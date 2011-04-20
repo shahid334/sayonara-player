@@ -1,17 +1,17 @@
 = Implemented Features =
 
-  *Cover fetch
-  *LastFM scrobbling
-  *Playlist
+  * Cover fetch
+  * LastFM scrobbling
+  * Playlist
 
 
 = Todo =
 
-  *Media Library
-  *Dynamic Playlists (using LastFM)
-  *ID3 Tagger
+  * Media Library
+  * Dynamic Playlists (using LastFM)
+  * ID3 Tagger
 
 = Maybe... =
 
-  *Audio Converter
-  *IPod integration
+  * Audio Converter
+  * IPod integration
