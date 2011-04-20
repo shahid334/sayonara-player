@@ -63,6 +63,7 @@
 			QAbstractItemDelegate* 	_pli_delegate;
 
 			QWidget*				_parent;
+			void initGUI();
 	};
 
 

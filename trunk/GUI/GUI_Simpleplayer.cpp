@@ -16,13 +16,15 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     ui(new Ui::GUI_SimplePlayer)
 {
     ui->setupUi(this);
-    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage("Covers/gui.jpg")));
+    initGUI();
+
+    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "gui.jpg")));
     this -> m_playing = false;
     this -> m_cur_searching = false;
     this -> m_mute = false;
 
     m_trayIcon = new QSystemTrayIcon();
-    m_trayIcon->setIcon(QIcon("icons/play.png"));
+    m_trayIcon->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     setupTrayContextMenu();
     m_trayIcon->show();
 
@@ -106,7 +108,7 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
     QString lengthString = getLengthString(in.length_ms);
 
-    this->ui->play->setIcon(QIcon("icons/pause.png"));
+    this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 
     this -> ui->maxTime->setText(lengthString);
     if (in.rating> 5) {
@@ -187,8 +189,8 @@ void GUI_SimplePlayer::playClicked(bool) {
     qDebug() << Q_FUNC_INFO;
 
     if (this -> m_playing == true) {
-    	this->ui->play->setIcon(QIcon("icons/play.png"));
-    	m_playAction->setIcon(QIcon("icons/play.png"));
+    	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     	m_playAction->setText("Play");
     	qDebug() << "pause";
     	emit pause();
@@ -198,8 +200,8 @@ void GUI_SimplePlayer::playClicked(bool) {
     }
 
     else {
-    	this->ui->play->setIcon(QIcon("icons/pause.png"));
-    	m_playAction->setIcon(QIcon("icons/pause.png"));
+    	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+    	m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
     	m_playAction->setText("Pause");
     	qDebug() << "play";
     	emit play();
@@ -212,8 +214,8 @@ void GUI_SimplePlayer::playClicked(bool) {
 
 void GUI_SimplePlayer::stopClicked(bool) {
     qDebug() << Q_FUNC_INFO;
-    this->ui->play->setIcon(QIcon("icons/play.png"));
-    m_playAction->setIcon(QIcon("icons/play.png"));
+    this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     m_playAction->setText("Play");
     m_playing = false;
 
@@ -277,7 +279,7 @@ void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
 
 void GUI_SimplePlayer::setupVolButton(int percent){
 
-	QString butFilename = "icons/vol_";
+	QString butFilename = Helper::getIconPath() + "vol_";
 
 	if(percent == 0){
 		butFilename += "mute.png";
@@ -308,7 +310,7 @@ void GUI_SimplePlayer::muteButtonPressed(){
 		m_mute = false;
 		this->ui->volumeSlider->setEnabled(true);
 
-		m_muteAction->setIcon(QIcon("icons/vol_mute.png"));
+		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
 		m_muteAction->setText("Mute");
 
 		setupVolButton(this->ui->volumeSlider->value());
@@ -319,8 +321,8 @@ void GUI_SimplePlayer::muteButtonPressed(){
 	else{
 		m_mute = true;
 		this->ui->volumeSlider->setEnabled(false);
-		this->ui->btn_mute->setIcon(QIcon("icons/vol_mute.png"));
-		m_muteAction->setIcon(QIcon("icons/vol_3.png"));
+		this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
+		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3.png"));
 		m_muteAction->setText("Unmute");
 
 		setupVolButton(0);
@@ -433,29 +435,29 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 
 
 	m_playAction = new QAction(tr("Play"), this);
-	m_playAction->setIcon(QIcon("icons/play.png"));
+	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 	connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
 
 	m_stopAction = new QAction(tr("Stop"), this);
-	m_stopAction->setIcon(QIcon("icons/stop.png"));
+	m_stopAction->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
 	connect(m_stopAction, SIGNAL(triggered()), this, SLOT(stopClicked()));
 
 	m_bwdAction = new QAction(tr("Previous"), this);
-	m_bwdAction->setIcon(QIcon("icons/bwd.png"));
+	m_bwdAction->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
 
 
 	m_fwdAction = new QAction(tr("Next"), this);
-	m_fwdAction->setIcon(QIcon("icons/fwd.png"));
+	m_fwdAction->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(forwardClicked()));
 
 	m_muteAction = new QAction(tr("Mute"), this);
-	m_muteAction->setIcon(QIcon("icons/vol_mute.png"));
+	m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
 	connect(m_muteAction, SIGNAL(triggered()), this, SLOT(muteButtonPressed()));
 
 
 	m_closeAction = new QAction(tr("Close"), this);
-	m_closeAction->setIcon(QIcon("icons/close.png"));
+	m_closeAction->setIcon(QIcon(Helper::getIconPath() + "close.png"));
 	connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
 
 	showAction = new QAction(tr("Show"), this);
@@ -544,6 +546,20 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
 	this->ui->playlist_widget->resize(tmpSize);
 	this->ui_playlist->resize(tmpSize);
+
+
+}
+
+
+void GUI_SimplePlayer::initGUI(){
+
+	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
+	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	this->ui->stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
+	this->ui->fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
+	this->ui->bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+
+
 
 
 }

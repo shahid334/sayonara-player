@@ -6,7 +6,8 @@ QT += network
 QT += xml
 QT += sql
 TEMPLATE = app
-TARGET = 
+TARGET = sayonara
+#DESTDIR = /usr/bin
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
 INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
 LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm
@@ -52,3 +53,33 @@ FORMS += \
     GUI/GUI_Playlist_Frame.ui \
 
 RESOURCES +=
+
+
+target.path = /usr/bin
+target.files += ./sayonara
+INSTALLS += target
+
+images.path = ~/.Sayonara/images
+images.files += GUI/icons/append.png
+images.files += GUI/icons/broom.png
+images.files += GUI/icons/bwd.png
+images.files += GUI/icons/close.png
+images.files += GUI/icons/fwd.png
+images.files += GUI/icons/pause.png
+images.files += GUI/icons/play.png
+images.files += GUI/icons/rec.png
+images.files += GUI/icons/rep1.png
+images.files += GUI/icons/repAll.png
+images.files += GUI/icons/save.png
+images.files += GUI/icons/shuffle.png
+images.files += GUI/icons/stop.png
+images.files += GUI/icons/vol_1.png
+images.files += GUI/icons/vol_1_dark.png
+images.files += GUI/icons/vol_2.png
+images.files += GUI/icons/vol_2_dark.png
+images.files += GUI/icons/vol_3.png
+images.files += GUI/icons/vol_3_dark.png
+images.files += GUI/icons/vol_mute.png
+images.files += GUI/icons/gui.jpg
+INSTALLS += images
+

@@ -147,5 +147,7 @@ namespace Helper{
 		return retString;
 	}
 
+	QString getIconPath();
+
 };
 #endif

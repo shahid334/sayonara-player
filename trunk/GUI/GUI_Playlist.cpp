@@ -28,7 +28,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui = new Ui::Playlist_Window();
 
 	ui->setupUi(this);
-
+	initGUI();
 
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
@@ -253,3 +253,14 @@ void GUI_Playlist::change_skin(bool dark){
 }
 
 
+void GUI_Playlist::initGUI(){
+
+
+	this->ui->btn_append->setIcon(QIcon(Helper::getIconPath() + "append.png"));
+	this->ui->btn_rep1->setIcon(QIcon(Helper::getIconPath() + "rep1.png"));
+	this->ui->btn_repAll->setIcon(QIcon(Helper::getIconPath() + "repAll.png"));
+	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
+	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
+	this->ui->btn_save_playlist->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+
+}

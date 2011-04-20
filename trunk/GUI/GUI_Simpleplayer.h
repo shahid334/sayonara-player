@@ -119,6 +119,7 @@ private:
     void setupTrayContextMenu();
     void setupVolButton(int percent);
 	void setupIcons();
+	void initGUI();
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
