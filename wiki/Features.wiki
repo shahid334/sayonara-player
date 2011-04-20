@@ -5,13 +5,13 @@
   *Playlist
 
 
-= TODO =
+= Todo =
 
   *Media Library
   *Dynamic Playlists (using LastFM)
   *ID3 Tagger
 
-= MAYBE... =
+= Maybe... =
 
   *Audio Converter
   *IPod integration
