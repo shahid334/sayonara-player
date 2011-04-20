@@ -1,8 +1,9 @@
 = Implemented Features =
 
+  * Playlist
   * Cover fetch
   * LastFM scrobbling
-  * Playlist
+
 
 
 = Todo =
