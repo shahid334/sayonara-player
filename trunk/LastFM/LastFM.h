@@ -22,7 +22,7 @@ class LastFM : public QObject{
 
 	Q_OBJECT
 public:
-	LastFM(std::string username, std::string password);
+	LastFM();
 	virtual ~LastFM();
 
 	public slots:
@@ -30,6 +30,9 @@ public:
 
 	private:
 		LASTFM_SESSION* _session;
+
+	public:
+		void login(std::string, std::string);
 };
 
 #endif /* LASTFM_H_ */

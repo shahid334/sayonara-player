@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
         GUI_Playlist 	ui_playlist(player.getParentOfPlaylist());
         MP3_Listen 		listen (&app);
         CLibraryBase 	library;
-
+        LastFM			lastfm;
         player.setVolume(listen.getVolume());
 
 
@@ -93,8 +93,9 @@ int main(int argc, char *argv[]){
 
 
         if(argc == 3){
-			LastFM	lastfm(argv[1], argv[2]);
+        	lastfm.login(argv[1], argv[2]);
 			app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(scrobble(const MetaData&)));
+			cout << "connected" << endl;
         }
 
         else {

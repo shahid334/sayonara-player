@@ -86,7 +86,7 @@ QString Helper::getIconPath(){
 	QString path = "GUI/icons/";
 
 	if(QFile::exists(QDir::homePath() + "/.Sayonara/images")) path = QDir::homePath() + "/.Sayonara/images/";
-	cout << "Path = " << path.toStdString() << endl;
+	//cout << "Path = " << path.toStdString() << endl;
 	return path;
 
 }
