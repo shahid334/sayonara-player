@@ -4,8 +4,8 @@
 
 == Libraries ==
 
-- Qt Development package, Phonon<br/>
-- libcurl<br/>
+* Qt Development package, Phonon<br/>
+* libcurl<br/>
 - libclastfm<br/>
 - Taglib
 
