@@ -1,0 +1,147 @@
+    /*
+ * MP3_Listen.cpp
+ *
+ *  Created on: Mar 2, 2011
+ *      Author: luke
+ */
+
+#include "MP3_Listen/MP3_Listen.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/id3.h"
+
+
+#include <iostream>
+#include <vector>
+
+#include <QtGui>
+#include <QtCore>
+#include <QPointer>
+#include <QApplication>
+#include <QString>
+#include <QMap>
+#include <QMapIterator>
+
+#include <phonon/audiooutput.h>
+#include <phonon/seekslider.h>
+#include <phonon/mediaobject.h>
+#include <phonon/volumeslider.h>
+#include <phonon/backendcapabilities.h>
+
+
+
+
+
+
+using namespace std;
+
+MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
+
+	_state = STATE_STOP;
+
+	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+	_media_object = new Phonon::MediaObject(this);
+	_media_object->setTickInterval(10);
+
+
+	Phonon::createPath(_media_object, _audio_output);
+
+	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
+	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
+}
+
+MP3_Listen::~MP3_Listen() {
+	delete _audio_output;
+	delete _media_object;
+}
+
+void MP3_Listen::play(){
+
+	//cout << "play " << endl;
+
+	_media_object->play();
+	_state = STATE_PLAY;
+}
+
+void MP3_Listen::stop(){
+
+	_media_object->stop();
+	_state= STATE_STOP;
+
+
+}
+
+void MP3_Listen::pause(){
+
+	_media_object->pause();
+	_state = STATE_PAUSE;
+}
+
+
+void MP3_Listen::jump(int where){
+
+	quint64 newtime_us = _meta_data.length_ms * where / 100.0;
+	_media_object->seek(newtime_us);
+	emit timeChangedSignal((quint32) (newtime_us / 1000));
+
+}
+
+
+
+void MP3_Listen::changeTrack(const QString & filepath){
+
+	_media_source = new Phonon::MediaSource(filepath);
+	_media_object->setCurrentSource( (*_media_source) );
+	_meta_data = ID3::getMetaDataOfFile(filepath);
+
+	_media_object->play();
+	_state = STATE_PLAY;
+
+}
+
+
+void MP3_Listen::changeTrack(const MetaData & metadata){
+
+	_media_source = new Phonon::MediaSource(metadata.filepath);
+	_media_object->setCurrentSource( (*_media_source) );
+	_meta_data = ID3::getMetaDataOfFile(metadata.filepath);
+
+	_media_object->play();
+	_state = STATE_PLAY;
+
+}
+
+
+const MetaData & MP3_Listen::getMetaData() const {
+	return _meta_data;
+
+}
+
+
+void MP3_Listen::seekableChanged(bool){
+
+}
+
+
+void MP3_Listen::timeChanged(qint64 time){
+
+	emit timeChangedSignal((quint32) (time / 1000));
+}
+
+void MP3_Listen::finished(){
+
+	emit track_finished();
+}
+
+
+void MP3_Listen::setVolume(qreal vol){
+   // qDebug() << "Set Volume " << vol;
+    _audio_output->setVolume(vol/100);
+}
+
+
+qreal MP3_Listen::getVolume(){
+    return _audio_output->volume();
+}
+
+

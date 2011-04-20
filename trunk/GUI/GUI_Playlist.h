@@ -1,0 +1,70 @@
+/*
+ * GUI_Playlist.h
+ *
+ *  Created on: Apr 6, 2011
+ *      Author: luke
+ */
+
+#ifndef GUI_PLAYLIST_H_
+#define GUI_PLAYLIST_H_
+
+#include "Playlist/Playlist.h"
+#include "HelperStructs/MetaData.h"
+
+#include <QMainWindow>
+#include <QWidget>
+#include <QKeyEvent>
+
+#include <string>
+#include <vector>
+
+#include "ui_GUI_Playlist.h"
+
+
+
+	class GUI_Playlist : public QWidget, private Ui::Playlist_Window
+	{
+		Q_OBJECT
+
+		public:
+			GUI_Playlist(QWidget *parent = 0);
+			~GUI_Playlist();
+
+		signals:
+			void selected_row_changed(int);
+			void clear_playlist();
+			void save_playlist(const QString&);
+			void playlist_mode_changed(const Playlist_Mode&);
+
+
+		public slots:
+			void update_progress_bar(int);
+			void fillPlaylist(vector<MetaData>&);
+			void track_changed(int);
+			void change_skin(bool);
+
+
+
+		private slots:
+
+			void current_row_changed(int);
+			void current_row_changed(const QModelIndex &);
+			void clear_playlist_slot();
+			void save_playlist_slot();
+			void playlist_mode_changed_slot();
+
+
+		private:
+			Ui::Playlist_Window* 	ui;
+			Playlist_Mode			_playlist_mode;
+
+
+			QAbstractItemModel* 	_pli_model;
+			QAbstractItemDelegate* 	_pli_delegate;
+
+			QWidget*				_parent;
+	};
+
+
+
+#endif /* GUI_PLAYLIST_H_ */
