@@ -1,3 +1,18 @@
 # How to compile Sayonara
 
 = How to compile Sayonara =
+
+You need
+
+# Qt Development package, Phonon
+# libcurl
+# libclastfm
+# Taglib
+
+
+On Windows you have to set environment variables:
+# Qt:      QTDIR
+# Taglib:  LIBTAG
+# libcurl: CURL
+# lastfm:  not done yet
+
