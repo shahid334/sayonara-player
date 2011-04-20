@@ -4,15 +4,16 @@
 
 == Libraries ==
 
-# Qt Development package, Phonon
-# libcurl
-# libclastfm
-# Taglib
+* Qt Development package, Phonon
+* libcurl
+* libclastfm
+* Taglib
 
 
 == Linux ==
-run qmake
-run make
+
+*run qmake
+*run make
 
 
 == Windows ==
@@ -20,10 +21,10 @@ run make
 On Windows you have to set environment variables:
 There is a Visual Studio 2008 solution
 
-# Qt:      QTDIR
-# Taglib:  LIBTAG
-# libcurl: CURL
-# lastfm:  not done yet
+* Qt:      QTDIR
+* Taglib:  LIBTAG
+* libcurl: CURL
+* lastfm:  not done yet
 
 
 == MAC ==
