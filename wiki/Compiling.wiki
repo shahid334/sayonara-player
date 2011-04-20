@@ -10,8 +10,9 @@
 
 == Linux ==
 
-  * run qmake
-  * run make
+  * qmake
+  * make
+  * make install
 
 
 == Windows ==
