@@ -2,7 +2,7 @@
 
 == Libraries ==
 
-  * Qt Development package, Phonon
+  * Qt: Gui, Core, Phonon, Xml, Sql
   * libcurl
   * libclastfm
   * Taglib
