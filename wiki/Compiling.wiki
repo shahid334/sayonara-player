@@ -2,10 +2,10 @@
 
 == Libraries ==
 
-  * Qt: Gui, Core, Phonon, Xml, Sql
-  * libcurl
-  * libclastfm
-  * Taglib
+  * Qt: Gui, Core, Phonon, Xml, Sql http://qt.nokia.com/products/
+  * libcurl http://curl.haxx.se/libcurl/
+  * libclastfm http://liblastfm.sourceforge.net/
+  * Taglib http://developer.kde.org/~wheeler/taglib.html
 
 
 == Linux ==
