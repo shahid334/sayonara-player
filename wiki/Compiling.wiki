@@ -18,7 +18,7 @@
 == Windows ==
 
 On Windows you have to set environment variables:
-There is a Visual Studio 2008 solution
+There is a Visual Studio 2008 solution, but not updated every time, so maybe the project will miss a few files
 
   * Qt:      QTDIR
   * Taglib:  LIBTAG
