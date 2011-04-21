@@ -49,6 +49,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(showAgain(QSystemTrayIcon::ActivationReason)));
     connect(this->ui->action_ViewPlaylist, SIGNAL(toggled(bool)), this, SLOT(showPlaylist(bool)));
     connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this, SLOT(changeSkin(bool)));
+    connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this, SLOT(lastFMClicked(bool)));
+
 
     ui_playlist = 0;
 
@@ -550,6 +552,12 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
 }
 
+
+void GUI_SimplePlayer::lastFMClicked(bool b){
+	qDebug() << "setupLastFM";
+	emit setupLastFM();
+
+}
 
 void GUI_SimplePlayer::initGUI(){
 

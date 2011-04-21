@@ -10,6 +10,7 @@
 
 #include <HelperStructs/MetaData.h>
 #include <QObject>
+#include <QString>
 #include <string>
 
 
@@ -27,12 +28,16 @@ public:
 
 	public slots:
 		void scrobble(const MetaData&);
+		void login_slot(QString, QString);
 
 	private:
 		LASTFM_SESSION* _session;
+		bool 			_logged_in;
 
 	public:
 		void login(std::string, std::string);
+
+
 };
 
 #endif /* LASTFM_H_ */

@@ -10,6 +10,7 @@
 #include <LastFM/LastFM.h>
 #include <HelperStructs/MetaData.h>
 #include <QObject>
+#include <QDebug>
 #include <iostream>
 #include <string.h>
 #include <string>
@@ -26,7 +27,7 @@ using namespace std;
 
 LastFM::LastFM() {
 	_session = LASTFM_init("51d6f9eaef806f603f346844bef326ba", "1093d769e54858cb0d21d42b35a8f603");
-
+	_logged_in = false;
 
 }
 
@@ -36,10 +37,25 @@ LastFM::~LastFM() {
 
 
 void LastFM::login(string username, string password){
-	LASTFM_login(_session, username.c_str(), password.c_str());
+
+
+	LASTFM_login_MD5(_session, username.c_str(), password.c_str());
+	_logged_in = true;
+}
+
+
+void LastFM::login_slot(QString username, QString password){
+
+	login(username.toStdString(), password.toStdString());
+
 }
 
 void LastFM::scrobble(const MetaData& metadata){
+
+	if(!_logged_in){
+		qDebug() << "Not logged in to LastFM!";
+		return;
+	}
 
 	time_t started;
 	time(&started);

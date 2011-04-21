@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>407</width>
-    <height>676</height>
+    <height>647</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -487,10 +487,9 @@
          <x>0</x>
          <y>0</y>
          <width>389</width>
-         <height>445</height>
+         <height>416</height>
         </rect>
        </property>
-       <zorder>album</zorder>
       </widget>
      </widget>
     </item>
@@ -524,8 +523,15 @@
     <addaction name="action_ViewPlaylist"/>
     <addaction name="action_Dark"/>
    </widget>
+   <widget class="QMenu" name="menuPreferences">
+    <property name="title">
+     <string>Preferences</string>
+    </property>
+    <addaction name="action_lastFM"/>
+   </widget>
    <addaction name="menuFle"/>
    <addaction name="menuView"/>
+   <addaction name="menuPreferences"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_OpenFile">
@@ -560,6 +566,15 @@
    </property>
    <property name="text">
     <string>Dark</string>
+   </property>
+  </action>
+  <action name="action_lastFM">
+   <property name="icon">
+    <iconset>
+     <normaloff>../../Desktop/lastfm-icon.png</normaloff>../../Desktop/lastfm-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>LastFM</string>
    </property>
   </action>
  </widget>

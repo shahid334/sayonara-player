@@ -10,11 +10,13 @@
 //#include <lastfm.h>
 #include "GUI/GUI_Simpleplayer.h"
 #include "GUI/GUI_Playlist.h"
+#include "GUI/LastFM/GUI_LastFM.h"
 #include "Playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
 #include "LastFM/LastFM.h"
+
 
 #include <QtGui>
 #include <QtCore>
@@ -26,8 +28,8 @@
 
 #include <iostream>
 
+#include <QCryptographicHash>
 
-#include <LastFM/LastFM.h>
 
 
 using namespace std;
@@ -51,6 +53,7 @@ int main(int argc, char *argv[]){
         MP3_Listen 		listen (&app);
         CLibraryBase 	library;
         LastFM			lastfm;
+        GUI_LastFM		ui_lastfm;
         player.setVolume(listen.getVolume());
 
 
@@ -90,12 +93,24 @@ int main(int argc, char *argv[]){
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
-
+        app.connect(&player, 	SIGNAL(setupLastFM()), 								&ui_lastfm, 	SLOT(show_win()));
+        app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
+        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(scrobble(const MetaData&)));
 
         if(argc == 3){
-        	lastfm.login(argv[1], argv[2]);
-			app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(scrobble(const MetaData&)));
-			cout << "connected" << endl;
+
+        	char c_buffer[33];
+        	memset(c_buffer, 0, 33);
+
+        	QString password(argv[2]);
+        	QByteArray password_hashed = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Md5).toHex();
+        	for(int i=0; i<password_hashed.length(); i++){
+        		c_buffer[i] = password_hashed.at(i);
+        	}
+
+        	c_buffer[32] = '\0';
+
+        	lastfm.login(argv[1], c_buffer);
         }
 
         else {

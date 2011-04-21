@@ -59,6 +59,7 @@ signals:
     void playlistCreated(QStringList&);
     void skinChanged(bool);
     void windowResized(const QSize&);
+    void setupLastFM();
 
 
 
@@ -79,6 +80,7 @@ private slots:
     void muteButtonPressed();
 
     void changeSkin(bool);
+    void lastFMClicked(bool = true);
 
 protected:
 

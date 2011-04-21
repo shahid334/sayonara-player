@@ -16,6 +16,7 @@ LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm
 HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/GUI_Simpleplayer.h \ 
     GUI/GUI_Playlist.h \
+    GUI/LastFM/GUI_LastFM.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
@@ -27,12 +28,13 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/Playlist/PlaylistItemDelegate.h \
     GUI/Playlist/GUI_PlaylistEntry.h \
     HelperStructs/id3.h \
-    LastFM/LastFM.h
+    LastFM/LastFM.h 
     
 
 SOURCES += Main.cpp MP3_Listen/MP3_Listen.cpp \
     GUI/GUI_Simpleplayer.cpp \
     GUI/GUI_Playlist.cpp \
+    GUI/LastFM/GUI_LastFM.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
     library/CDirectoryReader.cpp \
@@ -51,6 +53,7 @@ FORMS += \
     GUI/GUI_Playlist.ui \
     GUI/Playlist/GUI_Playlist_Entry.ui \
     GUI/GUI_Playlist_Frame.ui \
+    GUI/GUI_LastFM_Widget.ui
 
 RESOURCES +=
 
@@ -81,5 +84,6 @@ images.files += GUI/icons/vol_3.png
 images.files += GUI/icons/vol_3_dark.png
 images.files += GUI/icons/vol_mute.png
 images.files += GUI/icons/gui.jpg
+images.files += GUI/icons/lastfm_logo.jpg
 INSTALLS += images
 
