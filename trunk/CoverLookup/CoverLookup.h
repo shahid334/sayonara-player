@@ -19,6 +19,7 @@
 
 using namespace std;
 
+
 class CoverLookup : public QObject{
 
 	Q_OBJECT
@@ -42,7 +43,7 @@ public:
 
 private:
 	QPixmap add_new_pixmap(string cover_filename);
-	string 	getUrlAdress();
+	string 	calc_url_adress();
 	void 	search_cover();
 	void 	download_covers(uint num, bool apply_cover);
 };

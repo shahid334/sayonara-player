@@ -5,10 +5,6 @@
 #include <QDebug>
 
 #include <QFileDialog>
-#include <lastfmlib/lastfmscrobbler.h>
-
-
-
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
@@ -63,6 +59,15 @@ GUI_SimplePlayer::~GUI_SimplePlayer()
 }
 
 
+void GUI_SimplePlayer::setVolume(int vol){
+
+	this->ui->volumeSlider->setValue(vol);
+	setupVolButton(vol);
+	emit volumeChanged((qreal)vol);
+
+}
+
+
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
 		this->ui->centralwidget->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
@@ -99,8 +104,10 @@ QString GUI_SimplePlayer::getLengthString (quint32 length_ms)const {
 
 void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
+	// sometimes ignore the date
 	if(in.year < 1000 || in.album.contains(QString::number(in.year)))
 		this -> ui->album->setText(in.album);
+
 	else this -> ui->album->setText(in.album + " (" + QString::number(in.year) +")");
 
     this -> ui->artist->setText(in.artist);
@@ -111,6 +118,7 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
     QString lengthString = getLengthString(in.length_ms);
 
     this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+    this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 
     this -> ui->maxTime->setText(lengthString);
     if (in.rating> 5) {
@@ -121,45 +129,16 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
     QString tmp;
     for (int i=0; i<tmpRating; ++i){
-        //TODO make fancy stars or something
         tmp += "*";
     }
+
     this -> ui ->  rating->setText(tmp);
     this -> setWindowTitle(QString("Sayonara - ") + in.title);
 
-//    if (albumCover!=NULL) {
-//        this -> ui->albumCover->setPixmap(QPixmap::fromImage(*albumCover));
-//    }
-//    else {
-//        this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage("Images/dummyCover.jpg")));
-//    }
     this -> m_completeLength_ms = in.length_ms;
     this -> m_playing = true;
 
-
-
-
     emit wantCover(in);
-
-
-/*
-    LastFmScrobbler* scrobbler = new LastFmScrobbler(string("LucioCarreras"), string("rocks"), false, true);
-
-
-    SubmissionInfo info(in.artist.toStdString(), in.title.toStdString());
-
-    info.setAlbum(in.album.toStdString());
-    info.setTrackNr(1);
-    info.setTrackLength(in.length_ms / 1000);
-
-    scrobbler->startedPlaying(info);
-
-    cout << "scroblled" << endl;
-*/
-
-
-
-
 
 }
 
@@ -335,12 +314,7 @@ void GUI_SimplePlayer::muteButtonPressed(){
 
 }
 
-void GUI_SimplePlayer::setVolume (qreal vol_percent) {
 
-
-	qDebug() << "Volume is " << vol_percent;
-    //this -> ui ->volumeSlider->setValue(vol_percent*100 -1);
-}
 
 
 void GUI_SimplePlayer::cover_changed(QPixmap& cover){
@@ -526,8 +500,7 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 	ui_playlist = playlist;
 
 	QSize tmpSize = this->size();
-	qDebug() << tmpSize;
-	QSize tmpSize2 = tmpSize;
+
 	tmpSize.setWidth(tmpSize.width() -20 );
 	tmpSize.setHeight(tmpSize.height() - 210);
 
@@ -554,7 +527,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
 
 void GUI_SimplePlayer::lastFMClicked(bool b){
-	qDebug() << "setupLastFM";
+
 	emit setupLastFM();
 
 }

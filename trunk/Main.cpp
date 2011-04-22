@@ -36,25 +36,19 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-
-
-
-
 		CoverLookup cover;
-
 
 		QApplication app (argc, argv);
 		app.setApplicationName("Sayonara");
 
         GUI_SimplePlayer player;
-		player.move(0,0);
-        Playlist 		playlist(&app);
         GUI_Playlist 	ui_playlist(player.getParentOfPlaylist());
+
+        Playlist 		playlist(&app);
         MP3_Listen 		listen (&app);
         CLibraryBase 	library;
         LastFM			lastfm;
         GUI_LastFM		ui_lastfm;
-        player.setVolume(listen.getVolume());
 
 
 
@@ -68,14 +62,10 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(search(int)),						&listen,	SLOT(jump(int)));
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
-
-
+        app.connect (&player, SIGNAL(wantCover(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
-        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&cover,			SLOT(search_cover(const MetaData&)));
-
-
 
         app.connect (&playlist, SIGNAL(selected_file_changed(int)), 				&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(no_track_to_play()),							&listen,		SLOT(stop()));
@@ -96,6 +86,10 @@ int main(int argc, char *argv[]){
         app.connect(&player, 	SIGNAL(setupLastFM()), 								&ui_lastfm, 	SLOT(show_win()));
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(scrobble(const MetaData&)));
+
+
+        player.setVolume(50);
+
 
         if(argc == 3){
 

@@ -37,7 +37,7 @@ public slots:
       * Set current position in filestream
       */
     void setCurrentPosition (quint32 pos_sec);
-    void setVolume (qreal vol_percent);
+
 
 
 signals:
@@ -126,6 +126,7 @@ private:
 public:
     void setPlaylist(GUI_Playlist* playlist);
     QWidget* getParentOfPlaylist();
+    void setVolume(int vol);
 
 };
 

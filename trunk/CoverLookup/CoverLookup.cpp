@@ -81,9 +81,7 @@ int find_jpg_file_beginning(char* ptr, int beginning){
 }
 
 
-vector<string> calcAdresses(uint num){
-
-
+vector<string> calc_adresses_from_webpage(uint num){
 
 	vector<string> adresses;
 	if(webpage == 0) {
@@ -178,6 +176,8 @@ size_t get_content( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 }
 
 
+
+
 CoverLookup::CoverLookup() {
 	// TODO Auto-generated constructor stub
 
@@ -190,36 +190,6 @@ CoverLookup::~CoverLookup() {
 }
 
 
-string CoverLookup::getUrlAdress(){
-
-	string url = string("http://www.google.de/images?q=");
-	//string url = string("http://ws.audioscrobbler.com/2.0/?method=album.getInfo");
-
-	string artist = _artist;
-	string album = _album;
-
-	artist = Helper::replace_whitespaces(_artist, '+');
-	artist = Helper::replace_chars(artist, '&', 'n');
-	artist = Helper::replace_chars(artist, '?', '+');
-
-	album = Helper::replace_whitespaces(_album, '+');
-	album = Helper::replace_chars(album, '&', 'n');
-	album = Helper::replace_chars(album, '?', '+');
-
-
-
-
-
-	url += artist + "+" + album;
-	url +=  "&tbs=isz:s,ift:jpg";			// klein*/
-
-
-
-	return url;
-}
-
-
-
 
 
 
@@ -229,7 +199,7 @@ void CoverLookup::search_cover(){
 
 	CURL *curl_find_img = curl_easy_init();
 
-	string url_adress = getUrlAdress();
+	string url_adress = calc_url_adress();
 
 	/* Find images on Google*/
 	if(curl_find_img) {
@@ -243,16 +213,13 @@ void CoverLookup::search_cover(){
 		curl_easy_cleanup(curl_find_img);
 	}
 
-
-
-	_cover_adresses = calcAdresses(2);
+	_cover_adresses = calc_adresses_from_webpage(2);
 
 	if(webpage != 0){
 		free(webpage);
 		webpage = 0;
 	}
 	webpage_bytes = 0;
-
 
 	download_covers(1, true);
 }
@@ -286,7 +253,8 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 
 	_pixmaps.clear();
 	if(_cover_adresses.size() == 0) {
-		_cover_adresses = calcAdresses(10);
+		// get a few more adresses, maybe many images are dead
+		_cover_adresses = calc_adresses_from_webpage(num * 2);
 		if(_cover_adresses.size() == 0) {
 			if(apply_cover){
 				cout << "No covers found" << endl;
@@ -300,8 +268,7 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 
 	/* save image of first hit */
 	CURL *curl_save_img;
-	string tgt_img_filename;
-	//FILE* cover_file = 0;
+
 
 	bool cover_set = false;
 	int idx = 1;
@@ -312,12 +279,6 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 		curl_save_img = curl_easy_init();
 
 		if(curl_save_img){
-
-			string dir = "./Covers/";
-			if(!apply_cover) dir = "./tmp/";
-
-			tgt_img_filename = 	dir +
-								string("tmpcover.jpg");
 
 			curl_easy_setopt(curl_save_img, CURLOPT_URL, it->c_str());
 			curl_easy_setopt(curl_save_img, CURLOPT_WRITEFUNCTION, save_image);
@@ -389,3 +350,23 @@ QPixmap CoverLookup::add_new_pixmap(string cover_filename){
 }
 
 
+string CoverLookup::calc_url_adress(){
+
+	string url = string("http://www.google.de/images?q=");
+
+	string artist = _artist;
+	string album = _album;
+
+	artist = Helper::replace_whitespaces(_artist, '+');
+	artist = Helper::replace_chars(artist, '&', 'n');
+	artist = Helper::replace_chars(artist, '?', '+');
+
+	album = Helper::replace_whitespaces(_album, '+');
+	album = Helper::replace_chars(album, '&', 'n');
+	album = Helper::replace_chars(album, '?', '+');
+
+	url += artist + "+" + album;
+	url +=  "&tbs=isz:s,ift:jpg";			// klein*/
+
+	return url;
+}
