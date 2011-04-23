@@ -19,9 +19,9 @@ struct MetaData{
 	QString artist;
 	QString album;
 	qint32 rating;
-    qint64 length_ms;
-    qint32 year;
-    QString filepath;
+        qint64 length_ms;
+        qint32 year;
+        QString filepath;
 
 
     inline MetaData () {

@@ -62,8 +62,8 @@ namespace Helper{
 
 	inline string replace(string input, string toReplace, string replaceWith){
 
-		int i=0;
-		int pos = 0;
+                unsigned int i=0;
+                int pos = 0;
 		while(true){
 
 			pos = input.find_first_of(toReplace.c_str(), i);
@@ -125,7 +125,7 @@ namespace Helper{
 
 
 
-	string trim(string toTrim);
+        string trim(const string &toTrim);
 
 	inline QString cvtQString2FirstUpper(QString str){
 

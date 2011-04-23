@@ -2,8 +2,9 @@
 #include <QDebug>
 
 CLibraryBase::CLibraryBase(QObject *parent) :
-    QObject(parent)
+    QObject(parent), m_database (this)
 {
+
 }
 
 
@@ -16,4 +17,15 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
     qDebug() << fileList;
     emit playlistCreated(fileList);
 
+}
+
+void CLibraryBase::slotMetaDataLoaded(vector<MetaData>& in) {
+    m_database.storeMetadata(in);
+}
+
+
+void CLibraryBase::loadDataFromDb () {
+    std::vector <MetaData> data;
+    m_database.getTracksFromDatabase(data);
+    emit signalMetaDataLoaded(data);
 }

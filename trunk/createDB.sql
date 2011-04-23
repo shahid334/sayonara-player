@@ -45,7 +45,7 @@ CREATE TABLE Tracks (
   filetype INTEGER,  			--out of fs  
   albumID INTEGER,                      --FK to albums
   artistID INTEGER,			--FK to artists
-  composer INTEGER,			--out of id3
+  composer VARCHAR(255),		--out of id3
   title VARCHAR(255),                   --out of id3  
   year INTEGER,  			--out of id3  
   comment TEXT,  			--out of id3  
@@ -63,6 +63,69 @@ CREATE TABLE Tracks (
   foreign key (path) REFERENCES directories (path),
   foreign key (artistID) REFERENCES artists (artistID)
 );
+
+insert into Tracks (
+  TrackID,
+  filename, 	--could be pk as well
+  path,			--FK to dirs
+  createdate,			--read out of fs
+  modifydate,			--read out of fs
+  filesize,  			--out of fs  
+  filetype,  			--out of fs  
+  albumID,                      --FK to albums
+  artistID,			--FK to artists
+  composer,		--out of id3
+  title,                   --out of id3  
+  year,  			--out of id3  
+  comment,  			--out of id3  
+  track,  			--out of id3  
+  discnumber,  			--out of id3  
+  bitrate,  			--out of id3  
+  length,  			--out of id3  
+  samplerate,  			--out of id3  
+  bpm,	  			--out of id3  
+  genreID,			--FK to genres
+  lyricID,			--FK to lyrics
+) values (
+  last_insert_rowid()+1,
+  :filename,
+  :path,
+  :createdate,
+  :modifydate,
+  :filesize,
+  :filetype,
+  :albumID,
+  :artistID,
+  :composer,
+  :title,
+  :year,
+  :comment,
+  :track,
+  :discnumber,
+  :bitrate,
+  :length,
+  :samplerate,
+  :bpm
+)
+
+	QString title;
+	QString artist;
+	QString album;
+	qint32 rating;
+        qint64 length_ms;
+        qint32 year;
+        QString filepath;
+
+
+
+
+
+
+
+
+
+
+
 
 -- Stored playlists
 CREATE TABLE playlists (

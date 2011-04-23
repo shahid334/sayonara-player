@@ -25,7 +25,7 @@ using namespace std;
 
 
 template<typename T>
-string cvtNum2String(T num){
+string cvtNum2String(const T & num){
 	stringstream sstr;
 	sstr << num;
 	return sstr.str();
@@ -34,7 +34,7 @@ string cvtNum2String(T num){
 
 
 template<typename T>
-QString cvtSomething2QString(T sth){
+QString cvtSomething2QString(const T & sth){
 	stringstream sstr;
 	sstr << sth;
 	return QString(sstr.str().c_str());
@@ -50,7 +50,7 @@ void cvtSecs2MinAndSecs(int secs, int* tgt_min, int* tgt_sec)
 }
 
 
-string Helper::trim(string toTrim){
+string Helper::trim(const string & toTrim){
 
 	if(toTrim.size() == 0) return toTrim;
 

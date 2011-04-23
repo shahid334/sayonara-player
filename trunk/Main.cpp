@@ -87,9 +87,14 @@ int main(int argc, char *argv[]){
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
+        app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 	SLOT(slotMetaDataLoaded(vector<MetaData>&)));
+        app.connect (&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&)));
+
+
+
 
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
-
+        library.loadDataFromDb();
 
 
         player.setVolume(50);

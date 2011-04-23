@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "library/CDirectoryReader.h"
+#include "library/CDatabaseConnector.h"
 
 class CLibraryBase : public QObject
 {
@@ -10,14 +11,19 @@ class CLibraryBase : public QObject
 public:
     explicit CLibraryBase(QObject *parent = 0);
 
+    void loadDataFromDb ();
+
 signals:
 	void playlistCreated(QStringList&);
+        void signalMetaDataLoaded (vector<MetaData>& in);
 
 public slots:
     void baseDirSelected (const QString & baseDir);
+    void slotMetaDataLoaded(vector<MetaData>& in);
 
 private:
     CDirectoryReader m_reader;
+    CDatabaseConnector m_database;
 
 
 };
