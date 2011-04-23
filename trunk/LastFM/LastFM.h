@@ -28,14 +28,20 @@ public:
 
 	public slots:
 		void scrobble(const MetaData&);
+		void update_track(const MetaData&);
 		void login_slot(QString, QString);
 
 	private:
 		LASTFM_SESSION* _session;
 		bool 			_logged_in;
+		QString			_api_key;
+		QString			_api_secret;
+		QString			_username;
+		QString			_auth_token;
+
 
 	public:
-		void login(std::string, std::string);
+		void login(QString, QString);
 
 
 };

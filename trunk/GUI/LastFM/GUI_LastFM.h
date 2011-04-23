@@ -36,6 +36,10 @@ public:
 		Ui_GUI_LastFM_Widget* ui;
 
 
+	public:
+		void set_username_and_password(QString username, QString password);
+
+
 };
 
 #endif /* GUI_LASTFM_H_ */

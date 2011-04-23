@@ -38,7 +38,9 @@ using namespace std;
 MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 
 	_state = STATE_STOP;
-
+	_seconds_started = 0;
+	_seconds_now = 0;
+	_scrobbled = false;
 	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
 	_media_object = new Phonon::MediaObject(this);
 	_media_object->setTickInterval(10);
@@ -80,9 +82,10 @@ void MP3_Listen::pause(){
 
 void MP3_Listen::jump(int where){
 
-	quint64 newtime_us = _meta_data.length_ms * where / 100.0;
-	_media_object->seek(newtime_us);
-	emit timeChangedSignal((quint32) (newtime_us / 1000));
+	quint64 newtime_ms = _meta_data.length_ms * where / 100.0;
+	_media_object->seek(newtime_ms);
+	_seconds_started = newtime_ms / 1000;
+	emit timeChangedSignal((quint32) (newtime_ms / 1000));
 
 }
 
@@ -96,6 +99,9 @@ void MP3_Listen::changeTrack(const QString & filepath){
 
 	_media_object->play();
 	_state = STATE_PLAY;
+	_seconds_started = 0;
+	_seconds_now = 0;
+	_scrobbled = false;
 
 }
 
@@ -108,6 +114,10 @@ void MP3_Listen::changeTrack(const MetaData & metadata){
 
 	_media_object->play();
 	_state = STATE_PLAY;
+
+	_seconds_started = 0;
+	_seconds_now = 0;
+	_scrobbled = false;
 
 }
 
@@ -125,7 +135,16 @@ void MP3_Listen::seekableChanged(bool){
 
 void MP3_Listen::timeChanged(qint64 time){
 
+	_seconds_now = time / 1000;
+
+	// scrobble after 25 sec or if half of the track is reached
+	if( !_scrobbled && (_seconds_now - _seconds_started == 25 || _seconds_now - _seconds_started == _meta_data.length_ms / 2000)){
+		emit scrobble_track(_meta_data);
+		_scrobbled = true;
+	}
+
 	emit timeChangedSignal((quint32) (time / 1000));
+
 }
 
 void MP3_Listen::finished(){

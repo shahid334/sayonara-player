@@ -16,6 +16,7 @@
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
 #include "LastFM/LastFM.h"
+#include "HelperStructs/Helper.h"
 
 
 #include <QtGui>
@@ -28,7 +29,7 @@
 
 #include <iostream>
 
-#include <QCryptographicHash>
+
 
 
 
@@ -40,15 +41,16 @@ int main(int argc, char *argv[]){
 
 		QApplication app (argc, argv);
 		app.setApplicationName("Sayonara");
+		app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-        GUI_SimplePlayer player;
-        GUI_Playlist 	ui_playlist(player.getParentOfPlaylist());
+        GUI_SimplePlayer 	player;
+        GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
 
-        Playlist 		playlist(&app);
-        MP3_Listen 		listen (&app);
-        CLibraryBase 	library;
-        LastFM			lastfm;
-        GUI_LastFM		ui_lastfm;
+        Playlist 			playlist(&app);
+        MP3_Listen 			listen (&app);
+        CLibraryBase 		library;
+        LastFM				lastfm;
+        GUI_LastFM			ui_lastfm;
 
 
 
@@ -63,6 +65,7 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
         app.connect (&player, SIGNAL(wantCover(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
+        app.connect(&player, 	SIGNAL(setupLastFM()), 								&ui_lastfm, 	SLOT(show_win()));
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
@@ -70,7 +73,8 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(selected_file_changed(int)), 				&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(no_track_to_play()),							&listen,		SLOT(stop()));
         app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&)));
-        app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 				&ui_playlist, 	SLOT(update_progress_bar(int)));
+        app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 					&ui_playlist, 	SLOT(update_progress_bar(int)));
+        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(update_track(const MetaData&)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 				&playlist, 		SLOT(change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 						&playlist, 		SLOT(clear_playlist()));
@@ -79,41 +83,16 @@ int main(int argc, char *argv[]){
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
-
+        app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
-        app.connect(&player, 	SIGNAL(setupLastFM()), 								&ui_lastfm, 	SLOT(show_win()));
+
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
-        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(scrobble(const MetaData&)));
+
 
 
         player.setVolume(50);
-
-
-        if(argc == 3){
-
-        	char c_buffer[33];
-        	memset(c_buffer, 0, 33);
-
-        	QString password(argv[2]);
-        	QByteArray password_hashed = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Md5).toHex();
-        	for(int i=0; i<password_hashed.length(); i++){
-        		c_buffer[i] = password_hashed.at(i);
-        	}
-
-        	c_buffer[32] = '\0';
-
-        	lastfm.login(argv[1], c_buffer);
-        }
-
-        else {
-
-        	cout << "LASTFM: For LastFM Support call:" << endl << "Sayonara <username> <password>" << endl;
-
-        }
-
-
         player.setPlaylist(&ui_playlist);
         player.setWindowTitle("Sayonara");
         player.show();

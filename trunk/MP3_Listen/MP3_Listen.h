@@ -38,6 +38,9 @@ private:
 	int				_state;
 	std::string		_cur_MP3_file;
     MetaData		_meta_data;
+    int				_seconds_started;
+    int				_seconds_now;
+    bool			_scrobbled;
 
 	Phonon::AudioOutput *_audio_output;
 	Phonon::MediaObject *_media_object;
@@ -61,6 +64,7 @@ public:
 		void metaDataChangedSignal(const MetaData&);
 		void metaDataForPlaylistReady(vector<MetaData>&);
 		void timeChangedSignal(quint32);
+		void scrobble_track(const MetaData &);
 		void track_finished();
 
 

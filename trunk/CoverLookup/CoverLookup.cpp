@@ -85,7 +85,7 @@ vector<string> calc_adresses_from_webpage(uint num){
 
 	vector<string> adresses;
 	if(webpage == 0) {
-		cout << "webpage = 0" << endl;
+		cout << "No webpage found" << endl;
 		return adresses;
 	}
 
@@ -97,7 +97,7 @@ vector<string> calc_adresses_from_webpage(uint num){
 
 		int loc_start = -1;
 		int loc_end = find_jpg_file_ending(webpage, webpage_bytes, (char*) search_string.c_str(), search_string.size(), search_start);
-		cout << "Loc end = " << loc_end << endl;
+
 
 		if(loc_end != -1){
 			loc_start = find_jpg_file_beginning(webpage, loc_end);
