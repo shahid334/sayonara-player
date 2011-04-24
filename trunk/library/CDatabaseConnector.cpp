@@ -6,13 +6,6 @@
 #include <QVariant>
 #include <QSqlError>
 
-/* FIXME: Hochkommata problem beim insert und in select ... where statements
- *
- *
- * */
-
-
-
 CDatabaseConnector::CDatabaseConnector(QObject *parent) :
     QObject(parent),
     m_createScriptFileName ("createDB.sql"),
@@ -61,7 +54,8 @@ CDatabaseConnector::~CDatabaseConnector() {
 int CDatabaseConnector::getArtistID (const QString & artist)  {
     QSqlQuery q (this -> m_database);
     int artistID = -1;
-    q.prepare("select artistID from artists where name == '" + artist +"';");
+    q.prepare("select artistID from artists where name == ?;");
+    q.addBindValue(QVariant(artist));
     if (!q.exec()) {
         qDebug()<< q.lastQuery() << artistID << " " << q.executedQuery();
         throw QString ("SQL - Error: get Artist ID" + artist);
@@ -88,7 +82,8 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
 int CDatabaseConnector::getAlbumID (const QString & album)  {
     QSqlQuery q (this -> m_database);
     int albumID = -1;
-    q.prepare("select albumID from albums where name == '" + album + "';");
+    q.prepare("select albumID from albums where name == ?;");
+    q.addBindValue(QVariant(album));
     if (!q.exec()) {
         throw QString ("SQL - Error: getAlbumID" + album);
     }
@@ -127,15 +122,20 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 }
 
 QString CDatabaseConnector::getAlbumName (const int & id) {
-
     QSqlQuery q (this -> m_database);
     QString a;
-    q.prepare("select name from albums where albumid == '" + QString::number(id) + "';");
-    if (!q.exec()) {
-        throw QString ("SQL - Error: getAlbumName " + id);
+    if (id!= -1) {
+        q.prepare("select name from albums where albumid == ?;");
+        q.addBindValue(QVariant(id));
+        if (!q.exec()) {
+            throw QString ("SQL - Error: getAlbumName " + id);
+        }
+        if (q.next()) {
+            a = q.value(0).toString();
+        }
     }
-    if (q.next()) {
-        a = q.value(0).toString();
+    else {
+        qDebug() << "For some reason there is a -1 input of " << Q_FUNC_INFO;
     }
     return a;
 }
@@ -143,12 +143,18 @@ QString CDatabaseConnector::getAlbumName (const int & id) {
 QString CDatabaseConnector::getArtistName (const int & id) {
     QSqlQuery q (this -> m_database);
     QString a;
-    q.prepare("select name from artists where artistid == '" + QString::number(id) + "';");
-    if (!q.exec()) {
-        throw QString ("SQL - Error: getArtistName " + id);
+    if (id!=-1) {
+        q.prepare("select name from artists where artistid == ?;");
+        q.addBindValue(QVariant (id));
+        if (!q.exec()) {
+            throw QString ("SQL - Error: getArtistName " + id);
+        }
+        if (q.next()) {
+            a = q.value(0).toString();
+        }
     }
-    if (q.next()) {
-        a = q.value(0).toString();
+    else {
+        qDebug() << "For some reason there is a -1 input of " << Q_FUNC_INFO;
     }
     return a;
 }
@@ -167,10 +173,14 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
         if (!q.exec()) {
             throw QString ("SQL - Error: getTracksFromDatabase cammot execute query");
         }
+        int albumID = -1;
+        int artistID = -1;
         while (q.next()) {
+            albumID = q.value(1).toInt();
+            artistID = q.value(2).toInt();
             data.filepath = q.value(0).toString();
-            data.album = this -> getAlbumName(q.value(1).toInt());
-            data.artist = this -> getArtistName(q.value(2).toInt());
+            data.album = this -> getAlbumName(albumID);
+            data.artist = this -> getArtistName(artistID);
             data.title = q.value(3).toString();
             data.year = q.value(4).toInt();
             data.length_ms = q.value(5).toInt();
@@ -199,17 +209,17 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
             //first check if we know the artist and its id
 
             // TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
-            QString tmpArtist = data.artist.replace("'", "''");
-            artistID = this -> getArtistID(tmpArtist);
+//            QString tmpArtist = data.artist.replace("'", "''");
+            artistID = this -> getArtistID(data.artist);
             if (artistID == -1) {
-                artistID = insertArtistIntoDatabase(tmpArtist);
+                artistID = insertArtistIntoDatabase(data.artist);
             }
 
             // TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
-            QString tmpAlbum = data.album.replace("'", "''");
-            albumID = this -> getAlbumID(tmpAlbum);
+//            QString tmpAlbum = data.album.replace("'", "''");
+            albumID = this -> getAlbumID(data.album);
             if (albumID == -1) {
-                albumID = insertAlbumIntoDatabase( tmpAlbum);
+                albumID = insertAlbumIntoDatabase( data.album);
             }
             this -> insertTrackIntoDatabase (data,artistID,albumID);
         }
