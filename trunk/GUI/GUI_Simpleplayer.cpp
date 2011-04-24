@@ -491,6 +491,10 @@ QWidget* GUI_SimplePlayer::getParentOfPlaylist(){
 	return this->ui->playlist_widget;
 }
 
+QWidget* GUI_SimplePlayer::getParentOfLibrary(){
+	return this->ui->library_widget;
+}
+
 
 
 
@@ -501,11 +505,22 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 
 	QSize tmpSize = this->size();
 
-	tmpSize.setWidth(tmpSize.width() -20 );
+	tmpSize.setWidth(330 );
 	tmpSize.setHeight(tmpSize.height() - 210);
 
 	this->ui->playlist_widget->resize(tmpSize);
 	this->ui_playlist->resize(tmpSize);
+
+}
+
+
+void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
+
+	ui_library = library;
+	QSize tmpSize = this->size();
+	tmpSize.setWidth(tmpSize.width() - 360);
+	this->ui->library_widget->resize(tmpSize);
+	this->ui_library->resize(tmpSize);
 
 }
 
@@ -515,12 +530,8 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
 	QMainWindow::resizeEvent(e);
 
-	QSize tmpSize = e->size();
-	tmpSize.setWidth(tmpSize.width() -20);
-	tmpSize.setHeight(tmpSize.height() - 210);
-
-	this->ui->playlist_widget->resize(tmpSize);
-	this->ui_playlist->resize(tmpSize);
+	this->ui_playlist->resize(this->ui->playlist_widget->size());
+	this->ui_library->resize(this->ui->library_widget->size());
 
 
 }

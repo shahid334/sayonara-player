@@ -3,6 +3,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "GUI/GUI_Playlist.h"
+#include "GUI/Library/GUI_Library_windowed.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -97,6 +98,7 @@ private:
 
     Ui::GUI_SimplePlayer*		ui;
     GUI_Playlist* 				ui_playlist;
+    GUI_Library_windowed*		ui_library;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
@@ -125,7 +127,9 @@ private:
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
+    void setLibrary(GUI_Library_windowed* library);
     QWidget* getParentOfPlaylist();
+    QWidget* getParentOfLibrary();
     void setVolume(int vol);
 
 };
