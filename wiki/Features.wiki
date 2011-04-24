@@ -8,7 +8,7 @@
 
 = Todo =
 
-  * Media Library
+  * Media Library (at work)
   * Dynamic Playlists (using LastFM)
   * ID3 Tagger
   * Equalizer
