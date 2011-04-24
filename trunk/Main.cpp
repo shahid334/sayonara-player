@@ -88,7 +88,7 @@ int main(int argc, char *argv[]){
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
         app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 	SLOT(slotMetaDataLoaded(vector<MetaData>&)));
-        app.connect (&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&)));
+        app.connect (&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 		&playlist, 	SLOT(createPlaylist(vector<MetaData>&)));
 
 
 

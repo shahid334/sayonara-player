@@ -25,8 +25,6 @@ using namespace std;
 
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
-	_cur_id3_idx = -1;
-
 }
 
 Playlist::~Playlist() {
@@ -42,23 +40,12 @@ void Playlist::createPlaylist(QStringList& pathlist){
 	qDebug() << "Create playlist called";
 
     if(!_playlist_mode.append){
-
-		_pathlist = pathlist;
 		_v_meta_data.clear();
-		_cur_id3_idx = 0;
 	}
+    uint files2fill = pathlist.size();
+	for(uint i=0; i<files2fill; i++){
 
-	else{
-		_cur_id3_idx = _pathlist.size();
-		_pathlist.append(pathlist);
-	}
-
-	_todo = _pathlist.size();
-
-	int files2fill = _todo - _cur_id3_idx;
-	for(int i=_cur_id3_idx; i<_todo; i++){
-
-		MetaData md = ID3::getMetaDataOfFile(_pathlist.at(i));
+		MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
 		_v_meta_data.push_back(md);
 
 		double percent = i * 1.0 / files2fill;
@@ -70,6 +57,17 @@ void Playlist::createPlaylist(QStringList& pathlist){
 }
 
 
+void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
+	//_pathlist = pathlist;
+	_v_meta_data.clear();
+
+	_v_meta_data = v_meta_data;
+	emit playlist_created(_v_meta_data);
+
+
+}
+
+
 
 
 
@@ -78,14 +76,14 @@ void Playlist::forward(){
 
 	if(_playlist_mode.shuffle){
 
-		int track_num = rand() % _pathlist.size();
+		int track_num = rand() % _v_meta_data.size();
 		_cur_play_idx = track_num;
 		emit selected_file_changed(track_num);
 		emit selected_file_changed_md(_v_meta_data[track_num]);
 
 	}
 
-	else if(this->_cur_play_idx < _pathlist.size() - 1 && _cur_play_idx >= 0){
+	else if(this->_cur_play_idx < _v_meta_data.size() - 1 && _cur_play_idx >= 0){
 		_cur_play_idx++;
 		emit selected_file_changed(_cur_play_idx);
 		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
@@ -120,7 +118,7 @@ void Playlist::next_track(){
 
 	else if(_playlist_mode.shuffle){
 
-		int track_num = rand() % _pathlist.size();
+		int track_num = rand() % _v_meta_data.size();
 		_cur_play_idx = track_num;
 		emit selected_file_changed(track_num);
 		emit selected_file_changed_md(_v_meta_data[track_num]);
@@ -131,7 +129,7 @@ void Playlist::next_track(){
 
 	else if(_playlist_mode.repAll){
 
-		if(_cur_play_idx >= _pathlist.size() -1){
+		if(_cur_play_idx >= _v_meta_data.size() -1){
 
 			emit selected_file_changed(0);
 			emit selected_file_changed_md(_v_meta_data[0]);
@@ -148,7 +146,7 @@ void Playlist::next_track(){
 
 	else {
 
-		if(_cur_play_idx >= _pathlist.size() -1){
+		if(_cur_play_idx >= _v_meta_data.size() -1){
 			emit no_track_to_play();
 		}
 
@@ -175,7 +173,7 @@ void Playlist::change_track(int new_row){
 // GUI -->
 void Playlist::clear_playlist(){
 
-	_pathlist.clear();
+	//_pathlist.clear();
 	_v_meta_data.clear();
 }
 
@@ -187,8 +185,8 @@ void Playlist::save_playlist(const QString& filename){
 
 	if(file){
 		qint64 lines = 0;
-		for(int i=0; i<_pathlist.size(); i++){
-			string str = _pathlist.at(i).toStdString();
+		for(int i=0; i<_v_meta_data.size(); i++){
+			string str = _v_meta_data.at(i).filepath.toStdString();
 
 			lines += fputs(str.c_str(), file);
 			lines += fputs("\n", file);

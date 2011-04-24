@@ -6,6 +6,13 @@
 #include <QVariant>
 #include <QSqlError>
 
+/* FIXME: Hochkommata problem beim insert und in select ... where statements
+ *
+ *
+ * */
+
+
+
 CDatabaseConnector::CDatabaseConnector(QObject *parent) :
     QObject(parent),
     m_createScriptFileName ("createDB.sql"),
@@ -50,6 +57,7 @@ CDatabaseConnector::~CDatabaseConnector() {
 
 }
 
+// FIXME: artist könnte hochkommata enthalten (Guns 'n' roses)
 int CDatabaseConnector::getArtistID (const QString & artist)  {
     QSqlQuery q (this -> m_database);
     int artistID = -1;
@@ -64,6 +72,7 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
     return artistID;
 }
 
+// FIXME: artist könnte hochkommata enthalten (Guns 'n' roses)
 int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
     QSqlQuery q (this -> m_database);
     q.prepare("INSERT INTO artists (name) values (?);");
@@ -75,6 +84,7 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
     return this -> getArtistID (artist);
 }
 
+// FIXME: album könnte hochkommata enthalten (sackcloth 'n' Ashes)
 int CDatabaseConnector::getAlbumID (const QString & album)  {
     QSqlQuery q (this -> m_database);
     int albumID = -1;
@@ -88,6 +98,7 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
     return albumID;
 }
 
+// FIXME: album könnte hochkommata enthalten (sackcloth 'n' Ashes)
 int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
     QSqlQuery q (this -> m_database);
     q.prepare("INSERT INTO albums (name) values (?);");
@@ -98,11 +109,17 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
     return this -> getAlbumID (album);
 }
 
+
+// FIXME: was ist, wenn hier eine variable hochkommata aufweist? Bitte in den Variablen ' durch '' ersetzen
 int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
-    QSqlQuery q (this -> m_database);
+
+
+
+	QSqlQuery q (this -> m_database);
     q.prepare("insert into Tracks (filename,albumID,artistID,title,year,length) values (:filename,:albumID,:artistID,:title,:year,:length)");
     q.bindValue(":filename",QVariant(data.filepath));
     q.bindValue(":albumID",QVariant(albumID));
+    q.bindValue(":artistID",QVariant(artistID));
     q.bindValue(":length",QVariant(data.length_ms));
     q.bindValue(":year",QVariant(data.year));
     q.bindValue(":title",QVariant(data.title));
@@ -140,7 +157,10 @@ QString CDatabaseConnector::getArtistName (const int & id) {
 }
 
 
-
+// TODO: (Prio mittel) noch eine Funktion, in der nur alle tracks eines vectors von artists ausgegeben werden
+// TODO: (Prio mittel) noch eine Funktion, in der nur alle tracks eines vectors von alben ausgegeben werden
+// TODO: (Prio niedrig) noch eine Funktion, in der nur alle tracks ausgegeben werden, auf die ein suchstring passt (suchstring könnte für album, artist und track gelten)
+// FIXME: return fehlt
 int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndata) {
     if (!this -> m_database.isOpen())
         this -> m_database.open();
@@ -192,21 +212,25 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
         foreach (MetaData data, in) {
             //first check if we know the artist and its id
 
-            artistID = this -> getArtistID(data.artist);
+        	// TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
+        	QString tmpArtist = data.artist.replace("'", "''");
+            artistID = this -> getArtistID(tmpArtist);
             if (artistID == -1) {
-                artistID = insertArtistIntoDatabase(data.artist);
+                artistID = insertArtistIntoDatabase(tmpArtist);
             }
-            albumID = this -> getAlbumID(data.album);
+
+            // TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
+            QString tmpAlbum = data.album.replace("'", "''");
+            albumID = this -> getAlbumID(tmpAlbum);
             if (albumID == -1) {
-                albumID = insertAlbumIntoDatabase( data.album);
+                albumID = insertAlbumIntoDatabase( tmpAlbum);
             }
 
             this -> insertTrackIntoDatabase (data,artistID,albumID);
 
 
 
-
-//            data.
+            //            data.
 
 
 

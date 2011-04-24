@@ -69,6 +69,7 @@ public:
 	public slots:
 
 		void createPlaylist(QStringList&);
+		void createPlaylist(vector<MetaData>&);
 		void change_track(int);
 		void next_track();
 		void playlist_mode_changed(const Playlist_Mode&);
@@ -85,8 +86,6 @@ public:
 
 	vector<MetaData>	_v_meta_data;
 	QStringList			_pathlist;
-	uint				_todo;
-	int					_cur_id3_idx;
 	int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;
