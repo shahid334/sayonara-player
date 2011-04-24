@@ -10,7 +10,14 @@
 
 #include <QObject>
 #include <QWidget>
+
 #include <ui_GUI_Library_windowed.h>
+#include <GUI/Library/LibraryItemModelTracks.h>
+#include <HelperStructs/MetaData.h>
+
+#include <vector>
+
+using namespace std;
 
 
 
@@ -24,7 +31,10 @@ public:
 
 private:
 	Ui::Library_windowed* ui;
+	LibraryItemModelTracks* _model;
 
+	public slots:
+	void fill_library_tracks(vector<MetaData>&);
 };
 
 #endif /* GUI_LIBRARY_WINDOWED_H_ */

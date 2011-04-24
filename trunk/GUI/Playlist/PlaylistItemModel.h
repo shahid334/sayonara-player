@@ -24,6 +24,7 @@ class PlaylistItemModel : public QAbstractListModel {
 	Q_OBJECT
 public:
 	PlaylistItemModel(QObject* parent = 0);
+
 	virtual ~PlaylistItemModel();
 
 	int rowCount(const QModelIndex &parent) const;
