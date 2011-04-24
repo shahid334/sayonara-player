@@ -9,6 +9,8 @@
 #include "GUI/Library/LibraryItemModelTracks.h"
 #include "ui_GUI_Library_windowed.h"
 #include <QDebug>
+#include <QPoint>
+#include <QMouseEvent>
 #include <vector>
 #include <HelperStructs/Helper.h>
 #include <HelperStructs/MetaData.h>
@@ -21,6 +23,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->_model = new LibraryItemModelTracks();
 	this->ui->tb_title->setModel(this->_model);
+	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 
 }
 
@@ -54,10 +57,77 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 		list.push_back(QString::number(md.year));
 
 		this->_model->setData(idx, list, Qt::EditRole);
+	}
 
+
+}
+
+
+void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
+		QSize tmpSize = this->ui->tb_title->size();
+		int width = tmpSize.width();
+		if(width > 700){
+			this->ui->tb_title->setColumnWidth(0, width * 0.35);
+			this->ui->tb_title->setColumnWidth(1, width * 0.23);
+			this->ui->tb_title->setColumnWidth(2, width * 0.23);
+			this->ui->tb_title->setColumnWidth(3, width * 0.08);
+			this->ui->tb_title->setColumnWidth(4, width * 0.08);
+			this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+		}
+
+		else {
+			this->ui->tb_title->setColumnWidth(0, width * 0.5);
+			this->ui->tb_title->setColumnWidth(1, width * 0.25);
+			this->ui->tb_title->setColumnWidth(2, width * 0.25);
+			this->ui->tb_title->setColumnWidth(3, 80);
+			this->ui->tb_title->setColumnWidth(4, 80);
+			this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
+
+		}
+
+}
+
+
+
+
+void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
+
+	qDebug() << "Mouse pressed at " << idx.row();
+	QDrag* drag = new QDrag(this);
+	QMimeData* mime = new QMimeData();
+
+	QModelIndexList list = this->ui->tb_title->selectionModel()->selectedRows(0);
+	qDebug() << list.size() << " items selcted";
+
+	QString title;
+	QString artist;
+	QString album;
+	QString length;
+
+	for(int i=0; i<list.size(); i++){
+		int row = list.at(i).row();
+
+
+
+		title += this->_model->data(_model->index(row, 0), Qt::DisplayRole).toString() + "\n";
+		artist += this->_model->data(_model->index(row, 1), Qt::DisplayRole).toString() + "\n";
+		album += this->_model->data(_model->index(row, 2), Qt::DisplayRole).toString() + "\n";
+		length += this->_model->data(_model->index(row, 3), Qt::DisplayRole).toString() + "\n";
 
 
 	}
 
+
+
+
+	mime->setProperty("title", title);
+	mime->setProperty("artist", artist);
+	mime->setProperty("album", album);
+	mime->setProperty("length", length);
+
+	drag->setMimeData(mime);
+
+	Qt::DropAction dropAction = drag->exec();
 
 }

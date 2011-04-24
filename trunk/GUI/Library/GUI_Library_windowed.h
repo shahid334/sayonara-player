@@ -10,6 +10,7 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QAbstractTableModel>
 
 #include <ui_GUI_Library_windowed.h>
 #include <GUI/Library/LibraryItemModelTracks.h>
@@ -35,6 +36,13 @@ private:
 
 	public slots:
 	void fill_library_tracks(vector<MetaData>&);
+
+	protected:
+		void resizeEvent(QResizeEvent* e);
+
+	private slots:
+		void track_pressed(const QModelIndex&);
+
 };
 
 #endif /* GUI_LIBRARY_WINDOWED_H_ */

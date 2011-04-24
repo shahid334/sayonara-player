@@ -9,6 +9,7 @@
 #include "HelperStructs/MetaData.h"
 
 #include <QList>
+#include <QDebug>
 
 
 using namespace std;
@@ -98,4 +99,6 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
 	 return true;
 
 }
+
+
 

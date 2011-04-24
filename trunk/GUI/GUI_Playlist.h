@@ -30,6 +30,9 @@
 			GUI_Playlist(QWidget *parent = 0);
 			~GUI_Playlist();
 
+			void dragEnterEvent(QDragEnterEvent* event);
+			void dropEvent(QDropEvent* event);
+
 		signals:
 			void selected_row_changed(int);
 			void clear_playlist();

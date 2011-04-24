@@ -18,7 +18,12 @@
 using namespace std;
 
 LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
-	// TODO Auto-generated constructor stub
+
+	_headerdata.push_back("Title");
+	_headerdata.push_back("Artist");
+	_headerdata.push_back("Album");
+	_headerdata.push_back("Year");
+	_headerdata.push_back("Length");
 
 }
 
@@ -95,7 +100,7 @@ Qt::ItemFlags LibraryItemModelTracks::flags(const QModelIndex &index = QModelInd
 
 bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole){
 
-	 qDebug() << "setting up data, " << "index valid? " << index.isValid() << ", index.row() = " << index.row();
+
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
@@ -140,3 +145,25 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 
 }
 
+
+QVariant LibraryItemModelTracks::headerData ( int section, Qt::Orientation orientation, int role ) const{
+
+	 if (role != Qt::DisplayRole)
+	         return QVariant();
+
+	 if (orientation == Qt::Horizontal) {
+		 switch (section) {
+			 case 0: return tr("Title");
+
+			 case 1: return tr("Artist");
+			 case 2: return tr("Album");
+			 case 3: return tr("Length");
+			 case 4: return tr("Year");
+
+			 default:
+				 return QVariant();
+		 }
+	 }
+	 return QVariant();
+
+}

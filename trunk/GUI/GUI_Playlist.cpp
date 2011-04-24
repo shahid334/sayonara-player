@@ -52,6 +52,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(current_row_changed(const QModelIndex &)));
 
+	this->setAcceptDrops(true);
 	_parent = parent;
 
 }
@@ -188,6 +189,7 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 
 void GUI_Playlist::current_row_changed(int new_row){
 
+	qDebug() << "Current row changed";
 	//cout << "GUI: Current row changed to " << new_row << endl;
 	/*for(int i=0; i<this->ui->_filelist->count(); i++){
 			this->ui->_filelist->item(i)->setBackgroundColor(QColor::fromRgb(255, 255, 255));
@@ -200,6 +202,8 @@ void GUI_Playlist::current_row_changed(int new_row){
 
 
 void GUI_Playlist::track_changed(int new_row){
+
+	qDebug() << "track changed";
 
 	if(new_row < 0) return;
 
@@ -262,5 +266,64 @@ void GUI_Playlist::initGUI(){
 	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
 	this->ui->btn_save_playlist->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+
+}
+
+
+void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
+
+	qDebug() << "Drag enter event";
+	event->acceptProposedAction();
+
+
+}
+
+
+void GUI_Playlist::dropEvent(QDropEvent* event){
+
+	QPoint pos = event->pos();
+	QModelIndex idx = this->ui->listView->indexAt(pos);
+	int row = idx.row();
+
+	qDebug() << "Drop event";
+	QString text = event->mimeData()->text();
+
+	qDebug() << "row = " << row;
+
+
+	QStringList title_list = event->mimeData()->property("title").toString().split("\n");
+	QStringList artist_list = event->mimeData()->property("artist").toString().split("\n");
+	QStringList album_list = event->mimeData()->property("album").toString().split("\n");
+	QStringList length_list = event->mimeData()->property("length").toString().split("\n");
+
+	if(title_list.size() != artist_list.size() || title_list.size() != album_list.size() || title_list.size() != length_list.size()) return;
+
+
+
+
+
+	qDebug() << title_list.size()-1 << " inserted";
+
+	if(row < 0) row = 0;
+	if(row > 0) row--;
+	_pli_model->insertRows(row, title_list.size()-1);
+
+	for(int i=0; i<title_list.size()-1; i++){
+
+		QString str4Playlist = 	artist_list.at(i) + ",\n" +
+			"[" + album_list.at(i) + "]" + ",\n" +
+			title_list.at(i) + 			",\n" +
+			length_list.at(i) + ",\n" +
+			"0";
+
+		qDebug() << "insert " << str4Playlist;
+
+
+		this->_pli_model->setData(this->_pli_model->index(row+i,0), str4Playlist, Qt::EditRole);
+
+
+
+	}
+
 
 }

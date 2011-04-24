@@ -37,6 +37,7 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index);
 	bool removeRows(int position, int rows, const QModelIndex &index);
 
+
 private:
 	QStringList		_labellist;
 

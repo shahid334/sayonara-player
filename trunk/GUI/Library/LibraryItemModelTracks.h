@@ -38,9 +38,13 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
+	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+
+
 
 private:
 	QList<QStringList>		_tracklist;
+	QStringList				_headerdata;
 };
 
 #endif /* LIBRARYITEMMODELTRACKS_H_ */
