@@ -20,7 +20,7 @@
 --> Ist geplant
 
 
--       Neues Einlesen des in den Einstellungen festgelegten Ordners mit vlt Key="Music_Library_Directory", value="/home/luke/Sound"
+-       Neues Einlesen des in den Einstellungen festgelegten Ordners mit vlt Key="Music_Library_Directory", value="/home/****/Sound"
 
                 bool loadLibrary(string dir_name);
 --> Ist geplant
@@ -30,7 +30,7 @@
 --> geplant
 
 -       LastFM Einstellungen sollen in die Daba, vlt in eine Tabelle Preferences, die zwei Spalten hat: Key, value
-        z.b.    insert into preferences VALUES 'Last_FM_Username', 'LucioCarreras'
+        z.b.    insert into preferences VALUES 'Last_FM_Username', 'Myname'
                         insert into preferences VALUES 'Last_FM_Password', '234b234d234c422dca76e2435364'
 
 --> Ist geplant 
