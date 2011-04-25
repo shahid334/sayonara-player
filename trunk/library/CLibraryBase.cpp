@@ -19,7 +19,7 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 }
 
-void CLibraryBase::slotMetaDataLoaded(vector<MetaData>& in) {
+void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& in) {
     m_database.storeMetadata(in);
 }
 

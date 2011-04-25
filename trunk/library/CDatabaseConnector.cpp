@@ -5,16 +5,17 @@
 #include <stdlib.h>
 #include <QVariant>
 #include <QSqlError>
+#include <CSettingsStorage.h>
 
 CDatabaseConnector::CDatabaseConnector(QObject *parent) :
     QObject(parent),
     m_createScriptFileName ("createDB.sql"),
-    m_databaseContainerFile ("player.db")
+    m_databaseContainerFile (CSettingsStorage::getInstance()->getDBFileName())
 {
+
     if (this -> isExistent()==false) {
         qDebug() << "Database not existent";
     }
-
 }
 
 bool CDatabaseConnector::isExistent() {
@@ -47,7 +48,10 @@ bool CDatabaseConnector::openDatabase () {
 }
 
 CDatabaseConnector::~CDatabaseConnector() {
-
+    this -> storeSettingsFromStorage();
+    if (this -> m_database.isOpen()) {
+        this -> m_database.close();
+    }
 }
 
 // FIXME: artist könnte hochkommata enthalten (Guns 'n' roses)
@@ -204,8 +208,8 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
     if (!this -> m_database.isOpen())
         this -> m_database.open();
     int artistID = -1, albumID = -1;
-    try {
-        foreach (MetaData data, in) {
+    foreach (MetaData data, in) {
+        try {
             //first check if we know the artist and its id
 
             // TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
@@ -223,6 +227,35 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
             }
             this -> insertTrackIntoDatabase (data,artistID,albumID);
         }
+        catch (QString ex) {
+            qDebug() << "Error during inserting of metadata into database";
+            qDebug() << ex;
+            QSqlError er = this -> m_database.lastError();
+            qDebug() << er.driverText();
+            qDebug() << er.databaseText();
+            qDebug() << er.databaseText();
+        }
+    }
+    return true;
+}
+
+
+
+void CDatabaseConnector::fillSettingsStorage () {
+    if (!this -> m_database.isOpen())
+        this -> m_database.open();
+    QString username, password;
+    try {
+        QSqlQuery q (this -> m_database);
+        q.prepare("select lastFMUserName,lastFMPassword from settings");
+        if (!q.exec()) {
+            throw QString ("SQL - Error: fillSettingsStorage");
+        }
+        if (q.next()) {
+            username = q.value(0).toString();
+            password = q.value(1).toString();
+            CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
+        }
     }
     catch (QString ex) {
         qDebug() << "Error during inserting of metadata into database";
@@ -232,6 +265,39 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
         qDebug() << er.databaseText();
         qDebug() << er.databaseText();
     }
-    return true;
 }
 
+
+void CDatabaseConnector::storeSettingsFromStorage () {
+    if (!this -> m_database.isOpen())
+        this -> m_database.open();
+    try {
+        QString username, password;
+        CSettingsStorage::getInstance()->getLastFMNameAndPW(username,password);
+        QSqlQuery q (this -> m_database);
+        q.prepare("select lastFMUserName,lastFMPassword from settings");
+        if (!q.exec()) {
+            throw QString ("SQL - Error: storeSettingsFromStorage");
+        }
+        if (!q.next()) {
+            q.prepare("insert into settings (lastFMUserName,lastFMPassword) values ('dummy','dummy');");
+            if (!q.exec()) {
+                throw QString ("SQL - Error: storeSettingsFromStorage");
+            }
+        }
+        q.prepare("UPDATE settings set lastFMUserName = ?, lastFMPassword = ? where rowid == 1;");
+        q.addBindValue(QVariant(username));
+        q.addBindValue(QVariant(password));
+        if (!q.exec()) {
+            throw QString ("SQL - Error: storeSettingsFromStorage");
+        }
+    }
+    catch (QString ex) {
+        qDebug() << "Error during inserting of metadata into database";
+        qDebug() << ex;
+        QSqlError er = this -> m_database.lastError();
+        qDebug() << er.driverText();
+        qDebug() << er.databaseText();
+        qDebug() << er.databaseText();
+    }
+}

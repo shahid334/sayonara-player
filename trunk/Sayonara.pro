@@ -30,7 +30,8 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/Playlist/PlaylistItemDelegate.h \
     GUI/Playlist/GUI_PlaylistEntry.h \
     HelperStructs/id3.h \
-    LastFM/LastFM.h 
+    HelperStructs/CSettingsStorage.h \
+    LastFM/LastFM.h
     
 
 SOURCES += Main.cpp MP3_Listen/MP3_Listen.cpp \
@@ -49,7 +50,8 @@ SOURCES += Main.cpp MP3_Listen/MP3_Listen.cpp \
     GUI/Playlist/PlaylistItemDelegate.cpp \
     GUI/Playlist/GUI_PlaylistEntry.cpp \
     HelperStructs/id3.cpp \
-    LastFM/LastFM.cpp
+    LastFM/LastFM.cpp \
+    HelperStructs/CSettingsStorage.cpp
    
 
 FORMS += \
@@ -91,4 +93,3 @@ images.files += GUI/icons/vol_mute.png
 images.files += GUI/icons/gui.jpg
 images.files += GUI/icons/lastfm_logo.jpg
 INSTALLS += images
-

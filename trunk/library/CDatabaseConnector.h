@@ -23,6 +23,16 @@ public:
     bool openDatabase ();
 
 
+    /**
+      *Stores all settings inside Settings Singleton. The Settings Container will be fetched from singleton
+      */
+    void storeSettingsFromStorage ();
+
+    /**
+      * Stores all settings from inside db into singleton
+      */
+    void fillSettingsStorage ();
+
 
 
     /**

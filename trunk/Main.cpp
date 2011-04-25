@@ -29,6 +29,7 @@
 #include <vector>
 
 #include <iostream>
+#include <CSettingsStorage.h>
 
 
 
@@ -38,11 +39,14 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-		CoverLookup cover;
 
-		QApplication app (argc, argv);
-		app.setApplicationName("Sayonara");
-		app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
+    CSettingsStorage * set = CSettingsStorage::getInstance();
+    set  -> runFirstTime(false);
+        CoverLookup cover;
+
+        QApplication app (argc, argv);
+        app.setApplicationName("Sayonara");
+        app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
         GUI_SimplePlayer 	player;
         GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
@@ -90,7 +94,7 @@ int main(int argc, char *argv[]){
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
-        app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 		SLOT(slotMetaDataLoaded(vector<MetaData>&)));
+        app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 		SLOT(insertMetaDataIntoDB(vector<MetaData>&)));
         app.connect (&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 	&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
 
 

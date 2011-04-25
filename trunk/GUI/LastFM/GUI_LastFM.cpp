@@ -14,6 +14,9 @@
 #include <QCryptographicHash>
 
 #include <iostream>
+#include <CSettingsStorage.h>
+
+
 using namespace std;
 
 
@@ -67,10 +70,8 @@ void GUI_LastFM::save_button_pressed(){
 	c_buffer[32] = '\0';
 
 	emit new_lfm_credentials(this->ui->tf_username->text(), QString(c_buffer));
-
+        CSettingsStorage::getInstance()->setLastFMNameAndPW(this->ui->tf_username->text(),QString(c_buffer));
 	this->close();
-
-
 }
 void GUI_LastFM::show_win(){
 

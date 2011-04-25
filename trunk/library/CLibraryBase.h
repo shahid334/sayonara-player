@@ -19,7 +19,7 @@ signals:
 
 public slots:
     void baseDirSelected (const QString & baseDir);
-    void slotMetaDataLoaded(vector<MetaData>& in);
+    void insertMetaDataIntoDB(vector<MetaData>& in);
 
 private:
     CDirectoryReader m_reader;
