@@ -19,6 +19,8 @@ using namespace std;
 
 LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
 
+	Q_UNUSED(parent);
+
 	_headerdata.push_back("Title");
 	_headerdata.push_back("Artist");
 	_headerdata.push_back("Album");
@@ -29,7 +31,7 @@ LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
 
 LibraryItemModelTracks::LibraryItemModelTracks(const vector<MetaData>& v_metadata){
 
-	for( int i=0; i<v_metadata.size(); i++){
+	for( uint i=0; i<v_metadata.size(); i++){
 
 		MetaData md = v_metadata.at(i);
 
@@ -58,10 +60,14 @@ LibraryItemModelTracks::~LibraryItemModelTracks() {
 
 
 int LibraryItemModelTracks::rowCount(const QModelIndex &parent) const{
+
+	Q_UNUSED(parent);
 	return _tracklist.size();
 }
 
 int LibraryItemModelTracks::columnCount(const QModelIndex& parent) const{
+
+	Q_UNUSED(parent);
 
 	return 5;
 
@@ -119,6 +125,8 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 
 bool LibraryItemModelTracks::insertRows(int position, int rows, const QModelIndex &index){
 
+	Q_UNUSED(index);
+
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	 for (int row = 0; row < rows; ++row) {
@@ -133,6 +141,8 @@ bool LibraryItemModelTracks::insertRows(int position, int rows, const QModelInde
 }
 
 bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelIndex &index){
+
+	Q_UNUSED(index);
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 

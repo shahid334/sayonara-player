@@ -24,6 +24,7 @@ PlaylistItemModel::~PlaylistItemModel() {
 
 
 int PlaylistItemModel::rowCount(const QModelIndex &parent = QModelIndex()) const{
+	Q_UNUSED(parent);
 	return _labellist.size();
 }
 
@@ -76,6 +77,8 @@ bool PlaylistItemModel::setData(const QModelIndex &index, const QVariant &value,
 
 bool PlaylistItemModel::insertRows(int position, int rows, const QModelIndex &index){
 
+	Q_UNUSED(index);
+
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	 for (int row = 0; row < rows; ++row) {
@@ -88,6 +91,8 @@ bool PlaylistItemModel::insertRows(int position, int rows, const QModelIndex &in
 }
 
 bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &index){
+
+	Q_UNUSED(index);
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 

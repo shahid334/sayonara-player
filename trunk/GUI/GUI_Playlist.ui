@@ -123,14 +123,14 @@
            <widget class="QPushButton" name="btn_clear">
             <property name="minimumSize">
              <size>
-              <width>0</width>
-              <height>30</height>
+              <width>24</width>
+              <height>24</height>
              </size>
             </property>
             <property name="maximumSize">
              <size>
-              <width>30</width>
-              <height>30</height>
+              <width>26</width>
+              <height>26</height>
              </size>
             </property>
             <property name="toolTip">
@@ -143,8 +143,14 @@
              <iconset>
               <normaloff>icons/broom.png</normaloff>icons/broom.png</iconset>
             </property>
+            <property name="iconSize">
+             <size>
+              <width>24</width>
+              <height>24</height>
+             </size>
+            </property>
             <property name="flat">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -152,7 +158,7 @@
            <widget class="QPushButton" name="btn_save_playlist">
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>30</width>
               <height>30</height>
              </size>
             </property>
@@ -172,31 +178,52 @@
              <iconset>
               <normaloff>icons/save.png</normaloff>icons/save.png</iconset>
             </property>
+            <property name="iconSize">
+             <size>
+              <width>24</width>
+              <height>24</height>
+             </size>
+            </property>
             <property name="flat">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
            </widget>
           </item>
          </layout>
         </item>
-        <item row="0" column="5">
+        <item row="0" column="1" colspan="2">
+         <widget class="QLabel" name="lab_totalTime">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>25</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>1000</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Total Time: 0m 0s</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <property name="spacing">
            <number>0</number>
           </property>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
           <item>
            <widget class="QPushButton" name="btn_rep1">
             <property name="minimumSize">
@@ -361,28 +388,22 @@
             </property>
            </widget>
           </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </item>
-        <item row="0" column="1" colspan="2">
-         <widget class="QLabel" name="lab_totalTime">
-          <property name="maximumSize">
-           <size>
-            <width>1000</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Total Time: 0m 0s</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
+        <item row="0" column="5">
          <widget class="QProgressBar" name="pl_progress_bar">
           <property name="maximumSize">
            <size>

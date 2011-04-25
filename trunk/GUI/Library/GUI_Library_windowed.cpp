@@ -26,6 +26,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->ui->gridLayout->setRowStretch(1, 2);
 	this->ui->gridLayout->setRowStretch(2, 3);
+
 	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 
 }
@@ -36,6 +37,10 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 
 
 void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
+
+	_v_metadata.clear();
+	_v_metadata = v_metadata;
+
 	this->_model->removeRows(0, this->_model->rowCount());
 	this->_model->insertRows(0, v_metadata.size());
 
@@ -67,27 +72,30 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 
 
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
-		QSize tmpSize = this->ui->tb_title->size();
-		int width = tmpSize.width();
-		if(width > 700){
-			this->ui->tb_title->setColumnWidth(0, width * 0.35);
-			this->ui->tb_title->setColumnWidth(1, width * 0.23);
-			this->ui->tb_title->setColumnWidth(2, width * 0.23);
-			this->ui->tb_title->setColumnWidth(3, width * 0.08);
-			this->ui->tb_title->setColumnWidth(4, width * 0.08);
-			this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-		}
 
-		else {
-			this->ui->tb_title->setColumnWidth(0, width * 0.5);
-			this->ui->tb_title->setColumnWidth(1, width * 0.25);
-			this->ui->tb_title->setColumnWidth(2, width * 0.25);
-			this->ui->tb_title->setColumnWidth(3, 80);
-			this->ui->tb_title->setColumnWidth(4, 80);
-			this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	Q_UNUSED(e);
+
+	QSize tmpSize = this->ui->tb_title->size();
+	int width = tmpSize.width();
+	if(width > 550){
+		this->ui->tb_title->setColumnWidth(0, width * 0.35);
+		this->ui->tb_title->setColumnWidth(1, width * 0.23);
+		this->ui->tb_title->setColumnWidth(2, width * 0.23);
+		this->ui->tb_title->setColumnWidth(3, width * 0.08);
+		this->ui->tb_title->setColumnWidth(4, width * 0.08);
+		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	}
+
+	else {
+		this->ui->tb_title->setColumnWidth(0, width * 0.4);
+		this->ui->tb_title->setColumnWidth(1, width * 0.3);
+		this->ui->tb_title->setColumnWidth(2, width * 0.3);
+		this->ui->tb_title->setColumnWidth(3, 80);
+		this->ui->tb_title->setColumnWidth(4, 80);
+		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
 
-		}
+	}
 
 }
 
@@ -96,41 +104,24 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
-	qDebug() << "Mouse pressed at " << idx.row();
 	QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
-	QModelIndexList list = this->ui->tb_title->selectionModel()->selectedRows(0);
-	qDebug() << list.size() << " items selcted";
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
 
-	QString title;
-	QString artist;
-	QString album;
-	QString length;
+	QList<QVariant> list2send;
 
-	for(int i=0; i<list.size(); i++){
-		int row = list.at(i).row();
+	for(int i=0; i<idx_list.size(); i++){
+		int row = idx_list.at(i).row();
 
-
-
-		title += this->_model->data(_model->index(row, 0), Qt::DisplayRole).toString() + "\n";
-		artist += this->_model->data(_model->index(row, 1), Qt::DisplayRole).toString() + "\n";
-		album += this->_model->data(_model->index(row, 2), Qt::DisplayRole).toString() + "\n";
-		length += this->_model->data(_model->index(row, 3), Qt::DisplayRole).toString() + "\n";
-
-
+		QStringList metadata = _v_metadata.at(row).toStringList();
+		list2send.push_back(metadata);
 	}
 
-
-
-
-	mime->setProperty("title", title);
-	mime->setProperty("artist", artist);
-	mime->setProperty("album", album);
-	mime->setProperty("length", length);
-
+	mime->setProperty("data", (QVariant) list2send);
 	drag->setMimeData(mime);
 
 	Qt::DropAction dropAction = drag->exec();
+	Q_UNUSED(dropAction);
 
 }

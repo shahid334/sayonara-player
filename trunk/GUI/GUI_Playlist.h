@@ -38,6 +38,7 @@
 			void clear_playlist();
 			void save_playlist(const QString&);
 			void playlist_mode_changed(const Playlist_Mode&);
+			void dropped_tracks(const vector<MetaData>&, int);
 
 
 		public slots:
@@ -66,7 +67,9 @@
 			QAbstractItemDelegate* 	_pli_delegate;
 
 			QWidget*				_parent;
+			qint64 					_total_secs;
 			void initGUI();
+			void set_total_time_label();
 	};
 
 

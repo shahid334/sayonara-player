@@ -101,7 +101,8 @@ QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {
 
-
+	Q_UNUSED(option);
+	Q_UNUSED(index);
 	return QSize(600, 33);
 }
 
@@ -112,7 +113,9 @@ QWidget *PlaylistItemDelegate::createEditor(QWidget *parent,
                                     const QModelIndex &index) const
 
 {
-	//return new GUI_PlaylistEntry(parent);
+	Q_UNUSED(parent);
+	Q_UNUSED(option);
+	Q_UNUSED(index);
 
 	return 0;
 }
@@ -121,24 +124,16 @@ QWidget *PlaylistItemDelegate::createEditor(QWidget *parent,
 void PlaylistItemDelegate::setEditorData(QWidget *editor,
                                  const QModelIndex &index) const
 {
-	/*GUI_PlaylistEntry* entry = static_cast<GUI_PlaylistEntry*>(editor);
-	QString data = index.model()->data(index, Qt::WhatsThisRole).toString();
-
-	QStringList strList = data.split("#+,");
-
-	entry->setArtist(strList.at(0));
-	entry->setAlbum(strList.at(1));
-	entry->setTitle(strList.at(2));
-	entry->setTime(strList.at(3));
-
-	entry->setStyleSheet("background-color: #C0C0C0;");*/
-
+	Q_UNUSED(editor);
+	Q_UNUSED(index);
 }
 
 void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                                 const QModelIndex &index) const
 {
-
+	Q_UNUSED(editor);
+	Q_UNUSED(index);
+	Q_UNUSED(model);
 }
 
 

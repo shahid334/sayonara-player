@@ -48,6 +48,7 @@ int main(int argc, char *argv[]){
         app.setApplicationName("Sayonara");
         app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
+
         GUI_SimplePlayer 	player;
         GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
@@ -87,6 +88,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 						&playlist, 		SLOT(clear_playlist()));
         app.connect (&ui_playlist, SIGNAL(save_playlist(const QString&)), 			&playlist, 		SLOT(save_playlist(const QString&)));
         app.connect (&ui_playlist, SIGNAL(playlist_mode_changed(const Playlist_Mode&)), 			&playlist, 	SLOT(playlist_mode_changed(const Playlist_Mode&)));
+        app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), &playlist, SLOT(insert_tracks(const vector<MetaData>&, int)));
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
@@ -104,6 +106,7 @@ int main(int argc, char *argv[]){
         library.loadDataFromDb();
         QString user, password;
         set -> getLastFMNameAndPW(user, password);
+
         lastfm.login_slot (user,password);
 
 

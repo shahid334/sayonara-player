@@ -70,7 +70,8 @@ void GUI_SimplePlayer::setVolume(int vol){
 
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
-		this->ui->centralwidget->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
+		//this->ui->centralwidget->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
+		this->ui->centralwidget->setStyleSheet("background-color: rgb(0, 0, 0);\ncolor: rgb(0, 255, 0);");
 		m_skinSuffix = QString("_dark");
 	}
 
@@ -539,6 +540,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
 void GUI_SimplePlayer::lastFMClicked(bool b){
 
+	Q_UNUSED(b);
 	emit setupLastFM();
 
 }

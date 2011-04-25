@@ -59,6 +59,7 @@ void Playlist::createPlaylist(QStringList& pathlist){
 
 void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 	//_pathlist = pathlist;
+
 	_v_meta_data.clear();
 
 	_v_meta_data = v_meta_data;
@@ -66,6 +67,33 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 
 
 }
+
+
+void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
+
+	vector<MetaData> new_vec;
+
+
+	for(int i=0; i<row; i++){
+		new_vec.push_back(_v_meta_data.at(i));
+	}
+
+	for(uint i=0; i<v_metadata.size(); i++){
+		new_vec.push_back(v_metadata.at(i));
+	}
+
+	for(uint i=row; i<_v_meta_data.size(); i++){
+		new_vec.push_back(_v_meta_data.at(i));
+	}
+
+	_v_meta_data.clear();
+	_v_meta_data = new_vec;
+	emit playlist_created(_v_meta_data);
+
+
+}
+
+
 
 
 
@@ -83,7 +111,7 @@ void Playlist::forward(){
 
 	}
 
-	else if(this->_cur_play_idx < _v_meta_data.size() - 1 && _cur_play_idx >= 0){
+	else if(this->_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
 		_cur_play_idx++;
 		emit selected_file_changed(_cur_play_idx);
 		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
@@ -129,7 +157,7 @@ void Playlist::next_track(){
 
 	else if(_playlist_mode.repAll){
 
-		if(_cur_play_idx >= _v_meta_data.size() -1){
+		if(_cur_play_idx >= (int) _v_meta_data.size() -1){
 
 			emit selected_file_changed(0);
 			emit selected_file_changed_md(_v_meta_data[0]);
@@ -146,7 +174,7 @@ void Playlist::next_track(){
 
 	else {
 
-		if(_cur_play_idx >= _v_meta_data.size() -1){
+		if(_cur_play_idx >= (int) _v_meta_data.size() -1){
 			emit no_track_to_play();
 		}
 
@@ -185,7 +213,7 @@ void Playlist::save_playlist(const QString& filename){
 
 	if(file){
 		qint64 lines = 0;
-		for(int i=0; i<_v_meta_data.size(); i++){
+		for(uint i=0; i<_v_meta_data.size(); i++){
 			string str = _v_meta_data.at(i).filepath.toStdString();
 
 			lines += fputs(str.c_str(), file);
@@ -209,6 +237,7 @@ void Playlist::playlist_mode_changed(const Playlist_Mode& playlist_mode){
 	_playlist_mode.print();
 
 }
+
 
 
 

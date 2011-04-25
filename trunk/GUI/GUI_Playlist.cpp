@@ -54,6 +54,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	this->setAcceptDrops(true);
 	_parent = parent;
+	_total_secs = 0;
 
 }
 
@@ -74,10 +75,9 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_pli_model->insertRows(0, v_metadata.size());
-
+	_total_secs = 0;
 	int idx = 0;
 
-	qint64 playlist_time = 0;
 	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
 
 		QModelIndex model_idx = _pli_model->index(idx, 0);
@@ -86,7 +86,9 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 
 		int min, sek;
 		Helper::cvtSecs2MinAndSecs(it->length_ms / 1000, &min, &sek);
-		playlist_time += (min * 60 + sek);
+		_total_secs += (min * 60 + sek);
+
+
 
 
 		QString time_str = Helper::cvtSomething2QString(min, 2) + ":" + Helper::cvtSomething2QString(sek, 2);
@@ -114,23 +116,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 		idx++;
 	}
 
-	int secs, mins, hrs;
-	Helper::cvtSecs2MinAndSecs(playlist_time, &mins, &secs);
-	hrs = mins / 60;
-	mins = mins % 60;
-
-	QString playlist_string = "Total Time: ";
-
-	if(hrs > 0) playlist_string += QString::number(hrs) + "h ";
-
-	playlist_string += 	QString::number(mins) +
-						"m " +
-						QString::number(secs) +
-						"s";
-
-
-
-	this->ui->lab_totalTime->setText(playlist_string);
+	set_total_time_label();
 
 
 
@@ -282,48 +268,49 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
 	QPoint pos = event->pos();
-	QModelIndex idx = this->ui->listView->indexAt(pos);
-	int row = idx.row();
-
-	qDebug() << "Drop event";
-	QString text = event->mimeData()->text();
-
-	qDebug() << "row = " << row;
+	int row = this->ui->listView->indexAt(pos).row();
 
 
-	QStringList title_list = event->mimeData()->property("title").toString().split("\n");
-	QStringList artist_list = event->mimeData()->property("artist").toString().split("\n");
-	QStringList album_list = event->mimeData()->property("album").toString().split("\n");
-	QStringList length_list = event->mimeData()->property("length").toString().split("\n");
-
-	if(title_list.size() != artist_list.size() || title_list.size() != album_list.size() || title_list.size() != length_list.size()) return;
+	QList<QVariant> list = event->mimeData()->property("data").toList();
 
 
+	if(row == -1) row = _pli_model->rowCount();
+	else if(row > 0) row--;
 
+	vector<MetaData> v_md4Playlist;
 
+	for(int i=0; i<list.size(); i++){
 
-	qDebug() << title_list.size()-1 << " inserted";
+		QStringList md_stringlist = list.at(i).toStringList();
 
-	if(row < 0) row = 0;
-	if(row > 0) row--;
-	_pli_model->insertRows(row, title_list.size()-1);
-
-	for(int i=0; i<title_list.size()-1; i++){
-
-		QString str4Playlist = 	artist_list.at(i) + ",\n" +
-			"[" + album_list.at(i) + "]" + ",\n" +
-			title_list.at(i) + 			",\n" +
-			length_list.at(i) + ",\n" +
-			"0";
-
-		qDebug() << "insert " << str4Playlist;
-
-
-		this->_pli_model->setData(this->_pli_model->index(row+i,0), str4Playlist, Qt::EditRole);
-
-
-
+		MetaData md;
+		md.fromStringList(md_stringlist);
+		v_md4Playlist.push_back(md);
 	}
 
+	emit dropped_tracks(v_md4Playlist, row);
+
+}
+
+
+void GUI_Playlist::set_total_time_label(){
+
+	int secs, mins, hrs;
+			Helper::cvtSecs2MinAndSecs(_total_secs, &mins, &secs);
+			hrs = mins / 60;
+			mins = mins % 60;
+
+			QString playlist_string = "Total Time: ";
+
+			if(hrs > 0) playlist_string += QString::number(hrs) + "h ";
+
+			playlist_string += 	QString::fromStdString(Helper::cvtNum2String(mins, 2)) +
+								"m " +
+								QString::fromStdString(Helper::cvtNum2String(secs, 2)) +
+								"s";
+
+
+
+			this->ui->lab_totalTime->setText(playlist_string);
 
 }

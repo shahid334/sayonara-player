@@ -51,7 +51,7 @@ namespace Helper{
 	}
 
 
-	inline void cvtSecs2MinAndSecs(int secs, int* tgt_min, int* tgt_sec)
+	inline void cvtSecs2MinAndSecs(long int secs, int* tgt_min, int* tgt_sec)
 	{
 
 		*tgt_min = secs / 60;
@@ -63,7 +63,7 @@ namespace Helper{
 	inline string replace(string input, string toReplace, string replaceWith){
 
                 unsigned int i=0;
-                int pos = 0;
+                uint pos = 0;
 		while(true){
 
 			pos = input.find_first_of(toReplace.c_str(), i);

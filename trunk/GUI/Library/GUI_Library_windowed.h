@@ -33,6 +33,7 @@ public:
 private:
 	Ui::Library_windowed* ui;
 	LibraryItemModelTracks* _model;
+	vector<MetaData>	_v_metadata;
 
 	public slots:
 	void fill_library_tracks(vector<MetaData>&);
@@ -42,6 +43,9 @@ private:
 
 	private slots:
 		void track_pressed(const QModelIndex&);
+
+
+
 
 };
 
