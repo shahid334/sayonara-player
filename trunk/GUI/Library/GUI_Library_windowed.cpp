@@ -23,6 +23,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->_model = new LibraryItemModelTracks();
 	this->ui->tb_title->setModel(this->_model);
+
+	this->ui->gridLayout->setRowStretch(1, 2);
+	this->ui->gridLayout->setRowStretch(2, 3);
 	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 
 }
