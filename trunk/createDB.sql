@@ -64,6 +64,14 @@ CREATE TABLE Tracks (
   foreign key (artistID) REFERENCES artists (artistID)
 );
 
+
+CREATE TABLE settings (
+   lastFMUserName VARCHAR(1024),
+   lastFMPassword VARCHAR(1024)
+ );
+
+
+
 -- Stored playlists
 CREATE TABLE playlists (
   playlistID INTEGER PRIMARY KEY,
