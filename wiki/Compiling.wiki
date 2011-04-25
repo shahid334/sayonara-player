@@ -6,6 +6,7 @@
   * libcurl http://curl.haxx.se/libcurl/
   * libclastfm http://liblastfm.sourceforge.net/
   * Taglib http://developer.kde.org/~wheeler/taglib.html
+  * Sqlite
 
 
 == Linux ==
@@ -24,6 +25,7 @@ There is a Visual Studio 2008 solution, but not updated every time, so maybe the
   * Taglib:  LIBTAG
   * libcurl: CURL
   * lastfm:  not done yet
+  * sqlite:  not done yet
 
 
 == MAC ==
