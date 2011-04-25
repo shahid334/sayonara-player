@@ -49,9 +49,9 @@ void LastFM::login(QString username, QString password){
         _username = username;
         _logged_in = true;
     }
-    else {
-        CSettingsStorage::getInstance()->setLastFMNameAndPW("","");
-    }
+//    else {
+////        CSettingsStorage::getInstance()->setLastFMNameAndPW("","");
+////    }
 
 
 
