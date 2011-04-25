@@ -61,19 +61,34 @@ void GUI_LastFM::save_button_pressed(){
 	char c_buffer[33];
 	memset(c_buffer, 0, 33);
 
+        QString user, password;
+        CSettingsStorage::getInstance() -> getLastFMNameAndPW(user, password);
 
-	QByteArray password_hashed = QCryptographicHash::hash(this->ui->tf_password->text().toUtf8(), QCryptographicHash::Md5).toHex();
-	for(int i=0; i<password_hashed.length(); i++){
-		c_buffer[i] = password_hashed.at(i);
-	}
+        if (this->ui->tf_password->text() != password){
+            QByteArray password_hashed = QCryptographicHash::hash(this->ui->tf_password->text().toUtf8(), QCryptographicHash::Md5).toHex();
+            for(int i=0; i<password_hashed.length(); i++){
+                    c_buffer[i] = password_hashed.at(i);
+            }
 
-	c_buffer[32] = '\0';
-
-	emit new_lfm_credentials(this->ui->tf_username->text(), QString(c_buffer));
-        CSettingsStorage::getInstance()->setLastFMNameAndPW(this->ui->tf_username->text(),QString(c_buffer));
+            c_buffer[32] = '\0';
+            emit new_lfm_credentials(this->ui->tf_username->text(), QString(c_buffer));
+        }
+        else {
+            emit new_lfm_credentials(this->ui->tf_username->text(), password);
+        }
 	this->close();
 }
 void GUI_LastFM::show_win(){
 
-	this->show();
+    QString user, password;
+    CSettingsStorage::getInstance() -> getLastFMNameAndPW(user, password);
+    if (user.size() > 0) {
+        this->ui->tf_username->setText(user);
+        this->ui->tf_password->setText(password);
+    }
+    else {
+        this->ui->tf_username->setPlaceholderText("Enter Usename");
+        this->ui->tf_password->setPlaceholderText("Enter Password");
+    }
+    this->show();
 }

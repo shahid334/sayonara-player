@@ -102,6 +102,9 @@ int main(int argc, char *argv[]){
 
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
         library.loadDataFromDb();
+        QString user, password;
+        set -> getLastFMNameAndPW(user, password);
+        lastfm.login_slot (user,password);
 
 
         player.setVolume(50);

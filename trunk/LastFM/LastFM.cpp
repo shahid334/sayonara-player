@@ -17,6 +17,7 @@
 #include <ctime>
 #include <QCryptographicHash>
 #include <stdio.h>
+#include <CSettingsStorage.h>
 
 extern "C" {
 	#include "clastfm.h"
@@ -42,11 +43,18 @@ LastFM::~LastFM() {
 
 
 void LastFM::login(QString username, QString password){
+    if (LASTFM_login_MD5(_session, username.toStdString().c_str(), password.toStdString().c_str())==0) {
+        CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
+        _auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
+        _username = username;
+        _logged_in = true;
+    }
+    else {
+        CSettingsStorage::getInstance()->setLastFMNameAndPW("","");
+    }
 
-	LASTFM_login_MD5(_session, username.toStdString().c_str(), password.toStdString().c_str());
-	_auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
-	_username = username;
-	_logged_in = true;
+
+
 
 
 

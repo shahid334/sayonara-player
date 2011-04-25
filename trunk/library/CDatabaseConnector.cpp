@@ -16,6 +16,7 @@ CDatabaseConnector::CDatabaseConnector(QObject *parent) :
     if (this -> isExistent()==false) {
         qDebug() << "Database not existent";
     }
+
 }
 
 bool CDatabaseConnector::isExistent() {
@@ -44,6 +45,10 @@ bool CDatabaseConnector::openDatabase () {
         qDebug() << er.driverText();
         qDebug() << er.databaseText();
     }
+    else {
+        this -> fillSettingsStorage();
+    }
+
     return e;
 }
 
