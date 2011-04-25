@@ -207,6 +207,7 @@ void CoverLookup::search_cover(){
 		cout << "URL: " << url_adress << endl;
 
 		curl_easy_setopt(curl_find_img, CURLOPT_URL, url_adress.c_str());
+		curl_easy_setopt(curl_find_img, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_WRITEFUNCTION, get_content);
 
 		curl_easy_perform(curl_find_img);

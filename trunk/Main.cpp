@@ -72,7 +72,7 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
         app.connect (&player, SIGNAL(wantCover(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
-        app.connect(&player, 	SIGNAL(setupLastFM()), 								&ui_lastfm, 	SLOT(show_win()));
+        app.connect(&player, 	SIGNAL(setupLastFM()), 					&ui_lastfm, 	SLOT(show_win()));
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));

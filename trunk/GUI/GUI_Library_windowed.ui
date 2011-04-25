@@ -6,14 +6,17 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>628</width>
-    <height>483</height>
+    <width>563</width>
+    <height>593</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Library</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <property name="spacing">
@@ -32,7 +35,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="lv_artist"/>
+        <widget class="QListView" name="lv_artist">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>5</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -49,7 +59,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QListView" name="lv_album"/>
+        <widget class="QListView" name="lv_album">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>5</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -60,6 +77,12 @@
        </property>
        <item>
         <widget class="QTableView" name="tb_title">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>10</verstretch>
+          </sizepolicy>
+         </property>
          <property name="font">
           <font>
            <pointsize>8</pointsize>
