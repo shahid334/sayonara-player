@@ -1,5 +1,9 @@
 = How to compile Sayonara =
 
+*Please consider that this player is still in development, Much of the functionality is visible, but maybe not working. The player seems to compile and run on most systems but there were no extended tests*
+
+Please wait until end of June before telling us and the world, that this player isn't running on your system...
+
 == Libraries ==
 
   * Qt: Gui, Core, Phonon, Xml, Sql http://qt.nokia.com/products/
@@ -13,7 +17,9 @@
 
   * qmake
   * make
-  * make install
+  * make install <br>
+
+  * Known issue: After installing the .Sayonara directory in your home folder may only be owned by the root user. Please change the owner manually to your user before starting the player the first time
 
 
 == Windows ==
