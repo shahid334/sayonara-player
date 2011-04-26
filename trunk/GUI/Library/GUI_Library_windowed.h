@@ -14,6 +14,8 @@
 
 #include <ui_GUI_Library_windowed.h>
 #include <GUI/Library/LibraryItemModelTracks.h>
+#include <GUI/Library/LibraryItemModelAlbums.h>
+#include <GUI/Library/LibraryItemModelArtists.h>
 #include <HelperStructs/MetaData.h>
 
 #include <vector>
@@ -32,11 +34,17 @@ public:
 
 private:
 	Ui::Library_windowed* ui;
-	LibraryItemModelTracks* _model;
+	LibraryItemModelTracks* _track_model;
+	LibraryItemModelAlbums* _album_model;
+	LibraryItemModelArtists* _artist_model;
 	vector<MetaData>	_v_metadata;
+	vector<Album>		_v_albums;
+	vector<Artist>		_v_artists;
 
 	public slots:
 	void fill_library_tracks(vector<MetaData>&);
+	void fill_library_albums(vector<Album>&);
+	void fill_library_artists(vector<Artist>&);
 
 	protected:
 		void resizeEvent(QResizeEvent* e);

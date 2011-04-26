@@ -39,6 +39,7 @@
 			void save_playlist(const QString&);
 			void playlist_mode_changed(const Playlist_Mode&);
 			void dropped_tracks(const vector<MetaData>&, int);
+			void playlist_filled(vector<MetaData>&);
 
 
 		public slots:

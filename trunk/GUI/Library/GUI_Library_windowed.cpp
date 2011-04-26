@@ -7,6 +7,8 @@
 
 #include "GUI/Library/GUI_Library_windowed.h"
 #include "GUI/Library/LibraryItemModelTracks.h"
+#include <GUI/Library/LibraryItemModelAlbums.h>
+#include <GUI/Library/LibraryItemModelArtists.h>
 #include "ui_GUI_Library_windowed.h"
 #include <QDebug>
 #include <QPoint>
@@ -21,11 +23,19 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
-	this->_model = new LibraryItemModelTracks();
-	this->ui->tb_title->setModel(this->_model);
+	this->_track_model = new LibraryItemModelTracks();
+	this->_album_model = new LibraryItemModelAlbums();
+	this->_artist_model = new LibraryItemModelArtists();
+
+	this->ui->tb_title->setModel(this->_track_model);
+	this->ui->lv_album->setModel(this->_album_model);
+	this->ui->lv_artist->setModel(this->_artist_model);
 
 	this->ui->gridLayout->setRowStretch(1, 2);
 	this->ui->gridLayout->setRowStretch(2, 3);
+
+	this->ui->lv_album->setAlternatingRowColors(true);
+	this->ui->lv_artist->setAlternatingRowColors(true);
 
 	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 
@@ -41,14 +51,14 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 	_v_metadata.clear();
 	_v_metadata = v_metadata;
 
-	this->_model->removeRows(0, this->_model->rowCount());
-	this->_model->insertRows(0, v_metadata.size());
+	this->_track_model->removeRows(0, this->_track_model->rowCount());
+	this->_track_model->insertRows(0, v_metadata.size());
 
 	qDebug() << "inserted " << v_metadata.size() << " rows";
 
 	for(uint i=0; i<v_metadata.size(); i++){
 
-		QModelIndex idx = _model->index(i, 0);
+		QModelIndex idx = _track_model->index(i, 0);
 
 		MetaData md = v_metadata.at(i);
 
@@ -64,9 +74,68 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 		list.push_back(length);
 		list.push_back(QString::number(md.year));
 
-		this->_model->setData(idx, list, Qt::EditRole);
+		this->_track_model->setData(idx, list, Qt::EditRole);
 	}
 
+
+}
+
+
+void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
+
+	_v_albums.clear();
+	_v_albums = albums;
+
+	this->_album_model->removeRows(0, this->_album_model->rowCount());
+	this->_album_model->insertRows(0, albums.size());
+
+	for(uint i=0; i<albums.size(); i++){
+		QModelIndex idx = this->_album_model->index(i, 0);
+
+		QString albumname = albums.at(i).name;
+		if(albums.at(i).name.isEmpty()) albumname = "<Unknown>";
+
+		QString data = albumname + ", " +
+						QString::number(albums.at(i).num_songs) +
+						" track";
+
+		if(albums.at(i).num_songs != 1) data += "s";
+
+		if(albums.at(i).year != 0) data += " (" + QString::number(albums.at(i).year) + ")";
+		this->_album_model->setData(idx, data, Qt::EditRole );
+	}
+
+}
+
+
+
+
+void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
+
+	qDebug() << "Fill artists" << artists.size();
+
+	_v_artists.clear();
+	_v_artists = artists;
+
+	this->_artist_model->removeRows(0, this->_artist_model->rowCount());
+	this->_artist_model->insertRows(0, artists.size());
+
+	for(uint i=0; i<artists.size(); i++){
+		QModelIndex idx = this->_artist_model->index(i, 0);
+
+		QString artistname = artists.at(i).name;
+		if(artists.at(i).name.isEmpty()) artistname = "<Unknown>";
+
+		QString data = artistname + ", " +
+						QString::number(artists.at(i).num_songs) +
+						" track";
+
+		if(artists.at(i).num_songs != 1) data += "s";
+
+		qDebug() << "artist " << data;
+
+		this->_artist_model->setData(idx, data, Qt::EditRole );
+	}
 
 }
 

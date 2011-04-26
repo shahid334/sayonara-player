@@ -120,6 +120,11 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 
 
 
+	// nur ein test TODO: REMOVE ME
+	emit playlist_filled(v_metadata);
+
+
+
 
 }
 

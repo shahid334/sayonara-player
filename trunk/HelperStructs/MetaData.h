@@ -75,7 +75,23 @@ struct MetaData{
 
 };
 
+struct Artist{
+	QString name;
+	qint32	id;
+	qint32	num_songs;
+	qint32  num_albums;
 
+};
+
+
+struct Album{
+	QString name;
+	qint32	id;
+	qint32 	num_songs;
+	qint32 	length_sec;
+	qint32	year;
+	QStringList artists;
+};
 
 
 #endif /* METADATA_H_ */

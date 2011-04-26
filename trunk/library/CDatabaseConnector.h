@@ -68,6 +68,14 @@ public:
 
     int getTracksFromDatabase (std::vector <MetaData> & returndata);
 
+    void getAllArtists(vector<Artist>&);
+    void getAllAlbums(vector<Album>&);
+
+    void getAllArtistsByAlbum(QString album, vector<Artist>&);
+    void getAllAlbumsByArtist(QString artist, vector<Album>&);
+    void getAllTracksByAlbumAndArtistName(QString album, QString artist, vector<MetaData>&);
+
+
 
 public slots:
     /**

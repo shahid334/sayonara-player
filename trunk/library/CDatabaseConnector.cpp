@@ -213,19 +213,18 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
     if (!this -> m_database.isOpen())
         this -> m_database.open();
     int artistID = -1, albumID = -1;
+
+    m_database.transaction();
     foreach (MetaData data, in) {
-        try {
+
+    	try {
             //first check if we know the artist and its id
 
-            // TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
-//            QString tmpArtist = data.artist.replace("'", "''");
             artistID = this -> getArtistID(data.artist);
             if (artistID == -1) {
                 artistID = insertArtistIntoDatabase(data.artist);
             }
 
-            // TODO: Provisorischer FIX, ist das so in Ordnung? laufen tuts so
-//            QString tmpAlbum = data.album.replace("'", "''");
             albumID = this -> getAlbumID(data.album);
             if (albumID == -1) {
                 albumID = insertAlbumIntoDatabase( data.album);
@@ -240,7 +239,9 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
             qDebug() << er.databaseText();
             qDebug() << er.databaseText();
         }
+
     }
+    m_database.commit();
     return true;
 }
 
@@ -305,4 +306,110 @@ void CDatabaseConnector::storeSettingsFromStorage () {
         qDebug() << er.databaseText();
         qDebug() << er.databaseText();
     }
+}
+
+
+
+
+void CDatabaseConnector::getAllArtists(vector<Artist>& result){
+	 if (!this -> m_database.isOpen())
+				        this -> m_database.open();
+
+		try {
+			QSqlQuery q (this -> m_database);
+			q.prepare(QString("SELECT ") +
+						"artists.artistID, " +
+						"artists.name, " +
+						"count(albums.albumid), " +
+						"count(tracks.trackid) "
+						"FROM Tracks, artists, albums " +
+						"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
+						"GROUP BY artists.artistID, artists.name " +
+						"ORDER BY artists.name;");
+
+			if (!q.exec()) {
+				throw QString ("SQL - Error: Could not get all artists from database");
+			}
+
+			Artist artist;
+			while (q.next()) {
+				artist.id = q.value(0).toInt();
+				artist.name = q.value(1).toString();
+				artist.num_albums = q.value(2).toInt();
+				artist.num_songs = q.value(3).toInt();
+
+				result.push_back(artist);
+			}
+
+
+		}
+		catch (QString ex) {
+			qDebug() << "SQL - Error: getTracksFromDatabase";
+			qDebug() << ex;
+			QSqlError er = this -> m_database.lastError();
+			qDebug() << er.driverText();
+			qDebug() << er.databaseText();
+			qDebug() << er.databaseText();
+		}
+
+}
+
+void CDatabaseConnector::getAllAlbums(vector<Album>& result){
+	 if (!this -> m_database.isOpen())
+			        this -> m_database.open();
+
+	try {
+		QSqlQuery q (this -> m_database);
+		q.prepare(QString("SELECT ") +
+					"albums.albumID, " +
+					"albums.name, " +
+					"SUM(tracks.length) / 1000, " +
+					"count(tracks.trackid), " +
+					"max(tracks.year), " +
+					"group_concat(artists.name) " +
+					"FROM albums, Tracks, artists " +
+					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
+					"GROUP BY albums.albumID, albums.name " +
+					"ORDER BY albums.name;");
+
+		if (!q.exec()) {
+			throw QString ("SQL - Error: Could not get all albums from database");
+		}
+
+		Album album;
+		while (q.next()) {
+			album.id = q.value(0).toInt();
+			album.name = q.value(1).toString();
+			album.length_sec = q.value(2).toInt();
+			album.num_songs = q.value(3).toInt();
+			album.year = q.value(4).toInt();
+			QStringList artistList = q.value(5).toString().split(',');
+			artistList.removeDuplicates();
+			album.artists = artistList;
+
+			result.push_back(album);
+		}
+
+
+	}
+	catch (QString ex) {
+		qDebug() << "SQL - Error: getTracksFromDatabase";
+		qDebug() << ex;
+		QSqlError er = this -> m_database.lastError();
+		qDebug() << er.driverText();
+		qDebug() << er.databaseText();
+		qDebug() << er.databaseText();
+	}
+}
+
+void CDatabaseConnector::getAllArtistsByAlbum(QString album, vector<Artist>&){
+
+}
+
+void CDatabaseConnector::getAllAlbumsByArtist(QString artist, vector<Album>&){
+
+}
+
+void CDatabaseConnector::getAllTracksByAlbumAndArtistName(QString album, QString artist, vector<MetaData>&){
+
 }

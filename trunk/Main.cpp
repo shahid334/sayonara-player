@@ -89,6 +89,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(save_playlist(const QString&)), 			&playlist, 		SLOT(save_playlist(const QString&)));
         app.connect (&ui_playlist, SIGNAL(playlist_mode_changed(const Playlist_Mode&)), 			&playlist, 	SLOT(playlist_mode_changed(const Playlist_Mode&)));
         app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), &playlist, SLOT(insert_tracks(const vector<MetaData>&, int)));
+		//app.connect (&ui_playlist, SIGNAL(playlist_filled(vector<MetaData>&)), 		&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
@@ -96,14 +97,15 @@ int main(int argc, char *argv[]){
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
+        app.connect(&library, 	SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 	&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
+        app.connect(&library,   SIGNAL(allAlbumsLoaded(vector<Album>&)), 			&ui_library, 	SLOT(fill_library_albums(vector<Album>&)));
+        app.connect(&library,   SIGNAL(allArtistsLoaded(vector<Artist>&)), 			&ui_library, 	SLOT(fill_library_artists(vector<Artist>&)));
+
         app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 		SLOT(insertMetaDataIntoDB(vector<MetaData>&)));
-        app.connect (&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 	&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
-
-
-
-
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
+
         library.loadDataFromDb();
+
         QString user, password;
         set -> getLastFMNameAndPW(user, password);
 
