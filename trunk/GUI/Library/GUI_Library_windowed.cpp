@@ -31,8 +31,10 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->lv_album->setModel(this->_album_model);
 	this->ui->lv_artist->setModel(this->_artist_model);
 
-	this->ui->gridLayout->setRowStretch(1, 2);
-	this->ui->gridLayout->setRowStretch(2, 3);
+	this->ui->gridLayout->setRowStretch(0, 0);
+	this->ui->gridLayout->setRowStretch(1, 0);
+	this->ui->gridLayout->setRowStretch(3, 2);
+	this->ui->gridLayout->setRowStretch(4, 3);
 
 	this->ui->lv_album->setAlternatingRowColors(true);
 	this->ui->lv_artist->setAlternatingRowColors(true);

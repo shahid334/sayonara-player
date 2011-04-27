@@ -51,6 +51,7 @@ int main(int argc, char *argv[]){
 
 
         GUI_SimplePlayer 	player;
+        player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
         GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
 

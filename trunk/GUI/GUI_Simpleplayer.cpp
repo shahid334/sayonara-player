@@ -508,19 +508,20 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 
 	QSize tmpSize = this->ui->playlist_widget->size();
 
-	tmpSize.setWidth(328 );
-	tmpSize.setHeight(455);
+	tmpSize.setWidth(317 );
+	tmpSize.setHeight(431);
 
 	this->ui->playlist_widget->resize(tmpSize);
 	this->ui_playlist->resize(tmpSize);
 }
 
 
+
 void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
 
 	ui_library = library;
 	QSize tmpSize = this->size();
-	tmpSize.setWidth(632);
+	tmpSize.setWidth(672);
 	tmpSize.setHeight(611);
 	this->ui->library_widget->resize(tmpSize);
 	this->ui_library->resize(tmpSize);
@@ -532,11 +533,8 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
-	QMainWindow::resizeEvent(e);
-
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
-
 }
 
 

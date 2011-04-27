@@ -41,6 +41,10 @@ PlaylistItemDelegate::~PlaylistItemDelegate() {
 void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
+
+	if(!index.isValid()) return;
+
+
 	QItemDelegate::paint(painter, option, index);
 
 	QRect rect(option.rect);

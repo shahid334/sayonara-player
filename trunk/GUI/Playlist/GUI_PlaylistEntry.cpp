@@ -65,7 +65,7 @@ void GUI_PlaylistEntry::setBackgroundColorNotPlaying(){
 
 void GUI_PlaylistEntry::setWidth(int width){
 
-	this->ui->widget->resize(width, 30);
+	this->resize(width, 30);
 
 
 }
