@@ -49,16 +49,8 @@ void LastFM::login(QString username, QString password){
         _username = username;
         _logged_in = true;
     }
-//    else {
-////        CSettingsStorage::getInstance()->setLastFMNameAndPW("","");
-////    }
 
-
-
-
-
-
-//	qDebug() << "url = " << url;
+    else qDebug() << "Login to LastFM was not successful!";
 
 }
 

@@ -116,6 +116,8 @@ int main(int argc, char *argv[]){
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
         app.connect(&ui_librarySetup, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
         app.connect(&player, SIGNAL(setupLibraryPath()),    						&ui_librarySetup, SLOT(show()));
+        app.connect(&ui_library, SIGNAL(album_chosen_signal(vector<MetaData>&)), &playlist, SLOT(createPlaylist(vector<MetaData>&)));
+        app.connect(&ui_library, SIGNAL(artist_chosen_signal(vector<MetaData>&)), &playlist, SLOT(createPlaylist(vector<MetaData>&)));
 
         library.loadDataFromDb();
 
