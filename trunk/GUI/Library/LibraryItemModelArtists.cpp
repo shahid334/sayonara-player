@@ -86,8 +86,6 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 qDebug() << "replace ";
-
 		 _artist_list.replace(index.row(), value.toString());
 
 	     emit dataChanged(index, index);

@@ -61,7 +61,8 @@ signals:
     void skinChanged(bool);
     void windowResized(const QSize&);
     void setupLastFM();
-
+    void reloadLibrary();
+    void setupLibraryPath();
 
 
 private slots:
@@ -82,6 +83,9 @@ private slots:
 
     void changeSkin(bool);
     void lastFMClicked(bool = true);
+    void reloadLibraryClicked(bool = true);
+
+    void setLibraryPathClicked(bool = true);
 
 protected:
 

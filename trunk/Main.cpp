@@ -12,6 +12,7 @@
 #include "GUI/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/Library/GUI_Library_windowed.h"
+#include "GUI/Library/LibrarySetupWidget.h"
 #include "Playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
 #include "CoverLookup/CoverLookup.h"
@@ -58,6 +59,7 @@ int main(int argc, char *argv[]){
         CLibraryBase 		library;
         LastFM				lastfm;
         GUI_LastFM			ui_lastfm;
+        LibrarySetupWidget	ui_librarySetup;
 
 
 
@@ -73,7 +75,8 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
         app.connect (&player, SIGNAL(wantCover(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
-        app.connect(&player, 	SIGNAL(setupLastFM()), 					&ui_lastfm, 	SLOT(show_win()));
+        app.connect (&player, SIGNAL(setupLastFM()), 					&ui_lastfm, SLOT(show_win()));
+        app.connect (&player,SIGNAL(reloadLibrary()), 					&library, 	SLOT(reloadLibrary()));
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
@@ -83,13 +86,14 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&)));
         app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 					&ui_playlist, 	SLOT(update_progress_bar(int)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(update_track(const MetaData&)));
+       // app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 		SLOT(insertMetaDataIntoDB(vector<MetaData>&)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 				&playlist, 		SLOT(change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 						&playlist, 		SLOT(clear_playlist()));
         app.connect (&ui_playlist, SIGNAL(save_playlist(const QString&)), 			&playlist, 		SLOT(save_playlist(const QString&)));
+
         app.connect (&ui_playlist, SIGNAL(playlist_mode_changed(const Playlist_Mode&)), 			&playlist, 	SLOT(playlist_mode_changed(const Playlist_Mode&)));
-        app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), &playlist, SLOT(insert_tracks(const vector<MetaData>&, int)));
-		//app.connect (&ui_playlist, SIGNAL(playlist_filled(vector<MetaData>&)), 		&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
+        app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), 			&playlist, 	SLOT(insert_tracks(const vector<MetaData>&, int)));
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
@@ -98,11 +102,19 @@ int main(int argc, char *argv[]){
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
         app.connect(&library, 	SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 	&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
+        app.connect (&library,  SIGNAL(mp3s_loaded_signal(int)), 					&ui_playlist, 	SLOT(update_progress_bar(int)));
+
+        app.connect(&ui_library, 	SIGNAL(artist_changed_signal(int)), 			&library, 		SLOT(getAlbumsByArtist(int)));
+        app.connect(&ui_library, 	SIGNAL(album_changed_signal(int)), 				&library, 		SLOT(getTracksByAlbum(int)));
+        app.connect(&ui_library, 	SIGNAL(clear_signal()), 						&library, 		SLOT(getAllArtistsAlbumsTracks()));
+
         app.connect(&library,   SIGNAL(allAlbumsLoaded(vector<Album>&)), 			&ui_library, 	SLOT(fill_library_albums(vector<Album>&)));
         app.connect(&library,   SIGNAL(allArtistsLoaded(vector<Artist>&)), 			&ui_library, 	SLOT(fill_library_artists(vector<Artist>&)));
 
-        app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&library, 		SLOT(insertMetaDataIntoDB(vector<MetaData>&)));
+
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
+        app.connect(&ui_librarySetup, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
+        app.connect(&player, SIGNAL(setupLibraryPath()),    						&ui_librarySetup, SLOT(show()));
 
         library.loadDataFromDb();
 

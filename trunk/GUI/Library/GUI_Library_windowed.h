@@ -41,16 +41,27 @@ private:
 	vector<Album>		_v_albums;
 	vector<Artist>		_v_artists;
 
-	public slots:
-	void fill_library_tracks(vector<MetaData>&);
-	void fill_library_albums(vector<Album>&);
-	void fill_library_artists(vector<Artist>&);
 
-	protected:
-		void resizeEvent(QResizeEvent* e);
+	signals:
+		void artist_changed_signal(int);
+		void album_changed_signal(int);
+		void clear_signal();
+
+	public slots:
+		void fill_library_tracks(vector<MetaData>&);
+		void fill_library_albums(vector<Album>&);
+		void fill_library_artists(vector<Artist>&);
+
 
 	private slots:
 		void track_pressed(const QModelIndex&);
+		void album_changed(const QModelIndex&);
+		void artist_changed(const QModelIndex&);
+		void clear_button_pressed();
+
+	protected:
+			void resizeEvent(QResizeEvent* e);
+
 
 
 

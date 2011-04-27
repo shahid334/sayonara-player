@@ -21,6 +21,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/Library/LibraryItemModelTracks.h \
     GUI/Library/LibraryItemModelAlbums.h \
     GUI/Library/LibraryItemModelArtists.h \
+    GUI/Library/LibrarySetupWidget.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
@@ -44,6 +45,7 @@ SOURCES += Main.cpp MP3_Listen/MP3_Listen.cpp \
     GUI/Library/LibraryItemModelTracks.cpp \
     GUI/Library/LibraryItemModelAlbums.cpp \
     GUI/Library/LibraryItemModelArtists.cpp \
+    GUI/Library/LibrarySetupWidget.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
     library/CDirectoryReader.cpp \
@@ -64,7 +66,8 @@ FORMS += \
     GUI/Playlist/GUI_Playlist_Entry.ui \
     GUI/GUI_Playlist_Frame.ui \
     GUI/GUI_LastFM_Widget.ui \
-    GUI/GUI_Library_windowed.ui
+    GUI/GUI_Library_windowed.ui \
+    GUI/Library/GUI_LibrarySetup_Widget.ui
 
 RESOURCES +=
 

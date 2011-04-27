@@ -18,21 +18,26 @@ signals:
     void signalMetaDataLoaded (vector<MetaData>& in);
     void allAlbumsLoaded(vector<Album>&);
     void allArtistsLoaded(vector<Artist>&);
+    void mp3s_loaded_signal(int);
 
 public slots:
     void baseDirSelected (const QString & baseDir);
     void insertMetaDataIntoDB(vector<MetaData>& in);
-
+    void getAllArtistsAlbumsTracks();
     void getAllArtists();
-    void getArtistsByAlbumName(QString album);
+    void getArtistsByAlbum(int album);
     void getAllAlbums();
-    void getAlbumsByArtistName(QString artist);
-    void getTracksByAlbumAndArtistName(QString album, QString artist);
+    void getAlbumsByArtist(int artist);
+    void getTracksByAlbum(int);
+    void getTracksByArtist(int);
+    void reloadLibrary();
+    void setLibraryPath(QString);
 
 
 private:
-    CDirectoryReader m_reader;
-    CDatabaseConnector m_database;
+    CDirectoryReader    m_reader;
+    CDatabaseConnector  m_database;
+    QString				m_library_path;
 
 
 };

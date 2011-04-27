@@ -46,6 +46,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     connect(this->ui->action_ViewPlaylist, SIGNAL(toggled(bool)), this, SLOT(showPlaylist(bool)));
     connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this, SLOT(changeSkin(bool)));
     connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this, SLOT(lastFMClicked(bool)));
+    connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this, SLOT(reloadLibraryClicked(bool)));
+    connect(this->ui->action_setLibPath, SIGNAL(triggered(bool)), this, SLOT(setLibraryPathClicked(bool)));
 
 
     ui_playlist = 0;
@@ -504,10 +506,10 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 
 	ui_playlist = playlist;
 
-	QSize tmpSize = this->size();
+	QSize tmpSize = this->ui->playlist_widget->size();
 
-	tmpSize.setWidth(265 );
-	tmpSize.setHeight(tmpSize.height() - 220);
+	tmpSize.setWidth(328 );
+	tmpSize.setHeight(455);
 
 	this->ui->playlist_widget->resize(tmpSize);
 	this->ui_playlist->resize(tmpSize);
@@ -518,8 +520,8 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
 
 	ui_library = library;
 	QSize tmpSize = this->size();
-	tmpSize.setWidth(tmpSize.width() - 310);
-	tmpSize.setHeight(tmpSize.height() - 50);
+	tmpSize.setWidth(632);
+	tmpSize.setHeight(611);
 	this->ui->library_widget->resize(tmpSize);
 	this->ui_library->resize(tmpSize);
 
@@ -545,6 +547,11 @@ void GUI_SimplePlayer::lastFMClicked(bool b){
 
 }
 
+void GUI_SimplePlayer::reloadLibraryClicked(bool b){
+	Q_UNUSED(b);
+	emit reloadLibrary();
+}
+
 void GUI_SimplePlayer::initGUI(){
 
 	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
@@ -553,7 +560,10 @@ void GUI_SimplePlayer::initGUI(){
 	this->ui->fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	this->ui->bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 
+}
 
 
-
+void GUI_SimplePlayer::setLibraryPathClicked(bool b){
+	Q_UNUSED(b);
+	emit setupLibraryPath();
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
-    <height>593</height>
+    <width>632</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,6 +42,18 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
+         </property>
+         <property name="resizeMode">
+          <enum>QListView::Fixed</enum>
+         </property>
         </widget>
        </item>
       </layout>
@@ -65,6 +77,15 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="verticalScrollMode">
+          <enum>QAbstractItemView::ScrollPerPixel</enum>
          </property>
         </widget>
        </item>
@@ -116,7 +137,10 @@
           <enum>QAbstractItemView::ScrollPerPixel</enum>
          </property>
          <property name="showGrid">
-          <bool>false</bool>
+          <bool>true</bool>
+         </property>
+         <property name="gridStyle">
+          <enum>Qt::DotLine</enum>
          </property>
          <property name="sortingEnabled">
           <bool>true</bool>

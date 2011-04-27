@@ -20,20 +20,22 @@ using namespace Helper;
 MetaData ID3::getMetaDataOfFile(QString file){
 
 	TagLib::FileRef f(TagLib::FileName(file.toUtf8()));
-		string artist = f.tag()->artist().to8Bit(false);
-		string album = f.tag()->album().to8Bit(false);
-		string title = f.tag()->title().to8Bit(false);
+		string artist = f.tag()->artist().to8Bit(true);
+		string album = f.tag()->album().to8Bit(true);
+		string title = f.tag()->title().to8Bit(true);
 		uint year = f.tag()->year();
+		uint track = f.tag()->track();
 
 		int length = f.audioProperties()->length();
 
 		MetaData md;
-		md.album = cvtQString2FirstUpper(QString(album.c_str()));
-		md.artist = cvtQString2FirstUpper(QString(artist.c_str()));
-		md.title = cvtQString2FirstUpper(QString(title.c_str()));
+		md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
+		md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
+		md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
 		md.filepath = file;
 		md.length_ms = length * 1000;
 		md.year = year;
+		md.track_num = track;
 
 
 		if(md.title.length() == 0){

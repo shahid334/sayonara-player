@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <stdlib.h>
 #include <QVariant>
+#include <QObject>
 #include <QSqlError>
 #include <CSettingsStorage.h>
 
@@ -57,6 +58,26 @@ CDatabaseConnector::~CDatabaseConnector() {
     if (this -> m_database.isOpen()) {
         this -> m_database.close();
     }
+}
+
+
+void CDatabaseConnector::deleteTracksAlbumsArtists(){
+
+	   QSqlQuery q (this -> m_database);
+
+	    q.prepare("delete from tracks; delete from artists; delete from albums;");
+
+	    try{
+			q.exec();
+
+		}
+
+		catch(QString ex){
+			qDebug() << q.lastQuery();
+			qDebug() << ex;
+			qDebug() << q.executedQuery();
+
+	    }
 }
 
 // FIXME: artist könnte hochkommata enthalten (Guns 'n' roses)
@@ -117,13 +138,14 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 // FIXME: was ist, wenn hier eine variable hochkommata aufweist? Bitte in den Variablen ' durch '' ersetzen
 int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
     QSqlQuery q (this -> m_database);
-    q.prepare("insert into Tracks (filename,albumID,artistID,title,year,length) values (:filename,:albumID,:artistID,:title,:year,:length)");
+    q.prepare("insert into Tracks (filename,albumID,artistID,title,year,length,track) values (:filename,:albumID,:artistID,:title,:year,:length,:track)");
     q.bindValue(":filename",QVariant(data.filepath));
     q.bindValue(":albumID",QVariant(albumID));
     q.bindValue(":artistID",QVariant(artistID));
     q.bindValue(":length",QVariant(data.length_ms));
     q.bindValue(":year",QVariant(data.year));
     q.bindValue(":title",QVariant(data.title));
+    q.bindValue(":track",QVariant(data.track_num));
     if (!q.exec()) {
         throw QString ("SQL - Error: insertTrackIntoDatabase " + data.filepath);
     }
@@ -402,14 +424,166 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result){
 	}
 }
 
-void CDatabaseConnector::getAllArtistsByAlbum(QString album, vector<Artist>&){
+void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result){
+	 if (!this -> m_database.isOpen())
+					        this -> m_database.open();
+
+			try {
+				QSqlQuery q (this -> m_database);
+				q.prepare(QString("SELECT ") +
+							"artists.artistID, " +
+							"artists.name, " +
+							"count(albums.albumid), " +
+							"count(tracks.trackid) "
+							"FROM Tracks, artists, albums " +
+							"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
+							"AND albums.albumid=" + QString::number(album) + " " +
+							"GROUP BY artists.artistID, artists.name " +
+							"ORDER BY artists.name;");
+
+				if (!q.exec()) {
+					throw QString ("SQL - Error: Could not get all artists from database");
+				}
+
+				Artist artist;
+				while (q.next()) {
+					artist.id = q.value(0).toInt();
+					artist.name = q.value(1).toString();
+					artist.num_albums = q.value(2).toInt();
+					artist.num_songs = q.value(3).toInt();
+
+					result.push_back(artist);
+				}
+
+
+			}
+			catch (QString ex) {
+				qDebug() << "SQL - Error: getTracksFromDatabase";
+				qDebug() << ex;
+				QSqlError er = this -> m_database.lastError();
+				qDebug() << er.driverText();
+				qDebug() << er.databaseText();
+				qDebug() << er.databaseText();
+
+			}
+
 
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(QString artist, vector<Album>&){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result){
+	 if (!this -> m_database.isOpen())
+			        this -> m_database.open();
 
+	try {
+		QSqlQuery q (this -> m_database);
+		q.prepare(QString("SELECT ") +
+					"albums.albumID, " +
+					"albums.name, " +
+					"SUM(tracks.length) / 1000, " +
+					"count(tracks.trackid), " +
+					"max(tracks.year), " +
+					"group_concat(artists.name) " +
+					"FROM albums, Tracks, artists " +
+					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
+					"AND artists.artistid=" + QString::number(artist) + " " +
+					"GROUP BY albums.albumID, albums.name " +
+					"ORDER BY albums.name;");
+
+		if (!q.exec()) {
+			throw QString ("SQL - Error: Could not get all albums from database");
+		}
+
+		Album album;
+		while (q.next()) {
+			album.id = q.value(0).toInt();
+			album.name = q.value(1).toString();
+			album.length_sec = q.value(2).toInt();
+			album.num_songs = q.value(3).toInt();
+			album.year = q.value(4).toInt();
+			QStringList artistList = q.value(5).toString().split(',');
+			artistList.removeDuplicates();
+			album.artists = artistList;
+
+			result.push_back(album);
+		}
+
+
+	}
+	catch (QString ex) {
+		qDebug() << "SQL - Error: getTracksFromDatabase";
+		qDebug() << ex;
+		QSqlError er = this -> m_database.lastError();
+		qDebug() << er.driverText();
+		qDebug() << er.databaseText();
+		qDebug() << er.databaseText();
+	}
 }
 
-void CDatabaseConnector::getAllTracksByAlbumAndArtistName(QString album, QString artist, vector<MetaData>&){
+void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata){
+	  if (!this -> m_database.isOpen())
+	        this -> m_database.open();
+	    MetaData data;
+	    try {
+	        QSqlQuery q (this -> m_database);
+	        q.prepare("select filename,albumID,artistID,title,year,length from tracks where albumid=" + QString::number(album) + " order by track;");
+	        if (!q.exec()) {
+	            throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
+	        }
+	        int albumID = -1;
+	        int artistID = -1;
+	        while (q.next()) {
+	            albumID = q.value(1).toInt();
+	            artistID = q.value(2).toInt();
+	            data.filepath = q.value(0).toString();
+	            data.album = this -> getAlbumName(albumID);
+	            data.artist = this -> getArtistName(artistID);
+	            data.title = q.value(3).toString();
+	            data.year = q.value(4).toInt();
+	            data.length_ms = q.value(5).toInt();
+	            returndata.push_back(data);
+	        }
+	    }
+	    catch (QString ex) {
+	        qDebug() << "SQL - Error: getTracksFromDatabase";
+	        qDebug() << ex;
+	        QSqlError er = this -> m_database.lastError();
+	        qDebug() << er.driverText();
+	        qDebug() << er.databaseText();
+	        qDebug() << er.databaseText();
+	    }
+}
+
+void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata){
+	 if (!this -> m_database.isOpen())
+		        this -> m_database.open();
+		    MetaData data;
+		    try {
+		        QSqlQuery q (this -> m_database);
+		        q.prepare("select filename,albumID,artistID,title,year,length from tracks where artistid=" + QString::number(artist) + " order by year, track;");
+		        if (!q.exec()) {
+		            throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
+		        }
+		        int albumID = -1;
+		        int artistID = -1;
+		        while (q.next()) {
+		            albumID = q.value(1).toInt();
+		            artistID = q.value(2).toInt();
+		            data.filepath = q.value(0).toString();
+		            data.album = this -> getAlbumName(albumID);
+		            data.artist = this -> getArtistName(artistID);
+		            data.title = q.value(3).toString();
+		            data.year = q.value(4).toInt();
+		            data.length_ms = q.value(5).toInt();
+		            returndata.push_back(data);
+		        }
+		    }
+		    catch (QString ex) {
+		        qDebug() << "SQL - Error: getTracksFromDatabase";
+		        qDebug() << ex;
+		        QSqlError er = this -> m_database.lastError();
+		        qDebug() << er.driverText();
+		        qDebug() << er.databaseText();
+		        qDebug() << er.databaseText();
+		    }
 
 }

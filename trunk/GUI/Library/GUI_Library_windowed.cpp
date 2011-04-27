@@ -38,6 +38,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->lv_artist->setAlternatingRowColors(true);
 
 	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
+	connect(this->ui->lv_artist, SIGNAL( clicked ( const QModelIndex & )), this, SLOT(artist_changed(const QModelIndex&)));
+	connect(this->ui->lv_album, SIGNAL( clicked ( const QModelIndex & )), this, SLOT(album_changed(const QModelIndex&)));
+	connect(this->ui->btn_clear, SIGNAL(clicked()), this, SLOT(clear_button_pressed()));
 
 }
 
@@ -53,8 +56,6 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 
 	this->_track_model->removeRows(0, this->_track_model->rowCount());
 	this->_track_model->insertRows(0, v_metadata.size());
-
-	qDebug() << "inserted " << v_metadata.size() << " rows";
 
 	for(uint i=0; i<v_metadata.size(); i++){
 
@@ -112,8 +113,6 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 
 void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 
-	qDebug() << "Fill artists" << artists.size();
-
 	_v_artists.clear();
 	_v_artists = artists;
 
@@ -131,8 +130,6 @@ void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 						" track";
 
 		if(artists.at(i).num_songs != 1) data += "s";
-
-		qDebug() << "artist " << data;
 
 		this->_artist_model->setData(idx, data, Qt::EditRole );
 	}
@@ -173,6 +170,8 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
+	Q_UNUSED(idx);
+
 	QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
@@ -193,4 +192,19 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 	Qt::DropAction dropAction = drag->exec();
 	Q_UNUSED(dropAction);
 
+}
+
+
+void GUI_Library_windowed::album_changed(const QModelIndex& idx){
+	emit album_changed_signal(_v_albums.at(idx.row()).id);
+
+}
+
+void GUI_Library_windowed::artist_changed(const QModelIndex& idx){
+	emit artist_changed_signal(_v_artists.at(idx.row()).id);
+
+}
+
+void GUI_Library_windowed::clear_button_pressed(){
+	emit clear_signal();
 }

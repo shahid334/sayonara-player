@@ -20,9 +20,10 @@ struct MetaData{
 	QString artist;
 	QString album;
 	qint32 rating;
-        qint64 length_ms;
-        qint32 year;
-        QString filepath;
+	qint64 length_ms;
+	qint32 year;
+	QString filepath;
+	qint32 track_num;
 
 
     inline MetaData () {
@@ -33,6 +34,7 @@ struct MetaData{
             length_ms = 0;
             year = 0;
             filepath = "";
+            track_num = 0;
         }
 
 	void print(){
@@ -53,12 +55,13 @@ struct MetaData{
 		list.push_back(QString::number(length_ms));
 		list.push_back(QString::number(year));
 		list.push_back(filepath);
+		list.push_back(QString::number(track_num));
 		return list;
 	}
 
 	void fromStringList(QStringList list){
 
-		if(list.size() < 7) return;
+		if(list.size() < 8) return;
 
 		title = list.at(0);
 		artist = list.at(1);
@@ -67,6 +70,7 @@ struct MetaData{
 		length_ms = list.at(4).toULongLong();
 		year = list.at(5).toInt();
 		filepath = list.at(6);
+		track_num = list.at(7).toInt();
 
 
 	}

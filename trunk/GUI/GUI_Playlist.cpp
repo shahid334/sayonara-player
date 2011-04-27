@@ -180,12 +180,6 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 
 void GUI_Playlist::current_row_changed(int new_row){
 
-	qDebug() << "Current row changed";
-	//cout << "GUI: Current row changed to " << new_row << endl;
-	/*for(int i=0; i<this->ui->_filelist->count(); i++){
-			this->ui->_filelist->item(i)->setBackgroundColor(QColor::fromRgb(255, 255, 255));
-
-	}*/
 	if(new_row < 0) return;
 	emit selected_row_changed(new_row);
 
@@ -193,8 +187,6 @@ void GUI_Playlist::current_row_changed(int new_row){
 
 
 void GUI_Playlist::track_changed(int new_row){
-
-	qDebug() << "track changed";
 
 	if(new_row < 0) return;
 
@@ -263,10 +255,7 @@ void GUI_Playlist::initGUI(){
 
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
-	qDebug() << "Drag enter event";
 	event->acceptProposedAction();
-
-
 }
 
 

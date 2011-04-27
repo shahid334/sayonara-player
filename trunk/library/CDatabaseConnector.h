@@ -68,13 +68,17 @@ public:
 
     int getTracksFromDatabase (std::vector <MetaData> & returndata);
 
-    void getAllArtists(vector<Artist>&);
-    void getAllAlbums(vector<Album>&);
+    void getAllArtists(vector<Artist>& result);
+    void getAllAlbums(vector<Album>& result);
 
-    void getAllArtistsByAlbum(QString album, vector<Artist>&);
-    void getAllAlbumsByArtist(QString artist, vector<Album>&);
-    void getAllTracksByAlbumAndArtistName(QString album, QString artist, vector<MetaData>&);
+    void getAllArtistsByAlbum(int album, vector<Artist>& result);
+    void getAllAlbumsByArtist(int artist, vector<Album>& result);
 
+
+    void getAllTracksByAlbum(int album, vector<MetaData>& result);
+    void getAllTracksByArtist(int artist, vector<MetaData>& result);
+
+    void deleteTracksAlbumsArtists();
 
 
 public slots:
@@ -84,6 +88,7 @@ public slots:
       * @return true on success false if failed
       */
     bool storeMetadata (std::vector<MetaData> & in);
+
 
 signals:
 
