@@ -47,10 +47,10 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
-     <number>5</number>
+     <number>10</number>
     </property>
     <property name="topMargin">
-     <number>0</number>
+     <number>8</number>
     </property>
     <property name="rightMargin">
      <number>0</number>
@@ -302,6 +302,9 @@
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item row="3" column="3" colspan="3">
@@ -328,6 +331,9 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
       </property>
       <property name="openExternalLinks">
        <bool>false</bool>
@@ -532,14 +538,14 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>315</width>
-         <height>461</height>
+         <width>324</width>
+         <height>453</height>
         </rect>
        </property>
       </widget>
      </widget>
     </item>
-    <item row="0" column="8" rowspan="9">
+    <item row="0" column="7" rowspan="9">
      <widget class="QWidget" name="library_widget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -572,13 +578,6 @@
      <widget class="Line" name="line_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="7" rowspan="9">
-     <widget class="Line" name="line_3">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
