@@ -111,7 +111,6 @@ void Playlist::insert_artists(const vector<Artist>& v_artists, int idx){
 		vector<MetaData> vec;
 		CDatabaseConnector db;
 		db.getAllTracksByArtist(v_artists.at(i).id, vec);
-		db.
 		insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
