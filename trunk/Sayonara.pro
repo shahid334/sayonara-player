@@ -100,5 +100,6 @@ images.files += GUI/icons/vol_3.png
 images.files += GUI/icons/vol_3_dark.png
 images.files += GUI/icons/vol_mute.png
 images.files += GUI/icons/gui.jpg
+images.files += GUI/icons/play_small.png
 images.files += GUI/icons/lastfm_logo.jpg
 INSTALLS += images

@@ -11,6 +11,7 @@
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
+#include <HelperStructs/Helper.h>
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
 	this->_parent = parent;
 
@@ -37,7 +38,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 		if(index.column() == 0){
 
-			label.setPixmap(QPixmap("GUI/icons/play_small.png"));
+			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
 			label.resize(20, 20);
 
 		}
