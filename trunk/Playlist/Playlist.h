@@ -71,6 +71,8 @@ public:
 		void createPlaylist(QStringList&);
 		void createPlaylist(vector<MetaData>&);
 		void insert_tracks(const vector<MetaData>&, int);
+		void insert_albums(const vector<Album>&, int);
+		void insert_artists(const vector<Artist>&, int);
 		void change_track(int);
 		void next_track();
 		void playlist_mode_changed(const Playlist_Mode&);

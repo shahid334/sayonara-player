@@ -11,6 +11,7 @@
 #include "Playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 
+
 #include <QMainWindow>
 #include <QWidget>
 #include <QKeyEvent>
@@ -39,7 +40,10 @@
 			void save_playlist(const QString&);
 			void playlist_mode_changed(const Playlist_Mode&);
 			void dropped_tracks(const vector<MetaData>&, int);
+			void dropped_albums(const vector<Album>&, int);
+			void dropped_artists(const vector<Artist>&, int);
 			void playlist_filled(vector<MetaData>&);
+
 
 
 		public slots:

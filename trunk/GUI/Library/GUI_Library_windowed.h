@@ -17,6 +17,7 @@
 #include <GUI/Library/LibraryItemModelAlbums.h>
 #include <GUI/Library/LibraryItemModelArtists.h>
 #include <HelperStructs/MetaData.h>
+#include <library/CDatabaseConnector.h>
 
 #include <vector>
 
@@ -40,6 +41,7 @@ private:
 	vector<MetaData>	_v_metadata;
 	vector<Album>		_v_albums;
 	vector<Artist>		_v_artists;
+	CDatabaseConnector*	_db;
 
 
 	signals:
@@ -62,6 +64,8 @@ private:
 		void clear_button_pressed();
 		void album_chosen(const QModelIndex & );
 		void artist_chosen(const QModelIndex & );
+		void album_pressed(const QModelIndex &);
+		void artist_pressed(const QModelIndex &);
 
 	protected:
 			void resizeEvent(QResizeEvent* e);

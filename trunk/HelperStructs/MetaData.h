@@ -8,11 +8,17 @@
 #ifndef METADATA_H_
 #define METADATA_H_
 
+#define DROP_TYPE_ARTISTS 0
+#define DROP_TYPE_ALBUMS 1
+#define DROP_TYPE_TRACKS 2
+
 #include <QString>
 #include <QStringList>
 #include <iostream>
 
 using namespace std;
+
+
 
 struct MetaData{
 
@@ -59,7 +65,7 @@ struct MetaData{
 		return list;
 	}
 
-	void fromStringList(QStringList list){
+	void fromStringList(QStringList& list){
 
 		if(list.size() < 8) return;
 
@@ -85,6 +91,23 @@ struct Artist{
 	qint32	num_songs;
 	qint32  num_albums;
 
+	QStringList toStringList(){
+		QStringList list;
+		list.push_back(name);
+		list.push_back(QString::number(id));
+		list.push_back(QString::number(num_songs));
+		list.push_back(QString::number(num_albums));
+		return list;
+	}
+
+	void fromStringList(QStringList& list){
+		if(list.size() < 4) return;
+		name = list.at(0);
+		id = list.at(1).toInt();
+		num_songs = list.at(2).toInt();
+		num_albums = list.at(3).toInt();
+	}
+
 };
 
 
@@ -95,6 +118,24 @@ struct Album{
 	qint32 	length_sec;
 	qint32	year;
 	QStringList artists;
+
+
+	QStringList toStringList(){
+		QStringList list;
+		list.push_back(name);
+		list.push_back(QString::number(id));
+		list.push_back(QString::number(num_songs));
+		list.push_back(QString::number(length_sec));
+		return list;
+	}
+
+	void fromStringList(QStringList& list){
+		if(list.size() < 4) return;
+		name = list.at(0);
+		id = list.at(1).toInt();
+		num_songs = list.at(2).toInt();
+		length_sec = list.at(3).toLong();
+	}
 };
 
 

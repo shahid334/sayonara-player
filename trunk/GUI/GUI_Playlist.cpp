@@ -264,25 +264,74 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	QPoint pos = event->pos();
 	int row = this->ui->listView->indexAt(pos).row();
 
+	int event_type = event->mimeData()->property("data_type").toInt();
+	qDebug() << "event_type = " << event_type;
+	if(row == -1) row = _pli_model->rowCount();
+	else if(row > 0) row--;
 
 	QList<QVariant> list = event->mimeData()->property("data").toList();
 
 
-	if(row == -1) row = _pli_model->rowCount();
-	else if(row > 0) row--;
+	if(event_type == DROP_TYPE_TRACKS){
+		vector<MetaData> v_md4Playlist;
+		for(int i=0; i<list.size(); i++){
 
-	vector<MetaData> v_md4Playlist;
+			QStringList md_stringlist = list.at(i).toStringList();
 
-	for(int i=0; i<list.size(); i++){
+			MetaData md;
+			md.fromStringList(md_stringlist);
+			v_md4Playlist.push_back(md);
+		}
 
-		QStringList md_stringlist = list.at(i).toStringList();
-
-		MetaData md;
-		md.fromStringList(md_stringlist);
-		v_md4Playlist.push_back(md);
+		emit dropped_tracks(v_md4Playlist, row);
 	}
 
-	emit dropped_tracks(v_md4Playlist, row);
+
+
+
+
+	else if(event_type == DROP_TYPE_ALBUMS){
+
+		vector<Album> v_albums4Playlist;
+		for(int i=0; i<list.size(); i++){
+
+			QStringList album_stringlist = list.at(i).toStringList();
+
+			Album album;
+			album.fromStringList(album_stringlist);
+			v_albums4Playlist.push_back(album);
+		}
+
+		emit dropped_albums(v_albums4Playlist, row);
+	}
+
+
+	else if(event_type == DROP_TYPE_ARTISTS){
+
+		vector<Artist> v_artists4Playlist;
+		for(int i=0; i<list.size(); i++){
+
+			QStringList artist_stringlist = list.at(i).toStringList();
+
+
+			Artist artist;
+			artist.fromStringList(artist_stringlist);
+			v_artists4Playlist.push_back(artist);
+			qDebug() << "Dropped artist " << artist.name;
+		}
+
+		emit dropped_artists(v_artists4Playlist, row);
+	}
+
+
+
+
+
+
+
+
+
+
 
 }
 
