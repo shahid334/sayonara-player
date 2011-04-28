@@ -59,11 +59,19 @@ void Playlist::createPlaylist(QStringList& pathlist){
 
 
 void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
-	//_pathlist = pathlist;
 
-	_v_meta_data.clear();
+	if(!_playlist_mode.append){
+		_v_meta_data.clear();
+		_v_meta_data = v_meta_data;
+	}
 
-	_v_meta_data = v_meta_data;
+	else{
+		for(uint i=0; i<v_meta_data.size(); i++){
+			_v_meta_data.push_back(v_meta_data.at(i));
+		}
+	}
+
+
 	emit playlist_created(_v_meta_data);
 
 

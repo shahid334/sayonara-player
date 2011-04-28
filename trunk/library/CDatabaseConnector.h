@@ -78,6 +78,10 @@ public:
     void getAllTracksByAlbum(int album, vector<MetaData>& result);
     void getAllTracksByArtist(int artist, vector<MetaData>& result);
 
+    void getAllTracksBySearchString(QString search, vector<MetaData>& result);
+    void getAllAlbumsBySearchString(QString search, vector<Album>& result);
+    void getAllArtistsBySearchString(QString search, vector<Artist>& result);
+
     void deleteTracksAlbumsArtists();
 
 

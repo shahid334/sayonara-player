@@ -25,6 +25,15 @@ int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 	return _artist_list.size();
 }
 
+int LibraryItemModelArtists::columnCount(const QModelIndex& parent) const{
+
+	Q_UNUSED(parent);
+
+	return 2;
+
+	// title, artist, album, length, year
+
+}
 
 
 bool LibraryItemModelArtists::removeRows(int position, int rows, const QModelIndex & index)
@@ -65,12 +74,12 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
 	 if (!index.isValid())
 			 return QVariant();
 
-		 if (index.row() >= _artist_list.size())
+		 if (index.row() >= _artist_list.size() || index.column() == 0)
 			 return QVariant();
 
 
 
-		 if (role == Qt::DisplayRole){
+		 if (role == Qt::WhatsThisRole){
 				return _artist_list.at(index.row());
 
 		 }
@@ -105,4 +114,23 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 	return QAbstractItemModel::flags(index);
 }
 
+
+
+QVariant LibraryItemModelArtists::headerData ( int section, Qt::Orientation orientation, int role ) const{
+
+	 if (role != Qt::DisplayRole)
+	         return QVariant();
+
+	 if (orientation == Qt::Horizontal) {
+		 switch (section) {
+			 case 0: return QVariant();
+
+			 case 1: return tr("Artist");
+			 default:
+				 return QVariant();
+		 }
+	 }
+	 return QVariant();
+
+}
 

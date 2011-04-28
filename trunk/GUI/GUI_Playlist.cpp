@@ -230,11 +230,10 @@ void GUI_Playlist::change_skin(bool dark){
 	if(dark){
 		this->ui->lab_totalTime->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
 		this->ui->listView->setStyleSheet("background-color: rgb(255, 255, 255);");
-
 	}
 
 	else {
-		this->ui->lab_totalTime->setStyleSheet("color: rgb(0, 0, 0);");
+		this->ui->lab_totalTime->setStyleSheet("");
 		this->ui->listView->setStyleSheet("");
 	}
 }

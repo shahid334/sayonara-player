@@ -532,14 +532,14 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>317</width>
+         <width>315</width>
          <height>461</height>
         </rect>
        </property>
       </widget>
      </widget>
     </item>
-    <item row="0" column="7" rowspan="9">
+    <item row="0" column="8" rowspan="9">
      <widget class="QWidget" name="library_widget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -572,6 +572,13 @@
      <widget class="Line" name="line_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="7" rowspan="9">
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>

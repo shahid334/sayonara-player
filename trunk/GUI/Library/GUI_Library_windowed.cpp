@@ -8,6 +8,7 @@
 #include "GUI/Library/GUI_Library_windowed.h"
 #include "GUI/Library/LibraryItemModelTracks.h"
 #include <GUI/Library/LibraryItemModelAlbums.h>
+#include <GUI/Library/LibraryItemDelegateAlbums.h>
 #include <GUI/Library/LibraryItemModelArtists.h>
 #include "ui_GUI_Library_windowed.h"
 #include <QDebug>
@@ -32,16 +33,20 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->_track_model = new LibraryItemModelTracks();
 	this->_album_model = new LibraryItemModelAlbums();
+	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
 	this->_artist_model = new LibraryItemModelArtists();
+	this->_artist_delegate = new LibraryItemDelegateAlbums(this->ui->lv_artist);
 
 	this->ui->tb_title->setModel(this->_track_model);
 	this->ui->lv_album->setModel(this->_album_model);
+	this->ui->lv_album->setItemDelegate(this->_album_delegate);
 	this->ui->lv_artist->setModel(this->_artist_model);
+	this->ui->lv_artist->setItemDelegate(this->_artist_delegate);
 
-	this->ui->gridLayout->setRowStretch(0, 0);
+	/*this->ui->gridLayout->setRowStretch(0, 0);
 	this->ui->gridLayout->setRowStretch(1, 0);
-	this->ui->gridLayout->setRowStretch(3, 2);
-	this->ui->gridLayout->setRowStretch(4, 3);
+	this->ui->gridLayout->setRowStretch(2, 2);
+	this->ui->gridLayout->setRowStretch(3, 3);*/
 
 	this->ui->lv_album->setDragEnabled(true);
 	this->ui->lv_artist->setDragEnabled(true);
@@ -49,6 +54,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
+	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_chosen(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_chosen(const QModelIndex & )));
@@ -69,6 +75,7 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 
 	_v_metadata.clear();
 	_v_metadata = v_metadata;
+
 
 	this->_track_model->removeRows(0, this->_track_model->rowCount());
 	this->_track_model->insertRows(0, v_metadata.size());
@@ -107,18 +114,24 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 	this->_album_model->insertRows(0, albums.size());
 
 	for(uint i=0; i<albums.size(); i++){
-		QModelIndex idx = this->_album_model->index(i, 0);
+		QModelIndex idx = this->_album_model->index(i, 1);
 
-		QString albumname = albums.at(i).name;
-		if(albums.at(i).name.isEmpty()) albumname = "<Unknown>";
+		QString albumname = "<b>" + albums.at(i).name;
+		if(albums.at(i).name.isEmpty()) albumname = "<b>Unknown";
 
-		QString data = albumname + ", " +
-						QString::number(albums.at(i).num_songs) +
-						" track";
 
+
+		QString year = "";
+		if(albums.at(i).year != 0) year = "(" + QString::number(albums.at(i).year) + ")";
+		albumname += QString(" ") + year + "</b>\n";
+
+
+		QString data = albumname;
+
+		data +=  QString::number(albums.at(i).num_songs) + " track";
 		if(albums.at(i).num_songs != 1) data += "s";
+		data += QString(", ") + getTotalTimeString(albums.at(i));
 
-		if(albums.at(i).year != 0) data += " (" + QString::number(albums.at(i).year) + ")";
 		this->_album_model->setData(idx, data, Qt::EditRole );
 	}
 
@@ -138,8 +151,8 @@ void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 	for(uint i=0; i<artists.size(); i++){
 		QModelIndex idx = this->_artist_model->index(i, 0);
 
-		QString artistname = artists.at(i).name;
-		if(artists.at(i).name.isEmpty()) artistname = "<Unknown>";
+		QString artistname = QString("<b>") + artists.at(i).name + "</b>";
+		if(artists.at(i).name.isEmpty()) artistname = "<b>Unknown</b>";
 
 		QString data = artistname + ", " +
 						QString::number(artists.at(i).num_songs) +
@@ -166,6 +179,8 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 		this->ui->tb_title->setColumnWidth(3, width * 0.08);
 		this->ui->tb_title->setColumnWidth(4, width * 0.08);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
+
 	}
 
 	else {
@@ -179,6 +194,10 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	}
 
+	this->ui->lv_album->setColumnWidth(0, 20);
+	this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 20);
+	this->ui->lv_artist->setColumnWidth(0, 20);
+	this->ui->lv_artist->setColumnWidth(1, this->ui->lv_artist->width() - 20);
 }
 
 
@@ -256,6 +275,7 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 	for(int i=0; i<idx_list.size(); i++){
 		int row = idx_list.at(i).row();
 
+		qDebug() << "Path? " << _v_metadata.at(row).filepath;
 		QStringList metadata = _v_metadata.at(row).toStringList();
 		list2send.push_back(metadata);
 	}
@@ -295,13 +315,87 @@ void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 void GUI_Library_windowed::clear_button_pressed(){
 
 
-	vector<Album> vec_albums;
+	this->ui->le_search->clear();
+	text_line_edited(" ");
+}
+
+void GUI_Library_windowed::text_line_edited(const QString& search){
+Q_UNUSED(search);
+
+	QString searchstring = this->ui->le_search->text();
+	if(searchstring.length() == 0){
+
+		vector<Album> vec_albums;
+		vector<MetaData> vec_tracks;
+		vector<Artist> vec_artists;
+
+		CDatabaseConnector db;
+		db.getTracksFromDatabase(vec_tracks);
+		db.getAllAlbums(vec_albums);
+		db.getAllArtists(vec_artists);
+		fill_library_artists(vec_artists);
+		fill_library_albums(vec_albums);
+		fill_library_tracks(vec_tracks);
+
+		return;
+
+	}
+
 	vector<MetaData> vec_tracks;
+	vector<Album> vec_albums;
+	vector<Artist> vec_artists;
 
 	CDatabaseConnector db;
-	db.getTracksFromDatabase(vec_tracks);
-	db.getAllAlbums(vec_albums);
-	fill_library_albums(vec_albums);
+	db.getAllTracksBySearchString(QString("%") + searchstring + "%", vec_tracks);
 	fill_library_tracks(vec_tracks);
+
+	db.getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums);
+	fill_library_albums(vec_albums);
+
+	db.getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists);
+	fill_library_artists(vec_artists);
+
+
+}
+
+
+void GUI_Library_windowed::change_skin(bool dark){
+
+
+
+	if(dark){
+		//this->ui->lab_totalTime->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
+		this->ui->lv_album->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
+		this->ui->lv_artist->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
+		this->ui->tb_title->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
+	}
+
+	else {
+		this->ui->lv_album->setStyleSheet("");
+		this->ui->lv_artist->setStyleSheet("");
+		this->ui->tb_title->setStyleSheet("");
+	}
+}
+
+
+QString GUI_Library_windowed::getTotalTimeString(Album& album){
+	int secs, mins, hrs;
+	Helper::cvtSecs2MinAndSecs(album.length_sec, &mins, &secs);
+	hrs = mins / 60;
+	mins = mins % 60;
+
+	QString str = "";
+
+	if(hrs > 0) str += QString::number(hrs) + "h ";
+
+	str += 	QString::fromStdString(Helper::cvtNum2String(mins)) +
+			"m " +
+			QString::fromStdString(Helper::cvtNum2String(secs)) +
+			"s";
+
+
+
+	return str;
+
 
 }

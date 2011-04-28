@@ -20,6 +20,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/Library/GUI_Library_windowed.h \
     GUI/Library/LibraryItemModelTracks.h \
     GUI/Library/LibraryItemModelAlbums.h \
+    GUI/Library/LibraryItemDelegateAlbums.h \
     GUI/Library/LibraryItemModelArtists.h \
     GUI/Library/LibrarySetupWidget.h \
     HelperStructs/MetaData.h \
@@ -44,6 +45,7 @@ SOURCES += Main.cpp MP3_Listen/MP3_Listen.cpp \
     GUI/Library/GUI_Library_windowed.cpp \
     GUI/Library/LibraryItemModelTracks.cpp \
     GUI/Library/LibraryItemModelAlbums.cpp \
+    GUI/Library/LibraryItemDelegateAlbums.cpp \
     GUI/Library/LibraryItemModelArtists.cpp \
     GUI/Library/LibrarySetupWidget.cpp \
     HelperStructs/Helper.cpp \

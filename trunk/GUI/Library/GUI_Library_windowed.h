@@ -15,6 +15,7 @@
 #include <ui_GUI_Library_windowed.h>
 #include <GUI/Library/LibraryItemModelTracks.h>
 #include <GUI/Library/LibraryItemModelAlbums.h>
+#include <GUI/Library/LibraryItemDelegateAlbums.h>
 #include <GUI/Library/LibraryItemModelArtists.h>
 #include <HelperStructs/MetaData.h>
 #include <library/CDatabaseConnector.h>
@@ -37,7 +38,9 @@ private:
 	Ui::Library_windowed* ui;
 	LibraryItemModelTracks* _track_model;
 	LibraryItemModelAlbums* _album_model;
+	LibraryItemDelegateAlbums* _album_delegate;
 	LibraryItemModelArtists* _artist_model;
+	LibraryItemDelegateAlbums* _artist_delegate;
 	vector<MetaData>	_v_metadata;
 	vector<Album>		_v_albums;
 	vector<Artist>		_v_artists;
@@ -65,10 +68,17 @@ private:
 		void album_chosen(const QModelIndex & );
 		void artist_chosen(const QModelIndex & );
 
+		void text_line_edited(const QString&);
+
 	protected:
 			void resizeEvent(QResizeEvent* e);
 
 
+	public:
+			void change_skin(bool dark);
+
+	private:
+			QString getTotalTimeString(Album& album);
 
 
 

@@ -8,10 +8,10 @@
 #ifndef LIBRARYITEMMODELARTISTS_H_
 #define LIBRARYITEMMODELARTISTS_H_
 
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QStringList>
 
-class LibraryItemModelArtists : public QAbstractListModel {
+class LibraryItemModelArtists : public QAbstractTableModel {
 
 Q_OBJECT
 public:
@@ -19,6 +19,7 @@ public:
 	virtual ~LibraryItemModelArtists();
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	int columnCount(const QModelIndex &parent) const;
 
 	QVariant data(const QModelIndex &index, int role) const;
 
@@ -28,6 +29,7 @@ public:
 
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
+	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
 
 

@@ -72,18 +72,20 @@ void GUI_SimplePlayer::setVolume(int vol){
 
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
-		//this->ui->centralwidget->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
-		this->ui->centralwidget->setStyleSheet("background-color: rgb(0, 0, 0);\ncolor: rgb(0, 255, 0);");
+		this->ui->centralwidget->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
+
 		m_skinSuffix = QString("_dark");
 	}
 
 	else {
-		this->ui->centralwidget->setStyleSheet("color: rgb(0, 0, 0);");
+		this->ui->centralwidget->setStyleSheet("");
 		m_skinSuffix = QString("");
 	}
 
 	setupVolButton(this->ui->volumeSlider->value());
-	emit skinChanged(dark);
+	//emit skinChanged(dark);
+	this->ui_library->change_skin(dark);
+	this->ui_playlist->change_skin(dark);
 
 }
 
@@ -509,7 +511,7 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 	QSize tmpSize = this->ui->playlist_widget->size();
 
 	tmpSize.setWidth(317 );
-	tmpSize.setHeight(431);
+	tmpSize.setHeight(465);
 
 	this->ui->playlist_widget->resize(tmpSize);
 	this->ui_playlist->resize(tmpSize);

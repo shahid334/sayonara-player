@@ -526,7 +526,7 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	    MetaData data;
 	    try {
 	        QSqlQuery q (this -> m_database);
-	        q.prepare("select filename,albumID,artistID,title,year,length from tracks where albumid=" + QString::number(album) + " order by track;");
+	        q.prepare("select filename,albumID,artistID,title,year,length from tracks where albumid=" + QString::number(album) + " order by albumid, track;");
 	        if (!q.exec()) {
 	            throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
 	        }
@@ -555,36 +555,223 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 }
 
 void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata){
-	 if (!this -> m_database.isOpen())
-		        this -> m_database.open();
-		    MetaData data;
-		    try {
-		        QSqlQuery q (this -> m_database);
-		        q.prepare("select filename,albumID,artistID,title,year,length from tracks where artistid=" + QString::number(artist) + " order by year, track;");
-		        if (!q.exec()) {
-		            throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
-		        }
-		        int albumID = -1;
-		        int artistID = -1;
-		        while (q.next()) {
-		            albumID = q.value(1).toInt();
-		            artistID = q.value(2).toInt();
-		            data.filepath = q.value(0).toString();
-		            data.album = this -> getAlbumName(albumID);
-		            data.artist = this -> getArtistName(artistID);
-		            data.title = q.value(3).toString();
-		            data.year = q.value(4).toInt();
-		            data.length_ms = q.value(5).toInt();
-		            returndata.push_back(data);
-		        }
-		    }
-		    catch (QString ex) {
-		        qDebug() << "SQL - Error: getTracksFromDatabase";
-		        qDebug() << ex;
-		        QSqlError er = this -> m_database.lastError();
-		        qDebug() << er.driverText();
-		        qDebug() << er.databaseText();
-		        qDebug() << er.databaseText();
-		    }
+	if (!this -> m_database.isOpen())
+		this -> m_database.open();
+	MetaData data;
+	try {
+		QSqlQuery q (this -> m_database);
+		q.prepare("select filename,albumID,artistID,title,year,length from tracks where artistid=" + QString::number(artist) + " order by albumid, track;");
+		if (!q.exec()) {
+			throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
+		}
+		int albumID = -1;
+		int artistID = -1;
+		while (q.next()) {
+			albumID = q.value(1).toInt();
+			artistID = q.value(2).toInt();
+			data.filepath = q.value(0).toString();
+			data.album = this -> getAlbumName(albumID);
+			data.artist = this -> getArtistName(artistID);
+			data.title = q.value(3).toString();
+			data.year = q.value(4).toInt();
+			data.length_ms = q.value(5).toInt();
+			returndata.push_back(data);
+		}
+	}
+	catch (QString ex) {
+		qDebug() << "SQL - Error: getTracksFromDatabase";
+		qDebug() << ex;
+		QSqlError er = this -> m_database.lastError();
+		qDebug() << er.driverText();
+		qDebug() << er.databaseText();
+		qDebug() << er.databaseText();
+	}
 
+}
+
+
+void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaData>& result){
+	if (!this -> m_database.isOpen())
+		this -> m_database.open();
+	MetaData data;
+
+	try {
+		QSqlQuery q (this -> m_database);
+		QString query;
+		query = QString("SELECT * FROM ( ") +
+				"SELECT  " +
+					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name " +
+					"FROM tracks, albums, artists " +
+					"WHERE tracks.albumid = albums.albumid AND tracks.artistid = artists.artistid AND tracks.title LIKE :search_in_title " +
+				"UNION " +
+				"SELECT  " +
+					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name " +
+					"FROM tracks, albums, artists " +
+					"WHERE tracks.albumid = albums.albumid AND tracks.artistid = artists.artistid AND albums.name LIKE :search_in_album " +
+				"UNION  " +
+				"SELECT  " +
+					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name " +
+					"FROM tracks, albums, artists " +
+					"WHERE tracks.albumid = albums.albumid AND tracks.artistid = artists.artistid AND artists.name LIKE :search_in_artist " +
+				") " +
+			"ORDER BY album, track" +
+			";";
+
+		q.prepare(query);
+		q.bindValue(":search_in_title",QVariant(search));
+		q.bindValue(":search_in_album",QVariant(search));
+		q.bindValue(":search_in_artist",QVariant(search));
+
+
+		if (!q.exec()) {
+			throw QString ("SQL - Error: getTracksFromDatabase cannot execute search track query" );
+		}
+
+		while (q.next()) {
+
+			data.title = q.value(0).toString().trimmed();
+			data.length_ms = q.value(1).toInt();
+			data.year = q.value(2).toInt();
+			data.filepath = q.value(3).toString();
+			data.track_num = q.value(4).toInt();
+			data.album = q.value(5).toString().trimmed();
+			data.artist = q.value(6).toString().trimmed();
+
+			result.push_back(data);
+		}
+	}
+
+
+	catch (QString ex) {
+		qDebug() << "SQL - Error: getTracksFromDatabase";
+		qDebug() << ex;
+		QSqlError er = this -> m_database.lastError();
+		qDebug() << er.driverText();
+		qDebug() << er.databaseText();
+		qDebug() << er.databaseText();
+	}
+}
+
+void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album>& result){
+	if (!this -> m_database.isOpen())
+				this -> m_database.open();
+			Album album;
+
+			try {
+				QSqlQuery q (this -> m_database);
+				QString query;
+				query = QString("SELECT * FROM ( ") +
+							"SELECT " +
+								"albums.albumid as albumid, albums.name as name, COUNT(tracks.trackid), SUM(tracks.length)/1000, MAX(tracks.year), group_concat(artists.name) " +
+								"FROM albums, artists, tracks " +
+								"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
+								"GROUP BY albums.albumid, albums.name " +
+							"UNION " +
+							"SELECT  " +
+								"albums.albumid, albums.name, COUNT(tracks.trackid), SUM(tracks.length)/1000, MAX(tracks.year), group_concat(artists.name) " +
+								"FROM albums, artists, tracks " +
+								"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
+								"GROUP BY albums.albumid, albums.name " +
+							"UNION " +
+							"SELECT " +
+								"albums.albumid, albums.name, COUNT(tracks.trackid), SUM(tracks.length)/1000, MAX(tracks.year), group_concat(artists.name) " +
+								"FROM albums, artists, tracks " +
+								"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
+								"GROUP BY albums.albumid, albums.name " +
+						") " +
+						"GROUP BY albumid, name ORDER BY name;";
+
+				q.prepare(query);
+				q.bindValue(":search_in_title",QVariant(search));
+				q.bindValue(":search_in_album",QVariant(search));
+				q.bindValue(":search_in_artist",QVariant(search));
+
+				qDebug() << "query = " << query;
+
+
+				if (!q.exec()) {
+					throw QString ("SQL - Error: getTracksFromDatabase cannot execute search album query" );
+				}
+
+				while (q.next()) {
+
+					album.id = q.value(0).toInt();
+					album.name = q.value(1).toString().trimmed();
+					album.num_songs = q.value(2).toInt();
+					album.length_sec = q.value(3).toInt();
+					album.year = q.value(4).toInt();
+					album.artists = QStringList();
+
+					result.push_back(album);
+				}
+			}
+
+
+			catch (QString ex) {
+				qDebug() << "SQL - Error: getTracksFromDatabase";
+				qDebug() << ex;
+				QSqlError er = this -> m_database.lastError();
+				qDebug() << er.driverText();
+				qDebug() << er.databaseText();
+				qDebug() << er.databaseText();
+			}
+}
+
+void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result){
+	if (!this -> m_database.isOpen())
+				this -> m_database.open();
+			Artist artist;
+
+			try {
+				QSqlQuery q (this -> m_database);
+				QString query;
+				query = QString("SELECT * FROM ( ") +
+						"SELECT " +
+					"			artists.artistid as artistid, artists.name as name, COUNT(tracks.trackid), COUNT(albums.albumid) " +
+					"			FROM albums, artists, tracks " +
+					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
+					"			GROUP BY artists.artistid, artists.name " +
+					"		UNION " +
+					"		SELECT  " +
+					"			artists.artistid, artists.name, COUNT(tracks.trackid), COUNT(albums.albumid) " +
+					"			FROM albums, artists, tracks " +
+					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
+					"			GROUP BY artists.artistid, artists.name " +
+					"		UNION " +
+					"		SELECT  " +
+					"			artists.artistid, artists.name, COUNT(tracks.trackid), COUNT(albums.albumid) " +
+					"			FROM albums, artists, tracks " +
+					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
+					"			GROUP BY artists.artistid, artists.name " +
+					"	)  " +
+					"	GROUP BY artistid, name ORDER BY name; ";
+
+				q.prepare(query);
+				q.bindValue(":search_in_title",QVariant(search));
+				q.bindValue(":search_in_album",QVariant(search));
+				q.bindValue(":search_in_artist",QVariant(search));
+				if (!q.exec()) {
+					throw QString ("SQL - Error: getTracksFromDatabase cannot execute search artist query" );
+				}
+
+				while (q.next()) {
+
+					artist.id = q.value(0).toInt();
+					artist.name = q.value(1).toString().trimmed();
+					artist.num_songs = q.value(2).toInt();
+					artist.num_albums = q.value(3).toInt();
+
+					result.push_back(artist);
+				}
+			}
+
+
+			catch (QString ex) {
+				qDebug() << "SQL - Error: getTracksFromDatabase";
+				qDebug() << ex;
+				QSqlError er = this -> m_database.lastError();
+				qDebug() << er.driverText();
+				qDebug() << er.databaseText();
+				qDebug() << er.databaseText();
+			}
 }
