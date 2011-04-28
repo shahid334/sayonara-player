@@ -28,7 +28,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
-	this->_db = new CDatabaseConnector;
+
 
 	this->_track_model = new LibraryItemModelTracks();
 	this->_album_model = new LibraryItemModelAlbums();
@@ -48,11 +48,16 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->tb_title->setDragEnabled(true);
 
 
-	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
+
 	connect(this->ui->lv_artist, SIGNAL( clicked ( const QModelIndex & )), this, SLOT(artist_changed(const QModelIndex&)));
 	connect(this->ui->lv_album, SIGNAL( clicked ( const QModelIndex & )), this, SLOT(album_changed(const QModelIndex&)));
-	connect(this->ui->btn_clear, SIGNAL(clicked()), this, SLOT(clear_button_pressed()));
+
+	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
+
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_chosen(const QModelIndex & )));
+	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_chosen(const QModelIndex & )));
+
+	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 
@@ -268,7 +273,8 @@ void GUI_Library_windowed::album_changed(const QModelIndex& idx){
 	int album_id = _v_albums.at(idx.row()).id;
 
 	vector<MetaData> vec_tracks;
-	_db->getAllTracksByAlbum(album_id, vec_tracks);
+	CDatabaseConnector db;
+	db.getAllTracksByAlbum(album_id, vec_tracks);
 	fill_library_tracks(vec_tracks);
 }
 
@@ -280,8 +286,9 @@ void GUI_Library_windowed::artist_changed(const QModelIndex& idx){
 
 	vector<MetaData> vec_tracks;
 	vector<Album> vec_albums;
-	_db->getAllTracksByArtist(artist_id, vec_tracks);
-	_db->getAllAlbumsByArtist(artist_id, vec_albums);
+	CDatabaseConnector db;
+	db.getAllTracksByArtist(artist_id, vec_tracks);
+	db.getAllAlbumsByArtist(artist_id, vec_albums);
 
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
@@ -293,7 +300,8 @@ void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
 	int album_id = _v_albums.at(idx.row()).id;
 
 	vector<MetaData> vec;
-	_db->getAllTracksByAlbum(album_id, vec);
+	CDatabaseConnector db;
+	db.getAllTracksByAlbum(album_id, vec);
 	emit album_chosen_signal(vec);
 }
 
@@ -302,7 +310,8 @@ void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 	int artist_id = _v_artists.at(idx.row()).id;
 
 	vector<MetaData> vec;
-	_db->getAllTracksByArtist(artist_id, vec);
+	CDatabaseConnector db;
+	db.getAllTracksByArtist(artist_id, vec);
 	emit artist_chosen_signal(vec);
 
 }
@@ -313,8 +322,9 @@ void GUI_Library_windowed::clear_button_pressed(){
 	vector<Album> vec_albums;
 	vector<MetaData> vec_tracks;
 
-	_db->getTracksFromDatabase(vec_tracks);
-	_db->getAllAlbums(vec_albums);
+	CDatabaseConnector db;
+	db.getTracksFromDatabase(vec_tracks);
+	db.getAllAlbums(vec_albums);
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
 

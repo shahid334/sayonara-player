@@ -41,7 +41,6 @@ private:
 	vector<MetaData>	_v_metadata;
 	vector<Album>		_v_albums;
 	vector<Artist>		_v_artists;
-	CDatabaseConnector*	_db;
 
 
 	signals:
