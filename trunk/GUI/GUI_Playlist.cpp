@@ -261,6 +261,46 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
+	qDebug() << "Dropped";
+	qDebug() << event->mimeData()->text();
+	QString text = event->mimeData()->text();
+
+	if(text.startsWith("file://")){
+		QStringList pathlist = text.split('\n');
+		QStringList file_paths;
+		pathlist.removeLast();
+		for(int i=0; i<pathlist.size(); i++){
+			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
+			path = path.replace("%20", " ");
+			if(QFile::exists(path)){
+
+				if(path.endsWith(".mp3"))
+					file_paths.push_back(path);
+
+				else if(path.at(path.length()-4) != '.'){ // directory
+					emit directory_dropped(path);
+					return;
+				}
+			}
+		}
+
+
+		if(file_paths.size() > 0){
+
+			emit sound_files_dropped(file_paths);
+			return;
+		}
+
+
+
+		return;
+
+
+	}
+
+
+
+
 	QPoint pos = event->pos();
 	int row = this->ui->listView->indexAt(pos).row();
 
@@ -285,54 +325,6 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 		emit dropped_tracks(v_md4Playlist, row);
 	}
-
-
-
-
-
-	else if(event_type == DROP_TYPE_ALBUMS){
-
-		vector<Album> v_albums4Playlist;
-		for(int i=0; i<list.size(); i++){
-
-			QStringList album_stringlist = list.at(i).toStringList();
-
-			Album album;
-			album.fromStringList(album_stringlist);
-			v_albums4Playlist.push_back(album);
-		}
-
-		emit dropped_albums(v_albums4Playlist, row);
-	}
-
-
-	else if(event_type == DROP_TYPE_ARTISTS){
-
-		vector<Artist> v_artists4Playlist;
-		for(int i=0; i<list.size(); i++){
-
-			QStringList artist_stringlist = list.at(i).toStringList();
-
-
-			Artist artist;
-			artist.fromStringList(artist_stringlist);
-			v_artists4Playlist.push_back(artist);
-			qDebug() << "Dropped artist " << artist.name;
-		}
-
-		emit dropped_artists(v_artists4Playlist, row);
-	}
-
-
-
-
-
-
-
-
-
-
-
 }
 
 

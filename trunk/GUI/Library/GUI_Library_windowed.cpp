@@ -48,16 +48,12 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->tb_title->setDragEnabled(true);
 
 
-
-	connect(this->ui->lv_artist, SIGNAL( clicked ( const QModelIndex & )), this, SLOT(artist_changed(const QModelIndex&)));
-	connect(this->ui->lv_album, SIGNAL( clicked ( const QModelIndex & )), this, SLOT(album_changed(const QModelIndex&)));
-
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_chosen(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_chosen(const QModelIndex & )));
 
-	connect(this->ui->tb_title, SIGNAL(	pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
+	connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 
@@ -188,49 +184,55 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
-	Q_UNUSED(idx);
+	int artist_id = _v_artists.at(idx.row()).id;
+
+	vector<MetaData> vec_tracks;
+	vector<Album> vec_albums;
+	CDatabaseConnector db;
+	db.getAllTracksByArtist(artist_id, vec_tracks);
+	db.getAllAlbumsByArtist(artist_id, vec_albums);
+
+	fill_library_albums(vec_albums);
+	fill_library_tracks(vec_tracks);
 
 	QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
-	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows(0);
-
 	QList<QVariant> list2send;
 
-	for(int i=0; i<idx_list.size(); i++){
-		int row = idx_list.at(i).row();
+		for(int i=0; i<this->_track_model->rowCount(); i++){
+			QStringList metadata = _v_metadata.at(i).toStringList();
+			list2send.push_back(metadata);
+		}
 
-		QStringList metadata = _v_artists.at(row).toStringList();
-		qDebug() << "artists dragged = " << _v_artists.at(row).name;
-		list2send.push_back(metadata);
-	}
+		mime->setProperty("data_type", DROP_TYPE_TRACKS);
+		mime->setProperty("data", (QVariant) list2send);
+		drag->setMimeData(mime);
 
-	mime->setProperty("data_type", DROP_TYPE_ARTISTS);
-	mime->setProperty("data", (QVariant) list2send);
-	drag->setMimeData(mime);
-
-	Qt::DropAction dropAction = drag->exec();
-	Q_UNUSED(dropAction);
+		Qt::DropAction dropAction = drag->exec();
+		Q_UNUSED(dropAction);
 }
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
-	Q_UNUSED(idx);
+
+	int album_id = _v_albums.at(idx.row()).id;
+
+	vector<MetaData> vec_tracks;
+	CDatabaseConnector db;
+	db.getAllTracksByAlbum(album_id, vec_tracks);
+	fill_library_tracks(vec_tracks);
 
 	QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
-	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows(0);
-
 	QList<QVariant> list2send;
 
-	for(int i=0; i<idx_list.size(); i++){
-		int row = idx_list.at(i).row();
-
-		QStringList metadata = _v_albums.at(row).toStringList();
+	for(int i=0; i<this->_track_model->rowCount(); i++){
+		QStringList metadata = _v_metadata.at(i).toStringList();
 		list2send.push_back(metadata);
 	}
 
-	mime->setProperty("data_type", DROP_TYPE_ALBUMS);
+	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", (QVariant) list2send);
 	drag->setMimeData(mime);
 
@@ -268,32 +270,6 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 }
 
 
-void GUI_Library_windowed::album_changed(const QModelIndex& idx){
-
-	int album_id = _v_albums.at(idx.row()).id;
-
-	vector<MetaData> vec_tracks;
-	CDatabaseConnector db;
-	db.getAllTracksByAlbum(album_id, vec_tracks);
-	fill_library_tracks(vec_tracks);
-}
-
-
-
-void GUI_Library_windowed::artist_changed(const QModelIndex& idx){
-
-	int artist_id = _v_artists.at(idx.row()).id;
-
-	vector<MetaData> vec_tracks;
-	vector<Album> vec_albums;
-	CDatabaseConnector db;
-	db.getAllTracksByArtist(artist_id, vec_tracks);
-	db.getAllAlbumsByArtist(artist_id, vec_albums);
-
-	fill_library_albums(vec_albums);
-	fill_library_tracks(vec_tracks);
-
-}
 
 void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
 

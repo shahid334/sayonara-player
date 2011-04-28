@@ -58,13 +58,12 @@ private:
 
 	private slots:
 		void track_pressed(const QModelIndex&);
-		void album_changed(const QModelIndex&);
-		void artist_changed(const QModelIndex&);
+		void album_pressed(const QModelIndex &);
+		void artist_pressed(const QModelIndex &);
+
 		void clear_button_pressed();
 		void album_chosen(const QModelIndex & );
 		void artist_chosen(const QModelIndex & );
-		void album_pressed(const QModelIndex &);
-		void artist_pressed(const QModelIndex &);
 
 	protected:
 			void resizeEvent(QResizeEvent* e);

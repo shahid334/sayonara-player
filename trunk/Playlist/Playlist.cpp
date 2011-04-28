@@ -93,6 +93,7 @@ void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 }
 
 
+// not used, but maybe later
 void Playlist::insert_albums(const vector<Album>& v_albums, int idx){
 
 	int tmp_idx = idx;
@@ -105,6 +106,7 @@ void Playlist::insert_albums(const vector<Album>& v_albums, int idx){
 	}
 }
 
+// not used, but maybe late
 void Playlist::insert_artists(const vector<Artist>& v_artists, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_artists.size(); i++){

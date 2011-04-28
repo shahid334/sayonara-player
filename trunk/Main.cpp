@@ -95,8 +95,8 @@ int main(int argc, char *argv[]){
 
         app.connect (&ui_playlist, SIGNAL(playlist_mode_changed(const Playlist_Mode&)), 			&playlist, 	SLOT(playlist_mode_changed(const Playlist_Mode&)));
         app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), 			&playlist, 	SLOT(insert_tracks(const vector<MetaData>&, int)));
-        app.connect (&ui_playlist, SIGNAL(dropped_albums(const vector<Album>&, int)), 				&playlist, 	SLOT(insert_albums(const vector<Album>&, int)));
-        app.connect (&ui_playlist, SIGNAL(dropped_artists(const vector<Artist>&, int)), 			&playlist, 	SLOT(insert_artists(const vector<Artist>&, int)));
+        app.connect (&ui_playlist, SIGNAL(sound_files_dropped(QStringList&)), 						&playlist, 	SLOT(createPlaylist(QStringList&)));
+        app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 							&library, 	SLOT(baseDirSelected(const QString & )));
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));

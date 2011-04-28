@@ -51,6 +51,7 @@ bool CDatabaseConnector::openDatabase () {
     }
 
     return e;
+
 }
 
 CDatabaseConnector::~CDatabaseConnector() {
@@ -162,7 +163,7 @@ QString CDatabaseConnector::getAlbumName (const int & id) {
             throw QString ("SQL - Error: getAlbumName " + id);
         }
         if (q.next()) {
-            a = q.value(0).toString();
+            a = q.value(0).toString().trimmed();
         }
     }
     else {
@@ -181,7 +182,7 @@ QString CDatabaseConnector::getArtistName (const int & id) {
             throw QString ("SQL - Error: getArtistName " + id);
         }
         if (q.next()) {
-            a = q.value(0).toString();
+            a = q.value(0).toString().trimmed();
         }
     }
     else {
@@ -212,7 +213,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
             data.filepath = q.value(0).toString();
             data.album = this -> getAlbumName(albumID);
             data.artist = this -> getArtistName(artistID);
-            data.title = q.value(3).toString();
+            data.title = q.value(3).toString().trimmed();
             data.year = q.value(4).toInt();
             data.length_ms = q.value(5).toInt();
             returndata.push_back(data);
@@ -356,7 +357,7 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result){
 			Artist artist;
 			while (q.next()) {
 				artist.id = q.value(0).toInt();
-				artist.name = q.value(1).toString();
+				artist.name = q.value(1).toString().trimmed();
 				artist.num_albums = q.value(2).toInt();
 				artist.num_songs = q.value(3).toInt();
 
@@ -401,7 +402,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result){
 		Album album;
 		while (q.next()) {
 			album.id = q.value(0).toInt();
-			album.name = q.value(1).toString();
+			album.name = q.value(1).toString().trimmed();
 			album.length_sec = q.value(2).toInt();
 			album.num_songs = q.value(3).toInt();
 			album.year = q.value(4).toInt();
@@ -448,7 +449,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 				Artist artist;
 				while (q.next()) {
 					artist.id = q.value(0).toInt();
-					artist.name = q.value(1).toString();
+					artist.name = q.value(1).toString().trimmed();
 					artist.num_albums = q.value(2).toInt();
 					artist.num_songs = q.value(3).toInt();
 
@@ -496,7 +497,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result)
 		Album album;
 		while (q.next()) {
 			album.id = q.value(0).toInt();
-			album.name = q.value(1).toString();
+			album.name = q.value(1).toString().trimmed();
 			album.length_sec = q.value(2).toInt();
 			album.num_songs = q.value(3).toInt();
 			album.year = q.value(4).toInt();
@@ -535,8 +536,8 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	            albumID = q.value(1).toInt();
 	            artistID = q.value(2).toInt();
 	            data.filepath = q.value(0).toString();
-	            data.album = this -> getAlbumName(albumID);
-	            data.artist = this -> getArtistName(artistID);
+	            data.album = this -> getAlbumName(albumID).trimmed();
+	            data.artist = this -> getArtistName(artistID).trimmed();
 	            data.title = q.value(3).toString();
 	            data.year = q.value(4).toInt();
 	            data.length_ms = q.value(5).toInt();

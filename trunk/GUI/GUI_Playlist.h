@@ -43,6 +43,8 @@
 			void dropped_albums(const vector<Album>&, int);
 			void dropped_artists(const vector<Artist>&, int);
 			void playlist_filled(vector<MetaData>&);
+			void sound_files_dropped(QStringList&);
+			void directory_dropped(const QString&);
 
 
 
