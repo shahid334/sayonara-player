@@ -22,7 +22,7 @@ using namespace std;
 namespace Helper{
 
 	template<typename T>
-	string cvtNum2String(T num, uint digits=0){
+	QString cvtNum2String(T num, uint digits=0){
 		stringstream sstr;
 		sstr << num;
 		string tmpString=sstr.str();
@@ -31,7 +31,7 @@ namespace Helper{
 			tmpString = string("0") + tmpString;
 		}
 
-		return tmpString;
+		return QString::fromStdString(tmpString);
 
 	}
 
@@ -59,6 +59,14 @@ namespace Helper{
 
 	}
 
+
+	inline QString cvtMsecs2TitleLengthString(long int msec){
+		int sec = msec / 1000;
+		int min = sec / 60;
+		int secs = sec % 60;
+		return cvtNum2String(min, 2) + ":" + cvtNum2String(secs, 2);
+
+	}
 
 	inline string replace(string input, string toReplace, string replaceWith){
 

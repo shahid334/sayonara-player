@@ -8,6 +8,14 @@
 #ifndef LIBRARYITEMMODELTRACKS_H_
 #define LIBRARYITEMMODELTRACKS_H_
 
+#define COL_TRACK_NUM 0
+#define COL_TITLE 1
+#define COL_ALBUM 2
+#define COL_ARTIST 3
+#define COL_YEAR 4
+#define COL_LENGTH 5
+
+
 #include <QObject>
 #include <QStringList>
 #include <QAbstractTableModel>
@@ -15,7 +23,11 @@
 #include <vector>
 #include <HelperStructs/MetaData.h>
 
+
+
+
 using namespace std;
+
 
 
 class LibraryItemModelTracks : public QAbstractTableModel {
@@ -24,7 +36,7 @@ Q_OBJECT
 
 public:
 	LibraryItemModelTracks(QObject* parent=0);
-	LibraryItemModelTracks(const vector<MetaData>& v_metadata);
+
 	virtual ~LibraryItemModelTracks();
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -43,7 +55,7 @@ public:
 
 
 private:
-	QList<QStringList>		_tracklist;
+	QList<MetaData>			_tracklist;
 	QStringList				_headerdata;
 };
 

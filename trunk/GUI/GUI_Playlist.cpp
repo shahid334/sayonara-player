@@ -338,9 +338,9 @@ void GUI_Playlist::set_total_time_label(){
 
 			if(hrs > 0) playlist_string += QString::number(hrs) + "h ";
 
-			playlist_string += 	QString::fromStdString(Helper::cvtNum2String(mins, 2)) +
+			playlist_string += 	Helper::cvtNum2String(mins, 2) +
 								"m " +
-								QString::fromStdString(Helper::cvtNum2String(secs, 2)) +
+								Helper::cvtNum2String(secs, 2) +
 								"s";
 
 

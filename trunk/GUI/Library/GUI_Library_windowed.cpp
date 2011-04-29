@@ -87,16 +87,7 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 		MetaData md = v_metadata.at(i);
 
 
-		QStringList list;
-		list.push_back(md.title);
-		list.push_back(md.artist);
-		list.push_back(md.album);
-
-		int min, sec;
-		Helper::cvtSecs2MinAndSecs(md.length_ms/1000, &min, &sec);
-		QString length = QString::fromStdString(Helper::cvtNum2String(min, 2)) + ":" + QString::fromStdString(Helper::cvtNum2String(sec, 2));
-		list.push_back(length);
-		list.push_back(QString::number(md.year));
+		QStringList list = md.toStringList();
 
 		this->_track_model->setData(idx, list, Qt::EditRole);
 	}
@@ -170,25 +161,29 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	Q_UNUSED(e);
 
+
+
 	QSize tmpSize = this->ui->tb_title->size();
 	int width = tmpSize.width();
 	if(width > 550){
-		this->ui->tb_title->setColumnWidth(0, width * 0.35);
-		this->ui->tb_title->setColumnWidth(1, width * 0.23);
+		this->ui->tb_title->setColumnWidth(0, width * 0.03);
+		this->ui->tb_title->setColumnWidth(1, width * 0.35);
 		this->ui->tb_title->setColumnWidth(2, width * 0.23);
-		this->ui->tb_title->setColumnWidth(3, width * 0.08);
+		this->ui->tb_title->setColumnWidth(3, width * 0.23);
 		this->ui->tb_title->setColumnWidth(4, width * 0.08);
+		this->ui->tb_title->setColumnWidth(5, width * 0.08);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
 
 	}
 
 	else {
-		this->ui->tb_title->setColumnWidth(0, width * 0.4);
-		this->ui->tb_title->setColumnWidth(1, width * 0.3);
-		this->ui->tb_title->setColumnWidth(2, width * 0.3);
-		this->ui->tb_title->setColumnWidth(3, 80);
+		this->ui->tb_title->setColumnWidth(0, width * 0.10);
+		this->ui->tb_title->setColumnWidth(1, width * 0.25);
+		this->ui->tb_title->setColumnWidth(2, width * 0.25);
+		this->ui->tb_title->setColumnWidth(3, width * 0.25);
 		this->ui->tb_title->setColumnWidth(4, 80);
+		this->ui->tb_title->setColumnWidth(5, 80);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
 
@@ -208,8 +203,17 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	vector<MetaData> vec_tracks;
 	vector<Album> vec_albums;
 	CDatabaseConnector db;
-	db.getAllTracksByArtist(artist_id, vec_tracks);
-	db.getAllAlbumsByArtist(artist_id, vec_albums);
+	if(this->ui->le_search->text().length() == 0){
+		db.getAllTracksByArtist(artist_id, vec_tracks);
+		db.getAllAlbumsByArtist(artist_id, vec_albums);
+	}
+	else {
+		db.getAllTracksByArtist(artist_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
+		db.getAllAlbumsByArtist(artist_id, vec_albums, QString("%") + this->ui->le_search->text() + "%");
+	}
+
+
+
 
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
@@ -238,7 +242,15 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 	vector<MetaData> vec_tracks;
 	CDatabaseConnector db;
-	db.getAllTracksByAlbum(album_id, vec_tracks);
+
+	if(this->ui->le_search->text().length() == 0){
+		db.getAllTracksByAlbum(album_id, vec_tracks);
+	}
+
+	else {
+		db.getAllTracksByAlbum(album_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
+	}
+
 	fill_library_tracks(vec_tracks);
 
 	QDrag* drag = new QDrag(this);
@@ -388,9 +400,9 @@ QString GUI_Library_windowed::getTotalTimeString(Album& album){
 
 	if(hrs > 0) str += QString::number(hrs) + "h ";
 
-	str += 	QString::fromStdString(Helper::cvtNum2String(mins)) +
+	str += 	Helper::cvtNum2String(mins) +
 			"m " +
-			QString::fromStdString(Helper::cvtNum2String(secs)) +
+			Helper::cvtNum2String(secs) +
 			"s";
 
 

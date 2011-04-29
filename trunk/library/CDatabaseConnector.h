@@ -72,11 +72,11 @@ public:
     void getAllAlbums(vector<Album>& result);
 
     void getAllArtistsByAlbum(int album, vector<Artist>& result);
-    void getAllAlbumsByArtist(int artist, vector<Album>& result);
+    void getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter=QString(""));
 
 
-    void getAllTracksByAlbum(int album, vector<MetaData>& result);
-    void getAllTracksByArtist(int artist, vector<MetaData>& result);
+    void getAllTracksByAlbum(int album, vector<MetaData>& result, QString filter=QString(""));
+    void getAllTracksByArtist(int artist, vector<MetaData>& result, QString filter=QString(""));
 
     void getAllTracksBySearchString(QString search, vector<MetaData>& result);
     void getAllAlbumsBySearchString(QString search, vector<Album>& result);

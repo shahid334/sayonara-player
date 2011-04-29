@@ -201,7 +201,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
     MetaData data;
     try {
         QSqlQuery q (this -> m_database);
-        q.prepare("select filename,albumID,artistID,title,year,length from tracks");
+        q.prepare("select filename,albumID,artistID,title,year,length,track from tracks");
         if (!q.exec()) {
             throw QString ("SQL - Error: getTracksFromDatabase cammot execute query");
         }
@@ -216,6 +216,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
             data.title = q.value(3).toString().trimmed();
             data.year = q.value(4).toInt();
             data.length_ms = q.value(5).toInt();
+            data.track_num = q.value(6).toInt();
             returndata.push_back(data);
         }
     }
@@ -471,24 +472,49 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter){
 	 if (!this -> m_database.isOpen())
 			        this -> m_database.open();
 
 	try {
 		QSqlQuery q (this -> m_database);
-		q.prepare(QString("SELECT ") +
-					"albums.albumID, " +
-					"albums.name, " +
-					"SUM(tracks.length) / 1000, " +
-					"count(tracks.trackid), " +
-					"max(tracks.year), " +
-					"group_concat(artists.name) " +
-					"FROM albums, Tracks, artists " +
-					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
-					"AND artists.artistid=" + QString::number(artist) + " " +
-					"GROUP BY albums.albumID, albums.name " +
-					"ORDER BY albums.name;");
+		QString querytext = QString("SELECT ") +
+				"albums.albumID, " +
+				"albums.name, " +
+				"SUM(tracks.length) / 1000, " +
+				"count(tracks.trackid), " +
+				"max(tracks.year), " +
+				"group_concat(artists.name) " +
+				"FROM albums, tracks, artists " +
+				"WHERE tracks.albumID = albums.albumID AND artists.artistid = tracks.artistid AND artists.artistid = :artist_id ";
+
+		if(filter.length() > 0){
+				querytext += QString("AND tracks.trackid IN ( ") +
+										"SELECT t2.trackid " +
+										"FROM tracks t2 "+
+										"WHERE t2.title LIKE :filter1 "+
+										"UNION SELECT t3.trackid "+
+										"FROM tracks t3, albums "+
+										"WHERE albums.albumid = t3.albumid AND albums.name LIKE :filter2 "+
+										"UNION SELECT t4.trackid " +
+										"FROM tracks t4, albums, artists " +
+										"WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.name LIKE :filter3 "
+
+									") ";
+		}
+
+
+		querytext += QString("GROUP BY albums.albumID, albums.name ") +
+				"ORDER BY albums.name;";
+
+		q.prepare(querytext);
+		q.bindValue(":artist_id", QVariant(artist));
+		if(filter.length() > 0){
+			q.bindValue(":filter1", QVariant(filter));
+			q.bindValue(":filter2", QVariant(filter));
+			q.bindValue(":filter3", QVariant(filter));
+		}
+
 
 		if (!q.exec()) {
 			throw QString ("SQL - Error: Could not get all albums from database");
@@ -520,13 +546,45 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result)
 	}
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata){
+void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, QString filter){
 	  if (!this -> m_database.isOpen())
 	        this -> m_database.open();
 	    MetaData data;
 	    try {
 	        QSqlQuery q (this -> m_database);
-	        q.prepare("select filename,albumID,artistID,title,year,length from tracks where albumid=" + QString::number(album) + " order by albumid, track;");
+	        QString querytext = QString("select filename,albumID,artistID,title,year,length,track from tracks where albumid=:albumid ");
+
+
+	        if(filter.length() > 0 ){
+				// consider the case, that the search string may fit to the title
+				// union the case that the search string may fit to the album
+	        	querytext += QString("AND tracks.trackid IN ( ") +
+									"SELECT t2.trackid " +
+									"FROM tracks t2 "+
+									"WHERE t2.title LIKE :filter1 "+
+									"UNION SELECT t3.trackid "+
+									"FROM tracks t3, albums "+
+									"WHERE albums.albumid = t3.albumid AND albums.name LIKE :filter2 "+
+									"UNION SELECT t4.trackid " +
+									"FROM tracks t4, albums, artists " +
+									"WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.name LIKE :filter3 "
+
+								") ";
+
+
+
+			}
+
+	        querytext += QString(" order by albumid, track;");
+	        q.prepare(querytext);
+	        q.bindValue(":albumid", QVariant(album));
+	        if(filter.length() > 0){
+	        	q.bindValue(":filter1", QVariant(filter));
+	        	q.bindValue(":filter2", QVariant(filter));
+	        	q.bindValue(":filter3", QVariant(filter));
+	        }
+
+
 	        if (!q.exec()) {
 	            throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
 	        }
@@ -541,6 +599,8 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	            data.title = q.value(3).toString();
 	            data.year = q.value(4).toInt();
 	            data.length_ms = q.value(5).toInt();
+	            data.track_num = q.value(6).toInt();
+
 	            returndata.push_back(data);
 	        }
 	    }
@@ -554,13 +614,46 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	    }
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata){
+void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, QString filter){
 	if (!this -> m_database.isOpen())
 		this -> m_database.open();
+
 	MetaData data;
 	try {
 		QSqlQuery q (this -> m_database);
-		q.prepare("select filename,albumID,artistID,title,year,length from tracks where artistid=" + QString::number(artist) + " order by albumid, track;");
+		QString querytext = QString("select filename,albumID,artistID,title,year,length,track from tracks where artistID = :artist_id ");
+
+		if(filter.length() > 0 ){
+			// consider the case, that the search string may fit to the title
+			// union the case that the search string may fit to the album
+			querytext += QString("AND tracks.trackid IN ( ") +
+								"SELECT t2.trackid " +
+								"FROM tracks t2 "+
+								"WHERE t2.title LIKE :filter1 "+
+								"UNION SELECT t3.trackid "+
+								"FROM tracks t3, albums "+
+								"WHERE albums.albumid = t3.albumid AND albums.name LIKE :filter2 "+
+								"UNION SELECT t4.trackid " +
+								"FROM tracks t4, albums, artists " +
+								"WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.name LIKE :filter3 "
+
+							") ";
+
+
+		}
+
+		querytext += QString("order by albumid, track;");
+		qDebug() << "query = " << querytext;
+
+
+		q.prepare(querytext);
+		q.bindValue(":artist_id", QVariant(artist));
+		if(filter.length() > 0 ){
+			q.bindValue(":filter1", QVariant(filter));
+			q.bindValue(":filter2", QVariant(filter));
+			q.bindValue(":filter3", QVariant(filter));
+		}
+
 		if (!q.exec()) {
 			throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
 		}
@@ -575,6 +668,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 			data.title = q.value(3).toString();
 			data.year = q.value(4).toInt();
 			data.length_ms = q.value(5).toInt();
+			data.track_num = q.value(6).toInt();
 			returndata.push_back(data);
 		}
 	}
