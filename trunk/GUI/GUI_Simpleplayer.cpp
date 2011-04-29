@@ -355,7 +355,7 @@ void GUI_SimplePlayer::showPlaylist(bool vis){
 
 void GUI_SimplePlayer::changeEvent(QEvent *event){
 
-	if(isMinimized()  && !m_minTriggerByTray){
+	/*if(isMinimized()  && !m_minTriggerByTray){
 		if (m_trayIcon->isVisible()) {
 			hide();
 			QMainWindow::changeEvent(event);
@@ -365,14 +365,14 @@ void GUI_SimplePlayer::changeEvent(QEvent *event){
 	}
 
 	else event->ignore();
-	m_minTriggerByTray = false;
+	m_minTriggerByTray = false;*/
 }
 
 
 
 void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
 
-	m_minTriggerByTray = false;
+	/*m_minTriggerByTray = false;
 
 	switch(reason){
 		case QSystemTrayIcon::DoubleClick:
@@ -395,7 +395,7 @@ void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
 		default: break;
 
 
-	}
+	}*/
 
 
 }
