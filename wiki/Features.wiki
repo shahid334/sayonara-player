@@ -3,12 +3,12 @@
   * Playlist
   * Cover fetch
   * LastFM scrobbling
+  * Media Library
 
 
 
 = Todo =
 
-  * Media Library (at work)
   * Dynamic Playlists (using LastFM)
   * ID3 Tagger
   * Equalizer
