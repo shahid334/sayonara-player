@@ -45,6 +45,7 @@
 			void playlist_filled(vector<MetaData>&);
 			void sound_files_dropped(QStringList&);
 			void directory_dropped(const QString&);
+			void row_removed(int);
 
 
 
@@ -60,10 +61,15 @@
 
 			void current_row_changed(int);
 			void current_row_changed(const QModelIndex &);
+			void selected_row_changed(const QModelIndex&);
 			void clear_playlist_slot();
 			void save_playlist_slot();
 			void playlist_mode_changed_slot();
 
+
+
+		protected:
+			void keyPressEvent(QKeyEvent* e);
 
 		private:
 			Ui::Playlist_Window* 	ui;
@@ -75,8 +81,11 @@
 
 			QWidget*				_parent;
 			qint64 					_total_secs;
+			int						_cur_playing_row;
+			int						_cur_selected_row;
 			void initGUI();
 			void set_total_time_label();
+
 	};
 
 

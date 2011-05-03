@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), 			&playlist, 	SLOT(insert_tracks(const vector<MetaData>&, int)));
         app.connect (&ui_playlist, SIGNAL(sound_files_dropped(QStringList&)), 						&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 							&library, 	SLOT(baseDirSelected(const QString & )));
-
+        app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
@@ -112,6 +112,7 @@ int main(int argc, char *argv[]){
         app.connect(&ui_library, 	SIGNAL(clear_signal()), 						&library, 		SLOT(getAllArtistsAlbumsTracks()));
         app.connect(&ui_library, SIGNAL(album_chosen_signal(vector<MetaData>&)), &playlist, SLOT(createPlaylist(vector<MetaData>&)));
         app.connect(&ui_library, SIGNAL(artist_chosen_signal(vector<MetaData>&)), &playlist, SLOT(createPlaylist(vector<MetaData>&)));
+        app.connect(&ui_library, SIGNAL(track_chosen_signal(vector<MetaData>&)), &playlist, SLOT(createPlaylist(vector<MetaData>&)));
 
 
         app.connect(&library,   SIGNAL(allAlbumsLoaded(vector<Album>&)), 			&ui_library, 	SLOT(fill_library_albums(vector<Album>&)));

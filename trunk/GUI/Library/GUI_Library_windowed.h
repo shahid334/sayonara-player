@@ -52,6 +52,7 @@ private:
 		void clear_signal();
 		void album_chosen_signal(vector<MetaData>&);
 		void artist_chosen_signal(vector<MetaData>&);
+		void track_chosen_signal(vector<MetaData>& );
 
 	public slots:
 		void fill_library_tracks(vector<MetaData>&);
@@ -67,6 +68,7 @@ private:
 		void clear_button_pressed();
 		void album_chosen(const QModelIndex & );
 		void artist_chosen(const QModelIndex & );
+		void track_chosen(const QModelIndex & );
 
 		void text_line_edited(const QString&);
 

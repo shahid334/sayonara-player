@@ -35,6 +35,17 @@ Playlist::~Playlist() {
 }
 
 
+void Playlist::remove_row(int row){
+
+
+	if(row < _cur_play_idx) _cur_play_idx --;
+	else if(row == _cur_play_idx) _cur_play_idx = -1;
+
+	_v_meta_data.erase(this->_v_meta_data.begin() + row);
+
+	emit playlist_created(_v_meta_data);
+}
+
 
 void Playlist::createPlaylist(QStringList& pathlist){
 
@@ -78,25 +89,28 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 }
 
 
+
 void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	vector<MetaData> new_vec;
+	if(row < _cur_play_idx)
+		_cur_play_idx -= v_metadata.size();
 
 
-	for(int i=0; i<row; i++){
+	for(int i=0; i<row; i++)
 		new_vec.push_back(_v_meta_data.at(i));
-	}
 
-	for(uint i=0; i<v_metadata.size(); i++){
+
+	for(uint i=0; i<v_metadata.size(); i++)
 		new_vec.push_back(v_metadata.at(i));
-	}
 
-	for(uint i=row; i<_v_meta_data.size(); i++){
+
+	for(uint i=row; i<_v_meta_data.size(); i++)
 		new_vec.push_back(_v_meta_data.at(i));
-	}
 
 	_v_meta_data.clear();
 	_v_meta_data = new_vec;
+
 	emit playlist_created(_v_meta_data);
 }
 
@@ -125,12 +139,6 @@ void Playlist::insert_artists(const vector<Artist>& v_artists, int idx){
 		tmp_idx += vec.size();
 	}
 }
-
-
-
-
-
-
 
 
 void Playlist::forward(){
@@ -169,9 +177,10 @@ void Playlist::backward(){
 
 // --> GUI
 void Playlist::next_track(){
-	if(_cur_play_idx < 0) return;
+
 
 	if(_playlist_mode.rep1){
+		if(_cur_play_idx < 0) return;
 		emit selected_file_changed(_cur_play_idx);
 		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 
@@ -183,8 +192,6 @@ void Playlist::next_track(){
 		_cur_play_idx = track_num;
 		emit selected_file_changed(track_num);
 		emit selected_file_changed_md(_v_meta_data[track_num]);
-
-
 	}
 
 
@@ -236,6 +243,7 @@ void Playlist::clear_playlist(){
 
 	//_pathlist.clear();
 	_v_meta_data.clear();
+	_cur_play_idx = -1;
 }
 
 // GUI -->

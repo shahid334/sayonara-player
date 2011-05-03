@@ -52,12 +52,15 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->lv_artist->setDragEnabled(true);
 	this->ui->tb_title->setDragEnabled(true);
 
+	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
+
 
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_chosen(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_chosen(const QModelIndex & )));
+	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_chosen(const QModelIndex & )));
 
 	connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
@@ -272,7 +275,6 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 }
 
-
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
 	Q_UNUSED(idx);
@@ -324,8 +326,16 @@ void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 
 }
 
-void GUI_Library_windowed::clear_button_pressed(){
+void GUI_Library_windowed::track_chosen(const QModelIndex& idx){
 
+	vector<MetaData> vec;
+	vec.push_back(_v_metadata.at(idx.row()));
+	emit track_chosen_signal(vec);
+}
+
+
+
+void GUI_Library_windowed::clear_button_pressed(){
 
 	this->ui->le_search->clear();
 	text_line_edited(" ");

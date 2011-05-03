@@ -70,7 +70,7 @@ public:
 
 		void createPlaylist(QStringList&);
 		void createPlaylist(vector<MetaData>&);
-		void insert_tracks(const vector<MetaData>&, int);
+		void insert_tracks(const vector<MetaData>&, int idx);
 		void insert_albums(const vector<Album>&, int);			// not used
 		void insert_artists(const vector<Artist>&, int);		// not used
 		void change_track(int);
@@ -82,12 +82,14 @@ public:
 		void forward();
 		void backward();
 
+		void remove_row(int);
+
 
 	private:
 
 
 
-	vector<MetaData>		_v_meta_data;
+	vector<MetaData>	_v_meta_data;
 	QStringList			_pathlist;
 	int					_cur_play_idx;
 

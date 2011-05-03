@@ -12,6 +12,7 @@
 #include "GUI/Playlist/PlaylistItemDelegate.h"
 
 #include <QWidget>
+#include <QDebug>
 #include <QKeyEvent>
 #include <QFileDialog>
 #include <QAbstractListModel>
@@ -49,12 +50,15 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-
+	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(selected_row_changed(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(current_row_changed(const QModelIndex &)));
 
 	this->setAcceptDrops(true);
 	_parent = parent;
 	_total_secs = 0;
+
+	_cur_selected_row = -1;
+	_cur_playing_row = -1;
 
 }
 
@@ -82,14 +86,9 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 
 		QModelIndex model_idx = _pli_model->index(idx, 0);
 
-		//it->print();
-
 		int min, sek;
 		Helper::cvtSecs2MinAndSecs(it->length_ms / 1000, &min, &sek);
 		_total_secs += (min * 60 + sek);
-
-
-
 
 		QString time_str = Helper::cvtSomething2QString(min, 2) + ":" + Helper::cvtSomething2QString(sek, 2);
 
@@ -101,13 +100,14 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 						 time_str +
 						")";
 
-		//QListWidgetItem* item = new QListWidgetItem(	str );
-		//ui->_filelist->addItem(item);
 		QString str4Playlist = 	it->artist + 			",\n" +
 								"[" + it->album + "]" + ",\n" +
 								it->title + 			",\n" +
-								time_str + 				",\n" +
-								"0";
+								time_str + 				",\n";
+								//"0";
+
+		if(idx == _cur_playing_row) str4Playlist += "1";
+		else str4Playlist += "0";
 
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
@@ -118,14 +118,8 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 
 	set_total_time_label();
 
-
-
 	// nur ein test TODO: REMOVE ME
 	emit playlist_filled(v_metadata);
-
-
-
-
 }
 
 
@@ -133,7 +127,8 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 void GUI_Playlist::clear_playlist_slot(){
 	this->ui->lab_totalTime->setText("Total Time: 0m 0s");
 	_pli_model->removeRows(0, _pli_model->rowCount());
-	//this->ui->_filelist->clear();
+	_cur_playing_row = -1;
+	_cur_selected_row = -1;
 	emit clear_playlist();
 }
 
@@ -146,7 +141,10 @@ void GUI_Playlist::save_playlist_slot(){
 
 }
 
+void GUI_Playlist::selected_row_changed(const QModelIndex& index){
 
+	_cur_selected_row = index.row();
+}
 
 void GUI_Playlist::current_row_changed(const QModelIndex & index){
 
@@ -163,6 +161,9 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 			else
 				str4Playlist.replace(str4Playlist.size()-1, 1, '0');
 
+
+			_cur_playing_row = index.row();
+
 			_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 		}
 
@@ -176,12 +177,13 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 	}
 }
 
-
-
 void GUI_Playlist::current_row_changed(int new_row){
 
 	if(new_row < 0) return;
+
 	emit selected_row_changed(new_row);
+	_cur_playing_row = new_row;
+
 
 }
 
@@ -191,6 +193,7 @@ void GUI_Playlist::track_changed(int new_row){
 	if(new_row < 0) return;
 
 	QModelIndex index = _pli_model->index(new_row, 0);
+	_cur_playing_row = new_row;
 
 	for(int i=0; i<_pli_model->rowCount(); i++){
 
@@ -260,11 +263,11 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
-	qDebug() << "Dropped";
-	qDebug() << event->mimeData()->text();
+	/*qDebug() << "Dropped";
+	qDebug() << event->mimeData()->text();*/
 	QString text = event->mimeData()->text();
 
-	if(text.startsWith("file://")){
+	/*if(text.startsWith("file://")){
 		QStringList pathlist = text.split('\n');
 		QStringList file_paths;
 		pathlist.removeLast();
@@ -290,15 +293,8 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 			return;
 		}
 
-
-
 		return;
-
-
-	}
-
-
-
+	}*/
 
 	QPoint pos = event->pos();
 	int row = this->ui->listView->indexAt(pos).row();
@@ -308,7 +304,9 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	if(row == -1) row = _pli_model->rowCount();
 	else if(row > 0) row--;
 
+
 	QList<QVariant> list = event->mimeData()->property("data").toList();
+	if(row < _cur_playing_row) _cur_playing_row += list.size();
 
 
 	if(event_type == DROP_TYPE_TRACKS){
@@ -329,6 +327,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 void GUI_Playlist::set_total_time_label(){
 
+
 	int secs, mins, hrs;
 			Helper::cvtSecs2MinAndSecs(_total_secs, &mins, &secs);
 			hrs = mins / 60;
@@ -347,4 +346,27 @@ void GUI_Playlist::set_total_time_label(){
 
 			this->ui->lab_totalTime->setText(playlist_string);
 
+}
+
+void GUI_Playlist::keyPressEvent(QKeyEvent* e){
+
+	QWidget::keyPressEvent(e);
+	int key = e->key();
+
+	if(key == 16777223 && _cur_selected_row < _pli_model->rowCount() && _cur_selected_row >= 0){
+
+		if(_pli_model->rowCount() > 1){
+			if(_cur_selected_row < _cur_playing_row) _cur_playing_row --;
+
+			emit row_removed(_cur_selected_row);
+			_cur_selected_row = -1;
+
+		}
+
+		else {
+			clear_playlist_slot();
+			_cur_selected_row = -1;
+
+		}
+	}
 }
