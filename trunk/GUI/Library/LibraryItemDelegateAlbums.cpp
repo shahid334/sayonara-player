@@ -26,6 +26,9 @@ LibraryItemDelegateAlbums::~LibraryItemDelegateAlbums() {
 
 void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
+
+	QItemDelegate::paint(painter, option, index);
+
 	if(!index.isValid()) return;
 
 		QLabel label;
@@ -34,7 +37,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		QRect rect(option.rect);
 
 		painter->save();
-		painter->translate(0, 0);
+		painter->translate(2, 0);
 
 		if(index.column() == 0){
 
@@ -53,15 +56,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		}
 
 		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
-		if(! is_selected){
 
-						if(index.row() % 2 == 0)
-							label.setStyleSheet("background-color: #FFFFFF;");
+		label.setStyleSheet("background-color: transparent");
 
-						else label.setStyleSheet("background-color: #F0F0F0;");
-					}
-
-					else label.setStyleSheet("background-color: transparent;");
 
 
 		label.render(painter, rect.topLeft() );
@@ -69,6 +66,8 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 
 		painter->restore();
+
+
 }
 
 

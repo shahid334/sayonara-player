@@ -372,6 +372,8 @@ void GUI_SimplePlayer::changeEvent(QEvent *event){
 
 void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
 
+
+
 	/*m_minTriggerByTray = false;
 
 	switch(reason){

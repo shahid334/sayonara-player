@@ -10,6 +10,7 @@
 
 #include <QtGui>
 #include <QItemDelegate>
+#include <QPalette>
 
 #include <iostream>
 
@@ -45,12 +46,12 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	if(!index.isValid()) return;
 
 
-	QItemDelegate::paint(painter, option, index);
+
 
 	QRect rect(option.rect);
 
 	painter->save();
-	painter->translate(0, 1.0);
+	painter->translate(0, 0);
 
 	QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
 	QStringList strList = text.split(",\n");
@@ -63,7 +64,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	bool has_scrollbar = false;
 	if((_parent->model()->rowCount() + 1) * 33 > _parent->height()) has_scrollbar = true;
 
-	int offset = (has_scrollbar == true) ? 15 : 0;
+	int offset = (has_scrollbar == true) ?  this->_parent->horizontalScrollBar()->height()+2 : 4;
 
 	_pl_entry->setMinimumWidth(_parent->width()-offset);
 	_pl_entry->setMaximumWidth(_parent->width()-offset);
@@ -73,31 +74,28 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	bool cur_track = (strList.at(4) == "1");
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
+	QPalette palette = _parent->palette();
+
+	QColor col = palette.color(QPalette::Highlight);
+	QColor col_ia = palette.color(QPalette::Highlight).light();
 
 
 
 	if(!is_selected){
-		if(!cur_track){
-			if(index.row() % 2 == 0)
-				_pl_entry->setStyleSheet("background-color: #FFFFFF;");
-
-			else _pl_entry->setStyleSheet("background-color: #F0F0F0;");
-		}
-
-		else
-			_pl_entry->setStyleSheet("background-color: #C0C0C0; ");
+		if(!cur_track) _pl_entry->setStyleSheet("background-color: transparent");
+		else _pl_entry->setStyleSheet("background-color: " + col_ia.name() );
 
 	}
-
-	else 		_pl_entry->setStyleSheet("background-color: transparent; ");
-
-
-
+	else {
+		_pl_entry->setStyleSheet(QString("background-color: ") + col.name() + ";");
+	}
 
 	_pl_entry->render(painter, rect.topLeft() );
 
 
 	painter->restore();
+
+
 }
 
 

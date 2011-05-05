@@ -29,8 +29,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
-
-
 	this->_track_model = new LibraryItemModelTracks();
 	this->_album_model = new LibraryItemModelAlbums();
 	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
@@ -43,10 +41,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->lv_artist->setModel(this->_artist_model);
 	this->ui->lv_artist->setItemDelegate(this->_artist_delegate);
 
-	/*this->ui->gridLayout->setRowStretch(0, 0);
-	this->ui->gridLayout->setRowStretch(1, 0);
-	this->ui->gridLayout->setRowStretch(2, 2);
-	this->ui->gridLayout->setRowStretch(3, 3);*/
 
 	this->ui->lv_album->setDragEnabled(true);
 	this->ui->lv_artist->setDragEnabled(true);
@@ -54,6 +48,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
 
+
+	this->ui->lv_artist->setAlternatingRowColors(true);
 
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
@@ -112,8 +108,6 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 
 		QString albumname = "<b>" + albums.at(i).name;
 		if(albums.at(i).name.isEmpty()) albumname = "<b>Unknown";
-
-
 
 		QString year = "";
 		if(albums.at(i).year != 0) year = "(" + QString::number(albums.at(i).year) + ")";
@@ -386,7 +380,6 @@ void GUI_Library_windowed::change_skin(bool dark){
 
 
 	if(dark){
-		//this->ui->lab_totalTime->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
 		this->ui->lv_album->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
 		this->ui->lv_artist->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
 		this->ui->tb_title->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");

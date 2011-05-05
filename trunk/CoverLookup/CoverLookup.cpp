@@ -210,6 +210,8 @@ void CoverLookup::search_cover(){
 		curl_easy_setopt(curl_find_img, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_WRITEFUNCTION, get_content);
 
+
+
 		curl_easy_perform(curl_find_img);
 		curl_easy_cleanup(curl_find_img);
 	}
