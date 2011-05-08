@@ -50,6 +50,7 @@ bool CSettingsStorage::runFirstTime (bool deleteOld) {
                // qFatal(QString ("Were not able to copy file" + dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
                 qFatal("Were not able to copy file %s", QString(dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
 
+
             }
         }
     }
