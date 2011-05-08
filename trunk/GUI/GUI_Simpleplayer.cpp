@@ -355,6 +355,8 @@ void GUI_SimplePlayer::showPlaylist(bool vis){
 
 void GUI_SimplePlayer::changeEvent(QEvent *event){
 
+	Q_UNUSED(event);
+
 	/*if(isMinimized()  && !m_minTriggerByTray){
 		if (m_trayIcon->isVisible()) {
 			hide();
@@ -373,7 +375,7 @@ void GUI_SimplePlayer::changeEvent(QEvent *event){
 void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
 
 
-
+	Q_UNUSED(reason);
 	/*m_minTriggerByTray = false;
 
 	switch(reason){
@@ -537,6 +539,7 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 
+	Q_UNUSED(e);
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
 }

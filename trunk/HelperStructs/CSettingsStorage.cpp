@@ -47,12 +47,14 @@ bool CSettingsStorage::runFirstTime (bool deleteOld) {
                qDebug() << "DB File has been copied to " <<   dir.absolutePath() + QDir::separator()+ m_dbFile;
             }
             else {
-                qFatal(QString ("Were not able to copy file" + dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
+               // qFatal(QString ("Were not able to copy file" + dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
+                qFatal("Were not able to copy file %s", QString(dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
+
             }
         }
     }
     else {
-        qFatal(QString ("We are not able to create the directory " + QDir::homePath() + m_sayonaraPath).toStdString().c_str());
+        qFatal("We are not able to create the directory %s", QString(QDir::homePath() + m_sayonaraPath).toStdString().c_str() );
     }
     if (!dir.exists()) {
 

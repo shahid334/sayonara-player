@@ -40,31 +40,41 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
+		qDebug() << "ini database";
 
-    CSettingsStorage * set = CSettingsStorage::getInstance();
-    set  -> runFirstTime(false);
+		CSettingsStorage * set = CSettingsStorage::getInstance();
+		set  -> runFirstTime(false);
         CoverLookup cover;
+
 
         QApplication app (argc, argv);
         app.setApplicationName("Sayonara");
         app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-
+        qDebug() << "init GUI::Player";
         GUI_SimplePlayer 	player;
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
-        GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
-        GUI_Library_windowed	ui_library(player.getParentOfLibrary());
 
+        qDebug() << "init GUI::Playlist";
+        GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
         Playlist 			playlist(&app);
-        MP3_Listen 			listen (&app);
+
+        qDebug() << "init GUI::Library";
+        GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 		library;
-        LastFM				lastfm;
-        GUI_LastFM			ui_lastfm;
         LibrarySetupWidget	ui_librarySetup;
 
+        qDebug() << "init phonon";
+        MP3_Listen 			listen (&app);
+
+        qDebug() << "init lastfm";
+        LastFM				lastfm;
+        GUI_LastFM			ui_lastfm;
 
 
 
+
+        qDebug() << "setting connections";
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(fileSelected(QStringList &)),		&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&player, SIGNAL(play()),							&listen,	SLOT(play()));
@@ -123,22 +133,28 @@ int main(int argc, char *argv[]){
         app.connect(&ui_librarySetup, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
         app.connect(&player, SIGNAL(setupLibraryPath()),    						&ui_librarySetup, SLOT(show()));
 
+
+        player.setVolume(50);
+		player.setPlaylist(&ui_playlist);
+		player.setLibrary(&ui_library);
+		player.setWindowTitle("Sayonara");
+		player.show();
+
+
+		ui_playlist.show();
+
+
+
+        qDebug() << "loading media library";
         library.loadDataFromDb();
 
+        qDebug() << "init lastfm";
         QString user, password;
         set -> getLastFMNameAndPW(user, password);
 
         lastfm.login_slot (user,password);
 
 
-        player.setVolume(50);
-        player.setPlaylist(&ui_playlist);
-        player.setLibrary(&ui_library);
-        player.setWindowTitle("Sayonara");
-        player.show();
-
-
-        ui_playlist.show();
 
 
 

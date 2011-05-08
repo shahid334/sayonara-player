@@ -22,6 +22,7 @@ LibraryItemModelArtists::~LibraryItemModelArtists() {
 
 int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 {
+	Q_UNUSED(parent);
 	return _artist_list.size();
 }
 

@@ -64,21 +64,30 @@ CDatabaseConnector::~CDatabaseConnector() {
 
 void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
-	   QSqlQuery q (this -> m_database);
+		QSqlQuery q (this -> m_database);
 
-	    q.prepare("delete from tracks; delete from artists; delete from albums;");
+		m_database.transaction();
 
-	    try{
-			q.exec();
+		bool err = false;
+		for(int i=0; i<3; i++){
+			if(i==0) q.prepare("delete from tracks;");
+			else if(i==1) q.prepare("delete from artists;");
+			else if(i==2) q.prepare("delete from albums;");
 
+			try{
+				q.exec();
+			}
+
+			catch(QString ex){
+				err = true;
+				qDebug() << q.lastQuery();
+				qDebug() << ex;
+				qDebug() << q.executedQuery();
+
+			}
 		}
 
-		catch(QString ex){
-			qDebug() << q.lastQuery();
-			qDebug() << ex;
-			qDebug() << q.executedQuery();
-
-	    }
+		if(!err) m_database.commit();
 }
 
 // FIXME: artist könnte hochkommata enthalten (Guns 'n' roses)
@@ -779,9 +788,6 @@ void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album
 				q.bindValue(":search_in_title",QVariant(search));
 				q.bindValue(":search_in_album",QVariant(search));
 				q.bindValue(":search_in_artist",QVariant(search));
-
-				qDebug() << "query = " << query;
-
 
 				if (!q.exec()) {
 					throw QString ("SQL - Error: getTracksFromDatabase cannot execute search album query" );

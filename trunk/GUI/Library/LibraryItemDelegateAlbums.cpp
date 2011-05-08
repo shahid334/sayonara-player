@@ -55,7 +55,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 			label.resize(_parent->width()-20, 20);
 		}
 
-		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+		//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 		label.setStyleSheet("background-color: transparent");
 
@@ -76,6 +76,11 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
+
+
+	Q_UNUSED(option);
+	Q_UNUSED(index);
+
 	return QSize(1,20);
 
 
@@ -86,6 +91,9 @@ QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, c
 
 void LibraryItemDelegateAlbums::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex & index) const
 {
+	Q_UNUSED(editor);
+	Q_UNUSED(model);
+	Q_UNUSED(index);
 }
 
 QWidget *LibraryItemDelegateAlbums::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index) const

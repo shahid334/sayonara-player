@@ -141,6 +141,7 @@ vector<string> calc_adresses_from_webpage(uint num){
 
 size_t save_image( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 
+	(void) userdata;
 	if(image_bytes == 0){
 		image_bytes = size * nmemb;
 		image_data = (char*) (malloc(image_bytes));
@@ -159,6 +160,8 @@ size_t save_image( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 
 
 size_t get_content( void *ptr, size_t size, size_t nmemb, FILE *userdata){
+
+	(void) userdata;
 
 	if(webpage_bytes == 0){
 		webpage_bytes = size * nmemb;

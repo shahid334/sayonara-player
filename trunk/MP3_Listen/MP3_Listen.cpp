@@ -41,13 +41,18 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+
+	qDebug() << "   phonon init output";
 	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+
+	qDebug() << "   phonon init media object";
 	_media_object = new Phonon::MediaObject(this);
 	_media_object->setTickInterval(10);
 
-
+	qDebug() << "   phonon create path";
 	Phonon::createPath(_media_object, _audio_output);
 
+	qDebug() << "   phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 }

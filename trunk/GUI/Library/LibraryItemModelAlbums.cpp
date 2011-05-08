@@ -19,7 +19,7 @@ LibraryItemModelAlbums::~LibraryItemModelAlbums() {
 }
 
 int LibraryItemModelAlbums::rowCount(const QModelIndex & parent) const
-{
+{	Q_UNUSED(parent);
 	return _album_list.size();
 }
 
