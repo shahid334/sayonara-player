@@ -161,12 +161,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libcurl_imp.lib QtGui4.lib QtCore4.lib QtSql4.lib qtmain.lib phonon4.lib tag.lib"
+				AdditionalDependencies="libcurl_imp.lib QtGui4.lib QtCore4.lib QtSql4.lib qtmain.lib phonon4.lib tag.lib qsqlite4.lib"
 				OutputFile="$(OutDir)\Sayonara.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(QTDIR)/lib&quot;; &quot;$(CURL)\lib\DLL-Release&quot;;&quot;$(TAGLIB)\taglib\Release&quot;"
+				AdditionalLibraryDirectories="&quot;$(QTDIR)/lib&quot;; &quot;$(CURL)\lib\DLL-Release&quot;;&quot;$(TAGLIB)\taglib\Release&quot;;&quot;$(QTDIR)\plugins\sqldrivers&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -202,6 +202,14 @@
 		<Filter
 			Name="HelperStructs"
 			>
+			<File
+				RelativePath="..\HelperStructs\CSettingsStorage.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\HelperStructs\CSettingsStorage.h"
+				>
+			</File>
 			<File
 				RelativePath="..\HelperStructs\Helper.cpp"
 				>
@@ -267,6 +275,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\GUI\GUI_Library_windowed.ui"
+				>
+			</File>
+			<File
+				RelativePath="..\GUI\GUI_LibrarySetup_Widget.ui"
+				>
+			</File>
+			<File
 				RelativePath="..\GUI\GUI_Playlist.cpp"
 				>
 			</File>
@@ -322,6 +338,62 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Library"
+				>
+				<File
+					RelativePath="..\GUI\Library\GUI_Library_windowed.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\GUI_Library_windowed.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\GUI_LibrarySetup_Widget.ui"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemDelegateAlbums.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemDelegateAlbums.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemModelAlbums.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemModelAlbums.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemModelArtists.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemModelArtists.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemModelTracks.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibraryItemModelTracks.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibrarySetupWidget.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\Library\LibrarySetupWidget.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="library"
@@ -352,10 +424,6 @@
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\Main.cpp"
-			>
-		</File>
-		<File
 			RelativePath="..\moc_CDatabaseConnector.cpp"
 			>
 		</File>
@@ -372,6 +440,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\moc_GUI_Library_windowed.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\moc_GUI_Playlist.cpp"
 			>
 		</File>
@@ -385,6 +457,26 @@
 		</File>
 		<File
 			RelativePath="..\moc_Helper.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LibraryItemDelegateAlbums.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LibraryItemModelAlbums.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LibraryItemModelArtists.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LibraryItemModelTracks.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LibrarySetupWidget.cpp"
 			>
 		</File>
 		<File
@@ -405,6 +497,10 @@
 		</File>
 		<File
 			RelativePath="..\moc_PlaylistItemModel.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\Win_Main.cpp"
 			>
 		</File>
 	</Files>
