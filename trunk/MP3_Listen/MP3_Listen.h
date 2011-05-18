@@ -44,9 +44,6 @@ private:
 
 	Phonon::AudioOutput *_audio_output;
 	Phonon::MediaObject *_media_object;
-	Phonon::MediaSource *_media_source;
-
-
 
 
 public:

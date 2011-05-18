@@ -43,17 +43,23 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_scrobbled = false;
 
 	qDebug() << "   phonon init output";
-	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory);
 
 	qDebug() << "   phonon init media object";
-	_media_object = new Phonon::MediaObject(this);
-	_media_object->setTickInterval(10);
+	_media_object = new Phonon::MediaObject();
+	//_media_object->setTickInterval(10);
 
 	qDebug() << "   phonon create path";
 	Phonon::createPath(_media_object, _audio_output);
+	QList<Phonon::AudioOutputDevice> devices = Phonon::BackendCapabilities::availableAudioOutputDevices();
+	for(int i=0; i<devices.size(); i++){
+		qDebug() << "Device " << i << ": " << devices[i].name();
+	}
+    
+    _audio_output->setOutputDevice(devices[0]);
 
 	qDebug() << "   phonon connections";
-	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
+	//connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 }
 
@@ -98,8 +104,8 @@ void MP3_Listen::jump(int where){
 
 void MP3_Listen::changeTrack(const QString & filepath){
 
-	_media_source = new Phonon::MediaSource(filepath);
-	_media_object->setCurrentSource( (*_media_source) );
+	
+	_media_object->setCurrentSource( Phonon::MediaSource(filepath) );
 	_meta_data = ID3::getMetaDataOfFile(filepath);
 
 	_media_object->play();
@@ -113,9 +119,8 @@ void MP3_Listen::changeTrack(const QString & filepath){
 
 void MP3_Listen::changeTrack(const MetaData & metadata){
 
-	_media_source = new Phonon::MediaSource(metadata.filepath);
-	_media_object->setCurrentSource( (*_media_source) );
-	_meta_data = ID3::getMetaDataOfFile(metadata.filepath);
+	_media_object->setCurrentSource( Phonon::MediaSource(metadata.filepath) );
+	_meta_data = ID3::getMetaDataOfFile( metadata.filepath );
 
 	_media_object->play();
 	_state = STATE_PLAY;
