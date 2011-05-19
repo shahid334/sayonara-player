@@ -61,10 +61,23 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_eq = new Phonon::Effect(availableEffects[5], this);
 
 	_effect_parameters = _eq->parameters();
+	_is_eq_enabled = true;
 
 	qDebug() << "   phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
+
+	/*_eq->setParameterValue(_effect_parameters[0], 0);
+	_eq->setParameterValue(_effect_parameters[1], 0);
+	_eq->setParameterValue(_effect_parameters[2], 0);
+	_eq->setParameterValue(_effect_parameters[3], -1);
+	_eq->setParameterValue(_effect_parameters[4], -2);
+	_eq->setParameterValue(_effect_parameters[5], -2);
+	_eq->setParameterValue(_effect_parameters[6], -1);
+	_eq->setParameterValue(_effect_parameters[7], 3);
+	_eq->setParameterValue(_effect_parameters[8], 5);
+	_eq->setParameterValue(_effect_parameters[9], 6);*/
+
 }
 
 MP3_Listen::~MP3_Listen() {
@@ -203,9 +216,24 @@ void MP3_Listen::eq_changed(int band, int val){
 
 	_audio_path.removeEffect(_eq);
 	_eq->setParameterValue(_effect_parameters[band], val);
-	_audio_path.insertEffect(_eq);
 
-	_media_object->seek(tmp_seconds);
+	if(_is_eq_enabled){
+		_audio_path.insertEffect(_eq);
+		_media_object->seek(tmp_seconds);
+	}
 
+
+}
+
+
+void MP3_Listen::eq_enable(bool enable){
+
+	if(!enable)
+		_audio_path.removeEffect(_eq);
+
+	else
+		_audio_path.insertEffect(_eq);
+
+	_is_eq_enabled = enable;
 
 }

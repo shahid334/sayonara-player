@@ -22,6 +22,7 @@ public:
 
 	signals:
 		void eq_changed_signal(int, int);
+		void eq_enabled_signal(bool);
 
 
 
@@ -36,6 +37,7 @@ public:
 		void sli_7_changed(int);
 		void sli_8_changed(int);
 		void sli_9_changed(int);
+		void cb_enabled_changed(bool);
 
 	private:
 		Ui_GUI_Equalizer* _ui;

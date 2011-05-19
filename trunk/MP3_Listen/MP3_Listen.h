@@ -49,6 +49,7 @@ private:
 	Phonon::Path		_audio_path;
 	Phonon::Effect*		_eq;
 	QList<Phonon::EffectParameter> _effect_parameters;
+	bool				_is_eq_enabled;
 
 
 public:
@@ -85,6 +86,7 @@ public:
 		void changeTrack(const MetaData& );
 		void changeTrack(const QString& );
 		void eq_changed(int, int);
+		void eq_enable(bool);
 
 
 	private slots:
