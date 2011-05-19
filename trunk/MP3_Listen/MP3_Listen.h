@@ -25,6 +25,7 @@
 #include <phonon/mediaobject.h>
 #include <phonon/volumeslider.h>
 #include <phonon/backendcapabilities.h>
+#include <phonon/effectparameter.h>
 
 
 
@@ -40,10 +41,14 @@ private:
     MetaData		_meta_data;
     int				_seconds_started;
     int				_seconds_now;
+    qint64			_mseconds_now;
     bool			_scrobbled;
 
 	Phonon::AudioOutput *_audio_output;
 	Phonon::MediaObject *_media_object;
+	Phonon::Path		_audio_path;
+	Phonon::Effect*		_eq;
+	QList<Phonon::EffectParameter> _effect_parameters;
 
 
 public:
@@ -76,9 +81,10 @@ public:
 		/**
 		* TODO: Where in what? Percent, seconds or egss?
 		*/
-		void jump(int where);
+		void jump(int where, bool percent=true);
 		void changeTrack(const MetaData& );
 		void changeTrack(const QString& );
+		void eq_changed(int, int);
 
 
 	private slots:

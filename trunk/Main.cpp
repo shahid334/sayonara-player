@@ -13,6 +13,7 @@
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/Library/GUI_Library_windowed.h"
 #include "GUI/Library/LibrarySetupWidget.h"
+#include "GUI/equalizer/GUI_Equalizer.h"
 #include "Playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
 #include "CoverLookup/CoverLookup.h"
@@ -70,6 +71,9 @@ int main(int argc, char *argv[]){
         qDebug() << "init lastfm";
         LastFM				lastfm;
         GUI_LastFM			ui_lastfm;
+
+        qDebug() << "init equalizer";
+        GUI_Equalizer		ui_eq;
 
 
 
@@ -132,6 +136,10 @@ int main(int argc, char *argv[]){
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
         app.connect(&ui_librarySetup, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
         app.connect(&player, SIGNAL(setupLibraryPath()),    						&ui_librarySetup, SLOT(show()));
+
+        app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), &listen, SLOT(eq_changed(int, int)));
+
+        ui_eq.show();
 
 
         player.setVolume(50);

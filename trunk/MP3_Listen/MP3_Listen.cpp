@@ -27,6 +27,10 @@
 #include <phonon/mediaobject.h>
 #include <phonon/volumeslider.h>
 #include <phonon/backendcapabilities.h>
+#include <phonon/effect.h>
+#include <phonon/effectparameter.h>
+#include <phonon/path.h>
+
 
 
 
@@ -43,23 +47,23 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_scrobbled = false;
 
 	qDebug() << "   phonon init output";
-	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory);
+	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
 
 	qDebug() << "   phonon init media object";
-	_media_object = new Phonon::MediaObject();
-	//_media_object->setTickInterval(10);
+	_media_object = new Phonon::MediaObject(this);
+	_media_object->setTickInterval(10);
 
 	qDebug() << "   phonon create path";
-	Phonon::createPath(_media_object, _audio_output);
-	QList<Phonon::AudioOutputDevice> devices = Phonon::BackendCapabilities::availableAudioOutputDevices();
-	for(int i=0; i<devices.size(); i++){
-		qDebug() << "Device " << i << ": " << devices[i].name();
-	}
-    
-    _audio_output->setOutputDevice(devices[0]);
+
+	_audio_path = Phonon::createPath(_media_object, _audio_output);
+
+	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
+	_eq = new Phonon::Effect(availableEffects[5], this);
+
+	_effect_parameters = _eq->parameters();
 
 	qDebug() << "   phonon connections";
-	//connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
+	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 }
 
@@ -71,8 +75,20 @@ MP3_Listen::~MP3_Listen() {
 void MP3_Listen::play(){
 
 	//cout << "play " << endl;
+	//if(_eq != 0) _audio_path.removeEffect(_eq);
+	QList<Phonon::EffectDescription > devices = Phonon::BackendCapabilities::availableAudioEffects();
+
+	//qDebug() << "Devices " << devices.size();
+/*	for(int i=0; i<devices.size(); i++){
+		qDebug() << "Device " << i << ": " << devices[i].name();
+	}*/
+
+
+
 
 	_media_object->play();
+
+
 	_state = STATE_PLAY;
 }
 
@@ -91,9 +107,11 @@ void MP3_Listen::pause(){
 }
 
 
-void MP3_Listen::jump(int where){
+void MP3_Listen::jump(int where, bool percent){
 
-	quint64 newtime_ms = _meta_data.length_ms * where / 100.0;
+	quint64 newtime_ms = where;
+	if(percent) newtime_ms = _meta_data.length_ms * where / 100.0;
+
 	_media_object->seek(newtime_ms);
 	_seconds_started = newtime_ms / 1000;
 	emit timeChangedSignal((quint32) (newtime_ms / 1000));
@@ -108,11 +126,13 @@ void MP3_Listen::changeTrack(const QString & filepath){
 	_media_object->setCurrentSource( Phonon::MediaSource(filepath) );
 	_meta_data = ID3::getMetaDataOfFile(filepath);
 
-	_media_object->play();
+	//_media_object->play();
 	_state = STATE_PLAY;
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+
+	play();
 
 }
 
@@ -122,12 +142,15 @@ void MP3_Listen::changeTrack(const MetaData & metadata){
 	_media_object->setCurrentSource( Phonon::MediaSource(metadata.filepath) );
 	_meta_data = ID3::getMetaDataOfFile( metadata.filepath );
 
-	_media_object->play();
-	_state = STATE_PLAY;
+	//_media_object->play();
+	//_state = STATE_PLAY;
+
 
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+
+	play();
 
 }
 
@@ -145,6 +168,7 @@ void MP3_Listen::seekableChanged(bool){
 
 void MP3_Listen::timeChanged(qint64 time){
 
+	_mseconds_now = time;
 	_seconds_now = time / 1000;
 
 	// scrobble after 25 sec or if half of the track is reached
@@ -174,3 +198,14 @@ qreal MP3_Listen::getVolume(){
 }
 
 
+void MP3_Listen::eq_changed(int band, int val){
+	qint64 tmp_seconds = _mseconds_now;
+
+	_audio_path.removeEffect(_eq);
+	_eq->setParameterValue(_effect_parameters[band], val);
+	_audio_path.insertEffect(_eq);
+
+	_media_object->seek(tmp_seconds);
+
+
+}
