@@ -4,6 +4,7 @@
   * Cover fetch
   * LastFM scrobbling
   * Media Library
+  * Equalizer
 
 
 
@@ -11,7 +12,6 @@
 
   * Dynamic Playlists (using LastFM)
   * ID3 Tagger
-  * Equalizer
 
 = Maybe... =
 
