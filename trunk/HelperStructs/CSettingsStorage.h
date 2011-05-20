@@ -3,6 +3,9 @@
 
 #include <QString>
 #include <QPair>
+#include <vector>
+#include <HelperStructs/Equalizer_presets.h>
+using namespace std;
 
 /**
   * Class to check if we are running the first time.
@@ -34,12 +37,19 @@ public:
       */
     QString getDBFileName ();
 
+
+
+
     //TODO hash
     QPair<QString,QString> getLastFMNameAndPW ();
 
     void getLastFMNameAndPW (QString & name, QString & pw);
 
     void setLastFMNameAndPW (const QString & name,const QString & pw);
+
+    void getEqualizerSettings(vector<EQ_Setting>& vec);
+
+    void setEqualizerSettings(const vector<EQ_Setting>& vec);
 
 
 private:
@@ -52,6 +62,7 @@ private:
 
     QString m_dbFile, m_sayonaraPath, m_dbSource;
     QPair<QString,QString> m_lastFm;
+    vector<EQ_Setting> m_vec_eqSettings;
 };
 
 #endif // CSettingsStorage_H

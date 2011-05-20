@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_Equalizer.h'
 **
-** Created: Thu May 19 19:41:50 2011
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.0)
+** Created: Fri May 20 14:18:26 2011
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'GUI_Equalizer.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.7.0. It"
+#error "This file was generated using the moc from 4.7.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -23,7 +23,7 @@ static const uint qt_meta_data_GUI_Equalizer[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -46,6 +46,8 @@ static const uint qt_meta_data_GUI_Equalizer[] = {
      220,   14,   14,   14, 0x08,
      239,   14,   14,   14, 0x08,
      258,   14,   14,   14, 0x08,
+     283,   14,   14,   14, 0x08,
+     303,   14,   14,   14, 0x0a,
 
        0        // eod
 };
@@ -58,6 +60,8 @@ static const char qt_meta_stringdata_GUI_Equalizer[] = {
     "sli_5_changed(int)\0sli_6_changed(int)\0"
     "sli_7_changed(int)\0sli_8_changed(int)\0"
     "sli_9_changed(int)\0cb_enabled_changed(bool)\0"
+    "preset_changed(int)\0"
+    "fill_eq_presets(vector<EQ_Setting>)\0"
 };
 
 const QMetaObject GUI_Equalizer::staticMetaObject = {
@@ -102,9 +106,11 @@ int GUI_Equalizer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 10: sli_8_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 11: sli_9_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 12: cb_enabled_changed((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 13: preset_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 14: fill_eq_presets((*reinterpret_cast< const vector<EQ_Setting>(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 13;
+        _id -= 15;
     }
     return _id;
 }

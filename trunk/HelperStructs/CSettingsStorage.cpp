@@ -81,6 +81,15 @@ QString CSettingsStorage::getDBFileName () {
     return dir.absolutePath() + QDir::separator() + m_dbFile;
 }
 
+
+
+
+
+
+
+
+
+
 //TODO hash
 QPair<QString, QString> CSettingsStorage::getLastFMNameAndPW () {
     return this -> m_lastFm;
@@ -94,5 +103,18 @@ void CSettingsStorage::getLastFMNameAndPW (QString & name, QString & pw) {
 void CSettingsStorage::setLastFMNameAndPW (const QString & name,const QString & pw) {
     this -> m_lastFm.first = name;
     this -> m_lastFm.second = pw;
+}
+
+
+void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec){
+	vec = this->m_vec_eqSettings;
+}
+
+void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec){
+
+	m_vec_eqSettings.clear();
+	for(int i=0; i<vec.size(); i++){
+		m_vec_eqSettings.push_back(vec[i]);
+	}
 }
 

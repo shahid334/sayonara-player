@@ -8,9 +8,16 @@
 #ifndef GUI_EQUALIZER_H_
 #define GUI_EQUALIZER_H_
 
+#include "HelperStructs/Equalizer_presets.h"
+
 #include <QObject>
 #include <QWidget>
+
 #include <ui_GUI_equalizer.h>
+
+#include <vector>
+
+using namespace std;
 
 class GUI_Equalizer : public QWidget, private Ui_GUI_Equalizer{
 
@@ -25,7 +32,6 @@ public:
 		void eq_enabled_signal(bool);
 
 
-
 	private slots:
 		void sli_0_changed(int);
 		void sli_1_changed(int);
@@ -38,6 +44,10 @@ public:
 		void sli_8_changed(int);
 		void sli_9_changed(int);
 		void cb_enabled_changed(bool);
+		void preset_changed(int);
+
+	public slots:
+		void fill_eq_presets(const vector<EQ_Setting>&);
 
 	private:
 		Ui_GUI_Equalizer* _ui;

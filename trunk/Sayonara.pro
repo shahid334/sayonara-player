@@ -14,7 +14,7 @@ LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm
 
 # Input
 HEADERS += MP3_Listen/MP3_Listen.h \
-    GUI/GUI_Simpleplayer.h \ 
+	GUI/GUI_Simpleplayer.h \ 
     GUI/GUI_Playlist.h \
     GUI/LastFM/GUI_LastFM.h \
     GUI/Library/GUI_Library_windowed.h \
@@ -36,10 +36,12 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/Playlist/GUI_PlaylistEntry.h \
     HelperStructs/id3.h \
     HelperStructs/CSettingsStorage.h \
+    HelperStructs/Equalizer_presets.h \
     LastFM/LastFM.h
     
 
-SOURCES += Main.cpp MP3_Listen/MP3_Listen.cpp \
+SOURCES += Main.cpp \
+	MP3_Listen/MP3_Listen.cpp \
     GUI/GUI_Simpleplayer.cpp \
     GUI/GUI_Playlist.cpp \
     GUI/LastFM/GUI_LastFM.cpp \

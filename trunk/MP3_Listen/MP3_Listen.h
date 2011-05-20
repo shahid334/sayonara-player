@@ -19,6 +19,7 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Equalizer_presets.h"
 
 #include <string>
 #include <vector>
@@ -79,6 +80,7 @@ public:
 		void timeChangedSignal(quint32);
 		void scrobble_track(const MetaData &);
 		void track_finished();
+		void eq_presets_loaded(const vector<EQ_Setting>&);
 
 
 
@@ -103,6 +105,10 @@ public:
 		void seekableChanged(bool b);
         void timeChanged(qint64 time);
         void finished();
+
+
+	public:
+        void find_presets();
 
 };
 

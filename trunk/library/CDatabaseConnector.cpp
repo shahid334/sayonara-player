@@ -1,4 +1,7 @@
 #include "library/CDatabaseConnector.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Equalizer_presets.h"
+#include <vector>
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
@@ -7,6 +10,8 @@
 #include <QObject>
 #include <QSqlError>
 #include <CSettingsStorage.h>
+
+using namespace std;
 
 CDatabaseConnector::CDatabaseConnector(QObject *parent) :
     QObject(parent),
@@ -47,7 +52,8 @@ bool CDatabaseConnector::openDatabase () {
         qDebug() << er.databaseText();
     }
     else {
-        this -> fillSettingsStorage();
+        this -> load_settings_lastfm();
+        this -> load_settings_eq();
     }
 
     return e;
@@ -55,7 +61,7 @@ bool CDatabaseConnector::openDatabase () {
 }
 
 CDatabaseConnector::~CDatabaseConnector() {
-    this -> storeSettingsFromStorage();
+    this -> store_settings_lastfm();
     if (this -> m_database.isOpen()) {
         this -> m_database.close();
     }
@@ -280,75 +286,6 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
 
 
 
-void CDatabaseConnector::fillSettingsStorage () {
-    if (!this -> m_database.isOpen())
-        this -> m_database.open();
-    QString username, password;
-    try {
-        QSqlQuery q (this -> m_database);
-        q.prepare("select val from settings where key ='lastfm_user' UNION select val from settings where key='lastfm_pass';");
-        if (!q.exec()) {
-            throw QString ("SQL - Error: fillSettingsStorage");
-        }
-
-
-
-			username = q.value(0).toString();
-			q.next();
-			password = q.value(0).toString();
-
-
-
-		CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
-
-
-
-
-    }
-    catch (QString ex) {
-        qDebug() << "Error during inserting of metadata into database";
-        qDebug() << ex;
-        QSqlError er = this -> m_database.lastError();
-        qDebug() << er.driverText();
-        qDebug() << er.databaseText();
-        qDebug() << er.databaseText();
-    }
-}
-
-
-void CDatabaseConnector::storeSettingsFromStorage () {
-    if (!this -> m_database.isOpen())
-        this -> m_database.open();
-    try {
-        QString username, password;
-        CSettingsStorage::getInstance()->getLastFMNameAndPW(username,password);
-        QSqlQuery q (this -> m_database);
-        q.prepare("select lastFMUserName,lastFMPassword from settings");
-        if (!q.exec()) {
-            throw QString ("SQL - Error: storeSettingsFromStorage");
-        }
-        if (!q.next()) {
-            q.prepare("insert into settings (lastFMUserName,lastFMPassword) values ('dummy','dummy');");
-            if (!q.exec()) {
-                throw QString ("SQL - Error: storeSettingsFromStorage");
-            }
-        }
-        q.prepare("UPDATE settings set lastFMUserName = ?, lastFMPassword = ? where rowid == 1;");
-        q.addBindValue(QVariant(username));
-        q.addBindValue(QVariant(password));
-        if (!q.exec()) {
-            throw QString ("SQL - Error: storeSettingsFromStorage");
-        }
-    }
-    catch (QString ex) {
-        qDebug() << "Error during inserting of metadata into database";
-        qDebug() << ex;
-        QSqlError er = this -> m_database.lastError();
-        qDebug() << er.driverText();
-        qDebug() << er.databaseText();
-        qDebug() << er.databaseText();
-    }
-}
 
 
 
@@ -827,6 +764,8 @@ void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album
 }
 
 void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result){
+
+
 	if (!this -> m_database.isOpen())
 				this -> m_database.open();
 			Artist artist;
@@ -883,4 +822,102 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 				qDebug() << er.databaseText();
 				qDebug() << er.databaseText();
 			}
+}
+
+
+
+void CDatabaseConnector::load_settings_lastfm() {
+    if (!this -> m_database.isOpen())
+        this -> m_database.open();
+    QString username, password;
+    try {
+        QSqlQuery q (this -> m_database);
+        q.prepare("select value from settings where key ='LastFM_login';");
+        if (!q.exec()) {
+            throw QString ("SQL - Error: fillSettingsStorage");
+        }
+
+		if(q.next()){
+			QStringList list = q.value(0).toString().split(',');
+			if(list.size() == 2){
+				username = list[0];
+				password = list[1];
+			}
+		}
+
+		CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
+    }
+
+    catch (QString ex) {
+        qDebug() << "Error during inserting of metadata into database";
+        qDebug() << ex;
+    }
+}
+
+
+
+
+void CDatabaseConnector::store_settings_lastfm () {
+    if (!this -> m_database.isOpen())
+        this -> m_database.open();
+    try {
+        QString username, password;
+        CSettingsStorage::getInstance()->getLastFMNameAndPW(username,password);
+        QSqlQuery q (this -> m_database);
+        q.prepare("select value from settings where key = 'LastFM_login'");
+        if (!q.exec()) {
+            throw QString ("SQL - Error: storeSettingsFromStorage");
+        }
+        if (!q.next()) {
+            q.prepare("update settings set value='dummy,dummy' WHERE key='LastFM_login'");
+            if (!q.exec()) {
+                throw QString ("SQL - Error: storeSettingsFromStorage");
+            }
+        }
+        q.prepare("UPDATE settings set value=? WHERE key='LastFM_login'");
+        q.addBindValue(QVariant(username+","+password));
+
+        if (!q.exec()) {
+            throw QString ("SQL - Error: storeSettingsFromStorage");
+        }
+    }
+    catch (QString ex) {
+        qDebug() << "Error during inserting of metadata into database";
+        qDebug() << ex;
+        QSqlError er = this -> m_database.lastError();
+        qDebug() << er.driverText();
+        qDebug() << er.databaseText();
+        qDebug() << er.databaseText();
+    }
+}
+
+
+
+
+void CDatabaseConnector::load_settings_eq(){
+
+	if (!this -> m_database.isOpen())
+	        this -> m_database.open();
+
+	vector<EQ_Setting> result;
+    try{
+		QSqlQuery q (this -> m_database);
+		q.prepare("select value from settings where key like 'EQ_pr_%';");
+
+		if (!q.exec()) {
+			throw QString (q.lastError().text());
+		}
+
+		while (q.next()) {
+		   EQ_Setting eq_setting;
+		   QString row = q.value(0).toString();
+		   eq_setting.parseFromString(row);
+		   result.push_back(eq_setting);
+		}
+
+		CSettingsStorage::getInstance()->setEqualizerSettings(result);
+    }
+    catch(QString ex){
+    	qDebug() << "Error fetching EQ Presets (" << ex << ")";
+    }
 }

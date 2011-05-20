@@ -20,6 +20,7 @@
 #include "library/CLibraryBase.h"
 #include "LastFM/LastFM.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Equalizer_presets.h"
 
 
 #include <QtGui>
@@ -39,14 +40,19 @@
 
 using namespace std;
 
+
+
+
 int main(int argc, char *argv[]){
 
 		qDebug() << "ini database";
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);
-        CoverLookup cover;
 
+
+
+		CoverLookup cover;
 
         QApplication app (argc, argv);
         app.setApplicationName("Sayonara");
@@ -114,9 +120,12 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(sound_files_dropped(QStringList&)), 						&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 							&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
+
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
+        app.connect (&listen,	SIGNAL(eq_presets_loaded(const vector<EQ_Setting>&)), &ui_eq,		SLOT(fill_eq_presets(const vector<EQ_Setting>&)));
+
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
@@ -143,15 +152,15 @@ int main(int argc, char *argv[]){
         app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), &listen, SLOT(eq_enable(bool)));
 
 
-      //  ui_eq.show();
-
-
         player.setVolume(50);
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
 		player.setWindowTitle("Sayonara");
 		player.show();
+
+
+		listen.find_presets();
 
 		QRect rect = ui_eq.geometry();
 			rect.setHeight(player.getParentOfEqualizer()->height());
@@ -176,8 +185,11 @@ int main(int argc, char *argv[]){
         qDebug() << "init lastfm";
         QString user, password;
         set -> getLastFMNameAndPW(user, password);
-
         lastfm.login_slot (user,password);
+
+        vector<EQ_Setting> eq_settings;
+        set->getEqualizerSettings(eq_settings);
+
 		return app.exec();
 }
 

@@ -6,9 +6,11 @@
  */
 
 #include "MP3_Listen/MP3_Listen.h"
+#include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 
 #include <iostream>
@@ -66,7 +68,7 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 		Phonon::EffectDescription desc =  availableEffects[i];
 		qDebug() << desc.name();
 
-		if(desc.name() == "KEqualizer"){
+		if(desc.name() == "KEqualizer" && equalizerIdx == -1){
 			equalizerIdx = i;
 			_eq_type = EQ_TYPE_KEQ;
 		}
@@ -77,10 +79,8 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 		}
 	}
 
-	//equalizerIdx = 4;
-
 	if(equalizerIdx != -1){
-		qDebug() << "Equalizer found";
+		qDebug() << "Equalizer found (" << availableEffects[equalizerIdx] << ")";
 		_eq = new Phonon::Effect(availableEffects[equalizerIdx], this);
 
 		_effect_parameters = _eq->parameters();
@@ -89,6 +89,10 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 		//	qDebug() << param.description();
 		}
 		_is_eq_enabled = true;
+
+		_audio_path.insertEffect(_eq);
+
+
 	}
 
 	else {
@@ -104,16 +108,7 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 
-	/*_eq->setParameterValue(_effect_parameters[0], 0);
-	_eq->setParameterValue(_effect_parameters[1], 0);
-	_eq->setParameterValue(_effect_parameters[2], 0);
-	_eq->setParameterValue(_effect_parameters[3], -1);
-	_eq->setParameterValue(_effect_parameters[4], -2);
-	_eq->setParameterValue(_effect_parameters[5], -2);
-	_eq->setParameterValue(_effect_parameters[6], -1);
-	_eq->setParameterValue(_effect_parameters[7], 3);
-	_eq->setParameterValue(_effect_parameters[8], 5);
-	_eq->setParameterValue(_effect_parameters[9], 6);*/
+
 
 }
 
@@ -253,7 +248,7 @@ void MP3_Listen::eq_changed(int band, int val){
 
 	qint64 tmp_seconds = _mseconds_now;
 
-	_audio_path.removeEffect(_eq);
+	//_audio_path.removeEffect(_eq);
 
 	double new_val = 0;
 
@@ -264,21 +259,19 @@ void MP3_Listen::eq_changed(int band, int val){
 
 	else if(_eq_type == EQ_TYPE_KEQ){
 		new_val = val / 2.0;
-		band++;
+
 	}
 
 	_eq->setParameterValue(_effect_parameters[band], new_val);
 
-	if(_is_eq_enabled){
-		_audio_path.insertEffect(_eq);
-		_media_object->seek(tmp_seconds);
-	}
+
 
 
 }
 
 
 void MP3_Listen::eq_enable(bool enable){
+
 	if(_eq == 0 || _eq_type == EQ_TYPE_NONE) return;
 	if(!enable)
 		_audio_path.removeEffect(_eq);
@@ -287,5 +280,15 @@ void MP3_Listen::eq_enable(bool enable){
 		_audio_path.insertEffect(_eq);
 
 	_is_eq_enabled = enable;
+
+}
+
+
+void MP3_Listen::find_presets(){
+
+	CSettingsStorage * set = CSettingsStorage::getInstance();
+	vector<EQ_Setting> vec;
+	set->getEqualizerSettings(vec);
+	emit eq_presets_loaded(vec);
 
 }

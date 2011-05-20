@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'GUI_equalizer.ui'
 **
-** Created: Thu May 19 19:41:45 2011
-**      by: Qt User Interface Compiler version 4.7.0
+** Created: Fri May 20 14:18:20 2011
+**      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -15,6 +15,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -48,14 +50,17 @@ public:
     QLabel *label_9;
     QLabel *label_10;
     QCheckBox *cb_enabled;
+    QComboBox *combo_presets;
+    QFrame *line;
 
     void setupUi(QWidget *GUI_Equalizer)
     {
         if (GUI_Equalizer->objectName().isEmpty())
             GUI_Equalizer->setObjectName(QString::fromUtf8("GUI_Equalizer"));
-        GUI_Equalizer->resize(362, 129);
+        GUI_Equalizer->resize(379, 119);
         gridLayout_2 = new QGridLayout(GUI_Equalizer);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, 5, 0, 2);
         sli_9 = new QSlider(GUI_Equalizer);
         sli_9->setObjectName(QString::fromUtf8("sli_9"));
         sli_9->setMinimumSize(QSize(0, 65));
@@ -212,18 +217,30 @@ public:
 
         gridLayout_2->addWidget(cb_enabled, 0, 1, 1, 4);
 
+        combo_presets = new QComboBox(GUI_Equalizer);
+        combo_presets->setObjectName(QString::fromUtf8("combo_presets"));
+
+        gridLayout_2->addWidget(combo_presets, 0, 7, 1, 4);
+
+        line = new QFrame(GUI_Equalizer);
+        line->setObjectName(QString::fromUtf8("line"));
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
+        gridLayout_2->addWidget(line, 3, 1, 1, 10);
+
 
         retranslateUi(GUI_Equalizer);
-        QObject::connect(sli_0, SIGNAL(sliderMoved(int)), label, SLOT(setNum(int)));
-        QObject::connect(sli_1, SIGNAL(sliderMoved(int)), label_2, SLOT(setNum(int)));
-        QObject::connect(sli_2, SIGNAL(sliderMoved(int)), label_3, SLOT(setNum(int)));
-        QObject::connect(sli_3, SIGNAL(sliderMoved(int)), label_4, SLOT(setNum(int)));
-        QObject::connect(sli_4, SIGNAL(sliderMoved(int)), label_5, SLOT(setNum(int)));
-        QObject::connect(sli_5, SIGNAL(sliderMoved(int)), label_6, SLOT(setNum(int)));
-        QObject::connect(sli_6, SIGNAL(sliderMoved(int)), label_7, SLOT(setNum(int)));
-        QObject::connect(sli_7, SIGNAL(sliderMoved(int)), label_8, SLOT(setNum(int)));
-        QObject::connect(sli_8, SIGNAL(sliderMoved(int)), label_9, SLOT(setNum(int)));
-        QObject::connect(sli_9, SIGNAL(sliderMoved(int)), label_10, SLOT(setNum(int)));
+        QObject::connect(sli_0, SIGNAL(valueChanged(int)), label, SLOT(setNum(int)));
+        QObject::connect(sli_1, SIGNAL(valueChanged(int)), label_2, SLOT(setNum(int)));
+        QObject::connect(sli_2, SIGNAL(valueChanged(int)), label_3, SLOT(setNum(int)));
+        QObject::connect(sli_3, SIGNAL(valueChanged(int)), label_4, SLOT(setNum(int)));
+        QObject::connect(sli_4, SIGNAL(valueChanged(int)), label_5, SLOT(setNum(int)));
+        QObject::connect(sli_5, SIGNAL(valueChanged(int)), label_6, SLOT(setNum(int)));
+        QObject::connect(sli_6, SIGNAL(valueChanged(int)), label_7, SLOT(setNum(int)));
+        QObject::connect(sli_7, SIGNAL(valueChanged(int)), label_8, SLOT(setNum(int)));
+        QObject::connect(sli_8, SIGNAL(valueChanged(int)), label_9, SLOT(setNum(int)));
+        QObject::connect(sli_9, SIGNAL(valueChanged(int)), label_10, SLOT(setNum(int)));
 
         QMetaObject::connectSlotsByName(GUI_Equalizer);
     } // setupUi
