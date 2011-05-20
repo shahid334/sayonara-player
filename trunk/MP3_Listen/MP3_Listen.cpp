@@ -259,6 +259,7 @@ void MP3_Listen::eq_changed(int band, int val){
 
 	else if(_eq_type == EQ_TYPE_KEQ){
 		new_val = val / 4.0 - 6.0;
+		band = band + 1;
 
 	}
 
