@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'GUI_equalizer.ui'
 **
-** Created: Thu May 19 17:07:42 2011
-**      by: Qt User Interface Compiler version 4.7.2
+** Created: Thu May 19 19:41:45 2011
+**      by: Qt User Interface Compiler version 4.7.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -53,85 +53,105 @@ public:
     {
         if (GUI_Equalizer->objectName().isEmpty())
             GUI_Equalizer->setObjectName(QString::fromUtf8("GUI_Equalizer"));
-        GUI_Equalizer->resize(326, 138);
+        GUI_Equalizer->resize(362, 129);
         gridLayout_2 = new QGridLayout(GUI_Equalizer);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         sli_9 = new QSlider(GUI_Equalizer);
         sli_9->setObjectName(QString::fromUtf8("sli_9"));
+        sli_9->setMinimumSize(QSize(0, 65));
+        sli_9->setMaximumSize(QSize(16777215, 65));
         sli_9->setMinimum(-24);
-        sli_9->setMaximum(12);
+        sli_9->setMaximum(24);
         sli_9->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_9, 2, 10, 1, 1);
 
         sli_8 = new QSlider(GUI_Equalizer);
         sli_8->setObjectName(QString::fromUtf8("sli_8"));
+        sli_8->setMinimumSize(QSize(0, 65));
+        sli_8->setMaximumSize(QSize(16777215, 65));
         sli_8->setMinimum(-24);
-        sli_8->setMaximum(12);
+        sli_8->setMaximum(24);
         sli_8->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_8, 2, 9, 1, 1);
 
         sli_7 = new QSlider(GUI_Equalizer);
         sli_7->setObjectName(QString::fromUtf8("sli_7"));
+        sli_7->setMinimumSize(QSize(0, 65));
+        sli_7->setMaximumSize(QSize(16777215, 65));
         sli_7->setMinimum(-24);
-        sli_7->setMaximum(12);
+        sli_7->setMaximum(24);
         sli_7->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_7, 2, 8, 1, 1);
 
         sli_6 = new QSlider(GUI_Equalizer);
         sli_6->setObjectName(QString::fromUtf8("sli_6"));
+        sli_6->setMinimumSize(QSize(0, 65));
+        sli_6->setMaximumSize(QSize(16777215, 65));
         sli_6->setMinimum(-24);
-        sli_6->setMaximum(12);
+        sli_6->setMaximum(24);
         sli_6->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_6, 2, 7, 1, 1);
 
         sli_5 = new QSlider(GUI_Equalizer);
         sli_5->setObjectName(QString::fromUtf8("sli_5"));
+        sli_5->setMinimumSize(QSize(0, 65));
+        sli_5->setMaximumSize(QSize(16777215, 65));
         sli_5->setMinimum(-24);
-        sli_5->setMaximum(12);
+        sli_5->setMaximum(24);
         sli_5->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_5, 2, 6, 1, 1);
 
         sli_3 = new QSlider(GUI_Equalizer);
         sli_3->setObjectName(QString::fromUtf8("sli_3"));
+        sli_3->setMinimumSize(QSize(0, 65));
+        sli_3->setMaximumSize(QSize(16777215, 65));
         sli_3->setMinimum(-24);
-        sli_3->setMaximum(12);
+        sli_3->setMaximum(24);
         sli_3->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_3, 2, 4, 1, 1);
 
         sli_4 = new QSlider(GUI_Equalizer);
         sli_4->setObjectName(QString::fromUtf8("sli_4"));
+        sli_4->setMinimumSize(QSize(0, 65));
+        sli_4->setMaximumSize(QSize(16777215, 65));
         sli_4->setMinimum(-24);
-        sli_4->setMaximum(12);
+        sli_4->setMaximum(24);
         sli_4->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_4, 2, 5, 1, 1);
 
         sli_1 = new QSlider(GUI_Equalizer);
         sli_1->setObjectName(QString::fromUtf8("sli_1"));
+        sli_1->setMinimumSize(QSize(0, 65));
+        sli_1->setMaximumSize(QSize(16777215, 65));
         sli_1->setMinimum(-24);
-        sli_1->setMaximum(12);
+        sli_1->setMaximum(24);
         sli_1->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_1, 2, 2, 1, 1);
 
         sli_2 = new QSlider(GUI_Equalizer);
         sli_2->setObjectName(QString::fromUtf8("sli_2"));
+        sli_2->setMinimumSize(QSize(0, 65));
+        sli_2->setMaximumSize(QSize(16777215, 65));
         sli_2->setMinimum(-24);
-        sli_2->setMaximum(12);
+        sli_2->setMaximum(24);
         sli_2->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_2, 2, 3, 1, 1);
 
         sli_0 = new QSlider(GUI_Equalizer);
         sli_0->setObjectName(QString::fromUtf8("sli_0"));
+        sli_0->setMinimumSize(QSize(0, 65));
+        sli_0->setMaximumSize(QSize(16777215, 65));
         sli_0->setMinimum(-24);
-        sli_0->setMaximum(12);
+        sli_0->setMaximum(24);
         sli_0->setOrientation(Qt::Vertical);
 
         gridLayout_2->addWidget(sli_0, 2, 1, 1, 1);

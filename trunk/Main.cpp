@@ -61,7 +61,9 @@ int main(int argc, char *argv[]){
         Playlist 			playlist(&app);
 
         qDebug() << "init GUI::Library";
-        GUI_Library_windowed	ui_library(player.getParentOfLibrary());
+       GUI_Library_windowed	ui_library(player.getParentOfLibrary());
+        //GUI_Library_windowed	ui_library;
+
         CLibraryBase 		library;
         LibrarySetupWidget	ui_librarySetup;
 
@@ -73,7 +75,7 @@ int main(int argc, char *argv[]){
         GUI_LastFM			ui_lastfm;
 
         qDebug() << "init equalizer";
-        GUI_Equalizer		ui_eq;
+        GUI_Equalizer		ui_eq(player.getParentOfEqualizer());
 
 
 
@@ -141,19 +143,32 @@ int main(int argc, char *argv[]){
         app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), &listen, SLOT(eq_enable(bool)));
 
 
-        ui_eq.show();
+      //  ui_eq.show();
 
 
         player.setVolume(50);
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
+		player.setEqualizer(&ui_eq);
 		player.setWindowTitle("Sayonara");
 		player.show();
 
+		QRect rect = ui_eq.geometry();
+			rect.setHeight(player.getParentOfEqualizer()->height());
+			rect.setWidth(player.getParentOfEqualizer()->width());
+			ui_eq.setGeometry(rect);
 
-		ui_playlist.show();
+		rect = ui_playlist.geometry();
+			rect.setHeight(player.getParentOfPlaylist()->height());
+			rect.setWidth(player.getParentOfPlaylist()->width());
+			ui_playlist.setGeometry(rect);
 
+		rect = ui_library.geometry();
+			rect.setHeight(player.getParentOfLibrary()->height());
+			rect.setWidth(player.getParentOfLibrary()->width());
+			ui_library.setGeometry(rect);
 
+		player.showEqualizer(false);
 
         qDebug() << "loading media library";
         library.loadDataFromDb();
@@ -163,13 +178,7 @@ int main(int argc, char *argv[]){
         set -> getLastFMNameAndPW(user, password);
 
         lastfm.login_slot (user,password);
-
-
-
-
-
-
-        return app.exec();
+		return app.exec();
 }
 
 

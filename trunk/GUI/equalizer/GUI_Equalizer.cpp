@@ -9,7 +9,7 @@
 #include "ui_GUI_equalizer.h"
 #include <QWidget>
 
-GUI_Equalizer::GUI_Equalizer(QWidget* parent) {
+GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
 
 	this->_ui = new Ui_GUI_Equalizer( );
 	this->_ui->setupUi(this);

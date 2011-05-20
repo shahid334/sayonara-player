@@ -4,6 +4,7 @@
 #include "HelperStructs/MetaData.h"
 #include "GUI/GUI_Playlist.h"
 #include "GUI/Library/GUI_Library_windowed.h"
+#include "GUI/equalizer/GUI_Equalizer.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -33,6 +34,7 @@ public slots:
       */
 	void cover_changed(QPixmap&);
     void fillSimplePlayer (const MetaData & in);
+    void showEqualizer(bool);
 
     /**
       * Set current position in filestream
@@ -77,7 +79,6 @@ private slots:
     void searchSliderMoved(int search_percent);
     void volumeChangedSlider(int volume_percent);
     void coverClicked(bool);
-    void showPlaylist(bool);
     void showAgain(QSystemTrayIcon::ActivationReason);
     void muteButtonPressed();
 
@@ -103,6 +104,7 @@ private:
     Ui::GUI_SimplePlayer*		ui;
     GUI_Playlist* 				ui_playlist;
     GUI_Library_windowed*		ui_library;
+    GUI_Equalizer*				ui_eq;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
@@ -132,8 +134,10 @@ private:
 public:
     void setPlaylist(GUI_Playlist* playlist);
     void setLibrary(GUI_Library_windowed* library);
+    void setEqualizer(GUI_Equalizer* eq);
     QWidget* getParentOfPlaylist();
     QWidget* getParentOfLibrary();
+    QWidget* getParentOfEqualizer();
     void setVolume(int vol);
 
 };

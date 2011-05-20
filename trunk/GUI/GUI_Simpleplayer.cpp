@@ -43,7 +43,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     connect(this ->ui ->  songProgress, SIGNAL(sliderReleased()),this,SLOT(searchSliderReleased()));
 
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(showAgain(QSystemTrayIcon::ActivationReason)));
-    connect(this->ui->action_ViewPlaylist, SIGNAL(toggled(bool)), this, SLOT(showPlaylist(bool)));
+    connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this, SLOT(showEqualizer(bool)));
     connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this, SLOT(changeSkin(bool)));
     connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this, SLOT(lastFMClicked(bool)));
     connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this, SLOT(reloadLibraryClicked(bool)));
@@ -334,21 +334,24 @@ void GUI_SimplePlayer::coverClicked(bool){
 }
 
 
-void GUI_SimplePlayer::showPlaylist(bool vis){
+void GUI_SimplePlayer::showEqualizer(bool vis){
 
+	QRect rect = this->ui->playlist_widget->geometry();
 	if (vis) {
-		this->ui_playlist->show();
-		QRect rect = this->geometry();
-		rect.setHeight(680);
-		this->setGeometry(rect);
+		rect.setTop(rect.top() + this->ui_eq->height());
+		rect.setHeight( this->ui_playlist->height() - this->ui_eq->height() );
+		this->ui->eq_widget->show();
 	}
 
 	else {
-		this->ui_playlist->hide();
-		QRect rect = this->geometry();
-		rect.setHeight(200);
-		this->setGeometry(rect);
+		this->ui->eq_widget->hide();
+		rect.setHeight( this->ui_playlist->height() + this->ui_eq->height() );
+
 	}
+
+	this->ui->playlist_widget->setGeometry(rect);
+	this->ui_playlist->resize(this->ui->playlist_widget->size());
+//	resizeEvent(0);
 
 }
 
@@ -504,21 +507,14 @@ QWidget* GUI_SimplePlayer::getParentOfLibrary(){
 	return this->ui->library_widget;
 }
 
+QWidget* GUI_SimplePlayer::getParentOfEqualizer(){
+	return this->ui->eq_widget;
+}
 
 
 
 void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
-
-
 	ui_playlist = playlist;
-
-	QSize tmpSize = this->ui->playlist_widget->size();
-
-	tmpSize.setWidth(317 );
-	tmpSize.setHeight(465);
-
-	this->ui->playlist_widget->resize(tmpSize);
-	this->ui_playlist->resize(tmpSize);
 }
 
 
@@ -526,13 +522,10 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
 
 	ui_library = library;
-	QSize tmpSize = this->size();
-	tmpSize.setWidth(672);
-	tmpSize.setHeight(611);
-	this->ui->library_widget->resize(tmpSize);
-	this->ui_library->resize(tmpSize);
+}
 
-
+void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq){
+	ui_eq = eq;
 }
 
 
@@ -542,6 +535,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 	Q_UNUSED(e);
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
+	this->ui_eq->resize(this->ui->eq_widget->size());
 }
 
 

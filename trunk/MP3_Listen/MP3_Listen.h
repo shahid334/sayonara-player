@@ -12,6 +12,12 @@
 #define STATE_PLAY 1
 #define STATE_PAUSE 2
 
+#define EQ_TYPE_NONE -1
+#define EQ_TYPE_KEQ 0
+#define EQ_TYPE_10B 1
+
+
+
 #include "HelperStructs/MetaData.h"
 
 #include <string>
@@ -26,6 +32,8 @@
 #include <phonon/volumeslider.h>
 #include <phonon/backendcapabilities.h>
 #include <phonon/effectparameter.h>
+
+
 
 
 
@@ -50,6 +58,8 @@ private:
 	Phonon::Effect*		_eq;
 	QList<Phonon::EffectParameter> _effect_parameters;
 	bool				_is_eq_enabled;
+
+	int					_eq_type;
 
 
 public:

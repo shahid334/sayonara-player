@@ -286,15 +286,24 @@ void CDatabaseConnector::fillSettingsStorage () {
     QString username, password;
     try {
         QSqlQuery q (this -> m_database);
-        q.prepare("select lastFMUserName,lastFMPassword from settings");
+        q.prepare("select val from settings where key ='lastfm_user' UNION select val from settings where key='lastfm_pass';");
         if (!q.exec()) {
             throw QString ("SQL - Error: fillSettingsStorage");
         }
-        if (q.next()) {
-            username = q.value(0).toString();
-            password = q.value(1).toString();
-            CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
-        }
+
+
+
+			username = q.value(0).toString();
+			q.next();
+			password = q.value(0).toString();
+
+
+
+		CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
+
+
+
+
     }
     catch (QString ex) {
         qDebug() << "Error during inserting of metadata into database";

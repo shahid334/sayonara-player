@@ -56,12 +56,49 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	qDebug() << "   phonon create path";
 
 	_audio_path = Phonon::createPath(_media_object, _audio_output);
+	_eq_type = EQ_TYPE_NONE;
 
 	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
-	_eq = new Phonon::Effect(availableEffects[5], this);
 
-	_effect_parameters = _eq->parameters();
-	_is_eq_enabled = true;
+	qDebug() << "Available Effects:";
+	int equalizerIdx = -1;
+	for(int i=0; i<availableEffects.size(); i++){
+		Phonon::EffectDescription desc =  availableEffects[i];
+		qDebug() << desc.name();
+
+		if(desc.name() == "KEqualizer"){
+			equalizerIdx = i;
+			_eq_type = EQ_TYPE_KEQ;
+		}
+
+		else if(desc.name() == "equalizer-10bands" && equalizerIdx == -1){
+			equalizerIdx = i;
+			_eq_type = EQ_TYPE_10B;
+		}
+	}
+
+	//equalizerIdx = 4;
+
+	if(equalizerIdx != -1){
+		qDebug() << "Equalizer found";
+		_eq = new Phonon::Effect(availableEffects[equalizerIdx], this);
+
+		_effect_parameters = _eq->parameters();
+		foreach(Phonon::EffectParameter param, _effect_parameters){
+			qDebug() << param.name() << ": " << param.minimumValue() << ", " << param.maximumValue();
+		//	qDebug() << param.description();
+		}
+		_is_eq_enabled = true;
+	}
+
+	else {
+		qDebug() << "Equalizer effect not available";
+		_eq = 0;
+		_is_eq_enabled = false;
+	}
+
+
+
 
 	qDebug() << "   phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
@@ -212,10 +249,25 @@ qreal MP3_Listen::getVolume(){
 
 
 void MP3_Listen::eq_changed(int band, int val){
+	if(_eq == 0 || _eq_type == EQ_TYPE_NONE) return;
+
 	qint64 tmp_seconds = _mseconds_now;
 
 	_audio_path.removeEffect(_eq);
-	_eq->setParameterValue(_effect_parameters[band], val);
+
+	double new_val = 0;
+
+	if(_eq_type == EQ_TYPE_10B){
+		if(val >= 0) new_val = val / 2.0;
+		else new_val = val;
+	}
+
+	else if(_eq_type == EQ_TYPE_KEQ){
+		new_val = val / 2.0;
+		band++;
+	}
+
+	_eq->setParameterValue(_effect_parameters[band], new_val);
 
 	if(_is_eq_enabled){
 		_audio_path.insertEffect(_eq);
@@ -227,7 +279,7 @@ void MP3_Listen::eq_changed(int band, int val){
 
 
 void MP3_Listen::eq_enable(bool enable){
-
+	if(_eq == 0 || _eq_type == EQ_TYPE_NONE) return;
 	if(!enable)
 		_audio_path.removeEffect(_eq);
 

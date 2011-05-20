@@ -501,7 +501,7 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="0" colspan="7">
+    <item row="10" column="0" colspan="7">
      <widget class="QScrollArea" name="playlist_widget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -538,18 +538,18 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>324</width>
-         <height>453</height>
+         <width>289</width>
+         <height>332</height>
         </rect>
        </property>
       </widget>
      </widget>
     </item>
-    <item row="0" column="7" rowspan="9">
+    <item row="0" column="7" rowspan="11">
      <widget class="QWidget" name="library_widget" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-        <horstretch>10</horstretch>
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>13</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
@@ -561,21 +561,37 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="0" colspan="7">
-     <widget class="Line" name="line">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>2</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
+    <item row="4" column="0" colspan="7">
+     <widget class="Line" name="line_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="7">
-     <widget class="Line" name="line_2">
+    <item row="8" column="0" rowspan="2" colspan="7">
+     <widget class="QWidget" name="eq_widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+        <horstretch>2</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>120</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>120</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0" colspan="7">
+     <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -609,7 +625,7 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="action_ViewPlaylist"/>
+    <addaction name="action_ViewEqualizer"/>
     <addaction name="action_Dark"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
@@ -639,15 +655,15 @@
     <string>Close</string>
    </property>
   </action>
-  <action name="action_ViewPlaylist">
+  <action name="action_ViewEqualizer">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
-    <string>Playlist</string>
+    <string>Equalizer</string>
    </property>
   </action>
   <action name="action_Dark">
