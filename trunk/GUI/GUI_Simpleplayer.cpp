@@ -124,6 +124,7 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
     this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
     this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+    this->m_playAction->setText("Pause");
 
     this -> ui->maxTime->setText(lengthString);
     if (in.rating> 5) {
@@ -340,7 +341,9 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 	if (vis) {
 		rect.setTop(rect.top() + this->ui_eq->height());
 		rect.setHeight( this->ui_playlist->height() - this->ui_eq->height() );
+		rect.setWidth( this->ui_playlist->width());
 		this->ui->eq_widget->show();
+
 	}
 
 	else {

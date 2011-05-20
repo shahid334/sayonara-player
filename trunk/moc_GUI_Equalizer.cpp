@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_Equalizer.h'
 **
-** Created: Fri May 20 23:31:19 2011
+** Created: Fri May 20 23:52:51 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!

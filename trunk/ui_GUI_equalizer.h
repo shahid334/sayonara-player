@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'GUI_equalizer.ui'
 **
-** Created: Fri May 20 23:30:50 2011
+** Created: Fri May 20 23:52:46 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -59,7 +59,7 @@ public:
     {
         if (GUI_Equalizer->objectName().isEmpty())
             GUI_Equalizer->setObjectName(QString::fromUtf8("GUI_Equalizer"));
-        GUI_Equalizer->resize(484, 164);
+        GUI_Equalizer->resize(371, 126);
         gridLayout_2 = new QGridLayout(GUI_Equalizer);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 5, 0, 2);
@@ -238,6 +238,7 @@ public:
         btn_preset = new QPushButton(GUI_Equalizer);
         btn_preset->setObjectName(QString::fromUtf8("btn_preset"));
         btn_preset->setMaximumSize(QSize(30, 30));
+        btn_preset->setFlat(true);
 
         gridLayout_2->addWidget(btn_preset, 0, 10, 1, 1);
 

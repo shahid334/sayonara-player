@@ -8,6 +8,7 @@
 
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Helper.h"
 #include "library/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 
@@ -26,6 +27,9 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
 	this->_ui = new Ui_GUI_Equalizer( );
 	this->_ui->setupUi(this);
 
+	this->_ui->btn_preset->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	this->_ui->btn_preset->setText("");
+
 	connect(this->_ui->sli_0, SIGNAL(valueChanged(int)), this, SLOT(sli_0_changed(int)));
 	connect(this->_ui->sli_1, SIGNAL(valueChanged(int)), this, SLOT(sli_1_changed(int)));
 	connect(this->_ui->sli_2, SIGNAL(valueChanged(int)), this, SLOT(sli_2_changed(int)));
@@ -36,7 +40,6 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
 	connect(this->_ui->sli_7, SIGNAL(valueChanged(int)), this, SLOT(sli_7_changed(int)));
 	connect(this->_ui->sli_8, SIGNAL(valueChanged(int)), this, SLOT(sli_8_changed(int)));
 	connect(this->_ui->sli_9, SIGNAL(valueChanged(int)), this, SLOT(sli_9_changed(int)));
-	//connect(this->_ui->sli_level, SIGNAL(sliderReleased()), this, SLOT(sli_level_released()));
 
 	connect(this->_ui->cb_enabled, SIGNAL(toggled(bool)), this, SLOT(cb_enabled_changed(bool)));
 	connect(this->_ui->combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));

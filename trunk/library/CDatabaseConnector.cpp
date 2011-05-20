@@ -69,7 +69,6 @@ CDatabaseConnector::~CDatabaseConnector() {
 		 this->m_database.open();
 	 }
 
-	qDebug() << "Destruktor";
 	this -> store_settings_eq();
 	this -> store_settings_lastfm();
 
@@ -961,10 +960,14 @@ void CDatabaseConnector::store_settings_eq(){
 	        }
 
 	        if (!q.next() || str2insert == "") {
-	            q.prepare("update settings set value='Custom,0,0,0,0,0,0,0,0,0,0' WHERE key='EQ_pr_custom'");
+	            q.prepare("insert into settings  values('EQ_pr_custom', ?);");
+	            q.addBindValue(str2insert);
+
 	            if (!q.exec()) {
 	                throw QString ("SQL - Error: storeSettingsFromStorage");
 	            }
+
+	            return;
 	        }
 
 	        if(str2insert != ""){
