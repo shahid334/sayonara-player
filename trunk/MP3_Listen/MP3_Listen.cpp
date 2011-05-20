@@ -15,6 +15,7 @@
 
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include <QtGui>
 #include <QtCore>
@@ -59,50 +60,6 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 
 	_audio_path = Phonon::createPath(_media_object, _audio_output);
 	_eq_type = EQ_TYPE_NONE;
-
-	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
-
-	qDebug() << "Available Effects:";
-	int equalizerIdx = -1;
-	for(int i=0; i<availableEffects.size(); i++){
-		Phonon::EffectDescription desc =  availableEffects[i];
-		qDebug() << desc.name();
-
-		if(desc.name() == "KEqualizer" && equalizerIdx == -1){
-			equalizerIdx = i;
-			_eq_type = EQ_TYPE_KEQ;
-		}
-
-		else if(desc.name() == "equalizer-10bands" && equalizerIdx == -1){
-			equalizerIdx = i;
-			_eq_type = EQ_TYPE_10B;
-		}
-	}
-
-	if(equalizerIdx != -1){
-		qDebug() << "Equalizer found (" << availableEffects[equalizerIdx] << ")";
-		_eq = new Phonon::Effect(availableEffects[equalizerIdx], this);
-
-		_effect_parameters = _eq->parameters();
-		foreach(Phonon::EffectParameter param, _effect_parameters){
-			qDebug() << param.name() << ": " << param.minimumValue() << ", " << param.maximumValue();
-		//	qDebug() << param.description();
-		}
-		_is_eq_enabled = true;
-
-		_audio_path.insertEffect(_eq);
-
-
-	}
-
-	else {
-		qDebug() << "Equalizer effect not available";
-		_eq = 0;
-		_is_eq_enabled = false;
-	}
-
-
-
 
 	qDebug() << "   phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
@@ -244,30 +201,28 @@ qreal MP3_Listen::getVolume(){
 
 
 void MP3_Listen::eq_changed(int band, int val){
-	if(_eq == 0 || _eq_type == EQ_TYPE_NONE) return;
+	if(_eq == 0 || _eq_type == EQ_TYPE_NONE || _effect_parameters.size() == 0) return;
 
-	qint64 tmp_seconds = _mseconds_now;
-
-	//_audio_path.removeEffect(_eq);
+	if(_effect_parameters.size() < 10){
+		band = band / (( 10 / _effect_parameters.size()) + 1);
+	}
 
 	double new_val = 0;
+	if(_eq_type == EQ_TYPE_10B){ // -24 - +12
+		if(val > 0){
+			new_val = val * 0.33;
+		}
 
-	if(_eq_type == EQ_TYPE_10B){
-		if(val >= 0) new_val = val / 2.0;
-		else new_val = val;
+		else new_val = val * 0.66;
 	}
 
 	else if(_eq_type == EQ_TYPE_KEQ){
-		new_val = val / 3.0 - 4.0;
-		band = band + 1;
-
+		new_val = val * 0.33;
+		if(_effect_parameters.size() > 10)
+			band += _effect_parameters.size() - 10;
 	}
 
 	_eq->setParameterValue(_effect_parameters[band], new_val);
-
-
-
-
 }
 
 
@@ -285,11 +240,55 @@ void MP3_Listen::eq_enable(bool enable){
 }
 
 
-void MP3_Listen::find_presets(){
+void MP3_Listen::load_equalizer(){
 
-	CSettingsStorage * set = CSettingsStorage::getInstance();
-	vector<EQ_Setting> vec;
-	set->getEqualizerSettings(vec);
-	emit eq_presets_loaded(vec);
+	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
+	QStringList availableEqualizers;
 
+	//qDebug() << "Available Effects:";
+	int equalizerIdx = -1;
+	for(int i=0; i<availableEffects.size(); i++){
+		Phonon::EffectDescription desc =  availableEffects[i];
+		//qDebug() << desc.name();
+
+		if(desc.name() == "KEqualizer"  && equalizerIdx == -1){
+			equalizerIdx = i;
+			_eq_type = EQ_TYPE_KEQ;
+			availableEqualizers.push_back(desc.name());
+		}
+
+		else if(desc.name() == "equalizer-10bands" && equalizerIdx == -1){
+			equalizerIdx = i;
+			_eq_type = EQ_TYPE_10B;
+			availableEqualizers.push_back(desc.name());
+		}
+	}
+
+	if(equalizerIdx != -1){
+		qDebug() << "Equalizer found (" << availableEffects[equalizerIdx] << ")";
+		_eq = new Phonon::Effect(availableEffects[equalizerIdx], this);
+
+		_effect_parameters = _eq->parameters();
+		foreach(Phonon::EffectParameter param, _effect_parameters){
+			qDebug() << param.name() << ": " << param.minimumValue() << ", " << param.maximumValue();
+		//	qDebug() << param.description();
+		}
+		_is_eq_enabled = true;
+
+		_audio_path.insertEffect(_eq);
+
+		CSettingsStorage * set = CSettingsStorage::getInstance();
+		vector<EQ_Setting> vec;
+		set->getEqualizerSettings(vec);
+
+		emit eq_found(availableEqualizers);
+		emit eq_presets_loaded(vec);
+	}
+
+
+	else {
+		qDebug() << "Equalizer effect not available";
+		_eq = 0;
+		_is_eq_enabled = false;
+	}
 }

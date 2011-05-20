@@ -13,8 +13,14 @@
 
 using namespace std;
 
-CDatabaseConnector::CDatabaseConnector(QObject *parent) :
-    QObject(parent),
+
+CDatabaseConnector* CDatabaseConnector::getInstance(){
+	static CDatabaseConnector instance;
+	return &instance;
+}
+
+CDatabaseConnector::CDatabaseConnector() :
+
     m_createScriptFileName ("createDB.sql"),
     m_databaseContainerFile (CSettingsStorage::getInstance()->getDBFileName())
 {
@@ -22,7 +28,6 @@ CDatabaseConnector::CDatabaseConnector(QObject *parent) :
     if (this -> isExistent()==false) {
         qDebug() << "Database not existent";
     }
-
 }
 
 bool CDatabaseConnector::isExistent() {
@@ -43,6 +48,7 @@ bool CDatabaseConnector::createDB () {
 }
 
 bool CDatabaseConnector::openDatabase () {
+	if(m_database.isOpen()) m_database.close();
     this -> m_database = QSqlDatabase::addDatabase("QSQLITE",this->m_databaseContainerFile);
     this -> m_database.setDatabaseName(this->m_databaseContainerFile);
     bool e = this -> m_database.open();
@@ -51,21 +57,42 @@ bool CDatabaseConnector::openDatabase () {
         qDebug() << er.driverText();
         qDebug() << er.databaseText();
     }
-    else {
-        this -> load_settings_lastfm();
-        this -> load_settings_eq();
-    }
+
 
     return e;
 
 }
 
 CDatabaseConnector::~CDatabaseConnector() {
-    this -> store_settings_lastfm();
+
+	 if (!this -> m_database.isOpen()) {
+		 this->m_database.open();
+	 }
+
+	qDebug() << "Destruktor";
+	this -> store_settings_eq();
+	this -> store_settings_lastfm();
+
+
     if (this -> m_database.isOpen()) {
         this -> m_database.close();
     }
 }
+
+
+bool CDatabaseConnector::load_settings(){
+	 this -> load_settings_lastfm();
+	 this -> load_settings_eq();
+	 return true;
+}
+
+bool CDatabaseConnector::store_settings(){
+	if(!m_database.isOpen()) m_database.open();
+	this->store_settings_lastfm();
+	this->store_settings_eq();
+	return true;
+}
+
 
 
 void CDatabaseConnector::deleteTracksAlbumsArtists(){
@@ -379,6 +406,8 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result){
 		qDebug() << er.databaseText();
 		qDebug() << er.databaseText();
 	}
+
+	m_database.close();
 }
 
 void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result){
@@ -424,12 +453,14 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 
 			}
 
+			m_database.close();
+
 
 }
 
 void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter){
 	 if (!this -> m_database.isOpen())
-			        this -> m_database.open();
+		this -> m_database.open();
 
 	try {
 		QSqlQuery q (this -> m_database);
@@ -499,7 +530,10 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 		qDebug() << er.databaseText();
 		qDebug() << er.databaseText();
 	}
+
+	m_database.close();
 }
+
 
 void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, QString filter){
 	  if (!this -> m_database.isOpen())
@@ -567,7 +601,20 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	        qDebug() << er.databaseText();
 	        qDebug() << er.databaseText();
 	    }
+
+	    m_database.close();
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, QString filter){
 	if (!this -> m_database.isOpen())
@@ -600,14 +647,16 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 		querytext += QString("order by albumid, track;");
 		qDebug() << "query = " << querytext;
 
-
 		q.prepare(querytext);
+
 		q.bindValue(":artist_id", QVariant(artist));
 		if(filter.length() > 0 ){
 			q.bindValue(":filter1", QVariant(filter));
 			q.bindValue(":filter2", QVariant(filter));
 			q.bindValue(":filter3", QVariant(filter));
 		}
+
+
 
 		if (!q.exec()) {
 			throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
@@ -636,6 +685,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 		qDebug() << er.databaseText();
 	}
 
+	m_database.close();
 }
 
 
@@ -855,11 +905,8 @@ void CDatabaseConnector::load_settings_lastfm() {
 }
 
 
-
-
 void CDatabaseConnector::store_settings_lastfm () {
-    if (!this -> m_database.isOpen())
-        this -> m_database.open();
+
     try {
         QString username, password;
         CSettingsStorage::getInstance()->getLastFMNameAndPW(username,password);
@@ -892,7 +939,52 @@ void CDatabaseConnector::store_settings_lastfm () {
 }
 
 
+void CDatabaseConnector::store_settings_eq(){
 
+	 try {
+
+	        vector<EQ_Setting> vec;
+	        CSettingsStorage::getInstance()->getEqualizerSettings(vec);
+	        QString str2insert = "";
+	        for(uint i=0; i<vec.size(); i++){
+	        	if(vec[i].name == "Custom"){
+	        		str2insert = vec[i].toString();
+	        		break;
+	        	}
+	        }
+
+	        QSqlQuery q (this -> m_database);
+	        q.prepare("select value from settings where key = 'EQ_pr_custom'");
+
+	        if (!q.exec()) {
+	            throw QString ("SQL - Error: store settings equalizer (database not ready)");
+	        }
+
+	        if (!q.next() || str2insert == "") {
+	            q.prepare("update settings set value='Custom,0,0,0,0,0,0,0,0,0,0' WHERE key='EQ_pr_custom'");
+	            if (!q.exec()) {
+	                throw QString ("SQL - Error: storeSettingsFromStorage");
+	            }
+	        }
+
+	        if(str2insert != ""){
+				q.prepare("UPDATE settings set value=? WHERE key='EQ_pr_custom'");
+				q.addBindValue(str2insert);
+
+				if (!q.exec()) {
+					throw QString ("SQL - Error: storeSettingsFromStorage");
+				}
+				else{
+					qDebug() << "inserted successfully";
+				}
+	        }
+	    }
+
+	    catch (QString ex) {
+	        qDebug() << "Error during inserting of equalizer into database";
+	        qDebug() << ex;
+	    }
+}
 
 void CDatabaseConnector::load_settings_eq(){
 

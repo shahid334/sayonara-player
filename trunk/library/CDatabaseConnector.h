@@ -7,11 +7,13 @@
 #include <HelperStructs/MetaData.h>
 #include <HelperStructs/Equalizer_presets.h>
 
+
+class CDatabaseConnector;
 class CDatabaseConnector : public QObject
 {
     Q_OBJECT
 public:
-    explicit CDatabaseConnector(QObject *parent = 0);
+    static CDatabaseConnector* getInstance();
     virtual ~CDatabaseConnector();
 
     /**
@@ -22,6 +24,8 @@ public:
 
     bool createDB();
     bool openDatabase ();
+    bool load_settings();
+    bool store_settings();
 
 
 
@@ -88,12 +92,10 @@ public:
 	 * SETTINGS
 	 *******************************************/
 		void load_settings_eq();
+		void store_settings_eq();
 		void load_settings_lastfm();
-
-	    /**
-	      *Stores all settings inside Settings Singleton. The Settings Container will be fetched from singleton
-	      */
 	    void store_settings_lastfm ();
+
 
 
 public slots:
@@ -105,14 +107,17 @@ public slots:
     bool storeMetadata (std::vector<MetaData> & in);
 
 
-signals:
+protected:
+    CDatabaseConnector();
 
-public slots:
+
 
 private:
+    CDatabaseConnector(const CDatabaseConnector&);
     const QString m_createScriptFileName;
     const QString m_databaseContainerFile;
     QSqlDatabase m_database;
+
 
 
 

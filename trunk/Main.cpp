@@ -45,11 +45,9 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-		qDebug() << "ini database";
-
-		CSettingsStorage * set = CSettingsStorage::getInstance();
+				CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);
-
+		CDatabaseConnector::getInstance()->load_settings();
 
 
 		CoverLookup cover;
@@ -58,35 +56,29 @@ int main(int argc, char *argv[]){
         app.setApplicationName("Sayonara");
         app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-        qDebug() << "init GUI::Player";
         GUI_SimplePlayer 	player;
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-        qDebug() << "init GUI::Playlist";
         GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
         Playlist 			playlist(&app);
 
-        qDebug() << "init GUI::Library";
        GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         //GUI_Library_windowed	ui_library;
 
         CLibraryBase 		library;
         LibrarySetupWidget	ui_librarySetup;
 
-        qDebug() << "init phonon";
         MP3_Listen 			listen (&app);
 
-        qDebug() << "init lastfm";
         LastFM				lastfm;
         GUI_LastFM			ui_lastfm;
 
-        qDebug() << "init equalizer";
         GUI_Equalizer		ui_eq(player.getParentOfEqualizer());
 
 
 
 
-        qDebug() << "setting connections";
+
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(fileSelected(QStringList &)),		&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&player, SIGNAL(play()),							&listen,	SLOT(play()));
@@ -125,7 +117,7 @@ int main(int argc, char *argv[]){
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
         app.connect (&listen,	SIGNAL(eq_presets_loaded(const vector<EQ_Setting>&)), &ui_eq,		SLOT(fill_eq_presets(const vector<EQ_Setting>&)));
-
+        app.connect( &listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 		SLOT(fill_available_equalizers(const QStringList&)));
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
         app.connect(&library, 	SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
@@ -148,6 +140,8 @@ int main(int argc, char *argv[]){
         app.connect(&ui_librarySetup, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
         app.connect(&player, SIGNAL(setupLibraryPath()),    						&ui_librarySetup, SLOT(show()));
 
+
+
         app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), &listen, SLOT(eq_changed(int, int)));
         app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), &listen, SLOT(eq_enable(bool)));
 
@@ -160,7 +154,7 @@ int main(int argc, char *argv[]){
 		player.show();
 
 
-		listen.find_presets();
+		listen.load_equalizer();
 
 		QRect rect = ui_eq.geometry();
 			rect.setHeight(player.getParentOfEqualizer()->height());
@@ -178,19 +172,19 @@ int main(int argc, char *argv[]){
 			ui_library.setGeometry(rect);
 
 		player.showEqualizer(false);
-
-        qDebug() << "loading media library";
         library.loadDataFromDb();
-
-        qDebug() << "init lastfm";
         QString user, password;
-        set -> getLastFMNameAndPW(user, password);
+        set->getLastFMNameAndPW(user, password);
         lastfm.login_slot (user,password);
 
         vector<EQ_Setting> eq_settings;
         set->getEqualizerSettings(eq_settings);
 
-		return app.exec();
+        app.exec();
+
+        CDatabaseConnector::getInstance()->store_settings();
+
+        return 0;
 }
 
 

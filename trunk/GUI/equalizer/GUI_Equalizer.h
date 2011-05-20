@@ -30,6 +30,7 @@ public:
 	signals:
 		void eq_changed_signal(int, int);
 		void eq_enabled_signal(bool);
+		void eq_changed_level_signal(int);
 
 
 	private slots:
@@ -43,14 +44,18 @@ public:
 		void sli_7_changed(int);
 		void sli_8_changed(int);
 		void sli_9_changed(int);
+
 		void cb_enabled_changed(bool);
 		void preset_changed(int);
+		void btn_preset_clicked();
 
 	public slots:
 		void fill_eq_presets(const vector<EQ_Setting>&);
+		void fill_available_equalizers(const QStringList&);
 
 	private:
 		Ui_GUI_Equalizer* _ui;
+		vector<EQ_Setting> _presets;
 };
 
 #endif /* GUI_EQUALIZER_H_ */

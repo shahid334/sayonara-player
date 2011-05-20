@@ -36,7 +36,7 @@ public slots:
 
 private:
     CDirectoryReader    m_reader;
-    CDatabaseConnector  m_database;
+
     QString				m_library_path;
 
 

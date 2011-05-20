@@ -1,4 +1,5 @@
 #include "CSettingsStorage.h"
+#include <library/CDatabaseConnector.h>
 #include <QFile>
 #include <QDir>
 #include <QDebug>
@@ -83,13 +84,6 @@ QString CSettingsStorage::getDBFileName () {
 
 
 
-
-
-
-
-
-
-
 //TODO hash
 QPair<QString, QString> CSettingsStorage::getLastFMNameAndPW () {
     return this -> m_lastFm;
@@ -107,13 +101,14 @@ void CSettingsStorage::setLastFMNameAndPW (const QString & name,const QString & 
 
 
 void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec){
+
 	vec = this->m_vec_eqSettings;
 }
 
 void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec){
 
 	m_vec_eqSettings.clear();
-	for(int i=0; i<vec.size(); i++){
+	for(uint i=0; i<vec.size(); i++){
 		m_vec_eqSettings.push_back(vec[i]);
 	}
 }

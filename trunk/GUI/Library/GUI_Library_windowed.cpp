@@ -199,14 +199,14 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 	vector<MetaData> vec_tracks;
 	vector<Album> vec_albums;
-	CDatabaseConnector db;
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	if(this->ui->le_search->text().length() == 0){
-		db.getAllTracksByArtist(artist_id, vec_tracks);
-		db.getAllAlbumsByArtist(artist_id, vec_albums);
+		db->getAllTracksByArtist(artist_id, vec_tracks);
+		db->getAllAlbumsByArtist(artist_id, vec_albums);
 	}
 	else {
-		db.getAllTracksByArtist(artist_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
-		db.getAllAlbumsByArtist(artist_id, vec_albums, QString("%") + this->ui->le_search->text() + "%");
+		db->getAllTracksByArtist(artist_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
+		db->getAllAlbumsByArtist(artist_id, vec_albums, QString("%") + this->ui->le_search->text() + "%");
 	}
 
 
@@ -238,14 +238,14 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	int album_id = _v_albums.at(idx.row()).id;
 
 	vector<MetaData> vec_tracks;
-	CDatabaseConnector db;
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 	if(this->ui->le_search->text().length() == 0){
-		db.getAllTracksByAlbum(album_id, vec_tracks);
+		db->getAllTracksByAlbum(album_id, vec_tracks);
 	}
 
 	else {
-		db.getAllTracksByAlbum(album_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
+		db->getAllTracksByAlbum(album_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
 	}
 
 	fill_library_tracks(vec_tracks);
@@ -304,8 +304,8 @@ void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
 	int album_id = _v_albums.at(idx.row()).id;
 
 	vector<MetaData> vec;
-	CDatabaseConnector db;
-	db.getAllTracksByAlbum(album_id, vec);
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	db->getAllTracksByAlbum(album_id, vec);
 	emit album_chosen_signal(vec);
 }
 
@@ -314,8 +314,8 @@ void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 	int artist_id = _v_artists.at(idx.row()).id;
 
 	vector<MetaData> vec;
-	CDatabaseConnector db;
-	db.getAllTracksByArtist(artist_id, vec);
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	db->getAllTracksByArtist(artist_id, vec);
 	emit artist_chosen_signal(vec);
 
 }
@@ -345,10 +345,10 @@ Q_UNUSED(search);
 		vector<MetaData> vec_tracks;
 		vector<Artist> vec_artists;
 
-		CDatabaseConnector db;
-		db.getTracksFromDatabase(vec_tracks);
-		db.getAllAlbums(vec_albums);
-		db.getAllArtists(vec_artists);
+		CDatabaseConnector* db = CDatabaseConnector::getInstance();
+		db->getTracksFromDatabase(vec_tracks);
+		db->getAllAlbums(vec_albums);
+		db->getAllArtists(vec_artists);
 		fill_library_artists(vec_artists);
 		fill_library_albums(vec_albums);
 		fill_library_tracks(vec_tracks);
@@ -361,14 +361,14 @@ Q_UNUSED(search);
 	vector<Album> vec_albums;
 	vector<Artist> vec_artists;
 
-	CDatabaseConnector db;
-	db.getAllTracksBySearchString(QString("%") + searchstring + "%", vec_tracks);
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	db->getAllTracksBySearchString(QString("%") + searchstring + "%", vec_tracks);
 	fill_library_tracks(vec_tracks);
 
-	db.getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums);
+	db->getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums);
 	fill_library_albums(vec_albums);
 
-	db.getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists);
+	db->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists);
 	fill_library_artists(vec_artists);
 
 

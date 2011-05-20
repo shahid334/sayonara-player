@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_Equalizer.h'
 **
-** Created: Fri May 20 14:59:45 2011
+** Created: Fri May 20 23:31:19 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,45 +23,51 @@ static const uint qt_meta_data_GUI_Equalizer[] = {
        5,       // revision
        0,       // classname
        0,    0, // classinfo
-      15,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       2,       // signalCount
+       3,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
       17,   15,   14,   14, 0x05,
       44,   14,   14,   14, 0x05,
+      68,   14,   14,   14, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      68,   14,   14,   14, 0x08,
-      87,   14,   14,   14, 0x08,
-     106,   14,   14,   14, 0x08,
-     125,   14,   14,   14, 0x08,
-     144,   14,   14,   14, 0x08,
-     163,   14,   14,   14, 0x08,
-     182,   14,   14,   14, 0x08,
-     201,   14,   14,   14, 0x08,
-     220,   14,   14,   14, 0x08,
-     239,   14,   14,   14, 0x08,
-     258,   14,   14,   14, 0x08,
-     283,   14,   14,   14, 0x08,
-     303,   14,   14,   14, 0x0a,
+      97,   14,   14,   14, 0x08,
+     116,   14,   14,   14, 0x08,
+     135,   14,   14,   14, 0x08,
+     154,   14,   14,   14, 0x08,
+     173,   14,   14,   14, 0x08,
+     192,   14,   14,   14, 0x08,
+     211,   14,   14,   14, 0x08,
+     230,   14,   14,   14, 0x08,
+     249,   14,   14,   14, 0x08,
+     268,   14,   14,   14, 0x08,
+     287,   14,   14,   14, 0x08,
+     312,   14,   14,   14, 0x08,
+     332,   14,   14,   14, 0x08,
+     353,   14,   14,   14, 0x0a,
+     389,   14,   14,   14, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_GUI_Equalizer[] = {
     "GUI_Equalizer\0\0,\0eq_changed_signal(int,int)\0"
-    "eq_enabled_signal(bool)\0sli_0_changed(int)\0"
-    "sli_1_changed(int)\0sli_2_changed(int)\0"
-    "sli_3_changed(int)\0sli_4_changed(int)\0"
-    "sli_5_changed(int)\0sli_6_changed(int)\0"
-    "sli_7_changed(int)\0sli_8_changed(int)\0"
-    "sli_9_changed(int)\0cb_enabled_changed(bool)\0"
-    "preset_changed(int)\0"
+    "eq_enabled_signal(bool)\0"
+    "eq_changed_level_signal(int)\0"
+    "sli_0_changed(int)\0sli_1_changed(int)\0"
+    "sli_2_changed(int)\0sli_3_changed(int)\0"
+    "sli_4_changed(int)\0sli_5_changed(int)\0"
+    "sli_6_changed(int)\0sli_7_changed(int)\0"
+    "sli_8_changed(int)\0sli_9_changed(int)\0"
+    "cb_enabled_changed(bool)\0preset_changed(int)\0"
+    "btn_preset_clicked()\0"
     "fill_eq_presets(vector<EQ_Setting>)\0"
+    "fill_available_equalizers(QStringList)\0"
 };
 
 const QMetaObject GUI_Equalizer::staticMetaObject = {
@@ -95,22 +101,25 @@ int GUI_Equalizer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: eq_changed_signal((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 1: eq_enabled_signal((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 2: sli_0_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 3: sli_1_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: sli_2_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 5: sli_3_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: sli_4_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 7: sli_5_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 8: sli_6_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 9: sli_7_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 10: sli_8_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 11: sli_9_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 12: cb_enabled_changed((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 13: preset_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 14: fill_eq_presets((*reinterpret_cast< const vector<EQ_Setting>(*)>(_a[1]))); break;
+        case 2: eq_changed_level_signal((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 3: sli_0_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 4: sli_1_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: sli_2_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: sli_3_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 7: sli_4_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 8: sli_5_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 9: sli_6_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 10: sli_7_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 11: sli_8_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 12: sli_9_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 13: cb_enabled_changed((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 14: preset_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 15: btn_preset_clicked(); break;
+        case 16: fill_eq_presets((*reinterpret_cast< const vector<EQ_Setting>(*)>(_a[1]))); break;
+        case 17: fill_available_equalizers((*reinterpret_cast< const QStringList(*)>(_a[1]))); break;
         default: ;
         }
-        _id -= 15;
+        _id -= 18;
     }
     return _id;
 }
@@ -127,5 +136,12 @@ void GUI_Equalizer::eq_enabled_signal(bool _t1)
 {
     void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
+}
+
+// SIGNAL 2
+void GUI_Equalizer::eq_changed_level_signal(int _t1)
+{
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 2, _a);
 }
 QT_END_MOC_NAMESPACE

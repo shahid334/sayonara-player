@@ -25,6 +25,17 @@ struct EQ_Setting{
 			settings.append(list.at(i).toDouble());
 		}
 	}
+
+
+	QString toString(){
+
+		QString str = name;
+		for(int i=0; i<settings.size(); i++){
+			str += QString(",") + QString::number(settings[i]);
+		}
+
+		return str;
+	}
 };
 
 #endif

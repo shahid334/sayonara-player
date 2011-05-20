@@ -81,6 +81,7 @@ public:
 		void scrobble_track(const MetaData &);
 		void track_finished();
 		void eq_presets_loaded(const vector<EQ_Setting>&);
+		void eq_found(const QStringList&);
 
 
 
@@ -108,7 +109,7 @@ public:
 
 
 	public:
-        void find_presets();
+        void load_equalizer();
 
 };
 

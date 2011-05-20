@@ -3,7 +3,7 @@
 #include <QDebug>
 
 CLibraryBase::CLibraryBase(QObject *parent) :
-    QObject(parent), m_database (this)
+    QObject(parent)
 {
 
 }
@@ -21,8 +21,8 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 }
 
 void CLibraryBase::reloadLibrary(){
-	m_database.deleteTracksAlbumsArtists();
-//	QString libraryPath = m_database.getLibraryPath();
+	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
+//	QString libraryPath = CDatabaseConnector::getInstance()->getLibraryPath();
 	QStringList fileList;
 	vector<MetaData> v_metadata;
 //  this->m_reader.getFilesInsiderDirRecursive(QDir(libraryPath), fileList);
@@ -46,9 +46,9 @@ void CLibraryBase::reloadLibrary(){
 }
 
 void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& in) {
-    m_database.storeMetadata(in);
+	CDatabaseConnector::getInstance()->storeMetadata(in);
     std::vector<MetaData> data;
-    m_database.getTracksFromDatabase(data);
+    CDatabaseConnector::getInstance()->getTracksFromDatabase(data);
     emit signalMetaDataLoaded(data);
 }
 
@@ -62,7 +62,7 @@ void CLibraryBase::getAllArtistsAlbumsTracks(){
 
 void CLibraryBase::loadDataFromDb () {
     std::vector <MetaData> vec;
-    m_database.getTracksFromDatabase(vec);
+    CDatabaseConnector::getInstance()->getTracksFromDatabase(vec);
     if(vec.size() > 0)
     	emit signalMetaDataLoaded(vec);
 
@@ -75,7 +75,7 @@ void CLibraryBase::getAllArtists(){
 
 
 	vector<Artist> vec;
-		m_database.getAllArtists(vec);
+	CDatabaseConnector::getInstance()->getAllArtists(vec);
 		if(vec.size() > 0) {
 
 			emit allArtistsLoaded(vec);
@@ -86,7 +86,7 @@ void CLibraryBase::getAllArtists(){
 void CLibraryBase::getArtistsByAlbum(int album){
 
 	vector<Artist> vec;
-	m_database.getAllArtistsByAlbum(album, vec);
+	CDatabaseConnector::getInstance()->getAllArtistsByAlbum(album, vec);
 	if(vec.size() > 0){
 		emit allArtistsLoaded(vec);
 		getTracksByAlbum(album);
@@ -100,13 +100,13 @@ void CLibraryBase::getArtistsByAlbum(int album){
 void CLibraryBase::getAllAlbums(){
 
 	vector<Album> vec;
-	m_database.getAllAlbums(vec);
+	CDatabaseConnector::getInstance()->getAllAlbums(vec);
 	if(vec.size() > 0) emit allAlbumsLoaded(vec);
 }
 
 void CLibraryBase::getAlbumsByArtist(int artist){
 	vector<Album> vec;
-	m_database.getAllAlbumsByArtist(artist, vec);
+	CDatabaseConnector::getInstance()->getAllAlbumsByArtist(artist, vec);
 	if(vec.size() > 0)
 		emit allAlbumsLoaded(vec);
 		getTracksByArtist(artist);
@@ -117,7 +117,7 @@ void CLibraryBase::getAlbumsByArtist(int artist){
 void CLibraryBase::getTracksByAlbum(int album){
 
 	vector<MetaData> vec;
-	m_database.getAllTracksByAlbum(album, vec);
+	CDatabaseConnector::getInstance()->getAllTracksByAlbum(album, vec);
 	if(vec.size() > 0)
 		emit signalMetaDataLoaded(vec);
 
@@ -125,7 +125,7 @@ void CLibraryBase::getTracksByAlbum(int album){
 
 void CLibraryBase::getTracksByArtist(int artist){
 	vector<MetaData> vec;
-	m_database.getAllTracksByArtist(artist, vec);
+	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist, vec);
 	if(vec.size() > 0)
 		emit signalMetaDataLoaded(vec);
 

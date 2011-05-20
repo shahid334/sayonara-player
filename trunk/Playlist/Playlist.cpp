@@ -121,8 +121,7 @@ void Playlist::insert_albums(const vector<Album>& v_albums, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_albums.size(); i++){
 		vector<MetaData> vec;
-		CDatabaseConnector db;
-		db.getAllTracksByAlbum(v_albums.at(i).id, vec);
+		CDatabaseConnector::getInstance()->getAllTracksByAlbum(v_albums.at(i).id, vec);
 		insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
@@ -133,8 +132,7 @@ void Playlist::insert_artists(const vector<Artist>& v_artists, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_artists.size(); i++){
 		vector<MetaData> vec;
-		CDatabaseConnector db;
-		db.getAllTracksByArtist(v_artists.at(i).id, vec);
+		CDatabaseConnector::getInstance()->getAllTracksByArtist(v_artists.at(i).id, vec);
 		insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
