@@ -4,7 +4,7 @@
   * Cover fetch
   * LastFM scrobbling
   * Media Library
-  * Equalizer
+  * Equalizer (GStreamer, Xine)
 
 
 
