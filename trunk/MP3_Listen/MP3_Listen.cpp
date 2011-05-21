@@ -11,7 +11,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/CSettingsStorage.h"
-#include <fft.h>
+
 
 #include <iostream>
 #include <vector>
