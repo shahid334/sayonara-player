@@ -10,7 +10,7 @@ TARGET = sayonara
 #DESTDIR = /usr/bin
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
 INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
-LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm
+LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm 
 
 # Input
 HEADERS += MP3_Listen/MP3_Listen.h \

@@ -473,8 +473,10 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e){
 
 			cout << "stop" << endl;
 			break;
+
+		case Qt::Key_E:
+			this->ui->action_ViewEqualizer->setChecked(!this->ui->action_ViewEqualizer->isChecked());
 		default:
-			//QMainWindow::keyPressEvent(event);
 		break;
 
 	}

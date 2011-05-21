@@ -234,8 +234,17 @@ void CoverLookup::search_cover(){
 void CoverLookup::search_cover(const MetaData& metadata){
 	_artist = string(metadata.artist.toUtf8().constData());
 	_album = string(metadata.album.toUtf8().constData());
-	_cur_cover = -1;
-	search_cover();
+	_sound_dir = metadata.filepath.left(metadata.filepath.lastIndexOf('/'));
+
+	if(QFile::exists(_sound_dir + "/sayonara_cover.jpg")){
+		QPixmap pixmap = QPixmap::fromImage(QImage(_sound_dir + "/sayonara_cover.jpg"));
+		emit cover_found(pixmap);
+	}
+
+	else{
+		_cur_cover = -1;
+		search_cover();
+	}
 }
 
 
@@ -266,6 +275,7 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 				cout << "No covers found" << endl;
 				QPixmap pixmap = QPixmap::fromImage(QImage("Covers/gui.jpg"));
 				emit cover_found(pixmap);
+
 			}
 
 			return;
@@ -295,6 +305,7 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 
 			QImage img = QImage::fromData((const uchar*) image_data, image_bytes);
 
+			img.save( _sound_dir + "/sayonara_cover.jpg" );
 
 			if(!img.isNull()){
 
@@ -305,6 +316,7 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 					if(apply_cover){
 						_cur_cover = idx;
 						emit cover_found(pixmap);
+
 					}
 
 					cover_set = true;

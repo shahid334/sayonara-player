@@ -11,7 +11,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/CSettingsStorage.h"
-
+#include <fft.h>
 
 #include <iostream>
 #include <vector>
@@ -24,6 +24,7 @@
 #include <QString>
 #include <QMap>
 #include <QMapIterator>
+#include <QVector>
 
 #include <phonon/audiooutput.h>
 #include <phonon/seekslider.h>
@@ -33,8 +34,12 @@
 #include <phonon/effect.h>
 #include <phonon/effectparameter.h>
 #include <phonon/path.h>
-
-
+#include <phonon/audiodataoutput.h>
+/*
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
+#include <opencv/cxcore.h>
+*/
 
 
 
@@ -49,6 +54,15 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_seconds_now = 0;
 	_scrobbled = false;
 
+	/*_f = new float[512];
+	_m = new int[10];
+	_img = cvCreateImage(cvSize(100, 100), IPL_DEPTH_8U, 1);
+	cvNamedWindow("win");
+
+	_ado = new Phonon::AudioDataOutput();
+	_ado->setDataSize(512);*/
+
+
 	qDebug() << "   1/4 phonon init output";
 	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
 
@@ -58,12 +72,14 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 
 	qDebug() << "   3/4 phonon create path";
 	_audio_path = Phonon::createPath(_media_object, _audio_output);
+	//_audio_path_ado = Phonon::createPath(_media_object, _ado);
 	_eq_type = EQ_TYPE_NONE;
+
 
 	qDebug() << "   4/4 phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
-
+//	connect(_ado, SIGNAL(dataReady(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16>> &)), this, SLOT(handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & ) ));
 
 
 }
@@ -227,6 +243,7 @@ void MP3_Listen::eq_enable(bool enable){
 
 void MP3_Listen::load_equalizer(){
 
+
 	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
 	QStringList availableEqualizers;
 
@@ -271,4 +288,37 @@ void MP3_Listen::load_equalizer(){
 		_eq = 0;
 		_is_eq_enabled = false;
 	}
+}
+
+
+
+void MP3_Listen::handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & data){
+/*
+	cvZero(_img);
+	QList<QVector<short int> >	 vals = data.values();
+	foreach(QVector<short int> vec, vals){
+		if(vec.size() == 512){
+			for(int i=0; i<512; i++)
+				_f[i] = vec[i];
+
+			fftr1(_f, 512, 1);
+
+			for(int i=0; i<10; i++){
+				_m[i] = 0;
+				for(int j=51*i; j<51*(i+1); j++){
+					_m[i] += _f[j];
+				}
+
+				_m[i] /= 5100;
+				//qDebug() << i << " " << abs(_m[i]);
+				cvRectangle(_img, cvPoint(i * 10, 100), cvPoint((i+1)*10, 100- (_m[i] + 1000) / 20), cvScalarAll(255), -1);
+			}
+		}
+
+	}
+
+	cvShowImage("win", _img);
+	cvWaitKey(0);
+
+*/
 }

@@ -83,11 +83,15 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 		if(!cur_track && lightness < 96) _pl_entry->setStyleSheet("background-color: transparent;  color: rgb(216,216,216);");
 		else if(!cur_track && lightness >= 96 ) _pl_entry->setStyleSheet("background-color: transparent; ");
+
+		// cur_track
 		else _pl_entry->setStyleSheet("background-color: " + col_ia.name() );
+		//else _pl_entry->setStyleSheet("background-color: #F9B46A;");
 
 	}
 	else {
 		_pl_entry->setStyleSheet(QString("background-color: ") + col.name() + ";");
+		//_pl_entry->setStyleSheet(QString("background-color: #F3841A;"));
 	}
 
 	_pl_entry->render(painter, rect.topLeft() );

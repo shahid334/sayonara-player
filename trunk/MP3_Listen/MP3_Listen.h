@@ -26,6 +26,8 @@
 
 #include <QObject>
 #include <QString>
+#include <QVector>
+#include <QMap>
 
 #include <phonon/audiooutput.h>
 #include <phonon/seekslider.h>
@@ -33,11 +35,13 @@
 #include <phonon/volumeslider.h>
 #include <phonon/backendcapabilities.h>
 #include <phonon/effectparameter.h>
+#include <phonon/audiodataoutput.h>
 
 
-
-
-
+/*
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
+*/
 
 
 class MP3_Listen : public QObject{
@@ -52,12 +56,20 @@ private:
     int				_seconds_now;
     qint64			_mseconds_now;
     bool			_scrobbled;
+   /* float*			_f;
+    int*			_m;
+
+    IplImage* _img;*/
+
+
 
 	Phonon::AudioOutput *_audio_output;
 	Phonon::MediaObject *_media_object;
 	Phonon::Path		_audio_path;
+	//Phonon::Path		_audio_path_ado;
 	Phonon::Effect*		_eq;
 	QList<Phonon::EffectParameter> _effect_parameters;
+	//Phonon::AudioDataOutput*	_ado;
 	bool				_is_eq_enabled;
 
 	int					_eq_type;
@@ -106,6 +118,7 @@ public:
 		void seekableChanged(bool b);
         void timeChanged(qint64 time);
         void finished();
+        void handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & );
 
 
 	public:
