@@ -109,6 +109,7 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 
 
 void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs){
+	Q_UNUSED(eqs);
 	//this->_ui->but_enabled->setText(eqs[0]);
 }
 

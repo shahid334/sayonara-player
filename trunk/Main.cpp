@@ -14,7 +14,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/library/LibrarySetupWidget.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
-#include "Playlist/Playlist.h"
+#include "playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"

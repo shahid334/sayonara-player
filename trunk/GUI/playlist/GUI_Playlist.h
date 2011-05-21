@@ -8,7 +8,7 @@
 #ifndef GUI_PLAYLIST_H_
 #define GUI_PLAYLIST_H_
 
-#include "Playlist/Playlist.h"
+#include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 
 

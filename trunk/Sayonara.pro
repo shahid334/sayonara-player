@@ -33,7 +33,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     library/CDatabaseConnector.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
-    Playlist/Playlist.h \
+    playlist/Playlist.h \
     HelperStructs/id3.h \
     HelperStructs/CSettingsStorage.h \
     HelperStructs/Equalizer_presets.h \
@@ -60,7 +60,7 @@ SOURCES += Main.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
     library/CDatabaseConnector.cpp \
-    Playlist/Playlist.cpp \
+    playlist/Playlist.cpp \
     HelperStructs/id3.cpp \
     LastFM/LastFM.cpp \
     HelperStructs/CSettingsStorage.cpp
