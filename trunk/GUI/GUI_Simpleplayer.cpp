@@ -361,12 +361,34 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 
 void GUI_SimplePlayer::changeEvent(QEvent *event){
 
-	Q_UNUSED(event);
+	if( event->type() == QEvent::WindowStateChange ){
+
+		if(isMinimized())	hide();
+		else show();
+	}
+
 }
 
 
 
 void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
+
+	switch(reason){
+		case QSystemTrayIcon::Trigger:
+			if(this->isMinimized() || isHidden())
+				this->showNormal();
+			if(!this->isActiveWindow())
+				this->activateWindow();
+			else {
+				hide();
+			}
+		break;
+
+
+		default:
+		break;
+
+	}
 
 	Q_UNUSED(reason);
 
@@ -413,7 +435,7 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 	connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
 
 	showAction = new QAction(tr("Show"), this);
-	connect(showAction, SIGNAL(triggered()), this, SLOT(show()));
+	connect(showAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
 
 
@@ -430,7 +452,7 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 	trayContextMenu->addSeparator();
 	trayContextMenu->addAction(m_closeAction);
 
-	trayContextMenu->addAction(showAction);
+	//trayContextMenu->addAction(showAction);
 
 
 	m_trayIcon->setContextMenu(trayContextMenu);
@@ -441,9 +463,6 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e){
-
-
-
 
 	switch(e->key()){
 		case Qt::Key_Play:
