@@ -15,6 +15,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QDebug>
+#include <QMessageBox>
 
 #include <ui_GUI_equalizer.h>
 
@@ -28,6 +29,7 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
 	this->_ui->setupUi(this);
 
 	this->_ui->btn_preset->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	this->_ui->but_enabled->setIcon(QIcon(Helper::getIconPath() + "power_on.png"));
 	this->_ui->btn_preset->setText("");
 
 	connect(this->_ui->sli_0, SIGNAL(valueChanged(int)), this, SLOT(sli_0_changed(int)));
@@ -41,7 +43,7 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
 	connect(this->_ui->sli_8, SIGNAL(valueChanged(int)), this, SLOT(sli_8_changed(int)));
 	connect(this->_ui->sli_9, SIGNAL(valueChanged(int)), this, SLOT(sli_9_changed(int)));
 
-	connect(this->_ui->cb_enabled, SIGNAL(toggled(bool)), this, SLOT(cb_enabled_changed(bool)));
+	connect(this->_ui->but_enabled, SIGNAL(toggled(bool)), this, SLOT(but_enabled_changed(bool)));
 	connect(this->_ui->combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
 	connect(this->_ui->btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
 
@@ -85,7 +87,11 @@ void GUI_Equalizer::sli_9_changed(int new_val){
 	emit eq_changed_signal(9, new_val);
 }
 
-void GUI_Equalizer::cb_enabled_changed(bool enabled){
+void GUI_Equalizer::but_enabled_changed(bool enabled){
+
+	if(enabled)this->_ui->but_enabled->setIcon(QIcon(Helper::getIconPath() + "power_on.png"));
+	else this->_ui->but_enabled->setIcon(QIcon(Helper::getIconPath() + "power_off.png"));
+
 	emit eq_enabled_signal(enabled);
 }
 
@@ -103,7 +109,7 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 
 
 void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs){
-	this->_ui->cb_enabled->setText(eqs[0]);
+	//this->_ui->but_enabled->setText(eqs[0]);
 }
 
 
@@ -142,8 +148,6 @@ void GUI_Equalizer::btn_preset_clicked(){
 	str += _ui->label_9->text() + ",";
 	str += _ui->label_10->text();
 
-	qDebug() << str;
-
 	int custom_idx = -1;
 	for(uint i=0; i<_presets.size(); i++){
 
@@ -154,8 +158,23 @@ void GUI_Equalizer::btn_preset_clicked(){
 		}
 	}
 
-	CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
-	//CDatabaseConnector::getInstance()->store_settings();
-	if(custom_idx != -1) this->_ui->combo_presets->setCurrentIndex(custom_idx);
+	bool b_save = true;
+	int current_idx = this->_ui->combo_presets->currentIndex();
+
+	if( custom_idx != -1 && custom_idx != current_idx ){
+		 QMessageBox msgBox;
+		 msgBox.setText("This will overwrite your custom preset");
+		 msgBox.setInformativeText("Continue?");
+		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		 msgBox.setDefaultButton(QMessageBox::No);
+		 int ret = msgBox.exec();
+
+		 if(ret != QMessageBox::Yes) b_save = false;
+	}
+
+	if(b_save){
+		CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
+		if(custom_idx != -1) this->_ui->combo_presets->setCurrentIndex(custom_idx);
+	}
 
 }

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'GUI_equalizer.ui'
 **
-** Created: Fri May 20 23:52:46 2011
+** Created: Sat May 21 13:42:59 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,7 +14,6 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
@@ -53,13 +52,14 @@ public:
     QSlider *sli_5;
     QComboBox *combo_presets;
     QPushButton *btn_preset;
-    QCheckBox *cb_enabled;
+    QPushButton *but_enabled;
+    QLabel *label_11;
 
     void setupUi(QWidget *GUI_Equalizer)
     {
         if (GUI_Equalizer->objectName().isEmpty())
             GUI_Equalizer->setObjectName(QString::fromUtf8("GUI_Equalizer"));
-        GUI_Equalizer->resize(371, 126);
+        GUI_Equalizer->resize(336, 124);
         gridLayout_2 = new QGridLayout(GUI_Equalizer);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 5, 0, 2);
@@ -71,7 +71,7 @@ public:
         sli_3->setMaximum(24);
         sli_3->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_3, 3, 4, 1, 1);
+        gridLayout_2->addWidget(sli_3, 2, 4, 1, 1);
 
         sli_4 = new QSlider(GUI_Equalizer);
         sli_4->setObjectName(QString::fromUtf8("sli_4"));
@@ -81,7 +81,7 @@ public:
         sli_4->setMaximum(24);
         sli_4->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_4, 3, 5, 1, 1);
+        gridLayout_2->addWidget(sli_4, 2, 5, 1, 1);
 
         sli_1 = new QSlider(GUI_Equalizer);
         sli_1->setObjectName(QString::fromUtf8("sli_1"));
@@ -91,7 +91,7 @@ public:
         sli_1->setMaximum(24);
         sli_1->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_1, 3, 2, 1, 1);
+        gridLayout_2->addWidget(sli_1, 2, 2, 1, 1);
 
         sli_2 = new QSlider(GUI_Equalizer);
         sli_2->setObjectName(QString::fromUtf8("sli_2"));
@@ -101,7 +101,7 @@ public:
         sli_2->setMaximum(24);
         sli_2->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_2, 3, 3, 1, 1);
+        gridLayout_2->addWidget(sli_2, 2, 3, 1, 1);
 
         sli_0 = new QSlider(GUI_Equalizer);
         sli_0->setObjectName(QString::fromUtf8("sli_0"));
@@ -111,74 +111,74 @@ public:
         sli_0->setMaximum(24);
         sli_0->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_0, 3, 1, 1, 1);
+        gridLayout_2->addWidget(sli_0, 2, 1, 1, 1);
 
         label = new QLabel(GUI_Equalizer);
         label->setObjectName(QString::fromUtf8("label"));
         label->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label, 2, 1, 1, 1);
+        gridLayout_2->addWidget(label, 1, 1, 1, 1);
 
         label_2 = new QLabel(GUI_Equalizer);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_2, 2, 2, 1, 1);
+        gridLayout_2->addWidget(label_2, 1, 2, 1, 1);
 
         label_3 = new QLabel(GUI_Equalizer);
         label_3->setObjectName(QString::fromUtf8("label_3"));
         label_3->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_3, 2, 3, 1, 1);
+        gridLayout_2->addWidget(label_3, 1, 3, 1, 1);
 
         label_4 = new QLabel(GUI_Equalizer);
         label_4->setObjectName(QString::fromUtf8("label_4"));
         label_4->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_4, 2, 4, 1, 1);
+        gridLayout_2->addWidget(label_4, 1, 4, 1, 1);
 
         label_5 = new QLabel(GUI_Equalizer);
         label_5->setObjectName(QString::fromUtf8("label_5"));
         label_5->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_5, 2, 5, 1, 1);
+        gridLayout_2->addWidget(label_5, 1, 5, 1, 1);
 
         label_6 = new QLabel(GUI_Equalizer);
         label_6->setObjectName(QString::fromUtf8("label_6"));
         label_6->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_6, 2, 6, 1, 1);
+        gridLayout_2->addWidget(label_6, 1, 6, 1, 1);
 
         line = new QFrame(GUI_Equalizer);
         line->setObjectName(QString::fromUtf8("line"));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
 
-        gridLayout_2->addWidget(line, 4, 1, 1, 10);
+        gridLayout_2->addWidget(line, 3, 1, 1, 10);
 
         label_8 = new QLabel(GUI_Equalizer);
         label_8->setObjectName(QString::fromUtf8("label_8"));
         label_8->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_8, 2, 8, 1, 1);
+        gridLayout_2->addWidget(label_8, 1, 8, 1, 1);
 
         label_7 = new QLabel(GUI_Equalizer);
         label_7->setObjectName(QString::fromUtf8("label_7"));
         label_7->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_7, 2, 7, 1, 1);
+        gridLayout_2->addWidget(label_7, 1, 7, 1, 1);
 
         label_9 = new QLabel(GUI_Equalizer);
         label_9->setObjectName(QString::fromUtf8("label_9"));
         label_9->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_9, 2, 9, 1, 1);
+        gridLayout_2->addWidget(label_9, 1, 9, 1, 1);
 
         label_10 = new QLabel(GUI_Equalizer);
         label_10->setObjectName(QString::fromUtf8("label_10"));
         label_10->setAlignment(Qt::AlignCenter);
 
-        gridLayout_2->addWidget(label_10, 2, 10, 1, 1);
+        gridLayout_2->addWidget(label_10, 1, 10, 1, 1);
 
         sli_9 = new QSlider(GUI_Equalizer);
         sli_9->setObjectName(QString::fromUtf8("sli_9"));
@@ -188,7 +188,7 @@ public:
         sli_9->setMaximum(24);
         sli_9->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_9, 3, 10, 1, 1);
+        gridLayout_2->addWidget(sli_9, 2, 10, 1, 1);
 
         sli_8 = new QSlider(GUI_Equalizer);
         sli_8->setObjectName(QString::fromUtf8("sli_8"));
@@ -198,7 +198,7 @@ public:
         sli_8->setMaximum(24);
         sli_8->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_8, 3, 9, 1, 1);
+        gridLayout_2->addWidget(sli_8, 2, 9, 1, 1);
 
         sli_7 = new QSlider(GUI_Equalizer);
         sli_7->setObjectName(QString::fromUtf8("sli_7"));
@@ -208,7 +208,7 @@ public:
         sli_7->setMaximum(24);
         sli_7->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_7, 3, 8, 1, 1);
+        gridLayout_2->addWidget(sli_7, 2, 8, 1, 1);
 
         sli_6 = new QSlider(GUI_Equalizer);
         sli_6->setObjectName(QString::fromUtf8("sli_6"));
@@ -218,7 +218,7 @@ public:
         sli_6->setMaximum(24);
         sli_6->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_6, 3, 7, 1, 1);
+        gridLayout_2->addWidget(sli_6, 2, 7, 1, 1);
 
         sli_5 = new QSlider(GUI_Equalizer);
         sli_5->setObjectName(QString::fromUtf8("sli_5"));
@@ -228,12 +228,12 @@ public:
         sli_5->setMaximum(24);
         sli_5->setOrientation(Qt::Vertical);
 
-        gridLayout_2->addWidget(sli_5, 3, 6, 1, 1);
+        gridLayout_2->addWidget(sli_5, 2, 6, 1, 1);
 
         combo_presets = new QComboBox(GUI_Equalizer);
         combo_presets->setObjectName(QString::fromUtf8("combo_presets"));
 
-        gridLayout_2->addWidget(combo_presets, 0, 6, 1, 4);
+        gridLayout_2->addWidget(combo_presets, 0, 7, 1, 3);
 
         btn_preset = new QPushButton(GUI_Equalizer);
         btn_preset->setObjectName(QString::fromUtf8("btn_preset"));
@@ -242,12 +242,21 @@ public:
 
         gridLayout_2->addWidget(btn_preset, 0, 10, 1, 1);
 
-        cb_enabled = new QCheckBox(GUI_Equalizer);
-        cb_enabled->setObjectName(QString::fromUtf8("cb_enabled"));
-        cb_enabled->setChecked(true);
-        cb_enabled->setTristate(false);
+        but_enabled = new QPushButton(GUI_Equalizer);
+        but_enabled->setObjectName(QString::fromUtf8("but_enabled"));
+        but_enabled->setMinimumSize(QSize(24, 24));
+        but_enabled->setMaximumSize(QSize(24, 24));
+        but_enabled->setIconSize(QSize(18, 18));
+        but_enabled->setCheckable(true);
+        but_enabled->setChecked(true);
+        but_enabled->setFlat(false);
 
-        gridLayout_2->addWidget(cb_enabled, 0, 1, 2, 5);
+        gridLayout_2->addWidget(but_enabled, 0, 1, 1, 1);
+
+        label_11 = new QLabel(GUI_Equalizer);
+        label_11->setObjectName(QString::fromUtf8("label_11"));
+
+        gridLayout_2->addWidget(label_11, 0, 2, 1, 2);
 
 
         retranslateUi(GUI_Equalizer);
@@ -279,7 +288,8 @@ public:
         label_9->setText(QApplication::translate("GUI_Equalizer", "0", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("GUI_Equalizer", "0", 0, QApplication::UnicodeUTF8));
         btn_preset->setText(QApplication::translate("GUI_Equalizer", ".", 0, QApplication::UnicodeUTF8));
-        cb_enabled->setText(QString());
+        but_enabled->setText(QString());
+        label_11->setText(QApplication::translate("GUI_Equalizer", "Eq on/off", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

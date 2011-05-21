@@ -64,7 +64,7 @@ signals:
     void windowResized(const QSize&);
     void setupLastFM();
     void reloadLibrary();
-    void setupLibraryPath();
+    void libpath_changed(QString);
 
 
 private slots:

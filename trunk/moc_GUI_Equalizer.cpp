@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_Equalizer.h'
 **
-** Created: Fri May 20 23:52:51 2011
+** Created: Sat May 21 13:43:04 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -47,10 +47,10 @@ static const uint qt_meta_data_GUI_Equalizer[] = {
      249,   14,   14,   14, 0x08,
      268,   14,   14,   14, 0x08,
      287,   14,   14,   14, 0x08,
-     312,   14,   14,   14, 0x08,
-     332,   14,   14,   14, 0x08,
-     353,   14,   14,   14, 0x0a,
-     389,   14,   14,   14, 0x0a,
+     313,   14,   14,   14, 0x08,
+     333,   14,   14,   14, 0x08,
+     354,   14,   14,   14, 0x0a,
+     390,   14,   14,   14, 0x0a,
 
        0        // eod
 };
@@ -64,7 +64,7 @@ static const char qt_meta_stringdata_GUI_Equalizer[] = {
     "sli_4_changed(int)\0sli_5_changed(int)\0"
     "sli_6_changed(int)\0sli_7_changed(int)\0"
     "sli_8_changed(int)\0sli_9_changed(int)\0"
-    "cb_enabled_changed(bool)\0preset_changed(int)\0"
+    "but_enabled_changed(bool)\0preset_changed(int)\0"
     "btn_preset_clicked()\0"
     "fill_eq_presets(vector<EQ_Setting>)\0"
     "fill_available_equalizers(QStringList)\0"
@@ -112,7 +112,7 @@ int GUI_Equalizer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 10: sli_7_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 11: sli_8_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 12: sli_9_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 13: cb_enabled_changed((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 13: but_enabled_changed((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 14: preset_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 15: btn_preset_clicked(); break;
         case 16: fill_eq_presets((*reinterpret_cast< const vector<EQ_Setting>(*)>(_a[1]))); break;

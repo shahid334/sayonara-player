@@ -15,7 +15,7 @@ class CDirectoryReader {
           */
         void setFilter (const QStringList & filter);
 
-        void getFilesInsiderDirRecursive (QDir baseDir, QStringList & files);
+        void getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files);
         void getFilesInsideDirectory (QDir baseDir, QStringList & files);
 
     private:

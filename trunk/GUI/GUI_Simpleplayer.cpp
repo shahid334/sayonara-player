@@ -528,5 +528,10 @@ void GUI_SimplePlayer::initGUI(){
 
 void GUI_SimplePlayer::setLibraryPathClicked(bool b){
 	Q_UNUSED(b);
-	emit setupLibraryPath();
+
+	 QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+								getenv("$HOME"),
+								QFileDialog::ShowDirsOnly);
+	    if(dir != "")
+	    	emit libpath_changed(dir);
 }

@@ -45,7 +45,7 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-				CSettingsStorage * set = CSettingsStorage::getInstance();
+		CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
 
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(playlist_mode_changed(const Playlist_Mode&)), 			&playlist, 	SLOT(playlist_mode_changed(const Playlist_Mode&)));
         app.connect (&ui_playlist, SIGNAL(dropped_tracks(const vector<MetaData>&, int)), 			&playlist, 	SLOT(insert_tracks(const vector<MetaData>&, int)));
         app.connect (&ui_playlist, SIGNAL(sound_files_dropped(QStringList&)), 						&playlist, 	SLOT(createPlaylist(QStringList&)));
-        app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 							&library, 	SLOT(baseDirSelected(const QString & )));
+        app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 						&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
@@ -137,8 +137,8 @@ int main(int argc, char *argv[]){
 
 
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
-        app.connect(&ui_librarySetup, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
-        app.connect(&player, SIGNAL(setupLibraryPath()),    						&ui_librarySetup, SLOT(show()));
+        app.connect(&player, SIGNAL(libpath_changed(QString)), 			&library, 		SLOT(setLibraryPath(QString)));
+
 
 
 

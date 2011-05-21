@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>371</width>
-    <height>126</height>
+    <width>336</width>
+    <height>124</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,7 +26,7 @@
    <property name="bottomMargin">
     <number>2</number>
    </property>
-   <item row="3" column="4">
+   <item row="2" column="4">
     <widget class="QSlider" name="sli_3">
      <property name="minimumSize">
       <size>
@@ -51,7 +51,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="5">
+   <item row="2" column="5">
     <widget class="QSlider" name="sli_4">
      <property name="minimumSize">
       <size>
@@ -76,7 +76,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
+   <item row="2" column="2">
     <widget class="QSlider" name="sli_1">
      <property name="minimumSize">
       <size>
@@ -101,7 +101,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
+   <item row="2" column="3">
     <widget class="QSlider" name="sli_2">
      <property name="minimumSize">
       <size>
@@ -126,7 +126,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="2" column="1">
     <widget class="QSlider" name="sli_0">
      <property name="minimumSize">
       <size>
@@ -151,7 +151,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="1" column="1">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>0</string>
@@ -161,7 +161,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="1" column="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>0</string>
@@ -171,7 +171,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="1" column="3">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>0</string>
@@ -181,7 +181,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="4">
+   <item row="1" column="4">
     <widget class="QLabel" name="label_4">
      <property name="text">
       <string>0</string>
@@ -191,7 +191,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="5">
+   <item row="1" column="5">
     <widget class="QLabel" name="label_5">
      <property name="text">
       <string>0</string>
@@ -201,7 +201,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="6">
+   <item row="1" column="6">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>0</string>
@@ -211,14 +211,14 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1" colspan="10">
+   <item row="3" column="1" colspan="10">
     <widget class="Line" name="line">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
-   <item row="2" column="8">
+   <item row="1" column="8">
     <widget class="QLabel" name="label_8">
      <property name="text">
       <string>0</string>
@@ -228,7 +228,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="7">
+   <item row="1" column="7">
     <widget class="QLabel" name="label_7">
      <property name="text">
       <string>0</string>
@@ -238,7 +238,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="9">
+   <item row="1" column="9">
     <widget class="QLabel" name="label_9">
      <property name="text">
       <string>0</string>
@@ -248,7 +248,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="10">
+   <item row="1" column="10">
     <widget class="QLabel" name="label_10">
      <property name="text">
       <string>0</string>
@@ -258,7 +258,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="10">
+   <item row="2" column="10">
     <widget class="QSlider" name="sli_9">
      <property name="minimumSize">
       <size>
@@ -283,7 +283,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="9">
+   <item row="2" column="9">
     <widget class="QSlider" name="sli_8">
      <property name="minimumSize">
       <size>
@@ -308,7 +308,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="8">
+   <item row="2" column="8">
     <widget class="QSlider" name="sli_7">
      <property name="minimumSize">
       <size>
@@ -333,7 +333,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="7">
+   <item row="2" column="7">
     <widget class="QSlider" name="sli_6">
      <property name="minimumSize">
       <size>
@@ -358,7 +358,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="6">
+   <item row="2" column="6">
     <widget class="QSlider" name="sli_5">
      <property name="minimumSize">
       <size>
@@ -383,7 +383,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="6" colspan="4">
+   <item row="0" column="7" colspan="3">
     <widget class="QComboBox" name="combo_presets"/>
    </item>
    <item row="0" column="10">
@@ -402,16 +402,44 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1" rowspan="2" colspan="5">
-    <widget class="QCheckBox" name="cb_enabled">
+   <item row="0" column="1">
+    <widget class="QPushButton" name="but_enabled">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
      <property name="checked">
       <bool>true</bool>
      </property>
-     <property name="tristate">
+     <property name="flat">
       <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2">
+    <widget class="QLabel" name="label_11">
+     <property name="text">
+      <string>Eq on/off</string>
      </property>
     </widget>
    </item>

@@ -267,20 +267,27 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
-	/*qDebug() << "Dropped";
-	qDebug() << event->mimeData()->text();*/
+	qDebug() << "Dropped";
+	qDebug() << event->mimeData()->text();
 	QString text = event->mimeData()->text();
 
-	/*if(text.startsWith("file://")){
+	if(text.startsWith("file://")){
 		QStringList pathlist = text.split('\n');
 		QStringList file_paths;
-		pathlist.removeLast();
+		if(pathlist.size() > 1) pathlist.removeLast();
 		for(int i=0; i<pathlist.size(); i++){
 			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
+			qDebug() << "path = " << path;
 			path = path.replace("%20", " ");
 			if(QFile::exists(path)){
 
-				if(path.endsWith(".mp3"))
+				if(path.endsWith(".mp3") ||
+						path.endsWith(".ogg") ||
+						path.endsWith(".wav") ||
+						path.endsWith(".flac") ||
+						path.endsWith(".m4u") ||
+						path.endsWith(".wma") ||
+						path.endsWith(".aac"))
 					file_paths.push_back(path);
 
 				else if(path.at(path.length()-4) != '.'){ // directory
@@ -298,7 +305,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		}
 
 		return;
-	}*/
+	}
 
 	QPoint pos = event->pos();
 	int row = this->ui->listView->indexAt(pos).row();

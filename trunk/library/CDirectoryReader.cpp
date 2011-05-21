@@ -2,8 +2,15 @@
 #include <QDebug>
 #include <QDir>
 
+
 CDirectoryReader::CDirectoryReader () {
     this -> m_filters.push_back("*.mp3");
+    this -> m_filters.push_back("*.ogg");
+    this -> m_filters.push_back("*.m4a");
+    this -> m_filters.push_back("*.wma");
+    this-> m_filters.push_back("*.wav");
+    this-> m_filters.push_back("*.flac");
+    this->m_filters.push_back("*.aac");
 }
 CDirectoryReader::~CDirectoryReader () {
 
@@ -15,7 +22,7 @@ void CDirectoryReader::setFilter (const QStringList & filter) {
     this -> m_filters = filter;
 }
 
-void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & files) {
+void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files) {
 
     QStringList dirs;
 	baseDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -24,13 +31,14 @@ void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & 
     foreach (QString dir, dirs) {
 
     	baseDir.cd(dir);
-        this -> getFilesInsiderDirRecursive(baseDir, files);
+        this -> getFilesInsiderDirRecursive(baseDir, files, num_files);
         baseDir.cd("..");
     }
     QStringList tmp;
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
     this -> getFilesInsideDirectory (baseDir, tmp);
+    num_files += tmp.size();
 
     // absolute paths
     files += tmp;

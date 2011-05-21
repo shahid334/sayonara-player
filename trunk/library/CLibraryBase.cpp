@@ -1,6 +1,8 @@
 #include "library/CLibraryBase.h"
 #include "HelperStructs/id3.h"
 #include <QDebug>
+#include <QProgressDialog>
+#include <QProgressBar>
 
 CLibraryBase::CLibraryBase(QObject *parent) :
     QObject(parent)
@@ -12,7 +14,8 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
     qDebug() << "Base Dir: " << baseDir;
     QStringList fileList;
-    this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList);
+    int num_files = 0;
+    this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
 
     /* absolute paths */
     qDebug() << fileList;
@@ -21,21 +24,34 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 }
 
 void CLibraryBase::reloadLibrary(){
+
+
+
 	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
-//	QString libraryPath = CDatabaseConnector::getInstance()->getLibraryPath();
+
 	QStringList fileList;
 	vector<MetaData> v_metadata;
-//  this->m_reader.getFilesInsiderDirRecursive(QDir(libraryPath), fileList);
-	if(m_library_path.length() == 0) return;
-	this->m_reader.getFilesInsiderDirRecursive(QDir(m_library_path), fileList);
 
+	QProgressDialog dialog(0);
+
+	dialog.setLabelText("Gathering files...");
+	dialog.show();
+	dialog.setValue(0);
+
+	if(m_library_path.length() == 0) return;
+	int num_files = 0;
+	this->m_reader.getFilesInsiderDirRecursive(QDir(m_library_path), fileList, num_files);
+
+
+	dialog.setLabelText("Inserting ID3 Tags into database...");
 	uint todo = fileList.size();
 
 	for(int i=0; i<fileList.size(); i++){
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
 		v_metadata.push_back(md);
 
-		emit mp3s_loaded_signal((int)(i * 100.0 / todo));
+		//emit mp3s_loaded_signal((int)(i * 100.0 / todo));
+		dialog.setValue((int)(i * 100.0 / todo));
 	}
 
 	emit mp3s_loaded_signal(100);
@@ -43,6 +59,8 @@ void CLibraryBase::reloadLibrary(){
 	insertMetaDataIntoDB(v_metadata);
 	getAllAlbums();
 	getAllArtists();
+
+	dialog.close();
 }
 
 void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& in) {

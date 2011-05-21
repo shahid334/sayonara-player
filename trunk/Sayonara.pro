@@ -107,4 +107,6 @@ images.files += GUI/icons/vol_mute.png
 images.files += GUI/icons/gui.jpg
 images.files += GUI/icons/play_small.png
 images.files += GUI/icons/lastfm_logo.jpg
+images.files += GUI/icons/power_on.png
+images.files += GUI/icons/power_off.png
 INSTALLS += images

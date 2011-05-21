@@ -45,7 +45,7 @@ public:
 		void sli_8_changed(int);
 		void sli_9_changed(int);
 
-		void cb_enabled_changed(bool);
+		void but_enabled_changed(bool);
 		void preset_changed(int);
 		void btn_preset_clicked();
 
