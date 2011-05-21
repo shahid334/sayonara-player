@@ -45,9 +45,6 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 	if(!index.isValid()) return;
 
-
-
-
 	QRect rect(option.rect);
 
 	painter->save();
@@ -80,9 +77,12 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	QColor col_ia = palette.color(QPalette::Highlight).light();
 
 
+	int lightness = _parent->palette().color(QPalette::Background).lightness();
 
 	if(!is_selected){
-		if(!cur_track) _pl_entry->setStyleSheet("background-color: transparent");
+
+		if(!cur_track && lightness < 96) _pl_entry->setStyleSheet("background-color: transparent;  color: rgb(216,216,216);");
+		else if(!cur_track && lightness >= 96 ) _pl_entry->setStyleSheet("background-color: transparent; ");
 		else _pl_entry->setStyleSheet("background-color: " + col_ia.name() );
 
 	}

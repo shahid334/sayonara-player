@@ -15,9 +15,12 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include <QFileDialog>
+#include <QScrollBar>
+#include <QMacStyle>
 #include <QAbstractListModel>
 #include <iostream>
 #include <vector>
+#include <QStyleFactory>
 
 
 
@@ -231,8 +234,9 @@ void GUI_Playlist::change_skin(bool dark){
 
 
 	if(dark){
-		this->ui->lab_totalTime->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
-		this->ui->listView->setStyleSheet("background-color: rgb(255, 255, 255);");
+		this->ui->lab_totalTime->setStyleSheet("background-color: rgb(84, 84, 84); color: rgb(255, 255, 255);");
+		this->ui->listView->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56);");
+
 	}
 
 	else {

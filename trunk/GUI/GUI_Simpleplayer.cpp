@@ -72,13 +72,13 @@ void GUI_SimplePlayer::setVolume(int vol){
 
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
-		this->ui->centralwidget->setStyleSheet("background-color: rgb(92, 92, 92);\ncolor: rgb(255, 255, 255);");
-
-		m_skinSuffix = QString("_dark");
+		this->ui->centralwidget->setStyleSheet("background-color: rgb(84, 84, 84);\ncolor: rgb(255, 255, 255);");
+				m_skinSuffix = QString("_dark");
 	}
 
 	else {
 		this->ui->centralwidget->setStyleSheet("");
+		this->ui->playlist_widget->setStyleSheet("");
 		m_skinSuffix = QString("");
 	}
 
@@ -362,51 +362,13 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 void GUI_SimplePlayer::changeEvent(QEvent *event){
 
 	Q_UNUSED(event);
-
-	/*if(isMinimized()  && !m_minTriggerByTray){
-		if (m_trayIcon->isVisible()) {
-			hide();
-			QMainWindow::changeEvent(event);
-			//event->ignore();
-			m_minimized2tray = true;
-		}
-	}
-
-	else event->ignore();
-	m_minTriggerByTray = false;*/
 }
 
 
 
 void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
 
-
 	Q_UNUSED(reason);
-	/*m_minTriggerByTray = false;
-
-	switch(reason){
-		case QSystemTrayIcon::DoubleClick:
-			if(m_minimized2tray){
-				this->show();
-				m_minimized2tray = false;
-				m_minTriggerByTray = true;
-			}
-			else {
-				this->hide();
-				m_minimized2tray = true;
-			}
-
-			break;
-
-		case QSystemTrayIcon::Context:
-
-			break;
-
-		default: break;
-
-
-	}*/
-
 
 }
 
@@ -418,7 +380,6 @@ void GUI_SimplePlayer::setupIcons(){
 void GUI_SimplePlayer::setupTrayContextMenu(){
 
 	 QMenu*						trayContextMenu;
-
 	 QAction*					showAction;
 
 

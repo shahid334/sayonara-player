@@ -380,15 +380,24 @@ void GUI_Library_windowed::change_skin(bool dark){
 
 
 	if(dark){
-		this->ui->lv_album->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
-		this->ui->lv_artist->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
-		this->ui->tb_title->setStyleSheet("background-color: rgb(255, 255, 255); color: rgb(0,0,0);");
+		this->ui->lv_album->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56); color: rgb(255,255,255);");
+		this->ui->lv_artist->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56); color: rgb(255,255,255);");
+		this->ui->tb_title->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56); color: rgb(255,255,255);");
+
+		this->ui->tb_title->setShowGrid(false);
+		this->ui->lv_album->setShowGrid(false);
+		this->ui->lv_artist->setShowGrid(false);
+
 	}
 
 	else {
 		this->ui->lv_album->setStyleSheet("");
 		this->ui->lv_artist->setStyleSheet("");
 		this->ui->tb_title->setStyleSheet("");
+
+		this->ui->tb_title->setShowGrid(true);
+		this->ui->lv_album->setShowGrid(true);
+		this->ui->lv_artist->setShowGrid(true);
 	}
 }
 

@@ -8,12 +8,14 @@
 #include "LibraryItemDelegateAlbums.h"
 #include <QObject>
 #include <QLabel>
+#include <QDebug>
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
 #include <HelperStructs/Helper.h>
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
 	this->_parent = parent;
+
 
 }
 
@@ -57,9 +59,13 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 		//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
-		label.setStyleSheet("background-color: transparent");
 
+		int val = _parent->palette().color(QPalette::Background).lightness();
+		if(val < 128 && !((option.state & QStyle::State_Selected) != 0)){
+			label.setStyleSheet("background-color: transparent; color: rgb(216, 216, 216);");
+		}
 
+		else label.setStyleSheet("background-color: transparent");
 
 		label.render(painter, rect.topLeft() );
 
