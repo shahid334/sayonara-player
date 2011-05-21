@@ -28,7 +28,9 @@ class CoverLookup : public QObject{
 	vector<string> 	_cover_adresses;
 	string			_artist;
 	string			_album;
-	QString			_sound_dir;
+	QString			_cover_token;
+	QString			_filepath;
+	QString			_cover_path;
 	int 			_cur_cover;
 
 	signals:

@@ -7,7 +7,7 @@ QT += xml
 QT += sql
 TEMPLATE = app
 TARGET = sayonara
-#DESTDIR = /usr/bin
+
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
 INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
 LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm 
@@ -75,14 +75,9 @@ FORMS += \
     GUI/library/GUI_LibrarySetup_Widget.ui \
     GUI/equalizer/GUI_Equalizer.ui
 
-RESOURCES +=
 
 
-target.path = /usr/bin
-target.files += ./sayonara
-INSTALLS += target
-
-images.path = ~/.Sayonara/images
+images.path = /usr/share/sayonara
 images.files += GUI/icons/append.png
 images.files += GUI/icons/broom.png
 images.files += GUI/icons/bwd.png
@@ -109,3 +104,11 @@ images.files += GUI/icons/lastfm_logo.jpg
 images.files += GUI/icons/power_on.png
 images.files += GUI/icons/power_off.png
 INSTALLS += images
+
+
+target.path = /usr/bin
+target.files += ./sayonara
+INSTALLS += target
+
+
+

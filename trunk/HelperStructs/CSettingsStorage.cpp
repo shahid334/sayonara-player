@@ -25,6 +25,7 @@ bool CSettingsStorage::isRunFirstTime () {
 bool CSettingsStorage::runFirstTime (bool deleteOld) {
     bool ret = false;
     QDir dir = QDir::homePath();
+
     ret = dir.cd(this -> m_sayonaraPath);
     if (!ret) {
         //dir does not exist, so we are creating it...
@@ -43,6 +44,7 @@ bool CSettingsStorage::runFirstTime (bool deleteOld) {
             }
         }
         if (!dest.exists()) {
+
             qDebug() << "cp " << QDir::currentPath() + QDir::separator() + m_dbSource << " " << dir.absolutePath() + QDir::separator() + m_dbFile;
             if (QFile::copy(QDir::currentPath() + QDir::separator() +m_dbSource, dir.absolutePath() + QDir::separator()+ m_dbFile)) {
                qDebug() << "DB File has been copied to " <<   dir.absolutePath() + QDir::separator()+ m_dbFile;

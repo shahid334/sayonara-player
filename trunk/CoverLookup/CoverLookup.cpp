@@ -20,6 +20,9 @@
 
 #include <QString>
 #include <QFile>
+#include <QDir>
+#include <QDebug>
+#include <QCryptographicHash>
 #include <QImage>
 
 #include <curl/curl.h>
@@ -234,10 +237,19 @@ void CoverLookup::search_cover(){
 void CoverLookup::search_cover(const MetaData& metadata){
 	_artist = string(metadata.artist.toUtf8().constData());
 	_album = string(metadata.album.toUtf8().constData());
-	_sound_dir = metadata.filepath.left(metadata.filepath.lastIndexOf('/'));
+	_filepath = metadata.filepath.left(metadata.filepath.lastIndexOf("/"));
+	_cover_token = QCryptographicHash::hash(metadata.artist.toUtf8() + metadata.album.toUtf8(), QCryptographicHash::Md5).toHex();
+	_cover_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + _cover_token + ".jpg";
 
-	if(QFile::exists(_sound_dir + "/sayonara_cover.jpg")){
-		QPixmap pixmap = QPixmap::fromImage(QImage(_sound_dir + "/sayonara_cover.jpg"));
+	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
+		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
+		_cur_cover = -1;
+		search_cover();
+
+	}
+
+	else if(QFile::exists(_cover_path)){
+		QPixmap pixmap = QPixmap::fromImage(QImage(_cover_path));
 		emit cover_found(pixmap);
 	}
 
@@ -305,7 +317,9 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 
 			QImage img = QImage::fromData((const uchar*) image_data, image_bytes);
 
-			img.save( _sound_dir + "/sayonara_cover.jpg" );
+			img.save( _cover_path );
+			//img.save( _filepath + _cover_token + ".jpg");
+
 
 			if(!img.isNull()){
 
