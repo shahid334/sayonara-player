@@ -49,19 +49,18 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	qDebug() << "   phonon init output";
+	qDebug() << "   1/4 phonon init output";
 	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
 
-	qDebug() << "   phonon init media object";
+	qDebug() << "   2/4 phonon init media object";
 	_media_object = new Phonon::MediaObject(this);
 	_media_object->setTickInterval(10);
 
-	qDebug() << "   phonon create path";
-
+	qDebug() << "   3/4 phonon create path";
 	_audio_path = Phonon::createPath(_media_object, _audio_output);
 	_eq_type = EQ_TYPE_NONE;
 
-	qDebug() << "   phonon connections";
+	qDebug() << "   4/4 phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 
@@ -76,21 +75,7 @@ MP3_Listen::~MP3_Listen() {
 
 void MP3_Listen::play(){
 
-	//cout << "play " << endl;
-	//if(_eq != 0) _audio_path.removeEffect(_eq);
-	QList<Phonon::EffectDescription > devices = Phonon::BackendCapabilities::availableAudioEffects();
-
-	//qDebug() << "Devices " << devices.size();
-/*	for(int i=0; i<devices.size(); i++){
-		qDebug() << "Device " << i << ": " << devices[i].name();
-	}*/
-
-
-
-
 	_media_object->play();
-
-
 	_state = STATE_PLAY;
 }
 
@@ -190,7 +175,7 @@ void MP3_Listen::finished(){
 
 
 void MP3_Listen::setVolume(qreal vol){
-   // qDebug() << "Set Volume " << vol;
+
     _audio_output->setVolume(vol/100);
 }
 
@@ -245,11 +230,10 @@ void MP3_Listen::load_equalizer(){
 	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
 	QStringList availableEqualizers;
 
-	//qDebug() << "Available Effects:";
+
 	int equalizerIdx = -1;
 	for(int i=0; i<availableEffects.size(); i++){
 		Phonon::EffectDescription desc =  availableEffects[i];
-		//qDebug() << desc.name();
 
 		if(desc.name() == "KEqualizer"  && equalizerIdx == -1){
 			equalizerIdx = i;
@@ -265,14 +249,10 @@ void MP3_Listen::load_equalizer(){
 	}
 
 	if(equalizerIdx != -1){
-		qDebug() << "Equalizer found (" << availableEffects[equalizerIdx] << ")";
+
 		_eq = new Phonon::Effect(availableEffects[equalizerIdx], this);
 
 		_effect_parameters = _eq->parameters();
-		foreach(Phonon::EffectParameter param, _effect_parameters){
-			qDebug() << param.name() << ": " << param.minimumValue() << ", " << param.maximumValue();
-		//	qDebug() << param.description();
-		}
 		_is_eq_enabled = true;
 
 		_audio_path.insertEffect(_eq);

@@ -15,14 +15,17 @@ LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm
 # Input
 HEADERS += MP3_Listen/MP3_Listen.h \
 	GUI/GUI_Simpleplayer.h \ 
-    GUI/GUI_Playlist.h \
+    GUI/playlist/GUI_Playlist.h \
+    GUI/playlist/PlaylistItemModel.h \
+    GUI/playlist/PlaylistItemDelegate.h \
+    GUI/playlist/GUI_PlaylistEntry.h \
     GUI/LastFM/GUI_LastFM.h \
-    GUI/Library/GUI_Library_windowed.h \
-    GUI/Library/LibraryItemModelTracks.h \
-    GUI/Library/LibraryItemModelAlbums.h \
-    GUI/Library/LibraryItemDelegateAlbums.h \
-    GUI/Library/LibraryItemModelArtists.h \
-    GUI/Library/LibrarySetupWidget.h \
+    GUI/library/GUI_Library_windowed.h \
+    GUI/library/LibraryItemModelTracks.h \
+    GUI/library/LibraryItemModelAlbums.h \
+    GUI/library/LibraryItemDelegateAlbums.h \
+    GUI/library/LibraryItemModelArtists.h \
+    GUI/library/LibrarySetupWidget.h \
     GUI/equalizer/GUI_Equalizer.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
@@ -31,9 +34,6 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
     Playlist/Playlist.h \
-    GUI/Playlist/PlaylistItemModel.h \
-    GUI/Playlist/PlaylistItemDelegate.h \
-    GUI/Playlist/GUI_PlaylistEntry.h \
     HelperStructs/id3.h \
     HelperStructs/CSettingsStorage.h \
     HelperStructs/Equalizer_presets.h \
@@ -43,14 +43,17 @@ HEADERS += MP3_Listen/MP3_Listen.h \
 SOURCES += Main.cpp \
 	MP3_Listen/MP3_Listen.cpp \
     GUI/GUI_Simpleplayer.cpp \
-    GUI/GUI_Playlist.cpp \
+    GUI/playlist/GUI_Playlist.cpp \
+    GUI/playlist/PlaylistItemModel.cpp \
+    GUI/playlist/PlaylistItemDelegate.cpp \
+    GUI/playlist/GUI_PlaylistEntry.cpp \
     GUI/LastFM/GUI_LastFM.cpp \
-    GUI/Library/GUI_Library_windowed.cpp \
-    GUI/Library/LibraryItemModelTracks.cpp \
-    GUI/Library/LibraryItemModelAlbums.cpp \
-    GUI/Library/LibraryItemDelegateAlbums.cpp \
-    GUI/Library/LibraryItemModelArtists.cpp \
-    GUI/Library/LibrarySetupWidget.cpp \
+    GUI/library/GUI_Library_windowed.cpp \
+    GUI/library/LibraryItemModelTracks.cpp \
+    GUI/library/LibraryItemModelAlbums.cpp \
+    GUI/library/LibraryItemDelegateAlbums.cpp \
+    GUI/library/LibraryItemModelArtists.cpp \
+    GUI/library/LibrarySetupWidget.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
@@ -58,9 +61,6 @@ SOURCES += Main.cpp \
     library/CLibraryBase.cpp \
     library/CDatabaseConnector.cpp \
     Playlist/Playlist.cpp \
-    GUI/Playlist/PlaylistItemModel.cpp \
-    GUI/Playlist/PlaylistItemDelegate.cpp \
-    GUI/Playlist/GUI_PlaylistEntry.cpp \
     HelperStructs/id3.cpp \
     LastFM/LastFM.cpp \
     HelperStructs/CSettingsStorage.cpp
@@ -68,12 +68,11 @@ SOURCES += Main.cpp \
 
 FORMS += \
     GUI/GUI_Simpleplayer.ui \
-    GUI/GUI_Playlist.ui \
-    GUI/Playlist/GUI_Playlist_Entry.ui \
-    GUI/GUI_Playlist_Frame.ui \
-    GUI/GUI_LastFM_Widget.ui \
-    GUI/GUI_Library_windowed.ui \
-    GUI/Library/GUI_LibrarySetup_Widget.ui \
+    GUI/playlist/GUI_Playlist.ui \
+    GUI/playlist/GUI_Playlist_Entry.ui \
+    GUI/LastFM/GUI_LastFM_Widget.ui \
+    GUI/library/GUI_Library_windowed.ui \
+    GUI/library/GUI_LibrarySetup_Widget.ui \
     GUI/equalizer/GUI_Equalizer.ui
 
 RESOURCES +=

@@ -2,8 +2,8 @@
 #define GUI_SIMPLEPLAYER_H
 
 #include "HelperStructs/MetaData.h"
-#include "GUI/GUI_Playlist.h"
-#include "GUI/Library/GUI_Library_windowed.h"
+#include "GUI/playlist/GUI_Playlist.h"
+#include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 
 #include <QMainWindow>

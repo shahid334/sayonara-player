@@ -9,10 +9,10 @@
 
 //#include <lastfm.h>
 #include "GUI/GUI_Simpleplayer.h"
-#include "GUI/GUI_Playlist.h"
+#include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "GUI/Library/GUI_Library_windowed.h"
-#include "GUI/Library/LibrarySetupWidget.h"
+#include "GUI/library/GUI_Library_windowed.h"
+#include "GUI/library/LibrarySetupWidget.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "Playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"

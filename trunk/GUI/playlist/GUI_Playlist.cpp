@@ -5,11 +5,13 @@
  *      Author: luke
  */
 
-#include "GUI/GUI_Playlist.h"
+
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
-#include "GUI/Playlist/PlaylistItemModel.h"
-#include "GUI/Playlist/PlaylistItemDelegate.h"
+
+#include "GUI/playlist/GUI_Playlist.h"
+#include "GUI/playlist/PlaylistItemModel.h"
+#include "GUI/playlist/PlaylistItemDelegate.h"
 
 #include <QWidget>
 #include <QDebug>
@@ -267,8 +269,8 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
-	qDebug() << "Dropped";
-	qDebug() << event->mimeData()->text();
+	//qDebug() << "Dropped";
+	//qDebug() << event->mimeData()->text();
 	QString text = event->mimeData()->text();
 
 	if(text.startsWith("file://")){
@@ -277,7 +279,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		if(pathlist.size() > 1) pathlist.removeLast();
 		for(int i=0; i<pathlist.size(); i++){
 			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
-			qDebug() << "path = " << path;
+			//qDebug() << "path = " << path;
 			path = path.replace("%20", " ");
 			if(QFile::exists(path)){
 
@@ -311,7 +313,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	int row = this->ui->listView->indexAt(pos).row();
 
 	int event_type = event->mimeData()->property("data_type").toInt();
-	qDebug() << "event_type = " << event_type;
+	//qDebug() << "event_type = " << event_type;
 	if(row == -1) row = _pli_model->rowCount();
 	else if(row > 0) row--;
 
