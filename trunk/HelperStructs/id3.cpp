@@ -18,8 +18,9 @@
 using namespace Helper;
 
 MetaData ID3::getMetaDataOfFile(QString file){
-
+	MetaData md;
 	TagLib::FileRef f(TagLib::FileName(file.toUtf8()));
+		if(f.isNull()) return md;
 		string artist = f.tag()->artist().to8Bit(true);
 		string album = f.tag()->album().to8Bit(true);
 		string title = f.tag()->title().to8Bit(true);
@@ -28,7 +29,7 @@ MetaData ID3::getMetaDataOfFile(QString file){
 
 		int length = f.audioProperties()->length();
 
-		MetaData md;
+
 		md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 		md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 		md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
