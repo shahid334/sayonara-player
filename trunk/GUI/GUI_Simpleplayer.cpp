@@ -48,6 +48,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this, SLOT(lastFMClicked(bool)));
     connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this, SLOT(reloadLibraryClicked(bool)));
     connect(this->ui->action_setLibPath, SIGNAL(triggered(bool)), this, SLOT(setLibraryPathClicked(bool)));
+    connect(this->ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this, SLOT(fetch_all_covers_clicked(bool)));
 
 
     ui_playlist = 0;
@@ -555,4 +556,10 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b){
 								QFileDialog::ShowDirsOnly);
 	    if(dir != "")
 	    	emit libpath_changed(dir);
+}
+
+
+void GUI_SimplePlayer::fetch_all_covers_clicked(bool b){
+	Q_UNUSED(b);
+	emit fetch_all_covers();
 }

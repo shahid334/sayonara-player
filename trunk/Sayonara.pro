@@ -30,6 +30,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
+    LyricLookup/LyricLookup.h \
     library/CDatabaseConnector.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
@@ -57,6 +58,7 @@ SOURCES += Main.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
+    LyricLookup/LyricLookup.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
     library/CDatabaseConnector.cpp \

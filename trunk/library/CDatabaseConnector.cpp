@@ -391,6 +391,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result){
 			QStringList artistList = q.value(5).toString().split(',');
 			artistList.removeDuplicates();
 			album.artists = artistList;
+			album.is_sampler = (artistList.size() > 1);
 
 			result.push_back(album);
 		}
@@ -515,6 +516,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 			QStringList artistList = q.value(5).toString().split(',');
 			artistList.removeDuplicates();
 			album.artists = artistList;
+			album.is_sampler = (artistList.size() > 1);
 
 			result.push_back(album);
 		}
@@ -796,6 +798,10 @@ void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album
 					album.length_sec = q.value(3).toInt();
 					album.year = q.value(4).toInt();
 					album.artists = QStringList();
+					QStringList artistList = q.value(5).toString().split(',');
+					artistList.removeDuplicates();
+					album.artists = artistList;
+					album.is_sampler = (artistList.size() > 1);
 
 					result.push_back(album);
 				}

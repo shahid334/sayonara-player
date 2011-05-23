@@ -8,22 +8,28 @@
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "library/CDatabaseConnector.h"
+
 
 #include <string>
 #include <iostream>
 #include <vector>
-
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 
 #include <QString>
+#include <QStringList>
 #include <QFile>
 #include <QDir>
 #include <QDebug>
 #include <QCryptographicHash>
 #include <QImage>
+#include <QProgressDialog>
+#include <QMessageBox>
+#include <QThread>
+
 
 #include <curl/curl.h>
 
@@ -132,7 +138,7 @@ vector<string> calc_adresses_from_webpage(uint num){
 			if(!already_there){
 				adresses.push_back(adress);
 
-				cout << "adress= " << adress << endl;
+				//cout << "adress= " << adress << endl;
 				if(adresses.size() >= num) break;
 			}
 		}
@@ -199,7 +205,7 @@ CoverLookup::~CoverLookup() {
 
 
 
-void CoverLookup::search_cover(){
+void CoverLookup::search_cover(bool emit_signal){
 
 	_pixmaps.clear();
 
@@ -222,7 +228,7 @@ void CoverLookup::search_cover(){
 		curl_easy_cleanup(curl_find_img);
 	}
 
-	_cover_adresses = calc_adresses_from_webpage(2);
+	_cover_adresses = calc_adresses_from_webpage(3);
 
 	if(webpage != 0){
 		free(webpage);
@@ -230,32 +236,35 @@ void CoverLookup::search_cover(){
 	}
 	webpage_bytes = 0;
 
-	download_covers(1, true);
+	download_covers(1);
+	if(emit_signal) emit cover_found(_pixmaps[0]);
 }
 
 
-void CoverLookup::search_cover(const MetaData& metadata){
-	_artist = string(metadata.artist.toUtf8().constData());
-	_album = string(metadata.album.toUtf8().constData());
-	_filepath = metadata.filepath.left(metadata.filepath.lastIndexOf("/"));
+void CoverLookup::search_cover(const MetaData& metadata, bool emit_signal){
+	_artist = string(metadata.artist.trimmed().replace(" ", "+").toUtf8().constData());
+	_album = string(metadata.album.trimmed().replace(" ", "+").toUtf8().constData());
+
+	//_filepath = metadata.filepath.left(metadata.filepath.lastIndexOf("/"));
+
 	_cover_token = QCryptographicHash::hash(metadata.artist.toUtf8() + metadata.album.toUtf8(), QCryptographicHash::Md5).toHex();
 	_cover_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + _cover_token + ".jpg";
 
 	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
 		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
 		_cur_cover = -1;
-		search_cover();
+		search_cover(emit_signal);
 
 	}
 
 	else if(QFile::exists(_cover_path)){
 		QPixmap pixmap = QPixmap::fromImage(QImage(_cover_path));
-		emit cover_found(pixmap);
+		if(emit_signal) emit cover_found(pixmap);
 	}
 
 	else{
 		_cur_cover = -1;
-		search_cover();
+		search_cover(emit_signal);
 	}
 }
 
@@ -273,7 +282,7 @@ void CoverLookup::showCoverAlternatives(){
 
 
 
-void CoverLookup::download_covers(uint num, bool apply_cover){
+void CoverLookup::download_covers(uint num){
 
 	image_data = 0;
 	image_bytes = 0;
@@ -283,12 +292,8 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 		// get a few more adresses, maybe many images are dead
 		_cover_adresses = calc_adresses_from_webpage(num * 2);
 		if(_cover_adresses.size() == 0) {
-			if(apply_cover){
-				cout << "No covers found" << endl;
-				QPixmap pixmap = QPixmap::fromImage(QImage("Covers/gui.jpg"));
-				emit cover_found(pixmap);
-
-			}
+			QPixmap pixmap = QPixmap::fromImage(QImage("Covers/gui.jpg"));
+			_pixmaps.push_back(pixmap);
 
 			return;
 		}
@@ -296,11 +301,6 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 
 	/* save image of first hit */
 	CURL *curl_save_img;
-
-
-	bool cover_set = false;
-	int idx = 1;
-
 
 	for(vector<string>::iterator it = _cover_adresses.begin(); it != _cover_adresses.end(); it++){
 
@@ -311,33 +311,21 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 			curl_easy_setopt(curl_save_img, CURLOPT_URL, it->c_str());
 			curl_easy_setopt(curl_save_img, CURLOPT_WRITEFUNCTION, save_image);
 			curl_easy_setopt(curl_save_img, CURLOPT_BUFFERSIZE, 3000);
+			curl_easy_setopt(curl_save_img, CURLOPT_TIMEOUT_MS, 3000);
 
 			curl_easy_perform(curl_save_img);
 			curl_easy_cleanup(curl_save_img);
 
 			QImage img = QImage::fromData((const uchar*) image_data, image_bytes);
 
-			img.save( _cover_path );
-			//img.save( _filepath + _cover_token + ".jpg");
+			if(!img.isNull() && image_bytes > 500){
 
-
-			if(!img.isNull()){
-
-
+				img.save( _cover_path );
 				QPixmap pixmap = QPixmap::fromImage(img);
-
-				if(!cover_set){
-					if(apply_cover){
-						_cur_cover = idx;
-						emit cover_found(pixmap);
-
-					}
-
-					cover_set = true;
-				}
-
 				_pixmaps.push_back(pixmap);
+
 				if(_pixmaps.size() == num) break;
+
 			}
 
 			if(image_data != 0){
@@ -348,11 +336,68 @@ void CoverLookup::download_covers(uint num, bool apply_cover){
 
 		} // curl init successful
 
-		idx++;
 	} // for all cover adresses
 }
 
+void CoverLookup::search_all_covers(){
 
+
+	QMessageBox msgBox;
+	 msgBox.setText("This function sucks, lasts very long and you cannot abort it.");
+	 msgBox.setInformativeText("Proceed?");
+	 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	 msgBox.setDefaultButton(QMessageBox::No);
+	 int ret = msgBox.exec();
+
+	 if(ret != QMessageBox::Yes) return;
+
+
+
+	_terminate_cover_fetch = false;
+	QProgressDialog dialog(0);
+
+		dialog.setModal(true);
+		dialog.setValue(1);
+
+
+		connect(&dialog, SIGNAL(canceled()), this, SLOT(terminate_cover_fetch()));
+
+		dialog.show();
+
+
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	vector<Album> albums;
+	db->getAllAlbums(albums);
+
+	for(uint i=0; i<albums.size() && !_terminate_cover_fetch; i++){
+		Album album = albums[i];
+		QString artist = "";
+		MetaData md;
+		md.album = album.name;
+
+		dialog.setLabelText(album.name);
+		if(album.artists.size() > 0 ){
+			for(int j=0; j<album.artists.size(); j++){
+				QString artist = album.artists[j];
+
+				md.artist = artist;
+
+				search_cover(md, false);
+			}
+		}
+
+
+		else {
+			if(album.name != "") search_cover(md, false);
+		}
+
+		double val = (100.0 * i) / ( 1.0 *albums.size());
+		//qDebug() << val;
+		dialog.setValue((int) val );
+	}
+
+	dialog.close();
+}
 
 QPixmap CoverLookup::add_new_pixmap(string cover_filename){
 
@@ -389,11 +434,11 @@ string CoverLookup::calc_url_adress(){
 	string artist = _artist;
 	string album = _album;
 
-	artist = Helper::replace_whitespaces(_artist, '+');
+	//artist = Helper::replace_whitespaces(_artist, '+');
 	artist = Helper::replace_chars(artist, '&', 'n');
 	artist = Helper::replace_chars(artist, '?', '+');
 
-	album = Helper::replace_whitespaces(_album, '+');
+	//album = Helper::replace_whitespaces(_album, '+');
 	album = Helper::replace_chars(album, '&', 'n');
 	album = Helper::replace_chars(album, '?', '+');
 
@@ -401,4 +446,10 @@ string CoverLookup::calc_url_adress(){
 	url +=  "&tbs=isz:s,ift:jpg";			// klein*/
 
 	return url;
+}
+
+
+void CoverLookup::terminate_cover_fetch(){
+
+	_terminate_cover_fetch = true;
 }

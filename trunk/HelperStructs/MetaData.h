@@ -118,6 +118,7 @@ struct Album{
 	qint32 	length_sec;
 	qint32	year;
 	QStringList artists;
+	bool is_sampler;
 
 
 	QStringList toStringList(){
@@ -126,6 +127,12 @@ struct Album{
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(length_sec));
+		if(is_sampler){
+			list.push_back("sampler");
+		}
+		else{
+			list.push_back("no_sampler");
+		}
 		return list;
 	}
 
@@ -135,6 +142,7 @@ struct Album{
 		id = list.at(1).toInt();
 		num_songs = list.at(2).toInt();
 		length_sec = list.at(3).toLong();
+		is_sampler = (list.at(4) == "sampler");
 	}
 };
 

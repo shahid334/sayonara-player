@@ -386,6 +386,9 @@
       <property name="value">
        <number>50</number>
       </property>
+      <property name="tracking">
+       <bool>true</bool>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -634,6 +637,7 @@
     </property>
     <addaction name="action_lastFM"/>
     <addaction name="action_setLibPath"/>
+    <addaction name="action_fetch_all_covers"/>
    </widget>
    <addaction name="menuFle"/>
    <addaction name="menuView"/>
@@ -691,6 +695,11 @@
   <action name="action_setLibPath">
    <property name="text">
     <string>Set library path</string>
+   </property>
+  </action>
+  <action name="action_fetch_all_covers">
+   <property name="text">
+    <string>Fetch all covers</string>
    </property>
   </action>
  </widget>

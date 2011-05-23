@@ -65,6 +65,7 @@ signals:
     void setupLastFM();
     void reloadLibrary();
     void libpath_changed(QString);
+    void fetch_all_covers();
 
 
 private slots:
@@ -87,6 +88,7 @@ private slots:
     void reloadLibraryClicked(bool = true);
 
     void setLibraryPathClicked(bool = true);
+    void fetch_all_covers_clicked(bool b = true);
 
 protected:
 
