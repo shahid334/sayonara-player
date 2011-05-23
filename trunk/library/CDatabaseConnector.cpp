@@ -180,7 +180,7 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 // FIXME: was ist, wenn hier eine variable hochkommata aufweist? Bitte in den Variablen ' durch '' ersetzen
 int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
     QSqlQuery q (this -> m_database);
-    q.prepare("insert into Tracks (filename,albumID,artistID,title,year,length,track) values (:filename,:albumID,:artistID,:title,:year,:length,:track)");
+    q.prepare("insert into Tracks (filename,albumID,artistID,title,year,length,track,bitrate) values (:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate)");
     q.bindValue(":filename",QVariant(data.filepath));
     q.bindValue(":albumID",QVariant(albumID));
     q.bindValue(":artistID",QVariant(artistID));
@@ -188,6 +188,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
     q.bindValue(":year",QVariant(data.year));
     q.bindValue(":title",QVariant(data.title));
     q.bindValue(":track",QVariant(data.track_num));
+    q.bindValue(":bitrate",QVariant(data.bitrate));
     if (!q.exec()) {
         throw QString ("SQL - Error: insertTrackIntoDatabase " + data.filepath);
     }
@@ -242,7 +243,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
     MetaData data;
     try {
         QSqlQuery q (this -> m_database);
-        q.prepare("select filename,albumID,artistID,title,year,length,track from tracks");
+        q.prepare("select filename,albumID,artistID,title,year,length,track,bitrate from tracks");
         if (!q.exec()) {
             throw QString ("SQL - Error: getTracksFromDatabase cammot execute query");
         }
@@ -258,6 +259,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
             data.year = q.value(4).toInt();
             data.length_ms = q.value(5).toInt();
             data.track_num = q.value(6).toInt();
+            data.bitrate = q.value(7).toInt() * 1000;
             returndata.push_back(data);
         }
     }
@@ -542,7 +544,7 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	    MetaData data;
 	    try {
 	        QSqlQuery q (this -> m_database);
-	        QString querytext = QString("select filename,albumID,artistID,title,year,length,track from tracks where albumid=:albumid ");
+	        QString querytext = QString("select filename,albumID,artistID,title,year,length,track, tracks.bitrate from tracks where albumid=:albumid ");
 
 
 	        if(filter.length() > 0 ){
@@ -590,6 +592,7 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	            data.year = q.value(4).toInt();
 	            data.length_ms = q.value(5).toInt();
 	            data.track_num = q.value(6).toInt();
+	            data.bitrate = q.value(7).toInt() * 1000;
 
 	            returndata.push_back(data);
 	        }
@@ -624,7 +627,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 	MetaData data;
 	try {
 		QSqlQuery q (this -> m_database);
-		QString querytext = QString("select filename,albumID,artistID,title,year,length,track from tracks where artistID = :artist_id ");
+		QString querytext = QString("select filename,albumID,artistID,title,year,length,track,bitrate from tracks where artistID = :artist_id ");
 
 		if(filter.length() > 0 ){
 			// consider the case, that the search string may fit to the title
@@ -674,6 +677,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 			data.year = q.value(4).toInt();
 			data.length_ms = q.value(5).toInt();
 			data.track_num = q.value(6).toInt();
+			data.bitrate = q.value(7).toInt() * 1000;
 			returndata.push_back(data);
 		}
 	}
@@ -700,17 +704,17 @@ void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaD
 		QString query;
 		query = QString("SELECT * FROM ( ") +
 				"SELECT  " +
-					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name " +
+					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name, tracks.bitrate " +
 					"FROM tracks, albums, artists " +
 					"WHERE tracks.albumid = albums.albumid AND tracks.artistid = artists.artistid AND tracks.title LIKE :search_in_title " +
 				"UNION " +
 				"SELECT  " +
-					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name " +
+					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name, tracks.bitrate " +
 					"FROM tracks, albums, artists " +
 					"WHERE tracks.albumid = albums.albumid AND tracks.artistid = artists.artistid AND albums.name LIKE :search_in_album " +
 				"UNION  " +
 				"SELECT  " +
-					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name " +
+					"tracks.title, tracks.length, tracks.year, tracks.filename, tracks.track AS track, albums.name AS album, artists.name, tracks.bitrate " +
 					"FROM tracks, albums, artists " +
 					"WHERE tracks.albumid = albums.albumid AND tracks.artistid = artists.artistid AND artists.name LIKE :search_in_artist " +
 				") " +
@@ -736,6 +740,7 @@ void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaD
 			data.track_num = q.value(4).toInt();
 			data.album = q.value(5).toString().trimmed();
 			data.artist = q.value(6).toString().trimmed();
+			data.bitrate = q.value(7).toInt() * 1000;
 
 			result.push_back(data);
 		}

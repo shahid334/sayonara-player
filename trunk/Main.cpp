@@ -92,12 +92,13 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(search(int)),						&listen,	SLOT(jump(int)));
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
-        app.connect (&player, SIGNAL(wantCover(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
+        //app.connect (&player, SIGNAL(wantCover(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
         app.connect (&player, SIGNAL(setupLastFM()), 					&ui_lastfm, SLOT(show_win()));
         app.connect (&player,SIGNAL(reloadLibrary()), 					&library, 	SLOT(reloadLibrary()));
         app.connect (&player, SIGNAL(fetch_all_covers()),       		&cover, 	SLOT(search_all_covers()));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
+        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 		&cover, 	SLOT(search_cover(const MetaData&)));
 
         app.connect (&playlist, SIGNAL(selected_file_changed(int)), 				&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(no_track_to_play()),							&listen,		SLOT(stop()));

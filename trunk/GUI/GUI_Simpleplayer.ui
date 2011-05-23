@@ -266,7 +266,7 @@
      <widget class="QLabel" name="rating">
       <property name="font">
        <font>
-        <pointsize>17</pointsize>
+        <pointsize>8</pointsize>
         <weight>75</weight>
         <bold>true</bold>
         <kerning>false</kerning>
@@ -276,7 +276,7 @@
        <bool>false</bool>
       </property>
       <property name="styleSheet">
-       <string notr="true">color: rgb(255, 170, 0);</string>
+       <string notr="true"/>
       </property>
       <property name="text">
        <string>****</string>
@@ -402,9 +402,15 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="minimumSize">
+       <size>
+        <width>30</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
+        <width>30</width>
         <height>18</height>
        </size>
       </property>
@@ -445,9 +451,15 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="minimumSize">
+       <size>
+        <width>30</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
-        <width>16777215</width>
+        <width>30</width>
         <height>18</height>
        </size>
       </property>
@@ -469,11 +481,29 @@
         <height>20</height>
        </size>
       </property>
+      <property name="font">
+       <font>
+        <strikeout>false</strikeout>
+        <stylestrategy>PreferAntialias</stylestrategy>
+       </font>
+      </property>
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="invertedAppearance">
+       <bool>false</bool>
+      </property>
+      <property name="invertedControls">
+       <bool>false</bool>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::NoTicks</enum>
+      </property>
+      <property name="tickInterval">
+       <number>20</number>
       </property>
      </widget>
     </item>
@@ -541,7 +571,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>324</width>
+         <width>335</width>
          <height>338</height>
         </rect>
        </property>

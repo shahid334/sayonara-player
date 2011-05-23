@@ -162,13 +162,14 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	QSize tmpSize = this->ui->tb_title->size();
 	int width = tmpSize.width();
-	if(width > 550){
+	if(width > 450){
 		this->ui->tb_title->setColumnWidth(0, width * 0.03);
-		this->ui->tb_title->setColumnWidth(1, width * 0.35);
-		this->ui->tb_title->setColumnWidth(2, width * 0.23);
-		this->ui->tb_title->setColumnWidth(3, width * 0.23);
-		this->ui->tb_title->setColumnWidth(4, width * 0.08);
-		this->ui->tb_title->setColumnWidth(5, width * 0.08);
+		this->ui->tb_title->setColumnWidth(1, width * 0.30);
+		this->ui->tb_title->setColumnWidth(2, width * 0.21);
+		this->ui->tb_title->setColumnWidth(3, width * 0.21);
+		this->ui->tb_title->setColumnWidth(4, width * 0.07);
+		this->ui->tb_title->setColumnWidth(5, width * 0.07);
+		this->ui->tb_title->setColumnWidth(6, width * 0.12);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
 
@@ -181,6 +182,7 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 		this->ui->tb_title->setColumnWidth(3, width * 0.25);
 		this->ui->tb_title->setColumnWidth(4, 80);
 		this->ui->tb_title->setColumnWidth(5, 80);
+		this->ui->tb_title->setColumnWidth(6, 90);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
 

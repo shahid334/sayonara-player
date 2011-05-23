@@ -14,6 +14,7 @@
 #define COL_ARTIST 3
 #define COL_YEAR 4
 #define COL_LENGTH 5
+#define COL_BITRATE 6
 
 
 #include <QObject>

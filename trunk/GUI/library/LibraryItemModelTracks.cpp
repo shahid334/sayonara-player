@@ -26,6 +26,7 @@ LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
 	_headerdata.push_back("Album");
 	_headerdata.push_back("Year");
 	_headerdata.push_back("Length");
+	_headerdata.push_back("Bitrate");
 
 }
 
@@ -48,7 +49,7 @@ int LibraryItemModelTracks::columnCount(const QModelIndex& parent) const{
 
 	Q_UNUSED(parent);
 
-	return 6;
+	return 7;
 
 	// title, artist, album, length, year
 
@@ -85,6 +86,9 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
 			 case COL_YEAR:
 				 return QVariant(md.year);
+
+			 case COL_BITRATE:
+				return QVariant(md.bitrate);
 			 default:
 					return QVariant();
 		 }

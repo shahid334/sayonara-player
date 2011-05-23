@@ -434,11 +434,9 @@ string CoverLookup::calc_url_adress(){
 	string artist = _artist;
 	string album = _album;
 
-	//artist = Helper::replace_whitespaces(_artist, '+');
 	artist = Helper::replace_chars(artist, '&', 'n');
 	artist = Helper::replace_chars(artist, '?', '+');
 
-	//album = Helper::replace_whitespaces(_album, '+');
 	album = Helper::replace_chars(album, '&', 'n');
 	album = Helper::replace_chars(album, '?', '+');
 

@@ -134,12 +134,19 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
     int tmpRating = (rand() % 4) + 1;
 
-    QString tmp;
-    for (int i=0; i<tmpRating; ++i){
-        tmp += "*";
-    }
+
+
+    QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
+    if(in.bitrate < 96000) tmp += "*";
+    else if(in.bitrate < 128000) tmp += "**";
+    else if(in.bitrate < 160000) tmp += "***";
+    else if(in.bitrate < 256000) tmp += "****";
+    else tmp += "*****";
+    tmp += "</font>";
 
     this -> ui ->  rating->setText(tmp);
+    this->ui->rating->setToolTip(QString("<font color=\"#000000\">") + QString::number(in.bitrate) + "</font>");
+
     this -> setWindowTitle(QString("Sayonara - ") + in.title);
 
     this -> m_completeLength_ms = in.length_ms;

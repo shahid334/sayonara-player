@@ -30,6 +30,7 @@ struct MetaData{
 	qint32 year;
 	QString filepath;
 	qint32 track_num;
+	qint32 bitrate;
 
 
     inline MetaData () {
@@ -41,6 +42,7 @@ struct MetaData{
             year = 0;
             filepath = "";
             track_num = 0;
+            bitrate = 0;
         }
 
 	void print(){
@@ -62,6 +64,7 @@ struct MetaData{
 		list.push_back(QString::number(year));
 		list.push_back(filepath);
 		list.push_back(QString::number(track_num));
+		list.push_back(QString::number(bitrate));
 		return list;
 	}
 
@@ -77,6 +80,7 @@ struct MetaData{
 		year = list.at(5).toInt();
 		filepath = list.at(6);
 		track_num = list.at(7).toInt();
+		bitrate = list.at(8).toInt();
 
 
 	}

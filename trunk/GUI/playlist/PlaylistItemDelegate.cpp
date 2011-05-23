@@ -53,8 +53,11 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
 	QStringList strList = text.split(",\n");
 
+
 	_pl_entry->setArtist(strList.at(0));
-	_pl_entry->setAlbum(strList.at(1));
+	if(strList.at(1).size() == 2)
+		_pl_entry->setAlbum("");
+	else _pl_entry->setAlbum(strList.at(1));
 	_pl_entry->setTitle(strList.at(2));
 	_pl_entry->setTime(strList.at(3));
 

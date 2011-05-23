@@ -26,6 +26,8 @@ MetaData ID3::getMetaDataOfFile(QString file){
 		string title = f.tag()->title().to8Bit(true);
 		uint year = f.tag()->year();
 		uint track = f.tag()->track();
+		int bitrate = f.audioProperties()->bitrate();
+
 
 		int length = f.audioProperties()->length();
 
@@ -37,6 +39,7 @@ MetaData ID3::getMetaDataOfFile(QString file){
 		md.length_ms = length * 1000;
 		md.year = year;
 		md.track_num = track;
+		md.bitrate = bitrate;
 
 
 		if(md.title.length() == 0){
