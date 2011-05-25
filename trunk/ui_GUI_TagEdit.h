@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'GUI_TagEdit.ui'
 **
-** Created: Wed May 25 12:52:03 2011
+** Created: Wed May 25 14:11:41 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -65,20 +65,21 @@ public:
     {
         if (GUI_TagEdit->objectName().isEmpty())
             GUI_TagEdit->setObjectName(QString::fromUtf8("GUI_TagEdit"));
-        GUI_TagEdit->resize(520, 329);
+        GUI_TagEdit->resize(561, 273);
         gridLayout = new QGridLayout(GUI_TagEdit);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         lab_filepath = new QLabel(GUI_TagEdit);
         lab_filepath->setObjectName(QString::fromUtf8("lab_filepath"));
+        lab_filepath->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
 
-        gridLayout->addWidget(lab_filepath, 0, 0, 1, 1);
+        gridLayout->addWidget(lab_filepath, 0, 0, 1, 2);
 
         scrollArea = new QScrollArea(GUI_TagEdit);
         scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 506, 269));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 532, 236));
         gridLayout_2 = new QGridLayout(scrollAreaWidgetContents);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         lab_title = new QLabel(scrollAreaWidgetContents);
