@@ -14,6 +14,8 @@
 #include <QString>
 #include <QStringList>
 #include <QDebug>
+#include <QMessageBox>
+
 #include <vector>
 
 using namespace std;
@@ -26,23 +28,8 @@ GUI_TagEdit::GUI_TagEdit() {
 	_cur_idx = -1;
 
 	_db = CDatabaseConnector::getInstance();
-	_db->getAllAlbums(_vec_albums);
-	_db->getAllArtists(_vec_artists);
 
-	_max_album_id = -1;
-	_max_artist_id = -1;
-
-	for(uint i=0; i<_vec_albums.size(); i++){
-		if(_vec_albums[i].id > _max_album_id) _max_album_id = _vec_albums[i].id;
-	}
-	_max_album_id++;
-
-	for(uint i=0; i<_vec_artists.size(); i++){
-		if(_vec_artists[i].id > _max_artist_id) _max_artist_id = _vec_artists[i].id;
-	}
-	_max_artist_id++;
-
-
+	init();
 
 	close();
 
@@ -61,6 +48,20 @@ GUI_TagEdit::GUI_TagEdit() {
 
 GUI_TagEdit::~GUI_TagEdit() {
 	// TODO Auto-generated destructor stub
+}
+
+
+void GUI_TagEdit::init(){
+	_db->getAllAlbums(_vec_albums);
+	_db->getAllArtists(_vec_artists);
+
+	_max_album_id = -1;
+	_max_artist_id = -1;
+
+
+	_max_album_id = _db->getMaxAlbumID() + 1;
+	_max_artist_id = _db->getMaxArtistID() + 1;
+
 }
 
 
@@ -132,8 +133,11 @@ void GUI_TagEdit::next_button_clicked(){
 void GUI_TagEdit::ok_button_clicked(){
 	if(_cur_idx == -1) _cur_idx = 0;
 	save_metadata();
-	check_for_new_album_and_artist();
-	close();
+	QList<Album> v_album;
+	QList<Artist> v_artist;
+	check_for_new_album_and_artist(v_album, v_artist);
+	bool b = store_to_database(v_album, v_artist) ;
+	if(b) close();
 
 
 }
@@ -209,11 +213,7 @@ void GUI_TagEdit::save_metadata(){
 }
 
 
-void GUI_TagEdit::check_for_new_album_and_artist(){
-
-
-	QList<Album> v_album;
-	QList<Artist> v_artist;
+void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist){
 
 	for(uint track = 0; track<_vec_org_metadata.size(); track++){
 
@@ -334,13 +334,9 @@ void GUI_TagEdit::check_for_new_album_and_artist(){
 
 		_vec_tmp_metadata[track].artist_id = artist_id;
 
-		change_mp3_file(_vec_tmp_metadata[track]);
+
 
 	}
-
-	store_to_database(v_album, v_artist);
-
-
 }
 
 
@@ -350,30 +346,45 @@ void GUI_TagEdit::change_mp3_file(MetaData& md){
 }
 
 
-void GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists){
+bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists){
+
+	if(new_albums.size() > 0 || new_artists.size() > 0){
+		 QMessageBox msgBox;
+		 msgBox.setText("You are about to insert<br />" + QString::number(new_albums.size()) + "new album(s) and<br />" + QString::number(new_artists.size()) + " new artist(s).");
+		 msgBox.setInformativeText("Proceed?");
+		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		 msgBox.setDefaultButton(QMessageBox::No);
+		 int ret = msgBox.exec();
+
+		 if(ret != QMessageBox::Yes) return false;
+	}
+
 
 
 	for(int i=0; i<new_albums.size(); i++){
 		qDebug() << "New album: " << new_albums[i].name;
-		int num = _db->insertAlbumIntoDatabase(new_albums[i]);
+		_db->insertAlbumIntoDatabase(new_albums[i]);
 	}
 
 	for(int i=0; i<new_artists.size(); i++){
-		int num = _db->insertArtistIntoDatabase(new_artists[i]);
+		_db->insertArtistIntoDatabase(new_artists[i]);
 	}
 
 
 
 	for(uint i=0; i<_vec_tmp_metadata.size(); i++){
 
-		int num = CDatabaseConnector::getInstance()->updateTrack(_vec_tmp_metadata[i]);
-
+		CDatabaseConnector::getInstance()->updateTrack(_vec_tmp_metadata[i]);
+		change_mp3_file(_vec_tmp_metadata[i]);
 		this->ui->pb_progress->setValue( (int)(i * 100.0 / _vec_tmp_metadata.size()));
 	}
 
 
 	emit id3_tags_changed();
 	emit id3_tags_changed(_vec_tmp_metadata);
+
+	init();
+	return true;
 
 
 

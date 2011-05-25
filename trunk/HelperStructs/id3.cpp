@@ -15,6 +15,7 @@
 	#include <taglib/tag.h>
 	#include <taglib/taglib.h>
 	#include <taglib/fileref.h>
+
 #endif
 using namespace Helper;
 
@@ -69,6 +70,7 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String artist(md.artist.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String title(md.title.toUtf8().data(), TagLib::String::UTF8);
+
 	f.tag()->setAlbum(album);
 	f.tag()->setArtist(artist);
 	f.tag()->setTitle(title);

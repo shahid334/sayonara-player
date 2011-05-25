@@ -30,6 +30,36 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 }
 
 
+int CDatabaseConnector::getMaxAlbumID(){
+	 if (!this -> m_database.isOpen())
+				        this -> m_database.open();
+
+	 int max_id = -1;
+		try {
+			QSqlQuery q (this -> m_database);
+			q.prepare("SELECT MAX(albumID) FROM albums;");
+
+			if (!q.exec()) {
+				throw QString ("SQL - Error: Could not get max albumID from DB");
+			}
+
+
+			while (q.next()) {
+				max_id = q.value(0).toInt();
+			}
+
+			return max_id;
+
+
+		}
+		catch (QString ex) {
+			qDebug() << ex;
+			QSqlError er = this -> m_database.lastError();
+			return max_id;
+		}
+}
+
+
 
 QString CDatabaseConnector::getAlbumName (const int & id) {
     QSqlQuery q (this -> m_database);

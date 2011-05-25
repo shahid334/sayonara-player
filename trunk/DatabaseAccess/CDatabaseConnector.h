@@ -41,6 +41,7 @@ public:
 		 *  ARTISTS
 		 *****************/
 			int getArtistID (const QString & artist);
+			int getMaxArtistID();
 
 			QString getArtistName (const int & id);
 
@@ -58,6 +59,7 @@ public:
 		 *  ALBUMS
 		 *****************/
 			int getAlbumID (const QString & album);
+			int getMaxAlbumID();
 
 			QString getAlbumName (const int & id);
 

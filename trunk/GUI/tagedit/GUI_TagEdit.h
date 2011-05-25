@@ -71,13 +71,15 @@ public:
 		int _max_album_id;
 		int _max_artist_id;
 
+		void init();
+
 		void show_metadata();
 		void save_metadata();
-		void check_for_new_album_and_artist();
+		void check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist);
 
 
 		void change_mp3_file(MetaData& md);
-		void store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists);
+		bool store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists);
 
 
 

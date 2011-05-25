@@ -170,26 +170,6 @@
     </filter>
     <filter
        inkscape:collect="always"
-       id="filter5349"
-       x="-0.20449386"
-       width="1.4089877"
-       y="-0.18674222"
-       height="1.3734844">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="48.419156"
-         id="feGaussianBlur5351" />
-    </filter>
-    <filter
-       inkscape:collect="always"
-       id="filter5405">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="21.361389"
-         id="feGaussianBlur5407" />
-    </filter>
-    <filter
-       inkscape:collect="always"
        id="filter5487"
        x="-0.1924648"
        width="1.3849296"
@@ -208,15 +188,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.12374369"
-     inkscape:cx="-3051.1213"
-     inkscape:cy="812.62443"
+     inkscape:zoom="0.24748738"
+     inkscape:cx="-6103.9361"
+     inkscape:cy="1297.4976"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
      inkscape:window-height="960"
-     inkscape:window-x="1677"
+     inkscape:window-x="1678"
      inkscape:window-y="32"
      inkscape:window-maximized="1"
      showguides="true"
@@ -776,69 +756,65 @@
            inkscape:connector-curvature="0" />
       </g>
     </g>
-    <g
-       id="g5538"
-       transform="translate(-113.13709,719.22861)">
-      <rect
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         ry="172.7276"
-         y="-1128.1973"
-         x="-4500.707"
-         height="675.81232"
-         width="735.1394"
-         id="rect4593-9-1-8"
-         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#323232;stroke-width:37.80984497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10" />
-      <path
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         inkscape:connector-curvature="0"
-         id="path3193"
-         d="m -4192.9819,-929.82392 307.157,0"
-         style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         inkscape:connector-curvature="0"
-         id="path3193-2"
-         d="m -4382.2205,-929.82392 -8.9107,0"
-         style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         inkscape:connector-curvature="0"
-         id="path3193-1"
-         d="m -4192.9819,-770.51822 307.157,0"
-         style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         inkscape:connector-curvature="0"
-         id="path3193-2-0"
-         d="m -4382.2205,-770.51822 -8.9107,0"
-         style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         inkscape:connector-curvature="0"
-         id="path3193-0"
-         d="m -4192.9819,-612.85512 307.157,0"
-         style="fill:#ffffff;stroke:#f3841a;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
-         inkscape:connector-curvature="0"
-         id="path3193-2-5"
-         d="m -4382.2205,-612.85512 -8.9107,0"
-         style="fill:#ffffff;stroke:#f3841a;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-    </g>
+    <rect
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#323232;stroke-width:37.80984497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="rect4593-9-1-8"
+       width="735.1394"
+       height="675.81232"
+       x="-4613.8442"
+       y="-408.96866"
+       ry="172.7276"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -4306.119,-210.59531 307.157,0"
+       id="path3193"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -4495.3576,-210.59531 -8.9107,0"
+       id="path3193-2"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -4306.119,-51.28961 307.157,0"
+       id="path3193-1"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -4495.3576,-51.28961 -8.9107,0"
+       id="path3193-2-0"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;stroke:#f3841a;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -4306.119,106.37349 307.157,0"
+       id="path3193-0"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ffffff;stroke:#f3841a;stroke-width:110.12132263;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -4495.3576,106.37349 -8.9107,0"
+       id="path3193-2-5"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        id="g5547"
        transform="translate(-40.406102,719.22861)">
@@ -1209,6 +1185,47 @@
          id="path3999-7-8-7"
          d="m -729.04636,2533.0095 c 0,-79.9351 0.51499,-145.1422 1.14424,-144.9045 3.84786,1.4535 264.90524,144.5181 264.92786,145.1856 0.0289,0.8601 -263.551,145.0558 -265.15225,145.0558 -0.50584,0 -0.91985,-65.4016 -0.91985,-145.3369 z"
          style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:66.01241302;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10" />
+    </g>
+    <g
+       id="g4013"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/edit.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/append.png"
+         ry="172.7276"
+         y="-441.15848"
+         x="-5482.9819"
+         height="675.81232"
+         width="735.1394"
+         id="rect4593-9-1-8-4"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#323232;stroke-width:37.80984497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10" />
+      <text
+         transform="scale(0.71671395,1.3952568)"
+         sodipodi:linespacing="125%"
+         id="text3998"
+         y="68.535194"
+         x="-7561.0288"
+         style="font-size:406.9269104px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="68.535194"
+           x="-7561.0288"
+           id="tspan4000"
+           sodipodi:role="line">ID</tspan></text>
+      <text
+         transform="scale(0.91702769,1.0904796)"
+         sodipodi:linespacing="125%"
+         id="text4002"
+         y="83.492828"
+         x="-5569.4722"
+         style="font-size:515.94824219px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f3841a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="83.492828"
+           x="-5569.4722"
+           id="tspan4004"
+           sodipodi:role="line">3</tspan></text>
     </g>
   </g>
 </svg>

@@ -34,6 +34,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	if(!index.isValid()) return;
 
 		QLabel label;
+
 		QItemDelegate::paint(painter, option, index);
 
 		QRect rect(option.rect);
@@ -54,7 +55,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 			label.setText(text);
 			label.setContentsMargins(2, 2, 0, 2);
+
 			label.resize(_parent->width()-20, 20);
+
 		}
 
 		//bool is_selected = ((option.state & QStyle::State_Selected) != 0);

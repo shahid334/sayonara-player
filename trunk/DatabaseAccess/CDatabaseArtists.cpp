@@ -13,6 +13,37 @@
 
 
 
+
+int CDatabaseConnector::getMaxArtistID(){
+	 if (!this -> m_database.isOpen())
+				        this -> m_database.open();
+
+	 int max_id = -1;
+		try {
+			QSqlQuery q (this -> m_database);
+			q.prepare("SELECT MAX(artistID) FROM artists;");
+
+			if (!q.exec()) {
+				throw QString ("SQL - Error: Could not get max artistID from DB");
+			}
+
+
+			while (q.next()) {
+				max_id = q.value(0).toInt();
+			}
+
+			return max_id;
+
+
+		}
+		catch (QString ex) {
+			qDebug() << ex;
+			QSqlError er = this -> m_database.lastError();
+			return max_id;
+		}
+}
+
+
 int CDatabaseConnector::getArtistID (const QString & artist)  {
     QSqlQuery q (this -> m_database);
     int artistID = -1;
