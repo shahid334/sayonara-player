@@ -5,14 +5,13 @@
   * LastFM scrobbling
   * Media Library
   * Equalizer (GStreamer, Xine)
-
+  * ID3 Tagger
 
 
 = Todo =
 
   * Dynamic Playlists (using LastFM)
-  * ID3 Tagger
-
+  
 = Maybe... =
 
   * Audio Converter
