@@ -9,7 +9,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
-#include "library/CDatabaseConnector.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QFile>
 #include <QObject>
@@ -35,29 +35,18 @@ Playlist::~Playlist() {
 }
 
 
-void Playlist::remove_row(int row){
-
-
-	if(row < _cur_play_idx) _cur_play_idx --;
-	else if(row == _cur_play_idx) _cur_play_idx = -1;
-
-	_v_meta_data.erase(this->_v_meta_data.begin() + row);
-
-	emit playlist_created(_v_meta_data);
-}
-
 
 void Playlist::createPlaylist(QStringList& pathlist){
 
-	qDebug() << "Create playlist called";
-
-    if(!_playlist_mode.append){
+	if(!_playlist_mode.append){
 		_v_meta_data.clear();
+		_cur_play_idx = -1;
 	}
     uint files2fill = pathlist.size();
 	for(uint i=0; i<files2fill; i++){
 
 		MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
+		md.is_extern = true;
 		_v_meta_data.push_back(md);
 
 		double percent = i * 1.0 / files2fill;
@@ -74,6 +63,7 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
 		_v_meta_data = v_meta_data;
+		_cur_play_idx = -1;
 	}
 
 	else{
@@ -90,11 +80,27 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 
 
 
+
+void Playlist::remove_row(int row){
+
+
+	if(row < _cur_play_idx) _cur_play_idx --;
+	else if(row == _cur_play_idx) _cur_play_idx = -1;
+
+	_v_meta_data.erase(this->_v_meta_data.begin() + row);
+
+	emit playlist_created(_v_meta_data);
+}
+
+
+
+
+
 void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	vector<MetaData> new_vec;
-	if(row < _cur_play_idx)
-		_cur_play_idx -= v_metadata.size();
+	if(row < _cur_play_idx && _cur_play_idx != -1)
+		_cur_play_idx += v_metadata.size();
 
 
 	for(int i=0; i<row; i++)
@@ -150,7 +156,7 @@ void Playlist::forward(){
 
 	}
 
-	else if(this->_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
+	else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
 		_cur_play_idx++;
 		emit selected_file_changed(_cur_play_idx);
 		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
@@ -158,7 +164,7 @@ void Playlist::forward(){
 	}
 }
 
-
+// GUI -->
 void Playlist::backward(){
 
 
@@ -239,7 +245,6 @@ void Playlist::change_track(int new_row){
 // GUI -->
 void Playlist::clear_playlist(){
 
-	//_pathlist.clear();
 	_v_meta_data.clear();
 	_cur_play_idx = -1;
 }
@@ -281,3 +286,13 @@ void Playlist::playlist_mode_changed(const Playlist_Mode& playlist_mode){
 
 
 
+void Playlist::edit_id3_request(){
+	emit data_for_id3_change(_v_meta_data);
+}
+
+void Playlist::id3_tags_changed(vector<MetaData>& new_meta_data){
+	_v_meta_data = new_meta_data;
+	emit playlist_created(_v_meta_data);
+	if(_cur_play_idx >= 0 && _cur_play_idx < _v_meta_data.size())
+		emit cur_played_info_changed(_v_meta_data[_cur_play_idx]);
+}

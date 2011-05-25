@@ -65,6 +65,8 @@ public:
 		void no_track_to_play();
 
 		void mp3s_loaded_signal(int percent);
+		void data_for_id3_change(const vector<MetaData>&);
+		void cur_played_info_changed(const MetaData&);
 
 	public slots:
 
@@ -83,6 +85,9 @@ public:
 		void backward();
 
 		void remove_row(int);
+
+		void edit_id3_request();
+		void id3_tags_changed(vector<MetaData>&);
 
 
 	private:

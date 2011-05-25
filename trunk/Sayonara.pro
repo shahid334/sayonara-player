@@ -25,13 +25,13 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/library/LibraryItemModelAlbums.h \
     GUI/library/LibraryItemDelegateAlbums.h \
     GUI/library/LibraryItemModelArtists.h \
-    GUI/library/LibrarySetupWidget.h \
+    GUI/tagedit/GUI_TagEdit.h \
     GUI/equalizer/GUI_Equalizer.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
     LyricLookup/LyricLookup.h \
-    library/CDatabaseConnector.h \
+    DatabaseAccess/CDatabaseConnector.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
     playlist/Playlist.h \
@@ -54,14 +54,19 @@ SOURCES += Main.cpp \
     GUI/library/LibraryItemModelAlbums.cpp \
     GUI/library/LibraryItemDelegateAlbums.cpp \
     GUI/library/LibraryItemModelArtists.cpp \
-    GUI/library/LibrarySetupWidget.cpp \
+    GUI/tagedit/GUI_TagEdit.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
     LyricLookup/LyricLookup.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
-    library/CDatabaseConnector.cpp \
+    DatabaseAccess/CDatabaseConnector.cpp \
+    DatabaseAccess/CDatabaseLibrary.cpp \
+    DatabaseAccess/CDatabaseSettings.cpp \
+    DatabaseAccess/CDatabaseAlbums.cpp \
+    DatabaseAccess/CDatabaseArtists.cpp \
+    DatabaseAccess/CDatabaseTracks.cpp \
     playlist/Playlist.cpp \
     HelperStructs/id3.cpp \
     LastFM/LastFM.cpp \
@@ -74,8 +79,8 @@ FORMS += \
     GUI/playlist/GUI_Playlist_Entry.ui \
     GUI/LastFM/GUI_LastFM_Widget.ui \
     GUI/library/GUI_Library_windowed.ui \
-    GUI/library/GUI_LibrarySetup_Widget.ui \
-    GUI/equalizer/GUI_Equalizer.ui
+    GUI/equalizer/GUI_Equalizer.ui \
+    GUI/tagedit/GUI_TagEdit.ui
 
 
 
@@ -105,6 +110,7 @@ images.files += GUI/icons/play_small.png
 images.files += GUI/icons/lastfm_logo.jpg
 images.files += GUI/icons/power_on.png
 images.files += GUI/icons/power_off.png
+images.files += GUI/icons/edit.png
 INSTALLS += images
 
 

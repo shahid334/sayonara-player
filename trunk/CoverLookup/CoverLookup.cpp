@@ -8,7 +8,7 @@
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
-#include "library/CDatabaseConnector.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 
 #include <string>

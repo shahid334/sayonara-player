@@ -22,6 +22,9 @@ using namespace std;
 
 struct MetaData{
 
+	qint32 id;
+	qint32 album_id;
+	qint32 artist_id;
 	QString title;
 	QString artist;
 	QString album;
@@ -31,10 +34,15 @@ struct MetaData{
 	QString filepath;
 	qint32 track_num;
 	qint32 bitrate;
+	bool is_extern;
+
 
 
     inline MetaData () {
-            title = "";
+            id = 0;
+            artist_id = 0;
+            album_id = 0;
+			title = "";
             artist = "";
             album = "";
             rating = 0;
@@ -43,6 +51,7 @@ struct MetaData{
             filepath = "";
             track_num = 0;
             bitrate = 0;
+            is_extern = false;
         }
 
 	void print(){
@@ -56,6 +65,7 @@ struct MetaData{
 	QStringList toStringList(){
 
 		QStringList list;
+
 		list.push_back(title);
 		list.push_back(artist);
 		list.push_back(album);
@@ -65,6 +75,10 @@ struct MetaData{
 		list.push_back(filepath);
 		list.push_back(QString::number(track_num));
 		list.push_back(QString::number(bitrate));
+		list.push_back(QString::number(id));
+		list.push_back(QString::number(album_id));
+		list.push_back(QString::number(artist_id));
+		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
 		return list;
 	}
 
@@ -81,6 +95,10 @@ struct MetaData{
 		filepath = list.at(6);
 		track_num = list.at(7).toInt();
 		bitrate = list.at(8).toInt();
+		id = list.at(9).toInt();
+		album_id = list.at(10).toInt();
+		artist_id = list.at(11).toInt();
+		is_extern = ( list.at(12) == "1" );
 
 
 	}
@@ -94,6 +112,14 @@ struct Artist{
 	qint32	id;
 	qint32	num_songs;
 	qint32  num_albums;
+
+
+	Artist(){
+		id = -1;
+		name = "";
+		num_songs = 0;
+		num_albums = 0;
+	}
 
 	QStringList toStringList(){
 		QStringList list;
@@ -124,6 +150,14 @@ struct Album{
 	QStringList artists;
 	bool is_sampler;
 
+	Album(){
+		name = "";
+		id = -1;
+		num_songs = 0;
+		length_sec = 0;
+		year = 0;
+		is_sampler = false;
+	}
 
 	QStringList toStringList(){
 		QStringList list;

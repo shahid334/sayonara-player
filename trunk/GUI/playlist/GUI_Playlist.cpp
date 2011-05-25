@@ -39,7 +39,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
 
-	this->ui->pl_progress_bar->hide();
+	//this->ui->pl_progress_bar->hide();
 
 	this->ui->listView->setModel(_pli_model);
 	this->ui->listView->setItemDelegate(_pli_delegate);
@@ -58,6 +58,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(selected_row_changed(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(current_row_changed(const QModelIndex &)));
 
+	this->connect(this->ui->but_EditID3, SIGNAL(released()), this, SLOT(edit_id3_but_pressed()));
+
 	this->setAcceptDrops(true);
 	_parent = parent;
 	_total_secs = 0;
@@ -75,9 +77,10 @@ GUI_Playlist::~GUI_Playlist() {
 
 void GUI_Playlist::update_progress_bar(int percent){
 
-	if(percent > 0) this->ui->pl_progress_bar->show();
+	Q_UNUSED(percent);
+	/*if(percent > 0) this->ui->pl_progress_bar->show();
 	if(percent == 100) this->ui->pl_progress_bar->hide();
-	this->ui->pl_progress_bar->setValue(percent);
+	this->ui->pl_progress_bar->setValue(percent);*/
 }
 
 void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
@@ -257,6 +260,7 @@ void GUI_Playlist::initGUI(){
 	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
 	this->ui->btn_save_playlist->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	this->ui->but_EditID3->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 
 }
 
@@ -382,4 +386,9 @@ void GUI_Playlist::keyPressEvent(QKeyEvent* e){
 
 		}
 	}
+}
+
+
+void GUI_Playlist::edit_id3_but_pressed(){
+	emit edit_id3_signal();
 }

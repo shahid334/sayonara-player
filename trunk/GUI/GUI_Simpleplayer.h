@@ -40,6 +40,7 @@ public slots:
       * Set current position in filestream
       */
     void setCurrentPosition (quint32 pos_sec);
+    void update_info(const MetaData&);
 
 
 

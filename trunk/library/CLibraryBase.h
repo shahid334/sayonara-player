@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include "library/CDirectoryReader.h"
-#include "library/CDatabaseConnector.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 class CLibraryBase : public QObject
 {

@@ -62,9 +62,9 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	_pl_entry->setTime(strList.at(3));
 
 	bool has_scrollbar = false;
-	if((_parent->model()->rowCount() + 1) * 33 > _parent->height()) has_scrollbar = true;
+	if((_parent->model()->rowCount()) * 34 > _parent->height()) has_scrollbar = true;
 
-	int offset = (has_scrollbar == true) ?  this->_parent->horizontalScrollBar()->height()+2 : 4;
+	int offset = (has_scrollbar == true) ?  this->_parent->horizontalScrollBar()->height()+4 : 4;
 
 	_pl_entry->setMinimumWidth(_parent->width()-offset);
 	_pl_entry->setMaximumWidth(_parent->width()-offset);

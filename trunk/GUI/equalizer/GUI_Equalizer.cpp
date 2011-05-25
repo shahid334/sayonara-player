@@ -9,7 +9,7 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
-#include "library/CDatabaseConnector.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 
 #include <QObject>

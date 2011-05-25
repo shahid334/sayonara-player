@@ -46,6 +46,7 @@
 			void sound_files_dropped(QStringList&);
 			void directory_dropped(const QString&);
 			void row_removed(int);
+			void edit_id3_signal();
 
 
 
@@ -57,6 +58,7 @@
 
 
 
+
 		private slots:
 
 			void current_row_changed(int);
@@ -65,6 +67,7 @@
 			void clear_playlist_slot();
 			void save_playlist_slot();
 			void playlist_mode_changed_slot();
+			void edit_id3_but_pressed();
 
 
 

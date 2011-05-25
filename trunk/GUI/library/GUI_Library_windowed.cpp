@@ -7,17 +7,20 @@
 
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/library/LibraryItemModelTracks.h"
-#include <GUI/library/LibraryItemModelAlbums.h>
-#include <GUI/library/LibraryItemDelegateAlbums.h>
-#include <GUI/library/LibraryItemModelArtists.h>
+#include "GUI/library/LibraryItemModelAlbums.h"
+#include "GUI/library/LibraryItemDelegateAlbums.h"
+#include "GUI/library/LibraryItemModelArtists.h"
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/MetaData.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
+
 #include "ui_GUI_Library_windowed.h"
+
 #include <QDebug>
 #include <QPoint>
 #include <QMouseEvent>
+
 #include <vector>
-#include <HelperStructs/Helper.h>
-#include <HelperStructs/MetaData.h>
-#include <library/CDatabaseConnector.h>
 
 
 using namespace std;
@@ -124,8 +127,6 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 	}
 
 }
-
-
 
 
 void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
@@ -424,4 +425,17 @@ QString GUI_Library_windowed::getTotalTimeString(Album& album){
 	return str;
 
 
+}
+
+
+
+void GUI_Library_windowed::id3_tags_changed(){
+
+	if(this->ui->le_search->text().isEmpty()){
+		clear_button_pressed();
+	}
+
+	else{
+		text_line_edited(this->ui->le_search->text());
+	}
 }

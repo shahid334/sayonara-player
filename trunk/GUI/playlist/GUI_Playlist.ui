@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>676</width>
-    <height>679</height>
+    <width>703</width>
+    <height>685</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -52,6 +52,9 @@
    </property>
    <property name="horizontalSpacing">
     <number>3</number>
+   </property>
+   <property name="verticalSpacing">
+    <number>0</number>
    </property>
    <item row="0" column="0" colspan="7">
     <widget class="QLabel" name="lab_totalTime">
@@ -141,19 +144,6 @@
      </property>
      <property name="flat">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="8" colspan="3">
-    <widget class="QProgressBar" name="pl_progress_bar">
-     <property name="maximumSize">
-      <size>
-       <width>5000</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="value">
-      <number>0</number>
      </property>
     </widget>
    </item>
@@ -280,7 +270,68 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="9">
+   <item row="2" column="4" colspan="6">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="7" colspan="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="10">
+    <widget class="QPushButton" name="btn_clear">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Clear Playlist</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/broom.png</normaloff>icons/broom.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="9">
     <widget class="QPushButton" name="btn_save_playlist">
      <property name="minimumSize">
       <size>
@@ -316,65 +367,32 @@
     </widget>
    </item>
    <item row="2" column="10">
-    <widget class="QPushButton" name="btn_clear">
+    <widget class="QPushButton" name="but_EditID3">
      <property name="minimumSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>30</width>
+       <height>30</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>26</width>
-       <height>26</height>
+       <width>30</width>
+       <height>30</height>
       </size>
-     </property>
-     <property name="toolTip">
-      <string>Clear Playlist</string>
      </property>
      <property name="text">
       <string/>
      </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/broom.png</normaloff>icons/broom.png</iconset>
-     </property>
      <property name="iconSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>22</width>
+       <height>22</height>
       </size>
      </property>
      <property name="flat">
       <bool>true</bool>
      </property>
     </widget>
-   </item>
-   <item row="2" column="4" colspan="5">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="7">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

@@ -108,6 +108,24 @@ QString GUI_SimplePlayer::getLengthString (quint32 length_ms)const {
     return lengthString;
 }
 
+void GUI_SimplePlayer::update_info(const MetaData& in){
+	// sometimes ignore the date
+		if(in.year < 1000 || in.album.contains(QString::number(in.year)))
+			this -> ui->album->setText(in.album);
+
+		else this -> ui->album->setText(in.album + " (" + QString::number(in.year) +")");
+
+	    this -> ui->artist->setText(in.artist);
+	    this -> ui->title->setText(in.title);
+
+	    m_trayIcon->setToolTip("Currently playing: \"" + in.title + "\" by " + in.artist);
+	    this -> setWindowTitle(QString("Sayonara - ") + in.title);
+
+	    emit wantCover(in);
+
+}
+
+
 void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
 	// sometimes ignore the date
@@ -132,11 +150,12 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
         qDebug() << "Error rating is to big";
     }
 
-    int tmpRating = (rand() % 4) + 1;
+   // int tmpRating = (rand() % 4) + 1;
 
 
 
     QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
+    qDebug() << "Bitrate = " << in.bitrate;
     if(in.bitrate < 96000) tmp += "*";
     else if(in.bitrate < 128000) tmp += "**";
     else if(in.bitrate < 160000) tmp += "***";

@@ -1,5 +1,6 @@
-#include "CSettingsStorage.h"
-#include <library/CDatabaseConnector.h>
+#include "HelperStructs/CSettingsStorage.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
+
 #include <QFile>
 #include <QDir>
 #include <QDebug>

@@ -18,7 +18,7 @@
 #include <GUI/library/LibraryItemDelegateAlbums.h>
 #include <GUI/library/LibraryItemModelArtists.h>
 #include <HelperStructs/MetaData.h>
-#include <library/CDatabaseConnector.h>
+#include <DatabaseAccess/CDatabaseConnector.h>
 
 #include <vector>
 
@@ -58,6 +58,7 @@ private:
 		void fill_library_tracks(vector<MetaData>&);
 		void fill_library_albums(vector<Album>&);
 		void fill_library_artists(vector<Artist>&);
+		void id3_tags_changed();
 
 
 	private slots:

@@ -8,6 +8,7 @@ namespace ID3{
 
 MetaData getMetaDataOfFile(QString file);
 
+void setMetaDataOfFile(MetaData& md);
 
 };
 
