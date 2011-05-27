@@ -67,6 +67,8 @@ void GUI_TagEdit::init(){
 
 void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
 
+	init();
+
 	this->ui->pb_progress->hide();
 	_cur_idx = -1;
 	_lst_new_albums.clear();
@@ -215,6 +217,9 @@ void GUI_TagEdit::save_metadata(){
 
 void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist){
 
+
+	/* create lists with all albums and artists for the tracks
+	 * If a track has a new album/artist create new IDs for it */
 	for(uint track = 0; track<_vec_org_metadata.size(); track++){
 
 			QString new_album_name =  _lst_new_albums[track];
@@ -266,11 +271,16 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
 		bool album_found = false;
 		int album_id = -1;
+		/* check the track, if it has a NEW album */
+
 		for(uint i=0; i<_vec_albums.size(); i++){
+
+			// album is already in db
 			if(new_album_name == _vec_albums[i].name){
 				album_found = true;
 				album_id = _vec_albums[i].id;
 
+				// delete the album out of the list, we do not have to insert it
 				for(int j=0; j<v_album.size(); j++){
 					if(v_album[j].name == new_album_name){
 						v_album.removeAt(j);
@@ -280,8 +290,6 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
 				break;
 			}
-
-
 		}
 
 		if(!album_found){
@@ -350,7 +358,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
 	if(new_albums.size() > 0 || new_artists.size() > 0){
 		 QMessageBox msgBox;
-		 msgBox.setText("You are about to insert<br />" + QString::number(new_albums.size()) + "new album(s) and<br />" + QString::number(new_artists.size()) + " new artist(s).");
+		 msgBox.setText("You are about to insert<br /><b>" + QString::number(new_albums.size()) + "</b> new album(s) and<br /><b>" + QString::number(new_artists.size()) + "</b> new artist(s).");
 		 msgBox.setInformativeText("Proceed?");
 		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		 msgBox.setDefaultButton(QMessageBox::No);
@@ -370,20 +378,23 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 		_db->insertArtistIntoDatabase(new_artists[i]);
 	}
 
-
+	this->ui->pb_progress->setVisible(true);
 
 	for(uint i=0; i<_vec_tmp_metadata.size(); i++){
 
+		this->ui->pb_progress->setValue( (int)(i * 100.0 / _vec_tmp_metadata.size()));
 		CDatabaseConnector::getInstance()->updateTrack(_vec_tmp_metadata[i]);
 		change_mp3_file(_vec_tmp_metadata[i]);
-		this->ui->pb_progress->setValue( (int)(i * 100.0 / _vec_tmp_metadata.size()));
+
 	}
+
+	this->ui->pb_progress->setVisible(false);
 
 
 	emit id3_tags_changed();
 	emit id3_tags_changed(_vec_tmp_metadata);
 
-	init();
+
 	return true;
 
 
