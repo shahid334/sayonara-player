@@ -283,9 +283,12 @@ void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album
 
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
-    QSqlQuery q (this -> m_database);
-    q.prepare("INSERT INTO albums (name) values (?);");
-    q.bindValue(0,QVariant(album));
+	if (!this -> m_database.isOpen())
+					this -> m_database.open();
+
+	QSqlQuery q (this -> m_database);
+    q.prepare("INSERT INTO albums (name) values (:album);");
+    q.bindValue(":album", QVariant(album));
     if (!q.exec()) {
         throw QString ("SQL - Error: insertAlbumIntoDatabase " + album);
     }
@@ -316,6 +319,7 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
     		qDebug() << er.driverText();
     		qDebug() << er.databaseText();
     		qDebug() << er.databaseText();
+    		return -1;
     	}
 
 

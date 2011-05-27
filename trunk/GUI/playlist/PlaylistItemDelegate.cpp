@@ -5,8 +5,11 @@
  *      Author: luke
  */
 
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/MetaData.h"
 #include "GUI/playlist/PlaylistItemDelegate.h"
 #include "GUI/playlist/GUI_PlaylistEntry.h"
+
 
 #include <QtGui>
 #include <QItemDelegate>
@@ -50,28 +53,27 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	painter->save();
 	painter->translate(0, 0);
 
-	QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
-	QStringList strList = text.split(",\n");
+	QStringList strlist = index.model()->data(index, Qt::WhatsThisRole).toStringList();
+	MetaData md;
+		md.fromStringList(strlist);
+
+	bool cur_track = (strlist.last().toInt() == 1);
 
 
-	_pl_entry->setArtist(strList.at(0));
-	if(strList.at(1).size() == 2)
-		_pl_entry->setAlbum("");
-	else _pl_entry->setAlbum(strList.at(1));
-	_pl_entry->setTitle(strList.at(2));
-	_pl_entry->setTime(strList.at(3));
+	_pl_entry->setArtist(md.artist);
+	_pl_entry->setAlbum(md.album);
+	_pl_entry->setTitle(md.title);
+	_pl_entry->setTime(Helper::cvtMsecs2TitleLengthString(md.length_ms));
 
-	bool has_scrollbar = false;
-	if((_parent->model()->rowCount()) * 34 > _parent->height()) has_scrollbar = true;
 
-	int offset = (has_scrollbar == true) ?  this->_parent->horizontalScrollBar()->height()+4 : 4;
+	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?  this->_parent->verticalScrollBar()->width()+4 : 4;
 
 	_pl_entry->setMinimumWidth(_parent->width()-offset);
 	_pl_entry->setMaximumWidth(_parent->width()-offset);
 
 
 
-	bool cur_track = (strList.at(4) == "1");
+
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 	QPalette palette = _parent->palette();

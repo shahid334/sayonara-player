@@ -65,11 +65,10 @@ void CLibraryBase::reloadLibrary(){
 	dialog.setLabelText("Inserting ID3 Tags into database...");
 	uint todo = fileList.size();
 
+
 	for(int i=0; i<fileList.size(); i++){
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
 		v_metadata.push_back(md);
-
-		//emit mp3s_loaded_signal((int)(i * 100.0 / todo));
 		dialog.setValue((int)(i * 100.0 / todo));
 	}
 
@@ -83,9 +82,11 @@ void CLibraryBase::reloadLibrary(){
 }
 
 void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& in) {
-	CDatabaseConnector::getInstance()->storeMetadata(in);
+
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	db->storeMetadata(in);
     std::vector<MetaData> data;
-    CDatabaseConnector::getInstance()->getTracksFromDatabase(data);
+    db->getTracksFromDatabase(data);
     emit signalMetaDataLoaded(data);
 }
 

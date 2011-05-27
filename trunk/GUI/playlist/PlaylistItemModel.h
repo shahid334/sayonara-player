@@ -39,7 +39,7 @@ public:
 
 
 private:
-	QStringList		_labellist;
+	QList<QStringList>		_labellist;
 
 };
 

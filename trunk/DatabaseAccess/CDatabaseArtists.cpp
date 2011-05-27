@@ -183,9 +183,12 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 
 
 int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
-    QSqlQuery q (this -> m_database);
-    q.prepare("INSERT INTO artists (name) values (?);");
-    q.addBindValue(QVariant(artist));
+	if (!this -> m_database.isOpen())
+					this -> m_database.open();
+
+	QSqlQuery q (this -> m_database);
+    q.prepare("INSERT INTO artists (name) values (:artist);");
+    q.bindValue(":artist", QVariant(artist));
     if (!q.exec()) {
         qDebug()<< q.lastQuery() << q.executedQuery();
         throw QString ("SQL - Error: insertArtistIntoDatabase " + artist);

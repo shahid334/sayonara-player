@@ -101,21 +101,19 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 		QString time_str = Helper::cvtSomething2QString(min, 2) + ":" + Helper::cvtSomething2QString(sek, 2);
 
 
-		QString str = 	it->artist +
+		/*QString str = 	it->artist +
 						" - " +
 						it->title +
 						"      (" +
 						 time_str +
-						")";
+						")";*/
 
-		QString str4Playlist = 	it->artist + 			",\n" +
-								"[" + it->album + "]" + ",\n" +
-								it->title + 			",\n" +
-								time_str + 				",\n";
-								//"0";
+		QStringList str4Playlist = it->toStringList();
 
-		if(idx == _cur_playing_row) str4Playlist += "1";
-		else str4Playlist += "0";
+
+
+		if(idx == _cur_playing_row) str4Playlist.push_back("1");
+		else str4Playlist.push_back("0");
 
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
@@ -161,13 +159,16 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 		for(int i=0; i<index.model()->rowCount(); i++){
 
 			QModelIndex tmp_idx = index.model()->index(i, 0);
-			QString str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toString();
+			QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
+
+			str4Playlist.removeLast();
+
 
 			if(i == index.row())
-				str4Playlist.replace(str4Playlist.size()-1, 1, '1');
+				str4Playlist.push_back("1");
 
 			else
-				str4Playlist.replace(str4Playlist.size()-1, 1, '0');
+				str4Playlist.push_back("0");
 
 
 			_cur_playing_row = index.row();
@@ -206,13 +207,16 @@ void GUI_Playlist::track_changed(int new_row){
 	for(int i=0; i<_pli_model->rowCount(); i++){
 
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
-		QString str4Playlist = _pli_model->data(tmp_idx, Qt::WhatsThisRole).toString();
+		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
-		if(i == index.row())
-			str4Playlist.replace(str4Playlist.size()-1, 1, '1');
+				str4Playlist.removeLast();
 
-		else
-			str4Playlist.replace(str4Playlist.size()-1, 1, '0');
+
+				if(i == index.row())
+					str4Playlist.push_back("1");
+
+				else
+					str4Playlist.push_back("0");
 
 		_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 	}

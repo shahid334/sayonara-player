@@ -66,7 +66,7 @@ bool PlaylistItemModel::setData(const QModelIndex &index, const QVariant &value,
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 _labellist.replace(index.row(), value.toString());
+		 _labellist.replace(index.row(), value.toStringList());
 	     emit dataChanged(index, index);
 	     return true;
 	 }
@@ -83,7 +83,8 @@ bool PlaylistItemModel::insertRows(int position, int rows, const QModelIndex &in
 
 	 for (int row = 0; row < rows; ++row) {
 
-		 _labellist.insert(position, "");
+		 QStringList lst;
+		 _labellist.insert(position, lst);
 	 }
 
 	 endInsertRows();
