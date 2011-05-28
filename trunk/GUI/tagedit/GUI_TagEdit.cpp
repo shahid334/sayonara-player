@@ -52,6 +52,10 @@ GUI_TagEdit::~GUI_TagEdit() {
 
 
 void GUI_TagEdit::init(){
+
+	_vec_albums.clear();
+	_vec_artists.clear();
+
 	_db->getAllAlbums(_vec_albums);
 	_db->getAllArtists(_vec_artists);
 
@@ -67,7 +71,7 @@ void GUI_TagEdit::init(){
 
 void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
 
-	init();
+	this->init();
 
 	this->ui->pb_progress->hide();
 	_cur_idx = -1;
