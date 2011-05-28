@@ -147,7 +147,20 @@ int main(int argc, char *argv[]){
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
-		player.setWindowTitle("Sayonara");
+
+		/* version_number:
+		 * A.B.D[u|e|s]
+		 * A = Main Version number: only increased if ALL milestones
+		 *     fullfilled and there's a stable version of it
+		 * B = Sub version number: increased for every milstone current milestone
+		 * D = Date (increased for little bugfixes)
+		 * u = unstable (automatically if a new feature was implemented)
+		 * e = experimental (successor may be unstable again or stable)
+		 * s = stable (sucessor of experimental)
+		 *
+		 */
+
+		player.setWindowTitle("Sayonara (0.6.0528e)");
 		player.show();
 
 
