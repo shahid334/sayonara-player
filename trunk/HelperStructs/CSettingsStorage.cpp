@@ -88,26 +88,19 @@ QString CSettingsStorage::getDBFileName () {
 
 
 //TODO hash
-QPair<QString, QString> CSettingsStorage::getLastFMNameAndPW () {
-    return this -> m_lastFm;
-}
-
+QPair<QString, QString> CSettingsStorage::getLastFMNameAndPW () { return this -> m_lastFm; }
 void CSettingsStorage::getLastFMNameAndPW (QString & name, QString & pw) {
     name= this -> m_lastFm.first;
     pw= this -> m_lastFm.second;
 }
-
 void CSettingsStorage::setLastFMNameAndPW (const QString & name,const QString & pw) {
     this -> m_lastFm.first = name;
     this -> m_lastFm.second = pw;
 }
 
 
-void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec){
-
-	vec = this->m_vec_eqSettings;
-}
-
+EQ_Setting CSettingsStorage::getCustomEqualizer(){ return this->m_vec_eqSettings[m_vec_eqSettings.size()-1]; }
+void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec){vec = this->m_vec_eqSettings;}
 void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec){
 
 	m_vec_eqSettings.clear();
@@ -116,3 +109,15 @@ void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec){
 	}
 }
 
+
+int CSettingsStorage::getVolume(){ return m_volume; }
+void CSettingsStorage::setVolume(int vol){ if(vol >= 0 && vol <= 100) m_volume = vol; }
+
+void CSettingsStorage::setLastEqualizer(int eq_idx){ m_last_eq = eq_idx; }
+int CSettingsStorage::getLastEqualizer(){ return m_last_eq;}
+
+QString CSettingsStorage::getLibraryPath(){return m_library_path;}
+void CSettingsStorage::setLibraryPath(QString path){m_library_path = path;}
+
+QSize CSettingsStorage::getPlayerSize(){ return m_player_size; }
+void CSettingsStorage::setPlayerSize(QSize size){ m_player_size = size; }

@@ -13,160 +13,186 @@
 
 
 bool CDatabaseConnector::load_settings(){
-	 this -> load_settings_lastfm();
-	 this -> load_settings_eq();
+
+	/* Last FM */
+	QVariant last_fm_setting;
+	QString last_fm_username;
+	QString last_fm_password;
+	load_setting("LastFM_login", last_fm_setting);
+	if(last_fm_setting != 0){
+		QStringList list = last_fm_setting.toString().split(',');
+		if(list.size() == 2){
+			last_fm_username = list[0];
+			last_fm_password = list[1];
+		}
+	}
+
+	CSettingsStorage::getInstance()->setLastFMNameAndPW(last_fm_username, last_fm_password);
+
+
+	/* Equalizer */
+	QVariant v_eq_last;
+	int eq_last = 0;
+	load_setting("eq_last", v_eq_last);
+	if(v_eq_last != 0){
+		eq_last = v_eq_last.toInt();
+		qDebug() << "Got from database: " << eq_last;
+	}
+
+	CSettingsStorage::getInstance()->setLastEqualizer(eq_last);
+
+	vector<EQ_Setting> vec_eq_settings;
+	for(int i=0; i<7; i++){
+		QVariant v_eq_preset;
+		QString eq_preset = 0;
+		switch(i){
+			case 0: load_setting("EQ_pr_flat", v_eq_preset); break;
+			case 1: load_setting("EQ_pr_rock", v_eq_preset); break;
+			case 2: load_setting("EQ_pr_treble", v_eq_preset); break;
+			case 3: load_setting("EQ_pr_bass", v_eq_preset); break;
+			case 4: load_setting("EQ_pr_mid", v_eq_preset); break;
+			case 5: load_setting("EQ_pr_light_rock", v_eq_preset); break;
+			case 6: load_setting("EQ_pr_custom", v_eq_preset); break;
+			default: load_setting("EQ_pr_flat", v_eq_preset); break;
+		}
+
+		if(v_eq_preset != 0){
+			EQ_Setting eq_setting;
+			eq_setting.parseFromString(v_eq_preset.toString());
+			vec_eq_settings.push_back(eq_setting);
+		}
+	}
+
+	CSettingsStorage::getInstance()->setEqualizerSettings(vec_eq_settings);
+
+	/* Volume */
+	QVariant v_volume;
+	int volume = 0;
+	load_setting("volume", v_volume);
+	if(v_volume != 0)
+		volume = v_volume.toInt();
+
+	CSettingsStorage::getInstance()->setVolume(volume);
+
+
+
+	QVariant v_lib_path;
+	QString lib_path = "";
+	load_setting("library_path", v_lib_path);
+	if(v_lib_path != 0)
+		lib_path = v_lib_path.toString();
+
+	CSettingsStorage::getInstance()->setLibraryPath(lib_path);
+
+
+	QVariant v_player_size;
+	QStringList l_player_size;
+	QSize player_size(800, 600);
+	load_setting("player_size", v_player_size);
+	if(v_player_size != 0){
+		l_player_size = v_player_size.toString().split(',');
+		player_size.setWidth(l_player_size[0].toInt());
+		player_size.setHeight(l_player_size[1].toInt());
+	}
+
+	CSettingsStorage::getInstance()->setPlayerSize(player_size);
 	 return true;
 }
 
 bool CDatabaseConnector::store_settings(){
-	if(!m_database.isOpen()) m_database.open();
-	this->store_settings_lastfm();
-	this->store_settings_eq();
+
+	QString last_fm_username;
+	QString last_fm_password;
+	CSettingsStorage::getInstance()->getLastFMNameAndPW(last_fm_username, last_fm_password);
+	store_setting("LastFM_login", last_fm_username + "," + last_fm_password);
+
+	int last_eq_used = CSettingsStorage::getInstance()->getLastEqualizer();
+	store_setting("eq_last", last_eq_used);
+
+	QString custom_equalizer = CSettingsStorage::getInstance()->getCustomEqualizer().toString();
+	store_setting("EQ_pr_custom", custom_equalizer);
+
+	int volume = CSettingsStorage::getInstance()->getVolume();
+	store_setting("volume", volume);
+
+	QString library_path = CSettingsStorage::getInstance()->getLibraryPath();
+	store_setting("library_path", library_path);
+
+	QSize player_size = CSettingsStorage::getInstance()->getPlayerSize();
+	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
+	store_setting("player_size", str_size);
+
 	return true;
 }
 
 
-void CDatabaseConnector::load_settings_lastfm() {
-    if (!this -> m_database.isOpen())
-        this -> m_database.open();
-    QString username, password;
-    try {
-        QSqlQuery q (this -> m_database);
-        q.prepare("select value from settings where key ='LastFM_login';");
-        if (!q.exec()) {
-            throw QString ("SQL - Error: fillSettingsStorage");
-        }
-
-		if(q.next()){
-			QStringList list = q.value(0).toString().split(',');
-			if(list.size() == 2){
-				username = list[0];
-				password = list[1];
-			}
-		}
-
-		CSettingsStorage::getInstance()->setLastFMNameAndPW(username,password);
-    }
-
-    catch (QString ex) {
-        qDebug() << "Error during inserting of metadata into database";
-        qDebug() << ex;
-    }
-}
 
 
-void CDatabaseConnector::store_settings_lastfm () {
 
-    try {
-        QString username, password;
-        CSettingsStorage::getInstance()->getLastFMNameAndPW(username,password);
-        QSqlQuery q (this -> m_database);
-        q.prepare("select value from settings where key = 'LastFM_login'");
-        if (!q.exec()) {
-            throw QString ("SQL - Error: storeSettingsFromStorage");
-        }
-        if (!q.next()) {
-            q.prepare("update settings set value='dummy,dummy' WHERE key='LastFM_login'");
-            if (!q.exec()) {
-                throw QString ("SQL - Error: storeSettingsFromStorage");
-            }
-        }
-        q.prepare("UPDATE settings set value=? WHERE key='LastFM_login'");
-        q.addBindValue(QVariant(username+","+password));
-
-        if (!q.exec()) {
-            throw QString ("SQL - Error: storeSettingsFromStorage");
-        }
-    }
-    catch (QString ex) {
-        qDebug() << "Error during inserting of metadata into database";
-        qDebug() << ex;
-        QSqlError er = this -> m_database.lastError();
-        qDebug() << er.driverText();
-        qDebug() << er.databaseText();
-        qDebug() << er.databaseText();
-    }
-}
-
-
-void CDatabaseConnector::load_settings_eq(){
-
+void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value){
 	if (!this -> m_database.isOpen())
 	        this -> m_database.open();
 
-	vector<EQ_Setting> result;
-    try{
+	tgt_value = 0;
+	try {
 		QSqlQuery q (this -> m_database);
-		q.prepare("select value from settings where key like 'EQ_pr_%';");
+		q.prepare("select value from settings where key = ?;");
+		q.addBindValue(QVariant(key));
 
 		if (!q.exec()) {
-			throw QString (q.lastError().text());
+			throw QString ("SQL - Error: loading " + key);
 		}
 
-		while (q.next()) {
-		   EQ_Setting eq_setting;
-		   QString row = q.value(0).toString();
-		   eq_setting.parseFromString(row);
-		   result.push_back(eq_setting);
+		if(q.next()){
+			tgt_value = q.value(0);
+			qDebug() << "Fetched " << key;
 		}
+	}
 
-		CSettingsStorage::getInstance()->setEqualizerSettings(result);
-    }
-    catch(QString ex){
-    	qDebug() << "Error fetching EQ Presets (" << ex << ")";
-    }
+	catch (QString ex) {
+		qDebug() << ex;
+	}
 }
 
 
-
-
-void CDatabaseConnector::store_settings_eq(){
-
+void CDatabaseConnector::store_setting(QString key, QVariant value){
 	 try {
 
-	        vector<EQ_Setting> vec;
-	        CSettingsStorage::getInstance()->getEqualizerSettings(vec);
-	        QString str2insert = "";
-	        for(uint i=0; i<vec.size(); i++){
-	        	if(vec[i].name == "Custom"){
-	        		str2insert = vec[i].toString();
-	        		break;
-	        	}
-	        }
+		QSqlQuery q (this -> m_database);
+		q.prepare("select value from settings where key = :key;");
+		q.bindValue(":key", key);
 
-	        QSqlQuery q (this -> m_database);
-	        q.prepare("select value from settings where key = 'EQ_pr_custom'");
+		if (!q.exec()) {
+			throw QString ("SQL - Error: load " + key + " (during inserting)");
+		}
 
-	        if (!q.exec()) {
-	            throw QString ("SQL - Error: store settings equalizer (database not ready)");
-	        }
+		if (!q.next()) {
+			q.prepare("INSERT INTO settings VALUES(:key, :val);");
+			q.bindValue(":key", key);
+			q.bindValue(":value", value);
+			if (!q.exec()) {
+				throw QString ("SQL - Error: First insert of " + key);
+			}
 
-	        if (!q.next() || str2insert == "") {
-	            q.prepare("insert into settings  values('EQ_pr_custom', ?);");
-	            q.addBindValue(str2insert);
+			else{
+				qDebug() << "Inserted " << key << " first time";
+			}
+		}
 
-	            if (!q.exec()) {
-	                throw QString ("SQL - Error: storeSettingsFromStorage");
-	            }
+		q.prepare("UPDATE settings set value=:value WHERE key=:key;");
+		q.bindValue(":key", key);
+		q.bindValue(":value", value);
 
-	            return;
-	        }
+		if (!q.exec()) {
+			throw QString ("SQL - Error: update setting " + key);
+		}
 
-	        if(str2insert != ""){
-				q.prepare("UPDATE settings set value=? WHERE key='EQ_pr_custom'");
-				q.addBindValue(str2insert);
-
-				if (!q.exec()) {
-					throw QString ("SQL - Error: storeSettingsFromStorage");
-				}
-				else{
-					qDebug() << "inserted successfully";
-				}
-	        }
-	    }
-
-	    catch (QString ex) {
-	        qDebug() << "Error during inserting of equalizer into database";
-	        qDebug() << ex;
-	    }
+		else{
+			qDebug() << "Updated " << key;
+		}
+	}
+	catch (QString ex) {
+		qDebug() << ex;
+	}
 }
+

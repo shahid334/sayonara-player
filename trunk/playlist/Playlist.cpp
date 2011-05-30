@@ -54,7 +54,7 @@ void Playlist::createPlaylist(QStringList& pathlist){
 	}
 
 	emit mp3s_loaded_signal(100);
-	emit playlist_created(_v_meta_data);
+	emit playlist_created(_v_meta_data, _cur_play_idx);
 }
 
 
@@ -73,7 +73,7 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 	}
 
 
-	emit playlist_created(_v_meta_data);
+	emit playlist_created(_v_meta_data, _cur_play_idx);
 
 
 }
@@ -89,7 +89,7 @@ void Playlist::remove_row(int row){
 
 	_v_meta_data.erase(this->_v_meta_data.begin() + row);
 
-	emit playlist_created(_v_meta_data);
+	emit playlist_created(_v_meta_data, _cur_play_idx);
 }
 
 
@@ -117,7 +117,7 @@ void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 	_v_meta_data.clear();
 	_v_meta_data = new_vec;
 
-	emit playlist_created(_v_meta_data);
+	emit playlist_created(_v_meta_data, _cur_play_idx);
 }
 
 
@@ -144,6 +144,29 @@ void Playlist::insert_artists(const vector<Artist>& v_artists, int idx){
 	}
 }
 
+
+void Playlist::play(){
+
+	if(_v_meta_data.size() <= 0) return;
+
+	if(_cur_play_idx <= -1){
+		_cur_play_idx = 0;
+		emit selected_file_changed(_cur_play_idx);
+		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+	}
+
+	else{
+		emit goon_playing();
+	}
+
+}
+
+void Playlist::stop(){
+
+	_cur_play_idx = -1;
+	emit no_track_to_play();
+	emit playlist_created(_v_meta_data, _cur_play_idx);
+}
 
 void Playlist::forward(){
 
@@ -247,6 +270,8 @@ void Playlist::clear_playlist(){
 
 	_v_meta_data.clear();
 	_cur_play_idx = -1;
+	emit playlist_created(_v_meta_data, _cur_play_idx);
+
 }
 
 // GUI -->
@@ -292,7 +317,7 @@ void Playlist::edit_id3_request(){
 
 void Playlist::id3_tags_changed(vector<MetaData>& new_meta_data){
 	_v_meta_data = new_meta_data;
-	emit playlist_created(_v_meta_data);
-	if(_cur_play_idx >= 0 && _cur_play_idx < _v_meta_data.size())
+	emit playlist_created(_v_meta_data, _cur_play_idx);
+	if(_cur_play_idx >= 0 && _cur_play_idx < (int) _v_meta_data.size())
 		emit cur_played_info_changed(_v_meta_data[_cur_play_idx]);
 }

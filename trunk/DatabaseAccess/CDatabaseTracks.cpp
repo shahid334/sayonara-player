@@ -128,6 +128,8 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
         qDebug() << er.databaseText();
         return -1;
     }
+
+   // m_database.close();
     return 0;
 }
 
@@ -207,7 +209,7 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	        qDebug() << er.databaseText();
 	    }
 
-	    m_database.close();
+	   // m_database.close();
 }
 
 
@@ -295,7 +297,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 		qDebug() << er.databaseText();
 	}
 
-	m_database.close();
+	//m_database.close();
 }
 
 
@@ -364,4 +366,6 @@ void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaD
 		qDebug() << er.databaseText();
 		qDebug() << er.databaseText();
 	}
+
+	//m_database.close();
 }

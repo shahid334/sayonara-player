@@ -83,12 +83,14 @@ void GUI_Playlist::update_progress_bar(int percent){
 	this->ui->pl_progress_bar->setValue(percent);*/
 }
 
-void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
+void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_pli_model->insertRows(0, v_metadata.size());
 	_total_secs = 0;
 	int idx = 0;
+
+	_cur_playing_row = cur_play_idx;
 
 	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
 
@@ -99,14 +101,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 		_total_secs += (min * 60 + sek);
 
 		QString time_str = Helper::cvtSomething2QString(min, 2) + ":" + Helper::cvtSomething2QString(sek, 2);
-
-
-		/*QString str = 	it->artist +
-						" - " +
-						it->title +
-						"      (" +
-						 time_str +
-						")";*/
 
 		QStringList str4Playlist = it->toStringList();
 
@@ -127,8 +121,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata){
 	// nur ein test TODO: REMOVE ME
 	emit playlist_filled(v_metadata);
 }
-
-
 
 void GUI_Playlist::clear_playlist_slot(){
 	this->ui->lab_totalTime->setText("Total Time: 0m 0s");

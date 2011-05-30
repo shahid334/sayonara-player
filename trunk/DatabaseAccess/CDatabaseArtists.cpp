@@ -174,7 +174,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 
 			}
 
-			m_database.close();
+
 
 
 }

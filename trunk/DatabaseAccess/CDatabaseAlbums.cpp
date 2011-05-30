@@ -129,7 +129,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result){
 		qDebug() << er.databaseText();
 	}
 
-	m_database.close();
+
 }
 
 
@@ -208,7 +208,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 		qDebug() << er.databaseText();
 	}
 
-	m_database.close();
+
 }
 
 

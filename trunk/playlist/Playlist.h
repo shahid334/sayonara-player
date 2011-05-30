@@ -59,7 +59,7 @@ public:
 	virtual ~Playlist();
 
 	signals:
-		void playlist_created(vector<MetaData>&);
+		void playlist_created(vector<MetaData>&, int);
 		void selected_file_changed_md(const MetaData&);
 		void selected_file_changed(int row);
 		void no_track_to_play();
@@ -67,6 +67,7 @@ public:
 		void mp3s_loaded_signal(int percent);
 		void data_for_id3_change(const vector<MetaData>&);
 		void cur_played_info_changed(const MetaData&);
+		void goon_playing();
 
 	public slots:
 
@@ -81,6 +82,8 @@ public:
 		void clear_playlist();
 		void save_playlist(const QString&);
 
+		void play();
+		void stop();
 		void forward();
 		void backward();
 

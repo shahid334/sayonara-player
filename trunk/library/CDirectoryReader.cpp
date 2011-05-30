@@ -11,6 +11,8 @@ CDirectoryReader::CDirectoryReader () {
     this-> m_filters.push_back("*.wav");
     this-> m_filters.push_back("*.flac");
     this->m_filters.push_back("*.aac");
+    this->m_filters.push_back("*.avi");
+    this->m_filters.push_back("*.");
 }
 CDirectoryReader::~CDirectoryReader () {
 

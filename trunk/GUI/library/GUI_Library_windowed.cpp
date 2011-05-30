@@ -159,35 +159,36 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	Q_UNUSED(e);
 
-
-
 	QSize tmpSize = this->ui->tb_title->size();
 	int width = tmpSize.width();
-	if(width > 450){
-		this->ui->tb_title->setColumnWidth(0, width * 0.03);
-		this->ui->tb_title->setColumnWidth(1, width * 0.30);
-		this->ui->tb_title->setColumnWidth(2, width * 0.21);
-		this->ui->tb_title->setColumnWidth(3, width * 0.21);
-		this->ui->tb_title->setColumnWidth(4, width * 0.07);
-		this->ui->tb_title->setColumnWidth(5, width * 0.07);
-		this->ui->tb_title->setColumnWidth(6, width * 0.12);
+	int resisable_content = width - (80 + 80 + 80 + 20 ) -20;
+
+
+//	if(width > 450){
+		this->ui->tb_title->setColumnWidth(0, 20);
+		this->ui->tb_title->setColumnWidth(1, resisable_content * 0.40);
+		this->ui->tb_title->setColumnWidth(2, resisable_content * 0.30);
+		this->ui->tb_title->setColumnWidth(3, resisable_content * 0.30);
+		this->ui->tb_title->setColumnWidth(4, 80);
+		this->ui->tb_title->setColumnWidth(5, 80);
+		this->ui->tb_title->setColumnWidth(6, 80);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
 
-	}
+//	}
 
-	else {
+	/*else {
 		this->ui->tb_title->setColumnWidth(0, width * 0.10);
 		this->ui->tb_title->setColumnWidth(1, width * 0.25);
 		this->ui->tb_title->setColumnWidth(2, width * 0.25);
 		this->ui->tb_title->setColumnWidth(3, width * 0.25);
 		this->ui->tb_title->setColumnWidth(4, 80);
 		this->ui->tb_title->setColumnWidth(5, 80);
-		this->ui->tb_title->setColumnWidth(6, 90);
+		this->ui->tb_title->setColumnWidth(6, 80);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
 
-	}
+	}*/
 
 	this->ui->lv_album->setColumnWidth(0, 20);
 	this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 20);

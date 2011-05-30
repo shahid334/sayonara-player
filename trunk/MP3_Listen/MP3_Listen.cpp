@@ -35,6 +35,7 @@
 #include <phonon/effectparameter.h>
 #include <phonon/path.h>
 #include <phonon/audiodataoutput.h>
+#include <phonon/videoplayer.h>
 /*
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -54,17 +55,8 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	/*_f = new float[512];
-	_m = new int[10];
-	_img = cvCreateImage(cvSize(100, 100), IPL_DEPTH_8U, 1);
-	cvNamedWindow("win");
-
-	_ado = new Phonon::AudioDataOutput();
-	_ado->setDataSize(512);*/
-
-
 	qDebug() << "   1/4 phonon init output";
-	_audio_output = new Phonon::AudioOutput(Phonon::MusicCategory, this);
+	_audio_output = new Phonon::AudioOutput(Phonon::VideoCategory, this);
 
 	qDebug() << "   2/4 phonon init media object";
 	_media_object = new Phonon::MediaObject(this);
@@ -72,14 +64,13 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 
 	qDebug() << "   3/4 phonon create path";
 	_audio_path = Phonon::createPath(_media_object, _audio_output);
-	//_audio_path_ado = Phonon::createPath(_media_object, _ado);
 	_eq_type = EQ_TYPE_NONE;
 
 
 	qDebug() << "   4/4 phonon connections";
 	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
-//	connect(_ado, SIGNAL(dataReady(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16>> &)), this, SLOT(handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & ) ));
+	connect(_media_object, SIGNAL(totalTimeChanged ( qint64)), this, SLOT(total_time_changed(qint64)));
 
 
 }
@@ -127,7 +118,9 @@ void MP3_Listen::changeTrack(const QString & filepath){
 
 	
 	_media_object->setCurrentSource( Phonon::MediaSource(filepath) );
-	_meta_data = ID3::getMetaDataOfFile(filepath);
+	MetaData md = ID3::getMetaDataOfFile(filepath );
+	if(_media_object->hasVideo()) md.length_ms = _meta_data.length_ms;
+	_meta_data = md;
 
 	//_media_object->play();
 	_state = STATE_PLAY;
@@ -135,7 +128,7 @@ void MP3_Listen::changeTrack(const QString & filepath){
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	play();
+	if(!_media_object->hasVideo()) play();
 
 }
 
@@ -143,7 +136,9 @@ void MP3_Listen::changeTrack(const QString & filepath){
 void MP3_Listen::changeTrack(const MetaData & metadata){
 
 	_media_object->setCurrentSource( Phonon::MediaSource(metadata.filepath) );
-	_meta_data = ID3::getMetaDataOfFile( metadata.filepath );
+	MetaData md = ID3::getMetaDataOfFile( metadata.filepath );
+	if(_media_object->hasVideo()) md.length_ms = _meta_data.length_ms;
+	_meta_data = md;
 
 	//_media_object->play();
 	//_state = STATE_PLAY;
@@ -153,10 +148,20 @@ void MP3_Listen::changeTrack(const MetaData & metadata){
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	play();
+	if(!_media_object->hasVideo()) play();
 
 }
 
+
+void MP3_Listen::total_time_changed(qint64 total_time){
+
+	//qDebug() << "total time changed";
+	if(this->_media_object->hasVideo()){
+		emit total_time_changed_signal(total_time);
+		_meta_data.length_ms = total_time;
+		play();
+	}
+}
 
 const MetaData & MP3_Listen::getMetaData() const {
 	return _meta_data;
@@ -192,7 +197,7 @@ void MP3_Listen::finished(){
 
 void MP3_Listen::setVolume(qreal vol){
 
-    _audio_output->setVolume(vol/100);
+    _audio_output->setVolume(vol / 100.0);
 }
 
 

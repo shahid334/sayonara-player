@@ -52,7 +52,7 @@
 
 		public slots:
 			void update_progress_bar(int);
-			void fillPlaylist(vector<MetaData>&);
+			void fillPlaylist(vector<MetaData>&, int);
 			void track_changed(int);
 			void change_skin(bool);
 

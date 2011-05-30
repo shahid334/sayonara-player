@@ -76,11 +76,13 @@ int main(int argc, char *argv[]){
         qDebug() << "Setup connections";
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(fileSelected(QStringList &)),		&playlist, 	SLOT(createPlaylist(QStringList&)));
-        app.connect (&player, SIGNAL(play()),							&listen,	SLOT(play()));
-        app.connect (&player, SIGNAL(stop()),							&listen,	SLOT(stop()));
+        app.connect (&player, SIGNAL(play()),							&playlist,	SLOT(play()));
+        app.connect (&player, SIGNAL(stop()),							&playlist,	SLOT(stop()));
         app.connect (&player, SIGNAL(forward()),						&playlist,	SLOT(forward()));
         app.connect (&player, SIGNAL(backward()),						&playlist,	SLOT(backward()));
         app.connect (&player, SIGNAL(pause()),							&listen,	SLOT(pause()));
+
+
         app.connect (&player, SIGNAL(search(int)),						&listen,	SLOT(jump(int)));
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
@@ -93,11 +95,12 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&cover, 	SLOT(search_cover(const MetaData&)));
+        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(update_track(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed(int)), 				&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(no_track_to_play()),							&listen,		SLOT(stop()));
-        app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&)));
+        app.connect (&playlist, SIGNAL(goon_playing()), 							&listen,		SLOT(play()));
+        app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&, int)), 	&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&, int)));
         app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 					&ui_playlist, 	SLOT(update_progress_bar(int)));
-        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(update_track(const MetaData&)));
         app.connect( &playlist, SIGNAL(cur_played_info_changed(const MetaData&)),   &player,  		SLOT(update_info(const MetaData&)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 				&playlist, 		SLOT(change_track(int)));
@@ -115,6 +118,7 @@ int main(int argc, char *argv[]){
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
         app.connect (&listen,	SIGNAL(eq_presets_loaded(const vector<EQ_Setting>&)), &ui_eq,		SLOT(fill_eq_presets(const vector<EQ_Setting>&)));
         app.connect( &listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 		SLOT(fill_available_equalizers(const QStringList&)));
+        app.connect( &listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,		SLOT(total_time_changed(qint64)));
 
         app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
 
@@ -142,8 +146,10 @@ int main(int argc, char *argv[]){
 		app.connect(&ui_tagedit, SIGNAL(id3_tags_changed(vector<MetaData>&)), &playlist, SLOT(id3_tags_changed(vector<MetaData>&)));
 
 
+		int vol = set->getVolume();
+        player.setVolume(vol);
+        listen.setVolume(vol);
 
-        player.setVolume(50);
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
@@ -160,7 +166,7 @@ int main(int argc, char *argv[]){
 		 *
 		 */
 
-		player.setWindowTitle("Sayonara (0.6.0528e)");
+		player.setWindowTitle("Sayonara (0.6.0530e)");
 		player.show();
 
 
@@ -182,6 +188,7 @@ int main(int argc, char *argv[]){
 			ui_library.setGeometry(rect);
 
 		player.showEqualizer(false);
+
         library.loadDataFromDb();
         QString user, password;
         set->getLastFMNameAndPW(user, password);

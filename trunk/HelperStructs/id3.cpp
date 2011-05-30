@@ -23,6 +23,11 @@ MetaData ID3::getMetaDataOfFile(QString file){
 	MetaData md;
 	TagLib::FileRef f(TagLib::FileName(file.toUtf8()));
 
+		md.filepath = file;
+
+		int idx = md.filepath.lastIndexOf('/');
+		md.title = md.filepath.right(md.filepath.length() - idx -1);
+		md.title = md.title.left(md.title.length() - 4);
 
 		if(f.isNull()) return md;
 		string artist = f.tag()->artist().to8Bit(true);
@@ -48,7 +53,7 @@ MetaData ID3::getMetaDataOfFile(QString file){
 
 
 		if(md.title.length() == 0){
-			int idx = md.filepath.lastIndexOf('/');
+			idx = md.filepath.lastIndexOf('/');
 			md.title = md.filepath.right(md.filepath.length() - idx -1);
 			md.title = md.title.left(md.title.length() - 4);
 		}
@@ -64,8 +69,13 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
 
 
+		md.filepath = file;
+		int idx = md.filepath.lastIndexOf('/');
+		md.title = md.filepath.right(md.filepath.length() - idx -1);
+		md.title = md.title.left(md.title.length() - 4);
 
 		if(f.isNull()) return;
+
 		string artist = f.tag()->artist().to8Bit(true);
 		string album = f.tag()->album().to8Bit(true);
 		string title = f.tag()->title().to8Bit(true);
@@ -89,7 +99,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
 
 		if(md.title.length() == 0){
-			int idx = md.filepath.lastIndexOf('/');
+			idx = md.filepath.lastIndexOf('/');
 			md.title = md.filepath.right(md.filepath.length() - idx -1);
 			md.title = md.title.left(md.title.length() - 4);
 		}

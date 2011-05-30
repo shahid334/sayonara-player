@@ -76,6 +76,7 @@ private slots:
     void forwardClicked(bool b = true);
     void fileSelectedClicked(bool);
     void folderSelectedClicked(bool);
+    void total_time_changed(qint64);
     void searchSliderPressed();
     void searchSliderReleased();
     void searchSliderMoved(int search_percent);

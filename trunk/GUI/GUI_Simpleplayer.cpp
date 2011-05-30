@@ -1,6 +1,7 @@
 #include "GUI/GUI_Simpleplayer.h"
 #include "ui_GUI_Simpleplayer.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QDebug>
 
@@ -26,6 +27,12 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
     m_minTriggerByTray = false;
     m_minimized2tray = false;
+
+    QSize size = CSettingsStorage::getInstance()->getPlayerSize();
+    QRect rect = this->geometry();
+    rect.setWidth( size.width() );
+    rect.setHeight( size.height() );
+    setGeometry(rect);
 
     connect(this ->ui ->  play, SIGNAL(clicked(bool)),this,SLOT(playClicked(bool)));
     connect(this ->ui ->  fw, SIGNAL(clicked(bool)),this,SLOT(forwardClicked(bool)));
@@ -176,6 +183,13 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 }
 
 
+void GUI_SimplePlayer::total_time_changed(qint64 total_time){
+	m_completeLength_ms = total_time;
+	this->ui->maxTime->setText(getLengthString(total_time));
+
+}
+
+
 void GUI_SimplePlayer::setCurrentPosition (quint32 pos_sec) {
 
     if (m_completeLength_ms != 0) {
@@ -287,8 +301,8 @@ void GUI_SimplePlayer::searchSliderMoved(int search_percent){
 void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
 
 	setupVolButton(volume_percent);
-
-    emit volumeChanged((qreal)volume_percent);
+    emit volumeChanged(volume_percent * 1.0);
+    CSettingsStorage::getInstance()->setVolume(volume_percent);
 }
 
 void GUI_SimplePlayer::setupVolButton(int percent){
@@ -524,9 +538,9 @@ QWidget* GUI_SimplePlayer::getParentOfEqualizer(){
 }
 
 
-
 void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
 	ui_playlist = playlist;
+
 }
 
 
@@ -548,6 +562,8 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
 	this->ui_eq->resize(this->ui->eq_widget->size());
+
+	CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }
 
 
@@ -577,11 +593,20 @@ void GUI_SimplePlayer::initGUI(){
 void GUI_SimplePlayer::setLibraryPathClicked(bool b){
 	Q_UNUSED(b);
 
+	QString start_dir = getenv("$HOME");
+	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
+	if(old_dir != "")
+		start_dir = old_dir;
+
 	 QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-								getenv("$HOME"),
+								old_dir,
 								QFileDialog::ShowDirsOnly);
-	    if(dir != "")
-	    	emit libpath_changed(dir);
+	if(dir != ""){
+		emit libpath_changed(dir);
+		CSettingsStorage::getInstance()->setLibraryPath(dir);
+	}
+
+
 }
 
 

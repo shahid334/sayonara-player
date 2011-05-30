@@ -1,3 +1,4 @@
+#include "HelperStructs/CSettingsStorage.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/id3.h"
 #include <QDebug>
@@ -27,6 +28,9 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 void CLibraryBase::reloadLibrary(){
 
+	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+
+
 	if(m_library_path.length() == 0) {
 		QMessageBox msgBox;
 		msgBox.setText("Please select your library first");
@@ -41,7 +45,10 @@ void CLibraryBase::reloadLibrary(){
 			return;
 		}
 
-		else m_library_path = dir;
+		else {
+			m_library_path = dir;
+			CSettingsStorage::getInstance()->setLibraryPath(dir);
+		}
 	}
 
 

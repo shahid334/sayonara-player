@@ -96,10 +96,9 @@ public:
 	/********************************************
 	 * SETTINGS
 	 *******************************************/
-		void load_settings_eq();
-		void store_settings_eq();
-		void load_settings_lastfm();
-	    void store_settings_lastfm ();
+		void load_setting(QString key, QVariant& val);
+		void store_setting(QString key, QVariant val);
+
 
 
 

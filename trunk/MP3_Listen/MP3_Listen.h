@@ -94,6 +94,7 @@ public:
 		void track_finished();
 		void eq_presets_loaded(const vector<EQ_Setting>&);
 		void eq_found(const QStringList&);
+		void total_time_changed_signal(qint64);
 
 
 
@@ -119,6 +120,7 @@ public:
         void timeChanged(qint64 time);
         void finished();
         void handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & );
+        void total_time_changed(qint64);
 
 
 	public:

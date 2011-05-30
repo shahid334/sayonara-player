@@ -3,7 +3,9 @@
 
 #include <QString>
 #include <QPair>
+#include <QSize>
 #include <vector>
+
 #include <HelperStructs/Equalizer_presets.h>
 using namespace std;
 
@@ -43,13 +45,9 @@ public:
     //TODO hash
     QPair<QString,QString> getLastFMNameAndPW ();
 
-    void getLastFMNameAndPW (QString & name, QString & pw);
 
-    void setLastFMNameAndPW (const QString & name,const QString & pw);
 
-    void getEqualizerSettings(vector<EQ_Setting>& vec);
 
-    void setEqualizerSettings(const vector<EQ_Setting>& vec);
 
 
 private:
@@ -61,8 +59,42 @@ private:
     CSettingsStorage& operator=(const CSettingsStorage&);
 
     QString m_dbFile, m_sayonaraPath, m_dbSource;
+
+    // last fm
     QPair<QString,QString> m_lastFm;
+
+    // listen
+    int	m_volume;
+    int m_last_eq;
+
     vector<EQ_Setting> m_vec_eqSettings;
+
+    QSize m_player_size;
+
+
+    // library
+    QString m_library_path;
+
+public:
+    void getLastFMNameAndPW (QString & name, QString & pw);
+    void setLastFMNameAndPW (const QString & name,const QString & pw);
+
+    int getVolume();
+    void setVolume(int vol);
+
+	void setLastEqualizer(int);
+	int getLastEqualizer();
+
+	EQ_Setting getCustomEqualizer();
+	void getEqualizerSettings(vector<EQ_Setting>& vec);
+	void setEqualizerSettings(const vector<EQ_Setting>& vec);
+
+	QString getLibraryPath();
+	void setLibraryPath(QString path);
+
+	QSize getPlayerSize();
+	void setPlayerSize(QSize size);
+
 };
 
 #endif // CSettingsStorage_H

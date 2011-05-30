@@ -44,7 +44,7 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
 	connect(this->_ui->sli_9, SIGNAL(valueChanged(int)), this, SLOT(sli_9_changed(int)));
 
 	connect(this->_ui->but_enabled, SIGNAL(toggled(bool)), this, SLOT(but_enabled_changed(bool)));
-	connect(this->_ui->combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
+
 	connect(this->_ui->btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
 
 }
@@ -105,6 +105,17 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 		this->_ui->combo_presets->insertItem(i, presets[i].name);
 
 	}
+
+	int last_idx = CSettingsStorage::getInstance()->getLastEqualizer();
+	qDebug() << "last IDx " << last_idx;
+	if(last_idx < presets.size() ){
+
+		this->_ui->combo_presets->setCurrentIndex(last_idx);
+		preset_changed(last_idx);
+	}
+
+
+	connect(this->_ui->combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
 }
 
 
@@ -133,6 +144,10 @@ void GUI_Equalizer::preset_changed(int index){
 
 		emit eq_changed_signal(i, val);
 	}
+
+
+	CSettingsStorage::getInstance()->setLastEqualizer(index);
+
 }
 
 

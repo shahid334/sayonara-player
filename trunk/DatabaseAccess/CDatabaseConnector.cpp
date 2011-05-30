@@ -66,12 +66,7 @@ bool CDatabaseConnector::openDatabase () {
 
 CDatabaseConnector::~CDatabaseConnector() {
 
-	 if (!this -> m_database.isOpen()) {
-		 this->m_database.open();
-	 }
-
-	this -> store_settings_eq();
-	this -> store_settings_lastfm();
+	store_settings();
 
 
     if (this -> m_database.isOpen()) {
