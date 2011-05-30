@@ -572,7 +572,7 @@
          <x>0</x>
          <y>0</y>
          <width>335</width>
-         <height>338</height>
+         <height>312</height>
         </rect>
        </property>
       </widget>
@@ -601,6 +601,13 @@
       </property>
      </widget>
     </item>
+    <item row="7" column="0" colspan="7">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
     <item row="8" column="0" rowspan="2" colspan="7">
      <widget class="QWidget" name="eq_widget" native="true">
       <property name="sizePolicy">
@@ -612,21 +619,14 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>120</height>
+        <height>146</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>120</height>
+        <height>146</height>
        </size>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0" colspan="7">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>

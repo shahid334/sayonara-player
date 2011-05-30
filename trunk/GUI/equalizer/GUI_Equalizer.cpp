@@ -13,7 +13,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 
 #include <QObject>
-#include <QWidget>
+#include <QDockWidget>
 #include <QDebug>
 #include <QMessageBox>
 
@@ -23,7 +23,7 @@
 
 using namespace std;
 
-GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QWidget(parent) {
+GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 
 	this->_ui = new Ui_GUI_Equalizer( );
 	this->_ui->setupUi(this);
@@ -57,33 +57,43 @@ GUI_Equalizer::~GUI_Equalizer() {
 
 
 void GUI_Equalizer::sli_0_changed(int new_val){
+	this->_ui->label->setText(QString::number(new_val));
 	emit eq_changed_signal(0, new_val);
 }
 void GUI_Equalizer::sli_1_changed(int new_val){
+	this->_ui->label_2->setText(QString::number(new_val));
 	emit eq_changed_signal(1, new_val);
 }
 void GUI_Equalizer::sli_2_changed(int new_val){
+	this->_ui->label_3->setText(QString::number(new_val));
 	emit eq_changed_signal(2, new_val);
 }
 void GUI_Equalizer::sli_3_changed(int new_val){
+	this->_ui->label_4->setText(QString::number(new_val));
 	emit eq_changed_signal(3, new_val);
 }
 void GUI_Equalizer::sli_4_changed(int new_val){
+	this->_ui->label_5->setText(QString::number(new_val));
 	emit eq_changed_signal(4, new_val);
 }
 void GUI_Equalizer::sli_5_changed(int new_val){
+	this->_ui->label_6->setText(QString::number(new_val));
 	emit eq_changed_signal(5, new_val);
 }
 void GUI_Equalizer::sli_6_changed(int new_val){
+	this->_ui->label_7->setText(QString::number(new_val));
 	emit eq_changed_signal(6, new_val);
 }
 void GUI_Equalizer::sli_7_changed(int new_val){
+	this->_ui->label_8->setText(QString::number(new_val));
 	emit eq_changed_signal(7, new_val);
 }
 void GUI_Equalizer::sli_8_changed(int new_val){
+	this->_ui->label_9->setText(QString::number(new_val));
 	emit eq_changed_signal(8, new_val);
 }
 void GUI_Equalizer::sli_9_changed(int new_val){
+	this->_ui->label_10->setText(QString::number(new_val));
 	emit eq_changed_signal(9, new_val);
 }
 
@@ -193,4 +203,10 @@ void GUI_Equalizer::btn_preset_clicked(){
 		if(custom_idx != -1) this->_ui->combo_presets->setCurrentIndex(custom_idx);
 	}
 
+}
+
+
+void 	GUI_Equalizer::closeEvent ( QCloseEvent * event ){
+	event->ignore();
+	emit close_event();
 }

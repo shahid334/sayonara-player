@@ -145,6 +145,7 @@ int main(int argc, char *argv[]){
 
         app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), &listen, SLOT(eq_changed(int, int)));
         app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), &listen, SLOT(eq_enable(bool)));
+        app.connect(&ui_eq, SIGNAL(close_event()), &player, SLOT(close_eq()));
 
         app.connect(&ui_playlist, SIGNAL(edit_id3_signal()), &playlist, SLOT(edit_id3_request()));
         app.connect(&playlist, SIGNAL(data_for_id3_change(const vector<MetaData>&)), &ui_tagedit, SLOT(change_meta_data(const vector<MetaData>&)));

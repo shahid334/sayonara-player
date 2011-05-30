@@ -56,6 +56,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this, SLOT(reloadLibraryClicked(bool)));
     connect(this->ui->action_setLibPath, SIGNAL(triggered(bool)), this, SLOT(setLibraryPathClicked(bool)));
     connect(this->ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this, SLOT(fetch_all_covers_clicked(bool)));
+   // connect(this->ui->eq_widget, SIGNAL(closed()), this, SLOT(show_equalizer()));
+
 
 
     ui_playlist = 0;
@@ -383,6 +385,12 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 		rect.setTop(rect.top() + this->ui_eq->height());
 		rect.setHeight( this->ui_playlist->height() - this->ui_eq->height() );
 		rect.setWidth( this->ui_playlist->width());
+
+		QRect rect2 = this->ui_eq->geometry();
+		rect2.setWidth(this->ui_playlist->width());
+
+		this->ui_eq->setGeometry(rect2);
+
 		this->ui->eq_widget->show();
 
 	}
@@ -390,6 +398,7 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 	else {
 		this->ui->eq_widget->hide();
 		rect.setHeight( this->ui_playlist->height() + this->ui_eq->height() );
+		this->ui->action_ViewEqualizer->setChecked(false);
 
 	}
 
@@ -399,6 +408,10 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 
 }
 
+
+void GUI_SimplePlayer::close_eq(){
+	showEqualizer(false);
+}
 
 void GUI_SimplePlayer::changeEvent(QEvent *event){
 
@@ -505,14 +518,25 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e){
 
+	qDebug() << e->key();
 	switch(e->key()){
-		case Qt::Key_Play:
+		case Qt::Key_MediaPlay:
 
-			cout << "play" << endl;
+			playClicked(true);
 			break;
-		case Qt::Key_Stop:
+		case Qt::Key_MediaStop:
 
-			cout << "stop" << endl;
+			stopClicked();
+			break;
+
+		case Qt::Key_MediaNext:
+
+			forwardClicked(true);
+			break;
+
+		case Qt::Key_MediaPrevious:
+
+			backwardClicked(true);
 			break;
 
 		case Qt::Key_E:

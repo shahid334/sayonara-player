@@ -11,15 +11,15 @@
 #include "HelperStructs/Equalizer_presets.h"
 
 #include <QObject>
-#include <QWidget>
-
+#include <QDockWidget>
+#include <QCloseEvent>
 #include <ui_GUI_equalizer.h>
 
 #include <vector>
 
 using namespace std;
 
-class GUI_Equalizer : public QWidget, private Ui_GUI_Equalizer{
+class GUI_Equalizer : public QDockWidget, private Ui_GUI_Equalizer{
 
 	Q_OBJECT
 
@@ -31,6 +31,7 @@ public:
 		void eq_changed_signal(int, int);
 		void eq_enabled_signal(bool);
 		void eq_changed_level_signal(int);
+		void close_event();
 
 
 	private slots:
@@ -52,6 +53,10 @@ public:
 	public slots:
 		void fill_eq_presets(const vector<EQ_Setting>&);
 		void fill_available_equalizers(const QStringList&);
+
+	protected:
+		void 	closeEvent ( QCloseEvent * event );
+
 
 	private:
 		Ui_GUI_Equalizer* _ui;

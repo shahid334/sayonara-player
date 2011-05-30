@@ -34,13 +34,15 @@ public slots:
       */
 	void cover_changed(QPixmap&);
     void fillSimplePlayer (const MetaData & in);
-    void showEqualizer(bool);
+    void showEqualizer(bool b=false);
 
     /**
       * Set current position in filestream
       */
     void setCurrentPosition (quint32 pos_sec);
     void update_info(const MetaData&);
+    void close_eq();
+
 
 
 
