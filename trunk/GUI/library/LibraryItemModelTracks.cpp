@@ -173,6 +173,7 @@ QVariant LibraryItemModelTracks::headerData ( int section, Qt::Orientation orien
 			 case COL_ALBUM: return tr("Album");
 			 case COL_LENGTH: return tr("Length");
 			 case COL_YEAR: return tr("Year");
+			 case COL_BITRATE: return tr("Bitrate");
 
 			 default:
 				 return QVariant();

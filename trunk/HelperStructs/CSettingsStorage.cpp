@@ -1,5 +1,7 @@
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+
 
 #include <QFile>
 #include <QDir>
@@ -46,8 +48,8 @@ bool CSettingsStorage::runFirstTime (bool deleteOld) {
         }
         if (!dest.exists()) {
 
-            qDebug() << "cp " << QDir::currentPath() + QDir::separator() + m_dbSource << " " << dir.absolutePath() + QDir::separator() + m_dbFile;
-            if (QFile::copy(QDir::currentPath() + QDir::separator() +m_dbSource, dir.absolutePath() + QDir::separator()+ m_dbFile)) {
+            qDebug() << "cp " << Helper::getIconPath() + m_dbSource << " " << dir.absolutePath() + QDir::separator() + m_dbFile;
+            if (QFile::copy(Helper::getIconPath() + m_dbSource, dir.absolutePath() + QDir::separator()+ m_dbFile)) {
                qDebug() << "DB File has been copied to " <<   dir.absolutePath() + QDir::separator()+ m_dbFile;
             }
             else {

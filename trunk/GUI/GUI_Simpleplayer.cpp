@@ -15,7 +15,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     ui->setupUi(this);
     initGUI();
 
-    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "gui.jpg")));
+    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
     this -> m_playing = false;
     this -> m_cur_searching = false;
     this -> m_mute = false;
@@ -80,7 +80,7 @@ void GUI_SimplePlayer::setVolume(int vol){
 
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
-		this->ui->centralwidget->setStyleSheet("background-color: rgb(84, 84, 84);\ncolor: rgb(255, 255, 255);");
+		this->ui->centralwidget->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
 				m_skinSuffix = QString("_dark");
 	}
 

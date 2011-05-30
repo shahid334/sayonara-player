@@ -243,7 +243,7 @@
        <set>Qt::ImhNone</set>
       </property>
       <property name="text">
-       <string>Title</string>
+       <string>Sayonara Player</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
@@ -279,7 +279,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>****</string>
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -297,7 +297,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Album</string>
+       <string>Written by Lucio Carreras</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -324,7 +324,7 @@
        <enum>QFrame::Plain</enum>
       </property>
       <property name="text">
-       <string>Artist</string>
+       <string/>
       </property>
       <property name="textFormat">
        <enum>Qt::AutoText</enum>
@@ -469,7 +469,7 @@
        </font>
       </property>
       <property name="text">
-       <string>04:50</string>
+       <string>00:00</string>
       </property>
      </widget>
     </item>

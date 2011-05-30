@@ -292,7 +292,7 @@ void CoverLookup::download_covers(uint num){
 		// get a few more adresses, maybe many images are dead
 		_cover_adresses = calc_adresses_from_webpage(num * 2);
 		if(_cover_adresses.size() == 0) {
-			QPixmap pixmap = QPixmap::fromImage(QImage("Covers/gui.jpg"));
+			QPixmap pixmap = QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png"));
 			_pixmaps.push_back(pixmap);
 
 			return;

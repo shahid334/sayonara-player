@@ -28,6 +28,8 @@
 #include <QtCore>
 #include <QPointer>
 #include <QApplication>
+#include <QFile>
+#include <QDir>
 
 #include <string>
 #include <vector>
@@ -39,6 +41,10 @@ using namespace std;
 
 
 int main(int argc, char *argv[]){
+
+		if(!QFile::exists(QDir::homePath() + ".Sayonara")){
+			QDir().mkdir(QDir::homePath() + ".Sayonara");
+		}
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);
