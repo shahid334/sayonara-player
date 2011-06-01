@@ -82,20 +82,10 @@ void LastFM::scrobble(const MetaData& metadata){
 		started = mktime(ptm);
 	}
 
-
-	char* title = new char[metadata.title.toStdString().length()+1];
-	char* album = new char[metadata.album.toStdString().length()+1];
-	char* artist = new char[metadata.artist.toStdString().length()+1];
-
-	strcpy (title, metadata.title.toStdString().c_str());
-	strcpy (artist, metadata.artist.toStdString().c_str());
-	strcpy (album, metadata.album.toStdString().c_str());
-
-	LASTFM_track_scrobble(_session, title, album, artist,started, metadata.length_ms /1000,0,0,NULL);
-
-	delete title;
-	delete album;
-	delete artist;
+	LASTFM_track_scrobble(_session, metadata.title.toLocal8Bit().data(),
+							metadata.album.toLocal8Bit().data(),
+							metadata.artist.toLocal8Bit().data(),
+							started, metadata.length_ms /1000,0,0,NULL);
 
 	cout << "LastFM: " << LASTFM_status(_session) << endl;
 }
@@ -124,20 +114,12 @@ void LastFM::update_track(const MetaData& metadata){
 	}
 
 
-	char* title = new char[metadata.title.toStdString().length()+1];
-	char* album = new char[metadata.album.toStdString().length()+1];
-	char* artist = new char[metadata.artist.toStdString().length()+1];
+	LASTFM_track_update_now_playing(_session,
+					metadata.title.toLocal8Bit().data(),
+					metadata.album.toLocal8Bit().data(),
+					metadata.artist.toLocal8Bit().data(),
+					metadata.length_ms/1000, 0, 0);
 
-	strcpy (title, metadata.title.toStdString().c_str());
-	strcpy (artist, metadata.artist.toStdString().c_str());
-	strcpy (album, metadata.album.toStdString().c_str());
-
-	LASTFM_track_update_now_playing(_session, title, album, artist, metadata.length_ms/1000, 0, 0);
-
-
-	delete title;
-	delete album;
-	delete artist;
 
 	cout << "LastFM: " << LASTFM_status(_session) << endl;
 

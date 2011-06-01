@@ -81,7 +81,7 @@ private slots:
     void total_time_changed(qint64);
     void searchSliderPressed();
     void searchSliderReleased();
-    void searchSliderMoved(int search_percent);
+    void searchSliderMoved(int search_percent, bool by_app=false);
     void volumeChangedSlider(int volume_percent);
     void coverClicked(bool);
     void showAgain(QSystemTrayIcon::ActivationReason);

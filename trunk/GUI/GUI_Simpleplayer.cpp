@@ -83,12 +83,15 @@ void GUI_SimplePlayer::setVolume(int vol){
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
 		this->ui->centralwidget->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
+		this->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
+
 				m_skinSuffix = QString("_dark");
 	}
 
 	else {
 		this->ui->centralwidget->setStyleSheet("");
 		this->ui->playlist_widget->setStyleSheet("");
+		this->setStyleSheet("");
 		m_skinSuffix = QString("");
 	}
 
@@ -248,6 +251,15 @@ void GUI_SimplePlayer::stopClicked(bool) {
     m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     m_playAction->setText("Play");
     m_playing = false;
+    this->ui->title->setText("Sayonara Player");
+    this->ui->rating->setText("");
+    this->ui->album->setText("Written by Lucio Carreras");
+    this->ui->artist->setText("");
+    this->setWindowTitle("Sayonara");
+    this->ui->songProgress->setValue(0);
+    this->ui->curTime->setText("00:00");
+    this->ui->maxTime->setText("00:00");
+    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
 
     this->ui->albumCover->setFocus();
     emit stop();
@@ -294,10 +306,10 @@ void GUI_SimplePlayer::searchSliderReleased() {
 
 }
 
-void GUI_SimplePlayer::searchSliderMoved(int search_percent){
+void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app){
 	m_cur_searching = true;
 
-	emit search( search_percent );
+	if(!by_app) emit search( search_percent );
 }
 
 void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
@@ -312,7 +324,7 @@ void GUI_SimplePlayer::setupVolButton(int percent){
 	QString butFilename = Helper::getIconPath() + "vol_";
 
 	if(percent == 0){
-		butFilename += "mute.png";
+		butFilename += QString("mute") + m_skinSuffix + ".png";
 	}
 
 

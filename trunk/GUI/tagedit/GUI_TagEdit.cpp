@@ -9,6 +9,7 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/Helper.h"
 #include "ui_GUI_TagEdit.h"
 
 #include <QString>
@@ -30,8 +31,11 @@ GUI_TagEdit::GUI_TagEdit() {
 	_db = CDatabaseConnector::getInstance();
 
 	init();
-
+	/*QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "edit.png")).scaled(30,30, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	this->ui->lab_icon->setPixmap(pix);*/
 	close();
+
+
 
 	connect(this->ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
 	connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
@@ -176,12 +180,9 @@ void GUI_TagEdit::all_year_clicked(){
 	}
 }
 
-
-
 void GUI_TagEdit::album_changed(QString text){
 	Q_UNUSED(text);
 }
-
 
 void GUI_TagEdit::artist_changed(QString text){
 	Q_UNUSED(text);
