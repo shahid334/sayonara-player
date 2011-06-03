@@ -50,7 +50,7 @@
      <number>10</number>
     </property>
     <property name="topMargin">
-     <number>8</number>
+     <number>3</number>
     </property>
     <property name="rightMargin">
      <number>0</number>
@@ -572,7 +572,7 @@
          <x>0</x>
          <y>0</y>
          <width>335</width>
-         <height>312</height>
+         <height>317</height>
         </rect>
        </property>
       </widget>
@@ -697,7 +697,10 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Equalizer</string>
+    <string>Equalizer                       STRG + E</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="action_Dark">

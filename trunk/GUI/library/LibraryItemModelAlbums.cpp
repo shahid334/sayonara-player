@@ -6,9 +6,11 @@
  */
 
 #include "LibraryItemModelAlbums.h"
+#include <HelperStructs/MetaData.h>
 
 #include <QAbstractListModel>
 #include <QStringList>
+#include <QDebug>
 LibraryItemModelAlbums::LibraryItemModelAlbums() {
 	// TODO Auto-generated constructor stub
 
@@ -27,7 +29,7 @@ int LibraryItemModelAlbums::columnCount(const QModelIndex& parent) const{
 
 	Q_UNUSED(parent);
 
-	return 2;
+	return 3;
 
 	// title, artist, album, length, year
 
@@ -58,7 +60,8 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 
 	 for (int row = 0; row < rows; ++row) {
 
-		 _album_list.insert(position, "");
+		 Album album;
+		 _album_list.insert(position, album);
 	 }
 
 	 endInsertRows();
@@ -72,14 +75,21 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 	 if (!index.isValid())
 			 return QVariant();
 
-		 if (index.row() >= _album_list.size() || index.column() == 0)
+		 if (index.row() >= _album_list.size())
 			 return QVariant();
 
+		 if(role == Qt::WhatsThisRole && index.column() == 0){
+			 return _album_list.at(index.row()).is_sampler;
+		 }
 
 
-		 if (role == Qt::WhatsThisRole){
-				return _album_list.at(index.row());
+		 if (role == Qt::WhatsThisRole && index.column() == 1){
+			 Album album = _album_list.at(index.row());
+			 return album.toStringList();
 
+		 }
+		 else  if (role == Qt::WhatsThisRole && index.column() == 2){
+			 return _album_list.at(index.row()).year;
 		 }
 
 		 else
@@ -94,7 +104,14 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 	 if (index.isValid() && role == Qt::EditRole) {
 
 
-		 if(index.column() == 1) _album_list.replace(index.row(), value.toString());
+		 if(index.column() == 1) {
+			 QStringList list = value.toStringList();
+
+			 Album album;
+			 album.fromStringList(list);
+
+			 _album_list.replace(index.row(), album);
+		 }
 
 
 	     emit dataChanged(index, index);
@@ -126,10 +143,19 @@ QVariant LibraryItemModelAlbums::headerData ( int section, Qt::Orientation orien
 			 case 0: return QVariant();
 
 			 case 1: return tr("Album");
+			 case 2: return tr("Year");
 			 default:
 				 return QVariant();
 		 }
 	 }
 	 return QVariant();
+
+}
+
+
+void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
+
+
+
 
 }

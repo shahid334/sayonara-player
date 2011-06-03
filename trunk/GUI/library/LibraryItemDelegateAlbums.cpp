@@ -6,6 +6,7 @@
  */
 
 #include "LibraryItemDelegateAlbums.h"
+#include <HelperStructs/MetaData.h>
 #include <QObject>
 #include <QLabel>
 #include <QDebug>
@@ -45,22 +46,50 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		if(index.column() == 0){
 
 			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+			/*
+			bool isSampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
+			if(!isSampler){
+				label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+			}
+
+			else{
+				label.setPixmap(QPixmap(Helper::getIconPath() + "pause.png").scaled(16,16, (Qt::AspectRatioMode)0, (Qt::TransformationMode)1));
+			}
+*/
 			label.resize(20, 20);
 
 		}
 
 		else if(index.column() == 1){
-			QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
-			if(text.length() == 0) return;
 
+			bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+
+			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
+			Album album;
+			album.fromStringList(list);
+
+			QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
 			label.setText(text);
+
 			label.setContentsMargins(2, 2, 0, 2);
 
-			label.resize(_parent->width()-20, 20);
+			int text_width = label.fontMetrics().width(text);
+			int height = 20;
+
+			label.resize(_parent->columnWidth(1), height);
+
 
 		}
 
-		//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+		else{
+
+			label.setContentsMargins(2, 2, 0, 2);
+			QString str  = index.model()->data(index, Qt::WhatsThisRole).toString();
+			if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) str = "Unknown";
+
+			label.setText(str);
+		}
+
 
 
 		int val = _parent->palette().color(QPalette::Background).lightness();

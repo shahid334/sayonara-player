@@ -35,7 +35,7 @@
 #include <phonon/effectparameter.h>
 #include <phonon/path.h>
 #include <phonon/audiodataoutput.h>
-#include <phonon/videoplayer.h>
+#include <phonon/videowidget.h>
 /*
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
@@ -55,6 +55,8 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	_seconds_now = 0;
 	_scrobbled = false;
 
+
+
 	qDebug() << "   1/4 phonon init output";
 	_audio_output = new Phonon::AudioOutput(Phonon::VideoCategory, this);
 
@@ -64,6 +66,10 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 
 	qDebug() << "   3/4 phonon create path";
 	_audio_path = Phonon::createPath(_media_object, _audio_output);
+
+	_video_widget = new Phonon::VideoWidget();
+
+	Phonon::createPath(_media_object, _video_widget);
 	_eq_type = EQ_TYPE_NONE;
 
 
@@ -129,6 +135,7 @@ void MP3_Listen::changeTrack(const QString & filepath){
 	_scrobbled = false;
 
 	if(!_media_object->hasVideo()) play();
+	else _video_widget->show();
 
 }
 
@@ -149,6 +156,7 @@ void MP3_Listen::changeTrack(const MetaData & metadata){
 	_scrobbled = false;
 
 	if(!_media_object->hasVideo()) play();
+	else _video_widget->show();
 
 }
 

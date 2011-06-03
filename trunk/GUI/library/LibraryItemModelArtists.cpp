@@ -30,7 +30,7 @@ int LibraryItemModelArtists::columnCount(const QModelIndex& parent) const{
 
 	Q_UNUSED(parent);
 
-	return 2;
+	return 3;
 
 	// title, artist, album, length, year
 
@@ -60,8 +60,8 @@ bool LibraryItemModelArtists::insertRows(int position, int rows, const QModelInd
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	 for (int row = 0; row < rows; ++row) {
-
-		 _artist_list.insert(position, "");
+		 Artist artist;
+		 _artist_list.insert(position, artist);
 	 }
 
 	 endInsertRows();
@@ -80,9 +80,15 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
 
 
 
-		 if (role == Qt::WhatsThisRole){
-				return _artist_list.at(index.row());
+		 if (role == Qt::WhatsThisRole && index.column() == 1){
+			 Artist artist = _artist_list.at(index.row());
+				return artist.toStringList();
 
+		 }
+
+		 else if (role == Qt::WhatsThisRole && index.column() == 2){
+			 Artist artist = _artist_list.at(index.row());
+			 return artist.num_albums;
 		 }
 
 		 else
@@ -96,7 +102,10 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 _artist_list.replace(index.row(), value.toString());
+		 QStringList list = value.toStringList();
+		 Artist artist;
+		 artist.fromStringList(list);
+		 _artist_list.replace(index.row(), artist);
 
 	     emit dataChanged(index, index);
 	     return true;
@@ -127,6 +136,7 @@ QVariant LibraryItemModelArtists::headerData ( int section, Qt::Orientation orie
 			 case 0: return QVariant();
 
 			 case 1: return tr("Artist");
+			 case 2: return tr("#Albums");
 			 default:
 				 return QVariant();
 		 }

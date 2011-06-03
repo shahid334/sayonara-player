@@ -173,7 +173,7 @@ int main(int argc, char *argv[]){
 		 *
 		 */
 
-		player.setWindowTitle("Sayonara (0.6.0530e)");
+		player.setWindowTitle("Sayonara (0.6.0603e)");
 		player.show();
 
 

@@ -34,6 +34,7 @@ public:
 private:
 
 		QTableView* _parent;
+		int _m_column_width;
 
 
 };

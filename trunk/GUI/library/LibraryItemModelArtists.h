@@ -8,6 +8,7 @@
 #ifndef LIBRARYITEMMODELARTISTS_H_
 #define LIBRARYITEMMODELARTISTS_H_
 
+#include <HelperStructs/MetaData.h>
 #include <QAbstractTableModel>
 #include <QStringList>
 
@@ -34,7 +35,7 @@ public:
 
 
 private:
-	QStringList _artist_list;
+	QList<Artist> _artist_list;
 
 
 };

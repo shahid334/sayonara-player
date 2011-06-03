@@ -161,10 +161,14 @@ struct Album{
 
 	QStringList toStringList(){
 		QStringList list;
-		list.push_back(name);
+		QString tmpName = "Unknown";
+		if(name.size() > 0) tmpName = name;
+
+		list.push_back(tmpName);
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(length_sec));
+		list.push_back(QString::number(year));
 		if(is_sampler){
 			list.push_back("sampler");
 		}
@@ -175,12 +179,15 @@ struct Album{
 	}
 
 	void fromStringList(QStringList& list){
-		if(list.size() < 4) return;
+
+		if(list.size() < 6) return;
 		name = list.at(0);
 		id = list.at(1).toInt();
 		num_songs = list.at(2).toInt();
 		length_sec = list.at(3).toLong();
-		is_sampler = (list.at(4) == "sampler");
+		year = list.at(4).toInt();
+		is_sampler = (list.at(5) == "sampler");
+
 	}
 };
 

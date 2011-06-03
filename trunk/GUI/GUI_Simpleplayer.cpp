@@ -290,7 +290,7 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 
 void GUI_SimplePlayer::fileSelectedClicked(bool) {
     qDebug() << Q_FUNC_INFO;
-    QStringList list = QFileDialog::getOpenFileNames(this, tr("Open Soundfiles"), QDir::homePath(), tr("MP3s (*.mp3)"));
+    QStringList list = QFileDialog::getOpenFileNames(this, tr("Open Media files"), QDir::homePath(), tr("Media files (*.mp3 *.wav *.flac *.aac *.wma *.avi *.mpg *.mpeg)"));
 
 
     if(list.size() > 0) emit fileSelected(list);
@@ -551,7 +551,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e){
 			backwardClicked(true);
 			break;
 
-		case Qt::Key_E:
+		case (Qt::Key_E):
 			this->ui->action_ViewEqualizer->setChecked(!this->ui->action_ViewEqualizer->isChecked());
 		default:
 		break;

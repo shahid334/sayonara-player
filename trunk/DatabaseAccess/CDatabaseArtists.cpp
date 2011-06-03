@@ -93,7 +93,7 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result){
 			q.prepare(QString("SELECT ") +
 						"artists.artistID, " +
 						"artists.name, " +
-						"count(albums.albumid), " +
+						"group_concat(albums.albumid), " +
 						"count(tracks.trackid) "
 						"FROM Tracks, artists, albums " +
 						"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
@@ -108,7 +108,9 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result){
 			while (q.next()) {
 				artist.id = q.value(0).toInt();
 				artist.name = q.value(1).toString().trimmed();
-				artist.num_albums = q.value(2).toInt();
+				 QStringList list = q.value(2).toString().split(',');
+				 list.removeDuplicates();
+				artist.num_albums = list.size();
 				artist.num_songs = q.value(3).toInt();
 
 				result.push_back(artist);
@@ -140,7 +142,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 				q.prepare(QString("SELECT ") +
 							"artists.artistID, " +
 							"artists.name, " +
-							"count(albums.albumid), " +
+							"group_concat(albums.albumid), " +
 							"count(tracks.trackid) "
 							"FROM Tracks, artists, albums " +
 							"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
@@ -156,7 +158,10 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 				while (q.next()) {
 					artist.id = q.value(0).toInt();
 					artist.name = q.value(1).toString().trimmed();
-					artist.num_albums = q.value(2).toInt();
+
+					 QStringList list = q.value(2).toString().split(',');
+					list.removeDuplicates();
+					artist.num_albums = list.size();
 					artist.num_songs = q.value(3).toInt();
 
 					result.push_back(artist);
@@ -242,19 +247,19 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 				QString query;
 				query = QString("SELECT * FROM ( ") +
 						"SELECT " +
-					"			artists.artistid as artistid, artists.name as name, COUNT(tracks.trackid), COUNT(albums.albumid) " +
+					"			artists.artistid as artistid, artists.name as name, COUNT(tracks.trackid), group_concat(albums.albumid) " +
 					"			FROM albums, artists, tracks " +
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
 					"			GROUP BY artists.artistid, artists.name " +
 					"		UNION " +
 					"		SELECT  " +
-					"			artists.artistid, artists.name, COUNT(tracks.trackid), COUNT(albums.albumid) " +
+					"			artists.artistid, artists.name, COUNT(tracks.trackid), group_concat(albums.albumid) " +
 					"			FROM albums, artists, tracks " +
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
 					"			GROUP BY artists.artistid, artists.name " +
 					"		UNION " +
 					"		SELECT  " +
-					"			artists.artistid, artists.name, COUNT(tracks.trackid), COUNT(albums.albumid) " +
+					"			artists.artistid, artists.name, COUNT(tracks.trackid), group_concat(albums.albumid) " +
 					"			FROM albums, artists, tracks " +
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
 					"			GROUP BY artists.artistid, artists.name " +
@@ -274,7 +279,9 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 					artist.id = q.value(0).toInt();
 					artist.name = q.value(1).toString().trimmed();
 					artist.num_songs = q.value(2).toInt();
-					artist.num_albums = q.value(3).toInt();
+					 QStringList list = q.value(3).toString().split(',');
+					 list.removeDuplicates();
+					 artist.num_albums = list.size();
 
 					result.push_back(artist);
 				}

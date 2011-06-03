@@ -63,11 +63,11 @@ public:
 
 			QString getAlbumName (const int & id);
 
-			void getAllAlbums(vector<Album>& result);
+			void getAllAlbums(vector<Album>& result, QString sortorder = "name asc");
 
-			void getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter=QString(""));
+			void getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter=QString(""), QString sortorder = "name asc");
 
-			void getAllAlbumsBySearchString(QString search, vector<Album>& result);
+			void getAllAlbumsBySearchString(QString search, vector<Album>& result, QString sortorder = "name asc");
 
 			int insertAlbumIntoDatabase (const QString & album);
 			int insertAlbumIntoDatabase (const Album& album);

@@ -36,6 +36,7 @@
 #include <phonon/backendcapabilities.h>
 #include <phonon/effectparameter.h>
 #include <phonon/audiodataoutput.h>
+#include <phonon/videowidget.h>
 
 
 /*
@@ -73,6 +74,8 @@ private:
 	bool				_is_eq_enabled;
 
 	int					_eq_type;
+
+	Phonon::VideoWidget* _video_widget;
 
 
 public:

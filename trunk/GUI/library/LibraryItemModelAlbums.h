@@ -8,8 +8,11 @@
 #ifndef LIBRARYITEMMODELALBUMS_H_
 #define LIBRARYITEMMODELALBUMS_H_
 
+#include <HelperStructs/MetaData.h>
 #include <QAbstractTableModel>
-#include <QStringList>
+#include <QList>
+
+using namespace std;
 
 class LibraryItemModelAlbums : public QAbstractTableModel {
 
@@ -30,10 +33,11 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+	void sort(int column, Qt::SortOrder order);
 
 
 private:
-	QStringList _album_list;
+	QList<Album> _album_list;
 
 
 };

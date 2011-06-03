@@ -346,7 +346,10 @@ void GUI_Playlist::set_total_time_label(){
 			hrs = mins / 60;
 			mins = mins % 60;
 
-			QString playlist_string = "Total Time: ";
+			QString playlist_string = QString::number(this->_pli_model->rowCount());
+			if(this->_pli_model->rowCount() == 1) playlist_string += " Track - ";
+			else playlist_string += " Tracks - ";
+
 
 			if(hrs > 0) playlist_string += QString::number(hrs) + "h ";
 

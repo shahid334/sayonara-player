@@ -16,6 +16,7 @@
 #include <GUI/library/LibraryItemModelTracks.h>
 #include <GUI/library/LibraryItemModelAlbums.h>
 #include <GUI/library/LibraryItemDelegateAlbums.h>
+#include <GUI/library/LibraryItemDelegateArtists.h>
 #include <GUI/library/LibraryItemModelArtists.h>
 #include <HelperStructs/MetaData.h>
 #include <DatabaseAccess/CDatabaseConnector.h>
@@ -40,7 +41,7 @@ private:
 	LibraryItemModelAlbums* _album_model;
 	LibraryItemDelegateAlbums* _album_delegate;
 	LibraryItemModelArtists* _artist_model;
-	LibraryItemDelegateAlbums* _artist_delegate;
+	LibraryItemDelegateArtists* _artist_delegate;
 	vector<MetaData>	_v_metadata;
 	vector<Album>		_v_albums;
 	vector<Artist>		_v_artists;
@@ -72,6 +73,7 @@ private:
 		void track_chosen(const QModelIndex & );
 
 		void text_line_edited(const QString&);
+		void sort_by_column(int col);
 
 	protected:
 			void resizeEvent(QResizeEvent* e);
@@ -82,6 +84,10 @@ private:
 
 	private:
 			QString getTotalTimeString(Album& album);
+			QString _sort_albums;
+
+			int _selected_artist;
+			int _selected_album;
 
 
 
