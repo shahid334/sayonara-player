@@ -36,6 +36,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->_sort_albums = "name asc";
 	_selected_artist = -1;
 	_selected_album = -1;
+	_everything_loaded = false;
 
 	this->_track_model = new LibraryItemModelTracks();
 	this->_album_model = new LibraryItemModelAlbums();
@@ -50,6 +51,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->lv_artist->setItemDelegate(this->_artist_delegate);
 
 
+
 	this->ui->lv_album->setDragEnabled(true);
 	this->ui->lv_artist->setDragEnabled(true);
 	this->ui->tb_title->setDragEnabled(true);
@@ -59,7 +61,11 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->ui->lv_artist->setAlternatingRowColors(true);
 
+	this->ui->btn_reload->setIcon(QIcon(Helper::getIconPath() + "reload.png"));
+	this->ui->btn_reload->setVisible(false);
+
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
+	connect(this->ui->btn_reload, SIGNAL( clicked()), this, SLOT(reload_library_slot()));
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_chosen(const QModelIndex & )));
@@ -334,6 +340,8 @@ void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	db->getAllTracksByAlbum(album_id, vec);
 	emit album_chosen_signal(vec);
+
+	_everything_loaded = false;
 }
 
 void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
@@ -344,6 +352,8 @@ void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	db->getAllTracksByArtist(artist_id, vec);
 	emit artist_chosen_signal(vec);
+
+	_everything_loaded = false;
 
 }
 
@@ -361,13 +371,16 @@ void GUI_Library_windowed::clear_button_pressed(){
 	_selected_artist = -1;
 	this->ui->le_search->clear();
 	text_line_edited(" ");
+
 }
 
 void GUI_Library_windowed::text_line_edited(const QString& search){
 Q_UNUSED(search);
 
+	if(search.length() < 3 && _everything_loaded) return;
+
 	QString searchstring = this->ui->le_search->text();
-	if(searchstring.length() == 0){
+	if(searchstring.length() < 3){
 
 		vector<Album> vec_albums;
 		vector<MetaData> vec_tracks;
@@ -382,11 +395,14 @@ Q_UNUSED(search);
 		fill_library_tracks(vec_tracks);
 
 		_selected_album = -1;
-			_selected_artist = -1;
+		_selected_artist = -1;
+		_everything_loaded = true;
 
 		return;
 
 	}
+
+	_everything_loaded = false;
 
 	vector<MetaData> vec_tracks;
 	vector<Album> vec_albums;
@@ -473,6 +489,7 @@ void GUI_Library_windowed::id3_tags_changed(){
 
 void GUI_Library_windowed::sort_by_column(int col){
 
+
 qDebug() << _sort_albums << "->";
 
 	if(col == 1){
@@ -508,9 +525,22 @@ qDebug() << _sort_albums << "->";
 		CDatabaseConnector::getInstance()->getAllAlbums(vec_albums, _sort_albums);
 		fill_library_albums(vec_albums);
 	}
+}
 
 
+void GUI_Library_windowed::reloading_library(){
+	this->ui->label_2->setText("Music Library (Reloading...)");
+}
 
+void GUI_Library_windowed::reloading_library_finished(){
+	this->ui->label_2->setText("Music Library");
+}
 
+void GUI_Library_windowed::library_should_be_reloaded(){
+	this->ui->btn_reload->setVisible(true);
+}
 
+void GUI_Library_windowed::reload_library_slot(){
+	this->ui->btn_reload->setVisible(false);
+	emit reload_library();
 }

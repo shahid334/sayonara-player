@@ -133,8 +133,15 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(mp3s_loaded_signal(int)), 						&ui_playlist, 	SLOT(update_progress_bar(int)));
         app.connect(&library, SIGNAL(allAlbumsLoaded(vector<Album>&)), 				&ui_library, 	SLOT(fill_library_albums(vector<Album>&)));
         app.connect(&library, SIGNAL(allArtistsLoaded(vector<Artist>&)), 			&ui_library, 	SLOT(fill_library_artists(vector<Artist>&)));
+        app.connect(&library, SIGNAL(reloading_library_finished()), 				&ui_library, 	SLOT(reloading_library_finished()));
+        app.connect(&library, SIGNAL(reloading_library()), 							&ui_library, 	SLOT(reloading_library()));
+        app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
+
+
+
 
         app.connect(&ui_library, SIGNAL(artist_changed_signal(int)), 				&library, 		SLOT(getAlbumsByArtist(int)));
+        app.connect(&ui_library, SIGNAL(reload_library()), 							&library, 		SLOT(reloadLibrary()));
         app.connect(&ui_library, SIGNAL(album_changed_signal(int)), 				&library, 		SLOT(getTracksByAlbum(int)));
         app.connect(&ui_library, SIGNAL(clear_signal()), 							&library, 		SLOT(getAllArtistsAlbumsTracks()));
         app.connect(&ui_library, SIGNAL(album_chosen_signal(vector<MetaData>&)), 	&playlist, 		SLOT(createPlaylist(vector<MetaData>&)));
@@ -173,7 +180,7 @@ int main(int argc, char *argv[]){
 		 *
 		 */
 
-		player.setWindowTitle("Sayonara (0.6.0603e)");
+		player.setWindowTitle("Sayonara (0.6.0619e)");
 		player.show();
 
 

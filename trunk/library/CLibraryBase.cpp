@@ -1,4 +1,5 @@
 #include "HelperStructs/CSettingsStorage.h"
+#include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/id3.h"
 #include <QDebug>
@@ -6,22 +7,27 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressBar>
+#include <QFileSystemWatcher>
 
 CLibraryBase::CLibraryBase(QObject *parent) :
     QObject(parent)
 {
+	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+	m_thread = new ReloadThread();
+	m_watcher = new QFileSystemWatcher();
+	m_watcher->addPath(m_library_path);
 
+	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
+	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
 }
 
 
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
-    qDebug() << "Base Dir: " << baseDir;
+
     QStringList fileList;
     int num_files = 0;
     this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
 
-    /* absolute paths */
-    qDebug() << fileList;
     emit playlistCreated(fileList);
 
 }
@@ -29,6 +35,8 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 void CLibraryBase::reloadLibrary(){
 
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+
+
 
 
 	if(m_library_path.length() == 0) {
@@ -54,39 +62,31 @@ void CLibraryBase::reloadLibrary(){
 
 	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
 
-	QStringList fileList;
-	vector<MetaData> v_metadata;
-
-	QProgressDialog dialog(0);
-
-	dialog.setModal(true);
-	dialog.setLabelText("Gathering files...");
-	dialog.show();
-	dialog.setValue(0);
-
-
-	int num_files = 0;
-	this->m_reader.getFilesInsiderDirRecursive(QDir(m_library_path), fileList, num_files);
-
-
-	dialog.setLabelText("Inserting ID3 Tags into database...");
-	uint todo = fileList.size();
-
-
-	for(int i=0; i<fileList.size(); i++){
-		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
-		v_metadata.push_back(md);
-		dialog.setValue((int)(i * 100.0 / todo));
+	if(m_thread->isRunning()){
+		m_thread->terminate();
 	}
 
-	emit mp3s_loaded_signal(100);
+	m_thread->set_lib_path(m_library_path);
+	m_thread->start();
 
+	emit reloading_library();
+
+
+
+}
+
+void CLibraryBase::reload_thread_finished(){
+
+	vector<MetaData> v_metadata;
+	m_thread->get_metadata(v_metadata);
 	insertMetaDataIntoDB(v_metadata);
 	getAllAlbums();
 	getAllArtists();
 
-	dialog.close();
+	emit reloading_library_finished();
 }
+
+
 
 void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& in) {
 
@@ -179,4 +179,12 @@ void CLibraryBase::getTracksByArtist(int artist){
 void CLibraryBase::setLibraryPath(QString path){
 
 	m_library_path = path;
+}
+
+void CLibraryBase::file_system_changed(const QString& path){
+	Q_UNUSED(path);
+
+	emit library_should_be_reloaded();
+
+
 }

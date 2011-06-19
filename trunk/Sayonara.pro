@@ -35,6 +35,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     DatabaseAccess/CDatabaseConnector.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
+    library/ReloadThread.h \
     playlist/Playlist.h \
     HelperStructs/id3.h \
     HelperStructs/CSettingsStorage.h \
@@ -63,6 +64,7 @@ SOURCES += Main.cpp \
     LyricLookup/LyricLookup.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
+    library/ReloadThread.cpp \
     DatabaseAccess/CDatabaseConnector.cpp \
     DatabaseAccess/CDatabaseLibrary.cpp \
     DatabaseAccess/CDatabaseSettings.cpp \
@@ -113,6 +115,7 @@ additional_files.files += GUI/icons/lastfm_logo.jpg
 additional_files.files += GUI/icons/power_on.png
 additional_files.files += GUI/icons/power_off.png
 additional_files.files += GUI/icons/edit.png
+additional_files.files += GUI/icons/reload.png
 additional_files.files += empty.db
 INSTALLS += additional_files
 

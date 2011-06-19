@@ -36,10 +36,12 @@ class CoverLookup : public QObject{
 
 	signals:
 		void cover_found(QPixmap&);
+
 	public slots:
 		void search_cover(const MetaData&, bool emit_signal=true);
 		void showCoverAlternatives();
 		void search_all_covers();
+
 	private slots:
 		void terminate_cover_fetch();
 

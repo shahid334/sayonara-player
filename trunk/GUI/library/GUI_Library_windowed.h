@@ -54,12 +54,16 @@ private:
 		void album_chosen_signal(vector<MetaData>&);
 		void artist_chosen_signal(vector<MetaData>&);
 		void track_chosen_signal(vector<MetaData>& );
+		void reload_library();
 
 	public slots:
 		void fill_library_tracks(vector<MetaData>&);
 		void fill_library_albums(vector<Album>&);
 		void fill_library_artists(vector<Artist>&);
 		void id3_tags_changed();
+		void reloading_library();
+		void reloading_library_finished();
+		void library_should_be_reloaded();
 
 
 	private slots:
@@ -75,6 +79,8 @@ private:
 		void text_line_edited(const QString&);
 		void sort_by_column(int col);
 
+		void reload_library_slot();
+
 	protected:
 			void resizeEvent(QResizeEvent* e);
 
@@ -88,6 +94,8 @@ private:
 
 			int _selected_artist;
 			int _selected_album;
+
+			bool _everything_loaded;
 
 
 
