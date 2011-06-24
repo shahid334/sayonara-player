@@ -70,3 +70,7 @@ void GUI_PlaylistEntry::setWidth(int width){
 
 
 }
+
+void GUI_PlaylistEntry::setLine(bool enable){
+	this->ui->line->setVisible(enable);
+}

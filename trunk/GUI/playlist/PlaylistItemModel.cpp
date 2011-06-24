@@ -44,7 +44,6 @@ QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
 
 	 if (role == Qt::WhatsThisRole){
 			return _labellist.at(index.row());
-
 	 }
 
 	 else

@@ -30,6 +30,7 @@ public:
 	void setBackgroundColorNotPlaying();
 
 	void setWidth(int w);
+	void setLine(bool);
 
 
 private:

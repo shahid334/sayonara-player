@@ -58,7 +58,8 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	MetaData md;
 		md.fromStringList(strlist);
 
-	bool cur_track = (strlist.last().toInt() == 1);
+	bool cur_track = (strlist[strlist.length()-2].toInt() == 1);
+	bool insert = (strlist.last().toInt() == 1);
 
 
 	_pl_entry->setArtist(md.artist);
@@ -72,8 +73,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	_pl_entry->setMinimumWidth(_parent->width()-offset);
 	_pl_entry->setMaximumWidth(_parent->width()-offset);
 
-
-
+	_pl_entry->setLine(false);
 
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
@@ -101,6 +101,14 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 		if(col_ia.name() != "#ffffff") _pl_entry->setStyleSheet(QString("background-color: ") + col.name() + ";");
 		else _pl_entry->setStyleSheet(QString("background-color: transparent;"));
 	}
+
+
+	/*_pl_entry->setLine(false);
+	if(insert) _pl_entry->setLine(true);*/
+
+	int y = index.row() * _pl_entry->height();
+	if(insert) painter->drawLine(QLine(0, y, _pl_entry->width(), y));
+
 
 	_pl_entry->render(painter, rect.topLeft() );
 

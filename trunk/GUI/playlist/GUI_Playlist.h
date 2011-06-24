@@ -33,6 +33,7 @@
 
 			void dragEnterEvent(QDragEnterEvent* event);
 			void dropEvent(QDropEvent* event);
+			void dragMoveEvent(QDragMoveEvent* event);
 
 		signals:
 			void selected_row_changed(int);
@@ -88,6 +89,8 @@
 			int						_cur_selected_row;
 			void initGUI();
 			void set_total_time_label();
+			void remove_cur_selected_row();
+			bool inner_drag_drop;
 
 	};
 

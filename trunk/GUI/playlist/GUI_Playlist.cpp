@@ -23,7 +23,11 @@
 #include <iostream>
 #include <vector>
 #include <QStyleFactory>
+#include <QPaintDevice>
+#include <QPainter>
 
+class QPaintEngine;
+class QPaintDevice;
 
 
 using namespace std;
@@ -38,6 +42,11 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
+
+	inner_drag_drop = false;
+
+	this->ui->listView->setDragEnabled(true);
+
 
 	//this->ui->pl_progress_bar->hide();
 
@@ -109,6 +118,10 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 		if(idx == _cur_playing_row) str4Playlist.push_back("1");
 		else str4Playlist.push_back("0");
 
+		str4Playlist.push_back("0");
+
+
+
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 
@@ -142,6 +155,25 @@ void GUI_Playlist::save_playlist_slot(){
 void GUI_Playlist::selected_row_changed(const QModelIndex& index){
 
 	_cur_selected_row = index.row();
+	QDrag* drag = new QDrag(this);
+	QMimeData* mime = new QMimeData();
+
+	QList<QVariant> list2send;
+
+	QStringList metadata = this->_pli_model->data(index, Qt::WhatsThisRole).toStringList();
+	list2send.push_back(metadata);
+
+
+	mime->setProperty("data_type", DROP_TYPE_TRACKS);
+	mime->setProperty("data", (QVariant) list2send);
+	drag->setMimeData(mime);
+	inner_drag_drop = true;
+
+	drag->exec();
+
+
+
+
 }
 
 void GUI_Playlist::current_row_changed(const QModelIndex & index){
@@ -153,14 +185,14 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 			QModelIndex tmp_idx = index.model()->index(i, 0);
 			QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
-			str4Playlist.removeLast();
+
 
 
 			if(i == index.row())
-				str4Playlist.push_back("1");
+				str4Playlist[str4Playlist.length()-2] = "1";
 
 			else
-				str4Playlist.push_back("0");
+				str4Playlist[str4Playlist.length()-2] = "0";
 
 
 			_cur_playing_row = index.row();
@@ -168,12 +200,7 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 			_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 		}
 
-
-
-
 		int new_row = index.row();
-
-
 		current_row_changed(new_row);
 	}
 }
@@ -184,8 +211,6 @@ void GUI_Playlist::current_row_changed(int new_row){
 
 	emit selected_row_changed(new_row);
 	_cur_playing_row = new_row;
-
-
 }
 
 
@@ -261,15 +286,85 @@ void GUI_Playlist::initGUI(){
 }
 
 
+void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
+
+	QPoint pos = event->pos();
+		int row = this->ui->listView->indexAt(pos).row();
+
+	if(this->_pli_model->index(row-2, 0).isValid()){
+			QStringList list = _pli_model->data(this->_pli_model->index(row-2, 0), Qt::WhatsThisRole).toStringList();
+			list[list.length()-1] = QString("0");
+			_pli_model->setData(this->_pli_model->index(row-2, 0), (const QVariant&) list, Qt::EditRole);
+		}
+
+
+	if(this->_pli_model->index(row, 0).isValid()){
+				QStringList list = _pli_model->data(this->_pli_model->index(row, 0), Qt::WhatsThisRole).toStringList();
+				list[list.length()-1] = QString("0");
+				_pli_model->setData(this->_pli_model->index(row, 0), (const QVariant&) list, Qt::EditRole);
+			}
+
+
+
+
+	if(this->_pli_model->index(row-1, 0).isValid() && (row-1) != _cur_selected_row){
+		QStringList list = _pli_model->data(this->_pli_model->index(row-1, 0), Qt::WhatsThisRole).toStringList();
+		list[list.length()-1] = QString("1");
+		_pli_model->setData(this->_pli_model->index(row-1, 0), (const QVariant&) list, Qt::EditRole);
+	}
+
+}
+
+
+
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
-	event->acceptProposedAction();
+
+	int y_event =  event->pos().y();
+	int y_playlist = this->ui->listView->geometry().topLeft().y();
+
+
+	int scroll_bar_pos = this->ui->listView->verticalScrollBar()->sliderPosition();
+
+
+
+	if(y_event <= y_playlist+20){
+
+		if(scroll_bar_pos >= 1)
+			this->ui->listView->scrollTo(this->_pli_model->index(scroll_bar_pos-1, 0));
+	}
+
+	else if(y_event >= y_playlist + this->ui->listView->height()-20){
+
+		int num_steps = this->ui->listView->height() / 30;
+		QModelIndex idx = this->_pli_model->index(scroll_bar_pos+num_steps, 0);
+		if(idx.isValid()) this->ui->listView->scrollTo(idx);
+	}
+
+	if(event->mimeData() != NULL )
+		event->acceptProposedAction();
+
 }
 
 
 void GUI_Playlist::dropEvent(QDropEvent* event){
+	QPoint pos = event->pos();
+	int row = this->ui->listView->indexAt(pos).row();
 
-	//qDebug() << "Dropped";
+ 	if(inner_drag_drop && (row-1) == _cur_selected_row){
+		qDebug() << "ignore event";
+ 		event->ignore();
+		inner_drag_drop = false;
+		return;
+	}
+
+	else if(inner_drag_drop){
+		qDebug() << "Remove current selected row";
+		remove_cur_selected_row();
+		inner_drag_drop = false;
+	}
+
+	qDebug() << "Dropped";
 	//qDebug() << event->mimeData()->text();
 	QString text = event->mimeData()->text();
 
@@ -309,8 +404,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		return;
 	}
 
-	QPoint pos = event->pos();
-	int row = this->ui->listView->indexAt(pos).row();
+
 
 	int event_type = event->mimeData()->property("data_type").toInt();
 	//qDebug() << "event_type = " << event_type;
@@ -364,6 +458,20 @@ void GUI_Playlist::set_total_time_label(){
 
 }
 
+void GUI_Playlist::remove_cur_selected_row(){
+	if(_pli_model->rowCount() > 1){
+		if(_cur_selected_row < _cur_playing_row) _cur_playing_row --;
+
+		emit row_removed(_cur_selected_row);
+		_cur_selected_row = -1;
+	}
+
+	else {
+		clear_playlist_slot();
+		_cur_selected_row = -1;
+	}
+}
+
 void GUI_Playlist::keyPressEvent(QKeyEvent* e){
 
 	QWidget::keyPressEvent(e);
@@ -371,19 +479,7 @@ void GUI_Playlist::keyPressEvent(QKeyEvent* e){
 
 	if(key == 16777223 && _cur_selected_row < _pli_model->rowCount() && _cur_selected_row >= 0){
 
-		if(_pli_model->rowCount() > 1){
-			if(_cur_selected_row < _cur_playing_row) _cur_playing_row --;
-
-			emit row_removed(_cur_selected_row);
-			_cur_selected_row = -1;
-
-		}
-
-		else {
-			clear_playlist_slot();
-			_cur_selected_row = -1;
-
-		}
+		remove_cur_selected_row();
 	}
 }
 
