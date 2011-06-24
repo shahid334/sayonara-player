@@ -56,6 +56,8 @@ int main(int argc, char *argv[]){
         QApplication app (argc, argv);
         app.setApplicationName("Sayonara");
         app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
+        app.setStartDragDistance(15);
+        app.setStartDragTime(50);
 
         GUI_SimplePlayer 	player;
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -167,6 +169,8 @@ int main(int argc, char *argv[]){
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
+
+
 
 		/* version_number:
 		 * A.B.D[u|e|s]

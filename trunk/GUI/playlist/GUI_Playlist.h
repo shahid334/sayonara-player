@@ -32,8 +32,10 @@
 			~GUI_Playlist();
 
 			void dragEnterEvent(QDragEnterEvent* event);
+			void dragLeaveEvent(QDragLeaveEvent* event);
 			void dropEvent(QDropEvent* event);
 			void dragMoveEvent(QDragMoveEvent* event);
+			void clear_drag_lines(int row);
 
 		signals:
 			void selected_row_changed(int);
@@ -91,6 +93,8 @@
 			void set_total_time_label();
 			void remove_cur_selected_row();
 			bool inner_drag_drop;
+
+			QPoint	_last_known_drag_pos;
 
 	};
 

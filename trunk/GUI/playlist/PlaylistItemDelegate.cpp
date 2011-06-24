@@ -73,7 +73,6 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	_pl_entry->setMinimumWidth(_parent->width()-offset);
 	_pl_entry->setMaximumWidth(_parent->width()-offset);
 
-	_pl_entry->setLine(false);
 
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
@@ -106,7 +105,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	/*_pl_entry->setLine(false);
 	if(insert) _pl_entry->setLine(true);*/
 
-	int y = index.row() * _pl_entry->height();
+	int y = rect.topLeft().y() +  _pl_entry->height() -1;
 	if(insert) painter->drawLine(QLine(0, y, _pl_entry->width(), y));
 
 

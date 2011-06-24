@@ -91,9 +91,6 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 	_v_metadata.clear();
 	_v_metadata = v_metadata;
 
-
-
-
 	this->_track_model->removeRows(0, this->_track_model->rowCount());
 	this->_track_model->insertRows(0, v_metadata.size());
 
@@ -370,6 +367,7 @@ void GUI_Library_windowed::clear_button_pressed(){
 	_selected_album = -1;
 	_selected_artist = -1;
 	this->ui->le_search->clear();
+	_everything_loaded = false;
 	text_line_edited(" ");
 
 }

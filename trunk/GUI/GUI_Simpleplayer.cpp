@@ -82,10 +82,11 @@ void GUI_SimplePlayer::setVolume(int vol){
 
 void GUI_SimplePlayer::changeSkin(bool dark){
 	if(dark){
+
 		this->ui->centralwidget->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
 		this->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
 
-				m_skinSuffix = QString("_dark");
+		m_skinSuffix = QString("_dark");
 	}
 
 	else {
