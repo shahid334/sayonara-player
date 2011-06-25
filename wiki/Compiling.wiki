@@ -8,7 +8,6 @@ Please wait until end of June before telling us and the world, that this player 
 
   * Qt: Gui, Core, Phonon, Xml, Sqlite http://qt.nokia.com/products/
   * libcurl http://curl.haxx.se/libcurl/
-  * libclastfm http://liblastfm.sourceforge.net/
   * Taglib http://developer.kde.org/~wheeler/taglib.html
 
 
@@ -29,7 +28,7 @@ There is a Visual Studio 2008 solution, but not updated every time, so maybe the
   * Qt:      QTDIR
   * Taglib:  LIBTAG
   * libcurl: CURL
-  * lastfm:  not done yet
+  * lastfm:  should work
 
   * Known issues:
     # Some MP3 files are not played due to some Phonon issue
