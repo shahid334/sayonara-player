@@ -10,7 +10,7 @@ TARGET = sayonara
 
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
 INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
-LIBS += -L/usr/lib -lphonon -lcurl -ltag -lclastfm 
+LIBS += -L/usr/lib -lphonon -lcurl -ltag
 
 # Input
 HEADERS += MP3_Listen/MP3_Listen.h \
@@ -31,7 +31,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
-    LyricLookup/LyricLookup.h \
+    #LyricLookup/LyricLookup.h \
     DatabaseAccess/CDatabaseConnector.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
@@ -61,7 +61,7 @@ SOURCES += Main.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
-    LyricLookup/LyricLookup.cpp \
+   # LyricLookup/LyricLookup.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
     library/ReloadThread.cpp \

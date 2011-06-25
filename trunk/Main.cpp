@@ -184,7 +184,7 @@ int main(int argc, char *argv[]){
 		 *
 		 */
 
-		player.setWindowTitle("Sayonara (0.6.0619e)");
+		player.setWindowTitle("Sayonara (0.6.0625u)");
 		player.show();
 
 

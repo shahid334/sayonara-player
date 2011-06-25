@@ -118,7 +118,7 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 
 	int last_idx = CSettingsStorage::getInstance()->getLastEqualizer();
 	qDebug() << "last IDx " << last_idx;
-	if(last_idx < presets.size() ){
+	if(last_idx < (int) presets.size() ){
 
 		this->_ui->combo_presets->setCurrentIndex(last_idx);
 		preset_changed(last_idx);

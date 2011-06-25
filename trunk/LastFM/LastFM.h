@@ -14,11 +14,6 @@
 #include <string>
 
 
-extern "C"{
-#include <clastfm.h>
-
-}
-
 class LastFM : public QObject{
 
 	Q_OBJECT
@@ -30,19 +25,24 @@ public:
 		void scrobble(const MetaData&);
 		void update_track(const MetaData&);
 		void login_slot(QString, QString);
+		QString create_signature(QString fn_name);
+
 
 	private:
-		LASTFM_SESSION* _session;
+
 		bool 			_logged_in;
 		QString			_api_key;
 		QString			_api_secret;
 		QString			_username;
 		QString			_auth_token;
+		QString			_session_key;
 
 
 	public:
 		void login(QString, QString);
 
+	private:
+		QString parse_session_answer();
 
 };
 

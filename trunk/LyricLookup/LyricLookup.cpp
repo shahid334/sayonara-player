@@ -33,7 +33,7 @@ int find_first_of(char* arr, size_t len, QString str){
 
 
 		bool matched = false;
-		for(uint j=0; j<str.length(); j++, i++){
+		for(int j=0; j<str.length(); j++, i++){
 
 			if(arr[i] != str.at(j).toAscii()) break;
 
@@ -85,7 +85,7 @@ size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 
 	QString tmp = "";
 	QRegExp rx("&#(\\d+);|<br");
-	for(int i=0; i<size * nmemb; i++){
+	for(uint i=0; i<size * nmemb; i++){
 		tmp += cptr[i];
 	}
 
