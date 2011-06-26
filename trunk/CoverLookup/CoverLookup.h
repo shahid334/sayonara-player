@@ -15,6 +15,8 @@
 
 #include <QObject>
 #include <QPixmap>
+#include <QCryptographicHash>
+#include <QDir>
 
 
 using namespace std;
@@ -48,6 +50,7 @@ class CoverLookup : public QObject{
 public:
 	CoverLookup();
 	virtual ~CoverLookup();
+	static QString get_cover_path(QString artist, QString album);
 
 
 private:

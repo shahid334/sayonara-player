@@ -149,8 +149,7 @@ void GUI_Playlist::save_playlist_slot(){
 void GUI_Playlist::single_clicked(const QModelIndex& index){
 
 	_cur_selected_row = index.row();
-	qDebug() << "cur: " << _cur_selected_row;
-	QDrag* drag = new QDrag(this);
+
 	QMimeData* mime = new QMimeData();
 
 	QList<QVariant> list2send;
@@ -161,10 +160,10 @@ void GUI_Playlist::single_clicked(const QModelIndex& index){
 
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", (QVariant) list2send);
-	drag->setMimeData(mime);
+	this->ui->listView->set_mime_data(mime);
 	inner_drag_drop = true;
 
-	drag->exec();
+
 }
 
 

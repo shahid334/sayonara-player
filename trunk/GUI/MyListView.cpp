@@ -1,31 +1,30 @@
 /*
- * MyTableView.cpp
+ * MyListView.cpp
  *
  *  Created on: Jun 26, 2011
  *      Author: luke
  */
 
-#include "GUI/MyTableView.h"
+#include "GUI/MyListView.h"
 #include <QWidget>
-#include <QTableView>
+#include <QListView>
 #include <QMouseEvent>
 #include <QDebug>
-#include <QPixmap>
 
-MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
+MyListView::MyListView(QWidget* parent) : QListView(parent) {
 	_parent = parent;
 	qDrag = new QDrag(_parent);
 
 }
 
-MyTableView::~MyTableView() {
+MyListView::~MyListView() {
 
 
 }
 
 
 
-void MyTableView::mousePressEvent(QMouseEvent* event){
+void MyListView::mousePressEvent(QMouseEvent* event){
 
 
 
@@ -35,14 +34,14 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 			_drag  = true;
 			_drag_pos = event->pos();
 
-			QTableView::mousePressEvent(event);
+			QListView::mousePressEvent(event);
 			break;
 
 		default: break;
 	}
 }
 
-void MyTableView::mouseMoveEvent(QMouseEvent* event){
+void MyListView::mouseMoveEvent(QMouseEvent* event){
 
 
 	QPoint pos = event->pos();
@@ -58,12 +57,12 @@ void MyTableView::mouseMoveEvent(QMouseEvent* event){
 }
 
 
-void MyTableView::mouseReleaseEvent(QMouseEvent* event){
+void MyListView::mouseReleaseEvent(QMouseEvent* event){
 
 	switch(event->button()){
 		case Qt::LeftButton:
 
-			QTableView::mouseReleaseEvent(event);
+			QListView::mouseReleaseEvent(event);
 			event->accept();
 
 			_drag = false;
@@ -78,14 +77,8 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 }
 
 
-void MyTableView::set_mime_data(QMimeData* data, QPixmap* pixmap){
-
+void MyListView::set_mime_data(QMimeData* data){
 
 	this->qDrag = new QDrag(_parent);
-	if(pixmap)
-		this->qDrag->setPixmap(*pixmap);
-
-
-
 	this->qDrag->setMimeData(data);
 }

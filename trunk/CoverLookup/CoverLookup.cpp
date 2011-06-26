@@ -202,8 +202,14 @@ CoverLookup::~CoverLookup() {
 }
 
 
+QString CoverLookup::get_cover_path(QString artist, QString album){
+		QString cover_token = QCryptographicHash::hash(artist.toUtf8() + album.toUtf8(), QCryptographicHash::Md5).toHex();
+			QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + ".jpg";
 
+			if(QFile::exists(cover_path)) return cover_path;
+			else return QString("");
 
+	}
 
 void CoverLookup::search_cover(bool emit_signal){
 

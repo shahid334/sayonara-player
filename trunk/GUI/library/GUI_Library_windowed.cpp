@@ -13,6 +13,7 @@
 #include "GUI/library/LibraryItemModelArtists.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include "ui_GUI_Library_windowed.h"
@@ -20,6 +21,7 @@
 #include <QDebug>
 #include <QPoint>
 #include <QMouseEvent>
+#include <QPixmap>
 
 #include <vector>
 
@@ -230,7 +232,7 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
 
-	QDrag* drag = new QDrag(this);
+
 	QMimeData* mime = new QMimeData();
 
 	QList<QVariant> list2send;
@@ -242,14 +244,14 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 		mime->setProperty("data_type", DROP_TYPE_TRACKS);
 		mime->setProperty("data", (QVariant) list2send);
-		this->lv_album->qDrag->setMimeData(mime);
+		this->ui->lv_artist->set_mime_data(mime);
 
-		/*Qt::DropAction dropAction = drag->exec();
-		Q_UNUSED(dropAction);*/
+
 }
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
+	qDebug() << "album pressed";
 	int album_id = _v_albums.at(idx.row()).id;
 	_selected_album = album_id;
 	Album album = _v_albums.at(idx.row());
@@ -280,9 +282,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 	this->ui->lab_info->setText(info_str);
 
-	//fill_library_artists(vec_artists);
 
-	//QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
 	QList<QVariant> list2send;
@@ -294,13 +294,21 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", (QVariant) list2send);
-	this->ui->lv_album->qDrag->setMimeData(mime);
+
+	QString cover_path = QString("");
+	if(idx.row() < _v_albums.size())
+		 cover_path = CoverLookup::get_cover_path(_v_albums[idx.row()].artists[0], _v_albums[idx.row()].name);
+
+	if(cover_path.size() > 0){
+		QPixmap pixmap = QPixmap::fromImage(QImage(cover_path));
+		pixmap = pixmap.scaledToWidth(50, Qt::SmoothTransformation);
+		this->ui->lv_album->set_mime_data(mime, &pixmap);
+	}
+
+	else this->ui->lv_album->set_mime_data(mime);
 
 
 
-
-	/*Qt::DropAction dropAction = drag->exec();
-	Q_UNUSED(dropAction);*/
 
 }
 
@@ -308,7 +316,6 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
 	Q_UNUSED(idx);
 
-	QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
 	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
@@ -325,10 +332,7 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", (QVariant) list2send);
-	drag->setMimeData(mime);
-
-	Qt::DropAction dropAction = drag->exec();
-	Q_UNUSED(dropAction);
+	this->ui->tb_title->set_mime_data(mime);
 
 }
 
@@ -346,6 +350,7 @@ void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
 	_everything_loaded = false;
 }
 
+
 void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 
 	int artist_id = _v_artists.at(idx.row()).id;
@@ -355,6 +360,7 @@ void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 	db->getAllTracksByArtist(artist_id, vec);
 	emit artist_chosen_signal(vec);
 
+	vec.clear();
 	_everything_loaded = false;
 
 }
@@ -383,11 +389,14 @@ Q_UNUSED(search);
 	if(search.length() < 3 && _everything_loaded) return;
 
 	QString searchstring = this->ui->le_search->text();
+
+
+	vector<Album> vec_albums;
+	vector<MetaData> vec_tracks;
+	vector<Artist> vec_artists;
+
 	if(searchstring.length() < 3){
 
-		vector<Album> vec_albums;
-		vector<MetaData> vec_tracks;
-		vector<Artist> vec_artists;
 
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
 		db->getTracksFromDatabase(vec_tracks);
@@ -407,10 +416,6 @@ Q_UNUSED(search);
 
 	_everything_loaded = false;
 
-	vector<MetaData> vec_tracks;
-	vector<Album> vec_albums;
-	vector<Artist> vec_artists;
-
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	db->getAllTracksBySearchString(QString("%") + searchstring + "%", vec_tracks);
 	fill_library_tracks(vec_tracks);
@@ -420,7 +425,6 @@ Q_UNUSED(search);
 
 	db->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists);
 	fill_library_artists(vec_artists);
-
 
 }
 

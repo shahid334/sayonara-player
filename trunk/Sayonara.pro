@@ -29,6 +29,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/tagedit/GUI_TagEdit.h \
     GUI/equalizer/GUI_Equalizer.h \
     GUI/MyTableView.h \
+    GUI/MyListview.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
@@ -61,6 +62,7 @@ SOURCES += Main.cpp \
     GUI/tagedit/GUI_TagEdit.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     GUI/MyTableView.cpp \
+    GUI/MyListView.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
    # LyricLookup/LyricLookup.cpp \

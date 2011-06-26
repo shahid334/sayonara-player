@@ -105,7 +105,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
-    <widget class="QTableView" name="lv_artist">
+    <widget class="MyTableView" name="lv_artist">
      <property name="font">
       <font>
        <pointsize>8</pointsize>
@@ -141,7 +141,7 @@
     </widget>
    </item>
    <item row="4" column="0" colspan="4">
-    <widget class="QTableView" name="tb_title">
+    <widget class="MyTableView" name="tb_title">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
