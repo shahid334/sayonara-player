@@ -18,6 +18,7 @@
 #include <GUI/library/LibraryItemDelegateAlbums.h>
 #include <GUI/library/LibraryItemDelegateArtists.h>
 #include <GUI/library/LibraryItemModelArtists.h>
+#include <GUI/MyTableView.h>
 #include <HelperStructs/MetaData.h>
 #include <DatabaseAccess/CDatabaseConnector.h>
 
@@ -96,6 +97,8 @@ private:
 			int _selected_album;
 
 			bool _everything_loaded;
+
+		//	MyTableView* _table_view_albums;
 
 
 

@@ -54,10 +54,9 @@ int main(int argc, char *argv[]){
 		CoverLookup cover;
 	qDebug() << "Load GUI";
         QApplication app (argc, argv);
+
         app.setApplicationName("Sayonara");
         app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
-        app.setStartDragDistance(15);
-        app.setStartDragTime(50);
 
         GUI_SimplePlayer 	player;
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));

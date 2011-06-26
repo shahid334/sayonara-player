@@ -200,6 +200,7 @@ void LastFM::login(QString username, QString password){
 
 	if(!success){
 		qDebug() << "Could not connect to " << url;
+		qDebug() << lfm_webpage;
 		free_webpage();
 		return;
 	}
@@ -208,10 +209,18 @@ void LastFM::login(QString username, QString password){
 	QString session_key = parse_session_answer();
 	_session_key = session_key;
 
+
+	if(_session_key.size() != 0) {
+		_logged_in = true;
+		qDebug() << "Logged in to LastFM";
+
+	}
+	else{
+		qDebug() << "Session key error";
+		qDebug() << lfm_webpage;
+	}
+
    	free_webpage();
-
-
-	if(_session_key.size() != 0) _logged_in = true;
 }
 
 

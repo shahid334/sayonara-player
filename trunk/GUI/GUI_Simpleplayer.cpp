@@ -20,6 +20,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     this -> m_cur_searching = false;
     this -> m_mute = false;
 
+
     m_trayIcon = new QSystemTrayIcon();
     m_trayIcon->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     setupTrayContextMenu();

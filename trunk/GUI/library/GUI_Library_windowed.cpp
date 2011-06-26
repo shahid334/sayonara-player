@@ -33,6 +33,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
+
+
 	this->_sort_albums = "name asc";
 	_selected_artist = -1;
 	_selected_album = -1;
@@ -77,6 +79,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 
 	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
+
 
 
 }
@@ -215,6 +218,8 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 		db->getAllAlbumsByArtist(artist_id, vec_albums, QString("%") + this->ui->le_search->text() + "%");
 	}
 
+
+
 	QString infotext = "<b>" + artist.name + "</b>, ";
 	infotext += QString::number(artist.num_albums) + " albums, ";
 	infotext += QString::number(artist.num_songs) + " tracks";
@@ -237,10 +242,10 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 		mime->setProperty("data_type", DROP_TYPE_TRACKS);
 		mime->setProperty("data", (QVariant) list2send);
-		drag->setMimeData(mime);
+		this->lv_album->qDrag->setMimeData(mime);
 
-		Qt::DropAction dropAction = drag->exec();
-		Q_UNUSED(dropAction);
+		/*Qt::DropAction dropAction = drag->exec();
+		Q_UNUSED(dropAction);*/
 }
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
@@ -277,7 +282,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 	//fill_library_artists(vec_artists);
 
-	QDrag* drag = new QDrag(this);
+	//QDrag* drag = new QDrag(this);
 	QMimeData* mime = new QMimeData();
 
 	QList<QVariant> list2send;
@@ -289,13 +294,13 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", (QVariant) list2send);
-	drag->setMimeData(mime);
+	this->ui->lv_album->qDrag->setMimeData(mime);
 
 
 
 
-	Qt::DropAction dropAction = drag->exec();
-	Q_UNUSED(dropAction);
+	/*Qt::DropAction dropAction = drag->exec();
+	Q_UNUSED(dropAction);*/
 
 }
 

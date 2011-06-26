@@ -65,8 +65,8 @@
 		private slots:
 
 			void current_row_changed(int);
-			void current_row_changed(const QModelIndex &);
-			void selected_row_changed(const QModelIndex&);
+			void double_clicked(const QModelIndex &);
+			void single_clicked(const QModelIndex&);
 			void clear_playlist_slot();
 			void save_playlist_slot();
 			void playlist_mode_changed_slot();

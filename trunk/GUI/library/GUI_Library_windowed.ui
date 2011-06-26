@@ -54,7 +54,7 @@
     </layout>
    </item>
    <item row="2" column="2" colspan="2">
-    <widget class="QTableView" name="lv_album">
+    <widget class="MyTableView" name="lv_album">
      <property name="font">
       <font>
        <pointsize>8</pointsize>
@@ -267,6 +267,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyTableView</class>
+   <extends>QTableView</extends>
+   <header>GUI/MyTableView.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

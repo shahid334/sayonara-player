@@ -65,8 +65,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(selected_row_changed(const QModelIndex&)));
-	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(current_row_changed(const QModelIndex &)));
+	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(single_clicked(const QModelIndex&)));
+	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 
 	this->connect(this->ui->but_EditID3, SIGNAL(released()), this, SLOT(edit_id3_but_pressed()));
 
@@ -76,7 +76,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	_cur_selected_row = -1;
 	_cur_playing_row = -1;
-
 }
 
 
@@ -147,7 +146,7 @@ void GUI_Playlist::save_playlist_slot(){
 
 }
 
-void GUI_Playlist::selected_row_changed(const QModelIndex& index){
+void GUI_Playlist::single_clicked(const QModelIndex& index){
 
 	_cur_selected_row = index.row();
 	qDebug() << "cur: " << _cur_selected_row;
@@ -170,9 +169,11 @@ void GUI_Playlist::selected_row_changed(const QModelIndex& index){
 
 
 
-void GUI_Playlist::current_row_changed(const QModelIndex & index){
+void GUI_Playlist::double_clicked(const QModelIndex & index){
 
 	if(index.isValid()){
+
+		clear_drag_lines(index.row());
 
 		for(int i=0; i<index.model()->rowCount(); i++){
 
@@ -180,7 +181,7 @@ void GUI_Playlist::current_row_changed(const QModelIndex & index){
 			QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
 			if(i == index.row())
-				str4Playlist[str4Playlist.length()-2] = "1";
+				str4Playlist[str4Playlist.length()-2] = "1";	// paint as marked
 
 			else
 				str4Playlist[str4Playlist.length()-2] = "0";
@@ -291,6 +292,7 @@ void GUI_Playlist::clear_drag_lines(int row){
 
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
+
 	if(event->mimeData() != NULL )
 		event->acceptProposedAction();
 }
@@ -362,9 +364,11 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	QPoint pos = event->pos();
 	int row = this->ui->listView->indexAt(pos).row();
 
+	if(row == -1){
+		row = this->_pli_model->rowCount();
+	}
+
 	clear_drag_lines(row);
-
-
 
  	if(inner_drag_drop && (row-1) == _cur_selected_row){
 		qDebug() << "ignore event";
@@ -376,10 +380,14 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
  	if(inner_drag_drop){
 		qDebug() << "Remove current selected row";
 
-		if(_cur_selected_row < row) {
-					qDebug() << "cur = " << _cur_selected_row << ", " << row;
-					row--;
-				}
+		qDebug() << "Before: cur = " << _cur_selected_row << ", " << row;
+
+		if(_cur_selected_row < row ) {
+			qDebug() << "cur = " << _cur_selected_row << ", " << row;
+			row--;
+		}
+
+		else qDebug() << "After: cur = " << _cur_selected_row << ", " << row;
 		remove_cur_selected_row();
 		inner_drag_drop = false;
 
