@@ -157,6 +157,7 @@ int main(int argc, char *argv[]){
 
         app.connect(&ui_playlist, SIGNAL(edit_id3_signal()), &playlist, SLOT(edit_id3_request()));
         app.connect(&playlist, SIGNAL(data_for_id3_change(const vector<MetaData>&)), &ui_tagedit, SLOT(change_meta_data(const vector<MetaData>&)));
+        app.connect(&ui_library, SIGNAL(data_for_id3_change(const vector<MetaData>&)), &ui_tagedit, SLOT(change_meta_data(const vector<MetaData>&)));
 		app.connect(&ui_tagedit, SIGNAL(id3_tags_changed()), &ui_library, SLOT(id3_tags_changed()));
 		app.connect(&ui_tagedit, SIGNAL(id3_tags_changed(vector<MetaData>&)), &playlist, SLOT(id3_tags_changed(vector<MetaData>&)));
 

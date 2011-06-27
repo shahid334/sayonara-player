@@ -58,7 +58,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->listView->setMovement(QListView::Free);
 
 	this->connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
-	this->connect(this->ui->btn_save_playlist, SIGNAL(released()), this, SLOT(save_playlist_slot()));
+	//this->connect(this->ui->btn_save_playlist, SIGNAL(released()), this, SLOT(save_playlist_slot()));
 
 	this->connect(this->ui->btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
@@ -68,7 +68,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(single_clicked(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 
-	this->connect(this->ui->but_EditID3, SIGNAL(released()), this, SLOT(edit_id3_but_pressed()));
+	//this->connect(this->ui->but_EditID3, SIGNAL(released()), this, SLOT(edit_id3_but_pressed()));
 
 	this->setAcceptDrops(true);
 	_parent = parent;
@@ -218,14 +218,11 @@ void GUI_Playlist::track_changed(int new_row){
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
 		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
-				str4Playlist.removeLast();
+		if(i == index.row())
+			str4Playlist[str4Playlist.size()-2] = QString("1");
 
-
-				if(i == index.row())
-					str4Playlist.push_back("1");
-
-				else
-					str4Playlist.push_back("0");
+		else
+			str4Playlist[str4Playlist.size()-2] = QString("0");
 
 		_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 	}
@@ -271,8 +268,8 @@ void GUI_Playlist::initGUI(){
 	this->ui->btn_repAll->setIcon(QIcon(Helper::getIconPath() + "repAll.png"));
 	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
-	this->ui->btn_save_playlist->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->ui->but_EditID3->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
+	/*this->ui->btn_save_playlist->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	this->ui->but_EditID3->setIcon(QIcon(Helper::getIconPath() + "edit.png"));*/
 
 }
 

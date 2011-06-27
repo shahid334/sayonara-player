@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QAbstractTableModel>
+#include <QPoint>
 
 #include <ui_GUI_Library_windowed.h>
 #include <GUI/library/LibraryItemModelTracks.h>
@@ -21,6 +22,8 @@
 #include <GUI/MyTableView.h>
 #include <HelperStructs/MetaData.h>
 #include <DatabaseAccess/CDatabaseConnector.h>
+
+#include <QMenu>
 
 #include <vector>
 
@@ -47,6 +50,12 @@ private:
 	vector<Album>		_v_albums;
 	vector<Artist>		_v_artists;
 
+	QMenu*				_right_click_menu;
+	QAction*			_info_action;
+	QAction*			_edit_action;
+	QAction*			_delete_action;
+
+
 
 	signals:
 		void artist_changed_signal(int);
@@ -56,6 +65,7 @@ private:
 		void artist_chosen_signal(vector<MetaData>&);
 		void track_chosen_signal(vector<MetaData>& );
 		void reload_library();
+		void data_for_id3_change(const vector<MetaData>&);
 
 	public slots:
 		void fill_library_tracks(vector<MetaData>&);
@@ -82,6 +92,21 @@ private:
 
 		void reload_library_slot();
 
+		void show_artist_context_menu(const QPoint& p);
+		void show_album_context_menu(const QPoint& p);
+		void show_track_context_menu(const QPoint& p);
+
+		void edit_album();
+		void info_album();
+		void delete_album();
+		void edit_artist();
+		void info_artist();
+		void delete_artist();
+		void edit_tracks();
+		void info_tracks();
+		void delete_tracks();
+
+
 	protected:
 			void resizeEvent(QResizeEvent* e);
 
@@ -91,16 +116,13 @@ private:
 
 	private:
 			QString getTotalTimeString(Album& album);
+			void init_menues();
 			QString _sort_albums;
 
 			int _selected_artist;
 			int _selected_album;
 
 			bool _everything_loaded;
-
-		//	MyTableView* _table_view_albums;
-
-
 
 };
 

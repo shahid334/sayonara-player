@@ -21,6 +21,9 @@ class MyTableView : public QTableView{
 
 	Q_OBJECT
 
+signals:
+	void context_menu_emitted(const QPoint&);
+
 public:
 	MyTableView(QWidget* parent=0);
 	virtual ~MyTableView();

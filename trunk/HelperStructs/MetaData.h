@@ -165,6 +165,15 @@ struct Album{
 		if(name.size() > 0) tmpName = name;
 
 		list.push_back(tmpName);
+		if(artists.size() > 0){
+			QString tmp_artists = artists.at(0);
+			for(int i=1; i<artists.size(); i++){
+				tmp_artists += "," + artists[i];
+			}
+			list.push_back(tmp_artists);
+		}
+		else list.push_back("");
+
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(length_sec));
@@ -176,17 +185,22 @@ struct Album{
 			list.push_back("no_sampler");
 		}
 		return list;
+
+
 	}
 
 	void fromStringList(QStringList& list){
 
-		if(list.size() < 6) return;
+		if(list.size() < 7) return;
 		name = list.at(0);
-		id = list.at(1).toInt();
-		num_songs = list.at(2).toInt();
-		length_sec = list.at(3).toLong();
-		year = list.at(4).toInt();
-		is_sampler = (list.at(5) == "sampler");
+		QString tmp_artists = list.at(1);
+		QStringList tmp_list = tmp_artists.split(',');
+		artists = tmp_list;
+		id = list.at(2).toInt();
+		num_songs = list.at(3).toInt();
+		length_sec = list.at(4).toLong();
+		year = list.at(5).toInt();
+		is_sampler = (list.at(6) == "sampler");
 
 	}
 };

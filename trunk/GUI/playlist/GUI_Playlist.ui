@@ -35,7 +35,7 @@
    <string>Form</string>
   </property>
   <property name="toolTip">
-   <string>Append tracks</string>
+   <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
@@ -84,7 +84,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="13">
+   <item row="1" column="0" colspan="14">
     <widget class="MyListView" name="listView">
      <property name="minimumSize">
       <size>
@@ -229,7 +229,33 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="2" column="3" colspan="10">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="7" colspan="6">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="13">
     <widget class="QPushButton" name="btn_append">
      <property name="minimumSize">
       <size>
@@ -270,68 +296,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="4" colspan="7">
-    <spacer name="horizontalSpacer_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="7" colspan="5">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="11">
-    <widget class="QPushButton" name="btn_save_playlist">
-     <property name="minimumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Save Playlist</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/save.png</normaloff>icons/save.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="12">
+   <item row="0" column="13">
     <widget class="QPushButton" name="btn_clear">
      <property name="minimumSize">
       <size>
@@ -359,34 +324,6 @@
       <size>
        <width>24</width>
        <height>24</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="12">
-    <widget class="QPushButton" name="but_EditID3">
-     <property name="minimumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>22</width>
-       <height>22</height>
       </size>
      </property>
      <property name="flat">

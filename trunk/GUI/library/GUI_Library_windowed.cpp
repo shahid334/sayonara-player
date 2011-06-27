@@ -15,6 +15,7 @@
 #include "HelperStructs/MetaData.h"
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "GUI/tagedit/GUI_TagEdit.h"
 
 #include "ui_GUI_Library_windowed.h"
 
@@ -22,6 +23,7 @@
 #include <QPoint>
 #include <QMouseEvent>
 #include <QPixmap>
+#include <QMessageBox>
 
 #include <vector>
 
@@ -68,6 +70,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->btn_reload->setIcon(QIcon(Helper::getIconPath() + "reload.png"));
 	this->ui->btn_reload->setVisible(false);
 
+	init_menues();
+
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(this->ui->btn_reload, SIGNAL( clicked()), this, SLOT(reload_library_slot()));
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
@@ -80,6 +84,10 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 
+	connect(this->ui->lv_album, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_album_context_menu(const QPoint&)));
+	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
+	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
+
 	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
 
 
@@ -90,6 +98,21 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 	// TODO Auto-generated destructor stub
 }
 
+
+void GUI_Library_windowed::init_menues(){
+	_right_click_menu = new QMenu(this);
+	_info_action = new QAction("Info", this);
+	_edit_action = new QAction("Edit", this);
+	_delete_action = new QAction("Delete", this);
+
+	_right_click_menu->addAction(_info_action);
+	_right_click_menu->addAction(_edit_action);
+	_right_click_menu->addAction(_delete_action);
+
+
+
+
+}
 
 void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 
@@ -222,11 +245,11 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 
 
-	QString infotext = "<b>" + artist.name + "</b>, ";
+	/*QString infotext = "<b>" + artist.name + "</b>, ";
 	infotext += QString::number(artist.num_albums) + " albums, ";
 	infotext += QString::number(artist.num_songs) + " tracks";
 
-	this->ui->lab_info->setText(infotext);
+	this->ui->lab_info->setText(infotext);*/
 
 
 	fill_library_albums(vec_albums);
@@ -272,7 +295,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	fill_library_tracks(vec_tracks);
 
 
-	QString info_str = "<b>" + album.name + "</b>, ";
+	/*QString info_str = "<b>" + album.name + "</b>, ";
 
 	if(album.is_sampler) info_str += "by various artists (" + QString::number(album.artists.size()) + "), ";
 	else if(album.artists.size() > 0) info_str += QString("by ") + album.artists[0] + ", ";
@@ -280,7 +303,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	info_str += QString::number(album.num_songs) + " tracks, ";
 	info_str += QString("duration: ") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
 
-	this->ui->lab_info->setText(info_str);
+	this->ui->lab_info->setText(info_str);*/
 
 
 	QMimeData* mime = new QMimeData();
@@ -372,6 +395,50 @@ void GUI_Library_windowed::track_chosen(const QModelIndex& idx){
 	emit track_chosen_signal(vec);
 }
 
+
+
+void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
+
+
+
+	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));
+	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_artist()));
+	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_artist()));
+
+	this->_right_click_menu->exec(p);
+
+	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));
+	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_artist()));
+	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_artist()));
+
+}
+
+void GUI_Library_windowed::show_album_context_menu(const QPoint& p){
+	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_album()));
+	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_album()));
+	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_album()));
+
+	this->_right_click_menu->exec(p);
+
+	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_album()));
+	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_album()));
+	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_album()));
+
+
+}
+
+void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
+
+	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_tracks()));
+	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_tracks()));
+	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_tracks()));
+
+	this->_right_click_menu->exec(p);
+
+	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_tracks()));
+	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_tracks()));
+	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_tracks()));
+}
 
 
 void GUI_Library_windowed::clear_button_pressed(){
@@ -548,6 +615,205 @@ void GUI_Library_windowed::library_should_be_reloaded(){
 }
 
 void GUI_Library_windowed::reload_library_slot(){
+
 	this->ui->btn_reload->setVisible(false);
 	emit reload_library();
+}
+
+
+
+
+void GUI_Library_windowed::edit_album(){
+
+	emit data_for_id3_change(_v_metadata);
+}
+
+
+void GUI_Library_windowed::info_album(){
+
+
+	QMessageBox box;
+	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows(1);
+	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
+
+	Album album;
+	QStringList album_str_list = _album_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
+	album.fromStringList( album_str_list );
+
+	QString artist = album.artists[0];
+	if(album.artists.size() > 1)
+		artist = "Various artists";
+
+	QString album_name = album.name;
+	if(album_name.length() == 0)
+		album_name = "Unknown";
+
+	box.setText(QString("<b>") + artist + " - " + album_name + "</b>");
+
+	QString year =  QString::number(album.year);
+	if(album.year == 0) year = "Unknown";
+	QString info_text = QString::number(album.num_songs) + " tracks\n" +
+						"Playing time: " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + "\n" +
+						"Year: " + year;
+
+	QPixmap pm = QPixmap(CoverLookup::get_cover_path(album.artists[0], album.name));
+	pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+	box.setIconPixmap(pm);
+
+	box.setInformativeText(info_text);
+	box.exec();
+	box.close();
+
+}
+
+
+void GUI_Library_windowed::delete_album(){
+
+}
+
+
+void GUI_Library_windowed::edit_artist(){
+	emit data_for_id3_change(_v_metadata);
+}
+
+
+void GUI_Library_windowed::info_artist(){
+
+	QMessageBox box;
+	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows(1);
+	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
+
+	Artist artist;
+	QStringList artist_str_list = _artist_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
+	artist.fromStringList( artist_str_list );
+
+	QString artist_name = artist.name;
+	if(artist_name.length() == 0)
+		artist_name = "Unknown";
+
+	box.setText( QString("<b>") + artist_name + "</b>");
+
+	QString info_text = QString::number(artist.num_albums) + " albums\n" +
+						QString::number(artist.num_songs) + " songs";
+
+
+	QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist.name, _v_albums[rand() % artist.num_albums].name));
+	pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+	box.setIconPixmap(pm);
+
+	box.setInformativeText(info_text);
+	box.exec();
+	box.close();
+}
+
+
+void GUI_Library_windowed::delete_artist(){
+
+}
+
+
+void GUI_Library_windowed::edit_tracks(){
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+	vector<MetaData> vec_md;
+
+	for(int i=0; i<idx_list.size(); i++){
+		int row = idx_list[i].row();
+		if(row < _v_metadata.size()){
+			vec_md.push_back(_v_metadata[i]);
+		}
+	}
+
+	emit data_for_id3_change(vec_md);
+}
+
+void GUI_Library_windowed::info_tracks(){
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+	QMessageBox box;
+
+
+	if(idx_list.size() == 0 ) return;
+	else if(idx_list.size() == 1 && idx_list.at(0).isValid()){
+		MetaData md =  _v_metadata[idx_list.at(0).row()];
+		QString title = md.title;
+
+		box.setText(QString("<b>") + title + "</b>");
+
+		QString artist = md.artist;
+		if(artist.length() == 0) artist = "Unknown";
+		QString album = md.album;
+		if(album.length() == 0) album = "Unknown";
+		QString length = Helper::cvtMsecs2TitleLengthString(md.length_ms);
+		QString year = QString::number(md.year);
+		if(md.year == 0) year = "Unknown";
+		QString bitrate = QString::number(md.bitrate / 1000) + " kBit/s";
+		QString filepath = md.filepath;
+		QString track_num = QString::number(md.track_num);
+
+		box.setInformativeText(	QString("<b>Artist:</b>" ) + artist + "<br />" +
+								"<b>Album:</b> " + album + " ("+ track_num +")<br />" +
+								"<b>Length:</b> " + length + QString("<br />") +
+								"<b>Year:</b> " + year + QString("<br />") +
+								"<b>Bitrate:</b> " + bitrate);
+
+
+		QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist, album));
+		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		box.setIconPixmap(pm);
+	}
+
+	else if(idx_list.size() > 1){
+
+		QString album = "";
+		QString artist = "";
+		QString year = "";
+		QString bitrate = "";
+
+		QString tracks = QString::number(idx_list.size()) + " tracks";
+
+		box.setText(tracks);
+
+		for(int i=0; i<idx_list.size(); i++){
+			QModelIndex idx = idx_list[i];
+			if(!idx.isValid()) continue;
+
+			MetaData md =  _v_metadata[idx_list.at(i).row()];
+			if(album == "") album = md.album;
+			if(artist == "") artist = md.artist;
+			if(year == "" && md.year != 0) year = QString::number(md.year);
+			if(bitrate == "") bitrate = QString::number(md.bitrate);
+
+			if(album != md.album) album = "various albums";
+			if(artist != md.artist) artist = "various artists";
+			if(year != QString::number(md.year)) year = "-1";
+			if(bitrate != QString::number(md.bitrate)) bitrate = "-1";
+		}
+
+		QString info_text = "<b>Artist:</b> " + artist + "<br />" +
+							"<b>Album:</b> " + album;
+		if(year != "-1"){
+			info_text += "<br /><b>Year:</b> " + year;
+		}
+
+
+		if(bitrate != "-1"){
+			info_text += "<br /><b>Bitrate:</b> " + bitrate;
+		}
+
+		box.setInformativeText(info_text);
+		if(artist != "various artists" && album != "various albums"){
+
+			QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist, album));
+			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+			box.setIconPixmap(pm);
+		}
+	}
+
+	box.exec();
+	box.close();
+
+
+}
+
+void GUI_Library_windowed::delete_tracks(){
+
 }
