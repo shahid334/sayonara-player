@@ -14,7 +14,7 @@
 #include <QCryptographicHash>
 
 #include <iostream>
-#include <CSettingsStorage.h>
+#include "HelperStructs/CSettingsStorage.h"
 
 
 using namespace std;

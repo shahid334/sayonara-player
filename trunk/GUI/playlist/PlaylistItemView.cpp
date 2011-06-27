@@ -5,7 +5,7 @@
  *      Author: luke
  */
 
-#include "Playlist/PlaylistItemView.h"
+#include "GUI/Playlist/PlaylistItemView.h"
 #include "HelperStructs/MetaData.h"
 
 #include <QAbstractItemView>

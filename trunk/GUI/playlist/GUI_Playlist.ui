@@ -337,7 +337,7 @@
   <customwidget>
    <class>MyListView</class>
    <extends>QListView</extends>
-   <header>MyListView.h</header>
+   <header>GUI/MyListView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

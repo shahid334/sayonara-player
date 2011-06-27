@@ -82,9 +82,17 @@ void CSettingsStorage::init() {
 }
 
 QString CSettingsStorage::getDBFileName () {
-    QDir dir = QDir::homePath();
+#ifndef Q_OS_WIN   
+	QDir dir = QDir::homePath();
     dir.cd(this -> m_sayonaraPath);
     return dir.absolutePath() + QDir::separator() + m_dbFile;
+#else
+	QDir dir(Helper::getIconPath());
+    //dir.cd(Helper::getIconPath());
+    return dir.absolutePath() + QDir::separator() + m_dbFile;
+#endif
+
+
 }
 
 

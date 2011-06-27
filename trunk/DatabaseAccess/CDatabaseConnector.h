@@ -1,3 +1,4 @@
+
 #ifndef CDATABASECONNECTOR_H
 #define CDATABASECONNECTOR_H
 
@@ -8,7 +9,7 @@
 #include <HelperStructs/Equalizer_presets.h>
 
 
-class CDatabaseConnector;
+//class CDatabaseConnector;
 class CDatabaseConnector : public QObject
 {
     Q_OBJECT

@@ -84,8 +84,13 @@ string Helper::trim(const string & toTrim){
 QString Helper::getIconPath(){
 
 	QString path;
-	if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
+#ifndef Q_OS_WIN
+		if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
 	else path = "./GUI/icons/";
+#else
+	if(QFile::exists("./data")) path = "./data/";
+	else path = "";
+#endif
 
 	return path;
 

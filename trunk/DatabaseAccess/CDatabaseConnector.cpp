@@ -9,7 +9,7 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
-#include <CSettingsStorage.h>
+#include <HelperStructs/CSettingsStorage.h>
 
 using namespace std;
 

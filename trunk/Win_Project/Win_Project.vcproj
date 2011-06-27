@@ -30,11 +30,11 @@
 				Name="VCPreBuildEventTool"
 			/>
 			<Tool
-				Name="VCCustomBuildTool"
+				Name="UI"
 				ExecutionBucket="2"
 			/>
 			<Tool
-				Name="UI"
+				Name="VCCustomBuildTool"
 			/>
 			<Tool
 				Name="Moc Rule"
@@ -52,7 +52,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(CURL)/include&quot;;&quot;$(QTDIR)/include/Qt&quot;;&quot;$(QTDIR)/include/QtSql&quot;;&quot;$(QTDIR)/include&quot;;&quot;$(QTDIR)/include/QtCore&quot;;&quot;$(QTDIR)/include/QtGui&quot;;&quot;$(QTDIR)/include/phonon&quot;;&quot;$(SolutionDir)&quot;; &quot;$(TAGLIB)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)/include/QtXml&quot;;&quot;$(CURL)/include&quot;;&quot;$(QTDIR)/include/Qt&quot;;&quot;$(QTDIR)/include/QtSql&quot;;&quot;$(QTDIR)/include&quot;;&quot;$(QTDIR)/include/QtCore&quot;;&quot;$(QTDIR)/include/QtGui&quot;;&quot;$(QTDIR)/include/phonon&quot;;&quot;$(SolutionDir)&quot;;&quot;$(TAGLIB)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -73,7 +73,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				ExecutionBucket="11"
-				AdditionalDependencies="libcurld_imp.lib QtGuid4.lib QtCored4.lib QtSqld4.lib qtmaind.lib phonond4.lib tagd.lib"
+				AdditionalDependencies="libcurld_imp.lib QtGuid4.lib QtCored4.lib QtSqld4.lib QtXmld4.lib qtmaind.lib phonond4.lib tagd.lib"
 				OutputFile="$(OutDir)\SayonaraD.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)/lib&quot;;&quot;$(CURL)\lib\DLL-Debug&quot;;&quot;$(TAGLIB)\taglib\Debug&quot;"
@@ -122,12 +122,14 @@
 			/>
 			<Tool
 				Name="UI"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
+				ExecutionBucket="2"
 			/>
 			<Tool
 				Name="Moc Rule"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+				ExecutionBucket="4"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -142,7 +144,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(CURL)/include&quot;;&quot;$(QTDIR)/include/Qt&quot;;&quot;$(QTDIR)/include/QtSql&quot;;&quot;$(QTDIR)/include&quot;;&quot;$(QTDIR)/include/QtCore&quot;;&quot;$(QTDIR)/include/QtGui&quot;;&quot;$(QTDIR)/include/phonon&quot;;&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\MP3_Player&quot;; &quot;$(TAGLIB)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)/include/QtXml&quot;;&quot;$(CURL)/include&quot;;&quot;$(QTDIR)/include/Qt&quot;;&quot;$(QTDIR)/include/QtSql&quot;;&quot;$(QTDIR)/include&quot;;&quot;$(QTDIR)/include/QtCore&quot;;&quot;$(QTDIR)/include/QtGui&quot;;&quot;$(QTDIR)/include/phonon&quot;;&quot;$(SolutionDir)&quot;;&quot;$(SolutionDir)\MP3_Player&quot;;&quot;$(TAGLIB)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -161,7 +163,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libcurl_imp.lib QtGui4.lib QtCore4.lib QtSql4.lib qtmain.lib phonon4.lib tag.lib qsqlite4.lib"
+				ExecutionBucket="11"
+				AdditionalDependencies="libcurl_imp.lib QtGui4.lib QtCore4.lib QtSql4.lib QtXml4.lib qtmain.lib phonon4.lib tag.lib qsqlite4.lib"
 				OutputFile="$(OutDir)\Sayonara.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)/lib&quot;; &quot;$(CURL)\lib\DLL-Release&quot;;&quot;$(TAGLIB)\taglib\Release&quot;;&quot;$(QTDIR)\plugins\sqldrivers&quot;"
@@ -173,26 +176,32 @@
 			/>
 			<Tool
 				Name="VCALinkTool"
+				ExecutionBucket="12"
 			/>
 			<Tool
 				Name="VCManifestTool"
+				ExecutionBucket="13"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
+				ExecutionBucket="14"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				ExecutionBucket="15"
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
+				ExecutionBucket="16"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="&quot;$(SolutionDir)\Win_Tools\copy_icons.bat&quot; &quot;$(SolutionDir)&quot;"
 				CommandLine="&quot;$(SolutionDir)\Win_Tools\copy_icons.bat&quot; &quot;$(SolutionDir)&quot;"
+				ExecutionBucket="17"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 		</Configuration>
 	</Configurations>
@@ -208,6 +217,10 @@
 			</File>
 			<File
 				RelativePath="..\HelperStructs\CSettingsStorage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\HelperStructs\Equalizer_presets.h"
 				>
 			</File>
 			<File
@@ -275,26 +288,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\GUI\GUI_Library_windowed.ui"
-				>
-			</File>
-			<File
-				RelativePath="..\GUI\GUI_LibrarySetup_Widget.ui"
-				>
-			</File>
-			<File
-				RelativePath="..\GUI\GUI_Playlist.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\GUI\GUI_Playlist.h"
-				>
-			</File>
-			<File
-				RelativePath="..\GUI\GUI_Playlist.ui"
-				>
-			</File>
-			<File
 				RelativePath="..\GUI\GUI_Simpleplayer.cpp"
 				>
 			</File>
@@ -306,35 +299,71 @@
 				RelativePath="..\GUI\GUI_Simpleplayer.ui"
 				>
 			</File>
+			<File
+				RelativePath="..\GUI\MyListView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\GUI\MyListView.h"
+				>
+			</File>
+			<File
+				RelativePath="..\GUI\MyTableView.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\GUI\MyTableView.h"
+				>
+			</File>
 			<Filter
 				Name="Playlist"
 				>
 				<File
-					RelativePath="..\GUI\Playlist\GUI_Playlist_Entry.ui"
+					RelativePath="..\GUI\playlist\GUI_Playlist.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Playlist\GUI_PlaylistEntry.cpp"
+					RelativePath="..\GUI\playlist\GUI_Playlist.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Playlist\GUI_PlaylistEntry.h"
+					RelativePath="..\GUI\playlist\GUI_Playlist.ui"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Playlist\PlaylistItemDelegate.cpp"
+					RelativePath="..\GUI\playlist\GUI_Playlist_Entry.ui"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Playlist\PlaylistItemDelegate.h"
+					RelativePath="..\GUI\playlist\GUI_PlaylistEntry.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Playlist\PlaylistItemModel.cpp"
+					RelativePath="..\GUI\playlist\GUI_PlaylistEntry.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Playlist\PlaylistItemModel.h"
+					RelativePath="..\GUI\playlist\PlaylistItemDelegate.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\playlist\PlaylistItemDelegate.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\playlist\PlaylistItemModel.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\playlist\PlaylistItemModel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\playlist\PlaylistItemView.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\playlist\PlaylistItemView.h"
 					>
 				</File>
 			</Filter>
@@ -342,55 +371,115 @@
 				Name="Library"
 				>
 				<File
-					RelativePath="..\GUI\Library\GUI_Library_windowed.cpp"
+					RelativePath="..\GUI\library\GUI_Library_windowed.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\GUI_Library_windowed.h"
+					RelativePath="..\GUI\library\GUI_Library_windowed.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\GUI_LibrarySetup_Widget.ui"
+					RelativePath="..\GUI\library\GUI_Library_windowed.ui"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemDelegateAlbums.cpp"
+					RelativePath="..\GUI\library\GUI_LibrarySetup_Widget.ui"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemDelegateAlbums.h"
+					RelativePath="..\GUI\library\LibraryItemDelegateAlbums.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemModelAlbums.cpp"
+					RelativePath="..\GUI\library\LibraryItemDelegateAlbums.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemModelAlbums.h"
+					RelativePath="..\GUI\library\LibraryItemDelegateArtists.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemModelArtists.cpp"
+					RelativePath="..\GUI\library\LibraryItemDelegateArtists.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemModelArtists.h"
+					RelativePath="..\GUI\library\LibraryItemModelAlbums.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemModelTracks.cpp"
+					RelativePath="..\GUI\library\LibraryItemModelAlbums.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibraryItemModelTracks.h"
+					RelativePath="..\GUI\library\LibraryItemModelArtists.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibrarySetupWidget.cpp"
+					RelativePath="..\GUI\library\LibraryItemModelArtists.h"
 					>
 				</File>
 				<File
-					RelativePath="..\GUI\Library\LibrarySetupWidget.h"
+					RelativePath="..\GUI\library\LibraryItemModelTracks.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\library\LibraryItemModelTracks.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\library\LibrarySetupWidget.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\library\LibrarySetupWidget.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Equalizer"
+				>
+				<File
+					RelativePath="..\GUI\equalizer\GUI_Equalizer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\equalizer\GUI_Equalizer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\equalizer\GUI_equalizer.ui"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="LastFM"
+				>
+				<File
+					RelativePath="..\GUI\LastFM\GUI_LastFM.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\LastFM\GUI_LastFM.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\LastFM\GUI_LastFM_Widget.ui"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="TagEdit"
+				>
+				<File
+					RelativePath="..\GUI\tagedit\GUI_TagEdit.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\tagedit\GUI_TagEdit.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\tagedit\GUI_TagEdit.ui"
 					>
 				</File>
 			</Filter>
@@ -398,14 +487,6 @@
 		<Filter
 			Name="library"
 			>
-			<File
-				RelativePath="..\library\CDatabaseConnector.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\library\CDatabaseConnector.h"
-				>
-			</File>
 			<File
 				RelativePath="..\library\CDirectoryReader.cpp"
 				>
@@ -422,7 +503,63 @@
 				RelativePath="..\library\CLibraryBase.h"
 				>
 			</File>
+			<File
+				RelativePath="..\library\ReloadThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\library\ReloadThread.h"
+				>
+			</File>
 		</Filter>
+		<Filter
+			Name="DatabaseAccess"
+			>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseAlbums.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseArtists.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseConnector.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseConnector.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseLibrary.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseSettings.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\DatabaseAccess\CDatabaseTracks.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="LastFM"
+			>
+			<File
+				RelativePath="..\LastFM\LastFM.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\LastFM\LastFM.h"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath="..\Main.cpp"
+			>
+		</File>
 		<File
 			RelativePath="..\moc_CDatabaseConnector.cpp"
 			>
@@ -437,6 +574,22 @@
 		</File>
 		<File
 			RelativePath="..\moc_CoverLookup.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_CSettingsStorage.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_Equalizer_presets.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_GUI_Equalizer.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_GUI_LastFM.cpp"
 			>
 		</File>
 		<File
@@ -456,11 +609,27 @@
 			>
 		</File>
 		<File
+			RelativePath="..\moc_GUI_TagEdit.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\moc_Helper.cpp"
 			>
 		</File>
 		<File
+			RelativePath="..\moc_id3.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LastFM.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\moc_LibraryItemDelegateAlbums.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LibraryItemDelegateArtists.cpp"
 			>
 		</File>
 		<File
@@ -488,6 +657,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\moc_MyListView.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_MyTableView.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\moc_Playlist.cpp"
 			>
 		</File>
@@ -500,7 +677,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\Win_Main.cpp"
+			RelativePath="..\moc_PlaylistItemView.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_ReloadThread.cpp"
 			>
 		</File>
 	</Files>
