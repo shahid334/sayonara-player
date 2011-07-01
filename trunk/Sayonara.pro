@@ -33,6 +33,8 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
+    CoverLookup/CoverFetchThread.h \
+    CoverLookup/CoverDownloader.h \
     #LyricLookup/LyricLookup.h \
     DatabaseAccess/CDatabaseConnector.h \
     library/CDirectoryReader.h \
@@ -65,6 +67,7 @@ SOURCES += Main.cpp \
     GUI/MyListView.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
+    CoverLookup/CoverFetchThread.cpp \
    # LyricLookup/LyricLookup.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \

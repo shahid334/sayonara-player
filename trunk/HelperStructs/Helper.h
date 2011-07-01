@@ -157,5 +157,12 @@ namespace Helper{
 
 	QString getIconPath();
 
+	QString get_cover_path(QString artist, QString album);
+
+	QString calc_cover_google_adress(QString artist, QString album);
+	QString calc_cover_lfm_adress(QString artist, QString album);
+	QString calc_album_lfm_adress(QString album);
+
+	QString calc_cover_token(QString artist, QString album);
 };
 #endif

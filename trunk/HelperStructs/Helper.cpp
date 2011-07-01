@@ -6,18 +6,23 @@
  */
 
 #include "HelperStructs/Helper.h"
+#include "LastFM/LastFM.h"
 
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <QString>
+
 
 #include <sys/types.h>
 #include <sys/stat.h>
 //#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <QDir>
+#include <QUrl>
+#include <QString>
+#include <QCryptographicHash>
 
 
 
@@ -83,6 +88,7 @@ string Helper::trim(const string & toTrim){
 
 QString Helper::getIconPath(){
 
+
 	QString path;
 #ifndef Q_OS_WIN
 		if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
@@ -94,4 +100,69 @@ QString Helper::getIconPath(){
 
 	return path;
 
+}
+
+
+QString Helper::get_cover_path(QString artist, QString album){
+	QString cover_token = calc_cover_token(artist, album);
+	QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + ".jpg";
+
+	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
+		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
+	}
+
+	return cover_path;
+
+
+}
+
+QString Helper::calc_album_lfm_adress(QString album){
+	LastFM lfm;
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
+	QString api_key = lfm.get_api_key();
+
+	url += api_key + "&album=" + QUrl::toPercentEncoding(album);
+	return url;
+}
+
+QString Helper::calc_cover_lfm_adress(QString artist, QString album){
+	LastFM lfm;
+	QString api_key = lfm.get_api_key();
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=");
+
+		if(album == "") url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
+
+	url += api_key + "&";
+	url += "artist=" + QUrl::toPercentEncoding(artist);
+	if(album != "") url += "&album=" + QUrl::toPercentEncoding(album);
+	return url;
+
+
+}
+
+QString Helper::calc_cover_google_adress(QString artist, QString album){
+
+	QString url = QString("http://www.google.de/images?q=");
+	/*artist = artist.replace('&', 'n');
+	artist = artist.replace('?', '+');
+	artist = artist.replace(' ', '+');*/
+	artist = QUrl::toPercentEncoding(artist);
+
+
+	/*album = album.replace('&', 'n');
+	album = album.replace('?', '+');
+	album = album.replace(' ', '+');*/
+	album = QUrl::toPercentEncoding(album);
+
+
+
+	url += artist + "+" + album;
+	url +=  QString("&tbs=isz:s,ift:jpg");			// klein*/
+
+	return url;
+}
+
+QString Helper::calc_cover_token(QString artist, QString album){
+	QString ret = QCryptographicHash::hash(artist.toUtf8() + album.toUtf8(), QCryptographicHash::Md5).toHex();
+	return ret;
 }

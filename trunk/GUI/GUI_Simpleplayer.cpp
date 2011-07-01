@@ -382,7 +382,9 @@ void GUI_SimplePlayer::muteButtonPressed(){
 
 void GUI_SimplePlayer::cover_changed(QPixmap& cover){
 
+	qDebug() << "Cover changed";
 	this -> ui->albumCover->setPixmap(cover);
+	this->ui->albumCover->repaint();
 }
 
 void GUI_SimplePlayer::coverClicked(bool){

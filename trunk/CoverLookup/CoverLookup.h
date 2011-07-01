@@ -9,14 +9,20 @@
 #define COVERLOOKUP_H_
 
 #include "HelperStructs/MetaData.h"
+#include "CoverLookup/CoverFetchThread.h"
 
 #include <string>
 #include <vector>
 
 #include <QObject>
+#include <QThread>
 #include <QPixmap>
 #include <QCryptographicHash>
 #include <QDir>
+
+#define EMIT_NONE 0
+#define EMIT_ONE 1
+#define EMIT_ALL 2
 
 
 using namespace std;
@@ -26,38 +32,34 @@ class CoverLookup : public QObject{
 
 	Q_OBJECT
 
-	vector<QPixmap> _pixmaps;
-	vector<string> 	_cover_adresses;
-	string			_artist;
-	string			_album;
-	QString			_cover_token;
-	QString			_filepath;
-	QString			_cover_path;
-	int 			_cur_cover;
-	bool			_terminate_cover_fetch;
-
 	signals:
+		void covers_found(vector<QPixmap>&);
 		void cover_found(QPixmap&);
 
 	public slots:
-		void search_cover(const MetaData&, bool emit_signal=true);
-		void showCoverAlternatives();
+		void search_cover(const MetaData& md);
+		void search_covers(const vector<Album>&);
+		void search_alternative_covers(const QString& album);
 		void search_all_covers();
+		void terminate_thread();
 
 	private slots:
-		void terminate_cover_fetch();
+		void thread_finished();
+
 
 public:
 	CoverLookup();
 	virtual ~CoverLookup();
-	static QString get_cover_path(QString artist, QString album);
+
 
 
 private:
-	QPixmap add_new_pixmap(string cover_filename);
-	string 	calc_url_adress();
-	void 	search_cover(bool emit_signal);
-	void 	download_covers(uint num);
+	CoverFetchThread* _thread;
+	void download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QPixmap>& vec_pixmaps);
+
+	int _emit_type;
+
+	vector<QPixmap> alternative_covers;
 };
 
 #endif /* COVERLOOKUP_H_ */

@@ -318,9 +318,9 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", (QVariant) list2send);
 
-	QString cover_path = QString("");
+	/*QString cover_path = QString("");
 	if(idx.row() < _v_albums.size())
-		 cover_path = CoverLookup::get_cover_path(_v_albums[idx.row()].artists[0], _v_albums[idx.row()].name);
+		 cover_path = Helper::get_cover_path(_v_albums[idx.row()].artists[0], _v_albums[idx.row()].name);
 
 	if(cover_path.size() > 0){
 		QPixmap pixmap = QPixmap::fromImage(QImage(cover_path));
@@ -328,7 +328,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 		this->ui->lv_album->set_mime_data(mime, &pixmap);
 	}
 
-	else this->ui->lv_album->set_mime_data(mime);
+	else*/ this->ui->lv_album->set_mime_data(mime);
 
 
 
@@ -656,9 +656,9 @@ void GUI_Library_windowed::info_album(){
 						"Playing time: " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + "\n" +
 						"Year: " + year;
 
-	QPixmap pm = QPixmap(CoverLookup::get_cover_path(album.artists[0], album.name));
+	/*QPixmap pm = QPixmap(CoverLookup::get_cover_path(album.artists[0], album.name));
 	pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-	box.setIconPixmap(pm);
+	box.setIconPixmap(pm);*/
 
 	box.setInformativeText(info_text);
 	box.exec();
@@ -697,9 +697,9 @@ void GUI_Library_windowed::info_artist(){
 						QString::number(artist.num_songs) + " songs";
 
 
-	QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist.name, _v_albums[rand() % artist.num_albums].name));
+	/*QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist.name, _v_albums[rand() % artist.num_albums].name));
 	pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-	box.setIconPixmap(pm);
+	box.setIconPixmap(pm);*/
 
 	box.setInformativeText(info_text);
 	box.exec();
@@ -756,9 +756,9 @@ void GUI_Library_windowed::info_tracks(){
 								"<b>Bitrate:</b> " + bitrate);
 
 
-		QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist, album));
+		/*QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist, album));
 		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-		box.setIconPixmap(pm);
+		box.setIconPixmap(pm);*/
 	}
 
 	else if(idx_list.size() > 1){
@@ -802,9 +802,9 @@ void GUI_Library_windowed::info_tracks(){
 		box.setInformativeText(info_text);
 		if(artist != "various artists" && album != "various albums"){
 
-			QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist, album));
+			/*QPixmap pm = QPixmap(CoverLookup::get_cover_path(artist, album));
 			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-			box.setIconPixmap(pm);
+			box.setIconPixmap(pm);*/
 		}
 	}
 

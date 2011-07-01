@@ -40,6 +40,7 @@ public:
 
 	public:
 		void login(QString, QString);
+		QString get_api_key();
 
 	private:
 		QString parse_session_answer();

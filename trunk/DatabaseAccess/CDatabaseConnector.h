@@ -62,6 +62,8 @@ public:
 			int getAlbumID (const QString & album);
 			int getMaxAlbumID();
 
+			Album getAlbumByID(const int& id);
+
 			QString getAlbumName (const int & id);
 
 			void getAllAlbums(vector<Album>& result, QString sortorder = "name asc");

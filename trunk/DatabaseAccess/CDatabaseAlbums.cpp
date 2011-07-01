@@ -59,7 +59,56 @@ int CDatabaseConnector::getMaxAlbumID(){
 		}
 }
 
+Album CDatabaseConnector::getAlbumByID(const int& id){
+	 if (!this -> m_database.isOpen())
+				        this -> m_database.open();
 
+		try {
+			QSqlQuery q (this -> m_database);
+			QString querytext = QString("SELECT ") +
+					"albums.albumID, " +
+					"albums.name as name, " +
+					"SUM(tracks.length) / 1000, " +
+					"count(tracks.trackid), " +
+					"max(tracks.year) as year, " +
+					"group_concat(artists.name) " +
+					"FROM albums, tracks, artists " +
+					"WHERE albums.albumID = :id AND tracks.albumID = albums.albumID AND artists.artistID = tracks.artistID;";
+
+
+			q.prepare(querytext);
+			q.bindValue(":id", QVariant(id));
+
+			if (!q.exec()) {
+				throw QString ("SQL - Error: Could not get all albums from database");
+			}
+
+			Album album;
+			while (q.next()) {
+				album.id = q.value(0).toInt();
+				album.name = q.value(1).toString().trimmed();
+				album.length_sec = q.value(2).toInt();
+				album.num_songs = q.value(3).toInt();
+				album.year = q.value(4).toInt();
+				QStringList artistList = q.value(5).toString().split(',');
+				artistList.removeDuplicates();
+				album.artists = artistList;
+				album.is_sampler = (artistList.size() > 1);
+			}
+
+			return album;
+
+
+		}
+		catch (QString ex) {
+			qDebug() << "SQL - Error: getAlbumsFromDatabase";
+			qDebug() << ex;
+			QSqlError er = this -> m_database.lastError();
+			qDebug() << er.driverText();
+			qDebug() << er.databaseText();
+			qDebug() << er.databaseText();
+		}
+}
 
 QString CDatabaseConnector::getAlbumName (const int & id) {
     QSqlQuery q (this -> m_database);

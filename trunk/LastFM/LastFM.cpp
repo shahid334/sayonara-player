@@ -297,6 +297,7 @@ void LastFM::scrobble(const MetaData& metadata){
 
 void LastFM::update_track(const MetaData& metadata){
 
+
 	free_webpage();
 
 	if(!_logged_in){
@@ -349,4 +350,9 @@ void LastFM::update_track(const MetaData& metadata){
 	free_webpage();
 
 
+}
+
+
+QString LastFM::get_api_key(){
+	return _api_key;
 }

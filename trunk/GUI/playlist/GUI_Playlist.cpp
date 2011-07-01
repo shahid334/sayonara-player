@@ -240,6 +240,7 @@ void GUI_Playlist::playlist_mode_changed_slot(){
 	_playlist_mode.append = this->ui->btn_append->isChecked();
 
 	emit playlist_mode_changed(_playlist_mode);
+	emit save_playlist("bla");
 }
 
 
