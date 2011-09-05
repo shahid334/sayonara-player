@@ -30,15 +30,11 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/equalizer/GUI_Equalizer.h \
     GUI/MyTableView.h \
     GUI/MyListview.h \
-    #GUI/alternate_covers/GUI_Alternate_Covers.h \
-    #GUI/alternate_covers/AlternateCoverItemDelegate.h \
-    #GUI/alternate_covers/AlternateCoverItemModel.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
-    #LyricLookup/LyricLookup.h \
     DatabaseAccess/CDatabaseConnector.h \
     library/CDirectoryReader.h \
     library/CLibraryBase.h \
@@ -68,13 +64,9 @@ SOURCES += Main.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
-    #GUI/alternate_covers/GUI_Alternate_Covers.cpp \
-    #GUI/alternate_covers/AlternateCoverItemDelegate.cpp \
-    #GUI/alternate_covers/AlternateCoverItemModel.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \
-   # LyricLookup/LyricLookup.cpp \
     library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
     library/ReloadThread.cpp \
@@ -98,8 +90,8 @@ FORMS += \
     GUI/LastFM/GUI_LastFM_Widget.ui \
     GUI/library/GUI_Library_windowed.ui \
     GUI/equalizer/GUI_Equalizer.ui \
-    GUI/tagedit/GUI_TagEdit.ui 
-   # GUI/alternate_covers/GUI_Alternate_Covers.ui
+    GUI/tagedit/GUI_TagEdit.ui \
+    GUI/alternate_covers/GUI_Alternate_Covers.ui
 
 
 
