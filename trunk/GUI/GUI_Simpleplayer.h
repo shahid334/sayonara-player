@@ -61,6 +61,7 @@ signals:
     void search(int pos_percent);
     void volumeChanged (qreal vol_percent);
     void wantCover(const MetaData &);
+    void fetch_alternate_covers(const MetaData&);
     void wantMoreCovers();
     void playlistCreated(QStringList&);
     void skinChanged(bool);
@@ -86,6 +87,7 @@ private slots:
     void coverClicked(bool);
     void showAgain(QSystemTrayIcon::ActivationReason);
     void muteButtonPressed();
+    void album_cover_pressed();
 
     void changeSkin(bool);
     void lastFMClicked(bool = true);
@@ -131,6 +133,7 @@ private:
 
 
     QString						m_skinSuffix;
+    MetaData					m_metadata;
 
     void setupTrayContextMenu();
     void setupVolButton(int percent);

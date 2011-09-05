@@ -104,12 +104,15 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 
 		 QStringList list = value.toStringList();
 		 Artist artist;
+
 		 artist.fromStringList(list);
+		 qDebug() << "Artist name = " << artist.name;
 		 _artist_list.replace(index.row(), artist);
 
 	     emit dataChanged(index, index);
 	     return true;
 	 }
+
 
 	 return false;
 }

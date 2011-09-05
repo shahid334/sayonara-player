@@ -162,6 +162,8 @@ namespace Helper{
 	QString calc_cover_google_adress(QString artist, QString album);
 	QString calc_cover_lfm_adress(QString artist, QString album);
 	QString calc_album_lfm_adress(QString album);
+	QString calc_search_album_adress(QString album);
+	QString calc_search_artist_adress(QString artist);
 
 	QString calc_cover_token(QString artist, QString album);
 };

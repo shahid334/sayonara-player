@@ -14,6 +14,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
+#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
 #include "CoverLookup/CoverLookup.h"
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]){
 		CDatabaseConnector::getInstance()->load_settings();
 
 
-		CoverLookup cover;
+		CoverLookup* cover = CoverLookup::getInstance();
 	qDebug() << "Load GUI";
         QApplication app (argc, argv);
 
@@ -80,6 +81,8 @@ int main(int argc, char *argv[]){
         GUI_Equalizer		ui_eq(player.getParentOfEqualizer());
         GUI_TagEdit			ui_tagedit;
 
+       // GUI_Alternate_Covers ui_alternate_covers;
+
         qDebug() << "Setup connections";
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(fileSelected(QStringList &)),		&playlist, 	SLOT(createPlaylist(QStringList&)));
@@ -88,22 +91,20 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(forward()),						&playlist,	SLOT(forward()));
         app.connect (&player, SIGNAL(backward()),						&playlist,	SLOT(backward()));
         app.connect (&player, SIGNAL(pause()),							&listen,	SLOT(pause()));
-
-
-
-
         app.connect (&player, SIGNAL(search(int)),						&listen,	SLOT(jump(int)));
         app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
         app.connect (&player, SIGNAL(setupLastFM()), 					&ui_lastfm, SLOT(show_win()));
         app.connect (&player, SIGNAL(reloadLibrary()), 					&library, 	SLOT(reloadLibrary()));
-        app.connect (&player, SIGNAL(fetch_all_covers()),       		&cover, 	SLOT(search_all_covers()));
+        app.connect (&player, SIGNAL(fetch_all_covers()),       		cover, 	SLOT(search_all_covers()));
         app.connect (&player, SIGNAL(libpath_changed(QString)), 		&library, 	SLOT(setLibraryPath(QString)));
+       // app.connect (&player, SIGNAL(fetch_alternate_covers(const MetaData&) ), &ui_alternate_covers, SLOT(start(const MetaData&)));
+        app.connect (&player, SIGNAL(fetch_alternate_covers(const MetaData&) ), cover, SLOT(search_alternate_covers(const MetaData&)));
 
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
-        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&cover, 	SLOT(search_cover(const MetaData&)));
+        app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	cover, 			SLOT(search_cover(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&lastfm,		SLOT(update_track(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed(int)), 				&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(no_track_to_play()),							&listen,		SLOT(stop()));
@@ -122,7 +123,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
 
 
-        app.connect (&ui_playlist, SIGNAL(save_playlist(const QString&)), 			&cover, 		SLOT(search_alternative_covers(const QString&)));
+        app.connect (&ui_playlist, SIGNAL(save_playlist(const QString&)), 			cover, 		SLOT(search_alternative_covers(const QString&)));
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
@@ -131,7 +132,8 @@ int main(int argc, char *argv[]){
         app.connect( &listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 		SLOT(fill_available_equalizers(const QStringList&)));
         app.connect( &listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,		SLOT(total_time_changed(qint64)));
 
-        app.connect (&cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
+        app.connect (cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
+        //app.connect (cover,		SIGNAL(new_cover_found(const QPixmap&)), 					&ui_alternate_covers, SLOT(new_cover_found(const QPixmap& )));
 
         app.connect(&library, SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
         app.connect(&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 		&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));

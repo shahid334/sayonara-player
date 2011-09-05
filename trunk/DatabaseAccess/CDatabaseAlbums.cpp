@@ -62,7 +62,7 @@ int CDatabaseConnector::getMaxAlbumID(){
 Album CDatabaseConnector::getAlbumByID(const int& id){
 	 if (!this -> m_database.isOpen())
 				        this -> m_database.open();
-
+	 Album album;
 		try {
 			QSqlQuery q (this -> m_database);
 			QString querytext = QString("SELECT ") +
@@ -83,7 +83,7 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 				throw QString ("SQL - Error: Could not get all albums from database");
 			}
 
-			Album album;
+
 			while (q.next()) {
 				album.id = q.value(0).toInt();
 				album.name = q.value(1).toString().trimmed();
@@ -108,6 +108,8 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 			qDebug() << er.databaseText();
 			qDebug() << er.databaseText();
 		}
+
+		return album;
 }
 
 QString CDatabaseConnector::getAlbumName (const int & id) {

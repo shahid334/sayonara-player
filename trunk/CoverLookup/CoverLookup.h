@@ -33,33 +33,43 @@ class CoverLookup : public QObject{
 	Q_OBJECT
 
 	signals:
-		void covers_found(vector<QPixmap>&);
-		void cover_found(QPixmap&);
+		void covers_found(vector<QPixmap>&);		/* emit if multiple covers are found (player) */
+		void cover_found(QPixmap&);					/* emit if single cover is found (player) */
+		void new_cover_found(const QPixmap&);		/* emit if a new cover is found (alternate covers) */
 
 	public slots:
-		void search_cover(const MetaData& md);
-		void search_covers(const vector<Album>&);
-		void search_alternative_covers(const QString& album);
-		void search_all_covers();
-		void terminate_thread();
+		void search_cover(const MetaData& md);		/* search a cover for certain metadata */
+		void search_covers(const vector<Album>&);	/* search multiple covers */
+		void search_alternative_covers(const QString&);		/* search alternative covers for one album */
+		void search_alternative_covers(const MetaData&);	/* search alternative covers for one album */
+		void search_all_covers();					/* search all covers*/
+		void terminate_thread();					/* stop to search for covers */
 
 	private slots:
 		void thread_finished();
 
 
 public:
-	CoverLookup();
+
 	virtual ~CoverLookup();
 
+	static CoverLookup* getInstance();
 
+	bool get_found_cover(int idx, QPixmap& p);
+
+protected:
+	CoverLookup();
 
 private:
+	CoverLookup(const CoverLookup&);
+
 	CoverFetchThread* _thread;
 	void download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QPixmap>& vec_pixmaps);
+	Album get_album_from_metadata(const MetaData& md);
 
 	int _emit_type;
 
-	vector<QPixmap> alternative_covers;
+	vector<QPixmap> _alternative_covers;
 };
 
 #endif /* COVERLOOKUP_H_ */

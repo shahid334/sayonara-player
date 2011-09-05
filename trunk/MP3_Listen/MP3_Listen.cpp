@@ -306,7 +306,10 @@ void MP3_Listen::load_equalizer(){
 
 
 void MP3_Listen::handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & data){
-/*
+
+	Q_UNUSED(data);
+
+	/*
 	cvZero(_img);
 	QList<QVector<short int> >	 vals = data.values();
 	foreach(QVector<short int> vec, vals){

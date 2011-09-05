@@ -139,7 +139,7 @@ QStringList calc_adresses_from_webpage(uint num, QString qwebpage){
 
 					adresses.push_back(adress);
 
-					if(adresses.size() >= num) break;
+					if( num <= (uint) adresses.size() ) break;
 				}
 
 			}
@@ -253,6 +253,61 @@ QStringList call_and_parse_google(QString artist, QString album, int num_adresse
 
 
 
+QStringList call_and_parse_lfm_artist(QString artist, int num_adresses){
+
+	QString url_adress = Helper::calc_search_artist_adress(artist);
+
+
+	/* Find images on Google*/
+	QStringList cover_adresses;
+
+	CURL *curl_find_img = curl_easy_init();
+	if(curl_find_img) {
+
+		//qDebug() << "URL: " << url_adress;
+
+		curl_easy_setopt(curl_find_img, CURLOPT_URL, url_adress.toLocal8Bit().data());
+		curl_easy_setopt(curl_find_img, CURLOPT_FOLLOWLOCATION, 1);
+		curl_easy_setopt(curl_find_img, CURLOPT_WRITEFUNCTION, get_content);
+		curl_easy_setopt(curl_find_img, CURLOPT_BUFFERSIZE, 3000);
+		curl_easy_setopt(curl_find_img, CURLOPT_TIMEOUT_MS, 3000);
+
+	}
+
+
+	curl_easy_perform(curl_find_img);
+
+	int time2go = 3000000;
+	while(webpage_bytes == 0){
+		usleep(5000);
+		time2go-=5000;
+		if(time2go <= 0) break;
+	}
+
+	if(webpage_bytes== 0 || !webpage) qDebug() << "URL: " << url_adress;
+	else cover_adresses = calc_adresses_from_webpage(num_adresses, QString(webpage));
+
+
+
+	curl_easy_cleanup(curl_find_img);
+
+	return cover_adresses;
+}
+
+
+
+QStringList call_and_parse_lfm_album(QString album, int num_adresses){
+
+	Q_UNUSED(album);
+	Q_UNUSED(num_adresses);
+
+	QStringList list;
+
+	return list;
+}
+
+
+
 
 bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images){
 
@@ -315,12 +370,8 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 
 
 					good_image = img.loadFromData( (const uchar*) image_data, image_bytes);
-					qDebug() << "Good? " << good_image;
-
-
 
 					if(good_image && !img.isNull() && image_bytes > 1000){
-
 
 						vec_images.push_back(img);
 
@@ -359,23 +410,20 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 
 
 	return found;
-
 }
 
 
-void get_alternative_album_covers(QString album, vector<QImage>& images){
+
+void get_alternative_album_covers(QString url, vector<QImage>& images, int num){
 
 	clear_webpage_data();
 
-	QString album_url = Helper::calc_album_lfm_adress(album);
 	CURL *curl_lfm = curl_easy_init();
 	if(curl_lfm) {
-		qDebug() << "Url = " << album_url;
-		curl_easy_setopt(curl_lfm, CURLOPT_URL, album_url.toLocal8Bit().data());
+		qDebug() << "Url = " << url;
+		curl_easy_setopt(curl_lfm, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl_lfm, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl_lfm, CURLOPT_WRITEFUNCTION, get_content);
-		//curl_easy_setopt(curl_lfm, CURLOPT_BUFFERSIZE, 3000);
-		//curl_easy_setopt(curl_lfm, CURLOPT_TIMEOUT_MS, 100);
 	}
 
 
@@ -388,7 +436,7 @@ void get_alternative_album_covers(QString album, vector<QImage>& images){
 		if(time2go <= 0) break;
 	}
 
-	if(webpage_bytes== 0 || !webpage) qDebug() << "BAD URL: " << album_url;
+	if(webpage_bytes== 0 || !webpage) qDebug() << "BAD URL: " << url;
 	else {
 
 		QString qwebpage(webpage);
@@ -402,15 +450,24 @@ void get_alternative_album_covers(QString album, vector<QImage>& images){
 		}
 
 		qDebug() << "adresses " << adresses;
-		download_covers( adresses, 20, images);
+		download_covers( adresses, num, images);
 
 	}
 
 
 	curl_easy_cleanup(curl_lfm);
+}
 
 
 
+void search_covers_by_album_name(QString album, vector<QImage>& images, int num){
+	QString url = Helper::calc_search_album_adress(album);
+	get_alternative_album_covers(url, images, num);
+}
+
+void search_covers_by_artist_name(QString artist, vector<QImage>& images, int num){
+	QString url = Helper::calc_search_artist_adress(artist);
+	get_alternative_album_covers(url, images, num);
 }
 
 

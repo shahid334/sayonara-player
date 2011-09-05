@@ -130,7 +130,8 @@ QString Helper::calc_cover_lfm_adress(QString artist, QString album){
 	QString api_key = lfm.get_api_key();
 	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=");
 
-		if(album == "") url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
+	if(album == "")
+		url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
 
 	url += api_key + "&";
 	url += "artist=" + QUrl::toPercentEncoding(artist);
@@ -165,4 +166,22 @@ QString Helper::calc_cover_google_adress(QString artist, QString album){
 QString Helper::calc_cover_token(QString artist, QString album){
 	QString ret = QCryptographicHash::hash(artist.toUtf8() + album.toUtf8(), QCryptographicHash::Md5).toHex();
 	return ret;
+}
+
+QString Helper::calc_search_album_adress(QString album){
+	LastFM lfm;
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
+	QString api_key = lfm.get_api_key();
+
+	url += api_key + "&album=" + QUrl::toPercentEncoding(album);
+	return url;
+}
+
+QString Helper::calc_search_artist_adress(QString artist){
+	LastFM lfm;
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.search&api_key=");
+	QString api_key = lfm.get_api_key();
+
+	url += api_key + "&album=" + QUrl::toPercentEncoding(artist);
+	return url;
 }

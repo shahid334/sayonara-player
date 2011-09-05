@@ -57,7 +57,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this, SLOT(reloadLibraryClicked(bool)));
     connect(this->ui->action_setLibPath, SIGNAL(triggered(bool)), this, SLOT(setLibraryPathClicked(bool)));
     connect(this->ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this, SLOT(fetch_all_covers_clicked(bool)));
-   // connect(this->ui->eq_widget, SIGNAL(closed()), this, SLOT(show_equalizer()));
+	connect(this->ui->albumCover, SIGNAL(pressed()), this, SLOT(album_cover_pressed()));
 
 
 
@@ -123,7 +123,10 @@ QString GUI_SimplePlayer::getLengthString (quint32 length_ms)const {
 }
 
 void GUI_SimplePlayer::update_info(const MetaData& in){
-	// sometimes ignore the date
+
+
+		this->m_metadata = in;
+
 		if(in.year < 1000 || in.album.contains(QString::number(in.year)))
 			this -> ui->album->setText(in.album);
 
@@ -141,6 +144,8 @@ void GUI_SimplePlayer::update_info(const MetaData& in){
 
 
 void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
+
+	this->m_metadata = in;
 
 	// sometimes ignore the date
 	if(in.year < 1000 || in.album.contains(QString::number(in.year)))
@@ -653,4 +658,9 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b){
 void GUI_SimplePlayer::fetch_all_covers_clicked(bool b){
 	Q_UNUSED(b);
 	emit fetch_all_covers();
+}
+
+
+void GUI_SimplePlayer::album_cover_pressed(){
+	emit fetch_alternate_covers(this->m_metadata);
 }

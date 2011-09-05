@@ -53,7 +53,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 		else if(index.column() == 1){
 
-			bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+			//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
 			Artist artist;

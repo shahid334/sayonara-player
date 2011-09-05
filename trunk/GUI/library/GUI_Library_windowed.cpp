@@ -114,6 +114,7 @@ void GUI_Library_windowed::init_menues(){
 
 }
 
+
 void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 
 	_v_metadata.clear();
@@ -125,18 +126,12 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 	for(uint i=0; i<v_metadata.size(); i++){
 
 		QModelIndex idx = _track_model->index(i, 0);
-
-		MetaData md = v_metadata.at(i);
-
-
-		QStringList list = md.toStringList();
-
-		this->_track_model->setData(idx, list, Qt::EditRole);
+		QStringList data = v_metadata.at(i).toStringList();
+		this->_track_model->setData(idx, data, Qt::EditRole);
 	}
 
 
 }
-
 
 void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 
@@ -157,7 +152,6 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 
 }
 
-
 void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 
 	_v_artists.clear();
@@ -167,6 +161,7 @@ void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 	this->_artist_model->insertRows(0, artists.size());
 
 	for(uint i=0; i<artists.size(); i++){
+
 		QModelIndex idx = this->_artist_model->index(i, 0);
 
 		QStringList data = artists.at(i).toStringList();
@@ -372,7 +367,6 @@ void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
 
 	_everything_loaded = false;
 }
-
 
 void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
 
@@ -644,11 +638,7 @@ void GUI_Library_windowed::info_album(){
 	if(album.artists.size() > 1)
 		artist = "Various artists";
 
-	QString album_name = album.name;
-	if(album_name.length() == 0)
-		album_name = "Unknown";
-
-	box.setText(QString("<b>") + artist + " - " + album_name + "</b>");
+	box.setText(QString("<b>") + artist + " - " + album.name + "</b>");
 
 	QString year =  QString::number(album.year);
 	if(album.year == 0) year = "Unknown";
@@ -687,11 +677,8 @@ void GUI_Library_windowed::info_artist(){
 	QStringList artist_str_list = _artist_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
 	artist.fromStringList( artist_str_list );
 
-	QString artist_name = artist.name;
-	if(artist_name.length() == 0)
-		artist_name = "Unknown";
 
-	box.setText( QString("<b>") + artist_name + "</b>");
+	box.setText( QString("<b>") + artist.name + "</b>");
 
 	QString info_text = QString::number(artist.num_albums) + " albums\n" +
 						QString::number(artist.num_songs) + " songs";
@@ -718,7 +705,7 @@ void GUI_Library_windowed::edit_tracks(){
 
 	for(int i=0; i<idx_list.size(); i++){
 		int row = idx_list[i].row();
-		if(row < _v_metadata.size()){
+		if(row < (int) _v_metadata.size()){
 			vec_md.push_back(_v_metadata[i]);
 		}
 	}
@@ -739,9 +726,7 @@ void GUI_Library_windowed::info_tracks(){
 		box.setText(QString("<b>") + title + "</b>");
 
 		QString artist = md.artist;
-		if(artist.length() == 0) artist = "Unknown";
 		QString album = md.album;
-		if(album.length() == 0) album = "Unknown";
 		QString length = Helper::cvtMsecs2TitleLengthString(md.length_ms);
 		QString year = QString::number(md.year);
 		if(md.year == 0) year = "Unknown";

@@ -305,8 +305,6 @@ void LastFM::update_track(const MetaData& metadata){
 		return;
 	}
 
-
-
 	QString url = 	QString("http://ws.audioscrobbler.com/2.0/");
 
 
@@ -322,9 +320,6 @@ void LastFM::update_track(const MetaData& metadata){
 
 	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
 
-
-
-
 	string post_data =
 							string("album=") + get_url_enc(metadata.album) + string("&") +
 							string("api_key=") + _api_key.toStdString() + string("&") +
@@ -338,18 +333,8 @@ void LastFM::update_track(const MetaData& metadata){
 
 
 	call_scrobble_url(url.toStdString(), post_data);
-/*
-	qDebug() << lfm_webpage;
 
-	if(QString(lfm_webpage).contains("\"ok\""))
-		qDebug() << "updated";
-	else{
-		qDebug() << "error when updating";
-	}
-*/
 	free_webpage();
-
-
 }
 
 

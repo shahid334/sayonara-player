@@ -155,6 +155,8 @@ QVariant LibraryItemModelAlbums::headerData ( int section, Qt::Orientation orien
 
 void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 
+	Q_UNUSED(column);
+	Q_UNUSED(order);
 
 
 

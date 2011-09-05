@@ -65,10 +65,16 @@ struct MetaData{
 	QStringList toStringList(){
 
 		QStringList list;
+		QString tmpTitle = title;
+		QString tmpArtist = artist;
+		QString tmpAlbum = album;
+		if(title.trimmed().size() == 0) tmpTitle = QString("(Unknown title)");
+		if(artist.trimmed().size() == 0) tmpArtist = QString("(Unknown artist)");
+		if(album.trimmed().size() == 0) tmpAlbum = QString("(Unknown album)");
 
-		list.push_back(title);
-		list.push_back(artist);
-		list.push_back(album);
+		list.push_back(tmpTitle);
+		list.push_back(tmpArtist);
+		list.push_back(tmpAlbum);
 		list.push_back(QString::number(rating));
 		list.push_back(QString::number(length_ms));
 		list.push_back(QString::number(year));
@@ -123,7 +129,9 @@ struct Artist{
 
 	QStringList toStringList(){
 		QStringList list;
-		list.push_back(name);
+		QString tmpName = name;
+		if(name.trimmed().size() == 0) tmpName = QString("(Unknown artist)");
+		list.push_back(tmpName);
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(num_albums));
@@ -161,8 +169,8 @@ struct Album{
 
 	QStringList toStringList(){
 		QStringList list;
-		QString tmpName = "Unknown";
-		if(name.size() > 0) tmpName = name;
+		QString tmpName = "(Unknown album)";
+		if(name.trimmed().size() > 0) tmpName = name;
 
 		list.push_back(tmpName);
 		if(artists.size() > 0){

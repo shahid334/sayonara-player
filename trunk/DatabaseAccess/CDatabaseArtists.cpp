@@ -108,6 +108,7 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result){
 			while (q.next()) {
 				artist.id = q.value(0).toInt();
 				artist.name = q.value(1).toString().trimmed();
+
 				 QStringList list = q.value(2).toString().split(',');
 				 list.removeDuplicates();
 				artist.num_albums = list.size();

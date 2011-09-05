@@ -14,6 +14,8 @@
 #include <QItemDelegate>
 #include <QPainter>
 #include <HelperStructs/Helper.h>
+
+
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
 	this->_parent = parent;
 
@@ -46,23 +48,12 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		if(index.column() == 0){
 
 			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
-			/*
-			bool isSampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
-			if(!isSampler){
-				label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
-			}
-
-			else{
-				label.setPixmap(QPixmap(Helper::getIconPath() + "pause.png").scaled(16,16, (Qt::AspectRatioMode)0, (Qt::TransformationMode)1));
-			}
-*/
 			label.resize(20, 20);
-
 		}
 
 		else if(index.column() == 1){
 
-			bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+			//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
 			Album album;
@@ -73,7 +64,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 			label.setContentsMargins(2, 2, 0, 2);
 
-			int text_width = label.fontMetrics().width(text);
+			//int text_width = label.fontMetrics().width(text);
 			int height = 20;
 
 			label.resize(_parent->columnWidth(1), height);

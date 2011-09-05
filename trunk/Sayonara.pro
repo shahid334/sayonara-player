@@ -30,6 +30,9 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/equalizer/GUI_Equalizer.h \
     GUI/MyTableView.h \
     GUI/MyListview.h \
+    #GUI/alternate_covers/GUI_Alternate_Covers.h \
+    #GUI/alternate_covers/AlternateCoverItemDelegate.h \
+    #GUI/alternate_covers/AlternateCoverItemModel.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     CoverLookup/CoverLookup.h \
@@ -65,6 +68,9 @@ SOURCES += Main.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
+    #GUI/alternate_covers/GUI_Alternate_Covers.cpp \
+    #GUI/alternate_covers/AlternateCoverItemDelegate.cpp \
+    #GUI/alternate_covers/AlternateCoverItemModel.cpp \
     HelperStructs/Helper.cpp \
     CoverLookup/CoverLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \
@@ -81,7 +87,8 @@ SOURCES += Main.cpp \
     playlist/Playlist.cpp \
     HelperStructs/id3.cpp \
     LastFM/LastFM.cpp \
-    HelperStructs/CSettingsStorage.cpp
+    HelperStructs/CSettingsStorage.cpp \
+    
    
 
 FORMS += \
@@ -91,7 +98,8 @@ FORMS += \
     GUI/LastFM/GUI_LastFM_Widget.ui \
     GUI/library/GUI_Library_windowed.ui \
     GUI/equalizer/GUI_Equalizer.ui \
-    GUI/tagedit/GUI_TagEdit.ui
+    GUI/tagedit/GUI_TagEdit.ui 
+   # GUI/alternate_covers/GUI_Alternate_Covers.ui
 
 
 
