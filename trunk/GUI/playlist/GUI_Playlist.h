@@ -64,9 +64,10 @@
 
 		private slots:
 
-			void current_row_changed(int);
+
 			void double_clicked(const QModelIndex &);
-			void single_clicked(const QModelIndex&);
+			void pressed(const QModelIndex&);
+			void released(const QModelIndex&);
 			void clear_playlist_slot();
 			void save_playlist_slot();
 			void playlist_mode_changed_slot();
@@ -89,6 +90,7 @@
 			qint64 					_total_secs;
 			int						_cur_playing_row;
 			int						_cur_selected_row;
+
 			void initGUI();
 			void set_total_time_label();
 			void remove_cur_selected_row();

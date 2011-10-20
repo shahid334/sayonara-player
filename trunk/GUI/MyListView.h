@@ -32,11 +32,8 @@ public:
 		bool	_drag;
 		QPoint	_drag_pos;
 		QWidget* _parent;
+		QDrag*	_qDrag;
 
-
-
-	public:
-		QDrag*	qDrag;
 };
 
 #endif /* MYLISTVIEW_H_ */

@@ -14,7 +14,7 @@
 #include <QPoint>
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_parent = parent;
-	qDrag = new QDrag(_parent);
+	qDrag = new QDrag(this);
 
 }
 
@@ -33,8 +33,15 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 	switch(event->button()){
 		case Qt::LeftButton:
 
-			_drag  = true;
-			_drag_pos = event->pos();
+			if(event->pos().y() > this->model()->rowCount() * 20) {
+				_drag = false;
+				break;
+			}
+
+			else {
+				_drag_pos = event->pos();
+				_drag = true;
+			}
 
 			QTableView::mousePressEvent(event);
 			break;
@@ -55,9 +62,13 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 void MyTableView::mouseMoveEvent(QMouseEvent* event){
 
 
+	qDebug() << Q_FUNC_INFO << "start ";
 	QPoint pos = event->pos();
+	qDebug() << _drag << ", " << abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y());
+
 	if(_drag &&
 		abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y()) > 20){
+		qDebug() << "Exec";
 		qDrag->exec(Qt::MoveAction);
 
 	}
@@ -86,11 +97,12 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 void MyTableView::set_mime_data(QMimeData* data, QPixmap* pixmap){
 
 
-	this->qDrag = new QDrag(_parent);
+	this->qDrag = new QDrag(this);
 	if(pixmap)
 		this->qDrag->setPixmap(*pixmap);
 
-
-
 	this->qDrag->setMimeData(data);
+
+	if(data) _drag = true;
+	else _drag = false;
 }

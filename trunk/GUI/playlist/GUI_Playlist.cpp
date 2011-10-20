@@ -32,7 +32,7 @@ class QPaintDevice;
 
 
 using namespace std;
-
+// CTOR
 GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	QWidget(parent)
 	 {
@@ -65,7 +65,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(single_clicked(const QModelIndex&)));
+	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));
+	this->connect(this->ui->listView, SIGNAL(released(const QModelIndex&)), this, SLOT(released(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 
 	//this->connect(this->ui->but_EditID3, SIGNAL(released()), this, SLOT(edit_id3_but_pressed()));
@@ -78,19 +79,37 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_cur_playing_row = -1;
 }
 
-
+// DTOR
 GUI_Playlist::~GUI_Playlist() {
 
 }
 
+// SLOT: switch between dark & light skin
+void GUI_Playlist::change_skin(bool dark){
 
+	if(dark){
+		this->ui->lab_totalTime->setStyleSheet("background-color: rgb(56, 56, 56); color: rgb(255, 255, 255);");
+		this->ui->listView->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56);");
+	}
+
+	else {
+		this->ui->lab_totalTime->setStyleSheet("");
+		this->ui->listView->setStyleSheet("");
+	}
+}
+
+// SLOT: maybe we wanna use the progress bar
+// atm this function is not used
 void GUI_Playlist::update_progress_bar(int percent){
 
 	Q_UNUSED(percent);
 
 }
 
+// SLOT: fill all tracks in v_metadata into playlist
+// the current track should be highlighted
 void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
+
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_pli_model->insertRows(0, v_metadata.size());
@@ -129,6 +148,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 	//emit playlist_filled(v_metadata);
 }
 
+// private SLOT: clear button pressed
 void GUI_Playlist::clear_playlist_slot(){
 	this->ui->lab_totalTime->setText("Total Time: 0m 0s");
 	_pli_model->removeRows(0, _pli_model->rowCount());
@@ -137,6 +157,7 @@ void GUI_Playlist::clear_playlist_slot(){
 	emit clear_playlist();
 }
 
+// private SLOT: save button pressed
 void GUI_Playlist::save_playlist_slot(){
 
 	QString file2Save =QFileDialog::getSaveFileName(this, tr("Choose filename to save"), QDir::homePath(), QString("*.m3u"));
@@ -146,66 +167,70 @@ void GUI_Playlist::save_playlist_slot(){
 
 }
 
-void GUI_Playlist::single_clicked(const QModelIndex& index){
+// private SLOT: playlist item pressed (init drag & drop)
+void GUI_Playlist::pressed(const QModelIndex& index){
+
+	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
 	_cur_selected_row = index.row();
 
-	QMimeData* mime = new QMimeData();
-
 	QList<QVariant> list2send;
-
 	QStringList metadata = this->_pli_model->data(index, Qt::WhatsThisRole).toStringList();
+	if(metadata.size() == 0) return;
+
 	list2send.push_back(metadata);
 
-
+	QMimeData* mime = new QMimeData();
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
-	mime->setProperty("data", (QVariant) list2send);
+	mime->setProperty("data", list2send);
+
 	this->ui->listView->set_mime_data(mime);
 	inner_drag_drop = true;
 
 
 }
 
+void GUI_Playlist::released(const QModelIndex& index){
+	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
-
-void GUI_Playlist::double_clicked(const QModelIndex & index){
-
-	if(index.isValid()){
-
-		clear_drag_lines(index.row());
-
-		for(int i=0; i<index.model()->rowCount(); i++){
-
-			QModelIndex tmp_idx = index.model()->index(i, 0);
-			QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
-
-			if(i == index.row())
-				str4Playlist[str4Playlist.length()-2] = "1";	// paint as marked
-
-			else
-				str4Playlist[str4Playlist.length()-2] = "0";
-
-
-			_cur_playing_row = index.row();
-
-			_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
-		}
-
-		int new_row = index.row();
-		current_row_changed(new_row);
-	}
+		this->ui->listView->set_mime_data(NULL);
+		inner_drag_drop = false;
 }
 
 
-void GUI_Playlist::current_row_changed(int new_row){
+// private SLOT: track chosen (change track)
+void GUI_Playlist::double_clicked(const QModelIndex & index){
 
-	if(new_row < 0) return;
+	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
+
+	clear_drag_lines(index.row());
+
+	for(int i=0; i<index.model()->rowCount(); i++){
+
+		QModelIndex tmp_idx = index.model()->index(i, 0);
+		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
+
+		if(i == index.row())
+			str4Playlist[str4Playlist.length()-2] = "1";	// paint as marked
+
+		else
+			str4Playlist[str4Playlist.length()-2] = "0";
+
+		_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
+	}
+
+	int new_row = index.row();
+
+	if(new_row < 0 || new_row >= _pli_model->rowCount() ) return;
 
 	emit selected_row_changed(new_row);
 	_cur_playing_row = new_row;
 }
 
 
+
+// SLOT: if the current track has has changed
+// by playlist
 void GUI_Playlist::track_changed(int new_row){
 
 	if(new_row < 0) return;
@@ -218,20 +243,25 @@ void GUI_Playlist::track_changed(int new_row){
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
 		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
-		if(i == index.row())
-			str4Playlist[str4Playlist.size()-2] = QString("1");
+		do{
+			if(i == index.row() && str4Playlist.size() >= 3)
+				str4Playlist[str4Playlist.size()-2] = QString("1");
 
-		else
-			str4Playlist[str4Playlist.size()-2] = QString("0");
+			else if(str4Playlist.size() >= 3)
+				str4Playlist[str4Playlist.size()-2] = QString("0");
 
-		_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
+			else break;
+
+			_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
+
+		} while(0);
 	}
 
 	this->ui->listView->scrollTo(index);
 
 }
 
-
+// private SLOT: rep1, repAll, shuffle or append has changed
 void GUI_Playlist::playlist_mode_changed_slot(){
 
 	_playlist_mode.rep1 = this->ui->btn_rep1->isChecked();
@@ -245,66 +275,66 @@ void GUI_Playlist::playlist_mode_changed_slot(){
 
 
 
-void GUI_Playlist::change_skin(bool dark){
 
-
-
-	if(dark){
-		this->ui->lab_totalTime->setStyleSheet("background-color: rgb(56, 56, 56); color: rgb(255, 255, 255);");
-		this->ui->listView->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56);");
-	}
-
-	else {
-		this->ui->lab_totalTime->setStyleSheet("");
-		this->ui->listView->setStyleSheet("");
-	}
-}
-
-
+// initialize gui
+// maybe the button state (pressed/unpressed) should be loaded from db here
 void GUI_Playlist::initGUI(){
-
 
 	this->ui->btn_append->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 	this->ui->btn_rep1->setIcon(QIcon(Helper::getIconPath() + "rep1.png"));
 	this->ui->btn_repAll->setIcon(QIcon(Helper::getIconPath() + "repAll.png"));
 	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
-	/*this->ui->btn_save_playlist->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->ui->but_EditID3->setIcon(QIcon(Helper::getIconPath() + "edit.png"));*/
-
 }
 
+
+// we start the drag action, all lines has to be cleared
+void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
+	qDebug() << Q_FUNC_INFO;
+	int row = this->ui->listView->indexAt(_last_known_drag_pos).row();
+	clear_drag_lines(row);
+}
+
+
+
+// remove the black line under the titles
 void GUI_Playlist::clear_drag_lines(int row){
+
+	qDebug() << Q_FUNC_INFO;
 
 	for(int i=row-3; i<=row+3; i++){
 
-		if(this->_pli_model->index(i, 0).isValid()){
-			QStringList list = _pli_model->data(this->_pli_model->index(i, 0), Qt::WhatsThisRole).toStringList();
+		QModelIndex idx = this->_pli_model->index(i, 0);
+		if(!idx.isValid() || idx.row() < 0 || idx.row() >= _pli_model->rowCount())
+			continue;
+
+		QStringList list = _pli_model->data(this->_pli_model->index(i, 0), Qt::WhatsThisRole).toStringList();
+
+		// set the flag, that no black line should be painted
+		if(list.size() > 1)
 			list[list.length()-1] = QString("0");
-			_pli_model->setData(this->_pli_model->index(i, 0), (const QVariant&) list, Qt::EditRole);
-		}
+
+		_pli_model->setData(this->_pli_model->index(i, 0), (const QVariant&) list, Qt::EditRole);
+
 	}
 }
 
-
+// the drag comes, if there's data --> accept it
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
-
+	qDebug() << Q_FUNC_INFO;
 	if(event->mimeData() != NULL )
 		event->acceptProposedAction();
 }
 
 
-void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
 
-	Q_UNUSED(event);
-	int row = this->ui->listView->indexAt(_last_known_drag_pos).row();
-
-	clear_drag_lines(row);
-}
-
-
+// we move the title
+// scroll, if neccessary
+// paint line
 void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
+	qDebug() << Q_FUNC_INFO;
+	if( !event->mimeData() ) return;
 
 	QPoint pos = event->pos();
 
@@ -314,13 +344,14 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	int y_playlist = this->ui->listView->y();
 
 
-	// scroll if needed
+	// scroll up
 	if(y_event <= y_playlist+10){
 
 		if(scrollbar_pos >= 1)
 			this->ui->listView->scrollTo(this->_pli_model->index(scrollbar_pos-1, 0));
 	}
 
+	// scroll down
 	else if(y_event >= y_playlist + this->ui->listView->height()-10){
 
 		int num_steps = this->ui->listView->height() / 30;
@@ -329,12 +360,10 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 		if(idx.row() == -1) this->ui->listView->scrollToBottom();
 	}
 
-	scrollbar_pos = this->ui->listView->verticalScrollBar()->sliderPosition();
-
-
 	int row = this->ui->listView->indexAt(pos).row();
+
 	if(row == -1) row = _pli_model->rowCount()-1;
-		else if(row > 0) row--;
+	else if(row > 0) row--;
 
 	int current = row-1;
 
@@ -346,7 +375,11 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 
 
 	// paint line
-	if(this->_pli_model->index(current, 0).isValid() && (current) != _cur_selected_row){
+	if(	this->_pli_model->index(current, 0).isValid() &&
+		(current) != _cur_selected_row &&
+		current >= 0 &&
+		current < this->_pli_model->rowCount() ){
+
 		QStringList list = _pli_model->data(this->_pli_model->index(current, 0), Qt::WhatsThisRole).toStringList();
 		list[list.length()-1] = QString("1");
 		_pli_model->setData(this->_pli_model->index(current, 0), (const QVariant&) list, Qt::EditRole);
@@ -355,10 +388,13 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 }
 
 
-
+// finally drop it
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
+	if(!event->mimeData()) return;
+
 	QPoint pos = event->pos();
+
 	int row = this->ui->listView->indexAt(pos).row();
 
 	if(row == -1){
@@ -366,6 +402,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	}
 
 	clear_drag_lines(row);
+
 
  	if(inner_drag_drop && (row-1) == _cur_selected_row){
 		qDebug() << "ignore event";
