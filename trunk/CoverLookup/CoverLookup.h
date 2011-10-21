@@ -34,14 +34,14 @@ class CoverLookup : public QObject{
 
 	signals:
 		void covers_found(vector<QPixmap>&);		/* emit if multiple covers are found (player) */
-		void cover_found(QPixmap&);					/* emit if single cover is found (player) */
+		void cover_found(bool);					/* emit if single cover is found (player) */
 		void new_cover_found(const QPixmap&);		/* emit if a new cover is found (alternate covers) */
 
 	public slots:
 		void search_cover(const MetaData& md);		/* search a cover for certain metadata */
 		void search_covers(const vector<Album>&);	/* search multiple covers */
 		void search_alternative_covers(const QString&);		/* search alternative covers for one album */
-		void search_alternative_covers(const MetaData&);	/* search alternative covers for one album */
+		void research_cover(const MetaData&);	/* search alternative covers for one album */
 		void search_all_covers();					/* search all covers*/
 		void terminate_thread();					/* stop to search for covers */
 
@@ -70,6 +70,7 @@ private:
 	int _emit_type;
 
 	vector<QPixmap> _alternative_covers;
+	MetaData*		_metadata;
 };
 
 #endif /* COVERLOOKUP_H_ */

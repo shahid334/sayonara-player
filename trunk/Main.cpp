@@ -96,11 +96,8 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
         app.connect (&player, SIGNAL(setupLastFM()), 					&ui_lastfm, SLOT(show_win()));
         app.connect (&player, SIGNAL(reloadLibrary()), 					&library, 	SLOT(reloadLibrary()));
-        app.connect (&player, SIGNAL(fetch_all_covers()),       		cover, 	SLOT(search_all_covers()));
+        app.connect (&player, SIGNAL(fetch_all_covers()),       		cover, 		SLOT(search_all_covers()));
         app.connect (&player, SIGNAL(libpath_changed(QString)), 		&library, 	SLOT(setLibraryPath(QString)));
-       // app.connect (&player, SIGNAL(fetch_alternate_covers(const MetaData&) ), &ui_alternate_covers, SLOT(start(const MetaData&)));
-        app.connect (&player, SIGNAL(fetch_alternate_covers(const MetaData&) ), cover, SLOT(search_alternate_covers(const MetaData&)));
-
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
@@ -122,9 +119,6 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 						&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
 
-
-        app.connect (&ui_playlist, SIGNAL(save_playlist(const QString&)), 			cover, 		SLOT(search_alternative_covers(const QString&)));
-
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
@@ -132,8 +126,7 @@ int main(int argc, char *argv[]){
         app.connect( &listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 		SLOT(fill_available_equalizers(const QStringList&)));
         app.connect( &listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,		SLOT(total_time_changed(qint64)));
 
-        app.connect (cover, 	SIGNAL(cover_found(QPixmap&)), 						&player, 		SLOT(cover_changed(QPixmap&)));
-        //app.connect (cover,		SIGNAL(new_cover_found(const QPixmap&)), 					&ui_alternate_covers, SLOT(new_cover_found(const QPixmap& )));
+        app.connect (cover, 	SIGNAL(cover_found(bool)), 							&player, 		SLOT(cover_changed(bool)));
 
         app.connect(&library, SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
         app.connect(&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 		&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
@@ -157,15 +150,15 @@ int main(int argc, char *argv[]){
 
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
 
-        app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), &listen, SLOT(eq_changed(int, int)));
-        app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), &listen, SLOT(eq_enable(bool)));
-        app.connect(&ui_eq, SIGNAL(close_event()), &player, SLOT(close_eq()));
+        app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), 	&listen, 	SLOT(eq_changed(int, int)));
+        app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), 		&listen, 	SLOT(eq_enable(bool)));
+        app.connect(&ui_eq, SIGNAL(close_event()), 					&player, 	SLOT(close_eq()));
 
-        app.connect(&ui_playlist, SIGNAL(edit_id3_signal()), &playlist, SLOT(edit_id3_request()));
-        app.connect(&playlist, SIGNAL(data_for_id3_change(const vector<MetaData>&)), &ui_tagedit, SLOT(change_meta_data(const vector<MetaData>&)));
-        app.connect(&ui_library, SIGNAL(data_for_id3_change(const vector<MetaData>&)), &ui_tagedit, SLOT(change_meta_data(const vector<MetaData>&)));
-		app.connect(&ui_tagedit, SIGNAL(id3_tags_changed()), &ui_library, SLOT(id3_tags_changed()));
-		app.connect(&ui_tagedit, SIGNAL(id3_tags_changed(vector<MetaData>&)), &playlist, SLOT(id3_tags_changed(vector<MetaData>&)));
+        app.connect(&ui_playlist, 	SIGNAL(edit_id3_signal()), 								&playlist, 		SLOT(edit_id3_request()));
+        app.connect(&playlist, 		SIGNAL(data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit, 	SLOT(change_meta_data(const vector<MetaData>&)));
+        app.connect(&ui_library,	SIGNAL(data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit, 	SLOT(change_meta_data(const vector<MetaData>&)));
+		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed()), 							&ui_library, 	SLOT(id3_tags_changed()));
+		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed(vector<MetaData>&)), 			&playlist, 	SLOT(id3_tags_changed(vector<MetaData>&)));
 
 
 		int vol = set->getVolume();

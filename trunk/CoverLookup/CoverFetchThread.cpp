@@ -39,7 +39,7 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 
 					QString path = Helper::get_cover_path( album.artists[j], album.name);
 
-					if( _num_covers_2_fetch > 1 || !QFile::exists(path)){
+					if( _num_covers_2_fetch > 0 || !QFile::exists(path)){
 
 						QStringList cover_adresses = call_and_parse_google( album.artists[j], album.name, 3, _cover_source);
 
@@ -47,7 +47,11 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 						if(download_covers(cover_adresses, _num_covers_2_fetch, images)){
 
 							for(uint c=0; c<images.size(); c++){
-								if(c==0) images[c].save(path);
+
+								if(c==0) {
+									qDebug() << Q_FUNC_INFO << "Save cover to " << path;
+									images[c].save(path);
+								}
 								_images.push_back(images[c]);
 							}
 						}
@@ -68,13 +72,16 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 				if(album.name != ""){
 					QString path = Helper::get_cover_path("", album.name);
 
-					if(_num_covers_2_fetch > 1 || !QFile::exists(path)){
+					if(_num_covers_2_fetch > 0 || !QFile::exists(path)){
 						QStringList cover_adresses = call_and_parse_google("", album.name, 3, _cover_source);
 
 						if(download_covers(cover_adresses, _num_covers_2_fetch, images)){
 
 							for(uint c=0; c<images.size(); c++){
-								if(c==0) images[c].save(path);
+								if(c==0){
+									images[c].save(path);
+									qDebug() << Q_FUNC_INFO << "Save cover to " << path;
+								}
 								_images.push_back(images[c]);
 							}
 						 }
@@ -89,6 +96,8 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 				}
 			}
 		}
+
+
 }
 
 
@@ -110,7 +119,10 @@ void CoverFetchThread::search_covers_for_artist_str(const QString artist_name, i
 // run through all albums and search their covers
 void CoverFetchThread::run(){
 
+	this->_images.clear();
+
 	switch(_cover_fetch_mode){
+
 		case COV_FETCH_MODE_ALBUM_STR:
 			search_covers_for_album_str(_album_searchstring, _num_covers_2_fetch);
 		break;
@@ -209,6 +221,7 @@ bool CoverFetchThread::set_cover_fetch_mode(int mode){
 		_cover_fetch_mode = mode;
 		return true;
 	}
+
 
 	return false;
 }

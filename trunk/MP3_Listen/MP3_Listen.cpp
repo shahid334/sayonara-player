@@ -189,8 +189,11 @@ void MP3_Listen::timeChanged(qint64 time){
 
 	// scrobble after 25 sec or if half of the track is reached
 	if( !_scrobbled && (_seconds_now - _seconds_started == 25 || _seconds_now - _seconds_started == _meta_data.length_ms / 2000)){
+		qDebug() << "scrobble track";
 		emit scrobble_track(_meta_data);
 		_scrobbled = true;
+
+		qDebug() << "scrobble track end";
 	}
 
 	emit timeChangedSignal((quint32) (time / 1000));

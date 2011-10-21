@@ -32,7 +32,7 @@ public slots:
     /**
       * Insert Meta informations
       */
-	void cover_changed(QPixmap&);
+	void cover_changed(bool);
     void fillSimplePlayer (const MetaData & in);
     void showEqualizer(bool b=false);
 
@@ -133,6 +133,8 @@ private:
 
 
     QString						m_skinSuffix;
+    QString						m_album;
+    QString						m_artist;
     MetaData					m_metadata;
 
     void setupTrayContextMenu();

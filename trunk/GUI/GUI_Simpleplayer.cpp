@@ -145,6 +145,11 @@ void GUI_SimplePlayer::update_info(const MetaData& in){
 
 void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
+	if(in.artist != m_metadata.artist || in.album != m_metadata.album){
+		this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+		this->ui->albumCover->repaint();
+	}
+
 	this->m_metadata = in;
 
 	// sometimes ignore the date
@@ -155,6 +160,7 @@ void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
 
     this -> ui->artist->setText(in.artist);
     this -> ui->title->setText(in.title);
+
 
     m_trayIcon->setToolTip("Currently playing: \"" + in.title + "\" by " + in.artist);
 
@@ -208,11 +214,11 @@ void GUI_SimplePlayer::setCurrentPosition (quint32 pos_sec) {
 
     	double newSliderVal = (double)(pos_sec * 1000.0 * 100.0 / m_completeLength_ms);
 
+
     	if(!m_cur_searching)
     		this -> ui ->songProgress->setValue((int) newSliderVal);
 
         int min, sec;
-
 
         Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
 
@@ -222,6 +228,7 @@ void GUI_SimplePlayer::setCurrentPosition (quint32 pos_sec) {
 
 
         this -> ui ->curTime->setText(curPosString);
+
     }
 }
 
@@ -309,8 +316,6 @@ void GUI_SimplePlayer::searchSliderPressed(){
 
 void GUI_SimplePlayer::searchSliderReleased() {
 	m_cur_searching = false;
-
-
 }
 
 void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app){
@@ -385,9 +390,20 @@ void GUI_SimplePlayer::muteButtonPressed(){
 
 
 
-void GUI_SimplePlayer::cover_changed(QPixmap& cover){
+void GUI_SimplePlayer::cover_changed(bool success){
+
+	if(!success) return;
 
 	qDebug() << "Cover changed";
+
+
+
+	QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	if(!QFile::exists(cover_path)){
+		qDebug() << "File does not exist " << cover_path;
+		return;
+	}
+	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
 	this -> ui->albumCover->setPixmap(cover);
 	this->ui->albumCover->repaint();
 }
