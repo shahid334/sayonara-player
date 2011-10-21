@@ -30,10 +30,10 @@ There is a Visual Studio 2008 solution, but not updated every time, so maybe the
   * libcurl: CURL
 
   * Known issues:
-    # Some MP3 files are not played due to some Phonon issue (the standard Windows DirectX backend fails, so the next step will contain compilation of an alternative backend [e.g. gestreamer])
+    # Some MP3 files are not played due to some Phonon issue (the standard Windows DirectX backend fails, so the next step will contain compilation of an alternative backend e.g. gstreamer under Windows)
    
 
 
 == MAC ==
 
-Not tried yet
+Is there anybody out there who wants to try compilation on MAC OSX?
