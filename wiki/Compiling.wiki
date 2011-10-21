@@ -28,11 +28,10 @@ There is a Visual Studio 2008 solution, but not updated every time, so maybe the
   * Qt:      QTDIR
   * Taglib:  LIBTAG
   * libcurl: CURL
-  * lastfm:  should work
 
   * Known issues:
-    # Some MP3 files are not played due to some Phonon issue
-    # 32bit version is slow on 64bit environments, but I was too lazy to compile it on my 64 bit windows
+    # Some MP3 files are not played due to some Phonon issue (the standard Windows DirectX backend fails, so the next step will contain compilation of an alternative backend [e.g. gestreamer])
+   
 
 
 == MAC ==
