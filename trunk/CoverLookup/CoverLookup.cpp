@@ -120,6 +120,8 @@ void CoverLookup::terminate_thread(){
 }
 
 
+
+
 void CoverLookup::search_cover(const MetaData& md){
 
 	_metadata = (MetaData*) &md;

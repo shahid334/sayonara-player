@@ -24,6 +24,7 @@
 #include <DatabaseAccess/CDatabaseConnector.h>
 
 #include <QMenu>
+#include <QMessageBox>
 
 #include <vector>
 
@@ -55,6 +56,8 @@ private:
 	QAction*			_edit_action;
 	QAction*			_delete_action;
 
+	QMessageBox*		_album_msg_box;
+
 
 
 	signals:
@@ -66,6 +69,7 @@ private:
 		void track_chosen_signal(vector<MetaData>& );
 		void reload_library();
 		void data_for_id3_change(const vector<MetaData>&);
+		void search_cover(const MetaData&);
 
 	public slots:
 		void fill_library_tracks(vector<MetaData>&);
@@ -75,6 +79,7 @@ private:
 		void reloading_library();
 		void reloading_library_finished();
 		void library_should_be_reloaded();
+		void cover_changed(bool);
 
 
 	private slots:
@@ -106,6 +111,8 @@ private:
 		void info_tracks();
 		void delete_tracks();
 
+		void apply_cover_to_entire_album();
+
 
 	protected:
 			void resizeEvent(QResizeEvent* e);
@@ -121,6 +128,8 @@ private:
 
 			int _selected_artist;
 			int _selected_album;
+
+			Album _album_of_interest;
 
 			bool _everything_loaded;
 

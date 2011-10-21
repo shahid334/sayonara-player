@@ -127,6 +127,7 @@ int main(int argc, char *argv[]){
         app.connect( &listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,		SLOT(total_time_changed(qint64)));
 
         app.connect (cover, 	SIGNAL(cover_found(bool)), 							&player, 		SLOT(cover_changed(bool)));
+        app.connect (cover, 	SIGNAL(cover_found(bool)), 							&ui_library,	SLOT(cover_changed(bool)));
 
         app.connect(&library, SIGNAL(playlistCreated(QStringList&)), 				&playlist, 		SLOT(createPlaylist(QStringList&)));
         app.connect(&library, SIGNAL(signalMetaDataLoaded(vector<MetaData>&)), 		&ui_library, 	SLOT(fill_library_tracks(vector<MetaData>&)));
@@ -140,6 +141,7 @@ int main(int argc, char *argv[]){
 
 
 
+        app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
         app.connect(&ui_library, SIGNAL(artist_changed_signal(int)), 				&library, 		SLOT(getAlbumsByArtist(int)));
         app.connect(&ui_library, SIGNAL(reload_library()), 							&library, 		SLOT(reloadLibrary()));
         app.connect(&ui_library, SIGNAL(album_changed_signal(int)), 				&library, 		SLOT(getTracksByAlbum(int)));

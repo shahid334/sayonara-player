@@ -38,7 +38,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui->setupUi(this);
 
 
-
+	_album_msg_box = 0;
 	this->_sort_albums = "name asc";
 	_selected_artist = -1;
 	_selected_album = -1;
@@ -598,23 +598,34 @@ void GUI_Library_windowed::edit_album(){
 	emit data_for_id3_change(_v_metadata);
 }
 
+void GUI_Library_windowed::apply_cover_to_entire_album(){
+	QPixmap pixmap = QPixmap(Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name));
+	for(int i=0; i<_album_of_interest.artists.size(); i++){
+		pixmap.save(Helper::get_cover_path(_album_of_interest.artists[i], _album_of_interest.name));
+	}
+}
 
 void GUI_Library_windowed::info_album(){
 
 
-	QMessageBox box;
+	if(_album_msg_box) delete _album_msg_box;
+	_album_msg_box = new QMessageBox();
+	QPushButton* apply = 0;
+
 	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows(1);
 	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
 
 	Album album;
 	QStringList album_str_list = _album_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
 	album.fromStringList( album_str_list );
+	_album_of_interest = album;
 
 	QString artist = album.artists[0];
-	if(album.artists.size() > 1)
+	if(album.artists.size() > 1){
 		artist = "Various artists";
+	}
 
-	box.setText(QString("<b>") + artist + " - " + album.name + "</b>");
+	_album_msg_box->setText(QString("<b>") + artist + " - " + album.name + "</b>");
 
 	QString year =  QString::number(album.year);
 	if(album.year == 0) year = "Unknown";
@@ -622,13 +633,45 @@ void GUI_Library_windowed::info_album(){
 						"Playing time: " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + "\n" +
 						"Year: " + year;
 
-	QPixmap pm = QPixmap(Helper::get_cover_path(artist, album.name));
-	pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-	box.setIconPixmap(pm);
+	bool cover_found = false;
+	for(int i=0; i<album.artists.size(); i++){
 
-	box.setInformativeText(info_text);
-	box.exec();
-	box.close();
+		QPixmap pm = QPixmap(Helper::get_cover_path(album.artists[i], album.name));
+
+		if(!pm.isNull()){
+			if(album.artists.size() > 1){
+				apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
+				connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
+				album.artists.swap(0, i);
+			}
+
+			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+			_album_msg_box->setIconPixmap(pm);
+			cover_found = true;
+			break;
+		}
+	}
+
+	if(!cover_found){
+		qDebug() << Q_FUNC_INFO << "No cover found...";
+		MetaData md;
+		md.album_id = _album_of_interest.id;
+		md.album = CDatabaseConnector::getInstance()->getAlbumByID(md.album_id).name;
+		md.artist = _album_of_interest.artists[0];
+
+		qDebug() << Q_FUNC_INFO << "; " << md.album << ", " << md.artist;
+
+		emit search_cover(md);
+	}
+
+
+
+
+
+
+	_album_msg_box->setInformativeText(info_text);
+	_album_msg_box->exec();
+	_album_msg_box->close();
 
 }
 
@@ -692,7 +735,6 @@ void GUI_Library_windowed::edit_tracks(){
 void GUI_Library_windowed::info_tracks(){
 	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
 	QMessageBox box;
-
 
 	if(idx_list.size() == 0 ) return;
 	else if(idx_list.size() == 1 && idx_list.at(0).isValid()){
@@ -776,5 +818,20 @@ void GUI_Library_windowed::info_tracks(){
 }
 
 void GUI_Library_windowed::delete_tracks(){
+
+}
+
+
+void GUI_Library_windowed::cover_changed(bool success){
+	if(!_album_msg_box) return;
+	qDebug() << Q_FUNC_INFO << ", " <<_album_msg_box->isVisible() << ", " << Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
+
+		Album album = CDatabaseConnector::getInstance()->getAlbumByID(_album_of_interest.id);
+		QPixmap pm = QPixmap(Helper::get_cover_path(album.artists[0], album.name));
+		if(!pm.isNull()){
+			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+			_album_msg_box->setIconPixmap(pm);
+		}
+
 
 }

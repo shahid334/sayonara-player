@@ -164,11 +164,11 @@ void MP3_Listen::changeTrack(const MetaData & metadata){
 void MP3_Listen::total_time_changed(qint64 total_time){
 
 	//qDebug() << "total time changed";
-	if(this->_media_object->hasVideo()){
+	//if(this->_media_object->hasVideo()){
 		emit total_time_changed_signal(total_time);
 		_meta_data.length_ms = total_time;
 		play();
-	}
+	//}
 }
 
 const MetaData & MP3_Listen::getMetaData() const {
@@ -220,8 +220,8 @@ qreal MP3_Listen::getVolume(){
 void MP3_Listen::eq_changed(int band, int val){
 	if(_eq == 0 || _eq_type == EQ_TYPE_NONE || _effect_parameters.size() == 0) return;
 
-	if(_effect_parameters.size() < 10){
-		band = band / (( 10 / _effect_parameters.size()) + 1);
+	if(_effect_parameters.size() < 10 && _effect_parameters.size() > 0){
+		band = band / (  (10/_effect_parameters.size())   + 1);
 	}
 
 	double new_val = 0;
