@@ -70,7 +70,7 @@ private:
 	int _emit_type;
 
 	vector<QPixmap> _alternative_covers;
-	MetaData*		_metadata;
+	MetaData		_metadata;
 };
 
 #endif /* COVERLOOKUP_H_ */

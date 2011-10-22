@@ -78,7 +78,7 @@ bool call_session_url(QString url){
 	CURL *curl = curl_easy_init();
 
 	if(curl) {
-
+		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl, CURLOPT_URL, url.toUtf8().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_answer);
@@ -102,6 +102,7 @@ bool call_scrobble_url(string url, string post_data){
 
 	CURL* curl = curl_easy_init();
 	if(curl){
+		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 		curl_easy_setopt(curl, CURLOPT_POST, 1) ;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_answer);

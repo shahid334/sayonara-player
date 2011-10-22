@@ -40,8 +40,14 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	_album_msg_box = 0;
 	this->_sort_albums = "name asc";
+
 	_selected_artist = -1;
 	_selected_album = -1;
+
+	_selected_artist_name = "";
+	_selected_album_name = "";
+
+
 	_everything_loaded = false;
 
 	this->_track_model = new LibraryItemModelTracks();
@@ -223,6 +229,9 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 	int artist_id = _v_artists.at(idx.row()).id;
 	_selected_artist = artist_id;
+	_selected_artist_name = _v_artists.at(idx.row()).name;
+
+
 	Artist artist = _v_artists.at(idx.row());
 	vector<MetaData> vec_tracks;
 	vector<Album> vec_albums;
@@ -414,6 +423,10 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 void GUI_Library_windowed::clear_button_pressed(){
 	_selected_album = -1;
 	_selected_artist = -1;
+
+	_selected_artist_name = "";
+	_selected_album_name = "";
+
 	this->ui->le_search->clear();
 	_everything_loaded = false;
 	text_line_edited(" ");
@@ -445,6 +458,10 @@ Q_UNUSED(search);
 
 		_selected_album = -1;
 		_selected_artist = -1;
+
+		_selected_artist_name = "";
+		_selected_album_name = "";
+
 		_everything_loaded = true;
 
 		return;
@@ -607,10 +624,17 @@ void GUI_Library_windowed::apply_cover_to_entire_album(){
 
 void GUI_Library_windowed::info_album(){
 
+	int num_artists;
+	QPushButton* apply = 0;
+	QPixmap pm;
+	QString sel_artist = "";
+	QString cover_path = "";
+	bool	cover_found;
+
 
 	if(_album_msg_box) delete _album_msg_box;
 	_album_msg_box = new QMessageBox();
-	QPushButton* apply = 0;
+
 
 	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows(1);
 	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
@@ -618,56 +642,56 @@ void GUI_Library_windowed::info_album(){
 	Album album;
 	QStringList album_str_list = _album_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
 	album.fromStringList( album_str_list );
-	_album_of_interest = album;
+	_album_of_interest = CDatabaseConnector::getInstance()->getAlbumByID(album.id);
+	num_artists = _album_of_interest.artists.size();
 
-	QString artist = album.artists[0];
-	if(album.artists.size() > 1){
+	QString artist = _album_of_interest.artists[0];
+	if(_album_of_interest.artists.size() > 1){
 		artist = "Various artists";
 	}
 
-	_album_msg_box->setText(QString("<b>") + artist + " - " + album.name + "</b>");
+	_album_msg_box->setText(QString("<b>") + artist + " - " + album.name + " (" + QString::number(_album_of_interest.artists.size()) + ")</b>");
 
-	QString year =  QString::number(album.year);
-	if(album.year == 0) year = "Unknown";
-	QString info_text = QString::number(album.num_songs) + " tracks\n" +
-						"Playing time: " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + "\n" +
+	QString year =  QString::number(_album_of_interest.year);
+	if(_album_of_interest.year == 0) year = "Unknown";
+	QString info_text = QString::number(_album_of_interest.num_songs) + " tracks\n" +
+						"Playing time: " + Helper::cvtMsecs2TitleLengthString(_album_of_interest.length_sec * 1000) + "\n" +
 						"Year: " + year;
 
-	bool cover_found = false;
-	for(int i=0; i<album.artists.size(); i++){
 
-		QPixmap pm = QPixmap(Helper::get_cover_path(album.artists[i], album.name));
+	if(_album_of_interest.is_sampler)
+		cover_path = Helper::get_cover_path("", _album_of_interest.name);
 
-		if(!pm.isNull()){
-			if(album.artists.size() > 1){
-				apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
-				connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
-				album.artists.swap(0, i);
-			}
+	else
+		cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
 
-			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-			_album_msg_box->setIconPixmap(pm);
-			cover_found = true;
-			break;
+	pm = QPixmap(cover_path);
+	cover_found = !pm.isNull();
+
+
+	if(cover_found){
+
+		if(_album_of_interest.is_sampler){
+			apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
+			connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
 		}
+
+		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		_album_msg_box->setIconPixmap(pm);
+
 	}
 
-	if(!cover_found){
+	else{
 		qDebug() << Q_FUNC_INFO << "No cover found...";
 		MetaData md;
 		md.album_id = _album_of_interest.id;
-		md.album = CDatabaseConnector::getInstance()->getAlbumByID(md.album_id).name;
-		md.artist = _album_of_interest.artists[0];
+		md.album = _album_of_interest.name;
+		md.artist = (num_artists == 1) ? _album_of_interest.artists[0] : "";
 
 		qDebug() << Q_FUNC_INFO << "; " << md.album << ", " << md.artist;
 
 		emit search_cover(md);
 	}
-
-
-
-
-
 
 	_album_msg_box->setInformativeText(info_text);
 	_album_msg_box->exec();
@@ -823,15 +847,27 @@ void GUI_Library_windowed::delete_tracks(){
 
 
 void GUI_Library_windowed::cover_changed(bool success){
-	if(!_album_msg_box) return;
+	if(!_album_msg_box || !success) return;
 	qDebug() << Q_FUNC_INFO << ", " <<_album_msg_box->isVisible() << ", " << Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
 
-		Album album = CDatabaseConnector::getInstance()->getAlbumByID(_album_of_interest.id);
-		QPixmap pm = QPixmap(Helper::get_cover_path(album.artists[0], album.name));
-		if(!pm.isNull()){
-			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-			_album_msg_box->setIconPixmap(pm);
+	QString cover_path = "";
+	if(_album_of_interest.is_sampler)
+		cover_path = Helper::get_cover_path("", _album_of_interest.name);
+
+	else
+		cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
+
+	QPixmap pm = QPixmap(cover_path);
+	if(!pm.isNull()){
+
+		if(_album_of_interest.is_sampler){
+			QPushButton* apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
+			connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
 		}
+
+		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		_album_msg_box->setIconPixmap(pm);
+	}
 
 
 }

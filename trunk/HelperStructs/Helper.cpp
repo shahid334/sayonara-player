@@ -23,6 +23,7 @@
 #include <QUrl>
 #include <QString>
 #include <QCryptographicHash>
+#include <QDebug>
 
 
 
@@ -144,15 +145,18 @@ QString Helper::calc_cover_lfm_adress(QString artist, QString album){
 QString Helper::calc_cover_google_adress(QString artist, QString album){
 
 	QString url = QString("http://www.google.de/images?q=");
-	/*artist = artist.replace('&', 'n');
-	artist = artist.replace('?', '+');
-	artist = artist.replace(' ', '+');*/
+
 	artist = QUrl::toPercentEncoding(artist);
 
+	album = album.toLower();
 
-	/*album = album.replace('&', 'n');
-	album = album.replace('?', '+');
-	album = album.replace(' ', '+');*/
+	qDebug() << "album old = " << album;
+
+	album = album.remove(QRegExp(QString("(\\s)?-?(\\s)?((cd)|(CD)|((d|D)((is)|(IS))(c|C|k|K)))(\\d|(\\s\\d))")));
+	album = album.replace("()", "");
+	album = album.replace("( )", "");
+	album = album.trimmed();
+	qDebug() << "album new = " << album;
 	album = QUrl::toPercentEncoding(album);
 
 

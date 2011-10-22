@@ -7,85 +7,98 @@
 
 #include <QFileDialog>
 
-
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::GUI_SimplePlayer)
-{
-    ui->setupUi(this);
-    initGUI();
+QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
+	ui->setupUi(this);
+	initGUI();
 
-    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
-    this -> m_playing = false;
-    this -> m_cur_searching = false;
-    this -> m_mute = false;
+	this->ui->albumCover->setPixmap(
+			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+	this->m_playing = false;
+	this->m_cur_searching = false;
+	this->m_mute = false;
 
+	m_trayIcon = new QSystemTrayIcon();
+	m_trayIcon->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	setupTrayContextMenu();
+	m_trayIcon->show();
 
-    m_trayIcon = new QSystemTrayIcon();
-    m_trayIcon->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-    setupTrayContextMenu();
-    m_trayIcon->show();
+	m_minTriggerByTray = false;
+	m_minimized2tray = false;
 
-    m_minTriggerByTray = false;
-    m_minimized2tray = false;
+	QSize size = CSettingsStorage::getInstance()->getPlayerSize();
+	QRect rect = this->geometry();
+	rect.setWidth(size.width());
+	rect.setHeight(size.height());
+	setGeometry(rect);
 
-    QSize size = CSettingsStorage::getInstance()->getPlayerSize();
-    QRect rect = this->geometry();
-    rect.setWidth( size.width() );
-    rect.setHeight( size.height() );
-    setGeometry(rect);
+	connect(this->ui->play, SIGNAL(clicked(bool)), this,
+			SLOT(playClicked(bool)));
+	connect(this->ui->fw, SIGNAL(clicked(bool)), this,
+			SLOT(forwardClicked(bool)));
+	connect(this->ui->bw, SIGNAL(clicked(bool)), this,
+			SLOT(backwardClicked(bool)));
+	connect(this->ui->stop, SIGNAL(clicked(bool)), this,
+			SLOT(stopClicked(bool)));
 
-    connect(this ->ui ->  play, SIGNAL(clicked(bool)),this,SLOT(playClicked(bool)));
-    connect(this ->ui ->  fw, SIGNAL(clicked(bool)),this,SLOT(forwardClicked(bool)));
-    connect(this ->ui ->  bw, SIGNAL(clicked(bool)),this,SLOT(backwardClicked(bool)));
-    connect(this ->ui ->  stop, SIGNAL(clicked(bool)),this,SLOT(stopClicked(bool)));
+	connect(this->ui->action_OpenFile, SIGNAL(triggered(bool)), this,
+			SLOT(fileSelectedClicked(bool)));
+	connect(this->ui->action_OpenFolder, SIGNAL(triggered(bool)), this,
+			SLOT(folderSelectedClicked(bool)));
+	connect(this->ui->volumeSlider, SIGNAL(sliderMoved(int)), this,
+			SLOT(volumeChangedSlider(int)));
+	connect(this->ui->btn_mute, SIGNAL(released()), this,
+			SLOT(muteButtonPressed()));
 
+	connect(this->ui->songProgress, SIGNAL(sliderPressed()), this,
+			SLOT(searchSliderPressed()));
+	connect(this->ui->songProgress, SIGNAL(sliderMoved(int)), this,
+			SLOT(searchSliderMoved(int)));
+	connect(this->ui->songProgress, SIGNAL(sliderReleased()), this,
+			SLOT(searchSliderReleased()));
 
-    connect(this ->ui ->  action_OpenFile, SIGNAL(triggered(bool)),this,SLOT(fileSelectedClicked(bool)));
-    connect(this ->ui ->  action_OpenFolder, SIGNAL(triggered(bool)),this,SLOT(folderSelectedClicked(bool)));
-    connect(this ->ui ->  volumeSlider, SIGNAL(sliderMoved(int)),this,SLOT(volumeChangedSlider(int)));
-    connect(this ->ui ->  btn_mute, SIGNAL(released()), this, SLOT(muteButtonPressed()));
+	connect(this->m_trayIcon,
+			SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
+			SLOT(showAgain(QSystemTrayIcon::ActivationReason)));
+	connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
+			SLOT(showEqualizer(bool)));
+	connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this,
+			SLOT(changeSkin(bool)));
+	connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this,
+			SLOT(lastFMClicked(bool)));
+	connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this,
+			SLOT(reloadLibraryClicked(bool)));
+	connect(this->ui->action_setLibPath, SIGNAL(triggered(bool)), this,
+			SLOT(setLibraryPathClicked(bool)));
+	connect(this->ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this,
+			SLOT(fetch_all_covers_clicked(bool)));
+	connect(this->ui->albumCover, SIGNAL(pressed()), this,
+			SLOT(album_cover_pressed()));
 
-    connect(this ->ui ->  songProgress, SIGNAL(sliderPressed()),this,SLOT(searchSliderPressed()));
-    connect(this ->ui ->  songProgress, SIGNAL(sliderMoved(int)), this, SLOT(searchSliderMoved(int)));
-    connect(this ->ui ->  songProgress, SIGNAL(sliderReleased()),this,SLOT(searchSliderReleased()));
+	ui_playlist = 0;
 
-    connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(showAgain(QSystemTrayIcon::ActivationReason)));
-    connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this, SLOT(showEqualizer(bool)));
-    connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this, SLOT(changeSkin(bool)));
-    connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this, SLOT(lastFMClicked(bool)));
-    connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this, SLOT(reloadLibraryClicked(bool)));
-    connect(this->ui->action_setLibPath, SIGNAL(triggered(bool)), this, SLOT(setLibraryPathClicked(bool)));
-    connect(this->ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this, SLOT(fetch_all_covers_clicked(bool)));
-	connect(this->ui->albumCover, SIGNAL(pressed()), this, SLOT(album_cover_pressed()));
-
-
-
-    ui_playlist = 0;
-
-    m_skinSuffix = "";
+	m_skinSuffix = "";
 }
 
-GUI_SimplePlayer::~GUI_SimplePlayer()
-{
-    delete ui;
+GUI_SimplePlayer::~GUI_SimplePlayer() {
+	delete ui;
 }
 
-
-void GUI_SimplePlayer::setVolume(int vol){
+void GUI_SimplePlayer::setVolume(int vol) {
 
 	this->ui->volumeSlider->setValue(vol);
 	setupVolButton(vol);
-	emit volumeChanged((qreal)vol);
+	emit volumeChanged((qreal) vol);
 
 }
 
+void GUI_SimplePlayer::changeSkin(bool dark) {
+	if (dark) {
 
-void GUI_SimplePlayer::changeSkin(bool dark){
-	if(dark){
-
-		this->ui->centralwidget->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
-		this->setStyleSheet("background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
+		this->ui->centralwidget->setStyleSheet(
+				"background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
+		this->setStyleSheet(
+				"background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
 
 		m_skinSuffix = QString("_dark");
 	}
@@ -104,213 +117,223 @@ void GUI_SimplePlayer::changeSkin(bool dark){
 
 }
 
+QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
+	QString lengthString;
+	int length_sec = length_ms / 1000;
+	QString min = QString::number(length_sec / 60);
+	QString sek = QString::number(length_sec % 60);
 
+	if (min.length() < 2)
+		min = QString('0') + min;
 
-QString GUI_SimplePlayer::getLengthString (quint32 length_ms)const {
-    QString lengthString;
-    int length_sec = length_ms /1000;
-    QString min = QString::number(length_sec/60);
-    QString sek = QString::number(length_sec%60);
+	if (sek.length() < 2)
+		sek = QString('0') + sek;
 
-    if(min.length() < 2)
-    	min = QString('0') + min;
-
-    if(sek.length() < 2)
-    	sek = QString('0') + sek;
-
-    lengthString = min + QString(":") + sek;
-    return lengthString;
+	lengthString = min + QString(":") + sek;
+	return lengthString;
 }
 
-void GUI_SimplePlayer::update_info(const MetaData& in){
+void GUI_SimplePlayer::update_info(const MetaData& in) {
 
+	this->m_metadata = in;
 
-		this->m_metadata = in;
+	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
+		this->ui->album->setText(in.album);
 
-		if(in.year < 1000 || in.album.contains(QString::number(in.year)))
-			this -> ui->album->setText(in.album);
+	else
+		this->ui->album->setText(
+				in.album + " (" + QString::number(in.year) + ")");
 
-		else this -> ui->album->setText(in.album + " (" + QString::number(in.year) +")");
+	this->ui->artist->setText(in.artist);
+	this->ui->title->setText(in.title);
 
-	    this -> ui->artist->setText(in.artist);
-	    this -> ui->title->setText(in.title);
+	m_trayIcon->setToolTip(
+			"Currently playing: \"" + in.title + "\" by " + in.artist);
+	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
-	    m_trayIcon->setToolTip("Currently playing: \"" + in.title + "\" by " + in.artist);
-	    this -> setWindowTitle(QString("Sayonara - ") + in.title);
-
-	    emit wantCover(in);
+	emit wantCover(in);
 
 }
 
+void GUI_SimplePlayer::fillSimplePlayer(const MetaData & in) {
 
-void GUI_SimplePlayer::fillSimplePlayer (const MetaData & in) {
-
-	if(in.artist != m_metadata.artist || in.album != m_metadata.album){
-		this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+	if (in.artist != m_metadata.artist || in.album != m_metadata.album) {
+		this->ui->albumCover->setPixmap(
+				QPixmap::fromImage(
+						QImage(Helper::getIconPath() + "append.png")));
 		this->ui->albumCover->repaint();
 	}
 
 	this->m_metadata = in;
 
 	// sometimes ignore the date
-	if(in.year < 1000 || in.album.contains(QString::number(in.year)))
-		this -> ui->album->setText(in.album);
+	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
+		this->ui->album->setText(in.album);
 
-	else this -> ui->album->setText(in.album + " (" + QString::number(in.year) +")");
+	else
+		this->ui->album->setText(
+				in.album + " (" + QString::number(in.year) + ")");
 
-    this -> ui->artist->setText(in.artist);
-    this -> ui->title->setText(in.title);
+	this->ui->artist->setText(in.artist);
+	this->ui->title->setText(in.title);
 
+	m_trayIcon->setToolTip(
+			"Currently playing: \"" + in.title + "\" by " + in.artist);
 
-    m_trayIcon->setToolTip("Currently playing: \"" + in.title + "\" by " + in.artist);
+	QString lengthString = getLengthString(in.length_ms);
 
-    QString lengthString = getLengthString(in.length_ms);
+	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+	this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+	this->m_playAction->setText("Pause");
 
-    this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-    this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-    this->m_playAction->setText("Pause");
+	this->ui->maxTime->setText(lengthString);
+	if (in.rating > 5) {
+		qDebug() << "Error rating is to big";
+	}
 
-    this -> ui->maxTime->setText(lengthString);
-    if (in.rating> 5) {
-        qDebug() << "Error rating is to big";
-    }
+	// int tmpRating = (rand() % 4) + 1;
 
-   // int tmpRating = (rand() % 4) + 1;
+	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
+	qDebug() << "Bitrate = " << in.bitrate;
+	if (in.bitrate < 96000)
+		tmp += "*";
+	else if (in.bitrate < 128000)
+		tmp += "**";
+	else if (in.bitrate < 160000)
+		tmp += "***";
+	else if (in.bitrate < 256000)
+		tmp += "****";
+	else
+		tmp += "*****";
+	tmp += "</font>";
 
+	this->ui->rating->setText(tmp);
+	this->ui->rating->setToolTip(
+			QString("<font color=\"#000000\">") + QString::number(in.bitrate)
+	+ "</font>");
 
+	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
-    QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-    qDebug() << "Bitrate = " << in.bitrate;
-    if(in.bitrate < 96000) tmp += "*";
-    else if(in.bitrate < 128000) tmp += "**";
-    else if(in.bitrate < 160000) tmp += "***";
-    else if(in.bitrate < 256000) tmp += "****";
-    else tmp += "*****";
-    tmp += "</font>";
+	this->m_completeLength_ms = in.length_ms;
+	this->m_playing = true;
 
-    this -> ui ->  rating->setText(tmp);
-    this->ui->rating->setToolTip(QString("<font color=\"#000000\">") + QString::number(in.bitrate) + "</font>");
-
-    this -> setWindowTitle(QString("Sayonara - ") + in.title);
-
-    this -> m_completeLength_ms = in.length_ms;
-    this -> m_playing = true;
-
-    emit wantCover(in);
+	emit wantCover(in);
 
 }
 
-
-void GUI_SimplePlayer::total_time_changed(qint64 total_time){
+void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 	m_completeLength_ms = total_time;
 	this->ui->maxTime->setText(getLengthString(total_time));
 
 }
 
+void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
-void GUI_SimplePlayer::setCurrentPosition (quint32 pos_sec) {
+	if (m_completeLength_ms != 0) {
 
-    if (m_completeLength_ms != 0) {
+		double newSliderVal = (double) (pos_sec * 1000.0 * 100.0
+				/ m_completeLength_ms);
 
-    	double newSliderVal = (double)(pos_sec * 1000.0 * 100.0 / m_completeLength_ms);
+		if (!m_cur_searching)
+			this->ui->songProgress->setValue((int) newSliderVal);
 
+		int min, sec;
 
-    	if(!m_cur_searching)
-    		this -> ui ->songProgress->setValue((int) newSliderVal);
+		Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
 
-        int min, sec;
+		QString curPosString = Helper::cvtSomething2QString(min, 2)
+		+ QString(':') + Helper::cvtSomething2QString(sec, 2);
 
-        Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
+		this->ui->curTime->setText(curPosString);
 
-        QString curPosString = 	Helper::cvtSomething2QString(min, 2) +
-								QString(':') +
-								Helper::cvtSomething2QString(sec, 2);
-
-
-        this -> ui ->curTime->setText(curPosString);
-
-    }
+	}
 }
 
 void GUI_SimplePlayer::playClicked(bool) {
-    qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO;
 
-    if (this -> m_playing == true) {
-    	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-    	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-    	m_playAction->setText("Play");
-    	qDebug() << "pause";
-    	emit pause();
+	if (this->m_playing == true) {
+		this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+		m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+		m_playAction->setText("Play");
+		qDebug() << "pause";
+		emit
+		pause();
 
-    	this->ui->albumCover->setFocus();
+		this->ui->albumCover->setFocus();
 
-    }
+	}
 
-    else {
-    	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-    	m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-    	m_playAction->setText("Pause");
-    	qDebug() << "play";
-    	emit play();
+	else {
+		this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+		m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+		m_playAction->setText("Pause");
+		qDebug() << "play";
+		emit
+		play();
 
-    	this->ui->albumCover->setFocus();
+		this->ui->albumCover->setFocus();
 
-    }
-    this -> m_playing = !this -> m_playing;
+	}
+	this->m_playing = !this->m_playing;
 }
 
 void GUI_SimplePlayer::stopClicked(bool) {
-    qDebug() << Q_FUNC_INFO;
-    this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-    m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-    m_playAction->setText("Play");
-    m_playing = false;
-    this->ui->title->setText("Sayonara Player");
-    this->ui->rating->setText("");
-    this->ui->album->setText("Written by Lucio Carreras");
-    this->ui->artist->setText("");
-    this->setWindowTitle("Sayonara");
-    this->ui->songProgress->setValue(0);
-    this->ui->curTime->setText("00:00");
-    this->ui->maxTime->setText("00:00");
-    this -> ui->albumCover->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+	qDebug() << Q_FUNC_INFO;
+	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	m_playAction->setText("Play");
+	m_playing = false;
+	this->ui->title->setText("Sayonara Player");
+	this->ui->rating->setText("");
+	this->ui->album->setText("Written by Lucio Carreras");
+	this->ui->artist->setText("");
+	this->setWindowTitle("Sayonara");
+	this->ui->songProgress->setValue(0);
+	this->ui->curTime->setText("00:00");
+	this->ui->maxTime->setText("00:00");
+	this->ui->albumCover->setPixmap(
+			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
 
-    this->ui->albumCover->setFocus();
-    emit stop();
+	this->ui->albumCover->setFocus();
+	emit stop();
 }
 
 void GUI_SimplePlayer::backwardClicked(bool) {
-    qDebug() << Q_FUNC_INFO;
-    this->ui->albumCover->setFocus();
-    emit backward();
+	qDebug() << Q_FUNC_INFO;
+	this->ui->albumCover->setFocus();
+	emit backward();
 }
 
 void GUI_SimplePlayer::forwardClicked(bool) {
-    qDebug() << Q_FUNC_INFO;
-    this->ui->albumCover->setFocus();
-    emit forward();
+	qDebug() << Q_FUNC_INFO;
+	this->ui->albumCover->setFocus();
+	emit forward();
 }
-
 
 void GUI_SimplePlayer::folderSelectedClicked(bool) {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                    getenv("$HOME"),
-                                                    QFileDialog::ShowDirsOnly
-                                                    | QFileDialog::DontResolveSymlinks);
-    if(dir != "")
-    	emit baseDirSelected(dir);
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+			getenv("$HOME"),
+			QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	if (dir != "")
+		emit baseDirSelected(dir);
 }
-
 
 void GUI_SimplePlayer::fileSelectedClicked(bool) {
-    qDebug() << Q_FUNC_INFO;
-    QStringList list = QFileDialog::getOpenFileNames(this, tr("Open Media files"), QDir::homePath(), tr("Media files (*.mp3 *.wav *.flac *.aac *.wma *.avi *.mpg *.mpeg)"));
+	qDebug() << Q_FUNC_INFO;
+	QStringList list =
+			QFileDialog::getOpenFileNames(
+					this,
+					tr("Open Media files"),
+					QDir::homePath(),
+					tr(
+							"Media files (*.mp3 *.wav *.flac *.aac *.wma *.avi *.mpg *.mpeg)"));
 
-
-    if(list.size() > 0) emit fileSelected(list);
+	if (list.size() > 0)
+		emit fileSelected(list);
 }
 
-void GUI_SimplePlayer::searchSliderPressed(){
+void GUI_SimplePlayer::searchSliderPressed() {
 	m_cur_searching = true;
 }
 
@@ -318,33 +341,34 @@ void GUI_SimplePlayer::searchSliderReleased() {
 	m_cur_searching = false;
 }
 
-void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app){
+void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app) {
 	m_cur_searching = true;
 
-	if(!by_app) emit search( search_percent );
+	if (!by_app)
+		emit search(search_percent);
 }
 
 void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
 
 	setupVolButton(volume_percent);
-    emit volumeChanged(volume_percent * 1.0);
-    CSettingsStorage::getInstance()->setVolume(volume_percent);
+	emit
+	volumeChanged(volume_percent * 1.0);
+	CSettingsStorage::getInstance()->setVolume(volume_percent);
 }
 
-void GUI_SimplePlayer::setupVolButton(int percent){
+void GUI_SimplePlayer::setupVolButton(int percent) {
 
 	QString butFilename = Helper::getIconPath() + "vol_";
 
-	if(percent == 0){
+	if (percent == 0) {
 		butFilename += QString("mute") + m_skinSuffix + ".png";
 	}
 
-
-	else if(percent < 40){
+	else if (percent < 40) {
 		butFilename += QString("1") + m_skinSuffix + ".png";
 	}
 
-	else if(percent < 80){
+	else if (percent < 80) {
 		butFilename += QString("2") + m_skinSuffix + ".png";
 	}
 
@@ -352,15 +376,13 @@ void GUI_SimplePlayer::setupVolButton(int percent){
 		butFilename += QString("3") + m_skinSuffix + ".png";
 	}
 
-
 	this->ui->btn_mute->setIcon(QIcon(butFilename));
-
 
 }
 
-void GUI_SimplePlayer::muteButtonPressed(){
+void GUI_SimplePlayer::muteButtonPressed() {
 
-	if(m_mute){
+	if (m_mute) {
 		m_mute = false;
 		this->ui->volumeSlider->setEnabled(true);
 
@@ -369,13 +391,14 @@ void GUI_SimplePlayer::muteButtonPressed(){
 
 		setupVolButton(this->ui->volumeSlider->value());
 
-		emit volumeChanged((qreal)this->ui->volumeSlider->value());
+		emit volumeChanged((qreal) this->ui->volumeSlider->value());
 	}
 
-	else{
+	else {
 		m_mute = true;
 		this->ui->volumeSlider->setEnabled(false);
-		this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
+		this->ui->btn_mute->setIcon(
+				QIcon(Helper::getIconPath() + "vol_mute.png"));
 		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3.png"));
 		m_muteAction->setText("Unmute");
 
@@ -384,44 +407,42 @@ void GUI_SimplePlayer::muteButtonPressed(){
 		emit volumeChanged(0);
 	}
 
-
 }
 
+void GUI_SimplePlayer::cover_changed(bool success) {
 
-
-
-void GUI_SimplePlayer::cover_changed(bool success){
-
-	if(!success) return;
+	if (!success)
+		return;
 
 	qDebug() << "Cover changed";
 
+	QString cover_path;
 
+	if(CDatabaseConnector::getInstance()->getAlbumByID(m_metadata.album_id).is_sampler)
+		cover_path = Helper::get_cover_path("", m_metadata.album);
 
-	QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-	if(!QFile::exists(cover_path)){
+	else cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	if (!QFile::exists(cover_path)) {
 		qDebug() << "File does not exist " << cover_path;
 		return;
 	}
 	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
-	this -> ui->albumCover->setPixmap(cover);
+	this->ui->albumCover->setPixmap(cover);
 	this->ui->albumCover->repaint();
 }
 
-void GUI_SimplePlayer::coverClicked(bool){
-
+void GUI_SimplePlayer::coverClicked(bool) {
 
 	emit wantMoreCovers();
 }
 
-
-void GUI_SimplePlayer::showEqualizer(bool vis){
+void GUI_SimplePlayer::showEqualizer(bool vis) {
 
 	QRect rect = this->ui->playlist_widget->geometry();
 	if (vis) {
 		rect.setTop(rect.top() + this->ui_eq->height());
-		rect.setHeight( this->ui_playlist->height() - this->ui_eq->height() );
-		rect.setWidth( this->ui_playlist->width());
+		rect.setHeight(this->ui_playlist->height() - this->ui_eq->height());
+		rect.setWidth(this->ui_playlist->width());
 
 		QRect rect2 = this->ui_eq->geometry();
 		rect2.setWidth(this->ui_playlist->width());
@@ -434,49 +455,47 @@ void GUI_SimplePlayer::showEqualizer(bool vis){
 
 	else {
 		this->ui->eq_widget->hide();
-		rect.setHeight( this->ui_playlist->height() + this->ui_eq->height() );
+		rect.setHeight(this->ui_playlist->height() + this->ui_eq->height());
 		this->ui->action_ViewEqualizer->setChecked(false);
 
 	}
 
 	this->ui->playlist_widget->setGeometry(rect);
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
-//	resizeEvent(0);
+	//	resizeEvent(0);
 
 }
 
-
-void GUI_SimplePlayer::close_eq(){
+void GUI_SimplePlayer::close_eq() {
 	showEqualizer(false);
 }
 
-void GUI_SimplePlayer::changeEvent(QEvent *event){
+void GUI_SimplePlayer::changeEvent(QEvent *event) {
 
-	if( event->type() == QEvent::WindowStateChange ){
+	if (event->type() == QEvent::WindowStateChange) {
 
-		if(isMinimized())	hide();
-		else show();
+		if (isMinimized())
+			hide();
+		else
+			show();
 	}
 
 }
 
+void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason) {
 
-
-void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
-
-	switch(reason){
-		case QSystemTrayIcon::Trigger:
-			if(this->isMinimized() || isHidden())
-				this->showNormal();
-			if(!this->isActiveWindow())
-				this->activateWindow();
-			else {
-				hide();
-			}
+	switch (reason) {
+	case QSystemTrayIcon::Trigger:
+		if (this->isMinimized() || isHidden())
+			this->showNormal();
+		if (!this->isActiveWindow())
+			this->activateWindow();
+		else {
+			hide();
+		}
 		break;
 
-
-		default:
+	default:
 		break;
 
 	}
@@ -485,19 +504,16 @@ void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason){
 
 }
 
-void GUI_SimplePlayer::setupIcons(){
+void GUI_SimplePlayer::setupIcons() {
 
 }
 
+void GUI_SimplePlayer::setupTrayContextMenu() {
 
-void GUI_SimplePlayer::setupTrayContextMenu(){
-
-	 QMenu*						trayContextMenu;
-	 QAction*					showAction;
-
+	QMenu* trayContextMenu;
+	QAction* showAction;
 
 	trayContextMenu = new QMenu();
-
 
 	m_playAction = new QAction(tr("Play"), this);
 	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -511,7 +527,6 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 	m_bwdAction->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
 
-
 	m_fwdAction = new QAction(tr("Next"), this);
 	m_fwdAction->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(forwardClicked()));
@@ -520,15 +535,12 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 	m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
 	connect(m_muteAction, SIGNAL(triggered()), this, SLOT(muteButtonPressed()));
 
-
 	m_closeAction = new QAction(tr("Close"), this);
 	m_closeAction->setIcon(QIcon(Helper::getIconPath() + "close.png"));
 	connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
 
 	showAction = new QAction(tr("Show"), this);
 	connect(showAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-
-
 
 	trayContextMenu->addAction(m_playAction);
 	trayContextMenu->addAction(m_stopAction);
@@ -545,79 +557,70 @@ void GUI_SimplePlayer::setupTrayContextMenu(){
 
 	//trayContextMenu->addAction(showAction);
 
-
 	m_trayIcon->setContextMenu(trayContextMenu);
-
-
 
 }
 
-
-void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e){
+void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
 	qDebug() << e->key();
-	switch(e->key()){
-		case Qt::Key_MediaPlay:
+	switch (e->key()) {
+	case Qt::Key_MediaPlay:
 
-			playClicked(true);
-			break;
-		case Qt::Key_MediaStop:
+		playClicked(true);
+		break;
+	case Qt::Key_MediaStop:
 
-			stopClicked();
-			break;
+		stopClicked();
+		break;
 
-		case Qt::Key_MediaNext:
+	case Qt::Key_MediaNext:
 
-			forwardClicked(true);
-			break;
+		forwardClicked(true);
+		break;
 
-		case Qt::Key_MediaPrevious:
+	case Qt::Key_MediaPrevious:
 
-			backwardClicked(true);
-			break;
+		backwardClicked(true);
+		break;
 
-		case (Qt::Key_E):
-			this->ui->action_ViewEqualizer->setChecked(!this->ui->action_ViewEqualizer->isChecked());
-		default:
+	case (Qt::Key_E):
+				this->ui->action_ViewEqualizer->setChecked(
+						!this->ui->action_ViewEqualizer->isChecked());
+	default:
 		break;
 
 	}
 
 }
 
-
-QWidget* GUI_SimplePlayer::getParentOfPlaylist(){
+QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
 	return this->ui->playlist_widget;
 }
 
-QWidget* GUI_SimplePlayer::getParentOfLibrary(){
+QWidget* GUI_SimplePlayer::getParentOfLibrary() {
 	return this->ui->library_widget;
 }
 
-QWidget* GUI_SimplePlayer::getParentOfEqualizer(){
+QWidget* GUI_SimplePlayer::getParentOfEqualizer() {
 	return this->ui->eq_widget;
 }
 
-
-void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist){
+void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
 	ui_playlist = playlist;
 
 }
 
-
-
-void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library){
+void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
 
 	ui_library = library;
 }
 
-void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq){
+void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq) {
 	ui_eq = eq;
 }
 
-
-
-void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
+void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
 	Q_UNUSED(e);
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
@@ -627,20 +630,19 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e){
 	CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }
 
-
-void GUI_SimplePlayer::lastFMClicked(bool b){
+void GUI_SimplePlayer::lastFMClicked(bool b) {
 
 	Q_UNUSED(b);
 	emit setupLastFM();
 
 }
 
-void GUI_SimplePlayer::reloadLibraryClicked(bool b){
+void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
 	Q_UNUSED(b);
 	emit reloadLibrary();
 }
 
-void GUI_SimplePlayer::initGUI(){
+void GUI_SimplePlayer::initGUI() {
 
 	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
 	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -650,33 +652,28 @@ void GUI_SimplePlayer::initGUI(){
 
 }
 
-
-void GUI_SimplePlayer::setLibraryPathClicked(bool b){
+void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 	Q_UNUSED(b);
 
 	QString start_dir = getenv("$HOME");
 	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
-	if(old_dir != "")
+	if (old_dir != "")
 		start_dir = old_dir;
 
-	 QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-								old_dir,
-								QFileDialog::ShowDirsOnly);
-	if(dir != ""){
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+			old_dir, QFileDialog::ShowDirsOnly);
+	if (dir != "") {
 		emit libpath_changed(dir);
 		CSettingsStorage::getInstance()->setLibraryPath(dir);
 	}
 
-
 }
 
-
-void GUI_SimplePlayer::fetch_all_covers_clicked(bool b){
+void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 	Q_UNUSED(b);
 	emit fetch_all_covers();
 }
 
-
-void GUI_SimplePlayer::album_cover_pressed(){
+void GUI_SimplePlayer::album_cover_pressed() {
 	emit fetch_alternate_covers(this->m_metadata);
 }

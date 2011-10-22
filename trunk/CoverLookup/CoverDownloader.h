@@ -223,6 +223,7 @@ QStringList call_and_parse_google(QString artist, QString album, int num_adresse
 
 		//qDebug() << "URL: " << url_adress;
 
+		curl_easy_setopt(curl_find_img, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_URL, url_adress.toLocal8Bit().data());
 		curl_easy_setopt(curl_find_img, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_WRITEFUNCTION, get_content);
@@ -265,7 +266,7 @@ QStringList call_and_parse_lfm_artist(QString artist, int num_adresses){
 	if(curl_find_img) {
 
 		//qDebug() << "URL: " << url_adress;
-
+		curl_easy_setopt(curl_find_img, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_URL, url_adress.toLocal8Bit().data());
 		curl_easy_setopt(curl_find_img, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_WRITEFUNCTION, get_content);
@@ -348,7 +349,7 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 
 
 			if(curl_save_img){
-
+				curl_easy_setopt(curl_save_img, CURLOPT_NOSIGNAL, 1);
 				curl_easy_setopt(curl_save_img, CURLOPT_URL, adress.toLocal8Bit().data());
 				curl_easy_setopt(curl_save_img, CURLOPT_WRITEFUNCTION, save_image);
 				curl_easy_setopt(curl_save_img, CURLOPT_BUFFERSIZE, 3000);
@@ -421,6 +422,7 @@ void get_alternative_album_covers(QString url, vector<QImage>& images, int num){
 	CURL *curl_lfm = curl_easy_init();
 	if(curl_lfm) {
 		qDebug() << "Url = " << url;
+		curl_easy_setopt(curl_lfm, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl_lfm, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl_lfm, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl_lfm, CURLOPT_WRITEFUNCTION, get_content);

@@ -34,7 +34,13 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 		for(uint i=0; i<albums.size(); i++){
 			Album album = albums[i];
 
-			if(album.artists.size() > 0 ){
+			QStringList artists = album.artists;
+			if(album.is_sampler) {
+				artists.clear();
+				artists.push_back("");
+			}
+
+			if(artists.size() > 0 ){
 				for(int j=0; j<album.artists.size(); j++){
 
 					QString path = Helper::get_cover_path( album.artists[j], album.name);

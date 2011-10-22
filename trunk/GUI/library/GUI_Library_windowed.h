@@ -30,9 +30,7 @@
 
 using namespace std;
 
-
-
-class GUI_Library_windowed : public QWidget, private Ui::Library_windowed{
+class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
 
 Q_OBJECT
 
@@ -47,91 +45,88 @@ private:
 	LibraryItemDelegateAlbums* _album_delegate;
 	LibraryItemModelArtists* _artist_model;
 	LibraryItemDelegateArtists* _artist_delegate;
-	vector<MetaData>	_v_metadata;
-	vector<Album>		_v_albums;
-	vector<Artist>		_v_artists;
+	vector<MetaData> _v_metadata;
+	vector<Album> _v_albums;
+	vector<Artist> _v_artists;
 
-	QMenu*				_right_click_menu;
-	QAction*			_info_action;
-	QAction*			_edit_action;
-	QAction*			_delete_action;
+	QMenu* _right_click_menu;
+	QAction* _info_action;
+	QAction* _edit_action;
+	QAction* _delete_action;
 
-	QMessageBox*		_album_msg_box;
+	QMessageBox* _album_msg_box;
 
+signals:
+	void artist_changed_signal(int);
+	void album_changed_signal(int);
+	void clear_signal();
+	void album_chosen_signal(vector<MetaData>&);
+	void artist_chosen_signal(vector<MetaData>&);
+	void track_chosen_signal(vector<MetaData>&);
+	void reload_library();
+	void data_for_id3_change(const vector<MetaData>&);
+	void search_cover(const MetaData&);
 
+public slots:
+	void fill_library_tracks(vector<MetaData>&);
+	void fill_library_albums(vector<Album>&);
+	void fill_library_artists(vector<Artist>&);
+	void id3_tags_changed();
+	void reloading_library();
+	void reloading_library_finished();
+	void library_should_be_reloaded();
+	void cover_changed(bool);
 
-	signals:
-		void artist_changed_signal(int);
-		void album_changed_signal(int);
-		void clear_signal();
-		void album_chosen_signal(vector<MetaData>&);
-		void artist_chosen_signal(vector<MetaData>&);
-		void track_chosen_signal(vector<MetaData>& );
-		void reload_library();
-		void data_for_id3_change(const vector<MetaData>&);
-		void search_cover(const MetaData&);
+private slots:
+	void track_pressed(const QModelIndex&);
+	void album_pressed(const QModelIndex &);
+	void artist_pressed(const QModelIndex &);
 
-	public slots:
-		void fill_library_tracks(vector<MetaData>&);
-		void fill_library_albums(vector<Album>&);
-		void fill_library_artists(vector<Artist>&);
-		void id3_tags_changed();
-		void reloading_library();
-		void reloading_library_finished();
-		void library_should_be_reloaded();
-		void cover_changed(bool);
+	void clear_button_pressed();
+	void album_chosen(const QModelIndex &);
+	void artist_chosen(const QModelIndex &);
+	void track_chosen(const QModelIndex &);
 
+	void text_line_edited(const QString&);
+	void sort_by_column(int col);
 
-	private slots:
-		void track_pressed(const QModelIndex&);
-		void album_pressed(const QModelIndex &);
-		void artist_pressed(const QModelIndex &);
+	void reload_library_slot();
 
-		void clear_button_pressed();
-		void album_chosen(const QModelIndex & );
-		void artist_chosen(const QModelIndex & );
-		void track_chosen(const QModelIndex & );
+	void show_artist_context_menu(const QPoint& p);
+	void show_album_context_menu(const QPoint& p);
+	void show_track_context_menu(const QPoint& p);
 
-		void text_line_edited(const QString&);
-		void sort_by_column(int col);
+	void edit_album();
+	void info_album();
+	void delete_album();
+	void edit_artist();
+	void info_artist();
+	void delete_artist();
+	void edit_tracks();
+	void info_tracks();
+	void delete_tracks();
 
-		void reload_library_slot();
+	void apply_cover_to_entire_album();
 
-		void show_artist_context_menu(const QPoint& p);
-		void show_album_context_menu(const QPoint& p);
-		void show_track_context_menu(const QPoint& p);
+protected:
+	void resizeEvent(QResizeEvent* e);
 
-		void edit_album();
-		void info_album();
-		void delete_album();
-		void edit_artist();
-		void info_artist();
-		void delete_artist();
-		void edit_tracks();
-		void info_tracks();
-		void delete_tracks();
+public:
+	void change_skin(bool dark);
 
-		void apply_cover_to_entire_album();
+private:
+	QString getTotalTimeString(Album& album);
+	void init_menues();
+	QString _sort_albums;
 
+	int _selected_artist;
+	QString _selected_artist_name;
+	int _selected_album;
+	QString _selected_album_name;
 
-	protected:
-			void resizeEvent(QResizeEvent* e);
+	Album _album_of_interest;
 
-
-	public:
-			void change_skin(bool dark);
-
-	private:
-			QString getTotalTimeString(Album& album);
-			void init_menues();
-			QString _sort_albums;
-
-			int _selected_artist;
-			int _selected_album;
-
-			Album _album_of_interest;
-
-			bool _everything_loaded;
+	bool _everything_loaded;
 
 };
 

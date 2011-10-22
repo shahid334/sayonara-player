@@ -65,7 +65,7 @@ QString CDatabaseConnector::getArtistName (const int & id) {
     QSqlQuery q (this -> m_database);
     QString a;
     if (id!=-1) {
-        q.prepare("select name from artists where artistid == ?;");
+        q.prepare("select name from artists where artistid = ?;");
         q.addBindValue(QVariant (id));
         if (!q.exec()) {
             throw QString ("SQL - Error: getArtistName " + id);

@@ -1,4 +1,4 @@
-    /*
+/*
  * MP3_Listen.cpp
  *
  *  Created on: Mar 2, 2011
@@ -11,7 +11,6 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/CSettingsStorage.h"
-
 
 #include <iostream>
 #include <vector>
@@ -37,25 +36,20 @@
 #include <phonon/audiodataoutput.h>
 #include <phonon/videowidget.h>
 /*
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
-#include <opencv/cxcore.h>
-*/
-
-
-
-
+ #include <opencv/cv.h>
+ #include <opencv/highgui.h>
+ #include <opencv/cxcore.h>
+ */
 
 using namespace std;
 
-MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
+MP3_Listen::MP3_Listen(QObject * parent) :
+				QObject(parent) {
 
 	_state = STATE_STOP;
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
-
-
 
 	qDebug() << "   1/4 phonon init output";
 	_audio_output = new Phonon::AudioOutput(Phonon::VideoCategory, this);
@@ -72,12 +66,12 @@ MP3_Listen::MP3_Listen(QObject * parent) : QObject (parent){
 	Phonon::createPath(_media_object, _video_widget);
 	_eq_type = EQ_TYPE_NONE;
 
-
 	qDebug() << "   4/4 phonon connections";
-	connect(_media_object, SIGNAL(tick(qint64)), this, SLOT(timeChanged(qint64)) );
+	connect(_media_object, SIGNAL(tick(qint64)), this,
+			SLOT(timeChanged(qint64)));
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
-	connect(_media_object, SIGNAL(totalTimeChanged ( qint64)), this, SLOT(total_time_changed(qint64)));
-
+	connect(_media_object, SIGNAL(totalTimeChanged ( qint64)), this,
+			SLOT(total_time_changed(qint64)));
 
 }
 
@@ -86,31 +80,30 @@ MP3_Listen::~MP3_Listen() {
 	delete _media_object;
 }
 
-void MP3_Listen::play(){
+void MP3_Listen::play() {
 
 	_media_object->play();
 	_state = STATE_PLAY;
 }
 
-void MP3_Listen::stop(){
+void MP3_Listen::stop() {
 
 	_media_object->stop();
-	_state= STATE_STOP;
-
+	_state = STATE_STOP;
 
 }
 
-void MP3_Listen::pause(){
+void MP3_Listen::pause() {
 
 	_media_object->pause();
 	_state = STATE_PAUSE;
 }
 
-
-void MP3_Listen::jump(int where, bool percent){
+void MP3_Listen::jump(int where, bool percent) {
 
 	quint64 newtime_ms = where;
-	if(percent) newtime_ms = _meta_data.length_ms * where / 100.0;
+	if (percent)
+		newtime_ms = _meta_data.length_ms * where / 100.0;
 
 	_media_object->seek(newtime_ms);
 	_seconds_started = newtime_ms / 1000;
@@ -118,14 +111,12 @@ void MP3_Listen::jump(int where, bool percent){
 
 }
 
+void MP3_Listen::changeTrack(const QString & filepath) {
 
-
-void MP3_Listen::changeTrack(const QString & filepath){
-
-	
-	_media_object->setCurrentSource( Phonon::MediaSource(filepath) );
-	MetaData md = ID3::getMetaDataOfFile(filepath );
-	if(_media_object->hasVideo()) md.length_ms = _meta_data.length_ms;
+	_media_object->setCurrentSource(Phonon::MediaSource(filepath));
+	MetaData md = ID3::getMetaDataOfFile(filepath);
+	if (_media_object->hasVideo())
+		md.length_ms = _meta_data.length_ms;
 	_meta_data = md;
 
 	//_media_object->play();
@@ -134,40 +125,42 @@ void MP3_Listen::changeTrack(const QString & filepath){
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	if(!_media_object->hasVideo()) play();
-	else _video_widget->show();
+	if (!_media_object->hasVideo())
+		play();
+	else
+		_video_widget->show();
 
 }
 
+void MP3_Listen::changeTrack(const MetaData & metadata) {
 
-void MP3_Listen::changeTrack(const MetaData & metadata){
-
-	_media_object->setCurrentSource( Phonon::MediaSource(metadata.filepath) );
-	MetaData md = ID3::getMetaDataOfFile( metadata.filepath );
-	if(_media_object->hasVideo()) md.length_ms = _meta_data.length_ms;
+	_media_object->setCurrentSource(Phonon::MediaSource(metadata.filepath));
+	MetaData md = ID3::getMetaDataOfFile(metadata.filepath);
+	if (_media_object->hasVideo())
+		md.length_ms = _meta_data.length_ms;
 	_meta_data = md;
 
 	//_media_object->play();
 	//_state = STATE_PLAY;
 
-
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	if(!_media_object->hasVideo()) play();
-	else _video_widget->show();
+	if (!_media_object->hasVideo())
+		play();
+	else
+		_video_widget->show();
 
 }
 
-
-void MP3_Listen::total_time_changed(qint64 total_time){
+void MP3_Listen::total_time_changed(qint64 total_time) {
 
 	//qDebug() << "total time changed";
 	//if(this->_media_object->hasVideo()){
-		emit total_time_changed_signal(total_time);
-		_meta_data.length_ms = total_time;
-		play();
+	emit total_time_changed_signal(total_time);
+	_meta_data.length_ms = total_time;
+	play();
 	//}
 }
 
@@ -176,21 +169,23 @@ const MetaData & MP3_Listen::getMetaData() const {
 
 }
 
-
-void MP3_Listen::seekableChanged(bool){
+void MP3_Listen::seekableChanged(bool) {
 
 }
 
-
-void MP3_Listen::timeChanged(qint64 time){
+void MP3_Listen::timeChanged(qint64 time) {
 
 	_mseconds_now = time;
 	_seconds_now = time / 1000;
 
 	// scrobble after 25 sec or if half of the track is reached
-	if( !_scrobbled && (_seconds_now - _seconds_started == 25 || _seconds_now - _seconds_started == _meta_data.length_ms / 2000)){
+	if (!_scrobbled
+			&& (_seconds_now - _seconds_started == 25
+					|| _seconds_now - _seconds_started
+					== _meta_data.length_ms / 2000)) {
 		qDebug() << "scrobble track";
-		emit scrobble_track(_meta_data);
+		emit
+		scrobble_track(_meta_data);
 		_scrobbled = true;
 
 		qDebug() << "scrobble track end";
@@ -200,53 +195,52 @@ void MP3_Listen::timeChanged(qint64 time){
 
 }
 
-void MP3_Listen::finished(){
+void MP3_Listen::finished() {
 
 	emit track_finished();
 }
 
+void MP3_Listen::setVolume(qreal vol) {
 
-void MP3_Listen::setVolume(qreal vol){
-
-    _audio_output->setVolume(vol / 100.0);
+	_audio_output->setVolume(vol / 100.0);
 }
 
-
-qreal MP3_Listen::getVolume(){
-    return _audio_output->volume();
+qreal MP3_Listen::getVolume() {
+	return _audio_output->volume();
 }
 
+void MP3_Listen::eq_changed(int band, int val) {
+	if (_eq == 0 || _eq_type == EQ_TYPE_NONE || _effect_parameters.size() == 0)
+		return;
 
-void MP3_Listen::eq_changed(int band, int val){
-	if(_eq == 0 || _eq_type == EQ_TYPE_NONE || _effect_parameters.size() == 0) return;
-
-	if(_effect_parameters.size() < 10 && _effect_parameters.size() > 0){
-		band = band / (  (10/_effect_parameters.size())   + 1);
+	if (_effect_parameters.size() < 10 && _effect_parameters.size() > 0) {
+		band = band / ((10 / _effect_parameters.size()) + 1);
 	}
 
 	double new_val = 0;
-	if(_eq_type == EQ_TYPE_10B){ // -24 - +12
-		if(val > 0){
+	if (_eq_type == EQ_TYPE_10B) { // -24 - +12
+		if (val > 0) {
 			new_val = val * 0.33;
 		}
 
-		else new_val = val * 0.66;
+		else
+			new_val = val * 0.66;
 	}
 
-	else if(_eq_type == EQ_TYPE_KEQ){
+	else if (_eq_type == EQ_TYPE_KEQ) {
 		new_val = val * 0.33;
-		if(_effect_parameters.size() > 10)
+		if (_effect_parameters.size() > 10)
 			band += _effect_parameters.size() - 10;
 	}
 
 	_eq->setParameterValue(_effect_parameters[band], new_val);
 }
 
+void MP3_Listen::eq_enable(bool enable) {
 
-void MP3_Listen::eq_enable(bool enable){
-
-	if(_eq == 0 || _eq_type == EQ_TYPE_NONE) return;
-	if(!enable)
+	if (_eq == 0 || _eq_type == EQ_TYPE_NONE
+	) return;
+	if (!enable)
 		_audio_path.removeEffect(_eq);
 
 	else
@@ -256,32 +250,30 @@ void MP3_Listen::eq_enable(bool enable){
 
 }
 
+void MP3_Listen::load_equalizer() {
 
-void MP3_Listen::load_equalizer(){
-
-
-	QList<Phonon::EffectDescription> availableEffects = Phonon::BackendCapabilities::availableAudioEffects();
+	QList<Phonon::EffectDescription> availableEffects =
+			Phonon::BackendCapabilities::availableAudioEffects();
 	QStringList availableEqualizers;
 
-
 	int equalizerIdx = -1;
-	for(int i=0; i<availableEffects.size(); i++){
-		Phonon::EffectDescription desc =  availableEffects[i];
+	for (int i = 0; i < availableEffects.size(); i++) {
+		Phonon::EffectDescription desc = availableEffects[i];
 
-		if(desc.name() == "KEqualizer"  && equalizerIdx == -1){
+		if (desc.name() == "KEqualizer" && equalizerIdx == -1) {
 			equalizerIdx = i;
 			_eq_type = EQ_TYPE_KEQ;
 			availableEqualizers.push_back(desc.name());
 		}
 
-		else if(desc.name() == "equalizer-10bands" && equalizerIdx == -1){
+		else if (desc.name() == "equalizer-10bands" && equalizerIdx == -1) {
 			equalizerIdx = i;
 			_eq_type = EQ_TYPE_10B;
 			availableEqualizers.push_back(desc.name());
 		}
 	}
 
-	if(equalizerIdx != -1){
+	if (equalizerIdx != -1) {
 
 		_eq = new Phonon::Effect(availableEffects[equalizerIdx], this);
 
@@ -294,10 +286,10 @@ void MP3_Listen::load_equalizer(){
 		vector<EQ_Setting> vec;
 		set->getEqualizerSettings(vec);
 
-		emit eq_found(availableEqualizers);
+		emit
+		eq_found(availableEqualizers);
 		emit eq_presets_loaded(vec);
 	}
-
 
 	else {
 		qDebug() << "Equalizer effect not available";
@@ -306,38 +298,37 @@ void MP3_Listen::load_equalizer(){
 	}
 }
 
-
-
-void MP3_Listen::handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & data){
+void MP3_Listen::handle_data(
+		const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & data) {
 
 	Q_UNUSED(data);
 
 	/*
-	cvZero(_img);
-	QList<QVector<short int> >	 vals = data.values();
-	foreach(QVector<short int> vec, vals){
-		if(vec.size() == 512){
-			for(int i=0; i<512; i++)
-				_f[i] = vec[i];
+	 cvZero(_img);
+	 QList<QVector<short int> >	 vals = data.values();
+	 foreach(QVector<short int> vec, vals){
+	 if(vec.size() == 512){
+	 for(int i=0; i<512; i++)
+	 _f[i] = vec[i];
 
-			fftr1(_f, 512, 1);
+	 fftr1(_f, 512, 1);
 
-			for(int i=0; i<10; i++){
-				_m[i] = 0;
-				for(int j=51*i; j<51*(i+1); j++){
-					_m[i] += _f[j];
-				}
+	 for(int i=0; i<10; i++){
+	 _m[i] = 0;
+	 for(int j=51*i; j<51*(i+1); j++){
+	 _m[i] += _f[j];
+	 }
 
-				_m[i] /= 5100;
-				//qDebug() << i << " " << abs(_m[i]);
-				cvRectangle(_img, cvPoint(i * 10, 100), cvPoint((i+1)*10, 100- (_m[i] + 1000) / 20), cvScalarAll(255), -1);
-			}
-		}
+	 _m[i] /= 5100;
+	 //qDebug() << i << " " << abs(_m[i]);
+	 cvRectangle(_img, cvPoint(i * 10, 100), cvPoint((i+1)*10, 100- (_m[i] + 1000) / 20), cvScalarAll(255), -1);
+	 }
+	 }
 
-	}
+	 }
 
-	cvShowImage("win", _img);
-	cvWaitKey(0);
+	 cvShowImage("win", _img);
+	 cvWaitKey(0);
 
-*/
+	 */
 }

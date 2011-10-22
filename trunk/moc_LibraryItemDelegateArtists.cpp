@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'LibraryItemDelegateArtists.h'
 **
-** Created: Fri Oct 21 20:45:09 2011
+** Created: Sat Oct 22 03:37:58 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
