@@ -192,11 +192,13 @@ void CoverLookup::search_alternative_covers(const QString& album) {
 
 void CoverLookup::search_all_covers() {
 
-
+	vector<Album> albums;
+	CDatabaseConnector::getInstance()->getAllAlbums(albums);
 	if (_emit_type != EMIT_ONE
 	) _emit_type = EMIT_ALL;
 	if (_thread->isRunning())
 		_thread->terminate();
+	_thread->set_albums_to_fetch(albums);
 	_thread->set_cover_fetch_mode(COV_FETCH_MODE_ALL_ALBUMS);
 	_thread->set_num_covers_2_fetch(1);
 	_thread->start();

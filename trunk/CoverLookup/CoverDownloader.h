@@ -380,6 +380,7 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 						clear_image_data();
 						if(vec_images.size() == num_covers_to_fetch) {
 							qDebug() << "vec size = " << vec_images.size();
+							curl_easy_cleanup(curl_save_img);
 							break;
 						}
 
