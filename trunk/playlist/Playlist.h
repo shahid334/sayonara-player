@@ -68,6 +68,7 @@ public:
 		void data_for_id3_change(const vector<MetaData>&);
 		void cur_played_info_changed(const MetaData&);
 		void goon_playing();
+		void search_similar_artists(const QString&);
 
 	public slots:
 
@@ -81,6 +82,7 @@ public:
 		void playlist_mode_changed(const Playlist_Mode&);
 		void clear_playlist();
 		void save_playlist(const QString&);
+		void similar_artists_available(const int&);
 
 		void play();
 		void stop();

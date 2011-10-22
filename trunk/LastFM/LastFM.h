@@ -21,11 +21,17 @@ public:
 	LastFM();
 	virtual ~LastFM();
 
+	signals:
+		void similar_artists_available(const int&);
+
 	public slots:
 		void scrobble(const MetaData&);
 		void update_track(const MetaData&);
 		void login_slot(QString, QString);
+		void get_similar_artists(const QString&);
 		QString create_signature(QString fn_name);
+
+
 
 
 	private:

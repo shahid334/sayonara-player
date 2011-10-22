@@ -38,8 +38,11 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	 {
 	this->ui = new Ui::Playlist_Window();
 
+
 	ui->setupUi(this);
 	initGUI();
+
+	this->ui->btn_dummy->setVisible(false);
 
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
@@ -69,7 +72,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->listView, SIGNAL(released(const QModelIndex&)), this, SLOT(released(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 
-	//this->connect(this->ui->but_EditID3, SIGNAL(released()), this, SLOT(edit_id3_but_pressed()));
+	this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
 	this->setAcceptDrops(true);
 	_parent = parent;
@@ -78,6 +81,19 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_cur_selected_row = -1;
 	_cur_playing_row = -1;
 }
+
+
+void GUI_Playlist::dummy_pressed(){
+
+
+}
+
+void GUI_Playlist::similar_artists_available(const QStringList& artist_list){
+
+
+
+}
+
 
 // DTOR
 GUI_Playlist::~GUI_Playlist() {

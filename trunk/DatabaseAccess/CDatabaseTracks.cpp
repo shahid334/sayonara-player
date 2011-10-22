@@ -88,7 +88,6 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 }
 
 
-
 int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndata) {
     if (!this -> m_database.isOpen())
         this -> m_database.open();

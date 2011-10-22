@@ -108,7 +108,9 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(goon_playing()), 							&listen,		SLOT(play()));
         app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&, int)), 	&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&, int)));
         app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 					&ui_playlist, 	SLOT(update_progress_bar(int)));
-        app.connect( &playlist, SIGNAL(cur_played_info_changed(const MetaData&)),   &player,  		SLOT(update_info(const MetaData&)));
+        app.connect (&playlist, SIGNAL(cur_played_info_changed(const MetaData&)),   &player,  		SLOT(update_info(const MetaData&)));
+        app.connect (&playlist, SIGNAL(search_similar_artists(const QString&)), 	&lastfm,		SLOT(get_similar_artists(const QString&)));
+
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 				&playlist, 		SLOT(change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 						&playlist, 		SLOT(clear_playlist()));
@@ -118,6 +120,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(sound_files_dropped(QStringList&)), 						&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 						&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
+
 
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
@@ -160,7 +163,9 @@ int main(int argc, char *argv[]){
         app.connect(&playlist, 		SIGNAL(data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit, 	SLOT(change_meta_data(const vector<MetaData>&)));
         app.connect(&ui_library,	SIGNAL(data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit, 	SLOT(change_meta_data(const vector<MetaData>&)));
 		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed()), 							&ui_library, 	SLOT(id3_tags_changed()));
-		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed(vector<MetaData>&)), 			&playlist, 	SLOT(id3_tags_changed(vector<MetaData>&)));
+		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed(vector<MetaData>&)), 			&playlist, 		SLOT(id3_tags_changed(vector<MetaData>&)));
+
+		app.connect(&lastfm,		SIGNAL(similar_artists_available(const int&)),			&playlist,		SLOT(similar_artists_available(const int&)));
 
 
 		int vol = set->getVolume();

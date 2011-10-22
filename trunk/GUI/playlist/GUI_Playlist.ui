@@ -84,7 +84,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="14">
+   <item row="1" column="0" colspan="15">
     <widget class="MyListView" name="listView">
      <property name="minimumSize">
       <size>
@@ -255,7 +255,7 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="13">
+   <item row="2" column="14">
     <widget class="QPushButton" name="btn_append">
      <property name="minimumSize">
       <size>
@@ -296,7 +296,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="13">
+   <item row="0" column="14">
     <widget class="QPushButton" name="btn_clear">
      <property name="minimumSize">
       <size>
@@ -328,6 +328,13 @@
      </property>
      <property name="flat">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="13">
+    <widget class="QPushButton" name="btn_dummy">
+     <property name="text">
+      <string>Dummy</string>
      </property>
     </widget>
    </item>

@@ -37,6 +37,7 @@
 			void dragMoveEvent(QDragMoveEvent* event);
 			void clear_drag_lines(int row);
 
+
 		signals:
 			void selected_row_changed(int);
 			void clear_playlist();
@@ -50,6 +51,7 @@
 			void directory_dropped(const QString&);
 			void row_removed(int);
 			void edit_id3_signal();
+			void search_similar_artists(const QString&);
 
 
 
@@ -58,6 +60,7 @@
 			void fillPlaylist(vector<MetaData>&, int);
 			void track_changed(int);
 			void change_skin(bool);
+			void similar_artists_available(const QStringList&);
 
 
 
@@ -72,6 +75,7 @@
 			void save_playlist_slot();
 			void playlist_mode_changed_slot();
 			void edit_id3_but_pressed();
+			void dummy_pressed();
 
 
 

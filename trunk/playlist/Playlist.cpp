@@ -21,6 +21,7 @@
 #include <phonon/backendcapabilities.h>
 
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
@@ -251,6 +252,8 @@ void Playlist::next_track(){
 			emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 		}
 	}
+
+	emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
 }
 
 
@@ -262,6 +265,7 @@ void Playlist::change_track(int new_row){
 
 	_cur_play_idx = new_row;
 	emit selected_file_changed_md(_v_meta_data.at(new_row));
+	emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
 }
 
 
@@ -320,4 +324,20 @@ void Playlist::id3_tags_changed(vector<MetaData>& new_meta_data){
 	emit playlist_created(_v_meta_data, _cur_play_idx);
 	if(_cur_play_idx >= 0 && _cur_play_idx < (int) _v_meta_data.size())
 		emit cur_played_info_changed(_v_meta_data[_cur_play_idx]);
+}
+
+
+void Playlist::similar_artists_available(const int& artist_id){
+
+	srand ( time(NULL) );
+	vector<MetaData> vec_tracks;
+	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist_id, vec_tracks);
+
+	int rnd_track = (rand() % vec_tracks.size());
+	MetaData md = vec_tracks.at(rnd_track);
+
+	_v_meta_data.push_back(md);
+
+	emit playlist_created(_v_meta_data, _cur_play_idx);
+
 }
