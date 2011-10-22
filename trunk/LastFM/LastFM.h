@@ -9,9 +9,12 @@
 #define LASTFM_H_
 
 #include <HelperStructs/MetaData.h>
+#include <LastFM/LFMSimilarArtistsThread.h>
 #include <QObject>
 #include <QString>
 #include <string>
+
+
 
 
 class LastFM : public QObject{
@@ -30,6 +33,9 @@ public:
 		void login_slot(QString, QString);
 		void get_similar_artists(const QString&);
 		QString create_signature(QString fn_name);
+
+	private slots:
+		void sim_artists_thread_finished();
 
 
 
@@ -50,6 +56,8 @@ public:
 
 	private:
 		QString parse_session_answer();
+		LFM_SimilarArtists* _similar_artists_thread;
+
 
 };
 

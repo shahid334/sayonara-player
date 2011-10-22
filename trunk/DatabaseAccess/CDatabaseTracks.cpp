@@ -251,7 +251,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 		}
 
 		querytext += QString("order by albumid, track;");
-		qDebug() << "query = " << querytext;
+		//qDebug() << "query = " << querytext;
 
 		q.prepare(querytext);
 

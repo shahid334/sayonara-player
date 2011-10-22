@@ -45,7 +45,9 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/id3.h \
     HelperStructs/CSettingsStorage.h \
     HelperStructs/Equalizer_presets.h \
-    LastFM/LastFM.h
+    LastFM/LastFM.h \
+    LastFM/LFMWebAccess.h \
+    LastFM/LFMSimilarArtistsThread.h
     
 
 SOURCES += Main.cpp \
@@ -81,7 +83,9 @@ SOURCES += Main.cpp \
     playlist/Playlist.cpp \
     HelperStructs/id3.cpp \
     LastFM/LastFM.cpp \
-    HelperStructs/CSettingsStorage.cpp \
+    LastFM/LFMSimilarArtistsThread.cpp \
+    LastFM/LFMWebAccess.cpp \
+    HelperStructs/CSettingsStorage.cpp 
     
    
 
