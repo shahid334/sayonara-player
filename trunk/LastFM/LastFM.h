@@ -32,7 +32,7 @@ public:
 		void update_track(const MetaData&);
 		void login_slot(QString, QString);
 		void get_similar_artists(const QString&);
-		QString create_signature(QString fn_name);
+		void get_radio(const QString&, bool);
 
 	private slots:
 		void sim_artists_thread_finished();
@@ -53,6 +53,7 @@ public:
 	public:
 		void login(QString, QString);
 		QString get_api_key();
+		QString create_signature(QString fn_name);
 
 	private:
 		QString parse_session_answer();

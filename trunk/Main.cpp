@@ -15,6 +15,7 @@
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/radio/GUI_RadioWidget.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
 #include "CoverLookup/CoverLookup.h"
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]){
 
 
 		CoverLookup* cover = CoverLookup::getInstance();
-	qDebug() << "Load GUI";
+
         QApplication app (argc, argv);
 
         app.setApplicationName("Sayonara");
@@ -63,27 +64,20 @@ int main(int argc, char *argv[]){
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
 
-        GUI_Playlist 		ui_playlist(player.getParentOfPlaylist());
-
-        Playlist 			playlist(&app);
-
+        GUI_Playlist 			ui_playlist(player.getParentOfPlaylist());
+        Playlist 				playlist(&app);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
-
-
-        CLibraryBase 		library;
-
-
-        MP3_Listen 			listen (&app);
-
-        LastFM				lastfm;
-        GUI_LastFM			ui_lastfm;
-
-        GUI_Equalizer		ui_eq(player.getParentOfEqualizer());
-        GUI_TagEdit			ui_tagedit;
+        CLibraryBase 			library;
+        MP3_Listen 				listen (&app);
+        LastFM					lastfm;
+        GUI_LastFM				ui_lastfm;
+        GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
+       // GUI_RadioWidget			ui_radio(player.getParentOfEqualizer());
+        GUI_TagEdit				ui_tagedit;
 
        // GUI_Alternate_Covers ui_alternate_covers;
 
-        qDebug() << "Setup connections";
+
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(fileSelected(QStringList &)),		&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&player, SIGNAL(play()),							&playlist,	SLOT(play()));
@@ -163,6 +157,8 @@ int main(int argc, char *argv[]){
 
 		app.connect(&lastfm,		SIGNAL(similar_artists_available(const int&)),			&playlist,		SLOT(similar_artists_available(const int&)));
 
+		//app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
+
 		playlist.ui_loaded();
 
 
@@ -173,23 +169,13 @@ int main(int argc, char *argv[]){
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
+		//player.setRadio(&ui_radio);
 
 
-
-		/* version_number:
-		 * A.B.D[u|e|s]
-		 * A = Main Version number: only increased if ALL milestones
-		 *     fullfilled and there's a stable version of it
-		 * B = Sub version number: increased for every milstone current milestone
-		 * D = Date (increased for little bugfixes)
-		 * u = unstable (automatically if a new feature was implemented)
-		 * e = experimental (successor may be unstable again or stable)
-		 * s = stable (sucessor of experimental)
-		 *
-		 */
-
-		player.setWindowTitle("Sayonara (0.6.0625u)");
+		player.setWindowTitle("Sayonara (0.1)");
 		player.show();
+
+
 
 
 		listen.load_equalizer();
@@ -198,6 +184,11 @@ int main(int argc, char *argv[]){
 			rect.setHeight(player.getParentOfEqualizer()->height());
 			rect.setWidth(player.getParentOfEqualizer()->width());
 			ui_eq.setGeometry(rect);
+
+		/*rect = ui_radio.geometry();
+					rect.setHeight(player.getParentOfEqualizer()->height());
+					rect.setWidth(player.getParentOfEqualizer()->width());
+					ui_radio.setGeometry(rect);*/
 
 		rect = ui_playlist.geometry();
 			rect.setHeight(player.getParentOfPlaylist()->height());
@@ -209,7 +200,12 @@ int main(int argc, char *argv[]){
 			rect.setWidth(player.getParentOfLibrary()->width());
 			ui_library.setGeometry(rect);
 
+
+
 		player.showEqualizer(false);
+		//player.showRadio(false);
+
+		qDebug() << "Show player";
 
         library.loadDataFromDb();
         QString user, password;

@@ -66,6 +66,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+	this->connect(this->ui->btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));
@@ -288,6 +289,7 @@ void GUI_Playlist::playlist_mode_changed_slot(){
 	_playlist_mode.repAll = this->ui->btn_repAll->isChecked();
 	_playlist_mode.shuffle = this->ui->btn_shuffle->isChecked();
 	_playlist_mode.append = this->ui->btn_append->isChecked();
+	_playlist_mode.dynamic = this->ui->btn_dynamic->isChecked();
 
 	emit playlist_mode_changed(_playlist_mode);
 	emit save_playlist("bla");
@@ -302,9 +304,12 @@ void GUI_Playlist::initGUI(){
 
 	this->ui->btn_append->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 	this->ui->btn_rep1->setIcon(QIcon(Helper::getIconPath() + "rep1.png"));
+	this->ui->btn_rep1->setVisible(false);
 	this->ui->btn_repAll->setIcon(QIcon(Helper::getIconPath() + "repAll.png"));
+	this->ui->btn_dynamic->setIcon(QIcon(Helper::getIconPath() + "dynamic.png"));
 	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
+
 }
 
 

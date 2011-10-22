@@ -293,8 +293,8 @@ void Playlist::next_track(){
 			emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 		}
 	}
-
-	emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+	if(_playlist_mode.dynamic)
+		emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
 }
 
 
@@ -306,7 +306,9 @@ void Playlist::change_track(int new_row){
 
 	_cur_play_idx = new_row;
 	emit selected_file_changed_md(_v_meta_data.at(new_row));
-	emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+
+	if(_playlist_mode.dynamic)
+		emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
 }
 
 

@@ -113,10 +113,15 @@ bool lfm_wa_call_scrobble_url(string url, string post_data){
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 
-	if(lfm_webpage_bytes > 0)
+	if(lfm_webpage_bytes > 0){
+		//qDebug() << lfm_webpage;
 		return true;
+	}
 
-	else return false;
+	else {
+		qDebug() << "Webpage = null";
+		return false;
+	}
 }
 
 
@@ -147,7 +152,7 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 	if(lfm_webpage_bytes > 0){
-
+		//qDebug() << lfm_webpage;
 		QString xmlString = QString(lfm_webpage);
 		doc.setContent(xmlString, false);
 

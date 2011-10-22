@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icons/play.png</normaloff>icons/play.png</iconset>
+    <normaloff>../../.designer/backup/icons/play.png</normaloff>../../.designer/backup/icons/play.png</iconset>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -85,7 +85,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../Images/gui.jpg</pixmap>
+       <pixmap>../../.designer/Images/gui.jpg</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -123,8 +123,8 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/bwd.png</normaloff>
-        <selectedoff>icons/bwd.png</selectedoff>icons/bwd.png</iconset>
+        <normaloff>../../.designer/backup/icons/bwd.png</normaloff>
+        <selectedoff>../../.designer/backup/icons/bwd.png</selectedoff>../../.designer/backup/icons/bwd.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -162,8 +162,8 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/play.png</normaloff>
-        <selectedoff>icons/play.png</selectedoff>icons/play.png</iconset>
+        <normaloff>../../.designer/backup/icons/play.png</normaloff>
+        <selectedoff>../../.designer/backup/icons/play.png</selectedoff>../../.designer/backup/icons/play.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -204,8 +204,8 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/fwd.png</normaloff>
-        <selectedoff>icons/fwd.png</selectedoff>icons/fwd.png</iconset>
+        <normaloff>../../.designer/backup/icons/fwd.png</normaloff>
+        <selectedoff>../../.designer/backup/icons/fwd.png</selectedoff>../../.designer/backup/icons/fwd.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -353,7 +353,7 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/vol_mute.png</normaloff>icons/vol_mute.png</iconset>
+        <normaloff>../../.designer/backup/icons/vol_mute.png</normaloff>../../.designer/backup/icons/vol_mute.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -520,8 +520,8 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/stop.png</normaloff>
-        <selectedoff>icons/stop.png</selectedoff>icons/stop.png</iconset>
+        <normaloff>../../.designer/backup/icons/stop.png</normaloff>
+        <selectedoff>../../.designer/backup/icons/stop.png</selectedoff>../../.designer/backup/icons/stop.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -571,8 +571,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>335</width>
-         <height>312</height>
+         <width>344</width>
+         <height>306</height>
         </rect>
        </property>
       </widget>
@@ -647,7 +647,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFle">
@@ -668,6 +668,7 @@
      <string>View</string>
     </property>
     <addaction name="action_ViewEqualizer"/>
+    <addaction name="action_ViewRadio"/>
     <addaction name="action_Dark"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
@@ -742,6 +743,17 @@
   <action name="action_fetch_all_covers">
    <property name="text">
     <string>Fetch all covers</string>
+   </property>
+  </action>
+  <action name="action_ViewRadio">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Radio            STRG+R</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>

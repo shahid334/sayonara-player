@@ -30,6 +30,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/library/LibraryItemModelArtists.h \
     GUI/tagedit/GUI_TagEdit.h \
     GUI/equalizer/GUI_Equalizer.h \
+    GUI/radio/GUI_RadioWidget.h \
     GUI/MyTableView.h \
     GUI/MyListview.h \
     HelperStructs/MetaData.h \
@@ -66,6 +67,7 @@ SOURCES += Main.cpp \
     GUI/library/LibraryItemModelArtists.cpp \
     GUI/tagedit/GUI_TagEdit.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
+    GUI/radio/GUI_RadioWidget.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
     HelperStructs/Helper.cpp \
@@ -85,7 +87,7 @@ SOURCES += Main.cpp \
     LastFM/LastFM.cpp \
     LastFM/LFMSimilarArtistsThread.cpp \
     LastFM/LFMWebAccess.cpp \
-    HelperStructs/CSettingsStorage.cpp 
+    HelperStructs/CSettingsStorage.cpp \
     
    
 
@@ -97,7 +99,8 @@ FORMS += \
     GUI/library/GUI_Library_windowed.ui \
     GUI/equalizer/GUI_Equalizer.ui \
     GUI/tagedit/GUI_TagEdit.ui \
-    GUI/alternate_covers/GUI_Alternate_Covers.ui
+    GUI/alternate_covers/GUI_Alternate_Covers.ui \
+    GUI/radio/GUI_RadioWidget.ui
 
 
 
@@ -129,6 +132,7 @@ additional_files.files += GUI/icons/power_on.png
 additional_files.files += GUI/icons/power_off.png
 additional_files.files += GUI/icons/edit.png
 additional_files.files += GUI/icons/reload.png
+additional_files.files += GUI/icons/dynamic.png
 additional_files.files += empty.db
 INSTALLS += additional_files
 

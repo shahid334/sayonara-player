@@ -5,6 +5,7 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
+#include "GUI/radio/GUI_RadioWidget.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -35,6 +36,7 @@ public slots:
 	void cover_changed(bool);
     void fillSimplePlayer (const MetaData & in);
     void showEqualizer(bool b=false);
+    void showRadio(bool b=false);
 
     /**
       * Set current position in filestream
@@ -113,6 +115,7 @@ private:
     GUI_Playlist* 				ui_playlist;
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
+    GUI_RadioWidget*			ui_radio;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
@@ -137,6 +140,9 @@ private:
     QString						m_artist;
     MetaData					m_metadata;
 
+
+
+
     void setupTrayContextMenu();
     void setupVolButton(int percent);
 	void setupIcons();
@@ -146,6 +152,7 @@ public:
     void setPlaylist(GUI_Playlist* playlist);
     void setLibrary(GUI_Library_windowed* library);
     void setEqualizer(GUI_Equalizer* eq);
+    void setRadio(GUI_RadioWidget* radio);
     QWidget* getParentOfPlaylist();
     QWidget* getParentOfLibrary();
     QWidget* getParentOfEqualizer();

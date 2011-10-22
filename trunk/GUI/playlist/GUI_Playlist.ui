@@ -56,7 +56,7 @@
    <property name="verticalSpacing">
     <number>0</number>
    </property>
-   <item row="0" column="0" colspan="7">
+   <item row="0" column="0" colspan="6">
     <widget class="QLabel" name="lab_totalTime">
      <property name="minimumSize">
       <size>
@@ -84,7 +84,49 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="15">
+   <item row="0" column="7">
+    <widget class="QPushButton" name="btn_dummy">
+     <property name="text">
+      <string>Dummy</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="8">
+    <widget class="QPushButton" name="btn_clear">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Clear Playlist</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>icons/broom.png</normaloff>icons/broom.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="9">
     <widget class="MyListView" name="listView">
      <property name="minimumSize">
       <size>
@@ -107,47 +149,6 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QPushButton" name="btn_rep1">
-     <property name="minimumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Repeat 1</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/rep1.png</normaloff>icons/rep1.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>22</width>
-       <height>22</height>
-      </size>
-     </property>
-     <property name="shortcut">
-      <string>Enter</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
     <widget class="QPushButton" name="btn_repAll">
      <property name="minimumSize">
       <size>
@@ -169,7 +170,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/repAll.png</normaloff>icons/repAll.png</iconset>
+       <normaloff>../../icons/repAll.png</normaloff>../../icons/repAll.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -188,7 +189,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="1">
     <widget class="QPushButton" name="btn_shuffle">
      <property name="minimumSize">
       <size>
@@ -210,7 +211,7 @@
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>icons/shuffle.png</normaloff>icons/shuffle.png</iconset>
+       <normaloff>../../icons/shuffle.png</normaloff>../../icons/shuffle.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -229,7 +230,89 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3" colspan="10">
+   <item row="2" column="2">
+    <widget class="QPushButton" name="btn_dynamic">
+     <property name="minimumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Dynamic playing</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../icons/dynamic.png</normaloff>../../icons/dynamic.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Enter</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="btn_rep1">
+     <property name="minimumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Repeat 1</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>../../icons/rep1.png</normaloff>../../icons/rep1.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>22</width>
+       <height>22</height>
+      </size>
+     </property>
+     <property name="shortcut">
+      <string>Enter</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4" colspan="3">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -242,20 +325,7 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="7" colspan="6">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="14">
+   <item row="2" column="8">
     <widget class="QPushButton" name="btn_append">
      <property name="minimumSize">
       <size>
@@ -296,47 +366,18 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="14">
-    <widget class="QPushButton" name="btn_clear">
-     <property name="minimumSize">
+   <item row="0" column="6">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>40</width>
+       <height>20</height>
       </size>
      </property>
-     <property name="maximumSize">
-      <size>
-       <width>26</width>
-       <height>26</height>
-      </size>
-     </property>
-     <property name="toolTip">
-      <string>Clear Playlist</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/broom.png</normaloff>icons/broom.png</iconset>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="13">
-    <widget class="QPushButton" name="btn_dummy">
-     <property name="text">
-      <string>Dummy</string>
-     </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>

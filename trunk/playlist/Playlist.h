@@ -30,6 +30,7 @@ struct Playlist_Mode{
 	bool				repNone;
 	bool				append;
 	bool				shuffle;
+	bool				dynamic;
 
 	Playlist_Mode(){
 		rep1 = false;
@@ -44,7 +45,9 @@ struct Playlist_Mode{
 		cout << "rep1 = " << rep1 << ", "
 			<< "repAll = " << repAll << ", "
 			<< "repNone = " << repNone << ", "
-			<< "append = " << append <<", " << endl;
+			<< "append = " << append <<", "
+			<< "dynamic = " << dynamic << ","
+			<< endl;
 	}
 
 };

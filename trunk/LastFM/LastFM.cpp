@@ -30,7 +30,8 @@
 
 
 using namespace std;
-
+extern size_t lfm_webpage_bytes;
+extern char* lfm_webpage;
 
 LastFM::LastFM() {
 
@@ -190,27 +191,26 @@ void LastFM::update_track(const MetaData& metadata){
 
 
 	string signature = string("album") + metadata.album.toLocal8Bit().data() +
-								string("api_key") + _api_key.toStdString() +
-								string("artist") + metadata.artist.toLocal8Bit().data()+
-								string("duration") + QString::number(metadata.length_ms / 1000).toStdString() +
-								string("method") + "track.updatenowplaying" +
-								string("sk") + _session_key.toStdString() +
-								string("track") + metadata.title.toLocal8Bit().data() +
-								string("trackNumber0") +
-								_api_secret.toStdString();
+						string("api_key") + _api_key.toStdString() +
+						string("artist") + metadata.artist.toLocal8Bit().data()+
+						string("duration") + QString::number(metadata.length_ms / 1000).toStdString() +
+						string("method") + "track.updatenowplaying" +
+						string("sk") + _session_key.toStdString() +
+						string("track") + metadata.title.toLocal8Bit().data() +
+						string("trackNumber0") +
+						_api_secret.toStdString();
 
 	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
 
-	string post_data =
-							string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
-							string("api_key=") + _api_key.toStdString() + string("&") +
-							string("api_sig=") + signature_md5.toStdString() + string("&") +
-							string("artist=") + lfm_wa_get_url_enc(metadata.artist) + string("&") +
-							string("duration=") + QString::number(metadata.length_ms / 1000).toStdString()  + string("&") +
-							string("method=") + "track.updatenowplaying" + string("&") +
-							string("track=") + lfm_wa_get_url_enc(metadata.title) + string("&") +
-							string("trackNumber=0") + string("&") +
-							string("sk=") + _session_key.toStdString();
+	string post_data = string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
+						string("api_key=") + _api_key.toStdString() + string("&") +
+						string("api_sig=") + signature_md5.toStdString() + string("&") +
+						string("artist=") + lfm_wa_get_url_enc(metadata.artist) + string("&") +
+						string("duration=") + QString::number(metadata.length_ms / 1000).toStdString()  + string("&") +
+						string("method=") + "track.updatenowplaying" + string("&") +
+						string("track=") + lfm_wa_get_url_enc(metadata.title) + string("&") +
+						string("trackNumber=0") + string("&") +
+						string("sk=") + _session_key.toStdString();
 
 
 	lfm_wa_call_scrobble_url(url.toStdString(), post_data);
@@ -236,4 +236,67 @@ void LastFM::sim_artists_thread_finished(){
 
 QString LastFM::get_api_key(){
 	return _api_key;
+}
+
+void LastFM::get_radio(const QString& str, bool artist){
+
+
+	string signature = string("api_key") + _api_key.toStdString() +
+						//string("langen") +
+						string("methodradio.getPlaylist") +
+						string("sk") + _session_key.toStdString() +
+						string("stationlastfm://artist/metallica") +
+
+						_api_secret.toStdString();
+
+	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
+
+
+
+
+
+	string url_21 = string("http://ws.audioscrobbler.com/2.0/");
+	string url;
+	url += string("api_key=") + _api_key.toStdString();
+	url += string("&api_sig=");
+		url += signature_md5.toStdString();
+
+	//url += string("&lang=en");
+	url += string("&method=radio.getPlaylist");
+	url += string("&sk=");
+	url += _session_key.toStdString();
+	url += string("&station=lastfm://artist/metallica");
+
+
+
+	//qDebug() << "Url" << url.c_str();
+
+
+	CURL* curl = curl_easy_init();
+	if(curl){
+		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+		curl_easy_setopt(curl, CURLOPT_URL, url_21.c_str());
+		curl_easy_setopt(curl, CURLOPT_POST, 1) ;
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
+		//curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, url.c_str());
+
+	}
+	curl_easy_perform(curl);
+	curl_easy_cleanup(curl);
+
+	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
+	lfm_webpage[lfm_webpage_bytes] = '\0';
+
+
+	if(lfm_webpage_bytes > 0){
+		//qDebug() << lfm_webpage;
+
+	}
+
+	else {
+		qDebug() << "Webpage = null";
+
+	}
+
 }
