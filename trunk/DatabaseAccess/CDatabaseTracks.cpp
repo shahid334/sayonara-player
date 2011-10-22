@@ -11,6 +11,58 @@
 #include <QSqlError>
 //#include <CSettingsStorage.h>
 
+MetaData CDatabaseConnector::getTrackById(int id){
+	if (!this -> m_database.isOpen())
+			this -> m_database.open();
+
+		MetaData data;
+		try {
+			QSqlQuery q (this -> m_database);
+			QString querytext = QString("select filename,albumID,artistID,title,year,length,track,bitrate,TrackID from tracks where TrackID = :track_id ");
+
+			q.prepare(querytext);
+			q.bindValue(":track_id", QVariant(id));
+
+
+			if (!q.exec()) {
+				throw QString ("SQL - Error: getTracksFromDatabase cannot execute query");
+			}
+			int albumID = -1;
+			int artistID = -1;
+			while (q.next()) {
+				albumID = q.value(1).toInt();
+				artistID = q.value(2).toInt();
+				data.filepath = q.value(0).toString();
+				data.album = this -> getAlbumName(albumID);
+				data.artist = this -> getArtistName(artistID);
+				data.title = q.value(3).toString();
+				data.year = q.value(4).toInt();
+				data.length_ms = q.value(5).toInt();
+				data.track_num = q.value(6).toInt();
+				data.bitrate = q.value(7).toInt();
+				data.id = q.value(8).toInt();
+				data.album_id = albumID;
+				data.artist_id = artistID;
+				data.is_extern = false;
+				return data;
+			}
+		}
+		catch (QString& ex) {
+			qDebug() << "SQL - Error: getTracksFromDatabase";
+			qDebug() << ex;
+			QSqlError er = this -> m_database.lastError();
+			qDebug() << er.driverText();
+			qDebug() << er.databaseText();
+			qDebug() << er.databaseText();
+			return data;
+		}
+
+		return data;
+
+
+}
+
+
 int CDatabaseConnector::updateTrack(MetaData& data){
 
 
@@ -39,7 +91,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 			qDebug() << "updated (" << q.numRowsAffected() << ")";
 		}
 	}
-		  catch (QString ex) {
+		  catch (QString& ex) {
 		        qDebug() << "SQL - Error: getTracksFromDatabase";
 		        qDebug() << ex;
 		        QSqlError er = this -> m_database.lastError();
@@ -118,7 +170,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
             returndata.push_back(data);
         }
     }
-    catch (QString ex) {
+    catch (QString& ex) {
         qDebug() << "SQL - Error: getTracksFromDatabase";
         qDebug() << ex;
         QSqlError er = this -> m_database.lastError();
@@ -199,7 +251,7 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	            returndata.push_back(data);
 	        }
 	    }
-	    catch (QString ex) {
+	    catch (QString& ex) {
 	        qDebug() << "SQL - Error: getTracksFromDatabase";
 	        qDebug() << ex;
 	        QSqlError er = this -> m_database.lastError();
@@ -287,7 +339,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 			returndata.push_back(data);
 		}
 	}
-	catch (QString ex) {
+	catch (QString& ex) {
 		qDebug() << "SQL - Error: getTracksFromDatabase";
 		qDebug() << ex;
 		QSqlError er = this -> m_database.lastError();
@@ -357,7 +409,7 @@ void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaD
 	}
 
 
-	catch (QString ex) {
+	catch (QString& ex) {
 		qDebug() << "SQL - Error: getTracksFromDatabase";
 		qDebug() << ex;
 		QSqlError er = this -> m_database.lastError();

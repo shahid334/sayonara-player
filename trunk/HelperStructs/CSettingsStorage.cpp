@@ -131,3 +131,10 @@ void CSettingsStorage::setLibraryPath(QString path){m_library_path = path;}
 
 QSize CSettingsStorage::getPlayerSize(){ return m_player_size; }
 void CSettingsStorage::setPlayerSize(QSize size){ m_player_size = size; }
+
+QString CSettingsStorage::getPlaylist(){
+	return m_playlist;
+}
+void CSettingsStorage::setPlaylist(QString playlist){
+	m_playlist = playlist;
+}

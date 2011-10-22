@@ -29,7 +29,7 @@ void ReloadThread::run(){
 
 
 
-	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
+
 
 	QStringList fileList;
 
@@ -46,6 +46,7 @@ void ReloadThread::run(){
 		v_md.push_back(md);
 	}
 
+	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
 	_v_metadata = v_md;
 
 

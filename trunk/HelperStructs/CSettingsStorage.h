@@ -75,6 +75,9 @@ private:
     // library
     QString m_library_path;
 
+    // playlist
+    QString m_playlist;
+
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
@@ -94,6 +97,9 @@ public:
 
 	QSize getPlayerSize();
 	void setPlayerSize(QSize size);
+
+	QString getPlaylist();
+	void setPlaylist(QString playlist);
 
 };
 

@@ -55,6 +55,7 @@
 
 
 
+
 		public slots:
 			void update_progress_bar(int);
 			void fillPlaylist(vector<MetaData>&, int);

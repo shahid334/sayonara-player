@@ -10,6 +10,7 @@
 #include <QListView>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QDrag>
 
 MyListView::MyListView(QWidget* parent) :
 		QListView(parent) {
@@ -116,7 +117,7 @@ void MyListView::set_mime_data(QMimeData* data) {
 		qDebug() << Q_FUNC_INFO << " end";
 	}
 
-	catch (QString e) {
+	catch (QString& e) {
 		qDebug() << "ich kanns abfangen";
 	}
 }

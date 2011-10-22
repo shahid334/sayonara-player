@@ -14,6 +14,3 @@ Windows:
 		(http://curl.haxx.se/download.html)
 		Systemvariable: CURL
 		
-	-libclastfm: >= 0.4
-		http://sourceforge.net/projects/liblastfm/
-		

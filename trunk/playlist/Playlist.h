@@ -58,6 +58,8 @@ public:
 	Playlist(QObject * parent);
 	virtual ~Playlist();
 
+	void ui_loaded();
+
 	signals:
 		void playlist_created(vector<MetaData>&, int);
 		void selected_file_changed_md(const MetaData&);
@@ -90,6 +92,7 @@ public:
 		void backward();
 
 		void remove_row(int);
+		void save_playlist_to_storage();
 
 		void edit_id3_request();
 		void id3_tags_changed(vector<MetaData>&);

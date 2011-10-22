@@ -90,6 +90,7 @@ public:
 			int updateTrack(MetaData& data);
 
 			int getTracksFromDatabase (std::vector <MetaData> & returndata);
+			MetaData getTrackById(int id);
 
 
     void deleteTracksAlbumsArtists();

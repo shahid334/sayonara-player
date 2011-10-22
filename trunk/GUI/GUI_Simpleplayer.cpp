@@ -587,6 +587,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 	case (Qt::Key_E):
 				this->ui->action_ViewEqualizer->setChecked(
 						!this->ui->action_ViewEqualizer->isChecked());
+	break;
 	default:
 		break;
 

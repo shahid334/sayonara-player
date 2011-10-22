@@ -74,6 +74,10 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
+	// we need a reason for refreshing the list
+	QStringList empty_list;
+	emit sound_files_dropped(empty_list);
+
 	this->setAcceptDrops(true);
 	_parent = parent;
 	_total_secs = 0;

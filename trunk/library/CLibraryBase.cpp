@@ -36,9 +36,6 @@ void CLibraryBase::reloadLibrary(){
 
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
-
-
-
 	if(m_library_path.length() == 0) {
 		QMessageBox msgBox;
 		msgBox.setText("Please select your library first");
@@ -59,8 +56,6 @@ void CLibraryBase::reloadLibrary(){
 		}
 	}
 
-
-	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
 
 	if(m_thread->isRunning()){
 		m_thread->terminate();

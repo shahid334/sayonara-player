@@ -97,7 +97,22 @@ bool CDatabaseConnector::load_settings(){
 	}
 
 	CSettingsStorage::getInstance()->setPlayerSize(player_size);
-	 return true;
+
+	// playlist
+	QVariant playlist;
+	QString playlist_str;
+	load_setting("playlist", playlist);
+	if(playlist != 0){
+		playlist_str = playlist.toString();
+	}
+
+	CSettingsStorage::getInstance()->setPlaylist(playlist_str);
+
+
+
+
+
+	return true;
 }
 
 bool CDatabaseConnector::store_settings(){
@@ -122,6 +137,9 @@ bool CDatabaseConnector::store_settings(){
 	QSize player_size = CSettingsStorage::getInstance()->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
 	store_setting("player_size", str_size);
+
+	QString cur_playlist = CSettingsStorage::getInstance()->getPlaylist();
+	store_setting("playlist", cur_playlist);
 
 	return true;
 }
@@ -150,7 +168,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value){
 		}
 	}
 
-	catch (QString ex) {
+	catch (QString& ex) {
 		qDebug() << ex;
 	}
 }
@@ -192,7 +210,7 @@ void CDatabaseConnector::store_setting(QString key, QVariant value){
 			qDebug() << "Updated " << key;
 		}
 	}
-	catch (QString ex) {
+	catch (QString& ex) {
 		qDebug() << ex;
 	}
 }

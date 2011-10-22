@@ -52,11 +52,13 @@ int CDatabaseConnector::getMaxAlbumID(){
 
 
 		}
-		catch (QString ex) {
+		catch (QString& ex) {
 			qDebug() << ex;
 			QSqlError er = this -> m_database.lastError();
 			return max_id;
 		}
+
+		return max_id;
 }
 
 Album CDatabaseConnector::getAlbumByID(const int& id){
@@ -100,7 +102,7 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 
 
 		}
-		catch (QString ex) {
+		catch (QString& ex) {
 			qDebug() << "SQL - Error: getAlbumsFromDatabase";
 			qDebug() << ex;
 			QSqlError er = this -> m_database.lastError();
@@ -178,7 +180,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result, QString sort_order)
 
 
 	}
-	catch (QString ex) {
+	catch (QString& ex) {
 		qDebug() << "SQL - Error: getTracksFromDatabase";
 		qDebug() << ex;
 		QSqlError er = this -> m_database.lastError();
@@ -264,7 +266,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 
 
 	}
-	catch (QString ex) {
+	catch (QString& ex) {
 		qDebug() << "SQL - Error: getTracksFromDatabase";
 		qDebug() << ex;
 		QSqlError er = this -> m_database.lastError();
@@ -339,7 +341,7 @@ void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album
 			}
 
 
-			catch (QString ex) {
+			catch (QString& ex) {
 				qDebug() << "SQL - Error: getTracksFromDatabase";
 				qDebug() << ex;
 				QSqlError er = this -> m_database.lastError();
@@ -383,7 +385,7 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
     	    return this -> getAlbumID (album.name);
     }
 
-    catch (QString ex) {
+    catch (QString& ex) {
     		qDebug() << "SQL - Error: insert albums into database";
     		qDebug() << ex;
     		QSqlError er = this -> m_database.lastError();
@@ -393,6 +395,6 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
     		return -1;
     	}
 
-
+    return -1;
 }
 

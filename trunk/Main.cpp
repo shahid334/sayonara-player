@@ -121,7 +121,6 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&)), 						&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 						&playlist, 		SLOT(remove_row(int)));
 
-
         app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,		SLOT(setCurrentPosition(quint32) ));
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,		SLOT(next_track() ));
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 		SLOT(scrobble(const MetaData&)));
@@ -140,9 +139,6 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(reloading_library_finished()), 				&ui_library, 	SLOT(reloading_library_finished()));
         app.connect(&library, SIGNAL(reloading_library()), 							&ui_library, 	SLOT(reloading_library()));
         app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
-
-
-
 
         app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
         app.connect(&ui_library, SIGNAL(artist_changed_signal(int)), 				&library, 		SLOT(getAlbumsByArtist(int)));
@@ -166,6 +162,8 @@ int main(int argc, char *argv[]){
 		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed(vector<MetaData>&)), 			&playlist, 		SLOT(id3_tags_changed(vector<MetaData>&)));
 
 		app.connect(&lastfm,		SIGNAL(similar_artists_available(const int&)),			&playlist,		SLOT(similar_artists_available(const int&)));
+
+		playlist.ui_loaded();
 
 
 		int vol = set->getVolume();
