@@ -333,8 +333,22 @@ void Playlist::similar_artists_available(const int& artist_id){
 	vector<MetaData> vec_tracks;
 	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist_id, vec_tracks);
 
-	int rnd_track = (rand() % vec_tracks.size());
-	MetaData md = vec_tracks.at(rnd_track);
+	MetaData md;
+
+	for(int rounds=0; rounds < 10; rounds++){
+		int rnd_track = (rand() % vec_tracks.size());
+		md = vec_tracks.at(rnd_track);
+		bool same_track_avail = false;
+		for(int i=0; i<_v_meta_data.size(); i++){
+			if(_v_meta_data[i].id == md.id){
+				same_track_avail = true;
+				break;
+			}
+		}
+
+		if(!same_track_avail) break;
+
+	}
 
 	_v_meta_data.push_back(md);
 

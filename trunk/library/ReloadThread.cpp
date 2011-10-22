@@ -28,7 +28,7 @@ ReloadThread::~ReloadThread() {
 void ReloadThread::run(){
 
 
-	_v_metadata.clear();
+
 	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
 
 	QStringList fileList;
@@ -37,10 +37,16 @@ void ReloadThread::run(){
 	int num_files = 0;
 	reader.getFilesInsiderDirRecursive(QDir(_library_path), fileList, num_files);
 
+	vector<MetaData> v_md;
+
+
 	for(int i=0; i<fileList.size(); i++){
+
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
-		_v_metadata.push_back(md);
+		v_md.push_back(md);
 	}
+
+	_v_metadata = v_md;
 
 
 }

@@ -23,57 +23,6 @@ LFM_SimilarArtists::~LFM_SimilarArtists() {
 	// TODO Auto-generated destructor stub
 }
 
-/*
-bool call_lfm_url(QString url, QDomDocument& doc){
-
-	CURL *curl = curl_easy_init();
-
-	if(curl) {
-		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-		curl_easy_setopt(curl, CURLOPT_URL, url.toUtf8().data());
-		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_answer);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
-
-		curl_easy_perform(curl);
-
-	}
-
-	long int t = 5000000;
-	while(lfm_webpage_bytes == 0){
-		usleep(100000);
-		t -= 100000;
-		if( t <= 0) break;
-	}
-
-
-	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
-	lfm_webpage[lfm_webpage_bytes] = '\0';
-
-	if(lfm_webpage_bytes > 0){
-
-		QString xmlString = QString(lfm_webpage);
-		doc.setContent(xmlString, false);
-
-		free_webpage();
-
-		curl_easy_cleanup(curl);
-
-		return true;
-
-	}
-
-	else {
-		free_webpage();
-		qDebug() << "webpage is null";
-		curl_easy_cleanup(curl);
-		return false;
-	}
-
-}
-
-*/
-
 void LFM_SimilarArtists::run(){
 
 	_chosen_id = -1;
@@ -181,7 +130,6 @@ void LFM_SimilarArtists::run(){
 
 
 		_chosen_id = possible_artists.value(random_artist);
-		qDebug() << "Chosen artist = " << random_artist << ", " << _chosen_id;
 
 }
 
