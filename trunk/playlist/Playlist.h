@@ -9,6 +9,7 @@
 #define PLAYLIST_H_
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/PlaylistMode.h"
 
 #include <vector>
 #include <iostream>
@@ -21,36 +22,6 @@ using namespace std;
 
 
 #include <phonon/mediaobject.h>
-
-
-struct Playlist_Mode{
-
-	bool				rep1;
-	bool				repAll;
-	bool				repNone;
-	bool				append;
-	bool				shuffle;
-	bool				dynamic;
-
-	Playlist_Mode(){
-		rep1 = false;
-		repAll = false;
-		repNone = true;
-		append = false;
-		shuffle = false;
-
-	}
-
-	void print(){
-		cout << "rep1 = " << rep1 << ", "
-			<< "repAll = " << repAll << ", "
-			<< "repNone = " << repNone << ", "
-			<< "append = " << append <<", "
-			<< "dynamic = " << dynamic << ","
-			<< endl;
-	}
-
-};
 
 
 

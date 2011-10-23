@@ -1,4 +1,5 @@
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -138,3 +139,20 @@ QString CSettingsStorage::getPlaylist(){
 void CSettingsStorage::setPlaylist(QString playlist){
 	m_playlist = playlist;
 }
+
+bool CSettingsStorage::getLoadPlaylist(){
+	return m_loadPlaylist;
+}
+
+void CSettingsStorage::setLoadPlaylist(bool b){
+	m_loadPlaylist = b;
+}
+
+void CSettingsStorage::setPlaylistMode(const Playlist_Mode& plmode){
+	m_playlistmode = plmode;
+}
+
+Playlist_Mode CSettingsStorage::getPlaylistMode(){
+	return m_playlistmode;
+}
+

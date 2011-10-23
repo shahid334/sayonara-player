@@ -74,6 +74,7 @@ signals:
     void fetch_all_covers();
 
 
+
 private slots:
     void playClicked(bool b = true);
     void stopClicked(bool b = true);
@@ -97,6 +98,7 @@ private slots:
 
     void setLibraryPathClicked(bool = true);
     void fetch_all_covers_clicked(bool b = true);
+    void load_pl_on_startup_toggled(bool);
 
 protected:
 

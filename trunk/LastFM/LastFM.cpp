@@ -239,8 +239,8 @@ QString LastFM::get_api_key(){
 }
 
 void LastFM::get_radio(const QString& str, bool artist){
-
-
+	Q_UNUSED(str);
+	Q_UNUSED(artist);
 	string signature = string("api_key") + _api_key.toStdString() +
 						//string("langen") +
 						string("methodradio.getPlaylist") +

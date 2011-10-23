@@ -30,11 +30,11 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/library/LibraryItemModelArtists.h \
     GUI/tagedit/GUI_TagEdit.h \
     GUI/equalizer/GUI_Equalizer.h \
-    GUI/radio/GUI_RadioWidget.h \
     GUI/MyTableView.h \
     GUI/MyListview.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
+    HelperStructs/PlaylistMode.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
@@ -67,7 +67,6 @@ SOURCES += Main.cpp \
     GUI/library/LibraryItemModelArtists.cpp \
     GUI/tagedit/GUI_TagEdit.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
-    GUI/radio/GUI_RadioWidget.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
     HelperStructs/Helper.cpp \
@@ -99,8 +98,8 @@ FORMS += \
     GUI/library/GUI_Library_windowed.ui \
     GUI/equalizer/GUI_Equalizer.ui \
     GUI/tagedit/GUI_TagEdit.ui \
-    GUI/alternate_covers/GUI_Alternate_Covers.ui \
-    GUI/radio/GUI_RadioWidget.ui
+    GUI/alternate_covers/GUI_Alternate_Covers.ui 
+   
 
 
 

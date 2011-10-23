@@ -9,6 +9,8 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/PlaylistMode.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
@@ -52,6 +54,13 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->listView->setDragEnabled(true);
 
 
+	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
+	this->ui->btn_append->setChecked(_playlist_mode.append);
+	this->ui->btn_repAll->setChecked(_playlist_mode.repAll);
+	this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
+	this->ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
+
+
 	//this->ui->pl_progress_bar->hide();
 
 	this->ui->listView->setModel(_pli_model);
@@ -93,11 +102,7 @@ void GUI_Playlist::dummy_pressed(){
 
 }
 
-void GUI_Playlist::similar_artists_available(const QStringList& artist_list){
 
-
-
-}
 
 
 // DTOR

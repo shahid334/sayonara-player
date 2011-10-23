@@ -109,8 +109,22 @@ bool CDatabaseConnector::load_settings(){
 	CSettingsStorage::getInstance()->setPlaylist(playlist_str);
 
 
+	QVariant load_playlist;
+	bool load_playlist_bool;
+	load_setting("load_playlist", load_playlist);
+	load_playlist_bool = load_playlist.toBool();
+
+	CSettingsStorage::getInstance()->setLoadPlaylist(load_playlist_bool);
 
 
+	QVariant playlist_mode;
+	Playlist_Mode playlist_mode_typed;
+	load_setting("playlist_mode", playlist_mode);
+	if(!playlist_mode.isNull()){
+		playlist_mode_typed.fromString(playlist_mode.toString());
+	}
+
+	CSettingsStorage::getInstance()->setPlaylistMode(playlist_mode_typed);
 
 	return true;
 }
@@ -140,6 +154,12 @@ bool CDatabaseConnector::store_settings(){
 
 	QString cur_playlist = CSettingsStorage::getInstance()->getPlaylist();
 	store_setting("playlist", cur_playlist);
+
+	int load_playlist = CSettingsStorage::getInstance()->getLoadPlaylist();
+	store_setting("load_playlist", load_playlist);
+
+	QString playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode().toString();
+	store_setting("playlist_mode", playlist_mode);
 
 	return true;
 }

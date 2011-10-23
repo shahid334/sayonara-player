@@ -11,6 +11,7 @@
 #include "HelperStructs/id3.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/PlaylistMode.h"
 
 #include <QFile>
 #include <QObject>
@@ -40,6 +41,8 @@ Playlist::Playlist(QObject * parent) : QObject (parent){
 		}
 		_cur_play_idx = -1;
 	}
+
+	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
 }
 
 Playlist::~Playlist() {
@@ -62,7 +65,11 @@ void Playlist::save_playlist_to_storage(){
 }
 
 void Playlist::ui_loaded(){
-	if(_v_meta_data.size() > 0)
+
+	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
+	qDebug() << Q_FUNC_INFO << "load Playlist? " << loadPlaylist;
+
+	if(_v_meta_data.size() > 0 && loadPlaylist)
 		emit playlist_created(_v_meta_data, _cur_play_idx);
 
 }
@@ -351,6 +358,7 @@ void Playlist::save_playlist(const QString& filename){
 // GUI -->
 void Playlist::playlist_mode_changed(const Playlist_Mode& playlist_mode){
 
+	CSettingsStorage::getInstance()->setPlaylistMode(playlist_mode);
 	_playlist_mode = playlist_mode;
 	_playlist_mode.print();
 

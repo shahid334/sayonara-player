@@ -656,7 +656,9 @@
     </property>
     <addaction name="action_OpenFile"/>
     <addaction name="action_OpenFolder"/>
+    <addaction name="separator"/>
     <addaction name="action_reloadLibrary"/>
+    <addaction name="action_fetch_all_covers"/>
     <addaction name="separator"/>
     <addaction name="action_Close"/>
    </widget>
@@ -677,7 +679,8 @@
     </property>
     <addaction name="action_lastFM"/>
     <addaction name="action_setLibPath"/>
-    <addaction name="action_fetch_all_covers"/>
+    <addaction name="separator"/>
+    <addaction name="action_load_playlist"/>
    </widget>
    <addaction name="menuFle"/>
    <addaction name="menuView"/>
@@ -751,6 +754,17 @@
    </property>
    <property name="text">
     <string>Radio            STRG+R</string>
+   </property>
+  </action>
+  <action name="action_load_playlist">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Load Playlist</string>
+   </property>
+   <property name="toolTip">
+    <string>Load playlist on startup</string>
    </property>
   </action>
  </widget>

@@ -7,6 +7,7 @@
 #include <vector>
 
 #include <HelperStructs/Equalizer_presets.h>
+#include <HelperStructs/PlaylistMode.h>
 using namespace std;
 
 /**
@@ -67,6 +68,7 @@ private:
     int	m_volume;
     int m_last_eq;
 
+
     vector<EQ_Setting> m_vec_eqSettings;
 
     QSize m_player_size;
@@ -76,7 +78,9 @@ private:
     QString m_library_path;
 
     // playlist
-    QString m_playlist;
+    QString 		m_playlist;
+    bool			m_loadPlaylist;
+    Playlist_Mode 	m_playlistmode;
 
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
@@ -100,6 +104,12 @@ public:
 
 	QString getPlaylist();
 	void setPlaylist(QString playlist);
+
+	void setLoadPlaylist(bool b);
+	bool getLoadPlaylist();
+
+	void setPlaylistMode(const Playlist_Mode& plmode);
+	Playlist_Mode getPlaylistMode();
 
 };
 

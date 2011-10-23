@@ -10,6 +10,7 @@
 
 #include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/PlaylistMode.h"
 
 
 #include <QMainWindow>
@@ -61,7 +62,7 @@
 			void fillPlaylist(vector<MetaData>&, int);
 			void track_changed(int);
 			void change_skin(bool);
-			void similar_artists_available(const QStringList&);
+
 
 
 

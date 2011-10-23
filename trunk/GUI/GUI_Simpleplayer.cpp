@@ -32,6 +32,12 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 	rect.setHeight(size.height());
 	setGeometry(rect);
 
+	bool loadPlaylistChecked = CSettingsStorage::getInstance()->getLoadPlaylist();
+	qDebug() << Q_FUNC_INFO << "load Playlist? " << loadPlaylistChecked;
+	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
+
+	this->ui->action_ViewRadio->setVisible(false);
+
 	connect(this->ui->play, SIGNAL(clicked(bool)), this,
 			SLOT(playClicked(bool)));
 	connect(this->ui->fw, SIGNAL(clicked(bool)), this,
@@ -40,6 +46,8 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 			SLOT(backwardClicked(bool)));
 	connect(this->ui->stop, SIGNAL(clicked(bool)), this,
 			SLOT(stopClicked(bool)));
+
+
 
 	connect(this->ui->action_OpenFile, SIGNAL(triggered(bool)), this,
 			SLOT(fileSelectedClicked(bool)));
@@ -77,6 +85,9 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 			SLOT(setLibraryPathClicked(bool)));
 	connect(this->ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this,
 			SLOT(fetch_all_covers_clicked(bool)));
+	connect(this->ui->action_load_playlist, SIGNAL(toggled(bool)), this,
+			SLOT(load_pl_on_startup_toggled(bool)));
+
 	connect(this->ui->albumCover, SIGNAL(pressed()), this,
 			SLOT(album_cover_pressed()));
 
@@ -739,4 +750,9 @@ void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 
 void GUI_SimplePlayer::album_cover_pressed() {
 	emit fetch_alternate_covers(this->m_metadata);
+}
+
+void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){
+	Q_UNUSED(b);
+	CSettingsStorage::getInstance()->setLoadPlaylist(ui->action_load_playlist->isChecked());
 }
