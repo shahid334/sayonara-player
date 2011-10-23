@@ -88,9 +88,9 @@ QString CSettingsStorage::getDBFileName () {
 	QString dir = QDir::homePath() + QString("\\.Sayonara\\player.db");
     return dir;
 #else
-	QDir dir(Helper::getIconPath());
+
     //dir.cd(Helper::getIconPath());
-    return dir.absolutePath() + QDir::separator() + m_dbFile;
+    return QDir::homePath() + QDir::separator() + m_sayonaraPath + QDir::separator() + m_dbFile;
 #endif
 
 

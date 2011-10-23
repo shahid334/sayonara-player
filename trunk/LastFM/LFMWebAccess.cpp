@@ -8,7 +8,7 @@
 
 #include <QString>
 #include <QDebug>
-#include <QtXML>
+#include <qdom.h>
 
 #include <curl/curl.h>
 
