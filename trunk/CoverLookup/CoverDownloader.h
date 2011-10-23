@@ -237,7 +237,12 @@ QStringList call_and_parse_google(QString artist, QString album, int num_adresse
 
 	int time2go = 3000000;
 	while(webpage_bytes == 0){
+#ifdef Q_OS_WIN
+		Sleep(5000);
+#else
 		usleep(5000);
+#endif
+		
 		time2go-=5000;
 		if(time2go <= 0) break;
 	}
@@ -280,7 +285,11 @@ QStringList call_and_parse_lfm_artist(QString artist, int num_adresses){
 
 	int time2go = 3000000;
 	while(webpage_bytes == 0){
+#ifdef Q_OS_WIN
+		Sleep(5000);
+#else
 		usleep(5000);
+#endif
 		time2go-=5000;
 		if(time2go <= 0) break;
 	}
@@ -359,7 +368,12 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 
 				int time2go = 100000;
 				while(image_bytes == 0){
+					
+#ifdef Q_OS_WIN
+					Sleep(5000);
+#else
 					usleep(5000);
+#endif
 					time2go-=5000;
 					if(time2go <= 0) break;
 				}
@@ -434,7 +448,12 @@ void get_alternative_album_covers(QString url, vector<QImage>& images, int num){
 
 	int time2go = 100000;
 	while(webpage_bytes == 0){
+#ifdef Q_OS_WIN
+		Sleep(5000);
+#else
 		usleep(5000);
+#endif
+
 		time2go-=5000;
 		if(time2go <= 0) break;
 	}

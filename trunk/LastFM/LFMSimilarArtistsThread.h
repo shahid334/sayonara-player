@@ -8,7 +8,7 @@
 #ifndef LFMSIMILARARTISTS_H_
 #define LFMSIMILARARTISTS_H_
 
-#include <qthread.h>
+#include <QThread>
 #include <QString>
 
 class LFM_SimilarArtists: public QThread {

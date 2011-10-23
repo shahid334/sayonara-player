@@ -83,10 +83,10 @@ void CSettingsStorage::init() {
 }
 
 QString CSettingsStorage::getDBFileName () {
-#ifndef Q_OS_WIN   
-	QDir dir = QDir::homePath();
-    dir.cd(this -> m_sayonaraPath);
-    return dir.absolutePath() + QDir::separator() + m_dbFile;
+		
+#ifdef Q_OS_WIN   
+	QString dir = QDir::homePath() + QString("\\.Sayonara\\player.db");
+    return dir;
 #else
 	QDir dir(Helper::getIconPath());
     //dir.cd(Helper::getIconPath());
@@ -110,7 +110,12 @@ void CSettingsStorage::setLastFMNameAndPW (const QString & name,const QString & 
 }
 
 
-EQ_Setting CSettingsStorage::getCustomEqualizer(){ return this->m_vec_eqSettings[m_vec_eqSettings.size()-1]; }
+EQ_Setting CSettingsStorage::getCustomEqualizer(){ 
+	if(m_vec_eqSettings.size() == 0) {
+		EQ_Setting setting;
+		return setting;
+	}
+	return this->m_vec_eqSettings[m_vec_eqSettings.size()-1]; }
 void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec){vec = this->m_vec_eqSettings;}
 void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec){
 

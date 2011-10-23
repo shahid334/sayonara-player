@@ -169,7 +169,7 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(QTDIR)/lib&quot;; &quot;$(CURL)\lib\DLL-Release&quot;;&quot;$(TAGLIB)\taglib\Release&quot;;&quot;$(QTDIR)\plugins\sqldrivers&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -243,6 +243,10 @@
 				RelativePath="..\HelperStructs\MetaData.h"
 				>
 			</File>
+			<File
+				RelativePath="..\HelperStructs\PlaylistMode.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="MP3_Listen"
@@ -271,6 +275,18 @@
 		<Filter
 			Name="CoverLookup"
 			>
+			<File
+				RelativePath="..\CoverLookup\CoverDownloader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\CoverLookup\CoverFetchThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\CoverLookup\CoverFetchThread.h"
+				>
+			</File>
 			<File
 				RelativePath="..\CoverLookup\CoverLookup.cpp"
 				>
@@ -483,6 +499,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Radio"
+				>
+				<File
+					RelativePath="..\GUI\radio\GUI_RadioWidget.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\radio\GUI_RadioWidget.h"
+					>
+				</File>
+				<File
+					RelativePath="..\GUI\radio\GUI_RadioWidget.ui"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="library"
@@ -555,6 +587,22 @@
 				RelativePath="..\LastFM\LastFM.h"
 				>
 			</File>
+			<File
+				RelativePath="..\LastFM\LFMSimilarArtistsThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\LastFM\LFMSimilarArtistsThread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\LastFM\LFMWebAccess.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\LastFM\LFMWebAccess.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\Main.cpp"
@@ -605,6 +653,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\moc_GUI_RadioWidget.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\moc_GUI_Simpleplayer.cpp"
 			>
 		</File>
@@ -622,6 +674,14 @@
 		</File>
 		<File
 			RelativePath="..\moc_LastFM.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LFMSimilarArtistsThread.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\moc_LFMWebAccess.cpp"
 			>
 		</File>
 		<File

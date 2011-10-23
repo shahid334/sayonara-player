@@ -11,7 +11,7 @@
 
 GUI_RadioWidget::GUI_RadioWidget(QWidget* parent) : QDockWidget(parent)  {
 
-	this->_ui = new Ui_RadioWidget( );
+	this->_ui = new Ui::RadioWidget( );
 	this->_ui->setupUi(this);
 	this->_ui->rb_artist->setChecked(true);
 

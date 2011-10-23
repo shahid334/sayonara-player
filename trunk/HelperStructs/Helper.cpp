@@ -95,8 +95,11 @@ QString Helper::getIconPath(){
 		if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
 	else path = "./GUI/icons/";
 #else
-	if(QFile::exists("./data")) path = "./data/";
-	else path = "";
+	path = QDir::homePath() + QString("\\.Sayonara\\images\\");
+	if(QFile::exists(path)){
+		return path;
+	}
+	else return QString("");
 #endif
 
 	return path;

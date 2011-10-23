@@ -12,7 +12,7 @@
 #include <QDockWidget>
 #include <QWidget>
 
-class GUI_RadioWidget : public QDockWidget, private Ui_RadioWidget{
+class GUI_RadioWidget : public QDockWidget, private Ui::RadioWidget{
 
 Q_OBJECT
 
@@ -32,7 +32,7 @@ public:
 
 	private:
 
-	Ui_RadioWidget* _ui;
+		Ui::RadioWidget* _ui;
 
 };
 

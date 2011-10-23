@@ -14,7 +14,6 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/radio/GUI_RadioWidget.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"

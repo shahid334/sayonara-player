@@ -32,6 +32,7 @@ CDatabaseConnector::CDatabaseConnector() :
 
 bool CDatabaseConnector::isExistent() {
     QFile f (this->m_databaseContainerFile);
+	qDebug() << "Open database: " << f.fileName();
     bool r = f.exists();
     if (r == true) {
         f.close();

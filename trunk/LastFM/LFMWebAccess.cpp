@@ -4,14 +4,17 @@
  *  Created on: Oct 22, 2011
  *      Author: luke
  */
-#include <LastFM/LFMWebAccess.h>
+#include "LastFM/LFMWebAccess.h"
 
 #include <QString>
-#include <qdom.h>
+#include <QDebug>
+#include <QtXML>
+
 #include <curl/curl.h>
+
 #include <string>
 #include <stdlib.h>
-#include <QDebug>
+#include <ctime>
 
 using namespace std;
 
@@ -142,7 +145,12 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 
 	long int t = 5000000;
 	while(lfm_webpage_bytes == 0){
+#ifdef Q_OS_WIN
+		Sleep(100000);
+#else
 		usleep(100000);
+#endif
+	
 		t -= 100000;
 		if( t <= 0) break;
 	}
