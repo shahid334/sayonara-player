@@ -69,6 +69,9 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->listView->setAlternatingRowColors(true);
 	this->ui->listView->setMovement(QListView::Free);
 
+
+
+
 	this->connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
 	//this->connect(this->ui->btn_save_playlist, SIGNAL(released()), this, SLOT(save_playlist_slot()));
 
@@ -93,8 +96,28 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	_cur_selected_row = -1;
 	_cur_playing_row = -1;
+
+	check_for_library_path();
 }
 
+void GUI_Playlist::library_path_changed(QString path){
+	Q_UNUSED(path);
+	check_for_library_path();
+}
+
+void GUI_Playlist::check_for_library_path(){
+	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
+
+	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
+		this->ui->btn_dynamic->setEnabled(false);
+		this->ui->btn_dynamic->setToolTip("Please set library path first");
+	}
+
+	else{
+		this->ui->btn_dynamic->setEnabled(true);
+		this->ui->btn_dynamic->setToolTip("Dynamic playing");
+	}
+}
 
 void GUI_Playlist::dummy_pressed(){
 
@@ -152,7 +175,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 		_total_secs += (min * 60 + sek);
 
 		QString time_str = Helper::cvtSomething2QString(min, 2) + ":" + Helper::cvtSomething2QString(sek, 2);
-
 		QStringList str4Playlist = it->toStringList();
 
 

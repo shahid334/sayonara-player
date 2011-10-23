@@ -92,6 +92,8 @@ void LFM_SimilarArtists::run(){
 			}
 		}
 
+		doc.clear();
+
 		int idx = 0;
 		int rnd = rand() % 1000;
 		if(rnd > 600) idx = 0;			// [500-999]

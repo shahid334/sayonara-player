@@ -62,6 +62,8 @@
 			void fillPlaylist(vector<MetaData>&, int);
 			void track_changed(int);
 			void change_skin(bool);
+			void library_path_changed(QString);
+
 
 
 
@@ -100,9 +102,13 @@
 			void initGUI();
 			void set_total_time_label();
 			void remove_cur_selected_row();
+			void check_for_library_path();
+
 			bool inner_drag_drop;
 
 			QPoint	_last_known_drag_pos;
+
+
 
 	};
 

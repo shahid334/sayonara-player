@@ -91,6 +91,7 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(reloadLibrary()), 					&library, 	SLOT(reloadLibrary()));
         app.connect (&player, SIGNAL(fetch_all_covers()),       		cover, 		SLOT(search_all_covers()));
         app.connect (&player, SIGNAL(libpath_changed(QString)), 		&library, 	SLOT(setLibraryPath(QString)));
+        app.connect (&player, SIGNAL(libpath_changed(QString)),			&ui_playlist, SLOT(libpath_changed(QString)));
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
