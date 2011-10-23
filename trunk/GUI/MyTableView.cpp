@@ -62,13 +62,10 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 void MyTableView::mouseMoveEvent(QMouseEvent* event){
 
 
-	qDebug() << Q_FUNC_INFO << "start ";
 	QPoint pos = event->pos();
-	qDebug() << _drag << ", " << abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y());
 
 	if(_drag &&
 		abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y()) > 20){
-		qDebug() << "Exec";
 		qDrag->exec(Qt::MoveAction);
 
 	}

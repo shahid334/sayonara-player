@@ -204,8 +204,6 @@ int main(int argc, char *argv[]){
 		player.showEqualizer(false);
 		//player.showRadio(false);
 
-		qDebug() << "Show player";
-
         library.loadDataFromDb();
         QString user, password;
         set->getLastFMNameAndPW(user, password);

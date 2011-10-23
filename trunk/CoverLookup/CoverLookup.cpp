@@ -60,11 +60,8 @@ void CoverLookup::thread_finished() {
 	for (uint i = 0; i < images.size(); i++) {
 		pixmaps.push_back(QPixmap::fromImage(images[i]));
 	}
-	qDebug() << Q_FUNC_INFO << " num pixmaps found: " << pixmaps.size()
-					<< " emit type = " << _emit_type;
 	//emit covers_found(pixmaps);
 	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
-		qDebug() << Q_FUNC_INFO << "Cover found";
 		emit cover_found(true);
 	}
 
@@ -94,8 +91,6 @@ void CoverLookup::terminate_thread() {
 
 	//emit covers_found(pixmaps);
 	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
-		qDebug() << "emit";
-		qDebug() << Q_FUNC_INFO << "cover found";
 		emit cover_found(true);
 	}
 
@@ -113,12 +108,10 @@ void CoverLookup::search_cover(const MetaData& md) {
 		_metadata.artist_id = -1;
 	}
 
-	qDebug() << "Search single cover";
 
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);
 
 	if (QFile::exists(cover_path) && cover_path != "") {
-		qDebug() << Q_FUNC_INFO << "File exists on hd";
 		emit cover_found(true);
 		return;
 	}

@@ -33,7 +33,6 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 	setGeometry(rect);
 
 	bool loadPlaylistChecked = CSettingsStorage::getInstance()->getLoadPlaylist();
-	qDebug() << Q_FUNC_INFO << "load Playlist? " << loadPlaylistChecked;
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
 
 	this->ui->action_ViewRadio->setVisible(false);
@@ -88,8 +87,8 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 	connect(this->ui->action_load_playlist, SIGNAL(toggled(bool)), this,
 			SLOT(load_pl_on_startup_toggled(bool)));
 
-	connect(this->ui->albumCover, SIGNAL(pressed()), this,
-			SLOT(album_cover_pressed()));
+	/*connect(this->ui->albumCover, SIGNAL(pressed()), this,
+			SLOT(album_cover_pressed()));*/
 
 	ui_playlist = 0;
 
@@ -203,14 +202,10 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & in) {
 	this->m_playAction->setText("Pause");
 
 	this->ui->maxTime->setText(lengthString);
-	if (in.rating > 5) {
-		qDebug() << "Error rating is to big";
-	}
 
 	// int tmpRating = (rand() % 4) + 1;
 
 	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-	qDebug() << "Bitrate = " << in.bitrate;
 	if (in.bitrate < 96000)
 		tmp += "*";
 	else if (in.bitrate < 128000)
@@ -266,15 +261,12 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 }
 
 void GUI_SimplePlayer::playClicked(bool) {
-	qDebug() << Q_FUNC_INFO;
 
 	if (this->m_playing == true) {
 		this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setText("Play");
-		qDebug() << "pause";
-		emit
-		pause();
+		emit pause();
 
 		this->ui->albumCover->setFocus();
 
@@ -284,9 +276,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 		this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setText("Pause");
-		qDebug() << "play";
-		emit
-		play();
+		emit play();
 
 		this->ui->albumCover->setFocus();
 
@@ -295,11 +285,13 @@ void GUI_SimplePlayer::playClicked(bool) {
 }
 
 void GUI_SimplePlayer::stopClicked(bool) {
-	qDebug() << Q_FUNC_INFO;
+
 	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+
 	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 	m_playAction->setText("Play");
 	m_playing = false;
+
 	this->ui->title->setText("Sayonara Player");
 	this->ui->rating->setText("");
 	this->ui->album->setText("Written by Lucio Carreras");
@@ -316,13 +308,11 @@ void GUI_SimplePlayer::stopClicked(bool) {
 }
 
 void GUI_SimplePlayer::backwardClicked(bool) {
-	qDebug() << Q_FUNC_INFO;
 	this->ui->albumCover->setFocus();
 	emit backward();
 }
 
 void GUI_SimplePlayer::forwardClicked(bool) {
-	qDebug() << Q_FUNC_INFO;
 	this->ui->albumCover->setFocus();
 	emit forward();
 }
@@ -336,7 +326,6 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 }
 
 void GUI_SimplePlayer::fileSelectedClicked(bool) {
-	qDebug() << Q_FUNC_INFO;
 	QStringList list =
 			QFileDialog::getOpenFileNames(
 					this,
@@ -429,8 +418,6 @@ void GUI_SimplePlayer::cover_changed(bool success) {
 
 	if (!success)
 		return;
-
-	qDebug() << "Cover changed";
 
 	QString cover_path;
 
@@ -626,7 +613,6 @@ void GUI_SimplePlayer::setupTrayContextMenu() {
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
-	qDebug() << e->key();
 	switch (e->key()) {
 	case Qt::Key_MediaPlay:
 

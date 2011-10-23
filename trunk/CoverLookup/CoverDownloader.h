@@ -103,8 +103,6 @@ QStringList calc_adresses_from_webpage(uint num, QString qwebpage){
 
 	int search_start = 0;
 
-//	qDebug() << qwebpage;
-
 	while(true){
 
 		QString search_string = QString(".jpg");
@@ -130,7 +128,7 @@ QStringList calc_adresses_from_webpage(uint num, QString qwebpage){
 				tmp_idx--;
 			}
 
-			qDebug() << tmp_str;
+
 
 			bool adress_found = (tmp_str.startsWith("http"));
 			if(adress_found){
@@ -199,7 +197,6 @@ size_t get_content( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 		webpage_bytes += size * nmemb;
 	}
 
-	//qDebug() << "Bytes: " << size * nmemb;
 	return size * nmemb;
 }
 
@@ -220,8 +217,6 @@ QStringList call_and_parse_google(QString artist, QString album, int num_adresse
 
 	CURL *curl_find_img = curl_easy_init();
 	if(curl_find_img) {
-
-		//qDebug() << "URL: " << url_adress;
 
 		curl_easy_setopt(curl_find_img, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_URL, url_adress.toLocal8Bit().data());
@@ -247,8 +242,10 @@ QStringList call_and_parse_google(QString artist, QString album, int num_adresse
 		if(time2go <= 0) break;
 	}
 
-	if(webpage_bytes== 0 || !webpage) qDebug() << "URL: " << url_adress;
-	else cover_adresses = calc_adresses_from_webpage(num_adresses, QString(webpage));
+	if(webpage_bytes== 0 || !webpage)
+		qDebug() << Q_FUNC_INFO << "Invalid URL: " << url_adress;
+	else
+		cover_adresses = calc_adresses_from_webpage(num_adresses, QString(webpage));
 
 
 
@@ -270,7 +267,6 @@ QStringList call_and_parse_lfm_artist(QString artist, int num_adresses){
 	CURL *curl_find_img = curl_easy_init();
 	if(curl_find_img) {
 
-		//qDebug() << "URL: " << url_adress;
 		curl_easy_setopt(curl_find_img, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl_find_img, CURLOPT_URL, url_adress.toLocal8Bit().data());
 		curl_easy_setopt(curl_find_img, CURLOPT_FOLLOWLOCATION, 1);
@@ -294,8 +290,11 @@ QStringList call_and_parse_lfm_artist(QString artist, int num_adresses){
 		if(time2go <= 0) break;
 	}
 
-	if(webpage_bytes== 0 || !webpage) qDebug() << "URL: " << url_adress;
-	else cover_adresses = calc_adresses_from_webpage(num_adresses, QString(webpage));
+	if(webpage_bytes== 0 || !webpage)
+		qDebug() <<  Q_FUNC_INFO << "Invalid URL: " << url_adress;
+
+	else
+		cover_adresses = calc_adresses_from_webpage(num_adresses, QString(webpage));
 
 
 
@@ -393,7 +392,6 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 						found = true;
 						clear_image_data();
 						if(vec_images.size() == num_covers_to_fetch) {
-							qDebug() << "vec size = " << vec_images.size();
 							curl_easy_cleanup(curl_save_img);
 							break;
 						}
@@ -436,7 +434,7 @@ void get_alternative_album_covers(QString url, vector<QImage>& images, int num){
 
 	CURL *curl_lfm = curl_easy_init();
 	if(curl_lfm) {
-		qDebug() << "Url = " << url;
+
 		curl_easy_setopt(curl_lfm, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl_lfm, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl_lfm, CURLOPT_FOLLOWLOCATION, 1);
@@ -458,7 +456,9 @@ void get_alternative_album_covers(QString url, vector<QImage>& images, int num){
 		if(time2go <= 0) break;
 	}
 
-	if(webpage_bytes== 0 || !webpage) qDebug() << "BAD URL: " << url;
+	if(webpage_bytes== 0 || !webpage)
+		qDebug() <<  Q_FUNC_INFO << "Invalid URL: " << url;
+
 	else {
 
 		QString qwebpage(webpage);
@@ -471,7 +471,6 @@ void get_alternative_album_covers(QString url, vector<QImage>& images, int num){
 			}
 		}
 
-		qDebug() << "adresses " << adresses;
 		download_covers( adresses, num, images);
 
 	}

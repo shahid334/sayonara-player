@@ -21,7 +21,7 @@ CDirectoryReader::~CDirectoryReader () {
 
 
 void CDirectoryReader::setFilter (const QStringList & filter) {
-    qDebug() << "Setting filter to: " << filter;
+    qDebug() <<  Q_FUNC_INFO << "Setting filter to: " << filter;
     this -> m_filters = filter;
 }
 

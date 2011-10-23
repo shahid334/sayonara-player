@@ -153,13 +153,10 @@ QString Helper::calc_cover_google_adress(QString artist, QString album){
 
 	album = album.toLower();
 
-	qDebug() << "album old = " << album;
-
 	album = album.remove(QRegExp(QString("(\\s)?-?(\\s)?((cd)|(CD)|((d|D)((is)|(IS))(c|C|k|K)))(\\d|(\\s\\d))")));
 	album = album.replace("()", "");
 	album = album.replace("( )", "");
 	album = album.trimmed();
-	qDebug() << "album new = " << album;
 	album = QUrl::toPercentEncoding(album);
 
 

@@ -79,7 +79,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));
-	this->connect(this->ui->listView, SIGNAL(released(const QModelIndex&)), this, SLOT(released(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 
 	this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
@@ -320,7 +319,6 @@ void GUI_Playlist::initGUI(){
 
 // we start the drag action, all lines has to be cleared
 void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
-	qDebug() << Q_FUNC_INFO;
 	int row = this->ui->listView->indexAt(_last_known_drag_pos).row();
 	clear_drag_lines(row);
 }
@@ -329,8 +327,6 @@ void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
 
 // remove the black line under the titles
 void GUI_Playlist::clear_drag_lines(int row){
-
-	qDebug() << Q_FUNC_INFO;
 
 	for(int i=row-3; i<=row+3; i++){
 
@@ -352,7 +348,6 @@ void GUI_Playlist::clear_drag_lines(int row){
 // the drag comes, if there's data --> accept it
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
-	qDebug() << Q_FUNC_INFO;
 	if(event->mimeData() != NULL )
 		event->acceptProposedAction();
 }
@@ -363,7 +358,6 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 // scroll, if neccessary
 // paint line
 void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
-	qDebug() << Q_FUNC_INFO;
 	if( !event->mimeData() ) return;
 
 	QPoint pos = event->pos();
@@ -435,32 +429,22 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 
  	if(inner_drag_drop && (row-1) == _cur_selected_row){
-		qDebug() << "ignore event";
  		event->ignore();
 		inner_drag_drop = false;
 		return;
 	}
 
  	if(inner_drag_drop){
-		qDebug() << "Remove current selected row";
-
-		qDebug() << "Before: cur = " << _cur_selected_row << ", " << row;
 
 		if(_cur_selected_row < row ) {
-			qDebug() << "cur = " << _cur_selected_row << ", " << row;
 			row--;
 		}
 
-		else qDebug() << "After: cur = " << _cur_selected_row << ", " << row;
 		remove_cur_selected_row();
 		inner_drag_drop = false;
 
 	}
 
-
-	qDebug() << "Dropped";
-
-	//qDebug() << event->mimeData()->text();
 	QString text = event->mimeData()->text();
 
 	if(text.startsWith("file://")){
@@ -472,7 +456,6 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 		for(int i=0; i<pathlist.size(); i++){
 			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
-			//qDebug() << "path = " << path;
 			path = path.replace("%20", " ");
 			if(QFile::exists(path)){
 

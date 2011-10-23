@@ -112,7 +112,7 @@ void ID3::setMetaDataOfFile(MetaData& md){
 
 	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 	if(f.isNull()) {
-		qDebug() << "f is null!";
+		qDebug() << Q_FUNC_INFO << " f is null!";
 		return;
 	}
 

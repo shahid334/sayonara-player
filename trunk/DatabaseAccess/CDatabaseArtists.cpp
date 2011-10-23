@@ -173,7 +173,6 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 
 			}
 			catch (QString& ex) {
-				qDebug() << "SQL - Error: getTracksFromDatabase";
 				qDebug() << ex;
 				QSqlError er = this -> m_database.lastError();
 				qDebug() << er.driverText();
@@ -292,7 +291,6 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 
 
 			catch (QString& ex) {
-				qDebug() << "SQL - Error: getTracksFromDatabase";
 				qDebug() << ex;
 				QSqlError er = this -> m_database.lastError();
 				qDebug() << er.driverText();

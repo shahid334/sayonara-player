@@ -232,7 +232,6 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
 			bool insert = true;
 			for(int i=0; i<v_album.size(); i++){
-				//qDebug() << "New album: compare " << v_album[i] << " with " << new_album_name;
 				if(v_album[i].name == new_album_name) {
 					insert = false;
 					break;
@@ -305,9 +304,6 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 					break;
 				}
 			}
-
-			qDebug() << "New album has to be inserted " << album_id;
-
 		}
 
 		_vec_tmp_metadata[track].album_id = album_id;
@@ -340,9 +336,6 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 					break;
 				}
 			}
-
-			qDebug() << "New artist has to be inserted " << artist_id;
-
 		}
 
 		_vec_tmp_metadata[track].artist_id = artist_id;
@@ -375,7 +368,6 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
 
 	for(int i=0; i<new_albums.size(); i++){
-		qDebug() << "New album: " << new_albums[i].name;
 		_db->insertAlbumIntoDatabase(new_albums[i]);
 	}
 

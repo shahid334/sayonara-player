@@ -277,7 +277,6 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
-	qDebug() << "album pressed";
 	int album_id = _v_albums.at(idx.row()).id;
 	_selected_album = album_id;
 	Album album = _v_albums.at(idx.row());
@@ -327,7 +326,6 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 	for(int i=0; i<idx_list.size(); i++){
 		int row = idx_list.at(i).row();
 
-		qDebug() << "Path? " << _v_metadata.at(row).filepath;
 		QStringList metadata = _v_metadata.at(row).toStringList();
 		list2send.push_back(metadata);
 	}
@@ -550,9 +548,6 @@ void GUI_Library_windowed::id3_tags_changed(){
 
 void GUI_Library_windowed::sort_by_column(int col){
 
-
-qDebug() << _sort_albums << "->";
-
 	if(col == 1){
 		if(_sort_albums == "name asc") _sort_albums = "name desc";
 		else _sort_albums = "name asc";
@@ -562,8 +557,6 @@ qDebug() << _sort_albums << "->";
 		if(_sort_albums == "year asc") _sort_albums = "year desc";
 		else _sort_albums = "year asc";
 	}
-
-	qDebug() << "sort" << _sort_albums;
 
 	vector<Album> vec_albums;
 
@@ -682,13 +675,11 @@ void GUI_Library_windowed::info_album(){
 	}
 
 	else{
-		qDebug() << Q_FUNC_INFO << "No cover found...";
+		qDebug() << Q_FUNC_INFO << " No cover found...";
 		MetaData md;
 		md.album_id = _album_of_interest.id;
 		md.album = _album_of_interest.name;
 		md.artist = (num_artists == 1) ? _album_of_interest.artists[0] : "";
-
-		qDebug() << Q_FUNC_INFO << "; " << md.album << ", " << md.artist;
 
 		emit search_cover(md);
 	}
@@ -848,7 +839,6 @@ void GUI_Library_windowed::delete_tracks(){
 
 void GUI_Library_windowed::cover_changed(bool success){
 	if(!_album_msg_box || !success) return;
-	qDebug() << Q_FUNC_INFO << ", " <<_album_msg_box->isVisible() << ", " << Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
 
 	QString cover_path = "";
 	if(_album_of_interest.is_sampler)

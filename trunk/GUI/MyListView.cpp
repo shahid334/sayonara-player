@@ -25,8 +25,6 @@ MyListView::~MyListView() {
 
 void MyListView::mousePressEvent(QMouseEvent* event) {
 
-	qDebug() << Q_FUNC_INFO << " start";
-
 	switch (event->button()) {
 	case Qt::LeftButton:
 
@@ -46,26 +44,16 @@ void MyListView::mousePressEvent(QMouseEvent* event) {
 		_drag = false;
 		break;
 	}
-
-	qDebug() << Q_FUNC_INFO << " end";
 }
 
 void MyListView::mouseMoveEvent(QMouseEvent* event) {
 
-	qDebug() << Q_FUNC_INFO << " start";
-
 	QPoint pos = event->pos();
-
-	qDebug() << "Event pos: "
-			<< abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y());
 
 	if (_qDrag && _drag
 			&& abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y()) > 20) {
 		try {
-			qDebug() << "Exec";
 			_qDrag->exec(Qt::ActionMask);
-
-			qDebug() << "Exec end";
 		}
 
 		catch (...) {
@@ -73,14 +61,9 @@ void MyListView::mouseMoveEvent(QMouseEvent* event) {
 		}
 
 	}
-
-	qDebug() << Q_FUNC_INFO << " end";
-
 }
 
 void MyListView::mouseReleaseEvent(QMouseEvent* event) {
-
-	qDebug() << Q_FUNC_INFO << " start";
 
 	switch (event->button()) {
 	case Qt::LeftButton:
@@ -98,13 +81,9 @@ void MyListView::mouseReleaseEvent(QMouseEvent* event) {
 	default:
 		break;
 	}
-
-	qDebug() << Q_FUNC_INFO << " end";
 }
 
 void MyListView::set_mime_data(QMimeData* data) {
-	qDebug() << Q_FUNC_INFO << " start";
-
 	try {
 		_qDrag = new QDrag(this);
 		_qDrag->setMimeData(data);
@@ -113,11 +92,9 @@ void MyListView::set_mime_data(QMimeData* data) {
 			_drag = true;
 		else
 			_drag = false;
-
-		qDebug() << Q_FUNC_INFO << " end";
 	}
 
 	catch (QString& e) {
-		qDebug() << "ich kanns abfangen";
+		qDebug() << Q_FUNC_INFO << " Mime Data Exception";
 	}
 }

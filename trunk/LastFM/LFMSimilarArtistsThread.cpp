@@ -34,7 +34,6 @@ void LFM_SimilarArtists::run(){
 		url += QString("artist=") + encoded + QString("&");
 		url += QString("api_key=") + _api_key;
 
-		qDebug() << url;
 		QDomDocument doc("similar_artists");
 		lfm_wa_call_lfm_url(url, doc);
 

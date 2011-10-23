@@ -90,7 +90,6 @@ bool lfm_wa_call_session_url(QString url){
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
-	//qDebug() << lfm_webpage << endl;
 	if(lfm_webpage_bytes > 0)
 		return true;
 	else return false;
@@ -117,12 +116,11 @@ bool lfm_wa_call_scrobble_url(string url, string post_data){
 
 
 	if(lfm_webpage_bytes > 0){
-		//qDebug() << lfm_webpage;
 		return true;
 	}
 
 	else {
-		qDebug() << "Webpage = null";
+		qDebug() <<  Q_FUNC_INFO << "Webpage = null";
 		return false;
 	}
 }
@@ -160,7 +158,6 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 	if(lfm_webpage_bytes > 0){
-		//qDebug() << lfm_webpage;
 		QString xmlString = QString(lfm_webpage);
 		doc.setContent(xmlString, false);
 
@@ -174,7 +171,7 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 
 	else {
 		lfm_wa_free_webpage();
-		qDebug() << "webpage is null";
+		qDebug() <<  Q_FUNC_INFO << "webpage is null";
 		curl_easy_cleanup(curl);
 		return false;
 	}

@@ -386,7 +386,6 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
     }
 
     catch (QString& ex) {
-    		qDebug() << "SQL - Error: insert albums into database";
     		qDebug() << ex;
     		QSqlError er = this -> m_database.lastError();
     		qDebug() << er.driverText();

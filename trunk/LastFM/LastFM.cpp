@@ -81,7 +81,7 @@ void LastFM::login(QString username, QString password){
 	bool success = lfm_wa_call_session_url(url);
 
 	if(!success){
-		qDebug() << "Could not connect to " << url;
+		qDebug() << Q_FUNC_INFO << " Could not connect to " << url;
 
 		lfm_wa_free_webpage();
 		return;
@@ -94,11 +94,11 @@ void LastFM::login(QString username, QString password){
 
 	if(_session_key.size() != 0) {
 		_logged_in = true;
-		qDebug() << "Logged in to LastFM";
+		qDebug() << Q_FUNC_INFO <<  "Logged in to LastFM";
 
 	}
 	else{
-		qDebug() << "Session key error";
+		qDebug() << Q_FUNC_INFO <<  "Session key error";
 
 	}
 
@@ -117,7 +117,7 @@ void LastFM::scrobble(const MetaData& metadata){
 	lfm_wa_free_webpage();
 
 	if(!_logged_in){
-		qDebug() << "Not logged in to LastFM!";
+		qDebug() << Q_FUNC_INFO <<  "Not logged in to LastFM!";
 		return;
 	}
 
@@ -165,12 +165,6 @@ void LastFM::scrobble(const MetaData& metadata){
 
 
 	lfm_wa_call_scrobble_url(url.toStdString(), post_data);
-
-	/*if(QString(lfm_webpage).contains("\"ok\""))
-		qDebug() << "scrobbled";
-	else
-		qDebug() << "scrobbling not successful";*/
-
 	lfm_wa_free_webpage();
 
 }
@@ -183,7 +177,7 @@ void LastFM::update_track(const MetaData& metadata){
 	lfm_wa_free_webpage();
 
 	if(!_logged_in){
-		qDebug() << "Not logged in to LastFM!";
+		qDebug() <<  Q_FUNC_INFO << "Not logged in to LastFM!";
 		return;
 	}
 
@@ -267,11 +261,6 @@ void LastFM::get_radio(const QString& str, bool artist){
 	url += _session_key.toStdString();
 	url += string("&station=lastfm://artist/metallica");
 
-
-
-	//qDebug() << "Url" << url.c_str();
-
-
 	CURL* curl = curl_easy_init();
 	if(curl){
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
@@ -289,13 +278,8 @@ void LastFM::get_radio(const QString& str, bool artist){
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 
-	if(lfm_webpage_bytes > 0){
-		//qDebug() << lfm_webpage;
-
-	}
-
-	else {
-		qDebug() << "Webpage = null";
+	if(lfm_webpage_bytes == 0 || lfm_webpage == 0){
+		qDebug() <<  Q_FUNC_INFO << "Webpage is null";
 
 	}
 

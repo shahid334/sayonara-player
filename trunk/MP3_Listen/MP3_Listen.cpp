@@ -164,12 +164,9 @@ void MP3_Listen::changeTrack(const MetaData & metadata) {
 
 void MP3_Listen::total_time_changed(qint64 total_time) {
 
-	qDebug() << Q_FUNC_INFO <<  " total time changed" << total_time / 1000;
-	//if(this->_media_object->hasVideo()){
 	emit total_time_changed_signal(total_time);
 	_meta_data.length_ms = total_time;
 	play();
-	//}
 }
 
 const MetaData & MP3_Listen::getMetaData() const {

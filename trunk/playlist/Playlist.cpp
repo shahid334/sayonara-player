@@ -36,7 +36,6 @@ Playlist::Playlist(QObject * parent) : QObject (parent){
 		foreach(QString trackid, list){
 			if(trackid == "-1" || trackid == "") continue;
 			MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
-			qDebug() << "loading track " << track.title;
 			_v_meta_data.push_back(track);
 		}
 		_cur_play_idx = -1;
@@ -67,7 +66,6 @@ void Playlist::save_playlist_to_storage(){
 void Playlist::ui_loaded(){
 
 	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
-	qDebug() << Q_FUNC_INFO << "load Playlist? " << loadPlaylist;
 
 	if(_v_meta_data.size() > 0 && loadPlaylist)
 		emit playlist_created(_v_meta_data, _cur_play_idx);
@@ -77,8 +75,6 @@ void Playlist::ui_loaded(){
 
 
 void Playlist::createPlaylist(QStringList& pathlist){
-
-	qDebug() << Q_FUNC_INFO;
 
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
@@ -345,12 +341,11 @@ void Playlist::save_playlist(const QString& filename){
 			lines += fputs("\n", file);
 		}
 
-		qDebug() << lines << " lines were written";
 		fclose(file);
 	}
 
 	else{
-		qDebug() << " File could not be openend";
+		qDebug() <<  Q_FUNC_INFO << " File could not be openend; " << filename;
 	}
 }
 
