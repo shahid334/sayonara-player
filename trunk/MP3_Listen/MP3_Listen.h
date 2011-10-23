@@ -125,6 +125,10 @@ public:
         void handle_data(const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & );
         void total_time_changed(qint64);
 
+		void stateChanged(Phonon::State, Phonon::State);
+		void currentSourceChanged(const Phonon::MediaSource&);
+		void metaDataChanged();
+
 
 	public:
         void load_equalizer();

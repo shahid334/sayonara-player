@@ -72,6 +72,13 @@ MP3_Listen::MP3_Listen(QObject * parent) :
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 	connect(_media_object, SIGNAL(totalTimeChanged ( qint64)), this,
 			SLOT(total_time_changed(qint64)));
+	
+	// just for debugging	
+	connect(_media_object, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this,
+		SLOT(stateChanged(Phonon::State, Phonon::State)));
+	connect(_media_object, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
+	connect(_media_object, SIGNAL(currentSourceChanged(const Phonon::MediaSource&)),
+		this, SLOT(currentSourceChanged(const Phonon::MediaSource)));
 
 }
 
@@ -81,7 +88,7 @@ MP3_Listen::~MP3_Listen() {
 }
 
 void MP3_Listen::play() {
-
+	qDebug() << Q_FUNC_INFO << " playing " << _meta_data.filepath;
 	_media_object->play();
 	_state = STATE_PLAY;
 }
@@ -112,7 +119,7 @@ void MP3_Listen::jump(int where, bool percent) {
 }
 
 void MP3_Listen::changeTrack(const QString & filepath) {
-
+qDebug() << Q_FUNC_INFO << " playing " << filepath;
 	_media_object->setCurrentSource(Phonon::MediaSource(filepath));
 	MetaData md = ID3::getMetaDataOfFile(filepath);
 	if (_media_object->hasVideo())
@@ -133,6 +140,7 @@ void MP3_Listen::changeTrack(const QString & filepath) {
 }
 
 void MP3_Listen::changeTrack(const MetaData & metadata) {
+	qDebug() << Q_FUNC_INFO << " playing " << metadata.filepath;
 
 	_media_object->setCurrentSource(Phonon::MediaSource(metadata.filepath));
 	MetaData md = ID3::getMetaDataOfFile(metadata.filepath);
@@ -156,7 +164,7 @@ void MP3_Listen::changeTrack(const MetaData & metadata) {
 
 void MP3_Listen::total_time_changed(qint64 total_time) {
 
-	//qDebug() << "total time changed";
+	qDebug() << Q_FUNC_INFO <<  " total time changed" << total_time / 1000;
 	//if(this->_media_object->hasVideo()){
 	emit total_time_changed_signal(total_time);
 	_meta_data.length_ms = total_time;
@@ -331,4 +339,72 @@ void MP3_Listen::handle_data(
 	 cvWaitKey(0);
 
 	 */
+}
+
+
+
+
+
+void MP3_Listen::stateChanged(Phonon::State newstate, Phonon::State oldstate){
+
+	QString newstate_str;
+	QString oldstate_str;
+	switch(newstate){
+		case Phonon::LoadingState:
+			newstate_str = "Loading State";  break;
+
+			case Phonon::StoppedState:
+			newstate_str = "Stopped State";  break;
+
+			case Phonon::PlayingState:
+			newstate_str = "Playing State";  break;
+
+			case Phonon::BufferingState:
+			newstate_str = "Buffering State";  break;
+
+			case Phonon::PausedState:
+			newstate_str = "Paused State";  break;
+
+			case Phonon::ErrorState:
+				if (_media_object->errorType() == Phonon::FatalError) {
+                 QMessageBox::warning(NULL, tr("Fatal Error"), _media_object->errorString());
+             } else {
+                 QMessageBox::warning(NULL, tr("Error"),
+                 _media_object->errorString());
+             }
+			newstate_str = "Error State";  break;
+		default: break;
+	}
+	switch(oldstate){
+			
+		case Phonon::LoadingState:
+			oldstate_str = "Loading State";  break;
+
+			case Phonon::StoppedState:
+			oldstate_str = "Stopped State";  break;
+
+			case Phonon::PlayingState:
+			oldstate_str = "Playing State";  break;
+
+			case Phonon::BufferingState:
+			oldstate_str = "Buffering State";  break;
+
+			case Phonon::PausedState:
+			oldstate_str = "Paused State";  break;
+
+			case Phonon::ErrorState:
+			oldstate_str = "Error State";  break;
+		default: break;
+	}
+
+	qDebug() << "****State: " << oldstate_str << " -> " << newstate_str;
+}
+void MP3_Listen::currentSourceChanged(const Phonon::MediaSource& source){
+	qDebug() << "****SOURCE CHANGED" << source.fileName();
+	
+	
+}
+
+void MP3_Listen::metaDataChanged(){
+
 }
