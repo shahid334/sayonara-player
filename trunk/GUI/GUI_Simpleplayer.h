@@ -5,7 +5,7 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
-#include "GUI/radio/GUI_RadioWidget.h"
+//#include "GUI/radio/GUI_RadioWidget.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -117,7 +117,7 @@ private:
     GUI_Playlist* 				ui_playlist;
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
-    GUI_RadioWidget*			ui_radio;
+//    GUI_RadioWidget*			ui_radio;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
@@ -154,7 +154,7 @@ public:
     void setPlaylist(GUI_Playlist* playlist);
     void setLibrary(GUI_Library_windowed* library);
     void setEqualizer(GUI_Equalizer* eq);
-    void setRadio(GUI_RadioWidget* radio);
+//    void setRadio(GUI_RadioWidget* radio);
     QWidget* getParentOfPlaylist();
     QWidget* getParentOfLibrary();
     QWidget* getParentOfEqualizer();

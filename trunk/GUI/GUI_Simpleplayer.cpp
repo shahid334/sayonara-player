@@ -478,13 +478,11 @@ void GUI_SimplePlayer::showEqualizer(bool vis) {
 
 
 void GUI_SimplePlayer::showRadio(bool vis){
-
+/*
 
 	if(vis ){
 		ui->action_ViewEqualizer->setChecked(false);
 		ui->action_ViewRadio->setChecked(true);
-		/*ui_eq->setVisible(false);
-		showEqualizer(false);*/
 	}
 
 	QRect rect = this->ui->playlist_widget->geometry();
@@ -513,7 +511,7 @@ void GUI_SimplePlayer::showRadio(bool vis){
 
 
 	//	resizeEvent(0);
-
+*/
 }
 
 void GUI_SimplePlayer::close_eq() {
@@ -676,9 +674,9 @@ void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq) {
 	ui_eq = eq;
 }
 
-void GUI_SimplePlayer::setRadio(GUI_RadioWidget* radio){
+/*void GUI_SimplePlayer::setRadio(GUI_RadioWidget* radio){
 	ui_radio = radio;
-}
+}*/
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 

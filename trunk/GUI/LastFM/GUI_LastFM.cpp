@@ -90,9 +90,9 @@ void GUI_LastFM::show_win(){
         this->ui->tf_username->setText(user);
         this->ui->tf_password->setText(password);
     }
-    else {
+/*    else {
         this->ui->tf_username->setPlaceholderText("Enter Usename");
         this->ui->tf_password->setPlaceholderText("Enter Password");
-    }
+    }*/
     this->show();
 }
