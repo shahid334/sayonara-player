@@ -15,14 +15,10 @@
 #include <iostream>
 
 #include <QObject>
+#include <QList>
 #include <QStringList>
 
-
 using namespace std;
-
-
-#include <phonon/mediaobject.h>
-
 
 
 class Playlist  : public QObject {
@@ -58,7 +54,7 @@ public:
 		void playlist_mode_changed(const Playlist_Mode&);
 		void clear_playlist();
 		void save_playlist(const QString&);
-		void similar_artists_available(const int&);
+		void similar_artists_available(QList<int>&);
 
 		void play();
 		void stop();

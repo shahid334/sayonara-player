@@ -27,6 +27,7 @@
 #include <QCryptographicHash>
 #include <QUrl>
 #include <QtXml>
+#include <QList>
 
 
 using namespace std;
@@ -222,10 +223,10 @@ void LastFM::get_similar_artists(const QString& artistname){
 
 void LastFM::sim_artists_thread_finished(){
 
-	if(_similar_artists_thread->get_chosen_id() != -1){
-		emit similar_artists_available(_similar_artists_thread->get_chosen_id());
-	}
+	QList<int> ids = _similar_artists_thread->get_chosen_ids();
 
+	qDebug() << "Hier 5";
+	emit similar_artists_available(ids);
 }
 
 QString LastFM::get_api_key(){

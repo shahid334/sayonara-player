@@ -8,10 +8,12 @@
 #ifndef LASTFM_H_
 #define LASTFM_H_
 
-#include <HelperStructs/MetaData.h>
-#include <LastFM/LFMSimilarArtistsThread.h>
+#include "HelperStructs/MetaData.h"
+#include "LastFM/LFMSimilarArtistsThread.h"
+
 #include <QObject>
 #include <QString>
+#include <QList>
 #include <string>
 
 
@@ -25,7 +27,7 @@ public:
 	virtual ~LastFM();
 
 	signals:
-		void similar_artists_available(const int&);
+		void similar_artists_available(QList<int>&);
 
 	public slots:
 		void scrobble(const MetaData&);

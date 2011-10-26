@@ -14,13 +14,9 @@
 #include "HelperStructs/PlaylistMode.h"
 
 #include <QFile>
+#include <QList>
 #include <QObject>
-
-#include <phonon/audiooutput.h>
-#include <phonon/seekslider.h>
-#include <phonon/mediaobject.h>
-#include <phonon/volumeslider.h>
-#include <phonon/backendcapabilities.h>
+#include <QDebug>
 
 #include <iostream>
 #include <ctime>
@@ -28,6 +24,7 @@
 using namespace std;
 
 Playlist::Playlist(QObject * parent) : QObject (parent){
+
 	QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
 	QStringList list = saved_playlist.split(',');
 
@@ -375,28 +372,54 @@ void Playlist::id3_tags_changed(vector<MetaData>& new_meta_data){
 }
 
 
-void Playlist::similar_artists_available(const int& artist_id){
+void Playlist::similar_artists_available(QList<int>& artists){
+
+
+
+	if(artists.size() == 0) return;
+
+	Helper::randomize_list(artists);
 
 	srand ( time(NULL) );
-	vector<MetaData> vec_tracks;
-	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist_id, vec_tracks);
 
+
+	int cur_artist_idx = 0;
+	bool is_track_already_in = false;
 	MetaData md;
 
-	for(int rounds=0; rounds < 10; rounds++){
-		int rnd_track = (rand() % vec_tracks.size());
-		md = vec_tracks.at(rnd_track);
-		bool same_track_avail = false;
-		for(uint i=0; i<_v_meta_data.size(); i++){
-			if(_v_meta_data[i].id == md.id){
-				same_track_avail = true;
-				break;
+	do {
+		int artist_id = artists.at(cur_artist_idx);
+		vector<MetaData> vec_tracks;
+		CDatabaseConnector::getInstance()->getAllTracksByArtist(artist_id, vec_tracks);
+		qDebug() << "Try artist " << artist_id;
+
+		// give each artist several trys
+		int max_rounds = vec_tracks.size();
+		for(int rounds=0; rounds < max_rounds; rounds++){
+			is_track_already_in = false;
+			int rnd_track = (rand() % vec_tracks.size());
+			md = vec_tracks.at(rnd_track);
+
+			// search playlist
+			for(uint i=0; i<_v_meta_data.size(); i++){
+				if(_v_meta_data[i].id == md.id){
+					is_track_already_in = true;
+					break;
+				}
 			}
+
+
+
+			if(!is_track_already_in) break;
+
 		}
 
-		if(!same_track_avail) break;
-
+		cur_artist_idx++;
 	}
+
+	while(is_track_already_in && cur_artist_idx < artists.size());
+
+	qDebug() << "Found artist " << md.artist;
 
 	_v_meta_data.push_back(md);
 

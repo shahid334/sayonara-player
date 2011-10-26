@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <QString>
 #include <vector>
+#include <QList>
+#include <ctime>
 
 using namespace std;
 
@@ -168,5 +170,16 @@ namespace Helper{
 	QString calc_search_artist_adress(QString artist);
 
 	QString calc_cover_token(QString artist, QString album);
+
+	template <typename T> void randomize_list(QList<T>& list){
+		srand ( time(NULL) );
+
+		for(int i=0; i<list.size(); i++){
+
+			list.swap(i, rand() % list.size());
+		}
+
+	}
+
 };
 #endif

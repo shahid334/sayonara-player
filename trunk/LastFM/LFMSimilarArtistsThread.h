@@ -10,6 +10,9 @@
 
 #include <QThread>
 #include <QString>
+#include <QList>
+#include <QMap>
+
 
 class LFM_SimilarArtists: public QThread {
 
@@ -19,15 +22,17 @@ public:
 	virtual ~LFM_SimilarArtists();
 
 	void set_artist_name(QString artist_name);
-	int get_chosen_id();
+	QList<int> get_chosen_ids();
 
 protected:
 	void run();
 
 private:
-	QString _api_key;
-	QString _artist_name;
-	int		_chosen_id;
+	QString 		_api_key;
+	QString 		_artist_name;
+	QList<int>		_chosen_ids;
+
+	QMap<QString, int> filter_available_artists(QMap<QString, double> *artists, int idx);
 
 
 

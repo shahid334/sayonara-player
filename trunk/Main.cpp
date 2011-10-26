@@ -7,6 +7,7 @@
 #include <iostream>
 
 
+
 //#include <lastfm.h>
 #include "GUI/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
@@ -31,6 +32,7 @@
 #include <QApplication>
 #include <QFile>
 #include <QDir>
+#include <QList>
 
 #include <string>
 #include <vector>
@@ -155,7 +157,7 @@ int main(int argc, char *argv[]){
 		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed()), 							&ui_library, 	SLOT(id3_tags_changed()));
 		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed(vector<MetaData>&)), 			&playlist, 		SLOT(id3_tags_changed(vector<MetaData>&)));
 
-		app.connect(&lastfm,		SIGNAL(similar_artists_available(const int&)),			&playlist,		SLOT(similar_artists_available(const int&)));
+		app.connect(&lastfm,		SIGNAL(similar_artists_available(QList<int>&)),			&playlist,		SLOT(similar_artists_available(QList<int>&)));
 
 		//app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
 

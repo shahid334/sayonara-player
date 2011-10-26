@@ -18,12 +18,14 @@
 //#include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctime>
 
 #include <QDir>
 #include <QUrl>
 #include <QString>
 #include <QCryptographicHash>
 #include <QDebug>
+#include <QList>
 
 
 
@@ -182,6 +184,7 @@ QString Helper::calc_search_album_adress(QString album){
 }
 
 QString Helper::calc_search_artist_adress(QString artist){
+
 	LastFM lfm;
 	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.search&api_key=");
 	QString api_key = lfm.get_api_key();
@@ -189,3 +192,4 @@ QString Helper::calc_search_artist_adress(QString artist){
 	url += api_key + "&album=" + QUrl::toPercentEncoding(artist);
 	return url;
 }
+

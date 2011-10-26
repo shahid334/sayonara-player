@@ -8,11 +8,13 @@
 #include "LastFM/LFMSimilarArtistsThread.h"
 #include "LastFM/LFMWebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+
 #include <QMap>
 #include <QString>
 #include <QStringList>
 #include <qdom.h>
 #include <QUrl>
+#include <QList>
 
 LFM_SimilarArtists::LFM_SimilarArtists(QString api_key) {
 	_api_key = api_key;
@@ -23,9 +25,38 @@ LFM_SimilarArtists::~LFM_SimilarArtists() {
 	// TODO Auto-generated destructor stub
 }
 
+QMap<QString, int> LFM_SimilarArtists::filter_available_artists(QMap<QString, double> *artists, int idx){
+
+		int start_idx = idx;
+
+		QMap<QString, int> possible_artists;
+		QStringList possible_artist_names;
+
+		while(possible_artists.size() == 0){
+
+			foreach(QString key, artists[idx].keys()){
+
+				int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
+				if(artist_id != -1){
+					possible_artists[key] = artist_id;
+					possible_artist_names.push_back(key);
+
+				}
+			}
+
+			if(possible_artists.size() == 0) {
+				idx = (idx + 1) % 3;
+				if(start_idx == idx) break;
+			}
+			else break;
+		}
+
+		return possible_artists;
+}
+
 void LFM_SimilarArtists::run(){
 
-	_chosen_id = -1;
+
 	 srand ( time(NULL) );
 
 		QString url = 	QString("http://ws.audioscrobbler.com/2.0/?");
@@ -77,6 +108,7 @@ void LFM_SimilarArtists::run(){
 						if(match > 0.7){
 							artist_match[0][artist_name] = match;
 						}
+
 						else if(match > 0.3){
 							artist_match[1][artist_name] = match;
 						}
@@ -94,44 +126,31 @@ void LFM_SimilarArtists::run(){
 
 		doc.clear();
 
+		qDebug() << "Hier";
+
+
+		// get random list where to search the artist in
 		int idx = 0;
 		int rnd = rand() % 1000;
 		if(rnd > 600) idx = 0;			// [500-999]
 		else if(rnd > 250) idx = 1;		// [200-500]
 		else idx = 2;
 
-		int start_idx = idx;
+		qDebug() << "Hier 2";
 
-
-		QMap<QString, int> possible_artists;
-		QStringList possible_artist_names;
-
-		while(possible_artists.size() == 0){
-
-			foreach(QString key, artist_match[idx].keys()){
-
-				int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
-				if(artist_id != -1){
-					possible_artists[key] = artist_id;
-					possible_artist_names.push_back(key);
-
-				}
-			}
-
-			if(possible_artists.size() == 0) {
-				idx = (idx + 1) % 3;
-				if(start_idx == idx) break;
-			}
-			else break;
-		}
+		QMap<QString, int> possible_artists =
+				filter_available_artists(artist_match, idx);
 
 		if(possible_artists.size() == 0) return;
 
-		QString random_artist = possible_artist_names[rand() % possible_artist_names.size()];
+		//QString random_artist = possible_artist_names[rand() % possible_artist_names.size()];
 
 
-		_chosen_id = possible_artists.value(random_artist);
 
+		for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
+			qDebug() << "Push back " << it.value();
+			_chosen_ids.push_back(it.value());
+		}
 }
 
 
@@ -139,6 +158,6 @@ void LFM_SimilarArtists::set_artist_name(QString artist_name){
 	_artist_name = artist_name;
 }
 
-int LFM_SimilarArtists::get_chosen_id(){
-	return _chosen_id;
+QList<int> LFM_SimilarArtists::get_chosen_ids(){
+	return _chosen_ids;
 }
