@@ -1335,8 +1335,8 @@
     </g>
     <g
        id="g4177-0"
-       transform="matrix(1,0,0,-0.59239526,310.73572,1585.8347)"
-       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_up.png"
+       transform="matrix(0,1,0.59239526,0,-6313.1869,8446.2407)"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_right.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
       <path
@@ -1347,6 +1347,23 @@
       <path
          inkscape:connector-curvature="0"
          id="path4157-8-1"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g4177-0-1"
+       transform="matrix(0,1,-0.59239526,0,-5681.0989,8397.3836)"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_left.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-9-7"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-1-9"
          d="m -6244.45,1229.6693 -148.5714,257.1429"
          style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
