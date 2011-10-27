@@ -24,6 +24,8 @@
 #include <QMouseEvent>
 #include <QPixmap>
 #include <QMessageBox>
+#include <QPalette>
+#include <QBrush>
 
 #include <vector>
 
@@ -493,6 +495,21 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->tb_title->setShowGrid(false);
 		this->ui->lv_album->setShowGrid(false);
 		this->ui->lv_artist->setShowGrid(false);
+
+		QPalette p = this->ui->lv_artist->horizontalHeader()->palette();
+		/*QBrush b = p.dark();
+		b.setColor(QColor::fromRgb(0,0,0));*/
+		QColor b = QColor::fromRgb(0,0,0);
+
+		qDebug() << p.color(QPalette::Light);
+		qDebug() << p.color(QPalette::Midlight);
+		qDebug() << p.color(QPalette::Background);
+		qDebug() << p.color(QPalette::Highlight);
+		qDebug() << p.color(QPalette::Button);
+		qDebug() << p.color(QPalette::Window);
+		qDebug() << p.color(QPalette::Shadow);
+		qDebug() << p.color(QPalette::Base);
+
 
 	}
 
