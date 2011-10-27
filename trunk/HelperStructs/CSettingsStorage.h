@@ -82,6 +82,9 @@ private:
     bool			m_loadPlaylist;
     Playlist_Mode 	m_playlistmode;
 
+    // style
+    int				m_style;
+
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
@@ -110,6 +113,9 @@ public:
 
 	void setPlaylistMode(const Playlist_Mode& plmode);
 	Playlist_Mode getPlaylistMode();
+
+	void setPlayerStyle(int);
+	int getPlayerStyle();
 
 };
 

@@ -126,6 +126,16 @@ bool CDatabaseConnector::load_settings(){
 
 	CSettingsStorage::getInstance()->setPlaylistMode(playlist_mode_typed);
 
+
+	QVariant style;
+	int style_int = 0;
+	load_setting("player_style", style);
+
+	style_int = style.toInt();
+	CSettingsStorage::getInstance()->setPlayerStyle(style_int);
+
+
+
 	return true;
 }
 
@@ -133,33 +143,41 @@ bool CDatabaseConnector::store_settings(){
 
 	QString last_fm_username;
 	QString last_fm_password;
-	CSettingsStorage::getInstance()->getLastFMNameAndPW(last_fm_username, last_fm_password);
+	CSettingsStorage* storage = CSettingsStorage::getInstance();
+
+	storage->getLastFMNameAndPW(last_fm_username, last_fm_password);
 	store_setting("LastFM_login", last_fm_username + "," + last_fm_password);
 
-	int last_eq_used = CSettingsStorage::getInstance()->getLastEqualizer();
+	int last_eq_used = storage->getLastEqualizer();
 	store_setting("eq_last", last_eq_used);
 
-	QString custom_equalizer = CSettingsStorage::getInstance()->getCustomEqualizer().toString();
+	QString custom_equalizer = storage->getCustomEqualizer().toString();
 	store_setting("EQ_pr_custom", custom_equalizer);
 
-	int volume = CSettingsStorage::getInstance()->getVolume();
+	int volume = storage->getVolume();
 	store_setting("volume", volume);
 
-	QString library_path = CSettingsStorage::getInstance()->getLibraryPath();
+	QString library_path = storage->getLibraryPath();
 	store_setting("library_path", library_path);
 
-	QSize player_size = CSettingsStorage::getInstance()->getPlayerSize();
+	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
 	store_setting("player_size", str_size);
 
-	QString cur_playlist = CSettingsStorage::getInstance()->getPlaylist();
+	QString cur_playlist = storage->getPlaylist();
 	store_setting("playlist", cur_playlist);
 
-	int load_playlist = CSettingsStorage::getInstance()->getLoadPlaylist();
+	int load_playlist = storage->getLoadPlaylist();
 	store_setting("load_playlist", load_playlist);
 
-	QString playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode().toString();
+	QString playlist_mode = storage->getPlaylistMode().toString();
 	store_setting("playlist_mode", playlist_mode);
+
+	int style = storage->getPlayerStyle();
+	if(style == 0 || style == 1)
+		store_setting("player_style", style);
+	else
+		store_setting("player_style", 0);
 
 	return true;
 }

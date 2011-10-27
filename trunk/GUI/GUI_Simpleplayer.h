@@ -159,6 +159,7 @@ public:
     QWidget* getParentOfLibrary();
     QWidget* getParentOfEqualizer();
     void setVolume(int vol);
+    void setStyle(int);
 
 };
 

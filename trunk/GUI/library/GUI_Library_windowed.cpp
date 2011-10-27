@@ -11,9 +11,12 @@
 #include "GUI/library/LibraryItemDelegateAlbums.h"
 #include "GUI/library/LibraryItemDelegateArtists.h"
 #include "GUI/library/LibraryItemModelArtists.h"
+
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Style.h"
+#include "HelperStructs/CSettingsStorage.h"
+
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
@@ -100,7 +103,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
 
-
+	int style = CSettingsStorage::getInstance()->getPlayerStyle();
+	bool dark = (style == 1);
+	change_skin(dark);
 
 }
 

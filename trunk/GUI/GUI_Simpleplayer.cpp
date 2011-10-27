@@ -36,6 +36,7 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 	bool loadPlaylistChecked = CSettingsStorage::getInstance()->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
 
+
 	this->ui->action_ViewRadio->setVisible(false);
 
 	connect(this->ui->play, SIGNAL(clicked(bool)), this,
@@ -108,7 +109,14 @@ void GUI_SimplePlayer::setVolume(int vol) {
 
 }
 
+void GUI_SimplePlayer::setStyle(int style){
+	bool dark = (style == 1);
+	changeSkin(dark);
+	this->ui->action_Dark->setChecked(dark);
+}
+
 void GUI_SimplePlayer::changeSkin(bool dark) {
+
 	if (dark) {
 
 		this->ui->centralwidget->setStyleSheet(
@@ -128,6 +136,8 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->ui->menuView->setStyleSheet("");
 		m_skinSuffix = QString("");
 	}
+
+	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
 
 	setupVolButton(this->ui->volumeSlider->value());
 	//emit skinChanged(dark);

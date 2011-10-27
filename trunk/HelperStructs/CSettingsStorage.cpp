@@ -161,3 +161,10 @@ Playlist_Mode CSettingsStorage::getPlaylistMode(){
 	return m_playlistmode;
 }
 
+void CSettingsStorage::setPlayerStyle(int style){
+	m_style = style;
+}
+
+int CSettingsStorage::getPlayerStyle(){
+	return m_style;
+}

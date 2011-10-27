@@ -99,6 +99,11 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_cur_playing_row = -1;
 
 	check_for_library_path();
+
+	int style = CSettingsStorage::getInstance()->getPlayerStyle();
+	bool dark = (style == 1);
+	change_skin(dark);
+
 }
 
 void GUI_Playlist::library_path_changed(QString path){

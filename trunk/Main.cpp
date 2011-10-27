@@ -176,6 +176,7 @@ int main(int argc, char *argv[]){
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
 		//player.setRadio(&ui_radio);
+		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
 
 		player.setWindowTitle("Sayonara (0.1)");
