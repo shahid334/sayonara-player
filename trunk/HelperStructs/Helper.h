@@ -8,6 +8,8 @@
 #ifndef _HELPER_H
 #define _HELPER_H
 
+
+
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -180,6 +182,10 @@ namespace Helper{
 		}
 
 	}
+
+
+
+
 
 };
 #endif

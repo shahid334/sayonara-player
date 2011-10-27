@@ -35,6 +35,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     HelperStructs/PlaylistMode.h \
+    HelperStructs/Style.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
@@ -70,6 +71,8 @@ SOURCES += Main.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
     HelperStructs/Helper.cpp \
+    HelperStructs/CSettingsStorage.cpp \
+    HelperStructs/Style.cpp \
     CoverLookup/CoverLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \
     library/CDirectoryReader.cpp \
@@ -86,7 +89,7 @@ SOURCES += Main.cpp \
     LastFM/LastFM.cpp \
     LastFM/LFMSimilarArtistsThread.cpp \
     LastFM/LFMWebAccess.cpp \
-    HelperStructs/CSettingsStorage.cpp \
+    
     
    
 
@@ -132,7 +135,12 @@ additional_files.files += GUI/icons/power_off.png
 additional_files.files += GUI/icons/edit.png
 additional_files.files += GUI/icons/reload.png
 additional_files.files += GUI/icons/dynamic.png
+additional_files.files += GUI/icons/arrow_up.png
+additional_files.files += GUI/icons/arrow_down.png
+additional_files.files += GUI/icons/arrow_right.png
+additional_files.files += GUI/icons/arrow_left.png
 additional_files.files += empty.db
+
 INSTALLS += additional_files
 
 

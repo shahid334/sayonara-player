@@ -11,6 +11,7 @@
 #include "HelperStructs/id3.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Style.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
@@ -136,13 +137,18 @@ GUI_Playlist::~GUI_Playlist() {
 void GUI_Playlist::change_skin(bool dark){
 
 	if(dark){
-		this->ui->lab_totalTime->setStyleSheet("background-color: rgb(56, 56, 56); color: rgb(255, 255, 255);");
-		this->ui->listView->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56);");
+		QString table_style = Style::get_tv_style();
+		QString scrollbar_style = Style::get_v_scrollbar_style();
+
+		this->ui->lab_totalTime->setStyleSheet("background-color: " + Style::get_player_back_color() + ";");
+		this->ui->listView->setStyleSheet(table_style);
+		this->ui->listView->verticalScrollBar()->setStyleSheet(scrollbar_style);
 	}
 
 	else {
 		this->ui->lab_totalTime->setStyleSheet("");
 		this->ui->listView->setStyleSheet("");
+		this->ui->listView->verticalScrollBar()->setStyleSheet("");
 	}
 }
 

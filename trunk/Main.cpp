@@ -23,6 +23,8 @@
 #include "LastFM/LastFM.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
+#include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Style.h"
 #include "LyricLookup/LyricLookup.h"
 
 
@@ -38,7 +40,7 @@
 #include <vector>
 
 #include <iostream>
-#include "HelperStructs/CSettingsStorage.h"
+
 
 using namespace std;
 
@@ -48,6 +50,8 @@ int main(int argc, char *argv[]){
 		if(!QFile::exists(QDir::homePath() + ".Sayonara")){
 			QDir().mkdir(QDir::homePath() + ".Sayonara");
 		}
+
+
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);

@@ -13,6 +13,7 @@
 #include "GUI/library/LibraryItemModelArtists.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Style.h"
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
@@ -26,6 +27,7 @@
 #include <QMessageBox>
 #include <QPalette>
 #include <QBrush>
+#include <QScrollBar>
 
 #include <vector>
 
@@ -488,27 +490,33 @@ void GUI_Library_windowed::change_skin(bool dark){
 
 
 	if(dark){
-		this->ui->lv_album->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56); color: rgb(255,255,255);");
-		this->ui->lv_artist->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56); color: rgb(255,255,255);");
-		this->ui->tb_title->setStyleSheet("background-color: rgb(48, 48, 48);  alternate-background-color: rgb(56,56,56); color: rgb(255,255,255);");
+
+		QString table_style = Style::get_tv_style();
+		QString header_style = Style::get_tv_header_style();
+		QString v_scrollbar_style = Style::get_v_scrollbar_style();
+		QString h_scrollbar_style = Style::get_h_scrollbar_style();
+
+		this->ui->lv_album->setStyleSheet(table_style);
+		this->ui->lv_artist->setStyleSheet(table_style);
+		this->ui->tb_title->setStyleSheet(table_style);
 
 		this->ui->tb_title->setShowGrid(false);
 		this->ui->lv_album->setShowGrid(false);
 		this->ui->lv_artist->setShowGrid(false);
 
-		QPalette p = this->ui->lv_artist->horizontalHeader()->palette();
-		/*QBrush b = p.dark();
-		b.setColor(QColor::fromRgb(0,0,0));*/
-		QColor b = QColor::fromRgb(0,0,0);
+		this->ui->tb_title->horizontalHeader()->setStyleSheet(header_style);
+		this->ui->lv_album->horizontalHeader()->setStyleSheet(header_style);
+		this->ui->lv_artist->horizontalHeader()->setStyleSheet(header_style);
 
-		qDebug() << p.color(QPalette::Light);
-		qDebug() << p.color(QPalette::Midlight);
-		qDebug() << p.color(QPalette::Background);
-		qDebug() << p.color(QPalette::Highlight);
-		qDebug() << p.color(QPalette::Button);
-		qDebug() << p.color(QPalette::Window);
-		qDebug() << p.color(QPalette::Shadow);
-		qDebug() << p.color(QPalette::Base);
+		this->ui->lv_artist->verticalScrollBar()->setStyleSheet(v_scrollbar_style);
+		this->ui->lv_album->verticalScrollBar()->setStyleSheet(v_scrollbar_style);
+		this->ui->tb_title->verticalScrollBar()->setStyleSheet(v_scrollbar_style);
+
+		this->ui->lv_artist->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
+		this->ui->lv_album->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
+		this->ui->tb_title->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
+
+
 
 
 	}
@@ -521,6 +529,18 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->tb_title->setShowGrid(true);
 		this->ui->lv_album->setShowGrid(true);
 		this->ui->lv_artist->setShowGrid(true);
+
+		this->ui->tb_title->horizontalHeader()->setStyleSheet("");
+		this->ui->lv_album->horizontalHeader()->setStyleSheet("");
+		this->ui->lv_artist->horizontalHeader()->setStyleSheet("");
+
+		this->ui->lv_artist->verticalScrollBar()->setStyleSheet("");
+		this->ui->lv_album->verticalScrollBar()->setStyleSheet("");
+		this->ui->tb_title->verticalScrollBar()->setStyleSheet("");
+
+		this->ui->lv_artist->horizontalScrollBar()->setStyleSheet("");
+		this->ui->lv_album->horizontalScrollBar()->setStyleSheet("");
+		this->ui->tb_title->horizontalScrollBar()->setStyleSheet("");
 	}
 }
 

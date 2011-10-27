@@ -2,6 +2,7 @@
 #include "ui_GUI_Simpleplayer.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Style.h"
 
 #include <QDebug>
 
@@ -111,9 +112,11 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	if (dark) {
 
 		this->ui->centralwidget->setStyleSheet(
-				"background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
+				"background-color: " + Style::get_player_back_color() + "; color: rgb(255, 255, 255);");
 		this->setStyleSheet(
-				"background-color: rgb(56, 56, 56);\ncolor: rgb(255, 255, 255);");
+				"background-color: " + Style::get_player_back_color() + "; color: rgb(255, 255, 255);");
+
+		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; color: rgb(255, 255, 255);");
 
 		m_skinSuffix = QString("_dark");
 	}
@@ -122,6 +125,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->ui->centralwidget->setStyleSheet("");
 		this->ui->playlist_widget->setStyleSheet("");
 		this->setStyleSheet("");
+		this->ui->menuView->setStyleSheet("");
 		m_skinSuffix = QString("");
 	}
 
