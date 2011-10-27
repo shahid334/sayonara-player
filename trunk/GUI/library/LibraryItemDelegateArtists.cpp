@@ -53,38 +53,47 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 		else if(index.column() == 1){
 
-			//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
-
 			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
 			Artist artist;
 			artist.fromStringList(list);
 			QString text = "<b>" + artist.name + "</b>";
 			if(text.length() == 0) return;
 
-
 			label.setText(text);
-
 			label.setContentsMargins(2, 2, 0, 2);
-
-			label.resize(_parent->columnWidth(1), 20);
-
+			label.resize(_parent->columnWidth(index.column()), 20);
 		}
 
 		else if(index.column() == 2){
 			QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
 			label.setText(text + " Albums");
 			label.setContentsMargins(2, 2, 0, 2);
+			label.resize(_parent->columnWidth(index.column()), 20);
 		}
 
-		//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 
-		int val = _parent->palette().color(QPalette::Background).lightness();
-		if(val < 128 && !((option.state & QStyle::State_Selected) != 0)){
+		int val = _parent->palette().color(QPalette::Active, QPalette::Background).lightness();
+		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+
+		QColor col_highlight = _parent->palette().color(QPalette::Active, QPalette::Highlight);
+		QColor col_highlight_lighter = _parent->palette().color(QPalette::Active, QPalette::Highlight).light();
+
+		// DARK SKIN AND NOT SELECTED
+
+		if(val < 128 && !is_selected){
 			label.setStyleSheet("background-color: transparent; color: rgb(216, 216, 216);");
 		}
 
-		else label.setStyleSheet("background-color: transparent");
+		// LIGHT SKIN AND NOT SELECTED
+		else if(val >= 128 && !is_selected){
+			label.setStyleSheet("background-color: transparent;");
+		}
+
+		// SELECTED
+		else {
+			label.setStyleSheet("background-color: " + col_highlight.name() + ";");
+		}
 
 		label.render(painter, rect.topLeft() );
 

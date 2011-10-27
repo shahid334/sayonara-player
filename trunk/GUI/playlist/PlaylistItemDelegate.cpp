@@ -78,32 +78,43 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 	QPalette palette = _parent->palette();
 
-	QColor col = palette.color(QPalette::Highlight);
-	QColor col_ia = palette.color(QPalette::Highlight).light();
+	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+	QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
 
 
-	int lightness = _parent->palette().color(QPalette::Background).lightness();
+	int lightness = _parent->palette().color(QPalette::Active, QPalette::Background).lightness();
 
 	if(cur_track || !is_selected){
 
-		if(!cur_track && lightness < 96) _pl_entry->setStyleSheet("background-color: transparent;  color: rgb(216,216,216);");
-		else if(!cur_track && lightness >= 96 ) _pl_entry->setStyleSheet("background-color: transparent; ");
+		// not selected tracks and not current track
+			if(!cur_track && lightness < 96)
+				_pl_entry->setStyleSheet("background-color: transparent;  color: rgb(216,216,216);");
+
+			else if(!cur_track && lightness >= 96 )
+				_pl_entry->setStyleSheet("background-color: transparent; ");
+		// not selected tracks and not current track end
 
 		// cur_track
 		else {
-			//col_ia.name()
 
-			//_pl_entry->setStyleSheet("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(0, 0, 0, 0), stop:1 rgba("+ QString::number(col_ia.red()) +", "+ QString::number(col_ia.green()) +"," + QString::number(col_ia.blue()) + ", " + QString::number(col_ia.alpha()) + "));" );
-			if(col_ia.name() != "#ffffff")_pl_entry->setStyleSheet("background-color: " + col_ia.name() );
+			qDebug() << "Color: " << col_highlight_lighter.name();
 
-			else _pl_entry->setStyleSheet("background-color: " + col.name() );
+			if(col_highlight_lighter.name() != "#ffffff")
+				_pl_entry->setStyleSheet("background-color: " + col_highlight_lighter.name() );
+
+			else
+				_pl_entry->setStyleSheet("background-color: " + col_highlight.name() );
 		}
 
 	}
 
+	// selected && !current
 	else {
-		if(col_ia.name() != "#ffffff") _pl_entry->setStyleSheet(QString("background-color: ") + col.name() + ";");
-		else _pl_entry->setStyleSheet(QString("background-color: transparent;"));
+		if(col_highlight_lighter.name() != "#ffffff")
+			_pl_entry->setStyleSheet(QString("background-color: ") + col_highlight.name() + ";");
+
+		else
+			_pl_entry->setStyleSheet(QString("background-color: transparent;"));
 	}
 
 

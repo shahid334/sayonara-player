@@ -60,35 +60,48 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 			album.fromStringList(list);
 
 			QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
+
 			label.setText(text);
-
 			label.setContentsMargins(2, 2, 0, 2);
-
-			//int text_width = label.fontMetrics().width(text);
-			int height = 20;
-
-			label.resize(_parent->columnWidth(1), height);
+			label.resize(_parent->columnWidth(1), 20);
 
 
 		}
 
 		else{
 
-			label.setContentsMargins(2, 2, 0, 2);
-			QString str  = index.model()->data(index, Qt::WhatsThisRole).toString();
-			if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) str = "Unknown";
 
-			label.setText(str);
+			QString text  = index.model()->data(index, Qt::WhatsThisRole).toString();
+			if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) text = "Unknown";
+
+			label.setText(text);
+			label.setContentsMargins(2, 2, 0, 2);
+			label.resize(_parent->columnWidth(index.column()), 20);
 		}
 
 
 
-		int val = _parent->palette().color(QPalette::Background).lightness();
-		if(val < 128 && !((option.state & QStyle::State_Selected) != 0)){
+		int val = _parent->palette().color(QPalette::Active, QPalette::Background).lightness();
+		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+
+		QColor col_highlight = _parent->palette().color(QPalette::Active, QPalette::Highlight);
+		QColor col_highlight_lighter = _parent->palette().color(QPalette::Active, QPalette::Highlight).light();
+
+		// DARK SKIN AND NOT SELECTED
+
+		if(val < 128 && !is_selected){
 			label.setStyleSheet("background-color: transparent; color: rgb(216, 216, 216);");
 		}
 
-		else label.setStyleSheet("background-color: transparent");
+		// LIGHT SKIN AND NOT SELECTED
+		else if(val >= 128 && !is_selected){
+			label.setStyleSheet("background-color: transparent;");
+		}
+
+		// SELECTED
+		else {
+			label.setStyleSheet("background-color: " + col_highlight.name() + ";");
+		}
 
 		label.render(painter, rect.topLeft() );
 
