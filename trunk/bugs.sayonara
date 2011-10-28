@@ -1,0 +1,21 @@
+Bugs: 
+	dropping into playlist, while loading playlist = off:
+	Playlist is restored nevertheless
+	
+	Make orange selection colors in dark mode
+	
+	
+	Library: 	need track delegate (skin)
+				delete button not supported yet
+				white borders with white skin & no focus
+				Artist #Tracks instead of #Albums
+				
+	Playlist:	cannot drop behind last elem
+	
+	Player: 	Add Orange glow to buttons
+				Change slider in dark skin
+				Dark skin: round buttons
+				
+	ID3-tagger: always first track is considered only
+				
+				
