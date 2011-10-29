@@ -10,6 +10,8 @@
 #include <QSqlError>
 
 
+
+
 void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
 		QSqlQuery q (this -> m_database);

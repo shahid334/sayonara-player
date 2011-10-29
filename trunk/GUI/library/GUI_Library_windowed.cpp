@@ -445,7 +445,7 @@ void GUI_Library_windowed::clear_button_pressed(){
 }
 
 void GUI_Library_windowed::text_line_edited(const QString& search){
-Q_UNUSED(search);
+
 
 	if(search.length() < 3 && _everything_loaded) return;
 
@@ -783,7 +783,7 @@ void GUI_Library_windowed::edit_tracks(){
 	for(int i=0; i<idx_list.size(); i++){
 		int row = idx_list[i].row();
 		if(row < (int) _v_metadata.size()){
-			vec_md.push_back(_v_metadata[i]);
+			vec_md.push_back(_v_metadata[row]);
 		}
 	}
 
@@ -877,6 +877,77 @@ void GUI_Library_windowed::info_tracks(){
 
 void GUI_Library_windowed::delete_tracks(){
 
+	QMessageBox dialog;
+	QString tl = this->ui->le_search->text();
+
+	dialog.setFocus();
+	dialog.setIcon(QMessageBox::Warning);
+	dialog.setText("<b>Warning!</b>");
+	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	dialog.setDefaultButton(QMessageBox::No);
+
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+
+	QStringList file_list;
+	vector<MetaData> vec_md;
+	foreach(QModelIndex idx, idx_list){
+		int row = idx.row();
+		file_list.push_back(_v_metadata.at(row).filepath);
+		vec_md.push_back(_v_metadata.at(row));
+	}
+
+	int num_files_to_delete = idx_list.size();
+	dialog.setInformativeText(	QString("You are about to delete ") +
+								QString::number(num_files_to_delete) +
+								" files!\nContinue?" );
+
+	int answer = dialog.exec();
+	dialog.close();
+
+	int count_failure = 0;
+
+	switch(answer){
+		case QMessageBox::Yes:
+
+			CDatabaseConnector::getInstance()->deleteTracks(vec_md);
+
+			foreach(QString filename, file_list){
+				QFile file(filename);
+				if( !file.remove() )
+					count_failure ++;
+			}
+
+			text_line_edited(tl);
+
+			break;
+
+		case QMessageBox::No:
+			return;
+
+		default: return;
+	}
+
+
+	QMessageBox answerbox;
+	QString text;
+
+	answerbox.setText("Info");
+	answerbox.setIcon(QMessageBox::Information);
+
+	if(!count_failure){
+		text = "All files could be removed";
+	}
+
+	else{
+		text = QString::number(count_failure) +
+				" of " + QString::number(file_list.size()) +
+				" files could not be removed!";
+	}
+
+
+	answerbox.setInformativeText(text);
+	answerbox.exec();
+	answerbox.close();
 }
 
 

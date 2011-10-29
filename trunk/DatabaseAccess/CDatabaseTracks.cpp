@@ -353,6 +353,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 
 
 void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaData>& result){
+
 	if (!this -> m_database.isOpen())
 		this -> m_database.open();
 	MetaData data;
@@ -419,4 +420,49 @@ void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaD
 	}
 
 	//m_database.close();
+}
+
+
+
+int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
+	if (!this -> m_database.isOpen())
+			this -> m_database.open();
+
+	int success = 0;
+
+	m_database.transaction();
+
+	for(int i=0; i<vec_tracks.size(); i++){
+
+		int track_id = vec_tracks[i].id;
+
+		try {
+			QSqlQuery q (this -> m_database);
+			QString querytext = QString("DELETE FROM tracks WHERE trackID = :track_id;");
+
+			q.prepare(querytext);
+			q.bindValue(":track_id", QVariant(track_id));
+
+
+			if (!q.exec()) {
+				throw QString ("SQL - Error: delete track from Database:  cannot execute query");
+			}
+
+			success++;
+		}
+
+		catch (QString& ex) {
+			qDebug() << "SQL - Error: getTracksFromDatabase";
+			qDebug() << ex;
+			QSqlError er = this -> m_database.lastError();
+			qDebug() << er.driverText();
+			qDebug() << er.databaseText();
+			qDebug() << er.databaseText();
+		}
+	}
+
+	m_database.commit();
+
+	return success;
+
 }
