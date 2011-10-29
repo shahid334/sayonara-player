@@ -130,6 +130,9 @@ private:
 
 	bool _everything_loaded;
 
+	void deleteSomeTracks(vector<MetaData>&);
+	void refresh();
+
 };
 
 #endif /* GUI_LIBRARY_WINDOWED_H_ */

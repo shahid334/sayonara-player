@@ -444,6 +444,28 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 }
 
+void GUI_Library_windowed::refresh(){
+
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+	vector<Album> vec_albums;
+	vector<MetaData> vec_tracks;
+	vector<Artist> vec_artists;
+
+
+	db->getTracksFromDatabase(vec_tracks);
+	db->getAllAlbums(vec_albums, _sort_albums);
+	db->getAllArtists(vec_artists);
+	fill_library_artists(vec_artists);
+	fill_library_albums(vec_albums);
+	fill_library_tracks(vec_tracks);
+	_everything_loaded = true;
+
+	if(this->ui->le_search->text().size() > 0)
+		text_line_edited(this->ui->le_search->text());
+
+}
+
 void GUI_Library_windowed::text_line_edited(const QString& search){
 
 
@@ -578,13 +600,7 @@ QString GUI_Library_windowed::getTotalTimeString(Album& album){
 void GUI_Library_windowed::id3_tags_changed(){
 
 
-	if(this->ui->le_search->text().isEmpty()){
-		clear_button_pressed();
-	}
-
-	else{
-		text_line_edited(this->ui->le_search->text());
-	}
+	refresh();
 }
 
 
@@ -736,6 +752,12 @@ void GUI_Library_windowed::info_album(){
 
 void GUI_Library_windowed::delete_album(){
 
+	if(_selected_album == -1) return;
+	QStringList file_list;
+	vector<MetaData> vec_md;
+	CDatabaseConnector::getInstance()->getAllTracksByAlbum(_selected_album, vec_md);
+
+	deleteSomeTracks(vec_md);
 }
 
 
@@ -772,6 +794,11 @@ void GUI_Library_windowed::info_artist(){
 
 
 void GUI_Library_windowed::delete_artist(){
+
+	if(_selected_artist == -1) return;
+	vector<MetaData> vec_md;
+	CDatabaseConnector::getInstance()->getAllTracksByArtist(_selected_artist, vec_md);
+	deleteSomeTracks(vec_md);
 
 }
 
@@ -877,6 +904,22 @@ void GUI_Library_windowed::info_tracks(){
 
 void GUI_Library_windowed::delete_tracks(){
 
+
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+
+	vector<MetaData> vec_md;
+	foreach(QModelIndex idx, idx_list){
+		int row = idx.row();
+		vec_md.push_back(_v_metadata.at(row));
+	}
+
+	deleteSomeTracks(vec_md);
+
+}
+
+
+
+void GUI_Library_windowed::deleteSomeTracks(vector<MetaData>& vec_md){
 	QMessageBox dialog;
 	QString tl = this->ui->le_search->text();
 
@@ -886,17 +929,13 @@ void GUI_Library_windowed::delete_tracks(){
 	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	dialog.setDefaultButton(QMessageBox::No);
 
-	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
-
 	QStringList file_list;
-	vector<MetaData> vec_md;
-	foreach(QModelIndex idx, idx_list){
-		int row = idx.row();
-		file_list.push_back(_v_metadata.at(row).filepath);
-		vec_md.push_back(_v_metadata.at(row));
+	foreach(MetaData md, vec_md){
+		file_list.push_back(md.filepath);
 	}
 
-	int num_files_to_delete = idx_list.size();
+
+	int num_files_to_delete = vec_md.size();
 	dialog.setInformativeText(	QString("You are about to delete ") +
 								QString::number(num_files_to_delete) +
 								" files!\nContinue?" );
@@ -917,7 +956,12 @@ void GUI_Library_windowed::delete_tracks(){
 					count_failure ++;
 			}
 
-			text_line_edited(tl);
+			if(tl.size() > 0)
+				text_line_edited(tl);
+
+			else
+				refresh();
+
 
 			break;
 
@@ -948,6 +992,7 @@ void GUI_Library_windowed::delete_tracks(){
 	answerbox.setInformativeText(text);
 	answerbox.exec();
 	answerbox.close();
+
 }
 
 
@@ -972,6 +1017,4 @@ void GUI_Library_windowed::cover_changed(bool success){
 		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
 	}
-
-
 }
