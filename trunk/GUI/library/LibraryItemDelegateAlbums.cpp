@@ -44,6 +44,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	if(index.column() == 0){
 
 		label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+		label.setContentsMargins(2, 0, 2, 2);
 	}
 
 	else if(index.column() == 1){
@@ -55,6 +56,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
 
 		label.setText(text);
+		label.setContentsMargins(2, 0, 2, 2);
 	}
 
 	else{
@@ -62,6 +64,8 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) text = "Unknown";
 
 		label.setText(text);
+		label.setLayoutDirection(Qt::RightToLeft);
+		label.setContentsMargins(2, 0, 4, 2);
 	}
 
 
@@ -95,7 +99,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
 	}
 
-	label.setContentsMargins(2, 0, 2, 2);
+
 	label.resize(_parent->columnWidth(index.column()), 20);
 	label.setStyleSheet(style);
 	label.render(painter, rect.topLeft() );

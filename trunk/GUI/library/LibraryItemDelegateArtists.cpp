@@ -48,6 +48,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		if(index.column() == 0){
 
 			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+			label.setContentsMargins(2, 0, 2, 2);
 		}
 
 		else if(index.column() == 1){
@@ -57,18 +58,20 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 			artist.fromStringList(list);
 			QString text = "<b>" + artist.name + "</b>";
 			label.setText(text);
+			label.setContentsMargins(2, 0, 2, 2);
 		}
 
 		else if(index.column() == 2){
 			QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
-			label.setText(text + " Albums");
+			label.setText(text + " tracks");
+			label.setLayoutDirection(Qt::RightToLeft);
+			label.setContentsMargins(2, 0, 4, 2);
 		}
 
 
 
 
 		QString style;
-		QString padding = " padding-left: 2px";
 		QString fg_color;
 
 		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
@@ -96,7 +99,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 			style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
 		}
 
-		label.setContentsMargins(2, 0, 2, 2);
+
 		label.resize(_parent->columnWidth(index.column()), 20);
 		label.setStyleSheet(style);
 		label.render(painter, rect.topLeft() );

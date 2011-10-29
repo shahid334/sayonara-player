@@ -85,7 +85,7 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
 
 		 else if (role == Qt::WhatsThisRole && index.column() == 2){
 			 Artist artist = _artist_list.at(index.row());
-			 return artist.num_albums;
+			 return artist.num_songs;
 		 }
 
 		 else
@@ -136,7 +136,7 @@ QVariant LibraryItemModelArtists::headerData ( int section, Qt::Orientation orie
 			 case 0: return QVariant();
 
 			 case 1: return tr("Artist");
-			 case 2: return tr("#Albums");
+			 case 2: return tr("#Tracks");
 			 default:
 				 return QVariant();
 		 }

@@ -106,6 +106,14 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 }
 
+
+// DTOR
+GUI_Playlist::~GUI_Playlist() {
+
+}
+
+
+
 void GUI_Playlist::library_path_changed(QString path){
 	Q_UNUSED(path);
 	check_for_library_path();
@@ -132,11 +140,6 @@ void GUI_Playlist::dummy_pressed(){
 
 
 
-
-// DTOR
-GUI_Playlist::~GUI_Playlist() {
-
-}
 
 // SLOT: switch between dark & light skin
 void GUI_Playlist::change_skin(bool dark){
@@ -391,13 +394,14 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 // scroll, if neccessary
 // paint line
 void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
+
 	if( !event->mimeData() ) return;
 
 	QPoint pos = event->pos();
+	_last_known_drag_pos = pos;
 
 	int scrollbar_pos = this->ui->listView->verticalScrollBar()->sliderPosition();
 	int y_event =  event->pos().y();
-	_last_known_drag_pos = pos;
 	int y_playlist = this->ui->listView->y();
 
 
@@ -412,35 +416,40 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	else if(y_event >= y_playlist + this->ui->listView->height()-10){
 
 		int num_steps = this->ui->listView->height() / 30;
-		QModelIndex idx = this->_pli_model->index(scrollbar_pos+num_steps, 0);
+		QModelIndex idx = _pli_model->index(scrollbar_pos+num_steps, 0);
+
 		if(idx.isValid()) this->ui->listView->scrollTo(idx);
 		if(idx.row() == -1) this->ui->listView->scrollToBottom();
 	}
 
+
+
 	int row = this->ui->listView->indexAt(pos).row();
 
-	if(row == -1) row = _pli_model->rowCount()-1;
+	if(row <= -1) row = _pli_model->rowCount()-1;
 	else if(row > 0) row--;
 
-	int current = row-1;
+	if( row == _cur_selected_row ||
+		row >= _pli_model->rowCount()){
+			return;
+	}
+
+	clear_drag_lines(row);
+
+	if(pos.y() <= y_playlist + 2)
+		return;
 
 
-
-
-	// delete all lines
-	clear_drag_lines(current);
+	QModelIndex cur_idx = _pli_model->index(row, 0);
+	if( !cur_idx.isValid() )
+		return;
 
 
 	// paint line
-	if(	this->_pli_model->index(current, 0).isValid() &&
-		(current) != _cur_selected_row &&
-		current >= 0 &&
-		current < this->_pli_model->rowCount() ){
+	QStringList list = _pli_model->data(cur_idx, Qt::WhatsThisRole).toStringList();
+	list[list.length()-1] = QString("1");
 
-		QStringList list = _pli_model->data(this->_pli_model->index(current, 0), Qt::WhatsThisRole).toStringList();
-		list[list.length()-1] = QString("1");
-		_pli_model->setData(this->_pli_model->index(current, 0), (const QVariant&) list, Qt::EditRole);
-	}
+	_pli_model->setData(cur_idx, (const QVariant&) list, Qt::EditRole);
 
 }
 
@@ -451,8 +460,9 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	if(!event->mimeData()) return;
 
 	QPoint pos = event->pos();
+	QModelIndex idx = this->ui->listView->indexAt(pos);
 
-	int row = this->ui->listView->indexAt(pos).row();
+	int row = idx.row();
 
 	if(row == -1){
 		row = this->_pli_model->rowCount();
@@ -460,14 +470,12 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 	clear_drag_lines(row);
 
-
- 	if(inner_drag_drop && (row-1) == _cur_selected_row){
- 		event->ignore();
-		inner_drag_drop = false;
-		return;
-	}
-
- 	if(inner_drag_drop){
+	if(inner_drag_drop){
+		if( (row-1) == _cur_selected_row){
+			event->ignore();
+			inner_drag_drop = false;
+			return;
+		}
 
 		if(_cur_selected_row < row ) {
 			row--;
@@ -475,8 +483,8 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 		remove_cur_selected_row();
 		inner_drag_drop = false;
-
 	}
+
 
 	QString text = event->mimeData()->text();
 
@@ -521,23 +529,16 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		}
 
 		return;
-	}
-
-
+	} // extern drop end
 
 
 	int event_type = event->mimeData()->property("data_type").toInt();
 	//qDebug() << "event_type = " << event_type;
 	if(row == -1) row = _pli_model->rowCount();
-	else if(row > 0) row--;
-
-
-
-
+//	else if(row > 0) row--;
 
 	QList<QVariant> list = event->mimeData()->property("data").toList();
 	if(row < _cur_playing_row) _cur_playing_row += list.size();
-
 
 	if(event_type == DROP_TYPE_TRACKS){
 		vector<MetaData> v_md4Playlist;
