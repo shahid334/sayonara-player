@@ -28,6 +28,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/library/LibraryItemDelegateAlbums.h \
     GUI/library/LibraryItemDelegateArtists.h \
     GUI/library/LibraryItemModelArtists.h \
+    GUI/library/LibraryItemDelegateTracks.h \
     GUI/tagedit/GUI_TagEdit.h \
     GUI/equalizer/GUI_Equalizer.h \
     GUI/MyTableView.h \
@@ -66,6 +67,7 @@ SOURCES += Main.cpp \
     GUI/library/LibraryItemDelegateAlbums.cpp \
     GUI/library/LibraryItemDelegateArtists.cpp \
     GUI/library/LibraryItemModelArtists.cpp \
+    GUI/library/LibraryItemDelegateTracks.cpp \
     GUI/tagedit/GUI_TagEdit.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     GUI/MyTableView.cpp \

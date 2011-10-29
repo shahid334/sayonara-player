@@ -7,6 +7,7 @@
 
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/library/LibraryItemModelTracks.h"
+#include "GUI/library/LibraryItemDelegateTracks.h"
 #include "GUI/library/LibraryItemModelAlbums.h"
 #include "GUI/library/LibraryItemDelegateAlbums.h"
 #include "GUI/library/LibraryItemDelegateArtists.h"
@@ -57,13 +58,16 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	_everything_loaded = false;
 
-	this->_track_model = new LibraryItemModelTracks();
+
 	this->_album_model = new LibraryItemModelAlbums();
 	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
 	this->_artist_model = new LibraryItemModelArtists();
 	this->_artist_delegate = new LibraryItemDelegateArtists(this->ui->lv_artist);
+	this->_track_model = new LibraryItemModelTracks();
+	this->_track_delegate = new LibraryItemDelegateTracks(this->ui->tb_title);
 
 	this->ui->tb_title->setModel(this->_track_model);
+	this->ui->tb_title->setItemDelegate(this->_track_delegate);
 	this->ui->lv_album->setModel(this->_album_model);
 	this->ui->lv_album->setItemDelegate(this->_album_delegate);
 	this->ui->lv_artist->setModel(this->_artist_model);
@@ -520,11 +524,8 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->lv_artist->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
 		this->ui->lv_album->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
 		this->ui->tb_title->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
-
-
-
-
 	}
+
 
 	else {
 		this->ui->lv_album->setStyleSheet("");

@@ -120,11 +120,11 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	if (dark) {
 
 		this->ui->centralwidget->setStyleSheet(
-				"background-color: " + Style::get_player_back_color() + "; color: rgb(255, 255, 255);");
+				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
 		this->setStyleSheet(
-				"background-color: " + Style::get_player_back_color() + "; color: rgb(255, 255, 255);");
+				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
 
-		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; color: rgb(255, 255, 255);");
+		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; #D8D8D8;");
 
 		m_skinSuffix = QString("_dark");
 	}
@@ -492,7 +492,9 @@ void GUI_SimplePlayer::showEqualizer(bool vis) {
 
 
 void GUI_SimplePlayer::showRadio(bool vis){
-/*
+
+	Q_UNUSED(vis);
+	/*
 
 	if(vis ){
 		ui->action_ViewEqualizer->setChecked(false);

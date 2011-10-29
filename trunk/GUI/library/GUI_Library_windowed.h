@@ -15,6 +15,7 @@
 
 #include <ui_GUI_Library_windowed.h>
 #include <GUI/library/LibraryItemModelTracks.h>
+#include "GUI/library/LibraryItemDelegateTracks.h"
 #include <GUI/library/LibraryItemModelAlbums.h>
 #include <GUI/library/LibraryItemDelegateAlbums.h>
 #include <GUI/library/LibraryItemDelegateArtists.h>
@@ -41,6 +42,7 @@ public:
 private:
 	Ui::Library_windowed* ui;
 	LibraryItemModelTracks* _track_model;
+	LibraryItemDelegateTracks* _track_delegate;
 	LibraryItemModelAlbums* _album_model;
 	LibraryItemDelegateAlbums* _album_delegate;
 	LibraryItemModelArtists* _artist_model;

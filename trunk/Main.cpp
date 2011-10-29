@@ -47,8 +47,8 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-		if(!QFile::exists(QDir::homePath() + ".Sayonara")){
-			QDir().mkdir(QDir::homePath() + ".Sayonara");
+		if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
+			QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 		}
 
 

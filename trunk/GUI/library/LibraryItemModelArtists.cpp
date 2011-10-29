@@ -78,12 +78,9 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
 		 if (index.row() >= _artist_list.size() || index.column() == 0)
 			 return QVariant();
 
-
-
 		 if (role == Qt::WhatsThisRole && index.column() == 1){
 			 Artist artist = _artist_list.at(index.row());
 				return artist.toStringList();
-
 		 }
 
 		 else if (role == Qt::WhatsThisRole && index.column() == 2){

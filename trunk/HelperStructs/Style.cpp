@@ -17,7 +17,7 @@ QString Style::get_player_back_color(){
 }
 
 QString Style::get_tv_style(){
-	return QString("border: 1px solid #282828; background-color: #2C2C2C;  alternate-background-color: #242424; ");
+	return QString("border: 1px solid #282828; background-color: #2C2C2C;  alternate-background-color: #242424; color: #D8D8D8; ");
 
 }
 
@@ -28,7 +28,7 @@ QString Style::get_tv_header_style(){
 			"background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, "  +
 			"stop:0 #323232, stop: 0.5 #2E2E2E, " +
 			"stop: 0.6 #2E2E2E, stop:1 #323232); " +
-			"color: #C0C0C0; " +
+			"color: #D8D8D8; " +
 			"padding-left: 4px; " +
 			"padding-top: 5px; " +
 			"padding-bottom: 5px; " +

@@ -19,6 +19,15 @@
 
 using namespace std;
 
+QString get_fg_color(int val_bg){
+
+	if(val_bg > 128)
+		return  QString(" color: #202020; ");
+
+	else
+		return QString(" color: #D8D8D8 ");
+}
+
 PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
 	// TODO Auto-generated constructor stub
 	//_label_to_Render = new QLabel(parent);
@@ -68,63 +77,52 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	_pl_entry->setTime(Helper::cvtMsecs2TitleLengthString(md.length_ms));
 
 
-	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?  this->_parent->verticalScrollBar()->width()+4 : 4;
+	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
+						this->_parent->verticalScrollBar()->width() + 4 : 4;
 
 	_pl_entry->setMinimumWidth(_parent->width()-offset);
 	_pl_entry->setMaximumWidth(_parent->width()-offset);
+
+	QString style;
+	QString col_fg;
 
 
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 	QPalette palette = _parent->palette();
 
+	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
 	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
 	QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
 
-
-	int lightness = _parent->palette().color(QPalette::Active, QPalette::Background).lightness();
-
-	if(cur_track || !is_selected){
-
-		// not selected tracks and not current track
-			if(!cur_track && lightness < 96)
-				_pl_entry->setStyleSheet("background-color: transparent;  color: rgb(216,216,216);");
-
-			else if(!cur_track && lightness >= 96 )
-				_pl_entry->setStyleSheet("background-color: transparent; ");
-		// not selected tracks and not current track end
-
-		// cur_track
-		else {
-
-			qDebug() << "Color: " << col_highlight_lighter.name();
-
-			if(col_highlight_lighter.name() != "#ffffff")
-				_pl_entry->setStyleSheet("background-color: " + col_highlight_lighter.name() );
-
-			else
-				_pl_entry->setStyleSheet("background-color: " + col_highlight.name() );
-		}
-
-	}
-
-	// selected && !current
-	else {
-		if(col_highlight_lighter.name() != "#ffffff")
-			_pl_entry->setStyleSheet(QString("background-color: ") + col_highlight.name() + ";");
-
-		else
-			_pl_entry->setStyleSheet(QString("background-color: transparent;"));
-	}
+	int highlight_val = col_highlight.lightness();
+	int highlight_lighter_val = col_highlight_lighter.lightness();
+	int background_val = col_background.lightness();
 
 
-	/*_pl_entry->setLine(false);
-	if(insert) _pl_entry->setLine(true);*/
+	if(cur_track)
+		style = QString("background-color: ") +
+				col_highlight_lighter.name() + ";" +
+				get_fg_color(highlight_lighter_val);
+
+
+	else if(!is_selected)
+		style = QString("background-color: transparent;") + get_fg_color(background_val);
+
+
+
+	// standard selected
+	else
+		style = QString("background-color: ") +
+				col_highlight.name() + "; " +
+				get_fg_color(highlight_val);
+
+
 
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
 	if(insert) painter->drawLine(QLine(0, y, _pl_entry->width(), y));
 
-
+	_pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );
 
 

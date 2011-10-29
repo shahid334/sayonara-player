@@ -42,13 +42,12 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		QRect rect(option.rect);
 
 		painter->save();
-		painter->translate(2, 0);
+		painter->translate(0, 0);
+
 
 		if(index.column() == 0){
 
 			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
-			label.resize(20, 20);
-
 		}
 
 		else if(index.column() == 1){
@@ -57,50 +56,52 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 			Artist artist;
 			artist.fromStringList(list);
 			QString text = "<b>" + artist.name + "</b>";
-			if(text.length() == 0) return;
-
 			label.setText(text);
-			label.setContentsMargins(2, 2, 0, 2);
-			label.resize(_parent->columnWidth(index.column()), 20);
 		}
 
 		else if(index.column() == 2){
 			QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
 			label.setText(text + " Albums");
-			label.setContentsMargins(2, 2, 0, 2);
-			label.resize(_parent->columnWidth(index.column()), 20);
 		}
 
 
 
-		int val = _parent->palette().color(QPalette::Active, QPalette::Background).lightness();
+
+		QString style;
+		QString padding = " padding-left: 2px";
+		QString fg_color;
+
 		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
-		QColor col_highlight = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-		QColor col_highlight_lighter = _parent->palette().color(QPalette::Active, QPalette::Highlight).light();
+		QPalette palette = _parent->palette();
+		QColor col_background = palette.color(QPalette::Active, QPalette::Background);
+		QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+		QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
 
-		// DARK SKIN AND NOT SELECTED
+		int val_bg = col_background.lightness();
+		int val_sel = col_highlight.lightness();
 
-		if(val < 128 && !is_selected){
-			label.setStyleSheet("background-color: transparent; color: rgb(216, 216, 216);");
+		if(!is_selected){
+
+			if(val_bg > 128) fg_color = " color: #202020";
+			else fg_color = " color: #D8D8D8; ";
+
+			style = QString("background-color: transparent; ") + fg_color;
 		}
 
-		// LIGHT SKIN AND NOT SELECTED
-		else if(val >= 128 && !is_selected){
-			label.setStyleSheet("background-color: transparent;");
-		}
-
-		// SELECTED
 		else {
-			label.setStyleSheet("background-color: " + col_highlight.name() + ";");
+			if(val_sel > 128) fg_color = " color: #202020";
+			else fg_color = " color: #D8D8D8; ";
+
+			style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
 		}
 
+		label.setContentsMargins(2, 0, 2, 2);
+		label.resize(_parent->columnWidth(index.column()), 20);
+		label.setStyleSheet(style);
 		label.render(painter, rect.topLeft() );
 
-
-
 		painter->restore();
-
 
 }
 

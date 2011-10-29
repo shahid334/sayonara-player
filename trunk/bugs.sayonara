@@ -1,6 +1,6 @@
 Bugs: 
 	dropping into playlist, while loading playlist = off:
-	Playlist is restored nevertheless
+	Playlist is restored nevertheless							DONE
 	
 	Make orange selection colors in dark mode
 	
@@ -17,5 +17,7 @@ Bugs:
 				Dark skin: round buttons
 				
 	ID3-tagger: always first track is considered only
+	
+	Sayonara path: slash missing								DONE
 				
 				

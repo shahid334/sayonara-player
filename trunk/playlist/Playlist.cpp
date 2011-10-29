@@ -25,18 +25,7 @@ using namespace std;
 
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
-	QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
-	QStringList list = saved_playlist.split(',');
 
-	if(list.size() > 0){
-
-		foreach(QString trackid, list){
-			if(trackid == "-1" || trackid == "") continue;
-			MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
-			_v_meta_data.push_back(track);
-		}
-		_cur_play_idx = -1;
-	}
 
 	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
 }
@@ -64,9 +53,23 @@ void Playlist::ui_loaded(){
 
 	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
 
-	if(_v_meta_data.size() > 0 && loadPlaylist)
-		emit playlist_created(_v_meta_data, _cur_play_idx);
+	if( loadPlaylist ){
 
+		QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
+		QStringList list = saved_playlist.split(',');
+
+		if(list.size() > 0){
+
+			foreach(QString trackid, list){
+				if(trackid == "-1" || trackid == "") continue;
+				MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
+				_v_meta_data.push_back(track);
+			}
+			_cur_play_idx = -1;
+		}
+
+		emit playlist_created(_v_meta_data, _cur_play_idx);
+	}
 }
 
 

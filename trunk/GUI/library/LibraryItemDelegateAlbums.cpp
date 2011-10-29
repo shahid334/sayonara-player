@@ -5,7 +5,8 @@
  *      Author: luke
  */
 
-#include "LibraryItemDelegateAlbums.h"
+#include "GUI/library/LibraryItemDelegateAlbums.h"
+
 #include <HelperStructs/MetaData.h>
 #include <QObject>
 #include <QLabel>
@@ -32,84 +33,74 @@ LibraryItemDelegateAlbums::~LibraryItemDelegateAlbums() {
 void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
-	QItemDelegate::paint(painter, option, index);
-
 	if(!index.isValid()) return;
 
-		QLabel label;
+	QLabel label;
+	QRect rect(option.rect);
 
-		QItemDelegate::paint(painter, option, index);
+	painter->save();
+	painter->translate(0, 0);
 
-		QRect rect(option.rect);
+	if(index.column() == 0){
 
-		painter->save();
-		painter->translate(2, 0);
+		label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+	}
 
-		if(index.column() == 0){
+	else if(index.column() == 1){
 
-			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
-			label.resize(20, 20);
-		}
+		QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
+		Album album;
+		album.fromStringList(list);
 
-		else if(index.column() == 1){
+		QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
 
-			//bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+		label.setText(text);
+	}
 
-			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
-			Album album;
-			album.fromStringList(list);
+	else{
+		QString text  = index.model()->data(index, Qt::WhatsThisRole).toString();
+		if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) text = "Unknown";
 
-			QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
-
-			label.setText(text);
-			label.setContentsMargins(2, 2, 0, 2);
-			label.resize(_parent->columnWidth(1), 20);
-
-
-		}
-
-		else{
-
-
-			QString text  = index.model()->data(index, Qt::WhatsThisRole).toString();
-			if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) text = "Unknown";
-
-			label.setText(text);
-			label.setContentsMargins(2, 2, 0, 2);
-			label.resize(_parent->columnWidth(index.column()), 20);
-		}
+		label.setText(text);
+	}
 
 
 
-		int val = _parent->palette().color(QPalette::Active, QPalette::Background).lightness();
-		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+	QString style;
+	QString padding = " padding-left: 2px";
+	QString fg_color;
 
-		QColor col_highlight = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-		QColor col_highlight_lighter = _parent->palette().color(QPalette::Active, QPalette::Highlight).light();
+	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
-		// DARK SKIN AND NOT SELECTED
+	QPalette palette = _parent->palette();
+	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
+	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+	QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
 
-		if(val < 128 && !is_selected){
-			label.setStyleSheet("background-color: transparent; color: rgb(216, 216, 216);");
-		}
+	int val_bg = col_background.lightness();
+	int val_sel = col_highlight.lightness();
 
-		// LIGHT SKIN AND NOT SELECTED
-		else if(val >= 128 && !is_selected){
-			label.setStyleSheet("background-color: transparent;");
-		}
+	if(!is_selected){
 
-		// SELECTED
-		else {
-			label.setStyleSheet("background-color: " + col_highlight.name() + ";");
-		}
+		if(val_bg > 128) fg_color = " color: #202020";
+		else fg_color = " color: #D8D8D8; ";
 
-		label.render(painter, rect.topLeft() );
+		style = QString("background-color: transparent; ") + fg_color;
+	}
 
+	else {
+		if(val_sel > 128) fg_color = " color: #202020";
+		else fg_color = " color: #D8D8D8; ";
 
+		style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
+	}
 
-		painter->restore();
+	label.setContentsMargins(2, 0, 2, 2);
+	label.resize(_parent->columnWidth(index.column()), 20);
+	label.setStyleSheet(style);
+	label.render(painter, rect.topLeft() );
 
-
+	painter->restore();
 }
 
 
