@@ -182,9 +182,6 @@ int main(int argc, char *argv[]){
 		player.setWindowTitle("Sayonara (0.1)");
 		player.show();
 
-
-
-
 		listen.load_equalizer();
 
 		QRect rect = ui_eq.geometry();

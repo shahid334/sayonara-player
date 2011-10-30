@@ -141,7 +141,7 @@ void Playlist::remove_row(int row){
 void Playlist::directoryDropped(const QString& dir, int row){
 
 
-CDirectoryReader reader;
+	CDirectoryReader reader;
 
 	QStringList fileList;
     int num_files = 0;
@@ -150,6 +150,7 @@ CDirectoryReader reader;
     vector<MetaData> vec_md;
 
     foreach(QString filepath, fileList){
+    	qDebug() << filepath;
     	MetaData md = ID3::getMetaDataOfFile(filepath);
     	vec_md.push_back(md);
     }
