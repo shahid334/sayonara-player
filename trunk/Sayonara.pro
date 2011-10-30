@@ -37,11 +37,11 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/Helper.h \
     HelperStructs/PlaylistMode.h \
     HelperStructs/Style.h \
+    HelperStructs/CDirectoryReader.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
     DatabaseAccess/CDatabaseConnector.h \
-    library/CDirectoryReader.h \
     library/CLibraryBase.h \
     library/ReloadThread.h \
     playlist/Playlist.h \
@@ -75,9 +75,9 @@ SOURCES += Main.cpp \
     HelperStructs/Helper.cpp \
     HelperStructs/CSettingsStorage.cpp \
     HelperStructs/Style.cpp \
+    HelperStructs/CDirectoryReader.cpp \
     CoverLookup/CoverLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \
-    library/CDirectoryReader.cpp \
     library/CLibraryBase.cpp \
     library/ReloadThread.cpp \
     DatabaseAccess/CDatabaseConnector.cpp \

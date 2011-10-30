@@ -12,7 +12,7 @@
 #include <QThread>
 #include <QObject>
 #include <QString>
-#include <library/CDirectoryReader.h>
+#include <HelperStructs/CDirectoryReader.h>
 #include "HelperStructs/MetaData.h"
 #include <vector>
 

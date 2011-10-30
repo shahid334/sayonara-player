@@ -6,7 +6,7 @@
  */
 
 #include "library/ReloadThread.h"
-#include "library/CDirectoryReader.h"
+#include "HelperStructs/CDirectoryReader.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"

@@ -12,6 +12,7 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/PlaylistMode.h"
+#include "HelperStructs/CDirectoryReader.h"
 
 #include <QFile>
 #include <QList>
@@ -137,7 +138,25 @@ void Playlist::remove_row(int row){
 
 
 
+void Playlist::directoryDropped(const QString& dir, int row){
 
+
+CDirectoryReader reader;
+
+	QStringList fileList;
+    int num_files = 0;
+    reader.getFilesInsiderDirRecursive(QDir(dir), fileList, num_files);
+
+    vector<MetaData> vec_md;
+
+    foreach(QString filepath, fileList){
+    	MetaData md = ID3::getMetaDataOfFile(filepath);
+    	vec_md.push_back(md);
+    }
+
+    insert_tracks(vec_md, row);
+
+}
 
 void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 

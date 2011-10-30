@@ -56,6 +56,8 @@ public:
 		void save_playlist(const QString&);
 		void similar_artists_available(QList<int>&);
 
+		void directoryDropped(const QString& dir, int row);
+
 		void play();
 		void stop();
 		void forward();

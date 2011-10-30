@@ -5,18 +5,18 @@ Bugs:
 	Make orange selection colors in dark mode
 	
 	
-	Library: 	need track delegate (skin)
-				delete button not supported yet
-				white borders with white skin & no focus
-				Artist #Tracks instead of #Albums
+	Library: 	need track delegate (skin)						DONE
+				delete button not supported yet					DONE
+				white borders with white skin & no focus		DONE
+				Artist #Tracks instead of #Albums				DONE
 				
-	Playlist:	cannot drop behind last elem
+	Playlist:	cannot drop behind last elem					DONE
 	
 	Player: 	Add Orange glow to buttons
 				Change slider in dark skin
 				Dark skin: round buttons
 				
-	ID3-tagger: always first track is considered only
+	ID3-tagger: always first track is considered only			DONE
 	
 	Sayonara path: slash missing								DONE
 				

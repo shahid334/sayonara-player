@@ -510,7 +510,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 					file_paths.push_back(path);
 
 				else if(path.at(path.length()-4) != '.'){ // directory
-					emit directory_dropped(path);
+					emit directory_dropped(path, row);
 					return;
 				}
 			}

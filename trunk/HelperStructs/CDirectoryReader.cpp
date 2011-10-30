@@ -1,4 +1,4 @@
-#include "library/CDirectoryReader.h"
+#include "HelperStructs/CDirectoryReader.h"
 #include <QDebug>
 #include <QDir>
 

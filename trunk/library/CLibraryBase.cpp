@@ -22,6 +22,8 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 }
 
 
+
+
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
     QStringList fileList;

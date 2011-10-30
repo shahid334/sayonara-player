@@ -49,7 +49,7 @@
 			void dropped_artists(const vector<Artist>&, int);
 			void playlist_filled(vector<MetaData>&);
 			void sound_files_dropped(QStringList&);
-			void directory_dropped(const QString&);
+			void directory_dropped(const QString&, int);
 			void row_removed(int);
 			void edit_id3_signal();
 			void search_similar_artists(const QString&);

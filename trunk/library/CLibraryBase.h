@@ -5,7 +5,7 @@
 #include <QThread>
 #include <QFileSystemWatcher>
 #include <library/ReloadThread.h>
-#include "library/CDirectoryReader.h"
+#include "HelperStructs/CDirectoryReader.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 class CLibraryBase : public QObject
