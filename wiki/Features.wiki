@@ -6,13 +6,14 @@
   * Media Library
   * Equalizer (GStreamer, Xine)
   * ID3 Tagger
+  * Dynamic Playlists (using LastFM)
 
 
 = Todo =
-
-  * Dynamic Playlists (using LastFM)
   
-= Maybe... =
-
-  * Audio Converter
-  * IPod integration
+  * LastFM Radio
+  * Extern audio player integration (with optional format conversion)
+  * Internet streams
+  * Lyrics
+  * iTunes / Amarok db integration
+ 
