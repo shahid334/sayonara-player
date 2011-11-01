@@ -520,7 +520,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		if(file_paths.size() > 0){
 			vector<MetaData> v_metadata;
 			for(int i=0; i<file_paths.size(); i++){
-				v_metadata.push_back(ID3::getMetaDataOfFile(file_paths[0]));
+				v_metadata.push_back(ID3::getMetaDataOfFile(file_paths[i]));
 			}
 
 			emit dropped_tracks(v_metadata, row);
