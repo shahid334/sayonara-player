@@ -74,11 +74,11 @@ MP3_Listen::MP3_Listen(QObject * parent) :
 			SLOT(total_time_changed(qint64)));
 	
 	// just for debugging	
-	connect(_media_object, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this,
+	/*connect(_media_object, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this,
 		SLOT(stateChanged(Phonon::State, Phonon::State)));
 	connect(_media_object, SIGNAL(metaDataChanged()), this, SLOT(metaDataChanged()));
 	connect(_media_object, SIGNAL(currentSourceChanged(const Phonon::MediaSource&)),
-		this, SLOT(currentSourceChanged(const Phonon::MediaSource)));
+		this, SLOT(currentSourceChanged(const Phonon::MediaSource)));*/
 
 }
 
