@@ -35,11 +35,7 @@
 #include <phonon/path.h>
 #include <phonon/audiodataoutput.h>
 #include <phonon/videowidget.h>
-/*
- #include <opencv/cv.h>
- #include <opencv/highgui.h>
- #include <opencv/cxcore.h>
- */
+
 
 using namespace std;
 
@@ -88,7 +84,6 @@ MP3_Listen::~MP3_Listen() {
 }
 
 void MP3_Listen::play() {
-	qDebug() << Q_FUNC_INFO << " playing " << _meta_data.filepath;
 	_media_object->play();
 	_state = STATE_PLAY;
 }
@@ -119,7 +114,7 @@ void MP3_Listen::jump(int where, bool percent) {
 }
 
 void MP3_Listen::changeTrack(const QString & filepath) {
-qDebug() << Q_FUNC_INFO << " playing " << filepath;
+
 	_media_object->setCurrentSource(Phonon::MediaSource(filepath));
 	MetaData md = ID3::getMetaDataOfFile(filepath);
 	if (_media_object->hasVideo())
@@ -140,16 +135,13 @@ qDebug() << Q_FUNC_INFO << " playing " << filepath;
 }
 
 void MP3_Listen::changeTrack(const MetaData & metadata) {
-	qDebug() << Q_FUNC_INFO << " playing " << metadata.filepath;
+
 
 	_media_object->setCurrentSource(Phonon::MediaSource(metadata.filepath));
 	MetaData md = ID3::getMetaDataOfFile(metadata.filepath);
 	if (_media_object->hasVideo())
 		md.length_ms = _meta_data.length_ms;
 	_meta_data = md;
-
-	//_media_object->play();
-	//_state = STATE_PLAY;
 
 	_seconds_started = 0;
 	_seconds_now = 0;

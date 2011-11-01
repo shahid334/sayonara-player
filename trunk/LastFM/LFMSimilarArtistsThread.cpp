@@ -148,7 +148,6 @@ void LFM_SimilarArtists::run(){
 
 
 		for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
-			qDebug() << "Push back " << it.value();
 			_chosen_ids.push_back(it.value());
 		}
 }

@@ -225,7 +225,6 @@ void LastFM::sim_artists_thread_finished(){
 
 	QList<int> ids = _similar_artists_thread->get_chosen_ids();
 
-	qDebug() << "Hier 5";
 	emit similar_artists_available(ids);
 }
 
