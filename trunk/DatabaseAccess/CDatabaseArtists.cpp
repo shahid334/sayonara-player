@@ -86,22 +86,24 @@ QString CDatabaseConnector::getArtistName (const int & id) {
 
 
 
-void CDatabaseConnector::getAllArtists(vector<Artist>& result){
+void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString order){
 	 if (!this -> m_database.isOpen())
 				        this -> m_database.open();
 
 		try {
 			QSqlQuery q (this -> m_database);
-			q.prepare(QString("SELECT ") +
-						"artists.artistID, " +
-						"artists.name, " +
-						"group_concat(albums.albumid), " +
-						"count(tracks.trackid) "
-						"FROM Tracks, artists, albums " +
-						"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
-						"GROUP BY artists.artistID, artists.name " +
-						"ORDER BY artists.name;");
+			QString query = QString("SELECT ") +
+					"artists.artistID, " +
+					"artists.name AS name, " +
+					"group_concat(albums.albumid), " +
+					"count(tracks.trackid) AS trackcount "
+					"FROM Tracks, artists, albums " +
+					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
+					"GROUP BY artists.artistID, artists.name " +
+					"ORDER BY " + order + "; ";
+			q.prepare(query);
 
+			qDebug() << query;
 			if (!q.exec()) {
 				throw QString ("SQL - Error: Could not get all artists from database");
 			}
@@ -136,7 +138,7 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result){
 
 
 
-void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result){
+void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result, QString order){
 	 if (!this -> m_database.isOpen())
 					        this -> m_database.open();
 
@@ -144,14 +146,14 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result)
 				QSqlQuery q (this -> m_database);
 				q.prepare(QString("SELECT ") +
 							"artists.artistID, " +
-							"artists.name, " +
+							"artists.name AS name, " +
 							"group_concat(albums.albumid), " +
-							"count(tracks.trackid) "
+							"count(tracks.trackid) AS trackcount "
 							"FROM Tracks, artists, albums " +
 							"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
 							"AND albums.albumid=" + QString::number(album) + " " +
 							"GROUP BY artists.artistID, artists.name " +
-							"ORDER BY artists.name;");
+							"ORDER BY " + order + "; ");
 
 				if (!q.exec()) {
 					throw QString ("SQL - Error: Could not get all artists from database");
@@ -237,7 +239,7 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
 
 
-void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result){
+void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result, QString order){
 
 
 	if (!this -> m_database.isOpen())
@@ -249,24 +251,25 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 				QString query;
 				query = QString("SELECT * FROM ( ") +
 						"SELECT " +
-					"			artists.artistid as artistid, artists.name as name, COUNT(tracks.trackid), group_concat(albums.albumid) " +
+					"			artists.artistid as artistid, artists.name as name, COUNT(tracks.trackid) as trackcount, group_concat(albums.albumid) " +
 					"			FROM albums, artists, tracks " +
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
 					"			GROUP BY artists.artistid, artists.name " +
 					"		UNION " +
 					"		SELECT  " +
-					"			artists.artistid, artists.name, COUNT(tracks.trackid), group_concat(albums.albumid) " +
+					"			artists.artistid, artists.name, COUNT(tracks.trackid) as trackcount, group_concat(albums.albumid) " +
 					"			FROM albums, artists, tracks " +
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
 					"			GROUP BY artists.artistid, artists.name " +
 					"		UNION " +
 					"		SELECT  " +
-					"			artists.artistid, artists.name, COUNT(tracks.trackid), group_concat(albums.albumid) " +
+					"			artists.artistid, artists.name, COUNT(tracks.trackid) as trackcount, group_concat(albums.albumid) " +
 					"			FROM albums, artists, tracks " +
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
 					"			GROUP BY artists.artistid, artists.name " +
 					"	)  " +
-					"	GROUP BY artistid, name ORDER BY name; ";
+					"	GROUP BY artistid, name ORDER BY name " +
+					"	ORDER BY " + order + "; ";
 
 				q.prepare(query);
 				q.bindValue(":search_in_title",QVariant(search));

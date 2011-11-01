@@ -48,6 +48,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	_album_msg_box = 0;
 	this->_sort_albums = "name asc";
+	this->_sort_artists = "name asc";
+	this->_sort_tracks = "artist asc";
 
 	_selected_artist = -1;
 	_selected_album = -1;
@@ -105,7 +107,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
 	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
 
-	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
+	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_albums_by_column(int)));
+	connect(this->ui->lv_artist->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_artists_by_column(int)));
+	connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
@@ -244,6 +248,9 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	_selected_artist = artist_id;
 	_selected_artist_name = _v_artists.at(idx.row()).name;
 
+	_selected_album = -1;
+	_selected_album_name = QString("");
+
 
 	Artist artist = _v_artists.at(idx.row());
 	vector<MetaData> vec_tracks;
@@ -258,14 +265,6 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 		db->getAllTracksByArtist(artist_id, vec_tracks, QString("%") + this->ui->le_search->text() + "%");
 		db->getAllAlbumsByArtist(artist_id, vec_albums, QString("%") + this->ui->le_search->text() + "%");
 	}
-
-
-
-	/*QString infotext = "<b>" + artist.name + "</b>, ";
-	infotext += QString::number(artist.num_albums) + " albums, ";
-	infotext += QString::number(artist.num_songs) + " tracks";
-
-	this->ui->lab_info->setText(infotext);*/
 
 
 	fill_library_albums(vec_albums);
@@ -453,9 +452,9 @@ void GUI_Library_windowed::refresh(){
 	vector<Artist> vec_artists;
 
 
-	db->getTracksFromDatabase(vec_tracks);
+	db->getTracksFromDatabase(vec_tracks, _sort_tracks);
 	db->getAllAlbums(vec_albums, _sort_albums);
-	db->getAllArtists(vec_artists);
+	db->getAllArtists(vec_artists, _sort_artists);
 	fill_library_artists(vec_artists);
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
@@ -482,9 +481,9 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 
 
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		db->getTracksFromDatabase(vec_tracks);
+		db->getTracksFromDatabase(vec_tracks, _sort_tracks);
 		db->getAllAlbums(vec_albums, _sort_albums);
-		db->getAllArtists(vec_artists);
+		db->getAllArtists(vec_artists, _sort_artists);
 		fill_library_artists(vec_artists);
 		fill_library_albums(vec_albums);
 		fill_library_tracks(vec_tracks);
@@ -510,7 +509,7 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 	db->getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums);
 	fill_library_albums(vec_albums);
 
-	db->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists);
+	db->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists, _sort_artists);
 	fill_library_artists(vec_artists);
 
 }
@@ -605,7 +604,7 @@ void GUI_Library_windowed::id3_tags_changed(){
 
 
 
-void GUI_Library_windowed::sort_by_column(int col){
+void GUI_Library_windowed::sort_albums_by_column(int col){
 
 	if(col == 1){
 		if(_sort_albums == "name asc") _sort_albums = "name desc";
@@ -619,26 +618,105 @@ void GUI_Library_windowed::sort_by_column(int col){
 
 	vector<Album> vec_albums;
 
-
-
 	QString searchstring = this->ui->le_search->text();
+
 	if(!searchstring.isEmpty()){
 
 		CDatabaseConnector::getInstance()->getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums, _sort_albums);
-		fill_library_albums(vec_albums);
 	}
 
 	else if(_selected_artist != -1){
 		CDatabaseConnector::getInstance()->getAllAlbumsByArtist(_selected_artist, vec_albums, "", _sort_albums);
-		fill_library_albums(vec_albums);
-
 	}
 
 	else{
 		CDatabaseConnector::getInstance()->getAllAlbums(vec_albums, _sort_albums);
-		fill_library_albums(vec_albums);
 	}
+
+	fill_library_albums(vec_albums);
 }
+
+
+void GUI_Library_windowed::sort_artists_by_column(int col){
+
+	if(col == 1){
+		if(_sort_artists == "name asc") _sort_artists = "name desc";
+		else _sort_artists = "name asc";
+	}
+
+	if(col == 2){
+		if(_sort_artists == "trackcount asc") _sort_artists = "trackcount desc";
+		else _sort_artists = "trackcount asc";
+	}
+
+	vector<Artist> vec_artists;
+
+	QString searchstring = this->ui->le_search->text();
+
+	if(!searchstring.isEmpty()){
+
+		CDatabaseConnector::getInstance()->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists, _sort_artists);
+	}
+
+	else{
+		CDatabaseConnector::getInstance()->getAllArtists(vec_artists, _sort_artists);
+	}
+
+	fill_library_artists(vec_artists);
+}
+
+void GUI_Library_windowed::sort_tracks_by_column(int col){
+
+		if(col == 1){
+			if(_sort_tracks == "title asc") _sort_tracks = "title desc";
+			else _sort_tracks = "title asc";
+		}
+
+		if(col == 2){
+			if(_sort_tracks == "album asc") _sort_tracks = "album desc";
+			else _sort_tracks = "album asc";
+		}
+
+		if(col == 3){
+			if(_sort_tracks == "artist asc") _sort_tracks = "artist desc";
+			else _sort_tracks = "artist asc";
+		}
+
+		vector<MetaData> vec_md;
+
+		QString searchstring = this->ui->le_search->text();
+
+
+		if(!searchstring.isEmpty()){
+			searchstring = QString("%") + searchstring + QString("%");
+			CDatabaseConnector::getInstance()->getAllTracksBySearchString( searchstring, vec_md, _sort_tracks);
+		}
+
+		else if(_selected_album != -1){
+			searchstring = QString("%") + searchstring + QString("%");
+			CDatabaseConnector::getInstance()->getAllTracksByAlbum(_selected_album, vec_md, searchstring, _sort_tracks);
+		}
+
+		else if(_selected_artist != -1){
+			searchstring = QString("%") + searchstring + QString("%");
+			CDatabaseConnector::getInstance()->getAllTracksByArtist(_selected_artist, vec_md, searchstring, _sort_tracks);
+		}
+
+		else{
+			searchstring = QString("%") + searchstring + QString("%");
+			CDatabaseConnector::getInstance()->getTracksFromDatabase(vec_md, _sort_tracks);
+		}
+
+
+		fill_library_tracks(vec_md);
+
+
+
+
+
+}
+
+
 
 
 void GUI_Library_windowed::reloading_library(){

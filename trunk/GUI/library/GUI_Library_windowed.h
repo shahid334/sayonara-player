@@ -40,21 +40,23 @@ public:
 	virtual ~GUI_Library_windowed();
 
 private:
-	Ui::Library_windowed* ui;
-	LibraryItemModelTracks* _track_model;
-	LibraryItemDelegateTracks* _track_delegate;
-	LibraryItemModelAlbums* _album_model;
-	LibraryItemDelegateAlbums* _album_delegate;
-	LibraryItemModelArtists* _artist_model;
-	LibraryItemDelegateArtists* _artist_delegate;
-	vector<MetaData> _v_metadata;
-	vector<Album> _v_albums;
-	vector<Artist> _v_artists;
+	Ui::Library_windowed* 		ui;
 
-	QMenu* _right_click_menu;
-	QAction* _info_action;
-	QAction* _edit_action;
-	QAction* _delete_action;
+	LibraryItemModelTracks* 	_track_model;
+	LibraryItemDelegateTracks* 	_track_delegate;
+	LibraryItemModelAlbums* 	_album_model;
+	LibraryItemDelegateAlbums* 	_album_delegate;
+	LibraryItemModelArtists* 	_artist_model;
+	LibraryItemDelegateArtists* _artist_delegate;
+
+	vector<MetaData> 	_v_metadata;
+	vector<Album> 		_v_albums;
+	vector<Artist> 		_v_artists;
+
+	QMenu* 		_right_click_menu;
+	QAction* 	_info_action;
+	QAction* 	_edit_action;
+	QAction* 	_delete_action;
 
 	QMessageBox* _album_msg_box;
 
@@ -90,7 +92,9 @@ private slots:
 	void track_chosen(const QModelIndex &);
 
 	void text_line_edited(const QString&);
-	void sort_by_column(int col);
+	void sort_albums_by_column(int);
+	void sort_artists_by_column(int);
+	void sort_tracks_by_column(int);
 
 	void reload_library_slot();
 
@@ -119,15 +123,21 @@ public:
 private:
 	QString getTotalTimeString(Album& album);
 	void init_menues();
-	QString _sort_albums;
 
-	int _selected_artist;
+
+
+
+	QString _sort_albums;  /* [name | year] [asc | desc] */
+	QString _sort_artists; /* [name | tracks] [asc | desc] */
+	QString _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
+
+	int 	_selected_artist;
 	QString _selected_artist_name;
-	int _selected_album;
+
+	int 	_selected_album;
 	QString _selected_album_name;
 
 	Album _album_of_interest;
-
 	bool _everything_loaded;
 
 	void deleteSomeTracks(vector<MetaData>&);

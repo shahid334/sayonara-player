@@ -46,11 +46,11 @@ public:
 
 			QString getArtistName (const int & id);
 
-			void getAllArtists(vector<Artist>& result);
+			void getAllArtists(vector<Artist>& result, QString sortorder = "name asc");
 
-			void getAllArtistsByAlbum(int album, vector<Artist>& result);
+			void getAllArtistsByAlbum(int album, vector<Artist>& result, QString sortorder = "name asc");
 
-			void getAllArtistsBySearchString(QString search, vector<Artist>& result);
+			void getAllArtistsBySearchString(QString search, vector<Artist>& result, QString sortorder = "name asc");
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
@@ -80,16 +80,16 @@ public:
 		/*****************
 		 *  TRACKS
 		 *****************/
-			void getAllTracksByAlbum(int album, vector<MetaData>& result, QString filter=QString(""));
+			void getAllTracksByAlbum(int album, vector<MetaData>& result, QString filter=QString(""), QString sort="artist asc");
 
-			void getAllTracksByArtist(int artist, vector<MetaData>& result, QString filter=QString(""));
+			void getAllTracksByArtist(int artist, vector<MetaData>& result, QString filter=QString(""), QString sort="artist asc");
 
-			void getAllTracksBySearchString(QString search, vector<MetaData>& result);
+			void getAllTracksBySearchString(QString search, vector<MetaData>& result, QString sort="artist asc");
 
 			int insertTrackIntoDatabase (const MetaData & data,int artistID, int albumID);
 			int updateTrack(MetaData& data);
 
-			int getTracksFromDatabase (std::vector <MetaData> & returndata);
+			int getTracksFromDatabase (std::vector <MetaData> & returndata, QString sort="artist asc");
 			MetaData getTrackById(int id);
 
 			int deleteTracks(std::vector<MetaData>&);
