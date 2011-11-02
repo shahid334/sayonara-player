@@ -86,7 +86,7 @@ QString CDatabaseConnector::getArtistName (const int & id) {
 
 
 
-void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString order){
+void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString sort_order){
 	 if (!this -> m_database.isOpen())
 				        this -> m_database.open();
 
@@ -99,8 +99,14 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString order){
 					"count(tracks.trackid) AS trackcount "
 					"FROM Tracks, artists, albums " +
 					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
-					"GROUP BY artists.artistID, artists.name " +
-					"ORDER BY " + order + "; ";
+					"GROUP BY artists.artistID, artists.name ";
+
+			if(sort_order == "name asc") query += QString(" ORDER BY artists.name ASC;");
+			else if(sort_order == "name desc") query += QString(" ORDER BY artists.name DESC;");
+			else if(sort_order == "trackcount asc")query += QString(" ORDER BY trackcount ASC;");
+			else if(sort_order == "trackcount desc")query += QString(" ORDER BY trackcount DESC;");
+			else query += QString(";");
+
 			q.prepare(query);
 
 			qDebug() << query;
@@ -239,7 +245,7 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
 
 
-void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result, QString order){
+void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result, QString sort_order){
 
 
 	if (!this -> m_database.isOpen())
@@ -268,8 +274,13 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
 					"			GROUP BY artists.artistid, artists.name " +
 					"	)  " +
-					"	GROUP BY artistid, name ORDER BY name " +
-					"	ORDER BY " + order + "; ";
+					"	GROUP BY artistid, name ";
+
+				if(sort_order == "name asc") query += QString(" ORDER BY artists.name ASC;");
+				else if(sort_order == "name desc") query += QString(" ORDER BY artists.name DESC;");
+				else if(sort_order == "trackcount asc")query += QString(" ORDER BY trackcount ASC;");
+				else if(sort_order == "trackcount desc")query += QString(" ORDER BY trackcount DESC;");
+				else query += QString(";");
 
 				q.prepare(query);
 				q.bindValue(":search_in_title",QVariant(search));

@@ -503,10 +503,10 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 	_everything_loaded = false;
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	db->getAllTracksBySearchString(QString("%") + searchstring + "%", vec_tracks);
+	db->getAllTracksBySearchString(QString("%") + searchstring + "%", vec_tracks, _sort_tracks);
 	fill_library_tracks(vec_tracks);
 
-	db->getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums);
+	db->getAllAlbumsBySearchString(QString("%") + searchstring + "%", vec_albums, _sort_albums);
 	fill_library_albums(vec_albums);
 
 	db->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists, _sort_artists);
