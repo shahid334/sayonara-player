@@ -101,8 +101,8 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString sort_orde
 					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
 					"GROUP BY artists.artistID, artists.name ";
 
-			if(sort_order == "name asc") query += QString(" ORDER BY artists.name ASC;");
-			else if(sort_order == "name desc") query += QString(" ORDER BY artists.name DESC;");
+			if(sort_order == "name asc") query += QString(" ORDER BY name ASC;");
+			else if(sort_order == "name desc") query += QString(" ORDER BY name DESC;");
 			else if(sort_order == "trackcount asc")query += QString(" ORDER BY trackcount ASC;");
 			else if(sort_order == "trackcount desc")query += QString(" ORDER BY trackcount DESC;");
 			else query += QString(";");
@@ -276,8 +276,8 @@ void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Arti
 					"	)  " +
 					"	GROUP BY artistid, name ";
 
-				if(sort_order == "name asc") query += QString(" ORDER BY artists.name ASC;");
-				else if(sort_order == "name desc") query += QString(" ORDER BY artists.name DESC;");
+				if(sort_order == "name asc") query += QString(" ORDER BY name ASC;");
+				else if(sort_order == "name desc") query += QString(" ORDER BY name DESC;");
 				else if(sort_order == "trackcount asc")query += QString(" ORDER BY trackcount ASC;");
 				else if(sort_order == "trackcount desc")query += QString(" ORDER BY trackcount DESC;");
 				else query += QString(";");
