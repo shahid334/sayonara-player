@@ -40,6 +40,7 @@ struct EQ_Setting{
 		settings.clear();
 
 		QStringList list = str.split(',');
+		if(list.size() == 0) return;
 		name = list.at(0);
 
 		for(int i=1; i<list.size(); i++){
