@@ -78,9 +78,9 @@ int main(int argc, char *argv[]){
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
 
-
+		qDebug() << "Cover";
 		CoverLookup* cover = CoverLookup::getInstance();
-
+		qDebug() << "application";
         QApplication app (argc, argv);
 
         app.setApplicationName("Sayonara");

@@ -70,7 +70,7 @@ void ReloadThread::run(){
 #endif
 
 
-#pragma omp parallel for
+
 	for(int i=0; i<fileList.size(); i++){
 
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
