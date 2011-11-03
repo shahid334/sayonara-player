@@ -73,7 +73,10 @@ void ReloadThread::run(){
 
 	for(int i=0; i<fileList.size(); i++){
 
+		qDebug() << fileList.at(i);
+
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
+
 		v_md.push_back(md);
 		emit reloading_library( (i * 100) / fileList.size() );
 	}
