@@ -69,6 +69,7 @@ public slots:
 
 
 
+
 signals:
     /**
       * Signals emitted after pressing buttons

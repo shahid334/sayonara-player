@@ -89,20 +89,29 @@ int main(int argc, char *argv[]){
         GUI_SimplePlayer 	player;
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-
+        qDebug() << "GUI playlist";
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist());
+        qDebug() << "playlist";
         Playlist 				playlist(&app);
+        qDebug() << "GUI library";
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
+        qDebug() << "library";
         CLibraryBase 			library;
+        qDebug() << "Backend";
         MP3_Listen 				listen (&app);
+        qDebug() << "LastFM";
         LastFM					lastfm;
+        qDebug() << "GUI LastFM";
         GUI_LastFM				ui_lastfm;
+        qDebug() << "Equalizer";
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
        // GUI_RadioWidget			ui_radio(player.getParentOfEqualizer());
+        qDebug() << "ID3 Tags";
         GUI_TagEdit				ui_tagedit;
 
        // GUI_Alternate_Covers ui_alternate_covers;
 
+        qDebug() << "connections";
 
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(fileSelected(QStringList &)),		&playlist, 	SLOT(createPlaylist(QStringList&)));
@@ -183,20 +192,22 @@ int main(int argc, char *argv[]){
 		app.connect(&ui_tagedit, 	SIGNAL(id3_tags_changed(vector<MetaData>&)), 			&playlist, 		SLOT(id3_tags_changed(vector<MetaData>&)));
 
 		app.connect(&lastfm,		SIGNAL(similar_artists_available(QList<int>&)),			&playlist,		SLOT(similar_artists_available(QList<int>&)));
+		app.connect(&lastfm,		SIGNAL(last_fm_logged_in(bool)),						&ui_playlist,	SLOT(last_fm_logged_in(bool)));
 
 		//app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
 
+		qDebug() << "Playlist loaded";
 		playlist.ui_loaded();
 
 
-
+		qDebug() << "setup player";
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
 		//player.setRadio(&ui_radio);
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
-
+		qDebug() << "volume";
 		int vol = set->getVolume();
         player.setVolume(vol);
         listen.setVolume(vol);

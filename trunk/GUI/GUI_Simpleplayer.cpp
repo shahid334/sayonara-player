@@ -791,3 +791,5 @@ void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){
 	Q_UNUSED(b);
 	CSettingsStorage::getInstance()->setLoadPlaylist(ui->action_load_playlist->isChecked());
 }
+
+

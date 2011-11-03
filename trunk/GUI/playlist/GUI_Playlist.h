@@ -84,6 +84,7 @@
 			void track_changed(int);
 			void change_skin(bool);
 			void library_path_changed(QString);
+			void last_fm_logged_in(bool);
 
 
 

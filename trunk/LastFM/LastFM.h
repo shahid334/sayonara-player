@@ -49,6 +49,7 @@ public:
 
 	signals:
 		void similar_artists_available(QList<int>&);
+		void last_fm_logged_in(bool);
 
 	public slots:
 		void scrobble(const MetaData&);

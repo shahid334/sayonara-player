@@ -651,3 +651,8 @@ void GUI_Playlist::keyPressEvent(QKeyEvent* e){
 void GUI_Playlist::edit_id3_but_pressed(){
 	emit edit_id3_signal();
 }
+
+void GUI_Playlist::last_fm_logged_in(bool success){
+
+	this->ui->btn_dynamic->setEnabled(success);
+}

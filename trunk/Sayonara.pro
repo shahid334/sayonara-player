@@ -7,8 +7,7 @@ QT += xml
 QT += sql
 TEMPLATE = app
 TARGET = sayonara
-CONFIG += debug
-QMAKE_CXXFLAGS += -O2
+CXX_FLAGS += -O2
 
 
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup

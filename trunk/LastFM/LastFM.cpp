@@ -116,11 +116,13 @@ void LastFM::login(QString username, QString password){
 
 	if(_session_key.size() != 0) {
 		_logged_in = true;
+		emit last_fm_logged_in(true);
 		qDebug() << Q_FUNC_INFO <<  "Logged in to LastFM";
 
 	}
 	else{
 		qDebug() << Q_FUNC_INFO <<  "Session key error";
+		emit last_fm_logged_in(false);
 
 	}
 
