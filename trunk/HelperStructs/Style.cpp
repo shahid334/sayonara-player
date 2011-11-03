@@ -105,7 +105,29 @@ QString Style::get_v_scrollbar_style(){
 }
 
 
+QString Style::get_btn_style(int intensity){
+	QString style =
+		QString("QPushButton") +
+		"{"
+		"color: white; "
+		"border-width: 0px; "
+		"border-radius: 7; "
+		"padding: 1px; "
+		"padding-left: 1px; "
+		"padding-right: 1px; "
+		"}"
+		"QPushButton:checked"
+		"{"
+		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0." + QString::number(intensity) + " rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
+		"}"
+		"QPushButton:pressed"
+		"{"
+		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
+		"}";
 
+
+	return style;
+}
 
 QString Style::get_h_scrollbar_style(){
 

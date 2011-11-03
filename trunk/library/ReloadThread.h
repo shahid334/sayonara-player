@@ -20,6 +20,12 @@ using namespace std;
 
 class ReloadThread : public QThread {
 
+Q_OBJECT
+
+signals:
+
+	void reloading_library(int);
+
 
 public:
 	ReloadThread();
@@ -27,13 +33,14 @@ public:
 
 	void set_lib_path(QString library_path);
 	void get_metadata(vector<MetaData>&);
+	int getState();
 
 
 protected:
     void run();
 
 private:
-
+    int		_state;
     QString _library_path;
     vector<MetaData> _v_metadata;
 };

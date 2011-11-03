@@ -151,12 +151,29 @@ void GUI_Playlist::change_skin(bool dark){
 		this->ui->lab_totalTime->setStyleSheet("background-color: " + Style::get_player_back_color() + ";");
 		this->ui->listView->setStyleSheet(table_style);
 		this->ui->listView->verticalScrollBar()->setStyleSheet(scrollbar_style);
+
+
+		QString btn_style = Style::get_btn_style(6);
+
+		this->ui->btn_append->setStyleSheet(btn_style);
+		this->ui->btn_clear->setStyleSheet(btn_style);
+		this->ui->btn_dynamic->setStyleSheet(btn_style);
+		this->ui->btn_repAll->setStyleSheet(btn_style);
+		this->ui->btn_shuffle->setStyleSheet(btn_style);
 	}
 
 	else {
 		this->ui->lab_totalTime->setStyleSheet("");
 		this->ui->listView->setStyleSheet("");
 		this->ui->listView->verticalScrollBar()->setStyleSheet("");
+
+		QString btn_style = Style::get_btn_style(7);
+
+		this->ui->btn_append->setStyleSheet(btn_style);
+		this->ui->btn_clear->setStyleSheet(btn_style);
+		this->ui->btn_dynamic->setStyleSheet(btn_style);
+		this->ui->btn_repAll->setStyleSheet(btn_style);
+		this->ui->btn_shuffle->setStyleSheet(btn_style);
 	}
 }
 
@@ -324,6 +341,8 @@ void GUI_Playlist::track_changed(int new_row){
 
 // private SLOT: rep1, repAll, shuffle or append has changed
 void GUI_Playlist::playlist_mode_changed_slot(){
+
+	this->parentWidget()->setFocus();
 
 	_playlist_mode.rep1 = this->ui->btn_rep1->isChecked();
 	_playlist_mode.repAll = this->ui->btn_repAll->isChecked();

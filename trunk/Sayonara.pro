@@ -12,7 +12,8 @@ CONFIG += debug
 
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
 INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
-LIBS += -L/usr/lib -lphonon -lcurl -ltag
+LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp
+
 
 # Input
 HEADERS += MP3_Listen/MP3_Listen.h \

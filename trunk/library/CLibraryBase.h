@@ -25,7 +25,8 @@ signals:
 
     void library_should_be_reloaded();
     void reloading_library_finished();
-    void reloading_library();
+    void reloading_library(int);
+
 
 public slots:
     void baseDirSelected (const QString & baseDir);
@@ -43,6 +44,7 @@ public slots:
 private slots:
    void reload_thread_finished();
    void file_system_changed(const QString& path);
+   void library_reloading_state_slot(int);
 
 
 private:

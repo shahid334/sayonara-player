@@ -13,22 +13,24 @@
 #include <QStringList>
 #include <QDebug>
 #include <vector>
+#include <omp.h>
 
 using namespace std;
 
 ReloadThread::ReloadThread() {
-
+	_state = -1;
 }
 
 ReloadThread::~ReloadThread() {
 
 }
 
+int ReloadThread::getState(){
+	return _state;
+}
+
 
 void ReloadThread::run(){
-
-
-
 
 
 	QStringList fileList;
@@ -38,18 +40,25 @@ void ReloadThread::run(){
 	reader.getFilesInsiderDirRecursive(QDir(_library_path), fileList, num_files);
 
 	vector<MetaData> v_md;
+	_state = -1;
+
+#ifdef OMP_H
+	qDebug() << "OpenMP active";
+#else
+	qDebug() << "OpenMP inactive";
+#endif
 
 
+#pragma omp parallel for
 	for(int i=0; i<fileList.size(); i++){
 
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
 		v_md.push_back(md);
+		emit reloading_library( (i * 100) / fileList.size() );
 	}
 
 	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
 	_v_metadata = v_md;
-
-
 }
 
 void ReloadThread::set_lib_path(QString library_path){

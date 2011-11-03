@@ -19,6 +19,8 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
+	connect(m_thread, SIGNAL(reloading_library(int)), this, SLOT(library_reloading_state_slot(int)));
+
 }
 
 
@@ -66,9 +68,6 @@ void CLibraryBase::reloadLibrary(){
 	m_thread->set_lib_path(m_library_path);
 	m_thread->start();
 
-	emit reloading_library();
-
-
 
 }
 
@@ -81,6 +80,10 @@ void CLibraryBase::reload_thread_finished(){
 	getAllArtists();
 
 	emit reloading_library_finished();
+}
+
+void CLibraryBase::library_reloading_state_slot(int percent){
+	emit reloading_library(percent);
 }
 
 

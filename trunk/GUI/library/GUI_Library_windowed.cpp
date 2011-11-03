@@ -518,7 +518,6 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 void GUI_Library_windowed::change_skin(bool dark){
 
 
-
 	if(dark){
 
 		QString table_style = Style::get_tv_style();
@@ -529,6 +528,8 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->lv_album->setStyleSheet(table_style);
 		this->ui->lv_artist->setStyleSheet(table_style);
 		this->ui->tb_title->setStyleSheet(table_style);
+
+		this->ui->btn_clear->setStyleSheet(Style::get_btn_style());
 
 		this->ui->tb_title->setShowGrid(false);
 		this->ui->lv_album->setShowGrid(false);
@@ -667,20 +668,43 @@ void GUI_Library_windowed::sort_artists_by_column(int col){
 
 void GUI_Library_windowed::sort_tracks_by_column(int col){
 
-		if(col == 1){
+		if(col == COL_TRACK_NUM){
+			if(_sort_tracks == "track asc") _sort_tracks = "track desc";
+			else _sort_tracks = "track asc";
+		}
+
+		else if(col == COL_TITLE){
 			if(_sort_tracks == "title asc") _sort_tracks = "title desc";
 			else _sort_tracks = "title asc";
 		}
 
-		if(col == 2){
+		else if(col == COL_ALBUM){
 			if(_sort_tracks == "album asc") _sort_tracks = "album desc";
 			else _sort_tracks = "album asc";
 		}
 
-		if(col == 3){
+		else if(col == COL_ARTIST){
 			if(_sort_tracks == "artist asc") _sort_tracks = "artist desc";
 			else _sort_tracks = "artist asc";
 		}
+
+		else if(col == COL_YEAR){
+			if(_sort_tracks == "year asc") _sort_tracks = "year desc";
+			else _sort_tracks = "year asc";
+		}
+
+		else if(col == COL_LENGTH){
+			if(_sort_tracks == "length asc") _sort_tracks = "length desc";
+			else _sort_tracks = "length asc";
+		}
+
+
+		else if(col == COL_BITRATE){
+			if(_sort_tracks == "bitrate asc") _sort_tracks = "bitrate desc";
+			else _sort_tracks = "bitrate asc";
+		}
+
+
 
 		vector<MetaData> vec_md;
 
@@ -719,8 +743,10 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 
 
 
-void GUI_Library_windowed::reloading_library(){
-	this->ui->label_2->setText("Music Library (Reloading...)");
+void GUI_Library_windowed::reloading_library(int percent){
+	if(percent < 0)
+		this->ui->label_2->setText("Music Library (Reloading...)");
+	else this->ui->label_2->setText("Music Library (Reloading: " + QString::number(percent) + QString("\%)") );
 }
 
 void GUI_Library_windowed::reloading_library_finished(){

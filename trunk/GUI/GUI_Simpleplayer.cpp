@@ -36,16 +36,15 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 	bool loadPlaylistChecked = CSettingsStorage::getInstance()->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
 
-
 	this->ui->action_ViewRadio->setVisible(false);
 
-	connect(this->ui->play, SIGNAL(clicked(bool)), this,
+	connect(this->ui->btn_play, SIGNAL(clicked(bool)), this,
 			SLOT(playClicked(bool)));
-	connect(this->ui->fw, SIGNAL(clicked(bool)), this,
+	connect(this->ui->btn_fw, SIGNAL(clicked(bool)), this,
 			SLOT(forwardClicked(bool)));
-	connect(this->ui->bw, SIGNAL(clicked(bool)), this,
+	connect(this->ui->btn_bw, SIGNAL(clicked(bool)), this,
 			SLOT(backwardClicked(bool)));
-	connect(this->ui->stop, SIGNAL(clicked(bool)), this,
+	connect(this->ui->btn_stop, SIGNAL(clicked(bool)), this,
 			SLOT(stopClicked(bool)));
 
 
@@ -126,6 +125,14 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; #D8D8D8;");
 
+		QString style = Style::get_btn_style(8);
+		this->ui->btn_mute->setStyleSheet(style);
+		this->ui->btn_play->setStyleSheet(style);
+		this->ui->btn_fw->setStyleSheet(style);
+		this->ui->btn_bw->setStyleSheet(style);
+		this->ui->btn_stop->setStyleSheet(style);
+
+
 		m_skinSuffix = QString("_dark");
 	}
 
@@ -135,6 +142,13 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->setStyleSheet("");
 		this->ui->menuView->setStyleSheet("");
 		m_skinSuffix = QString("");
+
+		this->ui->btn_mute->setStyleSheet("");
+		this->ui->btn_play->setStyleSheet("");
+		this->ui->btn_fw->setStyleSheet("");
+		this->ui->btn_bw->setStyleSheet("");
+		this->ui->btn_stop->setStyleSheet("");
+
 	}
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
@@ -211,7 +225,7 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & in) {
 
 	QString lengthString = getLengthString(in.length_ms);
 
-	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 	this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 	this->m_playAction->setText("Pause");
 
@@ -277,7 +291,7 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 void GUI_SimplePlayer::playClicked(bool) {
 
 	if (this->m_playing == true) {
-		this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setText("Play");
 		emit pause();
@@ -287,7 +301,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 	}
 
 	else {
-		this->ui->play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setText("Pause");
 		emit play();
@@ -300,7 +314,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 
 void GUI_SimplePlayer::stopClicked(bool) {
 
-	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
 	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 	m_playAction->setText("Play");
@@ -719,10 +733,10 @@ void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
 void GUI_SimplePlayer::initGUI() {
 
 	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
-	this->ui->play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	this->ui->stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
-	this->ui->fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
-	this->ui->bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	this->ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
+	this->ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
+	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 
 }
 

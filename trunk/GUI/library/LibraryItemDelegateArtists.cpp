@@ -31,19 +31,14 @@ LibraryItemDelegateArtists::~LibraryItemDelegateArtists() {
 void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
-	QItemDelegate::paint(painter, option, index);
-
 	if(!index.isValid()) return;
 
 		QLabel label;
-
-		QItemDelegate::paint(painter, option, index);
 
 		QRect rect(option.rect);
 
 		painter->save();
 		painter->translate(0, 0);
-
 
 		if(index.column() == 0){
 
@@ -67,8 +62,6 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 			label.setLayoutDirection(Qt::RightToLeft);
 			label.setContentsMargins(2, 0, 4, 2);
 		}
-
-
 
 
 		QString style;

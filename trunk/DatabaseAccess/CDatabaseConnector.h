@@ -129,6 +129,9 @@ private:
     QSqlDatabase m_database;
 
 
+    QString append_track_sort_string(QString querytext, QString sort);
+
+
 
 
 };

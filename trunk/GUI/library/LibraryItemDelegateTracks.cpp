@@ -34,25 +34,19 @@ LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
 
 void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-	//QItemDelegate::paint(painter, option, index);
+
 
 	if(!index.isValid()) return;
 
 		painter->save();
 		painter->translate(0, 0);
 
-
 		QRect 	rect(option.rect);
 		QLabel 	label;
 
 		QString	text = QString("<b>") + index.model()->data(index, Qt::DisplayRole).toString() + QString("</b>");
 
-		label.setText(text);
-		label.setMinimumHeight(20);
-
-
 		QString style;
-		QString padding = " padding-left: 2px";
 		QString fg_color;
 
 		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
@@ -80,10 +74,16 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 			style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
 		}
 
+
+		label.setText(text);
 		label.setContentsMargins(2, 0, 2, 2);
-		label.resize(_parent->columnWidth(index.column()), 20);
+		label.setMinimumHeight(20);
+		label.setMinimumWidth(_parent->columnWidth(index.column()));
 		label.setStyleSheet(style);
 		label.render(painter, rect.topLeft() );
+
+		if(index.column() == 0 || index.column() > 3)
+			label.setLayoutDirection(Qt::RightToLeft);
 
 		painter->restore();
 

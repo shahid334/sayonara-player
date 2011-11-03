@@ -76,7 +76,7 @@ public slots:
 	void fill_library_albums(vector<Album>&);
 	void fill_library_artists(vector<Artist>&);
 	void id3_tags_changed();
-	void reloading_library();
+	void reloading_library(int);
 	void reloading_library_finished();
 	void library_should_be_reloaded();
 	void cover_changed(bool);
@@ -123,8 +123,6 @@ public:
 private:
 	QString getTotalTimeString(Album& album);
 	void init_menues();
-
-
 
 
 	QString _sort_albums;  /* [name | year] [asc | desc] */

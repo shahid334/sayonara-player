@@ -22,6 +22,7 @@ namespace Style{
 	QString get_v_scrollbar_style();
 	QString get_h_scrollbar_style();
 	QString get_tv_header_style();
+	QString get_btn_style(int intensity=7);
 };
 
 

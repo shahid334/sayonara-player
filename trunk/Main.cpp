@@ -137,7 +137,7 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(allAlbumsLoaded(vector<Album>&)), 				&ui_library, 	SLOT(fill_library_albums(vector<Album>&)));
         app.connect(&library, SIGNAL(allArtistsLoaded(vector<Artist>&)), 			&ui_library, 	SLOT(fill_library_artists(vector<Artist>&)));
         app.connect(&library, SIGNAL(reloading_library_finished()), 				&ui_library, 	SLOT(reloading_library_finished()));
-        app.connect(&library, SIGNAL(reloading_library()), 							&ui_library, 	SLOT(reloading_library()));
+        app.connect(&library, SIGNAL(reloading_library(int)),						&ui_library, 	SLOT(reloading_library(int)));
         app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
 
         app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
@@ -168,15 +168,18 @@ int main(int argc, char *argv[]){
 		playlist.ui_loaded();
 
 
-		int vol = set->getVolume();
-        player.setVolume(vol);
-        listen.setVolume(vol);
 
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.setEqualizer(&ui_eq);
 		//player.setRadio(&ui_radio);
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
+
+
+		int vol = set->getVolume();
+        player.setVolume(vol);
+        listen.setVolume(vol);
+
 
 
 		player.setWindowTitle("Sayonara (0.1)");
