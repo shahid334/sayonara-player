@@ -72,7 +72,6 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
     q.prepare("select artistID from artists where name == ?;");
     q.addBindValue(QVariant(artist));
     if (!q.exec()) {
-        qDebug()<< q.lastQuery() << artistID << " " << q.executedQuery();
         throw QString ("SQL - Error: get Artist ID" + artist);
     }
     if (q.next()) {
@@ -95,9 +94,6 @@ QString CDatabaseConnector::getArtistName (const int & id) {
         if (q.next()) {
             a = q.value(0).toString().trimmed();
         }
-    }
-    else {
-        qDebug() << "For some reason there is a -1 input of " << Q_FUNC_INFO;
     }
     return a;
 }
@@ -129,7 +125,6 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString sort_orde
 
 			q.prepare(query);
 
-			qDebug() << query;
 			if (!q.exec()) {
 				throw QString ("SQL - Error: Could not get all artists from database");
 			}
