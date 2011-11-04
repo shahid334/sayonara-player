@@ -183,7 +183,7 @@ void Playlist::directoryDropped(const QString& dir, int row){
 void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	vector<MetaData> new_vec;
-	if(row < _cur_play_idx && _cur_play_idx != -1)
+	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
 

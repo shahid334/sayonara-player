@@ -81,6 +81,8 @@ private:
 
 	QMessageBox* _album_msg_box;
 
+	QString		_cur_searchstring;
+
 signals:
 	void artist_changed_signal(int);
 	void album_changed_signal(int);

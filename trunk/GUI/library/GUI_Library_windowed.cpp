@@ -488,10 +488,12 @@ void GUI_Library_windowed::refresh(){
 
 void GUI_Library_windowed::text_line_edited(const QString& search){
 
-
-	if(search.length() < 3 && _everything_loaded) return;
-
 	QString searchstring = this->ui->le_search->text();
+
+
+	if( (search.length() < 3 && _everything_loaded) ) return;
+
+
 
 
 	vector<Album> vec_albums;
@@ -532,6 +534,8 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 
 	db->getAllArtistsBySearchString(QString("%") + searchstring + "%", vec_artists, _sort_artists);
 	fill_library_artists(vec_artists);
+
+	_cur_searchstring = searchstring;
 
 }
 
