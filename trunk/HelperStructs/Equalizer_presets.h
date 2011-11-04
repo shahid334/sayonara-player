@@ -32,21 +32,27 @@ struct EQ_Setting{
 	QString name;
 
 	EQ_Setting(){
+		name = "";
 
+		for(int i=0; i<10; i++){
+			settings.push_back(0);
+		}
 	}
 	
 	void parseFromString(QString str){
-
-		settings.clear();
 
 		QStringList list = str.split(',');
 		if(list.size() == 0) {
 			return;
 		}
-		name = list.at(0);
 
-		for(int i=1; i<list.size(); i++){
-			settings.append(list.at(i).toDouble());
+		name = list.at(0);
+		list.pop_front();
+
+		for(int i=0; i<list.size(); i++){
+
+			if( i == settings.size() ) break;
+			settings[i] = list.at(i).toDouble();
 		}
 	}
 

@@ -26,7 +26,7 @@
 #include "HelperStructs/Style.h"
 
 #include <QDebug>
-
+#include <QMessageBox>
 #include <QFileDialog>
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
@@ -764,7 +764,7 @@ void GUI_SimplePlayer::initGUI() {
 void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 	Q_UNUSED(b);
 
-	QString start_dir = getenv("$HOME");
+	QString start_dir = QDir::homePath();
 	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
 	if (old_dir != "")
 		start_dir = old_dir;
@@ -774,6 +774,22 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 	if (dir != "") {
 		emit libpath_changed(dir);
 		CSettingsStorage::getInstance()->setLibraryPath(dir);
+
+		QMessageBox dialog;
+
+		dialog.setFocus();
+		dialog.setIcon(QMessageBox::Question);
+		dialog.setText("<b>Library</b>");
+		dialog.setInformativeText("Do you want to reload the Library?");
+		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		dialog.setDefaultButton(QMessageBox::Yes);
+
+		int answer = dialog.exec();
+		if(answer == QMessageBox::Yes)
+			emit reloadLibrary();
+
+		dialog.close();
+
 	}
 
 }

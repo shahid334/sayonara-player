@@ -58,6 +58,7 @@ void ReloadThread::run(){
 
 	CDirectoryReader reader;
 	int num_files = 0;
+	emit reloading_library( -1 );
 	reader.getFilesInsiderDirRecursive(QDir(_library_path), fileList, num_files);
 
 	vector<MetaData> v_md;
