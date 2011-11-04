@@ -105,6 +105,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
+	this->connect(this->ui->listView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(released(const QModelIndex &)));
 
 	this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
@@ -284,12 +285,16 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 	mime->setProperty("data", list2send);
 
 	this->ui->listView->set_mime_data(mime);
-	inner_drag_drop = true;
+	if(index.row() == _cur_selected_row)
+		inner_drag_drop = true;
 
+	else inner_drag_drop = false;
 
 }
 
 void GUI_Playlist::released(const QModelIndex& index){
+	inner_drag_drop = false;
+
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
 		this->ui->listView->set_mime_data(NULL);
@@ -435,7 +440,10 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 // paint line
 void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 
-	if( !event->mimeData() ) return;
+	if( !event->mimeData() )  {
+		qDebug() << "mime data not available";
+		return;
+	}
 
 	QPoint pos = event->pos();
 	_last_known_drag_pos = pos;
@@ -469,21 +477,24 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	if(row <= -1) row = _pli_model->rowCount()-1;
 	else if(row > 0) row--;
 
-	if( row == _cur_selected_row ||
+	if( (row == _cur_selected_row && inner_drag_drop) ||
 		row >= _pli_model->rowCount()){
 			return;
 	}
 
 	clear_drag_lines(row);
 
-	if(pos.y() <= y_playlist + 2)
+	if(pos.y() <= y_playlist + 2){
 		return;
+	}
+
 
 
 	QModelIndex cur_idx = _pli_model->index(row, 0);
-	if( !cur_idx.isValid() )
-		return;
+	if( !cur_idx.isValid() ){
 
+		return;
+	}
 
 	// paint line
 	QStringList list = _pli_model->data(cur_idx, Qt::WhatsThisRole).toStringList();
@@ -511,9 +522,10 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	clear_drag_lines(row);
 
 	if(inner_drag_drop){
+		inner_drag_drop = false;
 		if( (row-1) == _cur_selected_row){
 			event->ignore();
-			inner_drag_drop = false;
+
 			return;
 		}
 
@@ -522,8 +534,8 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		}
 
 		remove_cur_selected_row();
-		inner_drag_drop = false;
 	}
+
 
 
 	QString text = event->mimeData()->text();
@@ -573,9 +585,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 
 	int event_type = event->mimeData()->property("data_type").toInt();
-	//qDebug() << "event_type = " << event_type;
 	if(row == -1) row = _pli_model->rowCount();
-//	else if(row > 0) row--;
 
 	QList<QVariant> list = event->mimeData()->property("data").toList();
 	if(row < _cur_playing_row) _cur_playing_row += list.size();

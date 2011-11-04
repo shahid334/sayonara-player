@@ -131,9 +131,6 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 
 			throw QString ("SQL - Error: insertTrackIntoDatabase " + data.filepath);
 		}
-		else{
-			qDebug() << "updated (" << q.numRowsAffected() << ")";
-		}
 	}
 		  catch (QString& ex) {
 		        qDebug() << "SQL - Error: getTracksFromDatabase";

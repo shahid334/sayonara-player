@@ -141,10 +141,15 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
-	if(insert) painter->drawLine(QLine(0, y, _pl_entry->width(), y));
+
+
 
 	_pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );
+
+	if(insert) {
+			painter->drawLine(QLine(0, y, _pl_entry->width(), y));
+		}
 
 
 	painter->restore();

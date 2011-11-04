@@ -21,7 +21,7 @@
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
-//#include "HelperStructs/Equalizer_presets.h"
+
 #include <vector>
 #include <QFile>
 #include <QDebug>
@@ -30,7 +30,6 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
-//#include <CSettingsStorage.h>
 
 
 
