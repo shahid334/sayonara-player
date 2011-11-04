@@ -100,6 +100,9 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 		label.setContentsMargins(2, 0, 2, 2);
 		label.setMinimumHeight(20);
 		label.setMinimumWidth(_parent->columnWidth(index.column()));
+		label.resize(_parent->columnWidth(index.column()), 20);
+
+
 		label.setStyleSheet(style);
 		label.render(painter, rect.topLeft() );
 
