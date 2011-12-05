@@ -91,6 +91,8 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 			SLOT(showAgain(QSystemTrayIcon::ActivationReason)));
 	connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
 			SLOT(showEqualizer(bool)));
+	connect(this->ui->action_ImportFolder, SIGNAL(triggered(bool)), this,
+			SLOT(importFolderClicked()));
 
 	/*connect(this->ui->action_ViewRadio, SIGNAL(toggled(bool)), this,
 				SLOT(showRadio(bool)));*/
@@ -749,6 +751,20 @@ void GUI_SimplePlayer::lastFMClicked(bool b) {
 void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
 	Q_UNUSED(b);
 	emit reloadLibrary();
+}
+
+void GUI_SimplePlayer::importFolderClicked(bool b){
+	Q_UNUSED(b);
+
+	QString dir = QFileDialog::getExistingDirectory(this, "Open Directory",
+				QDir::homePath(), QFileDialog::ShowDirsOnly);
+
+	if(dir.size() > 0){
+		qDebug() << "import " << dir;
+		emit importDirectory(dir);
+	}
+
+
 }
 
 void GUI_SimplePlayer::initGUI() {

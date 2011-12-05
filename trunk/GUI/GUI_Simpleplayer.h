@@ -92,6 +92,7 @@ signals:
     void windowResized(const QSize&);
     void setupLastFM();
     void reloadLibrary();
+    void importDirectory(QString);
     void libpath_changed(QString);
     void fetch_all_covers();
 
@@ -115,8 +116,9 @@ private slots:
     void album_cover_pressed();
 
     void changeSkin(bool);
-    void lastFMClicked(bool = true);
-    void reloadLibraryClicked(bool = true);
+    void lastFMClicked(bool b = true);
+    void reloadLibraryClicked(bool b = true);
+    void importFolderClicked(bool b = true);
 
     void setLibraryPathClicked(bool = true);
     void fetch_all_covers_clicked(bool b = true);

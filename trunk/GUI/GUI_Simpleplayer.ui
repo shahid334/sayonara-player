@@ -725,6 +725,7 @@
     <addaction name="action_OpenFolder"/>
     <addaction name="separator"/>
     <addaction name="action_reloadLibrary"/>
+    <addaction name="action_ImportFolder"/>
     <addaction name="action_fetch_all_covers"/>
     <addaction name="separator"/>
     <addaction name="action_Close"/>
@@ -832,6 +833,11 @@
    </property>
    <property name="toolTip">
     <string>Load playlist on startup</string>
+   </property>
+  </action>
+  <action name="action_ImportFolder">
+   <property name="text">
+    <string>Import folder</string>
    </property>
   </action>
  </widget>

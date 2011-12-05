@@ -60,6 +60,7 @@ public slots:
     void getTracksByAlbum(int);
     void getTracksByArtist(int);
     void reloadLibrary();
+    void importDirectory(QString);
     void setLibraryPath(QString);
 
 private slots:
