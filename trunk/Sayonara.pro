@@ -10,6 +10,7 @@ TARGET = sayonara
 CXX_FLAGS += -O2
 
 
+
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
 INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
 LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp

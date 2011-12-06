@@ -193,6 +193,8 @@ namespace Helper{
 	QString calc_search_artist_adress(QString artist);
 
 	QString calc_cover_token(QString artist, QString album);
+	QStringList get_soundfile_extensions();
+	bool is_soundfile(QString filename);
 
 	template <typename T> void randomize_list(QList<T>& list){
 		srand ( time(NULL) );

@@ -20,6 +20,7 @@
 
 
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Helper.h"
 #include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/id3.h"
@@ -59,30 +60,53 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 }
 
+
+
 void CLibraryBase::importDirectory(QString directory){
 
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
 	QDir lib_dir(m_library_path);
 	QDir src_dir(directory);
-	QStringList sub_dirs = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-	sub_dirs.push_front("");
+
+	QDir tmp_src_dir = src_dir;
+	tmp_src_dir.cdUp();
+
+	QString rel_src_path = tmp_src_dir.relativeFilePath(directory) + QDir::separator();
+	QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
+
+	content.push_front("");
 
 	bool ret;
-	QString dialogText = QInputDialog::getItem(NULL, "Select subfolder", "Select a subfolder from your library", sub_dirs, 0, true, &ret);
+	QString dialogText = QInputDialog::getItem(
+			NULL, 															// parent
+			"Select subfolder", 											// header
+			"Select a subfolder from your library\n\n" + m_library_path, 	// text
+			content, 														// dst (QStringList)
+			0, 																// current index
+			true, 															// editable
+			&ret);															// everything ok?
 
-	if(!ret) return;
+	if(!ret) {
+		QMessageBox msgBox(QMessageBox::Warning, "Error", "Sorry, there are problems with that folder." );
+		msgBox.exec();
+		return;
+	}
 
+	// remove first slash
+	if(	dialogText.size() > 0 &&
+		(dialogText.at(0) == '/' || dialogText.at(0) == '\\')){
 
-	if(dialogText.size() > 0 && (dialogText.at(0) == '/' || dialogText.at(0) == '\\')){
 		dialogText.remove(0, 1);
 	}
 
-	if(dialogText.size() > 0 && (dialogText.at(dialogText.size()-1) == '/' || dialogText.at(dialogText.size()-1) == '\\')){
+	// remove last slash
+	if( dialogText.size() > 0 &&
+		(dialogText.at(dialogText.size()-1) == '/' || dialogText.at(dialogText.size()-1) == '\\')){
+
 		dialogText.remove(dialogText.size(), 1);
 	}
 
-	QString rel_src_path =src_dir.relativeFilePath(directory);
 
 	QString target_path = m_library_path +
 			QDir::separator() +
@@ -92,69 +116,61 @@ void CLibraryBase::importDirectory(QString directory){
 
 	qDebug() << "Copy to " << target_path;
 
-	bool success = true;
-	QDir target_dir;
-	if(!QFile::exists(target_path)){
+	QStringList files2copy;
+	files2copy.push_back(src_dir.absolutePath());
+	int num_files = 1;
 
-		success = target_dir.mkpath(target_path);
+	for(int i=0; i<num_files; i++){
 
-	}
+		// fetch all entries of a file, maybe it's a directory
+		QDir sub_dir(files2copy[i]);
+		QStringList sub_files = sub_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotDot | QDir::NoDot, QDir::DirsFirst);
 
-	if(!success) return;
+		// it is a directory
+		if(sub_files.size() != 0){
 
-		QStringList filesInRoot = src_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotDot | QDir::NoDot, QDir::DirsFirst);
-		QStringList files2copy;
-		for(int i=0; i<filesInRoot.size(); i++)
-			files2copy.push_back( src_dir.absolutePath() + QDir::separator() + filesInRoot[i] );
+			// create this directory
+			QDir tmp_src_dir(src_dir);
+			QDir new_sub_dir( target_path + tmp_src_dir.relativeFilePath(files2copy[i]) );
+			sub_dir.mkpath(new_sub_dir.path());
 
-		int num_files = files2copy.size();
+			// remove this "file" from list
+			files2copy.removeAt(i);
+			num_files--;
 
-		for(int i=0; i<num_files; i++){
 
-			if(num_files > files2copy.size()) break;
-			// works for rootfiles
-			QDir sub_dir(files2copy[i]);
-			QStringList sub_files = sub_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotDot | QDir::NoDot, QDir::DirsFirst);
-
-			if(sub_files.size() != 0){
-				QDir new_sub_dir( sub_dir.path() );
-				qDebug() << "Create dir at " << new_sub_dir.path();
-				new_sub_dir.mkpath(sub_dir.path());
-
-				files2copy.removeAt(i);
-
-				for(int j=0; j<sub_files.size(); j++){
-					qDebug() << "insert "  << sub_dir.path() + QDir::separator() + sub_files[j];
-					files2copy.insert(i+j, sub_dir.path() + QDir::separator() + sub_files[j] );
-				}
-
-				num_files += sub_files.size();
+			// insert all files/directories from subdir
+			// into array
+			for(int j=0; j<sub_files.size(); j++){
+				files2copy.insert(i+j, sub_dir.path() + QDir::separator() + sub_files[j] );
 			}
+
+			num_files += sub_files.size();
+			i--;
 		}
-
-
-		for(int i=0; i<files2copy.size(); i++){
-			QFile f(files2copy[i]);
-			QDir d(src_dir);
-			d.cd("..");
-
-			qDebug() << "Copy " << files2copy[i] << " to " << target_path + d.relativeFilePath(files2copy[i]);;
-		}
-
-
-	if(success){
-		QMessageBox msgBox;
-		msgBox.setInformativeText("Success");
-		msgBox.exec();
-	}
-	else{
-		QMessageBox msgBox;
-		msgBox.setInformativeText("Copy failed");
-		msgBox.exec();
 	}
 
 
+	// copy & save to database
+	vector<MetaData> v_metadata;
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
+	for(int i=0; i<files2copy.size(); i++){
+
+		// target path + relative src path
+		QDir tmp_src_dir(src_dir);
+		QString new_filename = target_path + tmp_src_dir.relativeFilePath(files2copy[i]);
+
+		QFile f(files2copy[i]);
+		f.copy(new_filename);
+		if(Helper::is_soundfile(new_filename)){
+			MetaData md = ID3::getMetaDataOfFile(new_filename);
+			v_metadata.push_back( md );
+		}
+	}
+
+	db->storeMetadata(v_metadata);
+	emit reloading_library_finished();
 }
 
 

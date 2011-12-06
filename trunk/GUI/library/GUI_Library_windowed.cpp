@@ -826,10 +826,27 @@ void GUI_Library_windowed::info_album(){
 	_album_of_interest = CDatabaseConnector::getInstance()->getAlbumByID(album.id);
 	num_artists = _album_of_interest.artists.size();
 
+
+
 	QString artist = _album_of_interest.artists[0];
 	if(_album_of_interest.artists.size() > 1){
 		artist = "Various artists";
 	}
+
+	vector<MetaData> tracks;
+		CDatabaseConnector::getInstance()->getAllTracksByAlbum(_album_of_interest.id, tracks, "", this->_sort_albums);
+		QStringList album_paths;
+		foreach(MetaData md, tracks){
+
+			QString filepath = md.filepath;
+			QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+			filepath = filepath.replace(lib_path, ".");
+			filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
+			if(!album_paths.contains(filepath, Qt::CaseInsensitive)){
+				album_paths.push_back(filepath);
+			}
+		}
+
 
 	_album_msg_box->setText(QString("<b>") + artist + " - " + album.name + " (" + QString::number(_album_of_interest.artists.size()) + ")</b>");
 
@@ -837,11 +854,18 @@ void GUI_Library_windowed::info_album(){
 	if(_album_of_interest.year == 0) year = "Unknown";
 	QString info_text = QString::number(_album_of_interest.num_songs) + " tracks\n" +
 						"Playing time: " + Helper::cvtMsecs2TitleLengthString(_album_of_interest.length_sec * 1000) + "\n" +
-						"Year: " + year;
+						"Year: " + year + "\n\n";
+
+	foreach(QString album_path, album_paths){
+		info_text += album_path + "\n";
+	}
 
 
-	if(_album_of_interest.is_sampler)
+	if(_album_of_interest.is_sampler){
 		cover_path = Helper::get_cover_path("", _album_of_interest.name);
+		_album_of_interest.artists.clear();
+		_album_of_interest.artists.push_back("");
+	}
 
 	else
 		cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
@@ -867,7 +891,7 @@ void GUI_Library_windowed::info_album(){
 		MetaData md;
 		md.album_id = _album_of_interest.id;
 		md.album = _album_of_interest.name;
-		md.artist = (num_artists == 1) ? _album_of_interest.artists[0] : "";
+		md.artist = _album_of_interest.artists[0];
 
 		emit search_cover(md);
 	}
@@ -897,7 +921,8 @@ void GUI_Library_windowed::edit_artist(){
 
 void GUI_Library_windowed::info_artist(){
 
-	QMessageBox box;
+	if(_album_msg_box) delete _album_msg_box;
+		_album_msg_box = new QMessageBox();
 	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows(1);
 	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
 
@@ -906,19 +931,62 @@ void GUI_Library_windowed::info_artist(){
 	artist.fromStringList( artist_str_list );
 
 
-	box.setText( QString("<b>") + artist.name + "</b>");
+	vector<MetaData> tracks;
+	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist.id, tracks, "", this->_sort_artists);
+	QStringList artist_paths;
+	foreach(MetaData md, tracks){
+
+		QString filepath = md.filepath;
+		QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+		filepath = filepath.replace(lib_path, ".");
+		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
+		if(!artist_paths.contains(filepath, Qt::CaseInsensitive)){
+			artist_paths.push_back(filepath);
+		}
+	}
 
 	QString info_text = QString::number(artist.num_albums) + " albums\n" +
-						QString::number(artist.num_songs) + " songs";
+						QString::number(artist.num_songs) + " songs\n\n";
 
+	foreach(QString path, artist_paths){
+		info_text += QString(path + "\n");
+	}
 
-	QPixmap pm = QPixmap(Helper::get_cover_path(artist.name, _v_albums[rand() % _v_albums.size()].name));
-	pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
-	box.setIconPixmap(pm);
+	int rnd_album = rand() % _v_albums.size();
 
-	box.setInformativeText(info_text);
-	box.exec();
-	box.close();
+	_album_of_interest = _v_albums[rnd_album];
+	_album_of_interest.artists.clear();
+	_album_of_interest.artists.push_back(artist.name);
+	_album_of_interest.name = _v_albums[rnd_album].name;
+
+	QString cover_path = Helper::get_cover_path(artist.name, _album_of_interest.name);
+	if(!QFile::exists(cover_path)){
+		qDebug() << "Cover path " << cover_path << " does not exist";
+	}
+
+	QPixmap pm = QPixmap(cover_path);
+	bool cover_found = !pm.isNull();
+
+	if(cover_found){
+		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		_album_msg_box->setIconPixmap(pm);
+	}
+
+	else{
+		qDebug() << Q_FUNC_INFO << " No cover found...";
+		MetaData md;
+
+		md.album_id = _album_of_interest.id;
+		md.album = _album_of_interest.name;
+		md.artist = artist.name;
+
+		emit search_cover(md);
+	}
+
+	_album_msg_box->setInformativeText(info_text);
+	_album_msg_box->exec();
+	_album_msg_box->close();
+
 }
 
 
@@ -964,13 +1032,18 @@ void GUI_Library_windowed::info_tracks(){
 		if(md.year == 0) year = "Unknown";
 		QString bitrate = QString::number(md.bitrate / 1000) + " kBit/s";
 		QString filepath = md.filepath;
+		QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+		filepath = filepath.replace(lib_path, QString(lib_path + "<br />"));
+		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
 		QString track_num = QString::number(md.track_num);
+
 
 		box.setInformativeText(	QString("<b>Artist:</b>" ) + artist + "<br />" +
 								"<b>Album:</b> " + album + " ("+ track_num +")<br />" +
 								"<b>Length:</b> " + length + QString("<br />") +
 								"<b>Year:</b> " + year + QString("<br />") +
-								"<b>Bitrate:</b> " + bitrate);
+								"<b>Bitrate:</b> " + bitrate + QString("<br /><br />") +
+								filepath);
 
 
 		QPixmap pm = QPixmap(Helper::get_cover_path(artist, album));
@@ -1128,20 +1201,18 @@ void GUI_Library_windowed::deleteSomeTracks(vector<MetaData>& vec_md){
 void GUI_Library_windowed::cover_changed(bool success){
 	if(!_album_msg_box || !success) return;
 
-	QString cover_path = "";
-	if(_album_of_interest.is_sampler)
-		cover_path = Helper::get_cover_path("", _album_of_interest.name);
+	QString cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
 
-	else
-		cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
-
+	if(!QFile::exists(cover_path)){
+		qDebug() << cover_path << " does not exist";
+	}
 	QPixmap pm = QPixmap(cover_path);
 	if(!pm.isNull()){
 
-		if(_album_of_interest.is_sampler){
+		/*if(_album_of_interest.is_sampler){
 			QPushButton* apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
 			connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
-		}
+		}*/
 
 		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);

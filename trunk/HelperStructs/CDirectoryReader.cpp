@@ -20,29 +20,15 @@
 
 
 #include "HelperStructs/CDirectoryReader.h"
+#include "HelperStructs/Helper.h"
 #include <QDebug>
 #include <QDir>
 
 
 CDirectoryReader::CDirectoryReader () {
-    this->m_filters.push_back("*.mp3");
-    this->m_filters.push_back("*.ogg");
-    this->m_filters.push_back("*.m4a");
-    this->m_filters.push_back("*.wma");
-    this->m_filters.push_back("*.wav");
-    this->m_filters.push_back("*.flac");
-    this->m_filters.push_back("*.aac");
 
-    this->m_filters.push_back("*.avi");
-    this->m_filters.push_back("*.flv");
-    this->m_filters.push_back("*.mpg");
-    this->m_filters.push_back("*.mpeg");
-    this->m_filters.push_back("*.mkv");
-    this->m_filters.push_back("*.wmv");
+	this->m_filters = Helper::get_soundfile_extensions();
 
-
-
-    this->m_filters.push_back("*.");
 }
 CDirectoryReader::~CDirectoryReader () {
 

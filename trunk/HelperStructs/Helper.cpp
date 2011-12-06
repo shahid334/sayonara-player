@@ -213,3 +213,34 @@ QString Helper::calc_search_artist_adress(QString artist){
 	return url;
 }
 
+QStringList Helper::get_soundfile_extensions(){
+
+	QStringList filters;
+	filters.push_back("*.mp3");
+	filters.push_back("*.ogg");
+	filters.push_back("*.m4a");
+	filters.push_back("*.wma");
+	filters.push_back("*.wav");
+	filters.push_back("*.flac");
+	filters.push_back("*.aac");
+
+	filters.push_back("*.avi");
+	filters.push_back("*.flv");
+	filters.push_back("*.mpg");
+	filters.push_back("*.mpeg");
+	filters.push_back("*.mkv");
+	filters.push_back("*.wmv");
+
+	return filters;
+}
+
+bool Helper::is_soundfile(QString filename){
+	QStringList extensions = get_soundfile_extensions();
+	for(int i=0; i<extensions.size(); i++){
+		if(filename.endsWith(extensions[0].right(4))){
+			return true;
+		}
+	}
+
+	return false;
+}

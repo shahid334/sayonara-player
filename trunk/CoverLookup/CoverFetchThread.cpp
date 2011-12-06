@@ -76,6 +76,7 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 							for(uint c=0; c<images.size(); c++){
 
 								if(c==0) {
+									qDebug() << "save to " << path;
 									images[c].save(path);
 								}
 								_images.push_back(images[c]);
@@ -105,6 +106,7 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 
 							for(uint c=0; c<images.size(); c++){
 								if(c==0){
+									qDebug() << "save to " << path;
 									images[c].save(path);
 								}
 								_images.push_back(images[c]);

@@ -123,16 +123,21 @@ void CoverLookup::terminate_thread() {
 
 void CoverLookup::search_cover(const MetaData& md) {
 
+
+
 	_metadata = md;
-	if(CDatabaseConnector::getInstance()->getAlbumByID(md.album_id).is_sampler){
+
+	qDebug() << "search cover " << _metadata.toStringList();
+	/*if(CDatabaseConnector::getInstance()->getAlbumByID(md.album_id).is_sampler){
 		_metadata.artist = "";
 		_metadata.artist_id = -1;
-	}
+	}*/
 
 
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);
 
 	if (QFile::exists(cover_path) && cover_path != "") {
+		qDebug() << "cover found!" << cover_path;
 		emit cover_found(true);
 		return;
 	}
@@ -152,6 +157,8 @@ void CoverLookup::search_cover(const MetaData& md) {
 		album.artists = artists;
 
 		albums.push_back(album);
+		qDebug() << "search for " << album.toStringList();
+
 		search_covers(albums);
 	}
 

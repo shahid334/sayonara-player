@@ -50,7 +50,7 @@ MetaData ID3::getMetaDataOfFile(QString file){
 		md.title = md.filepath.right(md.filepath.length() - idx -1);
 		md.title = md.title.left(md.title.length() - 4);
 
-		if(f.isNull()) return md;
+		if(f.isNull() || !f.tag() || f.tag()->isEmpty() ) return md;
 		string artist = f.tag()->artist().to8Bit(true);
 		string album = f.tag()->album().to8Bit(true);
 		string title = f.tag()->title().to8Bit(true);
