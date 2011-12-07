@@ -26,6 +26,7 @@
 #include <QThread>
 #include <QFileSystemWatcher>
 #include <library/ReloadThread.h>
+#include <GUI/library/GUIImportFolder.h>
 #include "HelperStructs/CDirectoryReader.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -49,6 +50,8 @@ signals:
     void reloading_library(int);
 
 
+
+
 public slots:
     void baseDirSelected (const QString & baseDir);
     void insertMetaDataIntoDB(vector<MetaData>& in);
@@ -62,6 +65,7 @@ public slots:
     void reloadLibrary();
     void importDirectory(QString);
     void setLibraryPath(QString);
+    void importDirectoryAccepted(const QString&);
 
 private slots:
    void reload_thread_finished();
@@ -75,6 +79,8 @@ private:
     QString				m_library_path;
     ReloadThread* 		m_thread;
     QFileSystemWatcher*	m_watcher;
+    QString				m_src_dir;
+    GUI_ImportFolder*   m_import_dialog;
 
 
 

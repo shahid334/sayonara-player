@@ -171,6 +171,7 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(reloading_library(int)),						&ui_library, 	SLOT(reloading_library(int)));
         app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
 
+
         app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
         app.connect(&ui_library, SIGNAL(artist_changed_signal(int)), 				&library, 		SLOT(getAlbumsByArtist(int)));
         app.connect(&ui_library, SIGNAL(reload_library()), 							&library, 		SLOT(reloadLibrary()));

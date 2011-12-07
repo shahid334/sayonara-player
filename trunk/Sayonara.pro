@@ -35,6 +35,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/equalizer/GUI_Equalizer.h \
     GUI/MyTableView.h \
     GUI/MyListview.h \
+    GUI/library/GUIImportFolder.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     HelperStructs/PlaylistMode.h \
@@ -74,6 +75,7 @@ SOURCES += Main.cpp \
     GUI/equalizer/GUI_Equalizer.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
+    GUI/library/GUIImportFolder.cpp \
     HelperStructs/Helper.cpp \
     HelperStructs/CSettingsStorage.cpp \
     HelperStructs/Style.cpp \
@@ -103,9 +105,11 @@ FORMS += \
     GUI/playlist/GUI_Playlist_Entry.ui \
     GUI/LastFM/GUI_LastFM_Widget.ui \
     GUI/library/GUI_Library_windowed.ui \
+    GUI/library/GUI_ImportFolder.ui\
     GUI/equalizer/GUI_Equalizer.ui \
     GUI/tagedit/GUI_TagEdit.ui \
-    GUI/alternate_covers/GUI_Alternate_Covers.ui 
+    GUI/alternate_covers/GUI_Alternate_Covers.ui
+    
    
 
 
