@@ -26,7 +26,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 	connect(ui->bb_ok_cancel, SIGNAL(rejected()), this, SLOT(bb_recjected()));
 	connect(ui->comB_proposed_artists, SIGNAL(editTextChanged(const QString &)), this, SLOT(combo_box_changed(const QString&)));
 
-	ui->pb_progress->setValue(0);helgehel
+	ui->pb_progress->setValue(0);
 	ui->pb_progress->setVisible(false);
 
 }
