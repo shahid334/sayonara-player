@@ -156,15 +156,16 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item){
 			QString new_filename = target_path + tmp_src_dir.relativeFilePath(files2copy[i]);
 
 			QFile f(files2copy[i]);
-			f.copy(new_filename);
-			int percent = (i * 10000) / (100 * files2copy.size());
-			if( i== files2copy.size() -1) {
-				m_import_dialog->close();
-			}
-			else m_import_dialog->progress_changed(percent);
-			if(Helper::is_soundfile(new_filename)){
-				MetaData md = ID3::getMetaDataOfFile(new_filename);
-				v_metadata.push_back( md );
+			if( f.copy(new_filename) ){
+				int percent = (i * 10000) / (100 * files2copy.size());
+				if( i== files2copy.size() -1) {
+					m_import_dialog->close();
+				}
+				else m_import_dialog->progress_changed(percent);
+				if(Helper::is_soundfile(new_filename)){
+					MetaData md = ID3::getMetaDataOfFile(new_filename);
+					v_metadata.push_back( md );
+				}
 			}
 		}
 
