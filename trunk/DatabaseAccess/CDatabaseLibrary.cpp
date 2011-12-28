@@ -97,9 +97,9 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
                 artistID = insertArtistIntoDatabase((QString) data.artist);
             }
 
-
             this -> insertTrackIntoDatabase (data,artistID,albumID);
         }
+
         catch (QString ex) {
             qDebug() << "Error during inserting of metadata into database";
             qDebug() << ex;

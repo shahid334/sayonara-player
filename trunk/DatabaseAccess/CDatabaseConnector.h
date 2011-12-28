@@ -116,6 +116,19 @@ public:
 			int deleteTracks(std::vector<MetaData>&);
 
 
+			/*
+			 * Playlist
+			 * */
+			int createPlaylist(QString playlist_name);
+			QString getPlaylistNameById(QString playlist_id);
+			int getPlaylistIdByName(QString playlist_name);
+			int getPlalyistById(int playlist_id, vector<MetaData>&);
+			int insertPlaylist(const vector<MetaData>& vec_md, QString playlist_name);
+			bool deletePlaylist(int playlist_id);
+			int insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos);
+
+
+
     void deleteTracksAlbumsArtists();
 
 

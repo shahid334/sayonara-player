@@ -107,6 +107,7 @@ MetaData CDatabaseConnector::getTrackById(int id){
 }
 
 
+
 int CDatabaseConnector::updateTrack(MetaData& data){
 
 
@@ -146,8 +147,6 @@ int CDatabaseConnector::updateTrack(MetaData& data){
     return 0;
 
 }
-
-
 
 
 int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
