@@ -23,6 +23,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     GUI/playlist/PlaylistItemModel.h \
     GUI/playlist/PlaylistItemDelegate.h \
     GUI/playlist/GUI_PlaylistEntry.h \
+    GUI/playlist_chooser/GUI_PlaylistChooser.h \
     GUI/LastFM/GUI_LastFM.h \
     GUI/library/GUI_Library_windowed.h \
     GUI/library/LibraryItemModelTracks.h \
@@ -48,6 +49,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     library/CLibraryBase.h \
     library/ReloadThread.h \
     playlist/Playlist.h \
+    playlists/Playlists.h \
     HelperStructs/id3.h \
     HelperStructs/CSettingsStorage.h \
     HelperStructs/Equalizer_presets.h \
@@ -63,6 +65,7 @@ SOURCES += Main.cpp \
     GUI/playlist/PlaylistItemModel.cpp \
     GUI/playlist/PlaylistItemDelegate.cpp \
     GUI/playlist/GUI_PlaylistEntry.cpp \
+    GUI/playlist_chooser/GUI_PlaylistChooser.cpp \
     GUI/LastFM/GUI_LastFM.cpp \
     GUI/library/GUI_Library_windowed.cpp \
     GUI/library/LibraryItemModelTracks.cpp \
@@ -90,7 +93,9 @@ SOURCES += Main.cpp \
     DatabaseAccess/CDatabaseAlbums.cpp \
     DatabaseAccess/CDatabaseArtists.cpp \
     DatabaseAccess/CDatabaseTracks.cpp \
+    DatabaseAccess/CdatabasePlaylist.cpp \
     playlist/Playlist.cpp \
+    playlists/Playlists.cpp \
     HelperStructs/id3.cpp \
     LastFM/LastFM.cpp \
     LastFM/LFMSimilarArtistsThread.cpp \
@@ -108,12 +113,10 @@ FORMS += \
     GUI/library/GUI_ImportFolder.ui\
     GUI/equalizer/GUI_Equalizer.ui \
     GUI/tagedit/GUI_TagEdit.ui \
-    GUI/alternate_covers/GUI_Alternate_Covers.ui
+    GUI/alternate_covers/GUI_Alternate_Covers.ui \
+    GUI/playlist_chooser/GUI_PlaylistChooser.ui \
     
    
-
-
-
 additional_files.path = /usr/share/sayonara
 additional_files.files += GUI/icons/append.png
 additional_files.files += GUI/icons/broom.png

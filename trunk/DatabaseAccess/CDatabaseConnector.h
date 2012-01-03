@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include <QMap>
 #include <vector>
 #include <HelperStructs/MetaData.h>
 #include <HelperStructs/Equalizer_presets.h>
@@ -48,6 +49,7 @@ public:
     bool openDatabase ();
     bool load_settings();
     bool store_settings();
+    bool apply_fixes();
 
 
 
@@ -120,12 +122,15 @@ public:
 			 * Playlist
 			 * */
 			int createPlaylist(QString playlist_name);
-			QString getPlaylistNameById(QString playlist_id);
+			QString getPlaylistNameById(int playlist_id);
 			int getPlaylistIdByName(QString playlist_name);
-			int getPlalyistById(int playlist_id, vector<MetaData>&);
-			int insertPlaylist(const vector<MetaData>& vec_md, QString playlist_name);
+			bool getPlaylistById(int playlist_id, CustomPlaylist& pl);
+			bool storePlaylist(const vector<MetaData>& vec_md, QString playlist_name);
+			bool storePlaylist(const vector<MetaData>& vec_md, int playlist_id);
 			bool deletePlaylist(int playlist_id);
-			int insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos);
+			bool emptyPlaylist(int playlist_id);
+			bool insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos);
+			bool getAllPlaylists(QMap<int, QString>& mapping);
 
 
 

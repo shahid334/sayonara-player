@@ -81,6 +81,10 @@ bool CDatabaseConnector::openDatabase () {
         qDebug() << er.databaseText();
     }
 
+    else{
+    	apply_fixes();
+    }
+
 
     return e;
 
@@ -96,3 +100,33 @@ CDatabaseConnector::~CDatabaseConnector() {
     }
 }
 
+bool CDatabaseConnector::apply_fixes(){
+
+	if (!this -> m_database.isOpen())
+	        this -> m_database.open();
+
+	if (!this -> m_database.isOpen()) return false;
+
+	QSqlQuery q (this->m_database);
+	QString querytext = "SELECT position FROM playlisttotracks;";
+	q.prepare(querytext);
+	if(!q.exec()){
+
+		QSqlQuery q2 (this -> m_database);
+		querytext = "DROP TABLE playlisttotracks;";
+		q2.prepare(querytext);
+		q2.exec();
+
+		QSqlQuery q3(this->m_database);
+		querytext = QString("CREATE TABLE playlisttotracks ") +
+				"( "
+				"	trackid INTEGER, "
+				"	playlistid INTEGER, "
+				"	position INTEGER, "
+				"	FOREIGN KEY (trackid) REFERENCES tracks(trackid), "
+				"	FOREIGN KEY (playlistid) REFERENCES playlists(playlistid) "
+				");";
+		q3.prepare(querytext);
+		q3.exec();
+	}
+}

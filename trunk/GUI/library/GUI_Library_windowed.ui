@@ -23,36 +23,6 @@
    <property name="verticalSpacing">
     <number>5</number>
    </property>
-   <item row="1" column="2" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="spacing">
-      <number>3</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Search</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="le_search"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_clear">
-       <property name="maximumSize">
-        <size>
-         <width>34</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="2" column="2" colspan="2">
     <widget class="MyTableView" name="lv_album">
      <property name="font">
@@ -242,7 +212,19 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QComboBox" name="combo_switcher">
+       <property name="minimumSize">
+        <size>
+         <width>130</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>130</width>
+         <height>16777215</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <pointsize>10</pointsize>
@@ -250,8 +232,22 @@
          <bold>true</bold>
         </font>
        </property>
+       <item>
+        <property name="text">
+         <string>Music Library</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Playlists</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lab_status">
        <property name="text">
-        <string> Music Library</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -288,6 +284,36 @@
       <enum>QFrame::Raised</enum>
      </property>
     </widget>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Search</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="le_search"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_clear">
+       <property name="maximumSize">
+        <size>
+         <width>34</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

@@ -82,9 +82,6 @@ struct Playlist_Mode{
 
 	}
 
-
-
-
 };
 
 #endif

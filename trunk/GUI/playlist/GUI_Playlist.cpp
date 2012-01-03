@@ -66,7 +66,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	ui->setupUi(this);
 	initGUI();
 
-	this->ui->btn_dummy->setVisible(false);
+	//this->ui->btn_dummy->setVisible(false);
 
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
@@ -107,7 +107,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 	this->connect(this->ui->listView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(released(const QModelIndex &)));
 
-	this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
+	//this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
 	// we need a reason for refreshing the list
 	QStringList empty_list;

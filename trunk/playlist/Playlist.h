@@ -31,6 +31,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <vector>
 #include <iostream>
@@ -53,6 +54,7 @@ public:
 
 	signals:
 		void playlist_created(vector<MetaData>&, int);
+
 		void selected_file_changed_md(const MetaData&);
 		void selected_file_changed(int row);
 		void no_track_to_play();
@@ -63,10 +65,15 @@ public:
 		void goon_playing();
 		void search_similar_artists(const QString&);
 
+		void sig_playlist_prepared(int, vector<MetaData>&);
+		void sig_playlist_prepared(QString, vector<MetaData>&);
+
+
 	public slots:
 
 		void createPlaylist(QStringList&);
 		void createPlaylist(vector<MetaData>&);
+		void createPlaylist(CustomPlaylist&);
 		void insert_tracks(const vector<MetaData>&, int idx);
 		void insert_albums(const vector<Album>&, int);			// not used
 		void insert_artists(const vector<Artist>&, int);		// not used
@@ -78,6 +85,10 @@ public:
 		void similar_artists_available(QList<int>&);
 
 		void directoryDropped(const QString& dir, int row);
+
+		void prepare_playlist_for_save(int id);
+		void prepare_playlist_for_save(QString name);
+
 
 		void play();
 		void stop();
@@ -100,6 +111,8 @@ public:
 	int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;
+
+
 
 
 

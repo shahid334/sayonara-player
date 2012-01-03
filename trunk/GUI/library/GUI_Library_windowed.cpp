@@ -770,12 +770,12 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 
 void GUI_Library_windowed::reloading_library(int percent){
 	if(percent < 0)
-		this->ui->label_2->setText("Music Library (Reloading...)");
-	else this->ui->label_2->setText("Music Library (Reloading: " + QString::number(percent) + QString("\%)") );
+		this->ui->lab_status->setText("<b>(Reloading...)</b>");
+	else this->ui->lab_status->setText("<b>(Reloading: " + QString::number(percent) + QString("\%)") + QString("</b>"));
 }
 
 void GUI_Library_windowed::reloading_library_finished(){
-	this->ui->label_2->setText("Music Library");
+	this->ui->lab_status->setText("Music Library");
 }
 
 void GUI_Library_windowed::library_should_be_reloaded(){

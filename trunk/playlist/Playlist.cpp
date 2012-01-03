@@ -59,17 +59,6 @@ Playlist::~Playlist() {
 }
 
 
-void Playlist::save_playlist_to_storage(){
-
-	QString playlist_str;
-	for(uint i=0; i<_v_meta_data.size(); i++){
-
-		playlist_str += QString::number(_v_meta_data[i].id);
-		if(i != _v_meta_data.size() - 1) playlist_str += ",";
-	}
-
-	CSettingsStorage::getInstance()->setPlaylist(playlist_str);
-}
 
 void Playlist::ui_loaded(){
 
@@ -96,6 +85,23 @@ void Playlist::ui_loaded(){
 
 
 
+void Playlist::save_playlist_to_storage(){
+
+	QString playlist_str;
+	for(uint i=0; i<_v_meta_data.size(); i++){
+
+		playlist_str += QString::number(_v_meta_data[i].id);
+		if(i != _v_meta_data.size() - 1) playlist_str += ",";
+	}
+
+	CSettingsStorage::getInstance()->setPlaylist(playlist_str);
+}
+
+
+
+
+
+
 void Playlist::createPlaylist(QStringList& pathlist){
 
 	if(!_playlist_mode.append){
@@ -114,8 +120,6 @@ void Playlist::createPlaylist(QStringList& pathlist){
 	}
 
 	emit mp3s_loaded_signal(100);
-
-
 
 	save_playlist_to_storage();
 	emit playlist_created(_v_meta_data, _cur_play_idx);
@@ -138,8 +142,10 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 
 	save_playlist_to_storage();
 	emit playlist_created(_v_meta_data, _cur_play_idx);
+}
 
-
+void Playlist::createPlaylist(CustomPlaylist& pl){
+	createPlaylist(pl.tracks);
 }
 
 
@@ -366,6 +372,16 @@ void Playlist::clear_playlist(){
 	emit playlist_created(_v_meta_data, _cur_play_idx);
 
 }
+
+// --> custom playlists
+void Playlist::prepare_playlist_for_save(int id){
+	emit sig_playlist_prepared(id, _v_meta_data);
+}
+
+void Playlist::prepare_playlist_for_save(QString name){
+	emit sig_playlist_prepared(name, _v_meta_data);
+}
+
 
 // GUI -->
 void Playlist::save_playlist(const QString& filename){

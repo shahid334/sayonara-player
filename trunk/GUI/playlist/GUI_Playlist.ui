@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>703</width>
+    <width>460</width>
     <height>685</height>
    </rect>
   </property>
@@ -82,13 +82,6 @@
     </widget>
    </item>
    <item row="0" column="7">
-    <widget class="QPushButton" name="btn_dummy">
-     <property name="text">
-      <string>Dummy</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="8">
     <widget class="QPushButton" name="btn_clear">
      <property name="minimumSize">
       <size>
@@ -123,7 +116,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="9">
+   <item row="1" column="0" colspan="8">
     <widget class="MyListView" name="listView">
      <property name="minimumSize">
       <size>
@@ -322,7 +315,7 @@
      </property>
     </spacer>
    </item>
-   <item row="2" column="8">
+   <item row="2" column="7">
     <widget class="QPushButton" name="btn_append">
      <property name="minimumSize">
       <size>

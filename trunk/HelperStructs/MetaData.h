@@ -36,10 +36,9 @@
 #include <QString>
 #include <QStringList>
 #include <iostream>
+#include <vector>
 
 using namespace std;
-
-
 
 struct MetaData{
 
@@ -232,6 +231,15 @@ struct Album{
 		is_sampler = (list.at(6) == "sampler");
 
 	}
+};
+
+
+struct CustomPlaylist{
+	QString name;
+	qint32 id;
+	vector<MetaData> tracks;
+	qint32 length;
+	qint32 num_tracks;
 };
 
 

@@ -527,6 +527,28 @@ void GUI_SimplePlayer::showEqualizer(bool vis) {
 
 }
 
+void GUI_SimplePlayer::hideCustomPlaylists(){
+	qDebug() << "hide";
+	this->ui->playlists_chooser_widget->setMinimumHeight(0);
+	this->ui->playlists_chooser_widget->setMaximumWidth(this->ui->playlist_widget->width());
+	this->ui->playlists_chooser_widget->setMinimumWidth(this->ui->playlist_widget->width());
+	QSize rect = this->ui->playlist_widget->size();
+	rect.setHeight(rect.height() + 65);
+	this->ui->playlist_widget->resize(rect);
+	this->ui_playlist->resize(rect);
+}
+
+void GUI_SimplePlayer::showCustomPlaylists(){
+	qDebug() << "show";
+	this->ui->playlists_chooser_widget->setMinimumHeight(65);
+	this->ui->playlists_chooser_widget->setMaximumWidth(this->ui->playlist_widget->width());
+	this->ui->playlists_chooser_widget->setMinimumWidth(this->ui->playlist_widget->width());
+	QSize rect = this->ui->playlist_widget->size();
+	rect.setHeight(rect.height() - 65);
+	this->ui->playlist_widget->resize(rect);
+	this->ui_playlist->resize(rect);
+}
+
 
 void GUI_SimplePlayer::showRadio(bool vis){
 
@@ -689,6 +711,14 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 				this->ui->action_ViewRadio->setChecked(false);
 				break;
 
+	case (Qt::Key_P):
+			if(this->ui->playlists_chooser_widget->minimumHeight() == 0){
+
+					showCustomPlaylists();
+					emit show_playlists();
+			}
+			break;
+
 	/*case (Qt::Key_R):
 			this->ui->action_ViewRadio->setChecked(!this->ui->action_ViewRadio->isChecked());
 			this->ui->action_ViewEqualizer->setChecked( false);
@@ -703,6 +733,10 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
 QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
 	return this->ui->playlist_widget;
+}
+
+QWidget* GUI_SimplePlayer::getParentOfPlaylistChooser(){
+	return this->ui->playlists_chooser_widget;
 }
 
 QWidget* GUI_SimplePlayer::getParentOfLibrary() {
@@ -737,6 +771,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
 	this->ui_eq->resize(this->ui->eq_widget->size());
+
 
 	CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }

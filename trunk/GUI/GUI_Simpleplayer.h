@@ -58,6 +58,8 @@ public slots:
     void fillSimplePlayer (const MetaData & in);
     void showEqualizer(bool b=false);
     void showRadio(bool b=false);
+    void showCustomPlaylists();
+    void hideCustomPlaylists();
 
     /**
       * Set current position in filestream
@@ -95,6 +97,7 @@ signals:
     void importDirectory(QString);
     void libpath_changed(QString);
     void fetch_all_covers();
+    void show_playlists();
 
 
 
@@ -180,6 +183,7 @@ public:
     void setEqualizer(GUI_Equalizer* eq);
 //    void setRadio(GUI_RadioWidget* radio);
     QWidget* getParentOfPlaylist();
+    QWidget* getParentOfPlaylistChooser();
     QWidget* getParentOfLibrary();
     QWidget* getParentOfEqualizer();
     void setVolume(int vol);

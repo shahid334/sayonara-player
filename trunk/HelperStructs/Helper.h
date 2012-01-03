@@ -154,15 +154,11 @@ namespace Helper{
 			cout << "str_dst = " << string(str_dst) << endl;
 
 			return string(str_dst);
-
-
 		}
-
-
 
         string trim(const string &toTrim);
 
-	inline QString cvtQString2FirstUpper(QString str){
+        inline QString cvtQString2FirstUpper(QString str){
 
 		QString retString = "";
 
@@ -203,7 +199,6 @@ namespace Helper{
 
 			list.swap(i, rand() % list.size());
 		}
-
 	}
 
 

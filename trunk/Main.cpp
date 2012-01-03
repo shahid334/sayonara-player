@@ -47,6 +47,8 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "LyricLookup/LyricLookup.h"
+#include "playlists/Playlists.h"
+#include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 
 
 #include <QtGui>
@@ -89,24 +91,18 @@ int main(int argc, char *argv[]){
         GUI_SimplePlayer 	player;
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-        qDebug() << "GUI playlist";
+        GUI_PlaylistChooser		ui_playlist_chooser(player.getParentOfPlaylistChooser());
+        Playlists				playlists;
+
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist());
-        qDebug() << "playlist";
         Playlist 				playlist(&app);
-        qDebug() << "GUI library";
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
-        qDebug() << "library";
         CLibraryBase 			library;
-        qDebug() << "Backend";
         MP3_Listen 				listen (&app);
-        qDebug() << "LastFM";
         LastFM					lastfm;
-        qDebug() << "GUI LastFM";
         GUI_LastFM				ui_lastfm;
-        qDebug() << "Equalizer";
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
        // GUI_RadioWidget			ui_radio(player.getParentOfEqualizer());
-        qDebug() << "ID3 Tags";
         GUI_TagEdit				ui_tagedit;
 
        // GUI_Alternate_Covers ui_alternate_covers;
@@ -129,6 +125,7 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(fetch_all_covers()),       		cover, 		SLOT(search_all_covers()));
         app.connect (&player, SIGNAL(libpath_changed(QString)), 		&library, 	SLOT(setLibraryPath(QString)));
         app.connect (&player, SIGNAL(libpath_changed(QString)),			&ui_playlist, SLOT(libpath_changed(QString)));
+        app.connect (&player, SIGNAL(show_playlists()),					&ui_playlist_chooser, SLOT(show()));
 
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),	&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)), 	&listen, 		SLOT(changeTrack(const MetaData & )));
@@ -141,6 +138,9 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 					&ui_playlist, 	SLOT(update_progress_bar(int)));
         app.connect (&playlist, SIGNAL(cur_played_info_changed(const MetaData&)),   &player,  		SLOT(update_info(const MetaData&)));
         app.connect (&playlist, SIGNAL(search_similar_artists(const QString&)), 	&lastfm,		SLOT(get_similar_artists(const QString&)));
+        app.connect(&playlist, SIGNAL(sig_playlist_prepared(int, vector<MetaData>&)), 		&playlists, SLOT(save_playlist_as_custom(int, vector<MetaData>&)));
+    	app.connect(&playlist, SIGNAL(sig_playlist_prepared(QString, vector<MetaData>&)), 	&playlists, SLOT(save_playlist_as_custom(QString, vector<MetaData>&)));
+
 
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 				&playlist, 		SLOT(change_track(int)));
@@ -196,6 +196,18 @@ int main(int argc, char *argv[]){
 		app.connect(&lastfm,		SIGNAL(similar_artists_available(QList<int>&)),			&playlist,		SLOT(similar_artists_available(QList<int>&)));
 		app.connect(&lastfm,		SIGNAL(last_fm_logged_in(bool)),						&ui_playlist,	SLOT(last_fm_logged_in(bool)));
 
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_playlist_chosen(int)),		&playlists, SLOT(load_single_playlist(int)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_save_playlist(int)), 		&playlist, SLOT(prepare_playlist_for_save(int)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_save_playlist(QString)), 	&playlist, SLOT(prepare_playlist_for_save(QString)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_delete_playlist(int)), 	&playlists, SLOT(delete_playlist(int)));
+
+		app.connect(&playlists, SIGNAL(sig_single_playlist_loaded(CustomPlaylist&)), 	&playlist, SLOT(createPlaylist(CustomPlaylist&)));
+		app.connect(&playlists, SIGNAL(sig_all_playlists_loaded(QMap<int, QString>&)), 	&ui_playlist_chooser, SLOT(all_playlists_fetched(QMap<int, QString>&)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_closed()), &player, SLOT(hideCustomPlaylists()));
+
+
+
+
 		//app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
 
 		qDebug() << "Playlist loaded";
@@ -244,6 +256,9 @@ int main(int argc, char *argv[]){
 
 
 		player.showEqualizer(false);
+		ui_playlist_chooser.show();
+				player.hideCustomPlaylists();
+				playlists.ui_loaded();
 		//player.showRadio(false);
 
         library.loadDataFromDb();
