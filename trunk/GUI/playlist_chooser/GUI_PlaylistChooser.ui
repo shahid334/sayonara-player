@@ -26,10 +26,10 @@
    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetVerticalTitleBar</set>
   </property>
   <property name="allowedAreas">
-   <set>Qt::AllDockWidgetAreas</set>
+   <set>Qt::NoDockWidgetArea</set>
   </property>
   <property name="windowTitle">
-   <string notr="true"/>
+   <string notr="true">Playlist</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
@@ -45,15 +45,21 @@
     <property name="bottomMargin">
      <number>5</number>
     </property>
+    <property name="horizontalSpacing">
+     <number>4</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>3</number>
+    </property>
     <item row="0" column="0" colspan="4">
      <widget class="QComboBox" name="combo_playlistchooser"/>
     </item>
-    <item row="0" column="6">
+    <item row="0" column="7">
      <widget class="QPushButton" name="btn_save">
       <property name="maximumSize">
        <size>
-        <width>24</width>
-        <height>24</height>
+        <width>20</width>
+        <height>20</height>
        </size>
       </property>
       <property name="text">
@@ -61,31 +67,12 @@
       </property>
       <property name="iconSize">
        <size>
-        <width>20</width>
-        <height>20</height>
+        <width>18</width>
+        <height>18</height>
        </size>
       </property>
-      <property name="flat">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="4">
-     <widget class="QPushButton" name="btn_save_as">
-      <property name="maximumSize">
-       <size>
-        <width>24</width>
-        <height>24</height>
-       </size>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>20</width>
-        <height>20</height>
-       </size>
+      <property name="shortcut">
+       <string>Ctrl+S</string>
       </property>
       <property name="flat">
        <bool>true</bool>
@@ -93,11 +80,11 @@
      </widget>
     </item>
     <item row="0" column="5">
-     <widget class="QPushButton" name="btn_delete">
+     <widget class="QPushButton" name="btn_save_as">
       <property name="maximumSize">
        <size>
-        <width>24</width>
-        <height>24</height>
+        <width>20</width>
+        <height>20</height>
        </size>
       </property>
       <property name="text">
@@ -105,8 +92,8 @@
       </property>
       <property name="iconSize">
        <size>
-        <width>20</width>
-        <height>20</height>
+        <width>18</width>
+        <height>18</height>
        </size>
       </property>
       <property name="flat">
@@ -114,7 +101,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="7">
+    <item row="0" column="8">
      <widget class="QPushButton" name="btn_apply">
       <property name="maximumSize">
        <size>
@@ -124,6 +111,28 @@
       </property>
       <property name="text">
        <string>Apply</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4">
+     <widget class="QPushButton" name="btn_delete">
+      <property name="maximumSize">
+       <size>
+        <width>20</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

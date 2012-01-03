@@ -14,7 +14,9 @@
 #include <QWidget>
 #include <QDockWidget>
 #include <QInputDialog>
+#include <QMessageBox>
 #include <QDebug>
+#include <QCloseEvent>
 
 #include <ui_GUI_PlaylistChooser.h>
 
@@ -27,8 +29,12 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 	this->ui->setupUi(this);
 
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "close.png"));
+	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
+	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
+
+	this->ui->btn_save->setToolTip("Save");
+	this->ui->btn_save_as->setToolTip("Save as");
+	this->ui->btn_delete->setToolTip("Delete");
 
 
 	connect(this->ui->btn_apply, SIGNAL(pressed()), this, SLOT(apply_button_pressed()));
@@ -50,7 +56,7 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
 
 	this->ui->combo_playlistchooser->clear();
-	this->ui->combo_playlistchooser->addItem("Please choose", -1);
+	this->ui->combo_playlistchooser->addItem("<empty>", -1);
 
 	QList<int> keys = mapping.keys();
 	foreach(int key, keys){
@@ -88,9 +94,23 @@ void GUI_PlaylistChooser::save_as_button_pressed(){
 
 
 void GUI_PlaylistChooser::delete_button_pressed(){
+	QMessageBox dialog;
+
+	dialog.setFocus();
+	dialog.setIcon(QMessageBox::Warning);
+	dialog.setText("<b>Delete?</b>");
+	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	dialog.setDefaultButton(QMessageBox::No);
+
+	QStringList file_list;
+
+	dialog.setInformativeText(	"Are you sure?");
+	int answer = dialog.exec();
+	dialog.close();
+
 	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
 	int val = this->ui->combo_playlistchooser->itemData(cur_idx).toInt();
-	if(val >= 0)
+	if(val >= 0 && answer == QMessageBox::Yes)
 		emit sig_delete_playlist(val);
 
 }
@@ -107,6 +127,9 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 
 	if(val_bigger_zero)
 			emit sig_playlist_chosen(val);
+
+	else
+		emit sig_clear_playlist();
 }
 
 
@@ -122,9 +145,9 @@ void GUI_PlaylistChooser::apply_button_pressed(){
 
 
 
-void GUI_PlaylistChooser::closeEvent(QCloseEvent* e){
 
+
+void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
+	event->ignore();
 	emit sig_closed();
-	this->close();
 }
-

@@ -29,6 +29,7 @@ signals:
 	void sig_save_playlist(int);
 	void sig_save_playlist(QString);
 	void sig_closed();
+	void sig_clear_playlist();
 
 
 private slots:

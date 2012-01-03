@@ -26,6 +26,7 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
+#include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 //#include "GUI/radio/GUI_RadioWidget.h"
 
 #include <QMainWindow>
@@ -58,8 +59,7 @@ public slots:
     void fillSimplePlayer (const MetaData & in);
     void showEqualizer(bool b=false);
     void showRadio(bool b=false);
-    void showCustomPlaylists();
-    void hideCustomPlaylists();
+    void showPlaylistChooser(bool b=false);
 
     /**
       * Set current position in filestream
@@ -67,6 +67,7 @@ public slots:
     void setCurrentPosition (quint32 pos_sec);
     void update_info(const MetaData&);
     void close_eq();
+    void close_playlist_chooser();
 
 
 
@@ -127,6 +128,8 @@ private slots:
     void fetch_all_covers_clicked(bool b = true);
     void load_pl_on_startup_toggled(bool);
 
+    void about(bool b=false);
+
 protected:
 
 
@@ -144,6 +147,7 @@ private:
     GUI_Playlist* 				ui_playlist;
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
+    GUI_PlaylistChooser*		ui_playlist_chooser;
 //    GUI_RadioWidget*			ui_radio;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
@@ -169,6 +173,9 @@ private:
     QString						m_artist;
     MetaData					m_metadata;
 
+    bool						m_isEqHidden;
+    bool						m_isPcHidden;
+
 
 
 
@@ -176,11 +183,13 @@ private:
     void setupVolButton(int percent);
 	void setupIcons();
 	void initGUI();
+	void hideAllPlugins();
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
     void setLibrary(GUI_Library_windowed* library);
     void setEqualizer(GUI_Equalizer* eq);
+    void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
 //    void setRadio(GUI_RadioWidget* radio);
     QWidget* getParentOfPlaylist();
     QWidget* getParentOfPlaylistChooser();

@@ -237,11 +237,6 @@
          <string>Music Library</string>
         </property>
        </item>
-       <item>
-        <property name="text">
-         <string>Playlists</string>
-        </property>
-       </item>
       </widget>
      </item>
      <item>

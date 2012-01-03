@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>780</width>
-    <height>680</height>
+    <width>862</width>
+    <height>668</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -61,7 +61,7 @@
     <property name="verticalSpacing">
      <number>0</number>
     </property>
-    <item row="16" column="0" colspan="8">
+    <item row="16" column="0" colspan="6">
      <widget class="QScrollArea" name="playlist_widget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -75,11 +75,14 @@
         <height>0</height>
        </size>
       </property>
-      <property name="styleSheet">
-       <string notr="true"/>
-      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="lineWidth">
+       <number>5</number>
       </property>
       <property name="verticalScrollBarPolicy">
        <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -98,8 +101,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>302</width>
-         <height>253</height>
+         <width>296</width>
+         <height>457</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -111,14 +114,14 @@
       </widget>
      </widget>
     </item>
-    <item row="9" column="0" colspan="8">
+    <item row="9" column="0" colspan="6">
      <widget class="Line" name="line_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
      </widget>
     </item>
-    <item row="13" column="0" colspan="8">
+    <item row="13" column="0" colspan="6">
      <widget class="Line" name="line">
       <property name="enabled">
        <bool>true</bool>
@@ -134,10 +137,10 @@
       </property>
      </widget>
     </item>
-    <item row="14" column="0" rowspan="2" colspan="8">
-     <widget class="QWidget" name="eq_widget" native="true">
+    <item row="14" column="0" rowspan="2" colspan="6">
+     <widget class="QWidget" name="plugin_widget" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
         <horstretch>3</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -145,7 +148,7 @@
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>146</height>
+        <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -301,7 +304,7 @@
       </item>
      </layout>
     </item>
-    <item row="12" column="1" colspan="6">
+    <item row="12" column="1" colspan="4">
      <widget class="QSlider" name="songProgress">
       <property name="maximumSize">
        <size>
@@ -368,7 +371,7 @@
       </property>
      </widget>
     </item>
-    <item row="11" column="2" colspan="4">
+    <item row="11" column="2" colspan="2">
      <spacer name="horizontalSpacer">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -384,7 +387,7 @@
       </property>
      </spacer>
     </item>
-    <item row="0" column="7">
+    <item row="0" column="5">
      <widget class="QPushButton" name="btn_mute">
       <property name="maximumSize">
        <size>
@@ -410,7 +413,7 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="7" rowspan="8">
+    <item row="1" column="5" rowspan="8">
      <widget class="QSlider" name="volumeSlider">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -438,7 +441,7 @@
       </property>
      </widget>
     </item>
-    <item row="11" column="7" rowspan="2">
+    <item row="11" column="5" rowspan="2">
      <widget class="QPushButton" name="btn_stop">
       <property name="minimumSize">
        <size>
@@ -471,11 +474,11 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="11" rowspan="18" colspan="4">
+    <item row="0" column="9" rowspan="17" colspan="4">
      <widget class="QWidget" name="library_widget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>18</horstretch>
+        <horstretch>10</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
@@ -487,7 +490,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="1" colspan="6">
+    <item row="0" column="1" colspan="4">
      <widget class="QLabel" name="title">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -568,7 +571,7 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="1" rowspan="4" colspan="6">
+    <item row="3" column="1" rowspan="4" colspan="4">
      <widget class="QLabel" name="artist">
       <property name="minimumSize">
        <size>
@@ -613,7 +616,7 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="1" rowspan="2" colspan="6">
+    <item row="1" column="1" rowspan="2" colspan="4">
      <widget class="QLabel" name="rating">
       <property name="minimumSize">
        <size>
@@ -649,7 +652,7 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="1" colspan="6">
+    <item row="7" column="1" colspan="4">
      <widget class="QLabel" name="album">
       <property name="minimumSize">
        <size>
@@ -682,7 +685,7 @@
       </property>
      </widget>
     </item>
-    <item row="11" column="6">
+    <item row="11" column="4">
      <widget class="QLabel" name="maxTime">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -712,65 +715,6 @@
       </property>
      </widget>
     </item>
-    <item row="17" column="0" colspan="8">
-     <widget class="QWidget" name="playlists_chooser_widget" native="true">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-        <horstretch>3</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>80</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>16777215</width>
-        <height>80</height>
-       </size>
-      </property>
-      <property name="sizeIncrement">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
-      </property>
-      <widget class="Line" name="line_3">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>581</width>
-         <height>10</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>16777215</width>
-         <height>10</height>
-        </size>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -778,7 +722,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>780</width>
+     <width>862</width>
      <height>21</height>
     </rect>
    </property>
@@ -803,6 +747,7 @@
      <string>View</string>
     </property>
     <addaction name="action_ViewEqualizer"/>
+    <addaction name="action_ViewPlaylistChooser"/>
     <addaction name="action_ViewRadio"/>
     <addaction name="action_Dark"/>
    </widget>
@@ -815,9 +760,16 @@
     <addaction name="separator"/>
     <addaction name="action_load_playlist"/>
    </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="action_about"/>
+   </widget>
    <addaction name="menuFle"/>
    <addaction name="menuView"/>
    <addaction name="menuPreferences"/>
+   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_OpenFile">
@@ -903,6 +855,19 @@
   <action name="action_ImportFolder">
    <property name="text">
     <string>Import folder</string>
+   </property>
+  </action>
+  <action name="action_ViewPlaylistChooser">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Playlist Chooser       STRG + P</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

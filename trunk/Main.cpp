@@ -172,7 +172,7 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
 
 
-        app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
+        app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 			SLOT(search_cover(const MetaData&)));
         app.connect(&ui_library, SIGNAL(artist_changed_signal(int)), 				&library, 		SLOT(getAlbumsByArtist(int)));
         app.connect(&ui_library, SIGNAL(reload_library()), 							&library, 		SLOT(reloadLibrary()));
         app.connect(&ui_library, SIGNAL(album_changed_signal(int)), 				&library, 		SLOT(getTracksByAlbum(int)));
@@ -187,6 +187,7 @@ int main(int argc, char *argv[]){
         app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), 		&listen, 	SLOT(eq_enable(bool)));
         app.connect(&ui_eq, SIGNAL(close_event()), 					&player, 	SLOT(close_eq()));
 
+
         app.connect(&ui_playlist, 	SIGNAL(edit_id3_signal()), 								&playlist, 		SLOT(edit_id3_request()));
         app.connect(&playlist, 		SIGNAL(data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit, 	SLOT(change_meta_data(const vector<MetaData>&)));
         app.connect(&ui_library,	SIGNAL(data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit, 	SLOT(change_meta_data(const vector<MetaData>&)));
@@ -197,9 +198,11 @@ int main(int argc, char *argv[]){
 		app.connect(&lastfm,		SIGNAL(last_fm_logged_in(bool)),						&ui_playlist,	SLOT(last_fm_logged_in(bool)));
 
 		app.connect(&ui_playlist_chooser, SIGNAL(sig_playlist_chosen(int)),		&playlists, SLOT(load_single_playlist(int)));
-		app.connect(&ui_playlist_chooser, SIGNAL(sig_save_playlist(int)), 		&playlist, SLOT(prepare_playlist_for_save(int)));
-		app.connect(&ui_playlist_chooser, SIGNAL(sig_save_playlist(QString)), 	&playlist, SLOT(prepare_playlist_for_save(QString)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_save_playlist(int)), 		&playlist, 	SLOT(prepare_playlist_for_save(int)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_save_playlist(QString)), 	&playlist, 	SLOT(prepare_playlist_for_save(QString)));
 		app.connect(&ui_playlist_chooser, SIGNAL(sig_delete_playlist(int)), 	&playlists, SLOT(delete_playlist(int)));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_clear_playlist()), 		&playlist, 	SLOT(clear_playlist()));
+		app.connect(&ui_playlist_chooser, SIGNAL(sig_closed()), 				&player, 	SLOT(close_playlist_chooser()));
 
 		app.connect(&playlists, SIGNAL(sig_single_playlist_loaded(CustomPlaylist&)), 	&playlist, SLOT(createPlaylist(CustomPlaylist&)));
 		app.connect(&playlists, SIGNAL(sig_all_playlists_loaded(QMap<int, QString>&)), 	&ui_playlist_chooser, SLOT(all_playlists_fetched(QMap<int, QString>&)));
@@ -215,9 +218,11 @@ int main(int argc, char *argv[]){
 
 
 		qDebug() << "setup player";
+		player.setEqualizer(&ui_eq);
+		player.setPlaylistChooser(&ui_playlist_chooser);
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
-		player.setEqualizer(&ui_eq);
+
 		//player.setRadio(&ui_radio);
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
@@ -226,40 +231,22 @@ int main(int argc, char *argv[]){
         player.setVolume(vol);
         listen.setVolume(vol);
 
+       /*player.showEqualizer(false);
+   		player.showPlaylistChooser(false);*/
+     	playlists.ui_loaded();
+
+    	player.setWindowTitle("Sayonara (0.1)");
+    		player.show();
 
 
-		player.setWindowTitle("Sayonara (0.1)");
-		player.show();
 
 		listen.load_equalizer();
 
-		QRect rect = ui_eq.geometry();
-			rect.setHeight(player.getParentOfEqualizer()->height());
-			rect.setWidth(player.getParentOfEqualizer()->width());
-			ui_eq.setGeometry(rect);
+		ui_eq.resize(player.getParentOfEqualizer()->size());
+		ui_playlist_chooser.resize(player.getParentOfPlaylistChooser()->size());
+		ui_library.resize(player.getParentOfLibrary()->size());
+		ui_playlist.resize(player.getParentOfPlaylist()->size());
 
-		/*rect = ui_radio.geometry();
-					rect.setHeight(player.getParentOfEqualizer()->height());
-					rect.setWidth(player.getParentOfEqualizer()->width());
-					ui_radio.setGeometry(rect);*/
-
-		rect = ui_playlist.geometry();
-			rect.setHeight(player.getParentOfPlaylist()->height());
-			rect.setWidth(player.getParentOfPlaylist()->width());
-			ui_playlist.setGeometry(rect);
-
-		rect = ui_library.geometry();
-			rect.setHeight(player.getParentOfLibrary()->height());
-			rect.setWidth(player.getParentOfLibrary()->width());
-			ui_library.setGeometry(rect);
-
-
-
-		player.showEqualizer(false);
-		ui_playlist_chooser.show();
-				player.hideCustomPlaylists();
-				playlists.ui_loaded();
-		//player.showRadio(false);
 
         library.loadDataFromDb();
         QString user, password;

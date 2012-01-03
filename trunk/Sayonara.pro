@@ -129,6 +129,7 @@ additional_files.files += GUI/icons/rec.png
 additional_files.files += GUI/icons/rep1.png
 additional_files.files += GUI/icons/repAll.png
 additional_files.files += GUI/icons/save.png
+additional_files.files += GUI/icons/save_as.png
 additional_files.files += GUI/icons/shuffle.png
 additional_files.files += GUI/icons/stop.png
 additional_files.files += GUI/icons/vol_1.png
@@ -150,6 +151,8 @@ additional_files.files += GUI/icons/arrow_up.png
 additional_files.files += GUI/icons/arrow_down.png
 additional_files.files += GUI/icons/arrow_right.png
 additional_files.files += GUI/icons/arrow_left.png
+additional_files.files += GUI/icons/delete.png
+
 additional_files.files += empty.db
 
 INSTALLS += additional_files
