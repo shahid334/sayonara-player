@@ -92,9 +92,6 @@ bool CDatabaseConnector::openDatabase () {
 
 CDatabaseConnector::~CDatabaseConnector() {
 
-	store_settings();
-
-
     if (this -> m_database.isOpen()) {
         this -> m_database.close();
     }

@@ -257,7 +257,7 @@ int main(int argc, char *argv[]){
         set->getEqualizerSettings(eq_settings);
 
         app.exec();
-
+        qDebug() << "Store settings";
         CDatabaseConnector::getInstance()->store_settings();
 
         return 0;
