@@ -85,10 +85,11 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
 			"tracks.track		AS track, "			// 8
 			"tracks.bitrate		AS bitrate, "		// 9
 			"tracks.TrackID 	AS trackID "		// 10
-			"FROM tracks, albums, artists, playlists, playlisttotracks WHERE " +
+			"FROM tracks, albums, artists, playlists, playlisttotracks WHERE "
 			"playlists.playlistID = :playlist_id AND playlists.playlistID = playlistToTracks.playlistID AND " +
 			"playlistToTracks.trackID = tracks.trackID AND "
-			"tracks.albumID = albums.albumID AND tracks.artistID = artists.artistID; ";
+			"tracks.albumID = albums.albumID AND tracks.artistID = artists.artistID "
+			"ORDER BY playlistToTracks.position ASC; ";
 
 
 	q.prepare(querytext);
@@ -358,6 +359,22 @@ bool CDatabaseConnector::deletePlaylist(int playlist_id){
 	QString querytext = QString("DELETE FROM playlists WHERE playlistID = :playlist_id;");
 	q.prepare(querytext);
 	q.bindValue(":playlist_id", playlist_id);
+	return q.exec();
+
+}
+
+
+bool CDatabaseConnector::deleteFromAllPlaylists(int track_id){
+
+	if (!this -> m_database.isOpen())
+			this -> m_database.open();
+
+	if (!this -> m_database.isOpen()) return -1;
+
+	QSqlQuery q(this->m_database);
+	QString querytext = QString("DELETE FROM playlistToTracks WHERE trackID = :track_id;");
+	q.prepare(querytext);
+	q.bindValue(":track_id", track_id);
 	return q.exec();
 
 }

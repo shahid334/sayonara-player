@@ -126,4 +126,6 @@ bool CDatabaseConnector::apply_fixes(){
 		q3.prepare(querytext);
 		q3.exec();
 	}
+
+	return true;
 }

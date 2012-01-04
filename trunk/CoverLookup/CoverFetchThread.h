@@ -69,6 +69,8 @@ public:
 	bool 	get_certain_image(int idx, QImage& );
 	int 	get_num_images();
 
+	int 	get_cover_source();
+
 
 protected:
 	void run();

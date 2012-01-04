@@ -29,7 +29,7 @@
 #ifndef _HELPER_H
 #define _HELPER_H
 
-
+#include <HelperStructs/MetaData.h>
 
 #include <string>
 #include <sstream>
@@ -201,7 +201,7 @@ namespace Helper{
 		}
 	}
 
-
+	bool checkTrack(const MetaData& md);
 
 
 

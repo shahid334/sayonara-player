@@ -108,12 +108,15 @@ void Playlist::createPlaylist(QStringList& pathlist){
 		_v_meta_data.clear();
 		_cur_play_idx = -1;
 	}
+
     uint files2fill = pathlist.size();
 	for(uint i=0; i<files2fill; i++){
 
-		MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
-		md.is_extern = true;
-		_v_meta_data.push_back(md);
+		if(QFile::exists(pathlist[i])){
+			MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
+			md.is_extern = true;
+			_v_meta_data.push_back(md);
+		}
 
 		double percent = i * 1.0 / files2fill;
 		emit mp3s_loaded_signal((int) (percent * 100));
@@ -127,6 +130,19 @@ void Playlist::createPlaylist(QStringList& pathlist){
 
 
 void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
+
+	vector<MetaData> v_meta_data_tmp;
+
+
+	for(int i=0; i<v_meta_data.size(); i++){
+
+		MetaData md = v_meta_data.at(i);
+		if(Helper::checkTrack(md)){
+			v_meta_data_tmp.push_back(md);
+		}
+	}
+
+	v_meta_data = v_meta_data_tmp;
 
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
@@ -162,8 +178,6 @@ void Playlist::remove_row(int row){
 	save_playlist_to_storage();
 	emit playlist_created(_v_meta_data, _cur_play_idx);
 }
-
-
 
 void Playlist::directoryDropped(const QString& dir, int row){
 
@@ -298,58 +312,52 @@ void Playlist::backward(){
 void Playlist::next_track(){
 
 
-	if(_playlist_mode.shuffle){
-
-		if(_v_meta_data.size() == 0){
-			emit no_track_to_play();
-			return;
-		}
-
-		int track_num = rand() % _v_meta_data.size();
-		_cur_play_idx = track_num;
-		emit selected_file_changed(track_num);
-		emit selected_file_changed_md(_v_meta_data[track_num]);
+	if(_v_meta_data.size() == 0){
+		emit no_track_to_play();
+		return;
 	}
 
+	int track_num;
 
-	else if(_playlist_mode.repAll){
-
-		if(_v_meta_data.size() == 0){
-			emit no_track_to_play();
-			return;
-		}
-
-		if(_cur_play_idx >= (int) _v_meta_data.size() -1){
-
-			emit selected_file_changed(0);
-			emit selected_file_changed_md(_v_meta_data[0]);
-			_cur_play_idx = 0;
-		}
-
-		else {
-			_cur_play_idx++;
-			emit selected_file_changed(_cur_play_idx);
-			emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
-		}
-	}
+	if(_playlist_mode.shuffle)
+		track_num = rand() % _v_meta_data.size();
 
 
 	else {
 
+		// last track
 		if(_cur_play_idx >= (int) _v_meta_data.size() -1){
-			emit no_track_to_play();
+			track_num = -1;
+
+			if(_playlist_mode.repAll)
+				track_num = 0;
 		}
 
-		else {
+		else
+			track_num = _cur_play_idx + 1;
+	}
 
-			_cur_play_idx++;
-			emit selected_file_changed(_cur_play_idx);
-			emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+
+	if(track_num >= 0){
+		MetaData md = _v_meta_data[track_num];
+		if(Helper::checkTrack(md)){
+			emit selected_file_changed(track_num);
+			emit selected_file_changed_md(_v_meta_data[track_num]);
+			_cur_play_idx = track_num;
+			if(_playlist_mode.dynamic)
+				emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+		}
+
+		else{
+			remove_row(track_num);
+			next_track();
+			emit sig_library_changed();
 		}
 	}
 
-	if(_playlist_mode.dynamic)
-		emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+	else{
+		emit no_track_to_play();
+	}
 }
 
 
@@ -358,12 +366,23 @@ void Playlist::next_track(){
 void Playlist::change_track(int new_row){
 	if( (uint) new_row >= _v_meta_data.size())return;
 
+	MetaData md = _v_meta_data[new_row];
+	if(Helper::checkTrack(md)){
 
-	_cur_play_idx = new_row;
-	emit selected_file_changed_md(_v_meta_data.at(new_row));
+		_cur_play_idx = new_row;
 
-	if(_playlist_mode.dynamic)
-		emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+		emit selected_file_changed_md(md);
+
+		if(_playlist_mode.dynamic)
+			emit search_similar_artists(md.artist);
+	}
+
+	else{
+		_cur_play_idx = -1;
+		remove_row(new_row);
+		emit sig_library_changed();
+		emit no_track_to_play();
+	}
 }
 
 

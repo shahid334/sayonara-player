@@ -109,11 +109,12 @@ public:
 
 			void getAllTracksBySearchString(QString search, vector<MetaData>& result, QString sort="artist asc");
 
-			int insertTrackIntoDatabase (const MetaData & data,int artistID, int albumID);
+			int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
 			int updateTrack(MetaData& data);
 
 			int getTracksFromDatabase (std::vector <MetaData> & returndata, QString sort="artist asc");
 			MetaData getTrackById(int id);
+			int getTrackByPath(QString path);
 
 			int deleteTracks(std::vector<MetaData>&);
 
@@ -131,6 +132,7 @@ public:
 			bool emptyPlaylist(int playlist_id);
 			bool insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos);
 			bool getAllPlaylists(QMap<int, QString>& mapping);
+			bool deleteFromAllPlaylists(int track_id);
 
 
 

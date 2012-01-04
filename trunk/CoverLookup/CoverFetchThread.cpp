@@ -204,6 +204,10 @@ bool CoverFetchThread::set_cover_source(int source){
 	return false;
 }
 
+int CoverFetchThread::get_cover_source(){
+		return _cover_source;
+}
+
 
 bool CoverFetchThread::set_num_covers_2_fetch(int num){
 	if(num > 0){

@@ -31,6 +31,8 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/Helper.h"
+
 #include <QStringList>
 #include <QDebug>
 #include <vector>
@@ -53,6 +55,23 @@ int ReloadThread::getState(){
 
 void ReloadThread::run(){
 
+CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+	vector<MetaData> v_metadata;
+	vector<MetaData> v_to_delete;
+
+	emit reloading_library( -2 );
+	db->getTracksFromDatabase(v_metadata);
+
+	for(uint i=0; i<v_metadata.size(); i++){
+		MetaData md = v_metadata.at(i);
+		if(!Helper::checkTrack((const MetaData&) md)){
+			v_to_delete.push_back(md);
+		}
+	}
+
+	db->deleteTracks(v_to_delete);
+	v_to_delete.clear();
 
 	QStringList fileList;
 
@@ -64,12 +83,12 @@ void ReloadThread::run(){
 	vector<MetaData> v_md;
 	_state = -1;
 
+
 #ifdef OMP_H
 	qDebug() << "OpenMP active";
 #else
 	qDebug() << "OpenMP inactive";
 #endif
-
 
 
 	for(int i=0; i<fileList.size(); i++){
@@ -82,7 +101,7 @@ void ReloadThread::run(){
 		emit reloading_library( (i * 100) / fileList.size() );
 	}
 
-	CDatabaseConnector::getInstance()->deleteTracksAlbumsArtists();
+	//db->deleteTracksAlbumsArtists();
 	_v_metadata = v_md;
 }
 

@@ -1,23 +1,11 @@
-Bugs: 
-	dropping into playlist, while loading playlist = off:
-	Playlist is restored nevertheless							DONE
-	
-	Make orange selection colors in dark mode
-	
-	
-	Library: 	need track delegate (skin)						DONE
-				delete button not supported yet					DONE
-				white borders with white skin & no focus		DONE
-				Artist #Tracks instead of #Albums				DONE
-				
-	Playlist:	cannot drop behind last elem					DONE
-	
-	Player: 	Add Orange glow to buttons
-				Change slider in dark skin
-				Dark skin: round buttons
-				
-	ID3-tagger: always first track is considered only			DONE
-	
-	Sayonara path: slash missing								DONE
-				
-				
+TODO: 
+
+	tracks aus playlisten sollen auch in der library sein
+
+	wenn tracks aus der library gelöscht werden was dann?
+
+	leere playlisten können geladen werden
+
+	playlist gui passt sich nicht an
+
+

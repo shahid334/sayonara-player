@@ -83,12 +83,13 @@ void CoverLookup::thread_finished() {
 	}
 	//emit covers_found(pixmaps);
 	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
-		emit cover_found(true);
+		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
 
 	else if (pixmaps.size() == 0) {
 		emit cover_found(false);
-		research_cover(_metadata);
+		if(!_thread->get_cover_source() == COV_SRC_GOOGLE)
+			research_cover(_metadata);
 		return;
 
 	}
@@ -112,7 +113,7 @@ void CoverLookup::terminate_thread() {
 
 	//emit covers_found(pixmaps);
 	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
-		emit cover_found(true);
+		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
 
 	else if (pixmaps.size() == 0)
@@ -138,7 +139,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 
 	if (QFile::exists(cover_path) && cover_path != "") {
 		qDebug() << "cover found!" << cover_path;
-		emit cover_found(true);
+		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 		return;
 	}
 

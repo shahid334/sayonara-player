@@ -59,9 +59,9 @@ struct MetaData{
 
 
     inline MetaData () {
-            id = 0;
-            artist_id = 0;
-            album_id = 0;
+            id = -1;
+            artist_id = -1;
+            album_id = -1;
 			title = "";
             artist = "";
             album = "";

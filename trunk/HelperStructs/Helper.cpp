@@ -27,6 +27,8 @@
  */
 
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/MetaData.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include "LastFM/LastFM.h"
 
 #include <string>
@@ -236,11 +238,24 @@ QStringList Helper::get_soundfile_extensions(){
 
 bool Helper::is_soundfile(QString filename){
 	QStringList extensions = get_soundfile_extensions();
-	for(int i=0; i<extensions.size(); i++){
-		if(filename.endsWith(extensions[0].right(4))){
+	for(int i=0; i<=6; i++){
+		if(filename.endsWith(extensions[i].right(4))){
 			return true;
 		}
 	}
 
 	return false;
+}
+
+
+bool Helper::checkTrack(const MetaData& md){
+	if( !QFile::exists(md.filepath) && md.id >= 0 ){
+		vector<MetaData> vec_md;
+		vec_md.push_back(md);
+		CDatabaseConnector::getInstance()->deleteTracks(vec_md);
+		return false;
+	}
+
+	return true;
+
 }

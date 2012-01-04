@@ -55,7 +55,7 @@ public slots:
     /**
       * Insert Meta informations
       */
-	void cover_changed(bool);
+	void cover_changed(bool, QString);
     void fillSimplePlayer (const MetaData & in);
     void showEqualizer(bool b=false);
     void showRadio(bool b=false);

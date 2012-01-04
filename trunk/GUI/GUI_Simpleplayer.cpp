@@ -37,6 +37,9 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 
 	this->ui->albumCover->setPixmap(
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+
+	qDebug() << "Empty cover set (3)";
+
 	this->m_playing = false;
 	this->m_cur_searching = false;
 	this->m_mute = false;
@@ -214,7 +217,9 @@ QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
 
 void GUI_SimplePlayer::update_info(const MetaData& in) {
 
+
 	this->m_metadata = in;
+	qDebug() << m_metadata.toStringList();
 
 	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
 		this->ui->album->setText(in.album);
@@ -234,32 +239,28 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 
 }
 
-void GUI_SimplePlayer::fillSimplePlayer(const MetaData & in) {
+void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
-	if (in.artist != m_metadata.artist || in.album != m_metadata.album) {
-		this->ui->albumCover->setPixmap(
-				QPixmap::fromImage(
-						QImage(Helper::getIconPath() + "append.png")));
-		this->ui->albumCover->repaint();
-	}
 
-	this->m_metadata = in;
+
+	this->m_metadata = md;
+	qDebug() << this->m_metadata.toStringList();
 
 	// sometimes ignore the date
-	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
-		this->ui->album->setText(in.album);
+	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
+		this->ui->album->setText(md.album);
 
 	else
 		this->ui->album->setText(
-				in.album + " (" + QString::number(in.year) + ")");
+				md.album + " (" + QString::number(md.year) + ")");
 
-	this->ui->artist->setText(in.artist);
-	this->ui->title->setText(in.title);
+	this->ui->artist->setText(md.artist);
+	this->ui->title->setText(md.title);
 
 	m_trayIcon->setToolTip(
-			"Currently playing: \"" + in.title + "\" by " + in.artist);
+			"Currently playing: \"" + md.title + "\" by " + md.artist);
 
-	QString lengthString = getLengthString(in.length_ms);
+	QString lengthString = getLengthString(md.length_ms);
 
 	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 	this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
@@ -270,13 +271,13 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & in) {
 	// int tmpRating = (rand() % 4) + 1;
 
 	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-	if (in.bitrate < 96000)
+	if (md.bitrate < 96000)
 		tmp += "*";
-	else if (in.bitrate < 128000)
+	else if (md.bitrate < 128000)
 		tmp += "**";
-	else if (in.bitrate < 160000)
+	else if (md.bitrate < 160000)
 		tmp += "***";
-	else if (in.bitrate < 256000)
+	else if (md.bitrate < 256000)
 		tmp += "****";
 	else
 		tmp += "*****";
@@ -284,15 +285,17 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & in) {
 
 	this->ui->rating->setText(tmp);
 	this->ui->rating->setToolTip(
-			QString("<font color=\"#000000\">") + QString::number(in.bitrate)
+			QString("<font color=\"#000000\">") + QString::number(md.bitrate)
 	+ "</font>");
 
-	this->setWindowTitle(QString("Sayonara - ") + in.title);
+	this->setWindowTitle(QString("Sayonara - ") + md.title);
 
-	this->m_completeLength_ms = in.length_ms;
+	this->m_completeLength_ms = md.length_ms;
 	this->m_playing = true;
 
-	emit wantCover(in);
+	qDebug() << "After: " << this->m_metadata.toStringList();
+
+	//emit wantCover(md);
 
 }
 
@@ -366,6 +369,8 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	this->ui->maxTime->setText("00:00");
 	this->ui->albumCover->setPixmap(
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+
+	qDebug() << "Empty cover set (4)";
 
 	this->ui->albumCover->setFocus();
 	emit stop();
@@ -478,21 +483,33 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 }
 
-void GUI_SimplePlayer::cover_changed(bool success) {
+void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 
-	if (!success)
-		return;
 
-	QString cover_path;
 
-	if(CDatabaseConnector::getInstance()->getAlbumByID(m_metadata.album_id).is_sampler)
-		cover_path = Helper::get_cover_path("", m_metadata.album);
-
-	else cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-	if (!QFile::exists(cover_path)) {
-		qDebug() << "File does not exist " << cover_path;
+	if (!success){
+		this->ui->albumCover->setPixmap(
+				QPixmap::fromImage(
+						QImage(Helper::getIconPath() + "append.png")));
+		this->ui->albumCover->repaint();
+		qDebug() << "empty cover set (1)";
 		return;
 	}
+
+
+
+	if (!QFile::exists(cover_path)) {
+		this->ui->albumCover->setPixmap(
+				QPixmap::fromImage(
+						QImage(Helper::getIconPath() + "append.png")));
+		this->ui->albumCover->repaint();
+		qDebug() << "empty cover set (2)";
+		return;
+	}
+	else{
+		qDebug() << "cover set in player";
+	}
+
 	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
 	this->ui->albumCover->setPixmap(cover);
 	this->ui->albumCover->repaint();

@@ -179,8 +179,6 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 	_v_albums.clear();
 	_v_albums = albums;
 
-
-
 	this->_album_model->removeRows(0, this->_album_model->rowCount());
 	this->_album_model->insertRows(0, albums.size());
 
@@ -204,9 +202,7 @@ void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 	for(uint i=0; i<artists.size(); i++){
 
 		QModelIndex idx = this->_artist_model->index(i, 0);
-
 		QStringList data = artists.at(i).toStringList();
-
 		this->_artist_model->setData(idx, data, Qt::EditRole );
 	}
 
@@ -529,9 +525,6 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 
 	db->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
 	fill_library_artists(vec_artists);
-
-
-
 }
 
 
@@ -753,13 +746,18 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 
 
 void GUI_Library_windowed::reloading_library(int percent){
-	if(percent < 0)
-		this->ui->lab_status->setText("<b>(Reloading...)</b>");
+	if(percent == -2){
+		this->ui->lab_status->setText("<b>(Delete missing items...)</b>");
+	}
+
+	else if(percent == -1)
+		this->ui->lab_status->setText("<b>(Load tracks from harddisk...)</b>");
+
 	else this->ui->lab_status->setText("<b>(Reloading: " + QString::number(percent) + QString("\%)") + QString("</b>"));
 }
 
 void GUI_Library_windowed::reloading_library_finished(){
-	this->ui->lab_status->setText("Music Library");
+	this->ui->lab_status->setText("");
 }
 
 void GUI_Library_windowed::library_should_be_reloaded(){
@@ -1182,15 +1180,13 @@ void GUI_Library_windowed::deleteSomeTracks(vector<MetaData>& vec_md){
 }
 
 
-void GUI_Library_windowed::cover_changed(bool success){
+void GUI_Library_windowed::cover_changed(bool success, QString path){
 	if(!_album_msg_box || !success) return;
 
-	QString cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
-
-	if(!QFile::exists(cover_path)){
-		qDebug() << cover_path << " does not exist";
+	if(!QFile::exists(path)){
+		qDebug() << path << " does not exist";
 	}
-	QPixmap pm = QPixmap(cover_path);
+	QPixmap pm = QPixmap(path);
 	if(!pm.isNull()){
 
 		/*if(_album_of_interest.is_sampler){
@@ -1201,4 +1197,47 @@ void GUI_Library_windowed::cover_changed(bool success){
 		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
 	}
+}
+
+
+void GUI_Library_windowed::library_changed(){
+
+	int artist_id = _selected_artist;
+	int album_id = _selected_album;
+	QString search_string = _cur_searchstring;
+
+	if(search_string.size() > 2){
+		search_string = search_string.remove(0,1);
+		search_string = search_string.remove(search_string.size() -1, 1);
+	}
+
+	clear_button_pressed();
+
+	if(search_string.size() > 0){
+		this->ui->le_search->setText(search_string);
+		text_line_edited(search_string);
+	}
+
+	if(artist_id >= 0){
+		for(uint i=0; i<_v_artists.size(); i++){
+			if(artist_id == _v_artists[i].id){
+				QModelIndex idx = this->_artist_model->index(i, 0);
+				this->ui->lv_artist->selectRow(i);
+				artist_pressed(idx);
+				break;
+			}
+		}
+	}
+
+	if(album_id >= 0){
+		for(uint i=0; i<_v_albums.size(); i++){
+			if(album_id == _v_albums[i].id){
+				QModelIndex idx = this->_album_model->index(i, 0);
+				this->ui->lv_album->selectRow(i);
+				album_pressed(idx);
+				break;
+			}
+		}
+	}
+
 }

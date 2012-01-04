@@ -55,6 +55,48 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, QString 
 
 }
 
+
+int CDatabaseConnector::getTrackByPath(QString path){
+	if (!this -> m_database.isOpen())
+	        this -> m_database.open();
+
+	try {
+		QSqlQuery q (this -> m_database);
+
+		QString querytext = QString("SELECT trackid FROM tracks WHERE filename = :filename;");
+		q.prepare(querytext);
+		q.bindValue(":filename", path);
+
+
+		if (!q.exec()){
+			qDebug() << "DB cannot exec " << Q_FUNC_INFO;
+			return -2;
+		}
+
+
+		if (q.next()){
+			qDebug() << "DB return track id = " << q.value(0).toInt();
+			return q.value(0).toInt();
+		}
+
+		else {
+			qDebug() << "DB no track found for = " << path;
+			return -1;
+		}
+	}
+
+	catch (QString& ex) {
+		qDebug() << "SQL - Error: get track by path " << path;
+		qDebug() << ex;
+
+		return -2;
+	}
+
+	return -1;
+}
+
+
+
 MetaData CDatabaseConnector::getTrackById(int id){
 	if (!this -> m_database.isOpen())
 			this -> m_database.open();
@@ -118,7 +160,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 
 		QSqlQuery q (this -> m_database);
 		try{
-		q.prepare("update Tracks set albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID");
+		q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID");
 
 		q.bindValue(":albumID",QVariant(data.album_id));
 		q.bindValue(":artistID",QVariant(data.artist_id));
@@ -130,7 +172,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 
 		if (!q.exec()) {
 
-			throw QString ("SQL - Error: insertTrackIntoDatabase " + data.filepath);
+			throw QString ("SQL - Error: update track " + data.filepath);
 		}
 	}
 		  catch (QString& ex) {
@@ -149,20 +191,36 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 }
 
 
-int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
+int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID) {
 
 
 	if (!this -> m_database.isOpen())
 	        this -> m_database.open();
 
-	 if (!this -> m_database.isOpen()) return -1;
-
-
+	if (!this -> m_database.isOpen()) return -1;
 
 	QSqlQuery q (this -> m_database);
+	int track_id = getTrackByPath(data.filepath);
 
-	q.prepare("insert into Tracks (filename,albumID,artistID,title,year,length,track,bitrate) values (:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate)");
-    q.bindValue(":filename",QVariant(data.filepath));
+
+	if(track_id > 0){
+		data.id = track_id;
+		data.artist_id = artistID;
+		data.album_id = albumID;
+
+		updateTrack(data);
+		return 0;
+	}
+
+
+	QString querytext = QString("INSERT INTO tracks ") +
+				"(filename,albumID,artistID,title,year,length,track,bitrate) " +
+				"VALUES "+
+				"(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate); ";
+
+	q.prepare(querytext);
+
+	q.bindValue(":filename",QVariant(data.filepath));
     q.bindValue(":albumID",QVariant(albumID));
     q.bindValue(":artistID",QVariant(artistID));
     q.bindValue(":length",QVariant(data.length_ms));
@@ -173,8 +231,10 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 
 
     if (!q.exec()) {
-
-        throw QString ("SQL - Error: insertTrackIntoDatabase " + data.filepath);
+    	if(track_id < 0)
+    		throw QString ("SQL - Error: insert track into database " + data.filepath);
+    	else
+    		throw QString ("SQL - Error: update track in database " + data.filepath);
     }
     return 0;
 }
@@ -533,6 +593,10 @@ int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
 				throw QString ("SQL - Error: delete track from Database:  cannot execute query");
 			}
 
+			else{
+				deleteFromAllPlaylists(track_id);
+			}
+
 			success++;
 		}
 
@@ -551,3 +615,5 @@ int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
 	return success;
 
 }
+
+

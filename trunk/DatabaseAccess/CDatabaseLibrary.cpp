@@ -66,7 +66,7 @@ void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
 
 
-bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
+bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & v_md)  {
 
 
 
@@ -82,7 +82,7 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & in)  {
     int artistID = -1, albumID = -1;
 
     m_database.transaction();
-    foreach (MetaData data, in) {
+    foreach (MetaData data, v_md) {
 
     	try {
             //first check if we know the artist and its id

@@ -68,6 +68,8 @@ public:
 		void sig_playlist_prepared(int, vector<MetaData>&);
 		void sig_playlist_prepared(QString, vector<MetaData>&);
 
+		void sig_library_changed();
+
 
 	public slots:
 
