@@ -298,14 +298,12 @@ void Playlist::backward(){
 void Playlist::next_track(){
 
 
-	if(_playlist_mode.rep1){
-		if(_cur_play_idx < 0) return;
-		emit selected_file_changed(_cur_play_idx);
-		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+	if(_playlist_mode.shuffle){
 
-	}
-
-	else if(_playlist_mode.shuffle){
+		if(_v_meta_data.size() == 0){
+			emit no_track_to_play();
+			return;
+		}
 
 		int track_num = rand() % _v_meta_data.size();
 		_cur_play_idx = track_num;
@@ -315,6 +313,11 @@ void Playlist::next_track(){
 
 
 	else if(_playlist_mode.repAll){
+
+		if(_v_meta_data.size() == 0){
+			emit no_track_to_play();
+			return;
+		}
 
 		if(_cur_play_idx >= (int) _v_meta_data.size() -1){
 
@@ -338,11 +341,13 @@ void Playlist::next_track(){
 		}
 
 		else {
+
 			_cur_play_idx++;
 			emit selected_file_changed(_cur_play_idx);
 			emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 		}
 	}
+
 	if(_playlist_mode.dynamic)
 		emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
 }

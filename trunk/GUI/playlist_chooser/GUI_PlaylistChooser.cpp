@@ -74,9 +74,20 @@ void GUI_PlaylistChooser::save_button_pressed(){
 	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
 
 	int val = this->ui->combo_playlistchooser->itemData(cur_idx).toInt();
-	if(val >= 0 && cur_idx >0 ){
-		qDebug() << "Ui: save playlist";
-		emit sig_save_playlist(val);
+	if(val >= 0 && cur_idx > 0 ){
+		QMessageBox dialog;
+
+		dialog.setFocus();
+		dialog.setIcon(QMessageBox::Warning);
+		dialog.setText("<b>Overwrite?</b>");
+		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		dialog.setDefaultButton(QMessageBox::No);
+		dialog.setInformativeText("Are you sure?");
+		int answer = dialog.exec();
+		dialog.close();
+
+		if(answer == QMessageBox::Yes)
+			emit sig_save_playlist(val);
 	}
 
 	else save_as_button_pressed();
@@ -101,10 +112,7 @@ void GUI_PlaylistChooser::delete_button_pressed(){
 	dialog.setText("<b>Delete?</b>");
 	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 	dialog.setDefaultButton(QMessageBox::No);
-
-	QStringList file_list;
-
-	dialog.setInformativeText(	"Are you sure?");
+	dialog.setInformativeText("Are you sure?");
 	int answer = dialog.exec();
 	dialog.close();
 

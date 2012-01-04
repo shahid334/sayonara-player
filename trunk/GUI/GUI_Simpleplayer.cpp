@@ -574,6 +574,8 @@ void GUI_SimplePlayer::showEqualizer(bool vis) {
 
 		ui->plugin_widget->setMinimumSize(ui_eq->size());
 		ui->plugin_widget->setMaximumSize(ui_eq->size());
+		ui_eq->setMinimumSize(ui_eq->size());
+		ui_eq->setMaximumSize(ui_eq->size());
 
 
 		ui_eq->setVisible(true);
