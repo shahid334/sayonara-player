@@ -49,6 +49,8 @@ signals:
     void reloading_library_finished();
     void reloading_library(int);
 
+    void sig_import_result(bool);
+
 
 
 
@@ -64,8 +66,10 @@ public slots:
     void getTracksByArtist(int);
     void reloadLibrary();
     void importDirectory(QString);
+    void importFiles(const vector<MetaData>&);
+
     void setLibraryPath(QString);
-    void importDirectoryAccepted(const QString&);
+    void importDirectoryAccepted(const QString&, bool);
 
 private slots:
    void reload_thread_finished();

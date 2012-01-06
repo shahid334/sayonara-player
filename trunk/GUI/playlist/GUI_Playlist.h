@@ -74,7 +74,7 @@
 			void row_removed(int);
 			void edit_id3_signal();
 			void search_similar_artists(const QString&);
-			void sig_import_to_library();
+			void sig_import_to_library(bool);
 
 
 
@@ -86,6 +86,7 @@
 			void change_skin(bool);
 			void library_path_changed(QString);
 			void last_fm_logged_in(bool);
+			void import_result(bool);
 
 
 

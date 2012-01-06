@@ -53,57 +53,48 @@ public:
 	void ui_loaded();
 
 	signals:
-		void playlist_created(vector<MetaData>&, int);
-
-		void selected_file_changed_md(const MetaData&);
-		void selected_file_changed(int row);
-		void no_track_to_play();
-
-		void mp3s_loaded_signal(int percent);
-		void data_for_id3_change(const vector<MetaData>&);
-		void cur_played_info_changed(const MetaData&);
-		void goon_playing();
-		void search_similar_artists(const QString&);
-
+		void sig_playlist_created(vector<MetaData>&, int);
+		void sig_selected_file_changed_md(const MetaData&);
+		void sig_selected_file_changed(int row);
+		void sig_no_track_to_play();
+		void sig_mp3s_loaded_signal(int percent);
+		void sig_data_for_id3_change(const vector<MetaData>&);
+		void sig_cur_played_info_changed(const MetaData&);
+		void sig_goon_playing();
+		void sig_search_similar_artists(const QString&);
 		void sig_playlist_prepared(int, vector<MetaData>&);
 		void sig_playlist_prepared(QString, vector<MetaData>&);
-
 		void sig_library_changed();
+		void sig_import_files(const vector<MetaData>&);
 
 
 	public slots:
 
-		void createPlaylist(QStringList&);
-		void createPlaylist(vector<MetaData>&);
-		void createPlaylist(CustomPlaylist&);
-		void insert_tracks(const vector<MetaData>&, int idx);
-		void insert_albums(const vector<Album>&, int);			// not used
-		void insert_artists(const vector<Artist>&, int);		// not used
-		void change_track(int);
-		void next_track();
-		void playlist_mode_changed(const Playlist_Mode&);
-		void clear_playlist();
-		void save_playlist(const QString&);
-		void similar_artists_available(QList<int>&);
-
-		void directoryDropped(const QString& dir, int row);
-
-		void prepare_playlist_for_save(int id);
-		void prepare_playlist_for_save(QString name);
-
-
-		void play();
-		void stop();
-		void forward();
-		void backward();
-
-		void remove_row(int);
-		void save_playlist_to_storage();
-
-		void edit_id3_request();
-		void id3_tags_changed(vector<MetaData>&);
-
-		void import_new_tracks_to_library();
+		void psl_createPlaylist(QStringList&);
+		void psl_createPlaylist(vector<MetaData>&);
+		void psl_createPlaylist(CustomPlaylist&);
+		void psl_insert_tracks(const vector<MetaData>&, int idx);
+		void psl_insert_albums(const vector<Album>&, int);			// not used
+		void psl_insert_artists(const vector<Artist>&, int);		// not used
+		void psl_change_track(int);
+		void psl_next_track();
+		void psl_playlist_mode_changed(const Playlist_Mode&);
+		void psl_clear_playlist();
+		void psl_save_playlist(const QString&);
+		void psl_similar_artists_available(QList<int>&);
+		void psl_directoryDropped(const QString& dir, int row);
+		void psl_prepare_playlist_for_save(int id);
+		void psl_prepare_playlist_for_save(QString name);
+		void psl_play();
+		void psl_stop();
+		void psl_forward();
+		void psl_backward();
+		void psl_remove_row(int);
+		void psl_save_playlist_to_storage();
+		void psl_edit_id3_request();
+		void psl_id3_tags_changed(vector<MetaData>&);
+		void psl_import_new_tracks_to_library(bool);
+		void psl_import_result(bool);
 
 
 	private:

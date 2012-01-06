@@ -104,6 +104,7 @@ public slots:
 	void library_should_be_reloaded();
 	void cover_changed(bool, QString);
 	void library_changed();
+	void import_result(bool);
 
 private slots:
 	void track_pressed(const QModelIndex&);

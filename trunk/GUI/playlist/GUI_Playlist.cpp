@@ -91,7 +91,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->listView->setAlternatingRowColors(true);
 	this->ui->listView->setMovement(QListView::Free);
 
-
+	this->ui->btn_import->setVisible(false);
 
 
 	this->connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
@@ -219,7 +219,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 	_cur_playing_row = cur_play_idx;
 
-	this->ui->btn_import->setVisible(true);
+	this->ui->btn_import->setVisible(false);
 	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
 
 		if(it->is_extern) this->ui->btn_import->setVisible(true);
@@ -391,13 +391,16 @@ void GUI_Playlist::playlist_mode_changed_slot(){
 // maybe the button state (pressed/unpressed) should be loaded from db here
 void GUI_Playlist::initGUI(){
 
-	this->ui->btn_append->setIcon(QIcon(Helper::getIconPath() + "append.png"));
-	this->ui->btn_rep1->setIcon(QIcon(Helper::getIconPath() + "rep1.png"));
+	QString icon_path = Helper::getIconPath();
+
+	this->ui->btn_append->setIcon(QIcon(icon_path + "append.png"));
+	this->ui->btn_rep1->setIcon(QIcon(icon_path + "rep1.png"));
 	this->ui->btn_rep1->setVisible(false);
-	this->ui->btn_repAll->setIcon(QIcon(Helper::getIconPath() + "repAll.png"));
-	this->ui->btn_dynamic->setIcon(QIcon(Helper::getIconPath() + "dynamic.png"));
-	this->ui->btn_shuffle->setIcon(QIcon(Helper::getIconPath() + "shuffle.png"));
-	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
+	this->ui->btn_repAll->setIcon(QIcon(icon_path + "repAll.png"));
+	this->ui->btn_dynamic->setIcon(QIcon(icon_path + "dynamic.png"));
+	this->ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
+	this->ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
+	this->ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
 
 }
 
@@ -673,5 +676,11 @@ void GUI_Playlist::last_fm_logged_in(bool success){
 
 
 void GUI_Playlist::import_button_clicked(){
-	emit sig_import_to_library();
+	emit sig_import_to_library(false);
+}
+
+void GUI_Playlist::import_result(bool success){
+
+	this->ui->btn_import->setVisible(!success);
+
 }

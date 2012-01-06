@@ -12,7 +12,7 @@
 #include <QWidget>
 
 
-GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_list) {
+GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_list, bool copy_enabled) {
 
 	Q_UNUSED(parent);
 
@@ -21,6 +21,10 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 	ui->setupUi(this);
 
 	this->ui->comB_proposed_artists->addItems(folder_list);
+	this->ui->cb_copy->setEnabled(copy_enabled);
+	if(!copy_enabled){
+		this->ui->cb_copy->setChecked(false);
+	}
 
 	connect(ui->bb_ok_cancel, SIGNAL(accepted()), this, SLOT(bb_accepted()));
 	connect(ui->bb_ok_cancel, SIGNAL(rejected()), this, SLOT(bb_recjected()));
@@ -47,11 +51,12 @@ void GUI_ImportFolder::progress_changed(int val){
 }
 
 void GUI_ImportFolder::bb_accepted(){
-	emit accepted(this->ui->comB_proposed_artists->currentText());
+	emit accepted(this->ui->comB_proposed_artists->currentText(), this->ui->cb_copy->isChecked());
 }
 
 void GUI_ImportFolder::bb_recjected(){
-	emit rejected();
+	this->close();
+	//emit rejected();
 }
 
 void GUI_ImportFolder::combo_box_changed(const QString& text){

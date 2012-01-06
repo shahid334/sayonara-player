@@ -152,6 +152,7 @@ additional_files.files += GUI/icons/arrow_down.png
 additional_files.files += GUI/icons/arrow_right.png
 additional_files.files += GUI/icons/arrow_left.png
 additional_files.files += GUI/icons/delete.png
+additional_files.files += GUI/icons/import.png
 
 additional_files.files += empty.db
 

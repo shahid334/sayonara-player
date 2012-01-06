@@ -17,11 +17,11 @@ class GUI_ImportFolder : public QWidget, private Ui::ImportFolder {
 
 Q_OBJECT
 public:
-	GUI_ImportFolder(QWidget* widget, const QStringList&);
+	GUI_ImportFolder(QWidget* widget, const QStringList&, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
 
 	signals:
-		void accepted(const QString&);
+		void accepted(const QString&, bool);
 		void rejected();
 
 

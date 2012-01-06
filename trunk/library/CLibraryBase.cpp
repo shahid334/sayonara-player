@@ -82,20 +82,73 @@ void CLibraryBase::importDirectory(QString directory){
 	content.push_front("");
 
 	if(m_import_dialog){
+		disconnect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
 		delete m_import_dialog;
+		m_import_dialog = 0;
 	}
 
-	m_import_dialog = new GUI_ImportFolder(NULL, content);
-	connect(m_import_dialog, SIGNAL(accepted(const QString&)), this, SLOT(importDirectoryAccepted(const QString&)));
+	m_import_dialog = new GUI_ImportFolder(NULL, content, true);
+	connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
 	m_import_dialog->show();
-
-
 }
 
-void CLibraryBase::importDirectoryAccepted(const QString& chosen_item){
+void CLibraryBase::importFiles(const vector<MetaData>& v_md){
+
+	vector<MetaData> v_md_new = v_md;
+	bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
+	emit sig_import_result(success);
+
+
+
+	/*
+	qDebug() << "show import dialog";
+
+	QStringList content;
+	for(uint i=0; i<v_md.size(); i++){
+		QString path = v_md.at(i).filepath;
+		content.push_back(path);
+	}
+
+	content.push_front("");
+
+	if(m_import_dialog){
+		disconnect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
+		delete m_import_dialog;
+		m_import_dialog = 0;
+	}
+
+	m_import_dialog = new GUI_ImportFolder(NULL, content, false);
+	connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
+	m_import_dialog->show();*/
+}
+
+
+
+
+void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy){
 
 	QDir lib_dir(m_library_path);
 	QDir src_dir(m_src_dir);
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+	if(!copy){
+		CDirectoryReader reader;
+		QStringList files;
+		int n_files;
+		reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
+		vector<MetaData> v_md;
+		foreach(QString filename, files){
+			MetaData md;
+			md = ID3::getMetaDataOfFile(filename);
+			v_md.push_back(md);
+		}
+
+		bool success = db->storeMetadata(v_md);
+		emit sig_import_result(success);
+		emit reloading_library_finished();
+
+		return;
+	}
 
 	QDir tmp_src_dir = src_dir;
 	tmp_src_dir.cdUp();
@@ -104,7 +157,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item){
 
 	QString target_path = m_library_path +
 				QDir::separator() +
-				chosen_item+
+				chosen_item +
 				QDir::separator() +
 				rel_src_path.replace(" ", "_");
 
@@ -147,8 +200,8 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item){
 
 		// copy & save to database
 		vector<MetaData> v_metadata;
-		CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
+		bool success = false;
 		for(int i=0; i<files2copy.size(); i++){
 
 			// target path + relative src path
@@ -157,6 +210,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item){
 
 			QFile f(files2copy[i]);
 			if( f.copy(new_filename) ){
+				success = true;
 				int percent = (i * 10000) / (100 * files2copy.size());
 				if( i== files2copy.size() -1) {
 					m_import_dialog->close();
@@ -169,8 +223,9 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item){
 			}
 		}
 
-		db->storeMetadata(v_metadata);
-		emit reloading_library_finished();
+		success &= db->storeMetadata(v_metadata);
+		emit sig_import_result(success);
+
 }
 
 

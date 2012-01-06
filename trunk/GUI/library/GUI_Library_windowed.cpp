@@ -761,7 +761,7 @@ void GUI_Library_windowed::reloading_library_finished(){
 }
 
 void GUI_Library_windowed::library_should_be_reloaded(){
-	this->ui->btn_reload->setVisible(true);
+	//this->ui->btn_reload->setVisible(true);
 }
 
 void GUI_Library_windowed::reload_library_slot(){
@@ -1240,4 +1240,18 @@ void GUI_Library_windowed::library_changed(){
 		}
 	}
 
+}
+
+
+void GUI_Library_windowed::import_result(bool success){
+
+	QString success_string;
+	if(success){
+		success_string = "Importing was successful";
+	}
+
+	else success_string = "Importing failed";
+
+	QMessageBox::information(NULL, "Information", success_string );
+	library_changed();
 }

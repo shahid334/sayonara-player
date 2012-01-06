@@ -396,7 +396,7 @@
       <string>Impor new tracks from playlist to library</string>
      </property>
      <property name="text">
-      <string>-&gt;l</string>
+      <string/>
      </property>
      <property name="iconSize">
       <size>

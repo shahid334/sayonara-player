@@ -79,13 +79,13 @@ void Playlist::ui_loaded(){
 			_cur_play_idx = -1;
 		}
 
-		emit playlist_created(_v_meta_data, _cur_play_idx);
+		emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 	}
 }
 
 
 
-void Playlist::save_playlist_to_storage(){
+void Playlist::psl_save_playlist_to_storage(){
 
 	QString playlist_str;
 	for(uint i=0; i<_v_meta_data.size(); i++){
@@ -102,7 +102,7 @@ void Playlist::save_playlist_to_storage(){
 
 
 
-void Playlist::createPlaylist(QStringList& pathlist){
+void Playlist::psl_createPlaylist(QStringList& pathlist){
 
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
@@ -121,22 +121,22 @@ void Playlist::createPlaylist(QStringList& pathlist){
 		}
 
 		double percent = i * 1.0 / files2fill;
-		emit mp3s_loaded_signal((int) (percent * 100));
+		emit sig_mp3s_loaded_signal((int) (percent * 100));
 	}
 
-	emit mp3s_loaded_signal(100);
+	emit sig_mp3s_loaded_signal(100);
 
-	save_playlist_to_storage();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
 
-void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
+void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data){
 
 	vector<MetaData> v_meta_data_tmp;
 
 
-	for(int i=0; i<v_meta_data.size(); i++){
+	for(uint i=0; i<v_meta_data.size(); i++){
 
 		MetaData md = v_meta_data.at(i);
 		if(Helper::checkTrack(md)){
@@ -158,18 +158,18 @@ void Playlist::createPlaylist(vector<MetaData>& v_meta_data){
 		}
 	}
 
-	save_playlist_to_storage();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
-void Playlist::createPlaylist(CustomPlaylist& pl){
-	createPlaylist(pl.tracks);
+void Playlist::psl_createPlaylist(CustomPlaylist& pl){
+	psl_createPlaylist(pl.tracks);
 }
 
 
 
 
-void Playlist::remove_row(int row){
+void Playlist::psl_remove_row(int row){
 
 
 	if(row < _cur_play_idx) _cur_play_idx --;
@@ -180,19 +180,20 @@ void Playlist::remove_row(int row){
 
 	vector<MetaData> v_tmp_extern;
 
-	for(int i=0; i<_v_extern_tracks.size(); i++){
-		if(filepath != _v_extern_tracks.at(i).filepath){
-			v_tmp_extern.push_back(_v_meta_data.at(i));
+	for(uint i=0; i<_v_extern_tracks.size(); i++){
+		MetaData md = _v_extern_tracks.at(i);
+		if(filepath != md.filepath){
+			v_tmp_extern.push_back(_v_extern_tracks.at(i));
 		}
 	}
 
 	_v_extern_tracks = v_tmp_extern;
 
-	save_playlist_to_storage();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
-void Playlist::directoryDropped(const QString& dir, int row){
+void Playlist::psl_directoryDropped(const QString& dir, int row){
 
 
 	CDirectoryReader reader;
@@ -217,11 +218,11 @@ void Playlist::directoryDropped(const QString& dir, int row){
     	vec_md.push_back(md);
     }
 
-    insert_tracks(vec_md, row);
+    psl_insert_tracks(vec_md, row);
 
 }
 
-void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
+void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	vector<MetaData> new_vec;
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
@@ -256,85 +257,85 @@ void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 	_v_meta_data = new_vec;
 
 
-	save_playlist_to_storage();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
 
 // not used, but maybe later
-void Playlist::insert_albums(const vector<Album>& v_albums, int idx){
+void Playlist::psl_insert_albums(const vector<Album>& v_albums, int idx){
 
 	int tmp_idx = idx;
 	for(uint i=0; i<v_albums.size(); i++){
 		vector<MetaData> vec;
 		CDatabaseConnector::getInstance()->getAllTracksByAlbum(v_albums.at(i).id, vec);
-		insert_tracks(vec, tmp_idx);
+		psl_insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
 }
 
 // not used, but maybe late
-void Playlist::insert_artists(const vector<Artist>& v_artists, int idx){
+void Playlist::psl_insert_artists(const vector<Artist>& v_artists, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_artists.size(); i++){
 		vector<MetaData> vec;
 		CDatabaseConnector::getInstance()->getAllTracksByArtist(v_artists.at(i).id, vec);
-		insert_tracks(vec, tmp_idx);
+		psl_insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
 }
 
 
-void Playlist::play(){
+void Playlist::psl_play(){
 
 	if(_v_meta_data.size() <= 0) return;
 
 	if(_cur_play_idx <= -1){
 		_cur_play_idx = 0;
-		emit selected_file_changed(_cur_play_idx);
-		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+		emit sig_selected_file_changed(_cur_play_idx);
+		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 	}
 
 	else{
-		emit goon_playing();
+		emit sig_goon_playing();
 	}
 
 }
 
-void Playlist::stop(){
+void Playlist::psl_stop(){
 
 	_cur_play_idx = -1;
-	emit no_track_to_play();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	emit sig_no_track_to_play();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
-void Playlist::forward(){
+void Playlist::psl_forward(){
 
 	if(_playlist_mode.shuffle){
 
 		int track_num = rand() % _v_meta_data.size();
 		_cur_play_idx = track_num;
-		emit selected_file_changed(track_num);
-		emit selected_file_changed_md(_v_meta_data[track_num]);
+		emit sig_selected_file_changed(track_num);
+		emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 
 	}
 
 	else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
 		_cur_play_idx++;
-		emit selected_file_changed(_cur_play_idx);
-		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+		emit sig_selected_file_changed(_cur_play_idx);
+		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 
 	}
 }
 
 // GUI -->
-void Playlist::backward(){
+void Playlist::psl_backward(){
 
 
 	if(this->_cur_play_idx > 0){
 		_cur_play_idx--;
-		emit selected_file_changed(_cur_play_idx);
-		emit selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+		emit sig_selected_file_changed(_cur_play_idx);
+		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 
 	}
 
@@ -343,11 +344,11 @@ void Playlist::backward(){
 
 
 // --> GUI
-void Playlist::next_track(){
+void Playlist::psl_next_track(){
 
 
 	if(_v_meta_data.size() == 0){
-		emit no_track_to_play();
+		emit sig_no_track_to_play();
 		return;
 	}
 
@@ -375,29 +376,29 @@ void Playlist::next_track(){
 	if(track_num >= 0){
 		MetaData md = _v_meta_data[track_num];
 		if(Helper::checkTrack(md)){
-			emit selected_file_changed(track_num);
-			emit selected_file_changed_md(_v_meta_data[track_num]);
+			emit sig_selected_file_changed(track_num);
+			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
 			if(_playlist_mode.dynamic)
-				emit search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+				emit sig_search_similar_artists(_v_meta_data[_cur_play_idx].artist);
 		}
 
 		else{
-			remove_row(track_num);
-			next_track();
+			psl_remove_row(track_num);
+			psl_next_track();
 			emit sig_library_changed();
 		}
 	}
 
 	else{
-		emit no_track_to_play();
+		emit sig_no_track_to_play();
 	}
 }
 
 
 
 // GUI -->
-void Playlist::change_track(int new_row){
+void Playlist::psl_change_track(int new_row){
 	if( (uint) new_row >= _v_meta_data.size())return;
 
 	MetaData md = _v_meta_data[new_row];
@@ -405,45 +406,45 @@ void Playlist::change_track(int new_row){
 
 		_cur_play_idx = new_row;
 
-		emit selected_file_changed_md(md);
+		emit sig_selected_file_changed_md(md);
 
 		if(_playlist_mode.dynamic)
-			emit search_similar_artists(md.artist);
+			emit sig_search_similar_artists(md.artist);
 	}
 
 	else{
 		_cur_play_idx = -1;
-		remove_row(new_row);
+		psl_remove_row(new_row);
 		emit sig_library_changed();
-		emit no_track_to_play();
+		emit sig_no_track_to_play();
 	}
 }
 
 
 // GUI -->
-void Playlist::clear_playlist(){
+void Playlist::psl_clear_playlist(){
 
 	_v_meta_data.clear();
 	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
 
-	save_playlist_to_storage();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
 }
 
 // --> custom playlists
-void Playlist::prepare_playlist_for_save(int id){
+void Playlist::psl_prepare_playlist_for_save(int id){
 	emit sig_playlist_prepared(id, _v_meta_data);
 }
 
-void Playlist::prepare_playlist_for_save(QString name){
+void Playlist::psl_prepare_playlist_for_save(QString name){
 	emit sig_playlist_prepared(name, _v_meta_data);
 }
 
 
 // GUI -->
-void Playlist::save_playlist(const QString& filename){
+void Playlist::psl_save_playlist(const QString& filename){
 
 
 	FILE* file = fopen(filename.toStdString().c_str(), "w");
@@ -467,7 +468,7 @@ void Playlist::save_playlist(const QString& filename){
 
 
 // GUI -->
-void Playlist::playlist_mode_changed(const Playlist_Mode& playlist_mode){
+void Playlist::psl_playlist_mode_changed(const Playlist_Mode& playlist_mode){
 
 	CSettingsStorage::getInstance()->setPlaylistMode(playlist_mode);
 	_playlist_mode = playlist_mode;
@@ -479,19 +480,19 @@ void Playlist::playlist_mode_changed(const Playlist_Mode& playlist_mode){
 
 
 
-void Playlist::edit_id3_request(){
-	emit data_for_id3_change(_v_meta_data);
+void Playlist::psl_edit_id3_request(){
+	emit sig_data_for_id3_change(_v_meta_data);
 }
 
-void Playlist::id3_tags_changed(vector<MetaData>& new_meta_data){
+void Playlist::psl_id3_tags_changed(vector<MetaData>& new_meta_data){
 	_v_meta_data = new_meta_data;
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 	if(_cur_play_idx >= 0 && _cur_play_idx < (int) _v_meta_data.size())
-		emit cur_played_info_changed(_v_meta_data[_cur_play_idx]);
+		emit sig_cur_played_info_changed(_v_meta_data[_cur_play_idx]);
 }
 
 
-void Playlist::similar_artists_available(QList<int>& artists){
+void Playlist::psl_similar_artists_available(QList<int>& artists){
 
 
 
@@ -542,12 +543,23 @@ void Playlist::similar_artists_available(QList<int>& artists){
 
 	_v_meta_data.push_back(md);
 
-	save_playlist_to_storage();
-	emit playlist_created(_v_meta_data, _cur_play_idx);
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
 }
 
 
-void Playlist::import_new_tracks_to_library(){
+void Playlist::psl_import_new_tracks_to_library(bool copy){
 
+	Q_UNUSED(copy);
+
+	if(_v_extern_tracks.size() == 0) return;
+	emit sig_import_files(_v_extern_tracks);
+
+}
+
+void Playlist::psl_import_result(bool success){
+	if(success){
+		_v_extern_tracks.clear();
+	}
 }
