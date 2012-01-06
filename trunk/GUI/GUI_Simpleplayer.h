@@ -119,6 +119,9 @@ private slots:
     void muteButtonPressed();
     void album_cover_pressed();
 
+    void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
+
+
     void changeSkin(bool);
     void lastFMClicked(bool b = true);
     void reloadLibraryClicked(bool b = true);
@@ -129,6 +132,8 @@ private slots:
     void load_pl_on_startup_toggled(bool);
 
     void about(bool b=false);
+
+
 
 protected:
 
