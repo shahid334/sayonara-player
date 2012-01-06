@@ -239,6 +239,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 		else str4Playlist.push_back("0");
 
 		str4Playlist.push_back("0");
+		qDebug() << "insert " << str4Playlist;
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 
@@ -258,6 +259,7 @@ void GUI_Playlist::clear_playlist_slot(){
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_cur_playing_row = -1;
 	_cur_selected_row = -1;
+	qDebug() << "Ui:: send clear playlist";
 	emit clear_playlist();
 }
 

@@ -97,7 +97,7 @@ bool CDatabaseConnector::load_settings(){
 	CSettingsStorage::getInstance()->setVolume(volume);
 
 
-
+	/* Library path */
 	QVariant v_lib_path;
 	QString lib_path = "";
 	load_setting("library_path", v_lib_path);
@@ -107,6 +107,7 @@ bool CDatabaseConnector::load_settings(){
 	CSettingsStorage::getInstance()->setLibraryPath(lib_path);
 
 
+	/* Player size */
 	QVariant v_player_size;
 	QStringList l_player_size;
 	QSize player_size(800, 600);
@@ -223,7 +224,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value){
 
 		if(q.next()){
 			tgt_value = q.value(0);
-			qDebug() << "Fetched " << key;
+			//qDebug() << "Fetched " << key << " -> " << tgt_value;
 		}
 	}
 
@@ -266,7 +267,7 @@ void CDatabaseConnector::store_setting(QString key, QVariant value){
 		}
 
 		else{
-			qDebug() << "Updated " << key;
+			//qDebug() << "Updated " << key << " -> " << value;
 		}
 	}
 	catch (QString& ex) {

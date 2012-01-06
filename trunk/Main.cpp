@@ -174,6 +174,7 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(reloading_library(int)),						&ui_library, 	SLOT(reloading_library(int)));
         app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
         app.connect(&library, SIGNAL(sig_import_result(bool)),						&ui_library,	SLOT(import_result(bool)));
+        app.connect(&library, SIGNAL(sig_import_result(bool)),						&playlists,		SLOT(import_result(bool)));
 
 
         app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
@@ -209,7 +210,7 @@ int main(int argc, char *argv[]){
 
 		app.connect(&playlists, SIGNAL(sig_single_playlist_loaded(CustomPlaylist&)), 	&playlist, 				SLOT(psl_createPlaylist(CustomPlaylist&)));
 		app.connect(&playlists, SIGNAL(sig_all_playlists_loaded(QMap<int, QString>&)), 	&ui_playlist_chooser, 	SLOT(all_playlists_fetched(QMap<int, QString>&)));
-
+		app.connect(&playlists, SIGNAL(sig_import_tracks(const vector<MetaData>&)), 	&library, 				SLOT(importFiles(const vector<MetaData>&)));
 
 
 		//app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));

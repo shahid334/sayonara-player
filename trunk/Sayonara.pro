@@ -7,7 +7,8 @@ QT += xml
 QT += sql
 TEMPLATE = app
 TARGET = sayonara
-CXX_FLAGS += -O2
+#CXX_FLAGS += -O2
+CONFIG += debug
 
 
 

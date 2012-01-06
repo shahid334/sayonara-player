@@ -25,6 +25,9 @@ using namespace std;
 
 GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) {
 
+	_cur_idx = -1;
+
+
 	this->ui = new Ui::PlaylistChooser();
 	this->ui->setupUi(this);
 
@@ -42,7 +45,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 	connect(this->ui->btn_save, SIGNAL(pressed()), this, SLOT(save_button_pressed()));
 	connect(this->ui->btn_save_as, SIGNAL(pressed()), this, SLOT(save_as_button_pressed()));
 	connect(this->ui->btn_delete, SIGNAL(pressed()), this, SLOT(delete_button_pressed()));
-	connect(this->ui->combo_playlistchooser, SIGNAL(currentIndexChanged(int)), this, SLOT(playlist_selected(int)));
+
 
 }
 
@@ -53,7 +56,7 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
-	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
+
 
 	this->ui->combo_playlistchooser->clear();
 	this->ui->combo_playlistchooser->addItem("<empty>", -1);
@@ -63,18 +66,22 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 		QString name = mapping.value(key);
 		this->ui->combo_playlistchooser->addItem(name, key);
 	}
+	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1)
+		this->ui->combo_playlistchooser->setCurrentIndex(_cur_idx);
 
-	this->ui->combo_playlistchooser->setCurrentIndex(cur_idx);
+	connect(this->ui->combo_playlistchooser, SIGNAL(currentIndexChanged(int)), this, SLOT(playlist_selected(int)));
+
+
 }
 
 
 
 void GUI_PlaylistChooser::save_button_pressed(){
 
-	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
+	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx == -1) return;
 
-	int val = this->ui->combo_playlistchooser->itemData(cur_idx).toInt();
-	if(val >= 0 && cur_idx > 0 ){
+	int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
+	if(val >= 0 && _cur_idx > 0 ){
 		QMessageBox dialog;
 
 		dialog.setFocus();
@@ -97,6 +104,7 @@ void GUI_PlaylistChooser::save_button_pressed(){
 
 void GUI_PlaylistChooser::save_as_button_pressed(){
 
+
 	bool ok;
 	QString pl_name = QInputDialog::getText(0, "Please choose a name", "Playlist name", QLineEdit::Normal, "", &ok);
 
@@ -116,15 +124,19 @@ void GUI_PlaylistChooser::delete_button_pressed(){
 	int answer = dialog.exec();
 	dialog.close();
 
-	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
-	int val = this->ui->combo_playlistchooser->itemData(cur_idx).toInt();
-	if(val >= 0 && answer == QMessageBox::Yes)
-		emit sig_delete_playlist(val);
+	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1){
+		int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
+		if(val >= 0 && answer == QMessageBox::Yes)
+			emit sig_delete_playlist(val);
+	}
 
 }
 
 
 void GUI_PlaylistChooser::playlist_selected(int idx){
+
+	_cur_idx = idx;
+	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx == -1) return;
 
 	int val = this->ui->combo_playlistchooser->itemData(idx).toInt();
 	bool val_bigger_zero = (val >= 0);
@@ -143,8 +155,8 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 
 void GUI_PlaylistChooser::apply_button_pressed(){
 
-	int cur_idx = this->ui->combo_playlistchooser->currentIndex();
-	int val = this->ui->combo_playlistchooser->itemData(cur_idx).toInt();
+	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx == -1) return;
+	int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
 
 	if(val >= 0)
 		emit sig_playlist_chosen(val);

@@ -62,12 +62,18 @@ Playlist::~Playlist() {
 
 void Playlist::ui_loaded(){
 
+	_v_meta_data.clear();
 	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
+
+	qDebug() << "Load playlist" << loadPlaylist;
+
 
 	if( loadPlaylist ){
 
 		QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
 		QStringList list = saved_playlist.split(',');
+
+		qDebug() << list;
 
 		if(list.size() > 0){
 
@@ -79,6 +85,7 @@ void Playlist::ui_loaded(){
 			_cur_play_idx = -1;
 		}
 
+		qDebug() << "playlist created " << _v_meta_data.size();
 		emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 	}
 }
@@ -86,6 +93,8 @@ void Playlist::ui_loaded(){
 
 
 void Playlist::psl_save_playlist_to_storage(){
+
+	qDebug() << "psl save playlists " << _v_meta_data.size();
 
 	QString playlist_str;
 	for(uint i=0; i<_v_meta_data.size(); i++){
@@ -424,6 +433,8 @@ void Playlist::psl_change_track(int new_row){
 // GUI -->
 void Playlist::psl_clear_playlist(){
 
+	qDebug() << "clear playlist";
+
 	_v_meta_data.clear();
 	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
@@ -494,8 +505,6 @@ void Playlist::psl_id3_tags_changed(vector<MetaData>& new_meta_data){
 
 void Playlist::psl_similar_artists_available(QList<int>& artists){
 
-
-
 	if(artists.size() == 0) return;
 
 	Helper::randomize_list(artists);
@@ -559,7 +568,15 @@ void Playlist::psl_import_new_tracks_to_library(bool copy){
 }
 
 void Playlist::psl_import_result(bool success){
+
+	_v_extern_tracks.clear();
 	if(success){
-		_v_extern_tracks.clear();
+
+		foreach(MetaData md, _v_meta_data){
+			md.is_extern = false;
+		}
+
+		psl_createPlaylist(_v_meta_data);
 	}
+
 }

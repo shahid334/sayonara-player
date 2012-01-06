@@ -50,6 +50,8 @@ public:
 private:
 	Ui::PlaylistChooser* ui;
 	QMap<int, QString> _playlists;
+	int	_cur_idx;
+	bool _started;
 
 protected:
 	void closeEvent(QCloseEvent* e);
