@@ -115,6 +115,8 @@ void Playlist::createPlaylist(QStringList& pathlist){
 		if(QFile::exists(pathlist[i])){
 			MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
 			md.is_extern = true;
+
+			_v_extern_tracks.push_back(md);
 			_v_meta_data.push_back(md);
 		}
 
@@ -173,7 +175,18 @@ void Playlist::remove_row(int row){
 	if(row < _cur_play_idx) _cur_play_idx --;
 	else if(row == _cur_play_idx) _cur_play_idx = -1;
 
+	QString filepath = (_v_meta_data.begin() + row)->filepath;
 	_v_meta_data.erase(this->_v_meta_data.begin() + row);
+
+	vector<MetaData> v_tmp_extern;
+
+	for(int i=0; i<_v_extern_tracks.size(); i++){
+		if(filepath != _v_extern_tracks.at(i).filepath){
+			v_tmp_extern.push_back(_v_meta_data.at(i));
+		}
+	}
+
+	_v_extern_tracks = v_tmp_extern;
 
 	save_playlist_to_storage();
 	emit playlist_created(_v_meta_data, _cur_play_idx);
@@ -183,16 +196,24 @@ void Playlist::directoryDropped(const QString& dir, int row){
 
 
 	CDirectoryReader reader;
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 	QStringList fileList;
     int num_files = 0;
     reader.getFilesInsiderDirRecursive(QDir(dir), fileList, num_files);
 
     vector<MetaData> vec_md;
-
     foreach(QString filepath, fileList){
     	qDebug() << filepath;
     	MetaData md = ID3::getMetaDataOfFile(filepath);
+    	if(db->getTrackByPath(filepath) <= 0){
+
+    		md.is_extern = true;
+    		_v_extern_tracks.push_back(md);
+    	}
+
+    	else md.is_extern = false;
+
     	vec_md.push_back(md);
     }
 
@@ -203,6 +224,8 @@ void Playlist::directoryDropped(const QString& dir, int row){
 void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	vector<MetaData> new_vec;
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
 	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
@@ -211,8 +234,19 @@ void Playlist::insert_tracks(const vector<MetaData>& v_metadata, int row){
 		new_vec.push_back(_v_meta_data.at(i));
 
 
-	for(uint i=0; i<v_metadata.size(); i++)
-		new_vec.push_back(v_metadata.at(i));
+	for(uint i=0; i<v_metadata.size(); i++){
+		MetaData md = v_metadata.at(i);
+		if(db->getTrackByPath(md.filepath) > 0){
+			md.is_extern = false;
+		}
+
+		else {
+			md.is_extern = true;
+			_v_extern_tracks.push_back(md);
+		}
+		new_vec.push_back(md);
+	}
+
 
 
 	for(uint i=row; i<_v_meta_data.size(); i++)
@@ -390,6 +424,7 @@ void Playlist::change_track(int new_row){
 void Playlist::clear_playlist(){
 
 	_v_meta_data.clear();
+	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
 
 	save_playlist_to_storage();
@@ -509,5 +544,10 @@ void Playlist::similar_artists_available(QList<int>& artists){
 
 	save_playlist_to_storage();
 	emit playlist_created(_v_meta_data, _cur_play_idx);
+
+}
+
+
+void Playlist::import_new_tracks_to_library(){
 
 }

@@ -74,6 +74,7 @@
 			void row_removed(int);
 			void edit_id3_signal();
 			void search_similar_artists(const QString&);
+			void sig_import_to_library();
 
 
 
@@ -89,8 +90,6 @@
 
 
 
-
-
 		private slots:
 
 
@@ -102,6 +101,7 @@
 			void playlist_mode_changed_slot();
 			void edit_id3_but_pressed();
 			void dummy_pressed();
+			void import_button_clicked();
 
 
 
@@ -129,8 +129,6 @@
 			bool inner_drag_drop;
 
 			QPoint	_last_known_drag_pos;
-
-
 
 	};
 

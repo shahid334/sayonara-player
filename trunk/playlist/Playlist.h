@@ -103,16 +103,20 @@ public:
 		void edit_id3_request();
 		void id3_tags_changed(vector<MetaData>&);
 
+		void import_new_tracks_to_library();
+
 
 	private:
 
 
 
 	vector<MetaData>	_v_meta_data;
+	vector<MetaData>	_v_extern_tracks;
 	QStringList			_pathlist;
 	int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;
+
 
 
 

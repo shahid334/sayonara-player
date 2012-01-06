@@ -136,6 +136,7 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(selected_file_changed(int)), 						&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(playlist_created(vector<MetaData>&, int)), 			&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&, int)));
         app.connect (&playlist, SIGNAL(mp3s_loaded_signal(int)), 							&ui_playlist, 	SLOT(update_progress_bar(int)));
+        app.connect (&playlist, SIGNAL(sig_extern_track_found()),							&ui_playlist,	SLOT(extern_track_found()));
         app.connect (&playlist, SIGNAL(selected_file_changed_md(const MetaData&)),			&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(cur_played_info_changed(const MetaData&)),   		&player,  		SLOT(update_info(const MetaData&)));
         app.connect (&playlist, SIGNAL(sig_playlist_prepared(int, vector<MetaData>&)), 		&playlists, 	SLOT(save_playlist_as_custom(int, vector<MetaData>&)));
@@ -149,6 +150,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(sound_files_dropped(QStringList&)), 			&playlist, 	SLOT(createPlaylist(QStringList&)));
         app.connect (&ui_playlist, SIGNAL(directory_dropped(const QString&, int)),		&playlist, 	SLOT(directoryDropped(const QString &, int )));
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 							&playlist, 	SLOT(remove_row(int)));
+       // app.connect (&ui_playlist, SIGNAL(import_to_library()),							&playlist,	SLOT(import_new_tracks_to_library()));
 
         app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,	SLOT(next_track() ));
         app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 	SLOT(scrobble(const MetaData&)));

@@ -107,6 +107,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 	this->connect(this->ui->listView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(released(const QModelIndex &)));
 
+	this->connect(this->ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	//this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
 	// we need a reason for refreshing the list
@@ -125,7 +126,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
 	change_skin(dark);
-
 }
 
 
@@ -219,7 +219,10 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 	_cur_playing_row = cur_play_idx;
 
+	this->ui->btn_import->setVisible(true);
 	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
+
+		if(it->is_extern) this->ui->btn_import->setVisible(true);
 
 		QModelIndex model_idx = _pli_model->index(idx, 0);
 
@@ -251,6 +254,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 // private SLOT: clear button pressed
 void GUI_Playlist::clear_playlist_slot(){
 	this->ui->lab_totalTime->setText("Total Time: 0m 0s");
+	this->ui->btn_import->setVisible(false);
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_cur_playing_row = -1;
 	_cur_selected_row = -1;
@@ -665,4 +669,9 @@ void GUI_Playlist::edit_id3_but_pressed(){
 void GUI_Playlist::last_fm_logged_in(bool success){
 
 	this->ui->btn_dynamic->setEnabled(success);
+}
+
+
+void GUI_Playlist::import_button_clicked(){
+	emit sig_import_to_library();
 }
