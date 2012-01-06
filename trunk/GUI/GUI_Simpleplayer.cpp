@@ -126,6 +126,8 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
+        connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
+
 
 	/*connect(this->ui->albumCover, SIGNAL(pressed()), this,
 			SLOT(album_cover_pressed()));*/
@@ -765,9 +767,23 @@ void GUI_SimplePlayer::setupTrayContextMenu() {
 
 	//trayContextMenu->addAction(showAction);
 
+        m_trayIcon->setToolTip("Sayonara - Music - Player");
 	m_trayIcon->setContextMenu(trayContextMenu);
 
 }
+
+
+void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
+    switch (reason) {
+    case QSystemTrayIcon::MiddleClick:
+        this -> playClicked (false);
+        break;
+    default:
+        break;
+
+    }
+}
+
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
