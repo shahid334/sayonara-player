@@ -98,7 +98,7 @@ namespace Helper{
 	inline string replace(string input, string toReplace, string replaceWith){
 
                 unsigned int i=0;
-                uint pos = 0;
+                string::size_type pos = 0;
 		while(true){
 
 			pos = input.find_first_of(toReplace.c_str(), i);
