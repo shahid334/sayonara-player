@@ -29,6 +29,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <GUI_TrayIcon.h>
+
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
@@ -44,10 +46,13 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 	this->m_cur_searching = false;
 	this->m_mute = false;
 
-	m_trayIcon = new QSystemTrayIcon();
-	m_trayIcon->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	setupTrayContextMenu();
-	m_trayIcon->show();
+        this -> setupActions();
+
+
+        m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"));
+        m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction);
+        m_trayIcon->show();
+
 
 	m_minTriggerByTray = false;
 	m_minimized2tray = false;
@@ -96,10 +101,6 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 			SLOT(searchSliderMoved(int)));
 	connect(this->ui->songProgress, SIGNAL(sliderReleased()), this,
 			SLOT(searchSliderReleased()));
-
-	connect(this->m_trayIcon,
-			SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this,
-			SLOT(showAgain(QSystemTrayIcon::ActivationReason)));
 	connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
 			SLOT(showEqualizer(bool)));
 	connect(this->ui->action_ViewPlaylistChooser, SIGNAL(toggled(bool)), this,
@@ -126,11 +127,9 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
-        connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
+        this -> connectTrayIcon ();
 
 
-	/*connect(this->ui->albumCover, SIGNAL(pressed()), this,
-			SLOT(album_cover_pressed()));*/
 
 	ui_playlist = 0;
 
@@ -351,6 +350,8 @@ void GUI_SimplePlayer::playClicked(bool) {
 
 	}
 	this->m_playing = !this->m_playing;
+        this -> m_trayIcon->playStateChanged (this->m_playing);
+
 }
 
 void GUI_SimplePlayer::stopClicked(bool) {
@@ -692,95 +693,76 @@ void GUI_SimplePlayer::changeEvent(QEvent *event) {
 
 }
 
-void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason) {
+//void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason) {
 
-	switch (reason) {
-	case QSystemTrayIcon::Trigger:
-		if (this->isMinimized() || isHidden())
-			this->showNormal();
-		if (!this->isActiveWindow())
-			this->activateWindow();
-		else {
-			hide();
-		}
-		break;
+//	switch (reason) {
+//	case QSystemTrayIcon::Trigger:
+//		if (this->isMinimized() || isHidden())
+//			this->showNormal();
+//		if (!this->isActiveWindow())
+//			this->activateWindow();
+//		else {
+//			hide();
+//		}
+//		break;
 
-	default:
-		break;
+//	default:
+//		break;
 
-	}
+//	}
 
-	Q_UNUSED(reason);
+//	Q_UNUSED(reason);
 
-}
+//}
 
 void GUI_SimplePlayer::setupIcons() {
 
 }
 
-void GUI_SimplePlayer::setupTrayContextMenu() {
+void GUI_SimplePlayer::setupActions() {
+    m_playAction = new QAction(tr("Play"), this);
+    m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    m_stopAction = new QAction(tr("Stop"), this);
+    m_stopAction->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
+    m_bwdAction = new QAction(tr("Previous"), this);
+    m_bwdAction->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+    m_fwdAction = new QAction(tr("Next"), this);
+    m_fwdAction->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
+    m_muteAction = new QAction(tr("Mute"), this);
+    m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
+    m_closeAction = new QAction(tr("Close"), this);
+    m_closeAction->setIcon(QIcon(Helper::getIconPath() + "close.png"));
+    connect(m_stopAction, SIGNAL(triggered()), this, SLOT(stopClicked()));
+    connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
+    connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(forwardClicked()));
+    connect(m_muteAction, SIGNAL(triggered()), this, SLOT(muteButtonPressed()));
+    connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
+    connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
 
-	QMenu* trayContextMenu;
-	QAction* showAction;
+}
 
-	trayContextMenu = new QMenu();
-
-	m_playAction = new QAction(tr("Play"), this);
-	m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
-
-	m_stopAction = new QAction(tr("Stop"), this);
-	m_stopAction->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
-	connect(m_stopAction, SIGNAL(triggered()), this, SLOT(stopClicked()));
-
-	m_bwdAction = new QAction(tr("Previous"), this);
-	m_bwdAction->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
-	connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
-
-	m_fwdAction = new QAction(tr("Next"), this);
-	m_fwdAction->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
-	connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(forwardClicked()));
-
-	m_muteAction = new QAction(tr("Mute"), this);
-	m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
-	connect(m_muteAction, SIGNAL(triggered()), this, SLOT(muteButtonPressed()));
-
-	m_closeAction = new QAction(tr("Close"), this);
-	m_closeAction->setIcon(QIcon(Helper::getIconPath() + "close.png"));
-	connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
-
-	showAction = new QAction(tr("Show"), this);
-	connect(showAction, SIGNAL(triggered()), this, SLOT(showNormal()));
-
-	trayContextMenu->addAction(m_playAction);
-	trayContextMenu->addAction(m_stopAction);
-	trayContextMenu->addSeparator();
-
-	trayContextMenu->addAction(m_fwdAction);
-	trayContextMenu->addAction(m_bwdAction);
-
-	trayContextMenu->addSeparator();
-
-	trayContextMenu->addAction(m_muteAction);
-	trayContextMenu->addSeparator();
-	trayContextMenu->addAction(m_closeAction);
-
-	//trayContextMenu->addAction(showAction);
-
-        m_trayIcon->setToolTip("Sayonara - Music - Player");
-	m_trayIcon->setContextMenu(trayContextMenu);
-
+void GUI_SimplePlayer::connectTrayIcon() {
+    connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
+    connect(this -> m_trayIcon, SIGNAL(onShowNormal()), this, SLOT(showNormal()));
 }
 
 
 void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
     switch (reason) {
+    case QSystemTrayIcon::Trigger:
+        if (this->isMinimized() || isHidden())
+            this->showNormal();
+        if (!this->isActiveWindow())
+            this->activateWindow();
+        else {
+            hide();
+        }
+        break;
     case QSystemTrayIcon::MiddleClick:
         this -> playClicked (false);
         break;
     default:
         break;
-
     }
 }
 

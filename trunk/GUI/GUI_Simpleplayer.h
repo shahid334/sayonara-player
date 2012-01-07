@@ -31,7 +31,8 @@
 
 #include <QMainWindow>
 #include <QCloseEvent>
-#include <QSystemTrayIcon>
+#include <GUI_TrayIcon.h>
+
 
 #include <string>
 
@@ -40,7 +41,7 @@ class QCloseEvent;
 
 
 namespace Ui {
-    class GUI_SimplePlayer;
+class GUI_SimplePlayer;
 }
 
 
@@ -55,7 +56,7 @@ public slots:
     /**
       * Insert Meta informations
       */
-	void cover_changed(bool, QString);
+    void cover_changed(bool, QString);
     void fillSimplePlayer (const MetaData & in);
     void showEqualizer(bool b=false);
     void showRadio(bool b=false);
@@ -115,7 +116,7 @@ private slots:
     void searchSliderMoved(int search_percent, bool by_app=false);
     void volumeChangedSlider(int volume_percent);
     void coverClicked(bool);
-    void showAgain(QSystemTrayIcon::ActivationReason);
+    //void showAgain(QSystemTrayIcon::ActivationReason);
     void muteButtonPressed();
     void album_cover_pressed();
 
@@ -153,23 +154,24 @@ private:
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
     GUI_PlaylistChooser*		ui_playlist_chooser;
-//    GUI_RadioWidget*			ui_radio;
+    //    GUI_RadioWidget*			ui_radio;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
     bool						m_mute;
 
-    QSystemTrayIcon*			m_trayIcon;
+    GUI_TrayIcon *			m_trayIcon;
 
+    /// some shared actions
     QAction*					m_closeAction;
-   	QAction*					m_playAction;
-   	QAction*					m_stopAction;
-   	QAction*					m_muteAction;
-   	QAction*					m_fwdAction;
-   	QAction*					m_bwdAction;
+    QAction*					m_playAction;
+    QAction*					m_stopAction;
+    QAction*					m_muteAction;
+    QAction*					m_fwdAction;
+    QAction*					m_bwdAction;
 
 
-   	bool						m_minimized2tray;
+    bool						m_minimized2tray;
     bool						m_minTriggerByTray;
 
 
@@ -183,19 +185,20 @@ private:
 
 
 
+    void setupActions ();
+    void connectTrayIcon();
 
-    void setupTrayContextMenu();
     void setupVolButton(int percent);
-	void setupIcons();
-	void initGUI();
-	void hideAllPlugins();
+    void setupIcons();
+    void initGUI();
+    void hideAllPlugins();
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
     void setLibrary(GUI_Library_windowed* library);
     void setEqualizer(GUI_Equalizer* eq);
     void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
-//    void setRadio(GUI_RadioWidget* radio);
+    //    void setRadio(GUI_RadioWidget* radio);
     QWidget* getParentOfPlaylist();
     QWidget* getParentOfPlaylistChooser();
     QWidget* getParentOfLibrary();
