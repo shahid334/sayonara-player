@@ -89,6 +89,8 @@ private:
     int	m_volume;
     int m_last_eq;
 
+    bool m_show_notifications;
+
 
     vector<EQ_Setting> m_vec_eqSettings;
 
@@ -137,6 +139,9 @@ public:
 
 	void setPlayerStyle(int);
 	int getPlayerStyle();
+
+	void setShowNotifications(bool);
+	bool getShowNotification();
 
 };
 

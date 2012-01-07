@@ -195,15 +195,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.32"
-     inkscape:cx="-5087.8909"
-     inkscape:cy="-1884.0535"
+     inkscape:zoom="0.04"
+     inkscape:cx="-2229.3774"
+     inkscape:cy="-2237.6069"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
      inkscape:window-height="975"
-     inkscape:window-x="1680"
+     inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1"
      showguides="true"
@@ -216,7 +216,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1620,5 +1620,82 @@
        inkscape:export-filename="/home/luke/sayonara-player/icons/save_as.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#323232;fill-opacity:1;stroke:#323232;stroke-width:85.23659515;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect4059-9"
+       width="686.76343"
+       height="686.76343"
+       x="-2367.4751"
+       y="3024.7551"
+       ry="134.19833"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/power_off.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4159-7-4-8"
+       width="455.09109"
+       height="36.873428"
+       x="-2247.4875"
+       y="3061.5386"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/save.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="1.8902935" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4159-7-4-8-4"
+       width="339.46609"
+       height="36.873428"
+       x="-2190.0457"
+       y="3284.113"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/save.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="1.8902935" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4159-7-4-8-8"
+       width="234.77859"
+       height="36.873428"
+       x="-2146.2957"
+       y="3166.9255"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/save.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="1.8902935" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4159-7-4-8-1"
+       width="534.77863"
+       height="36.873428"
+       x="-2293.1707"
+       y="3402.613"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/save.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="1.8902935" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4159-7-4-8-2"
+       width="262.90359"
+       height="36.873428"
+       x="-2163.5942"
+       y="3515.7769"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/save.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="1.8902935" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       id="rect4159-7-4-8-89"
+       width="455.09109"
+       height="36.873428"
+       x="-2249.1526"
+       y="3624.1255"
+       inkscape:export-filename="/home/luke/sayonara-player/icons/save.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       ry="1.8902935" />
   </g>
 </svg>

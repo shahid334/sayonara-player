@@ -111,8 +111,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(lyric_button_toggled(bool)));
-
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));
 	this->connect(this->ui->listView, SIGNAL(doubleClicked(const QModelIndex &)), this, SLOT(double_clicked(const QModelIndex &)));
 	this->connect(this->ui->listView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(released(const QModelIndex &)));
@@ -173,6 +173,8 @@ void GUI_Playlist::dummy_pressed(){
 
 void GUI_Playlist::lyric_button_toggled(bool on){
 
+	this->parentWidget()->setFocus();
+
 	if(on){
 		QVariant data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
 		QStringList lst = data.toStringList();
@@ -186,13 +188,22 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 		QString lyrics = ll.find_lyrics(md.artist, md.title);
 		lyrics = lyrics.trimmed();
 
-		QString title = QString("<center><font size=\"5\" color=\"#F3841A\"><b>") + md.artist + " - " + md.title + "</b></font><br /><br />";
-		QString text_data = title + lyrics + "</center>";
+		QString title = QString("<font size=\"5\" color=\"#F3841A\"><b>") + md.artist + " - " + md.title + "</b></font><br /><br />";
+		QString text_data = title + lyrics ;//+ "</center>";
+		QSize size = this->ui->listView->size();
+		size.setWidth(size.width() + this->ui->listView->verticalScrollBar()->width());
+
 		_text->setAcceptRichText(true);
 		_text->setText(title + lyrics);
-		_text->setFixedHeight(this->ui->listView->height());
-		_text->setFixedWidth(this->ui->listView->width());
+		_text->setLineWrapColumnOrWidth(this->ui->listView->width() - 10);
+		_text->setLineWrapMode(QTextEdit::FixedPixelWidth);
+		_text->setMinimumSize(size);
+		_text->setMaximumSize(size);
+		_text->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+		_text->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 		_text->show();
+
+		this->ui->listView->verticalScrollBar()->hide();
 
 		_show_lyrics = true;
 	}
@@ -201,6 +212,8 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 		_show_lyrics = false;
 		_text->setPlainText("");
 		_text->hide();
+
+		this->ui->listView->verticalScrollBar()->show();
 	}
 
 }
@@ -226,6 +239,7 @@ void GUI_Playlist::change_skin(bool dark){
 		this->ui->btn_dynamic->setStyleSheet(btn_style);
 		this->ui->btn_repAll->setStyleSheet(btn_style);
 		this->ui->btn_shuffle->setStyleSheet(btn_style);
+		this->ui->btn_lyrics->setStyleSheet(btn_style);
 	}
 
 	else {
@@ -240,6 +254,7 @@ void GUI_Playlist::change_skin(bool dark){
 		this->ui->btn_dynamic->setStyleSheet(btn_style);
 		this->ui->btn_repAll->setStyleSheet(btn_style);
 		this->ui->btn_shuffle->setStyleSheet(btn_style);
+		this->ui->btn_lyrics->setStyleSheet(btn_style);
 	}
 }
 
@@ -457,6 +472,7 @@ void GUI_Playlist::initGUI(){
 	this->ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
 	this->ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
+	this->ui->btn_lyrics->setIcon(QIcon(icon_path + "lyrics.png"));
 
 }
 

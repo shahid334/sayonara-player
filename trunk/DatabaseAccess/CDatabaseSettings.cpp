@@ -152,9 +152,15 @@ bool CDatabaseConnector::load_settings(){
 	QVariant style;
 	int style_int = 0;
 	load_setting("player_style", style);
-
 	style_int = style.toInt();
 	CSettingsStorage::getInstance()->setPlayerStyle(style_int);
+
+
+	QVariant show_notifications;
+	bool show_notifications_bool = false;
+	load_setting("show_notifications", show_notifications);
+	show_notifications_bool = show_notifications.toBool();
+	CSettingsStorage::getInstance()->setShowNotifications(show_notifications_bool);
 
 
 
@@ -200,6 +206,9 @@ bool CDatabaseConnector::store_settings(){
 		store_setting("player_style", style);
 	else
 		store_setting("player_style", 0);
+
+	bool show_notifications = storage->getShowNotification();
+	store_setting("show_notifications", show_notifications);
 
 	return true;
 }

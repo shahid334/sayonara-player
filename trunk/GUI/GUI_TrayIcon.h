@@ -22,8 +22,11 @@
 #ifndef GUI_TRAYICON_H
 #define GUI_TRAYICON_H
 
+#include "HelperStructs/MetaData.h"
+
 #include <QSystemTrayIcon>
 #include <QAction>
+
 
 /**
   * Small class to be used as tray icon
@@ -45,6 +48,7 @@ public:
 
 public slots:
     void playStateChanged (bool playing);
+    void trackChanged(const MetaData& md);
     void songChangedMessage (const QString & message);
 
 
@@ -60,7 +64,7 @@ signals:
 private:
     QIcon                   m_playIcon;
     QIcon                   m_pauseIcon;
-    const quint16                 MESSAGE_TIMEOUT_MS;
+    const quint16           MESSAGE_TIMEOUT_MS;
 };
 
 

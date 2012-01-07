@@ -189,3 +189,11 @@ void CSettingsStorage::setPlayerStyle(int style){
 int CSettingsStorage::getPlayerStyle(){
 	return m_style;
 }
+
+void CSettingsStorage::setShowNotifications(bool active){
+	m_show_notifications = active;
+}
+
+bool CSettingsStorage::getShowNotification(){
+	return m_show_notifications;
+}

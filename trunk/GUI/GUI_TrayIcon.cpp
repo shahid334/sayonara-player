@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <GUI_TrayIcon.h>
+#include "HelperStructs/MetaData.h"
+#include "GUI/GUI_TrayIcon.h"
 #include <QAction>
 #include <QMenu>
 #include <QEvent>
@@ -27,7 +28,7 @@
 
 #include <Helper.h>
 
-GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent), MESSAGE_TIMEOUT_MS (2500) {
+GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent), MESSAGE_TIMEOUT_MS (5000) {
     this -> setToolTip("Sayonara - Music - Player");
     this -> setIcon(playIcon);
     this -> m_playIcon = playIcon;
@@ -75,6 +76,10 @@ void GUI_TrayIcon::playStateChanged (bool playing) {
     else {
         this -> setIcon(this -> m_pauseIcon);
     }
+}
+
+void GUI_TrayIcon::trackChanged(const MetaData& md){
+	this->setToolTip(md.title + " by " + md.artist);
 }
 
 GUI_TrayIcon::~GUI_TrayIcon() {

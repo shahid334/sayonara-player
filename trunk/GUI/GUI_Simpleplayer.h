@@ -73,7 +73,6 @@ public slots:
 
 
 
-
 signals:
     /**
       * Signals emitted after pressing buttons
@@ -114,7 +113,7 @@ private slots:
     void searchSliderPressed();
     void searchSliderReleased();
     void searchSliderMoved(int search_percent, bool by_app=false);
-    void volumeChangedSlider(int volume_percent);
+
     void coverClicked(bool);
     //void showAgain(QSystemTrayIcon::ActivationReason);
     void muteButtonPressed();
@@ -132,9 +131,12 @@ private slots:
     void fetch_all_covers_clicked(bool b = true);
     void load_pl_on_startup_toggled(bool);
 
-    void about(bool b=false);
-
+    void volumeChangedSlider(int volume_percent);
     void volumeChangedByTick(int val);
+
+    void show_notification_toggled(bool);
+
+    void about(bool b=false);
 
 
 
