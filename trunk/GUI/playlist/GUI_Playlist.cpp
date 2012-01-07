@@ -69,16 +69,12 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	ui->setupUi(this);
 	initGUI();
 
-	//this->ui->btn_dummy->setVisible(false);
+	this->ui->btn_import->setVisible(false);
 
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
 
-
 	inner_drag_drop = false;
-	_show_lyrics = false;
-	this->ui->listView->setDragEnabled(true);
-
 
 	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
 	this->ui->btn_append->setChecked(_playlist_mode.append);
@@ -86,9 +82,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
 	this->ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
 
-
-	//this->ui->pl_progress_bar->hide();
-
+	this->ui->listView->setDragEnabled(true);
 	this->ui->listView->setModel(_pli_model);
 	this->ui->listView->setItemDelegate(_pli_delegate);
 	this->ui->listView->setSelectionRectVisible(true);
@@ -99,8 +93,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->_text->setAcceptRichText(true);
 	this->_text->hide();
 
-
-	this->ui->btn_import->setVisible(false);
 
 
 	this->connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
@@ -205,11 +197,10 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 
 		this->ui->listView->verticalScrollBar()->hide();
 
-		_show_lyrics = true;
+
 	}
 
 	else{
-		_show_lyrics = false;
 		_text->setPlainText("");
 		_text->hide();
 
@@ -566,8 +557,6 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	if(pos.y() <= y_playlist + 2){
 		return;
 	}
-
-
 
 	QModelIndex cur_idx = _pli_model->index(row, 0);
 	if( !cur_idx.isValid() ){

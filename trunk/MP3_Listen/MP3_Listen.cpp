@@ -89,6 +89,7 @@ MP3_Listen::MP3_Listen(QObject * parent) :
 	connect(_media_object, SIGNAL(finished()), this, SLOT(finished()));
 	connect(_media_object, SIGNAL(totalTimeChanged ( qint64)), this,
 			SLOT(total_time_changed(qint64)));
+	connect(_media_object, SIGNAL(seekableChanged(bool)), this, SLOT(seekableChanged(bool)));
 	
 	// just for debugging	
 	/*connect(_media_object, SIGNAL(stateChanged(Phonon::State, Phonon::State)), this,
@@ -187,8 +188,8 @@ const MetaData & MP3_Listen::getMetaData() const {
 
 }
 
-void MP3_Listen::seekableChanged(bool) {
-
+void MP3_Listen::seekableChanged(bool seekable) {
+	qDebug() << "seekable ? " << seekable;
 }
 
 void MP3_Listen::timeChanged(qint64 time) {
