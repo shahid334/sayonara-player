@@ -39,19 +39,14 @@
 
 using namespace std;
 
-char* webpage_ll = 0;
-size_t webpage_ll_bytes = 0;
 size_t first_appearance = -1;
 size_t last_appearance = -1;
 bool b_save;
 QStringList lst;
 
-
-
 int find_first_of(char* arr, size_t len, QString str){
 	if(len <= 0) return -1;
 	for(size_t i=0; i<len; i++){
-
 
 		bool matched = false;
 		for(int j=0; j<str.length(); j++, i++){
@@ -77,10 +72,10 @@ int find_last_of(char* arr, size_t len, QString str){
 	if(len <= 0) return -1;
 
 	size_t off_back = 0;
-	for(size_t i=len-1; i>=0; i--){
+	for(size_t i=len-1; i>0; i--){
 
 			bool matched = false;
-			for(uint j=str.length()-1; j>=0; j--, i--, off_back++){
+			for(uint j=str.length()-1; j>0; j--, i--, off_back++){
 
 				if(arr[i] != str.at(j).toAscii()) break;
 
@@ -99,10 +94,10 @@ int find_last_of(char* arr, size_t len, QString str){
 
 
 size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
+
+	(void) userdata;
+
 	char* cptr = (char*) ptr;
-
-
-
 
 	QString tmp = "";
 	QRegExp rx("&#(\\d+);|<br");
@@ -110,8 +105,6 @@ size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 		tmp += cptr[i];
 	}
 
-
-	//rx.indexIn(tmp);
 	QStringList tmplist;;
 	 int pos = 0;
 	 while ((pos = rx.indexIn(tmp, pos)) != -1) {
@@ -121,15 +114,6 @@ size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 
 	 if(tmplist.size() > 0)
 		 lst.append(tmplist);
-
-	//qDebug() << tmplist;
-
-
-
-
-
-	fwrite(ptr, size, nmemb, userdata);
-
 
 	return size * nmemb;
 }
@@ -145,10 +129,8 @@ LyricLookup::~LyricLookup() {
 	// TODO Auto-generated destructor stub
 }
 
-void LyricLookup::find_lyrics(QString artist, QString song){
+QString LyricLookup::find_lyrics(QString artist, QString song){
 		b_save = true;
-		webpage_ll = 0;
-		webpage_ll_bytes = 0;
 
 		QString url = "http://lyrics.wikia.com/" +
 					artist.replace(" ", "_") + ":" +
@@ -160,25 +142,30 @@ void LyricLookup::find_lyrics(QString artist, QString song){
 		curl = curl_easy_init();
 
 		if(curl){
-			FILE* bla = fopen("/home/luke/file.txt", "w");
 			curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_content_ll);
-			curl_easy_setopt(curl, CURLOPT_WRITEDATA, bla);
-			//curl_easy_setopt(curl, CURLOPT_BUFFERSIZE, 100);
 			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 
 			curl_easy_perform(curl);
 			curl_easy_cleanup(curl);
-			fclose(bla);
 		}
-		qDebug() <<lst;
+
+		QString str;
 		for(int i=0; i<lst.size(); i++){
 			int n= lst[i].toInt();
 			QChar c = (QChar) n;
 
-			if(lst[i] == "" ) c='\n';
+			if(lst[i] == "" ) {
+				str.append("<br />");
+			}
 
-			cout << c.toAscii() << flush;
+			else str.append(c);
 		}
+
+		str = str.trimmed();
+		lst.clear();
+
+		return str;
+
 
 }

@@ -46,6 +46,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
+    LyricLookup/LyricLookup.h \
     DatabaseAccess/CDatabaseConnector.h \
     library/CLibraryBase.h \
     library/ReloadThread.h \
@@ -85,6 +86,7 @@ SOURCES += Main.cpp \
     HelperStructs/Style.cpp \
     HelperStructs/CDirectoryReader.cpp \
     CoverLookup/CoverLookup.cpp \
+    LyricLookup/LyricLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \
     library/CLibraryBase.cpp \
     library/ReloadThread.cpp \

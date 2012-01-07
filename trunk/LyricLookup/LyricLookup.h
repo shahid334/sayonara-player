@@ -28,7 +28,7 @@
 
 #ifndef LYRICLOOKUP_H_
 #define LYRICLOOKUP_H_
-
+#include <QStringList>
 #include <QString>
 
 class LyricLookup {
@@ -36,7 +36,7 @@ public:
 	LyricLookup();
 	virtual ~LyricLookup();
 
-	void find_lyrics(QString artist, QString song);
+	QString find_lyrics(QString artist, QString song);
 };
 
 #endif /* LYRICLOOKUP_H_ */

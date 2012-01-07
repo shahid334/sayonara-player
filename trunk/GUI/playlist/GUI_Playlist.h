@@ -37,6 +37,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QKeyEvent>
+#include <QTextEdit>
 
 #include <string>
 #include <vector>
@@ -103,6 +104,7 @@
 			void edit_id3_but_pressed();
 			void dummy_pressed();
 			void import_button_clicked();
+			void lyric_button_toggled(bool on);
 
 
 
@@ -116,11 +118,13 @@
 
 			QAbstractItemModel* 	_pli_model;
 			QAbstractItemDelegate* 	_pli_delegate;
+			QTextEdit* 				_text;
 
 			QWidget*				_parent;
 			qint64 					_total_secs;
 			int						_cur_playing_row;
 			int						_cur_selected_row;
+			bool					_show_lyrics;
 
 			void initGUI();
 			void set_total_time_label();

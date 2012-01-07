@@ -33,6 +33,7 @@
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
+#include "LyricLookup/LyricLookup.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
@@ -50,6 +51,8 @@
 #include <QStyleFactory>
 #include <QPaintDevice>
 #include <QPainter>
+#include <QMessageBox>
+#include <QTextEdit>
 
 class QPaintEngine;
 class QPaintDevice;
@@ -71,8 +74,9 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_pli_model = new PlaylistItemModel();
 	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
 
-	inner_drag_drop = false;
 
+	inner_drag_drop = false;
+	_show_lyrics = false;
 	this->ui->listView->setDragEnabled(true);
 
 
@@ -91,16 +95,22 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->listView->setAlternatingRowColors(true);
 	this->ui->listView->setMovement(QListView::Free);
 
+	this->_text = new QTextEdit(this->ui->listView);
+	this->_text->setAcceptRichText(true);
+	this->_text->hide();
+
+
 	this->ui->btn_import->setVisible(false);
 
 
 	this->connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
-	//this->connect(this->ui->btn_save_playlist, SIGNAL(released()), this, SLOT(save_playlist_slot()));
+	//this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
 	this->connect(this->ui->btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+	this->connect(this->ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(lyric_button_toggled(bool)));
 
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));
@@ -160,6 +170,48 @@ void GUI_Playlist::dummy_pressed(){
 
 }
 
+
+void GUI_Playlist::lyric_button_toggled(bool on){
+
+	if(on){
+		QVariant data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
+		QStringList lst = data.toStringList();
+		MetaData md;
+
+		md.fromStringList(lst);
+		qDebug() << "artist = " << md.artist << "; song = " << md.title;
+
+
+		LyricLookup ll;
+		QString lyrics = ll.find_lyrics(md.artist, md.title);
+		lyrics = lyrics.trimmed();
+		for(int i=lyrics.size()-1; i <0;i++){
+			if(lyrics.at(i).isSpace()){
+				lyrics.remove(i, 1);
+			}
+
+			else break;
+		}
+
+
+
+		QString title = QString("<font size=\"5\" color=\"#F3841A\"><b>") + md.artist + " - " + md.title + "</b></font><br /><br />";
+		_text->setAcceptRichText(true);
+		_text->setText(title + lyrics);
+		_text->setFixedHeight(this->ui->listView->height());
+		_text->setFixedWidth(this->ui->listView->width());
+		_text->show();
+
+		_show_lyrics = true;
+	}
+
+	else{
+		_show_lyrics = false;
+		_text->setPlainText("");
+		_text->hide();
+	}
+
+}
 
 
 
