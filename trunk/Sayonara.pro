@@ -57,7 +57,8 @@ HEADERS += MP3_Listen/MP3_Listen.h \
     HelperStructs/Equalizer_presets.h \
     LastFM/LastFM.h \
     LastFM/LFMWebAccess.h \
-    LastFM/LFMSimilarArtistsThread.h
+    LastFM/LFMSimilarArtistsThread.h  \
+    GUI/GUI_TrayIcon.h
     
 
 SOURCES += Main.cpp \
@@ -103,6 +104,7 @@ SOURCES += Main.cpp \
     LastFM/LastFM.cpp \
     LastFM/LFMSimilarArtistsThread.cpp \
     LastFM/LFMWebAccess.cpp \
+    GUI/GUI_TrayIcon.cpp
     
     
    
