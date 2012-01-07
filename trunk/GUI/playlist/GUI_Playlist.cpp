@@ -185,17 +185,9 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 		LyricLookup ll;
 		QString lyrics = ll.find_lyrics(md.artist, md.title);
 		lyrics = lyrics.trimmed();
-		for(int i=lyrics.size()-1; i <0;i++){
-			if(lyrics.at(i).isSpace()){
-				lyrics.remove(i, 1);
-			}
 
-			else break;
-		}
-
-
-
-		QString title = QString("<font size=\"5\" color=\"#F3841A\"><b>") + md.artist + " - " + md.title + "</b></font><br /><br />";
+		QString title = QString("<center><font size=\"5\" color=\"#F3841A\"><b>") + md.artist + " - " + md.title + "</b></font><br /><br />";
+		QString text_data = title + lyrics + "</center>";
 		_text->setAcceptRichText(true);
 		_text->setText(title + lyrics);
 		_text->setFixedHeight(this->ui->listView->height());
@@ -268,6 +260,11 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 	_pli_model->insertRows(0, v_metadata.size());
 	_total_secs = 0;
 	int idx = 0;
+
+	if(_cur_playing_row != cur_play_idx && !_text->isHidden()){
+		_cur_playing_row = cur_play_idx;
+		lyric_button_toggled(true);
+	}
 
 	_cur_playing_row = cur_play_idx;
 
@@ -398,6 +395,11 @@ void GUI_Playlist::track_changed(int new_row){
 	if(new_row < 0) return;
 
 	QModelIndex index = _pli_model->index(new_row, 0);
+	if(_cur_playing_row != new_row && !_text->isHidden()){
+		_cur_playing_row = new_row;
+		lyric_button_toggled(true);
+	}
+
 	_cur_playing_row = new_row;
 
 	for(int i=0; i<_pli_model->rowCount(); i++){

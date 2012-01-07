@@ -151,18 +151,37 @@ QString LyricLookup::find_lyrics(QString artist, QString song){
 		}
 
 		QString str;
+		bool already_print = false;
 		for(int i=0; i<lst.size(); i++){
 			int n= lst[i].toInt();
 			QChar c = (QChar) n;
 
 			if(lst[i] == "" ) {
-				str.append("<br />");
+				if(already_print)
+					str.append("<br />");
+
 			}
 
-			else str.append(c);
+			else {
+				already_print = true;
+				str.append(c);
+				//cout << c.toAscii() << "(" << n << ")";
+			}
 		}
 
 		str = str.trimmed();
+
+		while(true){
+			int idx = str.lastIndexOf("<br />");
+			if(idx < str.size() - 7 || idx <= 0) break;
+			str.remove(idx, 6);
+		}
+
+		str.append("<br />");
+		if(str.size() < 10){
+			str = "Sorry, no lyrics found";
+		}
+
 		lst.clear();
 
 		return str;
