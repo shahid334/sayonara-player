@@ -62,9 +62,11 @@ GUI_TagEdit::GUI_TagEdit() {
 	connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
 	connect(this->ui->bb_ok_cancel, SIGNAL(accepted()), this, SLOT(ok_button_clicked()));
 	connect(this->ui->bb_ok_cancel, SIGNAL(rejected()), this, SLOT(cancel_button_clicked()));
-	connect(this->ui->btn_all_album, SIGNAL(released()), this, SLOT(all_albums_clicked()));
-	connect(this->ui->btn_all_artist, SIGNAL(released()), this, SLOT(all_artists_clicked()));
-	connect(this->ui->btn_all_year, SIGNAL(released()), this, SLOT(all_year_clicked()));
+
+
+//        connect(this->ui->btn_all_album, SIGNAL(released()), this, SLOT(all_albums_clicked()));
+//	connect(this->ui->btn_all_artist, SIGNAL(released()), this, SLOT(all_artists_clicked()));
+//	connect(this->ui->btn_all_year, SIGNAL(released()), this, SLOT(all_year_clicked()));
 
 }
 
@@ -226,6 +228,20 @@ void GUI_TagEdit::show_metadata(){
 
 
 void GUI_TagEdit::save_metadata(){
+    if (this -> ui ->btn_all_album->isChecked()) {
+        this -> all_albums_clicked();
+    }
+
+    if (this -> ui ->btn_all_artist->isChecked()) {
+        this -> all_artists_clicked();
+    }
+    if (this -> ui ->btn_all_year->isChecked()) {
+        this -> all_year_clicked();
+    }
+    if (this -> ui ->btn_all_genre->isChecked()) {
+        this -> all_genre_clicked();
+    }
+
 
 	_lst_new_albums[_cur_idx] = this->ui->le_album->text();
 	_lst_new_artists[_cur_idx] = this->ui->le_artist->text();

@@ -46,7 +46,7 @@
         <x>0</x>
         <y>0</y>
         <width>461</width>
-        <height>261</height>
+        <height>260</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -188,37 +188,6 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="5">
-        <widget class="QPushButton" name="btn_all_album">
-         <property name="text">
-          <string>all</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="5">
-        <widget class="QPushButton" name="btn_all_artist">
-         <property name="text">
-          <string>all</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="5">
-        <widget class="QPushButton" name="btn_all_year">
-         <property name="text">
-          <string>all</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="5">
-        <widget class="QPushButton" name="btn_all_genre">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="text">
-          <string>all</string>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QLabel" name="lab_icon">
          <property name="minimumSize">
@@ -235,6 +204,40 @@
          </property>
          <property name="text">
           <string/>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="5">
+        <widget class="QCheckBox" name="btn_all_album">
+         <property name="text">
+          <string>all</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="5">
+        <widget class="QCheckBox" name="btn_all_artist">
+         <property name="text">
+          <string>all</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="5">
+        <widget class="QCheckBox" name="btn_all_genre">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>all</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="5">
+        <widget class="QCheckBox" name="btn_all_year">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="text">
+          <string>all</string>
          </property>
         </widget>
        </item>
