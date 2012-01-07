@@ -33,7 +33,7 @@
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
-QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
+                QMainWindow(parent), ui(new Ui::GUI_SimplePlayer), VOLUME_STEP_SIZE_PERC (2){
 	ui->setupUi(this);
 	initGUI();
 
@@ -49,7 +49,7 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
         this -> setupActions();
 
 
-        m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"));
+        m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"),this);
         m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction);
         m_trayIcon->show();
 
@@ -90,7 +90,7 @@ QMainWindow(parent), ui(new Ui::GUI_SimplePlayer) {
 			SLOT(fileSelectedClicked(bool)));
 	connect(this->ui->action_OpenFolder, SIGNAL(triggered(bool)), this,
 			SLOT(folderSelectedClicked(bool)));
-	connect(this->ui->volumeSlider, SIGNAL(sliderMoved(int)), this,
+        connect(this->ui->volumeSlider, SIGNAL(valueChanged(int)), this,
 			SLOT(volumeChangedSlider(int)));
 	connect(this->ui->btn_mute, SIGNAL(released()), this,
 			SLOT(muteButtonPressed()));
@@ -140,12 +140,12 @@ GUI_SimplePlayer::~GUI_SimplePlayer() {
 	delete ui;
 }
 
-void GUI_SimplePlayer::setVolume(int vol) {
 
+
+void GUI_SimplePlayer::setVolume(int vol) {
 	this->ui->volumeSlider->setValue(vol);
 	setupVolButton(vol);
 	emit volumeChanged((qreal) vol);
-
 }
 
 void GUI_SimplePlayer::setStyle(int style){
@@ -232,8 +232,8 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 	this->ui->artist->setText(in.artist);
 	this->ui->title->setText(in.title);
 
-	m_trayIcon->setToolTip(
-			"Currently playing: \"" + in.title + "\" by " + in.artist);
+        m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + in.title + "\" by " + in.artist));
+
 	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
 	emit wantCover(in);
@@ -258,8 +258,9 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 	this->ui->artist->setText(md.artist);
 	this->ui->title->setText(md.title);
 
-	m_trayIcon->setToolTip(
-			"Currently playing: \"" + md.title + "\" by " + md.artist);
+
+        m_trayIcon->songChangedMessage(QString(
+                        "Currently playing: \"" + md.title + "\" by " + md.artist));
 
 	QString lengthString = getLengthString(md.length_ms);
 
@@ -426,11 +427,31 @@ void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app) {
 }
 
 void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
-
 	setupVolButton(volume_percent);
-	emit
-	volumeChanged(volume_percent * 1.0);
+        emit volumeChanged((double)volume_percent);
 	CSettingsStorage::getInstance()->setVolume(volume_percent);
+}
+
+void GUI_SimplePlayer::volumeChangedByTick(int val) {
+    int currentVolumeOrig_perc = this -> ui->volumeSlider->value();
+    int currentVolume_perc = currentVolumeOrig_perc;
+    if (val > 0) {
+        //increase volume
+        if (currentVolume_perc < this -> ui->volumeSlider->maximum()-VOLUME_STEP_SIZE_PERC) {
+            currentVolume_perc+=VOLUME_STEP_SIZE_PERC;
+        }
+    }
+    else if (val < 0) {
+        //decrease volume
+        if (currentVolume_perc > this -> ui->volumeSlider->minimum()+VOLUME_STEP_SIZE_PERC) {
+            currentVolume_perc-=VOLUME_STEP_SIZE_PERC;
+        }
+    }
+    else {
+    }
+    if (currentVolumeOrig_perc != currentVolume_perc) {
+        this -> ui->volumeSlider->setValue(currentVolume_perc);
+    }
 }
 
 void GUI_SimplePlayer::setupVolButton(int percent) {
@@ -744,6 +765,8 @@ void GUI_SimplePlayer::setupActions() {
 void GUI_SimplePlayer::connectTrayIcon() {
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
     connect(this -> m_trayIcon, SIGNAL(onShowNormal()), this, SLOT(showNormal()));
+    connect(this -> m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
+
 }
 
 

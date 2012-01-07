@@ -31,7 +31,7 @@
 class GUI_TrayIcon : public QSystemTrayIcon {
     Q_OBJECT
 public:
-    explicit GUI_TrayIcon(const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent = 0);
+    explicit GUI_TrayIcon(const QIcon & playIcon,const QIcon & pauseIcon, QObject *parent = 0);
     ~GUI_TrayIcon();
 
     void setupMenu (    QAction* closeAction,
@@ -41,17 +41,26 @@ public:
                         QAction* fwdAction,
                         QAction* bwdAction);
 
+    virtual bool event ( QEvent * e );
+
 public slots:
     void playStateChanged (bool playing);
+    void songChangedMessage (const QString & message);
+
 
 signals:
+
+    /**
+      * this event is fired, if we have a mouse wheel event
+      * @param delta bigger then 0 when mouse wheel has moved forward smaller when moved backwards
+      */
+    void onVolumeChangedByWheel (int delta);
 
 
 private:
     QIcon                   m_playIcon;
     QIcon                   m_pauseIcon;
-
-
+    const quint16                 MESSAGE_TIMEOUT_MS;
 };
 
 

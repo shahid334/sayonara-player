@@ -21,9 +21,13 @@
 #include <GUI_TrayIcon.h>
 #include <QAction>
 #include <QMenu>
+#include <QEvent>
+#include <QWheelEvent>
+#include <QDebug>
+
 #include <Helper.h>
 
-GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent) {
+GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent), MESSAGE_TIMEOUT_MS (2500) {
     this -> setToolTip("Sayonara - Music - Player");
     this -> setIcon(playIcon);
     this -> m_playIcon = playIcon;
@@ -47,6 +51,21 @@ void GUI_TrayIcon::setupMenu (    QAction* closeAction,
     trayContextMenu->addSeparator();
     trayContextMenu->addAction(closeAction);
     this ->  setContextMenu(trayContextMenu);
+}
+
+bool GUI_TrayIcon::event ( QEvent * e ) {
+    if (e->type ()== QEvent::Wheel) {
+        QWheelEvent * wheelEvent = dynamic_cast <QWheelEvent *> (e);
+        emit onVolumeChangedByWheel (wheelEvent->delta());
+    }
+    return true;
+}
+
+void GUI_TrayIcon::songChangedMessage (const QString & message) {
+    if (this -> isSystemTrayAvailable()) {
+        this -> showMessage("Sayonara",message,QSystemTrayIcon::Information,MESSAGE_TIMEOUT_MS);
+    }
+    this -> setToolTip(message);
 }
 
 void GUI_TrayIcon::playStateChanged (bool playing) {

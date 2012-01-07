@@ -134,6 +134,10 @@ private slots:
 
     void about(bool b=false);
 
+    void volumeChangedByTick(int val);
+
+
+
 
 
 protected:
@@ -182,6 +186,8 @@ private:
 
     bool						m_isEqHidden;
     bool						m_isPcHidden;
+
+    const quint8                                   VOLUME_STEP_SIZE_PERC;
 
 
 
