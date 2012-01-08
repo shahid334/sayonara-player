@@ -39,6 +39,7 @@
 //#include "GUI/radio/GUI_RadioWidget.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/MP3_Listen.h"
+#include "MP3_Listen/GSTEngine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
 #include "LastFM/LastFM.h"
@@ -98,7 +99,8 @@ int main(int argc, char *argv[]){
         Playlist 				playlist(&app);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
-        MP3_Listen 				listen (&app);
+        //GST_Engine 				listen (&app);
+        MP3_Listen				listen(&app);
         LastFM					lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
@@ -106,6 +108,10 @@ int main(int argc, char *argv[]){
         GUI_TagEdit				ui_tagedit;
 
        // GUI_Alternate_Covers ui_alternate_covers;
+
+       /* if(!listen.init()){
+            		return 0;
+            	}*/
 
         qDebug() << "connections";
 
@@ -242,7 +248,7 @@ int main(int argc, char *argv[]){
 
 
 
-		listen.load_equalizer();
+		//listen.load_equalizer();
 
 		ui_eq.resize(player.getParentOfEqualizer()->size());
 		ui_playlist_chooser.resize(player.getParentOfPlaylistChooser()->size());

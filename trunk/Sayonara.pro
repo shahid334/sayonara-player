@@ -8,17 +8,19 @@ QT += sql
 TEMPLATE = app
 TARGET = sayonara
 #CXX_FLAGS += -O2
-CONFIG += debug
+CONFIG += link_pkgconfig
+PKGCONFIG += gstreamer-0.10
 
 
 
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
-INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup
-LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp
+INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup /usr/include/gstreamer-0.10
+LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp `pkg-config --cflags --libs gstreamer-0.10`
 
 
 # Input
 HEADERS += MP3_Listen/MP3_Listen.h \
+	MP3_Listen/GSTEngine.h \
 	GUI/GUI_Simpleplayer.h \ 
     GUI/playlist/GUI_Playlist.h \
     GUI/playlist/PlaylistItemModel.h \
@@ -63,6 +65,7 @@ HEADERS += MP3_Listen/MP3_Listen.h \
 
 SOURCES += Main.cpp \
 	MP3_Listen/MP3_Listen.cpp \
+	MP3_Listen/GSTEngine.cpp \
     GUI/GUI_Simpleplayer.cpp \
     GUI/playlist/GUI_Playlist.cpp \
     GUI/playlist/PlaylistItemModel.cpp \

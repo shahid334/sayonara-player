@@ -30,8 +30,10 @@
 									<listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
 									<listOptionValue builtIn="false" value="/usr/include/qt4/QtXml"/>
 									<listOptionValue builtIn="false" value="/usr/include/qt4"/>
-									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="/usr/include/c++/4.5"/>
+									<listOptionValue builtIn="false" value="/usr/include/gstreamer-0.10"/>
+									<listOptionValue builtIn="false" value="/usr/include/*"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.includefiles.179116150" name="Include Files" superClass="org.eclipse.cdt.build.core.settings.holder.includefiles" valueType="includeFiles">
 									<listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
@@ -49,6 +51,8 @@
 									<listOptionValue builtIn="false" value="/usr/include/qt4"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="/usr/include/gstreamer-0.10"/>
+									<listOptionValue builtIn="false" value="/usr/include/*"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.includefiles.1845837327" name="Include Files" superClass="org.eclipse.cdt.build.core.settings.holder.includefiles" valueType="includeFiles">
 									<listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
@@ -65,6 +69,8 @@
 									<listOptionValue builtIn="false" value="/usr/include/qt4"/>
 									<listOptionValue builtIn="false" value="/usr/include"/>
 									<listOptionValue builtIn="false" value="../."/>
+									<listOptionValue builtIn="false" value="/usr/include/gstreamer-0.10"/>
+									<listOptionValue builtIn="false" value="/usr/include/*"/>
 								</option>
 								<option id="org.eclipse.cdt.build.core.settings.holder.includefiles.1558575802" name="Include Files" superClass="org.eclipse.cdt.build.core.settings.holder.includefiles" valueType="includeFiles">
 									<listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
