@@ -99,8 +99,8 @@ int main(int argc, char *argv[]){
         Playlist 				playlist(&app);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
-        GST_Engine 				listen (&app);
-       // MP3_Listen				listen(&app);
+       // GST_Engine 				listen (&app);
+        MP3_Listen				listen(&app);
         LastFM					lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
