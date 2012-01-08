@@ -340,6 +340,8 @@ void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
+	qDebug() << "cur position: " << pos_sec;
+
 	if (m_completeLength_ms != 0) {
 
 		double newSliderVal = (double) (pos_sec * 1000.0 * 100.0

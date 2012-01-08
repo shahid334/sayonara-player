@@ -64,7 +64,9 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 }
 
 
-
+/*****************************************************************************************/
+/* Thread */
+/*****************************************************************************************/
 
 GST_PipelineThread::GST_PipelineThread(){
 
@@ -140,8 +142,8 @@ bool GST_Engine::init(){
 void GST_Engine::play(){
 
 	_state = STATE_PLAY;
-	_thread->start();
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+
 	obj_ref = this;
 
 }
@@ -262,12 +264,12 @@ void GST_Engine::set_cur_position(quint32 pos){
 			&& (_seconds_now - _seconds_started == 20
 					|| _seconds_now - _seconds_started
 					== _meta_data.length_ms / 2000)) {
-		qDebug() << "scrobble track";
+
 		emit
 		scrobble_track(_meta_data);
 		_scrobbled = true;
 
-		qDebug() << "scrobble track end";
+		qDebug() << "Track scrobbled";
 	}
 
 	emit timeChangedSignal(pos);
