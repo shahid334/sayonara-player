@@ -61,7 +61,7 @@
 
 
 
-class MP3_Listen : public QObject{
+class Phonon_Engine : public QObject{
 
 	Q_OBJECT
 
@@ -89,8 +89,8 @@ private:
 
 
 public:
-	MP3_Listen(QObject * parent);
-	virtual ~MP3_Listen();
+	Phonon_Engine(QObject * parent);
+	virtual ~Phonon_Engine();
 
 	const MetaData & getMetaData() const;
 	//int64_t getTime();

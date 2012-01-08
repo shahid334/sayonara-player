@@ -42,8 +42,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	this->ui->albumCover->setPixmap(
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
 
-	qDebug() << "Empty cover set (3)";
-
 	this->m_playing = false;
 	this->m_cur_searching = false;
 	this->m_mute = false;
@@ -272,10 +270,7 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 
 void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
-qDebug() << "FILL SIMPLE PLAYER";
-
 	this->m_metadata = md;
-
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
@@ -326,10 +321,6 @@ qDebug() << "FILL SIMPLE PLAYER";
 	this->m_completeLength_ms = md.length_ms;
 	this->m_playing = true;
 
-	qDebug() << "After: " << this->m_metadata.toStringList();
-
-	//emit wantCover(md);
-
 }
 
 void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
@@ -339,8 +330,6 @@ void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 }
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
-
-	qDebug() << "cur position: " << pos_sec;
 
 	if (m_completeLength_ms != 0) {
 
@@ -409,8 +398,6 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	this->ui->maxTime->setText("00:00");
 	this->ui->albumCover->setPixmap(
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
-
-	qDebug() << "Empty cover set (4)";
 
 	this->ui->albumCover->setFocus();
 	emit stop();
@@ -552,7 +539,6 @@ void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 				QPixmap::fromImage(
 						QImage(Helper::getIconPath() + "append.png")));
 		this->ui->albumCover->repaint();
-		qDebug() << "empty cover set (1)";
 		return;
 	}
 
@@ -563,11 +549,7 @@ void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 				QPixmap::fromImage(
 						QImage(Helper::getIconPath() + "append.png")));
 		this->ui->albumCover->repaint();
-		qDebug() << "empty cover set (2)";
 		return;
-	}
-	else{
-		qDebug() << "cover set in player";
 	}
 
 	QPixmap cover = QPixmap::fromImage(QImage(cover_path));

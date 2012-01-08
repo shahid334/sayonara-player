@@ -65,15 +65,10 @@ void Playlist::ui_loaded(){
 	_v_meta_data.clear();
 	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
 
-	qDebug() << "Load playlist" << loadPlaylist;
-
-
 	if( loadPlaylist ){
 
 		QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
 		QStringList list = saved_playlist.split(',');
-
-		qDebug() << list;
 
 		if(list.size() > 0){
 
@@ -85,7 +80,6 @@ void Playlist::ui_loaded(){
 			_cur_play_idx = -1;
 		}
 
-		qDebug() << "playlist created " << _v_meta_data.size();
 		emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 	}
 }
@@ -93,8 +87,6 @@ void Playlist::ui_loaded(){
 
 
 void Playlist::psl_save_playlist_to_storage(){
-
-	qDebug() << "psl save playlists " << _v_meta_data.size();
 
 	QString playlist_str;
 	for(uint i=0; i<_v_meta_data.size(); i++){
@@ -214,7 +206,6 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
 
     vector<MetaData> vec_md;
     foreach(QString filepath, fileList){
-    	qDebug() << filepath;
     	MetaData md = ID3::getMetaDataOfFile(filepath);
     	if(db->getTrackByPath(filepath) <= 0){
 
@@ -302,7 +293,6 @@ void Playlist::psl_play(){
 	if(_cur_play_idx <= -1){
 		_cur_play_idx = 0;
 		emit sig_selected_file_changed(_cur_play_idx);
-		qDebug() << "SELECTED FILE CHANGED (2)";
 		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 	}
 
@@ -326,7 +316,6 @@ void Playlist::psl_forward(){
 		int track_num = rand() % _v_meta_data.size();
 		_cur_play_idx = track_num;
 		emit sig_selected_file_changed(track_num);
-		qDebug() << "SELECTED FILE CHANGED (3)";
 		emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 
 	}
@@ -334,7 +323,6 @@ void Playlist::psl_forward(){
 	else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
 		_cur_play_idx++;
 		emit sig_selected_file_changed(_cur_play_idx);
-		qDebug() << "SELECTED FILE CHANGED (4)";
 		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 
 	}
@@ -347,12 +335,8 @@ void Playlist::psl_backward(){
 	if(this->_cur_play_idx > 0){
 		_cur_play_idx--;
 		emit sig_selected_file_changed(_cur_play_idx);
-
-		qDebug() << "SELECTED FILE CHANGED (5)";
 		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
-
 	}
-
 }
 
 
@@ -391,7 +375,6 @@ void Playlist::psl_next_track(){
 		MetaData md = _v_meta_data[track_num];
 		if(Helper::checkTrack(md)){
 			emit sig_selected_file_changed(track_num);
-			qDebug() << "SELECTED FILE CHANGED (6)";
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
 			if(_playlist_mode.dynamic)
@@ -420,7 +403,6 @@ void Playlist::psl_change_track(int new_row){
 	if(Helper::checkTrack(md)){
 
 		_cur_play_idx = new_row;
-		qDebug() << "SELECTED FILE CHANGED (1)";
 		emit sig_selected_file_changed_md(md);
 
 		if(_playlist_mode.dynamic)
@@ -438,8 +420,6 @@ void Playlist::psl_change_track(int new_row){
 
 // GUI -->
 void Playlist::psl_clear_playlist(){
-
-	qDebug() << "clear playlist";
 
 	_v_meta_data.clear();
 	_v_extern_tracks.clear();
@@ -526,7 +506,6 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 		int artist_id = artists.at(cur_artist_idx);
 		vector<MetaData> vec_tracks;
 		CDatabaseConnector::getInstance()->getAllTracksByArtist(artist_id, vec_tracks);
-		qDebug() << "Try artist " << artist_id;
 
 		// give each artist several trys
 		int max_rounds = vec_tracks.size();

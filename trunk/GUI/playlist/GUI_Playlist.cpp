@@ -173,8 +173,6 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 		MetaData md;
 
 		md.fromStringList(lst);
-		qDebug() << "artist = " << md.artist << "; song = " << md.title;
-
 
 		LyricLookup ll;
 		QString lyrics = ll.find_lyrics(md.artist, md.title);
@@ -294,7 +292,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 		else str4Playlist.push_back("0");
 
 		str4Playlist.push_back("0");
-		qDebug() << "insert " << str4Playlist;
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 

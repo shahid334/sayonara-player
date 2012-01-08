@@ -26,29 +26,12 @@
 #include <gst/gst.h>
 
 #include <QObject>
-#include <QThread>
 #include <QDebug>
 
 #include <vector>
 
 using namespace std;
 
-
-
-class GST_PipelineThread : public QThread
-{
-
-private:
-	GMainLoop* _threadloop;
-
-public:
-	GST_PipelineThread();
-	virtual ~GST_PipelineThread();
-
-protected:
-	void run();
-
-};
 
 
 
@@ -65,12 +48,11 @@ public:
 	bool		init();
 	void		state_changed();
 	void		set_cur_position(quint32);
+	void		set_track_finished();
 	int 		getState();
 
 
 private:
-
-	GST_PipelineThread* _thread;
 
 	GstElement* _pipeline;
 	GstElement* _volume;

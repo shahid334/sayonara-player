@@ -1,4 +1,4 @@
-/* MP3_Listen.cpp */
+/* Phonon_Engine.cpp */
 
 /* Copyright (C) 2011  Lucio Carreras
  *
@@ -20,13 +20,13 @@
 
 
 /*
- * MP3_Listen.cpp
+ * Phonon_Engine.cpp
  *
  *  Created on: Mar 2, 2011
  *      Author: luke
  */
 
-#include "MP3_Listen/MP3_Listen.h"
+#include "MP3_Listen/PhononEngine.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -60,7 +60,7 @@
 
 using namespace std;
 
-MP3_Listen::MP3_Listen(QObject * parent) :
+Phonon_Engine::Phonon_Engine(QObject * parent) :
 				QObject(parent) {
 
 	_state = STATE_STOP;
@@ -100,30 +100,30 @@ MP3_Listen::MP3_Listen(QObject * parent) :
 
 }
 
-MP3_Listen::~MP3_Listen() {
+Phonon_Engine::~Phonon_Engine() {
 	delete _audio_output;
 	delete _media_object;
 }
 
-void MP3_Listen::play() {
+void Phonon_Engine::play() {
 	_media_object->play();
 	_state = STATE_PLAY;
 }
 
-void MP3_Listen::stop() {
+void Phonon_Engine::stop() {
 
 	_media_object->stop();
 	_state = STATE_STOP;
 
 }
 
-void MP3_Listen::pause() {
+void Phonon_Engine::pause() {
 
 	_media_object->pause();
 	_state = STATE_PAUSE;
 }
 
-void MP3_Listen::jump(int where, bool percent) {
+void Phonon_Engine::jump(int where, bool percent) {
 
 	quint64 newtime_ms = where;
 	if (percent)
@@ -135,7 +135,7 @@ void MP3_Listen::jump(int where, bool percent) {
 
 }
 
-void MP3_Listen::changeTrack(const QString & filepath) {
+void Phonon_Engine::changeTrack(const QString & filepath) {
 
 	_media_object->setCurrentSource(Phonon::MediaSource(filepath));
 	MetaData md = ID3::getMetaDataOfFile(filepath);
@@ -156,7 +156,7 @@ void MP3_Listen::changeTrack(const QString & filepath) {
 
 }
 
-void MP3_Listen::changeTrack(const MetaData & metadata) {
+void Phonon_Engine::changeTrack(const MetaData & metadata) {
 
 
 	_media_object->setCurrentSource(Phonon::MediaSource(metadata.filepath));
@@ -176,23 +176,23 @@ void MP3_Listen::changeTrack(const MetaData & metadata) {
 
 }
 
-void MP3_Listen::total_time_changed(qint64 total_time) {
+void Phonon_Engine::total_time_changed(qint64 total_time) {
 
 	emit total_time_changed_signal(total_time);
 	_meta_data.length_ms = total_time;
 	play();
 }
 
-const MetaData & MP3_Listen::getMetaData() const {
+const MetaData & Phonon_Engine::getMetaData() const {
 	return _meta_data;
 
 }
 
-void MP3_Listen::seekableChanged(bool seekable) {
+void Phonon_Engine::seekableChanged(bool seekable) {
 	qDebug() << "seekable ? " << seekable;
 }
 
-void MP3_Listen::timeChanged(qint64 time) {
+void Phonon_Engine::timeChanged(qint64 time) {
 
 	_mseconds_now = time;
 	_seconds_now = time / 1000;
@@ -214,21 +214,21 @@ void MP3_Listen::timeChanged(qint64 time) {
 
 }
 
-void MP3_Listen::finished() {
+void Phonon_Engine::finished() {
 
 	emit track_finished();
 }
 
-void MP3_Listen::setVolume(qreal vol) {
+void Phonon_Engine::setVolume(qreal vol) {
 
 	_audio_output->setVolume(vol / 100.0);
 }
 
-qreal MP3_Listen::getVolume() {
+qreal Phonon_Engine::getVolume() {
 	return _audio_output->volume();
 }
 
-void MP3_Listen::eq_changed(int band, int val) {
+void Phonon_Engine::eq_changed(int band, int val) {
 	if (_eq == 0 || _eq_type == EQ_TYPE_NONE || _effect_parameters.size() == 0)
 		return;
 
@@ -255,7 +255,7 @@ void MP3_Listen::eq_changed(int band, int val) {
 	_eq->setParameterValue(_effect_parameters[band], new_val);
 }
 
-void MP3_Listen::eq_enable(bool enable) {
+void Phonon_Engine::eq_enable(bool enable) {
 
 	if (_eq == 0 || _eq_type == EQ_TYPE_NONE
 	) return;
@@ -269,7 +269,7 @@ void MP3_Listen::eq_enable(bool enable) {
 
 }
 
-void MP3_Listen::load_equalizer() {
+void Phonon_Engine::load_equalizer() {
 
 	QList<Phonon::EffectDescription> availableEffects =
 			Phonon::BackendCapabilities::availableAudioEffects();
@@ -317,7 +317,7 @@ void MP3_Listen::load_equalizer() {
 	}
 }
 
-void MP3_Listen::handle_data(
+void Phonon_Engine::handle_data(
 		const QMap<Phonon::AudioDataOutput::Channel, QVector<qint16> > & data) {
 
 	Q_UNUSED(data);
@@ -356,7 +356,7 @@ void MP3_Listen::handle_data(
 
 
 
-void MP3_Listen::stateChanged(Phonon::State newstate, Phonon::State oldstate){
+void Phonon_Engine::stateChanged(Phonon::State newstate, Phonon::State oldstate){
 
 	QString newstate_str;
 	QString oldstate_str;
@@ -410,12 +410,12 @@ void MP3_Listen::stateChanged(Phonon::State newstate, Phonon::State oldstate){
 
 	qDebug() << "****State: " << oldstate_str << " -> " << newstate_str;
 }
-void MP3_Listen::currentSourceChanged(const Phonon::MediaSource& source){
+void Phonon_Engine::currentSourceChanged(const Phonon::MediaSource& source){
 	qDebug() << "****SOURCE CHANGED" << source.fileName();
 	
 	
 }
 
-void MP3_Listen::metaDataChanged(){
+void Phonon_Engine::metaDataChanged(){
 
 }

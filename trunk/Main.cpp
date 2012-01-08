@@ -38,7 +38,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 //#include "GUI/radio/GUI_RadioWidget.h"
 #include "playlist/Playlist.h"
-#include "MP3_Listen/MP3_Listen.h"
+#include "MP3_Listen/PhononEngine.h"
 #include "MP3_Listen/GSTEngine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
@@ -100,8 +100,8 @@ int main(int argc, char *argv[]){
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
 
-        //GST_Engine 				listen (&app);
-        MP3_Listen				listen(&app);
+        GST_Engine 				listen (&app);
+        //Phonon_Engine			listen(&app);
         LastFM					lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());

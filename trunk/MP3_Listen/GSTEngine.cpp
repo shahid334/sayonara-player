@@ -33,8 +33,6 @@ static gboolean show_position(GstElement* pipeline){
 	}
 }
 
-
-
 static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data){
 
 	(void) bus;
@@ -42,6 +40,9 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 	switch (GST_MESSAGE_TYPE(msg)) {
 		case GST_MESSAGE_EOS:
 			qDebug("End-of-stream");
+			if(obj_ref){
+				obj_ref->set_track_finished();
+			}
 			g_main_loop_quit(_loop);
 		break;
 
@@ -64,23 +65,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 }
 
 
-/*****************************************************************************************/
-/* Thread */
-/*****************************************************************************************/
-
-GST_PipelineThread::GST_PipelineThread(){
-
-}
-
-GST_PipelineThread::~GST_PipelineThread(){
-	if(this->isRunning()) this->quit();
-}
-
-void GST_PipelineThread::run(){
-	g_main_loop_run (_loop);
-}
-
-
 
 
 
@@ -89,8 +73,6 @@ void GST_PipelineThread::run(){
 /*****************************************************************************************/
 
 GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
-	// TODO Auto-generated constructor stub
-	//gst_init(0, 0);
 
 	gst_init(0, 0);
 	_state = STATE_STOP;
@@ -116,21 +98,12 @@ GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
 		qDebug() << "Cannot init Pipeline";
 		return;
 	}
-
-	_thread = new GST_PipelineThread();
-
-
-
 }
 
 GST_Engine::~GST_Engine() {
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 	gst_object_unref (GST_OBJECT (_pipeline));
-
-	if(_thread->isRunning())
-		_thread->quit();
-
-	delete _thread;
+	obj_ref = 0;
 }
 
 
@@ -150,10 +123,8 @@ void GST_Engine::play(){
 
 void GST_Engine::stop(){
 	_state = STATE_STOP;
-	_thread->quit();
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 
-	//gst_object_unref(GST_OBJECT(_pipeline));
+	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 }
 
 void GST_Engine::pause(){
@@ -200,7 +171,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 	filename.push_front(QString("file://"));
 
 	g_object_set(G_OBJECT(_pipeline), "uri", filename.toLocal8Bit().data(), NULL);
-	g_timeout_add (200, (GSourceFunc) show_position, _pipeline);
+	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
 	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
 
@@ -273,6 +244,10 @@ void GST_Engine::set_cur_position(quint32 pos){
 	}
 
 	emit timeChangedSignal(pos);
+}
+
+void GST_Engine::set_track_finished(){
+	emit track_finished();
 }
 
 int GST_Engine::getState(){
