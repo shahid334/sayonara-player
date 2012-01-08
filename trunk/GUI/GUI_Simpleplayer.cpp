@@ -272,10 +272,10 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 
 void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
-
+qDebug() << "FILL SIMPLE PLAYER";
 
 	this->m_metadata = md;
-	qDebug() << this->m_metadata.toStringList();
+
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
@@ -367,6 +367,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setText("Play");
+		qDebug() << "Player: pause";
 		emit pause();
 
 		this->ui->albumCover->setFocus();
@@ -377,6 +378,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setText("Pause");
+		qDebug() << "Player: play";
 		emit play();
 
 		this->ui->albumCover->setFocus();
@@ -744,27 +746,6 @@ void GUI_SimplePlayer::changeEvent(QEvent *event) {
 
 }
 
-//void GUI_SimplePlayer::showAgain(QSystemTrayIcon::ActivationReason reason) {
-
-//	switch (reason) {
-//	case QSystemTrayIcon::Trigger:
-//		if (this->isMinimized() || isHidden())
-//			this->showNormal();
-//		if (!this->isActiveWindow())
-//			this->activateWindow();
-//		else {
-//			hide();
-//		}
-//		break;
-
-//	default:
-//		break;
-
-//	}
-
-//	Q_UNUSED(reason);
-
-//}
 
 void GUI_SimplePlayer::setupIcons() {
 

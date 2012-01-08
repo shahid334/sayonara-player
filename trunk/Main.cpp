@@ -99,8 +99,8 @@ int main(int argc, char *argv[]){
         Playlist 				playlist(&app);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
-        //GST_Engine 				listen (&app);
-        MP3_Listen				listen(&app);
+        GST_Engine 				listen (&app);
+       // MP3_Listen				listen(&app);
         LastFM					lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
@@ -109,9 +109,6 @@ int main(int argc, char *argv[]){
 
        // GUI_Alternate_Covers ui_alternate_covers;
 
-       /* if(!listen.init()){
-            		return 0;
-            	}*/
 
         qDebug() << "connections";
 
@@ -133,6 +130,7 @@ int main(int argc, char *argv[]){
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
 
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)), 		cover, 			SLOT(search_cover(const MetaData&)));
+        app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)),		&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(sig_search_similar_artists(const QString&)), 		&lastfm,		SLOT(get_similar_artists(const QString&)));
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)),		&lastfm,		SLOT(update_track(const MetaData&)));
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)), 		&listen, 		SLOT(changeTrack(const MetaData & )));
@@ -141,7 +139,7 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(sig_selected_file_changed(int)), 					&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(sig_playlist_created(vector<MetaData>&, int)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&, int)));
         app.connect (&playlist, SIGNAL(sig_mp3s_loaded_signal(int)), 						&ui_playlist, 	SLOT(update_progress_bar(int)));
-        app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)),		&player,		SLOT(fillSimplePlayer(const MetaData&)));
+
         app.connect (&playlist, SIGNAL(sig_cur_played_info_changed(const MetaData&)),   	&player,  		SLOT(update_info(const MetaData&)));
         app.connect (&playlist, SIGNAL(sig_playlist_prepared(int, vector<MetaData>&)), 		&playlists, 	SLOT(save_playlist_as_custom(int, vector<MetaData>&)));
     	app.connect (&playlist, SIGNAL(sig_playlist_prepared(QString, vector<MetaData>&)), 	&playlists, 	SLOT(save_playlist_as_custom(QString, vector<MetaData>&)));

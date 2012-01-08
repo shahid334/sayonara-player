@@ -60,11 +60,6 @@
 #include <phonon/videowidget.h>
 
 
-/*
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
-*/
-
 
 class MP3_Listen : public QObject{
 
@@ -78,11 +73,6 @@ private:
     int				_seconds_now;
     qint64			_mseconds_now;
     bool			_scrobbled;
-   /* float*			_f;
-    int*			_m;
-
-    IplImage* _img;*/
-
 
 
 	Phonon::AudioOutput *_audio_output;
@@ -93,7 +83,6 @@ private:
 	QList<Phonon::EffectParameter> _effect_parameters;
 	//Phonon::AudioDataOutput*	_ado;
 	bool				_is_eq_enabled;
-
 	int					_eq_type;
 
 	Phonon::VideoWidget* _video_widget;

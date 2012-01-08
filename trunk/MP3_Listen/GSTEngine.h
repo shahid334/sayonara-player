@@ -21,11 +21,34 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Equalizer_presets.h"
 
 #include <gst/gst.h>
 
 #include <QObject>
+#include <QThread>
 #include <QDebug>
+
+#include <vector>
+
+using namespace std;
+
+
+
+class GST_PipelineThread : public QThread
+{
+
+private:
+	GMainLoop* _threadloop;
+
+public:
+	GST_PipelineThread();
+	virtual ~GST_PipelineThread();
+
+protected:
+	void run();
+
+};
 
 
 
@@ -46,6 +69,9 @@ public:
 
 
 private:
+
+	GST_PipelineThread* _thread;
+
 	GstElement* _pipeline;
 	GstElement* _volume;
 	GstBus* 	_bus;
@@ -66,6 +92,11 @@ private:
 signals:
 	void total_time_changed_signal(qint64);
 	void timeChangedSignal(quint32);
+	void track_finished();
+	void scrobble_track(const MetaData&);
+	void eq_presets_loaded(const vector<EQ_Setting>&);
+	void eq_found(const QStringList&);
+
 
 
 

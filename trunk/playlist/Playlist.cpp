@@ -302,6 +302,7 @@ void Playlist::psl_play(){
 	if(_cur_play_idx <= -1){
 		_cur_play_idx = 0;
 		emit sig_selected_file_changed(_cur_play_idx);
+		qDebug() << "SELECTED FILE CHANGED (2)";
 		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 	}
 
@@ -325,6 +326,7 @@ void Playlist::psl_forward(){
 		int track_num = rand() % _v_meta_data.size();
 		_cur_play_idx = track_num;
 		emit sig_selected_file_changed(track_num);
+		qDebug() << "SELECTED FILE CHANGED (3)";
 		emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 
 	}
@@ -332,6 +334,7 @@ void Playlist::psl_forward(){
 	else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
 		_cur_play_idx++;
 		emit sig_selected_file_changed(_cur_play_idx);
+		qDebug() << "SELECTED FILE CHANGED (4)";
 		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 
 	}
@@ -344,6 +347,8 @@ void Playlist::psl_backward(){
 	if(this->_cur_play_idx > 0){
 		_cur_play_idx--;
 		emit sig_selected_file_changed(_cur_play_idx);
+
+		qDebug() << "SELECTED FILE CHANGED (5)";
 		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 
 	}
@@ -386,6 +391,7 @@ void Playlist::psl_next_track(){
 		MetaData md = _v_meta_data[track_num];
 		if(Helper::checkTrack(md)){
 			emit sig_selected_file_changed(track_num);
+			qDebug() << "SELECTED FILE CHANGED (6)";
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
 			if(_playlist_mode.dynamic)
@@ -414,7 +420,7 @@ void Playlist::psl_change_track(int new_row){
 	if(Helper::checkTrack(md)){
 
 		_cur_play_idx = new_row;
-
+		qDebug() << "SELECTED FILE CHANGED (1)";
 		emit sig_selected_file_changed_md(md);
 
 		if(_playlist_mode.dynamic)

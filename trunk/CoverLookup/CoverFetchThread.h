@@ -78,13 +78,13 @@ protected:
 
 private:
 
-	vector<Album> _vec_albums;
-	vector<QImage> _images;
-	int _cover_source;
-	int _num_covers_2_fetch;
-	QString _album_searchstring;
-	QString _artist_searchstring;
-	int _cover_fetch_mode;
+	vector<Album> 	_vec_albums;
+	vector<QImage> 	_images;
+	int 			_cover_source;
+	int 			_num_covers_2_fetch;
+	QString 		_album_searchstring;
+	QString 		_artist_searchstring;
+	int 			_cover_fetch_mode;
 
 
 	void search_covers_for_albums(const vector<Album>&);
