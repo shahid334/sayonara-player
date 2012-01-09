@@ -55,7 +55,12 @@ public:
 private:
 
 	GstElement* _pipeline;
+	GstElement* _equalizer;
 	GstElement* _volume;
+	GstElement* _audio_bin;
+	GstElement* _audio_sink;
+	GstPad*		_audio_pad;
+
 	GstBus* 	_bus;
 
 
@@ -69,7 +74,6 @@ private:
 
 	int			_eq_type;
 	int			_state;
-
 
 signals:
 	void total_time_changed_signal(qint64);

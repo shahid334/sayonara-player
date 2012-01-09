@@ -87,17 +87,34 @@ GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
 
 		}
 
-	_volume = gst_element_factory_make("playbin", "volume");
-	if(!_volume){
-		qDebug() << "cannot init volume";
-	}
-
-
 	_pipeline = gst_element_factory_make("playbin", "player");
+
 	if(!_pipeline){
 		qDebug() << "Cannot init Pipeline";
 		return;
 	}
+
+	_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
+		if(!_equalizer){
+			qDebug() << "Equalizer cannot be created";
+		}
+
+	bool success = gst_bin_add(GST_BIN(_pipeline), _equalizer);
+	qDebug() << "Adding: " << success;
+
+	_audio_sink = gst_element_factory_make("alsasink", "audiosink");
+
+	_audio_bin = gst_bin_new("audio-bin");
+	_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
+
+	/*gst_element_add_pad(_audio_bin, gst_ghost_pad_new("sink", _audio_pad));
+	gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
+	g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+	gst_object_unref(GST_OBJECT(_audio_pad));
+
+	gst_element_link_many(_equalizer, _audio_sink, NULL);*/
+
+
 }
 
 GST_Engine::~GST_Engine() {
@@ -215,7 +232,20 @@ void GST_Engine::changeTrack(const QString& filepath){
 
 }
 
-void GST_Engine::eq_changed(int, int){
+void GST_Engine::eq_changed(int band, int val){
+
+	double new_val = 0;
+
+	if (val > 0) {
+		new_val = val * 0.33;
+	}
+
+	else
+		new_val = val * 0.66;
+
+
+	g_object_set(G_OBJECT(_equalizer), "band4", new_val, NULL);
+
 
 }
 

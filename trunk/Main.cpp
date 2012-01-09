@@ -100,8 +100,8 @@ int main(int argc, char *argv[]){
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
 
-        GST_Engine 				listen (&app);
-        //Phonon_Engine			listen(&app);
+        //GST_Engine 				listen (&app);
+        Phonon_Engine			listen(&app);
         LastFM					lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
