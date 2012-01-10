@@ -37,6 +37,10 @@
 #include <QFile>
 #include <QDir>
 
+#include <vector>
+
+using namespace std;
+
 
 CoverFetchThread::CoverFetchThread() {
 	_cover_source = COV_SRC_LFM;
@@ -80,6 +84,8 @@ void CoverFetchThread::search_covers_for_albums(const vector<Album>& albums){
 									images[c].save(path);
 								}
 								_images.push_back(images[c]);
+
+
 							}
 						}
 

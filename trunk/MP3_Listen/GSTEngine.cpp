@@ -43,21 +43,20 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			if(obj_ref){
 				obj_ref->set_track_finished();
 			}
-			g_main_loop_quit(_loop);
 		break;
 
 		case GST_MESSAGE_ERROR:
 			GError *err;
+
 			gst_message_parse_error(msg, &err, NULL);
-			qDebug() << err->message;
+			qDebug() << "GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
 			g_error_free(err);
 
-			g_main_loop_quit(_loop);
 			break;
 
 		default:
-			GST_Engine* eng = (GST_Engine*) user_data;
-			eng->state_changed();
+			//qDebug() << "GST: " << GST_MESSAGE_TYPE_NAME(msg) << ": " << GST_MESSAGE_SRC_NAME(msg);
+			obj_ref->state_changed();
 			break;
     }
 
@@ -81,43 +80,60 @@ GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
 	_seconds_now = 0;
 	_scrobbled = false;
 
-	_loop = g_main_loop_new(NULL, FALSE);
-		if(!_loop){
-			qDebug() << "Cannot init loop";
-
-		}
-
-	_pipeline = gst_element_factory_make("playbin", "player");
+	_pipeline = gst_element_factory_make("playbin2", "player");
 
 	if(!_pipeline){
 		qDebug() << "Cannot init Pipeline";
 		return;
 	}
 
-	_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
+	g_timeout_add (200, (GSourceFunc) show_position, _pipeline);
+	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
+
+	gst_bus_add_watch(_bus, bus_state_changed, this);
+
+
+	bool success = false;
+	int i=0;
+	do{
+		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
 		if(!_equalizer){
 			qDebug() << "Equalizer cannot be created";
+			break;
 		}
 
-	bool success = gst_bin_add(GST_BIN(_pipeline), _equalizer);
-	qDebug() << "Adding: " << success;
+		_audio_sink = gst_element_factory_make("autoaudiosink", "alsa-sink");
+		if(!_audio_sink){
+			qDebug() << "Sink cannot be created";
+			break;
+		}
 
-	_audio_sink = gst_element_factory_make("alsasink", "audiosink");
+		_audio_bin = gst_bin_new("audio-bin");
+		if(!_audio_bin){
+			qDebug() << "Bin cannot be created";
+			break;
+		}
 
-	_audio_bin = gst_bin_new("audio-bin");
-	_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
+		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
 
-	/*gst_element_add_pad(_audio_bin, gst_ghost_pad_new("sink", _audio_pad));
-	gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
-	g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-	gst_object_unref(GST_OBJECT(_audio_pad));
+		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
+		if(!_audio_pad){
+			qDebug() << "Pad cannot be fetched";
+		}
 
-	gst_element_link_many(_equalizer, _audio_sink, NULL);*/
+		success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
 
+	} while(i);
+
+	if(success){
+		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+		gst_element_link(_equalizer, _audio_sink);
+	}
 
 }
 
 GST_Engine::~GST_Engine() {
+	gst_object_unref(_bus);
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 	gst_object_unref (GST_OBJECT (_pipeline));
 	obj_ref = 0;
@@ -190,10 +206,6 @@ void GST_Engine::changeTrack(const MetaData& md){
 	g_object_set(G_OBJECT(_pipeline), "uri", filename.toLocal8Bit().data(), NULL);
 	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
-	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
-
-	gst_bus_add_watch(_bus, bus_state_changed, this);
-	gst_object_unref(_bus);
 
 	emit total_time_changed_signal(_meta_data.length_ms);
 
@@ -218,13 +230,7 @@ void GST_Engine::changeTrack(const QString& filepath){
 
 	_meta_data = md;
 
-	g_object_set(G_OBJECT(_pipeline), "uri", filename.toStdString().c_str(), NULL);
-	g_timeout_add (200, (GSourceFunc) show_position, _pipeline);
-
-	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
-
-	gst_bus_add_watch(_bus, bus_state_changed, this);
-	gst_object_unref(_bus);
+	g_object_set(G_OBJECT(_pipeline), "uri", filename.toLocal8Bit().data(), NULL);
 
 	emit total_time_changed_signal(_meta_data.length_ms);
 
@@ -235,16 +241,21 @@ void GST_Engine::changeTrack(const QString& filepath){
 void GST_Engine::eq_changed(int band, int val){
 
 	double new_val = 0;
-
+	new_val = val * 1.0;
 	if (val > 0) {
-		new_val = val * 0.33;
+		new_val = val * 0.25;
 	}
 
 	else
-		new_val = val * 0.66;
+		new_val = val * 0.75;
 
+	char band_name[6];
+	sprintf(band_name, "band%d", band);
+	band_name[5] = '\0';
 
-	g_object_set(G_OBJECT(_equalizer), "band4", new_val, NULL);
+	//qDebug() << "updating band " << band_name << " to " << new_val;
+
+	g_object_set(G_OBJECT(_equalizer), band_name, new_val, NULL);
 
 
 }
