@@ -38,6 +38,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 //#include "GUI/radio/GUI_RadioWidget.h"
 #include "playlist/Playlist.h"
+#include "MP3_Listen/Engine.h"
 #include "MP3_Listen/PhononEngine.h"
 #include "MP3_Listen/GSTEngine.h"
 #include "CoverLookup/CoverLookup.h"
@@ -62,18 +63,42 @@
 
 #include <string>
 #include <vector>
-
 #include <iostream>
 
 
 using namespace std;
 
+void printHelp(){
+	qDebug() << "sayonara [-g]";
+	qDebug() << "-g\tuse gstreamer instead of phonon";
+}
 
 int main(int argc, char *argv[]){
+
+		bool use_gstreamer = false;
 
 		if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
 			QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 		}
+
+		for(int i=0; i<argc; i++){
+			if(i == 0) continue;
+
+			QString strArg = QString(argv[i]);
+
+			if( !strArg.compare("--help") )
+				printHelp();
+
+			else if( !strArg.compare("-g") )
+				use_gstreamer = true;
+
+			else
+				printHelp();
+		}
+
+
+		qDebug() << "Use gstreamer? " << use_gstreamer;
+
 
 
 
@@ -100,22 +125,24 @@ int main(int argc, char *argv[]){
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
 
-        //GST_Engine 				listen (&app);
-        Phonon_Engine			listen(&app);
         LastFM					lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
-       // GUI_RadioWidget			ui_radio(player.getParentOfEqualizer());
         GUI_TagEdit				ui_tagedit;
 
-       // GUI_Alternate_Covers ui_alternate_covers;
+        Engine* listen = 0;
+        if(use_gstreamer)
+        	listen = new GST_Engine();
+
+        else
+        	listen = new Phonon_Engine();
 
 
         qDebug() << "connections";
 
-        app.connect (&player, SIGNAL(pause()),							&listen,	SLOT(pause()));
-        app.connect (&player, SIGNAL(search(int)),						&listen,	SLOT(jump(int)));
-        app.connect (&player, SIGNAL(volumeChanged(qreal)),				&listen,	SLOT(setVolume(qreal)));
+        app.connect (&player, SIGNAL(pause()),							listen,	SLOT(pause()));
+        app.connect (&player, SIGNAL(search(int)),						listen,	SLOT(jump(int)));
+        app.connect (&player, SIGNAL(volumeChanged(qreal)),				listen,	SLOT(setVolume(qreal)));
         app.connect (&player, SIGNAL(setupLastFM()), 					&ui_lastfm, SLOT(show_win()));
         app.connect (&player, SIGNAL(baseDirSelected(const QString &)),	&library, 	SLOT(baseDirSelected(const QString & )));
         app.connect (&player, SIGNAL(reloadLibrary()), 					&library, 	SLOT(reloadLibrary()));
@@ -134,9 +161,9 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)),		&player,		SLOT(fillSimplePlayer(const MetaData&)));
         app.connect (&playlist, SIGNAL(sig_search_similar_artists(const QString&)), 		&lastfm,		SLOT(get_similar_artists(const QString&)));
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)),		&lastfm,		SLOT(update_track(const MetaData&)));
-        app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)), 		&listen, 		SLOT(changeTrack(const MetaData & )));
-        app.connect (&playlist, SIGNAL(sig_no_track_to_play()),								&listen,		SLOT(stop()));
-        app.connect (&playlist, SIGNAL(sig_goon_playing()), 								&listen,		SLOT(play()));
+        app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)), 		listen, 		SLOT(changeTrack(const MetaData & )));
+        app.connect (&playlist, SIGNAL(sig_no_track_to_play()),								listen,		SLOT(stop()));
+        app.connect (&playlist, SIGNAL(sig_goon_playing()), 								listen,		SLOT(play()));
         app.connect (&playlist, SIGNAL(sig_selected_file_changed(int)), 					&ui_playlist, 	SLOT(track_changed(int)));
         app.connect (&playlist, SIGNAL(sig_playlist_created(vector<MetaData>&, int)), 		&ui_playlist, 	SLOT(fillPlaylist(vector<MetaData>&, int)));
         app.connect (&playlist, SIGNAL(sig_mp3s_loaded_signal(int)), 						&ui_playlist, 	SLOT(update_progress_bar(int)));
@@ -157,12 +184,12 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(row_removed(int)), 							&playlist, 	SLOT(psl_remove_row(int)));
         app.connect (&ui_playlist, SIGNAL(sig_import_to_library(bool)),					&playlist,	SLOT(psl_import_new_tracks_to_library(bool)));
 
-        app.connect (&listen, 	SIGNAL(track_finished()),							&playlist,	SLOT(psl_next_track() ));
-        app.connect (&listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 	SLOT(scrobble(const MetaData&)));
-        app.connect (&listen,	SIGNAL(eq_presets_loaded(const vector<EQ_Setting>&)), &ui_eq,	SLOT(fill_eq_presets(const vector<EQ_Setting>&)));
-        app.connect (&listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 	SLOT(fill_available_equalizers(const QStringList&)));
-        app.connect (&listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,	SLOT(total_time_changed(qint64)));
-        app.connect (&listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,	SLOT(setCurrentPosition(quint32) ));
+        app.connect (listen, 	SIGNAL(track_finished()),							&playlist,	SLOT(psl_next_track() ));
+        app.connect (listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 	SLOT(scrobble(const MetaData&)));
+        app.connect (listen,	SIGNAL(eq_presets_loaded(const vector<EQ_Setting>&)), &ui_eq,	SLOT(fill_eq_presets(const vector<EQ_Setting>&)));
+        app.connect (listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 	SLOT(fill_available_equalizers(const QStringList&)));
+        app.connect (listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,	SLOT(total_time_changed(qint64)));
+        app.connect (listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,	SLOT(setCurrentPosition(quint32) ));
 
 
         app.connect (cover, 	SIGNAL(cover_found(bool, QString)), 				&player, 		SLOT(cover_changed(bool, QString)));
@@ -193,8 +220,8 @@ int main(int argc, char *argv[]){
 
         app.connect(&ui_lastfm, SIGNAL(new_lfm_credentials(QString, QString)), 		&lastfm, 		SLOT(login_slot(QString, QString)));
 
-        app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), 	&listen, 	SLOT(eq_changed(int, int)));
-        app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), 		&listen, 	SLOT(eq_enable(bool)));
+        app.connect(&ui_eq, SIGNAL(eq_changed_signal(int, int)), 	listen, 	SLOT(eq_changed(int, int)));
+        app.connect(&ui_eq, SIGNAL(eq_enabled_signal(bool)), 		listen, 	SLOT(eq_enable(bool)));
         app.connect(&ui_eq, SIGNAL(close_event()), 					&player, 	SLOT(close_eq()));
 
 
@@ -236,18 +263,14 @@ int main(int argc, char *argv[]){
 		qDebug() << "volume";
 		int vol = set->getVolume();
         player.setVolume(vol);
-        listen.setVolume(vol);
+        listen->setVolume(vol);
 
-       /*player.showEqualizer(false);
-   		player.showPlaylistChooser(false);*/
-     	playlists.ui_loaded();
+      	playlists.ui_loaded();
 
     	player.setWindowTitle("Sayonara (0.1)");
     		player.show();
 
-
-
-		//listen.load_equalizer();
+		listen->load_equalizer();
 
 		ui_eq.resize(player.getParentOfEqualizer()->size());
 		ui_playlist_chooser.resize(player.getParentOfPlaylistChooser()->size());
@@ -266,6 +289,8 @@ int main(int argc, char *argv[]){
         app.exec();
         qDebug() << "Store settings";
         CDatabaseConnector::getInstance()->store_settings();
+
+        delete listen;
 
         return 0;
 }

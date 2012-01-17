@@ -22,11 +22,13 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
+#include "MP3_Listen/Engine.h"
 
 #include <gst/gst.h>
 
 #include <QObject>
 #include <QDebug>
+
 
 #include <vector>
 
@@ -36,20 +38,15 @@ using namespace std;
 
 
 
-class GST_Engine : public QObject {
+class GST_Engine : public Engine {
 
 	Q_OBJECT
 
+
 public:
 
-	GST_Engine(QObject * parent);
+	GST_Engine();
 	virtual ~GST_Engine();
-
-	bool		init();
-	void		state_changed();
-	void		set_cur_position(quint32);
-	void		set_track_finished();
-	int 		getState();
 
 
 private:
@@ -60,47 +57,32 @@ private:
 	GstElement* _audio_bin;
 	GstElement* _audio_sink;
 	GstPad*		_audio_pad;
-
-	GstBus* 	_bus;
-
-
-	MetaData	_meta_data;
-	int			_seconds_started;
-	int			_seconds_now;
-	qint64		_mseconds_now;
-	bool		_scrobbled;
-
-	bool		_is_eq_enabled;
-
-	int			_eq_type;
-	int			_state;
-
-signals:
-	void total_time_changed_signal(qint64);
-	void timeChangedSignal(quint32);
-	void track_finished();
-	void scrobble_track(const MetaData&);
-	void eq_presets_loaded(const vector<EQ_Setting>&);
-	void eq_found(const QStringList&);
-
-
+	GstBus*		_bus;
 
 
 public slots:
+	virtual void play();
+	virtual void stop();
+	virtual void pause();
+	virtual void setVolume(qreal vol);
 
-	void play();
-	void stop();
-	void pause();
-    void setVolume(qreal vol);
+	virtual void jump(int where, bool percent=true);
+	virtual void changeTrack(const MetaData& );
+	virtual void changeTrack(const QString& );
+	virtual void eq_changed(int, int);
+	virtual void eq_enable(bool);
 
-	/**
-	* TODO: Where in what? Percent, seconds or egss?
-	*/
-	void jump(int where, bool percent=true);
-	void changeTrack(const MetaData& );
-	void changeTrack(const QString& );
-	void eq_changed(int, int);
-	void eq_enable(bool);
+
+public:
+	// callback -> class
+	void		state_changed();
+	void		set_cur_position(quint32);
+	void		set_track_finished();
+
+	virtual void 	load_equalizer();
+
+
+
 
 };
 

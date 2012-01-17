@@ -247,8 +247,8 @@ void LastFM::get_similar_artists(const QString& artistname){
 void LastFM::sim_artists_thread_finished(){
 
 	QList<int> ids = _similar_artists_thread->get_chosen_ids();
-
-	emit similar_artists_available(ids);
+	if(ids.size() > 0)
+		emit similar_artists_available(ids);
 }
 
 QString LastFM::get_api_key(){

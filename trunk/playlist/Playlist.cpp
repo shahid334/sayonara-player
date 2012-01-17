@@ -529,13 +529,12 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 		}
 
 		cur_artist_idx++;
-	}
-
-	while(is_track_already_in && cur_artist_idx < artists.size());
+	} while(is_track_already_in && cur_artist_idx < artists.size());
 
 	qDebug() << "Found artist " << md.artist;
 
-	_v_meta_data.push_back(md);
+	if(!is_track_already_in)
+		_v_meta_data.push_back(md);
 
 	psl_save_playlist_to_storage();
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);

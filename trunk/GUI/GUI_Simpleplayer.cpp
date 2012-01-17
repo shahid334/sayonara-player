@@ -786,8 +786,11 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
 
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
+	e->accept();
+	qDebug() << "Key Event" << e->key();
 
 	switch (e->key()) {
+
 	case Qt::Key_MediaPlay:
 
 		playClicked(true);

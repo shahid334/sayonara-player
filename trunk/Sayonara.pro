@@ -19,7 +19,8 @@ LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp `pkg-config --cflags --libs gs
 
 
 # Input
-HEADERS += MP3_Listen/PhononEngine.h \
+HEADERS += MP3_Listen/Engine.h \
+	MP3_Listen/PhononEngine.h \
 	MP3_Listen/GSTEngine.h \
 	GUI/GUI_Simpleplayer.h \ 
     GUI/playlist/GUI_Playlist.h \

@@ -60,8 +60,7 @@
 
 using namespace std;
 
-Phonon_Engine::Phonon_Engine(QObject * parent) :
-				QObject(parent) {
+Phonon_Engine::Phonon_Engine() {
 
 	_state = STATE_STOP;
 	_seconds_started = 0;
@@ -183,11 +182,6 @@ void Phonon_Engine::total_time_changed(qint64 total_time) {
 	play();
 }
 
-const MetaData & Phonon_Engine::getMetaData() const {
-	return _meta_data;
-
-}
-
 void Phonon_Engine::seekableChanged(bool seekable) {
 	qDebug() << "seekable ? " << seekable;
 }
@@ -301,12 +295,10 @@ void Phonon_Engine::load_equalizer() {
 
 		_audio_path.insertEffect(_eq);
 
-		CSettingsStorage * set = CSettingsStorage::getInstance();
+		CSettingsStorage * settings = CSettingsStorage::getInstance();
 		vector<EQ_Setting> vec;
-		set->getEqualizerSettings(vec);
+		settings->getEqualizerSettings(vec);
 
-		emit
-		eq_found(availableEqualizers);
 		emit eq_presets_loaded(vec);
 	}
 

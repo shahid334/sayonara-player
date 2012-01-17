@@ -7,10 +7,15 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/Equalizer_presets.h"
+#include "HelperStructs/CSettingsStorage.h"
+#include "MP3_Listen/Engine.h"
 #include "MP3_Listen/GSTEngine.h"
+
 
 #include <gst/gst.h>
 #include <string>
+#include <vector>
 
 #include <QObject>
 #include <QDebug>
@@ -18,8 +23,6 @@
 
 using namespace std;
 
-
-static GMainLoop*	_loop;
 static GST_Engine*	obj_ref;
 
 
@@ -31,6 +34,8 @@ static gboolean show_position(GstElement* pipeline){
 	if(obj_ref != NULL && obj_ref->getState() == STATE_PLAY){
 		obj_ref->set_cur_position((quint32)(pos / 1000000000));
 	}
+
+	return true;
 }
 
 static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data){
@@ -71,7 +76,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 /* Engine */
 /*****************************************************************************************/
 
-GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
+GST_Engine::GST_Engine(){
 
 	gst_init(0, 0);
 	_state = STATE_STOP;
@@ -84,13 +89,17 @@ GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
 
 	if(!_pipeline){
 		qDebug() << "Cannot init Pipeline";
-		return;
+
 	}
 
 	g_timeout_add (200, (GSourceFunc) show_position, _pipeline);
 	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
+	if(!_bus){
+		qDebug() << "Something went wrong with the bus";
+	}
 
 	gst_bus_add_watch(_bus, bus_state_changed, this);
+	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
 
 
 	bool success = false;
@@ -127,7 +136,8 @@ GST_Engine::GST_Engine(QObject* parent) : QObject(parent){
 
 	if(success){
 		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-		gst_element_link(_equalizer, _audio_sink);
+		success = gst_element_link(_equalizer, _audio_sink);
+		if(success) qDebug() << "Linking successful";
 	}
 
 }
@@ -139,10 +149,6 @@ GST_Engine::~GST_Engine() {
 	obj_ref = 0;
 }
 
-
-bool GST_Engine::init(){
-	return true;
-}
 
 
 void GST_Engine::play(){
@@ -176,9 +182,17 @@ void GST_Engine::setVolume(qreal vol){
 
 }
 
-/**
-* TODO: Where in what? Percent, seconds or egss?
-*/
+void GST_Engine::load_equalizer(){
+
+	CSettingsStorage * settings = CSettingsStorage::getInstance();
+	vector<EQ_Setting> vec;
+	settings->getEqualizerSettings(vec);
+
+	//emit eq_found(availableEqualizers);
+	emit eq_presets_loaded(vec);
+
+}
+
 void GST_Engine::jump(int where, bool percent){
 
 	Q_UNUSED(percent);
@@ -291,6 +305,3 @@ void GST_Engine::set_track_finished(){
 	emit track_finished();
 }
 
-int GST_Engine::getState(){
-	return _state;
-}

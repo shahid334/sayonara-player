@@ -51,22 +51,22 @@ QMap<QString, int> LFM_SimilarArtists::filter_available_artists(QMap<QString, do
 		int start_idx = idx;
 
 		QMap<QString, int> possible_artists;
-		QStringList possible_artist_names;
 
-		while(possible_artists.size() == 0){
+		while(possible_artists.keys().size() == 0){
 
 			foreach(QString key, artists[idx].keys()){
 
 				int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
 				if(artist_id != -1){
 					possible_artists[key] = artist_id;
-					possible_artist_names.push_back(key);
+					//qDebug() << "Artist: " << key << " @ " << artists[idx].value(key) << ", ("<< possible_artists.keys().size() << ")";
 
 				}
 			}
 
-			if(possible_artists.size() == 0) {
-				idx = (idx + 1) % 3;
+			if(possible_artists.keys().size() == 0) {
+				idx--;
+				if(idx == -1) idx = 2;
 				if(start_idx == idx) break;
 			}
 			else break;
@@ -115,6 +115,7 @@ void LFM_SimilarArtists::run(){
 						QDomElement e = content.toElement();
 						if(!e.isNull()){
 							artist_name = e.text();
+							//qDebug() << "artist =  " << e.text();
 						}
 					}
 
@@ -122,15 +123,16 @@ void LFM_SimilarArtists::run(){
 						QDomElement e = content.toElement();
 						if(!e.isNull()){
 							match = e.text().toDouble();
+							//qDebug() << "match = " << e.text() << " (" << e.text().toDouble() << ") ";
 						}
 					}
 
 					if(artist_name.size() > 0 && match >= 0) {
-						if(match > 0.7){
+						if(match > 0.1){
 							artist_match[0][artist_name] = match;
 						}
 
-						else if(match > 0.3){
+						else if(match > 0.03){
 							artist_match[1][artist_name] = match;
 						}
 
@@ -147,28 +149,22 @@ void LFM_SimilarArtists::run(){
 
 		doc.clear();
 
-		qDebug() << "Hier";
-
 
 		// get random list where to search the artist in
 		int idx = 0;
 		int rnd = rand() % 1000;
-		if(rnd > 600) idx = 0;			// [500-999]
-		else if(rnd > 250) idx = 1;		// [200-500]
+		if(rnd > 250) idx = 0;			// [250-999]
+		else if(rnd > 50) idx = 1;		// [50-250]
 		else idx = 2;
-
-		qDebug() << "Hier 2";
 
 		QMap<QString, int> possible_artists =
 				filter_available_artists(artist_match, idx);
 
 		if(possible_artists.size() == 0) return;
 
-		//QString random_artist = possible_artist_names[rand() % possible_artist_names.size()];
-
-
-
+		_chosen_ids.clear();
 		for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
+
 			_chosen_ids.push_back(it.value());
 		}
 }
