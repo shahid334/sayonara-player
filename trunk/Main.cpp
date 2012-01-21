@@ -36,7 +36,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
-//#include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/radio/GUI_RadioWidget.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/Engine.h"
 #include "MP3_Listen/PhononEngine.h"
@@ -60,6 +60,7 @@
 #include <QFile>
 #include <QDir>
 #include <QList>
+#include <QWebView>
 
 #include <string>
 #include <vector>
@@ -99,9 +100,6 @@ int main(int argc, char *argv[]){
 
 		qDebug() << "Use gstreamer? " << use_gstreamer;
 
-
-
-
 		CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
@@ -129,6 +127,7 @@ int main(int argc, char *argv[]){
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
         GUI_TagEdit				ui_tagedit;
+        GUI_RadioWidget			ui_radio;
 
         Engine* listen = 0;
         if(use_gstreamer)
@@ -191,7 +190,6 @@ int main(int argc, char *argv[]){
         app.connect (listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,	SLOT(total_time_changed(qint64)));
         app.connect (listen, 	SIGNAL(timeChangedSignal(quint32)),					&player,	SLOT(setCurrentPosition(quint32) ));
 
-
         app.connect (cover, 	SIGNAL(cover_found(bool, QString)), 				&player, 		SLOT(cover_changed(bool, QString)));
         app.connect (cover, 	SIGNAL(cover_found(bool, QString)), 				&ui_library,	SLOT(cover_changed(bool, QString)));
 
@@ -207,7 +205,6 @@ int main(int argc, char *argv[]){
         app.connect(&library, SIGNAL(library_should_be_reloaded()), 				&ui_library, 	SLOT(library_should_be_reloaded()));
         app.connect(&library, SIGNAL(sig_import_result(bool)),						&ui_library,	SLOT(import_result(bool)));
         app.connect(&library, SIGNAL(sig_import_result(bool)),						&playlists,		SLOT(import_result(bool)));
-
 
         app.connect(&ui_library, SIGNAL(search_cover(const MetaData&)), 			cover, 		SLOT(search_cover(const MetaData&)));
         app.connect(&ui_library, SIGNAL(artist_changed_signal(int)), 				&library, 	SLOT(getAlbumsByArtist(int)));
@@ -245,7 +242,10 @@ int main(int argc, char *argv[]){
 		app.connect(&playlists, SIGNAL(sig_import_tracks(const vector<MetaData>&)), 	&library, 				SLOT(importFiles(const vector<MetaData>&)));
 
 
-		//app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
+		app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
+
+
+		ui_radio.show();
 
 		qDebug() << "Playlist loaded";
 		playlist.ui_loaded();
@@ -285,6 +285,12 @@ int main(int argc, char *argv[]){
 
         vector<EQ_Setting> eq_settings;
         set->getEqualizerSettings(eq_settings);
+
+
+       /* QWebView *view = new QWebView(0);
+   	     view->load(QUrl("http://qt.nokia.com/"));
+   	     view->show();*/
+
 
         app.exec();
         qDebug() << "Store settings";

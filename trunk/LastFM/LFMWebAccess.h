@@ -57,6 +57,7 @@ bool lfm_wa_call_scrobble_url(string url, string post_data);
 bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc);
 
 QString lfm_wa_parse_session_answer();
+QString lfm_wa_parse_token_answer();
 
 
 

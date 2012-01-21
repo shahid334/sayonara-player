@@ -137,10 +137,12 @@ bool lfm_wa_call_scrobble_url(string url, string post_data){
 
 
 	if(lfm_webpage_bytes > 0){
+		qDebug() << "LastFM : ok " << lfm_webpage;
 		return true;
 	}
 
 	else {
+
 		qDebug() <<  Q_FUNC_INFO << "Webpage = null";
 		return false;
 	}
@@ -202,6 +204,8 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 
 QString lfm_wa_parse_session_answer(){
 
+	qDebug() << lfm_webpage;
+
 	QString str_key = "";
 	QDomDocument doc("answer");
 	QString content = QString(lfm_webpage);
@@ -227,4 +231,24 @@ QString lfm_wa_parse_session_answer(){
 	doc.clear();
 	return str_key;
 }
+
+
+
+QString lfm_wa_parse_token_answer(){
+
+	QString str_key = "";
+	QDomDocument doc("answer");
+	QString content = QString(lfm_webpage);
+	doc.setContent(content);
+
+	QDomNodeList nodeList =  doc.documentElement().elementsByTagName("token");
+
+	for(int i=0; i<nodeList.size(); i++){
+		str_key = nodeList.at(i).toElement().text();
+	}
+
+	doc.clear();
+	return str_key;
+}
+
 

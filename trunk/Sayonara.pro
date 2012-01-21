@@ -5,6 +5,7 @@
 QT += network
 QT += xml
 QT += sql
+QT += webkit
 TEMPLATE = app
 TARGET = sayonara
 #CXX_FLAGS += -O2
@@ -61,7 +62,8 @@ HEADERS += MP3_Listen/Engine.h \
     LastFM/LastFM.h \
     LastFM/LFMWebAccess.h \
     LastFM/LFMSimilarArtistsThread.h  \
-    GUI/GUI_TrayIcon.h
+    GUI/GUI_TrayIcon.h \
+    GUI/radio/GUI_RadioWidget.h \
     
 
 SOURCES += Main.cpp \
@@ -108,9 +110,8 @@ SOURCES += Main.cpp \
     LastFM/LastFM.cpp \
     LastFM/LFMSimilarArtistsThread.cpp \
     LastFM/LFMWebAccess.cpp \
-    GUI/GUI_TrayIcon.cpp
-    
-    
+    GUI/GUI_TrayIcon.cpp \
+    GUI/radio/GUI_RadioWidget.cpp \
    
 
 FORMS += \
@@ -124,6 +125,7 @@ FORMS += \
     GUI/tagedit/GUI_TagEdit.ui \
     GUI/alternate_covers/GUI_Alternate_Covers.ui \
     GUI/playlist_chooser/GUI_PlaylistChooser.ui \
+    GUI/radio/GUI_RadioWidget.ui \
     
    
 additional_files.path = /usr/share/sayonara
@@ -167,7 +169,6 @@ additional_files.files += GUI/icons/lyrics.png
 additional_files.files += empty.db
 
 INSTALLS += additional_files
-
 
 target.path = /usr/bin
 target.files += ./sayonara

@@ -84,6 +84,7 @@ private:
 
     // last fm
     QPair<QString,QString> m_lastFm;
+    QString m_lfm_sessionKey;
 
     // listen
     int	m_volume;
@@ -142,6 +143,9 @@ public:
 
 	void setShowNotifications(bool);
 	bool getShowNotification();
+
+	void setLastFMSessionKey(QString);
+	QString getLastFMSessionKey();
 
 };
 

@@ -36,6 +36,8 @@
 
 bool CDatabaseConnector::load_settings(){
 
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+
 	/* Last FM */
 	QVariant last_fm_setting;
 	QString last_fm_username;
@@ -49,7 +51,20 @@ bool CDatabaseConnector::load_settings(){
 		}
 	}
 
-	CSettingsStorage::getInstance()->setLastFMNameAndPW(last_fm_username, last_fm_password);
+	settings->setLastFMNameAndPW(last_fm_username, last_fm_password);
+
+
+
+	QVariant lfm_session_key;
+	QString lfm_session_key_str = "";
+	load_setting("lfm_session_key", lfm_session_key);
+	if(!lfm_session_key.isNull()){
+		lfm_session_key_str = lfm_session_key.toString();
+		if(lfm_session_key_str.size() < 32) lfm_session_key_str = "";
+	}
+
+	settings->setLastFMSessionKey(lfm_session_key_str);
+
 
 
 	/* Equalizer */
@@ -61,7 +76,7 @@ bool CDatabaseConnector::load_settings(){
 		qDebug() << "Got from database: " << eq_last;
 	}
 
-	CSettingsStorage::getInstance()->setLastEqualizer(eq_last);
+	settings->setLastEqualizer(eq_last);
 
 	vector<EQ_Setting> vec_eq_settings;
 	for(int i=0; i<7; i++){
@@ -85,7 +100,7 @@ bool CDatabaseConnector::load_settings(){
 		}
 	}
 
-	CSettingsStorage::getInstance()->setEqualizerSettings(vec_eq_settings);
+	settings->setEqualizerSettings(vec_eq_settings);
 
 	/* Volume */
 	QVariant v_volume;
@@ -94,7 +109,7 @@ bool CDatabaseConnector::load_settings(){
 	if(v_volume != 0)
 		volume = v_volume.toInt();
 
-	CSettingsStorage::getInstance()->setVolume(volume);
+	settings->setVolume(volume);
 
 
 	/* Library path */
@@ -104,7 +119,7 @@ bool CDatabaseConnector::load_settings(){
 	if(v_lib_path != 0)
 		lib_path = v_lib_path.toString();
 
-	CSettingsStorage::getInstance()->setLibraryPath(lib_path);
+	settings->setLibraryPath(lib_path);
 
 
 	/* Player size */
@@ -118,7 +133,7 @@ bool CDatabaseConnector::load_settings(){
 		player_size.setHeight(l_player_size[1].toInt());
 	}
 
-	CSettingsStorage::getInstance()->setPlayerSize(player_size);
+	settings->setPlayerSize(player_size);
 
 	// playlist
 	QVariant playlist;
@@ -128,7 +143,7 @@ bool CDatabaseConnector::load_settings(){
 		playlist_str = playlist.toString();
 	}
 
-	CSettingsStorage::getInstance()->setPlaylist(playlist_str);
+	settings->setPlaylist(playlist_str);
 
 
 	QVariant load_playlist;
@@ -136,7 +151,7 @@ bool CDatabaseConnector::load_settings(){
 	load_setting("load_playlist", load_playlist);
 	load_playlist_bool = load_playlist.toBool();
 
-	CSettingsStorage::getInstance()->setLoadPlaylist(load_playlist_bool);
+	settings->setLoadPlaylist(load_playlist_bool);
 
 
 	QVariant playlist_mode;
@@ -146,21 +161,21 @@ bool CDatabaseConnector::load_settings(){
 		playlist_mode_typed.fromString(playlist_mode.toString());
 	}
 
-	CSettingsStorage::getInstance()->setPlaylistMode(playlist_mode_typed);
+	settings->setPlaylistMode(playlist_mode_typed);
 
 
 	QVariant style;
 	int style_int = 0;
 	load_setting("player_style", style);
 	style_int = style.toInt();
-	CSettingsStorage::getInstance()->setPlayerStyle(style_int);
+	settings->setPlayerStyle(style_int);
 
 
 	QVariant show_notifications;
 	bool show_notifications_bool = false;
 	load_setting("show_notifications", show_notifications);
 	show_notifications_bool = show_notifications.toBool();
-	CSettingsStorage::getInstance()->setShowNotifications(show_notifications_bool);
+	settings->setShowNotifications(show_notifications_bool);
 
 
 
@@ -175,6 +190,9 @@ bool CDatabaseConnector::store_settings(){
 
 	storage->getLastFMNameAndPW(last_fm_username, last_fm_password);
 	store_setting("LastFM_login", last_fm_username + "," + last_fm_password);
+
+	QString lfm_session_key = storage->getLastFMSessionKey();
+	store_setting("lfm_session_key", lfm_session_key);
 
 	int last_eq_used = storage->getLastEqualizer();
 	store_setting("eq_last", last_eq_used);

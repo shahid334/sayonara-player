@@ -215,7 +215,8 @@ void GST_Engine::changeTrack(const MetaData& md){
 	QString filename = _meta_data.filepath;
 	obj_ref = NULL;
 
-	filename.push_front(QString("file://"));
+	if(filename.left(4).compare("http") != 0)
+		filename.push_front(QString("file://"));
 
 	g_object_set(G_OBJECT(_pipeline), "uri", filename.toLocal8Bit().data(), NULL);
 	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
@@ -240,7 +241,9 @@ void GST_Engine::changeTrack(const QString& filepath){
 	return;
 	obj_ref = NULL;
 	QString filename = filepath;
-	filename.push_front(QString("file://"));
+
+	if(filename.left(4).compare("http") != 0)
+		filename.push_front(QString("file://"));
 
 	_meta_data = md;
 

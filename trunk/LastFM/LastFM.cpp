@@ -49,6 +49,7 @@
 #include <QUrl>
 #include <QtXml>
 #include <QList>
+#include <QtWebKit/QWebView>
 
 
 using namespace std;
@@ -71,6 +72,8 @@ LastFM::~LastFM() {
 
 }
 
+
+
 QString LastFM::create_signature(QString fn_name){
 
 	QString str = 	QString("api_key") + _api_key +
@@ -86,8 +89,9 @@ QString LastFM::create_signature(QString fn_name){
 
 void LastFM::login(QString username, QString password){
 
-	_logged_in = false;
 	_username = username;
+
+	_logged_in = false;
 	_auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
 
 	QString signature = create_signature(QString("auth.getmobilesession"));
@@ -109,10 +113,7 @@ void LastFM::login(QString username, QString password){
 		return;
 	}
 
-
-	QString session_key = lfm_wa_parse_session_answer();
-	_session_key = session_key;
-
+	_session_key = lfm_wa_parse_session_answer();
 
 	if(_session_key.size() != 0) {
 		_logged_in = true;
@@ -127,7 +128,146 @@ void LastFM::login(QString username, QString password){
 	}
 
 	lfm_wa_free_webpage();
+
+
+	QString url_handshake = QString("http://ws.audioscrobbler.com/radio/handshake.php?");
+
+	url_handshake += QString("version=1.5") +
+				QString("&platform=linux") +
+				QString("&username=luciocarreras") +
+				QString("&passwordmd5=") + password;
+
+		qDebug() << "Curl perform";
+		qDebug() << "url = " << url_handshake;
+
+		CURL* curl = curl_easy_init();
+		if(curl){
+			curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+			curl_easy_setopt(curl, CURLOPT_URL, url_handshake.toLocal8Bit().data());
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
+			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+
+		}
+		curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+
+		lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
+		lfm_webpage[lfm_webpage_bytes] = '\0';
+
+
+		if(lfm_webpage_bytes == 0 || lfm_webpage == 0){
+			qDebug() <<  Q_FUNC_INFO << "Webpage is null";
+
+		}
+
+		qDebug() << lfm_webpage;
+		QString webpage = QString(lfm_webpage);
+		webpage.replace("session=", "");
+		_session_key2 = webpage.left(32);
+
+		lfm_wa_free_webpage();
 }
+
+
+
+
+void LastFM::login_session(QString username, QString password){
+
+
+	QString session_key = CSettingsStorage::getInstance()->getLastFMSessionKey();
+	if(session_key.size() > 0){
+		qDebug() << "Got session key " << session_key;
+		_session_key = session_key;
+		_logged_in = true;
+		return;
+	}
+
+	_logged_in = false;
+
+	QString url = 	QString("http://ws.audioscrobbler.com/2.0/?") +
+					QString("method=auth.gettoken&") +
+					QString("api_key=") + _api_key;
+
+	bool success = true;
+	success = lfm_wa_call_session_url(url);
+
+	if(!success){
+		qDebug() << Q_FUNC_INFO << " Cannot fetch token " << url;
+
+		lfm_wa_free_webpage();
+		return;
+	}
+
+	_auth_token = lfm_wa_parse_token_answer();
+
+	qDebug() << "token = " << _auth_token;
+
+
+	QString token_webpage = QString("firefox \"http://www.last.fm/api/auth/?api_key=") + _api_key + QString("&token=") + _auth_token + "\"";
+
+	system(token_webpage.toLocal8Bit().data());
+
+
+
+
+	success = false;
+
+	long int max_time = 30000000;
+
+	while(max_time > 0){
+
+			qDebug() << "Got LFM token " << _auth_token;
+			lfm_wa_free_webpage();
+
+			_username = username;
+
+			QString signature = QString("api_key") + _api_key +
+							QString("method") + QString("auth.getsession") +
+							QString("token") + _auth_token + _api_secret;
+
+			signature = QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
+
+			url = 	QString("http://ws.audioscrobbler.com/2.0/?") +
+								QString("method=auth.getsession&") +
+								QString("token=") + _auth_token + QString("&") +
+								QString("api_key=") + _api_key + QString("&") +
+								QString("api_sig=") + signature;
+
+
+			success = lfm_wa_call_session_url(url);
+
+			if(!success){
+				qDebug() << Q_FUNC_INFO << " Cannot get session " << url;
+
+				lfm_wa_free_webpage();
+				return;
+			}
+
+			_session_key = lfm_wa_parse_session_answer();
+
+			if(_session_key.size() != 0) {
+				_logged_in = true;
+				emit last_fm_logged_in(true);
+				qDebug() << Q_FUNC_INFO <<  "Logged in to LastFM";
+				break;
+
+			}
+			else{
+				_session_key = "";
+				qDebug() << Q_FUNC_INFO <<  "Session key error";
+				emit last_fm_logged_in(false);
+			}
+
+			usleep(1000000);
+			max_time -= 1000000;
+
+	}
+
+	CSettingsStorage::getInstance()->setLastFMSessionKey(_session_key);
+
+	lfm_wa_free_webpage();
+}
+
 
 
 void LastFM::login_slot(QString username, QString password){
@@ -149,18 +289,23 @@ void LastFM::scrobble(const MetaData& metadata){
 	time(&rawtime);
 
 	tm* ptm = gmtime( &rawtime );
+	qDebug() << "Offset = " << ptm->tm_gmtoff;
+	//ptm->tm_hour += 1;
 
 
 	time_t started = mktime(ptm);
-	if(ptm->tm_isdst){
+	if(!ptm->tm_isdst){ // if(no summertime)
 		ptm->tm_hour += 1;
 		started = mktime(ptm);
 	}
 
+
+
+
 	QString url = 	QString("http://ws.audioscrobbler.com/2.0/");
 
 
-	string signature = string("album") + metadata.album.toLocal8Bit().data() +
+	string signature =// string("album") + metadata.album.toLocal8Bit().data() +
 							string("api_key") + _api_key.toStdString() +
 							string("artist") + metadata.artist.toLocal8Bit().data() +
 							string("duration") + QString::number(metadata.length_ms / 1000).toStdString() +
@@ -176,14 +321,14 @@ void LastFM::scrobble(const MetaData& metadata){
 
 
 		string post_data =
-						string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
+						//string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
 						string("api_key=") + _api_key.toStdString() + string("&") +
 						string("api_sig=") + signature_md5.toStdString() + string("&") +
-						string("artist=") + lfm_wa_get_url_enc(metadata.artist) + string("&") +
+						string("artist=") + metadata.artist.toLocal8Bit().data() + string("&") +
 						string("duration=") + QString::number(metadata.length_ms / 1000).toStdString()  + string("&") +
 						string("method=") + "track.scrobble" + string("&") +
 						string("timestamp=") + QString::number(started).toStdString() + string("&") +
-						string("track=") + lfm_wa_get_url_enc(metadata.title) + string("&") +
+						string("track=") + metadata.title.toLocal8Bit().data() + string("&") +
 						string("trackNumber=0") + string("&") +
 						string("sk=") + _session_key.toStdString();
 
@@ -208,7 +353,7 @@ void LastFM::update_track(const MetaData& metadata){
 	QString url = 	QString("http://ws.audioscrobbler.com/2.0/");
 
 
-	string signature = string("album") + metadata.album.toLocal8Bit().data() +
+	string signature = //string("album") + metadata.album.toLocal8Bit().data() +
 						string("api_key") + _api_key.toStdString() +
 						string("artist") + metadata.artist.toLocal8Bit().data()+
 						string("duration") + QString::number(metadata.length_ms / 1000).toStdString() +
@@ -220,13 +365,13 @@ void LastFM::update_track(const MetaData& metadata){
 
 	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
 
-	string post_data = string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
+	string post_data = //string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
 						string("api_key=") + _api_key.toStdString() + string("&") +
 						string("api_sig=") + signature_md5.toStdString() + string("&") +
-						string("artist=") + lfm_wa_get_url_enc(metadata.artist) + string("&") +
+						string("artist=") + metadata.artist.toLocal8Bit().data() + string("&") +
 						string("duration=") + QString::number(metadata.length_ms / 1000).toStdString()  + string("&") +
 						string("method=") + "track.updatenowplaying" + string("&") +
-						string("track=") + lfm_wa_get_url_enc(metadata.title) + string("&") +
+						string("track=") + metadata.title.toLocal8Bit().data() + string("&") +
 						string("trackNumber=0") + string("&") +
 						string("sk=") + _session_key.toStdString();
 
@@ -259,39 +404,46 @@ void LastFM::get_radio(const QString& str, bool artist){
 	Q_UNUSED(str);
 	Q_UNUSED(artist);
 	string signature = string("api_key") + _api_key.toStdString() +
-						//string("langen") +
-						string("methodradio.getPlaylist") +
-						string("sk") + _session_key.toStdString() +
-						string("stationlastfm://artist/metallica") +
-
+						string("langen") +
+						string("method") + "radio.tune" +
+						string("sk") + _session_key2.toStdString() +
+						string("stationlastfm%3A%2F%2Fglobaltags%2Fmetal") +
 						_api_secret.toStdString();
+
+
 
 	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
 
+	qDebug() << signature_md5.toStdString().c_str();
+
+	string tune_in = string("http://ws.audioscrobbler.com/2.0/");
+	string post_in = string("api_key=") + _api_key.toStdString() +
+						string("&lang=en") +
+						string("&method=") + "radio.tune" +
+						string("&sk=") + _session_key2.toStdString() +
+						string("&station=") + string("stationlastfm%3A%2F%2Fglobaltags%2Fmetal") +
+						string("&api_sig=") + signature_md5.toStdString().c_str();
+
+	QString url_radio_station = QString("http://ws.audioscrobbler.com/radio/adjust.php?");
+
+	url_radio_station += "session=" + _session_key2 +
+			"&lang=en" +
+			"&url=lastfm%3A%2F%2Fglobaltags%2Fjazz";
+
+	//lastfm://artist/cher/similarartists
+	//lastfm://user/last.hq/recommended
+	//lastfm://user/last.hq/library
 
 
-
-
-	string url_21 = string("http://ws.audioscrobbler.com/2.0/");
-	string url;
-	url += string("api_key=") + _api_key.toStdString();
-	url += string("&api_sig=");
-		url += signature_md5.toStdString();
-
-	//url += string("&lang=en");
-	url += string("&method=radio.getPlaylist");
-	url += string("&sk=");
-	url += _session_key.toStdString();
-	url += string("&station=lastfm://artist/metallica");
+	qDebug() << "Curl perform";
+	qDebug() << "url = " << url_radio_station;
 
 	CURL* curl = curl_easy_init();
 	if(curl){
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-		curl_easy_setopt(curl, CURLOPT_URL, url_21.c_str());
-		curl_easy_setopt(curl, CURLOPT_POST, 1) ;
+		curl_easy_setopt(curl, CURLOPT_URL, url_radio_station.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
-		//curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 
 	}
 	curl_easy_perform(curl);
@@ -305,5 +457,49 @@ void LastFM::get_radio(const QString& str, bool artist){
 		qDebug() <<  Q_FUNC_INFO << "Webpage is null";
 
 	}
+
+	qDebug() << lfm_webpage;
+
+	lfm_wa_free_webpage();
+
+
+	// get playlist
+	QString url_tracks = QString("http://ws.audioscrobbler.com/radio/xspf.php?");
+	url_tracks += QString("sk=") + _session_key2 +
+				"&discovery=0" +
+				"&desktop=1.5";
+
+		qDebug() << "Curl perform";
+		qDebug() << "url = " << url_tracks;
+
+		CURL* curl_track = curl_easy_init();
+		if(curl_track){
+			curl_easy_setopt(curl_track, CURLOPT_NOSIGNAL, 1);
+			curl_easy_setopt(curl_track, CURLOPT_URL, url_tracks.toLocal8Bit().data());
+			curl_easy_setopt(curl_track, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
+			curl_easy_setopt(curl_track, CURLOPT_FOLLOWLOCATION, 1);
+
+		}
+		curl_easy_perform(curl_track);
+		curl_easy_cleanup(curl_track);
+
+		lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
+		lfm_webpage[lfm_webpage_bytes] = '\0';
+
+
+		if(lfm_webpage_bytes == 0 || lfm_webpage == 0){
+			qDebug() <<  Q_FUNC_INFO << "Webpage is null";
+
+		}
+
+		qDebug() << lfm_webpage;
+
+}
+
+
+void LastFM::parse_playlist_answer(vector<MetaData>& v_md, QString xml){
+
+
+
 
 }

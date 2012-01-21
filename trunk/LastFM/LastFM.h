@@ -72,16 +72,19 @@ public:
 		QString			_username;
 		QString			_auth_token;
 		QString			_session_key;
+		QString			_session_key2;
 
 
 	public:
 		void login(QString, QString);
+		void login_session(QString, QString);
 		QString get_api_key();
 		QString create_signature(QString fn_name);
 
 	private:
 		QString parse_session_answer();
 		LFM_SimilarArtists* _similar_artists_thread;
+		void parse_playlist_answer(vector<MetaData>& v_md, QString xml);
 
 
 };

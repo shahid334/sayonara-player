@@ -197,3 +197,10 @@ void CSettingsStorage::setShowNotifications(bool active){
 bool CSettingsStorage::getShowNotification(){
 	return m_show_notifications;
 }
+
+void CSettingsStorage::setLastFMSessionKey(QString key){
+	m_lfm_sessionKey = key;
+}
+QString CSettingsStorage::getLastFMSessionKey(){
+	return m_lfm_sessionKey;
+}
