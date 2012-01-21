@@ -70,6 +70,8 @@ public slots:
     void close_eq();
     void close_playlist_chooser();
 
+    void set_radio_active(bool);
+
 
 
 

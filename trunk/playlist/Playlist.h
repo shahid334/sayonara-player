@@ -66,13 +66,15 @@ public:
 		void sig_playlist_prepared(QString, vector<MetaData>&);
 		void sig_library_changed();
 		void sig_import_files(const vector<MetaData>&);
+		void sig_need_more_radio();
+		void sig_radio_active(bool);
 
 
 	public slots:
 
-		void psl_createPlaylist(QStringList&);
-		void psl_createPlaylist(vector<MetaData>&);
-		void psl_createPlaylist(CustomPlaylist&);
+		void psl_createPlaylist(QStringList&, bool radio = false);
+		void psl_createPlaylist(vector<MetaData>&, bool radio = false);
+		void psl_createPlaylist(CustomPlaylist&, bool radio = false);
 		void psl_insert_tracks(const vector<MetaData>&, int idx);
 		void psl_insert_albums(const vector<Album>&, int);			// not used
 		void psl_insert_artists(const vector<Artist>&, int);		// not used
@@ -95,6 +97,7 @@ public:
 		void psl_id3_tags_changed(vector<MetaData>&);
 		void psl_import_new_tracks_to_library(bool);
 		void psl_import_result(bool);
+		void psl_new_radio_playlist_available(const vector<MetaData>&);
 
 
 	private:
@@ -107,6 +110,7 @@ public:
 	int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;
+	bool				_radio_active;
 
 
 

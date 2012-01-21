@@ -353,8 +353,7 @@ void LastFM::update_track(const MetaData& metadata){
 	QString url = 	QString("http://ws.audioscrobbler.com/2.0/");
 
 
-	string signature = //string("album") + metadata.album.toLocal8Bit().data() +
-						string("api_key") + _api_key.toStdString() +
+	string signature =  string("api_key") + _api_key.toStdString() +
 						string("artist") + metadata.artist.toLocal8Bit().data()+
 						string("duration") + QString::number(metadata.length_ms / 1000).toStdString() +
 						string("method") + "track.updatenowplaying" +
@@ -365,8 +364,7 @@ void LastFM::update_track(const MetaData& metadata){
 
 	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
 
-	string post_data = //string("album=") + lfm_wa_get_url_enc(metadata.album) + string("&") +
-						string("api_key=") + _api_key.toStdString() + string("&") +
+	string post_data =  string("api_key=") + _api_key.toStdString() + string("&") +
 						string("api_sig=") + signature_md5.toStdString() + string("&") +
 						string("artist=") + metadata.artist.toLocal8Bit().data() + string("&") +
 						string("duration=") + QString::number(metadata.length_ms / 1000).toStdString()  + string("&") +
@@ -400,43 +398,27 @@ QString LastFM::get_api_key(){
 	return _api_key;
 }
 
-void LastFM::get_radio(const QString& str, bool artist){
-	Q_UNUSED(str);
-	Q_UNUSED(artist);
-	string signature = string("api_key") + _api_key.toStdString() +
-						string("langen") +
-						string("method") + "radio.tune" +
-						string("sk") + _session_key2.toStdString() +
-						string("stationlastfm%3A%2F%2Fglobaltags%2Fmetal") +
-						_api_secret.toStdString();
-
-
-
-	QString signature_md5 = QCryptographicHash::hash(signature.c_str(), QCryptographicHash::Md5).toHex();
-
-	qDebug() << signature_md5.toStdString().c_str();
-
-	string tune_in = string("http://ws.audioscrobbler.com/2.0/");
-	string post_in = string("api_key=") + _api_key.toStdString() +
-						string("&lang=en") +
-						string("&method=") + "radio.tune" +
-						string("&sk=") + _session_key2.toStdString() +
-						string("&station=") + string("stationlastfm%3A%2F%2Fglobaltags%2Fmetal") +
-						string("&api_sig=") + signature_md5.toStdString().c_str();
+void LastFM::radio_init(const QString& str, bool artist){
 
 	QString url_radio_station = QString("http://ws.audioscrobbler.com/radio/adjust.php?");
+	QString lfm_radio_station = QString("lastfm%3A%2F%2F");
 
-	url_radio_station += "session=" + _session_key2 +
-			"&lang=en" +
-			"&url=lastfm%3A%2F%2Fglobaltags%2Fjazz";
+	if(!artist)
+		lfm_radio_station += QString("globaltags%2F") + QUrl::toPercentEncoding(str);
+	else
+		lfm_radio_station += QString("artist%2F") + QUrl::toPercentEncoding(str) + QString("%2Fsimilarartists");
+
+
+	url_radio_station += QString("session=") + _session_key2 +
+						QString("&lang=en") +
+						QString("&url=") + lfm_radio_station;
+
+
+
 
 	//lastfm://artist/cher/similarartists
 	//lastfm://user/last.hq/recommended
 	//lastfm://user/last.hq/library
-
-
-	qDebug() << "Curl perform";
-	qDebug() << "url = " << url_radio_station;
 
 	CURL* curl = curl_easy_init();
 	if(curl){
@@ -458,10 +440,12 @@ void LastFM::get_radio(const QString& str, bool artist){
 
 	}
 
-	qDebug() << lfm_webpage;
-
 	lfm_wa_free_webpage();
 
+	radio_get_playlist();
+}
+
+void LastFM::radio_get_playlist(){
 
 	// get playlist
 	QString url_tracks = QString("http://ws.audioscrobbler.com/radio/xspf.php?");
@@ -489,17 +473,72 @@ void LastFM::get_radio(const QString& str, bool artist){
 
 		if(lfm_webpage_bytes == 0 || lfm_webpage == 0){
 			qDebug() <<  Q_FUNC_INFO << "Webpage is null";
-
 		}
 
-		qDebug() << lfm_webpage;
+		vector<MetaData> v_md;
+		parse_playlist_answer(v_md, QString(lfm_webpage));
+		lfm_wa_free_webpage();
 
+		qDebug() << "Got " << v_md.size() << " tracks";
+		if(v_md.size() > 0){
+			emit new_radio_playlist(v_md);
+		}
 }
 
 
-void LastFM::parse_playlist_answer(vector<MetaData>& v_md, QString xml){
+void LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QString& xml){
 
+	v_md.clear();
+	QDomDocument doc("radio");
+	doc.setContent(xml, false);
+	QDomElement docElement = doc.documentElement();
+	QDomNode tracklist = docElement.firstChildElement("trackList");
 
+	if(!tracklist.hasChildNodes())return;
 
+		for(int idx_track=0; idx_track < tracklist.childNodes().size(); idx_track++){
+
+			QDomNode track = tracklist.childNodes().item(idx_track);
+			if(!track.hasChildNodes()) continue;
+
+			MetaData md;
+
+			for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++){
+
+				md.is_extern = true;
+				md.bitrate = 128000;
+
+				QDomNode content = track.childNodes().item(idx_track_content);
+				QString nodename = content.nodeName().toLower();
+				QDomElement e = content.toElement();
+				if(!nodename.compare("location")){
+					md.filepath = e.text();
+					qDebug() << md.filepath;
+				}
+
+				else if(!nodename.compare("title")){
+					md.title = e.text();
+					qDebug() << md.title;
+				}
+
+				else if(!nodename.compare("album")){
+					md.album = e.text();
+					qDebug() << md.album;
+				}
+
+				else if(!nodename.compare("creator")){
+					md.artist = e.text();
+					qDebug() << md.artist;
+				}
+
+				else if(!nodename.compare("duration")){
+					md.length_ms = e.text().toLong();
+					qDebug() << md.length_ms;
+				}
+
+			}
+
+			v_md.push_back(md);
+		}
 
 }

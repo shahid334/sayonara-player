@@ -88,6 +88,7 @@
 			void library_path_changed(QString);
 			void last_fm_logged_in(bool);
 			void import_result(bool);
+			void set_radio_active(bool b);
 
 
 
@@ -124,6 +125,8 @@
 			qint64 					_total_secs;
 			int						_cur_playing_row;
 			int						_cur_selected_row;
+
+			bool					_radio_active;
 
 
 			void initGUI();

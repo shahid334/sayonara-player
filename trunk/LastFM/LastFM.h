@@ -50,13 +50,15 @@ public:
 	signals:
 		void similar_artists_available(QList<int>&);
 		void last_fm_logged_in(bool);
+		void new_radio_playlist(const vector<MetaData>&);
 
 	public slots:
 		void scrobble(const MetaData&);
 		void update_track(const MetaData&);
 		void login_slot(QString, QString);
 		void get_similar_artists(const QString&);
-		void get_radio(const QString&, bool);
+		void radio_init(const QString&, bool);
+		void radio_get_playlist();
 
 	private slots:
 		void sim_artists_thread_finished();
@@ -84,7 +86,7 @@ public:
 	private:
 		QString parse_session_answer();
 		LFM_SimilarArtists* _similar_artists_thread;
-		void parse_playlist_answer(vector<MetaData>& v_md, QString xml);
+		void parse_playlist_answer(vector<MetaData>& v_md, const QString& xml);
 
 
 };

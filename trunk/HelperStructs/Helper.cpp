@@ -249,6 +249,9 @@ bool Helper::is_soundfile(QString filename){
 
 
 bool Helper::checkTrack(const MetaData& md){
+
+	if( md.filepath.contains("http")) return true;
+
 	if( !QFile::exists(md.filepath) && md.id >= 0 ){
 		vector<MetaData> vec_md;
 		vec_md.push_back(md);

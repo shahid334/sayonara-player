@@ -963,6 +963,12 @@ void GUI_SimplePlayer::show_notification_toggled(bool active){
 	CSettingsStorage::getInstance()->setShowNotifications(active);
 }
 
+void GUI_SimplePlayer::set_radio_active(bool b){
+	this->ui->btn_bw->setEnabled(!b);
+	this->ui->songProgress->setEnabled(!b);
+	this->ui->btn_play->setEnabled(!b);
+}
+
 
 void GUI_SimplePlayer::about(bool b){
 	Q_UNUSED(b);

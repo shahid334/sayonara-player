@@ -172,7 +172,11 @@ int main(int argc, char *argv[]){
     	app.connect (&playlist, SIGNAL(sig_playlist_prepared(QString, vector<MetaData>&)), 	&playlists, 	SLOT(save_playlist_as_custom(QString, vector<MetaData>&)));
     	app.connect (&playlist, SIGNAL(sig_library_changed()), 								&ui_library, 	SLOT(library_changed()));
     	app.connect (&playlist, SIGNAL(sig_import_files(const vector<MetaData>&)), 			&library, 		SLOT(importFiles(const vector<MetaData>&)));
-        app.connect (&playlist, SIGNAL(sig_data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit,SLOT(change_meta_data(const vector<MetaData>&)));
+        app.connect (&playlist, SIGNAL(sig_data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit,	SLOT(change_meta_data(const vector<MetaData>&)));
+        app.connect (&playlist, SIGNAL(sig_need_more_radio()),								&lastfm, 		SLOT(radio_get_playlist()));
+        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&player,		SLOT(set_radio_active(bool)));
+        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist,	SLOT(set_radio_active(bool)));
+        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist_chooser,	SLOT(set_radio_active(bool)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 					&playlist, 	SLOT(psl_change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 							&playlist, 	SLOT(psl_clear_playlist()));
@@ -184,7 +188,7 @@ int main(int argc, char *argv[]){
         app.connect (&ui_playlist, SIGNAL(sig_import_to_library(bool)),					&playlist,	SLOT(psl_import_new_tracks_to_library(bool)));
 
         app.connect (listen, 	SIGNAL(track_finished()),							&playlist,	SLOT(psl_next_track() ));
-        app.connect (listen,   SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 	SLOT(scrobble(const MetaData&)));
+        app.connect (listen,	SIGNAL(scrobble_track(const MetaData&)), 			&lastfm, 	SLOT(scrobble(const MetaData&)));
         app.connect (listen,	SIGNAL(eq_presets_loaded(const vector<EQ_Setting>&)), &ui_eq,	SLOT(fill_eq_presets(const vector<EQ_Setting>&)));
         app.connect (listen, 	SIGNAL(eq_found(const QStringList&)), 				&ui_eq, 	SLOT(fill_available_equalizers(const QStringList&)));
         app.connect (listen, 	SIGNAL(total_time_changed_signal(qint64)),			&player,	SLOT(total_time_changed(qint64)));
@@ -229,6 +233,7 @@ int main(int argc, char *argv[]){
 
 		app.connect(&lastfm,		SIGNAL(similar_artists_available(QList<int>&)),			&playlist,		SLOT(psl_similar_artists_available(QList<int>&)));
 		app.connect(&lastfm,		SIGNAL(last_fm_logged_in(bool)),						&ui_playlist,	SLOT(last_fm_logged_in(bool)));
+		app.connect(&lastfm,		SIGNAL(new_radio_playlist(const vector<MetaData>&)),	&playlist,		SLOT(psl_new_radio_playlist_available(const vector<MetaData>&)));
 
 		app.connect(&ui_playlist_chooser, SIGNAL(sig_playlist_chosen(int)),		&playlists, SLOT(load_single_playlist(int)));
 		app.connect(&ui_playlist_chooser, SIGNAL(sig_delete_playlist(int)), 	&playlists, SLOT(delete_playlist(int)));
@@ -242,10 +247,10 @@ int main(int argc, char *argv[]){
 		app.connect(&playlists, SIGNAL(sig_import_tracks(const vector<MetaData>&)), 	&library, 				SLOT(importFiles(const vector<MetaData>&)));
 
 
-		app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(get_radio(const QString&, bool)));
+		app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(radio_init(const QString&, bool)));
 
 
-		ui_radio.show();
+		//ui_radio.show();
 
 		qDebug() << "Playlist loaded";
 		playlist.ui_loaded();
@@ -257,7 +262,6 @@ int main(int argc, char *argv[]){
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 
-		//player.setRadio(&ui_radio);
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
 		qDebug() << "volume";

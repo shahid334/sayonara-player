@@ -38,6 +38,7 @@ private slots:
 	void save_as_button_pressed();
 	void delete_button_pressed();
 	void playlist_selected(int);
+	void set_radio_active(bool);
 
 
 public slots:

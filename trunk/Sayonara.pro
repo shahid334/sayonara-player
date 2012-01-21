@@ -153,6 +153,7 @@ additional_files.files += GUI/icons/vol_mute.png
 additional_files.files += GUI/icons/gui.jpg
 additional_files.files += GUI/icons/play_small.png
 additional_files.files += GUI/icons/lastfm_logo.jpg
+additional_files.files += GUI/icons/lastfm_red_small.png
 additional_files.files += GUI/icons/power_on.png
 additional_files.files += GUI/icons/power_off.png
 additional_files.files += GUI/icons/edit.png
@@ -165,6 +166,7 @@ additional_files.files += GUI/icons/arrow_left.png
 additional_files.files += GUI/icons/delete.png
 additional_files.files += GUI/icons/import.png
 additional_files.files += GUI/icons/lyrics.png
+
 
 additional_files.files += empty.db
 

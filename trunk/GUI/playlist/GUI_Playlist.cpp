@@ -123,6 +123,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_cur_selected_row = -1;
 	_cur_playing_row = -1;
 
+	_radio_active = false;
+
 	check_for_library_path();
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
@@ -261,7 +263,11 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
-	_pli_model->insertRows(0, v_metadata.size());
+	if(!_radio_active)
+		_pli_model->insertRows(0, v_metadata.size());
+	else
+		_pli_model->insertRows(0, 1);
+
 	_total_secs = 0;
 	int idx = 0;
 
@@ -275,7 +281,9 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 	this->ui->btn_import->setVisible(false);
 	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
 
-		if(it->is_extern) this->ui->btn_import->setVisible(true);
+		if(it->is_extern && !_radio_active) {
+			this->ui->btn_import->setVisible(true);
+		}
 
 		QModelIndex model_idx = _pli_model->index(idx, 0);
 
@@ -295,13 +303,12 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 
+		if(_radio_active) break;
 		idx++;
+
 	}
 
 	set_total_time_label();
-
-	// nur ein test TODO: REMOVE ME
-	//emit playlist_filled(v_metadata);
 }
 
 // private SLOT: clear button pressed
@@ -328,6 +335,7 @@ void GUI_Playlist::save_playlist_slot(){
 // private SLOT: playlist item pressed (init drag & drop)
 void GUI_Playlist::pressed(const QModelIndex& index){
 
+
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
 	_cur_selected_row = index.row();
@@ -351,6 +359,8 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 }
 
 void GUI_Playlist::released(const QModelIndex& index){
+
+
 	inner_drag_drop = false;
 
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
@@ -467,6 +477,7 @@ void GUI_Playlist::initGUI(){
 
 // we start the drag action, all lines has to be cleared
 void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
+
 	int row = this->ui->listView->indexAt(_last_known_drag_pos).row();
 	clear_drag_lines(row);
 }
@@ -573,6 +584,7 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 // finally drop it
 void GUI_Playlist::dropEvent(QDropEvent* event){
 
+
 	if(!event->mimeData()) return;
 
 	QPoint pos = event->pos();
@@ -640,7 +652,10 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 				v_metadata.push_back(ID3::getMetaDataOfFile(file_paths[i]));
 			}
 
-			emit dropped_tracks(v_metadata, row);
+			if(!_radio_active)
+				emit dropped_tracks(v_metadata, row);
+			else
+				emit dropped_tracks(v_metadata, 0);
 
 			return;
 		}
@@ -666,13 +681,25 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 			v_md4Playlist.push_back(md);
 		}
 
-		emit dropped_tracks(v_md4Playlist, row);
+		if(!_radio_active)
+			emit dropped_tracks(v_md4Playlist, row);
+		else
+			emit dropped_tracks(v_md4Playlist, 0);
 	}
 }
 
 
 void GUI_Playlist::set_total_time_label(){
 
+	if(_radio_active){
+		QPixmap p = QPixmap(Helper::getIconPath() + "lastfm_red_small.png");
+		this->ui->lab_totalTime->setPixmap(p);
+		this->ui->lab_totalTime->setContentsMargins(0, 10, 0, 10);
+		//this->ui->lab_totalTime->setText("LastFM Radio");
+		return;
+	}
+
+	this->ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
 
 	int secs, mins, hrs;
 			Helper::cvtSecs2MinAndSecs(_total_secs, &mins, &secs);
@@ -740,5 +767,17 @@ void GUI_Playlist::import_button_clicked(){
 void GUI_Playlist::import_result(bool success){
 
 	this->ui->btn_import->setVisible(!success);
+
+}
+
+
+void GUI_Playlist::set_radio_active(bool b){
+
+	_radio_active = b;
+	this->ui->btn_append->setVisible(!b);
+	this->ui->btn_dynamic->setVisible(!b);
+	this->ui->btn_repAll->setVisible(!b);
+	this->ui->btn_shuffle->setVisible(!b);
+	this->ui->btn_import->setVisible(!b);
 
 }
