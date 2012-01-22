@@ -32,6 +32,7 @@
 #include <ui_GUI_RadioWidget.h>
 #include <QDockWidget>
 #include <QWidget>
+#include <QCloseEvent>
 
 class GUI_RadioWidget : public QDockWidget, private Ui::RadioWidget{
 
@@ -44,11 +45,14 @@ public:
 
 	signals:
 		void listen_clicked(const QString&, bool artist);
+		void close_event();
 
 	private slots:
 		void start_listen();
 		void radio_button_changed();
 
+	protected:
+			void 	closeEvent ( QCloseEvent * event );
 
 
 	private:

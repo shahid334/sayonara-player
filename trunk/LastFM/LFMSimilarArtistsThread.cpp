@@ -59,8 +59,6 @@ QMap<QString, int> LFM_SimilarArtists::filter_available_artists(QMap<QString, do
 				int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
 				if(artist_id != -1){
 					possible_artists[key] = artist_id;
-					//qDebug() << "Artist: " << key << " @ " << artists[idx].value(key) << ", ("<< possible_artists.keys().size() << ")";
-
 				}
 			}
 
@@ -115,7 +113,6 @@ void LFM_SimilarArtists::run(){
 						QDomElement e = content.toElement();
 						if(!e.isNull()){
 							artist_name = e.text();
-							//qDebug() << "artist =  " << e.text();
 						}
 					}
 
@@ -123,7 +120,6 @@ void LFM_SimilarArtists::run(){
 						QDomElement e = content.toElement();
 						if(!e.isNull()){
 							match = e.text().toDouble();
-							//qDebug() << "match = " << e.text() << " (" << e.text().toDouble() << ") ";
 						}
 					}
 
@@ -172,6 +168,8 @@ void LFM_SimilarArtists::run(){
 
 void LFM_SimilarArtists::set_artist_name(QString artist_name){
 	_artist_name = artist_name;
+	_artist_name.replace("&", "&amp");
+
 }
 
 QList<int> LFM_SimilarArtists::get_chosen_ids(){

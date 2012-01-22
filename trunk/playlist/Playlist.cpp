@@ -329,7 +329,6 @@ void Playlist::psl_play(){
 }
 
 void Playlist::psl_stop(){
-	qDebug() << "Radio active? " << _radio_active;
 
 	if(_radio_active){
 		psl_clear_playlist();
@@ -398,17 +397,21 @@ void Playlist::psl_next_track(){
 	if(_v_meta_data.size() == 0){
 		emit sig_no_track_to_play();
 		if(_radio_active){
+			emit sig_no_track_to_play();
 			emit sig_need_more_radio();
 		}
 		return;
 	}
 
-	int track_num;
+	int track_num = -1;
 	if(_radio_active){
+
+		if(_v_meta_data.size() == 1)
+			emit sig_need_more_radio();
 
 		this->psl_remove_row(0);
 		if(_v_meta_data.size() == 0){
-			_cur_play_idx = -1;
+			emit sig_no_track_to_play();
 			emit sig_need_more_radio();
 		}
 
@@ -455,6 +458,8 @@ void Playlist::psl_next_track(){
 	}
 
 	else{
+		if(_radio_active)
+			sig_need_more_radio();
 		emit sig_no_track_to_play();
 	}
 }
@@ -620,8 +625,6 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 		cur_artist_idx++;
 	} while(is_track_already_in && cur_artist_idx < artists.size());
 
-	qDebug() << "Found artist " << md.artist;
-
 	if(!is_track_already_in)
 		_v_meta_data.push_back(md);
 
@@ -656,6 +659,7 @@ void Playlist::psl_import_result(bool success){
 
 
 void Playlist::psl_new_radio_playlist_available(const vector<MetaData>& playlist){
+
 	_radio_active = true;
 	_cur_play_idx = 0;
 	emit sig_radio_active(_radio_active);

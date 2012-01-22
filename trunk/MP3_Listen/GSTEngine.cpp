@@ -44,7 +44,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 	(void) user_data;
 	switch (GST_MESSAGE_TYPE(msg)) {
 		case GST_MESSAGE_EOS:
-			qDebug("End-of-stream");
 			if(obj_ref){
 				obj_ref->set_track_finished();
 			}
@@ -60,7 +59,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			break;
 
 		default:
-			//qDebug() << "GST: " << GST_MESSAGE_TYPE_NAME(msg) << ": " << GST_MESSAGE_SRC_NAME(msg);
 			obj_ref->state_changed();
 			break;
     }
@@ -137,7 +135,6 @@ GST_Engine::GST_Engine(){
 	if(success){
 		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 		success = gst_element_link(_equalizer, _audio_sink);
-		if(success) qDebug() << "Linking successful";
 	}
 
 }
@@ -168,8 +165,6 @@ void GST_Engine::stop(){
 
 void GST_Engine::pause(){
 	_state = STATE_PAUSE;
-	qDebug() << "pause";
-	//g_main_loop_quit(_loop);
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 
 
@@ -270,11 +265,7 @@ void GST_Engine::eq_changed(int band, int val){
 	sprintf(band_name, "band%d", band);
 	band_name[5] = '\0';
 
-	//qDebug() << "updating band " << band_name << " to " << new_val;
-
 	g_object_set(G_OBJECT(_equalizer), band_name, new_val, NULL);
-
-
 }
 
 void GST_Engine::eq_enable(bool){
@@ -297,8 +288,6 @@ void GST_Engine::set_cur_position(quint32 pos){
 		emit
 		scrobble_track(_meta_data);
 		_scrobbled = true;
-
-		qDebug() << "Track scrobbled";
 	}
 
 	emit timeChangedSignal(pos);

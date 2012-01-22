@@ -29,6 +29,7 @@
 #include "GUI/radio/GUI_RadioWidget.h"
 #include <QWidget>
 #include <QDockWidget>
+#include <QCloseEvent>
 
 GUI_RadioWidget::GUI_RadioWidget(QWidget* parent) : QDockWidget(parent)  {
 
@@ -62,4 +63,9 @@ void GUI_RadioWidget::radio_button_changed(){
 	}
 
 	else _ui->rb_artist->setChecked(false);
+}
+
+void GUI_RadioWidget::closeEvent ( QCloseEvent * event ){
+	event->ignore();
+	emit close_event();
 }

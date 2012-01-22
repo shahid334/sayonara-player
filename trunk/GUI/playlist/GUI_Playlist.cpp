@@ -472,6 +472,7 @@ void GUI_Playlist::initGUI(){
 	this->ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
 	this->ui->btn_lyrics->setIcon(QIcon(icon_path + "lyrics.png"));
 
+
 }
 
 
@@ -691,13 +692,15 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 void GUI_Playlist::set_total_time_label(){
 
+	this->ui->lab_lfm->hide();
+
 	if(_radio_active){
+		this->ui->lab_lfm->show();
 		QPixmap p = QPixmap(Helper::getIconPath() + "lastfm_red_small.png");
 		this->ui->lab_totalTime->setPixmap(p);
-		this->ui->lab_totalTime->setContentsMargins(0, 10, 0, 10);
-		//this->ui->lab_totalTime->setText("LastFM Radio");
 		return;
 	}
+
 
 	this->ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
 

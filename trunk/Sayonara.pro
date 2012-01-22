@@ -8,7 +8,7 @@ QT += sql
 QT += webkit
 TEMPLATE = app
 TARGET = sayonara
-#CXX_FLAGS += -O2
+CXX_FLAGS += -O2
 CONFIG += link_pkgconfig
 PKGCONFIG += gstreamer-0.10
 

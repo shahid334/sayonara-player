@@ -27,7 +27,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-//#include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/radio/GUI_RadioWidget.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -69,6 +69,7 @@ public slots:
     void update_info(const MetaData&);
     void close_eq();
     void close_playlist_chooser();
+    void close_radio();
 
     void set_radio_active(bool);
 
@@ -117,7 +118,6 @@ private slots:
     void searchSliderMoved(int search_percent, bool by_app=false);
 
     void coverClicked(bool);
-    //void showAgain(QSystemTrayIcon::ActivationReason);
     void muteButtonPressed();
     void album_cover_pressed();
 
@@ -162,13 +162,13 @@ private:
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
     GUI_PlaylistChooser*		ui_playlist_chooser;
-    //    GUI_RadioWidget*			ui_radio;
+    GUI_RadioWidget*			ui_radio;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
     bool						m_mute;
 
-    GUI_TrayIcon *			m_trayIcon;
+    GUI_TrayIcon *				m_trayIcon;
 
     /// some shared actions
     QAction*					m_closeAction;
@@ -190,8 +190,11 @@ private:
 
     bool						m_isEqHidden;
     bool						m_isPcHidden;
+    bool						m_isRadioHidden;
 
-    const quint8                                   VOLUME_STEP_SIZE_PERC;
+    bool						m_radio_active;
+
+    const quint8				VOLUME_STEP_SIZE_PERC;
 
 
 
@@ -208,11 +211,15 @@ public:
     void setLibrary(GUI_Library_windowed* library);
     void setEqualizer(GUI_Equalizer* eq);
     void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
-    //    void setRadio(GUI_RadioWidget* radio);
+    void setRadio(GUI_RadioWidget* radio);
+
+
     QWidget* getParentOfPlaylist();
     QWidget* getParentOfPlaylistChooser();
     QWidget* getParentOfLibrary();
     QWidget* getParentOfEqualizer();
+    QWidget* getParentOfRadio();
+
     void setVolume(int vol);
     void setStyle(int);
 

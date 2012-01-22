@@ -33,6 +33,7 @@ GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QOb
     this -> setIcon(playIcon);
     this -> m_playIcon = playIcon;
     this -> m_pauseIcon = pauseIcon;
+
 }
 
 void GUI_TrayIcon::setupMenu (    QAction* closeAction,

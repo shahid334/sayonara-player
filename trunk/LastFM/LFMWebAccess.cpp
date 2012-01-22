@@ -137,7 +137,6 @@ bool lfm_wa_call_scrobble_url(string url, string post_data){
 
 
 	if(lfm_webpage_bytes > 0){
-		qDebug() << "LastFM : ok " << lfm_webpage;
 		return true;
 	}
 
@@ -203,8 +202,6 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 
 
 QString lfm_wa_parse_session_answer(){
-
-	qDebug() << lfm_webpage;
 
 	QString str_key = "";
 	QDomDocument doc("answer");

@@ -127,7 +127,7 @@ int main(int argc, char *argv[]){
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
         GUI_TagEdit				ui_tagedit;
-        GUI_RadioWidget			ui_radio;
+        GUI_RadioWidget			ui_radio(player.getParentOfRadio());
 
         Engine* listen = 0;
         if(use_gstreamer)
@@ -246,17 +246,16 @@ int main(int argc, char *argv[]){
 		app.connect(&playlists, SIGNAL(sig_all_playlists_loaded(QMap<int, QString>&)), 	&ui_playlist_chooser, 	SLOT(all_playlists_fetched(QMap<int, QString>&)));
 		app.connect(&playlists, SIGNAL(sig_import_tracks(const vector<MetaData>&)), 	&library, 				SLOT(importFiles(const vector<MetaData>&)));
 
-
 		app.connect(&ui_radio,		SIGNAL(listen_clicked(const QString&, bool)),	&lastfm,		SLOT(radio_init(const QString&, bool)));
+		app.connect(&ui_radio, 		SIGNAL(close_event()), 							&player, 		SLOT(close_radio()));
 
-
-		//ui_radio.show();
 
 		qDebug() << "Playlist loaded";
 		playlist.ui_loaded();
 
 
 		qDebug() << "setup player";
+		player.setRadio(&ui_radio);
 		player.setEqualizer(&ui_eq);
 		player.setPlaylistChooser(&ui_playlist_chooser);
 		player.setPlaylist(&ui_playlist);
@@ -289,12 +288,6 @@ int main(int argc, char *argv[]){
 
         vector<EQ_Setting> eq_settings;
         set->getEqualizerSettings(eq_settings);
-
-
-       /* QWebView *view = new QWebView(0);
-   	     view->load(QUrl("http://qt.nokia.com/"));
-   	     view->show();*/
-
 
         app.exec();
         qDebug() << "Store settings";
