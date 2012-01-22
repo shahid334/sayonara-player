@@ -9,6 +9,7 @@ Please wait until end of June before telling us and the world, that this player 
   * Qt: Gui, Core, Phonon, Xml, Sqlite http://qt.nokia.com/products/
   * libcurl http://curl.haxx.se/libcurl/
   * Taglib http://developer.kde.org/~wheeler/taglib.html
+  * Gstreamer development files, GStreamer plugins
 
 
 == Linux ==
@@ -17,7 +18,7 @@ Please wait until end of June before telling us and the world, that this player 
   * make
   * make install <br>
 
-  * Known issue: After installing, the .Sayonara directory in your home folder may only be owned by the root user. So you may have trouble with the database. Please change the owner manually to your user before starting the player the first time
+  * start with -g Option for gstreamer, otherwise phonon is used
 
 
 == Windows ==
