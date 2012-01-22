@@ -8,12 +8,15 @@
   * ID3 Tagger
   * Dynamic Playlists (using LastFM)
 
+= Upcoming (already available on svn) =
+  
+  * Gstreamer
+  * Lyrics
+  * LastFM radio
+  * Custom playlists
 
 = Todo =
   
-  * LastFM Radio
   * Extern audio player integration (with optional format conversion)
-  * Internet streams
-  * Lyrics
   * iTunes / Amarok db integration
  
