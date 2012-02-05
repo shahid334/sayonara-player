@@ -88,7 +88,7 @@ QString LyricLookup::calc_url(QString artist, QString song){
 	url.replace("<TITLE>", tmp_song);
 
 
-	//qDebug() << "url = " << url;
+	qDebug() << "url = " << url;
 
 	if(_server_list[_cur_server].to_lower)
 		return url.toLower();
@@ -99,6 +99,7 @@ QString LyricLookup::calc_url(QString artist, QString song){
 
 bool LyricLookup::parse_webpage(QString& dst){
 
+	//qDebug() << webpage;
 	dst = webpage;
 
 	ServerTemplate t = _server_list[_cur_server];
@@ -157,8 +158,9 @@ bool LyricLookup::parse_webpage(QString& dst){
 		}
 	}
 
-	return true;
+	dst.replace("\n", "<br />");
 
+	return true;
 }
 
 QString LyricLookup::find_lyrics(QString artist, QString song, int srv){
@@ -261,10 +263,29 @@ void LyricLookup::init_server_list(){
 	metrolyrics.to_lower = true;
 	metrolyrics.error = QString("404 page not found");
 
+	ServerTemplate asklyrics;
+	asklyrics.display_str = "AskLyrics";
+	asklyrics.server_adress = QString("http://www.asklyrics.com/display");
+	asklyrics.addReplacement("&", "and");
+	asklyrics.addReplacement(" ", "-");
+	asklyrics.addReplacement("'", "");
+	asklyrics.addReplacement("--", "-");
+	asklyrics.addReplacement("(", "-");
+	asklyrics.addReplacement(")", "-");
+	asklyrics.call_policy = QString("<SERVER>/<ARTIST>/<TITLE>-lyrics.htm");
+	asklyrics.start_tag = QString("<pre class=\"lc\">");
+	asklyrics.end_tag = QString("</pre>");
+	asklyrics.include_start_tag = false;
+	asklyrics.include_end_tag = false;
+	asklyrics.is_numeric = false;
+	asklyrics.to_lower = true;
+	asklyrics.error = QString("Error 404");
+
 	_server_list.push_back(wikia);
 	_server_list.push_back(oldieLyrics);
 	_server_list.push_back(lyricskeeper);
 	_server_list.push_back(metrolyrics);
+	_server_list.push_back(asklyrics);
 
 }
 

@@ -33,6 +33,7 @@
 #define OLDIELYRICS 1
 #define LYRICSKEEPER 2
 #define METROLYRICS 3
+#define ASKLYRICS 4
 
 #include "LyricLookup/LyricServer.h"
 #include <QStringList>
