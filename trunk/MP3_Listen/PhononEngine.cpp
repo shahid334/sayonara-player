@@ -196,12 +196,9 @@ void Phonon_Engine::timeChanged(qint64 time) {
 			&& (_seconds_now - _seconds_started == 25
 					|| _seconds_now - _seconds_started
 					== _meta_data.length_ms / 2000)) {
-		qDebug() << "scrobble track";
-		emit
-		scrobble_track(_meta_data);
+		emit scrobble_track(_meta_data);
 		_scrobbled = true;
 
-		qDebug() << "scrobble track end";
 	}
 
 	emit timeChangedSignal((quint32) (time / 1000));

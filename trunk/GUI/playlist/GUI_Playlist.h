@@ -32,6 +32,7 @@
 #include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
+#include "LyricLookup/LyricLookup.h"
 
 
 #include <QMainWindow>
@@ -106,6 +107,7 @@
 			void dummy_pressed();
 			void import_button_clicked();
 			void lyric_button_toggled(bool on);
+			void lyric_server_changed(int);
 
 
 
@@ -113,15 +115,18 @@
 			void keyPressEvent(QKeyEvent* e);
 
 		private:
+
 			Ui::Playlist_Window* 	ui;
+			QWidget*				_parent;
+
 			Playlist_Mode			_playlist_mode;
-
-
 			QAbstractItemModel* 	_pli_model;
 			QAbstractItemDelegate* 	_pli_delegate;
 			QTextEdit* 				_text;
+			QAction**				_action_lyric_servers;
+			QMenu*					_menu_lyrics;
 
-			QWidget*				_parent;
+
 			qint64 					_total_secs;
 			int						_cur_playing_row;
 			int						_cur_selected_row;
@@ -137,6 +142,9 @@
 			bool inner_drag_drop;
 
 			QPoint	_last_known_drag_pos;
+
+			LyricLookup _ll;
+			int _cur_lyric_server;
 
 	};
 

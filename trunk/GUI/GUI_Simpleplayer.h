@@ -204,7 +204,7 @@ private:
     void setupVolButton(int percent);
     void setupIcons();
     void initGUI();
-    void hideAllPlugins();
+
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
@@ -212,6 +212,8 @@ public:
     void setEqualizer(GUI_Equalizer* eq);
     void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
     void setRadio(GUI_RadioWidget* radio);
+
+    void hideAllPlugins();
 
 
     QWidget* getParentOfPlaylist();

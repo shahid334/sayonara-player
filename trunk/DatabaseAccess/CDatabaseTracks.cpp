@@ -404,8 +404,6 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 	if (!this -> m_database.isOpen())
 		this -> m_database.open();
 
-	qDebug() << "Get all tracks by artist";
-
 	MetaData data;
 	try {
 		QSqlQuery q (this -> m_database);
@@ -577,7 +575,7 @@ int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
 
 	m_database.transaction();
 
-	for(int i=0; i<vec_tracks.size(); i++){
+	for(uint i=0; i<vec_tracks.size(); i++){
 
 		int track_id = vec_tracks[i].id;
 

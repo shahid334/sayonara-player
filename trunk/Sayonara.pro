@@ -8,7 +8,6 @@ QT += sql
 QT += webkit
 TEMPLATE = app
 TARGET = sayonara
-CXX_FLAGS += -O2
 CONFIG += link_pkgconfig
 PKGCONFIG += gstreamer-0.10
 
@@ -42,6 +41,7 @@ HEADERS += MP3_Listen/Engine.h \
     GUI/MyTableView.h \
     GUI/MyListview.h \
     GUI/library/GUIImportFolder.h \
+    GUI/LyricMenuButton/LyricMenuButton.h \
     HelperStructs/MetaData.h \
     HelperStructs/Helper.h \
     HelperStructs/PlaylistMode.h \
@@ -51,6 +51,7 @@ HEADERS += MP3_Listen/Engine.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
     LyricLookup/LyricLookup.h \
+    LyricLookup/LyricServer.h \
     DatabaseAccess/CDatabaseConnector.h \
     library/CLibraryBase.h \
     library/ReloadThread.h \
@@ -88,6 +89,7 @@ SOURCES += Main.cpp \
     GUI/MyTableView.cpp \
     GUI/MyListView.cpp \
     GUI/library/GUIImportFolder.cpp \
+    GUI/LyricMenuButton/LyricMenuButton.cpp \
     HelperStructs/Helper.cpp \
     HelperStructs/CSettingsStorage.cpp \
     HelperStructs/Style.cpp \

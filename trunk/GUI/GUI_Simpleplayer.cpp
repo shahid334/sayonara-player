@@ -67,6 +67,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	rect.setHeight(size.height());
 	this->setGeometry(rect);
 
+
 	bool loadPlaylistChecked = settings->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
 
@@ -534,8 +535,6 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 
-
-
 	if (!success){
 		this->ui->albumCover->setPixmap(
 				QPixmap::fromImage(
@@ -567,6 +566,8 @@ void GUI_SimplePlayer::coverClicked(bool) {
 void GUI_SimplePlayer::hideAllPlugins(){
 	showPlaylistChooser(false);
 	showEqualizer(false);
+	showRadio(false);
+	this->ui->plugin_widget->hide();
 
 }
 

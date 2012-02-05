@@ -28,15 +28,32 @@
 
 #ifndef LYRICLOOKUP_H_
 #define LYRICLOOKUP_H_
+
+#define WIKIA 0
+#define OLDIELYRICS 1
+#define LYRICSKEEPER 2
+#define METROLYRICS 3
+
+#include "LyricLookup/LyricServer.h"
 #include <QStringList>
 #include <QString>
+#include <QList>
 
 class LyricLookup {
 public:
 	LyricLookup();
 	virtual ~LyricLookup();
 
-	QString find_lyrics(QString artist, QString song);
+	QString find_lyrics(QString artist, QString song, int srv=0);
+	QStringList getServers();
+private:
+	void init_server_list();
+
+	QList<ServerTemplate> _server_list;
+	int	_cur_server;
+
+	QString calc_url(QString artist, QString song);
+	bool parse_webpage(QString& dst);
 };
 
 #endif /* LYRICLOOKUP_H_ */

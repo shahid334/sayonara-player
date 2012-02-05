@@ -177,6 +177,7 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&player,		SLOT(set_radio_active(bool)));
         app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist,	SLOT(set_radio_active(bool)));
         app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist_chooser,	SLOT(set_radio_active(bool)));
+        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								cover,			SLOT(set_radio_active(bool)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 					&playlist, 	SLOT(psl_change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 							&playlist, 	SLOT(psl_clear_playlist()));
@@ -260,6 +261,7 @@ int main(int argc, char *argv[]){
 		player.setPlaylistChooser(&ui_playlist_chooser);
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
+		player.hideAllPlugins();
 
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
