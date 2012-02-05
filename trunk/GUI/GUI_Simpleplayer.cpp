@@ -1018,5 +1018,5 @@ void GUI_SimplePlayer::about(bool b){
 	Q_UNUSED(b);
 
 	QMessageBox::information(this, "About",
-			"<b><font size=\"+2\">Sayonara Player 0.1.120107</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
+			"<b><font size=\"+2\">Sayonara Player 0.1.120205</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
 }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>862</width>
-    <height>668</height>
+    <width>911</width>
+    <height>593</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -101,8 +101,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>296</width>
-         <height>457</height>
+         <width>316</width>
+         <height>380</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -391,7 +391,7 @@
      <widget class="QPushButton" name="btn_mute">
       <property name="maximumSize">
        <size>
-        <width>20</width>
+        <width>50</width>
         <height>30</height>
        </size>
       </property>
@@ -423,7 +423,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>20</width>
+        <width>50</width>
         <height>70</height>
        </size>
       </property>
@@ -451,7 +451,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>28</width>
+        <width>50</width>
         <height>28</height>
        </size>
       </property>
@@ -722,8 +722,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>862</width>
-     <height>21</height>
+     <width>911</width>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFle">
