@@ -257,7 +257,6 @@ int main(int argc, char *argv[]){
 		player.setPlaylistChooser(&ui_playlist_chooser);
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
-		player.hideAllPlugins();
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
 		qDebug() << "setup volume";
@@ -268,7 +267,9 @@ int main(int argc, char *argv[]){
       	playlists.ui_loaded();
 
     	player.setWindowTitle("Sayonara (0.1)");
-    		player.show();
+    	player.show();
+
+    	player.hideAllPlugins();
 
 		listen->load_equalizer();
 

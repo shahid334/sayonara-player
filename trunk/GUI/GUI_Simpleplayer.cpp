@@ -60,6 +60,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	m_isEqHidden = true;
 	m_isPcHidden = true;
+	m_isRadioHidden = true;
 
 	QSize size = settings->getPlayerSize();
 	QRect rect = this->geometry();
@@ -564,9 +565,10 @@ void GUI_SimplePlayer::coverClicked(bool) {
 }
 
 void GUI_SimplePlayer::hideAllPlugins(){
+	showRadio(false);
 	showPlaylistChooser(false);
 	showEqualizer(false);
-	showRadio(false);
+
 	this->ui->plugin_widget->hide();
 
 }
@@ -598,12 +600,14 @@ void GUI_SimplePlayer::showPlaylistChooser(bool vis){
 		ui_playlist_chooser->setVisible(true);
 		ui->plugin_widget->show();
 		m_isPcHidden = false;
+		m_isEqHidden = true;
+		m_isRadioHidden = true;
 
 	}
 
 	else {
 		rect = ui->playlist_widget->geometry();
-		if(!ui_playlist_chooser->isHidden()){
+		if(!m_isPcHidden){
 			rect.setTop(rect.top() - ui_playlist_chooser->height());
 			rect.setHeight(ui_playlist->height() + ui_playlist_chooser->height());
 		}
@@ -646,6 +650,8 @@ void GUI_SimplePlayer::showEqualizer(bool vis) {
 		ui_eq->setVisible(true);
 		ui->plugin_widget->show();
 		m_isEqHidden = false;
+		m_isPcHidden = true;
+		m_isRadioHidden = true;
 	}
 
 
@@ -695,6 +701,8 @@ void GUI_SimplePlayer::showRadio(bool vis){
 			ui_radio->setVisible(true);
 			ui->plugin_widget->show();
 			m_isRadioHidden = false;
+			m_isPcHidden = true;
+			m_isEqHidden = true;
 		}
 
 
@@ -739,7 +747,6 @@ void GUI_SimplePlayer::changeEvent(QEvent *event) {
 		else
 			show();
 	}
-
 }
 
 
@@ -801,33 +808,27 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
 	switch (e->key()) {
 
-
 		case Qt::Key_MediaPlay:
 			if(!m_radio_active)
 				playClicked(true);
 			break;
 
-
 		case Qt::Key_MediaStop:
 			stopClicked();
 			break;
 
-
 		case Qt::Key_MediaNext:
 			forwardClicked(true);
 			break;
-
 
 		case Qt::Key_MediaPrevious:
 			if(!m_radio_active)
 				backwardClicked(true);
 			break;
 
-
 		case (Qt::Key_E):
 			this->ui->action_ViewEqualizer->setChecked(!this->ui->action_ViewEqualizer->isChecked());
 			break;
-
 
 		case (Qt::Key_P):
 			this->ui->action_ViewPlaylistChooser->setChecked(!this->ui->action_ViewPlaylistChooser->isChecked());
