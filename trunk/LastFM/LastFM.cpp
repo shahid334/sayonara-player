@@ -69,30 +69,31 @@ LastFM::~LastFM() {
 
 }
 
+QString LastFM::create_signature(const UrlParams& data){
+
+	QString signature;
+
+	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
+		signature += it.key();
+		signature += it.value();
+	}
+
+	signature += _api_secret;
+	return QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
+}
+
+
 QString LastFM::create_std_url(const QString& base_url, const UrlParams& data){
 	string post_data;
 	QString url = create_std_url_post(base_url, data, post_data);
 	return QString(url + QString("?") + post_data.c_str());
-
 }
-
-
-QString LastFM::create_sig_url(const QString& base_url, const UrlParams& sig_data){
-	string post_data;
-	QString url = create_sig_url_post(base_url, sig_data, post_data);
-	return QString(url + QString("?") + post_data.c_str());
-}
-
 
 QString LastFM::create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data){
 	post_data = "";
 	QString url = base_url;
-	/*if(url.endsWith("/")){
-		url.remove(url.size() -1, 1);
-	}*/
 
 	post_data.clear();
-
 
 	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
 
@@ -101,12 +102,17 @@ QString LastFM::create_std_url_post(const QString& base_url, const UrlParams& da
 	}
 
 	// remove the last &
-
 	post_data = post_data.substr(0, post_data.size() -1);
 
 	return url;
 }
 
+
+QString LastFM::create_sig_url(const QString& base_url, const UrlParams& sig_data){
+	string post_data;
+	QString url = create_sig_url_post(base_url, sig_data, post_data);
+	return QString(url + QString("?") + post_data.c_str());
+}
 
 QString LastFM::create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data){
 
@@ -129,30 +135,12 @@ QString LastFM::create_sig_url_post(const QString& base_url, const UrlParams& si
 
 	post_data = post_data.substr(0, post_data.size() -1);
 
-
 	return url;
 }
-
-
-QString LastFM::create_signature(const UrlParams& data){
-
-	QString signature;
-
-	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
-		signature += it.key();
-		signature += it.value();
-	}
-
-	signature += _api_secret;
-	return QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
-}
-
-
 
 void LastFM::login(QString username, QString password){
 
 	_username = username;
-
 	_logged_in = false;
 	_auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
 
@@ -178,8 +166,8 @@ void LastFM::login(QString username, QString password){
 		_logged_in = true;
 		emit last_fm_logged_in(true);
 		qDebug() << Q_FUNC_INFO <<  "Logged in to LastFM";
-
 	}
+
 	else{
 		qDebug() << Q_FUNC_INFO <<  "Session key error";
 		qDebug() << response;
@@ -197,7 +185,7 @@ void LastFM::login(QString username, QString password){
 	QString resp_handshake;
 
 	success = lfm_wa_call_url(url_handshake, resp_handshake);
-	if(!success){
+	if( !success ){
 		_session_key2 = "";
 		qDebug() << Q_FUNC_INFO << " Handshake was not successful";
 		qDebug() << "url = " << url_handshake;
@@ -221,7 +209,7 @@ void LastFM::login_slot(QString username, QString password){
 
 void LastFM::update_track(const MetaData& metadata){
 
-	if(!_logged_in){
+	if(!_logged_in || _session_key.size() != 32){
 		qDebug() <<  Q_FUNC_INFO << "Not logged in to LastFM!";
 		return;
 	}
@@ -254,7 +242,7 @@ void LastFM::update_track(const MetaData& metadata){
 
 void LastFM::scrobble(const MetaData& metadata){
 
-	if(!_logged_in){
+	if(!_logged_in || _session_key.size() != 32){
 		qDebug() << Q_FUNC_INFO <<  "Not logged in to LastFM!";
 		return;
 	}
@@ -319,9 +307,14 @@ QString LastFM::get_api_key(){
 
 void LastFM::radio_init(const QString& str, bool artist){
 
-	QString lfm_radio_station = QString("lastfm://");
+	if(_session_key2.size() != 32){
+		qDebug() << "Not logged in to LastFM";
+		return;
+	}
 
+	QString lfm_radio_station = QString("lastfm://");
 	QString tag_string = str;
+
 	tag_string.replace("&", "and");
 
 	if(!artist)
@@ -337,7 +330,7 @@ void LastFM::radio_init(const QString& str, bool artist){
 	QString url = create_std_url( QString("http://ws.audioscrobbler.com/radio/adjust.php"), data );
 	QString response;
 	bool success = lfm_wa_call_url(url, response);
-	if(!success || response.contains("failed")){
+	if( !success ){
 		qDebug() << "Radio not initialized";
 		qDebug() << "url = " << url;
 		qDebug() << response;
@@ -351,23 +344,29 @@ void LastFM::radio_init(const QString& str, bool artist){
 
 void LastFM::radio_get_playlist(){
 
+	if(_session_key2.size() != 32){
+		qDebug() << "Not logged in to LastFM";
+		return;
+	}
+
 	UrlParams data;
 	data["sk"] = _session_key2;
 	data["discovery"] = "0";
 	data["desktop"] = "1.5";
 
 	QString url = create_std_url(QString("http://ws.audioscrobbler.com/radio/xspf.php"), data);
+	QDomDocument xml_response;
 
-	QString response;
-	bool success = lfm_wa_call_url(url, response);
-	if(!success || response.contains("failed") ){
+	bool success = lfm_wa_call_url_xml(url, xml_response);
+	if( !success ){
 		qDebug() << "Cannot get playlist";
 		qDebug() << "Url = " << url;
 		return;
 	}
 
 	vector<MetaData> v_md;
-	parse_playlist_answer(v_md, response);
+	parse_playlist_answer(v_md, xml_response);
+	xml_response.clear();
 
 	if(v_md.size() > 0){
 		emit new_radio_playlist(v_md);
@@ -375,56 +374,52 @@ void LastFM::radio_get_playlist(){
 }
 
 
-void LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QString& xml){
+void LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& doc){
 
 	v_md.clear();
-	QDomDocument doc("radio");
-	doc.setContent(xml, false);
+
 	QDomElement docElement = doc.documentElement();
 	QDomNode tracklist = docElement.firstChildElement("trackList");
 
-	if(!tracklist.hasChildNodes())return;
+	if(!tracklist.hasChildNodes()) return;
 
-		for(int idx_track=0; idx_track < tracklist.childNodes().size(); idx_track++){
+	for(int idx_track=0; idx_track < tracklist.childNodes().size(); idx_track++){
 
-			QDomNode track = tracklist.childNodes().item(idx_track);
-			if(!track.hasChildNodes()) continue;
+		QDomNode track = tracklist.childNodes().item(idx_track);
+		if(!track.hasChildNodes()) continue;
 
-			MetaData md;
+		MetaData md;
 
-			for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++){
+		for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++){
 
-				md.is_extern = true;
-				md.bitrate = 128000;
+			md.is_extern = true;
+			md.bitrate = 128000;
 
-				QDomNode content = track.childNodes().item(idx_track_content);
-				QString nodename = content.nodeName().toLower();
-				QDomElement e = content.toElement();
-				if(!nodename.compare("location")){
-					md.filepath = e.text();
-				}
-
-				else if(!nodename.compare("title")){
-					md.title = e.text();
-				}
-
-				else if(!nodename.compare("album")){
-					md.album = e.text();
-				}
-
-				else if(!nodename.compare("creator")){
-					md.artist = e.text();
-				}
-
-				else if(!nodename.compare("duration")){
-					md.length_ms = e.text().toLong();
-				}
-
+			QDomNode content = track.childNodes().item(idx_track_content);
+			QString nodename = content.nodeName().toLower();
+			QDomElement e = content.toElement();
+			if(!nodename.compare("location")){
+				md.filepath = e.text();
 			}
 
-			v_md.push_back(md);
+			else if(!nodename.compare("title")){
+				md.title = e.text();
+			}
+
+			else if(!nodename.compare("album")){
+				md.album = e.text();
+			}
+
+			else if(!nodename.compare("creator")){
+				md.artist = e.text();
+			}
+
+			else if(!nodename.compare("duration")){
+				md.length_ms = e.text().toLong();
+			}
+
 		}
 
-		doc.clear();
-
+		v_md.push_back(md);
+	}
 }

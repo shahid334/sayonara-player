@@ -182,16 +182,17 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
 
 		curl_easy_perform(curl);
-
+		curl_easy_cleanup(curl);
 	}
 
 	long int t = 5000000;
 	while(lfm_webpage_bytes == 0){
-#ifdef Q_OS_WIN
-		Sleep(100000);
-#else
-		usleep(100000);
-#endif
+
+		#ifdef Q_OS_WIN
+			Sleep(100000);
+		#else
+			usleep(100000);
+		#endif
 	
 		t -= 100000;
 		if( t <= 0) break;
@@ -203,22 +204,16 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 	if(lfm_webpage_bytes > 0){
 		QString xmlString = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
 		doc.setContent(xmlString, false);
-
 		lfm_wa_free_webpage();
 
-		curl_easy_cleanup(curl);
-
 		return true;
-
 	}
 
 	else {
 		lfm_wa_free_webpage();
 		qDebug() <<  Q_FUNC_INFO << "webpage is null";
-		curl_easy_cleanup(curl);
 		return false;
 	}
-
 }
 
 

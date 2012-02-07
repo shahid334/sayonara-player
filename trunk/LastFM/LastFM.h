@@ -36,6 +36,7 @@
 #include <QString>
 #include <QList>
 #include <QMap>
+#include <QtXml>
 #include <string>
 
 
@@ -85,7 +86,7 @@ public:
 	private:
 		QString parse_session_answer();
 		LFM_SimilarArtists* _similar_artists_thread;
-		void parse_playlist_answer(vector<MetaData>& v_md, const QString& xml);
+		void parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
 
 		QString create_std_url(const QString& base_url, const UrlParams& data);
 		QString create_sig_url(const QString& base_url, const UrlParams& sig_data);
