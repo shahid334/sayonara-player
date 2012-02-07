@@ -85,7 +85,7 @@ void LFM_SimilarArtists::run(){
 		url += QString("api_key=") + _api_key;
 
 		QDomDocument doc("similar_artists");
-		lfm_wa_call_lfm_url(url, doc);
+		lfm_wa_call_url_xml(url, doc);
 
 		QDomElement docElement = doc.documentElement();
 		QDomNode similarartists = docElement.firstChild();			// similarartists

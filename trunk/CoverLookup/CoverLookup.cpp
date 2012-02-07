@@ -124,8 +124,6 @@ void CoverLookup::terminate_thread() {
 
 void CoverLookup::search_cover(const MetaData& md) {
 
-
-
 	_metadata = md;
 
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);

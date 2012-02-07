@@ -35,10 +35,11 @@
 #include <QObject>
 #include <QString>
 #include <QList>
+#include <QMap>
 #include <string>
 
 
-
+#define UrlParams QMap<QString, QString>
 
 class LastFM : public QObject{
 
@@ -79,14 +80,20 @@ public:
 
 	public:
 		void login(QString, QString);
-		void login_session(QString, QString);
 		QString get_api_key();
-		QString create_signature(QString fn_name);
 
 	private:
 		QString parse_session_answer();
 		LFM_SimilarArtists* _similar_artists_thread;
 		void parse_playlist_answer(vector<MetaData>& v_md, const QString& xml);
+
+		QString create_std_url(const QString& base_url, const UrlParams& data);
+		QString create_sig_url(const QString& base_url, const UrlParams& sig_data);
+		QString create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data);
+		QString create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data);
+		QString create_signature(const UrlParams& data);
+
+
 
 
 };

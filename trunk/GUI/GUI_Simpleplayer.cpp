@@ -771,7 +771,6 @@ void GUI_SimplePlayer::setupActions() {
 
 void GUI_SimplePlayer::connectTrayIcon() {
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
-    connect(this->m_trayIcon, SIGNAL(onShowNormal()), this, SLOT(showNormal()));
     connect(this->m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
 
 }

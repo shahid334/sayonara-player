@@ -281,7 +281,7 @@ void GST_Engine::set_cur_position(quint32 pos){
 	_seconds_now = pos;
 
 	if (!_scrobbled
-			&& (_seconds_now - _seconds_started == 20
+			&& (_seconds_now - _seconds_started == 15
 					|| _seconds_now - _seconds_started
 					== _meta_data.length_ms / 2000)) {
 

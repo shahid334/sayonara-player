@@ -78,9 +78,6 @@
 			void search_similar_artists(const QString&);
 			void sig_import_to_library(bool);
 
-
-
-
 		public slots:
 			void update_progress_bar(int);
 			void fillPlaylist(vector<MetaData>&, int);
@@ -91,12 +88,7 @@
 			void import_result(bool);
 			void set_radio_active(bool b);
 
-
-
-
 		private slots:
-
-
 			void double_clicked(const QModelIndex &);
 			void pressed(const QModelIndex&);
 			void released(const QModelIndex&);

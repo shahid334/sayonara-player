@@ -60,7 +60,6 @@
 #include <QFile>
 #include <QDir>
 #include <QList>
-#include <QWebView>
 
 #include <string>
 #include <vector>
@@ -76,7 +75,7 @@ void printHelp(){
 
 int main(int argc, char *argv[]){
 
-		bool use_gstreamer = false;
+		bool use_gstreamer = true;
 
 		if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
 			QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
@@ -90,8 +89,8 @@ int main(int argc, char *argv[]){
 			if( !strArg.compare("--help") )
 				printHelp();
 
-			else if( !strArg.compare("-g") )
-				use_gstreamer = true;
+			else if( !strArg.compare("-p") )
+				use_gstreamer = false;
 
 			else
 				printHelp();
@@ -177,7 +176,6 @@ int main(int argc, char *argv[]){
         app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&player,		SLOT(set_radio_active(bool)));
         app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist,	SLOT(set_radio_active(bool)));
         app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist_chooser,	SLOT(set_radio_active(bool)));
-        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								cover,			SLOT(set_radio_active(bool)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 					&playlist, 	SLOT(psl_change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 							&playlist, 	SLOT(psl_clear_playlist()));
@@ -251,9 +249,7 @@ int main(int argc, char *argv[]){
 		app.connect(&ui_radio, 		SIGNAL(close_event()), 							&player, 		SLOT(close_radio()));
 
 
-		qDebug() << "Playlist loaded";
 		playlist.ui_loaded();
-
 
 		qDebug() << "setup player";
 		player.setRadio(&ui_radio);
@@ -262,10 +258,9 @@ int main(int argc, char *argv[]){
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
 		player.hideAllPlugins();
-
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
 
-		qDebug() << "volume";
+		qDebug() << "setup volume";
 		int vol = set->getVolume();
         player.setVolume(vol);
         listen->setVolume(vol);

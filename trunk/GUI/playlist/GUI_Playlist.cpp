@@ -104,7 +104,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 	this->connect(this->ui->btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	this->connect(this->ui->btn_lyrics, SIGNAL(sig_toggled(bool)), this, SLOT(lyric_button_toggled(bool)));
 	this->connect(this->ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
 	this->connect(this->ui->listView, SIGNAL(pressed(const QModelIndex&)), this, SLOT(pressed(const QModelIndex&)));

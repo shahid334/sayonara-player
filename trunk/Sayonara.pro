@@ -5,7 +5,6 @@
 QT += network
 QT += xml
 QT += sql
-QT += webkit
 TEMPLATE = app
 TARGET = sayonara
 CONFIG += link_pkgconfig

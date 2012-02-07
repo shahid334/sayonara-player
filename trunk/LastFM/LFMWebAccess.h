@@ -41,23 +41,20 @@ using namespace std;
 
 void lfm_wa_init();
 
-void lfm_wa_free_webpage();
 
 const char* lfm_wa_get_url_enc(QString str);
 
 size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
 
 
-bool lfm_wa_call_session_url(QString url);
+bool lfm_wa_call_url(const QString& url, QString& response);
 
+bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& response);
+bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc);
+bool lfm_wa_call_post_url(const QString& url, const string& post_data);
 
-bool lfm_wa_call_scrobble_url(string url, string post_data);
-
-
-bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc);
-
-QString lfm_wa_parse_session_answer();
-QString lfm_wa_parse_token_answer();
+QString lfm_wa_parse_session_answer(const QString& content);
+QString lfm_wa_parse_token_answer(const QString& content);
 
 
 

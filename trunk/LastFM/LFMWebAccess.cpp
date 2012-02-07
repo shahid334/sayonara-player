@@ -39,17 +39,11 @@
 
 using namespace std;
 
-size_t lfm_webpage_bytes;
-char* lfm_webpage;
+static size_t lfm_webpage_bytes;
+static char* lfm_webpage;
 
 
-void lfm_wa_init(){
-	lfm_webpage = 0;
-	lfm_webpage_bytes = 0;
-}
-
-
-void lfm_wa_free_webpage(){
+static void lfm_wa_free_webpage(){
 
 	if(lfm_webpage != 0){
 		free(lfm_webpage);
@@ -57,6 +51,13 @@ void lfm_wa_free_webpage(){
 	}
 	lfm_webpage_bytes = 0;
 
+}
+
+
+
+void lfm_wa_init(){
+	lfm_webpage = 0;
+	lfm_webpage_bytes = 0;
 }
 
 
@@ -93,13 +94,15 @@ size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 
 
 
-bool lfm_wa_call_session_url(QString url){
+bool lfm_wa_call_url(const QString& url, QString& response){
+
+	lfm_wa_free_webpage();
 
 	CURL *curl = curl_easy_init();
 
 	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-		curl_easy_setopt(curl, CURLOPT_URL, url.toUtf8().data());
+		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
@@ -111,18 +114,34 @@ bool lfm_wa_call_session_url(QString url){
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
-	if(lfm_webpage_bytes > 0)
+	if(lfm_webpage_bytes > 0){
+		response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
+		lfm_wa_free_webpage();
 		return true;
-	else return false;
+	}
+
+	else {
+		lfm_wa_free_webpage();
+		return false;
+	}
 }
 
+bool lfm_wa_call_post_url(const QString& url, string post_data){
+	QString response;
+	return lfm_wa_call_post_url(url, post_data, response);
 
-bool lfm_wa_call_scrobble_url(string url, string post_data){
+}
+
+bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& response){
+
+	response.clear();
+
+	lfm_wa_free_webpage();
 
 	CURL* curl = curl_easy_init();
 	if(curl){
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-		curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_POST, 1) ;
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -135,26 +154,29 @@ bool lfm_wa_call_scrobble_url(string url, string post_data){
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
-
 	if(lfm_webpage_bytes > 0){
+		response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
+		lfm_wa_free_webpage();
 		return true;
 	}
 
 	else {
-
+		lfm_wa_free_webpage();
 		qDebug() <<  Q_FUNC_INFO << "Webpage = null";
 		return false;
 	}
 }
 
 
-bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
+bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
+
+	lfm_wa_free_webpage();
 
 	CURL *curl = curl_easy_init();
 
 	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-		curl_easy_setopt(curl, CURLOPT_URL, url.toUtf8().data());
+		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
 		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
@@ -175,12 +197,11 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 		if( t <= 0) break;
 	}
 
-
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 	if(lfm_webpage_bytes > 0){
-		QString xmlString = QString(lfm_webpage);
+		QString xmlString = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
 		doc.setContent(xmlString, false);
 
 		lfm_wa_free_webpage();
@@ -201,11 +222,10 @@ bool lfm_wa_call_lfm_url(QString url, QDomDocument& doc){
 }
 
 
-QString lfm_wa_parse_session_answer(){
+QString lfm_wa_parse_session_answer(const QString& content){
 
 	QString str_key = "";
 	QDomDocument doc("answer");
-	QString content = QString(lfm_webpage);
 	doc.setContent(content);
 
 	QDomNodeList nodeList =  doc.documentElement().elementsByTagName("session");
