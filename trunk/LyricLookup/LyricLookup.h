@@ -39,19 +39,29 @@
 #include <QStringList>
 #include <QString>
 #include <QList>
+#include <QThread>
 
-class LyricLookup {
+class LyricLookupThread : public QThread {
+
 public:
-	LyricLookup();
-	virtual ~LyricLookup();
+	LyricLookupThread();
+	virtual ~LyricLookupThread();
 
-	QString find_lyrics(QString artist, QString song, int srv=0);
+	void prepare_thread(QString artist, QString song, int srv=0);
 	QStringList getServers();
+	QString getFinalLyrics();
+
+protected:
+	void run();
+
 private:
 	void init_server_list();
 
-	QList<ServerTemplate> _server_list;
+	QString _artist;
+	QString _title;
 	int	_cur_server;
+	QList<ServerTemplate> _server_list;
+	QString _final_wp;
 
 	QString calc_url(QString artist, QString song);
 	bool parse_webpage(QString& dst);

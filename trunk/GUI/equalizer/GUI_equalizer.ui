@@ -26,6 +26,12 @@
    <string>Equalizer</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>
@@ -364,12 +370,21 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>25</width>
-        <height>25</height>
+        <width>22</width>
+        <height>22</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string>Save as custom</string>
+      </property>
       <property name="text">
-       <string>.</string>
+       <string notr="true"/>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>18</width>
+        <height>18</height>
+       </size>
       </property>
       <property name="flat">
        <bool>true</bool>

@@ -1,4 +1,4 @@
-/* LyricLookup.cpp */
+/* LyricLookupThread.cpp */
 
 /* Copyright (C) 2011  Lucio Carreras
  *
@@ -20,7 +20,7 @@
 
 
 /*
- * LyricLookup.cpp
+ * LyricLookupThread.cpp
  *
  *  Created on: May 21, 2011
  *      Author: luke
@@ -36,12 +36,12 @@
 #include <iostream>
 #include <QRegExp>
 #include <QStringList>
+#include <QThread>
 
 using namespace std;
 
 size_t first_appearance = -1;
 size_t last_appearance = -1;
-bool b_save;
 QStringList lst;
 static QString webpage;
 
@@ -58,18 +58,21 @@ size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 }
 
 
-
-LyricLookup::LyricLookup() {
+/****************************************************************************************/
+/* THREAD
+ ****************************************************************************************/
+LyricLookupThread::LyricLookupThread() {
 	init_server_list();
 	_cur_server = WIKIA;
+	_final_wp.clear();
 
 }
 
-LyricLookup::~LyricLookup() {
+LyricLookupThread::~LyricLookupThread() {
 	// TODO Auto-generated destructor stub
 }
 
-QString LyricLookup::calc_url(QString artist, QString song){
+QString LyricLookupThread::calc_url(QString artist, QString song){
 	QString tmp_artist = artist;
 	QString tmp_song = song;
 
@@ -87,19 +90,14 @@ QString LyricLookup::calc_url(QString artist, QString song){
 	url.replace("<ARTIST>", tmp_artist);
 	url.replace("<TITLE>", tmp_song);
 
-
-	qDebug() << "url = " << url;
-
 	if(_server_list[_cur_server].to_lower)
 		return url.toLower();
 
 	else return url;
-
 }
 
-bool LyricLookup::parse_webpage(QString& dst){
+bool LyricLookupThread::parse_webpage(QString& dst){
 
-	//qDebug() << webpage;
 	dst = webpage;
 
 	ServerTemplate t = _server_list[_cur_server];
@@ -117,12 +115,8 @@ bool LyricLookup::parse_webpage(QString& dst){
 	if(!t.include_start_tag) start_idx += t.start_tag.size();
 	if(t.include_end_tag) end_idx += t.end_tag.size();
 
-
-
 	dst.remove(0, start_idx);
-
 	int num_chars = end_idx - start_idx;
-
 
 	dst = dst.left(num_chars);
 
@@ -163,38 +157,50 @@ bool LyricLookup::parse_webpage(QString& dst){
 	return true;
 }
 
-QString LyricLookup::find_lyrics(QString artist, QString song, int srv){
+void LyricLookupThread::run(){
 
-		_cur_server = srv;
-		b_save = true;
+	if(_artist.size() == 0 && _title.size() == 0) {
+		_final_wp = "No track selected";
+		return;
+	}
 
-		QString url = this->calc_url(artist, song);
+	QString url = this->calc_url(_artist, _title);
 
-		webpage = "";
-		CURL *curl;
-		curl = curl_easy_init();
+	webpage = "";
+	CURL *curl;
+	curl = curl_easy_init();
 
-		if(curl){
-			curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
-			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_content_ll);
-			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+	if(curl){
+		curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_content_ll);
+		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 
-			curl_easy_perform(curl);
-			curl_easy_cleanup(curl);
-		}
+		curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+	}
 
-		QString final_wp;
-		if ( !parse_webpage(final_wp) ){
-			final_wp = QString("Sorry, no lyrics found");
-		}
+	_final_wp.clear();
 
-		final_wp.push_front(_server_list[_cur_server].display_str + "<br /><br />");
-		return final_wp;
+	if ( !parse_webpage(_final_wp) ){
+		_final_wp = QString("Sorry, no lyrics found");
+	}
 
-
+	_final_wp.push_front(_server_list[_cur_server].display_str + "<br /><br />");
+	_final_wp.push_front(QString("<font size=\"5\" color=\"#F3841A\"><b>") +
+			_artist + QString(" - ") +
+			_title +
+			"</b></font><br /><br />");
 }
 
-void LyricLookup::init_server_list(){
+
+void LyricLookupThread::prepare_thread(QString artist, QString song, int srv){
+
+		_artist = artist;
+		_title = song;
+		_cur_server = srv;
+}
+
+void LyricLookupThread::init_server_list(){
 
 	ServerTemplate wikia;
 	wikia.display_str = "Wikia.com";
@@ -289,14 +295,16 @@ void LyricLookup::init_server_list(){
 
 }
 
-QStringList LyricLookup::getServers(){
+QStringList LyricLookupThread::getServers(){
 	QStringList lst;
 	foreach(ServerTemplate t, _server_list){
 		lst.push_back(t.display_str);
 	}
 
 	return lst;
-
 }
 
+QString LyricLookupThread::getFinalLyrics(){
+	return _final_wp;
+}
 

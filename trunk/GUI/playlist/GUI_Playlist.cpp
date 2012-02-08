@@ -97,6 +97,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->_text->setAcceptRichText(true);
 	this->_text->hide();
 
+	this->_lyrics_thread = new LyricLookupThread();
+
 	this->connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
 	//this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
@@ -113,6 +115,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	this->connect(this->ui->btn_lyrics_server, SIGNAL(sig_server_changed(int)), this, SLOT(lyric_server_changed(int)));
 	this->connect(this->ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(lyric_button_toggled(bool)));
+	this->connect(this->_lyrics_thread, SIGNAL(finished()), this, SLOT(lyric_thread_finished()));
+	this->connect(this->_lyrics_thread, SIGNAL(terminated()), this, SLOT(lyric_thread_terminated()));
 
 	// we need a reason for refreshing the list
 	QStringList empty_list;
@@ -127,7 +131,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 
 	_radio_active = false;
 
-	this->ui->btn_lyrics_server->setServers(_ll.getServers());
+	this->ui->btn_lyrics_server->setServers(_lyrics_thread->getServers());
 	this->ui->btn_lyrics_server->setVisible(false);
 	this->_cur_lyric_server = 0;
 	check_for_library_path();
@@ -184,42 +188,58 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 
 	if(on){
 
-		QVariant data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
+		QVariant data;
+		if(_cur_playing_row != -1){
+			data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
+		}
+
+		else {
+			data = this->_pli_model->data(_pli_model->index(_cur_selected_row, 0), Qt::WhatsThisRole);
+		}
+
 		QStringList lst = data.toStringList();
 		MetaData md;
-
 		md.fromStringList(lst);
 
-		QString lyrics = _ll.find_lyrics(md.artist, md.title, _cur_lyric_server);
-		lyrics = lyrics.trimmed();
-
-		QString title = QString("<font size=\"5\" color=\"#F3841A\"><b>") + md.artist + " - " + md.title + "</b></font><br /><br />";
-		QString text_data = title + lyrics ;//+ "</center>";
-		QSize size = this->ui->listView->size();
-		size.setWidth(size.width() + this->ui->listView->verticalScrollBar()->width());
-
-		_text->setAcceptRichText(true);
-		_text->setText(title + lyrics);
-		_text->setLineWrapColumnOrWidth(this->ui->listView->width() - 10);
-		_text->setLineWrapMode(QTextEdit::FixedPixelWidth);
-		_text->setMinimumSize(size);
-		_text->setMaximumSize(size);
-		_text->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-		_text->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-		_text->show();
-
-		this->ui->listView->verticalScrollBar()->hide();
-
+		_lyrics_thread->prepare_thread(md.artist, md.title, _cur_lyric_server);
+		_lyrics_thread->start();
 	}
 
 	else{
-		_text->setPlainText("");
 		_text->hide();
-
 		this->ui->listView->verticalScrollBar()->show();
 	}
 
 }
+
+
+void GUI_Playlist::lyric_thread_finished(){
+
+	QString lyrics = _lyrics_thread->getFinalLyrics();
+	lyrics = lyrics.trimmed();
+
+	QSize size = this->ui->listView->size();
+	size.setWidth(size.width() + this->ui->listView->verticalScrollBar()->width());
+
+	_text->setAcceptRichText(true);
+	_text->setText(lyrics);
+	_text->setLineWrapColumnOrWidth(this->ui->listView->width() - 10);
+	_text->setLineWrapMode(QTextEdit::FixedPixelWidth);
+	_text->setMinimumSize(size);
+	_text->setMaximumSize(size);
+	_text->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	_text->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	_text->show();
+
+	this->ui->listView->verticalScrollBar()->hide();
+
+}
+
+void GUI_Playlist::lyric_thread_terminated(){
+
+	this->ui->btn_lyrics->setChecked(false);
+}
+
 
 
 
@@ -227,7 +247,7 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 void GUI_Playlist::change_skin(bool dark){
 
 	if(dark){
-		QString table_style = Style::get_tv_style();
+		QString table_style = Style::get_tv_style(dark);
 		QString scrollbar_style = Style::get_v_scrollbar_style();
 
 		this->ui->lab_totalTime->setStyleSheet("background-color: " + Style::get_player_back_color() + ";");
@@ -246,9 +266,12 @@ void GUI_Playlist::change_skin(bool dark){
 	}
 
 	else {
-		this->ui->lab_totalTime->setStyleSheet("");
-		this->ui->listView->setStyleSheet("");
-		this->ui->listView->verticalScrollBar()->setStyleSheet("");
+
+		QString table_style = Style::get_tv_style(dark);
+
+		this->ui->lab_totalTime->setStyleSheet(table_style);
+		this->ui->listView->setStyleSheet(table_style);
+		this->ui->listView->verticalScrollBar()->setStyleSheet(table_style);
 
 		QString btn_style = Style::get_btn_style(7);
 

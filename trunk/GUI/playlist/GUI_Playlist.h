@@ -101,12 +101,16 @@
 			void lyric_button_toggled(bool on);
 			void lyric_server_changed(int);
 
+			void lyric_thread_finished();
+			void lyric_thread_terminated();
+
 
 
 		protected:
 			void keyPressEvent(QKeyEvent* e);
 
 		private:
+
 
 			Ui::Playlist_Window* 	ui;
 			QWidget*				_parent;
@@ -118,10 +122,14 @@
 			QAction**				_action_lyric_servers;
 			QMenu*					_menu_lyrics;
 
+			LyricLookupThread*		_lyrics_thread;
+			int 					_cur_lyric_server;
 
 			qint64 					_total_secs;
 			int						_cur_playing_row;
 			int						_cur_selected_row;
+			bool inner_drag_drop;
+			QPoint	_last_known_drag_pos;
 
 			bool					_radio_active;
 
@@ -131,12 +139,9 @@
 			void remove_cur_selected_row();
 			void check_for_library_path();
 
-			bool inner_drag_drop;
 
-			QPoint	_last_known_drag_pos;
 
-			LyricLookup _ll;
-			int _cur_lyric_server;
+
 
 	};
 

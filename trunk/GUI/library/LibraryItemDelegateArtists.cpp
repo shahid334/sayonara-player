@@ -100,14 +100,14 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 		if(!is_selected){
 
-			if(val_bg > 128) fg_color = " color: #202020";
+			if(val_bg > 96) fg_color = " color: #202020";
 			else fg_color = " color: #D8D8D8; ";
 
 			style = QString("background-color: transparent; ") + fg_color;
 		}
 
 		else {
-			if(val_sel > 128) fg_color = " color: #202020";
+			if(val_sel > 96) fg_color = " color: #202020";
 			else fg_color = " color: #D8D8D8; ";
 
 			style = QString("background-color: " + col_highlight.name() + ";") + fg_color;

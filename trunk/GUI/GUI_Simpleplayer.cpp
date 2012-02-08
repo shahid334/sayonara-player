@@ -292,6 +292,8 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
                         "Currently playing: \"" + md.title + "\" by " + md.artist));
 	}
 
+	m_trayIcon->setToolTip(md.title + " by " + md.artist);
+
 	QString lengthString = getLengthString(md.length_ms);
 
 	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
@@ -317,8 +319,10 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
 	this->ui->rating->setText(tmp);
 	this->ui->rating->setToolTip(
-			QString("<font color=\"#000000\">") + QString::number(md.bitrate)
-	+ "</font>");
+			QString("<font color=\"#000000\">") +
+			QString::number(md.bitrate / 1000) +
+			QString(" kBit/s") +
+			QString("</font>"));
 
 	this->setWindowTitle(QString("Sayonara - ") + md.title);
 

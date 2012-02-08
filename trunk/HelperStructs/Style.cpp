@@ -37,9 +37,19 @@ QString Style::get_player_back_color(){
 	return QString("#383838");
 }
 
-QString Style::get_tv_style(){
-	return QString("border: 1px solid #282828; background-color: #2C2C2C;  alternate-background-color: #242424; color: #D8D8D8; ");
+QString Style::get_tv_style(bool dark){
 
+
+	QString style = "";
+			/*QString("selection-color: black; "
+			"selection-background-color: #e8841a; ");			// sayonara orange*/
+
+	if(dark) return  style + QString("border: 1px solid #282828; "
+			"background-color: #2C2C2C;  "
+			"alternate-background-color: #242424; "
+			"color: #D8D8D8; ");
+
+	else return style;
 }
 
 
@@ -58,17 +68,13 @@ QString Style::get_tv_header_style(){
 			"} ";
 
 	return header_style;
-
 }
 
 
 QString Style::get_v_scrollbar_style(){
 
-
 	QString arrow_down_filename = Helper::getIconPath() + "/arrow_down.png";
 	QString arrow_up_filename = Helper::getIconPath() + "/arrow_up.png";
-
-
 
 	QString scrollbar_style = QString("QScrollBar::vertical \{") +
 			      "border: 0px solid " + get_player_back_color()  + "; " +
@@ -152,12 +158,8 @@ QString Style::get_btn_style(int intensity){
 
 QString Style::get_h_scrollbar_style(){
 
-
-
 	QString arrow_left_filename = Helper::getIconPath() + "/arrow_left.png";
 	QString arrow_right_filename = Helper::getIconPath() + "/arrow_right.png";
-
-
 
 	QString scrollbar_style = QString("QScrollBar::horizontal \{") +
 			      "border: 0px solid " + get_player_back_color()  + "; " +

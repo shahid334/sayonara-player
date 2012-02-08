@@ -82,14 +82,14 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 		if(!is_selected){
 
-			if(val_bg > 128) fg_color = " color: #202020";
+			if(val_bg > 96) fg_color = " color: #202020";
 			else fg_color = " color: #D8D8D8; ";
 
 			style = QString("background-color: transparent; ") + fg_color;
 		}
 
 		else {
-			if(val_sel > 128) fg_color = " color: #202020";
+			if(val_sel > 96) fg_color = " color: #202020";
 			else fg_color = " color: #D8D8D8; ";
 
 			style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
@@ -98,7 +98,7 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 		label.setText(text);
 		label.setContentsMargins(2, 0, 2, 2);
-		label.setMinimumHeight(20);
+		label.setMinimumHeight(25);
 		label.setMinimumWidth(_parent->columnWidth(index.column()));
 		label.resize(_parent->columnWidth(index.column()), 20);
 
@@ -124,7 +124,7 @@ QSize LibraryItemDelegateTracks::sizeHint(const QStyleOptionViewItem & option, c
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-	return QSize(1,20);
+	return QSize(1,25);
 
 
 }

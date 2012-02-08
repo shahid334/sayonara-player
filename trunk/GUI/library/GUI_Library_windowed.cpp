@@ -533,7 +533,7 @@ void GUI_Library_windowed::change_skin(bool dark){
 
 	if(dark){
 
-		QString table_style = Style::get_tv_style();
+		QString table_style = Style::get_tv_style(dark);
 		QString header_style = Style::get_tv_header_style();
 		QString v_scrollbar_style = Style::get_v_scrollbar_style();
 		QString h_scrollbar_style = Style::get_h_scrollbar_style();
@@ -563,9 +563,12 @@ void GUI_Library_windowed::change_skin(bool dark){
 
 
 	else {
-		this->ui->lv_album->setStyleSheet("");
-		this->ui->lv_artist->setStyleSheet("");
-		this->ui->tb_title->setStyleSheet("");
+
+		QString table_style = Style::get_tv_style(dark);
+
+		this->ui->lv_album->setStyleSheet(table_style);
+		this->ui->lv_artist->setStyleSheet(table_style);
+		this->ui->tb_title->setStyleSheet(table_style);
 
 		this->ui->tb_title->setShowGrid(true);
 		this->ui->lv_album->setShowGrid(true);

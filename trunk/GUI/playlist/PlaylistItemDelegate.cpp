@@ -42,7 +42,7 @@ using namespace std;
 
 QString get_fg_color(int val_bg){
 
-	if(val_bg > 128)
+	if(val_bg > 96)
 		return  QString(" color: #202020; ");
 
 	else
@@ -138,23 +138,16 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 				col_highlight.name() + "; " +
 				get_fg_color(highlight_val);
 
-
-
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
-
-
 
 	_pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );
 
 	if(insert) {
 			painter->drawLine(QLine(0, y, _pl_entry->width(), y));
-		}
-
+	}
 
 	painter->restore();
-
-
 }
 
 
