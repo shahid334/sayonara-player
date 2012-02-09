@@ -138,7 +138,10 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 				col_highlight.name() + "; " +
 				get_fg_color(highlight_val);
 
+
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
+
+
 
 	_pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );

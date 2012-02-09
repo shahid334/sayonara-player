@@ -116,7 +116,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->connect(this->ui->btn_lyrics_server, SIGNAL(sig_server_changed(int)), this, SLOT(lyric_server_changed(int)));
 	this->connect(this->ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(lyric_button_toggled(bool)));
 	this->connect(this->_lyrics_thread, SIGNAL(finished()), this, SLOT(lyric_thread_finished()));
-	this->connect(this->_lyrics_thread, SIGNAL(terminated()), this, SLOT(lyric_thread_terminated()));
+
 
 	// we need a reason for refreshing the list
 	QStringList empty_list;
@@ -215,6 +215,11 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 
 void GUI_Playlist::lyric_thread_finished(){
 
+	if(!this->ui-> btn_lyrics_server->isChecked()){
+		this->ui->btn_lyrics_server->setVisible(true);
+		this->ui->btn_lyrics->setChecked(true);
+	}
+
 	QString lyrics = _lyrics_thread->getFinalLyrics();
 	lyrics = lyrics.trimmed();
 
@@ -296,8 +301,6 @@ void GUI_Playlist::update_progress_bar(int percent){
 // the current track should be highlighted
 void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
-	this->ui->btn_lyrics->setChecked(false);
-
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	if(!_radio_active)
 		_pli_model->insertRows(0, v_metadata.size());
@@ -355,12 +358,15 @@ void GUI_Playlist::clear_playlist_slot(){
 		return;
 	}
 
+	if(_radio_active){
+		return;
+	}
+
 	this->ui->lab_totalTime->setText("Total Time: 0m 0s");
 	this->ui->btn_import->setVisible(false);
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_cur_playing_row = -1;
 	_cur_selected_row = -1;
-	qDebug() << "Ui:: send clear playlist";
 	emit clear_playlist();
 }
 
@@ -376,7 +382,6 @@ void GUI_Playlist::save_playlist_slot(){
 
 // private SLOT: playlist item pressed (init drag & drop)
 void GUI_Playlist::pressed(const QModelIndex& index){
-
 
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
@@ -401,7 +406,6 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 }
 
 void GUI_Playlist::released(const QModelIndex& index){
-
 
 	inner_drag_drop = false;
 

@@ -317,9 +317,16 @@ void Playlist::psl_play(){
 	if(_v_meta_data.size() <= 0) return;
 
 	if(_cur_play_idx <= -1){
-		_cur_play_idx = 0;
-		emit sig_selected_file_changed(_cur_play_idx);
-		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+		int track_num = 0;
+
+		MetaData md = _v_meta_data[track_num];
+		if(Helper::checkTrack(md)){
+			_cur_play_idx = track_num;
+			emit sig_selected_file_changed(track_num);
+			emit sig_selected_file_changed_md(md);
+			if(_playlist_mode.dynamic)
+				emit sig_search_similar_artists(md.artist);
+		}
 	}
 
 	else{
@@ -359,20 +366,26 @@ void Playlist::psl_forward(){
 		return;
 	}
 
+
+	MetaData md;
+	int track_num;
+
 	if(_playlist_mode.shuffle){
-
-		int track_num = rand() % _v_meta_data.size();
-		_cur_play_idx = track_num;
-		emit sig_selected_file_changed(track_num);
-		emit sig_selected_file_changed_md(_v_meta_data[track_num]);
-
+		track_num = rand() % _v_meta_data.size();
 	}
 
 	else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
-		_cur_play_idx++;
-		emit sig_selected_file_changed(_cur_play_idx);
-		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+		track_num = _cur_play_idx + 1;
+	}
 
+	md = _v_meta_data[track_num];
+
+	if(Helper::checkTrack(md)){
+		_cur_play_idx = track_num;
+		emit sig_selected_file_changed(track_num);
+		emit sig_selected_file_changed_md(md);
+		if(_playlist_mode.dynamic)
+			emit sig_search_similar_artists(md.artist);
 	}
 }
 
@@ -381,11 +394,19 @@ void Playlist::psl_backward(){
 
 	if(_radio_active) return;
 
-	if(this->_cur_play_idx > 0){
-		_cur_play_idx--;
-		emit sig_selected_file_changed(_cur_play_idx);
-		emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+	if(this->_cur_play_idx <= 0) return;
+
+	int track_num = _cur_play_idx - 1;
+	MetaData md = _v_meta_data[track_num];
+
+	if(Helper::checkTrack(md)){
+		emit sig_selected_file_changed(track_num);
+		emit sig_selected_file_changed_md(md);
+		_cur_play_idx = track_num;
+		if(_playlist_mode.dynamic)
+			emit sig_search_similar_artists(md.artist);
 	}
+
 }
 
 
@@ -447,7 +468,7 @@ void Playlist::psl_next_track(){
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
 			if(_playlist_mode.dynamic)
-				emit sig_search_similar_artists(_v_meta_data[_cur_play_idx].artist);
+				emit sig_search_similar_artists(md.artist);
 		}
 
 		else{

@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>icons/play.png</normaloff>icons/play.png</iconset>
+    <normaloff>../../.designer/backup/icons/play.png</normaloff>../../.designer/backup/icons/play.png</iconset>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -105,7 +105,7 @@
          <x>0</x>
          <y>0</y>
          <width>320</width>
-         <height>307</height>
+         <height>305</height>
         </rect>
        </property>
        <property name="sizePolicy">
@@ -181,8 +181,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>icons/bwd.png</normaloff>
-          <selectedoff>icons/bwd.png</selectedoff>icons/bwd.png</iconset>
+          <normaloff>../../.designer/backup/icons/bwd.png</normaloff>
+          <selectedoff>../../.designer/backup/icons/bwd.png</selectedoff>../../.designer/backup/icons/bwd.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -220,8 +220,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>icons/play.png</normaloff>
-          <selectedoff>icons/play.png</selectedoff>icons/play.png</iconset>
+          <normaloff>../../.designer/backup/icons/play.png</normaloff>
+          <selectedoff>../../.designer/backup/icons/play.png</selectedoff>../../.designer/backup/icons/play.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -268,8 +268,8 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>icons/fwd.png</normaloff>
-          <selectedoff>icons/fwd.png</selectedoff>icons/fwd.png</iconset>
+          <normaloff>../../.designer/backup/icons/fwd.png</normaloff>
+          <selectedoff>../../.designer/backup/icons/fwd.png</selectedoff>../../.designer/backup/icons/fwd.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -374,7 +374,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>../Images/gui.jpg</pixmap>
+       <pixmap>../../.designer/Images/gui.jpg</pixmap>
       </property>
       <property name="scaledContents">
        <bool>true</bool>
@@ -498,55 +498,6 @@
     <item row="9" column="1" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="maxTime">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>18</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>7</pointsize>
-         </font>
-        </property>
-        <property name="lineWidth">
-         <number>0</number>
-        </property>
-        <property name="text">
-         <string>00:00</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::MinimumExpanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>10</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QLabel" name="curTime">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -582,6 +533,55 @@
         </property>
        </widget>
       </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::MinimumExpanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>10</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="maxTime">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>18</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>7</pointsize>
+         </font>
+        </property>
+        <property name="lineWidth">
+         <number>0</number>
+        </property>
+        <property name="text">
+         <string>00:00</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item row="8" column="3" rowspan="2">
@@ -603,8 +603,8 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/stop.png</normaloff>
-        <selectedoff>icons/stop.png</selectedoff>icons/stop.png</iconset>
+        <normaloff>../../.designer/backup/icons/stop.png</normaloff>
+        <selectedoff>../../.designer/backup/icons/stop.png</selectedoff>../../.designer/backup/icons/stop.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -698,7 +698,7 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>icons/vol_mute.png</normaloff>icons/vol_mute.png</iconset>
+        <normaloff>../../.designer/backup/icons/vol_mute.png</normaloff>../../.designer/backup/icons/vol_mute.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -759,7 +759,7 @@
      <x>0</x>
      <y>0</y>
      <width>763</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFle">

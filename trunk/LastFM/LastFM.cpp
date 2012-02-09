@@ -289,6 +289,7 @@ void LastFM::scrobble(const MetaData& metadata){
 
 void LastFM::get_similar_artists(const QString& artistname){
 
+	qDebug() << "start similar artists";
 	_similar_artists_thread->set_artist_name(artistname);
 	_similar_artists_thread->start();
 
@@ -297,8 +298,12 @@ void LastFM::get_similar_artists(const QString& artistname){
 void LastFM::sim_artists_thread_finished(){
 
 	QList<int> ids = _similar_artists_thread->get_chosen_ids();
-	if(ids.size() > 0)
+	qDebug() << "number of similar artists = " << ids.size();
+	if(ids.size() > 0){
+
 		emit similar_artists_available(ids);
+
+	}
 }
 
 QString LastFM::get_api_key(){
