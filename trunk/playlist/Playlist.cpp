@@ -30,6 +30,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/PlaylistParser.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/PlaylistMode.h"
@@ -119,7 +120,15 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, bool radio){
 	}
 
     uint files2fill = pathlist.size();
-	for(uint i=0; i<files2fill; i++){
+
+    vector<MetaData> v_md_tmp;
+    for(uint i=0; i<files2fill; i++){
+
+		if(PlaylistParser::is_supported_playlist(pathlist[i])){
+			int success = PlaylistParser::parse_playlist(pathlist[i], v_md_tmp);
+			/* TODO: yes, even playlists should be treated */
+			continue;
+		}
 
 		if(QFile::exists(pathlist[i])){
 			MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
@@ -368,7 +377,7 @@ void Playlist::psl_forward(){
 
 
 	MetaData md;
-	int track_num;
+	int track_num = 0;
 
 	if(_playlist_mode.shuffle){
 		track_num = rand() % _v_meta_data.size();

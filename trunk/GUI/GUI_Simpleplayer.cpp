@@ -436,7 +436,7 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 					tr("Open Media files"),
 					QDir::homePath(),
 					tr(
-							"Media files (*.mp3 *.wav *.flac *.aac *.wma *.avi *.mpg *.mpeg)"));
+							"Media files (*.mp3 *.wav *.flac *.aac *.wma *.avi *.mpg *.mpeg *.m3u *.pls *.asx)"));
 
 	if (list.size() > 0)
 		emit fileSelected(list);

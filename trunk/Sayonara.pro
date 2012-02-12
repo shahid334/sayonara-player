@@ -46,6 +46,7 @@ HEADERS += MP3_Listen/Engine.h \
     HelperStructs/PlaylistMode.h \
     HelperStructs/Style.h \
     HelperStructs/CDirectoryReader.h \
+    HelperStructs/PlaylistParser.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
@@ -93,6 +94,7 @@ SOURCES += Main.cpp \
     HelperStructs/CSettingsStorage.cpp \
     HelperStructs/Style.cpp \
     HelperStructs/CDirectoryReader.cpp \
+    HelperStructs/PlaylistParser.cpp \
     CoverLookup/CoverLookup.cpp \
     LyricLookup/LyricLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \

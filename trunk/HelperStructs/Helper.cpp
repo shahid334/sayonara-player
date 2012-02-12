@@ -28,13 +28,13 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/id3.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "LastFM/LastFM.h"
 
 #include <string>
 #include <iostream>
 #include <sstream>
-
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -48,6 +48,7 @@
 #include <QCryptographicHash>
 #include <QDebug>
 #include <QList>
+#include <QFile>
 
 
 
@@ -250,7 +251,9 @@ bool Helper::is_soundfile(QString filename){
 
 bool Helper::checkTrack(const MetaData& md){
 
-	if( md.filepath.contains("http")) return true;
+	if( md.filepath.startsWith("http")) return true;
+	if( md.filepath.startsWith("ftp")) return true;
+	if( md.filepath.startsWith("mms")) return true;
 
 	if( !QFile::exists(md.filepath) && md.id >= 0 ){
 		vector<MetaData> vec_md;
@@ -259,5 +262,35 @@ bool Helper::checkTrack(const MetaData& md){
 		return false;
 	}
 
+	return true;
+}
+
+
+
+
+bool Helper::read_file_into_str(QString filename, QString& content){
+
+	QFile file(filename);
+	content.clear();
+	if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+		return false;
+	}
+
+	while (!file.atEnd()) {
+		content += file.readLine();
+	}
+
+	file.close();
+
+	if(content.size() > 0 ){
+		return true;
+	}
+
+	return false;
+
+}
+
+bool read_http_into_str(QString url, QString& content){
+	content.clear();
 	return true;
 }

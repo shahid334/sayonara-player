@@ -201,7 +201,16 @@ namespace Helper{
 		}
 	}
 
+
+	/* Checks if track exists
+	 * if track does not exist
+	 * it is deleted from database
+	 * For online tracks it always returns true
+	 */
 	bool checkTrack(const MetaData& md);
+
+	bool read_file_into_str(QString filename, QString& content);
+	bool read_http_into_str(QString url, QString& content);
 
 
 
