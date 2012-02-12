@@ -127,5 +127,22 @@ bool CDatabaseConnector::apply_fixes(){
 		q3.exec();
 	}
 
+
+	// save internet streams
+	QSqlQuery q4 (this->m_database);
+	querytext = "SELECT * FROM savedstreams;";
+	q4.prepare(querytext);
+	if(!q4.exec()){
+		QSqlQuery q5(this->m_database);
+		querytext = QString("CREATE TABLE savedstreams ") +
+				"( " +
+				"	name VARCHAR(255) PRIMARY KEY, " +
+				"	url VARCHAR(255) " +
+				");";
+		q5.prepare(querytext);
+		q5.exec();
+	}
+
+
 	return true;
 }

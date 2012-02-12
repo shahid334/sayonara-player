@@ -151,6 +151,13 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, bool radio){
 
 void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, bool radio){
 
+	if(v_meta_data.size() == 0) {
+		qDebug() << "no tracks in playlist";
+		return;
+	}
+
+	qDebug() << "create playlist with " << v_meta_data.size() << " tracks";
+
 	if(radio != _radio_active) psl_stop();
 	_radio_active = radio;
 	emit sig_radio_active(radio);
@@ -167,6 +174,7 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, bool radio){
 	}
 
 	v_meta_data = v_meta_data_tmp;
+	qDebug() << "appended tracks " << v_meta_data.size();
 
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
@@ -182,6 +190,8 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, bool radio){
 
 	if(!_radio_active)
 		psl_save_playlist_to_storage();
+
+	qDebug() << "playlist created ... " << _v_meta_data.size();
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
@@ -697,4 +707,41 @@ void Playlist::psl_new_radio_playlist_available(const vector<MetaData>& playlist
 	vector<MetaData> pl_copy = playlist;
 	this->psl_clear_playlist();
 	psl_createPlaylist(pl_copy, true);
+}
+
+
+void Playlist::psl_play_stream(const QString& url, const QString& name){
+
+	// playlist radio
+	if(PlaylistParser::is_supported_playlist(url)){
+		vector<MetaData> v_md;
+		if(PlaylistParser::parse_playlist(url, v_md) > 0){
+
+			for(int i=0; i<v_md.size(); i++){
+				if(name.size() > 0)
+					v_md.at(i).title = name;
+				else v_md.at(i).title = "Radio Station";
+			}
+
+			psl_createPlaylist(v_md, true);
+		}
+
+		return;
+	}
+
+	// real stream
+	else{
+		vector<MetaData> v_md;
+		MetaData md;
+
+		if(name.size() > 0) md.title = name;
+		else md.title = "Radio Station";
+
+		md.artist = url;
+		md.filepath = url;
+		v_md.push_back(md);
+		psl_createPlaylist(v_md, true);
+
+		return;
+	}
 }

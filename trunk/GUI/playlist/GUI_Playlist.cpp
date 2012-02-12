@@ -524,6 +524,7 @@ void GUI_Playlist::initGUI(){
 // we start the drag action, all lines has to be cleared
 void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
 
+	Q_UNUSED(event);
 	int row = this->ui->listView->indexAt(_last_known_drag_pos).row();
 	clear_drag_lines(row);
 }

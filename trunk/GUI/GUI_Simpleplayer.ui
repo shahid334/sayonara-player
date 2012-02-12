@@ -383,6 +383,12 @@
     </item>
     <item row="3" column="1" rowspan="2" colspan="2">
      <widget class="QLabel" name="artist">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -464,6 +470,12 @@
     </item>
     <item row="5" column="1" colspan="2">
      <widget class="QLabel" name="album">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize">
        <size>
         <width>0</width>
@@ -767,6 +779,7 @@
      <string>File</string>
     </property>
     <addaction name="action_OpenFile"/>
+    <addaction name="action_OpenStream"/>
     <addaction name="action_OpenFolder"/>
     <addaction name="separator"/>
     <addaction name="action_reloadLibrary"/>
@@ -916,6 +929,11 @@
    </property>
    <property name="text">
     <string>Notifications</string>
+   </property>
+  </action>
+  <action name="action_OpenStream">
+   <property name="text">
+    <string>Open Stream</string>
    </property>
   </action>
  </widget>

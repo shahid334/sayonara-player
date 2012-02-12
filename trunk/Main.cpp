@@ -37,6 +37,7 @@
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/stream/GUI_Stream.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/Engine.h"
 #include "MP3_Listen/PhononEngine.h"
@@ -152,8 +153,10 @@ int main(int argc, char *argv[]){
 		app.connect (&player, SIGNAL(stop()),							&playlist,	SLOT(psl_stop()));
 		app.connect (&player, SIGNAL(forward()),						&playlist,	SLOT(psl_forward()));
 		app.connect (&player, SIGNAL(backward()),						&playlist,	SLOT(psl_backward()));
+		app.connect (&player, SIGNAL(sig_stream_selected(const QString&, const QString&)), 	&playlist, SLOT(psl_play_stream(const QString&, const QString&)));
 		app.connect (&player, SIGNAL(show_playlists()),					&ui_playlist_chooser, SLOT(show()));
         app.connect (&player, SIGNAL(skinChanged(bool)), 				&ui_playlist, SLOT(change_skin(bool)));
+
 
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)), 		cover, 			SLOT(search_cover(const MetaData&)));
         app.connect (&playlist, SIGNAL(sig_selected_file_changed_md(const MetaData&)),		&player,		SLOT(fillSimplePlayer(const MetaData&)));

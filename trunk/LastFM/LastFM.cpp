@@ -232,10 +232,10 @@ void LastFM::update_track(const MetaData& metadata){
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
 	if(!success || response.contains("failed") ){
-		qDebug() << "Track cannot be updated";
+		/*qDebug() << "Track cannot be updated";
 		qDebug() << "url = " << url;
 		qDebug() << "post = " << post_data.c_str();
-		qDebug() << response;
+		qDebug() << response;*/
 	}
 }
 
@@ -276,10 +276,10 @@ void LastFM::scrobble(const MetaData& metadata){
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
 	if(!success || response.contains("failed")){
-		qDebug() << "Track scrobbling failed";
-		qDebug() << response;
+		/*qDebug() << "Track scrobbling failed";
 		qDebug() << "Url = " << url;
 		qDebug() << "Post data = " << post_data.c_str();
+		qDebug() << response;*/
 
 	}
 }

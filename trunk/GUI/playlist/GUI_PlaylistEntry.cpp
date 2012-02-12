@@ -54,7 +54,10 @@ void GUI_PlaylistEntry::setArtist(QString artist){
 
 void GUI_PlaylistEntry::setAlbum(QString album){
 
-	if(album == "") return;
+	if(album == ""){
+		this->ui->lab_album->setText("");
+		return;
+	}
 	this->ui->lab_album->setText(QString(" [ ") + album + " ]");
 
 

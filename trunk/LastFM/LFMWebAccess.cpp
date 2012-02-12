@@ -67,7 +67,6 @@ const char* lfm_wa_get_url_enc(QString str){
 
 	CURL *curl = curl_easy_init();
 	return curl_easy_escape(curl, c_s, 0);
-
 }
 
 

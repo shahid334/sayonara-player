@@ -98,6 +98,7 @@ public:
 		void psl_import_new_tracks_to_library(bool);
 		void psl_import_result(bool);
 		void psl_new_radio_playlist_available(const vector<MetaData>&);
+		void psl_play_stream(const QString&, const QString&);
 
 
 	private:

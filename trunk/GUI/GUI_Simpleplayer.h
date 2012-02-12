@@ -28,6 +28,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/stream/GUI_Stream.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -87,6 +88,7 @@ signals:
     void forward();
     void mute();
     void fileSelected (QStringList & filelist);
+    void sig_stream_selected(const QString&, const QString&);
     void baseDirSelected (const QString & baseDir);
     void search(int pos_percent);
     void volumeChanged (qreal vol_percent);
@@ -111,6 +113,8 @@ private slots:
     void backwardClicked(bool b = true);
     void forwardClicked(bool b = true);
     void fileSelectedClicked(bool);
+    void streamDialogClicked(bool);
+    void play_stream_selected(const QString&, const QString& );
     void folderSelectedClicked(bool);
     void total_time_changed(qint64);
     void searchSliderPressed();
@@ -138,6 +142,7 @@ private slots:
 
     void show_notification_toggled(bool);
 
+
     void about(bool b=false);
 
 
@@ -163,6 +168,7 @@ private:
     GUI_Equalizer*				ui_eq;
     GUI_PlaylistChooser*		ui_playlist_chooser;
     GUI_RadioWidget*			ui_radio;
+    GUI_Stream*					ui_stream_dialog;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;

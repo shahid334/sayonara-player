@@ -47,6 +47,7 @@ HEADERS += MP3_Listen/Engine.h \
     HelperStructs/Style.h \
     HelperStructs/CDirectoryReader.h \
     HelperStructs/PlaylistParser.h \
+    HelperStructs/WebAccess.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \
@@ -65,6 +66,7 @@ HEADERS += MP3_Listen/Engine.h \
     LastFM/LFMSimilarArtistsThread.h  \
     GUI/GUI_TrayIcon.h \
     GUI/radio/GUI_RadioWidget.h \
+    GUI/stream/GUI_Stream.h \
     
 
 SOURCES += Main.cpp \
@@ -95,6 +97,7 @@ SOURCES += Main.cpp \
     HelperStructs/Style.cpp \
     HelperStructs/CDirectoryReader.cpp \
     HelperStructs/PlaylistParser.cpp \
+    HelperStructs/WebAccess.cpp \
     CoverLookup/CoverLookup.cpp \
     LyricLookup/LyricLookup.cpp \
     CoverLookup/CoverFetchThread.cpp \
@@ -107,6 +110,7 @@ SOURCES += Main.cpp \
     DatabaseAccess/CDatabaseArtists.cpp \
     DatabaseAccess/CDatabaseTracks.cpp \
     DatabaseAccess/CdatabasePlaylist.cpp \
+    DatabaseAccess/CDatabaseStreams.cpp \
     playlist/Playlist.cpp \
     playlists/Playlists.cpp \
     HelperStructs/id3.cpp \
@@ -115,6 +119,7 @@ SOURCES += Main.cpp \
     LastFM/LFMWebAccess.cpp \
     GUI/GUI_TrayIcon.cpp \
     GUI/radio/GUI_RadioWidget.cpp \
+    GUI/stream/GUI_Stream.cpp \
    
 
 FORMS += \
@@ -129,6 +134,7 @@ FORMS += \
     GUI/alternate_covers/GUI_Alternate_Covers.ui \
     GUI/playlist_chooser/GUI_PlaylistChooser.ui \
     GUI/radio/GUI_RadioWidget.ui \
+    GUI/stream/GUI_Stream.ui \
     
    
 additional_files.path = /usr/share/sayonara

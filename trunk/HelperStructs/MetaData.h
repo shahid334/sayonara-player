@@ -89,8 +89,8 @@ struct MetaData{
 		QString tmpArtist = artist;
 		QString tmpAlbum = album;
 		if(title.trimmed().size() == 0) tmpTitle = QString("(Unknown title)");
-		if(artist.trimmed().size() == 0) tmpArtist = QString("(Unknown artist)");
-		if(album.trimmed().size() == 0) tmpAlbum = QString("(Unknown album)");
+		if(artist.trimmed().size() == 0) tmpArtist = QString("");
+		if(album.trimmed().size() == 0) tmpAlbum = QString("");
 
 		list.push_back(tmpTitle);
 		list.push_back(tmpArtist);

@@ -20,16 +20,20 @@
 
 
 #include "GUI/GUI_Simpleplayer.h"
+#include "GUI/stream/GUI_Stream.h"
+#include "GUI/GUI_TrayIcon.h"
 #include "ui_GUI_Simpleplayer.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 
 
+
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
-#include <GUI_TrayIcon.h>
+
+
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
@@ -41,6 +45,10 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	this->ui->albumCover->setPixmap(
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+
+	this->ui_stream_dialog = new GUI_Stream();
+	this->ui_stream_dialog->setModal(true);
+	this->ui_stream_dialog->hide();
 
 	this->m_playing = false;
 	this->m_cur_searching = false;
@@ -95,6 +103,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	// file
 	connect(this->ui->action_OpenFile, SIGNAL(triggered(bool)), this,
 			SLOT(fileSelectedClicked(bool)));
+	connect(this->ui->action_OpenStream, SIGNAL(triggered(bool)), this,
+			SLOT(streamDialogClicked(bool)));
 	connect(this->ui->action_OpenFolder, SIGNAL(triggered(bool)), this,
 			SLOT(folderSelectedClicked(bool)));
 	connect(this->ui->action_ImportFolder, SIGNAL(triggered(bool)), this,
@@ -138,6 +148,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	connect(this->ui->songProgress, SIGNAL(sliderReleased()), this,
 			SLOT(searchSliderReleased()));
 
+	connect(this->ui_stream_dialog, SIGNAL(sig_play_stream(const QString&, const QString&)), this,
+				SLOT(play_stream_selected(const QString&, const QString&)));
 
 
 
@@ -440,6 +452,21 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 
 	if (list.size() > 0)
 		emit fileSelected(list);
+}
+
+void GUI_SimplePlayer::streamDialogClicked(bool) {
+
+	QRect geo = ui_stream_dialog->geometry();
+	geo.setX(this->geometry().x() + 20);
+	geo.setY(this->geometry().y() + 100);
+	geo.setWidth(200);
+	geo.setHeight(80);
+	ui_stream_dialog->setGeometry(geo);
+	ui_stream_dialog->show();
+}
+
+void GUI_SimplePlayer::play_stream_selected(const QString& url, const QString& name){
+	emit sig_stream_selected(url, name);
 }
 
 void GUI_SimplePlayer::searchSliderPressed() {

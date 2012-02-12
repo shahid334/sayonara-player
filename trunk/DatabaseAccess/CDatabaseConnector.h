@@ -134,7 +134,12 @@ public:
 			bool getAllPlaylists(QMap<int, QString>& mapping);
 			bool deleteFromAllPlaylists(int track_id);
 
-
+			/*
+			 * Streams
+			 * */
+			bool getAllStreams(QMap<QString, QString>& result);
+			bool deleteStream(QString name);
+			bool addStream(QString name, QString url);
 
     void deleteTracksAlbumsArtists();
 

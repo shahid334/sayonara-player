@@ -790,12 +790,12 @@ void GUI_Library_windowed::apply_cover_to_entire_album(){
 
 void GUI_Library_windowed::info_album(){
 
-	int num_artists;
 	QPushButton* apply = 0;
 	QPixmap pm;
 	QString sel_artist = "";
 	QString cover_path = "";
 	bool	cover_found;
+	int num_artists = 0;
 
 
 	if(_album_msg_box) delete _album_msg_box;

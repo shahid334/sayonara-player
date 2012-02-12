@@ -29,8 +29,10 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/WebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "LastFM/LastFM.h"
+
 
 #include <string>
 #include <iostream>
@@ -290,7 +292,13 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 }
 
-bool read_http_into_str(QString url, QString& content){
+bool Helper::read_http_into_str(QString url, QString& content){
+
+	qDebug() << "read " << url << " into string";
 	content.clear();
-	return true;
+	wa_call_url(url, content);
+
+	if(content.size() > 0)	return true;
+
+	return false;
 }
