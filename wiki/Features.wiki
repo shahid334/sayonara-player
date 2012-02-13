@@ -4,16 +4,17 @@
   * Cover fetch
   * LastFM scrobbling
   * Media Library
-  * Equalizer (GStreamer, Xine)
+  * Equalizer (GStreamer- and Xine backend on Phonon)
   * ID3 Tagger
   * Dynamic Playlists (using LastFM)
 
-= Upcoming (already available on svn) =
+= Upcoming in version 0.2 (already available on svn) =
   
-  * Gstreamer
+  * Pure Gstreamer without Phonon
   * Lyrics
   * LastFM radio
   * Custom playlists
+  * Online Streams (e.g. Web-Radio)
 
 = Todo =
   
