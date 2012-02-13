@@ -84,7 +84,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="13">
+   <item row="1" column="0" colspan="12">
     <widget class="MyListView" name="listView">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
@@ -100,7 +100,7 @@
      </property>
      <property name="maximumSize">
       <size>
-       <width>1000</width>
+       <width>167721</width>
        <height>16777215</height>
       </size>
      </property>
@@ -276,7 +276,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="6" colspan="4">
+   <item row="2" column="6" colspan="3">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -343,33 +343,7 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="9">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="8">
-    <widget class="QLabel" name="lab_lfm">
-     <property name="minimumSize">
-      <size>
-       <width>20</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="12">
+   <item row="0" column="11">
     <widget class="QPushButton" name="btn_clear">
      <property name="minimumSize">
       <size>
@@ -404,7 +378,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="11">
+   <item row="0" column="10">
     <widget class="QPushButton" name="btn_import">
      <property name="minimumSize">
       <size>
@@ -435,7 +409,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="11">
+   <item row="2" column="10">
     <widget class="LyricMenuButton" name="btn_lyrics_server">
      <property name="minimumSize">
       <size>
@@ -487,7 +461,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="12">
+   <item row="2" column="11">
     <widget class="QPushButton" name="btn_lyrics">
      <property name="minimumSize">
       <size>

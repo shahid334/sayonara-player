@@ -8,6 +8,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/globals.h"
 
 #include <vector>
 
@@ -173,7 +174,7 @@ void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
 }
 
 
-void GUI_PlaylistChooser::set_radio_active(bool b){
-	this->ui->btn_save_as->setEnabled(!b);
-	this->ui->btn_save_as->setEnabled(!b);
+void GUI_PlaylistChooser::set_radio_active(int radio){
+	this->ui->btn_save_as->setEnabled(radio == RADIO_OFF);
+	this->ui->btn_save->setEnabled(radio == RADIO_OFF);
 }

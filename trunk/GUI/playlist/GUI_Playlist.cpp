@@ -33,6 +33,7 @@
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
+#include "HelperStructs/globals.h"
 #include "LyricLookup/LyricLookup.h"
 
 
@@ -129,7 +130,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	_cur_selected_row = -1;
 	_cur_playing_row = -1;
 
-	_radio_active = false;
+	_radio_active = RADIO_OFF;
 
 	this->ui->btn_lyrics_server->setServers(_lyrics_thread->getServers());
 	this->ui->btn_lyrics_server->setVisible(false);
@@ -302,7 +303,7 @@ void GUI_Playlist::update_progress_bar(int percent){
 void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
-	if(!_radio_active)
+	if(_radio_active != RADIO_LFM)
 		_pli_model->insertRows(0, v_metadata.size());
 	else
 		_pli_model->insertRows(0, 1);
@@ -320,7 +321,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 	this->ui->btn_import->setVisible(false);
 	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
 
-		if(it->is_extern && !_radio_active) {
+		if(it->is_extern && _radio_active == RADIO_OFF) {
 			this->ui->btn_import->setVisible(true);
 		}
 
@@ -342,7 +343,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
 
-		if(_radio_active) break;
+		if(_radio_active == RADIO_LFM) break;
 		idx++;
 
 	}
@@ -358,7 +359,7 @@ void GUI_Playlist::clear_playlist_slot(){
 		return;
 	}
 
-	if(_radio_active){
+	if(_radio_active != RADIO_OFF){
 		return;
 	}
 
@@ -699,7 +700,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 				v_metadata.push_back(ID3::getMetaDataOfFile(file_paths[i]));
 			}
 
-			if(!_radio_active)
+			if(_radio_active == RADIO_OFF)
 				emit dropped_tracks(v_metadata, row);
 			else
 				emit dropped_tracks(v_metadata, 0);
@@ -728,7 +729,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 			v_md4Playlist.push_back(md);
 		}
 
-		if(!_radio_active)
+		if(_radio_active == RADIO_OFF)
 			emit dropped_tracks(v_md4Playlist, row);
 		else
 			emit dropped_tracks(v_md4Playlist, 0);
@@ -738,14 +739,16 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 void GUI_Playlist::set_total_time_label(){
 
-	this->ui->lab_lfm->hide();
-
-	if(_radio_active){
-		this->ui->lab_lfm->show();
-		QPixmap p = QPixmap(Helper::getIconPath() + "lastfm_red_small.png");
-		this->ui->lab_totalTime->setPixmap(p);
+	if(_radio_active == RADIO_STATION){
+		this->ui->lab_totalTime->setText("Radio");
 		return;
 	}
+
+	else if(_radio_active == RADIO_LFM){
+		this->ui->lab_totalTime->setText("Last.fm Radio");
+		return;
+	}
+
 
 
 	this->ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
@@ -820,13 +823,13 @@ void GUI_Playlist::import_result(bool success){
 }
 
 
-void GUI_Playlist::set_radio_active(bool b){
+void GUI_Playlist::set_radio_active(int radio){
 
-	_radio_active = b;
-	this->ui->btn_append->setVisible(!b);
-	this->ui->btn_dynamic->setVisible(!b);
-	this->ui->btn_repAll->setVisible(!b);
-	this->ui->btn_shuffle->setVisible(!b);
-	this->ui->btn_import->setVisible(!b);
+	_radio_active = radio;
+	this->ui->btn_append->setVisible(radio == RADIO_OFF);
+	this->ui->btn_dynamic->setVisible(radio == RADIO_OFF);
+	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
+	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
+	this->ui->btn_import->setVisible(radio == RADIO_OFF);
 
 }

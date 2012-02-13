@@ -204,3 +204,12 @@ void CSettingsStorage::setLastFMSessionKey(QString key){
 QString CSettingsStorage::getLastFMSessionKey(){
 	return m_lfm_sessionKey;
 }
+
+void CSettingsStorage::setShowLibrary(bool b){
+	m_show_library = b;
+}
+
+bool CSettingsStorage::getShowLibrary(){
+	return m_show_library;
+
+}

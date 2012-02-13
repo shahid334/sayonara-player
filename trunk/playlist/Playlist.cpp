@@ -108,7 +108,7 @@ void Playlist::psl_save_playlist_to_storage(){
 
 
 
-void Playlist::psl_createPlaylist(QStringList& pathlist, bool radio){
+void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
 
 	if(radio != _radio_active) psl_stop();
 	_radio_active = radio;
@@ -125,8 +125,6 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, bool radio){
     for(uint i=0; i<files2fill; i++){
 
 		if(PlaylistParser::is_supported_playlist(pathlist[i])){
-			int success = PlaylistParser::parse_playlist(pathlist[i], v_md_tmp);
-			/* TODO: yes, even playlists should be treated */
 			continue;
 		}
 
@@ -149,16 +147,18 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, bool radio){
 }
 
 
-void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, bool radio){
+void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 
 	if(v_meta_data.size() == 0) {
 		qDebug() << "no tracks in playlist";
 		return;
 	}
 
-	qDebug() << "create playlist with " << v_meta_data.size() << " tracks";
+	bool played_radio = (_radio_active != RADIO_OFF);
+	if(radio != _radio_active){
+		psl_stop();
+	}
 
-	if(radio != _radio_active) psl_stop();
 	_radio_active = radio;
 	emit sig_radio_active(radio);
 
@@ -188,20 +188,24 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, bool radio){
 		}
 	}
 
-	if(!_radio_active)
+	if(_radio_active == RADIO_OFF)
 		psl_save_playlist_to_storage();
-
-	qDebug() << "playlist created ... " << _v_meta_data.size();
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
-	if(_radio_active){
+	if(v_meta_data.size() == 0)
+			emit sig_no_track_to_play();
+
+	else if(_radio_active == RADIO_LFM || _radio_active == RADIO_STATION || played_radio){
+
 		emit sig_selected_file_changed(0);
 		emit sig_selected_file_changed_md(_v_meta_data[0]);
 	}
+
+
 }
 
-void Playlist::psl_createPlaylist(CustomPlaylist& pl, bool radio){
+void Playlist::psl_createPlaylist(CustomPlaylist& pl, int radio){
 	psl_createPlaylist(pl.tracks, radio);
 }
 
@@ -234,7 +238,7 @@ void Playlist::psl_remove_row(int row){
 
 void Playlist::psl_directoryDropped(const QString& dir, int row){
 
-	if(_radio_active){
+	if(_radio_active != RADIO_OFF){
 		psl_stop();
 	}
 
@@ -265,7 +269,9 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
 
 void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 
-	if(_radio_active){
+	bool switched_from_radio = false;
+	if(_radio_active != RADIO_OFF){
+		switched_from_radio = true;
 		psl_stop();
 	}
 
@@ -293,17 +299,19 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 		new_vec.push_back(md);
 	}
 
-
-
 	for(uint i=row; i<_v_meta_data.size(); i++)
 		new_vec.push_back(_v_meta_data.at(i));
 
 	_v_meta_data.clear();
 	_v_meta_data = new_vec;
 
-
 	psl_save_playlist_to_storage();
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+	if(switched_from_radio && _v_meta_data.size() > 0){
+		_cur_play_idx = 0;
+		emit sig_selected_file_changed(0);
+		emit sig_selected_file_changed_md(_v_meta_data[0]);
+	}
 }
 
 
@@ -356,11 +364,11 @@ void Playlist::psl_play(){
 
 void Playlist::psl_stop(){
 
-	if(_radio_active){
+	if(_radio_active != RADIO_OFF){
 		psl_clear_playlist();
 	}
 
-	_radio_active = false;
+	_radio_active = RADIO_OFF;
 	emit sig_radio_active(_radio_active);
 
 	_cur_play_idx = -1;
@@ -371,7 +379,7 @@ void Playlist::psl_stop(){
 void Playlist::psl_forward(){
 
 
-	if(_radio_active){
+	if(_radio_active == RADIO_LFM){
 		psl_remove_row(0);
 		if(_v_meta_data.size() == 0){
 			emit sig_no_track_to_play();
@@ -382,6 +390,11 @@ void Playlist::psl_forward(){
 		_cur_play_idx = 0;
 		emit sig_selected_file_changed(0);
 		emit sig_selected_file_changed_md(_v_meta_data[0]);
+		return;
+	}
+
+	// this shouldn't happen, because forward is disabled
+	else if(_radio_active == RADIO_STATION){
 		return;
 	}
 
@@ -411,7 +424,8 @@ void Playlist::psl_forward(){
 // GUI -->
 void Playlist::psl_backward(){
 
-	if(_radio_active) return;
+	// this shouldn't happen, because backward is disabled
+	if(_radio_active != RADIO_OFF) return;
 
 	if(this->_cur_play_idx <= 0) return;
 
@@ -433,23 +447,33 @@ void Playlist::psl_backward(){
 // --> GUI
 void Playlist::psl_next_track(){
 
+	// radio station is over?
+	if(_radio_active == RADIO_STATION){
+		emit sig_no_track_to_play();
+		return;
+	}
 
+	// no track to play anymore
+	// if LFM, fetch more tracks
 	if(_v_meta_data.size() == 0){
 		emit sig_no_track_to_play();
-		if(_radio_active){
-			emit sig_no_track_to_play();
+		if(_radio_active == RADIO_LFM){
 			emit sig_need_more_radio();
 		}
 		return;
 	}
 
-	int track_num = -1;
-	if(_radio_active){
 
+	int track_num = -1;
+	// LFM next track
+	if(_radio_active == RADIO_LFM){
+
+		// start screaming for new tracks
 		if(_v_meta_data.size() == 1)
 			emit sig_need_more_radio();
 
 		this->psl_remove_row(0);
+		// we just played the last track
 		if(_v_meta_data.size() == 0){
 			emit sig_no_track_to_play();
 			emit sig_need_more_radio();
@@ -497,8 +521,9 @@ void Playlist::psl_next_track(){
 		}
 	}
 
+	// something weird happened, we have less than 1 track
 	else{
-		if(_radio_active)
+		if(_radio_active == RADIO_LFM)
 			sig_need_more_radio();
 		emit sig_no_track_to_play();
 	}
@@ -514,7 +539,9 @@ void Playlist::psl_change_track(int new_row){
 	MetaData md = _v_meta_data[new_row];
 	if(Helper::checkTrack(md)){
 
-		if(_radio_active){ // delete all tracks before this track
+		// never should gonna happen...
+		// we cannot click into playlist
+		if(_radio_active == RADIO_LFM){
 			for(int i=0; i<new_row; i++){
 				psl_remove_row(0);
 			}
@@ -529,13 +556,14 @@ void Playlist::psl_change_track(int new_row){
 			_cur_play_idx = 0;
 		}
 
+
 		else{
 			_cur_play_idx = new_row;
 		}
 
 		emit sig_selected_file_changed_md(md);
 
-		if(_playlist_mode.dynamic && !_radio_active)
+		if(_playlist_mode.dynamic && _radio_active == RADIO_OFF)
 			emit sig_search_similar_artists(md.artist);
 	}
 
@@ -555,7 +583,7 @@ void Playlist::psl_clear_playlist(){
 	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
 
-	if(!_radio_active)
+	if(_radio_active == RADIO_OFF)
 		psl_save_playlist_to_storage();
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
@@ -575,7 +603,8 @@ void Playlist::psl_prepare_playlist_for_save(QString name){
 // GUI -->
 void Playlist::psl_save_playlist(const QString& filename){
 
-	if(_radio_active) return;
+	// never should gonna happen
+	if(_radio_active != RADIO_OFF) return;
 
 	FILE* file = fopen(filename.toStdString().c_str(), "w");
 
@@ -624,7 +653,13 @@ void Playlist::psl_id3_tags_changed(vector<MetaData>& new_meta_data){
 
 void Playlist::psl_similar_artists_available(QList<int>& artists){
 
-	if(_radio_active) return;
+
+	// the response came too late, we already switched to radio
+	if(_radio_active != RADIO_OFF ){
+		artists.clear();
+		return;
+	}
+
 	if(artists.size() == 0) return;
 
 	Helper::randomize_list(artists);
@@ -700,13 +735,13 @@ void Playlist::psl_import_result(bool success){
 
 void Playlist::psl_new_radio_playlist_available(const vector<MetaData>& playlist){
 
-	_radio_active = true;
+	_radio_active = RADIO_LFM;
 	_cur_play_idx = 0;
 	emit sig_radio_active(_radio_active);
 
 	vector<MetaData> pl_copy = playlist;
 	this->psl_clear_playlist();
-	psl_createPlaylist(pl_copy, true);
+	psl_createPlaylist(pl_copy, _radio_active);
 }
 
 
@@ -717,13 +752,13 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		vector<MetaData> v_md;
 		if(PlaylistParser::parse_playlist(url, v_md) > 0){
 
-			for(int i=0; i<v_md.size(); i++){
+			for(uint i=0; i<v_md.size(); i++){
 				if(name.size() > 0)
 					v_md.at(i).title = name;
 				else v_md.at(i).title = "Radio Station";
 			}
 
-			psl_createPlaylist(v_md, true);
+			psl_createPlaylist(v_md, RADIO_STATION);
 		}
 
 		return;
@@ -740,7 +775,7 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		md.artist = url;
 		md.filepath = url;
 		v_md.push_back(md);
-		psl_createPlaylist(v_md, true);
+		psl_createPlaylist(v_md, RADIO_STATION);
 
 		return;
 	}

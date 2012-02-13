@@ -48,6 +48,7 @@ HEADERS += MP3_Listen/Engine.h \
     HelperStructs/CDirectoryReader.h \
     HelperStructs/PlaylistParser.h \
     HelperStructs/WebAccess.h \
+    HelperStructs/globals.h \
     CoverLookup/CoverLookup.h \
     CoverLookup/CoverFetchThread.h \
     CoverLookup/CoverDownloader.h \

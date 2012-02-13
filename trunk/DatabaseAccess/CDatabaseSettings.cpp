@@ -170,14 +170,19 @@ bool CDatabaseConnector::load_settings(){
 	style_int = style.toInt();
 	settings->setPlayerStyle(style_int);
 
-
+	/* show notifications */
 	QVariant show_notifications;
 	bool show_notifications_bool = false;
 	load_setting("show_notifications", show_notifications);
 	show_notifications_bool = show_notifications.toBool();
 	settings->setShowNotifications(show_notifications_bool);
 
-
+	/* show library */
+	QVariant show_library;
+	bool show_library_bool = true;
+	load_setting("show_library", show_library);
+	show_library_bool = show_library.toBool();
+	settings->setShowLibrary(show_library_bool);
 
 	return true;
 }
@@ -227,6 +232,9 @@ bool CDatabaseConnector::store_settings(){
 
 	bool show_notifications = storage->getShowNotification();
 	store_setting("show_notifications", show_notifications);
+
+	bool show_library = storage->getShowLibrary();
+	store_setting("show_library", show_library);
 
 	return true;
 }

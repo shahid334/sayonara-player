@@ -72,7 +72,7 @@ public slots:
     void close_playlist_chooser();
     void close_radio();
 
-    void set_radio_active(bool);
+    void set_radio_active(int);
 
 
 
@@ -127,6 +127,7 @@ private slots:
 
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
 
+    void showLibrary(bool);
 
     void changeSkin(bool);
     void lastFMClicked(bool b = true);
@@ -198,9 +199,11 @@ private:
     bool						m_isPcHidden;
     bool						m_isRadioHidden;
 
-    bool						m_radio_active;
+    int							m_radio_active;
 
     const quint8				VOLUME_STEP_SIZE_PERC;
+    int 						m_library_width;
+    int							m_library_stretch_factor;
 
 
 

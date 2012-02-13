@@ -176,9 +176,9 @@ int main(int argc, char *argv[]){
     	app.connect (&playlist, SIGNAL(sig_import_files(const vector<MetaData>&)), 			&library, 		SLOT(importFiles(const vector<MetaData>&)));
         app.connect (&playlist, SIGNAL(sig_data_for_id3_change(const vector<MetaData>&)), 	&ui_tagedit,	SLOT(change_meta_data(const vector<MetaData>&)));
         app.connect (&playlist, SIGNAL(sig_need_more_radio()),								&lastfm, 		SLOT(radio_get_playlist()));
-        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&player,		SLOT(set_radio_active(bool)));
-        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist,	SLOT(set_radio_active(bool)));
-        app.connect (&playlist, SIGNAL(sig_radio_active(bool)),								&ui_playlist_chooser,	SLOT(set_radio_active(bool)));
+        app.connect (&playlist, SIGNAL(sig_radio_active(int)),								&player,		SLOT(set_radio_active(int)));
+        app.connect (&playlist, SIGNAL(sig_radio_active(int)),								&ui_playlist,	SLOT(set_radio_active(int)));
+        app.connect (&playlist, SIGNAL(sig_radio_active(int)),								&ui_playlist_chooser,	SLOT(set_radio_active(int)));
 
         app.connect (&ui_playlist, SIGNAL(selected_row_changed(int)), 					&playlist, 	SLOT(psl_change_track(int)));
         app.connect (&ui_playlist, SIGNAL(clear_playlist()), 							&playlist, 	SLOT(psl_clear_playlist()));

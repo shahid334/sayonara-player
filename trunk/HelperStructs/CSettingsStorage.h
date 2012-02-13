@@ -100,6 +100,7 @@ private:
 
     // library
     QString m_library_path;
+    bool m_show_library;
 
     // playlist
     QString 		m_playlist;
@@ -146,6 +147,9 @@ public:
 
 	void setLastFMSessionKey(QString);
 	QString getLastFMSessionKey();
+
+	void setShowLibrary(bool);
+	bool getShowLibrary();
 
 };
 

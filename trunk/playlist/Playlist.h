@@ -31,6 +31,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
+#include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <vector>
@@ -67,14 +68,14 @@ public:
 		void sig_library_changed();
 		void sig_import_files(const vector<MetaData>&);
 		void sig_need_more_radio();
-		void sig_radio_active(bool);
+		void sig_radio_active(int);
 
 
 	public slots:
 
-		void psl_createPlaylist(QStringList&, bool radio = false);
-		void psl_createPlaylist(vector<MetaData>&, bool radio = false);
-		void psl_createPlaylist(CustomPlaylist&, bool radio = false);
+		void psl_createPlaylist(QStringList&, int radio = RADIO_OFF);
+		void psl_createPlaylist(vector<MetaData>&, int radio = RADIO_OFF);
+		void psl_createPlaylist(CustomPlaylist&, int radio = RADIO_OFF);
 		void psl_insert_tracks(const vector<MetaData>&, int idx);
 		void psl_insert_albums(const vector<Album>&, int);			// not used
 		void psl_insert_artists(const vector<Artist>&, int);		// not used
@@ -111,7 +112,7 @@ public:
 	int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;
-	bool				_radio_active;
+	int					_radio_active;
 
 
 

@@ -26,6 +26,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
+#include "HelperStructs/globals.h"
 
 
 
@@ -53,7 +54,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	this->m_playing = false;
 	this->m_cur_searching = false;
 	this->m_mute = false;
-	this->m_radio_active = false;
+	this->m_radio_active = RADIO_OFF;
 
 	this -> setupActions();
 
@@ -86,7 +87,19 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
 	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
 	this->ui->action_ViewRadio->setText("Radio\t\tSTRG+r");
+	this->ui->action_viewLibrary->setText("Library");
 
+	QSizePolicy p = this->ui->library_widget->sizePolicy();
+	m_library_stretch_factor = p.horizontalStretch();
+
+	bool show_library = settings->getShowLibrary();
+	if(!show_library){
+		p.setHorizontalStretch(0);
+		this->ui->library_widget->setSizePolicy(p);
+		m_library_width = 300;
+	}
+
+	this->ui->action_viewLibrary->setChecked(show_library);
 
 
 	connect(this->ui->btn_play, SIGNAL(clicked(bool)), this,
@@ -114,6 +127,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 
 	// view
+	connect(this->ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
+			SLOT(showLibrary(bool)));
 	connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
 				SLOT(showEqualizer(bool)));
 	connect(this->ui->action_ViewRadio, SIGNAL(toggled(bool)), this,
@@ -154,7 +169,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 
 
-        this -> connectTrayIcon ();
+    this -> connectTrayIcon ();
 
 
 
@@ -183,79 +198,6 @@ void GUI_SimplePlayer::initGUI() {
 }
 
 
-void GUI_SimplePlayer::setVolume(int vol) {
-	this->ui->volumeSlider->setValue(vol);
-	setupVolButton(vol);
-	emit volumeChanged((qreal) vol);
-}
-
-void GUI_SimplePlayer::setStyle(int style){
-	bool dark = (style == 1);
-	changeSkin(dark);
-	this->ui->action_Dark->setChecked(dark);
-}
-
-void GUI_SimplePlayer::changeSkin(bool dark) {
-
-	if (dark) {
-
-		this->ui->centralwidget->setStyleSheet(
-				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
-		this->setStyleSheet(
-				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
-
-		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; #D8D8D8;");
-
-		QString style = Style::get_btn_style(8);
-		this->ui->btn_mute->setStyleSheet(style);
-		this->ui->btn_play->setStyleSheet(style);
-		this->ui->btn_fw->setStyleSheet(style);
-		this->ui->btn_bw->setStyleSheet(style);
-		this->ui->btn_stop->setStyleSheet(style);
-
-
-		m_skinSuffix = QString("_dark");
-	}
-
-	else {
-		this->ui->centralwidget->setStyleSheet("");
-		this->ui->playlist_widget->setStyleSheet("");
-		this->setStyleSheet("");
-		this->ui->menuView->setStyleSheet("");
-		m_skinSuffix = QString("");
-
-		this->ui->btn_mute->setStyleSheet("");
-		this->ui->btn_play->setStyleSheet("");
-		this->ui->btn_fw->setStyleSheet("");
-		this->ui->btn_bw->setStyleSheet("");
-		this->ui->btn_stop->setStyleSheet("");
-
-	}
-
-	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
-
-	setupVolButton(this->ui->volumeSlider->value());
-	//emit skinChanged(dark);
-	this->ui_library->change_skin(dark);
-	this->ui_playlist->change_skin(dark);
-
-}
-
-QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
-	QString lengthString;
-	int length_sec = length_ms / 1000;
-	QString min = QString::number(length_sec / 60);
-	QString sek = QString::number(length_sec % 60);
-
-	if (min.length() < 2)
-		min = QString('0') + min;
-
-	if (sek.length() < 2)
-		sek = QString('0') + sek;
-
-	lengthString = min + QString(":") + sek;
-	return lengthString;
-}
 
 void GUI_SimplePlayer::update_info(const MetaData& in) {
 
@@ -369,6 +311,89 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 		this->ui->curTime->setText(curPosString);
 
 	}
+}
+
+
+
+
+
+void GUI_SimplePlayer::setStyle(int style){
+	bool dark = (style == 1);
+	changeSkin(dark);
+	this->ui->action_Dark->setChecked(dark);
+}
+
+void GUI_SimplePlayer::changeSkin(bool dark) {
+
+	if (dark) {
+
+		this->ui->centralwidget->setStyleSheet(
+				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
+		this->setStyleSheet(
+				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
+
+		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; #D8D8D8;");
+
+		QString style = Style::get_btn_style(8);
+		this->ui->btn_mute->setStyleSheet(style);
+		this->ui->btn_play->setStyleSheet(style);
+		this->ui->btn_fw->setStyleSheet(style);
+		this->ui->btn_bw->setStyleSheet(style);
+		this->ui->btn_stop->setStyleSheet(style);
+
+
+		m_skinSuffix = QString("_dark");
+	}
+
+	else {
+		this->ui->centralwidget->setStyleSheet("");
+		this->ui->playlist_widget->setStyleSheet("");
+		this->setStyleSheet("");
+		this->ui->menuView->setStyleSheet("");
+		m_skinSuffix = QString("");
+
+		this->ui->btn_mute->setStyleSheet("");
+		this->ui->btn_play->setStyleSheet("");
+		this->ui->btn_fw->setStyleSheet("");
+		this->ui->btn_bw->setStyleSheet("");
+		this->ui->btn_stop->setStyleSheet("");
+
+	}
+
+	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
+
+	setupVolButton(this->ui->volumeSlider->value());
+	//emit skinChanged(dark);
+	this->ui_library->change_skin(dark);
+	this->ui_playlist->change_skin(dark);
+
+}
+
+
+
+void GUI_SimplePlayer::setVolume(int vol) {
+	this->ui->volumeSlider->setValue(vol);
+	setupVolButton(vol);
+	emit volumeChanged((qreal) vol);
+}
+
+
+
+
+QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
+	QString lengthString;
+	int length_sec = length_ms / 1000;
+	QString min = QString::number(length_sec / 60);
+	QString sek = QString::number(length_sec % 60);
+
+	if (min.length() < 2)
+		min = QString('0') + min;
+
+	if (sek.length() < 2)
+		sek = QString('0') + sek;
+
+	lengthString = min + QString(":") + sek;
+	return lengthString;
 }
 
 
@@ -594,6 +619,38 @@ void GUI_SimplePlayer::coverClicked(bool) {
 
 	emit wantMoreCovers();
 }
+
+
+
+void GUI_SimplePlayer::showLibrary(bool b){
+
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+
+	settings->setShowLibrary(b);
+
+	if(!b){
+
+		QSizePolicy p = this->ui->library_widget->sizePolicy();
+
+		m_library_width = this->ui->library_widget->width();
+		m_library_stretch_factor = p.horizontalStretch();
+
+		p.setHorizontalStretch(0);
+		this->ui->library_widget->setSizePolicy(p);
+
+		this->resize(this->width() - m_library_width, this->height());
+	}
+
+	else{
+		QSizePolicy p = this->ui->library_widget->sizePolicy();
+		p.setHorizontalStretch(m_library_stretch_factor);
+		this->ui->library_widget->setSizePolicy(p);
+
+		this->resize(this->width() + m_library_width, this->height());
+
+	}
+}
+
 
 void GUI_SimplePlayer::hideAllPlugins(){
 	showRadio(false);
@@ -840,7 +897,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 	switch (e->key()) {
 
 		case Qt::Key_MediaPlay:
-			if(!m_radio_active)
+			if(m_radio_active == RADIO_OFF)
 				playClicked(true);
 			break;
 
@@ -853,7 +910,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			break;
 
 		case Qt::Key_MediaPrevious:
-			if(!m_radio_active)
+			if(m_radio_active == RADIO_OFF)
 				backwardClicked(true);
 			break;
 
@@ -929,9 +986,11 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
 	QWidget* w;
 	bool resize_plugin = false;
+
 	if(!m_isEqHidden && ui_eq){
 		w = ui_eq;
 		resize_plugin = true;
+
 	}
 
 	else if(!m_isPcHidden && ui_playlist_chooser){
@@ -945,10 +1004,14 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 	}
 
 	if(resize_plugin){
-		ui->plugin_widget->setMinimumSize(ui_playlist->width(), w->height());
-		ui->plugin_widget->setMaximumSize(ui_playlist->width(), w->height());
-		w->setMinimumSize(ui_playlist->width(), w->height());
-		w->setMaximumSize(ui_playlist->width(), w->height());
+
+		ui->plugin_widget->setMaximumSize(ui->line->width(), w->height());
+		ui->plugin_widget->setMinimumSize(ui->line->width(), w->height());
+
+		w->setMaximumSize(ui->line->width(), w->height());
+		w->setMinimumSize(ui->line->width(), w->height());
+
+
 	}
 
 
@@ -1035,13 +1098,16 @@ void GUI_SimplePlayer::show_notification_toggled(bool active){
 	CSettingsStorage::getInstance()->setShowNotifications(active);
 }
 
-void GUI_SimplePlayer::set_radio_active(bool b){
-	m_radio_active = b;
-	this->ui->btn_bw->setEnabled(!b);
-	this->ui->btn_play->setEnabled(!b);
-	this->ui->songProgress->setEnabled(!b);
-	this->m_bwdAction->setEnabled(!b);
-	this->m_playAction->setEnabled(!b);
+void GUI_SimplePlayer::set_radio_active(int radio){
+
+	m_radio_active = radio;
+	this->ui->btn_bw->setEnabled(radio == RADIO_OFF);
+	this->ui->btn_fw->setEnabled(radio != RADIO_STATION);
+	this->ui->btn_play->setEnabled(radio == RADIO_OFF);
+	this->ui->songProgress->setEnabled(radio == RADIO_OFF);
+	this->m_bwdAction->setEnabled(radio == RADIO_OFF);
+	this->m_fwdAction->setEnabled(radio != RADIO_STATION);
+	this->m_playAction->setEnabled(radio == RADIO_OFF);
 }
 
 

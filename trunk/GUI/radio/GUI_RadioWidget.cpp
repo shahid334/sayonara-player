@@ -27,15 +27,22 @@
  */
 
 #include "GUI/radio/GUI_RadioWidget.h"
+#include "HelperStructs/Helper.h"
 #include <QWidget>
 #include <QDockWidget>
 #include <QCloseEvent>
+#include <QPixmap>
 
 GUI_RadioWidget::GUI_RadioWidget(QWidget* parent) : QDockWidget(parent)  {
 
 	this->_ui = new Ui::RadioWidget( );
 	this->_ui->setupUi(this);
 	this->_ui->rb_artist->setChecked(true);
+
+	QPixmap p = QPixmap(Helper::getIconPath() + "lastfm_red_small.png");
+	this->_ui->lab_lfm->setPixmap(p);
+
+	_ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
 	connect(_ui->rb_artist, SIGNAL(released()), this, SLOT(radio_button_changed()));
 	connect(_ui->rb_tag, SIGNAL(released()), this, SLOT(radio_button_changed()));

@@ -86,7 +86,7 @@
 			void library_path_changed(QString);
 			void last_fm_logged_in(bool);
 			void import_result(bool);
-			void set_radio_active(bool b);
+			void set_radio_active(int radio);
 
 		private slots:
 			void double_clicked(const QModelIndex &);
@@ -131,7 +131,7 @@
 			bool inner_drag_drop;
 			QPoint	_last_known_drag_pos;
 
-			bool					_radio_active;
+			int						_radio_active;
 
 
 			void initGUI();
