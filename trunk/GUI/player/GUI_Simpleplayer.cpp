@@ -19,7 +19,7 @@
  */
 
 
-#include "GUI/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/GUI_TrayIcon.h"
 #include "ui_GUI_Simpleplayer.h"
@@ -28,13 +28,9 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 
-
-
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
-
-
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
@@ -47,22 +43,11 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	this->ui->albumCover->setPixmap(
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
 
-	this->ui_stream_dialog = new GUI_Stream();
-	this->ui_stream_dialog->setModal(true);
-	this->ui_stream_dialog->hide();
 
-	this->m_playing = false;
-	this->m_cur_searching = false;
-	this->m_mute = false;
-	this->m_radio_active = RADIO_OFF;
-
-	this -> setupActions();
-
-
-	m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"),this);
-	m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction);
-	m_trayIcon->show();
-
+	m_playing = false;
+	m_cur_searching = false;
+	m_mute = false;
+	m_radio_active = RADIO_OFF;
 
 	m_minTriggerByTray = false;
 	m_minimized2tray = false;
@@ -70,6 +55,17 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_isEqHidden = true;
 	m_isPcHidden = true;
 	m_isRadioHidden = true;
+
+	ui_playlist = 0;
+	ui_playlist_chooser = 0;
+	ui_radio = 0;
+	ui_eq = 0;
+
+	m_skinSuffix = "";
+
+	ui_stream_dialog = new GUI_Stream();
+	ui_stream_dialog->setModal(true);
+	ui_stream_dialog->hide();
 
 	QSize size = settings->getPlayerSize();
 	QRect rect = this->geometry();
@@ -84,11 +80,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	bool loadShowNotifications = settings->getShowNotification();
 	this->ui->action_notification->setChecked(loadShowNotifications);
 
-	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
-	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
-	this->ui->action_ViewRadio->setText("Radio\t\tSTRG+r");
-	this->ui->action_viewLibrary->setText("Library");
-
 	QSizePolicy p = this->ui->library_widget->sizePolicy();
 	m_library_stretch_factor = p.horizontalStretch();
 
@@ -101,6 +92,42 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	this->ui->action_viewLibrary->setChecked(show_library);
 
+	/* TRAY ACTIONS */
+	this->setupTrayActions();
+
+	/* SIGNALS AND SLOTS */
+	this->setupConnections();
+}
+
+
+GUI_SimplePlayer::~GUI_SimplePlayer() {
+	delete ui;
+	delete m_playAction;
+	delete m_stopAction;
+
+	delete m_bwdAction;
+	delete m_fwdAction;
+	delete m_muteAction;
+	delete m_closeAction;
+}
+
+
+
+void GUI_SimplePlayer::initGUI() {
+
+	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
+	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	this->ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
+	this->ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
+	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+
+	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
+	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
+	this->ui->action_ViewRadio->setText("Last.fm Radio\t\tSTRG+r");
+	this->ui->action_viewLibrary->setText("Library\t\tSTRG+l");
+}
+
+void GUI_SimplePlayer::setupConnections(){
 
 	connect(this->ui->btn_play, SIGNAL(clicked(bool)), this,
 			SLOT(playClicked(bool)));
@@ -156,7 +183,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
     connect(this->ui->volumeSlider, SIGNAL(valueChanged(int)), this,
 			SLOT(volumeChangedSlider(int)));
-	    connect(this->ui->songProgress, SIGNAL(sliderPressed()), this,
+	connect(this->ui->songProgress, SIGNAL(sliderPressed()), this,
 			SLOT(searchSliderPressed()));
 	connect(this->ui->songProgress, SIGNAL(sliderMoved(int)), this,
 			SLOT(searchSliderMoved(int)));
@@ -166,37 +193,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	connect(this->ui_stream_dialog, SIGNAL(sig_play_stream(const QString&, const QString&)), this,
 				SLOT(play_stream_selected(const QString&, const QString&)));
 
-
-
-
-    this -> connectTrayIcon ();
-
-
-
-	ui_playlist = 0;
-	ui_playlist_chooser = 0;
-	ui_radio = 0;
-	ui_eq = 0;
-
-	m_skinSuffix = "";
 }
-
-GUI_SimplePlayer::~GUI_SimplePlayer() {
-	delete ui;
-}
-
-
-
-void GUI_SimplePlayer::initGUI() {
-
-	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
-	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	this->ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
-	this->ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
-	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
-
-}
-
 
 
 void GUI_SimplePlayer::update_info(const MetaData& in) {
@@ -219,12 +216,11 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 		m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + in.title + "\" by " + in.artist));
 	}
 
-
 	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
 	emit wantCover(in);
-
 }
+
 
 void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
@@ -315,13 +311,12 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
 
 
-
-
 void GUI_SimplePlayer::setStyle(int style){
 	bool dark = (style == 1);
 	changeSkin(dark);
 	this->ui->action_Dark->setChecked(dark);
 }
+
 
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
@@ -370,14 +365,11 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 }
 
 
-
 void GUI_SimplePlayer::setVolume(int vol) {
 	this->ui->volumeSlider->setValue(vol);
 	setupVolButton(vol);
 	emit volumeChanged((qreal) vol);
 }
-
-
 
 
 QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
@@ -842,8 +834,12 @@ void GUI_SimplePlayer::setupIcons() {
 
 }
 
-void GUI_SimplePlayer::setupActions() {
-    m_playAction = new QAction(tr("Play"), this);
+
+/** TRAY ICON **/
+
+
+void GUI_SimplePlayer::setupTrayActions() {
+	m_playAction = new QAction(tr("Play"), this);
     m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     m_stopAction = new QAction(tr("Stop"), this);
     m_stopAction->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
@@ -855,6 +851,7 @@ void GUI_SimplePlayer::setupActions() {
     m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
     m_closeAction = new QAction(tr("Close"), this);
     m_closeAction->setIcon(QIcon(Helper::getIconPath() + "close.png"));
+
     connect(m_stopAction, SIGNAL(triggered()), this, SLOT(stopClicked()));
     connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
     connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(forwardClicked()));
@@ -862,12 +859,12 @@ void GUI_SimplePlayer::setupActions() {
     connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
 
-}
+    m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"),this);
+    m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction);
 
-void GUI_SimplePlayer::connectTrayIcon() {
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
-    connect(this->m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
-
+   	connect(this->m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
+    m_trayIcon->show();
 }
 
 
@@ -926,11 +923,13 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			this->ui->action_ViewRadio->setChecked(!this->ui->action_ViewRadio->isChecked());
 			break;
 
-		default:
+		case (Qt::Key_L):
+			this->ui->action_viewLibrary->setChecked(!this->ui->action_viewLibrary->isChecked());
 			break;
 
+		default:
+			break;
 	}
-
 }
 
 QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
@@ -1010,8 +1009,6 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
 		w->setMaximumSize(ui->line->width(), w->height());
 		w->setMinimumSize(ui->line->width(), w->height());
-
-
 	}
 
 
@@ -1037,11 +1034,8 @@ void GUI_SimplePlayer::importFolderClicked(bool b){
 				QDir::homePath(), QFileDialog::ShowDirsOnly);
 
 	if(dir.size() > 0){
-		qDebug() << "import " << dir;
 		emit importDirectory(dir);
 	}
-
-
 }
 
 
@@ -1073,10 +1067,9 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 			emit reloadLibrary();
 
 		dialog.close();
-
 	}
-
 }
+
 
 void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 	Q_UNUSED(b);

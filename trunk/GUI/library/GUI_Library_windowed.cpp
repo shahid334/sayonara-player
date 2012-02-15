@@ -61,11 +61,10 @@ using namespace std;
 
 GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
-
-
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
+	_db = CDatabaseConnector::getInstance();
 
 	_album_msg_box = 0;
 	this->_sort_albums = "name asc";
@@ -78,9 +77,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	_selected_artist_name = "";
 	_selected_album_name = "";
 
-
 	_everything_loaded = false;
-
 
 	this->_album_model = new LibraryItemModelAlbums();
 	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
@@ -116,9 +113,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	connect(this->ui->btn_reload, SIGNAL( clicked()), this, SLOT(reload_library_slot()));
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
-	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_chosen(const QModelIndex & )));
-	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_chosen(const QModelIndex & )));
-	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_chosen(const QModelIndex & )));
+	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
+	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
+	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
 
 	connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
@@ -259,8 +256,6 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
-
-
 	int artist_id = _v_artists.at(idx.row()).id;
 	_selected_artist = artist_id;
 	_selected_artist_name = _v_artists.at(idx.row()).name;
@@ -272,36 +267,31 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	Artist artist = _v_artists.at(idx.row());
 	vector<MetaData> vec_tracks;
 	vector<Album> vec_albums;
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 	if(this->ui->le_search->text().length() == 0){
-		db->getAllTracksByArtist(artist_id, vec_tracks, _cur_searchstring, _sort_tracks);
-		db->getAllAlbumsByArtist(artist_id, vec_albums, _cur_searchstring, _sort_tracks);
+		_db->getAllTracksByArtist(artist_id, vec_tracks, _cur_searchstring, _sort_tracks);
+		_db->getAllAlbumsByArtist(artist_id, vec_albums, _cur_searchstring, _sort_tracks);
 	}
 	else {
-		db->getAllTracksByArtist(artist_id, vec_tracks, _cur_searchstring, _sort_tracks) ;
-		db->getAllAlbumsByArtist(artist_id, vec_albums, _cur_searchstring, _sort_albums);
+		_db->getAllTracksByArtist(artist_id, vec_tracks, _cur_searchstring, _sort_tracks) ;
+		_db->getAllAlbumsByArtist(artist_id, vec_albums, _cur_searchstring, _sort_albums);
 	}
-
 
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
-
 
 	QMimeData* mime = new QMimeData();
 
 	QList<QVariant> list2send;
 
-		for(int i=0; i<this->_track_model->rowCount(); i++){
-			QStringList metadata = _v_metadata.at(i).toStringList();
-			list2send.push_back(metadata);
-		}
+	for(int i=0; i<this->_track_model->rowCount(); i++){
+		QStringList metadata = _v_metadata.at(i).toStringList();
+		list2send.push_back(metadata);
+	}
 
-		mime->setProperty("data_type", DROP_TYPE_TRACKS);
-		mime->setProperty("data", (QVariant) list2send);
-		this->ui->lv_artist->set_mime_data(mime);
-
-
+	mime->setProperty("data_type", DROP_TYPE_TRACKS);
+	mime->setProperty("data", (QVariant) list2send);
+	this->ui->lv_artist->set_mime_data(mime);
 }
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
@@ -311,14 +301,13 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	Album album = _v_albums.at(idx.row());
 	vector<MetaData> vec_tracks;
 	vector<Artist> vec_artists;
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 	if(this->ui->le_search->text().length() == 0){
-		db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
+		_db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
 	}
 
 	else {
-		db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
+		_db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
 	}
 
 	fill_library_tracks(vec_tracks);
@@ -364,39 +353,39 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
 
 
-void GUI_Library_windowed::album_chosen(const QModelIndex & idx){
+void GUI_Library_windowed::album_dbl_clicked(const QModelIndex & idx){
 
 	int album_id = _v_albums.at(idx.row()).id;
 
 	vector<MetaData> vec;
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	db->getAllTracksByAlbum(album_id, vec, _cur_searchstring, _sort_tracks);
-	emit album_chosen_signal(vec);
+
+	_db->getAllTracksByAlbum(album_id, vec, _cur_searchstring, _sort_tracks);
+	emit sig_album_chosen(vec);
 
 	_everything_loaded = false;
 }
 
-void GUI_Library_windowed::artist_chosen(const QModelIndex & idx){
+void GUI_Library_windowed::artist_dbl_clicked(const QModelIndex & idx){
 
 	int artist_id = _v_artists.at(idx.row()).id;
 
 	vector<MetaData> vec;
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	db->getAllTracksByArtist(artist_id, vec, _cur_searchstring, _sort_tracks);
-	emit artist_chosen_signal(vec);
+
+	_db->getAllTracksByArtist(artist_id, vec, _cur_searchstring, _sort_tracks);
+	emit sig_artist_chosen(vec);
 
 	vec.clear();
 	_everything_loaded = false;
 
 }
 
-void GUI_Library_windowed::track_chosen(const QModelIndex& idx){
+void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
 
 	if(!idx.isValid()) return;
 
 	vector<MetaData> vec;
 	vec.push_back(_v_metadata.at(idx.row()));
-	emit track_chosen_signal(vec);
+	emit sig_track_chosen(vec);
 }
 
 
@@ -446,6 +435,7 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 
 
 void GUI_Library_windowed::clear_button_pressed(){
+
 	_selected_album = -1;
 	_selected_artist = -1;
 
@@ -454,27 +444,28 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 	_cur_searchstring = "";
 
+	qDebug() << "clear";
 	this->ui->le_search->clear();
 	_everything_loaded = false;
+	qDebug() << "clear edit line";
 	text_line_edited(" ");
 
 }
 
 void GUI_Library_windowed::refresh(){
 
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-
 	vector<Album> vec_albums;
 	vector<MetaData> vec_tracks;
 	vector<Artist> vec_artists;
 
+	_db->getTracksFromDatabase(vec_tracks, _sort_tracks);
+	_db->getAllAlbums(vec_albums, _sort_albums);
+	_db->getAllArtists(vec_artists, _sort_artists);
 
-	db->getTracksFromDatabase(vec_tracks, _sort_tracks);
-	db->getAllAlbums(vec_albums, _sort_albums);
-	db->getAllArtists(vec_artists, _sort_artists);
 	fill_library_artists(vec_artists);
 	fill_library_albums(vec_albums);
 	fill_library_tracks(vec_tracks);
+
 	_everything_loaded = true;
 
 	if(this->ui->le_search->text().size() > 0)
@@ -484,7 +475,10 @@ void GUI_Library_windowed::refresh(){
 
 void GUI_Library_windowed::text_line_edited(const QString& search){
 
-	if( (search.length() < 3 && _everything_loaded) ) return;
+	if( (search.length() < 3 && _everything_loaded) ) {
+		_cur_searchstring = "";
+		return;
+	}
 
 	vector<Album> vec_albums;
 	vector<MetaData> vec_tracks;
@@ -492,11 +486,9 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 
 	if(search.length() < 3){
 
-
-		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		db->getTracksFromDatabase(vec_tracks, _sort_tracks);
-		db->getAllAlbums(vec_albums, _sort_albums);
-		db->getAllArtists(vec_artists, _sort_artists);
+		_db->getTracksFromDatabase(vec_tracks, _sort_tracks);
+		_db->getAllAlbums(vec_albums, _sort_albums);
+		_db->getAllArtists(vec_artists, _sort_artists);
 		fill_library_artists(vec_artists);
 		fill_library_albums(vec_albums);
 		fill_library_tracks(vec_tracks);
@@ -508,22 +500,23 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 		_selected_album_name = "";
 
 		_everything_loaded = true;
+		_cur_searchstring = "";
 
 		return;
-
 	}
+
+	// searchstring.size >= 3
 
 	_everything_loaded = false;
 	_cur_searchstring = QString("%") + search + "%";
 
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	db->getAllTracksBySearchString(_cur_searchstring, vec_tracks, _sort_tracks);
+	_db->getAllTracksBySearchString(_cur_searchstring, vec_tracks, _sort_tracks);
 	fill_library_tracks(vec_tracks);
 
-	db->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
+	_db->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
 	fill_library_albums(vec_albums);
 
-	db->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
+	_db->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
 	fill_library_artists(vec_artists);
 }
 
@@ -637,15 +630,15 @@ void GUI_Library_windowed::sort_albums_by_column(int col){
 
 	if(!_cur_searchstring.isEmpty()){
 
-		CDatabaseConnector::getInstance()->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
+		_db->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
 	}
 
 	else if(_selected_artist != -1){
-		CDatabaseConnector::getInstance()->getAllAlbumsByArtist(_selected_artist, vec_albums, _cur_searchstring, _sort_albums);
+		_db->getAllAlbumsByArtist(_selected_artist, vec_albums, _cur_searchstring, _sort_albums);
 	}
 
 	else{
-		CDatabaseConnector::getInstance()->getAllAlbums(vec_albums, _sort_albums);
+		_db->getAllAlbums(vec_albums, _sort_albums);
 	}
 
 	fill_library_albums(vec_albums);
@@ -668,11 +661,11 @@ void GUI_Library_windowed::sort_artists_by_column(int col){
 
 	if(!_cur_searchstring.isEmpty()){
 
-		CDatabaseConnector::getInstance()->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
+		_db->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
 	}
 
 	else{
-		CDatabaseConnector::getInstance()->getAllArtists(vec_artists, _sort_artists);
+		_db->getAllArtists(vec_artists, _sort_artists);
 	}
 
 	fill_library_artists(vec_artists);
@@ -721,19 +714,19 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 		vector<MetaData> vec_md;
 
 		if(!_cur_searchstring.isEmpty() && _selected_album == -1 && _selected_artist == -1){
-			CDatabaseConnector::getInstance()->getAllTracksBySearchString( _cur_searchstring, vec_md, _sort_tracks);
+			_db->getAllTracksBySearchString( _cur_searchstring, vec_md, _sort_tracks);
 		}
 
 		else if(_selected_album != -1){
-			CDatabaseConnector::getInstance()->getAllTracksByAlbum(_selected_album, vec_md, _cur_searchstring, _sort_tracks);
+			_db->getAllTracksByAlbum(_selected_album, vec_md, _cur_searchstring, _sort_tracks);
 		}
 
 		else if(_selected_artist != -1){
-			CDatabaseConnector::getInstance()->getAllTracksByArtist(_selected_artist, vec_md, _cur_searchstring, _sort_tracks);
+			_db->getAllTracksByArtist(_selected_artist, vec_md, _cur_searchstring, _sort_tracks);
 		}
 
 		else{
-			CDatabaseConnector::getInstance()->getTracksFromDatabase(vec_md, _sort_tracks);
+			_db->getTracksFromDatabase(vec_md, _sort_tracks);
 		}
 
 
@@ -770,7 +763,7 @@ void GUI_Library_windowed::library_should_be_reloaded(){
 void GUI_Library_windowed::reload_library_slot(){
 
 	this->ui->btn_reload->setVisible(false);
-	emit reload_library();
+	emit sig_reload_library();
 }
 
 
@@ -778,7 +771,7 @@ void GUI_Library_windowed::reload_library_slot(){
 
 void GUI_Library_windowed::edit_album(){
 
-	emit data_for_id3_change(_v_metadata);
+	emit sig_data_for_id3_change(_v_metadata);
 }
 
 void GUI_Library_windowed::apply_cover_to_entire_album(){
@@ -788,6 +781,8 @@ void GUI_Library_windowed::apply_cover_to_entire_album(){
 	}
 }
 
+
+/* TODO: clean me up, it cannot be that hard to solve the sampler issue */
 void GUI_Library_windowed::info_album(){
 
 	QPushButton* apply = 0;
@@ -808,7 +803,7 @@ void GUI_Library_windowed::info_album(){
 	Album album;
 	QStringList album_str_list = _album_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
 	album.fromStringList( album_str_list );
-	_album_of_interest = CDatabaseConnector::getInstance()->getAlbumByID(album.id);
+	_album_of_interest = _db->getAlbumByID(album.id);
 	num_artists = _album_of_interest.artists.size();
 
 
@@ -819,7 +814,7 @@ void GUI_Library_windowed::info_album(){
 	}
 
 	vector<MetaData> tracks;
-		CDatabaseConnector::getInstance()->getAllTracksByAlbum(_album_of_interest.id, tracks, _cur_searchstring, this->_sort_albums);
+		_db->getAllTracksByAlbum(_album_of_interest.id, tracks, _cur_searchstring, this->_sort_albums);
 		QStringList album_paths;
 		foreach(MetaData md, tracks){
 
@@ -878,7 +873,7 @@ void GUI_Library_windowed::info_album(){
 		md.album = _album_of_interest.name;
 		md.artist = _album_of_interest.artists[0];
 
-		emit search_cover(md);
+		emit sig_search_cover(md);
 	}
 
 	_album_msg_box->setInformativeText(info_text);
@@ -893,14 +888,14 @@ void GUI_Library_windowed::delete_album(){
 	if(_selected_album == -1) return;
 	QStringList file_list;
 	vector<MetaData> vec_md;
-	CDatabaseConnector::getInstance()->getAllTracksByAlbum(_selected_album, vec_md, _cur_searchstring, _sort_tracks);
+	_db->getAllTracksByAlbum(_selected_album, vec_md, _cur_searchstring, _sort_tracks);
 
 	deleteSomeTracks(vec_md);
 }
 
 
 void GUI_Library_windowed::edit_artist(){
-	emit data_for_id3_change(_v_metadata);
+	emit sig_data_for_id3_change(_v_metadata);
 }
 
 
@@ -917,7 +912,7 @@ void GUI_Library_windowed::info_artist(){
 
 
 	vector<MetaData> tracks;
-	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist.id, tracks, _cur_searchstring, _sort_tracks);
+	_db->getAllTracksByArtist(artist.id, tracks, _cur_searchstring, _sort_tracks);
 	QStringList artist_paths;
 	foreach(MetaData md, tracks){
 
@@ -965,7 +960,7 @@ void GUI_Library_windowed::info_artist(){
 		md.album = _album_of_interest.name;
 		md.artist = artist.name;
 
-		emit search_cover(md);
+		emit sig_search_cover(md);
 	}
 
 	_album_msg_box->setInformativeText(info_text);
@@ -979,7 +974,7 @@ void GUI_Library_windowed::delete_artist(){
 
 	if(_selected_artist == -1) return;
 	vector<MetaData> vec_md;
-	CDatabaseConnector::getInstance()->getAllTracksByArtist(_selected_artist, vec_md, _cur_searchstring, _sort_tracks);
+	_db->getAllTracksByArtist(_selected_artist, vec_md, _cur_searchstring, _sort_tracks);
 	deleteSomeTracks(vec_md);
 
 }
@@ -996,7 +991,7 @@ void GUI_Library_windowed::edit_tracks(){
 		}
 	}
 
-	emit data_for_id3_change(vec_md);
+	emit sig_data_for_id3_change(vec_md);
 }
 
 void GUI_Library_windowed::info_tracks(){
@@ -1135,7 +1130,7 @@ void GUI_Library_windowed::deleteSomeTracks(vector<MetaData>& vec_md){
 	switch(answer){
 		case QMessageBox::Yes:
 
-			CDatabaseConnector::getInstance()->deleteTracks(vec_md);
+			_db->deleteTracks(vec_md);
 
 			foreach(QString filename, file_list){
 				QFile file(filename);

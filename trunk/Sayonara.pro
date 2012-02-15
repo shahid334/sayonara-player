@@ -21,7 +21,7 @@ LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp `pkg-config --cflags --libs gs
 HEADERS += MP3_Listen/Engine.h \
 	MP3_Listen/PhononEngine.h \
 	MP3_Listen/GSTEngine.h \
-	GUI/GUI_Simpleplayer.h \ 
+	GUI/player/GUI_Simpleplayer.h \ 
     GUI/playlist/GUI_Playlist.h \
     GUI/playlist/PlaylistItemModel.h \
     GUI/playlist/PlaylistItemDelegate.h \
@@ -73,7 +73,7 @@ HEADERS += MP3_Listen/Engine.h \
 SOURCES += Main.cpp \
 	MP3_Listen/PhononEngine.cpp \
 	MP3_Listen/GSTEngine.cpp \
-    GUI/GUI_Simpleplayer.cpp \
+    GUI/player/GUI_Simpleplayer.cpp \
     GUI/playlist/GUI_Playlist.cpp \
     GUI/playlist/PlaylistItemModel.cpp \
     GUI/playlist/PlaylistItemDelegate.cpp \
@@ -124,7 +124,7 @@ SOURCES += Main.cpp \
    
 
 FORMS += \
-    GUI/GUI_Simpleplayer.ui \
+    GUI/player/GUI_Simpleplayer.ui \
     GUI/playlist/GUI_Playlist.ui \
     GUI/playlist/GUI_Playlist_Entry.ui \
     GUI/LastFM/GUI_LastFM_Widget.ui \

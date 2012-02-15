@@ -115,6 +115,10 @@ public:
 	int					_radio_active;
 
 
+	/* wrapper for Helper::checkTrack */
+	bool 				checkTrack(const MetaData* md);
+
+
 
 
 

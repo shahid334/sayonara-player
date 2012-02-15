@@ -84,15 +84,25 @@ private:
 	QString		_cur_searchstring;
 
 signals:
-	void artist_changed_signal(int);
-	void album_changed_signal(int);
-	void clear_signal();
-	void album_chosen_signal(vector<MetaData>&);
-	void artist_chosen_signal(vector<MetaData>&);
-	void track_chosen_signal(vector<MetaData>&);
-	void reload_library();
-	void data_for_id3_change(const vector<MetaData>&);
-	void search_cover(const MetaData&);
+
+	/* those three are intendenden for a nicer sw-design, but are not
+	 * used yet
+	 */
+	/*void sig_artist_changed(int);
+	void sig_album_changed(int);
+	void sig_clear();*/
+
+	/* emitted when dbl clicked */
+	void sig_album_chosen(vector<MetaData>&);
+
+	/* emitted when dbl clicked */
+	void sig_artist_chosen(vector<MetaData>&);
+
+	/* emitted when dbl clicked */
+	void sig_track_chosen(vector<MetaData>&);
+	void sig_reload_library();
+	void sig_data_for_id3_change(const vector<MetaData>&);
+	void sig_search_cover(const MetaData&);
 
 public slots:
 	void fill_library_tracks(vector<MetaData>&);
@@ -112,9 +122,9 @@ private slots:
 	void artist_pressed(const QModelIndex &);
 
 	void clear_button_pressed();
-	void album_chosen(const QModelIndex &);
-	void artist_chosen(const QModelIndex &);
-	void track_chosen(const QModelIndex &);
+	void album_dbl_clicked(const QModelIndex &);
+	void artist_dbl_clicked(const QModelIndex &);
+	void track_dbl_clicked(const QModelIndex &);
 
 	void text_line_edited(const QString&);
 	void sort_albums_by_column(int);
@@ -160,8 +170,15 @@ private:
 	int 	_selected_album;
 	QString _selected_album_name;
 
+
 	Album _album_of_interest;
+
+	/* this parameter tells if a filter is applied or everything is shown
+	 * and is only used in the text_line_edited function
+	 */
 	bool _everything_loaded;
+
+	CDatabaseConnector* _db;
 
 	void deleteSomeTracks(vector<MetaData>&);
 	void refresh();

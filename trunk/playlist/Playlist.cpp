@@ -149,10 +149,11 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
 
 void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 
+	// no tracks in new playlist
 	if(v_meta_data.size() == 0) {
-		qDebug() << "no tracks in playlist";
 		return;
 	}
+
 
 	bool played_radio = (_radio_active != RADIO_OFF);
 	if(radio != _radio_active){
@@ -168,13 +169,11 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 	for(uint i=0; i<v_meta_data.size(); i++){
 
 		MetaData md = v_meta_data.at(i);
-		if(Helper::checkTrack(md)){
+		if( checkTrack(md) )
 			v_meta_data_tmp.push_back(md);
-		}
 	}
 
 	v_meta_data = v_meta_data_tmp;
-	qDebug() << "appended tracks " << v_meta_data.size();
 
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
@@ -196,6 +195,7 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 	if(v_meta_data.size() == 0)
 			emit sig_no_track_to_play();
 
+	// if radio currently plays or was playing until now
 	else if(_radio_active == RADIO_LFM || _radio_active == RADIO_STATION || played_radio){
 
 		emit sig_selected_file_changed(0);
@@ -347,7 +347,7 @@ void Playlist::psl_play(){
 		int track_num = 0;
 
 		MetaData md = _v_meta_data[track_num];
-		if(Helper::checkTrack(md)){
+		if( checkTrack(md) ){
 			_cur_play_idx = track_num;
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(md);
@@ -412,7 +412,7 @@ void Playlist::psl_forward(){
 
 	md = _v_meta_data[track_num];
 
-	if(Helper::checkTrack(md)){
+	if( checkTrack(md) ){
 		_cur_play_idx = track_num;
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
@@ -432,7 +432,7 @@ void Playlist::psl_backward(){
 	int track_num = _cur_play_idx - 1;
 	MetaData md = _v_meta_data[track_num];
 
-	if(Helper::checkTrack(md)){
+	if( checkTrack(md) ){
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
 		_cur_play_idx = track_num;
@@ -484,11 +484,12 @@ void Playlist::psl_next_track(){
 	}
 
 
-
+	// shuffle mode
 	else if(_playlist_mode.shuffle)
 		track_num = rand() % _v_meta_data.size();
 
 
+	// standard next track, also valid for stream stations
 	else {
 
 		// last track
@@ -504,8 +505,11 @@ void Playlist::psl_next_track(){
 	}
 
 
+	// valid next track
 	if(track_num >= 0){
 		MetaData md = _v_meta_data[track_num];
+
+		// maybe track is deleted here
 		if(Helper::checkTrack(md)){
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
@@ -537,7 +541,7 @@ void Playlist::psl_change_track(int new_row){
 	if( (uint) new_row >= _v_meta_data.size())return;
 
 	MetaData md = _v_meta_data[new_row];
-	if(Helper::checkTrack(md)){
+	if( checkTrack(md) ){
 
 		// never should gonna happen...
 		// we cannot click into playlist
@@ -570,7 +574,6 @@ void Playlist::psl_change_track(int new_row){
 	else{
 		_cur_play_idx = -1;
 		psl_remove_row(new_row);
-		emit sig_library_changed();
 		emit sig_no_track_to_play();
 	}
 }
@@ -778,5 +781,15 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		psl_createPlaylist(v_md, RADIO_STATION);
 
 		return;
+	}
+}
+
+
+
+bool  Playlist::checkTrack(const MetaData* md){
+	if(Helper::checkTrack(md)) return true;
+	else {
+		emit sig_library_changed();
+		return false;
 	}
 }

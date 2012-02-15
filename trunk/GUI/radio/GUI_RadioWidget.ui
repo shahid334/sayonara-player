@@ -29,7 +29,7 @@
    <set>Qt::AllDockWidgetAreas</set>
   </property>
   <property name="windowTitle">
-   <string notr="true">Radio</string>
+   <string notr="true">Last.fm</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <property name="sizePolicy">

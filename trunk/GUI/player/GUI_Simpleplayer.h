@@ -161,7 +161,7 @@ protected:
 
 
 private:
-    QString getLengthString (quint32 length_ms) const;
+
 
     Ui::GUI_SimplePlayer*		ui;
     GUI_Playlist* 				ui_playlist;
@@ -206,13 +206,15 @@ private:
     int							m_library_stretch_factor;
 
 
+    QString getLengthString (quint32 length_ms) const;
 
-    void setupActions ();
-    void connectTrayIcon();
+
+    void setupTrayActions ();
 
     void setupVolButton(int percent);
     void setupIcons();
     void initGUI();
+    void setupConnections();
 
 
 public:
