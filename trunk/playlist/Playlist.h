@@ -116,7 +116,7 @@ public:
 
 
 	/* wrapper for Helper::checkTrack */
-	bool 				checkTrack(const MetaData* md);
+	bool 				checkTrack(const MetaData& md);
 
 
 

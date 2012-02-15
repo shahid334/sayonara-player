@@ -485,8 +485,12 @@ void Playlist::psl_next_track(){
 
 
 	// shuffle mode
-	else if(_playlist_mode.shuffle)
+	else if(_playlist_mode.shuffle){
 		track_num = rand() % _v_meta_data.size();
+		if(track_num == _cur_play_idx){
+			track_num = (_cur_play_idx + 1) % _v_meta_data.size();
+		}
+	}
 
 
 	// standard next track, also valid for stream stations
@@ -694,8 +698,6 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 				}
 			}
 
-
-
 			if(!is_track_already_in) break;
 
 		}
@@ -786,7 +788,7 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 
 
 
-bool  Playlist::checkTrack(const MetaData* md){
+bool  Playlist::checkTrack(const MetaData& md){
 	if(Helper::checkTrack(md)) return true;
 	else {
 		emit sig_library_changed();

@@ -26,6 +26,7 @@ private slots:
 	void listen_clicked();
 	void combo_index_changed(int idx);
 	void combo_text_changed(const QString& text);
+	void url_text_changed(const QString& text);
 	void delete_clicked();
 	void save_clicked();
 

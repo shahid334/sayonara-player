@@ -242,7 +242,11 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
                         "Currently playing: \"" + md.title + "\" by " + md.artist));
 	}
 
-	m_trayIcon->setToolTip(md.title + " by " + md.artist);
+	m_trayIcon->setToolTip(QString("\"") +
+			md.title +
+			"\" by \"" +
+			md.artist +
+			QString("\""));
 
 	QString lengthString = getLengthString(md.length_ms);
 
@@ -476,7 +480,7 @@ void GUI_SimplePlayer::streamDialogClicked(bool) {
 	QRect geo = ui_stream_dialog->geometry();
 	geo.setX(this->geometry().x() + 20);
 	geo.setY(this->geometry().y() + 100);
-	geo.setWidth(200);
+	//geo.setWidth(200);
 	geo.setHeight(80);
 	ui_stream_dialog->setGeometry(geo);
 	ui_stream_dialog->show();

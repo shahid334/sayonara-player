@@ -36,14 +36,17 @@ GUI_Stream::GUI_Stream() {
 	this->connect(this->ui->combo_stream, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_index_changed(int)));
 	this->connect(this->ui->combo_stream, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
 
+	this->connect(this->ui->le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
+
 }
+
 
 GUI_Stream::~GUI_Stream() {
 	// TODO Auto-generated destructor stub
 }
 
-void GUI_Stream::listen_clicked(){
 
+void GUI_Stream::listen_clicked(){
 
 	QString url;
 	QString name;
@@ -61,26 +64,31 @@ void GUI_Stream::listen_clicked(){
 	if(url.size() > 5){
 		emit sig_play_stream(url.trimmed(), name);
 	}
-
 }
+
 
 void GUI_Stream::psl_radio_stations_received(const QMap<QString, QString>& radio_stations){
 
 	_stations = radio_stations;
 	if(radio_stations.size() > 0){
-		_cur_station = 0;
+		_cur_station = -1;
 	}
 
 	this->ui->combo_stream->clear();
-	int i=0;
-	for(QMap<QString, QString>::const_iterator it = radio_stations.begin(); it != radio_stations.end(); it++, i++){
-		if(i == 0){
-			_cur_station_adress = it.value();
-			_cur_station_name = it.key();
-		}
 
+	_cur_station_adress = "";
+	_cur_station_name = "";
+	_cur_station = 0;
+
+	_stations[""] = "";
+
+	for(QMap<QString, QString>::iterator it = _stations.begin(); it != _stations.end(); it++){
 		this->ui->combo_stream->addItem(it.key(), it.value());
 	}
+
+	this->ui->btn_listen->setEnabled(false);
+	this->ui->btn_save->setEnabled(false);
+	this->ui->btn_delete->setEnabled(false);
 }
 
 
@@ -89,23 +97,73 @@ void GUI_Stream::init_gui(){
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
 }
 
+
 void GUI_Stream::combo_index_changed(int idx){
+
 	_cur_station = idx;
-	_cur_station_name = this->ui->combo_stream->itemText(idx);
-	_cur_station_adress = _stations[_cur_station_name];
-	this->ui->btn_delete->setEnabled(true);
+	_cur_station_name = this->ui->combo_stream->itemText(_cur_station);
+
+	QString adress = _stations[_cur_station_name];
+	if(adress.size() > 0){
+		_cur_station_adress = adress;
+		this->ui->le_url->setText(_cur_station_adress);
+	}
+
+	if(idx == 0){
+		this->ui->le_url->setText("");
+	}
+
+
+	this->ui->btn_delete->setEnabled(idx > 0);
 	this->ui->btn_save->setEnabled(false);
-
+	this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
 	this->ui->combo_stream->setToolTip(_cur_station_adress);
-
 }
+
 
 void GUI_Stream::combo_text_changed(const QString& text){
 	_cur_station = -1;
+
 	this->ui->btn_delete->setEnabled(false);
 	this->ui->btn_save->setEnabled((text.size() > 0));
-
+	this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
 	this->ui->combo_stream->setToolTip("");
+}
+
+void GUI_Stream::url_text_changed(const QString& text){
+
+	QString key = _stations.key(text);
+
+	if(! key.isEmpty() ){
+
+		int idx = this->ui->combo_stream->findText(key, Qt::MatchCaseSensitive);
+		if(idx != -1){
+			this->ui->combo_stream->setCurrentIndex(idx);
+			_cur_station = idx;
+			this->ui->btn_save->setEnabled(false);
+			this->ui->btn_delete->setEnabled(true);
+		}
+	}
+
+	// new adress
+	else{
+
+		this->ui->btn_delete->setEnabled(false);
+
+		bool save_enabled =
+				this->ui->combo_stream->currentText().size() > 0 &&
+				this->ui->le_url->text().size() > 5 &&
+				_cur_station == -1;
+
+		this->ui->btn_save->setEnabled(save_enabled);
+		this->ui->btn_listen->setEnabled(text.size() > 5);
+		if(_cur_station != -1){
+			_cur_station = -1;
+			this->ui->combo_stream->setEditText("new");
+			_cur_station = -1;
+		}
+	}
+
 }
 
 
@@ -130,13 +188,15 @@ void GUI_Stream::delete_clicked(){
 	_cur_station = -1;
 }
 
+
 void GUI_Stream::save_clicked(){
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	bool ok = false;
-	QString name = QInputDialog::getText(NULL, "Please type name", "Please enter name", QLineEdit::Normal, "", &ok);
-	bool success = ok;
-	if(ok && name.size() > 0){
-		success = db->addStream(name, this->ui->combo_stream->currentText());
+	QString name = this->ui->combo_stream->currentText();
+	QString url = this->ui->le_url->text();
+
+	bool success = false;
+	if(name.size() > 0 && url.size() > 0){
+		success = db->addStream(name, url);
 	}
 
 	if(success){
