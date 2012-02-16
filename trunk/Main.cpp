@@ -261,35 +261,34 @@ int main(int argc, char *argv[]){
 		playlist.ui_loaded();
 
 		qDebug() << "setup player";
+		player.setWindowTitle("Sayonara (0.1)");
+
+		player.setPlaylist(&ui_playlist);
+		player.setLibrary(&ui_library);
 		player.setRadio(&ui_radio);
 		player.setEqualizer(&ui_eq);
 		player.setPlaylistChooser(&ui_playlist_chooser);
-		player.setPlaylist(&ui_playlist);
-		player.setLibrary(&ui_library);
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
+		player.show();
+		player.hideAllPlugins();
 
-		qDebug() << "setup volume";
-		int vol = set->getVolume();
-        player.setVolume(vol);
-        listen->setVolume(vol);
-
-      	playlists.ui_loaded();
-
-    	player.setWindowTitle("Sayonara (0.1)");
-    	player.show();
-
-    	player.hideAllPlugins();
-
-		listen->load_equalizer();
-
-		ui_eq.resize(player.getParentOfEqualizer()->size());
-		ui_playlist_chooser.resize(player.getParentOfPlaylistChooser()->size());
 		ui_library.resize(player.getParentOfLibrary()->size());
 		ui_playlist.resize(player.getParentOfPlaylist()->size());
 
+		player.check_show_plugins();
 
-        library.loadDataFromDb();
-        QString user, password;
+
+		qDebug() << "setup volume";
+		int vol = set->getVolume();
+		player.setVolume(vol);
+		listen->setVolume(vol);
+		listen->load_equalizer();
+
+
+		playlists.ui_loaded();
+		library.loadDataFromDb();
+
+		QString user, password;
         set->getLastFMNameAndPW(user, password);
         lastfm.login_slot (user,password);
 

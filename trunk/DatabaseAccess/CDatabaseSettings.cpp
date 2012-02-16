@@ -23,6 +23,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/globals.h"
 #include <vector>
 #include <QFile>
 #include <QDebug>
@@ -184,6 +185,16 @@ bool CDatabaseConnector::load_settings(){
 	show_library_bool = show_library.toBool();
 	settings->setShowLibrary(show_library_bool);
 
+
+	/* shown plugin */
+	QVariant shown_plugin;
+	int shown_plugin_int = PLUGIN_NONE;
+	load_setting("shown_plugin", shown_plugin);
+	shown_plugin_int = shown_plugin.toInt();
+	if(shown_plugin_int < 0 || shown_plugin_int > PLUGIN_NUM) shown_plugin_int = PLUGIN_NONE;
+	settings->setShownPlugin(shown_plugin_int);
+
+
 	return true;
 }
 
@@ -235,6 +246,9 @@ bool CDatabaseConnector::store_settings(){
 
 	bool show_library = storage->getShowLibrary();
 	store_setting("show_library", show_library);
+
+	int shown_plugin = storage->getShownPlugin();
+	store_setting("shown_plugin", shown_plugin);
 
 	return true;
 }

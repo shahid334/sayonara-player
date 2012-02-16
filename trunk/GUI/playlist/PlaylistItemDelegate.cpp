@@ -55,9 +55,9 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
 
 	_pl_entry = new GUI_PlaylistEntry();
 	_rendered_items = 0;
-	int num = 33;
-	_pl_entry->setMinimumHeight(num);
-	_pl_entry->setMaximumHeight(num);
+
+	_pl_entry->setMinimumHeight(rowHeight());
+	_pl_entry->setMaximumHeight(rowHeight());
 
 
 	_parent = parent;
@@ -139,7 +139,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 				get_fg_color(highlight_val);
 
 
-	int y = rect.topLeft().y() +  _pl_entry->height() -1;
+	int y = rect.topLeft().y() +  _pl_entry->height()-1;
 
 
 
@@ -160,7 +160,7 @@ QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 	Q_UNUSED(option);
 	Q_UNUSED(index);
-	return QSize(600, 33);
+	return QSize(600, rowHeight());
 }
 
 
@@ -191,6 +191,11 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	Q_UNUSED(editor);
 	Q_UNUSED(index);
 	Q_UNUSED(model);
+}
+
+
+int PlaylistItemDelegate::rowHeight(){
+	return 31;
 }
 
 

@@ -94,6 +94,8 @@ public:
 		QString create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data);
 		QString create_signature(const UrlParams& data);
 
+		bool check_login();
+
 
 
 

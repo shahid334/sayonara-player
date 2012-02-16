@@ -138,6 +138,26 @@ QString LastFM::create_sig_url_post(const QString& base_url, const UrlParams& si
 	return url;
 }
 
+
+bool LastFM::check_login(){
+	if(!_logged_in || _session_key.size() != 32){
+
+		QString username, password;
+		CSettingsStorage::getInstance()->getLastFMNameAndPW(username, password);
+
+		if(!username.isEmpty() && !password.isEmpty())
+			login(username, password);
+
+		if(!_logged_in || _session_key.size() != 32){
+			return false;
+		}
+
+		return true;
+	}
+
+	else return true;
+}
+
 void LastFM::login(QString username, QString password){
 
 	_username = username;
@@ -209,8 +229,7 @@ void LastFM::login_slot(QString username, QString password){
 
 void LastFM::update_track(const MetaData& metadata){
 
-	if(!_logged_in || _session_key.size() != 32){
-		qDebug() <<  Q_FUNC_INFO << "Not logged in to LastFM!";
+	if(!check_login()){
 		return;
 	}
 
@@ -242,10 +261,7 @@ void LastFM::update_track(const MetaData& metadata){
 
 void LastFM::scrobble(const MetaData& metadata){
 
-	if(!_logged_in || _session_key.size() != 32){
-		qDebug() << Q_FUNC_INFO <<  "Not logged in to LastFM!";
-		return;
-	}
+	if(!check_login())	return;
 
 	time_t rawtime;
 	time(&rawtime);
@@ -289,7 +305,6 @@ void LastFM::scrobble(const MetaData& metadata){
 
 void LastFM::get_similar_artists(const QString& artistname){
 
-	qDebug() << "start similar artists";
 	_similar_artists_thread->set_artist_name(artistname);
 	_similar_artists_thread->start();
 
@@ -313,8 +328,13 @@ QString LastFM::get_api_key(){
 void LastFM::radio_init(const QString& str, bool artist){
 
 	if(_session_key2.size() != 32){
-		qDebug() << "Not logged in to LastFM";
-		return;
+		if(!check_login()){
+			return;
+		}
+
+		else if(_session_key2.size() != 32){
+			return;
+		}
 	}
 
 	QString lfm_radio_station = QString("lastfm://");
@@ -350,8 +370,13 @@ void LastFM::radio_init(const QString& str, bool artist){
 void LastFM::radio_get_playlist(){
 
 	if(_session_key2.size() != 32){
-		qDebug() << "Not logged in to LastFM";
-		return;
+		if(!check_login()){
+			return;
+		}
+
+		else if(_session_key2.size() != 32){
+			return;
+		}
 	}
 
 	UrlParams data;

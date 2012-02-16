@@ -6,15 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>338</width>
-    <height>133</height>
+    <width>586</width>
+    <height>149</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>319</width>
+    <height>119</height>
+   </size>
   </property>
   <property name="features">
    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetVerticalTitleBar</set>
@@ -470,7 +476,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="5" colspan="4">
+    <item row="0" column="6" colspan="4">
      <widget class="QComboBox" name="combo_presets"/>
     </item>
    </layout>

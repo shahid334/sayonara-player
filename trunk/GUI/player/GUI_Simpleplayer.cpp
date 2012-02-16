@@ -97,6 +97,9 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	/* SIGNALS AND SLOTS */
 	this->setupConnections();
+
+	this->ui->plugin_widget->resize(this->ui->plugin_widget->width(), 0);
+
 }
 
 
@@ -643,167 +646,94 @@ void GUI_SimplePlayer::showLibrary(bool b){
 		this->ui->library_widget->setSizePolicy(p);
 
 		this->resize(this->width() + m_library_width, this->height());
-
 	}
 }
 
+void GUI_SimplePlayer::hideUnneededPlugins(QWidget* wannashow){
+	if(ui_eq != wannashow)
+		this->ui->action_ViewEqualizer->setChecked(false);
+
+	if(ui_radio != wannashow)
+		this->ui->action_ViewRadio->setChecked(false);
+
+	if(ui_playlist_chooser != wannashow)
+		this->ui->action_ViewPlaylistChooser->setChecked(false);
+}
 
 void GUI_SimplePlayer::hideAllPlugins(){
-	showRadio(false);
-	showPlaylistChooser(false);
-	showEqualizer(false);
 
-	this->ui->plugin_widget->hide();
+	if(ui_eq)
+		this->ui_eq->hide();
+
+	if(ui_radio)
+		this->ui_radio->hide();
+
+	if(ui_playlist_chooser)
+		this->ui_playlist_chooser->hide();
+
+	this->ui->plugin_widget->setMinimumHeight(0);
+}
+
+
+void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
+
+	if(!widget) return;
+
+	int old_h = this->ui->plugin_widget->minimumHeight();
+	int h = widget->height();
+
+	QSize pl_size;
+	if(ui_playlist)
+		pl_size = ui_playlist->size();
+	QSize widget_size = widget->size();
+
+	if (v){
+		hideUnneededPlugins(widget);
+		this->ui->plugin_widget->show();
+		widget->show();
+		widget_size.setWidth(this->ui->plugin_widget->width());
+		pl_size.setHeight(pl_size.height() - h + old_h);
+
+		this->ui->plugin_widget->setMinimumHeight(widget->height());
+		widget->resize(widget_size);
+	}
+
+	else{
+		widget->hide();
+		pl_size.setHeight(pl_size.height() + old_h);
+		this->ui->plugin_widget->setMinimumHeight(0);
+
+	}
+
+	if(ui_playlist)
+		ui_playlist->resize(pl_size);
+
 
 }
 
 void GUI_SimplePlayer::showPlaylistChooser(bool vis){
 
-	QRect rect;
-	if (vis){
+	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_PLAYLIST_CHOOSER);
+	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
-		if(!m_isEqHidden || !m_isRadioHidden){
-			ui->action_ViewEqualizer->setChecked(false);
-			ui->action_ViewRadio->setChecked(false);
-		}
-
-		ui_eq->hide();
-		ui_radio->hide();
-
-		rect = ui->playlist_widget->geometry();
-
-		rect.setTop(rect.top() + ui_playlist_chooser->height());
-		rect.setHeight(ui_playlist->height() - ui_playlist_chooser->height());
-		rect.setWidth(ui_playlist->width());
-
-		ui->plugin_widget->setMinimumSize(rect.width(), ui_playlist_chooser->height());
-		ui->plugin_widget->setMaximumSize(rect.width(), ui_playlist_chooser->height());
-		ui_playlist_chooser->setMinimumSize(rect.width(), ui_playlist_chooser->height());
-		ui_playlist_chooser->setMaximumSize(rect.width(), ui_playlist_chooser->height());
-
-		ui_playlist_chooser->setVisible(true);
-		ui->plugin_widget->show();
-		m_isPcHidden = false;
-		m_isEqHidden = true;
-		m_isRadioHidden = true;
-
-	}
-
-	else {
-		rect = ui->playlist_widget->geometry();
-		if(!m_isPcHidden){
-			rect.setTop(rect.top() - ui_playlist_chooser->height());
-			rect.setHeight(ui_playlist->height() + ui_playlist_chooser->height());
-		}
-
-		ui_playlist_chooser->hide();
-		ui->plugin_widget->hide();
-		m_isPcHidden = true;
-	}
-	ui->playlist_widget->setGeometry(rect);
-	ui_playlist->resize(ui->playlist_widget->size());
-
+	showPlugin(ui_playlist_chooser, vis);
 
 }
 
 void GUI_SimplePlayer::showEqualizer(bool vis) {
 
-	QRect rect;
-	if (vis) {
+	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_EQUALIZER);
+	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
-		if(!m_isPcHidden || !m_isRadioHidden){
-			ui->action_ViewPlaylistChooser->setChecked(false);
-			ui->action_ViewRadio->setChecked(false);
-		}
-
-		ui_playlist_chooser->hide();
-		ui_radio->hide();
-
-		rect = ui->playlist_widget->geometry();
-
-		rect.setTop(rect.top() + ui_eq->height());
-		rect.setHeight(ui_playlist->height() - ui_eq->height());
-		rect.setWidth(ui_playlist->width());
-
-		ui->plugin_widget->setMinimumSize(rect.width(), ui_eq->height());
-		ui->plugin_widget->setMaximumSize(rect.width(), ui_eq->height());
-		ui_eq->setMinimumSize(rect.width(), ui_eq->height());
-		ui_eq->setMaximumSize(rect.width(), ui_eq->height());
-
-
-		ui_eq->setVisible(true);
-		ui->plugin_widget->show();
-		m_isEqHidden = false;
-		m_isPcHidden = true;
-		m_isRadioHidden = true;
-	}
-
-
-	else {
-		rect = ui->playlist_widget->geometry();
-		if(!m_isEqHidden){
-			rect.setTop(rect.top() - ui_eq->height());
-			rect.setHeight(ui_playlist->height() + ui_eq->height());
-		}
-
-		ui_eq->hide();
-		ui->plugin_widget->hide();
-
-		m_isEqHidden = true;
-	}
-
-	ui->playlist_widget->setGeometry(rect);
-	ui_playlist->resize(ui->playlist_widget->size());
-
+	showPlugin(ui_eq, vis);
 }
 
 void GUI_SimplePlayer::showRadio(bool vis){
 
-	QRect rect;
-		if (vis) {
+	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_RADIO);
+	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
-			if(!m_isPcHidden || !m_isEqHidden){
-				ui->action_ViewPlaylistChooser->setChecked(false);
-				ui->action_ViewEqualizer->setChecked(false);
-			}
-
-			ui_playlist_chooser->hide();
-			ui_eq->hide();
-
-			rect = ui->playlist_widget->geometry();
-
-			rect.setTop(rect.top() + ui_radio->height());
-			rect.setHeight(ui_playlist->height() - ui_radio->height());
-			rect.setWidth(ui_playlist->width());
-
-			ui->plugin_widget->setMinimumSize(rect.width(), ui_radio->height());
-			ui->plugin_widget->setMaximumSize(rect.width(), ui_radio->height());
-			ui_radio->setMinimumSize(rect.width(), ui_radio->height());
-			ui_radio->setMaximumSize(rect.width(), ui_radio->height());
-
-
-			ui_radio->setVisible(true);
-			ui->plugin_widget->show();
-			m_isRadioHidden = false;
-			m_isPcHidden = true;
-			m_isEqHidden = true;
-		}
-
-
-		else {
-			rect = ui->playlist_widget->geometry();
-			if(!m_isRadioHidden){
-				rect.setTop(rect.top() - ui_radio->height());
-				rect.setHeight(ui_playlist->height() + ui_radio->height());
-			}
-
-			ui_radio->hide();
-			ui->plugin_widget->hide();
-			m_isRadioHidden = true;
-		}
-
-		ui->playlist_widget->setGeometry(rect);
-		ui_playlist->resize(ui->playlist_widget->size());
+	showPlugin(ui_radio, vis);
 }
 
 void GUI_SimplePlayer::close_playlist_chooser(){
@@ -957,28 +887,63 @@ QWidget* GUI_SimplePlayer::getParentOfRadio(){
 }
 
 
+
 void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
 	ui_playlist = playlist;
-
-
+	ui_playlist->resize(this->ui->playlist_widget->size());
 }
 
 void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
-
 	ui_library = library;
+	ui_library->resize(this->ui->library_widget->size());
+}
+
+void GUI_SimplePlayer::check_show_plugins(){
+
+	int shown_plugin = CSettingsStorage::getInstance()->getShownPlugin();
+
+	switch(shown_plugin){
+
+		case PLUGIN_EQUALIZER:
+			ui->action_ViewEqualizer->setChecked(true);
+			showEqualizer(true);
+			break;
+
+		case PLUGIN_RADIO:
+			ui->action_ViewRadio->setChecked(true);
+			showRadio(true);
+			break;
+
+		case PLUGIN_PLAYLIST_CHOOSER:
+			ui->action_ViewPlaylistChooser->setChecked(true);
+			showPlaylistChooser(true);
+			break;
+
+		case PLUGIN_NONE:
+		default:
+			break;
+	}
+
+
 }
 
 
 void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq) {
 	ui_eq = eq;
+	ui_eq->resize(this->ui->plugin_widget->size());
+	//check_show_plugins();
 }
 
 void GUI_SimplePlayer::setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser){
 	ui_playlist_chooser = playlist_chooser;
+	ui_playlist_chooser->resize(this->ui->plugin_widget->size());
+	//check_show_plugins();
 }
 
 void GUI_SimplePlayer::setRadio(GUI_RadioWidget* radio){
 	ui_radio = radio;
+	ui_radio->resize(this->ui->plugin_widget->size());
+	//check_show_plugins();
 }
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
@@ -987,34 +952,12 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
 
-	QWidget* w;
-	bool resize_plugin = false;
-
-	if(!m_isEqHidden && ui_eq){
-		w = ui_eq;
-		resize_plugin = true;
-
-	}
-
-	else if(!m_isPcHidden && ui_playlist_chooser){
-		w = ui_playlist_chooser;
-		resize_plugin = true;
-	}
-
-	else if(!m_isRadioHidden && ui_radio){
-		w = ui_radio;
-		resize_plugin = true;
-	}
-
-	if(resize_plugin){
-
-		ui->plugin_widget->setMaximumSize(ui->line->width(), w->height());
-		ui->plugin_widget->setMinimumSize(ui->line->width(), w->height());
-
-		w->setMaximumSize(ui->line->width(), w->height());
-		w->setMinimumSize(ui->line->width(), w->height());
-	}
-
+	if(!ui_eq->isHidden())
+		ui_eq->resize(this->ui->plugin_widget->size());
+	if(!ui_radio->isHidden())
+		ui_radio->resize(this->ui->plugin_widget->size());
+	if(!ui_playlist_chooser->isHidden())
+		ui_playlist_chooser->resize(this->ui->plugin_widget->size());
 
 	CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }

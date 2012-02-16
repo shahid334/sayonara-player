@@ -30,6 +30,8 @@ GUI_Stream::GUI_Stream() {
 	if(data.size() > 0)
 		psl_radio_stations_received(data);
 
+	this->ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+
 	this->connect(this->ui->btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
 	this->connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
 	this->connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_clicked()));
@@ -37,7 +39,6 @@ GUI_Stream::GUI_Stream() {
 	this->connect(this->ui->combo_stream, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
 
 	this->connect(this->ui->le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
-
 }
 
 

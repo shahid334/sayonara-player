@@ -90,9 +90,6 @@ size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 	return size * nmemb;
 }
 
-
-
-
 bool lfm_wa_call_url(const QString& url, QString& response){
 
 	lfm_wa_free_webpage();
@@ -104,7 +101,7 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2000);
 
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);

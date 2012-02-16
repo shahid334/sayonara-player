@@ -33,7 +33,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "LyricLookup/LyricLookup.h"
-
+#include "GUI/playlist/PlaylistItemDelegate.h"
 
 #include <QMainWindow>
 #include <QWidget>
@@ -117,8 +117,7 @@
 
 			Playlist_Mode			_playlist_mode;
 			QAbstractItemModel* 	_pli_model;
-			QAbstractItemDelegate* 	_pli_delegate;
-			QTextEdit* 				_text;
+			PlaylistItemDelegate* 	_pli_delegate;
 			QAction**				_action_lyric_servers;
 			QMenu*					_menu_lyrics;
 

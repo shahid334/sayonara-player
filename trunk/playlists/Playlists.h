@@ -52,6 +52,8 @@ private:
 	QMap<int, QString> 	_mapping;
 	int					_import_state;
 	bool				check_for_extern_track(const vector<MetaData>& src, vector<MetaData>& tgt);
+
+
 };
 
 #endif /* PLAYLISTS_H_ */

@@ -107,8 +107,11 @@ private:
     bool			m_loadPlaylist;
     Playlist_Mode 	m_playlistmode;
 
-    // style
+    /* style */
     int				m_style;
+
+    /* shown plugin in player */
+    int 			m_shown_plugin;
 
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
@@ -150,6 +153,9 @@ public:
 
 	void setShowLibrary(bool);
 	bool getShowLibrary();
+
+	void setShownPlugin(int);
+	int getShownPlugin();
 
 };
 

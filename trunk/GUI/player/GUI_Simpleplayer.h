@@ -62,6 +62,8 @@ public slots:
     void showEqualizer(bool b=false);
     void showRadio(bool b=false);
     void showPlaylistChooser(bool b=false);
+    void showPlugin(QWidget* widget, bool v);
+    void hideUnneededPlugins(QWidget* wannashow);
 
     /**
       * Set current position in filestream
@@ -217,6 +219,7 @@ private:
     void setupConnections();
 
 
+
 public:
     void setPlaylist(GUI_Playlist* playlist);
     void setLibrary(GUI_Library_windowed* library);
@@ -225,6 +228,7 @@ public:
     void setRadio(GUI_RadioWidget* radio);
 
     void hideAllPlugins();
+    void check_show_plugins();
 
 
     QWidget* getParentOfPlaylist();

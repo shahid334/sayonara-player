@@ -58,7 +58,6 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 
-
 	this->ui->combo_playlistchooser->clear();
 	this->ui->combo_playlistchooser->addItem("<empty>", -1);
 
@@ -67,19 +66,18 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 		QString name = mapping.value(key);
 		this->ui->combo_playlistchooser->addItem(name, key);
 	}
-	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1)
+
+	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx >= 0)
 		this->ui->combo_playlistchooser->setCurrentIndex(_cur_idx);
 
 	connect(this->ui->combo_playlistchooser, SIGNAL(currentIndexChanged(int)), this, SLOT(playlist_selected(int)));
-
-
 }
 
 
 
 void GUI_PlaylistChooser::save_button_pressed(){
 
-	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx == -1) return;
+	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx < 0) return;
 
 	int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
 	if(val >= 0 && _cur_idx > 0 ){
@@ -98,18 +96,21 @@ void GUI_PlaylistChooser::save_button_pressed(){
 			emit sig_save_playlist(val);
 	}
 
-	else save_as_button_pressed();
+	else if(val == -1)
+		save_as_button_pressed();
+
+	else return;
 }
 
 
 
 void GUI_PlaylistChooser::save_as_button_pressed(){
 
-
 	bool ok;
 	QString pl_name = QInputDialog::getText(0, "Please choose a name", "Playlist name", QLineEdit::Normal, "", &ok);
 
-	if(pl_name.size() > 0 && ok) emit sig_save_playlist(pl_name);
+	if(pl_name.size() > 0 && ok)
+		emit sig_save_playlist(pl_name);
 }
 
 
@@ -147,7 +148,7 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 	this->ui->btn_apply->setEnabled(val_bigger_zero);
 
 	if(val_bigger_zero)
-			emit sig_playlist_chosen(val);
+		emit sig_playlist_chosen(val);
 
 	else
 		emit sig_clear_playlist();
@@ -161,11 +162,7 @@ void GUI_PlaylistChooser::apply_button_pressed(){
 
 	if(val >= 0)
 		emit sig_playlist_chosen(val);
-
 }
-
-
-
 
 
 void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){

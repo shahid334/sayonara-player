@@ -94,9 +94,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->ui->listView->setAlternatingRowColors(true);
 	this->ui->listView->setMovement(QListView::Free);
 
-	this->_text = new QTextEdit(this->ui->listView);
-	this->_text->setAcceptRichText(true);
-	this->_text->hide();
+	this->ui->te_lyrics->setAcceptRichText(true);
+	this->ui->te_lyrics->hide();
 
 	this->_lyrics_thread = new LyricLookupThread();
 
@@ -207,8 +206,8 @@ void GUI_Playlist::lyric_button_toggled(bool on){
 	}
 
 	else{
-		_text->hide();
-		this->ui->listView->verticalScrollBar()->show();
+		ui->te_lyrics->hide();
+		ui->listView->show();
 	}
 
 }
@@ -224,22 +223,18 @@ void GUI_Playlist::lyric_thread_finished(){
 	QString lyrics = _lyrics_thread->getFinalLyrics();
 	lyrics = lyrics.trimmed();
 
-	QSize size = this->ui->listView->size();
-	size.setWidth(size.width() + this->ui->listView->verticalScrollBar()->width());
-
-	_text->setAcceptRichText(true);
-	_text->setText(lyrics);
-	_text->setLineWrapColumnOrWidth(this->ui->listView->width() - 10);
-	_text->setLineWrapMode(QTextEdit::FixedPixelWidth);
-	_text->setMinimumSize(size);
-	_text->setMaximumSize(size);
-	_text->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	_text->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	_text->show();
-
-	this->ui->listView->verticalScrollBar()->hide();
+	ui->te_lyrics->setAcceptRichText(true);
+	ui->te_lyrics->setText(lyrics);
+	ui->te_lyrics->setLineWrapColumnOrWidth(this->ui->listView->width() - 10);
+	ui->te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
+	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	ui->te_lyrics->show();
+	ui->listView->hide();
 
 }
+
+
 
 void GUI_Playlist::lyric_thread_terminated(){
 
@@ -311,7 +306,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 	_total_secs = 0;
 	int idx = 0;
 
-	if(_cur_playing_row != cur_play_idx && !_text->isHidden()){
+	if(_cur_playing_row != cur_play_idx && !ui->te_lyrics->isHidden()){
 		_cur_playing_row = cur_play_idx;
 		lyric_button_toggled(true);
 	}
@@ -455,7 +450,7 @@ void GUI_Playlist::track_changed(int new_row){
 	if(new_row < 0) return;
 
 	QModelIndex index = _pli_model->index(new_row, 0);
-	if(_cur_playing_row != new_row && !_text->isHidden()){
+	if(_cur_playing_row != new_row && !ui->te_lyrics->isHidden()){
 		_cur_playing_row = new_row;
 		lyric_button_toggled(true);
 	}
@@ -589,7 +584,7 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	// scroll down
 	else if(y_event >= y_playlist + this->ui->listView->height()-10){
 
-		int num_steps = this->ui->listView->height() / 30;
+		int num_steps = ui->listView->height() / _pli_delegate->rowHeight();
 		QModelIndex idx = _pli_model->index(scrollbar_pos+num_steps, 0);
 
 		if(idx.isValid()) this->ui->listView->scrollTo(idx);

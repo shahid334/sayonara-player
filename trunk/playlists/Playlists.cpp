@@ -33,24 +33,16 @@ void Playlists::load_all_playlists(){
 	if(success){
 		emit sig_all_playlists_loaded(_mapping);
 	}
-
-	else{
-		qDebug() << "playlists could not be fetched";
-	}
 }
 
 void Playlists::load_single_playlist(int id){
 	CustomPlaylist pl;
+
 	QString playlist_name = CDatabaseConnector::getInstance()->getPlaylistNameById(id);
 	bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
 
 	if(success){
-		qDebug() << "Playlist " << playlist_name << " loaded";
 		emit sig_single_playlist_loaded(pl);
-	}
-
-	else{
-		qDebug() << "Could not load playlist " << playlist_name;
 	}
 }
 
