@@ -195,6 +195,14 @@ bool CDatabaseConnector::load_settings(){
 	settings->setShownPlugin(shown_plugin_int);
 
 
+	/* Minimize to tray */
+	QVariant min2tray;
+	bool min2tray_bool = true;
+	load_setting("min_to_tray", min2tray);
+	min2tray_bool = min2tray.toBool();
+	settings->setMinimizeToTray(min2tray_bool);
+
+
 	return true;
 }
 
@@ -249,6 +257,9 @@ bool CDatabaseConnector::store_settings(){
 
 	int shown_plugin = storage->getShownPlugin();
 	store_setting("shown_plugin", shown_plugin);
+
+	bool min2tray = storage->getMinimizeToTray();
+	store_setting("min_to_tray", min2tray);
 
 	return true;
 }

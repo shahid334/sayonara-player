@@ -49,12 +49,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_mute = false;
 	m_radio_active = RADIO_OFF;
 
-	m_minTriggerByTray = false;
-	m_minimized2tray = false;
-
-	m_isEqHidden = true;
-	m_isPcHidden = true;
-	m_isRadioHidden = true;
+	m_min2tray = settings->getMinimizeToTray();
 
 	ui_playlist = 0;
 	ui_playlist_chooser = 0;
@@ -73,6 +68,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	rect.setHeight(size.height());
 	this->setGeometry(rect);
 
+
+	this->ui->action_min2tray->setChecked(m_min2tray);
 
 	bool loadPlaylistChecked = settings->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
@@ -179,6 +176,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(fetch_all_covers_clicked(bool)));
 	connect(this->ui->action_load_playlist, SIGNAL(toggled(bool)), this,
 			SLOT(load_pl_on_startup_toggled(bool)));
+	connect(this->ui->action_min2tray, SIGNAL(toggled(bool)), this,
+			SLOT(min2tray_toggled(bool)));
 
 	// about
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
@@ -754,6 +753,8 @@ void GUI_SimplePlayer::close_radio() {
 
 void GUI_SimplePlayer::changeEvent(QEvent *event) {
 
+	if(!m_min2tray) return;
+
 	if (event->type() == QEvent::WindowStateChange) {
 
 		if (isMinimized())
@@ -809,7 +810,7 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
             this->showNormal();
         if (!this->isActiveWindow())
             this->activateWindow();
-        else {
+        else if(m_min2tray){
             hide();
         }
         break;
@@ -1036,6 +1037,11 @@ void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){
 void GUI_SimplePlayer::show_notification_toggled(bool active){
 
 	CSettingsStorage::getInstance()->setShowNotifications(active);
+}
+
+void GUI_SimplePlayer::min2tray_toggled(bool b){
+	CSettingsStorage::getInstance()->setMinimizeToTray(b);
+	m_min2tray = b;
 }
 
 void GUI_SimplePlayer::set_radio_active(int radio){

@@ -220,3 +220,10 @@ void CSettingsStorage::setShownPlugin(int plugin){
 int CSettingsStorage::getShownPlugin(){
 	return m_shown_plugin;
 }
+
+void CSettingsStorage::setMinimizeToTray(bool b){
+	m_minimize_to_tray = b;
+}
+bool CSettingsStorage::getMinimizeToTray(){
+	return m_minimize_to_tray;
+}

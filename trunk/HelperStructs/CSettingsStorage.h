@@ -113,6 +113,9 @@ private:
     /* shown plugin in player */
     int 			m_shown_plugin;
 
+    /* minimize the player to tray */
+    bool m_minimize_to_tray;
+
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
@@ -156,6 +159,9 @@ public:
 
 	void setShownPlugin(int);
 	int getShownPlugin();
+
+	void setMinimizeToTray(bool);
+	bool getMinimizeToTray();
 
 };
 

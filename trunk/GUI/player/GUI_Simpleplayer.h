@@ -144,6 +144,7 @@ private slots:
     void volumeChangedByTick(int val);
 
     void show_notification_toggled(bool);
+    void min2tray_toggled(bool);
 
 
     void about(bool b=false);
@@ -187,19 +188,12 @@ private:
     QAction*					m_fwdAction;
     QAction*					m_bwdAction;
 
-
-    bool						m_minimized2tray;
-    bool						m_minTriggerByTray;
-
-
     QString						m_skinSuffix;
     QString						m_album;
     QString						m_artist;
     MetaData					m_metadata;
+    bool						m_min2tray;
 
-    bool						m_isEqHidden;
-    bool						m_isPcHidden;
-    bool						m_isRadioHidden;
 
     int							m_radio_active;
 
