@@ -55,7 +55,7 @@ int ReloadThread::getState(){
 
 void ReloadThread::run(){
 
-CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 	vector<MetaData> v_metadata;
 	vector<MetaData> v_to_delete;
@@ -83,14 +83,16 @@ CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	vector<MetaData> v_md;
 	_state = -1;
 
-
 #ifdef OMP_H
 	qDebug() << "OpenMP active";
 #else
 	qDebug() << "OpenMP inactive";
 #endif
 
-
+	/// TODO: commit status every 20-30 tracks
+	// to give user a response what happens
+	// we're in a thread, baby! You can play the
+	// sound nevertheless... Fuck I'm drunk :(
 	for(int i=0; i<fileList.size(); i++){
 
 		qDebug() << fileList.at(i);
@@ -101,7 +103,6 @@ CDatabaseConnector* db = CDatabaseConnector::getInstance();
 		emit reloading_library( (i * 100) / fileList.size() );
 	}
 
-	//db->deleteTracksAlbumsArtists();
 	_v_metadata = v_md;
 }
 

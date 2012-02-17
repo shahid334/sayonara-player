@@ -58,6 +58,7 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 
 	if(!index.isValid()) return;
+	int col = index.column();
 
 		painter->save();
 		painter->translate(0, 0);
@@ -101,6 +102,9 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 		label.setMinimumHeight(25);
 		label.setMinimumWidth(_parent->columnWidth(index.column()));
 		label.resize(_parent->columnWidth(index.column()), 20);
+
+		if(col == 0 || col >= 4)
+			label.setAlignment(Qt::AlignRight);
 
 
 		label.setStyleSheet(style);

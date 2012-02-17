@@ -31,6 +31,7 @@ static gboolean show_position(GstElement* pipeline){
 	GstFormat fmt = GST_FORMAT_TIME;
 	gst_element_query_position(pipeline, &fmt, &pos);
 
+
 	if(obj_ref != NULL && obj_ref->getState() == STATE_PLAY){
 		obj_ref->set_cur_position((quint32)(pos / 1000000000));
 	}

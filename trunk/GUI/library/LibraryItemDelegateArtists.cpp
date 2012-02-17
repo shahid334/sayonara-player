@@ -80,8 +80,8 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		else if(index.column() == 2){
 			QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
 			label.setText(text + " tracks");
-			label.setLayoutDirection(Qt::RightToLeft);
 			label.setContentsMargins(2, 0, 4, 2);
+			label.setAlignment(Qt::AlignRight);
 		}
 
 

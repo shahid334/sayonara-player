@@ -302,17 +302,20 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
 		if (!m_cur_searching)
 			this->ui->songProgress->setValue((int) newSliderVal);
-
-		int min, sec;
-
-		Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
-
-		QString curPosString = Helper::cvtSomething2QString(min, 2)
-		+ QString(':') + Helper::cvtSomething2QString(sec, 2);
-
-		this->ui->curTime->setText(curPosString);
-
 	}
+
+	else{
+		this->ui->maxTime->setText("");
+	}
+
+	int min, sec;
+
+	Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
+
+	QString curPosString = Helper::cvtSomething2QString(min, 2)
+	+ QString(':') + Helper::cvtSomething2QString(sec, 2);
+
+	this->ui->curTime->setText(curPosString);
 }
 
 

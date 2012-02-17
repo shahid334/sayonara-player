@@ -49,9 +49,6 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 
 }
 
-
-
-
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
     QStringList fileList;
@@ -62,10 +59,7 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 }
 
-
-
 void CLibraryBase::importDirectory(QString directory){
-
 
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 	m_src_dir = directory;
