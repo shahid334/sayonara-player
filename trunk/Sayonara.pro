@@ -25,7 +25,10 @@ HEADERS += MP3_Listen/Engine.h \
     GUI/playlist/GUI_Playlist.h \
     GUI/playlist/PlaylistItemModel.h \
     GUI/playlist/PlaylistItemDelegate.h \
+    GUI/playlist/PlaylistItemDelegateSmall.h \
+    GUI/playlist/PlaylistItemDelegateInterface.h \
     GUI/playlist/GUI_PlaylistEntry.h \
+    GUI/playlist/GUI_PlaylistEntrySmall.h \
     GUI/playlist_chooser/GUI_PlaylistChooser.h \
     GUI/LastFM/GUI_LastFM.h \
     GUI/library/GUI_Library_windowed.h \
@@ -77,7 +80,9 @@ SOURCES += Main.cpp \
     GUI/playlist/GUI_Playlist.cpp \
     GUI/playlist/PlaylistItemModel.cpp \
     GUI/playlist/PlaylistItemDelegate.cpp \
+    GUI/playlist/PlaylistItemDelegateSmall.cpp \
     GUI/playlist/GUI_PlaylistEntry.cpp \
+    GUI/playlist/GUI_PlaylistEntrySmall.cpp \
     GUI/playlist_chooser/GUI_PlaylistChooser.cpp \
     GUI/LastFM/GUI_LastFM.cpp \
     GUI/library/GUI_Library_windowed.cpp \
@@ -127,6 +132,7 @@ FORMS += \
     GUI/player/GUI_Simpleplayer.ui \
     GUI/playlist/GUI_Playlist.ui \
     GUI/playlist/GUI_Playlist_Entry.ui \
+    GUI/playlist/GUI_Playlist_EntrySmall.ui \
     GUI/LastFM/GUI_LastFM_Widget.ui \
     GUI/library/GUI_Library_windowed.ui \
     GUI/library/GUI_ImportFolder.ui\

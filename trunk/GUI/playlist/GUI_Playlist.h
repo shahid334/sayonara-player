@@ -33,7 +33,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "LyricLookup/LyricLookup.h"
-#include "GUI/playlist/PlaylistItemDelegate.h"
+#include "GUI/playlist/PlaylistItemDelegateInterface.h"
 
 #include <QMainWindow>
 #include <QWidget>
@@ -87,6 +87,7 @@
 			void last_fm_logged_in(bool);
 			void import_result(bool);
 			void set_radio_active(int radio);
+			void show_small_playlist_items(bool b);
 
 		private slots:
 			void double_clicked(const QModelIndex &);
@@ -111,13 +112,12 @@
 
 		private:
 
-
 			Ui::Playlist_Window* 	ui;
 			QWidget*				_parent;
 
 			Playlist_Mode			_playlist_mode;
 			QAbstractItemModel* 	_pli_model;
-			PlaylistItemDelegate* 	_pli_delegate;
+			PlaylistItemDelegateInterface* 			_pli_delegate;
 			QAction**				_action_lyric_servers;
 			QMenu*					_menu_lyrics;
 
@@ -137,12 +137,7 @@
 			void set_total_time_label();
 			void remove_cur_selected_row();
 			void check_for_library_path();
-
-
-
-
-
-	};
+};
 
 
 

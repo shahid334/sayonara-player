@@ -97,24 +97,19 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 		}
 
 
+		if(col == 0 || col >= 4)
+				label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
 		label.setText(text);
 		label.setContentsMargins(2, 0, 2, 2);
 		label.setMinimumHeight(25);
 		label.setMinimumWidth(_parent->columnWidth(index.column()));
 		label.resize(_parent->columnWidth(index.column()), 20);
-
-		if(col == 0 || col >= 4)
-			label.setAlignment(Qt::AlignRight);
-
-
 		label.setStyleSheet(style);
+
 		label.render(painter, rect.topLeft() );
 
-		if(index.column() == 0 || index.column() > 3)
-			label.setLayoutDirection(Qt::RightToLeft);
-
 		painter->restore();
-
 }
 
 

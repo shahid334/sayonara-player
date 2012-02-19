@@ -40,6 +40,8 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
 #include "GUI/playlist/PlaylistItemDelegate.h"
+#include "GUI/playlist/PlaylistItemDelegateSmall.h"
+#include "GUI/playlist/PlaylistItemDelegateInterface.h"
 #include "GUI/LyricMenuButton/LyricMenuButton.h"
 
 #include <QWidget>
@@ -69,19 +71,23 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	QWidget(parent)
 	 {
 	this->ui = new Ui::Playlist_Window();
-
-
 	ui->setupUi(this);
 	initGUI();
 
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+
 	this->ui->btn_import->setVisible(false);
 
+	bool smallPlaylist = settings->getShowSmallPlaylist();
+
 	_pli_model = new PlaylistItemModel();
-	_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
+
+	show_small_playlist_items(smallPlaylist);
+
 
 	inner_drag_drop = false;
 
-	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
+	_playlist_mode = settings->getPlaylistMode();
 	this->ui->btn_append->setChecked(_playlist_mode.append);
 	this->ui->btn_repAll->setChecked(_playlist_mode.repAll);
 	this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
@@ -136,7 +142,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent) :
 	this->_cur_lyric_server = 0;
 	check_for_library_path();
 
-	int style = CSettingsStorage::getInstance()->getPlayerStyle();
+	int style = settings->getPlayerStyle();
 	bool dark = (style == 1);
 	change_skin(dark);
 
@@ -826,5 +832,20 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 	this->ui->btn_import->setVisible(radio == RADIO_OFF);
+
+}
+
+
+void GUI_Playlist::show_small_playlist_items(bool smallPlaylist){
+
+
+	if(smallPlaylist)
+		_pli_delegate = new PlaylistItemDelegateSmall(this->ui->listView);
+	else
+		_pli_delegate = new PlaylistItemDelegate(this->ui->listView);
+
+
+	this->ui->listView->setItemDelegate(_pli_delegate);
+	this->ui->listView->reset();
 
 }

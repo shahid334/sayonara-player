@@ -202,6 +202,12 @@ bool CDatabaseConnector::load_settings(){
 	min2tray_bool = min2tray.toBool();
 	settings->setMinimizeToTray(min2tray_bool);
 
+	/* small playlist items */
+	QVariant show_small_pl;
+	bool show_small_pl_bool = true;
+	load_setting("small_playlist_items", show_small_pl);
+	show_small_pl_bool = show_small_pl.toBool();
+	settings->setShowSmallPlaylist(show_small_pl_bool);
 
 	return true;
 }
@@ -260,6 +266,9 @@ bool CDatabaseConnector::store_settings(){
 
 	bool min2tray = storage->getMinimizeToTray();
 	store_setting("min_to_tray", min2tray);
+
+	bool small_playlist_items = storage->getShowSmallPlaylist();
+	store_setting("small_playlist_items", small_playlist_items);
 
 	return true;
 }

@@ -77,6 +77,9 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	bool loadShowNotifications = settings->getShowNotification();
 	this->ui->action_notification->setChecked(loadShowNotifications);
 
+	bool showSmallPlaylistItems = settings->getShowSmallPlaylist();
+	this->ui->action_smallPlaylistItems->setChecked(showSmallPlaylistItems);
+
 	QSizePolicy p = this->ui->library_widget->sizePolicy();
 	m_library_stretch_factor = p.horizontalStretch();
 
@@ -166,6 +169,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(changeSkin(bool)));
 	connect(this->ui->action_notification, SIGNAL(toggled(bool)), this,
 			SLOT(show_notification_toggled(bool)));
+	connect(this->ui->action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
+			SLOT(small_playlist_items_toggled(bool)));
 
 	// preferences
 	connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this,
@@ -1045,6 +1050,11 @@ void GUI_SimplePlayer::show_notification_toggled(bool active){
 void GUI_SimplePlayer::min2tray_toggled(bool b){
 	CSettingsStorage::getInstance()->setMinimizeToTray(b);
 	m_min2tray = b;
+}
+
+void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
+	CSettingsStorage::getInstance()->setShowSmallPlaylist(b);
+	emit show_small_playlist_items(b);
 }
 
 void GUI_SimplePlayer::set_radio_active(int radio){

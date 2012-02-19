@@ -116,6 +116,9 @@ private:
     /* minimize the player to tray */
     bool m_minimize_to_tray;
 
+    /* show small icons */
+    bool m_show_small_playlist;
+
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
@@ -162,6 +165,9 @@ public:
 
 	void setMinimizeToTray(bool);
 	bool getMinimizeToTray();
+
+	bool getShowSmallPlaylist();
+	void setShowSmallPlaylist(bool);
 
 };
 

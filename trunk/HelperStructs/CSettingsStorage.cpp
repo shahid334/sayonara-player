@@ -227,3 +227,13 @@ void CSettingsStorage::setMinimizeToTray(bool b){
 bool CSettingsStorage::getMinimizeToTray(){
 	return m_minimize_to_tray;
 }
+
+bool CSettingsStorage::getShowSmallPlaylist(){
+	return m_show_small_playlist;
+}
+
+void CSettingsStorage::setShowSmallPlaylist(bool b){
+	m_show_small_playlist = b;
+}
+
+

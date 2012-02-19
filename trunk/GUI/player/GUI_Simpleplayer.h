@@ -106,6 +106,7 @@ signals:
     void libpath_changed(QString);
     void fetch_all_covers();
     void show_playlists();
+    void show_small_playlist_items(bool);
 
 
 
@@ -145,6 +146,7 @@ private slots:
 
     void show_notification_toggled(bool);
     void min2tray_toggled(bool);
+    void small_playlist_items_toggled(bool);
 
 
     void about(bool b=false);

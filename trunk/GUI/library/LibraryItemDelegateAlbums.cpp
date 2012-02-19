@@ -85,7 +85,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) text = "Unknown";
 
 		label.setText(text);
-		label.setAlignment(Qt::AlignRight);
+		label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 		label.setContentsMargins(2, 0, 4, 2);
 	}
 

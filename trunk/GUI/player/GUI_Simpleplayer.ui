@@ -764,7 +764,7 @@
            <x>0</x>
            <y>0</y>
            <width>318</width>
-           <height>404</height>
+           <height>409</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -792,7 +792,7 @@
       <property name="minimumSize">
        <size>
         <width>320</width>
-        <height>8</height>
+        <height>3</height>
        </size>
       </property>
       <property name="orientation">
@@ -830,6 +830,7 @@
      <string>View</string>
     </property>
     <addaction name="action_viewLibrary"/>
+    <addaction name="action_smallPlaylistItems"/>
     <addaction name="separator"/>
     <addaction name="action_ViewEqualizer"/>
     <addaction name="action_ViewPlaylistChooser"/>
@@ -1000,6 +1001,14 @@
    </property>
    <property name="text">
     <string>Minimize to tray</string>
+   </property>
+  </action>
+  <action name="action_smallPlaylistItems">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Small Playlist Items</string>
    </property>
   </action>
  </widget>

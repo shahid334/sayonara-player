@@ -159,6 +159,7 @@ int main(int argc, char *argv[]){
 		CONNECT (&player, sig_stream_selected(const QString&, const QString&), 	&playlist, psl_play_stream(const QString&, const QString&));
 		CONNECT (&player, show_playlists(),					&ui_playlist_chooser, show());
         CONNECT (&player, skinChanged(bool), 				&ui_playlist, 	change_skin(bool));
+        CONNECT (&player, show_small_playlist_items(bool), &ui_playlist,	show_small_playlist_items(bool));
 
 
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		cover, 			search_cover(const MetaData&));

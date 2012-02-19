@@ -1,4 +1,4 @@
-/* PlaylistItemDelegate.cpp */
+/* PlaylistItemDelegateSmall.cpp */
 
 /* Copyright (C) 2011  Lucio Carreras
  *
@@ -28,8 +28,8 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
-#include "GUI/playlist/PlaylistItemDelegate.h"
-#include "GUI/playlist/GUI_PlaylistEntry.h"
+#include "GUI/playlist/PlaylistItemDelegateSmall.h"
+#include "GUI/playlist/GUI_PlaylistEntrySmall.h"
 
 
 #include <QtGui>
@@ -49,29 +49,30 @@ static QString get_fg_color(int val_bg){
 		return QString(" color: #D8D8D8 ");
 }
 
-PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
+PlaylistItemDelegateSmall::PlaylistItemDelegateSmall(QListView *parent ) {
 	// TODO Auto-generated constructor stub
 	//_label_to_Render = new QLabel(parent);
 
-	_pl_entry = new GUI_PlaylistEntry();
+	_pl_entry = new GUI_PlaylistEntrySmall();
 	_rendered_items = 0;
 
 	_pl_entry->setMinimumHeight(rowHeight());
 	_pl_entry->setMaximumHeight(rowHeight());
+
 
 	_parent = parent;
 
 
 }
 
-PlaylistItemDelegate::~PlaylistItemDelegate() {
+PlaylistItemDelegateSmall::~PlaylistItemDelegateSmall() {
 }
 
 
 
 
 //! [0]
-void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
 
@@ -153,7 +154,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 }
 
 
-QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
+QSize PlaylistItemDelegateSmall::sizeHint(const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {
 
@@ -164,7 +165,7 @@ QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 
 
-QWidget *PlaylistItemDelegate::createEditor(QWidget *parent,
+QWidget *PlaylistItemDelegateSmall::createEditor(QWidget *parent,
                                     const QStyleOptionViewItem &option,
                                     const QModelIndex &index) const
 
@@ -177,14 +178,14 @@ QWidget *PlaylistItemDelegate::createEditor(QWidget *parent,
 }
 
 
-void PlaylistItemDelegate::setEditorData(QWidget *editor,
+void PlaylistItemDelegateSmall::setEditorData(QWidget *editor,
                                  const QModelIndex &index) const
 {
 	Q_UNUSED(editor);
 	Q_UNUSED(index);
 }
 
-void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+void PlaylistItemDelegateSmall::setModelData(QWidget *editor, QAbstractItemModel *model,
                                 const QModelIndex &index) const
 {
 	Q_UNUSED(editor);
@@ -193,8 +194,8 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 }
 
 
-int PlaylistItemDelegate::rowHeight(){
-	return 31;
+int PlaylistItemDelegateSmall::rowHeight(){
+	return 20;
 }
 
 
