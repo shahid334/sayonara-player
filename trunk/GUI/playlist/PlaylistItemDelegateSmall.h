@@ -59,7 +59,9 @@ public:
 	    virtual void setModelData(QWidget *editor, QAbstractItemModel *model,
 	   	                      const QModelIndex &index) const;
 
-	    static int rowHeight();
+
+
+
 
 	protected:
 

@@ -34,10 +34,11 @@ public:
 	    virtual void setModelData(QWidget *editor, QAbstractItemModel *model,
 	   	                      const QModelIndex &index) const = 0;
 
-	    static int rowHeight() { return 0; }
+	    int rowHeight(){return _row_height;}
 
 	protected:
 	    int					_rendered_items;
+	    int					_row_height;
 	    QListView*			_parent;
 
 };

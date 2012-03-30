@@ -560,8 +560,6 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 		event->acceptProposedAction();
 }
 
-
-
 // we move the title
 // scroll, if neccessary
 // paint line
@@ -589,7 +587,6 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 
 	// scroll down
 	else if(y_event >= y_playlist + this->ui->listView->height()-10){
-
 		int num_steps = ui->listView->height() / _pli_delegate->rowHeight();
 		QModelIndex idx = _pli_model->index(scrollbar_pos+num_steps, 0);
 
@@ -628,7 +625,6 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	_pli_model->setData(cur_idx, (const QVariant&) list, Qt::EditRole);
 
 }
-
 
 // finally drop it
 void GUI_Playlist::dropEvent(QDropEvent* event){

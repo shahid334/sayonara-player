@@ -60,11 +60,13 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
 	_pl_entry->setMaximumHeight(rowHeight());
 
 	_parent = parent;
+	_row_height = 31;
 
 
 }
 
 PlaylistItemDelegate::~PlaylistItemDelegate() {
+	_row_height = 31;
 }
 
 
@@ -100,8 +102,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
 						this->_parent->verticalScrollBar()->width() + 4 : 4;
 
-	_pl_entry->setMinimumWidth(_parent->width()-offset);
-	_pl_entry->setMaximumWidth(_parent->width()-offset);
+	_pl_entry->resize(_parent->width() - offset, _row_height);
 
 	QString style;
 	QString col_fg;
@@ -159,7 +160,7 @@ QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 	Q_UNUSED(option);
 	Q_UNUSED(index);
-	return QSize(600, rowHeight());
+	return QSize(600, _row_height);
 }
 
 
@@ -192,9 +193,5 @@ void PlaylistItemDelegate::setModelData(QWidget *editor, QAbstractItemModel *mod
 	Q_UNUSED(model);
 }
 
-
-int PlaylistItemDelegate::rowHeight(){
-	return 31;
-}
 
 

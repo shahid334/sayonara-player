@@ -201,14 +201,11 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 		emit sig_selected_file_changed(0);
 		emit sig_selected_file_changed_md(_v_meta_data[0]);
 	}
-
-
 }
 
 void Playlist::psl_createPlaylist(CustomPlaylist& pl, int radio){
 	psl_createPlaylist(pl.tracks, radio);
 }
-
 
 
 
