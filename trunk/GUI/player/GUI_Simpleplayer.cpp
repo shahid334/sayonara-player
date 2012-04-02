@@ -833,6 +833,7 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 	e->accept();
+	qDebug() << "Key = " << e->key();
 
 	switch (e->key()) {
 
@@ -868,6 +869,12 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
 		case (Qt::Key_L):
 			this->ui->action_viewLibrary->setChecked(!this->ui->action_viewLibrary->isChecked());
+			break;
+
+		case (Qt::Key_F11):
+			if(!this->isFullScreen())
+				this->showFullScreen();
+			else this->showNormal();
 			break;
 
 		default:

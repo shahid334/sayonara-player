@@ -56,11 +56,12 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
 	_pl_entry = new GUI_PlaylistEntry();
 	_rendered_items = 0;
 
-	_pl_entry->setMinimumHeight(rowHeight());
-	_pl_entry->setMaximumHeight(rowHeight());
-
 	_parent = parent;
 	_row_height = 31;
+
+	_pl_entry->setMinimumHeight(_row_height);
+	_pl_entry->setMaximumHeight(_row_height);
+
 
 
 }

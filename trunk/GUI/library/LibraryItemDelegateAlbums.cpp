@@ -62,9 +62,17 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	painter->save();
 	painter->translate(0, 0);
 
-	if(index.column() == 0){
 
-		label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+
+	if(index.column() == 0){
+		QString icon_path = Helper::getIconPath() + "play_small.png";
+		bool is_sampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
+
+		if(is_sampler){
+			icon_path = Helper::getIconPath() + "append_small.png";
+		}
+
+		label.setPixmap(QPixmap(icon_path));
 		label.setContentsMargins(2, 0, 2, 2);
 	}
 

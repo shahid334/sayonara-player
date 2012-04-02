@@ -56,18 +56,14 @@ PlaylistItemDelegateSmall::PlaylistItemDelegateSmall(QListView *parent ) {
 	_pl_entry = new GUI_PlaylistEntrySmall();
 	_rendered_items = 0;
 
-	_pl_entry->setMinimumHeight(rowHeight());
-	_pl_entry->setMaximumHeight(rowHeight());
-
-
 	_parent = parent;
 	_row_height = 20;
 
-
+	_pl_entry->setMinimumHeight(_row_height);
+	_pl_entry->setMaximumHeight(_row_height);
 }
 
 PlaylistItemDelegateSmall::~PlaylistItemDelegateSmall() {
-	_row_height = 20;
 }
 
 
@@ -105,10 +101,8 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	_pl_entry->resize(_parent->width()-offset, _row_height);
 
-
 	QString style;
 	QString col_fg;
-
 
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 

@@ -146,6 +146,7 @@ FORMS += \
    
 additional_files.path = /usr/share/sayonara
 additional_files.files += GUI/icons/append.png
+additional_files.files += GUI/icons/append_small.png
 additional_files.files += GUI/icons/broom.png
 additional_files.files += GUI/icons/bwd.png
 additional_files.files += GUI/icons/close.png

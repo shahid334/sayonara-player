@@ -60,6 +60,7 @@
 #include <QTextEdit>
 #include <QAction>
 #include <QMenu>
+#include <QUrl>
 
 class QPaintEngine;
 class QPaintDevice;
@@ -660,7 +661,19 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 
 
+
 	QString text = event->mimeData()->text();
+	const QMimeData* d = event->mimeData();
+
+	if( text.size() == 0 && d->hasUrls() ){
+
+		foreach(QUrl url, d->urls()){
+			text += (url.toString());
+			text += ("");
+		}
+	}
+
+	if(text.size() == 0) return;
 
 	if(text.startsWith("file://")){
 
