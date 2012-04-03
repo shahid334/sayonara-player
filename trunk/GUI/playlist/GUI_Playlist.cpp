@@ -660,8 +660,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	}
 
 
-
-
+	///TODO: UGLY UGLY UGLY
 	QString text = event->mimeData()->text();
 	const QMimeData* d = event->mimeData();
 
@@ -669,11 +668,9 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 		foreach(QUrl url, d->urls()){
 			text += (url.toString());
-			text += ("");
+			text += ("\n");
 		}
 	}
-
-	if(text.size() == 0) return;
 
 	if(text.startsWith("file://")){
 
@@ -683,17 +680,12 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		if(pathlist.size() > 1) pathlist.removeLast();
 
 		for(int i=0; i<pathlist.size(); i++){
+			qDebug() << "Path: " << pathlist.at(i) << ", " << pathlist.at(i).length();
 			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
 			path = path.replace("%20", " ");
-			if(QFile::exists(path)){
 
-				if(path.endsWith(".mp3") ||
-						path.endsWith(".ogg") ||
-						path.endsWith(".wav") ||
-						path.endsWith(".flac") ||
-						path.endsWith(".m4u") ||
-						path.endsWith(".wma") ||
-						path.endsWith(".aac"))
+			if(QFile::exists(path)){
+				if(Helper::is_soundfile(path))
 					file_paths.push_back(path);
 
 				else if(path.at(path.length()-4) != '.'){ // directory
@@ -707,7 +699,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		if(file_paths.size() > 0){
 			vector<MetaData> v_metadata;
 			for(int i=0; i<file_paths.size(); i++){
-				v_metadata.push_back(ID3::getMetaDataOfFile(file_paths[i]));
+				v_metadata.push_back( ID3::getMetaDataOfFile(file_paths[i]) );
 			}
 
 			if(_radio_active == RADIO_OFF)

@@ -278,10 +278,9 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
-
-	for(int i=0; i<row; i++)
+	for(int i=0; i<row; i++){
 		new_vec.push_back(_v_meta_data.at(i));
-
+	}
 
 	for(uint i=0; i<v_metadata.size(); i++){
 		MetaData md = v_metadata.at(i);
@@ -301,6 +300,7 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	_v_meta_data.clear();
 	_v_meta_data = new_vec;
+
 
 	psl_save_playlist_to_storage();
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
