@@ -237,6 +237,7 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
 
 	if(_radio_active != RADIO_OFF){
 		psl_stop();
+		row = 0;
 	}
 
 	CDirectoryReader reader;
@@ -249,6 +250,7 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
     vector<MetaData> vec_md;
     foreach(QString filepath, fileList){
     	MetaData md = ID3::getMetaDataOfFile(filepath);
+
     	if(db->getTrackByPath(filepath) <= 0){
 
     		md.is_extern = true;
@@ -278,10 +280,12 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
+	qDebug() << "loop 1";
 	for(int i=0; i<row; i++){
 		new_vec.push_back(_v_meta_data.at(i));
 	}
 
+	qDebug() << "loop 2";
 	for(uint i=0; i<v_metadata.size(); i++){
 		MetaData md = v_metadata.at(i);
 		if(db->getTrackByPath(md.filepath) > 0){
