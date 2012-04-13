@@ -40,15 +40,10 @@
 
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
 	this->_parent = parent;
-
-
 }
 
 LibraryItemDelegateAlbums::~LibraryItemDelegateAlbums() {
-	// TODO Auto-generated destructor stub
 }
-
-
 
 
 void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
@@ -62,14 +57,12 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	painter->save();
 	painter->translate(0, 0);
 
-
-
 	if(index.column() == 0){
 		QString icon_path = Helper::getIconPath() + "play_small.png";
 		bool is_sampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
 
 		if(is_sampler){
-			icon_path = Helper::getIconPath() + "append_small.png";
+			icon_path = Helper::getIconPath() + "fwd_orange.png";
 		}
 
 		label.setPixmap(QPixmap(icon_path));
@@ -137,22 +130,13 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 }
 
 
-
-
-
 QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-
-
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
 	return QSize(1,20);
-
-
 }
-
-
 
 
 void LibraryItemDelegateAlbums::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex & index) const
@@ -169,8 +153,6 @@ QWidget *LibraryItemDelegateAlbums::createEditor(QWidget *parent, const QStyleOp
 	Q_UNUSED(index);
 	return 0;
 }
-
-
 
 
 void LibraryItemDelegateAlbums::setEditorData(QWidget *editor, const QModelIndex & index) const

@@ -272,6 +272,7 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 	if(_radio_active != RADIO_OFF){
 		switched_from_radio = true;
 		psl_stop();
+		row = 0;
 	}
 
 	vector<MetaData> new_vec;

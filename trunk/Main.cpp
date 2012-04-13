@@ -262,7 +262,7 @@ int main(int argc, char *argv[]){
 		playlist.ui_loaded();
 
 		qDebug() << "setup player";
-		player.setWindowTitle("Sayonara (0.1)");
+		player.setWindowTitle("Sayonara (0.2)");
 
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);

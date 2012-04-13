@@ -195,16 +195,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.04"
-     inkscape:cx="-2229.3774"
+     inkscape:zoom="0.088388348"
+     inkscape:cx="-4185.6274"
      inkscape:cy="-2237.6069"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1680"
-     inkscape:window-height="975"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-height="966"
+     inkscape:window-x="1680"
+     inkscape:window-y="31"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true" />
@@ -1159,7 +1159,7 @@
        inkscape:export-xdpi="1.9782559"
        inkscape:export-ydpi="1.9782559" />
     <path
-       style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:66.01241302;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:66.012;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
        d="m -1779.605,2137.0297 c 0,-79.9351 0.515,-145.1422 1.1443,-144.9045 3.8478,1.4535 264.9052,144.5181 264.9278,145.1856 0.029,0.8601 -263.551,145.0558 -265.1522,145.0558 -0.5059,0 -0.9199,-65.4016 -0.9199,-145.3369 z"
        id="path3999-7-8-7"
        inkscape:connector-curvature="0"
@@ -1697,5 +1697,79 @@
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90"
        ry="1.8902935" />
+    <g
+       id="g4008">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/fwd.png"
+         transform="matrix(0.84905665,0,0,0.84905665,-2740.388,1924.3975)"
+         d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+         sodipodi:ry="374.7666"
+         sodipodi:rx="374.7666"
+         sodipodi:cy="227.06755"
+         sodipodi:cx="-932.37079"
+         id="path4766-9-6"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+         sodipodi:type="arc" />
+      <g
+         style="fill:#f3841a;fill-opacity:1;stroke:#f3841a;stroke-opacity:1"
+         transform="translate(-358.62228,550.22678)"
+         id="g3326-5">
+        <path
+           style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:52.86169434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+           d="m -3181.2454,1576.4788 c 0,-64.8193 0.4072,-117.6955 0.9048,-117.5027 3.043,1.1786 209.49,117.1892 209.5079,117.7306 0.023,0.6974 -208.4191,117.6253 -209.6853,117.6253 -0.4001,0 -0.7274,-53.034 -0.7274,-117.8532 z"
+           id="path3999-7-9-6"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/fwd.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:52.86169434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+           d="m -3316.161,1574.6265 c 0,-64.8193 0.4072,-117.6955 0.9048,-117.5027 3.043,1.1786 209.49,117.1892 209.5079,117.7306 0.023,0.6974 -208.4191,117.6253 -209.6853,117.6253 -0.4001,0 -0.7274,-53.034 -0.7274,-117.8532 z"
+           id="path3999-7-9-7-9"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/fwd.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+    </g>
+    <g
+       id="g4014">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/bwd.png"
+         transform="matrix(-0.84905665,0,0,0.84905665,-3499.3748,1924.3976)"
+         d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+         sodipodi:ry="374.7666"
+         sodipodi:rx="374.7666"
+         sodipodi:cy="227.06755"
+         sodipodi:cx="-932.37079"
+         id="path4766-9-3-7"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+         sodipodi:type="arc" />
+      <g
+         style="fill:#f3841a;fill-opacity:1;stroke:#f3841a;stroke-opacity:1"
+         transform="translate(-358.62228,550.22688)"
+         id="g3330-4">
+        <path
+           style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:52.86169434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+           d="m -2341.2728,1576.4788 c 0,-64.8193 -0.4072,-117.6955 -0.9048,-117.5027 -3.043,1.1786 -209.49,117.1892 -209.5079,117.7306 -0.023,0.6974 208.4191,117.6253 209.6853,117.6253 0.4001,0 0.7274,-53.034 0.7274,-117.8532 z"
+           id="path3999-7-9-79-5"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/bwd.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:52.86169434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+           d="m -2206.3572,1574.6265 c 0,-64.8193 -0.4072,-117.6955 -0.9048,-117.5027 -3.043,1.1786 -209.49,117.1892 -209.5079,117.7306 -0.023,0.6974 208.4191,117.6253 209.6853,117.6253 0.4001,0 0.7274,-53.034 0.7274,-117.8532 z"
+           id="path3999-7-9-7-8-2"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/bwd.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+    </g>
   </g>
 </svg>
