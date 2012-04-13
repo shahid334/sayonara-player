@@ -61,11 +61,26 @@
 using namespace std;
 
 Phonon_Engine::Phonon_Engine() {
-
 	_state = STATE_STOP;
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+
+	_name = "Phonon Backend";
+	_audio_output = 0;
+	_media_object = 0;
+}
+
+Phonon_Engine::~Phonon_Engine() {
+	if(_audio_output)
+			delete _audio_output;
+	if(_media_object)
+		delete _media_object;
+}
+
+void Phonon_Engine::init(){
+
+
 
 	qDebug() << "   1/4 phonon init output";
 	_audio_output = new Phonon::AudioOutput(Phonon::VideoCategory, this);
@@ -97,11 +112,6 @@ Phonon_Engine::Phonon_Engine() {
 	connect(_media_object, SIGNAL(currentSourceChanged(const Phonon::MediaSource&)),
 		this, SLOT(currentSourceChanged(const Phonon::MediaSource)));*/
 
-}
-
-Phonon_Engine::~Phonon_Engine() {
-	delete _audio_output;
-	delete _media_object;
 }
 
 void Phonon_Engine::play() {
@@ -292,7 +302,7 @@ void Phonon_Engine::load_equalizer() {
 
 		_audio_path.insertEffect(_eq);
 
-		CSettingsStorage * settings = CSettingsStorage::getInstance();
+		CSettingsStorage* settings = CSettingsStorage::getInstance();
 		vector<EQ_Setting> vec;
 		settings->getEqualizerSettings(vec);
 
@@ -408,3 +418,13 @@ void Phonon_Engine::currentSourceChanged(const Phonon::MediaSource& source){
 void Phonon_Engine::metaDataChanged(){
 
 }
+
+int Phonon_Engine::getState(){
+	return _state;
+}
+
+QString Phonon_Engine::getName(){
+	return _name;
+}
+
+Q_EXPORT_PLUGIN2(sayonara_phonon, Phonon_Engine);

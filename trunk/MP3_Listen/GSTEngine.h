@@ -29,24 +29,22 @@
 #include <QObject>
 #include <QDebug>
 
-
 #include <vector>
 
 using namespace std;
 
-
-
-
-
 class GST_Engine : public Engine {
 
 	Q_OBJECT
+	Q_INTERFACES(Engine)
 
 
 public:
 
 	GST_Engine();
 	virtual ~GST_Engine();
+
+	virtual void init();
 
 
 private:
@@ -80,6 +78,8 @@ public:
 	void		set_track_finished();
 
 	virtual void 	load_equalizer();
+	virtual int		getState();
+	virtual QString	getName();
 
 
 

@@ -209,6 +209,12 @@ bool CDatabaseConnector::load_settings(){
 	show_small_pl_bool = show_small_pl.toBool();
 	settings->setShowSmallPlaylist(show_small_pl_bool);
 
+	QVariant sound_engine;
+	QString sound_engine_str = "";
+	load_setting("sound_engine", sound_engine);
+	sound_engine_str = sound_engine.toString();
+	settings->setSoundEngine(sound_engine_str);
+
 	return true;
 }
 
@@ -269,6 +275,9 @@ bool CDatabaseConnector::store_settings(){
 
 	bool small_playlist_items = storage->getShowSmallPlaylist();
 	store_setting("small_playlist_items", small_playlist_items);
+
+	QString sound_engine = storage->getSoundEngine();
+	store_setting("sound_engine", sound_engine);
 
 	return true;
 }

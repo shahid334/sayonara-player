@@ -65,12 +65,13 @@
 class Phonon_Engine : public Engine{
 
 	Q_OBJECT
-
+	Q_INTERFACES(Engine)
 
 public:
 
 	Phonon_Engine();
 	virtual ~Phonon_Engine();
+	virtual void init();
 
 private:
 
@@ -109,7 +110,10 @@ private:
 
 	public:
 		virtual void 		load_equalizer();
+		virtual int			getState();
 		qreal 				getVolume();
+		virtual QString		getName();
+
 
 
 };

@@ -29,6 +29,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/radio/GUI_RadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "MP3_Listen/Engine.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -107,6 +108,7 @@ signals:
     void fetch_all_covers();
     void show_playlists();
     void show_small_playlist_items(bool);
+    void sig_sound_engine_changed(QString&);
 
 
 
@@ -148,6 +150,9 @@ private slots:
     void min2tray_toggled(bool);
     void small_playlist_items_toggled(bool);
 
+    void sound_engine_phonon_clicked();
+    void sound_engine_gst_clicked();
+    void populate_engines(const QList<Engine*>& lists, int active);
 
     void about(bool b=false);
 

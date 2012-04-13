@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
+#include <Qt/qplugin.h>
 
 using namespace std;
 
@@ -77,12 +78,34 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 GST_Engine::GST_Engine(){
 
-	gst_init(0, 0);
+
+	_name = "GStreamer Backend";
 	_state = STATE_STOP;
 
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+
+	_bus = 0;
+	_pipeline = 0;
+}
+
+GST_Engine::~GST_Engine() {
+
+	if(_bus)
+		gst_object_unref(_bus);
+
+	if(_pipeline){
+		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+		gst_object_unref (GST_OBJECT (_pipeline));
+	}
+	obj_ref = 0;
+}
+
+
+void GST_Engine::init(){
+
+	gst_init(0, 0);
 
 	_pipeline = gst_element_factory_make("playbin2", "player");
 
@@ -139,15 +162,6 @@ GST_Engine::GST_Engine(){
 	}
 
 }
-
-GST_Engine::~GST_Engine() {
-	gst_object_unref(_bus);
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-	gst_object_unref (GST_OBJECT (_pipeline));
-	obj_ref = 0;
-}
-
-
 
 void GST_Engine::play(){
 
@@ -298,3 +312,12 @@ void GST_Engine::set_track_finished(){
 	emit track_finished();
 }
 
+int GST_Engine::getState(){
+	return _state;
+}
+
+QString GST_Engine::getName(){
+	return _name;
+}
+
+Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

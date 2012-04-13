@@ -7,20 +7,19 @@ QT += xml
 QT += sql
 TEMPLATE = app
 TARGET = sayonara
-CONFIG += link_pkgconfig
-PKGCONFIG += gstreamer-0.10
-
-
 
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
-INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup /usr/include/gstreamer-0.10
-LIBS += -L/usr/lib -lphonon -lcurl -ltag -fopenmp `pkg-config --cflags --libs gstreamer-0.10`
+INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup 
+CONFIG          += link_pkgconfig
+PKGCONFIG       += gstreamer-0.10
+LIBS            += -L/usr/lib `pkg-config --cflags --libs gstreamer-0.10`
+LIBS 		+= -L. -L/usr/lib -lphonon -lcurl -ltag -fopenmp -lsayonara_gstreamer
+
 
 
 # Input
 HEADERS += MP3_Listen/Engine.h \
-	MP3_Listen/PhononEngine.h \
-	MP3_Listen/GSTEngine.h \
+	MP3_Listen/SoundPluginLoader.h \
 	GUI/player/GUI_Simpleplayer.h \ 
     GUI/playlist/GUI_Playlist.h \
     GUI/playlist/PlaylistItemModel.h \
@@ -74,9 +73,8 @@ HEADERS += MP3_Listen/Engine.h \
     
 
 SOURCES += Main.cpp \
-	MP3_Listen/PhononEngine.cpp \
-	MP3_Listen/GSTEngine.cpp \
-    GUI/player/GUI_Simpleplayer.cpp \
+	MP3_Listen/SoundPluginLoader.cpp \
+	GUI/player/GUI_Simpleplayer.cpp \
     GUI/playlist/GUI_Playlist.cpp \
     GUI/playlist/PlaylistItemModel.cpp \
     GUI/playlist/PlaylistItemDelegate.cpp \

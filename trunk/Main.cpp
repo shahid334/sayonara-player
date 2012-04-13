@@ -30,8 +30,6 @@
 
 #define CONNECT(a,b,c,d) app.connect(a, SIGNAL(b), c, SLOT(d))
 
-
-//#include <lastfm.h>
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
@@ -40,10 +38,10 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/radio/GUI_RadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "playlist/Playlist.h"
 #include "MP3_Listen/Engine.h"
-#include "MP3_Listen/PhononEngine.h"
-#include "MP3_Listen/GSTEngine.h"
+#include "MP3_Listen/SoundPluginLoader.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
 #include "LastFM/LastFM.h"
@@ -54,12 +52,11 @@
 #include "HelperStructs/globals.h"
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
-#include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-
 
 #include <QtGui>
 #include <QtCore>
 #include <QPointer>
+
 #include <QApplication>
 #include <QFile>
 #include <QDir>
@@ -69,39 +66,20 @@
 #include <vector>
 #include <iostream>
 
-
 using namespace std;
+
 
 void printHelp(){
 	qDebug() << "sayonara [-g]";
 	qDebug() << "-g\tuse gstreamer instead of phonon";
 }
 
-int main(int argc, char *argv[]){
 
-		bool use_gstreamer = true;
+int main(int argc, char *argv[]){
 
 		if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
 			QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 		}
-
-		for(int i=0; i<argc; i++){
-			if(i == 0) continue;
-
-			QString strArg = QString(argv[i]);
-
-			if( !strArg.compare("--help") )
-				printHelp();
-
-			else if( !strArg.compare("-p") )
-				use_gstreamer = false;
-
-			else
-				printHelp();
-		}
-
-
-		qDebug() << "Use gstreamer? " << use_gstreamer;
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
 		set  -> runFirstTime(false);
@@ -132,15 +110,14 @@ int main(int argc, char *argv[]){
         GUI_TagEdit				ui_tagedit;
         GUI_RadioWidget			ui_radio(player.getParentOfRadio());
 
-        Engine* listen = 0;
-        if(use_gstreamer)
-        	listen = new GST_Engine();
+        SoundPluginLoader 		plugin_loader(app.applicationDirPath());
 
-        else
-        	listen = new Phonon_Engine();
-
-
-        qDebug() << "connections";
+        Engine* listen = plugin_loader.get_cur_engine();
+        if(!listen){
+        	qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
+        	return -1;
+        }
+		listen->init();
 
         CONNECT (&player, pause(), 							listen, 		pause());
         CONNECT (&player, search(int),						listen,			jump(int));
@@ -160,6 +137,7 @@ int main(int argc, char *argv[]){
 		CONNECT (&player, show_playlists(),					&ui_playlist_chooser, show());
         CONNECT (&player, skinChanged(bool), 				&ui_playlist, 	change_skin(bool));
         CONNECT (&player, show_small_playlist_items(bool), &ui_playlist,	show_small_playlist_items(bool));
+        CONNECT (&player, sig_sound_engine_changed(QString&), &plugin_loader, psl_switch_engine(QString&));
 
 
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		cover, 			search_cover(const MetaData&));
@@ -262,7 +240,7 @@ int main(int argc, char *argv[]){
 		playlist.ui_loaded();
 
 		qDebug() << "setup player";
-		player.setWindowTitle("Sayonara (0.2)");
+		player.setWindowTitle("Sayonara (0.1)");
 
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
@@ -292,10 +270,10 @@ int main(int argc, char *argv[]){
 		QString user, password;
         set->getLastFMNameAndPW(user, password);
         lastfm.login_slot (user,password);
-
+	qDebug() << "init equalizer";
         vector<EQ_Setting> eq_settings;
         set->getEqualizerSettings(eq_settings);
-
+	qDebug() << "Initialization done";
         app.exec();
         qDebug() << "Store settings";
         CDatabaseConnector::getInstance()->store_settings();

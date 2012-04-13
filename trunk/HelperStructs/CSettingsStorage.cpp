@@ -236,4 +236,12 @@ void CSettingsStorage::setShowSmallPlaylist(bool b){
 	m_show_small_playlist = b;
 }
 
+QString CSettingsStorage::getSoundEngine(){
+	return m_sound_engine;
+}
+
+void CSettingsStorage::setSoundEngine(QString engine){
+	m_sound_engine = engine;
+}
+
 

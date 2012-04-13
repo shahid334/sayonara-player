@@ -27,7 +27,9 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
+#include "MP3_Listen/Engine.h"
 
+#include <QList>
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -871,6 +873,17 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			this->ui->action_viewLibrary->setChecked(!this->ui->action_viewLibrary->isChecked());
 			break;
 
+		case (Qt::Key_F5):
+			sound_engine_phonon_clicked();
+			QMessageBox::information(NULL, "Info", "Please restart in order to change engine to Phonon");
+			break;
+
+		case (Qt::Key_F6):
+			sound_engine_gst_clicked();
+			QMessageBox::information(NULL, "Info", "Please restart in order to change engine to GStreamer");
+			break;
+
+
 		case (Qt::Key_F11):
 			if(!this->isFullScreen())
 				this->showFullScreen();
@@ -1077,9 +1090,30 @@ void GUI_SimplePlayer::set_radio_active(int radio){
 }
 
 
+void GUI_SimplePlayer::populate_engines(const QList<Engine*>& lists, int active){
+
+
+}
+
+void GUI_SimplePlayer::sound_engine_phonon_clicked(){
+
+	QString engine = "Phonon Backend";
+	emit sig_sound_engine_changed(engine);
+}
+
+void GUI_SimplePlayer::sound_engine_gst_clicked(){
+	QString engine = "GStreamer Backend";
+	emit sig_sound_engine_changed(engine);
+}
+
+
+
 void GUI_SimplePlayer::about(bool b){
 	Q_UNUSED(b);
 
 	QMessageBox::information(this, "About",
 			"<b><font size=\"+2\">Sayonara Player 0.2</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
 }
+
+
+

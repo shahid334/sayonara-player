@@ -119,6 +119,10 @@ private:
     /* show small icons */
     bool m_show_small_playlist;
 
+
+    /* sound engine */
+    QString m_sound_engine;
+
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
@@ -168,6 +172,9 @@ public:
 
 	bool getShowSmallPlaylist();
 	void setShowSmallPlaylist(bool);
+
+	QString getSoundEngine();
+	void setSoundEngine(QString engine);
 
 };
 

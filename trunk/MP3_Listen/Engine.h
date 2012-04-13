@@ -23,13 +23,13 @@ protected:
 	bool		_is_eq_enabled;
 	int			_eq_type;
 	int			_state;
+	QString		_name;
 
 public:
 	virtual void 	load_equalizer()=0;
-
-	int getState(){
-		return _state;
-	}
+	virtual int		getState()=0;
+	virtual QString	getName()=0;
+	virtual void	init()=0;
 
 signals:
 	void total_time_changed_signal(qint64);
@@ -40,7 +40,6 @@ signals:
 	void eq_found(const QStringList&);
 
 public slots:
-
 	virtual void play()=0;
 	virtual void stop()=0;
 	virtual void pause()=0;
@@ -51,7 +50,10 @@ public slots:
 	virtual void changeTrack(const QString& )=0;
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
-
 };
+
+Q_DECLARE_INTERFACE(Engine, "sayonara.engine/1.0");
+
+
 
 #endif

@@ -1011,6 +1011,21 @@
     <string>Small Playlist Items</string>
    </property>
   </action>
+  <action name="actionSound_Engine">
+   <property name="text">
+    <string>Sound Engine</string>
+   </property>
+  </action>
+  <action name="action_engine_gst">
+   <property name="text">
+    <string>Gstreamer</string>
+   </property>
+  </action>
+  <action name="action_engine_phonon">
+   <property name="text">
+    <string>Phonon</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
