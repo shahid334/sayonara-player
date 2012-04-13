@@ -110,7 +110,16 @@ int main(int argc, char *argv[]){
         GUI_TagEdit				ui_tagedit;
         GUI_RadioWidget			ui_radio(player.getParentOfRadio());
 
-        SoundPluginLoader 		plugin_loader(app.applicationDirPath());
+
+        QString dir;
+
+#ifdef Q_OS_UNIX
+        dir = "/usr/lib/sayonara";
+#else
+        dir = app.applicationDirPath();
+#endif
+
+        SoundPluginLoader 		plugin_loader(dir);
 
         Engine* listen = plugin_loader.get_cur_engine();
         if(!listen){

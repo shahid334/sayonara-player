@@ -31,6 +31,11 @@ Makefile.gstreamer:
 
 Makefile.phonon:
 	qmake Phonon.pro -o Makefile.phonon
+	
+
+install:
+	make -f Makefile.sayonara install
+	make -f Makefile.phonon install
 
 clean: sayonara_clean phonon_clean gst_clean
 	rm -rf Makefile.*

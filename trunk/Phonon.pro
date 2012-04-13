@@ -17,3 +17,8 @@ SOURCES		= MP3_Listen/PhononEngine.cpp \
 TARGET		= $$qtLibraryTarget(sayonara_phonon)
 DESTDIR		= .
 LIBS 		+= -lphonon
+
+
+target.path = /usr/lib/sayonara
+
+INSTALLS += target

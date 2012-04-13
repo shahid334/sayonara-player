@@ -19,4 +19,4 @@ DESTDIR		= .
 CONFIG 		+= link_pkgconfig
 PKGCONFIG 	+= gstreamer-0.10
 LIBS 		+= -L/usr/lib `pkg-config --cflags --libs gstreamer-0.10`
-	
+
