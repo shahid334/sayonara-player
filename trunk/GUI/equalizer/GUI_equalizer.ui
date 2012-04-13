@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>586</width>
-    <height>149</height>
+    <width>343</width>
+    <height>119</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>319</width>
+    <width>343</width>
     <height>119</height>
    </size>
   </property>
@@ -476,7 +476,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="6" colspan="4">
+    <item row="0" column="4" colspan="5">
      <widget class="QComboBox" name="combo_presets"/>
     </item>
    </layout>
