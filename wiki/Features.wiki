@@ -7,14 +7,14 @@
   * Equalizer (GStreamer- and Xine backend on Phonon)
   * ID3 Tagger
   * Dynamic Playlists (using LastFM)
-
-= Upcoming in version 0.2 (already available on svn) =
-  
   * Pure Gstreamer without Phonon
+  * Phonon optionally as plugin
   * Lyrics
   * LastFM radio
   * Custom playlists
   * Online Streams (e.g. Web-Radio)
+
+
 
 = Todo =
   
