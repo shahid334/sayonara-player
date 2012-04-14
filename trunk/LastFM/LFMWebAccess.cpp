@@ -158,7 +158,7 @@ bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& 
 
 	else {
 		lfm_wa_free_webpage();
-		qDebug() <<  Q_FUNC_INFO << "Webpage = null";
+		qDebug() <<  "LFM: Webpage = null";
 		return false;
 	}
 }
@@ -207,7 +207,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 
 	else {
 		lfm_wa_free_webpage();
-		qDebug() <<  Q_FUNC_INFO << "webpage is null";
+		qDebug() <<  "LFM: webpage is null";
 		return false;
 	}
 }

@@ -176,7 +176,7 @@ void LastFM::login(QString username, QString password){
 	bool success = lfm_wa_call_url(url, response);
 
 	if(!success){
-		qDebug() << Q_FUNC_INFO << " Could not connect to " << url;
+		qDebug() << " Could not connect to " << url;
 		return;
 	}
 
@@ -185,11 +185,11 @@ void LastFM::login(QString username, QString password){
 	if(_session_key.size() != 0) {
 		_logged_in = true;
 		emit last_fm_logged_in(true);
-		qDebug() << Q_FUNC_INFO <<  "Logged in to LastFM";
+		qDebug() << "LFM: Logged in to LastFM";
 	}
 
 	else{
-		qDebug() << Q_FUNC_INFO <<  "Session key error";
+		qDebug() << "LFM: Session key error";
 		qDebug() << response;
 		emit last_fm_logged_in(false);
 		return;
@@ -207,9 +207,9 @@ void LastFM::login(QString username, QString password){
 	success = lfm_wa_call_url(url_handshake, resp_handshake);
 	if( !success ){
 		_session_key2 = "";
-		qDebug() << Q_FUNC_INFO << " Handshake was not successful";
-		qDebug() << "url = " << url_handshake;
-		qDebug() << resp_handshake;
+		qDebug() << "LFM: Handshake was not successful";
+		qDebug() << "LFM: url = " << url_handshake;
+		qDebug() << "LFM: " << resp_handshake;
 		return;
 	}
 
@@ -313,7 +313,6 @@ void LastFM::get_similar_artists(const QString& artistname){
 void LastFM::sim_artists_thread_finished(){
 
 	QList<int> ids = _similar_artists_thread->get_chosen_ids();
-	qDebug() << "number of similar artists = " << ids.size();
 	if(ids.size() > 0){
 
 		emit similar_artists_available(ids);
@@ -356,9 +355,9 @@ void LastFM::radio_init(const QString& str, bool artist){
 	QString response;
 	bool success = lfm_wa_call_url(url, response);
 	if( !success ){
-		qDebug() << "Radio not initialized";
-		qDebug() << "url = " << url;
-		qDebug() << response;
+		qDebug() << "LFM: Radio not initialized";
+		qDebug() << "LFM: url = " << url;
+		qDebug() << "LFM: " << response;
 	}
 
 	else {
@@ -389,8 +388,8 @@ void LastFM::radio_get_playlist(){
 
 	bool success = lfm_wa_call_url_xml(url, xml_response);
 	if( !success ){
-		qDebug() << "Cannot get playlist";
-		qDebug() << "Url = " << url;
+		qDebug() << "LFM: Cannot get playlist";
+		qDebug() << "LFM: Url = " << url;
 		return;
 	}
 

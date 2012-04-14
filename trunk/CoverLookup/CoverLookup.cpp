@@ -81,7 +81,7 @@ void CoverLookup::thread_finished() {
 	for (uint i = 0; i < images.size(); i++) {
 		pixmaps.push_back(QPixmap::fromImage(images[i]));
 	}
-	//emit covers_found(pixmaps);
+
 	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
 		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
@@ -111,7 +111,6 @@ void CoverLookup::terminate_thread() {
 		pixmaps.push_back(QPixmap::fromImage(images[i]));
 	}
 
-	//emit covers_found(pixmaps);
 	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
 		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
@@ -159,7 +158,6 @@ void CoverLookup::search_cover(const MetaData& md) {
 		albums.push_back(album);
 		search_covers(albums);
 	}
-
 }
 
 void CoverLookup::search_covers(const vector<Album> & vec_albums) {

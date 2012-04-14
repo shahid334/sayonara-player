@@ -31,7 +31,6 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
-#include "HelperStructs/CSettingsStorage.h"
 
 #include <iostream>
 #include <vector>
@@ -146,33 +145,17 @@ void Phonon_Engine::jump(int where, bool percent) {
 
 void Phonon_Engine::changeTrack(const QString & filepath) {
 
-	_media_object->setCurrentSource(Phonon::MediaSource(filepath));
 	MetaData md = ID3::getMetaDataOfFile(filepath);
-	if (_media_object->hasVideo())
-		md.length_ms = _meta_data.length_ms;
-	_meta_data = md;
-
-	//_media_object->play();
-	_state = STATE_PLAY;
-	_seconds_started = 0;
-	_seconds_now = 0;
-	_scrobbled = false;
-
-	if (!_media_object->hasVideo())
-		play();
-	else
-		_video_widget->show();
-
+	changeTrack(md);
 }
 
 void Phonon_Engine::changeTrack(const MetaData & metadata) {
 
 
 	_media_object->setCurrentSource(Phonon::MediaSource(metadata.filepath));
-	MetaData md = ID3::getMetaDataOfFile(metadata.filepath);
-	if (_media_object->hasVideo())
-		md.length_ms = _meta_data.length_ms;
-	_meta_data = md;
+	_meta_data = metadata;
+
+	_state = STATE_PLAY;
 
 	_seconds_started = 0;
 	_seconds_now = 0;
@@ -208,17 +191,17 @@ void Phonon_Engine::timeChanged(qint64 time) {
 					== _meta_data.length_ms / 2000)) {
 		emit scrobble_track(_meta_data);
 		_scrobbled = true;
-
 	}
 
 	emit timeChangedSignal((quint32) (time / 1000));
-
 }
+
 
 void Phonon_Engine::finished() {
 
 	emit track_finished();
 }
+
 
 void Phonon_Engine::setVolume(qreal vol) {
 
@@ -270,7 +253,7 @@ void Phonon_Engine::eq_enable(bool enable) {
 
 }
 
-void Phonon_Engine::load_equalizer() {
+void Phonon_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_setting) {
 
 	QList<Phonon::EffectDescription> availableEffects =
 			Phonon::BackendCapabilities::availableAudioEffects();
@@ -302,11 +285,7 @@ void Phonon_Engine::load_equalizer() {
 
 		_audio_path.insertEffect(_eq);
 
-		CSettingsStorage* settings = CSettingsStorage::getInstance();
-		vector<EQ_Setting> vec;
-		settings->getEqualizerSettings(vec);
-
-		emit eq_presets_loaded(vec);
+		emit eq_presets_loaded(vec_eq_setting);
 	}
 
 	else {

@@ -57,6 +57,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	painter->save();
 	painter->translate(0, 0);
 
+
+
+
 	if(index.column() == 0){
 		QString icon_path = Helper::getIconPath() + "play_small.png";
 		bool is_sampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
@@ -76,9 +79,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		album.fromStringList(list);
 
 		QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
-
 		label.setText(text);
 		label.setContentsMargins(2, 0, 2, 2);
+		label.setToolTip(QString::number(album.num_songs) + " tracks");
 	}
 
 	else{
@@ -89,6 +92,8 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 		label.setContentsMargins(2, 0, 4, 2);
 	}
+
+
 
 
 

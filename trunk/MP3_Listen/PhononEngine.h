@@ -60,7 +60,7 @@
 #include <phonon/audiodataoutput.h>
 #include <phonon/videowidget.h>
 
-
+using namespace std;
 
 class Phonon_Engine : public Engine{
 
@@ -109,7 +109,7 @@ private:
 
 
 	public:
-		virtual void 		load_equalizer();
+		virtual void 		load_equalizer(vector<EQ_Setting>&);
 		virtual int			getState();
 		qreal 				getVolume();
 		virtual QString		getName();

@@ -833,6 +833,7 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 	this->ui->btn_import->setVisible(radio == RADIO_OFF);
+	this->ui->btn_lyrics->setVisible(radio != RADIO_STATION);
 
 }
 

@@ -85,10 +85,9 @@ int main(int argc, char *argv[]){
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
 
-		qDebug() << "Cover";
+
 		CoverLookup* cover = CoverLookup::getInstance();
-		qDebug() << "application";
-        QApplication app (argc, argv);
+		QApplication app (argc, argv);
 
         app.setApplicationName("Sayonara");
         app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -249,7 +248,7 @@ int main(int argc, char *argv[]){
 		playlist.ui_loaded();
 
 		qDebug() << "setup player";
-		player.setWindowTitle("Sayonara (0.1)");
+		player.setWindowTitle("Sayonara (0.2)");
 
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
@@ -266,11 +265,14 @@ int main(int argc, char *argv[]){
 		player.check_show_plugins();
 
 
+		vector<EQ_Setting> vec_eq_setting;
+		set->getEqualizerSettings(vec_eq_setting);
+
 		qDebug() << "setup volume";
 		int vol = set->getVolume();
 		player.setVolume(vol);
 		listen->setVolume(vol);
-		listen->load_equalizer();
+		listen->load_equalizer(vec_eq_setting);
 
 
 		playlists.ui_loaded();
@@ -279,12 +281,9 @@ int main(int argc, char *argv[]){
 		QString user, password;
         set->getLastFMNameAndPW(user, password);
         lastfm.login_slot (user,password);
-	qDebug() << "init equalizer";
-        vector<EQ_Setting> eq_settings;
-        set->getEqualizerSettings(eq_settings);
-	qDebug() << "Initialization done";
+
         app.exec();
-        qDebug() << "Store settings";
+
         CDatabaseConnector::getInstance()->store_settings();
 
         delete listen;

@@ -600,6 +600,10 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 
+	// found cover is not for the player but for the library
+	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	if(our_coverpath != cover_path) return;
+
 	if (!success){
 		this->ui->albumCover->setPixmap(
 				QPixmap::fromImage(
@@ -875,12 +879,10 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
 		case (Qt::Key_F5):
 			sound_engine_phonon_clicked();
-			QMessageBox::information(NULL, "Info", "Please restart in order to change engine to Phonon");
 			break;
 
 		case (Qt::Key_F6):
 			sound_engine_gst_clicked();
-			QMessageBox::information(NULL, "Info", "Please restart in order to change engine to GStreamer");
 			break;
 
 
@@ -1092,6 +1094,8 @@ void GUI_SimplePlayer::set_radio_active(int radio){
 
 void GUI_SimplePlayer::populate_engines(const QList<Engine*>& lists, int active){
 
+	Q_UNUSED(lists);
+	Q_UNUSED(active);
 
 }
 

@@ -1,5 +1,3 @@
-QT		+= sql
-QT		+= xml
 TEMPLATE	= lib
 CONFIG		+= plugin static
 INCLUDEPATH	+= . /usr/include/gstreamer-0.10
@@ -10,7 +8,6 @@ HEADERS		= MP3_Listen/GSTEngine.h \
 		HelperStructs/Equalizer_presets.h
 
 SOURCES		= MP3_Listen/GSTEngine.cpp \
-		HelperStructs/CSettingsStorage.cpp \
 		HelperStructs/Helper.cpp \
 		HelperStructs/id3.cpp
 

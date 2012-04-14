@@ -77,7 +77,7 @@ public:
 	void		set_cur_position(quint32);
 	void		set_track_finished();
 
-	virtual void 	load_equalizer();
+	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();
 	virtual QString	getName();
 

@@ -14,6 +14,7 @@
 #include <QString>
 #include <QDebug>
 #include <QPluginLoader>
+#include <QMessageBox>
 #include <QList>
 #include <QtPlugin>
 #include <vector>
@@ -106,6 +107,8 @@ Engine* SoundPluginLoader::get_cur_engine(){
 
 void SoundPluginLoader::psl_switch_engine(QString& new_engine){
 
+	if(new_engine.toLower() == _cur_engine_name.toLower()) return;
+
 	qDebug() << "Change Engine to " << new_engine;
 
 	bool engine_found = false;
@@ -121,8 +124,8 @@ void SoundPluginLoader::psl_switch_engine(QString& new_engine){
 	}
 
 	if(engine_found){
+		QMessageBox::information(NULL, "Info", QString("Please restart in order to change engine to ") + new_engine);
 		CSettingsStorage::getInstance()->setSoundEngine(_cur_engine_name);
-		emit sig_new_engine_set();
 	}
 
 }

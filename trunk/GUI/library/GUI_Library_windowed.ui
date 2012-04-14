@@ -218,18 +218,12 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QComboBox" name="combo_switcher">
-       <property name="minimumSize">
-        <size>
-         <width>130</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>130</width>
-         <height>16777215</height>
-        </size>
+      <widget class="QLabel" name="lab_music_library">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <property name="font">
         <font>
@@ -238,11 +232,9 @@
          <bold>true</bold>
         </font>
        </property>
-       <item>
-        <property name="text">
-         <string>Music Library</string>
-        </property>
-       </item>
+       <property name="text">
+        <string>Music Library  </string>
+       </property>
       </widget>
      </item>
      <item>
@@ -299,7 +291,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="le_search"/>
+      <widget class="QLineEdit" name="le_search">
+       <property name="toolTip">
+        <string>Search for title, interprets and albums</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_clear">
@@ -308,6 +304,9 @@
          <width>34</width>
          <height>24</height>
         </size>
+       </property>
+       <property name="toolTip">
+        <string>Show all interprets, albums, tracks</string>
        </property>
        <property name="text">
         <string/>

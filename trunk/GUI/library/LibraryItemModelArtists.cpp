@@ -96,10 +96,16 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
 	 if (!index.isValid())
 			 return QVariant();
 
-		 if (index.row() >= _artist_list.size() || index.column() == 0)
+		 if (index.row() >= _artist_list.size())
 			 return QVariant();
 
-		 if (role == Qt::WhatsThisRole && index.column() == 1){
+		 if( role == Qt::WhatsThisRole && index.column() == 0 ){
+			 Artist artist = _artist_list.at(index.row());
+			 return artist.num_albums;
+		 }
+
+
+		 else if (role == Qt::WhatsThisRole && index.column() == 1){
 			 Artist artist = _artist_list.at(index.row());
 				return artist.toStringList();
 		 }

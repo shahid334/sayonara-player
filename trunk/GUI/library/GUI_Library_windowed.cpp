@@ -302,14 +302,11 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	vector<MetaData> vec_tracks;
 	vector<Artist> vec_artists;
 
-	if(this->ui->le_search->text().length() == 0){
-		_db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
-	}
+	//_db->getAllArtistsByAlbum(album_id, vec_artists, _sort_artists);
+	_db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
 
-	else {
-		_db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
-	}
 
+	//fill_library_artists(vec_artists);
 	fill_library_tracks(vec_tracks);
 
 

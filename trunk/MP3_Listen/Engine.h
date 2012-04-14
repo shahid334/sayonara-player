@@ -26,7 +26,7 @@ protected:
 	QString		_name;
 
 public:
-	virtual void 	load_equalizer()=0;
+	virtual void 	load_equalizer(vector<EQ_Setting>&)=0;
 	virtual int		getState()=0;
 	virtual QString	getName()=0;
 	virtual void	init()=0;

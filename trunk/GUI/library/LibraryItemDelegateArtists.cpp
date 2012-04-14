@@ -61,9 +61,16 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		painter->save();
 		painter->translate(0, 0);
 
-		if(index.column() == 0){
 
-			label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+
+		if(index.column() == 0){
+			int num_albums = index.model()->data(index, Qt::WhatsThisRole).toInt();
+
+			if(num_albums <= 1)
+				label.setPixmap(QPixmap(Helper::getIconPath() + "play_small.png"));
+			else
+				label.setPixmap(QPixmap(Helper::getIconPath() + "fwd_orange.png"));
+
 			label.setContentsMargins(2, 0, 2, 2);
 		}
 
@@ -72,6 +79,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
 			Artist artist;
 			artist.fromStringList(list);
+
 			QString text = "<b>" + artist.name + "</b>";
 			label.setText(text);
 			label.setContentsMargins(2, 0, 2, 2);
@@ -83,7 +91,6 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 			label.setContentsMargins(2, 0, 4, 2);
 			label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 		}
-
 
 		QString style;
 		QString fg_color;

@@ -27,20 +27,16 @@
  */
 
 #include "GUI/LastFM/GUI_LastFM.h"
-#include <ui_GUI_LastFM_Widget.h>
-#include <HelperStructs/Helper.h>
+#include "ui_GUI_LastFM_Widget.h"
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QString>
-#include <QDebug>
 #include <QCryptographicHash>
 
 #include <iostream>
-#include "HelperStructs/CSettingsStorage.h"
-
 
 using namespace std;
-
-
 
 GUI_LastFM::GUI_LastFM() {
 	this->ui = new Ui_GUI_LastFM_Widget();

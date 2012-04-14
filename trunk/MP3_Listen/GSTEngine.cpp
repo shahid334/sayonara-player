@@ -192,15 +192,10 @@ void GST_Engine::setVolume(qreal vol){
 
 }
 
-void GST_Engine::load_equalizer(){
-
-	CSettingsStorage * settings = CSettingsStorage::getInstance();
-	vector<EQ_Setting> vec;
-	settings->getEqualizerSettings(vec);
+void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings){
 
 	//emit eq_found(availableEqualizers);
-	emit eq_presets_loaded(vec);
-
+	emit eq_presets_loaded(vec_eq_settings);
 }
 
 void GST_Engine::jump(int where, bool percent){
@@ -245,23 +240,8 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 void GST_Engine::changeTrack(const QString& filepath){
 
-	//stop();
 	MetaData md = ID3::getMetaDataOfFile(filepath);
 	changeTrack(md);
-	return;
-	obj_ref = NULL;
-	QString filename = filepath;
-
-	if(filename.toLower().left(4).compare("http") != 0)
-		filename.push_front(QString("file://"));
-
-	_meta_data = md;
-
-	g_object_set(G_OBJECT(_pipeline), "uri", filename.toLocal8Bit().data(), NULL);
-
-	emit total_time_changed_signal(_meta_data.length_ms);
-
-	play();
 
 }
 
