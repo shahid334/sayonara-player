@@ -24,9 +24,9 @@ Please wait until end of June before telling us and the world, that this player 
   <b>make gst</b><br />
 
   *For building everything
-  <b>make [all]</b><br />
+  <b>make (all)</b><br />
 
-<font color="#FF0000"><b> Do not use qmake anymore!!!</b></font>
+  <font color="#FF0000"><b>  *Do not use qmake anymore!!!</b></font>
 
 
 == Windows ==
@@ -45,4 +45,4 @@ There is a Visual Studio 2008 solution, but not updated every time, so maybe the
 
 == MAC ==
 
-Is there anybody out there who wants to try compilation on MAC OSX?
+Same as for Linux, try to fetch all packages with MacPorts. 
