@@ -14,11 +14,19 @@ Please wait until end of June before telling us and the world, that this player 
 
 == Linux ==
 
-  * qmake
-  * make
-  * make install <br>
+  *For building just Sayonara type
+  <b>make sayonara</b><br />
 
-  * start with -g Option for gstreamer, otherwise phonon is used
+  *For building the Phonon backend
+  <b>make phonon</b><br />
+
+  *For building the Gstreamer backend
+  <b>make gst</b><br />
+
+  *For building everything
+  <b>make [all]</b><br />
+
+<font color="#FF0000"><b> Do not use qmake anymore!!!</b></font>
 
 
 == Windows ==
