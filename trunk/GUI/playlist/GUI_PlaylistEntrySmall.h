@@ -19,13 +19,6 @@
  */
 
 
-/*
- * GUI_PlaylistEntry.h
- *
- *  Created on: Apr 9, 2011
- *      Author: luke
- */
-
 #ifndef GUI_PLAYLISTENTRYSMALL_H_
 #define GUI_PLAYLISTENTRYSMALL_H_
 

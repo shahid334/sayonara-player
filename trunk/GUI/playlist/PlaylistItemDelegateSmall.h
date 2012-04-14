@@ -18,14 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/*
- * ItemListDelegate_small.h
- *
- *  Created on: Apr 9, 2011
- *      Author: luke
- */
-
 #ifndef ITEMLISTDELEGATESMALL_H_
 #define ITEMLISTDELEGATESMALL_H_
 

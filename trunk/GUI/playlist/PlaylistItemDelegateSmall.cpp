@@ -19,13 +19,6 @@
  */
 
 
-/*
- * ItemListDelegate.cpp
- *
- *  Created on: Apr 9, 2011
- *      Author: luke
- */
-
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "GUI/playlist/PlaylistItemDelegateSmall.h"

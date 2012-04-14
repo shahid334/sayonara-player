@@ -18,14 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/*
- * GUI_PlaylistEntrySmall.cpp
- *
- *  Created on: Apr 9, 2011
- *      Author: luke
- */
-
 #include "GUI/playlist/GUI_PlaylistEntrySmall.h"
 
 #include <QFrame>

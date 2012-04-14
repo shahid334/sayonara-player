@@ -93,9 +93,9 @@ void ReloadThread::run(){
 	// to give user a response what happens
 	// we're in a thread, baby! You can play the
 	// sound nevertheless... Fuck I'm drunk :(
-	for(int i=0; i<fileList.size(); i++){
 
-		qDebug() << fileList.at(i);
+#pragma omp parallel for
+	for(int i=0; i<fileList.size(); i++){
 
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
 
