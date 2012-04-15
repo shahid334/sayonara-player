@@ -23,7 +23,12 @@
 #define WEBACCESS_H_
 #include <QString>
 
-bool wa_call_url(const QString& url, QString& response);
+
+
+namespace WebAccess {
+
+	bool read_http_into_str(QString url, QString& content);
+};
 
 
 #endif /* WEBACCESS_H_ */

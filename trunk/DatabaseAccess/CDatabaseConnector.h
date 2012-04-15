@@ -23,12 +23,14 @@
 #ifndef CDATABASECONNECTOR_H
 #define CDATABASECONNECTOR_H
 
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Equalizer_presets.h"
+
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
+
 #include <vector>
-#include <HelperStructs/MetaData.h>
-#include <HelperStructs/Equalizer_presets.h>
 
 
 //class CDatabaseConnector;
@@ -65,6 +67,7 @@ public:
 		 *  ARTISTS
 		 *****************/
 			int getArtistID (const QString & artist);
+			Artist getArtistByID( const int& id);
 			int getMaxArtistID();
 
 			QString getArtistName (const int & id);
@@ -117,6 +120,7 @@ public:
 			int getTrackByPath(QString path);
 
 			int deleteTracks(std::vector<MetaData>&);
+			int deleteTrack(MetaData&);
 
 
 			/*

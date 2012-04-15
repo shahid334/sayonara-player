@@ -19,7 +19,7 @@
  */
 
 
-#include <HelperStructs/MetaData.h>
+#include "HelperStructs/MetaData.h"
 #include <QString>
 #include <string>
 

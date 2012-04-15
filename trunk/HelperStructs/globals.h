@@ -32,5 +32,9 @@
 #define PLUGIN_EQUALIZER 2
 #define PLUGIN_PLAYLIST_CHOOSER 3
 
+#define LFM_API_KEY 	QString("51d6f9eaef806f603f346844bef326ba")
+#define LFM_API_SECRET	QString("1093d769e54858cb0d21d42b35a8f603")
+
+
 
 #endif /* GLOBALS_H_ */

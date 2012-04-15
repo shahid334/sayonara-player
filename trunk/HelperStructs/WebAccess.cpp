@@ -19,6 +19,7 @@
  */
 
 #include "HelperStructs/WebAccess.h"
+
 #include <QString>
 #include <QDebug>
 #include <curl/curl.h>
@@ -32,6 +33,7 @@ static QString webpage;
 
 static void wa_free_webpage();
 static size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
+static bool wa_call_url(const QString& url, QString& response);
 
 static
 void wa_free_webpage(){
@@ -84,4 +86,17 @@ bool wa_call_url(const QString& url, QString& response){
 		return false;
 	}
 }
+
+
+bool WebAccess::read_http_into_str(QString url, QString& content){
+
+	qDebug() << "read " << url << " into string";
+	content.clear();
+	wa_call_url(url, content);
+
+	if(content.size() > 0)	return true;
+
+	return false;
+}
+
 

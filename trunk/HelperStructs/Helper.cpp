@@ -28,11 +28,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/id3.h"
-#include "HelperStructs/WebAccess.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
-#include "LastFM/LastFM.h"
-
+#include "HelperStructs/globals.h"
 
 #include <string>
 #include <iostream>
@@ -147,19 +143,11 @@ QString Helper::get_cover_path(QString artist, QString album){
 
 }
 
-QString Helper::calc_album_lfm_adress(QString album){
-	LastFM lfm;
-	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
-	QString api_key = lfm.get_api_key();
-
-	url += api_key + "&album=" + QUrl::toPercentEncoding(album);
-	return url;
-}
 
 QString Helper::calc_cover_lfm_adress(QString artist, QString album){
-	LastFM lfm;
-	QString api_key = lfm.get_api_key();
+
 	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=");
+	QString api_key = QString("51d6f9eaef806f603f346844bef326ba");
 
 	if(album == "")
 		url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
@@ -169,8 +157,8 @@ QString Helper::calc_cover_lfm_adress(QString artist, QString album){
 	if(album != "") url += "&album=" + QUrl::toPercentEncoding(album);
 	return url;
 
-
 }
+
 
 QString Helper::calc_cover_google_adress(QString artist, QString album){
 
@@ -199,24 +187,7 @@ QString Helper::calc_cover_token(QString artist, QString album){
 	return ret;
 }
 
-QString Helper::calc_search_album_adress(QString album){
-	LastFM lfm;
-	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
-	QString api_key = lfm.get_api_key();
 
-	url += api_key + "&album=" + QUrl::toPercentEncoding(album);
-	return url;
-}
-
-QString Helper::calc_search_artist_adress(QString artist){
-
-	LastFM lfm;
-	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.search&api_key=");
-	QString api_key = lfm.get_api_key();
-
-	url += api_key + "&album=" + QUrl::toPercentEncoding(artist);
-	return url;
-}
 
 QStringList Helper::get_soundfile_extensions(){
 
@@ -229,6 +200,7 @@ QStringList Helper::get_soundfile_extensions(){
 	filters.push_back("*.flac");
 	filters.push_back("*.aac");
 
+	// ok, these files contain sound :)
 	filters.push_back("*.avi");
 	filters.push_back("*.flv");
 	filters.push_back("*.mpg");
@@ -258,9 +230,7 @@ bool Helper::checkTrack(const MetaData& md){
 	if( md.filepath.startsWith("mms")) return true;
 
 	if( !QFile::exists(md.filepath) && md.id >= 0 ){
-		vector<MetaData> vec_md;
-		vec_md.push_back(md);
-		CDatabaseConnector::getInstance()->deleteTracks(vec_md);
+
 		return false;
 	}
 
@@ -292,13 +262,35 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 }
 
-bool Helper::read_http_into_str(QString url, QString& content){
 
-	qDebug() << "read " << url << " into string";
-	content.clear();
-	wa_call_url(url, content);
 
-	if(content.size() > 0)	return true;
 
-	return false;
+QString Helper::calc_album_lfm_adress(QString album){
+
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
+
+
+	url += LFM_API_KEY + "&album=" + QUrl::toPercentEncoding(album);
+	return url;
 }
+
+
+
+QString Helper::calc_search_album_adress(QString album){
+
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
+
+	url += LFM_API_KEY + "&album=" + QUrl::toPercentEncoding(album);
+	return url;
+}
+
+QString Helper::calc_search_artist_adress(QString artist){
+
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.search&api_key=");
+
+	url += LFM_API_KEY + "&album=" + QUrl::toPercentEncoding(artist);
+	return url;
+}
+
+
+

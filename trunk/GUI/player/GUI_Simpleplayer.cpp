@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPalette>
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
@@ -291,6 +292,7 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
 	this->m_completeLength_ms = md.length_ms;
 	this->m_playing = true;
+	this->m_trayIcon->playStateChanged(this->m_playing);
 
 }
 
@@ -336,6 +338,16 @@ void GUI_SimplePlayer::setStyle(int style){
 
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
+
+	QString menu_style = Style::get_menu_style(dark);
+
+	this->ui->menubar->setStyleSheet(Style::get_menubar_style(dark));
+	this->ui->menuFle->setStyleSheet(menu_style);
+	this->ui->menuLibrary->setStyleSheet(menu_style);
+	this->ui->menuPreferences->setStyleSheet(menu_style);
+	this->ui->menuView->setStyleSheet(menu_style);
+	this->ui->menuAbout->setStyleSheet(menu_style);
+
 	if (dark) {
 
 		this->ui->centralwidget->setStyleSheet(
@@ -343,9 +355,10 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->setStyleSheet(
 				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
 
-		this->ui->menuView->setStyleSheet("background-color: " + Style::get_player_back_color() + "; #D8D8D8;");
 
 		QString style = Style::get_btn_style(8);
+
+
 		this->ui->btn_mute->setStyleSheet(style);
 		this->ui->btn_play->setStyleSheet(style);
 		this->ui->btn_fw->setStyleSheet(style);
@@ -368,7 +381,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->ui->btn_fw->setStyleSheet("");
 		this->ui->btn_bw->setStyleSheet("");
 		this->ui->btn_stop->setStyleSheet("");
-
 	}
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
@@ -407,14 +419,14 @@ QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
 
 void GUI_SimplePlayer::playClicked(bool) {
 
+	qDebug() << "m_playing before: " << this->m_playing;
+	bool play_tmp = false;
 	if (this->m_playing == true) {
 		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		m_playAction->setText("Play");
-		qDebug() << "Player: pause";
-		emit pause();
 
-		this->ui->albumCover->setFocus();
+		emit pause();
 
 	}
 
@@ -422,14 +434,17 @@ void GUI_SimplePlayer::playClicked(bool) {
 		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		m_playAction->setText("Pause");
-		qDebug() << "Player: play";
+
 		emit play();
-
-		this->ui->albumCover->setFocus();
-
+		play_tmp = true;
 	}
-	this->m_playing = !this->m_playing;
-        this -> m_trayIcon->playStateChanged (this->m_playing);
+
+	this->ui->albumCover->setFocus();
+	this->m_playing = play_tmp;
+
+	qDebug() << "m_playing after: " << this->m_playing;
+
+	this -> m_trayIcon->playStateChanged (this->m_playing);
 
 }
 
@@ -453,6 +468,7 @@ void GUI_SimplePlayer::stopClicked(bool) {
 			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
 
 	this->ui->albumCover->setFocus();
+	this -> m_trayIcon->playStateChanged (this->m_playing);
 	emit stop();
 }
 

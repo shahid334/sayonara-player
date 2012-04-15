@@ -19,9 +19,9 @@
  */
 
 
-#include <HelperStructs/MetaData.h>
-#include <HelperStructs/id3.h>
-#include <HelperStructs/Helper.h>
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/id3.h"
+#include "HelperStructs/Helper.h"
 
 #include <QString>
 #include <QObject>

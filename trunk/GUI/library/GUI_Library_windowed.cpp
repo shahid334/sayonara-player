@@ -71,12 +71,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->_sort_artists = "name asc";
 	this->_sort_tracks = "artist asc";
 
-	_selected_artist = -1;
-	_selected_album = -1;
-
-	_selected_artist_name = "";
-	_selected_album_name = "";
-
 	_everything_loaded = false;
 
 	this->_album_model = new LibraryItemModelAlbums();
@@ -256,29 +250,38 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
-	int artist_id = _v_artists.at(idx.row()).id;
-	_selected_artist = artist_id;
-	_selected_artist_name = _v_artists.at(idx.row()).name;
+	Q_UNUSED(idx);
 
-	_selected_album = -1;
-	_selected_album_name = QString("");
+	_selected_artists.clear();
+
+	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
+
+	vector<MetaData> v_md,  v_md_acc;
+	vector<Album> v_albums_acc, v_albums;
 
 
-	Artist artist = _v_artists.at(idx.row());
-	vector<MetaData> vec_tracks;
-	vector<Album> vec_albums;
-
-	if(this->ui->le_search->text().length() == 0){
-		_db->getAllTracksByArtist(artist_id, vec_tracks, _cur_searchstring, _sort_tracks);
-		_db->getAllAlbumsByArtist(artist_id, vec_albums, _cur_searchstring, _sort_tracks);
-	}
-	else {
-		_db->getAllTracksByArtist(artist_id, vec_tracks, _cur_searchstring, _sort_tracks) ;
-		_db->getAllAlbumsByArtist(artist_id, vec_albums, _cur_searchstring, _sort_albums);
+	foreach(QModelIndex model_idx, idx_list){
+		Artist artist = _v_artists.at(model_idx.row());
+		_selected_artists.push_back(artist.id);
+		_db->getAllTracksByArtist(artist.id, v_md, _cur_searchstring, _sort_tracks);
+		_db->getAllAlbumsByArtist(artist.id, v_albums, _cur_searchstring, _sort_albums);
 	}
 
-	fill_library_albums(vec_albums);
-	fill_library_tracks(vec_tracks);
+	if(idx_list.size() == 1) {
+		v_albums_acc = v_albums;
+		v_md_acc = v_md;
+	}
+	else{
+		for(uint i=0; i<v_md.size(); i++)
+			v_md_acc.push_back(v_md[i]);
+
+		for(uint i=0; i<v_albums.size(); i++)
+			v_albums_acc.push_back(v_albums[i]);
+	}
+
+
+	fill_library_albums(v_albums_acc);
+	fill_library_tracks(v_md_acc);
 
 	QMimeData* mime = new QMimeData();
 
@@ -296,19 +299,28 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
-	int album_id = _v_albums.at(idx.row()).id;
-	_selected_album = album_id;
-	Album album = _v_albums.at(idx.row());
-	vector<MetaData> vec_tracks;
-	vector<Artist> vec_artists;
+	Q_UNUSED(idx);
 
-	//_db->getAllArtistsByAlbum(album_id, vec_artists, _sort_artists);
-	_db->getAllTracksByAlbum(album_id, vec_tracks, _cur_searchstring, _sort_tracks);
+	_selected_albums.clear();
 
+	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows();
+	vector<MetaData> v_md;
+	vector<MetaData> v_md_acc;
 
-	//fill_library_artists(vec_artists);
-	fill_library_tracks(vec_tracks);
+	foreach(QModelIndex model_idx, idx_list){
+		Album album = _v_albums.at(model_idx.row());
+		_selected_albums.push_back(album.id);
+		_db->getAllTracksByAlbum(album.id, v_md, _cur_searchstring, _sort_tracks);
+	}
 
+	if(idx_list.size() == 1) v_md_acc = v_md;
+	else{
+		for(uint i=0; i<v_md.size(); i++){
+			v_md_acc.push_back(v_md[i]);
+		}
+	}
+
+	fill_library_tracks(v_md_acc);
 
 	QMimeData* mime = new QMimeData();
 
@@ -332,7 +344,7 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
 	QMimeData* mime = new QMimeData();
 
-	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows();
 
 	QList<QVariant> list2send;
 
@@ -433,11 +445,8 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 
 void GUI_Library_windowed::clear_button_pressed(){
 
-	_selected_album = -1;
-	_selected_artist = -1;
-
-	_selected_artist_name = "";
-	_selected_album_name = "";
+	_selected_albums.clear();
+	_selected_artists.clear();
 
 	_cur_searchstring = "";
 
@@ -490,11 +499,8 @@ void GUI_Library_windowed::text_line_edited(const QString& search){
 		fill_library_albums(vec_albums);
 		fill_library_tracks(vec_tracks);
 
-		_selected_album = -1;
-		_selected_artist = -1;
-
-		_selected_artist_name = "";
-		_selected_album_name = "";
+		_selected_albums.clear();
+		_selected_artists.clear();
 
 		_everything_loaded = true;
 		_cur_searchstring = "";
@@ -630,8 +636,16 @@ void GUI_Library_windowed::sort_albums_by_column(int col){
 		_db->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
 	}
 
-	else if(_selected_artist != -1){
-		_db->getAllAlbumsByArtist(_selected_artist, vec_albums, _cur_searchstring, _sort_albums);
+	else if(_selected_artists.size() > 0){
+
+		foreach(int artist_id, _selected_artists){
+			vector<Album> vec_albums_tmp;
+			_db->getAllAlbumsByArtist(artist_id, vec_albums_tmp, _cur_searchstring, _sort_albums);
+			for(uint i=0; i<vec_albums_tmp.size(); i++){
+				vec_albums.push_back(vec_albums_tmp[i]);
+			}
+		}
+
 	}
 
 	else{
@@ -710,29 +724,47 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 
 		vector<MetaData> vec_md;
 
-		if(!_cur_searchstring.isEmpty() && _selected_album == -1 && _selected_artist == -1){
+		// searchstring, no album selected, no artist selected
+		if(!_cur_searchstring.isEmpty() && _selected_albums.size() == 0 && _selected_artists.size() == 0){
 			_db->getAllTracksBySearchString( _cur_searchstring, vec_md, _sort_tracks);
 		}
 
-		else if(_selected_album != -1){
-			_db->getAllTracksByAlbum(_selected_album, vec_md, _cur_searchstring, _sort_tracks);
+		// possible searchstring, album selected
+		else if( _selected_albums.size() > 0 ){
+
+
+			foreach(int album_id, _selected_albums){
+				vector<MetaData> tmp_md;
+				_db->getAllTracksByAlbum(album_id, tmp_md, _cur_searchstring, _sort_tracks);
+				for(uint i=0; i<tmp_md.size(); i++){
+					vec_md.push_back(tmp_md[i]);
+				}
+			}
+
+
 		}
 
-		else if(_selected_artist != -1){
-			_db->getAllTracksByArtist(_selected_artist, vec_md, _cur_searchstring, _sort_tracks);
+		// possible searchstring, artist selected
+		else if( _selected_artists.size() > 0 ){
+
+			foreach(int artist_id, _selected_artists){
+				vector<MetaData> tmp_md;
+				_db->getAllTracksByArtist(artist_id, tmp_md, _cur_searchstring, _sort_tracks);
+				for(uint i=0; i<tmp_md.size(); i++){
+					vec_md.push_back(tmp_md[i]);
+				}
+			}
+
+
 		}
 
+		// no album, no artist, no searchstring
 		else{
 			_db->getTracksFromDatabase(vec_md, _sort_tracks);
 		}
 
 
 		fill_library_tracks(vec_md);
-
-
-
-
-
 }
 
 
@@ -772,107 +804,125 @@ void GUI_Library_windowed::edit_album(){
 }
 
 void GUI_Library_windowed::apply_cover_to_entire_album(){
-	QPixmap pixmap = QPixmap(Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name));
-	for(int i=0; i<_album_of_interest.artists.size(); i++){
-		pixmap.save(Helper::get_cover_path(_album_of_interest.artists[i], _album_of_interest.name));
-	}
+
 }
 
 
 /* TODO: clean me up, it cannot be that hard to solve the sampler issue */
 void GUI_Library_windowed::info_album(){
 
-	QPushButton* apply = 0;
-	QPixmap pm;
-	QString sel_artist = "";
-	QString cover_path = "";
-	bool	cover_found;
-	int num_artists = 0;
-
+	if(_selected_albums.size() == 0) return;
 
 	if(_album_msg_box) delete _album_msg_box;
 	_album_msg_box = new QMessageBox();
 
-
-	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows(1);
-	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
-
-	Album album;
-	QStringList album_str_list = _album_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
-	album.fromStringList( album_str_list );
-	_album_of_interest = _db->getAlbumByID(album.id);
-	num_artists = _album_of_interest.artists.size();
+	QPixmap pm;
+	QString cover_path = "";
+	bool	cover_found;
 
 
+	// info string
+	QString msg_text, year_string;
+	int min_year = 120000;
+	int max_year = -120000;
+	bool unknown_year = false;
+	int num_songs = 0;
+	qint64 length = 0;
+	QString first_album_name, first_album_artist;
+	int first_album_id;
+	int num_albums = 0;
 
-	QString artist = _album_of_interest.artists[0];
-	if(_album_of_interest.artists.size() > 1){
-		artist = "Various artists";
+	foreach(int album_id, _selected_albums){
+
+		QString artist;
+		Album album =  _db->getAlbumByID(album_id);
+
+		num_songs += album.num_songs;
+		length += album.length_sec;
+
+		if(album.year < min_year && album.year != 0) min_year = album.year;
+		if(album.year > max_year && album.year != 0) max_year = album.year;
+		if(album.year == 0) unknown_year = true;
+
+		artist = album.artists[0];
+		if(album.is_sampler)
+			artist = "Various";
+
+		if(num_albums == 0){
+			first_album_artist = artist;
+			first_album_name = album.name;
+			first_album_id = album.id;
+			cover_path = Helper::get_cover_path(artist, album.name);
+		}
+		num_albums ++;
+
+		msg_text += "<b>" + artist + ": " + album.name + "<b><br />";
 	}
 
-	vector<MetaData> tracks;
-		_db->getAllTracksByAlbum(_album_of_interest.id, tracks, _cur_searchstring, this->_sort_albums);
-		QStringList album_paths;
-		foreach(MetaData md, tracks){
+	msg_text += "<br />";
 
-			QString filepath = md.filepath;
-			QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
-			filepath = filepath.replace(lib_path, ".");
-			filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
-			if(!album_paths.contains(filepath, Qt::CaseInsensitive)){
-				album_paths.push_back(filepath);
-			}
+	if(_selected_albums.size() > 1){
+		cover_path = Helper::getIconPath() + "append.png";
+	}
+
+	// album paths
+	QStringList album_paths;
+	QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+	foreach(MetaData md, _v_metadata){
+
+		QString filepath = md.filepath;
+		filepath = filepath.replace(lib_path, "${ML}");
+		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
+		if(!album_paths.contains(filepath, Qt::CaseInsensitive)){
+			album_paths.push_back(filepath);
 		}
+	}
 
 
-	_album_msg_box->setText(QString("<b>") + artist + " - " + album.name + " (" + QString::number(_album_of_interest.artists.size()) + ")</b>");
+	if(min_year != max_year){
+		if(min_year < 3000)
+			year_string += QString::number(min_year);
+		if(max_year > 0) year_string += QString(" - ") + QString::number(max_year);
+	}
+	else{
+		if(min_year > 0)
+			year_string = QString::number(min_year);
+	}
+	if(unknown_year) year_string += ", Unknown";
 
-	QString year =  QString::number(_album_of_interest.year);
-	if(_album_of_interest.year == 0) year = "Unknown";
-	QString info_text = QString::number(_album_of_interest.num_songs) + " tracks\n" +
-						"Playing time: " + Helper::cvtMsecs2TitleLengthString(_album_of_interest.length_sec * 1000) + "\n" +
-						"Year: " + year + "\n\n";
+	QString info_text = QString::number(num_songs) + " tracks\n" +
+						"Playing time: " + Helper::cvtMsecs2TitleLengthString(length * 1000) + "\n" +
+						"Year: " + year_string + "\n\n";
 
 	foreach(QString album_path, album_paths){
 		info_text += album_path + "\n";
 	}
 
-
-	if(_album_of_interest.is_sampler){
-		cover_path = Helper::get_cover_path("", _album_of_interest.name);
-		_album_of_interest.artists.clear();
-		_album_of_interest.artists.push_back("");
-	}
-
-	else
-		cover_path = Helper::get_cover_path(_album_of_interest.artists[0], _album_of_interest.name);
-
 	pm = QPixmap(cover_path);
 	cover_found = !pm.isNull();
 
-
 	if(cover_found){
-
-		if(_album_of_interest.is_sampler){
-			apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
-			connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
-		}
-
 		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
-
 	}
 
 	else{
-		qDebug() << Q_FUNC_INFO << " No cover found...";
+
+		cover_path = Helper::getIconPath() + "append.png";
+		QPixmap pm_tmp = QPixmap(cover_path);
+		pm_tmp = pm_tmp.scaledToWidth(150, Qt::SmoothTransformation);
+		_album_msg_box->setIconPixmap(pm_tmp);
+
+
 		MetaData md;
-		md.album_id = _album_of_interest.id;
-		md.album = _album_of_interest.name;
-		md.artist = _album_of_interest.artists[0];
+		md.album_id = first_album_id;
+		md.album = first_album_name;
+		md.artist = first_album_artist;
 
 		emit sig_search_cover(md);
 	}
 
+	_album_msg_box->setText(msg_text);
 	_album_msg_box->setInformativeText(info_text);
 	_album_msg_box->exec();
 	_album_msg_box->close();
@@ -882,12 +932,14 @@ void GUI_Library_windowed::info_album(){
 
 void GUI_Library_windowed::delete_album(){
 
-	if(_selected_album == -1) return;
+	if(_selected_albums.size() == 0) return;
 	QStringList file_list;
-	vector<MetaData> vec_md;
-	_db->getAllTracksByAlbum(_selected_album, vec_md, _cur_searchstring, _sort_tracks);
 
-	deleteSomeTracks(vec_md);
+	foreach(int album_id, _selected_albums){
+		vector<MetaData> vec_md;
+		_db->getAllTracksByAlbum(album_id, vec_md, _cur_searchstring, _sort_tracks);
+		deleteSomeTracks(vec_md);
+	}
 }
 
 
@@ -898,51 +950,70 @@ void GUI_Library_windowed::edit_artist(){
 
 void GUI_Library_windowed::info_artist(){
 
-	if(_album_msg_box) delete _album_msg_box;
-		_album_msg_box = new QMessageBox();
-	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows(1);
+
+
+	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
+
 	if(idx_list.size() <= 0 || !idx_list.at(0).isValid()) return;
 
-	Artist artist;
-	QStringList artist_str_list = _artist_model->data(idx_list.at(0), Qt::WhatsThisRole).toStringList();
-	artist.fromStringList( artist_str_list );
+	QString msg_text, info_text;
+	int num_albums = 0;
+	int num_songs = 0;
+	int num_artists = 0;
+	bool various_artists = (_selected_artists.size() > 1);
+	QString first_artist_name;
+	QString cover_path = "";
+
+	foreach(int artist_id, _selected_artists){
+		Artist artist = _db->getArtistByID(artist_id);
+		msg_text += "<b>" + artist.name + "</b><br />";
+
+		num_albums += artist.num_albums;
+		num_songs += artist.num_songs;
+
+		if(num_artists == 0){
+			first_artist_name = artist.name;
+		}
+	}
+
+	msg_text += QString::number(num_albums) + " albums<br />";
+	msg_text += QString::number(num_songs) + " tracks";
 
 
-	vector<MetaData> tracks;
-	_db->getAllTracksByArtist(artist.id, tracks, _cur_searchstring, _sort_tracks);
 	QStringList artist_paths;
-	foreach(MetaData md, tracks){
+	QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+	foreach(MetaData md, _v_metadata){
 
 		QString filepath = md.filepath;
-		QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
-		filepath = filepath.replace(lib_path, ".");
+		filepath = filepath.replace(lib_path, "${ML}");
 		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
 		if(!artist_paths.contains(filepath, Qt::CaseInsensitive)){
 			artist_paths.push_back(filepath);
 		}
 	}
 
-	QString info_text = QString::number(artist.num_albums) + " albums\n" +
-						QString::number(artist.num_songs) + " songs\n\n";
-
 	foreach(QString path, artist_paths){
-		info_text += QString(path + "\n");
+		info_text += QString(path) + "<br/>";
 	}
 
 	int rnd_album = rand() % _v_albums.size();
 
-	_album_of_interest = _v_albums[rnd_album];
-	_album_of_interest.artists.clear();
-	_album_of_interest.artists.push_back(artist.name);
-	_album_of_interest.name = _v_albums[rnd_album].name;
+	if(various_artists){
+		cover_path = Helper::getIconPath() + "append.png";
+	}
 
-	QString cover_path = Helper::get_cover_path(artist.name, _album_of_interest.name);
-	if(!QFile::exists(cover_path)){
-		qDebug() << "Cover path " << cover_path << " does not exist";
+	else {
+		cover_path = Helper::get_cover_path(first_artist_name, _v_albums[rnd_album].name);
 	}
 
 	QPixmap pm = QPixmap(cover_path);
 	bool cover_found = !pm.isNull();
+
+	if(_album_msg_box)
+		delete _album_msg_box;
+
+	_album_msg_box = new QMessageBox();
+
 
 	if(cover_found){
 		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
@@ -950,16 +1021,23 @@ void GUI_Library_windowed::info_artist(){
 	}
 
 	else{
-		qDebug() << Q_FUNC_INFO << " No cover found...";
-		MetaData md;
 
-		md.album_id = _album_of_interest.id;
-		md.album = _album_of_interest.name;
-		md.artist = artist.name;
+		cover_path = Helper::getIconPath() + "append.png";
+		QPixmap pm_tmp = QPixmap(cover_path);
+		pm_tmp = pm_tmp.scaledToWidth(150, Qt::SmoothTransformation);
+		_album_msg_box->setIconPixmap(pm_tmp);
+
+		MetaData md;
+		md.album_id = _v_albums[rnd_album].id;
+		md.album = _v_albums[rnd_album].name;
+		md.artist = first_artist_name;
 
 		emit sig_search_cover(md);
 	}
 
+
+
+	_album_msg_box->setText(msg_text);
 	_album_msg_box->setInformativeText(info_text);
 	_album_msg_box->exec();
 	_album_msg_box->close();
@@ -969,11 +1047,13 @@ void GUI_Library_windowed::info_artist(){
 
 void GUI_Library_windowed::delete_artist(){
 
-	if(_selected_artist == -1) return;
-	vector<MetaData> vec_md;
-	_db->getAllTracksByArtist(_selected_artist, vec_md, _cur_searchstring, _sort_tracks);
-	deleteSomeTracks(vec_md);
+	if(_selected_artists.size() == 0) return;
 
+	foreach(int artist_id, _selected_artists){
+		vector<MetaData> vec_md;
+		_db->getAllTracksByArtist(artist_id, vec_md, _cur_searchstring, _sort_tracks);
+		deleteSomeTracks(vec_md);
+	}
 }
 
 
@@ -1197,8 +1277,6 @@ void GUI_Library_windowed::cover_changed(bool success, QString path){
 
 void GUI_Library_windowed::library_changed(){
 
-	int artist_id = _selected_artist;
-	int album_id = _selected_album;
 	QString search_string = _cur_searchstring;
 
 	if(search_string.size() > 2){
@@ -1213,24 +1291,30 @@ void GUI_Library_windowed::library_changed(){
 		text_line_edited(search_string);
 	}
 
-	if(artist_id >= 0){
+	if(_selected_artists.size() > 0){
 		for(uint i=0; i<_v_artists.size(); i++){
-			if(artist_id == _v_artists[i].id){
-				QModelIndex idx = this->_artist_model->index(i, 0);
-				this->ui->lv_artist->selectRow(i);
-				artist_pressed(idx);
-				break;
+			for(int j=0; j<_selected_artists.size(); j++){
+				if(_selected_artists[j] == _v_artists[i].id){
+					QModelIndex idx = this->_artist_model->index(i, 0);
+					this->ui->lv_artist->selectRow(i);
+					artist_pressed(idx);
+					break;
+				}
 			}
+
 		}
 	}
 
-	if(album_id >= 0){
+	if(_selected_albums.size() > 0){
 		for(uint i=0; i<_v_albums.size(); i++){
-			if(album_id == _v_albums[i].id){
-				QModelIndex idx = this->_album_model->index(i, 0);
-				this->ui->lv_album->selectRow(i);
-				album_pressed(idx);
-				break;
+			for(int j=0; j<_selected_albums.size(); j++){
+
+				if(_selected_albums[j] == _v_albums[i].id){
+					QModelIndex idx = this->_album_model->index(i, 0);
+					this->ui->lv_album->selectRow(i);
+					album_pressed(idx);
+					break;
+				}
 			}
 		}
 	}

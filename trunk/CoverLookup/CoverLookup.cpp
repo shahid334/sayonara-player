@@ -134,6 +134,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 
 	if (_thread->isRunning())
 		return;
+
 	_emit_type = EMIT_ONE;
 
 	if (_metadata.album_id != -1) {

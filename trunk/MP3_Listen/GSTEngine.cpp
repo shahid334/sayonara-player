@@ -22,7 +22,6 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "MP3_Listen/Engine.h"
 #include "MP3_Listen/GSTEngine.h"
 

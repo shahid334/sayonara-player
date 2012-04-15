@@ -37,6 +37,10 @@ QString Style::get_player_back_color(){
 	return QString("#383838");
 }
 
+QString Style::get_player_fore_color(){
+	return QString("#D8D8D8");
+}
+
 QString Style::get_tv_style(bool dark){
 
 
@@ -144,11 +148,11 @@ QString Style::get_btn_style(int intensity){
 		"padding-right: 1px; "
 		"}"
 		"QPushButton:checked"
-		"{"
+		"\{"
 		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0." + QString::number(intensity) + " rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
 		"}"
 		"QPushButton:pressed"
-		"{"
+		"\{"
 		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
 		"}";
 
@@ -214,6 +218,49 @@ QString Style::get_h_scrollbar_style(){
 			  "}";
 
 	return scrollbar_style;
+}
+
+QString Style::get_menubar_style(bool dark){
+	if(!dark) return "";
+
+	QString menubar_style = QString("") +
+			"QMenuBar \{" +
+			"   color: " + get_player_fore_color() + "; " +
+			"	background-color: " + get_player_back_color() + "; " +
+			"} " +
+
+			"QMenuBar::item \{" +
+			"   color: " + get_player_fore_color() + "; " +
+			"   background-color: " + get_player_back_color() + "; " +
+			"} " +
+			"QMenuBar::item:selected \{ " +
+			"   background: #686868; " +
+			"}";
+
+
+	return menubar_style;
+
+
+}
+
+
+QString Style::get_menu_style(bool dark){
+	if (!dark ) return "";
+	QString qmenustyle = QString("") +
+		"QMenu { " +
+		"     background-color: " + get_player_back_color() + "; " +
+		"} " +
+
+		"QMenu::item { " +
+
+		"    background-color: transparent; " +
+		"} " +
+
+		"QMenu::item:selected { " +
+		"   background: #686868; " +
+		"} ";
+
+	return qmenustyle;
 }
 
 

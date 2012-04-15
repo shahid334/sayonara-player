@@ -66,6 +66,39 @@ int CDatabaseConnector::getMaxArtistID(){
 }
 
 
+Artist CDatabaseConnector::getArtistByID(const int &id){
+	 QSqlQuery q (this -> m_database);
+	Artist artist;
+
+	if (id!=-1) {
+		QString query = QString("SELECT ") +
+					"artists.name, COUNT(DISTINCT albums.albumID), COUNT(DISTINCT tracks.trackID)"+
+					"FROM artists, albums, tracks " +
+					"WHERE artists.artistID = ? " +
+					"AND tracks.artistID = artists.artistID " +
+					"AND tracks.albumID = albums.albumID " +
+					"GROUP BY artists.name;";
+
+		q.prepare(query);
+		q.addBindValue(QVariant (id));
+
+		if (!q.exec()) {
+			throw QString ("SQL - Error: getArtistName " + id);
+		}
+
+		if (q.next()) {
+			artist.id = id;
+			artist.name = q.value(0).toString().trimmed();
+			artist.num_albums = q.value(1).toInt();
+			artist.num_songs = q.value(2).toInt();
+			return artist;
+		}
+	}
+
+	return artist;
+}
+
+
 int CDatabaseConnector::getArtistID (const QString & artist)  {
     QSqlQuery q (this -> m_database);
     int artistID = -1;

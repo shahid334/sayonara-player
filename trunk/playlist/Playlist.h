@@ -113,10 +113,12 @@ public:
 
 	Playlist_Mode		_playlist_mode;
 	int					_radio_active;
+	CDatabaseConnector* _db;
 
 
 	/* wrapper for Helper::checkTrack */
 	bool 				checkTrack(const MetaData& md);
+
 
 
 

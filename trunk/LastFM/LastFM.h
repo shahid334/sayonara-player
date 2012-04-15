@@ -29,6 +29,7 @@
 #ifndef LASTFM_H_
 #define LASTFM_H_
 
+
 #include "HelperStructs/MetaData.h"
 #include "LastFM/LFMSimilarArtistsThread.h"
 
@@ -71,8 +72,7 @@ public:
 	private:
 
 		bool 			_logged_in;
-		QString			_api_key;
-		QString			_api_secret;
+
 		QString			_username;
 		QString			_auth_token;
 		QString			_session_key;
@@ -81,7 +81,12 @@ public:
 
 	public:
 		void login(QString, QString);
-		QString get_api_key();
+		static QString get_api_key();
+
+		static QString calc_album_lfm_adress(QString album);
+		static QString calc_search_album_adress(QString album);
+		static QString calc_search_artist_adress(QString album);
+
 
 	private:
 		QString parse_session_answer();

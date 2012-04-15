@@ -164,14 +164,8 @@ private:
 	QString _sort_artists; /* [name | tracks] [asc | desc] */
 	QString _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
-	int 	_selected_artist;
-	QString _selected_artist_name;
-
-	int 	_selected_album;
-	QString _selected_album_name;
-
-
-	Album _album_of_interest;
+	QList<int> 	_selected_artists;
+	QList<int> 	_selected_albums;
 
 	/* this parameter tells if a filter is applied or everything is shown
 	 * and is only used in the text_line_edited function

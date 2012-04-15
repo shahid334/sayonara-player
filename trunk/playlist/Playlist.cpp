@@ -16,11 +16,6 @@
 
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-
-/*
- * Playlist.cpp
  *
  *  Created on: Apr 6, 2011
  *      Author: luke
@@ -39,7 +34,6 @@
 #include <QFile>
 #include <QList>
 #include <QObject>
-#include <QDebug>
 
 #include <iostream>
 #include <ctime>
@@ -49,18 +43,16 @@ using namespace std;
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
 	_radio_active = false;
-
 	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
+	_db = CDatabaseConnector::getInstance();
 }
 
 Playlist::~Playlist() {
 
-
-	// TODO Auto-generated destructor stub
 }
 
 
-
+// call this function if all extern signals/slots for this class are defined
 void Playlist::ui_loaded(){
 
 	_v_meta_data.clear();
@@ -87,6 +79,7 @@ void Playlist::ui_loaded(){
 
 
 
+// save the playlist, for possibly reloading it on next startup
 void Playlist::psl_save_playlist_to_storage(){
 
 	if(_radio_active){
@@ -105,48 +98,7 @@ void Playlist::psl_save_playlist_to_storage(){
 
 
 
-
-
-
-void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
-
-	if(radio != _radio_active) psl_stop();
-	_radio_active = radio;
-	emit sig_radio_active(radio);
-
-	if(!_playlist_mode.append){
-		_v_meta_data.clear();
-		_cur_play_idx = -1;
-	}
-
-    uint files2fill = pathlist.size();
-
-    vector<MetaData> v_md_tmp;
-    for(uint i=0; i<files2fill; i++){
-
-		if(PlaylistParser::is_supported_playlist(pathlist[i])){
-			continue;
-		}
-
-		if(QFile::exists(pathlist[i])){
-			MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
-			md.is_extern = true;
-
-			_v_extern_tracks.push_back(md);
-			_v_meta_data.push_back(md);
-		}
-
-		double percent = i * 1.0 / files2fill;
-		emit sig_mp3s_loaded_signal((int) (percent * 100));
-	}
-
-	emit sig_mp3s_loaded_signal(100);
-
-	psl_save_playlist_to_storage();
-	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
-}
-
-
+// create a playlist, where metadata is already available
 void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 
 	// no tracks in new playlist
@@ -165,13 +117,13 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 
 	vector<MetaData> v_meta_data_tmp;
 
-
 	for(uint i=0; i<v_meta_data.size(); i++){
 
 		MetaData md = v_meta_data.at(i);
 		if( checkTrack(md) )
 			v_meta_data_tmp.push_back(md);
 	}
+
 
 	v_meta_data = v_meta_data_tmp;
 
@@ -203,22 +155,118 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 	}
 }
 
+
+
+// create a new playlist, where only filepaths are given
+// Load Folder, Load File...
+void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
+
+	if(radio != _radio_active)
+		psl_stop();
+
+	_radio_active = radio;
+	emit sig_radio_active(radio);
+
+	if(!_playlist_mode.append){
+		_v_meta_data.clear();
+		_cur_play_idx = -1;
+	}
+
+    uint files2fill = pathlist.size();
+
+
+    vector<MetaData> v_md_from_playlist;
+
+    // parse playlist sound files
+    for(uint i=0; i<files2fill; i++){
+
+    	if(!QFile::exists(pathlist[i])) continue;
+		if(!PlaylistParser::is_supported_playlist(pathlist[i])) continue;
+
+		PlaylistParser::parse_playlist(pathlist[i], v_md_from_playlist);
+
+    }
+
+    // push titles from playlist into playlist
+    for(uint i=0; i<v_md_from_playlist.size(); i++){
+
+    	MetaData md = v_md_from_playlist[i];
+    	QString filepath = md.filepath.trimmed();
+
+		if(_db->getTrackByPath(filepath) <= 0){
+			md.is_extern = true;
+			_v_extern_tracks.push_back(md);
+		}
+
+		else md.is_extern = false;
+
+		_v_meta_data.push_back(md);
+
+    }
+
+    // parse pure sound files
+    // throw those files away, that were already loaded by a m3u, pls or different playlist
+    for(uint i=0; i<files2fill; i++){
+
+    	// only pure sound files are allowed
+    	if(!Helper::is_soundfile(pathlist[i])) continue;
+
+
+		MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
+		bool already_found_in_pl = false;
+
+		// look in playlist files
+		for(uint j=0; j<v_md_from_playlist.size(); j++){
+
+			if(v_md_from_playlist[j].filepath == md.filepath){
+				already_found_in_pl = true;
+				break;
+			}
+		}
+
+		if(!already_found_in_pl){
+			QString filepath = md.filepath.trimmed();
+
+			if(_db->getTrackByPath(filepath) <= 0){
+				md.is_extern = true;
+				_v_extern_tracks.push_back(md);
+			}
+
+			else md.is_extern = false;
+
+			_v_meta_data.push_back(md);
+		}
+
+		double percent = i * 1.0 / files2fill;
+		emit sig_mp3s_loaded_signal((int) (percent * 100));
+
+    }
+
+
+	emit sig_mp3s_loaded_signal(100);
+
+	psl_save_playlist_to_storage();
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+}
+
+
+// create playlist from saved custom playlist
 void Playlist::psl_createPlaylist(CustomPlaylist& pl, int radio){
 	psl_createPlaylist(pl.tracks, radio);
 }
 
 
-
+// remove one row
 void Playlist::psl_remove_row(int row){
 
+	vector<MetaData> v_tmp_extern;
+	QString filepath = "";
 
 	if(row < _cur_play_idx) _cur_play_idx --;
 	else if(row == _cur_play_idx) _cur_play_idx = -1;
 
-	QString filepath = (_v_meta_data.begin() + row)->filepath;
+	filepath = (_v_meta_data.begin() + row)->filepath;
 	_v_meta_data.erase(this->_v_meta_data.begin() + row);
-
-	vector<MetaData> v_tmp_extern;
 
 	for(uint i=0; i<_v_extern_tracks.size(); i++){
 		MetaData md = _v_extern_tracks.at(i);
@@ -233,6 +281,8 @@ void Playlist::psl_remove_row(int row){
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
+
+// a directory was dropped from extern desktop
 void Playlist::psl_directoryDropped(const QString& dir, int row){
 
 	if(_radio_active != RADIO_OFF){
@@ -241,17 +291,17 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
 	}
 
 	CDirectoryReader reader;
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-
 	QStringList fileList;
-    int num_files = 0;
-    reader.getFilesInsiderDirRecursive(QDir(dir), fileList, num_files);
+	vector<MetaData> vec_md;
+	int num_files = 0;
 
-    vector<MetaData> vec_md;
+
+	reader.getFilesInsiderDirRecursive(QDir(dir), fileList, num_files);
+
     foreach(QString filepath, fileList){
     	MetaData md = ID3::getMetaDataOfFile(filepath);
 
-    	if(db->getTrackByPath(filepath) <= 0){
+    	if( _db->getTrackByPath(filepath) <= 0 ){
 
     		md.is_extern = true;
     		_v_extern_tracks.push_back(md);
@@ -266,8 +316,10 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
 
 }
 
+// insert tracks (also drag & drop)
 void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 
+	// turn off radio
 	bool switched_from_radio = false;
 	if(_radio_active != RADIO_OFF){
 		switched_from_radio = true;
@@ -276,20 +328,20 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 	}
 
 	vector<MetaData> new_vec;
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
+	// possibly the current playing index has to be updated
 	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
-	qDebug() << "loop 1";
+	// all titles before the current row stay as they are
 	for(int i=0; i<row; i++){
 		new_vec.push_back(_v_meta_data.at(i));
 	}
 
-	qDebug() << "loop 2";
+	// insert new tracks
 	for(uint i=0; i<v_metadata.size(); i++){
 		MetaData md = v_metadata.at(i);
-		if(db->getTrackByPath(md.filepath) > 0){
+		if( _db->getTrackByPath(md.filepath) > 0 ){
 			md.is_extern = false;
 		}
 
@@ -300,6 +352,7 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 		new_vec.push_back(md);
 	}
 
+	// append all old tracks with higher index as row
 	for(uint i=row; i<_v_meta_data.size(); i++)
 		new_vec.push_back(_v_meta_data.at(i));
 
@@ -309,6 +362,8 @@ void Playlist::psl_insert_tracks(const vector<MetaData>& v_metadata, int row){
 
 	psl_save_playlist_to_storage();
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+
+	// radio was turned off, so we start at beginning of playlist
 	if(switched_from_radio && _v_meta_data.size() > 0){
 		_cur_play_idx = 0;
 		emit sig_selected_file_changed(0);
@@ -323,7 +378,7 @@ void Playlist::psl_insert_albums(const vector<Album>& v_albums, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_albums.size(); i++){
 		vector<MetaData> vec;
-		CDatabaseConnector::getInstance()->getAllTracksByAlbum(v_albums.at(i).id, vec);
+		_db->getAllTracksByAlbum(v_albums.at(i).id, vec);
 		psl_insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
@@ -334,25 +389,30 @@ void Playlist::psl_insert_artists(const vector<Artist>& v_artists, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_artists.size(); i++){
 		vector<MetaData> vec;
-		CDatabaseConnector::getInstance()->getAllTracksByArtist(v_artists.at(i).id, vec);
+		_db->getAllTracksByArtist(v_artists.at(i).id, vec);
 		psl_insert_tracks(vec, tmp_idx);
 		tmp_idx += vec.size();
 	}
 }
 
 
+// play a track
 void Playlist::psl_play(){
 
 	if(_v_meta_data.size() <= 0) return;
 
+	// state was stop until now
 	if(_cur_play_idx <= -1){
-		int track_num = 0;
 
+		int track_num = 0;
 		MetaData md = _v_meta_data[track_num];
+
 		if( checkTrack(md) ){
 			_cur_play_idx = track_num;
+
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(md);
+
 			if(_playlist_mode.dynamic)
 				emit sig_search_similar_artists(md.artist);
 		}
@@ -378,11 +438,19 @@ void Playlist::psl_stop(){
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
+// fwd was pressed -> next track
 void Playlist::psl_forward(){
 
+	MetaData md;
+	int track_num = 0;
 
+
+	// lastfm removes current played file
+	// next file is also on idx 0
 	if(_radio_active == RADIO_LFM){
 		psl_remove_row(0);
+
+		// any more files to play?
 		if(_v_meta_data.size() == 0){
 			emit sig_no_track_to_play();
 			emit sig_need_more_radio();
@@ -401,23 +469,29 @@ void Playlist::psl_forward(){
 	}
 
 
-	MetaData md;
-	int track_num = 0;
-
+	// SHUFFLE
 	if(_playlist_mode.shuffle){
 		track_num = rand() % _v_meta_data.size();
 	}
 
+	// new track within normal playlist
 	else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
-		track_num = _cur_play_idx + 1;
+
+		if( _playlist_mode.repAll )
+			track_num = (_cur_play_idx + 1) % _v_meta_data.size();
+		else
+			track_num = (_cur_play_idx + 1);
 	}
 
 	md = _v_meta_data[track_num];
 
 	if( checkTrack(md) ){
+
 		_cur_play_idx = track_num;
+
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
+
 		if(_playlist_mode.dynamic)
 			emit sig_search_similar_artists(md.artist);
 	}
@@ -516,7 +590,7 @@ void Playlist::psl_next_track(){
 		MetaData md = _v_meta_data[track_num];
 
 		// maybe track is deleted here
-		if(Helper::checkTrack(md)){
+		if( checkTrack(md) ){
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
@@ -527,7 +601,6 @@ void Playlist::psl_next_track(){
 		else{
 			psl_remove_row(track_num);
 			psl_next_track();
-			emit sig_library_changed();
 		}
 	}
 
@@ -536,6 +609,7 @@ void Playlist::psl_next_track(){
 		if(_radio_active == RADIO_LFM)
 			sig_need_more_radio();
 		emit sig_no_track_to_play();
+
 	}
 }
 
@@ -578,6 +652,7 @@ void Playlist::psl_change_track(int new_row){
 	}
 
 	else{
+		_db->deleteTrack(md);
 		_cur_play_idx = -1;
 		psl_remove_row(new_row);
 		emit sig_no_track_to_play();
@@ -628,10 +703,6 @@ void Playlist::psl_save_playlist(const QString& filename){
 
 		fclose(file);
 	}
-
-	else{
-		qDebug() <<  Q_FUNC_INFO << " File could not be openend; " << filename;
-	}
 }
 
 
@@ -643,9 +714,6 @@ void Playlist::psl_playlist_mode_changed(const Playlist_Mode& playlist_mode){
 	_playlist_mode.print();
 
 }
-
-
-
 
 
 void Playlist::psl_edit_id3_request(){
@@ -683,7 +751,7 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 	do {
 		int artist_id = artists.at(cur_artist_idx);
 		vector<MetaData> vec_tracks;
-		CDatabaseConnector::getInstance()->getAllTracksByArtist(artist_id, vec_tracks);
+		_db->getAllTracksByArtist(artist_id, vec_tracks);
 
 		// give each artist several trys
 		int max_rounds = vec_tracks.size();
@@ -793,6 +861,8 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 bool  Playlist::checkTrack(const MetaData& md){
 	if(Helper::checkTrack(md)) return true;
 	else {
+		MetaData md_cp = md;
+		_db->deleteTrack(md_cp);
 		emit sig_library_changed();
 		return false;
 	}

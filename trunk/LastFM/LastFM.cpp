@@ -31,10 +31,12 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/globals.h"
 #include "LastFM/LastFM.h"
 #include "LastFM/LFMSimilarArtistsThread.h"
 #include "LastFM/LFMWebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+
 
 #include <iostream>
 #include <curl/curl.h>
@@ -56,12 +58,11 @@ using namespace std;
 LastFM::LastFM() {
 
 	lfm_wa_init();
-	_api_key = QString("51d6f9eaef806f603f346844bef326ba");
-	_api_secret = QString("1093d769e54858cb0d21d42b35a8f603");
+
 
 	_logged_in = false;
 
-	_similar_artists_thread = new LFM_SimilarArtists(_api_key);
+	_similar_artists_thread = new LFM_SimilarArtists(LFM_API_KEY);
 	connect(_similar_artists_thread, SIGNAL(finished()), this, SLOT(sim_artists_thread_finished()));
 }
 
@@ -78,7 +79,7 @@ QString LastFM::create_signature(const UrlParams& data){
 		signature += it.value();
 	}
 
-	signature += _api_secret;
+	signature += LFM_API_SECRET;
 	return QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
 }
 
@@ -165,7 +166,7 @@ void LastFM::login(QString username, QString password){
 	_auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
 
 	UrlParams signature_data;
-		signature_data["api_key"] = _api_key;
+		signature_data["api_key"] = LFM_API_KEY;
 		signature_data["authToken"] = _auth_token;
 		signature_data["method"] = QString("auth.getmobilesession");
 		signature_data["username"] = _username;
@@ -237,7 +238,7 @@ void LastFM::update_track(const MetaData& metadata){
 	QString title = metadata.title;
 
 	UrlParams sig_data;
-		sig_data["api_key"] = _api_key;
+		sig_data["api_key"] = LFM_API_KEY;
 		sig_data["artist"] = artist;
 		sig_data["duration"] = QString::number(metadata.length_ms / 1000);
 		sig_data["method"] = QString("track.updatenowplaying").toLocal8Bit();
@@ -278,7 +279,7 @@ void LastFM::scrobble(const MetaData& metadata){
 	QString title = metadata.title;
 
 	UrlParams sig_data;
-		sig_data["api_key"] = _api_key;
+		sig_data["api_key"] = LFM_API_KEY;
 		sig_data["artist"] = artist;
 		sig_data["duration"] = QString::number(metadata.length_ms / 1000);
 		sig_data["method"] = QString("track.scrobble");
@@ -321,7 +322,7 @@ void LastFM::sim_artists_thread_finished(){
 }
 
 QString LastFM::get_api_key(){
-	return _api_key;
+	return LFM_API_KEY;
 }
 
 void LastFM::radio_init(const QString& str, bool artist){
@@ -452,3 +453,6 @@ void LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& d
 		v_md.push_back(md);
 	}
 }
+
+
+

@@ -39,11 +39,14 @@ namespace Style{
 
 	QString get_tv_style(bool dark);
 	QString get_player_back_color();
+	QString get_player_fore_color();
 
 	QString get_v_scrollbar_style();
 	QString get_h_scrollbar_style();
 	QString get_tv_header_style();
 	QString get_btn_style(int intensity=7);
+	QString get_menubar_style(bool dark);
+	QString get_menu_style(bool dark);
 };
 
 
