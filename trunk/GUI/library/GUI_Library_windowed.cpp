@@ -253,6 +253,7 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	Q_UNUSED(idx);
 
 	_selected_artists.clear();
+	_selected_albums.clear();
 
 	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
 
@@ -450,10 +451,8 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 	_cur_searchstring = "";
 
-	qDebug() << "clear";
 	this->ui->le_search->clear();
 	_everything_loaded = false;
-	qDebug() << "clear edit line";
 	text_line_edited(" ");
 
 }
@@ -600,17 +599,13 @@ QString GUI_Library_windowed::getTotalTimeString(Album& album){
 			Helper::cvtNum2String(secs) +
 			"s";
 
-
-
 	return str;
-
 
 }
 
 
 
 void GUI_Library_windowed::id3_tags_changed(){
-
 
 	refresh();
 }
@@ -645,7 +640,6 @@ void GUI_Library_windowed::sort_albums_by_column(int col){
 				vec_albums.push_back(vec_albums_tmp[i]);
 			}
 		}
-
 	}
 
 	else{
@@ -720,8 +714,6 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 			else _sort_tracks = "bitrate asc";
 		}
 
-
-
 		vector<MetaData> vec_md;
 
 		// searchstring, no album selected, no artist selected
@@ -740,8 +732,6 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 					vec_md.push_back(tmp_md[i]);
 				}
 			}
-
-
 		}
 
 		// possible searchstring, artist selected
@@ -754,15 +744,12 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 					vec_md.push_back(tmp_md[i]);
 				}
 			}
-
-
 		}
 
 		// no album, no artist, no searchstring
 		else{
 			_db->getTracksFromDatabase(vec_md, _sort_tracks);
 		}
-
 
 		fill_library_tracks(vec_md);
 }
