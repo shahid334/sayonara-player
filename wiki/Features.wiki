@@ -1,23 +1,23 @@
 = Implemented Features =
 
+  
   * Playlist
+  * Media Library
+  * Lyrics
   * Cover fetch
   * LastFM scrobbling
-  * Media Library
-  * Equalizer (GStreamer- and Xine backend on Phonon)
-  * ID3 Tagger
-  * Dynamic Playlists (using LastFM)
-  * Pure Gstreamer without Phonon
-  * Phonon optionally as plugin
-  * Lyrics
   * LastFM radio
+  * Dynamic Playlists (using LastFM)
+  * Equalizer
+  * ID3 Tagger
+  * Gstreamer backend
   * Custom playlists
   * Online Streams (e.g. Web-Radio)
-
-
+  * optional Phonon plugin
 
 = Todo =
   
   * Extern audio player integration (with optional format conversion)
   * iTunes / Amarok db integration
+  * VLC backend
  
