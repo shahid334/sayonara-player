@@ -1,8 +1,5 @@
 = How to compile Sayonara =
 
-*Please consider that this player is still in development, Much of the functionality is visible, but maybe not working. The player seems to compile and run on most systems but there were no extended tests*
-
-Please wait until end of June before telling us and the world, that this player isn't running on your system...
 
 == Libraries ==
 
