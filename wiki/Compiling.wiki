@@ -6,13 +6,15 @@ Please wait until end of June before telling us and the world, that this player 
 
 == Libraries ==
 
-  * Qt: Gui, Core, Phonon, Xml, Sqlite http://qt.nokia.com/products/
+  * Qt >= 4.7: Gui, Core, Phonon, Xml, Sqlite http://qt.nokia.com/products/
   * libcurl http://curl.haxx.se/libcurl/
   * Taglib http://developer.kde.org/~wheeler/taglib.html
   * Gstreamer development files, GStreamer plugins
 
 
 == Linux ==
+
+  Due to the plugin-based design there are several makefiles now: Makefile, Makefile.sayonara, Makefile.gstreamer, Makefile.phonon. Makefile is just a wrapper for the three smaller ones. This wrapper Makefile also builds its dependency-Makefiles out of the Qt project files automatically (Sayonara.pro, Gstreamer.pro, Phonon.pro). Gstreamer is mandatory and will be linked static to sayonara while Phonon is build as a complete optional plugin which brings its own installation routine. 
 
   *For building just Sayonara type
   <b>make sayonara</b><br />
@@ -25,6 +27,12 @@ Please wait until end of June before telling us and the world, that this player 
 
   *For building everything
   <b>make (all)</b><br />
+
+  *Installing sayonara is done by
+  <b>make -f Makefile.sayonara install</b>
+
+  *Installing the phonon plugin is done by
+  <b>make -f Makefile.phonon install</b>
 
   <font color="#FF0000"><b>  *Do not use qmake anymore!!!</b></font>
 
