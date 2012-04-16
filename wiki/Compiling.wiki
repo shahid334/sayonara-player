@@ -1,3 +1,4 @@
+#labels Featured
 = How to compile Sayonara =
 
 
@@ -31,8 +32,12 @@
   * Installing the phonon plugin is done by
   <b>make -f Makefile.phonon install</b>
 
-  <font color="#FF0000"><b>  *Do not use qmake anymore!!!</b></font>
+  <font color="#FF0000"><b>  *Do not use qmake anymore!!!</b></font><br />
   If you have used qmake, you can restore the Makefile by renaming the Makefile.bak
+  <br /><br />
+
+  Debian packages can be created by executing the *2debian.sh scripts in the linux_packages folder
+
 
 
 == Windows ==
