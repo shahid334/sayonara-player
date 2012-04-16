@@ -3,7 +3,7 @@
 DEBIAN_DIR=phonon.debian
 CUR_DIR=$PWD
 
-if [ $1 = "clean" ] ; then
+if [ "$1" = "clean" ] ; then
 	rm -rf $DEBIAN_DIR
 	exit
 fi
