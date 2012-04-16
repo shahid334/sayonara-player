@@ -20,7 +20,7 @@ fi
 
 cd $CUR_DIR
 
-cp ../libsayonara_phonon.so $DEBIAN_DIR/usr/lib
+cp ../libsayonara_phonon.so $DEBIAN_DIR/usr/lib/sayonara
 cp ./resources/libsayonara-phonon.prerm $DEBIAN_DIR
 cp ./resources/libsayonara-phonon.control $DEBIAN_DIR/DEBIAN/control
 
