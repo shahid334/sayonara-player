@@ -37,6 +37,7 @@ Makefile.phonon: Phonon.pro
 
 clean: sayonara_clean phonon_clean gst_clean
 	rm -rf Makefile.*
+	cp Makefile Makefile.bak
 
 
 
