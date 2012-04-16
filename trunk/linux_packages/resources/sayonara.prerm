@@ -1,0 +1,5 @@
+#!/bin/bash
+rm -rf /usr/share/sayonara
+rm -f /usr/bin/sayonara
+rm -f /usr/share/applications/sayonara.desktop
+update-menus

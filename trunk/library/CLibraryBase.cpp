@@ -165,7 +165,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
 			// fetch all entries of a file, maybe it's a directory
 			QDir sub_dir(files2copy[i]);
-			QStringList sub_files = sub_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotDot | QDir::NoDot, QDir::DirsFirst);
+			QStringList sub_files = sub_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDir::DirsFirst);
 
 			// it is a directory
 			if(sub_files.size() != 0){

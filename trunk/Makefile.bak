@@ -1,5 +1,7 @@
-all: phonon gst sayonara
+all: gst sayonara
 	
+install: sayonara
+	make -f Makefile.sayonara install
 
 sayonara: gst Makefile.sayonara
 	make -f Makefile.sayonara
@@ -17,19 +19,20 @@ gst_clean:
 phonon: Makefile.phonon
 	make -f Makefile.phonon
 
+phonon-install: phonon
+	make -f Makefile.phonon install
+
 phonon_clean: Makefile.phonon
 	make -f Makefile.phonon clean
 
 
-Makefile.sayonara:
+Makefile.sayonara: Sayonara.pro
 	qmake Sayonara.pro -o Makefile.sayonara
 
-
-
-Makefile.gstreamer:
+Makefile.gstreamer: Gstreamer.pro
 	qmake Gstreamer.pro -o Makefile.gstreamer
 
-Makefile.phonon:
+Makefile.phonon: Phonon.pro
 	qmake Phonon.pro -o Makefile.phonon
 
 clean: sayonara_clean phonon_clean gst_clean
