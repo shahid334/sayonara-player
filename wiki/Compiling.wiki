@@ -35,6 +35,7 @@ Please wait until end of June before telling us and the world, that this player 
   <b>make -f Makefile.phonon install</b>
 
   <font color="#FF0000"><b>  *Do not use qmake anymore!!!</b></font>
+  If you have used qmake, you can restore the Makefile by renaming the Makefile.bak
 
 
 == Windows ==
