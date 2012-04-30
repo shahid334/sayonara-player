@@ -40,36 +40,47 @@
 #include <QtXml>
 #include <string>
 
+#define LFM_RADIO_MODE_ARTIST 0
+#define LFM_RADIO_MODE_TAG 1
 
 #define UrlParams QMap<QString, QString>
 
+// singleton base LastFM API class
+// signals and slots are handled by the adapter class
 class LastFM : public QObject{
 
-	Q_OBJECT
-public:
-	LastFM();
-	virtual ~LastFM();
+	public:
+		static LastFM * getInstance();
+		virtual ~LastFM();
 
-	signals:
-		void similar_artists_available(QList<int>&);
-		void last_fm_logged_in(bool);
-		void new_radio_playlist(const vector<MetaData>&);
 
-	public slots:
-		void scrobble(const MetaData&);
-		void update_track(const MetaData&);
-		void login_slot(QString, QString);
-		void get_similar_artists(const QString&);
-		void radio_init(const QString&, bool);
-		void radio_get_playlist();
+		bool scrobble(const MetaData&);
+		bool update_track(const MetaData&);
+		bool get_similar_artists(const QString&, QList<int>& artist_ids);
+		bool radio_init(const QString& search_str, int radio_mode);
+		bool radio_get_playlist(vector<MetaData>& v_md);
 
-	private slots:
-		void sim_artists_thread_finished();
+		bool login(QString username, QString password);
+		static QString get_api_key();
+
+		static QString calc_album_lfm_adress(QString album);
+		static QString calc_search_album_adress(QString album);
+		static QString calc_search_artist_adress(QString album);
+
+		QString getArtistInfo(const QString& artist);
+		QString getAlbumInfo(const QString& artist, const QString& album);
+		QString getTrackInfo(const QString& artist, const QString& title);
 
 
 
 
 	private:
+
+		 LastFM();
+		 LastFM(const LastFM&);
+		 LastFM& operator=(const LastFM&);
+
+		 void init();
 
 		bool 			_logged_in;
 
@@ -79,25 +90,19 @@ public:
 		QString			_session_key2;
 
 
-	public:
-		void login(QString, QString);
-		static QString get_api_key();
-
-		static QString calc_album_lfm_adress(QString album);
-		static QString calc_search_album_adress(QString album);
-		static QString calc_search_artist_adress(QString album);
-
-
 	private:
 		QString parse_session_answer();
 		LFM_SimilarArtists* _similar_artists_thread;
-		void parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
+		bool parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
 
 		QString create_std_url(const QString& base_url, const UrlParams& data);
 		QString create_sig_url(const QString& base_url, const UrlParams& sig_data);
 		QString create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data);
 		QString create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data);
 		QString create_signature(const UrlParams& data);
+
+
+
 
 		bool check_login();
 

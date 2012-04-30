@@ -67,6 +67,7 @@ HEADERS += MP3_Listen/Engine.h \
     LastFM/LastFM.h \
     LastFM/LFMWebAccess.h \
     LastFM/LFMSimilarArtistsThread.h  \
+    LastFM/LastFMAdapter.h \
     GUI/GUI_TrayIcon.h \
     GUI/radio/GUI_RadioWidget.h \
     GUI/stream/GUI_Stream.h \
@@ -121,6 +122,7 @@ SOURCES += Main.cpp \
     LastFM/LastFM.cpp \
     LastFM/LFMSimilarArtistsThread.cpp \
     LastFM/LFMWebAccess.cpp \
+    LastFM/LastFMAdapter.cpp \
     GUI/GUI_TrayIcon.cpp \
     GUI/radio/GUI_RadioWidget.cpp \
     GUI/stream/GUI_Stream.cpp \

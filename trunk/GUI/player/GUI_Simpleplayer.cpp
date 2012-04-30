@@ -206,33 +206,8 @@ void GUI_SimplePlayer::setupConnections(){
 }
 
 
-void GUI_SimplePlayer::update_info(const MetaData& in) {
 
-
-	this->m_metadata = in;
-	qDebug() << m_metadata.toStringList();
-
-	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
-		this->ui->album->setText(in.album);
-
-	else
-		this->ui->album->setText(
-				in.album + " (" + QString::number(in.year) + ")");
-
-	this->ui->artist->setText(in.artist);
-	this->ui->title->setText(in.title);
-
-	if( this->ui->action_notification->isChecked() ){
-		m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + in.title + "\" by " + in.artist));
-	}
-
-	this->setWindowTitle(QString("Sayonara - ") + in.title);
-
-	emit wantCover(in);
-}
-
-
-void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
+void GUI_SimplePlayer::update_track(const MetaData & md) {
 
 	this->m_metadata = md;
 
@@ -260,13 +235,8 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
 	QString lengthString = getLengthString(md.length_ms);
 
-	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-	this->m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-	this->m_playAction->setText("Pause");
-
 	this->ui->maxTime->setText(lengthString);
-
-	// int tmpRating = (rand() % 4) + 1;
+	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 
 	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
 	if (md.bitrate < 96000)
@@ -290,11 +260,77 @@ void GUI_SimplePlayer::fillSimplePlayer(const MetaData & md) {
 
 	this->setWindowTitle(QString("Sayonara - ") + md.title);
 
-	this->m_completeLength_ms = md.length_ms;
-	this->m_playing = true;
-	this->m_trayIcon->playStateChanged(this->m_playing);
+	m_playAction->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+	m_playAction->setText("Pause");
 
+	m_completeLength_ms = md.length_ms;
+	m_playing = true;
+	m_trayIcon->playStateChanged(this->m_playing);
+
+	emit wantCover(md);
 }
+
+// public slot:
+// id3 tags have changed
+void GUI_SimplePlayer::update_info(const MetaData& in) {
+
+
+	this->m_metadata = in;
+
+	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
+		this->ui->album->setText(in.album);
+
+	else
+		this->ui->album->setText(
+				in.album + " (" + QString::number(in.year) + ")");
+
+	this->ui->artist->setText(in.artist);
+	this->ui->title->setText(in.title);
+
+	if( this->ui->action_notification->isChecked() ){
+		m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + in.title + "\" by " + in.artist));
+	}
+
+	this->setWindowTitle(QString("Sayonara - ") + in.title);
+
+	emit wantCover(in);
+}
+
+
+// public slot
+// cover was found by CoverLookup
+void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
+
+	// found cover is not for the player but for the library
+	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	if(our_coverpath.toLower() != cover_path.toLower()){
+		return;
+	}
+
+	if (!success){
+		this->ui->albumCover->setPixmap(
+				QPixmap::fromImage(
+						QImage(Helper::getIconPath() + "append.png")));
+		this->ui->albumCover->repaint();
+		return;
+	}
+
+
+
+	if (!QFile::exists(cover_path)) {
+		this->ui->albumCover->setPixmap(
+				QPixmap::fromImage(
+						QImage(Helper::getIconPath() + "append.png")));
+		this->ui->albumCover->repaint();
+		return;
+	}
+
+	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
+	this->ui->albumCover->setPixmap(cover);
+	this->ui->albumCover->repaint();
+}
+
+
 
 void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 	m_completeLength_ms = total_time;
@@ -419,7 +455,6 @@ QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
 
 void GUI_SimplePlayer::playClicked(bool) {
 
-	qDebug() << "m_playing before: " << this->m_playing;
 	bool play_tmp = false;
 	if (this->m_playing == true) {
 		this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -441,8 +476,6 @@ void GUI_SimplePlayer::playClicked(bool) {
 
 	this->ui->albumCover->setFocus();
 	this->m_playing = play_tmp;
-
-	qDebug() << "m_playing after: " << this->m_playing;
 
 	this -> m_trayIcon->playStateChanged (this->m_playing);
 
@@ -614,34 +647,6 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 }
 
-void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
-
-	// found cover is not for the player but for the library
-	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-	if(our_coverpath != cover_path) return;
-
-	if (!success){
-		this->ui->albumCover->setPixmap(
-				QPixmap::fromImage(
-						QImage(Helper::getIconPath() + "append.png")));
-		this->ui->albumCover->repaint();
-		return;
-	}
-
-
-
-	if (!QFile::exists(cover_path)) {
-		this->ui->albumCover->setPixmap(
-				QPixmap::fromImage(
-						QImage(Helper::getIconPath() + "append.png")));
-		this->ui->albumCover->repaint();
-		return;
-	}
-
-	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
-	this->ui->albumCover->setPixmap(cover);
-	this->ui->albumCover->repaint();
-}
 
 void GUI_SimplePlayer::coverClicked(bool) {
 
@@ -855,7 +860,6 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
 
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 	e->accept();
-	qDebug() << "Key = " << e->key();
 
 	switch (e->key()) {
 

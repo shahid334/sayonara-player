@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QString>
 
 #ifndef GLOBALS_H_
 #define GLOBALS_H_
@@ -34,6 +35,21 @@
 
 #define LFM_API_KEY 	QString("51d6f9eaef806f603f346844bef326ba")
 #define LFM_API_SECRET	QString("1093d769e54858cb0d21d42b35a8f603")
+
+
+#define GOOGLE_IMG_ICON QString("icon")
+#define GOOGLE_IMG_SMALL QString("small")
+#define GOOGLE_IMG_MEDIUM QString("medium")
+#define GOOGLE_IMG_LARGE QString("large")
+#define GOOGLE_IMG_XLARGE QString("xlarge")
+#define GOOGLE_IMG_XXLARGE QString("xxlarge")
+#define GOOGLE_IMG_HUGE QString("huge")
+
+#define GOOGLE_FT_JPG QString("jpg")
+#define GOOGLE_FT_PNG QString("png")
+#define GOOGLE_FT_GIF QString("gif")
+#define GOOGLE_FT_BMP QString("bmp")
+
 
 
 

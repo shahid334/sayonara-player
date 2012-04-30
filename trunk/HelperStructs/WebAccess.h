@@ -22,12 +22,14 @@
 #ifndef WEBACCESS_H_
 #define WEBACCESS_H_
 #include <QString>
+#include <QImage>
 
 
 
 namespace WebAccess {
 
 	bool read_http_into_str(QString url, QString& content);
+	bool read_http_into_img(QString url, QImage& image);
 };
 
 

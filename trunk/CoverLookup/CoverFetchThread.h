@@ -58,19 +58,17 @@ public:
 	CoverFetchThread();
 	virtual ~CoverFetchThread();
 
-	bool 	set_albums_to_fetch(const vector<Album> &);
-	bool	set_album_searchstring(const QString &);
-	bool 	set_artist_searchstring(const QString &);
-	bool	set_cover_fetch_mode(int);
-	bool 	set_search_all_covers(bool);
-	bool 	set_num_covers_2_fetch(int);
-	bool 	set_cover_source(int source);
+	int		get_cover_fetch_mode();
 	void 	get_images(vector<QImage>&);
 	bool 	get_certain_image(int idx, QImage& );
 	int 	get_num_images();
 
 	int 	get_cover_source();
+	void 	reset();
 
+	void	setup_fetch_artist_image(const QString& artist, int source);
+	void	setup_fetch_album_covers(const vector<Album>& albums, int source);
+	void	setup_fetch_single_album(const Album& album, int source);
 
 protected:
 	void run();
@@ -87,9 +85,10 @@ private:
 	int 			_cover_fetch_mode;
 
 
-	void search_covers_for_albums(const vector<Album>&);
-	void search_covers_for_album_str(const QString album_name, int num);
-	void search_covers_for_artist_str(const QString artist_name, int num);
+	void search_images_for_albums();
+	void search_images_for_artist(const QString& artist_name, int num);
+	void search_images_for_album_str(const QString album_name, int num);
+	void search_images_for_artist_str(const QString artist_name, int num);
 
 
 };

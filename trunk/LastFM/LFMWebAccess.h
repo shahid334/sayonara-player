@@ -46,9 +46,7 @@ const char* lfm_wa_get_url_enc(QString str);
 
 size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
 
-
 bool lfm_wa_call_url(const QString& url, QString& response);
-
 bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& response);
 bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc);
 bool lfm_wa_call_post_url(const QString& url, const string& post_data);

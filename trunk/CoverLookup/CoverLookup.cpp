@@ -46,10 +46,7 @@
 #include <QFile>
 #include <QDir>
 #include <QDebug>
-#include <QCryptographicHash>
 #include <QImage>
-#include <QProgressDialog>
-#include <QMessageBox>
 
 #include <curl/curl.h>
 
@@ -58,7 +55,7 @@ using namespace std;
 CoverLookup::CoverLookup() {
 	// TODO Auto-generated constructor stub
 	_thread = new CoverFetchThread();
-
+	_research_done = false;
 	connect(_thread, SIGNAL(finished()), this, SLOT(thread_finished()));
 }
 
@@ -78,49 +75,70 @@ void CoverLookup::thread_finished() {
 
 	_thread->get_images(images);
 
+	// convert images to pixmaps
 	for (uint i = 0; i < images.size(); i++) {
 		pixmaps.push_back(QPixmap::fromImage(images[i]));
 	}
 
-	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
-		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+	if (pixmaps.size() >= 1) {
+
+		switch(_thread->get_cover_fetch_mode()){
+			case COV_FETCH_MODE_ALBUM_STR:
+			case COV_FETCH_MODE_ALL_ALBUMS:
+			case COV_FETCH_MODE_SINGLE_ALBUM:
+				emit sig_cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+				break;
+
+			case COV_FETCH_MODE_ARTIST_STR:
+				emit sig_cover_found(true, Helper::get_artist_image_path(_metadata.artist));
+				break;
+			default: break;
+		}
 	}
 
 	else if (pixmaps.size() == 0) {
-		emit cover_found(false);
-		if(!_thread->get_cover_source() == COV_SRC_GOOGLE)
+		emit sig_cover_found(false);
+
+		// if not already tried google and not searching an artist string
+		if( !_research_done &&
+			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_ARTIST_STR ){
 			research_cover(_metadata);
+		}
+
+		else{
+			_research_done = false;
+		}
+
 		return;
-
 	}
-
-	_emit_type = EMIT_NONE;
 }
 
 void CoverLookup::terminate_thread() {
+
+
+	vector<QPixmap> pixmaps;
+	vector<QImage> images;
 
 	if (_thread->isRunning()) {
 		_thread->terminate();
 	}
 
-	vector<QPixmap> pixmaps;
-	vector<QImage> images;
 	_thread->get_images(images);
 	for (uint i = 0; i < images.size(); i++) {
-
 		pixmaps.push_back(QPixmap::fromImage(images[i]));
 	}
 
-	if (pixmaps.size() >= 1 && _emit_type == EMIT_ONE) {
-		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+	if (pixmaps.size() >= 1) {
+		emit sig_cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
 
 	else if (pixmaps.size() == 0)
-		emit cover_found(false);
-
-	_emit_type = EMIT_NONE;
+		emit sig_cover_found(false);
 }
 
+
+
+// search one cover
 void CoverLookup::search_cover(const MetaData& md) {
 
 	_metadata = md;
@@ -128,89 +146,83 @@ void CoverLookup::search_cover(const MetaData& md) {
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);
 
 	if (QFile::exists(cover_path) && cover_path != "") {
-		emit cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+		emit sig_cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
 		return;
 	}
 
 	if (_thread->isRunning())
 		return;
-
-	_emit_type = EMIT_ONE;
-
-	if (_metadata.album_id != -1) {
-		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		vector<Album> albums;
-		Album album = db->getAlbumByID(_metadata.album_id);
-
-		QStringList artists;
-		artists.push_back(_metadata.artist);
-
-		album.artists = artists;
-		albums.push_back(album);
-		search_covers(albums);
-	}
-
-	else {
-		Album album;
-		album.artists.push_back(_metadata.artist);
-		album.name = _metadata.album;
-
-		vector<Album> albums;
-		albums.push_back(album);
-		search_covers(albums);
-	}
-}
-
-void CoverLookup::search_covers(const vector<Album> & vec_albums) {
-
-	if (_emit_type != EMIT_ONE
-	) _emit_type = EMIT_ALL;
-	if (_thread->isRunning())
-		_thread->terminate();
-	_thread->set_cover_fetch_mode(COV_FETCH_MODE_ALL_ALBUMS);
-	_thread->set_cover_source(COV_SRC_LFM);
-	_thread->set_albums_to_fetch(vec_albums);
-	_thread->start();
-}
-
-void CoverLookup::research_cover(const MetaData& md) {
-
 
 	vector<Album> albums;
-	Album album = get_album_from_metadata(md);
-	albums.push_back(album);
-	album.name = md.album;
+	Album album;
+
+	if (_metadata.album_id != -1){
+		CDatabaseConnector* db = CDatabaseConnector::getInstance();
+		album = db->getAlbumByID(_metadata.album_id);
+	}
+
+	else{
+		album.name = _metadata.album;
+	}
+
+
 	album.artists.clear();
-	album.artists.push_back(md.artist);
-	_emit_type = EMIT_ONE;
-	_thread->set_cover_fetch_mode(COV_FETCH_MODE_SINGLE_ALBUM);
-	_thread->set_cover_source(COV_SRC_GOOGLE);
-	_thread->set_num_covers_2_fetch(1);
+	album.artists.push_back(_metadata.artist);
+
+	albums.push_back(album);
+	search_covers(albums);
+}
+
+
+
+// search more covers
+void CoverLookup::search_covers(const vector<Album> & vec_albums) {
+
+	if (_thread->isRunning())
+		_thread->terminate();
+	_thread->setup_fetch_album_covers(vec_albums, COV_SRC_LFM);
 	_thread->start();
-
 }
 
-void CoverLookup::search_alternative_covers(const QString& album) {
-
-	Q_UNUSED(album);
-	/*
-	 * Maybe for google
-	 * */
-}
-
+// search covers for all albums
 void CoverLookup::search_all_covers() {
 
 	vector<Album> albums;
 	CDatabaseConnector::getInstance()->getAllAlbums(albums);
-	if (_emit_type != EMIT_ONE
-	) _emit_type = EMIT_ALL;
-	if (_thread->isRunning())
-		_thread->terminate();
-	_thread->set_albums_to_fetch(albums);
-	_thread->set_cover_fetch_mode(COV_FETCH_MODE_ALL_ALBUMS);
-	_thread->set_num_covers_2_fetch(1);
+	search_covers(albums);
+}
+
+
+// search cover for artist
+void CoverLookup::search_artist_image(const QString& artist){
+
+	if (_thread->isRunning()) return;
+
+	_metadata = MetaData();
+	_metadata.artist = artist;
+
+	_thread->setup_fetch_artist_image(artist, COV_SRC_LFM);
 	_thread->start();
 }
+
+
+// research on google
+void CoverLookup::research_cover(const MetaData& md) {
+
+	_research_done = true;
+	if (_thread->isRunning()) return;
+
+	_metadata = md;
+
+	Album album = _get_album_from_metadata(md);
+	album.artists.clear();
+	album.artists.push_back(md.artist);
+	_thread->setup_fetch_single_album(album, COV_SRC_GOOGLE);
+	_thread->start();
+}
+
+
+
 
 bool CoverLookup::get_found_cover(int idx, QPixmap& p) {
 	if (idx < 0 || idx >= ((int) _alternative_covers.size()))
@@ -220,7 +232,9 @@ bool CoverLookup::get_found_cover(int idx, QPixmap& p) {
 	return true;
 }
 
-Album CoverLookup::get_album_from_metadata(const MetaData& md) {
+
+
+Album CoverLookup::_get_album_from_metadata(const MetaData& md) {
 
 	Album album;
 
@@ -237,6 +251,5 @@ Album CoverLookup::get_album_from_metadata(const MetaData& md) {
 		album.name = md.album;
 
 		return album;
-
 	}
 }

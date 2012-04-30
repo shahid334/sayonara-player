@@ -21,15 +21,15 @@
 #include "HelperStructs/WebAccess.h"
 
 #include <QString>
+#include <QImage>
 #include <QDebug>
 #include <curl/curl.h>
 
 #include <string>
 #include <stdlib.h>
 
-
 static QString webpage;
-
+static int webpage_bytes;;
 
 static void wa_free_webpage();
 static size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
@@ -39,6 +39,7 @@ static
 void wa_free_webpage(){
 
 	webpage.clear();
+	webpage_bytes = 0;
 
 }
 
@@ -48,8 +49,9 @@ size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 	(void) userdata;
 
 	char* cptr = (char*) ptr;
-	webpage.append(cptr);
+	webpage.append(QString::fromLatin1(cptr, size*nmemb));
 
+	webpage_bytes += (size * nmemb);
 	return size * nmemb;
 }
 
@@ -73,16 +75,13 @@ bool wa_call_url(const QString& url, QString& response){
 	}
 
 
-	if(webpage.size() > 0){
-		qDebug() << "got response from " << url << ":";
+	if(webpage_bytes > 0){
 		response = webpage;
-		wa_free_webpage();
 		return true;
 	}
 
 	else {
 		qDebug() << "got no response from url";
-		wa_free_webpage();
 		return false;
 	}
 }
@@ -90,13 +89,24 @@ bool wa_call_url(const QString& url, QString& response){
 
 bool WebAccess::read_http_into_str(QString url, QString& content){
 
-	qDebug() << "read " << url << " into string";
 	content.clear();
 	wa_call_url(url, content);
 
 	if(content.size() > 0)	return true;
 
 	return false;
+}
+
+bool WebAccess::read_http_into_img(QString url, QImage& img){
+
+	QString content;
+	if( !wa_call_url(url, content) ) return false;
+
+	bool good_image = false;
+
+	good_image = img.loadFromData((const uchar*) content.toLatin1().data(), content.size());
+	return good_image;
+
 }
 
 

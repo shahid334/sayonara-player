@@ -129,6 +129,17 @@ QString Helper::getIconPath(){
 
 }
 
+QString Helper::get_artist_image_path(QString artist){
+	QString token = QString("artist_") + calc_cover_token(artist, "");
+	QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
+
+
+	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
+		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
+	}
+
+	return image_path;
+}
 
 QString Helper::get_cover_path(QString artist, QString album){
 	QString cover_token = calc_cover_token(artist, album);
@@ -143,11 +154,19 @@ QString Helper::get_cover_path(QString artist, QString album){
 
 }
 
+QString Helper::calc_lfm_artist_adress(QString artist){
+	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
+	QString api_key = LFM_API_KEY;
+	url += api_key + "&";
+	url += "artist=" + QUrl::toPercentEncoding(artist);
+	return url;
+}
 
-QString Helper::calc_cover_lfm_adress(QString artist, QString album){
+
+QString Helper::calc_lfm_album_adress(QString artist, QString album){
 
 	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=");
-	QString api_key = QString("51d6f9eaef806f603f346844bef326ba");
+	QString api_key = LFM_API_KEY;
 
 	if(album == "")
 		url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
@@ -160,9 +179,22 @@ QString Helper::calc_cover_lfm_adress(QString artist, QString album){
 }
 
 
-QString Helper::calc_cover_google_adress(QString artist, QString album){
-
+QString Helper::calc_google_image_search_adress(QString searchstring, QString size, QString filetype){
 	QString url = QString("http://www.google.de/images?q=");
+	url += searchstring;
+	url += QString("&imgsz=") + size;
+	url += QString("&as_filetype=") + filetype;
+	return url;
+}
+
+
+QString Helper::calc_google_artist_adress(QString artist){
+
+	return calc_google_image_search_adress(QUrl::toPercentEncoding(artist), GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
+}
+
+
+QString Helper::calc_google_album_adress(QString artist, QString album){
 
 	artist = QUrl::toPercentEncoding(artist);
 
@@ -174,12 +206,11 @@ QString Helper::calc_cover_google_adress(QString artist, QString album){
 	album = album.trimmed();
 	album = QUrl::toPercentEncoding(album);
 
+	QString searchstring = artist;
+	if(searchstring.size() > 0) searchstring += "+";
+	searchstring += album;
 
-
-	url += artist + "+" + album;
-	url +=  QString("&tbs=isz:s,ift:jpg");			// klein*/
-
-	return url;
+	return calc_google_image_search_adress(searchstring, GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
 }
 
 QString Helper::calc_cover_token(QString artist, QString album){
@@ -261,36 +292,5 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 	return false;
 
 }
-
-
-
-
-QString Helper::calc_album_lfm_adress(QString album){
-
-	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
-
-
-	url += LFM_API_KEY + "&album=" + QUrl::toPercentEncoding(album);
-	return url;
-}
-
-
-
-QString Helper::calc_search_album_adress(QString album){
-
-	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.search&api_key=");
-
-	url += LFM_API_KEY + "&album=" + QUrl::toPercentEncoding(album);
-	return url;
-}
-
-QString Helper::calc_search_artist_adress(QString artist){
-
-	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.search&api_key=");
-
-	url += LFM_API_KEY + "&album=" + QUrl::toPercentEncoding(artist);
-	return url;
-}
-
 
 

@@ -103,6 +103,7 @@ signals:
 	void sig_reload_library();
 	void sig_data_for_id3_change(const vector<MetaData>&);
 	void sig_search_cover(const MetaData&);
+	void sig_search_artist_image(const QString&);
 
 public slots:
 	void fill_library_tracks(vector<MetaData>&);

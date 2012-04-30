@@ -38,10 +38,13 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/WebAccess.h"
+
 
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
+#include "LastFM/LastFM.h"
 
 #include "ui_GUI_Library_windowed.h"
 
@@ -55,6 +58,8 @@
 #include <QScrollBar>
 
 #include <vector>
+
+#define INFO_IMG_SIZE 220
 
 
 using namespace std;
@@ -889,7 +894,7 @@ void GUI_Library_windowed::info_album(){
 	cover_found = !pm.isNull();
 
 	if(cover_found){
-		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
 	}
 
@@ -897,7 +902,7 @@ void GUI_Library_windowed::info_album(){
 
 		cover_path = Helper::getIconPath() + "append.png";
 		QPixmap pm_tmp = QPixmap(cover_path);
-		pm_tmp = pm_tmp.scaledToWidth(150, Qt::SmoothTransformation);
+		pm_tmp = pm_tmp.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm_tmp);
 
 
@@ -938,6 +943,7 @@ void GUI_Library_windowed::edit_artist(){
 void GUI_Library_windowed::info_artist(){
 
 
+	LastFM* lfm = LastFM::getInstance();
 
 	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
 
@@ -950,13 +956,14 @@ void GUI_Library_windowed::info_artist(){
 	bool various_artists = (_selected_artists.size() > 1);
 	QString first_artist_name;
 	QString cover_path = "";
-
+	int num_plays = 0;
 	foreach(int artist_id, _selected_artists){
 		Artist artist = _db->getArtistByID(artist_id);
 		msg_text += "<b>" + artist.name + "</b><br />";
 
 		num_albums += artist.num_albums;
 		num_songs += artist.num_songs;
+		num_plays += lfm->getArtistInfo(artist.name).toInt();
 
 		if(num_artists == 0){
 			first_artist_name = artist.name;
@@ -964,7 +971,8 @@ void GUI_Library_windowed::info_artist(){
 	}
 
 	msg_text += QString::number(num_albums) + " albums<br />";
-	msg_text += QString::number(num_songs) + " tracks";
+	msg_text += QString::number(num_songs) + " tracks<br />";
+	msg_text += QString::number(num_plays) + " LastFM plays";
 
 
 	QStringList artist_paths;
@@ -983,14 +991,14 @@ void GUI_Library_windowed::info_artist(){
 		info_text += QString(path) + "<br/>";
 	}
 
-	int rnd_album = rand() % _v_albums.size();
+	QImage img;
 
 	if(various_artists){
 		cover_path = Helper::getIconPath() + "append.png";
 	}
 
 	else {
-		cover_path = Helper::get_cover_path(first_artist_name, _v_albums[rnd_album].name);
+		cover_path = Helper::get_artist_image_path(first_artist_name);
 	}
 
 	QPixmap pm = QPixmap(cover_path);
@@ -1003,26 +1011,11 @@ void GUI_Library_windowed::info_artist(){
 
 
 	if(cover_found){
-		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
 	}
 
-	else{
-
-		cover_path = Helper::getIconPath() + "append.png";
-		QPixmap pm_tmp = QPixmap(cover_path);
-		pm_tmp = pm_tmp.scaledToWidth(150, Qt::SmoothTransformation);
-		_album_msg_box->setIconPixmap(pm_tmp);
-
-		MetaData md;
-		md.album_id = _v_albums[rnd_album].id;
-		md.album = _v_albums[rnd_album].name;
-		md.artist = first_artist_name;
-
-		emit sig_search_cover(md);
-	}
-
-
+	emit sig_search_artist_image(first_artist_name);
 
 	_album_msg_box->setText(msg_text);
 	_album_msg_box->setInformativeText(info_text);
@@ -1091,7 +1084,7 @@ void GUI_Library_windowed::info_tracks(){
 
 
 		QPixmap pm = QPixmap(Helper::get_cover_path(artist, album));
-		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 		box.setIconPixmap(pm);
 	}
 
@@ -1137,7 +1130,7 @@ void GUI_Library_windowed::info_tracks(){
 		if(artist != "various artists" && album != "various albums"){
 
 			QPixmap pm = QPixmap(Helper::get_cover_path(artist, album));
-			pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+			pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 			box.setIconPixmap(pm);
 		}
 	}
@@ -1256,7 +1249,7 @@ void GUI_Library_windowed::cover_changed(bool success, QString path){
 			connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
 		}*/
 
-		pm = pm.scaledToWidth(150, Qt::SmoothTransformation);
+		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
 	}
 }

@@ -54,14 +54,15 @@ class CoverLookup : public QObject{
 	Q_OBJECT
 
 	signals:
-		void covers_found(vector<QPixmap>&);		/* emit if multiple covers are found (player) */
-		void cover_found(bool, QString str="");			/* emit if single cover is found (player) */
-		void new_cover_found(const QPixmap&);		/* emit if a new cover is found (alternate covers) */
+		void sig_covers_found(vector<QPixmap>&);		/* emit if multiple covers are found (player) */
+		void sig_cover_found(bool, QString str="");		/* emit if single cover is found (player) */
+		void sig_new_cover_found(const QPixmap&);		/* emit if a new cover is found (alternate covers) */
 
 	public slots:
+		void search_artist_image(const QString& artist); /* artist image */
 		void search_cover(const MetaData& md);		/* search a cover for certain metadata */
 		void search_covers(const vector<Album>&);	/* search multiple covers */
-		void search_alternative_covers(const QString&);		/* search alternative covers for one album */
+
 		void research_cover(const MetaData&);	/* search alternative covers for one album */
 		void search_all_covers();					/* search all covers*/
 		void terminate_thread();					/* stop to search for covers */
@@ -72,26 +73,28 @@ class CoverLookup : public QObject{
 
 public:
 
-	virtual ~CoverLookup();
-
 	static CoverLookup* getInstance();
-
+	virtual ~CoverLookup();
 	bool get_found_cover(int idx, QPixmap& p);
+
 
 protected:
 	CoverLookup();
 
+
 private:
 	CoverLookup(const CoverLookup&);
 
-	CoverFetchThread* _thread;
-	void download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QPixmap>& vec_pixmaps);
-	Album get_album_from_metadata(const MetaData& md);
+	MetaData			_metadata;
+	CoverFetchThread* 	_thread;
+	vector<QPixmap> 	_alternative_covers;
 
-	int _emit_type;
+	int 				_emit_type;
+	bool				_research_done;
 
-	vector<QPixmap> _alternative_covers;
-	MetaData		_metadata;
+	void 	_download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QPixmap>& vec_pixmaps);
+	Album 	_get_album_from_metadata(const MetaData& md);
+
 };
 
 #endif /* COVERLOOKUP_H_ */

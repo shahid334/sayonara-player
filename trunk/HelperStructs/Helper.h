@@ -201,13 +201,17 @@ namespace Helper{
 
 	QString getIconPath();
 
+	QString get_artist_image_path(QString artist);
 	QString get_cover_path(QString artist, QString album);
 
-	QString calc_cover_google_adress(QString artist, QString album);
-	QString calc_cover_lfm_adress(QString artist, QString album);
-	QString calc_album_lfm_adress(QString album);
-	QString calc_search_album_adress(QString album);
-	QString calc_search_artist_adress(QString artist);
+	QString calc_google_image_search_adress(QString searchstring,  QString size, QString filetype);
+	QString calc_google_artist_adress(QString artist);
+	QString calc_google_album_adress(QString artist, QString album);
+
+
+	QString calc_lfm_artist_adress(QString artist);
+	QString calc_lfm_album_adress(QString artist, QString album);
+
 
 	QString calc_cover_token(QString artist, QString album);
 	QStringList get_soundfile_extensions();
@@ -235,6 +239,10 @@ namespace Helper{
 
 	bool read_file_into_str(QString filename, QString& content);
 	bool read_http_into_str(QString url, QString& content);
+
+
+	Album get_album_from_metadata(const MetaData& md);
+
 
 
 

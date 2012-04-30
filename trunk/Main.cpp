@@ -44,7 +44,7 @@
 #include "MP3_Listen/SoundPluginLoader.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
-#include "LastFM/LastFM.h"
+#include "LastFM/LastFMAdapter.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]){
         GUI_Library_windowed	ui_library(player.getParentOfLibrary());
         CLibraryBase 			library;
 
-        LastFM					lastfm;
+        LastFMAdapter			lastfm;
         GUI_LastFM				ui_lastfm;
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
         GUI_TagEdit				ui_tagedit;
@@ -137,6 +137,7 @@ int main(int argc, char *argv[]){
         CONNECT (&player, libpath_changed(QString), 		&library, 		setLibraryPath(QString));
         CONNECT (&player, fetch_all_covers(),       		cover, 			search_all_covers());
         CONNECT (&player, fileSelected(QStringList &),		&playlist, 		psl_createPlaylist(QStringList&));
+        CONNECT (&player, wantCover(const MetaData&),		cover,			search_cover(const MetaData&) );
 		CONNECT (&player, play(),							&playlist,		psl_play());
 		CONNECT (&player, stop(),							&playlist,		psl_stop());
 		CONNECT (&player, forward(),						&playlist,		psl_forward());
@@ -148,13 +149,13 @@ int main(int argc, char *argv[]){
         CONNECT (&player, sig_sound_engine_changed(QString&), &plugin_loader, psl_switch_engine(QString&));
 
 
-        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		cover, 			search_cover(const MetaData&));
-        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&player,		fillSimplePlayer(const MetaData&));
+        //CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		cover, 			search_cover(const MetaData&));
+        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&player,		update_track(const MetaData&));
         CONNECT (&playlist, sig_search_similar_artists(const QString&), 		&lastfm,		get_similar_artists(const QString&));
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&lastfm,		update_track(const MetaData&));
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
-        CONNECT (&playlist, sig_no_track_to_play(),								listen,		stop());
-        CONNECT (&playlist, sig_goon_playing(), 								listen,		play());
+        CONNECT (&playlist, sig_no_track_to_play(),								listen,			stop());
+        CONNECT (&playlist, sig_goon_playing(), 								listen,			play());
         CONNECT (&playlist, sig_selected_file_changed(int), 					&ui_playlist, 	track_changed(int));
         CONNECT (&playlist, sig_playlist_created(vector<MetaData>&, int), 		&ui_playlist, 	fillPlaylist(vector<MetaData>&, int));
         CONNECT (&playlist, sig_mp3s_loaded_signal(int), 						&ui_playlist, 	update_progress_bar(int));
@@ -186,8 +187,8 @@ int main(int argc, char *argv[]){
         CONNECT (listen, 	total_time_changed_signal(qint64),			&player,	total_time_changed(qint64));
         CONNECT (listen, 	timeChangedSignal(quint32),					&player,	setCurrentPosition(quint32) );
 
-        CONNECT (cover, 	cover_found(bool, QString), 				&player, 		cover_changed(bool, QString));
-        CONNECT (cover, 	cover_found(bool, QString), 				&ui_library,	cover_changed(bool, QString));
+        CONNECT (cover, 	sig_cover_found(bool, QString), 				&player, 		cover_changed(bool, QString));
+        CONNECT (cover, 	sig_cover_found(bool, QString), 				&ui_library,	cover_changed(bool, QString));
 
         CONNECT(&library, playlistCreated(QStringList&), 				&playlist, 		psl_createPlaylist(QStringList&));
         CONNECT(&library, sig_import_result(bool),						&playlist,		psl_import_result(bool));
@@ -203,6 +204,7 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_import_result(bool),						&playlists,		import_result(bool));
 
         CONNECT(&ui_library, sig_search_cover(const MetaData&), 	cover, 		search_cover(const MetaData&));
+        CONNECT(&ui_library, sig_search_artist_image(const QString&), cover,	search_artist_image(const QString&));
         CONNECT(&ui_library, sig_reload_library(), 					&library, 	reloadLibrary());
         CONNECT(&ui_library, sig_album_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
         CONNECT(&ui_library, sig_artist_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
@@ -268,7 +270,6 @@ int main(int argc, char *argv[]){
 		vector<EQ_Setting> vec_eq_setting;
 		set->getEqualizerSettings(vec_eq_setting);
 
-		qDebug() << "setup volume";
 		int vol = set->getVolume();
 		player.setVolume(vol);
 		listen->setVolume(vol);
@@ -280,7 +281,7 @@ int main(int argc, char *argv[]){
 
 		QString user, password;
         set->getLastFMNameAndPW(user, password);
-        lastfm.login_slot (user,password);
+        LastFM::getInstance()->login( user,password );
 
         app.exec();
 
