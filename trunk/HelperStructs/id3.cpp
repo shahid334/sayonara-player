@@ -28,16 +28,10 @@
 #include <QDebug>
 
 #include <string>
-#ifdef _WIN32
-	#include <tag.h>
-	#include <taglib.h>
-	#include <fileref.h>
-#else
 	#include <taglib/tag.h>
 	#include <taglib/taglib.h>
 	#include <taglib/fileref.h>
 
-#endif
 using namespace Helper;
 
 MetaData ID3::getMetaDataOfFile(QString file){

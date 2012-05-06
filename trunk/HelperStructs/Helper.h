@@ -244,6 +244,9 @@ namespace Helper{
 	Album get_album_from_metadata(const MetaData& md);
 
 
+	QString easy_tag_finder(QString tag, QString& xml_doc);
+
+
 
 
 };

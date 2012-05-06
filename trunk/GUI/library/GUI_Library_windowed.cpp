@@ -803,6 +803,7 @@ void GUI_Library_windowed::apply_cover_to_entire_album(){
 /* TODO: clean me up, it cannot be that hard to solve the sampler issue */
 void GUI_Library_windowed::info_album(){
 
+	LastFM* lfm = LastFM::getInstance();
 	if(_selected_albums.size() == 0) return;
 
 	if(_album_msg_box) delete _album_msg_box;
@@ -823,6 +824,7 @@ void GUI_Library_windowed::info_album(){
 	QString first_album_name, first_album_artist;
 	int first_album_id;
 	int num_albums = 0;
+	int album_playcount = 0;
 
 	foreach(int album_id, _selected_albums){
 
@@ -839,6 +841,8 @@ void GUI_Library_windowed::info_album(){
 		artist = album.artists[0];
 		if(album.is_sampler)
 			artist = "Various";
+
+		album_playcount += lfm->getAlbumInfo(artist, album.name).toInt();
 
 		if(num_albums == 0){
 			first_album_artist = artist;
@@ -863,7 +867,7 @@ void GUI_Library_windowed::info_album(){
 	foreach(MetaData md, _v_metadata){
 
 		QString filepath = md.filepath;
-		filepath = filepath.replace(lib_path, "${ML}");
+		filepath = filepath.replace(lib_path, "<b>${ML}</b>");
 		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
 		if(!album_paths.contains(filepath, Qt::CaseInsensitive)){
 			album_paths.push_back(filepath);
@@ -882,12 +886,18 @@ void GUI_Library_windowed::info_album(){
 	}
 	if(unknown_year) year_string += ", Unknown";
 
-	QString info_text = QString::number(num_songs) + " tracks\n" +
-						"Playing time: " + Helper::cvtMsecs2TitleLengthString(length * 1000) + "\n" +
-						"Year: " + year_string + "\n\n";
+	QString info_text = QString::number(num_songs) + " tracks<br />" +
+						"<b>Playing time:</b> " + Helper::cvtMsecs2TitleLengthString(length * 1000) + "<br />" +
+						"<b>Year:</b> " + year_string + "<br />";
+
+			if(album_playcount > 0)
+						info_text += "<b>LastFM playcount:</b> " + QString::number(album_playcount) + "<br />";
+
+			info_text += "<br />";
+
 
 	foreach(QString album_path, album_paths){
-		info_text += album_path + "\n";
+		info_text += album_path + "<br />";
 	}
 
 	pm = QPixmap(cover_path);
@@ -980,7 +990,7 @@ void GUI_Library_windowed::info_artist(){
 	foreach(MetaData md, _v_metadata){
 
 		QString filepath = md.filepath;
-		filepath = filepath.replace(lib_path, "${ML}");
+		filepath = filepath.replace(lib_path, "<b>${ML}</b>");
 		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
 		if(!artist_paths.contains(filepath, Qt::CaseInsensitive)){
 			artist_paths.push_back(filepath);
@@ -1053,14 +1063,19 @@ void GUI_Library_windowed::edit_tracks(){
 
 void GUI_Library_windowed::info_tracks(){
 	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
-	QMessageBox box;
 
+	LastFM* lfm = LastFM::getInstance();
+	if(_album_msg_box)
+		delete _album_msg_box;
+	_album_msg_box = new QMessageBox();
+
+	int playcount = 0;
 	if(idx_list.size() == 0 ) return;
 	else if(idx_list.size() == 1 && idx_list.at(0).isValid()){
 		MetaData md =  _v_metadata[idx_list.at(0).row()];
 		QString title = md.title;
 
-		box.setText(QString("<b>") + title + "</b>");
+		_album_msg_box->setText(QString("<b>") + title + "</b>");
 
 		QString artist = md.artist;
 		QString album = md.album;
@@ -1074,18 +1089,41 @@ void GUI_Library_windowed::info_tracks(){
 		filepath = filepath.left(filepath.lastIndexOf(QDir::separator()));
 		QString track_num = QString::number(md.track_num);
 
+		QMap<QString, QString> info;
+		lfm->getTrackInfo(artist, md.title, info);
+		/*if(!info[LFM_TAG_USERPLAYCOUNT].isNull() && !info[LFM_TAG_USERPLAYCOUNT].isEmpty() ){
+			playcount += info[LFM_TAG_USERPLAYCOUNT].toInt();
+		}*/
 
-		box.setInformativeText(	QString("<b>Artist:</b>" ) + artist + "<br />" +
-								"<b>Album:</b> " + album + " ("+ track_num +")<br />" +
-								"<b>Length:</b> " + length + QString("<br />") +
-								"<b>Year:</b> " + year + QString("<br />") +
-								"<b>Bitrate:</b> " + bitrate + QString("<br /><br />") +
-								filepath);
+		QString info_text = QString("<b>Artist:</b>" ) + artist + "<br />" +
+				"<b>Album:</b> " + album + " ("+ track_num +")<br />" +
+				"<b>Length:</b> " + length + QString("<br />");
+
+		if(year != "-1"){
+				info_text += "<b>Year:</b> " + year + QString("<br />");
+		}
+
+		if(bitrate != "-1"){
+			info_text += "<b>Bitrate:</b> " + bitrate + QString("<br />");
+		}
+
+		if(playcount > 0){
+			info_text += "<b>LastFM plays:</b> " + QString::number(playcount) + QString("<br />");
+		}
 
 
-		QPixmap pm = QPixmap(Helper::get_cover_path(artist, album));
-		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
-		box.setIconPixmap(pm);
+		_album_msg_box->setInformativeText( info_text + "<br />" + filepath );
+
+		if(QFile::exists(Helper::get_cover_path(artist, album))){
+			QPixmap pm = QPixmap(Helper::get_cover_path(artist, album));
+			pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
+			_album_msg_box->setIconPixmap(pm);
+			_album_msg_box->repaint();
+		}
+
+		else {
+			emit sig_search_cover(md);
+		}
 	}
 
 	else if(idx_list.size() > 1){
@@ -1097,7 +1135,7 @@ void GUI_Library_windowed::info_tracks(){
 
 		QString tracks = QString::number(idx_list.size()) + " tracks";
 
-		box.setText(tracks);
+		_album_msg_box->setText(tracks);
 
 		for(int i=0; i<idx_list.size(); i++){
 			QModelIndex idx = idx_list[i];
@@ -1113,6 +1151,12 @@ void GUI_Library_windowed::info_tracks(){
 			if(artist != md.artist) artist = "various artists";
 			if(year != QString::number(md.year)) year = "-1";
 			if(bitrate != QString::number(md.bitrate)) bitrate = "-1";
+
+			QMap<QString, QString> info;
+			lfm->getTrackInfo(artist, md.title, info);
+			/*if( !info[LFM_TAG_USERPLAYCOUNT].isNull() && !info[LFM_TAG_USERPLAYCOUNT].isEmpty() ){
+				playcount += info[LFM_TAG_USERPLAYCOUNT].toInt();
+			}*/
 		}
 
 		QString info_text = "<b>Artist:</b> " + artist + "<br />" +
@@ -1126,17 +1170,31 @@ void GUI_Library_windowed::info_tracks(){
 			info_text += "<br /><b>Bitrate:</b> " + bitrate;
 		}
 
-		box.setInformativeText(info_text);
-		if(artist != "various artists" && album != "various albums"){
-
-			QPixmap pm = QPixmap(Helper::get_cover_path(artist, album));
-			pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
-			box.setIconPixmap(pm);
+		if(playcount >= 0){
+			info_text += "<br /><b>LastFM plays:</b> " + QString::number(playcount);
 		}
+
+		_album_msg_box->setInformativeText(info_text);
+		QString cover_path;
+		if(artist != "various artists" && album != "various albums"){
+			cover_path = Helper::get_cover_path(artist, album);
+			if(!QFile::exists(cover_path)) {
+				emit sig_search_cover( _v_metadata[idx_list.at(0).row()]);
+				cover_path = Helper::getIconPath() + "append.png";
+			}
+
+		}
+		else {
+			cover_path = Helper::getIconPath() + "append.png";
+		}
+
+		QPixmap pm = QPixmap(cover_path);
+		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
+		_album_msg_box->setIconPixmap(pm);
 	}
 
-	box.exec();
-	box.close();
+	_album_msg_box->exec();
+	_album_msg_box->close();
 
 
 }

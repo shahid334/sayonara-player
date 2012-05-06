@@ -43,6 +43,14 @@
 #define LFM_RADIO_MODE_ARTIST 0
 #define LFM_RADIO_MODE_TAG 1
 
+#define LFM_TAG_TRACK_TITLE "track.name"
+#define LFM_TAG_TRACK_ALBUM "track.album.title"
+#define LFM_TAG_TRACK_ARTIST "track.artist.name"
+#define LFM_TAG_TRACK_DURATION "track.duration"
+#define LFM_TAG_TRACK_LOVED "track.userloved"
+#define LFM_TAG_TRACK_USERPLAYCOUNT "track.userplaycount"
+
+
 #define UrlParams QMap<QString, QString>
 
 // singleton base LastFM API class
@@ -69,9 +77,7 @@ class LastFM : public QObject{
 
 		QString getArtistInfo(const QString& artist);
 		QString getAlbumInfo(const QString& artist, const QString& album);
-		QString getTrackInfo(const QString& artist, const QString& title);
-
-
+		bool getTrackInfo(const QString& artist, const QString& title, QMap<QString, QString>& values);
 
 
 	private:
@@ -88,6 +94,7 @@ class LastFM : public QObject{
 		QString			_auth_token;
 		QString			_session_key;
 		QString			_session_key2;
+		MetaData		_loved_tracks;
 
 
 	private:

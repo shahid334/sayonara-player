@@ -126,11 +126,13 @@ void GUI_SimplePlayer::initGUI() {
 	this->ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
 	this->ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+	this->ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 
 	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
 	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
 	this->ui->action_ViewRadio->setText("Last.fm Radio\t\tSTRG+r");
 	this->ui->action_viewLibrary->setText("Library\t\tSTRG+l");
+	this->ui->btn_correct->setVisible(false);
 }
 
 void GUI_SimplePlayer::setupConnections(){
@@ -145,6 +147,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(stopClicked(bool)));
 	connect(this->ui->btn_mute, SIGNAL(released()), this,
 				SLOT(muteButtonPressed()));
+	connect(this->ui->btn_correct, SIGNAL(clicked(bool)), this,
+			SLOT(correct_btn_clicked(bool)));
 
 	// file
 	connect(this->ui->action_OpenFile, SIGNAL(triggered(bool)), this,
@@ -206,10 +210,11 @@ void GUI_SimplePlayer::setupConnections(){
 }
 
 
-
+// new track
 void GUI_SimplePlayer::update_track(const MetaData & md) {
 
 	this->m_metadata = md;
+	qDebug() << "change info";
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
@@ -267,7 +272,16 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	m_playing = true;
 	m_trayIcon->playStateChanged(this->m_playing);
 
-	emit wantCover(md);
+	QString cover_path = Helper::get_cover_path(md.artist, md.album);
+	if(! QFile::exists(cover_path) ){
+		cover_path = Helper::getIconPath() + "append.png";
+		emit wantCover(md);
+	}
+
+	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
+	this->ui->albumCover->setPixmap(cover);
+	this->ui->albumCover->repaint();
+	this->repaint();
 }
 
 // public slot:
@@ -294,6 +308,7 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
 	emit wantCover(in);
+	this->repaint();
 }
 
 
@@ -307,17 +322,7 @@ void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 		return;
 	}
 
-	if (!success){
-		this->ui->albumCover->setPixmap(
-				QPixmap::fromImage(
-						QImage(Helper::getIconPath() + "append.png")));
-		this->ui->albumCover->repaint();
-		return;
-	}
-
-
-
-	if (!QFile::exists(cover_path)) {
+	if (!success || !QFile::exists(cover_path)){
 		this->ui->albumCover->setPixmap(
 				QPixmap::fromImage(
 						QImage(Helper::getIconPath() + "append.png")));
@@ -330,6 +335,23 @@ void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 	this->ui->albumCover->repaint();
 }
 
+
+void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
+
+	m_metadata_corrected = md;
+	this->ui->btn_correct->setVisible(corrected);
+
+	qDebug() << "loved? " << loved;
+	if(loved){
+		this->ui->title->setText(this->ui->title->text() + QString("(L)"));
+	}
+
+	this->repaint();
+}
+
+void GUI_SimplePlayer::correct_btn_clicked(bool b){
+	emit sig_correct_id3(m_metadata_corrected);
+}
 
 
 void GUI_SimplePlayer::total_time_changed(qint64 total_time) {

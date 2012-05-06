@@ -94,7 +94,11 @@ void GUI_TagEdit::init(){
 	_max_artist_id = _db->getMaxArtistID() + 1;
 
 }
-
+void GUI_TagEdit::change_meta_data(const MetaData& md){
+	vector<MetaData> v_md;
+	v_md.push_back(md);
+	change_meta_data(v_md);
+}
 
 void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
 

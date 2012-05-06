@@ -31,6 +31,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
 #include "LastFM/LastFM.h"
 #include "LastFM/LFMSimilarArtistsThread.h"
@@ -131,6 +132,7 @@ QString LastFM::create_sig_url(const QString& base_url, const UrlParams& sig_dat
 	return QString(url + QString("?") + post_data.c_str());
 }
 
+
 QString LastFM::create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data){
 
 	post_data.clear();
@@ -174,6 +176,8 @@ bool LastFM::check_login(){
 
 	else return true;
 }
+
+
 
 bool LastFM::login(QString username, QString password){
 
@@ -235,10 +239,6 @@ bool LastFM::login(QString username, QString password){
 }
 
 
-
-
-
-
 bool LastFM::update_track(const MetaData& metadata){
 
 	if(!check_login()){
@@ -268,7 +268,6 @@ bool LastFM::update_track(const MetaData& metadata){
 		qDebug() << "post = " << post_data.c_str();
 		qDebug() << response;*/
 		return false;
-
 	}
 
 	return true;
@@ -320,8 +319,6 @@ bool LastFM::scrobble(const MetaData& metadata){
 }
 
 
-
-
 bool LastFM::get_similar_artists(const QString& artistname, QList<int>& artist_ids){
 
 
@@ -338,7 +335,8 @@ bool LastFM::get_similar_artists(const QString& artistname, QList<int>& artist_i
 	if(max <= 0) return false;
 
 	artist_ids.clear();
-	_similar_artists_thread->get_chosen_ids();
+	artist_ids = _similar_artists_thread->get_chosen_ids();
+
 	return true;
 }
 
@@ -370,9 +368,7 @@ bool LastFM::radio_init(const QString& str, int radio_mode){
 			break;
 		default:
 			break;
-
 	}
-
 
 	UrlParams data;
 		data["session"] = _session_key2;
@@ -419,7 +415,6 @@ bool LastFM::radio_get_playlist(vector<MetaData>& v_md){
 		qDebug() << "LFM: Url = " << url;
 		return false;
 	}
-
 
 	parse_playlist_answer(v_md, xml_response);
 	xml_response.clear();
@@ -475,7 +470,6 @@ bool LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& d
 			else if(!nodename.compare("duration")){
 				md.length_ms = e.text().toLong();
 			}
-
 		}
 
 		v_md.push_back(md);
@@ -486,6 +480,7 @@ bool LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& d
 
 
 QString LastFM::getArtistInfo(const QString& artist){
+
 	QString retval;
 
 	if(!_logged_in) {
@@ -520,14 +515,80 @@ QString LastFM::getArtistInfo(const QString& artist){
 }
 
 QString LastFM::getAlbumInfo(const QString& artist, const QString& album){
+
 	QString retval;
-	return retval;
+
+	if(!_logged_in) {
+		qDebug() << "not logged in";
+		return "";
+	}
+
+	UrlParams params;
+	params["artist"] = QUrl::toPercentEncoding(artist);
+	params["album"] = QUrl::toPercentEncoding(album);
+	params["username"] = _username;
+	params["method"] = QString("album.getinfo");
+	params["api_key"] = LFM_API_KEY;
+
+
+	QString url_getAlbumInfo = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+
+	bool success = lfm_wa_call_url(url_getAlbumInfo, retval);
+	if(!success) {
+		return "";
+	}
+
+	QString str2search = QString("<userplaycount>");
+	int idx = retval.indexOf(str2search);
+	idx += str2search.size();
+	QString playcount = "";
+	for(int i=idx; retval.at(i).isDigit(); i++){
+		playcount += retval.at(i);
+	}
+
+	return playcount;
 }
 
-QString LastFM::getTrackInfo(const QString& artist, const QString& title){
+bool LastFM::getTrackInfo(const QString& artist, const QString& title, QMap<QString, QString>& values){
 	QString retval;
-	return retval;
 
+	if(!_logged_in) {
+		qDebug() << "not logged in";
+		return "";
+	}
+
+	UrlParams params;
+	params["artist"] = QUrl::toPercentEncoding(artist);
+	params["track"] = QUrl::toPercentEncoding(title);
+	params["username"] = _username;
+	params["method"] = QString("track.getinfo");
+	params["autocorrect"] = QString("1");
+	params["api_key"] = LFM_API_KEY;
+
+
+
+	QString url_getTrackInfo = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+
+	bool success = lfm_wa_call_url(url_getTrackInfo, retval);
+
+	if(!success) {
+		return false;
+	}
+
+	QStringList search_list;
+	search_list << LFM_TAG_TRACK_USERPLAYCOUNT;
+	search_list << LFM_TAG_TRACK_LOVED;
+	search_list << LFM_TAG_TRACK_ALBUM;
+	search_list << LFM_TAG_TRACK_ARTIST;
+	search_list << LFM_TAG_TRACK_DURATION;
+	search_list << LFM_TAG_TRACK_TITLE;
+	foreach(QString str2search, search_list){
+		QString str = Helper::easy_tag_finder(str2search , retval);
+		values[str2search] = str;
+		qDebug() << "set " << str2search << " to " << str;
+	}
+
+	return true;
 }
 
 

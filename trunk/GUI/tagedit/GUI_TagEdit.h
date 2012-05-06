@@ -71,6 +71,7 @@ public:
 
 	public slots:
 		void change_meta_data(const vector<MetaData>&);
+		void change_meta_data(const MetaData&);
 
 
 	private:

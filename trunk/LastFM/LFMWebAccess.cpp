@@ -207,7 +207,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 
 	else {
 		lfm_wa_free_webpage();
-		qDebug() <<  "LFM: webpage is null";
+		qDebug() <<  "LFM: webpage is null " << url;
 		return false;
 	}
 }

@@ -245,7 +245,7 @@ QStringList Helper::get_soundfile_extensions(){
 bool Helper::is_soundfile(QString filename){
 	QStringList extensions = get_soundfile_extensions();
 	for(int i=0; i<=6; i++){
-		if(filename.endsWith(extensions[i].right(4))){
+		if(filename.toLower().endsWith(extensions[i].right(4).toLower())){
 			return true;
 		}
 	}
@@ -256,9 +256,9 @@ bool Helper::is_soundfile(QString filename){
 
 bool Helper::checkTrack(const MetaData& md){
 
-	if( md.filepath.startsWith("http")) return true;
-	if( md.filepath.startsWith("ftp")) return true;
-	if( md.filepath.startsWith("mms")) return true;
+	if( md.filepath.toLower().startsWith("http")) return true;
+	if( md.filepath.toLower().startsWith("ftp")) return true;
+	if( md.filepath.toLower().startsWith("mms")) return true;
 
 	if( !QFile::exists(md.filepath) && md.id >= 0 ){
 
@@ -293,4 +293,40 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 }
 
+
+QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
+
+	int p = tag.indexOf('.');
+	QString t = tag;
+	QString t_rev;
+	QString new_xml_doc = xml_doc;
+
+	while(p > 0){
+
+		t = tag.left(p);
+		t_rev = tag.right(tag.length() - p -1);
+
+		new_xml_doc = easy_tag_finder(t, new_xml_doc);
+		p = t_rev.indexOf('.');
+		tag = t_rev;
+	}
+
+	t = tag;
+
+//qDebug() << "search for " << t << " in " << new_xml_doc;
+	QString str2search_start = QString("<") + t + QString(".*>");
+	QString str2search_end = QString("</") + t + QString(">");
+	QString str2search =str2search_start + "(.+)" + str2search_end;
+
+	QRegExp rx(str2search);
+	rx.setMinimal(true);
+	//qDebug() << "search for " << str2search;
+	int pos = 0;
+	if(rx.indexIn(new_xml_doc, pos) != -1) {
+		//qDebug() << "found " << rx.cap(1);
+		return rx.cap(1);
+	}
+
+	return "";
+}
 

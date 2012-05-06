@@ -65,6 +65,7 @@ public slots:
     void showPlaylistChooser(bool b=false);
     void showPlugin(QWidget* widget, bool v);
     void hideUnneededPlugins(QWidget* wannashow);
+    void lfm_info_fetched(const MetaData& md, bool loved, bool corrected);
 
     /**
       * Set current position in filestream
@@ -109,6 +110,7 @@ signals:
     void show_playlists();
     void show_small_playlist_items(bool);
     void sig_sound_engine_changed(QString&);
+    void sig_correct_id3(const MetaData&);
 
 
 
@@ -125,6 +127,7 @@ private slots:
     void searchSliderPressed();
     void searchSliderReleased();
     void searchSliderMoved(int search_percent, bool by_app=false);
+    void correct_btn_clicked(bool b=false);
 
     void coverClicked(bool);
     void muteButtonPressed();
@@ -199,6 +202,7 @@ private:
     QString						m_album;
     QString						m_artist;
     MetaData					m_metadata;
+    MetaData					m_metadata_corrected;
     bool						m_min2tray;
 
 

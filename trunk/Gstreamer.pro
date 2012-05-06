@@ -1,7 +1,7 @@
 TEMPLATE	= lib
 CONFIG		+= plugin static
-INCLUDEPATH	+= . /usr/include/gstreamer-0.10
-HEADERS		= MP3_Listen/GSTEngine.h \ 
+INCLUDEPATH	+= ./ usr/include/gstreamer-0.10
+HEADERS		= ./MP3_Listen/GSTEngine.h \ 
 		MP3_Listen/Engine.h \
 		HelperStructs/MetaData.h \
 		HelperStructs/id3.h \

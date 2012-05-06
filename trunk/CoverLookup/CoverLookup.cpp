@@ -94,6 +94,7 @@ void CoverLookup::thread_finished() {
 				break;
 			default: break;
 		}
+		_research_done = false;
 	}
 
 	else if (pixmaps.size() == 0) {
@@ -102,6 +103,7 @@ void CoverLookup::thread_finished() {
 		// if not already tried google and not searching an artist string
 		if( !_research_done &&
 			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_ARTIST_STR ){
+			qDebug() << "No cover found, research";
 			research_cover(_metadata);
 		}
 

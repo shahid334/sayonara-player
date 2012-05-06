@@ -39,8 +39,35 @@ void LastFMAdapter::scrobble(const MetaData& md){
 	lfm_api->scrobble(md);
 }
 
+void LastFMAdapter::get_track_info(const MetaData& md){
+	QMap<QString, QString> map;
+	lfm_api->getTrackInfo(md.artist, md.title, map);
+
+	bool corrected = false;
+	bool loved = (map[LFM_TAG_TRACK_LOVED].toInt() == 1);
+
+	QString artist = map[LFM_TAG_TRACK_ARTIST];
+	QString title = map[LFM_TAG_TRACK_TITLE];
+
+	MetaData md_copy = md;
+
+
+	if(artist.toLower() != md.artist.toLower() ||
+		title.toLower() != md.title.toLower() ){
+		corrected = true;
+		md_copy.artist = artist;
+		md_copy.title = title;
+	}
+
+	emit track_info_fetched(md_copy, loved, corrected);
+}
+
 void LastFMAdapter::update_track(const MetaData& md){
+
 	lfm_api->update_track(md);
+	get_similar_artists(md.artist);
+	get_track_info(md);
+
 }
 
 void LastFMAdapter::login_slot(QString username, QString password){

@@ -110,6 +110,7 @@ int main(int argc, char *argv[]){
         GUI_RadioWidget			ui_radio(player.getParentOfRadio());
 
 
+
         QString dir;
 
 #ifdef Q_OS_UNIX
@@ -127,7 +128,7 @@ int main(int argc, char *argv[]){
         }
 		listen->init();
 
-        CONNECT (&player, pause(), 							listen, 		pause());
+        CONNECT (&player, pause(), 							listen,			pause());
         CONNECT (&player, search(int),						listen,			jump(int));
         CONNECT (&player, volumeChanged(qreal),				listen,			setVolume(qreal));
         CONNECT (&player, setupLastFM(), 					&ui_lastfm, 	show_win());
@@ -145,21 +146,19 @@ int main(int argc, char *argv[]){
 		CONNECT (&player, sig_stream_selected(const QString&, const QString&), 	&playlist, psl_play_stream(const QString&, const QString&));
 		CONNECT (&player, show_playlists(),					&ui_playlist_chooser, show());
         CONNECT (&player, skinChanged(bool), 				&ui_playlist, 	change_skin(bool));
-        CONNECT (&player, show_small_playlist_items(bool), &ui_playlist,	show_small_playlist_items(bool));
+        CONNECT (&player, show_small_playlist_items(bool),	&ui_playlist,	show_small_playlist_items(bool));
         CONNECT (&player, sig_sound_engine_changed(QString&), &plugin_loader, psl_switch_engine(QString&));
+        CONNECT (&player, sig_correct_id3(const MetaData&), &ui_tagedit,		change_meta_data(const MetaData&));
 
 
-        //CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		cover, 			search_cover(const MetaData&));
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&player,		update_track(const MetaData&));
-        CONNECT (&playlist, sig_search_similar_artists(const QString&), 		&lastfm,		get_similar_artists(const QString&));
-        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&lastfm,		update_track(const MetaData&));
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
+        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&lastfm,		update_track(const MetaData&));
         CONNECT (&playlist, sig_no_track_to_play(),								listen,			stop());
         CONNECT (&playlist, sig_goon_playing(), 								listen,			play());
         CONNECT (&playlist, sig_selected_file_changed(int), 					&ui_playlist, 	track_changed(int));
         CONNECT (&playlist, sig_playlist_created(vector<MetaData>&, int), 		&ui_playlist, 	fillPlaylist(vector<MetaData>&, int));
         CONNECT (&playlist, sig_mp3s_loaded_signal(int), 						&ui_playlist, 	update_progress_bar(int));
-
         CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
         CONNECT (&playlist, sig_playlist_prepared(int, vector<MetaData>&), 		&playlists, 	save_playlist_as_custom(int, vector<MetaData>&));
     	CONNECT (&playlist, sig_playlist_prepared(QString, vector<MetaData>&), 	&playlists, 	save_playlist_as_custom(QString, vector<MetaData>&));
@@ -210,18 +209,11 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_library, sig_artist_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
         CONNECT(&ui_library, sig_track_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
 
-        /* Never called, would be nicer by design but more stressful when handling the asynchron data retrieval */
-/*      CONNECT(&ui_library, sig_clear(), 							&library, 	getAllArtistsAlbumsTracks());
-        CONNECT(&ui_library, sig_artist_changed(int), 				&library, 	getAlbumsByArtist(int));
-        CONNECT(&ui_library, sig_album_changed(int), 				&library, 	getTracksByAlbum(int));*/
-
-
         CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		&lastfm, 		login_slot(QString, QString));
 
         CONNECT(&ui_eq, eq_changed_signal(int, int), 	listen, 	eq_changed(int, int));
         CONNECT(&ui_eq, eq_enabled_signal(bool), 		listen, 	eq_enable(bool));
         CONNECT(&ui_eq, close_event(), 					&player, 	close_eq());
-
 
         CONNECT(&ui_playlist, 	edit_id3_signal(), 								&playlist, 	psl_edit_id3_request());
         CONNECT(&ui_library,	sig_data_for_id3_change(const vector<MetaData>&), 	&ui_tagedit,change_meta_data(const vector<MetaData>&));
@@ -231,6 +223,7 @@ int main(int argc, char *argv[]){
 		CONNECT(&lastfm,		similar_artists_available(QList<int>&),			&playlist,		psl_similar_artists_available(QList<int>&));
 		CONNECT(&lastfm,		last_fm_logged_in(bool),						&ui_playlist,	last_fm_logged_in(bool));
 		CONNECT(&lastfm,		new_radio_playlist(const vector<MetaData>&),	&playlist,		psl_new_radio_playlist_available(const vector<MetaData>&));
+		CONNECT(&lastfm, 		track_info_fetched(const MetaData&, bool, bool),	&player,	lfm_info_fetched(const MetaData&, bool, bool));
 
 		CONNECT(&ui_playlist_chooser, sig_playlist_chosen(int),		&playlists, load_single_playlist(int));
 		CONNECT(&ui_playlist_chooser, sig_delete_playlist(int), 	&playlists, delete_playlist(int));

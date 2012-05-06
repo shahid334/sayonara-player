@@ -41,10 +41,13 @@ public:
 		void similar_artists_available(QList<int>&);
 		void last_fm_logged_in(bool);
 		void new_radio_playlist(const vector<MetaData>&);
+		void track_info_fetched(const MetaData& md, bool loved, bool corrected);
 
 	public slots:
 		void scrobble(const MetaData&);
 		void update_track(const MetaData&);
+		void get_track_info(const MetaData&);
+
 		void login_slot(QString, QString);
 		void get_similar_artists(const QString&);
 		void radio_init(const QString&, bool);

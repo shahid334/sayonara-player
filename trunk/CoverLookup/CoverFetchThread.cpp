@@ -137,8 +137,6 @@ void CoverFetchThread::search_images_for_albums(){
 				}
 			}
 		}
-
-
 }
 
 
@@ -227,7 +225,6 @@ void CoverFetchThread::setup_fetch_artist_image(const QString& artist, int sourc
 
 
 void CoverFetchThread::setup_fetch_album_covers(const vector<Album>& albums, int source){
-
 
 	_album_searchstring = "";
 	_artist_searchstring = "";
