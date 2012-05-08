@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>380</width>
+    <width>470</width>
     <height>130</height>
    </rect>
   </property>
@@ -21,138 +21,94 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>380</width>
-    <height>130</height>
+    <width>1000</width>
+    <height>1000</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>LastFM Preferences</string>
   </property>
-  <widget class="QWidget" name="gridLayoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>361</width>
-     <height>111</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <property name="horizontalSpacing">
-     <number>20</number>
-    </property>
-    <item row="2" column="2">
-     <widget class="QLabel" name="label_2">
-      <property name="text">
-       <string>Username</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="4">
-     <widget class="QLineEdit" name="tf_username"/>
-    </item>
-    <item row="2" column="0" rowspan="2">
-     <widget class="QFrame" name="frame">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="minimumSize">
-       <size>
-        <width>120</width>
-        <height>60</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>105</width>
-        <height>200</height>
-       </size>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgb(255, 255, 255);</string>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-      <widget class="QLabel" name="lab_image">
-       <property name="geometry">
-        <rect>
-         <x>11</x>
-         <y>15</y>
-         <width>100</width>
-         <height>30</height>
-        </rect>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>30</height>
-        </size>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="pixmap">
-        <pixmap>../../Desktop/lastfm-icon.png</pixmap>
-       </property>
-       <property name="scaledContents">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </widget>
-    </item>
-    <item row="3" column="2">
-     <widget class="QLabel" name="label_3">
-      <property name="text">
-       <string>Password</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="4">
-     <widget class="QLineEdit" name="tf_password">
-      <property name="echoMode">
-       <enum>QLineEdit::Password</enum>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="4">
-     <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Username</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2">
+    <widget class="QLineEdit" name="tf_username"/>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="QLineEdit" name="tf_password">
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Password</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QPushButton" name="btn_save">
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Propose ID3 corrections</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="3">
+    <widget class="QWidget" name="widget" native="true">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 255, 255);</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
+       <widget class="QLabel" name="lab_image">
+        <property name="minimumSize">
          <size>
-          <width>40</width>
-          <height>20</height>
+          <width>100</width>
+          <height>30</height>
          </size>
         </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_save">
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="text">
-         <string>Save</string>
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap>../../Desktop/lastfm-icon.png</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
      </layout>
-    </item>
-   </layout>
-  </widget>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="cb_correct_id3">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

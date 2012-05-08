@@ -54,6 +54,12 @@ bool CDatabaseConnector::load_settings(){
 
 	settings->setLastFMNameAndPW(last_fm_username, last_fm_password);
 
+	QVariant lfm_corrections;
+	bool lfm_corrections_bool;
+	load_setting("lfm_corrections", lfm_corrections);
+	lfm_corrections_bool = lfm_corrections.toBool();
+	settings->setLastFMCorrections(lfm_corrections_bool);
+
 
 
 	QVariant lfm_session_key;
@@ -226,6 +232,9 @@ bool CDatabaseConnector::store_settings(){
 
 	storage->getLastFMNameAndPW(last_fm_username, last_fm_password);
 	store_setting("LastFM_login", last_fm_username + "," + last_fm_password);
+
+	bool lfm_corrections = storage->getLastFMCorrections();
+	store_setting("lfm_corrections", lfm_corrections);
 
 	QString lfm_session_key = storage->getLastFMSessionKey();
 	store_setting("lfm_session_key", lfm_session_key);

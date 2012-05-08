@@ -86,11 +86,11 @@ void CoverLookup::thread_finished() {
 			case COV_FETCH_MODE_ALBUM_STR:
 			case COV_FETCH_MODE_ALL_ALBUMS:
 			case COV_FETCH_MODE_SINGLE_ALBUM:
-				emit sig_cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+				emit sig_cover_found(Helper::get_cover_path(_metadata.artist, _metadata.album));
 				break;
 
 			case COV_FETCH_MODE_ARTIST_STR:
-				emit sig_cover_found(true, Helper::get_artist_image_path(_metadata.artist));
+				emit sig_cover_found(Helper::get_artist_image_path(_metadata.artist));
 				break;
 			default: break;
 		}
@@ -98,7 +98,7 @@ void CoverLookup::thread_finished() {
 	}
 
 	else if (pixmaps.size() == 0) {
-		emit sig_cover_found(false);
+		emit sig_cover_found("");
 
 		// if not already tried google and not searching an artist string
 		if( !_research_done &&
@@ -131,11 +131,11 @@ void CoverLookup::terminate_thread() {
 	}
 
 	if (pixmaps.size() >= 1) {
-		emit sig_cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+		emit sig_cover_found(Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
 
 	else if (pixmaps.size() == 0)
-		emit sig_cover_found(false);
+		emit sig_cover_found("");
 }
 
 
@@ -148,7 +148,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);
 
 	if (QFile::exists(cover_path) && cover_path != "") {
-		emit sig_cover_found(true, Helper::get_cover_path(_metadata.artist, _metadata.album));
+		emit sig_cover_found(Helper::get_cover_path(_metadata.artist, _metadata.album));
 		return;
 	}
 

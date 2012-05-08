@@ -368,6 +368,9 @@
     </item>
     <item row="8" column="1" colspan="2">
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>2</number>
+      </property>
       <item>
        <widget class="QLabel" name="curTime">
         <property name="sizePolicy">
@@ -385,7 +388,7 @@
         <property name="maximumSize">
          <size>
           <width>30</width>
-          <height>18</height>
+          <height>16</height>
          </size>
         </property>
         <property name="font">
@@ -450,7 +453,7 @@
         <property name="maximumSize">
          <size>
           <width>30</width>
-          <height>18</height>
+          <height>16</height>
          </size>
         </property>
         <property name="font">
@@ -518,7 +521,7 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>20</height>
+        <height>16</height>
        </size>
       </property>
       <property name="sizeIncrement">
@@ -714,7 +717,7 @@
            <x>0</x>
            <y>0</y>
            <width>318</width>
-           <height>409</height>
+           <height>413</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -812,12 +815,18 @@
         </property>
         <property name="maximumSize">
          <size>
-          <width>20</width>
-          <height>100</height>
+          <width>18</width>
+          <height>18</height>
          </size>
         </property>
         <property name="text">
          <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>18</width>
+          <height>18</height>
+         </size>
         </property>
         <property name="flat">
          <bool>true</bool>

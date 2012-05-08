@@ -842,7 +842,7 @@ void GUI_Library_windowed::info_album(){
 		if(album.is_sampler)
 			artist = "Various";
 
-		album_playcount += lfm->getAlbumInfo(artist, album.name).toInt();
+		album_playcount += lfm->get_album_info(artist, album.name).toInt();
 
 		if(num_albums == 0){
 			first_album_artist = artist;
@@ -973,7 +973,7 @@ void GUI_Library_windowed::info_artist(){
 
 		num_albums += artist.num_albums;
 		num_songs += artist.num_songs;
-		num_plays += lfm->getArtistInfo(artist.name).toInt();
+		num_plays += lfm->get_artist_info(artist.name).toInt();
 
 		if(num_artists == 0){
 			first_artist_name = artist.name;
@@ -1090,7 +1090,10 @@ void GUI_Library_windowed::info_tracks(){
 		QString track_num = QString::number(md.track_num);
 
 		QMap<QString, QString> info;
-		lfm->getTrackInfo(artist, md.title, info);
+		MetaData md_tmp;
+			md_tmp.artist = artist;
+			md_tmp.title = md.title;
+		lfm->get_track_info(md_tmp, info, false);
 		/*if(!info[LFM_TAG_USERPLAYCOUNT].isNull() && !info[LFM_TAG_USERPLAYCOUNT].isEmpty() ){
 			playcount += info[LFM_TAG_USERPLAYCOUNT].toInt();
 		}*/
@@ -1153,7 +1156,10 @@ void GUI_Library_windowed::info_tracks(){
 			if(bitrate != QString::number(md.bitrate)) bitrate = "-1";
 
 			QMap<QString, QString> info;
-			lfm->getTrackInfo(artist, md.title, info);
+			MetaData md_tmp;
+				md_tmp.artist = artist;
+				md_tmp.title = md.title;
+			lfm->get_track_info(md_tmp, info, false);
 			/*if( !info[LFM_TAG_USERPLAYCOUNT].isNull() && !info[LFM_TAG_USERPLAYCOUNT].isEmpty() ){
 				playcount += info[LFM_TAG_USERPLAYCOUNT].toInt();
 			}*/
@@ -1293,20 +1299,15 @@ void GUI_Library_windowed::deleteSomeTracks(vector<MetaData>& vec_md){
 }
 
 
-void GUI_Library_windowed::cover_changed(bool success, QString path){
-	if(!_album_msg_box || !success) return;
+void GUI_Library_windowed::cover_changed(QString path){
+	if(!_album_msg_box || path.size() == 0) return;
 
 	if(!QFile::exists(path)){
 		qDebug() << path << " does not exist";
 	}
+
 	QPixmap pm = QPixmap(path);
 	if(!pm.isNull()){
-
-		/*if(_album_of_interest.is_sampler){
-			QPushButton* apply = _album_msg_box->addButton("Apply cover to entire album", QMessageBox::ActionRole);
-			connect(apply, SIGNAL(pressed()), this, SLOT(apply_cover_to_entire_album()));
-		}*/
-
 		pm = pm.scaledToWidth(INFO_IMG_SIZE, Qt::SmoothTransformation);
 		_album_msg_box->setIconPixmap(pm);
 	}

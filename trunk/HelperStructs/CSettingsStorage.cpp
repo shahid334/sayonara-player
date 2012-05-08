@@ -131,6 +131,15 @@ void CSettingsStorage::setLastFMNameAndPW (const QString & name,const QString & 
 }
 
 
+void CSettingsStorage::setLastFMCorrections(bool b){
+	m_lfm_corrections = b;
+}
+
+bool CSettingsStorage::getLastFMCorrections(){
+	return m_lfm_corrections;
+}
+
+
 EQ_Setting CSettingsStorage::getCustomEqualizer(){ 
 	if(m_vec_eqSettings.size() == 0) {
 		EQ_Setting setting;

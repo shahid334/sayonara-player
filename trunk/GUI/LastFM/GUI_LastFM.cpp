@@ -43,8 +43,13 @@ GUI_LastFM::GUI_LastFM() {
 	this->ui->setupUi(this);
 
 	this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
+	bool checked = CSettingsStorage::getInstance()->getLastFMCorrections();
+	this->ui->cb_correct_id3->setChecked(checked);
 
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+	connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
+
+
 
 }
 
@@ -112,4 +117,11 @@ void GUI_LastFM::show_win(){
         this->ui->tf_password->setPlaceholderText("Enter Password");
     }*/
     this->show();
+}
+
+
+void GUI_LastFM::cb_correct_id3_toggled(bool checked){
+
+	CSettingsStorage::getInstance()->setLastFMCorrections(checked);
+
 }

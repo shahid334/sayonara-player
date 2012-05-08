@@ -127,6 +127,8 @@ void GUI_SimplePlayer::initGUI() {
 	this->ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	this->ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
+	//this->ui->btn_correct->setText(QString("(c)"));
+	this->ui->btn_correct->setToolTip("Correct ID3 Tag");
 
 	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
 	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
@@ -213,8 +215,8 @@ void GUI_SimplePlayer::setupConnections(){
 // new track
 void GUI_SimplePlayer::update_track(const MetaData & md) {
 
+
 	this->m_metadata = md;
-	qDebug() << "change info";
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
@@ -239,7 +241,6 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 			QString("\""));
 
 	QString lengthString = getLengthString(md.length_ms);
-
 	this->ui->maxTime->setText(lengthString);
 	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 
@@ -280,6 +281,8 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 
 	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
 	this->ui->albumCover->setPixmap(cover);
+	setCurrentPosition(0);
+	this->ui->btn_correct->setVisible(false);
 	this->ui->albumCover->repaint();
 	this->repaint();
 }
@@ -287,7 +290,6 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 // public slot:
 // id3 tags have changed
 void GUI_SimplePlayer::update_info(const MetaData& in) {
-
 
 	this->m_metadata = in;
 
@@ -308,26 +310,22 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
 	emit wantCover(in);
+	this->ui->btn_correct->setVisible(false);
 	this->repaint();
 }
 
 
 // public slot
 // cover was found by CoverLookup
-void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
+void GUI_SimplePlayer::cover_changed(QString cover_path) {
 
-	// found cover is not for the player but for the library
+	// found cover is not for the player but for sth else
 	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-	if(our_coverpath.toLower() != cover_path.toLower()){
-		return;
-	}
 
-	if (!success || !QFile::exists(cover_path)){
-		this->ui->albumCover->setPixmap(
-				QPixmap::fromImage(
-						QImage(Helper::getIconPath() + "append.png")));
-		this->ui->albumCover->repaint();
-		return;
+	if(	our_coverpath.toLower() != cover_path.toLower() ||
+		!QFile::exists(cover_path) ){
+
+		cover_path = Helper::getIconPath() + "append.png";
 	}
 
 	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
@@ -339,11 +337,11 @@ void GUI_SimplePlayer::cover_changed(bool success, QString cover_path) {
 void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
 
 	m_metadata_corrected = md;
-	this->ui->btn_correct->setVisible(corrected);
+	this->ui->btn_correct->setVisible(corrected && CSettingsStorage::getInstance()->getLastFMCorrections());
 
 	qDebug() << "loved? " << loved;
 	if(loved){
-		this->ui->title->setText(this->ui->title->text() + QString("(L)"));
+		this->ui->title->setText(this->ui->title->text());
 	}
 
 	this->repaint();
@@ -351,13 +349,13 @@ void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool cor
 
 void GUI_SimplePlayer::correct_btn_clicked(bool b){
 	emit sig_correct_id3(m_metadata_corrected);
+
 }
 
 
 void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 	m_completeLength_ms = total_time;
 	this->ui->maxTime->setText(getLengthString(total_time));
-
 }
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
@@ -383,6 +381,8 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 	+ QString(':') + Helper::cvtSomething2QString(sec, 2);
 
 	this->ui->curTime->setText(curPosString);
+	//this->ui->curTime->repaint();
+
 }
 
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>331</width>
-    <height>72</height>
+    <width>320</width>
+    <height>97</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
-    <height>0</height>
+    <width>320</width>
+    <height>97</height>
    </size>
   </property>
   <property name="features">
@@ -39,10 +39,7 @@
     </sizepolicy>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0" colspan="3">
-     <widget class="QLineEdit" name="le_text"/>
-    </item>
-    <item row="1" column="3">
+    <item row="2" column="4">
      <widget class="QPushButton" name="btn_listen">
       <property name="minimumSize">
        <size>
@@ -67,7 +64,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="3">
+    <item row="0" column="4" rowspan="2">
      <widget class="QLabel" name="lab_lfm">
       <property name="minimumSize">
        <size>
@@ -97,6 +94,34 @@
      <widget class="QRadioButton" name="rb_tag">
       <property name="text">
        <string>Tag</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="le_text"/>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cb_friends">
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QRadioButton" name="rb_user">
+      <property name="text">
+       <string>User</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QRadioButton" name="rb_recom">
+      <property name="text">
+       <string>Recommended</string>
       </property>
      </widget>
     </item>

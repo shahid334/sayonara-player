@@ -113,7 +113,7 @@ public slots:
 	void reloading_library(int);
 	void reloading_library_finished();
 	void library_should_be_reloaded();
-	void cover_changed(bool, QString);
+	void cover_changed(QString);
 	void library_changed();
 	void import_result(bool);
 

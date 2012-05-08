@@ -286,6 +286,7 @@ void GST_Engine::state_changed(){
 
 void GST_Engine::set_cur_position(quint32 pos){
 
+	if(_seconds_now == pos) return;
 	_seconds_now = pos;
 
 	if (!_scrobbled

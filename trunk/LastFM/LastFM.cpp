@@ -71,11 +71,15 @@ LastFM::LastFM() {
 void LastFM::init(){
 	lfm_wa_init();
 
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
 	_logged_in = false;
+	/*QString bla;
+	settings->getLastFMNameAndPW(_username, bla);*/
 
 	_similar_artists_thread = new LFM_SimilarArtists(LFM_API_KEY);
 	connect(_similar_artists_thread, SIGNAL(finished()), this, SLOT(sim_artists_thread_finished()));
+	connect(_similar_artists_thread, SIGNAL(terminated()), this, SLOT(sim_artists_thread_finished()));
 }
 
 LastFM::~LastFM() {
@@ -239,19 +243,35 @@ bool LastFM::login(QString username, QString password){
 }
 
 
-bool LastFM::update_track(const MetaData& metadata){
+void LastFM::login_slot(QString username, QString password){
+	bool logged_in = login(username, password);
+	emit last_fm_logged_in(logged_in);
+}
+
+
+void LastFM::track_changed(const MetaData& md){
+
+	update_track(md);
+
+	if(CSettingsStorage::getInstance()->getPlaylistMode().dynamic)
+		get_similar_artists(md.artist);
+
+	get_track_info(md);
+}
+
+bool LastFM::update_track(const MetaData& md){
 
 	if(!check_login()){
 		return false;
 	}
 
-	QString artist = metadata.artist;
-	QString title = metadata.title;
+	QString artist = md.artist;
+	QString title = md.title;
 
 	UrlParams sig_data;
 		sig_data["api_key"] = LFM_API_KEY;
 		sig_data["artist"] = artist;
-		sig_data["duration"] = QString::number(metadata.length_ms / 1000);
+		sig_data["duration"] = QString::number(md.length_ms / 1000);
 		sig_data["method"] = QString("track.updatenowplaying").toLocal8Bit();
 		sig_data["sk"] = _session_key;
 		sig_data["track"] =  title;
@@ -271,13 +291,12 @@ bool LastFM::update_track(const MetaData& metadata){
 	}
 
 	return true;
-
 }
 
 
-bool LastFM::scrobble(const MetaData& metadata){
+void LastFM::scrobble(const MetaData& metadata){
 
-	if(!check_login())	return false;
+	if(!check_login())	return;
 
 	time_t rawtime;
 	time(&rawtime);
@@ -308,49 +327,42 @@ bool LastFM::scrobble(const MetaData& metadata){
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
 	if(!success || response.contains("failed")){
-		return false;
+		return;
 		/*qDebug() << "Track scrobbling failed";
 		qDebug() << "Url = " << url;
 		qDebug() << "Post data = " << post_data.c_str();
 		qDebug() << response;*/
 	}
 
-	return true;
 }
 
 
-bool LastFM::get_similar_artists(const QString& artistname, QList<int>& artist_ids){
-
+void LastFM::get_similar_artists(const QString& artistname){
 
 	_similar_artists_thread->set_artist_name(artistname);
 	_similar_artists_thread->start();
+}
 
-	long int max = 3000000; // 3 secs
 
-	while(!_similar_artists_thread->isFinished() && max > 0){
-		usleep(10000); // 0.1 sec
-		max -= 10000;
-	}
+void LastFM::sim_artists_thread_finished(){
 
-	if(max <= 0) return false;
+	QList<int> ids = _similar_artists_thread->get_chosen_ids();
+	if(ids.size() > 0)
+		emit similar_artists_available(ids);
 
-	artist_ids.clear();
-	artist_ids = _similar_artists_thread->get_chosen_ids();
-
-	return true;
 }
 
 
 
-bool LastFM::radio_init(const QString& str, int radio_mode){
+void LastFM::radio_init(const QString& str, int radio_mode){
 
 	if(_session_key2.size() != 32){
 		if(!check_login()){
-			return false;
+			return;
 		}
 
 		else if(_session_key2.size() != 32){
-			return false;
+			return;
 		}
 	}
 
@@ -360,15 +372,28 @@ bool LastFM::radio_init(const QString& str, int radio_mode){
 	tag_string.replace("&", "and");
 
 	switch(radio_mode){
+
 		case LFM_RADIO_MODE_ARTIST:
 			lfm_radio_station += QString("artist/") + str + QString("/similarartists");
 			break;
+
 		case LFM_RADIO_MODE_TAG:
 			lfm_radio_station += QString("globaltags/") + str;
 			break;
+
+		case LFM_RADIO_MODE_RECOMMENDED:
+			lfm_radio_station += "user/" + str + "/recommended";
+			break;
+
+		case LFM_RADIO_MODE_USER_LIBRARY:
+			lfm_radio_station += "user/" + str + "/library";
+			break;
+
 		default:
 			break;
 	}
+
+	qDebug() << "LFM Radio: Init Radio to " << lfm_radio_station;
 
 	UrlParams data;
 		data["session"] = _session_key2;
@@ -382,24 +407,27 @@ bool LastFM::radio_init(const QString& str, int radio_mode){
 		qDebug() << "LFM: Radio not initialized";
 		qDebug() << "LFM: url = " << url;
 		qDebug() << "LFM: " << response;
-		return false;
+		return;
 	}
 
-	return true;
+	radio_get_playlist();
 }
 
 
-bool LastFM::radio_get_playlist(vector<MetaData>& v_md){
+void LastFM::radio_get_playlist(){
 
 	if(_session_key2.size() != 32){
 		if(!check_login()){
-			return false;
+			return;
 		}
 
 		else if(_session_key2.size() != 32){
-			return false;
+			return;
 		}
 	}
+
+	QDomDocument xml_response;
+	vector<MetaData> v_md;
 
 	UrlParams data;
 	data["sk"] = _session_key2;
@@ -407,23 +435,23 @@ bool LastFM::radio_get_playlist(vector<MetaData>& v_md){
 	data["desktop"] = "1.5";
 
 	QString url = create_std_url(QString("http://ws.audioscrobbler.com/radio/xspf.php"), data);
-	QDomDocument xml_response;
+
 
 	bool success = lfm_wa_call_url_xml(url, xml_response);
 	if( !success ){
 		qDebug() << "LFM: Cannot get playlist";
 		qDebug() << "LFM: Url = " << url;
-		return false;
+		return;
 	}
+
 
 	parse_playlist_answer(v_md, xml_response);
 	xml_response.clear();
 
 	if(v_md.size() > 0){
-		return true;
+		emit new_radio_playlist(v_md);
+		return;
 	}
-
-	return false;
 }
 
 
@@ -479,7 +507,7 @@ bool LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& d
 }
 
 
-QString LastFM::getArtistInfo(const QString& artist){
+QString LastFM::get_artist_info(const QString& artist){
 
 	QString retval;
 
@@ -514,7 +542,7 @@ QString LastFM::getArtistInfo(const QString& artist){
 
 }
 
-QString LastFM::getAlbumInfo(const QString& artist, const QString& album){
+QString LastFM::get_album_info(const QString& artist, const QString& album){
 
 	QString retval;
 
@@ -549,7 +577,13 @@ QString LastFM::getAlbumInfo(const QString& artist, const QString& album){
 	return playcount;
 }
 
-bool LastFM::getTrackInfo(const QString& artist, const QString& title, QMap<QString, QString>& values){
+
+bool LastFM::get_track_info(const MetaData& md, bool emit_sig){
+	QMap<QString, QString> values;
+	get_track_info(md, values, emit_sig);
+}
+
+bool LastFM::get_track_info(const MetaData& md, QMap<QString, QString>& values, bool emit_sig){
 	QString retval;
 
 	if(!_logged_in) {
@@ -558,14 +592,12 @@ bool LastFM::getTrackInfo(const QString& artist, const QString& title, QMap<QStr
 	}
 
 	UrlParams params;
-	params["artist"] = QUrl::toPercentEncoding(artist);
-	params["track"] = QUrl::toPercentEncoding(title);
+	params["artist"] = QUrl::toPercentEncoding(md.artist);
+	params["track"] = QUrl::toPercentEncoding(md.title);
 	params["username"] = _username;
 	params["method"] = QString("track.getinfo");
 	params["autocorrect"] = QString("1");
 	params["api_key"] = LFM_API_KEY;
-
-
 
 	QString url_getTrackInfo = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
 
@@ -585,10 +617,64 @@ bool LastFM::getTrackInfo(const QString& artist, const QString& title, QMap<QStr
 	foreach(QString str2search, search_list){
 		QString str = Helper::easy_tag_finder(str2search , retval);
 		values[str2search] = str;
-		qDebug() << "set " << str2search << " to " << str;
 	}
 
+
+	bool corrected = false;
+	bool loved = (values[LFM_TAG_TRACK_LOVED].toInt() == 1);
+
+	QString artist = values[LFM_TAG_TRACK_ARTIST];
+	QString title = values[LFM_TAG_TRACK_TITLE];
+
+	MetaData md_copy = md;
+
+	if(artist.toLower() != md.artist.toLower() ||
+		title.toLower() != md.title.toLower() ){
+		corrected = true;
+		md_copy.artist = artist;
+		md_copy.title = title;
+	}
+
+	if(emit_sig)
+		emit track_info_fetched(md_copy, loved, corrected);
 	return true;
 }
 
 
+void LastFM::get_friends(QStringList& friends){
+
+	if(!_logged_in)
+		return;
+
+	UrlParams params;
+
+	params["user"] = _username;
+	params["api_key"] = LFM_API_KEY;
+	params["method"] = QString("user.getFriends");
+
+	QString url_getFriends = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+
+	QString retval;
+
+	bool success = lfm_wa_call_url(url_getFriends, retval);
+	if(!success) {
+		qDebug() << "LFM: Cannot fetch friends";
+		return;
+	}
+
+	friends << _username;
+	QString username = Helper::easy_tag_finder("user.name", retval);
+	if(username.size() > 0)
+		friends << username;
+	int idx = 0;
+	while(idx >= 0){
+		idx = retval.indexOf("<user>");
+		retval = retval.right(retval.size() - idx - 2);
+		username = Helper::easy_tag_finder("user.name", retval);
+		if(username.size() > 0)
+			friends << username;
+	}
+
+	qDebug() << "Found " << friends;
+
+}

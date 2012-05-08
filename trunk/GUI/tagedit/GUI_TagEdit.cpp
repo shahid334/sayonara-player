@@ -52,8 +52,8 @@ GUI_TagEdit::GUI_TagEdit() {
 	_db = CDatabaseConnector::getInstance();
 
 	init();
-	/*QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "edit.png")).scaled(30,30, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	this->ui->lab_icon->setPixmap(pix);*/
+	QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "edit.png")).scaled(30,30, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	this->ui->lab_icon->setPixmap(pix);
 	close();
 
 
@@ -62,11 +62,6 @@ GUI_TagEdit::GUI_TagEdit() {
 	connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
 	connect(this->ui->bb_ok_cancel, SIGNAL(accepted()), this, SLOT(ok_button_clicked()));
 	connect(this->ui->bb_ok_cancel, SIGNAL(rejected()), this, SLOT(cancel_button_clicked()));
-
-
-//        connect(this->ui->btn_all_album, SIGNAL(released()), this, SLOT(all_albums_clicked()));
-//	connect(this->ui->btn_all_artist, SIGNAL(released()), this, SLOT(all_artists_clicked()));
-//	connect(this->ui->btn_all_year, SIGNAL(released()), this, SLOT(all_year_clicked()));
 
 }
 
@@ -380,9 +375,6 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 		}
 
 		_vec_tmp_metadata[track].artist_id = artist_id;
-
-
-
 	}
 }
 

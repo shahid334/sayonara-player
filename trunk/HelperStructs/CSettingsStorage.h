@@ -85,6 +85,7 @@ private:
     // last fm
     QPair<QString,QString> m_lastFm;
     QString m_lfm_sessionKey;
+    bool m_lfm_corrections;
 
     // listen
     int	m_volume;
@@ -126,6 +127,9 @@ private:
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
+
+    void setLastFMCorrections(bool checked);
+    bool getLastFMCorrections();
 
     int getVolume();
     void setVolume(int vol);

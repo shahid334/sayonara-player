@@ -55,7 +55,7 @@ class CoverLookup : public QObject{
 
 	signals:
 		void sig_covers_found(vector<QPixmap>&);		/* emit if multiple covers are found (player) */
-		void sig_cover_found(bool, QString str="");		/* emit if single cover is found (player) */
+		void sig_cover_found(QString str);				/* emit if single cover is found (player) */
 		void sig_new_cover_found(const QPixmap&);		/* emit if a new cover is found (alternate covers) */
 
 	public slots:

@@ -48,6 +48,7 @@ struct MetaData{
 	QString title;
 	QString artist;
 	QString album;
+	//QString genre;
 	qint32 rating;
 	qint64 length_ms;
 	qint32 year;
@@ -65,6 +66,7 @@ struct MetaData{
 			title = "";
             artist = "";
             album = "";
+            //genre = "";
             rating = 0;
             length_ms = 0;
             year = 0;
@@ -88,9 +90,11 @@ struct MetaData{
 		QString tmpTitle = title;
 		QString tmpArtist = artist;
 		QString tmpAlbum = album;
+		//QString tmpGenre = genre;
 		if(title.trimmed().size() == 0) tmpTitle = QString("(Unknown title)");
 		if(artist.trimmed().size() == 0) tmpArtist = QString("");
 		if(album.trimmed().size() == 0) tmpAlbum = QString("");
+		//if(genre.trimmed().size() == 0) tmpGenre = QString("");
 
 		list.push_back(tmpTitle);
 		list.push_back(tmpArtist);
@@ -105,6 +109,7 @@ struct MetaData{
 		list.push_back(QString::number(album_id));
 		list.push_back(QString::number(artist_id));
 		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
+		//list.push_back(tmpGenre);
 		return list;
 	}
 
@@ -125,6 +130,7 @@ struct MetaData{
 		album_id = list.at(10).toInt();
 		artist_id = list.at(11).toInt();
 		is_extern = ( list.at(12) == "1" );
+		//genre = list.at(13);
 
 
 	}

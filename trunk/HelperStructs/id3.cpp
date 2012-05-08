@@ -134,12 +134,14 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String artist(md.artist.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String title(md.title.toUtf8().data(), TagLib::String::UTF8);
+	//TagLib::String genre(md.genre.toUtf8().data(), TagLib::String::UTF8);
 
 	f.tag()->setAlbum(album);
 	f.tag()->setArtist(artist);
 	f.tag()->setTitle(title);
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
+	//f.tag()->setGenre(genre);
 	f.save();
 	return;
 }

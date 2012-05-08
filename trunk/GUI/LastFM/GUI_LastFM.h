@@ -48,6 +48,7 @@ public:
 
 	private slots:
 		void save_button_pressed();
+		void cb_correct_id3_toggled(bool);
 
 
 	public slots:

@@ -44,7 +44,7 @@ public:
 
 
 	signals:
-		void listen_clicked(const QString&, bool artist);
+		void listen_clicked(const QString&, int artist);
 		void close_event();
 
 	private slots:
@@ -54,10 +54,10 @@ public:
 	protected:
 			void 	closeEvent ( QCloseEvent * event );
 
-
 	private:
 
 		Ui::RadioWidget* _ui;
+		QStringList _friends;
 
 };
 

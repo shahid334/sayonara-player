@@ -42,6 +42,9 @@
 
 #define LFM_RADIO_MODE_ARTIST 0
 #define LFM_RADIO_MODE_TAG 1
+#define LFM_RADIO_MODE_RECOMMENDED 2
+#define LFM_RADIO_MODE_USER_LIBRARY 3
+
 
 #define LFM_TAG_TRACK_TITLE "track.name"
 #define LFM_TAG_TRACK_ALBUM "track.album.title"
@@ -57,27 +60,44 @@
 // signals and slots are handled by the adapter class
 class LastFM : public QObject{
 
+Q_OBJECT
+
+	signals:
+		void last_fm_logged_in(bool);
+		void similar_artists_available(QList<int>&);
+		void new_radio_playlist(const vector<MetaData>&);
+		void track_info_fetched(const MetaData& md, bool loved, bool corrected);
+
+	public slots:
+		void scrobble(const MetaData&);
+		void track_changed(const MetaData&);
+		void login_slot(QString, QString);
+		void radio_init(const QString&, int);
+		void radio_get_playlist();
+
+	private slots:
+		void sim_artists_thread_finished();
+
 	public:
 		static LastFM * getInstance();
 		virtual ~LastFM();
 
-
-		bool scrobble(const MetaData&);
 		bool update_track(const MetaData&);
-		bool get_similar_artists(const QString&, QList<int>& artist_ids);
-		bool radio_init(const QString& search_str, int radio_mode);
-		bool radio_get_playlist(vector<MetaData>& v_md);
+		void get_similar_artists(const QString&);
+		void get_friends(QStringList& );
 
 		bool login(QString username, QString password);
-		static QString get_api_key();
 
+		static QString get_api_key();
 		static QString calc_album_lfm_adress(QString album);
 		static QString calc_search_album_adress(QString album);
 		static QString calc_search_artist_adress(QString album);
 
-		QString getArtistInfo(const QString& artist);
-		QString getAlbumInfo(const QString& artist, const QString& album);
-		bool getTrackInfo(const QString& artist, const QString& title, QMap<QString, QString>& values);
+		QString get_artist_info(const QString& artist);
+		QString get_album_info(const QString& artist, const QString& album);
+
+		bool get_track_info(const MetaData& md, bool emit_sig=true);
+		bool get_track_info(const MetaData& md, QMap<QString, QString>& values, bool emit_sig=true);
 
 
 	private:
@@ -96,7 +116,6 @@ class LastFM : public QObject{
 		QString			_session_key2;
 		MetaData		_loved_tracks;
 
-
 	private:
 		QString parse_session_answer();
 		LFM_SimilarArtists* _similar_artists_thread;
@@ -108,14 +127,7 @@ class LastFM : public QObject{
 		QString create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data);
 		QString create_signature(const UrlParams& data);
 
-
-
-
 		bool check_login();
-
-
-
-
 };
 
 #endif /* LASTFM_H_ */
