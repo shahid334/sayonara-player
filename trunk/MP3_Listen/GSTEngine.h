@@ -39,6 +39,7 @@
 
 #include <gst/gst.h>
 
+
 #include <QObject>
 #include <QDebug>
 
@@ -52,6 +53,7 @@ class GST_Engine : public Engine {
 	Q_INTERFACES(Engine)
 
 
+
 public:
 
 	GST_Engine();
@@ -62,13 +64,23 @@ public:
 
 private:
 
+	GstElement* _rec_src;
+	GstElement* _rec_dst;
+	GstElement* _rec_pipeline;
+	GstElement* _rec_enc;
+	GstElement* _rec_cvt;
+
 	GstElement* _pipeline;
 	GstElement* _equalizer;
 	GstElement* _volume;
 	GstElement* _audio_bin;
 	GstElement* _audio_sink;
+	GstElement* _file_sink;
 	GstPad*		_audio_pad;
 	GstBus*		_bus;
+
+	bool 		_is_recording;
+	QString		_recording_dst;
 
 
 public slots:
@@ -93,6 +105,9 @@ public:
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();
 	virtual QString	getName();
+
+	bool			getRecording();
+	void			setRecording(bool b);
 
 
 

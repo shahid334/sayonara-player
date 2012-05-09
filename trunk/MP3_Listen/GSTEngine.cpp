@@ -33,6 +33,8 @@
 #include <QObject>
 #include <QDebug>
 #include <QString>
+#include <QFile>
+#include <QDir>
 #include <Qt/qplugin.h>
 
 using namespace std;
@@ -57,6 +59,8 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 	(void) bus;
 	(void) user_data;
+
+
 	switch (GST_MESSAGE_TYPE(msg)) {
 		case GST_MESSAGE_EOS:
 			if(obj_ref){
@@ -69,6 +73,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 			gst_message_parse_error(msg, &err, NULL);
 			qDebug() << "GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
+
 			g_error_free(err);
 
 			break;
@@ -101,6 +106,7 @@ GST_Engine::GST_Engine(){
 
 	_bus = 0;
 	_pipeline = 0;
+	_is_recording = false;
 }
 
 GST_Engine::~GST_Engine() {
@@ -120,14 +126,31 @@ void GST_Engine::init(){
 
 	gst_init(0, 0);
 
-	_pipeline = gst_element_factory_make("playbin2", "player");
 
+	bool success = false;
+
+	int i=0;
+
+	_rec_pipeline = gst_pipeline_new("rec_pipeline");
+	_rec_src = gst_element_factory_make("souphttpsrc", "rec_uri");
+	_rec_cvt = gst_element_factory_make("audioconvert", "rec_cvt");
+	_rec_enc = gst_element_factory_make("lamemp3enc", "rec_enc");
+	_rec_dst = gst_element_factory_make("filesink", "rec_sink");
+
+	if(!_rec_pipeline) qDebug() << "pipeline error";
+	if(!_rec_src) qDebug() << "src error";
+	if(!_rec_cvt) qDebug() << "cvt error";
+	if(!_rec_enc) qDebug() << "enc error";
+	if(!_rec_dst) qDebug() << "sink error";
+
+	gst_bin_add_many(GST_BIN(_rec_pipeline), _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst, NULL);
+	gst_element_link( _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst);
+
+	_pipeline = gst_element_factory_make("playbin2", "player");
 	if(!_pipeline){
 		qDebug() << "Cannot init Pipeline";
-
 	}
 
-	g_timeout_add (200, (GSourceFunc) show_position, _pipeline);
 	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
 	if(!_bus){
 		qDebug() << "Something went wrong with the bus";
@@ -137,41 +160,42 @@ void GST_Engine::init(){
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
 
 
-	bool success = false;
-	int i=0;
+	success = false;
+	i=0;
+	// eq -> autoaudiosink is packaged into a bin
 	do{
+		// create equalizer element
 		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
 		if(!_equalizer){
 			qDebug() << "Equalizer cannot be created";
 			break;
 		}
 
-		_audio_sink = gst_element_factory_make("autoaudiosink", "alsa-sink");
+		// create audio sink
+		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
 		if(!_audio_sink){
 			qDebug() << "Sink cannot be created";
 			break;
 		}
 
+		// create audio bin
 		_audio_bin = gst_bin_new("audio-bin");
 		if(!_audio_bin){
 			qDebug() << "Bin cannot be created";
 			break;
 		}
 
+		// create, link and add ghost pad
 		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
-
+		gst_element_link(_equalizer, _audio_sink);
 		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
-		if(!_audio_pad){
-			qDebug() << "Pad cannot be fetched";
+		if(_audio_pad) {
+			 success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
 		}
-
-		success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
-
 	} while(i);
 
 	if(success){
 		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-		success = gst_element_link(_equalizer, _audio_sink);
 	}
 
 }
@@ -179,16 +203,26 @@ void GST_Engine::init(){
 void GST_Engine::play(){
 
 	_state = STATE_PLAY;
+
+	if(_is_recording){
+
+		gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
+
+		QFile* f = new QFile(_recording_dst);
+		while(f->size() < 16000){
+			usleep(100000);
+		}
+	}
+
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-
 	obj_ref = this;
-
 }
 
 void GST_Engine::stop(){
 	_state = STATE_STOP;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+	gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 }
 
 void GST_Engine::pause(){
@@ -215,30 +249,59 @@ void GST_Engine::jump(int where, bool percent){
 
 	Q_UNUSED(percent);
 
-
 	_seconds_started = where * _meta_data.length_ms / 100;
-
 
 	qint64 new_time_ns = where * _meta_data.length_ms * 10000; // nanoseconds
 	if(!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, new_time_ns)){
 		qDebug() << "seeking failed";
 	}
-
 }
 
 void GST_Engine::changeTrack(const MetaData& md){
 
 	stop();
+
 	_meta_data = md;
 	QString filename = _meta_data.filepath;
+	QString stream_filename = filename;
+
 	obj_ref = NULL;
 
-	if(filename.toLower().left(4).compare("http") != 0)
-		filename.push_front(QString("file://"));
+	qDebug() << "Filename: " << filename;
+	if( filename.startsWith("http") ){
+		_is_recording = true;
 
-	g_object_set(G_OBJECT(_pipeline), "uri", filename.toLocal8Bit().data(), NULL);
+		QString artist = md.artist;
+		QString title = md.title;
+			artist.replace(" ", "_");
+			title.replace(" ", "_");
+
+		QDir dir(QDir::homePath());
+		dir.mkdir(artist);
+
+
+		stream_filename = QDir::homePath() + QDir::separator() + artist + QDir::separator() + title + "." + md.filepath.right(3);
+
+		_recording_dst = stream_filename;
+
+		qDebug() << "Recording source: " << filename;
+		qDebug() << "Destination srouce: " << stream_filename;
+		g_object_set(G_OBJECT(_rec_src), "location", filename.toLocal8Bit().data(), NULL);
+		g_object_set(G_OBJECT(_rec_dst), "location", stream_filename.toLocal8Bit().data(), NULL);
+
+	}
+
+	else{
+
+		stream_filename = filename;
+		_is_recording = false;
+	}
+	stream_filename.push_front("file://");
+
+
+	// playing src
+	g_object_set(G_OBJECT(_pipeline), "uri", stream_filename.toLocal8Bit().data(), NULL);
 	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
-
 
 	emit total_time_changed_signal(_meta_data.length_ms);
 
@@ -312,6 +375,15 @@ int GST_Engine::getState(){
 
 QString GST_Engine::getName(){
 	return _name;
+}
+
+
+bool	GST_Engine::getRecording(){
+	return _is_recording;
+}
+
+void	GST_Engine::setRecording(bool b){
+	_is_recording = b;
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)
