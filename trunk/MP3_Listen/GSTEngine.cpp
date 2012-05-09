@@ -107,6 +107,11 @@ GST_Engine::GST_Engine(){
 	_bus = 0;
 	_pipeline = 0;
 	_is_recording = false;
+
+	QDir dir(QDir::homePath());
+	dir.mkdir("sayonara-streams");
+
+
 }
 
 GST_Engine::~GST_Engine() {
@@ -221,6 +226,11 @@ void GST_Engine::play(){
 void GST_Engine::stop(){
 	_state = STATE_STOP;
 
+	if(_is_recording){
+		_meta_data.filepath = _recording_dst;
+		ID3::setMetaDataOfFile(_meta_data);
+	}
+
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 	gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 }
@@ -267,7 +277,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 	obj_ref = NULL;
 
-	qDebug() << "Filename: " << filename;
+
 	if( filename.startsWith("http") ){
 		_is_recording = true;
 
@@ -276,11 +286,11 @@ void GST_Engine::changeTrack(const MetaData& md){
 			artist.replace(" ", "_");
 			title.replace(" ", "_");
 
-		QDir dir(QDir::homePath());
+		QDir dir(QDir::homePath() + QDir::separator() + "sayonara-streams");
 		dir.mkdir(artist);
+		dir.cd(artist);
 
-
-		stream_filename = QDir::homePath() + QDir::separator() + artist + QDir::separator() + title + "." + md.filepath.right(3);
+		stream_filename = dir.path() + QDir::separator() + title + "." + md.filepath.right(3);
 
 		_recording_dst = stream_filename;
 
