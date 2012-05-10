@@ -127,6 +127,7 @@ int main(int argc, char *argv[]){
         	return -1;
         }
 	listen->init();
+	listen->set_streamripper_active(set->getStreamRipper());
 	listen->streamripper_path_changed(set->getStreamRipperPath());
 
         CONNECT (&player, pause(), 				listen,			pause());

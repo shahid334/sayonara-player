@@ -80,7 +80,7 @@ private:
 	GstBus*		_bus;
 
 	bool 		_playing_stream;
-	bool		_stream_ripper_active;
+	bool		_streamripper_active;
 	bool		_wanna_record;
 	QString		_recording_dst;
 	QString		_streamripper_path;
