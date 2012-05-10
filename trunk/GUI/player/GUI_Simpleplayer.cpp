@@ -95,6 +95,9 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	this->ui->action_viewLibrary->setChecked(show_library);
 
+	bool streamripper_active = settings->getStreamRipper();
+	this->ui->action_streamripper->setChecked(streamripper_active);
+
 	/* TRAY ACTIONS */
 	this->setupTrayActions();
 
@@ -123,6 +126,9 @@ void GUI_SimplePlayer::initGUI() {
 
 	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
 	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	this->ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
+	this->ui->btn_rec->setVisible(false);
+
 	this->ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
 	this->ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
@@ -149,6 +155,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(stopClicked(bool)));
 	connect(this->ui->btn_mute, SIGNAL(released()), this,
 				SLOT(muteButtonPressed()));
+	connect(this->ui->btn_rec, SIGNAL(toggled(bool)), this,
+				SLOT(sl_rec_button_toggled(bool)));
 	connect(this->ui->btn_correct, SIGNAL(clicked(bool)), this,
 			SLOT(correct_btn_clicked(bool)));
 
@@ -192,6 +200,9 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(load_pl_on_startup_toggled(bool)));
 	connect(this->ui->action_min2tray, SIGNAL(toggled(bool)), this,
 			SLOT(min2tray_toggled(bool)));
+	connect(this->ui->action_streamripper, SIGNAL(toggled(bool)), this,
+			SLOT(sl_action_streamripper_toggled(bool)));
+
 
 	// about
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
@@ -398,6 +409,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 
 	QString menu_style = Style::get_menu_style(dark);
+	QString btn_style;
 
 	this->ui->menubar->setStyleSheet(Style::get_menubar_style(dark));
 	this->ui->menuFle->setStyleSheet(menu_style);
@@ -415,14 +427,12 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 
 		QString style = Style::get_btn_style(8);
-
-
 		this->ui->btn_mute->setStyleSheet(style);
 		this->ui->btn_play->setStyleSheet(style);
 		this->ui->btn_fw->setStyleSheet(style);
 		this->ui->btn_bw->setStyleSheet(style);
 		this->ui->btn_stop->setStyleSheet(style);
-
+		this->ui->btn_rec->setStyleSheet(style);
 
 		m_skinSuffix = QString("_dark");
 	}
@@ -439,6 +449,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->ui->btn_fw->setStyleSheet("");
 		this->ui->btn_bw->setStyleSheet("");
 		this->ui->btn_stop->setStyleSheet("");
+		this->ui->btn_rec->setStyleSheet(Style::get_btn_style(8));
 	}
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
@@ -472,6 +483,11 @@ QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
 
 	lengthString = min + QString(":") + sek;
 	return lengthString;
+}
+
+void GUI_SimplePlayer::sl_rec_button_toggled(bool b){
+
+	emit sig_rec_button_toggled(b);
 }
 
 
@@ -1124,13 +1140,25 @@ void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
 void GUI_SimplePlayer::set_radio_active(int radio){
 
 	m_radio_active = radio;
+	bool stream_ripper = CSettingsStorage::getInstance()->getStreamRipper();
 	this->ui->btn_bw->setEnabled(radio == RADIO_OFF);
 	this->ui->btn_fw->setEnabled(radio != RADIO_STATION);
-	this->ui->btn_play->setEnabled(radio == RADIO_OFF);
+
+	if(stream_ripper){
+		this->ui->btn_play->setVisible(radio == RADIO_OFF);
+		this->ui->btn_rec->setVisible(radio != RADIO_OFF);
+	}
+
+	else{
+		this->ui->btn_play->setEnabled(radio == RADIO_OFF);
+		this->ui->btn_rec->setVisible(false);
+	}
+
 	this->ui->songProgress->setEnabled(radio == RADIO_OFF);
 	this->m_bwdAction->setEnabled(radio == RADIO_OFF);
 	this->m_fwdAction->setEnabled(radio != RADIO_STATION);
 	this->m_playAction->setEnabled(radio == RADIO_OFF);
+	
 }
 
 
@@ -1150,6 +1178,11 @@ void GUI_SimplePlayer::sound_engine_phonon_clicked(){
 void GUI_SimplePlayer::sound_engine_gst_clicked(){
 	QString engine = "GStreamer Backend";
 	emit sig_sound_engine_changed(engine);
+}
+
+void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
+	CSettingsStorage::getInstance()->setStreamRipper(b);
+	emit sig_streamripper_toggled(b);
 }
 
 

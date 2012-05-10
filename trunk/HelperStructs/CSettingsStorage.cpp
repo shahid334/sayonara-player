@@ -253,4 +253,21 @@ void CSettingsStorage::setSoundEngine(QString engine){
 	m_sound_engine = engine;
 }
 
+bool CSettingsStorage::getStreamRipper(){
+	return m_stream_ripper;
+}
+
+void CSettingsStorage::setStreamRipper(bool b){
+	m_stream_ripper = b;
+}
+
+bool CSettingsStorage::getStreamRipperWarning(){
+	return	m_stream_ripper_warning;
+}
+
+void CSettingsStorage::setStreamRipperWarning(bool b){
+	m_stream_ripper_warning = b;
+}
+
+
 

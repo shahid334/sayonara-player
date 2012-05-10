@@ -221,6 +221,24 @@ bool CDatabaseConnector::load_settings(){
 	sound_engine_str = sound_engine.toString();
 	settings->setSoundEngine(sound_engine_str);
 
+	QVariant stream_ripper;
+	bool stream_ripper_bool;
+	load_setting("stream_ripper", stream_ripper);
+	stream_ripper_bool = stream_ripper.toBool();
+	settings->setStreamRipper(stream_ripper_bool);
+
+
+	QVariant stream_ripper_warning;
+	bool stream_ripper_warning_bool;
+	load_setting("stream_ripper_warning", stream_ripper_warning);
+	stream_ripper_warning_bool = stream_ripper_warning.toBool();
+	settings->setStreamRipperWarning(stream_ripper_warning_bool);
+
+
+
+	
+	
+
 	return true;
 }
 
@@ -287,6 +305,12 @@ bool CDatabaseConnector::store_settings(){
 
 	QString sound_engine = storage->getSoundEngine();
 	store_setting("sound_engine", sound_engine);
+
+	bool stream_ripper = storage->getStreamRipper();
+	store_setting("stream_ripper", stream_ripper);
+	
+	bool stream_ripper_warning = storage->getStreamRipperWarning();
+	store_setting("stream_ripper_warning", stream_ripper_warning);
 
 	return true;
 }

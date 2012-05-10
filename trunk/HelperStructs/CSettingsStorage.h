@@ -105,7 +105,7 @@ private:
 
     // playlist
     QString 		m_playlist;
-    bool			m_loadPlaylist;
+    bool		m_loadPlaylist;
     Playlist_Mode 	m_playlistmode;
 
     /* style */
@@ -119,6 +119,10 @@ private:
 
     /* show small icons */
     bool m_show_small_playlist;
+
+    /* activate stream ripper */
+    bool m_stream_ripper;
+    bool m_stream_ripper_warning;  
 
 
     /* sound engine */
@@ -179,6 +183,12 @@ public:
 
 	QString getSoundEngine();
 	void setSoundEngine(QString engine);
+
+	bool getStreamRipper();
+	void setStreamRipper(bool b);
+
+	bool getStreamRipperWarning();
+	void setStreamRipperWarning(bool b);
 
 };
 

@@ -91,6 +91,7 @@ signals:
     void backward();
     void forward();
     void mute();
+    void sig_rec_button_toggled(bool);
     void fileSelected (QStringList & filelist);
     void sig_stream_selected(const QString&, const QString&);
     void baseDirSelected (const QString & baseDir);
@@ -111,6 +112,7 @@ signals:
     void show_small_playlist_items(bool);
     void sig_sound_engine_changed(QString&);
     void sig_correct_id3(const MetaData&);
+    void sig_streamripper_toggled(bool);
 
 
 
@@ -119,6 +121,7 @@ private slots:
     void stopClicked(bool b = true);
     void backwardClicked(bool b = true);
     void forwardClicked(bool b = true);
+    void sl_rec_button_toggled(bool b);
     void fileSelectedClicked(bool);
     void streamDialogClicked(bool);
     void play_stream_selected(const QString&, const QString& );
@@ -156,6 +159,7 @@ private slots:
     void sound_engine_phonon_clicked();
     void sound_engine_gst_clicked();
     void populate_engines(const QList<Engine*>& lists, int active);
+    void sl_action_streamripper_toggled(bool);
 
     void about(bool b=false);
 

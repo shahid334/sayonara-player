@@ -10,6 +10,14 @@ Maintainer: Lucio Carreras <LucioCarreras@gmail.com>
 Conflicts:
 Replaces:
 Provides: sayonara
-Description: Sayonara player is a small, lightweight music player. It's main focus is on managing libraries and playing sound out of it. Features are: 	Music library, Custom playlists, Dynamic playlists, ID3 Tag Editor, LastFM scrobbling, LastFM radio, Web streaming, Equalizer, Phonon plugin
-	
-
+Description: Sayonara player is a small, lightweight music player. It's main focus is on managing libraries and playing sound out of it. 
+  Features are: 	
+    Music library, 
+    Custom playlists, 
+    Dynamic playlists, 
+    ID3 Tag Editor, 
+    LastFM scrobbling, 
+    LastFM radio, 
+    Web streaming, 
+    Equalizer, 
+    Phonon plugin  

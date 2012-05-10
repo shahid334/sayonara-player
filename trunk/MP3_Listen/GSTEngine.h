@@ -79,7 +79,9 @@ private:
 	GstPad*		_audio_pad;
 	GstBus*		_bus;
 
-	bool 		_is_recording;
+	bool 		_playing_stream;
+	bool		_stream_ripper_active;
+	bool		_wanna_record;
 	QString		_recording_dst;
 
 
@@ -95,6 +97,9 @@ public slots:
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
 
+ 	virtual void record_button_toggled(bool);
+	virtual void set_streamripper_active(bool);
+
 
 public:
 	// callback -> class
@@ -106,8 +111,6 @@ public:
 	virtual int		getState();
 	virtual QString	getName();
 
-	bool			getRecording();
-	void			setRecording(bool b);
 
 
 

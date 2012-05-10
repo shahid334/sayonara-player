@@ -106,7 +106,9 @@ GST_Engine::GST_Engine(){
 
 	_bus = 0;
 	_pipeline = 0;
-	_is_recording = false;
+	_playing_stream = false;
+	_wanna_record = false;
+	_stream_ripper_active = false;
 
 	QDir dir(QDir::homePath());
 	dir.mkdir("sayonara-streams");
@@ -171,45 +173,30 @@ void GST_Engine::init(){
 	do{
 		// create equalizer element
 		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
-		if(!_equalizer){
-			qDebug() << "Equalizer cannot be created";
-			break;
-		}
-
-		// create audio sink
 		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
-		if(!_audio_sink){
-			qDebug() << "Sink cannot be created";
-			break;
-		}
-
-		// create audio bin
 		_audio_bin = gst_bin_new("audio-bin");
-		if(!_audio_bin){
-			qDebug() << "Bin cannot be created";
-			break;
-		}
+		
+		if(!_equalizer)	qDebug() << "Equalizer cannot be created"; break;
+		if(!_audio_sink) qDebug() << "Sink cannot be created"; break;
+		if(!_audio_bin)	qDebug() << "Bin cannot be created"; break;
 
 		// create, link and add ghost pad
 		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
 		gst_element_link(_equalizer, _audio_sink);
 		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
 		if(_audio_pad) {
-			 success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
+			success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
+			if(!success) break;
+			g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 		}
 	} while(i);
-
-	if(success){
-		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-	}
-
 }
 
 void GST_Engine::play(){
 
 	_state = STATE_PLAY;
 
-	if(_is_recording){
+	if(_playing_stream && _stream_ripper_active){
 
 		gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
@@ -226,9 +213,17 @@ void GST_Engine::play(){
 void GST_Engine::stop(){
 	_state = STATE_STOP;
 
-	if(_is_recording){
+	// tag recorded file
+	// _wanna_record <= _stream_ripper_active
+	if( _playing_stream && _wanna_record ){
 		_meta_data.filepath = _recording_dst;
 		ID3::setMetaDataOfFile(_meta_data);
+	}
+
+	
+	else if( _playing_stream ){
+		QFile f(_recording_dst);
+		f.remove();
 	}
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
@@ -268,49 +263,61 @@ void GST_Engine::jump(int where, bool percent){
 }
 
 void GST_Engine::changeTrack(const MetaData& md){
-
-	stop();
-
-	_meta_data = md;
-	QString filename = _meta_data.filepath;
-	QString stream_filename = filename;
+	
+	QString org_src_filename = md.filepath;
+	QString new_src_filename = md.filepath;
+	QString new_src_filename_uri;
+	QString artist = md.artist;
+	QString title = md.title;
 
 	obj_ref = NULL;
+	_playing_stream = false;
+
+	// Warning!! this order is important!!!
+	stop();
+	_meta_data = md;
 
 
-	if( filename.startsWith("http") ){
-		_is_recording = true;
+	if( org_src_filename.startsWith("http") && _wanna_record){
+		_playing_stream = true;
 
-		QString artist = md.artist;
-		QString title = md.title;
-			artist.replace(" ", "_");
-			title.replace(" ", "_");
+		artist.replace(" ", "_");
+		title.replace(" ", "_");
 
 		QDir dir(QDir::homePath() + QDir::separator() + "sayonara-streams");
 		dir.mkdir(artist);
 		dir.cd(artist);
 
-		stream_filename = dir.path() + QDir::separator() + title + "." + md.filepath.right(3);
+		new_src_filename = dir.path() + QDir::separator() + title + "." + md.filepath.right(3);
 
-		_recording_dst = stream_filename;
+		_recording_dst = new_src_filename;
 
-		qDebug() << "Recording source: " << filename;
-		qDebug() << "Destination srouce: " << stream_filename;
-		g_object_set(G_OBJECT(_rec_src), "location", filename.toLocal8Bit().data(), NULL);
-		g_object_set(G_OBJECT(_rec_dst), "location", stream_filename.toLocal8Bit().data(), NULL);
+		/*qDebug() << "Recording source: " << filename;
+		qDebug() << "Destination srouce: " << stream_filename;*/
+		
+		g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
+		g_object_set(G_OBJECT(_rec_dst), "location", new_src_filename.toLocal8Bit().data(), NULL);
+
+		new_src_filename_uri = QString("file://") + new_src_filename;
 
 	}
 
+	// stream, but don't wanna record
+	else if(org_src_filename.startsWith("http")){
+		new_src_filename_uri = org_src_filename;
+	}
+
+	// no stream (not quite right because of mms, rtsp or other streams
+	// FIXME
 	else{
-
-		stream_filename = filename;
-		_is_recording = false;
+		new_src_filename_uri = QString("file://") + org_src_filename;
 	}
-	stream_filename.push_front("file://");
+	
+
 
 
 	// playing src
-	g_object_set(G_OBJECT(_pipeline), "uri", stream_filename.toLocal8Bit().data(), NULL);
+	g_object_set(G_OBJECT(_pipeline), "uri", new_src_filename_uri.toLocal8Bit().data(), NULL);
 	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
 	emit total_time_changed_signal(_meta_data.length_ms);
@@ -328,7 +335,6 @@ void GST_Engine::changeTrack(const QString& filepath){
 
 	MetaData md = ID3::getMetaDataOfFile(filepath);
 	changeTrack(md);
-
 }
 
 void GST_Engine::eq_changed(int band, int val){
@@ -375,6 +381,12 @@ void GST_Engine::set_cur_position(quint32 pos){
 	emit timeChangedSignal(pos);
 }
 
+void GST_Engine::record_button_toggled(bool b){
+
+	_wanna_record = b;
+
+}
+
 void GST_Engine::set_track_finished(){
 	emit track_finished();
 }
@@ -388,12 +400,8 @@ QString GST_Engine::getName(){
 }
 
 
-bool	GST_Engine::getRecording(){
-	return _is_recording;
-}
-
-void	GST_Engine::setRecording(bool b){
-	_is_recording = b;
+void GST_Engine::set_streamripper_active(bool b){
+	_stream_ripper_active = (b && _wanna_record);
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

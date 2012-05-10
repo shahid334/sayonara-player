@@ -169,6 +169,34 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="btn_rec">
+        <property name="minimumSize">
+         <size>
+          <width>32</width>
+          <height>34</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>32</width>
+          <height>34</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="btn_fw">
         <property name="enabled">
          <bool>true</bool>
@@ -716,8 +744,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>318</width>
-           <height>413</height>
+           <width>338</width>
+           <height>412</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -843,7 +871,7 @@
      <x>0</x>
      <y>0</y>
      <width>926</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -888,6 +916,7 @@
     <addaction name="separator"/>
     <addaction name="action_load_playlist"/>
     <addaction name="action_min2tray"/>
+    <addaction name="action_streamripper"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1065,6 +1094,14 @@
   <action name="action_engine_phonon">
    <property name="text">
     <string>Phonon</string>
+   </property>
+  </action>
+  <action name="action_streamripper">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Activate Streamripper</string>
    </property>
   </action>
  </widget>
