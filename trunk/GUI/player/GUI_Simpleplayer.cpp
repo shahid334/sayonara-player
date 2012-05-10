@@ -97,6 +97,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	bool streamripper_active = settings->getStreamRipper();
 	this->ui->action_streamripper->setChecked(streamripper_active);
+	this->ui->action_streamripper_path->setVisible(streamripper_active);
 
 	/* TRAY ACTIONS */
 	this->setupTrayActions();
@@ -202,7 +203,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(min2tray_toggled(bool)));
 	connect(this->ui->action_streamripper, SIGNAL(toggled(bool)), this,
 			SLOT(sl_action_streamripper_toggled(bool)));
-
+	connect(this->ui->action_streamripper_path, SIGNAL(triggered(bool)), this,
+			SLOT(sl_action_streamripper_path_clicked(bool)));
 
 	// about
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
@@ -1182,7 +1184,22 @@ void GUI_SimplePlayer::sound_engine_gst_clicked(){
 
 void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
 	CSettingsStorage::getInstance()->setStreamRipper(b);
+	this->ui->action_streamripper_path->setVisible(b);
 	emit sig_streamripper_toggled(b);
+}
+
+void GUI_SimplePlayer::sl_action_streamripper_path_clicked(bool b){
+	Q_UNUSED(b);
+
+	CSettingsStorage* set = CSettingsStorage::getInstance();
+
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+		set->getStreamRipperPath(),
+		QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	if(dir.size() > 0){
+		set->setStreamRipperPath(dir);
+		emit sig_streamripper_path_changed(dir);
+	}
 }
 
 

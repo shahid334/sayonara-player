@@ -254,19 +254,28 @@ void CSettingsStorage::setSoundEngine(QString engine){
 }
 
 bool CSettingsStorage::getStreamRipper(){
-	return m_stream_ripper;
+	return m_streamripper;
 }
 
 void CSettingsStorage::setStreamRipper(bool b){
-	m_stream_ripper = b;
+	m_streamripper = b;
 }
 
 bool CSettingsStorage::getStreamRipperWarning(){
-	return	m_stream_ripper_warning;
+	return	m_streamripper_warning;
 }
 
 void CSettingsStorage::setStreamRipperWarning(bool b){
-	m_stream_ripper_warning = b;
+	m_streamripper_warning = b;
+}
+
+QString CSettingsStorage::getStreamRipperPath(){
+	return m_streamripper_path;
+}
+
+void CSettingsStorage::setStreamRipperPath(QString path){
+	qDebug() << "set path to " << path;
+	m_streamripper_path = path;
 }
 
 

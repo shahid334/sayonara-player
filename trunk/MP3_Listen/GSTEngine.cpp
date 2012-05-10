@@ -20,6 +20,7 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "MP3_Listen/Engine.h"
@@ -218,6 +219,13 @@ void GST_Engine::stop(){
 	if( _playing_stream && _wanna_record ){
 		_meta_data.filepath = _recording_dst;
 		ID3::setMetaDataOfFile(_meta_data);
+		
+		QDir dir(_streamripper_path);
+		dir.mkdir(_meta_data.artist);
+		dir.cd(_meta_data.artist);
+		QFile f(_recording_dst);
+		f.copy(dir.path());
+		f.remove();
 	}
 
 	
@@ -284,11 +292,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 		artist.replace(" ", "_");
 		title.replace(" ", "_");
 
-		QDir dir(QDir::homePath() + QDir::separator() + "sayonara-streams");
-		dir.mkdir(artist);
-		dir.cd(artist);
-
-		new_src_filename = dir.path() + QDir::separator() + title + "." + md.filepath.right(3);
+		new_src_filename = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
 
 		_recording_dst = new_src_filename;
 
@@ -402,6 +406,10 @@ QString GST_Engine::getName(){
 
 void GST_Engine::set_streamripper_active(bool b){
 	_stream_ripper_active = (b && _wanna_record);
+}
+
+void GST_Engine::streamripper_path_changed(const QString& str){
+	_streamripper_path = str;
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

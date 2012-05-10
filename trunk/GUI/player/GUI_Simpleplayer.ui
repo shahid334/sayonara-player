@@ -916,7 +916,9 @@
     <addaction name="separator"/>
     <addaction name="action_load_playlist"/>
     <addaction name="action_min2tray"/>
+    <addaction name="separator"/>
     <addaction name="action_streamripper"/>
+    <addaction name="action_streamripper_path"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1102,6 +1104,11 @@
    </property>
    <property name="text">
     <string>Activate Streamripper</string>
+   </property>
+  </action>
+  <action name="action_streamripper_path">
+   <property name="text">
+    <string>Set Streamripper Path</string>
    </property>
   </action>
  </widget>

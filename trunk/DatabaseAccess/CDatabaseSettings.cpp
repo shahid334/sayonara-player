@@ -26,6 +26,7 @@
 #include "HelperStructs/globals.h"
 #include <vector>
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 #include <QSqlQuery>
 #include <stdlib.h>
@@ -33,6 +34,38 @@
 #include <QObject>
 #include <QSqlError>
 
+bool CDatabaseConnector::load_setting_bool(QString key, bool def){
+	bool ret;
+	QVariant v;
+	load_setting(key, v);
+	ret =  v.toBool();
+	if(v.isNull()) return def;
+	else return ret;
+}
+
+QString CDatabaseConnector::load_setting_string(QString key, QString def){
+	QString ret;
+	QVariant v;
+	load_setting(key, v);
+	ret = v.toString();
+	if(v.isNull()) return def;
+	else return ret;
+}
+
+int CDatabaseConnector::load_setting_int(QString key, int def){
+	bool ok;
+	int ret;
+	QVariant v;
+	load_setting(key, v);
+	ret = v.toInt(&ok);
+	if(!ok) return def;
+	else return ret;
+
+}
+
+QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
+	return load_setting_string(key).split(sep);
+}
 
 
 bool CDatabaseConnector::load_settings(){
@@ -40,37 +73,23 @@ bool CDatabaseConnector::load_settings(){
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
 	/* Last FM */
-	QVariant last_fm_setting;
-	QString last_fm_username;
-	QString last_fm_password;
-	load_setting("LastFM_login", last_fm_setting);
-	if(last_fm_setting != 0){
-		QStringList list = last_fm_setting.toString().split(',');
-		if(list.size() == 2){
-			last_fm_username = list[0];
-			last_fm_password = list[1];
-		}
+	QString last_fm_username, last_fm_password;
+	QStringList list = load_setting_strlist("LastFM_login");
+	if(list.size() >= 2){
+		last_fm_username = list[0];
+		last_fm_password = list[1];
 	}
 
 	settings->setLastFMNameAndPW(last_fm_username, last_fm_password);
 
-	QVariant lfm_corrections;
-	bool lfm_corrections_bool;
-	load_setting("lfm_corrections", lfm_corrections);
-	lfm_corrections_bool = lfm_corrections.toBool();
-	settings->setLastFMCorrections(lfm_corrections_bool);
+
+	bool lfm_corrections =	load_setting_bool("lfm_corrections");
+	settings->setLastFMCorrections(lfm_corrections);
 
 
-
-	QVariant lfm_session_key;
-	QString lfm_session_key_str = "";
-	load_setting("lfm_session_key", lfm_session_key);
-	if(!lfm_session_key.isNull()){
-		lfm_session_key_str = lfm_session_key.toString();
-		if(lfm_session_key_str.size() < 32) lfm_session_key_str = "";
-	}
-
-	settings->setLastFMSessionKey(lfm_session_key_str);
+	QString lfm_session_key = load_setting_string("lfm_session_key");
+	if(lfm_session_key.size() != 32) lfm_session_key = "";
+	settings->setLastFMSessionKey(lfm_session_key);
 
 
 
@@ -110,134 +129,78 @@ bool CDatabaseConnector::load_settings(){
 	settings->setEqualizerSettings(vec_eq_settings);
 
 	/* Volume */
-	QVariant v_volume;
-	int volume = 0;
-	load_setting("volume", v_volume);
-	if(v_volume != 0)
-		volume = v_volume.toInt();
-
+	int volume = load_setting_int("volume");
 	settings->setVolume(volume);
 
 
 	/* Library path */
-	QVariant v_lib_path;
-	QString lib_path = "";
-	load_setting("library_path", v_lib_path);
-	if(v_lib_path != 0)
-		lib_path = v_lib_path.toString();
-
+	QString lib_path = load_setting_string("library_path");
 	settings->setLibraryPath(lib_path);
 
 
 	/* Player size */
-	QVariant v_player_size;
-	QStringList l_player_size;
 	QSize player_size(800, 600);
-	load_setting("player_size", v_player_size);
-	if(v_player_size != 0){
-		l_player_size = v_player_size.toString().split(',');
+	QStringList l_player_size = load_setting_strlist("player_size");
+	if(l_player_size.size() >= 2){
 		player_size.setWidth(l_player_size[0].toInt());
 		player_size.setHeight(l_player_size[1].toInt());
 	}
-
 	settings->setPlayerSize(player_size);
 
+	
 	// playlist
-	QVariant playlist;
-	QString playlist_str;
-	load_setting("playlist", playlist);
-	if(playlist != 0){
-		playlist_str = playlist.toString();
-	}
+	QString playlist = load_setting_string("playlist");
+	settings->setPlaylist(playlist);
 
-	settings->setPlaylist(playlist_str);
+	bool load_playlist = load_setting_bool("load_playlist");
+	settings->setLoadPlaylist(load_playlist);
 
-
-	QVariant load_playlist;
-	bool load_playlist_bool;
-	load_setting("load_playlist", load_playlist);
-	load_playlist_bool = load_playlist.toBool();
-
-	settings->setLoadPlaylist(load_playlist_bool);
-
-
-	QVariant playlist_mode;
+	QString playlist_mode_str = load_setting_string("playlist_mode");
 	Playlist_Mode playlist_mode_typed;
-	load_setting("playlist_mode", playlist_mode);
-	if(!playlist_mode.isNull()){
-		playlist_mode_typed.fromString(playlist_mode.toString());
-	}
-
+	playlist_mode_typed.fromString(playlist_mode_str);
 	settings->setPlaylistMode(playlist_mode_typed);
 
-
-	QVariant style;
-	int style_int = 0;
-	load_setting("player_style", style);
-	style_int = style.toInt();
-	settings->setPlayerStyle(style_int);
+	// style
+	int style = load_setting_int("player_style");
+	settings->setPlayerStyle(style);
 
 	/* show notifications */
-	QVariant show_notifications;
-	bool show_notifications_bool = false;
-	load_setting("show_notifications", show_notifications);
-	show_notifications_bool = show_notifications.toBool();
-	settings->setShowNotifications(show_notifications_bool);
+	bool show_notifications = load_setting_bool("show_notifications");
+	settings->setShowNotifications(show_notifications);
 
 	/* show library */
-	QVariant show_library;
-	bool show_library_bool = true;
-	load_setting("show_library", show_library);
-	show_library_bool = show_library.toBool();
-	settings->setShowLibrary(show_library_bool);
+	bool show_library = load_setting_bool("show_library", true);
+	settings->setShowLibrary(show_library);
 
 
 	/* shown plugin */
-	QVariant shown_plugin;
-	int shown_plugin_int = PLUGIN_NONE;
-	load_setting("shown_plugin", shown_plugin);
-	shown_plugin_int = shown_plugin.toInt();
-	if(shown_plugin_int < 0 || shown_plugin_int > PLUGIN_NUM) shown_plugin_int = PLUGIN_NONE;
-	settings->setShownPlugin(shown_plugin_int);
+	int shown_plugin = load_setting_int("shown_plugin", PLUGIN_NONE);
+	if(shown_plugin < 0 || shown_plugin > PLUGIN_NUM) 
+		shown_plugin = PLUGIN_NONE;
+	settings->setShownPlugin(shown_plugin);
 
 
 	/* Minimize to tray */
-	QVariant min2tray;
-	bool min2tray_bool = true;
-	load_setting("min_to_tray", min2tray);
-	min2tray_bool = min2tray.toBool();
-	settings->setMinimizeToTray(min2tray_bool);
+	bool min2tray = load_setting_bool("min_to_tray", true);
+	settings->setMinimizeToTray(min2tray);
 
 	/* small playlist items */
-	QVariant show_small_pl;
-	bool show_small_pl_bool = true;
-	load_setting("small_playlist_items", show_small_pl);
-	show_small_pl_bool = show_small_pl.toBool();
-	settings->setShowSmallPlaylist(show_small_pl_bool);
+	bool show_small_pl = load_setting_bool("small_playlist_items", true);
+	settings->setShowSmallPlaylist(show_small_pl);
 
-	QVariant sound_engine;
-	QString sound_engine_str = "";
-	load_setting("sound_engine", sound_engine);
-	sound_engine_str = sound_engine.toString();
-	settings->setSoundEngine(sound_engine_str);
+	/* Sound Engine */
+	QString sound_engine = load_setting_string("sound_engine");
+	settings->setSoundEngine(sound_engine);
 
-	QVariant stream_ripper;
-	bool stream_ripper_bool;
-	load_setting("stream_ripper", stream_ripper);
-	stream_ripper_bool = stream_ripper.toBool();
-	settings->setStreamRipper(stream_ripper_bool);
+	/* Stream ripper */
+	bool streamripper = load_setting_bool("streamripper", false);
+	settings->setStreamRipper(streamripper);
 
+	bool streamripper_warning = load_setting_bool("streamripper_warning", true);
+	settings->setStreamRipperWarning(streamripper_warning);
 
-	QVariant stream_ripper_warning;
-	bool stream_ripper_warning_bool;
-	load_setting("stream_ripper_warning", stream_ripper_warning);
-	stream_ripper_warning_bool = stream_ripper_warning.toBool();
-	settings->setStreamRipperWarning(stream_ripper_warning_bool);
-
-
-
-	
-	
+	QString streamripper_path = load_setting_string("streamripper_path", QDir::homePath());
+	settings->setStreamRipperPath(streamripper_path);
 
 	return true;
 }
@@ -306,11 +269,14 @@ bool CDatabaseConnector::store_settings(){
 	QString sound_engine = storage->getSoundEngine();
 	store_setting("sound_engine", sound_engine);
 
-	bool stream_ripper = storage->getStreamRipper();
-	store_setting("stream_ripper", stream_ripper);
+	bool streamripper = storage->getStreamRipper();
+	store_setting("streamripper", streamripper);
 	
-	bool stream_ripper_warning = storage->getStreamRipperWarning();
-	store_setting("stream_ripper_warning", stream_ripper_warning);
+	bool streamripper_warning = storage->getStreamRipperWarning();
+	store_setting("streamripper_warning", streamripper_warning);
+
+	QString streamripper_path = storage->getStreamRipperPath();
+	store_setting("streamripper_path", streamripper_path);
 
 	return true;
 }

@@ -121,9 +121,9 @@ private:
     bool m_show_small_playlist;
 
     /* activate stream ripper */
-    bool m_stream_ripper;
-    bool m_stream_ripper_warning;  
-
+    bool m_streamripper;
+    bool m_streamripper_warning;  
+    QString m_streamripper_path;
 
     /* sound engine */
     QString m_sound_engine;
@@ -189,6 +189,9 @@ public:
 
 	bool getStreamRipperWarning();
 	void setStreamRipperWarning(bool b);
+
+	QString getStreamRipperPath();
+	void setStreamRipperPath(QString path);
 
 };
 

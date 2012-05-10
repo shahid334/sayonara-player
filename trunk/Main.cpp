@@ -126,13 +126,15 @@ int main(int argc, char *argv[]){
         	qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
         	return -1;
         }
-		listen->init();
+	listen->init();
+	listen->streamripper_path_changed(set->getStreamRipperPath());
 
         CONNECT (&player, pause(), 				listen,			pause());
         CONNECT (&player, search(int),				listen,			jump(int));
         CONNECT (&player, volumeChanged(qreal),			listen,			setVolume(qreal));
 	CONNECT (&player, sig_rec_button_toggled(bool),		listen,			record_button_toggled(bool));
 	CONNECT (&player, sig_streamripper_toggled(bool),	listen,			set_streamripper_active(bool));
+	CONNECT (&player, sig_streamripper_path_changed(const QString&), listen,	streamripper_path_changed(const QString& ));
         CONNECT (&player, setupLastFM(), 			&ui_lastfm, 		show_win());
         CONNECT (&player, baseDirSelected(const QString &),	&library, 		baseDirSelected(const QString & ));
         CONNECT (&player, reloadLibrary(), 			&library, 		reloadLibrary());

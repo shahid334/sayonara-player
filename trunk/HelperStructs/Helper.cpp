@@ -112,7 +112,6 @@ string Helper::trim(const string & toTrim){
 
 QString Helper::getIconPath(){
 
-
 	QString path;
 #ifndef Q_OS_WIN
 		if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
@@ -126,7 +125,10 @@ QString Helper::getIconPath(){
 #endif
 
 	return path;
+}
 
+QString Helper::getSayonaraPath(){
+	return QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator();
 }
 
 QString Helper::get_artist_image_path(QString artist){

@@ -113,6 +113,7 @@ signals:
     void sig_sound_engine_changed(QString&);
     void sig_correct_id3(const MetaData&);
     void sig_streamripper_toggled(bool);
+    void sig_streamripper_path_changed(const QString &);
 
 
 
@@ -160,6 +161,7 @@ private slots:
     void sound_engine_gst_clicked();
     void populate_engines(const QList<Engine*>& lists, int active);
     void sl_action_streamripper_toggled(bool);
+    void sl_action_streamripper_path_clicked(bool);
 
     void about(bool b=false);
 

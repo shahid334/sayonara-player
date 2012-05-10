@@ -155,6 +155,12 @@ public:
 		void load_setting(QString key, QVariant& val);
 		void store_setting(QString key, QVariant val);
 
+		bool load_setting_bool(QString key, bool def=false);
+		QString load_setting_string(QString key, QString def="");
+		int load_setting_int(QString key, int def=0);
+		QStringList load_setting_strlist(QString key, QChar sep=',');
+		 
+
 
 
 

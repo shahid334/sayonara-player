@@ -74,6 +74,7 @@ public slots:
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;
         virtual void set_streamripper_active(bool)=0;
+	virtual void streamripper_path_changed(const QString&)=0;
 };
 
 Q_DECLARE_INTERFACE(Engine, "sayonara.engine/1.0");

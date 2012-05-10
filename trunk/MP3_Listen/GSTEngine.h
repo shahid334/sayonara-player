@@ -83,6 +83,7 @@ private:
 	bool		_stream_ripper_active;
 	bool		_wanna_record;
 	QString		_recording_dst;
+	QString		_streamripper_path;
 
 
 public slots:
@@ -99,6 +100,7 @@ public slots:
 
  	virtual void record_button_toggled(bool);
 	virtual void set_streamripper_active(bool);
+	virtual void streamripper_path_changed(const QString&);
 
 
 public:
