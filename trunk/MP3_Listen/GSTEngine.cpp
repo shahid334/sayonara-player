@@ -214,21 +214,21 @@ void GST_Engine::play(){
 void GST_Engine::stop(){
 	_state = STATE_STOP;
 
+	qDebug() << "stop";
 	// tag recorded file
 	// _wanna_record <= _streamripper_active
+
+	qDebug() << "playing stream? " << _playing_stream << ", wanna record? " << _wanna_record;
 	if( _playing_stream && _wanna_record ){
+
 		_meta_data.filepath = _recording_dst;
 		ID3::setMetaDataOfFile(_meta_data);
-		qDebug() << "set metadata to " << _recording_dst;
-		
 		QDir dir(_streamripper_path);
 		dir.mkdir(_meta_data.artist);
-		qDebug() << "Create dir " << _streamripper_path + QDir::separator() + _meta_data.artist;
 		dir.cd(_meta_data.artist);
 		QFile f(_recording_dst);
 		QString fname = f.fileName().right( f.fileName().size() - f.fileName().lastIndexOf(QDir::separator()) );
 		bool success = 	f.copy(dir.path() + QDir::separator() + fname);
-		qDebug() << "Copy " << _recording_dst << " to " << dir.path() + QDir::separator() + fname << ": " << success;
 		f.remove();
 	}
 
@@ -283,12 +283,13 @@ void GST_Engine::changeTrack(const MetaData& md){
 	QString title = md.title;
 
 	obj_ref = NULL;
-	_playing_stream = false;
+
 
 	// Warning!! this order is important!!!
 	stop();
 	_meta_data = md;
 
+	_playing_stream = false;
 
 	if( org_src_filename.startsWith("http") && _streamripper_active){
 		_playing_stream = true;
