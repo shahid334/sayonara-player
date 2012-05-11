@@ -1,22 +1,23 @@
 = Implemented Features =
 
-  
-  * Playlist
+  * Gstreamer backend
   * Media Library
+  * Covers
   * Lyrics
-  * Cover fetch
-  * LastFM scrobbling
-  * LastFM radio
-  * Dynamic Playlists (using LastFM)
+  * LastFM integration (radio, scrobbling, dynamic playlists)
   * Equalizer
   * ID3 Tagger
-  * Gstreamer backend
-  * Custom playlists
   * Online Streams (e.g. Web-Radio)
+  * Gstreamer 
   * optional Phonon plugin
+
+= Upcoming (already available on SVN) =
+
+  * Stream-Ripper
 
 = Todo =
   
+  * IMPORTANT: Create cross-compiling environment
   * Extern audio player integration (with optional format conversion)
   * iTunes / Amarok db integration
   * VLC backend
