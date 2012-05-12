@@ -14,11 +14,11 @@
 
   In order to compile Sayonara you have to use cmake now.
 
-  cmake .
-  make
-  make install (as root)
+  cmake .<br />
+  make<br />
+  make install (as root)<br /><br />
 
-  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.
+  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.<br /><br />
 
   Debian packages can be created by executing the *2debian.sh scripts in the linux_packages folder
 
