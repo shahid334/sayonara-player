@@ -12,33 +12,15 @@
 
 == Linux ==
 
-  Due to the plugin-based design there are several makefiles now: Makefile, Makefile.sayonara, Makefile.gstreamer, Makefile.phonon. Makefile is just a wrapper for the three smaller ones. This wrapper Makefile also builds its dependency-Makefiles out of the Qt project files automatically (Sayonara.pro, Gstreamer.pro, Phonon.pro). Gstreamer is mandatory and will be linked static to sayonara while Phonon is build as a complete optional plugin which brings its own installation routine. 
+  In order to compile Sayonara you have to use cmake now.
 
-  * For building just Sayonara type
-  <b>make sayonara</b><br />
+  cmake .
+  make
+  make install (as root)
 
-  * For building the Phonon backend
-  <b>make phonon</b><br />
-
-  * For building the Gstreamer backend
-  <b>make gst</b><br />
-
-  * For building everything
-  <b>make (all)</b><br />
-
-  * Installing sayonara is done by
-  <b>make -f Makefile.sayonara install</b>
-
-  * Installing the phonon plugin is done by
-  <b>make -f Makefile.phonon install</b>
-
-  <font color="#FF0000"><b>  *Do not use qmake anymore!!!</b></font><br />
-  If you have used qmake, you can restore the Makefile by renaming the Makefile.bak
-  <br /><br />
+  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.
 
   Debian packages can be created by executing the *2debian.sh scripts in the linux_packages folder
-
-
 
 == Windows ==
 
