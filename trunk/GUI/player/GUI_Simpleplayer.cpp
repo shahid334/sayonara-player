@@ -21,13 +21,13 @@
 
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/stream/GUI_Stream.h"
-#include "GUI/GUI_TrayIcon.h"
+#include "GUI/player/GUI_TrayIcon.h"
 #include "ui_GUI_Simpleplayer.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
-#include "MP3_Listen/Engine.h"
+#include "Engine/Engine.h"
 
 #include <QList>
 #include <QDebug>

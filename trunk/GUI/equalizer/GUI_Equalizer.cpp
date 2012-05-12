@@ -38,7 +38,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include <ui_GUI_equalizer.h>
+#include <ui_GUI_Equalizer.h>
 
 #include <vector>
 

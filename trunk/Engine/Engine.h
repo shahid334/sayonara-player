@@ -73,7 +73,7 @@ public slots:
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;
-        virtual void set_streamripper_active(bool)=0;
+	virtual void set_streamripper_active(bool)=0;
 	virtual void streamripper_path_changed(const QString&)=0;
 };
 

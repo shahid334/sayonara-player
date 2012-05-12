@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>358</width>
-    <height>118</height>
+    <height>105</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>0</width>
+    <width>330</width>
     <height>105</height>
    </size>
   </property>
@@ -49,7 +49,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>70</width>
+        <width>80</width>
         <height>200</height>
        </size>
       </property>
@@ -68,13 +68,13 @@
      <widget class="QLabel" name="lab_lfm">
       <property name="minimumSize">
        <size>
-        <width>70</width>
+        <width>80</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>70</width>
+        <width>80</width>
         <height>16777215</height>
        </size>
       </property>
@@ -85,6 +85,11 @@
     </item>
     <item row="0" column="0">
      <widget class="QRadioButton" name="rb_artist">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Artist</string>
       </property>
@@ -92,6 +97,11 @@
     </item>
     <item row="0" column="1">
      <widget class="QRadioButton" name="rb_tag">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Tag</string>
       </property>
@@ -113,6 +123,11 @@
     </item>
     <item row="1" column="0">
      <widget class="QRadioButton" name="rb_user">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>User</string>
       </property>
@@ -120,6 +135,11 @@
     </item>
     <item row="1" column="1">
      <widget class="QRadioButton" name="rb_recom">
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Recommended</string>
       </property>

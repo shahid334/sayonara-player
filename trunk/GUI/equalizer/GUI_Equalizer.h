@@ -34,7 +34,7 @@
 #include <QObject>
 #include <QDockWidget>
 #include <QCloseEvent>
-#include <ui_GUI_equalizer.h>
+#include <ui_GUI_Equalizer.h>
 
 #include <vector>
 

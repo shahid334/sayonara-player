@@ -29,11 +29,11 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/radio/GUI_RadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
-#include "MP3_Listen/Engine.h"
+#include "Engine/Engine.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
-#include <GUI_TrayIcon.h>
+#include "GUI/player/GUI_TrayIcon.h"
 
 
 #include <string>

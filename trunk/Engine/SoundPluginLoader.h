@@ -23,7 +23,7 @@
 #ifndef SOUNDPLUGINLOADER_H_
 #define SOUNDPLUGINLOADER_H_
 
-#include "MP3_Listen/Engine.h"
+#include "Engine/Engine.h"
 
 #include <QObject>
 #include <QList>

@@ -23,8 +23,8 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "MP3_Listen/Engine.h"
-#include "MP3_Listen/GSTEngine.h"
+#include "Engine/Engine.h"
+#include "Engine/GStreamer/GSTEngine.h"
 
 
 #include <gst/gst.h>
@@ -36,7 +36,7 @@
 #include <QString>
 #include <QFile>
 #include <QDir>
-#include <Qt/qplugin.h>
+#include <qplugin.h>
 
 using namespace std;
 
@@ -229,6 +229,9 @@ void GST_Engine::stop(){
 		QFile f(_recording_dst);
 		QString fname = f.fileName().right( f.fileName().size() - f.fileName().lastIndexOf(QDir::separator()) );
 		bool success = 	f.copy(dir.path() + QDir::separator() + fname);
+		if(!success){
+			qDebug() << "unable to copy " <<  _recording_dst << " to " << dir.path() + QDir::separator() + fname;
+		}
 		f.remove();
 	}
 
@@ -370,7 +373,7 @@ void GST_Engine::state_changed(){
 
 void GST_Engine::set_cur_position(quint32 pos){
 
-	if(_seconds_now == pos) return;
+	if((quint32)_seconds_now == pos) return;
 	_seconds_now = pos;
 
 	if (!_scrobbled

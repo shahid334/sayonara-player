@@ -41,7 +41,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "MP3_Listen/Engine.h"
+#include "Engine/Engine.h"
 
 #include <string>
 #include <vector>
@@ -94,6 +94,10 @@ private:
 		virtual void changeTrack(const QString& );
 		virtual void eq_changed(int, int);
 		virtual void eq_enable(bool);
+
+		virtual void record_button_toggled(bool);
+		virtual void set_streamripper_active(bool);
+		virtual void streamripper_path_changed(const QString&);
 
 
 	private slots:

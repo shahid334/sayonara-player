@@ -19,8 +19,8 @@
  */
 
 
-#include "MP3_Listen/SoundPluginLoader.h"
-#include "MP3_Listen/Engine.h"
+#include "Engine/SoundPluginLoader.h"
+#include "Engine/Engine.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 #include <QObject>
@@ -30,12 +30,12 @@
 #include <QPluginLoader>
 #include <QMessageBox>
 #include <QList>
-#include <QtPlugin>
+#include <qplugin.h>
 #include <vector>
 
 using namespace std;
 
-Q_IMPORT_PLUGIN(sayonara_gstreamer)
+//Q_IMPORT_PLUGIN(sayonara_gstreamer)
 
 SoundPluginLoader::SoundPluginLoader(QString app_dir){
 	_cur_engine = -1;

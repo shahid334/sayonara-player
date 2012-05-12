@@ -1,0 +1,35 @@
+PROJECT(sayonara_phonon)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
+
+FIND_PACKAGE(Qt4 REQUIRED)
+
+SET(QT_PHONON_LIBRARY_RELEASE /usr/lib/libphonon.so)
+SET(PHONON_LIBRARY_TYPE SHARED)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
+
+
+SET(HEADERS
+	PhononEngine.h 
+	../Engine.h
+	../../HelperStructs/MetaData.h
+	../../HelperStructs/id3.h
+	../../HelperStructs/Equalizer_presets.h
+)
+
+SET(SOURCES
+	PhononEngine.cpp
+	../../HelperStructs/Helper.cpp
+	../../HelperStructs/id3.cpp
+)
+	
+QT4_WRAP_CPP(HEADERS_MOC
+	${HEADERS}
+)
+
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
+
+ADD_LIBRARY(sayonara_phonon ${PHONON_LIBRARY_TYPE} ${SOURCES} ${HEADERS})
+TARGET_LINK_LIBRARIES(sayonara_phonon ${QT_LIBRARIES})

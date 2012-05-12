@@ -26,7 +26,7 @@
  *      Author: luke
  */
 
-#include "MP3_Listen/PhononEngine.h"
+#include "Engine/Phonon/PhononEngine.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -404,6 +404,18 @@ int Phonon_Engine::getState(){
 
 QString Phonon_Engine::getName(){
 	return _name;
+}
+
+
+void Phonon_Engine::record_button_toggled(bool b){
+	Q_UNUSED(b);
+}
+void Phonon_Engine::set_streamripper_active(bool b){
+	Q_UNUSED(b);
+}
+
+void Phonon_Engine::streamripper_path_changed(const QString& str){
+	Q_UNUSED(str);
 }
 
 Q_EXPORT_PLUGIN2(sayonara_phonon, Phonon_Engine);
