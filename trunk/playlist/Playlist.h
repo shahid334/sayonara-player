@@ -83,7 +83,7 @@ public:
 		void psl_next_track();
 		void psl_playlist_mode_changed(const Playlist_Mode&);
 		void psl_clear_playlist();
-		void psl_save_playlist(const QString&);
+		void psl_save_playlist(const QString&, const vector<MetaData>& v_md);
 		void psl_similar_artists_available(QList<int>&);
 		void psl_directoryDropped(const QString& dir, int row);
 		void psl_prepare_playlist_for_save(int id);
@@ -100,6 +100,7 @@ public:
 		void psl_import_result(bool);
 		void psl_new_radio_playlist_available(const vector<MetaData>&);
 		void psl_play_stream(const QString&, const QString&);
+		void psl_valid_strrec_track(const MetaData&);
 
 
 	private:
@@ -114,10 +115,12 @@ public:
 	Playlist_Mode		_playlist_mode;
 	int					_radio_active;
 	CDatabaseConnector* _db;
+	vector<MetaData>	_v_stream_playlist;
 
 
 	/* wrapper for Helper::checkTrack */
 	bool 				checkTrack(const MetaData& md);
+	void				save_stream_playlist();
 
 
 

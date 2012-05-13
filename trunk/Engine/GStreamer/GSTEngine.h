@@ -79,11 +79,6 @@ private:
 	GstPad*		_audio_pad;
 	GstBus*		_bus;
 
-	bool 		_playing_stream;
-	bool		_streamripper_active;
-	bool		_wanna_record;
-	QString		_recording_dst;
-	QString		_streamripper_path;
 
 
 public slots:
@@ -99,8 +94,11 @@ public slots:
 	virtual void eq_enable(bool);
 
  	virtual void record_button_toggled(bool);
-	virtual void set_streamripper_active(bool);
-	virtual void streamripper_path_changed(const QString&);
+
+ 	virtual void psl_strrip_set_active(bool);
+	virtual void psl_strrip_set_path(const QString& );
+	virtual void psl_strrip_complete_tracks(bool);
+	virtual void psl_strrip_set_create_playlist(bool);
 
 
 public:

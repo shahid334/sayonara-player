@@ -167,7 +167,6 @@ void Playlists::save_playlist_as_custom(QString name, vector<MetaData>& vec_md){
 
 	success = db->storePlaylist(vec_md_copy, name);
 	if(success){
-		qDebug() << "Saved playlist as " << name;
 		_mapping.clear();
 		CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
 		emit sig_all_playlists_loaded(_mapping);

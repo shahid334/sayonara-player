@@ -34,6 +34,9 @@
 #include <QFile>
 #include <QList>
 #include <QObject>
+#include <QDate>
+#include <QTime>
+#include <QDebug>
 
 #include <iostream>
 #include <ctime>
@@ -427,6 +430,8 @@ void Playlist::psl_play(){
 void Playlist::psl_stop(){
 
 	if(_radio_active != RADIO_OFF){
+
+		save_stream_playlist();
 		psl_clear_playlist();
 	}
 
@@ -663,6 +668,7 @@ void Playlist::psl_change_track(int new_row){
 // GUI -->
 void Playlist::psl_clear_playlist(){
 
+	_v_stream_playlist.clear();
 	_v_meta_data.clear();
 	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
@@ -685,17 +691,14 @@ void Playlist::psl_prepare_playlist_for_save(QString name){
 
 
 // GUI -->
-void Playlist::psl_save_playlist(const QString& filename){
-
-	// never should gonna happen
-	if(_radio_active != RADIO_OFF) return;
+void Playlist::psl_save_playlist(const QString& filename, const vector<MetaData>& v_md){
 
 	FILE* file = fopen(filename.toStdString().c_str(), "w");
 
 	if(file){
 		qint64 lines = 0;
-		for(uint i=0; i<_v_meta_data.size(); i++){
-			string str = _v_meta_data.at(i).filepath.toStdString();
+		for(uint i=0; i<v_md.size(); i++){
+			string str = v_md.at(i).filepath.toStdString();
 
 			lines += fputs(str.c_str(), file);
 			lines += fputs("\n", file);
@@ -856,6 +859,29 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 	}
 }
 
+void Playlist::psl_valid_strrec_track(const MetaData& md){
+	qDebug() << "push back " << md.title;
+	_v_stream_playlist.push_back(md);
+}
+
+void Playlist::save_stream_playlist(){
+
+	if(_v_stream_playlist.size() == 0) {
+		qDebug() << "Stream playlist is empty";
+		return;
+	}
+
+
+
+	QString title = "Radio_" + QDate::currentDate().toString("yyyy-mm-dd");
+	title += QTime::currentTime().toString("hh.mm");
+	QString dir = CSettingsStorage::getInstance()->getStreamRipperPath() + QDir::separator();
+
+	psl_save_playlist(dir + title + ".m3u", _v_stream_playlist);
+
+	/*qDebug() << "found " << _v_stream_playlist.size() << " items";
+	sig_playlist_prepared(title, _v_stream_playlist);*/
+}
 
 
 bool  Playlist::checkTrack(const MetaData& md){

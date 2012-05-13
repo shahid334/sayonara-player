@@ -200,7 +200,14 @@ bool CDatabaseConnector::load_settings(){
 	settings->setStreamRipperWarning(streamripper_warning);
 
 	QString streamripper_path = load_setting_string("streamripper_path", QDir::homePath());
+	if(streamripper_path.trimmed().size() == 0 || !QFile::exists(streamripper_path)) streamripper_path = QDir::homePath();
 	settings->setStreamRipperPath(streamripper_path);
+
+	bool streamripper_complete_tracks = load_setting_bool("streamripper_complete_tracks", true);
+	settings->setStreamRipperCompleteTracks(streamripper_complete_tracks);
+
+	bool streamripper_playlist = load_setting_bool("streamripper_playlist", true);
+	settings->setStreamRipperPlaylist(streamripper_playlist);
 
 	return true;
 }
@@ -277,6 +284,12 @@ bool CDatabaseConnector::store_settings(){
 
 	QString streamripper_path = storage->getStreamRipperPath();
 	store_setting("streamripper_path", streamripper_path);
+
+	bool streamripper_complete_tracks = storage->getStreamRipperCompleteTracks();
+	store_setting("streamripper_complete_tracks", streamripper_complete_tracks);
+
+	bool streamripper_playlist = storage->getStreamRipperPlaylist();
+	store_setting("streamripper_playlist", streamripper_playlist);
 
 	return true;
 }

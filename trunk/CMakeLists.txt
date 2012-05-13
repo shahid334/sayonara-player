@@ -91,6 +91,7 @@ SET(HEADERS
     LastFM/LFMSimilarArtistsThread.h
     GUI/radio/GUI_RadioWidget.h
     GUI/stream/GUI_Stream.h
+    GUI/StreamRecorder/GUI_StreamRecorder.h
 )
 
 SET(SOURCES
@@ -145,6 +146,7 @@ SET(SOURCES
     LastFM/LFMWebAccess.cpp
     GUI/radio/GUI_RadioWidget.cpp
     GUI/stream/GUI_Stream.cpp
+    GUI/StreamRecorder/GUI_StreamRecorder.cpp
     Main.cpp
 )
 
@@ -162,6 +164,7 @@ SET(FORMS
     GUI/playlist_chooser/GUI_PlaylistChooser.ui
     GUI/radio/GUI_RadioWidget.ui
     GUI/stream/GUI_Stream.ui
+    GUI/StreamRecorder/GUI_StreamRecorder.ui
 )
 
 SET(ICONS 

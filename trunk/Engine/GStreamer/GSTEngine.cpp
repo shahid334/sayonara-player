@@ -104,17 +104,18 @@ GST_Engine::GST_Engine(){
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+	_track_finished = true;
 
-	_bus = 0;
-	_pipeline = 0;
 	_playing_stream = false;
-	_wanna_record = false;
 	_streamripper_active = false;
+	_wanna_record = false;
+	_recording_dst = "";
+	_streamripper_path = "";
+	_streamripper_complete_tracks = true;
+	_streamripper_create_playlist = true;
 
-	QDir dir(QDir::homePath());
-	dir.mkdir("sayonara-streams");
 
-
+	qDebug() << "Gst engine end";
 }
 
 GST_Engine::~GST_Engine() {
@@ -131,6 +132,7 @@ GST_Engine::~GST_Engine() {
 
 
 void GST_Engine::init(){
+
 
 	gst_init(0, 0);
 
@@ -194,7 +196,7 @@ void GST_Engine::init(){
 }
 
 void GST_Engine::play(){
-
+	_track_finished = false;
 	_state = STATE_PLAY;
 
 	if(_playing_stream && _streamripper_active){
@@ -202,7 +204,7 @@ void GST_Engine::play(){
 		gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
 		QFile* f = new QFile(_recording_dst);
-		while(f->size() < 16000){
+		while(f->size() < 32000){
 			usleep(100000);
 		}
 	}
@@ -214,25 +216,46 @@ void GST_Engine::play(){
 void GST_Engine::stop(){
 	_state = STATE_STOP;
 
-	qDebug() << "stop";
-	// tag recorded file
-	// _wanna_record <= _streamripper_active
-
 	qDebug() << "playing stream? " << _playing_stream << ", wanna record? " << _wanna_record;
+	qDebug() << "track finished? " << _track_finished;
+	qDebug() << "wanna complete tracks? " << _streamripper_complete_tracks;
+
+	// streamripper
 	if( _playing_stream && _wanna_record ){
 
-		_meta_data.filepath = _recording_dst;
-		ID3::setMetaDataOfFile(_meta_data);
-		QDir dir(_streamripper_path);
-		dir.mkdir(_meta_data.artist);
-		dir.cd(_meta_data.artist);
-		QFile f(_recording_dst);
-		QString fname = f.fileName().right( f.fileName().size() - f.fileName().lastIndexOf(QDir::separator()) );
-		bool success = 	f.copy(dir.path() + QDir::separator() + fname);
-		if(!success){
-			qDebug() << "unable to copy " <<  _recording_dst << " to " << dir.path() + QDir::separator() + fname;
-		}
-		f.remove();
+		do{
+			if(!_track_finished && _streamripper_complete_tracks) break;
+
+
+
+
+
+			QFile f(_recording_dst);
+			QDir dir(_streamripper_path);
+				dir.mkdir(_meta_data.artist);
+				dir.cd(_meta_data.artist);
+
+			// remove directories in front of filename
+			QString fname = f.fileName().right( f.fileName().size() - f.fileName().lastIndexOf(QDir::separator()) );
+			QString dst_name = 	dir.path() + QDir::separator() + fname;
+
+			bool success = 	f.copy(dst_name);
+			if(!success){
+				qDebug() << "unable to copy " <<  _recording_dst << " to " << dir.path() + QDir::separator() + fname;
+			}
+
+			else{
+				_meta_data.filepath = dst_name;
+				ID3::setMetaDataOfFile(_meta_data);
+				if(_streamripper_create_playlist){
+					emit sig_valid_strrec_track(_meta_data);
+				}
+
+			}
+
+
+			f.remove();
+		} while (0);
 	}
 
 	
@@ -243,6 +266,7 @@ void GST_Engine::stop(){
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 	gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+	_track_finished = true;
 }
 
 void GST_Engine::pause(){
@@ -319,7 +343,10 @@ void GST_Engine::changeTrack(const MetaData& md){
 	}
 
 	// no stream (not quite right because of mms, rtsp or other streams
-	// FIXME
+	else if(org_src_filename.startsWith("mms") || org_src_filename.startsWith("rtsp")){
+		// do nothing
+	}
+
 	else{
 		new_src_filename_uri = QString("file://") + org_src_filename;
 	}
@@ -333,6 +360,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+	_track_finished = false;
 
 	play();
 
@@ -389,6 +417,8 @@ void GST_Engine::set_cur_position(quint32 pos){
 	emit timeChangedSignal(pos);
 }
 void GST_Engine::set_track_finished(){
+
+	_track_finished = true;
 	emit track_finished();
 }
 
@@ -405,13 +435,21 @@ void GST_Engine::record_button_toggled(bool b){
 	_wanna_record = (_streamripper_active && b);
 }
 
-
-void GST_Engine::set_streamripper_active(bool b){
+void GST_Engine::psl_strrip_set_active(bool b){
 	_streamripper_active = b;
 }
 
-void GST_Engine::streamripper_path_changed(const QString& str){
-	_streamripper_path = str;
+void GST_Engine::psl_strrip_set_path(const QString& path){
+	_streamripper_path = path;
 }
+
+void GST_Engine::psl_strrip_complete_tracks(bool b){
+	_streamripper_complete_tracks = b;
+}
+void GST_Engine::psl_strrip_set_create_playlist(bool b){
+	_streamripper_create_playlist = b;
+}
+
+
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

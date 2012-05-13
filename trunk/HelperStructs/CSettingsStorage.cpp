@@ -274,9 +274,27 @@ QString CSettingsStorage::getStreamRipperPath(){
 }
 
 void CSettingsStorage::setStreamRipperPath(QString path){
-	qDebug() << "set path to " << path;
 	m_streamripper_path = path;
 }
+
+bool CSettingsStorage::getStreamRipperCompleteTracks(){
+	return m_streamripper_complete_tracks;
+}
+
+void CSettingsStorage::setStreamRipperCompleteTracks(bool b){
+	m_streamripper_complete_tracks = b;
+}
+
+bool CSettingsStorage::getStreamRipperPlaylist(){
+	return m_streamripper_playlist;
+}
+
+void CSettingsStorage::setStreamRipperPlaylist(bool b){
+	m_streamripper_playlist = b;
+}
+
+
+
 
 
 

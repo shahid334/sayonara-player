@@ -745,7 +745,7 @@
            <x>0</x>
            <y>0</y>
            <width>338</width>
-           <height>412</height>
+           <height>413</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -871,7 +871,7 @@
      <x>0</x>
      <y>0</y>
      <width>926</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -913,12 +913,11 @@
      <string>Preferences</string>
     </property>
     <addaction name="action_lastFM"/>
+    <addaction name="action_streamrecorder"/>
     <addaction name="separator"/>
     <addaction name="action_load_playlist"/>
     <addaction name="action_min2tray"/>
     <addaction name="separator"/>
-    <addaction name="action_streamripper"/>
-    <addaction name="action_streamripper_path"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1098,12 +1097,12 @@
     <string>Phonon</string>
    </property>
   </action>
-  <action name="action_streamripper">
+  <action name="action_streamrecorder">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
-    <string>Activate Streamripper</string>
+    <string>Stream recorder</string>
    </property>
   </action>
   <action name="action_streamripper_path">

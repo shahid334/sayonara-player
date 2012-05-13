@@ -46,6 +46,16 @@ protected:
 	int			_eq_type;
 	int			_state;
 	QString		_name;
+	bool		_track_finished;
+
+	bool 		_playing_stream;
+	bool		_streamripper_active;
+	bool		_wanna_record;
+	QString		_recording_dst;
+	QString		_streamripper_path;
+	bool		_streamripper_complete_tracks;
+	bool		_streamripper_create_playlist;
+
 
 public:
 	virtual void 	load_equalizer(vector<EQ_Setting>&)=0;
@@ -60,6 +70,7 @@ signals:
 	void scrobble_track(const MetaData&);
 	void eq_presets_loaded(const vector<EQ_Setting>&);
 	void eq_found(const QStringList&);
+	void sig_valid_strrec_track(const MetaData&);
 
 public slots:
 	virtual void play()=0;
@@ -73,8 +84,12 @@ public slots:
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;
-	virtual void set_streamripper_active(bool)=0;
-	virtual void streamripper_path_changed(const QString&)=0;
+
+	virtual void psl_strrip_set_active(bool)=0;
+	virtual void psl_strrip_set_path(const QString& )=0;
+	virtual void psl_strrip_complete_tracks(bool)=0;
+	virtual void psl_strrip_set_create_playlist(bool)=0;
+
 };
 
 Q_DECLARE_INTERFACE(Engine, "sayonara.engine/1.0");

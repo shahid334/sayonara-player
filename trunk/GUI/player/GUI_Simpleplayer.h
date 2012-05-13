@@ -77,6 +77,7 @@ public slots:
     void close_radio();
 
     void set_radio_active(int);
+    void psl_strrip_set_active(bool);
 
 
 
@@ -112,10 +113,7 @@ signals:
     void show_small_playlist_items(bool);
     void sig_sound_engine_changed(QString&);
     void sig_correct_id3(const MetaData&);
-    void sig_streamripper_toggled(bool);
-    void sig_streamripper_path_changed(const QString &);
-
-
+    void sig_show_stream_rec(bool);
 
 private slots:
     void playClicked(bool b = true);
@@ -161,7 +159,8 @@ private slots:
     void sound_engine_gst_clicked();
     void populate_engines(const QList<Engine*>& lists, int active);
     void sl_action_streamripper_toggled(bool);
-    void sl_action_streamripper_path_clicked(bool);
+
+
 
     void about(bool b=false);
 

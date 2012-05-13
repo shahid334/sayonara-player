@@ -124,6 +124,8 @@ private:
     bool m_streamripper;
     bool m_streamripper_warning;  
     QString m_streamripper_path;
+    bool m_streamripper_complete_tracks;
+    bool m_streamripper_playlist;
 
     /* sound engine */
     QString m_sound_engine;
@@ -192,6 +194,12 @@ public:
 
 	QString getStreamRipperPath();
 	void setStreamRipperPath(QString path);
+
+	bool getStreamRipperCompleteTracks();
+	void setStreamRipperCompleteTracks(bool b);
+
+	bool getStreamRipperPlaylist();
+	void setStreamRipperPlaylist(bool b);
 
 };
 
