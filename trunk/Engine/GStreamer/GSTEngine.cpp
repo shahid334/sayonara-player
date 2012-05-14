@@ -48,7 +48,6 @@ static gboolean show_position(GstElement* pipeline){
 	GstFormat fmt = GST_FORMAT_TIME;
 	gst_element_query_position(pipeline, &fmt, &pos);
 
-
 	if(obj_ref != NULL && obj_ref->getState() == STATE_PLAY){
 		obj_ref->set_cur_position((quint32)(pos / 1000000000));
 	}
@@ -60,7 +59,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 	(void) bus;
 	(void) user_data;
-
 
 	switch (GST_MESSAGE_TYPE(msg)) {
 		case GST_MESSAGE_EOS:
@@ -86,8 +84,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
     return true;
 }
-
-
 
 
 
@@ -195,21 +191,111 @@ void GST_Engine::init(){
 	} while(i);
 }
 
+
+
+void GST_Engine::changeTrack(const MetaData& md){
+
+	QString org_src_filename = md.filepath;
+	QString new_src_filename = md.filepath;
+	QString new_src_filename_uri;
+	QString artist = md.artist;
+	QString title = md.title;
+
+	obj_ref = NULL;
+
+
+	// Warning!! this order is important!!!
+	stop();
+	_meta_data = md;
+
+	_playing_stream = false;
+
+	if( org_src_filename.startsWith("http") && _streamripper_active){
+		_playing_stream = true;
+
+		artist.replace(" ", "_");
+		title.replace(" ", "_");
+
+		new_src_filename = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
+
+//		_recording_dst = Helper::calc_hash(title) + "." + md.filepath.right(3);
+		_recording_dst = new_src_filename;
+
+		// record from org_src_filename to new_src_filename
+		g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
+		g_object_set(G_OBJECT(_rec_dst), "location", new_src_filename.toLocal8Bit().data(), NULL);
+		g_object_set(G_OBJECT(_rec_src), "blocksize", 16384, NULL);
+
+		new_src_filename_uri = QString("file://") + new_src_filename;
+		qDebug() << "Streaming from " << org_src_filename << " to " << new_src_filename;
+
+	}
+
+	// stream, but don't wanna record
+	else if(org_src_filename.startsWith("http")){
+		_playing_stream = true;
+		new_src_filename_uri = org_src_filename;
+	}
+
+	// no stream (not quite right because of mms, rtsp or other streams
+	else if(org_src_filename.startsWith("mms") || org_src_filename.startsWith("rtsp")){
+		// do nothing
+	}
+
+	else{
+		new_src_filename_uri = QString("file://") + org_src_filename;
+	}
+
+	// playing src
+	g_object_set(G_OBJECT(_pipeline), "uri", new_src_filename_uri.toLocal8Bit().data(), NULL);
+	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
+
+	emit total_time_changed_signal(_meta_data.length_ms);
+
+	_seconds_started = 0;
+	_seconds_now = 0;
+	_scrobbled = false;
+	_track_finished = false;
+
+	play();
+
+}
+
+
+
 void GST_Engine::play(){
 	_track_finished = false;
 	_state = STATE_PLAY;
 
+	bool success = true;
 	if(_playing_stream && _streamripper_active){
 
 		gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
+		// buffering...
+		qint64 max = 10000000;
+		qint64 interval = 100000;
+		qint64 sz = 0;
+		
 		QFile* f = new QFile(_recording_dst);
-		while(f->size() < 32000){
-			usleep(100000);
-		}
+		do{
+			sz = f->size();
+			qDebug() << _recording_dst << ": Size = " << sz;
+			
+			usleep(interval);
+			max -= interval;
+			if(max <= 0) success = false;
+		} while(sz < 32000 && max > 0);
+		f->close();
+
 	}
 
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+	if(success)
+		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+	else{
+		// unable to buffer
+		set_track_finished();
+	}
 	obj_ref = this;
 }
 
@@ -299,71 +385,6 @@ void GST_Engine::jump(int where, bool percent){
 	if(!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, new_time_ns)){
 		qDebug() << "seeking failed";
 	}
-}
-
-void GST_Engine::changeTrack(const MetaData& md){
-	
-	QString org_src_filename = md.filepath;
-	QString new_src_filename = md.filepath;
-	QString new_src_filename_uri;
-	QString artist = md.artist;
-	QString title = md.title;
-
-	obj_ref = NULL;
-
-
-	// Warning!! this order is important!!!
-	stop();
-	_meta_data = md;
-
-	_playing_stream = false;
-
-	if( org_src_filename.startsWith("http") && _streamripper_active){
-		_playing_stream = true;
-
-		artist.replace(" ", "_");
-		title.replace(" ", "_");
-
-		new_src_filename = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
-
-		_recording_dst = new_src_filename;
-
-		// record from org_src_filename to new_src_filename
-		g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
-		g_object_set(G_OBJECT(_rec_dst), "location", new_src_filename.toLocal8Bit().data(), NULL);
-
-		new_src_filename_uri = QString("file://") + new_src_filename;
-
-	}
-
-	// stream, but don't wanna record
-	else if(org_src_filename.startsWith("http")){
-		_playing_stream = true;
-		new_src_filename_uri = org_src_filename;
-	}
-
-	// no stream (not quite right because of mms, rtsp or other streams
-	else if(org_src_filename.startsWith("mms") || org_src_filename.startsWith("rtsp")){
-		// do nothing
-	}
-
-	else{
-		new_src_filename_uri = QString("file://") + org_src_filename;
-	}
-	
-	// playing src
-	g_object_set(G_OBJECT(_pipeline), "uri", new_src_filename_uri.toLocal8Bit().data(), NULL);
-	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
-
-	emit total_time_changed_signal(_meta_data.length_ms);
-
-	_seconds_started = 0;
-	_seconds_now = 0;
-	_scrobbled = false;
-	_track_finished = false;
-
-	play();
-
 }
 
 

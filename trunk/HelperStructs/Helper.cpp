@@ -215,6 +215,8 @@ QString Helper::calc_google_album_adress(QString artist, QString album){
 	return calc_google_image_search_adress(searchstring, GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
 }
 
+
+
 QString Helper::calc_cover_token(QString artist, QString album){
 	QString ret = QCryptographicHash::hash(artist.toUtf8() + album.toUtf8(), QCryptographicHash::Md5).toHex();
 	return ret;
@@ -332,3 +334,6 @@ QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
 	return "";
 }
 
+QString Helper::calc_hash(QString data){
+	return QCryptographicHash::hash(data.toUtf8(), QCryptographicHash::Md5).toHex();
+}
