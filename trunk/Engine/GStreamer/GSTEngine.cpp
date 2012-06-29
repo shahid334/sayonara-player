@@ -143,52 +143,95 @@ void GST_Engine::init(){
 	_rec_enc = gst_element_factory_make("lamemp3enc", "rec_enc");
 	_rec_dst = gst_element_factory_make("filesink", "rec_sink");
 
-	if(!_rec_pipeline) qDebug() << "pipeline error";
-	if(!_rec_src) qDebug() << "src error";
-	if(!_rec_cvt) qDebug() << "cvt error";
-	if(!_rec_enc) qDebug() << "enc error";
-	if(!_rec_dst) qDebug() << "sink error";
+	if(!_rec_pipeline) qDebug() << "GST: pipeline error";
+	if(!_rec_src) qDebug() << "GST: src error";
+	if(!_rec_cvt) qDebug() << "GST: cvt error";
+	if(!_rec_enc) qDebug() << "GST: enc error";
+	if(!_rec_dst) qDebug() << "GST: sink error";
 
 	gst_bin_add_many(GST_BIN(_rec_pipeline), _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst, NULL);
 	gst_element_link( _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst);
 
 	_pipeline = gst_element_factory_make("playbin2", "player");
-	if(!_pipeline){
-		qDebug() << "Cannot init Pipeline";
-	}
-
 	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
-	if(!_bus){
-		qDebug() << "Something went wrong with the bus";
-	}
 
-	gst_bus_add_watch(_bus, bus_state_changed, this);
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
+	if(!_pipeline)	qDebug() << "GST: Cannot init Pipeline";
+	if(!_bus) qDebug() << "GST: Something went wrong with the bus";
 
+
+
+	qDebug() << "GST init playing pipeline";
 
 	success = false;
 	i=0;
+
+
 	// eq -> autoaudiosink is packaged into a bin
 	do{
+		qDebug() << "GST start loop";
 		// create equalizer element
 		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
 		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
 		_audio_bin = gst_bin_new("audio-bin");
 		
-		if(!_equalizer)	qDebug() << "Equalizer cannot be created"; break;
-		if(!_audio_sink) qDebug() << "Sink cannot be created"; break;
-		if(!_audio_bin)	qDebug() << "Bin cannot be created"; break;
+		GstPad* eq_src, eq_sink, audio_sink_pad;
+
+		eq_sink = gst_element_get_request_pad(_equalizer, "sink");
+
+
+		_audio_pad = gst_element_get_static_pad(_equalizer, "src");
+		audio_sink_pad = gst_element_get_static_pad(_audio_sink, "sink");
+
+		success = gst_element_link(_audio_pad, audio_sink_pad);
+
+
+
+
+
+		if(!_equalizer)	{
+			qDebug() << "GST: Equalizer cannot be created";
+			break;
+		}
+		if(!_audio_sink) {
+			qDebug() << "GST: Sink cannot be created";
+			break;
+		}
+		if(!_audio_bin)	{
+			qDebug() << "GST: Bin cannot be created";
+			break;
+		}
+
+		qDebug() << "GST: Equalizer, Sink and Bin initialized";
 
 		// create, link and add ghost pad
-		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
-		gst_element_link(_equalizer, _audio_sink);
+
+
 		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
-		if(_audio_pad) {
-			success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
-			if(!success) break;
-			g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+		if(!_audio_pad) {
+			qDebug() << "GST: cannot get static pad"; break;
 		}
+
+		GstPad* ghost_pad = gst_ghost_pad_new("sink", _audio_pad);
+		success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  ghost_pad);
+
+		if(!success) {
+			qDebug() << "GST: cannot add pad"; break;
+		}
+
+
+		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
+
+		if(!success) {
+			qDebug() << "GST: cannot link equalizer";
+		}
+
+
+		//g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+
 	} while(i);
+
+	gst_bus_add_watch(_bus, bus_state_changed, this);
+	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
 }
 
 
@@ -396,6 +439,8 @@ void GST_Engine::changeTrack(const QString& filepath){
 
 void GST_Engine::eq_changed(int band, int val){
 
+
+	qDebug() << "GST: Eq changed " << band << ", " << val;
 	double new_val = 0;
 	new_val = val * 1.0;
 	if (val > 0) {
