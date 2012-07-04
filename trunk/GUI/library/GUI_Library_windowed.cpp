@@ -44,7 +44,7 @@
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
-#include "LastFM/LastFM.h"
+#include "StreamPlugins/LastFM/LastFM.h"
 
 #include "ui_GUI_Library_windowed.h"
 

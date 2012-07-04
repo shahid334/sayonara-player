@@ -226,22 +226,24 @@ QString Helper::calc_cover_token(QString artist, QString album){
 
 QStringList Helper::get_soundfile_extensions(){
 
-	QStringList filters;
-	filters.push_back("*.mp3");
-	filters.push_back("*.ogg");
-	filters.push_back("*.m4a");
-	filters.push_back("*.wma");
-	filters.push_back("*.wav");
-	filters.push_back("*.flac");
-	filters.push_back("*.aac");
+	QStringList filters, filters_case;
+	filters << "*.mp3"
+			<< "*.ogg"
+			<< "*.m4a"
+			<< "*.wav"
+			<< "*.flac"
+			<< "*.aac"
+			<< "*.wma";
 
-	// ok, these files contain sound :)
-	filters.push_back("*.avi");
-	filters.push_back("*.flv");
-	filters.push_back("*.mpg");
-	filters.push_back("*.mpeg");
-	filters.push_back("*.mkv");
-	filters.push_back("*.wmv");
+
+	/*
+	filters << "*.avi"
+			<< "*.flv"
+			<< "*.mpg"
+			<< "*.mpeg"
+			<< "*.mkv"
+			<< "*.wmv"
+			<< "*.vob";*/
 
 	return filters;
 }
@@ -317,17 +319,15 @@ QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
 
 	t = tag;
 
-//qDebug() << "search for " << t << " in " << new_xml_doc;
 	QString str2search_start = QString("<") + t + QString(".*>");
 	QString str2search_end = QString("</") + t + QString(">");
-	QString str2search =str2search_start + "(.+)" + str2search_end;
-
+	QString str2search = str2search_start + "(.+)" + str2search_end;
 	QRegExp rx(str2search);
 	rx.setMinimal(true);
-	//qDebug() << "search for " << str2search;
+
+
 	int pos = 0;
 	if(rx.indexIn(new_xml_doc, pos) != -1) {
-		//qDebug() << "found " << rx.cap(1);
 		return rx.cap(1);
 	}
 

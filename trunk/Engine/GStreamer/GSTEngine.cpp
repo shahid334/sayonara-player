@@ -103,12 +103,12 @@ GST_Engine::GST_Engine(){
 	_track_finished = true;
 
 	_playing_stream = false;
-	_streamripper_active = false;
-	_wanna_record = false;
-	_recording_dst = "";
-	_streamripper_path = "";
-	_streamripper_complete_tracks = true;
-	_streamripper_create_playlist = true;
+	_sr_active = false;
+	_sr_wanna_record = false;
+	_sr_recording_dst = "";
+	_sr_path = "";
+	_sr_complete_tracks = true;
+	_sr_create_playlist = true;
 
 
 	qDebug() << "Gst engine end";
@@ -127,111 +127,139 @@ GST_Engine::~GST_Engine() {
 }
 
 
+
+void GST_Engine::init_record_pipeline(){
+
+	int i=0;
+
+	/*
+	 * _rec_pipeline:
+	 *
+	 * _rec_src -> _rec_cvt -> _rec_enc -> _rec_dst
+	 *
+	 */
+
+	do{
+		_rec_pipeline = gst_pipeline_new("rec_pipeline");
+		_rec_src = gst_element_factory_make("souphttpsrc", "rec_uri");
+		_rec_cvt = gst_element_factory_make("audioconvert", "rec_cvt");
+		_rec_enc = gst_element_factory_make("lamemp3enc", "rec_enc");
+		_rec_dst = gst_element_factory_make("filesink", "rec_sink");
+
+		if(!_rec_pipeline) {
+			qDebug() << "Record: pipeline error";
+			break;
+		}
+
+		if(!_rec_src) {
+			qDebug() << "Record: src error";
+			break;
+		}
+
+		if(!_rec_cvt) {
+			qDebug() << "Record: cvt error";
+			break;
+		}
+
+		if(!_rec_enc) {
+			qDebug() << "Record: enc error";
+			break;
+		}
+
+		if(!_rec_dst) {
+			qDebug() << "Record: sink error";
+			break;
+		}
+
+		gst_bin_add_many(GST_BIN(_rec_pipeline), _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst, NULL);
+		gst_element_link( _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst);
+
+
+	} while(i);
+}
+
+void GST_Engine::init_play_pipeline(){
+
+
+
+	/*
+	 * Play pipeline:
+	 *
+	 * _audio_bin:
+	 * =(O _audio_pad )  _equalizer -> _audio_sink
+	 *
+	 * Is mounted at audio sink of playbin2
+	 */
+
+	bool success = false;
+	int i;
+
+
+
+
+	i=0;
+
+	// eq -> autoaudiosink is packaged into a bin
+	do{
+		qDebug() << "Entering do loop";
+		// create equalizer element
+		_pipeline = gst_element_factory_make("playbin2", "player");
+		 if(!_pipeline) {
+			 qDebug() << "Pipeline sucks";
+			 break;
+		 }
+
+		 _bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
+		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
+		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
+		_audio_bin = gst_bin_new("audio-bin");
+
+
+		qDebug() << "factory stuff";
+		if(!_bus){
+			qDebug() << "Something went wrong with the bus";
+			break;
+		}
+
+		if(!_equalizer)	{
+			qDebug() << "Equalizer cannot be created";
+			break;
+		}
+
+		if(!_audio_sink) {
+			qDebug() << "Sink cannot be created";
+			break;
+		}
+
+		if(!_audio_bin)	{
+			qDebug() << "Bin cannot be created";
+			break;
+		}
+
+
+		// create, link and add ghost pad
+		gst_bus_add_watch(_bus, bus_state_changed, this);
+		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
+		gst_element_link(_equalizer, _audio_sink);
+		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
+		if(_audio_pad) {
+			success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
+			if(!success) break;
+			g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+		}
+
+		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
+	} while(i);
+}
+
 void GST_Engine::init(){
 
 
 	gst_init(0, 0);
 
+	init_record_pipeline();
+	init_play_pipeline();
 
-	bool success = false;
-
-	int i=0;
-
-	_rec_pipeline = gst_pipeline_new("rec_pipeline");
-	_rec_src = gst_element_factory_make("souphttpsrc", "rec_uri");
-	_rec_cvt = gst_element_factory_make("audioconvert", "rec_cvt");
-	_rec_enc = gst_element_factory_make("lamemp3enc", "rec_enc");
-	_rec_dst = gst_element_factory_make("filesink", "rec_sink");
-
-	if(!_rec_pipeline) qDebug() << "GST: pipeline error";
-	if(!_rec_src) qDebug() << "GST: src error";
-	if(!_rec_cvt) qDebug() << "GST: cvt error";
-	if(!_rec_enc) qDebug() << "GST: enc error";
-	if(!_rec_dst) qDebug() << "GST: sink error";
-
-	gst_bin_add_many(GST_BIN(_rec_pipeline), _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst, NULL);
-	gst_element_link( _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst);
-
-	_pipeline = gst_element_factory_make("playbin2", "player");
-	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
-
-	if(!_pipeline)	qDebug() << "GST: Cannot init Pipeline";
-	if(!_bus) qDebug() << "GST: Something went wrong with the bus";
-
-
-
-	qDebug() << "GST init playing pipeline";
-
-	success = false;
-	i=0;
-
-
-	// eq -> autoaudiosink is packaged into a bin
-	do{
-		qDebug() << "GST start loop";
-		// create equalizer element
-		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
-		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
-		_audio_bin = gst_bin_new("audio-bin");
-		
-		GstPad* eq_src, eq_sink, audio_sink_pad;
-
-		eq_sink = gst_element_get_request_pad(_equalizer, "sink");
-
-
-		_audio_pad = gst_element_get_static_pad(_equalizer, "src");
-		audio_sink_pad = gst_element_get_static_pad(_audio_sink, "sink");
-
-		success = gst_element_link(_audio_pad, audio_sink_pad);
-
-
-
-
-
-		if(!_equalizer)	{
-			qDebug() << "GST: Equalizer cannot be created";
-			break;
-		}
-		if(!_audio_sink) {
-			qDebug() << "GST: Sink cannot be created";
-			break;
-		}
-		if(!_audio_bin)	{
-			qDebug() << "GST: Bin cannot be created";
-			break;
-		}
-
-		qDebug() << "GST: Equalizer, Sink and Bin initialized";
-
-		// create, link and add ghost pad
-
-
-		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
-		if(!_audio_pad) {
-			qDebug() << "GST: cannot get static pad"; break;
-		}
-
-		GstPad* ghost_pad = gst_ghost_pad_new("sink", _audio_pad);
-		success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  ghost_pad);
-
-		if(!success) {
-			qDebug() << "GST: cannot add pad"; break;
-		}
-
-
-		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
-
-		if(!success) {
-			qDebug() << "GST: cannot link equalizer";
-		}
-
-
-		//g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-
-	} while(i);
-
-	gst_bus_add_watch(_bus, bus_state_changed, this);
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
 }
 
 
@@ -253,7 +281,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 	_playing_stream = false;
 
-	if( org_src_filename.startsWith("http") && _streamripper_active){
+	if( org_src_filename.startsWith("http") && _sr_active){
 		_playing_stream = true;
 
 		artist.replace(" ", "_");
@@ -262,7 +290,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 		new_src_filename = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
 
 //		_recording_dst = Helper::calc_hash(title) + "." + md.filepath.right(3);
-		_recording_dst = new_src_filename;
+		_sr_recording_dst = new_src_filename;
 
 		// record from org_src_filename to new_src_filename
 		g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
@@ -311,7 +339,7 @@ void GST_Engine::play(){
 	_state = STATE_PLAY;
 
 	bool success = true;
-	if(_playing_stream && _streamripper_active){
+	if(_playing_stream && _sr_active){
 
 		gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
@@ -320,10 +348,10 @@ void GST_Engine::play(){
 		qint64 interval = 100000;
 		qint64 sz = 0;
 		
-		QFile* f = new QFile(_recording_dst);
+		QFile* f = new QFile(_sr_recording_dst);
 		do{
 			sz = f->size();
-			qDebug() << _recording_dst << ": Size = " << sz;
+			qDebug() << _sr_recording_dst << ": Size = " << sz;
 			
 			usleep(interval);
 			max -= interval;
@@ -345,22 +373,18 @@ void GST_Engine::play(){
 void GST_Engine::stop(){
 	_state = STATE_STOP;
 
-	qDebug() << "playing stream? " << _playing_stream << ", wanna record? " << _wanna_record;
+	qDebug() << "playing stream? " << _playing_stream << ", wanna record? " << _sr_wanna_record;
 	qDebug() << "track finished? " << _track_finished;
-	qDebug() << "wanna complete tracks? " << _streamripper_complete_tracks;
+	qDebug() << "wanna complete tracks? " << _sr_complete_tracks;
 
 	// streamripper
-	if( _playing_stream && _wanna_record ){
+	if( _playing_stream && _sr_wanna_record ){
 
 		do{
-			if(!_track_finished && _streamripper_complete_tracks) break;
+			if(!_track_finished && _sr_complete_tracks) break;
 
-
-
-
-
-			QFile f(_recording_dst);
-			QDir dir(_streamripper_path);
+			QFile f(_sr_recording_dst);
+			QDir dir(_sr_path);
 				dir.mkdir(_meta_data.artist);
 				dir.cd(_meta_data.artist);
 
@@ -370,18 +394,16 @@ void GST_Engine::stop(){
 
 			bool success = 	f.copy(dst_name);
 			if(!success){
-				qDebug() << "unable to copy " <<  _recording_dst << " to " << dir.path() + QDir::separator() + fname;
+				qDebug() << "unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname;
 			}
 
 			else{
 				_meta_data.filepath = dst_name;
 				ID3::setMetaDataOfFile(_meta_data);
-				if(_streamripper_create_playlist){
+				if(_sr_create_playlist){
 					emit sig_valid_strrec_track(_meta_data);
 				}
-
 			}
-
 
 			f.remove();
 		} while (0);
@@ -389,7 +411,7 @@ void GST_Engine::stop(){
 
 	
 	else if( _playing_stream ){
-		QFile f(_recording_dst);
+		QFile f(_sr_recording_dst);
 		f.remove();
 	}
 
@@ -439,8 +461,6 @@ void GST_Engine::changeTrack(const QString& filepath){
 
 void GST_Engine::eq_changed(int band, int val){
 
-
-	qDebug() << "GST: Eq changed " << band << ", " << val;
 	double new_val = 0;
 	new_val = val * 1.0;
 	if (val > 0) {
@@ -498,22 +518,22 @@ QString GST_Engine::getName(){
 
 
 void GST_Engine::record_button_toggled(bool b){
-	_wanna_record = (_streamripper_active && b);
+	_sr_wanna_record = (_sr_active && b);
 }
 
 void GST_Engine::psl_strrip_set_active(bool b){
-	_streamripper_active = b;
+	_sr_active = b;
 }
 
 void GST_Engine::psl_strrip_set_path(const QString& path){
-	_streamripper_path = path;
+	_sr_path = path;
 }
 
 void GST_Engine::psl_strrip_complete_tracks(bool b){
-	_streamripper_complete_tracks = b;
+	_sr_complete_tracks = b;
 }
 void GST_Engine::psl_strrip_set_create_playlist(bool b){
-	_streamripper_create_playlist = b;
+	_sr_create_playlist = b;
 }
 
 

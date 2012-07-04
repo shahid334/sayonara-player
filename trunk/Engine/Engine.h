@@ -41,6 +41,7 @@ protected:
 	int			_seconds_started;
 	int			_seconds_now;
 	qint64		_mseconds_now;
+
 	bool		_scrobbled;
 	bool		_is_eq_enabled;
 	int			_eq_type;
@@ -49,12 +50,14 @@ protected:
 	bool		_track_finished;
 
 	bool 		_playing_stream;
-	bool		_streamripper_active;
-	bool		_wanna_record;
-	QString		_recording_dst;
-	QString		_streamripper_path;
-	bool		_streamripper_complete_tracks;
-	bool		_streamripper_create_playlist;
+
+	bool		_sr_active;
+
+	bool		_sr_wanna_record;
+	QString		_sr_recording_dst;
+	QString		_sr_path;
+	bool		_sr_complete_tracks;
+	bool		_sr_create_playlist;
 
 
 public:

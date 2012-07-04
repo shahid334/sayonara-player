@@ -28,7 +28,7 @@
 
 #include "GUI/radio/GUI_RadioWidget.h"
 #include "HelperStructs/Helper.h"
-#include "LastFM/LastFM.h"
+#include "StreamPlugins/LastFM/LastFM.h"
 #include <QWidget>
 #include <QDockWidget>
 #include <QCloseEvent>

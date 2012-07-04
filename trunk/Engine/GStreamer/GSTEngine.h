@@ -112,6 +112,9 @@ public:
 	virtual QString	getName();
 
 
+private:
+	void init_record_pipeline();
+	void init_play_pipeline();
 
 
 

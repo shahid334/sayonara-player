@@ -43,7 +43,7 @@
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
-#include "LastFM/LastFM.h"
+#include "StreamPlugins/LastFM/LastFM.h"
 #include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Helper.h"
