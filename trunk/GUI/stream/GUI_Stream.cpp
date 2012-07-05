@@ -24,7 +24,7 @@
 #include "HelperStructs/Helper.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <QDialog>
+#include <QDockWidget>
 #include <QIcon>
 #include <QMap>
 #include <QDebug>
@@ -32,8 +32,8 @@
 #include <QMessageBox>
 
 
-GUI_Stream::GUI_Stream() {
-	this->ui = new Ui::GUI_stream();
+GUI_Stream::GUI_Stream(QWidget* parent): QDockWidget(parent)  {
+	this->ui = new Ui::GUI_Stream();
 	this->ui->setupUi(this);
 
 	init_gui();

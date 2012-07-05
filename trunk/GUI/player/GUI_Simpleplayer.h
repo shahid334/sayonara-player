@@ -27,7 +27,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-#include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "Engine/Engine.h"
 
@@ -60,9 +60,10 @@ public slots:
       */
     void cover_changed(QString);
     void update_track (const MetaData & in);
-    void showEqualizer(bool b=false);
-    void showRadio(bool b=false);
-    void showPlaylistChooser(bool b=false);
+    void show_eq(bool b=false);
+    void show_stream(bool b=false);
+    void show_lfm_radio(bool b=false);
+    void show_playlist_chooser(bool b=false);
     void showPlugin(QWidget* widget, bool v);
     void hideUnneededPlugins(QWidget* wannashow);
     void lfm_info_fetched(const MetaData& md, bool loved, bool corrected);
@@ -74,7 +75,8 @@ public slots:
     void update_info(const MetaData&);
     void close_eq();
     void close_playlist_chooser();
-    void close_radio();
+    void close_stream();
+    void close_lfm_radio();
 
     void set_radio_active(int);
     void psl_strrip_set_active(bool);
@@ -186,7 +188,8 @@ private:
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
     GUI_PlaylistChooser*		ui_playlist_chooser;
-    GUI_RadioWidget*			ui_radio;
+    GUI_Stream*					ui_stream;
+    GUI_LFMRadioWidget*			ui_lfm_radio;
     GUI_Stream*					ui_stream_dialog;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
@@ -235,7 +238,8 @@ public:
     void setLibrary(GUI_Library_windowed* library);
     void setEqualizer(GUI_Equalizer* eq);
     void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
-    void setRadio(GUI_RadioWidget* radio);
+    void setStream(GUI_Stream* stream);
+    void setLFMRadio(GUI_LFMRadioWidget* lfm_radio);
 
     void hideAllPlugins();
     void check_show_plugins();
@@ -246,6 +250,7 @@ public:
     QWidget* getParentOfLibrary();
     QWidget* getParentOfEqualizer();
     QWidget* getParentOfRadio();
+    QWidget* getParentOfStream();
 
     void setVolume(int vol);
     void setStyle(int);

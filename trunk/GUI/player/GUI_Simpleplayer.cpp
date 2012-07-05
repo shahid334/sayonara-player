@@ -56,13 +56,14 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	ui_playlist = 0;
 	ui_playlist_chooser = 0;
-	ui_radio = 0;
+	ui_lfm_radio = 0;
 	ui_eq = 0;
+	ui_stream = 0;
 
 	m_skinSuffix = "";
 
 	ui_stream_dialog = new GUI_Stream();
-	ui_stream_dialog->setModal(true);
+	//ui_stream_dialog->setModal(true);
 	ui_stream_dialog->hide();
 
 	QSize size = settings->getPlayerSize();
@@ -135,7 +136,7 @@ void GUI_SimplePlayer::initGUI() {
 
 	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
 	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
-	this->ui->action_ViewRadio->setText("Last.fm Radio\t\tSTRG+r");
+	this->ui->action_ViewLFMRadio->setText("Last.fm Radio\t\tSTRG+r");
 	this->ui->action_viewLibrary->setText("Library\t\tSTRG+l");
 	this->ui->btn_correct->setVisible(false);
 }
@@ -174,11 +175,16 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this->ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
 			SLOT(showLibrary(bool)));
 	connect(this->ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
-				SLOT(showEqualizer(bool)));
-	connect(this->ui->action_ViewRadio, SIGNAL(toggled(bool)), this,
-				SLOT(showRadio(bool)));
+				SLOT(show_eq(bool)));
+	connect(this->ui->action_ViewLFMRadio, SIGNAL(toggled(bool)), this,
+				SLOT(show_lfm_radio(bool)));
+
+
+	qDebug() << "setup show stream";
+	connect(this->ui->action_ViewStream, SIGNAL(toggled(bool)), this,
+					SLOT(show_stream(bool)));
 	connect(this->ui->action_ViewPlaylistChooser, SIGNAL(toggled(bool)), this,
-				SLOT(showPlaylistChooser(bool)));
+				SLOT(show_playlist_chooser(bool)));
 	connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this,
 			SLOT(changeSkin(bool)));
 	connect(this->ui->action_notification, SIGNAL(toggled(bool)), this,
@@ -722,8 +728,11 @@ void GUI_SimplePlayer::hideUnneededPlugins(QWidget* wannashow){
 	if(ui_eq != wannashow)
 		this->ui->action_ViewEqualizer->setChecked(false);
 
-	if(ui_radio != wannashow)
-		this->ui->action_ViewRadio->setChecked(false);
+	if(ui_lfm_radio != wannashow)
+		this->ui->action_ViewLFMRadio->setChecked(false);
+
+	if(ui_stream != wannashow)
+		this->ui->action_ViewStream->setChecked(false);
 
 	if(ui_playlist_chooser != wannashow)
 		this->ui->action_ViewPlaylistChooser->setChecked(false);
@@ -734,8 +743,11 @@ void GUI_SimplePlayer::hideAllPlugins(){
 	if(ui_eq)
 		this->ui_eq->hide();
 
-	if(ui_radio)
-		this->ui_radio->hide();
+	if(ui_stream)
+		this->ui_stream->hide();
+
+	if(ui_lfm_radio)
+		this->ui_lfm_radio->hide();
 
 	if(ui_playlist_chooser)
 		this->ui_playlist_chooser->hide();
@@ -780,7 +792,7 @@ void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
 
 }
 
-void GUI_SimplePlayer::showPlaylistChooser(bool vis){
+void GUI_SimplePlayer::show_playlist_chooser(bool vis){
 
 	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_PLAYLIST_CHOOSER);
 	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
@@ -789,7 +801,7 @@ void GUI_SimplePlayer::showPlaylistChooser(bool vis){
 
 }
 
-void GUI_SimplePlayer::showEqualizer(bool vis) {
+void GUI_SimplePlayer::show_eq(bool vis) {
 
 	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_EQUALIZER);
 	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
@@ -797,28 +809,40 @@ void GUI_SimplePlayer::showEqualizer(bool vis) {
 	showPlugin(ui_eq, vis);
 }
 
-void GUI_SimplePlayer::showRadio(bool vis){
+void GUI_SimplePlayer::show_stream(bool vis){
 
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_RADIO);
+	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_STREAM);
 	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
-	showPlugin(ui_radio, vis);
+	showPlugin(ui_stream, vis);
+}
+
+
+void GUI_SimplePlayer::show_lfm_radio(bool vis){
+	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_LFM_RADIO);
+	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
+
+	showPlugin(ui_lfm_radio, vis);
 }
 
 void GUI_SimplePlayer::close_playlist_chooser(){
-	showPlaylistChooser(false);
+	show_playlist_chooser(false);
 	ui->action_ViewPlaylistChooser->setChecked(false);
 }
 
 void GUI_SimplePlayer::close_eq() {
-	showEqualizer(false);
+	show_eq(false);
 	ui->action_ViewEqualizer->setChecked(false);
 }
 
+void GUI_SimplePlayer::close_lfm_radio() {
+	show_lfm_radio(false);
+	ui->action_ViewLFMRadio->setChecked(false);
+}
 
-void GUI_SimplePlayer::close_radio() {
-	showRadio(false);
-	ui->action_ViewRadio->setChecked(false);
+void GUI_SimplePlayer::close_stream() {
+	show_stream(false);
+	ui->action_ViewStream->setChecked(false);
 }
 
 void GUI_SimplePlayer::changeEvent(QEvent *event) {
@@ -925,8 +949,12 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			break;
 
 		case (Qt::Key_R):
-			this->ui->action_ViewRadio->setChecked(!this->ui->action_ViewRadio->isChecked());
+			this->ui->action_ViewLFMRadio->setChecked(!this->ui->action_ViewLFMRadio->isChecked());
 			break;
+
+		case (Qt::Key_S):
+					this->ui->action_ViewStream->setChecked(!this->ui->action_ViewStream->isChecked());
+					break;
 
 		case (Qt::Key_L):
 			this->ui->action_viewLibrary->setChecked(!this->ui->action_viewLibrary->isChecked());
@@ -973,6 +1001,11 @@ QWidget* GUI_SimplePlayer::getParentOfRadio(){
 }
 
 
+QWidget* GUI_SimplePlayer::getParentOfStream(){
+	return this->ui->plugin_widget;
+}
+
+
 
 void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
 	ui_playlist = playlist;
@@ -992,18 +1025,25 @@ void GUI_SimplePlayer::check_show_plugins(){
 
 		case PLUGIN_EQUALIZER:
 			ui->action_ViewEqualizer->setChecked(true);
-			showEqualizer(true);
+			show_eq(true);
 			break;
 
-		case PLUGIN_RADIO:
-			ui->action_ViewRadio->setChecked(true);
-			showRadio(true);
+		case PLUGIN_LFM_RADIO:
+			ui->action_ViewLFMRadio->setChecked(true);
+			show_lfm_radio(true);
+			break;
+
+		case PLUGIN_STREAM:
+			ui->action_ViewStream->setChecked(true);
+			show_stream(true);
 			break;
 
 		case PLUGIN_PLAYLIST_CHOOSER:
 			ui->action_ViewPlaylistChooser->setChecked(true);
-			showPlaylistChooser(true);
+			show_playlist_chooser(true);
 			break;
+
+
 
 		case PLUGIN_NONE:
 		default:
@@ -1026,10 +1066,14 @@ void GUI_SimplePlayer::setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser)
 	//check_show_plugins();
 }
 
-void GUI_SimplePlayer::setRadio(GUI_RadioWidget* radio){
-	ui_radio = radio;
-	ui_radio->resize(this->ui->plugin_widget->size());
-	//check_show_plugins();
+void GUI_SimplePlayer::setStream(GUI_Stream* stream){
+	ui_stream = stream;
+	ui_stream->resize(this->ui->plugin_widget->size());
+}
+
+void GUI_SimplePlayer::setLFMRadio(GUI_LFMRadioWidget* radio){
+	ui_lfm_radio = radio;
+	ui_lfm_radio->resize(this->ui->plugin_widget->size());
 }
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
@@ -1038,12 +1082,16 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 	this->ui_playlist->resize(this->ui->playlist_widget->size());
 	this->ui_library->resize(this->ui->library_widget->size());
 
+	QSize sz = this->ui->plugin_widget->size();
+
 	if(!ui_eq->isHidden())
-		ui_eq->resize(this->ui->plugin_widget->size());
-	if(!ui_radio->isHidden())
-		ui_radio->resize(this->ui->plugin_widget->size());
+		ui_eq->resize(sz);
+	if(!ui_stream->isHidden())
+		ui_stream->resize(sz);
+	if(!ui_lfm_radio->isHidden())
+		ui_lfm_radio->resize(sz);
 	if(!ui_playlist_chooser->isHidden())
-		ui_playlist_chooser->resize(this->ui->plugin_widget->size());
+		ui_playlist_chooser->resize(sz);
 
 	CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }
@@ -1172,6 +1220,10 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 		this->ui->btn_rec->setVisible(false);
 	}
 }
+void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
+
+	emit sig_show_stream_rec(b);
+}
 
 
 void GUI_SimplePlayer::populate_engines(const QList<Engine*>& lists, int active){
@@ -1192,10 +1244,6 @@ void GUI_SimplePlayer::sound_engine_gst_clicked(){
 	emit sig_sound_engine_changed(engine);
 }
 
-void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
-
-	emit sig_show_stream_rec(b);
-}
 
 
 

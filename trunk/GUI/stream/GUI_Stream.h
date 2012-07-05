@@ -22,11 +22,11 @@
 #ifndef GUI_STREAM_H_
 #define GUI_STREAM_H_
 
-#include <QDialog>
+#include <QDockWidget>
 #include <QMap>
 #include <ui_GUI_Stream.h>
 
-class GUI_Stream : public QDialog, private Ui::GUI_stream {
+class GUI_Stream : public QDockWidget, private Ui::GUI_Stream {
 
 	Q_OBJECT
 
@@ -46,11 +46,11 @@ private slots:
 
 
 public:
-	GUI_Stream();
+	GUI_Stream(QWidget* parent=0);
 	virtual ~GUI_Stream();
 
 private:
-	Ui::GUI_stream* ui;
+	Ui::GUI_Stream* ui;
 
 	void init_gui();
 	QMap<QString, QString> _stations;

@@ -26,7 +26,7 @@
  *      Author: luke
  */
 
-#include "GUI/radio/GUI_LFMRadioWidget.h"
+#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "HelperStructs/Helper.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include <QWidget>

@@ -745,7 +745,7 @@
            <x>0</x>
            <y>0</y>
            <width>338</width>
-           <height>413</height>
+           <height>412</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -871,7 +871,7 @@
      <x>0</x>
      <y>0</y>
      <width>926</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -902,8 +902,9 @@
     <addaction name="action_smallPlaylistItems"/>
     <addaction name="separator"/>
     <addaction name="action_ViewEqualizer"/>
+    <addaction name="action_ViewStream"/>
+    <addaction name="action_ViewLFMRadio"/>
     <addaction name="action_ViewPlaylistChooser"/>
-    <addaction name="action_ViewRadio"/>
     <addaction name="separator"/>
     <addaction name="action_notification"/>
     <addaction name="action_Dark"/>
@@ -1002,7 +1003,7 @@
     <string>Fetch all covers</string>
    </property>
   </action>
-  <action name="action_ViewRadio">
+  <action name="action_ViewLFMRadio">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -1108,6 +1109,14 @@
   <action name="action_streamripper_path">
    <property name="text">
     <string>Set Streamripper Path</string>
+   </property>
+  </action>
+  <action name="action_ViewStream">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Stream</string>
    </property>
   </action>
  </widget>

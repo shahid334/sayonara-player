@@ -36,7 +36,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
-#include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
@@ -106,9 +106,10 @@ int main(int argc, char *argv[]){
         CLibraryBase 			library;
         LastFM*					lastfm = LastFM::getInstance();
         GUI_LastFM				ui_lastfm;
+        GUI_Stream				ui_stream(player.getParentOfRadio());
         GUI_Equalizer			ui_eq(player.getParentOfEqualizer());
         GUI_TagEdit				ui_tagedit;
-        GUI_RadioWidget			ui_radio(player.getParentOfRadio());
+        GUI_LFMRadioWidget		ui_lfm_radio(player.getParentOfRadio());
         GUI_StreamRecorder		ui_stream_rec(&player);
 
         QString dir;
@@ -243,8 +244,8 @@ int main(int argc, char *argv[]){
 		CONNECT(&playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	&ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
 		CONNECT(&playlists, sig_import_tracks(const vector<MetaData>&), 	&library, 				importFiles(const vector<MetaData>&));
 
-		CONNECT(&ui_radio, listen_clicked(const QString&, int),		lastfm,		radio_init(const QString&, int));
-		CONNECT(&ui_radio, close_event(), 							&player, 	close_radio());
+		CONNECT(&ui_lfm_radio, listen_clicked(const QString&, int),		lastfm,		radio_init(const QString&, int));
+		CONNECT(&ui_lfm_radio, close_event(), 							&player, 	close_lfm_radio());
 
 		CONNECT (&ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_strrip_set_active(bool));
 		CONNECT (&ui_stream_rec, sig_stream_recorder_active(bool),	&player,	psl_strrip_set_active(bool));
@@ -261,7 +262,8 @@ int main(int argc, char *argv[]){
 
 		player.setPlaylist(&ui_playlist);
 		player.setLibrary(&ui_library);
-		player.setRadio(&ui_radio);
+		player.setStream(&ui_stream);
+		player.setLFMRadio(&ui_lfm_radio);
 		player.setEqualizer(&ui_eq);
 		player.setPlaylistChooser(&ui_playlist_chooser);
 		player.setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );

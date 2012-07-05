@@ -38,7 +38,6 @@ LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 
 ADD_SUBDIRECTORY(Engine/GStreamer)
 
-
 SET(HEADERS
 	Engine/Engine.h
 	Engine/SoundPluginLoader.h
@@ -90,7 +89,7 @@ SET(HEADERS
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMWebAccess.h
     StreamPlugins/LastFM/LFMSimilarArtistsThread.h
-    GUI/radio/GUI_RadioWidget.h
+    GUI/LFMRadio/GUI_LFMRadioWidget.h
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
 )
@@ -145,7 +144,7 @@ SET(SOURCES
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMSimilarArtistsThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
-    GUI/radio/GUI_RadioWidget.cpp
+    GUI/LFMRadio/GUI_LFMRadioWidget.cpp
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
     Main.cpp
@@ -163,7 +162,7 @@ SET(FORMS
     GUI/tagedit/GUI_TagEdit.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui
     GUI/playlist_chooser/GUI_PlaylistChooser.ui
-    GUI/radio/GUI_RadioWidget.ui
+    GUI/LFMRadio/GUI_LFMRadioWidget.ui
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui
 )
