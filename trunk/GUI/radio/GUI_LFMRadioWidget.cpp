@@ -26,7 +26,7 @@
  *      Author: luke
  */
 
-#include "GUI/radio/GUI_RadioWidget.h"
+#include "GUI/radio/GUI_LFMRadioWidget.h"
 #include "HelperStructs/Helper.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include <QWidget>
@@ -34,9 +34,9 @@
 #include <QCloseEvent>
 #include <QPixmap>
 
-GUI_RadioWidget::GUI_RadioWidget(QWidget* parent) : QDockWidget(parent)  {
+GUI_LFMRadioWidget::GUI_LFMRadioWidget(QWidget* parent) : QDockWidget(parent)  {
 
-	this->_ui = new Ui::RadioWidget( );
+	this->_ui = new Ui::LFMRadioWidget( );
 	this->_ui->setupUi(this);
 	this->_ui->rb_artist->setChecked(true);
 	this->_ui->cb_friends->setVisible(false);
@@ -53,12 +53,12 @@ GUI_RadioWidget::GUI_RadioWidget(QWidget* parent) : QDockWidget(parent)  {
 	connect(_ui->btn_listen, SIGNAL(released()), this, SLOT(start_listen()));
 }
 
-GUI_RadioWidget::~GUI_RadioWidget() {
+GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
 	// TODO Auto-generated destructor stub
 }
 
 
-void GUI_RadioWidget::start_listen(){
+void GUI_LFMRadioWidget::start_listen(){
 
 	bool text_input = false;
 	int lfm_listen_mode = LFM_RADIO_MODE_TAG;
@@ -89,7 +89,7 @@ void GUI_RadioWidget::start_listen(){
 		emit listen_clicked(text, lfm_listen_mode);
 }
 
-void GUI_RadioWidget::radio_button_changed(){
+void GUI_LFMRadioWidget::radio_button_changed(){
 
 	if(_friends.size() == 0){
 		LastFM::getInstance()->get_friends(_friends);
@@ -135,7 +135,7 @@ void GUI_RadioWidget::radio_button_changed(){
 	}
 }
 
-void GUI_RadioWidget::closeEvent ( QCloseEvent * event ){
+void GUI_LFMRadioWidget::closeEvent ( QCloseEvent * event ){
 	event->ignore();
 	emit close_event();
 }

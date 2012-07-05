@@ -29,18 +29,18 @@
 #ifndef GUIRADIOWIDGET_H_
 #define GUIRADIOWIDGET_H_
 
-#include <ui_GUI_RadioWidget.h>
+#include <ui_GUI_LFMRadioWidget.h>
 #include <QDockWidget>
 #include <QWidget>
 #include <QCloseEvent>
 
-class GUI_RadioWidget : public QDockWidget, private Ui::RadioWidget{
+class GUI_LFMRadioWidget : public QDockWidget, private Ui::LFMRadioWidget{
 
 Q_OBJECT
 
 public:
-	GUI_RadioWidget(QWidget* parent=0);
-	virtual ~GUI_RadioWidget();
+	GUI_LFMRadioWidget(QWidget* parent=0);
+	virtual ~GUI_LFMRadioWidget();
 
 
 	signals:
@@ -56,7 +56,7 @@ public:
 
 	private:
 
-		Ui::RadioWidget* _ui;
+		Ui::LFMRadioWidget* _ui;
 		QStringList _friends;
 
 };

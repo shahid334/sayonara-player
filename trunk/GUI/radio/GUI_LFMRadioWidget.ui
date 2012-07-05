@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>RadioWidget</class>
- <widget class="QDockWidget" name="RadioWidget">
+ <class>LFMRadioWidget</class>
+ <widget class="QDockWidget" name="LFMRadioWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
+    <width>368</width>
     <height>105</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>330</width>
+    <width>368</width>
     <height>105</height>
    </size>
   </property>
