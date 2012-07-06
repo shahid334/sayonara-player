@@ -32,6 +32,8 @@
 
 #include <vector>
 
+#define DB_TRY_OPEN(db) if (!this -> db.isOpen()) \
+							this -> db.open()
 
 //class CDatabaseConnector;
 class CDatabaseConnector : public QObject
@@ -70,8 +72,6 @@ public:
 			Artist getArtistByID( const int& id);
 			int getMaxArtistID();
 
-			QString getArtistName (const int & id);
-
 			void getAllArtists(vector<Artist>& result, QString sortorder = "name asc");
 
 			void getAllArtistsByAlbum(int album, vector<Artist>& result, QString sortorder = "name asc");
@@ -89,8 +89,6 @@ public:
 			int getMaxAlbumID();
 
 			Album getAlbumByID(const int& id);
-
-			QString getAlbumName (const int & id);
 
 			void getAllAlbums(vector<Album>& result, QString sortorder = "name asc");
 
@@ -183,6 +181,8 @@ private:
     const QString m_createScriptFileName;
     const QString m_databaseContainerFile;
     QSqlDatabase m_database;
+
+
 
 
     QString append_track_sort_string(QString querytext, QString sort);

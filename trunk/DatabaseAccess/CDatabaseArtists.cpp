@@ -31,76 +31,107 @@
 #include <QObject>
 #include <QSqlError>
 
+#define ARTIST_ALBUM_TRACK_SELECTOR QString("SELECT ") + \
+				"artists.artistid AS artistID, " + \
+				"artists.name AS artistName, " + \
+				"COUNT(tracks.trackid) AS artistNTracks, " + \
+				"GROUP_CONCAT(albums.albumid) AS artistAlbums " + \
+				"FROM artists, albums, tracks "
 
+bool _db_fetch_artists(QSqlQuery& q, vector<Artist>& result){
 
-
-int CDatabaseConnector::getMaxArtistID(){
-	 if (!this -> m_database.isOpen())
-				        this -> m_database.open();
-
-	 int max_id = -1;
-		try {
-			QSqlQuery q (this -> m_database);
-			q.prepare("SELECT MAX(artistID) FROM artists;");
-
-			if (!q.exec()) {
-				throw QString ("SQL - Error: Could not get max artistID from DB");
-			}
-
-
-			while (q.next()) {
-				max_id = q.value(0).toInt();
-			}
-
-			return max_id;
-
-
-		}
-		catch (QString& ex) {
-			qDebug() << ex;
-			QSqlError er = this -> m_database.lastError();
-			return max_id;
+	try{
+		if (!q.exec()) {
+			qDebug() << "SQL-Error: Could not get all artists from database";
+			qDebug() << q.executedQuery();
+			return false;
 		}
 
-		return max_id;
+		Artist artist;
+		while (q.next()) {
+			artist.id = q.value(0).toInt();
+			artist.name = q.value(1).toString().trimmed();
+
+			QStringList list = q.value(2).toString().split(',');
+			list.removeDuplicates();
+			artist.num_albums = list.size();
+			artist.num_songs = q.value(3).toInt();
+
+			result.push_back(artist);
+		}
+
+		return true;
+	}
+
+	catch (QString& ex) {
+		qDebug() << "SQL-Exception (Fetch artists): ";
+		qDebug() << ex;
+		return false;
+	}
+
+	return true;
 }
 
 
+int CDatabaseConnector::getMaxArtistID(){
+	DB_TRY_OPEN(m_database);
+
+	int max_id = -1;
+	try {
+		QSqlQuery q (this -> m_database);
+		q.prepare("SELECT MAX(artistID) FROM artists;");
+
+		if (!q.exec()) {
+			throw QString ("SQL - Error: Could not get max artistID from DB");
+		}
+
+		while (q.next()) {
+			max_id = q.value(0).toInt();
+		}
+
+		return max_id;
+	}
+
+	catch (QString& ex) {
+		qDebug() << ex;
+		QSqlError er = this -> m_database.lastError();
+		return max_id;
+	}
+
+	return max_id;
+}
+
 Artist CDatabaseConnector::getArtistByID(const int &id){
-	 QSqlQuery q (this -> m_database);
+
+	DB_TRY_OPEN(m_database);
+
+	QSqlQuery q (this -> m_database);
+
 	Artist artist;
+	vector<Artist> artists;
 
 	if (id!=-1) {
-		QString query = QString("SELECT ") +
-					"artists.name, COUNT(DISTINCT albums.albumID), COUNT(DISTINCT tracks.trackID)"+
-					"FROM artists, albums, tracks " +
+		QString query = ARTIST_ALBUM_TRACK_SELECTOR +
 					"WHERE artists.artistID = ? " +
 					"AND tracks.artistID = artists.artistID " +
 					"AND tracks.albumID = albums.albumID " +
-					"GROUP BY artists.name;";
+					"GROUP BY artistName;";
 
 		q.prepare(query);
 		q.addBindValue(QVariant (id));
 
-		if (!q.exec()) {
-			throw QString ("SQL - Error: getArtistName " + id);
-		}
-
-		if (q.next()) {
-			artist.id = id;
-			artist.name = q.value(0).toString().trimmed();
-			artist.num_albums = q.value(1).toInt();
-			artist.num_songs = q.value(2).toInt();
-			return artist;
-		}
+		_db_fetch_artists(q, artists);
+		if(artists.size() > 0) artist = artists[0];
 	}
 
 	return artist;
 }
 
-
 int CDatabaseConnector::getArtistID (const QString & artist)  {
-    QSqlQuery q (this -> m_database);
+
+	DB_TRY_OPEN(m_database);
+
+	QSqlQuery q (this -> m_database);
     int artistID = -1;
     q.prepare("select artistID from artists where name == ?;");
     q.addBindValue(QVariant(artist));
@@ -113,141 +144,81 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
     return artistID;
 }
 
-
-
-QString CDatabaseConnector::getArtistName (const int & id) {
-    QSqlQuery q (this -> m_database);
-    QString a;
-    if (id!=-1) {
-        q.prepare("select name from artists where artistid = ?;");
-        q.addBindValue(QVariant (id));
-        if (!q.exec()) {
-            throw QString ("SQL - Error: getArtistName " + id);
-        }
-        if (q.next()) {
-            a = q.value(0).toString().trimmed();
-        }
-    }
-    return a;
-}
-
-
-
-
-
 void CDatabaseConnector::getAllArtists(vector<Artist>& result, QString sort_order){
-	 if (!this -> m_database.isOpen())
-				        this -> m_database.open();
 
-		try {
-			QSqlQuery q (this -> m_database);
-			QString query = QString("SELECT ") +
-					"artists.artistID, " +
-					"artists.name AS name, " +
-					"group_concat(albums.albumid), " +
-					"count(tracks.trackid) AS trackcount "
-					"FROM Tracks, artists, albums " +
-					"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
-					"GROUP BY artists.artistID, artists.name ";
+	DB_TRY_OPEN(m_database);
 
-			if(sort_order == "name asc") query += QString(" ORDER BY name ASC;");
-			else if(sort_order == "name desc") query += QString(" ORDER BY name DESC;");
-			else if(sort_order == "trackcount asc")query += QString(" ORDER BY trackcount ASC;");
-			else if(sort_order == "trackcount desc")query += QString(" ORDER BY trackcount DESC;");
-			else query += QString(";");
+	QSqlQuery q (this -> m_database);
+	QString query = ARTIST_ALBUM_TRACK_SELECTOR +
+			"WHERE Tracks.albumID = albums.albumID AND artists.artistid = tracks.artistid " +
+			"GROUP BY artists.artistID, artists.name ";
 
-			q.prepare(query);
+	if(sort_order == "name asc") query += QString(" ORDER BY artistName ASC;");
+	else if(sort_order == "name desc") query += QString(" ORDER BY artistName DESC;");
+	else if(sort_order == "trackcount asc")query += QString(" ORDER BY artistNTracks ASC;");
+	else if(sort_order == "trackcount desc")query += QString(" ORDER BY artistNTracks DESC;");
+	else query += QString(";");
 
-			if (!q.exec()) {
-				throw QString ("SQL - Error: Could not get all artists from database");
-			}
+	q.prepare(query);
 
-			Artist artist;
-			while (q.next()) {
-				artist.id = q.value(0).toInt();
-				artist.name = q.value(1).toString().trimmed();
-
-				 QStringList list = q.value(2).toString().split(',');
-				 list.removeDuplicates();
-				artist.num_albums = list.size();
-				artist.num_songs = q.value(3).toInt();
-
-				result.push_back(artist);
-			}
-
-
-		}
-		catch (QString& ex) {
-			qDebug() << "SQL - Error: getTracksFromDatabase";
-			qDebug() << ex;
-			QSqlError er = this -> m_database.lastError();
-			qDebug() << er.driverText();
-			qDebug() << er.databaseText();
-			qDebug() << er.databaseText();
-		}
+	_db_fetch_artists(q, result);
 
 }
-
-
-
-
 
 void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result, QString order){
-	 if (!this -> m_database.isOpen())
-					        this -> m_database.open();
 
-			try {
-				QSqlQuery q (this -> m_database);
-				q.prepare(QString("SELECT ") +
-							"artists.artistID, " +
-							"artists.name AS name, " +
-							"group_concat(albums.albumid), " +
-							"count(tracks.trackid) AS trackcount "
-							"FROM Tracks, artists, albums " +
-							"WHERE Tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
-							"AND albums.albumid=" + QString::number(album) + " " +
-							"GROUP BY artists.artistID, artists.name " +
-							"ORDER BY " + order + "; ");
+	DB_TRY_OPEN(m_database);
 
-				if (!q.exec()) {
-					throw QString ("SQL - Error: Could not get all artists from database");
-				}
+	QSqlQuery q (this -> m_database);
+	q.prepare(	ARTIST_ALBUM_TRACK_SELECTOR +
+				"WHERE Tracks.albumID = albums.albumID " +
+				"AND artists.artistid = tracks.artistid " +
+				"AND albums.albumid=" + QString::number(album) + " " +
+				"GROUP BY artists.artistID, artists.name " +
+				"ORDER BY " + order + "; ");
 
-				Artist artist;
-				while (q.next()) {
-					artist.id = q.value(0).toInt();
-					artist.name = q.value(1).toString().trimmed();
-
-					 QStringList list = q.value(2).toString().split(',');
-					list.removeDuplicates();
-					artist.num_albums = list.size();
-					artist.num_songs = q.value(3).toInt();
-
-					result.push_back(artist);
-				}
-
-
-			}
-			catch (QString& ex) {
-				qDebug() << ex;
-				QSqlError er = this -> m_database.lastError();
-				qDebug() << er.driverText();
-				qDebug() << er.databaseText();
-				qDebug() << er.databaseText();
-
-			}
-
-
-
-
+	_db_fetch_artists(q, result);
 }
 
+void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result, QString sort_order){
 
+	DB_TRY_OPEN(m_database);
+
+	QSqlQuery q (this -> m_database);
+	QString query;
+	query = QString("SELECT * FROM ( ") +
+			ARTIST_ALBUM_TRACK_SELECTOR +
+	"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
+	"			GROUP BY artists.artistid, artists.name " +
+	"		UNION " +
+			ARTIST_ALBUM_TRACK_SELECTOR +
+	"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
+	"			GROUP BY artists.artistid, artists.name " +
+	"		UNION " +
+			ARTIST_ALBUM_TRACK_SELECTOR +
+	"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
+	"			GROUP BY artists.artistid, artists.name " +
+	"	)  " +
+	"	GROUP BY artistID, artistName ";
+
+	if(sort_order == "name asc") query += QString(" ORDER BY artistName ASC;");
+	else if(sort_order == "name desc") query += QString(" ORDER BY artistName DESC;");
+	else if(sort_order == "trackcount asc") query += QString(" ORDER BY artistNTracks ASC;");
+	else if(sort_order == "trackcount desc") query += QString(" ORDER BY artistNTracks DESC;");
+	else query += QString(";");
+
+	q.prepare(query);
+	q.bindValue(":search_in_title",QVariant(search));
+	q.bindValue(":search_in_album",QVariant(search));
+	q.bindValue(":search_in_artist",QVariant(search));
+
+	_db_fetch_artists(q, result);
+}
 
 
 int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
-	if (!this -> m_database.isOpen())
-					this -> m_database.open();
+
+	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
     q.prepare("INSERT INTO artists (name) values (:artist);");
@@ -259,11 +230,9 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
     return this -> getArtistID (artist);
 }
 
-
-
 int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
-	 if (!this -> m_database.isOpen())
-				        this -> m_database.open();
+
+	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
 	try{
@@ -281,82 +250,8 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
    catch (QString& ex) {
    		qDebug() << "SQL - Error: insert albums into database";
    		qDebug() << ex;
-   		QSqlError er = this -> m_database.lastError();
-   		qDebug() << er.driverText();
-   		qDebug() << er.databaseText();
-   		qDebug() << er.databaseText();
    	}
 
     return this -> getArtistID (artist.name);
 }
 
-
-
-
-void CDatabaseConnector::getAllArtistsBySearchString(QString search, vector<Artist>& result, QString sort_order){
-
-
-	if (!this -> m_database.isOpen())
-				this -> m_database.open();
-			Artist artist;
-
-			try {
-				QSqlQuery q (this -> m_database);
-				QString query;
-				query = QString("SELECT * FROM ( ") +
-						"SELECT " +
-					"			artists.artistid as artistid, artists.name as name, COUNT(tracks.trackid) as trackcount, group_concat(albums.albumid) " +
-					"			FROM albums, artists, tracks " +
-					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
-					"			GROUP BY artists.artistid, artists.name " +
-					"		UNION " +
-					"		SELECT  " +
-					"			artists.artistid, artists.name, COUNT(tracks.trackid) as trackcount, group_concat(albums.albumid) " +
-					"			FROM albums, artists, tracks " +
-					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
-					"			GROUP BY artists.artistid, artists.name " +
-					"		UNION " +
-					"		SELECT  " +
-					"			artists.artistid, artists.name, COUNT(tracks.trackid) as trackcount, group_concat(albums.albumid) " +
-					"			FROM albums, artists, tracks " +
-					"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
-					"			GROUP BY artists.artistid, artists.name " +
-					"	)  " +
-					"	GROUP BY artistid, name ";
-
-				if(sort_order == "name asc") query += QString(" ORDER BY name ASC;");
-				else if(sort_order == "name desc") query += QString(" ORDER BY name DESC;");
-				else if(sort_order == "trackcount asc")query += QString(" ORDER BY trackcount ASC;");
-				else if(sort_order == "trackcount desc")query += QString(" ORDER BY trackcount DESC;");
-				else query += QString(";");
-
-				q.prepare(query);
-				q.bindValue(":search_in_title",QVariant(search));
-				q.bindValue(":search_in_album",QVariant(search));
-				q.bindValue(":search_in_artist",QVariant(search));
-				if (!q.exec()) {
-					throw QString ("SQL - Error: getTracksFromDatabase cannot execute search artist query" );
-				}
-
-				while (q.next()) {
-
-					artist.id = q.value(0).toInt();
-					artist.name = q.value(1).toString().trimmed();
-					artist.num_songs = q.value(2).toInt();
-					 QStringList list = q.value(3).toString().split(',');
-					 list.removeDuplicates();
-					 artist.num_albums = list.size();
-
-					result.push_back(artist);
-				}
-			}
-
-
-			catch (QString& ex) {
-				qDebug() << ex;
-				QSqlError er = this -> m_database.lastError();
-				qDebug() << er.driverText();
-				qDebug() << er.databaseText();
-				qDebug() << er.databaseText();
-			}
-}

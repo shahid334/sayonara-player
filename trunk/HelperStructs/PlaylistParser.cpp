@@ -201,7 +201,7 @@ int parse_pls(QString file_content, vector<MetaData>& v_md, QString abs_path){
 		track_idx = track_idx_str.toInt();
 		if( track_idx <= 0 ||
 			track_idx_str.size() == 0 ||
-			(track_idx -1 ) >= v_md.size() ) continue;
+			(track_idx - 1 ) >= v_md.size() ) continue;
 
 		key = tmp_key.left(f_track_idx);
 
