@@ -62,10 +62,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	m_skinSuffix = "";
 
-	ui_stream_dialog = new GUI_Stream();
-	//ui_stream_dialog->setModal(true);
-	ui_stream_dialog->hide();
-
 	QSize size = settings->getPlayerSize();
 	QRect rect = this->geometry();
 	rect.setWidth(size.width());
@@ -135,6 +131,7 @@ void GUI_SimplePlayer::initGUI() {
 	this->ui->btn_correct->setToolTip("Correct ID3 Tag");
 
 	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
+	this->ui->action_ViewStream->setText("Stream\t\tSTRG+s");
 	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
 	this->ui->action_ViewLFMRadio->setText("Last.fm Radio\t\tSTRG+r");
 	this->ui->action_viewLibrary->setText("Library\t\tSTRG+l");
@@ -161,8 +158,7 @@ void GUI_SimplePlayer::setupConnections(){
 	// file
 	connect(this->ui->action_OpenFile, SIGNAL(triggered(bool)), this,
 			SLOT(fileSelectedClicked(bool)));
-	connect(this->ui->action_OpenStream, SIGNAL(triggered(bool)), this,
-			SLOT(streamDialogClicked(bool)));
+
 	connect(this->ui->action_OpenFolder, SIGNAL(triggered(bool)), this,
 			SLOT(folderSelectedClicked(bool)));
 	connect(this->ui->action_ImportFolder, SIGNAL(triggered(bool)), this,
@@ -219,9 +215,6 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(searchSliderMoved(int)));
 	connect(this->ui->songProgress, SIGNAL(sliderReleased()), this,
 			SLOT(searchSliderReleased()));
-
-	connect(this->ui_stream_dialog, SIGNAL(sig_play_stream(const QString&, const QString&)), this,
-				SLOT(play_stream_selected(const QString&, const QString&)));
 
 }
 
@@ -416,7 +409,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 	this->ui->menubar->setStyleSheet(Style::get_menubar_style(dark));
 	this->ui->menuFle->setStyleSheet(menu_style);
-	this->ui->menuLibrary->setStyleSheet(menu_style);
 	this->ui->menuPreferences->setStyleSheet(menu_style);
 	this->ui->menuView->setStyleSheet(menu_style);
 	this->ui->menuAbout->setStyleSheet(menu_style);
@@ -577,20 +569,6 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 		emit fileSelected(list);
 }
 
-void GUI_SimplePlayer::streamDialogClicked(bool) {
-
-	QRect geo = ui_stream_dialog->geometry();
-	geo.setX(this->geometry().x() + 20);
-	geo.setY(this->geometry().y() + 100);
-	//geo.setWidth(200);
-	geo.setHeight(80);
-	ui_stream_dialog->setGeometry(geo);
-	ui_stream_dialog->show();
-}
-
-void GUI_SimplePlayer::play_stream_selected(const QString& url, const QString& name){
-	emit sig_stream_selected(url, name);
-}
 
 void GUI_SimplePlayer::searchSliderPressed() {
 	m_cur_searching = true;
@@ -984,24 +962,11 @@ QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
 	return this->ui->playlist_widget;
 }
 
-QWidget* GUI_SimplePlayer::getParentOfPlaylistChooser(){
-	return this->ui->plugin_widget;
-}
-
 QWidget* GUI_SimplePlayer::getParentOfLibrary() {
 	return this->ui->library_widget;
 }
 
-QWidget* GUI_SimplePlayer::getParentOfEqualizer() {
-	return this->ui->plugin_widget;
-}
-
-QWidget* GUI_SimplePlayer::getParentOfRadio(){
-	return this->ui->plugin_widget;
-}
-
-
-QWidget* GUI_SimplePlayer::getParentOfStream(){
+QWidget* GUI_SimplePlayer::getParentOfPlugin() {
 	return this->ui->plugin_widget;
 }
 
@@ -1049,23 +1014,18 @@ void GUI_SimplePlayer::check_show_plugins(){
 		default:
 			break;
 	}
-
-
 }
 
 
 void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq) {
 	ui_eq = eq;
 	ui_eq->resize(this->ui->plugin_widget->size());
-	//check_show_plugins();
 }
 
 void GUI_SimplePlayer::setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser){
 	ui_playlist_chooser = playlist_chooser;
 	ui_playlist_chooser->resize(this->ui->plugin_widget->size());
-	//check_show_plugins();
 }
-
 void GUI_SimplePlayer::setStream(GUI_Stream* stream){
 	ui_stream = stream;
 	ui_stream->resize(this->ui->plugin_widget->size());

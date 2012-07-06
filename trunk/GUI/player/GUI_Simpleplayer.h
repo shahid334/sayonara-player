@@ -124,8 +124,7 @@ private slots:
     void forwardClicked(bool b = true);
     void sl_rec_button_toggled(bool b);
     void fileSelectedClicked(bool);
-    void streamDialogClicked(bool);
-    void play_stream_selected(const QString&, const QString& );
+
     void folderSelectedClicked(bool);
     void total_time_changed(qint64);
     void searchSliderPressed();
@@ -167,9 +166,6 @@ private slots:
     void about(bool b=false);
 
 
-
-
-
 protected:
 
 
@@ -184,13 +180,15 @@ private:
 
 
     Ui::GUI_SimplePlayer*		ui;
+
     GUI_Playlist* 				ui_playlist;
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
     GUI_PlaylistChooser*		ui_playlist_chooser;
     GUI_Stream*					ui_stream;
     GUI_LFMRadioWidget*			ui_lfm_radio;
-    GUI_Stream*					ui_stream_dialog;
+
+
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;
@@ -246,11 +244,8 @@ public:
 
 
     QWidget* getParentOfPlaylist();
-    QWidget* getParentOfPlaylistChooser();
     QWidget* getParentOfLibrary();
-    QWidget* getParentOfEqualizer();
-    QWidget* getParentOfRadio();
-    QWidget* getParentOfStream();
+    QWidget* getParentOfPlugin();
 
     void setVolume(int vol);
     void setStyle(int);

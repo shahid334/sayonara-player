@@ -24,6 +24,7 @@
 
 #include <QDockWidget>
 #include <QMap>
+#include <QCloseEvent>
 #include <ui_GUI_Stream.h>
 
 class GUI_Stream : public QDockWidget, private Ui::GUI_Stream {
@@ -32,9 +33,7 @@ class GUI_Stream : public QDockWidget, private Ui::GUI_Stream {
 
 signals:
 	void sig_play_stream(const QString&, const QString&);
-
-public slots:
-	void psl_radio_stations_received(const QMap<QString, QString>&);
+	void sig_close_event();
 
 private slots:
 	void listen_clicked();
@@ -57,6 +56,13 @@ private:
 	int _cur_station;
 	QString _cur_station_name;
 	QString _cur_station_adress;
+
+	void setup_stations(const QMap<QString, QString>&);
+
+protected:
+	void 	closeEvent ( QCloseEvent * event );
+
+
 };
 
 #endif /* GUI_STREAM_H_ */

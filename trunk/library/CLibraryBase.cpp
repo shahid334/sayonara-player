@@ -279,6 +279,7 @@ void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& v_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	db->storeMetadata(v_md);
+
     std::vector<MetaData> data;
     db->getTracksFromDatabase(data);
     emit signalMetaDataLoaded(data);

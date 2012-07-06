@@ -63,16 +63,18 @@ void ReloadThread::run(){
 	emit reloading_library( -2 );
 	db->getTracksFromDatabase(v_metadata);
 
+	// find orphaned tracks in library && delete them
 	for(uint i=0; i<v_metadata.size(); i++){
 		MetaData md = v_metadata[i];
 		if(!Helper::checkTrack(md)){
 			v_to_delete.push_back(md);
 		}
-
 	}
 
 	db->deleteTracks(v_to_delete);
 	v_to_delete.clear();
+
+
 
 	QStringList fileList;
 

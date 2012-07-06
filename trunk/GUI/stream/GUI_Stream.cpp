@@ -42,7 +42,7 @@ GUI_Stream::GUI_Stream(QWidget* parent): QDockWidget(parent)  {
 	QMap<QString, QString> data;
 	CDatabaseConnector::getInstance()->getAllStreams(data);
 	if(data.size() > 0)
-		psl_radio_stations_received(data);
+		setup_stations(data);
 
 	this->ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
@@ -82,7 +82,7 @@ void GUI_Stream::listen_clicked(){
 }
 
 
-void GUI_Stream::psl_radio_stations_received(const QMap<QString, QString>& radio_stations){
+void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations){
 
 	_stations = radio_stations;
 	if(radio_stations.size() > 0){
@@ -195,7 +195,7 @@ void GUI_Stream::delete_clicked(){
 			qDebug() << _cur_station_name << "successfully deleted";
 			QMap<QString, QString> map;
 			if(db->getAllStreams(map)){
-				psl_radio_stations_received(map);
+				setup_stations(map);
 			}
 		}
 	}
@@ -217,10 +217,16 @@ void GUI_Stream::save_clicked(){
 	if(success){
 		QMap<QString, QString> map;
 		if(db->getAllStreams(map)){
-			psl_radio_stations_received(map);
+			setup_stations(map);
 		}
 	}
 
 	_cur_station = -1;
 }
+
+void GUI_Stream::closeEvent ( QCloseEvent * event ){
+	event->ignore();
+	emit sig_close_event();
+}
+
 

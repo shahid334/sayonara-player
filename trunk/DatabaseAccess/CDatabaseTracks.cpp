@@ -65,6 +65,8 @@ int CDatabaseConnector::getTrackByPath(QString path){
 
 		QString querytext = QString("SELECT trackid FROM tracks WHERE filename = :filename;");
 		q.prepare(querytext);
+		path.replace("//", "/");
+		path.replace("\\\\", "\\");
 		q.bindValue(":filename", path);
 
 

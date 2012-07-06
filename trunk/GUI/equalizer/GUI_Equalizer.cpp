@@ -225,7 +225,6 @@ void GUI_Equalizer::btn_preset_clicked(){
 
 }
 
-
 void 	GUI_Equalizer::closeEvent ( QCloseEvent * event ){
 	event->ignore();
 	emit close_event();
