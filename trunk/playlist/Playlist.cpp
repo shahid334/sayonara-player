@@ -731,18 +731,18 @@ void Playlist::psl_id3_tags_changed(vector<MetaData>& new_meta_data){
 }
 
 
-void Playlist::psl_similar_artists_available(QList<int>& artists){
+void Playlist::psl_similar_artists_available(const QList<int>& artists){
 
 
 	// the response came too late, we already switched to radio
 	if(_radio_active != RADIO_OFF ){
-		artists.clear();
+
 		return;
 	}
 
 	if(artists.size() == 0) return;
 
-	Helper::randomize_list(artists);
+	QList<int> artists_copy = Helper::randomize_list(artists);
 
 	srand ( time(NULL) );
 
@@ -752,7 +752,7 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 	MetaData md;
 
 	do {
-		int artist_id = artists.at(cur_artist_idx);
+		int artist_id = artists_copy.at(cur_artist_idx);
 		vector<MetaData> vec_tracks;
 		_db->getAllTracksByArtist(artist_id, vec_tracks);
 
@@ -776,7 +776,7 @@ void Playlist::psl_similar_artists_available(QList<int>& artists){
 		}
 
 		cur_artist_idx++;
-	} while(is_track_already_in && cur_artist_idx < artists.size());
+	} while(is_track_already_in && cur_artist_idx < artists_copy.size());
 
 	if(!is_track_already_in)
 		_v_meta_data.push_back(md);

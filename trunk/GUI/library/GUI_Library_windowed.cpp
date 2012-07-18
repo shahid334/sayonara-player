@@ -39,6 +39,7 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/WebAccess.h"
+#include "HelperStructs/Filter.h"
 
 
 #include "CoverLookup/CoverLookup.h"
@@ -127,6 +128,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_albums_by_column(int)));
 	connect(this->ui->lv_artist->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_artists_by_column(int)));
 	connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
+	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
@@ -223,8 +225,6 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 		this->ui->tb_title->setColumnWidth(5, 50);
 		this->ui->tb_title->setColumnWidth(6, 60);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-
-
 	}
 
 	else{
@@ -269,8 +269,8 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	foreach(QModelIndex model_idx, idx_list){
 		Artist artist = _v_artists.at(model_idx.row());
 		_selected_artists.push_back(artist.id);
-		_db->getAllTracksByArtist(artist.id, v_md, _cur_searchstring, _sort_tracks);
-		_db->getAllAlbumsByArtist(artist.id, v_albums, _cur_searchstring, _sort_albums);
+		_db->getAllTracksByArtist(artist.id, v_md, _cur_searchfilter, _sort_tracks);
+		_db->getAllAlbumsByArtist(artist.id, v_albums, _cur_searchfilter, _sort_albums);
 	}
 
 	if(idx_list.size() == 1) {
@@ -316,7 +316,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	foreach(QModelIndex model_idx, idx_list){
 		Album album = _v_albums.at(model_idx.row());
 		_selected_albums.push_back(album.id);
-		_db->getAllTracksByAlbum(album.id, v_md, _cur_searchstring, _sort_tracks);
+		_db->getAllTracksByAlbum(album.id, v_md, _cur_searchfilter, _sort_tracks);
 	}
 
 	if(idx_list.size() == 1) v_md_acc = v_md;
@@ -374,7 +374,7 @@ void GUI_Library_windowed::album_dbl_clicked(const QModelIndex & idx){
 
 	vector<MetaData> vec;
 
-	_db->getAllTracksByAlbum(album_id, vec, _cur_searchstring, _sort_tracks);
+	_db->getAllTracksByAlbum(album_id, vec, _cur_searchfilter, _sort_tracks);
 	emit sig_album_chosen(vec);
 
 	_everything_loaded = false;
@@ -386,7 +386,7 @@ void GUI_Library_windowed::artist_dbl_clicked(const QModelIndex & idx){
 
 	vector<MetaData> vec;
 
-	_db->getAllTracksByArtist(artist_id, vec, _cur_searchstring, _sort_tracks);
+	_db->getAllTracksByArtist(artist_id, vec, _cur_searchfilter, _sort_tracks);
 	emit sig_artist_chosen(vec);
 
 	vec.clear();
@@ -402,8 +402,6 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
 	vec.push_back(_v_metadata.at(idx.row()));
 	emit sig_track_chosen(vec);
 }
-
-
 
 void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
 
@@ -454,13 +452,64 @@ void GUI_Library_windowed::clear_button_pressed(){
 	_selected_albums.clear();
 	_selected_artists.clear();
 
-	_cur_searchstring = "";
+	_cur_searchfilter.filtertext = "";
 
 	this->ui->le_search->clear();
 	_everything_loaded = false;
 	text_line_edited(" ");
 
 }
+
+
+void GUI_Library_windowed::text_line_edited(const QString& search){
+
+	if( (search.length() < 3 && _everything_loaded) ) {
+		_cur_searchfilter.filtertext = "";
+		return;
+	}
+
+	vector<Album> vec_albums;
+	vector<MetaData> vec_tracks;
+	vector<Artist> vec_artists;
+
+	// fetch all, ignore input
+	if(search.length() < 3){
+
+		_db->getTracksFromDatabase(vec_tracks, _sort_tracks);
+		_db->getAllAlbums(vec_albums, _sort_albums);
+		_db->getAllArtists(vec_artists, _sort_artists);
+		fill_library_artists(vec_artists);
+		fill_library_albums(vec_albums);
+		fill_library_tracks(vec_tracks);
+
+		_selected_albums.clear();
+		_selected_artists.clear();
+
+		_everything_loaded = true;
+		_cur_searchfilter.filtertext = "";
+
+		return;
+	}
+
+	// searchstring.size >= 3
+
+	_everything_loaded = false;
+	_cur_searchfilter.filtertext = QString("%") + search + "%";
+	if(ui->combo_searchfilter->currentIndex() == 0) _cur_searchfilter.by_searchstring = BY_FULLTEXT;
+	else if(ui->combo_searchfilter->currentIndex() == 1) _cur_searchfilter.by_searchstring = BY_FILENAME;
+
+
+	_db->getAllTracksBySearchString(_cur_searchfilter, vec_tracks, _sort_tracks);
+	fill_library_tracks(vec_tracks);
+
+	_db->getAllAlbumsBySearchString(_cur_searchfilter, vec_albums, _sort_albums);
+	fill_library_albums(vec_albums);
+
+	_db->getAllArtistsBySearchString(_cur_searchfilter, vec_artists, _sort_artists);
+	fill_library_artists(vec_artists);
+}
+
+
 
 void GUI_Library_windowed::refresh(){
 
@@ -483,49 +532,6 @@ void GUI_Library_windowed::refresh(){
 
 }
 
-void GUI_Library_windowed::text_line_edited(const QString& search){
-
-	if( (search.length() < 3 && _everything_loaded) ) {
-		_cur_searchstring = "";
-		return;
-	}
-
-	vector<Album> vec_albums;
-	vector<MetaData> vec_tracks;
-	vector<Artist> vec_artists;
-
-	if(search.length() < 3){
-
-		_db->getTracksFromDatabase(vec_tracks, _sort_tracks);
-		_db->getAllAlbums(vec_albums, _sort_albums);
-		_db->getAllArtists(vec_artists, _sort_artists);
-		fill_library_artists(vec_artists);
-		fill_library_albums(vec_albums);
-		fill_library_tracks(vec_tracks);
-
-		_selected_albums.clear();
-		_selected_artists.clear();
-
-		_everything_loaded = true;
-		_cur_searchstring = "";
-
-		return;
-	}
-
-	// searchstring.size >= 3
-
-	_everything_loaded = false;
-	_cur_searchstring = QString("%") + search + "%";
-
-	_db->getAllTracksBySearchString(_cur_searchstring, vec_tracks, _sort_tracks);
-	fill_library_tracks(vec_tracks);
-
-	_db->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
-	fill_library_albums(vec_albums);
-
-	_db->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
-	fill_library_artists(vec_artists);
-}
 
 
 void GUI_Library_windowed::change_skin(bool dark){
@@ -631,16 +637,16 @@ void GUI_Library_windowed::sort_albums_by_column(int col){
 
 	vector<Album> vec_albums;
 
-	if(!_cur_searchstring.isEmpty()){
+	if(!_cur_searchfilter.filtertext.isEmpty()){
 
-		_db->getAllAlbumsBySearchString(_cur_searchstring, vec_albums, _sort_albums);
+		_db->getAllAlbumsBySearchString(_cur_searchfilter, vec_albums, _sort_albums);
 	}
 
 	else if(_selected_artists.size() > 0){
 
 		foreach(int artist_id, _selected_artists){
 			vector<Album> vec_albums_tmp;
-			_db->getAllAlbumsByArtist(artist_id, vec_albums_tmp, _cur_searchstring, _sort_albums);
+			_db->getAllAlbumsByArtist(artist_id, vec_albums_tmp, _cur_searchfilter, _sort_albums);
 			for(uint i=0; i<vec_albums_tmp.size(); i++){
 				vec_albums.push_back(vec_albums_tmp[i]);
 			}
@@ -669,9 +675,9 @@ void GUI_Library_windowed::sort_artists_by_column(int col){
 
 	vector<Artist> vec_artists;
 
-	if(!_cur_searchstring.isEmpty()){
+	if(!_cur_searchfilter.filtertext.isEmpty()){
 
-		_db->getAllArtistsBySearchString(_cur_searchstring, vec_artists, _sort_artists);
+		_db->getAllArtistsBySearchString(_cur_searchfilter, vec_artists, _sort_artists);
 	}
 
 	else{
@@ -722,8 +728,8 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 		vector<MetaData> vec_md;
 
 		// searchstring, no album selected, no artist selected
-		if(!_cur_searchstring.isEmpty() && _selected_albums.size() == 0 && _selected_artists.size() == 0){
-			_db->getAllTracksBySearchString( _cur_searchstring, vec_md, _sort_tracks);
+		if(!_cur_searchfilter.filtertext.isEmpty() && _selected_albums.size() == 0 && _selected_artists.size() == 0){
+			_db->getAllTracksBySearchString( _cur_searchfilter, vec_md, _sort_tracks);
 		}
 
 		// possible searchstring, album selected
@@ -732,7 +738,7 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 
 			foreach(int album_id, _selected_albums){
 				vector<MetaData> tmp_md;
-				_db->getAllTracksByAlbum(album_id, tmp_md, _cur_searchstring, _sort_tracks);
+				_db->getAllTracksByAlbum(album_id, tmp_md, _cur_searchfilter, _sort_tracks);
 				for(uint i=0; i<tmp_md.size(); i++){
 					vec_md.push_back(tmp_md[i]);
 				}
@@ -744,7 +750,7 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 
 			foreach(int artist_id, _selected_artists){
 				vector<MetaData> tmp_md;
-				_db->getAllTracksByArtist(artist_id, tmp_md, _cur_searchstring, _sort_tracks);
+				_db->getAllTracksByArtist(artist_id, tmp_md, _cur_searchfilter, _sort_tracks);
 				for(uint i=0; i<tmp_md.size(); i++){
 					vec_md.push_back(tmp_md[i]);
 				}
@@ -939,7 +945,7 @@ void GUI_Library_windowed::delete_album(){
 
 	foreach(int album_id, _selected_albums){
 		vector<MetaData> vec_md;
-		_db->getAllTracksByAlbum(album_id, vec_md, _cur_searchstring, _sort_tracks);
+		_db->getAllTracksByAlbum(album_id, vec_md, _cur_searchfilter, _sort_tracks);
 		deleteSomeTracks(vec_md);
 	}
 }
@@ -1041,7 +1047,7 @@ void GUI_Library_windowed::delete_artist(){
 
 	foreach(int artist_id, _selected_artists){
 		vector<MetaData> vec_md;
-		_db->getAllTracksByArtist(artist_id, vec_md, _cur_searchstring, _sort_tracks);
+		_db->getAllTracksByArtist(artist_id, vec_md, _cur_searchfilter, _sort_tracks);
 		deleteSomeTracks(vec_md);
 	}
 }
@@ -1316,7 +1322,7 @@ void GUI_Library_windowed::cover_changed(QString path){
 
 void GUI_Library_windowed::library_changed(){
 
-	QString search_string = _cur_searchstring;
+	QString search_string = _cur_searchfilter.filtertext;
 
 	if(search_string.size() > 2){
 		search_string = search_string.remove(0,1);
@@ -1357,7 +1363,6 @@ void GUI_Library_windowed::library_changed(){
 			}
 		}
 	}
-
 }
 
 
@@ -1372,4 +1377,9 @@ void GUI_Library_windowed::import_result(bool success){
 
 	QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
+}
+
+void GUI_Library_windowed::searchfilter_changed(int idx){
+	Q_UNUSED(idx);
+	text_line_edited(_cur_searchfilter.filtertext);
 }

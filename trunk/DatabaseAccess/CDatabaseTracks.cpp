@@ -163,7 +163,7 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
     return 0;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, QString filter, QString sort){
+void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, Filter filter, QString sort){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -171,25 +171,38 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 			"AND tracks.albumid=:albumid ";
 
 
-	if(filter.length() > 0 ){
-		// consider the case, that the search string may fit to the title
-		// union the case that the search string may fit to the album
-		querytext += QString("AND tracks.trackid IN ( ") +
-							"	SELECT t2.trackid " +
-							"	FROM tracks t2 "+
-							"	WHERE t2.title LIKE :filter1 "+
+	if(filter.filtertext.length() > 0 ){
 
-							"	UNION SELECT t3.trackid "+
-							"	FROM tracks t3, albums a2 "+
-							"	WHERE a2.albumid = t3.albumid AND a2.name LIKE :filter2 "+
 
-							"	UNION SELECT t4.trackid " +
-							"	FROM tracks t4, albums a3, artists ar2" +
-							"	WHERE t4.albumid = a3.albumid " +
-							"	AND t4.artistid = ar2.artistid " +
-							"	AND ar2.name LIKE :filter3 "
+		switch(filter.by_searchstring){
 
-						") ";
+			case BY_FILENAME:
+				querytext += "AND tracks.filename LIKE :filter1 ";
+				break;
+
+			case BY_FULLTEXT:
+			default:
+				// consider the case, that the search string may fit to the title
+				// union the case that the search string may fit to the album
+				querytext += QString("AND tracks.trackid IN ( ") +
+									"	SELECT t2.trackid " +
+									"	FROM tracks t2 "+
+									"	WHERE t2.title LIKE :filter1 "+
+
+									"	UNION SELECT t3.trackid "+
+									"	FROM tracks t3, albums a2 "+
+									"	WHERE a2.albumid = t3.albumid AND a2.name LIKE :filter2 "+
+
+									"	UNION SELECT t4.trackid " +
+									"	FROM tracks t4, albums a3, artists ar2" +
+									"	WHERE t4.albumid = a3.albumid " +
+									"	AND t4.artistid = ar2.artistid " +
+									"	AND ar2.name LIKE :filter3 "
+
+								") ";
+				break;
+		}
+
 	}
 
 	querytext = append_track_sort_string(querytext, sort);
@@ -197,17 +210,28 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	q.prepare(querytext);
 	q.bindValue(":albumid", QVariant(album));
 
-	if(filter.length() > 0){
-		q.bindValue(":filter1", QVariant(filter));
-		q.bindValue(":filter2", QVariant(filter));
-		q.bindValue(":filter3", QVariant(filter));
+	if(filter.filtertext.length() > 0){
+		q.bindValue(":filter1", QVariant(filter.filtertext));
+
+		switch(filter.by_searchstring){
+
+			case BY_FILENAME:
+				break;
+
+			case BY_FULLTEXT:
+			default:
+				q.bindValue(":filter2", QVariant(filter.filtertext));
+				q.bindValue(":filter3", QVariant(filter.filtertext));
+				break;
+		}
+
 	}
 
 	_db_fetch_tracks(q, returndata);
 
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, QString filter, QString sort){
+void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, Filter filter, QString sort){
 	DB_TRY_OPEN(m_database);
 
 	MetaData data;
@@ -216,10 +240,16 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 	QString querytext = TRACK_SELECTOR +
 					"AND tracks.artistID=:artistID ";
 
-	if(filter.length() > 0 ){
-		// consider the case, that the search string may fit to the title
-		// union the case that the search string may fit to the album
-		querytext += QString("AND tracks.trackid IN ( ") +
+	if(filter.filtertext.length() > 0 ){
+		switch(filter.by_searchstring){
+
+			case BY_FILENAME:
+				querytext += "AND tracks.filename LIKE :filter1 ";
+				break;
+
+			case BY_FULLTEXT:
+			default:
+				querytext += QString("AND tracks.trackid IN ( ") +
 							"	SELECT t2.trackid "
 							"	FROM tracks t2 "
 							"	WHERE t2.title LIKE :filter1 "
@@ -230,23 +260,38 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 							"	FROM tracks t4, albums a3, artists ar2"
 							"	WHERE t4.albumid = a3.albumid AND t4.artistID = ar2.artistID AND ar2.name LIKE :filter3 "
 						") ";
+				break;
+		}
+		// consider the case, that the search string may fit to the title
+		// union the case that the search string may fit to the album
+
 	}
 
 	querytext = append_track_sort_string(querytext, sort);
 
 	q.prepare(querytext);
-
 	q.bindValue(":artist_id", QVariant(artist));
-	if(filter.length() > 0 ){
-		q.bindValue(":filter1", QVariant(filter));
-		q.bindValue(":filter2", QVariant(filter));
-		q.bindValue(":filter3", QVariant(filter));
+
+	if(filter.filtertext.length() > 0 ){
+		q.bindValue(":filter1", QVariant(filter.filtertext));
+
+		switch(filter.by_searchstring){
+
+			case BY_FILENAME:
+				break;
+			case BY_FULLTEXT:
+
+			default:
+				q.bindValue(":filter2", QVariant(filter.filtertext));
+				q.bindValue(":filter3", QVariant(filter.filtertext));
+				break;
+		}
 	}
 
 	_db_fetch_tracks(q, returndata);
 }
 
-void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaData>& result, QString sort){
+void CDatabaseConnector::getAllTracksBySearchString(Filter filter, vector<MetaData>& result, QString sort){
 
 	DB_TRY_OPEN(m_database);
 
@@ -256,20 +301,45 @@ void CDatabaseConnector::getAllTracksBySearchString(QString search, vector<MetaD
 	QString querytext;
 	QString subquery = TRACK_SELECTOR;
 
-	querytext = QString("SELECT * FROM ( ") +
-							subquery + "AND tracks.title LIKE :search_in_title " +
-							"UNION " +
-							subquery + "AND albums.name LIKE :search_in_album " +
-							"UNION " +
-							subquery + "AND artists.name LIKE :search_in_artist " +
-							" )";
+	switch(filter.by_searchstring){
+
+		case BY_FILENAME:
+			querytext = TRACK_SELECTOR  +
+						"AND tracks.filename LIKE :search_in_filename ";
+			break;
+
+		case BY_FULLTEXT:
+		default:
+			querytext = QString("SELECT * FROM ( ") +
+					subquery + "AND tracks.title LIKE :search_in_title " +
+					"UNION " +
+					subquery + "AND albums.name LIKE :search_in_album " +
+					"UNION " +
+					subquery + "AND artists.name LIKE :search_in_artist " +
+					" )";
+			break;
+	}
+
+
 
 	querytext = append_track_sort_string(querytext, sort);
-
 	q.prepare(querytext);
-	q.bindValue(":search_in_title",QVariant(search));
-	q.bindValue(":search_in_album",QVariant(search));
-	q.bindValue(":search_in_artist",QVariant(search));
+
+	switch(filter.by_searchstring){
+
+		case BY_FILENAME:
+			q.bindValue(":search_in_filename",QVariant(filter.filtertext));
+			break;
+
+		case BY_FULLTEXT:
+		default:
+			q.bindValue(":search_in_title",QVariant(filter.filtertext));
+			q.bindValue(":search_in_album",QVariant(filter.filtertext));
+			q.bindValue(":search_in_artist",QVariant(filter.filtertext));
+			break;
+	}
+
+
 
 	_db_fetch_tracks(q, result);
 }

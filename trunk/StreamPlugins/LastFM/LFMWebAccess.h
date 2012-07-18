@@ -29,6 +29,8 @@
 #ifndef LFMWEBACCESS_H_
 #define LFMWEBACCESS_H_
 
+#include "StreamPlugins/LastFM/LFMGlobals.h"
+
 #include <QString>
 #include <qdom.h>
 #include <curl/curl.h>
@@ -42,9 +44,9 @@ using namespace std;
 void lfm_wa_init();
 
 
-const char* lfm_wa_get_url_enc(QString str);
+//const char* lfm_wa_get_url_enc(QString str);
 
-size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
+//size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
 
 bool lfm_wa_call_url(const QString& url, QString& response);
 bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& response);
@@ -53,6 +55,14 @@ bool lfm_wa_call_post_url(const QString& url, const string& post_data);
 
 QString lfm_wa_parse_session_answer(const QString& content);
 QString lfm_wa_parse_token_answer(const QString& content);
+
+
+
+QString lfm_wa_create_std_url(const QString& base_url, const UrlParams& data);
+QString lfm_wa_create_sig_url(const QString& base_url, const UrlParams& sig_data);
+QString lfm_wa_create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data);
+QString lfm_wa_create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data);
+QString lfm_wa_create_signature(const UrlParams& data);
 
 
 

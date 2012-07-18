@@ -21,6 +21,7 @@
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Filter.h"
 #include <vector>
 #include <QFile>
 #include <QDebug>
@@ -172,33 +173,52 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result, QString sort_order)
 	_db_fetch_albums(q, result);
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter, QString sort_order){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter, QString sort_order){
 
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
+
+	// fetch all albums
 	QString querytext =
 			ALBUM_ARTIST_TRACK_SELECTOR +
-			"WHERE tracks.albumID = albums.albumID AND artists.artistid = tracks.artistid AND artists.artistid = :artist_id ";
+			"WHERE tracks.albumID = albums.albumID AND "
+			"artists.artistid = tracks.artistid AND "
+			"artists.artistid = :artist_id ";
 
-	if(filter.length() > 0){
-			querytext += QString("AND tracks.trackid IN ( ") +
-									"SELECT t2.trackid " +
-									"FROM tracks t2 "+
-									"WHERE t2.title LIKE :filter1 "+
 
-									"UNION SELECT t3.trackid "+
-									"FROM tracks t3, albums "+
-									"WHERE albums.albumid = t3.albumid AND albums.name LIKE :filter2 "+
+	if(filter.filtertext.length() > 0){
+		switch(filter.by_searchstring){
+			case BY_FILENAME:
+				querytext += QString("AND tracks.trackid IN ( ") +			// track title is like filter
+								"SELECT t2.trackid " +
+								"FROM tracks t2 "+
+								"WHERE t2.filename LIKE :filter1) ";
+				break;
 
-									"UNION SELECT t4.trackid " +
-									"FROM tracks t4, albums, artists " +
-									"WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.name LIKE :filter3 "
-								") ";
+			case BY_FULLTEXT:
+			default:
+				querytext += QString("AND tracks.trackid IN ( ") +			// track title is like filter
+								"SELECT t2.trackid " +
+								"FROM tracks t2 "+
+								"WHERE t2.title LIKE :filter1 " +
+
+								"UNION SELECT t3.trackid "+			// album title is like filter
+								"FROM tracks t3, albums "+
+								"WHERE albums.albumid = t3.albumid AND albums.name LIKE :filter2 "+
+
+								"UNION SELECT t4.trackid " +		// artist title is like filter
+								"FROM tracks t4, albums, artists " +
+								"WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.name LIKE :filter3 "
+							") ";
+				break;
+		}
 	}
 
 
+
 	querytext += QString("GROUP BY albumID, albumName ");
+
 	if(sort_order == "name asc") querytext += QString(" ORDER BY albumName ASC;");
 	else if(sort_order == "name desc") querytext += QString(" ORDER BY albumName DESC;");
 	else if(sort_order == "year asc") querytext += QString(" ORDER BY albumYear ASC;");
@@ -207,47 +227,69 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 
 	q.prepare(querytext);
 	q.bindValue(":artist_id", QVariant(artist));
-	if(filter.length() > 0){
-		q.bindValue(":filter1", QVariant(filter));
-		q.bindValue(":filter2", QVariant(filter));
-		q.bindValue(":filter3", QVariant(filter));
+
+	if(filter.filtertext.length() > 0){
+		q.bindValue(":filter1", QVariant(filter.filtertext));
+
+		switch(filter.by_searchstring){
+			case BY_FILENAME:
+				break;
+			default:
+				q.bindValue(":filter2", QVariant(filter.filtertext));
+				q.bindValue(":filter3", QVariant(filter.filtertext));
+				break;
+		}
 	}
 
 
 	_db_fetch_albums(q, result);
 }
 
-void CDatabaseConnector::getAllAlbumsBySearchString(QString search, vector<Album>& result, QString sort_order){
+void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>& result, QString sort_order){
 
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
 	QString query;
-	query = QString("SELECT * FROM ( ") +
-			ALBUM_ARTIST_TRACK_SELECTOR +
-				"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
-				"GROUP BY albums.albumid, albums.name " +
-			"UNION " +
-			ALBUM_ARTIST_TRACK_SELECTOR +
-				"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
-				"GROUP BY albums.albumid, albums.name " +
-			"UNION " +
-			ALBUM_ARTIST_TRACK_SELECTOR +
-				"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
-				"GROUP BY albums.albumid, albums.name " +
-		") " +
-		"GROUP BY albumID, albumName";
+	if(filter.by_searchstring == BY_FULLTEXT){
+			query = QString("SELECT * FROM ( ") +
+					ALBUM_ARTIST_TRACK_SELECTOR +
+						"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
+						"GROUP BY albums.albumid, albums.name " +
+					"UNION " +
+					ALBUM_ARTIST_TRACK_SELECTOR +
+						"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
+						"GROUP BY albums.albumid, albums.name " +
+					"UNION " +
+					ALBUM_ARTIST_TRACK_SELECTOR +
+						"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
+						"GROUP BY albums.albumid, albums.name " +
+				") " +
+				"GROUP BY albumID, albumName";
+	}
+	else if(filter.by_searchstring == BY_FILENAME){
+		query = ALBUM_ARTIST_TRACK_SELECTOR +
+					"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.filename LIKE :search_in_filename " +
+					"GROUP BY albumID, albumName";
+	}
 
 	if(sort_order == "name asc") query += QString(" ORDER BY albumName ASC;");
 	else if(sort_order == "name desc") query += QString(" ORDER BY albumName DESC;");
 	else if(sort_order == "year asc")query += QString(" ORDER BY albumYear ASC;");
 	else if(sort_order == "year desc")query += QString(" ORDER BY albumYear DESC;");
 
-
 	q.prepare(query);
-	q.bindValue(":search_in_title",QVariant(search));
-	q.bindValue(":search_in_album",QVariant(search));
-	q.bindValue(":search_in_artist",QVariant(search));
+
+
+	if(filter.by_searchstring == BY_FULLTEXT){
+		q.bindValue(":search_in_title",QVariant(filter.filtertext));
+		q.bindValue(":search_in_album",QVariant(filter.filtertext));
+		q.bindValue(":search_in_artist",QVariant(filter.filtertext));
+	}
+
+	else if(filter.by_searchstring == BY_FILENAME){
+		q.bindValue(":search_in_filename", QVariant(filter.filtertext));
+	}
 
 	_db_fetch_albums(q, result);
 }

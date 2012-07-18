@@ -218,13 +218,16 @@ namespace Helper{
 	QStringList get_soundfile_extensions();
 	bool is_soundfile(QString filename);
 
-	template <typename T> void randomize_list(QList<T>& list){
+	template <typename T> QList<T> randomize_list(const QList<T>& list){
 		srand ( time(NULL) );
 
+		QList<T> list_copy = list;
 		for(int i=0; i<list.size(); i++){
 
-			list.swap(i, rand() % list.size());
+			list_copy.swap(i, rand() % list.size());
 		}
+
+		return list_copy;
 	}
 
 

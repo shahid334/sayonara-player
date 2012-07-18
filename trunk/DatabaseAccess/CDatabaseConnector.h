@@ -24,6 +24,7 @@
 #define CDATABASECONNECTOR_H
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
 
 #include <QObject>
@@ -76,7 +77,7 @@ public:
 
 			void getAllArtistsByAlbum(int album, vector<Artist>& result, QString sortorder = "name asc");
 
-			void getAllArtistsBySearchString(QString search, vector<Artist>& result, QString sortorder = "name asc");
+			void getAllArtistsBySearchString(Filter filter, vector<Artist>& result, QString sortorder = "name asc");
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
@@ -92,9 +93,9 @@ public:
 
 			void getAllAlbums(vector<Album>& result, QString sortorder = "name asc");
 
-			void getAllAlbumsByArtist(int artist, vector<Album>& result, QString filter=QString(""), QString sortorder = "name asc");
+			void getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter=Filter(), QString sortorder = "name asc");
 
-			void getAllAlbumsBySearchString(QString search, vector<Album>& result, QString sortorder = "name asc");
+			void getAllAlbumsBySearchString(Filter filter, vector<Album>& result, QString sortorder = "name asc");
 
 			int insertAlbumIntoDatabase (const QString & album);
 			int insertAlbumIntoDatabase (const Album& album);
@@ -104,11 +105,11 @@ public:
 		/*****************
 		 *  TRACKS
 		 *****************/
-			void getAllTracksByAlbum(int album, vector<MetaData>& result, QString filter=QString(""), QString sort="artist asc");
+			void getAllTracksByAlbum(int album, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
 
-			void getAllTracksByArtist(int artist, vector<MetaData>& result, QString filter=QString(""), QString sort="artist asc");
+			void getAllTracksByArtist(int artist, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
 
-			void getAllTracksBySearchString(QString search, vector<MetaData>& result, QString sort="artist asc");
+			void getAllTracksBySearchString(Filter filter, vector<MetaData>& result, QString sort="artist asc");
 
 			int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
 			int updateTrack(MetaData& data);

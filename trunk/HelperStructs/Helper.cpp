@@ -48,6 +48,9 @@
 #include <QList>
 #include <QFile>
 
+#include "StreamPlugins/LastFM/LFMGlobals.h"
+
+
 
 
 using namespace std;

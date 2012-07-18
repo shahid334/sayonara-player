@@ -34,7 +34,8 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
 #include "StreamPlugins/LastFM/LastFM.h"
-#include "StreamPlugins/LastFM/LFMSimilarArtistsThread.h"
+#include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
+#include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMWebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -71,15 +72,10 @@ LastFM::LastFM() {
 void LastFM::init(){
 	lfm_wa_init();
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
-
 	_logged_in = false;
-	/*QString bla;
-	settings->getLastFMNameAndPW(_username, bla);*/
+	_track_changed_thread = 0;
 
-	_similar_artists_thread = new LFM_SimilarArtists(LFM_API_KEY);
-	connect(_similar_artists_thread, SIGNAL(finished()), this, SLOT(sim_artists_thread_finished()));
-	connect(_similar_artists_thread, SIGNAL(terminated()), this, SLOT(sim_artists_thread_finished()));
+
 }
 
 LastFM::~LastFM() {
@@ -90,75 +86,27 @@ QString LastFM::get_api_key(){
 	return LFM_API_KEY;
 }
 
-QString LastFM::create_signature(const UrlParams& data){
 
-	QString signature;
+bool LastFM::init_track_changed_thread(){
 
-	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
-		signature += it.key();
-		signature += it.value();
+	if(!_logged_in) return false;
+
+	_track_changed_thread = new LFMTrackChangedThread(LFM_API_KEY, _username, _session_key);
+
+	if(_track_changed_thread){
+			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available()),
+					 this, 					SLOT(corrected_data_available()));
+
+			connect( _track_changed_thread, SIGNAL(sig_similar_artists_available(const QList<int>&)),
+					 this, 					SLOT(similar_artists_available(const QList<int>&)));
+
+			return true;
 	}
 
-	signature += LFM_API_SECRET;
-	return QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
-}
+	return false;
 
 
-QString LastFM::create_std_url(const QString& base_url, const UrlParams& data){
-	string post_data;
-	QString url = create_std_url_post(base_url, data, post_data);
-	return QString(url + QString("?") + post_data.c_str());
-}
 
-QString LastFM::create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data){
-	post_data = "";
-	QString url = base_url;
-
-
-	post_data.clear();
-
-	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
-
-		post_data += string(it.key().toLocal8Bit().data()) + string("=");
-		post_data += string(it.value().toLocal8Bit().replace("&", "%26").data()) + string("&");
-	}
-
-	// remove the last &
-	post_data = post_data.substr(0, post_data.size() -1);
-
-	return url;
-}
-
-
-QString LastFM::create_sig_url(const QString& base_url, const UrlParams& sig_data){
-	string post_data;
-	QString url = create_sig_url_post(base_url, sig_data, post_data);
-	return QString(url + QString("?") + post_data.c_str());
-}
-
-
-QString LastFM::create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data){
-
-	post_data.clear();
-
-	QString signature;
-	signature = create_signature(sig_data);
-
-	QString url = base_url;
-
-	UrlParams data_copy = sig_data;
-	data_copy["api_sig"] = signature;
-	QString session_key;
-
-	for(UrlParams::iterator it=data_copy.begin(); it != data_copy.end(); it++){
-
-		post_data += string(it.key().toLocal8Bit().data()) + string("=");
-		post_data += string(it.value().replace("&", "%26").toLocal8Bit().data()) + string("&");
-	}
-
-	post_data = post_data.substr(0, post_data.size() -1);
-
-	return url;
 }
 
 
@@ -182,7 +130,6 @@ bool LastFM::check_login(){
 }
 
 
-
 bool LastFM::login(QString username, QString password){
 
 	_username = username;
@@ -195,7 +142,7 @@ bool LastFM::login(QString username, QString password){
 		signature_data["method"] = QString("auth.getmobilesession");
 		signature_data["username"] = _username;
 
-	QString url = create_sig_url(QString("http://ws.audioscrobbler.com/2.0/"), signature_data);
+	QString url = lfm_wa_create_sig_url(QString("http://ws.audioscrobbler.com/2.0/"), signature_data);
 
 	QString response;
 	bool success = lfm_wa_call_url(url, response);
@@ -224,7 +171,7 @@ bool LastFM::login(QString username, QString password){
 		handshake_data["username"] = _username.toLower();
 		handshake_data["passwordmd5"] = password;
 
-	QString url_handshake = create_std_url("http://ws.audioscrobbler.com/radio/handshake.php", handshake_data);
+	QString url_handshake = lfm_wa_create_std_url("http://ws.audioscrobbler.com/radio/handshake.php", handshake_data);
 	QString resp_handshake;
 
 	success = lfm_wa_call_url(url_handshake, resp_handshake);
@@ -245,52 +192,19 @@ bool LastFM::login(QString username, QString password){
 
 void LastFM::login_slot(QString username, QString password){
 	bool logged_in = login(username, password);
-	emit last_fm_logged_in(logged_in);
+	emit sig_last_fm_logged_in(logged_in);
 }
 
 
 void LastFM::track_changed(const MetaData& md){
 
-	update_track(md);
-
-	if(CSettingsStorage::getInstance()->getPlaylistMode().dynamic)
-		get_similar_artists(md.artist);
-
-	get_track_info(md);
-}
-
-bool LastFM::update_track(const MetaData& md){
-
-	if(!check_login()){
-		return false;
+	if(!_track_changed_thread) {
+		if(!init_track_changed_thread())
+			return;
 	}
 
-	QString artist = md.artist;
-	QString title = md.title;
-
-	UrlParams sig_data;
-		sig_data["api_key"] = LFM_API_KEY;
-		sig_data["artist"] = artist;
-		sig_data["duration"] = QString::number(md.length_ms / 1000);
-		sig_data["method"] = QString("track.updatenowplaying").toLocal8Bit();
-		sig_data["sk"] = _session_key;
-		sig_data["track"] =  title;
-
-
-	string post_data;
-	QString url = create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), sig_data, post_data);
-	QString response;
-
-	bool success = lfm_wa_call_post_url(url, post_data, response);
-	if(!success || response.contains("failed") ){
-		/*qDebug() << "Track cannot be updated";
-		qDebug() << "url = " << url;
-		qDebug() << "post = " << post_data.c_str();
-		qDebug() << response;*/
-		return false;
-	}
-
-	return true;
+	_track_changed_thread->setTrackInfo(md);
+	_track_changed_thread->start();
 }
 
 
@@ -322,36 +236,31 @@ void LastFM::scrobble(const MetaData& metadata){
 		sig_data["track"] = title;
 
 	string post_data;
-	QString url = create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), sig_data, post_data);
+	QString url = lfm_wa_create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), sig_data, post_data);
 	QString response;
+
+	SLOT(scrobble);
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
 	if(!success || response.contains("failed")){
 		return;
-		/*qDebug() << "Track scrobbling failed";
-		qDebug() << "Url = " << url;
-		qDebug() << "Post data = " << post_data.c_str();
-		qDebug() << response;*/
 	}
 
 }
 
-
-void LastFM::get_similar_artists(const QString& artistname){
-
-	_similar_artists_thread->set_artist_name(artistname);
-	_similar_artists_thread->start();
+void LastFM::similar_artists_available(const QList<int>& ids){
+	emit sig_similar_artists_available(ids);
 }
 
 
-void LastFM::sim_artists_thread_finished(){
+void LastFM::corrected_data_available(){
+	MetaData md;
+	bool loved;
+	bool corrected;
 
-	QList<int> ids = _similar_artists_thread->get_chosen_ids();
-	if(ids.size() > 0)
-		emit similar_artists_available(ids);
-
+	if( _track_changed_thread->getCorrections(md, loved, corrected) )
+		emit sig_track_info_fetched(md, loved, corrected);
 }
-
 
 
 void LastFM::radio_init(const QString& str, int radio_mode){
@@ -393,24 +302,16 @@ void LastFM::radio_init(const QString& str, int radio_mode){
 			break;
 	}
 
-	qDebug() << "LFM Radio: Init Radio to " << lfm_radio_station;
-
 	UrlParams data;
 		data["session"] = _session_key2;
 		data["lang"] = QString("en");
 		data["url"] = QUrl::toPercentEncoding( lfm_radio_station );
 
-	QString url = create_std_url( QString("http://ws.audioscrobbler.com/radio/adjust.php"), data );
+	QString url = lfm_wa_create_std_url( QString("http://ws.audioscrobbler.com/radio/adjust.php"), data );
 	QString response;
 	bool success = lfm_wa_call_url(url, response);
-	if( !success ){
-		qDebug() << "LFM: Radio not initialized";
-		qDebug() << "LFM: url = " << url;
-		qDebug() << "LFM: " << response;
-		return;
-	}
+	if( success ) radio_get_playlist();
 
-	radio_get_playlist();
 }
 
 
@@ -434,7 +335,7 @@ void LastFM::radio_get_playlist(){
 	data["discovery"] = "0";
 	data["desktop"] = "1.5";
 
-	QString url = create_std_url(QString("http://ws.audioscrobbler.com/radio/xspf.php"), data);
+	QString url = lfm_wa_create_std_url(QString("http://ws.audioscrobbler.com/radio/xspf.php"), data);
 
 
 	bool success = lfm_wa_call_url_xml(url, xml_response);
@@ -449,7 +350,7 @@ void LastFM::radio_get_playlist(){
 	xml_response.clear();
 
 	if(v_md.size() > 0){
-		emit new_radio_playlist(v_md);
+		emit sig_new_radio_playlist(v_md);
 		return;
 	}
 }
@@ -523,7 +424,7 @@ QString LastFM::get_artist_info(const QString& artist){
 	params["api_key"] = LFM_API_KEY;
 
 
-	QString url_getArtistInfo = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+	QString url_getArtistInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
 
 	bool success = lfm_wa_call_url(url_getArtistInfo, retval);
 	if(!success) {
@@ -559,7 +460,7 @@ QString LastFM::get_album_info(const QString& artist, const QString& album){
 	params["api_key"] = LFM_API_KEY;
 
 
-	QString url_getAlbumInfo = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+	QString url_getAlbumInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
 
 	bool success = lfm_wa_call_url(url_getAlbumInfo, retval);
 	if(!success) {
@@ -599,7 +500,7 @@ bool LastFM::get_track_info(const MetaData& md, QMap<QString, QString>& values, 
 	params["autocorrect"] = QString("1");
 	params["api_key"] = LFM_API_KEY;
 
-	QString url_getTrackInfo = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+	QString url_getTrackInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
 
 	bool success = lfm_wa_call_url(url_getTrackInfo, retval);
 
@@ -636,7 +537,7 @@ bool LastFM::get_track_info(const MetaData& md, QMap<QString, QString>& values, 
 	}
 
 	if(emit_sig)
-		emit track_info_fetched(md_copy, loved, corrected);
+		emit sig_track_info_fetched(md_copy, loved, corrected);
 	return true;
 }
 
@@ -652,7 +553,7 @@ void LastFM::get_friends(QStringList& friends){
 	params["api_key"] = LFM_API_KEY;
 	params["method"] = QString("user.getFriends");
 
-	QString url_getFriends = create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+	QString url_getFriends = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
 
 	QString retval;
 

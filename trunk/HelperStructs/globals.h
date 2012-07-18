@@ -35,8 +35,7 @@
 #define PLUGIN_PLAYLIST_CHOOSER 4
 
 
-#define LFM_API_KEY 	QString("51d6f9eaef806f603f346844bef326ba")
-#define LFM_API_SECRET	QString("1093d769e54858cb0d21d42b35a8f603")
+
 
 
 #define GOOGLE_IMG_ICON QString("icon")

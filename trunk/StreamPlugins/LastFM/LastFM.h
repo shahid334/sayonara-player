@@ -31,7 +31,8 @@
 
 
 #include "HelperStructs/MetaData.h"
-#include "StreamPlugins/LastFM/LFMSimilarArtistsThread.h"
+#include "StreamPlugins/LastFM/LFMGlobals.h"
+#include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 
 #include <QObject>
 #include <QString>
@@ -40,21 +41,7 @@
 #include <QtXml>
 #include <string>
 
-#define LFM_RADIO_MODE_ARTIST 0
-#define LFM_RADIO_MODE_TAG 1
-#define LFM_RADIO_MODE_RECOMMENDED 2
-#define LFM_RADIO_MODE_USER_LIBRARY 3
 
-
-#define LFM_TAG_TRACK_TITLE "track.name"
-#define LFM_TAG_TRACK_ALBUM "track.album.title"
-#define LFM_TAG_TRACK_ARTIST "track.artist.name"
-#define LFM_TAG_TRACK_DURATION "track.duration"
-#define LFM_TAG_TRACK_LOVED "track.userloved"
-#define LFM_TAG_TRACK_USERPLAYCOUNT "track.userplaycount"
-
-
-#define UrlParams QMap<QString, QString>
 
 // singleton base LastFM API class
 // signals and slots are handled by the adapter class
@@ -63,10 +50,10 @@ class LastFM : public QObject{
 Q_OBJECT
 
 	signals:
-		void last_fm_logged_in(bool);
-		void similar_artists_available(QList<int>&);
-		void new_radio_playlist(const vector<MetaData>&);
-		void track_info_fetched(const MetaData& md, bool loved, bool corrected);
+		void sig_last_fm_logged_in(bool);
+		void sig_similar_artists_available(const QList<int>&);
+		void sig_new_radio_playlist(const vector<MetaData>&);
+		void sig_track_info_fetched(const MetaData& md, bool loved, bool corrected);
 
 	public slots:
 		void scrobble(const MetaData&);
@@ -76,7 +63,8 @@ Q_OBJECT
 		void radio_get_playlist();
 
 	private slots:
-		void sim_artists_thread_finished();
+		void similar_artists_available(const QList<int>&);
+		void corrected_data_available();
 
 	public:
 		static LastFM * getInstance();
@@ -107,6 +95,7 @@ Q_OBJECT
 		 LastFM& operator=(const LastFM&);
 
 		 void init();
+		 bool init_track_changed_thread();
 
 		bool 			_logged_in;
 
@@ -118,14 +107,9 @@ Q_OBJECT
 
 	private:
 		QString parse_session_answer();
-		LFM_SimilarArtists* _similar_artists_thread;
+		LFMTrackChangedThread* _track_changed_thread;
 		bool parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
 
-		QString create_std_url(const QString& base_url, const UrlParams& data);
-		QString create_sig_url(const QString& base_url, const UrlParams& sig_data);
-		QString create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data);
-		QString create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data);
-		QString create_signature(const UrlParams& data);
 
 		bool check_login();
 };

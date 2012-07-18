@@ -25,10 +25,13 @@
  *  Created on: Oct 22, 2011
  *      Author: luke
  */
+#include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMWebAccess.h"
+
 
 #include <QString>
 #include <QDebug>
+#include <QCryptographicHash>
 #include <qdom.h>
 
 #include <curl/curl.h>
@@ -60,7 +63,7 @@ void lfm_wa_init(){
 	lfm_webpage_bytes = 0;
 }
 
-
+/*
 const char* lfm_wa_get_url_enc(QString str){
 
 	const char* c_s = str.toLocal8Bit().data();
@@ -68,7 +71,7 @@ const char* lfm_wa_get_url_enc(QString str){
 	CURL *curl = curl_easy_init();
 	return curl_easy_escape(curl, c_s, 0);
 }
-
+*/
 
 
 size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
@@ -257,6 +260,80 @@ QString lfm_wa_parse_token_answer(){
 
 	doc.clear();
 	return str_key;
+}
+
+
+
+
+QString lfm_wa_create_signature(const UrlParams& data){
+
+	QString signature;
+
+	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
+		signature += it.key();
+		signature += it.value();
+	}
+
+	signature += LFM_API_SECRET;
+	return QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
+}
+
+
+QString lfm_wa_create_std_url(const QString& base_url, const UrlParams& data){
+	string post_data;
+	QString url = lfm_wa_create_std_url_post(base_url, data, post_data);
+	return QString(url + QString("?") + post_data.c_str());
+}
+
+QString lfm_wa_create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data){
+	post_data = "";
+	QString url = base_url;
+
+
+	post_data.clear();
+
+	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
+
+		post_data += string(it.key().toLocal8Bit().data()) + string("=");
+		post_data += string(it.value().toLocal8Bit().replace("&", "%26").data()) + string("&");
+	}
+
+	// remove the last &
+	post_data = post_data.substr(0, post_data.size() -1);
+
+	return url;
+}
+
+
+QString lfm_wa_create_sig_url(const QString& base_url, const UrlParams& sig_data){
+	string post_data;
+	QString url = lfm_wa_create_sig_url_post(base_url, sig_data, post_data);
+	return QString(url + QString("?") + post_data.c_str());
+}
+
+
+QString lfm_wa_create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data){
+
+	post_data.clear();
+
+	QString signature;
+	signature = lfm_wa_create_signature(sig_data);
+
+	QString url = base_url;
+
+	UrlParams data_copy = sig_data;
+	data_copy["api_sig"] = signature;
+	QString session_key;
+
+	for(UrlParams::iterator it=data_copy.begin(); it != data_copy.end(); it++){
+
+		post_data += string(it.key().toLocal8Bit().data()) + string("=");
+		post_data += string(it.value().replace("&", "%26").toLocal8Bit().data()) + string("&");
+	}
+
+	post_data = post_data.substr(0, post_data.size() -1);
+
+	return url;
 }
 
 

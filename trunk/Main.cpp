@@ -53,6 +53,7 @@
 #include "HelperStructs/globals.h"
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
+#include "Socket/Socket.h"
 
 
 #include <QtGui>
@@ -112,6 +113,9 @@ int main(int argc, char *argv[]){
         GUI_LFMRadioWidget		ui_lfm_radio(player.getParentOfPlugin());
         GUI_StreamRecorder		ui_stream_rec(&player);
 
+        qDebug() << "sisasocket";
+        Socket					remote_socket(1234);
+
         QString dir;
 
 #ifdef Q_OS_UNIX
@@ -150,7 +154,7 @@ int main(int argc, char *argv[]){
 		CONNECT (&player, stop(),								&playlist,			psl_stop());
 		CONNECT (&player, forward(),							&playlist,			psl_forward());
 		CONNECT (&player, backward(),							&playlist,			psl_backward());
-		CONNECT (&player, sig_stream_selected(const QString&, const QString&), 	&playlist, psl_play_stream(const QString&, const QString&));
+		CONNECT (&player, sig_stream_selected(const QString&, const QString&), 		&playlist, psl_play_stream(const QString&, const QString&));
 		CONNECT (&player, show_playlists(),						&ui_playlist_chooser, 	show());
         CONNECT (&player, skinChanged(bool), 					&ui_playlist, 		change_skin(bool));
         CONNECT (&player, show_small_playlist_items(bool),		&ui_playlist,		show_small_playlist_items(bool));
@@ -228,10 +232,10 @@ int main(int argc, char *argv[]){
 		CONNECT(&ui_tagedit, id3_tags_changed(), 								&ui_library,id3_tags_changed());
 		CONNECT(&ui_tagedit, id3_tags_changed(vector<MetaData>&), 				&playlist, 	psl_id3_tags_changed(vector<MetaData>&));
 
-		CONNECT(lastfm,	similar_artists_available(QList<int>&),				&playlist,		psl_similar_artists_available(QList<int>&));
-		CONNECT(lastfm,	last_fm_logged_in(bool),							&ui_playlist,	last_fm_logged_in(bool));
-		CONNECT(lastfm,	new_radio_playlist(const vector<MetaData>&),		&playlist,		psl_new_radio_playlist_available(const vector<MetaData>&));
-		CONNECT(lastfm, track_info_fetched(const MetaData&, bool, bool),	&player,	lfm_info_fetched(const MetaData&, bool, bool));
+		CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		&playlist,		psl_similar_artists_available(const QList<int>&));
+		CONNECT(lastfm,	sig_last_fm_logged_in(bool),							&ui_playlist,	last_fm_logged_in(bool));
+		CONNECT(lastfm,	sig_new_radio_playlist(const vector<MetaData>&),		&playlist,		psl_new_radio_playlist_available(const vector<MetaData>&));
+		CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),	&player,	lfm_info_fetched(const MetaData&, bool, bool));
 
 		CONNECT(&ui_playlist_chooser, sig_playlist_chosen(int),		&playlists, load_single_playlist(int));
 		CONNECT(&ui_playlist_chooser, sig_delete_playlist(int), 	&playlists, delete_playlist(int));
@@ -253,6 +257,14 @@ int main(int argc, char *argv[]){
 		CONNECT (&ui_stream_rec, sig_complete_tracks(bool), 		listen,		psl_strrip_complete_tracks(bool));
 		CONNECT (&ui_stream_rec, sig_create_playlist(bool), 		listen,		psl_strrip_set_create_playlist(bool ));
 
+
+		CONNECT (&remote_socket, sig_play(),		&playlist,			psl_play());
+		CONNECT (&remote_socket, sig_next(),		&playlist,			psl_forward());
+		CONNECT (&remote_socket, sig_prev(),		&playlist,			psl_backward());
+		CONNECT (&remote_socket, sig_stop(),		&playlist,			psl_stop());
+		CONNECT (&remote_socket, sig_pause(),		listen,				pause());
+
+		remote_socket.start();
 
 		playlist.ui_loaded();
 

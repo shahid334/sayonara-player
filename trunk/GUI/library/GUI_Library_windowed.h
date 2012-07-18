@@ -43,6 +43,8 @@
 #include <GUI/library/LibraryItemModelArtists.h>
 #include <GUI/MyTableView.h>
 #include <HelperStructs/MetaData.h>
+#include <HelperStructs/Filter.h>
+
 #include <DatabaseAccess/CDatabaseConnector.h>
 
 #include <QMenu>
@@ -81,7 +83,7 @@ private:
 
 	QMessageBox* _album_msg_box;
 
-	QString		_cur_searchstring;
+	Filter		_cur_searchfilter;
 
 signals:
 
@@ -127,6 +129,7 @@ private slots:
 	void artist_dbl_clicked(const QModelIndex &);
 	void track_dbl_clicked(const QModelIndex &);
 
+	void searchfilter_changed(int);
 	void text_line_edited(const QString&);
 	void sort_albums_by_column(int);
 	void sort_artists_by_column(int);
@@ -149,6 +152,7 @@ private slots:
 	void delete_tracks();
 
 	void apply_cover_to_entire_album();
+
 
 protected:
 	void resizeEvent(QResizeEvent* e);

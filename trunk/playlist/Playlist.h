@@ -84,7 +84,7 @@ public:
 		void psl_playlist_mode_changed(const Playlist_Mode&);
 		void psl_clear_playlist();
 		void psl_save_playlist(const QString&, const vector<MetaData>& v_md);
-		void psl_similar_artists_available(QList<int>&);
+		void psl_similar_artists_available(const QList<int>&);
 		void psl_directoryDropped(const QString& dir, int row);
 		void psl_prepare_playlist_for_save(int id);
 		void psl_prepare_playlist_for_save(QString name);

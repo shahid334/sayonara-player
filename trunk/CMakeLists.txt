@@ -89,10 +89,11 @@ SET(HEADERS
     HelperStructs/Equalizer_presets.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMWebAccess.h
-    StreamPlugins/LastFM/LFMSimilarArtistsThread.h
+    StreamPlugins/LastFM/LFMTrackChangedThread.h
     GUI/LFMRadio/GUI_LFMRadioWidget.h
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
+    Socket/Socket.h
 )
 
 SET(SOURCES
@@ -143,11 +144,12 @@ SET(SOURCES
     playlists/Playlists.cpp
     HelperStructs/id3.cpp
     StreamPlugins/LastFM/LastFM.cpp
-    StreamPlugins/LastFM/LFMSimilarArtistsThread.cpp
+    StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
     GUI/LFMRadio/GUI_LFMRadioWidget.cpp
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
+    Socket/Socket.cpp
     Main.cpp
 )
 
