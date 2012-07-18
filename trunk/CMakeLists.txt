@@ -87,6 +87,7 @@ SET(HEADERS
     HelperStructs/id3.h
     HelperStructs/CSettingsStorage.h
     HelperStructs/Equalizer_presets.h
+    StreamPlugins/LFMGlobals.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMWebAccess.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
