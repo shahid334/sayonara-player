@@ -19,7 +19,8 @@
  */
 
 #include "GUI/playlist/GUI_PlaylistEntrySmall.h"
-
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 #include <QFrame>
 
 
@@ -37,27 +38,17 @@ GUI_PlaylistEntrySmall::~GUI_PlaylistEntrySmall() {
 	// TODO Auto-generated destructor stub
 }
 
-void GUI_PlaylistEntrySmall::setArtist(QString artist){
+void GUI_PlaylistEntrySmall::setContent(const MetaData& md){
 
-	this->ui->lab_artist->setText(artist);
-
-}
-
-
-void GUI_PlaylistEntrySmall::setAlbum(QString album){
-
-}
-
-void GUI_PlaylistEntrySmall::setTitle(QString title){
-
-	this->ui->lab_title->setText(title);
-}
-
-
-void GUI_PlaylistEntrySmall::setTime(QString time){
-	this->ui->lab_time->setText(time);
+	this->ui->lab_artist->setText(md.artist.trimmed());
+	this->ui->lab_title->setText(md.title.trimmed());
+	this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+	this->ui->lab_title->setToolTip(md.title.trimmed() + " by " + md.artist.trimmed());
+	this->ui->lab_artist->setToolTip(md.title.trimmed() + " by " + md.artist.trimmed());
 
 }
+
+
 
 
 void GUI_PlaylistEntrySmall::setBackgroundColorPlaying(){
@@ -76,8 +67,8 @@ void GUI_PlaylistEntrySmall::setBackgroundColorNotPlaying(){
 void GUI_PlaylistEntrySmall::setWidth(int width){
 
 	this->resize(width, 30);
-
-
+	this->setMaximumWidth(width);
+	this->setMinimumWidth(width);
 }
 
 

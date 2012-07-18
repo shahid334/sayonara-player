@@ -110,9 +110,6 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, QString 
 int CDatabaseConnector::getTrackByPath(QString path){
 	DB_TRY_OPEN(m_database);
 
-	path.replace("//", "/");
-	path.replace("\\\\", "\\");
-
 	vector<MetaData> vec_data;
 	QSqlQuery q (this -> m_database);
 
@@ -429,6 +426,10 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
+
+	data.filepath.replace("//", "/");
+	data.filepath.replace("\\\\", "\\");
+
 	int track_id = getTrackByPath(data.filepath);
 
 	if(track_id > 0){

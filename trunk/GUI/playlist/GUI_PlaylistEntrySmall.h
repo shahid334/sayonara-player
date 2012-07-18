@@ -23,7 +23,7 @@
 #define GUI_PLAYLISTENTRYSMALL_H_
 
 #include "ui_GUI_Playlist_EntrySmall.h"
-
+#include "HelperStructs/MetaData.h"
 #include <QObject>
 
 
@@ -35,10 +35,7 @@ public:
 	virtual ~GUI_PlaylistEntrySmall();
 
 public:
-	void setArtist(QString artist);
-	void setAlbum(QString album);
-	void setTitle(QString title);
-	void setTime(QString time);
+	void setContent(const MetaData& md);
 
 	void setBackgroundColorPlaying();
 	void setBackgroundColorNotPlaying();

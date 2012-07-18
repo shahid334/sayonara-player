@@ -55,7 +55,7 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
     int num_files = 0;
     this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
 
-    emit playlistCreated(fileList);
+    emit sig_playlist_created(fileList);
 
 }
 
@@ -139,7 +139,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
 		bool success = db->storeMetadata(v_md);
 		emit sig_import_result(success);
-		emit reloading_library_finished();
+		emit sig_reload_library_finished();
 
 		return;
 	}
@@ -266,11 +266,11 @@ void CLibraryBase::reload_thread_finished(){
 	getAllAlbums();
 	getAllArtists();
 
-	emit reloading_library_finished();
+	emit sig_reload_library_finished();
 }
 
 void CLibraryBase::library_reloading_state_slot(int percent){
-	emit reloading_library(percent);
+	emit sig_reloading_library(percent);
 }
 
 
@@ -282,7 +282,7 @@ void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& v_md) {
 
     std::vector<MetaData> data;
     db->getTracksFromDatabase(data);
-    emit signalMetaDataLoaded(data);
+    emit sig_metadata_loaded(data);
 }
 
 
@@ -297,7 +297,7 @@ void CLibraryBase::loadDataFromDb () {
     std::vector <MetaData> vec;
     CDatabaseConnector::getInstance()->getTracksFromDatabase(vec);
     if(vec.size() > 0)
-    	emit signalMetaDataLoaded(vec);
+    	emit sig_metadata_loaded(vec);
 
     getAllAlbums();
     getAllArtists();
@@ -306,12 +306,11 @@ void CLibraryBase::loadDataFromDb () {
 
 void CLibraryBase::getAllArtists(){
 
-
 	vector<Artist> vec;
 	CDatabaseConnector::getInstance()->getAllArtists(vec);
 		if(vec.size() > 0) {
 
-			emit allArtistsLoaded(vec);
+			emit sig_all_artists_loaded(vec);
 		}
 
 }
@@ -321,7 +320,7 @@ void CLibraryBase::getArtistsByAlbum(int album){
 	vector<Artist> vec;
 	CDatabaseConnector::getInstance()->getAllArtistsByAlbum(album, vec);
 	if(vec.size() > 0){
-		emit allArtistsLoaded(vec);
+		emit sig_all_artists_loaded(vec);
 		getTracksByAlbum(album);
 	}
 
@@ -334,14 +333,14 @@ void CLibraryBase::getAllAlbums(){
 
 	vector<Album> vec;
 	CDatabaseConnector::getInstance()->getAllAlbums(vec);
-	if(vec.size() > 0) emit allAlbumsLoaded(vec);
+	if(vec.size() > 0) emit sig_all_albums_loaded(vec);
 }
 
 void CLibraryBase::getAlbumsByArtist(int artist){
 	vector<Album> vec;
 	CDatabaseConnector::getInstance()->getAllAlbumsByArtist(artist, vec);
 	if(vec.size() > 0)
-		emit allAlbumsLoaded(vec);
+		emit sig_all_albums_loaded(vec);
 		getTracksByArtist(artist);
 
 }
@@ -352,7 +351,7 @@ void CLibraryBase::getTracksByAlbum(int album){
 	vector<MetaData> vec;
 	CDatabaseConnector::getInstance()->getAllTracksByAlbum(album, vec);
 	if(vec.size() > 0)
-		emit signalMetaDataLoaded(vec);
+		emit sig_metadata_loaded(vec);
 
 }
 
@@ -360,7 +359,7 @@ void CLibraryBase::getTracksByArtist(int artist){
 	vector<MetaData> vec;
 	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist, vec);
 	if(vec.size() > 0)
-		emit signalMetaDataLoaded(vec);
+		emit sig_metadata_loaded(vec);
 
 }
 
@@ -372,7 +371,7 @@ void CLibraryBase::setLibraryPath(QString path){
 void CLibraryBase::file_system_changed(const QString& path){
 	Q_UNUSED(path);
 
-	emit library_should_be_reloaded();
+	emit sig_should_reload_library();
 
 
 }

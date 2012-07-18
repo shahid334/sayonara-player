@@ -39,15 +39,15 @@ public:
     void loadDataFromDb ();
 
 signals:
-	void playlistCreated(QStringList&);
-    void signalMetaDataLoaded (vector<MetaData>& in);
-    void allAlbumsLoaded(vector<Album>&);
-    void allArtistsLoaded(vector<Artist>&);
-    void mp3s_loaded_signal(int);
+	void sig_playlist_created(QStringList&);
+    void sig_metadata_loaded (vector<MetaData>& in);
+    void sig_all_albums_loaded(vector<Album>&);
+    void sig_all_artists_loaded(vector<Artist>&);
+    void sig_mp3s_loaded(int);
 
-    void library_should_be_reloaded();
-    void reloading_library_finished();
-    void reloading_library(int);
+    void sig_should_reload_library();
+    void sig_reload_library_finished();
+    void sig_reloading_library(int);
 
     void sig_import_result(bool);
 

@@ -68,16 +68,7 @@ void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
 bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & v_md)  {
 
-
-
-	if (!this -> m_database.isOpen())
-        this -> m_database.open();
-    if(!this->m_database.isOpen()) {
-    	qDebug() << "Datbase cannot be opened";
-    	qDebug() << m_database.lastError();
-    	return false;
-    }
-
+	DB_TRY_OPEN(m_database);
 
     int artistID = -1, albumID = -1;
     int trackID = -1;

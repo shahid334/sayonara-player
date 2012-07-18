@@ -74,8 +74,6 @@ void ReloadThread::run(){
 	db->deleteTracks(v_to_delete);
 	v_to_delete.clear();
 
-
-
 	QStringList fileList;
 
 	CDirectoryReader reader;
@@ -86,18 +84,12 @@ void ReloadThread::run(){
 	vector<MetaData> v_md;
 	_state = -1;
 
-#ifdef OMP_H
-	qDebug() << "OpenMP active";
-#else
-	qDebug() << "OpenMP inactive";
-#endif
-
 	/// TODO: commit status every 20-30 tracks
 	// to give user a response what happens
 	// we're in a thread, baby! You can play the
 	// sound nevertheless... Fuck I'm drunk :(
 
-#pragma omp parallel for
+
 	for(int i=0; i<fileList.size(); i++){
 
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));

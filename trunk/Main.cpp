@@ -113,7 +113,7 @@ int main(int argc, char *argv[]){
         GUI_LFMRadioWidget		ui_lfm_radio(player.getParentOfPlugin());
         GUI_StreamRecorder		ui_stream_rec(&player);
 
-        qDebug() << "sisasocket";
+
         Socket					remote_socket(1234);
 
         QString dir;
@@ -201,16 +201,16 @@ int main(int argc, char *argv[]){
         CONNECT (cover, sig_cover_found(QString), 					&player, 		cover_changed(QString));
         CONNECT (cover, sig_cover_found(QString), 					&ui_library,	cover_changed(QString));
 
-        CONNECT(&library, playlistCreated(QStringList&), 				&playlist, 		psl_createPlaylist(QStringList&));
+        CONNECT(&library, sig_playlist_created(QStringList&), 				&playlist, 		psl_createPlaylist(QStringList&));
         CONNECT(&library, sig_import_result(bool),						&playlist,		psl_import_result(bool));
         CONNECT(&library, sig_import_result(bool),						&ui_playlist,	import_result(bool));
-        CONNECT(&library, mp3s_loaded_signal(int), 						&ui_playlist, 	update_progress_bar(int));
-        CONNECT(&library, signalMetaDataLoaded(vector<MetaData>&), 		&ui_library, 	fill_library_tracks(vector<MetaData>&));
-        CONNECT(&library, allAlbumsLoaded(vector<Album>&), 				&ui_library, 	fill_library_albums(vector<Album>&));
-        CONNECT(&library, allArtistsLoaded(vector<Artist>&), 			&ui_library, 	fill_library_artists(vector<Artist>&));
-        CONNECT(&library, reloading_library_finished(), 				&ui_library, 	reloading_library_finished());
-        CONNECT(&library, reloading_library(int),						&ui_library, 	reloading_library(int));
-        CONNECT(&library, library_should_be_reloaded(), 				&ui_library, 	library_should_be_reloaded());
+        CONNECT(&library, sig_mp3s_loaded(int), 						&ui_playlist, 	update_progress_bar(int));
+        CONNECT(&library, sig_metadata_loaded(vector<MetaData>&), 		&ui_library, 	fill_library_tracks(vector<MetaData>&));
+        CONNECT(&library, sig_all_albums_loaded(vector<Album>&), 		&ui_library, 	fill_library_albums(vector<Album>&));
+        CONNECT(&library, sig_all_artists_loaded(vector<Artist>&), 		&ui_library, 	fill_library_artists(vector<Artist>&));
+        CONNECT(&library, sig_reload_library_finished(), 				&ui_library, 	reloading_library_finished());
+        CONNECT(&library, sig_reloading_library(int),					&ui_library, 	reloading_library(int));
+        CONNECT(&library, sig_should_reload_library(), 					&ui_library, 	library_should_be_reloaded());
         CONNECT(&library, sig_import_result(bool),						&ui_library,	import_result(bool));
         CONNECT(&library, sig_import_result(bool),						&playlists,		import_result(bool));
 
@@ -307,6 +307,7 @@ int main(int argc, char *argv[]){
 
         CDatabaseConnector::getInstance()->store_settings();
 
+        remote_socket.terminate();
         delete listen;
 
         return 0;

@@ -46,11 +46,14 @@ PlaylistItemDelegateSmall::PlaylistItemDelegateSmall(QListView *parent ) {
 	// TODO Auto-generated constructor stub
 	//_label_to_Render = new QLabel(parent);
 
-	_pl_entry = new GUI_PlaylistEntrySmall();
+
 	_rendered_items = 0;
 
 	_parent = parent;
 	_row_height = 20;
+
+
+	_pl_entry = new GUI_PlaylistEntrySmall();
 
 	_pl_entry->setMinimumHeight(_row_height);
 	_pl_entry->setMaximumHeight(_row_height);
@@ -82,17 +85,12 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	bool cur_track = (strlist[strlist.length()-2].toInt() == 1);
 	bool insert = (strlist.last().toInt() == 1);
 
-
-	_pl_entry->setArtist(md.artist);
-	_pl_entry->setAlbum(md.album);
-	_pl_entry->setTitle(md.title);
-	_pl_entry->setTime(Helper::cvtMsecs2TitleLengthString(md.length_ms));
-
+	_pl_entry->setContent(md);
 
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
 						this->_parent->verticalScrollBar()->width() + 4 : 4;
 
-	_pl_entry->resize(_parent->width()-offset, _row_height);
+	_pl_entry->setWidth(_parent->width() - offset);
 
 	QString style;
 	QString col_fg;
@@ -119,8 +117,6 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	else if(!is_selected)
 		style = QString("background-color: transparent;") + get_fg_color(background_val);
 
-
-
 	// standard selected
 	else
 		style = QString("background-color: ") +
@@ -130,13 +126,11 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	int y = rect.topLeft().y() +  _pl_entry->height()-1;
 
-
-
 	_pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );
 
 	if(insert) {
-			painter->drawLine(QLine(0, y, _pl_entry->width(), y));
+		painter->drawLine(QLine(0, y, _pl_entry->width(), y));
 	}
 
 	painter->restore();
