@@ -87,7 +87,7 @@ QStringList calc_adresses_from_webpage(uint num, QString& qwebpage) {
 				QString adress = tmp_str;
 				if (!adresses.contains(adress)) {
 					adresses.push_back(adress);
-					if(adresses.size() >= num) break;
+					if((uint) adresses.size() >= num) break;
 				}
 			}
 

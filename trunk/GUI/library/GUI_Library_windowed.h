@@ -160,7 +160,6 @@ public:
 	void change_skin(bool dark);
 
 private:
-	QString getTotalTimeString(Album& album);
 	void init_menues();
 
 

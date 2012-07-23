@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_InfoDialog.h'
 **
-** Created: Sun Jul 22 21:55:23 2012
+** Created: Mon Jul 23 19:31:46 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

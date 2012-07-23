@@ -450,7 +450,7 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 		should_emit = false;
 
 	filter.filtertext = QString("%") + search + QString("%");
-
+	_cur_searchfilter = filter;
 	if(should_emit || force_emit)
 		sig_filter_changed(filter);
 }
@@ -461,9 +461,9 @@ void GUI_Library_windowed::searchfilter_changed(int idx){
 }
 
 
-// TODO: implement me
-void GUI_Library_windowed::refresh(){
 
+void GUI_Library_windowed::refresh(){
+	text_line_edited(_cur_searchfilter.filtertext, true);
 }
 
 
@@ -471,26 +471,6 @@ void GUI_Library_windowed::id3_tags_changed(){
 	refresh();
 }
 
-
-/* TODO: Helper!!! */
-QString GUI_Library_windowed::getTotalTimeString(Album& album){
-	int secs, mins, hrs;
-	Helper::cvtSecs2MinAndSecs(album.length_sec, &mins, &secs);
-	hrs = mins / 60;
-	mins = mins % 60;
-
-	QString str = "";
-
-	if(hrs > 0) str += QString::number(hrs) + "h ";
-
-	str += 	Helper::cvtNum2String(mins) +
-			"m " +
-			Helper::cvtNum2String(secs) +
-			"s";
-
-	return str;
-
-}
 
 
 
@@ -581,6 +561,7 @@ void GUI_Library_windowed::reloading_library(int percent){
 
 void GUI_Library_windowed::reloading_library_finished(){
 	this->ui->lab_status->setText("");
+	refresh();
 }
 
 
@@ -608,20 +589,17 @@ void GUI_Library_windowed::edit_tracks(){
 }
 
 
-/// TODO: Implement me
 void GUI_Library_windowed::info_album(){
 
 	_info_dialog->setMode(INFO_MODE_ALBUMS);
 	_info_dialog->show();
 }
 
-/// TODO: Implement me
 void GUI_Library_windowed::info_artist(){
 	_info_dialog->setMode(INFO_MODE_ARTISTS);
 	_info_dialog->show();
 }
 
-/// TODO: Implement me
 void GUI_Library_windowed::info_tracks(){
 	_info_dialog->setMode(INFO_MODE_TRACKS);
 	_info_dialog->show();
@@ -638,6 +616,7 @@ void GUI_Library_windowed::psl_delete_answer(QString answer){
 
 	answerbox.exec();
 	answerbox.close();
+	refresh();
 }
 
 
@@ -689,8 +668,6 @@ bool GUI_Library_windowed::show_delete_dialog(int n_tracks){
 		int answer = dialog.exec();
 		dialog.close();
 
-		int count_failure = 0;
-
 		switch(answer){
 			case QMessageBox::Yes:
 				return true;
@@ -702,15 +679,15 @@ bool GUI_Library_windowed::show_delete_dialog(int n_tracks){
 			default: return false;
 		}
 
+		return true;
 }
 
 
-// TODO: Logic should send corrected version of library
 void GUI_Library_windowed::library_changed(){
 	refresh();
 }
 
-/// TODO: Implement me
+
 void GUI_Library_windowed::import_result(bool success){
 
 	QString success_string;

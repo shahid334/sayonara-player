@@ -48,7 +48,6 @@ SET(HEADERS
     GUI/playlist/PlaylistItemModel.h
     GUI/playlist/PlaylistItemDelegate.h
     GUI/playlist/PlaylistItemDelegateSmall.h
-    GUI/playlist/PlaylistItemDelegateInterface.h
     GUI/playlist/GUI_PlaylistEntry.h
     GUI/playlist/GUI_PlaylistEntrySmall.h
     GUI/playlist_chooser/GUI_PlaylistChooser.h
@@ -59,38 +58,19 @@ SET(HEADERS
     GUI/library/LibraryItemDelegateAlbums.h
     GUI/library/LibraryItemDelegateArtists.h
     GUI/library/LibraryItemModelArtists.h
-    GUI/library/LibraryItemDelegateTracks.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
     GUI/MyTableView.h
-    GUI/MyListView.h
     GUI/library/GUIImportFolder.h
     GUI/LyricMenuButton/LyricMenuButton.h
     GUI/InfoDialog/GUI_InfoDialog.h
-    HelperStructs/MetaData.h
-    HelperStructs/Helper.h
-    HelperStructs/PlaylistMode.h
-    HelperStructs/Style.h
-    HelperStructs/CDirectoryReader.h
-    HelperStructs/PlaylistParser.h
-    HelperStructs/WebAccess.h
-    HelperStructs/globals.h
     CoverLookup/CoverLookup.h
-    CoverLookup/CoverFetchThread.h
-    CoverLookup/CoverDownloader.h
-    LyricLookup/LyricLookup.h
-    LyricLookup/LyricServer.h
     DatabaseAccess/CDatabaseConnector.h
     library/CLibraryBase.h
     library/ReloadThread.h
     playlist/Playlist.h
     playlists/Playlists.h
-    HelperStructs/id3.h
-    HelperStructs/CSettingsStorage.h
-    HelperStructs/Equalizer_presets.h
-    StreamPlugins/LastFM/LFMGlobals.h
     StreamPlugins/LastFM/LastFM.h
-    StreamPlugins/LastFM/LFMWebAccess.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     GUI/LFMRadio/GUI_LFMRadioWidget.h
     GUI/stream/GUI_Stream.h

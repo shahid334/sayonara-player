@@ -209,7 +209,6 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_mp3s_loaded(int), 						&ui_playlist, 	update_progress_bar(int));
         CONNECT(&library, sig_reload_library_finished(), 				&ui_library, 	reloading_library_finished());
         CONNECT(&library, sig_reloading_library(int),					&ui_library, 	reloading_library(int));
-        CONNECT(&library, sig_should_reload_library(), 					&ui_library, 	library_should_be_reloaded());
         CONNECT(&library, sig_import_result(bool),						&ui_library,	import_result(bool));
         CONNECT(&library, sig_metadata_loaded(vector<MetaData>&), 		&ui_library, 	fill_library_tracks(vector<MetaData>&));
         CONNECT(&library, sig_all_albums_loaded(vector<Album>&), 		&ui_library, 	fill_library_albums(vector<Album>&));
@@ -219,7 +218,6 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_tracks_for_playlist_available(vector<MetaData>&), 		&playlist, psl_createPlaylist(vector<MetaData>&));
         CONNECT(&library, sig_import_result(bool),						&playlists,		import_result(bool));
         CONNECT(&library, sig_delete_answer(QString), 					&ui_library, 	psl_delete_answer(QString));
-
 
 
         CONNECT(&ui_library, sig_album_dbl_clicked(), 						&library, 	psl_prepare_album_for_playlist());

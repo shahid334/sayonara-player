@@ -267,7 +267,8 @@ int PlaylistParser::parse_playlist(QString playlist_file, vector<MetaData>& v_md
 	}
 
 	else if(playlist_file.toLower().endsWith("pls")){
-		parse_pls(content, v_md_tmp), abs_path;
+
+		parse_pls(content, v_md_tmp, abs_path);
 	}
 
 	else if(playlist_file.toLower().endsWith("asx")){

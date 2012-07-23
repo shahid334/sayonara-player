@@ -63,24 +63,18 @@ void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
 
 
-
-
-
 bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & v_md)  {
 
 	DB_TRY_OPEN(m_database);
 
     int artistID = -1, albumID = -1;
-    int trackID = -1;
 
     m_database.transaction();
     foreach (MetaData data, v_md) {
 
     	try {
 
-    		trackID = getTrackByPath(data.filepath);
-
-            //first check if we know the artist and its id
+    		 //first check if we know the artist and its id
     		 albumID = this -> getAlbumID(data.album);
 
 			if (albumID == -1) {

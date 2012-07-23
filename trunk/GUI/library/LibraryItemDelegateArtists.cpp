@@ -100,7 +100,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		QPalette palette = _parent->palette();
 		QColor col_background = palette.color(QPalette::Active, QPalette::Background);
 		QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-		QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
+		//QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
 
 		int val_bg = col_background.lightness();
 		int val_sel = col_highlight.lightness();
