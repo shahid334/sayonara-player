@@ -85,7 +85,7 @@ public slots:
 	virtual void play();
 	virtual void stop();
 	virtual void pause();
-	virtual void setVolume(qreal vol);
+	virtual void setVolume(int vol);
 
 	virtual void jump(int where, bool percent=true);
 	virtual void changeTrack(const MetaData& );

@@ -201,7 +201,6 @@ void GST_Engine::init_play_pipeline(){
 
 	// eq -> autoaudiosink is packaged into a bin
 	do{
-		qDebug() << "Entering do loop";
 		// create equalizer element
 		_pipeline = gst_element_factory_make("playbin2", "player");
 		 if(!_pipeline) {
@@ -214,8 +213,6 @@ void GST_Engine::init_play_pipeline(){
 		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
 		_audio_bin = gst_bin_new("audio-bin");
 
-
-		qDebug() << "factory stuff";
 		if(!_bus){
 			qDebug() << "Something went wrong with the bus";
 			break;
@@ -427,16 +424,16 @@ void GST_Engine::pause(){
 
 }
 
-void GST_Engine::setVolume(qreal vol){
+void GST_Engine::setVolume(int vol){
+
 	if(!_volume) return;
-	float vol_val = (float) vol / 100.0f;
+	float vol_val = (float) (vol * 1.0f / 100.0f);
 	g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
 
 }
 
 void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings){
 
-	//emit eq_found(availableEqualizers);
 	emit eq_presets_loaded(vec_eq_settings);
 }
 

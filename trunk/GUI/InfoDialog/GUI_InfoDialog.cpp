@@ -52,7 +52,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
 	_lfm_thread = new LFMTrackChangedThread(_class_name);
 	_lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
 
-	_cover_lookup = CoverLookup::getInstance();
+	_cover_lookup = new CoverLookup(_class_name);
 	_db = CDatabaseConnector::getInstance();
 
 
@@ -65,6 +65,15 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
 	connect( _lfm_thread, SIGNAL(sig_artist_info_available(const QString&)),
 			 this, SLOT(psl_artist_info_available(const QString&)));
 
+	connect(this, SIGNAL(sig_search_cover(const MetaData&)),
+			_cover_lookup, SLOT(search_cover(const MetaData&)));
+
+	connect(this, SIGNAL(sig_search_artist_image(const QString&)),
+			_cover_lookup, SLOT(search_artist_image(const QString&)));
+
+	connect(_cover_lookup, SIGNAL(sig_cover_found(QString, QString)),
+			this, 			SLOT(psl_image_available(QString, QString)));
+
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {
@@ -73,7 +82,8 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 
 
 
-void GUI_InfoDialog::psl_image_available(QString filename){
+void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
+	if(_class_name != caller_class) return;
 	if(!QFile::exists(filename)) return;
 
 	QSize sz = this->ui->lab_image->size();
@@ -406,7 +416,7 @@ void GUI_InfoDialog::prepare_tracks(){
 				count = QString::number(md.track_num) + "th";
 				break;
 		}
-		info = count + " track on " + md.album;
+		info = count + " track on " + md.album + CAR_RET;
 		info+= BOLD("Artist:&nbsp;") + md.artist + CAR_RET;
 		info+= BOLD("Length:&nbsp;") + Helper::cvtMsecs2TitleLengthString(md.length_ms) + CAR_RET;
 		info+= BOLD("Year:&nbsp;") + QString::number(md.year) + CAR_RET;
@@ -441,7 +451,7 @@ void GUI_InfoDialog::prepare_tracks(){
 void GUI_InfoDialog::prepare_cover(){
 
 
-	psl_image_available(Helper::getIconPath() + "append.png");
+	psl_image_available(_class_name, Helper::getIconPath() + "append.png");
 
 	switch(_diff_mode){
 

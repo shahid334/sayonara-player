@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_InfoDialog.h'
 **
-** Created: Mon Jul 23 19:31:46 2012
+** Created: Mon Jul 23 23:08:10 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -35,19 +35,19 @@ static const uint qt_meta_data_GUI_InfoDialog[] = {
       43,   15,   15,   15, 0x05,
 
  // slots: signature, parameters, type, tag, flags
-      76,   15,   15,   15, 0x0a,
-     118,  105,   15,   15, 0x0a,
-     152,  105,   15,   15, 0x0a,
-     187,  105,   15,   15, 0x0a,
+      78,   76,   15,   15, 0x0a,
+     128,  115,   15,   15, 0x0a,
+     162,  115,   15,   15, 0x0a,
+     197,  115,   15,   15, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_GUI_InfoDialog[] = {
     "GUI_InfoDialog\0\0sig_search_cover(MetaData)\0"
-    "sig_search_artist_image(QString)\0"
-    "psl_image_available(QString)\0target_class\0"
-    "psl_album_info_available(QString)\0"
+    "sig_search_artist_image(QString)\0,\0"
+    "psl_image_available(QString,QString)\0"
+    "target_class\0psl_album_info_available(QString)\0"
     "psl_artist_info_available(QString)\0"
     "psl_corrected_data_available(QString)\0"
 };
@@ -83,7 +83,7 @@ int GUI_InfoDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: sig_search_cover((*reinterpret_cast< const MetaData(*)>(_a[1]))); break;
         case 1: sig_search_artist_image((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 2: psl_image_available((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: psl_image_available((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< QString(*)>(_a[2]))); break;
         case 3: psl_album_info_available((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 4: psl_artist_info_available((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 5: psl_corrected_data_available((*reinterpret_cast< const QString(*)>(_a[1]))); break;

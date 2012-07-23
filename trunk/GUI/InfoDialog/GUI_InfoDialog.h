@@ -49,7 +49,7 @@ signals:
 	void sig_search_artist_image(const QString&);
 
 public slots:
-	void psl_image_available(QString);
+	void psl_image_available(QString, QString);
 	void psl_album_info_available(const QString& target_class);
 	void psl_artist_info_available(const QString& target_class);
 	void psl_corrected_data_available(const QString& target_class);
@@ -64,11 +64,11 @@ public:
 
 
 private:
-	Ui::InfoDialog* ui;
-	CoverLookup* _cover_lookup;
-	LFMTrackChangedThread* _lfm_thread;
-	CDatabaseConnector* _db;
-	QString _class_name;
+	Ui::InfoDialog* 		ui;
+	CoverLookup* 			_cover_lookup;
+	LFMTrackChangedThread* 	_lfm_thread;
+	CDatabaseConnector* 	_db;
+	QString 				_class_name;
 
 
 	vector<MetaData> _v_md;

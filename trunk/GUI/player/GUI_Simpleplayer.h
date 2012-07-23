@@ -30,6 +30,7 @@
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "Engine/Engine.h"
+#include "CoverLookup/CoverLookup.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -58,7 +59,7 @@ public slots:
     /**
       * Insert Meta informations
       */
-    void cover_changed(QString);
+    void cover_changed(QString, QString);
     void update_track (const MetaData & in);
     void show_eq(bool b=false);
     void show_stream(bool b=false);
@@ -99,10 +100,11 @@ signals:
     void sig_stream_selected(const QString&, const QString&);
     void baseDirSelected (const QString & baseDir);
     void search(int pos_percent);
-    void volumeChanged (qreal vol_percent);
-    void wantCover(const MetaData &);
-    void fetch_alternate_covers(const MetaData&);
-    void wantMoreCovers();
+    void sig_volume_changed (int);
+    void sig_want_cover(const MetaData &);
+    void sig_fetch_alternate_covers(const MetaData&);
+    void sig_want_more_covers();
+    void sig_fetch_all_covers();
     void playlistCreated(QStringList&);
     void skinChanged(bool);
     void windowResized(const QSize&);
@@ -110,7 +112,7 @@ signals:
     void reloadLibrary();
     void importDirectory(QString);
     void libpath_changed(QString);
-    void fetch_all_covers();
+
     void show_playlists();
     void show_small_playlist_items(bool);
     void sig_sound_engine_changed(QString&);
@@ -181,14 +183,18 @@ private:
 
     Ui::GUI_SimplePlayer*		ui;
 
+
     GUI_Playlist* 				ui_playlist;
     GUI_Library_windowed*		ui_library;
     GUI_Equalizer*				ui_eq;
     GUI_PlaylistChooser*		ui_playlist_chooser;
     GUI_Stream*					ui_stream;
     GUI_LFMRadioWidget*			ui_lfm_radio;
+    CoverLookup*				m_cov_lookup;
 
 
+
+    QString						m_class_name;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
     bool 						m_cur_searching;

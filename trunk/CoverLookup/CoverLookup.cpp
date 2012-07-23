@@ -52,21 +52,17 @@
 
 using namespace std;
 
-CoverLookup::CoverLookup() {
-	// TODO Auto-generated constructor stub
+CoverLookup::CoverLookup(QString caller_class) {
+
+	_caller_class = caller_class;
 	_thread = new CoverFetchThread();
 	_research_done = false;
 	connect(_thread, SIGNAL(finished()), this, SLOT(thread_finished()));
 }
 
-CoverLookup* CoverLookup::getInstance() {
-	static CoverLookup instance;
-	return &instance;
+CoverLookup::~CoverLookup() {
 }
 
-CoverLookup::~CoverLookup() {
-	// TODO Auto-generated destructor stub
-}
 
 void CoverLookup::thread_finished() {
 
@@ -86,11 +82,11 @@ void CoverLookup::thread_finished() {
 			case COV_FETCH_MODE_ALBUM_STR:
 			case COV_FETCH_MODE_ALL_ALBUMS:
 			case COV_FETCH_MODE_SINGLE_ALBUM:
-				emit sig_cover_found(Helper::get_cover_path(_metadata.artist, _metadata.album));
+				emit sig_cover_found(_caller_class, Helper::get_cover_path(_metadata.artist, _metadata.album));
 				break;
 
 			case COV_FETCH_MODE_ARTIST_STR:
-				emit sig_cover_found(Helper::get_artist_image_path(_metadata.artist));
+				emit sig_cover_found(_caller_class, Helper::get_artist_image_path(_metadata.artist));
 				break;
 			default: break;
 		}
@@ -98,7 +94,7 @@ void CoverLookup::thread_finished() {
 	}
 
 	else if (pixmaps.size() == 0) {
-		emit sig_cover_found("");
+		emit sig_cover_found(_caller_class, "");
 
 		// if not already tried google and not searching an artist string
 		if( !_research_done &&
@@ -131,11 +127,11 @@ void CoverLookup::terminate_thread() {
 	}
 
 	if (pixmaps.size() >= 1) {
-		emit sig_cover_found(Helper::get_cover_path(_metadata.artist, _metadata.album));
+		emit sig_cover_found(_caller_class, Helper::get_cover_path(_metadata.artist, _metadata.album));
 	}
 
 	else if (pixmaps.size() == 0)
-		emit sig_cover_found("");
+		emit sig_cover_found(_caller_class, "");
 }
 
 
@@ -148,7 +144,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);
 
 	if (QFile::exists(cover_path) && cover_path != "") {
-		emit sig_cover_found(Helper::get_cover_path(_metadata.artist, _metadata.album));
+		emit sig_cover_found(_caller_class, Helper::get_cover_path(_metadata.artist, _metadata.album));
 		return;
 	}
 

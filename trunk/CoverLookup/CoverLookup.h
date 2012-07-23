@@ -54,9 +54,12 @@ class CoverLookup : public QObject{
 	Q_OBJECT
 
 	signals:
-		void sig_covers_found(vector<QPixmap>&);		/* emit if multiple covers are found (player) */
-		void sig_cover_found(QString str);				/* emit if single cover is found (player) */
-		void sig_new_cover_found(const QPixmap&);		/* emit if a new cover is found (alternate covers) */
+		// caller class, pixmaps
+		void sig_covers_found(QString, vector<QPixmap>&);		/* emit if multiple covers are found (player) */
+		// caller class, path
+		void sig_cover_found(QString, QString);					/* emit if single cover is found (player) */
+		// caller class, pixmap
+		void sig_new_cover_found(QString, const QPixmap&);		/* emit if a new cover is found (alternate covers) */
 
 	public slots:
 		void search_artist_image(const QString& artist); /* artist image */
@@ -74,17 +77,13 @@ class CoverLookup : public QObject{
 
 public:
 
-	static CoverLookup* getInstance();
+	CoverLookup(QString caller_class);
 	virtual ~CoverLookup();
 	bool get_found_cover(int idx, QPixmap& p);
 
 
-protected:
-	CoverLookup();
-
-
 private:
-	CoverLookup(const CoverLookup&);
+
 
 	MetaData			_metadata;
 	CoverFetchThread* 	_thread;
@@ -92,6 +91,7 @@ private:
 
 	int 				_emit_type;
 	bool				_research_done;
+	QString				_caller_class;
 
 	void 	_download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QPixmap>& vec_pixmaps);
 	Album 	_get_album_from_metadata(const MetaData& md);

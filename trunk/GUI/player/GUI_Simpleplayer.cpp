@@ -27,6 +27,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
+#include "CoverLookup/CoverLookup.h"
 #include "Engine/Engine.h"
 
 #include <QList>
@@ -61,6 +62,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui_stream = 0;
 
 	m_skinSuffix = "";
+	m_class_name = "Player";
 
 	QSize size = settings->getPlayerSize();
 	QRect rect = this->geometry();
@@ -68,6 +70,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	rect.setHeight(size.height());
 	this->setGeometry(rect);
 
+	m_cov_lookup = new CoverLookup(m_class_name);
 
 	this->ui->action_min2tray->setChecked(m_min2tray);
 
@@ -176,7 +179,6 @@ void GUI_SimplePlayer::setupConnections(){
 				SLOT(show_lfm_radio(bool)));
 
 
-	qDebug() << "setup show stream";
 	connect(this->ui->action_ViewStream, SIGNAL(toggled(bool)), this,
 					SLOT(show_stream(bool)));
 	connect(this->ui->action_ViewPlaylistChooser, SIGNAL(toggled(bool)), this,
@@ -215,6 +217,17 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(searchSliderMoved(int)));
 	connect(this->ui->songProgress, SIGNAL(sliderReleased()), this,
 			SLOT(searchSliderReleased()));
+
+
+	// cover lookup
+	connect(this->m_cov_lookup, SIGNAL(sig_cover_found(QString, QString)),
+			this, 				SLOT(cover_changed(QString, QString)));
+
+	connect(this, 				SIGNAL(sig_want_cover(const MetaData&)),
+			this->m_cov_lookup, SLOT(search_cover(const MetaData&)));
+
+	connect(this,				SIGNAL(sig_fetch_all_covers()),
+			this->m_cov_lookup, SLOT(search_all_covers()));
 
 }
 
@@ -283,7 +296,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	QString cover_path = Helper::get_cover_path(md.artist, md.album);
 	if(! QFile::exists(cover_path) ){
 		cover_path = Helper::getIconPath() + "append.png";
-		emit wantCover(md);
+		emit sig_want_cover(md);
 	}
 
 	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
@@ -316,7 +329,7 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 
 	this->setWindowTitle(QString("Sayonara - ") + in.title);
 
-	emit wantCover(in);
+	emit sig_want_cover(in);
 	this->ui->btn_correct->setVisible(false);
 	this->repaint();
 }
@@ -324,7 +337,9 @@ void GUI_SimplePlayer::update_info(const MetaData& in) {
 
 // public slot
 // cover was found by CoverLookup
-void GUI_SimplePlayer::cover_changed(QString cover_path) {
+void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
+
+	if(m_class_name != caller_class) return;
 
 	// found cover is not for the player but for sth else
 	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
@@ -346,7 +361,6 @@ void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool cor
 	m_metadata_corrected = md;
 	this->ui->btn_correct->setVisible(corrected && CSettingsStorage::getInstance()->getLastFMCorrections());
 
-	qDebug() << "loved? " << loved;
 	if(loved){
 		this->ui->title->setText(this->ui->title->text());
 	}
@@ -460,7 +474,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 void GUI_SimplePlayer::setVolume(int vol) {
 	this->ui->volumeSlider->setValue(vol);
 	setupVolButton(vol);
-	emit volumeChanged((qreal) vol);
+	emit sig_volume_changed(vol);
 }
 
 
@@ -587,7 +601,8 @@ void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app) {
 
 void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
 	setupVolButton(volume_percent);
-        emit volumeChanged((double)volume_percent);
+	emit sig_volume_changed(volume_percent);
+
 	CSettingsStorage::getInstance()->setVolume(volume_percent);
 }
 
@@ -648,7 +663,7 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 		setupVolButton(this->ui->volumeSlider->value());
 
-		emit volumeChanged((qreal) this->ui->volumeSlider->value());
+		emit sig_volume_changed(this->ui->volumeSlider->value());
 	}
 
 	else {
@@ -660,8 +675,7 @@ void GUI_SimplePlayer::muteButtonPressed() {
 		m_muteAction->setText("Unmute");
 
 		setupVolButton(0);
-
-		emit volumeChanged(0);
+		emit sig_volume_changed(0);
 	}
 
 }
@@ -669,7 +683,7 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 void GUI_SimplePlayer::coverClicked(bool) {
 
-	emit wantMoreCovers();
+	//emit sig_want_more_covers();
 }
 
 
@@ -1114,11 +1128,11 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 	Q_UNUSED(b);
-	emit fetch_all_covers();
+	emit sig_fetch_all_covers();
 }
 
 void GUI_SimplePlayer::album_cover_pressed() {
-	emit fetch_alternate_covers(this->m_metadata);
+
 }
 
 void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){

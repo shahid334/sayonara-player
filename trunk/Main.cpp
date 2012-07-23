@@ -44,7 +44,6 @@
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
 #include "StreamPlugins/LastFM/LastFM.h"
-#include "CoverLookup/CoverLookup.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
@@ -86,17 +85,13 @@ int main(int argc, char *argv[]){
 		}
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
-		CoverLookup* cover = CoverLookup::getInstance();
 
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
 
-
-
 		QApplication app (argc, argv);
 			app.setApplicationName("Sayonara");
 			app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
-
 
         GUI_SimplePlayer 		player;
         GUI_PlaylistChooser		ui_playlist_chooser(player.getParentOfPlugin());
@@ -142,16 +137,14 @@ int main(int argc, char *argv[]){
 
         CONNECT (&player, pause(), 								listen,				pause());
         CONNECT (&player, search(int),							listen,				jump(int));
-        CONNECT (&player, volumeChanged(qreal),					listen,				setVolume(qreal));
+        CONNECT (&player, sig_volume_changed(int),				listen,				setVolume(int));
 		CONNECT (&player, sig_rec_button_toggled(bool),			listen,				record_button_toggled(bool));
 		CONNECT (&player, setupLastFM(), 						&ui_lastfm, 		show_win());
         CONNECT (&player, baseDirSelected(const QString &),		&library, 			baseDirSelected(const QString & ));
         CONNECT (&player, reloadLibrary(), 						&library, 			reloadLibrary());
         CONNECT (&player, importDirectory(QString),				&library,			importDirectory(QString));
         CONNECT (&player, libpath_changed(QString), 			&library, 			setLibraryPath(QString));
-        CONNECT (&player, fetch_all_covers(),       			cover, 				search_all_covers());
         CONNECT (&player, fileSelected(QStringList &),			&playlist, 			psl_createPlaylist(QStringList&));
-        CONNECT (&player, wantCover(const MetaData&),			cover,				search_cover(const MetaData&) );
 		CONNECT (&player, play(),								&playlist,			psl_play());
 		CONNECT (&player, stop(),								&playlist,			psl_stop());
 		CONNECT (&player, forward(),							&playlist,			psl_forward());
@@ -198,10 +191,7 @@ int main(int argc, char *argv[]){
         CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&), 	&ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
         CONNECT (listen, eq_found(const QStringList&), 					&ui_eq, 	fill_available_equalizers(const QStringList&));
         CONNECT (listen, total_time_changed_signal(qint64),				&player,	total_time_changed(qint64));
-        CONNECT (listen, timeChangedSignal(quint32),						&player,	setCurrentPosition(quint32) );
-
-        CONNECT (cover, sig_cover_found(QString), 						&player, 			cover_changed(QString));
-        CONNECT (cover, sig_cover_found(QString), 						&ui_info_dialog,	psl_image_available(QString));
+        CONNECT (listen, timeChangedSignal(quint32),					&player,	setCurrentPosition(quint32) );
 
         CONNECT(&library, sig_playlist_created(QStringList&), 			&playlist, 		psl_createPlaylist(QStringList&));
         CONNECT(&library, sig_import_result(bool),						&playlist,		psl_import_result(bool));
@@ -232,10 +222,6 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_library, sig_delete_tracks(),							&library,	psl_delete_tracks());
         CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&),	&library,	psl_delete_certain_tracks(const QList<int>&));
 
-
-        CONNECT(&ui_info_dialog, sig_search_cover(const MetaData&), 		cover, 		search_cover(const MetaData&));
-        CONNECT(&ui_info_dialog, sig_search_artist_image(const QString&), 	cover,	search_artist_image(const QString&));
-
         CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		login_slot(QString, QString));
 
         CONNECT(&ui_eq, eq_changed_signal(int, int), 	listen, 	eq_changed(int, int));
@@ -264,6 +250,10 @@ int main(int argc, char *argv[]){
 
 		CONNECT(&ui_lfm_radio, listen_clicked(const QString&, int),		lastfm,		radio_init(const QString&, int));
 		CONNECT(&ui_lfm_radio, close_event(), 							&player, 	close_lfm_radio());
+
+		CONNECT(&ui_stream, sig_play_stream(const QString&, const QString&), 	&playlist, 	psl_play_stream(const QString&, const QString&));
+		CONNECT(&ui_stream, sig_close_event(), 									&player, 	close_stream());
+
 
 		CONNECT (&ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_strrip_set_active(bool));
 		CONNECT (&ui_stream_rec, sig_stream_recorder_active(bool),	&player,	psl_strrip_set_active(bool));
