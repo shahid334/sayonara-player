@@ -55,6 +55,7 @@ bool _db_fetch_tracks(QSqlQuery& q, vector<MetaData>& result){
 		}
 
 		while (q.next()) {
+
 			MetaData data;
 			data.id = 		 q.value(0).toInt();
 			data.title = 	 q.value(1).toString();

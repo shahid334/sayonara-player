@@ -69,6 +69,7 @@ public:
 	void	setup_fetch_artist_image(const QString& artist, int source);
 	void	setup_fetch_album_covers(const vector<Album>& albums, int source);
 	void	setup_fetch_single_album(const Album& album, int source);
+	void	setup_fetch_single_album(QString album, QString artist, int source);
 
 protected:
 	void run();

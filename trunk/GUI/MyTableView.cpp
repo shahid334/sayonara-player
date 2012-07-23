@@ -35,7 +35,7 @@
 #include <QPoint>
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_parent = parent;
-	qDrag = new QDrag(this);
+	qDrag = 0;
 
 }
 
@@ -85,9 +85,10 @@ void MyTableView::mouseMoveEvent(QMouseEvent* event){
 
 	QPoint pos = event->pos();
 
-	if(_drag &&
+	if(_drag && this->qDrag &&
 		abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y()) > 20){
-		qDrag->exec(Qt::MoveAction);
+
+			qDrag->exec(Qt::MoveAction);
 
 	}
 

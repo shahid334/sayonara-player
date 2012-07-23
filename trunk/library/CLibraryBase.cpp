@@ -25,6 +25,9 @@
 #include "library/CLibraryBase.h"
 #include "GUI/library/GUIImportFolder.h"
 #include "HelperStructs/id3.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Filter.h"
+
 #include <QDebug>
 #include <QProgressDialog>
 #include <QMessageBox>
@@ -33,6 +36,8 @@
 #include <QFileSystemWatcher>
 #include <QInputDialog>
 #include <QListWidget>
+
+#include <vector>
 
 CLibraryBase::CLibraryBase(QObject *parent) :
     QObject(parent)
@@ -43,11 +48,20 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 	m_watcher->addPath(m_library_path);
 	m_import_dialog = 0;
 
+	_db = CDatabaseConnector::getInstance();
+
+	_track_sortorder = "artist asc";
+	_album_sortorder = "name asc";
+	_artist_sortorder = "name_asc";
+
+	_filter.by_searchstring = BY_FULLTEXT;
+	_filter.filtertext = "";
+
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
 	connect(m_thread, SIGNAL(reloading_library(int)), this, SLOT(library_reloading_state_slot(int)));
-
 }
+
 
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
@@ -258,15 +272,17 @@ void CLibraryBase::reloadLibrary(){
 
 }
 
+// TODO:
+
 void CLibraryBase::reload_thread_finished(){
 
-	vector<MetaData> v_metadata;
+	/*vector<MetaData> v_metadata;
 	m_thread->get_metadata(v_metadata);
 	insertMetaDataIntoDB(v_metadata);
 	getAllAlbums();
 	getAllArtists();
 
-	emit sig_reload_library_finished();
+	emit sig_reload_library_finished();*/
 }
 
 void CLibraryBase::library_reloading_state_slot(int percent){
@@ -286,82 +302,132 @@ void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& v_md) {
 }
 
 
-void CLibraryBase::getAllArtistsAlbumsTracks(){
-	loadDataFromDb();
-
-}
-
-
 
 void CLibraryBase::loadDataFromDb () {
-    std::vector <MetaData> vec;
-    CDatabaseConnector::getInstance()->getTracksFromDatabase(vec);
-    if(vec.size() > 0)
-    	emit sig_metadata_loaded(vec);
-
-    getAllAlbums();
-    getAllArtists();
+	gather_stuff();
+	emit_stuff();
 }
 
 
-void CLibraryBase::getAllArtists(){
+void CLibraryBase::gather_stuff(){
+	_vec_albums.clear();
+	_vec_artists.clear();
+	_vec_md.clear();
 
-	vector<Artist> vec;
-	CDatabaseConnector::getInstance()->getAllArtists(vec);
-		if(vec.size() > 0) {
-
-			emit sig_all_artists_loaded(vec);
-		}
-
-}
-
-void CLibraryBase::getArtistsByAlbum(int album){
-
-	vector<Artist> vec;
-	CDatabaseConnector::getInstance()->getAllArtistsByAlbum(album, vec);
-	if(vec.size() > 0){
-		emit sig_all_artists_loaded(vec);
-		getTracksByAlbum(album);
+	if(_filter.filtertext.size() >= 5){
+		_db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+		_db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
+		_db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
 	}
 
+	else {
+		_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+		_db->getAllAlbums(_vec_albums, _album_sortorder);
+		_db->getAllArtists(_vec_artists, _artist_sortorder);
+	}
+}
+
+void CLibraryBase::emit_stuff(){
+	emit sig_all_albums_loaded(_vec_albums);
+	emit sig_all_artists_loaded(_vec_artists);
+	emit sig_metadata_loaded(_vec_md);
 }
 
 
 
+void CLibraryBase::psl_sortorder_changed(QString artist_so, QString album_so, QString track_so){
+	_album_sortorder = album_so;
+	_artist_sortorder = artist_so;
+	_track_sortorder = track_so;
 
-void CLibraryBase::getAllAlbums(){
-
-	vector<Album> vec;
-	CDatabaseConnector::getInstance()->getAllAlbums(vec);
-	if(vec.size() > 0) emit sig_all_albums_loaded(vec);
+	gather_stuff();
+	emit_stuff();
 }
 
-void CLibraryBase::getAlbumsByArtist(int artist){
-	vector<Album> vec;
-	CDatabaseConnector::getInstance()->getAllAlbumsByArtist(artist, vec);
-	if(vec.size() > 0)
-		emit sig_all_albums_loaded(vec);
-		getTracksByArtist(artist);
+void CLibraryBase::psl_filter_changed(const Filter& filter){
+	_filter = filter;
 
+	gather_stuff();
+	emit_stuff();
 }
 
 
-void CLibraryBase::getTracksByAlbum(int album){
+void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
+	_vec_md.clear();
+	_vec_albums.clear();
 
-	vector<MetaData> vec;
-	CDatabaseConnector::getInstance()->getAllTracksByAlbum(album, vec);
-	if(vec.size() > 0)
-		emit sig_metadata_loaded(vec);
+	foreach(int idx, idx_list){
+		Artist artist = _vec_artists[idx];
+
+		vector<Album> v_tmp_album;
+		vector<MetaData> v_tmp_md;
+
+		_db->getAllAlbumsByArtist(artist.id, v_tmp_album, _filter, _album_sortorder);
+		foreach(Album album, v_tmp_album){
+			_vec_albums.push_back(album);
+		}
+
+		_db->getAllTracksByArtist(artist.id, v_tmp_md, _filter, _track_sortorder);
+		foreach(MetaData md, v_tmp_md){
+			_vec_md.push_back(md);
+		}
+	}
+
+	emit sig_all_albums_loaded(_vec_albums);
+	emit sig_metadata_loaded(_vec_md);
+	// TODO: No drag and drop possible
+}
+
+
+
+void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
+
+	_vec_md.clear();
+
+	foreach(int idx, idx_list){
+		Album album = _vec_albums[idx];
+
+		vector<MetaData> v_tmp_md;
+
+		_db->getAllTracksByAlbum(album.id, v_tmp_md, _filter, _track_sortorder);
+		foreach(MetaData md, v_tmp_md){
+			_vec_md.push_back(md);
+		}
+	}
+
+	emit sig_metadata_loaded(_vec_md);
+	// TODO: No drag and drop possible
+}
+
+void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
+
+	vector<MetaData> v_md;
+	foreach(int idx,idx_list){
+		v_md.push_back(_vec_md[idx]);
+	}
+
+	emit sig_track_mime_data_available(v_md);
 
 }
 
-void CLibraryBase::getTracksByArtist(int artist){
-	vector<MetaData> vec;
-	CDatabaseConnector::getInstance()->getAllTracksByArtist(artist, vec);
-	if(vec.size() > 0)
-		emit sig_metadata_loaded(vec);
+void CLibraryBase::psl_change_id3_tags(const QList<int>& lst){
 
+	// album, artist
+	if(lst.size() == 0 && _vec_md.size() > 0)
+		emit sig_change_id3_tags(_vec_md);
+
+	// set of tracks
+	else if(lst.size()){
+		vector<MetaData> v_md;
+		foreach(int i, lst){
+			v_md.push_back(_vec_md[i]);
+		}
+
+		emit sig_change_id3_tags(v_md);
+	}
 }
+
+
 
 void CLibraryBase::setLibraryPath(QString path){
 
@@ -372,6 +438,71 @@ void CLibraryBase::file_system_changed(const QString& path){
 	Q_UNUSED(path);
 
 	emit sig_should_reload_library();
-
-
 }
+
+void CLibraryBase::psl_prepare_artist_for_playlist(){
+	emit sig_tracks_for_playlist_available(_vec_md);
+}
+
+
+void CLibraryBase::psl_prepare_album_for_playlist(){
+	emit sig_tracks_for_playlist_available(_vec_md);
+}
+
+
+void CLibraryBase::psl_prepare_track_for_playlist(int idx){
+	vector<MetaData> v_md;
+	v_md.push_back(_vec_md[idx]);
+	emit sig_tracks_for_playlist_available(v_md);
+}
+
+
+
+void CLibraryBase::delete_tracks(vector<MetaData>& vec_md){
+	QStringList file_list;
+	int n_files = vec_md.size();
+	int n_fails = 0;
+
+	foreach(MetaData md, vec_md){
+		file_list.push_back(md.filepath);
+	}
+
+
+	_db->deleteTracks(vec_md);
+	vec_md.clear();
+
+	foreach(QString filename, file_list){
+		QFile file(filename);
+		if( !file.remove() )
+			n_fails ++;
+	}
+
+	QString answer;
+
+	if(n_fails == 0){
+		answer = "All files could be removed";
+	}
+
+	else {
+		answer = QString::number(n_fails) + " of " + QString::number(n_files) + " could not be removed";
+	}
+
+	emit sig_delete_answer(answer);
+}
+
+
+void CLibraryBase::psl_delete_tracks(){
+	delete_tracks(_vec_md);
+}
+
+
+void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst){
+
+	vector<MetaData> vec_md;
+	foreach(int idx, lst){
+		vec_md.push_back(_vec_md[idx]);
+	}
+
+	delete_tracks(vec_md);
+}
+

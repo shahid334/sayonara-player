@@ -103,15 +103,17 @@ int main(int argc, char *argv[]){
         Playlists				playlists;
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist());
         Playlist 				playlist(&app);
-        GUI_Library_windowed	ui_library(player.getParentOfLibrary());
+        GUI_InfoDialog			ui_info_dialog;
+        GUI_Library_windowed	ui_library(player.getParentOfLibrary(), &ui_info_dialog);
         CLibraryBase 			library;
         LastFM*					lastfm = LastFM::getInstance();
         GUI_LastFM				ui_lastfm;
         GUI_Stream				ui_stream(player.getParentOfPlugin());
         GUI_Equalizer			ui_eq(player.getParentOfPlugin());
-        GUI_TagEdit				ui_tagedit;
         GUI_LFMRadioWidget		ui_lfm_radio(player.getParentOfPlugin());
         GUI_StreamRecorder		ui_stream_rec(&player);
+        GUI_TagEdit				ui_id3_editor;
+
 
 
         Socket					remote_socket(1234);
@@ -159,7 +161,7 @@ int main(int argc, char *argv[]){
         CONNECT (&player, skinChanged(bool), 					&ui_playlist, 		change_skin(bool));
         CONNECT (&player, show_small_playlist_items(bool),		&ui_playlist,		show_small_playlist_items(bool));
         CONNECT (&player, sig_sound_engine_changed(QString&), 	&plugin_loader, 	psl_switch_engine(QString&));
-        CONNECT (&player, sig_correct_id3(const MetaData&), 	&ui_tagedit,		change_meta_data(const MetaData&));
+        CONNECT (&player, sig_correct_id3(const MetaData&), 	&ui_id3_editor,		change_meta_data(const MetaData&));
         CONNECT (&player, sig_show_stream_rec(bool),			&ui_stream_rec,		psl_show(bool));
 
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&player,		update_track(const MetaData&));
@@ -175,7 +177,7 @@ int main(int argc, char *argv[]){
     	CONNECT (&playlist, sig_playlist_prepared(QString, vector<MetaData>&), 	&playlists, 	save_playlist_as_custom(QString, vector<MetaData>&));
     	CONNECT (&playlist, sig_library_changed(), 								&ui_library, 	library_changed());
     	CONNECT (&playlist, sig_import_files(const vector<MetaData>&), 			&library, 		importFiles(const vector<MetaData>&));
-        CONNECT (&playlist, sig_data_for_id3_change(const vector<MetaData>&), 	&ui_tagedit,	change_meta_data(const vector<MetaData>&));
+        CONNECT (&playlist, sig_data_for_id3_change(const vector<MetaData>&), 	&ui_id3_editor,	change_meta_data(const vector<MetaData>&));
         CONNECT (&playlist, sig_need_more_radio(),								lastfm, 		radio_get_playlist());
         CONNECT (&playlist, sig_radio_active(int),								&player,		set_radio_active(int));
         CONNECT (&playlist, sig_radio_active(int),								&ui_playlist,	set_radio_active(int));
@@ -198,28 +200,43 @@ int main(int argc, char *argv[]){
         CONNECT (listen, total_time_changed_signal(qint64),				&player,	total_time_changed(qint64));
         CONNECT (listen, timeChangedSignal(quint32),						&player,	setCurrentPosition(quint32) );
 
-        CONNECT (cover, sig_cover_found(QString), 					&player, 		cover_changed(QString));
-        CONNECT (cover, sig_cover_found(QString), 					&ui_library,	cover_changed(QString));
+        CONNECT (cover, sig_cover_found(QString), 						&player, 			cover_changed(QString));
+        CONNECT (cover, sig_cover_found(QString), 						&ui_info_dialog,	psl_image_available(QString));
 
-        CONNECT(&library, sig_playlist_created(QStringList&), 				&playlist, 		psl_createPlaylist(QStringList&));
+        CONNECT(&library, sig_playlist_created(QStringList&), 			&playlist, 		psl_createPlaylist(QStringList&));
         CONNECT(&library, sig_import_result(bool),						&playlist,		psl_import_result(bool));
         CONNECT(&library, sig_import_result(bool),						&ui_playlist,	import_result(bool));
         CONNECT(&library, sig_mp3s_loaded(int), 						&ui_playlist, 	update_progress_bar(int));
-        CONNECT(&library, sig_metadata_loaded(vector<MetaData>&), 		&ui_library, 	fill_library_tracks(vector<MetaData>&));
-        CONNECT(&library, sig_all_albums_loaded(vector<Album>&), 		&ui_library, 	fill_library_albums(vector<Album>&));
-        CONNECT(&library, sig_all_artists_loaded(vector<Artist>&), 		&ui_library, 	fill_library_artists(vector<Artist>&));
         CONNECT(&library, sig_reload_library_finished(), 				&ui_library, 	reloading_library_finished());
         CONNECT(&library, sig_reloading_library(int),					&ui_library, 	reloading_library(int));
         CONNECT(&library, sig_should_reload_library(), 					&ui_library, 	library_should_be_reloaded());
         CONNECT(&library, sig_import_result(bool),						&ui_library,	import_result(bool));
+        CONNECT(&library, sig_metadata_loaded(vector<MetaData>&), 		&ui_library, 	fill_library_tracks(vector<MetaData>&));
+        CONNECT(&library, sig_all_albums_loaded(vector<Album>&), 		&ui_library, 	fill_library_albums(vector<Album>&));
+        CONNECT(&library, sig_all_artists_loaded(vector<Artist>&), 		&ui_library, 	fill_library_artists(vector<Artist>&));
+        CONNECT(&library, sig_track_mime_data_available(const vector<MetaData>&), 		&ui_library, 	track_info_available(const vector<MetaData>&));
+        CONNECT(&library, sig_change_id3_tags(const vector<MetaData>&),	&ui_id3_editor,	change_meta_data(const vector<MetaData>&));
+        CONNECT(&library, sig_tracks_for_playlist_available(vector<MetaData>&), 		&playlist, psl_createPlaylist(vector<MetaData>&));
         CONNECT(&library, sig_import_result(bool),						&playlists,		import_result(bool));
+        CONNECT(&library, sig_delete_answer(QString), 					&ui_library, 	psl_delete_answer(QString));
 
-        CONNECT(&ui_library, sig_search_cover(const MetaData&), 	cover, 		search_cover(const MetaData&));
-        CONNECT(&ui_library, sig_search_artist_image(const QString&), cover,	search_artist_image(const QString&));
-        CONNECT(&ui_library, sig_reload_library(), 					&library, 	reloadLibrary());
-        CONNECT(&ui_library, sig_album_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
-        CONNECT(&ui_library, sig_artist_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
-        CONNECT(&ui_library, sig_track_chosen(vector<MetaData>&), 	&playlist, 	psl_createPlaylist(vector<MetaData>&));
+
+
+        CONNECT(&ui_library, sig_album_dbl_clicked(), 						&library, 	psl_prepare_album_for_playlist());
+        CONNECT(&ui_library, sig_artist_dbl_clicked(), 						&library, 	psl_prepare_artist_for_playlist());
+        CONNECT(&ui_library, sig_track_dbl_clicked(int), 					&library, 	psl_prepare_track_for_playlist(int));
+        CONNECT(&ui_library, sig_artist_pressed(const QList<int>&), 		&library, 	psl_selected_artists_changed(const QList<int>&));
+        CONNECT(&ui_library, sig_album_pressed(const QList<int>&), 			&library, 	psl_selected_albums_changed(const QList<int>&));
+        CONNECT(&ui_library, sig_track_pressed(const QList<int>&), 			&library, 	psl_selected_tracks_changed(const QList<int>&));
+        CONNECT(&ui_library, sig_filter_changed(const Filter&), 			&library, 	psl_filter_changed(const Filter&));
+        CONNECT(&ui_library, sig_sortorder_changed(QString,QString,QString), &library, 	psl_sortorder_changed(QString, QString, QString));
+        CONNECT(&ui_library, sig_show_id3_editor(const QList<int>&),		&library, 	psl_change_id3_tags(const QList<int>&));
+        CONNECT(&ui_library, sig_delete_tracks(),							&library,	psl_delete_tracks());
+        CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&),	&library,	psl_delete_certain_tracks(const QList<int>&));
+
+
+        CONNECT(&ui_info_dialog, sig_search_cover(const MetaData&), 		cover, 		search_cover(const MetaData&));
+        CONNECT(&ui_info_dialog, sig_search_artist_image(const QString&), 	cover,	search_artist_image(const QString&));
 
         CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		login_slot(QString, QString));
 
@@ -228,9 +245,8 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_eq, close_event(), 					&player, 	close_eq());
 
         CONNECT(&ui_playlist, edit_id3_signal(), 								&playlist, 	psl_edit_id3_request());
-        CONNECT(&ui_library, sig_data_for_id3_change(const vector<MetaData>&), 	&ui_tagedit,change_meta_data(const vector<MetaData>&));
-		CONNECT(&ui_tagedit, id3_tags_changed(), 								&ui_library,id3_tags_changed());
-		CONNECT(&ui_tagedit, id3_tags_changed(vector<MetaData>&), 				&playlist, 	psl_id3_tags_changed(vector<MetaData>&));
+		CONNECT(&ui_id3_editor, id3_tags_changed(), 							&ui_library,id3_tags_changed());
+		CONNECT(&ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&playlist, 	psl_id3_tags_changed(vector<MetaData>&));
 
 		CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		&playlist,		psl_similar_artists_available(const QList<int>&));
 		CONNECT(lastfm,	sig_last_fm_logged_in(bool),							&ui_playlist,	last_fm_logged_in(bool));

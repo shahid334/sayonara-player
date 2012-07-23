@@ -70,35 +70,31 @@ LastFM::LastFM() {
 }
 
 void LastFM::init(){
-	lfm_wa_init();
 
+	lfm_wa_init();
+	_class_name = QString("LastFM");
 	_logged_in = false;
 	_track_changed_thread = 0;
-
-
 }
 
 LastFM::~LastFM() {
 
 }
 
-QString LastFM::get_api_key(){
-	return LFM_API_KEY;
-}
 
 
 bool LastFM::init_track_changed_thread(){
 
 	if(!_logged_in) return false;
 
-	_track_changed_thread = new LFMTrackChangedThread(LFM_API_KEY, _username, _session_key);
+	_track_changed_thread = new LFMTrackChangedThread(_class_name);
 
 	if(_track_changed_thread){
-			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available()),
-					 this, 					SLOT(corrected_data_available()));
+			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available(const QString&)),
+					 this, 					SLOT(corrected_data_available(const QString&)));
 
-			connect( _track_changed_thread, SIGNAL(sig_similar_artists_available(const QList<int>&)),
-					 this, 					SLOT(similar_artists_available(const QList<int>&)));
+			connect( _track_changed_thread, SIGNAL(sig_similar_artists_available(const QString&, const QList<int>&)),
+					 this, 					SLOT(similar_artists_available(const QString&, const QList<int>&)));
 
 			return true;
 	}
@@ -156,12 +152,9 @@ bool LastFM::login(QString username, QString password){
 
 	if(_session_key.size() != 0) {
 		_logged_in = true;
-		qDebug() << "LFM: Logged in to LastFM";
 	}
 
 	else{
-		qDebug() << "LFM: Session key error";
-		qDebug() << response;
 		return false;
 	}
 
@@ -203,7 +196,15 @@ void LastFM::track_changed(const MetaData& md){
 			return;
 	}
 
+	_track_changed_thread->setThreadTask(
+			LFM_THREAD_TASK_UPDATE_TRACK 		|
+			LFM_THREAD_TASK_SIM_ARTISTS 		|
+			LFM_THREAD_TASK_FETCH_TRACK_INFO);
+
 	_track_changed_thread->setTrackInfo(md);
+	_track_changed_thread->setUsername(_username);
+	_track_changed_thread->setSessionKey(_session_key);
+
 	_track_changed_thread->start();
 }
 
@@ -248,17 +249,22 @@ void LastFM::scrobble(const MetaData& metadata){
 
 }
 
-void LastFM::similar_artists_available(const QList<int>& ids){
+void LastFM::similar_artists_available(const QString& target_class, const QList<int>& ids){
+	if(target_class.compare(_class_name) != 0) return;
+
 	emit sig_similar_artists_available(ids);
 }
 
 
-void LastFM::corrected_data_available(){
+void LastFM::corrected_data_available(const QString& target_class){
+
+	if(target_class.compare(_class_name) != 0) return;
+
 	MetaData md;
 	bool loved;
 	bool corrected;
 
-	if( _track_changed_thread->getCorrections(md, loved, corrected) )
+	if( _track_changed_thread->fetch_corrections(md, loved, corrected) )
 		emit sig_track_info_fetched(md, loved, corrected);
 }
 
@@ -407,139 +413,6 @@ bool LastFM::parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& d
 	return (v_md.size() > 0);
 }
 
-
-QString LastFM::get_artist_info(const QString& artist){
-
-	QString retval;
-
-	if(!_logged_in) {
-		qDebug() << "not logged in";
-		return "";
-	}
-
-	UrlParams params;
-	params["artist"] = QUrl::toPercentEncoding(artist);
-	params["username"] = _username;
-	params["method"] = QString("artist.getinfo");
-	params["api_key"] = LFM_API_KEY;
-
-
-	QString url_getArtistInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
-
-	bool success = lfm_wa_call_url(url_getArtistInfo, retval);
-	if(!success) {
-		return "";
-	}
-
-	QString str2search = QString("<userplaycount>");
-	int idx = retval.indexOf(str2search);
-	idx += str2search.size();
-	QString playcount = "";
-	for(int i=idx; retval.at(i).isDigit(); i++){
-		playcount += retval.at(i);
-	}
-
-	return playcount;
-
-}
-
-QString LastFM::get_album_info(const QString& artist, const QString& album){
-
-	QString retval;
-
-	if(!_logged_in) {
-		qDebug() << "not logged in";
-		return "";
-	}
-
-	UrlParams params;
-	params["artist"] = QUrl::toPercentEncoding(artist);
-	params["album"] = QUrl::toPercentEncoding(album);
-	params["username"] = _username;
-	params["method"] = QString("album.getinfo");
-	params["api_key"] = LFM_API_KEY;
-
-
-	QString url_getAlbumInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
-
-	bool success = lfm_wa_call_url(url_getAlbumInfo, retval);
-	if(!success) {
-		return "";
-	}
-
-	QString str2search = QString("<userplaycount>");
-	int idx = retval.indexOf(str2search);
-	idx += str2search.size();
-	QString playcount = "";
-	for(int i=idx; retval.at(i).isDigit(); i++){
-		playcount += retval.at(i);
-	}
-
-	return playcount;
-}
-
-
-bool LastFM::get_track_info(const MetaData& md, bool emit_sig){
-	QMap<QString, QString> values;
-	get_track_info(md, values, emit_sig);
-}
-
-bool LastFM::get_track_info(const MetaData& md, QMap<QString, QString>& values, bool emit_sig){
-	QString retval;
-
-	if(!_logged_in) {
-		qDebug() << "not logged in";
-		return "";
-	}
-
-	UrlParams params;
-	params["artist"] = QUrl::toPercentEncoding(md.artist);
-	params["track"] = QUrl::toPercentEncoding(md.title);
-	params["username"] = _username;
-	params["method"] = QString("track.getinfo");
-	params["autocorrect"] = QString("1");
-	params["api_key"] = LFM_API_KEY;
-
-	QString url_getTrackInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
-
-	bool success = lfm_wa_call_url(url_getTrackInfo, retval);
-
-	if(!success) {
-		return false;
-	}
-
-	QStringList search_list;
-	search_list << LFM_TAG_TRACK_USERPLAYCOUNT;
-	search_list << LFM_TAG_TRACK_LOVED;
-	search_list << LFM_TAG_TRACK_ALBUM;
-	search_list << LFM_TAG_TRACK_ARTIST;
-	search_list << LFM_TAG_TRACK_DURATION;
-	search_list << LFM_TAG_TRACK_TITLE;
-	foreach(QString str2search, search_list){
-		QString str = Helper::easy_tag_finder(str2search , retval);
-		values[str2search] = str;
-	}
-
-
-	bool corrected = false;
-	bool loved = (values[LFM_TAG_TRACK_LOVED].toInt() == 1);
-
-	QString artist = values[LFM_TAG_TRACK_ARTIST];
-	QString title = values[LFM_TAG_TRACK_TITLE];
-
-	MetaData md_copy = md;
-
-	if(artist.toLower() != md.artist.toLower() ||
-		title.toLower() != md.title.toLower() ){
-		corrected = true;
-		md_copy.artist = artist;
-		md_copy.title = title;
-	}
-
-	if(emit_sig)
-		emit sig_track_info_fetched(md_copy, loved, corrected);
-	return true;
-}
 
 
 void LastFM::get_friends(QStringList& friends){

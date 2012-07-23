@@ -39,18 +39,41 @@
 
 #define UrlParams QMap<QString, QString>
 
-LFMTrackChangedThread::LFMTrackChangedThread(QString api_key, QString username, QString session_key) {
-	_api_key = api_key;
-	_username = username;
-	_session_key = session_key;
+LFMTrackChangedThread::LFMTrackChangedThread(QString target_class) {
+	_target_class = target_class;
 }
+
 
 LFMTrackChangedThread::~LFMTrackChangedThread() {
 
 }
 
+void LFMTrackChangedThread::setSessionKey(QString session_key){
+	_session_key = session_key;
+}
+
+void LFMTrackChangedThread::setUsername(QString username){
+	_username = username;
+}
+
 void LFMTrackChangedThread::setTrackInfo(const MetaData& md){
 	_md = md;
+}
+
+void LFMTrackChangedThread::setAlbumName(QString album_name){
+	_album_name = album_name;
+}
+
+void LFMTrackChangedThread::setArtistName(QString artist_name){
+	_artist_name = artist_name;
+}
+
+void LFMTrackChangedThread::setThreadTask(int task){
+	_thread_tasks = task;
+}
+
+void LFMTrackChangedThread::setTargetClass(QString name){
+	_target_class = name;
 }
 
 
@@ -58,39 +81,59 @@ void LFMTrackChangedThread::run(){
 
 	bool success = false;
 
-	success = update_now_playing();
-	if(!success)
-		qDebug() << "Could not update current played track";
+	_album_data.clear();
+	_artist_data.clear();
 
-	success = search_similar_artists();
-	if(success)
-		emit sig_similar_artists_available(_chosen_ids);
-
-
-	MetaData md = _md;
-	bool loved;
-	bool corrected;
-
-	success = get_corrected_track_info(md, loved, corrected);
-	_corrected_success = success;
-	_loved = loved;
-	_corrected = corrected;
-	_md_corrected = md;
-
-	if(success){
-		emit sig_corrected_data_available();
+	if(_thread_tasks & LFM_THREAD_TASK_UPDATE_TRACK){
+		success = update_now_playing();
+		if(!success)
+			qDebug() << "Could not update current played track";
 	}
+
+
+
+	if(_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS){
+		success = search_similar_artists();
+		if(success)
+			emit sig_similar_artists_available(_target_class, _chosen_ids);
+	}
+
+
+	if(_thread_tasks & LFM_THREAD_TASK_FETCH_TRACK_INFO){
+		MetaData md = _md;
+		bool loved;
+		bool corrected;
+
+		success = get_corrected_track_info(md, loved, corrected);
+		_corrected_success = success;
+		_loved = loved;
+		_corrected = corrected;
+		_md_corrected = md;
+
+		if(success){
+			emit sig_corrected_data_available(_target_class);
+		}
+	}
+
+	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ALBUM_INFO){
+		success = get_album_info(_artist_name, _album_name);
+		if(success)
+			emit sig_album_info_available(_target_class);
+	}
+
+	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ARTIST_INFO){
+		success = get_artist_info(_artist_name);
+		if(success)
+			emit sig_artist_info_available(_target_class);
+	}
+
+	_thread_tasks = 0;
 
 
 }
 
 
 bool LFMTrackChangedThread::update_now_playing(){
-
-	qDebug() << _md.title << "; API Key: " << _api_key;
-
-
-
 
 	QString artist = _md.artist;
 	QString title = _md.title;
@@ -106,7 +149,6 @@ bool LFMTrackChangedThread::update_now_playing(){
 
 	string post_data;
 	QString url = lfm_wa_create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), sig_data, post_data);
-	qDebug() << "url : " << url;
 	QString response;
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
@@ -218,9 +260,7 @@ bool LFMTrackChangedThread::search_similar_artists(){
 			_chosen_ids.push_back(it.value());
 		}
 
-
 		return (_chosen_ids.size() > 0);
-
 }
 
 
@@ -252,6 +292,27 @@ QMap<QString, int> LFMTrackChangedThread::filter_available_artists(QMap<QString,
 		return possible_artists;
 }
 
+bool LFMTrackChangedThread::fetch_corrections(MetaData& md, bool& loved, bool& corrected){
+
+	md = _md_corrected;
+	loved = _loved;
+	corrected = _corrected;
+
+	return _corrected_success;
+
+}
+
+bool LFMTrackChangedThread::fetch_album_info(QMap<QString, QString>& info){
+	info = _album_data;
+	return(info.keys().count() > 0);
+}
+
+bool LFMTrackChangedThread::fetch_artist_info( QMap<QString, QString>& info){
+	info = _artist_data;
+	return(info.keys().count() > 0);
+}
+
+
 
 bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, bool& corrected){
 	QString retval;
@@ -263,7 +324,7 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 		params["username"] = _username;
 		params["method"] = QString("track.getinfo");
 		params["autocorrect"] = QString("1");
-		params["api_key"] = _api_key;
+		params["api_key"] = LFM_API_KEY;
 
 		QString url_getTrackInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
 
@@ -302,13 +363,57 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 }
 
 
-bool LFMTrackChangedThread::getCorrections(MetaData& md, bool& loved, bool& corrected){
 
-	md = _md_corrected;
-	loved = _loved;
-	corrected = _corrected;
-	return _corrected_success;
+bool LFMTrackChangedThread::get_artist_info(QString artist){
+
+	QString retval;
+
+	UrlParams params;
+	params["artist"] = QUrl::toPercentEncoding(artist);
+	params["username"] = _username;
+	params["method"] = QString("artist.getinfo");
+	params["api_key"] = LFM_API_KEY;
+
+
+	QString url_getArtistInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+
+	bool success = lfm_wa_call_url(url_getArtistInfo, retval);
+	if(!success) {
+
+		return false;
+	}
+
+	_artist_data["LastFM plays"] = Helper::easy_tag_finder(QString("artist.stats.userplaycount"), retval);
+
+	return true;
 
 }
+
+bool LFMTrackChangedThread::get_album_info(QString artist, QString album){
+
+	QString retval;
+
+	UrlParams params;
+	params["artist"] = QUrl::toPercentEncoding(artist);
+	params["album"] = QUrl::toPercentEncoding(album);
+	params["username"] = _username;
+	params["method"] = QString("album.getinfo");
+	params["api_key"] = LFM_API_KEY;
+
+
+	QString url_getAlbumInfo = lfm_wa_create_std_url("http://ws.audioscrobbler.com/2.0/", params);
+
+
+	bool success = lfm_wa_call_url(url_getAlbumInfo, retval);
+	if(!success) {
+		return false;
+	}
+
+	_album_data["Release Date"] = Helper::easy_tag_finder(QString("album.releasedate"), retval);
+	_album_data["LastFM plays"] = Helper::easy_tag_finder(QString("album.userplaycount"), retval);
+
+	return true;
+}
+
 
 

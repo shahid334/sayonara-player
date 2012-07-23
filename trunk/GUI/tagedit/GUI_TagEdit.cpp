@@ -125,8 +125,6 @@ void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
 
 void GUI_TagEdit::prev_button_clicked(){
 
-
-
 	save_metadata();
 
 	if(_cur_idx > 0){

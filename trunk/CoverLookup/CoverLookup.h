@@ -63,6 +63,7 @@ class CoverLookup : public QObject{
 		void search_cover(const MetaData& md);		/* search a cover for certain metadata */
 		void search_covers(const vector<Album>&);	/* search multiple covers */
 
+
 		void research_cover(const MetaData&);	/* search alternative covers for one album */
 		void search_all_covers();					/* search all covers*/
 		void terminate_thread();					/* stop to search for covers */

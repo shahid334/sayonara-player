@@ -33,43 +33,113 @@
 
 #include "HelperStructs/MetaData.h"
 
+#define LFM_THREAD_TASK_UPDATE_TRACK 		1<<0
+#define LFM_THREAD_TASK_SIM_ARTISTS 		1<<1
+#define LFM_THREAD_TASK_FETCH_TRACK_INFO 	1<<2
+#define LFM_THREAD_TASK_FETCH_ARTIST_INFO 	1<<3
+#define LFM_THREAD_TASK_FETCH_ALBUM_INFO 	1<<4
+
+
 class LFMTrackChangedThread : public QThread{
 
 	Q_OBJECT
 
 	signals:
-		void sig_corrected_data_available();
-		void sig_similar_artists_available(const QList<int>&);
+		void sig_corrected_data_available(const QString&);
+		void sig_album_info_available(const QString&);
+		void sig_artist_info_available(const QString&);
+		void sig_similar_artists_available(const QString&, const QList<int>&);
+
 
 protected:
 		void run();
 
 public:
-	LFMTrackChangedThread(QString api_key, QString username, QString session_key);
+	LFMTrackChangedThread(QString target_class);
 	virtual ~LFMTrackChangedThread();
 
+	/*
+	 *	required by
+	 *	required LFM_THREAD_TASK_UPDATE_TRACK
+	 *	required LFM_THREAD_TASK_SIM_ARTISTS
+	 *	required LFM_THREAD_TASK_FETCH_TRACK_INFO
+	 */
 	void setTrackInfo(const MetaData& md);
-	bool getCorrections(MetaData& md, bool& loved, bool& corrected);
+
+	/*
+	 *	required by
+	 *	required LFM_THREAD_TASK_UPDATE_TRACK
+	*/
+	void setSessionKey(QString session_key);
+
+	/*
+	 *	required by
+	 *	required LFM_THREAD_TASK_UPDATE_TRACK
+	 *	required LFM_THREAD_TASK_FETCH_TRACK_INFO
+	 *	required LFM_THREAD_TASK_FETCH_ALBUM_INFO
+	 *	required LFM_THREAD_TASK_FETCH_ARTIST_INFO
+	 */
+	void setUsername(QString username);
+
+	/*
+	 * required by LFM_THREAD_TASK_ALBUM_INFO
+	 * required by LFM_THREAD_TASK_ARTIST_INFO
+	 */
+	void setArtistName(QString artist);
+
+	/*
+	 * required by LFM_THREAD_TASK_ALBUM_INFO
+	 */
+	void setAlbumName(QString album);
+
+
+	/*
+	 * Ready to fetch function
+	 */
+	bool fetch_corrections(MetaData& md, bool& loved, bool& corrected);
+	bool fetch_album_info(QMap<QString, QString>& info);
+	bool fetch_artist_info(QMap<QString, QString>& info);
+
+	void setThreadTask(int task);
+	void setTargetClass(QString name);
 
 
 private:
+
+	QString		_target_class;
+	int			_thread_tasks;
+
 	MetaData 	_md;
+
+	/* update track */
 	QString		_username;
-	QString 	_api_key;
 	QString 	_session_key;
+
+	bool update_now_playing();
+
+
+	/* similar artists */
 	QList<int>	_chosen_ids;
 
+	bool search_similar_artists();
+	QMap<QString, int> filter_available_artists(QMap<QString, double> *artists, int idx);
+
+
+	/* Track info */
 	MetaData	_md_corrected;
 	bool		_loved;
 	bool		_corrected;
 	bool		_corrected_success;
 
 
-	bool search_similar_artists();
-	bool update_now_playing();
-	bool get_corrected_track_info(MetaData& md, bool& loved, bool& corrected);
+	QString		_album_name;
+	QString		_artist_name;
+	QMap<QString, QString>		_album_data;
+	QMap<QString, QString>		_artist_data;
 
-	QMap<QString, int> filter_available_artists(QMap<QString, double> *artists, int idx);
+	bool 		get_corrected_track_info(MetaData& md, bool& loved, bool& corrected);
+	bool 		get_artist_info(QString artist);
+	bool	 	get_album_info(QString artist, QString album);
 
 };
 

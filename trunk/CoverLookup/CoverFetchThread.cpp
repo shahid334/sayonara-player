@@ -235,6 +235,13 @@ void CoverFetchThread::setup_fetch_album_covers(const vector<Album>& albums, int
 	_images.clear();
 }
 
+void CoverFetchThread::setup_fetch_single_album(QString album_str, QString artist_str, int source){
+	Album album;
+	album.artists << artist_str;
+	album.name = album_str;
+	setup_fetch_single_album(album, source);
+
+}
 
 void CoverFetchThread::setup_fetch_single_album(const Album& album, int source){
 	_album_searchstring = album.name;

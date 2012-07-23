@@ -63,8 +63,8 @@ Q_OBJECT
 		void radio_get_playlist();
 
 	private slots:
-		void similar_artists_available(const QList<int>&);
-		void corrected_data_available();
+		void similar_artists_available(const QString&, const QList<int>&);
+		void corrected_data_available(const QString&);
 
 	public:
 		static LastFM * getInstance();
@@ -76,17 +76,10 @@ Q_OBJECT
 
 		bool login(QString username, QString password);
 
-		static QString get_api_key();
+		/*static QString get_api_key();
 		static QString calc_album_lfm_adress(QString album);
 		static QString calc_search_album_adress(QString album);
-		static QString calc_search_artist_adress(QString album);
-
-		QString get_artist_info(const QString& artist);
-		QString get_album_info(const QString& artist, const QString& album);
-
-		bool get_track_info(const MetaData& md, bool emit_sig=true);
-		bool get_track_info(const MetaData& md, QMap<QString, QString>& values, bool emit_sig=true);
-
+		static QString calc_search_artist_adress(QString album);*/
 
 	private:
 
@@ -97,6 +90,8 @@ Q_OBJECT
 		 void init();
 		 bool init_track_changed_thread();
 
+		 QString			_class_name;
+
 		bool 			_logged_in;
 
 		QString			_username;
@@ -104,6 +99,7 @@ Q_OBJECT
 		QString			_session_key;
 		QString			_session_key2;
 		MetaData		_loved_tracks;
+
 
 	private:
 		QString parse_session_answer();

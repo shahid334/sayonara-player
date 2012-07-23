@@ -41,7 +41,9 @@
 #include <GUI/library/LibraryItemDelegateAlbums.h>
 #include <GUI/library/LibraryItemDelegateArtists.h>
 #include <GUI/library/LibraryItemModelArtists.h>
+#include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include <GUI/MyTableView.h>
+
 #include <HelperStructs/MetaData.h>
 #include <HelperStructs/Filter.h>
 
@@ -59,7 +61,7 @@ class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
 Q_OBJECT
 
 public:
-	GUI_Library_windowed(QWidget* parent = 0);
+	GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dialog);
 	virtual ~GUI_Library_windowed();
 
 private:
@@ -72,40 +74,33 @@ private:
 	LibraryItemModelArtists* 	_artist_model;
 	LibraryItemDelegateArtists* _artist_delegate;
 
-	vector<MetaData> 	_v_metadata;
-	vector<Album> 		_v_albums;
-	vector<Artist> 		_v_artists;
-
 	QMenu* 		_right_click_menu;
+
 	QAction* 	_info_action;
 	QAction* 	_edit_action;
 	QAction* 	_delete_action;
 
-	QMessageBox* _album_msg_box;
-
 	Filter		_cur_searchfilter;
+
+
 
 signals:
 
-	/* those three are intendenden for a nicer sw-design, but are not
-	 * used yet
-	 */
-	/*void sig_artist_changed(int);
-	void sig_album_changed(int);
-	void sig_clear();*/
+	void sig_album_dbl_clicked();
+	void sig_artist_dbl_clicked();
+	void sig_track_dbl_clicked(int);
 
-	/* emitted when dbl clicked */
-	void sig_album_chosen(vector<MetaData>&);
+	void sig_artist_pressed(const QList<int>&);
+	void sig_album_pressed(const QList<int>&);
+	void sig_track_pressed(const QList<int>&);
 
-	/* emitted when dbl clicked */
-	void sig_artist_chosen(vector<MetaData>&);
+	void sig_delete_tracks();
+	void sig_delete_certain_tracks(const QList<int>&);
 
-	/* emitted when dbl clicked */
-	void sig_track_chosen(vector<MetaData>&);
-	void sig_reload_library();
-	void sig_data_for_id3_change(const vector<MetaData>&);
-	void sig_search_cover(const MetaData&);
-	void sig_search_artist_image(const QString&);
+	void sig_filter_changed(const Filter&);
+	void sig_sortorder_changed(QString,QString,QString);
+
+	void sig_show_id3_editor(const QList<int>&);
 
 public slots:
 	void fill_library_tracks(vector<MetaData>&);
@@ -114,44 +109,48 @@ public slots:
 	void id3_tags_changed();
 	void reloading_library(int);
 	void reloading_library_finished();
-	void library_should_be_reloaded();
-	void cover_changed(QString);
 	void library_changed();
 	void import_result(bool);
+	void psl_delete_answer(QString);
+
 
 private slots:
-	void track_pressed(const QModelIndex&);
-	void album_pressed(const QModelIndex &);
+
 	void artist_pressed(const QModelIndex &);
+	void album_pressed(const QModelIndex &);
+	void track_pressed(const QModelIndex&);
+	void track_info_available(const vector<MetaData>& v_md);
 
 	void clear_button_pressed();
-	void album_dbl_clicked(const QModelIndex &);
+
 	void artist_dbl_clicked(const QModelIndex &);
+	void album_dbl_clicked(const QModelIndex &);
 	void track_dbl_clicked(const QModelIndex &);
 
 	void searchfilter_changed(int);
-	void text_line_edited(const QString&);
-	void sort_albums_by_column(int);
-	void sort_artists_by_column(int);
-	void sort_tracks_by_column(int);
+	void text_line_edited(const QString&, bool force_emit=false);
 
-	void reload_library_slot();
+	void sort_artists_by_column(int);
+	void sort_albums_by_column(int);
+	void sort_tracks_by_column(int);
 
 	void show_artist_context_menu(const QPoint& p);
 	void show_album_context_menu(const QPoint& p);
 	void show_track_context_menu(const QPoint& p);
 
-	void edit_album();
-	void info_album();
-	void delete_album();
-	void edit_artist();
-	void info_artist();
-	void delete_artist();
-	void edit_tracks();
-	void info_tracks();
-	void delete_tracks();
 
-	void apply_cover_to_entire_album();
+
+	void info_artist();
+	void info_album();
+	void info_tracks();
+
+	void edit_artist();
+	void edit_album();
+	void edit_tracks();
+
+	void delete_artist();
+	void delete_album();
+	void delete_tracks();
 
 
 protected:
@@ -169,17 +168,9 @@ private:
 	QString _sort_artists; /* [name | tracks] [asc | desc] */
 	QString _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
-	QList<int> 	_selected_artists;
-	QList<int> 	_selected_albums;
+	GUI_InfoDialog* _info_dialog;
 
-	/* this parameter tells if a filter is applied or everything is shown
-	 * and is only used in the text_line_edited function
-	 */
-	bool _everything_loaded;
-
-	CDatabaseConnector* _db;
-
-	void deleteSomeTracks(vector<MetaData>&);
+	bool show_delete_dialog(int n_tracks);
 	void refresh();
 
 };

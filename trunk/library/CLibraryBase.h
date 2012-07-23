@@ -22,13 +22,20 @@
 #ifndef CLIBRARYBASE_H
 #define CLIBRARYBASE_H
 
+#include "HelperStructs/CDirectoryReader.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Filter.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
+
 #include <QObject>
 #include <QThread>
 #include <QFileSystemWatcher>
 #include <library/ReloadThread.h>
 #include <GUI/library/GUIImportFolder.h>
-#include "HelperStructs/CDirectoryReader.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
+
+#include <vector>
+
+
 
 class CLibraryBase : public QObject
 {
@@ -38,11 +45,14 @@ public:
 
     void loadDataFromDb ();
 
+
 signals:
 	void sig_playlist_created(QStringList&);
-    void sig_metadata_loaded (vector<MetaData>& in);
+	void sig_track_mime_data_available(const vector<MetaData>&);
+    void sig_metadata_loaded (vector<MetaData>&);
     void sig_all_albums_loaded(vector<Album>&);
     void sig_all_artists_loaded(vector<Artist>&);
+    void sig_tracks_for_playlist_available(vector<MetaData>&);
     void sig_mp3s_loaded(int);
 
     void sig_should_reload_library();
@@ -50,6 +60,9 @@ signals:
     void sig_reloading_library(int);
 
     void sig_import_result(bool);
+    void sig_change_id3_tags(const vector<MetaData>&);
+
+    void sig_delete_answer(QString);
 
 
 
@@ -57,19 +70,30 @@ signals:
 public slots:
     void baseDirSelected (const QString & baseDir);
     void insertMetaDataIntoDB(vector<MetaData>& in);
-    void getAllArtistsAlbumsTracks();
-    void getAllArtists();
-    void getArtistsByAlbum(int album);
-    void getAllAlbums();
-    void getAlbumsByArtist(int artist);
-    void getTracksByAlbum(int);
-    void getTracksByArtist(int);
+
     void reloadLibrary();
     void importDirectory(QString);
     void importFiles(const vector<MetaData>&);
 
     void setLibraryPath(QString);
     void importDirectoryAccepted(const QString&, bool);
+
+
+/* New way */
+    void psl_selected_artists_changed(const QList<int>&);
+    void psl_selected_albums_changed(const QList<int>&);
+    void psl_selected_tracks_changed(const QList<int>&);
+
+    void psl_prepare_album_for_playlist();
+    void psl_prepare_artist_for_playlist();
+    void psl_prepare_track_for_playlist(int idx);
+
+    void psl_filter_changed(const Filter&);
+    void psl_sortorder_changed(QString, QString, QString);
+    void psl_change_id3_tags(const QList<int>& lst);
+
+    void psl_delete_tracks();
+    void psl_delete_certain_tracks(const QList<int>&);
 
 private slots:
    void reload_thread_finished();
@@ -87,6 +111,21 @@ private:
     GUI_ImportFolder*   m_import_dialog;
 
 
+
+    CDatabaseConnector*	_db;
+    vector<MetaData>	_vec_md;
+    vector<Album>		_vec_albums;
+    vector<Artist>		_vec_artists;
+
+    QString				_track_sortorder;
+    QString				_album_sortorder;
+    QString				_artist_sortorder;
+
+    Filter				_filter;
+
+    void 				emit_stuff();
+    void				gather_stuff();
+    void				delete_tracks(vector<MetaData>& v_md);
 
 
 };

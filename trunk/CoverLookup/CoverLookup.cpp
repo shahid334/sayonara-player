@@ -175,8 +175,6 @@ void CoverLookup::search_cover(const MetaData& md) {
 	search_covers(albums);
 }
 
-
-
 // search more covers
 void CoverLookup::search_covers(const vector<Album> & vec_albums) {
 

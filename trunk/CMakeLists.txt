@@ -66,6 +66,7 @@ SET(HEADERS
     GUI/MyListView.h
     GUI/library/GUIImportFolder.h
     GUI/LyricMenuButton/LyricMenuButton.h
+    GUI/InfoDialog/GUI_InfoDialog.h
     HelperStructs/MetaData.h
     HelperStructs/Helper.h
     HelperStructs/PlaylistMode.h
@@ -122,6 +123,7 @@ SET(SOURCES
     GUI/MyListView.cpp
     GUI/library/GUIImportFolder.cpp
     GUI/LyricMenuButton/LyricMenuButton.cpp
+    GUI/InfoDialog/GUI_InfoDialog.cpp
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
     HelperStructs/Style.cpp
@@ -169,6 +171,7 @@ SET(FORMS
     GUI/LFMRadio/GUI_LFMRadioWidget.ui
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui
+    GUI/InfoDialog/GUI_InfoDialog.ui
 )
 
 SET(ICONS 
