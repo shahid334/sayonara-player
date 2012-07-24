@@ -568,41 +568,37 @@ void GUI_Library_windowed::reloading_library_finished(){
 
 void GUI_Library_windowed::edit_album(){
 
-	QList<int> lst;
-	emit sig_show_id3_editor(lst);
+	_info_dialog->setMode(INFO_MODE_ALBUMS);
+	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Library_windowed::edit_artist(){
-	QList<int> lst;
-	emit sig_show_id3_editor(lst);
+
+	_info_dialog->setMode(INFO_MODE_ARTISTS);
+	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Library_windowed::edit_tracks(){
 
-	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
-	QList<int> lst;
-	foreach(QModelIndex idx, idx_list){
-		lst.push_back(idx.row());
-	}
-
-	emit sig_show_id3_editor(lst);
+	_info_dialog->setMode(INFO_MODE_TRACKS);
+	_info_dialog->show(TAB_EDIT);
 }
 
 
 void GUI_Library_windowed::info_album(){
 
 	_info_dialog->setMode(INFO_MODE_ALBUMS);
-	_info_dialog->show();
+	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_Library_windowed::info_artist(){
 	_info_dialog->setMode(INFO_MODE_ARTISTS);
-	_info_dialog->show();
+	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_Library_windowed::info_tracks(){
 	_info_dialog->setMode(INFO_MODE_TRACKS);
-	_info_dialog->show();
+	_info_dialog->show(TAB_INFO);
 }
 
 

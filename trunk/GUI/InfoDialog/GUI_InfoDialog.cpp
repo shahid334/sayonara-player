@@ -154,7 +154,7 @@ void GUI_InfoDialog::psl_lyrics_available(){
 	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
 	if(!_lyrics_visible)
-		this->ui->tab_widget->setTabEnabled(1, true);
+		this->ui->tab_widget->setTabEnabled(TAB_LYRICS, true);
 
 	_lyrics_visible = true;
 }
@@ -588,10 +588,10 @@ void GUI_InfoDialog::setMetaData(vector<MetaData>& v_md){
 void GUI_InfoDialog::setMode(int mode){
 	_mode = mode;
 
-	ui->tab_widget->setCurrentIndex(0);
+	ui->tab_widget->setCurrentIndex(TAB_INFO);
 
 	if(_lyrics_visible)
-		this->ui->tab_widget->setTabEnabled(1, false);
+		this->ui->tab_widget->setTabEnabled(TAB_LYRICS, false);
 	_lyrics_visible = false;
 
 	if(ui_tag_edit)
@@ -616,4 +616,10 @@ void GUI_InfoDialog::setMode(int mode){
 
 	prepare_cover();
 	prepare_lfm_info();
+}
+
+void GUI_InfoDialog::show(int tab){
+	QWidget::show();
+	if(tab > 2 || tab < 0) tab = TAB_INFO;
+	ui->tab_widget->setCurrentIndex(tab);
 }

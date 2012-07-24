@@ -90,8 +90,6 @@ public:
 		QStringList _lst_new_albums;
 		QStringList _lst_new_artists;
 
-
-
 		CDatabaseConnector* _db;
 
 		int _max_album_id;

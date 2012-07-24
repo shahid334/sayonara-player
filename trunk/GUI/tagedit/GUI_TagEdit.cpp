@@ -169,6 +169,13 @@ void GUI_TagEdit::ok_button_clicked(){
 	QList<Artist> v_artist;
 	check_for_new_album_and_artist(v_album, v_artist);
 	bool b = store_to_database(v_album, v_artist) ;
+
+
+	this->ui->btn_all_album->setChecked(false);
+	this->ui->btn_all_artist-> setChecked(false);
+	this->ui->btn_all_genre->setChecked(false);
+	this->ui->btn_all_year->setChecked(false);
+
 	if(b) close();
 
 
@@ -176,6 +183,10 @@ void GUI_TagEdit::ok_button_clicked(){
 
 void GUI_TagEdit::cancel_button_clicked(){
 	emit sig_cancelled();
+	this->ui->btn_all_album->setChecked(false);
+	this->ui->btn_all_artist-> setChecked(false);
+	this->ui->btn_all_genre->setChecked(false);
+	this->ui->btn_all_year->setChecked(false);
 	this->close();
 
 }

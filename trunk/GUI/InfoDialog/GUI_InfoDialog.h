@@ -43,6 +43,10 @@
 #define INFO_MODE_ARTISTS 1
 #define INFO_MODE_ALBUMS 2
 
+#define TAB_INFO 0
+#define TAB_LYRICS 1
+#define TAB_EDIT 2
+
 class GUI_InfoDialog : public QWidget, private Ui::InfoDialog{
 Q_OBJECT
 
@@ -67,6 +71,8 @@ public:
 
 	void setMode(int mode);
 	void setMetaData(vector<MetaData>& vd);
+
+	void show(int tab);
 
 
 private:
