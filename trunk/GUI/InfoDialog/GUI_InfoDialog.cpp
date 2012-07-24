@@ -43,7 +43,7 @@
 #define CAR_RET QString("<br />")
 #define BOLD(x) QString("<b>") + x + QString("</b>")
 
-GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
+GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QWidget(parent){
 	this->ui = new Ui::InfoDialog();
 	this->ui->setupUi(this);
 
@@ -54,12 +54,20 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
 	_lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
 
 	_lyric_thread = new LyricLookupThread();
-	_lyric_server = LYRIC_SRV_METROLYRICS;
-	ui->lmb_server_button->setServers(_lyric_thread->getServers());
+	_lyric_server = 0;
+	QStringList server_list = _lyric_thread->getServers();
+	ui->lmb_server_button->setServers(server_list);
+	ui->lmb_server_button->setText(server_list[0]);
 
 	_cover_lookup = new CoverLookup(_class_name);
 	_db = CDatabaseConnector::getInstance();
 
+	_lyrics_visible = true;
+
+	ui_tag_edit = tag_edit;
+
+	if(ui_tag_edit)
+		ui->tab_widget->addTab(ui_tag_edit, "Edit");
 
 	connect( _lfm_thread, SIGNAL(sig_corrected_data_available(const QString&)),
 			 this, SLOT(psl_corrected_data_available(const QString&)));
@@ -81,11 +89,13 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
 
 	connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
 	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
+	if(ui_tag_edit){
+		connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
+	}
 
 	this->connect(	ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
 					this, 					SLOT(psl_lyrics_server_changed(int)));
 
-	this->connect( ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(psl_show_lyric_stuff(bool)));
 
 }
 
@@ -108,17 +118,21 @@ void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename)
 
 void GUI_InfoDialog::psl_lyrics_server_changed(int idx){
 	_lyric_server = idx;
+	QStringList lst = _lyric_thread->getServers();
+	this->ui->lmb_server_button->setText(lst[idx]);
 	prepare_lyrics();
 }
 
 
-void GUI_InfoDialog::psl_show_lyric_stuff(bool b){
-	this->ui->te_lyrics->setVisible(b);
-	this->ui->lmb_server_button->setVisible(b);
+void GUI_InfoDialog::prepare_lyrics(){
+
+	_lyric_thread->prepare_thread(_artist_name, _title, _lyric_server);
+	_lyric_thread->start();
 }
 
-void GUI_InfoDialog::psl_lyrics_available(){
 
+
+void GUI_InfoDialog::psl_lyrics_available(){
 
 	if(!this->ui->lmb_server_button->isChecked()){
 		this->ui->lmb_server_button->setVisible(true);
@@ -128,13 +142,21 @@ void GUI_InfoDialog::psl_lyrics_available(){
 	QString lyrics = _lyric_thread->getFinalLyrics();
 	lyrics = lyrics.trimmed();
 
+	int height, width;
+	height = ui->te_lyrics->height();
+	width = this->ui->tab_2->size().width();
+	ui->te_lyrics->resize(width, height);
 	ui->te_lyrics->setAcceptRichText(true);
 	ui->te_lyrics->setText(lyrics);
-	ui->te_lyrics->setLineWrapColumnOrWidth(this->ui->te_lyrics->width() - 10);
+	ui->te_lyrics->setLineWrapColumnOrWidth(this->ui->te_lyrics->width());
 	ui->te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
-	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	ui->te_lyrics->show();
+
+	if(!_lyrics_visible)
+		this->ui->tab_widget->setTabEnabled(1, true);
+
+	_lyrics_visible = true;
 }
 
 
@@ -444,9 +466,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		_artist_name = md.artist;
 		_title = md.title;
 
-		qDebug() << "set btn lyrics visible";
-		this->ui->btn_lyrics->setVisible(true);
-		this->ui->btn_lyrics->setChecked(false);
+
 		prepare_lyrics();
 
 		int tracknum = md.track_num;
@@ -495,11 +515,7 @@ void GUI_InfoDialog::prepare_tracks(){
 }
 
 
-void GUI_InfoDialog::prepare_lyrics(){
 
-	_lyric_thread->prepare_thread(_artist_name, _title, _lyric_server);
-	_lyric_thread->start();
-}
 
 void GUI_InfoDialog::prepare_cover(){
 
@@ -563,14 +579,23 @@ void GUI_InfoDialog::prepare_lfm_info(){
 }
 
 void GUI_InfoDialog::setMetaData(vector<MetaData>& v_md){
+	if(ui_tag_edit)
+		ui_tag_edit->change_meta_data(v_md);
+
 	_v_md = v_md;
 }
 
 void GUI_InfoDialog::setMode(int mode){
 	_mode = mode;
 
-	this->ui->btn_lyrics->setVisible(false);
-	this->ui->btn_lyrics->setChecked(false);
+	ui->tab_widget->setCurrentIndex(0);
+
+	if(_lyrics_visible)
+		this->ui->tab_widget->setTabEnabled(1, false);
+	_lyrics_visible = false;
+
+	if(ui_tag_edit)
+		ui_tag_edit->hide();
 
 	switch(_mode){
 		case INFO_MODE_TRACKS:

@@ -39,6 +39,7 @@
 #include <QString>
 #include <QStringList>
 
+
 #include <vector>
 
 using namespace std;
@@ -48,12 +49,13 @@ class GUI_TagEdit : public QWidget, private Ui::GUI_TagEdit{
 	Q_OBJECT
 
 public:
-	GUI_TagEdit();
+	GUI_TagEdit(QWidget* parent=0);
 	virtual ~GUI_TagEdit();
 
 	signals:
 		void id3_tags_changed();
 		void id3_tags_changed(vector<MetaData>&);
+		void sig_cancelled();
 
 	private slots:
 		void prev_button_clicked();
@@ -75,6 +77,8 @@ public:
 
 
 	private:
+		Ui::GUI_TagEdit* ui;
+		QWidget*	_parent;
 
 		int _cur_idx;
 		vector<MetaData> _vec_org_metadata;
@@ -86,7 +90,7 @@ public:
 		QStringList _lst_new_albums;
 		QStringList _lst_new_artists;
 
-		Ui::GUI_TagEdit* ui;
+
 
 		CDatabaseConnector* _db;
 

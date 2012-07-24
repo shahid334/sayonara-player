@@ -30,6 +30,7 @@
 #include "LyricLookup/LyricLookup.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "GUI/tagedit/GUI_TagEdit.h"
 
 #include <ui_GUI_InfoDialog.h>
 #include <QWidget>
@@ -58,10 +59,10 @@ public slots:
 private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
-	void psl_show_lyric_stuff(bool b=true);
+
 
 public:
-	GUI_InfoDialog(QWidget* parent =0);
+	GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit=0);
 	virtual ~GUI_InfoDialog();
 
 	void setMode(int mode);
@@ -70,6 +71,7 @@ public:
 
 private:
 	Ui::InfoDialog* 		ui;
+	GUI_TagEdit*			ui_tag_edit;
 
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
@@ -77,6 +79,9 @@ private:
 	CDatabaseConnector* 	_db;
 	QString 				_class_name;
 	int						_lyric_server;
+	bool					_lyrics_visible;
+
+
 
 
 	vector<MetaData> _v_md;

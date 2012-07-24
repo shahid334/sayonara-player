@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'GUI_InfoDialog.h'
 **
-** Created: Tue Jul 24 15:06:33 2012
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
+** Created: Tue Jul 24 22:38:25 2012
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -11,7 +11,7 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'GUI_InfoDialog.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.6.2. It"
+#error "This file was generated using the moc from 4.7.4. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,10 +20,10 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_GUI_InfoDialog[] = {
 
  // content:
-       4,       // revision
+       5,       // revision
        0,       // classname
        0,    0, // classinfo
-      10,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -41,8 +41,6 @@ static const uint qt_meta_data_GUI_InfoDialog[] = {
      197,  115,   15,   15, 0x0a,
      235,   15,   15,   15, 0x08,
      258,   15,   15,   15, 0x08,
-     291,  289,   15,   15, 0x08,
-     318,   15,   15,   15, 0x28,
 
        0        // eod
 };
@@ -55,9 +53,7 @@ static const char qt_meta_stringdata_GUI_InfoDialog[] = {
     "psl_artist_info_available(QString)\0"
     "psl_corrected_data_available(QString)\0"
     "psl_lyrics_available()\0"
-    "psl_lyrics_server_changed(int)\0b\0"
-    "psl_show_lyric_stuff(bool)\0"
-    "psl_show_lyric_stuff()\0"
+    "psl_lyrics_server_changed(int)\0"
 };
 
 const QMetaObject GUI_InfoDialog::staticMetaObject = {
@@ -97,11 +93,9 @@ int GUI_InfoDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 5: psl_corrected_data_available((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 6: psl_lyrics_available(); break;
         case 7: psl_lyrics_server_changed((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 8: psl_show_lyric_stuff((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 9: psl_show_lyric_stuff(); break;
         default: ;
         }
-        _id -= 10;
+        _id -= 8;
     }
     return _id;
 }

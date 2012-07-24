@@ -98,8 +98,7 @@ int main(int argc, char *argv[]){
         Playlists				playlists;
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist());
         Playlist 				playlist(&app);
-        GUI_InfoDialog			ui_info_dialog;
-        GUI_Library_windowed	ui_library(player.getParentOfLibrary(), &ui_info_dialog);
+
         CLibraryBase 			library;
         LastFM*					lastfm = LastFM::getInstance();
         GUI_LastFM				ui_lastfm;
@@ -108,8 +107,8 @@ int main(int argc, char *argv[]){
         GUI_LFMRadioWidget		ui_lfm_radio(player.getParentOfPlugin());
         GUI_StreamRecorder		ui_stream_rec(&player);
         GUI_TagEdit				ui_id3_editor;
-
-
+        GUI_InfoDialog			ui_info_dialog(NULL, &ui_id3_editor);
+        GUI_Library_windowed	ui_library(player.getParentOfLibrary(), &ui_info_dialog);
 
         Socket					remote_socket(1234);
 

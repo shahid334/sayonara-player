@@ -43,7 +43,8 @@
 using namespace std;
 
 
-GUI_TagEdit::GUI_TagEdit() {
+GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
+	_parent = parent;
 	this->ui = new Ui::GUI_TagEdit();
 	this->ui->setupUi(this);
 
@@ -56,13 +57,10 @@ GUI_TagEdit::GUI_TagEdit() {
 	this->ui->lab_icon->setPixmap(pix);
 	close();
 
-
-
 	connect(this->ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
 	connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
 	connect(this->ui->bb_ok_cancel, SIGNAL(accepted()), this, SLOT(ok_button_clicked()));
 	connect(this->ui->bb_ok_cancel, SIGNAL(rejected()), this, SLOT(cancel_button_clicked()));
-
 }
 
 
@@ -87,6 +85,10 @@ void GUI_TagEdit::init(){
 
 	_max_album_id = _db->getMaxAlbumID() + 1;
 	_max_artist_id = _db->getMaxArtistID() + 1;
+
+	if(_parent){
+		this->resize(_parent->size());
+	}
 
 }
 void GUI_TagEdit::change_meta_data(const MetaData& md){
@@ -173,7 +175,9 @@ void GUI_TagEdit::ok_button_clicked(){
 }
 
 void GUI_TagEdit::cancel_button_clicked(){
+	emit sig_cancelled();
 	this->close();
+
 }
 
 
@@ -425,6 +429,5 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
 	return true;
 
-
-
 }
+
