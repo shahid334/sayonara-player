@@ -116,6 +116,10 @@ private:
 	void init_record_pipeline();
 	void init_play_pipeline();
 
+	QString init_streamripper(const MetaData& md);
+	bool start_streamripper();
+	void stop_streamripper();
+
 
 
 };

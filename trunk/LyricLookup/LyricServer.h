@@ -39,13 +39,10 @@ struct ServerTemplate {
 	bool to_lower;
 	QString error;
 
-
 	void addReplacement(QString rep, QString rep_with){
 		replacements[rep] = rep_with;
 	}
 
-	//QString start_tag;
-	//QString end_tag;
 };
 
 #endif /* LYRICSERVER_H_ */

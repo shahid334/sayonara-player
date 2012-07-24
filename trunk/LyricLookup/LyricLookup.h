@@ -29,11 +29,11 @@
 #ifndef LYRICLOOKUP_H_
 #define LYRICLOOKUP_H_
 
-#define WIKIA 0
-#define OLDIELYRICS 1
-#define LYRICSKEEPER 2
-#define METROLYRICS 3
-#define ASKLYRICS 4
+#define LYRIC_SRV_WIKIA 0
+#define LYRIC_SRV_OLDIELYRICS 1
+#define LYRIC_SRV_LYRICSKEEPER 2
+#define LYRIC_SRV_METROLYRICS 3
+#define LYRIC_SRV_ASKLYRICS 4
 
 #include "LyricLookup/LyricServer.h"
 #include <QStringList>

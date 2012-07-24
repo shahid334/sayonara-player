@@ -72,7 +72,7 @@ private:
 	LibraryItemModelAlbums* 	_album_model;
 	LibraryItemDelegateAlbums* 	_album_delegate;
 	LibraryItemModelArtists* 	_artist_model;
-	LibraryItemDelegateArtists* _artist_delegate;
+	LibraryItemDelegateArtists* 	_artist_delegate;
 
 	QMenu* 		_right_click_menu;
 

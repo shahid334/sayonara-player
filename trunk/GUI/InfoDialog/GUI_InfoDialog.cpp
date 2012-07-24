@@ -25,6 +25,7 @@
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "CoverLookup/CoverFetchThread.h"
+#include "LyricLookup/LyricLookup.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -52,6 +53,10 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
 	_lfm_thread = new LFMTrackChangedThread(_class_name);
 	_lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
 
+	_lyric_thread = new LyricLookupThread();
+	_lyric_server = LYRIC_SRV_METROLYRICS;
+	ui->lmb_server_button->setServers(_lyric_thread->getServers());
+
 	_cover_lookup = new CoverLookup(_class_name);
 	_db = CDatabaseConnector::getInstance();
 
@@ -74,6 +79,14 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) : QWidget(parent){
 	connect(_cover_lookup, SIGNAL(sig_cover_found(QString, QString)),
 			this, 			SLOT(psl_image_available(QString, QString)));
 
+	connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
+	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
+
+	this->connect(	ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
+					this, 					SLOT(psl_lyrics_server_changed(int)));
+
+	this->connect( ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(psl_show_lyric_stuff(bool)));
+
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {
@@ -93,6 +106,36 @@ void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename)
 }
 
 
+void GUI_InfoDialog::psl_lyrics_server_changed(int idx){
+	_lyric_server = idx;
+	prepare_lyrics();
+}
+
+
+void GUI_InfoDialog::psl_show_lyric_stuff(bool b){
+	this->ui->te_lyrics->setVisible(b);
+	this->ui->lmb_server_button->setVisible(b);
+}
+
+void GUI_InfoDialog::psl_lyrics_available(){
+
+
+	if(!this->ui->lmb_server_button->isChecked()){
+		this->ui->lmb_server_button->setVisible(true);
+		this->ui->lmb_server_button->setChecked(true);
+	}
+
+	QString lyrics = _lyric_thread->getFinalLyrics();
+	lyrics = lyrics.trimmed();
+
+	ui->te_lyrics->setAcceptRichText(true);
+	ui->te_lyrics->setText(lyrics);
+	ui->te_lyrics->setLineWrapColumnOrWidth(this->ui->te_lyrics->width() - 10);
+	ui->te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
+	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	ui->te_lyrics->show();
+}
 
 
 void GUI_InfoDialog::psl_corrected_data_available(const QString& target_class){
@@ -399,6 +442,12 @@ void GUI_InfoDialog::prepare_tracks(){
 
 		_album_name = md.album;
 		_artist_name = md.artist;
+		_title = md.title;
+
+		qDebug() << "set btn lyrics visible";
+		this->ui->btn_lyrics->setVisible(true);
+		this->ui->btn_lyrics->setChecked(false);
+		prepare_lyrics();
 
 		int tracknum = md.track_num;
 		QString count;
@@ -446,7 +495,11 @@ void GUI_InfoDialog::prepare_tracks(){
 }
 
 
+void GUI_InfoDialog::prepare_lyrics(){
 
+	_lyric_thread->prepare_thread(_artist_name, _title, _lyric_server);
+	_lyric_thread->start();
+}
 
 void GUI_InfoDialog::prepare_cover(){
 
@@ -515,6 +568,9 @@ void GUI_InfoDialog::setMetaData(vector<MetaData>& v_md){
 
 void GUI_InfoDialog::setMode(int mode){
 	_mode = mode;
+
+	this->ui->btn_lyrics->setVisible(false);
+	this->ui->btn_lyrics->setChecked(false);
 
 	switch(_mode){
 		case INFO_MODE_TRACKS:

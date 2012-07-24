@@ -63,7 +63,7 @@ size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
  ****************************************************************************************/
 LyricLookupThread::LyricLookupThread() {
 	init_server_list();
-	_cur_server = WIKIA;
+	_cur_server = LYRIC_SRV_WIKIA;
 	_final_wp.clear();
 
 }

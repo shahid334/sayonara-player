@@ -21,9 +21,6 @@ PKG_CHECK_MODULES(GSTREAMER REQUIRED gstreamer-0.10)
 SET(HEADERS
 	GSTEngine.h 
 	../Engine.h
-	../../HelperStructs/MetaData.h
-	../../HelperStructs/id3.h
-	../../HelperStructs/Equalizer_presets.h
 )
 
 SET(SOURCES

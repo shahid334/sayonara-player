@@ -13,9 +13,6 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 SET(HEADERS
 	PhononEngine.h 
 	../Engine.h
-	../../HelperStructs/MetaData.h
-	../../HelperStructs/id3.h
-	../../HelperStructs/Equalizer_presets.h
 )
 
 SET(SOURCES

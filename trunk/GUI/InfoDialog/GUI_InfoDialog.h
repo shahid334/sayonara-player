@@ -27,6 +27,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "CoverLookup/CoverLookup.h"
+#include "LyricLookup/LyricLookup.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -54,6 +55,10 @@ public slots:
 	void psl_artist_info_available(const QString& target_class);
 	void psl_corrected_data_available(const QString& target_class);
 
+private slots:
+	void psl_lyrics_available();
+	void psl_lyrics_server_changed(int);
+	void psl_show_lyric_stuff(bool b=true);
 
 public:
 	GUI_InfoDialog(QWidget* parent =0);
@@ -65,10 +70,13 @@ public:
 
 private:
 	Ui::InfoDialog* 		ui;
+
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
+	LyricLookupThread*		_lyric_thread;
 	CDatabaseConnector* 	_db;
 	QString 				_class_name;
+	int						_lyric_server;
 
 
 	vector<MetaData> _v_md;
@@ -78,6 +86,7 @@ private:
 
 	QString _album_name;
 	QString _artist_name;
+	QString	_title;
 
 	void prepare_artists();
 	void prepare_albums();
@@ -85,6 +94,9 @@ private:
 
 	void prepare_cover();
 	void prepare_lfm_info();
+	void prepare_lyrics();
+
+
 };
 
 #endif /* GUI_INFODIALOG_H_ */
