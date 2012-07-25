@@ -29,12 +29,16 @@
 #ifndef GUI_PLAYLIST_H_
 #define GUI_PLAYLIST_H_
 
+#include "ui_GUI_Playlist.h"
+
 #include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "LyricLookup/LyricLookup.h"
 #include "GUI/playlist/PlaylistItemDelegateInterface.h"
+#include "GUI/InfoDialog/GUI_InfoDialog.h"
 
+#include <QObject>
 #include <QMainWindow>
 #include <QWidget>
 #include <QKeyEvent>
@@ -43,16 +47,13 @@
 #include <string>
 #include <vector>
 
-#include "ui_GUI_Playlist.h"
-
-
 
 	class GUI_Playlist : public QWidget, private Ui::Playlist_Window
 	{
 		Q_OBJECT
 
 		public:
-			GUI_Playlist(QWidget *parent = 0);
+			GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog);
 			~GUI_Playlist();
 
 			void dragEnterEvent(QDragEnterEvent* event);
@@ -87,7 +88,7 @@
 			void last_fm_logged_in(bool);
 			void import_result(bool);
 			void set_radio_active(int radio);
-			void show_small_playlist_items(bool b);
+			void psl_show_small_playlist_items(bool small_items);
 
 		private slots:
 			void double_clicked(const QModelIndex &);
@@ -107,36 +108,56 @@
 
 
 
+			void psl_show_context_menu(const QPoint &);
+			void psl_info_tracks();
+			void psl_edit_tracks();
+			void psl_delete_tracks();
+
 		protected:
 			void keyPressEvent(QKeyEvent* e);
 
 		private:
 
-			Ui::Playlist_Window* 	ui;
-			QWidget*				_parent;
+			Ui::Playlist_Window* 			ui;
+			QWidget*						_parent;
+			GUI_InfoDialog*					_info_dialog;
 
-			Playlist_Mode			_playlist_mode;
-			QAbstractItemModel* 	_pli_model;
-			PlaylistItemDelegateInterface* 			_pli_delegate;
-			QAction**				_action_lyric_servers;
-			QMenu*					_menu_lyrics;
+			Playlist_Mode					_playlist_mode;
+			QAbstractItemModel* 			_pli_model;
+			PlaylistItemDelegateInterface* 	_pli_delegate;
+			QAction**						_action_lyric_servers;
+			QMenu*							_menu_lyrics;
 
-			LyricLookupThread*		_lyrics_thread;
-			int 					_cur_lyric_server;
+			LyricLookupThread*				_lyrics_thread;
+			int 							_cur_lyric_server;
 
-			qint64 					_total_secs;
-			int						_cur_playing_row;
-			int						_cur_selected_row;
-			bool inner_drag_drop;
-			QPoint	_last_known_drag_pos;
+			qint64 		_total_secs;
+			int			_cur_playing_row;
+			int			_cur_selected_row;
+			bool 		_inner_drag_drop;
+			QPoint		_last_known_drag_pos;
 
-			int						_radio_active;
+			int			_radio_active;
+
+			QMenu* 		_right_click_menu;
+
+			QAction* 	_info_action;
+			QAction* 	_edit_action;
+			QAction* 	_delete_action;
 
 
 			void initGUI();
+
 			void set_total_time_label();
 			void remove_cur_selected_row();
-			void check_for_library_path();
+			void check_dynamic_play_button();
+			void init_menues();
+
+			PlaylistItemDelegateInterface* create_item_delegate(bool small_playlist_items);
+
+
+
+
 };
 
 

@@ -37,9 +37,15 @@
 #include <QDrag>
 
 class MyListView :public QListView{
-public:
-	MyListView(QWidget* parent=0);
-	virtual ~MyListView();
+
+Q_OBJECT
+
+signals:
+	void context_menu_emitted(const QPoint&);
+
+	public:
+		MyListView(QWidget* parent=0);
+		virtual ~MyListView();
 
 
 	void set_mime_data(QMimeData* data);

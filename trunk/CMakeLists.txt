@@ -61,6 +61,7 @@ SET(HEADERS
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
     GUI/MyTableView.h
+    GUI/MyListView.h
     GUI/library/GUIImportFolder.h
     GUI/LyricMenuButton/LyricMenuButton.h
     GUI/InfoDialog/GUI_InfoDialog.h

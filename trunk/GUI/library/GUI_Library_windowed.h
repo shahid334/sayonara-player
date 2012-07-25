@@ -35,19 +35,19 @@
 #include <QPoint>
 
 #include <ui_GUI_Library_windowed.h>
-#include <GUI/library/LibraryItemModelTracks.h>
+#include "GUI/library/LibraryItemModelTracks.h"
 #include "GUI/library/LibraryItemDelegateTracks.h"
-#include <GUI/library/LibraryItemModelAlbums.h>
-#include <GUI/library/LibraryItemDelegateAlbums.h>
-#include <GUI/library/LibraryItemDelegateArtists.h>
-#include <GUI/library/LibraryItemModelArtists.h>
+#include "GUI/library/LibraryItemModelAlbums.h"
+#include "GUI/library/LibraryItemDelegateAlbums.h"
+#include "GUI/library/LibraryItemDelegateArtists.h"
+#include "GUI/library/LibraryItemModelArtists.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
-#include <GUI/MyTableView.h>
+#include "GUI/MyTableView.h"
 
-#include <HelperStructs/MetaData.h>
-#include <HelperStructs/Filter.h>
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Filter.h"
 
-#include <DatabaseAccess/CDatabaseConnector.h>
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QMenu>
 #include <QMessageBox>
@@ -65,13 +65,13 @@ public:
 	virtual ~GUI_Library_windowed();
 
 private:
-	Ui::Library_windowed* 		ui;
+	Ui::Library_windowed* 			ui;
 
-	LibraryItemModelTracks* 	_track_model;
-	LibraryItemDelegateTracks* 	_track_delegate;
-	LibraryItemModelAlbums* 	_album_model;
-	LibraryItemDelegateAlbums* 	_album_delegate;
-	LibraryItemModelArtists* 	_artist_model;
+	LibraryItemModelTracks* 		_track_model;
+	LibraryItemDelegateTracks* 		_track_delegate;
+	LibraryItemModelAlbums* 		_album_model;
+	LibraryItemDelegateAlbums* 		_album_delegate;
+	LibraryItemModelArtists* 		_artist_model;
 	LibraryItemDelegateArtists* 	_artist_delegate;
 
 	QMenu* 		_right_click_menu;

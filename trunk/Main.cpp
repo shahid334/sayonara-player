@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
         GUI_SimplePlayer 		player;
         GUI_PlaylistChooser		ui_playlist_chooser(player.getParentOfPlugin());
         Playlists				playlists;
-        GUI_Playlist 			ui_playlist(player.getParentOfPlaylist());
+
         Playlist 				playlist(&app);
 
         CLibraryBase 			library;
@@ -109,6 +109,7 @@ int main(int argc, char *argv[]){
         GUI_TagEdit				ui_id3_editor;
         GUI_InfoDialog			ui_info_dialog(NULL, &ui_id3_editor);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary(), &ui_info_dialog);
+        GUI_Playlist 			ui_playlist(player.getParentOfPlaylist(), &ui_info_dialog);
 
         Socket					remote_socket(1234);
 
@@ -151,7 +152,7 @@ int main(int argc, char *argv[]){
 		CONNECT (&player, sig_stream_selected(const QString&, const QString&), 		&playlist, psl_play_stream(const QString&, const QString&));
 		CONNECT (&player, show_playlists(),						&ui_playlist_chooser, 	show());
         CONNECT (&player, skinChanged(bool), 					&ui_playlist, 		change_skin(bool));
-        CONNECT (&player, show_small_playlist_items(bool),		&ui_playlist,		show_small_playlist_items(bool));
+        CONNECT (&player, show_small_playlist_items(bool),		&ui_playlist,		psl_show_small_playlist_items(bool));
         CONNECT (&player, sig_sound_engine_changed(QString&), 	&plugin_loader, 	psl_switch_engine(QString&));
         CONNECT (&player, sig_correct_id3(const MetaData&), 	&ui_id3_editor,		change_meta_data(const MetaData&));
         CONNECT (&player, sig_show_stream_rec(bool),			&ui_stream_rec,		psl_show(bool));

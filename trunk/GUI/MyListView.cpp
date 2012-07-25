@@ -46,6 +46,9 @@ MyListView::~MyListView() {
 
 void MyListView::mousePressEvent(QMouseEvent* event) {
 
+	QPoint pos_org = event->pos();
+	QPoint pos = QWidget::mapToGlobal(pos_org);
+
 	switch (event->button()) {
 	case Qt::LeftButton:
 
@@ -59,6 +62,15 @@ void MyListView::mousePressEvent(QMouseEvent* event) {
 			_drag = false;
 		}
 
+		break;
+
+	case Qt::RightButton:
+		_drag = false;
+
+		QListView::mousePressEvent(event);
+		pos.setY(pos.y());
+		pos.setX(pos.x() + 10);
+		emit context_menu_emitted(pos);
 		break;
 
 	default:
