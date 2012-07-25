@@ -724,8 +724,19 @@ void Playlist::psl_edit_id3_request(){
 }
 
 void Playlist::psl_id3_tags_changed(vector<MetaData>& new_meta_data){
-	_v_meta_data = new_meta_data;
+
+	for(uint i=0; i<_v_meta_data.size(); i++){
+		MetaData md_old = _v_meta_data[i];
+		for(uint j=0; j<new_meta_data.size(); j++){
+			MetaData md_new = new_meta_data[j];
+			if(md_old.id == md_new.id){
+				_v_meta_data.at(i) = md_new;
+			}
+		}
+	}
+
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+
 	if(_cur_play_idx >= 0 && _cur_play_idx < (int) _v_meta_data.size())
 		emit sig_cur_played_info_changed(_v_meta_data[_cur_play_idx]);
 }

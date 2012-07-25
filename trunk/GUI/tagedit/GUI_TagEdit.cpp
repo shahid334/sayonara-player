@@ -176,18 +176,17 @@ void GUI_TagEdit::ok_button_clicked(){
 	this->ui->btn_all_genre->setChecked(false);
 	this->ui->btn_all_year->setChecked(false);
 
-	if(b) close();
-
-
+	emit sig_success(b);
 }
 
 void GUI_TagEdit::cancel_button_clicked(){
-	emit sig_cancelled();
+
 	this->ui->btn_all_album->setChecked(false);
 	this->ui->btn_all_artist-> setChecked(false);
 	this->ui->btn_all_genre->setChecked(false);
 	this->ui->btn_all_year->setChecked(false);
-	this->close();
+
+	emit sig_cancelled();
 
 }
 

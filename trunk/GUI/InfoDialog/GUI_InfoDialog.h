@@ -63,6 +63,7 @@ public slots:
 private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
+	void psl_id3_success(bool);
 
 
 public:

@@ -35,6 +35,7 @@
 #include <QImage>
 #include <QFile>
 #include <QDebug>
+#include <QMessageBox>
 
 
 #define INFO_MODE_SINGLE 0
@@ -91,6 +92,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QWidget
 	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
 	if(ui_tag_edit){
 		connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
+		connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
 	}
 
 	this->connect(	ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
@@ -622,4 +624,13 @@ void GUI_InfoDialog::show(int tab){
 	QWidget::show();
 	if(tab > 2 || tab < 0) tab = TAB_INFO;
 	ui->tab_widget->setCurrentIndex(tab);
+}
+
+void GUI_InfoDialog::psl_id3_success(bool b){
+	if(b) close();
+	else{
+		QMessageBox::warning ( this,
+				"Error",
+				"ID3 tags could not be changed");
+	}
 }

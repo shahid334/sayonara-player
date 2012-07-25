@@ -165,7 +165,7 @@ int main(int argc, char *argv[]){
         CONNECT (&playlist, sig_selected_file_changed(int), 					&ui_playlist, 	track_changed(int));
         CONNECT (&playlist, sig_playlist_created(vector<MetaData>&, int), 		&ui_playlist, 	fillPlaylist(vector<MetaData>&, int));
         CONNECT (&playlist, sig_mp3s_loaded_signal(int), 						&ui_playlist, 	update_progress_bar(int));
-        CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
+        //CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
         CONNECT (&playlist, sig_playlist_prepared(int, vector<MetaData>&), 		&playlists, 	save_playlist_as_custom(int, vector<MetaData>&));
     	CONNECT (&playlist, sig_playlist_prepared(QString, vector<MetaData>&), 	&playlists, 	save_playlist_as_custom(QString, vector<MetaData>&));
     	CONNECT (&playlist, sig_library_changed(), 								&ui_library, 	library_changed());
@@ -228,9 +228,11 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_eq, eq_enabled_signal(bool), 		listen, 	eq_enable(bool));
         CONNECT(&ui_eq, close_event(), 					&player, 	close_eq());
 
-        CONNECT(&ui_playlist, edit_id3_signal(), 								&playlist, 	psl_edit_id3_request());
-		CONNECT(&ui_id3_editor, id3_tags_changed(), 							&ui_library,id3_tags_changed());
-		CONNECT(&ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&playlist, 	psl_id3_tags_changed(vector<MetaData>&));
+        CONNECT(&ui_playlist, edit_id3_signal(), 								&playlist, 		psl_edit_id3_request());
+		CONNECT(&ui_id3_editor, id3_tags_changed(), 							&ui_library,	id3_tags_changed());
+		CONNECT(&ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&playlist, 		psl_id3_tags_changed(vector<MetaData>&));
+		CONNECT(&ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&player, 		psl_id3_tags_changed(vector<MetaData>&));
+
 
 		CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		&playlist,		psl_similar_artists_available(const QList<int>&));
 		CONNECT(lastfm,	sig_last_fm_logged_in(bool),							&ui_playlist,	last_fm_logged_in(bool));
@@ -311,7 +313,7 @@ int main(int argc, char *argv[]){
 
         CDatabaseConnector::getInstance()->store_settings();
 
-        remote_socket.terminate();
+        remote_socket.exit();
         delete listen;
 
         return 0;

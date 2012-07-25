@@ -309,27 +309,38 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 
 // public slot:
 // id3 tags have changed
-void GUI_SimplePlayer::update_info(const MetaData& in) {
+void GUI_SimplePlayer::psl_id3_tags_changed(vector<MetaData>& v_md) {
 
-	this->m_metadata = in;
+	MetaData md_new;
+	bool found = false;
 
-	if (in.year < 1000 || in.album.contains(QString::number(in.year)))
-		this->ui->album->setText(in.album);
+	for(int i=0; i<v_md.size(); i++){
+		if(m_metadata.id == v_md[i].id){
+			m_metadata = v_md[i];
+			found = true;
+			break;
+		}
+	}
+
+	if(!found) return;
+
+	if (m_metadata.year < 1000 || m_metadata.album.contains(QString::number(m_metadata.year)))
+		this->ui->album->setText(m_metadata.album);
 
 	else
 		this->ui->album->setText(
-				in.album + " (" + QString::number(in.year) + ")");
+				m_metadata.album + " (" + QString::number(m_metadata.year) + ")");
 
-	this->ui->artist->setText(in.artist);
-	this->ui->title->setText(in.title);
+	this->ui->artist->setText(m_metadata.artist);
+	this->ui->title->setText(m_metadata.title);
 
 	if( this->ui->action_notification->isChecked() ){
-		m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + in.title + "\" by " + in.artist));
+		m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + m_metadata.title + "\" by " + m_metadata.artist));
 	}
 
-	this->setWindowTitle(QString("Sayonara - ") + in.title);
+	this->setWindowTitle(QString("Sayonara - ") + m_metadata.title);
 
-	emit sig_want_cover(in);
+	emit sig_want_cover(m_metadata);
 	this->ui->btn_correct->setVisible(false);
 	this->repaint();
 }
