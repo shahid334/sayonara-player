@@ -34,6 +34,7 @@
 #define LYRIC_SRV_LYRICSKEEPER 2
 #define LYRIC_SRV_METROLYRICS 3
 #define LYRIC_SRV_ASKLYRICS 4
+#define LYRIC_SRV_ELYRICS 5
 
 #include "LyricLookup/LyricServer.h"
 #include <QStringList>
@@ -63,7 +64,7 @@ private:
 	QList<ServerTemplate> _server_list;
 	QString _final_wp;
 
-	QString calc_url(QString artist, QString song);
+	QString calc_url(QString artist, QString song, bool with_the=true);
 	bool parse_webpage(QString& dst);
 };
 

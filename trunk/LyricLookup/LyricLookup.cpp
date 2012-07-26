@@ -72,8 +72,22 @@ LyricLookupThread::~LyricLookupThread() {
 	// TODO Auto-generated destructor stub
 }
 
-QString LyricLookupThread::calc_url(QString artist, QString song){
-	QString tmp_artist = artist;
+QString get_artist_wo_the(QString artist){
+	QString tmp_artist = artist.toLower();
+	tmp_artist.replace("the ", "");
+	return artist.right(tmp_artist.size());
+
+
+}
+
+QString LyricLookupThread::calc_url(QString artist, QString song, bool without_the){
+
+	QString tmp_artist;
+
+	if(!without_the)
+		tmp_artist = artist;
+	else tmp_artist = get_artist_wo_the(artist);
+
 	QString tmp_song = song;
 
 	// apply replacements
@@ -87,6 +101,7 @@ QString LyricLookupThread::calc_url(QString artist, QString song){
 
 	QString url = _server_list[_cur_server].call_policy;
 	url.replace("<SERVER>", _server_list[_cur_server].server_adress);
+	url.replace("<FIRST_ARTIST_LETTER>", QString(tmp_artist[0]));
 	url.replace("<ARTIST>", tmp_artist);
 	url.replace("<TITLE>", tmp_song);
 
@@ -164,27 +179,36 @@ void LyricLookupThread::run(){
 		return;
 	}
 
-	QString url = this->calc_url(_artist, _title);
+	int max_tries = 1;
+	if(_artist.toLower().contains("the ")) max_tries = 2;
+	int tries = 0;
+	while(tries < max_tries){
 
-	webpage = "";
-	CURL *curl;
-	curl = curl_easy_init();
+		QString url = this->calc_url(_artist, _title, (bool) tries);
 
-	if(curl){
-		curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_content_ll);
-		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+		webpage = "";
+		CURL *curl;
+		curl = curl_easy_init();
 
-		curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
+		if(curl){
+			curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
+			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_content_ll);
+			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+
+			curl_easy_perform(curl);
+			curl_easy_cleanup(curl);
+		}
+
+		_final_wp.clear();
+
+		if ( !parse_webpage(_final_wp) ){
+			_final_wp = QString("Sorry, no lyrics found<br />" + url);
+			tries++;
+		}
+
+		else break;
+
 	}
-
-	_final_wp.clear();
-
-	if ( !parse_webpage(_final_wp) ){
-		_final_wp = QString("Sorry, no lyrics found");
-	}
-
 	_final_wp.push_front(_server_list[_cur_server].display_str + "<br /><br />");
 	_final_wp.push_front(QString("<font size=\"5\" color=\"#F3841A\"><b>") +
 			_artist + QString(" - ") +
@@ -287,11 +311,30 @@ void LyricLookupThread::init_server_list(){
 	asklyrics.to_lower = true;
 	asklyrics.error = QString("Error 404");
 
+
+	ServerTemplate elyrics;
+	elyrics.display_str = "eLyrics";
+	elyrics.server_adress= QString("http://www.elyrics.net/read");
+	elyrics.addReplacement(" ", "-");
+	elyrics.addReplacement("the ", "");
+	elyrics.addReplacement("The ", "");
+	elyrics.addReplacement("'", "_");
+	elyrics.call_policy = QString("<SERVER>/<FIRST_ARTIST_LETTER>/<ARTIST>-lyrics/<TITLE>-lyrics.html");
+	elyrics.start_tag= QString("lyrics</strong><br>");
+	elyrics.include_start_tag = false;
+	elyrics.end_tag = QString("</div>");
+	elyrics.include_end_tag = false;
+	elyrics.is_numeric = false;
+	elyrics.to_lower = true;
+	elyrics.error = QString("Error 404");
+
+
 	_server_list.push_back(wikia);
 	_server_list.push_back(oldieLyrics);
 	_server_list.push_back(lyricskeeper);
 	_server_list.push_back(metrolyrics);
 	_server_list.push_back(asklyrics);
+	_server_list.push_back(elyrics);
 
 }
 
