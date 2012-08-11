@@ -79,6 +79,7 @@ private:
 	QAction* 	_info_action;
 	QAction* 	_edit_action;
 	QAction* 	_delete_action;
+	QAction*	_play_next_action;
 
 	Filter		_cur_searchfilter;
 
@@ -101,6 +102,8 @@ signals:
 	void sig_sortorder_changed(QString,QString,QString);
 
 	void sig_show_id3_editor(const QList<int>&);
+	void sig_play_next_tracks(const QList<int>& lst);
+	void sig_play_next_all_tracks();
 
 public slots:
 	void fill_library_tracks(vector<MetaData>&);
@@ -138,6 +141,10 @@ private slots:
 	void show_album_context_menu(const QPoint& p);
 	void show_track_context_menu(const QPoint& p);
 
+	void artist_middle_clicked(const QPoint& p);
+	void album_middle_clicked(const QPoint& p);
+	void tracks_middle_clicked(const QPoint& p);
+
 
 
 	void info_artist();
@@ -151,6 +158,9 @@ private slots:
 	void delete_artist();
 	void delete_album();
 	void delete_tracks();
+
+	void play_next();
+	void play_next_tracks();
 
 
 protected:

@@ -208,6 +208,7 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_tracks_for_playlist_available(vector<MetaData>&), 		&playlist, psl_createPlaylist(vector<MetaData>&));
         CONNECT(&library, sig_import_result(bool),						&playlists,		import_result(bool));
         CONNECT(&library, sig_delete_answer(QString), 					&ui_library, 	psl_delete_answer(QString));
+        CONNECT(&library, sig_play_next_tracks(const vector<MetaData>&),&playlist,		psl_play_next_tracks(const vector<MetaData>&));
 
 
         CONNECT(&ui_library, sig_album_dbl_clicked(), 						&library, 	psl_prepare_album_for_playlist());
@@ -221,6 +222,8 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_library, sig_show_id3_editor(const QList<int>&),		&library, 	psl_change_id3_tags(const QList<int>&));
         CONNECT(&ui_library, sig_delete_tracks(),							&library,	psl_delete_tracks());
         CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&),	&library,	psl_delete_certain_tracks(const QList<int>&));
+    	CONNECT(&ui_library, sig_play_next_tracks(const QList<int>&),		&library,	psl_play_next_tracks(const QList<int>&));
+    	CONNECT(&ui_library, sig_play_next_all_tracks(),					&library,	psl_play_next_all_tracks());
 
         CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		login_slot(QString, QString));
 

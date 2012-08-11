@@ -37,6 +37,10 @@
 #include <QDrag>
 #include <QPixmap>
 
+#define ID_TABLE_VIEW_ARTISTS 0
+#define ID_TABLE_VIEW_ALBUMS 1
+#define ID_TABLE_VIEW_TRACKS 2
+
 
 class MyTableView : public QTableView{
 
@@ -44,6 +48,8 @@ class MyTableView : public QTableView{
 
 signals:
 	void context_menu_emitted(const QPoint&);
+
+	void sig_middle_button_clicked(const QPoint&);
 
 public:
 	MyTableView(QWidget* parent=0);
@@ -61,10 +67,14 @@ private:
 	QPoint	_drag_pos;
 	QWidget* _parent;
 
+	int		_id;
+
 
 
 public:
 	QDrag*	qDrag;
+
+	void set_id(int id);
 
 };
 

@@ -76,6 +76,10 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 
 	_info_dialog = dialog;
 
+	this->ui->lv_artist->set_id(ID_TABLE_VIEW_ARTISTS);
+	this->ui->lv_album->set_id(ID_TABLE_VIEW_ALBUMS);
+	this->ui->tb_title->set_id(ID_TABLE_VIEW_TRACKS);
+
 
 	this->_album_model = new LibraryItemModelAlbums();
 	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
@@ -110,16 +114,19 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
 	connect(this->ui->lv_album, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_album_context_menu(const QPoint&)));
 	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_albums_by_column(int)));
+	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
 	connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
 	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
 	connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
+	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
 	connect(this->ui->lv_artist->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_artists_by_column(int)));
+	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
 
 	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
@@ -138,34 +145,40 @@ void GUI_Library_windowed::init_menues(){
 	_info_action = new QAction("Info", this);
 	_edit_action = new QAction("Edit", this);
 	_delete_action = new QAction("Delete", this);
+	_play_next_action = new QAction("Play next", this);
 
 	_right_click_menu->addAction(_info_action);
 	_right_click_menu->addAction(_edit_action);
 	_right_click_menu->addAction(_delete_action);
+	_right_click_menu->addAction(_play_next_action);
 }
 void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
 
 	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));
 	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_artist()));
 	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_artist()));
+	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
 
 	this->_right_click_menu->exec(p);
 
 	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));
 	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_artist()));
 	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_artist()));
+	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
 }
 
 void GUI_Library_windowed::show_album_context_menu(const QPoint& p){
 	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_album()));
 	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_album()));
 	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_album()));
+	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
 
 	this->_right_click_menu->exec(p);
 
 	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_album()));
 	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_album()));
 	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_album()));
+	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
 }
 
 void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
@@ -173,12 +186,14 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_tracks()));
 	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_tracks()));
 	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_tracks()));
+	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_tracks()));
 
 	this->_right_click_menu->exec(p);
 
 	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_tracks()));
 	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_tracks()));
 	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_tracks()));
+	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_tracks()));
 }
 
 
@@ -601,6 +616,21 @@ void GUI_Library_windowed::info_tracks(){
 	_info_dialog->show(TAB_INFO);
 }
 
+void GUI_Library_windowed::play_next(){
+
+	emit sig_play_next_all_tracks();
+
+}
+
+void GUI_Library_windowed::play_next_tracks(){
+	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+	QList<int> lst;
+	foreach(QModelIndex idx, idx_list){
+		lst.push_back(idx.row());
+	}
+
+	emit sig_play_next_tracks(lst);
+}
 
 
 void GUI_Library_windowed::psl_delete_answer(QString answer){
@@ -647,7 +677,7 @@ void GUI_Library_windowed::delete_tracks(){
 
 bool GUI_Library_windowed::show_delete_dialog(int n_tracks){
 
-	QMessageBox dialog;
+		QMessageBox dialog;
 		QString tl = this->ui->le_search->text();
 
 
@@ -676,6 +706,19 @@ bool GUI_Library_windowed::show_delete_dialog(int n_tracks){
 		}
 
 		return true;
+}
+
+void GUI_Library_windowed::artist_middle_clicked(const QPoint& pt){
+	play_next();
+}
+
+
+void GUI_Library_windowed::album_middle_clicked(const QPoint& pt){
+	play_next();
+}
+
+void GUI_Library_windowed::tracks_middle_clicked(const QPoint& pt){
+	play_next_tracks();
 }
 
 

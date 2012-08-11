@@ -101,6 +101,7 @@ public:
 		void psl_new_radio_playlist_available(const vector<MetaData>&);
 		void psl_play_stream(const QString&, const QString&);
 		void psl_valid_strrec_track(const MetaData&);
+		void psl_play_next_tracks(const vector<MetaData>&);
 
 
 

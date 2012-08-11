@@ -63,6 +63,7 @@ signals:
     void sig_change_id3_tags(const vector<MetaData>&);
 
     void sig_delete_answer(QString);
+    void sig_play_next_tracks(const vector<MetaData>&);
 
 
 
@@ -95,6 +96,9 @@ public slots:
     void psl_delete_tracks();
     void psl_delete_certain_tracks(const QList<int>&);
 
+    void psl_play_next_all_tracks();
+    void psl_play_next_tracks(const QList<int>&);
+
 private slots:
    void reload_thread_finished();
    void file_system_changed(const QString& path);
@@ -102,6 +106,7 @@ private slots:
 
 
 private:
+
     CDirectoryReader    m_reader;
 
     QString				m_library_path;
@@ -110,6 +115,7 @@ private:
     QString				m_src_dir;
     GUI_ImportFolder*   m_import_dialog;
 
+	int					_reload_progress;
 
 
     CDatabaseConnector*	_db;

@@ -33,6 +33,9 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QPoint>
+
+
+
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_parent = parent;
 	qDrag = 0;
@@ -74,6 +77,14 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 			pos.setY(pos.y() + 35);
 			pos.setX(pos.x() + 10);
 			emit context_menu_emitted(pos);
+			break;
+
+		case Qt::MiddleButton:
+			_drag = false;
+
+			QTableView::mousePressEvent(event);
+
+			emit sig_middle_button_clicked(pos);
 			break;
 
 		default: break;
@@ -125,3 +136,8 @@ void MyTableView::set_mime_data(QMimeData* data, QPixmap* pixmap){
 	if(data) _drag = true;
 	else _drag = false;
 }
+
+void MyTableView::set_id(int id){
+	_id = id;
+}
+

@@ -56,6 +56,7 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 
 	_filter.by_searchstring = BY_FULLTEXT;
 	_filter.filtertext = "";
+	_reload_progress = 0;
 
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
@@ -106,11 +107,6 @@ void CLibraryBase::importFiles(const vector<MetaData>& v_md){
 	bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
 	emit sig_import_result(success);
 
-
-
-	/*
-	qDebug() << "show import dialog";
-
 	QStringList content;
 	for(uint i=0; i<v_md.size(); i++){
 		QString path = v_md.at(i).filepath;
@@ -127,7 +123,7 @@ void CLibraryBase::importFiles(const vector<MetaData>& v_md){
 
 	m_import_dialog = new GUI_ImportFolder(NULL, content, false);
 	connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
-	m_import_dialog->show();*/
+	m_import_dialog->show();
 }
 
 
@@ -276,17 +272,19 @@ void CLibraryBase::reloadLibrary(){
 
 void CLibraryBase::reload_thread_finished(){
 
-	/*vector<MetaData> v_metadata;
+	vector<MetaData> v_metadata;
 	m_thread->get_metadata(v_metadata);
 	insertMetaDataIntoDB(v_metadata);
-	getAllAlbums();
-	getAllArtists();
+	_db->getAllAlbums(_vec_albums);
+	_db->getAllArtists(_vec_artists);
 
-	emit sig_reload_library_finished();*/
+	emit sig_reload_library_finished();
 }
 
 void CLibraryBase::library_reloading_state_slot(int percent){
+
 	emit sig_reloading_library(percent);
+
 }
 
 
@@ -504,5 +502,18 @@ void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst){
 	}
 
 	delete_tracks(vec_md);
+}
+
+void CLibraryBase::psl_play_next_all_tracks(){
+	emit sig_play_next_tracks(_vec_md);
+}
+
+void CLibraryBase::psl_play_next_tracks(const QList<int>& lst){
+	vector<MetaData> v_md;
+	foreach(int i, lst){
+		v_md.push_back(_vec_md[i]);
+	}
+
+	emit sig_play_next_tracks(v_md);
 }
 
