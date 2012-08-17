@@ -81,7 +81,6 @@ void ReloadThread::run(){
 	emit reloading_library( -1 );
 	reader.getFilesInsiderDirRecursive(QDir(_library_path), fileList, num_files);
 
-	vector<MetaData> v_md;
 	_state = -1;
 
 	/// TODO: commit status every 20-30 tracks
@@ -89,16 +88,14 @@ void ReloadThread::run(){
 	// we're in a thread, baby! You can play the
 	// sound nevertheless... Fuck I'm drunk :(
 
+	_v_metadata.clear();
 
 	for(int i=0; i<fileList.size(); i++){
 
 		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
-
-		v_md.push_back(md);
+		_v_metadata.push_back(md);
 		emit reloading_library( (i * 100) / fileList.size() );
 	}
-
-	_v_metadata = v_md;
 }
 
 void ReloadThread::set_lib_path(QString library_path){
@@ -108,3 +105,5 @@ void ReloadThread::set_lib_path(QString library_path){
 void ReloadThread::get_metadata(vector<MetaData>& md){
 	md = _v_metadata;
 }
+
+
