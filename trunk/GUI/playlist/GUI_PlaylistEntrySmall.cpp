@@ -19,6 +19,7 @@
  */
 
 #include "GUI/playlist/GUI_PlaylistEntrySmall.h"
+#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include <QFrame>
@@ -38,14 +39,19 @@ GUI_PlaylistEntrySmall::~GUI_PlaylistEntrySmall() {
 	// TODO Auto-generated destructor stub
 }
 
-void GUI_PlaylistEntrySmall::setContent(const MetaData& md){
+void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx){
 
+	QString titlestr;
+
+	if(CSettingsStorage::getInstance()->getPlaylistNumbers())
+		titlestr = QString::number(idx) + ". " + md.title.trimmed();
+
+	else
+		titlestr = md.title.trimmed();
+
+	this->ui->lab_title->setText(titlestr);
 	this->ui->lab_artist->setText(md.artist.trimmed());
-	this->ui->lab_title->setText(md.title.trimmed());
 	this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
-	this->ui->lab_title->setToolTip(md.title.trimmed() + " by " + md.artist.trimmed());
-	this->ui->lab_artist->setToolTip(md.title.trimmed() + " by " + md.artist.trimmed());
-
 }
 
 
@@ -54,7 +60,6 @@ void GUI_PlaylistEntrySmall::setContent(const MetaData& md){
 void GUI_PlaylistEntrySmall::setBackgroundColorPlaying(){
 
 	this->setStyleSheet("background-color: #C0C0C0;");
-
 }
 
 

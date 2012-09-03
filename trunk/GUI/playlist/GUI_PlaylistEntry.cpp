@@ -27,6 +27,9 @@
  */
 
 #include "GUI/playlist/GUI_PlaylistEntry.h"
+#include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/MetaData.h"
 
 #include <QFrame>
 
@@ -93,6 +96,26 @@ void GUI_PlaylistEntry::setWidth(int width){
 	this->resize(width, 30);
 
 
+}
+
+void GUI_PlaylistEntry::setContent(MetaData& md, int idx){
+
+	QString titlestr = md.title;
+	if(CSettingsStorage::getInstance()->getPlaylistNumbers()){
+		titlestr = QString::number(idx) + ". " + md.title;
+	}
+	this->ui->lab_title->setText(titlestr);
+
+
+	this->ui->lab_artist->setText(md.artist);
+	if(md.album == ""){
+		this->ui->lab_album->setText("");
+		return;
+	}
+
+	this->ui->lab_album->setText(QString(" [ ") + md.album.trimmed() + " ]");
+
+	this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
 }
 
 

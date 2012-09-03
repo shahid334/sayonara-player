@@ -85,7 +85,7 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	bool cur_track = (strlist[strlist.length()-2].toInt() == 1);
 	bool insert = (strlist.last().toInt() == 1);
 
-	_pl_entry->setContent(md);
+	_pl_entry->setContent(md, index.row() +1 );
 
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
 						this->_parent->verticalScrollBar()->width() + 4 : 4;

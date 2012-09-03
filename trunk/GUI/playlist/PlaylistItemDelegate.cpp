@@ -94,10 +94,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	bool insert = (strlist.last().toInt() == 1);
 
 
-	_pl_entry->setArtist(md.artist);
-	_pl_entry->setAlbum(md.album);
-	_pl_entry->setTitle(md.title);
-	_pl_entry->setTime(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+	_pl_entry->setContent(md, index.row() + 1);
 
 
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?

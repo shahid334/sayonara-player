@@ -315,6 +315,14 @@ void CSettingsStorage::setSocketTo(int val){
 	m_socket_to = val;
 }
 
+bool CSettingsStorage::getPlaylistNumbers(){
+	return m_show_playlist_numbers;
+}
+
+void CSettingsStorage::setPlaylistNumbers(bool b){
+	m_show_playlist_numbers = b;
+}
+
 
 
 

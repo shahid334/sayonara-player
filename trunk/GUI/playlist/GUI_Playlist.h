@@ -34,7 +34,6 @@
 #include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "LyricLookup/LyricLookup.h"
 #include "GUI/playlist/PlaylistItemDelegateInterface.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
@@ -99,18 +98,13 @@
 			void edit_id3_but_pressed();
 			void dummy_pressed();
 			void import_button_clicked();
-			void lyric_button_toggled(bool on);
-			void lyric_server_changed(int);
-
-			void lyric_thread_finished();
-			void lyric_thread_terminated();
-
-
 
 			void psl_show_context_menu(const QPoint &);
 			void psl_info_tracks();
 			void psl_edit_tracks();
 			void psl_delete_tracks();
+
+			void btn_numbers_changed(bool);
 
 		protected:
 			void keyPressEvent(QKeyEvent* e);
@@ -124,11 +118,7 @@
 			Playlist_Mode					_playlist_mode;
 			QAbstractItemModel* 			_pli_model;
 			PlaylistItemDelegateInterface* 	_pli_delegate;
-			QAction**						_action_lyric_servers;
-			QMenu*							_menu_lyrics;
 
-			LyricLookupThread*				_lyrics_thread;
-			int 							_cur_lyric_server;
 
 			qint64 		_total_secs;
 			int			_cur_playing_row;

@@ -34,14 +34,12 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
-#include "LyricLookup/LyricLookup.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
 #include "GUI/playlist/PlaylistItemDelegate.h"
 #include "GUI/playlist/PlaylistItemDelegateSmall.h"
 #include "GUI/playlist/PlaylistItemDelegateInterface.h"
-#include "GUI/LyricMenuButton/LyricMenuButton.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include <QWidget>
@@ -81,7 +79,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 	bool small_playlist_items = settings->getShowSmallPlaylist();
 
-	_lyrics_thread = new LyricLookupThread();
 	_info_dialog = dialog;
 
 	_pli_model = new PlaylistItemModel();
@@ -95,6 +92,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	this->ui->btn_repAll->setChecked(_playlist_mode.repAll);
 	this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
 	this->ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
+	this->ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
 
 	this->ui->listView->setDragEnabled(true);
 	this->ui->listView->setModel(_pli_model);
@@ -102,9 +100,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	this->ui->listView->setSelectionRectVisible(true);
 	this->ui->listView->setAlternatingRowColors(true);
 	this->ui->listView->setMovement(QListView::Free);
-
-	this->ui->te_lyrics->setAcceptRichText(true);
-	this->ui->te_lyrics->hide();
 
 	this->ui->btn_import->setVisible(false);
 
@@ -123,10 +118,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(this->ui->listView, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(psl_show_context_menu(const QPoint&)));
 
 	connect(this->ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
-	connect(this->ui->btn_lyrics_server, SIGNAL(sig_server_changed(int)), this, SLOT(lyric_server_changed(int)));
-	connect(this->ui->btn_lyrics, SIGNAL(toggled(bool)), this, SLOT(lyric_button_toggled(bool)));
-	connect(this->_lyrics_thread, SIGNAL(finished()), this, SLOT(lyric_thread_finished()));
-
+	connect(this->ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
 
 	// we need a reason for refreshing the list
 	QStringList empty_list;
@@ -140,9 +132,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	_radio_active = RADIO_OFF;
 
-	this->ui->btn_lyrics_server->setServers(_lyrics_thread->getServers());
-	this->ui->btn_lyrics_server->setVisible(false);
-	this->_cur_lyric_server = 0;
 	check_dynamic_play_button();
 
 	int style = settings->getPlayerStyle();
@@ -173,15 +162,15 @@ void GUI_Playlist::initGUI(){
 	this->ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
 	this->ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
 	this->ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
-	this->ui->btn_lyrics->setIcon(QIcon(icon_path + "lyrics.png"));
+	this->ui->btn_numbers->setIcon(QIcon(icon_path + "numbers.png"));
 }
 
 
 void GUI_Playlist::init_menues(){
 
 	_right_click_menu = new QMenu(this);
-	_info_action = new QAction("Info", this);
-	_edit_action = new QAction("Edit", this);
+	_info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), "Info", this);
+	_edit_action = new QAction(QIcon(Helper::getIconPath() + "lyrics.png"), "Edit", this);
 
 	_right_click_menu->addAction(_info_action);
 	_right_click_menu->addAction(_edit_action);
@@ -213,68 +202,6 @@ void GUI_Playlist::dummy_pressed(){
 
 }
 
-void GUI_Playlist::lyric_server_changed(int idx){
-
-	if(!this->ui->btn_lyrics->isChecked()) return;
-
-	_cur_lyric_server = idx;
-	lyric_button_toggled(true);
-
-}
-
-void GUI_Playlist::lyric_button_toggled(bool on){
-
-	this->ui->btn_lyrics_server->setVisible(on);
-
-	if(!on){
-		ui->te_lyrics->hide();
-		ui->listView->show();
-		return;
-	}
-
-	QVariant data;
-	if(_cur_playing_row != -1){
-		data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
-	}
-
-	else return;
-
-
-	QStringList lst = data.toStringList();
-	MetaData md;
-	md.fromStringList(lst);
-
-	_lyrics_thread->prepare_thread(md.artist, md.title, _cur_lyric_server);
-	_lyrics_thread->start();
-}
-
-
-void GUI_Playlist::lyric_thread_finished(){
-
-	if(!this->ui-> btn_lyrics_server->isChecked()){
-		this->ui->btn_lyrics_server->setVisible(true);
-		this->ui->btn_lyrics->setChecked(true);
-	}
-
-	QString lyrics = _lyrics_thread->getFinalLyrics();
-	lyrics = lyrics.trimmed();
-
-	ui->te_lyrics->setAcceptRichText(true);
-	ui->te_lyrics->setText(lyrics);
-	ui->te_lyrics->setLineWrapColumnOrWidth(this->_parent->width() - 20);
-	ui->te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
-	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	ui->te_lyrics->show();
-	ui->listView->hide();
-
-}
-
-void GUI_Playlist::lyric_thread_terminated(){
-
-	this->ui->btn_lyrics->setChecked(false);
-}
-
 
 // SLOT: switch between dark & light skin
 void GUI_Playlist::change_skin(bool dark){
@@ -296,7 +223,7 @@ void GUI_Playlist::change_skin(bool dark){
 	this->ui->btn_dynamic->setStyleSheet(btn_style);
 	this->ui->btn_repAll->setStyleSheet(btn_style);
 	this->ui->btn_shuffle->setStyleSheet(btn_style);
-	this->ui->btn_lyrics->setStyleSheet(btn_style);
+	this->ui->btn_numbers->setStyleSheet(btn_style);
 }
 
 
@@ -313,11 +240,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 	_total_secs = 0;
 	int idx = 0;
-
-	if(_cur_playing_row != cur_play_idx && !ui->te_lyrics->isHidden()){
-		_cur_playing_row = cur_play_idx;
-		lyric_button_toggled(true);
-	}
 
 	_cur_playing_row = cur_play_idx;
 
@@ -352,11 +274,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 // private SLOT: clear button pressed
 void GUI_Playlist::clear_playlist_slot(){
-
-	if(this->ui->btn_lyrics->isChecked()){
-		this->ui->btn_lyrics->setChecked(false);
-		return;
-	}
 
 	if(_radio_active != RADIO_OFF) return;
 
@@ -459,10 +376,6 @@ void GUI_Playlist::track_changed(int new_row){
 	if(new_row < 0) return;
 
 	QModelIndex index = _pli_model->index(new_row, 0);
-	if(_cur_playing_row != new_row && !ui->te_lyrics->isHidden()){
-		_cur_playing_row = new_row;
-		lyric_button_toggled(true);
-	}
 
 	_cur_playing_row = new_row;
 
@@ -817,7 +730,6 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 	this->ui->btn_import->setVisible(radio == RADIO_OFF);
-	this->ui->btn_lyrics->setVisible(radio != RADIO_STATION);
 }
 
 
@@ -839,4 +751,12 @@ void GUI_Playlist::psl_show_small_playlist_items(bool small_playlist_items){
 
 	this->ui->listView->setItemDelegate(_pli_delegate);
 	this->ui->listView->reset();
+}
+
+
+void GUI_Playlist::btn_numbers_changed(bool b){
+	this->parentWidget()->setFocus();
+	CSettingsStorage::getInstance()->setPlaylistNumbers(b);
+	this->ui->listView->reset();
+
 }

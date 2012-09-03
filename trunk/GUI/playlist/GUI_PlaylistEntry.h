@@ -30,6 +30,7 @@
 #define GUI_PLAYLISTENTRY_H_
 
 #include "ui_GUI_Playlist_Entry.h"
+#include "HelperStructs/MetaData.h"
 
 #include <QObject>
 
@@ -46,6 +47,8 @@ public:
 	void setAlbum(QString album);
 	void setTitle(QString title);
 	void setTime(QString time);
+
+	void setContent(MetaData& md, int idx);
 
 	void setBackgroundColorPlaying();
 	void setBackgroundColorNotPlaying();

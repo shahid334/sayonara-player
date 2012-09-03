@@ -218,6 +218,9 @@ bool CDatabaseConnector::load_settings(){
 	int socket_to = load_setting_int("socket_to");
 	settings->setSocketTo(socket_to);
 
+	bool show_playlist_numbers = load_setting_bool("show_playlist_numbers");
+	settings->setPlaylistNumbers(show_playlist_numbers);
+
 	return true;
 }
 
@@ -308,6 +311,9 @@ bool CDatabaseConnector::store_settings(){
 
 	int socket_to = storage->getSocketTo();
 	store_setting("socket_to", socket_to);
+
+	bool show_playlist_numbers = storage->getPlaylistNumbers();
+	store_setting("show_playlist_numbers", show_playlist_numbers);
 
 	return true;
 }

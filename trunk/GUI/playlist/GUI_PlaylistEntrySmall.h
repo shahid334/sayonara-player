@@ -24,6 +24,7 @@
 
 #include "ui_GUI_Playlist_EntrySmall.h"
 #include "HelperStructs/MetaData.h"
+
 #include <QObject>
 
 
@@ -35,7 +36,7 @@ public:
 	virtual ~GUI_PlaylistEntrySmall();
 
 public:
-	void setContent(const MetaData& md);
+	void setContent(const MetaData& md, int idx);
 
 	void setBackgroundColorPlaying();
 	void setBackgroundColorNotPlaying();

@@ -150,16 +150,18 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 
 void GUI_Library_windowed::init_menues(){
 	_right_click_menu = new QMenu(this);
-	_info_action = new QAction("Info", this);
-	_edit_action = new QAction("Edit", this);
-	_delete_action = new QAction("Delete", this);
-	_play_next_action = new QAction("Play next", this);
+
+	_info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), "Info", this);
+	_edit_action = new QAction(QIcon(Helper::getIconPath() + "lyrics.png"), "Edit", this);
+	_delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), "Delete", this);
+	_play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), "Play next", this);
 
 	_right_click_menu->addAction(_info_action);
 	_right_click_menu->addAction(_edit_action);
 	_right_click_menu->addAction(_delete_action);
 	_right_click_menu->addAction(_play_next_action);
 }
+
 void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
 
 	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));

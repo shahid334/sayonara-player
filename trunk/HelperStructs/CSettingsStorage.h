@@ -120,6 +120,8 @@ private:
     /* show small icons */
     bool m_show_small_playlist;
 
+    bool m_show_playlist_numbers;
+
     /* activate stream ripper */
     bool m_streamripper;
     bool m_streamripper_warning;  
@@ -214,6 +216,9 @@ public:
 
 	int getSocketTo();
 	void setSocketTo(int val);
+
+	bool getPlaylistNumbers();
+	void setPlaylistNumbers(bool b);
 
 };
 
