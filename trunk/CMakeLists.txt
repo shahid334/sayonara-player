@@ -160,7 +160,7 @@ SET(FORMS
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui
     GUI/InfoDialog/GUI_InfoDialog.ui
-    GUI/GSTDataPainter/GSTDataPainter.ui
+#    GUI/GSTDataPainter/GSTDataPainter.ui
     GUI/SocketConfiguration/GUI_SocketSetup.ui
 )
 
