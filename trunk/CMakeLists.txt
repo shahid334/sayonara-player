@@ -66,7 +66,7 @@ SET(HEADERS
     GUI/library/GUIImportFolder.h
     GUI/LyricMenuButton/LyricMenuButton.h
     GUI/InfoDialog/GUI_InfoDialog.h
-    GUI/GSTDataPainter/GSTDataPainter.h
+#    GUI/GSTDataPainter/GSTDataPainter.h
     GUI/SocketConfiguration/GUISocketSetup.h
     CoverLookup/CoverLookup.h
     DatabaseAccess/CDatabaseConnector.h
@@ -109,7 +109,7 @@ SET(SOURCES
     GUI/library/GUIImportFolder.cpp
     GUI/LyricMenuButton/LyricMenuButton.cpp
     GUI/InfoDialog/GUI_InfoDialog.cpp
-    GUI/GSTDataPainter/GSTDataPainter.cpp
+#    GUI/GSTDataPainter/GSTDataPainter.cpp
     GUI/SocketConfiguration/GUISocketSetup.cpp
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
