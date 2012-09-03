@@ -66,9 +66,11 @@ public:
   	 * LIBRARY
 	 *******************************************/
 
+
 		/*****************
 		 *  ARTISTS
 		 *****************/
+
 			int getArtistID (const QString & artist);
 			Artist getArtistByID( const int& id);
 			int getMaxArtistID();
@@ -86,6 +88,8 @@ public:
 		/*****************
 		 *  ALBUMS
 		 *****************/
+
+
 			int getAlbumID (const QString & album);
 			int getMaxAlbumID();
 
@@ -105,6 +109,7 @@ public:
 		/*****************
 		 *  TRACKS
 		 *****************/
+
 			void getAllTracksByAlbum(int album, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
 
 			void getAllTracksByArtist(int artist, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");

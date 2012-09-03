@@ -259,25 +259,57 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl, int radio){
 }
 
 
+void Playlist::remove_row(int row){
+	QList<int> remove_list;
+	remove_list << row;
+	psl_remove_rows(remove_list);
+}
+
 // remove one row
-void Playlist::psl_remove_row(int row){
+void Playlist::psl_remove_rows(const QList<int> & rows){
 
+	vector<MetaData> v_tmp_md;
 	vector<MetaData> v_tmp_extern;
-	QString filepath = "";
 
-	if(row < _cur_play_idx) _cur_play_idx --;
-	else if(row == _cur_play_idx) _cur_play_idx = -1;
+	int n_tracks = _v_meta_data.size();
+	int n_tracks_extern = _v_extern_tracks.size();
 
-	filepath = (_v_meta_data.begin() + row)->filepath;
-	_v_meta_data.erase(this->_v_meta_data.begin() + row);
+	bool* to_delete = new bool[n_tracks];
+	bool* to_delete_extern = new bool[n_tracks_extern];
 
-	for(uint i=0; i<_v_extern_tracks.size(); i++){
-		MetaData md = _v_extern_tracks.at(i);
-		if(filepath != md.filepath){
-			v_tmp_extern.push_back(_v_extern_tracks.at(i));
+	for(int i=0; i<n_tracks_extern; i++){
+		to_delete_extern[i] = false;
+	}
+
+	for(int i=0; i<n_tracks; i++){
+		to_delete[i] = false;
+		if(rows.contains(i)) {
+			to_delete[i] = true;
+			for(int j=0; j<n_tracks_extern; j++){
+				MetaData e_md = _v_extern_tracks[j];
+				if(e_md.filepath.toLower().trimmed() == _v_meta_data[i].filepath.toLower().trimmed()){
+					to_delete_extern[j] = true;
+				}
+			}
 		}
 	}
 
+	for(int i=0; i<n_tracks; i++){
+		if(!to_delete[i]){
+			v_tmp_md.push_back(_v_meta_data[i]);
+			if(i < _cur_play_idx) _cur_play_idx--;
+			else if(i == _cur_play_idx) _cur_play_idx = -1;
+		}
+	}
+
+	if(_cur_play_idx < -1) _cur_play_idx = -1;
+
+	for(int i=0; i<n_tracks_extern; i++){
+		if(!to_delete_extern[i])
+			v_tmp_extern.push_back(_v_extern_tracks[i]);
+	}
+
+	_v_meta_data = v_tmp_md;
 	_v_extern_tracks = v_tmp_extern;
 
 	psl_save_playlist_to_storage();
@@ -453,7 +485,8 @@ void Playlist::psl_forward(){
 	// lastfm removes current played file
 	// next file is also on idx 0
 	if(_radio_active == RADIO_LFM){
-		psl_remove_row(0);
+
+		remove_row(0);
 
 		// any more files to play?
 		if(_v_meta_data.size() == 0){
@@ -553,7 +586,10 @@ void Playlist::psl_next_track(){
 		if(_v_meta_data.size() == 1)
 			emit sig_need_more_radio();
 
-		this->psl_remove_row(0);
+
+
+
+		remove_row(0);
 		// we just played the last track
 		if(_v_meta_data.size() == 0){
 			emit sig_no_track_to_play();
@@ -604,7 +640,7 @@ void Playlist::psl_next_track(){
 		}
 
 		else{
-			psl_remove_row(track_num);
+			remove_row(track_num);
 			psl_next_track();
 		}
 	}
@@ -632,7 +668,7 @@ void Playlist::psl_change_track(int new_row){
 		// we cannot click into playlist
 		if(_radio_active == RADIO_LFM){
 			for(int i=0; i<new_row; i++){
-				psl_remove_row(0);
+				remove_row(0);
 			}
 
 			if(_v_meta_data.size() == 0){
@@ -659,7 +695,7 @@ void Playlist::psl_change_track(int new_row){
 	else{
 		_db->deleteTrack(md);
 		_cur_play_idx = -1;
-		psl_remove_row(new_row);
+		remove_row(new_row);
 		emit sig_no_track_to_play();
 	}
 }

@@ -54,43 +54,45 @@ Q_OBJECT
 		void sig_similar_artists_available(const QList<int>&);
 		void sig_new_radio_playlist(const vector<MetaData>&);
 		void sig_track_info_fetched(const MetaData& md, bool loved, bool corrected);
+		void sig_user_info_fetched(QMap<QString, QString>&);
+
 
 	public slots:
-		void scrobble(const MetaData&);
-		void track_changed(const MetaData&);
-		void login_slot(QString, QString);
-		void radio_init(const QString&, int);
-		void radio_get_playlist();
+		void psl_scrobble(const MetaData&);
+		void psl_track_changed(const MetaData&);
+		void psl_login(QString, QString);
+		void psl_radio_init(const QString&, int);
+		void psl_radio_playlist_request();
+
+
 
 	private slots:
-		void similar_artists_available(const QString&, const QList<int>&);
-		void corrected_data_available(const QString&);
+		void _sl_similar_artists_available(const QString&, const QList<int>&);
+		void _sl_corrected_data_available(const QString&);
 
 	public:
 		static LastFM * getInstance();
 		virtual ~LastFM();
 
-		bool update_track(const MetaData&);
-		void get_similar_artists(const QString&);
-		void get_friends(QStringList& );
-
-		bool login(QString username, QString password);
-
-		/*static QString get_api_key();
-		static QString calc_album_lfm_adress(QString album);
-		static QString calc_search_album_adress(QString album);
-		static QString calc_search_artist_adress(QString album);*/
+		bool lfm_login(QString username, QString password);
+		void lfm_get_friends(QStringList& );
+		bool lfm_get_user_info(QMap<QString, QString>&);
 
 	private:
 
-		 LastFM();
-		 LastFM(const LastFM&);
-		 LastFM& operator=(const LastFM&);
+		LastFM();
+		LastFM(const LastFM&);
+		LastFM& operator=(const LastFM&);
 
-		 void init();
-		 bool init_track_changed_thread();
+		bool 	_lfm_init_track_changed_thread();
+		bool 	_lfm_update_track(const MetaData&);
+		void 	_lfm_get_similar_artists(const QString&);
+		QString _lfm_parse_session_answer();
+		bool 	_lfm_parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
+		bool 	_lfm_check_login();
 
-		 QString			_class_name;
+
+		QString			_class_name;
 
 		bool 			_logged_in;
 
@@ -100,14 +102,7 @@ Q_OBJECT
 		QString			_session_key2;
 		MetaData		_loved_tracks;
 
-
-	private:
-		QString parse_session_answer();
 		LFMTrackChangedThread* _track_changed_thread;
-		bool parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
-
-
-		bool check_login();
 };
 
 #endif /* LASTFM_H_ */

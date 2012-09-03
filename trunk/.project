@@ -1,24 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sayonara-player</name>
+	<name>Project@sayonara-player</name>
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<name>org.eclipse.cdt.make.core.makeBuilder</name>
 			<triggers>clean,full,incremental,</triggers>
 			<arguments>
 				<dictionary>
-					<key>?name?</key>
-					<value></value>
+					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
+					<value>true</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.append_environment</key>
 					<value>true</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
+					<key>org.eclipse.cdt.make.core.stopOnError</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enabledIncrementalBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.command</key>
+					<value>/usr/bin/make</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.contents</key>
+					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.inc</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.arguments</key>
+					<value></value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.buildLocation</key>
+					<value>/home/luke/sayonara-player</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.environment</key>
+					<value>VERBOSE=1|CMAKE_NO_VERBOSE=1|</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
+					<value>true</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.auto</key>
+					<value>all</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
+					<value>false</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.build.target.clean</key>
+					<value>clean</value>
+				</dictionary>
+				<dictionary>
+					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
 					<value>all</value>
 				</dictionary>
 				<dictionary>
@@ -26,54 +82,986 @@
 					<value></value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.buildCommand</key>
-					<value>make</value>
+					<key>org.eclipse.cdt.make.core.build.location</key>
+					<value>/home/luke/sayonara-player</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.cleanBuildTarget</key>
-					<value>clean</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.contents</key>
-					<value>org.eclipse.cdt.make.core.activeConfigSettings</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.enableAutoBuild</key>
-					<value>false</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.enableCleanBuild</key>
-					<value>true</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.enableFullBuild</key>
-					<value>true</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.fullBuildTarget</key>
+					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
 					<value>all</value>
 				</dictionary>
 				<dictionary>
-					<key>org.eclipse.cdt.make.core.stopOnError</key>
-					<value>true</value>
-				</dictionary>
-				<dictionary>
-					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
-					<value>true</value>
+					<key>org.eclipse.cdt.core.errorOutputParser</key>
+					<value>org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GASErrorParser;org.eclipse.cdt.core.GLDErrorParser;</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
-			<triggers>full,incremental,</triggers>
+			<name>org.eclipse.cdt.make.core.ScannerConfigBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.cdt.core.cnature</nature>
 		<nature>org.eclipse.cdt.core.ccnature</nature>
-		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
-		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.make.core.makeNature</nature>
+		<nature>org.eclipse.cdt.make.core.ScannerConfigNature</nature>
+		<nature>org.eclipse.cdt.core.cnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>[Subprojects]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Subprojects]/sayonara_gstreamer</name>
+			<type>2</type>
+			<location>/home/luke/sayonara-player/Engine/GStreamer</location>
+		</link>
+		<link>
+			<name>[Targets]</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Simpleplayer.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/GUI_Simpleplayer.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Playlist.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/GUI_Playlist.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Playlist_Entry.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/GUI_Playlist_Entry.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Playlist_EntrySmall.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/GUI_Playlist_EntrySmall.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_LastFM_Widget.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LastFM/GUI_LastFM_Widget.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Library_windowed.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/GUI_Library_windowed.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_ImportFolder.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/GUI_ImportFolder.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Library_Info_Box.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/GUI_Library_Info_Box.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Equalizer.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/equalizer/GUI_Equalizer.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_TagEdit.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/tagedit/GUI_TagEdit.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Alternate_Covers.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/alternate_covers/GUI_Alternate_Covers.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_PlaylistChooser.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist_chooser/GUI_PlaylistChooser.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_LFMRadioWidget.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LFMRadio/GUI_LFMRadioWidget.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_Stream.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/stream/GUI_Stream.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_StreamRecorder.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/StreamRecorder/GUI_StreamRecorder.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GUI_InfoDialog.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/InfoDialog/GUI_InfoDialog.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara//GSTDataPainter.ui</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/GSTDataPainter/GSTDataPainter.ui</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/SoundPluginLoader.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/SoundPluginLoader.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_Simpleplayer.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/GUI_Simpleplayer.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_TrayIcon.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/GUI_TrayIcon.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_Playlist.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/GUI_Playlist.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/PlaylistItemModel.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/PlaylistItemModel.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/PlaylistItemDelegate.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/PlaylistItemDelegate.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/PlaylistItemDelegateSmall.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/PlaylistItemDelegateSmall.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_PlaylistEntry.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/GUI_PlaylistEntry.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_PlaylistEntrySmall.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/GUI_PlaylistEntrySmall.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_PlaylistChooser.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist_chooser/GUI_PlaylistChooser.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_LastFM.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LastFM/GUI_LastFM.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_Library_windowed.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/GUI_Library_windowed.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LibraryItemModelTracks.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/LibraryItemModelTracks.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LibraryItemModelAlbums.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/LibraryItemModelAlbums.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LibraryItemDelegateAlbums.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/LibraryItemDelegateAlbums.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LibraryItemDelegateArtists.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/LibraryItemDelegateArtists.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LibraryItemModelArtists.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/LibraryItemModelArtists.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LibraryItemDelegateTracks.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/LibraryItemDelegateTracks.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUILibraryInfoBox.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/GUILibraryInfoBox.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_TagEdit.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/tagedit/GUI_TagEdit.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_Equalizer.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/equalizer/GUI_Equalizer.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/MyTableView.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/MyTableView.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/MyListView.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/MyListView.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUIImportFolder.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/GUIImportFolder.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LyricMenuButton.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LyricMenuButton/LyricMenuButton.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_InfoDialog.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/InfoDialog/GUI_InfoDialog.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GSTDataPainter.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/GSTDataPainter/GSTDataPainter.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/Helper.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/Helper.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CSettingsStorage.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/CSettingsStorage.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/Style.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/Style.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDirectoryReader.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/CDirectoryReader.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/PlaylistParser.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/PlaylistParser.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/WebAccess.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/WebAccess.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CoverLookup.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/CoverLookup/CoverLookup.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LyricLookup.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/LyricLookup/LyricLookup.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CoverFetchThread.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/CoverLookup/CoverFetchThread.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CLibraryBase.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/library/CLibraryBase.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/ReloadThread.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/library/ReloadThread.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseConnector.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseConnector.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseLibrary.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseLibrary.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseSettings.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseSettings.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseAlbums.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseAlbums.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseArtists.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseArtists.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseTracks.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseTracks.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabasePlaylist.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabasePlaylist.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/CDatabaseStreams.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/CDatabaseStreams.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/Playlist.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/playlist/Playlist.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/Playlists.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/playlists/Playlists.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/id3.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/id3.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LastFM.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/LastFM.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LFMTrackChangedThread.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/LFMTrackChangedThread.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/LFMWebAccess.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/LFMWebAccess.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_LFMRadioWidget.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LFMRadio/GUI_LFMRadioWidget.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_Stream.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/stream/GUI_Stream.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/GUI_StreamRecorder.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/StreamRecorder/GUI_StreamRecorder.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/Socket.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Socket/Socket.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/Main.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Main.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_Engine.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/moc_Engine.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_SoundPluginLoader.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/moc_SoundPluginLoader.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_Simpleplayer.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/moc_GUI_Simpleplayer.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_TrayIcon.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/moc_GUI_TrayIcon.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_Playlist.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_GUI_Playlist.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_PlaylistItemModel.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_PlaylistItemModel.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_PlaylistItemDelegate.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_PlaylistItemDelegate.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_PlaylistItemDelegateSmall.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_PlaylistItemDelegateSmall.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_PlaylistEntry.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_GUI_PlaylistEntry.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_PlaylistEntrySmall.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_GUI_PlaylistEntrySmall.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_PlaylistChooser.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist_chooser/moc_GUI_PlaylistChooser.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_LastFM.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LastFM/moc_GUI_LastFM.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_Library_windowed.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_GUI_Library_windowed.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LibraryItemModelTracks.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemModelTracks.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LibraryItemModelAlbums.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemModelAlbums.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LibraryItemDelegateAlbums.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemDelegateAlbums.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LibraryItemDelegateArtists.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemDelegateArtists.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LibraryItemModelArtists.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemModelArtists.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUILibraryInfoBox.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_GUILibraryInfoBox.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_TagEdit.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/tagedit/moc_GUI_TagEdit.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_Equalizer.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/equalizer/moc_GUI_Equalizer.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_MyTableView.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/moc_MyTableView.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_MyListView.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/moc_MyListView.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUIImportFolder.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_GUIImportFolder.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LyricMenuButton.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LyricMenuButton/moc_LyricMenuButton.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_InfoDialog.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/InfoDialog/moc_GUI_InfoDialog.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GSTDataPainter.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/GSTDataPainter/moc_GSTDataPainter.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_CoverLookup.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/CoverLookup/moc_CoverLookup.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_CDatabaseConnector.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/moc_CDatabaseConnector.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_CLibraryBase.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/library/moc_CLibraryBase.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_ReloadThread.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/library/moc_ReloadThread.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_Playlist.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/playlist/moc_Playlist.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_Playlists.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/playlists/moc_Playlists.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LastFM.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/moc_LastFM.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_LFMTrackChangedThread.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/moc_LFMTrackChangedThread.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_LFMRadioWidget.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LFMRadio/moc_GUI_LFMRadioWidget.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_Stream.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/stream/moc_GUI_Stream.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_GUI_StreamRecorder.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/StreamRecorder/moc_GUI_StreamRecorder.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Source Files/moc_Socket.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Socket/moc_Socket.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Simpleplayer.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Simpleplayer.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Playlist.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Playlist.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Playlist_Entry.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Playlist_Entry.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Playlist_EntrySmall.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Playlist_EntrySmall.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_LastFM_Widget.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_LastFM_Widget.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Library_windowed.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Library_windowed.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_ImportFolder.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_ImportFolder.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Library_Info_Box.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Library_Info_Box.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Equalizer.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Equalizer.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_TagEdit.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_TagEdit.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Alternate_Covers.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Alternate_Covers.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_PlaylistChooser.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_PlaylistChooser.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_LFMRadioWidget.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_LFMRadioWidget.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_Stream.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_Stream.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_StreamRecorder.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_StreamRecorder.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GUI_InfoDialog.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GUI_InfoDialog.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Header Files/ui_GSTDataPainter.h</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/ui_GSTDataPainter.h</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_Engine.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/moc_Engine.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_SoundPluginLoader.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/moc_SoundPluginLoader.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_Simpleplayer.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/moc_GUI_Simpleplayer.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_TrayIcon.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/player/moc_GUI_TrayIcon.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_Playlist.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_GUI_Playlist.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_PlaylistItemModel.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_PlaylistItemModel.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_PlaylistItemDelegate.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_PlaylistItemDelegate.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_PlaylistItemDelegateSmall.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_PlaylistItemDelegateSmall.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_PlaylistEntry.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_GUI_PlaylistEntry.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_PlaylistEntrySmall.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist/moc_GUI_PlaylistEntrySmall.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_PlaylistChooser.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/playlist_chooser/moc_GUI_PlaylistChooser.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_LastFM.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LastFM/moc_GUI_LastFM.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_Library_windowed.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_GUI_Library_windowed.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LibraryItemModelTracks.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemModelTracks.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LibraryItemModelAlbums.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemModelAlbums.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LibraryItemDelegateAlbums.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemDelegateAlbums.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LibraryItemDelegateArtists.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemDelegateArtists.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LibraryItemModelArtists.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_LibraryItemModelArtists.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUILibraryInfoBox.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_GUILibraryInfoBox.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_TagEdit.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/tagedit/moc_GUI_TagEdit.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_Equalizer.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/equalizer/moc_GUI_Equalizer.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_MyTableView.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/moc_MyTableView.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_MyListView.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/moc_MyListView.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUIImportFolder.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/library/moc_GUIImportFolder.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LyricMenuButton.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LyricMenuButton/moc_LyricMenuButton.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_InfoDialog.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/InfoDialog/moc_GUI_InfoDialog.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GSTDataPainter.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/GSTDataPainter/moc_GSTDataPainter.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_CoverLookup.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/CoverLookup/moc_CoverLookup.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_CDatabaseConnector.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/DatabaseAccess/moc_CDatabaseConnector.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_CLibraryBase.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/library/moc_CLibraryBase.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_ReloadThread.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/library/moc_ReloadThread.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_Playlist.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/playlist/moc_Playlist.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_Playlists.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/playlists/moc_Playlists.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LastFM.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/moc_LastFM.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_LFMTrackChangedThread.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/StreamPlugins/LastFM/moc_LFMTrackChangedThread.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_LFMRadioWidget.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/LFMRadio/moc_GUI_LFMRadioWidget.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_Stream.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/stream/moc_GUI_Stream.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_GUI_StreamRecorder.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/GUI/StreamRecorder/moc_GUI_StreamRecorder.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/CMake Rules/moc_Socket.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Socket/moc_Socket.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[exe] sayonara/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Source Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Source Files/GSTEngine.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/GStreamer/GSTEngine.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Source Files/Helper.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/Helper.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Source Files/id3.cpp</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/HelperStructs/id3.cpp</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Source Files/moc_GSTEngine.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/GStreamer/moc_GSTEngine.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Source Files/moc_Engine.cxx</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/GStreamer/__/moc_Engine.cxx</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Header Files</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/CMake Rules</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/CMake Rules/moc_GSTEngine.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/GStreamer/moc_GSTEngine.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/CMake Rules/moc_Engine.cxx.rule</name>
+			<type>1</type>
+			<location>/home/luke/sayonara-player/Engine/GStreamer/__/moc_Engine.cxx.rule</location>
+		</link>
+		<link>
+			<name>[Targets]/[lib] sayonara_gstreamer/Resources</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

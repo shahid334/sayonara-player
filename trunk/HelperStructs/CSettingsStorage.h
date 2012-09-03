@@ -130,6 +130,11 @@ private:
     /* sound engine */
     QString m_sound_engine;
 
+    /* socket stuff */
+    bool	m_socket_activated;
+    int		m_socket_from;
+    int		m_socket_to;
+
 public:
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
@@ -200,6 +205,15 @@ public:
 
 	bool getStreamRipperPlaylist();
 	void setStreamRipperPlaylist(bool b);
+
+	bool getSocketActivated();
+	void setSocketActivated(bool b);
+
+	int getSocketFrom();
+	void setSocketFrom(int val);
+
+	int getSocketTo();
+	void setSocketTo(int val);
 
 };
 

@@ -92,7 +92,7 @@ void GUI_LFMRadioWidget::start_listen(){
 void GUI_LFMRadioWidget::radio_button_changed(){
 
 	if(_friends.size() == 0){
-		LastFM::getInstance()->get_friends(_friends);
+		LastFM::getInstance()->lfm_get_friends(_friends);
 		_ui->cb_friends->addItems(_friends);
 	}
 

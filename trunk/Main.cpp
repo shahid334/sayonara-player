@@ -34,12 +34,14 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/library/GUI_Library_windowed.h"
+#include "GUI/library/GUILibraryInfoBox.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
+#include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
@@ -68,6 +70,7 @@
 #include <vector>
 #include <iostream>
 
+
 using namespace std;
 
 
@@ -85,6 +88,7 @@ int main(int argc, char *argv[]){
 		}
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
+		bool is_socket_active = set->getSocketActivated();
 
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
@@ -109,9 +113,12 @@ int main(int argc, char *argv[]){
         GUI_TagEdit				ui_id3_editor;
         GUI_InfoDialog			ui_info_dialog(NULL, &ui_id3_editor);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary(), &ui_info_dialog);
+        GUI_Library_Info_Box	ui_library_info_box(player.centralWidget());
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist(), &ui_info_dialog);
+        GUI_SocketSetup			ui_socket_setup(player.centralWidget());
 
-        Socket					remote_socket(1234);
+
+        Socket					remote_socket;
 
         QString dir;
 
@@ -156,22 +163,22 @@ int main(int argc, char *argv[]){
         CONNECT (&player, sig_sound_engine_changed(QString&), 	&plugin_loader, 	psl_switch_engine(QString&));
         CONNECT (&player, sig_correct_id3(const MetaData&), 	&ui_id3_editor,		change_meta_data(const MetaData&));
         CONNECT (&player, sig_show_stream_rec(bool),			&ui_stream_rec,		psl_show(bool));
+        CONNECT (&player, sig_show_socket(),					&ui_socket_setup, 	show());
 
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&player,		update_track(const MetaData&));
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
-        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			track_changed(const MetaData&));
+        CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
         CONNECT (&playlist, sig_no_track_to_play(),								listen,			stop());
         CONNECT (&playlist, sig_goon_playing(), 								listen,			play());
         CONNECT (&playlist, sig_selected_file_changed(int), 					&ui_playlist, 	track_changed(int));
         CONNECT (&playlist, sig_playlist_created(vector<MetaData>&, int), 		&ui_playlist, 	fillPlaylist(vector<MetaData>&, int));
-        CONNECT (&playlist, sig_mp3s_loaded_signal(int), 						&ui_playlist, 	update_progress_bar(int));
         //CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
         CONNECT (&playlist, sig_playlist_prepared(int, vector<MetaData>&), 		&playlists, 	save_playlist_as_custom(int, vector<MetaData>&));
     	CONNECT (&playlist, sig_playlist_prepared(QString, vector<MetaData>&), 	&playlists, 	save_playlist_as_custom(QString, vector<MetaData>&));
     	CONNECT (&playlist, sig_library_changed(), 								&ui_library, 	library_changed());
     	CONNECT (&playlist, sig_import_files(const vector<MetaData>&), 			&library, 		importFiles(const vector<MetaData>&));
         CONNECT (&playlist, sig_data_for_id3_change(const vector<MetaData>&), 	&ui_id3_editor,	change_meta_data(const vector<MetaData>&));
-        CONNECT (&playlist, sig_need_more_radio(),								lastfm, 		radio_get_playlist());
+        CONNECT (&playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
         CONNECT (&playlist, sig_radio_active(int),								&player,		set_radio_active(int));
         CONNECT (&playlist, sig_radio_active(int),								&ui_playlist,	set_radio_active(int));
         CONNECT (&playlist, sig_radio_active(int),								&ui_playlist_chooser,	set_radio_active(int));
@@ -182,12 +189,12 @@ int main(int argc, char *argv[]){
         CONNECT (&ui_playlist, dropped_tracks(const vector<MetaData>&, int),&playlist, 	psl_insert_tracks(const vector<MetaData>&, int));
         CONNECT (&ui_playlist, sound_files_dropped(QStringList&), 			&playlist, 	psl_createPlaylist(QStringList&));
         CONNECT (&ui_playlist, directory_dropped(const QString&, int),		&playlist, 	psl_directoryDropped(const QString &, int ));
-        CONNECT (&ui_playlist, row_removed(int), 							&playlist, 	psl_remove_row(int));
+        CONNECT (&ui_playlist, rows_removed(const QList<int>&), 			&playlist, 	psl_remove_rows(const QList<int>&));
         CONNECT (&ui_playlist, sig_import_to_library(bool),					&playlist,	psl_import_new_tracks_to_library(bool));
 
         CONNECT (listen, track_finished(),								&playlist,	psl_next_track() );
         CONNECT (listen, sig_valid_strrec_track(const MetaData&),		&playlist,  psl_valid_strrec_track(const MetaData&));
-        CONNECT (listen, scrobble_track(const MetaData&), 				lastfm, 	scrobble(const MetaData&));
+        CONNECT (listen, scrobble_track(const MetaData&), 				lastfm, 	psl_scrobble(const MetaData&));
         CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&), 	&ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
         CONNECT (listen, eq_found(const QStringList&), 					&ui_eq, 	fill_available_equalizers(const QStringList&));
         CONNECT (listen, total_time_changed_signal(qint64),				&player,	total_time_changed(qint64));
@@ -196,7 +203,6 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_playlist_created(QStringList&), 			&playlist, 		psl_createPlaylist(QStringList&));
         CONNECT(&library, sig_import_result(bool),						&playlist,		psl_import_result(bool));
         CONNECT(&library, sig_import_result(bool),						&ui_playlist,	import_result(bool));
-        CONNECT(&library, sig_mp3s_loaded(int), 						&ui_playlist, 	update_progress_bar(int));
         CONNECT(&library, sig_reload_library_finished(), 				&ui_library, 	reloading_library_finished());
         CONNECT(&library, sig_reloading_library(int),					&ui_library, 	reloading_library(int));
         CONNECT(&library, sig_import_result(bool),						&ui_library,	import_result(bool));
@@ -210,22 +216,22 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_delete_answer(QString), 					&ui_library, 	psl_delete_answer(QString));
         CONNECT(&library, sig_play_next_tracks(const vector<MetaData>&),&playlist,		psl_play_next_tracks(const vector<MetaData>&));
 
+        CONNECT(&ui_library, sig_album_dbl_clicked(), 						&library, 		psl_prepare_album_for_playlist());
+        CONNECT(&ui_library, sig_artist_dbl_clicked(), 						&library, 		psl_prepare_artist_for_playlist());
+        CONNECT(&ui_library, sig_track_dbl_clicked(int), 					&library, 		psl_prepare_track_for_playlist(int));
+        CONNECT(&ui_library, sig_artist_pressed(const QList<int>&), 		&library, 		psl_selected_artists_changed(const QList<int>&));
+        CONNECT(&ui_library, sig_album_pressed(const QList<int>&), 		&library, 		psl_selected_albums_changed(const QList<int>&));
+        CONNECT(&ui_library, sig_track_pressed(const QList<int>&), 		&library, 		psl_selected_tracks_changed(const QList<int>&));
+        CONNECT(&ui_library, sig_filter_changed(const Filter&), 			&library, 		psl_filter_changed(const Filter&));
+        CONNECT(&ui_library, sig_sortorder_changed(QString,QString,QString), &library, 		psl_sortorder_changed(QString, QString, QString));
+        CONNECT(&ui_library, sig_show_id3_editor(const QList<int>&),		&library, 		psl_change_id3_tags(const QList<int>&));
+        CONNECT(&ui_library, sig_delete_tracks(),							&library,		psl_delete_tracks());
+        CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&),	&library,		psl_delete_certain_tracks(const QList<int>&));
+    	CONNECT(&ui_library, sig_play_next_tracks(const QList<int>&),		&library,		psl_play_next_tracks(const QList<int>&));
+    	CONNECT(&ui_library, sig_play_next_all_tracks(),					&library,		psl_play_next_all_tracks());
 
-        CONNECT(&ui_library, sig_album_dbl_clicked(), 						&library, 	psl_prepare_album_for_playlist());
-        CONNECT(&ui_library, sig_artist_dbl_clicked(), 						&library, 	psl_prepare_artist_for_playlist());
-        CONNECT(&ui_library, sig_track_dbl_clicked(int), 					&library, 	psl_prepare_track_for_playlist(int));
-        CONNECT(&ui_library, sig_artist_pressed(const QList<int>&), 		&library, 	psl_selected_artists_changed(const QList<int>&));
-        CONNECT(&ui_library, sig_album_pressed(const QList<int>&), 			&library, 	psl_selected_albums_changed(const QList<int>&));
-        CONNECT(&ui_library, sig_track_pressed(const QList<int>&), 			&library, 	psl_selected_tracks_changed(const QList<int>&));
-        CONNECT(&ui_library, sig_filter_changed(const Filter&), 			&library, 	psl_filter_changed(const Filter&));
-        CONNECT(&ui_library, sig_sortorder_changed(QString,QString,QString), &library, 	psl_sortorder_changed(QString, QString, QString));
-        CONNECT(&ui_library, sig_show_id3_editor(const QList<int>&),		&library, 	psl_change_id3_tags(const QList<int>&));
-        CONNECT(&ui_library, sig_delete_tracks(),							&library,	psl_delete_tracks());
-        CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&),	&library,	psl_delete_certain_tracks(const QList<int>&));
-    	CONNECT(&ui_library, sig_play_next_tracks(const QList<int>&),		&library,	psl_play_next_tracks(const QList<int>&));
-    	CONNECT(&ui_library, sig_play_next_all_tracks(),					&library,	psl_play_next_all_tracks());
 
-        CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		login_slot(QString, QString));
+        CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		psl_login(QString, QString));
 
         CONNECT(&ui_eq, eq_changed_signal(int, int), 	listen, 	eq_changed(int, int));
         CONNECT(&ui_eq, eq_enabled_signal(bool), 		listen, 	eq_enable(bool));
@@ -253,8 +259,8 @@ int main(int argc, char *argv[]){
 		CONNECT(&playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	&ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
 		CONNECT(&playlists, sig_import_tracks(const vector<MetaData>&), 	&library, 				importFiles(const vector<MetaData>&));
 
-		CONNECT(&ui_lfm_radio, listen_clicked(const QString&, int),		lastfm,		radio_init(const QString&, int));
-		CONNECT(&ui_lfm_radio, close_event(), 							&player, 	close_lfm_radio());
+		CONNECT(&ui_lfm_radio, listen_clicked(const QString&, int),		lastfm,					psl_radio_init(const QString&, int));
+		CONNECT(&ui_lfm_radio, close_event(), 								&player, 				close_lfm_radio());
 
 		CONNECT(&ui_stream, sig_play_stream(const QString&, const QString&), 	&playlist, 	psl_play_stream(const QString&, const QString&));
 		CONNECT(&ui_stream, sig_close_event(), 									&player, 	close_stream());
@@ -267,13 +273,17 @@ int main(int argc, char *argv[]){
 		CONNECT (&ui_stream_rec, sig_create_playlist(bool), 		listen,		psl_strrip_set_create_playlist(bool ));
 
 
-		CONNECT (&remote_socket, sig_play(),		&playlist,			psl_play());
-		CONNECT (&remote_socket, sig_next(),		&playlist,			psl_forward());
-		CONNECT (&remote_socket, sig_prev(),		&playlist,			psl_backward());
-		CONNECT (&remote_socket, sig_stop(),		&playlist,			psl_stop());
-		CONNECT (&remote_socket, sig_pause(),		listen,				pause());
 
-		remote_socket.start();
+
+		if(is_socket_active){
+			CONNECT (&remote_socket, sig_play(),		&playlist,			psl_play());
+			CONNECT (&remote_socket, sig_next(),		&playlist,			psl_forward());
+			CONNECT (&remote_socket, sig_prev(),		&playlist,			psl_backward());
+			CONNECT (&remote_socket, sig_stop(),		&playlist,			psl_stop());
+			CONNECT (&remote_socket, sig_pause(),		listen,				pause());
+
+			remote_socket.start();
+		}
 
 		playlist.ui_loaded();
 
@@ -310,13 +320,17 @@ int main(int argc, char *argv[]){
 
 		QString user, password;
         set->getLastFMNameAndPW(user, password);
-        LastFM::getInstance()->login( user,password );
+        LastFM::getInstance()->lfm_login( user,password );
 
         app.exec();
 
         CDatabaseConnector::getInstance()->store_settings();
 
-        remote_socket.exit();
+        if(is_socket_active){
+        	remote_socket.exit(0);
+        }
+
+
         delete listen;
 
         return 0;

@@ -1,4 +1,4 @@
-/* Socket.h
+/* GUILibraryInfoBox.h
 
  * Copyright (C) 2012  
  *
@@ -18,48 +18,49 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * created by Lucio Carreras, 
- * Jul 17, 2012 
+ * Sep 2, 2012 
  *
  */
 
-#ifndef SOCKET_H_
-#define SOCKET_H_
+#ifndef GUILIBRARYINFOBOX_H_
+#define GUILIBRARYINFOBOX_H_
 
 #include <QObject>
-#include <QThread>
-#include <netinet/in.h>
+#include <QDialog>
+#include <QString>
+#include "ui_GUI_Library_Info_Box.h"
 
-class Socket : public QThread {
+#include "DatabaseAccess/CDatabaseConnector.h"
+#include "StreamPlugins/LastFM/LastFM.h"
+
+class GUI_Library_Info_Box : public QDialog, private Ui::Library_Info_Box {
 
 	Q_OBJECT
 
-protected:
-	void run();
+public:
+	GUI_Library_Info_Box(QWidget* parent=0);
+	virtual ~GUI_Library_Info_Box();
+
 
 signals:
-	void sig_play();
-	void sig_pause();
-	void sig_stop();
-	void sig_prev();
-	void sig_next();
-	void sig_louder();
-	void sig_leiser();
+	void sig_lfm_usercount_request();
 
-public:
-	Socket();
-	virtual ~Socket();
+public slots:
+	void psl_refresh();
+	void lfm_data_available();
 
 private:
-	int		_srv_socket;
-	int 	_client_socket;
-	int		_port;
-	int		_port_to;
-	bool 	_connected;
-	struct sockaddr_in _srv_info;
+	Ui::Library_Info_Box* 	ui;
+	CDatabaseConnector*   	_db;
+	LastFM*					_lfm;
 
-	bool sock_connect();
-	void sock_disconnect();
-
+	uint 		_n_tracks;
+	uint		_n_albums;
+	uint		_n_artists;
+	uint 		_n_lfm_playcount;
+	uint		_n_lfm_days_registered;
+	qint64 		_duration_ms;
+	QString		_duration_string;
 };
 
-#endif /* SOCKET_H_ */
+#endif /* GUILIBRARYINFOBOX_H_ */

@@ -58,6 +58,7 @@ SET(HEADERS
     GUI/library/LibraryItemDelegateAlbums.h
     GUI/library/LibraryItemDelegateArtists.h
     GUI/library/LibraryItemModelArtists.h
+    GUI/library/GUILibraryInfoBox.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
     GUI/MyTableView.h
@@ -65,6 +66,8 @@ SET(HEADERS
     GUI/library/GUIImportFolder.h
     GUI/LyricMenuButton/LyricMenuButton.h
     GUI/InfoDialog/GUI_InfoDialog.h
+    GUI/GSTDataPainter/GSTDataPainter.h
+    GUI/SocketConfiguration/GUISocketSetup.h
     CoverLookup/CoverLookup.h
     DatabaseAccess/CDatabaseConnector.h
     library/CLibraryBase.h
@@ -98,6 +101,7 @@ SET(SOURCES
     GUI/library/LibraryItemDelegateArtists.cpp
     GUI/library/LibraryItemModelArtists.cpp
     GUI/library/LibraryItemDelegateTracks.cpp
+    GUI/library/GUILibraryInfoBox.cpp
     GUI/tagedit/GUI_TagEdit.cpp
     GUI/equalizer/GUI_Equalizer.cpp
     GUI/MyTableView.cpp
@@ -105,6 +109,8 @@ SET(SOURCES
     GUI/library/GUIImportFolder.cpp
     GUI/LyricMenuButton/LyricMenuButton.cpp
     GUI/InfoDialog/GUI_InfoDialog.cpp
+    GUI/GSTDataPainter/GSTDataPainter.cpp
+    GUI/SocketConfiguration/GUISocketSetup.cpp
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
     HelperStructs/Style.cpp
@@ -145,6 +151,7 @@ SET(FORMS
     GUI/LastFM/GUI_LastFM_Widget.ui
     GUI/library/GUI_Library_windowed.ui
     GUI/library/GUI_ImportFolder.ui
+    GUI/library/GUI_Library_Info_Box.ui
     GUI/equalizer/GUI_Equalizer.ui
     GUI/tagedit/GUI_TagEdit.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui
@@ -153,6 +160,8 @@ SET(FORMS
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui
     GUI/InfoDialog/GUI_InfoDialog.ui
+    GUI/GSTDataPainter/GSTDataPainter.ui
+    GUI/SocketConfiguration/GUI_SocketSetup.ui
 )
 
 SET(ICONS 
@@ -196,6 +205,7 @@ SET(ICONS
 	GUI/icons/delete.png
 	GUI/icons/import.png
 	GUI/icons/lyrics.png
+	GUI/icons/info.png
 )
 
 

@@ -87,12 +87,13 @@ namespace Helper{
 	}
 
 
-	inline QString cvtMsecs2TitleLengthString(long int msec){
+	inline QString cvtMsecs2TitleLengthString(long int msec, bool colon=true){
 
 		bool show_hrs = false;
 
 		int sec = msec / 1000;
 		int min = sec / 60;
+
 		int secs = sec % 60;
 		int hrs = min / 60;
 		int days = hrs / 24;
@@ -101,16 +102,19 @@ namespace Helper{
 
 		if(days > 0){
 			final_str += QString::number(days) + "d ";
-			hrs -= (days * 24);
+			hrs = hrs % 24;
 			show_hrs = true;
 		}
 
 		if(hrs > 0 || show_hrs){
 			final_str += QString::number(hrs) + "h ";
-			min -= (hrs * 60);
+			min = min % 60;
 		}
 
-		final_str +=  cvtNum2String(min, 2) + ":" + cvtNum2String(secs, 2);
+		if(colon)
+			final_str +=  cvtNum2String(min, 2) + ":" + cvtNum2String(secs, 2);
+		else
+			final_str +=  cvtNum2String(min, 2) + "m " + cvtNum2String(secs, 2);
 
 		return final_str;
 

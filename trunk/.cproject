@@ -1,162 +1,78 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?>
 
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<cproject>
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
-		<cconfiguration id="0.1450287393">
-			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.1450287393" moduleId="org.eclipse.cdt.core.settings" name="Default">
-<externalSettings>
-<externalSetting>
-<entry flags="BUILTIN|READONLY|RESOLVED" kind="includePath" name="/usr/lib/gcc/i486-linux-gnu/4.4.3/include-fixed"/>
-<entry flags="BUILTIN|READONLY|RESOLVED" kind="includePath" name="/usr/lib/gcc/i486-linux-gnu/4.4.3/include"/>
-<entry flags="BUILTIN|READONLY|RESOLVED" kind="includePath" name="/usr/local/include"/>
-<entry flags="BUILTIN|READONLY|RESOLVED" kind="includePath" name="/usr/include/c++/4.4/backward"/>
-<entry flags="BUILTIN|READONLY|RESOLVED" kind="includePath" name="/usr/include/c++/4.4/i486-linux-gnu"/>
-<entry flags="BUILTIN|READONLY|RESOLVED" kind="includePath" name="/usr/include/c++/4.4"/>
-<entry flags="RESOLVED" kind="includePath" name="/usr/include"/>
-<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="includePath" name="/usr/include/gstreamer-0.10"/>
-<entry flags="RESOLVED" kind="includePath" name="/usr/include/qt4/QtCore"/>
-<entry flags="RESOLVED" kind="includePath" name="/usr/include/qt4/QtSql"/>
-<entry flags="RESOLVED" kind="includePath" name="/usr/include/qt4/QtGui"/>
-<entry flags="RESOLVED" kind="includePath" name="/usr/include/qt4/Qt"/>
-</externalSetting>
-</externalSettings>
-<extensions>
-<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
-<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
-</extensions>
-</storageModule>
-			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-<configuration artifactName="sayonara-player" buildProperties="" description="" id="0.1450287393" name="Default" parent="org.eclipse.cdt.build.core.prefbase.cfg">
-<folderInfo id="0.1450287393." name="/" resourcePath="">
-<toolChain id="cdt.managedbuild.toolchain.gnu.base.514897243" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.base">
-<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="cdt.managedbuild.target.gnu.platform.base.1026779346" name="Debug Platform" osList="linux,hpux,aix,qnx" superClass="cdt.managedbuild.target.gnu.platform.base"/>
-<builder id="cdt.managedbuild.target.gnu.builder.base.1927867636" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="cdt.managedbuild.target.gnu.builder.base"/>
-<tool id="cdt.managedbuild.tool.gnu.archiver.base.309715500" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
-<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.base.1330306536" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.base">
-<option id="gnu.cpp.compiler.option.include.paths.1158106190" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="/usr/include/qt4/Qt"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtSql"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/usr/include/gstreamer-0.10}&quot;"/>
-<listOptionValue builtIn="false" value="/usr/include"/>
-</option>
-<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.848665936" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
-</tool>
-<tool id="cdt.managedbuild.tool.gnu.c.compiler.base.23989845" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.base">
-<option id="gnu.c.compiler.option.include.paths.556357091" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="/usr/include/qt4/Qt"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtSql"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/usr/include/gstreamer-0.10}&quot;"/>
-<listOptionValue builtIn="false" value="/usr/include"/>
-</option>
-<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1134920643" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
-</tool>
-<tool id="cdt.managedbuild.tool.gnu.c.linker.base.2044816859" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>
-<tool id="cdt.managedbuild.tool.gnu.cpp.linker.base.1366673036" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.base">
-<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1423420634" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
-<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
-<additionalInput kind="additionalinput" paths="$(LIBS)"/>
-</inputType>
-</tool>
-<tool id="cdt.managedbuild.tool.gnu.assembler.base.1173790288" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.base">
-<option id="gnu.both.asm.option.include.paths.251767790" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-<listOptionValue builtIn="false" value="/usr/include/qt4/Qt"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtGui"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtSql"/>
-<listOptionValue builtIn="false" value="/usr/include/qt4/QtCore"/>
-<listOptionValue builtIn="false" value="&quot;${workspace_loc:/usr/include/gstreamer-0.10}&quot;"/>
-<listOptionValue builtIn="false" value="/usr/include"/>
-</option>
-<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1028488165" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
-</tool>
-</toolChain>
-</folderInfo>
-</configuration>
-</storageModule>
+		<cconfiguration id="org.eclipse.cdt.core.default.config.1">
+			<storageModule buildSystemId="org.eclipse.cdt.core.defaultConfigDataProvider" id="org.eclipse.cdt.core.default.config.1" moduleId="org.eclipse.cdt.core.settings" name="Configuration">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+				<project-mappings/>
+			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
-			<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
-		<storageModule moduleId="scannerConfiguration"/>
-<storageModule moduleId="org.eclipse.cdt.core.language.mapping"/>
-<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
-<buildTargets>
-<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-<buildCommand>make</buildCommand>
-<buildTarget>all</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>true</useDefaultCommand>
-<runAllBuilders>true</runAllBuilders>
-</target>
-<target name="cmake" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-<buildCommand>cmake</buildCommand>
-<buildTarget>.</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-<runAllBuilders>true</runAllBuilders>
-</target>
-<target name="clean" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-<buildCommand>make</buildCommand>
-<buildTarget>clean</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>true</useDefaultCommand>
-<runAllBuilders>true</runAllBuilders>
-</target>
-<target name="install" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-<buildCommand>gksu</buildCommand>
-<buildArguments>make</buildArguments>
-<buildTarget>install</buildTarget>
-<stopOnError>true</stopOnError>
-<useDefaultCommand>false</useDefaultCommand>
-<runAllBuilders>true</runAllBuilders>
-</target>
-</buildTargets>
-</storageModule>
-</cconfiguration>
+		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-<project id="sayonara-player.null.297445707" name="sayonara-player"/>
-</storageModule>
-	<storageModule moduleId="refreshScope"/>
+		<project id="Project.null.1" name="Project"/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.pathentry">
+		<pathentry excluding="**/CMakeFiles/" kind="out" path=""/>
+		<pathentry kind="mac" name="QT_NO_DEBUG" path="" value=""/>
+		<pathentry kind="mac" name="QT_GUI_LIB" path="" value=""/>
+		<pathentry kind="mac" name="QT_XML_LIB" path="" value=""/>
+		<pathentry kind="mac" name="QT_SQL_LIB" path="" value=""/>
+		<pathentry kind="mac" name="QT_CORE_LIB" path="" value=""/>
+		<pathentry include="/usr/include/qt4" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/qt4/QtGui" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/qt4/QtXml" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/qt4/QtSql" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/qt4/QtCore" kind="inc" path="" system="true"/>
+		<pathentry include="/home/luke/sayonara-player" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/taglib" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/glib-2.0" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/lib/i386-linux-gnu/glib-2.0/include" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/gstreamer-0.10" kind="inc" path="" system="true"/>
+		<pathentry include="/usr/include/libxml2" kind="inc" path="" system="true"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+		<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="specsFile">
+				<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="/usr/bin/gcc" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+		<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+			<buildOutputProvider>
+				<openAction enabled="true" filePath=""/>
+				<parser enabled="true"/>
+			</buildOutputProvider>
+			<scannerInfoProvider id="makefileGenerator">
+				<runAction arguments="-f ${project_name}_scd.mk" command="/usr/bin/make" useDefault="true"/>
+				<parser enabled="true"/>
+			</scannerInfoProvider>
+		</profile>
+	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
 		<buildTargets>
-			<target name="clean" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildTarget>clean</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
-			</target>
-			<target name="install" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>gksu</buildCommand>
-				<buildArguments>make</buildArguments>
-				<buildTarget>install</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>false</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
-			</target>
-			<target name="all" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments>-j2</buildArguments>
+			<target name="all" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
+				<buildCommand>/usr/bin/make</buildCommand>
+				<buildArguments/>
 				<buildTarget>all</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
-			<target name="sayonara" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments>sayonara</buildArguments>
-				<buildTarget>sayonara</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>false</useDefaultCommand>
-				<runAllBuilders>true</runAllBuilders>
-			</target>
-			<target name="cmake" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="cmake" path="" targetID="org.eclipse.cdt.make.MakeTargetBuilder">
 				<buildCommand>cmake</buildCommand>
 				<buildArguments/>
 				<buildTarget>.</buildTarget>
@@ -166,18 +82,4 @@
 			</target>
 		</buildTargets>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="scannerConfiguration">
-		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="0.1450287393;0.1450287393.;cdt.managedbuild.tool.gnu.c.compiler.base.23989845;cdt.managedbuild.tool.gnu.c.compiler.input.1134920643">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="0.1450287393">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="0.1450287393;0.1450287393.;cdt.managedbuild.tool.gnu.cpp.compiler.base.1330306536;cdt.managedbuild.tool.gnu.cpp.compiler.input.848665936">
-			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP"/>
-		</scannerConfigBuildInfo>
-	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 </cproject>

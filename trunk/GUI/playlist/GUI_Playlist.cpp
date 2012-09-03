@@ -108,8 +108,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	this->ui->btn_import->setVisible(false);
 
-
-
 	connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
 	//this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
@@ -138,7 +136,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	_parent = parent;
 	_total_secs = 0;
 
-	_cur_selected_row = -1;
 	_cur_playing_row = -1;
 
 	_radio_active = RADIO_OFF;
@@ -153,7 +150,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	change_skin(dark);
 
 	init_menues();
-
 }
 
 
@@ -162,6 +158,34 @@ GUI_Playlist::~GUI_Playlist() {
 
 }
 
+
+// initialize gui
+// maybe the button state (pressed/unpressed) should be loaded from db here
+void GUI_Playlist::initGUI(){
+
+	QString icon_path = Helper::getIconPath();
+
+	this->ui->btn_append->setIcon(QIcon(icon_path + "append.png"));
+	this->ui->btn_rep1->setIcon(QIcon(icon_path + "rep1.png"));
+	this->ui->btn_rep1->setVisible(false);
+	this->ui->btn_repAll->setIcon(QIcon(icon_path + "repAll.png"));
+	this->ui->btn_dynamic->setIcon(QIcon(icon_path + "dynamic.png"));
+	this->ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
+	this->ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
+	this->ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
+	this->ui->btn_lyrics->setIcon(QIcon(icon_path + "lyrics.png"));
+}
+
+
+void GUI_Playlist::init_menues(){
+
+	_right_click_menu = new QMenu(this);
+	_info_action = new QAction("Info", this);
+	_edit_action = new QAction("Edit", this);
+
+	_right_click_menu->addAction(_info_action);
+	_right_click_menu->addAction(_edit_action);
+}
 
 
 
@@ -187,45 +211,41 @@ void GUI_Playlist::check_dynamic_play_button(){
 
 void GUI_Playlist::dummy_pressed(){
 
-
 }
 
 void GUI_Playlist::lyric_server_changed(int idx){
 
-	if(this->ui->btn_lyrics->isChecked()){
-		_cur_lyric_server = idx;
-		lyric_button_toggled(true);
-	}
+	if(!this->ui->btn_lyrics->isChecked()) return;
+
+	_cur_lyric_server = idx;
+	lyric_button_toggled(true);
+
 }
 
 void GUI_Playlist::lyric_button_toggled(bool on){
 
 	this->ui->btn_lyrics_server->setVisible(on);
 
-	if(on){
-
-		QVariant data;
-		if(_cur_playing_row != -1){
-			data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
-		}
-
-		else {
-			data = this->_pli_model->data(_pli_model->index(_cur_selected_row, 0), Qt::WhatsThisRole);
-		}
-
-		QStringList lst = data.toStringList();
-		MetaData md;
-		md.fromStringList(lst);
-
-		_lyrics_thread->prepare_thread(md.artist, md.title, _cur_lyric_server);
-		_lyrics_thread->start();
-	}
-
-	else{
+	if(!on){
 		ui->te_lyrics->hide();
 		ui->listView->show();
+		return;
 	}
 
+	QVariant data;
+	if(_cur_playing_row != -1){
+		data = this->_pli_model->data(_pli_model->index(_cur_playing_row, 0), Qt::WhatsThisRole);
+	}
+
+	else return;
+
+
+	QStringList lst = data.toStringList();
+	MetaData md;
+	md.fromStringList(lst);
+
+	_lyrics_thread->prepare_thread(md.artist, md.title, _cur_lyric_server);
+	_lyrics_thread->start();
 }
 
 
@@ -241,7 +261,7 @@ void GUI_Playlist::lyric_thread_finished(){
 
 	ui->te_lyrics->setAcceptRichText(true);
 	ui->te_lyrics->setText(lyrics);
-	ui->te_lyrics->setLineWrapColumnOrWidth(this->ui->listView->width() - 10);
+	ui->te_lyrics->setLineWrapColumnOrWidth(this->_parent->width() - 20);
 	ui->te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
 	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -250,64 +270,36 @@ void GUI_Playlist::lyric_thread_finished(){
 
 }
 
-
-
 void GUI_Playlist::lyric_thread_terminated(){
 
 	this->ui->btn_lyrics->setChecked(false);
 }
 
 
-
-
 // SLOT: switch between dark & light skin
 void GUI_Playlist::change_skin(bool dark){
 
-	if(dark){
-		QString table_style = Style::get_tv_style(dark);
-		QString scrollbar_style = Style::get_v_scrollbar_style();
+	QString btn_style = Style::get_btn_style(dark ? 6 : 7);
+	QString table_style = Style::get_tv_style(dark);
+	QString scrollbar_style = Style::get_v_scrollbar_style();
 
+	if(dark)
 		this->ui->lab_totalTime->setStyleSheet("background-color: " + Style::get_player_back_color() + ";");
-		this->ui->listView->setStyleSheet(table_style);
-		this->ui->listView->verticalScrollBar()->setStyleSheet(scrollbar_style);
+	else
+		this->ui->lab_totalTime->setStyleSheet("");
 
+	this->ui->listView->setStyleSheet(table_style);
+	this->ui->listView->verticalScrollBar()->setStyleSheet(dark ? scrollbar_style : table_style);
 
-		QString btn_style = Style::get_btn_style(6);
-
-		this->ui->btn_append->setStyleSheet(btn_style);
-		this->ui->btn_clear->setStyleSheet(btn_style);
-		this->ui->btn_dynamic->setStyleSheet(btn_style);
-		this->ui->btn_repAll->setStyleSheet(btn_style);
-		this->ui->btn_shuffle->setStyleSheet(btn_style);
-		this->ui->btn_lyrics->setStyleSheet(btn_style);
-	}
-
-	else {
-
-		QString table_style = Style::get_tv_style(dark);
-
-		this->ui->lab_totalTime->setStyleSheet(table_style);
-		this->ui->listView->setStyleSheet(table_style);
-		this->ui->listView->verticalScrollBar()->setStyleSheet(table_style);
-
-		QString btn_style = Style::get_btn_style(7);
-
-		this->ui->btn_append->setStyleSheet(btn_style);
-		this->ui->btn_clear->setStyleSheet(btn_style);
-		this->ui->btn_dynamic->setStyleSheet(btn_style);
-		this->ui->btn_repAll->setStyleSheet(btn_style);
-		this->ui->btn_shuffle->setStyleSheet(btn_style);
-		this->ui->btn_lyrics->setStyleSheet(btn_style);
-	}
+	this->ui->btn_append->setStyleSheet(btn_style);
+	this->ui->btn_clear->setStyleSheet(btn_style);
+	this->ui->btn_dynamic->setStyleSheet(btn_style);
+	this->ui->btn_repAll->setStyleSheet(btn_style);
+	this->ui->btn_shuffle->setStyleSheet(btn_style);
+	this->ui->btn_lyrics->setStyleSheet(btn_style);
 }
 
-// SLOT: maybe we wanna use the progress bar
-// atm this function is not used
-void GUI_Playlist::update_progress_bar(int percent){
 
-	Q_UNUSED(percent);
-
-}
 
 // SLOT: fill all tracks in v_metadata into playlist
 // the current track should be highlighted
@@ -342,10 +334,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 		Helper::cvtSecs2MinAndSecs(it->length_ms / 1000, &min, &sek);
 		_total_secs += (min * 60 + sek);
 
-		QString time_str = Helper::cvtSomething2QString(min, 2) + ":" + Helper::cvtSomething2QString(sek, 2);
 		QStringList str4Playlist = it->toStringList();
-
-
 
 		if(idx == _cur_playing_row) str4Playlist.push_back("1");
 		else str4Playlist.push_back("0");
@@ -356,7 +345,6 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 
 		if(_radio_active == RADIO_LFM) break;
 		idx++;
-
 	}
 
 	set_total_time_label();
@@ -370,60 +358,56 @@ void GUI_Playlist::clear_playlist_slot(){
 		return;
 	}
 
-	if(_radio_active != RADIO_OFF){
-		return;
-	}
+	if(_radio_active != RADIO_OFF) return;
 
 	this->ui->lab_totalTime->setText("Total Time: 0m 0s");
 	this->ui->btn_import->setVisible(false);
+
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	_cur_playing_row = -1;
-	_cur_selected_row = -1;
+	_cur_selected_rows.clear();
+
 	emit clear_playlist();
 }
 
-// private SLOT: save button pressed
-void GUI_Playlist::save_playlist_slot(){
-
-	QString file2Save =QFileDialog::getSaveFileName(this, tr("Choose filename to save"), QDir::homePath(), QString("*.m3u"));
-	if(!file2Save.endsWith(".m3u"))
-		file2Save.append(".m3u");
-	emit save_playlist(file2Save);
-
-}
 
 // private SLOT: playlist item pressed (init drag & drop)
 void GUI_Playlist::pressed(const QModelIndex& index){
 
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
-	_cur_selected_row = index.row();
-
-
 	QList<QVariant> list2send;
 	MetaData md;
 	vector<MetaData> v_md;
-	QStringList metadata = this->_pli_model->data(index, Qt::WhatsThisRole).toStringList();
-	if(metadata.size() == 0) return;
 
+	QModelIndexList idx_list = this->ui->listView->selectionModel()->selectedRows();
 
+	_cur_selected_rows.clear();
 
-	md.fromStringList(metadata);
-	v_md.push_back(md);
+	foreach(QModelIndex idx, idx_list){
+
+		QStringList metadata = this->_pli_model->data(idx, Qt::WhatsThisRole).toStringList();
+		if(metadata.size() == 0) continue;
+
+		_cur_selected_rows.push_back(idx.row());
+
+		md.fromStringList(metadata);
+		list2send.push_back(metadata);
+		v_md.push_back(md);
+	}
+
 	_info_dialog->setMetaData(v_md);
-
-	list2send.push_back(metadata);
 
 	QMimeData* mime = new QMimeData();
 	mime->setProperty("data_type", DROP_TYPE_TRACKS);
 	mime->setProperty("data", list2send);
 
 	this->ui->listView->set_mime_data(mime);
-	if(index.row() == _cur_selected_row)
+
+	if(_cur_selected_rows.contains( index.row() ))
 		_inner_drag_drop = true;
 
 	else _inner_drag_drop = false;
-
 }
 
 void GUI_Playlist::released(const QModelIndex& index){
@@ -487,22 +471,19 @@ void GUI_Playlist::track_changed(int new_row){
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
 		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
-		do{
-			if(i == index.row() && str4Playlist.size() >= 3)
+		if(str4Playlist.size() >= 3){
+
+			if(i == index.row())
 				str4Playlist[str4Playlist.size()-2] = QString("1");
 
-			else if(str4Playlist.size() >= 3)
+			else
 				str4Playlist[str4Playlist.size()-2] = QString("0");
 
-			else break;
-
 			_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
-
-		} while(0);
+		}
 	}
 
 	this->ui->listView->scrollTo(index);
-
 }
 
 // private SLOT: rep1, repAll, shuffle or append has changed
@@ -542,45 +523,11 @@ void GUI_Playlist::psl_show_context_menu(const QPoint& p){
 
 	connect(_edit_action, SIGNAL(triggered()), this, SLOT(psl_edit_tracks()));
 	connect(_info_action, SIGNAL(triggered()), this, SLOT(psl_info_tracks()));
-//	connect(_delete_action, SIGNAL(triggered()), this, SLOT(psl_delete_tracks()));
 
 	this->_right_click_menu->exec(p);
 
 	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(psl_edit_tracks()));
 	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(psl_info_tracks()));
-//	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(psl_delete_tracks()));
-}
-
-void GUI_Playlist::init_menues(){
-
-	_right_click_menu = new QMenu(this);
-	_info_action = new QAction("Info", this);
-	_edit_action = new QAction("Edit", this);
-	//_delete_action = new QAction("Delete", this);
-
-	_right_click_menu->addAction(_info_action);
-	_right_click_menu->addAction(_edit_action);
-//	_right_click_menu->addAction(_delete_action);
-
-}
-
-
-// initialize gui
-// maybe the button state (pressed/unpressed) should be loaded from db here
-void GUI_Playlist::initGUI(){
-
-	QString icon_path = Helper::getIconPath();
-
-	this->ui->btn_append->setIcon(QIcon(icon_path + "append.png"));
-	this->ui->btn_rep1->setIcon(QIcon(icon_path + "rep1.png"));
-	this->ui->btn_rep1->setVisible(false);
-	this->ui->btn_repAll->setIcon(QIcon(icon_path + "repAll.png"));
-	this->ui->btn_dynamic->setIcon(QIcon(icon_path + "dynamic.png"));
-	this->ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
-	this->ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
-	this->ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
-	this->ui->btn_lyrics->setIcon(QIcon(icon_path + "lyrics.png"));
-
 }
 
 
@@ -591,7 +538,6 @@ void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event){
 	int row = this->ui->listView->indexAt(_last_known_drag_pos).row();
 	clear_drag_lines(row);
 }
-
 
 
 // remove the black line under the titles
@@ -656,13 +602,12 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	}
 
 
-
 	int row = this->ui->listView->indexAt(pos).row();
 
 	if(row <= -1) row = _pli_model->rowCount()-1;
 	else if(row > 0) row--;
 
-	if( (row == _cur_selected_row && _inner_drag_drop) ||
+	if( (_cur_selected_rows.contains(row) && _inner_drag_drop) ||
 		row >= _pli_model->rowCount()){
 			return;
 	}
@@ -684,7 +629,6 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	list[list.length()-1] = QString("1");
 
 	_pli_model->setData(cur_idx, (const QVariant&) list, Qt::EditRole);
-
 }
 
 // finally drop it
@@ -693,32 +637,30 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 	if(!event->mimeData()) return;
 
+	// where did i drop?
 	QPoint pos = event->pos();
 	QModelIndex idx = this->ui->listView->indexAt(pos);
-
 	int row = idx.row();
-
 	if(row == -1){
 		row = this->_pli_model->rowCount();
 	}
 
+	// remove line
 	clear_drag_lines(row);
 
 	if(_inner_drag_drop){
 		_inner_drag_drop = false;
-		if( (row-1) == _cur_selected_row){
+		if( _cur_selected_rows.contains(row-1) ){
 			event->ignore();
-
 			return;
 		}
 
-		if(_cur_selected_row < row ) {
-			row--;
+		if(_cur_selected_rows.first() < row ) {
+			row -= _cur_selected_rows.size();
 		}
 
-		remove_cur_selected_row();
+		remove_cur_selected_rows();
 	}
-
 
 	///TODO: UGLY UGLY UGLY
 	QString text = event->mimeData()->text();
@@ -740,7 +682,6 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		if(pathlist.size() > 1) pathlist.removeLast();
 
 		for(int i=0; i<pathlist.size(); i++){
-			qDebug() << "Path: " << pathlist.at(i) << ", " << pathlist.at(i).length();
 			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
 			path = path.replace("%20", " ");
 
@@ -784,9 +725,9 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		vector<MetaData> v_md4Playlist;
 		for(int i=0; i<list.size(); i++){
 
+			MetaData md;
 			QStringList md_stringlist = list.at(i).toStringList();
 
-			MetaData md;
 			md.fromStringList(md_stringlist);
 			v_md4Playlist.push_back(md);
 		}
@@ -811,45 +752,31 @@ void GUI_Playlist::set_total_time_label(){
 		return;
 	}
 
-
-
 	this->ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
 
-	int secs, mins, hrs;
-			Helper::cvtSecs2MinAndSecs(_total_secs, &mins, &secs);
-			hrs = mins / 60;
-			mins = mins % 60;
+	QString playlist_string = QString::number(this->_pli_model->rowCount());
+	if(this->_pli_model->rowCount() == 1) playlist_string += " Track - ";
+	else playlist_string += " Tracks - ";
 
-			QString playlist_string = QString::number(this->_pli_model->rowCount());
-			if(this->_pli_model->rowCount() == 1) playlist_string += " Track - ";
-			else playlist_string += " Tracks - ";
+	playlist_string += Helper::cvtMsecs2TitleLengthString(_total_secs * 1000, false);
 
-
-			if(hrs > 0) playlist_string += QString::number(hrs) + "h ";
-
-			playlist_string += 	Helper::cvtNum2String(mins, 2) +
-								"m " +
-								Helper::cvtNum2String(secs, 2) +
-								"s";
-
-
-
-			this->ui->lab_totalTime->setText(playlist_string);
-
+	this->ui->lab_totalTime->setText(playlist_string);
 }
 
-void GUI_Playlist::remove_cur_selected_row(){
+void GUI_Playlist::remove_cur_selected_rows(){
+
 	if(_pli_model->rowCount() > 1){
-		if(_cur_selected_row < _cur_playing_row) _cur_playing_row --;
 
-		emit row_removed(_cur_selected_row);
-		_cur_selected_row = -1;
+		if(_cur_selected_rows.first() < _cur_playing_row)
+			_cur_playing_row --;
+
+		emit rows_removed(_cur_selected_rows);
 	}
 
-	else {
+	else
 		clear_playlist_slot();
-		_cur_selected_row = -1;
-	}
+
+	_cur_selected_rows.clear();
 }
 
 void GUI_Playlist::keyPressEvent(QKeyEvent* e){
@@ -857,10 +784,8 @@ void GUI_Playlist::keyPressEvent(QKeyEvent* e){
 	QWidget::keyPressEvent(e);
 	int key = e->key();
 
-	if(key == 16777223 && _cur_selected_row < _pli_model->rowCount() && _cur_selected_row >= 0){
-
-		remove_cur_selected_row();
-	}
+	if(key == Qt::Key_Delete && _cur_selected_rows.size() > 0)
+		remove_cur_selected_rows();
 }
 
 
@@ -881,7 +806,6 @@ void GUI_Playlist::import_button_clicked(){
 void GUI_Playlist::import_result(bool success){
 
 	this->ui->btn_import->setVisible(!success);
-
 }
 
 
@@ -894,9 +818,7 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 	this->ui->btn_import->setVisible(radio == RADIO_OFF);
 	this->ui->btn_lyrics->setVisible(radio != RADIO_STATION);
-
 }
-
 
 
 PlaylistItemDelegateInterface* GUI_Playlist::create_item_delegate(bool small_playlist_items){
@@ -908,8 +830,8 @@ PlaylistItemDelegateInterface* GUI_Playlist::create_item_delegate(bool small_pla
 		delegate = new PlaylistItemDelegate(this->ui->listView);
 
 	return delegate;
-
 }
+
 
 void GUI_Playlist::psl_show_small_playlist_items(bool small_playlist_items){
 
@@ -917,5 +839,4 @@ void GUI_Playlist::psl_show_small_playlist_items(bool small_playlist_items){
 
 	this->ui->listView->setItemDelegate(_pli_delegate);
 	this->ui->listView->reset();
-
 }

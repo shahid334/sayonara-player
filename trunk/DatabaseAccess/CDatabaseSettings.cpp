@@ -209,6 +209,15 @@ bool CDatabaseConnector::load_settings(){
 	bool streamripper_playlist = load_setting_bool("streamripper_playlist", true);
 	settings->setStreamRipperPlaylist(streamripper_playlist);
 
+	bool socket_active = load_setting_bool("socket_active");
+	settings->setSocketActivated(socket_active);
+
+	int socket_from = load_setting_int("socket_from");
+	settings->setSocketFrom(socket_from);
+
+	int socket_to = load_setting_int("socket_to");
+	settings->setSocketTo(socket_to);
+
 	return true;
 }
 
@@ -291,10 +300,17 @@ bool CDatabaseConnector::store_settings(){
 	bool streamripper_playlist = storage->getStreamRipperPlaylist();
 	store_setting("streamripper_playlist", streamripper_playlist);
 
+	bool socket_active = storage->getSocketActivated();
+	store_setting("socket_active", socket_active);
+
+	int socket_from = storage->getSocketFrom();
+	store_setting("socket_from", socket_from);
+
+	int socket_to = storage->getSocketTo();
+	store_setting("socket_to", socket_to);
+
 	return true;
 }
-
-
 
 
 

@@ -24,20 +24,25 @@
 #include <QDebug>
 #include <QString>
 #include "Socket/Socket.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-Socket::Socket(int port) {
+Socket::Socket() {
 
-	_port = port;
-	qDebug() << "socket... ";
+	CSettingsStorage* db = CSettingsStorage::getInstance();
+
+	_port = db->getSocketFrom();
+	_port_to = db->getSocketTo();
 
 	_srv_socket = -1;
 	_client_socket = -1;
 	_connected = false;
+
+
 }
 
 
@@ -50,10 +55,10 @@ void Socket::run(){
 	char msg[1024];
 
 	while(1){
-		sock_connect();
+
+		if(!sock_connect()) return;
 
 		int err = -1;
-
 
 		while( err != 0 ){
 			err = recv(_client_socket, msg, 1024, 0);
@@ -87,8 +92,6 @@ void Socket::run(){
 				else if(msg_string.startsWith("q")) {
 					break;
 				}
-
-
 			}
 
 			if( err == 0) break;
@@ -102,9 +105,8 @@ void Socket::run(){
 	}
 }
 
-void Socket::sock_connect(){
+bool Socket::sock_connect(){
 
-	qDebug() << "connect ";
 	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
 	_srv_info.sin_family = AF_INET;
 	_srv_info.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -114,6 +116,9 @@ void Socket::sock_connect(){
 
 	while(bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info)) == -1){
 		_port++;
+
+		if(_port > _port_to) return false;
+
 		_srv_info.sin_port = htons(_port);
 		usleep(10000);
 	}
@@ -127,6 +132,7 @@ void Socket::sock_connect(){
 	}
 
 	_connected = true;
+	return true;
 }
 
 void Socket::sock_disconnect(){

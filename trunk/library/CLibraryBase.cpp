@@ -323,6 +323,8 @@ void CLibraryBase::gather_stuff(){
 		_db->getAllAlbums(_vec_albums, _album_sortorder);
 		_db->getAllArtists(_vec_artists, _artist_sortorder);
 	}
+
+
 }
 
 void CLibraryBase::emit_stuff(){
@@ -394,7 +396,6 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 	}
 
 	emit sig_metadata_loaded(_vec_md);
-	// TODO: No drag and drop possible
 }
 
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){

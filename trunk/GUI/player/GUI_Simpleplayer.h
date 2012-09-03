@@ -119,6 +119,8 @@ signals:
     void sig_correct_id3(const MetaData&);
     void sig_show_stream_rec(bool);
 
+    void sig_show_socket();
+
 private slots:
     void playClicked(bool b = true);
     void stopClicked(bool b = true);
@@ -162,6 +164,7 @@ private slots:
     void sound_engine_gst_clicked();
     void populate_engines(const QList<Engine*>& lists, int active);
     void sl_action_streamripper_toggled(bool);
+    void sl_action_socket_connection_triggered(bool);
 
 
 

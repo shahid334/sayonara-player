@@ -203,6 +203,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(min2tray_toggled(bool)));
 	connect(this->ui->action_streamrecorder, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_streamripper_toggled(bool)));
+	connect(this->ui->action_SocketConnection, SIGNAL(triggered(bool)), this,
+			SLOT(sl_action_socket_connection_triggered(bool)));
 
 
 	// about
@@ -1241,3 +1243,6 @@ void GUI_SimplePlayer::about(bool b){
 
 
 
+void GUI_SimplePlayer::sl_action_socket_connection_triggered(bool b){
+	emit sig_show_socket();
+}

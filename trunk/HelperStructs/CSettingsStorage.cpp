@@ -293,6 +293,27 @@ void CSettingsStorage::setStreamRipperPlaylist(bool b){
 	m_streamripper_playlist = b;
 }
 
+bool CSettingsStorage::getSocketActivated(){
+	return m_socket_activated;
+}
+void CSettingsStorage::setSocketActivated(bool b){
+	m_socket_activated = b;
+}
+
+int CSettingsStorage::getSocketFrom(){
+	return m_socket_from;
+}
+void CSettingsStorage::setSocketFrom(int val){
+	m_socket_from = val;
+}
+
+int CSettingsStorage::getSocketTo(){
+	return m_socket_to;
+}
+
+void CSettingsStorage::setSocketTo(int val){
+	m_socket_to = val;
+}
 
 
 

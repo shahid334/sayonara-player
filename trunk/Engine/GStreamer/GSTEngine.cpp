@@ -449,7 +449,6 @@ void GST_Engine::pause(){
 
 void GST_Engine::setVolume(int vol){
 
-	if(!_volume) return;
 	float vol_val = (float) (vol * 1.0f / 100.0f);
 	g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
 

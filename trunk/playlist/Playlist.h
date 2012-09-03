@@ -92,7 +92,7 @@ public:
 		void psl_stop();
 		void psl_forward();
 		void psl_backward();
-		void psl_remove_row(int);
+		void psl_remove_rows(const QList<int> &);
 		void psl_save_playlist_to_storage();
 		void psl_edit_id3_request();
 		void psl_id3_tags_changed(vector<MetaData>&);
@@ -123,6 +123,8 @@ public:
 	/* wrapper for Helper::checkTrack */
 	bool 				checkTrack(const MetaData& md);
 	void				save_stream_playlist();
+
+	void				remove_row(int row);
 
 
 

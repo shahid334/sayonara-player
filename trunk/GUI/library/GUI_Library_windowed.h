@@ -41,6 +41,8 @@
 #include "GUI/library/LibraryItemDelegateAlbums.h"
 #include "GUI/library/LibraryItemDelegateArtists.h"
 #include "GUI/library/LibraryItemModelArtists.h"
+#include "GUI/library/GUILibraryInfoBox.h"
+
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/MyTableView.h"
 
@@ -104,6 +106,8 @@ signals:
 	void sig_show_id3_editor(const QList<int>&);
 	void sig_play_next_tracks(const QList<int>& lst);
 	void sig_play_next_all_tracks();
+
+	void sig_info_btn_clicked();
 
 public slots:
 	void fill_library_tracks(vector<MetaData>&);
@@ -178,6 +182,7 @@ private:
 	QString _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
 	GUI_InfoDialog* _info_dialog;
+	GUI_Library_Info_Box* _lib_info_dialog;
 
 	bool show_delete_dialog(int n_tracks);
 	void refresh();

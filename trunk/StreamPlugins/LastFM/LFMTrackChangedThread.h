@@ -38,6 +38,7 @@
 #define LFM_THREAD_TASK_FETCH_TRACK_INFO 	1<<2
 #define LFM_THREAD_TASK_FETCH_ARTIST_INFO 	1<<3
 #define LFM_THREAD_TASK_FETCH_ALBUM_INFO 	1<<4
+#define LFM_THREAD_TASK_FETCH_USER_INFO 	1<<5
 
 
 class LFMTrackChangedThread : public QThread{
@@ -48,7 +49,9 @@ class LFMTrackChangedThread : public QThread{
 		void sig_corrected_data_available(const QString&);
 		void sig_album_info_available(const QString&);
 		void sig_artist_info_available(const QString&);
+		void sig_user_info_available(const QString&);
 		void sig_similar_artists_available(const QString&, const QList<int>&);
+
 
 
 protected:
@@ -136,6 +139,7 @@ private:
 	QString		_artist_name;
 	QMap<QString, QString>		_album_data;
 	QMap<QString, QString>		_artist_data;
+	QMap<QString, QString>		_user_data;
 
 	bool 		get_corrected_track_info(MetaData& md, bool& loved, bool& corrected);
 	bool 		get_artist_info(QString artist);

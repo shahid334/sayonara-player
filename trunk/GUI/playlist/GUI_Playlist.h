@@ -43,6 +43,7 @@
 #include <QWidget>
 #include <QKeyEvent>
 #include <QTextEdit>
+#include <QList>
 
 #include <string>
 #include <vector>
@@ -74,13 +75,12 @@
 			void playlist_filled(vector<MetaData>&);
 			void sound_files_dropped(QStringList&);
 			void directory_dropped(const QString&, int);
-			void row_removed(int);
+			void rows_removed(const QList<int>&);
 			void edit_id3_signal();
 			void search_similar_artists(const QString&);
 			void sig_import_to_library(bool);
 
 		public slots:
-			void update_progress_bar(int);
 			void fillPlaylist(vector<MetaData>&, int);
 			void track_changed(int);
 			void change_skin(bool);
@@ -95,7 +95,6 @@
 			void pressed(const QModelIndex&);
 			void released(const QModelIndex&);
 			void clear_playlist_slot();
-			void save_playlist_slot();
 			void playlist_mode_changed_slot();
 			void edit_id3_but_pressed();
 			void dummy_pressed();
@@ -133,7 +132,7 @@
 
 			qint64 		_total_secs;
 			int			_cur_playing_row;
-			int			_cur_selected_row;
+			QList<int>	_cur_selected_rows;
 			bool 		_inner_drag_drop;
 			QPoint		_last_known_drag_pos;
 
@@ -149,7 +148,7 @@
 			void initGUI();
 
 			void set_total_time_label();
-			void remove_cur_selected_row();
+			void remove_cur_selected_rows();
 			void check_dynamic_play_button();
 			void init_menues();
 

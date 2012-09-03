@@ -31,11 +31,13 @@
 #include "HelperStructs/Helper.h"
 
 #include <QWidget>
+#include <QString>
 #include <QPixmap>
 #include <QImage>
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
+
 
 
 #define INFO_MODE_SINGLE 0
@@ -187,6 +189,7 @@ void GUI_InfoDialog::psl_album_info_available(const QString& target_class){
 		if(val.trimmed().size() == 0) continue;
 		text += BOLD(key) + ": " + val + CAR_RET;
 	}
+
 	this->ui->lab_playcount->setText(text);
 }
 

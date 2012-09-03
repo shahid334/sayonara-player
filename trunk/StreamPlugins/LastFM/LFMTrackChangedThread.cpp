@@ -129,7 +129,6 @@ void LFMTrackChangedThread::run(){
 
 	_thread_tasks = 0;
 
-
 }
 
 

@@ -33,7 +33,9 @@
 #include "GUI/library/LibraryItemDelegateAlbums.h"
 #include "GUI/library/LibraryItemDelegateArtists.h"
 #include "GUI/library/LibraryItemModelArtists.h"
+#include "GUI/library/GUILibraryInfoBox.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
+
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
@@ -75,6 +77,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_sort_tracks = "artist asc";
 
 	_info_dialog = dialog;
+	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
 	this->ui->lv_artist->set_id(ID_TABLE_VIEW_ARTISTS);
 	this->ui->lv_album->set_id(ID_TABLE_VIEW_ALBUMS);
@@ -104,10 +107,13 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui->lv_album->setDragEnabled(true);
 
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
+	this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
 
 	init_menues();
 
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
+	connect(this->ui->btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
+
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
@@ -129,6 +135,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
 
 	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
+
+
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
@@ -333,11 +341,12 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 
 	this->_album_model->removeRows(0, this->_album_model->rowCount());
-	this->_album_model->insertRows(0, albums.size());
+	this->_album_model->insertRows(0, albums.size()); // fake "all albums row"
+
+	QModelIndex idx;
 
 	for(uint i=0; i<albums.size(); i++){
-		QModelIndex idx = this->_album_model->index(i, 1);
-
+		idx = this->_album_model->index(i, 1);
 		QStringList data = albums.at(i).toStringList();
 		this->_album_model->setData(idx, data, Qt::EditRole );
 	}
@@ -349,9 +358,11 @@ void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 	this->_artist_model->removeRows(0, this->_artist_model->rowCount());
 	this->_artist_model->insertRows(0, artists.size());
 
+	QModelIndex idx;
+
 	for(uint i=0; i<artists.size(); i++){
 
-		QModelIndex idx = this->_artist_model->index(i, 0);
+		idx = this->_artist_model->index(i, 0);
 		QStringList data = artists.at(i).toStringList();
 		this->_artist_model->setData(idx, data, Qt::EditRole );
 	}
@@ -739,5 +750,3 @@ void GUI_Library_windowed::import_result(bool success){
 	QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
 }
-
-
