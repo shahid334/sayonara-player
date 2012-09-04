@@ -208,7 +208,7 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_import_result(bool),						&ui_library,	import_result(bool));
         CONNECT(&library, sig_metadata_loaded(vector<MetaData>&), 		&ui_library, 	fill_library_tracks(vector<MetaData>&));
         CONNECT(&library, sig_all_albums_loaded(vector<Album>&), 		&ui_library, 	fill_library_albums(vector<Album>&));
-        CONNECT(&library, sig_all_artists_loaded(vector<Artist>&), 		&ui_library, 	fill_library_artists(vector<Artist>&));
+        CONNECT(&library, sig_all_artists_loaded(vector<Artist>&), 	&ui_library, 	fill_library_artists(vector<Artist>&));
         CONNECT(&library, sig_track_mime_data_available(const vector<MetaData>&), 		&ui_library, 	track_info_available(const vector<MetaData>&));
         CONNECT(&library, sig_change_id3_tags(const vector<MetaData>&),	&ui_id3_editor,	change_meta_data(const vector<MetaData>&));
         CONNECT(&library, sig_tracks_for_playlist_available(vector<MetaData>&), 		&playlist, psl_createPlaylist(vector<MetaData>&));

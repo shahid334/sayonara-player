@@ -106,7 +106,9 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 
 		 if (role == Qt::WhatsThisRole && index.column() == 1){
 			 Album album = _album_list.at(index.row());
-			 return album.toStringList();
+			 QStringList strlist = album.toStringList();
+
+			 return strlist;
 
 		 }
 		 else  if (role == Qt::WhatsThisRole && index.column() == 2){
@@ -123,7 +125,6 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 {
 
 	 if (index.isValid() && role == Qt::EditRole) {
-
 
 		 if(index.column() == 1) {
 			 QStringList list = value.toStringList();

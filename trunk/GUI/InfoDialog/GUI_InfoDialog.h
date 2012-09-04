@@ -72,7 +72,7 @@ public:
 	virtual ~GUI_InfoDialog();
 
 	void setMode(int mode);
-	void setMetaData(vector<MetaData>& vd);
+	void setMetaData(const vector<MetaData>& vd);
 
 	void show(int tab);
 

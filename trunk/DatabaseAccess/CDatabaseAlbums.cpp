@@ -173,8 +173,8 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result, QString sort_order)
 	_db_fetch_albums(q, result);
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter, QString sort_order){
 
+void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter, QString sort_order){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -183,8 +183,22 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 	QString querytext =
 			ALBUM_ARTIST_TRACK_SELECTOR +
 			"WHERE tracks.albumID = albums.albumID AND "
-			"artists.artistid = tracks.artistid AND "
-			"artists.artistid = :artist_id ";
+			"artists.artistid = tracks.artistid AND ";
+
+	if(artists.size() == 0) return;
+
+	else if(artists.size() > 1){
+		querytext += "(artists.artistid = :artist_id ";
+		for(int i=1; i<artists.size(); i++){
+			querytext += QString("OR artists.artistid = :artist_id_" + QString::number(i) + " ");
+		}
+
+		querytext += ") ";
+	}
+
+	else{
+		querytext += "artists.artistid = :artist_id ";
+	}
 
 
 	if(filter.filtertext.length() > 0){
@@ -215,8 +229,6 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 		}
 	}
 
-
-
 	querytext += QString("GROUP BY albumID, albumName ");
 
 	if(sort_order == "name asc") querytext += QString(" ORDER BY albumName ASC;");
@@ -226,7 +238,11 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 	else querytext += ";";
 
 	q.prepare(querytext);
-	q.bindValue(":artist_id", QVariant(artist));
+
+	q.bindValue(":artist_id", QVariant(artists[0]));
+	for(int i=1; i<artists.size(); i++){
+		q.bindValue(QString(":artist_id_") + QString::number(i), artists[i]);
+	}
 
 	if(filter.filtertext.length() > 0){
 		q.bindValue(":filter1", QVariant(filter.filtertext));
@@ -241,8 +257,14 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result,
 		}
 	}
 
-
 	_db_fetch_albums(q, result);
+}
+
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter, QString sort_order){
+
+	QList<int> list;
+	list << artist;
+	getAllAlbumsByArtist(list, result, filter, sort_order);
 }
 
 void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>& result, QString sort_order){
@@ -275,8 +297,9 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>
 
 	if(sort_order == "name asc") query += QString(" ORDER BY albumName ASC;");
 	else if(sort_order == "name desc") query += QString(" ORDER BY albumName DESC;");
-	else if(sort_order == "year asc")query += QString(" ORDER BY albumYear ASC;");
-	else if(sort_order == "year desc")query += QString(" ORDER BY albumYear DESC;");
+	else if(sort_order == "year asc")	query += QString(" ORDER BY albumYear ASC;");
+	else if(sort_order == "year desc")	query += QString(" ORDER BY albumYear DESC;");
+	else query += QString(";");
 
 	q.prepare(query);
 

@@ -162,12 +162,31 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
 }
 
 void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, Filter filter, QString sort){
+	QList<int> list;
+	list << album;
+	getAllTracksByAlbum(list, returndata, filter, sort);
+}
+
+void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, vector<MetaData>& returndata, Filter filter, QString sort){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
-	QString querytext = TRACK_SELECTOR +
-			"AND tracks.albumid=:albumid ";
+	QString querytext = TRACK_SELECTOR;
 
+	if(albums.size() == 0) return;
+
+	else if(albums.size() == 1){
+		querytext += "AND tracks.albumid=:albumid ";
+	}
+
+	else {
+		querytext += "AND (tracks.albumid=:albumid ";
+		for(int i=1; i<albums.size(); i++){
+			querytext += "OR tracks.albumid=:albumid_" + QString::number(i) + " ";
+		}
+
+		querytext += ") ";
+	}
 
 	if(filter.filtertext.length() > 0 ){
 
@@ -206,7 +225,10 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 	querytext = append_track_sort_string(querytext, sort);
 
 	q.prepare(querytext);
-	q.bindValue(":albumid", QVariant(album));
+	q.bindValue(":albumid", QVariant(albums[0]));
+	for(int i=1; i<albums.size(); i++){
+		q.bindValue(QString(":albumid_") + QString::number(i), albums[i]);
+	}
 
 	if(filter.filtertext.length() > 0){
 		q.bindValue(":filter1", QVariant(filter.filtertext));
@@ -230,13 +252,35 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& return
 }
 
 void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, Filter filter, QString sort){
+	QList<int> list;
+	list << artist;
+	getAllTracksByArtist(list, returndata, filter, sort);
+}
+
+void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaData>& returndata, Filter filter, QString sort){
 	DB_TRY_OPEN(m_database);
 
 	MetaData data;
 
 	QSqlQuery q (this -> m_database);
-	QString querytext = TRACK_SELECTOR +
-					"AND tracks.artistID=:artistID ";
+	QString querytext = TRACK_SELECTOR;
+
+
+
+	if(artists.size() == 0) return;
+
+	else if(artists.size() == 1){
+		querytext += "AND tracks.artistid=:artistid ";
+	}
+
+	else {
+		querytext += "AND (tracks.artistid=:artistid ";
+		for(int i=1; i<artists.size(); i++){
+			querytext += "OR tracks.artistid=:artistid_" + QString::number(i) + " ";
+		}
+
+		querytext += ") ";
+	}
 
 	if(filter.filtertext.length() > 0 ){
 		switch(filter.by_searchstring){
@@ -268,7 +312,10 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& retu
 	querytext = append_track_sort_string(querytext, sort);
 
 	q.prepare(querytext);
-	q.bindValue(":artist_id", QVariant(artist));
+	q.bindValue(":artist_id", QVariant(artists[0]));
+	for(int i=1; i<artists.size(); i++){
+		q.bindValue(QString(":artistid_") + QString::number(i), artists[i]);
+	}
 
 	if(filter.filtertext.length() > 0 ){
 		q.bindValue(":filter1", QVariant(filter.filtertext));

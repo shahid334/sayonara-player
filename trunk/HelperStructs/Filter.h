@@ -37,9 +37,11 @@
 struct Filter {
 	QString filtertext;
 	int by_searchstring;
+	bool cleared;
 	Filter(){
 		filtertext = "";
 		by_searchstring = BY_FULLTEXT;
+		cleared = true;
 	}
 };
 

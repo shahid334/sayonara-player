@@ -127,6 +127,9 @@ private:
     QString				_album_sortorder;
     QString				_artist_sortorder;
 
+    QList<int>			_selected_artists;
+    QList<int>			_selected_albums;
+
     Filter				_filter;
 
     void 				emit_stuff();

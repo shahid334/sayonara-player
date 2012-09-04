@@ -55,8 +55,9 @@ public:
 	signals:
 		void id3_tags_changed();
 		void id3_tags_changed(vector<MetaData>&);
-		void sig_cancelled();
 		void sig_success(bool);
+		void sig_cancelled();
+
 
 	private slots:
 		void prev_button_clicked();

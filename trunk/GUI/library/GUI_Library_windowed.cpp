@@ -350,6 +350,7 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 	for(uint i=0; i<albums.size(); i++){
 		idx = this->_album_model->index(i, 1);
 		QStringList data = albums.at(i).toStringList();
+
 		this->_album_model->setData(idx, data, Qt::EditRole );
 	}
 }
@@ -366,6 +367,7 @@ void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
 
 		idx = this->_artist_model->index(i, 0);
 		QStringList data = artists.at(i).toStringList();
+
 		this->_artist_model->setData(idx, data, Qt::EditRole );
 	}
 }
@@ -385,8 +387,8 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 	}
 
 	emit sig_artist_pressed(idx_list_int);
-
 }
+
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
@@ -400,14 +402,13 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 	}
 
 	emit sig_album_pressed(idx_list_int);
-
 }
 
 
 void GUI_Library_windowed::track_info_available(const vector<MetaData>& v_md){
+
 	QMimeData* mime = new QMimeData();
 	QList<QVariant> mime_list;
-
 
 	for(uint i=0; i<v_md.size(); i++){
 		MetaData md = v_md[i];
@@ -418,11 +419,9 @@ void GUI_Library_windowed::track_info_available(const vector<MetaData>& v_md){
 	mime->setProperty("data", (QVariant) mime_list);
 
 	this->ui->tb_title->set_mime_data(mime);
-
-	vector<MetaData> v_md_tmp = v_md;
-	_info_dialog->setMetaData(v_md_tmp);
-
+	_info_dialog->setMetaData(v_md);
 }
+
 
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
@@ -456,6 +455,7 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
 
 void GUI_Library_windowed::clear_button_pressed(){
 
+
 	this->ui->le_search->setText("");
 	text_line_edited("", true);
 }
@@ -474,8 +474,13 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 
 	bool should_emit = true;
 
-	if(filter.filtertext.size() < 5 && search.size() < 3)
+	if(filter.filtertext.size() < 3 && search.size() < 3){
 		should_emit = false;
+		filter.cleared = true;
+	}
+
+	else filter.cleared = false;
+
 
 	filter.filtertext = QString("%") + search + QString("%");
 	_cur_searchfilter = filter;
@@ -491,6 +496,7 @@ void GUI_Library_windowed::searchfilter_changed(int idx){
 
 
 void GUI_Library_windowed::refresh(){
+
 	text_line_edited(_cur_searchfilter.filtertext, true);
 }
 

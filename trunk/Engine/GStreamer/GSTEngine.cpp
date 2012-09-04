@@ -27,13 +27,16 @@
 #include "Engine/GStreamer/GSTEngine.h"
 
 
+
 #include <gst/gst.h>
 #include <string>
 #include <vector>
 
 #include <QObject>
+#include <QDate>
 #include <QDebug>
 #include <QString>
+#include <QStringList>
 #include <QFile>
 #include <QDir>
 #include <qplugin.h>
@@ -261,6 +264,8 @@ void GST_Engine::init(){
 
 QString GST_Engine::init_streamripper(const MetaData& md){
 
+	qDebug() << "MetaData: " << md.toStringList();
+
 	QString artist = md.artist;
 	QString title = md.title;
 	QString org_src_filename = md.filepath;	// some url
@@ -268,8 +273,11 @@ QString GST_Engine::init_streamripper(const MetaData& md){
 	QString new_src_filename_uri;			// GStreamer needs an URI
 
 	title.replace(" ", "_");
+	if(Helper::is_soundfile(md.filepath))
+		_sr_recording_dst = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
+	else
+		_sr_recording_dst = Helper::getSayonaraPath() + title + "_" + QDateTime::currentDateTime().toString("yyMMdd_hhmm") + ".mp3";
 
-	_sr_recording_dst = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
 	new_src_filename = _sr_recording_dst;
 
 	// record from org_src_filename to new_src_filename

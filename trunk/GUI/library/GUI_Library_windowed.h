@@ -184,6 +184,8 @@ private:
 	GUI_InfoDialog* _info_dialog;
 	GUI_Library_Info_Box* _lib_info_dialog;
 
+	vector<MetaData> _v_md_tmp;
+
 	bool show_delete_dialog(int n_tracks);
 	void refresh();
 

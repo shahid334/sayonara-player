@@ -312,19 +312,52 @@ void CLibraryBase::gather_stuff(){
 	_vec_artists.clear();
 	_vec_md.clear();
 
-	if(_filter.filtertext.size() >= 5){
-		_db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+	if(_filter.filtertext.size() >= 3){
+
 		_db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
-		_db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
+
+		// albums
+		if(_selected_artists.size() == 0)
+			_db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+		else
+			_db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _album_sortorder);
+
+		// tracks
+		if(_selected_albums.size() == 0 && _selected_artists.size() == 0)
+			_db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
+
+		else if(_selected_albums.size() > 0)
+			_db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, _track_sortorder);
+
+		else if(_selected_artists.size() > 0)
+			_db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
 	}
+
+
+	else if(_selected_albums.size() > 0){
+		_db->getAllArtists(_vec_artists, _artist_sortorder);
+
+		if(_selected_artists.size() > 0)
+			_db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _album_sortorder);
+		else
+			_db->getAllAlbums(_vec_albums, _album_sortorder);
+
+		_db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, _track_sortorder);
+	}
+
+
+	else if(_selected_artists.size() > 0){
+		_db->getAllArtists(_vec_artists, _artist_sortorder);
+		_db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _album_sortorder);
+		_db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
+	}
+
 
 	else {
 		_db->getTracksFromDatabase(_vec_md, _track_sortorder);
 		_db->getAllAlbums(_vec_albums, _album_sortorder);
 		_db->getAllArtists(_vec_artists, _artist_sortorder);
 	}
-
-
 }
 
 void CLibraryBase::emit_stuff(){
@@ -346,6 +379,10 @@ void CLibraryBase::psl_sortorder_changed(QString artist_so, QString album_so, QS
 
 void CLibraryBase::psl_filter_changed(const Filter& filter){
 	_filter = filter;
+	if(_filter.cleared){
+		_selected_albums.clear();
+		_selected_artists.clear();
+	}
 
 	gather_stuff();
 	emit_stuff();
@@ -355,27 +392,21 @@ void CLibraryBase::psl_filter_changed(const Filter& filter){
 void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
 	_vec_md.clear();
 	_vec_albums.clear();
+	_vec_md.clear();
+
+	_selected_artists.clear();
+	vector<Album> v_tmp_album;
 
 	foreach(int idx, idx_list){
 		Artist artist = _vec_artists[idx];
-
-		vector<Album> v_tmp_album;
-		vector<MetaData> v_tmp_md;
-
-		_db->getAllAlbumsByArtist(artist.id, v_tmp_album, _filter, _album_sortorder);
-		foreach(Album album, v_tmp_album){
-			_vec_albums.push_back(album);
-		}
-
-		_db->getAllTracksByArtist(artist.id, v_tmp_md, _filter, _track_sortorder);
-		foreach(MetaData md, v_tmp_md){
-			_vec_md.push_back(md);
-		}
+		_selected_artists << artist.id;
 	}
+
+	_db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
+	_db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _album_sortorder);
 
 	emit sig_all_albums_loaded(_vec_albums);
 	emit sig_metadata_loaded(_vec_md);
-	// TODO: No drag and drop possible
 }
 
 
@@ -383,17 +414,15 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
 void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 
 	_vec_md.clear();
+	_selected_albums.clear();
 
 	foreach(int idx, idx_list){
 		Album album = _vec_albums[idx];
 
-		vector<MetaData> v_tmp_md;
-
-		_db->getAllTracksByAlbum(album.id, v_tmp_md, _filter, _track_sortorder);
-		foreach(MetaData md, v_tmp_md){
-			_vec_md.push_back(md);
-		}
+		_selected_albums << album.id;
 	}
+
+	_db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, _track_sortorder);
 
 	emit sig_metadata_loaded(_vec_md);
 }

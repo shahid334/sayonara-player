@@ -38,7 +38,7 @@
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::GUI_SimplePlayer), VOLUME_STEP_SIZE_PERC (2){
+    QMainWindow(parent), ui(new Ui::GUI_SimplePlayer), VOLUME_STEP_SIZE_PERC (5){
 	ui->setupUi(this);
 	initGUI();
 

@@ -98,6 +98,7 @@ public:
 			void getAllAlbums(vector<Album>& result, QString sortorder = "name asc");
 
 			void getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter=Filter(), QString sortorder = "name asc");
+			void getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter=Filter(), QString sortorder = "name asc");
 
 			void getAllAlbumsBySearchString(Filter filter, vector<Album>& result, QString sortorder = "name asc");
 
@@ -111,8 +112,10 @@ public:
 		 *****************/
 
 			void getAllTracksByAlbum(int album, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
+			void getAllTracksByAlbum(QList<int> albums, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
 
 			void getAllTracksByArtist(int artist, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
+			void getAllTracksByArtist(QList<int> artists, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
 
 			void getAllTracksBySearchString(Filter filter, vector<MetaData>& result, QString sort="artist asc");
 

@@ -84,7 +84,7 @@ struct MetaData{
                 << " (" << length_ms << " m_sec) :: " << filepath.toStdString() << endl;
 	}
 
-	QStringList toStringList(){
+	QStringList toStringList() const{
 
 		QStringList list;
 		QString tmpTitle = title;

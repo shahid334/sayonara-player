@@ -48,6 +48,7 @@ Playlist::Playlist(QObject * parent) : QObject (parent){
 	_radio_active = false;
 	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
 	_db = CDatabaseConnector::getInstance();
+	_v_meta_data.clear();
 }
 
 Playlist::~Playlist() {
@@ -106,8 +107,11 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 
 	// no tracks in new playlist
 	if(v_meta_data.size() == 0) {
+		_v_meta_data.clear();
 		return;
 	}
+
+
 
 
 	bool played_radio = (_radio_active != RADIO_OFF);
@@ -144,6 +148,7 @@ void Playlist::psl_createPlaylist(vector<MetaData>& v_meta_data, int radio){
 
 	if(_radio_active == RADIO_OFF)
 		psl_save_playlist_to_storage();
+
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
@@ -249,6 +254,7 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
 	emit sig_mp3s_loaded_signal(100);
 
 	psl_save_playlist_to_storage();
+
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 }
 
@@ -765,7 +771,8 @@ void Playlist::psl_id3_tags_changed(vector<MetaData>& new_meta_data){
 		MetaData md_old = _v_meta_data[i];
 		for(uint j=0; j<new_meta_data.size(); j++){
 			MetaData md_new = new_meta_data[j];
-			if(md_old.id == md_new.id){
+			//qDebug() << "compare " << md_old.filepath.toLower().trimmed() << " with " << md_new.filepath.toLower().trimmed() << md_old.filepath.toLower().trimmed().compare(md_new.filepath.toLower().trimmed());
+			if(md_old.filepath.toLower().trimmed().compare(md_new.filepath.toLower().trimmed()) == 0){
 				_v_meta_data.at(i) = md_new;
 			}
 		}

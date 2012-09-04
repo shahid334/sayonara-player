@@ -43,7 +43,7 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) {
 	_is_complete_tracks = _settings->getStreamRipperCompleteTracks();
 	_is_create_playlist = _settings->getStreamRipperPlaylist();
 
-	this->ui->lab_path->setText(_path);
+	this->ui->le_path->setText(_path);
 	this->ui->cb_activate->setChecked(_is_active);
 	this->ui->cb_complete_tracks->setChecked(_is_complete_tracks);
 	this->ui->cb_create_playlist->setChecked(_is_create_playlist);
@@ -94,7 +94,7 @@ void GUI_StreamRecorder::sl_btn_path_clicked(){
 	if(dir.size() > 0){
 		_path = dir;
 		_settings->setStreamRipperPath(_path);
-		this->ui->lab_path->setText(_path);
+		this->ui->le_path->setText(_path);
 		emit sig_path_changed(_path);
 	}
 }

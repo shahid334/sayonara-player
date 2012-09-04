@@ -102,10 +102,12 @@ void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
 	this->init();
 
 	this->ui->pb_progress->hide();
+
 	_cur_idx = -1;
 	_lst_new_albums.clear();
 	_lst_new_artists.clear();
 	_vec_tmp_metadata.clear();
+	_vec_org_metadata.clear();
 
 	if(vec.size() <= 0) return;
 
@@ -117,6 +119,7 @@ void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
 	}
 
 	show();
+
 	_cur_idx = 0;
 	this->ui->pb_next_track->setEnabled( (vec.size() > 1) );
 	this->ui->pb_prev->setEnabled(false);
@@ -165,10 +168,21 @@ void GUI_TagEdit::next_button_clicked(){
 void GUI_TagEdit::ok_button_clicked(){
 	if(_cur_idx == -1) _cur_idx = 0;
 	save_metadata();
+
 	QList<Album> v_album;
 	QList<Artist> v_artist;
+
+	// stores only artists/albums if track is in database
 	check_for_new_album_and_artist(v_album, v_artist);
-	bool b = store_to_database(v_album, v_artist) ;
+
+	bool b = store_to_database(v_album, v_artist);
+
+	this->ui->pb_progress->setVisible(false);
+
+	vector<MetaData> v_md2send = _vec_tmp_metadata;
+
+	emit id3_tags_changed();
+	emit id3_tags_changed(v_md2send);
 
 
 	this->ui->btn_all_album->setChecked(false);
@@ -185,9 +199,7 @@ void GUI_TagEdit::cancel_button_clicked(){
 	this->ui->btn_all_artist-> setChecked(false);
 	this->ui->btn_all_genre->setChecked(false);
 	this->ui->btn_all_year->setChecked(false);
-
 	emit sig_cancelled();
-
 }
 
 
@@ -232,9 +244,7 @@ void GUI_TagEdit::show_metadata(){
 	this->ui->sb_year->setValue(_vec_tmp_metadata[_cur_idx].year);
 
 	this->ui->lab_filepath->setText(_vec_org_metadata[_cur_idx].filepath);
-		this->ui->lab_track_num->setText("Track " + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
-
-
+	this->ui->lab_track_num->setText("Track " + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
 }
 
 
@@ -274,6 +284,10 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 	/* create lists with all albums and artists for the tracks
 	 * If a track has a new album/artist create new IDs for it */
 	for(uint track = 0; track<_vec_org_metadata.size(); track++){
+
+			if( _db->getTrackByPath(_vec_org_metadata[track].filepath) < 0){
+				continue;
+			}
 
 			QString new_album_name =  _lst_new_albums[track];
 			QString new_artist_name = _lst_new_artists[track];
@@ -411,7 +425,6 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 	}
 
 
-
 	for(int i=0; i<new_albums.size(); i++){
 		_db->insertAlbumIntoDatabase(new_albums[i]);
 	}
@@ -425,17 +438,12 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 	for(uint i=0; i<_vec_tmp_metadata.size(); i++){
 
 		this->ui->pb_progress->setValue( (int)(i * 100.0 / _vec_tmp_metadata.size()));
-		CDatabaseConnector::getInstance()->updateTrack(_vec_tmp_metadata[i]);
 		change_mp3_file(_vec_tmp_metadata[i]);
 
+		if( _db->getTrackByPath(_vec_org_metadata[i].filepath) >= 0){
+			CDatabaseConnector::getInstance()->updateTrack(_vec_tmp_metadata[i]);
+		}
 	}
-
-	this->ui->pb_progress->setVisible(false);
-
-
-	emit id3_tags_changed();
-	emit id3_tags_changed(_vec_tmp_metadata);
-
 
 	return true;
 
