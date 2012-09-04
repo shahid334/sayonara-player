@@ -1,41 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>InfoDialog</class>
- <widget class="QWidget" name="InfoDialog">
+ <widget class="QDialog" name="InfoDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>645</width>
-    <height>400</height>
+    <width>655</width>
+    <height>394</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>0</width>
-    <height>400</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>700</width>
-    <height>650</height>
-   </size>
-  </property>
   <property name="windowTitle">
-   <string>Info</string>
+   <string>Info / Edit</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="horizontalSpacing">
-    <number>10</number>
-   </property>
-   <item row="0" column="0" colspan="2">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tab_widget">
      <property name="minimumSize">
       <size>
@@ -299,38 +278,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>btn_close</sender>
-   <signal>clicked()</signal>
-   <receiver>InfoDialog</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>480</x>
-     <y>248</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>283</x>
-     <y>135</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btn_close1</sender>
-   <signal>clicked()</signal>
-   <receiver>InfoDialog</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>358</x>
-     <y>366</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>237</x>
-     <y>199</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

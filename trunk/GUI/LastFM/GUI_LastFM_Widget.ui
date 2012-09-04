@@ -1,72 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>GUI_LastFM_Widget</class>
- <widget class="QWidget" name="GUI_LastFM_Widget">
-  <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
-  </property>
+ <widget class="QDialog" name="GUI_LastFM_Widget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>470</width>
-    <height>130</height>
+    <width>480</width>
+    <height>134</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>380</width>
-    <height>130</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>1000</width>
-    <height>1000</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>LastFM Preferences</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Username</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2" colspan="2">
-    <widget class="QLineEdit" name="tf_username"/>
-   </item>
-   <item row="1" column="2" colspan="2">
-    <widget class="QLineEdit" name="tf_password">
-     <property name="echoMode">
-      <enum>QLineEdit::Password</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Password</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="3">
-    <widget class="QPushButton" name="btn_save">
-     <property name="text">
-      <string>Save</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Propose ID3 corrections</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" rowspan="3">
     <widget class="QWidget" name="widget" native="true">
      <property name="styleSheet">
@@ -101,10 +48,48 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Username</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="2">
+    <widget class="QLineEdit" name="tf_username"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Password</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="QLineEdit" name="tf_password">
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Propose ID3 corrections</string>
+     </property>
+    </widget>
+   </item>
    <item row="2" column="2">
     <widget class="QCheckBox" name="cb_correct_id3">
      <property name="text">
       <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="btn_save">
+     <property name="text">
+      <string>Save</string>
      </property>
     </widget>
    </item>

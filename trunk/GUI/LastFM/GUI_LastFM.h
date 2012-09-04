@@ -29,16 +29,17 @@
 #ifndef GUI_LASTFM_H_
 #define GUI_LASTFM_H_
 
+#include <QDialog>
 #include <QObject>
 #include <QString>
 #include <ui_GUI_LastFM_Widget.h>
 
-class GUI_LastFM : public QWidget, private Ui_GUI_LastFM_Widget{
+class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Widget{
 
 	Q_OBJECT
 
 public:
-	GUI_LastFM();
+	GUI_LastFM(QWidget* parent=0);
 	GUI_LastFM(QString username, QString password);
 
 	virtual ~GUI_LastFM();

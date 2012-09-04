@@ -46,7 +46,7 @@
 #define CAR_RET QString("<br />")
 #define BOLD(x) QString("<b>") + x + QString("</b>")
 
-GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QWidget(parent){
+GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog(parent){
 	this->ui = new Ui::InfoDialog();
 	this->ui->setupUi(this);
 

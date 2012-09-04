@@ -34,6 +34,7 @@
 
 #include <ui_GUI_InfoDialog.h>
 #include <QWidget>
+#include <QDialog>
 #include <QString>
 #include <QMetaType>
 
@@ -47,7 +48,7 @@
 #define TAB_LYRICS 1
 #define TAB_EDIT 2
 
-class GUI_InfoDialog : public QWidget, private Ui::InfoDialog{
+class GUI_InfoDialog : public QDialog, private Ui::InfoDialog{
 Q_OBJECT
 
 signals:

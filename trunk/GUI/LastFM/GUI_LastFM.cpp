@@ -38,7 +38,7 @@
 
 using namespace std;
 
-GUI_LastFM::GUI_LastFM() {
+GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 	this->ui = new Ui_GUI_LastFM_Widget();
 	this->ui->setupUi(this);
 
@@ -48,9 +48,6 @@ GUI_LastFM::GUI_LastFM() {
 
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
 	connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
-
-
-
 }
 
 

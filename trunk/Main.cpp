@@ -105,13 +105,13 @@ int main(int argc, char *argv[]){
 
         CLibraryBase 			library;
         LastFM*					lastfm = LastFM::getInstance();
-        GUI_LastFM				ui_lastfm;
+        GUI_LastFM				ui_lastfm(player.centralWidget());
         GUI_Stream				ui_stream(player.getParentOfPlugin());
         GUI_Equalizer			ui_eq(player.getParentOfPlugin());
         GUI_LFMRadioWidget		ui_lfm_radio(player.getParentOfPlugin());
-        GUI_StreamRecorder		ui_stream_rec(&player);
+        GUI_StreamRecorder		ui_stream_rec(player.centralWidget());
         GUI_TagEdit				ui_id3_editor;
-        GUI_InfoDialog			ui_info_dialog(NULL, &ui_id3_editor);
+        GUI_InfoDialog			ui_info_dialog(player.centralWidget(), &ui_id3_editor);
         GUI_Library_windowed	ui_library(player.getParentOfLibrary(), &ui_info_dialog);
         GUI_Library_Info_Box	ui_library_info_box(player.centralWidget());
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist(), &ui_info_dialog);
