@@ -27,7 +27,7 @@
  */
 
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "ui_GUI_LastFM_Widget.h"
+#include "ui_GUI_LastFM_Dialog.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 
@@ -39,7 +39,7 @@
 using namespace std;
 
 GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
-	this->ui = new Ui_GUI_LastFM_Widget();
+	this->ui = new Ui_GUI_LastFM_Dialog();
 	this->ui->setupUi(this);
 
 	this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
@@ -53,7 +53,7 @@ GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 
 GUI_LastFM::GUI_LastFM(QString username, QString password){
 
-	this->ui = new Ui_GUI_LastFM_Widget();
+	this->ui = new Ui_GUI_LastFM_Dialog();
 	this->ui->setupUi(this);
 
 	this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
@@ -101,6 +101,8 @@ void GUI_LastFM::save_button_pressed(){
 
 	this->close();
 }
+
+
 void GUI_LastFM::show_win(){
 
     QString user, password;
@@ -109,10 +111,15 @@ void GUI_LastFM::show_win(){
         this->ui->tf_username->setText(user);
         this->ui->tf_password->setText(password);
     }
-/*    else {
+
+#if QT_VERSION >= QT_VERSION_CHECK(4, 7, 0)
+    else {
         this->ui->tf_username->setPlaceholderText("Enter Usename");
         this->ui->tf_password->setPlaceholderText("Enter Password");
-    }*/
+    }
+
+#endif
+
     this->show();
 }
 

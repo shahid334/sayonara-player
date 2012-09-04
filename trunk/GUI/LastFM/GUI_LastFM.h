@@ -32,9 +32,9 @@
 #include <QDialog>
 #include <QObject>
 #include <QString>
-#include <ui_GUI_LastFM_Widget.h>
+#include <ui_GUI_LastFM_Dialog.h>
 
-class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Widget{
+class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Dialog{
 
 	Q_OBJECT
 
@@ -56,7 +56,7 @@ public:
 		void show_win();
 
 	private:
-		Ui_GUI_LastFM_Widget* ui;
+		Ui_GUI_LastFM_Dialog* ui;
 
 
 	public:

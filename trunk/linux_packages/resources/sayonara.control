@@ -1,5 +1,5 @@
 Package: sayonara
-Version: 0.2
+Version: 0.3
 Section: sound
 Priority: extra
 Architecture: i386
@@ -20,4 +20,6 @@ Description: Sayonara player is a small, lightweight music player. It's main foc
     LastFM radio, 
     Web streaming, 
     Equalizer, 
-    Phonon plugin  
+    Lyrics,
+    Streams,
+    Streamripper

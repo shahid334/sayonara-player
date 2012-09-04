@@ -148,7 +148,7 @@ SET(FORMS
     GUI/playlist/GUI_Playlist.ui
     GUI/playlist/GUI_Playlist_Entry.ui
     GUI/playlist/GUI_Playlist_EntrySmall.ui
-    GUI/LastFM/GUI_LastFM_Widget.ui
+    GUI/LastFM/GUI_LastFM_Dialog.ui
     GUI/library/GUI_Library_windowed.ui
     GUI/library/GUI_ImportFolder.ui
     GUI/library/GUI_Library_Info_Box.ui
