@@ -97,8 +97,8 @@ signals:
 	void sig_album_pressed(const QList<int>&);
 	void sig_track_pressed(const QList<int>&);
 
-	void sig_delete_tracks();
-	void sig_delete_certain_tracks(const QList<int>&);
+	void sig_delete_tracks(int);
+	void sig_delete_certain_tracks(const QList<int>&, int);
 
 	void sig_filter_changed(const Filter&);
 	void sig_sortorder_changed(QString,QString,QString);
@@ -186,7 +186,7 @@ private:
 
 	vector<MetaData> _v_md_tmp;
 
-	bool show_delete_dialog(int n_tracks);
+	int show_delete_dialog(int n_tracks);
 	void refresh();
 
 };

@@ -64,7 +64,7 @@ void GUI_ImportFolder::progress_changed(int val){
 }
 
 void GUI_ImportFolder::bb_accepted(){
-	emit accepted(this->ui->comB_proposed_artists->currentText(), this->ui->cb_copy->isChecked());
+	emit accepted(this->ui->comB_proposed_artists->currentText().trimmed(), this->ui->cb_copy->isChecked());
 }
 
 void GUI_ImportFolder::bb_recjected(){

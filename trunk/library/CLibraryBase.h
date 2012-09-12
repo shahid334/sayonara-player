@@ -93,8 +93,8 @@ public slots:
     void psl_sortorder_changed(QString, QString, QString);
     void psl_change_id3_tags(const QList<int>& lst);
 
-    void psl_delete_tracks();
-    void psl_delete_certain_tracks(const QList<int>&);
+    void psl_delete_tracks(int);
+    void psl_delete_certain_tracks(const QList<int>&,int);
 
     void psl_play_next_all_tracks();
     void psl_play_next_tracks(const QList<int>&);
@@ -134,7 +134,7 @@ private:
 
     void 				emit_stuff();
     void				gather_stuff();
-    void				delete_tracks(vector<MetaData>& v_md);
+    void				delete_tracks(vector<MetaData>& v_md, int answer);
 
 
 };

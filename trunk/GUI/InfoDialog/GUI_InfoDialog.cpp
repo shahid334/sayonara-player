@@ -101,6 +101,8 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 					this, 					SLOT(psl_lyrics_server_changed(int)));
 
 
+
+
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {

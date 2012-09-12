@@ -225,8 +225,8 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_library, sig_filter_changed(const Filter&), 			&library, 		psl_filter_changed(const Filter&));
         CONNECT(&ui_library, sig_sortorder_changed(QString,QString,QString), &library, 		psl_sortorder_changed(QString, QString, QString));
         CONNECT(&ui_library, sig_show_id3_editor(const QList<int>&),		&library, 		psl_change_id3_tags(const QList<int>&));
-        CONNECT(&ui_library, sig_delete_tracks(),							&library,		psl_delete_tracks());
-        CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&),	&library,		psl_delete_certain_tracks(const QList<int>&));
+        CONNECT(&ui_library, sig_delete_tracks(int),						&library,		psl_delete_tracks(int));
+        CONNECT(&ui_library, sig_delete_certain_tracks(const QList<int>&, int),	&library,		psl_delete_certain_tracks(const QList<int>&, int));
     	CONNECT(&ui_library, sig_play_next_tracks(const QList<int>&),		&library,		psl_play_next_tracks(const QList<int>&));
     	CONNECT(&ui_library, sig_play_next_all_tracks(),					&library,		psl_play_next_all_tracks());
 

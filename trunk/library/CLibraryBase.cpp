@@ -106,24 +106,6 @@ void CLibraryBase::importFiles(const vector<MetaData>& v_md){
 	vector<MetaData> v_md_new = v_md;
 	bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
 	emit sig_import_result(success);
-
-	QStringList content;
-	for(uint i=0; i<v_md.size(); i++){
-		QString path = v_md.at(i).filepath;
-		content.push_back(path);
-	}
-
-	content.push_front("");
-
-	if(m_import_dialog){
-		disconnect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
-		delete m_import_dialog;
-		m_import_dialog = 0;
-	}
-
-	m_import_dialog = new GUI_ImportFolder(NULL, content, false);
-	connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
-	m_import_dialog->show();
 }
 
 
@@ -380,6 +362,7 @@ void CLibraryBase::psl_sortorder_changed(QString artist_so, QString album_so, QS
 void CLibraryBase::psl_filter_changed(const Filter& filter){
 	_filter = filter;
 	if(_filter.cleared){
+		qDebug() << "Filter cleard";
 		_selected_albums.clear();
 		_selected_artists.clear();
 	}
@@ -486,8 +469,10 @@ void CLibraryBase::psl_prepare_track_for_playlist(int idx){
 
 
 
-void CLibraryBase::delete_tracks(vector<MetaData>& vec_md){
+void CLibraryBase::delete_tracks(vector<MetaData>& vec_md, int answer){
+
 	QStringList file_list;
+	QString file_entry = "files";
 	int n_files = vec_md.size();
 	int n_fails = 0;
 
@@ -495,43 +480,45 @@ void CLibraryBase::delete_tracks(vector<MetaData>& vec_md){
 		file_list.push_back(md.filepath);
 	}
 
-
 	_db->deleteTracks(vec_md);
 	vec_md.clear();
 
-	foreach(QString filename, file_list){
-		QFile file(filename);
-		if( !file.remove() )
-			n_fails ++;
+	if(answer == 1){
+		file_entry = "entries";
+		foreach(QString filename, file_list){
+			QFile file(filename);
+			if( !file.remove() )
+				n_fails ++;
+		}
 	}
 
-	QString answer;
+	QString answer_str;
 
 	if(n_fails == 0){
-		answer = "All files could be removed";
+		answer_str = "All " + file_entry + " could be removed";
 	}
 
 	else {
-		answer = QString::number(n_fails) + " of " + QString::number(n_files) + " could not be removed";
+		answer_str = QString::number(n_fails) + " of " + QString::number(n_files) + " " + file_entry + " could not be removed";
 	}
 
-	emit sig_delete_answer(answer);
+	emit sig_delete_answer(answer_str);
 }
 
 
-void CLibraryBase::psl_delete_tracks(){
-	delete_tracks(_vec_md);
+void CLibraryBase::psl_delete_tracks(int answer){
+	delete_tracks(_vec_md, answer);
 }
 
 
-void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst){
+void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
 
 	vector<MetaData> vec_md;
 	foreach(int idx, lst){
 		vec_md.push_back(_vec_md[idx]);
 	}
 
-	delete_tracks(vec_md);
+	delete_tracks(vec_md, answer);
 }
 
 void CLibraryBase::psl_play_next_all_tracks(){

@@ -472,20 +472,17 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 		default: filter.by_searchstring = BY_FULLTEXT; break;
 	}
 
-	bool should_emit = true;
+	filter.filtertext = QString("%") + search + QString("%");
 
-	if(filter.filtertext.size() < 3 && search.size() < 3){
-		should_emit = false;
+
+	if(search.size() < 3){
 		filter.cleared = true;
 	}
 
 	else filter.cleared = false;
 
-
-	filter.filtertext = QString("%") + search + QString("%");
 	_cur_searchfilter = filter;
-	if(should_emit || force_emit)
-		sig_filter_changed(filter);
+	sig_filter_changed(filter);
 }
 
 void GUI_Library_windowed::searchfilter_changed(int idx){
@@ -668,16 +665,20 @@ void GUI_Library_windowed::psl_delete_answer(QString answer){
 void GUI_Library_windowed::delete_album(){
 
 	int n_tracks = this->_track_model->rowCount();
-	if(show_delete_dialog(n_tracks)){
-		emit sig_delete_tracks();
+	int answer = show_delete_dialog(n_tracks);
+
+	if(answer){
+		emit sig_delete_tracks(answer);
 	}
 }
 
 void GUI_Library_windowed::delete_artist(){
 
 	int n_tracks = this->_track_model->rowCount();
-	if(show_delete_dialog(n_tracks)){
-		emit sig_delete_tracks();
+	int answer = show_delete_dialog(n_tracks);
+
+	if(answer){
+		emit sig_delete_tracks(answer);
 	}
 }
 
@@ -689,21 +690,25 @@ void GUI_Library_windowed::delete_tracks(){
 		lst.push_back(idx.row());
 	}
 
-	if(show_delete_dialog(lst.size()))
-		emit sig_delete_certain_tracks(lst);
+	int answer = show_delete_dialog(lst.size());
+
+	if(answer)
+		emit sig_delete_certain_tracks(lst, answer);
 }
 
 
-bool GUI_Library_windowed::show_delete_dialog(int n_tracks){
+int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 
 		QMessageBox dialog;
 		QString tl = this->ui->le_search->text();
-
+		QAbstractButton* clicked_button;
+		QPushButton* only_library_button;
 
 		dialog.setFocus();
 		dialog.setIcon(QMessageBox::Warning);
 		dialog.setText("<b>Warning!</b>");
 		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+		only_library_button = dialog.addButton("Only from library", QMessageBox::AcceptRole);
 		dialog.setDefaultButton(QMessageBox::No);
 
 		dialog.setInformativeText(	QString("You are about to delete ") +
@@ -711,20 +716,21 @@ bool GUI_Library_windowed::show_delete_dialog(int n_tracks){
 									" files!\nContinue?" );
 
 		int answer = dialog.exec();
+		clicked_button = dialog.clickedButton();
 		dialog.close();
 
-		switch(answer){
-			case QMessageBox::Yes:
-				return true;
-				break;
 
-			case QMessageBox::No:
-				return false;
+		if(answer == QMessageBox::No)
+			return 0;
 
-			default: return false;
+		if(answer == QMessageBox::Yes)
+			return 1;
+
+		if(clicked_button->text() == only_library_button->text()){
+			return 2;
 		}
 
-		return true;
+		return 0;
 }
 
 void GUI_Library_windowed::artist_middle_clicked(const QPoint& pt){
