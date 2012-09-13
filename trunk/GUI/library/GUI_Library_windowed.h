@@ -48,6 +48,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
+#include "HelperStructs/globals.h"
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -57,6 +58,7 @@
 #include <vector>
 
 using namespace std;
+using namespace Sort;
 
 class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
 
@@ -101,7 +103,7 @@ signals:
 	void sig_delete_certain_tracks(const QList<int>&, int);
 
 	void sig_filter_changed(const Filter&);
-	void sig_sortorder_changed(QString,QString,QString);
+	void sig_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort);
 
 	void sig_show_id3_editor(const QList<int>&);
 	void sig_play_next_tracks(const QList<int>& lst);
@@ -177,9 +179,9 @@ private:
 	void init_menues();
 
 
-	QString _sort_albums;  /* [name | year] [asc | desc] */
-	QString _sort_artists; /* [name | tracks] [asc | desc] */
-	QString _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
+	AlbumSort _sort_albums;  /* [name | year] [asc | desc] */
+	ArtistSort _sort_artists; /* [name | tracks] [asc | desc] */
+	TrackSort _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
 	GUI_InfoDialog* _info_dialog;
 	GUI_Library_Info_Box* _lib_info_dialog;

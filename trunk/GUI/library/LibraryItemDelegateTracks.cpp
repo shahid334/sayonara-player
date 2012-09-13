@@ -83,29 +83,32 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 		if(!is_selected){
 
-			if(val_bg > 96) fg_color = " color: #202020";
+			if(val_bg > 96) fg_color = " color: #202020; ";
 			else fg_color = " color: #D8D8D8; ";
 
 			style = QString("background-color: transparent; ") + fg_color;
 		}
 
 		else {
-			if(val_sel > 96) fg_color = " color: #202020";
+			if(val_sel > 96) fg_color = " color: #202020; ";
 			else fg_color = " color: #D8D8D8; ";
 
-			style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
+			style = QString("background-color: " + col_highlight.name() + "; ") + fg_color;
 		}
 
+		label.setAlignment( Qt::AlignVCenter );
+		label.setStyleSheet(style);
+		label.setFixedHeight(_parent->rowHeight(index.row())-1);
+		label.setFixedWidth(_parent->columnWidth(col));
+		label.setText(text);
+		label.setContentsMargins(2, 0, 2, 0);
 
 		if(col == 0 || col >= 4)
-				label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+			label.setAlignment( Qt::AlignVCenter | Qt::AlignRight);
 
-		label.setText(text);
-		label.setContentsMargins(2, 0, 2, 2);
-		label.setMinimumHeight(25);
-		label.setMinimumWidth(_parent->columnWidth(index.column()));
-		label.resize(_parent->columnWidth(index.column()), 20);
-		label.setStyleSheet(style);
+
+
+
 
 		label.render(painter, rect.topLeft() );
 
@@ -123,7 +126,7 @@ QSize LibraryItemDelegateTracks::sizeHint(const QStyleOptionViewItem & option, c
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-	return QSize(1,25);
+	return QSize(1, _parent->rowHeight(index.row()));
 
 
 }

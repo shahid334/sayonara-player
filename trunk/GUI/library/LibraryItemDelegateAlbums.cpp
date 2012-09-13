@@ -69,7 +69,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 		}
 
 		label.setPixmap(QPixmap(icon_path));
-		label.setContentsMargins(2, 0, 2, 2);
+		label.setContentsMargins(2, 0, 2, 0);
 	}
 
 	else if(index.column() == 1){
@@ -80,7 +80,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 		QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
 		label.setText(text);
-		label.setContentsMargins(2, 0, 2, 2);
+		label.setContentsMargins(2, 0, 2, 0);
 		label.setToolTip(QString::number(album.num_songs) + " tracks");
 	}
 
@@ -90,7 +90,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 		label.setText(text);
 		label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-		label.setContentsMargins(2, 0, 4, 2);
+		label.setContentsMargins(2, 0, 4, 0);
 	}
 
 
@@ -127,7 +127,12 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	}
 
 
-	label.resize(_parent->columnWidth(index.column()), 20);
+	label.setAlignment( Qt::AlignVCenter );
+	label.setStyleSheet(style);
+	label.setFixedHeight(_parent->rowHeight(index.row())-1);
+	label.setFixedWidth(_parent->columnWidth(index.column()));
+	label.setContentsMargins(2, 0, 2, 0);
+
 	label.setStyleSheet(style);
 	label.render(painter, rect.topLeft() );
 
@@ -140,7 +145,7 @@ QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, c
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-	return QSize(1,20);
+	return QSize(1, _parent->rowHeight(index.row()));
 }
 
 

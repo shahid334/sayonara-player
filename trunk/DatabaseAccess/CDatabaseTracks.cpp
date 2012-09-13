@@ -30,6 +30,8 @@
 #include <QObject>
 #include <QSqlError>
 
+using namespace Sort;
+
 #define TRACK_SELECTOR QString("SELECT ") + \
 	"tracks.trackID AS trackID, " \
 	"tracks.title AS trackTitle, "	\
@@ -86,22 +88,23 @@ bool _db_fetch_tracks(QSqlQuery& q, vector<MetaData>& result){
 }
 
 
-QString CDatabaseConnector::append_track_sort_string(QString querytext, QString sort){
+QString CDatabaseConnector::append_track_sort_string(QString querytext, TrackSort sort){
 
-	if(sort == "artist asc") querytext += QString(" ORDER BY artistName ASC, albumName ASC, trackNum;");
-	else if(sort == "artist desc") querytext += QString(" ORDER BY artistName DESC, albumName ASC, trackNum;");
-	else if(sort == "album asc") querytext += QString(" ORDER BY albumName ASC, trackNum;");
-	else if(sort == "album desc") querytext += QString(" ORDER BY albumName DESC, trackNum;");
-	else if(sort == "title asc") querytext += QString(" ORDER BY trackTitle ASC;");
-	else if(sort == "title desc") querytext += QString(" ORDER BY trackTitle DESC;");
-	else if(sort == "track asc") querytext += QString(" ORDER BY trackNum ASC;");
-	else if(sort == "track desc") querytext += QString(" ORDER BY trackNum DESC;");
-	else if(sort == "year asc") querytext += QString(" ORDER BY trackYear ASC;");
-	else if(sort == "year desc") querytext += QString(" ORDER BY trackYear DESC;");
-	else if(sort == "length asc") querytext += QString(" ORDER BY trackLength ASC;");
-	else if(sort == "length desc") querytext += QString(" ORDER BY trackLength DESC;");
-	else if(sort == "bitrate asc") querytext += QString(" ORDER BY trackBitrate ASC;");
-	else if(sort == "bitrate desc") querytext += QString(" ORDER BY trackBitrate DESC;");
+
+	if(sort == TrackArtistAsc) querytext += QString(" ORDER BY artistName ASC, albumName ASC, trackNum;");
+	else if(sort == TrackArtistDesc) querytext += QString(" ORDER BY artistName DESC, albumName ASC, trackNum;");
+	else if(sort == TrackAlbumAsc) querytext += QString(" ORDER BY albumName ASC, trackNum;");
+	else if(sort == TrackAlbumDesc) querytext += QString(" ORDER BY albumName DESC, trackNum;");
+	else if(sort == TrackTitleAsc) querytext += QString(" ORDER BY trackTitle ASC;");
+	else if(sort == TrackTitleDesc) querytext += QString(" ORDER BY trackTitle DESC;");
+	else if(sort == TrackNumAsc) querytext += QString(" ORDER BY trackNum ASC;");
+	else if(sort == TrackNumDesc) querytext += QString(" ORDER BY trackNum DESC;");
+	else if(sort == TrackYearAsc) querytext += QString(" ORDER BY trackYear ASC;");
+	else if(sort == TrackYearDesc) querytext += QString(" ORDER BY trackYear DESC;");
+	else if(sort == TrackLenghtAsc) querytext += QString(" ORDER BY trackLength ASC;");
+	else if(sort == TrackLengthDesc) querytext += QString(" ORDER BY trackLength DESC;");
+	else if(sort == TrackBitrateAsc) querytext += QString(" ORDER BY trackBitrate ASC;");
+	else if(sort == TrackBitrateDesc) querytext += QString(" ORDER BY trackBitrate DESC;");
 	else querytext += ";";
 
 	return querytext;
@@ -148,7 +151,7 @@ MetaData CDatabaseConnector::getTrackById(int id){
 }
 
 
-int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndata, QString sort) {
+int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndata, TrackSort sort) {
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -161,13 +164,13 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
     return 0;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, Filter filter, QString sort){
+void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, Filter filter, TrackSort sort){
 	QList<int> list;
 	list << album;
 	getAllTracksByAlbum(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, vector<MetaData>& returndata, Filter filter, QString sort){
+void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, vector<MetaData>& returndata, Filter filter, TrackSort sort){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -251,13 +254,13 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, vector<MetaData>
 
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, Filter filter, QString sort){
+void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, Filter filter, TrackSort sort){
 	QList<int> list;
 	list << artist;
 	getAllTracksByArtist(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaData>& returndata, Filter filter, QString sort){
+void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaData>& returndata, Filter filter, TrackSort sort){
 	DB_TRY_OPEN(m_database);
 
 	MetaData data;
@@ -336,7 +339,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaDat
 	_db_fetch_tracks(q, returndata);
 }
 
-void CDatabaseConnector::getAllTracksBySearchString(Filter filter, vector<MetaData>& result, QString sort){
+void CDatabaseConnector::getAllTracksBySearchString(Filter filter, vector<MetaData>& result, TrackSort sort){
 
 	DB_TRY_OPEN(m_database);
 

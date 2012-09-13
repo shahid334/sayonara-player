@@ -26,12 +26,15 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
+#include "HelperStructs/globals.h"
 
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
 
 #include <vector>
+
+using namespace Sort;
 
 #define DB_TRY_OPEN(db) if (!this -> db.isOpen()) \
 							this -> db.open()
@@ -75,11 +78,11 @@ public:
 			Artist getArtistByID( const int& id);
 			int getMaxArtistID();
 
-			void getAllArtists(vector<Artist>& result, QString sortorder = "name asc");
+			void getAllArtists(vector<Artist>& result, ArtistSort sortorder = ArtistNameAsc);
 
-			void getAllArtistsByAlbum(int album, vector<Artist>& result, QString sortorder = "name asc");
+			void getAllArtistsByAlbum(int album, vector<Artist>& result, ArtistSort sortorder = ArtistNameAsc);
 
-			void getAllArtistsBySearchString(Filter filter, vector<Artist>& result, QString sortorder = "name asc");
+			void getAllArtistsBySearchString(Filter filter, vector<Artist>& result, ArtistSort sortorder = ArtistNameAsc);
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
@@ -95,12 +98,12 @@ public:
 
 			Album getAlbumByID(const int& id);
 
-			void getAllAlbums(vector<Album>& result, QString sortorder = "name asc");
+			void getAllAlbums(vector<Album>& result, AlbumSort sortorder=AlbumNameAsc);
 
-			void getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter=Filter(), QString sortorder = "name asc");
-			void getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter=Filter(), QString sortorder = "name asc");
+			void getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
+			void getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
 
-			void getAllAlbumsBySearchString(Filter filter, vector<Album>& result, QString sortorder = "name asc");
+			void getAllAlbumsBySearchString(Filter filter, vector<Album>& result, AlbumSort sortorder = AlbumNameAsc);
 
 			int insertAlbumIntoDatabase (const QString & album);
 			int insertAlbumIntoDatabase (const Album& album);
@@ -111,18 +114,18 @@ public:
 		 *  TRACKS
 		 *****************/
 
-			void getAllTracksByAlbum(int album, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
-			void getAllTracksByAlbum(QList<int> albums, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
+			void getAllTracksByAlbum(int album, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
+			void getAllTracksByAlbum(QList<int> albums, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
 
-			void getAllTracksByArtist(int artist, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
-			void getAllTracksByArtist(QList<int> artists, vector<MetaData>& result, Filter filter=Filter(), QString sort="artist asc");
+			void getAllTracksByArtist(int artist, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
+			void getAllTracksByArtist(QList<int> artists, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
 
-			void getAllTracksBySearchString(Filter filter, vector<MetaData>& result, QString sort="artist asc");
+			void getAllTracksBySearchString(Filter filter, vector<MetaData>& result, TrackSort sortorder = TrackArtistAsc);
 
 			int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
 			int updateTrack(MetaData& data);
 
-			int getTracksFromDatabase (std::vector <MetaData> & returndata, QString sort="artist asc");
+			int getTracksFromDatabase (std::vector <MetaData> & returndata, TrackSort sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
 			int getTrackByPath(QString path);
 
@@ -194,7 +197,7 @@ private:
 
 
 
-    QString append_track_sort_string(QString querytext, QString sort);
+    QString append_track_sort_string(QString querytext, TrackSort sortorder);
 
 
 

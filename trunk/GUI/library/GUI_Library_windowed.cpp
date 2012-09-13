@@ -72,9 +72,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
-	_sort_albums = "name asc";
-	_sort_artists = "name asc";
-	_sort_tracks = "artist asc";
+	_sort_albums = AlbumNameAsc;
+	_sort_artists = ArtistNameAsc;
+	_sort_tracks = TrackArtistAsc;
 
 	_info_dialog = dialog;
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
@@ -502,20 +502,20 @@ void GUI_Library_windowed::id3_tags_changed(){
 	refresh();
 }
 
-
+template <typename T>
+void switch_sorters(T& srcdst, T src1, T src2){
+	if(srcdst == src1) srcdst = src2;
+	else srcdst = src1;
+}
 
 
 void GUI_Library_windowed::sort_albums_by_column(int col){
 
-	if(col == 1){
-		if(_sort_albums == "name asc") _sort_albums = "name desc";
-		else _sort_albums = "name asc";
-	}
+	if(col == 1)
+		switch_sorters(_sort_albums, AlbumNameAsc, AlbumNameDesc);
 
-	if(col == 2){
-		if(_sort_albums == "year asc") _sort_albums = "year desc";
-		else _sort_albums = "year asc";
-	}
+	if(col == 2)
+		switch_sorters(_sort_albums, AlbumYearAsc, AlbumYearDesc);
 
 	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
 }
@@ -523,56 +523,40 @@ void GUI_Library_windowed::sort_albums_by_column(int col){
 
 void GUI_Library_windowed::sort_artists_by_column(int col){
 
-	if(col == 1){
-		if(_sort_artists == "name asc") _sort_artists = "name desc";
-		else _sort_artists = "name asc";
-	}
+	if(col == 1)
+		switch_sorters(_sort_artists, ArtistNameAsc, ArtistNameDesc);
 
-	if(col == 2){
-		if(_sort_artists == "trackcount asc") _sort_artists = "trackcount desc";
-		else _sort_artists = "trackcount asc";
-	}
+	if(col == 2)
+		switch_sorters(_sort_artists, ArtistTrackcountAsc, ArtistTrackcountDesc);
 
 	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
 }
 
 void GUI_Library_windowed::sort_tracks_by_column(int col){
 
-		if(col == COL_TRACK_NUM){
-			if(_sort_tracks == "track asc") _sort_tracks = "track desc";
-			else _sort_tracks = "track asc";
-		}
 
-		else if(col == COL_TITLE){
-			if(_sort_tracks == "title asc") _sort_tracks = "title desc";
-			else _sort_tracks = "title asc";
-		}
-
-		else if(col == COL_ALBUM){
-			if(_sort_tracks == "album asc") _sort_tracks = "album desc";
-			else _sort_tracks = "album asc";
-		}
-
-		else if(col == COL_ARTIST){
-			if(_sort_tracks == "artist asc") _sort_tracks = "artist desc";
-			else _sort_tracks = "artist asc";
-		}
-
-		else if(col == COL_YEAR){
-			if(_sort_tracks == "year asc") _sort_tracks = "year desc";
-			else _sort_tracks = "year asc";
-		}
-
-		else if(col == COL_LENGTH){
-			if(_sort_tracks == "length asc") _sort_tracks = "length desc";
-			else _sort_tracks = "length asc";
-		}
+		if(col == COL_TRACK_NUM)
+			switch_sorters(_sort_tracks, Sort::TrackNumAsc, Sort::TrackNumDesc);
 
 
-		else if(col == COL_BITRATE){
-			if(_sort_tracks == "bitrate asc") _sort_tracks = "bitrate desc";
-			else _sort_tracks = "bitrate asc";
-		}
+		else if(col == COL_TITLE)
+			switch_sorters(_sort_tracks, TrackTitleAsc, TrackTitleDesc);
+
+		else if(col == COL_ALBUM)
+			switch_sorters(_sort_tracks, TrackAlbumAsc, TrackAlbumDesc);
+
+		else if(col == COL_ARTIST)
+			switch_sorters(_sort_tracks, TrackArtistAsc, TrackArtistDesc);
+
+		else if(col == COL_YEAR)
+			switch_sorters(_sort_tracks, TrackYearAsc, TrackYearDesc);
+
+		else if(col == COL_LENGTH)
+			switch_sorters(_sort_tracks, TrackLenghtAsc, TrackLengthDesc);
+
+
+		else if(col == COL_BITRATE)
+			switch_sorters(_sort_tracks, TrackBitrateAsc, TrackBitrateDesc);
 
 	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
 }

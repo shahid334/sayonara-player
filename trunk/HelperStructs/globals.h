@@ -35,9 +35,6 @@
 #define PLUGIN_PLAYLIST_CHOOSER 4
 
 
-
-
-
 #define GOOGLE_IMG_ICON QString("icon")
 #define GOOGLE_IMG_SMALL QString("small")
 #define GOOGLE_IMG_MEDIUM QString("medium")
@@ -50,6 +47,17 @@
 #define GOOGLE_FT_PNG QString("png")
 #define GOOGLE_FT_GIF QString("gif")
 #define GOOGLE_FT_BMP QString("bmp")
+
+namespace Sort{
+
+	enum ArtistSort{ ArtistNameAsc=0, ArtistNameDesc, ArtistTrackcountAsc, ArtistTrackcountDesc};
+
+ 	enum AlbumSort{AlbumNameAsc=0, AlbumNameDesc, AlbumYearAsc, AlbumYearDesc};
+
+	enum TrackSort{TrackNumAsc=0, TrackNumDesc,TrackTitleAsc, TrackTitleDesc, TrackAlbumAsc, TrackAlbumDesc, TrackArtistAsc, TrackArtistDesc, TrackYearAsc, TrackYearDesc, TrackLenghtAsc, TrackLengthDesc, TrackBitrateAsc, TrackBitrateDesc};
+
+};
+
 
 
 

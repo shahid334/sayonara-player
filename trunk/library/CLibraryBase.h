@@ -90,7 +90,7 @@ public slots:
     void psl_prepare_track_for_playlist(int idx);
 
     void psl_filter_changed(const Filter&);
-    void psl_sortorder_changed(QString, QString, QString);
+    void psl_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort);
     void psl_change_id3_tags(const QList<int>& lst);
 
     void psl_delete_tracks(int);
@@ -123,9 +123,9 @@ private:
     vector<Album>		_vec_albums;
     vector<Artist>		_vec_artists;
 
-    QString				_track_sortorder;
-    QString				_album_sortorder;
-    QString				_artist_sortorder;
+    Sort::TrackSort		_track_sortorder;
+    Sort::AlbumSort	_album_sortorder;
+    Sort::ArtistSort	_artist_sortorder;
 
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;
@@ -133,7 +133,6 @@ private:
     Filter				_filter;
 
     void 				emit_stuff();
-    void				gather_stuff();
     void				delete_tracks(vector<MetaData>& v_md, int answer);
 
 

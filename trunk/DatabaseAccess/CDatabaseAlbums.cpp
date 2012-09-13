@@ -31,6 +31,8 @@
 #include <QObject>
 #include <QSqlError>
 
+using namespace Sort;
+
 #define ALBUM_ARTIST_TRACK_SELECTOR QString("SELECT ") + \
 			"albums.albumID AS albumID, " + \
 			"albums.name AS albumName, " + \
@@ -77,6 +79,26 @@ bool _db_fetch_albums(QSqlQuery& q, vector<Album>& result) {
 		return true;
 }
 
+QString _create_order_string(AlbumSort sortorder){
+
+	switch(sortorder){
+
+		case AlbumNameAsc:
+			return QString (" ORDER BY albumName ASC ");
+
+		case AlbumNameDesc:
+			return QString (" ORDER BY albumName DESC ");
+
+		case AlbumYearAsc:
+			return QString (" ORDER BY albumYear ASC, albumName ASC ");
+
+		case AlbumYearDesc:
+			return QString (" ORDER BY albumYear DESC, albumName ASC ");
+
+		default:
+			return "";
+	}
+}
 
 int CDatabaseConnector::getAlbumID (const QString & album)  {
 
@@ -151,7 +173,7 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 	return album;
 }
 
-void CDatabaseConnector::getAllAlbums(vector<Album>& result, QString sort_order){
+void CDatabaseConnector::getAllAlbums(vector<Album>& result, AlbumSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -162,11 +184,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result, QString sort_order)
 			"GROUP BY albumID, albumName";
 
 
-	if(sort_order == "name asc") querytext += QString(" ORDER BY albumName ASC;");
-	else if(sort_order == "name desc") querytext += QString(" ORDER BY albumName DESC;");
-	else if(sort_order == "year asc") querytext += QString(" ORDER BY albumYear ASC;");
-	else if(sort_order == "year desc") querytext += QString(" ORDER BY albumYear DESC;");
-	else querytext += ";";
+	querytext += _create_order_string(sortorder) + ";";
 
 	q.prepare(querytext);
 
@@ -174,7 +192,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result, QString sort_order)
 }
 
 
-void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter, QString sort_order){
+void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter,AlbumSort sortorder){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -230,12 +248,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>&
 	}
 
 	querytext += QString("GROUP BY albumID, albumName ");
-
-	if(sort_order == "name asc") querytext += QString(" ORDER BY albumName ASC;");
-	else if(sort_order == "name desc") querytext += QString(" ORDER BY albumName DESC;");
-	else if(sort_order == "year asc") querytext += QString(" ORDER BY albumYear ASC;");
-	else if(sort_order == "year desc") querytext += QString(" ORDER BY albumYear DESC;");
-	else querytext += ";";
+	querytext += _create_order_string(sortorder) + ";";
 
 	q.prepare(querytext);
 
@@ -260,14 +273,14 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>&
 	_db_fetch_albums(q, result);
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter, QString sort_order){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter, AlbumSort sortorder){
 
 	QList<int> list;
 	list << artist;
-	getAllAlbumsByArtist(list, result, filter, sort_order);
+	getAllAlbumsByArtist(list, result, filter, sortorder);
 }
 
-void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>& result, QString sort_order){
+void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>& result, AlbumSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -295,11 +308,7 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>
 					"GROUP BY albumID, albumName";
 	}
 
-	if(sort_order == "name asc") query += QString(" ORDER BY albumName ASC;");
-	else if(sort_order == "name desc") query += QString(" ORDER BY albumName DESC;");
-	else if(sort_order == "year asc")	query += QString(" ORDER BY albumYear ASC;");
-	else if(sort_order == "year desc")	query += QString(" ORDER BY albumYear DESC;");
-	else query += QString(";");
+	query += _create_order_string(sortorder) + ";";
 
 	q.prepare(query);
 

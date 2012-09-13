@@ -121,7 +121,12 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		}
 
 
-		label.resize(_parent->columnWidth(index.column()), 20);
+		label.setAlignment( Qt::AlignVCenter );
+		label.setStyleSheet(style);
+		label.setFixedHeight(_parent->rowHeight(index.row())-1);
+		label.setFixedWidth(_parent->columnWidth(index.column()));
+		label.setContentsMargins(2, 0, 2, 0);
+
 		label.setStyleSheet(style);
 		label.render(painter, rect.topLeft() );
 
@@ -140,7 +145,7 @@ QSize LibraryItemDelegateArtists::sizeHint(const QStyleOptionViewItem & option, 
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-	return QSize(1,20);
+	return QSize(1, _parent->rowHeight(index.row()));
 
 
 }

@@ -77,17 +77,21 @@ int LibraryItemModelTracks::columnCount(const QModelIndex& parent) const{
 }
 
 QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
-	 if (!index.isValid())
+
+	int row = index.row();
+	int col = index.column();
+
+	if (!index.isValid())
 		 return QVariant();
 
-	 if (index.row() >= _tracklist.size())
+	 if (row >= _tracklist.size())
 		 return QVariant();
 
 
 
 	 if (role == Qt::DisplayRole){
 
-		 MetaData md = _tracklist.at(index.row());
+		 MetaData md = _tracklist.at(row);
 
 		 switch(index.column()){
 			 case COL_TRACK_NUM:
@@ -113,6 +117,16 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 			 default:
 					return QVariant();
 		 }
+	 }
+
+	 else if (role == Qt::TextAlignmentRole){
+
+		  if (col == COL_TRACK_NUM || col == COL_BITRATE || col == COL_LENGTH || col == COL_YEAR)
+          {
+              return Qt::AlignRight + Qt::AlignVCenter;
+          }
+
+          else return Qt::AlignVCenter;
 	 }
 
 	 else
