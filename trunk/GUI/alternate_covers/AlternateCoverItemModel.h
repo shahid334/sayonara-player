@@ -33,6 +33,7 @@
 #include <QList>
 #include <QModelIndex>
 #include <QAbstractTableModel>
+#include <QStringList>
 
 
 class AlternateCoverItemModel : public QAbstractTableModel {
@@ -43,7 +44,7 @@ public:
 	virtual ~AlternateCoverItemModel();
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	int columnCount(const QModelIndex &parent) const;
+	int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
 	QVariant data(const QModelIndex &index, int role) const;
 
@@ -56,7 +57,7 @@ public:
 
 
 private:
-	QList<int> _item_idx_list;
+	QStringList _pathlist;
 
 
 };

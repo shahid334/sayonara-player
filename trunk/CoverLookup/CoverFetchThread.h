@@ -45,6 +45,7 @@
 #define COV_FETCH_MODE_ARTIST_STR 1
 #define COV_FETCH_MODE_SINGLE_ALBUM 2
 #define COV_FETCH_MODE_ALL_ALBUMS 3
+#define COV_FETCH_MODE_SEARCHSTRING 4
 
 
 using namespace std;
@@ -66,10 +67,11 @@ public:
 	int 	get_cover_source();
 	void 	reset();
 
-	void	setup_fetch_artist_image(const QString& artist, int source);
-	void	setup_fetch_album_covers(const vector<Album>& albums, int source);
-	void	setup_fetch_single_album(const Album& album, int source);
+	void	setup_fetch_artist_image(const QString& artist, int source, int n_covers=1);
+	void	setup_fetch_album_covers(const vector<Album>& albums, int source, int n_covers=1);
+	void	setup_fetch_single_album(const Album& album, int source, int n_covers=1);
 	void	setup_fetch_single_album(QString album, QString artist, int source);
+	void	setup_fetch_by_searchstring(QString searchstring, int n_covers);
 
 protected:
 	void run();
@@ -83,6 +85,7 @@ private:
 	int 			_num_covers_2_fetch;
 	QString 		_album_searchstring;
 	QString 		_artist_searchstring;
+	QString			_universal_searchstring;
 	int 			_cover_fetch_mode;
 
 
@@ -90,6 +93,7 @@ private:
 	void search_images_for_artist(const QString& artist_name, int num);
 	void search_images_for_album_str(const QString album_name, int num);
 	void search_images_for_artist_str(const QString artist_name, int num);
+	void search_images_for_searchstring();
 
 
 };

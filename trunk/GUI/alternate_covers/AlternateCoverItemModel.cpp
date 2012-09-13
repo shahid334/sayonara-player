@@ -29,6 +29,8 @@
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
 #include <QModelIndex>
 #include <QVariant>
+#include <QStringList>
+#include <QDebug>
 
 
 AlternateCoverItemModel::AlternateCoverItemModel() {
@@ -47,23 +49,27 @@ AlternateCoverItemModel::~AlternateCoverItemModel() {
 int AlternateCoverItemModel::rowCount(const QModelIndex &parent) const
 {
 	Q_UNUSED(parent);
-	return _item_idx_list.size();
+	if(_pathlist.size() == 0) return 0;
+	return _pathlist.size() / 5;
 
 }
 int AlternateCoverItemModel::columnCount(const QModelIndex &parent) const
 {
-
 	return 5;
 }
 
 QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 {
 
-	 if (!index.isValid())
+	 if (!index.isValid() || _pathlist.size() == 0)
 		 return QVariant();
 
+	 int row = index.row();
+	 int col = index.column();
+	 int calc_entry = index.row() * columnCount() + index.column();
+
 	 if(role == Qt::WhatsThisRole){
-		 return _item_idx_list.at( index.row() * 5 + index.column());
+		 return _pathlist[index.row() * columnCount() + index.column()];
 	 }
 
 	 else
@@ -83,7 +89,7 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
 		 return false;
 
 	 if(role == Qt::EditRole){
-		 _item_idx_list[index.row() * 5 + index.column()] = value.toInt();
+		 _pathlist[index.row() * columnCount() + index.column()] = value.toString();
 		 return true;
 	 }
 
@@ -97,12 +103,12 @@ bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelInd
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
+	_pathlist.clear();
+	for(int i=0; i<rows; i++){
+		for(int j=0; j<columnCount(); j++)
+		_pathlist << "";
 
-
-		 _item_idx_list.insert(position, 0);
-	 }
-
+	}
 	 endInsertRows();
 	 return true;
 
@@ -112,9 +118,7 @@ bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelInd
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 _item_idx_list.removeAt(position);
-	 }
+	 _pathlist.clear();
 
 	 endRemoveRows();
 	 return true;

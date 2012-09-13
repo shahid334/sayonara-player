@@ -42,6 +42,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
+#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
@@ -116,6 +117,7 @@ int main(int argc, char *argv[]){
         GUI_Library_Info_Box	ui_library_info_box(player.centralWidget());
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist(), &ui_info_dialog);
         GUI_SocketSetup			ui_socket_setup(player.centralWidget());
+        GUI_Alternate_Covers	ui_alternate_covers;
 
 
         Socket					remote_socket;
@@ -276,8 +278,6 @@ int main(int argc, char *argv[]){
 		CONNECT (&ui_stream_rec, sig_create_playlist(bool), 		listen,		psl_strrip_set_create_playlist(bool ));
 
 
-
-
 		if(is_socket_active){
 			CONNECT (&remote_socket, sig_play(),		&playlist,			psl_play());
 			CONNECT (&remote_socket, sig_next(),		&playlist,			psl_forward());
@@ -287,6 +287,9 @@ int main(int argc, char *argv[]){
 
 			remote_socket.start();
 		}
+
+
+		//ui_alternate_covers.start("Pink Floyd", "Dark side of the moon");
 
 		playlist.ui_loaded();
 

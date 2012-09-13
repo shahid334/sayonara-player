@@ -155,6 +155,23 @@ void CoverFetchThread::search_images_for_artist_str(const QString artist_name, i
 	//search_covers_by_artist_name(artist_name, _images, num);
 }
 
+void CoverFetchThread::search_images_for_searchstring(){
+
+
+
+
+	QString adress = Helper::calc_google_image_search_adress(_universal_searchstring, GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
+	//adress = QUrl::toPercentEncoding(adress);
+	adress.replace(" ", "%20");
+	QStringList lst = call_and_parse(adress, _num_covers_2_fetch);
+
+	if(lst.size() > 0)
+		download_covers(lst, _num_covers_2_fetch, _images, true );
+	else
+		qDebug() << "cannot find cover paths";
+
+}
+
 
 // run through all albums and search their covers
 void CoverFetchThread::run(){
@@ -175,6 +192,10 @@ void CoverFetchThread::run(){
 		case COV_FETCH_MODE_ALL_ALBUMS:
 			search_images_for_albums();
 		break;
+
+		case COV_FETCH_MODE_SEARCHSTRING:
+			search_images_for_searchstring();
+			break;
 
 		default: break;
 	}
@@ -213,24 +234,24 @@ int CoverFetchThread::get_cover_fetch_mode(){
 }
 
 
-void CoverFetchThread::setup_fetch_artist_image(const QString& artist, int source){
+void CoverFetchThread::setup_fetch_artist_image(const QString& artist, int source, int n_covers){
 	_album_searchstring = "";
 	_artist_searchstring = artist;
 	_cover_source = source;
 	_cover_fetch_mode = COV_FETCH_MODE_ARTIST_STR;
-	_num_covers_2_fetch = 4;
+	_num_covers_2_fetch = 1;
 	_vec_albums.clear();
 	_images.clear();
 }
 
 
-void CoverFetchThread::setup_fetch_album_covers(const vector<Album>& albums, int source){
+void CoverFetchThread::setup_fetch_album_covers(const vector<Album>& albums, int source, int n_covers){
 
 	_album_searchstring = "";
 	_artist_searchstring = "";
 	_cover_source = source;
 	_cover_fetch_mode = COV_FETCH_MODE_ALL_ALBUMS;
-	_num_covers_2_fetch = 1;
+	_num_covers_2_fetch = n_covers;
 	_vec_albums = albums;
 	_images.clear();
 }
@@ -243,14 +264,26 @@ void CoverFetchThread::setup_fetch_single_album(QString album_str, QString artis
 
 }
 
-void CoverFetchThread::setup_fetch_single_album(const Album& album, int source){
+void CoverFetchThread::setup_fetch_single_album(const Album& album, int source, int n_covers){
 	_album_searchstring = album.name;
 	_artist_searchstring = album.artists[0];
 	_cover_source = source;
 	_cover_fetch_mode = COV_FETCH_MODE_SINGLE_ALBUM;
-	_num_covers_2_fetch = 1;
+	_num_covers_2_fetch = n_covers;
 	_vec_albums.clear();
 	_vec_albums.push_back(album);
 	_images.clear();
+}
+
+void CoverFetchThread::setup_fetch_by_searchstring(QString searchstring, int n_covers){
+
+
+	_universal_searchstring = searchstring;
+	_cover_source = COV_SRC_GOOGLE;
+	_num_covers_2_fetch = n_covers;
+	_cover_fetch_mode = COV_FETCH_MODE_SEARCHSTRING;
+	_images.clear();
+
+
 
 }

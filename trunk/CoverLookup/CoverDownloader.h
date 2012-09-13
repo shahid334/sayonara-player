@@ -46,6 +46,9 @@
 #include <QStringList>
 #include <QImage>
 #include <QUrl>
+#include <QDebug>
+#include <QRegExp>
+#include <QDir>
 
 using namespace std;
 
@@ -111,6 +114,9 @@ QStringList call_and_parse(QString url, int num_adresses){
 	if(success){
 		cover_adresses = calc_adresses_from_webpage(num_adresses, content);
 	}
+	else{
+		qDebug() << "could not get cover adresses from " << url;
+	}
 
 	return cover_adresses;
 }
@@ -161,7 +167,7 @@ QStringList call_and_parse_album(QString artist, QString album,	int num_adresses
 // downloads num_covers_to_fetch covers out from adresses. If size of adresses is smaller, then the
 // max number of covers will be fetched
 // result images are stored in vec_images
-bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images) {
+bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images, bool save=false) {
 
 	vec_images.clear();
 
@@ -182,6 +188,8 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 		if (success) {
 
 			vec_images.push_back(img);
+			if(save)
+				img.save(Helper::getSayonaraPath() + QDir::separator() + "tmp" + QDir::separator() + "image_" + QString::number(adresses.size()-i) + ".jpg");
 			found = true;
 
 			if (vec_images.size() >= num_covers_to_fetch)

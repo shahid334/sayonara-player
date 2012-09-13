@@ -36,6 +36,7 @@
 #include <QLabel>
 #include <QItemDelegate>
 #include <QPainter>
+#include <QDebug>
 
 
 
@@ -65,12 +66,18 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 			painter->translate(2, 0);
 
 
-			int pixmap_idx = index.model()->data(index, Qt::WhatsThisRole).toInt();
-			QPixmap pixmap;
+			QString filename = index.model()->data(index, Qt::WhatsThisRole).toString();
 
+			QImage image(filename);
+			if(!image.isNull()){
+				QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(90,90), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+				if(!pixmap.isNull()){
 
-			label.setPixmap(pixmap);
-			label.resize(50, 50);
+					label.setPixmap(pixmap);
+					label.resize(100, 100);
+				}
+			}
+			label.setContentsMargins(5, 5, 5, 5);
 
 
 			label.render(painter, rect.topLeft() );
@@ -81,7 +88,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
 QSize AlternateCoverItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const{
 
-	return QSize(50, 50);
+	return QSize(100, 100);
 
 }
 

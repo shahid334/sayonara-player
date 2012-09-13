@@ -59,6 +59,9 @@ SET(HEADERS
     GUI/library/LibraryItemDelegateArtists.h
     GUI/library/LibraryItemModelArtists.h
     GUI/library/GUILibraryInfoBox.h
+    GUI/alternate_covers/AlternateCoverItemDelegate.h
+    GUI/alternate_covers/AlternateCoverItemModel.h
+    GUI/alternate_covers/GUI_Alternate_Covers.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
     GUI/MyTableView.h
@@ -102,6 +105,9 @@ SET(SOURCES
     GUI/library/LibraryItemModelArtists.cpp
     GUI/library/LibraryItemDelegateTracks.cpp
     GUI/library/GUILibraryInfoBox.cpp
+	GUI/alternate_covers/AlternateCoverItemDelegate.cpp
+    GUI/alternate_covers/AlternateCoverItemModel.cpp
+    GUI/alternate_covers/GUI_Alternate_Covers.cpp
     GUI/tagedit/GUI_TagEdit.cpp
     GUI/equalizer/GUI_Equalizer.cpp
     GUI/MyTableView.cpp
@@ -162,6 +168,7 @@ SET(FORMS
     GUI/InfoDialog/GUI_InfoDialog.ui
 #    GUI/GSTDataPainter/GSTDataPainter.ui
     GUI/SocketConfiguration/GUI_SocketSetup.ui
+    GUI/alternate_covers/GUI_Alternate_Covers.ui
 )
 
 SET(ICONS 

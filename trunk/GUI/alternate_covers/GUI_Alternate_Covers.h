@@ -32,11 +32,13 @@
 #include <ui_GUI_Alternate_Covers.h>
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
+#include "CoverLookup/CoverLookup.h"
 
 #include <QWidget>
 #include <QPixmap>
 #include <QList>
 #include <QModelIndex>
+#include <QFileSystemWatcher>
 
 
 using namespace std;
@@ -51,9 +53,9 @@ public:
 	virtual ~GUI_Alternate_Covers();
 
 	signals:
-		void fetch_covers(const QString&, bool);
-		void search_album_image(const QString&);
-		void search_artist_image(const QString&);
+
+		void sig_search_images(const QString&);
+
 
 	public slots:
 		void new_cover_found(const QPixmap&);
@@ -62,9 +64,11 @@ public:
 	private slots:
 		void save_button_pressed();
 		void cancel_button_pressed();
-		void search_album_button_pressed();
-		void search_artist_button_pressed();
+		void search_button_pressed();
 		void cover_pressed(const QModelIndex& idx);
+		void covers_there(QString classname);
+		void tmp_folder_changed(const QString&);
+
 
 
 
@@ -72,11 +76,17 @@ public:
 		Ui::GUI_Alternate_Covers* ui;
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
+		CoverLookup*				 _cov_lookup;
+		QFileSystemWatcher*			_watcher;
+
 
 		QList<QPixmap>	_pixmaps;
 		int 			_cur_idx;
+		QString			_class_name;
 
 		void fill_covers();
+
+
 
 
 };

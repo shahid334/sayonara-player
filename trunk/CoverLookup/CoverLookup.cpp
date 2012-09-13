@@ -88,6 +88,9 @@ void CoverLookup::thread_finished() {
 			case COV_FETCH_MODE_ARTIST_STR:
 				emit sig_cover_found(_caller_class, Helper::get_artist_image_path(_metadata.artist));
 				break;
+			case COV_FETCH_MODE_SEARCHSTRING:
+				emit sig_multi_covers_found(_caller_class);
+				break;
 			default: break;
 		}
 		_research_done = false;
@@ -98,7 +101,8 @@ void CoverLookup::thread_finished() {
 
 		// if not already tried google and not searching an artist string
 		if( !_research_done &&
-			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_ARTIST_STR ){
+			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_ARTIST_STR &&
+			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_SEARCHSTRING){
 			qDebug() << "No cover found, research";
 			research_cover(_metadata);
 		}
@@ -197,6 +201,7 @@ void CoverLookup::search_artist_image(const QString& artist){
 	_metadata = MetaData();
 	_metadata.artist = artist;
 
+
 	_thread->setup_fetch_artist_image(artist, COV_SRC_LFM);
 	_thread->start();
 }
@@ -215,6 +220,16 @@ void CoverLookup::research_cover(const MetaData& md) {
 	album.artists.push_back(md.artist);
 	_thread->setup_fetch_single_album(album, COV_SRC_GOOGLE);
 	_thread->start();
+}
+
+
+void  CoverLookup::search_images_by_searchstring(QString searchstring, int n_images){
+
+	if(_thread->isRunning()) return;
+
+	_thread->setup_fetch_by_searchstring(searchstring, 10);
+	_thread-> start();
+
 }
 
 

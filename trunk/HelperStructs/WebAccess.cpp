@@ -90,9 +90,9 @@ bool wa_call_url(const QString& url, QString& response){
 bool WebAccess::read_http_into_str(QString url, QString& content){
 
 	content.clear();
-	wa_call_url(url, content);
+	bool success = wa_call_url(url, content);
 
-	if(content.size() > 0)	return true;
+	if(content.size() > 0)	return success;
 
 	return false;
 }
