@@ -117,7 +117,7 @@ GST_Engine::GST_Engine(){
 }
 
 GST_Engine::~GST_Engine() {
-
+	qDebug() << "close engine... ";
 	if(_bus)
 		gst_object_unref(_bus);
 

@@ -45,6 +45,10 @@
 
 #define CAR_RET QString("<br />")
 #define BOLD(x) QString("<b>") + x + QString("</b>")
+#define BLACK(x) QString("<font color=#000000>") + x + QString("</font>")
+#define LINK(x, y) (QString("<a style=\"text-decoration:none;\" href=\"") + x + QString("\">") + y + QString("</a>"))
+
+
 
 GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog(parent){
 	this->ui = new Ui::InfoDialog();
@@ -296,15 +300,22 @@ void GUI_InfoDialog::prepare_artists(){
 	if(n_artists > 1)
 		info += BOLD("#Artists:&nbsp;") + QString::number(n_artists) + CAR_RET;
 
+	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
-		path.replace(library_path, QString("<b>${ML}</b>"));
+		QString tmppath = path;
+		//path.replace(library_path, BOLD("${ML}"));
+		path.replace(library_path, ".");
+
+		path = LINK(tmppath, path);
+
 		paths += (path + CAR_RET);
 	}
 
 	this->ui->lab_heading->setText(header);
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
+	this->ui->lab_paths->setOpenExternalLinks(true);
 	this->ui->lab_paths->setText(paths);
 	this->ui->lab_playcount->setText("");
 }
@@ -365,7 +376,7 @@ void GUI_InfoDialog::prepare_albums(){
 		_artist_name = album.artists[0];
 
 		n_songs = album.num_songs;
-		header = album.name + " <font size=\"small\"> by " + _artist_name + "</font>";
+		header = album.name + " <font size=\"small\">"+ CAR_RET + "by " + _artist_name + "</font>";
 
 		info = BOLD("#Tracks:&nbsp;") +  QString::number(album.num_songs) + CAR_RET;
 		info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + CAR_RET;
@@ -398,15 +409,21 @@ void GUI_InfoDialog::prepare_albums(){
 
 	else return;
 
+	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
-		path.replace(library_path, QString("<b>${ML}</b>"));
+		QString tmppath = path;
+		//path.replace(library_path, BOLD("${ML}"));
+		path.replace(library_path, ".");
+		path = LINK(tmppath, path);
 		paths += (path + CAR_RET);
 	}
+
 
 	this->ui->lab_heading->setText(header);
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
+	this->ui->lab_paths->setOpenExternalLinks(true);
 	this->ui->lab_paths->setText(paths);
 	this->ui->lab_playcount->setText("");
 }

@@ -330,11 +330,9 @@ int main(int argc, char *argv[]){
         CDatabaseConnector::getInstance()->store_settings();
 
         if(is_socket_active){
-        	remote_socket.exit(0);
+        	if(remote_socket.isRunning())
+        		remote_socket.exit(0);
         }
-
-
-        delete listen;
 
         return 0;
 }

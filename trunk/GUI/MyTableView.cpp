@@ -44,6 +44,7 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 
 MyTableView::~MyTableView() {
 
+	qDebug() << "Delete table view";
 
 }
 

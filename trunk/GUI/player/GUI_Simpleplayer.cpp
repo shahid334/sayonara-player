@@ -107,6 +107,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 
 GUI_SimplePlayer::~GUI_SimplePlayer() {
+	qDebug() << "closing player...";
 	delete ui;
 	delete m_playAction;
 	delete m_stopAction;

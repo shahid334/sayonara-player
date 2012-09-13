@@ -65,11 +65,9 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 			painter->translate(2, 0);
 
 
-			CoverLookup* cl = CoverLookup::getInstance();
-
 			int pixmap_idx = index.model()->data(index, Qt::WhatsThisRole).toInt();
 			QPixmap pixmap;
-			cl->get_found_cover(pixmap_idx, pixmap);
+
 
 			label.setPixmap(pixmap);
 			label.resize(50, 50);

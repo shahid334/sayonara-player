@@ -136,8 +136,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 
 	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
-
-
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
 	change_skin(dark);

@@ -41,9 +41,8 @@ MyListView::MyListView(QWidget* parent) :
 }
 
 MyListView::~MyListView() {
-
+	qDebug() << "Delete list view";
 }
-
 void MyListView::mousePressEvent(QMouseEvent* event) {
 
 	QPoint pos_org = event->pos();

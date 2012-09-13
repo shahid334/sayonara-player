@@ -320,6 +320,9 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 
 	psl_save_playlist_to_storage();
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+
+	delete to_delete;
+	delete to_delete_extern;
 }
 
 

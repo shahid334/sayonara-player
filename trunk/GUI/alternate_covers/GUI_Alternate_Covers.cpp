@@ -56,7 +56,8 @@ GUI_Alternate_Covers::GUI_Alternate_Covers() {
 
 
 GUI_Alternate_Covers::~GUI_Alternate_Covers() {
-	_pixmaps.clear();
+
+
 }
 
 
@@ -103,14 +104,14 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 
 void GUI_Alternate_Covers::search_album_button_pressed(){
 	if(this->ui->le_search->text().size() < 3) return;
-	emit search_artist_image(this->ui->le_search->text());
+	emit sig_search_albums_images(this->ui->le_search->text());
 
 }
 
 void GUI_Alternate_Covers::search_artist_button_pressed(){
 
 	if(this->ui->le_search->text().size() < 3) return;
-	emit search_album_image(this->ui->le_search->text());
+	emit sig_search_artist_images(this->ui->le_search->text());
 
 }
 

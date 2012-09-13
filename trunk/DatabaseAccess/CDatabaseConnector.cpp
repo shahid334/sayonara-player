@@ -92,6 +92,7 @@ bool CDatabaseConnector::openDatabase () {
 
 CDatabaseConnector::~CDatabaseConnector() {
 
+	qDebug() << "close database... ";
     if (this -> m_database.isOpen()) {
         this -> m_database.close();
     }

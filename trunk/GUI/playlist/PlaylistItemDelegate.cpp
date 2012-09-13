@@ -67,7 +67,6 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
 }
 
 PlaylistItemDelegate::~PlaylistItemDelegate() {
-	_row_height = 31;
 }
 
 
