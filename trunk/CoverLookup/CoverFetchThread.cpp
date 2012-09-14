@@ -55,10 +55,16 @@ CoverFetchThread::~CoverFetchThread() {
 
 void CoverFetchThread::search_images_for_artist(const QString& artist_name, int num){
 	vector<QImage> images;
+
 	QString path = Helper::get_artist_image_path(artist_name);
+	if( num == 1 && QFile::exists(path)){
+		_images.push_back(QImage(path));
+		return;
+	}
+
 	QStringList image_adresses = call_and_parse_artist(artist_name, num, _cover_source);
 
-	if(download_covers(image_adresses, _num_covers_2_fetch, images)){
+	if(download_covers(image_adresses, _num_covers_2_fetch, images, true)){
 		for(uint c=0; c<images.size(); c++){
 			_images.push_back(images[c]);
 			if(c == 0){
@@ -157,13 +163,10 @@ void CoverFetchThread::search_images_for_artist_str(const QString artist_name, i
 
 void CoverFetchThread::search_images_for_searchstring(){
 
-
-
-
 	QString adress = Helper::calc_google_image_search_adress(_universal_searchstring, GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
-	//adress = QUrl::toPercentEncoding(adress);
 	adress.replace(" ", "%20");
-	QStringList lst = call_and_parse(adress, _num_covers_2_fetch);
+
+	QStringList lst = call_and_parse(adress, _num_covers_2_fetch + _num_covers_2_fetch / 2);
 
 	if(lst.size() > 0)
 		download_covers(lst, _num_covers_2_fetch, _images, true );
@@ -239,7 +242,7 @@ void CoverFetchThread::setup_fetch_artist_image(const QString& artist, int sourc
 	_artist_searchstring = artist;
 	_cover_source = source;
 	_cover_fetch_mode = COV_FETCH_MODE_ARTIST_STR;
-	_num_covers_2_fetch = 1;
+	_num_covers_2_fetch = n_covers;
 	_vec_albums.clear();
 	_images.clear();
 }
@@ -283,7 +286,4 @@ void CoverFetchThread::setup_fetch_by_searchstring(QString searchstring, int n_c
 	_num_covers_2_fetch = n_covers;
 	_cover_fetch_mode = COV_FETCH_MODE_SEARCHSTRING;
 	_images.clear();
-
-
-
 }

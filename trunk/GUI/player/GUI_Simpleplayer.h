@@ -29,6 +29,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
 
@@ -102,7 +103,7 @@ signals:
     void search(int pos_percent);
     void sig_volume_changed (int);
     void sig_want_cover(const MetaData &);
-    void sig_fetch_alternate_covers(const MetaData&);
+    void sig_fetch_alternate_covers(int);
     void sig_want_more_covers();
     void sig_fetch_all_covers();
     void playlistCreated(QStringList&);
@@ -136,7 +137,7 @@ private slots:
     void searchSliderMoved(int search_percent, bool by_app=false);
     void correct_btn_clicked(bool b=false);
 
-    void coverClicked(bool);
+    void coverClicked();
     void muteButtonPressed();
     void album_cover_pressed();
 
@@ -166,6 +167,8 @@ private slots:
     void sl_action_streamripper_toggled(bool);
     void sl_action_socket_connection_triggered(bool);
 
+    void sl_alternate_cover_available(QString);
+
 
 
     void about(bool b=false);
@@ -194,6 +197,8 @@ private:
     GUI_Stream*					ui_stream;
     GUI_LFMRadioWidget*			ui_lfm_radio;
     CoverLookup*				m_cov_lookup;
+
+    GUI_Alternate_Covers*		m_alternate_covers;
 
 
 

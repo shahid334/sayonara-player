@@ -43,12 +43,14 @@
 
 #include <curl/curl.h>
 
+#include <QString>
 #include <QStringList>
 #include <QImage>
 #include <QUrl>
 #include <QDebug>
 #include <QRegExp>
 #include <QDir>
+
 
 using namespace std;
 
@@ -97,9 +99,7 @@ QStringList calc_adresses_from_webpage(uint num, QString& qwebpage) {
 			search_start = loc_end;
 		}
 
-		else {
-			return adresses;
-		}
+		else return adresses;
 	}
 
 	return adresses;
@@ -181,20 +181,28 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 	// download
 	for (int i = adresses.size() - 1; i >= 0; i--) {
 
-		QString adress = adresses[i];
 		QImage img;
-		bool success = WebAccess::read_http_into_img(adress, img);
+		bool success = WebAccess::read_http_into_img(adresses[i], img);
+		qDebug() << adresses[i] << " sucess? " << success;
+		if (!success) continue;
 
-		if (success) {
+		if(save){
 
-			vec_images.push_back(img);
-			if(save)
-				img.save(Helper::getSayonaraPath() + QDir::separator() + "tmp" + QDir::separator() + "image_" + QString::number(adresses.size()-i) + ".jpg");
-			found = true;
+			QString target_filename = Helper::getSayonaraPath() +
+					QDir::separator() +
+					"tmp" +
+					QDir::separator() +
+					"image_" + QString::number(adresses.size()-i) + ".jpg";
 
-			if (vec_images.size() >= num_covers_to_fetch)
-				break;
+			img.save(target_filename);
 		}
+
+		vec_images.push_back(img);
+		found = true;
+
+		if (vec_images.size() >= num_covers_to_fetch)
+			break;
+
 	} // for all cover adresses
 
 	// no covers could be fetched

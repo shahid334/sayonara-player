@@ -117,7 +117,7 @@ int main(int argc, char *argv[]){
         GUI_Library_Info_Box	ui_library_info_box(player.centralWidget());
         GUI_Playlist 			ui_playlist(player.getParentOfPlaylist(), &ui_info_dialog);
         GUI_SocketSetup			ui_socket_setup(player.centralWidget());
-        GUI_Alternate_Covers	ui_alternate_covers;
+
 
 
         Socket					remote_socket;
@@ -166,6 +166,7 @@ int main(int argc, char *argv[]){
         CONNECT (&player, sig_correct_id3(const MetaData&), 	&ui_id3_editor,		change_meta_data(const MetaData&));
         CONNECT (&player, sig_show_stream_rec(bool),			&ui_stream_rec,		psl_show(bool));
         CONNECT (&player, sig_show_socket(),					&ui_socket_setup, 	show());
+
 
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&),		&player,		update_track(const MetaData&));
         CONNECT (&playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
@@ -287,9 +288,6 @@ int main(int argc, char *argv[]){
 
 			remote_socket.start();
 		}
-
-
-		//ui_alternate_covers.start("Pink Floyd", "Dark side of the moon");
 
 		playlist.ui_loaded();
 

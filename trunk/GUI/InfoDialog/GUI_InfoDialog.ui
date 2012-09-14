@@ -34,7 +34,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -114,7 +114,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLabel" name="lab_image">
+          <widget class="QPushButton" name="btn_image">
            <property name="minimumSize">
             <size>
              <width>220</width>
@@ -127,14 +127,17 @@
              <height>220</height>
             </size>
            </property>
-           <property name="sizeIncrement">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="iconSize">
             <size>
-             <width>0</width>
+             <width>220</width>
              <height>220</height>
             </size>
            </property>
-           <property name="text">
-            <string/>
+           <property name="flat">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

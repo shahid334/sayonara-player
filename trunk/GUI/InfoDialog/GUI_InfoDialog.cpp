@@ -23,6 +23,7 @@
  */
 
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
+#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "CoverLookup/CoverFetchThread.h"
 #include "LyricLookup/LyricLookup.h"
@@ -62,6 +63,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
 	_lyric_thread = new LyricLookupThread();
 	_lyric_server = 0;
+
 	QStringList server_list = _lyric_thread->getServers();
 	ui->lmb_server_button->setServers(server_list);
 	ui->lmb_server_button->setText(server_list[0]);
@@ -72,6 +74,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 	_lyrics_visible = true;
 
 	ui_tag_edit = tag_edit;
+	_alternate_covers = new GUI_Alternate_Covers(this, _class_name );
 
 	if(ui_tag_edit)
 		ui->tab_widget->addTab(ui_tag_edit, "Edit");
@@ -96,16 +99,17 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
 	connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
 	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
+
 	if(ui_tag_edit){
 		connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
 		connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
 	}
 
-	this->connect(	ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
-					this, 					SLOT(psl_lyrics_server_changed(int)));
+	connect(ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
+			this, 					SLOT(psl_lyrics_server_changed(int)));
 
-
-
+	connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
+	connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
 
 }
 
@@ -116,13 +120,11 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 
 
 void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
+
 	if(_class_name != caller_class) return;
 	if(!QFile::exists(filename)) return;
 
-	QSize sz = this->ui->lab_image->size();
-
-	QPixmap pix = QPixmap::fromImage(QImage(filename)).scaled(sz, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	this->ui->lab_image->setPixmap(pix);
+	this->ui->btn_image->setIcon(QIcon(filename));
 }
 
 
@@ -200,6 +202,7 @@ void GUI_InfoDialog::psl_album_info_available(const QString& target_class){
 }
 
 void GUI_InfoDialog::psl_artist_info_available(const QString& target_class){
+
 	if(target_class != _class_name) return;
 
 	QMap<QString, QString> map;
@@ -655,4 +658,34 @@ void GUI_InfoDialog::psl_id3_success(bool b){
 				"Error",
 				"ID3 tags could not be changed");
 	}
+}
+
+
+void GUI_InfoDialog::cover_clicked(){
+	switch(_diff_mode){
+
+			case INFO_MODE_SINGLE:
+				if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
+									_alternate_covers->start(_v_md[0].album_id, true);
+								}
+				else if(_mode == INFO_MODE_ARTISTS){
+					_alternate_covers->start(_v_md[0].artist_id, false);
+				}
+
+				break;
+
+			case INFO_MODE_MULTI:
+			default:
+				return;
+		}
+
+	this->setFocus();
+}
+
+void GUI_InfoDialog::alternate_covers_available(QString caller_class){
+
+	Q_UNUSED(caller_class);
+
+	prepare_cover();
+
 }

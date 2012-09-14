@@ -29,11 +29,13 @@
 #ifndef GUI_ALTERNATE_COVERS_H_
 #define GUI_ALTERNATE_COVERS_H_
 
-#include <ui_GUI_Alternate_Covers.h>
+#include "ui_GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
 #include "CoverLookup/CoverLookup.h"
+#include "HelperStructs/MetaData.h"
 
+#include <QDialog>
 #include <QWidget>
 #include <QPixmap>
 #include <QList>
@@ -45,21 +47,21 @@ using namespace std;
 
 
 
-class GUI_Alternate_Covers : public QWidget{
+class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
 
 	Q_OBJECT
 public:
-	GUI_Alternate_Covers();
+	GUI_Alternate_Covers(QWidget* parent, QString calling_class);
 	virtual ~GUI_Alternate_Covers();
 
 	signals:
 
 		void sig_search_images(const QString&);
+		void sig_covers_changed(QString);
 
 
 	public slots:
-		void new_cover_found(const QPixmap&);
-		void start(const QString&, const QString&);
+		void start(int, bool);
 
 	private slots:
 		void save_button_pressed();
@@ -69,22 +71,26 @@ public:
 		void covers_there(QString classname);
 		void tmp_folder_changed(const QString&);
 
-
-
-
 	private:
-		Ui::GUI_Alternate_Covers* ui;
+		Ui::AlternateCovers* ui;
+
+		int 				_cur_idx;
+		QString				_tmp_dir;
+		QString				_class_name;
+		QString				_calling_class;
+		Album				_album;
+		Artist				_artist;
+		QStringList			_filelist;
+		bool				_search_for_album;
+
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
-		CoverLookup*				 _cov_lookup;
+		CoverLookup*				_cov_lookup;
 		QFileSystemWatcher*			_watcher;
 
 
-		QList<QPixmap>	_pixmaps;
-		int 			_cur_idx;
-		QString			_class_name;
+		void update_model(int cur_selected);
 
-		void fill_covers();
 
 
 

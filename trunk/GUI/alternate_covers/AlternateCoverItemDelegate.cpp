@@ -66,18 +66,33 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 			painter->translate(2, 0);
 
 
-			QString filename = index.model()->data(index, Qt::WhatsThisRole).toString();
+			QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
 
-			QImage image(filename);
-			if(!image.isNull()){
-				QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(90,90), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-				if(!pixmap.isNull()){
+			bool is_selected = false;
+			if(data_lst.size() >= 2){
 
-					label.setPixmap(pixmap);
-					label.resize(100, 100);
+				QString filename = data_lst[0];
+				is_selected = (data_lst[1].toInt() == 1);
+
+				if(is_selected) label.setStyleSheet("background-color: black;");
+
+
+
+				QImage image(filename);
+				if(!image.isNull()){
+					QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(80,80), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+					if(!pixmap.isNull()){
+
+						label.setPixmap(pixmap);
+
+					}
 				}
 			}
-			label.setContentsMargins(5, 5, 5, 5);
+
+			if(!is_selected)
+				label.setStyleSheet("background-color: transparent;");
+			label.resize(100, 100);
+			label.setContentsMargins(10, 10, 10, 10);
 
 
 			label.render(painter, rect.topLeft() );

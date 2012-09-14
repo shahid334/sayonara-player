@@ -68,7 +68,7 @@ bool wa_call_url(const QString& url, QString& response){
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wa_get_answer);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2000);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2500);
 
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
@@ -81,7 +81,7 @@ bool wa_call_url(const QString& url, QString& response){
 	}
 
 	else {
-		qDebug() << "got no response from url";
+		qDebug() << "got no response from url " << url;
 		return false;
 	}
 }
@@ -102,11 +102,7 @@ bool WebAccess::read_http_into_img(QString url, QImage& img){
 	QString content;
 	if( !wa_call_url(url, content) ) return false;
 
-	bool good_image = false;
-
-	good_image = img.loadFromData((const uchar*) content.toLatin1().data(), content.size());
-	return good_image;
-
+	return img.loadFromData((const uchar*) content.toLatin1().data(), content.size());
 }
 
 

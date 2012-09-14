@@ -104,13 +104,15 @@ bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelInd
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	_pathlist.clear();
+	int z=0;
 	for(int i=0; i<rows; i++){
-		for(int j=0; j<columnCount(); j++)
-		_pathlist << "";
-
+		for(int j=0; j<columnCount(); j++, z++){
+			_pathlist << "";
+		}
 	}
-	 endInsertRows();
-	 return true;
+
+	endInsertRows();
+	return true;
 
 }
 bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelIndex &index){

@@ -22,6 +22,7 @@
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/player/GUI_TrayIcon.h"
+#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "ui_GUI_Simpleplayer.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -29,6 +30,7 @@
 #include "HelperStructs/globals.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Engine/Engine.h"
+
 
 #include <QList>
 #include <QDebug>
@@ -44,8 +46,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	this->ui->albumCover->setPixmap(
-			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 
 
 	m_playing = false;
@@ -71,6 +72,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	this->setGeometry(rect);
 
 	m_cov_lookup = new CoverLookup(m_class_name);
+	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
 
 	this->ui->action_min2tray->setChecked(m_min2tray);
 
@@ -158,6 +160,7 @@ void GUI_SimplePlayer::setupConnections(){
 				SLOT(sl_rec_button_toggled(bool)));
 	connect(this->ui->btn_correct, SIGNAL(clicked(bool)), this,
 			SLOT(correct_btn_clicked(bool)));
+	connect(this->ui->albumCover, SIGNAL(clicked()), this, SLOT(coverClicked()));
 
 	// file
 	connect(this->ui->action_OpenFile, SIGNAL(triggered(bool)), this,
@@ -232,6 +235,9 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this,				SIGNAL(sig_fetch_all_covers()),
 			this->m_cov_lookup, SLOT(search_all_covers()));
 
+	connect(this->m_alternate_covers, SIGNAL(sig_covers_changed(QString)),
+			this,				SLOT(sl_alternate_cover_available(QString)));
+
 }
 
 
@@ -302,8 +308,9 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 		emit sig_want_cover(md);
 	}
 
-	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
-	this->ui->albumCover->setPixmap(cover);
+
+	this->ui->albumCover->setIcon(QIcon(cover_path));
+
 	setCurrentPosition(0);
 	this->ui->btn_correct->setVisible(false);
 	this->ui->albumCover->repaint();
@@ -364,8 +371,7 @@ void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
 		cover_path = Helper::getIconPath() + "append.png";
 	}
 
-	QPixmap cover = QPixmap::fromImage(QImage(cover_path));
-	this->ui->albumCover->setPixmap(cover);
+	this->ui->albumCover->setIcon(QIcon(cover_path));
 	this->ui->albumCover->repaint();
 }
 
@@ -558,8 +564,9 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	this->ui->songProgress->setValue(0);
 	this->ui->curTime->setText("00:00");
 	this->ui->maxTime->setText("00:00");
-	this->ui->albumCover->setPixmap(
-			QPixmap::fromImage(QImage(Helper::getIconPath() + "append.png")));
+
+
+	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 
 	this->ui->albumCover->setFocus();
 	this -> m_trayIcon->playStateChanged (this->m_playing);
@@ -695,9 +702,21 @@ void GUI_SimplePlayer::muteButtonPressed() {
 }
 
 
-void GUI_SimplePlayer::coverClicked(bool) {
+void GUI_SimplePlayer::coverClicked() {
 
-	//emit sig_want_more_covers();
+	if(m_metadata.album_id >= 0)
+		m_alternate_covers->start(m_metadata.album_id, true);
+
+	this->setFocus();
+}
+
+void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class){
+
+	Q_UNUSED(target_class);
+
+	QString coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	this->ui->albumCover->setIcon(QIcon(coverpath));
+
 }
 
 

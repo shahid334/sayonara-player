@@ -86,6 +86,7 @@ private:
 	QString 		_album_searchstring;
 	QString 		_artist_searchstring;
 	QString			_universal_searchstring;
+
 	int 			_cover_fetch_mode;
 
 

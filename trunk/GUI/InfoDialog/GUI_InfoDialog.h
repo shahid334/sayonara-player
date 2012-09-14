@@ -31,6 +31,7 @@
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
+#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 
 #include <ui_GUI_InfoDialog.h>
 #include <QWidget>
@@ -65,6 +66,8 @@ private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
 	void psl_id3_success(bool);
+	void alternate_covers_available(QString);
+	void cover_clicked();
 
 
 public:
@@ -81,6 +84,7 @@ private:
 	Ui::InfoDialog* 		ui;
 	GUI_TagEdit*			ui_tag_edit;
 
+	GUI_Alternate_Covers*	_alternate_covers;
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
 	LyricLookupThread*		_lyric_thread;
