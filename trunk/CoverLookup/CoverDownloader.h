@@ -183,7 +183,7 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 
 		QImage img;
 		bool success = WebAccess::read_http_into_img(adresses[i], img);
-		qDebug() << adresses[i] << " sucess? " << success;
+
 		if (!success) continue;
 
 		if(save){
