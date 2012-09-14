@@ -8,13 +8,14 @@
   * Equalizer
   * ID3 Tagger
   * Online Streams (e.g. Web-Radio)
-  * Gstreamer 
   * optional Phonon plugin
 
-= Upcoming (already available on SVN) =
-
+== New in Sayonara 0.3 ==
   * Stream-Ripper
-
+  * Alternative cover fetcher
+  * Savable Playlists
+  * Socket remote control
+  
 = Todo =
   
   * IMPORTANT: Create cross-compiling environment
