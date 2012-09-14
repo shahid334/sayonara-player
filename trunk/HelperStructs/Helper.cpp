@@ -185,10 +185,17 @@ QString Helper::calc_lfm_album_adress(QString artist, QString album){
 
 
 QString Helper::calc_google_image_search_adress(QString searchstring, QString size, QString filetype){
-	QString url = QString("http://www.google.de/images?q=");
+
+	searchstring.replace(" ", "%20");
+	searchstring.replace("/", "%2F");
+	searchstring.replace("&", "%26");
+	searchstring.replace("$", "%24");
+
+	QString url = QString("https://www.google.de/search?q=");
 	url += searchstring;
 	url += QString("&imgsz=") + size;
-	url += QString("&as_filetype=") + filetype;
+	url += QString("&tbs=ift:") + filetype + ",isz:m";
+	url += QString("&tbm=isch");
 	return url;
 }
 

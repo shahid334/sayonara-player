@@ -60,7 +60,7 @@ class CoverLookup : public QObject{
 		void sig_cover_found(QString, QString);					/* emit if single cover is found (player) */
 		// caller class, pixmap
 		void sig_new_cover_found(QString, const QPixmap&);		/* emit if a new cover is found (alternate covers) */
-		void sig_multi_covers_found(QString);
+		void sig_multi_covers_found(QString, int);
 
 	public slots:
 		void search_artist_image(const QString& artist); /* artist image */

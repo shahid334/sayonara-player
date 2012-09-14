@@ -502,7 +502,7 @@
      </widget>
     </item>
     <item row="7" column="1" colspan="2">
-     <widget class="QSlider" name="songProgress">
+     <widget class="SearchSlider" name="songProgress">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -511,8 +511,8 @@
       </property>
       <property name="minimumSize">
        <size>
-        <width>0</width>
-        <height>0</height>
+        <width>100</width>
+        <height>10</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -580,7 +580,7 @@
      </widget>
     </item>
     <item row="1" column="3" rowspan="6">
-     <widget class="QSlider" name="volumeSlider">
+     <widget class="SearchSlider" name="volumeSlider">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -1116,6 +1116,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SearchSlider</class>
+   <extends>QSlider</extends>
+   <header location="global">GUI/player/SearchSlider.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

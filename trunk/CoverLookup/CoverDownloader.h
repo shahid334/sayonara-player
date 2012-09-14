@@ -63,6 +63,7 @@ QStringList calc_adresses_from_webpage(uint num, QString& qwebpage) {
 		return adresses;
 	}
 
+
 	int search_start = 0;
 
 	while (true) {
@@ -90,7 +91,9 @@ QStringList calc_adresses_from_webpage(uint num, QString& qwebpage) {
 			bool adress_found = (tmp_str.startsWith("http"));
 			if (adress_found) {
 				QString adress = tmp_str;
-				if (!adresses.contains(adress)) {
+				QUrl url(adress);
+
+				if (!adresses.contains(adress) && url.isValid()) {
 					adresses.push_back(adress);
 					if((uint) adresses.size() >= num) break;
 				}
@@ -167,15 +170,15 @@ QStringList call_and_parse_album(QString artist, QString album,	int num_adresses
 // downloads num_covers_to_fetch covers out from adresses. If size of adresses is smaller, then the
 // max number of covers will be fetched
 // result images are stored in vec_images
-bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images, bool save=false) {
+int download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images, bool save=false) {
 
 	vec_images.clear();
 
-	bool found = false;
+	int found = 0;
 
 	// if no adresses, try to fetch some
 	if (adresses.size() == 0) {
-		return false;
+		return 0;
 	}
 
 	// download
@@ -198,9 +201,9 @@ bool download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QIma
 		}
 
 		vec_images.push_back(img);
-		found = true;
+		found++;
 
-		if (vec_images.size() >= num_covers_to_fetch)
+		if (found >= num_covers_to_fetch)
 			break;
 
 	} // for all cover adresses

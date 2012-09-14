@@ -135,6 +135,7 @@ private slots:
     void searchSliderPressed();
     void searchSliderReleased();
     void searchSliderMoved(int search_percent, bool by_app=false);
+    void searchSliderClicked(int value, bool by_app=false);
     void correct_btn_clicked(bool b=false);
 
     void coverClicked();

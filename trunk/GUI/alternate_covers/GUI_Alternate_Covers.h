@@ -68,7 +68,7 @@ public:
 		void cancel_button_pressed();
 		void search_button_pressed();
 		void cover_pressed(const QModelIndex& idx);
-		void covers_there(QString classname);
+		void covers_there(QString classname, int n_covers);
 		void tmp_folder_changed(const QString&);
 
 	private:

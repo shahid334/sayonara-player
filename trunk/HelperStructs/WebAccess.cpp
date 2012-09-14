@@ -28,12 +28,35 @@
 #include <string>
 #include <stdlib.h>
 
+#define DOWNLOAD_INCOMPLETE 0
+#define DOWNLOAD_COMPLETE 1
+
+int download_status;
+
 static QString webpage;
 static int webpage_bytes;;
 
 static void wa_free_webpage();
 static size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
 static bool wa_call_url(const QString& url, QString& response);
+static int wa_progress(void *p, double dltotal, double dlnow, double ultotal, double ulnow);
+
+
+static int wa_progress(void *p,
+                    double dltotal, double dlnow,
+                    double ultotal, double ulnow)
+{
+
+  (void) p;
+
+ // qDebug() << dlnow << "/" << dltotal;
+
+  if(dlnow >= dltotal) download_status = DOWNLOAD_COMPLETE;
+  else download_status = DOWNLOAD_INCOMPLETE;
+
+  return 0;
+}
+
 
 static
 void wa_free_webpage(){
@@ -61,6 +84,7 @@ bool wa_call_url(const QString& url, QString& response){
 
 	wa_free_webpage();
 
+	download_status = DOWNLOAD_INCOMPLETE;
 	CURL *curl = curl_easy_init();
 
 	if(curl) {
@@ -68,7 +92,9 @@ bool wa_call_url(const QString& url, QString& response){
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wa_get_answer);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2500);
+		//curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2500);
+	    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, wa_progress);
+	    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
@@ -76,8 +102,11 @@ bool wa_call_url(const QString& url, QString& response){
 
 
 	if(webpage_bytes > 0){
+
 		response = webpage;
-		return true;
+		if(download_status == DOWNLOAD_COMPLETE)
+			return true;
+		else return false;
 	}
 
 	else {

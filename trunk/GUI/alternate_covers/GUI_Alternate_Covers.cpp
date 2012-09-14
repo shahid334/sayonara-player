@@ -76,7 +76,7 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 	connect(this->ui->btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
 	connect(this->ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
 	connect(this->ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
-	connect(this->_cov_lookup, SIGNAL(sig_multi_covers_found(QString)), this, SLOT(covers_there(QString)));
+	connect(this->_cov_lookup, SIGNAL(sig_multi_covers_found(QString, int)), this, SLOT(covers_there(QString, int)));
 	connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
 	connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
 }
@@ -90,6 +90,7 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 
 void GUI_Alternate_Covers::start(int album_artist_id, bool search_for_album){
 
+	ui->pb_progress->setTextVisible(false);
 	_search_for_album = search_for_album;
 
 	if(search_for_album){
@@ -178,7 +179,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 
 	if(success) {
-		QMessageBox::information(this, "Information", "Cover updated" );
+
 		emit sig_covers_changed(_calling_class);
 
 		_filelist.clear();
@@ -187,14 +188,12 @@ void GUI_Alternate_Covers::save_button_pressed(){
 	}
 
 	else QMessageBox::warning(this, "Information", "Some error appeared when updating cover" );
-
-
-
-
 }
+
 
 void GUI_Alternate_Covers::cancel_button_pressed(){
 
+	_cov_lookup->terminate_thread();
 	_filelist.clear();
 	update_model(-1);
 	this->close();
@@ -203,8 +202,16 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 
 void GUI_Alternate_Covers::search_button_pressed(){
 
+	if(ui->btn_search->text().compare("Stop") == 0){
+		_cov_lookup->terminate_thread();
+		ui->btn_search->setText("Search");
+		return;
+	}
+
+	ui->pb_progress->setValue(0);
+	ui->pb_progress->setTextVisible(true);
+
 	QString searchstring = this->ui->le_search->text();
-	if(searchstring.size() < 3) return;
 
 	QStringList filters;
 	filters << "*.jpg";
@@ -222,6 +229,7 @@ void GUI_Alternate_Covers::search_button_pressed(){
 	}
 
 	_cov_lookup->search_images_by_searchstring(searchstring, 10, _search_for_album);
+	ui->btn_search->setText("Stop");
 
 }
 
@@ -261,7 +269,7 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
 }
 
 
-void GUI_Alternate_Covers::covers_there(QString classname){
+void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 
 	if(classname != _class_name) return;
 
@@ -280,11 +288,13 @@ void GUI_Alternate_Covers::covers_there(QString classname){
 
 	entrylist = dir.entryList();
 
-	foreach (QString f, entrylist) {
+	foreach (QString f, entrylist)
 		_filelist << dir.absoluteFilePath(f);
-	}
 
-	update_model( -1);
+	update_model(-1);
+
+	ui->pb_progress->setVisible(false);
+	ui->btn_search->setText("Search");
 }
 
 
@@ -309,6 +319,14 @@ void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
 
 
 	update_model(-1);
+
+	ui->pb_progress->setTextVisible(false);
+	ui->pb_progress->setVisible(true);
+	ui->pb_progress->setValue(_filelist.size() * 10);
+
+	if(ui->pb_progress->value() == 100)
+		ui->pb_progress->setVisible(false);
+
 }
 
 

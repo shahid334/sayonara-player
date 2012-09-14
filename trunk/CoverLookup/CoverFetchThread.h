@@ -63,6 +63,7 @@ public:
 	void 	get_images(vector<QImage>&);
 	bool 	get_certain_image(int idx, QImage& );
 	int 	get_num_images();
+	int		get_found_images();
 
 	int 	get_cover_source();
 	void 	reset();
@@ -88,6 +89,7 @@ private:
 	QString			_universal_searchstring;
 
 	int 			_cover_fetch_mode;
+	int				_n_found_images;
 
 
 	void search_images_for_albums();

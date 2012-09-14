@@ -44,6 +44,7 @@ SET(HEADERS
 	Engine/SoundPluginLoader.h
 	GUI/player/GUI_Simpleplayer.h
 	GUI/player/GUI_TrayIcon.h 
+	GUI/player/SearchSlider.h
     GUI/playlist/GUI_Playlist.h
     GUI/playlist/PlaylistItemModel.h
     GUI/playlist/PlaylistItemDelegate.h
@@ -89,6 +90,7 @@ SET(SOURCES
 	Engine/SoundPluginLoader.cpp
 	GUI/player/GUI_Simpleplayer.cpp
 	GUI/player/GUI_TrayIcon.cpp
+	GUI/player/SearchSlider.cpp
     GUI/playlist/GUI_Playlist.cpp
     GUI/playlist/PlaylistItemModel.cpp
     GUI/playlist/PlaylistItemDelegate.cpp

@@ -217,6 +217,8 @@ void GUI_SimplePlayer::setupConnections(){
 
     connect(this->ui->volumeSlider, SIGNAL(valueChanged(int)), this,
 			SLOT(volumeChangedSlider(int)));
+    connect(this->ui->songProgress, SIGNAL(searchSliderClicked(int)), this,
+    		SLOT(searchSliderClicked(int)));
 	connect(this->ui->songProgress, SIGNAL(sliderPressed()), this,
 			SLOT(searchSliderPressed()));
 	connect(this->ui->songProgress, SIGNAL(sliderMoved(int)), this,
@@ -244,7 +246,7 @@ void GUI_SimplePlayer::setupConnections(){
 // new track
 void GUI_SimplePlayer::update_track(const MetaData & md) {
 
-
+	this->ui->songProgress->setValue(0);
 	this->m_metadata = md;
 
 	// sometimes ignore the date
@@ -620,6 +622,12 @@ void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app) {
 		emit search(search_percent);
 }
 
+void GUI_SimplePlayer::searchSliderClicked(int search_percent, bool by_app){
+
+	if (!by_app)
+		emit search(search_percent);
+}
+
 void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
 	setupVolButton(volume_percent);
 	emit sig_volume_changed(volume_percent);
@@ -919,6 +927,7 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
    	connect(this->m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
     m_trayIcon->show();
+
 }
 
 
