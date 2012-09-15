@@ -48,7 +48,7 @@ static GST_Engine*	obj_ref;
 
 static gboolean show_position(GstElement* pipeline){
 
-	qint64 pos;
+	gint64 pos;
 
 	GstFormat fmt = GST_FORMAT_TIME;
 	gst_element_query_position(pipeline, &fmt, &pos);
