@@ -34,6 +34,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/CustomMimeData.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
@@ -144,7 +145,10 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 // DTOR
 GUI_Playlist::~GUI_Playlist() {
+	delete _pli_delegate;
+	delete _pli_model;
 
+	delete ui;
 }
 
 
@@ -293,31 +297,28 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
-	QList<QVariant> list2send;
-	MetaData md;
-	vector<MetaData> v_md;
-
 	QModelIndexList idx_list = this->ui->listView->selectionModel()->selectedRows();
+	vector<MetaData> v_md;
 
 	_cur_selected_rows.clear();
 
 	foreach(QModelIndex idx, idx_list){
 
+		MetaData md;
 		QStringList metadata = this->_pli_model->data(idx, Qt::WhatsThisRole).toStringList();
 		if(metadata.size() == 0) continue;
 
-		_cur_selected_rows.push_back(idx.row());
-
 		md.fromStringList(metadata);
-		list2send.push_back(metadata);
 		v_md.push_back(md);
+
+		_cur_selected_rows.push_back(idx.row());
 	}
 
-	_info_dialog->setMetaData(v_md);
+	if(_info_dialog)
+		_info_dialog->setMetaData(v_md);
 
-	QMimeData* mime = new QMimeData();
-	mime->setProperty("data_type", DROP_TYPE_TRACKS);
-	mime->setProperty("data", list2send);
+	CustomMimeData* mime = new CustomMimeData();
+	mime->setMetaData(v_md);
 
 	this->ui->listView->set_mime_data(mime);
 
@@ -416,13 +417,13 @@ void GUI_Playlist::playlist_mode_changed_slot(){
 
 
 void GUI_Playlist::psl_edit_tracks(){
-
+	if(!_info_dialog) return;
 	_info_dialog->setMode(INFO_MODE_TRACKS);
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Playlist::psl_info_tracks(){
-
+	if(!_info_dialog) return;
 	_info_dialog->setMode(INFO_MODE_TRACKS);
 	_info_dialog->show(TAB_INFO);
 }
@@ -575,80 +576,59 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		remove_cur_selected_rows();
 	}
 
-	///TODO: UGLY UGLY UGLY
-	QString text = event->mimeData()->text();
-	const QMimeData* d = event->mimeData();
+	const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
+	vector<MetaData> v_metadata;
 
-	if( text.size() == 0 && d->hasUrls() ){
+
+	// extern
+	if( d->hasUrls() ){
 
 		foreach(QUrl url, d->urls()){
-			text += (url.toString());
-			text += ("\n");
-		}
-	}
 
-	if(text.startsWith("file://")){
+				QString path;
+				QString url_str = url.toString();
 
-		QStringList pathlist = text.split('\n');
-		QStringList file_paths;
+				if(url_str.startsWith("file://")){
+					path =  url_str.right(url_str.length() - 7).trimmed();
+					path = path.replace("%20", " ");
 
-		if(pathlist.size() > 1) pathlist.removeLast();
+					if(QFile::exists(path)){
+						if(Helper::is_soundfile(path)){
+							MetaData md;
+							if( ID3::getMetaDataOfFile(path, md) ){
+								v_metadata.push_back( md );
+							}
+						}
 
-		for(int i=0; i<pathlist.size(); i++){
-			QString path =  pathlist.at(i).right(pathlist.at(i).length() - 7).trimmed();
-			path = path.replace("%20", " ");
-
-			if(QFile::exists(path)){
-				if(Helper::is_soundfile(path))
-					file_paths.push_back(path);
-
-				else if(path.at(path.length()-4) != '.'){ // directory
-					emit directory_dropped(path, row);
-					return;
+						else if(path.at(path.length()-4) != '.'){ // directory
+							emit directory_dropped(path, row);
+							return;
+						}
+					}
 				}
-			}
-		}
 
+		} // end foreach
 
-		if(file_paths.size() > 0){
-			vector<MetaData> v_metadata;
-			for(int i=0; i<file_paths.size(); i++){
-				v_metadata.push_back( ID3::getMetaDataOfFile(file_paths[i]) );
-			}
-
-			if(_radio_active == RADIO_OFF)
-				emit dropped_tracks(v_metadata, row);
-			else
-				emit dropped_tracks(v_metadata, 0);
-
-			return;
-		}
-
-		return;
-	} // extern drop end
-
-
-	int event_type = event->mimeData()->property("data_type").toInt();
-	if(row == -1) row = _pli_model->rowCount();
-
-	QList<QVariant> list = event->mimeData()->property("data").toList();
-	if(row < _cur_playing_row) _cur_playing_row += list.size();
-
-	if(event_type == DROP_TYPE_TRACKS){
-		vector<MetaData> v_md4Playlist;
-		for(int i=0; i<list.size(); i++){
-
-			MetaData md;
-			QStringList md_stringlist = list.at(i).toStringList();
-
-			md.fromStringList(md_stringlist);
-			v_md4Playlist.push_back(md);
-		}
+		if(v_metadata.size() == 0) return;
 
 		if(_radio_active == RADIO_OFF)
-			emit dropped_tracks(v_md4Playlist, row);
+			emit dropped_tracks(v_metadata, row);
 		else
-			emit dropped_tracks(v_md4Playlist, 0);
+			emit dropped_tracks(v_metadata, 0);
+
+		return;
+	}
+
+	else if(d->getMetaData(v_metadata) > 0){
+
+		if(row == -1) row = _pli_model->rowCount();
+		if(row < _cur_playing_row) _cur_playing_row += v_metadata.size();
+
+		if(_radio_active == RADIO_OFF)
+			emit dropped_tracks(v_metadata, row);
+		else
+			emit dropped_tracks(v_metadata, 0);
+
 	}
 }
 

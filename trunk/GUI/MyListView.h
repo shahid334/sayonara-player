@@ -29,6 +29,8 @@
 #ifndef MYLISTVIEW_H_
 #define MYLISTVIEW_H_
 
+#include "HelperStructs/CustomMimeData.h"
+
 #include <QListView>
 #include <QObject>
 #include <QWidget>
@@ -36,30 +38,33 @@
 #include <QPoint>
 #include <QDrag>
 
+
 class MyListView :public QListView{
 
-Q_OBJECT
+	Q_OBJECT
 
-signals:
-	void context_menu_emitted(const QPoint&);
+	signals:
+		void context_menu_emitted(const QPoint&);
+
 
 	public:
 		MyListView(QWidget* parent=0);
 		virtual ~MyListView();
 
+		void set_mime_data(CustomMimeData* data);
 
-	void set_mime_data(QMimeData* data);
 
 	protected:
 		void mousePressEvent(QMouseEvent* event);
 		void mouseReleaseEvent(QMouseEvent* event);
 		void mouseMoveEvent(QMouseEvent* event);
 
+
 	private:
-		bool	_drag;
-		QPoint	_drag_pos;
-		QWidget* _parent;
-		QDrag*	_qDrag;
+		bool		_drag;
+		QPoint		_drag_pos;
+		QWidget* 	_parent;
+		QDrag*		_qDrag;
 
 };
 

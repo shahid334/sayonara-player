@@ -72,7 +72,7 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 
 GUI_Equalizer::~GUI_Equalizer() {
 
-	// TODO Auto-generated destructor stub
+	delete _ui;
 }
 
 

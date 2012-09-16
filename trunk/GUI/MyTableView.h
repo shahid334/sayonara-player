@@ -34,48 +34,37 @@
 #include <QWidget>
 #include <QEvent>
 #include <QPoint>
-#include <QDrag>
-#include <QPixmap>
 
-#define ID_TABLE_VIEW_ARTISTS 0
-#define ID_TABLE_VIEW_ALBUMS 1
-#define ID_TABLE_VIEW_TRACKS 2
+#include "HelperStructs/CustomMimeData.h"
 
 
 class MyTableView : public QTableView{
 
 	Q_OBJECT
 
-signals:
-	void context_menu_emitted(const QPoint&);
-
-	void sig_middle_button_clicked(const QPoint&);
-
-public:
-	MyTableView(QWidget* parent=0);
-	virtual ~MyTableView();
-
-	void set_mime_data(QMimeData* data, QPixmap* pixmap =0);
-
-protected:
-	void mousePressEvent(QMouseEvent* event);
-	void mouseReleaseEvent(QMouseEvent* event);
-	void mouseMoveEvent(QMouseEvent* event);
-
-private:
-	bool	_drag;
-	QPoint	_drag_pos;
-	QWidget* _parent;
-
-	int		_id;
+	signals:
+		void context_menu_emitted(const QPoint&);
+		void sig_middle_button_clicked(const QPoint&);
 
 
+	public:
+		MyTableView(QWidget* parent=0);
+		virtual ~MyTableView();
 
-public:
-	QDrag*	qDrag;
+		void set_mime_data(CustomMimeData* data);
 
-	void set_id(int id);
 
+	protected:
+		void mousePressEvent(QMouseEvent* event);
+		void mouseReleaseEvent(QMouseEvent* event);
+		void mouseMoveEvent(QMouseEvent* event);
+
+
+	private:
+		QWidget* 	_parent;
+		bool		_drag;
+		QPoint		_drag_pos;
+		QDrag*		_qDrag;
 };
 
 #endif /* MYLISTVIEW_H_ */

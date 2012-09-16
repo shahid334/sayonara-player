@@ -67,7 +67,7 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
 
 
 GUI_TagEdit::~GUI_TagEdit() {
-	// TODO Auto-generated destructor stub
+	delete ui;
 }
 
 

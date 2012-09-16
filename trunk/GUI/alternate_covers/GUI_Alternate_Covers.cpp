@@ -46,7 +46,6 @@
 
 GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) : QDialog(parent){
 
-
 	this->ui = new Ui::AlternateCovers();
 	this->ui->setupUi(this);
 
@@ -83,8 +82,9 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 
 
 GUI_Alternate_Covers::~GUI_Alternate_Covers() {
-
-
+	delete _model;
+	delete _delegate;
+	delete ui;
 }
 
 

@@ -215,12 +215,11 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
     // parse pure sound files
     // throw those files away, that were already loaded by a m3u, pls or different playlist
     for(uint i=0; i<files2fill; i++){
-
+    	MetaData md;
     	// only pure sound files are allowed
     	if(!Helper::is_soundfile(pathlist[i])) continue;
+		if(!ID3::getMetaDataOfFile(pathlist[i], md)) continue;
 
-
-		MetaData md = ID3::getMetaDataOfFile(pathlist[i]);
 		bool already_found_in_pl = false;
 
 		// look in playlist files
@@ -343,7 +342,8 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
 	reader.getFilesInsiderDirRecursive(QDir(dir), fileList, num_files);
 
     foreach(QString filepath, fileList){
-    	MetaData md = ID3::getMetaDataOfFile(filepath);
+    	MetaData md;
+    	if(!ID3::getMetaDataOfFile(filepath, md)) continue;
 
     	if( _db->getTrackByPath(filepath) <= 0 ){
 

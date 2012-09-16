@@ -25,24 +25,28 @@
  *  Created on: Jun 26, 2011
  *      Author: luke
  */
-
+#include "HelperStructs/CustomMimeData.h"
 #include "GUI/MyListView.h"
+
 #include <QWidget>
 #include <QListView>
 #include <QMouseEvent>
 #include <QDebug>
-#include <QDrag>
 
-MyListView::MyListView(QWidget* parent) :
-		QListView(parent) {
+
+MyListView::MyListView(QWidget* parent) : QListView(parent) {
+
 	_parent = parent;
-	_qDrag = new QDrag(this);
+	_qDrag = 0;
 
 }
 
 MyListView::~MyListView() {
-	qDebug() << "Delete list view";
+	if(_qDrag) delete _qDrag;
+	_qDrag = 0;
 }
+
+
 void MyListView::mousePressEvent(QMouseEvent* event) {
 
 	QPoint pos_org = event->pos();
@@ -78,55 +82,40 @@ void MyListView::mousePressEvent(QMouseEvent* event) {
 	}
 }
 
+
 void MyListView::mouseMoveEvent(QMouseEvent* event) {
 
 	QPoint pos = event->pos();
+	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
-	if (_qDrag && _drag
-			&& abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y()) > 20) {
-		try {
-			_qDrag->exec(Qt::ActionMask);
-		}
-
-		catch (...) {
-			qDebug() << "Cannot drag";
-		}
-
+	if (_drag && _qDrag && distance > 20) {
+		_qDrag->exec(Qt::ActionMask);
 	}
 }
+
 
 void MyListView::mouseReleaseEvent(QMouseEvent* event) {
 
 	switch (event->button()) {
-	case Qt::LeftButton:
 
-		QListView::mouseReleaseEvent(event);
-		event->accept();
+		case Qt::LeftButton:
 
-		_drag = false;
+			QListView::mouseReleaseEvent(event);
+			event->accept();
 
-		break;
-	case Qt::RightButton:
+			_drag = false;
+			break;
 
-		break;
-
-	default:
-		break;
+		default: break;
 	}
 }
 
-void MyListView::set_mime_data(QMimeData* data) {
-	try {
-		_qDrag = new QDrag(this);
-		_qDrag->setMimeData(data);
+void MyListView::set_mime_data(CustomMimeData* data) {
 
-		if (data)
-			_drag = true;
-		else
-			_drag = false;
-	}
+	_qDrag = new QDrag(this);
+	_qDrag->setMimeData(data);
 
-	catch (QString& e) {
-		qDebug() << Q_FUNC_INFO << " Mime Data Exception";
-	}
+	if (data) _drag = true;
+	else _drag = false;
+
 }

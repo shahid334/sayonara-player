@@ -125,7 +125,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 		vector<MetaData> v_md;
 		foreach(QString filename, files){
 			MetaData md;
-			md = ID3::getMetaDataOfFile(filename);
+			if(!ID3::getMetaDataOfFile(filename, md)) continue;
 
 			if(! _db->getTrackByPath(md.filepath) < 0)
 				v_md.push_back(md);
@@ -206,8 +206,9 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 				}
 				else m_import_dialog->progress_changed(percent);
 				if(Helper::is_soundfile(new_filename)){
-					MetaData md = ID3::getMetaDataOfFile(new_filename);
-					v_metadata.push_back( md );
+					MetaData md;
+					if( ID3::getMetaDataOfFile(new_filename, md))
+						v_metadata.push_back( md );
 				}
 			}
 		}

@@ -65,7 +65,9 @@ int parse_m3u(QString file_content, vector<MetaData>& v_md, QString abs_path){
 
 		MetaData md;
 		if( !line.startsWith("http")){
-			md = ID3::getMetaDataOfFile(line);
+			if( ID3::getMetaDataOfFile(line, md) ){
+				v_md.push_back(md);
+			}
 		}
 
 		else {
@@ -74,7 +76,7 @@ int parse_m3u(QString file_content, vector<MetaData>& v_md, QString abs_path){
 			md.album = "";
 		}
 
-		v_md.push_back(md);
+
 	}
 
 	qDebug() << "extracted " << v_md.size() << " tracks";

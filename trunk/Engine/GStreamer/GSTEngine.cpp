@@ -481,8 +481,11 @@ void GST_Engine::jump(int where, bool percent){
 
 
 void GST_Engine::changeTrack(const QString& filepath){
-
-	MetaData md = ID3::getMetaDataOfFile(filepath);
+	MetaData md;
+	if(!ID3::getMetaDataOfFile(filepath, md)){
+		stop();
+		return;
+	}
 	changeTrack(md);
 }
 

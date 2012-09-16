@@ -43,12 +43,14 @@
 #include "GUI/library/LibraryItemModelArtists.h"
 #include "GUI/library/GUILibraryInfoBox.h"
 
+
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/MyTableView.h"
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/CustomMimeData.h"
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -187,6 +189,11 @@ private:
 	GUI_Library_Info_Box* _lib_info_dialog;
 
 	vector<MetaData> _v_md_tmp;
+
+	CustomMimeData* _mime_data_album;
+	CustomMimeData* _mime_data_artist;
+	CustomMimeData* _mime_data;
+
 
 	int show_delete_dialog(int n_tracks);
 	void refresh();

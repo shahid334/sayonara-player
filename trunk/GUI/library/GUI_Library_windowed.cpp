@@ -42,12 +42,14 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/Filter.h"
+#include "HelperStructs/CustomMimeData.h"
 
 
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "StreamPlugins/LastFM/LastFM.h"
+
 
 #include "ui_GUI_Library_windowed.h"
 
@@ -59,6 +61,7 @@
 #include <QPalette>
 #include <QBrush>
 #include <QScrollBar>
+
 
 #include <vector>
 
@@ -79,10 +82,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_info_dialog = dialog;
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-	this->ui->lv_artist->set_id(ID_TABLE_VIEW_ARTISTS);
-	this->ui->lv_album->set_id(ID_TABLE_VIEW_ALBUMS);
-	this->ui->tb_title->set_id(ID_TABLE_VIEW_TRACKS);
-
+	_mime_data = new CustomMimeData();
 
 	this->_album_model = new LibraryItemModelAlbums();
 	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
@@ -143,7 +143,14 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 }
 
 GUI_Library_windowed::~GUI_Library_windowed() {
-
+	delete _album_model;
+	delete _album_delegate;
+	delete _artist_model;
+	delete _artist_delegate;
+	delete _track_model;
+	delete _track_delegate;
+	delete _mime_data;
+	delete _lib_info_dialog;
 }
 
 void GUI_Library_windowed::init_menues(){
@@ -312,29 +319,31 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 
-	_info_dialog->setMetaData(v_metadata);
+	if(_info_dialog)
+		_info_dialog->setMetaData(v_metadata);
 
 	this->_track_model->removeRows(0, this->_track_model->rowCount());
 	this->_track_model->insertRows(0, v_metadata.size());
 
-	QList<QVariant> mime_list;
-
+	vector<MetaData> v_md;
 	for(uint i=0; i<v_metadata.size(); i++){
 		MetaData md = v_metadata.at(i);
-		QModelIndex idx = _track_model->index(i, 0);
 		QStringList data = md.toStringList();
 
+		QModelIndex idx = _track_model->index(i, 0);
+
+		v_md.push_back(md);
 		this->_track_model->setData(idx, data, Qt::EditRole);
-		mime_list.push_back(data);
+
 	}
+	_mime_data_artist = new CustomMimeData();
+	_mime_data_album = new CustomMimeData();
 
-	QMimeData* mime = new QMimeData();
+	_mime_data_artist->setMetaData(v_md);
+	_mime_data_album->setMetaData(v_md);
 
-	mime->setProperty("data_type", DROP_TYPE_TRACKS);
-	mime->setProperty("data", (QVariant) mime_list);
-
-	this->ui->lv_artist->set_mime_data(mime);
-	this->ui->lv_album->set_mime_data(mime);
+	this->ui->lv_artist->set_mime_data(_mime_data_artist);
+	this->ui->lv_album->set_mime_data(_mime_data_album);
 }
 
 
@@ -405,19 +414,12 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
 void GUI_Library_windowed::track_info_available(const vector<MetaData>& v_md){
 
-	QMimeData* mime = new QMimeData();
-	QList<QVariant> mime_list;
+	_mime_data = new CustomMimeData();
+	_mime_data->setMetaData(v_md);
 
-	for(uint i=0; i<v_md.size(); i++){
-		MetaData md = v_md[i];
-		mime_list.push_back(md.toStringList());
-	}
-
-	mime->setProperty("data_type", DROP_TYPE_TRACKS);
-	mime->setProperty("data", (QVariant) mime_list);
-
-	this->ui->tb_title->set_mime_data(mime);
-	_info_dialog->setMetaData(v_md);
+	this->ui->tb_title->set_mime_data(_mime_data);
+	if(_info_dialog)
+		_info_dialog->setMetaData(v_md);
 }
 
 
@@ -580,18 +582,21 @@ void GUI_Library_windowed::reloading_library_finished(){
 
 
 void GUI_Library_windowed::edit_album(){
+	if(!_info_dialog) return;
 
 	_info_dialog->setMode(INFO_MODE_ALBUMS);
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Library_windowed::edit_artist(){
+	if(!_info_dialog) return;
 
 	_info_dialog->setMode(INFO_MODE_ARTISTS);
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Library_windowed::edit_tracks(){
+	if(!_info_dialog) return;
 
 	_info_dialog->setMode(INFO_MODE_TRACKS);
 	_info_dialog->show(TAB_EDIT);
@@ -599,17 +604,19 @@ void GUI_Library_windowed::edit_tracks(){
 
 
 void GUI_Library_windowed::info_album(){
-
+	if(!_info_dialog) return;
 	_info_dialog->setMode(INFO_MODE_ALBUMS);
 	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_Library_windowed::info_artist(){
+	if(!_info_dialog) return;
 	_info_dialog->setMode(INFO_MODE_ARTISTS);
 	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_Library_windowed::info_tracks(){
+	if(!_info_dialog) return;
 	_info_dialog->setMode(INFO_MODE_TRACKS);
 	_info_dialog->show(TAB_INFO);
 }
@@ -743,6 +750,6 @@ void GUI_Library_windowed::import_result(bool success){
 
 	else success_string = "Importing failed";
 
-	QMessageBox::information(NULL, "Information", success_string );
+	//QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
 }

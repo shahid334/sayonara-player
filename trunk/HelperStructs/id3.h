@@ -32,7 +32,7 @@
 namespace ID3{
 
 
-MetaData getMetaDataOfFile(QString file);
+bool getMetaDataOfFile(QString file, MetaData& md);
 
 void setMetaDataOfFile(MetaData& md);
 

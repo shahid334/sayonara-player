@@ -92,7 +92,8 @@ void ReloadThread::run(){
 
 	for(int i=0; i<fileList.size(); i++){
 
-		MetaData md = ID3::getMetaDataOfFile(fileList.at(i));
+		MetaData md;
+		if(!ID3::getMetaDataOfFile(fileList.at(i), md)) continue;
 		_v_metadata.push_back(md);
 		emit reloading_library( (i * 100) / fileList.size() );
 	}

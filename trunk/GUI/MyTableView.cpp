@@ -31,20 +31,23 @@
 #include <QTableView>
 #include <QMouseEvent>
 #include <QDebug>
-#include <QPixmap>
-#include <QPoint>
+
+
+#include "HelperStructs/CustomMimeData.h"
+#include "HelperStructs/CustomDrag.h"
 
 
 
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_parent = parent;
-	qDrag = 0;
+	_qDrag = 0;
 
 }
 
 MyTableView::~MyTableView() {
 
-	qDebug() << "Delete table view";
+	if(_qDrag) delete _qDrag;
+	_qDrag = 0;
 
 }
 
@@ -58,6 +61,8 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 	switch(event->button()){
 		case Qt::LeftButton:
 
+			QTableView::mousePressEvent(event);
+
 			if(event->pos().y() > this->model()->rowCount() * 20) {
 				_drag = false;
 				break;
@@ -68,7 +73,6 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 				_drag = true;
 			}
 
-			QTableView::mousePressEvent(event);
 			break;
 
 		case Qt::RightButton:
@@ -88,20 +92,20 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 			emit sig_middle_button_clicked(pos);
 			break;
 
-		default: break;
+		default:
+			_drag = false;
+			break;
 	}
+
 }
 
 void MyTableView::mouseMoveEvent(QMouseEvent* event){
 
-
 	QPoint pos = event->pos();
+	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
-	if(_drag && this->qDrag &&
-		abs(pos.x() - _drag_pos.x()) + abs(pos.y() - _drag_pos.y()) > 20){
-
-			qDrag->exec(Qt::MoveAction);
-
+	if (_drag && _qDrag && distance > 20) {
+		_qDrag->exec(Qt::ActionMask);
 	}
 
 }
@@ -109,36 +113,29 @@ void MyTableView::mouseMoveEvent(QMouseEvent* event){
 
 void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 
-	switch(event->button()){
+	switch (event->button()) {
+
 		case Qt::LeftButton:
 
 			QTableView::mouseReleaseEvent(event);
 			event->accept();
 
 			_drag = false;
-
 			break;
-
 
 		default: break;
 	}
 }
 
 
-void MyTableView::set_mime_data(QMimeData* data, QPixmap* pixmap){
+void MyTableView::set_mime_data(CustomMimeData* data){
 
+	_qDrag = new CustomDrag(this);
+	_qDrag->setMimeData(data);
 
-	this->qDrag = new QDrag(this);
-	if(pixmap)
-		this->qDrag->setPixmap(*pixmap);
-
-	this->qDrag->setMimeData(data);
-
-	if(data) _drag = true;
+	if (data) _drag = true;
 	else _drag = false;
 }
 
-void MyTableView::set_id(int id){
-	_id = id;
-}
+
 

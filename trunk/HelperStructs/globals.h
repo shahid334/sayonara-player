@@ -19,9 +19,13 @@
  */
 
 #include <QString>
+#include <QDebug>
 
 #ifndef GLOBALS_H_
 #define GLOBALS_H_
+
+
+
 
 #define RADIO_OFF 0
 #define RADIO_LFM 1
@@ -47,6 +51,12 @@
 #define GOOGLE_FT_PNG QString("png")
 #define GOOGLE_FT_GIF QString("gif")
 #define GOOGLE_FT_BMP QString("bmp")
+
+
+
+
+
+
 
 namespace Sort{
 
