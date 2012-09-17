@@ -2,6 +2,12 @@
 = How to compile Sayonara =
 
 
+You can get the most recent version on the svn server
+
+  * svn checkout http://sayonara-player.googlecode.com/svn/trunk/ sayonara-player-read-only
+
+There is also a source archive in the [http://code.google.com/p/sayonara-player/downloads/list Download] section. It is not the most recent version, but the version of the latest release
+
 == Libraries ==
 
   * Qt >= 4.7: Gui, Core, Phonon, Xml, Sqlite http://qt.nokia.com/products/
