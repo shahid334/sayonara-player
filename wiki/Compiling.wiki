@@ -25,7 +25,7 @@ There is also a source archive in the [http://code.google.com/p/sayonara-player/
   * make
   * make install (as root)
 
-  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.<br /><br />
+  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.<br />
 
   Debian packages can be created by executing the *2debian.sh scripts in the linux_packages folder
 
