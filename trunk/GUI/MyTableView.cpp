@@ -34,7 +34,6 @@
 
 
 #include "HelperStructs/CustomMimeData.h"
-#include "HelperStructs/CustomDrag.h"
 
 
 
@@ -84,7 +83,7 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 			emit context_menu_emitted(pos);
 			break;
 
-		case Qt::MiddleButton:
+		case Qt::MidButton:
 			_drag = false;
 
 			QTableView::mousePressEvent(event);
@@ -130,7 +129,7 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 
 void MyTableView::set_mime_data(CustomMimeData* data){
 
-	_qDrag = new CustomDrag(this);
+	_qDrag = new QDrag(this);
 	_qDrag->setMimeData(data);
 
 	if (data) _drag = true;
