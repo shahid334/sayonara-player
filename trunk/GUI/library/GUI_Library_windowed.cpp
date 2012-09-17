@@ -82,7 +82,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_info_dialog = dialog;
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-	_mime_data = new CustomMimeData();
+	_mime_data_artist = 0;
+	_mime_data_album = 0;
+	_mime_data = 0;
 
 	this->_album_model = new LibraryItemModelAlbums();
 	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
@@ -149,7 +151,6 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 	delete _artist_delegate;
 	delete _track_model;
 	delete _track_delegate;
-	delete _mime_data;
 	delete _lib_info_dialog;
 }
 
