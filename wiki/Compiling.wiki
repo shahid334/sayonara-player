@@ -10,6 +10,7 @@ There is also a source archive in the [http://code.google.com/p/sayonara-player/
 
 == Libraries ==
 
+  * Cmake
   * Qt >= 4.7: Gui, Core, Phonon, Xml, Sqlite http://qt.nokia.com/products/
   * libcurl http://curl.haxx.se/libcurl/
   * Taglib http://developer.kde.org/~wheeler/taglib.html
@@ -20,9 +21,9 @@ There is also a source archive in the [http://code.google.com/p/sayonara-player/
 
   In order to compile Sayonara you have to use cmake now.
 
-  cmake .<br />
-  make<br />
-  make install (as root)<br /><br />
+  * cmake .
+  * make
+  * make install (as root)
 
   Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.<br /><br />
 
