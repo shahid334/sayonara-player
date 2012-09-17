@@ -25,23 +25,13 @@ There is also a source archive in the [http://code.google.com/p/sayonara-player/
   * make
   * make install (as root)
 
-  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.<br />
+  Sayonara player itself and the Gstreamer backend are built and installed automatically. The Phonon Backend has to be built separately in the Engine/Phonon directory.
 
   Debian packages can be created by executing the *2debian.sh scripts in the linux_packages folder
 
 == Windows ==
 
-On Windows you have to set environment variables:
-There is a Visual Studio 2008 solution, but not updated every time, so maybe the project will miss a few files
-
-  * Qt:      QTDIR
-  * Taglib:  LIBTAG
-  * libcurl: CURL
-
-  * Known issues:
-    # Some MP3 files are not played due to some Phonon issue (the standard Windows DirectX backend fails, so the next step will contain compilation of an alternative backend e.g. gstreamer under Windows)
-   
-
+Not supported yet
 
 == MAC ==
 
