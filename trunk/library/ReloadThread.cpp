@@ -73,30 +73,13 @@ void ReloadThread::run(){
 
 	db->deleteTracks(v_to_delete);
 	v_to_delete.clear();
-
-	QStringList fileList;
+	v_metadata.clear();
 
 	CDirectoryReader reader;
 	int num_files = 0;
 	emit reloading_library( -1 );
-	reader.getFilesInsiderDirRecursive(QDir(_library_path), fileList, num_files);
 
-	_state = -1;
-
-	/// TODO: commit status every 20-30 tracks
-	// to give user a response what happens
-	// we're in a thread, baby! You can play the
-	// sound nevertheless... Fuck I'm drunk :(
-
-	_v_metadata.clear();
-
-	for(int i=0; i<fileList.size(); i++){
-
-		MetaData md;
-		if(!ID3::getMetaDataOfFile(fileList.at(i), md)) continue;
-		_v_metadata.push_back(md);
-		emit reloading_library( (i * 100) / fileList.size() );
-	}
+	reader.getFilesInsiderDirRecursive(QDir(_library_path), _v_metadata);
 }
 
 void ReloadThread::set_lib_path(QString library_path){

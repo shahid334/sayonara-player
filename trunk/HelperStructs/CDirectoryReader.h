@@ -21,6 +21,10 @@
 
 #ifndef DIRECTORY_READER
 #define DIRECTORY_READER
+
+#define NUM_FILES_TO_SAVE 500
+
+#include "HelperStructs/MetaData.h"
 #include <QString>
 #include <QStringList>
 #include <QDir>
@@ -36,10 +40,13 @@ class CDirectoryReader {
           */
         void setFilter (const QStringList & filter);
 
-        void getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files);
-        void getFilesInsideDirectory (QDir baseDir, QStringList & files);
+        void getFilesInsiderDirRecursive (QDir baseDir,  vector<MetaData>& v_md);
+        void getFilesInsideDirectory (QDir baseDir, vector<MetaData>& v_md);
 
-    private:
+    
+
+
+	private:
         QStringList m_filters;
 
 };

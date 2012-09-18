@@ -18,9 +18,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/CDirectoryReader.h"
+#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/id3.h"
 #include <QDebug>
 #include <QDir>
 
@@ -40,7 +42,7 @@ void CDirectoryReader::setFilter (const QStringList & filter) {
     this -> m_filters = filter;
 }
 
-void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files) {
+void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, vector<MetaData>& v_md) {
 
     QStringList dirs;
 	baseDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -49,25 +51,32 @@ void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & 
     foreach (QString dir, dirs) {
 
     	baseDir.cd(dir);
-        this -> getFilesInsiderDirRecursive(baseDir, files, num_files);
+        this -> getFilesInsiderDirRecursive(baseDir, v_md);
+
         baseDir.cd("..");
     }
-    QStringList tmp;
+
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
-    this -> getFilesInsideDirectory (baseDir, tmp);
-    num_files += tmp.size();
-
-    // absolute paths
-    files += tmp;
+    this -> getFilesInsideDirectory (baseDir, v_md);
+    if(v_md.size() >= NUM_FILES_TO_SAVE){
+	CDatabaseConnector::getInstance()->storeMetadata(v_md);
+	v_md.clear();
+    }
 }
 
-void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & files) {
+
+
+void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, vector<MetaData>& v_md) {
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
-    QStringList tmp;
-    tmp = baseDir.entryList();
+    QStringList tmp = baseDir.entryList();
+
     foreach (QString f, tmp) {
-        files.push_back(baseDir.absoluteFilePath(f));
+	MetaData md;
+	QString filename = baseDir.absoluteFilePath(f);
+	if( ID3::getMetaDataOfFile( filename, md )){
+		v_md.push_back(md);
+	}
     }
 }

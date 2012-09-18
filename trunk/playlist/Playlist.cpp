@@ -327,7 +327,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 
 // a directory was dropped from extern desktop
 void Playlist::psl_directoryDropped(const QString& dir, int row){
-
+/*
 	if(_radio_active != RADIO_OFF){
 		psl_stop();
 		row = 0;
@@ -357,6 +357,7 @@ void Playlist::psl_directoryDropped(const QString& dir, int row){
     }
 
     psl_insert_tracks(vec_md, row);
+*/
 
 }
 
