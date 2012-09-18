@@ -35,7 +35,7 @@
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
-#include <HelperStructs/Helper.h>
+#include "HelperStructs/Helper.h"
 
 
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
@@ -57,10 +57,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 	painter->save();
 	painter->translate(0, 0);
 
-
-
-
 	if(index.column() == 0){
+		QModelIndex idx = index.model()->index(index.row(), 1);
+
 		QString icon_path = Helper::getIconPath() + "play_small.png";
 		bool is_sampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
 

@@ -301,7 +301,7 @@ int main(int argc, char *argv[]){
 		playlist.ui_loaded();
 
 		qDebug() << "setup player";
-		player.setWindowTitle("Sayonara (0.2)");
+		player.setWindowTitle("Sayonara (0.3)");
         player.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
 		player.setPlaylist(&ui_playlist);
