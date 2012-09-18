@@ -118,7 +118,7 @@ public slots:
 	void fill_library_albums(vector<Album>&);
 	void fill_library_artists(vector<Artist>&);
 	void id3_tags_changed();
-	void reloading_library(int);
+	void reloading_library(QString&);
 	void reloading_library_finished();
 	void library_changed();
 	void import_result(bool);

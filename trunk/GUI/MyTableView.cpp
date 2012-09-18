@@ -45,8 +45,8 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 
 MyTableView::~MyTableView() {
 
-	if(_qDrag) delete _qDrag;
-	_qDrag = 0;
+	/*if(_qDrag) delete _qDrag;
+	_qDrag = 0;*/
 
 }
 
@@ -104,7 +104,7 @@ void MyTableView::mouseMoveEvent(QMouseEvent* event){
 	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
 	if (_drag && _qDrag && distance > 20) {
-//		_qDrag->exec(Qt::ActionMask);
+		_qDrag->exec(Qt::ActionMask);
 	}
 
 }

@@ -470,13 +470,15 @@ void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings){
 void GST_Engine::jump(int where, bool percent){
 
 	Q_UNUSED(percent);
-
+	qDebug() << "jump " << where;
 	_seconds_started = where * _meta_data.length_ms / 100;
 
 	qint64 new_time_ns = where * _meta_data.length_ms * 10000; // nanoseconds
 	if(!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, new_time_ns)){
 		qDebug() << "seeking failed";
 	}
+
+	emit timeChangedSignal(where);
 }
 
 

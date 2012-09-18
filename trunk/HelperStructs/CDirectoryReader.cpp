@@ -18,11 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "DatabaseAccess/CDatabaseConnector.h"
+
 #include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/id3.h"
 #include <QDebug>
 #include <QDir>
 
@@ -42,7 +40,7 @@ void CDirectoryReader::setFilter (const QStringList & filter) {
     this -> m_filters = filter;
 }
 
-void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, vector<MetaData>& v_md) {
+void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files) {
 
     QStringList dirs;
 	baseDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -51,32 +49,25 @@ void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, vector<MetaDat
     foreach (QString dir, dirs) {
 
     	baseDir.cd(dir);
-        this -> getFilesInsiderDirRecursive(baseDir, v_md);
-
+        this -> getFilesInsiderDirRecursive(baseDir, files, num_files);
         baseDir.cd("..");
     }
-
+    QStringList tmp;
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
-    this -> getFilesInsideDirectory (baseDir, v_md);
-    if(v_md.size() >= NUM_FILES_TO_SAVE){
-	CDatabaseConnector::getInstance()->storeMetadata(v_md);
-	v_md.clear();
-    }
+    this -> getFilesInsideDirectory (baseDir, tmp);
+    num_files += tmp.size();
+
+    // absolute paths
+    files += tmp;
 }
 
-
-
-void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, vector<MetaData>& v_md) {
+void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & files) {
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
-    QStringList tmp = baseDir.entryList();
-
+    QStringList tmp;
+    tmp = baseDir.entryList();
     foreach (QString f, tmp) {
-	MetaData md;
-	QString filename = baseDir.absoluteFilePath(f);
-	if( ID3::getMetaDataOfFile( filename, md )){
-		v_md.push_back(md);
-	}
+        files.push_back(baseDir.absoluteFilePath(f));
     }
 }

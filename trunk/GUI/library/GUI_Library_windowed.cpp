@@ -563,15 +563,11 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 }
 
 
-void GUI_Library_windowed::reloading_library(int percent){
-	if(percent == -2){
-		this->ui->lab_status->setText("<b>(Delete missing items...)</b>");
-	}
+void GUI_Library_windowed::reloading_library(QString& str){
 
-	else if(percent == -1)
-		this->ui->lab_status->setText("<b>(Load tracks from harddisk...)</b>");
+	QString final_str = QString("<b>") + str + "</b>";
+	this->ui->lab_status->setText(final_str);
 
-	else this->ui->lab_status->setText("<b>(Reloading: " + QString::number(percent) + QString("\%)") + QString("</b>"));
 }
 
 

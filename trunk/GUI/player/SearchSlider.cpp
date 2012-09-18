@@ -21,21 +21,24 @@
  * Sep 14, 2012 
  *
  */
-
+#include <QDebug>
 #include <QEvent>
 #include <QMouseEvent>
-#include <QSlider>
+#include <QAbstractSlider>
 #include "GUI/player/SearchSlider.h"
 
 
 SearchSlider::SearchSlider(QWidget* parent) : QSlider(parent) {
-
+	_searching = false;
 }
 
 SearchSlider::~SearchSlider() {
 	// TODO Auto-generated destructor stub
 }
 
+bool SearchSlider::isSearching(){
+	return _searching;
+}
 
 bool SearchSlider::event(QEvent* e){
 
@@ -45,12 +48,56 @@ bool SearchSlider::event(QEvent* e){
 	QMouseEvent* mouseEvent;
 
 	switch(e->type()){
+
+		case QEvent::MouseButtonPress:
+
+			_searching = true;
+
+			e->ignore();
+			mouseEvent = (QMouseEvent*) e;
+
+			if(this->orientation() == Qt::Horizontal)
+				percent = (mouseEvent->x() * 100 / this->width());
+			else
+				percent = 100 - (mouseEvent->y() * 100 / this->height());
+
+			this->setValue(percent);
+
+			emit searchSliderPressed(percent);
+
+			break;
+
+		case QEvent::MouseMove:
+
+			e->ignore();
+			mouseEvent = (QMouseEvent*) e;
+
+			if(this->orientation() == Qt::Horizontal)
+				percent = (mouseEvent->x() * 100 / this->width());
+			else
+				percent = 100 - (mouseEvent->y() * 100 / this->height());
+
+			this->setValue(percent);
+
+			if(_searching)
+				emit searchSliderMoved(percent);
+
+			break;
+
 		case QEvent::MouseButtonRelease:
 
-			e->accept();
+			_searching = false;
+			e->ignore();
 			mouseEvent = (QMouseEvent*) e;
-			percent = (mouseEvent->x() * 100 / this->width());
-			emit searchSliderClicked(percent);
+
+			if(this->orientation() == Qt::Horizontal)
+				percent = (mouseEvent->x() * 100 / this->width());
+			else
+				percent = 100 - (mouseEvent->y() * 100 / this->height());
+
+			this->setValue(percent);
+
+			emit searchSliderReleased(percent);
 			break;
 
 		default:

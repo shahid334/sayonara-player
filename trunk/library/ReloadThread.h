@@ -39,13 +39,15 @@
 
 using namespace std;
 
+
+
 class ReloadThread : public QThread {
 
 Q_OBJECT
 
 signals:
 
-	void reloading_library(int);
+	void reloading_library(QString);
 
 
 public:
@@ -64,6 +66,9 @@ private:
     int		_state;
     QString _library_path;
     vector<MetaData> _v_metadata;
+
+    int get_and_save_all_files();
+    void get_files_recursive (QDir baseDir, vector<MetaData>& v_md, int* n_files);
 };
 
 #endif /* RELOADTHREAD_H_ */

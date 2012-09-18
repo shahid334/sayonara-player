@@ -51,7 +51,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 
 	m_playing = false;
-	m_cur_searching = false;
 	m_mute = false;
 	m_radio_active = RADIO_OFF;
 
@@ -160,7 +159,7 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this->ui->btn_stop, SIGNAL(clicked(bool)), this,
 			SLOT(stopClicked(bool)));
 	connect(this->ui->btn_mute, SIGNAL(released()), this,
-				SLOT(muteButtonPressed()));
+			SLOT(muteButtonPressed()));
 	connect(this->ui->btn_rec, SIGNAL(toggled(bool)), this,
 				SLOT(sl_rec_button_toggled(bool)));
 	connect(this->ui->btn_correct, SIGNAL(clicked(bool)), this,
@@ -220,16 +219,21 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
 
-    connect(this->ui->volumeSlider, SIGNAL(valueChanged(int)), this,
-			SLOT(volumeChangedSlider(int)));
-    connect(this->ui->songProgress, SIGNAL(searchSliderClicked(int)), this,
-    		SLOT(searchSliderClicked(int)));
-	connect(this->ui->songProgress, SIGNAL(sliderPressed()), this,
-			SLOT(searchSliderPressed()));
-	connect(this->ui->songProgress, SIGNAL(sliderMoved(int)), this,
-			SLOT(searchSliderMoved(int)));
-	connect(this->ui->songProgress, SIGNAL(sliderReleased()), this,
-			SLOT(searchSliderReleased()));
+    connect(this->ui->volumeSlider, SIGNAL(searchSliderMoved(int)), this,
+			SLOT(volumeChanged(int)));
+    connect(this->ui->volumeSlider, SIGNAL(searchSliderReleased(int)), this,
+    		SLOT(volumeChanged(int)));
+    connect(this->ui->volumeSlider, SIGNAL(searchSliderPressed(int)), this,
+    		SLOT(volumeChanged(int)));
+
+
+    connect(this->ui->songProgress, SIGNAL(searchSliderReleased(int)), this,
+    		SLOT(setProgressJump(int)));
+	connect(this->ui->songProgress, SIGNAL(searchSliderPressed(int)), this,
+			SLOT(setProgressJump(int)));
+	connect(this->ui->songProgress, SIGNAL(searchSliderMoved(int)), this,
+			SLOT(setProgressJump(int)));
+
 
 
 	// cover lookup
@@ -424,15 +428,19 @@ void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 	this->ui->maxTime->setText(getLengthString(total_time));
 }
 
+void GUI_SimplePlayer::setProgressJump(int percent){
+	emit search(percent);
+}
+
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
 	if (m_completeLength_ms != 0) {
 
-		double newSliderVal = (double) (pos_sec * 1000.0 * 100.0
-				/ m_completeLength_ms);
+		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
 
-		if (!m_cur_searching)
+		if (!this->ui->songProgress->isSearching()){
 			this->ui->songProgress->setValue((int) newSliderVal);
+		}
 	}
 
 	else{
@@ -447,7 +455,6 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 	+ QString(':') + Helper::cvtSomething2QString(sec, 2);
 
 	this->ui->curTime->setText(curPosString);
-	//this->ui->curTime->repaint();
 
 }
 
@@ -630,28 +637,9 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 }
 
 
-void GUI_SimplePlayer::searchSliderPressed() {
-	m_cur_searching = true;
-}
 
-void GUI_SimplePlayer::searchSliderReleased() {
-	m_cur_searching = false;
-}
 
-void GUI_SimplePlayer::searchSliderMoved(int search_percent, bool by_app) {
-	m_cur_searching = true;
-
-	if (!by_app)
-		emit search(search_percent);
-}
-
-void GUI_SimplePlayer::searchSliderClicked(int search_percent, bool by_app){
-
-	if (!by_app)
-		emit search(search_percent);
-}
-
-void GUI_SimplePlayer::volumeChangedSlider(int volume_percent) {
+void GUI_SimplePlayer::volumeChanged(int volume_percent) {
 	setupVolButton(volume_percent);
 	emit sig_volume_changed(volume_percent);
 

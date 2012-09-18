@@ -60,16 +60,17 @@ CLibraryBase::CLibraryBase(QObject *parent) :
 
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
-	connect(m_thread, SIGNAL(reloading_library(int)), this, SLOT(library_reloading_state_slot(int)));
+	connect(m_thread, SIGNAL(reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
 }
 
 
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
-    vector<MetaData> v_md;
-    this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir), v_md);
+    QStringList fileList;
+    int num_files = 0;
+    this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
 
-    //emit sig_playlist_created(fileList);
+    emit sig_playlist_created(fileList);
 
 }
 
@@ -115,15 +116,24 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 	QDir lib_dir(m_library_path);
 	QDir src_dir(m_src_dir);
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	vector<MetaData> v_md;
 
 	if(!copy){
 		CDirectoryReader reader;
 		QStringList files;
 		int n_files;
-		reader.getFilesInsiderDirRecursive(src_dir, v_md);
-		/// TODO:
-		emit sig_import_result(true);
+		reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
+		vector<MetaData> v_md;
+		foreach(QString filename, files){
+			MetaData md;
+			if(!ID3::getMetaDataOfFile(filename, md)) continue;
+
+			if(_db->getTrackByPath(md.filepath) < 0)
+				v_md.push_back(md);
+		}
+
+		bool success = db->storeMetadata(v_md);
+
+		emit sig_import_result(success);
 		emit sig_reload_library_finished();
 
 		return;
@@ -139,8 +149,6 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 				chosen_item +
 				QDir::separator() +
 				rel_src_path.replace(" ", "_");
-
-		qDebug() << "Copy to " << target_path;
 
 		QStringList files2copy;
 		files2copy.push_back(src_dir.absolutePath());
@@ -248,18 +256,15 @@ void CLibraryBase::reloadLibrary(){
 
 void CLibraryBase::reload_thread_finished(){
 
-	vector<MetaData> v_metadata;
-	m_thread->get_metadata(v_metadata);
-	insertMetaDataIntoDB(v_metadata);
 	_db->getAllAlbums(_vec_albums);
 	_db->getAllArtists(_vec_artists);
 
 	emit sig_reload_library_finished();
 }
 
-void CLibraryBase::library_reloading_state_slot(int percent){
+void CLibraryBase::library_reloading_state_slot(QString str){
 
-	emit sig_reloading_library(percent);
+	emit sig_reloading_library(str);
 
 }
 
@@ -267,8 +272,8 @@ void CLibraryBase::library_reloading_state_slot(int percent){
 
 void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& v_md) {
 
-    CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    db->storeMetadata(v_md);
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	db->storeMetadata(v_md);
 
     std::vector<MetaData> data;
     db->getTracksFromDatabase(data);

@@ -42,8 +42,8 @@ MyListView::MyListView(QWidget* parent) : QListView(parent) {
 }
 
 MyListView::~MyListView() {
-	if(_qDrag) delete _qDrag;
-	_qDrag = 0;
+	/*if(_qDrag) delete _qDrag;
+	_qDrag = 0;*/
 }
 
 

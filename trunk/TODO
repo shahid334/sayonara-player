@@ -1,21 +1,21 @@
 
 LastFM:
-	(de)activate LastFM
-	(un)successful login message
-	signal when logged in / not logged in sig_lfm_logged_in(bool)
-	isLoggedIn in lastFM
+	(de)activate LastFM		DONE
+	(un)successful login message 	DONE
+	signal when logged in / not logged in sig_lfm_logged_in(bool) DONE
+	isLoggedIn in lastFM DONE
 	
-	dynamic playlist button (de)activation
-	view option enable/disable
-	info button library
-	artist/album/track info dialog
+	dynamic playlist button (de)activation DONE
+	view option enable/disable DONE
+	info button library DONE
+	artist/album/track info dialog DONE
 
 Socket:
 	volume
 	jump
 
 Player:
-	slider
+	slider DONE
 
 Playlist:
 	love option

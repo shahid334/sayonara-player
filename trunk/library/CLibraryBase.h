@@ -57,7 +57,7 @@ signals:
 
     void sig_should_reload_library();
     void sig_reload_library_finished();
-    void sig_reloading_library(int);
+    void sig_reloading_library(QString &);
 
     void sig_import_result(bool);
     void sig_change_id3_tags(const vector<MetaData>&);
@@ -102,7 +102,7 @@ public slots:
 private slots:
    void reload_thread_finished();
    void file_system_changed(const QString& path);
-   void library_reloading_state_slot(int);
+   void library_reloading_state_slot(QString);
 
 
 private:

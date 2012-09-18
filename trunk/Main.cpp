@@ -210,7 +210,7 @@ int main(int argc, char *argv[]){
         CONNECT(&library, sig_import_result(bool),						&playlist,		psl_import_result(bool));
         CONNECT(&library, sig_import_result(bool),						&ui_playlist,	import_result(bool));
         CONNECT(&library, sig_reload_library_finished(), 				ui_library, 	reloading_library_finished());
-        CONNECT(&library, sig_reloading_library(int),					ui_library, 	reloading_library(int));
+        CONNECT(&library, sig_reloading_library(QString&),				ui_library, 	reloading_library(QString&));
         CONNECT(&library, sig_import_result(bool),						ui_library,	import_result(bool));
         CONNECT(&library, sig_metadata_loaded(vector<MetaData>&), 		ui_library, 	fill_library_tracks(vector<MetaData>&));
         CONNECT(&library, sig_all_albums_loaded(vector<Album>&), 		ui_library, 	fill_library_albums(vector<Album>&));

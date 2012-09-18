@@ -134,10 +134,6 @@ private slots:
 
     void folderSelectedClicked(bool);
     void total_time_changed(qint64);
-    void searchSliderPressed();
-    void searchSliderReleased();
-    void searchSliderMoved(int search_percent, bool by_app=false);
-    void searchSliderClicked(int value, bool by_app=false);
     void correct_btn_clicked(bool b=false);
 
     void coverClicked();
@@ -157,7 +153,8 @@ private slots:
     void fetch_all_covers_clicked(bool b = true);
     void load_pl_on_startup_toggled(bool);
 
-    void volumeChangedSlider(int volume_percent);
+    void setProgressJump(int percent);
+    void volumeChanged(int volume_percent);
     void volumeChangedByTick(int val);
 
     void show_notification_toggled(bool);
@@ -208,7 +205,6 @@ private:
     QString						m_class_name;
     quint32 					m_completeLength_ms;
     bool 						m_playing;
-    bool 						m_cur_searching;
     bool						m_mute;
 
     GUI_TrayIcon *				m_trayIcon;
