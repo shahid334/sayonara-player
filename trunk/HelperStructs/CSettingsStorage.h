@@ -64,8 +64,7 @@ public:
 
 
 
-    //TODO hash
-    QPair<QString,QString> getLastFMNameAndPW ();
+    
 
 
 
@@ -83,6 +82,7 @@ private:
     QString m_dbFile, m_sayonaraPath, m_dbSource;
 
     // last fm
+    bool m_lfm_active;
     QPair<QString,QString> m_lastFm;
     QString m_lfm_sessionKey;
     bool m_lfm_corrections;
@@ -104,15 +104,15 @@ private:
     bool m_show_library;
 
     // playlist
-    QString 		m_playlist;
-    bool		m_loadPlaylist;
-    Playlist_Mode 	m_playlistmode;
+    QString m_playlist;
+    bool m_loadPlaylist;
+    Playlist_Mode m_playlistmode;
 
     /* style */
-    int				m_style;
+    int	m_style;
 
     /* shown plugin in player */
-    int 			m_shown_plugin;
+    int m_shown_plugin;
 
     /* minimize the player to tray */
     bool m_minimize_to_tray;
@@ -138,6 +138,10 @@ private:
     int		m_socket_to;
 
 public:
+
+    QPair<QString,QString> getLastFMNameAndPW ();
+    bool getLastFMActive();
+    void setLastFMActive(bool b);
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
 

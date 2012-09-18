@@ -73,6 +73,9 @@ bool CDatabaseConnector::load_settings(){
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
 	/* Last FM */
+	bool lfm_active = load_setting_bool("LastFM_active", false);
+	settings->setLastFMActive(lfm_active);
+
 	QString last_fm_username, last_fm_password;
 	QStringList list = load_setting_strlist("LastFM_login");
 	if(list.size() >= 2){
@@ -229,6 +232,9 @@ bool CDatabaseConnector::store_settings(){
 	QString last_fm_username;
 	QString last_fm_password;
 	CSettingsStorage* storage = CSettingsStorage::getInstance();
+
+	bool lfm_active = storage->getLastFMActive();
+	store_setting("LastFM_active", lfm_active);
 
 	storage->getLastFMNameAndPW(last_fm_username, last_fm_password);
 	store_setting("LastFM_login", last_fm_username + "," + last_fm_password);

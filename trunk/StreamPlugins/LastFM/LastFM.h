@@ -31,8 +31,10 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/CSettingsStorage.h"
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
+
 
 #include <QObject>
 #include <QString>
@@ -74,9 +76,10 @@ Q_OBJECT
 		static LastFM * getInstance();
 		virtual ~LastFM();
 
-		bool lfm_login(QString username, QString password);
+		bool lfm_login(QString username, QString password, bool should_emit=true);
 		void lfm_get_friends(QStringList& );
 		bool lfm_get_user_info(QMap<QString, QString>&);
+		bool lfm_is_logged_in();
 
 	private:
 
@@ -101,6 +104,8 @@ Q_OBJECT
 		QString			_session_key;
 		QString			_session_key2;
 		MetaData		_loved_tracks;
+
+		CSettingsStorage* _settings;
 
 		LFMTrackChangedThread* _track_changed_thread;
 };

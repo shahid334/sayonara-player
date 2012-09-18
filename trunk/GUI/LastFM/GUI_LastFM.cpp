@@ -34,6 +34,7 @@
 #include <QString>
 #include <QCryptographicHash>
 
+
 #include <iostream>
 
 using namespace std;
@@ -42,12 +43,17 @@ GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 	this->ui = new Ui_GUI_LastFM_Dialog();
 	this->ui->setupUi(this);
 
+	bool enabled = CSettingsStorage::getInstance()->getLastFMActive();
+	this->ui->cb_activate->setChecked(enabled);
+	setLFMActive(enabled);
+
 	this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
 	bool checked = CSettingsStorage::getInstance()->getLastFMCorrections();
 	this->ui->cb_correct_id3->setChecked(checked);
 
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
 	connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
+	connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(cb_activate_toggled(bool)));
 }
 
 
@@ -127,5 +133,16 @@ void GUI_LastFM::show_win(){
 void GUI_LastFM::cb_correct_id3_toggled(bool checked){
 
 	CSettingsStorage::getInstance()->setLastFMCorrections(checked);
+}
 
+void GUI_LastFM::setLFMActive(bool enabled){
+	this->ui->tf_username->setEnabled(enabled);
+	this->ui->tf_password->setEnabled(enabled);
+	this->ui->cb_correct_id3->setEnabled(enabled);
+}
+
+void GUI_LastFM::cb_activate_toggled(bool b){
+	setLFMActive(b);
+	CSettingsStorage::getInstance()->setLastFMActive(b);
+	emit sig_activated(b);
 }

@@ -30,6 +30,7 @@
 #include "HelperStructs/globals.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Engine/Engine.h"
+#include "StreamPlugins/LastFM/LastFM.h"
 
 
 #include <QList>
@@ -73,6 +74,10 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	m_cov_lookup = new CoverLookup(m_class_name);
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
+
+
+	ui->action_ViewLFMRadio->setVisible(settings->getLastFMActive());
+
 
 	this->ui->action_min2tray->setChecked(m_min2tray);
 
@@ -377,6 +382,24 @@ void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
 	this->ui->albumCover->repaint();
 }
 
+void GUI_SimplePlayer::last_fm_logged_in(bool b){
+
+	if(!b && CSettingsStorage::getInstance()->getLastFMActive() && !m_suppress_warning)
+		QMessageBox::warning(this->ui->centralwidget, "Warning", "You are not logged in to LastFM!");
+
+	show_lfm_radio(false);
+	ui->action_ViewLFMRadio->setChecked(false);
+
+	this->ui->action_ViewLFMRadio->setVisible(b);
+}
+
+void GUI_SimplePlayer::psl_lfm_activated(bool b){
+
+	show_lfm_radio(false);
+	ui->action_ViewLFMRadio->setChecked(false);
+
+	this->ui->action_ViewLFMRadio->setVisible(b);
+}
 
 void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
 
@@ -852,6 +875,18 @@ void GUI_SimplePlayer::show_stream(bool vis){
 
 
 void GUI_SimplePlayer::show_lfm_radio(bool vis){
+
+	bool lfm_stuff = true;
+	lfm_stuff &= CSettingsStorage::getInstance()->getLastFMActive();
+	lfm_stuff &= LastFM::getInstance()->lfm_is_logged_in();
+
+	if(vis && !lfm_stuff){
+		QMessageBox::warning(this->ui->centralwidget, "LastFM warning", "Something is wrong with your LastFM settings");
+	}
+
+	vis &= lfm_stuff;
+
+
 	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_LFM_RADIO);
 	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
@@ -1274,4 +1309,8 @@ void GUI_SimplePlayer::about(bool b){
 
 void GUI_SimplePlayer::sl_action_socket_connection_triggered(bool b){
 	emit sig_show_socket();
+}
+
+void GUI_SimplePlayer::suppress_warning(bool b){
+	 m_suppress_warning = b;
 }

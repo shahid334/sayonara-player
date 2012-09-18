@@ -46,10 +46,12 @@ public:
 
 	signals:
 		void new_lfm_credentials(QString, QString);
+		void sig_activated(bool);
 
 	private slots:
 		void save_button_pressed();
 		void cb_correct_id3_toggled(bool);
+		void cb_activate_toggled(bool);
 
 
 	public slots:
@@ -57,7 +59,7 @@ public:
 
 	private:
 		Ui_GUI_LastFM_Dialog* ui;
-
+		void setLFMActive(bool b);
 
 	public:
 		void set_username_and_password(QString username, QString password);

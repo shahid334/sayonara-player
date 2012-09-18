@@ -25,6 +25,7 @@
 #include "GUI/library/GUILibraryInfoBox.h"
 #include "ui_GUI_Library_Info_Box.h"
 
+#include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/MetaData.h"
@@ -76,26 +77,32 @@ void GUI_Library_Info_Box::psl_refresh(){
 
 	_duration_string = Helper::cvtMsecs2TitleLengthString(_duration_ms, false);
 
-
-	QMap<QString, QString> map;
-	if(_lfm->lfm_get_user_info(map)){
-		_n_lfm_playcount = map["playcount"].toInt();
-		QString reg_date = map["register_date"];
-		int y, m, d;
-		y = reg_date.left(4).toInt();
-		m = reg_date.mid(5, 2).toInt();
-		d = reg_date.mid(8, 2).toInt();
-		QDate date(y, m, d);
-		_n_lfm_days_registered = date.daysTo(QDate::currentDate());
-		this->ui->lab_lfm_playcount->setText(QString::number(_n_lfm_playcount) + " -> " + QString::number((_n_lfm_playcount * 1.0) / _n_lfm_days_registered, ' ', 2) );
-	}
-
-	else{
+	if( !CSettingsStorage::getInstance()->getLastFMActive() ) {
 		_n_lfm_playcount = -1;
 		_n_lfm_days_registered = -1;
-		this->ui->lab_lfm_playcount->setText("-");
+		this->ui->lab_lfm_playcount->setText("LastFM not active");
 	}
 
+	else {
+		QMap<QString, QString> map;
+		if(_lfm->lfm_get_user_info(map)){
+			_n_lfm_playcount = map["playcount"].toInt();
+			QString reg_date = map["register_date"];
+			int y, m, d;
+			y = reg_date.left(4).toInt();
+			m = reg_date.mid(5, 2).toInt();
+			d = reg_date.mid(8, 2).toInt();
+			QDate date(y, m, d);
+			_n_lfm_days_registered = date.daysTo(QDate::currentDate());
+			this->ui->lab_lfm_playcount->setText(QString::number(_n_lfm_playcount) + " -> " + QString::number((_n_lfm_playcount * 1.0) / _n_lfm_days_registered, ' ', 2) );
+		}
+
+		else{
+			_n_lfm_playcount = -1;
+			_n_lfm_days_registered = -1;
+			this->ui->lab_lfm_playcount->setText("-");
+		}
+	}
 	this->ui->lab_album_count->setText(QString::number(_n_albums));
 	this->ui->lab_track_count->setText(QString::number(_n_tracks));
 	this->ui->lab_artist_count->setText(QString::number(_n_artists));

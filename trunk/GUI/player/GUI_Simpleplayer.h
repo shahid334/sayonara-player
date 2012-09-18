@@ -68,7 +68,9 @@ public slots:
     void show_playlist_chooser(bool b=false);
     void showPlugin(QWidget* widget, bool v);
     void hideUnneededPlugins(QWidget* wannashow);
+    void last_fm_logged_in(bool);
     void lfm_info_fetched(const MetaData& md, bool loved, bool corrected);
+    void psl_lfm_activated(bool b);
 
     /**
       * Set current position in filestream
@@ -232,6 +234,7 @@ private:
     const quint8				VOLUME_STEP_SIZE_PERC;
     int 						m_library_width;
     int							m_library_stretch_factor;
+    bool						m_suppress_warning;
 
 
     QString getLengthString (quint32 length_ms) const;
@@ -264,6 +267,7 @@ public:
 
     void setVolume(int vol);
     void setStyle(int);
+    void suppress_warning(bool b);
 
 };
 

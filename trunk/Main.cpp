@@ -61,11 +61,12 @@
 #include <QtGui>
 #include <QtCore>
 #include <QPointer>
-
+#include <QMessageBox>
 #include <QApplication>
 #include <QFile>
 #include <QDir>
 #include <QList>
+#include <QString>
 
 #include <string>
 #include <vector>
@@ -238,8 +239,8 @@ int main(int argc, char *argv[]){
         CONNECT(ui_library, sig_delete_certain_tracks(const QList<int>&, int),	&library,		psl_delete_certain_tracks(const QList<int>&, int));
     	CONNECT(ui_library, sig_play_next_tracks(const QList<int>&),		&library,		psl_play_next_tracks(const QList<int>&));
     	CONNECT(ui_library, sig_play_next_all_tracks(),					&library,		psl_play_next_all_tracks());
-
-
+    	CONNECT(&ui_lastfm, sig_activated(bool), &player, psl_lfm_activated(bool));
+    	CONNECT(&ui_lastfm, sig_activated(bool), &ui_playlist, psl_lfm_activated(bool));
         CONNECT(&ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		psl_login(QString, QString));
 
         CONNECT(&ui_eq, eq_changed_signal(int, int), 	listen, 	eq_changed(int, int));
@@ -256,8 +257,9 @@ int main(int argc, char *argv[]){
 
 		CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		&playlist,		psl_similar_artists_available(const QList<int>&));
 		CONNECT(lastfm,	sig_last_fm_logged_in(bool),							&ui_playlist,	last_fm_logged_in(bool));
+		CONNECT(lastfm,	sig_last_fm_logged_in(bool),							&player,		last_fm_logged_in(bool));
 		CONNECT(lastfm,	sig_new_radio_playlist(const vector<MetaData>&),		&playlist,		psl_new_radio_playlist_available(const vector<MetaData>&));
-		CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),	&player,	lfm_info_fetched(const MetaData&, bool, bool));
+		CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),	&player,		lfm_info_fetched(const MetaData&, bool, bool));
 
 		CONNECT(&ui_playlist_chooser, sig_playlist_chosen(int),		&playlists, load_single_playlist(int));
 		CONNECT(&ui_playlist_chooser, sig_delete_playlist(int), 	&playlists, delete_playlist(int));
@@ -328,8 +330,17 @@ int main(int argc, char *argv[]){
 		library.loadDataFromDb();
 
 		QString user, password;
-        set->getLastFMNameAndPW(user, password);
-        LastFM::getInstance()->lfm_login( user,password );
+		if(set->getLastFMActive()){
+			set->getLastFMNameAndPW(user, password);
+			player.suppress_warning(true);
+			bool success = LastFM::getInstance()->lfm_login( user,password, true );
+			if(!success){
+				QMessageBox::warning(player.centralWidget(), "LastFM warning", "You are not logged in to LastFM.<br />Deactivate LastFM to disable this warning");
+			}
+
+			player.suppress_warning(false);
+
+		}
 
         app.exec();
 

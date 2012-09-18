@@ -190,8 +190,9 @@ void GUI_Playlist::library_path_changed(QString path){
 void GUI_Playlist::check_dynamic_play_button(){
 
 	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
+	bool lfm_active = CSettingsStorage::getInstance()->getLastFMActive();
 
-	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
+	if(libraryPath.size() == 0 || !QFile::exists(libraryPath) || !lfm_active){
 		this->ui->btn_dynamic->setEnabled(false);
 		this->ui->btn_dynamic->setToolTip("Please set library path first");
 	}
@@ -689,6 +690,10 @@ void GUI_Playlist::edit_id3_but_pressed(){
 void GUI_Playlist::last_fm_logged_in(bool success){
 
 	this->ui->btn_dynamic->setEnabled(success);
+}
+
+void GUI_Playlist::psl_lfm_activated(bool b){
+	this->ui->btn_dynamic->setEnabled(b);
 }
 
 

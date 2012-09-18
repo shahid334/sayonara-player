@@ -40,6 +40,7 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 
+
 #include <iostream>
 #include <curl/curl.h>
 
@@ -71,6 +72,7 @@ LastFM::LastFM() {
 	_class_name = QString("LastFM");
 	_logged_in = false;
 	_track_changed_thread = 0;
+	_settings = CSettingsStorage::getInstance();
 }
 
 
@@ -124,11 +126,17 @@ bool LastFM::_lfm_check_login(){
 	else return true;
 }
 
+bool LastFM::lfm_is_logged_in(){
+	return _logged_in;
+}
 
-bool LastFM::lfm_login(QString username, QString password){
+bool LastFM::lfm_login(QString username, QString password, bool should_emit){
+
+	_logged_in = false;
+
+	if(!_settings->getLastFMActive()) return false;
 
 	_username = username;
-	_logged_in = false;
 	_auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
 
 	UrlParams signature_data;
@@ -143,7 +151,8 @@ bool LastFM::lfm_login(QString username, QString password){
 	bool success = lfm_wa_call_url(url, response);
 
 	if(!success){
-		qDebug() << " Could not connect to " << url;
+		if(should_emit)
+			emit sig_last_fm_logged_in(_logged_in);
 		return false;
 	}
 
@@ -151,12 +160,18 @@ bool LastFM::lfm_login(QString username, QString password){
 
 	if(_session_key.size() != 0) {
 		_logged_in = true;
+		if(should_emit)
+			emit sig_last_fm_logged_in(_logged_in);
 	}
 
 	else{
+		if(should_emit)
+			emit sig_last_fm_logged_in(_logged_in);
 		return false;
 	}
 
+
+	// only for radio
 	UrlParams handshake_data;
 		handshake_data["version"] = QString::number(1.5);
 		handshake_data["platform"] = QString("linux");
@@ -183,12 +198,14 @@ bool LastFM::lfm_login(QString username, QString password){
 
 
 void LastFM::psl_login(QString username, QString password){
-	bool logged_in = lfm_login(username, password);
+	bool logged_in = lfm_login(username, password, false);
 	emit sig_last_fm_logged_in(logged_in);
 }
 
 
 void LastFM::psl_track_changed(const MetaData& md){
+
+	if(!_settings->getLastFMActive() || !_logged_in) return;
 
 	if(!_track_changed_thread) {
 		if(!_lfm_init_track_changed_thread())
@@ -209,6 +226,8 @@ void LastFM::psl_track_changed(const MetaData& md){
 
 
 void LastFM::psl_scrobble(const MetaData& metadata){
+
+	if(!_settings->getLastFMActive() || !_logged_in) return;
 
 	if(!_lfm_check_login())	return;
 
@@ -251,6 +270,11 @@ void LastFM::psl_scrobble(const MetaData& metadata){
 
 
 void LastFM::psl_radio_init(const QString& str, int radio_mode){
+
+	if(!_logged_in){
+
+		return;
+	}
 
 	if(_session_key2.size() != 32){
 		if(!_lfm_check_login()){
@@ -418,7 +442,6 @@ bool LastFM::_lfm_parse_playlist_answer(vector<MetaData>& v_md, const QDomDocume
 
 	return (v_md.size() > 0);
 }
-
 
 
 void LastFM::lfm_get_friends(QStringList& friends){

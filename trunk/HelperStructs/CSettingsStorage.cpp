@@ -117,9 +117,14 @@ QString CSettingsStorage::getDBFileName () {
 
 }
 
+bool CSettingsStorage::getLastFMActive(){
+	return m_lfm_active;
+}
 
+void CSettingsStorage::setLastFMActive(bool b){
+	m_lfm_active = b;
+}
 
-//TODO hash
 QPair<QString, QString> CSettingsStorage::getLastFMNameAndPW () { return this -> m_lastFm; }
 void CSettingsStorage::getLastFMNameAndPW (QString & name, QString & pw) {
     name= this -> m_lastFm.first;

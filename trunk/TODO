@@ -1,1 +1,27 @@
-baumstruktur für genres
+
+LastFM:
+	(de)activate LastFM
+	(un)successful login message
+	signal when logged in / not logged in sig_lfm_logged_in(bool)
+	isLoggedIn in lastFM
+	
+	dynamic playlist button (de)activation
+	view option enable/disable
+	info button library
+	artist/album/track info dialog
+
+Socket:
+	volume
+	jump
+
+Player:
+	slider
+
+Playlist:
+	love option
+
+
+
+
+	
+	

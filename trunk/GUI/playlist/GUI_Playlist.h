@@ -88,6 +88,7 @@
 			void import_result(bool);
 			void set_radio_active(int radio);
 			void psl_show_small_playlist_items(bool small_items);
+			void psl_lfm_activated(bool);
 
 		private slots:
 			void double_clicked(const QModelIndex &);
