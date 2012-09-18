@@ -42,8 +42,7 @@ signals:
 	void sig_stop();
 	void sig_prev();
 	void sig_next();
-	void sig_louder();
-	void sig_leiser();
+	void sig_setVolume(int);
 
 public:
 	Socket();

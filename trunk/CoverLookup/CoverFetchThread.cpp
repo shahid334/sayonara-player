@@ -65,7 +65,7 @@ void CoverFetchThread::search_images_for_artist(const QString& artist_name, int 
 	QStringList image_adresses = call_and_parse_artist(artist_name, num + num / 2, _cover_source);
 	_n_found_images = download_covers(image_adresses, _num_covers_2_fetch, images, true);
 
-	for(uint c=0; c<_n_found_images; c++){
+	for(int c=0; c<_n_found_images; c++){
 		_images.push_back(images[c]);
 		if(c == 0){
 			images[c].save(path);
@@ -94,7 +94,7 @@ void CoverFetchThread::search_images_for_albums(){
 						_n_found_images = download_covers(cover_adresses, _num_covers_2_fetch, images);
 						if(_n_found_images){
 
-							for(uint c=0; c<_n_found_images; c++){
+							for(int c=0; c<_n_found_images; c++){
 
 								if(c==0) {
 									images[c].save(path);
@@ -125,7 +125,7 @@ void CoverFetchThread::search_images_for_albums(){
 						_n_found_images = download_covers(cover_adresses, _num_covers_2_fetch, images);
 						if(_n_found_images > 0){
 
-							for(uint c=0; c<_n_found_images; c++){
+							for(int c=0; c<_n_found_images; c++){
 								if(c==0){
 									images[c].save(path);
 								}

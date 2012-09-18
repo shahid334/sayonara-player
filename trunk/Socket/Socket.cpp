@@ -54,15 +54,22 @@ Socket::~Socket() {
 void Socket::run(){
 	char msg[1024];
 
+	qDebug() << "Starting socket on port "<<_port;
+
 	while(1){
 
-		if(!sock_connect()) return;
+		if(!sock_connect()) {
+			qDebug() << "Cannot establish socket";
+			return;
+		}
 
 		int err = -1;
 
 		while( err != 0 ){
 			err = recv(_client_socket, msg, 1024, 0);
+			qDebug() << "error on port " << _client_socket << " Port = " << _port;
 			if(err != -1){
+
 				QString msg_string(msg);
 				if(msg_string.startsWith("next")) {
 					emit sig_next();
@@ -81,13 +88,12 @@ void Socket::run(){
 					emit sig_stop();
 				}
 
-				else if(msg_string.startsWith("vol+")) {
-					emit sig_louder();
+				else if(msg_string.startsWith("vol")) {
+					bool ok;
+					int volume = msg_string.mid(3,2).toInt(&ok);
+					if(ok) emit sig_setVolume(volume);
 				}
 
-				else if(msg_string.startsWith("vol-")) {
-					emit sig_leiser();
-				}
 
 				else if(msg_string.startsWith("q")) {
 					break;

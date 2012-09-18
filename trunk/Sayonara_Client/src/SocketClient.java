@@ -20,7 +20,7 @@ public class SocketClient {
 				_w = new PrintWriter( _s.getOutputStream(), true);
 				break;
 			} catch(Exception e){
-			
+				System.out.println("trying new socket");
 				port++;
 				
 			}
@@ -68,12 +68,8 @@ public class SocketClient {
 		write("stop");
 	}
 	
-	public void louder(){
-		write("vol+");
-	}
-	
-	public void leiser(){
-		write("vol-");
+	public void changeVolume(int val){
+		write("vol" + val);
 	}
 	
 	public void quit(){

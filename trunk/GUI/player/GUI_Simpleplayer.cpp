@@ -335,7 +335,7 @@ void GUI_SimplePlayer::psl_id3_tags_changed(vector<MetaData>& v_md) {
 	MetaData md_new;
 	bool found = false;
 
-	for(int i=0; i<v_md.size(); i++){
+	for(uint i=0; i<v_md.size(); i++){
 		if(m_metadata.id == v_md[i].id){
 			m_metadata = v_md[i];
 			found = true;
@@ -624,13 +624,26 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 }
 
 void GUI_SimplePlayer::fileSelectedClicked(bool) {
+
+	QStringList filetypes = Helper::get_soundfile_extensions();
+	QString filetypes_str = QString("Media files (");
+	foreach(QString filetype, filetypes){
+		filetypes_str += filetype;
+		if(filetype != filetypes.last()){
+			filetypes_str += " ";
+		}
+	}
+
+	filetypes_str += ")";
+
+
+
 	QStringList list =
 			QFileDialog::getOpenFileNames(
 					this,
 					tr("Open Media files"),
 					QDir::homePath(),
-					tr(
-							"Media files (*.mp3 *.wav *.flac *.aac *.wma *.avi *.mpg *.mpeg *.m3u *.pls *.asx)"));
+					filetypes_str);
 
 	if (list.size() > 0)
 		emit fileSelected(list);

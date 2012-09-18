@@ -233,6 +233,8 @@ bool CDatabaseConnector::store_settings(){
 	QString last_fm_password;
 	CSettingsStorage* storage = CSettingsStorage::getInstance();
 
+	m_database.transaction();
+
 	bool lfm_active = storage->getLastFMActive();
 	store_setting("LastFM_active", lfm_active);
 
@@ -321,6 +323,7 @@ bool CDatabaseConnector::store_settings(){
 	bool show_playlist_numbers = storage->getPlaylistNumbers();
 	store_setting("show_playlist_numbers", show_playlist_numbers);
 
+	m_database.commit();
 	return true;
 }
 

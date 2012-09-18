@@ -64,10 +64,6 @@ QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 	 if (!index.isValid() || _pathlist.size() == 0)
 		 return QVariant();
 
-	 int row = index.row();
-	 int col = index.column();
-	 int calc_entry = index.row() * columnCount() + index.column();
-
 	 if(role == Qt::WhatsThisRole){
 		 return _pathlist[index.row() * columnCount() + index.column()];
 	 }

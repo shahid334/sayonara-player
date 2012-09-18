@@ -6,6 +6,9 @@ import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 
 public class AppWindow extends JFrame {
@@ -15,8 +18,7 @@ public class AppWindow extends JFrame {
 	JButton _btn_play;
 	JButton _btn_pause;
 	JButton _btn_stop;
-	JButton _btn_louder;
-	JButton _btn_leiser;
+	JSlider _sli_volume;
 	
 
 	SocketClient _s;
@@ -48,13 +50,10 @@ public class AppWindow extends JFrame {
 		_s.stop();
 	}
 	
-	private void btn_louder_clicked(){
-		_s.louder();
+	private void sli_changed(int val){
+		_s.changeVolume(val);
 	}
 	
-	private void btn_leiser_clicked(){
-		_s.leiser();
-	}
 	
 
 	private void initWindow(){
@@ -63,9 +62,7 @@ public class AppWindow extends JFrame {
 		_btn_play = new JButton("PLAY");
 		_btn_pause = new JButton("PAUSE");
 		_btn_stop = new JButton("STOP");
-		_btn_louder = new JButton("VOL+");
-		_btn_leiser = new JButton("VOL-");
-		
+		_sli_volume = new JSlider(JSlider.VERTICAL, 0, 99, 0);
 		_btn_bwd.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -108,23 +105,12 @@ public class AppWindow extends JFrame {
 			
 		});
 		
-		_btn_louder.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-				btn_louder_clicked();
+		_sli_volume.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e){
+				int val = _sli_volume.getValue();
+				sli_changed(val);
 			}
-			
 		});
-
-		
-		_btn_leiser.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-				btn_leiser_clicked();
-			}
-			
-		});
-
 		this.addWindowListener(new WindowAdapter(){
 		      public void windowClosing(WindowEvent e){
 		        _s.close_socket();
@@ -139,16 +125,16 @@ public class AppWindow extends JFrame {
 		
 		_btn_stop.setBounds(10, 130, 210, 50);
 		
-		_btn_louder.setBounds(250, 10, 100, 75);
-		_btn_leiser.setBounds(250, 105, 100, 75);
+		_sli_volume.setBounds(250, 10, 100, 75);
+	
 		
 		this.getContentPane().add(_btn_bwd);
 		this.getContentPane().add(_btn_fwd);
 		this.getContentPane().add(_btn_play);
 		this.getContentPane().add(_btn_pause);
 		this.getContentPane().add(_btn_stop);
-		this.getContentPane().add(_btn_louder);
-		this.getContentPane().add(_btn_leiser);
+		this.getContentPane().add(_sli_volume);
+		
 		
 		
 		this.pack();

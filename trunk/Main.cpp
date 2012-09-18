@@ -90,7 +90,6 @@ int main(int argc, char *argv[]){
 		}
 
 		CSettingsStorage * set = CSettingsStorage::getInstance();
-		bool is_socket_active = set->getSocketActivated();
 
 		set  -> runFirstTime(false);
 		CDatabaseConnector::getInstance()->load_settings();
@@ -98,6 +97,8 @@ int main(int argc, char *argv[]){
 		QApplication app (argc, argv);
 			app.setApplicationName("Sayonara");
 			app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
+
+
 
         GUI_SimplePlayer 		player;
         GUI_PlaylistChooser		ui_playlist_chooser(player.getParentOfPlugin());
@@ -285,13 +286,14 @@ int main(int argc, char *argv[]){
 		CONNECT (&ui_stream_rec, sig_complete_tracks(bool), 		listen,		psl_strrip_complete_tracks(bool));
 		CONNECT (&ui_stream_rec, sig_create_playlist(bool), 		listen,		psl_strrip_set_create_playlist(bool ));
 
-
+		bool is_socket_active = set->getSocketActivated();
 		if(is_socket_active){
 			CONNECT (&remote_socket, sig_play(),		&playlist,			psl_play());
 			CONNECT (&remote_socket, sig_next(),		&playlist,			psl_forward());
 			CONNECT (&remote_socket, sig_prev(),		&playlist,			psl_backward());
 			CONNECT (&remote_socket, sig_stop(),		&playlist,			psl_stop());
 			CONNECT (&remote_socket, sig_pause(),		listen,				pause());
+			CONNECT (&remote_socket, sig_setVolume(int),&player,			setVolume(int));
 
 			remote_socket.start();
 		}

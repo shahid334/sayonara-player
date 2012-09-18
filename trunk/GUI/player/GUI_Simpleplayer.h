@@ -84,6 +84,7 @@ public slots:
 
     void set_radio_active(int);
     void psl_strrip_set_active(bool);
+    void setVolume(int vol);
 
 
 
@@ -261,7 +262,7 @@ public:
     QWidget* getParentOfLibrary();
     QWidget* getParentOfPlugin();
 
-    void setVolume(int vol);
+
     void setStyle(int);
     void suppress_warning(bool b);
 

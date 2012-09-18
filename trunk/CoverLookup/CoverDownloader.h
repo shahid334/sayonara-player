@@ -174,7 +174,7 @@ int download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImag
 
 	vec_images.clear();
 
-	int found = 0;
+	uint found = 0;
 
 	// if no adresses, try to fetch some
 	if (adresses.size() == 0) {
