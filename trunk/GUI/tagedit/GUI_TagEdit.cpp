@@ -54,6 +54,9 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
 
     _db = CDatabaseConnector::getInstance();
 
+
+
+
     init();
     QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "edit.png")).scaled(30,30, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     this->ui->lab_icon->setPixmap(pix);
@@ -67,6 +70,13 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     complete_list << TAG_YEAR;
     QCompleter* completer = new QCompleter(complete_list);
     this->ui->le_tag_from_path->setCompleter(completer);
+
+    this->ui->le_tag_from_path->setVisible(false);
+    this->ui->cb_tag_all->setVisible(false);
+    this->ui->btn_tag_apply->setVisible(false);
+    this->ui->btn_tag_help->setVisible(false);
+    this->ui->btn_tag_undo->setVisible(false);
+    this->ui->label_8->setVisible(false);
 
     connect(this->ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
     connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
@@ -201,16 +211,16 @@ void GUI_TagEdit::ok_button_clicked(){
 
     vector<MetaData> v_md2send = _vec_tmp_metadata;
 
-    //emit id3_tags_changed();
-  // emit id3_tags_changed(v_md2send);
+    emit id3_tags_changed();
+    emit id3_tags_changed(v_md2send);
 
 
-   /* this->ui->btn_all_album->setChecked(false);
+    this->ui->btn_all_album->setChecked(false);
     this->ui->btn_all_artist-> setChecked(false);
-   // this->ui->btn_all_genre->setChecked(false);
+    //this->ui->btn_all_genre->setChecked(false);
     this->ui->btn_all_year->setChecked(false);
     if(b)
-        emit sig_success(b);*/
+        emit sig_success(b);
 }
 
 void GUI_TagEdit::cancel_button_clicked(){
@@ -523,7 +533,6 @@ void GUI_TagEdit::change_mp3_file(MetaData& md){
 
 bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists){
 
-    return true;
 
     if(new_albums.size() > 0 || new_artists.size() > 0){
          QMessageBox msgBox;
