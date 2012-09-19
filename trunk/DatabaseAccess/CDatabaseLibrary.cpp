@@ -69,6 +69,7 @@ bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & v_md)  {
 
     int artistID = -1, albumID = -1;
 
+
     m_database.transaction();
     foreach (MetaData data, v_md) {
 

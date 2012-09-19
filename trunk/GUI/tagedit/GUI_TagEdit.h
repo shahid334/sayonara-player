@@ -29,6 +29,12 @@
 #ifndef GUI_TAGEDIT_H_
 #define GUI_TAGEDIT_H_
 
+#define TAG_TITLE QString("<TITLE>")
+#define TAG_ALBUM QString("<ALBUM>")
+#define TAG_ARTIST QString("<ARTIST>")
+#define TAG_TRACK_NUM QString("<TRACK>")
+#define TAG_YEAR QString("<YEAR>")
+
 #include "ui_GUI_TagEdit.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -71,6 +77,13 @@ public:
 		void all_artists_clicked();
 		void all_genre_clicked();
 		void all_year_clicked();
+        void all_tag_clicked();
+
+        void help_tag_clicked();
+        void undo_tag_clicked();
+        void apply_tag_clicked();
+
+        void tag_from_path_text_changed(const QString&);
 
 
 	public slots:
@@ -81,6 +94,7 @@ public:
 	private:
 		Ui::GUI_TagEdit* ui;
 		QWidget*	_parent;
+        QMap<int, bool>  _idx_affected_by_tag;
 
 		int _cur_idx;
 		vector<MetaData> _vec_org_metadata;
@@ -108,6 +122,11 @@ public:
 		bool store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists);
 
 
+        bool calc_tag(int idx, MetaData& md);
+        bool remove_aftertag_str(QString& str, QString aftertag, bool looking_for_num);
+        bool has_open_tag(QString str);
+        bool has_tag(QString str);
+        bool is_valid_tag_str(QString str);
 
 
 };

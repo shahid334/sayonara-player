@@ -251,9 +251,9 @@ int main(int argc, char *argv[]){
         CONNECT(&ui_playlist, edit_id3_signal(), 								&playlist, 		psl_edit_id3_request());
 
         if(ui_id3_editor){
-			CONNECT(ui_id3_editor, id3_tags_changed(), 								ui_library,	id3_tags_changed());
-			CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&playlist, 		psl_id3_tags_changed(vector<MetaData>&));
-			CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&player, 		psl_id3_tags_changed(vector<MetaData>&));
+            CONNECT(ui_id3_editor, id3_tags_changed(), 								ui_library, 	id3_tags_changed());
+            /*CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&playlist, 		psl_id3_tags_changed(vector<MetaData>&));
+            CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			&player, 		psl_id3_tags_changed(vector<MetaData>&));*/
         }
 
 		CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		&playlist,		psl_similar_artists_available(const QList<int>&));

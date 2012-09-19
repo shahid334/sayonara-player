@@ -43,6 +43,7 @@
 #include "GUI/playlist/PlaylistItemDelegateInterface.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
+#include "StreamPlugins/LastFM/LastFM.h"
 #include <QWidget>
 #include <QDebug>
 #include <QKeyEvent>
@@ -91,7 +92,12 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	this->ui->btn_append->setChecked(_playlist_mode.append);
 	this->ui->btn_repAll->setChecked(_playlist_mode.repAll);
-	this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
+
+	if(settings->getLastFMActive() && LastFM::getInstance()->lfm_is_logged_in())
+		this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
+	else
+		this->ui->btn_dynamic->setChecked(false);
+
 	this->ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
 	this->ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
 
@@ -190,11 +196,17 @@ void GUI_Playlist::library_path_changed(QString path){
 void GUI_Playlist::check_dynamic_play_button(){
 
 	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
-	bool lfm_active = CSettingsStorage::getInstance()->getLastFMActive();
+	bool lfm_active = CSettingsStorage::getInstance()->getLastFMActive() && LastFM::getInstance()->lfm_is_logged_in();
 
-	if(libraryPath.size() == 0 || !QFile::exists(libraryPath) || !lfm_active){
+
+	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
 		this->ui->btn_dynamic->setEnabled(false);
 		this->ui->btn_dynamic->setToolTip("Please set library path first");
+	}
+
+	if(!lfm_active){
+		this->ui->btn_dynamic->setEnabled(false);
+		this->ui->btn_dynamic->setToolTip("Please configure LastFM");
 	}
 
 	else{

@@ -9,7 +9,7 @@ TEMPLATE = app
 TARGET = sayonara
 
 DEPENDPATH += . GUI MP3_Listen HelperStructs CoverLookup
-INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup 
+INCLUDEPATH += . GUI MP3_Listen HelperStructs CoverLookup /usr/include/qt4/QtCore /usr/include/qt4/Qt /usr/include/qt4/QtGui /usr/include/qt4/QtXml /usr/include/qt4/QtSql
 CONFIG          += link_pkgconfig
 PKGCONFIG       += gstreamer-0.10
 LIBS            += -L/usr/lib `pkg-config --cflags --libs gstreamer-0.10`

@@ -37,7 +37,13 @@
 using namespace Sort;
 
 #define DB_TRY_OPEN(db) if (!this -> db.isOpen()) \
-							this -> db.open()
+                            this -> db.open()
+#define DB_RETURN_NOT_OPEN_VOID(db) if (!this -> db.isOpen()) \
+                                    return
+
+#define DB_RETURN_NOT_OPEN_INT(db)if (!this -> db.isOpen()) \
+                            return -1
+
 
 //class CDatabaseConnector;
 class CDatabaseConnector : public QObject

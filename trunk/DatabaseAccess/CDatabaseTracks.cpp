@@ -342,6 +342,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaDat
 void CDatabaseConnector::getAllTracksBySearchString(Filter filter, vector<MetaData>& result, TrackSort sort){
 
 	DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_VOID(m_database);
 
 	MetaData data;
 
@@ -395,6 +396,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, vector<MetaDa
 
 int CDatabaseConnector::deleteTrack(MetaData& md){
 	DB_TRY_OPEN(m_database);
+     DB_RETURN_NOT_OPEN_INT(m_database);
 
 	try {
 			QSqlQuery q (this -> m_database);
@@ -424,6 +426,7 @@ int CDatabaseConnector::deleteTrack(MetaData& md){
 int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
 
 	DB_TRY_OPEN(m_database);
+     DB_RETURN_NOT_OPEN_INT(m_database);
 
 	int success = 0;
 
@@ -444,20 +447,32 @@ int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
 int CDatabaseConnector::updateTrack(MetaData& data){
 
 	DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_INT(m_database);
+
 
 	QSqlQuery q (this -> m_database);
 	try{
-		q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID");
+        q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID;");
+
+        qDebug() << data.album_id;
+        qDebug() << data.artist_id;
+        qDebug() << data.title;
+        qDebug() << data.track_num;
+        qDebug() << data.year;
+        qDebug() << data.id;
+
 
 		q.bindValue(":albumID",QVariant(data.album_id));
 		q.bindValue(":artistID",QVariant(data.artist_id));
-		q.bindValue(":title",QVariant(data.title));
+        q.bindValue(":title",QVariant(data.title));
 		q.bindValue(":track",QVariant(data.track_num));
 		q.bindValue(":year",QVariant(data.year));
 		q.bindValue(":trackID", QVariant(data.id));
 
-		if (!q.exec()) {
+        qDebug() << q.executedQuery();
 
+        if (!q.exec()) {
+            qDebug() << "error";
 			throw QString ("SQL - Error: update track " + data.filepath);
 		}
 	}
