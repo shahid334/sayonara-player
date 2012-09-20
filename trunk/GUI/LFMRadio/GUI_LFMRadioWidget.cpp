@@ -51,6 +51,8 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QWidget* parent) : QDockWidget(parent)  {
 	connect(_ui->rb_recom, SIGNAL(released()), this, SLOT(radio_button_changed()));
 	connect(_ui->rb_user, SIGNAL(released()), this, SLOT(radio_button_changed()));
 	connect(_ui->btn_listen, SIGNAL(released()), this, SLOT(start_listen()));
+
+    hide();
 }
 
 GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
@@ -137,5 +139,7 @@ void GUI_LFMRadioWidget::radio_button_changed(){
 
 void GUI_LFMRadioWidget::closeEvent ( QCloseEvent * event ){
 	event->ignore();
+    hide();
+    close();
 	emit close_event();
 }

@@ -62,6 +62,36 @@
 			void dragMoveEvent(QDragMoveEvent* event);
 			void clear_drag_lines(int row);
 
+            void *operator new[](size_t size)
+             {
+                 return malloc(size);
+             }
+
+             void *operator new(size_t size)
+             {
+                 return malloc(size);
+             }
+
+             void operator delete[](void *ptr)
+             {
+                 free(ptr);
+             }
+
+             void operator delete[](void *ptr, size_t)
+             {
+                 free(ptr);
+             }
+
+             void operator delete(void *ptr)
+             {
+                 free(ptr);
+             }
+
+             void operator delete(void *ptr, size_t)
+             {
+                 free(ptr);
+             }
+
 
 		signals:
 			void selected_row_changed(int);

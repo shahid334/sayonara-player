@@ -61,6 +61,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 	connect(this->ui->btn_save_as, SIGNAL(pressed()), this, SLOT(save_as_button_pressed()));
 	connect(this->ui->btn_delete, SIGNAL(pressed()), this, SLOT(delete_button_pressed()));
 
+    hide();
 
 }
 
@@ -180,7 +181,10 @@ void GUI_PlaylistChooser::apply_button_pressed(){
 
 
 void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
-	event->ignore();
+
+    event->ignore();
+    hide();
+    close();
 	emit sig_closed();
 }
 

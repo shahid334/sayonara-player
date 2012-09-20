@@ -314,5 +314,37 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>btn_close</sender>
+   <signal>clicked()</signal>
+   <receiver>InfoDialog</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>196</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btn_close1</sender>
+   <signal>clicked()</signal>
+   <receiver>InfoDialog</receiver>
+   <slot>hide()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>592</x>
+     <y>360</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>327</x>
+     <y>196</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

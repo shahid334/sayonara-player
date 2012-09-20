@@ -48,6 +48,8 @@ GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) : QDialog(parent){
 	connect(this->ui->sb_start, SIGNAL(valueChanged(int)), this, SLOT(_sl_start_changed(int)));
 	connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(_sl_ok_pressed()));
 
+    hide();
+
 }
 
 GUI_SocketSetup::~GUI_SocketSetup() {
@@ -69,5 +71,8 @@ void GUI_SocketSetup::_sl_ok_pressed(){
 	_db->setSocketActivated(this->ui->cb_activate->isChecked());
 	_db->setSocketFrom(this->ui->sb_start->value());
 	_db->setSocketTo(this->ui->sb_increment->value());
+
+    hide();
+    close();
 }
 

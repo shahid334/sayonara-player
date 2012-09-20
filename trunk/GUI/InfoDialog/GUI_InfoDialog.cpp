@@ -111,6 +111,8 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 	connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
 	connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
 
+    hide();
+
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {
@@ -656,7 +658,10 @@ void GUI_InfoDialog::show(int tab){
 }
 
 void GUI_InfoDialog::psl_id3_success(bool b){
-	if(b) close();
+    if(b) {
+        hide();
+        close();
+    }
 	else{
 		QMessageBox::warning ( this,
 				"Error",

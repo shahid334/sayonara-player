@@ -87,6 +87,8 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     connect(this->ui->btn_tag_help, SIGNAL(clicked()), this, SLOT(help_tag_clicked()));
     connect(this->ui->btn_tag_undo, SIGNAL(clicked()), this, SLOT(undo_tag_clicked()));
     connect(this->ui->btn_tag_apply, SIGNAL(clicked()), this, SLOT(apply_tag_clicked()));
+
+    hide();
 }
 
 
@@ -221,6 +223,11 @@ void GUI_TagEdit::ok_button_clicked(){
     this->ui->btn_all_year->setChecked(false);
     if(b)
         emit sig_success(b);
+
+    if(!_parent) {
+        hide();
+        close();
+    }
 }
 
 void GUI_TagEdit::cancel_button_clicked(){
@@ -230,6 +237,11 @@ void GUI_TagEdit::cancel_button_clicked(){
    // this->ui->btn_all_genre->setChecked(false);
     this->ui->btn_all_year->setChecked(false);
     emit sig_cancelled();
+
+    if(!_parent) {
+        hide();
+        close();
+    }
 }
 
 

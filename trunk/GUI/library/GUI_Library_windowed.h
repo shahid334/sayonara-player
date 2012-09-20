@@ -70,6 +70,8 @@ public:
 	GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dialog);
 	virtual ~GUI_Library_windowed();
 
+
+
 private:
 	Ui::Library_windowed* 			ui;
 
@@ -84,7 +86,7 @@ private:
 
 	QAction* 	_info_action;
 	QAction* 	_edit_action;
-	QAction* 	_delete_action;
+    QAction* 	_delete_action;
 	QAction*	_play_next_action;
 
 	Filter		_cur_searchfilter;

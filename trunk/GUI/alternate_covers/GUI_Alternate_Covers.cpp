@@ -184,6 +184,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 		_filelist.clear();
 		update_model(-1);
+        hide();
 		close();
 	}
 
@@ -196,6 +197,7 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 	_cov_lookup->terminate_thread();
 	_filelist.clear();
 	update_model(-1);
+    hide();
 	this->close();
 }
 

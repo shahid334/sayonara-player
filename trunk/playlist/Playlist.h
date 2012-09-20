@@ -48,7 +48,7 @@ class Playlist  : public QObject {
 
 	Q_OBJECT
 public:
-	Playlist(QObject * parent);
+    Playlist(QObject * parent=0);
 	virtual ~Playlist();
 
 	void ui_loaded();

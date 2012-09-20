@@ -62,6 +62,8 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) {
 	connect(this->ui->cb_create_playlist, SIGNAL(toggled(bool)), this, SLOT(sl_cb_create_playlist_toggled(bool)));
 	connect(this->ui->btn_path, SIGNAL(clicked()), this, SLOT(sl_btn_path_clicked()));
 	connect(this->ui->btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
+
+    hide();
 }
 
 
@@ -101,10 +103,11 @@ void GUI_StreamRecorder::sl_btn_path_clicked(){
 
 void GUI_StreamRecorder::psl_show(bool b){
 	Q_UNUSED(b);
-	this->show();
+    show();
 }
 
 void GUI_StreamRecorder::sl_ok(){
 	CDatabaseConnector::getInstance()->store_settings();
-	this->close();
+    hide();
+    close();
 }

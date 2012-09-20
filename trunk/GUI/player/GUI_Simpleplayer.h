@@ -266,6 +266,8 @@ public:
     void setStyle(int);
     void suppress_warning(bool b);
 
+
+
 };
 
 #endif // GUI_SIMPLEPLAYER_H

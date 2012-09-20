@@ -9,6 +9,7 @@ PKG_CHECK_MODULES(GLIB glib-2.0)
 PKG_CHECK_MODULES(TAGLIB REQUIRED taglib>=1.6)
 PKG_CHECK_MODULES(GOBJECT gobject-2.0)
 
+SET(CMAKE_BUILD_TYPE "Release")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 SET(CMAKE_C_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
@@ -40,11 +41,12 @@ LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 ADD_SUBDIRECTORY(Engine/GStreamer)
 
 SET(HEADERS
-	Engine/Engine.h
-	Engine/SoundPluginLoader.h
-	GUI/player/GUI_Simpleplayer.h
-	GUI/player/GUI_TrayIcon.h 
-	GUI/player/SearchSlider.h
+    application.h
+    Engine/Engine.h
+    Engine/SoundPluginLoader.h
+    GUI/player/GUI_Simpleplayer.h
+    GUI/player/GUI_TrayIcon.h
+    GUI/player/SearchSlider.h
     GUI/playlist/GUI_Playlist.h
     GUI/playlist/PlaylistItemModel.h
     GUI/playlist/PlaylistItemDelegate.h
@@ -87,10 +89,12 @@ SET(HEADERS
 )
 
 SET(SOURCES
-	Engine/SoundPluginLoader.cpp
-	GUI/player/GUI_Simpleplayer.cpp
-	GUI/player/GUI_TrayIcon.cpp
-	GUI/player/SearchSlider.cpp
+    Main.cpp
+    application.cpp
+    Engine/SoundPluginLoader.cpp
+    GUI/player/GUI_Simpleplayer.cpp
+    GUI/player/GUI_TrayIcon.cpp
+    GUI/player/SearchSlider.cpp
     GUI/playlist/GUI_Playlist.cpp
     GUI/playlist/PlaylistItemModel.cpp
     GUI/playlist/PlaylistItemDelegate.cpp
@@ -148,7 +152,7 @@ SET(SOURCES
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
     Socket/Socket.cpp
-    Main.cpp
+
 )
 
 SET(FORMS

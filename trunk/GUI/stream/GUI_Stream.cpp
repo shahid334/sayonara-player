@@ -53,6 +53,8 @@ GUI_Stream::GUI_Stream(QWidget* parent): QDockWidget(parent)  {
 	this->connect(this->ui->combo_stream, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
 
 	this->connect(this->ui->le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
+
+    hide();
 }
 
 
@@ -226,6 +228,8 @@ void GUI_Stream::save_clicked(){
 
 void GUI_Stream::closeEvent ( QCloseEvent * event ){
 	event->ignore();
+    hide();
+    close();
 	emit sig_close_event();
 }
 

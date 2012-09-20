@@ -68,6 +68,8 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 
 	connect(this->_ui->btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
 
+    hide();
+
 }
 
 GUI_Equalizer::~GUI_Equalizer() {
@@ -227,5 +229,7 @@ void GUI_Equalizer::btn_preset_clicked(){
 
 void 	GUI_Equalizer::closeEvent ( QCloseEvent * event ){
 	event->ignore();
+    hide();
+    close();
 	emit close_event();
 }

@@ -228,7 +228,7 @@ bool CSettingsStorage::getShowLibrary(){
 }
 
 void CSettingsStorage::setShownPlugin(int plugin){
-	m_shown_plugin = plugin;
+    m_shown_plugin = plugin;
 }
 
 int CSettingsStorage::getShownPlugin(){

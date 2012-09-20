@@ -40,6 +40,7 @@
 using namespace std;
 
 GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
+
 	this->ui = new Ui_GUI_LastFM_Dialog();
 	this->ui->setupUi(this);
 
@@ -54,6 +55,8 @@ GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
 	connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
 	connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(cb_activate_toggled(bool)));
+
+    hide();
 }
 
 
@@ -104,8 +107,8 @@ void GUI_LastFM::save_button_pressed(){
             CSettingsStorage::getInstance()->setLastFMNameAndPW(this->ui->tf_username->text(), password);
         }
 
-
-	this->close();
+        hide();
+        close();
 }
 
 
