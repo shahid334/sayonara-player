@@ -276,12 +276,11 @@ void Application::init_connections(){
            CONNECT(ui_library, sig_play_next_tracks(const QList<int>&),             library,		psl_play_next_tracks(const QList<int>&));
            CONNECT(ui_library, sig_play_next_all_tracks(),                          library,		psl_play_next_all_tracks());
 
-           // should be set up when ui lastfm is instanciated
+
            CONNECT(ui_lastfm, sig_activated(bool), player, psl_lfm_activated(bool));
            CONNECT(ui_lastfm, sig_activated(bool), ui_playlist, psl_lfm_activated(bool));
            CONNECT(ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		psl_login(QString, QString));
 
-           // should be set up when ui eq is instanciated
 
            CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
            CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
@@ -290,7 +289,6 @@ void Application::init_connections(){
 
            CONNECT(ui_playlist, edit_id3_signal(),                                  playlist, 		psl_edit_id3_request());
 
-           // should be set up when ui id3 is instanciated
            CONNECT(ui_id3_editor, id3_tags_changed(), 							ui_library, 	id3_tags_changed());
            CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			playlist, 		psl_id3_tags_changed(vector<MetaData>&));
            CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			player, 		psl_id3_tags_changed(vector<MetaData>&));
@@ -302,9 +300,6 @@ void Application::init_connections(){
            CONNECT(lastfm,	sig_new_radio_playlist(const vector<MetaData>&),		playlist,		psl_new_radio_playlist_available(const vector<MetaData>&));
            CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),     player,		lfm_info_fetched(const MetaData&, bool, bool));
 
-
-           // should be set up when playlist chooser is instanciated
-
            CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
            CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
            CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist, 	psl_prepare_playlist_for_save(int));
@@ -312,26 +307,17 @@ void Application::init_connections(){
            CONNECT(ui_playlist_chooser, sig_clear_playlist(),           playlist, 	psl_clear_playlist());
            CONNECT(ui_playlist_chooser, sig_closed(),                   player, 	close_playlist_chooser());
 
-
-
            CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
            CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
            CONNECT(playlists, sig_import_tracks(const vector<MetaData>&),       library, 				importFiles(const vector<MetaData>&));
 
 
-           // should be done when ui lfm radio is instanciated
-
             CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
             CONNECT(ui_lfm_radio, close_event(), 								player, 	close_lfm_radio());
-
-
-           // should be done when ui stream is instanciated
 
             CONNECT(ui_stream, sig_play_stream(const QString&, const QString&), 	playlist, 	psl_play_stream(const QString&, const QString&));
             CONNECT(ui_stream, sig_close_event(), 									player, 	close_stream());
 
-
-           // should be done when ui stream rec is instanciated
 
            CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_strrip_set_active(bool));
            CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));

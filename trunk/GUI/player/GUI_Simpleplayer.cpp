@@ -1075,14 +1075,18 @@ QWidget* GUI_SimplePlayer::getParentOfPlugin() {
 
 void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
 	ui_playlist = playlist;
-    if(ui_playlist)
+    if(ui_playlist){
+        ui_playlist->show();
         ui_playlist->resize(this->ui->playlist_widget->size());
+    }
 }
 
 void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
 	ui_library = library;
-    if(ui_library)
-       ui_library->resize(this->ui->library_widget->size());
+    if(ui_library){
+        ui_library->show();
+        ui_library->resize(this->ui->library_widget->size());
+    }
 
 }
 

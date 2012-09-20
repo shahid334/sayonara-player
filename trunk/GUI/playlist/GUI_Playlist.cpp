@@ -146,6 +146,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	change_skin(dark);
 
 	init_menues();
+
+    hide();
 }
 
 

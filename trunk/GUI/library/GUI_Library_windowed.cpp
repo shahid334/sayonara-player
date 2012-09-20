@@ -142,6 +142,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	bool dark = (style == 1);
 	change_skin(dark);
 
+    hide();
+
 }
 
 GUI_Library_windowed::~GUI_Library_windowed() {
