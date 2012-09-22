@@ -11,7 +11,7 @@ fi
 
 if [ "$1" = "-ax64" ] ; then
 	CONTROL_FILE=./resources/sayonara64.control
-	OUTPUT_FILE=sayonara-0.3_amd64.dev
+	OUTPUT_FILE=sayonara-0.3_amd64.deb
 fi
 	
 
@@ -41,5 +41,5 @@ cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara
 
 dpkg-deb -b $DEBIAN_DIR $DEBIAN_DIR/$OUTPUT_FILE
-echo Written to $DEBIAN_DIR/sayonara-0.3.deb
+echo Written to $DEBIAN_DIR/$OUTPUT_FILE
 

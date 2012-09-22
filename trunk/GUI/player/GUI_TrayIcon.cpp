@@ -33,17 +33,16 @@
 
 GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent), MESSAGE_TIMEOUT_MS (5000) {
 
-    QPixmap play_pixmap = playIcon.pixmap(16, 16);
+    QPixmap play_pixmap = playIcon.pixmap(24, 24);
     m_playIcon = QIcon(play_pixmap);
 
-    QPixmap pause_pixmap = pauseIcon.pixmap(16, 16);
+    QPixmap pause_pixmap = pauseIcon.pixmap(24, 24);
     m_pauseIcon = QIcon(pause_pixmap);
 
     this -> setToolTip("Sayonara - Music - Player");
     this -> setIcon(playIcon);
-
-
 }
+
 
 void GUI_TrayIcon::setupMenu (    QAction* closeAction,
                                   QAction* playAction,
