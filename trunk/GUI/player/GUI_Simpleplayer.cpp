@@ -966,7 +966,7 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
 
-    m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "append_small.png"), QIcon(Helper::getIconPath() + "append_small.png"),this);
+    m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play_yellow.png"), QIcon(Helper::getIconPath() + "pause_yellow.png"),this);
     m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction);
 
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
