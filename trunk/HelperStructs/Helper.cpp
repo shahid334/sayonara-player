@@ -191,11 +191,12 @@ QString Helper::calc_google_image_search_adress(QString searchstring, QString si
 	searchstring.replace("&", "%26");
 	searchstring.replace("$", "%24");
 
-	QString url = QString("https://www.google.de/search?q=");
-	url += searchstring;
-	url += QString("&imgsz=") + size;
-	url += QString("&tbs=ift:") + filetype + ",isz:m";
-	url += QString("&tbm=isch");
+    QString url = QString("https://www.google.de/search?num=20&hl=de&site=imghp&tbm=isch&source=hp&");
+    url += QString("&q=") + searchstring;
+    url += QString("&oq=") + searchstring;
+
+    qDebug() << url;
+
 	return url;
 }
 

@@ -130,6 +130,7 @@ void GUI_SimplePlayer::initGUI() {
 
 	this->ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
 	this->ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+
 	this->ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
 	this->ui->btn_rec->setVisible(false);
 
@@ -218,6 +219,8 @@ void GUI_SimplePlayer::setupConnections(){
 	// about
 	connect(this->ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
+    connect(this->m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
+
 
     connect(this->ui->volumeSlider, SIGNAL(searchSliderMoved(int)), this,
 			SLOT(volumeChanged(int)));
@@ -255,7 +258,7 @@ void GUI_SimplePlayer::setupConnections(){
 // new track
 void GUI_SimplePlayer::update_track(const MetaData & md) {
 
-	this->ui->songProgress->setValue(0);
+    this->ui->songProgress->setValue(0);
 	this->m_metadata = md;
 
 	// sometimes ignore the date
@@ -328,6 +331,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	this->repaint();
 }
 
+
 // public slot:
 // id3 tags have changed
 void GUI_SimplePlayer::psl_id3_tags_changed(vector<MetaData>& v_md) {
@@ -363,7 +367,7 @@ void GUI_SimplePlayer::psl_id3_tags_changed(vector<MetaData>& v_md) {
 
 	emit sig_want_cover(m_metadata);
 	this->ui->btn_correct->setVisible(false);
-	this->repaint();
+    //this->repaint();
 }
 
 
@@ -429,7 +433,13 @@ void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 }
 
 void GUI_SimplePlayer::setProgressJump(int percent){
-	emit search(percent);
+
+
+    long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
+   QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
+    this->ui->curTime->setText(curPosString);
+
+    emit search(percent);
 }
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
@@ -447,14 +457,16 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 		this->ui->maxTime->setText("");
 	}
 
-	int min, sec;
+    if(!this->ui->songProgress->isSearching()){
+        int min, sec;
 
-	Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
+        Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
 
-	QString curPosString = Helper::cvtSomething2QString(min, 2)
-	+ QString(':') + Helper::cvtSomething2QString(sec, 2);
+        QString curPosString = Helper::cvtSomething2QString(min, 2)
+        + QString(':') + Helper::cvtSomething2QString(sec, 2);
 
-	this->ui->curTime->setText(curPosString);
+        this->ui->curTime->setText(curPosString);
+    }
 
 }
 
@@ -654,12 +666,15 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 
 void GUI_SimplePlayer::volumeChanged(int volume_percent) {
 	setupVolButton(volume_percent);
+    this->ui->volumeSlider->setValue(volume_percent);
 	emit sig_volume_changed(volume_percent);
 
 	CSettingsStorage::getInstance()->setVolume(volume_percent);
 }
 
 void GUI_SimplePlayer::volumeChangedByTick(int val) {
+
+
     int currentVolumeOrig_perc = this -> ui->volumeSlider->value();
     int currentVolume_perc = currentVolumeOrig_perc;
     if (val > 0) {
@@ -674,10 +689,12 @@ void GUI_SimplePlayer::volumeChangedByTick(int val) {
             currentVolume_perc-=VOLUME_STEP_SIZE_PERC;
         }
     }
-    else {
-    }
+
+
+
     if (currentVolumeOrig_perc != currentVolume_perc) {
-        this -> ui->volumeSlider->setValue(currentVolume_perc);
+
+        volumeChanged(currentVolume_perc);
     }
 }
 
