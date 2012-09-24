@@ -49,7 +49,8 @@ void GUI_TrayIcon::setupMenu (    QAction* closeAction,
                                   QAction* stopAction,
                                   QAction* muteAction,
                                   QAction* fwdAction,
-                                  QAction* bwdAction) {
+                                  QAction* bwdAction,
+                                  QAction* showAction) {
     QMenu* trayContextMenu = new QMenu();
     trayContextMenu->addAction(playAction);
     trayContextMenu->addAction(stopAction);
@@ -59,6 +60,7 @@ void GUI_TrayIcon::setupMenu (    QAction* closeAction,
     trayContextMenu->addSeparator();
     trayContextMenu->addAction(muteAction);
     trayContextMenu->addSeparator();
+    trayContextMenu->addAction(showAction);
     trayContextMenu->addAction(closeAction);
     this ->  setContextMenu(trayContextMenu);
 }

@@ -218,6 +218,7 @@ private:
     QAction*					m_muteAction;
     QAction*					m_fwdAction;
     QAction*					m_bwdAction;
+    QAction*                    m_showAction;
 
     QString						m_skinSuffix;
     QString						m_album;

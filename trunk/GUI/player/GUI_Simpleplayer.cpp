@@ -971,6 +971,8 @@ void GUI_SimplePlayer::setupTrayActions() {
     m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
     m_closeAction = new QAction(tr("Close"), this);
     m_closeAction->setIcon(QIcon(Helper::getIconPath() + "close.png"));
+    m_showAction = new QAction(tr("Show"), this);
+
 
     connect(m_stopAction, SIGNAL(triggered()), this, SLOT(stopClicked()));
     connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
@@ -978,9 +980,10 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(m_muteAction, SIGNAL(triggered()), this, SLOT(muteButtonPressed()));
     connect(m_closeAction, SIGNAL(triggered()), this, SLOT(really_close()));
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
+    connect(m_showAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
     m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"),this);
-    m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction);
+    m_trayIcon ->setupMenu(m_closeAction,m_playAction, m_stopAction,m_muteAction,m_fwdAction,m_bwdAction, m_showAction);
     m_trayIcon->playStateChanged(true);
 
     connect(this->m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));

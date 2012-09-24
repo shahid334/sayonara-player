@@ -42,7 +42,8 @@ public:
                         QAction* stopAction,
                         QAction* muteAction,
                         QAction* fwdAction,
-                        QAction* bwdAction);
+                        QAction* bwdAction,
+                        QAction* showAction);
 
     virtual bool event ( QEvent * e );
 
