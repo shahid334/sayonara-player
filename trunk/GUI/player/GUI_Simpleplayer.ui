@@ -22,6 +22,9 @@
     <height>2000</height>
    </size>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -633,6 +636,9 @@
         <height>0</height>
        </size>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
      </widget>
     </item>
     <item row="11" column="0" colspan="4">
@@ -714,7 +720,7 @@
            <x>0</x>
            <y>0</y>
            <width>318</width>
-           <height>388</height>
+           <height>390</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -868,7 +874,7 @@
      <x>0</x>
      <y>0</y>
      <width>832</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
    <property name="defaultUp">
@@ -1063,7 +1069,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Minimize to tray</string>
+    <string>Close to tray</string>
    </property>
   </action>
   <action name="action_smallPlaylistItems">

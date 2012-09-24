@@ -888,6 +888,8 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		vector<MetaData> v_md;
 		if(PlaylistParser::parse_playlist(url, v_md) > 0){
 
+            qDebug() << "got " << v_md.size() << "tracks";
+
 			for(uint i=0; i<v_md.size(); i++){
 				if(name.size() > 0)
 					v_md.at(i).title = name;

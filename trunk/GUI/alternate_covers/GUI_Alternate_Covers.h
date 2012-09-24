@@ -57,11 +57,12 @@ public:
 	signals:
 
 		void sig_search_images(const QString&);
-		void sig_covers_changed(QString);
+        void sig_covers_changed(QString);
 
 
 	public slots:
 		void start(int, bool);
+        void start(QString, QString);
 
 	private slots:
 		void save_button_pressed();
@@ -86,7 +87,10 @@ public:
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
 		CoverLookup*				_cov_lookup;
-		QFileSystemWatcher*			_watcher;
+        QFileSystemWatcher*			_watcher;
+
+        bool                _no_album;
+        QString             _target_filename;
 
 
 		void update_model(int cur_selected);

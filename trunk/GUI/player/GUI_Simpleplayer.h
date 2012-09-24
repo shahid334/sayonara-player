@@ -169,6 +169,8 @@ private slots:
 
     void sl_alternate_cover_available(QString);
 
+    void really_close();
+
 
 
     void about(bool b=false);
@@ -176,8 +178,8 @@ private slots:
 
 protected:
 
+    void closeEvent(QCloseEvent* e);
 
-    void changeEvent(QEvent *event);
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
 

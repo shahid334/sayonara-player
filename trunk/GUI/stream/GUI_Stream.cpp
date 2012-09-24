@@ -69,7 +69,7 @@ void GUI_Stream::listen_clicked(){
 	QString name;
 
 	if(_cur_station == -1){
-		url = this->ui->combo_stream->currentText();
+        url = this->ui->le_url->text();
 		name = "Radio";
 	}
 
@@ -223,7 +223,10 @@ void GUI_Stream::save_clicked(){
 		}
 	}
 
+
 	_cur_station = -1;
+    this->ui->le_url->setText(url);
+    url_text_changed(url);
 }
 
 void GUI_Stream::closeEvent ( QCloseEvent * event ){

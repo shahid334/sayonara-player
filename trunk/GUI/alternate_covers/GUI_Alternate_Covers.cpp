@@ -87,13 +87,28 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	delete ui;
 }
 
+void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
+
+    ui->pb_progress->setTextVisible(false);
+    _no_album = true;
+    _target_filename = target_filename;
+
+    this->ui->le_search->setText(searchstring);
+    this->ui->lab_title->setText(searchstring);
+
+    this->show();
+    this->search_button_pressed();
+}
+
 
 void GUI_Alternate_Covers::start(int album_artist_id, bool search_for_album){
+
+    _no_album = false;
 
 	ui->pb_progress->setTextVisible(false);
 	_search_for_album = search_for_album;
 
-	if(search_for_album){
+    if(search_for_album){
 		_album = CDatabaseConnector::getInstance()->getAlbumByID(album_artist_id);
 
 		if(_album.is_sampler){
@@ -148,7 +163,16 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 	bool success = true;
 
-	if(_search_for_album){
+    if(_no_album){
+
+        QString cover_token = _target_filename;
+        if(QFile::exists(cover_token)) QFile::remove(cover_token);
+        success &= file.copy(cover_token);
+
+    }
+
+
+    else if(_search_for_album){
 		if(_album.is_sampler ){
 
 			foreach(QString artist, _album.artists){
@@ -230,7 +254,7 @@ void GUI_Alternate_Covers::search_button_pressed(){
 		file.remove();
 	}
 
-	_cov_lookup->search_images_by_searchstring(searchstring, 10, _search_for_album);
+    _cov_lookup->search_images_by_searchstring(searchstring, 10, _search_for_album);
 	ui->btn_search->setText("Stop");
 
 }

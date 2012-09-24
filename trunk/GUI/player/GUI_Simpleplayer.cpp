@@ -54,7 +54,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_mute = false;
 	m_radio_active = RADIO_OFF;
 
-	m_min2tray = settings->getMinimizeToTray();
+    m_min2tray = settings->getMinimizeToTray();
 
 	ui_playlist = 0;
 	ui_playlist_chooser = 0;
@@ -78,7 +78,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui->action_ViewLFMRadio->setVisible(settings->getLastFMActive());
 
 
-	this->ui->action_min2tray->setChecked(m_min2tray);
+    this->ui->action_min2tray->setChecked(m_min2tray);
 
 	bool loadPlaylistChecked = settings->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
@@ -756,6 +756,13 @@ void GUI_SimplePlayer::coverClicked() {
 	if(m_metadata.album_id >= 0)
 		m_alternate_covers->start(m_metadata.album_id, true);
 
+   else if(m_radio_active == RADIO_STATION){
+        QString searchstring = QString("Radio ") + m_metadata.title;
+        QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+        qDebug() << "new cover " << targetpath;
+        m_alternate_covers->start(searchstring, targetpath);
+    }
+
 	this->setFocus();
 }
 
@@ -940,18 +947,7 @@ void GUI_SimplePlayer::close_stream() {
 	ui->action_ViewStream->setChecked(false);
 }
 
-void GUI_SimplePlayer::changeEvent(QEvent *event) {
 
-	if(!m_min2tray) return;
-
-	if (event->type() == QEvent::WindowStateChange) {
-
-		if (isMinimized())
-			hide();
-		else
-			show();
-	}
-}
 
 
 void GUI_SimplePlayer::setupIcons() {
@@ -980,7 +976,7 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(backwardClicked()));
     connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(forwardClicked()));
     connect(m_muteAction, SIGNAL(triggered()), this, SLOT(muteButtonPressed()));
-    connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close()));
+    connect(m_closeAction, SIGNAL(triggered()), this, SLOT(really_close()));
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(playClicked()));
 
     m_trayIcon = new GUI_TrayIcon(QIcon(Helper::getIconPath() + "play.png"), QIcon(Helper::getIconPath() + "pause.png"),this);
@@ -994,16 +990,35 @@ void GUI_SimplePlayer::setupTrayActions() {
 }
 
 
+void GUI_SimplePlayer::really_close(){
+    m_min2tray = false;
+    this->close();
+}
+
+void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
+
+    if(m_min2tray){
+        e->ignore();
+        this->hide();
+    }
+}
+
+
 void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
     switch (reason) {
     case QSystemTrayIcon::Trigger:
-        if (this->isMinimized() || isHidden())
+
+        if (this->isMinimized() || isHidden()){
+            this->setHidden(false);
             this->showNormal();
-        if (!this->isActiveWindow())
             this->activateWindow();
-        else if(m_min2tray){
-            hide();
         }
+
+        else if(m_min2tray){
+            this->setHidden(true);
+        }
+
+
         break;
     case QSystemTrayIcon::MiddleClick:
         this -> playClicked (false);

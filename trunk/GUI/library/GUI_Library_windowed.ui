@@ -10,6 +10,9 @@
     <height>611</height>
    </rect>
   </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
   <property name="windowTitle">
    <string>Library</string>
   </property>
@@ -305,6 +308,9 @@
      </item>
      <item>
       <widget class="QLineEdit" name="le_search">
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="toolTip">
         <string>Search for title, interprets and albums</string>
        </property>
