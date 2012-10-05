@@ -34,10 +34,7 @@ using namespace std;
 
 namespace PlaylistParser {
 
-
-	int parse_playlist(QString playlist_file, vector<MetaData>& md);
-	bool is_supported_playlist(QString filename);
-
+	int parse_playlist(QString playlist_file, MetaDataList& md);
 
 };
 

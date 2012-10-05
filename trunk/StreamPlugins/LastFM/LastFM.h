@@ -54,7 +54,7 @@ Q_OBJECT
 	signals:
 		void sig_last_fm_logged_in(bool);
 		void sig_similar_artists_available(const QList<int>&);
-		void sig_new_radio_playlist(const vector<MetaData>&);
+		void sig_new_radio_playlist(const MetaDataList&);
 		void sig_track_info_fetched(const MetaData& md, bool loved, bool corrected);
 		void sig_user_info_fetched(QMap<QString, QString>&);
 
@@ -91,7 +91,7 @@ Q_OBJECT
 		bool 	_lfm_update_track(const MetaData&);
 		void 	_lfm_get_similar_artists(const QString&);
 		QString _lfm_parse_session_answer();
-		bool 	_lfm_parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& xml);
+		bool 	_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& xml);
 		bool 	_lfm_check_login();
 
 

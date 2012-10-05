@@ -10,7 +10,7 @@ using namespace std;
 class CustomMimeData : public QMimeData {
 	
 private:
-	vector<MetaData> _v_md;
+	MetaDataList _v_md;
 
 public:
 	CustomMimeData() : QMimeData(){
@@ -18,11 +18,11 @@ public:
 
 	virtual ~CustomMimeData(){}
 
-	void setMetaData(const vector<MetaData>& v_md){
+	void setMetaData(const MetaDataList& v_md){
 		_v_md = v_md;
 	}
 
-	uint getMetaData(vector<MetaData>& v_md) const {
+	uint getMetaData(MetaDataList& v_md) const {
 		
 		v_md = _v_md;
 		return v_md.size();

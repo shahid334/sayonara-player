@@ -334,7 +334,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 
 // public slot:
 // id3 tags have changed
-void GUI_SimplePlayer::psl_id3_tags_changed(vector<MetaData>& v_md) {
+void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 
 	MetaData md_new;
 	bool found = false;

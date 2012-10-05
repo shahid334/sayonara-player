@@ -38,7 +38,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <QString>
-#include <vector>
 #include <QList>
 #include <ctime>
 
@@ -220,7 +219,10 @@ namespace Helper{
 
 	QString calc_cover_token(QString artist, QString album);
 	QStringList get_soundfile_extensions();
+	QStringList get_playlistfile_extensions();
+
 	bool is_soundfile(QString filename);
+	bool is_playlistfile(QString filename);
 
 	template <typename T> QList<T> randomize_list(const QList<T>& list){
 		srand ( time(NULL) );
@@ -254,10 +256,6 @@ namespace Helper{
 
 	QString easy_tag_finder(QString tag, QString& xml_doc);
 	QString calc_hash(QString data);
-
-
-
-
 };
 
 

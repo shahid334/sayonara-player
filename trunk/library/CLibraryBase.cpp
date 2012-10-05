@@ -101,9 +101,9 @@ void CLibraryBase::importDirectory(QString directory){
 	m_import_dialog->show();
 }
 
-void CLibraryBase::importFiles(const vector<MetaData>& v_md){
+void CLibraryBase::importFiles(const MetaDataList& v_md){
 
-	vector<MetaData> v_md_new = v_md;
+	MetaDataList v_md_new = v_md;
 	bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
 	emit sig_import_result(success);
 }
@@ -122,13 +122,15 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 		QStringList files;
 		int n_files;
 		reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
-		vector<MetaData> v_md;
+		MetaDataList v_md;
 		foreach(QString filename, files){
 			MetaData md;
-			if(!ID3::getMetaDataOfFile(filename, md)) continue;
+			md = _db->getTrackByPath(md.filepath);
+			if(md.id < 0){
+				if(!ID3::getMetaDataOfFile(filename, md)) continue;
+			}
 
-			if(_db->getTrackByPath(md.filepath) < 0)
-				v_md.push_back(md);
+			v_md.push_back(md);
 		}
 
 		bool success = db->storeMetadata(v_md);
@@ -186,7 +188,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
 
 		// copy & save to database
-		vector<MetaData> v_metadata;
+		MetaDataList v_metadata;
 
 		bool success = false;
 		for(int i=0; i<files2copy.size(); i++){
@@ -270,12 +272,12 @@ void CLibraryBase::library_reloading_state_slot(QString str){
 
 
 
-void CLibraryBase::insertMetaDataIntoDB(vector<MetaData>& v_md) {
+void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 	db->storeMetadata(v_md);
 
-    std::vector<MetaData> data;
+    MetaDataList data;
     db->getTracksFromDatabase(data);
     emit sig_metadata_loaded(data);
 }
@@ -441,7 +443,7 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
 
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 	foreach(int idx,idx_list){
 		v_md.push_back(_vec_md[idx]);
 	}
@@ -458,7 +460,7 @@ void CLibraryBase::psl_change_id3_tags(const QList<int>& lst){
 
 	// set of tracks
 	else if(lst.size()){
-		vector<MetaData> v_md;
+		MetaDataList v_md;
 		foreach(int i, lst){
 			v_md.push_back(_vec_md[i]);
 		}
@@ -491,14 +493,14 @@ void CLibraryBase::psl_prepare_album_for_playlist(){
 
 
 void CLibraryBase::psl_prepare_track_for_playlist(int idx){
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 	v_md.push_back(_vec_md[idx]);
 	emit sig_tracks_for_playlist_available(v_md);
 }
 
 
 
-void CLibraryBase::delete_tracks(vector<MetaData>& vec_md, int answer){
+void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
 
 	QStringList file_list;
 	QString file_entry = "files";
@@ -542,7 +544,7 @@ void CLibraryBase::psl_delete_tracks(int answer){
 
 void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
 
-	vector<MetaData> vec_md;
+	MetaDataList vec_md;
 	foreach(int idx, lst){
 		vec_md.push_back(_vec_md[idx]);
 	}
@@ -555,7 +557,7 @@ void CLibraryBase::psl_play_next_all_tracks(){
 }
 
 void CLibraryBase::psl_play_next_tracks(const QList<int>& lst){
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 	foreach(int i, lst){
 		v_md.push_back(_vec_md[i]);
 	}

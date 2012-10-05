@@ -15,6 +15,7 @@
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
@@ -25,6 +26,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/CDirectoryReader.h"
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
 #include "Socket/Socket.h"
@@ -200,18 +202,18 @@ void Application::init_connections(){
            CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 
 
-           CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		player,		update_track(const MetaData&));
+           CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		player,			update_track(const MetaData&));
            CONNECT (playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
            CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
            CONNECT (playlist, sig_no_track_to_play(),								listen,			stop());
            CONNECT (playlist, sig_goon_playing(),                                   listen,			play());
            CONNECT (playlist, sig_selected_file_changed(int),                       ui_playlist, 	track_changed(int));
-           CONNECT (playlist, sig_playlist_created(vector<MetaData>&, int), 		ui_playlist, 	fillPlaylist(vector<MetaData>&, int));
+           CONNECT (playlist, sig_playlist_created(MetaDataList&, int), 		ui_playlist, 	fillPlaylist(MetaDataList&, int));
            //CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
-           CONNECT (playlist, sig_playlist_prepared(int, vector<MetaData>&), 		playlists,      save_playlist_as_custom(int, vector<MetaData>&));
-           CONNECT (playlist, sig_playlist_prepared(QString, vector<MetaData>&), 	playlists,      save_playlist_as_custom(QString, vector<MetaData>&));
+           CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&), 		playlists,      save_playlist_as_custom(int, MetaDataList&));
+           CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&), 	playlists,      save_playlist_as_custom(QString, MetaDataList&));
            CONNECT (playlist, sig_library_changed(), 								ui_library, 	library_changed());
-           CONNECT (playlist, sig_import_files(const vector<MetaData>&), 			library, 		importFiles(const vector<MetaData>&));
+           CONNECT (playlist, sig_import_files(const MetaDataList&), 			library, 		importFiles(const MetaDataList&));
            CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
            CONNECT (playlist, sig_radio_active(int),								player,         set_radio_active(int));
            CONNECT (playlist, sig_radio_active(int),								ui_playlist,	set_radio_active(int));
@@ -219,12 +221,12 @@ void Application::init_connections(){
            // Can be done inside player
            CONNECT (playlist, sig_radio_active(int),								ui_playlist_chooser, set_radio_active(int));
 
-           CONNECT (playlist, sig_data_for_id3_change(const vector<MetaData>&), 	ui_id3_editor,	change_meta_data(const vector<MetaData>&)); // IND
+           CONNECT (playlist, sig_data_for_id3_change(const MetaDataList&), 	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
 
            CONNECT (ui_playlist, selected_row_changed(int), 					playlist, 	psl_change_track(int));
            CONNECT (ui_playlist, clear_playlist(),                              playlist, 	psl_clear_playlist());
            CONNECT (ui_playlist, playlist_mode_changed(const Playlist_Mode&),   playlist, 	psl_playlist_mode_changed(const Playlist_Mode&));
-           CONNECT (ui_playlist, dropped_tracks(const vector<MetaData>&, int),  playlist, 	psl_insert_tracks(const vector<MetaData>&, int));
+           CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),  playlist, 	psl_insert_tracks(const MetaDataList&, int));
            CONNECT (ui_playlist, sound_files_dropped(QStringList&), 			playlist, 	psl_createPlaylist(QStringList&));
            CONNECT (ui_playlist, directory_dropped(const QString&, int),		playlist, 	psl_directoryDropped(const QString &, int ));
            CONNECT (ui_playlist, rows_removed(const QList<int>&),               playlist, 	psl_remove_rows(const QList<int>&));
@@ -247,17 +249,17 @@ void Application::init_connections(){
            CONNECT(library, sig_reload_library_finished(),                  ui_library, 	reloading_library_finished());
            CONNECT(library, sig_reloading_library(QString&),				ui_library, 	reloading_library(QString&));
            CONNECT(library, sig_import_result(bool),						ui_library,	import_result(bool));
-           CONNECT(library, sig_metadata_loaded(vector<MetaData>&), 		ui_library, 	fill_library_tracks(vector<MetaData>&));
+           CONNECT(library, sig_metadata_loaded(MetaDataList&), 		ui_library, 	fill_library_tracks(MetaDataList&));
            CONNECT(library, sig_all_albums_loaded(vector<Album>&),          ui_library, 	fill_library_albums(vector<Album>&));
            CONNECT(library, sig_all_artists_loaded(vector<Artist>&), 		ui_library, 	fill_library_artists(vector<Artist>&));
-           CONNECT(library, sig_track_mime_data_available(const vector<MetaData>&), 		ui_library, 	track_info_available(const vector<MetaData>&));
-           CONNECT(library, sig_tracks_for_playlist_available(vector<MetaData>&),           playlist, psl_createPlaylist(vector<MetaData>&));
+           CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 		ui_library, 	track_info_available(const MetaDataList&));
+           CONNECT(library, sig_tracks_for_playlist_available(MetaDataList&),           playlist, psl_createPlaylist(MetaDataList&));
            CONNECT(library, sig_import_result(bool),						playlists,		import_result(bool));
            CONNECT(library, sig_delete_answer(QString), 					ui_library, 	psl_delete_answer(QString));
-           CONNECT(library, sig_play_next_tracks(const vector<MetaData>&),  playlist,		psl_play_next_tracks(const vector<MetaData>&));
+           CONNECT(library, sig_play_next_tracks(const MetaDataList&),  playlist,		psl_play_next_tracks(const MetaDataList&));
 
            if(ui_id3_editor)
-               CONNECT(library, sig_change_id3_tags(const vector<MetaData>&),	ui_id3_editor,	change_meta_data(const vector<MetaData>&)); // IND
+               CONNECT(library, sig_change_id3_tags(const MetaDataList&),	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
 
            CONNECT(ui_library, sig_album_dbl_clicked(), 						library, 		psl_prepare_album_for_playlist());
            CONNECT(ui_library, sig_artist_dbl_clicked(), 						library, 		psl_prepare_artist_for_playlist());
@@ -290,14 +292,14 @@ void Application::init_connections(){
            CONNECT(ui_playlist, edit_id3_signal(),                                  playlist, 		psl_edit_id3_request());
 
            CONNECT(ui_id3_editor, id3_tags_changed(), 							ui_library, 	id3_tags_changed());
-           CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			playlist, 		psl_id3_tags_changed(vector<MetaData>&));
-           CONNECT(ui_id3_editor, id3_tags_changed(vector<MetaData>&), 			player, 		psl_id3_tags_changed(vector<MetaData>&));
+           CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			playlist, 		psl_id3_tags_changed(MetaDataList&));
+           CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
 
 
            CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,		psl_similar_artists_available(const QList<int>&));
            CONNECT(lastfm,	sig_last_fm_logged_in(bool),							ui_playlist,	last_fm_logged_in(bool));
            CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
-           CONNECT(lastfm,	sig_new_radio_playlist(const vector<MetaData>&),		playlist,		psl_new_radio_playlist_available(const vector<MetaData>&));
+           CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),		playlist,		psl_new_radio_playlist_available(const MetaDataList&));
            CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),     player,		lfm_info_fetched(const MetaData&, bool, bool));
 
            CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
@@ -309,7 +311,7 @@ void Application::init_connections(){
 
            CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
            CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
-           CONNECT(playlists, sig_import_tracks(const vector<MetaData>&),       library, 				importFiles(const vector<MetaData>&));
+           CONNECT(playlists, sig_import_tracks(const MetaDataList&),       library, 				importFiles(const MetaDataList&));
 
 
             CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
@@ -337,4 +339,14 @@ void Application::init_connections(){
 
                remote_socket->start();
            }
+}
+
+
+void Application::setFiles2Play(QStringList filelist){
+
+	playlist->psl_createPlaylist(filelist, RADIO_OFF);
+
+	if(playlist->get_num_tracks() > 0)
+		playlist->psl_play();
+
 }

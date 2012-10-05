@@ -320,7 +320,7 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 
 
-void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
+void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_metadata);
@@ -328,7 +328,7 @@ void GUI_Library_windowed::fill_library_tracks(vector<MetaData>& v_metadata){
 	this->_track_model->removeRows(0, this->_track_model->rowCount());
 	this->_track_model->insertRows(0, v_metadata.size());
 
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 	for(uint i=0; i<v_metadata.size(); i++){
 		MetaData md = v_metadata.at(i);
 		QStringList data = md.toStringList();
@@ -415,7 +415,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 }
 
 
-void GUI_Library_windowed::track_info_available(const vector<MetaData>& v_md){
+void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
 	_mime_data = new CustomMimeData();
 	_mime_data->setMetaData(v_md);

@@ -25,13 +25,13 @@
  *  Created on: Mar 2, 2011
  *      Author: luke
  */
-#include <iostream>
 
 
 
 #include "application.h"
 
 #include <QApplication>
+#include <QStringList>
 
 #include <string>
 #include <vector>
@@ -42,8 +42,9 @@ using namespace std;
 
 
 void printHelp(){
-	qDebug() << "sayonara [-g]";
-	qDebug() << "-g\tuse gstreamer instead of phonon";
+	qDebug() << "sayonara <list>";
+	qDebug() << "<list> can consist of either files or directories or both";
+
 }
 
 
@@ -58,7 +59,14 @@ int main(int argc, char *argv[]){
 			app.setApplicationName("Sayonara");
 			app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-            Application application(&app);
+		QStringList params;
+		for(int i=1; i<argc; i++){
+			QString param(argv[i]);
+			params.push_back(param);
+		}
+
+		Application application(&app);
+		application.setFiles2Play(params);
 
         app.exec();
 

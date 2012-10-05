@@ -120,12 +120,12 @@ void GUI_TagEdit::init(){
 
 }
 void GUI_TagEdit::change_meta_data(const MetaData& md){
-    vector<MetaData> v_md;
+    MetaDataList v_md;
     v_md.push_back(md);
     change_meta_data(v_md);
 }
 
-void GUI_TagEdit::change_meta_data(const vector<MetaData>& vec){
+void GUI_TagEdit::change_meta_data(const MetaDataList& vec){
 
     this->init();
 
@@ -211,7 +211,7 @@ void GUI_TagEdit::ok_button_clicked(){
 
     this->ui->pb_progress->hide();
 
-    vector<MetaData> v_md2send = _vec_tmp_metadata;
+    MetaDataList v_md2send = _vec_tmp_metadata;
 
     emit id3_tags_changed();
     emit id3_tags_changed(v_md2send);
@@ -420,7 +420,8 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
      * If a track has a new album/artist create new IDs for it */
     for(uint track = 0; track<_vec_org_metadata.size(); track++){
 
-            if( _db->getTrackByPath(_vec_org_metadata[track].filepath) < 0){
+    		MetaData md = _db->getTrackByPath(_vec_org_metadata[track].filepath);
+            if( md.id < 0){
                 continue;
             }
 

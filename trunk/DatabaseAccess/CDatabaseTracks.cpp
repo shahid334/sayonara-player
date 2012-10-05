@@ -48,7 +48,7 @@ using namespace Sort;
 	"WHERE artists.artistID = tracks.artistID " \
 	"AND albums.albumID = tracks.albumID "
 
-bool _db_fetch_tracks(QSqlQuery& q, vector<MetaData>& result){
+bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 
 	try{
 		if (!q.exec()) {
@@ -111,30 +111,31 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, TrackSor
 }
 
 
-int CDatabaseConnector::getTrackByPath(QString path){
+MetaData CDatabaseConnector::getTrackByPath(QString path){
 	DB_TRY_OPEN(m_database);
 
-	vector<MetaData> vec_data;
+	MetaDataList vec_data;
 	QSqlQuery q (this -> m_database);
 
 	QString querytext = TRACK_SELECTOR + " AND tracks.filename = :filename;";
 	q.prepare(querytext);
 	q.bindValue(":filename", path);
 
-	if(!_db_fetch_tracks(q, vec_data)) return -1;
+	MetaData md;
+	md.id = -1;
 
-	if(vec_data.size() == 0)
-		return -2;
+	if(!_db_fetch_tracks(q, vec_data)) return md;
 
-	else
-		return vec_data[0].id;
+	if(vec_data.size() == 0) return md;
+
+	return vec_data[0];
+
 }
 
 MetaData CDatabaseConnector::getTrackById(int id){
 	DB_TRY_OPEN(m_database);
 
-	MetaData data;
-	vector<MetaData> vec_data;
+	MetaDataList vec_data;
 
 	QSqlQuery q (this -> m_database);
 	QString querytext = TRACK_SELECTOR + " AND tracks.trackID = :track_id;";
@@ -142,16 +143,18 @@ MetaData CDatabaseConnector::getTrackById(int id){
 	q.prepare(querytext);
 	q.bindValue(":track_id", QVariant(id));
 
-	_db_fetch_tracks(q, vec_data);
+	MetaData md;
+	md.id = -1;
 
-	if(vec_data.size() > 0)
-		data = vec_data[0];
+	if(!_db_fetch_tracks(q, vec_data)) return md;
 
-	return data;
+	if(vec_data.size() == 0) return md;
+
+	return vec_data[0];
 }
 
 
-int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndata, TrackSort sort) {
+int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, TrackSort sort) {
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -164,13 +167,13 @@ int CDatabaseConnector::getTracksFromDatabase (std::vector<MetaData> & returndat
     return 0;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, vector<MetaData>& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, TrackSort sort){
 	QList<int> list;
 	list << album;
 	getAllTracksByAlbum(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, vector<MetaData>& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, TrackSort sort){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -254,13 +257,13 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, vector<MetaData>
 
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, vector<MetaData>& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, TrackSort sort){
 	QList<int> list;
 	list << artist;
 	getAllTracksByArtist(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaData>& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, TrackSort sort){
 	DB_TRY_OPEN(m_database);
 
 	MetaData data;
@@ -339,7 +342,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, vector<MetaDat
 	_db_fetch_tracks(q, returndata);
 }
 
-void CDatabaseConnector::getAllTracksBySearchString(Filter filter, vector<MetaData>& result, TrackSort sort){
+void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sort){
 
 	DB_TRY_OPEN(m_database);
     DB_RETURN_NOT_OPEN_VOID(m_database);
@@ -423,7 +426,7 @@ int CDatabaseConnector::deleteTrack(MetaData& md){
 		}
 }
 
-int CDatabaseConnector::deleteTracks(vector<MetaData>& vec_tracks){
+int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 
 	DB_TRY_OPEN(m_database);
      DB_RETURN_NOT_OPEN_INT(m_database);
@@ -496,10 +499,11 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 	data.filepath.replace("//", "/");
 	data.filepath.replace("\\\\", "\\");
 
-	int track_id = getTrackByPath(data.filepath);
+	MetaData md =  getTrackByPath(data.filepath);
+	int track_id = md.id;
 
 	if(track_id > 0){
-		data.id = track_id;
+		data.id = md.id;
 		data.artist_id = artistID;
 		data.album_id = albumID;
 

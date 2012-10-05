@@ -237,7 +237,7 @@ QString Helper::calc_cover_token(QString artist, QString album){
 
 QStringList Helper::get_soundfile_extensions(){
 
-	QStringList filters, filters_case;
+	QStringList filters;
 	filters << "*.mp3"
 			<< "*.ogg"
 			<< "*.m4a"
@@ -245,6 +245,12 @@ QStringList Helper::get_soundfile_extensions(){
 			<< "*.flac"
 			<< "*.aac"
 			<< "*.wma";
+
+	QString bla;
+
+	foreach(QString filter, filters){
+		filters.push_back(filter.toUpper());
+	}
 
 
 	/*
@@ -261,14 +267,43 @@ QStringList Helper::get_soundfile_extensions(){
 
 bool Helper::is_soundfile(QString filename){
 	QStringList extensions = get_soundfile_extensions();
-	for(int i=0; i<=6; i++){
-		if(filename.toLower().endsWith(extensions[i].right(4).toLower())){
+	foreach(QString extension, extensions){
+		if(filename.toLower().endsWith(extension.right(4).toLower())){
 			return true;
 		}
 	}
 
 	return false;
 }
+
+
+QStringList Helper::get_playlistfile_extensions(){
+	QStringList filters;
+
+	filters << "*.pls"
+			<< "*.m3u"
+			<< "*.ram"
+			<< "*.asx";
+
+
+	foreach(QString filter, filters){
+		filters.push_back(filter.toUpper());
+	}
+
+	return filters;
+}
+
+bool Helper::is_playlistfile(QString filename){
+	QStringList extensions = get_playlistfile_extensions();
+	foreach(QString extension, extensions){
+		if(filename.toLower().endsWith(extension.right(4).toLower())){
+			return true;
+		}
+	}
+
+	return false;
+}
+
 
 
 bool Helper::checkTrack(const MetaData& md){

@@ -75,7 +75,7 @@ public:
 	virtual ~GUI_InfoDialog();
 
 	void setMode(int mode);
-	void setMetaData(const vector<MetaData>& vd);
+	void setMetaData(const MetaDataList& vd);
 
 	void show(int tab);
 
@@ -96,7 +96,7 @@ private:
 
 
 
-	vector<MetaData> _v_md;
+	MetaDataList _v_md;
 
 	int _mode;
 	int _diff_mode;

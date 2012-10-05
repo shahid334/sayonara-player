@@ -60,7 +60,7 @@ void Playlists::load_single_playlist(int id){
 	}
 }
 
-bool Playlists::check_for_extern_track(const vector<MetaData>& src, vector<MetaData>& tgt){
+bool Playlists::check_for_extern_track(const MetaDataList& src, MetaDataList& tgt){
 
 	tgt = src;
 
@@ -74,7 +74,7 @@ bool Playlists::check_for_extern_track(const vector<MetaData>& src, vector<MetaD
 
 
 	if(extern_track_found){
-		vector<MetaData> v_md_save = src;
+		MetaDataList v_md_save = src;
 		_import_state = STATE_WAIT;
 
 		int info = QMessageBox::information(NULL,
@@ -111,10 +111,10 @@ bool Playlists::check_for_extern_track(const vector<MetaData>& src, vector<MetaD
 			CDatabaseConnector* db = CDatabaseConnector::getInstance();
 			for(uint i=0; i<v_md_save.size(); i++){
 
-				int id = db->getTrackByPath(v_md_save[i].filepath);
-				if(id > 0){
+				MetaData md_tmp = db->getTrackByPath(v_md_save[i].filepath);
+				if(md_tmp.id > 0){
 					MetaData md = v_md_save.at(i);
-					md.id = id;
+					md.id = md_tmp.id;
 					tgt.push_back(md);
 				}
 			}
@@ -133,10 +133,10 @@ void Playlists::import_result(bool success){
 }
 
 
-void Playlists::save_playlist_as_custom(int id, vector<MetaData>& vec_md){
+void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md){
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	vector<MetaData> vec_md_copy;
+	MetaDataList vec_md_copy;
 	bool success = check_for_extern_track(vec_md, vec_md_copy);
 	if(!success)
 		return;
@@ -158,10 +158,10 @@ void Playlists::save_playlist_as_custom(int id, vector<MetaData>& vec_md){
 
 
 
-void Playlists::save_playlist_as_custom(QString name, vector<MetaData>& vec_md){
+void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md){
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	vector<MetaData> vec_md_copy;
+	MetaDataList vec_md_copy;
 	bool success = check_for_extern_track(vec_md, vec_md_copy);
 	if(!success) return;
 

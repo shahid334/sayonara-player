@@ -230,7 +230,7 @@ int CDatabaseConnector::createPlaylist(QString playlist_name){
 }
 
 
-bool CDatabaseConnector::storePlaylist(const vector<MetaData>& vec_md, QString playlist_name){
+bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playlist_name){
 	if (!this -> m_database.isOpen())
 	        this -> m_database.open();
 
@@ -279,7 +279,7 @@ bool CDatabaseConnector::storePlaylist(const vector<MetaData>& vec_md, QString p
 
 
 
-bool CDatabaseConnector::storePlaylist(const vector<MetaData>& vec_md, int playlist_id){
+bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_id){
 	if (!this -> m_database.isOpen())
 	        this -> m_database.open();
 

@@ -35,6 +35,7 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CustomMimeData.h"
+#include "HelperStructs/CDirectoryReader.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
@@ -61,6 +62,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QUrl>
+#include <QFileInfo>
 
 
 class QPaintEngine;
@@ -249,7 +251,7 @@ void GUI_Playlist::change_skin(bool dark){
 
 // SLOT: fill all tracks in v_metadata into playlist
 // the current track should be highlighted
-void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
+void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
 	if(_radio_active != RADIO_LFM)
@@ -263,7 +265,7 @@ void GUI_Playlist::fillPlaylist(vector<MetaData>& v_metadata, int cur_play_idx){
 	_cur_playing_row = cur_play_idx;
 
 	this->ui->btn_import->setVisible(false);
-	for(vector<MetaData>::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
+	for(MetaDataList::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
 
 		if(it->is_extern && _radio_active == RADIO_OFF) {
 			this->ui->btn_import->setVisible(true);
@@ -313,7 +315,7 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
 	QModelIndexList idx_list = this->ui->listView->selectionModel()->selectedRows();
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 
 	_cur_selected_rows.clear();
 
@@ -592,37 +594,25 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	}
 
 	const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
-	vector<MetaData> v_metadata;
-
+	MetaDataList v_metadata;
 
 	// extern
 	if( d->hasUrls() ){
 
+		QStringList filelist;
 		foreach(QUrl url, d->urls()){
 
 				QString path;
 				QString url_str = url.toString();
-
-				if(url_str.startsWith("file://")){
-					path =  url_str.right(url_str.length() - 7).trimmed();
-					path = path.replace("%20", " ");
-
-					if(QFile::exists(path)){
-						if(Helper::is_soundfile(path)){
-							MetaData md;
-							if( ID3::getMetaDataOfFile(path, md) ){
-								v_metadata.push_back( md );
-							}
-						}
-
-						else if(path.at(path.length()-4) != '.'){ // directory
-							emit directory_dropped(path, row);
-							return;
-						}
-					}
-				}
+				path =  url_str.right(url_str.length() - 7).trimmed();
+				path = path.replace("%20", " ");
+				filelist.push_back(path);
 
 		} // end foreach
+
+		CDirectoryReader reader;
+		reader.setFilter(Helper::get_soundfile_extensions());
+		reader.getMetadataFromFileList(filelist, v_metadata);
 
 		if(v_metadata.size() == 0) return;
 

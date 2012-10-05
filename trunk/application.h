@@ -7,6 +7,8 @@
 #define CONNECT(a,b,c,d) app->connect(a, SIGNAL(b), c, SLOT(d))
 
 #include <QApplication>
+#include <QStringList>
+
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
@@ -74,6 +76,9 @@ private:
 
 
     void init_connections();
+
+public:
+    void setFiles2Play(QStringList filelist);
 };
 
 #endif // APPLICATION_H

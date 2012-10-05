@@ -18,11 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include "HelperStructs/MetaData.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/id3.h"
+#include "HelperStructs/PlaylistParser.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include <QDebug>
 #include <QDir>
+#include <QFileInfo>
+#include <QStringList>
+#include <vector>
+
+
+
+using namespace std;
 
 
 CDirectoryReader::CDirectoryReader () {
@@ -52,6 +62,7 @@ void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & 
         this -> getFilesInsiderDirRecursive(baseDir, files, num_files);
         baseDir.cd("..");
     }
+
     QStringList tmp;
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
@@ -66,8 +77,118 @@ void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & file
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
     QStringList tmp;
+
     tmp = baseDir.entryList();
     foreach (QString f, tmp) {
         files.push_back(baseDir.absoluteFilePath(f));
     }
+}
+
+bool vec_md_contains(MetaDataList& v_md, MetaData& md){
+
+	if(v_md.size() == 0) return false;
+
+	QString filepath1 = md.filepath.toLower().trimmed();
+
+	for(uint j=0; j<v_md.size(); j++){
+		QString filepath2 = v_md[j].filepath.toLower().trimmed();
+
+		// equal
+		if(!filepath1.compare(filepath2)){
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_md){
+
+	CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+	// read pure sound files files
+	setFilter(Helper::get_soundfile_extensions());
+	foreach(QString str, lst){
+
+		if(!QFile::exists(str)) continue;
+		QFileInfo fileinfo(str);
+
+		if(fileinfo.isDir()){
+
+			QStringList files;
+			int n_files;
+			getFilesInsiderDirRecursive(fileinfo.absoluteDir(), files, n_files);
+
+			foreach(QString filename, files){
+				MetaData md = db->getTrackByPath(filename);
+
+				if(md.id < 0){
+					if(!ID3::getMetaDataOfFile(filename, md)) continue;
+				}
+
+				v_md.push_back(md);
+
+			}
+		}
+
+		else if(fileinfo.isFile() && Helper::is_soundfile(str) ){
+			MetaData md = db->getTrackByPath(str);
+
+			if(md.id < 0){
+				if(!ID3::getMetaDataOfFile(str, md)) continue;
+			}
+
+			v_md.push_back(md);
+		}
+	}
+
+
+	// TODO: look for playlists if paths could be read from database
+	//extract media files out of playlist files
+	setFilter(Helper::get_soundfile_extensions());
+	foreach(QString str, lst){
+
+		if(!QFile::exists(str)) continue;
+
+		QFileInfo fileinfo(str);
+
+		if(fileinfo.isDir()){
+
+			// get playlists out of dirs
+			QStringList files;
+			int n_files;
+			getFilesInsiderDirRecursive(fileinfo.absoluteDir(), files, n_files);
+
+			// parse all playlists
+			foreach(QString file, files){
+				MetaDataList v_md_pl;
+				PlaylistParser::parse_playlist(file, v_md_pl);
+
+				// check, that metadata is not already available
+				for(uint i=0; i<v_md_pl.size(); i++){
+					MetaData md_pl = v_md_pl[i];
+					if(!vec_md_contains(v_md, md_pl)){
+						v_md.push_back(md_pl);
+					}
+				}
+
+			} // end for each playlist file
+		} // if is dir
+
+
+		else if(fileinfo.isFile() && Helper::is_playlistfile(str)){
+
+			MetaDataList v_md_pl;
+			PlaylistParser::parse_playlist(str, v_md_pl);
+
+			// check, that metadata is not already available
+			for(uint i=0; i<v_md_pl.size(); i++){
+				MetaData md_pl = v_md_pl[i];
+				if(!vec_md_contains(v_md, md_pl)){
+					v_md.push_back(md_pl);
+				}
+			}
+		}
+	}
+
 }

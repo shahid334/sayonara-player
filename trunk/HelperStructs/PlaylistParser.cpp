@@ -35,17 +35,12 @@
 #include <qdom.h>
 
 
-#include <vector>
-
-using namespace std;
-
-
-static int parse_m3u(QString file_content, vector<MetaData>& v_md, QString abs_path="");
-static int parse_asx(QString file_content, vector<MetaData>& v_md, QString abs_path="");
-static int parse_pls(QString file_content, vector<MetaData>& v_md, QString abs_path="");
+static int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path="");
+static int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path="");
+static int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path="");
 
 
-int parse_m3u(QString file_content, vector<MetaData>& v_md, QString abs_path){
+int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 	QStringList list = file_content.split('\n');
 
 	foreach(QString line, list){
@@ -84,7 +79,7 @@ int parse_m3u(QString file_content, vector<MetaData>& v_md, QString abs_path){
 }
 
 
-int parse_asx(QString file_content, vector<MetaData>& v_md, QString abs_path){
+int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path){
 
 
 	v_md.clear();
@@ -138,7 +133,7 @@ int parse_asx(QString file_content, vector<MetaData>& v_md, QString abs_path){
 }
 
 
-int parse_pls(QString file_content, vector<MetaData>& v_md, QString abs_path){
+int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path){
 
 	// abs_path = "", if file is not local
 
@@ -208,21 +203,21 @@ int parse_pls(QString file_content, vector<MetaData>& v_md, QString abs_path){
 		key = tmp_key.left(f_track_idx);
 
 		if(key.toLower().startsWith("file")){
-			v_md.at(track_idx - 1).artist = val;
+			v_md[track_idx - 1].artist = val;
 
 			// calc absolute filepath
-			v_md.at(track_idx - 1).filepath = val;
-			if(!QDir(v_md.at(track_idx - 1).filepath).isAbsolute()){
-				v_md.at(track_idx - 1).filepath = abs_path + v_md.at(track_idx - 1).filepath;
+			v_md[track_idx - 1].filepath = val;
+			if(!QDir(v_md[track_idx - 1].filepath).isAbsolute()){
+				v_md[track_idx - 1].filepath = abs_path + v_md[track_idx - 1].filepath;
 			}
 		}
 
 		else if(line.toLower().startsWith("title")){
-			v_md.at(track_idx - 1).title = val;
+			v_md[track_idx - 1].title = val;
 		}
 
 		else if(line.toLower().startsWith("length")){
-			v_md.at(track_idx - 1).length_ms = val.toInt() * 1000;
+			v_md[track_idx - 1].length_ms = val.toInt() * 1000;
 		}
 	}
 
@@ -231,13 +226,13 @@ int parse_pls(QString file_content, vector<MetaData>& v_md, QString abs_path){
 }
 
 
-int PlaylistParser::parse_playlist(QString playlist_file, vector<MetaData>& v_md){
+int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md){
 
 	// is only changed, if container file is local
 	QString abs_path = "";
 
-	vector<MetaData> v_md_tmp;
-	vector<MetaData> v_md_to_delete;
+	MetaDataList v_md_tmp;
+	MetaDataList v_md_to_delete;
 
 	bool success = false;
 	bool is_local_file = true;
@@ -299,12 +294,7 @@ int PlaylistParser::parse_playlist(QString playlist_file, vector<MetaData>& v_md
 
 
 
-bool  PlaylistParser::is_supported_playlist(QString filename){
-	return (filename.toLower().endsWith("m3u") ||
-			filename.toLower().endsWith("pls") ||
-			filename.toLower().endsWith("ram") ||
-			filename.toLower().endsWith("asx") );
-}
+
 
 
 

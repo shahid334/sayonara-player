@@ -120,22 +120,22 @@ public:
 		 *  TRACKS
 		 *****************/
 
-			void getAllTracksByAlbum(int album, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
-			void getAllTracksByAlbum(QList<int> albums, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
+			void getAllTracksByAlbum(int album, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
+			void getAllTracksByAlbum(QList<int> albums, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
 
-			void getAllTracksByArtist(int artist, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
-			void getAllTracksByArtist(QList<int> artists, vector<MetaData>& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
+			void getAllTracksByArtist(int artist, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
+			void getAllTracksByArtist(QList<int> artists, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
 
-			void getAllTracksBySearchString(Filter filter, vector<MetaData>& result, TrackSort sortorder = TrackArtistAsc);
+			void getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sortorder = TrackArtistAsc);
 
 			int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
 			int updateTrack(MetaData& data);
 
-			int getTracksFromDatabase (std::vector <MetaData> & returndata, TrackSort sortorder = TrackArtistAsc);
+			int getTracksFromDatabase (MetaDataList& returndata, TrackSort sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
-			int getTrackByPath(QString path);
+			MetaData getTrackByPath(QString path);
 
-			int deleteTracks(std::vector<MetaData>&);
+			int deleteTracks(MetaDataList&);
 			int deleteTrack(MetaData&);
 
 
@@ -146,8 +146,8 @@ public:
 			QString getPlaylistNameById(int playlist_id);
 			int getPlaylistIdByName(QString playlist_name);
 			bool getPlaylistById(int playlist_id, CustomPlaylist& pl);
-			bool storePlaylist(const vector<MetaData>& vec_md, QString playlist_name);
-			bool storePlaylist(const vector<MetaData>& vec_md, int playlist_id);
+			bool storePlaylist(const MetaDataList& vec_md, QString playlist_name);
+			bool storePlaylist(const MetaDataList& vec_md, int playlist_id);
 			bool deletePlaylist(int playlist_id);
 			bool emptyPlaylist(int playlist_id);
 			bool insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos);
@@ -186,7 +186,7 @@ public slots:
       * @param in vector containing metadata
       * @return true on success false if failed
       */
-    bool storeMetadata (std::vector<MetaData> & in);
+    bool storeMetadata (MetaDataList & in);
 
 
 protected:

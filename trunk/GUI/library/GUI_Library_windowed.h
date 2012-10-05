@@ -116,7 +116,7 @@ signals:
 	void sig_info_btn_clicked();
 
 public slots:
-	void fill_library_tracks(vector<MetaData>&);
+	void fill_library_tracks(MetaDataList&);
 	void fill_library_albums(vector<Album>&);
 	void fill_library_artists(vector<Artist>&);
 	void id3_tags_changed();
@@ -132,7 +132,7 @@ private slots:
 	void artist_pressed(const QModelIndex &);
 	void album_pressed(const QModelIndex &);
 	void track_pressed(const QModelIndex&);
-	void track_info_available(const vector<MetaData>& v_md);
+	void track_info_available(const MetaDataList& v_md);
 
 	void clear_button_pressed();
 
@@ -190,7 +190,7 @@ private:
 	GUI_InfoDialog* _info_dialog;
 	GUI_Library_Info_Box* _lib_info_dialog;
 
-	vector<MetaData> _v_md_tmp;
+	MetaDataList _v_md_tmp;
 
 	CustomMimeData* _mime_data_album;
 	CustomMimeData* _mime_data_artist;

@@ -63,7 +63,7 @@ void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
 
 
-bool CDatabaseConnector::storeMetadata (std::vector<MetaData> & v_md)  {
+bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
 	DB_TRY_OPEN(m_database);
 

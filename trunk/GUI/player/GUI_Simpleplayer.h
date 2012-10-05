@@ -76,7 +76,7 @@ public slots:
       * Set current position in filestream
       */
     void setCurrentPosition (quint32 pos_sec);
-    void psl_id3_tags_changed(vector<MetaData>& v_md);
+    void psl_id3_tags_changed(MetaDataList& v_md);
     void close_eq();
     void close_playlist_chooser();
     void close_stream();

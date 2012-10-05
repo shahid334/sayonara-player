@@ -60,7 +60,7 @@ public:
 
 	signals:
 		void id3_tags_changed();
-		void id3_tags_changed(vector<MetaData>&);
+		void id3_tags_changed(MetaDataList&);
 		void sig_success(bool);
 		void sig_cancelled();
 
@@ -87,7 +87,7 @@ public:
 
 
 	public slots:
-		void change_meta_data(const vector<MetaData>&);
+		void change_meta_data(const MetaDataList&);
 		void change_meta_data(const MetaData&);
 
 
@@ -97,8 +97,8 @@ public:
         QMap<int, bool>  _idx_affected_by_tag;
 
 		int _cur_idx;
-		vector<MetaData> _vec_org_metadata;
-		vector<MetaData> _vec_tmp_metadata;
+		MetaDataList _vec_org_metadata;
+		MetaDataList _vec_tmp_metadata;
 
 		vector<Album> _vec_albums;
 		vector<Artist> _vec_artists;

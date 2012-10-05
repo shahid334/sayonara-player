@@ -35,12 +35,14 @@
 
 #include <QString>
 #include <QStringList>
-#include <iostream>
+#include <QVector>
+#include <QDebug>
+#include <QVariant>
 #include <vector>
 
 using namespace std;
 
-struct MetaData{
+struct MetaData : public QVariant {
 
 	qint32 id;
 	qint32 album_id;
@@ -56,8 +58,6 @@ struct MetaData{
 	qint32 track_num;
 	qint32 bitrate;
 	bool is_extern;
-
-
 
     inline MetaData () {
             id = -1;
@@ -78,10 +78,10 @@ struct MetaData{
 
 	void print(){
 
-		cout << title.toStdString()
-				<< " by " << artist.toStdString()
-				<< " from " << album.toStdString()
-                << " (" << length_ms << " m_sec) :: " << filepath.toStdString() << endl;
+		qDebug() << title
+				<< " by " << artist
+				<< " from " << album
+                << " (" << length_ms << " m_sec) :: " << filepath;
 	}
 
 	QStringList toStringList() const{
@@ -131,11 +131,41 @@ struct MetaData{
 		artist_id = list.at(11).toInt();
 		is_extern = ( list.at(12) == "1" );
 		//genre = list.at(13);
-
-
 	}
+};
 
+class MetaDataList : public vector<MetaData>{
 
+public:
+
+	bool contains(const MetaData& md, bool cs=false){
+		QString filepath;
+
+		if(cs){
+			filepath = md.filepath.trimmed();
+
+			for(uint i=0; i<size(); i++){
+				MetaData md =  vector<MetaData>::at(i);
+				QString filepath2 = md.filepath.trimmed();
+				if(!filepath.compare(filepath2)) return true;
+
+			}
+		}
+
+		else{
+
+			filepath = md.filepath.toLower().trimmed();
+
+			for(uint i=0; i<size(); i++){
+				MetaData md =  vector<MetaData>::at(i);
+				QString filepath2 = md.filepath.toLower().trimmed();
+				if(!filepath.compare(filepath2)) return true;
+
+			}
+		}
+
+		return false;
+	}
 
 };
 
@@ -243,7 +273,7 @@ struct Album{
 struct CustomPlaylist{
 	QString name;
 	qint32 id;
-	vector<MetaData> tracks;
+	MetaDataList tracks;
 	qint32 length;
 	qint32 num_tracks;
 };

@@ -611,7 +611,7 @@ void GUI_InfoDialog::prepare_lfm_info(){
 
 }
 
-void GUI_InfoDialog::setMetaData(const vector<MetaData>& v_md){
+void GUI_InfoDialog::setMetaData(const MetaDataList& v_md){
 	if(ui_tag_edit)
 		ui_tag_edit->change_meta_data(v_md);
 

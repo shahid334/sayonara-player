@@ -52,7 +52,7 @@ int ReloadThread::get_and_save_all_files(){
 	if(_library_path.size() == 0 || !QFile::exists(_library_path)) return 0;
 
 	QDir dir(_library_path);
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 	int n_files = 0;
 
 	get_files_recursive (dir, v_md, &n_files);
@@ -69,7 +69,7 @@ int ReloadThread::get_and_save_all_files(){
 }
 
 
-void ReloadThread::get_files_recursive (QDir baseDir, vector<MetaData>& v_md, int* n_files){
+void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n_files){
 	QDir baseDirDirs(baseDir);
 	QDir baseDirFiles(baseDir);
     QStringList dirs;
@@ -137,8 +137,8 @@ void ReloadThread::run(){
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
-	vector<MetaData> v_metadata;
-	vector<MetaData> v_to_delete;
+	MetaDataList v_metadata;
+	MetaDataList v_to_delete;
 
 	QString reload_status_str = QString("Reloading library: Delete orphaned tracks");
 	emit reloading_library(reload_status_str);
@@ -164,7 +164,7 @@ void ReloadThread::set_lib_path(QString library_path){
 	_library_path = library_path;
 }
 
-void ReloadThread::get_metadata(vector<MetaData>& md){
+void ReloadThread::get_metadata(MetaDataList& md){
 	md = _v_metadata;
 }
 

@@ -339,7 +339,7 @@ void LastFM::psl_radio_playlist_request(){
 	}
 
 	QDomDocument xml_response;
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 
 	UrlParams data;
 	data["sk"] = _session_key2;
@@ -392,7 +392,7 @@ void LastFM::_sl_corrected_data_available(const QString& target_class){
 
 
 
-bool LastFM::_lfm_parse_playlist_answer(vector<MetaData>& v_md, const QDomDocument& doc){
+bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& doc){
 
 	v_md.clear();
 

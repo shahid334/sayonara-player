@@ -21,9 +21,16 @@
 
 #ifndef DIRECTORY_READER
 #define DIRECTORY_READER
+#include "HelperStructs/MetaData.h"
+
 #include <QString>
 #include <QStringList>
 #include <QDir>
+#include <QFileInfo>
+#include <vector>
+
+
+using namespace std;
 
 class CDirectoryReader {
     public:
@@ -38,9 +45,12 @@ class CDirectoryReader {
 
         void getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files);
         void getFilesInsideDirectory (QDir baseDir, QStringList & files);
+        void getMetadataFromFileList(QStringList lst, MetaDataList& v_md);
 
     private:
         QStringList m_filters;
+
+
 
 };
 

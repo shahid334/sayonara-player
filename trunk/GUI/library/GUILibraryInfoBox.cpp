@@ -58,7 +58,7 @@ GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 
 
 void GUI_Library_Info_Box::psl_refresh(){
-	vector<MetaData> v_md;
+	MetaDataList v_md;
 	vector<Album> v_albums;
 	vector<Artist> v_artists;
 

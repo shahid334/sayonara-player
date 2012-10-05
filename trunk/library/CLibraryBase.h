@@ -48,11 +48,11 @@ public:
 
 signals:
 	void sig_playlist_created(QStringList&);
-	void sig_track_mime_data_available(const vector<MetaData>&);
-    void sig_metadata_loaded (vector<MetaData>&);
+	void sig_track_mime_data_available(const MetaDataList&);
+    void sig_metadata_loaded (MetaDataList&);
     void sig_all_albums_loaded(vector<Album>&);
     void sig_all_artists_loaded(vector<Artist>&);
-    void sig_tracks_for_playlist_available(vector<MetaData>&);
+    void sig_tracks_for_playlist_available(MetaDataList&);
     void sig_mp3s_loaded(int);
 
     void sig_should_reload_library();
@@ -60,21 +60,21 @@ signals:
     void sig_reloading_library(QString &);
 
     void sig_import_result(bool);
-    void sig_change_id3_tags(const vector<MetaData>&);
+    void sig_change_id3_tags(const MetaDataList&);
 
     void sig_delete_answer(QString);
-    void sig_play_next_tracks(const vector<MetaData>&);
+    void sig_play_next_tracks(const MetaDataList&);
 
 
 
 
 public slots:
     void baseDirSelected (const QString & baseDir);
-    void insertMetaDataIntoDB(vector<MetaData>& in);
+    void insertMetaDataIntoDB(MetaDataList& in);
 
     void reloadLibrary();
     void importDirectory(QString);
-    void importFiles(const vector<MetaData>&);
+    void importFiles(const MetaDataList&);
 
     void setLibraryPath(QString);
     void importDirectoryAccepted(const QString&, bool);
@@ -119,7 +119,7 @@ private:
 
 
     CDatabaseConnector*	_db;
-    vector<MetaData>	_vec_md;
+    MetaDataList	_vec_md;
     vector<Album>		_vec_albums;
     vector<Artist>		_vec_artists;
 
@@ -133,7 +133,7 @@ private:
     Filter				_filter;
 
     void 				emit_stuff();
-    void				delete_tracks(vector<MetaData>& v_md, int answer);
+    void				delete_tracks(MetaDataList& v_md, int answer);
 
 
 };
