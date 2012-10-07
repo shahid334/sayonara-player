@@ -40,9 +40,37 @@
 
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
 	this->_parent = parent;
+
+        QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
+        QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
+
+        QPalette palette = _parent->palette();
+        QColor col_background = palette.color(QPalette::Active, QPalette::Background);
+        QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+        _col_highlight_name = col_highlight.name();
+
+        _val_bg = col_background.lightness();
+        _val_sel = col_highlight.lightness();
+
+        _icon_label_sampler = new QLabel();
+        _icon_label_sampler->setPixmap(QPixmap(icon_path_sampler));
+        _icon_label_sampler->setContentsMargins(2, 0, 2, 0);
+        _icon_label_sampler->setAlignment( Qt::AlignVCenter );
+
+
+        _icon_label_no_sampler = new QLabel();
+        _icon_label_no_sampler->setPixmap(QPixmap(icon_path_no_sampler));
+        _icon_label_no_sampler->setContentsMargins(2, 0, 2, 0);
+        _icon_label_no_sampler->setAlignment( Qt::AlignVCenter );
+
+        _label = new QLabel();
+        _label->setContentsMargins(2, 0, 2, 0);
 }
 
 LibraryItemDelegateAlbums::~LibraryItemDelegateAlbums() {
+    delete _label;
+    delete _icon_label_sampler;
+    delete _icon_label_no_sampler;
 }
 
 
@@ -51,91 +79,88 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
 	if(!index.isValid()) return;
 
-	QLabel label;
 	QRect rect(option.rect);
 
-	painter->save();
+        painter->save();
 	painter->translate(0, 0);
 
-	if(index.column() == 0){
-		QModelIndex idx = index.model()->index(index.row(), 1);
 
-		QString icon_path = Helper::getIconPath() + "play_small.png";
+        QLabel* label = _label;
+        QString label_text;
+        int row_height = _parent->rowHeight(index.row());
+        int col_width = _parent->columnWidth(index.column());
+
+        int column = index.column();
+
+
+        if(column == 0){
+
 		bool is_sampler = index.model()->data(index, Qt::WhatsThisRole).toBool();
 
-		if(is_sampler){
-			icon_path = Helper::getIconPath() + "fwd_orange.png";
-		}
 
-		label.setPixmap(QPixmap(icon_path));
-		label.setContentsMargins(2, 0, 2, 0);
+                if(is_sampler)
+                    label = _icon_label_sampler;
+
+                else
+                    label = _icon_label_no_sampler;
+
+
+                label->setFixedHeight(row_height);
+                label->setFixedWidth(col_width);
+                label->render(painter, rect.topLeft() );
+                painter->restore();
+                return;
 	}
 
-	else if(index.column() == 1){
+
+        else if(column == 1){
 
 		QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
 		Album album;
 		album.fromStringList(list);
 
-		QString text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
-		label.setText(text);
-		label.setContentsMargins(2, 0, 2, 0);
-		label.setToolTip(QString::number(album.num_songs) + " tracks");
+                label_text = QString("<b>") + album.name + "</b>";// - " + QString::number(album.num_songs) + " tracks, " + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000);
+                label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
+
 	}
 
 	else{
-		QString text  = index.model()->data(index, Qt::WhatsThisRole).toString();
-		if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) text = "Unknown";
+                label_text  = index.model()->data(index, Qt::WhatsThisRole).toString();
+                if(index.model()->data(index, Qt::WhatsThisRole).toInt() == 0) label_text = "Unknown";
 
-		label.setText(text);
-		label.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-		label.setContentsMargins(2, 0, 4, 0);
+
+                label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 	}
 
 
-
-
-
 	QString style;
-	QString padding = " padding-left: 2px";
 	QString fg_color;
 
 	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
-	QPalette palette = _parent->palette();
-	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
-	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-	//QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
-
-	int val_bg = col_background.lightness();
-	int val_sel = col_highlight.lightness();
-
 	if(!is_selected){
 
-		if(val_bg > 96) fg_color = " color: #202020";
+                if(_val_bg > 96) fg_color = " color: #202020";
 		else fg_color = " color: #D8D8D8; ";
 
 		style = QString("background-color: transparent; ") + fg_color;
 	}
 
 	else {
-		if(val_sel > 96) fg_color = " color: #202020";
+                if(_val_sel > 96) fg_color = " color: #202020";
 		else fg_color = " color: #D8D8D8; ";
 
-		style = QString("background-color: " + col_highlight.name() + ";") + fg_color;
+                style = QString("background-color: " + _col_highlight_name + ";") + fg_color;
 	}
 
 
-	label.setAlignment( Qt::AlignVCenter );
-	label.setStyleSheet(style);
-	label.setFixedHeight(_parent->rowHeight(index.row())-1);
-	label.setFixedWidth(_parent->columnWidth(index.column()));
-	label.setContentsMargins(2, 0, 2, 0);
+        label->setText(label_text);
+        label->setStyleSheet(style);
+        label->setFixedHeight(row_height);
+        label->setFixedWidth(col_width);
+        label->render(painter, rect.topLeft() );
 
-	label.setStyleSheet(style);
-	label.render(painter, rect.topLeft() );
-
-	painter->restore();
+        painter->restore();
 }
 
 

@@ -31,6 +31,7 @@
 
 #include <QItemDelegate>
 #include <QTableView>
+#include <QLabel>
 
 class LibraryItemDelegateTracks : public QItemDelegate {
 public:
@@ -51,6 +52,10 @@ public:
 
 private:
 		QTableView* _parent;
+                QLabel*     _label;
+                int         _val_bg;
+                int         _val_sel;
+                QString     _col_highlight_name;
 };
 
 #endif /* IBRARYITEMDELEGATETRACKS_H_ */

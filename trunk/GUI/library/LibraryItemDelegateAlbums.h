@@ -54,6 +54,14 @@ public:
 
 private:
 
+                QLabel*      _icon_label_sampler;
+                QLabel*      _icon_label_no_sampler;
+                QLabel*      _label;
+                QString     _col_highlight_name;
+                int         _val_bg;
+                int         _val_sel;
+
+
 		QTableView* _parent;
 		int _m_column_width;
 

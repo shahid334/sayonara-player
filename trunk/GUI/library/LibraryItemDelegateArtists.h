@@ -56,6 +56,12 @@ public:
 private:
 
 		QTableView* _parent;
+                QString     _col_highlight_name;
+                int         _val_sel;
+                int         _val_bg;
+                QLabel*      _label;
+                QLabel*      _icon_label_single_album;
+                QLabel*      _icon_label_multi_album;
 		int _m_column_width;
 
 

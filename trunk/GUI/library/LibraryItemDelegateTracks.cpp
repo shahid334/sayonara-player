@@ -43,11 +43,25 @@
 LibraryItemDelegateTracks::LibraryItemDelegateTracks(QTableView* parent) {
 	this->_parent = parent;
 
+        _label = new QLabel();
+        _label->setContentsMargins(2, 0, 2, 0);
+
+        QPalette palette = _parent->palette();
+        QColor col_background = palette.color(QPalette::Active, QPalette::Background);
+        QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+
+        _col_highlight_name = col_highlight.name();
+        _val_bg = col_background.lightness();
+        _val_sel = col_highlight.lightness();
+
+
+
 
 }
 
 LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
 	// TODO Auto-generated destructor stub
+    delete _label;
 }
 
 
@@ -58,61 +72,43 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 
 	if(!index.isValid()) return;
-	int col = index.column();
 
-		painter->save();
-		painter->translate(0, 0);
+        int col = index.column();
+        int col_width = _parent->columnWidth(col);
+        int row_height = _parent->rowHeight(index.row()) - 1;
 
-		QRect 	rect(option.rect);
-		QLabel 	label;
+        painter->save();
+        painter->translate(0, 0);
 
-		QString	text = QString("<b>") + index.model()->data(index, Qt::DisplayRole).toString() + QString("</b>");
+        QRect 	rect(option.rect);
 
-		QString style;
-		QString fg_color;
+        QString	text = QString("<b>") + index.model()->data(index, Qt::DisplayRole).toString() + QString("</b>");
+        QString style;
 
-		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+        bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
-		QPalette palette = _parent->palette();
-		QColor col_background = palette.color(QPalette::Active, QPalette::Background);
-		QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-		//QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
+        if(!is_selected)
+                style = QString("background-color: transparent; ");
 
-		int val_bg = col_background.lightness();
-		int val_sel = col_highlight.lightness();
+        else
+                style = QString("background-color: " + _col_highlight_name + "; ");
 
-		if(!is_selected){
-
-			if(val_bg > 96) fg_color = " color: #202020; ";
-			else fg_color = " color: #D8D8D8; ";
-
-			style = QString("background-color: transparent; ") + fg_color;
-		}
-
-		else {
-			if(val_sel > 96) fg_color = " color: #202020; ";
-			else fg_color = " color: #D8D8D8; ";
-
-			style = QString("background-color: " + col_highlight.name() + "; ") + fg_color;
-		}
-
-		label.setAlignment( Qt::AlignVCenter );
-		label.setStyleSheet(style);
-		label.setFixedHeight(_parent->rowHeight(index.row())-1);
-		label.setFixedWidth(_parent->columnWidth(col));
-		label.setText(text);
-		label.setContentsMargins(2, 0, 2, 0);
-
-		if(col == 0 || col >= 4)
-			label.setAlignment( Qt::AlignVCenter | Qt::AlignRight);
+        _label->setStyleSheet(style);
+        _label->setFixedHeight(row_height);
+        _label->setFixedWidth(col_width);
+        _label->setText(text);
 
 
+        if(col == 0 || col >= 4)
+                _label->setAlignment( Qt::AlignVCenter | Qt::AlignRight);
+
+        else
+                _label->setAlignment( Qt::AlignVCenter | Qt::AlignLeft);
 
 
+        _label->render(painter, rect.topLeft() );
 
-		label.render(painter, rect.topLeft() );
-
-		painter->restore();
+        painter->restore();
 }
 
 
