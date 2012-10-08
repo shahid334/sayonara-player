@@ -34,17 +34,15 @@
 
 using namespace Helper;
 
-bool ID3::getMetaDataOfFile(QString file, MetaData& md){
+bool ID3::getMetaDataOfFile(MetaData& md){
 
-	TagLib::FileRef f(TagLib::FileName(file.toUtf8()));
-
-	md.filepath = file;
+    TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
 	int idx = md.filepath.lastIndexOf('/');
 	md.title = md.filepath.right(md.filepath.length() - idx -1);
 	md.title = md.title.left(md.title.length() - 4);
 
-    if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isReadable(file.toUtf8()) ) return false;
+    if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) return false;
 	string artist = f.tag()->artist().to8Bit(true);
 	string album = f.tag()->album().to8Bit(true);
 	string title = f.tag()->title().to8Bit(true);
@@ -60,8 +58,7 @@ bool ID3::getMetaDataOfFile(QString file, MetaData& md){
 	md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 	md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
-	md.filepath = file;
-	md.length_ms = length * 1000;
+    md.length_ms = length * 1000;
 	md.year = year;
 	md.track_num = track;
 	md.bitrate = bitrate;

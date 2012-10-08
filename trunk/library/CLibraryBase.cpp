@@ -68,7 +68,8 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
     QStringList fileList;
     int num_files = 0;
-    this -> m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
+
+    m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
 
     emit sig_playlist_created(fileList);
 
@@ -126,8 +127,9 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 		foreach(QString filename, files){
 			MetaData md;
 			md = _db->getTrackByPath(md.filepath);
+
 			if(md.id < 0){
-				if(!ID3::getMetaDataOfFile(filename, md)) continue;
+                if(!ID3::getMetaDataOfFile(md)) continue;
 			}
 
 			v_md.push_back(md);
@@ -207,7 +209,8 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 				else m_import_dialog->progress_changed(percent);
 				if(Helper::is_soundfile(new_filename)){
 					MetaData md;
-					if( ID3::getMetaDataOfFile(new_filename, md))
+                    md.filepath = new_filename;
+                    if( ID3::getMetaDataOfFile( md))
 						v_metadata.push_back( md );
 				}
 			}
@@ -260,6 +263,24 @@ void CLibraryBase::reload_thread_finished(){
 
 	_db->getAllAlbums(_vec_albums);
 	_db->getAllArtists(_vec_artists);
+    _db->getTracksFromDatabase(_vec_md);
+
+    QMap<QString, QList<int> > map;
+    int c=0;
+
+    foreach(MetaData md, _vec_md){
+
+        QString title = md.title;
+        for(int i=0; i<title.length() - 3; i++){
+            QString sub = title.mid(i, 3).toLower();
+            map[sub].push_back(md.id );
+
+            c++;
+        }
+    }
+
+    _db->setTrackIndexes(map);
+
 
 	emit sig_reload_library_finished();
 }
@@ -274,11 +295,10 @@ void CLibraryBase::library_reloading_state_slot(QString str){
 
 void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
 
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	db->storeMetadata(v_md);
+    _db->storeMetadata(v_md);
 
     MetaDataList data;
-    db->getTracksFromDatabase(data);
+    _db->getTracksFromDatabase(data);
     emit sig_metadata_loaded(data);
 }
 
@@ -388,7 +408,10 @@ void CLibraryBase::psl_filter_changed(const Filter& filter){
 		_db->getAllArtists(_vec_artists, _artist_sortorder);
 		_db->getAllAlbums(_vec_albums, _album_sortorder);
 		_db->getTracksFromDatabase(_vec_md, _track_sortorder);
-	}
+
+
+
+    }
 
 	else {
 		_db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);

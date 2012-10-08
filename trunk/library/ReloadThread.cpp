@@ -94,9 +94,9 @@ void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n
     foreach (QString f, dirs) {
 
     	MetaData md;
-    	QString filename = baseDirFiles.absoluteFilePath(f);
+        md.filepath = baseDirFiles.absoluteFilePath(f);
 
-		if(ID3::getMetaDataOfFile(filename, md)){
+        if(ID3::getMetaDataOfFile(md)){
 			v_md.push_back(md);
 			num_files ++;
 

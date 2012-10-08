@@ -428,15 +428,16 @@ void GUI_SimplePlayer::correct_btn_clicked(bool b){
 
 
 void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
-	m_completeLength_ms = total_time;
-	this->ui->maxTime->setText(getLengthString(total_time));
+
+    m_completeLength_ms = total_time;
+    this->ui->maxTime->setText(getLengthString(total_time));
 }
 
 void GUI_SimplePlayer::setProgressJump(int percent){
 
 
     long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
-   QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
+    QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
     this->ui->curTime->setText(curPosString);
 
     emit search(percent);
@@ -444,7 +445,7 @@ void GUI_SimplePlayer::setProgressJump(int percent){
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
-	if (m_completeLength_ms != 0) {
+    if (m_completeLength_ms != 0) {
 
 		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
 
@@ -454,7 +455,8 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 	}
 
 	else{
-		this->ui->maxTime->setText("");
+        this->ui->maxTime->setText("0:00");
+        this->ui->songProgress->setValue(0);
 	}
 
     if(!this->ui->songProgress->isSearching()){

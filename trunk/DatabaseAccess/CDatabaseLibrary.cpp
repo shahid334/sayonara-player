@@ -87,7 +87,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
                 artistID = insertArtistIntoDatabase((QString) data.artist);
             }
 
-            this -> insertTrackIntoDatabase (data,artistID,albumID);
+            this -> insertTrackIntoDatabase (data,artistID,albumID, false);
         }
 
         catch (QString ex) {

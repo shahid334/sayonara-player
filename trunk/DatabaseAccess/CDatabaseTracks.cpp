@@ -44,9 +44,10 @@ using namespace Sort;
 	"artists.artistID AS artistID, " \
 	"albums.name AS albumName, " \
 	"artists.name AS artistName " \
-	"FROM tracks, albums, artists " \
-	"WHERE artists.artistID = tracks.artistID " \
-	"AND albums.albumID = tracks.albumID "
+    "FROM tracks " \
+    "INNER JOIN albums ON tracks.albumID=albums.albumID " \
+    "INNER JOIN artists ON tracks.artistID=artists.artistID "
+
 
 bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 
@@ -111,6 +112,23 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, TrackSor
 }
 
 
+void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md){
+
+    DB_TRY_OPEN(m_database);
+     DB_RETURN_NOT_OPEN_VOID(m_database);
+
+    m_database.transaction();
+
+    foreach(QString path, paths){
+        MetaData md = getTrackByPath(path);
+        v_md.push_back(md);
+    }
+
+    m_database.commit();
+
+}
+
+
 MetaData CDatabaseConnector::getTrackByPath(QString path){
 	DB_TRY_OPEN(m_database);
 
@@ -123,13 +141,13 @@ MetaData CDatabaseConnector::getTrackByPath(QString path){
 
 	MetaData md;
 	md.id = -1;
+    md.filepath = path;
 
 	if(!_db_fetch_tracks(q, vec_data)) return md;
 
 	if(vec_data.size() == 0) return md;
 
 	return vec_data[0];
-
 }
 
 MetaData CDatabaseConnector::getTrackById(int id){
@@ -351,26 +369,30 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 
 	QSqlQuery q (this -> m_database);
 	QString querytext;
-	QString subquery = TRACK_SELECTOR;
+    QString subquery = TRACK_SELECTOR;
 
 	switch(filter.by_searchstring){
 
 		case BY_FILENAME:
 			querytext = TRACK_SELECTOR  +
-						"AND tracks.filename LIKE :search_in_filename ";
+
+                        "AND tracks.filename LIKE :search_in_filename ";
 			break;
 
 		case BY_FULLTEXT:
 		default:
-			querytext = QString("SELECT * FROM ( ") +
-					subquery + "AND tracks.title LIKE :search_in_title " +
-					"UNION " +
-					subquery + "AND albums.name LIKE :search_in_album " +
-					"UNION " +
-					subquery + "AND artists.name LIKE :search_in_artist " +
-					" )";
+
+                  querytext = TRACK_SELECTOR + " AND tracks.trackID IN ("+
+                            "SELECT tracks.trackID FROM tracks WHERE tracks.title LIKE :search_in_title " +
+                            "UNION "+
+                            "SELECT tracks.trackID FROM tracks INNER JOIN albums ON tracks.albumID = albums.albumID AND albums.name LIKE :search_in_album "
+                            "UNION "+
+                            "SELECT tracks.trackID FROM tracks INNER JOIN artists ON tracks.artistID = artists.artistID AND artists.name LIKE :search_in_artist "
+                            ") ";
+
 			break;
 	}
+
 
 
 
@@ -392,16 +414,19 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 	}
 
 
-
 	_db_fetch_tracks(q, result);
+
+    qDebug() << q.executedQuery();
 }
 
 
 int CDatabaseConnector::deleteTrack(MetaData& md){
 	DB_TRY_OPEN(m_database);
-     DB_RETURN_NOT_OPEN_INT(m_database);
+    DB_RETURN_NOT_OPEN_INT(m_database);
 
-	try {
+    //deleteTrackIndexes(md.id);
+
+    try {
 			QSqlQuery q (this -> m_database);
 			QString querytext = QString("DELETE FROM tracks WHERE trackID = :track_id;");
 
@@ -426,6 +451,9 @@ int CDatabaseConnector::deleteTrack(MetaData& md){
 		}
 }
 
+
+
+
 int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 
 	DB_TRY_OPEN(m_database);
@@ -447,22 +475,24 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 	return success;
 }
 
-int CDatabaseConnector::updateTrack(MetaData& data){
+int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
 
 	DB_TRY_OPEN(m_database);
     DB_RETURN_NOT_OPEN_INT(m_database);
 
+    if(update_idx){
+        QStringList indexes;
+        for(int i=0; i<data.title.length()-INDEX_SIZE; i++){
+            indexes.push_back(data.title.mid(i, INDEX_SIZE));
+        }
+
+        deleteTrackIndexes(data.id);
+        setTrackIndexes(data.id, indexes);
+    }
 
 	QSqlQuery q (this -> m_database);
 	try{
         q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID;");
-
-        qDebug() << data.album_id;
-        qDebug() << data.artist_id;
-        qDebug() << data.title;
-        qDebug() << data.track_num;
-        qDebug() << data.year;
-        qDebug() << data.id;
 
 
 		q.bindValue(":albumID",QVariant(data.album_id));
@@ -472,7 +502,6 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 		q.bindValue(":year",QVariant(data.year));
 		q.bindValue(":trackID", QVariant(data.id));
 
-        qDebug() << q.executedQuery();
 
         if (!q.exec()) {
             qDebug() << "error";
@@ -490,7 +519,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 }
 
 
-int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID) {
+int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID, bool update_idx) {
 
 	DB_TRY_OPEN(m_database);
 
@@ -502,14 +531,25 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 	MetaData md =  getTrackByPath(data.filepath);
 	int track_id = md.id;
 
+
 	if(track_id > 0){
 		data.id = md.id;
 		data.artist_id = artistID;
 		data.album_id = albumID;
 
-		updateTrack(data);
+        updateTrack(data, update_idx);
 		return 0;
 	}
+
+    if(update_idx){
+
+        QStringList indexes;
+        for(int i=0; i<data.title.length()-INDEX_SIZE; i++){
+            indexes.push_back(data.title.mid(i, INDEX_SIZE));
+        }
+
+        setTrackIndexes(data.id, indexes);
+    }
 
 	QString querytext = QString("INSERT INTO tracks ") +
 				"(filename,albumID,artistID,title,year,length,track,bitrate) " +
@@ -535,4 +575,112 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     		throw QString ("SQL - Error: update track in database " + data.filepath);
     }
     return 0;
+}
+
+
+
+
+
+QStringList CDatabaseConnector::getTrackIndexes(int track_id){
+
+    DB_TRY_OPEN(m_database);
+
+    QStringList returnlist;
+
+    QSqlQuery q (this -> m_database);
+    QString querytext = QString("SELECT substring FROM index_metadata WHERE trackid = :id;");
+
+
+
+    q.prepare(querytext);
+    q.bindValue(":id", track_id);
+
+    if (!q.exec()) {
+        qDebug() << "SQL - Error: cannot fetch indexes from table for " << track_id;
+        return returnlist;
+    }
+
+    while (q.next()) returnlist << q.value(0).toString();
+
+    return returnlist;
+}
+
+
+bool CDatabaseConnector::setTrackIndexes(QMap<QString, QList<int> >& idx_list){
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
+    bool ret = true;
+
+    m_database.transaction();
+
+    QStringList keys = idx_list.keys();
+    foreach(QString key, keys){
+        foreach(int i, idx_list[key]){
+            ret &= setTrackIndex(i, key);
+        }
+    }
+
+    m_database.commit();
+
+    return ret;
+}
+
+
+bool CDatabaseConnector::setTrackIndexes(int track_id, QStringList& idx_list){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_INT(m_database);
+    bool ret = true;
+    m_database.transaction();
+
+    foreach(QString idx, idx_list){
+        ret &= setTrackIndex(track_id, idx);
+    }
+
+    m_database.commit();
+
+    return ret;
+
+}
+
+
+
+bool CDatabaseConnector::setTrackIndex(int track_id, QString idx){
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_INT(m_database);
+
+        QSqlQuery q (this -> m_database);
+        QString querytext = QString("INSERT INTO index_metadata VALUES (:substring, :trackid);");
+
+        q.prepare(querytext);
+        q.bindValue(":trackid", track_id);
+        q.bindValue(":substring", idx);
+
+        if (!q.exec()) {
+            qDebug() << "SQL - Error: cannot fetch indexes from table for " << track_id;
+            return false;
+        }
+
+
+    return true;
+}
+
+
+bool CDatabaseConnector::deleteTrackIndexes(int track_id){
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_INT(m_database);
+
+        QSqlQuery q (this -> m_database);
+        QString querytext = QString("DELETE FROM index_metadata WHERE trackid=:track_id;");
+
+        q.prepare(querytext);
+        q.bindValue(":trackid", track_id);
+
+        if (!q.exec()) {
+            qDebug() << "SQL - Error: cannot fetch indexes from table for " << track_id;
+            return false;
+        }
+
+
+    return true;
 }

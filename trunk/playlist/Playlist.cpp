@@ -129,35 +129,38 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data, int radio){
 	}
 
 
-	v_meta_data = v_meta_data_tmp;
-
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
-		_v_meta_data = v_meta_data;
-		_cur_play_idx = -1;
+        _cur_play_idx = -1;
 	}
 
-	else{
-		for(uint i=0; i<v_meta_data.size(); i++){
-			_v_meta_data.push_back(v_meta_data.at(i));
-		}
-	}
+    for(uint i=0; i<v_meta_data_tmp.size(); i++){
+        _v_meta_data.push_back(v_meta_data.at(i));
+    }
 
-	if(_radio_active == RADIO_OFF)
+
+    if(_radio_active == RADIO_OFF)
 		psl_save_playlist_to_storage();
 
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
-	if(v_meta_data.size() == 0)
-			emit sig_no_track_to_play();
+
+    if(v_meta_data_tmp.size() == 0){
+        emit sig_no_track_to_play();
+    }
+
+
 
 	// if radio currently plays or was playing until now
 	else if(_radio_active == RADIO_LFM || _radio_active == RADIO_STATION || played_radio){
 
-		emit sig_selected_file_changed(0);
-		emit sig_selected_file_changed_md(_v_meta_data[0]);
+        emit sig_selected_file_changed(0);
+        emit sig_selected_file_changed_md(_v_meta_data[0]);
+
 	}
+
+    qDebug() << "bye";
 }
 
 
@@ -165,6 +168,9 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data, int radio){
 // create a new playlist, where only filepaths are given
 // Load Folder, Load File...
 void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
+
+
+    qDebug() << "create playlist" << pathlist;
 
 	// regardless, of radio or not
 	// stop if playlist mode changed
@@ -182,7 +188,7 @@ void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
 
 	MetaDataList v_md;
 
-	CDirectoryReader reader;
+    CDirectoryReader reader;
 	reader.getMetadataFromFileList(pathlist, v_md);
 
 
@@ -258,40 +264,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 }
 
 
-// a directory was dropped from extern desktop
-void Playlist::psl_directoryDropped(const QString& dir, int row){
 
-	if(_radio_active != RADIO_OFF){
-		psl_stop();
-		row = 0;
-	}
-
-	CDirectoryReader reader;
-	QStringList fileList;
-	MetaDataList vec_md;
-	int num_files = 0;
-
-
-	reader.getFilesInsiderDirRecursive(QDir(dir), fileList, num_files);
-
-    foreach(QString filepath, fileList){
-
-    	MetaData md = _db->getTrackByPath(filepath);
-    	if(md.id < 0){
-    		if(!ID3::getMetaDataOfFile(filepath, md)) continue;
-    		md.is_extern = true;
-    		_v_extern_tracks.push_back(md);
-    	}
-
-    	else md.is_extern = false;
-
-    	vec_md.push_back(md);
-    }
-
-    psl_insert_tracks(vec_md, row);
-
-
-}
 
 // insert tracks (also drag & drop)
 void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
@@ -822,9 +795,8 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 	// playlist radio
 	if(Helper::is_playlistfile(url)){
 		MetaDataList v_md;
+        qDebug() << "parse playlist";
 		if(PlaylistParser::parse_playlist(url, v_md) > 0){
-
-            qDebug() << "got " << v_md.size() << "tracks";
 
 			for(uint i=0; i<v_md.size(); i++){
 				if(name.size() > 0)
@@ -832,7 +804,9 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 				else v_md.at(i).title = "Radio Station";
 			}
 
-			psl_createPlaylist(v_md, RADIO_STATION);
+
+            if(v_md.size() > 0)
+                psl_createPlaylist(v_md, RADIO_STATION);
 		}
 
 		return;
@@ -856,14 +830,14 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 }
 
 void Playlist::psl_valid_strrec_track(const MetaData& md){
-	qDebug() << "push back " << md.title;
+
 	_v_stream_playlist.push_back(md);
 }
 
 void Playlist::save_stream_playlist(){
 
 	if(_v_stream_playlist.size() == 0) {
-		qDebug() << "Stream playlist is empty";
+
 		return;
 	}
 

@@ -34,7 +34,10 @@
 
 #include <vector>
 
+
 using namespace Sort;
+
+#define INDEX_SIZE 3
 
 #define DB_TRY_OPEN(db) if (!this -> db.isOpen()) \
                             this -> db.open()
@@ -43,6 +46,9 @@ using namespace Sort;
 
 #define DB_RETURN_NOT_OPEN_INT(db)if (!this -> db.isOpen()) \
                             return -1
+
+#define DB_RETURN_NOT_OPEN_BOOL(db)if (!this -> db.isOpen()) \
+                            return false
 
 
 //class CDatabaseConnector;
@@ -128,15 +134,22 @@ public:
 
 			void getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sortorder = TrackArtistAsc);
 
-			int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
-			int updateTrack(MetaData& data);
+            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID, bool update_idx=false);
+            int updateTrack(MetaData& data,  bool update_idx=false);
 
 			int getTracksFromDatabase (MetaDataList& returndata, TrackSort sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
 			MetaData getTrackByPath(QString path);
+            void getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md);
 
 			int deleteTracks(MetaDataList&);
 			int deleteTrack(MetaData&);
+
+            QStringList getTrackIndexes(int track_id);
+            bool setTrackIndexes(QMap<QString, QList<int> >& idx_list);
+            bool setTrackIndexes(int track_id, QStringList& idx_list);
+            bool setTrackIndex(int track_id, QString idx);
+            bool deleteTrackIndexes(int track_id);
 
 
 			/*

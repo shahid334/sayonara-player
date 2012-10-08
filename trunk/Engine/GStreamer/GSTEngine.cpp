@@ -280,10 +280,14 @@ QString GST_Engine::init_streamripper(const MetaData& md){
 
 	new_src_filename = _sr_recording_dst;
 
+
+
+
 	// record from org_src_filename to new_src_filename
 	g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
 	g_object_set(G_OBJECT(_rec_dst), "location", new_src_filename.toLocal8Bit().data(), NULL);
-	g_object_set(G_OBJECT(_rec_src), "blocksize", 16384, NULL);
+    g_object_set(G_OBJECT(_rec_src), "blocksize", 32768, NULL);
+
 
 	qDebug() << "Streaming from " << org_src_filename << " to " << new_src_filename;
 
@@ -294,16 +298,19 @@ QString GST_Engine::init_streamripper(const MetaData& md){
 
 void GST_Engine::changeTrack(const MetaData& md){
 
+
 	// Gstreamer needs an URI
 	QString new_src_filename_uri;
 
 	obj_ref = NULL;
 
 	// Warning!! this order is important!!!
+
 	stop();
 	_meta_data = md;
 
 	_playing_stream = false;
+
 
 	if( md.filepath.startsWith("http") ){
 		_playing_stream = true;
@@ -329,11 +336,13 @@ void GST_Engine::changeTrack(const MetaData& md){
 		new_src_filename_uri = md.filepath;
 	}
 
+
 	// playing src
 	g_object_set(G_OBJECT(_pipeline), "uri", new_src_filename_uri.toLocal8Bit().data(), NULL);
 	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
-	emit total_time_changed_signal(_meta_data.length_ms);
+
+    emit total_time_changed_signal(_meta_data.length_ms);
 
 	_seconds_started = 0;
 	_seconds_now = 0;
@@ -341,6 +350,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 	_track_finished = false;
 
 	play();
+
 
 }
 
@@ -484,7 +494,8 @@ void GST_Engine::jump(int where, bool percent){
 
 void GST_Engine::changeTrack(const QString& filepath){
 	MetaData md;
-	if(!ID3::getMetaDataOfFile(filepath, md)){
+    md.filepath = filepath;
+    if(!ID3::getMetaDataOfFile(md)){
 		stop();
 		return;
 	}

@@ -86,8 +86,7 @@ public:
 		void psl_clear_playlist();
 		void psl_save_playlist(const QString&, const MetaDataList& v_md);
 		void psl_similar_artists_available(const QList<int>&);
-		void psl_directoryDropped(const QString& dir, int row);
-		void psl_prepare_playlist_for_save(int id);
+        void psl_prepare_playlist_for_save(int id);
 		void psl_prepare_playlist_for_save(QString name);
 		void psl_play();
 		void psl_stop();

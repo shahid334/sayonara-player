@@ -32,13 +32,16 @@
 namespace ID3{
 
 
-bool getMetaDataOfFile(QString file, MetaData& md);
+bool getMetaDataOfFile(MetaData& md);
 
 void setMetaDataOfFile(MetaData& md);
 
 
 void getMetaDataOfFile(TagLib::FileRef&, QString file, MetaData&);
+
 };
+
+
 
 
 

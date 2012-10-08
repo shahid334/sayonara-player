@@ -612,6 +612,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 		CDirectoryReader reader;
 		reader.setFilter(Helper::get_soundfile_extensions());
+
 		reader.getMetadataFromFileList(filelist, v_metadata);
 
 		if(v_metadata.size() == 0) return;

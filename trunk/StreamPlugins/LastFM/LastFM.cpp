@@ -258,9 +258,7 @@ void LastFM::psl_scrobble(const MetaData& metadata){
 	QString url = lfm_wa_create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), sig_data, post_data);
 	QString response;
 
-	SLOT(scrobble);
-
-	bool success = lfm_wa_call_post_url(url, post_data, response);
+    bool success = lfm_wa_call_post_url(url, post_data, response);
 	if(!success || response.contains("failed")){
 		return;
 	}

@@ -60,7 +60,8 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 
 		MetaData md;
 		if( !line.startsWith("http")){
-			if( ID3::getMetaDataOfFile(line, md) ){
+            md.filepath = line;
+            if( ID3::getMetaDataOfFile(md) ){
 				v_md.push_back(md);
 			}
 		}

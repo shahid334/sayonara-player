@@ -119,7 +119,7 @@ private:
 
 
     CDatabaseConnector*	_db;
-    MetaDataList	_vec_md;
+    MetaDataList        _vec_md;
     vector<Album>		_vec_albums;
     vector<Artist>		_vec_artists;
 

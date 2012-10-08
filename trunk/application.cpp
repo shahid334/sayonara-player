@@ -226,9 +226,7 @@ void Application::init_connections(){
            CONNECT (ui_playlist, selected_row_changed(int), 					playlist, 	psl_change_track(int));
            CONNECT (ui_playlist, clear_playlist(),                              playlist, 	psl_clear_playlist());
            CONNECT (ui_playlist, playlist_mode_changed(const Playlist_Mode&),   playlist, 	psl_playlist_mode_changed(const Playlist_Mode&));
-           CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),  playlist, 	psl_insert_tracks(const MetaDataList&, int));
-           CONNECT (ui_playlist, sound_files_dropped(QStringList&), 			playlist, 	psl_createPlaylist(QStringList&));
-           CONNECT (ui_playlist, directory_dropped(const QString&, int),		playlist, 	psl_directoryDropped(const QString &, int ));
+           CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),      playlist, 	psl_insert_tracks(const MetaDataList&, int));
            CONNECT (ui_playlist, rows_removed(const QList<int>&),               playlist, 	psl_remove_rows(const QList<int>&));
            CONNECT (ui_playlist, sig_import_to_library(bool),					playlist,	psl_import_new_tracks_to_library(bool));
 
