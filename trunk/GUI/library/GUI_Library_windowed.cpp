@@ -330,13 +330,12 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
 	MetaDataList v_md;
 	for(uint i=0; i<v_metadata.size(); i++){
-		MetaData md = v_metadata.at(i);
-		QStringList data = md.toStringList();
+		MetaData md = v_metadata[i];
+		v_md.push_back(md);
 
 		QModelIndex idx = _track_model->index(i, 0);
 
-		v_md.push_back(md);
-		this->_track_model->setData(idx, data, Qt::EditRole);
+		this->_track_model->setData(idx, md.toVariant(), Qt::EditRole);
 
 	}
 	_mime_data_artist = new CustomMimeData();

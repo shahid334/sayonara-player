@@ -328,6 +328,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	setCurrentPosition(0);
 	this->ui->btn_correct->setVisible(false);
 	this->ui->albumCover->repaint();
+	setRadioMode(md.radio_mode);
 	this->repaint();
 }
 
@@ -453,6 +454,10 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 			this->ui->songProgress->setValue((int) newSliderVal);
 		}
 	}
+
+    else if(pos_sec > m_completeLength / 1000){
+    	this->ui->songProgress->setValue(0);
+    }
 
 	else{
         this->ui->maxTime->setText("0:00");
@@ -1296,7 +1301,7 @@ void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
 	emit show_small_playlist_items(b);
 }
 
-void GUI_SimplePlayer::set_radio_active(int radio){
+void GUI_SimplePlayer::setRadioMode(int radio){
 
 	m_radio_active = radio;
 	bool stream_ripper = CSettingsStorage::getInstance()->getStreamRipper();

@@ -50,20 +50,19 @@ int PlaylistItemModel::rowCount(const QModelIndex &parent = QModelIndex()) const
 }
 
 QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
-	 if (!index.isValid())
+
+	if (!index.isValid())
 		 return QVariant();
 
 	 if (index.row() >= _labellist.size())
 		 return QVariant();
 
 	 if (role == Qt::DisplayRole){
-
 		return QVariant();
 	 }
 
-
 	 if (role == Qt::WhatsThisRole){
-			return _labellist.at(index.row());
+		return _labellist.at(index.row());
 	 }
 
 	 else

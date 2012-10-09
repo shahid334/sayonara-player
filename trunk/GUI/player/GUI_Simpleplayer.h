@@ -82,7 +82,6 @@ public slots:
     void close_stream();
     void close_lfm_radio();
 
-    void set_radio_active(int);
     void psl_strrip_set_active(bool);
     void setVolume(int vol);
 
@@ -245,6 +244,7 @@ private:
     void setupIcons();
     void initGUI();
     void setupConnections();
+    void setRadioMode(int);
 
 
 

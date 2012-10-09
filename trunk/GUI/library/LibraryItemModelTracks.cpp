@@ -87,8 +87,6 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 	 if (row >= _tracklist.size())
 		 return QVariant();
 
-
-
 	 if (role == Qt::DisplayRole){
 
 		 MetaData md = _tracklist.at(row);
@@ -115,7 +113,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 			 case COL_BITRATE:
 				return QVariant(md.bitrate);
 			 default:
-					return QVariant();
+				return QVariant();
 		 }
 	 }
 
@@ -146,15 +144,12 @@ Qt::ItemFlags LibraryItemModelTracks::flags(const QModelIndex &index = QModelInd
 
 bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole){
 
-
-
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 MetaData md_toSet;
-		 QStringList val2list = value.toStringList();
-		 md_toSet.fromStringList( val2list );
+		 MetaData md;
+		 if(!MetaData::fromVariant(value, md)) return false;
 
-		 _tracklist.replace(index.row(), md_toSet);
+		 _tracklist.replace(index.row(), md);
 
 	     emit dataChanged(index, index);
 	     return true;

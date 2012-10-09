@@ -40,10 +40,15 @@
 #include <QVariant>
 #include <vector>
 
+#include "HelperStructs/globals.h"
+
 using namespace std;
 
-struct MetaData : public QVariant {
+struct MetaData {
 
+
+
+public:
 	qint32 id;
 	qint32 album_id;
 	qint32 artist_id;
@@ -58,6 +63,12 @@ struct MetaData : public QVariant {
 	qint32 track_num;
 	qint32 bitrate;
 	bool is_extern;
+	int radio_mode;
+
+	bool pl_selected;
+	bool pl_playing;
+	bool pl_dragged;
+
 
     inline MetaData () {
             id = -1;
@@ -74,6 +85,11 @@ struct MetaData : public QVariant {
             track_num = 0;
             bitrate = 0;
             is_extern = false;
+            radio_mode = RADIO_OFF;
+
+            pl_selected = false;
+            pl_playing = false;
+            pl_dragged = false;
         }
 
 	void print(){
@@ -84,17 +100,17 @@ struct MetaData : public QVariant {
                 << " (" << length_ms << " m_sec) :: " << filepath;
 	}
 
-	QStringList toStringList() const{
+	QVariant toVariant() const{
 
 		QStringList list;
+
 		QString tmpTitle = title;
 		QString tmpArtist = artist;
 		QString tmpAlbum = album;
-		//QString tmpGenre = genre;
+
 		if(title.trimmed().size() == 0) tmpTitle = QString("(Unknown title)");
 		if(artist.trimmed().size() == 0) tmpArtist = QString("");
 		if(album.trimmed().size() == 0) tmpAlbum = QString("");
-		//if(genre.trimmed().size() == 0) tmpGenre = QString("");
 
 		list.push_back(tmpTitle);
 		list.push_back(tmpArtist);
@@ -109,29 +125,44 @@ struct MetaData : public QVariant {
 		list.push_back(QString::number(album_id));
 		list.push_back(QString::number(artist_id));
 		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
-		//list.push_back(tmpGenre);
+		list.push_back( QString::number(radio_mode) );
+		list.push_back( (pl_playing) ? "1" : "0" );
+		list.push_back( (pl_selected) ? "1" : "0" );
+		list.push_back( (pl_dragged) ? "1" : "0" );
+
 		return list;
 	}
 
-	void fromStringList(QStringList& list){
 
-		if(list.size() < 8) return;
+	static bool fromVariant(QVariant v, MetaData& md){
 
-		title = list.at(0);
-		artist = list.at(1);
-		album = list.at(2);
-		rating = list.at(3).toInt();
-		length_ms = list.at(4).toULongLong();
-		year = list.at(5).toInt();
-		filepath = list.at(6);
-		track_num = list.at(7).toInt();
-		bitrate = list.at(8).toInt();
-		id = list.at(9).toInt();
-		album_id = list.at(10).toInt();
-		artist_id = list.at(11).toInt();
-		is_extern = ( list.at(12) == "1" );
-		//genre = list.at(13);
+		QStringList list = v.toStringList();
+
+		if(list.size() < 17) return false;
+
+		md.title = list[0];
+		md.artist = list[1];
+		md.album = list[2];
+		md.rating = list[3].toInt();
+		md.length_ms = list[4].toULongLong();
+		md.year = list[5].toInt();
+		md.filepath = list[6];
+		md.track_num = list[7].toInt();
+		md.bitrate = list[8].toInt();
+		md.id = list[9].toInt();
+		md.album_id = list[10].toInt();
+		md.artist_id = list[11].toInt();
+		md.is_extern = ( list[12] == "1" );
+		md.radio_mode = list[13].toInt();
+
+		md.pl_playing = (list[14] == "1");
+		md.pl_selected = (list[15] == "1");
+		md.pl_dragged = (list[16] == "1");
+
+		return true;
 	}
+
+
 };
 
 class MetaDataList : public vector<MetaData>{
@@ -167,6 +198,17 @@ public:
 		return false;
 	}
 
+	void insert(const MetaData& md, int pos){
+		if(pos >= size()){
+			push_back(md);
+			return;
+		}
+
+		if(pos < 0) pos = 0;
+
+		vector<MetaData>::iterator it = begin();
+		insert(it + pos);
+	}
 };
 
 struct Artist{

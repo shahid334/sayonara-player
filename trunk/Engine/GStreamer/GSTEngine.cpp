@@ -264,8 +264,6 @@ void GST_Engine::init(){
 
 QString GST_Engine::init_streamripper(const MetaData& md){
 
-	qDebug() << "MetaData: " << md.toStringList();
-
 	QString artist = md.artist;
 	QString title = md.title;
 	QString org_src_filename = md.filepath;	// some url
@@ -279,9 +277,6 @@ QString GST_Engine::init_streamripper(const MetaData& md){
 		_sr_recording_dst = Helper::getSayonaraPath() + title + "_" + QDateTime::currentDateTime().toString("yyMMdd_hhmm") + ".mp3";
 
 	new_src_filename = _sr_recording_dst;
-
-
-
 
 	// record from org_src_filename to new_src_filename
 	g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);

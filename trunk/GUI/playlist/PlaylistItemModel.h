@@ -60,7 +60,7 @@ public:
 
 
 private:
-	QList<QStringList>		_labellist;
+	QList<QVariant>		_labellist;
 
 };
 

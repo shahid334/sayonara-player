@@ -215,7 +215,6 @@ void Application::init_connections(){
            CONNECT (playlist, sig_library_changed(), 								ui_library, 	library_changed());
            CONNECT (playlist, sig_import_files(const MetaDataList&), 			library, 		importFiles(const MetaDataList&));
            CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
-           CONNECT (playlist, sig_radio_active(int),								player,         set_radio_active(int));
            CONNECT (playlist, sig_radio_active(int),								ui_playlist,	set_radio_active(int));
 
            // Can be done inside player

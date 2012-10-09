@@ -111,7 +111,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data, int radio){
 		return;
 	}
 
-	bool played_radio = (_radio_active != RADIO_OFF);
+	bool played_radio = (_radio_active != RADIO_OFF );
 	if(radio != _radio_active){
 		psl_stop();
 	}
@@ -119,37 +119,23 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data, int radio){
 	_radio_active = radio;
 	emit sig_radio_active(radio);
 
-	MetaDataList v_meta_data_tmp;
-
-	for(uint i=0; i<v_meta_data.size(); i++){
-
-		MetaData md = v_meta_data.at(i);
-		if( checkTrack(md) )
-			v_meta_data_tmp.push_back(md);
-	}
-
 
 	if(!_playlist_mode.append){
 		_v_meta_data.clear();
-        _cur_play_idx = -1;
+	    _cur_play_idx = -1;
 	}
 
-    for(uint i=0; i<v_meta_data_tmp.size(); i++){
-        _v_meta_data.push_back(v_meta_data.at(i));
-    }
+	foreach(MetaData md, v_meta_data){
 
-
-    if(_radio_active == RADIO_OFF)
-		psl_save_playlist_to_storage();
-
+		if( checkTrack(md) )
+			_v_meta_data.push_back(md);
+	}
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
-
-    if(v_meta_data_tmp.size() == 0){
+    if(_v_meta_data.size() == 0){
         emit sig_no_track_to_play();
     }
-
 
 
 	// if radio currently plays or was playing until now
@@ -157,10 +143,14 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data, int radio){
 
         emit sig_selected_file_changed(0);
         emit sig_selected_file_changed_md(_v_meta_data[0]);
-
 	}
 
-    qDebug() << "bye";
+
+    else{
+		if(_radio_active == RADIO_OFF)
+			psl_save_playlist_to_storage();
+    }
+
 }
 
 
@@ -169,31 +159,12 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data, int radio){
 // Load Folder, Load File...
 void Playlist::psl_createPlaylist(QStringList& pathlist, int radio){
 
-
-    qDebug() << "create playlist" << pathlist;
-
-	// regardless, of radio or not
-	// stop if playlist mode changed
-	if(radio != _radio_active)
-		psl_stop();
-
-	_radio_active = radio;
-	emit sig_radio_active(radio);
-
-	// start a new playlist
-	if(!_playlist_mode.append){
-		_v_meta_data.clear();
-		_cur_play_idx = -1;
-	}
-
 	MetaDataList v_md;
 
     CDirectoryReader reader;
 	reader.getMetadataFromFileList(pathlist, v_md);
 
-
-	psl_save_playlist_to_storage();
-	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+	psl_createPlaylist(v_md, radio);
 }
 
 
@@ -283,15 +254,11 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
-	// all titles before the current row stay as they are
-	for(int i=0; i<row; i++){
-		new_vec.push_back(_v_meta_data.at(i));
-	}
 
 	// insert new tracks
 	for(uint i=0; i<v_metadata.size(); i++){
 
-		MetaData md = v_metadata.at(i);
+		MetaData md = v_metadata[i];
 		MetaData md_tmp = _db->getTrackByPath(md.filepath);
 
 		if( md_tmp.id >= 0 ){
@@ -303,15 +270,8 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 			_v_extern_tracks.push_back(md);
 		}
 
-		new_vec.push_back(md);
+		_v_meta_data.insert(md, i + row);
 	}
-
-	// append all old tracks with higher index as row
-	for(uint i=row; i<_v_meta_data.size(); i++)
-		new_vec.push_back(_v_meta_data.at(i));
-
-	_v_meta_data.clear();
-	_v_meta_data = new_vec;
 
 
 	psl_save_playlist_to_storage();
@@ -415,8 +375,12 @@ void Playlist::psl_forward(){
 		}
 
 		_cur_play_idx = 0;
+		md = _v_meta_data[0];
+		md.radio_mode = _radio_active;
+
 		emit sig_selected_file_changed(0);
-		emit sig_selected_file_changed_md(_v_meta_data[0]);
+		emit sig_selected_file_changed_md(md);
+
 		return;
 	}
 
@@ -441,6 +405,7 @@ void Playlist::psl_forward(){
 	}
 
 	md = _v_meta_data[track_num];
+	md.radio_mode = _radio_active;
 
 	if( checkTrack(md) ){
 
@@ -464,6 +429,7 @@ void Playlist::psl_backward(){
 
 	int track_num = _cur_play_idx - 1;
 	MetaData md = _v_meta_data[track_num];
+	md.radio_mode = _radio_active;
 
 	if( checkTrack(md) ){
 		emit sig_selected_file_changed(track_num);
@@ -486,6 +452,8 @@ void Playlist::psl_next_track(){
 		return;
 	}
 
+	int radio_mode;
+
 	// no track to play anymore
 	// if LFM, fetch more tracks
 	if(_v_meta_data.size() == 0){
@@ -504,8 +472,6 @@ void Playlist::psl_next_track(){
 		// start screaming for new tracks
 		if(_v_meta_data.size() == 1)
 			emit sig_need_more_radio();
-
-
 
 
 		remove_row(0);
@@ -548,9 +514,11 @@ void Playlist::psl_next_track(){
 	// valid next track
 	if(track_num >= 0){
 		MetaData md = _v_meta_data[track_num];
+		md.radio_mode = _radio_active;
 
 		// maybe track is deleted here
 		if( checkTrack(md) ){
+
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
@@ -785,7 +753,7 @@ void Playlist::psl_new_radio_playlist_available(const MetaDataList& playlist){
 	emit sig_radio_active(_radio_active);
 
 	MetaDataList pl_copy = playlist;
-	this->psl_clear_playlist();
+	psl_clear_playlist();
 	psl_createPlaylist(pl_copy, _radio_active);
 }
 

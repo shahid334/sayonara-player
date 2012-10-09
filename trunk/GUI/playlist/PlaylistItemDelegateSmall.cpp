@@ -73,17 +73,13 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	if(!index.isValid()) return;
 
-	QRect rect(option.rect);
+	QVariant mdVariant = index.model()->data(index, Qt::WhatsThisRole);
+	MetaData md;
+	if( !MetaData::fromVariant(mdVariant, md) ) return;
 
+	QRect rect(option.rect);
 	painter->save();
 	painter->translate(0, 0);
-
-	QStringList strlist = index.model()->data(index, Qt::WhatsThisRole).toStringList();
-	MetaData md;
-		md.fromStringList(strlist);
-
-	bool cur_track = (strlist[strlist.length()-2].toInt() == 1);
-	bool insert = (strlist.last().toInt() == 1);
 
 	_pl_entry->setContent(md, index.row() +1 );
 
@@ -94,9 +90,6 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	QString style;
 	QString col_fg;
-
-	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
-
 	QPalette palette = _parent->palette();
 
 	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
@@ -108,13 +101,13 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	int background_val = col_background.lightness();
 
 
-	if(cur_track)
+	if(md.pl_playing)
 		style = QString("background-color: ") +
 				col_highlight_lighter.name() + ";" +
 				get_fg_color(highlight_lighter_val);
 
 
-	else if(!is_selected)
+	else if(!md.pl_selected)
 		style = QString("background-color: transparent;") + get_fg_color(background_val);
 
 	// standard selected
@@ -129,7 +122,7 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	_pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );
 
-	if(insert) {
+	if(md.pl_dragged) {
 		painter->drawLine(QLine(0, y, _pl_entry->width(), y));
 	}
 

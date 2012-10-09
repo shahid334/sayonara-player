@@ -85,16 +85,18 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	painter->save();
 	painter->translate(0, 0);
 
-	QStringList strlist = index.model()->data(index, Qt::WhatsThisRole).toStringList();
+	QVariant mdVariant = index.model()->data(index, Qt::WhatsThisRole);
 	MetaData md;
-		md.fromStringList(strlist);
+	if(!MetaData::fromVariant(mdVariant, md)){
+		painter->restore();
+		return;
+	}
 
-	bool cur_track = (strlist[strlist.length()-2].toInt() == 1);
-	bool insert = (strlist.last().toInt() == 1);
-
+	bool cur_track = md.pl_playing;
+	bool insert = md.pl_dragged;
+	bool is_selected = md.pl_selected;
 
 	_pl_entry->setContent(md, index.row() + 1);
-
 
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
 						this->_parent->verticalScrollBar()->width() + 4 : 4;
@@ -103,9 +105,6 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 	QString style;
 	QString col_fg;
-
-
-	bool is_selected = ((option.state & QStyle::State_Selected) != 0);
 
 	QPalette palette = _parent->palette();
 

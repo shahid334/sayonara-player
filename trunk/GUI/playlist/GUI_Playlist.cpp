@@ -277,14 +277,11 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 		Helper::cvtSecs2MinAndSecs(it->length_ms / 1000, &min, &sek);
 		_total_secs += (min * 60 + sek);
 
-		QStringList str4Playlist = it->toStringList();
+		it->pl_playing = (idx == _cur_playing_row);
+		it->pl_selected = false;
+		QVariant md2variant = it->toVariant();
 
-		if(idx == _cur_playing_row) str4Playlist.push_back("1");
-		else str4Playlist.push_back("0");
-
-		str4Playlist.push_back("0");
-
-		_pli_model->setData(model_idx, (const QVariant&) str4Playlist, Qt::EditRole);
+		_pli_model->setData(model_idx, md2variant, Qt::EditRole);
 
 		if(_radio_active == RADIO_LFM) break;
 		idx++;
@@ -321,11 +318,10 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 
 	foreach(QModelIndex idx, idx_list){
 
+		QVariant mdvariant = this->_pli_model->data(idx, Qt::WhatsThisRole);
 		MetaData md;
-		QStringList metadata = this->_pli_model->data(idx, Qt::WhatsThisRole).toStringList();
-		if(metadata.size() == 0) continue;
+		if(!MetaData::fromVariant(mdvariant, md)) continue;
 
-		md.fromStringList(metadata);
 		v_md.push_back(md);
 
 		_cur_selected_rows.push_back(idx.row());
@@ -366,15 +362,14 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 	for(int i=0; i<index.model()->rowCount(); i++){
 
 		QModelIndex tmp_idx = index.model()->index(i, 0);
-		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
+		QVariant mdvariant = index.model()->data(tmp_idx, Qt::WhatsThisRole);
+		MetaData md;
+		if(!MetaData::fromVariant(mdvariant, md)) continue;
 
-		if(i == index.row())
-			str4Playlist[str4Playlist.length()-2] = "1";	// paint as marked
+		md.pl_selected = (i == index.row());
+		md.pl_playing = (i == index.row());
 
-		else
-			str4Playlist[str4Playlist.length()-2] = "0";
-
-		_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
+		_pli_model->setData(tmp_idx, md.toVariant(), Qt::EditRole);
 	}
 
 	int new_row = index.row();
@@ -400,18 +395,14 @@ void GUI_Playlist::track_changed(int new_row){
 	for(int i=0; i<_pli_model->rowCount(); i++){
 
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
-		QStringList str4Playlist = index.model()->data(tmp_idx, Qt::WhatsThisRole).toStringList();
 
-		if(str4Playlist.size() >= 3){
+		QVariant mdvariant = index.model()->data(tmp_idx, Qt::WhatsThisRole);
+		MetaData md;
+		if(!MetaData::fromVariant(mdvariant, md)) continue;
 
-			if(i == index.row())
-				str4Playlist[str4Playlist.size()-2] = QString("1");
+		md.pl_playing = (i == index.row());
+		_pli_model->setData(tmp_idx, md.toVariant(), Qt::EditRole);
 
-			else
-				str4Playlist[str4Playlist.size()-2] = QString("0");
-
-			_pli_model->setData(tmp_idx, (const QVariant&) str4Playlist, Qt::EditRole);
-		}
 	}
 
 	this->ui->listView->scrollTo(index);
@@ -480,13 +471,13 @@ void GUI_Playlist::clear_drag_lines(int row){
 		if(!idx.isValid() || idx.row() < 0 || idx.row() >= _pli_model->rowCount())
 			continue;
 
-		QStringList list = _pli_model->data(this->_pli_model->index(i, 0), Qt::WhatsThisRole).toStringList();
+		QVariant mdVariant = _pli_model->data(this->_pli_model->index(i, 0), Qt::WhatsThisRole);
+		MetaData md;
+		if(MetaData::fromVariant(mdVariant, md)){
 
-		// set the flag, that no black line should be painted
-		if(list.size() > 1)
-			list[list.length()-1] = QString("0");
-
-		_pli_model->setData(this->_pli_model->index(i, 0), (const QVariant&) list, Qt::EditRole);
+			md.pl_dragged = false;
+			_pli_model->setData(this->_pli_model->index(i, 0), md.toVariant(), Qt::EditRole);
+		}
 
 	}
 }
@@ -556,10 +547,14 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 	}
 
 	// paint line
-	QStringList list = _pli_model->data(cur_idx, Qt::WhatsThisRole).toStringList();
-	list[list.length()-1] = QString("1");
 
-	_pli_model->setData(cur_idx, (const QVariant&) list, Qt::EditRole);
+	QVariant mdVariant = _pli_model->data(cur_idx, Qt::WhatsThisRole);
+	MetaData md;
+	if(!MetaData::fromVariant(mdVariant, md)) return;
+
+	md.pl_dragged = true;
+	_pli_model->setData(cur_idx, md.toVariant(), Qt::EditRole);
+
 }
 
 // finally drop it
