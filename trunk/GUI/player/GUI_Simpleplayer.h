@@ -226,9 +226,6 @@ private:
     MetaData					m_metadata_corrected;
     bool						m_min2tray;
 
-
-    int							m_radio_active;
-
     const quint8				VOLUME_STEP_SIZE_PERC;
     int 						m_library_width;
     int							m_library_stretch_factor;

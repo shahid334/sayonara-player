@@ -45,12 +45,18 @@ bool SearchSlider::event(QEvent* e){
 
 
 	int percent;
-	QMouseEvent* mouseEvent;
+    QMouseEvent* mouseEvent;
 
-	switch(e->type()){
+
+    switch(e->type()){
+        case QEvent::MouseTrackingChange:
+        break;
+
+        case QEvent::MouseButtonDblClick:
+        break;
 
 		case QEvent::MouseButtonPress:
-
+            if(!isEnabled()) break;
 			_searching = true;
 
 			e->ignore();
@@ -68,7 +74,7 @@ bool SearchSlider::event(QEvent* e){
 			break;
 
 		case QEvent::MouseMove:
-
+            if(!isEnabled()) break;
 			e->ignore();
 			mouseEvent = (QMouseEvent*) e;
 
@@ -86,7 +92,7 @@ bool SearchSlider::event(QEvent* e){
 
 		case QEvent::MouseButtonRelease:
 
-
+            if(!isEnabled()) break;
 			e->ignore();
 			mouseEvent = (QMouseEvent*) e;
 
@@ -102,7 +108,8 @@ bool SearchSlider::event(QEvent* e){
 			break;
 
 		default:
-			QSlider::event(e);
+
+            QSlider::event(e);
 
 			break;
 	}

@@ -198,16 +198,17 @@ public:
 		return false;
 	}
 
-	void insert(const MetaData& md, int pos){
-		if(pos >= size()){
+	void insert_mid(const MetaData& md, int pos){
+		if(pos >= (int) size()){
 			push_back(md);
 			return;
 		}
 
 		if(pos < 0) pos = 0;
 
-		vector<MetaData>::iterator it = begin();
-		insert(it + pos);
+		MetaData md_cp = md;
+		MetaDataList::iterator it = begin();
+		insert(it + pos, md_cp);
 	}
 };
 

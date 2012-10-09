@@ -435,6 +435,8 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 			}
 		}
 
+        md.radio_mode = RADIO_LFM;
+
 		v_md.push_back(md);
 	}
 

@@ -97,6 +97,12 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
     QStringList files;
 
+
+    // fetch sound and playlist files
+    QStringList filter = Helper::get_soundfile_extensions();
+    filter.append(Helper::get_playlistfile_extensions());
+    setFilter(filter);
+
     foreach(QString str, lst){
         if(!QFile::exists(str)) continue;
 
@@ -108,10 +114,6 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             QDir dir(str);
             dir.cd(str);
 
-            QStringList filter = Helper::get_soundfile_extensions();
-            filter.append(Helper::get_playlistfile_extensions());
-
-            setFilter(filter);
             getFilesInsiderDirRecursive(dir, files, n_files);
         }
 
@@ -127,24 +129,22 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
     db->getMultipleTracksByPath(files, v_possible_md);
 
-    for(int i=0; i<v_possible_md.size(); i++){
+    foreach(MetaData md, v_possible_md){
 
-        QString path = files[i];
-        if(Helper::is_playlistfile(path)){
-            playlist_paths.push_back(path);
+        if(Helper::is_playlistfile(md.filepath)){
+            playlist_paths.push_back(md.filepath);
             continue;
         }
 
-        if(!Helper::is_soundfile(path)) continue;
+        if(Helper::is_soundfile(md.filepath)){
 
-        MetaData md = v_possible_md[i];
+            if(md.id < 0){
 
-        if(md.id < 0){
-            qDebug() << "not found: " << md.filepath;
-            if(!ID3::getMetaDataOfFile(md)) continue;
+                if(!ID3::getMetaDataOfFile(md)) continue;
+
+                v_md.push_back(md);
+            }
         }
-
-       v_md.push_back(md);
     }
 
 
@@ -156,9 +156,9 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         PlaylistParser::parse_playlist(path, v_md_pl);
 
         // check, that metadata is not already available
-        for(uint i=0; i<v_md_pl.size(); i++){
-            MetaData md_pl = v_md_pl[i];
-            if(!v_md_pl.contains(md_pl)){
+        foreach(MetaData md_pl, v_md_pl){
+
+            if(!v_md.contains(md_pl)){
                 v_md.push_back(md_pl);
             }
         }

@@ -253,8 +253,11 @@ void GUI_Playlist::change_skin(bool dark){
 // the current track should be highlighted
 void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 
-	_pli_model->removeRows(0, _pli_model->rowCount());
-	if(_radio_active != RADIO_LFM)
+    _pli_model->removeRows(0, _pli_model->rowCount());
+
+    if(v_metadata.size() == 0) return;
+
+    if(v_metadata[0].radio_mode != RADIO_LFM)
 		_pli_model->insertRows(0, v_metadata.size());
 	else
 		_pli_model->insertRows(0, 1);
@@ -265,25 +268,24 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 	_cur_playing_row = cur_play_idx;
 
 	this->ui->btn_import->setVisible(false);
-	for(MetaDataList::iterator it = v_metadata.begin(); it != v_metadata.end(); it++){
+    foreach(MetaData md, v_metadata){
 
-		if(it->is_extern && _radio_active == RADIO_OFF) {
+        if(md.is_extern) {
 			this->ui->btn_import->setVisible(true);
 		}
 
 		QModelIndex model_idx = _pli_model->index(idx, 0);
 
 		int min, sek;
-		Helper::cvtSecs2MinAndSecs(it->length_ms / 1000, &min, &sek);
+        Helper::cvtSecs2MinAndSecs(md.length_ms / 1000, &min, &sek);
 		_total_secs += (min * 60 + sek);
 
-		it->pl_playing = (idx == _cur_playing_row);
-		it->pl_selected = false;
-		QVariant md2variant = it->toVariant();
+        md.pl_playing = (idx == _cur_playing_row);
+        md.pl_selected = false;
 
-		_pli_model->setData(model_idx, md2variant, Qt::EditRole);
+        _pli_model->setData(model_idx, md.toVariant(), Qt::EditRole);
 
-		if(_radio_active == RADIO_LFM) break;
+        if(md.radio_mode == RADIO_LFM) break;
 		idx++;
 	}
 

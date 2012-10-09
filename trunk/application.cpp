@@ -215,10 +215,6 @@ void Application::init_connections(){
            CONNECT (playlist, sig_library_changed(), 								ui_library, 	library_changed());
            CONNECT (playlist, sig_import_files(const MetaDataList&), 			library, 		importFiles(const MetaDataList&));
            CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
-           CONNECT (playlist, sig_radio_active(int),								ui_playlist,	set_radio_active(int));
-
-           // Can be done inside player
-           CONNECT (playlist, sig_radio_active(int),								ui_playlist_chooser, set_radio_active(int));
 
            CONNECT (playlist, sig_data_for_id3_change(const MetaDataList&), 	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
 
@@ -341,7 +337,7 @@ void Application::init_connections(){
 
 void Application::setFiles2Play(QStringList filelist){
 
-	playlist->psl_createPlaylist(filelist, RADIO_OFF);
+    playlist->psl_createPlaylist(filelist);
 
 	if(playlist->get_num_tracks() > 0)
 		playlist->psl_play();

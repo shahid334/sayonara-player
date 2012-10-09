@@ -188,8 +188,3 @@ void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
 	emit sig_closed();
 }
 
-
-void GUI_PlaylistChooser::set_radio_active(int radio){
-	this->ui->btn_save_as->setEnabled(radio == RADIO_OFF);
-	this->ui->btn_save->setEnabled(radio == RADIO_OFF);
-}

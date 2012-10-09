@@ -76,6 +76,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			GError *err;
 
 			gst_message_parse_error(msg, &err, NULL);
+
 			qDebug() << "GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
 
 			g_error_free(err);

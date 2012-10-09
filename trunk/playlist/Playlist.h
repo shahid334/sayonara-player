@@ -69,14 +69,14 @@ public:
 		void sig_library_changed();
 		void sig_import_files(const MetaDataList&);
 		void sig_need_more_radio();
-		void sig_radio_active(int);
+
 
 
 	public slots:
 
-		void psl_createPlaylist(QStringList&, int radio = RADIO_OFF);
-		void psl_createPlaylist(MetaDataList&, int radio = RADIO_OFF);
-		void psl_createPlaylist(CustomPlaylist&, int radio = RADIO_OFF);
+        void psl_createPlaylist(QStringList&);
+        void psl_createPlaylist(MetaDataList&);
+        void psl_createPlaylist(CustomPlaylist&);
 		void psl_insert_tracks(const MetaDataList&, int idx);
 		void psl_insert_albums(const vector<Album>&, int);			// not used
 		void psl_insert_artists(const vector<Artist>&, int);		// not used

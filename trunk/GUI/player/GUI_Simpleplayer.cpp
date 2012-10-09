@@ -52,7 +52,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	m_playing = false;
 	m_mute = false;
-	m_radio_active = RADIO_OFF;
+
 
     m_min2tray = settings->getMinimizeToTray();
 
@@ -436,7 +436,9 @@ void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 
 void GUI_SimplePlayer::setProgressJump(int percent){
 
-
+    if(percent > 100 || percent < 0) {
+        percent = 0;
+    }
     long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
     QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
     this->ui->curTime->setText(curPosString);
@@ -446,27 +448,24 @@ void GUI_SimplePlayer::setProgressJump(int percent){
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
+
+
     if (m_completeLength_ms != 0) {
 
 		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
 
-		if (!this->ui->songProgress->isSearching()){
-			this->ui->songProgress->setValue((int) newSliderVal);
+        if (!this->ui->songProgress->isSearching() && newSliderVal < ui->songProgress->maximum()){
+            this->ui->songProgress->setValue(newSliderVal);
 		}
 	}
 
-    else if(pos_sec > m_completeLength / 1000){
+    else if(pos_sec > m_completeLength_ms / 1000){
     	this->ui->songProgress->setValue(0);
     }
 
-	else{
-        this->ui->maxTime->setText("0:00");
-        this->ui->songProgress->setValue(0);
-	}
-
     if(!this->ui->songProgress->isSearching()){
         int min, sec;
-
+        if(m_completeLength_ms != 0 && pos_sec > m_completeLength_ms) pos_sec = 0;
         Helper::cvtSecs2MinAndSecs(pos_sec, &min, &sec);
 
         QString curPosString = Helper::cvtSomething2QString(min, 2)
@@ -613,7 +612,7 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	this->ui->artist->setText("");
 	this->setWindowTitle("Sayonara");
 	this->ui->songProgress->setValue(0);
-	this->ui->curTime->setText("00:00");
+    this->ui->curTime->setText("0:00");
 	this->ui->maxTime->setText("00:00");
 
 
@@ -763,7 +762,7 @@ void GUI_SimplePlayer::coverClicked() {
 	if(m_metadata.album_id >= 0)
 		m_alternate_covers->start(m_metadata.album_id, true);
 
-   else if(m_radio_active == RADIO_STATION){
+   else if(m_metadata.radio_mode == RADIO_STATION){
         QString searchstring = QString("Radio ") + m_metadata.title;
         QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
         qDebug() << "new cover " << targetpath;
@@ -1045,7 +1044,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 	switch (e->key()) {
 
 		case Qt::Key_MediaPlay:
-			if(m_radio_active == RADIO_OFF)
+            if(m_metadata.radio_mode == RADIO_OFF)
 				playClicked(true);
 			break;
 
@@ -1058,7 +1057,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			break;
 
 		case Qt::Key_MediaPrevious:
-			if(m_radio_active == RADIO_OFF)
+            if(m_metadata.radio_mode == RADIO_OFF)
 				backwardClicked(true);
 			break;
 
@@ -1303,7 +1302,7 @@ void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
 
 void GUI_SimplePlayer::setRadioMode(int radio){
 
-	m_radio_active = radio;
+
 	bool stream_ripper = CSettingsStorage::getInstance()->getStreamRipper();
 	this->ui->btn_bw->setEnabled(radio == RADIO_OFF);
 	this->ui->btn_fw->setEnabled(radio != RADIO_STATION);
@@ -1318,24 +1317,24 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 		this->ui->btn_rec->setVisible(false);
 	}
 
-	this->ui->songProgress->setEnabled(radio == RADIO_OFF);
-	this->m_bwdAction->setEnabled(radio == RADIO_OFF);
+    this->ui->songProgress->setEnabled(radio == RADIO_OFF);
+    this->m_bwdAction->setEnabled(radio == RADIO_OFF);
 	this->m_fwdAction->setEnabled(radio != RADIO_STATION);
-	this->m_playAction->setEnabled(radio == RADIO_OFF);
-	
+    this->m_playAction->setEnabled(radio == RADIO_OFF);
+
 }
 
 
 void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 
 	if(b){
-		this->ui->btn_play->setVisible(m_radio_active == RADIO_OFF);
-		this->ui->btn_rec->setVisible(m_radio_active != RADIO_OFF);
+        this->ui->btn_play->setVisible(m_metadata.radio_mode == RADIO_OFF);
+        this->ui->btn_rec->setVisible(m_metadata.radio_mode != RADIO_OFF);
 	}
 
 	else{
 		this->ui->btn_play->setVisible(true);
-		this->ui->btn_play->setEnabled(m_radio_active == RADIO_OFF);
+        this->ui->btn_play->setEnabled(m_metadata.radio_mode == RADIO_OFF);
 		this->ui->btn_rec->setVisible(false);
 	}
 }
