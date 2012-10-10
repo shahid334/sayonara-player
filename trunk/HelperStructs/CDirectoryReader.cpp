@@ -122,6 +122,8 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         }
     }
 
+    qDebug() << files.size() << " files extracted";
+
 
     // this has to be so strange,
     MetaDataList v_possible_md;
@@ -139,13 +141,14 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         if(Helper::is_soundfile(md.filepath)){
 
             if(md.id < 0){
-
                 if(!ID3::getMetaDataOfFile(md)) continue;
-
-                v_md.push_back(md);
             }
+
+             v_md.push_back(md);
         }
     }
+
+    qDebug() << "found " << v_md.size() << " tracks";
 
 
 	// TODO: look for playlists if paths could be read from database

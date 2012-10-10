@@ -40,31 +40,8 @@ LibraryItemDelegateArtists::LibraryItemDelegateArtists(QTableView* parent) {
 	this->_parent = parent;
 
 
-        QPixmap icon_single_album(Helper::getIconPath() + "play_small.png");
-        QPixmap icon_multi_album(Helper::getIconPath() + "fwd_orange.png");
-
-
-        QPalette palette = _parent->palette();
-        QColor col_background = palette.color(QPalette::Active, QPalette::Background);
-        QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-        //QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
-        _col_highlight_name = col_highlight.name();
-        _val_bg = col_background.lightness();
-        _val_sel = col_highlight.lightness();
-
-        _icon_label_single_album = new QLabel();
-        _icon_label_single_album->setAlignment( Qt::AlignVCenter );
-        _icon_label_single_album->setContentsMargins(2, 0, 2, 0);
-        _icon_label_single_album->setPixmap(icon_single_album);
-
-        _icon_label_multi_album = new QLabel();
-        _icon_label_multi_album->setContentsMargins(2, 0, 2, 0);
-        _icon_label_multi_album->setAlignment( Qt::AlignVCenter );
-        _icon_label_multi_album->setPixmap(icon_multi_album);
-
-        _label = new QLabel();
-
-        _label->setContentsMargins(2, 0, 2, 0);
+    _icon_single_album = QPixmap(Helper::getIconPath() + "play_small.png");
+    _icon_multi_album = QPixmap(Helper::getIconPath() + "fwd_orange.png");
 
 
 }
@@ -79,78 +56,53 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 	if(!index.isValid()) return;
 
-                QRect rect(option.rect);
-                QLabel* label = _label;
-                QString label_text;
-
-                int row_height = _parent->rowHeight(index.row())-1;
-                int col_width = _parent->columnWidth(index.column());
+        QRect rect(option.rect);
 
 		painter->save();
-		painter->translate(0, 0);
 
 		if(index.column() == 0){
-                        int num_albums = index.model()->data(index, Qt::WhatsThisRole).toInt();
+            int col_width = _parent->columnWidth(0)-4;
+            int row_height = _parent->rowHeight(0)-4;
+            rect.translate(2, 2);
 
-                        if(num_albums <= 1)
-                           label = _icon_label_single_album;
+            int num_albums = index.model()->data(index, Qt::WhatsThisRole).toInt();
 
-                        else
-                            label = _icon_label_multi_album;
+            if(num_albums <= 1)
+                painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
 
+            else
+                painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
 
-                        label->setFixedHeight(row_height);
-                        label->setFixedWidth(col_width);
-                        label->render(painter, rect.topLeft() );
-
-                        painter->restore();
-                        return;
 		}
 
 		else if(index.column() == 1){
 
-			QStringList list = index.model()->data(index, Qt::WhatsThisRole).toStringList();
-			Artist artist;
-			artist.fromStringList(list);
+            rect.translate(2, 0);
+            QString name = index.model()->data(index, Qt::WhatsThisRole).toString();
 
-                        label_text = "<b>" + artist.name + "</b>";
-                        label->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+            QFont font;
+            font.setBold(true);
+
+            painter->setFont(font);
+            painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
+
 		}
 
-		else if(index.column() == 2){
-			QString text = index.model()->data(index, Qt::WhatsThisRole).toString();
-                        label_text = text + " tracks";
-                        label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-		}
+        else if(index.column() == 2){
 
-		QString style;
-		QString fg_color;
+            rect.translate(-2, 0);
+            int n_tracks = index.model()->data(index, Qt::WhatsThisRole).toInt();
 
-		bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+            QFont font;
+            font.setBold(true);
 
+            painter->setFont(font);
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, QString::number(n_tracks) + " tracks");
 
-		if(!is_selected){
+        }
 
-                        if(_val_bg > 96) fg_color = " color: #202020";
-			else fg_color = " color: #D8D8D8; ";
+        painter->restore();
 
-			style = QString("background-color: transparent; ") + fg_color;
-		}
-
-		else {
-                        if(_val_sel > 96) fg_color = " color: #202020";
-			else fg_color = " color: #D8D8D8; ";
-
-                        style = QString("background-color: " + _col_highlight_name + ";") + fg_color;
-		}
-
-                label->setText(label_text);
-                label->setStyleSheet(style);
-                label->setFixedHeight(row_height);
-                label->setFixedWidth(col_width);
-                label->render(painter, rect.topLeft() );
-
-		painter->restore();
 }
 
 
@@ -164,9 +116,7 @@ QSize LibraryItemDelegateArtists::sizeHint(const QStyleOptionViewItem & option, 
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-        delete _label;
-        delete _icon_label_single_album;
-        delete _icon_label_multi_album;
+
 
 	return QSize(1, _parent->rowHeight(index.row()));
 

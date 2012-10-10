@@ -100,19 +100,19 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 			 return QVariant();
 
 		 if(role == Qt::WhatsThisRole && index.column() == 0){
-			 return _album_list.at(index.row()).is_sampler;
+             Album album = _album_list[index.row()];
+             return album.is_sampler;
 		 }
 
 
 		 if (role == Qt::WhatsThisRole && index.column() == 1){
-			 Album album = _album_list.at(index.row());
-			 QStringList strlist = album.toStringList();
-
-			 return strlist;
-
+            Album album = _album_list[index.row()];
+            return album.name;
 		 }
-		 else  if (role == Qt::WhatsThisRole && index.column() == 2){
-			 return _album_list.at(index.row()).year;
+
+         else  if (role == Qt::WhatsThisRole && index.column() == 2){
+             Album album = _album_list[index.row()];
+             return album.year;
 		 }
 
 		 else

@@ -232,9 +232,7 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 		row = 0;
 	}
 
-	MetaDataList new_vec;
-
-	// possibly the current playing index has to be updated
+    // possibly the current playing index has to be updated
 	if(row <= _cur_play_idx && _cur_play_idx != -1)
 		_cur_play_idx += v_metadata.size();
 
@@ -249,11 +247,11 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 			md.is_extern = false;
 		}
 
-		else {
+        else {
 			md.is_extern = true;
             md.radio_mode = RADIO_OFF;
 			_v_extern_tracks.push_back(md);
-		}
+        }
 
 		_v_meta_data.insert_mid(md, i + row);
 	}

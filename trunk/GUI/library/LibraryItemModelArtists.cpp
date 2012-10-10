@@ -100,19 +100,17 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
 			 return QVariant();
 
 		 if( role == Qt::WhatsThisRole && index.column() == 0 ){
-			 Artist artist = _artist_list.at(index.row());
-			 return artist.num_albums;
+             return _artist_list[index.row()].num_albums;
+
 		 }
 
-
 		 else if (role == Qt::WhatsThisRole && index.column() == 1){
-			 Artist artist = _artist_list.at(index.row());
-				return artist.toStringList();
+             return _artist_list[index.row()].name;
 		 }
 
 		 else if (role == Qt::WhatsThisRole && index.column() == 2){
-			 Artist artist = _artist_list.at(index.row());
-			 return artist.num_songs;
+             Artist artist = _artist_list[index.row()];
+             return artist.num_songs;
 		 }
 
 		 else

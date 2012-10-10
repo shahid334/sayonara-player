@@ -29,14 +29,16 @@
 #ifndef LIBRARYITEMMODELTRACKS_H_
 #define LIBRARYITEMMODELTRACKS_H_
 
-#define COL_TRACK_NUM 0
-#define COL_TITLE 1
-#define COL_ALBUM 2
-#define COL_ARTIST 3
-#define COL_YEAR 4
-#define COL_LENGTH 5
-#define COL_BITRATE 6
-
+#ifndef COL_MACROS
+    #define COL_MACROS
+    #define COL_TRACK_NUM 0
+    #define COL_TITLE 1
+    #define COL_ALBUM 2
+    #define COL_ARTIST 3
+    #define COL_YEAR 4
+    #define COL_LENGTH 5
+    #define COL_BITRATE 6
+#endif
 
 #include <QObject>
 #include <QStringList>

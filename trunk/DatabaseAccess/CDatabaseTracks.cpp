@@ -71,7 +71,6 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 			data.artist_id = q.value(8).toInt();
 			data.album = 	 q.value(9).toString().trimmed();
 			data.artist = 	 q.value(10).toString().trimmed();
-			data.is_extern = false;
 
 			result.push_back(data);
 		}

@@ -408,7 +408,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 
 		for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++){
 
-			md.is_extern = true;
+            md.is_extern = false;
 			md.bitrate = 128000;
 
 			QDomNode content = track.childNodes().item(idx_track_content);

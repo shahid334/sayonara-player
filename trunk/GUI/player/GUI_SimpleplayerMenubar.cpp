@@ -24,6 +24,7 @@
 void GUI_SimplePlayer::fileSelectedClicked(bool) {
 
 	QStringList filetypes = Helper::get_soundfile_extensions();
+    filetypes.append(Helper::get_playlistfile_extensions());
 	QString filetypes_str = QString("Media files (");
 	foreach(QString filetype, filetypes){
 		filetypes_str += filetype;

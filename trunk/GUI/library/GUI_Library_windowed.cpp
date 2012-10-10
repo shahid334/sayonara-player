@@ -307,6 +307,7 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	}
 
+
 	this->ui->lv_album->setColumnWidth(0, 20);
 
 	this->ui->lv_album->setColumnWidth(0, 20);
@@ -314,8 +315,8 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 	this->ui->lv_album->setColumnWidth(2, 40);
 
 	this->ui->lv_artist->setColumnWidth(0, 20);
-	this->ui->lv_artist->setColumnWidth(1, this->ui->lv_artist->width() - 100);
-	this->ui->lv_artist->setColumnWidth(2, 50);
+    this->ui->lv_artist->setColumnWidth(1, this->ui->lv_artist->width() - 120);
+    this->ui->lv_artist->setColumnWidth(2, 60);
 }
 
 
@@ -474,17 +475,17 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 		default: filter.by_searchstring = BY_FULLTEXT; break;
 	}
 
-	filter.filtertext = QString("%") + search + QString("%");
-
-
-	if(search.size() < 3){
+    if(search.size() < 3)
 		filter.cleared = true;
-	}
 
-	else filter.cleared = false;
+    else{
+        filter.filtertext = QString("%") + search + QString("%");
+        filter.cleared = false;
+
+    }
 
 	_cur_searchfilter = filter;
-	sig_filter_changed(filter);
+    sig_filter_changed(filter);
 }
 
 void GUI_Library_windowed::searchfilter_changed(int idx){

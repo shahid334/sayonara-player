@@ -39,29 +39,26 @@
 #include <QPainter>
 #include <HelperStructs/Helper.h>
 
+#ifndef COL_MACROS
+    #define COL_MACROS
+    #define COL_TRACK_NUM 0
+    #define COL_TITLE 1
+    #define COL_ALBUM 2
+    #define COL_ARTIST 3
+    #define COL_YEAR 4
+    #define COL_LENGTH 5
+    #define COL_BITRATE 6
+#endif
+
 
 LibraryItemDelegateTracks::LibraryItemDelegateTracks(QTableView* parent) {
 	this->_parent = parent;
-
-        _label = new QLabel();
-        _label->setContentsMargins(2, 0, 2, 0);
-
-        QPalette palette = _parent->palette();
-        QColor col_background = palette.color(QPalette::Active, QPalette::Background);
-        QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-
-        _col_highlight_name = col_highlight.name();
-        _val_bg = col_background.lightness();
-        _val_sel = col_highlight.lightness();
-
-
 
 
 }
 
 LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
-	// TODO Auto-generated destructor stub
-    delete _label;
+
 }
 
 
@@ -70,49 +67,38 @@ LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
 void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
-
 	if(!index.isValid()) return;
 
-        int col = index.column();
-        int col_width = _parent->columnWidth(col);
-        int row_height = _parent->rowHeight(index.row()) - 1;
+    int col = index.column();
+    painter->save();
 
-        painter->save();
-        painter->translate(0, 0);
+    QRect 	rect(option.rect);
+    QString	text = index.model()->data(index, Qt::DisplayRole).toString();
 
-        QRect 	rect(option.rect);
+    QFont font;
+    font.setBold(true);
 
-        QString	text = QString("<b>") + index.model()->data(index, Qt::DisplayRole).toString() + QString("</b>");
-        QString style;
+    painter->setFont(font);
 
-        bool is_selected = ((option.state & QStyle::State_Selected) != 0);
+    switch(col){
 
-        if(!is_selected)
-                style = QString("background-color: transparent; ");
+        case COL_YEAR:
+            if(text == "0") text = "";
 
-        else
-                style = QString("background-color: " + _col_highlight_name + "; ");
+        case COL_TRACK_NUM:
+        case COL_LENGTH:
+        case COL_BITRATE:
+            rect.translate(-2, 0);
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+            break;
+        default:
+            rect.translate(2, 0);
+            painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, text);
+            break;
+    }
 
-        _label->setStyleSheet(style);
-        _label->setFixedHeight(row_height);
-        _label->setFixedWidth(col_width);
-        _label->setText(text);
-
-
-        if(col == 0 || col >= 4)
-                _label->setAlignment( Qt::AlignVCenter | Qt::AlignRight);
-
-        else
-                _label->setAlignment( Qt::AlignVCenter | Qt::AlignLeft);
-
-
-        //_label->render(painter, rect.topLeft() );
-        painter->drawText(rect, text);
-
-        painter->restore();
+    painter->restore();
 }
-
-
 
 
 

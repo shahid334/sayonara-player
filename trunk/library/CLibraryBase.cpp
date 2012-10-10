@@ -265,22 +265,6 @@ void CLibraryBase::reload_thread_finished(){
 	_db->getAllArtists(_vec_artists);
     _db->getTracksFromDatabase(_vec_md);
 
-    QMap<QString, QList<int> > map;
-    int c=0;
-
-    foreach(MetaData md, _vec_md){
-
-        QString title = md.title;
-        for(int i=0; i<title.length() - 3; i++){
-            QString sub = title.mid(i, 3).toLower();
-            map[sub].push_back(md.id );
-
-            c++;
-        }
-    }
-
-    _db->setTrackIndexes(map);
-
 
 	emit sig_reload_library_finished();
 }
@@ -317,8 +301,6 @@ void CLibraryBase::loadDataFromDb () {
 
 	emit_stuff();
 }
-
-
 
 
 void CLibraryBase::emit_stuff(){
@@ -395,7 +377,10 @@ void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_s
 }
 
 void CLibraryBase::psl_filter_changed(const Filter& filter){
-	_filter = filter;
+
+    if(_filter.cleared && filter.cleared && filter.filtertext.size() != 0) return;
+
+    _filter = filter;
 
 	_vec_albums.clear();
 	_vec_artists.clear();
@@ -408,9 +393,6 @@ void CLibraryBase::psl_filter_changed(const Filter& filter){
 		_db->getAllArtists(_vec_artists, _artist_sortorder);
 		_db->getAllAlbums(_vec_albums, _album_sortorder);
 		_db->getTracksFromDatabase(_vec_md, _track_sortorder);
-
-
-
     }
 
 	else {

@@ -268,9 +268,11 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 	_cur_playing_row = cur_play_idx;
 
 	this->ui->btn_import->setVisible(false);
+    set_radio_active(RADIO_OFF);
     foreach(MetaData md, v_metadata){
 
         if(md.is_extern) {
+
 			this->ui->btn_import->setVisible(true);
 		}
 
@@ -285,8 +287,16 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 
         _pli_model->setData(model_idx, md.toVariant(), Qt::EditRole);
 
-        if(md.radio_mode == RADIO_LFM) break;
-		idx++;
+        if(md.radio_mode != RADIO_OFF){
+            set_radio_active(md.radio_mode);
+        }
+
+        if(md.radio_mode == RADIO_LFM) {
+
+            break;
+        }
+
+        idx++;
 	}
 
 	set_total_time_label();
@@ -705,6 +715,7 @@ void GUI_Playlist::import_button_clicked(){
 
 void GUI_Playlist::import_result(bool success){
 
+
 	this->ui->btn_import->setVisible(!success);
 }
 
@@ -716,7 +727,7 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_dynamic->setVisible(radio == RADIO_OFF);
 	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
-	this->ui->btn_import->setVisible(radio == RADIO_OFF);
+
 }
 
 
