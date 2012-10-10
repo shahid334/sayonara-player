@@ -93,6 +93,8 @@ SET(SOURCES
     application.cpp
     Engine/SoundPluginLoader.cpp
     GUI/player/GUI_Simpleplayer.cpp
+    GUI/player/GUI_SimpleplayerPlugins.cpp
+    GUI/player/GUI_SimpleplayerMenubar.cpp
     GUI/player/GUI_TrayIcon.cpp
     GUI/player/SearchSlider.cpp
     GUI/playlist/GUI_Playlist.cpp

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>GUI_SimplePlayer</class>
- <widget class="QMainWindow" name="GUI_SimplePlayer">
+ <class>SimplePlayer</class>
+ <widget class="QMainWindow" name="SimplePlayer">
   <property name="geometry">
    <rect>
     <x>0</x>

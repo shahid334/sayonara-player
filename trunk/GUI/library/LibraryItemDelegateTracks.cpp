@@ -106,7 +106,8 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
                 _label->setAlignment( Qt::AlignVCenter | Qt::AlignLeft);
 
 
-        _label->render(painter, rect.topLeft() );
+        //_label->render(painter, rect.topLeft() );
+        painter->drawText(rect, text);
 
         painter->restore();
 }

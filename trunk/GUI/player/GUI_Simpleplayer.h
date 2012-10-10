@@ -21,7 +21,7 @@
 
 #ifndef GUI_SIMPLEPLAYER_H
 #define GUI_SIMPLEPLAYER_H
-
+#include "ui_GUI_Simpleplayer.h"
 #include "HelperStructs/MetaData.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
@@ -44,12 +44,7 @@ class QCloseEvent;
 
 
 
-namespace Ui {
-class GUI_SimplePlayer;
-}
-
-
-class GUI_SimplePlayer : public QMainWindow
+class GUI_SimplePlayer : public QMainWindow, private Ui::SimplePlayer
 {
     Q_OBJECT
 public:
@@ -137,7 +132,7 @@ private slots:
 
     void coverClicked();
     void muteButtonPressed();
-    void album_cover_pressed();
+
 
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
 
@@ -160,9 +155,6 @@ private slots:
     void min2tray_toggled(bool);
     void small_playlist_items_toggled(bool);
 
-    void sound_engine_phonon_clicked();
-    void sound_engine_gst_clicked();
-    void populate_engines(const QList<Engine*>& lists, int active);
     void sl_action_streamripper_toggled(bool);
     void sl_action_socket_connection_triggered(bool);
 
@@ -188,7 +180,7 @@ protected:
 private:
 
 
-    Ui::GUI_SimplePlayer*		ui;
+    Ui::SimplePlayer*		ui;
 
 
     GUI_Playlist* 				ui_playlist;
@@ -238,7 +230,6 @@ private:
     void setupTrayActions ();
 
     void setupVolButton(int percent);
-    void setupIcons();
     void initGUI();
     void setupConnections();
     void setRadioMode(int);

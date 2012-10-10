@@ -41,7 +41,7 @@
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::GUI_SimplePlayer), VOLUME_STEP_SIZE_PERC (5){
+    QMainWindow(parent), ui(new Ui::SimplePlayer), VOLUME_STEP_SIZE_PERC (5){
 	ui->setupUi(this);
 	initGUI();
 
@@ -372,25 +372,9 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 }
 
 
-// public slot
-// cover was found by CoverLookup
-void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
 
-	if(m_class_name != caller_class) return;
 
-	// found cover is not for the player but for sth else
-	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-
-	if(	our_coverpath.toLower() != cover_path.toLower() ||
-		!QFile::exists(cover_path) ){
-
-		cover_path = Helper::getIconPath() + "append.png";
-	}
-
-	this->ui->albumCover->setIcon(QIcon(cover_path));
-	this->ui->albumCover->repaint();
-}
-
+/** LAST FM **/
 void GUI_SimplePlayer::last_fm_logged_in(bool b){
 
 	if(!b && CSettingsStorage::getInstance()->getLastFMActive() && !m_suppress_warning)
@@ -426,8 +410,10 @@ void GUI_SimplePlayer::correct_btn_clicked(bool b){
 	emit sig_correct_id3(m_metadata_corrected);
 
 }
+/** LAST FM **/
 
 
+/** PROGRESS BAR **/
 void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
 
     m_completeLength_ms = total_time;
@@ -476,6 +462,7 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
 }
 
+/** PROGRESS BAR END **/
 
 
 void GUI_SimplePlayer::setStyle(int style){
@@ -483,7 +470,6 @@ void GUI_SimplePlayer::setStyle(int style){
 	changeSkin(dark);
 	this->ui->action_Dark->setChecked(dark);
 }
-
 
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
@@ -541,12 +527,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 }
 
 
-void GUI_SimplePlayer::setVolume(int vol) {
-	this->ui->volumeSlider->setValue(vol);
-	setupVolButton(vol);
-	emit sig_volume_changed(vol);
-}
-
 
 QString GUI_SimplePlayer::getLengthString(quint32 length_ms) const {
 	QString lengthString;
@@ -570,6 +550,7 @@ void GUI_SimplePlayer::sl_rec_button_toggled(bool b){
 }
 
 
+/** PLAYER BUTTONS **/
 void GUI_SimplePlayer::playClicked(bool) {
 
 	bool play_tmp = false;
@@ -632,43 +613,17 @@ void GUI_SimplePlayer::forwardClicked(bool) {
 	this->ui->albumCover->setFocus();
 	emit forward();
 }
+/** PLAYER BUTTONS END **/
 
-void GUI_SimplePlayer::folderSelectedClicked(bool) {
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-			getenv("$HOME"),
-			QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-	if (dir != "")
-		emit baseDirSelected(dir);
+
+
+
+/** VOLUME **/
+void GUI_SimplePlayer::setVolume(int vol) {
+	this->ui->volumeSlider->setValue(vol);
+	setupVolButton(vol);
+	emit sig_volume_changed(vol);
 }
-
-void GUI_SimplePlayer::fileSelectedClicked(bool) {
-
-	QStringList filetypes = Helper::get_soundfile_extensions();
-	QString filetypes_str = QString("Media files (");
-	foreach(QString filetype, filetypes){
-		filetypes_str += filetype;
-		if(filetype != filetypes.last()){
-			filetypes_str += " ";
-		}
-	}
-
-	filetypes_str += ")";
-
-
-
-	QStringList list =
-			QFileDialog::getOpenFileNames(
-					this,
-					tr("Open Media files"),
-					QDir::homePath(),
-					filetypes_str);
-
-	if (list.size() > 0)
-		emit fileSelected(list);
-}
-
-
-
 
 void GUI_SimplePlayer::volumeChanged(int volume_percent) {
 	setupVolButton(volume_percent);
@@ -756,7 +711,11 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 }
 
+/** VOLUME END **/
 
+
+
+/** COVERS **/
 void GUI_SimplePlayer::coverClicked() {
 
 	if(m_metadata.album_id >= 0)
@@ -782,188 +741,33 @@ void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class){
 }
 
 
+// public slot
+// cover was found by CoverLookup
+void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
 
-void GUI_SimplePlayer::showLibrary(bool b){
+	if(m_class_name != caller_class) return;
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
+	// found cover is not for the player but for sth else
+	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
-	settings->setShowLibrary(b);
+	if(	our_coverpath.toLower() != cover_path.toLower() ||
+		!QFile::exists(cover_path) ){
 
-	if(!b){
-
-		QSizePolicy p = this->ui->library_widget->sizePolicy();
-
-		m_library_width = this->ui->library_widget->width();
-		m_library_stretch_factor = p.horizontalStretch();
-
-		p.setHorizontalStretch(0);
-		this->ui->library_widget->setSizePolicy(p);
-
-		this->resize(this->width() - m_library_width, this->height());
+		cover_path = Helper::getIconPath() + "append.png";
 	}
 
-	else{
-		QSizePolicy p = this->ui->library_widget->sizePolicy();
-		p.setHorizontalStretch(m_library_stretch_factor);
-		this->ui->library_widget->setSizePolicy(p);
-
-		this->resize(this->width() + m_library_width, this->height());
-	}
-}
-
-void GUI_SimplePlayer::hideUnneededPlugins(QWidget* wannashow){
-	if(ui_eq != wannashow)
-		this->ui->action_ViewEqualizer->setChecked(false);
-
-	if(ui_lfm_radio != wannashow)
-		this->ui->action_ViewLFMRadio->setChecked(false);
-
-	if(ui_stream != wannashow)
-		this->ui->action_ViewStream->setChecked(false);
-
-	if(ui_playlist_chooser != wannashow)
-		this->ui->action_ViewPlaylistChooser->setChecked(false);
-}
-
-void GUI_SimplePlayer::hideAllPlugins(){
-
-    if(ui_eq){
-        this->ui_eq->hide();
-        this->ui_eq->close();
-    }
-
-    if(ui_stream){
-		this->ui_stream->hide();
-        this->ui_stream->close();
-    }
-
-    if(ui_lfm_radio){
-        this->ui_lfm_radio->hide();
-        this->ui_lfm_radio->close();
-    }
-
-    if(ui_playlist_chooser){
-        this->ui_playlist_chooser->hide();
-        this->ui_playlist_chooser->close();
-    }
-
-	this->ui->plugin_widget->setMinimumHeight(0);
+	this->ui->albumCover->setIcon(QIcon(cover_path));
+	this->ui->albumCover->repaint();
 }
 
 
-void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
-
-	if(!widget) return;
-
-	int old_h = this->ui->plugin_widget->minimumHeight();
-	int h = widget->height();
-
-	QSize pl_size;
-	if(ui_playlist)
-		pl_size = ui_playlist->size();
-	QSize widget_size = widget->size();
-
-	if (v){
-		hideUnneededPlugins(widget);
-		this->ui->plugin_widget->show();
-		widget->show();
-		widget_size.setWidth(this->ui->plugin_widget->width());
-		pl_size.setHeight(pl_size.height() - h + old_h);
-
-		this->ui->plugin_widget->setMinimumHeight(widget->height());
-		widget->resize(widget_size);
-	}
-
-	else{
-		widget->hide();
-        widget->close();
-		pl_size.setHeight(pl_size.height() + old_h);
-		this->ui->plugin_widget->setMinimumHeight(0);
-
-	}
-
-	if(ui_playlist)
-		ui_playlist->resize(pl_size);
-
-
-}
-
-void GUI_SimplePlayer::show_playlist_chooser(bool vis){
-
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_PLAYLIST_CHOOSER);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
-
-	showPlugin(ui_playlist_chooser, vis);
-
-}
-
-void GUI_SimplePlayer::show_eq(bool vis) {
-
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_EQUALIZER);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
-
-	showPlugin(ui_eq, vis);
-}
-
-void GUI_SimplePlayer::show_stream(bool vis){
-
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_STREAM);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
-
-	showPlugin(ui_stream, vis);
-}
-
-
-void GUI_SimplePlayer::show_lfm_radio(bool vis){
-
-	bool lfm_stuff = true;
-	lfm_stuff &= CSettingsStorage::getInstance()->getLastFMActive();
-	lfm_stuff &= LastFM::getInstance()->lfm_is_logged_in();
-
-	if(vis && !lfm_stuff){
-		QMessageBox::warning(this->ui->centralwidget, "LastFM warning", "Something is wrong with your LastFM settings");
-	}
-
-	vis &= lfm_stuff;
-
-
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_LFM_RADIO);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
-
-	showPlugin(ui_lfm_radio, vis);
-}
-
-void GUI_SimplePlayer::close_playlist_chooser(){
-	show_playlist_chooser(false);
-	ui->action_ViewPlaylistChooser->setChecked(false);
-}
-
-void GUI_SimplePlayer::close_eq() {
-	show_eq(false);
-	ui->action_ViewEqualizer->setChecked(false);
-}
-
-void GUI_SimplePlayer::close_lfm_radio() {
-	show_lfm_radio(false);
-	ui->action_ViewLFMRadio->setChecked(false);
-}
-
-void GUI_SimplePlayer::close_stream() {
-	show_stream(false);
-	ui->action_ViewStream->setChecked(false);
-}
+/** COVER END **/
 
 
 
-
-void GUI_SimplePlayer::setupIcons() {
-
-}
 
 
 /** TRAY ICON **/
-
-
 void GUI_SimplePlayer::setupTrayActions() {
 	m_playAction = new QAction(tr("Play"), this);
     m_playAction->setIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -998,23 +802,9 @@ void GUI_SimplePlayer::setupTrayActions() {
 
 }
 
-
-void GUI_SimplePlayer::really_close(){
-    m_min2tray = false;
-    this->close();
-}
-
-void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
-
-    if(m_min2tray){
-        e->ignore();
-        this->hide();
-    }
-}
-
-
 void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
     switch (reason) {
+
     case QSystemTrayIcon::Trigger:
 
         if (this->isMinimized() || isHidden()){
@@ -1035,6 +825,68 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
     default:
         break;
     }
+}
+
+/** TRAY ICON END **/
+
+
+
+
+
+// public fct
+QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
+	return this->ui->playlist_widget;
+}
+
+QWidget* GUI_SimplePlayer::getParentOfLibrary() {
+	return this->ui->library_widget;
+}
+
+
+// public fct
+void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
+	ui_playlist = playlist;
+    if(ui_playlist){
+        ui_playlist->show();
+        ui_playlist->resize(this->ui->playlist_widget->size());
+    }
+}
+
+// public fct
+void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
+	ui_library = library;
+    if(ui_library){
+        ui_library->show();
+        ui_library->resize(this->ui->library_widget->size());
+    }
+
+}
+
+
+
+/** OVERLOADED EVENTS **/
+// protected fct
+void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
+
+	Q_UNUSED(e);
+	this->ui_playlist->resize(this->ui->playlist_widget->size());
+	this->ui_library->resize(this->ui->library_widget->size());
+
+	QSize sz = this->ui->plugin_widget->size();
+
+    if(ui_eq && !ui_eq->isHidden())
+		ui_eq->resize(sz);
+
+    if(ui_stream && !ui_stream->isHidden())
+		ui_stream->resize(sz);
+
+    if(ui_lfm_radio && !ui_lfm_radio->isHidden())
+		ui_lfm_radio->resize(sz);
+
+    if(ui_playlist_chooser && !ui_playlist_chooser->isHidden())
+		ui_playlist_chooser->resize(sz);
+
+	CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }
 
 
@@ -1081,15 +933,6 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			this->ui->action_viewLibrary->setChecked(!this->ui->action_viewLibrary->isChecked());
 			break;
 
-		case (Qt::Key_F5):
-			sound_engine_phonon_clicked();
-			break;
-
-		case (Qt::Key_F6):
-			sound_engine_gst_clicked();
-			break;
-
-
 		case (Qt::Key_F11):
 			if(!this->isFullScreen())
 				this->showFullScreen();
@@ -1101,205 +944,27 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 	}
 }
 
-QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
-	return this->ui->playlist_widget;
-}
 
-QWidget* GUI_SimplePlayer::getParentOfLibrary() {
-	return this->ui->library_widget;
-}
+void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
 
-QWidget* GUI_SimplePlayer::getParentOfPlugin() {
-	return this->ui->plugin_widget;
-}
-
-
-
-void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
-	ui_playlist = playlist;
-    if(ui_playlist){
-        ui_playlist->show();
-        ui_playlist->resize(this->ui->playlist_widget->size());
+    if(m_min2tray){
+        e->ignore();
+        this->hide();
     }
 }
 
-void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
-	ui_library = library;
-    if(ui_library){
-        ui_library->show();
-        ui_library->resize(this->ui->library_widget->size());
-    }
-
-}
-
-void GUI_SimplePlayer::check_show_plugins(){
-
-	int shown_plugin = CSettingsStorage::getInstance()->getShownPlugin();
-
-	switch(shown_plugin){
-
-		case PLUGIN_EQUALIZER:
-            if(!ui_eq) break;
-			ui->action_ViewEqualizer->setChecked(true);
-			show_eq(true);
-			break;
-
-		case PLUGIN_LFM_RADIO:
-            if(!ui_lfm_radio) break;
-			ui->action_ViewLFMRadio->setChecked(true);
-			show_lfm_radio(true);
-			break;
-
-		case PLUGIN_STREAM:
-            if(!ui_stream) break;
-			ui->action_ViewStream->setChecked(true);
-			show_stream(true);
-			break;
-
-		case PLUGIN_PLAYLIST_CHOOSER:
-            if(!ui_playlist_chooser) break;
-			ui->action_ViewPlaylistChooser->setChecked(true);
-			show_playlist_chooser(true);
-			break;
+/** OVERLOADED EVENTS END **/
 
 
-
-		case PLUGIN_NONE:
-		default:
-			break;
-	}
+void GUI_SimplePlayer::really_close(){
+    m_min2tray = false;
+    this->close();
 }
 
 
-void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq) {
-	ui_eq = eq;
-    if(ui_eq)
-        ui_eq->resize(this->ui->plugin_widget->size());
-}
-
-void GUI_SimplePlayer::setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser){
-	ui_playlist_chooser = playlist_chooser;
-    if(ui_playlist_chooser)
-        ui_playlist_chooser->resize(this->ui->plugin_widget->size());
-}
-void GUI_SimplePlayer::setStream(GUI_Stream* stream){
-	ui_stream = stream;
-    if(ui_stream)
-        ui_stream->resize(this->ui->plugin_widget->size());
-}
-
-void GUI_SimplePlayer::setLFMRadio(GUI_LFMRadioWidget* radio){
-	ui_lfm_radio = radio;
-    if(ui_lfm_radio)
-        ui_lfm_radio->resize(this->ui->plugin_widget->size());
-}
-
-void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
-
-	Q_UNUSED(e);
-	this->ui_playlist->resize(this->ui->playlist_widget->size());
-	this->ui_library->resize(this->ui->library_widget->size());
-
-	QSize sz = this->ui->plugin_widget->size();
-
-    if(ui_eq && !ui_eq->isHidden())
-		ui_eq->resize(sz);
-    if(ui_stream && !ui_stream->isHidden())
-		ui_stream->resize(sz);
-    if(ui_lfm_radio && !ui_lfm_radio->isHidden())
-		ui_lfm_radio->resize(sz);
-    if(ui_playlist_chooser && !ui_playlist_chooser->isHidden())
-		ui_playlist_chooser->resize(sz);
-
-	CSettingsStorage::getInstance()->setPlayerSize(this->size());
-}
-
-void GUI_SimplePlayer::lastFMClicked(bool b) {
-
-	Q_UNUSED(b);
-	emit setupLastFM();
-
-}
-
-void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
-	Q_UNUSED(b);
-	emit reloadLibrary();
-}
-
-void GUI_SimplePlayer::importFolderClicked(bool b){
-	Q_UNUSED(b);
-
-	QString dir = QFileDialog::getExistingDirectory(this, "Open Directory",
-				QDir::homePath(), QFileDialog::ShowDirsOnly);
-
-	if(dir.size() > 0){
-		emit importDirectory(dir);
-	}
-}
 
 
-void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
-	Q_UNUSED(b);
-
-	QString start_dir = QDir::homePath();
-	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
-	if (old_dir != "")
-		start_dir = old_dir;
-
-	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-			old_dir, QFileDialog::ShowDirsOnly);
-	if (dir != "") {
-		emit libpath_changed(dir);
-		CSettingsStorage::getInstance()->setLibraryPath(dir);
-
-		QMessageBox dialog;
-
-		dialog.setFocus();
-		dialog.setIcon(QMessageBox::Question);
-		dialog.setText("<b>Library</b>");
-		dialog.setInformativeText("Do you want to reload the Library?");
-		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		dialog.setDefaultButton(QMessageBox::Yes);
-
-		int answer = dialog.exec();
-		if(answer == QMessageBox::Yes)
-			emit reloadLibrary();
-
-		dialog.close();
-	}
-}
-
-
-void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
-	Q_UNUSED(b);
-	emit sig_fetch_all_covers();
-}
-
-void GUI_SimplePlayer::album_cover_pressed() {
-
-}
-
-void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){
-	Q_UNUSED(b);
-	CSettingsStorage::getInstance()->setLoadPlaylist(ui->action_load_playlist->isChecked());
-}
-
-
-void GUI_SimplePlayer::show_notification_toggled(bool active){
-
-	CSettingsStorage::getInstance()->setShowNotifications(active);
-}
-
-void GUI_SimplePlayer::min2tray_toggled(bool b){
-	CSettingsStorage::getInstance()->setMinimizeToTray(b);
-	m_min2tray = b;
-}
-
-void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
-	CSettingsStorage::getInstance()->setShowSmallPlaylist(b);
-	emit show_small_playlist_items(b);
-}
-
+// prvt fct
 void GUI_SimplePlayer::setRadioMode(int radio){
 
 
@@ -1324,7 +989,7 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 
 }
 
-
+// public slot
 void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 
 	if(b){
@@ -1338,45 +1003,7 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 		this->ui->btn_rec->setVisible(false);
 	}
 }
-void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
 
-	emit sig_show_stream_rec(b);
-}
-
-
-void GUI_SimplePlayer::populate_engines(const QList<Engine*>& lists, int active){
-
-	Q_UNUSED(lists);
-	Q_UNUSED(active);
-
-}
-
-void GUI_SimplePlayer::sound_engine_phonon_clicked(){
-
-	QString engine = "Phonon Backend";
-	emit sig_sound_engine_changed(engine);
-}
-
-void GUI_SimplePlayer::sound_engine_gst_clicked(){
-	QString engine = "GStreamer Backend";
-	emit sig_sound_engine_changed(engine);
-}
-
-
-
-
-void GUI_SimplePlayer::about(bool b){
-	Q_UNUSED(b);
-
-	QMessageBox::information(this, "About",
-			"<b><font size=\"+2\">Sayonara Player 0.3</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
-}
-
-
-
-void GUI_SimplePlayer::sl_action_socket_connection_triggered(bool b){
-	emit sig_show_socket();
-}
 
 void GUI_SimplePlayer::suppress_warning(bool b){
 	 m_suppress_warning = b;

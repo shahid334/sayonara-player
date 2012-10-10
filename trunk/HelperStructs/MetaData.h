@@ -133,7 +133,6 @@ public:
 		return list;
 	}
 
-
 	static bool fromVariant(QVariant v, MetaData& md){
 
 		QStringList list = v.toStringList();
@@ -161,8 +160,6 @@ public:
 
 		return true;
 	}
-
-
 };
 
 class MetaDataList : public vector<MetaData>{

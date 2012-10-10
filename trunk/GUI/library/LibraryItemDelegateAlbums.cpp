@@ -35,6 +35,8 @@
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
+#include <QTableView>
+#include <QStyleOptionViewItem>
 #include "HelperStructs/Helper.h"
 
 

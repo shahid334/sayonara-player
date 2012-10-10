@@ -41,6 +41,7 @@ using namespace Sort;
 
 #define DB_TRY_OPEN(db) if (!this -> db.isOpen()) \
                             this -> db.open()
+
 #define DB_RETURN_NOT_OPEN_VOID(db) if (!this -> db.isOpen()) \
                                     return
 
