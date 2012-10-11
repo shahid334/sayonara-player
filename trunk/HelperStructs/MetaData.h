@@ -33,16 +33,22 @@
 #define DROP_TYPE_ALBUMS 1
 #define DROP_TYPE_TRACKS 2
 
-#include <QString>
-#include <QStringList>
-
-#include <QDebug>
-#include <QVariant>
-#include <vector>
-
 #include "HelperStructs/globals.h"
 
+
+#include <QString>
+#include <QStringList>
+#include <QPair>
+#include <QDebug>
+#include <QVariant>
+
+#include <vector>
+
+
+
 using namespace std;
+
+
 
 struct MetaData {
 
@@ -55,8 +61,7 @@ public:
 	QString title;
 	QString artist;
 	QString album;
-	int genre_id;
-	QString genre;
+    QStringList genres;
 	qint32 rating;
 	qint64 length_ms;
 	qint32 year;
@@ -78,8 +83,6 @@ public:
 			title = "";
             artist = "";
             album = "";
-            genre = "";
-            genre_id = -1;
             rating = 0;
             length_ms = 0;
             year = 0;
@@ -126,8 +129,7 @@ public:
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(album_id));
 		list.push_back(QString::number(artist_id));
-		list.push_back(QString::number(genre_id));
-		list.push_back(genre);
+        list.push_back(genres.join(","));
 		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
 		list.push_back( QString::number(radio_mode) );
 		list.push_back( (pl_playing) ? "1" : "0" );
@@ -141,7 +143,7 @@ public:
 
 		QStringList list = v.toStringList();
 
-		if(list.size() < 19) return false;
+        if(list.size() < 18) return false;
 
 		md.title = list[0];
 		md.artist = list[1];
@@ -155,14 +157,12 @@ public:
 		md.id = list[9].toInt();
 		md.album_id = list[10].toInt();
 		md.artist_id = list[11].toInt();
-		md.genre_id = list[12].toInt();
-		md.genre = list[13];
-		md.is_extern = ( list[14] == "1" );
-		md.radio_mode = list[15].toInt();
-
-		md.pl_playing = (list[16] == "1");
-		md.pl_selected = (list[17] == "1");
-		md.pl_dragged = (list[18] == "1");
+        md.genres = list[12].split(",");
+        md.is_extern = ( list[13] == "1" );
+        md.radio_mode = list[14].toInt();
+        md.pl_playing = (list[15] == "1");
+        md.pl_selected = (list[16] == "1");
+        md.pl_dragged = (list[17] == "1");
 
 		return true;
 	}
@@ -315,8 +315,6 @@ struct Album{
 	}
 };
 
-typedef struct vector<Album> AlbumList;
-typedef struct vector<Artist> ArtistList;
 
 
 struct CustomPlaylist{
@@ -328,6 +326,8 @@ struct CustomPlaylist{
 };
 
 
+typedef struct vector<Album> AlbumList;
+typedef struct vector<Artist> ArtistList;
 
 
 #endif /* METADATA_H_ */

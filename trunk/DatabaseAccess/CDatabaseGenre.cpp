@@ -12,6 +12,7 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
+#include <QList>
 
 QString CDatabaseConnector::getGenreByID(int genreID){
 	DB_TRY_OPEN(m_database);
@@ -59,6 +60,7 @@ int CDatabaseConnector::getGenreByName(QString genre){
 int CDatabaseConnector::insertGenreIntoDatabase(QString genre){
 
 	DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_INT(m_database);
 
 	QSqlQuery q (this -> m_database);
 	QString querytext = "INSERT INTO genres (name) VALUES(:genre)";
@@ -71,4 +73,55 @@ int CDatabaseConnector::insertGenreIntoDatabase(QString genre){
 	}
 
 	return this->getGenreByName(genre);
+}
+
+
+bool CDatabaseConnector::insertGenreMappingsIntoDatabase(QList<int> genreIDs, int trackID){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
+
+    m_database.transaction();
+
+    foreach(int genreID, genreIDs)
+        insertGenreMappingIntoDatabase(genreID, trackID);
+
+    return m_database.commit();
+
+}
+
+
+bool CDatabaseConnector::insertGenreMappingIntoDatabase(int genreID, int trackID){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
+
+    QSqlQuery q(this->m_database);
+
+    QString querytext = "INSERT INTO track_genre_mapping (genreID, trackID) VALUES(:genreID, :trackID);";
+
+    q.prepare(querytext);
+    q.bindValue(":genreID", genreID);
+    q.bindValue(":trackID", trackID);
+
+    if(!q.exec()) return false;
+    return true;
+
+}
+
+
+bool CDatabaseConnector::deleteGenreMappingByTrackID(int trackID){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
+
+    QSqlQuery q(this->m_database);
+
+    QString querytext = "DELETE FROM track_genre_mapping WHERE trackID = :trackID";
+
+    q.prepare(querytext);
+    q.bindValue(":trackID", trackID);
+
+    if(!q.exec()) return false;
+    return true;
 }

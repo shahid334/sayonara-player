@@ -31,6 +31,7 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
+#include <QList>
 
 
 using namespace Sort;
@@ -133,7 +134,7 @@ public:
 
 			void getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sortorder = TrackArtistAsc);
 
-            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID, int genreID, bool update_idx=false);
+            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID, bool update_idx=false);
             int updateTrack(MetaData& data,  bool update_idx=false);
 
 			int getTracksFromDatabase (MetaDataList& returndata, TrackSort sortorder = TrackArtistAsc);
@@ -154,7 +155,9 @@ public:
             int getGenreByName(QString genre);
             QString getGenreByID(int genreID);
             int insertGenreIntoDatabase(QString genre);
-
+            bool insertGenreMappingsIntoDatabase(QList<int> genreIDs, int trackID);
+            bool insertGenreMappingIntoDatabase(int genreID, int trackID);
+            bool deleteGenreMappingByTrackID(int trackid);
 
 
 			/*

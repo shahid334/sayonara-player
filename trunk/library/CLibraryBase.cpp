@@ -377,7 +377,11 @@ void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_s
 
 void CLibraryBase::psl_filter_changed(const Filter& filter){
 
-    if(_filter.cleared && filter.cleared && filter.filtertext.size() != 0) return;
+    if(     _filter.cleared &&
+            filter.cleared &&
+            filter.filtertext.size() < 5 &&
+            (_selected_artists.size() == 0) &&
+            (_selected_albums.size() == 0)) return;
 
     _filter = filter;
 

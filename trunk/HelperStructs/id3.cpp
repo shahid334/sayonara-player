@@ -51,12 +51,14 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
 	int bitrate = f.audioProperties()->bitrate() * 1000;
-	qDebug() << "genre of " << title.c_str() << ": " << genre.c_str();
+
 
 
 	int length = f.audioProperties()->length();
 
-
+    QStringList genres;
+    QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
+    genres = genre_str.split(QRegExp(",|\\|/|;|.|-"));
 	md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 	md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
@@ -64,7 +66,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	md.year = year;
 	md.track_num = track;
 	md.bitrate = bitrate;
-	md.genre = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
+    md.genres = genres;
 
 
 	if(md.title.length() == 0){
@@ -93,16 +95,16 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 		string album = f.tag()->album().to8Bit(true);
 		string title = f.tag()->title().to8Bit(true);
 		string genre = f.tag()->genre().to8Bit(true);
-		qDebug() << "genre of " << title.c_str() << ": " << genre.c_str();
 		uint year = f.tag()->year();
 		uint track = f.tag()->track();
 
 		int bitrate = f.audioProperties()->bitrate() * 1000;
-
-
-
 		int length = f.audioProperties()->length();
 
+
+        QStringList genres;
+        QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
+        genres = genre_str.split(QRegExp(",|\\|/|;|.|-"));
 
 		md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 		md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
@@ -112,7 +114,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 		md.year = year;
 		md.track_num = track;
 		md.bitrate = bitrate;
-		md.genre = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
+        md.genres = genres;
 
 
 		if(md.title.length() == 0){
@@ -126,7 +128,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
 void ID3::setMetaDataOfFile(MetaData& md){
 
-qDebug() << "file save start";
+
 	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
     if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ){
 		qDebug() << Q_FUNC_INFO << " f is null!";
@@ -136,8 +138,7 @@ qDebug() << "file save start";
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String artist(md.artist.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String title(md.title.toUtf8().data(), TagLib::String::UTF8);
-	TagLib::String genre(md.genre.toUtf8().data(), TagLib::String::UTF8);
-	//TagLib::String genre(md.genre.toUtf8().data(), TagLib::String::UTF8);
+    TagLib::String genre(md.genres.join(",").toUtf8().data(), TagLib::String::UTF8);
 
 	f.tag()->setAlbum(album);
 	f.tag()->setArtist(artist);
@@ -145,7 +146,7 @@ qDebug() << "file save start";
 	f.tag()->setGenre(genre);
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
-	//f.tag()->setGenre(genre);
+
     qDebug() << "file save";
     f.save();
 	return;

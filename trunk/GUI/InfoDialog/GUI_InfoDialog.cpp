@@ -519,7 +519,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		info+= BOLD("Length:&nbsp;") + Helper::cvtMsecs2TitleLengthString(md.length_ms) + CAR_RET;
 		info+= BOLD("Year:&nbsp;") + QString::number(md.year) + CAR_RET;
 		info+= BOLD("Bitrate:&nbsp;") + QString::number(md.bitrate);
-		info+= BOLD("Genre:&nbsp;") + md.genre + CAR_RET;
+        info+= BOLD("Genre:&nbsp;") + md.genres.join("<br />") + CAR_RET;
 	}
 
 	else if(n_tracks > 1){

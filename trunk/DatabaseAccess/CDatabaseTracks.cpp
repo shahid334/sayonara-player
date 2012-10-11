@@ -43,13 +43,12 @@ using namespace Sort;
 	"albums.albumID AS albumID, " \
 	"artists.artistID AS artistID, " \
 	"albums.name AS albumName, " \
-	"artists.name AS artistName, " \
-	"genres.genreID AS genreID, " \
-	"genres.name AS genreName " \
+    "artists.name AS artistName, " \
+    "'' AS genrename "\
     "FROM tracks " \
-    "INNER JOIN albums ON tracks.albumID=albums.albumID " \
-    "INNER JOIN artists ON tracks.artistID=artists.artistID " \
-    "INNER JOIN genres ON tracks.genreID=genres.genreID "
+    "INNER JOIN albums ON tracks.albumID = albums.albumID " \
+    "INNER JOIN artists ON tracks.artistID = artists.artistID "
+
 
 
 bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
@@ -74,9 +73,7 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 			data.artist_id = q.value(8).toInt();
 			data.album = 	 q.value(9).toString().trimmed();
 			data.artist = 	 q.value(10).toString().trimmed();
-			data.genre_id =	 q.value(11).toInt();
-			data.genre =     q.value(12).toString().trimmed();
-
+            data.genres =	 q.value(11).toString().split(",");
 
 			result.push_back(data);
 		}
@@ -223,7 +220,7 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 		switch(filter.by_searchstring){
 			case BY_GENRE:
 				querytext = TRACK_SELECTOR +
-							"AND genreName LIKE :filter1 ";
+                            "AND genreName LIKE :filter1 ";
 				break;
 
 			case BY_FILENAME:
@@ -322,7 +319,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 
 			case BY_GENRE:
 					querytext = TRACK_SELECTOR +
-								"AND genreName LIKE :filter1";
+                                "AND genreName LIKE :filter1";
 				break;
 
 			case BY_FILENAME:
@@ -392,7 +389,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 
 		case BY_GENRE:
 			querytext = TRACK_SELECTOR +
-						"AND genreName LIKE :search_in_genre";
+                        "AND genreName LIKE :search_in_genre ";
 		break;
 
 		case BY_FILENAME:
@@ -517,8 +514,7 @@ int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
 
 	QSqlQuery q (this -> m_database);
 	try{
-        q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track, genreID = :genreID WHERE TrackID = :trackID;");
-
+        q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID;");
 
 		q.bindValue(":albumID",QVariant(data.album_id));
 		q.bindValue(":artistID",QVariant(data.artist_id));
@@ -526,8 +522,6 @@ int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
 		q.bindValue(":track",QVariant(data.track_num));
 		q.bindValue(":year",QVariant(data.year));
 		q.bindValue(":trackID", QVariant(data.id));
-		q.bindValue(":genreID", QVariant(data.genre_id));
-
 
         if (!q.exec()) {
             qDebug() << "error";
@@ -545,7 +539,7 @@ int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
 }
 
 
-int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID, int genreID, bool update_idx) {
+int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID, bool update_idx) {
 
 	DB_TRY_OPEN(m_database);
 
@@ -562,7 +556,6 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 		data.id = md.id;
 		data.artist_id = artistID;
 		data.album_id = albumID;
-		data.genre_id = genreID;
 
         updateTrack(data, update_idx);
 		return 0;
@@ -579,9 +572,9 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     }
 
 	QString querytext = QString("INSERT INTO tracks ") +
-				"(filename,albumID,artistID,title,year,length,track,bitrate,genreID) " +
+                "(filename,albumID,artistID,title,year,length,track,bitrate) " +
 				"VALUES "+
-				"(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate,:genreID); ";
+                "(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate); ";
 
 	q.prepare(querytext);
 
@@ -593,7 +586,6 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     q.bindValue(":title",QVariant(data.title));
     q.bindValue(":track",QVariant(data.track_num));
     q.bindValue(":bitrate",QVariant(data.bitrate));
-    q.bindValue(":genreID",QVariant(data.genre_id));
 
 
     if (!q.exec()) {

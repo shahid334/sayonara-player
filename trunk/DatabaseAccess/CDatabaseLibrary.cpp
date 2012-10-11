@@ -87,12 +87,23 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
                 artistID = insertArtistIntoDatabase((QString) data.artist);
             }
 
-            genreID = this->getGenreByName(data.genre);
-            if (genreID == -1){
-            	genreID = insertGenreIntoDatabase((QString) data.genre);
+
+            deleteGenreMappingByTrackID(data.id);
+
+            QList<int> genres2insert;
+            foreach(QString genre, data.genres){
+                genreID = this->getGenreByName(genre);
+                if (genreID == -1){
+                    genreID = insertGenreIntoDatabase(genre);
+                    if(genreID >= 0){
+                        genres2insert.push_back(genreID);
+                    }
+                }
             }
 
-            this -> insertTrackIntoDatabase (data,artistID,albumID,genreID, false);
+            this->insertGenreMappingsIntoDatabase(genres2insert, data.id);
+
+            this -> insertTrackIntoDatabase (data,artistID,albumID, false);
         }
 
         catch (QString ex) {
