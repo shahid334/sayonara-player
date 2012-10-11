@@ -33,9 +33,6 @@
 #include <library/ReloadThread.h>
 #include <GUI/library/GUIImportFolder.h>
 
-#include <vector>
-
-
 
 class CLibraryBase : public QObject
 {
@@ -50,8 +47,8 @@ signals:
 	void sig_playlist_created(QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
     void sig_metadata_loaded (MetaDataList&);
-    void sig_all_albums_loaded(vector<Album>&);
-    void sig_all_artists_loaded(vector<Artist>&);
+    void sig_all_albums_loaded(AlbumList&);
+    void sig_all_artists_loaded(ArtistList&);
     void sig_tracks_for_playlist_available(MetaDataList&);
     void sig_mp3s_loaded(int);
 
@@ -120,8 +117,8 @@ private:
 
     CDatabaseConnector*	_db;
     MetaDataList        _vec_md;
-    vector<Album>		_vec_albums;
-    vector<Artist>		_vec_artists;
+    AlbumList			_vec_albums;
+    ArtistList			_vec_artists;
 
     Sort::TrackSort		_track_sortorder;
     Sort::AlbumSort	_album_sortorder;

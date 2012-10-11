@@ -29,14 +29,11 @@
 #include <QObject>
 #include <QDebug>
 #include <QStringList>
-#include <vector>
 #include <HelperStructs/MetaData.h>
 #include <HelperStructs/Helper.h>
 
-
 #include "LibraryItemModelTracks.h"
 
-using namespace std;
 
 LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
 

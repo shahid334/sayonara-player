@@ -35,7 +35,7 @@
 
 #include <QString>
 #include <QStringList>
-#include <QVector>
+
 #include <QDebug>
 #include <QVariant>
 #include <vector>
@@ -55,7 +55,8 @@ public:
 	QString title;
 	QString artist;
 	QString album;
-	//QString genre;
+	int genre_id;
+	QString genre;
 	qint32 rating;
 	qint64 length_ms;
 	qint32 year;
@@ -77,7 +78,8 @@ public:
 			title = "";
             artist = "";
             album = "";
-            //genre = "";
+            genre = "";
+            genre_id = -1;
             rating = 0;
             length_ms = 0;
             year = 0;
@@ -124,6 +126,8 @@ public:
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(album_id));
 		list.push_back(QString::number(artist_id));
+		list.push_back(QString::number(genre_id));
+		list.push_back(genre);
 		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
 		list.push_back( QString::number(radio_mode) );
 		list.push_back( (pl_playing) ? "1" : "0" );
@@ -137,7 +141,7 @@ public:
 
 		QStringList list = v.toStringList();
 
-		if(list.size() < 17) return false;
+		if(list.size() < 19) return false;
 
 		md.title = list[0];
 		md.artist = list[1];
@@ -151,12 +155,14 @@ public:
 		md.id = list[9].toInt();
 		md.album_id = list[10].toInt();
 		md.artist_id = list[11].toInt();
-		md.is_extern = ( list[12] == "1" );
-		md.radio_mode = list[13].toInt();
+		md.genre_id = list[12].toInt();
+		md.genre = list[13];
+		md.is_extern = ( list[14] == "1" );
+		md.radio_mode = list[15].toInt();
 
-		md.pl_playing = (list[14] == "1");
-		md.pl_selected = (list[15] == "1");
-		md.pl_dragged = (list[16] == "1");
+		md.pl_playing = (list[16] == "1");
+		md.pl_selected = (list[17] == "1");
+		md.pl_dragged = (list[18] == "1");
 
 		return true;
 	}
@@ -309,6 +315,9 @@ struct Album{
 	}
 };
 
+typedef struct vector<Album> AlbumList;
+typedef struct vector<Artist> ArtistList;
+
 
 struct CustomPlaylist{
 	QString name;
@@ -317,6 +326,8 @@ struct CustomPlaylist{
 	qint32 length;
 	qint32 num_tracks;
 };
+
+
 
 
 #endif /* METADATA_H_ */

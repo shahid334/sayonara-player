@@ -19,7 +19,7 @@
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
-#include <vector>
+
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>

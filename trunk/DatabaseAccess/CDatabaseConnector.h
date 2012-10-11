@@ -32,8 +32,6 @@
 #include <QSqlDatabase>
 #include <QMap>
 
-#include <vector>
-
 
 using namespace Sort;
 
@@ -91,11 +89,11 @@ public:
 			Artist getArtistByID( const int& id);
 			int getMaxArtistID();
 
-			void getAllArtists(vector<Artist>& result, ArtistSort sortorder = ArtistNameAsc);
+			void getAllArtists(ArtistList& result, ArtistSort sortorder = ArtistNameAsc);
 
-			void getAllArtistsByAlbum(int album, vector<Artist>& result, ArtistSort sortorder = ArtistNameAsc);
+			void getAllArtistsByAlbum(int album, ArtistList& result, ArtistSort sortorder = ArtistNameAsc);
 
-			void getAllArtistsBySearchString(Filter filter, vector<Artist>& result, ArtistSort sortorder = ArtistNameAsc);
+			void getAllArtistsBySearchString(Filter filter, ArtistList& result, ArtistSort sortorder = ArtistNameAsc);
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
@@ -111,12 +109,12 @@ public:
 
 			Album getAlbumByID(const int& id);
 
-			void getAllAlbums(vector<Album>& result, AlbumSort sortorder=AlbumNameAsc);
+			void getAllAlbums(AlbumList& result, AlbumSort sortorder=AlbumNameAsc);
 
-			void getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
-			void getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
+			void getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
+			void getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
 
-			void getAllAlbumsBySearchString(Filter filter, vector<Album>& result, AlbumSort sortorder = AlbumNameAsc);
+			void getAllAlbumsBySearchString(Filter filter, AlbumList& result, AlbumSort sortorder = AlbumNameAsc);
 
 			int insertAlbumIntoDatabase (const QString & album);
 			int insertAlbumIntoDatabase (const Album& album);
@@ -135,7 +133,7 @@ public:
 
 			void getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sortorder = TrackArtistAsc);
 
-            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID, bool update_idx=false);
+            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID, int genreID, bool update_idx=false);
             int updateTrack(MetaData& data,  bool update_idx=false);
 
 			int getTracksFromDatabase (MetaDataList& returndata, TrackSort sortorder = TrackArtistAsc);
@@ -151,6 +149,12 @@ public:
             bool setTrackIndexes(int track_id, QStringList& idx_list);
             bool setTrackIndex(int track_id, QString idx);
             bool deleteTrackIndexes(int track_id);
+
+
+            int getGenreByName(QString genre);
+            QString getGenreByID(int genreID);
+            int insertGenreIntoDatabase(QString genre);
+
 
 
 			/*

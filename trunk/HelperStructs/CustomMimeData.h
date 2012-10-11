@@ -3,9 +3,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include <QMimeData>
-#include <vector>
 
-using namespace std;
 
 class CustomMimeData : public QMimeData {
 	

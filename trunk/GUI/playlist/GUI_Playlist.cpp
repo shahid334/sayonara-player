@@ -52,8 +52,6 @@
 #include <QScrollBar>
 #include <QMacStyle>
 #include <QAbstractListModel>
-#include <iostream>
-#include <vector>
 #include <QStyleFactory>
 #include <QPaintDevice>
 #include <QPainter>
@@ -64,6 +62,8 @@
 #include <QUrl>
 #include <QFileInfo>
 
+
+#include <iostream>
 
 class QPaintEngine;
 class QPaintDevice;

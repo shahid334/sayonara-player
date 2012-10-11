@@ -34,7 +34,6 @@
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <vector>
 #include <iostream>
 
 #include <QObject>
@@ -78,8 +77,8 @@ public:
         void psl_createPlaylist(MetaDataList&);
         void psl_createPlaylist(CustomPlaylist&);
 		void psl_insert_tracks(const MetaDataList&, int idx);
-		void psl_insert_albums(const vector<Album>&, int);			// not used
-		void psl_insert_artists(const vector<Artist>&, int);		// not used
+		void psl_insert_albums(const AlbumList&, int);			// not used
+		void psl_insert_artists(const ArtistList&, int);		// not used
 		void psl_change_track(int);
 		void psl_next_track();
 		void psl_playlist_mode_changed(const Playlist_Mode&);

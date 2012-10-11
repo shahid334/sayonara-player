@@ -57,9 +57,6 @@
 #include <QMenu>
 #include <QMessageBox>
 
-#include <vector>
-
-using namespace std;
 using namespace Sort;
 
 class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
@@ -117,8 +114,8 @@ signals:
 
 public slots:
 	void fill_library_tracks(MetaDataList&);
-	void fill_library_albums(vector<Album>&);
-	void fill_library_artists(vector<Artist>&);
+	void fill_library_albums(AlbumList&);
+	void fill_library_artists(ArtistList&);
 	void id3_tags_changed();
 	void reloading_library(QString&);
 	void reloading_library_finished();

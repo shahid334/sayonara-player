@@ -270,7 +270,7 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 
 
 // not used, but maybe later
-void Playlist::psl_insert_albums(const vector<Album>& v_albums, int idx){
+void Playlist::psl_insert_albums(const AlbumList& v_albums, int idx){
 
 	int tmp_idx = idx;
 	for(uint i=0; i<v_albums.size(); i++){
@@ -282,7 +282,7 @@ void Playlist::psl_insert_albums(const vector<Album>& v_albums, int idx){
 }
 
 // not used, but maybe late
-void Playlist::psl_insert_artists(const vector<Artist>& v_artists, int idx){
+void Playlist::psl_insert_artists(const ArtistList& v_artists, int idx){
 	int tmp_idx = idx;
 	for(uint i=0; i<v_artists.size(); i++){
 		MetaDataList vec;

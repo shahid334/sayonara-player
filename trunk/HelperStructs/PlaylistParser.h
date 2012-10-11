@@ -27,10 +27,6 @@
 #include <QStringList>
 #include <QString>
 
-#include <vector>
-
-using namespace std;
-
 
 namespace PlaylistParser {
 

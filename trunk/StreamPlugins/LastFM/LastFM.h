@@ -51,6 +51,8 @@ class LastFM : public QObject{
 
 Q_OBJECT
 
+SINGLETON(LastFM)
+
 	signals:
 		void sig_last_fm_logged_in(bool);
 		void sig_similar_artists_available(const QList<int>&);
@@ -73,19 +75,30 @@ Q_OBJECT
 		void _sl_corrected_data_available(const QString&);
 
 	public:
-		static LastFM * getInstance();
-		virtual ~LastFM();
+		//static LastFM * getInstance();
+
 
 		bool lfm_login(QString username, QString password, bool should_emit=true);
 		void lfm_get_friends(QStringList& );
 		bool lfm_get_user_info(QMap<QString, QString>&);
 		bool lfm_is_logged_in();
 
-	private:
+	/*private:
 
 		LastFM();
 		LastFM(const LastFM&);
 		LastFM& operator=(const LastFM&);
+
+	public:
+
+		virtual ~LastFM();
+
+		static LastFM* getInstance(bool init_now){
+			static LastFM inst;
+			return &inst;
+		}*/
+
+	private:
 
 		bool 	_lfm_init_track_changed_thread();
 		bool 	_lfm_update_track(const MetaData&);

@@ -27,7 +27,6 @@
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <vector>
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>

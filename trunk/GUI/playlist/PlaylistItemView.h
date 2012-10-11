@@ -35,7 +35,6 @@
 #include <QList>
 #include <QPair>
 #include <QString>
-#include <vector>
 
 
 using namespace std;

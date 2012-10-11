@@ -33,13 +33,6 @@
 #include <QApplication>
 #include <QStringList>
 
-#include <string>
-#include <vector>
-#include <iostream>
-
-
-using namespace std;
-
 
 void printHelp(){
 	qDebug() << "sayonara <list>";

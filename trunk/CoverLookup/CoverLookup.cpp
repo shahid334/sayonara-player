@@ -140,7 +140,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 	if (_thread->isRunning())
 		terminate_thread();
 
-	vector<Album> albums;
+	AlbumList albums;
 	Album album;
 
 	if (_metadata.album_id != -1){
@@ -161,7 +161,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 }
 
 // search more covers
-void CoverLookup::search_covers(const vector<Album> & vec_albums) {
+void CoverLookup::search_covers(const AlbumList & vec_albums) {
 
 	if (_thread->isRunning())
 		terminate_thread();
@@ -173,7 +173,7 @@ void CoverLookup::search_covers(const vector<Album> & vec_albums) {
 // search covers for all albums
 void CoverLookup::search_all_covers() {
 
-	vector<Album> albums;
+	AlbumList albums;
 	CDatabaseConnector::getInstance()->getAllAlbums(albums);
 	search_covers(albums);
 }
@@ -243,7 +243,6 @@ Album CoverLookup::_get_album_from_metadata(const MetaData& md) {
 
 	if (md.album_id != -1) {
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		vector<Album> albums;
 		album = db->getAlbumByID(md.album_id);
 		return album;
 	}

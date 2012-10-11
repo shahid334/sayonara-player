@@ -21,7 +21,7 @@
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
-#include <vector>
+
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
@@ -67,7 +67,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
 	DB_TRY_OPEN(m_database);
 
-    int artistID = -1, albumID = -1;
+    int artistID = -1, albumID = -1, genreID = -1;
 
 
     m_database.transaction();
@@ -87,7 +87,12 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
                 artistID = insertArtistIntoDatabase((QString) data.artist);
             }
 
-            this -> insertTrackIntoDatabase (data,artistID,albumID, false);
+            genreID = this->getGenreByName(data.genre);
+            if (genreID == -1){
+            	genreID = insertGenreIntoDatabase((QString) data.genre);
+            }
+
+            this -> insertTrackIntoDatabase (data,artistID,albumID,genreID, false);
         }
 
         catch (QString ex) {

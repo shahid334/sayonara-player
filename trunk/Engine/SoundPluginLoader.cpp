@@ -31,7 +31,7 @@
 #include <QMessageBox>
 #include <QList>
 #include <qplugin.h>
-#include <vector>
+
 
 using namespace std;
 

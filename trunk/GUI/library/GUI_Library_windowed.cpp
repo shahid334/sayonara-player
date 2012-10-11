@@ -63,8 +63,6 @@
 #include <QScrollBar>
 
 
-#include <vector>
-
 #define INFO_IMG_SIZE 220
 
 
@@ -350,7 +348,7 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 }
 
 
-void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
+void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 
 	this->_album_model->removeRows(0, this->_album_model->rowCount());
 	this->_album_model->insertRows(0, albums.size()); // fake "all albums row"
@@ -366,7 +364,7 @@ void GUI_Library_windowed::fill_library_albums(vector<Album>& albums){
 }
 
 
-void GUI_Library_windowed::fill_library_artists(vector<Artist>& artists){
+void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
 	this->_artist_model->removeRows(0, this->_artist_model->rowCount());
 	this->_artist_model->insertRows(0, artists.size());

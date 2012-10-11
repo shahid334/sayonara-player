@@ -24,13 +24,11 @@
 
 #include "HelperStructs/MetaData.h"
 
-#include <vector>
 #include <QMap>
 #include <QWidget>
 #include <QDockWidget>
 #include <ui_GUI_PlaylistChooser.h>
 
-using namespace std;
 
 class GUI_PlaylistChooser : public QDockWidget, private Ui::PlaylistChooser {
 

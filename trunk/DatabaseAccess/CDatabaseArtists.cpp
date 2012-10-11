@@ -22,14 +22,15 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 
-#include <vector>
+
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
+
+#include <cstdlib>
 
 using namespace Sort;
 
@@ -40,7 +41,7 @@ using namespace Sort;
 				"GROUP_CONCAT(albums.albumid) AS artistAlbums " + \
 				"FROM artists, albums, tracks "
 
-bool _db_fetch_artists(QSqlQuery& q, vector<Artist>& result){
+bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
 
 	try{
 		if (!q.exec()) {
@@ -126,7 +127,7 @@ Artist CDatabaseConnector::getArtistByID(const int &id){
 	QSqlQuery q (this -> m_database);
 
 	Artist artist;
-	vector<Artist> artists;
+	ArtistList artists;
 
 	if (id!=-1) {
 		QString query = ARTIST_ALBUM_TRACK_SELECTOR +
@@ -162,7 +163,7 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
     return artistID;
 }
 
-void CDatabaseConnector::getAllArtists(vector<Artist>& result, ArtistSort sortorder){
+void CDatabaseConnector::getAllArtists(ArtistList& result, ArtistSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -179,7 +180,7 @@ void CDatabaseConnector::getAllArtists(vector<Artist>& result, ArtistSort sortor
 
 }
 
-void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result, ArtistSort sortorder){
+void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, ArtistSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -194,7 +195,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, vector<Artist>& result,
 	_db_fetch_artists(q, result);
 }
 
-void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, vector<Artist>& result, ArtistSort sortorder){
+void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, ArtistSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 

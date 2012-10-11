@@ -28,8 +28,6 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include <vector>
-using namespace std;
 
 Playlists::Playlists() {
 	_import_state = STATE_IMPORT_SUCCESS;

@@ -22,17 +22,17 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include <vector>
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
 #include <HelperStructs/CSettingsStorage.h>
 
-using namespace std;
+#include <cstdlib>
+
+
 
 
 CDatabaseConnector* CDatabaseConnector::getInstance(){

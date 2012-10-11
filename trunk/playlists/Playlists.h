@@ -31,11 +31,7 @@
 #include <QObject>
 #include <QString>
 #include <QMap>
-#include <vector>
 
-
-
-using namespace std;
 
 class Playlists : public QObject {
 	Q_OBJECT

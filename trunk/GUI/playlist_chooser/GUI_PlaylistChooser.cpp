@@ -24,8 +24,6 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
 
-#include <vector>
-
 #include <QWidget>
 #include <QDockWidget>
 #include <QInputDialog>
@@ -35,7 +33,6 @@
 
 #include <ui_GUI_PlaylistChooser.h>
 
-using namespace std;
 
 
 GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) {

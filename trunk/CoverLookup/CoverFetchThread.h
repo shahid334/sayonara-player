@@ -69,7 +69,7 @@ public:
 	void 	reset();
 
 	void	setup_fetch_artist_image(const QString& artist, int source, int n_covers=1);
-	void	setup_fetch_album_covers(const vector<Album>& albums, int source, int n_covers=1);
+	void	setup_fetch_album_covers(const AlbumList& albums, int source, int n_covers=1);
 	void	setup_fetch_single_album(const Album& album, int source, int n_covers=1);
 	void	setup_fetch_single_album(QString album, QString artist, int source);
 	void	setup_fetch_by_searchstring(QString searchstring, int n_covers);
@@ -80,7 +80,7 @@ protected:
 
 private:
 
-	vector<Album> 	_vec_albums;
+	AlbumList 		_vec_albums;
 	vector<QImage> 	_images;
 	int 			_cover_source;
 	int 			_num_covers_2_fetch;

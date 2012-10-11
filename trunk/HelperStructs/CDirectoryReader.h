@@ -27,10 +27,7 @@
 #include <QStringList>
 #include <QDir>
 #include <QFileInfo>
-#include <vector>
 
-
-using namespace std;
 
 class CDirectoryReader {
     public:

@@ -61,11 +61,7 @@
 using namespace std;
 
 
-LastFM* LastFM::getInstance(){
-	static LastFM inst;
-	return &inst;
 
-}
 
 LastFM::LastFM() {
 	lfm_wa_init();

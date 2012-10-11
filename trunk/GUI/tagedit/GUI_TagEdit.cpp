@@ -40,10 +40,6 @@
 #include <QWidget>
 #include <QCompleter>
 
-#include <vector>
-
-using namespace std;
-
 
 GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     _parent = parent;

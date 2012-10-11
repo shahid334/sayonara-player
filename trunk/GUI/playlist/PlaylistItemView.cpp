@@ -34,10 +34,7 @@
 #include <QPair>
 #include <QVariant>
 #include <QString>
-#include <vector>
 
-
-using namespace std;
 
 PlaylistItemView::PlaylistItemView() : QAbstractItemView() {
 
@@ -55,22 +52,18 @@ PlaylistItemView::~PlaylistItemView() {
 
 
 /*
-void MyAbstractItemModel::setData(vector<MetaData>& v_metadata){
+void MyAbstractItemModel::setData(MetaDataList& v_metadata){
 
 
 	int idx= 0;
-	for(vector<MetaData>::iterator it=v_metadata.begin(); it != v_metadata.end(); it++){
+	foreach(MetaData md, v_metadata){
 
-		QString info = "<b>" + it->title + "</b>\nby" + it->artist;
+		QString info = "<b>" + md.title + "</b>\nby" + md.artist;
 		QPair<QString, int> pair(info, idx);
 		m_data2set.push_back(pair);
 
 		idx++;
 	}
-
-
-
-
 }
 
 

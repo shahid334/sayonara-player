@@ -45,7 +45,6 @@
 #include <QList>
 
 #include <string>
-#include <vector>
 
 
 	class GUI_Playlist : public QWidget, private Ui::Playlist_Window
@@ -99,8 +98,8 @@
 			void save_playlist(const QString&);
 			void playlist_mode_changed(const Playlist_Mode&);
 			void dropped_tracks(const MetaDataList&, int);
-			void dropped_albums(const vector<Album>&, int);
-			void dropped_artists(const vector<Artist>&, int);
+			void dropped_albums(const AlbumList&, int);
+			void dropped_artists(const ArtistList&, int);
 			void playlist_filled(MetaDataList&);
 			void sound_files_dropped(QStringList&);
 			void directory_dropped(const QString&, int);

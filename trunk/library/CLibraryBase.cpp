@@ -37,7 +37,6 @@
 #include <QInputDialog>
 #include <QListWidget>
 
-#include <vector>
 
 CLibraryBase::CLibraryBase(QObject *parent) :
     QObject(parent)
@@ -413,7 +412,7 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
 	_selected_artists.clear();
 	_selected_albums.clear();
 
-	vector<Album> v_tmp_album;
+	AlbumList v_tmp_album;
 
 	foreach(int idx, idx_list){
 		Artist artist = _vec_artists[idx];

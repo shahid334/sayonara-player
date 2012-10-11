@@ -22,14 +22,15 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
-#include <vector>
+
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
+
+#include <cstdlib>
 
 using namespace Sort;
 
@@ -42,7 +43,7 @@ using namespace Sort;
 			"group_concat(artists.name) AS albumArtists " + \
 			"FROM albums, artists, tracks "
 
-bool _db_fetch_albums(QSqlQuery& q, vector<Album>& result) {
+bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
 		try{
 			if (!q.exec()) {
@@ -154,7 +155,7 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 
 	DB_TRY_OPEN(m_database);
 
-	vector<Album> albums;
+	AlbumList albums;
 	Album album;
 
 	QSqlQuery q (this -> m_database);
@@ -173,7 +174,7 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 	return album;
 }
 
-void CDatabaseConnector::getAllAlbums(vector<Album>& result, AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbums(AlbumList& result, AlbumSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -192,7 +193,7 @@ void CDatabaseConnector::getAllAlbums(vector<Album>& result, AlbumSort sortorder
 }
 
 
-void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>& result, Filter filter,AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,AlbumSort sortorder){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -273,14 +274,14 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, vector<Album>&
 	_db_fetch_albums(q, result);
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, vector<Album>& result, Filter filter, AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, AlbumSort sortorder){
 
 	QList<int> list;
 	list << artist;
 	getAllAlbumsByArtist(list, result, filter, sortorder);
 }
 
-void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, vector<Album>& result, AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, AlbumSort sortorder){
 
 	DB_TRY_OPEN(m_database);
 

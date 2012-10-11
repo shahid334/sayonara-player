@@ -39,12 +39,6 @@
 #include <qmetatype.h>
 #include <QStringList>
 #include <QDebug>
-#include <vector>
-#include <omp.h>
-
-
-
-using namespace std;
 
 
 int ReloadThread::get_and_save_all_files(){

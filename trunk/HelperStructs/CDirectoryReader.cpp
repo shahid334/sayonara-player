@@ -28,11 +28,6 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QStringList>
-#include <vector>
-
-
-
-using namespace std;
 
 
 CDirectoryReader::CDirectoryReader () {
@@ -140,6 +135,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
         if(Helper::is_soundfile(md.filepath)){
 
+        	qDebug() << md.filepath << " is soundfile " << md.id;
             if(md.id < 0){
                 if(!ID3::getMetaDataOfFile(md)) continue;
             }

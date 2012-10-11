@@ -53,7 +53,18 @@
 #define GOOGLE_FT_BMP QString("bmp")
 
 
-
+#define SINGLETON(x) private: \
+						x(); \
+						x(const x&); \
+						x& operator=(const x&); \
+						\
+					public:\
+							virtual ~x(); \
+						\
+					static x* getInstance(){ \
+							static x inst; \
+							return &inst; \
+					}\
 
 
 

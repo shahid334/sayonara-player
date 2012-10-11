@@ -32,6 +32,7 @@
 	#include <taglib/taglib.h>
 	#include <taglib/fileref.h>
 
+using namespace std;
 using namespace Helper;
 
 bool ID3::getMetaDataOfFile(MetaData& md){
@@ -46,10 +47,11 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	string artist = f.tag()->artist().to8Bit(true);
 	string album = f.tag()->album().to8Bit(true);
 	string title = f.tag()->title().to8Bit(true);
+	string genre = f.tag()->genre().to8Bit(true);
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
 	int bitrate = f.audioProperties()->bitrate() * 1000;
-
+	qDebug() << "genre of " << title.c_str() << ": " << genre.c_str();
 
 
 	int length = f.audioProperties()->length();
@@ -62,6 +64,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	md.year = year;
 	md.track_num = track;
 	md.bitrate = bitrate;
+	md.genre = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
 
 
 	if(md.title.length() == 0){
@@ -89,8 +92,11 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 		string artist = f.tag()->artist().to8Bit(true);
 		string album = f.tag()->album().to8Bit(true);
 		string title = f.tag()->title().to8Bit(true);
+		string genre = f.tag()->genre().to8Bit(true);
+		qDebug() << "genre of " << title.c_str() << ": " << genre.c_str();
 		uint year = f.tag()->year();
 		uint track = f.tag()->track();
+
 		int bitrate = f.audioProperties()->bitrate() * 1000;
 
 
@@ -106,6 +112,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 		md.year = year;
 		md.track_num = track;
 		md.bitrate = bitrate;
+		md.genre = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
 
 
 		if(md.title.length() == 0){
@@ -129,11 +136,13 @@ qDebug() << "file save start";
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String artist(md.artist.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String title(md.title.toUtf8().data(), TagLib::String::UTF8);
+	TagLib::String genre(md.genre.toUtf8().data(), TagLib::String::UTF8);
 	//TagLib::String genre(md.genre.toUtf8().data(), TagLib::String::UTF8);
 
 	f.tag()->setAlbum(album);
 	f.tag()->setArtist(artist);
 	f.tag()->setTitle(title);
+	f.tag()->setGenre(genre);
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
 	//f.tag()->setGenre(genre);

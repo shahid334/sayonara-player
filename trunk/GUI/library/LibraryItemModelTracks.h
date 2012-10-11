@@ -44,14 +44,7 @@
 #include <QStringList>
 #include <QAbstractTableModel>
 
-#include <vector>
 #include <HelperStructs/MetaData.h>
-
-
-
-
-using namespace std;
-
 
 
 class LibraryItemModelTracks : public QAbstractTableModel {

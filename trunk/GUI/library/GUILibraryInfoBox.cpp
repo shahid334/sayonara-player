@@ -59,8 +59,8 @@ GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 
 void GUI_Library_Info_Box::psl_refresh(){
 	MetaDataList v_md;
-	vector<Album> v_albums;
-	vector<Artist> v_artists;
+	AlbumList v_albums;
+	ArtistList v_artists;
 
 	_db->getTracksFromDatabase(v_md);
 	_db->getAllAlbums(v_albums);

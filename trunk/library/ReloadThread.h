@@ -35,10 +35,6 @@
 #include <QString>
 #include <HelperStructs/CDirectoryReader.h>
 #include "HelperStructs/MetaData.h"
-#include <vector>
-
-using namespace std;
-
 
 
 class ReloadThread : public QThread {

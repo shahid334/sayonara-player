@@ -65,7 +65,7 @@ class CoverLookup : public QObject{
 	public slots:
 		void search_artist_image(const QString& artist); /* artist image */
 		void search_cover(const MetaData& md);			 /* search a cover for certain metadata */
-		void search_covers(const vector<Album>&);		 /* search multiple covers */
+		void search_covers(const AlbumList&);		 /* search multiple covers */
 		void search_images_by_searchstring(QString searchstring, int n_images, bool search_for_album);
 
 

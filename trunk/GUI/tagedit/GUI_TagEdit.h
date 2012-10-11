@@ -46,13 +46,10 @@
 #include <QStringList>
 
 
-#include <vector>
-
-using namespace std;
-
 class GUI_TagEdit : public QWidget, private Ui::GUI_TagEdit{
 
 	Q_OBJECT
+
 
 public:
 	GUI_TagEdit(QWidget* parent=0);
@@ -100,8 +97,8 @@ public:
 		MetaDataList _vec_org_metadata;
 		MetaDataList _vec_tmp_metadata;
 
-		vector<Album> _vec_albums;
-		vector<Artist> _vec_artists;
+		AlbumList _vec_albums;
+		ArtistList _vec_artists;
 
 		QStringList _lst_new_albums;
 		QStringList _lst_new_artists;
@@ -127,8 +124,6 @@ public:
         bool has_open_tag(QString str);
         bool has_tag(QString str);
         bool is_valid_tag_str(QString str);
-
-
 };
 
 #endif /* GUI_TAGEDIT_H_ */
