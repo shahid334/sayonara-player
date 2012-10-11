@@ -51,7 +51,6 @@ class LastFM : public QObject{
 
 Q_OBJECT
 
-SINGLETON(LastFM)
 
 	signals:
 		void sig_last_fm_logged_in(bool);
@@ -75,7 +74,7 @@ SINGLETON(LastFM)
 		void _sl_corrected_data_available(const QString&);
 
 	public:
-		//static LastFM * getInstance();
+		static LastFM * getInstance();
 
 
 		bool lfm_login(QString username, QString password, bool should_emit=true);
@@ -83,7 +82,7 @@ SINGLETON(LastFM)
 		bool lfm_get_user_info(QMap<QString, QString>&);
 		bool lfm_is_logged_in();
 
-	/*private:
+	private:
 
 		LastFM();
 		LastFM(const LastFM&);
@@ -96,7 +95,7 @@ SINGLETON(LastFM)
 		static LastFM* getInstance(bool init_now){
 			static LastFM inst;
 			return &inst;
-		}*/
+		}
 
 	private:
 
