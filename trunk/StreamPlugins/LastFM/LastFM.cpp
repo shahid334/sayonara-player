@@ -60,7 +60,11 @@
 
 using namespace std;
 
+LastFM* LastFM::getInstance(){
+	static LastFM instance;
+	return &instance;
 
+}
 
 
 LastFM::LastFM() {
