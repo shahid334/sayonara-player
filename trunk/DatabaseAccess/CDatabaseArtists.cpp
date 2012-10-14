@@ -204,6 +204,12 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 
 	switch(filter.by_searchstring){
 
+        case BY_GENRE:
+            query = ARTIST_ALBUM_TRACK_SELECTOR +
+                            "	WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.genre LIKE :search_in_genre " +
+                            "	GROUP BY artistID, artistName ";
+            break;
+
 		case BY_FILENAME:
 			query = ARTIST_ALBUM_TRACK_SELECTOR +
 							"	WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.filename LIKE :search_in_title " +
@@ -235,6 +241,9 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 	q.prepare(query);
 	switch(filter.by_searchstring){
 
+        case BY_GENRE:
+            q.bindValue(":search_in_genre", QVariant(filter.filtertext));
+            break;
 		case BY_FILENAME:
 			q.bindValue(":search_in_filename",QVariant(filter.filtertext));
 			break;

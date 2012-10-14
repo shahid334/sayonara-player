@@ -1,5 +1,12 @@
-#!/bin/basha
-OUTPUT_FILE=sayonara-0.3.deb
+#!/bin/bash
+
+cd ..
+REV=`svn info | grep Revision | tail -c 4` 
+
+cd linux_packages
+
+OUTPUT_FILE=sayonara-0.3-r"${REV}".deb
+
 CONTROL_FILE=./resources/sayonara32.control
 DEBIAN_DIR=sayonara.debian
 CUR_DIR=$PWD

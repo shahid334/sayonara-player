@@ -68,6 +68,8 @@ public:
 		void sig_library_changed();
 		void sig_import_files(const MetaDataList&);
 		void sig_need_more_radio();
+        void sig_gapless_track(const MetaData&);
+
 
 
 
@@ -101,6 +103,7 @@ public:
 		void psl_play_stream(const QString&, const QString&);
 		void psl_valid_strrec_track(const MetaData&);
 		void psl_play_next_tracks(const MetaDataList&);
+        void psl_gapless_track();
 
 
 

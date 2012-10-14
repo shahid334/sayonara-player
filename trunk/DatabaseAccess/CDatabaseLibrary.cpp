@@ -88,7 +88,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
             }
 
 
-            deleteGenreMappingByTrackID(data.id);
+            /*deleteGenreMappingByTrackID(data.id);
 
             QList<int> genres2insert;
             foreach(QString genre, data.genres){
@@ -99,9 +99,9 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
                         genres2insert.push_back(genreID);
                     }
                 }
-            }
+            }*/
 
-            this->insertGenreMappingsIntoDatabase(genres2insert, data.id);
+            //this->insertGenreMappingsIntoDatabase(genres2insert, data.id);
 
             this -> insertTrackIntoDatabase (data,artistID,albumID, false);
         }

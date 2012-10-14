@@ -29,6 +29,7 @@
 
 
 #include <gst/gst.h>
+#include <gst/app/gstappsrc.h>
 #include <string>
 #include <vector>
 
@@ -46,6 +47,17 @@ using namespace std;
 static GST_Engine*	obj_ref;
 
 
+gboolean player_change_file(GstBin* pipeline, void* app){
+
+    qDebug() << "player change file";
+    Q_UNUSED(pipeline);
+    Q_UNUSED(app);
+
+    obj_ref->set_about_to_finish();
+
+    return true;
+}
+
 static gboolean show_position(GstElement* pipeline){
 
 	gint64 pos;
@@ -54,7 +66,7 @@ static gboolean show_position(GstElement* pipeline){
 	gst_element_query_position(pipeline, &fmt, &pos);
 
 	if(obj_ref != NULL && obj_ref->getState() == STATE_PLAY){
-		obj_ref->set_cur_position((quint32)(pos / 1000000000));
+        obj_ref->set_cur_position((quint32)(pos / 1000000000)); // ms
 	}
 
 	return true;
@@ -66,6 +78,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 	(void) user_data;
 
 	switch (GST_MESSAGE_TYPE(msg)) {
+
 		case GST_MESSAGE_EOS:
 			if(obj_ref){
 				obj_ref->set_track_finished();
@@ -114,6 +127,8 @@ GST_Engine::GST_Engine(){
 	_sr_path = "";
 	_sr_complete_tracks = true;
 	_sr_create_playlist = true;
+
+    _gapless_track_available = false;
 
 }
 
@@ -228,7 +243,7 @@ void GST_Engine::init_play_pipeline(){
 
 		if(!_audio_sink) {
 			qDebug() << "Sink cannot be created";
-			break;
+            break;
 		}
 
 		if(!_audio_bin)	{
@@ -247,6 +262,8 @@ void GST_Engine::init_play_pipeline(){
 			if(!success) break;
 			g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 		}
+
+       // g_signal_connect (_pipeline, "about-to-finish", G_CALLBACK (player_change_file), NULL);
 
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
 	} while(i);
@@ -292,6 +309,12 @@ QString GST_Engine::init_streamripper(const MetaData& md){
 }
 
 
+void GST_Engine::psl_gapless_track(const MetaData& md){
+    qDebug() << "Gapless track " << md.title;
+    _md_gapless = md;
+    _gapless_track_available = true;
+}
+
 void GST_Engine::changeTrack(const MetaData& md){
 
 
@@ -335,7 +358,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 	// playing src
 	g_object_set(G_OBJECT(_pipeline), "uri", new_src_filename_uri.toLocal8Bit().data(), NULL);
-	g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
+    g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
 
     emit total_time_changed_signal(_meta_data.length_ms);
@@ -344,6 +367,8 @@ void GST_Engine::changeTrack(const MetaData& md){
 	_seconds_now = 0;
 	_scrobbled = false;
 	_track_finished = false;
+    _gapless_track_available = false;
+
 
 	play();
 
@@ -391,13 +416,19 @@ void GST_Engine::play(){
 		success = start_streamripper();
 	}
 
-	if(success)
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    if(success){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+
+
+        emit wanna_gapless_track();
+    }
 
 	// unable to buffer
 	else{
 		set_track_finished();
 	}
+
+
 	obj_ref = this;
 }
 
@@ -520,14 +551,18 @@ void GST_Engine::eq_enable(bool){
 
 }
 
+
 void GST_Engine::state_changed(){
 
 }
 
+
 void GST_Engine::set_cur_position(quint32 pos){
 
-	if((quint32)_seconds_now == pos) return;
-	_seconds_now = pos;
+
+
+    if((quint32) _seconds_now == pos) return;
+    _seconds_now = pos;
 
 	if (!_scrobbled
 			&& (_seconds_now - _seconds_started == 15
@@ -538,12 +573,27 @@ void GST_Engine::set_cur_position(quint32 pos){
 		_scrobbled = true;
 	}
 
-	emit timeChangedSignal(pos);
+    emit timeChangedSignal(_seconds_now);
 }
-void GST_Engine::set_track_finished(){
 
+
+void GST_Engine::set_track_finished(){
+    qDebug() << "track_finished " << _track_finished;
 	_track_finished = true;
 	emit track_finished();
+}
+
+void GST_Engine::set_about_to_finish(){
+    qDebug() << "about to finish " << _gapless_track_available;
+
+    if(_gapless_track_available){
+        _track_finished = true;
+        //emit track_finished();
+
+        changeTrack(_md_gapless);
+        //_track_finished = true;
+        //emit track_finished();
+    }
 }
 
 int GST_Engine::getState(){

@@ -310,6 +310,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Genre</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Path</string>
         </property>
        </item>

@@ -326,7 +326,19 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 	QModelIndexList idx_list = this->ui->listView->selectionModel()->selectedRows();
 	MetaDataList v_md;
 
-	_cur_selected_rows.clear();
+    foreach(int row, _cur_selected_rows){
+        QModelIndex idx = _pli_model->index(row, 0);
+        QVariant mdvariant = this->_pli_model->data(idx, Qt::WhatsThisRole);
+
+        MetaData md;
+        if(!MetaData::fromVariant(mdvariant, md)) continue;
+
+        md.pl_selected = false;
+        this->_pli_model->setData(idx, md.toVariant(), Qt::EditRole);
+    }
+
+
+    _cur_selected_rows.clear();
 
 	foreach(QModelIndex idx, idx_list){
 
@@ -334,7 +346,10 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 		MetaData md;
 		if(!MetaData::fromVariant(mdvariant, md)) continue;
 
+        md.pl_selected = true;
+
 		v_md.push_back(md);
+        this->_pli_model->setData(idx, md.toVariant(), Qt::EditRole);
 
 		_cur_selected_rows.push_back(idx.row());
 	}
@@ -385,6 +400,7 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 	}
 
 	int new_row = index.row();
+    qDebug() << "new row = " << new_row << ", _pli_model " << _pli_model->rowCount();
 
 	if(new_row < 0 || new_row >= _pli_model->rowCount() ) return;
 
@@ -715,8 +731,12 @@ void GUI_Playlist::import_button_clicked(){
 
 void GUI_Playlist::import_result(bool success){
 
-
 	this->ui->btn_import->setVisible(!success);
+    if(success)
+        QMessageBox::information(this, "Import files", "All files could be imported");
+    else
+        QMessageBox::warning(this, "Import files", QString("Sorry, but tracks could not be imported <br />") +
+                             "Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
 }
 
 

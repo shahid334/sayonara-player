@@ -126,6 +126,7 @@ private:
 
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;
+    QList<int>          _selected_tracks;
 
     Filter				_filter;
 

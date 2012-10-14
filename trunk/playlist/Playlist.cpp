@@ -77,6 +77,7 @@ void Playlist::ui_loaded(){
 			_cur_play_idx = -1;
 		}
 
+        qDebug() << "sig playlist created " << _v_meta_data[0].id;
 		emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 	}
 }
@@ -106,13 +107,13 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
 	// no tracks in new playlist
 	if(v_meta_data.size() == 0) {
-		_v_meta_data.clear();
+        _v_meta_data.clear();
         emit sig_no_track_to_play();
 		return;
 	}
 
     if(!_playlist_mode.append){
-		_v_meta_data.clear();
+        _v_meta_data.clear();
 	    _cur_play_idx = -1;
 	}
 
@@ -134,7 +135,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
     }
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx);
-
+    psl_save_playlist_to_storage();
 }
 
 
@@ -326,7 +327,7 @@ void Playlist::psl_stop(){
 	if(_radio_active != RADIO_OFF){
 
 		save_stream_playlist();
-		psl_clear_playlist();
+        psl_clear_playlist();
 	}
 
 	_radio_active = RADIO_OFF;
@@ -519,6 +520,19 @@ void Playlist::psl_next_track(){
 }
 
 
+void Playlist::psl_gapless_track(){
+    if(_cur_play_idx + 1>= _v_meta_data.size() || _cur_play_idx < 0) {
+
+        return;
+    }
+
+    //_cur_play_idx++;
+    MetaData md = _v_meta_data[_cur_play_idx + 1];
+    emit sig_gapless_track(md);
+
+}
+
+
 
 // GUI -->
 void Playlist::psl_change_track(int new_row){
@@ -568,7 +582,7 @@ void Playlist::psl_change_track(int new_row){
 // GUI -->
 void Playlist::psl_clear_playlist(){
 
-	_v_stream_playlist.clear();
+    _v_stream_playlist.clear();
 	_v_meta_data.clear();
 	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
@@ -709,14 +723,11 @@ void Playlist::psl_import_new_tracks_to_library(bool copy){
 
 void Playlist::psl_import_result(bool success){
 
-	_v_extern_tracks.clear();
 	if(success){
-
+        _v_extern_tracks.clear();
 		foreach(MetaData md, _v_meta_data){
 			md.is_extern = false;
 		}
-
-		psl_createPlaylist(_v_meta_data);
 	}
 
 }
@@ -728,6 +739,7 @@ void Playlist::psl_new_radio_playlist_available(const MetaDataList& playlist){
 	_cur_play_idx = 0;
 
 	MetaDataList pl_copy = playlist;
+
 	psl_clear_playlist();
     psl_createPlaylist(pl_copy);
 }

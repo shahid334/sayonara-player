@@ -196,6 +196,9 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, AlbumSort sortorder){
 void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,AlbumSort sortorder){
 	DB_TRY_OPEN(m_database);
 
+    QStringList lst_artist_names;
+
+
 	QSqlQuery q (this -> m_database);
 
 	// fetch all albums
@@ -222,19 +225,21 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 
 	if(filter.filtertext.length() > 0){
 		switch(filter.by_searchstring){
-			case BY_FILENAME:
-				querytext += QString("AND tracks.trackid IN ( ") +			// track title is like filter
-								"SELECT t2.trackid " +
-								"FROM tracks t2 "+
-								"WHERE t2.filename LIKE :filter1) ";
+            case BY_GENRE:
+                querytext += QString("AND tracks.genre LIKE :filter1 ");			// track title is like filter
+                break;
+
+            case BY_FILENAME:
+                querytext += QString("AND tracks.filename LIKE :filter1 ");			// track title is like filter
+
 				break;
 
 			case BY_FULLTEXT:
 			default:
-				querytext += QString("AND tracks.trackid IN ( ") +			// track title is like filter
-								"SELECT t2.trackid " +
-								"FROM tracks t2 "+
-								"WHERE t2.title LIKE :filter1 " +
+                querytext += QString("AND tracks.trackID IN ( "
+                                     "SELECT t2.trackID "
+                                     "FROM tracks t2 "
+                                     "WHERE t2.title LIKE :filter1 ") +			// track title is like filter
 
 								"UNION SELECT t3.trackid "+			// album title is like filter
 								"FROM tracks t3, albums "+
@@ -262,7 +267,9 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 		q.bindValue(":filter1", QVariant(filter.filtertext));
 
 		switch(filter.by_searchstring){
-			case BY_FILENAME:
+            case BY_GENRE:
+                break;
+            case BY_FILENAME:
 				break;
 			default:
 				q.bindValue(":filter2", QVariant(filter.filtertext));
@@ -271,7 +278,9 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 		}
 	}
 
-	_db_fetch_albums(q, result);
+
+    _db_fetch_albums(q, result);
+
 }
 
 void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, AlbumSort sortorder){
@@ -309,6 +318,12 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 					"GROUP BY albumID, albumName";
 	}
 
+    else if(filter.by_searchstring == BY_GENRE){
+       query = ALBUM_ARTIST_TRACK_SELECTOR +
+                    "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.genre LIKE :search_in_genre " +
+                    "GROUP BY albumID, albumName";
+    }
+
 	query += _create_order_string(sortorder) + ";";
 
 	q.prepare(query);
@@ -323,6 +338,10 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 	else if(filter.by_searchstring == BY_FILENAME){
 		q.bindValue(":search_in_filename", QVariant(filter.filtertext));
 	}
+
+    else if(filter.by_searchstring == BY_GENRE){
+        q.bindValue(":search_in_genre", QVariant(filter.filtertext));
+    }
 
 	_db_fetch_albums(q, result);
 }

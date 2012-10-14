@@ -215,7 +215,7 @@ void GUI_TagEdit::ok_button_clicked(){
 
     this->ui->btn_all_album->setChecked(false);
     this->ui->btn_all_artist-> setChecked(false);
-    //this->ui->btn_all_genre->setChecked(false);
+    this->ui->btn_all_genre->setChecked(false);
     this->ui->btn_all_year->setChecked(false);
     if(b)
         emit sig_success(b);
@@ -230,7 +230,7 @@ void GUI_TagEdit::cancel_button_clicked(){
 
     this->ui->btn_all_album->setChecked(false);
     this->ui->btn_all_artist-> setChecked(false);
-   // this->ui->btn_all_genre->setChecked(false);
+    this->ui->btn_all_genre->setChecked(false);
     this->ui->btn_all_year->setChecked(false);
     emit sig_cancelled();
 
@@ -254,9 +254,15 @@ void GUI_TagEdit::all_artists_clicked(){
     }
 }
 void GUI_TagEdit::all_genre_clicked(){
-    /*for(int i=0; i<_vec_tmp_metadata.size(); i++){
-        _vec_tmp_metadata[i].ge = this->ui->le_album->text();
-    }*/
+
+    for(uint i=0; i<_vec_tmp_metadata.size(); i++){
+        _vec_tmp_metadata[i].genres.clear();
+
+        QStringList genres;
+        genres = this->ui->le_genres->text().split(QRegExp(",|\\|/|;|-"));
+
+        _vec_tmp_metadata[i].genres = genres;
+    }
 }
 void GUI_TagEdit::all_year_clicked(){
     for(uint i=0; i<_vec_tmp_metadata.size(); i++){
@@ -363,6 +369,7 @@ void GUI_TagEdit::show_metadata(){
     this->ui->le_title->setText(md.title);
     this->ui->sb_track_num->setValue(md.track_num);
     this->ui->sb_year->setValue(md.year);
+    this->ui->le_genres->setText(md.genres.join(","));
 
     this->ui->lab_filepath->setText(md.filepath);
     this->ui->lab_track_num->setText("Track " + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
@@ -383,9 +390,9 @@ void GUI_TagEdit::save_metadata(){
     if (this -> ui ->btn_all_year->isChecked()) {
         this -> all_year_clicked();
     }
-   /* if (this -> ui ->btn_all_genre->isChecked()) {
+    if (this -> ui ->btn_all_genre->isChecked()) {
         this -> all_genre_clicked();
-    }*/
+    }
 
     if(this->ui->cb_tag_all->isChecked()){
         this->all_tag_clicked();
@@ -399,6 +406,7 @@ void GUI_TagEdit::save_metadata(){
     _vec_tmp_metadata[_cur_idx].title = this->ui->le_title->text();
     _vec_tmp_metadata[_cur_idx].track_num = this->ui->sb_track_num->value();
     _vec_tmp_metadata[_cur_idx].year = this->ui->sb_year->value();
+    _vec_tmp_metadata[_cur_idx].genres = this->ui->le_genres->text().split(QRegExp(",|\\|/|;|-"));
 
 
     _vec_tmp_metadata[_cur_idx].print();

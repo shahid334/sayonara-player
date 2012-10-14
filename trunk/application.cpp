@@ -93,7 +93,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     qDebug() << "Init connections";
     init_connections();
 
-    playlist->ui_loaded();
+
 
     qDebug() << "setup player";
     player->setWindowTitle("Sayonara (0.3)");
@@ -126,7 +126,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     listen->load_equalizer(vec_eq_setting);
 
 
-    playlists->ui_loaded();
+
 
     library->loadDataFromDb();
 
@@ -142,6 +142,9 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
         player->suppress_warning(false);
 
     }
+
+    playlist->ui_loaded();
+    playlists->ui_loaded();
 }
 
 Application::~Application(){
@@ -206,7 +209,8 @@ void Application::init_connections(){
 
 	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		player,			update_track(const MetaData&));
 	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
-	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
+       CONNECT (playlist, sig_gapless_track(const MetaData&),                   listen, 		psl_gapless_track(const MetaData & ));
+       CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
 	   CONNECT (playlist, sig_no_track_to_play(),								listen,			stop());
 	   CONNECT (playlist, sig_goon_playing(),                                   listen,			play());
 	   CONNECT (playlist, sig_selected_file_changed(int),                       ui_playlist, 	track_changed(int));
@@ -232,13 +236,14 @@ void Application::init_connections(){
 	   CONNECT (listen, sig_valid_strrec_track(const MetaData&),            playlist,  psl_valid_strrec_track(const MetaData&));
 
 	   CONNECT (listen, scrobble_track(const MetaData&),                    lastfm, 	psl_scrobble(const MetaData&));
+       CONNECT (listen, wanna_gapless_track(),                              playlist,   psl_gapless_track() );
 
 	   // should be sent to player
 	   CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&),       ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
 	   CONNECT (listen, eq_found(const QStringList&),                       ui_eq, 	fill_available_equalizers(const QStringList&));
-
 	   CONNECT (listen, total_time_changed_signal(qint64),                  player,	total_time_changed(qint64));
 	   CONNECT (listen, timeChangedSignal(quint32),                         player,	setCurrentPosition(quint32) );
+
 
 	   CONNECT(library, sig_playlist_created(QStringList&), 			playlist, 		psl_createPlaylist(QStringList&));
 	   CONNECT(library, sig_import_result(bool),						playlist,		psl_import_result(bool));
@@ -336,9 +341,11 @@ void Application::init_connections(){
 
 void Application::setFiles2Play(QStringList filelist){
 
-    playlist->psl_createPlaylist(filelist);
+    if(filelist.size() > 0){
+        playlist->psl_createPlaylist(filelist);
 
-	if(playlist->get_num_tracks() > 0)
-		playlist->psl_play();
+        if(playlist->get_num_tracks() > 0)
+            playlist->psl_play();
+    }
 
 }

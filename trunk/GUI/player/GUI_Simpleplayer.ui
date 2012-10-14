@@ -320,7 +320,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>0.2</string>
+       <string>0.3</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -720,7 +720,7 @@
            <x>0</x>
            <y>0</y>
            <width>318</width>
-           <height>390</height>
+           <height>388</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -874,7 +874,7 @@
      <x>0</x>
      <y>0</y>
      <width>832</width>
-     <height>23</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="defaultUp">

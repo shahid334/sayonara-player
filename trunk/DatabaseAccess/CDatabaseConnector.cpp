@@ -86,6 +86,8 @@ bool CDatabaseConnector::openDatabase () {
     }
 
 
+
+
     return e;
 
 }
@@ -142,8 +144,12 @@ bool CDatabaseConnector::apply_fixes(){
 				");";
 		q5.prepare(querytext);
 		q5.exec();
-	}
+    }
 
+    QSqlQuery q6(this->m_database);
+    querytext = "ALTER table tracks ADD genre varchar;";
+    q6.prepare(querytext);
+    q6.exec();
 
 	return true;
 }

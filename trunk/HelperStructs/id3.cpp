@@ -58,7 +58,10 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
     QStringList genres;
     QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
-    genres = genre_str.split(QRegExp(",|\\|/|;|.|-"));
+    genres = genre_str.split(QRegExp(",|\\|/|;|-"));
+
+
+
 	md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 	md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
@@ -147,7 +150,6 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
 
-    qDebug() << "file save";
     f.save();
 	return;
 }

@@ -75,6 +75,8 @@ public:
 	bool pl_playing;
 	bool pl_dragged;
 
+    bool is_lib_selected;
+
 
     inline MetaData () {
             id = -1;
@@ -95,6 +97,8 @@ public:
             pl_selected = false;
             pl_playing = false;
             pl_dragged = false;
+
+            is_lib_selected = false;
         }
 
 	void print(){
@@ -135,6 +139,7 @@ public:
 		list.push_back( (pl_playing) ? "1" : "0" );
 		list.push_back( (pl_selected) ? "1" : "0" );
 		list.push_back( (pl_dragged) ? "1" : "0" );
+        list.push_back( (is_lib_selected) ? "1" : "0" );
 
 		return list;
 	}
@@ -143,7 +148,7 @@ public:
 
 		QStringList list = v.toStringList();
 
-        if(list.size() < 18) return false;
+        if(list.size() < 19) return false;
 
 		md.title = list[0];
 		md.artist = list[1];
@@ -163,6 +168,7 @@ public:
         md.pl_playing = (list[15] == "1");
         md.pl_selected = (list[16] == "1");
         md.pl_dragged = (list[17] == "1");
+        md.is_lib_selected = (list[18] == "1");
 
 		return true;
 	}
@@ -171,6 +177,11 @@ public:
 class MetaDataList : public vector<MetaData>{
 
 public:
+
+    MetaDataList(){}
+    ~MetaDataList(){
+        clear();
+    }
 
 	bool contains(const MetaData& md, bool cs=false){
 		QString filepath;
@@ -220,6 +231,7 @@ struct Artist{
 	qint32	id;
 	qint32	num_songs;
 	qint32  num_albums;
+    bool is_lib_selected;
 
 
 	Artist(){
@@ -227,6 +239,7 @@ struct Artist{
 		name = "";
 		num_songs = 0;
 		num_albums = 0;
+        is_lib_selected = false;
 	}
 
 	QStringList toStringList(){
@@ -237,15 +250,17 @@ struct Artist{
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(num_albums));
+        list.push_back((is_lib_selected ? "1" : "0"));
 		return list;
 	}
 
 	void fromStringList(QStringList& list){
 		if(list.size() < 4) return;
-		name = list.at(0);
-		id = list.at(1).toInt();
-		num_songs = list.at(2).toInt();
-		num_albums = list.at(3).toInt();
+        name = list[0];
+        id = list[1].toInt();
+        num_songs = list[2].toInt();
+        num_albums = list[3].toInt();
+        is_lib_selected = ((list[4] == "1") ? true : false);
 	}
 
 };
@@ -259,6 +274,7 @@ struct Album{
 	qint32	year;
 	QStringList artists;
 	bool is_sampler;
+    bool is_lib_selected;
 
 	Album(){
 		name = "";
@@ -267,6 +283,7 @@ struct Album{
 		length_sec = 0;
 		year = 0;
 		is_sampler = false;
+        is_lib_selected = false;
 	}
 
 	QStringList toStringList(){
@@ -276,28 +293,29 @@ struct Album{
 
 		list.push_back(tmpName);
 		if(artists.size() > 0){
-			QString tmp_artists = artists.at(0);
-			for(int i=1; i<artists.size(); i++){
-				tmp_artists += "," + artists[i];
-			}
-			list.push_back(tmp_artists);
+            list.push_back(artists.join(","));
 		}
 		else list.push_back("");
+
 
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(length_sec));
 		list.push_back(QString::number(year));
-		if(is_sampler){
+
+
+        if(is_sampler){
 			list.push_back("sampler");
 		}
 		else{
 			list.push_back("no_sampler");
 		}
+
+        list.push_back((is_lib_selected ? "1" : "0"));
+
 		return list;
-
-
 	}
+
 
 	void fromStringList(QStringList& list){
 
@@ -311,7 +329,7 @@ struct Album{
 		length_sec = list.at(4).toLong();
 		year = list.at(5).toInt();
 		is_sampler = (list.at(6) == "sampler");
-
+        is_lib_selected = ((list[7] == "1") ? true : false);
 	}
 };
 

@@ -90,6 +90,7 @@ public slots:
 	virtual void jump(int where, bool percent=true);
 	virtual void changeTrack(const MetaData& );
 	virtual void changeTrack(const QString& );
+    virtual void psl_gapless_track(const MetaData&);
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
 
@@ -101,11 +102,13 @@ public slots:
 	virtual void psl_strrip_set_create_playlist(bool);
 
 
+
 public:
 	// callback -> class
 	void		state_changed();
 	void		set_cur_position(quint32);
 	void		set_track_finished();
+    void        set_about_to_finish();
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();

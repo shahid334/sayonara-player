@@ -38,6 +38,7 @@ class Engine : public QObject{
 
 protected:
 	MetaData	_meta_data;
+    MetaData    _md_gapless;
 	int			_seconds_started;
 	int			_seconds_now;
 	qint64		_mseconds_now;
@@ -50,6 +51,7 @@ protected:
 	bool		_track_finished;
 
 	bool 		_playing_stream;
+    bool        _gapless_track_available;
 
 	bool		_sr_active;
 
@@ -74,6 +76,7 @@ signals:
 	void eq_presets_loaded(const vector<EQ_Setting>&);
 	void eq_found(const QStringList&);
 	void sig_valid_strrec_track(const MetaData&);
+    void wanna_gapless_track();
 
 public slots:
 	virtual void play()=0;
@@ -84,6 +87,7 @@ public slots:
 	virtual void jump(int where, bool percent=true)=0;
 	virtual void changeTrack(const MetaData& )=0;
 	virtual void changeTrack(const QString& )=0;
+    virtual void psl_gapless_track(const MetaData&)=0;
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;
@@ -92,6 +96,7 @@ public slots:
 	virtual void psl_strrip_set_path(const QString& )=0;
 	virtual void psl_strrip_complete_tracks(bool)=0;
 	virtual void psl_strrip_set_create_playlist(bool)=0;
+
 
 };
 

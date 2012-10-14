@@ -44,7 +44,7 @@ using namespace Sort;
 	"artists.artistID AS artistID, " \
 	"albums.name AS albumName, " \
     "artists.name AS artistName, " \
-    "'' AS genrename "\
+    "tracks.genre AS genrename "\
     "FROM tracks " \
     "INNER JOIN albums ON tracks.albumID = albums.albumID " \
     "INNER JOIN artists ON tracks.artistID = artists.artistID "
@@ -219,8 +219,7 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 
 		switch(filter.by_searchstring){
 			case BY_GENRE:
-				querytext = TRACK_SELECTOR +
-                            "AND genreName LIKE :filter1 ";
+                querytext += "AND tracks.genre LIKE :filter1 ";
 				break;
 
 			case BY_FILENAME:
@@ -318,8 +317,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 		switch(filter.by_searchstring){
 
 			case BY_GENRE:
-					querytext = TRACK_SELECTOR +
-                                "AND genreName LIKE :filter1";
+                    querytext += "AND tracks.genre LIKE :filter1";
 				break;
 
 			case BY_FILENAME:
@@ -389,7 +387,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 
 		case BY_GENRE:
 			querytext = TRACK_SELECTOR +
-                        "AND genreName LIKE :search_in_genre ";
+                        "AND genrename LIKE :search_in_genre ";
 		break;
 
 		case BY_FILENAME:
@@ -418,6 +416,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 	querytext = append_track_sort_string(querytext, sort);
 	q.prepare(querytext);
 
+
 	switch(filter.by_searchstring){
 
 		case BY_FILENAME:
@@ -438,7 +437,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 
 	_db_fetch_tracks(q, result);
 
-    qDebug() << q.executedQuery();
+
 }
 
 
@@ -513,8 +512,8 @@ int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
     }
 
 	QSqlQuery q (this -> m_database);
-	try{
-        q.prepare("UPDATE Tracks SET albumID = :albumID, artistID = :artistID, title = :title, year = :year, track = :track WHERE TrackID = :trackID;");
+
+        q.prepare("UPDATE Tracks SET albumID=:albumID, artistID=:artistID, title=:title, year=:year, track=:track, genre=:genre WHERE TrackID = :trackID;");
 
 		q.bindValue(":albumID",QVariant(data.album_id));
 		q.bindValue(":artistID",QVariant(data.artist_id));
@@ -522,18 +521,13 @@ int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
 		q.bindValue(":track",QVariant(data.track_num));
 		q.bindValue(":year",QVariant(data.year));
 		q.bindValue(":trackID", QVariant(data.id));
+        q.bindValue(":genre", QVariant(data.genres.join(",")));
 
         if (!q.exec()) {
-            qDebug() << "error";
-			throw QString ("SQL - Error: update track " + data.filepath);
+            qDebug() << ("SQL - Error: update track " + data.filepath);
 		}
-	}
 
-	catch (QString& ex) {
-		qDebug() << "SQL - Error: getTracksFromDatabase";
-		qDebug() << ex;
-		return -1;
-	}
+
 
 	return 0;
 }
@@ -572,9 +566,9 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     }
 
 	QString querytext = QString("INSERT INTO tracks ") +
-                "(filename,albumID,artistID,title,year,length,track,bitrate) " +
+                "(filename,albumID,artistID,title,year,length,track,bitrate,genre) " +
 				"VALUES "+
-                "(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate); ";
+                "(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate,:genre); ";
 
 	q.prepare(querytext);
 
@@ -586,6 +580,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     q.bindValue(":title",QVariant(data.title));
     q.bindValue(":track",QVariant(data.track_num));
     q.bindValue(":bitrate",QVariant(data.bitrate));
+    q.bindValue(":genre", QVariant(data.genres.join(",")));
 
 
     if (!q.exec()) {

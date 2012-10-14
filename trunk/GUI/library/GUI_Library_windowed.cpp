@@ -61,6 +61,7 @@
 #include <QPalette>
 #include <QBrush>
 #include <QScrollBar>
+#include <QItemSelectionModel>
 
 
 #define INFO_IMG_SIZE 220
@@ -327,21 +328,39 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 	this->_track_model->removeRows(0, this->_track_model->rowCount());
 	this->_track_model->insertRows(0, v_metadata.size());
 
-	MetaDataList v_md;
-	for(uint i=0; i<v_metadata.size(); i++){
-		MetaData md = v_metadata[i];
-		v_md.push_back(md);
+    int first_selected_md_row = -1;
 
-		QModelIndex idx = _track_model->index(i, 0);
+    QItemSelectionModel* sm = this->ui->tb_title->selectionModel();
+    QItemSelection sel = sm->selection();
+
+    for(uint row=0; row<v_metadata.size(); row++){
+        MetaData md = v_metadata[row];
+
+        if(md.is_lib_selected){
+            if(first_selected_md_row == -1)
+                first_selected_md_row = row;
+
+            this->ui->tb_title->selectRow(row);
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
+
+
+        QModelIndex idx = _track_model->index(row, 0);
 
 		this->_track_model->setData(idx, md.toVariant(), Qt::EditRole);
+    }
 
-	}
+    sm->clearSelection();
+    sm->select(sel,QItemSelectionModel::Select);
+
+    if(first_selected_md_row >= 0)
+        this->ui->lv_album->scrollTo(_track_model->index(first_selected_md_row, 0), QTableView::PositionAtCenter);
+
 	_mime_data_artist = new CustomMimeData();
 	_mime_data_album = new CustomMimeData();
 
-	_mime_data_artist->setMetaData(v_md);
-	_mime_data_album->setMetaData(v_md);
+    _mime_data_artist->setMetaData(v_metadata);
+    _mime_data_album->setMetaData(v_metadata);
 
 	this->ui->lv_artist->set_mime_data(_mime_data_artist);
 	this->ui->lv_album->set_mime_data(_mime_data_album);
@@ -353,31 +372,78 @@ void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 	this->_album_model->removeRows(0, this->_album_model->rowCount());
 	this->_album_model->insertRows(0, albums.size()); // fake "all albums row"
 
-	QModelIndex idx;
 
-	for(uint i=0; i<albums.size(); i++){
-		idx = this->_album_model->index(i, 1);
-		QStringList data = albums.at(i).toStringList();
+	QModelIndex idx;
+    int first_selected_album_row = -1;
+
+    QItemSelectionModel* sm = this->ui->lv_album->selectionModel();
+    QItemSelection sel = sm->selection();
+
+
+    for(uint row=0; row < albums.size(); row++){
+        Album album = albums[row];
+
+        idx = this->_album_model->index(row, 1);
+
+        if(album.is_lib_selected){
+            if(first_selected_album_row == -1)
+                first_selected_album_row = row;
+
+            this->ui->lv_album->selectRow(row);
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
+
+
+        QStringList data = album.toStringList();
 
 		this->_album_model->setData(idx, data, Qt::EditRole );
 	}
+
+    sm->clearSelection();
+    sm->select(sel,QItemSelectionModel::Select);
+
+
+    if(first_selected_album_row >= 0)
+        this->ui->lv_album->scrollTo(_album_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
 }
 
 
 void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
-	this->_artist_model->removeRows(0, this->_artist_model->rowCount());
+    this->_artist_model->removeRows(0, this->_artist_model->rowCount());
 	this->_artist_model->insertRows(0, artists.size());
 
 	QModelIndex idx;
+    int first_selected_artist_row = -1;
 
-	for(uint i=0; i<artists.size(); i++){
 
-		idx = this->_artist_model->index(i, 0);
-		QStringList data = artists.at(i).toStringList();
+    QItemSelectionModel* sm = this->ui->lv_artist->selectionModel();
+    QItemSelection sel = sm->selection();
 
-		this->_artist_model->setData(idx, data, Qt::EditRole );
+    for(uint row=0; row<artists.size(); row++){
+
+        Artist artist = artists[row];
+        idx = this->_artist_model->index(row, 0);
+
+        QStringList data = artist.toStringList();
+        this->_artist_model->setData(idx, data, Qt::EditRole );
+
+        if(artist.is_lib_selected){
+
+            if(first_selected_artist_row == -1)
+                first_selected_artist_row = row;
+
+            this->ui->lv_artist->selectRow(row);
+
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
 	}
+
+   sm->clearSelection();
+   sm->select(sel,QItemSelectionModel::Select);
+
+    if(first_selected_artist_row >= 0)
+        this->ui->lv_artist->scrollTo(_artist_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
 }
 
 
@@ -413,6 +479,21 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 }
 
 
+void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
+
+    if(!idx.isValid()) return;
+
+    QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows();
+    QList<int> idx_list_int;
+
+    foreach(QModelIndex  model_idx, idx_list){
+        idx_list_int.push_back( model_idx.row() );
+    }
+
+    emit sig_track_pressed(idx_list_int);
+}
+
+
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
 	_mime_data = new CustomMimeData();
@@ -424,19 +505,6 @@ void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 }
 
 
-void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
-
-	if(!idx.isValid()) return;
-
-	QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows();
-	QList<int> idx_list_int;
-
-	foreach(QModelIndex  model_idx, idx_list){
-		idx_list_int.push_back( model_idx.row() );
-	}
-
-	emit sig_track_pressed(idx_list_int);
-}
 
 
 
@@ -464,12 +532,28 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit){
 
+    if(search.toLower() == "f:"){
+        this->ui->combo_searchfilter->setCurrentIndex(0);
+        this->ui->le_search->setText("");
+    }
+
+    else if(search.toLower() == "g:") {
+        this->ui->combo_searchfilter->setCurrentIndex(1);
+        this->ui->le_search->setText("");
+    }
+
+    else if(search.toLower() == "p:") {
+        this->ui->combo_searchfilter->setCurrentIndex(2);
+        this->ui->le_search->setText("");
+    }
+
 	Filter filter;
 	int idx = this->ui->combo_searchfilter->currentIndex();
 	switch(idx){
 		case 0:	filter.by_searchstring = BY_FULLTEXT; break;
-		case 1: filter.by_searchstring = BY_FILENAME; break;
-		case 2: filter.by_searchstring = BY_GENRE; break;
+        case 1: filter.by_searchstring = BY_GENRE; break;
+        case 2: filter.by_searchstring = BY_FILENAME; break;
+
 		default: filter.by_searchstring = BY_FULLTEXT; break;
 	}
 
