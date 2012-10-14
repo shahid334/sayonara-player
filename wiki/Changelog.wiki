@@ -1,9 +1,27 @@
-= Changelog= 
+= Changelog = 
 
+== 0.3 -> SVN ==
 
-0.2 -> 0.3
+=== New features ===
 
-== New features ==
+  * Genres
+
+=== Improvements ===
+
+  * Significant better library performance
+  * Less memory consumption
+  * Play soundfiles from command line or desktop
+
+=== Bugfixes ===
+
+  * Import button in playlist
+  * Sorting in library
+
+<br />
+
+== 0.2 -> 0.3 ==
+
+=== New features ===
 
   * Audiostream ripper
   * Alternative cover fetcher (click on cover)
@@ -11,7 +29,7 @@
   * Sample Java client application for remote controlling
 
 
-== Improvements ==
+=== Improvements ===
 
   * Library reloading
   * Delete track only from library
@@ -21,7 +39,7 @@
   * Memory consumption improved
 
 
-== Smaller improvements ==
+=== Smaller improvements ===
 
   * Library info
   * Mousewheel on tray icon
@@ -33,7 +51,7 @@
   * Faster shutdown
 	
 
-== Bugfixes ==
+=== Bugfixes ===
 
   * Unity icon
   * Library sort
