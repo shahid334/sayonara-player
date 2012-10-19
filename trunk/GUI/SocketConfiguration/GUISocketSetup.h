@@ -36,6 +36,8 @@ class GUI_SocketSetup: public QDialog, private Ui::SocketSetupDialog {
 
 	Q_OBJECT
 
+public slots:
+    void show_win();
 
 private slots:
 	void _sl_start_changed(int);

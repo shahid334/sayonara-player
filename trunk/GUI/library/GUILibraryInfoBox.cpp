@@ -39,16 +39,10 @@
 
 
 GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) : QDialog(parent){
-	this->ui = new Ui::Library_Info_Box();
-	this->ui->setupUi(this);
 
-	_db = CDatabaseConnector::getInstance();
-	_lfm = LastFM::getInstance();
+    hide();
 
-	QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "info.png")).scaled(80,80, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	this->ui->lab_icon->setPixmap(pix);
-
-
+    this->ui = NULL;
 
 }
 
@@ -58,7 +52,21 @@ GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 
 
 void GUI_Library_Info_Box::psl_refresh(){
-	MetaDataList v_md;
+
+    if(this->ui == NULL){
+        this->ui = new Ui::Library_Info_Box();
+        this->ui->setupUi(this);
+
+        _db = CDatabaseConnector::getInstance();
+        _lfm = LastFM::getInstance();
+
+        QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "info.png")).scaled(80,80, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        this->ui->lab_icon->setPixmap(pix);
+
+
+    }
+
+    MetaDataList v_md;
 	AlbumList v_albums;
 	ArtistList v_artists;
 
@@ -115,5 +123,4 @@ void GUI_Library_Info_Box::psl_refresh(){
 void GUI_Library_Info_Box::lfm_data_available(){
 
 }
-
 

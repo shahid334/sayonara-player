@@ -543,8 +543,9 @@ void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
 void CLibraryBase::psl_change_id3_tags(const QList<int>& lst){
 
 	// album, artist
-	if(lst.size() == 0 && _vec_md.size() > 0)
-		emit sig_change_id3_tags(_vec_md);
+    if(lst.size() == 0 && _vec_md.size() > 0){
+        emit sig_change_id3_tags(_vec_md);
+    }
 
 	// set of tracks
 	else if(lst.size()){

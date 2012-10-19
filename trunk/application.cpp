@@ -42,10 +42,11 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player              = new GUI_SimplePlayer();
 
     ui_playlist_chooser = new GUI_PlaylistChooser(player->getParentOfPlugin());
-    playlists           = new Playlists();
-    playlist            = new Playlist(/*&app*/);
+
+    playlist            = new Playlist();
     library             = new CLibraryBase();
     lastfm              = LastFM::getInstance();
+    playlists           = new Playlists();
 
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
     ui_stream           = new GUI_Stream(player->getParentOfPlugin());
@@ -55,16 +56,11 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
     ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
-    ui_library_info_box = new GUI_Library_Info_Box(player->centralWidget());
+    //ui_library_info_box = new GUI_Library_Info_Box(player->centralWidget());
     ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
-
     ui_library          = new GUI_Library_windowed(player->getParentOfLibrary(), ui_info_dialog);
-
-
     ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
-
-
 
     remote_socket       = new Socket();
 
@@ -159,7 +155,7 @@ Application::~Application(){
     delete remote_socket;
     delete ui_socket_setup;
     delete ui_playlist;
-    delete ui_library_info_box;
+   // delete ui_library_info_box;
     delete ui_library;
     delete ui_id3_editor;
     delete ui_stream_rec;
@@ -199,9 +195,9 @@ void Application::init_connections(){
    CONNECT (player, sig_sound_engine_changed(QString&), 	plugin_loader,      psl_switch_engine(QString&));
 
    CONNECT (player, show_playlists(),						ui_playlist_chooser, 	show()); // IND
-   CONNECT (player, setupLastFM(),                          ui_lastfm, 		show_win()); // IND
-   CONNECT (player, sig_show_stream_rec(bool),              ui_stream_rec,		psl_show(bool)); // IND
-   CONNECT (player, sig_show_socket(),                      ui_socket_setup,    show()); // IND
+   CONNECT (player, setupLastFM(),                          ui_lastfm,              show_win()); // IND
+   CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
+   CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
 
 
 	   CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND

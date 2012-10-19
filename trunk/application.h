@@ -64,7 +64,7 @@ private:
     GUI_TagEdit*			ui_id3_editor;
     GUI_InfoDialog*			ui_info_dialog;
     GUI_Library_windowed*	ui_library;
-    GUI_Library_Info_Box*	ui_library_info_box;
+    //GUI_Library_Info_Box*	ui_library_info_box;
     GUI_Playlist* 			ui_playlist;
     GUI_SocketSetup*		ui_socket_setup;
     Socket*					remote_socket;

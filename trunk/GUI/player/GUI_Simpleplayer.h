@@ -114,7 +114,7 @@ signals:
     void show_small_playlist_items(bool);
     void sig_sound_engine_changed(QString&);
     void sig_correct_id3(const MetaData&);
-    void sig_show_stream_rec(bool);
+    void sig_show_stream_rec();
 
     void sig_show_socket();
 

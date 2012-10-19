@@ -52,64 +52,26 @@
 
 
 GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog(parent){
-	this->ui = new Ui::InfoDialog();
-	this->ui->setupUi(this);
 
-	_mode = INFO_MODE_TRACKS;
-	_diff_mode = INFO_MODE_SINGLE;
-	_class_name = QString("InfoDialog");
-	_lfm_thread = new LFMTrackChangedThread(_class_name);
-	_lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
+    this->ui = new Ui::InfoDialog();
+    this->ui->setupUi(this);
 
-	_lyric_thread = new LyricLookupThread();
-	_lyric_server = 0;
+    _db = CDatabaseConnector::getInstance();
 
-	QStringList server_list = _lyric_thread->getServers();
-	ui->lmb_server_button->setServers(server_list);
-	ui->lmb_server_button->setText(server_list[0]);
+    _mode = INFO_MODE_TRACKS;
+    _diff_mode = INFO_MODE_SINGLE;
+    _class_name = QString("InfoDialog");
 
-	_cover_lookup = new CoverLookup(_class_name);
-	_db = CDatabaseConnector::getInstance();
+    _initialized = false;
+    ui_tag_edit = tag_edit;
 
-	_lyrics_visible = true;
+    if(ui_tag_edit)
+        ui->tab_widget->addTab(ui_tag_edit, "Edit");
 
-	ui_tag_edit = tag_edit;
-	_alternate_covers = new GUI_Alternate_Covers(this, _class_name );
 
-	if(ui_tag_edit)
-		ui->tab_widget->addTab(ui_tag_edit, "Edit");
+    _lfm_thread = new LFMTrackChangedThread(_class_name);
+    _lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
 
-	connect( _lfm_thread, SIGNAL(sig_corrected_data_available(const QString&)),
-			 this, SLOT(psl_corrected_data_available(const QString&)));
-
-	connect( _lfm_thread, SIGNAL(sig_album_info_available(const QString&)),
-			 this, SLOT(psl_album_info_available(const QString&)));
-
-	connect( _lfm_thread, SIGNAL(sig_artist_info_available(const QString&)),
-			 this, SLOT(psl_artist_info_available(const QString&)));
-
-	connect(this, SIGNAL(sig_search_cover(const MetaData&)),
-			_cover_lookup, SLOT(search_cover(const MetaData&)));
-
-	connect(this, SIGNAL(sig_search_artist_image(const QString&)),
-			_cover_lookup, SLOT(search_artist_image(const QString&)));
-
-	connect(_cover_lookup, SIGNAL(sig_cover_found(QString, QString)),
-			this, 			SLOT(psl_image_available(QString, QString)));
-
-	connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
-	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
-
-	if(ui_tag_edit){
-		connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
-		connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
-	}
-
-	connect(ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
-			this, 					SLOT(psl_lyrics_server_changed(int)));
-
-	connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
-	connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
 
     hide();
 
@@ -653,6 +615,9 @@ void GUI_InfoDialog::setMode(int mode){
 }
 
 void GUI_InfoDialog::show(int tab){
+
+    if(!_initialized) init();
+
 	QWidget::show();
 	if(tab > 2 || tab < 0) tab = TAB_INFO;
 	ui->tab_widget->setCurrentIndex(tab);
@@ -697,5 +662,59 @@ void GUI_InfoDialog::alternate_covers_available(QString caller_class){
 	Q_UNUSED(caller_class);
 
 	prepare_cover();
+
+}
+
+
+void GUI_InfoDialog::init(){
+
+    _initialized = true;
+
+
+    _lyric_thread = new LyricLookupThread();
+    _lyric_server = 0;
+
+    _cover_lookup = new CoverLookup(_class_name);
+
+    _lyrics_visible = true;
+    _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
+
+
+    QStringList server_list = _lyric_thread->getServers();
+    ui->lmb_server_button->setServers(server_list);
+    ui->lmb_server_button->setText(server_list[0]);
+
+
+    connect( _lfm_thread, SIGNAL(sig_corrected_data_available(const QString&)),
+             this, SLOT(psl_corrected_data_available(const QString&)));
+
+    connect( _lfm_thread, SIGNAL(sig_album_info_available(const QString&)),
+             this, SLOT(psl_album_info_available(const QString&)));
+
+    connect( _lfm_thread, SIGNAL(sig_artist_info_available(const QString&)),
+             this, SLOT(psl_artist_info_available(const QString&)));
+
+    connect(this, SIGNAL(sig_search_cover(const MetaData&)),
+            _cover_lookup, SLOT(search_cover(const MetaData&)));
+
+    connect(this, SIGNAL(sig_search_artist_image(const QString&)),
+            _cover_lookup, SLOT(search_artist_image(const QString&)));
+
+    connect(_cover_lookup, SIGNAL(sig_cover_found(QString, QString)),
+            this, 			SLOT(psl_image_available(QString, QString)));
+
+    connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
+    connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
+
+    if(ui_tag_edit){
+        connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
+        connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
+    }
+
+    connect(ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
+            this, 					SLOT(psl_lyrics_server_changed(int)));
+
+    connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
+    connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
 
 }

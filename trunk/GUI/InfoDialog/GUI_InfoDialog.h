@@ -92,6 +92,9 @@ private:
 	QString 				_class_name;
 	int						_lyric_server;
 	bool					_lyrics_visible;
+    bool                    _initialized;
+
+
 
 
 
@@ -112,6 +115,8 @@ private:
 	void prepare_cover();
 	void prepare_lfm_info();
 	void prepare_lyrics();
+
+    void init();
 
 
 };

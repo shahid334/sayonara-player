@@ -31,23 +31,7 @@
 
 GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) : QDialog(parent){
 
-	ui = new Ui::SocketSetupDialog();
-	ui->setupUi(this);
-
-	_db = CSettingsStorage::getInstance();
-	_socket_from = _db->getSocketFrom();
-	_socket_to = _db->getSocketTo();
-
-	if(_socket_from == 0 ||  _socket_from > 65535) _socket_from = 1024;
-	if(_socket_to == 0 ||  _socket_to > 65535) _socket_to = 1034;
-
-	this->ui->cb_activate->setChecked(_db->getSocketActivated());
-	this->ui->sb_start->setValue(_socket_from);
-	this->ui->sb_increment->setValue(_socket_to);
-
-	connect(this->ui->sb_start, SIGNAL(valueChanged(int)), this, SLOT(_sl_start_changed(int)));
-	connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(_sl_ok_pressed()));
-
+    this->ui = NULL;
     hide();
 
 }
@@ -74,5 +58,29 @@ void GUI_SocketSetup::_sl_ok_pressed(){
 
     hide();
     close();
+}
+
+void GUI_SocketSetup::show_win(){
+
+    if(this->ui == NULL){
+        ui = new Ui::SocketSetupDialog();
+        ui->setupUi(this);
+
+        _db = CSettingsStorage::getInstance();
+        _socket_from = _db->getSocketFrom();
+        _socket_to = _db->getSocketTo();
+
+        if(_socket_from == 0 ||  _socket_from > 65535) _socket_from = 1024;
+        if(_socket_to == 0 ||  _socket_to > 65535) _socket_to = 1034;
+
+        this->ui->cb_activate->setChecked(_db->getSocketActivated());
+        this->ui->sb_start->setValue(_socket_from);
+        this->ui->sb_increment->setValue(_socket_to);
+
+        connect(this->ui->sb_start, SIGNAL(valueChanged(int)), this, SLOT(_sl_start_changed(int)));
+        connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(_sl_ok_pressed()));
+    }
+
+    this->show();
 }
 

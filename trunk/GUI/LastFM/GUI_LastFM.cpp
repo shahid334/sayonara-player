@@ -41,21 +41,7 @@ using namespace std;
 
 GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 
-	this->ui = new Ui_GUI_LastFM_Dialog();
-	this->ui->setupUi(this);
-
-	bool enabled = CSettingsStorage::getInstance()->getLastFMActive();
-	this->ui->cb_activate->setChecked(enabled);
-	setLFMActive(enabled);
-
-	this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
-	bool checked = CSettingsStorage::getInstance()->getLastFMCorrections();
-	this->ui->cb_correct_id3->setChecked(checked);
-
-	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
-	connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
-	connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(cb_activate_toggled(bool)));
-
+    this->ui = NULL;
     hide();
 }
 
@@ -113,6 +99,23 @@ void GUI_LastFM::save_button_pressed(){
 
 
 void GUI_LastFM::show_win(){
+
+    if(ui == NULL){
+        this->ui = new Ui_GUI_LastFM_Dialog();
+        this->ui->setupUi(this);
+
+        bool enabled = CSettingsStorage::getInstance()->getLastFMActive();
+        this->ui->cb_activate->setChecked(enabled);
+        setLFMActive(enabled);
+
+        this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
+        bool checked = CSettingsStorage::getInstance()->getLastFMCorrections();
+        this->ui->cb_correct_id3->setChecked(checked);
+
+        connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+        connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
+        connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(cb_activate_toggled(bool)));
+    }
 
     QString user, password;
     CSettingsStorage::getInstance() -> getLastFMNameAndPW(user, password);

@@ -188,7 +188,7 @@ void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
 // private slot
 void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
 
-	emit sig_show_stream_rec(b);
+    emit sig_show_stream_rec();
 }
 
 // prvt slot

@@ -434,8 +434,6 @@ void GUI_SimplePlayer::setProgressJump(int percent){
 
 void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
-
-
     if (m_completeLength_ms != 0) {
 
 		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
@@ -448,6 +446,7 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
     else if(pos_sec > m_completeLength_ms / 1000){
     	this->ui->songProgress->setValue(0);
     }
+
 
     if(!this->ui->songProgress->isSearching()){
         int min, sec;
@@ -605,8 +604,17 @@ void GUI_SimplePlayer::stopClicked(bool) {
 }
 
 void GUI_SimplePlayer::backwardClicked(bool) {
-	this->ui->albumCover->setFocus();
-	emit backward();
+
+    this->ui->albumCover->setFocus();
+    int cur_pos_sec =  (m_completeLength_ms * this->ui->songProgress->value()) / 100000;
+    if(cur_pos_sec > 3){
+        setProgressJump(0);
+
+    }
+
+    else{
+        emit backward();
+    }
 }
 
 void GUI_SimplePlayer::forwardClicked(bool) {

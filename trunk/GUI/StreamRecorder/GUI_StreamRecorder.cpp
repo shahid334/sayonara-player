@@ -33,35 +33,7 @@
 
 GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) {
 
-	ui = new Ui::GUI_StreamRecorder();
-	ui->setupUi(this);
-
-	_settings = CSettingsStorage::getInstance();
-
-	_path = _settings->getStreamRipperPath();
-	_is_active = _settings->getStreamRipper();
-	_is_complete_tracks = _settings->getStreamRipperCompleteTracks();
-	_is_create_playlist = _settings->getStreamRipperPlaylist();
-
-	this->ui->le_path->setText(_path);
-	this->ui->cb_activate->setChecked(_is_active);
-	this->ui->cb_complete_tracks->setChecked(_is_complete_tracks);
-	this->ui->cb_create_playlist->setChecked(_is_create_playlist);
-
-	this->ui->cb_complete_tracks->setEnabled(_is_active);
-	this->ui->cb_create_playlist->setEnabled(_is_active);
-	this->ui->btn_path->setEnabled(_is_active);
-
-	QPixmap pm(QPixmap(Helper::getIconPath() + "rec.png"));
-
-	this->ui->lab_icon->setPixmap( pm.scaledToWidth(this->ui->lab_icon->maximumWidth()) );
-	this->setModal(true);
-
-	connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(sl_cb_activate_toggled(bool)));
-	connect(this->ui->cb_complete_tracks, SIGNAL(toggled(bool)), this, SLOT(sl_cb_complete_tracks_toggled(bool)));
-	connect(this->ui->cb_create_playlist, SIGNAL(toggled(bool)), this, SLOT(sl_cb_create_playlist_toggled(bool)));
-	connect(this->ui->btn_path, SIGNAL(clicked()), this, SLOT(sl_btn_path_clicked()));
-	connect(this->ui->btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
+    this->ui = NULL;
 
     hide();
 }
@@ -101,8 +73,40 @@ void GUI_StreamRecorder::sl_btn_path_clicked(){
 	}
 }
 
-void GUI_StreamRecorder::psl_show(bool b){
-	Q_UNUSED(b);
+void GUI_StreamRecorder::show_win(){
+
+    if(ui == NULL){
+        ui = new Ui::GUI_StreamRecorder();
+        ui->setupUi(this);
+
+        _settings = CSettingsStorage::getInstance();
+
+        _path = _settings->getStreamRipperPath();
+        _is_active = _settings->getStreamRipper();
+        _is_complete_tracks = _settings->getStreamRipperCompleteTracks();
+        _is_create_playlist = _settings->getStreamRipperPlaylist();
+
+        this->ui->le_path->setText(_path);
+        this->ui->cb_activate->setChecked(_is_active);
+        this->ui->cb_complete_tracks->setChecked(_is_complete_tracks);
+        this->ui->cb_create_playlist->setChecked(_is_create_playlist);
+
+        this->ui->cb_complete_tracks->setEnabled(_is_active);
+        this->ui->cb_create_playlist->setEnabled(_is_active);
+        this->ui->btn_path->setEnabled(_is_active);
+
+        QPixmap pm(QPixmap(Helper::getIconPath() + "rec.png"));
+
+        this->ui->lab_icon->setPixmap( pm.scaledToWidth(this->ui->lab_icon->maximumWidth()) );
+        this->setModal(true);
+
+        connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(sl_cb_activate_toggled(bool)));
+        connect(this->ui->cb_complete_tracks, SIGNAL(toggled(bool)), this, SLOT(sl_cb_complete_tracks_toggled(bool)));
+        connect(this->ui->cb_create_playlist, SIGNAL(toggled(bool)), this, SLOT(sl_cb_create_playlist_toggled(bool)));
+        connect(this->ui->btn_path, SIGNAL(clicked()), this, SLOT(sl_btn_path_clicked()));
+        connect(this->ui->btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
+    }
+
     show();
 }
 

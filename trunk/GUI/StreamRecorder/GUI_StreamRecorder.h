@@ -50,7 +50,7 @@ public:
 		void sl_ok();
 
 	public slots:
-		void psl_show(bool);
+        void show_win();
 
 	public:
 		GUI_StreamRecorder(QWidget* parent=0);
