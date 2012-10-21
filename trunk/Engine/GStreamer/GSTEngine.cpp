@@ -32,6 +32,10 @@
 #include <gst/app/gstappsrc.h>
 #include <string>
 #include <vector>
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
+
 
 #include <QObject>
 #include <QDate>
@@ -41,6 +45,8 @@
 #include <QFile>
 #include <QDir>
 #include <qplugin.h>
+
+
 
 using namespace std;
 

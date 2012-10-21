@@ -40,6 +40,11 @@
 #include <stdlib.h>
 #include <ctime>
 
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
+
+
 using namespace std;
 
 static size_t lfm_webpage_bytes;

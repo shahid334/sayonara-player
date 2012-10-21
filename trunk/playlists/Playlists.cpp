@@ -28,6 +28,11 @@
 #include <QDebug>
 #include <QMessageBox>
 
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
+
+
 
 Playlists::Playlists() {
 	_import_state = STATE_IMPORT_SUCCESS;

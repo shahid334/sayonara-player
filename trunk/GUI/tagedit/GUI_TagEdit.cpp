@@ -40,6 +40,11 @@
 #include <QWidget>
 #include <QCompleter>
 
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
+
+
 
 GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     _parent = parent;

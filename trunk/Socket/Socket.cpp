@@ -31,6 +31,11 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#ifdef Q_OS_LINUX
+#include <unistd.h>
+#endif
+
+
 Socket::Socket() {
 
 	CSettingsStorage* db = CSettingsStorage::getInstance();
