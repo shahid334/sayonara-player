@@ -255,7 +255,7 @@ bool LFMTrackChangedThread::search_similar_artists(){
 
 		_chosen_ids.clear();
 		for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
-
+            qDebug() << it.value();
 			_chosen_ids.push_back(it.value());
 		}
 

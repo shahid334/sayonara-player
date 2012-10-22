@@ -845,6 +845,8 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
             this->setHidden(true);
         }
 
+        else this->showMinimized();
+
 
         break;
     case QSystemTrayIcon::MiddleClick:

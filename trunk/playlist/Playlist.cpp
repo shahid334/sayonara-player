@@ -676,6 +676,7 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
 	bool is_track_already_in = false;
 	MetaData md;
 
+
 	do {
 		int artist_id = artists_copy.at(cur_artist_idx);
 		MetaDataList vec_tracks;
@@ -688,6 +689,7 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
 			int rnd_track = (rand() % vec_tracks.size());
 			md = vec_tracks.at(rnd_track);
 
+
 			// search playlist
 			for(uint i=0; i<_v_meta_data.size(); i++){
 				if(_v_meta_data[i].id == md.id){
@@ -697,11 +699,12 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
 			}
 
 			if(!is_track_already_in) break;
-
 		}
 
 		cur_artist_idx++;
 	} while(is_track_already_in && cur_artist_idx < artists_copy.size());
+
+    if(md.id < 0) return;
 
 	if(!is_track_already_in)
 		_v_meta_data.push_back(md);
