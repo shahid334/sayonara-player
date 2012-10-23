@@ -31,6 +31,13 @@
 #include "playlists/Playlists.h"
 #include "Socket/Socket.h"
 
+#include <QMap>
+
+#include <fstream>
+#include <string>
+
+using namespace std;
+
 Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
 {
     app                = qapp;
@@ -89,8 +96,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     qDebug() << "Init connections";
     init_connections();
 
-
-
     qDebug() << "setup player";
     player->setWindowTitle("Sayonara (0.3)");
     player->setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -121,26 +126,19 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     listen->setVolume(vol);
     listen->load_equalizer(vec_eq_setting);
 
-
-
-
     library->loadDataFromDb();
 
     QString user, password;
     if(set->getLastFMActive()){
         set->getLastFMNameAndPW(user, password);
         player->suppress_warning(true);
-        bool success = LastFM::getInstance()->lfm_login( user,password, true );
-        if(!success){
-            QMessageBox::warning(player->centralWidget(), "LastFM warning", "You are not logged in to LastFM.<br />Deactivate LastFM to disable this warning");
-        }
-
-        player->suppress_warning(false);
-
+        LastFM::getInstance()->lfm_login( user,password, true );
     }
 
     playlist->ui_loaded();
     playlists->ui_loaded();
+
+    getVersion();
 }
 
 Application::~Application(){
@@ -155,7 +153,6 @@ Application::~Application(){
     delete remote_socket;
     delete ui_socket_setup;
     delete ui_playlist;
-   // delete ui_library_info_box;
     delete ui_library;
     delete ui_id3_editor;
     delete ui_stream_rec;
@@ -173,6 +170,8 @@ Application::~Application(){
 
 
 void Application::init_connections(){
+
+
 
 
    CONNECT (player, pause(),                                listen,				pause());
@@ -276,8 +275,7 @@ void Application::init_connections(){
 	   CONNECT(ui_library, sig_play_next_all_tracks(),                          library,		psl_play_next_all_tracks());
 
 	   CONNECT(ui_lastfm, sig_activated(bool), player, psl_lfm_activated(bool));
-	   CONNECT(ui_lastfm, sig_activated(bool), ui_playlist, psl_lfm_activated(bool));
-	   CONNECT(ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		psl_login(QString, QString));
+       CONNECT(ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		psl_login(QString, QString));
 
 	   CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
 	   CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
@@ -289,9 +287,8 @@ void Application::init_connections(){
 	   CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
 
 
-	   CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,		psl_similar_artists_available(const QList<int>&));
-	   CONNECT(lastfm,	sig_last_fm_logged_in(bool),							ui_playlist,	last_fm_logged_in(bool));
-	   CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
+       CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
+       CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
 	   CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),		playlist,		psl_new_radio_playlist_available(const MetaDataList&));
 	   CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),     player,		lfm_info_fetched(const MetaData&, bool, bool));
 
@@ -343,5 +340,28 @@ void Application::setFiles2Play(QStringList filelist){
         if(playlist->get_num_tracks() > 0)
             playlist->psl_play();
     }
+}
 
+
+
+void Application::getVersion(){
+
+
+
+    ifstream istr;
+    QString version_file = Helper::getSharePath() + "/VERSION";
+
+    istr.open(version_file.toUtf8()  );
+    if(!istr || !istr.is_open()) return;
+
+    QMap<QString, int> map;
+
+    while(istr.good()){
+        string type;
+        int version;
+        istr >> type >> version;
+        map[QString(type.c_str())] = version;
+    }
+
+    istr.close();
 }

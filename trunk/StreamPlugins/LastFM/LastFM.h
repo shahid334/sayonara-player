@@ -34,6 +34,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
+#include "StreamPlugins/LastFM/LFMLoginThread.h"
 
 
 #include <QObject>
@@ -72,12 +73,13 @@ Q_OBJECT
 	private slots:
 		void _sl_similar_artists_available(const QString&, const QList<int>&);
 		void _sl_corrected_data_available(const QString&);
+        void _login_thread_finished();
 
 	public:
 		static LastFM * getInstance();
 
 
-		bool lfm_login(QString username, QString password, bool should_emit=true);
+        void lfm_login(QString username, QString password, bool should_emit=true);
 		void lfm_get_friends(QStringList& );
 		bool lfm_get_user_info(QMap<QString, QString>&);
 		bool lfm_is_logged_in();
@@ -110,6 +112,7 @@ Q_OBJECT
 		QString			_class_name;
 
 		bool 			_logged_in;
+        bool            _emit_login;
 
 		QString			_username;
 		QString			_auth_token;
@@ -120,6 +123,7 @@ Q_OBJECT
 		CSettingsStorage* _settings;
 
 		LFMTrackChangedThread* _track_changed_thread;
+        LFMLoginThread* _login_thread;
 };
 
 #endif /* LASTFM_H_ */

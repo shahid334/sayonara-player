@@ -103,9 +103,9 @@ void CLibraryBase::importDirectory(QString directory){
 
 void CLibraryBase::importFiles(const MetaDataList& v_md){
 
-	MetaDataList v_md_new = v_md;
-	bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
-	emit sig_import_result(success);
+    MetaDataList v_md_new = v_md;
+    bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
+    emit sig_import_result(success);
 }
 
 
@@ -113,8 +113,8 @@ void CLibraryBase::importFiles(const MetaDataList& v_md){
 
 void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy){
 
-	QDir lib_dir(m_library_path);
-	QDir src_dir(m_src_dir);
+    QDir lib_dir(m_library_path);
+    QDir src_dir(m_src_dir);
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 	if(!copy){
@@ -125,7 +125,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 		MetaDataList v_md;
 		foreach(QString filename, files){
 			MetaData md;
-			md = _db->getTrackByPath(md.filepath);
+            md = _db->getTrackByPath(md.filepath);
 
 			if(md.id < 0){
                 if(!ID3::getMetaDataOfFile(md)) continue;

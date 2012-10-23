@@ -40,6 +40,51 @@
 #define LFM_THREAD_TASK_FETCH_ALBUM_INFO 	1<<4
 #define LFM_THREAD_TASK_FETCH_USER_INFO 	1<<5
 
+enum Quality{
+    Quality_Poor = 0,
+    Quality_Well = 1,
+    Quality_Very_Good = 2
+};
+
+struct ArtistMatch{
+
+    static const int Quality_Poor = 0;
+    static const int Quality_Well = 1;
+    static const int Quality_Very_Good = 2;
+
+    QMap<QString, double> very_good;
+    QMap<QString, double> well;
+    QMap<QString, double> poor;
+
+    QString artist;
+
+    bool operator ==(ArtistMatch am){
+        return (artist == am.artist);
+    }
+
+    void add(QString artist, double match){
+        if(match > 0.15) very_good[artist] = match;
+        else if(match > 0.05) well[artist] = match;
+        else poor[artist] = match;
+    }
+
+    QMap<QString, double> get(Quality q){
+        switch(q){
+            case Quality_Poor:
+                    return poor;
+            case Quality_Well:
+                return well;
+            case Quality_Very_Good:
+                return very_good;
+            default:
+                return very_good;
+        }
+
+        return very_good;
+    }
+
+
+};
 
 class LFMTrackChangedThread : public QThread{
 
@@ -125,7 +170,7 @@ private:
 	QList<int>	_chosen_ids;
 
 	bool search_similar_artists();
-	QMap<QString, int> filter_available_artists(QMap<QString, double> *artists, int idx);
+    QMap<QString, int> filter_available_artists(QMap<QString, double>& artists);
 
 
 	/* Track info */
@@ -140,6 +185,7 @@ private:
 	QMap<QString, QString>		_album_data;
 	QMap<QString, QString>		_artist_data;
 	QMap<QString, QString>		_user_data;
+    QMap<QString, ArtistMatch >   _sim_artists_cache;
 
 	bool 		get_corrected_track_info(MetaData& md, bool& loved, bool& corrected);
 	bool 		get_artist_info(QString artist);

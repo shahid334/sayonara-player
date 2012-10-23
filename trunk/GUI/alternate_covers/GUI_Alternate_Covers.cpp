@@ -134,7 +134,7 @@ void GUI_Alternate_Covers::start(int album_artist_id, bool search_for_album){
 	}
 
 	this->show();
-	this->search_button_pressed();
+    this->search_button_pressed();
 }
 
 
@@ -207,7 +207,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 		emit sig_covers_changed(_calling_class);
 
 		_filelist.clear();
-		update_model(-1);
+        update_model();
         hide();
 		close();
 	}
@@ -218,9 +218,10 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 void GUI_Alternate_Covers::cancel_button_pressed(){
 
+
 	_cov_lookup->terminate_thread();
 	_filelist.clear();
-	update_model(-1);
+    update_model();
     hide();
 	this->close();
 }
@@ -228,9 +229,12 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 
 void GUI_Alternate_Covers::search_button_pressed(){
 
+    _cur_idx = -1;
+
 	if(ui->btn_search->text().compare("Stop") == 0){
 		_cov_lookup->terminate_thread();
 		ui->btn_search->setText("Search");
+        ui->pb_progress->setVisible(false);
 		return;
 	}
 
@@ -259,31 +263,33 @@ void GUI_Alternate_Covers::search_button_pressed(){
 
 }
 
-void GUI_Alternate_Covers::update_model(int cur_selected){
+void GUI_Alternate_Covers::update_model(){
 
-	int n_rows = _filelist.size() / _model->columnCount() + 1;
-	if (_filelist.size() % _model->columnCount() == 0) n_rows--;
+    _model->removeRows(0, _model->rowCount());
+    _model->insertRows(0, 2);
+    qDebug() << "cur idx = " << _cur_idx;
 
+    for(int i=0; i<_filelist.size(); i++){
 
-	_model->removeRows(0, _model->rowCount());
-	_model->insertRows(0, n_rows);
+        QString str = _filelist[i];
+        QString str_tmp = str.right(str.size() - (str.lastIndexOf(QDir::separator()) + 1));
+        str_tmp = str_tmp.left(str_tmp.size() - 4);
+        str_tmp.replace("image_", "");
+        int number = str_tmp.toInt() - 1;
 
-	for(int i=0; i<_filelist.size(); i++){
+        int row = number / _model->columnCount();
+        int col = number % _model->columnCount();
+        QModelIndex idx = _model->index(row, col);
 
-		int row = i / _model->columnCount();
-		int col = i % _model->columnCount();
-		QModelIndex idx = _model->index(row, col);
+        this->ui->tv_images->setColumnWidth(col, 100);
+        this->ui->tv_images->setRowHeight(row,100);
 
-		this->ui->tv_images->setColumnWidth(col, 100);
-		this->ui->tv_images->setRowHeight(row,100);
-
-		QString str = _filelist[i];
-
-		if(i == cur_selected) str.append(",1");
-		else str.append(",0");
+        if(number == _cur_idx) str.append(",1");
+        else str.append(",0");
 
 		_model->setData(idx, str, Qt::EditRole);
 	}
+
 }
 
 void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
@@ -291,7 +297,8 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
 	int col = idx.column();
 
 	_cur_idx = row * _model->columnCount() + col;
-	update_model(_cur_idx);
+
+    update_model();
 }
 
 
@@ -299,7 +306,7 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 
 	if(classname != _class_name) return;
 
-	_filelist.clear();
+    _filelist.clear();
 
 	QDir dir(_tmp_dir);
 	QStringList entrylist;
@@ -317,7 +324,7 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 	foreach (QString f, entrylist)
 		_filelist << dir.absoluteFilePath(f);
 
-	update_model(-1);
+    update_model();
 
 	ui->pb_progress->setVisible(false);
 	ui->btn_search->setText("Search");
@@ -344,7 +351,7 @@ void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
 		_filelist << dir.absoluteFilePath(f);
 
 
-	update_model(-1);
+    update_model();
 
 	ui->pb_progress->setTextVisible(false);
 	ui->pb_progress->setVisible(true);

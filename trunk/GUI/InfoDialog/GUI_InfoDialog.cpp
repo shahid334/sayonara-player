@@ -458,6 +458,8 @@ void GUI_InfoDialog::prepare_tracks(){
 	QStringList pathlist;
 	QString header, info, paths;
 	QString tooltip;
+    QString library_path = CSettingsStorage::getInstance()->getLibraryPath();
+
 
 	foreach(MetaData md, _v_md){
 		int album_id = md.album_id;
@@ -544,10 +546,15 @@ void GUI_InfoDialog::prepare_tracks(){
 		info+= BOLD("Length:&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
 	}
 
-	foreach(QString path, pathlist){
-		paths += path + CAR_RET;
-	}
+    paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
+    foreach(QString path, pathlist){
+        QString tmppath = path;
+        //path.replace(library_path, BOLD("${ML}"));
+        path.replace(library_path, ".");
+        path = LINK(tmppath, path);
+        paths += (path + CAR_RET);
+    }
 
 	this->ui->lab_heading->setText(header);
 	this->ui->lab_heading->setToolTip(tooltip);

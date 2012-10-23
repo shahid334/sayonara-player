@@ -74,7 +74,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 				QString filename = data_lst[0];
 				is_selected = (data_lst[1].toInt() == 1);
 
-				if(is_selected) label.setStyleSheet("background-color: black;");
+                if(is_selected) label.setStyleSheet("background-color: #e8841a;");
 
 
 

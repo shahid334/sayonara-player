@@ -204,6 +204,7 @@ namespace Helper{
 
 	QString getIconPath();
 	QString getSayonaraPath();
+    QString getSharePath();
 
 	QString get_artist_image_path(QString artist);
 	QString get_cover_path(QString artist, QString album);

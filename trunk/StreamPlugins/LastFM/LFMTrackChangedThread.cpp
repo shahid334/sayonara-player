@@ -162,133 +162,139 @@ bool LFMTrackChangedThread::update_now_playing(){
 
 bool LFMTrackChangedThread::search_similar_artists(){
 
-	bool success;
-	QString artist_name = _md.artist;
-	artist_name.replace("&", "&amp;");
+    bool success;
+    QString artist_name = _md.artist;
 
-	 srand ( time(NULL) );
+    bool callLFM = true;
 
-		QString url = 	QString("http://ws.audioscrobbler.com/2.0/?");
-		QString encoded = QUrl::toPercentEncoding( artist_name );
-		url += QString("method=artist.getsimilar&");
-		url += QString("artist=") + encoded + QString("&");
-		url += QString("api_key=") + LFM_API_KEY;
 
-		QDomDocument doc("similar_artists");
+    artist_name.replace("&", "&amp;");
 
-		success = lfm_wa_call_url_xml(url, doc);
-		if(!success) return false;
+    ArtistMatch artist_match;
+    artist_match.artist = artist_name;
 
-		QDomElement docElement = doc.documentElement();
-		QDomNode similarartists = docElement.firstChild();			// similarartists
 
-		// 0= very good match
-		// 1= good match
-		// 2= ok match
-		QMap<QString, double> artist_match[3];
+    // check if already in cache
+    if(_sim_artists_cache.keys().contains(artist_name)){
+        artist_match = _sim_artists_cache.value(artist_name);
+        callLFM = false;
+    }
 
-		if(similarartists.hasChildNodes()){
+    srand ( time(NULL) );
 
-			QString artist_name = "";
-			double match = -1.0;
+    if(callLFM){
 
-			for(int idx_artist=0; idx_artist < similarartists.childNodes().size(); idx_artist++){
-				QDomNode artist = similarartists.childNodes().item(idx_artist);
+        QString url = 	QString("http://ws.audioscrobbler.com/2.0/?");
+        QString encoded = QUrl::toPercentEncoding( artist_name );
+        url += QString("method=artist.getsimilar&");
+        url += QString("artist=") + encoded + QString("&");
+        url += QString("api_key=") + LFM_API_KEY;
 
-				if(artist.nodeName().toLower().compare("artist") != 0) continue;
+        QDomDocument doc("similar_artists");
 
-				if(!artist.hasChildNodes()) continue;
+        success = lfm_wa_call_url_xml(url, doc);
+        if(!success) {
+            qDebug() << "could not call url: " << url;
+            return false;
+        }
 
-				for(int idx_content = 0; idx_content <artist.childNodes().size(); idx_content++){
-					QDomNode content = artist.childNodes().item(idx_content);
-					if(content.nodeName().toLower().contains("name")){
-						QDomElement e = content.toElement();
-						if(!e.isNull()){
-							artist_name = e.text();
-						}
-					}
+        QDomElement docElement = doc.documentElement();
+        QDomNode similarartists = docElement.firstChild();			// similarartists
 
-					if(content.nodeName().toLower().contains("match")){
-						QDomElement e = content.toElement();
-						if(!e.isNull()){
-							match = e.text().toDouble();
-						}
-					}
+        if(similarartists.hasChildNodes()){
 
-					if(artist_name.size() > 0 && match >= 0) {
-						if(match > 0.1){
-							artist_match[0][artist_name] = match;
-						}
+            QString artist_name = "";
+            double match = -1.0;
 
-						else if(match > 0.03){
-							artist_match[1][artist_name] = match;
-						}
+            for(int idx_artist=0; idx_artist < similarartists.childNodes().size(); idx_artist++){
+                QDomNode artist = similarartists.childNodes().item(idx_artist);
 
-						else {
-							artist_match[2][artist_name] = match;
-						}
-						artist_name = "";
-						match = -1.0;
-						break;
-					}
-				}
-			}
+                if(artist.nodeName().toLower().compare("artist") != 0) continue;
 
-		}
+                if(!artist.hasChildNodes()) continue;
 
-		else
-			return false;
+                for(int idx_content = 0; idx_content <artist.childNodes().size(); idx_content++){
+                    QDomNode content = artist.childNodes().item(idx_content);
+                    if(content.nodeName().toLower().contains("name")){
+                        QDomElement e = content.toElement();
+                        if(!e.isNull()){
+                            artist_name = e.text();
+                        }
+                    }
 
-		doc.clear();
+                    if(content.nodeName().toLower().contains("match")){
+                        QDomElement e = content.toElement();
+                        if(!e.isNull()){
+                            match = e.text().toDouble();
+                        }
+                    }
 
-		// get random list where to search the artist in
-		int idx = 0;
-		int rnd = rand() % 1000;
-		if(rnd > 250) idx = 0;			// [250-999]
-		else if(rnd > 50) idx = 1;		// [50-250]
-		else idx = 2;
+                    if(artist_name.size() > 0 && match > 0) {
+                        artist_match.add(artist_name, match);
+                        artist_name = "";
+                        match = -1.0;
+                        break;
+                    }
+                }
+            }
+        }
 
-		QMap<QString, int> possible_artists =
-				filter_available_artists(artist_match, idx);
+        else{
+            qDebug() << "empty xml document from " << url;
+            return false;
+        }
 
-		if(possible_artists.size() == 0) return false;
+        doc.clear();
+        _sim_artists_cache[artist_name] = artist_match;
+    } // end found in cache
 
-		_chosen_ids.clear();
-		for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
-            qDebug() << it.value();
-			_chosen_ids.push_back(it.value());
-		}
 
-		return (_chosen_ids.size() > 0);
+
+    // get random list where to search the artist in
+    Quality quality, quality_org;
+    int rnd = rand() % 1000;
+    if(rnd > 250) quality = Quality_Very_Good;			// [250-999]
+    else if(rnd > 50) quality = Quality_Well;		// [50-250]
+    else quality = Quality_Poor;
+
+    quality_org = quality;
+    QMap<QString, int> possible_artists;
+
+    while(possible_artists.size() == 0){
+
+        QMap<QString, double> quality_map = artist_match.get(quality);
+        possible_artists = filter_available_artists(quality_map);
+        if(quality == Quality_Poor) quality = Quality_Very_Good;
+        else if(quality == Quality_Well) quality = Quality_Poor;
+        else if(quality == Quality_Very_Good) quality = Quality_Well;
+        if(quality == quality_org) break;
+    }
+
+    if(possible_artists.size() == 0) return false;
+
+    _chosen_ids.clear();
+    for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
+        _chosen_ids.push_back(it.value());
+    }
+
+    return (_chosen_ids.size() > 0);
 }
 
 
 
-QMap<QString, int> LFMTrackChangedThread::filter_available_artists(QMap<QString, double> *artists, int idx){
+QMap<QString, int> LFMTrackChangedThread::filter_available_artists(QMap<QString, double>& artist_match){
 
-		int start_idx = idx;
+        QMap<QString, int> possible_artists;
 
-		QMap<QString, int> possible_artists;
+        foreach(QString key, artist_match.keys()){
 
-		while(possible_artists.keys().size() == 0){
+            int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
+            if(artist_id != -1){
+                possible_artists[key] = artist_id;
+            }
+        }
 
-			foreach(QString key, artists[idx].keys()){
-
-				int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
-				if(artist_id != -1){
-					possible_artists[key] = artist_id;
-				}
-			}
-
-			if(possible_artists.keys().size() == 0) {
-				idx--;
-				if(idx == -1) idx = 2;
-				if(start_idx == idx) break;
-			}
-			else break;
-		}
-
-		return possible_artists;
+        return possible_artists;
 }
 
 bool LFMTrackChangedThread::fetch_corrections(MetaData& md, bool& loved, bool& corrected){

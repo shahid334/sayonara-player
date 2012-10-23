@@ -95,10 +95,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	this->ui->btn_append->setChecked(_playlist_mode.append);
 	this->ui->btn_repAll->setChecked(_playlist_mode.repAll);
 
-	if(settings->getLastFMActive() && LastFM::getInstance()->lfm_is_logged_in())
-		this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
-	else
-		this->ui->btn_dynamic->setChecked(false);
+
+    this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
 
 	this->ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
 	this->ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
@@ -200,21 +198,14 @@ void GUI_Playlist::library_path_changed(QString path){
 void GUI_Playlist::check_dynamic_play_button(){
 
 	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
-	bool lfm_active = CSettingsStorage::getInstance()->getLastFMActive() && LastFM::getInstance()->lfm_is_logged_in();
 
 
 	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
-		this->ui->btn_dynamic->setEnabled(false);
 		this->ui->btn_dynamic->setToolTip("Please set library path first");
 	}
 
-	if(!lfm_active){
-		this->ui->btn_dynamic->setEnabled(false);
-		this->ui->btn_dynamic->setToolTip("Please configure LastFM");
-	}
 
 	else{
-		this->ui->btn_dynamic->setEnabled(true);
 		this->ui->btn_dynamic->setToolTip("Dynamic playing");
 	}
 }
@@ -715,18 +706,11 @@ void GUI_Playlist::edit_id3_but_pressed(){
 	emit edit_id3_signal();
 }
 
-void GUI_Playlist::last_fm_logged_in(bool success){
 
-	this->ui->btn_dynamic->setEnabled(success);
-}
-
-void GUI_Playlist::psl_lfm_activated(bool b){
-	this->ui->btn_dynamic->setEnabled(b);
-}
 
 
 void GUI_Playlist::import_button_clicked(){
-	emit sig_import_to_library(false);
+    emit sig_import_to_library(false);
 }
 
 void GUI_Playlist::import_result(bool success){

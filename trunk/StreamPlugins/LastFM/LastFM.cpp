@@ -72,6 +72,8 @@ LastFM::LastFM() {
 	_class_name = QString("LastFM");
 	_logged_in = false;
 	_track_changed_thread = 0;
+    _login_thread = new LFMLoginThread();
+    this->connect(_login_thread, SIGNAL(finished()), this, SLOT(_login_thread_finished()));
 	_settings = CSettingsStorage::getInstance();
 }
 
@@ -86,9 +88,7 @@ LastFM::~LastFM() {
 
 bool LastFM::_lfm_init_track_changed_thread(){
 
-	if(!_logged_in) return false;
-
-	_track_changed_thread = new LFMTrackChangedThread(_class_name);
+    _track_changed_thread = new LFMTrackChangedThread(_class_name);
 
 	if(_track_changed_thread){
 			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available(const QString&)),
@@ -130,87 +130,65 @@ bool LastFM::lfm_is_logged_in(){
 	return _logged_in;
 }
 
-bool LastFM::lfm_login(QString username, QString password, bool should_emit){
+
+void LastFM::_login_thread_finished(){
+
+    LFMLoginStuff login_info = _login_thread->getLoginStuff();
+
+    _logged_in = login_info.logged_in;
+    _auth_token = login_info.authToken;
+    _session_key = login_info.sessionKey;
+    _session_key2 = login_info.sessionKey2;
+
+    //qDebug() << "Logged in? " << _logged_in << ", Auth token? " << _auth_token << ", session key? " << _session_key << ", session key2? " << _session_key2;
+
+
+    if(!_logged_in)
+        emit sig_last_fm_logged_in(_logged_in);
+
+}
+
+void LastFM::lfm_login(QString username, QString password, bool should_emit){
 
 	_logged_in = false;
+    _username = username;
+    _emit_login = should_emit;
 
-	if(!_settings->getLastFMActive()) return false;
+    if(!_settings->getLastFMActive()){
 
-	_username = username;
-	_auth_token = QCryptographicHash::hash(username.toUtf8() + password.toUtf8(), QCryptographicHash::Md5).toHex();
+            //emit sig_last_fm_logged_in(false);
+    }
 
-	UrlParams signature_data;
-		signature_data["api_key"] = LFM_API_KEY;
-		signature_data["authToken"] = _auth_token;
-		signature_data["method"] = QString("auth.getmobilesession");
-		signature_data["username"] = _username;
+    _login_thread->setup_login_thread(username, password);
+    _login_thread->start();
 
-	QString url = lfm_wa_create_sig_url(QString("http://ws.audioscrobbler.com/2.0/"), signature_data);
-
-	QString response;
-	bool success = lfm_wa_call_url(url, response);
-
-	if(!success){
-		if(should_emit)
-			emit sig_last_fm_logged_in(_logged_in);
-		return false;
-	}
-
-	_session_key = lfm_wa_parse_session_answer(response);
-
-	if(_session_key.size() != 0) {
-		_logged_in = true;
-		if(should_emit)
-			emit sig_last_fm_logged_in(_logged_in);
-	}
-
-	else{
-		if(should_emit)
-			emit sig_last_fm_logged_in(_logged_in);
-		return false;
-	}
-
-
-	// only for radio
-	UrlParams handshake_data;
-		handshake_data["version"] = QString::number(1.5);
-		handshake_data["platform"] = QString("linux");
-		handshake_data["username"] = _username.toLower();
-		handshake_data["passwordmd5"] = password;
-
-	QString url_handshake = lfm_wa_create_std_url("http://ws.audioscrobbler.com/radio/handshake.php", handshake_data);
-	QString resp_handshake;
-
-	success = lfm_wa_call_url(url_handshake, resp_handshake);
-	if( !success ){
-		_session_key2 = "";
-		qDebug() << "LFM: Handshake was not successful";
-		qDebug() << "LFM: url = " << url_handshake;
-		qDebug() << "LFM: " << resp_handshake;
-		return false;
-	}
-
-	resp_handshake.replace("session=", "");
-	_session_key2 = resp_handshake.left(32);
-
-	return true;
 }
 
 
 void LastFM::psl_login(QString username, QString password){
-	bool logged_in = lfm_login(username, password, false);
-	emit sig_last_fm_logged_in(logged_in);
+    lfm_login(username, password, false);
 }
 
 
 void LastFM::psl_track_changed(const MetaData& md){
 
-	if(!_settings->getLastFMActive() || !_logged_in) return;
 
-	if(!_track_changed_thread) {
-		if(!_lfm_init_track_changed_thread())
-			return;
-	}
+    if(!_track_changed_thread) {
+        if(!_lfm_init_track_changed_thread()) return;
+    }
+
+    if(_track_changed_thread->isRunning()) _track_changed_thread->terminate();
+
+
+    if(!_settings->getLastFMActive() || !_logged_in) {
+
+        _track_changed_thread->setThreadTask( LFM_THREAD_TASK_SIM_ARTISTS );
+        _track_changed_thread->setTrackInfo(md);
+        _track_changed_thread->start();
+
+        return;
+     }
+
 
 	_track_changed_thread->setThreadTask(
 			LFM_THREAD_TASK_UPDATE_TRACK 		|

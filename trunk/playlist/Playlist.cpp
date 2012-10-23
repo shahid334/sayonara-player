@@ -521,7 +521,7 @@ void Playlist::psl_next_track(){
 
 
 void Playlist::psl_gapless_track(){
-    if(_cur_play_idx + 1>= _v_meta_data.size() || _cur_play_idx < 0) {
+    if((uint)(_cur_play_idx + 1) >= _v_meta_data.size() || _cur_play_idx < 0) {
 
         return;
     }
@@ -717,9 +717,7 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
 
 void Playlist::psl_import_new_tracks_to_library(bool copy){
 
-	Q_UNUSED(copy);
-
-	if(_v_extern_tracks.size() == 0) return;
+    if(_v_extern_tracks.size() == 0) return;
 	emit sig_import_files(_v_extern_tracks);
 
 }

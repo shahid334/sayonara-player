@@ -82,6 +82,7 @@ SET(HEADERS
     playlists/Playlists.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
+    StreamPlugins/LastFM/LFMLoginThread.h
     GUI/LFMRadio/GUI_LFMRadioWidget.h
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
@@ -151,6 +152,7 @@ SET(SOURCES
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
+    StreamPlugins/LastFM/LFMLoginThread.cpp
     GUI/LFMRadio/GUI_LFMRadioWidget.cpp
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp

@@ -113,11 +113,10 @@
 			void track_changed(int);
 			void change_skin(bool);
 			void library_path_changed(QString);
-			void last_fm_logged_in(bool);
-			void import_result(bool);
+            void import_result(bool);
 			void set_radio_active(int radio);
 			void psl_show_small_playlist_items(bool small_items);
-			void psl_lfm_activated(bool);
+
 
 		private slots:
 			void double_clicked(const QModelIndex &);

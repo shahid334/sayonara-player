@@ -93,7 +93,7 @@ public:
         QString             _target_filename;
 
 
-		void update_model(int cur_selected);
+        void update_model();
 
 
 

@@ -79,6 +79,9 @@ private:
 
 public:
     void setFiles2Play(QStringList filelist);
+
+private:
+    void getVersion();
 };
 
 #endif // APPLICATION_H

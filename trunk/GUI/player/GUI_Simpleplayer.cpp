@@ -377,8 +377,8 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 /** LAST FM **/
 void GUI_SimplePlayer::last_fm_logged_in(bool b){
 
-	if(!b && CSettingsStorage::getInstance()->getLastFMActive() && !m_suppress_warning)
-		QMessageBox::warning(this->ui->centralwidget, "Warning", "You are not logged in to LastFM!");
+    if(!b && CSettingsStorage::getInstance()->getLastFMActive())
+        QMessageBox::warning(this->ui->centralwidget, "Warning", "Cannot login to LastFM");
 
 	show_lfm_radio(false);
 	ui->action_ViewLFMRadio->setChecked(false);

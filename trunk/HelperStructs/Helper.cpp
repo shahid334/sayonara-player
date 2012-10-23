@@ -112,6 +112,24 @@ string Helper::trim(const string & toTrim){
 
 }
 
+QString Helper::getSharePath(){
+
+    QString path;
+#ifndef Q_OS_WIN
+        if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
+    else path = "";
+#else
+    path = QDir::homePath() + QString("\\.Sayonara\\images\\");
+    if(QFile::exists(path)){
+        return path;
+    }
+    else path = "";
+#endif
+
+    return path;
+
+}
+
 
 QString Helper::getIconPath(){
 

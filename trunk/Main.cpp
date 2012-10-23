@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
 		}
 
 		QApplication app (argc, argv);
-			app.setApplicationName("Sayonara");
+            app.setApplicationName("Sayonara");
 			app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
 		QStringList params;

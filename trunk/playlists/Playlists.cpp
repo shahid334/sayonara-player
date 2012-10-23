@@ -54,9 +54,7 @@ void Playlists::load_all_playlists(){
 
 void Playlists::load_single_playlist(int id){
 	CustomPlaylist pl;
-
-	QString playlist_name = CDatabaseConnector::getInstance()->getPlaylistNameById(id);
-	bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
+    bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
 
 	if(success){
 		emit sig_single_playlist_loaded(pl);
