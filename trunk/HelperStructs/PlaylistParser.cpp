@@ -42,7 +42,7 @@ static int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path=
 
 int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 	QStringList list = file_content.split('\n');
-
+    qDebug() << file_content;
 	foreach(QString line, list){
 
 		// remove comments
@@ -70,12 +70,11 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 			md.artist = line;
 			md.filepath = line;
 			md.album = "";
+            v_md.push_back(md);
 		}
-
-
 	}
 
-	qDebug() << "extracted " << v_md.size() << " tracks";
+
 	return v_md.size();
 }
 

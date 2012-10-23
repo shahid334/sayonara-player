@@ -274,8 +274,8 @@ void Application::init_connections(){
 	   CONNECT(ui_library, sig_play_next_tracks(const QList<int>&),             library,		psl_play_next_tracks(const QList<int>&));
 	   CONNECT(ui_library, sig_play_next_all_tracks(),                          library,		psl_play_next_all_tracks());
 
-	   CONNECT(ui_lastfm, sig_activated(bool), player, psl_lfm_activated(bool));
-       CONNECT(ui_lastfm, new_lfm_credentials(QString, QString), 		lastfm, 		psl_login(QString, QString));
+       CONNECT(ui_lastfm, sig_activated(bool),                                  player,         psl_lfm_activated(bool));
+       CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));
 
 	   CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
 	   CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
@@ -289,8 +289,8 @@ void Application::init_connections(){
 
        CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
        CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
-	   CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),		playlist,		psl_new_radio_playlist_available(const MetaDataList&));
-	   CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),     player,		lfm_info_fetched(const MetaData&, bool, bool));
+       CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),            playlist,		psl_new_radio_playlist_available(const MetaDataList&));
+       CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),     player,		lfm_info_fetched(const MetaData&, bool, bool));
 
 	   CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
 	   CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));

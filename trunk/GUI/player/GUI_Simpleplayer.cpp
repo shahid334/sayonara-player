@@ -318,10 +318,13 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 
 	QString cover_path = Helper::get_cover_path(md.artist, md.album);
 	if(! QFile::exists(cover_path) ){
-		cover_path = Helper::getIconPath() + "append.png";
-		emit sig_want_cover(md);
+        if(md.radio_mode != RADIO_STATION){
+            cover_path = Helper::getIconPath() + "append.png";
+            emit sig_want_cover(md);
+        }
+        else
+            cover_path = Helper::getIconPath() + "radio.png";
 	}
-
 
 	this->ui->albumCover->setIcon(QIcon(cover_path));
 
@@ -1004,10 +1007,12 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 
 	if(stream_ripper){
 		this->ui->btn_play->setVisible(radio == RADIO_OFF);
+        this->ui->btn_play->setEnabled(radio == RADIO_OFF);
 		this->ui->btn_rec->setVisible(radio != RADIO_OFF);
 	}
 
 	else{
+        this->ui->btn_play->setVisible(true);
 		this->ui->btn_play->setEnabled(radio == RADIO_OFF);
 		this->ui->btn_rec->setVisible(false);
 	}

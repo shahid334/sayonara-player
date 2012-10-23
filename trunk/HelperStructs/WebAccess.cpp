@@ -93,8 +93,8 @@ bool wa_call_url(const QString& url, QString& response){
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wa_get_answer);
 		//curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2500);
-	    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, wa_progress);
-	    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
+        curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, wa_progress);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
@@ -119,19 +119,24 @@ bool wa_call_url(const QString& url, QString& response){
 bool WebAccess::read_http_into_str(QString url, QString& content){
 
 	content.clear();
-	bool success = wa_call_url(url, content);
+    QString tmp_cont;
+    wa_call_url(url, content);
+    //content = tmp_cont.toLatin1();
+    //content = tmp_cont;
 
-	if(content.size() > 0)	return success;
+    if(content.size() > 0)	return true;
 
 	return false;
 }
 
 bool WebAccess::read_http_into_img(QString url, QImage& img){
 
-	QString content;
-	if( !wa_call_url(url, content) ) return false;
+    QString content;
+    if( !wa_call_url(url, content) ) return false;
 
-	return img.loadFromData((const uchar*) content.toLatin1().data(), content.size());
+
+
+    return img.loadFromData(content.toAscii());
 }
 
 

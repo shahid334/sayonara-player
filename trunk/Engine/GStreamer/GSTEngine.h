@@ -35,6 +35,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
+#include "Engine/GStreamer/StreamRipperBufferThread.h"
 #include "Engine/Engine.h"
 
 #include <gst/gst.h>
@@ -79,6 +80,13 @@ private:
 	GstPad*		_audio_pad;
 	GstBus*		_bus;
 
+    StreamRipperBufferThread* _sr_thread;
+
+
+private slots:
+    void sr_thread_finished();
+    void sr_thread_terminated();
+
 
 
 public slots:
@@ -122,6 +130,8 @@ private:
 	QString init_streamripper(const MetaData& md);
 	bool start_streamripper();
 	void stop_streamripper();
+
+
 
 
 

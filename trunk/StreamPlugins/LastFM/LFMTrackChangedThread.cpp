@@ -86,11 +86,9 @@ void LFMTrackChangedThread::run(){
 
 	if(_thread_tasks & LFM_THREAD_TASK_UPDATE_TRACK){
 		success = update_now_playing();
-		if(!success)
-			qDebug() << "Could not update current played track";
+        /*if(!success)
+            qDebug() << "Could not update current played track";*/
 	}
-
-
 
 	if(_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS){
 		success = search_similar_artists();
@@ -152,7 +150,7 @@ bool LFMTrackChangedThread::update_now_playing(){
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
 	if(!success || response.contains("failed") ){
-		qDebug() << "url: " << url << "\n" << response;
+
 		return false;
 	}
 

@@ -1,0 +1,73 @@
+#include "StreamRipperBufferThread.h"
+#include <QFile>
+#include <QString>
+#include <QDebug>
+#include <unistd.h>
+
+
+StreamRipperBufferThread::StreamRipperBufferThread(QObject *parent) :
+    QThread(parent)
+{
+    _f = NULL;
+
+}
+
+StreamRipperBufferThread::~StreamRipperBufferThread(){
+
+}
+
+
+void StreamRipperBufferThread::setUri(QString uri){
+    _uri = uri;
+}
+
+void StreamRipperBufferThread::run(){
+
+    qDebug() << "Buffer file " << _uri;
+    // initially fill the buffer
+    qint64 max = 10000000;
+    qint64 interval = 100000;
+
+    _size = 0;
+
+    /*
+     * _sr_recording_dst = .Sayonara/filename
+     */
+
+    if(_f != NULL){
+        if(_f->isOpen()) _f->close();
+        delete _f;
+    }
+
+    _f = new QFile(_uri);
+
+    do{
+        _size = _f->size();
+
+        usleep(interval);
+        max -= interval;
+
+        if(max <= 0) break;
+    } while(_size < 32000 && max > 0);
+
+    _size = _f->size();
+    _f->close();
+
+
+
+}
+
+QString StreamRipperBufferThread::getUri(){
+    return _uri;
+}
+
+qint64 StreamRipperBufferThread::getSize(){
+    return _size;
+}
+
+
+void StreamRipperBufferThread::terminate(){
+
+    if(_f->isOpen()) _f->close();
+    QThread::terminate();
+}

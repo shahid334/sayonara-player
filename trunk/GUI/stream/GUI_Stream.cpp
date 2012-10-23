@@ -79,7 +79,9 @@ void GUI_Stream::listen_clicked(){
 	}
 
 	if(url.size() > 5){
-		emit sig_play_stream(url.trimmed(), name);
+
+
+        emit sig_play_stream(url.trimmed(), name);
 	}
 }
 

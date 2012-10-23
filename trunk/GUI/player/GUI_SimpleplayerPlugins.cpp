@@ -125,19 +125,18 @@ void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
 	if(!widget) return;
 
 	int old_h = this->ui->plugin_widget->minimumHeight();
-	int h = widget->height();
+    QSize widget_size = widget->size();
 
 	QSize pl_size;
 	if(ui_playlist)
 		pl_size = ui_playlist->size();
-	QSize widget_size = widget->size();
 
 	if (v){
 		hideUnneededPlugins(widget);
 		this->ui->plugin_widget->show();
 		widget->show();
 		widget_size.setWidth(this->ui->plugin_widget->width());
-		pl_size.setHeight(pl_size.height() - h + old_h);
+        pl_size.setHeight(pl_size.height() - widget_size.height() + old_h);
 
 		this->ui->plugin_widget->setMinimumHeight(widget->height());
 		widget->resize(widget_size);
@@ -146,7 +145,7 @@ void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
 	else{
 		widget->hide();
         widget->close();
-		pl_size.setHeight(pl_size.height() + old_h);
+        pl_size.setHeight(pl_size.height() + old_h);
 		this->ui->plugin_widget->setMinimumHeight(0);
 
 	}

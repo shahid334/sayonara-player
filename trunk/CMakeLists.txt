@@ -225,6 +225,7 @@ SET(ICONS
 	GUI/icons/lyrics.png
 	GUI/icons/info.png
 	GUI/icons/numbers.png
+        GUI/icons/radio.png
 )
 
 

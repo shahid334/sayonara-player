@@ -105,12 +105,7 @@ void Playlist::psl_save_playlist_to_storage(){
 // create a playlist, where metadata is already available
 void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
-	// no tracks in new playlist
-	if(v_meta_data.size() == 0) {
-        _v_meta_data.clear();
-        emit sig_no_track_to_play();
-		return;
-	}
+
 
     if(!_playlist_mode.append){
         _v_meta_data.clear();
@@ -124,14 +119,18 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
 	}
 
-    if(_v_meta_data.size() == 0){
+    // no tracks in new playlist
+    if(v_meta_data.size() == 0) {
+        _v_meta_data.clear();
         emit sig_no_track_to_play();
+        return;
     }
 
     if(_radio_active){
-
+        _cur_play_idx = 0;
         emit sig_selected_file_changed(0);
         emit sig_selected_file_changed_md(_v_meta_data[0]);
+
     }
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx);
@@ -484,9 +483,17 @@ void Playlist::psl_next_track(){
 				track_num = 0;
 		}
 
-		else
-			track_num = _cur_play_idx + 1;
+      /*  else if(_cur_play_idx && _radio_active == RADIO_STATION){
+            track_num = -1;
+        }*/
+
+        else{
+
+            track_num = _cur_play_idx + 1;
+        }
 	}
+
+    qDebug() << "next track: " << track_num;
 
 
 	// valid next track
@@ -751,8 +758,9 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
     _radio_active = RADIO_STATION;
 
     // playlist radio
+
+    MetaDataList v_md;
 	if(Helper::is_playlistfile(url)){
-		MetaDataList v_md;
 
 		if(PlaylistParser::parse_playlist(url, v_md) > 0){
 
@@ -763,15 +771,12 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
                     v_md[i].title = name;
                 else v_md[i].title = "Radio Station";
 			}
-
-            if(v_md.size() > 0)
-                psl_createPlaylist(v_md);
 		}
 	}
 
 	// real stream
 	else{
-		MetaDataList v_md;
+
 		MetaData md;
 
 		if(name.size() > 0) md.title = name;
@@ -781,9 +786,10 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		md.filepath = url;
         md.radio_mode = RADIO_STATION;
 		v_md.push_back(md);
-        psl_createPlaylist(v_md);
-
 	}
+
+    if(v_md.size() > 0)
+        psl_createPlaylist(v_md);
 }
 
 void Playlist::psl_valid_strrec_track(const MetaData& md){

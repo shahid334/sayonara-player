@@ -28,6 +28,7 @@
 
 
 
+
 #include <gst/gst.h>
 #include <gst/app/gstappsrc.h>
 #include <string>
@@ -44,6 +45,7 @@
 #include <QStringList>
 #include <QFile>
 #include <QDir>
+#include <QUrl>
 #include <qplugin.h>
 
 
@@ -97,7 +99,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			gst_message_parse_error(msg, &err, NULL);
 
 			qDebug() << "GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
-
+            obj_ref->stop();
 			g_error_free(err);
 
 			break;
@@ -135,11 +137,17 @@ GST_Engine::GST_Engine(){
 	_sr_create_playlist = true;
 
     _gapless_track_available = false;
+    _sr_thread = new StreamRipperBufferThread();
+
+    connect(_sr_thread, SIGNAL(finished()), this, SLOT(sr_thread_finished()));
+    connect(_sr_thread, SIGNAL(terminated()), this, SLOT(sr_thread_terminated()));
 
 }
 
 GST_Engine::~GST_Engine() {
 	qDebug() << "close engine... ";
+
+    delete _sr_thread;
 	if(_bus)
 		gst_object_unref(_bus);
 
@@ -218,9 +226,6 @@ void GST_Engine::init_play_pipeline(){
 	bool success = false;
 	int i;
 
-
-
-
 	i=0;
 
 	// eq -> autoaudiosink is packaged into a bin
@@ -277,7 +282,6 @@ void GST_Engine::init_play_pipeline(){
 
 void GST_Engine::init(){
 
-
 	gst_init(0, 0);
 
 	init_record_pipeline();
@@ -286,33 +290,7 @@ void GST_Engine::init(){
 }
 
 
-QString GST_Engine::init_streamripper(const MetaData& md){
 
-	QString artist = md.artist;
-	QString title = md.title;
-	QString org_src_filename = md.filepath;	// some url
-	QString new_src_filename; 				// file in .Sayonara directory
-	QString new_src_filename_uri;			// GStreamer needs an URI
-
-	title.replace(" ", "_");
-	if(Helper::is_soundfile(md.filepath))
-		_sr_recording_dst = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
-	else
-		_sr_recording_dst = Helper::getSayonaraPath() + title + "_" + QDateTime::currentDateTime().toString("yyMMdd_hhmm") + ".mp3";
-
-	new_src_filename = _sr_recording_dst;
-
-	// record from org_src_filename to new_src_filename
-	g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
-	g_object_set(G_OBJECT(_rec_dst), "location", new_src_filename.toLocal8Bit().data(), NULL);
-    g_object_set(G_OBJECT(_rec_src), "blocksize", 32768, NULL);
-
-
-	qDebug() << "Streaming from " << org_src_filename << " to " << new_src_filename;
-
-	new_src_filename_uri = QString("file://") + new_src_filename;
-	return new_src_filename_uri;
-}
 
 
 void GST_Engine::psl_gapless_track(const MetaData& md){
@@ -321,11 +299,24 @@ void GST_Engine::psl_gapless_track(const MetaData& md){
     _gapless_track_available = true;
 }
 
+
+
+void GST_Engine::changeTrack(const QString& filepath){
+    MetaData md;
+    md.filepath = filepath;
+    if(!ID3::getMetaDataOfFile(md)){
+        stop();
+        return;
+    }
+    changeTrack(md);
+}
+
+
 void GST_Engine::changeTrack(const MetaData& md){
 
 
 	// Gstreamer needs an URI
-	QString new_src_filename_uri;
+    gchar* uri = NULL;
 
 	obj_ref = NULL;
 
@@ -343,29 +334,39 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 	// stream && streamripper active
 	if(_playing_stream && _sr_active){
-		new_src_filename_uri = init_streamripper(md);
+
+
+        gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+        QString new_src_filename = init_streamripper(md);
+        uri = gst_filename_to_uri(new_src_filename.toLocal8Bit().data(), NULL);
+        _sr_thread->setUri(new_src_filename);
+
 	}
 
 	// stream, but don't wanna record
 	else if(_playing_stream && !_sr_active){
 		_playing_stream = true;
-		new_src_filename_uri = md.filepath;
+
+        uri = md.filepath.toLocal8Bit().data();
 	}
 
 	// no stream (not quite right because of mms, rtsp or other streams
 	else if( !md.filepath.contains("://") ){
-		new_src_filename_uri = QString("file://") + md.filepath;
+
+         uri = gst_filename_to_uri(md.filepath.toLocal8Bit().data(), NULL);
 	}
 
 	else {
-		new_src_filename_uri = md.filepath;
+
+        uri = md.filepath.toLocal8Bit().data();
 	}
 
+    if(uri != NULL){
+        // playing src
+        g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
 
-	// playing src
-	g_object_set(G_OBJECT(_pipeline), "uri", new_src_filename_uri.toLocal8Bit().data(), NULL);
-    g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
-
+        g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
+    }
 
     emit total_time_changed_signal(_meta_data.length_ms);
 
@@ -377,38 +378,44 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 
 	play();
+}
 
 
+QString GST_Engine::init_streamripper(const MetaData& md){
+
+    // stream file to _sr_recording_dst
+    QString title = md.title;
+    QString org_src_filename = md.filepath;	// some url
+
+    title.replace(" ", "_");
+    if(Helper::is_soundfile(md.filepath))
+        _sr_recording_dst = Helper::getSayonaraPath() + title + "." + md.filepath.right(3);
+    else
+        _sr_recording_dst = Helper::getSayonaraPath() + title + "_" + QDateTime::currentDateTime().toString("yyMMdd_hhmm") + ".mp3";
+
+    qDebug() << "Recording dst = " << _sr_recording_dst;
+
+    // record from org_src_filename to new_src_filename
+    gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+    g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
+    g_object_set(G_OBJECT(_rec_dst), "location", _sr_recording_dst.toLocal8Bit().data(), NULL);
+    g_object_set(G_OBJECT(_rec_src), "blocksize", 32768, NULL);
+
+    return _sr_recording_dst;
 }
 
 bool GST_Engine::start_streamripper(){
 
-	bool success = true;
-	gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
+    if(!_sr_thread) return false;
 
-	// initially fill the buffer
-	qint64 max = 10000000;
-	qint64 interval = 100000;
-	qint64 sz = 0;
+    if(_sr_thread->isRunning()) _sr_thread->terminate();
 
+    gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
+    _sr_thread->setUri(_sr_recording_dst);
+    _sr_thread->start();
 
-	/*
-	 * _sr_recording_dst = .Sayonara/filename
-	 */
-	QFile* f = new QFile(_sr_recording_dst);
-
-	do{
-		sz = f->size();
-
-		usleep(interval);
-		max -= interval;
-		if(max <= 0) success = false;
-	} while(sz < 32000 && max > 0);
-
-	f->close();
-
-	return success;
+    return true;
 
 }
 
@@ -419,21 +426,18 @@ void GST_Engine::play(){
 	bool success = true;
 
 	if(_playing_stream && _sr_active){
-		success = start_streamripper();
+        start_streamripper();
+        return;
 	}
 
     if(success){
         gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-
-
-        emit wanna_gapless_track();
     }
 
 	// unable to buffer
 	else{
 		set_track_finished();
 	}
-
 
 	obj_ref = this;
 }
@@ -442,10 +446,14 @@ void GST_Engine::play(){
 
 void GST_Engine::stop_streamripper(){
 
-	if(!_track_finished && _sr_complete_tracks) return;
+    if(_sr_thread->isRunning()) _sr_thread->terminate();
 
-	//  _sr_recording_dst = .Sayonara/filename
-	QFile f(_sr_recording_dst);
+    QFile f(_sr_recording_dst);
+
+    if(!_track_finished && _sr_complete_tracks){
+        f.remove();
+        return;
+    }
 
 	// Final path where track is saved
 	QDir dir(_sr_path);
@@ -458,6 +466,8 @@ void GST_Engine::stop_streamripper(){
 	QString dst_name = 	dir.path() + QDir::separator() + fname_wo_path;
 
 	bool success = 	f.copy(dst_name);
+    f.remove();
+
 	if(!success){
 		qDebug() << "unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname_wo_path;
 	}
@@ -469,13 +479,13 @@ void GST_Engine::stop_streamripper(){
 			emit sig_valid_strrec_track(_meta_data);
 		}
 	}
-
-	f.remove();
-
 }
+
 
 void GST_Engine::stop(){
 	_state = STATE_STOP;
+
+    if(_sr_thread->isRunning()) _sr_thread->terminate();
 
 	// streamripper, wanna record is set when record button is pressed
 	if( _playing_stream && _sr_wanna_record ){
@@ -493,10 +503,12 @@ void GST_Engine::stop(){
 	_track_finished = true;
 }
 
+
 void GST_Engine::pause(){
 	_state = STATE_PAUSE;
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 }
+
 
 void GST_Engine::setVolume(int vol){
 
@@ -525,15 +537,6 @@ void GST_Engine::jump(int where, bool percent){
 }
 
 
-void GST_Engine::changeTrack(const QString& filepath){
-	MetaData md;
-    md.filepath = filepath;
-    if(!ID3::getMetaDataOfFile(md)){
-		stop();
-		return;
-	}
-	changeTrack(md);
-}
 
 void GST_Engine::eq_changed(int band, int val){
 
@@ -565,8 +568,6 @@ void GST_Engine::state_changed(){
 
 void GST_Engine::set_cur_position(quint32 pos){
 
-
-
     if((quint32) _seconds_now == pos) return;
     _seconds_now = pos;
 
@@ -584,13 +585,14 @@ void GST_Engine::set_cur_position(quint32 pos){
 
 
 void GST_Engine::set_track_finished(){
-    qDebug() << "track_finished " << _track_finished;
+
+    if(_sr_active) stop_streamripper();
+
 	_track_finished = true;
 	emit track_finished();
 }
 
 void GST_Engine::set_about_to_finish(){
-    qDebug() << "about to finish " << _gapless_track_available;
 
     if(_gapless_track_available){
         _track_finished = true;
@@ -628,6 +630,25 @@ void GST_Engine::psl_strrip_complete_tracks(bool b){
 }
 void GST_Engine::psl_strrip_set_create_playlist(bool b){
 	_sr_create_playlist = b;
+}
+
+
+void GST_Engine::sr_thread_finished(){
+
+    qint64 size = _sr_thread->getSize();
+
+    if(size > 32000){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    }
+
+    else stop();
+
+    obj_ref = this;
+}
+
+
+void GST_Engine::sr_thread_terminated(){
+    stop();
 }
 
 
