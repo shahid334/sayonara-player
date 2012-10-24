@@ -11,11 +11,13 @@
   * Significant better library performance
   * Less memory consumption
   * Play soundfiles from command line or desktop
+  * Streaming & stream recorder improved
 
 === Bugfixes ===
 
   * Import button in playlist
   * Sorting in library
+  * m3u playlist issue fixed
 
 <br />
 
