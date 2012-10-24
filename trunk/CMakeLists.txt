@@ -145,7 +145,6 @@ SET(SOURCES
     DatabaseAccess/CDatabaseTracks.cpp
     DatabaseAccess/CDatabasePlaylist.cpp
     DatabaseAccess/CDatabaseStreams.cpp
-    DatabaseAccess/CDatabaseGenre.cpp
     playlist/Playlist.cpp
     playlists/Playlists.cpp
     HelperStructs/id3.cpp
