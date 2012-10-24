@@ -117,8 +117,6 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         }
     }
 
-    qDebug() << files.size() << " files extracted";
-
 
     // this has to be so strange,
     MetaDataList v_possible_md;
@@ -144,10 +142,8 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         }
     }
 
-    qDebug() << "found " << v_md.size() << " tracks";
 
-
-	// TODO: look for playlists if paths could be read from database
+    // TODO: look for playlists if paths could be read from database
 	//extract media files out of playlist files
     foreach(QString path, playlist_paths){
 

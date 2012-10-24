@@ -67,7 +67,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
 	DB_TRY_OPEN(m_database);
 
-    int artistID = -1, albumID = -1, genreID = -1;
+    int artistID = -1, albumID = -1;
 
 
     m_database.transaction();
@@ -87,23 +87,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
                 artistID = insertArtistIntoDatabase((QString) data.artist);
             }
 
-
-            /*deleteGenreMappingByTrackID(data.id);
-
-            QList<int> genres2insert;
-            foreach(QString genre, data.genres){
-                genreID = this->getGenreByName(genre);
-                if (genreID == -1){
-                    genreID = insertGenreIntoDatabase(genre);
-                    if(genreID >= 0){
-                        genres2insert.push_back(genreID);
-                    }
-                }
-            }*/
-
-            //this->insertGenreMappingsIntoDatabase(genres2insert, data.id);
-
-            this -> insertTrackIntoDatabase (data,artistID,albumID, false);
+            this -> insertTrackIntoDatabase (data,artistID,albumID);
         }
 
         catch (QString ex) {

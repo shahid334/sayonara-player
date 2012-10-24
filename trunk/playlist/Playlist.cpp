@@ -77,8 +77,7 @@ void Playlist::ui_loaded(){
 			_cur_play_idx = -1;
 		}
 
-        qDebug() << "sig playlist created " << _v_meta_data[0].id;
-		emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+        emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 	}
 }
 
@@ -105,8 +104,6 @@ void Playlist::psl_save_playlist_to_storage(){
 // create a playlist, where metadata is already available
 void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
-
-
     if(!_playlist_mode.append){
         _v_meta_data.clear();
 	    _cur_play_idx = -1;
@@ -116,7 +113,6 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
 		if( checkTrack(md) )
 			_v_meta_data.push_back(md);
-
 	}
 
     // no tracks in new playlist
@@ -130,7 +126,6 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
         _cur_play_idx = 0;
         emit sig_selected_file_changed(0);
         emit sig_selected_file_changed_md(_v_meta_data[0]);
-
     }
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx);
@@ -167,6 +162,7 @@ void Playlist::remove_row(int row){
 // remove one row
 void Playlist::psl_remove_rows(const QList<int> & rows){
 
+    qDebug() << " Cur selecte row before " << _cur_play_idx;
 	MetaDataList v_tmp_md;
 	MetaDataList v_tmp_extern;
 
@@ -196,9 +192,12 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 	for(int i=0; i<n_tracks; i++){
 		if(!to_delete[i]){
 			v_tmp_md.push_back(_v_meta_data[i]);
-			if(i < _cur_play_idx) _cur_play_idx--;
-			else if(i == _cur_play_idx) _cur_play_idx = -1;
-		}
+        }
+
+        else{
+            if(i < _cur_play_idx) _cur_play_idx--;
+            else if(i == _cur_play_idx) _cur_play_idx = -1;
+        }
 	}
 
 	if(_cur_play_idx < -1) _cur_play_idx = -1;
@@ -212,6 +211,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 	_v_extern_tracks = v_tmp_extern;
 
 	psl_save_playlist_to_storage();
+    qDebug() << "New cur play idx = " << _cur_play_idx;
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
 	delete to_delete;
@@ -309,9 +309,6 @@ void Playlist::psl_play(){
 
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(md);
-
-			if(_playlist_mode.dynamic)
-				emit sig_search_similar_artists(md.artist);
 		}
 	}
 
@@ -398,9 +395,6 @@ void Playlist::psl_forward(){
 
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
-
-		if(_playlist_mode.dynamic)
-			emit sig_search_similar_artists(md.artist);
 	}
 }
 
@@ -420,8 +414,6 @@ void Playlist::psl_backward(){
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
 		_cur_play_idx = track_num;
-		if(_playlist_mode.dynamic)
-			emit sig_search_similar_artists(md.artist);
 	}
 
 }
@@ -483,14 +475,9 @@ void Playlist::psl_next_track(){
 				track_num = 0;
 		}
 
-      /*  else if(_cur_play_idx && _radio_active == RADIO_STATION){
-            track_num = -1;
-        }*/
-
-        else{
-
+        else
             track_num = _cur_play_idx + 1;
-        }
+
 	}
 
     qDebug() << "next track: " << track_num;
@@ -507,8 +494,6 @@ void Playlist::psl_next_track(){
 			emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
-            if(_playlist_mode.dynamic && _radio_active != RADIO_LFM)
-				emit sig_search_similar_artists(md.artist);
 		}
 
 		else{
@@ -547,6 +532,8 @@ void Playlist::psl_change_track(int new_row){
     if( (uint) new_row >= _v_meta_data.size()) return;
 
 	MetaData md = _v_meta_data[new_row];
+    md.pl_playing = true;
+
 	if( checkTrack(md) ){
 
 		// never should gonna happen...
@@ -569,12 +556,13 @@ void Playlist::psl_change_track(int new_row){
 
 		else{
 			_cur_play_idx = new_row;
+            for(uint i=0; i<_v_meta_data.size(); i++){
+                _v_meta_data[i].pl_playing = (i == new_row);
+            }
+
 		}
 
 		emit sig_selected_file_changed_md(md);
-
-		if(_playlist_mode.dynamic && _radio_active == RADIO_OFF)
-			emit sig_search_similar_artists(md.artist);
 	}
 
 	else{
@@ -732,12 +720,14 @@ void Playlist::psl_import_new_tracks_to_library(bool copy){
 void Playlist::psl_import_result(bool success){
 
 	if(success){
-        _v_extern_tracks.clear();
-		foreach(MetaData md, _v_meta_data){
-			md.is_extern = false;
-		}
-	}
 
+        _v_extern_tracks.clear();
+        for(uint i=0; i<_v_meta_data.size(); i++){
+            _v_meta_data[i].is_extern = false;
+        }
+
+        sig_playlist_created(_v_meta_data, _cur_play_idx);
+	}
 }
 
 

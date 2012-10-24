@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>335</width>
-    <height>159</height>
+    <height>152</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,6 +19,12 @@
   <property name="minimumSize">
    <size>
     <width>300</width>
+    <height>152</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>524287</width>
     <height>152</height>
    </size>
   </property>
@@ -37,6 +43,12 @@
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>152</height>
+    </size>
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">

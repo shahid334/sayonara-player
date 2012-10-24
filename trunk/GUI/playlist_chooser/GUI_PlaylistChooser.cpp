@@ -31,7 +31,7 @@
 #include <QDebug>
 #include <QCloseEvent>
 
-#include <ui_GUI_PlaylistChooser.h>
+#include "ui_GUI_PlaylistChooser.h"
 
 
 
@@ -40,7 +40,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 	_cur_idx = -1;
 
 
-	this->ui = new Ui::PlaylistChooser();
+    this->ui = new Ui::GUI_PlaylistChooser();
 	this->ui->setupUi(this);
 
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));

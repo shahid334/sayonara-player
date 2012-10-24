@@ -30,7 +30,7 @@
 #include <ui_GUI_PlaylistChooser.h>
 
 
-class GUI_PlaylistChooser : public QDockWidget, private Ui::PlaylistChooser {
+class GUI_PlaylistChooser : public QDockWidget, private Ui::GUI_PlaylistChooser {
 
 Q_OBJECT
 
@@ -61,7 +61,7 @@ public:
 	virtual ~GUI_PlaylistChooser();
 
 private:
-	Ui::PlaylistChooser* ui;
+    Ui::GUI_PlaylistChooser* ui;
 	QMap<int, QString> _playlists;
 	int	_cur_idx;
 	bool _started;

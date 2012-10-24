@@ -145,11 +145,15 @@ MetaData CDatabaseConnector::getTrackByPath(QString path){
 	md.id = -1;
     md.filepath = path;
 
-	if(!_db_fetch_tracks(q, vec_data)) return md;
+    if(!_db_fetch_tracks(q, vec_data)) return md;
 
-	if(vec_data.size() == 0) return md;
+    if(vec_data.size() == 0){
+        md.is_extern = true;
+        return md;
+    }
 
-	return vec_data[0];
+    return vec_data[0];
+
 }
 
 MetaData CDatabaseConnector::getTrackById(int id){
@@ -166,10 +170,12 @@ MetaData CDatabaseConnector::getTrackById(int id){
 	MetaData md;
 	md.id = -1;
 
-	if(!_db_fetch_tracks(q, vec_data)) return md;
+    if(!_db_fetch_tracks(q, vec_data)) return md;
 
-	if(vec_data.size() == 0) return md;
-
+    if(vec_data.size() == 0) {
+        md.is_extern = true;
+        return md;
+    }
 	return vec_data[0];
 }
 
@@ -496,20 +502,10 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 	return success;
 }
 
-int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
+int CDatabaseConnector::updateTrack(MetaData& data){
 
 	DB_TRY_OPEN(m_database);
     DB_RETURN_NOT_OPEN_INT(m_database);
-
-    if(update_idx){
-        QStringList indexes;
-        for(int i=0; i<data.title.length()-INDEX_SIZE; i++){
-            indexes.push_back(data.title.mid(i, INDEX_SIZE));
-        }
-
-        deleteTrackIndexes(data.id);
-        setTrackIndexes(data.id, indexes);
-    }
 
 	QSqlQuery q (this -> m_database);
 
@@ -527,13 +523,11 @@ int CDatabaseConnector::updateTrack(MetaData& data, bool update_idx){
             qDebug() << ("SQL - Error: update track " + data.filepath);
 		}
 
-
-
 	return 0;
 }
 
 
-int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID, bool update_idx) {
+int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID) {
 
 	DB_TRY_OPEN(m_database);
 
@@ -551,19 +545,10 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 		data.artist_id = artistID;
 		data.album_id = albumID;
 
-        updateTrack(data, update_idx);
+        updateTrack(data);
 		return 0;
 	}
 
-    if(update_idx){
-
-        QStringList indexes;
-        for(int i=0; i<data.title.length()-INDEX_SIZE; i++){
-            indexes.push_back(data.title.mid(i, INDEX_SIZE));
-        }
-
-        setTrackIndexes(data.id, indexes);
-    }
 
 	QString querytext = QString("INSERT INTO tracks ") +
                 "(filename,albumID,artistID,title,year,length,track,bitrate,genre) " +
@@ -594,108 +579,3 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 
 
 
-
-
-QStringList CDatabaseConnector::getTrackIndexes(int track_id){
-
-    DB_TRY_OPEN(m_database);
-
-    QStringList returnlist;
-
-    QSqlQuery q (this -> m_database);
-    QString querytext = QString("SELECT substring FROM index_metadata WHERE trackid = :id;");
-
-
-
-    q.prepare(querytext);
-    q.bindValue(":id", track_id);
-
-    if (!q.exec()) {
-        qDebug() << "SQL - Error: cannot fetch indexes from table for " << track_id;
-        return returnlist;
-    }
-
-    while (q.next()) returnlist << q.value(0).toString();
-
-    return returnlist;
-}
-
-
-bool CDatabaseConnector::setTrackIndexes(QMap<QString, QList<int> >& idx_list){
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_BOOL(m_database);
-    bool ret = true;
-
-    m_database.transaction();
-
-    QStringList keys = idx_list.keys();
-    foreach(QString key, keys){
-        foreach(int i, idx_list[key]){
-            ret &= setTrackIndex(i, key);
-        }
-    }
-
-    m_database.commit();
-
-    return ret;
-}
-
-
-bool CDatabaseConnector::setTrackIndexes(int track_id, QStringList& idx_list){
-
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_INT(m_database);
-    bool ret = true;
-    m_database.transaction();
-
-    foreach(QString idx, idx_list){
-        ret &= setTrackIndex(track_id, idx);
-    }
-
-    m_database.commit();
-
-    return ret;
-
-}
-
-
-
-bool CDatabaseConnector::setTrackIndex(int track_id, QString idx){
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_INT(m_database);
-
-        QSqlQuery q (this -> m_database);
-        QString querytext = QString("INSERT INTO index_metadata VALUES (:substring, :trackid);");
-
-        q.prepare(querytext);
-        q.bindValue(":trackid", track_id);
-        q.bindValue(":substring", idx);
-
-        if (!q.exec()) {
-            qDebug() << "SQL - Error: cannot fetch indexes from table for " << track_id;
-            return false;
-        }
-
-
-    return true;
-}
-
-
-bool CDatabaseConnector::deleteTrackIndexes(int track_id){
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_INT(m_database);
-
-        QSqlQuery q (this -> m_database);
-        QString querytext = QString("DELETE FROM index_metadata WHERE trackid=:track_id;");
-
-        q.prepare(querytext);
-        q.bindValue(":trackid", track_id);
-
-        if (!q.exec()) {
-            qDebug() << "SQL - Error: cannot fetch indexes from table for " << track_id;
-            return false;
-        }
-
-
-    return true;
-}

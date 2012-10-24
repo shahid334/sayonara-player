@@ -58,7 +58,10 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
     QStringList genres;
     QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
-    genres = genre_str.split(QRegExp(",|\\|/|;|-"));
+    genres = genre_str.split(QRegExp(",|/|;|\\."));
+    for(int i=0; i<genres.size(); i++){
+        genres[i] = genres[i].trimmed();
+    }
 
 
 
@@ -107,7 +110,10 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
         QStringList genres;
         QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
-        genres = genre_str.split(QRegExp(",|\\|/|;|.|-"));
+        genres = genre_str.split(QRegExp(",|/|;|\\."));
+        for(int i=0; i<genres.size(); i++){
+            genres[i] = genres[i].trimmed();
+        }
 
 		md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 		md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));

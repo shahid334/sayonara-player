@@ -40,7 +40,7 @@
 
 using namespace std;
 
-class GUI_Equalizer : public QDockWidget, private Ui_GUI_Equalizer{
+class GUI_Equalizer : public QDockWidget, private Ui::GUI_Equalizer{
 
 	Q_OBJECT
 
@@ -80,7 +80,7 @@ public:
 
 
 	private:
-		Ui_GUI_Equalizer* _ui;
+        Ui::GUI_Equalizer* _ui;
 		vector<EQ_Setting> _presets;
 };
 

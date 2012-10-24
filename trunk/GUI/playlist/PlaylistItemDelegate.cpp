@@ -110,29 +110,52 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
 	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-	QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
+    QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light(140);
+
+    QColor col_orange = SAYONARA_ORANGE_COL;
+    QColor col_orange_light = col_orange.light();
+
 
 	int highlight_val = col_highlight.lightness();
 	int highlight_lighter_val = col_highlight_lighter.lightness();
 	int background_val = col_background.lightness();
 
 
-	if(cur_track)
-		style = QString("background-color: ") +
-				col_highlight_lighter.name() + ";" +
-				get_fg_color(highlight_lighter_val);
+    if(cur_track){
+        if(!md.is_extern){
+            style = QString("background-color: ") +
+                    col_highlight_lighter.name() + ";" +
+                    get_fg_color(highlight_lighter_val);
+        }
+
+        else {
+            style = QString("background-color: ") +
+                col_orange_light.name() + ";" +
+                get_fg_color(col_orange_light.lightness());
+        }
 
 
-	else if(!is_selected)
-		style = QString("background-color: transparent;") + get_fg_color(background_val);
+    }
+
+
+    else if(!is_selected){
+        if(!md.is_extern)
+            style = QString("background-color: transparent;") + get_fg_color(background_val);
+        else{
+            style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(background_val);
+        }
+
+    }
 
 
 
 	// standard selected
-	else
-		style = QString("background-color: ") +
-				col_highlight.name() + "; " +
-				get_fg_color(highlight_val);
+    else{
+        style = QString("background-color: ") +
+                col_highlight.name() + "; " +
+                get_fg_color(highlight_val);
+
+    }
 
 
 	int y = rect.topLeft().y() +  _pl_entry->height()-1;

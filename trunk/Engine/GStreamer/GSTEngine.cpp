@@ -27,10 +27,10 @@
 #include "Engine/GStreamer/GSTEngine.h"
 
 
-
-
 #include <gst/gst.h>
+#include <gst/gsturi.h>
 #include <gst/app/gstappsrc.h>
+
 #include <string>
 #include <vector>
 #ifdef Q_OS_LINUX

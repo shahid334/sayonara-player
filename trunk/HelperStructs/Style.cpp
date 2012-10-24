@@ -264,3 +264,6 @@ QString Style::get_menu_style(bool dark){
 }
 
 
+QString Style::get_sayonara_orange_str(){
+return QString("#e8841a");
+}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PlaylistChooser</class>
- <widget class="QDockWidget" name="PlaylistChooser">
+ <class>GUI_PlaylistChooser</class>
+ <widget class="QDockWidget" name="GUI_PlaylistChooser">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -32,6 +32,12 @@
    <string notr="true">Playlist</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>56</height>
+    </size>
+   </property>
    <layout class="QGridLayout" name="gridLayout">
     <property name="leftMargin">
      <number>0</number>

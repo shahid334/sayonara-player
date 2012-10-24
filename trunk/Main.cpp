@@ -34,6 +34,7 @@
 #include <QStringList>
 
 
+
 void printHelp(){
 	qDebug() << "sayonara <list>";
 	qDebug() << "<list> can consist of either files or directories or both";
@@ -41,8 +42,8 @@ void printHelp(){
 }
 
 
-
 int main(int argc, char *argv[]){
+
 
 		if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
 			QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");

@@ -47,6 +47,8 @@ namespace Style{
 	QString get_btn_style(int intensity=7);
 	QString get_menubar_style(bool dark);
 	QString get_menu_style(bool dark);
+
+    QString get_sayonara_orange_str();
 };
 
 

@@ -46,7 +46,7 @@ using namespace std;
 
 GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 
-	this->_ui = new Ui_GUI_Equalizer( );
+    this->_ui = new Ui::GUI_Equalizer( );
 	this->_ui->setupUi(this);
 
 	this->_ui->btn_preset->setIcon(QIcon(Helper::getIconPath() + "save.png"));

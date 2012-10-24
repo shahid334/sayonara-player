@@ -352,7 +352,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Impor new tracks from playlist to library</string>
+      <string>Import new (orange) tracks to library w/o copying</string>
      </property>
      <property name="text">
       <string/>

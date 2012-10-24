@@ -94,11 +94,9 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	this->ui->btn_append->setChecked(_playlist_mode.append);
 	this->ui->btn_repAll->setChecked(_playlist_mode.repAll);
-
-
     this->ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
-
 	this->ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
+
 	this->ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
 
 	this->ui->listView->setDragEnabled(true);
@@ -135,9 +133,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	_parent = parent;
 	_total_secs = 0;
 
-	_cur_playing_row = -1;
-
-	_radio_active = RADIO_OFF;
+    _radio_active = RADIO_OFF;
 
 	check_dynamic_play_button();
 
@@ -256,9 +252,7 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 	_total_secs = 0;
 	int idx = 0;
 
-	_cur_playing_row = cur_play_idx;
-
-	this->ui->btn_import->setVisible(false);
+    this->ui->btn_import->setVisible(false);
     set_radio_active(RADIO_OFF);
     foreach(MetaData md, v_metadata){
 
@@ -273,7 +267,6 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
         Helper::cvtSecs2MinAndSecs(md.length_ms / 1000, &min, &sek);
 		_total_secs += (min * 60 + sek);
 
-        md.pl_playing = (idx == _cur_playing_row);
         md.pl_selected = false;
 
         _pli_model->setData(model_idx, md.toVariant(), Qt::EditRole);
@@ -302,7 +295,6 @@ void GUI_Playlist::clear_playlist_slot(){
 	this->ui->btn_import->setVisible(false);
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
-	_cur_playing_row = -1;
 	_cur_selected_rows.clear();
 
 	emit clear_playlist();
@@ -391,12 +383,11 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 	}
 
 	int new_row = index.row();
-    qDebug() << "new row = " << new_row << ", _pli_model " << _pli_model->rowCount();
 
 	if(new_row < 0 || new_row >= _pli_model->rowCount() ) return;
 
 	emit selected_row_changed(new_row);
-	_cur_playing_row = new_row;
+
 }
 
 
@@ -409,9 +400,7 @@ void GUI_Playlist::track_changed(int new_row){
 
 	QModelIndex index = _pli_model->index(new_row, 0);
 
-	_cur_playing_row = new_row;
-
-	for(int i=0; i<_pli_model->rowCount(); i++){
+    for(int i=0; i<_pli_model->rowCount(); i++){
 
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
 
@@ -642,7 +631,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	else if(d->getMetaData(v_metadata) > 0){
 
 		if(row == -1) row = _pli_model->rowCount();
-		if(row < _cur_playing_row) _cur_playing_row += v_metadata.size();
+
 
 		if(_radio_active == RADIO_OFF)
 			emit dropped_tracks(v_metadata, row);
@@ -679,9 +668,6 @@ void GUI_Playlist::set_total_time_label(){
 void GUI_Playlist::remove_cur_selected_rows(){
 
 	if(_pli_model->rowCount() > 1){
-
-		if(_cur_selected_rows.first() < _cur_playing_row)
-			_cur_playing_row --;
 
 		emit rows_removed(_cur_selected_rows);
 	}

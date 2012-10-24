@@ -94,21 +94,37 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
 	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-	QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light();
+    QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light(140);
+
+    QColor col_orange = SAYONARA_ORANGE_COL;
+    QColor col_orange_light = col_orange.light();
 
 	int highlight_val = col_highlight.lightness();
-	int highlight_lighter_val = col_highlight_lighter.lightness();
-	int background_val = col_background.lightness();
+    int background_val = col_background.lightness();
 
 
-	if(md.pl_playing)
-		style = QString("background-color: ") +
-				col_highlight_lighter.name() + ";" +
-				get_fg_color(highlight_lighter_val);
+    if(md.pl_playing){
+
+        if(!md.is_extern){
+            style = QString("background-color: ") +
+                col_highlight_lighter.name() + ";" +
+                get_fg_color(col_highlight_lighter.lightness());
+        }
+
+        else {
+            style = QString("background-color: ") +
+                col_orange_light.name() + ";" +
+                get_fg_color(col_orange_light.lightness());
+        }
+
+    }
 
 
-	else if(!md.pl_selected)
-		style = QString("background-color: transparent;") + get_fg_color(background_val);
+    else if(!md.pl_selected){
+        if(!md.is_extern) style = QString("background-color: transparent; ") + get_fg_color(background_val);
+        else style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(col_orange.lightness());
+
+    }
 
 	// standard selected
 	else

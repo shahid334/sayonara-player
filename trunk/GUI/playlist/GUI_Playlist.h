@@ -150,7 +150,6 @@
 
 
 			qint64 		_total_secs;
-			int			_cur_playing_row;
 			QList<int>	_cur_selected_rows;
 			bool 		_inner_drag_drop;
 			QPoint		_last_known_drag_pos;

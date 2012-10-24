@@ -96,7 +96,7 @@ void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n
 
 
 			if(num_files % 20 == 0){
-				reload_status_str = QString("Reloading library: ") + QString::number(num_files) + " tracks";
+                reload_status_str = QString("Reloading: ") + QString::number(num_files) + " tracks";
 				emit reloading_library( reload_status_str );
 			}
 		}
@@ -134,7 +134,7 @@ void ReloadThread::run(){
 	MetaDataList v_metadata;
 	MetaDataList v_to_delete;
 
-	QString reload_status_str = QString("Reloading library: Delete orphaned tracks");
+    QString reload_status_str = QString("Delete orphaned tracks...");
 	emit reloading_library(reload_status_str);
 	db->getTracksFromDatabase(v_metadata);
 

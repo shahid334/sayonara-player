@@ -29,14 +29,18 @@
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "HelperStructs/Helper.h"
 #include "StreamPlugins/LastFM/LastFM.h"
+
 #include <QWidget>
 #include <QDockWidget>
 #include <QCloseEvent>
 #include <QPixmap>
 
+#include "ui_GUI_LFMRadioWidget.h"
+
 GUI_LFMRadioWidget::GUI_LFMRadioWidget(QWidget* parent) : QDockWidget(parent)  {
 
-	this->_ui = new Ui::LFMRadioWidget( );
+
+    this->_ui = new Ui::GUI_LFMRadioWidget();
 	this->_ui->setupUi(this);
 	this->_ui->rb_artist->setChecked(true);
 	this->_ui->cb_friends->setVisible(false);

@@ -179,9 +179,9 @@ void Application::init_connections(){
    CONNECT (player, sig_volume_changed(int),				listen,			setVolume(int));
    CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
 
-   CONNECT (player, baseDirSelected(const QString &),		library, 		baseDirSelected(const QString & ));
-   CONNECT (player, reloadLibrary(), 						library, 		reloadLibrary());
-   CONNECT (player, importDirectory(QString),				library,		importDirectory(QString));
+   CONNECT (player, baseDirSelected(const QString &),		library,            baseDirSelected(const QString & ));
+   CONNECT (player, reloadLibrary(), 						library,            reloadLibrary());
+   CONNECT (player, importDirectory(QString),				library,            importDirectory(QString));
    CONNECT (player, libpath_changed(QString),               library, 			setLibraryPath(QString));
    CONNECT (player, fileSelected(QStringList &),			playlist, 			psl_createPlaylist(QStringList&));
    CONNECT (player, play(),                                 playlist,			psl_play());

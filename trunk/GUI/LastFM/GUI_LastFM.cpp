@@ -57,14 +57,12 @@ GUI_LastFM::GUI_LastFM(QString username, QString password){
 	this->ui->tf_username->setText(password);
 
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
-
 }
 
 
 GUI_LastFM::~GUI_LastFM() {
 	// TODO Auto-generated destructor stub
 }
-
 
 
 void GUI_LastFM::save_button_pressed(){

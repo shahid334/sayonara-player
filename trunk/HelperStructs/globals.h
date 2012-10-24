@@ -21,8 +21,15 @@
 #include <QString>
 #include <QDebug>
 
+
 #ifndef GLOBALS_H_
 #define GLOBALS_H_
+
+
+#define SAYONARA_ORANGE_STR QString("#e8841a")
+
+
+#define SAYONARA_ORANGE_COL QColor(232, 132, 26)
 
 
 

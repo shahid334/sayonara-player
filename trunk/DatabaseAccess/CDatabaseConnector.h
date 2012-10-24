@@ -134,8 +134,8 @@ public:
 
 			void getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sortorder = TrackArtistAsc);
 
-            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID, bool update_idx=false);
-            int updateTrack(MetaData& data,  bool update_idx=false);
+            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
+            int updateTrack(MetaData& data);
 
 			int getTracksFromDatabase (MetaDataList& returndata, TrackSort sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
@@ -144,20 +144,6 @@ public:
 
 			int deleteTracks(MetaDataList&);
 			int deleteTrack(MetaData&);
-
-            QStringList getTrackIndexes(int track_id);
-            bool setTrackIndexes(QMap<QString, QList<int> >& idx_list);
-            bool setTrackIndexes(int track_id, QStringList& idx_list);
-            bool setTrackIndex(int track_id, QString idx);
-            bool deleteTrackIndexes(int track_id);
-
-
-            int getGenreByName(QString genre);
-            QString getGenreByID(int genreID);
-            int insertGenreIntoDatabase(QString genre);
-            bool insertGenreMappingsIntoDatabase(QList<int> genreIDs, int trackID);
-            bool insertGenreMappingIntoDatabase(int genreID, int trackID);
-            bool deleteGenreMappingByTrackID(int trackid);
 
 
 			/*

@@ -29,6 +29,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QMap>
 #include <QString>
@@ -86,11 +87,10 @@ void LFMTrackChangedThread::run(){
 
 	if(_thread_tasks & LFM_THREAD_TASK_UPDATE_TRACK){
 		success = update_now_playing();
-        /*if(!success)
-            qDebug() << "Could not update current played track";*/
 	}
 
-	if(_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS){
+    bool dynamic = CSettingsStorage::getInstance()->getPlaylistMode().dynamic;
+    if(dynamic && (_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS)){
 		success = search_similar_artists();
 		if(success)
 			emit sig_similar_artists_available(_target_class, _chosen_ids);
@@ -126,7 +126,6 @@ void LFMTrackChangedThread::run(){
 	}
 
 	_thread_tasks = 0;
-
 }
 
 
