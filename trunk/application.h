@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QStringList>
+#include <QMainWindow>
 
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
@@ -37,12 +38,13 @@
 #include "playlists/Playlists.h"
 #include "Socket/Socket.h"
 
-
+class CLibraryBase;
 class Application : public QObject
 {
     Q_OBJECT
+
 public:
-    explicit Application( QApplication* qapp, QObject *parent = 0);
+    Application( QApplication* qapp, QObject *parent = 0);
     virtual ~Application();
     
 signals:
@@ -79,9 +81,14 @@ private:
 
 public:
     void setFiles2Play(QStringList filelist);
+    QMainWindow* getMainWindow();
+
 
 private:
     void getVersion();
+
 };
 
+
 #endif // APPLICATION_H
+

@@ -27,6 +27,7 @@
 #include "HelperStructs/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
+#include "application.h"
 
 #include <QDebug>
 #include <QProgressDialog>
@@ -38,9 +39,10 @@
 #include <QListWidget>
 
 
-CLibraryBase::CLibraryBase(QObject *parent) :
+CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     QObject(parent)
 {
+    m_app = app;
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 	m_thread = new ReloadThread();
 	m_watcher = new QFileSystemWatcher();
@@ -96,7 +98,7 @@ void CLibraryBase::importDirectory(QString directory){
 		m_import_dialog = 0;
 	}
 
-	m_import_dialog = new GUI_ImportFolder(NULL, content, true);
+    m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), content, true);
 	connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
 	m_import_dialog->show();
 }

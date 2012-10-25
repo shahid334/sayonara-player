@@ -121,7 +121,7 @@ public:
 		if(artist.trimmed().size() == 0) tmpArtist = QString("");
 		if(album.trimmed().size() == 0) tmpAlbum = QString("");
 
-		list.push_back(tmpTitle);
+        list.push_back(tmpTitle);
 		list.push_back(tmpArtist);
 		list.push_back(tmpAlbum);
 		list.push_back(QString::number(rating));
@@ -150,19 +150,19 @@ public:
 
         if(list.size() < 19) return false;
 
-		md.title = list[0];
-		md.artist = list[1];
-		md.album = list[2];
-		md.rating = list[3].toInt();
-		md.length_ms = list[4].toULongLong();
-		md.year = list[5].toInt();
-		md.filepath = list[6];
-		md.track_num = list[7].toInt();
-		md.bitrate = list[8].toInt();
-		md.id = list[9].toInt();
-		md.album_id = list[10].toInt();
-		md.artist_id = list[11].toInt();
-        md.genres = list[12].split(",");
+        md.title =      list[0];
+        md.artist =     list[1];
+        md.album =      list[2];
+        md.rating =     list[3].toInt();
+        md.length_ms =  list[4].toULongLong();
+        md.year =       list[5].toInt();
+        md.filepath =   list[6];
+        md.track_num =  list[7].toInt();
+        md.bitrate =    list[8].toInt();
+        md.id =         list[9].toInt();
+        md.album_id =   list[10].toInt();
+        md.artist_id =  list[11].toInt();
+        md.genres =     list[12].split(",");
         md.is_extern = ( list[13] == "1" );
         md.radio_mode = list[14].toInt();
         md.pl_playing = (list[15] == "1");
@@ -181,6 +181,13 @@ public:
     MetaDataList(){}
     ~MetaDataList(){
         clear();
+    }
+
+    void setCurPlayTrack(int idx){
+        for(uint i=0; i<size(); i++){
+            if((int) i == idx) this->at(i).pl_playing = true;
+            this->at(i).pl_playing = false;
+        }
     }
 
 	bool contains(const MetaData& md, bool cs=false){

@@ -159,27 +159,33 @@ void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
 
 void GUI_SimplePlayer::show_playlist_chooser(bool vis){
 
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_PLAYLIST_CHOOSER);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
 	showPlugin(ui_playlist_chooser, vis);
+
+    if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_PLAYLIST_CHOOSER);
+    else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
+
 
 }
 
 void GUI_SimplePlayer::show_eq(bool vis) {
 
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_EQUALIZER);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
 	showPlugin(ui_eq, vis);
+
+    if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_EQUALIZER);
+    else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
+
 }
 
 void GUI_SimplePlayer::show_stream(bool vis){
 
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_STREAM);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
 	showPlugin(ui_stream, vis);
+
+    if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_STREAM);
+    else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
+
 }
 
 void GUI_SimplePlayer::show_lfm_radio(bool vis){
@@ -195,10 +201,12 @@ void GUI_SimplePlayer::show_lfm_radio(bool vis){
 	vis &= lfm_stuff;
 
 
-	if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_LFM_RADIO);
-	else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 
 	showPlugin(ui_lfm_radio, vis);
+
+    if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_LFM_RADIO);
+    else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
+
 }
 
 void GUI_SimplePlayer::close_playlist_chooser(){

@@ -26,6 +26,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "application.h"
 
 #include <QObject>
 #include <QThread>
@@ -33,12 +34,12 @@
 #include <library/ReloadThread.h>
 #include <GUI/library/GUIImportFolder.h>
 
-
+class Application;
 class CLibraryBase : public QObject
 {
     Q_OBJECT
 public:
-    explicit CLibraryBase(QObject *parent = 0);
+    CLibraryBase(Application* app, QObject *parent = 0);
 
     void loadDataFromDb ();
 
@@ -103,7 +104,7 @@ private slots:
 
 
 private:
-
+    Application*            m_app;
     CDirectoryReader    m_reader;
 
     QString				m_library_path;

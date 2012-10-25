@@ -21,16 +21,16 @@
 #ifndef GUIIMPORTFOLDER_H_
 #define GUIIMPORTFOLDER_H_
 
-#include <QWidget>
+#include <QDialog>
 #include <QStringList>
 #include <ui_GUI_ImportFolder.h>
 
 
-class GUI_ImportFolder : public QWidget, private Ui::ImportFolder {
+class GUI_ImportFolder : public QDialog, private Ui::ImportFolder {
 
 Q_OBJECT
 public:
-	GUI_ImportFolder(QWidget* widget, const QStringList&, bool copy_enabled);
+    GUI_ImportFolder(QWidget* parent, const QStringList&, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
 
 	signals:

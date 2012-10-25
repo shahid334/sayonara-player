@@ -211,7 +211,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 	_v_extern_tracks = v_tmp_extern;
 
 	psl_save_playlist_to_storage();
-    qDebug() << "New cur play idx = " << _cur_play_idx;
+
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
 	delete to_delete;
@@ -389,9 +389,12 @@ void Playlist::psl_forward(){
 	md = _v_meta_data[track_num];
 	md.radio_mode = _radio_active;
 
-	if( checkTrack(md) ){
+
+
+    if( checkTrack(md) ){
 
 		_cur_play_idx = track_num;
+        _v_meta_data.setCurPlayTrack(track_num);
 
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
@@ -411,9 +414,11 @@ void Playlist::psl_backward(){
 	md.radio_mode = _radio_active;
 
 	if( checkTrack(md) ){
+        _cur_play_idx = track_num;
+        _v_meta_data.setCurPlayTrack(track_num);
 		emit sig_selected_file_changed(track_num);
 		emit sig_selected_file_changed_md(md);
-		_cur_play_idx = track_num;
+
 	}
 
 }
@@ -480,11 +485,10 @@ void Playlist::psl_next_track(){
 
 	}
 
-    qDebug() << "next track: " << track_num;
-
 
 	// valid next track
 	if(track_num >= 0){
+        _v_meta_data.setCurPlayTrack(track_num);
 		MetaData md = _v_meta_data[track_num];
 		md.radio_mode = _radio_active;
 
@@ -556,18 +560,18 @@ void Playlist::psl_change_track(int new_row){
 
 		else{
 			_cur_play_idx = new_row;
-            for(uint i=0; i<_v_meta_data.size(); i++){
-                _v_meta_data[i].pl_playing = (i == new_row);
-            }
-
 		}
 
+        _v_meta_data.setCurPlayTrack(_cur_play_idx);
 		emit sig_selected_file_changed_md(md);
+        emit sig_selected_file_changed(_cur_play_idx);
 	}
 
 	else{
+        _cur_play_idx = -1;
 		_db->deleteTrack(md);
-		_cur_play_idx = -1;
+        _v_meta_data.setCurPlayTrack(_cur_play_idx);
+
 		remove_row(new_row);
 		emit sig_no_track_to_play();
 	}
@@ -581,6 +585,7 @@ void Playlist::psl_clear_playlist(){
 	_v_meta_data.clear();
 	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
+
 
 	if(_radio_active == RADIO_OFF)
 		psl_save_playlist_to_storage();
@@ -705,6 +710,7 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
 		_v_meta_data.push_back(md);
 
 	psl_save_playlist_to_storage();
+
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
 }

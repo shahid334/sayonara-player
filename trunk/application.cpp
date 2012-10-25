@@ -51,7 +51,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     ui_playlist_chooser = new GUI_PlaylistChooser(player->getParentOfPlugin());
 
     playlist            = new Playlist();
-    library             = new CLibraryBase();
+    library             = new CLibraryBase(this);
     lastfm              = LastFM::getInstance();
     playlists           = new Playlists();
 
@@ -106,15 +106,19 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->setLFMRadio(ui_lfm_radio);
     player->setEqualizer(ui_eq);
     player->setPlaylistChooser(ui_playlist_chooser);
-    player->setStyle( CSettingsStorage::getInstance()->getPlayerStyle() );
+    player->setStyle( set->getPlayerStyle() );
     player->show();
+    int shown_plugin = set->getShownPlugin();
     player->hideAllPlugins();
+    set->setShownPlugin(shown_plugin);
+    player->check_show_plugins();
+
 
    qDebug() << "player is set up";
     ui_library->resize(player->getParentOfLibrary()->size());
     ui_playlist->resize(player->getParentOfPlaylist()->size());
 
-    player->check_show_plugins();
+
 
 
 
@@ -364,4 +368,8 @@ void Application::getVersion(){
     }
 
     istr.close();
+}
+
+QMainWindow* Application::getMainWindow(){
+    return this->player;
 }

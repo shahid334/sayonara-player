@@ -240,6 +240,7 @@ void GUI_Playlist::change_skin(bool dark){
 // the current track should be highlighted
 void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 
+    qDebug() << "fill playlist";
     _pli_model->removeRows(0, _pli_model->rowCount());
 
     if(v_metadata.size() == 0) return;
@@ -250,11 +251,14 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 		_pli_model->insertRows(0, 1);
 
 	_total_secs = 0;
-	int idx = 0;
+
 
     this->ui->btn_import->setVisible(false);
     set_radio_active(RADIO_OFF);
+
+    int idx = 0;
     foreach(MetaData md, v_metadata){
+
 
         if(md.is_extern) {
 
@@ -268,6 +272,7 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 		_total_secs += (min * 60 + sek);
 
         md.pl_selected = false;
+        md.pl_playing = (cur_play_idx == idx);
 
         _pli_model->setData(model_idx, md.toVariant(), Qt::EditRole);
 
@@ -396,6 +401,7 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 // by playlist
 void GUI_Playlist::track_changed(int new_row){
 
+    qDebug() << "new track = " << new_row;
 	if(new_row < 0) return;
 
 	QModelIndex index = _pli_model->index(new_row, 0);
@@ -409,6 +415,7 @@ void GUI_Playlist::track_changed(int new_row){
 		if(!MetaData::fromVariant(mdvariant, md)) continue;
 
 		md.pl_playing = (i == index.row());
+        if(md.pl_playing) qDebug() << "set " << md.title << " to playing";
 		_pli_model->setData(tmp_idx, md.toVariant(), Qt::EditRole);
 
 	}
