@@ -927,10 +927,18 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 }
 
 
+
+
 void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
-	e->accept();
+
+
+    e->accept();
+
+
 
 	switch (e->key()) {
+
+
 
 		case Qt::Key_MediaPlay:
             if(m_metadata.radio_mode == RADIO_OFF)
@@ -945,10 +953,14 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			forwardClicked(true);
 			break;
 
+
 		case Qt::Key_MediaPrevious:
             if(m_metadata.radio_mode == RADIO_OFF)
 				backwardClicked(true);
 			break;
+
+
+
 
 		case (Qt::Key_E):
 			this->ui->action_ViewEqualizer->setChecked(!this->ui->action_ViewEqualizer->isChecked());
