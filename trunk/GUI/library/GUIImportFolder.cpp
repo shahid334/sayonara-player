@@ -21,6 +21,7 @@
 #include "GUI/library/GUIImportFolder.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "ui_GUI_ImportFolder.h"
 #include <QDialog>
 #include <QString>
@@ -52,16 +53,22 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
     this->ui->lab_target_path->setText( libpath );
 
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(bb_accepted()));
-    connect(ui->btn_cancel, SIGNAL(clicked()), this, SLOT(bb_recjected()));
     connect(ui->combo_folders, SIGNAL(editTextChanged(const QString &)), this, SLOT(combo_box_changed(const QString&)));
 
 	ui->pb_progress->setValue(0);
 	ui->pb_progress->setVisible(false);
-
 }
+
 
 GUI_ImportFolder::~GUI_ImportFolder() {
 	// TODO Auto-generated destructor stub
+}
+
+void GUI_ImportFolder::changeSkin(bool dark){
+    QString pb_style = Style::get_pushbutton_style(dark);
+    this->ui->btn_cancel->setStyleSheet(pb_style);
+    this->ui->btn_ok->setStyleSheet(pb_style);
+    this->ui->combo_folders->setStyleSheet(Style::get_combobox_style(dark));
 }
 
 void GUI_ImportFolder::progress_changed(int val){
@@ -79,10 +86,6 @@ void GUI_ImportFolder::bb_accepted(){
     emit accepted(this->ui->combo_folders->currentText().trimmed(), this->ui->cb_copy2lib->isChecked());
 }
 
-void GUI_ImportFolder::bb_recjected(){
-	this->close();
-
-}
 
 void GUI_ImportFolder::combo_box_changed(const QString& text){
 

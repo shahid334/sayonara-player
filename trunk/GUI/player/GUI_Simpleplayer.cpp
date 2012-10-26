@@ -484,6 +484,10 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	this->ui->menuPreferences->setStyleSheet(menu_style);
 	this->ui->menuView->setStyleSheet(menu_style);
 	this->ui->menuAbout->setStyleSheet(menu_style);
+    this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
+    this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
+
+    this->m_alternate_covers->changeSkin(dark);
 
 	if (dark) {
 
@@ -522,7 +526,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
 
 	setupVolButton(this->ui->volumeSlider->value());
-	//emit skinChanged(dark);
+    emit skinChanged(dark);
 	this->ui_library->change_skin(dark);
 	this->ui_playlist->change_skin(dark);
 
@@ -1039,6 +1043,11 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 	}
 }
 
+void GUI_SimplePlayer::ui_loaded(){
+
+
+    emit skinChanged(CSettingsStorage::getInstance()->getPlayerStyle() == 1);
+}
 
 void GUI_SimplePlayer::suppress_warning(bool b){
 	 m_suppress_warning = b;

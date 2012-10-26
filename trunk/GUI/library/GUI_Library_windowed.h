@@ -122,6 +122,7 @@ public slots:
 	void library_changed();
 	void import_result(bool);
 	void psl_delete_answer(QString);
+    void change_skin(bool dark);
 
 
 private slots:
@@ -173,8 +174,6 @@ private slots:
 protected:
 	void resizeEvent(QResizeEvent* e);
 
-public:
-	void change_skin(bool dark);
 
 private:
 	void init_menues();

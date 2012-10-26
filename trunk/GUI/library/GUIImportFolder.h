@@ -42,11 +42,13 @@ public:
 
 	private slots:
 		void bb_accepted();
-		void bb_recjected();
 		void combo_box_changed(const QString&);
 
 	public:
 		void progress_changed(int);
+
+    public slots:
+        void changeSkin(bool);
 
 
 private:

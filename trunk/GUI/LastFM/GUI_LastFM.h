@@ -56,6 +56,7 @@ public:
 
 	public slots:
 		void show_win();
+        void changeSkin(bool);
 
 	private:
 		Ui_GUI_LastFM_Dialog* ui;

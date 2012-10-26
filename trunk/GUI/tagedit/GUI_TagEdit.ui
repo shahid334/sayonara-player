@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
-    <height>421</height>
+    <width>553</width>
+    <height>454</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -218,19 +218,6 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="7" rowspan="5">
-    <widget class="QLabel" name="lab_icon">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="scaledContents">
-      <bool>true</bool>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
    <item row="10" column="0" colspan="8">
     <widget class="Line" name="line">
      <property name="orientation">
@@ -277,13 +264,6 @@
    </item>
    <item row="15" column="1">
     <widget class="QSpinBox" name="sb_track_num"/>
-   </item>
-   <item row="18" column="5" colspan="3">
-    <widget class="QDialogButtonBox" name="bb_ok_cancel">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
    </item>
    <item row="16" column="1" colspan="6">
     <widget class="QLineEdit" name="le_comment"/>
@@ -336,6 +316,67 @@
     <widget class="QCheckBox" name="btn_all_genre">
      <property name="text">
       <string>all</string>
+     </property>
+    </widget>
+   </item>
+   <item row="18" column="6">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pb_cancel">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pb_ok">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="text">
+        <string>Ok</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="lab_icon">
+     <property name="minimumSize">
+      <size>
+       <width>50</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>50</width>
+       <height>50</height>
+      </size>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>

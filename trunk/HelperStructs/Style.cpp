@@ -74,6 +74,205 @@ QString Style::get_tv_header_style(){
 	return header_style;
 }
 
+QString Style::get_pushbutton_style(bool dark){
+
+    if(!dark) return "";
+
+
+    QString dark_grey = "#383838";
+    QString darker_grey = "#242424";
+    QString lighter_grey = "#424242";
+    QString lighter_grey2 = "#525252";
+    QString orange = "#e8841a";
+
+    QString style = QString("QPushButton {") +
+            "   border-left: 1px solid " + lighter_grey2 + ";" +
+            "   border-bottom: 1px solid " + lighter_grey2 + ";" +
+            "   border-right: 1px solid " + lighter_grey2 + ";" +
+            "   border-top: 1px solid " + lighter_grey2 + ";" +
+            "   border-radius: 6px; " +
+            "   padding: 4px;"
+            "}" +
+
+    "QPushButton:pressed {" +
+                "   border-left: 1px solid " + orange + ";" +
+                "   border-bottom: 1px solid " + orange + ";" +
+                "   border-right: 1px solid " + orange + ";" +
+                "   border-top: 1px solid " + orange + ";" +
+                "   border-radius: 6px; " +
+                "   padding: 4px;" +
+                "   background: " + lighter_grey + ";" +
+                "}";
+
+
+
+
+
+    return style;
+}
+
+QString Style::get_tabwidget_style(bool dark){
+    if(!dark ) return "";
+
+
+    QString dark_grey = "#383838";
+    QString darker_grey = "#242424";
+    QString lighter_grey = "#424242";
+    QString lighter_grey2 = "#525252";
+    QString orange = "#e8841a";
+   QString style = QString("QTabWidget::pane { ") +
+           "     border: 1px solid " + lighter_grey2 + ";" +
+    "}" +
+
+    "QTabWidget::tab-bar {" +
+    "    left: 5px; /* move to the right by 5px */" +
+    "}" +
+
+
+    "QTabBar::tab {" +
+    "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1," +
+           "                        stop: 0 " + lighter_grey2 + ", stop: 0.4 " + dark_grey + "," +
+           "                                stop: 0.5 " + dark_grey + ", stop: 1.0 " + lighter_grey + ");" +
+           "    border: 1px solid " + darker_grey + ";" +
+   // "    border-bottom-color: #C2C7CB; " +
+    "    border-top-left-radius: 4px;" +
+    "    border-top-right-radius: 4px;" +
+    "    min-width: 8ex;" +
+    "    padding: 4px;" +
+    "}" +
+
+   "QTabBar::tab:disabled {" +
+          "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1," +
+          "                        stop: 0 " + lighter_grey2 + ", stop: 0.4 " + dark_grey + "," +
+          "                                stop: 0.5 " + dark_grey + ", stop: 1.0 " + lighter_grey + ");" +
+          "    border: 1px solid " + darker_grey + ";" +
+           "    color: " + lighter_grey2 + ";" +
+   "}" +
+
+    "QTabBar::tab:selected, QTabBar::tab:hover {" +
+           "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1," +
+                  "                        stop: 0 " + lighter_grey2 + ", stop: 0.4 " + lighter_grey + "," +
+                  "                                stop: 0.5 " + lighter_grey + ", stop: 1.0 " + lighter_grey2 + ");" +
+                  "    border: 1px solid " + darker_grey + ";" +
+    "}" +
+
+
+
+    "QTabBar::tab:selected {" +
+    "    border-color: " + darker_grey + ";" +
+    "    border-bottom-color: " + lighter_grey2 + ";" +
+    "}" +
+
+    "QTabBar::tab:!selected {" +
+    "    margin-top: 2px; /* make non-selected tabs look smaller */" +
+    "}";
+
+   return style;
+
+}
+
+QString Style::get_lineedit_style(bool dark){
+
+    QString dark_grey = "#383838";
+    QString lighter_grey = "#525252";
+    QString orange = "#e8841a";
+
+    if(!dark) return "";
+
+    QString style = QString("QLineEdit {") +
+            "    border: 1px solid #2B2B2B;" +
+            "    border-radius: 4px; " +
+            "    background: " + lighter_grey + ";" +
+            "}"+
+
+            "QLineEdit::focus {"+
+            "    border-radius: 4px; " +
+            "    border: 1px solid " + orange + ";" +
+            "}"
+
+            "QLineEdit:read-only {" +
+            "    border-radius: 4px; " +
+            "    border: 1px solid #2B2B2B;" +
+            "    background: " + dark_grey + ";" +
+            "}";
+
+    return style;
+
+
+}
+
+QString Style::get_combobox_style(bool dark){
+
+    QString dark_grey = "#383838";
+    QString lighter_grey = "#525252";
+
+    if(!dark) return "";
+
+    else{
+        QString arrow_down_filename = Helper::getIconPath() + "/arrow_down.png";
+
+        QString style =
+        QString("QComboBox {") +
+        "     border: 1px solid #2B2B2B;" +
+        "     border-radius: 3px;"+
+        "     padding: 1px 18px 1px 3px;"+
+        "     min-width: 6em;"+
+
+        " }"+
+
+         "QComboBox:editable {"+
+                "     background: " + lighter_grey + ";" +
+
+         "}"+
+
+         "QComboBox:!editable, QComboBox::drop-down:editable {"+
+         "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "+
+         "                                 stop: 0 #555555, stop: 0.4 " + dark_grey + ");" +
+         //"                                 stop: 0.5 #2E2E2E, stop: 1.0 " + dark_grey + ");"+
+         "     font-weight: bold;" +
+         "}"+
+
+                "QComboBox:!editable:on, QComboBox::drop-down:editable:on {"+
+         "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"+
+         "                                stop: 0 #f1b42a, stop: 0.4 #e8841a,"+
+         "                                stop: 0.5 #e8841a, stop: 1.0 #e8841a);"+
+         "}"+
+
+                "QComboBox:!editable:off, QComboBox::drop-down:editable:off {"+
+         "    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,"+
+         "                                stop: 0 #f1b42a, stop: 0.4 #e8841a,"+
+         "                                stop: 0.5 #e8841a, stop: 1.0 #e8841a);"+
+         "}"+
+
+         "QComboBox:on { /* shift the text when the popup opens */"+
+         "    padding-top: 3px;"+
+         "    padding-left: 4px;"+
+         "}"+
+
+         "QComboBox::drop-down {"+
+         "    width: 18px;"+
+
+         "    border-left-width: 1px;"+
+         "    border-left-color: #242424;"+
+         "    border-left-style: solid; /* just a single line */"+
+         "    border-top-right-radius: 3px; /* same radius as the QComboBox */"+
+         "    border-bottom-right-radius: 3px;"+
+         "}"+
+
+         "QComboBox::down-arrow {"+
+                "   height: 12px; " +
+                "   width: 10px; " +
+                " padding: 2px; " +
+                "    image: url("+ arrow_down_filename +");"+
+         "}";
+
+        return style;
+    }
+
+    return "";
+
+}
+
 
 QString Style::get_v_scrollbar_style(){
 
@@ -138,7 +337,7 @@ QString Style::get_v_scrollbar_style(){
 
 QString Style::get_btn_style(int intensity){
 	QString style =
-		QString("QPushButton") +
+        QString("QPushButton") +
 		"{"
 		"color: white; "
 		"border-width: 0px; "
@@ -147,11 +346,11 @@ QString Style::get_btn_style(int intensity){
 		"padding-left: 1px; "
 		"padding-right: 1px; "
 		"}"
-		"QPushButton:checked"
+        "QPushButton:checked"
 		"\{"
 		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0." + QString::number(intensity) + " rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
 		"}"
-		"QPushButton:pressed"
+        "QPushButton:pressed"
 		"\{"
 		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
 		"}";
@@ -265,5 +464,166 @@ QString Style::get_menu_style(bool dark){
 
 
 QString Style::get_sayonara_orange_str(){
-return QString("#e8841a");
+    return QString("#e8841a");
+}
+
+
+QString Style::get_spinbox_style(bool dark){
+
+    if(!dark) return "";
+
+    QString dark_grey = "#383838";
+    QString darker_grey = "#2B2B2B";
+    QString lighter_grey2 = "#525252";
+    QString orange = "#e8841a";
+
+    QString arrow_down_filename = Helper::getIconPath() + "/arrow_down.png";
+    QString arrow_up_filename = Helper::getIconPath() + "/arrow_up.png";
+    QString style = QString("") +
+
+    "QSpinBox {" +
+    "    padding-right: 15px;" +
+    "    background: " + lighter_grey2 + "; " +
+    "    border: 1px solid " + darker_grey + "; " +
+    "}" +
+
+    "QSpinBox:focus {" +
+    "    padding-right: 15px;" +
+    "    background: " + lighter_grey2 + "; " +
+    "    border: 1px solid " + orange + "; " +
+    "}" +
+
+
+    "QSpinBox::up-button {" +
+    "     subcontrol-origin: border;" +
+    "     subcontrol-position: top right;" +
+    "     width: 12px;" +
+    "     border: 1px solid " + darker_grey + "; " +
+    "     padding: 2px;" +
+    "     background: " + dark_grey + "; " +
+    "}" +
+
+    "QSpinBox::up-button:hover {"+
+    "    background: " + lighter_grey2  + "; "+
+    "}"+
+
+
+    "QSpinBox::up-arrow {" +
+ "    image: url(" + arrow_up_filename + ");" +
+    "     width: 7px;" +
+    "     height: 7px;" +
+    " }" +
+
+    "QSpinBox::down-button {" +
+    "     subcontrol-origin: border;" +
+    "     subcontrol-position: bottom right;" +
+    "     padding: 2px;" +
+    "     width: 12px;" +
+    "     border: 1px solid " + darker_grey + "; " +
+    "     background: " + dark_grey + "; " +
+    " }" +
+
+    "QSpinBox::down-button:hover {"+
+    "    background: " + lighter_grey2  + "; "+
+    "}"+
+
+    "QSpinBox::down-arrow {" +
+    "    image: url(" + arrow_down_filename + ");" +
+    "    width: 7px;" +
+    "    height: 7px;" +
+    "}";
+
+    return style;
+}
+
+
+QString Style::get_v_slider_style(bool dark){
+    if(!dark) return "";
+
+    QString darker_grey = "#2B2B2B";
+    QString orange = "#e8841a";
+
+
+    QString style =  QString("QSlider {") +
+            "border-radius: 4px; " +
+            "background: #383838; " +
+
+        "}" +
+
+        "QSlider::handle:vertical {" +
+        "    background: #525252;" +
+        "    height: 10px;" +
+        "    margin-left: -5px; " +
+        "    margin-right: -5px; " +
+        "    min-width: 12px;" +
+        "	 border: 1px solid #2C2C2C; " +
+        "    border-radius: 4px; " +
+        "}" +
+
+
+        "QSlider::groove:vertical { " +
+        "    background: #383838;" +
+        "    width: 6px; " +
+        "    left: 10px; right: 10px; " +
+        "}" +
+
+
+        "QSlider::add-page:vertical {"+
+        "   background: " + orange + ";"+
+        "   border-radius: 2px;" +
+
+       "}"+
+
+        "QSlider::sub-page:vertical {"+
+        "   background: " + darker_grey + ";"+
+        "   border-radius: 2px;" +
+
+        "}";
+
+    return style;
+}
+
+QString Style::get_h_slider_style(bool dark){
+   if(!dark) return "";
+
+    QString darker_grey = "#2B2B2B";
+    QString orange = "#e8841a";
+
+
+    QString style =  QString("QSlider {") +
+            "border-radius: 4px; " +
+            "background: #383838; " +
+        "}" +
+
+        "QSlider::handle:horizontal {" +
+        "    background: #525252;" +
+        "    width: 10px;" +
+        "    margin-top: -5px; " +
+        "    margin-bottom: -5px; " +
+        "    min-height: 12px;" +
+        "	 border: 1px solid #2C2C2C; " +
+        "    border-radius: 4px; " +
+        "}" +
+
+
+        "QSlider::groove:horizontal { " +
+        "    background: #383838;" +
+        "    height: 6px; " +
+        "    top: 10px; bottom: 10px; " +
+        "}" +
+
+
+        "QSlider::add-page:horizontal {"+
+        "   background: " + darker_grey + ";"+
+        "   border-radius: 2px;" +
+
+       "}"+
+
+        "QSlider::sub-page:horizontal {"+
+        "   background: " + orange + ";"+
+        "   border-radius: 2px;" +
+
+        "}";
+
+    return style;
 }

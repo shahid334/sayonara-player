@@ -127,7 +127,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 		MetaDataList v_md;
 		foreach(QString filename, files){
 			MetaData md;
-            md = _db->getTrackByPath(md.filepath);
+            md = _db->getTrackByPath(filename);
 
 			if(md.id < 0){
                 if(!ID3::getMetaDataOfFile(md)) continue;
@@ -219,7 +219,6 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
 		success &= db->storeMetadata(v_metadata);
 		emit sig_import_result(success);
-
 }
 
 
@@ -254,12 +253,10 @@ void CLibraryBase::reloadLibrary(){
 
 	m_thread->set_lib_path(m_library_path);
 	m_thread->start();
-
-
 }
 
-// TODO:
 
+// TODO:
 void CLibraryBase::reload_thread_finished(){
 
 	_db->getAllAlbums(_vec_albums);

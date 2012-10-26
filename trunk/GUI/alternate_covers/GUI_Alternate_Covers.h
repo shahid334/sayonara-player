@@ -63,6 +63,7 @@ public:
 	public slots:
 		void start(int, bool);
         void start(QString, QString);
+        void changeSkin(bool dark);
 
 	private slots:
 		void save_button_pressed();

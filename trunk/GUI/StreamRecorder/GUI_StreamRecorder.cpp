@@ -24,6 +24,7 @@
 
 #include "GUI_StreamRecorder.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -41,6 +42,17 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) {
 
 GUI_StreamRecorder::~GUI_StreamRecorder() {
 	// TODO Auto-generated destructor stub
+}
+
+
+void GUI_StreamRecorder::changeSkin(bool dark){
+    QString button_style = Style::get_btn_style(dark);
+
+    if(!ui) return;
+    this->ui->btn_cancel->setStyleSheet(button_style);
+    this->ui->btn_ok->setStyleSheet(button_style);
+    this->ui->btn_path->setStyleSheet(button_style);
+    this->ui->le_path->setStyleSheet(Style::get_lineedit_style(dark));
 }
 
 

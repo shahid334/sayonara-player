@@ -30,6 +30,7 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 
@@ -75,6 +76,22 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 GUI_Equalizer::~GUI_Equalizer() {
 
 	delete _ui;
+}
+
+
+void GUI_Equalizer::changeSkin(bool dark){
+    this->_ui->combo_presets->setStyleSheet(Style::get_combobox_style(dark));
+    QString sli_style = Style::get_v_slider_style(dark);
+    this->_ui->sli_0->setStyleSheet(sli_style);
+    this->_ui->sli_1->setStyleSheet(sli_style);
+    this->_ui->sli_2->setStyleSheet(sli_style);
+    this->_ui->sli_3->setStyleSheet(sli_style);
+    this->_ui->sli_4->setStyleSheet(sli_style);
+    this->_ui->sli_5->setStyleSheet(sli_style);
+    this->_ui->sli_6->setStyleSheet(sli_style);
+    this->_ui->sli_7->setStyleSheet(sli_style);
+    this->_ui->sli_8->setStyleSheet(sli_style);
+    this->_ui->sli_9->setStyleSheet(sli_style);
 }
 
 

@@ -23,6 +23,9 @@
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>

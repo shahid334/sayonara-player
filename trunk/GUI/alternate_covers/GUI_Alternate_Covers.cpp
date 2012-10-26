@@ -25,7 +25,7 @@
  *  Created on: Jul 1, 2011
  *      Author: luke
  */
-
+#include "HelperStructs/Style.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
@@ -85,6 +85,15 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	delete _model;
 	delete _delegate;
 	delete ui;
+}
+
+void GUI_Alternate_Covers::changeSkin(bool dark){
+    this->ui->le_search->setStyleSheet(Style::get_lineedit_style(dark));
+    QString button_style = Style::get_pushbutton_style(dark);
+
+    this->ui->btn_cancel->setStyleSheet(button_style);
+    this->ui->btn_save->setStyleSheet(button_style);
+    this->ui->btn_search->setStyleSheet(button_style);
 }
 
 void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){

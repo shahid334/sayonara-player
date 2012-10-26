@@ -51,6 +51,7 @@ public:
 
 	public slots:
         void show_win();
+        void changeSkin(bool dark);
 
 	public:
 		GUI_StreamRecorder(QWidget* parent=0);

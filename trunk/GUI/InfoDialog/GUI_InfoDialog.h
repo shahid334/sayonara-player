@@ -61,6 +61,7 @@ public slots:
 	void psl_album_info_available(const QString& target_class);
 	void psl_artist_info_available(const QString& target_class);
 	void psl_corrected_data_available(const QString& target_class);
+    void changeSkin(bool dark);
 
 private slots:
 	void psl_lyrics_available();

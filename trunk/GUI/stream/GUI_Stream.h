@@ -43,10 +43,15 @@ private slots:
 	void delete_clicked();
 	void save_clicked();
 
+public slots:
+    void changeSkin(bool);
+
 
 public:
 	GUI_Stream(QWidget* parent=0);
 	virtual ~GUI_Stream();
+
+
 
 private:
 	Ui::GUI_Stream* ui;

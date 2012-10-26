@@ -30,6 +30,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 
 #include <QWidget>
 #include <QString>
@@ -38,6 +39,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QMessageBox>
+#include <QScrollBar>
 
 
 
@@ -85,8 +87,12 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
 
     QStringList server_list = _lyric_thread->getServers();
-    ui->lmb_server_button->setServers(server_list);
-    ui->lmb_server_button->setText(server_list[0]);
+    foreach(QString server, server_list){
+
+        ui->combo_servers->addItem(server);
+    }
+
+    ui->combo_servers->setCurrentIndex(0);
 
 
     connect( _lfm_thread, SIGNAL(sig_corrected_data_available(const QString&)),
@@ -115,7 +121,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
         connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
     }
 
-    connect(ui->lmb_server_button, 	SIGNAL(sig_server_changed(int)),
+    connect(ui->combo_servers, 	SIGNAL(currentIndexChanged(int)),
             this, 					SLOT(psl_lyrics_server_changed(int)));
 
     connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
@@ -131,6 +137,21 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 	// TODO Auto-generated destructor stub
 }
 
+void GUI_InfoDialog::changeSkin(bool dark){
+
+    QString button_style = Style::get_pushbutton_style(dark);
+
+    this->ui->tab_widget->setStyleSheet(Style::get_tabwidget_style(dark));
+    this->ui->btn_close->setStyleSheet(button_style);
+    this->ui->btn_close1->setStyleSheet(button_style);
+    if(dark)
+        this->ui->te_lyrics->verticalScrollBar()->setStyleSheet(Style::get_v_scrollbar_style());
+    else
+        this->ui->te_lyrics->verticalScrollBar()->setStyleSheet("");
+    this->ui->combo_servers->setStyleSheet(Style::get_combobox_style(dark));
+    this->_alternate_covers->changeSkin(dark);
+
+}
 
 
 void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
@@ -144,8 +165,6 @@ void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename)
 
 void GUI_InfoDialog::psl_lyrics_server_changed(int idx){
 	_lyric_server = idx;
-	QStringList lst = _lyric_thread->getServers();
-	this->ui->lmb_server_button->setText(lst[idx]);
 	prepare_lyrics();
 }
 
@@ -160,10 +179,6 @@ void GUI_InfoDialog::prepare_lyrics(){
 
 void GUI_InfoDialog::psl_lyrics_available(){
 
-	if(!this->ui->lmb_server_button->isChecked()){
-		this->ui->lmb_server_button->setVisible(true);
-		this->ui->lmb_server_button->setChecked(true);
-	}
 
 	QString lyrics = _lyric_thread->getFinalLyrics();
 	lyrics = lyrics.trimmed();

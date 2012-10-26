@@ -87,6 +87,7 @@ public:
 		void change_meta_data(const MetaDataList&);
 		void change_meta_data(const MetaData&);
         void show_win();
+        void changeSkin(bool dark);
 
 
 	private:

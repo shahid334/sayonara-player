@@ -47,8 +47,15 @@ namespace Style{
 	QString get_btn_style(int intensity=7);
 	QString get_menubar_style(bool dark);
 	QString get_menu_style(bool dark);
+    QString get_combobox_style(bool dark);
+    QString get_lineedit_style(bool dark);
+    QString get_pushbutton_style(bool dark);
+    QString get_tabwidget_style(bool dark);
+    QString get_spinbox_style(bool dark);
 
     QString get_sayonara_orange_str();
+    QString get_v_slider_style(bool dark);
+    QString get_h_slider_style(bool dark);
 };
 
 

@@ -22,6 +22,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 
 #include <QWidget>
@@ -67,6 +68,9 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 }
 
 
+void GUI_PlaylistChooser::changeSkin(bool dark){
+    this->ui->combo_playlistchooser->setStyleSheet(Style::get_combobox_style(dark));
+}
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 

@@ -55,6 +55,7 @@ private slots:
 
 public slots:
 	void all_playlists_fetched(QMap<int, QString>&);
+    void changeSkin(bool);
 
 public:
 	GUI_PlaylistChooser(QWidget* parent=0);

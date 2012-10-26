@@ -22,6 +22,7 @@
 #include "ui_GUI_Stream.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QDockWidget>
@@ -63,6 +64,13 @@ GUI_Stream::~GUI_Stream() {
 }
 
 
+void GUI_Stream::changeSkin(bool dark){
+    this->ui->combo_stream->setStyleSheet(Style::get_combobox_style(dark));
+    this->ui->le_url->setStyleSheet(Style::get_lineedit_style(dark));
+    this->ui->btn_listen->setStyleSheet(Style::get_pushbutton_style(dark));
+}
+
+
 void GUI_Stream::listen_clicked(){
 
 	QString url;
@@ -79,7 +87,6 @@ void GUI_Stream::listen_clicked(){
 	}
 
 	if(url.size() > 5){
-
 
         emit sig_play_stream(url.trimmed(), name);
 	}

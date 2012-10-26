@@ -49,6 +49,7 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "StreamPlugins/LastFM/LastFM.h"
+#include "HelperStructs/Style.h"
 
 
 #include "ui_GUI_Library_windowed.h"
@@ -218,16 +219,25 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 void GUI_Library_windowed::change_skin(bool dark){
 
 
+    QString table_style = Style::get_tv_style(dark);
+    QString combo_style = Style::get_combobox_style(dark);
+    QString line_edit_style = Style::get_lineedit_style(dark);
+
+    this->ui->combo_searchfilter->setStyleSheet(combo_style);
+    this->ui->lv_album->setStyleSheet(table_style);
+    this->ui->lv_artist->setStyleSheet(table_style);
+    this->ui->tb_title->setStyleSheet(table_style);
+    this->ui->le_search->setStyleSheet(line_edit_style);
+
+
 	if(dark){
 
-		QString table_style = Style::get_tv_style(dark);
+
 		QString header_style = Style::get_tv_header_style();
 		QString v_scrollbar_style = Style::get_v_scrollbar_style();
 		QString h_scrollbar_style = Style::get_h_scrollbar_style();
 
-		this->ui->lv_album->setStyleSheet(table_style);
-		this->ui->lv_artist->setStyleSheet(table_style);
-		this->ui->tb_title->setStyleSheet(table_style);
+
 
 		this->ui->btn_clear->setStyleSheet(Style::get_btn_style());
 
@@ -246,18 +256,13 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->lv_artist->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
 		this->ui->lv_album->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
 		this->ui->tb_title->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
+
 	}
 
 
 	else {
 
-		QString table_style = Style::get_tv_style(dark);
-
-		this->ui->lv_album->setStyleSheet(table_style);
-		this->ui->lv_artist->setStyleSheet(table_style);
-		this->ui->tb_title->setStyleSheet(table_style);
-
-		this->ui->tb_title->setShowGrid(true);
+        this->ui->tb_title->setShowGrid(true);
 		this->ui->lv_album->setShowGrid(true);
 		this->ui->lv_artist->setShowGrid(true);
 

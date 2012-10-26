@@ -31,6 +31,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "ui_GUI_TagEdit.h"
 
 #include <QString>
@@ -58,7 +59,7 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     _db = CDatabaseConnector::getInstance();
 
 
-        QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "edit.png")).scaled(30,30, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        QPixmap pix = QPixmap(Helper::getIconPath() + "edit.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         this->ui->lab_icon->setPixmap(pix);
 
 
@@ -80,8 +81,8 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
 
         connect(this->ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
         connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
-        connect(this->ui->bb_ok_cancel, SIGNAL(accepted()), this, SLOT(ok_button_clicked()));
-        connect(this->ui->bb_ok_cancel, SIGNAL(rejected()), this, SLOT(cancel_button_clicked()));
+        connect(this->ui->pb_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
+        connect(this->ui->pb_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_clicked()));
         connect(this->ui->le_tag_from_path, SIGNAL(textChanged ( const QString &)), this, SLOT(tag_from_path_text_changed(const QString&)));
 
         connect(this->ui->btn_tag_help, SIGNAL(clicked()), this, SLOT(help_tag_clicked()));
@@ -99,6 +100,28 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
 
 GUI_TagEdit::~GUI_TagEdit() {
     delete ui;
+}
+
+void GUI_TagEdit::changeSkin(bool dark){
+
+    QString le_style = Style::get_lineedit_style(dark);
+    QString pb_style = Style::get_pushbutton_style(dark);
+    QString sb_style = Style::get_spinbox_style(dark);
+    this->ui->le_album->setStyleSheet(le_style);
+    this->ui->le_artist->setStyleSheet(le_style);
+    this->ui->le_comment->setStyleSheet(le_style);
+    this->ui->le_genres->setStyleSheet(le_style);
+    this->ui->le_tag_from_path->setStyleSheet(le_style);
+    this->ui->le_title->setStyleSheet(le_style);
+    this->ui->lab_filepath->setStyleSheet(le_style);
+
+    this->ui->btn_tag_apply->setStyleSheet(pb_style);
+    this->ui->pb_next_track->setStyleSheet(pb_style);
+    this->ui->pb_prev->setStyleSheet(pb_style);
+    this->ui->pb_ok->setStyleSheet(pb_style);
+    this->ui->pb_cancel->setStyleSheet(pb_style);
+    this->ui->sb_track_num->setStyleSheet(sb_style);
+    this->ui->sb_year->setStyleSheet(sb_style);
 }
 
 

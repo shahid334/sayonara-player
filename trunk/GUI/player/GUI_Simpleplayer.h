@@ -253,6 +253,7 @@ public:
     QWidget* getParentOfPlugin();
 
 
+    void ui_loaded();
     void setStyle(int);
     void suppress_warning(bool b);
 

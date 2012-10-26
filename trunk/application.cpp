@@ -108,10 +108,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->setPlaylistChooser(ui_playlist_chooser);
     player->setStyle( set->getPlayerStyle() );
     player->show();
-    int shown_plugin = set->getShownPlugin();
-    player->hideAllPlugins();
-    set->setShownPlugin(shown_plugin);
-    player->check_show_plugins();
+
 
 
    qDebug() << "player is set up";
@@ -141,6 +138,12 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
 
     playlist->ui_loaded();
     playlists->ui_loaded();
+    player->ui_loaded();
+
+    int shown_plugin = set->getShownPlugin();
+    player->hideAllPlugins();
+    set->setShownPlugin(shown_plugin);
+    player->check_show_plugins();
 
     getVersion();
 }
@@ -175,9 +178,6 @@ Application::~Application(){
 
 void Application::init_connections(){
 
-
-
-
    CONNECT (player, pause(),                                listen,				pause());
    CONNECT (player, search(int),							listen,			jump(int));
    CONNECT (player, sig_volume_changed(int),				listen,			setVolume(int));
@@ -193,7 +193,18 @@ void Application::init_connections(){
    CONNECT (player, forward(),                              playlist,			psl_forward());
    CONNECT (player, backward(),                             playlist,			psl_backward());
    CONNECT (player, sig_stream_selected(const QString&, const QString&), 		playlist, psl_play_stream(const QString&, const QString&));
+
    CONNECT (player, skinChanged(bool),                      ui_playlist, 		change_skin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_library, 		change_skin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_eq,              changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_stream,          changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_lfm_radio, 		changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_playlist_chooser, changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_info_dialog,     changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_stream_rec,      changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_id3_editor,      changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_lastfm,          changeSkin(bool));
+
    CONNECT (player, show_small_playlist_items(bool),		ui_playlist,		psl_show_small_playlist_items(bool));
    CONNECT (player, sig_sound_engine_changed(QString&), 	plugin_loader,      psl_switch_engine(QString&));
 

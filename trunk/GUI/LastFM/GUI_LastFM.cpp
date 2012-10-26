@@ -29,6 +29,7 @@
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "ui_GUI_LastFM_Dialog.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 #include <QString>
@@ -64,6 +65,19 @@ GUI_LastFM::~GUI_LastFM() {
 	// TODO Auto-generated destructor stub
 }
 
+void GUI_LastFM::changeSkin(bool dark){
+
+    if(!ui) return;
+
+    QString pb_style = Style::get_pushbutton_style(dark);
+    QString le_style = Style::get_lineedit_style(dark);
+
+    this->ui->btn_cancel->setStyleSheet(pb_style);
+    this->ui->btn_save->setStyleSheet(pb_style);
+    this->ui->tf_password->setStyleSheet(le_style);
+    this->ui->tf_username->setStyleSheet(le_style);
+
+}
 
 void GUI_LastFM::save_button_pressed(){
 

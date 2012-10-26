@@ -47,6 +47,10 @@ public:
 		void listen_clicked(const QString&, int artist);
 		void close_event();
 
+    public slots:
+        void changeSkin(bool);
+
+
 	private slots:
 		void start_listen();
 		void radio_button_changed();

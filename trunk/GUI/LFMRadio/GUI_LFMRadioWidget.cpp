@@ -28,6 +28,7 @@
 
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
 #include <QWidget>
@@ -59,10 +60,16 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QWidget* parent) : QDockWidget(parent)  {
     hide();
 }
 
+
 GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
 	// TODO Auto-generated destructor stub
 }
 
+void GUI_LFMRadioWidget::changeSkin(bool dark){
+    this->_ui->cb_friends->setStyleSheet(Style::get_combobox_style(dark));
+    this->_ui->le_text->setStyleSheet(Style::get_lineedit_style(dark));
+    this->_ui->btn_listen->setStyleSheet(Style::get_pushbutton_style(dark));
+}
 
 void GUI_LFMRadioWidget::start_listen(){
 

@@ -98,6 +98,9 @@
        <height>30</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Repeat All</string>
      </property>
@@ -138,6 +141,9 @@
        <width>30</width>
        <height>30</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Shuffle</string>
@@ -180,6 +186,9 @@
        <height>30</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Dynamic playing</string>
      </property>
@@ -221,6 +230,9 @@
        <height>30</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Repeat 1</string>
      </property>
@@ -261,6 +273,9 @@
        <width>30</width>
        <height>30</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Append when adding new tracks</string>
@@ -316,6 +331,9 @@
        <height>26</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Clear Playlist</string>
      </property>
@@ -350,6 +368,9 @@
        <width>26</width>
        <height>26</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Import new (orange) tracks to library w/o copying</string>
@@ -429,6 +450,9 @@
        <width>30</width>
        <height>30</height>
       </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Show numbers in playlist</string>
