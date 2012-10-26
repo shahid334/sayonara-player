@@ -14,6 +14,7 @@
   * Play soundfiles from command line or desktop
   * Streaming & stream recorder improved
   * Faster startup
+  * Dark skin usable now
 
 === Bugfixes ===
 
