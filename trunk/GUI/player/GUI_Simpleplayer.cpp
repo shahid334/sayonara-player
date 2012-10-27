@@ -581,7 +581,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 		play_tmp = true;
 	}
 
-	this->ui->albumCover->setFocus();
+    //this->ui->albumCover->setFocus();
 	this->m_playing = play_tmp;
 
 	this -> m_trayIcon->playStateChanged (this->m_playing);
@@ -608,14 +608,14 @@ void GUI_SimplePlayer::stopClicked(bool) {
 
 	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 
-	this->ui->albumCover->setFocus();
+    //this->ui->albumCover->setFocus();
 	this -> m_trayIcon->playStateChanged (this->m_playing);
 	emit stop();
 }
 
 void GUI_SimplePlayer::backwardClicked(bool) {
 
-    this->ui->albumCover->setFocus();
+   // this->ui->albumCover->setFocus();
     int cur_pos_sec =  (m_completeLength_ms * this->ui->songProgress->value()) / 100000;
     if(cur_pos_sec > 3){
         setProgressJump(0);
@@ -628,7 +628,7 @@ void GUI_SimplePlayer::backwardClicked(bool) {
 }
 
 void GUI_SimplePlayer::forwardClicked(bool) {
-	this->ui->albumCover->setFocus();
+    //this->ui->albumCover->setFocus();
 	emit forward();
 }
 /** PLAYER BUTTONS END **/
@@ -766,7 +766,7 @@ void GUI_SimplePlayer::coverClicked() {
 
 
 
-	this->setFocus();
+    this->setFocus();
 }
 
 void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class){

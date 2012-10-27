@@ -164,28 +164,18 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 
     qDebug() << " Cur selecte row before " << _cur_play_idx;
 	MetaDataList v_tmp_md;
-	MetaDataList v_tmp_extern;
 
 	int n_tracks = _v_meta_data.size();
-	int n_tracks_extern = _v_extern_tracks.size();
+
 
 	bool* to_delete = new bool[n_tracks];
-	bool* to_delete_extern = new bool[n_tracks_extern];
 
-	for(int i=0; i<n_tracks_extern; i++){
-		to_delete_extern[i] = false;
-	}
 
 	for(int i=0; i<n_tracks; i++){
 		to_delete[i] = false;
 		if(rows.contains(i)) {
 			to_delete[i] = true;
-			for(int j=0; j<n_tracks_extern; j++){
-				MetaData e_md = _v_extern_tracks[j];
-				if(e_md.filepath.toLower().trimmed() == _v_meta_data[i].filepath.toLower().trimmed()){
-					to_delete_extern[j] = true;
-				}
-			}
+
 		}
 	}
 
@@ -202,20 +192,15 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 
 	if(_cur_play_idx < -1) _cur_play_idx = -1;
 
-	for(int i=0; i<n_tracks_extern; i++){
-        if(!to_delete_extern[i] )
-			v_tmp_extern.push_back(_v_extern_tracks[i]);
-	}
 
 	_v_meta_data = v_tmp_md;
-	_v_extern_tracks = v_tmp_extern;
 
 	psl_save_playlist_to_storage();
 
 	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
 
 	delete to_delete;
-	delete to_delete_extern;
+
 }
 
 
@@ -250,7 +235,6 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
         else {
 			md.is_extern = true;
             md.radio_mode = RADIO_OFF;
-			_v_extern_tracks.push_back(md);
         }
 
 		_v_meta_data.insert_mid(md, i + row);
@@ -583,7 +567,6 @@ void Playlist::psl_clear_playlist(){
 
     _v_stream_playlist.clear();
 	_v_meta_data.clear();
-	_v_extern_tracks.clear();
 	_cur_play_idx = -1;
 
 
@@ -717,9 +700,17 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
 
 
 void Playlist::psl_import_new_tracks_to_library(bool copy){
+    qDebug() << "import files..";
+    MetaDataList v_md_extern;
+    foreach(MetaData md, _v_meta_data){
+        if(md.is_extern){
+            v_md_extern.push_back(md);
+            qDebug() << md.title;
+        }
+    }
 
-    if(_v_extern_tracks.size() == 0) return;
-	emit sig_import_files(_v_extern_tracks);
+    if(v_md_extern.size() == 0) return;
+    emit sig_import_files(v_md_extern);
 
 }
 
@@ -727,7 +718,6 @@ void Playlist::psl_import_result(bool success){
 
 	if(success){
 
-        _v_extern_tracks.clear();
         for(uint i=0; i<_v_meta_data.size(); i++){
             _v_meta_data[i].is_extern = false;
         }

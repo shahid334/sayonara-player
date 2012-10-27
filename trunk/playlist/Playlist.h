@@ -112,8 +112,7 @@ public:
 
 
 	MetaDataList	_v_meta_data;
-	MetaDataList	_v_extern_tracks;
-	QStringList			_pathlist;
+    QStringList			_pathlist;
 	int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;

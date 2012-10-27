@@ -108,7 +108,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	this->ui->btn_import->setVisible(false);
 
-	connect(this->ui->btn_clear, SIGNAL(released()), this, SLOT(clear_playlist_slot()));
+    connect(this->ui->btn_clear, SIGNAL(clicked()), this, SLOT(clear_playlist_slot()));
 	//this->connect(this->ui->btn_dummy, SIGNAL(released()), this, SLOT(dummy_pressed()));
 
 	connect(this->ui->btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
@@ -240,7 +240,6 @@ void GUI_Playlist::change_skin(bool dark){
 // the current track should be highlighted
 void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 
-    qDebug() << "fill playlist";
     _pli_model->removeRows(0, _pli_model->rowCount());
 
     if(v_metadata.size() == 0) return;
