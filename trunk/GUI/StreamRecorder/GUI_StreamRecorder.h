@@ -38,9 +38,6 @@ public:
 
 	signals:
 		void sig_stream_recorder_active(bool);
-		void sig_path_changed(const QString&);
-		void sig_complete_tracks(bool);
-		void sig_create_playlist(bool);
 
 	private slots:
 		void sl_cb_activate_toggled(bool);
@@ -65,6 +62,7 @@ public:
 		bool	_is_active;
 		bool	_is_complete_tracks;
 		bool	_is_create_playlist;
+        bool    _skin;
 
 };
 

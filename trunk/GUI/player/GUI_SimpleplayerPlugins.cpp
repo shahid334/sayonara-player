@@ -142,7 +142,7 @@ void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
 		widget->resize(widget_size);
 	}
 
-	else{
+    else{
 		widget->hide();
         widget->close();
         pl_size.setHeight(pl_size.height() + old_h);
@@ -190,19 +190,14 @@ void GUI_SimplePlayer::show_stream(bool vis){
 
 void GUI_SimplePlayer::show_lfm_radio(bool vis){
 
-	bool lfm_stuff = true;
-	lfm_stuff &= CSettingsStorage::getInstance()->getLastFMActive();
-	lfm_stuff &= LastFM::getInstance()->lfm_is_logged_in();
+    bool lfm_active = true;
+    lfm_active = CSettingsStorage::getInstance()->getLastFMActive();
+    bool show_widget = vis && lfm_active;
 
-	if(vis && !lfm_stuff){
-		QMessageBox::warning(this->ui->centralwidget, "LastFM warning", "Something is wrong with your LastFM settings");
-	}
+    // that's cool.. If you read this in a few weeks have fun
+    if( ui_lfm_radio->isHidden() == show_widget)
+        showPlugin(ui_lfm_radio, (show_widget)) ;
 
-	vis &= lfm_stuff;
-
-
-
-	showPlugin(ui_lfm_radio, vis);
 
     if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_LFM_RADIO);
     else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);

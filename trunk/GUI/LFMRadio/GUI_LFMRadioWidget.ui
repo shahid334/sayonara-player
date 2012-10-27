@@ -70,6 +70,9 @@
         <pointsize>8</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="text">
        <string>Artist</string>
       </property>
@@ -82,6 +85,9 @@
         <pointsize>8</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="text">
        <string>Tag</string>
       </property>
@@ -90,10 +96,17 @@
     <item row="2" column="0" colspan="3">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLineEdit" name="le_text"/>
+       <widget class="QLineEdit" name="le_text">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QComboBox" name="cb_friends">
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
         <property name="editable">
          <bool>true</bool>
         </property>
@@ -114,7 +127,7 @@
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="text">
          <string>Listen</string>
@@ -136,6 +149,9 @@
         <pointsize>8</pointsize>
        </font>
       </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
       <property name="text">
        <string>User</string>
       </property>
@@ -147,6 +163,9 @@
        <font>
         <pointsize>8</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
       </property>
       <property name="text">
        <string>Recommended</string>
@@ -182,5 +201,22 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>le_text</sender>
+   <signal>returnPressed()</signal>
+   <receiver>btn_listen</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>91</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>80</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

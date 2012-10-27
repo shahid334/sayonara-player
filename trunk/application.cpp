@@ -52,9 +52,9 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
 
     playlist            = new Playlist();
     library             = new CLibraryBase(this);
-    lastfm              = LastFM::getInstance();
     playlists           = new Playlists();
 
+    lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
     ui_stream           = new GUI_Stream(player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer(player->getParentOfPlugin());
@@ -87,10 +87,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
 
     else{
         listen->init();
-        listen->psl_strrip_set_active(set->getStreamRipper());
-        listen->psl_strrip_complete_tracks(set->getStreamRipperCompleteTracks());
-        listen->psl_strrip_set_create_playlist(set->getStreamRipperPlaylist());
-        listen->psl_strrip_set_path(set->getStreamRipperPath());
+        listen->psl_sr_set_active(set->getStreamRipper());
     }
 
     qDebug() << "Init connections";
@@ -326,11 +323,8 @@ void Application::init_connections(){
 		CONNECT(ui_stream, sig_close_event(), 									player, 	close_stream());
 
 
-	   CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_strrip_set_active(bool));
-	   CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));
-	   CONNECT (ui_stream_rec, sig_path_changed(const QString&), 	listen,		psl_strrip_set_path(const QString& ));
-	   CONNECT (ui_stream_rec, sig_complete_tracks(bool),           listen,		psl_strrip_complete_tracks(bool));
-	   CONNECT (ui_stream_rec, sig_create_playlist(bool),           listen,		psl_strrip_set_create_playlist(bool ));
+       CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_sr_set_active(bool));
+       CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));
 
 
 	   bool is_socket_active = set->getSocketActivated();

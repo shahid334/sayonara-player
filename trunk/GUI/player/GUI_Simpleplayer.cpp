@@ -383,15 +383,17 @@ void GUI_SimplePlayer::last_fm_logged_in(bool b){
     if(!b && CSettingsStorage::getInstance()->getLastFMActive())
         QMessageBox::warning(this->ui->centralwidget, "Warning", "Cannot login to LastFM");
 
-	show_lfm_radio(false);
-	ui->action_ViewLFMRadio->setChecked(false);
+    if(!b){
+        show_lfm_radio(false);
+        ui->action_ViewLFMRadio->setChecked(false);
+    }
 
 	this->ui->action_ViewLFMRadio->setVisible(b);
 }
 
 void GUI_SimplePlayer::psl_lfm_activated(bool b){
 
-	show_lfm_radio(false);
+    show_lfm_radio(false);
 	ui->action_ViewLFMRadio->setChecked(false);
 
 	this->ui->action_ViewLFMRadio->setVisible(b);
@@ -400,7 +402,13 @@ void GUI_SimplePlayer::psl_lfm_activated(bool b){
 void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
 
 	m_metadata_corrected = md;
-	this->ui->btn_correct->setVisible(corrected && CSettingsStorage::getInstance()->getLastFMCorrections());
+
+
+    this->ui->btn_correct->setVisible(
+         corrected &&
+         (m_metadata.radio_mode == RADIO_OFF) &&
+         CSettingsStorage::getInstance()->getLastFMCorrections()
+    );
 
 	if(loved){
 		this->ui->title->setText(this->ui->title->text());
@@ -489,6 +497,15 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
     this->m_alternate_covers->changeSkin(dark);
 
+
+    QString style = Style::get_btn_style(dark, 8);
+    this->ui->btn_mute->setStyleSheet(style);
+    this->ui->btn_play->setStyleSheet(style);
+    this->ui->btn_fw->setStyleSheet(style);
+    this->ui->btn_bw->setStyleSheet(style);
+    this->ui->btn_stop->setStyleSheet(style);
+    this->ui->btn_rec->setStyleSheet(style);
+
 	if (dark) {
 
 		this->ui->centralwidget->setStyleSheet(
@@ -497,13 +514,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
 
 
-		QString style = Style::get_btn_style(8);
-		this->ui->btn_mute->setStyleSheet(style);
-		this->ui->btn_play->setStyleSheet(style);
-		this->ui->btn_fw->setStyleSheet(style);
-		this->ui->btn_bw->setStyleSheet(style);
-		this->ui->btn_stop->setStyleSheet(style);
-		this->ui->btn_rec->setStyleSheet(style);
 
 		m_skinSuffix = QString("_dark");
 	}
@@ -514,13 +524,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 		this->setStyleSheet("");
 		this->ui->menuView->setStyleSheet("");
 		m_skinSuffix = QString("");
-
-		this->ui->btn_mute->setStyleSheet("");
-		this->ui->btn_play->setStyleSheet("");
-		this->ui->btn_fw->setStyleSheet("");
-		this->ui->btn_bw->setStyleSheet("");
-		this->ui->btn_stop->setStyleSheet("");
-		this->ui->btn_rec->setStyleSheet(Style::get_btn_style(8));
 	}
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
@@ -678,8 +681,8 @@ void GUI_SimplePlayer::setupVolButton(int percent) {
 
 	QString butFilename = Helper::getIconPath() + "vol_";
 
-	if (percent == 0) {
-		butFilename += QString("mute") + m_skinSuffix + ".png";
+    if (percent <= 1) {
+        butFilename += QString("mute") + ".png";
 	}
 
 	else if (percent < 40) {

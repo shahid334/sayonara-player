@@ -35,7 +35,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "Engine/GStreamer/StreamRipperBufferThread.h"
+#include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
 
 #include <gst/gst.h>
@@ -65,11 +65,7 @@ public:
 
 private:
 
-	GstElement* _rec_src;
-	GstElement* _rec_dst;
-	GstElement* _rec_pipeline;
-	GstElement* _rec_enc;
-	GstElement* _rec_cvt;
+
 
 	GstElement* _pipeline;
 	GstElement* _equalizer;
@@ -79,14 +75,14 @@ private:
 	GstElement* _file_sink;
 	GstPad*		_audio_pad;
 	GstBus*		_bus;
+    StreamRecorder* _stream_recorder;
 
-    StreamRipperBufferThread* _sr_thread;
+
 
 
 private slots:
-    void sr_thread_finished();
-    void sr_thread_terminated();
-
+    virtual void sr_initialized(bool);
+    virtual void sr_ended();
 
 
 public slots:
@@ -104,11 +100,7 @@ public slots:
 
  	virtual void record_button_toggled(bool);
 
- 	virtual void psl_strrip_set_active(bool);
-	virtual void psl_strrip_set_path(const QString& );
-	virtual void psl_strrip_complete_tracks(bool);
-	virtual void psl_strrip_set_create_playlist(bool);
-
+    virtual void psl_sr_set_active(bool);
 
 
 public:
@@ -124,12 +116,10 @@ public:
 
 
 private:
-	void init_record_pipeline();
+
 	void init_play_pipeline();
 
-	QString init_streamripper(const MetaData& md);
-	bool start_streamripper();
-	void stop_streamripper();
+
 
 
 

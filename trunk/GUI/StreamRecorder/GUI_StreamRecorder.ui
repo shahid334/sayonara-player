@@ -88,6 +88,9 @@
    </item>
    <item row="4" column="1" colspan="3">
     <widget class="QCheckBox" name="cb_activate">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -138,6 +141,9 @@
    </item>
    <item row="10" column="1" colspan="3">
     <widget class="QCheckBox" name="cb_complete_tracks">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
@@ -157,6 +163,9 @@
     <widget class="QCheckBox" name="cb_create_playlist">
      <property name="enabled">
       <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -222,6 +231,22 @@
     <hint type="destinationlabel">
      <x>204</x>
      <y>96</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cb_activate</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>le_path</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>265</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>247</x>
+     <y>133</y>
     </hint>
    </hints>
   </connection>

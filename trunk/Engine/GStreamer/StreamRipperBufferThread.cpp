@@ -25,8 +25,8 @@ void StreamRipperBufferThread::run(){
 
     qDebug() << "Buffer file " << _uri;
     // initially fill the buffer
-    qint64 max = 10000000;
-    qint64 interval = 100000;
+    qint64 max = 5000000;
+    qint64 interval = 10000;
 
     _size = 0;
 
@@ -50,10 +50,10 @@ void StreamRipperBufferThread::run(){
         if(max <= 0) break;
     } while(_size < 32000 && max > 0);
 
+
     _size = _f->size();
+    qDebug() << "size = " << _size;
     _f->close();
-
-
 
 }
 
@@ -69,5 +69,6 @@ qint64 StreamRipperBufferThread::getSize(){
 void StreamRipperBufferThread::terminate(){
 
     if(_f->isOpen()) _f->close();
+    _size = 0;
     QThread::terminate();
 }

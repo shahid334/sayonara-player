@@ -70,7 +70,7 @@ SET(HEADERS
     GUI/MyTableView.h
     GUI/MyListView.h
     GUI/library/GUIImportFolder.h
-    GUI/LyricMenuButton/LyricMenuButton.h
+
     GUI/InfoDialog/GUI_InfoDialog.h
 #    GUI/GSTDataPainter/GSTDataPainter.h
     GUI/SocketConfiguration/GUISocketSetup.h
@@ -114,7 +114,7 @@ SET(SOURCES
     GUI/library/LibraryItemModelArtists.cpp
     GUI/library/LibraryItemDelegateTracks.cpp
     GUI/library/GUILibraryInfoBox.cpp
-	GUI/alternate_covers/AlternateCoverItemDelegate.cpp
+    GUI/alternate_covers/AlternateCoverItemDelegate.cpp
     GUI/alternate_covers/AlternateCoverItemModel.cpp
     GUI/alternate_covers/GUI_Alternate_Covers.cpp
     GUI/tagedit/GUI_TagEdit.cpp
@@ -122,7 +122,6 @@ SET(SOURCES
     GUI/MyTableView.cpp
     GUI/MyListView.cpp
     GUI/library/GUIImportFolder.cpp
-    GUI/LyricMenuButton/LyricMenuButton.cpp
     GUI/InfoDialog/GUI_InfoDialog.cpp
 #    GUI/GSTDataPainter/GSTDataPainter.cpp
     GUI/SocketConfiguration/GUISocketSetup.cpp
@@ -225,6 +224,11 @@ SET(ICONS
 	GUI/icons/info.png
 	GUI/icons/numbers.png
         GUI/icons/radio.png
+        GUI/icons/cb_checked.png
+        GUI/icons/cb_checked_disabled.png
+        GUI/icons/rb_checked.png
+        GUI/icons/rb_checked_disabled.png
+
 )
 
 

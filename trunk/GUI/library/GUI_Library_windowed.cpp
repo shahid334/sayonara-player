@@ -228,6 +228,7 @@ void GUI_Library_windowed::change_skin(bool dark){
     this->ui->lv_artist->setStyleSheet(table_style);
     this->ui->tb_title->setStyleSheet(table_style);
     this->ui->le_search->setStyleSheet(line_edit_style);
+    this->ui->btn_clear->setStyleSheet(Style::get_btn_style(dark));
 
 
 	if(dark){
@@ -239,7 +240,7 @@ void GUI_Library_windowed::change_skin(bool dark){
 
 
 
-		this->ui->btn_clear->setStyleSheet(Style::get_btn_style());
+
 
 		this->ui->tb_title->setShowGrid(false);
 		this->ui->lv_album->setShowGrid(false);

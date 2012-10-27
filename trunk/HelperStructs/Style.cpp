@@ -91,6 +91,7 @@ QString Style::get_pushbutton_style(bool dark){
             "   border-right: 1px solid " + lighter_grey2 + ";" +
             "   border-top: 1px solid " + lighter_grey2 + ";" +
             "   border-radius: 6px; " +
+            "   background: " + lighter_grey + ";" +
             "   padding: 4px;"
             "}" +
 
@@ -101,7 +102,16 @@ QString Style::get_pushbutton_style(bool dark){
                 "   border-top: 1px solid " + orange + ";" +
                 "   border-radius: 6px; " +
                 "   padding: 4px;" +
-                "   background: " + lighter_grey + ";" +
+                "   background: " + dark_grey + ";" +
+                "}" +
+
+                "QPushButton:disabled {" +
+                "   border-left: 1px solid " + lighter_grey + ";" +
+                "   border-bottom: 1px solid " + lighter_grey + ";" +
+                "   border-right: 1px solid " + lighter_grey + ";" +
+                "   border-top: 1px solid " + lighter_grey + ";" +
+                 "color: " + lighter_grey + ";" +
+                 "background: " + dark_grey + ";" +
                 "}";
 
 
@@ -194,6 +204,14 @@ QString Style::get_lineedit_style(bool dark){
             "    border-radius: 4px; " +
             "    border: 1px solid #2B2B2B;" +
             "    background: " + dark_grey + ";" +
+            "}" +
+
+
+             "QLineEdit:disabled {" +
+            "    border-radius: 4px; " +
+            "    border: 1px solid #2B2B2B;" +
+            "    background: " + dark_grey + ";" +
+            "    color: " + lighter_grey + "; " +
             "}";
 
     return style;
@@ -205,6 +223,7 @@ QString Style::get_combobox_style(bool dark){
 
     QString dark_grey = "#383838";
     QString lighter_grey = "#525252";
+    QString orange = "#e8841a";
 
     if(!dark) return "";
 
@@ -228,8 +247,6 @@ QString Style::get_combobox_style(bool dark){
          "QComboBox:!editable, QComboBox::drop-down:editable {"+
          "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "+
          "                                 stop: 0 #555555, stop: 0.4 " + dark_grey + ");" +
-         //"                                 stop: 0.5 #2E2E2E, stop: 1.0 " + dark_grey + ");"+
-         "     font-weight: bold;" +
          "}"+
 
                 "QComboBox:!editable:on, QComboBox::drop-down:editable:on {"+
@@ -264,7 +281,17 @@ QString Style::get_combobox_style(bool dark){
                 "   width: 10px; " +
                 " padding: 2px; " +
                 "    image: url("+ arrow_down_filename +");"+
-         "}";
+         "}"
+
+         "QComboBox:focus {"
+
+            "    border-radius: 4px; " +
+            "    border: 1px solid " + orange + ";" +
+         "}"
+
+         "";
+
+
 
         return style;
     }
@@ -335,24 +362,26 @@ QString Style::get_v_scrollbar_style(){
 }
 
 
-QString Style::get_btn_style(int intensity){
-	QString style =
+QString Style::get_btn_style(bool dark, int intensity){
+
+    QString style =
         QString("QPushButton") +
 		"{"
-		"color: white; "
-		"border-width: 0px; "
-		"border-radius: 7; "
-		"padding: 1px; "
-		"padding-left: 1px; "
-		"padding-right: 1px; "
+        "    color: white; "
+        "    border-radius: 7; "
+        "    padding: 1px; "
+        "    padding-left: 1px; "
+        "    padding-right: 1px; "
 		"}"
+
         "QPushButton:checked"
 		"\{"
-		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0." + QString::number(intensity) + " rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
+        "    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0." + QString::number(intensity) + " rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
 		"}"
+
         "QPushButton:pressed"
 		"\{"
-		"background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
+        "    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.55, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));"
 		"}";
 
 
@@ -482,7 +511,6 @@ QString Style::get_spinbox_style(bool dark){
     QString style = QString("") +
 
     "QSpinBox {" +
-    "    padding-right: 15px;" +
     "    background: " + lighter_grey2 + "; " +
     "    border: 1px solid " + darker_grey + "; " +
     "}" +
@@ -495,13 +523,15 @@ QString Style::get_spinbox_style(bool dark){
 
 
     "QSpinBox::up-button {" +
-    "     subcontrol-origin: border;" +
+    "     subcontrol-origin: margin;" +
     "     subcontrol-position: top right;" +
     "     width: 12px;" +
     "     border: 1px solid " + darker_grey + "; " +
     "     padding: 2px;" +
+    "     "
     "     background: " + dark_grey + "; " +
     "}" +
+
 
     "QSpinBox::up-button:hover {"+
     "    background: " + lighter_grey2  + "; "+
@@ -522,6 +552,8 @@ QString Style::get_spinbox_style(bool dark){
     "     border: 1px solid " + darker_grey + "; " +
     "     background: " + dark_grey + "; " +
     " }" +
+
+
 
     "QSpinBox::down-button:hover {"+
     "    background: " + lighter_grey2  + "; "+
@@ -560,6 +592,12 @@ QString Style::get_v_slider_style(bool dark){
         "    border-radius: 4px; " +
         "}" +
 
+        "QSlider::handle:vertical:disabled {" +
+        "    background: transparent;"
+        "    height: 0px;"
+        "	 border-width: 0px;"
+        "}" +
+
 
         "QSlider::groove:vertical { " +
         "    background: #383838;" +
@@ -569,12 +607,14 @@ QString Style::get_v_slider_style(bool dark){
 
 
         "QSlider::add-page:vertical {"+
-        "   background: " + orange + ";"+
-        "   border-radius: 2px;" +
+        "    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, "  +
+        "          stop:0 #E88417, stop: 0.3 #C46600, " +
+        "          stop: 0.7 #C46600, stop:1 #E88417); " +
+        "    border-radius: 2px;" +
 
        "}"+
 
-        "QSlider::sub-page:vertical {"+
+        "QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {"+
         "   background: " + darker_grey + ";"+
         "   border-radius: 2px;" +
 
@@ -587,7 +627,6 @@ QString Style::get_h_slider_style(bool dark){
    if(!dark) return "";
 
     QString darker_grey = "#2B2B2B";
-    QString orange = "#e8841a";
 
 
     QString style =  QString("QSlider {") +
@@ -605,25 +644,140 @@ QString Style::get_h_slider_style(bool dark){
         "    border-radius: 4px; " +
         "}" +
 
-
-        "QSlider::groove:horizontal { " +
-        "    background: #383838;" +
-        "    height: 6px; " +
-        "    top: 10px; bottom: 10px; " +
+        "QSlider::handle:horizontal:disabled {" +
+        "    background: transparent;"
+        "    width: 0px;"
+        "	 border-width: 0px;"
         "}" +
 
 
-        "QSlider::add-page:horizontal {"+
-        "   background: " + darker_grey + ";"+
-        "   border-radius: 2px;" +
+        "QSlider::handle:horizontal:disabled {" +
+        "    width: 0px;"
+        "}" +
 
-       "}"+
 
-        "QSlider::sub-page:horizontal {"+
-        "   background: " + orange + ";"+
-        "   border-radius: 2px;" +
+        "QSlider::groove:horizontal { "
+        "    background: #383838;"
+        "    height: 6px; "
+        "    top: 10px; bottom: 10px; "
+        "}"
 
+
+        "QSlider::add-page:horizontal {"
+        "   background: " + darker_grey + ";"
+        "   border-radius: 2px;"
+       "}"
+
+        "QSlider::sub-page:horizontal {"
+        "   border-radius: 2px;"
+        "   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
+        "          stop:0 #E88417, stop: 0.3 #C46600, "
+        "          stop: 0.7 #C46600, stop:1 #E88417); "
         "}";
 
     return style;
 }
+
+
+QString  Style::get_cb_style(bool dark){
+    if(!dark) return "";
+
+    QString darker_grey = "#242424";
+    QString lighter_grey = "#424242";
+    QString lighter_grey2 = "#525252";
+
+    QString style = QString("QCheckBox {") +
+        "    spacing: 5px;"
+        "}"
+
+        "QCheckBox::disabled {"
+        "    spacing: 5px;"
+        "    color: " + lighter_grey + ";"
+        "}"
+
+        "QCheckBox::indicator {"
+        "    border: 1px solid " + darker_grey + ";"
+        "    padding: 2px; "
+        "    width: 8px;"
+        "    height: 8px;"
+        "    max-width: 8px;"
+        "    max-height: 8px;"
+        "   border-radius: 3px;"
+
+        "    background: " + lighter_grey2 + ";"
+        "}"
+
+        "QCheckBox::indicator:disabled {"
+        "    border: 1px solid #2B2B2B;"
+       "    background: " + lighter_grey + ";"
+        "}"
+
+
+
+        "QCheckBox::indicator:checked {"
+        "    image: url(" + Helper::getIconPath() + "/cb_checked.png" + ");"
+        "}"
+
+
+        "QCheckBox::indicator:checked:disabled {"
+        "    image: url(" + Helper::getIconPath() + "/cb_checked_disabled.png" + ");"
+        "}"
+
+
+        "";
+
+        return style;
+}
+
+
+QString  Style::get_rb_style(bool dark){
+    if(!dark) return "";
+
+
+    QString darker_grey = "#242424";
+    QString lighter_grey = "#424242";
+    QString lighter_grey2 = "#525252";
+
+    QString style = QString("QRadioButton {") +
+        "    spacing: 5px;"
+        "}"
+
+        "QRadioButton::disabled {"
+        "    spacing: 5px;"
+        "    color: " + lighter_grey + ";"
+        "}"
+
+        "QRadioButton::indicator {"
+        "    border: 1px solid " + darker_grey + ";"
+        "    padding: 1px; "
+        "    width: 8px;"
+        "    height: 8px;"
+        "    max-width: 8px;"
+        "    max-height: 8px;"
+        "   border-radius: 5px;"
+
+        "    background: " + lighter_grey2 + ";"
+        "}"
+
+        "QRadioButton::indicator:disabled {"
+        "    border: 1px solid #2B2B2B;"
+       "    background: " + lighter_grey + ";"
+        "}"
+
+
+
+        "QRadioButton::indicator:checked {"
+        "    image: url(" + Helper::getIconPath() + "/rb_checked.png" + ");"
+        "}"
+
+
+        "QRadioButton::indicator:checked:disabled {"
+        "    image: url(" + Helper::getIconPath() + "/rb_checked_disabled.png" + ");"
+        "}"
+
+
+        "";
+
+        return style;
+}
+

@@ -270,6 +270,9 @@
          <height>24</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -303,6 +306,9 @@
      </property>
      <item>
       <widget class="QComboBox" name="combo_searchfilter">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <item>
         <property name="text">
          <string>Search</string>
@@ -337,6 +343,9 @@
          <width>34</width>
          <height>24</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Show all interprets, albums, tracks</string>

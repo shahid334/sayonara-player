@@ -64,6 +64,9 @@
    </item>
    <item row="1" column="1" colspan="2">
     <widget class="QCheckBox" name="cb_copy2lib">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Copy tracks to library</string>
      </property>
@@ -82,6 +85,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string>cancel</string>
        </property>
@@ -94,6 +100,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
         <string>ok</string>
@@ -188,6 +197,9 @@
           <width>16777215</width>
           <height>25</height>
          </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
         </property>
         <property name="editable">
          <bool>true</bool>

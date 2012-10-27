@@ -27,6 +27,7 @@
 #include <QString>
 #include <QWidget>
 #include <QPixmap>
+#include <QScrollBar>
 
 
 GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_list, bool copy_enabled) : QDialog(parent){
@@ -57,6 +58,8 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 
 	ui->pb_progress->setValue(0);
 	ui->pb_progress->setVisible(false);
+    bool dark = (CSettingsStorage::getInstance()->getPlayerStyle() == 1);
+    changeSkin(dark);
 }
 
 
@@ -65,10 +68,17 @@ GUI_ImportFolder::~GUI_ImportFolder() {
 }
 
 void GUI_ImportFolder::changeSkin(bool dark){
+
     QString pb_style = Style::get_pushbutton_style(dark);
     this->ui->btn_cancel->setStyleSheet(pb_style);
     this->ui->btn_ok->setStyleSheet(pb_style);
     this->ui->combo_folders->setStyleSheet(Style::get_combobox_style(dark));
+    this->ui->cb_copy2lib->setStyleSheet(Style::get_cb_style(dark));
+    if(dark)
+        this->ui->combo_folders->view()->verticalScrollBar()->setStyleSheet(Style::get_v_scrollbar_style());
+    else
+        this->ui->combo_folders->view()->verticalScrollBar()->setStyleSheet("");
+
 }
 
 void GUI_ImportFolder::progress_changed(int val){

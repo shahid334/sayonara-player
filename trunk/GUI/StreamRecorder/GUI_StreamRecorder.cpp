@@ -32,7 +32,7 @@
 #include <QDebug>
 #include <QFileDialog>
 
-GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) {
+GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) : QDialog(parent) {
 
     this->ui = NULL;
 
@@ -46,13 +46,20 @@ GUI_StreamRecorder::~GUI_StreamRecorder() {
 
 
 void GUI_StreamRecorder::changeSkin(bool dark){
-    QString button_style = Style::get_btn_style(dark);
+    _skin = dark;
 
     if(!ui) return;
+
+    QString button_style = Style::get_pushbutton_style(dark);
+    QString cb_style = Style::get_cb_style(dark);
+
     this->ui->btn_cancel->setStyleSheet(button_style);
     this->ui->btn_ok->setStyleSheet(button_style);
     this->ui->btn_path->setStyleSheet(button_style);
     this->ui->le_path->setStyleSheet(Style::get_lineedit_style(dark));
+    this->ui->cb_activate->setStyleSheet(cb_style);
+    this->ui->cb_complete_tracks->setStyleSheet(cb_style);
+    this->ui->cb_create_playlist->setStyleSheet(cb_style);
 }
 
 
@@ -65,13 +72,11 @@ void GUI_StreamRecorder::sl_cb_activate_toggled(bool b){
 void GUI_StreamRecorder::sl_cb_complete_tracks_toggled(bool b){
 	_is_complete_tracks = b;
 	_settings->setStreamRipperCompleteTracks(b);
-	emit sig_complete_tracks(b);
 }
 
 void GUI_StreamRecorder::sl_cb_create_playlist_toggled(bool b){
 	_is_create_playlist = b;
 	_settings->setStreamRipperPlaylist(b);
-	emit sig_create_playlist(b);
 }
 
 void GUI_StreamRecorder::sl_btn_path_clicked(){
@@ -81,7 +86,6 @@ void GUI_StreamRecorder::sl_btn_path_clicked(){
 		_path = dir;
 		_settings->setStreamRipperPath(_path);
 		this->ui->le_path->setText(_path);
-		emit sig_path_changed(_path);
 	}
 }
 
@@ -106,6 +110,7 @@ void GUI_StreamRecorder::show_win(){
         this->ui->cb_complete_tracks->setEnabled(_is_active);
         this->ui->cb_create_playlist->setEnabled(_is_active);
         this->ui->btn_path->setEnabled(_is_active);
+        this->ui->le_path->setEnabled(_is_active);
 
         QPixmap pm(QPixmap(Helper::getIconPath() + "rec.png"));
 
@@ -119,6 +124,7 @@ void GUI_StreamRecorder::show_win(){
         connect(this->ui->btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
     }
 
+    changeSkin(_skin);
     show();
 }
 

@@ -21,13 +21,14 @@ PKG_CHECK_MODULES(GSTREAMER REQUIRED gstreamer-0.10)
 SET(HEADERS
 	GSTEngine.h 
         StreamRipperBufferThread.h
+        StreamRecorder.h
 	../Engine.h
-
 )
 
 SET(SOURCES
 	GSTEngine.cpp
         StreamRipperBufferThread.cpp
+        StreamRecorder.cpp
 	../../HelperStructs/Helper.cpp
 	../../HelperStructs/id3.cpp
 )

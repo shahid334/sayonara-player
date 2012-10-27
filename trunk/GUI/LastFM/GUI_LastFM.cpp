@@ -42,7 +42,8 @@ using namespace std;
 
 GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 
-    this->ui = NULL;
+
+
     hide();
 }
 
@@ -67,15 +68,22 @@ GUI_LastFM::~GUI_LastFM() {
 
 void GUI_LastFM::changeSkin(bool dark){
 
+    _skin = dark;
+
     if(!ui) return;
 
     QString pb_style = Style::get_pushbutton_style(dark);
     QString le_style = Style::get_lineedit_style(dark);
+    QString cb_style = Style::get_cb_style(dark);
+
 
     this->ui->btn_cancel->setStyleSheet(pb_style);
     this->ui->btn_save->setStyleSheet(pb_style);
     this->ui->tf_password->setStyleSheet(le_style);
     this->ui->tf_username->setStyleSheet(le_style);
+    this->ui->cb_activate->setStyleSheet(cb_style);
+    this->ui->cb_correct_id3->setStyleSheet(cb_style);
+
 
 }
 
@@ -112,7 +120,7 @@ void GUI_LastFM::save_button_pressed(){
 
 void GUI_LastFM::show_win(){
 
-    if(ui == NULL){
+    if(!ui){
         this->ui = new Ui_GUI_LastFM_Dialog();
         this->ui->setupUi(this);
 
@@ -143,7 +151,7 @@ void GUI_LastFM::show_win(){
     }
 
 #endif
-
+    changeSkin(_skin);
     this->show();
 }
 

@@ -53,11 +53,11 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 	this->ui->btn_delete->setToolTip("Delete");
 
 
-	connect(this->ui->btn_apply, SIGNAL(pressed()), this, SLOT(apply_button_pressed()));
+    connect(this->ui->btn_apply, SIGNAL(clicked()), this, SLOT(apply_button_pressed()));
 
-	connect(this->ui->btn_save, SIGNAL(pressed()), this, SLOT(save_button_pressed()));
-	connect(this->ui->btn_save_as, SIGNAL(pressed()), this, SLOT(save_as_button_pressed()));
-	connect(this->ui->btn_delete, SIGNAL(pressed()), this, SLOT(delete_button_pressed()));
+    connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+    connect(this->ui->btn_save_as, SIGNAL(clicked()), this, SLOT(save_as_button_pressed()));
+    connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_button_pressed()));
 
     hide();
 
@@ -69,7 +69,14 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 
 void GUI_PlaylistChooser::changeSkin(bool dark){
+    QString btn_style = Style::get_btn_style(dark);
     this->ui->combo_playlistchooser->setStyleSheet(Style::get_combobox_style(dark));
+    this->ui->btn_apply->setStyleSheet(btn_style);
+    this->ui->btn_delete->setStyleSheet(btn_style);
+    this->ui->btn_save->setStyleSheet(btn_style);
+    this->ui->btn_save_as->setStyleSheet(btn_style);
+
+
 }
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){

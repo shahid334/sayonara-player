@@ -61,9 +61,12 @@ public:
 	private:
 		Ui_GUI_LastFM_Dialog* ui;
 		void setLFMActive(bool b);
+        bool _skin;
 
 	public:
 		void set_username_and_password(QString username, QString password);
+
+
 
 
 };

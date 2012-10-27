@@ -51,7 +51,6 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 	this->_ui->setupUi(this);
 
 	this->_ui->btn_preset->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->_ui->but_enabled->setIcon(QIcon(Helper::getIconPath() + "power_on.png"));
 	this->_ui->btn_preset->setText("");
 
 	connect(this->_ui->sli_0, SIGNAL(valueChanged(int)), this, SLOT(sli_0_changed(int)));
@@ -65,7 +64,6 @@ GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 	connect(this->_ui->sli_8, SIGNAL(valueChanged(int)), this, SLOT(sli_8_changed(int)));
 	connect(this->_ui->sli_9, SIGNAL(valueChanged(int)), this, SLOT(sli_9_changed(int)));
 
-	connect(this->_ui->but_enabled, SIGNAL(toggled(bool)), this, SLOT(but_enabled_changed(bool)));
 
 	connect(this->_ui->btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
 
@@ -80,6 +78,7 @@ GUI_Equalizer::~GUI_Equalizer() {
 
 
 void GUI_Equalizer::changeSkin(bool dark){
+
     this->_ui->combo_presets->setStyleSheet(Style::get_combobox_style(dark));
     QString sli_style = Style::get_v_slider_style(dark);
     this->_ui->sli_0->setStyleSheet(sli_style);
@@ -92,6 +91,8 @@ void GUI_Equalizer::changeSkin(bool dark){
     this->_ui->sli_7->setStyleSheet(sli_style);
     this->_ui->sli_8->setStyleSheet(sli_style);
     this->_ui->sli_9->setStyleSheet(sli_style);
+
+    this->_ui->btn_preset->setStyleSheet(Style::get_btn_style(dark));
 }
 
 
@@ -139,10 +140,6 @@ void GUI_Equalizer::sli_9_changed(int new_val){
 
 void GUI_Equalizer::but_enabled_changed(bool enabled){
 
-	if(enabled)this->_ui->but_enabled->setIcon(QIcon(Helper::getIconPath() + "power_on.png"));
-	else this->_ui->but_enabled->setIcon(QIcon(Helper::getIconPath() + "power_off.png"));
-
-	emit eq_enabled_signal(enabled);
 }
 
 
@@ -170,7 +167,6 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 
 void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs){
 	Q_UNUSED(eqs);
-	//this->_ui->but_enabled->setText(eqs[0]);
 }
 
 

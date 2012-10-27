@@ -37,6 +37,9 @@
    </property>
    <item row="15" column="7">
     <widget class="QCheckBox" name="btn_all_year">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
@@ -140,6 +143,9 @@
    </item>
    <item row="12" column="7">
     <widget class="QCheckBox" name="btn_all_album">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>all</string>
      </property>
@@ -250,6 +256,9 @@
    </item>
    <item row="13" column="7">
     <widget class="QCheckBox" name="btn_all_artist">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>all</string>
      </property>
@@ -290,6 +299,9 @@
    </item>
    <item row="8" column="7">
     <widget class="QCheckBox" name="cb_tag_all">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>all</string>
      </property>
@@ -314,6 +326,9 @@
    </item>
    <item row="14" column="7">
     <widget class="QCheckBox" name="btn_all_genre">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>all</string>
      </property>

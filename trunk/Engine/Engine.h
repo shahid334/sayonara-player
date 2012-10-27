@@ -57,9 +57,8 @@ protected:
 
 	bool		_sr_wanna_record;
 	QString		_sr_recording_dst;
-	QString		_sr_path;
-	bool		_sr_complete_tracks;
-	bool		_sr_create_playlist;
+
+
 
 
 public:
@@ -92,10 +91,13 @@ public slots:
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;
 
-	virtual void psl_strrip_set_active(bool)=0;
-	virtual void psl_strrip_set_path(const QString& )=0;
-	virtual void psl_strrip_complete_tracks(bool)=0;
-	virtual void psl_strrip_set_create_playlist(bool)=0;
+    virtual void psl_sr_set_active(bool)=0;
+
+private slots:
+    virtual void sr_initialized(bool)=0;
+    virtual void sr_ended()=0;
+
+
 
 
 };

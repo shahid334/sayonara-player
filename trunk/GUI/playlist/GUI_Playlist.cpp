@@ -214,7 +214,7 @@ void GUI_Playlist::dummy_pressed(){
 // SLOT: switch between dark & light skin
 void GUI_Playlist::change_skin(bool dark){
 
-	QString btn_style = Style::get_btn_style(dark ? 6 : 7);
+    QString btn_style = Style::get_btn_style(dark, (dark ? 6 : 7));
 	QString table_style = Style::get_tv_style(dark);
 	QString scrollbar_style = Style::get_v_scrollbar_style();
 

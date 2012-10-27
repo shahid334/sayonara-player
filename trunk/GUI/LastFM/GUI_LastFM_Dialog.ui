@@ -38,7 +38,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>../../Desktop/lastfm-icon.png</pixmap>
+         <pixmap>../../../Desktop/lastfm-icon.png</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -56,7 +56,11 @@
     </widget>
    </item>
    <item row="1" column="2" colspan="2">
-    <widget class="QLineEdit" name="tf_username"/>
+    <widget class="QLineEdit" name="tf_username">
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
+    </widget>
    </item>
    <item row="2" column="1">
     <widget class="QLabel" name="label_3">
@@ -67,6 +71,9 @@
    </item>
    <item row="2" column="2" colspan="2">
     <widget class="QLineEdit" name="tf_password">
+     <property name="focusPolicy">
+      <enum>Qt::TabFocus</enum>
+     </property>
      <property name="echoMode">
       <enum>QLineEdit::Password</enum>
      </property>
@@ -81,6 +88,9 @@
    </item>
    <item row="3" column="2">
     <widget class="QCheckBox" name="cb_correct_id3">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -108,6 +118,9 @@
    </item>
    <item row="0" column="2">
     <widget class="QCheckBox" name="cb_activate">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
@@ -140,6 +153,38 @@
     <hint type="destinationlabel">
      <x>239</x>
      <y>66</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tf_password</sender>
+   <signal>returnPressed()</signal>
+   <receiver>btn_save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>80</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>422</x>
+     <y>139</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tf_username</sender>
+   <signal>returnPressed()</signal>
+   <receiver>btn_save</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>370</x>
+     <y>48</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>422</x>
+     <y>139</y>
     </hint>
    </hints>
   </connection>
