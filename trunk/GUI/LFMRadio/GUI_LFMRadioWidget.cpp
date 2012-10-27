@@ -155,8 +155,10 @@ void GUI_LFMRadioWidget::radio_button_changed(){
 }
 
 void GUI_LFMRadioWidget::closeEvent ( QCloseEvent * event ){
-	event->ignore();
-    hide();
+
+    emit close_event();
+
+    event->ignore();
     close();
-	emit close_event();
+
 }

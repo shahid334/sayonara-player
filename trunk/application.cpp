@@ -288,6 +288,7 @@ void Application::init_connections(){
 
        CONNECT(ui_lastfm, sig_activated(bool),                                  player,         psl_lfm_activated(bool));
        CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));
+       CONNECT(ui_lfm_radio, close_event(),                                        player, 		close_lfm_radio());
 
 	   CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
 	   CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
