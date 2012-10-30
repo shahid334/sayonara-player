@@ -39,12 +39,14 @@
 using namespace std;
 
 Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
-{
+{   QString version    = getVersion();
     app                = qapp;
+
 
     set                 = CSettingsStorage::getInstance();
     set  -> runFirstTime(false);
     CDatabaseConnector::getInstance()->load_settings();
+    set->setVersion( version );
 
     player              = new GUI_SimplePlayer();
 
@@ -63,7 +65,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
     ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
-    //ui_library_info_box = new GUI_Library_Info_Box(player->centralWidget());
     ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
     ui_library          = new GUI_Library_windowed(player->getParentOfLibrary(), ui_info_dialog);
@@ -90,11 +91,9 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
         listen->psl_sr_set_active(set->getStreamRipper());
     }
 
-    qDebug() << "Init connections";
     init_connections();
 
-    qDebug() << "setup player";
-    player->setWindowTitle("Sayonara (0.3)");
+    player->setWindowTitle("Sayonara " + version);
     player->setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
 
     player->setPlaylist(ui_playlist);
@@ -106,15 +105,8 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->setStyle( set->getPlayerStyle() );
     player->show();
 
-
-
-   qDebug() << "player is set up";
     ui_library->resize(player->getParentOfLibrary()->size());
     ui_playlist->resize(player->getParentOfPlaylist()->size());
-
-
-
-
 
     vector<EQ_Setting> vec_eq_setting;
     set->getEqualizerSettings(vec_eq_setting);
@@ -142,7 +134,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     set->setShownPlugin(shown_plugin);
     player->check_show_plugins();
 
-    getVersion();
 }
 
 Application::~Application(){
@@ -197,6 +188,7 @@ void Application::init_connections(){
    CONNECT (player, skinChanged(bool),                      ui_stream,          changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_lfm_radio, 		changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_playlist_chooser, changeSkin(bool));
+
    CONNECT (player, skinChanged(bool),                      ui_info_dialog,     changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_stream_rec,      changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_id3_editor,      changeSkin(bool));
@@ -354,15 +346,13 @@ void Application::setFiles2Play(QStringList filelist){
 
 
 
-void Application::getVersion(){
-
-
+QString Application::getVersion(){
 
     ifstream istr;
     QString version_file = Helper::getSharePath() + "/VERSION";
 
     istr.open(version_file.toUtf8()  );
-    if(!istr || !istr.is_open()) return;
+    if(!istr || !istr.is_open() ) return "0.3.1";
 
     QMap<QString, int> map;
 
@@ -370,10 +360,16 @@ void Application::getVersion(){
         string type;
         int version;
         istr >> type >> version;
+	qDebug() << type.c_str() << ": " << version;
         map[QString(type.c_str())] = version;
     }
 
     istr.close();
+
+    QString version_str = QString::number(map["MAJOR"]) + "." + 
+			QString::number(map["MINOR"]) + "." + 
+			QString::number(map["SUBMINOR"]) + " r" + QString::number(map["BUILD"]);
+    return version_str;
 }
 
 QMainWindow* Application::getMainWindow(){

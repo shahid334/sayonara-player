@@ -117,6 +117,14 @@ QString CSettingsStorage::getDBFileName () {
 
 }
 
+QString CSettingsStorage::getVersion(){
+	return _version;
+}
+
+void CSettingsStorage::setVersion(QString version){
+	_version = version;
+}
+
 bool CSettingsStorage::getLastFMActive(){
 	return m_lfm_active;
 }

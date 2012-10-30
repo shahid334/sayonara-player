@@ -49,6 +49,9 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 
+	this->ui->artist->setText(settings->getVersion());
+	this->ui->album->setText("Written by Lucio Carreras");
+
 
 	m_playing = false;
 	m_mute = false;
@@ -476,6 +479,7 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
 
 void GUI_SimplePlayer::setStyle(int style){
+
 	bool dark = (style == 1);
 	changeSkin(dark);
 	this->ui->action_Dark->setChecked(dark);
@@ -492,8 +496,9 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	this->ui->menuPreferences->setStyleSheet(menu_style);
 	this->ui->menuView->setStyleSheet(menu_style);
 	this->ui->menuAbout->setStyleSheet(menu_style);
-    this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
-    this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
+    	this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
+	this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
+
 
     this->m_alternate_covers->changeSkin(dark);
 

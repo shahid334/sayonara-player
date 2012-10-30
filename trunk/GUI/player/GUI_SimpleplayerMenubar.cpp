@@ -206,7 +206,9 @@ void GUI_SimplePlayer::lastFMClicked(bool b) {
 void GUI_SimplePlayer::about(bool b){
 	Q_UNUSED(b);
 
+	QString version = CSettingsStorage::getInstance()->getVersion();
+
 	QMessageBox::information(this, "About",
-			"<b><font size=\"+2\">Sayonara Player 0.3</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
+			"<b><font size=\"+2\">Sayonara Player "+ version + "</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
 }
 

@@ -42,7 +42,7 @@ using namespace std;
 
 GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 
-
+    ui = 0;
 
     hide();
 }

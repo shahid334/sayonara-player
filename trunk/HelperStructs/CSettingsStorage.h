@@ -80,6 +80,7 @@ private:
     CSettingsStorage& operator=(const CSettingsStorage&);
 
     QString m_dbFile, m_sayonaraPath, m_dbSource;
+    QString _version;
 
     // last fm
     bool m_lfm_active;
@@ -138,6 +139,9 @@ private:
     int		m_socket_to;
 
 public:
+
+    QString getVersion();
+    void setVersion(QString str);
 
     QPair<QString,QString> getLastFMNameAndPW ();
     bool getLastFMActive();

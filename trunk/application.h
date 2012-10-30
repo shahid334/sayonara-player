@@ -85,7 +85,7 @@ public:
 
 
 private:
-    void getVersion();
+    QString getVersion();
 
 };
 
