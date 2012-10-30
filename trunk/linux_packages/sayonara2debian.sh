@@ -1,11 +1,25 @@
 #!/bin/bash
 
 cd ..
-REV=`svn info | grep Revision | tail -c 4` 
+
+sh setversion.sh
+
+STR_MAJOR=`grep -e "^MAJOR" ./VERSION`
+STR_MINOR=`grep -e "^MINOR" ./VERSION`
+STR_SUBMINOR=`grep -e "^SUBMINOR" ./VERSION`
+STR_BUILD=`grep -e "^BUILD" ./VERSION`
+
+VER_MAJOR=${STR_MAJOR#[A-Z]*[" "]}
+VER_MINOR=${STR_MINOR#[A-Z]*[" "]}
+VER_SUBMINOR=${STR_SUBMINOR#[A-Z]*[" "]}
+VER_BUILD=${STR_BUILD#[A-Z]*[" "]}
+
+ARCH=`uname -m`
+
 
 cd linux_packages
 
-OUTPUT_FILE=sayonara-0.3-r"${REV}".deb
+OUTPUT_FILE="sayonara-${VER_MAJOR}.${VER_MINOR}.${VER_SUBMINOR}-r${VER_BUILD}-${ARCH}.deb"
 
 CONTROL_FILE=./resources/sayonara32.control
 DEBIAN_DIR=sayonara.debian
@@ -18,7 +32,6 @@ fi
 
 if [ "$1" = "-ax64" ] ; then
 	CONTROL_FILE=./resources/sayonara64.control
-	OUTPUT_FILE=sayonara-0.3_amd64.deb
 fi
 	
 
@@ -32,7 +45,8 @@ cd ..
 make all
 
 if [ $? -ne 0 ] ; then
-exit
+	echo "BUILD WAS NOT SUCCESSFUL!"
+	exit
 fi
 
 cd $CUR_DIR
