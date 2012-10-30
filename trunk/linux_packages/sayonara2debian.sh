@@ -53,6 +53,7 @@ cd $CUR_DIR
 
 cp ../bin/sayonara $DEBIAN_DIR/usr/bin
 cp ../GUI/icons/* $DEBIAN_DIR/usr/share/sayonara
+cp ../VERSION ${DEBIAN_DIR}/usr/share/sayonara
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/player.db
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/empty.db
 cp ./resources/sayonara.postinst $DEBIAN_DIR
