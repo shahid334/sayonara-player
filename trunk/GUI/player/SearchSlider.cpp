@@ -28,6 +28,8 @@
 #include <QAbstractSlider>
 #include "GUI/player/SearchSlider.h"
 
+#include <cmath>
+
 
 SearchSlider::SearchSlider(QWidget* parent) : QSlider(parent) {
 	_searching = false;
@@ -113,7 +115,8 @@ bool SearchSlider::event(QEvent* e){
 			break;
 
         case QEvent::Wheel:
-            if(!isEnabled()) break;
+
+        if(!isEnabled()) break;
             if(this->orientation() == Qt::Horizontal){
                 e->ignore();
                 break;
@@ -122,7 +125,7 @@ bool SearchSlider::event(QEvent* e){
 
             wheelEvent = (QWheelEvent*) e;
 
-            percent = cur_val + wheelEvent->delta() / (8 * 15);
+            percent = cur_val + (wheelEvent->delta() / abs(wheelEvent->delta()) * 3);
 
             emit searchSliderMoved(percent);
             _searching = false;

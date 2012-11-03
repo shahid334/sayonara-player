@@ -667,6 +667,7 @@ void GUI_SimplePlayer::volumeChangedByTick(int val) {
             currentVolume_perc+=VOLUME_STEP_SIZE_PERC;
         }
     }
+
     else if (val < 0) {
         //decrease volume
         if (currentVolume_perc > this -> ui->volumeSlider->minimum()+VOLUME_STEP_SIZE_PERC) {
