@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QEvent>
 #include <QMouseEvent>
+#include <QWheelEvent>
 #include <QAbstractSlider>
 #include "GUI/player/SearchSlider.h"
 
@@ -45,7 +46,11 @@ bool SearchSlider::event(QEvent* e){
 
 
 	int percent;
+    int cur_val = this->value() * 1.0;
     QMouseEvent* mouseEvent;
+    QWheelEvent* wheelEvent;
+
+
 
 
     switch(e->type()){
@@ -107,10 +112,25 @@ bool SearchSlider::event(QEvent* e){
 			_searching = false;
 			break;
 
+        case QEvent::Wheel:
+            if(!isEnabled()) break;
+            if(this->orientation() == Qt::Horizontal){
+                e->ignore();
+                break;
+            }
+            e->ignore();
+
+            wheelEvent = (QWheelEvent*) e;
+
+            percent = cur_val + wheelEvent->delta() / (8 * 15);
+
+            emit searchSliderMoved(percent);
+            _searching = false;
+            break;
+
 		default:
 
             QSlider::event(e);
-
 			break;
 	}
 
