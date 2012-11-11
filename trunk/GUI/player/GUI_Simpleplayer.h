@@ -159,8 +159,9 @@ private slots:
     void sl_action_socket_connection_triggered(bool);
 
     void sl_alternate_cover_available(QString);
-
+    void show_fullscreen_toggled(bool);
     void really_close();
+    void really_close(bool);
 
 
 

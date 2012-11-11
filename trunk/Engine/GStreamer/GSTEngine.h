@@ -83,6 +83,7 @@ private:
 private slots:
     virtual void sr_initialized(bool);
     virtual void sr_ended();
+    
 
 
 public slots:

@@ -929,6 +929,7 @@
     <addaction name="separator"/>
     <addaction name="action_notification"/>
     <addaction name="action_Dark"/>
+    <addaction name="action_Fullscreen"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
     <property name="title">
@@ -1087,6 +1088,15 @@
     <string>Close to tray</string>
    </property>
   </action>
+  <action name="action_Fullscreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+       <string>Fullscreen         F11</string>
+   </property>
+  </action>
+
   <action name="action_smallPlaylistItems">
    <property name="checkable">
     <bool>true</bool>

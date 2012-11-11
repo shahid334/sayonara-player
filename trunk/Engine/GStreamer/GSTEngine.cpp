@@ -137,7 +137,7 @@ GST_Engine::GST_Engine(){
     _stream_recorder = new StreamRecorder();
 
     connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
-    connect(_stream_recorder, SIGNAL(sig_stream_ended()), this, SLOT(sr_stream_ended()));
+    connect(_stream_recorder, SIGNAL(sig_stream_ended()), this, SLOT(sr_ended()));
 
 
 }

@@ -181,6 +181,9 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this->ui->action_reloadLibrary, SIGNAL(triggered(bool)), this,
 				SLOT(reloadLibraryClicked(bool)));
 
+	connect(this->ui->action_Close, SIGNAL(triggered(bool)), this, 
+				SLOT(really_close(bool)));
+
 
 	// view
 	connect(this->ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
@@ -201,6 +204,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(show_notification_toggled(bool)));
 	connect(this->ui->action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
 			SLOT(small_playlist_items_toggled(bool)));
+	connect(this->ui->action_Fullscreen, SIGNAL(toggled(bool)), this,
+			SLOT(show_fullscreen_toggled(bool)));
 
 	// preferences
 	connect(this->ui->action_lastFM, SIGNAL(triggered(bool)), this,
@@ -607,14 +612,18 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	this->ui->artist->setText("");
 	this->setWindowTitle("Sayonara");
 	this->ui->songProgress->setValue(0);
-    this->ui->curTime->setText("0:00");
-	this->ui->maxTime->setText("00:00");
+        this->ui->curTime->setText("0:00");
+	this->ui->maxTime->setText("0:00");
 
 
 	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
 
-    //this->ui->albumCover->setFocus();
 	this -> m_trayIcon->playStateChanged (this->m_playing);
+
+	if(this->ui->btn_rec->isVisible() && this->ui->btn_rec->isChecked()){
+		this->ui->btn_rec->setChecked(false);
+	}
+
 	emit stop();
 }
 
@@ -943,11 +952,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 
     e->accept();
 
-
-
 	switch (e->key()) {
-
-
 
 		case Qt::Key_MediaPlay:
             if(m_metadata.radio_mode == RADIO_OFF)
@@ -992,15 +997,23 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			break;
 
 		case (Qt::Key_F11):
-			if(!this->isFullScreen())
-				this->showFullScreen();
-			else this->showNormal();
+			show_fullscreen_toggled(!this->isFullScreen());
 			break;
 
 		default:
 			break;
 	}
 }
+
+void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
+	// may happend because of F11 too
+	this->ui->action_Fullscreen->setChecked(b);
+	if(b)
+		this->showFullScreen();
+	else this->showNormal();
+
+}
+
 
 
 void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
@@ -1012,7 +1025,11 @@ void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
 }
 
 /** OVERLOADED EVENTS END **/
+void GUI_SimplePlayer::really_close(bool b){
+	Q_UNUSED(b);
+	really_close();
 
+}
 
 void GUI_SimplePlayer::really_close(){
     m_min2tray = false;
