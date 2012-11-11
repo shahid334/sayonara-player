@@ -304,11 +304,14 @@ void Playlist::psl_play(){
 
 void Playlist::psl_stop(){
 
-	if(_radio_active != RADIO_OFF){
-
+    if(_radio_active != RADIO_OFF){
 		save_stream_playlist();
-        psl_clear_playlist();
 	}
+
+    // track no longer valid
+    if(_radio_active == RADIO_LFM){
+        psl_clear_playlist();
+    }
 
 	_radio_active = RADIO_OFF;
 
@@ -782,6 +785,7 @@ void Playlist::psl_valid_strrec_track(const MetaData& md){
 
 	_v_stream_playlist.push_back(md);
 }
+
 
 void Playlist::save_stream_playlist(){
 

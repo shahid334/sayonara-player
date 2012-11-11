@@ -360,7 +360,9 @@ QString Application::getVersion(){
         string type;
         int version;
         istr >> type >> version;
-	qDebug() << type.c_str() << ": " << version;
+        if(type.size() > 0)
+            qDebug() << type.c_str() << ": " << version;
+
         map[QString(type.c_str())] = version;
     }
 

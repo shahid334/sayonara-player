@@ -584,7 +584,7 @@ void GUI_InfoDialog::prepare_tracks(){
 void GUI_InfoDialog::prepare_cover(){
 
 
-	psl_image_available(_class_name, Helper::getIconPath() + "append.png");
+    psl_image_available(_class_name, Helper::getIconPath() + "logo.png");
 
 	switch(_diff_mode){
 

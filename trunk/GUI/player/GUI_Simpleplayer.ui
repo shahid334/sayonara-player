@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>832</width>
-    <height>571</height>
+    <height>742</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -326,7 +326,7 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string></string>
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -732,7 +732,7 @@
            <x>0</x>
            <y>0</y>
            <width>318</width>
-           <height>390</height>
+           <height>559</height>
           </rect>
          </property>
          <property name="sizePolicy">
@@ -777,6 +777,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
         </property>
         <property name="maximumSize">
          <size>
@@ -1093,10 +1099,9 @@
     <bool>true</bool>
    </property>
    <property name="text">
-       <string>Fullscreen         F11</string>
+    <string>Fullscreen         F11</string>
    </property>
   </action>
-
   <action name="action_smallPlaylistItems">
    <property name="checkable">
     <bool>true</bool>

@@ -228,7 +228,7 @@ SET(ICONS
         GUI/icons/cb_checked_disabled.png
         GUI/icons/rb_checked.png
         GUI/icons/rb_checked_disabled.png
-
+	GUI/icons/logo.png
 )
 
 
@@ -237,6 +237,9 @@ QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
 TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl)
+IF(${UNIX})
+	execute_process(COMMAND sh ./setversion.sh)
+ENDIF(${UNIX})
 
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 SET(CMAKE_INSTALL_PREFIX "/usr")

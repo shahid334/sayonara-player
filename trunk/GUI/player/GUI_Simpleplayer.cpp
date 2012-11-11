@@ -47,7 +47,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
+    this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
 	this->ui->artist->setText(settings->getVersion());
 	this->ui->album->setText("Written by Lucio Carreras");
@@ -327,7 +327,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	QString cover_path = Helper::get_cover_path(md.artist, md.album);
 	if(! QFile::exists(cover_path) ){
         if(md.radio_mode != RADIO_STATION){
-            cover_path = Helper::getIconPath() + "append.png";
+            cover_path = Helper::getIconPath() + "logo.png";
             emit sig_want_cover(md);
         }
         else
@@ -616,7 +616,7 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	this->ui->maxTime->setText("0:00");
 
 
-	this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "append.png"));
+    this->ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
 	this -> m_trayIcon->playStateChanged (this->m_playing);
 
@@ -806,7 +806,7 @@ void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
 	if(	our_coverpath.toLower() != cover_path.toLower() ||
 		!QFile::exists(cover_path) ){
 
-		cover_path = Helper::getIconPath() + "append.png";
+        cover_path = Helper::getIconPath() + "logo.png";
 	}
 
 	this->ui->albumCover->setIcon(QIcon(cover_path));
@@ -1048,15 +1048,30 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 	this->ui->btn_fw->setEnabled(radio != RADIO_STATION);
 
 	if(stream_ripper){
-		this->ui->btn_play->setVisible(radio == RADIO_OFF);
+
+        bool btn_rec_visible = (radio != RADIO_OFF);
+        if(btn_rec_visible){
+            this->ui->btn_play->setVisible(radio == RADIO_OFF);
+            this->ui->btn_rec->setVisible(radio != RADIO_OFF);
+        }
+
+        else {
+            this->ui->btn_rec->setVisible(radio != RADIO_OFF);
+            this->ui->btn_play->setVisible(radio == RADIO_OFF);
+
+        }
+
+
         this->ui->btn_play->setEnabled(radio == RADIO_OFF);
-		this->ui->btn_rec->setVisible(radio != RADIO_OFF);
+
+
 	}
 
 	else{
+    this->ui->btn_rec->setVisible(false);
         this->ui->btn_play->setVisible(true);
 		this->ui->btn_play->setEnabled(radio == RADIO_OFF);
-		this->ui->btn_rec->setVisible(false);
+
 	}
 
     this->ui->songProgress->setEnabled(radio == RADIO_OFF);
