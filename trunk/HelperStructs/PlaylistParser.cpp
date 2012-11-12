@@ -47,9 +47,9 @@ QString _correct_filepath(QString filepath, QString abs_path){
     bool is_absolute = QDir(filepath).isAbsolute();
     QString tmp_filepath;
     if(!is_absolute){
-        tmp_filepath = abs_path + QDir::separator() + filepath.trimmed();
+        tmp_filepath = abs_path + filepath.trimmed();
         if(!QFile::exists(tmp_filepath)){
-            tmp_filepath = abs_path + QDir::separator() + filepath;
+            tmp_filepath = abs_path + filepath;
             if(!QFile::exists(tmp_filepath)) {
                 qDebug() << tmp_filepath << " does not exist";
                 return "";
