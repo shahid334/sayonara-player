@@ -364,6 +364,8 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
 	_mime_data_artist = new CustomMimeData();
 	_mime_data_album = new CustomMimeData();
+    _mime_data_artist->setText("Artist");
+    _mime_data_album->setText("Album");
 
     _mime_data_artist->setMetaData(v_metadata);
     _mime_data_album->setMetaData(v_metadata);
@@ -503,6 +505,7 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
 	_mime_data = new CustomMimeData();
+    _mime_data->setText("Tracks");
 	_mime_data->setMetaData(v_md);
 
 	this->ui->tb_title->set_mime_data(_mime_data);

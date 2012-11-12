@@ -38,7 +38,7 @@
 #define RADIO_LFM 1
 #define RADIO_STATION 2
 
-#define PLUGIN_NUM 3
+#define PLUGIN_NUM 4
 #define PLUGIN_NONE 0
 #define PLUGIN_LFM_RADIO 1
 #define PLUGIN_STREAM 2

@@ -72,14 +72,14 @@ void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & 
 
 void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & files) {
 
-    qDebug() << "Get files inside " << baseDir.path();
+    //qDebug() << "Get files inside " << baseDir.path();
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
     QStringList tmp;
 
     tmp = baseDir.entryList();
     foreach (QString f, tmp) {
-        qDebug() << "found file in " << baseDir.path();
+       // qDebug() << "found file in " << baseDir.path();
         files.push_back(baseDir.absoluteFilePath(f));
     }
 }
@@ -133,12 +133,12 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
         if(Helper::is_soundfile(md.filepath)){
 
-        	qDebug() << md.filepath << " is soundfile " << md.id;
+            //qDebug() << md.filepath << " is soundfile " << md.id;
             if(md.id < 0){
                 if(!ID3::getMetaDataOfFile(md)) continue;
             }
-
-             v_md.push_back(md);
+            //qDebug() << "push back " << md.filepath;
+            v_md.push_back(md);
         }
     }
 
@@ -147,6 +147,8 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 	//extract media files out of playlist files
     foreach(QString path, playlist_paths){
 
+        qDebug() << "parse playlist file " << path;
+
         MetaDataList v_md_pl;
         PlaylistParser::parse_playlist(path, v_md_pl);
 
@@ -154,6 +156,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         foreach(MetaData md_pl, v_md_pl){
 
             if(!v_md.contains(md_pl)){
+                //qDebug() << md_pl.filepath << " not in vector";
                 v_md.push_back(md_pl);
             }
         }

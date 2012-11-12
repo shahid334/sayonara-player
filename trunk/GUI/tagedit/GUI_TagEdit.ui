@@ -119,6 +119,9 @@
        <height>30</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>?</string>
      </property>
@@ -153,6 +156,9 @@
    </item>
    <item row="9" column="6">
     <widget class="QPushButton" name="btn_tag_apply">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Apply expression</string>
      </property>
@@ -160,6 +166,9 @@
    </item>
    <item row="9" column="5">
     <widget class="QPushButton" name="btn_tag_undo">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Undo expression</string>
      </property>
@@ -180,6 +189,9 @@
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
         <string>&lt;</string>
@@ -216,6 +228,9 @@
          <width>30</width>
          <height>30</height>
         </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
         <string>&gt;</string>

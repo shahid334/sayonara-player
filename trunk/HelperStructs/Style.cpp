@@ -184,6 +184,7 @@ QString Style::get_tabwidget_style(bool dark){
 QString Style::get_lineedit_style(bool dark){
 
     QString dark_grey = "#383838";
+    QString grey = "#424242";
     QString lighter_grey = "#525252";
     QString orange = "#e8841a";
 
@@ -203,7 +204,7 @@ QString Style::get_lineedit_style(bool dark){
             "QLineEdit:read-only {" +
             "    border-radius: 4px; " +
             "    border: 1px solid #2B2B2B;" +
-            "    background: " + dark_grey + ";" +
+            "    background: " + grey + ";" +
             "}" +
 
 
@@ -305,6 +306,7 @@ QString Style::get_v_scrollbar_style(){
 
 	QString arrow_down_filename = Helper::getIconPath() + "/arrow_down.png";
 	QString arrow_up_filename = Helper::getIconPath() + "/arrow_up.png";
+    QString dark_grey = "#404040";
 
 	QString scrollbar_style = QString("QScrollBar::vertical \{") +
 			      "border: 0px solid " + get_player_back_color()  + "; " +
@@ -317,7 +319,8 @@ QString Style::get_v_scrollbar_style(){
 			  "}" +
 
 			  "QScrollBar::handle:vertical \{" +
-			  "    background: #404040;" +
+              "    background: #404040;" +
+
 			  "    min-height: 20px;" +
 			  "	   border: 2px solid #2C2C2C; " +
 			  "    border-radius: 4px; " +
@@ -573,6 +576,7 @@ QString Style::get_v_slider_style(bool dark){
     if(!dark) return "";
 
     QString darker_grey = "#2B2B2B";
+    QString dark_grey = "#525252";
     QString orange = "#e8841a";
 
 
@@ -583,7 +587,9 @@ QString Style::get_v_slider_style(bool dark){
         "}" +
 
         "QSlider::handle:vertical {" +
-        "    background: #525252;" +
+        //"    background: #525252;" +
+       "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "+
+         "                                 stop: 0 #6A6A6A, stop: 0.4 " + dark_grey + ");" +
         "    height: 10px;" +
         "    margin-left: -5px; " +
         "    margin-right: -5px; " +
@@ -627,6 +633,7 @@ QString Style::get_h_slider_style(bool dark){
    if(!dark) return "";
 
     QString darker_grey = "#2B2B2B";
+    QString dark_grey = "#525252";
 
 
     QString style =  QString("QSlider {") +
@@ -635,7 +642,9 @@ QString Style::get_h_slider_style(bool dark){
         "}" +
 
         "QSlider::handle:horizontal {" +
-        "    background: #525252;" +
+        //"    background: #525252;" +
+        "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "+
+         "                                 stop: 0 #6A6A6A, stop: 0.4 " + dark_grey + ");" +
         "    width: 10px;" +
         "    margin-top: -5px; " +
         "    margin-bottom: -5px; " +
@@ -673,6 +682,7 @@ QString Style::get_h_slider_style(bool dark){
         "   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, "
         "          stop:0 #E88417, stop: 0.3 #C46600, "
         "          stop: 0.7 #C46600, stop:1 #E88417); "
+
         "}";
 
     return style;

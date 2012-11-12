@@ -345,6 +345,7 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 		_info_dialog->setMetaData(v_md);
 
 	CustomMimeData* mime = new CustomMimeData();
+    mime->setText("tracks");
 	mime->setMetaData(v_md);
 
 	this->ui->listView->set_mime_data(mime);
@@ -588,6 +589,7 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	// remove line
 	clear_drag_lines(row);
 
+
 	if(_inner_drag_drop){
 		_inner_drag_drop = false;
 		if( _cur_selected_rows.contains(row-1) ){
@@ -603,14 +605,16 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 	}
 
 	const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
+
 	MetaDataList v_metadata;
 
 	// extern
 	if( d->hasUrls() ){
+        qDebug() << "has urls";
 
 		QStringList filelist;
 		foreach(QUrl url, d->urls()){
-
+            qDebug() << "Url: " << url;
 				QString path;
 				QString url_str = url.toString();
 				path =  url_str.right(url_str.length() - 7).trimmed();
@@ -634,17 +638,38 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 		return;
 	}
 
-	else if(d->getMetaData(v_metadata) > 0){
 
-		if(row == -1) row = _pli_model->rowCount();
+    else if(d->hasHtml()){
+        qDebug() << d->html();
+    }
 
+    else if(d->hasImage()){
+        qDebug() << "image";
+    }
+
+
+    else if(d->hasText() && d->hasMetaData()){
+
+        uint sz = d->getMetaData(v_metadata);
+        if(sz == 0) return;
+
+        if(row == -1) row = _pli_model->rowCount();
 
 		if(_radio_active == RADIO_OFF)
 			emit dropped_tracks(v_metadata, row);
 		else
-			emit dropped_tracks(v_metadata, 0);
+            emit dropped_tracks(v_metadata, 0);
 
-	}
+    }
+
+    else if(d->hasText()){
+        qDebug() << d->text();
+    }
+
+
+    else {
+
+    }
 }
 
 

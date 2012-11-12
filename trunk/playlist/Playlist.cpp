@@ -589,6 +589,9 @@ void Playlist::psl_prepare_playlist_for_save(QString name){
 	emit sig_playlist_prepared(name, _v_meta_data);
 }
 
+void Playlist::psl_prepare_playlist_for_save_file(QString name){
+    psl_save_playlist(name, _v_meta_data);
+}
 
 // GUI -->
 void Playlist::psl_save_playlist(const QString& filename, const MetaDataList& v_md){
@@ -597,15 +600,14 @@ void Playlist::psl_save_playlist(const QString& filename, const MetaDataList& v_
     if(!file) return;
 
     qint64 lines = 0;
-    for(uint i=0; i<v_md.size(); i++){
-        string str = v_md.at(i).filepath.toStdString();
+    foreach(MetaData md, v_md){
+        string str = md.filepath.toStdString();
 
         lines += fputs(str.c_str(), file);
         lines += fputs("\n", file);
     }
 
     fclose(file);
-
 }
 
 

@@ -48,6 +48,9 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     CDatabaseConnector::getInstance()->load_settings();
     set->setVersion( version );
 
+    int shown_plugin = set->getShownPlugin();
+    qDebug() << "get shown Plugin: " << shown_plugin;
+
     player              = new GUI_SimplePlayer();
 
     ui_playlist_chooser = new GUI_PlaylistChooser(player->getParentOfPlugin());
@@ -94,14 +97,15 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     init_connections();
 
     player->setWindowTitle("Sayonara " + version);
-    player->setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
+    player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
     player->setPlaylist(ui_playlist);
     player->setLibrary(ui_library);
+    player->setPlaylistChooser(ui_playlist_chooser);
     player->setStream(ui_stream);
     player->setLFMRadio(ui_lfm_radio);
     player->setEqualizer(ui_eq);
-    player->setPlaylistChooser(ui_playlist_chooser);
+
     player->setStyle( set->getPlayerStyle() );
     player->show();
 
@@ -129,7 +133,8 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     playlists->ui_loaded();
     player->ui_loaded();
 
-    int shown_plugin = set->getShownPlugin();
+
+
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
     player->check_show_plugins();
@@ -182,6 +187,14 @@ void Application::init_connections(){
    CONNECT (player, backward(),                             playlist,			psl_backward());
    CONNECT (player, sig_stream_selected(const QString&, const QString&), 		playlist, psl_play_stream(const QString&, const QString&));
 
+   CONNECT (player, show_small_playlist_items(bool),		ui_playlist,		psl_show_small_playlist_items(bool));
+   CONNECT (player, sig_sound_engine_changed(QString&), 	plugin_loader,      psl_switch_engine(QString&));
+
+   CONNECT (player, show_playlists(),						ui_playlist_chooser, 	show()); // IND
+   CONNECT (player, setupLastFM(),                          ui_lastfm,              show_win()); // IND
+   CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
+   CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
+
    CONNECT (player, skinChanged(bool),                      ui_playlist, 		change_skin(bool));
    CONNECT (player, skinChanged(bool),                      ui_library, 		change_skin(bool));
    CONNECT (player, skinChanged(bool),                      ui_eq,              changeSkin(bool));
@@ -193,14 +206,6 @@ void Application::init_connections(){
    CONNECT (player, skinChanged(bool),                      ui_stream_rec,      changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_id3_editor,      changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_lastfm,          changeSkin(bool));
-
-   CONNECT (player, show_small_playlist_items(bool),		ui_playlist,		psl_show_small_playlist_items(bool));
-   CONNECT (player, sig_sound_engine_changed(QString&), 	plugin_loader,      psl_switch_engine(QString&));
-
-   CONNECT (player, show_playlists(),						ui_playlist_chooser, 	show()); // IND
-   CONNECT (player, setupLastFM(),                          ui_lastfm,              show_win()); // IND
-   CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
-   CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
 
 
 	   CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
@@ -214,6 +219,7 @@ void Application::init_connections(){
 	   CONNECT (playlist, sig_goon_playing(),                                   listen,			play());
 	   CONNECT (playlist, sig_selected_file_changed(int),                       ui_playlist, 	track_changed(int));
 	   CONNECT (playlist, sig_playlist_created(MetaDataList&, int), 		ui_playlist, 	fillPlaylist(MetaDataList&, int));
+       CONNECT (playlist, sig_playlist_created(MetaDataList&, int), 		ui_playlist_chooser, 	playlist_changed(MetaDataList&, int));
 	   //CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
 	   CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&), 		playlists,      save_playlist_as_custom(int, MetaDataList&));
 	   CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&), 	playlists,      save_playlist_as_custom(QString, MetaDataList&));
@@ -301,8 +307,10 @@ void Application::init_connections(){
 	   CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
 	   CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist, 	psl_prepare_playlist_for_save(int));
 	   CONNECT(ui_playlist_chooser, sig_save_playlist(QString), 	playlist, 	psl_prepare_playlist_for_save(QString));
+       CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString), 	playlist, 	psl_prepare_playlist_for_save_file(QString));
 	   CONNECT(ui_playlist_chooser, sig_clear_playlist(),           playlist, 	psl_clear_playlist());
 	   CONNECT(ui_playlist_chooser, sig_closed(),                   player, 	close_playlist_chooser());
+       CONNECT(ui_playlist_chooser, sig_files_selected(QStringList &), playlist, psl_createPlaylist(QStringList&));
 
 	   CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
 	   CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));

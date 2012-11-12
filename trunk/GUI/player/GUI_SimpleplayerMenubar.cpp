@@ -7,11 +7,13 @@
 
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include <HelperStructs/Style.h>
 
 #include <QWidget>
 #include <QDir>
 #include <QStringList>
 #include <QFileDialog>
+
 
 #include <cstdio>
 #include <cstdlib>
@@ -208,7 +210,19 @@ void GUI_SimplePlayer::about(bool b){
 
 	QString version = CSettingsStorage::getInstance()->getVersion();
 
-	QMessageBox::information(this, "About",
-			"<b><font size=\"+2\">Sayonara Player "+ version + "</font></b><br /><br />Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
+    QMessageBox infobox;
+    infobox.setParent(this);
+    QPixmap p = QPixmap(Helper::getIconPath() + "logo.png").scaled(150, 150, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    infobox.setIconPixmap(p);
+    infobox.setWindowFlags(Qt::Dialog);
+    infobox.setModal(true);
+
+    infobox.setWindowTitle("About Sayonara");
+    infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
+    infobox.setInformativeText("Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
+    infobox.setStandardButtons(QMessageBox::Ok);
+    infobox.button(QMessageBox::Ok)->setStyleSheet(Style::get_pushbutton_style(m_dark));
+    infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
+    infobox.exec();
 }
 

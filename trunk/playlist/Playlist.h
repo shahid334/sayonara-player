@@ -89,6 +89,7 @@ public:
 		void psl_similar_artists_available(const QList<int>&);
         void psl_prepare_playlist_for_save(int id);
 		void psl_prepare_playlist_for_save(QString name);
+        void psl_prepare_playlist_for_save_file(QString name);
 		void psl_play();
 		void psl_stop();
 		void psl_forward();

@@ -82,6 +82,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
             QFont font;
             font.setBold(true);
+            font.setFamily("DejaVu Sans");
 
             painter->setFont(font);
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
@@ -95,6 +96,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
             QFont font;
             font.setBold(true);
+            font.setFamily("DejaVu Sans");
 
             painter->setFont(font);
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, QString::number(n_tracks) + " tracks");

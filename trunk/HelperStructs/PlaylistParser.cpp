@@ -40,9 +40,42 @@ static int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path=
 static int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path="");
 
 
+QString _correct_filepath(QString filepath, QString abs_path){
+
+    if(filepath.startsWith("http")) return filepath;
+
+    bool is_absolute = !QDir(filepath).isAbsolute();
+    QString tmp_filepath;
+    if(!is_absolute){
+        tmp_filepath = abs_path + QDir::separator() + filepath.trimmed();
+        if(!QFile::exists(tmp_filepath)){
+            tmp_filepath = abs_path + QDir::separator() + filepath;
+            if(!QFile::exists(tmp_filepath)) return "";
+            else return tmp_filepath;
+        }
+
+        else return tmp_filepath;
+    }
+
+    else {
+        tmp_filepath = filepath.trimmed();
+        if(!QFile::exists(tmp_filepath)){
+            tmp_filepath = filepath;
+            if(!QFile::exists(tmp_filepath)) return "";
+            else return tmp_filepath;
+        }
+
+        else return tmp_filepath;
+    }
+
+    return filepath;
+}
+
+
 int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 	QStringList list = file_content.split('\n');
-    qDebug() << file_content;
+
+    MetaData ext_md;
 	foreach(QString line, list){
 
 		// remove comments
@@ -50,28 +83,40 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 		if(comment_idx >= 0)
 			line = line.mid(comment_idx, line.size() - comment_idx);
 
-		if(line.trimmed().size() <= 0 ||
-			line.startsWith("#")) continue;
+        if(line.trimmed().size() <= 0) continue;
 
 
-		// add absolute path of container file
-		line = abs_path + line.trimmed();
+        if(line.toUpper().startsWith("#EXTINFO:")){
+            int first_comma = line.indexOf(",");
+            int space_after = line.indexOf(" - ", first_comma);
+            ext_md.artist = line.mid(first_comma + 1, space_after - first_comma);
+            ext_md.title = line.right(line.size() - (space_after + 3));
+            continue;
+        }
 
+        MetaData md;
+        if(ext_md.artist.size() > 0 || ext_md.title.size() > 0) md = ext_md;
 
-		MetaData md;
-		if( !line.startsWith("http")){
-            md.filepath = line;
-            if( ID3::getMetaDataOfFile(md) ){
+        if( !line.startsWith("http")){
+            md.filepath = _correct_filepath(line, abs_path);
+
+            if( md.filepath.size() > 0 && ID3::getMetaDataOfFile(md) ){
 				v_md.push_back(md);
 			}
 		}
 
 		else {
-			md.artist = line;
-			md.filepath = line;
+
+            if(md.artist.size() == 0)
+                md.artist = line;
+
+            md.filepath = _correct_filepath(line, abs_path);
 			md.album = "";
             v_md.push_back(md);
 		}
+
+        ext_md.artist = "";
+        ext_md.title = "";
 	}
 
 
@@ -108,17 +153,17 @@ int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path){
 				QString path = e.attribute("href");
 
 				// filepath, convert to absolute path if relative
-				md.filepath = path.trimmed();
-				if(!QDir(md.filepath).isAbsolute()){
-					md.filepath = abs_path + md.filepath;
-				}
-
+                md.filepath = _correct_filepath(path, abs_path);
 				md.artist = path.trimmed();
 			}
 
 			else if(!nodename.compare("title")){
 				md.title = e.text();
 			}
+
+            else if(!nodename.compare("album")){
+                md.album = e.text();
+            }
 
 			else if(!nodename.compare("author")){
 				md.artist = e.text();
@@ -180,7 +225,7 @@ int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path){
 		if( line_splitted.size() <= 1 ) continue;
 
 		tmp_key = line_splitted[0].trimmed();
-		val = line_splitted[1].trimmed();
+        val = line_splitted[1];
 
 
 		int track_idx = -1;
@@ -206,13 +251,10 @@ int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path){
 			v_md[track_idx - 1].artist = val;
 
 			// calc absolute filepath
-			v_md[track_idx - 1].filepath = val;
-			if(!QDir(v_md[track_idx - 1].filepath).isAbsolute()){
-				v_md[track_idx - 1].filepath = abs_path + v_md[track_idx - 1].filepath;
-			}
+            v_md[track_idx - 1].filepath = _correct_filepath(val, abs_path);
 		}
 
-		else if(line.toLower().startsWith("title")){
+        else if(line.toLower().startsWith("title")){
 			v_md[track_idx - 1].title = val;
 		}
 
@@ -272,8 +314,6 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md){
 		parse_asx(content, v_md_tmp, abs_path);
 	}
 
-
-	QDir dir(playlist_file);
 
 	for(uint i=0; i<v_md_tmp.size(); i++){
 

@@ -51,7 +51,8 @@ int main(int argc, char *argv[]){
 
 		QApplication app (argc, argv);
             app.setApplicationName("Sayonara");
-			app.setWindowIcon(QIcon(Helper::getIconPath() + "play.png"));
+            app.setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
+
 
 		QStringList params;
 		for(int i=1; i<argc; i++){

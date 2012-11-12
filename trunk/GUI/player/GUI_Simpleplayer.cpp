@@ -144,12 +144,24 @@ void GUI_SimplePlayer::initGUI() {
 	//this->ui->btn_correct->setText(QString("(c)"));
 	this->ui->btn_correct->setToolTip("Correct ID3 Tag");
 
-	this->ui->action_ViewEqualizer->setText("Equalizer\t\tSTRG+e");
-	this->ui->action_ViewStream->setText("Stream\t\tSTRG+s");
-	this->ui->action_ViewPlaylistChooser->setText("Playlist Chooser\tSTRG+p");
-	this->ui->action_ViewLFMRadio->setText("Last.fm Radio\t\tSTRG+r");
-	this->ui->action_viewLibrary->setText("Library\t\tSTRG+l");
-	this->ui->btn_correct->setVisible(false);
+    this->ui->action_ViewEqualizer->setText("&Equalizer");
+    this->ui->action_ViewEqualizer->setShortcut(QKeySequence("CTRL+e"));
+
+    this->ui->action_ViewStream->setText("&Stream");
+    this->ui->action_ViewStream->setShortcut(QKeySequence("CTRL+s"));
+
+    this->ui->action_ViewPlaylistChooser->setText("&Playlist Chooser");
+    this->ui->action_ViewPlaylistChooser->setShortcut(QKeySequence("CTRL+p"));
+
+    this->ui->action_ViewLFMRadio->setText("Last.fm &Radio");
+    this->ui->action_ViewLFMRadio->setShortcut(QKeySequence("CTRL+r"));
+
+    this->ui->action_viewLibrary->setText("&Library");
+    this->ui->action_viewLibrary->setShortcut(QKeySequence("CTRL+l"));
+
+    this->ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
+
+    this->ui->btn_correct->setVisible(false);
 }
 
 void GUI_SimplePlayer::setupConnections(){
@@ -492,6 +504,7 @@ void GUI_SimplePlayer::setStyle(int style){
 
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
+    m_dark = dark;
 
 	QString menu_style = Style::get_menu_style(dark);
 	QString btn_style;

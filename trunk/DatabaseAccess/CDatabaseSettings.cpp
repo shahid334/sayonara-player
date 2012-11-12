@@ -284,8 +284,10 @@ bool CDatabaseConnector::store_settings(){
 	bool show_library = storage->getShowLibrary();
 	store_setting("show_library", show_library);
 
+
 	int shown_plugin = storage->getShownPlugin();
 	store_setting("shown_plugin", shown_plugin);
+    qDebug() << "Db: shown plugin = " << shown_plugin;
 
 	bool min2tray = storage->getMinimizeToTray();
 	store_setting("min_to_tray", min2tray);
@@ -388,7 +390,7 @@ void CDatabaseConnector::store_setting(QString key, QVariant value){
 		}
 
 		else{
-			//qDebug() << "Updated " << key << " -> " << value;
+           // qDebug() << "Updated " << key << " -> " << value;
 		}
 	}
 	catch (QString& ex) {

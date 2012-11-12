@@ -40,8 +40,12 @@ signals:
 	void sig_delete_playlist(int);
 	void sig_save_playlist(int);
 	void sig_save_playlist(QString);
+    void sig_save_playlist_file(QString);
 	void sig_closed();
 	void sig_clear_playlist();
+    void sig_files_selected(QStringList&);
+
+
 
 
 private slots:
@@ -49,11 +53,14 @@ private slots:
 	void save_button_pressed();
 	void save_as_button_pressed();
 	void delete_button_pressed();
+    void load_button_pressed();
 	void playlist_selected(int);
+    void text_changed(const QString&);
 
 
 
 public slots:
+    void playlist_changed(MetaDataList&, int);
 	void all_playlists_fetched(QMap<int, QString>&);
     void changeSkin(bool);
 
@@ -66,6 +73,10 @@ private:
 	QMap<int, QString> _playlists;
 	int	_cur_idx;
 	bool _started;
+    bool _dark;
+    QString _text_before_save;
+
+    int show_warning(QString title_text);
 
 protected:
 	void closeEvent(QCloseEvent* e);

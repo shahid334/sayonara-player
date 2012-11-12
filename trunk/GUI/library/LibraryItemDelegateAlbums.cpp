@@ -85,6 +85,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
             QFont font;
             font.setBold(true);
+            font.setFamily("DejaVu Sans");
 
             painter->setFont(font);
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
@@ -98,6 +99,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
             QFont font;
             font.setBold(true);
+            font.setFamily("DejaVu Sans");
 
             QString year_str = QString::number(year);
             if(year == 0) year_str = "Unknown";

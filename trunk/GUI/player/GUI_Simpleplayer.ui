@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>832</width>
+    <width>976</width>
     <height>742</height>
    </rect>
   </property>
@@ -731,7 +731,7 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>318</width>
+           <width>350</width>
            <height>559</height>
           </rect>
          </property>
@@ -894,7 +894,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>832</width>
+     <width>976</width>
      <height>23</height>
     </rect>
    </property>
@@ -984,7 +984,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Equalizer                       STRG + E</string>
+    <string>Equalizer</string>
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
@@ -1027,7 +1027,16 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Radio            STRG+R</string>
+    <string>Radio</string>
+   </property>
+   <property name="shortcut">
+    <string extracomment="STRG + R"/>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+   <property name="softKeyRole">
+    <enum>QAction::PositiveSoftKey</enum>
    </property>
   </action>
   <action name="action_load_playlist">
@@ -1051,7 +1060,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Playlist Chooser       STRG + P</string>
+    <string>Playlist Chooser</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="action_about">
@@ -1083,7 +1095,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Library                      STRG + L</string>
+    <string>Library</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="action_min2tray">
@@ -1099,7 +1114,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Fullscreen         F11</string>
+    <string>Fullscreen </string>
    </property>
   </action>
   <action name="action_smallPlaylistItems">
@@ -1144,6 +1159,9 @@
    </property>
    <property name="text">
     <string>Stream</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="action_SocketConnection">

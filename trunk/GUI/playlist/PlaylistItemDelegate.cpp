@@ -104,7 +104,6 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 	_pl_entry->resize(_parent->width() - offset, _row_height);
 
 	QString style;
-	QString col_fg;
 
 	QPalette palette = _parent->palette();
 
@@ -146,8 +145,6 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
         }
 
     }
-
-
 
 	// standard selected
     else{

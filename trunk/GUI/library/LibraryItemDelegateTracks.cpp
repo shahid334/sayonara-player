@@ -77,6 +77,7 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
     QFont font;
     font.setBold(true);
+    font.setFamily("DejaVu Sans");
 
     painter->setFont(font);
 

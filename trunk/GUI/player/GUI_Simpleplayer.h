@@ -214,6 +214,7 @@ private:
     QAction*                    m_showAction;
 
     QString						m_skinSuffix;
+    bool                        m_dark;
     QString						m_album;
     QString						m_artist;
     MetaData					m_metadata;
