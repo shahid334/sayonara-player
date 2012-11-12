@@ -114,7 +114,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
         if( checkTrack(md) ){
 
             MetaData md_tmp = _db->getTrackByPath(md.filepath);
-            md.is_extern = (md_tmp.id < 0);
+            md.is_extern = (md_tmp.id < 0 && !md.filepath.toLower().startsWith("http"));
             _v_meta_data.push_back(md);
         }
 	}
