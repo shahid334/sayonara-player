@@ -111,8 +111,12 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
 	foreach(MetaData md, v_meta_data){
 
-		if( checkTrack(md) )
-			_v_meta_data.push_back(md);
+        if( checkTrack(md) ){
+
+            MetaData md_tmp = _db->getTrackByPath(md.filepath);
+            md.is_extern = (md_tmp.id < 0);
+            _v_meta_data.push_back(md);
+        }
 	}
 
     // no tracks in new playlist
