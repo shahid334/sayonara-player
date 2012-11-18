@@ -35,7 +35,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
             gst_message_parse_error(msg, &err, NULL);
 
-            qDebug() << "StreamRecorder: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
+            qDebug() << "SR: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
            g_error_free(err);
 
             break;
@@ -87,27 +87,27 @@ void StreamRecorder::init(){
         _rec_dst = gst_element_factory_make("filesink", "rec_sink");
 
         if(!_rec_pipeline) {
-            qDebug() << "Record: pipeline error";
+            qDebug() << "SR: pipeline error";
             break;
         }
 
         if(!_rec_src) {
-            qDebug() << "Record: src error";
+            qDebug() << "SR: src error";
             break;
         }
 
         if(!_rec_cvt) {
-            qDebug() << "Record: cvt error";
+            qDebug() << "SR: cvt error";
             break;
         }
 
         if(!_rec_enc) {
-            qDebug() << "Record: enc error";
+            qDebug() << "SR: enc error";
             break;
         }
 
         if(!_rec_dst) {
-            qDebug() << "Record: sink error";
+            qDebug() << "SR: sink error";
             break;
         }
 
@@ -199,7 +199,7 @@ QString StreamRecorder::stop(bool track_finished, bool delete_track){
     f.remove();
 
     if(!success){
-        qDebug() << "unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname_wo_path;
+        qDebug() << "SR: unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname_wo_path;
         return "";
     }
 
@@ -212,7 +212,7 @@ void StreamRecorder::thread_finished(){
 
     qint64 size = _sr_thread->getSize();
 
-
+    qDebug() << "SR: Could not init because file size = " << size;
     if(size < _buffer_size && !_stream_ended){
         _sr_thread->start();
     }
@@ -225,7 +225,9 @@ void StreamRecorder::endOfStream(){
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
     _sr_thread->terminate();
     _stream_ended = true;
-    qDebug() << "Stream ended";
+    QFile f(_sr_recording_dst);
+    qDebug() << "SR: Stream ended" << f.size();
+    f.close();
 
     emit sig_stream_ended();
 }

@@ -145,6 +145,7 @@ SET(SOURCES
     DatabaseAccess/CDatabasePlaylist.cpp
     DatabaseAccess/CDatabaseStreams.cpp
     playlist/Playlist.cpp
+    playlist/Playlist_GUI_slots.cpp
     playlists/Playlists.cpp
     HelperStructs/id3.cpp
     StreamPlugins/LastFM/LastFM.cpp

@@ -40,19 +40,21 @@ void StreamRipperBufferThread::run(){
     }
 
     _f = new QFile(_uri);
-
+    int n_loops = 0;
     do{
         _size = _f->size();
 
         usleep(interval);
         max -= interval;
 
+        n_loops++;
         if(max <= 0) break;
+
     } while(_size < 32000 && max > 0);
 
 
     _size = _f->size();
-    qDebug() << "size = " << _size;
+    qDebug() << "size = " << _size << " loops = " << n_loops;
     _f->close();
 
 }

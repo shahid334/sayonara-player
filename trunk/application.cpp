@@ -300,7 +300,7 @@ void Application::init_connections(){
 
        CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
        CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
-       CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),            playlist,		psl_new_radio_playlist_available(const MetaDataList&));
+       CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),            playlist,		psl_new_lfm_playlist_available(const MetaDataList&));
        CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),     player,		lfm_info_fetched(const MetaData&, bool, bool));
 
 	   CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));

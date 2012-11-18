@@ -79,8 +79,7 @@ public:
         void psl_createPlaylist(MetaDataList&);
         void psl_createPlaylist(CustomPlaylist&);
 		void psl_insert_tracks(const MetaDataList&, int idx);
-		void psl_insert_albums(const AlbumList&, int);			// not used
-		void psl_insert_artists(const ArtistList&, int);		// not used
+
 		void psl_change_track(int);
 		void psl_next_track();
 		void psl_playlist_mode_changed(const Playlist_Mode&);
@@ -100,7 +99,7 @@ public:
 		void psl_id3_tags_changed(MetaDataList&);
 		void psl_import_new_tracks_to_library(bool);
 		void psl_import_result(bool);
-		void psl_new_radio_playlist_available(const MetaDataList&);
+        void psl_new_lfm_playlist_available(const MetaDataList&);
 		void psl_play_stream(const QString&, const QString&);
 		void psl_valid_strrec_track(const MetaData&);
 		void psl_play_next_tracks(const MetaDataList&);
