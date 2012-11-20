@@ -22,6 +22,8 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
     (void) bus;
     (void) user_data;
 
+
+
     switch (GST_MESSAGE_TYPE(msg)) {
 
         case GST_MESSAGE_EOS:
@@ -36,7 +38,8 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
             gst_message_parse_error(msg, &err, NULL);
 
             qDebug() << "SR: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
-           g_error_free(err);
+
+            g_error_free(err);
 
             break;
 
@@ -53,11 +56,12 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 StreamRecorder::StreamRecorder(QObject *parent) :
     QObject(parent)
 {
-    _buffer_size = 32768;
+    _buffer_size = 32769;
     _stream_ended = true;
 
     _settings = CSettingsStorage::getInstance();
     obj_ref = this;
+    _try = 2;
 }
 
 
@@ -134,8 +138,10 @@ void StreamRecorder::init(){
 }
 
 
-QString StreamRecorder::changeTrack(const MetaData& md){
+QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
+
+    _max_tries = trys;
     _md = md;
     if(!_sr_thread) return "";
     if(_sr_thread->isRunning()) _sr_thread->terminate();
@@ -148,6 +154,8 @@ QString StreamRecorder::changeTrack(const MetaData& md){
 
 
     title.replace(" ", "_");
+    title.replace("/", "_");
+    title.replace("\\", "_");
     if(Helper::is_soundfile(md.filepath))
         _sr_recording_dst = Helper::getSayonaraPath() + title + "." + _md.filepath.right(3);
     else
@@ -163,6 +171,7 @@ QString StreamRecorder::changeTrack(const MetaData& md){
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
     _sr_thread->setUri(_sr_recording_dst);
+    _try = 0;
     _sr_thread->start();
 
     return _sr_recording_dst;
@@ -171,6 +180,7 @@ QString StreamRecorder::changeTrack(const MetaData& md){
 
 QString StreamRecorder::stop(bool track_finished, bool delete_track){
 
+    _stream_ended = true;
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 
     if(_sr_thread->isRunning()) _sr_thread->terminate();
@@ -181,6 +191,7 @@ QString StreamRecorder::stop(bool track_finished, bool delete_track){
     QString sr_path = _settings->getStreamRipperPath();
 
     if( (!track_finished && complete_tracks) || delete_track){
+        qDebug() << "Remove File (1)" << f.fileName();
         f.remove();
         return "";
     }
@@ -196,6 +207,7 @@ QString StreamRecorder::stop(bool track_finished, bool delete_track){
     QString dst_name = 	dir.path() + QDir::separator() + fname_wo_path;
 
     bool success = 	f.copy(dst_name);
+    qDebug() << "Remove File (2)" << f.fileName();
     f.remove();
 
     if(!success){
@@ -212,12 +224,36 @@ void StreamRecorder::thread_finished(){
 
     qint64 size = _sr_thread->getSize();
 
-    qDebug() << "SR: Could not init because file size = " << size;
-    if(size < _buffer_size && !_stream_ended){
-        _sr_thread->start();
+    bool success = true;
+
+    if(size < 50 || !QFile::exists(_sr_recording_dst)){
+        _stream_ended = true;
+        qDebug() << "Stream not valid (1)";
+        emit sig_stream_not_valid();
+        return;
     }
 
-    emit sig_initialized(size >= _buffer_size);
+    if( (size < _buffer_size && !_stream_ended) || !QFile::exists(_sr_recording_dst)){
+
+        if(_try < 25 || _max_tries == -1) _sr_thread->start();
+        qDebug() << "SR: Could not init because file size = " << size << ". Try again to buffer";
+        success = false;
+        qDebug() << "SR: Try " << _try;
+        _try++;
+    }
+
+    else{
+        qDebug() << "SR:Init. file size = " << size;
+    }
+
+    if(_try < 25 || _max_tries == -1)
+        emit sig_initialized(success);
+
+    else emit {
+        _stream_ended = true;
+        qDebug() << "Stream not valid (2)";
+        emit sig_stream_not_valid();
+    }
 }
 
 
@@ -225,9 +261,21 @@ void StreamRecorder::endOfStream(){
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
     _sr_thread->terminate();
     _stream_ended = true;
+
+    if(QFile::exists(_sr_recording_dst)){
+        emit sig_stream_not_valid();
+        return;
+    }
+
+
     QFile f(_sr_recording_dst);
+
     qDebug() << "SR: Stream ended" << f.size();
     f.close();
 
     emit sig_stream_ended();
+}
+
+bool StreamRecorder::getFinished(){
+    return _stream_ended;
 }

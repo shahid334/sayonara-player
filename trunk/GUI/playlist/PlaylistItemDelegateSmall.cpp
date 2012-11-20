@@ -102,7 +102,6 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	int highlight_val = col_highlight.lightness();
     int background_val = col_background.lightness();
 
-
     if(md.pl_playing){
 
         if(!md.is_extern){
@@ -116,14 +115,15 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
                 col_orange_light.name() + ";" +
                 get_fg_color(col_orange_light.lightness());
         }
-
     }
 
+    else if(md.is_disabled){
+        style = QString("background-color: transparent; color: #888888;");
+    }
 
     else if(!md.pl_selected){
         if(!md.is_extern) style = QString("background-color: transparent; ") + get_fg_color(background_val);
         else style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(col_orange.lightness());
-
     }
 
 	// standard selected
@@ -134,8 +134,8 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 
 	int y = rect.topLeft().y() +  _pl_entry->height()-1;
-
-	_pl_entry->setStyleSheet(style);
+    _pl_entry->setStyleSheet(style);
+    if(md.is_disabled) _pl_entry->setDisabled(true);
 	_pl_entry->render(painter, rect.topLeft() );
 
 	if(md.pl_dragged) {

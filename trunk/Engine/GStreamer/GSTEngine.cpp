@@ -57,7 +57,7 @@ static GST_Engine*	obj_ref;
 
 gboolean player_change_file(GstBin* pipeline, void* app){
 
-    qDebug() << "player change file";
+    qDebug() << "Engine: player change file";
     Q_UNUSED(pipeline);
     Q_UNUSED(app);
 
@@ -98,7 +98,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 			gst_message_parse_error(msg, &err, NULL);
 
-			qDebug() << "GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
+            qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
             obj_ref->stop();
 			g_error_free(err);
 
@@ -143,7 +143,7 @@ GST_Engine::GST_Engine(){
 }
 
 GST_Engine::~GST_Engine() {
-	qDebug() << "close engine... ";
+    qDebug() << "Engine: close engine... ";
 
    if(_bus)
 		gst_object_unref(_bus);
@@ -182,7 +182,7 @@ void GST_Engine::init_play_pipeline(){
 		// create equalizer element
 		_pipeline = gst_element_factory_make("playbin2", "player");
 		 if(!_pipeline) {
-			 qDebug() << "Pipeline sucks";
+             qDebug() << "Engine: Pipeline sucks";
 			 break;
 		 }
 
@@ -192,22 +192,22 @@ void GST_Engine::init_play_pipeline(){
 		_audio_bin = gst_bin_new("audio-bin");
 
 		if(!_bus){
-			qDebug() << "Something went wrong with the bus";
+            qDebug() << "Engine: Something went wrong with the bus";
 			break;
 		}
 
 		if(!_equalizer)	{
-			qDebug() << "Equalizer cannot be created";
+            qDebug() << "Engine: Equalizer cannot be created";
 			break;
 		}
 
 		if(!_audio_sink) {
-			qDebug() << "Sink cannot be created";
+            qDebug() << "Engine: Sink cannot be created";
             break;
 		}
 
 		if(!_audio_bin)	{
-			qDebug() << "Bin cannot be created";
+            qDebug() << "Engine: Bin cannot be created";
 			break;
 		}
 
@@ -244,7 +244,7 @@ void GST_Engine::init(){
 
 
 void GST_Engine::psl_gapless_track(const MetaData& md){
-    qDebug() << "Gapless track " << md.title;
+    qDebug() << "Engine: Gapless track " << md.title;
     _md_gapless = md;
     _gapless_track_available = true;
 }
@@ -268,7 +268,7 @@ void GST_Engine::changeTrack(const MetaData& md){
     obj_ref = NULL;
 
     // Gstreamer needs an URI
-    gchar* uri = NULL;
+    const gchar* uri = NULL;
 
     // when stream ripper, do not start playing
     bool start_playing = true;
@@ -284,15 +284,19 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 	// stream && streamripper active
     if( _playing_stream && _sr_active ){
-        QString filepath = _stream_recorder->changeTrack(md);
+
+        int max_tries = 10;
+
+        QString filepath = _stream_recorder->changeTrack(md, max_tries);
         if(filepath.size() == 0) {
-            qDebug() << "Stream Ripper Error: Could not get filepath";
+            qDebug() << "Engine: Stream Ripper Error: Could not get filepath";
             return;
         }
         else {
-            uri = g_filename_to_uri( filepath.toStdString().c_str(), NULL, NULL);
-            qDebug() << "Stream Ripper file = " << filepath;
-            qDebug() << "Stream Ripper file = " << uri;
+
+            uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
+            qDebug() << "Engine: Stream Ripper file = " << filepath;
+            qDebug() << "Engine: Stream Ripper file = " << uri;
         }
 
         start_playing = false;
@@ -303,23 +307,25 @@ void GST_Engine::changeTrack(const MetaData& md){
 	else if(_playing_stream && !_sr_active){
 		_playing_stream = true;
 
-        uri = md.filepath.toLocal8Bit().data();
+       // uri = md.filepath.toLocal8Bit();
+        uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
+
 	}
 
 	// no stream (not quite right because of mms, rtsp or other streams
 	else if( !md.filepath.contains("://") ){
 
-         uri = g_filename_to_uri(md.filepath.toLocal8Bit().data(), NULL, NULL);
+         uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
 	}
 
 	else {
 
-        uri = md.filepath.toLocal8Bit().data();
+        uri = g_filename_to_uri(g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
 	}
 
     if(uri != NULL){
         // playing src
-        qDebug() << " set uri: " << uri;
+        qDebug() << "Engine:  set uri: " << uri;
         g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
 
         g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
@@ -375,7 +381,6 @@ void GST_Engine::pause(){
 
 void GST_Engine::setVolume(int vol){
 
-
 	float vol_val = (float) (vol * 1.0f / 100.0f);
 
 	g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
@@ -396,7 +401,7 @@ void GST_Engine::jump(int where, bool percent){
 
 	qint64 new_time_ns = where * _meta_data.length_ms * 10000; // nanoseconds
 	if(!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, new_time_ns)){
-		qDebug() << "seeking failed";
+        qDebug() << "seeking failed";
 	}
 
 	emit timeChangedSignal(where);
@@ -453,6 +458,12 @@ void GST_Engine::set_cur_position(quint32 pos){
 
 void GST_Engine::set_track_finished(){
 
+
+    qDebug() << "Engine: Track finished";
+    if(_sr_active && !_stream_recorder->getFinished()){
+        changeTrack(_meta_data);
+    }
+
     if(_sr_active) {
         _stream_recorder->stop(true, !_sr_wanna_record);
     }
@@ -499,6 +510,10 @@ void GST_Engine::sr_ended(){
     //emit track_finished();
 }
 
+void GST_Engine::sr_not_valid(){
+    qDebug() << "Engine: Stream not valid.. Next file";
+    emit track_finished();
+}
 
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

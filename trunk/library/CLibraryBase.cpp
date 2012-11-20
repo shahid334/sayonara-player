@@ -288,8 +288,6 @@ void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
 
 void CLibraryBase::loadDataFromDb () {
 
-
-
 	_filter.cleared = true;
 	_filter.filtertext = "";
 
@@ -500,9 +498,6 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 
         else
             _db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
-
-
-
     }
 
     // only album is selected

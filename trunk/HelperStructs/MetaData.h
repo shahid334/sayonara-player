@@ -76,6 +76,7 @@ public:
 	bool pl_dragged;
 
     bool is_lib_selected;
+    bool is_disabled;
 
 
     inline MetaData () {
@@ -99,6 +100,7 @@ public:
             pl_dragged = false;
 
             is_lib_selected = false;
+            is_disabled = false;
         }
 
 	void print(){
@@ -140,6 +142,7 @@ public:
 		list.push_back( (pl_selected) ? "1" : "0" );
 		list.push_back( (pl_dragged) ? "1" : "0" );
         list.push_back( (is_lib_selected) ? "1" : "0" );
+        list.push_back( (is_disabled) ? "1" : "0");
 
 		return list;
 	}
@@ -148,7 +151,7 @@ public:
 
 		QStringList list = v.toStringList();
 
-        if(list.size() < 19) return false;
+        if(list.size() < 20) return false;
 
         md.title =      list[0];
         md.artist =     list[1];
@@ -169,6 +172,7 @@ public:
         md.pl_selected = (list[16] == "1");
         md.pl_dragged = (list[17] == "1");
         md.is_lib_selected = (list[18] == "1");
+        md.is_disabled = (list[19] == "1");
 
 		return true;
 	}

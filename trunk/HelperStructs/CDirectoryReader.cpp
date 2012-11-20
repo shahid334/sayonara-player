@@ -84,7 +84,6 @@ void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & file
     }
 }
 
-
 void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_md){
 
 
@@ -162,9 +161,4 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             }
         }
 	}
-
-
-
-
-
 }

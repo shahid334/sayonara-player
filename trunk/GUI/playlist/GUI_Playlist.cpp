@@ -181,7 +181,7 @@ void GUI_Playlist::init_menues(){
 	_edit_action = new QAction(QIcon(Helper::getIconPath() + "lyrics.png"), "Edit", this);
 
 	_right_click_menu->addAction(_info_action);
-	_right_click_menu->addAction(_edit_action);
+    _right_click_menu->addAction(_edit_action);
 }
 
 
@@ -238,31 +238,28 @@ void GUI_Playlist::change_skin(bool dark){
 
 // SLOT: fill all tracks in v_metadata into playlist
 // the current track should be highlighted
-void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
+void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int radio_mode){
 
+    _radio_active = radio_mode;
     _pli_model->removeRows(0, _pli_model->rowCount());
 
     if(v_metadata.size() == 0) return;
 
-    if(v_metadata[0].radio_mode != RADIO_LFM)
-		_pli_model->insertRows(0, v_metadata.size());
-	else
-		_pli_model->insertRows(0, 1);
+    if(radio_mode != RADIO_LFM)
+        _pli_model->insertRows(0, v_metadata.size());
+    else
+        _pli_model->insertRows(0, cur_play_idx + 1);
 
 	_total_secs = 0;
 
-
     this->ui->btn_import->setVisible(false);
-    set_radio_active(RADIO_OFF);
+    set_radio_active(radio_mode);
 
     int idx = 0;
     foreach(MetaData md, v_metadata){
 
-
-        if(md.is_extern) {
-
+        if(md.is_extern)
 			this->ui->btn_import->setVisible(true);
-		}
 
 		QModelIndex model_idx = _pli_model->index(idx, 0);
 
@@ -272,17 +269,11 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 
         md.pl_selected = false;
         md.pl_playing = (cur_play_idx == idx);
+        if(md.radio_mode == RADIO_LFM)
+            md.is_disabled = true;
 
         _pli_model->setData(model_idx, md.toVariant(), Qt::EditRole);
-
-        if(md.radio_mode != RADIO_OFF){
-            set_radio_active(md.radio_mode);
-        }
-
-        if(md.radio_mode == RADIO_LFM) {
-
-            break;
-        }
+        if(idx == cur_play_idx && radio_mode == RADIO_LFM) break;
 
         idx++;
 	}
@@ -293,9 +284,7 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx){
 // private SLOT: clear button pressed
 void GUI_Playlist::clear_playlist_slot(){
 
-	if(_radio_active != RADIO_OFF) return;
-
-	this->ui->lab_totalTime->setText("Total Time: 0m 0s");
+    this->ui->lab_totalTime->setText("Total Time: 0m 0s");
 	this->ui->btn_import->setVisible(false);
 
 	_pli_model->removeRows(0, _pli_model->rowCount());
@@ -313,6 +302,7 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 	QModelIndexList idx_list = this->ui->listView->selectionModel()->selectedRows();
 	MetaDataList v_md;
 
+    // set all tracks not pressed
     foreach(int row, _cur_selected_rows){
         QModelIndex idx = _pli_model->index(row, 0);
         QVariant mdvariant = this->_pli_model->data(idx, Qt::WhatsThisRole);
@@ -324,37 +314,45 @@ void GUI_Playlist::pressed(const QModelIndex& index){
         this->_pli_model->setData(idx, md.toVariant(), Qt::EditRole);
     }
 
-
     _cur_selected_rows.clear();
 
-	foreach(QModelIndex idx, idx_list){
+    // search for cur selected rows
+    foreach(QModelIndex idx, idx_list){
 
 		QVariant mdvariant = this->_pli_model->data(idx, Qt::WhatsThisRole);
 		MetaData md;
+
 		if(!MetaData::fromVariant(mdvariant, md)) continue;
 
         md.pl_selected = true;
+        v_md.push_back(md);
 
-		v_md.push_back(md);
         this->_pli_model->setData(idx, md.toVariant(), Qt::EditRole);
-
-		_cur_selected_rows.push_back(idx.row());
+        if(_radio_active == RADIO_OFF){
+            _cur_selected_rows.push_back(idx.row());
+        }
 	}
 
-	if(_info_dialog)
-		_info_dialog->setMetaData(v_md);
+    if(_info_dialog){
+        _info_dialog->setMetaData(v_md);
+    }
 
-	CustomMimeData* mime = new CustomMimeData();
-    mime->setText("tracks");
-	mime->setMetaData(v_md);
+    if(_radio_active != RADIO_OFF){
+        CustomMimeData* mime = new CustomMimeData();
+        mime->setText("tracks");
+        mime->setMetaData(v_md);
 
-	this->ui->listView->set_mime_data(mime);
+        this->ui->listView->set_mime_data(mime);
 
-	if(_cur_selected_rows.contains( index.row() ))
-		_inner_drag_drop = true;
+        if(_cur_selected_rows.contains( index.row() ))
+            _inner_drag_drop = true;
 
-	else _inner_drag_drop = false;
+        else _inner_drag_drop = false;
+    }
+
+    else _inner_drag_drop = false;
 }
+
 
 void GUI_Playlist::released(const QModelIndex& index){
 
@@ -379,20 +377,20 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 		QModelIndex tmp_idx = index.model()->index(i, 0);
 		QVariant mdvariant = index.model()->data(tmp_idx, Qt::WhatsThisRole);
 		MetaData md;
-		if(!MetaData::fromVariant(mdvariant, md)) continue;
+        if(!MetaData::fromVariant(mdvariant, md)) continue;
 
-		md.pl_selected = (i == index.row());
-		md.pl_playing = (i == index.row());
+        if(i == index.row()){
+            md.pl_selected = true;
+            if(!md.is_disabled){
+                md.pl_playing = true;
+                emit selected_row_changed(i);
+            }
+        }
+
+        else md.pl_selected = false;
 
 		_pli_model->setData(tmp_idx, md.toVariant(), Qt::EditRole);
 	}
-
-	int new_row = index.row();
-
-	if(new_row < 0 || new_row >= _pli_model->rowCount() ) return;
-
-	emit selected_row_changed(new_row);
-
 }
 
 
@@ -401,8 +399,8 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 // by playlist
 void GUI_Playlist::track_changed(int new_row){
 
-    qDebug() << "new track = " << new_row;
-	if(new_row < 0) return;
+    if(new_row < 0) return;
+    else if(new_row > _pli_model->rowCount()) return;
 
 	QModelIndex index = _pli_model->index(new_row, 0);
 
@@ -410,15 +408,13 @@ void GUI_Playlist::track_changed(int new_row){
 
 		QModelIndex tmp_idx = _pli_model->index(i, 0);
 
-		QVariant mdvariant = index.model()->data(tmp_idx, Qt::WhatsThisRole);
-		MetaData md;
-		if(!MetaData::fromVariant(mdvariant, md)) continue;
+        MetaData md;
+        QVariant mdvariant = index.model()->data(tmp_idx, Qt::WhatsThisRole);
+        if(!MetaData::fromVariant(mdvariant, md)) continue;
 
 		md.pl_playing = (i == index.row());
-        if(md.pl_playing) qDebug() << "set " << md.title << " to playing";
 		_pli_model->setData(tmp_idx, md.toVariant(), Qt::EditRole);
-
-	}
+    }
 
 	this->ui->listView->scrollTo(index);
 }
@@ -460,6 +456,7 @@ void GUI_Playlist::psl_show_context_menu(const QPoint& p){
 
 	connect(_edit_action, SIGNAL(triggered()), this, SLOT(psl_edit_tracks()));
 	connect(_info_action, SIGNAL(triggered()), this, SLOT(psl_info_tracks()));
+    _edit_action->setEnabled(_radio_active == RADIO_OFF);
 
 	this->_right_click_menu->exec(p);
 
@@ -675,19 +672,20 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 void GUI_Playlist::set_total_time_label(){
 
+    QString text = "";
+
 	if(_radio_active == RADIO_STATION){
 		this->ui->lab_totalTime->setText("Radio");
 		return;
 	}
 
 	else if(_radio_active == RADIO_LFM){
-		this->ui->lab_totalTime->setText("Last.fm Radio");
-		return;
+        text = "Last.fm Radio: ";
 	}
 
 	this->ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
 
-	QString playlist_string = QString::number(this->_pli_model->rowCount());
+    QString playlist_string = text + QString::number(this->_pli_model->rowCount());
 	if(this->_pli_model->rowCount() == 1) playlist_string += " Track - ";
 	else playlist_string += " Tracks - ";
 
@@ -714,8 +712,10 @@ void GUI_Playlist::keyPressEvent(QKeyEvent* e){
 	QWidget::keyPressEvent(e);
 	int key = e->key();
 
-	if(key == Qt::Key_Delete && _cur_selected_rows.size() > 0)
-		remove_cur_selected_rows();
+    if(key == Qt::Key_Delete && _cur_selected_rows.size() > 0){
+        qDebug() << "cur selected rows = " << _cur_selected_rows.size();
+        remove_cur_selected_rows();
+    }
 }
 
 
@@ -748,6 +748,19 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_dynamic->setVisible(radio == RADIO_OFF);
 	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
+
+    if(radio != RADIO_OFF){
+
+        this->_right_click_menu->removeAction(_edit_action);
+        this->_info_dialog->set_tag_edit_visible(false);
+    }
+    else if(!_right_click_menu->actions().contains(_edit_action)){
+        this->_right_click_menu->addAction(_edit_action);
+        this->_info_dialog->set_tag_edit_visible(true);
+    }
+
+    else
+        this->_info_dialog->set_tag_edit_visible(true);
 
 }
 

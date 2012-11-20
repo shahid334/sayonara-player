@@ -22,6 +22,7 @@ public:
 signals:
     void sig_initialized(bool);
     void sig_stream_ended();
+    void sig_stream_not_valid();
 
     
 public slots:
@@ -31,12 +32,12 @@ private slots:
 
 public:
     void init();
-    QString changeTrack(const MetaData& md);
+    QString changeTrack(const MetaData& md, int max_tries);
     bool start();
     QString stop(bool track_finished, bool delete_track = false);
 
-
     void endOfStream();
+    bool getFinished();
 
 private:
     MetaData    _md;
@@ -55,6 +56,9 @@ private:
     GstElement* _rec_enc;
     GstElement* _rec_cvt;
     GstBus*     _bus;
+
+    int        _try;
+    int        _max_tries;
     
 };
 

@@ -38,6 +38,7 @@
 #include <QDialog>
 #include <QString>
 #include <QMetaType>
+#include <QCloseEvent>
 
 
 
@@ -71,12 +72,16 @@ private slots:
 	void cover_clicked();
 
 
+protected:
+    void closeEvent(QCloseEvent *e);
+
 public:
 	GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit=0);
 	virtual ~GUI_InfoDialog();
 
 	void setMode(int mode);
 	void setMetaData(const MetaDataList& vd);
+    void set_tag_edit_visible(bool b);
 
 	void show(int tab);
 
@@ -94,6 +99,7 @@ private:
 	int						_lyric_server;
 	bool					_lyrics_visible;
     bool                    _initialized;
+    bool                    _tag_edit_visible;
 
 
 

@@ -60,7 +60,7 @@ private slots:
 
 
 public slots:
-    void playlist_changed(MetaDataList&, int);
+    void playlist_changed(MetaDataList&, int, int);
 	void all_playlists_fetched(QMap<int, QString>&);
     void changeSkin(bool);
 

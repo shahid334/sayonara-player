@@ -34,6 +34,8 @@ void StreamRipperBufferThread::run(){
      * _sr_recording_dst = .Sayonara/filename
      */
 
+    if(!QFile::exists(_uri)) return;
+
     if(_f != NULL){
         if(_f->isOpen()) _f->close();
         delete _f;

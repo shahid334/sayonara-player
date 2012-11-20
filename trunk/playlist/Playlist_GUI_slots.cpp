@@ -16,7 +16,9 @@ void Playlist::psl_clear_playlist(){
     if(_radio_active == RADIO_OFF)
         psl_save_playlist_to_storage();
 
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    _radio_active = RADIO_OFF;
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
 }
 
@@ -62,47 +64,53 @@ void Playlist::psl_stop(){
 
     _cur_play_idx = -1;
     emit sig_no_track_to_play();
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }
 
 // fwd was pressed -> next track
 void Playlist::psl_forward(){
 
+    psl_next_track();
+    return;
+
     MetaData md;
-    int track_num = 0;
+    int track_num = -1;
 
-
-    // lastfm removes current played file
-    // next file is also on idx 0
     if(_radio_active == RADIO_LFM){
-
-        remove_row(0);
-
-        // any more files to play?
         if(_v_meta_data.size() == 0){
             emit sig_no_track_to_play();
             emit sig_need_more_radio();
             return;
         }
 
-        _cur_play_idx = 0;
-        md = _v_meta_data[0];
-        md.radio_mode = RADIO_LFM;
+        int track_num = _cur_play_idx + 1;
 
-        MetaDataList v_md;
-        v_md.push_back(md);
+        // track too high
+        if(track_num > (int) _v_meta_data.size() -1){
+            track_num = -1;
+            emit sig_no_track_to_play();
+            emit sig_need_more_radio();
+            return;
+        }
 
-        emit sig_selected_file_changed(0);
-        emit sig_selected_file_changed_md(md);
+        // last track
+        else if(track_num == (int) _v_meta_data.size() -1) {
+            emit sig_need_more_radio();
+        }
 
+        emit sig_playlist_created(_v_meta_data, track_num, _radio_active);
+        emit sig_selected_file_changed(track_num);
+        emit sig_selected_file_changed_md(_v_meta_data[track_num]);
+
+        _cur_play_idx = track_num;
         return;
     }
+
 
     // this shouldn't happen, because forward is disabled
     else if(_radio_active == RADIO_STATION){
         return;
     }
-
 
     // SHUFFLE
     if(_playlist_mode.shuffle){
@@ -120,8 +128,6 @@ void Playlist::psl_forward(){
 
     md = _v_meta_data[track_num];
     md.radio_mode = _radio_active;
-
-
 
     if( checkTrack(md) ){
 
@@ -160,35 +166,16 @@ void Playlist::psl_backward(){
 void Playlist::psl_change_track(int new_row){
 
     if( (uint) new_row >= _v_meta_data.size()) return;
+    if( _radio_active == RADIO_LFM) return;
 
     MetaData md = _v_meta_data[new_row];
     md.pl_playing = true;
 
     if( checkTrack(md) ){
 
-        // never should gonna happen...
-        // we cannot click into playlist
-        if(_radio_active == RADIO_LFM){
-            for(int i=0; i<new_row; i++){
-                remove_row(0);
-            }
-
-            if(_v_meta_data.size() == 0){
-                emit sig_need_more_radio();
-                return;
-            }
-
-            md = _v_meta_data[0];
-
-            _cur_play_idx = 0;
-        }
-
-
-        else{
-            _cur_play_idx = new_row;
-        }
-
+        _cur_play_idx = new_row;
         _v_meta_data.setCurPlayTrack(_cur_play_idx);
+
         emit sig_selected_file_changed_md(md);
         emit sig_selected_file_changed(_cur_play_idx);
     }
@@ -215,6 +202,8 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
         row = 0;
     }
 
+    _radio_active = RADIO_OFF;
+
     // possibly the current playing index has to be updated
     if(row <= _cur_play_idx && _cur_play_idx != -1)
         _cur_play_idx += v_metadata.size();
@@ -240,7 +229,7 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 
 
     psl_save_playlist_to_storage();
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
     // radio was turned off, so we start at beginning of playlist
     if(switched_from_radio && _v_meta_data.size() > 0){
@@ -274,7 +263,6 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
         to_delete[i] = false;
         if(rows.contains(i)) {
             to_delete[i] = true;
-
         }
     }
 
@@ -290,13 +278,11 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
     }
 
     if(_cur_play_idx < -1) _cur_play_idx = -1;
-
-
     _v_meta_data = v_tmp_md;
 
     psl_save_playlist_to_storage();
 
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
     delete to_delete;
 }

@@ -30,6 +30,7 @@
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style.h"
 
 #include <QWidget>
 #include <QDialog>
@@ -44,10 +45,18 @@ GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) : QDialog(parent){
 
     this->ui = NULL;
 
+
 }
 
 GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 	// TODO Auto-generated destructor stub
+}
+
+
+void GUI_Library_Info_Box::change_skin(bool dark){
+    _skin = dark;
+    if(this->ui)
+        this->ui->btn_cancel->setStyleSheet(Style::get_pushbutton_style(dark));
 }
 
 
@@ -56,6 +65,8 @@ void GUI_Library_Info_Box::psl_refresh(){
     if(this->ui == NULL){
         this->ui = new Ui::Library_Info_Box();
         this->ui->setupUi(this);
+
+        this->ui->btn_cancel->setStyleSheet(Style::get_pushbutton_style(_skin));
 
         _db = CDatabaseConnector::getInstance();
         _lfm = LastFM::getInstance();

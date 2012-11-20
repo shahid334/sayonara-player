@@ -536,7 +536,7 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>16</height>
+        <height>20</height>
        </size>
       </property>
       <property name="sizeIncrement">
@@ -738,7 +738,7 @@
            <x>0</x>
            <y>0</y>
            <width>350</width>
-           <height>557</height>
+           <height>553</height>
           </rect>
          </property>
          <property name="sizePolicy">

@@ -222,25 +222,26 @@ void GUI_Library_windowed::change_skin(bool dark){
     QString table_style = Style::get_tv_style(dark);
     QString combo_style = Style::get_combobox_style(dark);
     QString line_edit_style = Style::get_lineedit_style(dark);
+    QString btn_style = Style::get_btn_style(dark);
 
     this->ui->combo_searchfilter->setStyleSheet(combo_style);
     this->ui->lv_album->setStyleSheet(table_style);
     this->ui->lv_artist->setStyleSheet(table_style);
     this->ui->tb_title->setStyleSheet(table_style);
     this->ui->le_search->setStyleSheet(line_edit_style);
-    this->ui->btn_clear->setStyleSheet(Style::get_btn_style(dark));
+    this->ui->btn_clear->setStyleSheet(btn_style);
+    this->ui->btn_info->setStyleSheet(btn_style);
+
+
+   if(_lib_info_dialog)
+        this->_lib_info_dialog->change_skin(dark);
 
 
 	if(dark){
 
-
 		QString header_style = Style::get_tv_header_style();
 		QString v_scrollbar_style = Style::get_v_scrollbar_style();
 		QString h_scrollbar_style = Style::get_h_scrollbar_style();
-
-
-
-
 
 		this->ui->tb_title->setShowGrid(false);
 		this->ui->lv_album->setShowGrid(false);

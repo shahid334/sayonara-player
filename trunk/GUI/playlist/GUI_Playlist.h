@@ -109,7 +109,7 @@
 			void sig_import_to_library(bool);
 
 		public slots:
-			void fillPlaylist(MetaDataList&, int);
+            void fillPlaylist(MetaDataList&, int, int);
 			void track_changed(int);
 			void change_skin(bool);
 			void library_path_changed(QString);

@@ -96,6 +96,7 @@ public slots:
 private slots:
     virtual void sr_initialized(bool)=0;
     virtual void sr_ended()=0;
+    virtual void sr_not_valid()=0;
 
 
 

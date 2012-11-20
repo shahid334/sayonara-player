@@ -45,7 +45,7 @@ using namespace std;
 
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
-	_radio_active = false;
+    _radio_active = RADIO_OFF;
 	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
 	_db = CDatabaseConnector::getInstance();
 	_v_meta_data.clear();
@@ -72,6 +72,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
         return;
     }
 
+    int old_radio_active = _radio_active;
     // check if there, check if extern
     foreach(MetaData md, v_meta_data){
 
@@ -79,25 +80,25 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
             MetaData md_tmp = _db->getTrackByPath(md.filepath);
 
-            if(md.radio_mode == RADIO_OFF)
+            if(md.radio_mode == RADIO_OFF){
                 md.is_extern = (md_tmp.id < 0 && !md.filepath.startsWith("http", Qt::CaseInsensitive));
-
-            else {
-                md.is_extern = false;
-                _radio_active = md.radio_mode;
+                _radio_active = RADIO_OFF;
             }
+
+            else
+                md.is_extern = false;
 
             _v_meta_data.push_back(md);
         }
     }
 
-    if(_radio_active){
+    if(_radio_active != old_radio_active){
         _cur_play_idx = 0;
         emit sig_selected_file_changed(0);
         emit sig_selected_file_changed_md(_v_meta_data[0]);
     }
 
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
     psl_save_playlist_to_storage();
 }
 
@@ -107,6 +108,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 // Load Folder, Load File...
 void Playlist::psl_createPlaylist(QStringList& pathlist){
 
+    _radio_active = RADIO_OFF;
     MetaDataList v_md;
 
     CDirectoryReader reader;
@@ -118,6 +120,7 @@ void Playlist::psl_createPlaylist(QStringList& pathlist){
 
 // create playlist from saved custom playlist
 void Playlist::psl_createPlaylist(CustomPlaylist& pl){
+    _radio_active = RADIO_OFF;
     psl_createPlaylist(pl.tracks);
 }
 
@@ -127,7 +130,7 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 // call this function if all extern signals/slots for this class are defined
 void Playlist::ui_loaded(){
 
-	_v_meta_data.clear();
+    _v_meta_data.clear();
 	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
 
 	if( loadPlaylist ){
@@ -140,12 +143,12 @@ void Playlist::ui_loaded(){
 			foreach(QString trackid, list){
 				if(trackid == "-1" || trackid == "") continue;
 				MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
-				_v_meta_data.push_back(track);
+                _v_meta_data.push_back(track);
 			}
 			_cur_play_idx = -1;
 		}
 
-        emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+        emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 	}
 }
 
@@ -155,7 +158,6 @@ void Playlist::ui_loaded(){
 void Playlist::psl_save_playlist_to_storage(){
 
     if(_radio_active) return;
-
 
 	QString playlist_str;
 	for(uint i=0; i<_v_meta_data.size(); i++){
@@ -203,46 +205,52 @@ void Playlist::save_stream_playlist(){
 
 void Playlist::psl_next_track(){
 
+    if(_radio_active == RADIO_LFM){
+        if(_v_meta_data.size() == 0){
+            emit sig_no_track_to_play();
+            emit sig_need_more_radio();
+            return;
+        }
 
-	// no track to play anymore
-	// if LFM, fetch more tracks
-	if(_v_meta_data.size() == 0){
+        int track_num = _cur_play_idx + 1;
+
+        // track too high
+        if(track_num > (int) _v_meta_data.size() -1){
+            track_num = -1;
+            emit sig_no_track_to_play();
+            emit sig_need_more_radio();
+            return;
+        }
+
+        // last track
+        else if(track_num == (int) _v_meta_data.size() -1) {
+            emit sig_need_more_radio();
+        }
+
+        emit sig_playlist_created(_v_meta_data, track_num, _radio_active);
+        emit sig_selected_file_changed(track_num);
+        emit sig_selected_file_changed_md(_v_meta_data[track_num]);
+
+        _cur_play_idx = track_num;
+        return;
+    }
+
+
+    int track_num = -1;
+    if(_v_meta_data.size() == 0){
+        _cur_play_idx = -1;
 		emit sig_no_track_to_play();
-		if(_radio_active == RADIO_LFM){
-			emit sig_need_more_radio();
-		}
 		return;
 	}
 
 
-	int track_num = -1;
-	// LFM next track
-	if(_radio_active == RADIO_LFM){
-
-		// start screaming for new tracks
-		if(_v_meta_data.size() == 1)
-			emit sig_need_more_radio();
-
-		remove_row(0);
-		// we just played the last track
-		if(_v_meta_data.size() == 0){
-			emit sig_no_track_to_play();
-			emit sig_need_more_radio();
-		}
-
-		else
-			track_num = 0;
-	}
-
-
 	// shuffle mode
-	else if(_playlist_mode.shuffle){
+    if(_playlist_mode.shuffle){
 		track_num = rand() % _v_meta_data.size();
 		if(track_num == _cur_play_idx){
 			track_num = (_cur_play_idx + 1) % _v_meta_data.size();
 		}
 	}
-
 
 	// standard next track, also valid for stream stations
 	else {
@@ -251,8 +259,13 @@ void Playlist::psl_next_track(){
 		if(_cur_play_idx >= (int) _v_meta_data.size() -1){
 			track_num = -1;
 
-			if(_playlist_mode.repAll)
+            if(_playlist_mode.repAll)
 				track_num = 0;
+
+            else{
+                emit sig_no_track_to_play();
+                return;
+            }
 		}
 
         else
@@ -269,24 +282,16 @@ void Playlist::psl_next_track(){
 		// maybe track is deleted here
 		if( checkTrack(md) ){
 
-			emit sig_selected_file_changed(track_num);
+            emit sig_selected_file_changed(track_num);
 			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
 			_cur_play_idx = track_num;
 		}
 
 		else{
-			remove_row(track_num);
+            remove_row(track_num);
 			psl_next_track();
 		}
-	}
-
-	// something weird happened, we have less than 1 track
-	else{
-		if(_radio_active == RADIO_LFM)
-			sig_need_more_radio();
-		emit sig_no_track_to_play();
-
-	}
+	}    
 }
 
 
@@ -325,29 +330,31 @@ void Playlist::psl_edit_id3_request(){
 
 void Playlist::psl_id3_tags_changed(MetaDataList& new_meta_data){
 
-	for(uint i=0; i<_v_meta_data.size(); i++){
-		MetaData md_old = _v_meta_data[i];
+    for(uint i=0; i<_v_meta_data.size(); i++){
+
+        MetaData md_old = _v_meta_data[i];
+
         foreach(MetaData md_new, new_meta_data){
 
-			if(md_old.filepath.toLower().trimmed().compare(md_new.filepath.toLower().trimmed()) == 0){
+            int cmp = md_old.filepath.compare(md_new.filepath, Qt::CaseInsensitive);
+            if(cmp == 0){
+
                 _v_meta_data[i] = md_new;
-			}
-		}
-	}
+            }
+        }
+    }
 
-	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    if(_cur_play_idx >= 0 && _cur_play_idx <= (int) _v_meta_data.size());
+        emit sig_cur_played_info_changed(_v_meta_data[_cur_play_idx]);
 
-	if(_cur_play_idx >= 0 && _cur_play_idx < (int) _v_meta_data.size())
-		emit sig_cur_played_info_changed(_v_meta_data[_cur_play_idx]);
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }
 
 
 void Playlist::psl_similar_artists_available(const QList<int>& artists){
 
-
 	// the response came too late, we already switched to radio
 	if(_radio_active != RADIO_OFF ){
-
 		return;
 	}
 
@@ -393,17 +400,17 @@ void Playlist::psl_similar_artists_available(const QList<int>& artists){
     if(md.id < 0) return;
 
 	if(!is_track_already_in)
-		_v_meta_data.push_back(md);
+        _v_meta_data.push_back(md);
 
-	psl_save_playlist_to_storage();
+    psl_save_playlist_to_storage();
 
-	emit sig_playlist_created(_v_meta_data, _cur_play_idx);
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
 }
 
 
 void Playlist::psl_import_new_tracks_to_library(bool copy){
-    qDebug() << "import files..";
+
     MetaDataList v_md_extern;
     foreach(MetaData md, _v_meta_data){
         if(md.is_extern){
@@ -425,20 +432,39 @@ void Playlist::psl_import_result(bool success){
             _v_meta_data[i].is_extern = false;
         }
 
-        sig_playlist_created(_v_meta_data, _cur_play_idx);
-	}
+        sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    }
 }
 
 
 void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
 
-	_radio_active = RADIO_LFM;
-	_cur_play_idx = 0;
+    MetaDataList v_md;
 
-	MetaDataList pl_copy = playlist;
+    if(_radio_active != RADIO_LFM) _cur_play_idx = -1;
+    _radio_active = RADIO_LFM;
 
-	psl_clear_playlist();
-    psl_createPlaylist(pl_copy);
+    foreach(MetaData md, _v_meta_data){
+        if(md.radio_mode == RADIO_LFM) v_md.push_back(md);
+    }
+
+    foreach(MetaData md, playlist){
+
+        md.radio_mode = RADIO_LFM;
+        v_md.push_back(md);
+    }
+
+
+    int old_play_idx = _cur_play_idx;
+    if(_cur_play_idx == -1) _cur_play_idx = 0;
+
+    _v_meta_data = v_md;
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    if(old_play_idx == -1){
+        emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+        emit sig_selected_file_changed(_cur_play_idx);
+    }
 }
 
 

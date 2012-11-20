@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QScrollBar>
+#include <QCloseEvent>
 
 
 
@@ -84,6 +85,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
     _lyrics_visible = true;
     _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
+    _tag_edit_visible = true;
 
 
     QStringList server_list = _lyric_thread->getServers();
@@ -690,7 +692,13 @@ void GUI_InfoDialog::show(int tab){
 
 	QWidget::show();
 	if(tab > 2 || tab < 0) tab = TAB_INFO;
-	ui->tab_widget->setCurrentIndex(tab);
+
+    ui->tab_widget->setTabEnabled(2, _tag_edit_visible);
+    if(!_tag_edit_visible && tab == TAB_EDIT){
+        tab = TAB_INFO;
+    }
+
+    ui->tab_widget->setCurrentIndex(tab);
 }
 
 void GUI_InfoDialog::psl_id3_success(bool b){
@@ -738,5 +746,16 @@ void GUI_InfoDialog::alternate_covers_available(QString caller_class){
 
 void GUI_InfoDialog::init(){
 
+
+}
+
+
+void GUI_InfoDialog::set_tag_edit_visible(bool b){
+    _tag_edit_visible = b;
+}
+
+void GUI_InfoDialog::closeEvent(QCloseEvent* e){
+    _tag_edit_visible = true;
+    e->accept();
 
 }

@@ -54,7 +54,7 @@ public:
 	uint get_num_tracks();
 
 	signals:
-		void sig_playlist_created(MetaDataList&, int);
+        void sig_playlist_created(MetaDataList&, int, int);
 		void sig_selected_file_changed_md(const MetaData&);
 		void sig_selected_file_changed(int row);
 		void sig_no_track_to_play();

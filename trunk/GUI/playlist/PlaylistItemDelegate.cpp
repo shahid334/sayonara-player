@@ -61,15 +61,11 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView *parent ) {
 
 	_pl_entry->setMinimumHeight(_row_height);
 	_pl_entry->setMaximumHeight(_row_height);
-
-
-
 }
+
 
 PlaylistItemDelegate::~PlaylistItemDelegate() {
 }
-
-
 
 
 //! [0]
@@ -136,6 +132,10 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
     }
 
+
+    else if(md.is_disabled){
+        style = QString("background-color: transparent; color: #888888;");
+    }
 
     else if(!is_selected){
         if(!md.is_extern)

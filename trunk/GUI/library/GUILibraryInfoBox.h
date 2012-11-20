@@ -48,11 +48,13 @@ signals:
 public slots:
 	void psl_refresh();
 	void lfm_data_available();
+    void change_skin(bool);
 
 private:
 	Ui::Library_Info_Box* 	ui;
 	CDatabaseConnector*   	_db;
 	LastFM*					_lfm;
+    bool                    _skin;
 
 	uint 		_n_tracks;
 	uint		_n_albums;
