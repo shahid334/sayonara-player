@@ -299,6 +299,7 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
+
 	QModelIndexList idx_list = this->ui->listView->selectionModel()->selectedRows();
 	MetaDataList v_md;
 
@@ -337,7 +338,10 @@ void GUI_Playlist::pressed(const QModelIndex& index){
         _info_dialog->setMetaData(v_md);
     }
 
-    if(_radio_active != RADIO_OFF){
+
+
+    if(_radio_active == RADIO_OFF && v_md.size() > 0){
+
         CustomMimeData* mime = new CustomMimeData();
         mime->setText("tracks");
         mime->setMetaData(v_md);
@@ -350,7 +354,10 @@ void GUI_Playlist::pressed(const QModelIndex& index){
         else _inner_drag_drop = false;
     }
 
+
+
     else _inner_drag_drop = false;
+
 }
 
 
@@ -497,7 +504,8 @@ void GUI_Playlist::clear_drag_lines(int row){
 // the drag comes, if there's data --> accept it
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 
-	if(event->mimeData() != NULL )
+
+    if(event->mimeData() != NULL )
 		event->acceptProposedAction();
 }
 
@@ -505,6 +513,8 @@ void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event){
 // scroll, if neccessary
 // paint line
 void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
+
+
 
 	if( !event->mimeData() )  {
 		qDebug() << "mime data not available";
@@ -571,7 +581,6 @@ void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event){
 
 // finally drop it
 void GUI_Playlist::dropEvent(QDropEvent* event){
-
 
 	if(!event->mimeData()) return;
 
@@ -750,11 +759,12 @@ void GUI_Playlist::set_radio_active(int radio){
 	this->ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 
     if(radio != RADIO_OFF){
-
+        this->ui->listView->set_drag_enabled(false);
         this->_right_click_menu->removeAction(_edit_action);
         this->_info_dialog->set_tag_edit_visible(false);
     }
     else if(!_right_click_menu->actions().contains(_edit_action)){
+        this->ui->listView->set_drag_enabled(true);
         this->_right_click_menu->addAction(_edit_action);
         this->_info_dialog->set_tag_edit_visible(true);
     }

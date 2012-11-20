@@ -36,6 +36,7 @@
 
 MyListView::MyListView(QWidget* parent) : QListView(parent) {
 
+    _drag_allowed = true;
 	_parent = parent;
 	_qDrag = 0;
 
@@ -49,11 +50,14 @@ MyListView::~MyListView() {
 
 void MyListView::mousePressEvent(QMouseEvent* event) {
 
+
+
 	QPoint pos_org = event->pos();
 	QPoint pos = QWidget::mapToGlobal(pos_org);
 
 	switch (event->button()) {
 	case Qt::LeftButton:
+        if(!_drag_allowed) break;
 
 		QListView::mousePressEvent(event);
 
@@ -88,7 +92,7 @@ void MyListView::mouseMoveEvent(QMouseEvent* event) {
 	QPoint pos = event->pos();
 	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
-	if (_drag && _qDrag && distance > 20) {
+    if (_drag && _qDrag && distance > 20 && _drag_allowed) {
 		_qDrag->exec(Qt::ActionMask);
 	}
 }
@@ -112,10 +116,15 @@ void MyListView::mouseReleaseEvent(QMouseEvent* event) {
 
 void MyListView::set_mime_data(CustomMimeData* data) {
 
+    if(!_drag_allowed) return;
+
 	_qDrag = new QDrag(this);
 	_qDrag->setMimeData(data);
 
 	if (data) _drag = true;
 	else _drag = false;
+}
 
+void MyListView::set_drag_enabled(bool b){
+    _drag_allowed = b;
 }

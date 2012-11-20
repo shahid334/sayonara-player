@@ -52,6 +52,7 @@ class MyListView :public QListView{
 		virtual ~MyListView();
 
 		void set_mime_data(CustomMimeData* data);
+        void        set_drag_enabled(bool b);
 
 
 	protected:
@@ -60,12 +61,13 @@ class MyListView :public QListView{
 		void mouseMoveEvent(QMouseEvent* event);
 
 
+
 	private:
 		bool		_drag;
 		QPoint		_drag_pos;
 		QWidget* 	_parent;
 		QDrag*		_qDrag;
-
+        bool        _drag_allowed;
 };
 
 #endif /* MYLISTVIEW_H_ */

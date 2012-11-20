@@ -484,7 +484,6 @@ bool LastFM::lfm_get_user_info(QMap<QString, QString>& userinfo){
 		return false;
 	}
 
-	qDebug() << retval;
 	userinfo["playcount"] = Helper::easy_tag_finder(QString("user.playcount"), retval);
 	userinfo["register_date"] = Helper::easy_tag_finder(QString("user.registered"), retval);
 	return true;

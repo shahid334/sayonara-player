@@ -250,12 +250,9 @@ void Playlist::remove_row(int row){
 // remove one row
 void Playlist::psl_remove_rows(const QList<int> & rows){
 
-    qDebug() << " Cur selecte row before " << _cur_play_idx;
     MetaDataList v_tmp_md;
 
     int n_tracks = _v_meta_data.size();
-
-
     bool* to_delete = new bool[n_tracks];
 
 
