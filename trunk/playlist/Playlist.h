@@ -84,11 +84,11 @@ public:
 		void psl_next_track();
 		void psl_playlist_mode_changed(const Playlist_Mode&);
 		void psl_clear_playlist();
-		void psl_save_playlist(const QString&, const MetaDataList& v_md);
+        void psl_save_playlist(const QString&, const MetaDataList& v_md, bool relative);
 		void psl_similar_artists_available(const QList<int>&);
         void psl_prepare_playlist_for_save(int id);
 		void psl_prepare_playlist_for_save(QString name);
-        void psl_prepare_playlist_for_save_file(QString name);
+        void psl_prepare_playlist_for_save_file(QString, bool);
 		void psl_play();
 		void psl_stop();
 		void psl_forward();

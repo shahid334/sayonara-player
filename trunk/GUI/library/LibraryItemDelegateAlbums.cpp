@@ -83,11 +83,11 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             rect.translate(2, 0);
             QString name = index.model()->data(index, Qt::WhatsThisRole).toString();
 
-            QFont font;
+          /*  QFont font;
             font.setBold(true);
             font.setFamily("DejaVu Sans");
 
-            painter->setFont(font);
+            painter->setFont(font);*/
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
         }
 
@@ -97,14 +97,14 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             rect.translate(-2, 0);
             int year = index.model()->data(index, Qt::WhatsThisRole).toInt();
 
-            QFont font;
+           /* QFont font;
             font.setBold(true);
-            font.setFamily("DejaVu Sans");
+            font.setFamily("DejaVu Sans");*/
 
             QString year_str = QString::number(year);
             if(year == 0) year_str = "Unknown";
 
-            painter->setFont(font);
+            //painter->setFont(font);
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, year_str);
         }
 

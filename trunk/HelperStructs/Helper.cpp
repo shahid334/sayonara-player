@@ -326,12 +326,11 @@ bool Helper::is_playlistfile(QString filename){
 
 bool Helper::checkTrack(const MetaData& md){
 
-	if( md.filepath.toLower().startsWith("http")) return true;
-	if( md.filepath.toLower().startsWith("ftp")) return true;
-	if( md.filepath.toLower().startsWith("mms")) return true;
+    if( md.filepath.startsWith("http", Qt::CaseInsensitive)) return true;
+    if( md.filepath.startsWith("ftp", Qt::CaseInsensitive)) return true;
+    if( md.filepath.startsWith("mms", Qt::CaseInsensitive)) return true;
 
 	if( !QFile::exists(md.filepath) && md.id >= 0 ){
-
 		return false;
 	}
 

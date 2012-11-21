@@ -23,11 +23,13 @@
 #define GUIPLAYLISTCHOOSER_H_
 
 #include "HelperStructs/MetaData.h"
+#include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 
 #include <QMap>
 #include <QWidget>
 #include <QDockWidget>
 #include <ui_GUI_PlaylistChooser.h>
+
 
 
 class GUI_PlaylistChooser : public QDockWidget, private Ui::GUI_PlaylistChooser {
@@ -40,7 +42,7 @@ signals:
 	void sig_delete_playlist(int);
 	void sig_save_playlist(int);
 	void sig_save_playlist(QString);
-    void sig_save_playlist_file(QString);
+    void sig_save_playlist_file(QString, bool);
 	void sig_closed();
 	void sig_clear_playlist();
     void sig_files_selected(QStringList&);
@@ -56,6 +58,7 @@ private slots:
     void load_button_pressed();
 	void playlist_selected(int);
     void text_changed(const QString&);
+    void got_save_params(const QString&, bool);
 
 
 
@@ -75,6 +78,7 @@ private:
 	bool _started;
     bool _dark;
     QString _text_before_save;
+    GUI_Target_Playlist_Dialog* _target_playlist_dialog;
 
     int show_warning(QString title_text);
 

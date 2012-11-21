@@ -75,11 +75,11 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
     QRect 	rect(option.rect);
     QString	text = index.model()->data(index, Qt::DisplayRole).toString();
 
-    QFont font;
+   /* QFont font;
     font.setBold(true);
     font.setFamily("DejaVu Sans");
 
-    painter->setFont(font);
+    painter->setFont(font);*/
 
     switch(col){
 

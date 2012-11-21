@@ -26,6 +26,7 @@
 #include <QString>
 #include <QObject>
 #include <QDebug>
+#include <QDir>
 
 #include <string>
 	#include <taglib/tag.h>
@@ -37,10 +38,11 @@ using namespace Helper;
 
 bool ID3::getMetaDataOfFile(MetaData& md){
 
+    md.filepath = QDir(md.filepath).absolutePath();
     TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
-	int idx = md.filepath.lastIndexOf('/');
-	md.title = md.filepath.right(md.filepath.length() - idx -1);
+    int idx = md.filepath.lastIndexOf('/');
+    md.title = md.filepath.right(md.filepath.length() - idx -1);
 	md.title = md.title.left(md.title.length() - 4);
 
     if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) return false;
@@ -76,21 +78,19 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
 
 	if(md.title.length() == 0){
-		idx = md.filepath.lastIndexOf('/');
-		md.title = md.filepath.right(md.filepath.length() - idx -1);
+        idx = md.filepath.lastIndexOf('/');
+        md.title = md.filepath.right(md.filepath.length() - idx -1);
 		md.title = md.title.left(md.title.length() - 4);
 	}
 	return true;
 }
 
 
-
-
 void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
 
 
-		md.filepath = file;
+		md.filepath = QDir(file).absolutePath();
 		int idx = md.filepath.lastIndexOf('/');
 		md.title = md.filepath.right(md.filepath.length() - idx -1);
 		md.title = md.title.left(md.title.length() - 4);
@@ -118,7 +118,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 		md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 		md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 		md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
-		md.filepath = file;
+		md.filepath = QDir(file).absolutePath();;
 		md.length_ms = length * 1000;
 		md.year = year;
 		md.track_num = track;
@@ -137,7 +137,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
 void ID3::setMetaDataOfFile(MetaData& md){
 
-
+	md.filepath = QDir(md.filepath).absolutePath();
 	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
     if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ){
 		qDebug() << Q_FUNC_INFO << " f is null!";

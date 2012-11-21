@@ -124,13 +124,13 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
     db->getMultipleTracksByPath(files, v_possible_md);
 
     foreach(MetaData md, v_possible_md){
-
-        if(Helper::is_playlistfile(md.filepath)){
-            playlist_paths.push_back(md.filepath);
+    	QString filepath = QDir(md.filepath).absolutePath();
+        if(Helper::is_playlistfile(filepath)){
+            playlist_paths.push_back(filepath);
             continue;
         }
 
-        if(Helper::is_soundfile(md.filepath)){
+        if(Helper::is_soundfile(filepath)){
 
             //qDebug() << md.filepath << " is soundfile " << md.id;
             if(md.id < 0){

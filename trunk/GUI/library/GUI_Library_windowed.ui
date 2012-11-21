@@ -36,7 +36,10 @@
     <widget class="MyTableView" name="lv_album">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <pointsize>8</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="layoutDirection">
@@ -96,7 +99,10 @@
     <widget class="MyTableView" name="lv_artist">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <pointsize>8</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="layoutDirection">
@@ -153,7 +159,10 @@
      </property>
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <pointsize>8</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="layoutDirection">

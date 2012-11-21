@@ -170,20 +170,9 @@ void Playlist::psl_save_playlist_to_storage(){
 }
 
 // GUI -->
-void Playlist::psl_save_playlist(const QString& filename, const MetaDataList& v_md){
+void Playlist::psl_save_playlist(const QString& filename, const MetaDataList& v_md, bool relative){
 
-    FILE* file = fopen(filename.toStdString().c_str(), "w");
-    if(!file) return;
-
-    qint64 lines = 0;
-    foreach(MetaData md, v_md){
-        string str = md.filepath.toStdString();
-
-        lines += fputs(str.c_str(), file);
-        lines += fputs("\n", file);
-    }
-
-    fclose(file);
+   PlaylistParser::save_playlist(filename, v_md, relative);
 }
 
 
@@ -199,7 +188,7 @@ void Playlist::save_stream_playlist(){
     title += QTime::currentTime().toString("hh.mm");
     QString dir = CSettingsStorage::getInstance()->getStreamRipperPath() + QDir::separator();
 
-    psl_save_playlist(dir + title + ".m3u", _v_stream_playlist);
+    psl_save_playlist(dir + title + ".m3u", _v_stream_playlist, false);
 }
 
 
@@ -318,8 +307,8 @@ void Playlist::psl_prepare_playlist_for_save(QString name){
 	emit sig_playlist_prepared(name, _v_meta_data);
 }
 
-void Playlist::psl_prepare_playlist_for_save_file(QString name){
-    psl_save_playlist(name, _v_meta_data);
+void Playlist::psl_prepare_playlist_for_save_file(QString name, bool relative){
+    psl_save_playlist(name, _v_meta_data, relative);
 }
 
 
@@ -335,8 +324,9 @@ void Playlist::psl_id3_tags_changed(MetaDataList& new_meta_data){
         MetaData md_old = _v_meta_data[i];
 
         foreach(MetaData md_new, new_meta_data){
-
-            int cmp = md_old.filepath.compare(md_new.filepath, Qt::CaseInsensitive);
+        	QString old_path = QDir(md_old.filepath).absolutePath();
+        	QString new_path = QDir(md_new.filepath).absolutePath();
+            int cmp = old_path.compare(new_path, Qt::CaseInsensitive);
             if(cmp == 0){
 
                 _v_meta_data[i] = md_new;

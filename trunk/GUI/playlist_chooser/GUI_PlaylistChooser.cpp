@@ -20,6 +20,8 @@
 
 
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
+#include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
+#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -47,8 +49,11 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
     _dark = false;
     _text_before_save = "";
 
+
     this->ui = new Ui::GUI_PlaylistChooser();
 	this->ui->setupUi(this);
+
+    _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
 
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
 	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
@@ -70,6 +75,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
     connect(this->ui->btn_load, SIGNAL(clicked()), this, SLOT(load_button_pressed()));
     connect(this->ui->combo_playlistchooser, SIGNAL(currentIndexChanged(int)), this, SLOT(playlist_selected(int)));
     connect(this->ui->combo_playlistchooser, SIGNAL(editTextChanged ( const QString & )), this, SLOT(text_changed ( const QString & )));
+    connect(_target_playlist_dialog, SIGNAL(sig_target_chosen(QString,bool)), this, SLOT(got_save_params(QString,bool)));
 
     hide();
 
@@ -78,6 +84,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 }
+
 
 
 void GUI_PlaylistChooser::changeSkin(bool dark){
@@ -165,14 +172,14 @@ void GUI_PlaylistChooser::save_button_pressed(){
 	else return;
 }
 
+void GUI_PlaylistChooser::got_save_params(const QString& filename, bool relative){
+    emit sig_save_playlist_file(filename, relative);
 
+}
 
 void GUI_PlaylistChooser::save_as_button_pressed(){
-
-    QString filename = QFileDialog::getSaveFileName(this, "Save Playlist as", Helper::getSayonaraPath(), "m3u file(*.m3u)");
-
-    if(filename.size() > 0)
-        emit sig_save_playlist_file(filename);
+    _target_playlist_dialog->change_skin(_dark);
+    _target_playlist_dialog->show();
 }
 
 
@@ -212,7 +219,7 @@ void GUI_PlaylistChooser::load_button_pressed(){
     QStringList filelist = QFileDialog::getOpenFileNames(
                     this,
                     tr("Open Playlist files"),
-                    QDir::homePath(),
+                    CSettingsStorage::getInstance()->getLibraryPath(),
                     Helper::get_playlistfile_extensions().join(" "));
 
 

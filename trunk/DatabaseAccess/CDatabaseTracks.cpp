@@ -27,6 +27,7 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
+#include <QDir>
 
 #include <cstdlib>
 
@@ -135,11 +136,14 @@ MetaData CDatabaseConnector::getTrackByPath(QString path){
 	DB_TRY_OPEN(m_database);
 
 	MetaDataList vec_data;
+	QDir d(path);
+    path = d.absolutePath();
+
 	QSqlQuery q (this -> m_database);
 
 	QString querytext = TRACK_SELECTOR + " AND tracks.filename = :filename;";
 	q.prepare(querytext);
-	q.bindValue(":filename", path);
+    q.bindValue(":filename", path);
 
 	MetaData md;
 	md.id = -1;
@@ -535,6 +539,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 
 	data.filepath.replace("//", "/");
 	data.filepath.replace("\\\\", "\\");
+
 
 	MetaData md =  getTrackByPath(data.filepath);
 	int track_id = md.id;

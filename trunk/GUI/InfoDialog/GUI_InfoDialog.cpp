@@ -37,6 +37,7 @@
 #include <QPixmap>
 #include <QImage>
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 #include <QMessageBox>
 #include <QScrollBar>
@@ -285,7 +286,7 @@ void GUI_InfoDialog::prepare_artists(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-		filepath = md.filepath.left(last_sep);
+		filepath = QDir(md.filepath.left(last_sep)).absolutePath();
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
 	}
@@ -390,7 +391,7 @@ void GUI_InfoDialog::prepare_albums(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-		filepath = md.filepath.left(last_sep);
+		filepath = filepath = QDir(md.filepath.left(last_sep)).absolutePath();
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
 	}
@@ -507,7 +508,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-		filepath = md.filepath.left(last_sep);
+		filepath = QDir(md.filepath.left(last_sep)).absolutePath();
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
 	}

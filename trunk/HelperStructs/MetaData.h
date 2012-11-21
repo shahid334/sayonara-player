@@ -52,6 +52,7 @@ using namespace std;
 
 struct MetaData {
 
+private:
 
 
 public:

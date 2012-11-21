@@ -38,11 +38,12 @@
 static int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path="");
 static int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path="");
 static int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path="");
-
+static CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 QString _correct_filepath(QString filepath, QString abs_path){
 
-    if(filepath.startsWith("http")) return filepath;
+    if(filepath.startsWith("http")) return QDir(filepath).absolutePath();
+
 
     bool is_absolute = QDir(filepath).isAbsolute();
     QString tmp_filepath;
@@ -54,10 +55,10 @@ QString _correct_filepath(QString filepath, QString abs_path){
                 qDebug() << tmp_filepath << " does not exist";
                 return "";
             }
-            else return tmp_filepath;
+            else return QDir(tmp_filepath).absolutePath();
         }
 
-        else return tmp_filepath;
+        else return QDir(tmp_filepath).absolutePath();
     }
 
     else {
@@ -68,13 +69,13 @@ QString _correct_filepath(QString filepath, QString abs_path){
                 qDebug() << tmp_filepath << " does not exist (2)";
                 return "";
             }
-            else return tmp_filepath;
+            else return QDir(tmp_filepath).absolutePath();
         }
 
-        else return tmp_filepath;
+        else return QDir(tmp_filepath).absolutePath();
     }
 
-    return filepath;
+    return QDir(filepath).absolutePath();
 }
 
 
@@ -104,9 +105,11 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 
         if( !line.startsWith("http")){
             md.filepath = _correct_filepath(line, abs_path);
-            qDebug() << "Filepath = " << md.filepath;
+            //qDebug() << "Filepath = " << md.filepath;
+            MetaData md_tmp = db->getTrackByPath(md.filepath);
 
-            if( md.filepath.size() > 0 && ID3::getMetaDataOfFile(md) ){
+            if( md_tmp.id >= 0) v_md.push_back(md_tmp);
+            else if( md.filepath.size() > 0 && ID3::getMetaDataOfFile(md) ){
 				v_md.push_back(md);
 			}
 		}
@@ -320,7 +323,6 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md){
 		parse_asx(content, v_md_tmp, abs_path);
 	}
 
-
 	for(uint i=0; i<v_md_tmp.size(); i++){
 
 		MetaData md = v_md_tmp[i];
@@ -339,7 +341,37 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md){
 }
 
 
+void PlaylistParser::save_playlist(QString filename, const MetaDataList& v_md, bool relative){
 
+    if(!filename.endsWith("m3u", Qt::CaseInsensitive)) filename.append(".m3u");
+
+    QString dir_str = filename.left(filename.lastIndexOf(QDir::separator()));
+    QDir dir(dir_str);
+    dir.cd(dir_str);
+
+    FILE* file = fopen(filename.toStdString().c_str(), "w");
+    if(!file) return;
+
+    qint64 lines = 0;
+    foreach(MetaData md, v_md){
+
+        QString str;
+        if(relative){
+            str = dir.relativeFilePath(md.filepath);
+        }
+
+        else{
+            str = md.filepath;
+        }
+
+        QString ext_data = "#EXTINF: " + QString::number(md.length_ms / 1000)  + ", " + md.artist + " - " + md.title + "\n";
+        lines += fputs(ext_data.toLocal8Bit().data(), file);
+        lines += fputs(str.toLocal8Bit().data(), file);
+        lines += fputs("\n", file);
+    }
+
+    fclose(file);
+}
 
 
 

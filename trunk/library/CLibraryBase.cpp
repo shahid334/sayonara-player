@@ -210,7 +210,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 				else m_import_dialog->progress_changed(percent);
 				if(Helper::is_soundfile(new_filename)){
 					MetaData md;
-                    md.filepath = new_filename;
+                    md.filepath = QDir(new_filename).absolutePath();
                     if( ID3::getMetaDataOfFile( md))
 						v_metadata.push_back( md );
 				}

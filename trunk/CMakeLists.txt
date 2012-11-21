@@ -54,6 +54,7 @@ SET(HEADERS
     GUI/playlist/GUI_PlaylistEntry.h
     GUI/playlist/GUI_PlaylistEntrySmall.h
     GUI/playlist_chooser/GUI_PlaylistChooser.h
+    GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
     GUI/LastFM/GUI_LastFM.h
     GUI/library/GUI_Library_windowed.h
     GUI/library/LibraryItemModelTracks.h
@@ -87,6 +88,8 @@ SET(HEADERS
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
     Socket/Socket.h
+
+    HelperStructs/MetaData.h
 )
 
 SET(SOURCES
@@ -105,6 +108,7 @@ SET(SOURCES
     GUI/playlist/GUI_PlaylistEntry.cpp
     GUI/playlist/GUI_PlaylistEntrySmall.cpp
     GUI/playlist_chooser/GUI_PlaylistChooser.cpp
+    GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     GUI/LastFM/GUI_LastFM.cpp
     GUI/library/GUI_Library_windowed.cpp
     GUI/library/LibraryItemModelTracks.cpp
@@ -157,6 +161,7 @@ SET(SOURCES
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
     Socket/Socket.cpp
 
+
 )
 
 SET(FORMS
@@ -179,6 +184,7 @@ SET(FORMS
 #    GUI/GSTDataPainter/GSTDataPainter.ui
     GUI/SocketConfiguration/GUI_SocketSetup.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui
+    GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
 )
 
 SET(ICONS 

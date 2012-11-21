@@ -80,11 +80,11 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
             rect.translate(2, 0);
             QString name = index.model()->data(index, Qt::WhatsThisRole).toString();
 
-            QFont font;
+          /*  QFont font;
             font.setBold(true);
             font.setFamily("DejaVu Sans");
 
-            painter->setFont(font);
+            painter->setFont(font);*/
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
 
 		}
@@ -94,11 +94,11 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
             rect.translate(-2, 0);
             int n_tracks = index.model()->data(index, Qt::WhatsThisRole).toInt();
 
-            QFont font;
+            /*QFont font;
             font.setBold(true);
             font.setFamily("DejaVu Sans");
 
-            painter->setFont(font);
+            painter->setFont(font);*/
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, QString::number(n_tracks) + " tracks");
 
         }

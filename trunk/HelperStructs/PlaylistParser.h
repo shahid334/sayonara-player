@@ -31,6 +31,7 @@
 namespace PlaylistParser {
 
 	int parse_playlist(QString playlist_file, MetaDataList& md);
+    void save_playlist(QString filename, const MetaDataList& md, bool relative);
 
 };
 

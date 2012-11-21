@@ -40,6 +40,7 @@
 #include <QMessageBox>
 #include <QWidget>
 #include <QCompleter>
+#include <QDir>
 
 #ifdef Q_OS_LINUX
 #include <unistd.h>
@@ -414,7 +415,7 @@ void GUI_TagEdit::show_metadata(){
     this->ui->sb_year->setValue(md.year);
     this->ui->le_genres->setText(md.genres.join(","));
 
-    this->ui->lab_filepath->setText(md.filepath);
+    this->ui->lab_filepath->setText(QDir(md.filepath).absolutePath());
     this->ui->lab_track_num->setText("Track " + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
 
     tag_from_path_text_changed(this->ui->le_tag_from_path->text());
@@ -700,7 +701,7 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
         return false;
     }
 
-    QString path = _vec_org_metadata[idx].filepath;
+    QString path = QDir(_vec_org_metadata[idx].filepath).absolutePath();
     QString path_copy; // we wait until extension is removed
 
 

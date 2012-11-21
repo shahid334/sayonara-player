@@ -307,7 +307,7 @@ void Application::init_connections(){
 	   CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
 	   CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist, 	psl_prepare_playlist_for_save(int));
 	   CONNECT(ui_playlist_chooser, sig_save_playlist(QString), 	playlist, 	psl_prepare_playlist_for_save(QString));
-       CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString), 	playlist, 	psl_prepare_playlist_for_save_file(QString));
+       CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString, bool), 	playlist, 	psl_prepare_playlist_for_save_file(QString, bool));
 	   CONNECT(ui_playlist_chooser, sig_clear_playlist(),           playlist, 	psl_clear_playlist());
 	   CONNECT(ui_playlist_chooser, sig_closed(),                   player, 	close_playlist_chooser());
        CONNECT(ui_playlist_chooser, sig_files_selected(QStringList &), playlist, psl_createPlaylist(QStringList&));
