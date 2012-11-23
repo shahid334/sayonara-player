@@ -426,55 +426,68 @@ void Playlist::psl_import_result(bool success){
     }
 }
 
+void  Playlist::psl_lfm_radio_init(bool success){
+
+    if(!success) return;
+
+    psl_clear_playlist();
+    _radio_active = RADIO_LFM;
+    _cur_play_idx = -1;
+}
 
 void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
 
-    MetaDataList v_md;
+    qDebug() << "Playlist available " << playlist.size();
 
-    if(_radio_active != RADIO_LFM) _cur_play_idx = -1;
-    _radio_active = RADIO_LFM;
-
-    foreach(MetaData md, _v_meta_data){
-        if(md.radio_mode == RADIO_LFM) v_md.push_back(md);
+    if(playlist.size() == 0){
+        psl_clear_playlist();
+        return;
     }
 
     foreach(MetaData md, playlist){
 
-        md.radio_mode = RADIO_LFM;
-        v_md.push_back(md);
+        if(md.radio_mode != RADIO_LFM) continue;
+        _v_meta_data.push_back(md);
     }
 
+    if(_v_meta_data.size() == 0) return;
 
-    int old_play_idx = _cur_play_idx;
-    if(_cur_play_idx == -1) _cur_play_idx = 0;
-
-    _v_meta_data = v_md;
-
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
-    if(old_play_idx == -1){
+    if(_cur_play_idx == -1) {
+        _cur_play_idx = 0;
+        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_LFM);
         emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
         emit sig_selected_file_changed(_cur_play_idx);
     }
+
+    else{
+        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_LFM);
+    }
+
+
+    _radio_active = RADIO_LFM;
 }
 
 
 void Playlist::psl_play_stream(const QString& url, const QString& name){
 
     _radio_active = RADIO_STATION;
+    psl_clear_playlist();
+    MetaDataList v_md;
 
     // playlist radio
+    if(Helper::is_playlistfile(url)){
 
-    MetaDataList v_md;
-	if(Helper::is_playlistfile(url)){
+        if(PlaylistParser::parse_playlist(url, v_md) > 0){
 
-		if(PlaylistParser::parse_playlist(url, v_md) > 0){
+            foreach(MetaData md, v_md){
 
-            for(uint i=0; i<v_md.size(); i++){
+                md.radio_mode = RADIO_STATION;
 
-                v_md[i].radio_mode = RADIO_STATION;
-				if(name.size() > 0)
-                    v_md[i].title = name;
-                else v_md[i].title = "Radio Station";
+                if(name.size() > 0)
+                    md.title = name;
+                else md.title = "Radio Station";
+
+                _v_meta_data.push_back(md);
 			}
 		}
 	}
@@ -490,11 +503,17 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		md.artist = url;
 		md.filepath = url;
         md.radio_mode = RADIO_STATION;
-		v_md.push_back(md);
+        _v_meta_data.push_back(md);
 	}
 
-    if(v_md.size() > 0)
-        psl_createPlaylist(v_md);
+
+    if(_v_meta_data.size() == 0) return;
+
+    _cur_play_idx = 0;
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+    emit sig_selected_file_changed(_cur_play_idx);
 }
 
 void Playlist::psl_valid_strrec_track(const MetaData& md){

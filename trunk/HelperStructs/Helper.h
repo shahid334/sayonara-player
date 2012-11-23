@@ -219,6 +219,7 @@ namespace Helper{
 
 
 	QString calc_cover_token(QString artist, QString album);
+    QString calc_filesize_str(qint64 filesize);
 	QStringList get_soundfile_extensions();
 	QStringList get_playlistfile_extensions();
 

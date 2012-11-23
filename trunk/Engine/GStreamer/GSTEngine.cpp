@@ -309,6 +309,8 @@ void GST_Engine::changeTrack(const MetaData& md){
 
        // uri = md.filepath.toLocal8Bit();
         uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
+        qDebug() << "Engine: Stream Ripper file = " << md.filepath;
+        qDebug() << "Engine: Stream Ripper file = " << uri;
 
 	}
 
@@ -319,8 +321,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 	}
 
 	else {
-
-        uri = g_filename_to_uri(g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
+        uri =g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
 	}
 
     if(uri != NULL){

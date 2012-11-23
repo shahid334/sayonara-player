@@ -100,11 +100,7 @@ private:
 	bool					_lyrics_visible;
     bool                    _initialized;
     bool                    _tag_edit_visible;
-
-
-
-
-
+    bool                    _dark;
 
 	MetaDataList _v_md;
 

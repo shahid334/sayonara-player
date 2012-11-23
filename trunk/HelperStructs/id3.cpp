@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDir>
+#include <QFile>
 
 #include <string>
 	#include <taglib/tag.h>
@@ -39,6 +40,9 @@ using namespace Helper;
 bool ID3::getMetaDataOfFile(MetaData& md){
 
     md.filepath = QDir(md.filepath).absolutePath();
+    QFile qf(md.filepath);
+    md.filesize = qf.size();
+    qf.close();
     TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
     int idx = md.filepath.lastIndexOf('/');
@@ -88,9 +92,13 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
 void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 
-
-
 		md.filepath = QDir(file).absolutePath();
+
+        QFile qf(md.filepath);
+        md.filesize = qf.size();
+        qf.close();
+
+
 		int idx = md.filepath.lastIndexOf('/');
 		md.title = md.filepath.right(md.filepath.length() - idx -1);
 		md.title = md.title.left(md.title.length() - 4);

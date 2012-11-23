@@ -82,6 +82,7 @@ void GUI_Stream::listen_clicked(){
 	}
 
 	else{
+        qDebug() << "Emit: " << _cur_station_name << ": " << _cur_station_adress;
 		url = _cur_station_adress;
 		name = _cur_station_name;
 	}

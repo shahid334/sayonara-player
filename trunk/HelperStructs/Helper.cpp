@@ -108,8 +108,6 @@ string Helper::trim(const string & toTrim){
 	string retStr = string(arr_dst);
 	delete arr_dst;
 	return retStr;
-
-
 }
 
 QString Helper::getSharePath(){
@@ -175,6 +173,28 @@ QString Helper::get_cover_path(QString artist, QString album){
 	return cover_path;
 
 
+}
+
+QString Helper::calc_filesize_str(qint64 filesize){
+    qint64 kb = 1024;
+    qint64 mb = kb * 1024;
+    qint64 gb = mb * 1024;
+
+    QString size;
+    if(filesize > gb){
+
+        size = QString::number(filesize / gb) + "." + QString::number((filesize / mb) % gb).left(2)  + " GB";
+    }
+
+    else if (filesize > mb){
+        size = QString::number(filesize / mb) + "." + QString::number((filesize / kb) % mb).left(2)  + " MB";
+    }
+
+    else {
+        size = QString::number( filesize / kb) + " KB";
+    }
+
+    return size;
 }
 
 QString Helper::calc_lfm_artist_adress(QString artist){

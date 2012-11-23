@@ -7,43 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>453</width>
-    <height>193</height>
+    <height>216</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Info</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="2">
-    <widget class="QLabel" name="lab_track_count">
+   <item row="3" column="2">
+    <widget class="QLabel" name="lab_duration_value">
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="lab_albums">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Albums</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QLabel" name="lab_lfm">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>LastFM Playcount</string>
      </property>
     </widget>
    </item>
@@ -54,7 +28,110 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="5">
+   <item row="5" column="1">
+    <widget class="QLabel" name="lab_lfm">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>LastFM Playcount</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="lab_artists">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Artists</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QPushButton" name="btn_cancel">
+     <property name="maximumSize">
+      <size>
+       <width>60</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string>Close</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="lab_track_count">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="lab_album_count">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="lab_tracks">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Tracks</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="lab_duration">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Duration</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLabel" name="lab_albums">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Albums</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" rowspan="6">
     <widget class="QLabel" name="lab_icon">
      <property name="minimumSize">
       <size>
@@ -82,82 +159,31 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
-    <widget class="QLabel" name="lab_duration_value">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="lab_artists">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Artists</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="lab_duration">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Duration</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lab_tracks">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Tracks</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="lab_album_count">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
+   <item row="5" column="2">
     <widget class="QLabel" name="lab_lfm_playcount">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="5" column="2">
-    <widget class="QPushButton" name="btn_cancel">
-     <property name="maximumSize">
-      <size>
-       <width>60</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::ClickFocus</enum>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
+   <item row="4" column="1">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
      <property name="text">
-      <string>Close</string>
+      <string>Filesize</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QLabel" name="lab_filesize">
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>

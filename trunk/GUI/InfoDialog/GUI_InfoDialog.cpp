@@ -51,7 +51,9 @@
 #define CAR_RET QString("<br />")
 #define BOLD(x) QString("<b>") + x + QString("</b>")
 #define BLACK(x) QString("<font color=#000000>") + x + QString("</font>")
-#define LINK(x, y) (QString("<a style=\"text-decoration:none;\" href=\"") + x + QString("\">") + y + QString("</a>"))
+#define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
+#define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
+#define LINK(x, y) (QString("<a style=\"text-decoration:none;\" href=\"") + x + QString("\">") + (_dark ? LIGHT_BLUE(y) : DARK_BLUE(y)) + QString("</a>"))
 
 
 
@@ -142,6 +144,7 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 
 void GUI_InfoDialog::changeSkin(bool dark){
 
+    _dark = dark;
     QString button_style = Style::get_pushbutton_style(dark);
 
     this->ui->tab_widget->setStyleSheet(Style::get_tabwidget_style(dark));
@@ -267,6 +270,7 @@ void GUI_InfoDialog::prepare_artists(){
 	QString library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
 	QStringList pathlist;
+    qint64 filesize = 0;
 
 	foreach(MetaData md, _v_md){
 		int artist_id = md.artist_id;
@@ -289,6 +293,8 @@ void GUI_InfoDialog::prepare_artists(){
 		filepath = QDir(md.filepath.left(last_sep)).absolutePath();
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
+
+        filesize += md.filesize;
 	}
 
 	n_artists = map_artists.keys().size();
@@ -334,6 +340,7 @@ void GUI_InfoDialog::prepare_artists(){
 	info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
 	if(n_artists > 1)
 		info += BOLD("#Artists:&nbsp;") + QString::number(n_artists) + CAR_RET;
+    info+= BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 
 	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
@@ -372,6 +379,7 @@ void GUI_InfoDialog::prepare_albums(){
 	QString library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
 	QStringList pathlist;
+    qint64 filesize = 0;
 
 	foreach(MetaData md, _v_md){
 		int album_id = md.album_id;
@@ -394,6 +402,8 @@ void GUI_InfoDialog::prepare_albums(){
 		filepath = filepath = QDir(md.filepath.left(last_sep)).absolutePath();
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
+
+        filesize += md.filesize;
 	}
 
 	n_albums = map_albums.keys().size();
@@ -417,7 +427,8 @@ void GUI_InfoDialog::prepare_albums(){
 		info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + CAR_RET;
 		if(album.year != 0)
 			info += BOLD("Year:&nbsp;") + QString::number(album.year) + CAR_RET;
-		info += BOLD("Sampler?:&nbsp;") + ((album.is_sampler) ? "yes" : "no");
+        info += BOLD("Sampler?:&nbsp;") + ((album.is_sampler) ? "yes" : "no") + CAR_RET;
+        info += BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
 
@@ -440,6 +451,7 @@ void GUI_InfoDialog::prepare_albums(){
 		}
 
 		info = BOLD("#Tracks:&nbsp;") + QString::number(n_songs);
+        info += BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
 	else return;
@@ -478,6 +490,7 @@ void GUI_InfoDialog::prepare_tracks(){
 	QString tooltip;
     QString library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
+    qint64 filesize = 0;
 
 	foreach(MetaData md, _v_md){
 		int album_id = md.album_id;
@@ -511,6 +524,8 @@ void GUI_InfoDialog::prepare_tracks(){
 		filepath = QDir(md.filepath.left(last_sep)).absolutePath();
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
+
+        filesize += md.filesize;
 	}
 
 
@@ -552,6 +567,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		info+= BOLD("Year:&nbsp;") + QString::number(md.year) + CAR_RET;
         info+= BOLD("Bitrate:&nbsp;") + QString::number(md.bitrate) + CAR_RET;
         info+= BOLD("Genre:&nbsp;") + md.genres.join("<br />") + CAR_RET;
+        info+= BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
 	else if(n_tracks > 1){
@@ -562,6 +578,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		info+= BOLD("#Albums:&nbsp;") + QString::number(n_albums) + CAR_RET;
 		info+= BOLD("#Artists:&nbsp;") + QString::number(n_artists) + CAR_RET;
 		info+= BOLD("Length:&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
+        info+= BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
     paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;

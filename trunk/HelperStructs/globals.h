@@ -74,8 +74,6 @@
 					}\
 
 
-
-
 namespace Sort{
 
 	enum ArtistSort{ ArtistNameAsc=0, ArtistNameDesc, ArtistTrackcountAsc, ArtistTrackcountDesc};

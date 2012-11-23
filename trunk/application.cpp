@@ -133,8 +133,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     playlists->ui_loaded();
     player->ui_loaded();
 
-
-
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
     player->check_show_plugins();
@@ -299,6 +297,7 @@ void Application::init_connections(){
 
 
        CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
+       CONNECT(lastfm,  sig_radio_initialized(bool),                            playlist,	psl_lfm_radio_init(bool));
        CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
        CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),            playlist,	psl_new_lfm_playlist_available(const MetaDataList&));
        CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),    player,		lfm_info_fetched(const MetaData&, bool, bool));
@@ -316,9 +315,8 @@ void Application::init_connections(){
 	   CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
 	   CONNECT(playlists, sig_import_tracks(const MetaDataList&),       library, 				importFiles(const MetaDataList&));
 
-
-		CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
-		CONNECT(ui_lfm_radio, close_event(), 								player, 	close_lfm_radio());
+        CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
+        CONNECT(ui_lfm_radio, close_event(), 								player, 	close_lfm_radio());
 
 		CONNECT(ui_stream, sig_play_stream(const QString&, const QString&), 	playlist, 	psl_play_stream(const QString&, const QString&));
 		CONNECT(ui_stream, sig_close_event(), 									player, 	close_stream());

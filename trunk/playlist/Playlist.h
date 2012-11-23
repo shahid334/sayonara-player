@@ -99,6 +99,7 @@ public:
 		void psl_id3_tags_changed(MetaDataList&);
 		void psl_import_new_tracks_to_library(bool);
 		void psl_import_result(bool);
+        void psl_lfm_radio_init(bool);
         void psl_new_lfm_playlist_available(const MetaDataList&);
 		void psl_play_stream(const QString&, const QString&);
 		void psl_valid_strrec_track(const MetaData&);

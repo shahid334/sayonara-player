@@ -63,6 +63,8 @@ private:
 	uint		_n_lfm_days_registered;
 	qint64 		_duration_ms;
 	QString		_duration_string;
+    qint64      _filesize;
+    QString     _filesize_str;
 };
 
 #endif /* GUILIBRARYINFOBOX_H_ */

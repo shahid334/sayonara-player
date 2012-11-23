@@ -297,7 +297,9 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 	QString url = lfm_wa_create_std_url( QString("http://ws.audioscrobbler.com/radio/adjust.php"), data );
 	QString response;
 	bool success = lfm_wa_call_url(url, response);
-	if( success ) psl_radio_playlist_request();
+    emit sig_radio_initialized(success);
+
+    if( success ) psl_radio_playlist_request();
 
 }
 

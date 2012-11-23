@@ -89,12 +89,15 @@ void GUI_Library_Info_Box::psl_refresh(){
 	_n_albums = v_albums.size();
 	_n_artists = v_artists.size();
 	_duration_ms = 0;
+    _filesize = 0;
 
 	foreach(MetaData md, v_md){
 		_duration_ms += md.length_ms;
+        _filesize += md.filesize;
 	}
 
 	_duration_string = Helper::cvtMsecs2TitleLengthString(_duration_ms, false);
+    _filesize_str = Helper::calc_filesize_str(_filesize);
 
 	if( !CSettingsStorage::getInstance()->getLastFMActive() ) {
 		_n_lfm_playcount = -1;
@@ -126,6 +129,7 @@ void GUI_Library_Info_Box::psl_refresh(){
 	this->ui->lab_track_count->setText(QString::number(_n_tracks));
 	this->ui->lab_artist_count->setText(QString::number(_n_artists));
 	this->ui->lab_duration_value->setText(_duration_string + "s");
+    this->ui->lab_filesize->setText(_filesize_str);
 
 	this->show();
 }

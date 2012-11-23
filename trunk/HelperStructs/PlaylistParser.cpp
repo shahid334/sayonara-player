@@ -42,7 +42,7 @@ static CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 QString _correct_filepath(QString filepath, QString abs_path){
 
-    if(filepath.startsWith("http")) return QDir(filepath).absolutePath();
+    if(filepath.startsWith("http")) return filepath;
 
 
     bool is_absolute = QDir(filepath).isAbsolute();

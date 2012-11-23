@@ -69,8 +69,10 @@ public:
 	QString filepath;
 	qint32 track_num;
 	qint32 bitrate;
+    qint64 filesize;
 	bool is_extern;
 	int radio_mode;
+
 
 	bool pl_selected;
 	bool pl_playing;
@@ -95,6 +97,7 @@ public:
             bitrate = 0;
             is_extern = false;
             radio_mode = RADIO_OFF;
+            filesize = 0;
 
             pl_selected = false;
             pl_playing = false;
@@ -136,6 +139,7 @@ public:
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(album_id));
 		list.push_back(QString::number(artist_id));
+        list.push_back(QString::number(filesize));
         list.push_back(genres.join(","));
 		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
 		list.push_back( QString::number(radio_mode) );
@@ -152,7 +156,7 @@ public:
 
 		QStringList list = v.toStringList();
 
-        if(list.size() < 20) return false;
+        if(list.size() < 21) return false;
 
         md.title =      list[0];
         md.artist =     list[1];
@@ -166,14 +170,15 @@ public:
         md.id =         list[9].toInt();
         md.album_id =   list[10].toInt();
         md.artist_id =  list[11].toInt();
-        md.genres =     list[12].split(",");
-        md.is_extern = ( list[13] == "1" );
-        md.radio_mode = list[14].toInt();
-        md.pl_playing = (list[15] == "1");
-        md.pl_selected = (list[16] == "1");
-        md.pl_dragged = (list[17] == "1");
-        md.is_lib_selected = (list[18] == "1");
-        md.is_disabled = (list[19] == "1");
+        md.filesize =   list[12].toInt();
+        md.genres =     list[13].split(",");
+        md.is_extern = ( list[14] == "1" );
+        md.radio_mode = list[15].toInt();
+        md.pl_playing = (list[16] == "1");
+        md.pl_selected = (list[17] == "1");
+        md.pl_dragged = (list[18] == "1");
+        md.is_lib_selected = (list[19] == "1");
+        md.is_disabled = (list[20] == "1");
 
 		return true;
 	}
