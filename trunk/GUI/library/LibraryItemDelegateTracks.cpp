@@ -38,6 +38,7 @@
 #include <QItemDelegate>
 #include <QPainter>
 #include <HelperStructs/Helper.h>
+#include "GUI/library/LibraryItemModelTracks.h"
 
 #ifndef COL_MACROS
     #define COL_MACROS
@@ -51,8 +52,9 @@
 #endif
 
 
-LibraryItemDelegateTracks::LibraryItemDelegateTracks(QTableView* parent) {
+LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModelTracks* model, QTableView* parent) {
 	this->_parent = parent;
+     _model = model;
 
 
 }
@@ -75,11 +77,10 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
     QRect 	rect(option.rect);
     QString	text = index.model()->data(index, Qt::DisplayRole).toString();
 
-   /* QFont font;
-    font.setBold(true);
-    font.setFamily("DejaVu Sans");
 
-    painter->setFont(font);*/
+    if(_model->is_selected(index.row())) {
+        painter->setPen(_pen);
+    }
 
     switch(col){
 
@@ -143,3 +144,14 @@ void LibraryItemDelegateTracks::setEditorData(QWidget *editor, const QModelIndex
 }
 
 
+void LibraryItemDelegateTracks::set_skin(bool dark){
+    QPalette palette = _parent->palette();
+    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+    int highlight_val = col_highlight.lightness();
+
+    if(highlight_val > 96)
+        _pen.setColor(QColor("#202020"));
+
+    else
+        _pen.setColor(QColor("#D8D8D8"));
+}

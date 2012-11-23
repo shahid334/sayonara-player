@@ -69,11 +69,14 @@ public:
 
 	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
+    bool is_selected(int row);
+    void set_selected(QList<int>& rows);
 
 
 private:
 	QList<MetaData>			_tracklist;
 	QStringList				_headerdata;
+    QList<int>              _selected_rows;
 };
 
 #endif /* LIBRARYITEMMODELTRACKS_H_ */

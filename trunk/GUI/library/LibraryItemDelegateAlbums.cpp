@@ -28,6 +28,7 @@
 
 #include "GUI/library/LibraryItemDelegateAlbums.h"
 
+
 #include <HelperStructs/MetaData.h>
 #include <QObject>
 #include <QLabel>
@@ -40,13 +41,14 @@
 #include "HelperStructs/Helper.h"
 
 
-LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(QTableView* parent) {
+LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModelAlbums* model, QTableView* parent) {
 	this->_parent = parent;
 
         QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
         QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
         _icon_single_album = QPixmap(icon_path_no_sampler);
         _icon_multi_album = QPixmap(icon_path_sampler);
+        _model = model;
 
 }
 
@@ -63,12 +65,17 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
         painter->save();
 
+
+        if(_model->is_selected(index.row())) {
+            painter->setPen(_pen);
+        }
+
         if(index.column() == 0){
             int col_width = _parent->columnWidth(0)-4;
             int row_height = _parent->rowHeight(0)-4;
             rect.translate(2, 2);
 
-            int num_albums = index.model()->data(index, Qt::WhatsThisRole).toInt();
+            int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
 
             if(num_albums <= 1)
                 painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
@@ -81,13 +88,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         else if(index.column() == 1){
 
             rect.translate(2, 0);
-            QString name = index.model()->data(index, Qt::WhatsThisRole).toString();
-
-          /*  QFont font;
-            font.setBold(true);
-            font.setFamily("DejaVu Sans");
-
-            painter->setFont(font);*/
+            QString name = _model->data(index, Qt::WhatsThisRole).toString();
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
         }
 
@@ -95,19 +96,12 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         else if(index.column() == 2){
 
             rect.translate(-2, 0);
-            int year = index.model()->data(index, Qt::WhatsThisRole).toInt();
-
-           /* QFont font;
-            font.setBold(true);
-            font.setFamily("DejaVu Sans");*/
+            int year = _model->data(index, Qt::WhatsThisRole).toInt();
 
             QString year_str = QString::number(year);
             if(year == 0) year_str = "Unknown";
-
-            //painter->setFont(font);
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, year_str);
         }
-
 
         painter->restore();
 
@@ -146,4 +140,14 @@ void LibraryItemDelegateAlbums::setEditorData(QWidget *editor, const QModelIndex
 	Q_UNUSED(index);
 }
 
+void LibraryItemDelegateAlbums::set_skin(bool dark){
+    QPalette palette = _parent->palette();
+    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+    int highlight_val = col_highlight.lightness();
 
+    if(highlight_val > 96)
+        _pen.setColor(QColor("#202020"));
+
+    else
+        _pen.setColor(QColor("#D8D8D8"));
+}

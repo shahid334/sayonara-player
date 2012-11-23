@@ -36,13 +36,13 @@
 #include <QPainter>
 #include <HelperStructs/Helper.h>
 
-LibraryItemDelegateArtists::LibraryItemDelegateArtists(QTableView* parent) {
+LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModelArtists* model, QTableView* parent) {
 	this->_parent = parent;
 
 
     _icon_single_album = QPixmap(Helper::getIconPath() + "play_small.png");
     _icon_multi_album = QPixmap(Helper::getIconPath() + "fwd_orange.png");
-
+    _model = model;
 
 }
 
@@ -60,12 +60,16 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 		painter->save();
 
+        if(_model->is_selected(index.row())) {
+            painter->setPen(_pen);
+        }
+
 		if(index.column() == 0){
             int col_width = _parent->columnWidth(0)-4;
             int row_height = _parent->rowHeight(0)-4;
             rect.translate(2, 2);
 
-            int num_albums = index.model()->data(index, Qt::WhatsThisRole).toInt();
+            int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
 
             if(num_albums <= 1)
                 painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
@@ -78,13 +82,8 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 		else if(index.column() == 1){
 
             rect.translate(2, 0);
-            QString name = index.model()->data(index, Qt::WhatsThisRole).toString();
+            QString name = _model->data(index, Qt::WhatsThisRole).toString();
 
-          /*  QFont font;
-            font.setBold(true);
-            font.setFamily("DejaVu Sans");
-
-            painter->setFont(font);*/
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
 
 		}
@@ -92,13 +91,8 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
         else if(index.column() == 2){
 
             rect.translate(-2, 0);
-            int n_tracks = index.model()->data(index, Qt::WhatsThisRole).toInt();
+            int n_tracks = _model->data(index, Qt::WhatsThisRole).toInt();
 
-            /*QFont font;
-            font.setBold(true);
-            font.setFamily("DejaVu Sans");
-
-            painter->setFont(font);*/
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, QString::number(n_tracks) + " tracks");
 
         }
@@ -153,3 +147,14 @@ void LibraryItemDelegateArtists::setEditorData(QWidget *editor, const QModelInde
 }
 
 
+void LibraryItemDelegateArtists::set_skin(bool dark){
+    QPalette palette = _parent->palette();
+    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+    int highlight_val = col_highlight.lightness();
+
+    if(highlight_val > 96)
+        _pen.setColor(QColor("#202020"));
+
+    else
+        _pen.setColor(QColor("#D8D8D8"));
+}

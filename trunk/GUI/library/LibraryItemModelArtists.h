@@ -53,11 +53,14 @@ public:
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
+    bool is_selected(int row);
+    void set_selected(QList<int>& rows);
+
 
 
 private:
 	QList<Artist> _artist_list;
-
+    QList<int> _selected_rows;
 
 };
 

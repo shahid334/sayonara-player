@@ -55,7 +55,13 @@ LibraryItemModelTracks::~LibraryItemModelTracks() {
 
 
 
+void LibraryItemModelTracks::set_selected(QList<int>& rows){
+    _selected_rows = rows;
+}
 
+bool LibraryItemModelTracks::is_selected(int row){
+    return _selected_rows.contains(row);
+}
 
 int LibraryItemModelTracks::rowCount(const QModelIndex &parent) const{
 
@@ -146,6 +152,8 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 		 MetaData md;
 		 if(!MetaData::fromVariant(value, md)) return false;
 
+         if(md.is_lib_selected)
+             _selected_rows << index.row();
 		 _tracklist.replace(index.row(), md);
 
 	     emit dataChanged(index, index);
@@ -158,7 +166,7 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 
 bool LibraryItemModelTracks::insertRows(int position, int rows, const QModelIndex &index){
 
-	Q_UNUSED(index);
+    Q_UNUSED(index);
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 

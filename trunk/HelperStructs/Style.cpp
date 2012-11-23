@@ -33,6 +33,17 @@
 #define NEWLINE "\n";
 
 
+static QString get_fg_color(int val_bg, bool with_str=true){
+
+    QString ret_str = "";
+    if(with_str) ret_str = QString(" color: ");
+    if(val_bg > 96)
+        return  ret_str + QString("#202020; ");
+
+    else
+        return ret_str + QString("#D8D8D8; ");
+}
+
 QString Style::get_player_back_color(){
 	return QString("#383838");
 }
@@ -41,19 +52,33 @@ QString Style::get_player_fore_color(){
 	return QString("#D8D8D8");
 }
 
-QString Style::get_tv_style(bool dark){
+QString Style::get_tv_style(bool dark, QPalette* p){
+
+    if(!dark) return "";
+
+    QString style;
 
 
-	QString style = "";
-			/*QString("selection-color: black; "
-			"selection-background-color: #e8841a; ");			// sayonara orange*/
+    int highlight_val;
+    if(p){
+        QColor col_highlight = p->color(QPalette::Active, QPalette::Highlight);
+        highlight_val = col_highlight.lightness();
+    }
 
-	if(dark) return  style + QString("border: 1px solid #282828; "
-			"background-color: #2C2C2C;  "
-			"alternate-background-color: #242424; "
-			"color: #D8D8D8; ");
+    else highlight_val = 255;
 
-	else return style;
+    QString fg_color = get_fg_color(highlight_val, false);
+    if(p){
+        p->setColor(QPalette::Active, QPalette::HighlightedText, QColor(0, 0, 0));
+    }
+
+    style = QString("border: 1px solid #282828; "
+                    "background-color: #2C2C2C;  "
+                    "alternate-background-color: #242424; "
+                    /*"color: #D8D8D8;"*/);
+
+    return  style;
+
 }
 
 
@@ -790,4 +815,3 @@ QString  Style::get_rb_style(bool dark){
 
         return style;
 }
-

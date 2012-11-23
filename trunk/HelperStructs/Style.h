@@ -31,13 +31,14 @@
 
 
 #include <QString>
+#include <QPalette>
 
 
 
 namespace Style{
 
 
-	QString get_tv_style(bool dark);
+    QString get_tv_style(bool dark, QPalette* p=0);
 	QString get_player_back_color();
 	QString get_player_fore_color();
 
@@ -58,6 +59,7 @@ namespace Style{
     QString get_h_slider_style(bool dark);
     QString get_cb_style(bool dark);
     QString get_rb_style(bool dark);
+
 };
 
 

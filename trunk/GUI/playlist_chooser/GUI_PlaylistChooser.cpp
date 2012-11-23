@@ -67,8 +67,6 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
     this->ui->btn_save->setEnabled(false);
     this->ui->btn_save_as->setEnabled(false);
 
-    connect(this->ui->btn_apply, SIGNAL(clicked()), this, SLOT(apply_button_pressed()));
-
     connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
     connect(this->ui->btn_save_as, SIGNAL(clicked()), this, SLOT(save_as_button_pressed()));
     connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_button_pressed()));
@@ -90,7 +88,6 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 void GUI_PlaylistChooser::changeSkin(bool dark){
     QString btn_style = Style::get_btn_style(dark);
     this->ui->combo_playlistchooser->setStyleSheet(Style::get_combobox_style(dark));
-    this->ui->btn_apply->setStyleSheet(btn_style);
     this->ui->btn_delete->setStyleSheet(btn_style);
     this->ui->btn_save->setStyleSheet(btn_style);
     this->ui->btn_save_as->setStyleSheet(btn_style);
@@ -144,7 +141,7 @@ void GUI_PlaylistChooser::playlist_changed(MetaDataList& v_md, int i, int radio_
 
 void GUI_PlaylistChooser::save_button_pressed(){
 
-	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx < 0) return;
+    if(_cur_idx >= this->ui->combo_playlistchooser->count()) return;
 
     QString cur_text = this->ui->combo_playlistchooser->currentText();
     _text_before_save = cur_text;
@@ -206,7 +203,6 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 
 	this->ui->btn_delete->setEnabled(val_bigger_zero);
 	this->ui->btn_save->setEnabled(val_bigger_zero);
-	this->ui->btn_apply->setEnabled(val_bigger_zero);
 
 	if(val_bigger_zero)
 		emit sig_playlist_chosen(val);

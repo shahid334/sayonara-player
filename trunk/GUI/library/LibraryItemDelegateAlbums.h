@@ -32,11 +32,14 @@
 #include <QLabel>
 #include <QTableView>
 #include <QItemDelegate>
+#include <QPen>
+
+#include "GUI/library/LibraryItemModelAlbums.h"
 
 class LibraryItemDelegateAlbums : public QItemDelegate {
 	Q_OBJECT
 public:
-	LibraryItemDelegateAlbums(QTableView* parent=0);
+    LibraryItemDelegateAlbums(LibraryItemModelAlbums* model, QTableView* parent=0);
 	virtual ~LibraryItemDelegateAlbums();
 
 public:
@@ -51,14 +54,17 @@ public:
 		void setEditorData(QWidget *editor, const QModelIndex &index) const;
 		void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
+        void set_skin(bool dark);
+
 
 private:
-
-
 		QTableView* _parent;
 
         QPixmap _icon_single_album;
         QPixmap _icon_multi_album;
+
+        QPen _pen;
+        LibraryItemModelAlbums* _model;
 
 
 };

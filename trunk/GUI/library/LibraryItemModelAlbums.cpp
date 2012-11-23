@@ -41,6 +41,16 @@ LibraryItemModelAlbums::~LibraryItemModelAlbums() {
 	// TODO Auto-generated destructor stub
 }
 
+
+void LibraryItemModelAlbums::set_selected(QList<int>& rows){
+    _selected_rows = rows;
+}
+
+bool LibraryItemModelAlbums::is_selected(int row){
+    return _selected_rows.contains(row);
+}
+
+
 int LibraryItemModelAlbums::rowCount(const QModelIndex & parent) const
 {	Q_UNUSED(parent);
 	return _album_list.size();
@@ -66,6 +76,8 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 	 for (int row = 0; row < rows; ++row) {
 		 _album_list.removeAt(position);
 	 }
+
+
 
 	 endRemoveRows();
 	 return true;
@@ -131,9 +143,13 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 
 			 Album album;
 			 album.fromStringList(list);
+             if(album.is_lib_selected)
+                _selected_rows << index.row();
 
 			 _album_list.replace(index.row(), album);
 		 }
+
+
 
 
 	     emit dataChanged(index, index);
@@ -179,7 +195,6 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 
 	Q_UNUSED(column);
 	Q_UNUSED(order);
-
-
-
 }
+
+

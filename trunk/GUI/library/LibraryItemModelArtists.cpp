@@ -41,6 +41,15 @@ LibraryItemModelArtists::~LibraryItemModelArtists() {
 	// TODO Auto-generated destructor stub
 }
 
+
+void LibraryItemModelArtists::set_selected(QList<int>& rows){
+    _selected_rows = rows;
+}
+
+bool LibraryItemModelArtists::is_selected(int row){
+    return _selected_rows.contains(row);
+}
+
 int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 {
 	Q_UNUSED(parent);
@@ -128,13 +137,15 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 		 Artist artist;
 
 		 artist.fromStringList(list);
+         if(artist.is_lib_selected)
+            _selected_rows << index.row();
 
 		 _artist_list.replace(index.row(), artist);
+
 
 	     emit dataChanged(index, index);
 	     return true;
 	 }
-
 
 	 return false;
 }

@@ -514,7 +514,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	this->ui->menuPreferences->setStyleSheet(menu_style);
 	this->ui->menuView->setStyleSheet(menu_style);
 	this->ui->menuAbout->setStyleSheet(menu_style);
-    	this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
+    this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
 	this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
 
 
@@ -531,10 +531,18 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 	if (dark) {
 
-		this->ui->centralwidget->setStyleSheet(
-				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
-		this->setStyleSheet(
-				"background-color: " + Style::get_player_back_color() + "; color: #D8D8D8;");
+        this->ui->centralwidget->setStyleSheet(
+                "background-color: " + Style::get_player_back_color() +
+                "; color: #D8D8D8;");
+
+        this->setStyleSheet(
+                    "background-color: " +
+                    Style::get_player_back_color() + ";"
+                    + " color: #D8D8D8;");
+
+        /*this->ui->library_widget->setStyleSheet("background-color: " +
+                                                Style::get_player_back_color() + ";"
+                                                + " color: #000000;");*/
 
 
 
@@ -553,8 +561,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 	setupVolButton(this->ui->volumeSlider->value());
     emit skinChanged(dark);
-	this->ui_library->change_skin(dark);
-	this->ui_playlist->change_skin(dark);
+
 
 }
 

@@ -32,10 +32,12 @@
 #include <QItemDelegate>
 #include <QTableView>
 #include <QLabel>
+#include <QPen>
+#include "GUI/library/LibraryItemModelTracks.h"
 
 class LibraryItemDelegateTracks : public QItemDelegate {
 public:
-	LibraryItemDelegateTracks(QTableView* parent=0);
+    LibraryItemDelegateTracks(LibraryItemModelTracks* model, QTableView* parent=0);
 	virtual ~LibraryItemDelegateTracks();
 
 public:
@@ -50,8 +52,12 @@ public:
 		void setEditorData(QWidget *editor, const QModelIndex &index) const;
 		void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
+        void set_skin(bool dark);
+
 private:
 		QTableView* _parent;
+        QPen        _pen;
+        LibraryItemModelTracks* _model;
 
 };
 

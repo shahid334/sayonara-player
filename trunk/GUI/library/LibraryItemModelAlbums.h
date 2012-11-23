@@ -56,9 +56,13 @@ public:
 	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 	void sort(int column, Qt::SortOrder order);
 
+    bool is_selected(int row);
+    void set_selected(QList<int>& rows);
+
 
 private:
 	QList<Album> _album_list;
+    QList<int> _selected_rows;
 
 
 };

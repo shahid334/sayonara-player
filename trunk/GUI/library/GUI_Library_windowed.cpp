@@ -87,11 +87,11 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_mime_data = 0;
 
 	this->_album_model = new LibraryItemModelAlbums();
-	this->_album_delegate = new LibraryItemDelegateAlbums(this->ui->lv_album);
+    this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
 	this->_artist_model = new LibraryItemModelArtists();
-	this->_artist_delegate = new LibraryItemDelegateArtists(this->ui->lv_artist);
+    this->_artist_delegate = new LibraryItemDelegateArtists(_artist_model, this->ui->lv_artist);
 	this->_track_model = new LibraryItemModelTracks();
-	this->_track_delegate = new LibraryItemDelegateTracks(this->ui->tb_title);
+    this->_track_delegate = new LibraryItemDelegateTracks(_track_model, this->ui->tb_title);
 
 	this->ui->tb_title->setModel(this->_track_model);
 	this->ui->tb_title->setItemDelegate(this->_track_delegate);
@@ -219,7 +219,8 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 void GUI_Library_windowed::change_skin(bool dark){
 
 
-    QString table_style = Style::get_tv_style(dark);
+    QString table_style = Style::get_tv_style(dark, 0);
+
     QString combo_style = Style::get_combobox_style(dark);
     QString line_edit_style = Style::get_lineedit_style(dark);
     QString btn_style = Style::get_btn_style(dark);
@@ -233,7 +234,7 @@ void GUI_Library_windowed::change_skin(bool dark){
     this->ui->btn_info->setStyleSheet(btn_style);
 
 
-   if(_lib_info_dialog)
+    if(_lib_info_dialog)
         this->_lib_info_dialog->change_skin(dark);
 
 
@@ -259,6 +260,11 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->lv_album->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
 		this->ui->tb_title->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
 
+        /*this->setStyleSheet("background-color: " +
+                        Style::get_player_back_color() + ";"
+                        "color: " + Style::get_player_fore_color() + ";");*/
+
+
 	}
 
 
@@ -280,6 +286,11 @@ void GUI_Library_windowed::change_skin(bool dark){
 		this->ui->lv_album->horizontalScrollBar()->setStyleSheet("");
 		this->ui->tb_title->horizontalScrollBar()->setStyleSheet("");
 	}
+
+
+    this->_album_delegate->set_skin(dark);
+    this->_artist_delegate->set_skin(dark);
+    this->_track_delegate->set_skin(dark);
 }
 
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
@@ -328,6 +339,10 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 
 void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
+
+    QList<int> lst;
+    _track_model->set_selected(lst);
+
 
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_metadata);
@@ -378,9 +393,13 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
 void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 
+    QList<int> lst;
+    _album_model->set_selected(lst);
+
+
+
 	this->_album_model->removeRows(0, this->_album_model->rowCount());
 	this->_album_model->insertRows(0, albums.size()); // fake "all albums row"
-
 
 	QModelIndex idx;
     int first_selected_album_row = -1;
@@ -410,7 +429,6 @@ void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 
     sm->clearSelection();
     sm->select(sel,QItemSelectionModel::Select);
-
 
     if(first_selected_album_row >= 0)
         this->ui->lv_album->scrollTo(_album_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
@@ -469,6 +487,8 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 		idx_list_int.push_back(model_idx.row());
 	}
 
+    _artist_model->set_selected(idx_list_int);
+
 	emit sig_artist_pressed(idx_list_int);
 }
 
@@ -484,6 +504,7 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 		idx_list_int.push_back(model_idx.row());
 	}
 
+    _album_model->set_selected(idx_list_int);
 	emit sig_album_pressed(idx_list_int);
 }
 
@@ -498,6 +519,8 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
     foreach(QModelIndex  model_idx, idx_list){
         idx_list_int.push_back( model_idx.row() );
     }
+
+    _track_model->set_selected(idx_list_int);
 
     emit sig_track_pressed(idx_list_int);
 }
@@ -535,12 +558,18 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
 void GUI_Library_windowed::clear_button_pressed(){
 
 
+
 	this->ui->le_search->setText("");
 	text_line_edited("", true);
 }
 
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit){
+
+    QList<int> lst;
+    _album_model->set_selected(lst);
+    _track_model->set_selected(lst);
+    _artist_model->set_selected(lst);
 
     if(search.toLower() == "f:"){
         this->ui->combo_searchfilter->setCurrentIndex(0);
