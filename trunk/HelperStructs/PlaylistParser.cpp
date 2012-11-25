@@ -351,7 +351,7 @@ void PlaylistParser::save_playlist(QString filename, const MetaDataList& v_md, b
 
     FILE* file = fopen(filename.toStdString().c_str(), "w");
     if(!file) return;
-
+    fputs("#EXTM3U\n", file);
     qint64 lines = 0;
     foreach(MetaData md, v_md){
 
