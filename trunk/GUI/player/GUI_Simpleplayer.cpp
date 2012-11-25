@@ -587,8 +587,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 	setupVolButton(this->ui->volumeSlider->value());
     emit skinChanged(dark);
-
-
 }
 
 

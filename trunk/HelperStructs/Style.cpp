@@ -229,7 +229,7 @@ QString Style::get_lineedit_style(bool dark){
             "QLineEdit:read-only {" +
             "    border-radius: 4px; " +
             "    border: 1px solid #2B2B2B;" +
-            "    background: " + grey + ";" +
+            //"    background: " + grey + ";" +
             "}" +
 
 
