@@ -554,7 +554,8 @@ QString Style::get_spinbox_style(bool dark){
     "     subcontrol-origin: margin;" +
     "     subcontrol-position: top right;" +
     "     width: 12px;" +
-    "     border: 1px solid " + darker_grey + "; " +
+    "     margin-top: 1px; "
+    "     margin-right: 1px; "
     "     padding: 2px;" +
     "     "
     "     background: " + dark_grey + "; " +
@@ -566,19 +567,22 @@ QString Style::get_spinbox_style(bool dark){
     "}"+
 
 
+
+
     "QSpinBox::up-arrow {" +
  "    image: url(" + arrow_up_filename + ");" +
     "     width: 7px;" +
     "     height: 7px;" +
     " }" +
 
-    "QSpinBox::down-button {" +
-    "     subcontrol-origin: border;" +
-    "     subcontrol-position: bottom right;" +
-    "     padding: 2px;" +
-    "     width: 12px;" +
-    "     border: 1px solid " + darker_grey + "; " +
-    "     background: " + dark_grey + "; " +
+    "QSpinBox::down-button {"
+    "     subcontrol-origin: border;"
+    "     subcontrol-position: bottom right;"
+    "     padding: 2px;"
+    "     margin-bottom: 1px; "
+    "     margin-right: 1px; "
+    "     width: 12px;"
+    "     background: " + dark_grey + "; "
     " }" +
 
 

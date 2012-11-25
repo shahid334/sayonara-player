@@ -343,7 +343,8 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 		search_list << LFM_TAG_TRACK_ARTIST;
 		search_list << LFM_TAG_TRACK_DURATION;
 		search_list << LFM_TAG_TRACK_TITLE;
-		foreach(QString str2search, search_list){
+
+        foreach(QString str2search, search_list){
 			QString str = Helper::easy_tag_finder(str2search , retval);
 			values[str2search] = str;
 		}
@@ -352,12 +353,18 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 		loved = (values[LFM_TAG_TRACK_LOVED].toInt() == 1);
 
 		QString artist = values[LFM_TAG_TRACK_ARTIST];
+        QString album = values[LFM_TAG_TRACK_ALBUM];
 		QString title = values[LFM_TAG_TRACK_TITLE];
 
-		if(artist.toLower() != md.artist.toLower() ||
-			title.toLower() != md.title.toLower() ){
+        bool artist_cor = (artist.compare(md.artist, Qt::CaseInsensitive) != 0);
+        bool title_cor = (title.compare(md.title, Qt::CaseInsensitive) != 0);
+        bool album_cor = (album.compare(md.album, Qt::CaseInsensitive) != 0);
+
+        if(artist_cor || title_cor || album_cor){
+
 			corrected = true;
 			md.artist = artist;
+            md.album = album;
 			md.title = title;
 		}
 

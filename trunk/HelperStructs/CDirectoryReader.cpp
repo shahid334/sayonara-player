@@ -132,9 +132,11 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
         if(Helper::is_soundfile(filepath)){
 
-            //qDebug() << md.filepath << " is soundfile " << md.id;
+            qDebug() << md.filepath << " is soundfile " << md.id;
             if(md.id < 0){
-                if(!ID3::getMetaDataOfFile(md)) continue;
+                if(!ID3::getMetaDataOfFile(md)){
+                    continue;
+                }
                 md.is_extern = true;
             }
             //qDebug() << "push back " << md.filepath;
@@ -161,4 +163,6 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             }
         }
 	}
+
+
 }

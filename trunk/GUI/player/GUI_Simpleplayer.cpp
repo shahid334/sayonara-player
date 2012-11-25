@@ -111,6 +111,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	this->setupConnections();
 
 	this->ui->plugin_widget->resize(this->ui->plugin_widget->width(), 0);
+    ui_info_dialog = 0;
 
 }
 
@@ -142,21 +143,21 @@ void GUI_SimplePlayer::initGUI() {
 	this->ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	this->ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 	//this->ui->btn_correct->setText(QString("(c)"));
-	this->ui->btn_correct->setToolTip("Correct ID3 Tag");
+    this->ui->btn_correct->setToolTip(tr("Correct ID3 Tag"));
 
-    this->ui->action_ViewEqualizer->setText("&Equalizer");
+    this->ui->action_ViewEqualizer->setText(tr("&Equalizer"));
     this->ui->action_ViewEqualizer->setShortcut(QKeySequence("CTRL+e"));
 
-    this->ui->action_ViewStream->setText("&Stream");
+    this->ui->action_ViewStream->setText(tr("&Stream"));
     this->ui->action_ViewStream->setShortcut(QKeySequence("CTRL+s"));
 
-    this->ui->action_ViewPlaylistChooser->setText("&Playlist Chooser");
+    this->ui->action_ViewPlaylistChooser->setText(tr("&Playlist Chooser"));
     this->ui->action_ViewPlaylistChooser->setShortcut(QKeySequence("CTRL+p"));
 
-    this->ui->action_ViewLFMRadio->setText("Last.fm &Radio");
+    this->ui->action_ViewLFMRadio->setText(tr("Last.fm &Radio"));
     this->ui->action_ViewLFMRadio->setShortcut(QKeySequence("CTRL+r"));
 
-    this->ui->action_viewLibrary->setText("&Library");
+    this->ui->action_viewLibrary->setText(tr("&Library"));
     this->ui->action_viewLibrary->setShortcut(QKeySequence("CTRL+l"));
 
     this->ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
@@ -421,8 +422,7 @@ void GUI_SimplePlayer::psl_lfm_activated(bool b){
 
 void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
 
-	m_metadata_corrected = md;
-
+    m_metadata_corrected = md;
 
     this->ui->btn_correct->setVisible(
          corrected &&
@@ -434,11 +434,45 @@ void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool cor
 		this->ui->title->setText(this->ui->title->text());
 	}
 
+
+
 	this->repaint();
 }
 
 void GUI_SimplePlayer::correct_btn_clicked(bool b){
-	emit sig_correct_id3(m_metadata_corrected);
+
+    if(!ui_info_dialog){
+        return;
+    }
+
+    MetaData md = m_metadata_corrected;
+    m_metadata_corrected = m_metadata;
+
+
+    bool same_artist = (m_metadata.artist.compare(md.artist) == 0);
+    bool same_album = (m_metadata.album.compare(md.album) == 0);
+    bool same_title = (m_metadata.title.compare(md.title) == 0);
+
+    if(!same_artist){
+        m_metadata_corrected.artist = md.artist;
+        m_metadata_corrected.artist_id = -1;
+    }
+
+    if(!same_album){
+        m_metadata_corrected.album = md.album;
+        m_metadata_corrected.album_id = -1;
+    }
+
+    if(!same_title){
+        m_metadata_corrected.title = md.title;
+    }
+
+    MetaDataList lst;
+    lst.push_back(m_metadata_corrected);
+    this->ui_info_dialog->setMetaData(lst);
+    this->ui_info_dialog->setMode(INFO_MODE_TRACKS);
+
+    ui_info_dialog->show(TAB_EDIT);
 
 }
 /** LAST FM **/
@@ -507,7 +541,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
     m_dark = dark;
 
 	QString menu_style = Style::get_menu_style(dark);
-	QString btn_style;
 
 	this->ui->menubar->setStyleSheet(Style::get_menubar_style(dark));
 	this->ui->menuFle->setStyleSheet(menu_style);
@@ -517,9 +550,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
     this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
 	this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
 
-
     this->m_alternate_covers->changeSkin(dark);
-
 
     QString style = Style::get_btn_style(dark, 8);
     this->ui->btn_mute->setStyleSheet(style);
@@ -528,6 +559,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
     this->ui->btn_bw->setStyleSheet(style);
     this->ui->btn_stop->setStyleSheet(style);
     this->ui->btn_rec->setStyleSheet(style);
+    this->ui->btn_correct->setStyleSheet(style);
 
 	if (dark) {
 
@@ -539,12 +571,6 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
                     "background-color: " +
                     Style::get_player_back_color() + ";"
                     + " color: #D8D8D8;");
-
-        /*this->ui->library_widget->setStyleSheet("background-color: " +
-                                                Style::get_player_back_color() + ";"
-                                                + " color: #000000;");*/
-
-
 
 		m_skinSuffix = QString("_dark");
 	}

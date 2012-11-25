@@ -67,6 +67,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
 
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
+
     ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
     ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
@@ -74,6 +75,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
     remote_socket       = new Socket();
+
 
     QString dir;
 
@@ -105,6 +107,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->setStream(ui_stream);
     player->setLFMRadio(ui_lfm_radio);
     player->setEqualizer(ui_eq);
+    player->setInfoDialog(ui_info_dialog);
 
     player->setStyle( set->getPlayerStyle() );
     player->show();
@@ -212,6 +215,7 @@ void Application::init_connections(){
 	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		player,			update_track(const MetaData&));
 	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
        CONNECT (playlist, sig_gapless_track(const MetaData&),                   listen, 		psl_gapless_track(const MetaData & ));
+       CONNECT (playlist, sig_new_stream_session(),                             listen,         psl_new_stream_session());
        CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
 	   CONNECT (playlist, sig_no_track_to_play(),								listen,			stop());
 	   CONNECT (playlist, sig_goon_playing(),                                   listen,			play());
@@ -219,10 +223,10 @@ void Application::init_connections(){
        CONNECT (playlist, sig_playlist_created(MetaDataList&, int, int), 		ui_playlist, 	fillPlaylist(MetaDataList&, int, int));
        CONNECT (playlist, sig_playlist_created(MetaDataList&, int, int), 		ui_playlist_chooser, 	playlist_changed(MetaDataList&, int, int));
 	   //CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
-	   CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&), 		playlists,      save_playlist_as_custom(int, MetaDataList&));
-	   CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&), 	playlists,      save_playlist_as_custom(QString, MetaDataList&));
+       CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&),            playlists,      save_playlist_as_custom(int, MetaDataList&));
+       CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&),        playlists,      save_playlist_as_custom(QString, MetaDataList&));
 	   CONNECT (playlist, sig_library_changed(), 								ui_library, 	library_changed());
-	   CONNECT (playlist, sig_import_files(const MetaDataList&), 			library, 		importFiles(const MetaDataList&));
+       CONNECT (playlist, sig_import_files(const MetaDataList&),                library, 		importFiles(const MetaDataList&));
 	   CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
 
 	   CONNECT (playlist, sig_data_for_id3_change(const MetaDataList&), 	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND

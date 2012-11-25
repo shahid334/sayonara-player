@@ -18,6 +18,11 @@ QWidget* GUI_SimplePlayer::getParentOfPlugin() {
 	return this->ui->plugin_widget;
 }
 
+void GUI_SimplePlayer::setInfoDialog(GUI_InfoDialog* dialog){
+    ui_info_dialog = dialog;
+    ui_info_dialog->setMode(INFO_MODE_TRACKS);
+}
+
 
 void GUI_SimplePlayer::hideUnneededPlugins(QWidget* wannashow){
 	if(ui_eq != wannashow)

@@ -109,7 +109,7 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2000);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 10000);
 
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
@@ -183,13 +183,13 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
-		curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 5000);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 10000);
 
 		curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 	}
 
-	long int t = 5000000;
+    long int t = 10000000;
 	while(lfm_webpage_bytes == 0){
 
 		#ifdef Q_OS_WIN

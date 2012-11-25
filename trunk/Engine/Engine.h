@@ -92,6 +92,7 @@ public slots:
 	virtual void record_button_toggled(bool)=0;
 
     virtual void psl_sr_set_active(bool)=0;
+    virtual void psl_new_stream_session()=0;
 
 private slots:
     virtual void sr_initialized(bool)=0;

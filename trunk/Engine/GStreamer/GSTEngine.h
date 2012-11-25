@@ -99,10 +99,12 @@ public slots:
     virtual void psl_gapless_track(const MetaData&);
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
+    virtual void psl_new_stream_session();
 
  	virtual void record_button_toggled(bool);
 
     virtual void psl_sr_set_active(bool);
+
 
 
 public:

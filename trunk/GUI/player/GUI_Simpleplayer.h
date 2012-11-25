@@ -191,7 +191,9 @@ private:
     GUI_PlaylistChooser*		ui_playlist_chooser;
     GUI_Stream*					ui_stream;
     GUI_LFMRadioWidget*			ui_lfm_radio;
+    GUI_InfoDialog*             ui_info_dialog;
     CoverLookup*				m_cov_lookup;
+
 
     GUI_Alternate_Covers*		m_alternate_covers;
 
@@ -246,6 +248,7 @@ public:
     void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
     void setStream(GUI_Stream* stream);
     void setLFMRadio(GUI_LFMRadioWidget* lfm_radio);
+    void setInfoDialog(GUI_InfoDialog* info_dialog);
 
     void hideAllPlugins();
     void check_show_plugins();

@@ -53,49 +53,46 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
 
 
 
-        this->ui = new Ui::GUI_TagEdit();
-        this->ui->setupUi(this);
+    this->ui = new Ui::GUI_TagEdit();
+    this->ui->setupUi(this);
 
     _cur_idx = -1;
     _db = CDatabaseConnector::getInstance();
 
 
-        QPixmap pix = QPixmap(Helper::getIconPath() + "edit.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        this->ui->lab_icon->setPixmap(pix);
+    QPixmap pix = QPixmap(Helper::getIconPath() + "edit.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    this->ui->lab_icon->setPixmap(pix);
 
 
-        QStringList complete_list;
-        complete_list << TAG_TITLE;
-        complete_list << TAG_ARTIST;
-        complete_list << TAG_ALBUM;
-        complete_list << TAG_TRACK_NUM;
-        complete_list << TAG_YEAR;
-        QCompleter* completer = new QCompleter(complete_list);
-        this->ui->le_tag_from_path->setCompleter(completer);
+    QStringList complete_list;
+    complete_list << TAG_TITLE;
+    complete_list << TAG_ARTIST;
+    complete_list << TAG_ALBUM;
+    complete_list << TAG_TRACK_NUM;
+    complete_list << TAG_YEAR;
+    QCompleter* completer = new QCompleter(complete_list);
+    this->ui->le_tag_from_path->setCompleter(completer);
 
-        this->ui->le_tag_from_path->setVisible(false);
-        this->ui->cb_tag_all->setVisible(false);
-        this->ui->btn_tag_apply->setVisible(false);
-        this->ui->btn_tag_help->setVisible(false);
-        this->ui->btn_tag_undo->setVisible(false);
-        this->ui->label_8->setVisible(false);
+    this->ui->le_tag_from_path->setVisible(false);
+    this->ui->cb_tag_all->setVisible(false);
+    this->ui->btn_tag_apply->setVisible(false);
+    this->ui->btn_tag_help->setVisible(false);
+    this->ui->btn_tag_undo->setVisible(false);
+    this->ui->label_8->setVisible(false);
 
-        connect(this->ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
-        connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
-        connect(this->ui->pb_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
-        connect(this->ui->pb_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_clicked()));
-        connect(this->ui->le_tag_from_path, SIGNAL(textChanged ( const QString &)), this, SLOT(tag_from_path_text_changed(const QString&)));
+    connect(this->ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
+    connect(this->ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
+    connect(this->ui->pb_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
+    connect(this->ui->pb_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_clicked()));
+    connect(this->ui->le_tag_from_path, SIGNAL(textChanged ( const QString &)), this, SLOT(tag_from_path_text_changed(const QString&)));
 
-        connect(this->ui->btn_tag_help, SIGNAL(clicked()), this, SLOT(help_tag_clicked()));
-        connect(this->ui->btn_tag_undo, SIGNAL(clicked()), this, SLOT(undo_tag_clicked()));
-        connect(this->ui->btn_tag_apply, SIGNAL(clicked()), this, SLOT(apply_tag_clicked()));
+    connect(this->ui->btn_tag_help, SIGNAL(clicked()), this, SLOT(help_tag_clicked()));
+    connect(this->ui->btn_tag_undo, SIGNAL(clicked()), this, SLOT(undo_tag_clicked()));
+    connect(this->ui->btn_tag_apply, SIGNAL(clicked()), this, SLOT(apply_tag_clicked()));
 
-        init();
-        hide();
-
-
+    init();
+    hide();
 }
-
 
 
 
@@ -831,8 +828,6 @@ void GUI_TagEdit::tag_from_path_text_changed(const QString& str){
 
 
 void  GUI_TagEdit::show_win(){
-
-
 
     show();
 }

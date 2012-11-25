@@ -34,6 +34,8 @@
 #include <QWidget>
 #include <QEvent>
 #include <QPoint>
+#include <QKeyEvent>
+
 
 #include "HelperStructs/CustomMimeData.h"
 
@@ -45,6 +47,7 @@ class MyTableView : public QTableView{
 	signals:
 		void context_menu_emitted(const QPoint&);
 		void sig_middle_button_clicked(const QPoint&);
+        void sig_all_selected();
 
 
 	public:
@@ -58,6 +61,7 @@ class MyTableView : public QTableView{
 		void mousePressEvent(QMouseEvent* event);
 		void mouseReleaseEvent(QMouseEvent* event);
 		void mouseMoveEvent(QMouseEvent* event);
+        void keyPressEvent(QKeyEvent* event);
 
 
 	private:

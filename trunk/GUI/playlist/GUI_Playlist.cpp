@@ -245,10 +245,11 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int 
 
     if(v_metadata.size() == 0) return;
 
-    if(radio_mode != RADIO_LFM)
-        _pli_model->insertRows(0, v_metadata.size());
-    else
+    if(radio_mode == RADIO_LFM)
         _pli_model->insertRows(0, cur_play_idx + 1);
+
+    else
+        _pli_model->insertRows(0, v_metadata.size());
 
 	_total_secs = 0;
 
@@ -753,6 +754,8 @@ void GUI_Playlist::import_result(bool success){
 void GUI_Playlist::set_radio_active(int radio){
 
 	_radio_active = radio;
+
+
 	this->ui->btn_append->setVisible(radio == RADIO_OFF);
 	this->ui->btn_dynamic->setVisible(radio == RADIO_OFF);
 	this->ui->btn_repAll->setVisible(radio == RADIO_OFF);
@@ -763,6 +766,7 @@ void GUI_Playlist::set_radio_active(int radio){
         this->_right_click_menu->removeAction(_edit_action);
         this->_info_dialog->set_tag_edit_visible(false);
     }
+
     else if(!_right_click_menu->actions().contains(_edit_action)){
         this->ui->listView->set_drag_enabled(true);
         this->_right_click_menu->addAction(_edit_action);

@@ -43,13 +43,14 @@ bool ID3::getMetaDataOfFile(MetaData& md){
     QFile qf(md.filepath);
     md.filesize = qf.size();
     qf.close();
+
     TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
     int idx = md.filepath.lastIndexOf('/');
     md.title = md.filepath.right(md.filepath.length() - idx -1);
 	md.title = md.title.left(md.title.length() - 4);
 
-    if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) return false;
+    if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) return false;
 	string artist = f.tag()->artist().to8Bit(true);
 	string album = f.tag()->album().to8Bit(true);
 	string title = f.tag()->title().to8Bit(true);
@@ -103,7 +104,7 @@ void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
 		md.title = md.filepath.right(md.filepath.length() - idx -1);
 		md.title = md.title.left(md.title.length() - 4);
 
-        if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isReadable(file.toUtf8()) ) return;
+        if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(file.toUtf8()) ) return;
 
 		string artist = f.tag()->artist().to8Bit(true);
 		string album = f.tag()->album().to8Bit(true);
@@ -147,10 +148,12 @@ void ID3::setMetaDataOfFile(MetaData& md){
 
 	md.filepath = QDir(md.filepath).absolutePath();
 	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
-    if(f.isNull() || !f.tag() || f.tag()->isEmpty() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ){
-		qDebug() << Q_FUNC_INFO << " f is null!";
+    if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ){
+        qDebug() << "ID3 cannot save";
 		return;
 	}
+
+
 
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String artist(md.artist.toUtf8().data(), TagLib::String::UTF8);

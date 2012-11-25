@@ -99,7 +99,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			gst_message_parse_error(msg, &err, NULL);
 
             qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
-            obj_ref->stop();
+            obj_ref->set_track_finished();
 			g_error_free(err);
 
 			break;
@@ -273,8 +273,7 @@ void GST_Engine::changeTrack(const MetaData& md){
     // when stream ripper, do not start playing
     bool start_playing = true;
 
-	// Warning!! this order is important!!!
-	stop();
+    stop();
 	_meta_data = md;
 
 	_playing_stream = false;
@@ -295,8 +294,8 @@ void GST_Engine::changeTrack(const MetaData& md){
         else {
 
             uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
-            qDebug() << "Engine: Stream Ripper file = " << filepath;
-            qDebug() << "Engine: Stream Ripper file = " << uri;
+            /*qDebug() << "Engine: Stream Ripper file = " << filepath;
+            qDebug() << "Engine: Stream Ripper file = " << uri;*/
         }
 
         start_playing = false;
@@ -309,8 +308,8 @@ void GST_Engine::changeTrack(const MetaData& md){
 
        // uri = md.filepath.toLocal8Bit();
         uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
-        qDebug() << "Engine: Stream Ripper file = " << md.filepath;
-        qDebug() << "Engine: Stream Ripper file = " << uri;
+       /* qDebug() << "Engine: Stream Ripper file = " << md.filepath;
+        qDebug() << "Engine: Stream Ripper file = " << uri;*/
 
 	}
 
@@ -346,7 +345,6 @@ void GST_Engine::changeTrack(const MetaData& md){
 }
 
 
-
 void GST_Engine::play(){
 	_track_finished = false;
 	_state = STATE_PLAY;
@@ -357,11 +355,9 @@ void GST_Engine::play(){
 }
 
 
-
-
 void GST_Engine::stop(){
-	_state = STATE_STOP;
 
+    _state = STATE_STOP;
 
 	// streamripper, wanna record is set when record button is pressed
     if( _playing_stream && _sr_active ){
@@ -500,6 +496,10 @@ void GST_Engine::record_button_toggled(bool b){
 
 void GST_Engine::psl_sr_set_active(bool b){
 	_sr_active = b;
+}
+
+void GST_Engine::psl_new_stream_session(){
+    _stream_recorder->set_new_stream_session();
 }
 
 void GST_Engine::sr_initialized(bool b){

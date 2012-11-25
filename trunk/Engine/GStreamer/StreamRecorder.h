@@ -32,9 +32,14 @@ private slots:
 
 public:
     void init();
-    QString changeTrack(const MetaData& md, int max_tries);
     bool start();
+
     QString stop(bool track_finished, bool delete_track = false);
+
+    QString changeTrack(const MetaData& md, int max_tries);
+    void set_new_stream_session();
+
+
 
     void endOfStream();
     bool getFinished();
@@ -59,6 +64,13 @@ private:
 
     int        _try;
     int        _max_tries;
+
+
+    QString     _pl_file_path;
+    QString     _session_path;
+    MetaDataList _session_collector;
+
+    QString check_session_path(QString sr_path);
     
 };
 

@@ -60,7 +60,7 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 	switch(event->button()){
 		case Qt::LeftButton:
 
-			QTableView::mousePressEvent(event);
+            QTableView::mousePressEvent(event);
 
 			if(event->pos().y() > this->model()->rowCount() * 20) {
 				_drag = false;
@@ -134,6 +134,21 @@ void MyTableView::set_mime_data(CustomMimeData* data){
 
 	if (data) _drag = true;
 	else _drag = false;
+}
+
+
+void  MyTableView::keyPressEvent(QKeyEvent* event){
+    int key = event->key();
+
+    if(key != Qt::Key_A) return;
+
+    Qt::KeyboardModifiers  modifiers = event->modifiers();
+
+    if(modifiers & Qt::ControlModifier){
+        selectAll();
+        emit sig_all_selected();
+    }
+
 }
 
 

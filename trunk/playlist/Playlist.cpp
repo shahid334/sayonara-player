@@ -56,8 +56,6 @@ Playlist::~Playlist() {
 }
 
 
-
-
 // create a playlist, where metadata is already available
 void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
@@ -405,7 +403,6 @@ void Playlist::psl_import_new_tracks_to_library(bool copy){
     foreach(MetaData md, _v_meta_data){
         if(md.is_extern){
             v_md_extern.push_back(md);
-            qDebug() << md.title;
         }
     }
 
@@ -437,8 +434,6 @@ void  Playlist::psl_lfm_radio_init(bool success){
 
 void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
 
-    qDebug() << "Playlist available " << playlist.size();
-
     if(playlist.size() == 0){
         psl_clear_playlist();
         return;
@@ -453,6 +448,7 @@ void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
     if(_v_meta_data.size() == 0) return;
 
     if(_cur_play_idx == -1) {
+        emit sig_new_stream_session();
         _cur_play_idx = 0;
         emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_LFM);
         emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
@@ -470,7 +466,7 @@ void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
 
 void Playlist::psl_play_stream(const QString& url, const QString& name){
 
-    _radio_active = RADIO_STATION;
+    emit sig_new_stream_session();
     psl_clear_playlist();
     MetaDataList v_md;
 
@@ -506,10 +502,10 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
         _v_meta_data.push_back(md);
 	}
 
-
     if(_v_meta_data.size() == 0) return;
 
     _cur_play_idx = 0;
+    _radio_active = RADIO_STATION;
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
     emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);

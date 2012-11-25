@@ -69,6 +69,7 @@ public:
 		void sig_import_files(const MetaDataList&);
 		void sig_need_more_radio();
         void sig_gapless_track(const MetaData&);
+        void sig_new_stream_session();
 
 
 

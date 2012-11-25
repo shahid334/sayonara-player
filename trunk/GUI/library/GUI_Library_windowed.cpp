@@ -26,6 +26,10 @@
  *      Author: luke
  */
 
+#define SEL_ARTISTS 0
+#define SEL_ALBUMS 1
+#define SEL_TRACKS 2
+
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/library/LibraryItemModelTracks.h"
 #include "GUI/library/LibraryItemDelegateTracks.h"
@@ -119,19 +123,25 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
-	connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
+    connect(this->ui->lv_album, SIGNAL(sig_all_selected()), this, SLOT(album_pressed()));
+    connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
+    connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
 	connect(this->ui->lv_album, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_album_context_menu(const QPoint&)));
 	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_albums_by_column(int)));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
-	connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
+    connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
+    connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
+    connect(this->ui->tb_title, SIGNAL(clicked(const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex & )));
 	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
 	connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
 	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
+    connect(this->ui->lv_artist, SIGNAL(sig_all_selected()), this, SLOT(artist_pressed()));
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
+    connect(this->ui->lv_artist, SIGNAL(clicked(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
 	connect(this->ui->lv_artist->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_artists_by_column(int)));
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
@@ -366,7 +376,6 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
             sel.merge(sm->selection(), QItemSelectionModel::Select);
         }
 
-
         QModelIndex idx = _track_model->index(row, 0);
 
 		this->_track_model->setData(idx, md.toVariant(), Qt::EditRole);
@@ -395,8 +404,6 @@ void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 
     QList<int> lst;
     _album_model->set_selected(lst);
-
-
 
 	this->_album_model->removeRows(0, this->_album_model->rowCount());
 	this->_album_model->insertRows(0, albums.size()); // fake "all albums row"
@@ -473,57 +480,97 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
         this->ui->lv_artist->scrollTo(_artist_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
 }
 
+QList<int> GUI_Library_windowed::calc_selections(int table){
+
+    QList<int> idx_list_int;
+    QModelIndexList idx_list;
+
+    switch(table){
+        case SEL_ARTISTS:
+
+            idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
+
+            foreach(QModelIndex model_idx, idx_list){
+                idx_list_int.push_back(model_idx.row());
+            }
+
+            _artist_model->set_selected(idx_list_int);
+            break;
+
+
+        case SEL_ALBUMS:
+            idx_list = this->ui->lv_album->selectionModel()->selectedRows();
+
+            foreach(QModelIndex model_idx, idx_list){
+                idx_list_int.push_back(model_idx.row());
+            }
+
+            _album_model->set_selected(idx_list_int);
+            break;
+
+        case SEL_TRACKS:
+
+            idx_list = this->ui->tb_title->selectionModel()->selectedRows();
+
+            foreach(QModelIndex model_idx, idx_list){
+                idx_list_int.push_back(model_idx.row());
+            }
+
+            _track_model->set_selected(idx_list_int);
+            break;
+
+        default: break;
+    }
+
+    return idx_list_int;
+}
 
 
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
-	if(!idx.isValid()) return;
+    QList<int> idx_list_int;
+    if(idx.isValid())
+        idx_list_int = calc_selections(SEL_ARTISTS);
+    else
+        calc_selections(SEL_ARTISTS);
 
-	QModelIndexList idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
-	QList<int> idx_list_int;
-
-	foreach(QModelIndex model_idx, idx_list){
-		idx_list_int.push_back(model_idx.row());
-	}
-
-    _artist_model->set_selected(idx_list_int);
-
-	emit sig_artist_pressed(idx_list_int);
+    emit sig_artist_pressed(idx_list_int);
 }
+
+void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
 
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
-	if(!idx.isValid()) return;
+    QList<int> idx_list_int;
 
-	QModelIndexList idx_list = this->ui->lv_album->selectionModel()->selectedRows();
-	QList<int> idx_list_int;
+    if(idx.isValid())
+        idx_list_int = calc_selections(SEL_ALBUMS);
+    else
+        calc_selections(SEL_ALBUMS);
 
-	foreach(QModelIndex model_idx, idx_list){
-		idx_list_int.push_back(model_idx.row());
-	}
-
-    _album_model->set_selected(idx_list_int);
-	emit sig_album_pressed(idx_list_int);
+    emit sig_album_pressed(idx_list_int);
 }
+
+
+void GUI_Library_windowed::album_released(const QModelIndex& idx){}
+
 
 
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
-    if(!idx.isValid()) return;
-
-    QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows();
     QList<int> idx_list_int;
-
-    foreach(QModelIndex  model_idx, idx_list){
-        idx_list_int.push_back( model_idx.row() );
-    }
-
-    _track_model->set_selected(idx_list_int);
+    if(idx.isValid())
+        idx_list_int = calc_selections(SEL_TRACKS);
+    else
+        calc_selections(SEL_TRACKS);
 
     emit sig_track_pressed(idx_list_int);
 }
+
+void GUI_Library_windowed::track_released(const QModelIndex&){}
+
 
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
@@ -536,9 +583,6 @@ void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_md);
 }
-
-
-
 
 
 void GUI_Library_windowed::album_dbl_clicked(const QModelIndex & idx){
@@ -556,8 +600,6 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
 
 
 void GUI_Library_windowed::clear_button_pressed(){
-
-
 
 	this->ui->le_search->setText("");
 	text_line_edited("", true);

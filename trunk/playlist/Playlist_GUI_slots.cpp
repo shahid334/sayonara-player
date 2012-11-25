@@ -51,9 +51,9 @@ void Playlist::psl_play(){
 
 void Playlist::psl_stop(){
 
-    if(_radio_active == RADIO_STATION){
+    /*if(_radio_active == RADIO_STATION){
         save_stream_playlist();
-    }
+    }*/
 
     // track no longer valid
     if(_radio_active == RADIO_LFM){
@@ -63,6 +63,7 @@ void Playlist::psl_stop(){
     _radio_active = RADIO_OFF;
 
     _cur_play_idx = -1;
+
     emit sig_no_track_to_play();
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }
@@ -252,29 +253,39 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 
     MetaDataList v_tmp_md;
 
-    int n_tracks = _v_meta_data.size();
+    int n_tracks = (int) _v_meta_data.size();
+    int n_tracks_before_cur_idx = 0;
+
     bool* to_delete = new bool[n_tracks];
 
+    if(rows.contains(_cur_play_idx)) _cur_play_idx = -1;
 
     for(int i=0; i<n_tracks; i++){
-        to_delete[i] = false;
+
         if(rows.contains(i)) {
-            to_delete[i] = true;
+            if(i < _cur_play_idx)
+                n_tracks_before_cur_idx++;
+
+            continue;
         }
+
+        MetaData md = _v_meta_data[i];
+
+        md.pl_dragged = false;
+        md.pl_selected = false;
+        md.pl_playing = false;
+
+        v_tmp_md.push_back(md);
     }
 
-    for(int i=0; i<n_tracks; i++){
-        if(!to_delete[i]){
-            v_tmp_md.push_back(_v_meta_data[i]);
-        }
+    _cur_play_idx -= n_tracks_before_cur_idx;
 
-        else{
-            if(i < _cur_play_idx) _cur_play_idx--;
-            else if(i == _cur_play_idx) _cur_play_idx = -1;
-        }
-    }
+    if(_cur_play_idx < 0 )
+        _cur_play_idx = -1;
 
-    if(_cur_play_idx < -1) _cur_play_idx = -1;
+    else
+        v_tmp_md[_cur_play_idx].pl_playing = true;
+
     _v_meta_data = v_tmp_md;
 
     psl_save_playlist_to_storage();

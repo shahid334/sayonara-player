@@ -127,9 +127,12 @@ public slots:
 
 private slots:
 
-	void artist_pressed(const QModelIndex &);
-	void album_pressed(const QModelIndex &);
-	void track_pressed(const QModelIndex&);
+    void artist_pressed(const QModelIndex & = QModelIndex());
+    void artist_released(const QModelIndex & = QModelIndex());
+    void album_pressed(const QModelIndex & = QModelIndex());
+    void album_released(const QModelIndex & = QModelIndex());
+    void track_pressed(const QModelIndex& = QModelIndex());
+    void track_released(const QModelIndex & = QModelIndex());
 	void track_info_available(const MetaDataList& v_md);
 
 	void clear_button_pressed();
@@ -148,6 +151,7 @@ private slots:
 	void show_artist_context_menu(const QPoint& p);
 	void show_album_context_menu(const QPoint& p);
 	void show_track_context_menu(const QPoint& p);
+
 
 	void artist_middle_clicked(const QPoint& p);
 	void album_middle_clicked(const QPoint& p);
@@ -195,6 +199,8 @@ private:
 
 	int show_delete_dialog(int n_tracks);
 	void refresh();
+
+    QList<int> calc_selections(int table);
 
 };
 
