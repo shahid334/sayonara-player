@@ -83,6 +83,11 @@ public:
 	private:
         Ui::GUI_Equalizer* _ui;
 		vector<EQ_Setting> _presets;
+
+        double _m;
+        double _t;
+
+        bool _dark;
 };
 
 #endif /* GUI_EQUALIZER_H_ */

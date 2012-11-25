@@ -30,6 +30,8 @@
 #include "HelperStructs/Style.h"
 #include <QString>
 
+#include <sstream>
+
 #define NEWLINE "\n";
 
 
@@ -601,12 +603,44 @@ QString Style::get_spinbox_style(bool dark){
 }
 
 
-QString Style::get_v_slider_style(bool dark){
+QString Style::get_v_slider_style(bool dark, int percent){
     if(!dark) return "";
 
     QString darker_grey = "#2B2B2B";
     QString dark_grey = "#525252";
+
+
+
     QString orange = "#e8841a";
+    QString back_col = orange;
+
+    if(percent > 0)
+    {
+        double p = percent * 1.0 / 100.0;
+        int r, g, b;
+        b = 0;
+        if(p < 0.6) {
+            r=255;
+        }
+
+        else {
+            r = (-255.0 / 0.6) * (p-0.6) + 255;
+        }
+
+        g = (255.0) * p;
+
+
+        QString s_r;
+        QString s_g;
+        QString s_b;
+
+        s_r.sprintf("%02X", r);
+        s_g.sprintf("%02X", g);
+        s_b.sprintf("%02X", b);
+
+
+        back_col = "#" + s_r + s_g + s_b;
+    }
 
 
     QString style =  QString("QSlider {") +
@@ -642,15 +676,19 @@ QString Style::get_v_slider_style(bool dark){
 
 
         "QSlider::add-page:vertical {"+
-        "    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, "  +
+        /*"    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, "  +
         "          stop:0 #E88417, stop: 0.3 #C46600, " +
-        "          stop: 0.7 #C46600, stop:1 #E88417); " +
+        "          stop: 0.7 #C46600, stop:1 #E88417); " +*/
+        //"      background-color: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 rgba(255, 0, 0, 255), stop:0.505051 rgba(255, 228, 0, 255), stop:1 rgba(55, 239, 78, 255)); "
+
+        "    background-color: " + back_col + "; "
         "    border-radius: 2px;" +
 
        "}"+
 
         "QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {"+
         "   background: " + darker_grey + ";"+
+        //     "    background-color: " + back_col + "; "
         "   border-radius: 2px;" +
 
         "}";

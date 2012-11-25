@@ -55,7 +55,7 @@ namespace Style{
     QString get_spinbox_style(bool dark);
 
     QString get_sayonara_orange_str();
-    QString get_v_slider_style(bool dark);
+    QString get_v_slider_style(bool dark, int percent = -1);
     QString get_h_slider_style(bool dark);
     QString get_cb_style(bool dark);
     QString get_rb_style(bool dark);
