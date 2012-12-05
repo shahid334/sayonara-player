@@ -33,6 +33,9 @@
 #include <QApplication>
 #include <QStringList>
 #include <QDebug>
+#include <knotification.h>
+#include "HelperStructs/Helper.h"
+
 
 
 
@@ -45,14 +48,12 @@ void printHelp(){
 
 int main(int argc, char *argv[]){
 
-    QDir d("/media/media/Sound/16_horsepower/../(2001) 16 Horsepower  - Hoarse/(2001) 16 Horsepower  - Hoarse");
-    qDebug() << d.absolutePath();
+	//KNotification::event("My event", "Sayonara", "Starting");
 
 
-
-		if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
-			QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
-		}
+   	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
+		QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
+	}
 
 		QApplication app (argc, argv);
             app.setApplicationName("Sayonara");

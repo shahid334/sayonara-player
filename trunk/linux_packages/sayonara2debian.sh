@@ -62,6 +62,6 @@ cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara
 
-dpkg-deb -b $DEBIAN_DIR $DEBIAN_DIR/$OUTPUT_FILE
-echo Written to $DEBIAN_DIR/$OUTPUT_FILE
+dpkg-deb -b $DEBIAN_DIR $OUTPUT_FILE
+echo Written to $OUTPUT_FILE
 
