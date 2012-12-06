@@ -974,6 +974,7 @@
     <addaction name="action_notifications"/>
     <addaction name="action_load_playlist"/>
     <addaction name="action_min2tray"/>
+    <addaction name="action_only_one_instance"/>
     <addaction name="separator"/>
     <addaction name="action_SocketConnection"/>
    </widget>
@@ -1134,6 +1135,14 @@
    </property>
    <property name="text">
     <string>Close to tray</string>
+   </property>
+  </action>
+  <action name="action_only_one_instance">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Only one instance</string>
    </property>
   </action>
   <action name="action_Fullscreen">

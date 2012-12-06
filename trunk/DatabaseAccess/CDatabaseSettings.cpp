@@ -230,6 +230,9 @@ bool CDatabaseConnector::load_settings(){
 	bool show_playlist_numbers = load_setting_bool("show_playlist_numbers");
 	settings->setPlaylistNumbers(show_playlist_numbers);
 
+	bool allow_only_one_instance = load_setting_bool("only_one_instance", true);
+	settings->setAllowOnlyOneInstance(allow_only_one_instance);
+
 	return true;
 }
 
@@ -296,10 +299,8 @@ bool CDatabaseConnector::store_settings(){
 	bool show_library = storage->getShowLibrary();
 	store_setting("show_library", show_library);
 
-
 	int shown_plugin = storage->getShownPlugin();
 	store_setting("shown_plugin", shown_plugin);
-    qDebug() << "Db: shown plugin = " << shown_plugin;
 
 	bool min2tray = storage->getMinimizeToTray();
 	store_setting("min_to_tray", min2tray);
@@ -336,6 +337,9 @@ bool CDatabaseConnector::store_settings(){
 
 	bool show_playlist_numbers = storage->getPlaylistNumbers();
 	store_setting("show_playlist_numbers", show_playlist_numbers);
+
+	bool allow_only_one_instance = storage->getAllowOnlyOneInstance();
+	store_setting("only_one_instance", allow_only_one_instance);
 
 	m_database.commit();
 	return true;

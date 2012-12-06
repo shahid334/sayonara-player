@@ -39,11 +39,31 @@
 #include <QFileDialog>
 #include <QPalette>
 
+GUI_SimplePlayer* obj_ref = 0;
+void signal_handler(int sig);
+
+#ifdef Q_OS_UNIX
+#include <signal.h>
+
+
+void signal_handler(int sig){
+	if(sig == SIGWINCH && obj_ref){
+		qDebug() << "show everything";
+		obj_ref->setHidden(false);
+		obj_ref->showNormal();
+		obj_ref->activateWindow();
+	}
+}
+
+#endif
+
 
 GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     QMainWindow(parent), ui(new Ui::SimplePlayer), VOLUME_STEP_SIZE_PERC (5){
 	ui->setupUi(this);
 	initGUI();
+
+
 
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
@@ -84,6 +104,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 
     this->ui->action_min2tray->setChecked(m_min2tray);
+    this->ui->action_only_one_instance->setChecked(settings->getAllowOnlyOneInstance());
 
 	bool loadPlaylistChecked = settings->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
@@ -111,7 +132,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	this->ui->plugin_widget->resize(this->ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
-
 }
 
 
@@ -229,6 +249,9 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(load_pl_on_startup_toggled(bool)));
 	connect(this->ui->action_min2tray, SIGNAL(toggled(bool)), this,
 			SLOT(min2tray_toggled(bool)));
+	connect(this->ui->action_only_one_instance, SIGNAL(toggled(bool)), this,
+				SLOT(only_one_instance_toggled(bool)));
+
 	connect(this->ui->action_streamrecorder, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_streamripper_toggled(bool)));
     connect(this->ui->action_notifications, SIGNAL(triggered(bool)), ui_notifications,
@@ -1144,6 +1167,10 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 
 void GUI_SimplePlayer::ui_loaded(){
 
+	#ifdef Q_OS_UNIX
+		obj_ref = this;
+		signal(SIGWINCH, signal_handler);
+	#endif
 
     emit skinChanged(CSettingsStorage::getInstance()->getPlayerStyle() == 1);
 }

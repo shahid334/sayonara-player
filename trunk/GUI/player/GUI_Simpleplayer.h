@@ -81,6 +81,7 @@ public slots:
 
     void psl_strrip_set_active(bool);
     void setVolume(int vol);
+    void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
 
 
 
@@ -135,11 +136,7 @@ private slots:
     void coverClicked();
     void muteButtonPressed();
 
-
-    void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
-
     void showLibrary(bool);
-
     void changeSkin(bool);
     void lastFMClicked(bool b = true);
     void reloadLibraryClicked(bool b = true);
@@ -155,6 +152,7 @@ private slots:
 
     void show_notification_toggled(bool);
     void min2tray_toggled(bool);
+    void only_one_instance_toggled(bool);
     void small_playlist_items_toggled(bool);
 
     void sl_action_streamripper_toggled(bool);

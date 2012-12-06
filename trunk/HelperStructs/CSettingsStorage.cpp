@@ -353,6 +353,13 @@ void CSettingsStorage::setPlaylistNumbers(bool b){
 }
 
 
+bool CSettingsStorage::getAllowOnlyOneInstance(){
+	return m_allow_only_one_instance;
+}
 
+void CSettingsStorage::setAllowOnlyOneInstance(bool b){
+	m_allow_only_one_instance = b;
+	CDatabaseConnector::getInstance()->store_settings();
+}
 
 

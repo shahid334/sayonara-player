@@ -181,6 +181,10 @@ void GUI_SimplePlayer::min2tray_toggled(bool b){
 	m_min2tray = b;
 }
 
+void GUI_SimplePlayer::only_one_instance_toggled(bool b){
+	CSettingsStorage::getInstance()->setAllowOnlyOneInstance(b);
+}
+
 // prvt slot
 void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
 	CSettingsStorage::getInstance()->setShowSmallPlaylist(b);
@@ -202,6 +206,7 @@ void GUI_SimplePlayer::lastFMClicked(bool b) {
 }
 
 /** PREFERENCES END **/
+
 
 
 // private slot

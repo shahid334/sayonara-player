@@ -33,9 +33,51 @@
 #include <QApplication>
 #include <QStringList>
 #include <QDebug>
+
+#include <QDir>
+#include <QFile>
+#include <QString>
+#include <QStringList>
+
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/CSettingsStorage.h"
 
+int check_for_another_instance_unix(){
 
+	int pid = -1;
+
+	QDir dir("/proc");
+	dir.cd(".");
+	QStringList lst = dir.entryList(QDir::Dirs);
+	int n_instances = 0;
+
+	foreach(QString dirname, lst){
+		bool ok;
+		int tmp_pid = dirname.toInt(&ok);
+		if(!ok) continue;
+
+		dir.cd(dirname);
+
+		QFile f(dir.absolutePath() + QDir::separator() + "cmdline");
+		f.open(QIODevice::ReadOnly);
+		if(!f.isOpen()) {
+			dir.cd("..");
+			continue;
+		}
+
+		QString str = f.readLine();
+		f.close();
+
+		if(str.contains("sayonara", Qt::CaseInsensitive)){
+			if(pid == -1 || tmp_pid < pid) pid = tmp_pid;
+			n_instances ++;
+			if(n_instances > 1) return pid;
+		}
+		dir.cd("..");
+	}
+
+	return 0;
+}
 
 
 void printHelp(){
@@ -46,6 +88,26 @@ void printHelp(){
 
 
 int main(int argc, char *argv[]){
+
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+	settings->runFirstTime(false);
+
+	CDatabaseConnector::getInstance()->load_settings();
+
+
+
+#ifdef Q_OS_UNIX
+	if(settings->getAllowOnlyOneInstance()){
+		int pid = check_for_another_instance_unix();
+		if(pid > 0) {
+			qDebug() << "another instance is already running";
+			QString kill_cmd = "kill -s 28 " + QString::number(pid);
+			int success = system(kill_cmd.toLocal8Bit());
+			Q_UNUSED(success);
+			return 0;
+		}
+	}
+#endif
 
    	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
 		QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
@@ -63,6 +125,7 @@ int main(int argc, char *argv[]){
 		}
 
 		Application application(&app);
+		if(!application.is_initialized()) return 0;
 		application.setFiles2Play(params);
 
         app.exec();

@@ -141,6 +141,8 @@ private:
     int		m_socket_from;
     int		m_socket_to;
 
+    bool	m_allow_only_one_instance;
+
 public:
 
     QString getVersion();
@@ -236,6 +238,9 @@ public:
 
 	bool getPlaylistNumbers();
 	void setPlaylistNumbers(bool b);
+
+	bool getAllowOnlyOneInstance();
+	void setAllowOnlyOneInstance(bool b);
 
 };
 

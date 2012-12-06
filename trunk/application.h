@@ -42,6 +42,8 @@
 #include "playlists/Playlists.h"
 #include "Socket/Socket.h"
 
+
+
 class CLibraryBase;
 class Application : public QObject
 {
@@ -82,12 +84,16 @@ private:
     CSettingsStorage*       set;
     QApplication*           app;
 
+    bool					_initialized;
+
+
 
     void init_connections();
 
 public:
     void setFiles2Play(QStringList filelist);
     QMainWindow* getMainWindow();
+    bool is_initialized();
 
 
 private:

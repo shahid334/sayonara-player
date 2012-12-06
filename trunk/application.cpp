@@ -33,25 +33,33 @@
 #include "playlists/Playlists.h"
 #include "Socket/Socket.h"
 
+
 #include <QMap>
+#include <QSharedMemory>
 
 #include <fstream>
 #include <string>
 
 using namespace std;
 
+bool Application::is_initialized(){
+	return _initialized;
+
+}
+
+
+
 Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
-{   QString version    = getVersion();
-    app                = qapp;
+{
 
+	app                = qapp;
 
-    set                 = CSettingsStorage::getInstance();
-    set  -> runFirstTime(false);
-    CDatabaseConnector::getInstance()->load_settings();
-    set->setVersion( version );
+	set                 = CSettingsStorage::getInstance();
+
+	QString version    = getVersion();
+	set->setVersion( version );
 
     int shown_plugin = set->getShownPlugin();
-    qDebug() << "get shown Plugin: " << shown_plugin;
 
     player              = new GUI_SimplePlayer();
 
@@ -141,6 +149,8 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
     player->check_show_plugins();
+
+    _initialized = true;
 }
 
 Application::~Application(){
@@ -203,7 +213,6 @@ void Application::init_connections(){
    CONNECT (player, skinChanged(bool),                      ui_stream,          changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_lfm_radio, 		changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_playlist_chooser, changeSkin(bool));
-
    CONNECT (player, skinChanged(bool),                      ui_info_dialog,     changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_stream_rec,      changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_id3_editor,      changeSkin(bool));

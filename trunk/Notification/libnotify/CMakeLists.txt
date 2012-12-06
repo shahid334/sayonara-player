@@ -6,11 +6,9 @@ include(FindPkgConfig)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
 
-
-
 #if(LIBNOTIFY_FOUND)
 
-pkg_check_modules(LIBNOTIFY libnotify)
+pkg_check_modules(LIBNOTIFY libnotify>=0.7.0)
 
 if (LIBNOTIFY_FOUND)
 
