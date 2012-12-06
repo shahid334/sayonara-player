@@ -290,11 +290,13 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 	}
 
 	UrlParams data;
-
-        data["session"] = _session_key;
+        //data["session"] = _session_key2;
+        //data["session"] = "504cc0a6892cea53a69771d9bfb7bb18";
+        data["session"] = _session_key2;
 		data["lang"] = QString("en");
 		data["url"] = QUrl::toPercentEncoding( lfm_radio_station );
-        data["api_key"] = LFM_API_KEY;
+        data["api_key"] = "9d1bbaef3b443eb97973d44181";
+
 
 	QString url = lfm_wa_create_std_url( QString("http://ws.audioscrobbler.com/radio/adjust.php"), data );
 	QString response;
