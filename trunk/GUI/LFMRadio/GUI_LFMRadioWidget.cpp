@@ -79,6 +79,8 @@ void GUI_LFMRadioWidget::changeSkin(bool dark){
 
 void GUI_LFMRadioWidget::start_listen(){
 
+
+
 	bool text_input = false;
 	int lfm_listen_mode = LFM_RADIO_MODE_TAG;
 
@@ -104,8 +106,11 @@ void GUI_LFMRadioWidget::start_listen(){
 	else
 		text = _ui->cb_friends->currentText();
 
-	if(text.size() >= 3)
-		emit listen_clicked(text, lfm_listen_mode);
+    if(text.size() >= 3){
+        qDebug() << "Listen to " << lfm_listen_mode;
+        emit listen_clicked(text, lfm_listen_mode);
+
+    }
 }
 
 void GUI_LFMRadioWidget::radio_button_changed(){

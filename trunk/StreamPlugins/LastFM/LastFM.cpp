@@ -290,12 +290,15 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 	}
 
 	UrlParams data;
-		data["session"] = _session_key2;
+
+        data["session"] = _session_key;
 		data["lang"] = QString("en");
 		data["url"] = QUrl::toPercentEncoding( lfm_radio_station );
+        data["api_key"] = LFM_API_KEY;
 
 	QString url = lfm_wa_create_std_url( QString("http://ws.audioscrobbler.com/radio/adjust.php"), data );
 	QString response;
+    qDebug() << "Call url " << url;
 	bool success = lfm_wa_call_url(url, response);
     emit sig_radio_initialized(success);
 

@@ -19,6 +19,8 @@ Libraries
 	* Gstreamer 0.10 + development files (libgstreamer0.10, libgstreamer-plugins-base0.10)
 	* libcurl
 
+	* OPTIONAL: For notifications: libnotify + development files
+
 	= Build =
 
 	* cmake .
@@ -30,6 +32,9 @@ Libraries
 	
 		* sudo apt-get install libqt4-dev libqtcore4 libtaglib2.0-cil libcurl4-gnutls-dev \
                   libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev cmake
+
+		* for notifications
+		  sudo apt-get install libnotify-dev
 
 
 2. Windows

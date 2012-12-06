@@ -71,6 +71,7 @@ void LFMLoginThread::run(){
 
     resp_handshake.replace("session=", "");
      _login_info.sessionKey2 = resp_handshake.left(32);
+     qDebug() << "session key 2 = " << _login_info.sessionKey2;
 
 }
 

@@ -119,12 +119,15 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 	if(lfm_webpage_bytes > 0){
+
 		response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
+
 		lfm_wa_free_webpage();
 		return true;
 	}
 
 	else {
+
 		lfm_wa_free_webpage();
 		return false;
 	}
@@ -206,6 +209,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
 	if(lfm_webpage_bytes > 0){
+
 		QString xmlString = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
 		doc.setContent(xmlString, false);
 		lfm_wa_free_webpage();
