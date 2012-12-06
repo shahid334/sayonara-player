@@ -29,10 +29,23 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include <QString>
+#include <QDebug>
 
-#include <sstream>
+
 
 #define NEWLINE "\n";
+
+QString Style::get_style(bool dark){
+	QString style = "";
+
+	if(!dark) return style;
+	else{
+
+		Helper::read_file_into_str("/usr/share/sayonara/style.css", style);
+		qDebug() << style;
+		return style;
+	}
+}
 
 
 static QString get_fg_color(int val_bg, bool with_str=true){
@@ -140,10 +153,6 @@ QString Style::get_pushbutton_style(bool dark){
                  "color: " + lighter_grey + ";" +
                  "background: " + dark_grey + ";" +
                 "}";
-
-
-
-
 
     return style;
 }

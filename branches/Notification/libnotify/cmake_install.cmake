@@ -1,4 +1,4 @@
-# Install script for directory: /home/IGEL/lugmair/sayonara-player/Notification/libnotify
+# Install script for directory: /home/IGEL/lugmair/sayonara-player/branches/Notification/libnotify
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)

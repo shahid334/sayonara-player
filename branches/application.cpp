@@ -207,7 +207,7 @@ void Application::init_connections(){
    CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
    CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
 
-   CONNECT (player, skinChanged(bool),                      ui_playlist, 		change_skin(bool));
+   /*CONNECT (player, skinChanged(bool),                      ui_playlist, 		change_skin(bool));
    CONNECT (player, skinChanged(bool),                      ui_library, 		change_skin(bool));
    CONNECT (player, skinChanged(bool),                      ui_eq,              changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_stream,          changeSkin(bool));
@@ -216,7 +216,7 @@ void Application::init_connections(){
    CONNECT (player, skinChanged(bool),                      ui_info_dialog,     changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_stream_rec,      changeSkin(bool));
    CONNECT (player, skinChanged(bool),                      ui_id3_editor,      changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_lastfm,          changeSkin(bool));
+   CONNECT (player, skinChanged(bool),                      ui_lastfm,          changeSkin(bool));*/
 
 
 	   CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND

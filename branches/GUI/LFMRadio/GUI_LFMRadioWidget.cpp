@@ -66,15 +66,7 @@ GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
 }
 
 void GUI_LFMRadioWidget::changeSkin(bool dark){
-    QString rb_style = Style::get_rb_style(dark);
 
-    this->_ui->cb_friends->setStyleSheet(Style::get_combobox_style(dark));
-    this->_ui->le_text->setStyleSheet(Style::get_lineedit_style(dark));
-    this->_ui->btn_listen->setStyleSheet(Style::get_pushbutton_style(dark));
-    this->_ui->rb_artist->setStyleSheet(rb_style);
-    this->_ui->rb_recom->setStyleSheet(rb_style);
-    this->_ui->rb_tag->setStyleSheet(rb_style);
-    this->_ui->rb_user->setStyleSheet(rb_style);
 }
 
 void GUI_LFMRadioWidget::start_listen(){

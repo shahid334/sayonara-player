@@ -564,47 +564,14 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
     m_dark = dark;
 
-	QString menu_style = Style::get_menu_style(dark);
-
-	this->ui->menubar->setStyleSheet(Style::get_menubar_style(dark));
-	this->ui->menuFle->setStyleSheet(menu_style);
-	this->ui->menuPreferences->setStyleSheet(menu_style);
-	this->ui->menuView->setStyleSheet(menu_style);
-	this->ui->menuAbout->setStyleSheet(menu_style);
-    this->ui->songProgress->setStyleSheet(Style::get_h_slider_style(dark));
-	this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
-
-    this->m_alternate_covers->changeSkin(dark);
-    this->ui_notifications->change_skin(dark);
-
-    QString style = Style::get_btn_style(dark, 8);
-    this->ui->btn_mute->setStyleSheet(style);
-    this->ui->btn_play->setStyleSheet(style);
-    this->ui->btn_fw->setStyleSheet(style);
-    this->ui->btn_bw->setStyleSheet(style);
-    this->ui->btn_stop->setStyleSheet(style);
-    this->ui->btn_rec->setStyleSheet(style);
-    this->ui->btn_correct->setStyleSheet(style);
+	QString stylesheet = Style::get_style(dark);
+	this->setStyleSheet(stylesheet);
 
 	if (dark) {
-
-        this->ui->centralwidget->setStyleSheet(
-                "background-color: " + Style::get_player_back_color() +
-                "; color: #D8D8D8;");
-
-        this->setStyleSheet(
-                    "background-color: " +
-                    Style::get_player_back_color() + ";"
-                    + " color: #D8D8D8;");
-
 		m_skinSuffix = QString("_dark");
 	}
 
 	else {
-		this->ui->centralwidget->setStyleSheet("");
-		this->ui->playlist_widget->setStyleSheet("");
-		this->setStyleSheet("");
-		this->ui->menuView->setStyleSheet("");
 		m_skinSuffix = QString("");
 	}
 

@@ -67,13 +67,5 @@ void GUI_Notifications::ok_clicked(){
 
 
 void GUI_Notifications::change_skin(bool dark){
-    QString style_combobox = Style::get_combobox_style(dark);
-    QString style_btn = Style::get_pushbutton_style(dark);
-    QString style_sb = Style::get_spinbox_style(dark);
-    QString style_cb = Style::get_cb_style(dark);
 
-    ui->btn_ok->setStyleSheet(style_btn);
-    ui->combo_notification->setStyleSheet(style_combobox);
-    ui->sb_timeout->setStyleSheet(style_sb);
-    ui->cb_activate->setStyleSheet(style_cb);
 }

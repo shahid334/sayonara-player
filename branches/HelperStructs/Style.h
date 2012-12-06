@@ -37,6 +37,7 @@
 
 namespace Style{
 
+	QString get_style(bool dark);
 
     QString get_tv_style(bool dark, QPalette* p=0);
 	QString get_player_back_color();
