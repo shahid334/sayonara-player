@@ -30,8 +30,10 @@
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/Notifications/GUI_Notifications.h"
 #include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
+#include "Notification/Notification.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -163,10 +165,9 @@ private slots:
     void really_close();
     void really_close(bool);
 
-
+    void notification_changed(bool active, int ms);
 
     void about(bool b=false);
-
 
 protected:
 
@@ -192,6 +193,7 @@ private:
     GUI_Stream*					ui_stream;
     GUI_LFMRadioWidget*			ui_lfm_radio;
     GUI_InfoDialog*             ui_info_dialog;
+    GUI_Notifications*          ui_notifications;
     CoverLookup*				m_cov_lookup;
 
 
@@ -227,7 +229,6 @@ private:
     int 						m_library_width;
     int							m_library_stretch_factor;
     bool						m_suppress_warning;
-
 
     QString getLengthString (quint32 length_ms) const;
 

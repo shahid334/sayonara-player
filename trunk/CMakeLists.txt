@@ -7,9 +7,11 @@ INCLUDE(FindPkgConfig)
 PKG_CHECK_MODULES(GSTREAMER gstreamer-0.10)
 PKG_CHECK_MODULES(GSTREAMER_BASE gstreamer-base-0.10)
 PKG_CHECK_MODULES(GLIB glib-2.0)
+PKG_CHECK_MODULES(GOBJECT gobject-2.0)
+
 PKG_CHECK_MODULES(TAGLIB REQUIRED taglib>=1.6)
 PKG_CHECK_MODULES(CURL REQUIRED libcurl)
-PKG_CHECK_MODULES(GOBJECT gobject-2.0)
+
 
 SET(CMAKE_BUILD_TYPE "Release")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
@@ -47,8 +49,9 @@ ADD_SUBDIRECTORY(Notification/libnotify)
 SET(HEADERS
     application.h
     Engine/Engine.h
-    Notification/Notification.h
     Engine/SoundPluginLoader.h
+    Notification/Notification.h
+    Notification/NotificationPluginLoader.h
     GUI/player/GUI_Simpleplayer.h
     GUI/player/GUI_TrayIcon.h
     GUI/player/SearchSlider.h
@@ -92,15 +95,15 @@ SET(HEADERS
     GUI/LFMRadio/GUI_LFMRadioWidget.h
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
+    GUI/Notifications/GUI_Notifications.h
     Socket/Socket.h
-
-    HelperStructs/MetaData.h
 )
 
 SET(SOURCES
     Main.cpp
     application.cpp
     Engine/SoundPluginLoader.cpp
+    Notification/NotificationPluginLoader.cpp
     GUI/player/GUI_Simpleplayer.cpp
     GUI/player/GUI_SimpleplayerPlugins.cpp
     GUI/player/GUI_SimpleplayerMenubar.cpp
@@ -164,6 +167,7 @@ SET(SOURCES
     GUI/LFMRadio/GUI_LFMRadioWidget.cpp
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
+    GUI/Notifications/GUI_Notifications.cpp
     Socket/Socket.cpp
 
 
@@ -190,6 +194,7 @@ SET(FORMS
     GUI/SocketConfiguration/GUI_SocketSetup.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui
     GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
+    GUI/Notifications/GUI_Notifications.ui
 )
 
 SET(ICONS 
@@ -241,6 +246,7 @@ SET(ICONS
         GUI/icons/rb_checked.png
         GUI/icons/rb_checked_disabled.png
 	GUI/icons/logo.png
+        GUI/icons/logo_small.png
 )
 
 

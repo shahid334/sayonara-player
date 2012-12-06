@@ -19,6 +19,8 @@
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
+#include "Notification/Notification.h"
+#include "Notification/NotificationPluginLoader.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Helper.h"
@@ -85,8 +87,8 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     dir = app->applicationDirPath();
 #endif
 
-    plugin_loader = new SoundPluginLoader(dir);
-    listen = plugin_loader->get_cur_engine();
+    engine_plugin_loader = new SoundPluginLoader(dir);
+    listen = engine_plugin_loader->get_cur_engine();
     if(!listen){
         qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
     }
@@ -139,7 +141,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
     player->check_show_plugins();
-
 }
 
 Application::~Application(){
@@ -189,7 +190,7 @@ void Application::init_connections(){
    CONNECT (player, sig_stream_selected(const QString&, const QString&), 		playlist, psl_play_stream(const QString&, const QString&));
 
    CONNECT (player, show_small_playlist_items(bool),		ui_playlist,		psl_show_small_playlist_items(bool));
-   CONNECT (player, sig_sound_engine_changed(QString&), 	plugin_loader,      psl_switch_engine(QString&));
+   CONNECT (player, sig_sound_engine_changed(QString&), 	engine_plugin_loader,      psl_switch_engine(QString&));
 
    CONNECT (player, show_playlists(),						ui_playlist_chooser, 	show()); // IND
    CONNECT (player, setupLastFM(),                          ui_lastfm,              show_win()); // IND

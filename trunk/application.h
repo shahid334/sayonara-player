@@ -24,9 +24,13 @@
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
+#include "Notification/Notification.h"
+#include "Notification/NotificationPluginLoader.h"
+
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Helper.h"
@@ -71,8 +75,10 @@ private:
     GUI_SocketSetup*		ui_socket_setup;
     Socket*					remote_socket;
 
-    SoundPluginLoader*      plugin_loader;
-    Engine*                 listen;
+
+    SoundPluginLoader*          engine_plugin_loader;
+    Engine*                     listen;
+
     CSettingsStorage*       set;
     QApplication*           app;
 

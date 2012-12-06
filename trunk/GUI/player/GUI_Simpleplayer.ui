@@ -960,7 +960,6 @@
     <addaction name="action_ViewLFMRadio"/>
     <addaction name="action_ViewPlaylistChooser"/>
     <addaction name="separator"/>
-    <addaction name="action_notification"/>
     <addaction name="action_Dark"/>
     <addaction name="action_Fullscreen"/>
    </widget>
@@ -972,6 +971,7 @@
     <addaction name="action_lastFM"/>
     <addaction name="action_streamrecorder"/>
     <addaction name="separator"/>
+    <addaction name="action_notifications"/>
     <addaction name="action_load_playlist"/>
     <addaction name="action_min2tray"/>
     <addaction name="separator"/>
@@ -1194,6 +1194,11 @@
   <action name="action_SocketConnection">
    <property name="text">
     <string>Socket connection</string>
+   </property>
+  </action>
+  <action name="action_notifications">
+   <property name="text">
+    <string>Notifications</string>
    </property>
   </action>
  </widget>

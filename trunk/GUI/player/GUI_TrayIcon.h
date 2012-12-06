@@ -22,10 +22,15 @@
 #ifndef GUI_TRAYICON_H
 #define GUI_TRAYICON_H
 
+#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/MetaData.h"
+
+#include "Notification/Notification.h"
+#include "Notification/NotificationPluginLoader.h"
 
 #include <QSystemTrayIcon>
 #include <QAction>
+
 
 
 /**
@@ -46,11 +51,13 @@ public:
                         QAction* showAction);
 
     virtual bool event ( QEvent * e );
+    void set_timeout(int timeout_ms);
+    void set_notification_active(bool active);
 
 public slots:
     void playStateChanged (bool playing);
     void trackChanged(const MetaData& md);
-    void songChangedMessage (const QString & message);
+    void songChangedMessage (const MetaData& md);
 
 
 signals:
@@ -65,7 +72,12 @@ signals:
 private:
     QIcon                   m_playIcon;
     QIcon                   m_pauseIcon;
-    const quint16           MESSAGE_TIMEOUT_MS;
+    int                     m_timeout;
+
+    NotificationPluginLoader* m_plugin_loader;
+
+    bool                    m_notification_active;
+    CSettingsStorage*       m_settings;
 };
 
 

@@ -64,7 +64,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 			if(plugin_eng){
 				QString name = plugin_eng->getName().toLower();
-				qDebug() << "Found plugin " << plugin_eng->getName();
+                qDebug() << "Found plugin " << plugin_eng->getName();
 				_lst_engines.push_back(plugin_eng);
 				if(name == target_engine){
 					_cur_engine = i;

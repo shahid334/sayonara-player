@@ -33,7 +33,6 @@
 #include <QApplication>
 #include <QStringList>
 #include <QDebug>
-#include <knotification.h>
 #include "HelperStructs/Helper.h"
 
 
@@ -47,9 +46,6 @@ void printHelp(){
 
 
 int main(int argc, char *argv[]){
-
-	//KNotification::event("My event", "Sayonara", "Starting");
-
 
    	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
 		QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");

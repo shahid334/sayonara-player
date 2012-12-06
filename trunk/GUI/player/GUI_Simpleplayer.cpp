@@ -65,6 +65,8 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui_eq = 0;
 	ui_stream = 0;
 
+    ui_notifications = new GUI_Notifications(this);
+
 	m_skinSuffix = "";
 	m_class_name = "Player";
 
@@ -85,9 +87,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	bool loadPlaylistChecked = settings->getLoadPlaylist();
 	this->ui->action_load_playlist->setChecked(loadPlaylistChecked);
-
-	bool loadShowNotifications = settings->getShowNotification();
-	this->ui->action_notification->setChecked(loadShowNotifications);
 
 	bool showSmallPlaylistItems = settings->getShowSmallPlaylist();
 	this->ui->action_smallPlaylistItems->setChecked(showSmallPlaylistItems);
@@ -213,8 +212,7 @@ void GUI_SimplePlayer::setupConnections(){
 				SLOT(show_playlist_chooser(bool)));
 	connect(this->ui->action_Dark, SIGNAL(toggled(bool)), this,
 			SLOT(changeSkin(bool)));
-	connect(this->ui->action_notification, SIGNAL(toggled(bool)), this,
-			SLOT(show_notification_toggled(bool)));
+
 	connect(this->ui->action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
 			SLOT(small_playlist_items_toggled(bool)));
 	connect(this->ui->action_Fullscreen, SIGNAL(toggled(bool)), this,
@@ -233,6 +231,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(min2tray_toggled(bool)));
 	connect(this->ui->action_streamrecorder, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_streamripper_toggled(bool)));
+    connect(this->ui->action_notifications, SIGNAL(triggered(bool)), ui_notifications,
+            SLOT(show()));
 	connect(this->ui->action_SocketConnection, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_socket_connection_triggered(bool)));
 
@@ -273,6 +273,11 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this->m_alternate_covers, SIGNAL(sig_covers_changed(QString)),
 			this,				SLOT(sl_alternate_cover_available(QString)));
 
+
+    // notifications
+    connect(this->ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
+            this, SLOT(notification_changed(bool,int)));
+
 }
 
 
@@ -293,10 +298,8 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	this->ui->artist->setText(md.artist);
 	this->ui->title->setText(md.title);
 
-	if( this->ui->action_notification->isChecked() ){
-        m_trayIcon->songChangedMessage(QString(
-                        "Currently playing: \"" + md.title + "\" by " + md.artist));
-	}
+
+    m_trayIcon->songChangedMessage(md);
 
 	m_trayIcon->setToolTip(QString("\"") +
 			md.title +
@@ -384,9 +387,7 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 	this->ui->artist->setText(m_metadata.artist);
 	this->ui->title->setText(m_metadata.title);
 
-	if( this->ui->action_notification->isChecked() ){
-		m_trayIcon->songChangedMessage(QString ("Currently playing: \"" + m_metadata.title + "\" by " + m_metadata.artist));
-	}
+    m_trayIcon->songChangedMessage(m_metadata);
 
 	this->setWindowTitle(QString("Sayonara - ") + m_metadata.title);
 
@@ -551,6 +552,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	this->ui->volumeSlider->setStyleSheet(Style::get_v_slider_style(dark));
 
     this->m_alternate_covers->changeSkin(dark);
+    this->ui_notifications->change_skin(dark);
 
     QString style = Style::get_btn_style(dark, 8);
     this->ui->btn_mute->setStyleSheet(style);
@@ -1148,4 +1150,11 @@ void GUI_SimplePlayer::ui_loaded(){
 
 void GUI_SimplePlayer::suppress_warning(bool b){
 	 m_suppress_warning = b;
+}
+
+void GUI_SimplePlayer::notification_changed(bool active, int timeout_ms){
+
+    m_trayIcon->set_timeout(timeout_ms);
+    m_trayIcon->set_notification_active(active);
+
 }

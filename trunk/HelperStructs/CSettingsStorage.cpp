@@ -216,6 +216,22 @@ void CSettingsStorage::setShowNotifications(bool active){
 	m_show_notifications = active;
 }
 
+void CSettingsStorage::setNotificationTimout(int timeout){
+    m_notification_timeout = timeout;
+}
+
+int CSettingsStorage::getNotificationTimeout(){
+    return m_notification_timeout;
+}
+
+void CSettingsStorage::setNotification(QString n){
+    m_notification_name = n;
+}
+
+QString CSettingsStorage::getNotification(){
+    return m_notification_name;
+}
+
 bool CSettingsStorage::getShowNotification(){
 	return m_show_notifications;
 }

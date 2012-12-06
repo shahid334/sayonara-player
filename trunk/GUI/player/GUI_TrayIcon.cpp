@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+#include "Notification/NotificationPluginLoader.h"
+#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "GUI/player/GUI_TrayIcon.h"
@@ -28,10 +29,11 @@
 #include <QDebug>
 #include <QIcon>
 #include <QPixmap>
+#include <Notification/Notification.h>
 
 
 
-GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent), MESSAGE_TIMEOUT_MS (5000) {
+GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent) {
 
     QPixmap play_pixmap = playIcon.pixmap(24, 24);
     m_playIcon = QIcon(play_pixmap);
@@ -39,8 +41,19 @@ GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QOb
     QPixmap pause_pixmap = pauseIcon.pixmap(24, 24);
     m_pauseIcon = QIcon(pause_pixmap);
 
+    m_settings = CSettingsStorage::getInstance();
+
+    m_plugin_loader = NotificationPluginLoader::getInstance();
+    m_notification_active = m_settings->getShowNotification();
+    m_timeout = m_settings->getNotificationTimeout();
+
     this -> setToolTip("Sayonara - Music - Player");
     this -> setIcon(playIcon);
+}
+
+
+GUI_TrayIcon::~GUI_TrayIcon() {
+
 }
 
 
@@ -73,11 +86,22 @@ bool GUI_TrayIcon::event ( QEvent * e ) {
     return true;
 }
 
-void GUI_TrayIcon::songChangedMessage (const QString & message) {
-    if (this -> isSystemTrayAvailable()) {
-        this -> showMessage("Sayonara",message,QSystemTrayIcon::Information,MESSAGE_TIMEOUT_MS);
+void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
+
+    if(m_notification_active){
+        Notification* n = m_plugin_loader->get_cur_plugin();
+
+        if(n){
+            n->notification_show(md.title, md.artist+ "\n" + md.album);
+        }
+
+        else if (this -> isSystemTrayAvailable()) {
+
+            this -> showMessage("Sayonara",md.title + " by " + md.artist,QSystemTrayIcon::Information, m_timeout);
+        }
     }
-    this -> setToolTip(message);
+
+    this -> setToolTip(md.title + " by " + md.artist);
 }
 
 void GUI_TrayIcon::playStateChanged (bool playing) {
@@ -91,8 +115,14 @@ void GUI_TrayIcon::playStateChanged (bool playing) {
 
 void GUI_TrayIcon::trackChanged(const MetaData& md){
 	this->setToolTip(md.title + " by " + md.artist);
+    songChangedMessage(md);
 }
 
-GUI_TrayIcon::~GUI_TrayIcon() {
-
+void  GUI_TrayIcon::set_timeout(int timeout_ms){
+    m_timeout = timeout_ms;
 }
+
+void  GUI_TrayIcon::set_notification_active(bool active){
+    m_notification_active = active;
+}
+

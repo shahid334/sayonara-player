@@ -171,6 +171,12 @@ bool CDatabaseConnector::load_settings(){
 	bool show_notifications = load_setting_bool("show_notifications");
 	settings->setShowNotifications(show_notifications);
 
+    int notification_timeout = load_setting_int("notification_timeout", 5000);
+    settings->setNotificationTimout(notification_timeout);
+
+    QString notification_name = load_setting_string("notification_name", "Standard");
+    settings->setNotification(notification_name);
+
 	/* show library */
 	bool show_library = load_setting_bool("show_library", true);
 	settings->setShowLibrary(show_library);
@@ -280,6 +286,12 @@ bool CDatabaseConnector::store_settings(){
 
 	bool show_notifications = storage->getShowNotification();
 	store_setting("show_notifications", show_notifications);
+
+    int notification_timeout = storage->getNotificationTimeout();
+    store_setting("notification_timeout", notification_timeout);
+
+    QString notification_name = storage->getNotification();
+    store_setting("notification_name", notification_name);
 
 	bool show_library = storage->getShowLibrary();
 	store_setting("show_library", show_library);

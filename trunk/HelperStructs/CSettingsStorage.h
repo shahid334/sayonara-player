@@ -92,8 +92,6 @@ private:
     int	m_volume;
     int m_last_eq;
 
-    bool m_show_notifications;
-
 
     vector<EQ_Setting> m_vec_eqSettings;
 
@@ -132,6 +130,11 @@ private:
 
     /* sound engine */
     QString m_sound_engine;
+
+    /* notifications */
+    bool    m_show_notifications;
+    int     m_notification_timeout;
+    QString m_notification_name;
 
     /* socket stuff */
     bool	m_socket_activated;
@@ -182,6 +185,12 @@ public:
 
 	void setShowNotifications(bool);
 	bool getShowNotification();
+
+    void setNotificationTimout(int);
+    int getNotificationTimeout();
+
+    void setNotification(QString);
+    QString getNotification();
 
 	void setLastFMSessionKey(QString);
 	QString getLastFMSessionKey();
