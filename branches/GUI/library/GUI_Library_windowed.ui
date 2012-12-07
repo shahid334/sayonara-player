@@ -69,6 +69,9 @@
      <property name="horizontalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
      <property name="gridStyle">
       <enum>Qt::DotLine</enum>
      </property>
@@ -131,6 +134,9 @@
      </property>
      <property name="horizontalScrollMode">
       <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
      </property>
      <property name="gridStyle">
       <enum>Qt::DotLine</enum>
@@ -205,7 +211,7 @@
       <enum>QAbstractItemView::ScrollPerPixel</enum>
      </property>
      <property name="showGrid">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="gridStyle">
       <enum>Qt::DotLine</enum>

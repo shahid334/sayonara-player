@@ -36,43 +36,24 @@
 #define NEWLINE "\n";
 
 QString Style::get_style(bool dark){
-	QString style = "";
 
-    if(!dark) return style;
-	else{
+    QString style;
 
-        Helper::read_file_into_str("/usr/share/sayonara/style.css", style);
-        return style;
-	}
+    if(!dark)
+        Helper::read_file_into_str(Helper::getSharePath() + "/standard.css", style);
+
+    else
+        Helper::read_file_into_str(Helper::getSharePath() + "/dark.css", style);
+
+
+    return style;
 }
 
 
 QString Style::get_tv_style(bool dark, QPalette* p){
 
-    if(!dark) return "";
 
-    QString style;
-
-
-    int highlight_val;
-    if(p){
-        QColor col_highlight = p->color(QPalette::Active, QPalette::Highlight);
-        highlight_val = col_highlight.lightness();
-    }
-
-    else highlight_val = 255;
-
-    QString fg_color = "#D8D8D8";
-    if(p){
-        p->setColor(QPalette::Active, QPalette::HighlightedText, QColor(0, 0, 0));
-    }
-
-    style = QString("border: 1px solid #282828; "
-                    "background-color: #2C2C2C;  "
-                    "alternate-background-color: #242424; "
-                    /*"color: #D8D8D8;"*/);
-
-    return  style;
+    return  "";
 
 }
 

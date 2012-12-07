@@ -130,6 +130,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	ui->plugin_widget->resize(ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
+
     changeSkin(settings->getPlayerStyle() == 1);
 }
 
@@ -501,9 +502,8 @@ void GUI_SimplePlayer::setStyle(int style){
 
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
-    ui_eq->changeSkin(dark);
+    QString stylesheet = Style::get_style(dark);
 
-	QString stylesheet = Style::get_style(dark);
 	this->setStyleSheet(stylesheet);
 
 	if (dark) 	m_skinSuffix = QString("_dark");
@@ -511,13 +511,14 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
 
-	setupVolButton(ui->volumeSlider->value());
+    setupVolButton(ui->volumeSlider->value());
 }
 
 
 
 /** TRAY ICON **/
 void GUI_SimplePlayer::setupTrayActions() {
+
 
 	m_trayIcon = new GUI_TrayIcon(this);
 
@@ -537,6 +538,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 
    	m_trayIcon->switch_play_pause(false);
     m_trayIcon->show();
+
 }
 
 
