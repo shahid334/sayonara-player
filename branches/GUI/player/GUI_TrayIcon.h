@@ -39,23 +39,27 @@
 class GUI_TrayIcon : public QSystemTrayIcon {
     Q_OBJECT
 public:
-    explicit GUI_TrayIcon(const QIcon & playIcon,const QIcon & pauseIcon, QObject *parent = 0);
-    ~GUI_TrayIcon();
 
-    void setupMenu (    QAction* closeAction,
-                        QAction* playAction,
-                        QAction* stopAction,
-                        QAction* muteAction,
-                        QAction* fwdAction,
-                        QAction* bwdAction,
-                        QAction* showAction);
+    GUI_TrayIcon(QObject *parent = 0);
+    virtual ~GUI_TrayIcon();
 
     virtual bool event ( QEvent * e );
     void set_timeout(int timeout_ms);
     void set_notification_active(bool active);
 
+   void set_enable_play(bool);
+   void set_enable_stop(bool);
+   void set_enable_mute(bool);
+   void set_enable_fwd(bool);
+   void set_enable_bwd(bool);
+   void set_enable_show(bool);
+
+   void switch_play_pause(bool play);
+   void switch_mute_unmute(bool mute);
+
+   int get_vol_step();
+
 public slots:
-    void playStateChanged (bool playing);
     void trackChanged(const MetaData& md);
     void songChangedMessage (const MetaData& md);
 
@@ -67,17 +71,51 @@ signals:
       * @param delta bigger then 0 when mouse wheel has moved forward smaller when moved backwards
       */
     void onVolumeChangedByWheel (int delta);
+    void sig_play_clicked();
+    void sig_pause_clicked();
+    void sig_fwd_clicked();
+    void sig_bwd_clicked();
+    void sig_show_clicked();
+    void sig_hide_clicked();
+    void sig_close_clicked();
+    void sig_mute_clicked();
+    void sig_stop_clicked();
+
+private slots:
+	void play_clicked();
+	void stop_clicked();
+	void fwd_clicked();
+	void bwd_clicked();
+	void show_clicked();
+	void close_clicked();
+	void mute_clicked();
+
 
 
 private:
+    /// some shared actions
+    QAction*					m_closeAction;
+    QAction*					m_playAction;
+    QAction*					m_stopAction;
+    QAction*					m_muteAction;
+    QAction*					m_fwdAction;
+    QAction*					m_bwdAction;
+    QAction*                    m_showAction;
+
+
     QIcon                   m_playIcon;
     QIcon                   m_pauseIcon;
     int                     m_timeout;
+    int						m_vol_step;
 
     NotificationPluginLoader* m_plugin_loader;
 
     bool                    m_notification_active;
     CSettingsStorage*       m_settings;
+
+
+
+
 };
 
 

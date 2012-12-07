@@ -71,11 +71,12 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 {
     _buffer_size = 32769;
     _stream_ended = true;
-
     _settings = CSettingsStorage::getInstance();
-    obj_ref = this;
+
     _try = 2;
     _session_path = get_time_str();
+
+    obj_ref = this;
 }
 
 
@@ -154,17 +155,18 @@ void StreamRecorder::init(){
 
 QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
+	_md = md;
     _max_tries = trys;
-    _md = md;
+    _try = 0;
+
     if(!_sr_thread) return "";
     if(_sr_thread->isRunning()) _sr_thread->terminate();
 
-     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+    gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 
     // stream file to _sr_recording_dst
     QString title = _md.title;
     QString org_src_filename = _md.filepath;	// some url
-
 
     title.replace(" ", "_");
     title.replace("/", "_");
@@ -181,11 +183,11 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
     g_object_set(G_OBJECT(_rec_dst), "location", _sr_recording_dst.toLocal8Bit().data(), NULL);
     g_object_set(G_OBJECT(_rec_src), "blocksize", _buffer_size, NULL);
 
-    _stream_ended = false;
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
+    _stream_ended = false;
+
     _sr_thread->setUri(_sr_recording_dst);
-    _try = 0;
     _sr_thread->start();
 
     return _sr_recording_dst;
@@ -193,8 +195,13 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
 
 void StreamRecorder::set_new_stream_session(){
-    _session_path = get_time_str();
+
+	_session_path = get_time_str();
     _session_collector.clear();
+
+    QString sr_path = _settings->getStreamRipperPath();
+    QString session_path = check_session_path(sr_path);
+    _session_playlist_name = session_path + QDir::separator() + get_time_str() + ".m3u";
 }
 
 
@@ -242,9 +249,9 @@ QString StreamRecorder::stop(bool track_finished, bool delete_track){
     else{
         _md.filepath = dst_name;
         ID3::setMetaDataOfFile(_md);
-
         _session_collector.push_back(_md);
-        PlaylistParser::save_playlist(session_path + QDir::separator() + get_time_str() + ".m3u", _session_collector, true);
+
+        PlaylistParser::save_playlist(_session_playlist_name, _session_collector, true);
         ret_val = dst_name;
     }
 
@@ -273,10 +280,6 @@ void StreamRecorder::thread_finished(){
         _try++;
     }
 
-    else{
-        qDebug() << "SR:Init. file size = " << size;
-    }
-
     if(_try < 25 || _max_tries == -1)
         emit sig_initialized(success);
 
@@ -289,13 +292,17 @@ void StreamRecorder::thread_finished(){
 
 
 void StreamRecorder::endOfStream(){
-    gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
-    _sr_thread->terminate();
-    _stream_ended = true;
+
+	gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+
+	_stream_ended = true;
+	_sr_thread->terminate();
+
 
     QFile f(_sr_recording_dst);
 
-    if(!QFile::exists(_sr_recording_dst) || f.size() == 0){
+    if(!QFile::exists(_sr_recording_dst) || f.size() < _buffer_size){
+    	qDebug() << "SR: Stream not valid";
         emit sig_stream_not_valid();
         return;
     }
@@ -304,10 +311,6 @@ void StreamRecorder::endOfStream(){
     f.close();
 
     emit sig_stream_ended();
-}
-
-bool StreamRecorder::getFinished(){
-    return _stream_ended;
 }
 
 
@@ -320,8 +323,10 @@ QString StreamRecorder::check_session_path(QString sr_path){
         dir.mkdir(_session_path);
     }
 
-
     return sr_path + QDir::separator() + _session_path;
+}
 
 
+bool StreamRecorder::getFinished(){
+    return _stream_ended;
 }

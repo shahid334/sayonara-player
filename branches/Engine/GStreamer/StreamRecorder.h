@@ -68,7 +68,9 @@ private:
 
     QString     _pl_file_path;
     QString     _session_path;
+    QString		_session_playlist_name;
     MetaDataList _session_collector;
+
 
     QString check_session_path(QString sr_path);
     

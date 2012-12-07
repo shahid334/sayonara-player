@@ -138,7 +138,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     QString user, password;
     if(set->getLastFMActive()){
         set->getLastFMNameAndPW(user, password);
-        player->suppress_warning(true);
         LastFM::getInstance()->lfm_login( user,password, true );
     }
 
