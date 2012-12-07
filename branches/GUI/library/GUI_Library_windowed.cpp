@@ -228,23 +228,12 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 
 void GUI_Library_windowed::change_skin(bool dark){
 
-	if(dark){
-		this->ui->tb_title->setShowGrid(false);
-		this->ui->lv_album->setShowGrid(false);
-		this->ui->lv_artist->setShowGrid(false);
-	}
+    /*QString style = "";
+    if(dark) {
+        Helper::read_file_into_str("/usr/share/sayonara/style.css", style);
+    }
 
-
-	else {
-
-        this->ui->tb_title->setShowGrid(true);
-		this->ui->lv_album->setShowGrid(true);
-		this->ui->lv_artist->setShowGrid(true);
-	}
-
-    this->_album_delegate->set_skin(dark);
-    this->_artist_delegate->set_skin(dark);
-    this->_track_delegate->set_skin(dark);
+    this->setStyleSheet(style);*/
 }
 
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){

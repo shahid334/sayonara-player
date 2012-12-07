@@ -86,13 +86,6 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 
 void GUI_PlaylistChooser::changeSkin(bool dark){
-    QString btn_style = Style::get_btn_style(dark);
-    this->ui->combo_playlistchooser->setStyleSheet(Style::get_combobox_style(dark));
-    this->ui->btn_delete->setStyleSheet(btn_style);
-    this->ui->btn_save->setStyleSheet(btn_style);
-    this->ui->btn_save_as->setStyleSheet(btn_style);
-    this->ui->le_playlist_file->setStyleSheet(Style::get_lineedit_style(dark));
-    this->ui->btn_load->setStyleSheet(Style::get_pushbutton_style(dark));
 
     _dark = dark;
 
@@ -286,8 +279,7 @@ int GUI_PlaylistChooser::show_warning(QString title_text){
         warning_box.setInformativeText("Are you sure?");
         warning_box.setWindowTitle(title_text);
         warning_box.setDefaultButton(QMessageBox::No);
-        warning_box.button(QMessageBox::Yes)->setStyleSheet(Style::get_pushbutton_style(_dark));
-        warning_box.button(QMessageBox::No)->setStyleSheet(Style::get_pushbutton_style(_dark));
+
 
     return warning_box.exec();
 }

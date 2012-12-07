@@ -214,24 +214,9 @@ void GUI_Playlist::dummy_pressed(){
 // SLOT: switch between dark & light skin
 void GUI_Playlist::change_skin(bool dark){
 
-    QString btn_style = Style::get_btn_style(dark, (dark ? 6 : 7));
+
 	QString table_style = Style::get_tv_style(dark);
-	QString scrollbar_style = Style::get_v_scrollbar_style();
 
-	if(dark)
-		this->ui->lab_totalTime->setStyleSheet("background-color: " + Style::get_player_back_color() + ";");
-	else
-		this->ui->lab_totalTime->setStyleSheet("");
-
-	this->ui->listView->setStyleSheet(table_style);
-	this->ui->listView->verticalScrollBar()->setStyleSheet(dark ? scrollbar_style : table_style);
-
-	this->ui->btn_append->setStyleSheet(btn_style);
-	this->ui->btn_clear->setStyleSheet(btn_style);
-	this->ui->btn_dynamic->setStyleSheet(btn_style);
-	this->ui->btn_repAll->setStyleSheet(btn_style);
-	this->ui->btn_shuffle->setStyleSheet(btn_style);
-	this->ui->btn_numbers->setStyleSheet(btn_style);
 }
 
 

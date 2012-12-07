@@ -132,6 +132,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	this->ui->plugin_widget->resize(this->ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
+    changeSkin(settings->getPlayerStyle() == 1);
 }
 
 
@@ -567,6 +568,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	QString stylesheet = Style::get_style(dark);
 	this->setStyleSheet(stylesheet);
 
+
 	if (dark) {
 		m_skinSuffix = QString("_dark");
 	}
@@ -950,7 +952,6 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
         ui_library->show();
         ui_library->resize(this->ui->library_widget->size());
     }
-
 }
 
 
@@ -1138,8 +1139,8 @@ void GUI_SimplePlayer::ui_loaded(){
 		obj_ref = this;
 		signal(SIGWINCH, signal_handler);
 	#endif
+    changeSkin(CSettingsStorage::getInstance()->getPlayerStyle() == 1);
 
-    emit skinChanged(CSettingsStorage::getInstance()->getPlayerStyle() == 1);
 }
 
 void GUI_SimplePlayer::suppress_warning(bool b){

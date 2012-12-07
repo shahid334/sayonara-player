@@ -69,16 +69,6 @@ GUI_ImportFolder::~GUI_ImportFolder() {
 
 void GUI_ImportFolder::changeSkin(bool dark){
 
-    QString pb_style = Style::get_pushbutton_style(dark);
-    this->ui->btn_cancel->setStyleSheet(pb_style);
-    this->ui->btn_ok->setStyleSheet(pb_style);
-    this->ui->combo_folders->setStyleSheet(Style::get_combobox_style(dark));
-    this->ui->cb_copy2lib->setStyleSheet(Style::get_cb_style(dark));
-    if(dark)
-        this->ui->combo_folders->view()->verticalScrollBar()->setStyleSheet(Style::get_v_scrollbar_style());
-    else
-        this->ui->combo_folders->view()->verticalScrollBar()->setStyleSheet("");
-
 }
 
 void GUI_ImportFolder::progress_changed(int val){

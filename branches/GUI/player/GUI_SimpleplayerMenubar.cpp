@@ -226,7 +226,6 @@ void GUI_SimplePlayer::about(bool b){
     infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
     infobox.setInformativeText("Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
     infobox.setStandardButtons(QMessageBox::Ok);
-    infobox.button(QMessageBox::Ok)->setStyleSheet(Style::get_pushbutton_style(m_dark));
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
     infobox.exec();
 }

@@ -22,12 +22,6 @@ GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog(){
 
 void GUI_Target_Playlist_Dialog::change_skin(bool dark){
 
-    QString btn_style = Style::get_pushbutton_style(dark);
-    QString le_style = Style::get_lineedit_style(dark);
-    this->ui->btn_cancel->setStyleSheet(btn_style);
-    this->ui->btn_ok->setStyleSheet(btn_style);
-    this->ui->btn_choose->setStyleSheet(btn_style);
-    this->ui->le_path->setStyleSheet(le_style);
 }
 
 
