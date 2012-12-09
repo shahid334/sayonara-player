@@ -1,7 +1,36 @@
 #labels Featured
 = Changelog = 
 
-== 0.3 -> SVN ==
+== 0.3.1 -> SVN ==
+
+=== New features ===
+
+  * Only one instance
+  * Notifications with libnotify
+
+=== Improvements ===
+
+  * Streams are more stable
+  * LastFM radio works w/o subscription
+  * Playlists load and save to m3u
+  * Sayonara in file manager context menu
+
+=== Smaller Improvements ===
+
+  * Dark skin
+  * Numbers in playlist
+  * Streamrecorder improved (playlists, session folders)
+  
+
+=== Bugfixes ===
+
+  * playlist issues
+  * streaming with activated stream recorder
+  * Menu icons
+  * Better font for non-latin characters
+
+
+== 0.3 -> 0.3.1 ==
 
 === New features ===
 
