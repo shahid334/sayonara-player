@@ -13,7 +13,7 @@ PKG_CHECK_MODULES(TAGLIB REQUIRED taglib>=1.6)
 PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 
-SET(CMAKE_BUILD_TYPE "Release")
+SET(CMAKE_BUILD_TYPE "Debug")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 SET(CMAKE_C_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
@@ -212,6 +212,7 @@ SET(ICONS
 	GUI/icons/pause.png
 	GUI/icons/play.png
 	GUI/icons/rec.png
+        GUI/icons/rec_off.png
 	GUI/icons/rep1.png
 	GUI/icons/repAll.png
 	GUI/icons/save.png
@@ -268,15 +269,15 @@ INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)
+INSTALL(FILES "GUI/icons/sayonara.png" DESTINATION share/icons)
+INSTALL(FILES "GUI/icons/sayonara.png" DESTINATION share/pixmaps)
+INSTALL(FILES "linux_packages/resources/sayonara" DESTINATION share/menu)
 INSTALL(FILES "GUI/standard.css" DESTINATION share/sayonara)
 INSTALL(FILES "GUI/dark.css" DESTINATION share/sayonara)
 INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
 
-IF("${CMAKE_SYSTEM}" MATCHES "Linux")
-	execute_process(COMMAND update-menus)
-ENDIF("${CMAKE_SYSTEM}" MATCHES "Linux")
-
 IF(${UNIX})
+	execute_process(COMMAND update-menus)
 	execute_process(COMMAND sh ./setversion.sh)
 ENDIF(${UNIX})
 

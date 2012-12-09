@@ -175,6 +175,7 @@ QComboBox {
      min-width: 6em;
  }
 
+/*
 QComboBox QAbstractItemView {
      border: 2px solid #282828;
      background: #383838;
@@ -182,7 +183,7 @@ QComboBox QAbstractItemView {
      min-height: 3em;
      border-radius: 3px;
  }
-
+*/
 QComboBox:editable {
      background: #525252;
 }
@@ -510,38 +511,29 @@ QPushButton[flat=true]{
 
 
 QPushButton[flat=true]:checked{
-    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.50, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));
+    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.54, fx:0.502, fy:0.500876, stop:0.8 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));
 }
 
 QPushButton[flat=true]:pressed{
-    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.50, fx:0.502, fy:0.500876, stop:0.7 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));
+    background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.54, fx:0.502, fy:0.500876, stop:0.8 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));
 }
 
 QPushButton[flat=false] {
-   border-left: 1px solid #525252;
-   border-bottom: 1px solid #525252;
-   border-right: 1px solid #525252;
-   border-top: 1px solid #525252;
+   border: 1px solid #282828;
    border-radius: 6px;
     background: #424242;
    padding: 4px;
 }
 
 QPushButton[flat=false]:pressed {
-   border-left: 1px solid #e8841a;
-   border-bottom: 1px solid #e8841a;
-   border-right: 1px solid #e8841a;
-   border-top: 1px solid #e8841a;
+   border: #e8841a;
    border-radius: 6px;
     padding: 4px;
    background: #383838;
 }
 
 QPushButton[flat=false]:disabled {
-   border-left: 1px solid #424242;
-   border-bottom: 1px solid #424242;
-   border-right: 1px solid #424242;
-   border-top: 1px solid #424242;
+   border: 1px solid #424242;
    color: #424242;
    background: #383838;
 }

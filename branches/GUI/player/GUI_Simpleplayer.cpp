@@ -71,10 +71,9 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui->artist->setText(settings->getVersion());
 	ui->album->setText("Written by Lucio Carreras");
 
-
+    m_metadata_available = false;
 	m_playing = false;
 	m_mute = false;
-
 
     m_min2tray = settings->getMinimizeToTray();
 
@@ -146,7 +145,7 @@ void GUI_SimplePlayer::initGUI() {
 
 	ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
 	ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
+    ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
 	ui->btn_rec->setVisible(false);
 
 	ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
@@ -371,6 +370,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	ui->albumCover->repaint();
 
 	setRadioMode(md.radio_mode);
+    m_metadata_available = true;
 	this->repaint();
 }
 
@@ -503,6 +503,8 @@ void GUI_SimplePlayer::setStyle(int style){
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
     QString stylesheet = Style::get_style(dark);
+    if(ui_eq)
+        ui_eq->changeSkin(dark);
 
 	this->setStyleSheet(stylesheet);
 
@@ -614,6 +616,7 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 	if(stream_ripper){
 
         bool btn_rec_visible = (radio != RADIO_OFF);
+
         if(btn_rec_visible){
             ui->btn_play->setVisible(radio == RADIO_OFF);
             ui->btn_rec->setVisible(radio != RADIO_OFF);
@@ -628,6 +631,7 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 	}
 
 	else{
+
 		ui->btn_rec->setVisible(false);
         ui->btn_play->setVisible(true);
 		ui->btn_play->setEnabled(radio == RADIO_OFF);

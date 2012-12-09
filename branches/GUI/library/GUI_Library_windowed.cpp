@@ -79,6 +79,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
+
 	_sort_albums = AlbumNameAsc;
 	_sort_artists = ArtistNameAsc;
 	_sort_tracks = TrackArtistAsc;
@@ -266,6 +267,15 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 		this->ui->tb_title->setColumnWidth(6, 60);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	}
+
+    if(this->ui->tb_title->horizontalScrollBar()->isVisible()){
+        QLabel* lab = new QLabel();
+        QPixmap p = QPixmap(Helper::getIconPath() + "/logo_small.png").scaled(20, 20, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        lab->setPixmap(p);
+        this->ui->tb_title->setCornerWidget(lab);
+    }
+
+    else this->ui->tb_title->setCornerWidget(NULL);
 
 
 	this->ui->lv_album->setColumnWidth(0, 20);

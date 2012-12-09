@@ -23,6 +23,8 @@ OUTPUT_FILE="sayonara-${VER_MAJOR}.${VER_MINOR}.${VER_SUBMINOR}-r${VER_BUILD}-${
 
 CONTROL_FILE=./resources/sayonara32.control
 DEBIAN_DIR=sayonara.debian
+rm -rf $DEBIAN_DIR
+
 CUR_DIR=$PWD
 
 if [ "$1" = "clean" ] ; then
@@ -37,6 +39,9 @@ fi
 
 mkdir -p $DEBIAN_DIR/DEBIAN
 mkdir -p $DEBIAN_DIR/usr/share/sayonara
+mkdir -p $DEBIAN_DIR/usr/share/menu
+mkdir -p $DEBIAN_DIR/usr/share/pixmaps
+mkdir -p $DEBIAN_DIR/usr/share/icons
 mkdir -p $DEBIAN_DIR/usr/share/applications
 mkdir -p $DEBIAN_DIR/usr/bin
 mkdir -p $DEBIAN_DIR/usr/lib/sayonara
@@ -53,11 +58,14 @@ cd $CUR_DIR
 
 cp ../bin/sayonara $DEBIAN_DIR/usr/bin
 cp ../GUI/icons/* $DEBIAN_DIR/usr/share/sayonara
+cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/pixmaps
+cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/icons
 cp ../VERSION ${DEBIAN_DIR}/usr/share/sayonara
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/player.db
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/empty.db
 cp ./resources/sayonara.postinst $DEBIAN_DIR
 cp ./resources/sayonara.prerm $DEBIAN_DIR
+cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara

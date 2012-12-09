@@ -229,6 +229,7 @@ private:
 
     MetaData				m_metadata;
     MetaData				m_metadata_corrected;
+    bool                    m_metadata_available;
     bool					m_min2tray;
 
     int 					m_library_width;

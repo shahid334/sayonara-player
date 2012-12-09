@@ -56,9 +56,6 @@ protected:
 	bool		_sr_active;
 
 	bool		_sr_wanna_record;
-	QString		_sr_recording_dst;
-
-
 
 
 public:

@@ -30,7 +30,9 @@
 /** PLAYER BUTTONS **/
 void GUI_SimplePlayer::playClicked(bool) {
 
-	if (m_playing) {
+    if(!m_metadata_available) return;
+
+    if (m_playing) {
 		ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 		emit pause();
 	}
@@ -54,18 +56,19 @@ void GUI_SimplePlayer::stopClicked(bool) {
 	ui->title->setText("Sayonara Player");
 	ui->rating->setText("");
 	ui->album->setText("Written by Lucio Carreras");
-	ui->artist->setText("");
+    ui->artist->setText(CSettingsStorage::getInstance()->getVersion());
 	this->setWindowTitle("Sayonara");
 	ui->songProgress->setValue(0);
-        ui->curTime->setText("0:00");
+    ui->curTime->setText("0:00");
 	ui->maxTime->setText("0:00");
-
 
     ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
 	if(ui->btn_rec->isVisible() && ui->btn_rec->isChecked()){
 		ui->btn_rec->setChecked(false);
 	}
+
+
 
 	emit stop();
 }
@@ -76,7 +79,6 @@ void GUI_SimplePlayer::backwardClicked(bool) {
     int cur_pos_sec =  (m_completeLength_ms * ui->songProgress->value()) / 100000;
     if(cur_pos_sec > 3){
         setProgressJump(0);
-
     }
 
     else{
@@ -92,7 +94,7 @@ void GUI_SimplePlayer::forwardClicked(bool) {
 
 void GUI_SimplePlayer::sl_rec_button_toggled(bool b){
 
-	emit sig_rec_button_toggled(b);
+    emit sig_rec_button_toggled(b);
 }
 
 

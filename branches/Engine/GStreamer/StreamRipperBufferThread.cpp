@@ -34,7 +34,10 @@ void StreamRipperBufferThread::run(){
      * _sr_recording_dst = .Sayonara/filename
      */
 
-    if(!QFile::exists(_uri)) return;
+    if(!QFile::exists(_uri)) {
+        qDebug() << "Buffer thread: file does not exist";
+        return;
+    }
 
     if(_f != NULL){
         if(_f->isOpen()) _f->close();
@@ -42,8 +45,10 @@ void StreamRipperBufferThread::run(){
     }
 
     _f = new QFile(_uri);
+
     int n_loops = 0;
     do{
+
         _size = _f->size();
 
         usleep(interval);
@@ -54,11 +59,7 @@ void StreamRipperBufferThread::run(){
 
     } while(_size < 32000 && max > 0);
 
-
-    _size = _f->size();
-    qDebug() << "size = " << _size << " loops = " << n_loops;
     _f->close();
-
 }
 
 QString StreamRipperBufferThread::getUri(){
