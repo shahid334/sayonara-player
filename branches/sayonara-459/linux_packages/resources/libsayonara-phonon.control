@@ -1,0 +1,18 @@
+Package: libsayonara-phonon
+Version: 0.2
+Section: sound 
+Priority: optional
+Architecture: i386
+Essential: no
+Depends: libqt4-gui, libqt4-core, libphonon4, sayonara (>= 0.2)
+Pre-Depends: 
+Recommends:
+Suggests: 
+Installed-Size: 100
+Maintainer: Lucio Carreras <LucioCarreras@gmail.com>
+Conflicts:
+Replaces:
+Provides: libsayonara-phonon
+Description: Phonon backend for sayonara player
+
+
