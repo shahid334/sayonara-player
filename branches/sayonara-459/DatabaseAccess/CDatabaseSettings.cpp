@@ -215,8 +215,8 @@ bool CDatabaseConnector::load_settings(){
 	bool streamripper_complete_tracks = load_setting_bool("streamripper_complete_tracks", true);
 	settings->setStreamRipperCompleteTracks(streamripper_complete_tracks);
 
-	bool streamripper_playlist = load_setting_bool("streamripper_playlist", true);
-	settings->setStreamRipperPlaylist(streamripper_playlist);
+    bool streamripper_session_path = load_setting_bool("streamripper_session_path", true);
+    settings->setStreamRipperSessionPath(streamripper_session_path);
 
 	bool socket_active = load_setting_bool("socket_active");
 	settings->setSocketActivated(socket_active);
@@ -323,8 +323,8 @@ bool CDatabaseConnector::store_settings(){
 	bool streamripper_complete_tracks = storage->getStreamRipperCompleteTracks();
 	store_setting("streamripper_complete_tracks", streamripper_complete_tracks);
 
-	bool streamripper_playlist = storage->getStreamRipperPlaylist();
-	store_setting("streamripper_playlist", streamripper_playlist);
+    bool streamripper_session_path = storage->getStreamRipperSessionPath();
+    store_setting("streamripper_session_path", streamripper_session_path);
 
 	bool socket_active = storage->getSocketActivated();
 	store_setting("socket_active", socket_active);

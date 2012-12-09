@@ -187,6 +187,7 @@ void Application::init_connections(){
    CONNECT (player, search(int),							listen,			jump(int));
    CONNECT (player, sig_volume_changed(int),				listen,			setVolume(int));
    CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
+   CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,	record_button_toggled(bool));
 
    CONNECT (player, baseDirSelected(const QString &),		library,            baseDirSelected(const QString & ));
    CONNECT (player, reloadLibrary(), 						library,            reloadLibrary());

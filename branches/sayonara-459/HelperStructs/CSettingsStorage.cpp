@@ -314,12 +314,12 @@ void CSettingsStorage::setStreamRipperCompleteTracks(bool b){
 	m_streamripper_complete_tracks = b;
 }
 
-bool CSettingsStorage::getStreamRipperPlaylist(){
-	return m_streamripper_playlist;
+bool CSettingsStorage::getStreamRipperSessionPath(){
+    return m_streamripper_session_path;
 }
 
-void CSettingsStorage::setStreamRipperPlaylist(bool b){
-	m_streamripper_playlist = b;
+void CSettingsStorage::setStreamRipperSessionPath(bool b){
+    m_streamripper_session_path = b;
 }
 
 bool CSettingsStorage::getSocketActivated(){

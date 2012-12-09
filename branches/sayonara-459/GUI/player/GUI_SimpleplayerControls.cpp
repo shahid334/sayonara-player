@@ -66,9 +66,8 @@ void GUI_SimplePlayer::stopClicked(bool) {
 
 	if(ui->btn_rec->isVisible() && ui->btn_rec->isChecked()){
 		ui->btn_rec->setChecked(false);
+        emit sig_rec_button_toggled(false);
 	}
-
-
 
 	emit stop();
 }

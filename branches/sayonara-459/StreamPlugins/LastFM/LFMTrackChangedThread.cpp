@@ -173,6 +173,7 @@ bool LFMTrackChangedThread::search_similar_artists(){
 
     // check if already in cache
     if(_sim_artists_cache.keys().contains(artist_name)){
+        qDebug() << "Found " << artist_name << " in cache";
         artist_match = _sim_artists_cache.value(artist_name);
         callLFM = false;
     }

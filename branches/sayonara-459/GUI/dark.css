@@ -348,19 +348,19 @@ QSpinBox::down-arrow {
 }
 
 
-#e8841a
 QSlider {
-border-radius: 4px;
- background: #383838;
- }
+    border-radius: 4px;
+    background: #383838;
+}
+
 
 QSlider::handle:vertical {
      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6A6A6A, stop: 0.4 #525252);
-    height: 10px;
-    margin-left: -5px;
+     height: 10px;
+     margin-left: -5px;
      margin-right: -5px;
      min-width: 12px;
-	 border: 1px solid #2C2C2C;
+     border: 1px solid #2C2C2C;
      border-radius: 4px;
  }
 
@@ -389,19 +389,14 @@ QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {
 }
 
 
-QSlider {
-border-radius: 4px;
- background: #383838;
- }
-
 QSlider::handle:horizontal {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6A6A6A, stop: 0.4 #525252);
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6A6A6A, stop: 0.4 #525252);
     width: 10px;
     margin-top: -5px;
-     margin-bottom: -5px;
-     min-height: 12px;
-	 border: 1px solid #2C2C2C;
-     border-radius: 4px;
+    margin-bottom: -5px;
+    min-height: 12px;
+    border: 1px solid #2c2c2c;
+    border-radius: 4px;
  }
 
 QSlider::handle:horizontal:disabled {
@@ -413,6 +408,7 @@ QSlider::handle:horizontal:disabled {
 QSlider::handle:horizontal:disabled {
     width: 0px;
 }
+
 
 QSlider::groove:horizontal {
      background: #383838;
@@ -452,18 +448,26 @@ QCheckBox::indicator {
     background: #525252;
 }
 
-QCheckBox::indicator:disabled {
+QCheckBox::indicator:pressed {
+border: 1px solid #E8841a;
+
+}
+
+QCheckBox::indicator:unchecked:disabled {
     border: 1px solid #2B2B2B;
     background: #424242;
 }
 
-QCheckBox::indicator:checked {
+QCheckBox::indicator:checked:disabled {
+    border: 1px solid #2B2B2B;
+    image: url(/usr/share/sayonara//cb_checked_disabled.png);
+}
+
+
+QCheckBox::indicator:checked:enabled {
     image: url(/usr/share/sayonara//cb_checked.png);
 }
 
-QCheckBox::indicator:checked:disabled {
-    image: url(/usr/share/sayonara//cb_checked_disabled.png);
-}
 
 
 QRadioButton {
@@ -484,6 +488,11 @@ QRadioButton::indicator {
     max-height: 8px;
    border-radius: 5px;
     background: #525252;
+}
+
+QRadioButton::indicator:pressed {
+    border: 1px solid #e8841a;
+
 }
 
 QRadioButton::indicator:disabled {
