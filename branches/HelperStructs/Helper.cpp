@@ -235,8 +235,6 @@ QString Helper::calc_google_image_search_adress(QString searchstring, QString si
     url += QString("&q=") + searchstring;
     url += QString("&oq=") + searchstring;
 
-    qDebug() << url;
-
 	return url;
 }
 

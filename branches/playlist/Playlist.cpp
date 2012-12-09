@@ -220,10 +220,13 @@ void Playlist::psl_next_track(){
         }
 
         // copy tracks to tmp vector
-        for(int i=0; i<_v_meta_data.size(); i++){
+
+        for(int i=0; i< (int) _v_meta_data.size(); i++){
+
         	if(i <= track_num)
         		v_md.push_back(_v_meta_data[i]);
         }
+
 
         emit sig_playlist_created(v_md, track_num, _radio_active);
         emit sig_selected_file_changed(track_num);
