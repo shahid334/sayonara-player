@@ -138,7 +138,6 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     QString user, password;
     if(set->getLastFMActive()){
         set->getLastFMNameAndPW(user, password);
-        player->suppress_warning(true);
         LastFM::getInstance()->lfm_login( user,password, true );
     }
 
@@ -149,6 +148,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
     player->check_show_plugins();
+
 
     _initialized = true;
 }
@@ -200,23 +200,14 @@ void Application::init_connections(){
    CONNECT (player, sig_stream_selected(const QString&, const QString&), 		playlist, psl_play_stream(const QString&, const QString&));
 
    CONNECT (player, show_small_playlist_items(bool),		ui_playlist,		psl_show_small_playlist_items(bool));
-   CONNECT (player, sig_sound_engine_changed(QString&), 	engine_plugin_loader,      psl_switch_engine(QString&));
 
    CONNECT (player, show_playlists(),						ui_playlist_chooser, 	show()); // IND
    CONNECT (player, setupLastFM(),                          ui_lastfm,              show_win()); // IND
    CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
    CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
 
-   CONNECT (player, skinChanged(bool),                      ui_playlist, 		change_skin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_library, 		change_skin(bool));
+
    CONNECT (player, skinChanged(bool),                      ui_eq,              changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_stream,          changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_lfm_radio, 		changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_playlist_chooser, changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_info_dialog,     changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_stream_rec,      changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_id3_editor,      changeSkin(bool));
-   CONNECT (player, skinChanged(bool),                      ui_lastfm,          changeSkin(bool));
 
 
 	   CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
@@ -247,7 +238,6 @@ void Application::init_connections(){
 	   CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),      playlist, 	psl_insert_tracks(const MetaDataList&, int));
 	   CONNECT (ui_playlist, rows_removed(const QList<int>&),               playlist, 	psl_remove_rows(const QList<int>&));
 	   CONNECT (ui_playlist, sig_import_to_library(bool),					playlist,	psl_import_new_tracks_to_library(bool));
-	   CONNECT(ui_playlist, edit_id3_signal(),								playlist, 	psl_edit_id3_request());
 
 	   CONNECT (listen, track_finished(),                                   playlist,	psl_next_track() );
 	   CONNECT (listen, sig_valid_strrec_track(const MetaData&),            playlist,  psl_valid_strrec_track(const MetaData&));
@@ -258,7 +248,6 @@ void Application::init_connections(){
 	   // should be sent to player
 	   CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&),       ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
 	   CONNECT (listen, eq_found(const QStringList&),                       ui_eq, 	fill_available_equalizers(const QStringList&));
-	   CONNECT (listen, total_time_changed_signal(qint64),                  player,	total_time_changed(qint64));
 	   CONNECT (listen, timeChangedSignal(quint32),                         player,	setCurrentPosition(quint32) );
 
 

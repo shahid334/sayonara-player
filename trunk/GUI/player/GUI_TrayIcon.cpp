@@ -33,58 +33,90 @@
 
 
 
-GUI_TrayIcon::GUI_TrayIcon (const QIcon & playIcon, const QIcon & pauseIcon, QObject *parent) : QSystemTrayIcon (parent) {
+GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 
-    QPixmap play_pixmap = playIcon.pixmap(24, 24);
+	m_settings = CSettingsStorage::getInstance();
+
+	QString icon_path = Helper::getIconPath();
+	QIcon play_icon = QIcon(icon_path + "/play.png");
+	QIcon pause_icon = QIcon(icon_path + "/pause.png");
+
+    QPixmap play_pixmap = play_icon.pixmap(24, 24);
+    QPixmap pause_pixmap = pause_icon.pixmap(24, 24);
+
     m_playIcon = QIcon(play_pixmap);
-
-    QPixmap pause_pixmap = pauseIcon.pixmap(24, 24);
     m_pauseIcon = QIcon(pause_pixmap);
 
-    m_settings = CSettingsStorage::getInstance();
+    m_vol_step = 5;
 
     m_plugin_loader = NotificationPluginLoader::getInstance();
     m_notification_active = m_settings->getShowNotification();
     m_timeout = m_settings->getNotificationTimeout();
 
-    this -> setToolTip("Sayonara - Music - Player");
-    this -> setIcon(playIcon);
+
+    m_playAction = new QAction(tr("Play"), this);
+	m_playAction->setIcon(QIcon(icon_path + "play.png"));
+	m_stopAction = new QAction(tr("Stop"), this);
+	m_stopAction->setIcon(QIcon(icon_path + "stop.png"));
+	m_bwdAction = new QAction(tr("Previous"), this);
+	m_bwdAction->setIcon(QIcon(icon_path + "bwd.png"));
+	m_fwdAction = new QAction(tr("Next"), this);
+	m_fwdAction->setIcon(QIcon(icon_path + "fwd.png"));
+	m_muteAction = new QAction(tr("Mute"), this);
+	m_muteAction->setIcon(QIcon(icon_path + "vol_mute.png"));
+	m_closeAction = new QAction(tr("Close"), this);
+	m_closeAction->setIcon(QIcon(icon_path + "close.png"));
+	m_showAction = new QAction(tr("Show"), this);
+
+	QMenu* trayContextMenu = new QMenu();
+	    trayContextMenu->addAction(m_playAction);
+	    trayContextMenu->addAction(m_stopAction);
+	    trayContextMenu->addSeparator();
+	    trayContextMenu->addAction(m_fwdAction);
+	    trayContextMenu->addAction(m_bwdAction);
+	    trayContextMenu->addSeparator();
+	    trayContextMenu->addAction(m_muteAction);
+	    trayContextMenu->addSeparator();
+	    trayContextMenu->addAction(m_showAction);
+	    trayContextMenu->addAction(m_closeAction);
+	this->setContextMenu(trayContextMenu);
+
+
+    this->setToolTip("Sayonara Player");
+    this->setIcon(m_playIcon);
+
+    connect(m_playAction, SIGNAL(triggered()), this, SLOT(play_clicked()));
+    connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(fwd_clicked()));
+    connect(m_bwdAction, SIGNAL(triggered()), this, SLOT(bwd_clicked()));
+    connect(m_stopAction, SIGNAL(triggered()), this, SLOT(stop_clicked()));
+    connect(m_showAction, SIGNAL(triggered()), this, SLOT(show_clicked()));
+    connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close_clicked()));
+    connect(m_muteAction, SIGNAL(triggered()), this, SLOT(mute_clicked()));
 }
 
 
 GUI_TrayIcon::~GUI_TrayIcon() {
-
+	delete m_playAction;
+	delete m_stopAction;
+	delete m_bwdAction;
+	delete m_fwdAction;
+	delete m_muteAction;
+	delete m_closeAction;
 }
 
 
-void GUI_TrayIcon::setupMenu (    QAction* closeAction,
-                                  QAction* playAction,
-                                  QAction* stopAction,
-                                  QAction* muteAction,
-                                  QAction* fwdAction,
-                                  QAction* bwdAction,
-                                  QAction* showAction) {
-    QMenu* trayContextMenu = new QMenu();
-    trayContextMenu->addAction(playAction);
-    trayContextMenu->addAction(stopAction);
-    trayContextMenu->addSeparator();
-    trayContextMenu->addAction(fwdAction);
-    trayContextMenu->addAction(bwdAction);
-    trayContextMenu->addSeparator();
-    trayContextMenu->addAction(muteAction);
-    trayContextMenu->addSeparator();
-    trayContextMenu->addAction(showAction);
-    trayContextMenu->addAction(closeAction);
-    this ->  setContextMenu(trayContextMenu);
-}
 
 bool GUI_TrayIcon::event ( QEvent * e ) {
-    if (e->type ()== QEvent::Wheel) {
+    if (e->type() == QEvent::Wheel) {
         QWheelEvent * wheelEvent = dynamic_cast <QWheelEvent *> (e);
         emit onVolumeChangedByWheel (wheelEvent->delta());
     }
     return true;
 }
+
+
+
+
 
 void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
 
@@ -104,14 +136,7 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
     this -> setToolTip(md.title + " by " + md.artist);
 }
 
-void GUI_TrayIcon::playStateChanged (bool playing) {
-    if(playing) {
-        this -> setIcon(this->m_playIcon);
-    }
-    else {
-        this -> setIcon(this -> m_pauseIcon);
-    }
-}
+
 
 void GUI_TrayIcon::trackChanged(const MetaData& md){
 	this->setToolTip(md.title + " by " + md.artist);
@@ -126,3 +151,91 @@ void  GUI_TrayIcon::set_notification_active(bool active){
     m_notification_active = active;
 }
 
+void GUI_TrayIcon::set_enable_play(bool b){
+	m_playAction->setEnabled(b);
+}
+
+void GUI_TrayIcon::set_enable_stop(bool b){
+	m_stopAction->setEnabled(b);
+}
+
+void GUI_TrayIcon::set_enable_mute(bool b){
+
+}
+
+void GUI_TrayIcon::set_enable_fwd(bool b){
+	m_fwdAction->setEnabled(b);
+}
+
+void GUI_TrayIcon::set_enable_bwd(bool b){
+	m_bwdAction->setEnabled(b);
+}
+
+void GUI_TrayIcon::set_enable_show(bool b){
+	m_showAction->setEnabled(b);
+}
+
+
+void GUI_TrayIcon::play_clicked(){
+	if(!m_playAction->text().compare("play", Qt::CaseInsensitive)){
+		emit sig_play_clicked();
+	}
+
+	else emit sig_pause_clicked();
+}
+
+void GUI_TrayIcon::stop_clicked(){
+	emit sig_stop_clicked();
+}
+
+void GUI_TrayIcon::fwd_clicked(){
+	emit sig_fwd_clicked();
+}
+
+void GUI_TrayIcon::bwd_clicked(){
+	emit sig_bwd_clicked();
+}
+
+void GUI_TrayIcon::show_clicked(){
+	emit sig_show_clicked();
+}
+
+void GUI_TrayIcon::close_clicked(){
+	emit sig_close_clicked();
+}
+
+void GUI_TrayIcon::mute_clicked(){
+	emit sig_mute_clicked();
+}
+
+void GUI_TrayIcon::switch_mute_unmute(bool mute){
+
+	if(mute){
+		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
+		m_muteAction->setText("Mute");
+	}
+
+	else {
+		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3.png"));
+		m_muteAction->setText("Mute");
+	}
+}
+
+void GUI_TrayIcon::switch_play_pause(bool play){
+
+	if(play){
+		setIcon(m_playIcon);
+		m_playAction->setIcon(m_playIcon);
+		m_playAction->setText("Play");
+	}
+	else {
+		setIcon(m_pauseIcon);
+		m_playAction->setIcon(m_pauseIcon);
+		m_playAction->setText("Pause");
+	}
+}
+
+int GUI_TrayIcon::get_vol_step(){
+	return m_vol_step;
+
+}

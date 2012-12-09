@@ -131,15 +131,13 @@ GST_Engine::GST_Engine(){
 	_playing_stream = false;
 	_sr_active = false;
 	_sr_wanna_record = false;
-	_sr_recording_dst = "";
 
     _gapless_track_available = false;
     _stream_recorder = new StreamRecorder();
 
     connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
     connect(_stream_recorder, SIGNAL(sig_stream_ended()), this, SLOT(sr_ended()));
-
-
+    connect(_stream_recorder, SIGNAL(sig_stream_not_valid()), this, SLOT(sr_ended()));
 }
 
 GST_Engine::~GST_Engine() {
@@ -346,6 +344,7 @@ void GST_Engine::changeTrack(const MetaData& md){
 
 
 void GST_Engine::play(){
+
 	_track_finished = false;
 	_state = STATE_PLAY;
 
@@ -361,7 +360,7 @@ void GST_Engine::stop(){
 
 	// streamripper, wanna record is set when record button is pressed
     if( _playing_stream && _sr_active ){
-        _stream_recorder->stop(_track_finished, !_sr_wanna_record);
+        _stream_recorder->stop(!_sr_wanna_record);
 	}
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
@@ -455,14 +454,8 @@ void GST_Engine::set_cur_position(quint32 pos){
 
 void GST_Engine::set_track_finished(){
 
-
-    qDebug() << "Engine: Track finished";
-    if(_sr_active && !_stream_recorder->getFinished()){
-        changeTrack(_meta_data);
-    }
-
     if(_sr_active) {
-        _stream_recorder->stop(true, !_sr_wanna_record);
+        _stream_recorder->stop(!_sr_wanna_record);
     }
 
 	_track_finished = true;
@@ -503,6 +496,7 @@ void GST_Engine::psl_new_stream_session(){
 }
 
 void GST_Engine::sr_initialized(bool b){
+    qDebug() << "SR init " << b;
     if(b) play();
     //else stop();
 }

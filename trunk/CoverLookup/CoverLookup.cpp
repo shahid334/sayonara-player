@@ -103,7 +103,7 @@ void CoverLookup::thread_finished() {
 		if( !_research_done &&
 			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_ARTIST_STR &&
 			_thread->get_cover_fetch_mode() != COV_FETCH_MODE_SEARCHSTRING){
-			qDebug() << "No cover found, research";
+            //qDebug() << "No cover found, research";
 			research_cover(_metadata);
 		}
 

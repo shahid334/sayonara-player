@@ -79,6 +79,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
+
 	_sort_albums = AlbumNameAsc;
 	_sort_artists = ArtistNameAsc;
 	_sort_tracks = TrackArtistAsc;
@@ -228,79 +229,12 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 
 void GUI_Library_windowed::change_skin(bool dark){
 
+    /*QString style = "";
+    if(dark) {
+        Helper::read_file_into_str("/usr/share/sayonara/style.css", style);
+    }
 
-    QString table_style = Style::get_tv_style(dark, 0);
-
-    QString combo_style = Style::get_combobox_style(dark);
-    QString line_edit_style = Style::get_lineedit_style(dark);
-    QString btn_style = Style::get_btn_style(dark);
-
-    this->ui->combo_searchfilter->setStyleSheet(combo_style);
-    this->ui->lv_album->setStyleSheet(table_style);
-    this->ui->lv_artist->setStyleSheet(table_style);
-    this->ui->tb_title->setStyleSheet(table_style);
-    this->ui->le_search->setStyleSheet(line_edit_style);
-    this->ui->btn_clear->setStyleSheet(btn_style);
-    this->ui->btn_info->setStyleSheet(btn_style);
-
-
-    if(_lib_info_dialog)
-        this->_lib_info_dialog->change_skin(dark);
-
-
-	if(dark){
-
-		QString header_style = Style::get_tv_header_style();
-		QString v_scrollbar_style = Style::get_v_scrollbar_style();
-		QString h_scrollbar_style = Style::get_h_scrollbar_style();
-
-		this->ui->tb_title->setShowGrid(false);
-		this->ui->lv_album->setShowGrid(false);
-		this->ui->lv_artist->setShowGrid(false);
-
-		this->ui->tb_title->horizontalHeader()->setStyleSheet(header_style);
-		this->ui->lv_album->horizontalHeader()->setStyleSheet(header_style);
-		this->ui->lv_artist->horizontalHeader()->setStyleSheet(header_style);
-
-		this->ui->lv_artist->verticalScrollBar()->setStyleSheet(v_scrollbar_style);
-		this->ui->lv_album->verticalScrollBar()->setStyleSheet(v_scrollbar_style);
-		this->ui->tb_title->verticalScrollBar()->setStyleSheet(v_scrollbar_style);
-
-		this->ui->lv_artist->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
-		this->ui->lv_album->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
-		this->ui->tb_title->horizontalScrollBar()->setStyleSheet(h_scrollbar_style);
-
-        /*this->setStyleSheet("background-color: " +
-                        Style::get_player_back_color() + ";"
-                        "color: " + Style::get_player_fore_color() + ";");*/
-
-
-	}
-
-
-	else {
-
-        this->ui->tb_title->setShowGrid(true);
-		this->ui->lv_album->setShowGrid(true);
-		this->ui->lv_artist->setShowGrid(true);
-
-		this->ui->tb_title->horizontalHeader()->setStyleSheet("");
-		this->ui->lv_album->horizontalHeader()->setStyleSheet("");
-		this->ui->lv_artist->horizontalHeader()->setStyleSheet("");
-
-		this->ui->lv_artist->verticalScrollBar()->setStyleSheet("");
-		this->ui->lv_album->verticalScrollBar()->setStyleSheet("");
-		this->ui->tb_title->verticalScrollBar()->setStyleSheet("");
-
-		this->ui->lv_artist->horizontalScrollBar()->setStyleSheet("");
-		this->ui->lv_album->horizontalScrollBar()->setStyleSheet("");
-		this->ui->tb_title->horizontalScrollBar()->setStyleSheet("");
-	}
-
-
-    this->_album_delegate->set_skin(dark);
-    this->_artist_delegate->set_skin(dark);
-    this->_track_delegate->set_skin(dark);
+    this->setStyleSheet(style);*/
 }
 
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
@@ -333,6 +267,15 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 		this->ui->tb_title->setColumnWidth(6, 60);
 		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	}
+
+    if(this->ui->tb_title->horizontalScrollBar()->isVisible()){
+        QLabel* lab = new QLabel();
+        QPixmap p = QPixmap(Helper::getIconPath() + "/logo_small.png").scaled(20, 20, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        lab->setPixmap(p);
+        this->ui->tb_title->setCornerWidget(lab);
+    }
+
+    else this->ui->tb_title->setCornerWidget(NULL);
 
 
 	this->ui->lv_album->setColumnWidth(0, 20);

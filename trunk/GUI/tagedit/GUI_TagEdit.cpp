@@ -102,32 +102,6 @@ GUI_TagEdit::~GUI_TagEdit() {
 
 void GUI_TagEdit::changeSkin(bool dark){
 
-    QString le_style = Style::get_lineedit_style(dark);
-    QString pb_style = Style::get_pushbutton_style(dark);
-    QString sb_style = Style::get_spinbox_style(dark);
-    QString cb_style = Style::get_cb_style(dark);
-
-    this->ui->le_album->setStyleSheet(le_style);
-    this->ui->le_artist->setStyleSheet(le_style);
-    this->ui->le_comment->setStyleSheet(le_style);
-    this->ui->le_genres->setStyleSheet(le_style);
-    this->ui->le_tag_from_path->setStyleSheet(le_style);
-    this->ui->le_title->setStyleSheet(le_style);
-    this->ui->lab_filepath->setStyleSheet(le_style);
-
-    this->ui->btn_tag_apply->setStyleSheet(pb_style);
-    this->ui->pb_next_track->setStyleSheet(pb_style);
-    this->ui->pb_prev->setStyleSheet(pb_style);
-    this->ui->pb_ok->setStyleSheet(pb_style);
-    this->ui->pb_cancel->setStyleSheet(pb_style);
-    this->ui->sb_track_num->setStyleSheet(sb_style);
-    this->ui->sb_year->setStyleSheet(sb_style);
-
-    this->ui->btn_all_album->setStyleSheet(cb_style);
-    this->ui->btn_all_artist->setStyleSheet(cb_style);
-    this->ui->btn_all_genre->setStyleSheet(cb_style);
-    this->ui->btn_all_year->setStyleSheet(cb_style);
-    this->ui->cb_tag_all->setStyleSheet(cb_style);
 }
 
 

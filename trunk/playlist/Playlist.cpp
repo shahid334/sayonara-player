@@ -192,8 +192,13 @@ void Playlist::save_stream_playlist(){
 
 void Playlist::psl_next_track(){
 
+	/*** LASTFM ***/
     if(_radio_active == RADIO_LFM){
-        if(_v_meta_data.size() == 0){
+
+    	MetaDataList v_md;
+
+    	if(_v_meta_data.size() == 0){
+    		_cur_play_idx = -1;
             emit sig_no_track_to_play();
             emit sig_need_more_radio();
             return;
@@ -202,27 +207,37 @@ void Playlist::psl_next_track(){
         int track_num = _cur_play_idx + 1;
 
         // track too high
-        if(track_num > (int) _v_meta_data.size() -1){
-            track_num = -1;
+        if(track_num >= (int) _v_meta_data.size()){
+            _cur_play_idx = -1;
             emit sig_no_track_to_play();
             emit sig_need_more_radio();
             return;
         }
 
         // last track
-        else if(track_num == (int) _v_meta_data.size() -1) {
+        else if(track_num == (int) _v_meta_data.size()-1) {
             emit sig_need_more_radio();
         }
 
-        emit sig_playlist_created(_v_meta_data, track_num, _radio_active);
+        // copy tracks to tmp vector
+
+        for(int i=0; i< (int) _v_meta_data.size(); i++){
+
+        	if(i <= track_num)
+        		v_md.push_back(_v_meta_data[i]);
+        }
+
+
+        emit sig_playlist_created(v_md, track_num, _radio_active);
         emit sig_selected_file_changed(track_num);
-        emit sig_selected_file_changed_md(_v_meta_data[track_num]);
+        emit sig_selected_file_changed_md(v_md[track_num]);
 
         _cur_play_idx = track_num;
         return;
     }
 
 
+    /*** NOT LASTFM ***/
     int track_num = -1;
     if(_v_meta_data.size() == 0){
         _cur_play_idx = -1;
@@ -439,26 +454,36 @@ void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
         return;
     }
 
+
+    MetaDataList v_md = _v_meta_data;
+
+    int i=0;
     foreach(MetaData md, playlist){
 
         if(md.radio_mode != RADIO_LFM) continue;
+
+        md.is_disabled = true;
         _v_meta_data.push_back(md);
+        if(i==0) v_md.push_back(md);
+        i++;
     }
 
-    if(_v_meta_data.size() == 0) return;
+    if(_v_meta_data.size() == 0 || v_md.size() == 0) return;
 
     if(_cur_play_idx == -1) {
-        emit sig_new_stream_session();
+
         _cur_play_idx = 0;
-        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_LFM);
-        emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+
+        emit sig_new_stream_session();
+
+        emit sig_playlist_created(v_md, _cur_play_idx, RADIO_LFM);
+        emit sig_selected_file_changed_md(v_md[_cur_play_idx]);
         emit sig_selected_file_changed(_cur_play_idx);
     }
 
     else{
-        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_LFM);
+        emit sig_playlist_created(v_md, _cur_play_idx, RADIO_LFM);
     }
-
 
     _radio_active = RADIO_LFM;
 }

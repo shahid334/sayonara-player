@@ -108,6 +108,8 @@ SET(SOURCES
     GUI/player/GUI_Simpleplayer.cpp
     GUI/player/GUI_SimpleplayerPlugins.cpp
     GUI/player/GUI_SimpleplayerMenubar.cpp
+    GUI/player/GUI_SimpleplayerControls.cpp
+    GUI/player/GUI_SimpleplayerCover.cpp
     GUI/player/GUI_TrayIcon.cpp
     GUI/player/SearchSlider.cpp
     GUI/playlist/GUI_Playlist.cpp
@@ -210,6 +212,7 @@ SET(ICONS
 	GUI/icons/pause.png
 	GUI/icons/play.png
 	GUI/icons/rec.png
+        GUI/icons/rec_off.png
 	GUI/icons/rep1.png
 	GUI/icons/repAll.png
 	GUI/icons/save.png
@@ -254,15 +257,28 @@ SET(ICONS
 QT4_WRAP_UI(FORMS_HEADERS ${FORMS})
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
-ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
-TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl)
 IF(${UNIX})
 	execute_process(COMMAND sh ./setversion.sh)
 ENDIF(${UNIX})
 
+ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
+TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl)
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)
+INSTALL(FILES "GUI/icons/sayonara.png" DESTINATION share/icons)
+INSTALL(FILES "GUI/icons/sayonara.png" DESTINATION share/pixmaps)
+INSTALL(FILES "linux_packages/resources/sayonara" DESTINATION share/menu)
+INSTALL(FILES "GUI/standard.css" DESTINATION share/sayonara)
+INSTALL(FILES "GUI/dark.css" DESTINATION share/sayonara)
+INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
+
+IF(${UNIX})
+	execute_process(COMMAND update-menus)
+	execute_process(COMMAND sh ./setversion.sh)
+ENDIF(${UNIX})
+
+

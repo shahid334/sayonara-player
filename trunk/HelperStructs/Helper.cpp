@@ -50,65 +50,67 @@
 
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 
-
-
-
 using namespace std;
 
 
-template<typename T>
-string cvtNum2String(const T & num){
-	stringstream sstr;
-	sstr << num;
-	return sstr.str();
+QString Helper::cvtQString2FirstUpper(QString str){
 
+	QString ret_str = "";
+	QStringList lst = str.split(" ");
+	foreach(QString word, lst){
+		QChar first = word.at(0);
+		word.remove(0,1);
+		word.prepend(first.toUpper());
+
+		ret_str += word + " ";
+	}
+
+	return ret_str.trimmed();
 }
 
+QString cvtNum2String(int num, int digits){
+	QString str = QString::number(num);
+	while(str.size() < digits){
+		str.prepend("0");
+	}
 
-template<typename T>
-QString cvtSomething2QString(const T & sth){
-	stringstream sstr;
-	sstr << sth;
-	return QString(sstr.str().c_str());
+	return str;
 }
 
+QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon){
 
-void cvtSecs2MinAndSecs(int secs, int* tgt_min, int* tgt_sec)
-{
+		bool show_hrs = false;
 
-	*tgt_min = secs / 60;
-	*tgt_sec = secs % 60;
+		int sec = msec / 1000;
+		int min = sec / 60;
 
-}
+		int secs = sec % 60;
+		int hrs = min / 60;
+		int days = hrs / 24;
 
+		QString final_str;
 
-string Helper::trim(const string & toTrim){
-
-	if(toTrim.size() == 0) return toTrim;
-
-	const char* arr_src = toTrim.c_str();
-
-	int count_whitespaces = 0;
-	for(int i=toTrim.size()-1; i>=0; i--){
-		if(!isspace(arr_src[i])){
-			break;
+		if(days > 0){
+			final_str += QString::number(days) + "d ";
+			hrs = hrs % 24;
+			show_hrs = true;
 		}
 
-		else count_whitespaces ++;
+		if(hrs > 0 || show_hrs){
+			final_str += QString::number(hrs) + "h ";
+			min = min % 60;
+		}
+
+		if(colon)
+			final_str +=  cvtNum2String(min, 2) + ":" + cvtNum2String(secs, 2);
+		else
+			final_str +=  cvtNum2String(min, 2) + "m " + cvtNum2String(secs, 2);
+
+		return final_str;
+
 	}
 
-	char* arr_dst = new char[toTrim.size() - count_whitespaces + 1];
 
-	for(uint i=0; i<toTrim.size() - count_whitespaces; i++){
-		arr_dst[i] = arr_src[i];
-	}
-
-	arr_dst[toTrim.size() - count_whitespaces] = '\0';
-
-	string retStr = string(arr_dst);
-	delete arr_dst;
-	return retStr;
-}
 
 QString Helper::getSharePath(){
 
@@ -232,8 +234,6 @@ QString Helper::calc_google_image_search_adress(QString searchstring, QString si
     QString url = QString("https://www.google.de/search?num=20&hl=de&site=imghp&tbm=isch&source=hp");
     url += QString("&q=") + searchstring;
     url += QString("&oq=") + searchstring;
-
-    qDebug() << url;
 
 	return url;
 }
@@ -420,3 +420,5 @@ QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
 QString Helper::calc_hash(QString data){
 	return QCryptographicHash::hash(data.toUtf8(), QCryptographicHash::Md5).toHex();
 }
+
+

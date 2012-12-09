@@ -88,12 +88,7 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 }
 
 void GUI_Alternate_Covers::changeSkin(bool dark){
-    this->ui->le_search->setStyleSheet(Style::get_lineedit_style(dark));
-    QString button_style = Style::get_pushbutton_style(dark);
 
-    this->ui->btn_cancel->setStyleSheet(button_style);
-    this->ui->btn_save->setStyleSheet(button_style);
-    this->ui->btn_search->setStyleSheet(button_style);
 }
 
 void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){

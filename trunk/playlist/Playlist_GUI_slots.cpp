@@ -27,10 +27,10 @@ void Playlist::psl_clear_playlist(){
 // play a track
 void Playlist::psl_play(){
 
-    if(_v_meta_data.size() <= 0) return;
+    if(_v_meta_data.size() == 0) return;
 
     // state was stop until now
-    if(_cur_play_idx <= -1){
+    if(_cur_play_idx < 0){
 
         int track_num = 0;
         MetaData md = _v_meta_data[track_num];
@@ -51,10 +51,6 @@ void Playlist::psl_play(){
 
 void Playlist::psl_stop(){
 
-    /*if(_radio_active == RADIO_STATION){
-        save_stream_playlist();
-    }*/
-
     // track no longer valid
     if(_radio_active == RADIO_LFM){
         psl_clear_playlist();
@@ -72,72 +68,6 @@ void Playlist::psl_stop(){
 void Playlist::psl_forward(){
 
     psl_next_track();
-    return;
-
-    MetaData md;
-    int track_num = -1;
-
-    if(_radio_active == RADIO_LFM){
-        if(_v_meta_data.size() == 0){
-            emit sig_no_track_to_play();
-            emit sig_need_more_radio();
-            return;
-        }
-
-        int track_num = _cur_play_idx + 1;
-
-        // track too high
-        if(track_num > (int) _v_meta_data.size() -1){
-            track_num = -1;
-            emit sig_no_track_to_play();
-            emit sig_need_more_radio();
-            return;
-        }
-
-        // last track
-        else if(track_num == (int) _v_meta_data.size() -1) {
-            emit sig_need_more_radio();
-        }
-
-        emit sig_playlist_created(_v_meta_data, track_num, _radio_active);
-        emit sig_selected_file_changed(track_num);
-        emit sig_selected_file_changed_md(_v_meta_data[track_num]);
-
-        _cur_play_idx = track_num;
-        return;
-    }
-
-
-    // this shouldn't happen, because forward is disabled
-    else if(_radio_active == RADIO_STATION){
-        return;
-    }
-
-    // SHUFFLE
-    if(_playlist_mode.shuffle){
-        track_num = rand() % _v_meta_data.size();
-    }
-
-    // new track within normal playlist
-    else if(_cur_play_idx < (int) _v_meta_data.size() - 1 && _cur_play_idx >= 0){
-
-        if( _playlist_mode.repAll )
-            track_num = (_cur_play_idx + 1) % _v_meta_data.size();
-        else
-            track_num = (_cur_play_idx + 1);
-    }
-
-    md = _v_meta_data[track_num];
-    md.radio_mode = _radio_active;
-
-    if( checkTrack(md) ){
-
-        _cur_play_idx = track_num;
-        _v_meta_data.setCurPlayTrack(track_num);
-
-        emit sig_selected_file_changed(track_num);
-        emit sig_selected_file_changed_md(md);
-    }
 }
 
 // GUI -->
@@ -146,7 +76,7 @@ void Playlist::psl_backward(){
     // this shouldn't happen, because backward is disabled
     if(_radio_active != RADIO_OFF) return;
 
-    if(this->_cur_play_idx <= 0) return;
+    if(_cur_play_idx <= 0) return;
 
     int track_num = _cur_play_idx - 1;
     MetaData md = _v_meta_data[track_num];
@@ -157,7 +87,6 @@ void Playlist::psl_backward(){
         _v_meta_data.setCurPlayTrack(track_num);
         emit sig_selected_file_changed(track_num);
         emit sig_selected_file_changed_md(md);
-
     }
 }
 

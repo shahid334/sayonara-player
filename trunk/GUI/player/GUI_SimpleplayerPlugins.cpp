@@ -175,7 +175,6 @@ void GUI_SimplePlayer::show_playlist_chooser(bool vis){
 
 void GUI_SimplePlayer::show_eq(bool vis) {
 
-
 	showPlugin(ui_eq, vis);
 
     if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_EQUALIZER);

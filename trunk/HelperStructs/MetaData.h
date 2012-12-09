@@ -73,7 +73,6 @@ public:
 	bool is_extern;
 	int radio_mode;
 
-
 	bool pl_selected;
 	bool pl_playing;
 	bool pl_dragged;

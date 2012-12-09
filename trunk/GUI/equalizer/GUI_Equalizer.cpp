@@ -83,7 +83,7 @@ GUI_Equalizer::~GUI_Equalizer() {
 void GUI_Equalizer::changeSkin(bool dark){
 
     _dark = dark;
-    this->_ui->combo_presets->setStyleSheet(Style::get_combobox_style(dark));
+
 
     QString sli_style0 = Style::get_v_slider_style(dark, SCALE(_ui->sli_0->value()));
     QString sli_style1 = Style::get_v_slider_style(dark, SCALE(_ui->sli_1->value()));
@@ -107,7 +107,8 @@ void GUI_Equalizer::changeSkin(bool dark){
     this->_ui->sli_8->setStyleSheet(sli_style8);
     this->_ui->sli_9->setStyleSheet(sli_style9);
 
-    this->_ui->btn_preset->setStyleSheet(Style::get_btn_style(dark));
+	QString stylesheet = Style::get_style(dark);
+	this->setStyleSheet(stylesheet);
 }
 
 

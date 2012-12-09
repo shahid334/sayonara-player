@@ -48,18 +48,6 @@ GUI_StreamRecorder::~GUI_StreamRecorder() {
 void GUI_StreamRecorder::changeSkin(bool dark){
     _skin = dark;
 
-    if(!ui) return;
-
-    QString button_style = Style::get_pushbutton_style(dark);
-    QString cb_style = Style::get_cb_style(dark);
-
-    this->ui->btn_cancel->setStyleSheet(button_style);
-    this->ui->btn_ok->setStyleSheet(button_style);
-    this->ui->btn_path->setStyleSheet(button_style);
-    this->ui->le_path->setStyleSheet(Style::get_lineedit_style(dark));
-    this->ui->cb_activate->setStyleSheet(cb_style);
-    this->ui->cb_complete_tracks->setStyleSheet(cb_style);
-    this->ui->cb_create_playlist->setStyleSheet(cb_style);
 }
 
 

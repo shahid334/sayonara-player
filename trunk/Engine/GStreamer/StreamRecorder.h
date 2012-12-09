@@ -34,7 +34,7 @@ public:
     void init();
     bool start();
 
-    QString stop(bool track_finished, bool delete_track = false);
+    bool stop(bool delete_track = false);
 
     QString changeTrack(const MetaData& md, int max_tries);
     void set_new_stream_session();
@@ -64,13 +64,18 @@ private:
 
     int        _try;
     int        _max_tries;
+    bool       _thread_is_running;
 
 
     QString     _pl_file_path;
     QString     _session_path;
+    QString		_session_playlist_name;
     MetaDataList _session_collector;
 
+
     QString check_session_path(QString sr_path);
+    bool save_file();
+    bool init_thread(QString filename);
     
 };
 

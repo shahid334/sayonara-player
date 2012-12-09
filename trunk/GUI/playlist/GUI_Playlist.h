@@ -104,7 +104,6 @@
 			void sound_files_dropped(QStringList&);
 			void directory_dropped(const QString&, int);
 			void rows_removed(const QList<int>&);
-			void edit_id3_signal();
 			void search_similar_artists(const QString&);
 			void sig_import_to_library(bool);
 
@@ -124,7 +123,6 @@
 			void released(const QModelIndex&);
 			void clear_playlist_slot();
 			void playlist_mode_changed_slot();
-			void edit_id3_but_pressed();
 			void dummy_pressed();
 			void import_button_clicked();
 
@@ -165,7 +163,7 @@
 
 			void initGUI();
 
-			void set_total_time_label();
+			void set_total_time_label(qint64 total_msecs);
 			void remove_cur_selected_rows();
 			void check_dynamic_play_button();
 			void init_menues();

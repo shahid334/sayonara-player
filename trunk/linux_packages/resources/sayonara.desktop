@@ -8,9 +8,9 @@ Name=Sayonara Player
 GenericName=Media player
 Comment=Music player and music library admininstration
 Exec=sayonara %F
-Icon=/usr/share/sayonara/logo.xpm
+Icon=sayonara.png
 Terminal=false
-Categories=AudioVideo;Player;
+Categories=Audio;Music;Player;AudioVideo
 FilePattern=mp3;MP3;wav;WAV;ogg;OGG;flac;FLAC;m4a;M4A;aac;AAC;wma;WMA;m3u;pls;ram;asx
 MimeType=audio/mpeg;audio/x-mpegurl;audio/wav;audio/x-wav;audio/basic
 

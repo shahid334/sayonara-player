@@ -145,18 +145,6 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 void GUI_InfoDialog::changeSkin(bool dark){
 
     _dark = dark;
-    QString button_style = Style::get_pushbutton_style(dark);
-
-    this->ui->tab_widget->setStyleSheet(Style::get_tabwidget_style(dark));
-    this->ui->btn_close->setStyleSheet(button_style);
-    this->ui->btn_close1->setStyleSheet(button_style);
-    if(dark)
-        this->ui->te_lyrics->verticalScrollBar()->setStyleSheet(Style::get_v_scrollbar_style());
-    else
-        this->ui->te_lyrics->verticalScrollBar()->setStyleSheet("");
-    this->ui->combo_servers->setStyleSheet(Style::get_combobox_style(dark));
-    this->_alternate_covers->changeSkin(dark);
-
 }
 
 

@@ -65,9 +65,7 @@ GUI_Stream::~GUI_Stream() {
 
 
 void GUI_Stream::changeSkin(bool dark){
-    this->ui->combo_stream->setStyleSheet(Style::get_combobox_style(dark));
-    this->ui->le_url->setStyleSheet(Style::get_lineedit_style(dark));
-    this->ui->btn_listen->setStyleSheet(Style::get_pushbutton_style(dark));
+
 }
 
 
