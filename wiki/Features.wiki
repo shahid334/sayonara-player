@@ -1,25 +1,15 @@
-= Implemented Features =
-
-  * Gstreamer backend
+= FEATURES =
+  
+  * Playlist
   * Media Library
   * Covers
   * Lyrics
+  * Stream Recorder
+  * Online Streams (e.g. Web-Radio)
   * LastFM integration (radio, scrobbling, dynamic playlists)
   * Equalizer
   * ID3 Tagger
-  * Online Streams (e.g. Web-Radio)
-  * optional Phonon plugin
-
-== New in Sayonara 0.3 ==
-  * Stream-Ripper
-  * Alternative cover fetcher
-  * Savable Playlists
   * Socket remote control
+
+Devil is in detail. Try it out.
   
-= Todo =
-  
-  * IMPORTANT: Create cross-compiling environment
-  * Extern audio player integration (with optional format conversion)
-  * iTunes / Amarok db integration
-  * VLC backend
- 
