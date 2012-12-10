@@ -47,7 +47,7 @@ public:
 signals:
 	void sig_playlist_created(QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
-    void sig_metadata_loaded (MetaDataList&);
+    void sig_all_tracks_loaded (MetaDataList&);
     void sig_all_albums_loaded(AlbumList&);
     void sig_all_artists_loaded(ArtistList&);
     void sig_tracks_for_playlist_available(MetaDataList&);
@@ -101,6 +101,7 @@ private slots:
    void reload_thread_finished();
    void file_system_changed(const QString& path);
    void library_reloading_state_slot(QString);
+   void library_reloading_state_new_block();
 
 
 private:
@@ -114,7 +115,6 @@ private:
     GUI_ImportFolder*   m_import_dialog;
 
 	int					_reload_progress;
-
 
     CDatabaseConnector*	_db;
     MetaDataList        _vec_md;
@@ -133,6 +133,7 @@ private:
 
     void 				emit_stuff();
     void				delete_tracks(MetaDataList& v_md, int answer);
+
 
 
 };

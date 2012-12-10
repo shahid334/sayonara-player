@@ -59,17 +59,12 @@ public:
     static CDatabaseConnector* getInstance();
     virtual ~CDatabaseConnector();
 
-    /**
-      * Check if db of m_databaseFileContainer is existent
-      * @return true if we can load the db false if not
-      */
-    bool isExistent ();
 
-    bool createDB();
-    bool openDatabase ();
+    bool init_settings_storage();
     bool load_settings();
     bool store_settings();
-    bool apply_fixes();
+
+
 
 
 
@@ -175,7 +170,7 @@ public:
 	/********************************************
 	 * SETTINGS
 	 *******************************************/
-		void load_setting(QString key, QVariant& val);
+        void load_setting(QString key, QVariant& val, QVariant def=0);
 		void store_setting(QString key, QVariant val);
 
 		bool load_setting_bool(QString key, bool def=false);
@@ -203,14 +198,24 @@ protected:
 
 private:
     CDatabaseConnector(const CDatabaseConnector&);
-    const QString m_createScriptFileName;
-    const QString m_databaseContainerFile;
+
     QSqlDatabase m_database;
-
-
-
+    QString _db_filename;
 
     QString append_track_sort_string(QString querytext, TrackSort sortorder);
+
+    /**
+      * Check if db of m_databaseFileContainer is existent
+      * @return true if we can load the db false if not
+      */
+    bool isExistent ();
+
+    bool createDB();
+    bool openDatabase ();
+    bool apply_fixes();
+
+
+
 
 
 

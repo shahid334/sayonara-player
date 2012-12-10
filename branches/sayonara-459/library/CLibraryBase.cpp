@@ -61,7 +61,8 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
-	connect(m_thread, SIGNAL(reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
+    connect(m_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
+    connect(m_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
 }
 
 
@@ -263,14 +264,29 @@ void CLibraryBase::reload_thread_finished(){
 	_db->getAllArtists(_vec_artists);
     _db->getTracksFromDatabase(_vec_md);
 
-
+    emit sig_all_artists_loaded(_vec_artists);
+    emit sig_all_albums_loaded(_vec_albums);
+    emit sig_all_tracks_loaded(_vec_md);
 	emit sig_reload_library_finished();
+}
+
+void CLibraryBase::library_reloading_state_new_block(){
+    m_thread->pause();
+    _db->getAllAlbums(_vec_albums);
+    _db->getAllArtists(_vec_artists);
+    _db->getTracksFromDatabase(_vec_md);
+
+    emit sig_all_artists_loaded(_vec_artists);
+    emit sig_all_albums_loaded(_vec_albums);
+    emit sig_all_tracks_loaded(_vec_md);
+
+    m_thread->goon();
+
 }
 
 void CLibraryBase::library_reloading_state_slot(QString str){
 
 	emit sig_reloading_library(str);
-
 }
 
 
@@ -281,7 +297,7 @@ void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
 
     MetaDataList data;
     _db->getTracksFromDatabase(data);
-    emit sig_metadata_loaded(data);
+    emit sig_all_tracks_loaded(data);
 }
 
 
@@ -302,7 +318,7 @@ void CLibraryBase::loadDataFromDb () {
 void CLibraryBase::emit_stuff(){
 	emit sig_all_albums_loaded(_vec_albums);
 	emit sig_all_artists_loaded(_vec_artists);
-	emit sig_metadata_loaded(_vec_md);
+    emit sig_all_tracks_loaded(_vec_md);
 }
 
 
@@ -398,7 +414,7 @@ void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_s
             _vec_md.push_back(md);
         }
 
-		emit sig_metadata_loaded(_vec_md);
+        emit sig_all_tracks_loaded(_vec_md);
 	}
 }
 
@@ -503,7 +519,7 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
     _selected_tracks = new_selected_tracks;
 */
 	emit sig_all_albums_loaded(_vec_albums);
-	emit sig_metadata_loaded(_vec_md);
+    emit sig_all_tracks_loaded(_vec_md);
 }
 
 
@@ -574,7 +590,7 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
     _selected_tracks = new_selected_tracks;
 
 
-	emit sig_metadata_loaded(_vec_md);
+    emit sig_all_tracks_loaded(_vec_md);
 }
 
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){

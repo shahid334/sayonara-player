@@ -57,15 +57,16 @@ QString Helper::cvtQString2FirstUpper(QString str){
 
 	QString ret_str = "";
 	QStringList lst = str.split(" ");
-	foreach(QString word, lst){
-		QChar first = word.at(0);
-		word.remove(0,1);
-		word.prepend(first.toUpper());
 
-		ret_str += word + " ";
+    foreach(QString word, lst){
+        QString first = word.left(1);
+		word.remove(0,1);
+        word = first.toUpper() + word + " ";
+
+        ret_str += word;
 	}
 
-	return ret_str.trimmed();
+    return ret_str.left(ret_str.size() - 1);
 }
 
 QString cvtNum2String(int num, int digits){

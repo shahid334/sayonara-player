@@ -141,7 +141,6 @@ void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
 	if(b)
 		this->showFullScreen();
 	else this->showNormal();
-
 }
 
 
@@ -167,7 +166,7 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 		emit libpath_changed(dir);
 		CSettingsStorage::getInstance()->setLibraryPath(dir);
 
-		QMessageBox dialog;
+        QMessageBox dialog(this);
 
 		dialog.setFocus();
 		dialog.setIcon(QMessageBox::Question);

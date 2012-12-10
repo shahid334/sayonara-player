@@ -49,25 +49,9 @@ public:
     bool isRunFirstTime ();
 
     /**
-      * Create directory .sayonara and db
-      * @param deleteOld Dont care if config already exists
-      * @return true if successfull
-      */
-    bool runFirstTime (bool deleteOld = false);
-
-
-    /**
       * Returns Filename of DB as absolute path
       */
     QString getDBFileName ();
-
-
-
-
-    
-
-
-
 
 
 

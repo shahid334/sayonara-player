@@ -47,49 +47,7 @@ bool CSettingsStorage::isRunFirstTime () {
     return ret;
 }
 
-bool CSettingsStorage::runFirstTime (bool deleteOld) {
-    bool ret = false;
-    QDir dir = QDir::homePath();
 
-    ret = dir.cd(this -> m_sayonaraPath);
-    if (!ret) {
-        //dir does not exist, so we are creating it...
-        ret = dir.mkdir(this -> m_sayonaraPath);
-        if (ret) {
-            ret = dir.cd(this -> m_sayonaraPath);
-        }
-    }
-    //if ret is still not true we are not able to create the directory
-    if (ret) {
-        QFile dest (dir.absolutePath() + QDir::separator() + m_dbFile);
-        if (deleteOld) {
-            if (dest.exists()) {
-                qDebug() << "Deleting: " << dir.absolutePath() + QDir::separator() + m_dbFile;
-                dir.remove(m_dbFile);
-            }
-        }
-        if (!dest.exists()) {
-
-            qDebug() << "cp " << Helper::getIconPath() + m_dbSource << " " << dir.absolutePath() + QDir::separator() + m_dbFile;
-            if (QFile::copy(Helper::getIconPath() + m_dbSource, dir.absolutePath() + QDir::separator()+ m_dbFile)) {
-               qDebug() << "DB File has been copied to " <<   dir.absolutePath() + QDir::separator()+ m_dbFile;
-            }
-            else {
-               // qFatal(QString ("Were not able to copy file" + dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
-                qFatal("Were not able to copy file %s", QString(dir.absolutePath() + QDir::separator()+ m_dbFile).toStdString().c_str());
-
-
-            }
-        }
-    }
-    else {
-        qFatal("We are not able to create the directory %s", QString(QDir::homePath() + m_sayonaraPath).toStdString().c_str() );
-    }
-    if (!dir.exists()) {
-
-    }
-    return ret;
-}
 
 
 CSettingsStorage::~CSettingsStorage () {
@@ -105,16 +63,7 @@ void CSettingsStorage::init() {
 
 QString CSettingsStorage::getDBFileName () {
 		
-#ifdef Q_OS_WIN   
-	QString dir = QDir::homePath() + QString("\\.Sayonara\\player.db");
-    return dir;
-#else
-
-    //dir.cd(Helper::getIconPath());
-    return QDir::homePath() + QDir::separator() + m_sayonaraPath + QDir::separator() + m_dbFile;
-#endif
-
-
+    return Helper::getSayonaraPath() + QDir::separator() + m_dbFile;
 }
 
 QString CSettingsStorage::getVersion(){
