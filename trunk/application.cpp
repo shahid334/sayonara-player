@@ -187,6 +187,7 @@ void Application::init_connections(){
    CONNECT (player, search(int),							listen,			jump(int));
    CONNECT (player, sig_volume_changed(int),				listen,			setVolume(int));
    CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
+   CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,	record_button_toggled(bool));
 
    CONNECT (player, baseDirSelected(const QString &),		library,            baseDirSelected(const QString & ));
    CONNECT (player, reloadLibrary(), 						library,            reloadLibrary());
@@ -257,7 +258,7 @@ void Application::init_connections(){
 	   CONNECT(library, sig_reload_library_finished(),                  ui_library, 	reloading_library_finished());
 	   CONNECT(library, sig_reloading_library(QString&),				ui_library, 	reloading_library(QString&));
 	   CONNECT(library, sig_import_result(bool),						ui_library,		import_result(bool));
-	   CONNECT(library, sig_metadata_loaded(MetaDataList&), 			ui_library, 	fill_library_tracks(MetaDataList&));
+       CONNECT(library, sig_all_tracks_loaded(MetaDataList&), 			ui_library, 	fill_library_tracks(MetaDataList&));
 	   CONNECT(library, sig_all_albums_loaded(AlbumList&),          ui_library, 	fill_library_albums(AlbumList&));
 	   CONNECT(library, sig_all_artists_loaded(ArtistList&), 		ui_library, 	fill_library_artists(ArtistList&));
 	   CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			ui_library, 	track_info_available(const MetaDataList&));

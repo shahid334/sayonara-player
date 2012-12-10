@@ -43,7 +43,8 @@ Q_OBJECT
 
 signals:
 
-	void reloading_library(QString);
+    void sig_reloading_library(QString);
+    void sig_new_block_saved();
 
 
 public:
@@ -53,6 +54,8 @@ public:
 	void set_lib_path(QString library_path);
 	void get_metadata(MetaDataList&);
 	int getState();
+    void pause();
+    void goon();
 
 
 protected:
@@ -62,6 +65,7 @@ private:
     int		_state;
     QString _library_path;
     MetaDataList _v_metadata;
+    bool    _paused;
 
     int get_and_save_all_files();
     void get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n_files);

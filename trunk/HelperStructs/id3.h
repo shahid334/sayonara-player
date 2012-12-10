@@ -36,9 +36,6 @@ bool getMetaDataOfFile(MetaData& md);
 
 void setMetaDataOfFile(MetaData& md);
 
-
-void getMetaDataOfFile(TagLib::FileRef&, QString file, MetaData&);
-
 };
 
 

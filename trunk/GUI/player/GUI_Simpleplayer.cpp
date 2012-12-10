@@ -170,6 +170,8 @@ void GUI_SimplePlayer::initGUI() {
     ui->action_viewLibrary->setShortcut(QKeySequence("CTRL+l"));
 
     ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
+    ui->action_Dark->setShortcut(QKeySequence("F10"));
+
 
     ui->btn_correct->setVisible(false);
 }
@@ -642,6 +644,8 @@ void GUI_SimplePlayer::setRadioMode(int radio){
     m_trayIcon->set_enable_bwd(radio == RADIO_OFF);
 
     ui->songProgress->setEnabled(radio == RADIO_OFF);
+
+    emit sig_rec_button_toggled(ui->btn_rec->isChecked() && ui->btn_rec->isVisible());
 }
 
 
@@ -658,6 +662,8 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
         ui->btn_play->setEnabled(m_metadata.radio_mode == RADIO_OFF);
 		ui->btn_rec->setVisible(false);
 	}
+
+    emit sig_rec_button_toggled(ui->btn_rec->isChecked() && ui->btn_rec->isVisible());
 }
 
 
@@ -747,6 +753,10 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 		case (Qt::Key_L):
 			ui->action_viewLibrary->setChecked(!ui->action_viewLibrary->isChecked());
 			break;
+
+        case (Qt::Key_F10):
+            ui->action_Dark->setChecked(!ui->action_Dark->isChecked());
+            break;
 
 		case (Qt::Key_F11):
 			show_fullscreen_toggled(!this->isFullScreen());

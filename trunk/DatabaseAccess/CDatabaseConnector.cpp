@@ -23,12 +23,15 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 #include <QSqlQuery>
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
 #include <HelperStructs/CSettingsStorage.h>
+#include <HelperStructs/Helper.h>
+
 
 #include <cstdlib>
 
@@ -40,56 +43,119 @@ CDatabaseConnector* CDatabaseConnector::getInstance(){
 	return &instance;
 }
 
-CDatabaseConnector::CDatabaseConnector() :
-
-    m_createScriptFileName ("createDB.sql"),
-    m_databaseContainerFile (CSettingsStorage::getInstance()->getDBFileName())
+CDatabaseConnector::CDatabaseConnector()
 {
+    _db_filename = Helper::getSayonaraPath() + QDir::separator() + "player.db";
 
-    if (this -> isExistent()==false) {
-        qDebug() << "Database not existent";
+    bool success = isExistent();
+
+    if ( !success ) {
+        qDebug() << "Database not existent. Creating database";
+
+        success = createDB();
     }
 }
 
 bool CDatabaseConnector::isExistent() {
-    QFile f (this->m_databaseContainerFile);
-	qDebug() << "Open database: " << f.fileName();
-    bool r = f.exists();
-    if (r == true) {
-        f.close();
-        r = openDatabase ();
-        if (r) {
-            m_database.close();
+
+    bool success;
+    success = QFile::exists(_db_filename);
+    if(!success){
+        success = createDB();
+
+        if(!success){
+            qDebug() << "Database could not be created";
+            return false;
         }
+
+        else
+            qDebug() << "Database created successfully";
     }
-    return r;
+
+    success = openDatabase();
+
+    if (success)
+        m_database.close();
+
+    else
+        qDebug() << "Could not open Database";
+
+
+    return success;
 }
 
 bool CDatabaseConnector::createDB () {
-	return true;
+
+        bool ret = false;
+        bool success;
+        QDir dir = QDir::homePath();
+
+        QString sayonara_path = Helper::getSayonaraPath();
+        if(!QFile::exists(sayonara_path)){
+            success = dir.mkdir(".Sayonara");
+            qDebug() << "Could not create .Sayonara dir";
+            if(!success) return false;
+        }
+
+        success = dir.cd(sayonara_path);
+
+        //if ret is still not true we are not able to create the directory
+        if(!success){
+            qDebug() << "Could not change to .Sayonara dir";
+            return false;
+        }
+
+        QString source_db_file = Helper::getSharePath() + QDir::separator() + "empty.db";
+        QString target_db_file = _db_filename;
+        success = QFile::exists(target_db_file);
+
+        if(success) return true;
+
+        if (!success) {
+
+            qDebug() << "copy " <<  source_db_file << " to " << target_db_file;
+            if (QFile::copy(source_db_file, target_db_file)) {
+               qDebug() << "DB file has been copied to " <<   target_db_file;
+               success = true;
+            }
+
+            else {
+                qDebug() << "Fatal Error: could not copy DB file to " << target_db_file;
+                success = false;
+            }
+        }
+
+        return success;
+}
+
+bool CDatabaseConnector::init_settings_storage(){
+    CSettingsStorage* s = CSettingsStorage::getInstance();
+    if(s)
+        return true;
+    else
+        return false;
 }
 
 bool CDatabaseConnector::openDatabase () {
-	if(m_database.isOpen()) m_database.close();
-    this -> m_database = QSqlDatabase::addDatabase("QSQLITE",this->m_databaseContainerFile);
-    this -> m_database.setDatabaseName(this->m_databaseContainerFile);
-    bool e = this -> m_database.open();
+
+    if(m_database.isOpen()) m_database.close();
+
+    m_database = QSqlDatabase::addDatabase("QSQLITE", _db_filename);
+    m_database.setDatabaseName( _db_filename );
+    bool e = m_database.open();
     if (!e) {
     	qDebug() << "DatabaseConnector database cannot be opened!";
-        QSqlError er = this -> m_database.lastError();
+        QSqlError er = m_database.lastError();
         qDebug() << er.driverText();
         qDebug() << er.databaseText();
     }
 
     else{
+        qDebug() << "Apply fixes";
     	apply_fixes();
     }
 
-
-
-
     return e;
-
 }
 
 CDatabaseConnector::~CDatabaseConnector() {
@@ -102,10 +168,8 @@ CDatabaseConnector::~CDatabaseConnector() {
 
 bool CDatabaseConnector::apply_fixes(){
 
-	if (!this -> m_database.isOpen())
-	        this -> m_database.open();
-
-	if (!this -> m_database.isOpen()) return false;
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
 
 	QSqlQuery q (this->m_database);
 	QString querytext = "SELECT position FROM playlisttotracks;";

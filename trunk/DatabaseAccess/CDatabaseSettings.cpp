@@ -37,16 +37,17 @@
 bool CDatabaseConnector::load_setting_bool(QString key, bool def){
 	bool ret;
 	QVariant v;
-	load_setting(key, v);
+    load_setting(key, v, def);
+
 	ret =  v.toBool();
-	if(v.isNull()) return def;
+    if(v.isNull() || !v.isValid()) return def;
 	else return ret;
 }
 
 QString CDatabaseConnector::load_setting_string(QString key, QString def){
 	QString ret;
 	QVariant v;
-	load_setting(key, v);
+    load_setting(key, v, def);
 	ret = v.toString();
 	if(v.isNull()) return def;
 	else return ret;
@@ -56,7 +57,7 @@ int CDatabaseConnector::load_setting_int(QString key, int def){
 	bool ok;
 	int ret;
 	QVariant v;
-	load_setting(key, v);
+    load_setting(key, v, def);
 	ret = v.toInt(&ok);
 	if(!ok) return def;
 	else return ret;
@@ -64,11 +65,17 @@ int CDatabaseConnector::load_setting_int(QString key, int def){
 }
 
 QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
+
+    DB_TRY_OPEN(m_database);
+
 	return load_setting_string(key).split(sep);
 }
 
 
 bool CDatabaseConnector::load_settings(){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
 
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
@@ -132,7 +139,7 @@ bool CDatabaseConnector::load_settings(){
 	settings->setEqualizerSettings(vec_eq_settings);
 
 	/* Volume */
-	int volume = load_setting_int("volume");
+    int volume = load_setting_int("volume", 50);
 	settings->setVolume(volume);
 
 
@@ -155,7 +162,7 @@ bool CDatabaseConnector::load_settings(){
 	QString playlist = load_setting_string("playlist");
 	settings->setPlaylist(playlist);
 
-	bool load_playlist = load_setting_bool("load_playlist");
+    bool load_playlist = load_setting_bool("load_playlist", false);
 	settings->setLoadPlaylist(load_playlist);
 
 	QString playlist_mode_str = load_setting_string("playlist_mode");
@@ -168,7 +175,7 @@ bool CDatabaseConnector::load_settings(){
 	settings->setPlayerStyle(style);
 
 	/* show notifications */
-	bool show_notifications = load_setting_bool("show_notifications");
+    bool show_notifications = load_setting_bool("show_notifications", true);
 	settings->setShowNotifications(show_notifications);
 
     int notification_timeout = load_setting_int("notification_timeout", 5000);
@@ -215,8 +222,8 @@ bool CDatabaseConnector::load_settings(){
 	bool streamripper_complete_tracks = load_setting_bool("streamripper_complete_tracks", true);
 	settings->setStreamRipperCompleteTracks(streamripper_complete_tracks);
 
-	bool streamripper_playlist = load_setting_bool("streamripper_playlist", true);
-	settings->setStreamRipperPlaylist(streamripper_playlist);
+    bool streamripper_session_path = load_setting_bool("streamripper_session_path", true);
+    settings->setStreamRipperSessionPath(streamripper_session_path);
 
 	bool socket_active = load_setting_bool("socket_active");
 	settings->setSocketActivated(socket_active);
@@ -237,6 +244,9 @@ bool CDatabaseConnector::load_settings(){
 }
 
 bool CDatabaseConnector::store_settings(){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
 
 	QString last_fm_username;
 	QString last_fm_password;
@@ -323,8 +333,8 @@ bool CDatabaseConnector::store_settings(){
 	bool streamripper_complete_tracks = storage->getStreamRipperCompleteTracks();
 	store_setting("streamripper_complete_tracks", streamripper_complete_tracks);
 
-	bool streamripper_playlist = storage->getStreamRipperPlaylist();
-	store_setting("streamripper_playlist", streamripper_playlist);
+    bool streamripper_session_path = storage->getStreamRipperSessionPath();
+    store_setting("streamripper_session_path", streamripper_session_path);
 
 	bool socket_active = storage->getSocketActivated();
 	store_setting("socket_active", socket_active);
@@ -347,9 +357,9 @@ bool CDatabaseConnector::store_settings(){
 
 
 
-void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value){
-	if (!this -> m_database.isOpen())
-	        this -> m_database.open();
+void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant def){
+
+    qDebug() << "Wanna load " << key;
 
 	tgt_value = 0;
 	try {
@@ -363,12 +373,16 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value){
 
 		if(q.next()){
 			tgt_value = q.value(0);
-			//qDebug() << "Fetched " << key << " -> " << tgt_value;
 		}
+
+        else{
+            tgt_value = def;
+        }
 	}
 
 	catch (QString& ex) {
 		qDebug() << ex;
+        tgt_value = def;
 	}
 }
 

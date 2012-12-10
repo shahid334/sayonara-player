@@ -49,25 +49,9 @@ public:
     bool isRunFirstTime ();
 
     /**
-      * Create directory .sayonara and db
-      * @param deleteOld Dont care if config already exists
-      * @return true if successfull
-      */
-    bool runFirstTime (bool deleteOld = false);
-
-
-    /**
       * Returns Filename of DB as absolute path
       */
     QString getDBFileName ();
-
-
-
-
-    
-
-
-
 
 
 
@@ -126,7 +110,7 @@ private:
     bool m_streamripper_warning;  
     QString m_streamripper_path;
     bool m_streamripper_complete_tracks;
-    bool m_streamripper_playlist;
+    bool m_streamripper_session_path;
 
     /* sound engine */
     QString m_sound_engine;
@@ -224,8 +208,8 @@ public:
 	bool getStreamRipperCompleteTracks();
 	void setStreamRipperCompleteTracks(bool b);
 
-	bool getStreamRipperPlaylist();
-	void setStreamRipperPlaylist(bool b);
+    bool getStreamRipperSessionPath();
+    void setStreamRipperSessionPath(bool b);
 
 	bool getSocketActivated();
 	void setSocketActivated(bool b);

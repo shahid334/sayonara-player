@@ -23,8 +23,8 @@ void LN_Notification::notification_show(QString title, QString text){
 
     QString pixmap_path = Helper::getIconPath() + "/logo_small.png";
 
-	NotifyNotification* n = notify_notification_new( title.toLocal8Bit().data(),
-													text.toLocal8Bit().data(),
+    NotifyNotification* n = notify_notification_new( title.toLocal8Bit().data(),
+                                                     text.toLocal8Bit().data(),
                                                     pixmap_path.toLocal8Bit().data());
     int timeout = CSettingsStorage::getInstance()->getNotificationTimeout();
     notify_notification_set_timeout     (n, timeout);

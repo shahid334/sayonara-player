@@ -88,13 +88,12 @@ void printHelp(){
 
 
 int main(int argc, char *argv[]){
+    CDatabaseConnector::getInstance()->init_settings_storage();
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    bool success = CDatabaseConnector::getInstance()->load_settings();
+    qDebug() << "Load settings: " << success;
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
-	settings->runFirstTime(false);
-
-	CDatabaseConnector::getInstance()->load_settings();
-
-
+    if(!success) return 0;
 
 #ifdef Q_OS_UNIX
 	if(settings->getAllowOnlyOneInstance()){

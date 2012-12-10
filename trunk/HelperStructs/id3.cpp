@@ -72,7 +72,8 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
 
 
-	md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
+    //md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
+    md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 	md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
     md.length_ms = length * 1000;
@@ -88,59 +89,6 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 		md.title = md.title.left(md.title.length() - 4);
 	}
 	return true;
-}
-
-
-void ID3::getMetaDataOfFile(TagLib::FileRef& f, QString file, MetaData& md){
-
-		md.filepath = QDir(file).absolutePath();
-
-        QFile qf(md.filepath);
-        md.filesize = qf.size();
-        qf.close();
-
-
-		int idx = md.filepath.lastIndexOf('/');
-		md.title = md.filepath.right(md.filepath.length() - idx -1);
-		md.title = md.title.left(md.title.length() - 4);
-
-        if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(file.toUtf8()) ) return;
-
-		string artist = f.tag()->artist().to8Bit(true);
-		string album = f.tag()->album().to8Bit(true);
-		string title = f.tag()->title().to8Bit(true);
-		string genre = f.tag()->genre().to8Bit(true);
-		uint year = f.tag()->year();
-		uint track = f.tag()->track();
-
-		int bitrate = f.audioProperties()->bitrate() * 1000;
-		int length = f.audioProperties()->length();
-
-
-        QStringList genres;
-        QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
-        genres = genre_str.split(QRegExp(",|/|;|\\."));
-        for(int i=0; i<genres.size(); i++){
-            genres[i] = genres[i].trimmed();
-        }
-
-		md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
-		md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
-		md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
-		md.filepath = QDir(file).absolutePath();;
-		md.length_ms = length * 1000;
-		md.year = year;
-		md.track_num = track;
-		md.bitrate = bitrate;
-        md.genres = genres;
-
-
-		if(md.title.length() == 0){
-			idx = md.filepath.lastIndexOf('/');
-			md.title = md.filepath.right(md.filepath.length() - idx -1);
-			md.title = md.title.left(md.title.length() - 4);
-		}
-
 }
 
 
