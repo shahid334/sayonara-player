@@ -124,12 +124,15 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
         Notification* n = m_plugin_loader->get_cur_plugin();
 
         if(n){
-            n->notification_show(md.title, md.artist+ "\n" + md.album);
+            qDebug() << "Notification: " << md.title << ", " << md.artist+ "," + md.album;
+            QString text = md.artist+ "\n" + md.album;
+            text.replace("&", "&amp;");
+            n->notification_show(md.title, text);
         }
 
         else if (this -> isSystemTrayAvailable()) {
 
-            this -> showMessage("Sayonara",md.title + " by " + md.artist,QSystemTrayIcon::Information, m_timeout);
+            this -> showMessage("Sayonara", md.title + " by " + md.artist,QSystemTrayIcon::Information, m_timeout);
         }
     }
 

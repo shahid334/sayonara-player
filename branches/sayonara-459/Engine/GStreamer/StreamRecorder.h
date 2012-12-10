@@ -76,6 +76,7 @@ private:
     QString check_session_path(QString sr_path);
     bool save_file();
     bool init_thread(QString filename);
+    bool terminate_thread_if_running();
     
 };
 

@@ -360,6 +360,7 @@ void GST_Engine::stop(){
 
 	// streamripper, wanna record is set when record button is pressed
     if( _playing_stream && _sr_active ){
+        qDebug() << "Playing stream";
         _stream_recorder->stop(!_sr_wanna_record);
 	}
 
@@ -454,7 +455,7 @@ void GST_Engine::set_cur_position(quint32 pos){
 
 void GST_Engine::set_track_finished(){
 
-    if(_sr_active) {
+    if(_sr_active && _playing_stream) {
         _stream_recorder->stop(!_sr_wanna_record);
     }
 

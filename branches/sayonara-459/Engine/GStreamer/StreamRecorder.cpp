@@ -92,8 +92,10 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 
 
 StreamRecorder::~StreamRecorder(){
-    if(_sr_thread)
+    if(_sr_thread){
         delete _sr_thread;
+        _sr_thread = NULL;
+    }
 }
 
 
@@ -185,6 +187,17 @@ bool StreamRecorder::init_thread(QString filename){
 
 }
 
+bool StreamRecorder::terminate_thread_if_running(){
+    if(_sr_thread){
+        if(_sr_thread->isRunning()){
+            _sr_thread->terminate();
+        }
+    }
+
+    _thread_is_running = false;
+    return true;
+}
+
 
 
 
@@ -248,8 +261,7 @@ bool StreamRecorder::stop(bool delete_track){
     bool save_success = true;
 
     _stream_ended = true;
-    if(_sr_thread->isRunning())
-        _sr_thread->terminate();
+    terminate_thread_if_running();
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 
