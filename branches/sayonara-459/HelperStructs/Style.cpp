@@ -62,7 +62,7 @@ QString Style::get_v_slider_style(bool dark, int percent){
     if(!dark) return "";
 
     QString darker_grey = "#2B2B2B";
-    QString dark_grey = "#525252";
+    QString dark_grey = "#555555";
 
 
 
@@ -105,14 +105,13 @@ QString Style::get_v_slider_style(bool dark, int percent){
         "}" +
 
         "QSlider::handle:vertical {" +
-        //"    background: #525252;" +
        "     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, "+
-         "                                 stop: 0 #6A6A6A, stop: 0.4 " + dark_grey + ");" +
+         "                                 stop: 0 #6B6B6B, stop: 0.4 " + dark_grey + ");" +
         "    height: 10px;" +
-        "    margin-left: -5px; " +
-        "    margin-right: -5px; " +
+        "    margin-left: -4px; " +
+        "    margin-right: -4px; " +
         "    min-width: 12px;" +
-        "	 border: 1px solid #2C2C2C; " +
+        "    border: 1px solid #2C2C2C; " +
         "    border-radius: 4px; " +
         "}" +
 
