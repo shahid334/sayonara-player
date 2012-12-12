@@ -271,7 +271,6 @@ void GUI_Alternate_Covers::update_model(){
 
     _model->removeRows(0, _model->rowCount());
     _model->insertRows(0, 2);
-    qDebug() << "cur idx = " << _cur_idx;
 
     for(int i=0; i<_filelist.size(); i++){
 

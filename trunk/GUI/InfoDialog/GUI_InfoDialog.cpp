@@ -335,9 +335,11 @@ void GUI_InfoDialog::prepare_artists(){
 	foreach(QString path, pathlist){
 		QString tmppath = path;
 		//path.replace(library_path, BOLD("${ML}"));
-		path.replace(library_path, ".");
+        if(library_path.size() > 0)
+            path.replace(library_path, ".");
 
 		path = LINK(tmppath, path);
+        qDebug() << "path = " << path;
 
 		paths += (path + CAR_RET);
 	}
@@ -449,7 +451,8 @@ void GUI_InfoDialog::prepare_albums(){
 	foreach(QString path, pathlist){
 		QString tmppath = path;
 		//path.replace(library_path, BOLD("${ML}"));
-		path.replace(library_path, ".");
+        if(library_path.size() > 0)
+            path.replace(library_path, ".");
 		path = LINK(tmppath, path);
 		paths += (path + CAR_RET);
 	}
@@ -574,7 +577,8 @@ void GUI_InfoDialog::prepare_tracks(){
     foreach(QString path, pathlist){
         QString tmppath = path;
         //path.replace(library_path, BOLD("${ML}"));
-        path.replace(library_path, ".");
+        if(library_path.size() > 0)
+            path.replace(library_path, ".");
         path = LINK(tmppath, path);
         paths += (path + CAR_RET);
     }

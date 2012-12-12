@@ -109,7 +109,6 @@ bool CDatabaseConnector::load_settings(){
 	load_setting("eq_last", v_eq_last);
 	if(v_eq_last != 0){
 		eq_last = v_eq_last.toInt();
-		qDebug() << "Got from database: " << eq_last;
 	}
 
 	settings->setLastEqualizer(eq_last);
@@ -375,7 +374,6 @@ bool CDatabaseConnector::store_settings(){
 
 void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant def){
 
-    qDebug() << "Wanna load " << key;
 
 	tgt_value = 0;
 	try {
