@@ -63,33 +63,35 @@ LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
 
 }
 
-
-
-
 void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
 	if(!index.isValid()) return;
 
     int col = index.column();
+    LibraryItemModelTracks* model = (LibraryItemModelTracks*) _parent->model();
+    int idx_col = model->calc_shown_col(col);
     painter->save();
 
     QRect 	rect(option.rect);
     QString	text = index.model()->data(index, Qt::DisplayRole).toString();
 
-
     if(_model->is_selected(index.row())) {
         painter->setPen(_pen);
     }
 
-    switch(col){
+    switch(idx_col){
 
+
+        case COL_BITRATE:
+            text = QString::number(text.toInt() / 1000) + " kbit/s";
+            rect.translate(-2, 0);
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+            break;
         case COL_YEAR:
-            if(text == "0") text = "";
-
+                if(text == "0") text = "";
         case COL_TRACK_NUM:
         case COL_LENGTH:
-        case COL_BITRATE:
             rect.translate(-2, 0);
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
             break;

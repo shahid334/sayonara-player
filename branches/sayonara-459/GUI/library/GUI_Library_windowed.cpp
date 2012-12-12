@@ -67,6 +67,7 @@
 #include <QBrush>
 #include <QScrollBar>
 #include <QItemSelectionModel>
+#include <QHeaderView>
 
 
 #define INFO_IMG_SIZE 220
@@ -98,8 +99,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->_track_model = new LibraryItemModelTracks();
     this->_track_delegate = new LibraryItemDelegateTracks(_track_model, this->ui->tb_title);
 
+
 	this->ui->tb_title->setModel(this->_track_model);
-	this->ui->tb_title->setItemDelegate(this->_track_delegate);
+    this->ui->tb_title->setItemDelegate(this->_track_delegate);
 	this->ui->tb_title->setAlternatingRowColors(true);
 	this->ui->tb_title->setDragEnabled(true);
 
@@ -136,7 +138,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
     connect(this->ui->tb_title, SIGNAL(clicked(const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex & )));
 	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
-	connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
+    connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
+    //connect(title_header_view, SIGNAL(context_menu_emitted()), this, SLOT(show_header_menu_title()));
 	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
@@ -148,6 +151,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
 
 	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
+
+
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
@@ -179,7 +184,59 @@ void GUI_Library_windowed::init_menues(){
 	_right_click_menu->addAction(_edit_action);
 	_right_click_menu->addAction(_delete_action);
 	_right_click_menu->addAction(_play_next_action);
+
+
+    _header_rc_menu_title = new QMenu(this->ui->tb_title->horizontalHeader());
+
+
+    QAction* title_action_track_num = new QAction("Track number", this);
+    QAction* title_action_name = new QAction("Name", this);
+    QAction* title_action_artist = new QAction("Artist", this);
+    QAction* title_action_album = new QAction("Album", this);
+    QAction* title_action_year = new QAction("Year", this);
+    QAction* title_action_length = new QAction("Length", this);
+    QAction* title_action_bitrate = new QAction("Bitrate", this);
+
+    _header_rc_actions_title  << title_action_track_num;
+    _header_rc_actions_title  << title_action_name;
+    _header_rc_actions_title  << title_action_album;
+    _header_rc_actions_title  << title_action_artist;
+    _header_rc_actions_title  << title_action_year;
+    _header_rc_actions_title  << title_action_length;
+    _header_rc_actions_title  << title_action_bitrate;
+
+    for(int i=0; i<_header_rc_actions_title.size(); i++){
+        QAction* action = _header_rc_actions_title[i];
+        _header_map_name_col_title[action->text()] = i;
+        action->setCheckable(true);
+        action->setChecked(true);
+        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_title_changed(bool)));
+        ui->tb_title->horizontalHeader()->addAction(action);
+    }
+
+    this->ui->tb_title->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
+
+void GUI_Library_windowed::header_rc_menu_title_changed(bool b){
+
+    _track_model->removeColumns(0, _track_model->columnCount());
+
+    int col_idx = 0;
+    foreach(QAction* action, _header_rc_actions_title){
+
+        qDebug() << action->text() << ": " << action->isChecked();
+
+        if(action->isChecked()){
+
+            _track_model->insertColumn(col_idx);
+        }
+
+        col_idx++;
+    }
+
+    set_title_sizes();
+}
+
 
 void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
 
@@ -237,56 +294,130 @@ void GUI_Library_windowed::change_skin(bool dark){
     this->setStyleSheet(style);*/
 }
 
+int GUI_Library_windowed::set_title_sizes(){
+
+    int altogether_width = 0;
+    int tolerance = 0;
+
+    bool artist_shown = false;
+    bool album_shown = false;
+    bool title_shown = false;
+
+    for(int i=0; i<_track_model->columnCount(); i++){
+        int col = _track_model->calc_shown_col(i);
+        int preferred_size;
+
+        switch(col){
+            case COL_TRACK_NUM:
+                preferred_size = 25;
+                break;
+            case COL_YEAR:
+                preferred_size = 50;
+                break;
+            case COL_LENGTH:
+                preferred_size = 50;
+                break;
+            case COL_BITRATE:
+                preferred_size = 70;
+                break;
+
+            case COL_ALBUM:
+                album_shown = true; break;
+            case COL_ARTIST:
+                artist_shown = true; break;
+            case COL_TITLE:
+                title_shown = true; break;
+
+            default:
+                preferred_size = 0;
+                break;
+        }
+
+        altogether_width += preferred_size;
+
+        this->ui->tb_title->setColumnWidth(i, preferred_size);
+    }
+
+    altogether_width += tolerance;
+
+    int target_width = this->ui->tb_title->width();
+
+    if(target_width < 600) {
+        target_width = 600;
+    }
+
+    target_width -= altogether_width;
+
+    for(int i=0; i<_track_model->columnCount(); i++){
+        int col = _track_model->calc_shown_col(i);
+        int preferred_size = 0;
+
+        switch(col){
+
+            case COL_TITLE:
+                if(artist_shown && album_shown)
+                    preferred_size = (0.4 * target_width);
+                else if(artist_shown || album_shown)
+                    preferred_size = (int) (0.6 * target_width);
+                else
+                    preferred_size = target_width;
+                break;
+
+            case COL_ALBUM:
+
+                if(title_shown && artist_shown)
+                    preferred_size = (int) (0.3 * target_width);
+                else if(title_shown)
+                    preferred_size = (int) (0.4 * target_width);
+                else if(artist_shown)
+                    preferred_size = (int) (0.5 * target_width);
+                else
+                    preferred_size = target_width;
+
+                break;
+
+            case COL_ARTIST:
+                if(title_shown && album_shown)
+                    preferred_size = (int) (0.3 * target_width);
+                else if(title_shown)
+                    preferred_size = (int) (0.4 * target_width);
+                else if(album_shown)
+                    preferred_size = (int) (0.5 * target_width);
+                else
+                    preferred_size = target_width;
+                    break;
+            default:
+                preferred_size = 0;
+                break;
+        }
+
+        altogether_width += preferred_size;
+
+        if(preferred_size > 0)
+            this->ui->tb_title->setColumnWidth(i, preferred_size);
+    }
+
+    if(altogether_width > this->ui->tb_title->width())
+        this->ui->tb_title->horizontalScrollBar()->show();
+
+
+    return 0;
+}
+
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	Q_UNUSED(e);
 
-	QSize tmpSize = this->ui->tb_title->size();
-	int width = tmpSize.width() -20;
-	int resisable_content = width - (50 + 50 + 60 + 25 );
-
-
-	if(width > 600){
-		this->ui->tb_title->setColumnWidth(0, 25);
-		this->ui->tb_title->setColumnWidth(1, resisable_content * 0.40);
-		this->ui->tb_title->setColumnWidth(2, resisable_content * 0.30);
-		this->ui->tb_title->setColumnWidth(3, resisable_content * 0.30);
-		this->ui->tb_title->setColumnWidth(4, 50);
-		this->ui->tb_title->setColumnWidth(5, 50);
-		this->ui->tb_title->setColumnWidth(6, 60);
-		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	}
-
-	else{
-		this->ui->tb_title->setColumnWidth(0, 25);
-		this->ui->tb_title->setColumnWidth(1, (width-25) * 0.40);
-		this->ui->tb_title->setColumnWidth(2, (width-25) * 0.30);
-		this->ui->tb_title->setColumnWidth(3, (width-25) * 0.30);
-		this->ui->tb_title->setColumnWidth(4, 50);
-		this->ui->tb_title->setColumnWidth(5, 50);
-		this->ui->tb_title->setColumnWidth(6, 60);
-		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	}
-
-    if(this->ui->tb_title->horizontalScrollBar()->isVisible()){
-        QLabel* lab = new QLabel();
-        QPixmap p = QPixmap(Helper::getIconPath() + "/logo_small.png").scaled(20, 20, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        lab->setPixmap(p);
-        this->ui->tb_title->setCornerWidget(lab);
-    }
-
-    else this->ui->tb_title->setCornerWidget(NULL);
-
-
-	this->ui->lv_album->setColumnWidth(0, 20);
-
-	this->ui->lv_album->setColumnWidth(0, 20);
-	this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 100);
-	this->ui->lv_album->setColumnWidth(2, 40);
-
-	this->ui->lv_artist->setColumnWidth(0, 20);
+    this->ui->lv_artist->setColumnWidth(0, 20);
     this->ui->lv_artist->setColumnWidth(1, this->ui->lv_artist->width() - 120);
     this->ui->lv_artist->setColumnWidth(2, 60);
+
+
+	this->ui->lv_album->setColumnWidth(0, 20);
+    this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 100);
+	this->ui->lv_album->setColumnWidth(2, 40);
+
+    set_title_sizes();
 }
 
 
