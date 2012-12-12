@@ -90,27 +90,27 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="3">
      <widget class="QSlider" name="sli_2">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -134,20 +134,20 @@
     <item row="6" column="9">
      <widget class="QSlider" name="sli_8">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -189,27 +189,27 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="6">
      <widget class="QSlider" name="sli_5">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -251,7 +251,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -276,7 +276,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -301,7 +301,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -326,27 +326,27 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="7">
      <widget class="QSlider" name="sli_6">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -388,27 +388,27 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="5">
      <widget class="QSlider" name="sli_4">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -432,20 +432,20 @@
     <item row="6" column="2">
      <widget class="QSlider" name="sli_1">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -487,27 +487,27 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="1">
      <widget class="QSlider" name="sli_0">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -549,27 +549,27 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="4">
      <widget class="QSlider" name="sli_3">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -611,7 +611,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -697,20 +697,20 @@
     <item row="6" column="10">
      <widget class="QSlider" name="sli_9">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>5</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -746,20 +746,20 @@
     <item row="6" column="8">
      <widget class="QSlider" name="sli_7">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>30</width>
+        <width>24</width>
         <height>65</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>30</width>
+        <width>100</width>
         <height>5000</height>
        </size>
       </property>
@@ -797,6 +797,9 @@
       <property name="text">
        <string>29</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="7" column="2">
@@ -815,6 +818,9 @@
       </property>
       <property name="text">
        <string>59</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -835,6 +841,9 @@
       <property name="text">
        <string>119</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="7" column="4">
@@ -853,6 +862,9 @@
       </property>
       <property name="text">
        <string>237</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -873,6 +885,9 @@
       <property name="text">
        <string>474</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="7" column="6">
@@ -891,6 +906,9 @@
       </property>
       <property name="text">
        <string>947</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -911,6 +929,9 @@
       <property name="text">
        <string>1.9k</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="7" column="8">
@@ -929,6 +950,9 @@
       </property>
       <property name="text">
        <string>3.8k</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
@@ -949,6 +973,9 @@
       <property name="text">
        <string>7.5k</string>
       </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
     <item row="7" column="10">
@@ -967,6 +994,9 @@
       </property>
       <property name="text">
        <string>15k</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>

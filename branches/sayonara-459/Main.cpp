@@ -91,9 +91,11 @@ int main(int argc, char *argv[]){
     CDatabaseConnector::getInstance()->init_settings_storage();
     CSettingsStorage* settings = CSettingsStorage::getInstance();
     bool success = CDatabaseConnector::getInstance()->load_settings();
-    qDebug() << "Load settings: " << success;
-
-    if(!success) return 0;
+	
+    if(!success) {
+	qDebug() << "Database Error: Could not load settings";
+	return 0;
+    }
 
 #ifdef Q_OS_UNIX
 	if(settings->getAllowOnlyOneInstance()){
