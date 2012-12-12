@@ -116,7 +116,7 @@ signals:
     void sig_show_stream_rec();
     void libpath_changed(QString);
     void setupLastFM();
-    void skinChanged(bool);
+    void sig_skin_changed(bool);
 
     /* Covers */
     void sig_want_cover(const MetaData &);

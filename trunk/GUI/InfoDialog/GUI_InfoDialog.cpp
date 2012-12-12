@@ -339,8 +339,6 @@ void GUI_InfoDialog::prepare_artists(){
             path.replace(library_path, ".");
 
 		path = LINK(tmppath, path);
-        qDebug() << "path = " << path;
-
 		paths += (path + CAR_RET);
 	}
 

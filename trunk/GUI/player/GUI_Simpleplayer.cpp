@@ -505,8 +505,6 @@ void GUI_SimplePlayer::setStyle(int style){
 void GUI_SimplePlayer::changeSkin(bool dark) {
 
     QString stylesheet = Style::get_style(dark);
-    if(ui_eq)
-        ui_eq->changeSkin(dark);
 
 	this->setStyleSheet(stylesheet);
 
@@ -516,6 +514,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
 
     setupVolButton(ui->volumeSlider->value());
+    emit sig_skin_changed(dark);
 }
 
 
