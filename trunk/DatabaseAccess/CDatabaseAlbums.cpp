@@ -96,6 +96,18 @@ QString _create_order_string(AlbumSort sortorder){
 		case AlbumYearDesc:
 			return QString (" ORDER BY albumYear DESC, albumName ASC ");
 
+        case AlbumTracksAsc:
+            return QString (" ORDER BY albumNTracks ASC, albumName ASC ");
+
+        case AlbumTracksDesc:
+            return QString (" ORDER BY albumNTracks DESC, albumName ASC ");
+
+        case AlbumDurationAsc:
+            return QString (" ORDER BY albumLength ASC, albumName ASC ");
+
+        case AlbumDurationDesc:
+            return QString (" ORDER BY albumLength DESC, albumName ASC ");
+
 		default:
 			return "";
 	}

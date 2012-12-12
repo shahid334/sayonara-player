@@ -111,6 +111,8 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, TrackSor
 	else if(sort == TrackLengthDesc) querytext += QString(" ORDER BY trackLength DESC;");
 	else if(sort == TrackBitrateAsc) querytext += QString(" ORDER BY trackBitrate ASC;");
 	else if(sort == TrackBitrateDesc) querytext += QString(" ORDER BY trackBitrate DESC;");
+    else if(sort == TrackSizeAsc) querytext += QString(" ORDER BY filesize ASC;");
+    else if(sort == TrackSizeDesc) querytext += QString(" ORDER BY filesize DESC;");
 	else querytext += ";";
 
 	return querytext;

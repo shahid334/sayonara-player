@@ -219,7 +219,7 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
     _stream_ended = true;
     _try = 0;
 
-   gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+    gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 
     // stream file to _sr_recording_dst
     QString title = _md.title;
@@ -290,7 +290,7 @@ bool StreamRecorder::save_file(){
     QString sr_path = _settings->getStreamRipperPath();
     QString session_path = check_session_path(sr_path);
 
-   QDir dir(session_path);
+    QDir dir(session_path);
         dir.mkdir(_md.artist);
         dir.cd(_md.artist);
 
@@ -313,7 +313,7 @@ bool StreamRecorder::save_file(){
         qDebug() << "SR: unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname_wo_path;
 
     else{
-       qDebug() << "SR: Remove File w save" << f.fileName() << " -> " << dst_name;
+        qDebug() << "SR: Remove File w save" << f.fileName() << " -> " << dst_name;
         _md.filepath = dst_name;
         ID3::setMetaDataOfFile(_md);
     }
@@ -376,7 +376,7 @@ QString StreamRecorder::check_session_path(QString sr_path){
 
     if(!QFile::exists(sr_path + QDir::separator() + _session_path)){
 
-       QDir dir(sr_path);
+        QDir dir(sr_path);
         dir.mkdir(_session_path);
     }
 

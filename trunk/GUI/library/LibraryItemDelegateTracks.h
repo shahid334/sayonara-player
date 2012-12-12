@@ -54,6 +54,7 @@ public:
 
         void set_skin(bool dark);
 
+
 private:
 		QTableView* _parent;
         QPen        _pen;

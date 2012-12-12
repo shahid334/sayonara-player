@@ -312,3 +312,25 @@ void CSettingsStorage::setAllowOnlyOneInstance(bool b){
 }
 
 
+void CSettingsStorage::setLibShownColsTitle(QStringList lst){
+    m_lib_shown_cols_title = lst;
+}
+
+QStringList CSettingsStorage::getLibShownColsTitle(){
+    return m_lib_shown_cols_title;
+}
+
+void CSettingsStorage::setLibShownColsAlbum(QStringList lst){
+    m_lib_shown_cols_album = lst;
+}
+QStringList CSettingsStorage::getLibShownColsAlbum(){
+    return m_lib_shown_cols_album;
+}
+
+void CSettingsStorage::setLibShownColsArtist(QStringList lst){
+    m_lib_shown_cols_artist = lst;
+}
+
+QStringList CSettingsStorage::getLibShownColsArtist(){
+    return m_lib_shown_cols_artist;
+}

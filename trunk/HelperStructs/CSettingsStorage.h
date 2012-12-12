@@ -85,6 +85,9 @@ private:
     // library
     QString m_library_path;
     bool m_show_library;
+    QStringList m_lib_shown_cols_title;
+    QStringList m_lib_shown_cols_artist;
+    QStringList m_lib_shown_cols_album;
 
     // playlist
     QString m_playlist;
@@ -183,6 +186,15 @@ public:
 
 	void setShowLibrary(bool);
 	bool getShowLibrary();
+
+    void setLibShownColsTitle(QStringList lst);
+    QStringList getLibShownColsTitle();
+
+    void setLibShownColsAlbum(QStringList lst);
+    QStringList getLibShownColsAlbum();
+
+    void setLibShownColsArtist(QStringList lst);
+    QStringList getLibShownColsArtist();
 
 	void setShownPlugin(int);
 	int getShownPlugin();

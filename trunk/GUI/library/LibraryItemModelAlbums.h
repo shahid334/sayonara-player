@@ -33,6 +33,17 @@
 #include <QAbstractTableModel>
 #include <QList>
 
+#ifndef COL_ALBUM_MACROS
+    #define COL_ALBUM_MACROS
+    #define COL_ALBUM_SAMPLER 0
+    #define COL_ALBUM_NAME 1
+    #define COL_ALBUM_DURATION 2
+    #define COL_ALBUM_N_SONGS 3
+    #define COL_ALBUM_YEAR 4
+    #define N_ALBUM_COLS 5
+#endif
+
+
 using namespace std;
 
 class LibraryItemModelAlbums : public QAbstractTableModel {
@@ -43,7 +54,7 @@ public:
 	virtual ~LibraryItemModelAlbums();
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	int columnCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
 	QVariant data(const QModelIndex &index, int role) const;
 
@@ -53,16 +64,28 @@ public:
 
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
+
+    bool insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
+    bool removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
+
+
 	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 	void sort(int column, Qt::SortOrder order);
 
     bool is_selected(int row);
     void set_selected(QList<int>& rows);
 
+    int calc_shown_col(int col) const;
+    bool is_col_shown(int col) const;
+    QStringList get_header_names();
+
 
 private:
 	QList<Album> _album_list;
     QList<int> _selected_rows;
+
+    QStringList				_headerdata;
+    bool                    _cols_active[N_ALBUM_COLS];
 
 
 };

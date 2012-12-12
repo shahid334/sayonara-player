@@ -112,26 +112,28 @@ void GUI_SimplePlayer::showLibrary(bool b){
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
 	settings->setShowLibrary(b);
+    this->ui->library_widget->setVisible(b);
 
 	if(!b){
 
-		QSizePolicy p = this->ui->library_widget->sizePolicy();
-
+        QSizePolicy p = this->ui->library_widget->sizePolicy();
 		m_library_width = this->ui->library_widget->width();
 		m_library_stretch_factor = p.horizontalStretch();
 
-		p.setHorizontalStretch(0);
-		this->ui->library_widget->setSizePolicy(p);
+        p.setHorizontalStretch(0);
+        this->ui->library_widget->setSizePolicy(p);
 
-		this->resize(this->width() - m_library_width, this->height());
+        this->setMinimumWidth(350);
+        this->resize(350, this->height());
 	}
 
 	else{
-		QSizePolicy p = this->ui->library_widget->sizePolicy();
+        QSizePolicy p = this->ui->library_widget->sizePolicy();
 		p.setHorizontalStretch(m_library_stretch_factor);
-		this->ui->library_widget->setSizePolicy(p);
+        this->ui->library_widget->setSizePolicy(p);
 
-		this->resize(this->width() + m_library_width, this->height());
+        this->resize(760, this->height());
+        this->setMinimumWidth(760);
 	}
 }
 

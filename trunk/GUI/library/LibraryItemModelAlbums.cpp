@@ -28,12 +28,18 @@
 
 #include "LibraryItemModelAlbums.h"
 #include <HelperStructs/MetaData.h>
+#include <HelperStructs/Helper.h>
 
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QDebug>
 LibraryItemModelAlbums::LibraryItemModelAlbums() {
-	// TODO Auto-generated constructor stub
+
+    _headerdata.push_back("#");
+    _headerdata.push_back("Album");
+    _headerdata.push_back("Duration");
+    _headerdata.push_back("Tracks");
+    _headerdata.push_back("Year");
 
 }
 
@@ -58,12 +64,14 @@ int LibraryItemModelAlbums::rowCount(const QModelIndex & parent) const
 
 int LibraryItemModelAlbums::columnCount(const QModelIndex& parent) const{
 
-	Q_UNUSED(parent);
+    Q_UNUSED(parent);
 
-	return 3;
+    int n_active = 0;
+    for(int i=0; i<N_ALBUM_COLS; i++){
+        if(_cols_active[i]) n_active++;
+    }
 
-	// title, artist, album, length, year
-
+    return n_active;
 }
 
 
@@ -102,6 +110,32 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 }
 
 
+bool LibraryItemModelAlbums::insertColumns(int position, int cols, const QModelIndex &index){
+
+    beginInsertColumns(QModelIndex(), position, position+cols-1);
+
+    for(int i=position; i<position+cols; i++){
+
+        _cols_active[i] = true;
+    }
+
+    endInsertColumns();
+    return true;
+}
+
+
+bool LibraryItemModelAlbums::removeColumns(int position, int cols, const QModelIndex &index){
+
+    beginRemoveColumns(QModelIndex(), position, position+cols-1);
+    for(int i=0; i<N_ALBUM_COLS; i++){
+        _cols_active[i] = false;
+    }
+
+    endRemoveColumns();
+    return true;
+}
+
+
 
 QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 {
@@ -111,24 +145,32 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 		 if (index.row() >= _album_list.size())
 			 return QVariant();
 
-		 if(role == Qt::WhatsThisRole && index.column() == 0){
-             Album album = _album_list[index.row()];
-             return album.is_sampler;
-		 }
+         if(role == Qt::WhatsThisRole){
 
+            int row = index.row();
+            int col = index.column();
 
-		 if (role == Qt::WhatsThisRole && index.column() == 1){
-            Album album = _album_list[index.row()];
-            return album.name;
-		 }
+            Album album = _album_list[row];
+            int idx_col = calc_shown_col(col);
 
-         else  if (role == Qt::WhatsThisRole && index.column() == 2){
-             Album album = _album_list[index.row()];
-             return album.year;
-		 }
+             switch(idx_col){
+                 case COL_ALBUM_SAMPLER:
+                    return album.is_sampler;
+                 case COL_ALBUM_N_SONGS:
+                     return album.num_songs;
+                 case COL_ALBUM_YEAR:
+                     return album.year;
+                 case COL_ALBUM_NAME:
+                     return album.name;
 
-		 else
-			 return QVariant();
+                 case COL_ALBUM_DURATION:
+                    return Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000, true, false);
+
+                default: return "";
+             }
+         }
+
+         return QVariant();
 }
 
 
@@ -148,9 +190,6 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 
 			 _album_list.replace(index.row(), album);
 		 }
-
-
-
 
 	     emit dataChanged(index, index);
 	     return true;
@@ -176,16 +215,9 @@ QVariant LibraryItemModelAlbums::headerData ( int section, Qt::Orientation orien
 	 if (role != Qt::DisplayRole)
 	         return QVariant();
 
-	 if (orientation == Qt::Horizontal) {
-		 switch (section) {
-			 case 0: return QVariant();
-
-			 case 1: return tr("Album");
-			 case 2: return tr("Year");
-			 default:
-				 return QVariant();
-		 }
-	 }
+     int idx_col = calc_shown_col(section);
+     if (orientation == Qt::Horizontal)
+         return _headerdata[idx_col];
 	 return QVariant();
 
 }
@@ -198,3 +230,21 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 }
 
 
+int LibraryItemModelAlbums::calc_shown_col(int col) const {
+    int idx_col = 0;
+    int n_true = -1;
+    for(idx_col=0; idx_col<N_ALBUM_COLS; idx_col++){
+        if(_cols_active[idx_col]) n_true++;
+        if(n_true == col) break;
+    }
+
+    return idx_col;
+}
+
+bool LibraryItemModelAlbums::is_col_shown(int col) const{
+    return _cols_active[col];
+}
+
+QStringList  LibraryItemModelAlbums::get_header_names(){
+    return _headerdata;
+}

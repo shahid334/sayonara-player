@@ -45,6 +45,7 @@ class MyTableView : public QTableView{
 	Q_OBJECT
 
 	signals:
+        void header_menu_emitted(const QPoint&);
 		void context_menu_emitted(const QPoint&);
 		void sig_middle_button_clicked(const QPoint&);
         void sig_all_selected();

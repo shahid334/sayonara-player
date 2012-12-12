@@ -86,7 +86,6 @@ bool CDatabaseConnector::isExistent() {
 
 bool CDatabaseConnector::createDB () {
 
-        bool ret = false;
         bool success;
         QDir dir = QDir::homePath();
 

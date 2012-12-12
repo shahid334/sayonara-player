@@ -110,7 +110,6 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 
 
-
 QTableView QHeaderView::section {
 
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #323232, stop:0.5 #2E2E2E, stop:0.6 #2E2E2E, stop:1 #323232); 
@@ -122,6 +121,7 @@ QTableView QHeaderView::section {
 	 padding-bottom: 5px;
 	 border: 0px;
 	 border-bottom: 1px solid #323232;
+         border-right: 1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #303030, stop:0.5 #505050, stop:0.6 #505050, stop:1 #303030);
 
 
 }
@@ -139,7 +139,6 @@ QTableView QHeaderView::down-arrow {
 	image: url(/usr/share/sayonara//arrow_down.png);
 }
 
-
 QMenuBar {
    color: #D8D8D8;
  	background-color: #383838;
@@ -156,18 +155,51 @@ QMenuBar {
 
 
 QMenu {
+      border: 1px solid #202020;
+      border-radius: 4px;
       background-color: #383838;
  }
 
  QMenu::item {
+     padding: 2px 25px 2px 20px;
      background-color: transparent;
  }
 
  QMenu::item:selected {
-    background: #686868;
+    background: #e8841a;
+    color: #282828;
  }
 
- 
+QMenu::indicator {
+    margin-left: 5px;
+    width: 8px;
+    height: 8px;
+}
+
+QMenu::icon:checked {
+
+	border 1px solid red;
+	position: absolute;
+	left: 5px;
+}
+
+
+
+QMenu::separator {
+     height: 1px;
+     background: #202020;
+     margin: 3px 5px;
+ }
+
+QMenu::indicator:non-exclusive:checked {
+     image: url(/usr/share/sayonara/cb_checked.png);
+}
+
+QMenu::indicator:non-exclusive:checked {
+     image: url(/usr/share/sayonara/cb_checked.png);
+}
+
+
 QComboBox {
      border: 1px solid #2B2B2B;
      border-radius: 3px;
@@ -175,15 +207,8 @@ QComboBox {
      min-width: 6em;
  }
 
-/*
-QComboBox QAbstractItemView {
-     border: 2px solid #282828;
-     background: #383838;
-     max-height: 150px;
-     min-height: 3em;
-     border-radius: 3px;
- }
-*/
+
+
 QComboBox:editable {
      background: #525252;
 }
@@ -199,6 +224,13 @@ QComboBox:!editable:on, QComboBox::drop-down:editable:on {
 QComboBox:!editable:off, QComboBox::drop-down:editable:off {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #f1b42a, stop: 0.4 #e8841a, stop: 0.5 #e8841a, stop: 1.0 #e8841a);
 }
+
+
+
+QComboBox QAbstractItemView::item {
+background: red;
+}
+
 
 QComboBox:on {
  /* shift the text when the popup opens */    padding-top: 3px;
@@ -227,9 +259,6 @@ QComboBox:focus {
      border: 1px solid #e8841a;
 }
 
-QComboBox:popup {
-	background: red;
-}
 
 QLineEdit {
     border: 1px solid #2B2B2B;
@@ -354,12 +383,13 @@ QSlider {
 }
 
 
+
+
 QSlider::handle:vertical {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6A6A6A, stop: 0.4 #525252);
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6B6B6B, stop: 0.4 #555555);
      height: 10px;
      margin-left: -5px;
      margin-right: -5px;
-     min-width: 12px;
      border: 1px solid #2C2C2C;
      border-radius: 4px;
  }
@@ -390,11 +420,10 @@ QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {
 
 
 QSlider::handle:horizontal {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6A6A6A, stop: 0.4 #525252);
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6B6B6B, stop: 0.4 #555555);
     width: 10px;
-    margin-top: -5px;
-    margin-bottom: -5px;
-    min-height: 12px;
+    margin-top: -4px;
+    margin-bottom: -4px;
     border: 1px solid #2c2c2c;
     border-radius: 4px;
  }

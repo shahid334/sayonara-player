@@ -67,6 +67,7 @@
 #include <QBrush>
 #include <QScrollBar>
 #include <QItemSelectionModel>
+#include <QHeaderView>
 
 
 #define INFO_IMG_SIZE 220
@@ -98,8 +99,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->_track_model = new LibraryItemModelTracks();
     this->_track_delegate = new LibraryItemDelegateTracks(_track_model, this->ui->tb_title);
 
+
 	this->ui->tb_title->setModel(this->_track_model);
-	this->ui->tb_title->setItemDelegate(this->_track_delegate);
+    this->ui->tb_title->setItemDelegate(this->_track_delegate);
 	this->ui->tb_title->setAlternatingRowColors(true);
 	this->ui->tb_title->setDragEnabled(true);
 
@@ -117,6 +119,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
 
 	init_menues();
+    init_rc_header_title();
+    init_rc_header_artist();
+    init_rc_header_album();
 
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(this->ui->btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
@@ -136,7 +141,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
     connect(this->ui->tb_title, SIGNAL(clicked(const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex & )));
 	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
-	connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
+    connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
 	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
@@ -154,8 +159,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	change_skin(dark);
 
     hide();
-
 }
+
 
 GUI_Library_windowed::~GUI_Library_windowed() {
 	delete _album_model;
@@ -180,6 +185,176 @@ void GUI_Library_windowed::init_menues(){
 	_right_click_menu->addAction(_delete_action);
 	_right_click_menu->addAction(_play_next_action);
 }
+
+
+void GUI_Library_windowed::init_rc_header_title(){
+    _header_rc_menu_title = new QMenu(this->ui->tb_title->horizontalHeader());
+
+    QStringList header_names = _track_model->get_header_names();
+    QStringList lst = CSettingsStorage::getInstance()->getLibShownColsTitle();
+
+    int i =0;
+    foreach(QString header_name, header_names){
+        QAction* action = new QAction(header_name, this);
+        _header_rc_actions_title << action;
+
+        action->setCheckable(true);
+        if(i == COL_TITLE) {
+            action->setEnabled(false);
+            action->setChecked(true);
+        }
+
+        if(i < lst.size())
+            action->setChecked(lst[i] == "1");
+        else
+            action->setChecked(false);
+
+        header_rc_menu_title_changed();
+
+        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_title_changed(bool)));
+        ui->tb_title->horizontalHeader()->addAction(action);
+        i++;
+    }
+
+
+    this->ui->tb_title->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
+void GUI_Library_windowed::init_rc_header_album(){
+    _header_rc_menu_album = new QMenu(this->ui->lv_album->horizontalHeader());
+
+    QStringList header_names = _album_model->get_header_names();
+    QStringList lst = CSettingsStorage::getInstance()->getLibShownColsAlbum();
+
+    int i =0;
+    foreach(QString header_name, header_names){
+        QAction* action = new QAction(header_name, this);
+        _header_rc_actions_album << action;
+
+        action->setCheckable(true);
+        if(i == COL_ALBUM_NAME) {
+            action->setEnabled(false);
+            action->setChecked(true);
+        }
+
+        if(i < lst.size())
+            action->setChecked(lst[i] == "1");
+        else
+            action->setChecked(false);
+
+        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_album_changed(bool)));
+        ui->lv_album->horizontalHeader()->addAction(action);
+        i++;
+    }
+
+    header_rc_menu_album_changed();
+
+    this->ui->lv_album->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
+
+void GUI_Library_windowed::init_rc_header_artist(){
+    _header_rc_menu_artist = new QMenu(this->ui->lv_artist->horizontalHeader());
+
+    QStringList header_names = _artist_model->get_header_names();
+    QStringList lst = CSettingsStorage::getInstance()->getLibShownColsArtist();
+
+    int i =0;
+    foreach(QString header_name, header_names){
+        QAction* action = new QAction(header_name, this);
+        _header_rc_actions_artist << action;
+
+        if(i == COL_ARTIST_NAME) {
+            action->setEnabled(false);
+            action->setChecked(true);
+        }
+
+        action->setCheckable(true);
+
+        if(i < lst.size())
+            action->setChecked(lst[i] == "1");
+        else
+            action->setChecked(false);
+
+        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_artist_changed(bool)));
+        ui->lv_artist->horizontalHeader()->addAction(action);
+        i++;
+    }
+
+    header_rc_menu_artist_changed();
+    this->ui->lv_artist->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
+
+void GUI_Library_windowed::header_rc_menu_title_changed(bool b){
+
+    _track_model->removeColumns(0, _track_model->columnCount());
+
+    int col_idx = 0;
+    QStringList lst;
+    foreach(QAction* action, _header_rc_actions_title){
+
+        if(action->isChecked()){
+
+            _track_model->insertColumn(col_idx);
+            lst << "1";
+        }
+
+        else lst << "0";
+
+        col_idx++;
+    }
+
+    CSettingsStorage::getInstance()->setLibShownColsTitle(lst);
+    set_title_sizes();
+}
+
+
+void GUI_Library_windowed::header_rc_menu_artist_changed(bool b){
+
+    _artist_model->removeColumns(0, _artist_model->columnCount());
+    int col_idx = 0;
+    QStringList lst;
+    foreach(QAction* action, _header_rc_actions_artist){
+
+        if(action->isChecked()){
+
+            _artist_model->insertColumn(col_idx);
+            lst << "1";
+        }
+
+        else lst << "0";
+
+        col_idx++;
+    }
+
+    CSettingsStorage::getInstance()->setLibShownColsArtist(lst);
+    set_artist_sizes();
+}
+
+void GUI_Library_windowed::header_rc_menu_album_changed(bool b){
+
+    _album_model->removeColumns(0, _album_model->columnCount());
+
+    int col_idx = 0;
+    QStringList lst;
+    foreach(QAction* action, _header_rc_actions_album){
+
+        if(action->isChecked()){
+
+            _album_model->insertColumn(col_idx);
+            lst << "1";
+        }
+
+        else lst << "0";
+
+        col_idx++;
+    }
+
+    CSettingsStorage::getInstance()->setLibShownColsAlbum(lst);
+    set_album_sizes();
+}
+
 
 void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
 
@@ -228,65 +403,212 @@ void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
 
 
 void GUI_Library_windowed::change_skin(bool dark){
+}
 
-    /*QString style = "";
-    if(dark) {
-        Helper::read_file_into_str("/usr/share/sayonara/style.css", style);
+
+
+int GUI_Library_windowed::set_album_sizes(){
+
+    int album_col = -1;
+    const int tolerance = 25;
+    int target_width = this->ui->lv_album->width() - tolerance;
+
+    for(int i=0; i<_album_model->columnCount(); i++){
+        int col = _album_model->calc_shown_col(i);
+        int preferred_size = 0;
+
+        switch(col){
+            case COL_ALBUM_SAMPLER:
+                preferred_size = 20;
+                break;
+            case COL_ALBUM_YEAR:
+                preferred_size = 70;
+                break;
+
+            case COL_ALBUM_N_SONGS:
+                preferred_size = 80;
+                break;
+
+            case COL_ALBUM_DURATION:
+                preferred_size = 90;
+                break;
+
+            case COL_ALBUM_NAME:
+                album_col = i;
+                break;
+
+            default:
+                preferred_size = 0;
+                break;
+        }
+
+        target_width -= preferred_size;
+        this->ui->lv_album->setColumnWidth(i, preferred_size);
     }
 
-    this->setStyleSheet(style);*/
+    if(target_width < 100) target_width = 100;
+    this->ui->lv_album->setColumnWidth(album_col, target_width);
+    return 0;
+}
+
+int GUI_Library_windowed::set_artist_sizes(){
+
+    const int tolerance = 25;
+    int target_width = this->ui->lv_artist->width() - tolerance;
+
+    int artist_col = -1;
+
+    for(int i=0; i<_artist_model->columnCount(); i++){
+        int col = _artist_model->calc_shown_col(i);
+        int preferred_size = 0;
+
+        switch(col){
+            case COL_ARTIST_N_ALBUMS:
+                preferred_size = 20;
+                break;
+            case COL_ARTIST_TRACKS:
+                preferred_size = 80;
+                break;
+
+            case COL_ARTIST_NAME:
+                artist_col = i;
+                break;
+
+            default:
+                preferred_size = 0;
+                break;
+        }
+
+        target_width -= preferred_size;
+
+        this->ui->lv_artist->setColumnWidth(i, preferred_size);
+    }
+
+    if(target_width < 100) target_width = 100;
+    this->ui->lv_artist->setColumnWidth(artist_col, target_width);
+    return 0;
+}
+
+
+int GUI_Library_windowed::set_title_sizes(){
+
+    int altogether_width = 0;
+    int tolerance = 20;
+
+    bool artist_shown = false;
+    bool album_shown = false;
+
+    for(int i=0; i<_track_model->columnCount(); i++){
+        int col = _track_model->calc_shown_col(i);
+        int preferred_size = 0;
+
+        switch(col){
+            case COL_FILESIZE:
+                preferred_size = 75;
+                break;
+            case COL_TRACK_NUM:
+                preferred_size = 25;
+                break;
+            case COL_YEAR:
+                preferred_size = 50;
+                break;
+            case COL_LENGTH:
+                preferred_size = 50;
+                break;
+            case COL_BITRATE:
+                preferred_size = 75;
+                break;
+
+            case COL_ALBUM:
+                album_shown = true; break;
+            case COL_ARTIST:
+                artist_shown = true; break;
+
+            default:
+                preferred_size = 0;
+                break;
+        }
+
+        altogether_width += preferred_size;
+
+        this->ui->tb_title->setColumnWidth(i, preferred_size);
+    }
+
+    altogether_width += tolerance;
+
+    int target_width = this->ui->tb_title->width();
+
+    if(target_width < 600) {
+        target_width = 600;
+    }
+
+    target_width -= altogether_width;
+
+    for(int i=0; i<_track_model->columnCount(); i++){
+        int col = _track_model->calc_shown_col(i);
+        int preferred_size = 0;
+
+        switch(col){
+
+            case COL_TITLE:
+                if(artist_shown && album_shown)
+                    preferred_size = (0.4 * target_width);
+                else if(artist_shown || album_shown)
+                    preferred_size = (int) (0.6 * target_width);
+                else
+                    preferred_size = target_width;
+                break;
+
+            case COL_ALBUM:
+
+                if(artist_shown)
+                    preferred_size = (int) (0.3 * target_width);
+                else
+                    preferred_size = (int) (0.4 * target_width);
+
+                break;
+
+            case COL_ARTIST:
+                if(album_shown)
+                    preferred_size = (int) (0.3 * target_width);
+                else
+                    preferred_size = (int) (0.4 * target_width);
+
+                break;
+            default:
+                preferred_size = 0;
+                break;
+        }
+
+        altogether_width += preferred_size;
+
+        if(preferred_size > 0)
+            this->ui->tb_title->setColumnWidth(i, preferred_size);
+    }
+
+    if(altogether_width > this->ui->tb_title->width())
+        this->ui->tb_title->horizontalScrollBar()->show();
+
+
+    return 0;
 }
 
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	Q_UNUSED(e);
 
-	QSize tmpSize = this->ui->tb_title->size();
-	int width = tmpSize.width() -20;
-	int resisable_content = width - (50 + 50 + 60 + 25 );
-
-
-	if(width > 600){
-		this->ui->tb_title->setColumnWidth(0, 25);
-		this->ui->tb_title->setColumnWidth(1, resisable_content * 0.40);
-		this->ui->tb_title->setColumnWidth(2, resisable_content * 0.30);
-		this->ui->tb_title->setColumnWidth(3, resisable_content * 0.30);
-		this->ui->tb_title->setColumnWidth(4, 50);
-		this->ui->tb_title->setColumnWidth(5, 50);
-		this->ui->tb_title->setColumnWidth(6, 60);
-		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	}
-
-	else{
-		this->ui->tb_title->setColumnWidth(0, 25);
-		this->ui->tb_title->setColumnWidth(1, (width-25) * 0.40);
-		this->ui->tb_title->setColumnWidth(2, (width-25) * 0.30);
-		this->ui->tb_title->setColumnWidth(3, (width-25) * 0.30);
-		this->ui->tb_title->setColumnWidth(4, 50);
-		this->ui->tb_title->setColumnWidth(5, 50);
-		this->ui->tb_title->setColumnWidth(6, 60);
-		this->ui->tb_title->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	}
-
-    if(this->ui->tb_title->horizontalScrollBar()->isVisible()){
-        QLabel* lab = new QLabel();
-        QPixmap p = QPixmap(Helper::getIconPath() + "/logo_small.png").scaled(20, 20, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        lab->setPixmap(p);
-        this->ui->tb_title->setCornerWidget(lab);
-    }
-
-    else this->ui->tb_title->setCornerWidget(NULL);
-
-
-	this->ui->lv_album->setColumnWidth(0, 20);
-
-	this->ui->lv_album->setColumnWidth(0, 20);
-	this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 100);
-	this->ui->lv_album->setColumnWidth(2, 40);
-
-	this->ui->lv_artist->setColumnWidth(0, 20);
+    this->ui->lv_artist->setColumnWidth(0, 20);
     this->ui->lv_artist->setColumnWidth(1, this->ui->lv_artist->width() - 120);
     this->ui->lv_artist->setColumnWidth(2, 60);
+
+
+	this->ui->lv_album->setColumnWidth(0, 20);
+    this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 100);
+	this->ui->lv_album->setColumnWidth(2, 40);
+
+    set_title_sizes();
+    set_album_sizes();
+    set_artist_sizes();
 }
 
 
@@ -461,7 +783,6 @@ QList<int> GUI_Library_windowed::calc_selections(int table){
 
             _track_model->set_selected(idx_list_int);
             break;
-
         default: break;
     }
 
@@ -620,11 +941,21 @@ void switch_sorters(T& srcdst, T src1, T src2){
 
 void GUI_Library_windowed::sort_albums_by_column(int col){
 
-	if(col == 1)
+    if(col == COL_ALBUM_NAME)
 		switch_sorters(_sort_albums, AlbumNameAsc, AlbumNameDesc);
 
-	if(col == 2)
+    else if(col == COL_ALBUM_YEAR)
 		switch_sorters(_sort_albums, AlbumYearAsc, AlbumYearDesc);
+
+    else if(col == COL_ALBUM_N_SONGS)
+        switch_sorters(_sort_albums, AlbumTracksAsc, AlbumTracksDesc);
+
+    else if(col == COL_ALBUM_DURATION)
+        switch_sorters(_sort_albums, AlbumDurationAsc, AlbumDurationDesc);
+
+    else return;
+
+
 
 	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
 }
@@ -632,21 +963,21 @@ void GUI_Library_windowed::sort_albums_by_column(int col){
 
 void GUI_Library_windowed::sort_artists_by_column(int col){
 
-	if(col == 1)
+    if(col == COL_ARTIST_NAME)
 		switch_sorters(_sort_artists, ArtistNameAsc, ArtistNameDesc);
 
-	if(col == 2)
+    else if(col == COL_ARTIST_TRACKS)
 		switch_sorters(_sort_artists, ArtistTrackcountAsc, ArtistTrackcountDesc);
+
+    else return;
 
 	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
 }
 
 void GUI_Library_windowed::sort_tracks_by_column(int col){
 
-
 		if(col == COL_TRACK_NUM)
 			switch_sorters(_sort_tracks, Sort::TrackNumAsc, Sort::TrackNumDesc);
-
 
 		else if(col == COL_TITLE)
 			switch_sorters(_sort_tracks, TrackTitleAsc, TrackTitleDesc);
@@ -663,9 +994,13 @@ void GUI_Library_windowed::sort_tracks_by_column(int col){
 		else if(col == COL_LENGTH)
 			switch_sorters(_sort_tracks, TrackLenghtAsc, TrackLengthDesc);
 
-
 		else if(col == COL_BITRATE)
 			switch_sorters(_sort_tracks, TrackBitrateAsc, TrackBitrateDesc);
+
+        else if(col == COL_FILESIZE)
+            switch_sorters(_sort_tracks, TrackSizeAsc, TrackSizeDesc);
+
+        else return;
 
 	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
 }

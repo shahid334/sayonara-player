@@ -46,6 +46,19 @@
 
 using namespace std;
 
+QString calc_lab(int val){
+    if(val > 0){
+        double v = val / 2.0;
+        if(val % 2 == 0)
+            return QString("+") + QString::number(v) + ".0";
+        else
+            return QString("+") + QString::number(v);
+    }
+
+    return QString::number(val) + ".0";
+
+}
+
 GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
 
     this->_ui = new Ui::GUI_Equalizer( );
@@ -117,63 +130,73 @@ void GUI_Equalizer::sli_0_changed(int new_val){
 
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val ));
     this->_ui->sli_0->setStyleSheet(sli_style);
-	this->_ui->label->setText(QString::number(new_val));
+
+
+    this->_ui->label->setText(calc_lab(new_val));
 	emit eq_changed_signal(0, new_val);
 }
 void GUI_Equalizer::sli_1_changed(int new_val){
 
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_1->setStyleSheet(sli_style);
-	this->_ui->label_2->setText(QString::number(new_val));
+
+    this->_ui->label_2->setText(calc_lab(new_val));
 	emit eq_changed_signal(1, new_val);
 }
 void GUI_Equalizer::sli_2_changed(int new_val){
 
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_2->setStyleSheet(sli_style);
-	this->_ui->label_3->setText(QString::number(new_val));
+
+    this->_ui->label_3->setText(calc_lab(new_val));
 	emit eq_changed_signal(2, new_val);
 }
 void GUI_Equalizer::sli_3_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_3->setStyleSheet(sli_style);
-	this->_ui->label_4->setText(QString::number(new_val));
+
+    this->_ui->label_4->setText(calc_lab(new_val));
 	emit eq_changed_signal(3, new_val);
 }
 void GUI_Equalizer::sli_4_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_4->setStyleSheet(sli_style);
-	this->_ui->label_5->setText(QString::number(new_val));
+
+    this->_ui->label_5->setText(calc_lab(new_val));
 	emit eq_changed_signal(4, new_val);
 }
 void GUI_Equalizer::sli_5_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_5->setStyleSheet(sli_style);
-	this->_ui->label_6->setText(QString::number(new_val));
+
+    this->_ui->label_6->setText(calc_lab(new_val));
 	emit eq_changed_signal(5, new_val);
 }
 void GUI_Equalizer::sli_6_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_6->setStyleSheet(sli_style);
-	this->_ui->label_7->setText(QString::number(new_val));
+
+    this->_ui->label_7->setText(calc_lab(new_val));
 	emit eq_changed_signal(6, new_val);
 }
 void GUI_Equalizer::sli_7_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark,SCALE(new_val));
     this->_ui->sli_7->setStyleSheet(sli_style);
-	this->_ui->label_8->setText(QString::number(new_val));
+
+    this->_ui->label_8->setText(calc_lab(new_val));
 	emit eq_changed_signal(7, new_val);
 }
 void GUI_Equalizer::sli_8_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_8->setStyleSheet(sli_style);
-	this->_ui->label_9->setText(QString::number(new_val));
+    this->_ui->label_9->setText(calc_lab(new_val));
+
 	emit eq_changed_signal(8, new_val);
 }
 void GUI_Equalizer::sli_9_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
     this->_ui->sli_9->setStyleSheet(sli_style);
-	this->_ui->label_10->setText(QString::number(new_val));
+    this->_ui->label_10->setText(calc_lab(new_val));
 	emit eq_changed_signal(9, new_val);
 }
 
