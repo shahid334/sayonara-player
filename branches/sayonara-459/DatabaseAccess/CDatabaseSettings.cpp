@@ -147,6 +147,14 @@ bool CDatabaseConnector::load_settings(){
 	QString lib_path = load_setting_string("library_path");
 	settings->setLibraryPath(lib_path);
 
+    QStringList lib_shown_cols_title, lib_shown_cols_artist, lib_shown_cols_album;
+    lib_shown_cols_title = load_setting_string("lib_shown_cols_title", "1,1,1,1,1,1,1,1,1,1").split(",");
+    lib_shown_cols_artist = load_setting_string("lib_shown_cols_artist", "1,1,1,1,1,1,1,1,1,1").split(",");
+    lib_shown_cols_album = load_setting_string("lib_shown_cols_album", "1,1,1,1,1,1,1,1,1,1").split(",");
+    settings->setLibShownColsTitle(lib_shown_cols_title);
+    settings->setLibShownColsAlbum(lib_shown_cols_album);
+    settings->setLibShownColsArtist(lib_shown_cols_artist);
+
 
 	/* Player size */
 	QSize player_size(800, 600);
@@ -277,6 +285,14 @@ bool CDatabaseConnector::store_settings(){
 
 	QString library_path = storage->getLibraryPath();
 	store_setting("library_path", library_path);
+
+    QStringList lib_shown_cols_title, lib_shown_cols_artist, lib_shown_cols_album;
+    lib_shown_cols_title = storage->getLibShownColsTitle();
+    lib_shown_cols_album = storage->getLibShownColsAlbum();
+    lib_shown_cols_artist = storage->getLibShownColsArtist();
+    store_setting("lib_shown_cols_title", lib_shown_cols_title.join(","));
+    store_setting("lib_shown_cols_album", lib_shown_cols_album.join(","));
+    store_setting("lib_shown_cols_artist", lib_shown_cols_artist.join(","));
 
 	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());

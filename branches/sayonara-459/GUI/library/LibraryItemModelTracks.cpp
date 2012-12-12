@@ -31,6 +31,7 @@
 #include <QStringList>
 #include <HelperStructs/MetaData.h>
 #include <HelperStructs/Helper.h>
+#include <HelperStructs/CSettingsStorage.h>
 
 #include "LibraryItemModelTracks.h"
 
@@ -40,7 +41,6 @@ LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
 	Q_UNUSED(parent);
 
 
-
     _headerdata.push_back("#");
 	_headerdata.push_back("Title");
 	_headerdata.push_back("Artist");
@@ -48,10 +48,9 @@ LibraryItemModelTracks::LibraryItemModelTracks(QObject* parent) {
 	_headerdata.push_back("Year");
 	_headerdata.push_back("Length");
 	_headerdata.push_back("Bitrate");
+    _headerdata.push_back("Filesize");
 
-    for(int i=0; i<_headerdata.size(); i++){
-        _cols_active[i] = true;
-    }
+
 
 }
 
@@ -129,6 +128,9 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
 			 case COL_BITRATE:
 				return QVariant(md.bitrate);
+
+             case COL_FILESIZE:
+                return QVariant(md.filesize);
 			 default:
 				return QVariant();
 		 }
@@ -137,7 +139,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 	 else if (role == Qt::TextAlignmentRole){
 
          qDebug() << "idx_col = " << idx_col;
-          if (idx_col == COL_TRACK_NUM || idx_col == COL_BITRATE || idx_col == COL_LENGTH || idx_col == COL_YEAR)
+          if (idx_col == COL_TRACK_NUM || idx_col == COL_BITRATE || idx_col == COL_LENGTH || idx_col == COL_YEAR || idx_col == COL_FILESIZE)
           {
               return Qt::AlignRight + Qt::AlignVCenter;
           }
@@ -251,18 +253,7 @@ QVariant LibraryItemModelTracks::headerData ( int col, Qt::Orientation orientati
      int idx_col = calc_shown_col(col);
 
 	 if (orientation == Qt::Horizontal) {
-         switch (idx_col) {
-             case COL_TRACK_NUM: return "";
-			 case COL_TITLE: return tr("Title");
-			 case COL_ARTIST: return tr("Artist");
-			 case COL_ALBUM: return tr("Album");
-			 case COL_LENGTH: return tr("Length");
-			 case COL_YEAR: return tr("Year");
-			 case COL_BITRATE: return tr("Bitrate");
-
-			 default:
-				 return QVariant();
-		 }
+         return _headerdata[idx_col];
 	 }
 	 return QVariant();
 
@@ -282,4 +273,8 @@ int LibraryItemModelTracks::calc_shown_col(int col) const {
 
 bool LibraryItemModelTracks::is_col_shown(int col) const{
     return _cols_active[col];
+}
+
+QStringList  LibraryItemModelTracks::get_header_names(){
+    return _headerdata;
 }

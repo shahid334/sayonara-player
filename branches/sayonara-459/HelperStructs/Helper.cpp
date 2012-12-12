@@ -78,7 +78,7 @@ QString cvtNum2String(int num, int digits){
 	return str;
 }
 
-QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon){
+QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon, bool show_days){
 
 		bool show_hrs = false;
 
@@ -91,11 +91,15 @@ QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon){
 
 		QString final_str;
 
-		if(days > 0){
+        if(days > 0 && show_days){
 			final_str += QString::number(days) + "d ";
 			hrs = hrs % 24;
 			show_hrs = true;
 		}
+
+        if(!show_days){
+            hrs += (days * 24);
+        }
 
 		if(hrs > 0 || show_hrs){
 			final_str += QString::number(hrs) + "h ";

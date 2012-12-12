@@ -167,6 +167,8 @@ private slots:
 	void show_track_context_menu(const QPoint& p);
 
     void header_rc_menu_title_changed(bool b=false);
+    void header_rc_menu_artist_changed(bool b=false);
+    void header_rc_menu_album_changed(bool b=false);
 
 
 	void artist_middle_clicked(const QPoint& p);
@@ -198,6 +200,9 @@ protected:
 
 private:
 	void init_menues();
+    void init_rc_header_title();
+    void init_rc_header_album();
+    void init_rc_header_artist();
 
 
 	AlbumSort _sort_albums;  /* [name | year] [asc | desc] */
@@ -219,6 +224,8 @@ private:
 
     QList<int> calc_selections(int table);
     int set_title_sizes();
+    int set_album_sizes();
+    int set_artist_sizes();
 
 };
 

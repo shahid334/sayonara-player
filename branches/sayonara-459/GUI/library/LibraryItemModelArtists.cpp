@@ -33,8 +33,9 @@
 #include <QDebug>
 
 LibraryItemModelArtists::LibraryItemModelArtists() {
-	// TODO Auto-generated constructor stub
-
+    _headerdata.push_back("#");
+    _headerdata.push_back("Artist");
+    _headerdata.push_back("Tracks");
 }
 
 LibraryItemModelArtists::~LibraryItemModelArtists() {
@@ -58,11 +59,14 @@ int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 
 int LibraryItemModelArtists::columnCount(const QModelIndex& parent) const{
 
-	Q_UNUSED(parent);
+    Q_UNUSED(parent);
 
-	return 3;
+    int n_active = 0;
+    for(int i=0; i<N_ARTIST_COLS; i++){
+        if(_cols_active[i]) n_active++;
+    }
 
-	// title, artist, album, length, year
+    return n_active;
 
 }
 
@@ -100,30 +104,64 @@ bool LibraryItemModelArtists::insertRows(int position, int rows, const QModelInd
 
 
 
+bool LibraryItemModelArtists::insertColumns(int position, int cols, const QModelIndex &index){
+
+    beginInsertColumns(QModelIndex(), position, position+cols-1);
+
+    for(int i=position; i<position+cols; i++){
+
+        _cols_active[i] = true;
+    }
+
+    endInsertColumns();
+    return true;
+}
+
+
+bool LibraryItemModelArtists::removeColumns(int position, int cols, const QModelIndex &index){
+
+    beginRemoveColumns(QModelIndex(), position, position+cols-1);
+    for(int i=0; i<N_ARTIST_COLS; i++){
+        _cols_active[i] = false;
+    }
+
+    endRemoveColumns();
+    return true;
+}
+
+
+
+
+
 QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) const
 {
-	 if (!index.isValid())
-			 return QVariant();
+    if (!index.isValid())
+         return QVariant();
 
-		 if (index.row() >= _artist_list.size())
-			 return QVariant();
+     if (index.row() >= _artist_list.size())
+         return QVariant();
 
-		 if( role == Qt::WhatsThisRole && index.column() == 0 ){
-             return _artist_list[index.row()].num_albums;
+     if(role == Qt::WhatsThisRole){
 
-		 }
+        int row = index.row();
+        int col = index.column();
 
-		 else if (role == Qt::WhatsThisRole && index.column() == 1){
-             return _artist_list[index.row()].name;
-		 }
+        Artist artist = _artist_list[row];
+        int idx_col = calc_shown_col(col);
 
-		 else if (role == Qt::WhatsThisRole && index.column() == 2){
-             Artist artist = _artist_list[index.row()];
-             return artist.num_songs;
-		 }
+        switch(idx_col){
+            case COL_ARTIST_NAME:
+                return artist.name;
+            case COL_ARTIST_N_ALBUMS:
+                return artist.num_albums;
+            case COL_ARTIST_TRACKS:
+                return artist.num_songs;
 
-		 else
-			 return QVariant();
+            default: return "";
+        }
+     }
+
+ return QVariant();
 }
 
 
@@ -167,17 +205,30 @@ QVariant LibraryItemModelArtists::headerData ( int section, Qt::Orientation orie
 	 if (role != Qt::DisplayRole)
 	         return QVariant();
 
-	 if (orientation == Qt::Horizontal) {
-		 switch (section) {
-			 case 0: return QVariant();
+     int idx_col = calc_shown_col(section);
+     if (orientation == Qt::Horizontal)
+         return _headerdata[idx_col];
 
-			 case 1: return tr("Artist");
-			 case 2: return tr("#Tracks");
-			 default:
-				 return QVariant();
-		 }
-	 }
 	 return QVariant();
 
 }
 
+
+int LibraryItemModelArtists::calc_shown_col(int col) const {
+    int idx_col = 0;
+    int n_true = -1;
+    for(idx_col=0; idx_col<N_ARTIST_COLS; idx_col++){
+        if(_cols_active[idx_col]) n_true++;
+        if(n_true == col) break;
+    }
+
+    return idx_col;
+}
+
+bool LibraryItemModelArtists::is_col_shown(int col) const{
+    return _cols_active[col];
+}
+
+QStringList  LibraryItemModelArtists::get_header_names(){
+    return _headerdata;
+}

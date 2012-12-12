@@ -38,14 +38,16 @@
     #define COL_YEAR 4
     #define COL_LENGTH 5
     #define COL_BITRATE 6
-    #define N_COLS 7
+    #define COL_FILESIZE 7
+    #define N_COLS 8
 #endif
 
 #include <QObject>
 #include <QStringList>
 #include <QAbstractTableModel>
 
-#include <HelperStructs/MetaData.h>
+#include "HelperStructs/MetaData.h"
+
 
 
 class LibraryItemModelTracks : public QAbstractTableModel {
@@ -78,6 +80,7 @@ public:
 
     int calc_shown_col(int col) const;
     bool is_col_shown(int col) const;
+    QStringList get_header_names();
 
 
 private:

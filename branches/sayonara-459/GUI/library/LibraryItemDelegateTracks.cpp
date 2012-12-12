@@ -40,18 +40,6 @@
 #include <HelperStructs/Helper.h>
 #include "GUI/library/LibraryItemModelTracks.h"
 
-#ifndef COL_MACROS
-    #define COL_MACROS
-    #define COL_TRACK_NUM 0
-    #define COL_TITLE 1
-    #define COL_ALBUM 2
-    #define COL_ARTIST 3
-    #define COL_YEAR 4
-    #define COL_LENGTH 5
-    #define COL_BITRATE 6
-#endif
-
-
 LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModelTracks* model, QTableView* parent) {
 	this->_parent = parent;
      _model = model;
@@ -82,6 +70,11 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
     switch(idx_col){
 
+        case COL_FILESIZE:
+            text = Helper::calc_filesize_str(text.toInt());
+            rect.translate(-2, 0);
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+            break;
 
         case COL_BITRATE:
             text = QString::number(text.toInt() / 1000) + " kbit/s";

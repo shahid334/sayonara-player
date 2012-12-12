@@ -65,12 +65,15 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
         painter->save();
 
+        int col = index.column();
+        int idx_col = _model->calc_shown_col(col);
+
 
         if(_model->is_selected(index.row())) {
             painter->setPen(_pen);
         }
 
-        if(index.column() == 0){
+        if(idx_col == COL_ALBUM_SAMPLER){
             int col_width = _parent->columnWidth(0)-4;
             int row_height = _parent->rowHeight(0)-4;
             rect.translate(2, 2);
@@ -82,18 +85,21 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
             else
                 painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
+
         }
 
 
-        else if(index.column() == 1){
+        else if(idx_col == COL_ALBUM_NAME){
 
             rect.translate(2, 0);
             QString name = _model->data(index, Qt::WhatsThisRole).toString();
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
+
+
         }
 
 
-        else if(index.column() == 2){
+        else if(idx_col == COL_ALBUM_YEAR){
 
             rect.translate(-2, 0);
             int year = _model->data(index, Qt::WhatsThisRole).toInt();
@@ -101,11 +107,24 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             QString year_str = QString::number(year);
             if(year == 0) year_str = "Unknown";
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, year_str);
+
+        }
+
+        else if(idx_col == COL_ALBUM_N_SONGS){
+
+            rect.translate(-2, 0);
+            QString n_songs = _model->data(index, Qt::WhatsThisRole).toString() + " tracks";
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, n_songs);
+        }
+
+        else if(idx_col == COL_ALBUM_DURATION){
+
+            rect.translate(-2, 0);
+            QString duration = _model->data(index, Qt::WhatsThisRole).toString();
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, duration);
         }
 
         painter->restore();
-
-
 }
 
 
