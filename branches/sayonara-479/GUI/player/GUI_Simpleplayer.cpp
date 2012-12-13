@@ -84,6 +84,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui_stream = 0;
 
     ui_notifications = new GUI_Notifications(this);
+    ui_startup_dialog = new GUI_Startup_Dialog(this);
 
 	m_skinSuffix = "";
 	m_class_name = "Player";
@@ -102,9 +103,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
     ui->action_min2tray->setChecked(m_min2tray);
     ui->action_only_one_instance->setChecked(settings->getAllowOnlyOneInstance());
-
-	bool loadPlaylistChecked = settings->getLoadPlaylist();
-	ui->action_load_playlist->setChecked(loadPlaylistChecked);
 
 	bool showSmallPlaylistItems = settings->getShowSmallPlaylist();
 	ui->action_smallPlaylistItems->setChecked(showSmallPlaylistItems);
@@ -178,6 +176,8 @@ void GUI_SimplePlayer::initGUI() {
 
 void GUI_SimplePlayer::setupConnections(){
 
+
+    qDebug() << "connections start";
 	connect(ui->btn_play, SIGNAL(clicked(bool)), this,
 			SLOT(playClicked(bool)));
 	connect(ui->btn_fw, SIGNAL(clicked(bool)), this,
@@ -237,8 +237,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(setLibraryPathClicked(bool)));
 	connect(ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this,
 			SLOT(fetch_all_covers_clicked(bool)));
-	connect(ui->action_load_playlist, SIGNAL(toggled(bool)), this,
-			SLOT(load_pl_on_startup_toggled(bool)));
+    connect(ui->action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
+            SLOT(show()));
 	connect(ui->action_min2tray, SIGNAL(toggled(bool)), this,
 			SLOT(min2tray_toggled(bool)));
 	connect(ui->action_only_one_instance, SIGNAL(toggled(bool)), this,
@@ -293,24 +293,21 @@ void GUI_SimplePlayer::setupConnections(){
     connect(ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
             this, SLOT(notification_changed(bool,int)));
 
+    qDebug() << "connections done";
 }
 
 
 // new track
-void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec) {
-
-	qDebug() << "Update track "<< pos_sec;
-    if(pos_sec == 0)
-	    ui->songProgress->setValue(0);
+void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playing) {
 
     m_metadata = md;
     m_trayIcon->switch_play_pause(false);
 
 	m_completeLength_ms = md.length_ms;
-	m_playing = true;
+    m_playing = playing;
 	m_trayIcon->switch_play_pause(m_playing);
 
-	setCurrentPosition(pos_sec);
+    setCurrentPosition(pos_sec);
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
@@ -333,7 +330,11 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec) {
 
 	QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
 	ui->maxTime->setText(lengthString);
-	ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+
+    if(m_playing)
+        ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+    else
+        ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
 	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
 	if (md.bitrate < 96000)

@@ -66,6 +66,8 @@ public:
     bool store_settings();
 
 
+
+
 	/********************************************
   	 * LIBRARY
 	 *******************************************/
@@ -165,7 +167,7 @@ public:
 	 * SETTINGS
 	 *******************************************/
         void load_setting(QString key, QVariant& val, QVariant def=0);
-		void store_setting(QString key, QVariant val);
+
 
 		bool load_setting_bool(QString key, bool def=false);
 		QString load_setting_string(QString key, QString def="");
@@ -183,6 +185,7 @@ public slots:
       * @return true on success false if failed
       */
     bool storeMetadata (MetaDataList & in);
+    void store_setting(QString, QVariant);
 
 
 

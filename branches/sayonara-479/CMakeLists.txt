@@ -95,6 +95,7 @@ SET(HEADERS
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
     GUI/Notifications/GUI_Notifications.h
+    GUI/startup_dialog/GUI_Startup_Dialog.h
     Socket/Socket.h
     HelperStructs/CSettingsStorage.h
 )
@@ -169,6 +170,7 @@ SET(SOURCES
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
     GUI/Notifications/GUI_Notifications.cpp
+    GUI/startup_dialog/GUI_Startup_Dialog.cpp
     Socket/Socket.cpp
     HelperStructs/CSettingsStorage.cpp
 
@@ -192,6 +194,7 @@ SET(FORMS
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui
     GUI/InfoDialog/GUI_InfoDialog.ui
+    GUI/startup_dialog/GUI_Startup_Dialog.ui
 #    GUI/GSTDataPainter/GSTDataPainter.ui
     GUI/SocketConfiguration/GUI_SocketSetup.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui

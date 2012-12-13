@@ -91,14 +91,14 @@ private slots:
 
 
 public slots:
-	virtual void play();
+    virtual void play(int pos_sec=0);
 	virtual void stop();
 	virtual void pause();
 	virtual void setVolume(int vol);
 
 	virtual void jump(int where, bool percent=true);
-	virtual void changeTrack(const MetaData&, int pos_sec=0);
-	virtual void changeTrack(const QString&, int pos_sec=0 );
+    virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true);
+    virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true );
     virtual void psl_gapless_track(const MetaData&);
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);

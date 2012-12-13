@@ -37,13 +37,13 @@ void GUI_SimplePlayer::playClicked(bool) {
 		emit pause();
 	}
 
-	else {
+    else {
 		ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		emit play();
 	}
 
 	m_playing = !m_playing;
-	m_trayIcon->switch_play_pause(m_playing);
+    m_trayIcon->switch_play_pause(m_playing);
 }
 
 void GUI_SimplePlayer::stopClicked(bool) {
@@ -125,6 +125,7 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
 
         if (!ui->songProgress->isSearching() && newSliderVal < ui->songProgress->maximum()){
+
             ui->songProgress->setValue(newSliderVal);
 		}
 	}

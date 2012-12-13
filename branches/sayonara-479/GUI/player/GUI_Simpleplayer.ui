@@ -902,7 +902,6 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <zorder>plugin_widget</zorder>
         </widget>
        </widget>
       </item>
@@ -966,7 +965,7 @@
     <addaction name="action_streamrecorder"/>
     <addaction name="separator"/>
     <addaction name="action_notifications"/>
-    <addaction name="action_load_playlist"/>
+    <addaction name="action_startup"/>
     <addaction name="action_min2tray"/>
     <addaction name="action_only_one_instance"/>
     <addaction name="separator"/>
@@ -1061,12 +1060,12 @@
     <enum>QAction::PositiveSoftKey</enum>
    </property>
   </action>
-  <action name="action_load_playlist">
+  <action name="action_startup">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
-    <string>Load Playlist On Start-Up</string>
+    <string>Start up</string>
    </property>
    <property name="toolTip">
     <string>Load playlist on startup</string>
