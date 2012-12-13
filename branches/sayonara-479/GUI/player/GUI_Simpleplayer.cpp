@@ -297,9 +297,11 @@ void GUI_SimplePlayer::setupConnections(){
 
 
 // new track
-void GUI_SimplePlayer::update_track(const MetaData & md) {
+void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec) {
 
-    ui->songProgress->setValue(0);
+	qDebug() << "Update track "<< pos_sec;
+    if(pos_sec == 0)
+	    ui->songProgress->setValue(0);
 
     m_metadata = md;
     m_trayIcon->switch_play_pause(false);
@@ -308,7 +310,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md) {
 	m_playing = true;
 	m_trayIcon->switch_play_pause(m_playing);
 
-	setCurrentPosition(0);
+	setCurrentPosition(pos_sec);
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))

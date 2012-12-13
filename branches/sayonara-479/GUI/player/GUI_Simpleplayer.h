@@ -56,7 +56,7 @@ public:
 public slots:
 
 	void cover_changed(QString, QString);
-    void update_track (const MetaData & in);
+    void update_track (const MetaData & in, int pos=0);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
 

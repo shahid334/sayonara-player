@@ -54,6 +54,7 @@ CDatabaseConnector::CDatabaseConnector()
 
         success = createDB();
     }
+
 }
 
 bool CDatabaseConnector::isExistent() {
@@ -128,9 +129,13 @@ bool CDatabaseConnector::createDB () {
 }
 
 bool CDatabaseConnector::init_settings_storage(){
-    CSettingsStorage* s = CSettingsStorage::getInstance();
-    if(s)
-        return true;
+    _settings = CSettingsStorage::getInstance();
+    if(_settings){
+	        
+    	connect(_settings, SIGNAL(save_immediatly(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+	return true;
+    }
+
     else
         return false;
 }

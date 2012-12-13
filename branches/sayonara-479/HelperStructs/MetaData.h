@@ -363,5 +363,39 @@ struct CustomPlaylist{
 typedef struct vector<Album> AlbumList;
 typedef struct vector<Artist> ArtistList;
 
+struct LastTrack{
+	qint32 id;
+	QString filepath;
+	qint32 pos_sec;
+	bool valid;
+
+	LastTrack(){
+		id = -1;
+		filepath = "";
+		pos_sec = -1;
+		valid = false;
+	}
+
+	QString toString(){
+		
+		QString str;
+		str += QString::number(id) + ",";
+		str += filepath + ",";
+		str += QString::number(pos_sec);
+		return str;
+	}
+
+	static LastTrack fromString(QString str){
+		QStringList lst = str.split(",");
+		LastTrack tr;
+		if(lst.size() < 3) return tr;
+		tr.id = lst[0].toInt();
+		tr.filepath = lst[1].toInt();
+		tr.pos_sec = lst[2].toInt();
+		tr.valid = true;
+		return tr;
+	}
+};
+
 
 #endif /* METADATA_H_ */

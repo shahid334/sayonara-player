@@ -215,8 +215,8 @@ void Application::init_connections(){
 	   CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 
 
-	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		player,			update_track(const MetaData&));
-	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
+	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&, int),		player,			update_track(const MetaData&, int));
+	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&, int),	listen, 		changeTrack(const MetaData &, int ));
        CONNECT (playlist, sig_gapless_track(const MetaData&),                   listen, 		psl_gapless_track(const MetaData & ));
        CONNECT (playlist, sig_new_stream_session(),                             listen,         psl_new_stream_session());
        CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));

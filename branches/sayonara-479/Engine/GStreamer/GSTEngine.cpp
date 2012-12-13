@@ -119,7 +119,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 /*****************************************************************************************/
 
 GST_Engine::GST_Engine(){
-
+	_settings = CSettingsStorage::getInstance();
 	_name = "GStreamer Backend";
 	_state = STATE_STOP;
 
@@ -249,21 +249,21 @@ void GST_Engine::psl_gapless_track(const MetaData& md){
 
 
 
-void GST_Engine::changeTrack(const QString& filepath){
+void GST_Engine::changeTrack(const QString& filepath, int pos_sec){
     MetaData md;
     md.filepath = filepath;
     if(!ID3::getMetaDataOfFile(md)){
         stop();
         return;
     }
-    changeTrack(md);
+    changeTrack(md, pos_sec);
 }
 
 
-void GST_Engine::changeTrack(const MetaData& md){
-
+void GST_Engine::changeTrack(const MetaData& md, int pos_sec){
 
     obj_ref = NULL;
+    _last_track = _settings->getLastTrack();
 
     // Gstreamer needs an URI
     const gchar* uri = NULL;
@@ -330,7 +330,8 @@ void GST_Engine::changeTrack(const MetaData& md){
     }
 
     emit total_time_changed_signal(_meta_data.length_ms);
-    emit timeChangedSignal(0);
+
+//    emit timeChangedSignal(0);
 
 	_seconds_started = 0;
 	_seconds_now = 0;
@@ -338,8 +339,11 @@ void GST_Engine::changeTrack(const MetaData& md){
 	_track_finished = false;
     _gapless_track_available = false;
 
-    if(start_playing)
+    if(start_playing){
         play();
+	qDebug() << "Jump to " << pos_sec;
+    	jump(pos_sec, false);
+    }
 }
 
 
@@ -392,17 +396,28 @@ void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings){
 
 void GST_Engine::jump(int where, bool percent){
 
-	Q_UNUSED(percent);
 
-	_seconds_started = where * _meta_data.length_ms / 100;
+	qint64 new_time_ns;
+	if(percent){
+		_seconds_started = (where * _meta_data.length_ms) / 100;
 
-	qint64 new_time_ns = where * _meta_data.length_ms * 10000; // nanoseconds
-	if(!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, new_time_ns)){
-        qDebug() << "seeking failed";
+		new_time_ns = where * _meta_data.length_ms * 10000; // nanoseconds
 	}
 
-	emit timeChangedSignal(where);
-}
+	else {
+		_seconds_started = where;
+		new_time_ns = where * 1000000000;
+		where = (where * 100000) / _meta_data.length_ms;
+		qDebug() << "new where " <<  where;
+	}
+
+	if(!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH, new_time_ns)){
+	        qDebug() << "seeking failed";
+	}
+
+	qDebug() << "jump: " << where;	
+		emit timeChangedSignal(where);
+	}
 
 
 
@@ -437,6 +452,8 @@ void GST_Engine::state_changed(){
 
 void GST_Engine::set_cur_position(quint32 pos){
 
+qDebug() << "Cur pos = " << pos;
+
     if((quint32) _seconds_now == pos) return;
     _seconds_now = pos;
 
@@ -449,6 +466,12 @@ void GST_Engine::set_cur_position(quint32 pos){
 		_scrobbled = true;
 	}
 
+    _last_track->id = _meta_data.id;
+    _last_track->filepath = _meta_data.filepath;
+    _last_track->pos_sec = pos;
+
+    _settings->updateLastTrack();
+ 
     emit timeChangedSignal(_seconds_now);
 }
 

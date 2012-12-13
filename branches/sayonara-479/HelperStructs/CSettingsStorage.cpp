@@ -145,6 +145,29 @@ void CSettingsStorage::setLoadPlaylist(bool b){
 	m_loadPlaylist = b;
 }
 
+bool CSettingsStorage::getLoadLastTrack(){
+	return m_loadLastTrack;
+}
+
+void CSettingsStorage::setLoadLastTrack(bool b){
+	m_loadLastTrack = b;
+	
+}
+
+LastTrack* CSettingsStorage::getLastTrack(){
+	return &m_lastTrack;
+}
+
+void CSettingsStorage::setLastTrack(LastTrack& t){
+	m_lastTrack = t;
+}
+
+void CSettingsStorage::updateLastTrack(){
+ 	QString str = m_lastTrack.toString();
+	emit save_immediatly("last_track", str);
+}
+
+
 void CSettingsStorage::setPlaylistMode(const Playlist_Mode& plmode){
 	m_playlistmode = plmode;
 }

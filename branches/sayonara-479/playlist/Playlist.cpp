@@ -128,26 +128,59 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 // call this function if all extern signals/slots for this class are defined
 void Playlist::ui_loaded(){
 
-    _v_meta_data.clear();
-	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
+        _v_meta_data.clear();
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	if( loadPlaylist ){
+	bool loadPlaylist = settings->getLoadPlaylist();
+	bool loadLastTrack = settings->getLoadLastTrack();
+	LastTrack* last_track = settings->getLastTrack();
+	bool load_last_position = true;
+	bool start_immediatly = false;
+	
+	
+	if( !loadPlaylist ) return;
 
-		QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
-		QStringList list = saved_playlist.split(',');
+	QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
+	QStringList list = saved_playlist.split(',');
 
-		if(list.size() > 0){
+	if(list.size() == 0) return;
 
-			foreach(QString trackid, list){
-				if(trackid == "-1" || trackid == "") continue;
-				MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
-                _v_meta_data.push_back(track);
-			}
-			_cur_play_idx = -1;
+	int last_track_idx = -1;
+	
+	for(int i=0; i<list.size(); i++){
+		QString trackid = list[i];
+
+		if(trackid == "-1" || trackid.isEmpty()) continue;
+
+		
+		MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
+        	_v_meta_data.push_back(track);
+
+		qDebug() << "compare " << track.id << " with " << last_track->id;
+		if(track.id == last_track->id) 
+			last_track_idx = i;
+	}
+	
+	_cur_play_idx = 0;
+	if(loadLastTrack && last_track_idx >= 0){
+		qDebug() << "cur play idx = " << _cur_play_idx;
+		_cur_play_idx = last_track_idx;
+	}
+	
+	emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active); 
+	
+	if(start_immediatly || 1){
+		emit sig_selected_file_changed(_cur_play_idx);
+		if(load_last_position){
+	        	emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx], last_track->pos_sec);
+		}
+		
+		else {
+			emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
 		}
 
-        emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 	}
+
 }
 
 

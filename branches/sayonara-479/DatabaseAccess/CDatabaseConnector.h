@@ -27,6 +27,7 @@
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QObject>
 #include <QSqlDatabase>
@@ -63,13 +64,6 @@ public:
     bool init_settings_storage();
     bool load_settings();
     bool store_settings();
-
-
-
-
-
-
-
 
 
 	/********************************************
@@ -191,13 +185,18 @@ public slots:
     bool storeMetadata (MetaDataList & in);
 
 
+
 protected:
     CDatabaseConnector();
+
+
+private slots:
 
 
 
 private:
     CDatabaseConnector(const CDatabaseConnector&);
+    CSettingsStorage* _settings;
 
     QSqlDatabase m_database;
     QString _db_filename;
@@ -213,11 +212,6 @@ private:
     bool createDB();
     bool openDatabase ();
     bool apply_fixes();
-
-
-
-
-
 
 
 };

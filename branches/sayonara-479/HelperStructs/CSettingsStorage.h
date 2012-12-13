@@ -29,14 +29,20 @@
 
 #include <HelperStructs/Equalizer_presets.h>
 #include <HelperStructs/PlaylistMode.h>
+#include <HelperStructs/MetaData.h>
 using namespace std;
 
 /**
   * Class to check if we are running the first time.
   * If yes we are doing bootstrapping. It is a Singleton
   */
-class CSettingsStorage
+class CSettingsStorage : public QObject
 {
+Q_OBJECT
+
+signals: 
+
+	void save_immediatly(QString, QVariant);
 public:
     static CSettingsStorage * getInstance();
 
@@ -92,6 +98,8 @@ private:
     // playlist
     QString m_playlist;
     bool m_loadPlaylist;
+    bool m_loadLastTrack;
+    LastTrack m_lastTrack;
     Playlist_Mode m_playlistmode;
 
     /* style */
@@ -165,6 +173,15 @@ public:
 
 	void setLoadPlaylist(bool b);
 	bool getLoadPlaylist();
+
+	bool getLoadLastTrack();
+	void setLoadLastTrack(bool b);
+
+	LastTrack* getLastTrack();
+	void setLastTrack(LastTrack& t);
+	void updateLastTrack();
+
+	
 
 	void setPlaylistMode(const Playlist_Mode& plmode);
 	Playlist_Mode getPlaylistMode();

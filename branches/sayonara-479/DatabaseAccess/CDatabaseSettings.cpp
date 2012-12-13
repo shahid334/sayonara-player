@@ -169,8 +169,14 @@ bool CDatabaseConnector::load_settings(){
 	QString playlist = load_setting_string("playlist");
 	settings->setPlaylist(playlist);
 
-    bool load_playlist = load_setting_bool("load_playlist", false);
+        bool load_playlist = load_setting_bool("load_playlist", false);
 	settings->setLoadPlaylist(load_playlist);
+
+	bool load_last_track = load_setting_bool("load_last_track", false);
+        settings->setLoadLastTrack(load_last_track);
+
+	LastTrack track = LastTrack::fromString(load_setting_string("last_track", ""));
+        settings->setLastTrack(track);
 
 	QString playlist_mode_str = load_setting_string("playlist_mode");
 	Playlist_Mode playlist_mode_typed;
@@ -302,6 +308,12 @@ bool CDatabaseConnector::store_settings(){
 
 	int load_playlist = storage->getLoadPlaylist();
 	store_setting("load_playlist", load_playlist);
+
+	bool load_last_track = storage->getLoadLastTrack();
+	store_setting("load_last_track", load_last_track);
+
+	QString last_track = storage->getLastTrack()->toString();
+	store_setting("last_track", last_track);	
 
 	QString playlist_mode = storage->getPlaylistMode().toString();
 	store_setting("playlist_mode", playlist_mode);
