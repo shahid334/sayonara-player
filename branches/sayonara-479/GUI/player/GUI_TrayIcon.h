@@ -54,14 +54,16 @@ public:
    void set_enable_bwd(bool);
    void set_enable_show(bool);
 
-   void switch_play_pause(bool play);
-   void switch_mute_unmute(bool mute);
+
+
 
    int get_vol_step();
 
 public slots:
     void trackChanged(const MetaData& md);
     void songChangedMessage (const MetaData& md);
+    void setPlaying(bool);
+    void setMute(bool mute);
 
 
 signals:
@@ -108,9 +110,12 @@ private:
     int                     m_timeout;
     int						m_vol_step;
 
+
     NotificationPluginLoader* m_plugin_loader;
 
     bool                    m_notification_active;
+    bool                    m_playing;
+    bool                    m_mute;
     CSettingsStorage*       m_settings;
 
 

@@ -75,8 +75,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_playing = false;
 	m_mute = false;
 
-    m_min2tray = settings->getMinimizeToTray();
-
 	ui_playlist = 0;
 	ui_playlist_chooser = 0;
 	ui_lfm_radio = 0;
@@ -100,7 +98,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
 	ui->action_ViewLFMRadio->setVisible(settings->getLastFMActive());
 
-
+    m_min2tray = settings->getMinimizeToTray();
     ui->action_min2tray->setChecked(m_min2tray);
     ui->action_only_one_instance->setChecked(settings->getAllowOnlyOneInstance());
 
@@ -294,6 +292,8 @@ void GUI_SimplePlayer::setupConnections(){
     connect(ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
             this, SLOT(notification_changed(bool,int)));
 
+
+
     qDebug() << "connections done";
 }
 
@@ -305,7 +305,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 
     m_completeLength_ms = md.length_ms;
     m_playing = playing;
-    m_trayIcon->switch_play_pause(playing);
+    m_trayIcon->setPlaying(playing);
 
     setCurrentPosition(pos_sec);
 
@@ -534,6 +534,7 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(m_trayIcon, SIGNAL(sig_mute_clicked()), this, SLOT(muteButtonPressed()));
     connect(m_trayIcon, SIGNAL(sig_close_clicked()), this, SLOT(really_close()));
     connect(m_trayIcon, SIGNAL(sig_play_clicked()), this, SLOT(playClicked()));
+    connect(m_trayIcon, SIGNAL(sig_pause_clicked()), this, SLOT(playClicked()));
     connect(m_trayIcon, SIGNAL(sig_show_clicked()), this, SLOT(showNormal()));
 
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -542,7 +543,8 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)),
    			this, 		SLOT(volumeChangedByTick(int)));
 
-   	m_trayIcon->switch_play_pause(true);
+    m_trayIcon->setPlaying(false);
+
     m_trayIcon->show();
 
 }

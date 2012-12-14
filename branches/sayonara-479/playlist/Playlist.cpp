@@ -46,9 +46,11 @@ using namespace std;
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
     _radio_active = RADIO_OFF;
-	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
+    _settings = CSettingsStorage::getInstance();
+    _playlist_mode = _settings->getPlaylistMode();
 	_db = CDatabaseConnector::getInstance();
 	_v_meta_data.clear();
+
 }
 
 Playlist::~Playlist() {
@@ -129,17 +131,17 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 void Playlist::ui_loaded(){
 
     _v_meta_data.clear();
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	bool loadPlaylist = settings->getLoadPlaylist();
-	bool loadLastTrack = settings->getLoadLastTrack();
-	LastTrack* last_track = settings->getLastTrack();
-    bool load_last_position = settings->getRememberTime();
-    bool start_immediatly = settings->getStartPlaying();
+
+    bool loadPlaylist = _settings->getLoadPlaylist();
+    bool loadLastTrack = _settings->getLoadLastTrack();
+    LastTrack* last_track = _settings->getLastTrack();
+    bool load_last_position = _settings->getRememberTime();
+    bool start_immediatly = _settings->getStartPlaying();
 
 	if( !loadPlaylist ) return;
 
-    QStringList saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
+    QStringList saved_playlist = _settings->getPlaylist();
 
     if(saved_playlist.size() == 0) return;
 
@@ -227,7 +229,7 @@ void Playlist::psl_save_playlist_to_storage(){
             playlist_lst << md.filepath;
 	}
 
-    CSettingsStorage::getInstance()->setPlaylist(playlist_lst);
+    _settings->setPlaylist(playlist_lst);
 }
 
 // GUI -->
@@ -247,7 +249,7 @@ void Playlist::save_stream_playlist(){
 
     QString title = "Radio_" + QDate::currentDate().toString("yyyy-mm-dd");
     title += QTime::currentTime().toString("hh.mm");
-    QString dir = CSettingsStorage::getInstance()->getStreamRipperPath() + QDir::separator();
+    QString dir = _settings->getStreamRipperPath() + QDir::separator();
 
     psl_save_playlist(dir + title + ".m3u", _v_stream_playlist, false);
 }

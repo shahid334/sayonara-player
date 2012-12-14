@@ -30,6 +30,8 @@
 /** PLAYER BUTTONS **/
 void GUI_SimplePlayer::playClicked(bool) {
 
+    qDebug() << "play clicked";
+
     if(!m_metadata_available) return;
 
     if (m_playing) {
@@ -43,13 +45,13 @@ void GUI_SimplePlayer::playClicked(bool) {
 	}
 
 	m_playing = !m_playing;
-        m_trayIcon->switch_play_pause(m_playing);
+        m_trayIcon->setPlaying(m_playing);
 }
 
 void GUI_SimplePlayer::stopClicked(bool) {
 
 	ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	m_trayIcon->switch_play_pause(false);
+    m_trayIcon->setPlaying(false);
 
 	m_playing = false;
 
@@ -239,7 +241,7 @@ void GUI_SimplePlayer::muteButtonPressed() {
 		emit sig_volume_changed(0);
 	}
 
-	m_trayIcon->switch_mute_unmute(m_mute);
+    m_trayIcon->setMute(m_mute);
 
 }
 

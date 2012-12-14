@@ -376,6 +376,13 @@ struct LastTrack{
 		valid = false;
 	}
 
+    void reset(){
+        id = -1;
+        filepath = "";
+        pos_sec = -1;
+        valid = false;
+    }
+
 	QString toString(){
 		
 		QString str;

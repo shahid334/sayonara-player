@@ -8,6 +8,11 @@
 // GUI -->
 void Playlist::psl_clear_playlist(){
 
+    LastTrack* last_track = _settings->getLastTrack();
+    last_track->reset();
+    _settings->updateLastTrack();
+
+
     _v_stream_playlist.clear();
     _v_meta_data.clear();
     _cur_play_idx = -1;
@@ -50,6 +55,10 @@ void Playlist::psl_play(){
 }
 
 void Playlist::psl_stop(){
+
+    LastTrack* last_track = _settings->getLastTrack();
+    last_track->reset();
+    _settings->updateLastTrack();
 
     // track no longer valid
     if(_radio_active == RADIO_LFM){
@@ -155,6 +164,7 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
         }
 
         _v_meta_data.insert_mid(md, i + row);
+        if(md.pl_playing) _cur_play_idx = (i + row);
     }
 
 
@@ -229,7 +239,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 // GUI -->
 void Playlist::psl_playlist_mode_changed(const Playlist_Mode& playlist_mode){
 
-    CSettingsStorage::getInstance()->setPlaylistMode(playlist_mode);
+    _settings->setPlaylistMode(playlist_mode);
     _playlist_mode = playlist_mode;
     _playlist_mode.print();
 

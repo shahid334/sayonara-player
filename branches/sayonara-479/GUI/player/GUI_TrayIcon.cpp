@@ -36,9 +36,11 @@
 GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 
 	m_settings = CSettingsStorage::getInstance();
+    m_playing = false;
+    m_mute = false;
 
 	QString icon_path = Helper::getIconPath();
-	QIcon play_icon = QIcon(icon_path + "/play.png");
+    QIcon play_icon = QIcon(icon_path + "/play.png");
 	QIcon pause_icon = QIcon(icon_path + "/pause.png");
 
     QPixmap play_pixmap = play_icon.pixmap(24, 24);
@@ -180,7 +182,8 @@ void GUI_TrayIcon::set_enable_show(bool b){
 
 
 void GUI_TrayIcon::play_clicked(){
-	if(!m_playAction->text().compare("play", Qt::CaseInsensitive)){
+    qDebug() << "tray: play clicked";
+    if(!m_playing){
 		emit sig_play_clicked();
 	}
 
@@ -211,20 +214,22 @@ void GUI_TrayIcon::mute_clicked(){
 	emit sig_mute_clicked();
 }
 
-void GUI_TrayIcon::switch_mute_unmute(bool mute){
+void GUI_TrayIcon::setMute(bool mute){
 
 	if(!mute){
 		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
-		m_muteAction->setText("Mute");
+        m_muteAction->setText("Mute");
 	}
 
 	else {
 		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3.png"));
-		m_muteAction->setText("Mute");
+        m_muteAction->setText("Unmute");
 	}
 }
 
-void GUI_TrayIcon::switch_play_pause(bool play){
+void GUI_TrayIcon::setPlaying(bool play){
+
+    m_playing = play;
 
 	if(play){
 		setIcon(m_playIcon);

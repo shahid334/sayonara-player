@@ -120,6 +120,7 @@ public:
 	Playlist_Mode		_playlist_mode;
 	int					_radio_active;
 	CDatabaseConnector* _db;
+    CSettingsStorage*   _settings;
 	MetaDataList	_v_stream_playlist;
 
 
