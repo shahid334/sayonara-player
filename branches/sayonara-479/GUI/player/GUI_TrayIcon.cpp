@@ -213,7 +213,7 @@ void GUI_TrayIcon::mute_clicked(){
 
 void GUI_TrayIcon::switch_mute_unmute(bool mute){
 
-	if(mute){
+	if(!mute){
 		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
 		m_muteAction->setText("Mute");
 	}
@@ -228,13 +228,13 @@ void GUI_TrayIcon::switch_play_pause(bool play){
 
 	if(play){
 		setIcon(m_playIcon);
-		m_playAction->setIcon(m_playIcon);
-		m_playAction->setText("Play");
+		m_playAction->setIcon(m_pauseIcon);
+		m_playAction->setText("Pause");
 	}
 	else {
 		setIcon(m_pauseIcon);
-		m_playAction->setIcon(m_pauseIcon);
-		m_playAction->setText("Pause");
+		m_playAction->setIcon(m_playIcon);
+		m_playAction->setText("Play");
 	}
 }
 

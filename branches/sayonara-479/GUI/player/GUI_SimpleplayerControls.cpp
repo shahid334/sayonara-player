@@ -43,7 +43,7 @@ void GUI_SimplePlayer::playClicked(bool) {
 	}
 
 	m_playing = !m_playing;
-    m_trayIcon->switch_play_pause(m_playing);
+        m_trayIcon->switch_play_pause(m_playing);
 }
 
 void GUI_SimplePlayer::stopClicked(bool) {

@@ -129,6 +129,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     ui_info_dialog = 0;
 
     changeSkin(settings->getPlayerStyle() == 1);
+
 }
 
 
@@ -301,11 +302,10 @@ void GUI_SimplePlayer::setupConnections(){
 void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playing) {
 
     m_metadata = md;
-    m_trayIcon->switch_play_pause(false);
 
-	m_completeLength_ms = md.length_ms;
+    m_completeLength_ms = md.length_ms;
     m_playing = playing;
-	m_trayIcon->switch_play_pause(m_playing);
+    m_trayIcon->switch_play_pause(playing);
 
     setCurrentPosition(pos_sec);
 
@@ -542,7 +542,7 @@ void GUI_SimplePlayer::setupTrayActions() {
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)),
    			this, 		SLOT(volumeChangedByTick(int)));
 
-   	m_trayIcon->switch_play_pause(false);
+   	m_trayIcon->switch_play_pause(true);
     m_trayIcon->show();
 
 }
