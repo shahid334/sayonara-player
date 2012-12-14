@@ -109,7 +109,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 			break;
 
-        case GST_MESSAGE_ASYNC_DONE:
+       case GST_MESSAGE_ASYNC_DONE:
 
             if(__start_at_beginning == false) {
                 __start_at_beginning = true;
@@ -119,7 +119,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
             break;
 
 		default:
-            obj_ref->state_changed();
+			obj_ref->state_changed();
 			break;
     }
 
@@ -304,6 +304,8 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
         else {
 
             uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
+            /*qDebug() << "Engine: Stream Ripper file = " << filepath;
+            qDebug() << "Engine: Stream Ripper file = " << uri;*/
         }
 
         start_play = false;
@@ -313,7 +315,10 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 	else if(_playing_stream && !_sr_active){
 		_playing_stream = true;
 
+       // uri = md.filepath.toLocal8Bit();
         uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
+       /* qDebug() << "Engine: Stream Ripper file = " << md.filepath;
+        qDebug() << "Engine: Stream Ripper file = " << uri;*/
 
 	}
 
@@ -321,7 +326,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 	else if( !md.filepath.contains("://") ){
 
          uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
-    }
+	}
 
 	else {
         uri =g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
@@ -331,11 +336,13 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
         // playing src
         qDebug() << "Engine:  set uri: " << uri;
         g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
+
         g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
     }
 
     emit total_time_changed_signal(_meta_data.length_ms);
+    emit timeChangedSignal(pos_sec);
 
 	_seconds_started = 0;
 	_seconds_now = 0;
@@ -359,7 +366,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
     if(start_play)
         play(pos_sec);
 
-    else
+    else if(!start_play && !( _playing_stream && _sr_active))
         pause();
 
 }
@@ -372,8 +379,8 @@ void GST_Engine::play(int pos_sec){
 
     gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
 
+	obj_ref = this;
 }
-
 
 
 void GST_Engine::stop(){
@@ -386,7 +393,6 @@ void GST_Engine::stop(){
         _stream_recorder->stop(!_sr_wanna_record);
 	}
 
-    gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 
 	_track_finished = true;
@@ -396,7 +402,6 @@ void GST_Engine::stop(){
 void GST_Engine::pause(){
 	_state = STATE_PAUSE;
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
-
 }
 
 
