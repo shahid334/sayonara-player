@@ -72,7 +72,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
     connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_button_pressed()));
     connect(this->ui->btn_load, SIGNAL(clicked()), this, SLOT(load_button_pressed()));
     connect(this->ui->combo_playlistchooser, SIGNAL(currentIndexChanged(int)), this, SLOT(playlist_selected(int)));
-    connect(this->ui->combo_playlistchooser, SIGNAL(editTextChanged ( const QString & )), this, SLOT(text_changed ( const QString & )));
+    connect(this->ui->combo_playlistchooser, SIGNAL(editTextChanged( const QString & )), this, SLOT(text_changed ( const QString & )));
     connect(_target_playlist_dialog, SIGNAL(sig_target_chosen(QString,bool)), this, SLOT(got_save_params(QString,bool)));
 
     hide();
@@ -115,6 +115,8 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
             _cur_idx = idx;
         }
     }
+
+    text_changed(this->ui->combo_playlistchooser->currentText());
 }
 
 
@@ -128,6 +130,8 @@ void GUI_PlaylistChooser::playlist_changed(MetaDataList& v_md, int i, int radio_
 
     if(empty)
         this->ui->le_playlist_file->clear();
+
+    text_changed(this->ui->combo_playlistchooser->currentText());
 }
 
 
@@ -195,7 +199,7 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 	bool val_bigger_zero = (val >= 0);
 
 	this->ui->btn_delete->setEnabled(val_bigger_zero);
-	this->ui->btn_save->setEnabled(val_bigger_zero);
+    text_changed(this->ui->combo_playlistchooser->currentText());
 
 	if(val_bigger_zero)
 		emit sig_playlist_chosen(val);
@@ -254,7 +258,6 @@ void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
 void GUI_PlaylistChooser::text_changed(const QString & text){
 
     this->ui->btn_save->setEnabled(text.size() > 0);
-
 
     QStringList lst;
     for(int i=0; i<this->ui->combo_playlistchooser->count(); i++){

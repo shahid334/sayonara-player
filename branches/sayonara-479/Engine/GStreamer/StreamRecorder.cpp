@@ -208,7 +208,10 @@ void StreamRecorder::set_new_stream_session(){
 
     QString sr_path = _settings->getStreamRipperPath();
     QString session_path = check_session_path(sr_path);
+    qDebug() << "session_path = " << session_path;
+
     _session_playlist_name = session_path + QDir::separator() + get_time_str() + ".m3u";
+    qDebug() << "session playlist name = " << _session_playlist_name;
 }
 
 
@@ -278,9 +281,6 @@ bool StreamRecorder::stop(bool delete_track){
     if(!save_success)
         return false;
 
-    _session_collector.push_back(_md);
-
-    PlaylistParser::save_playlist(_session_playlist_name, _session_collector, true);
     return true;
 }
 
@@ -309,14 +309,20 @@ bool StreamRecorder::save_file(){
 
     bool success = 	f.copy(dst_name);
 
-    if(!success)
+    if(!success){
         qDebug() << "SR: unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname_wo_path;
-
-    else{
-        qDebug() << "SR: Remove File w save" << f.fileName() << " -> " << dst_name;
-        _md.filepath = dst_name;
-        ID3::setMetaDataOfFile(_md);
+        return false;
     }
+
+
+    qDebug() << "SR: Remove File w save" << f.fileName() << " -> " << dst_name;
+    _md.filepath = dst_name;
+    ID3::setMetaDataOfFile(_md);
+
+    _session_collector.push_back(_md);
+
+    qDebug() << "save playlist as " << _session_playlist_name;
+    PlaylistParser::save_playlist(_session_playlist_name, _session_collector, true);
 
     return success;
 }

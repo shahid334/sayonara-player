@@ -191,6 +191,14 @@ private slots:
 	void play_next();
 	void play_next_tracks();
 
+    void forbid_mime_data_destroyable();
+    void forbid_album_mime_data_destroyable();
+    void forbid_artist_mime_data_destroyable();
+
+    void create_mime_data();
+    void create_artist_mime_data();
+    void create_album_mime_data();
+
 
 
 
@@ -214,9 +222,12 @@ private:
 
 	MetaDataList _v_md_tmp;
 
-	CustomMimeData* _mime_data_album;
-	CustomMimeData* _mime_data_artist;
-	CustomMimeData* _mime_data;
+    CustomMimeData* _mime_data_album;
+    CustomMimeData* _mime_data_artist;
+    CustomMimeData* _mime_data;
+    bool            _mime_data_album_destroyable;
+    bool            _mime_data_artist_destroyable;
+    bool            _mime_data_destroyable;
 
 
 	int show_delete_dialog(int n_tracks);

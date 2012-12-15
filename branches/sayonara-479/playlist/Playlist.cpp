@@ -145,29 +145,39 @@ void Playlist::ui_loaded(){
 
     if(saved_playlist.size() == 0) return;
 
-	int last_track_idx = -1;
-	
-    for(int i=0; i<saved_playlist.size(); i++){
-
-        QString item = saved_playlist[i];
-        if(item.size() == 0) continue;
-
-        bool ok;
-        int track_id = item.toInt(&ok);
-
-        QString path_in_list = item;
-        QDir d(path_in_list);
-        path_in_list = d.absolutePath();
-
+    // the path of the last played track
         QString last_track_path = last_track->filepath;
         QDir d2(last_track_path);
         last_track_path = d2.absolutePath();
 
+	int last_track_idx = -1;
+	
+    // run over all tracks
+    for(int i=0; i<saved_playlist.size(); i++){
+
+        // convert item into MetaData
+
+        QString item = saved_playlist[i];
+        if(item.size() == 0) continue;
+
+        // maybe we can get a track id
+            bool ok;
+            int track_id = item.toInt(&ok);
+
+        // maybe it's an filepath
+            QString path_in_list = item;
+            QDir d(path_in_list);
+            path_in_list = d.absolutePath();
+
 
         MetaData track;
         CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+        // we have a track id
         if(track_id >= 0 && ok){
             track = db->getTrackById(track_id);
+
+            // this track id cannot be found in db
             if(track.id < 0){
                 if(!ID3::getMetaDataOfFile(track)) continue;
                 track.is_extern = true;
@@ -180,11 +190,17 @@ void Playlist::ui_loaded(){
                 last_track_idx = i;
         }
 
+        // we have an filepath
         else{
+            if(!QFile::exists(path_in_list)) continue;
+
+            // maybe it's in the library neverthe less
             track = db->getTrackByPath(path_in_list);
+            // we expected that.. try to get metadata
             if(track.id < 0){
                 if(!ID3::getMetaDataOfFile(track)) continue;
             }
+
             track.is_extern = true;
 
             if(!path_in_list.compare(last_track_path, Qt::CaseInsensitive)){
@@ -194,7 +210,6 @@ void Playlist::ui_loaded(){
 
         _v_meta_data.push_back(track);
 	}
-
 
     if(_v_meta_data.size() == 0) return;
 	

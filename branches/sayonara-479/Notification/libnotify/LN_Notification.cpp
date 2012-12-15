@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <QtPlugin>
+#include <QDebug>
 
 #include "Notification/Notification.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -29,6 +30,7 @@ void LN_Notification::notification_show(QString title, QString text){
     int timeout = CSettingsStorage::getInstance()->getNotificationTimeout();
     notify_notification_set_timeout     (n, timeout);
 	notify_notification_show            (n, NULL);
+    qDebug() << "notification end";
 }
 
 QString LN_Notification::get_name(){

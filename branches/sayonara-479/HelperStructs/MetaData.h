@@ -229,17 +229,28 @@ public:
 	}
 
 	void insert_mid(const MetaData& md, int pos){
-		if(pos >= (int) size()){
+
+        if(pos >= (int) size()){
 			push_back(md);
 			return;
 		}
 
 		if(pos < 0) pos = 0;
 
-		MetaData md_cp = md;
-		MetaDataList::iterator it = begin();
-		insert(it + pos, md_cp);
-	}
+        uint sz = size();
+
+        // copy last element
+        push_back(at(sz - 1));
+        sz++;
+
+        // s
+        for(uint j= sz-2; j>(uint) pos; j--){
+            at(j) = at(j-1);
+        }
+
+        // replace
+        at(pos) = md;
+    }
 };
 
 struct Artist{

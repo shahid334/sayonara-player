@@ -551,6 +551,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 
 
 void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
+
     switch (reason) {
 
     case QSystemTrayIcon::Trigger:
@@ -783,7 +784,6 @@ void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
 
 void GUI_SimplePlayer::really_close(bool b){
 
-	really_close();
 	m_min2tray = false;
 	this->close();
 }

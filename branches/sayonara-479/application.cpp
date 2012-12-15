@@ -264,7 +264,6 @@ void Application::init_connections(){
 	   CONNECT(library, sig_all_artists_loaded(ArtistList&), 		ui_library, 	fill_library_artists(ArtistList&));
 	   CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			ui_library, 	track_info_available(const MetaDataList&));
 	   CONNECT(library, sig_tracks_for_playlist_available(MetaDataList&),           	playlist, psl_createPlaylist(MetaDataList&));
-	   CONNECT(library, sig_import_result(bool),						playlists,		import_result(bool));
 	   CONNECT(library, sig_delete_answer(QString), 					ui_library, 	psl_delete_answer(QString));
 	   CONNECT(library, sig_play_next_tracks(const MetaDataList&),  playlist,		psl_play_next_tracks(const MetaDataList&));
 
@@ -318,7 +317,6 @@ void Application::init_connections(){
 
 	   CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
 	   CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
-	   CONNECT(playlists, sig_import_tracks(const MetaDataList&),       library, 				importFiles(const MetaDataList&));
 
         CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
         CONNECT(ui_lfm_radio, close_event(), 								player, 	close_lfm_radio());

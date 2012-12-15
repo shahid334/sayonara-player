@@ -73,6 +73,8 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
     m_database.transaction();
     foreach (MetaData data, v_md) {
 
+        if(data.is_extern) continue;
+
     	try {
 
     		 //first check if we know the artist and its id
