@@ -628,9 +628,9 @@ void Playlist::psl_valid_strrec_track(const MetaData& md){
 bool  Playlist::checkTrack(const MetaData& md){
 	if(Helper::checkTrack(md)) return true;
 	else {
-		MetaData md_cp = md;
-		_db->deleteTrack(md_cp);
-		emit sig_library_changed();
+        //MetaData md_cp = md;
+        //_db->deleteTrack(md_cp);
+        //emit sig_library_changed();
 		return false;
 	}
 }
@@ -642,5 +642,4 @@ void Playlist::psl_play_next_tracks(const MetaDataList& v_md){
 uint Playlist::get_num_tracks(){
 
 	return _v_meta_data.size();
-
 }

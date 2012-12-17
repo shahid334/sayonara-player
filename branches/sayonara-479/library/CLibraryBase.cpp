@@ -223,6 +223,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 }
 
 
+
 void CLibraryBase::reloadLibrary(){
 
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
@@ -418,6 +419,11 @@ void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_s
 	}
 }
 
+
+void CLibraryBase::refresh(){
+
+    psl_filter_changed(_filter);
+}
 
 void CLibraryBase::psl_filter_changed(const Filter& filter){
 

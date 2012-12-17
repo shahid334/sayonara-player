@@ -242,7 +242,7 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int 
         idx++;
 	}
 
-	set_total_time_label(total_msecs);
+    set_total_time_label(total_msecs);
 }
 
 // private SLOT: clear button pressed
@@ -338,6 +338,7 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
 	clear_drag_lines(index.row());
+    int row_clicked = -1;
 
 	for(int i=0; i<index.model()->rowCount(); i++){
 
@@ -350,7 +351,7 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
             md.pl_selected = true;
             if(!md.is_disabled){
                 md.pl_playing = true;
-                emit selected_row_changed(i);
+                row_clicked = i;
             }
         }
 
@@ -358,6 +359,8 @@ void GUI_Playlist::double_clicked(const QModelIndex & index){
 
 		_pli_model->setData(tmp_idx, md.toVariant(), Qt::EditRole);
 	}
+    if(row_clicked > -1)
+        emit selected_row_changed(row_clicked);
 }
 
 

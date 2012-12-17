@@ -71,6 +71,7 @@ public slots:
     void insertMetaDataIntoDB(MetaDataList& in);
 
     void reloadLibrary();
+    void refresh();
     void importDirectory(QString);
     void importFiles(const MetaDataList&);
 

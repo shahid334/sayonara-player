@@ -884,6 +884,8 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit){
 
+    qDebug() << "text line edited";
+
     QList<int> lst;
     _album_model->set_selected(lst);
     _track_model->set_selected(lst);
@@ -920,10 +922,10 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
     else{
         filter.filtertext = QString("%") + search + QString("%");
         filter.cleared = false;
-
     }
 
 	_cur_searchfilter = filter;
+    qDebug() << "Filter changed";
     sig_filter_changed(filter);
 }
 
@@ -935,6 +937,7 @@ void GUI_Library_windowed::searchfilter_changed(int idx){
 
 
 void GUI_Library_windowed::refresh(){
+    qDebug() << "Refresh";
 
 	text_line_edited(_cur_searchfilter.filtertext, true);
 }
