@@ -155,7 +155,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
         data.is_extern = true;
 
         for(uint row=0; row<pl.tracks.size(); row++){
-            if(row >= position){
+            if( (int) row >= position){
                 pl.tracks.insert_mid(data, row);
                 pl.num_tracks++;
                 break;

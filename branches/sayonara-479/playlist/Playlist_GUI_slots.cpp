@@ -221,7 +221,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
 
     _cur_play_idx -= n_tracks_before_cur_idx;
 
-    if(_cur_play_idx < 0 || _cur_play_idx >= v_tmp_md.size() )
+    if(_cur_play_idx < 0 || _cur_play_idx >= (int) v_tmp_md.size() )
         _cur_play_idx = -1;
 
     else

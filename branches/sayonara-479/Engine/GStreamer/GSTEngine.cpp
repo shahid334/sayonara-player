@@ -274,6 +274,8 @@ void GST_Engine::changeTrack(const QString& filepath, int pos_sec, bool start_pl
 }
 
 
+
+
 void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 
     obj_ref = NULL;
@@ -301,13 +303,8 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
             qDebug() << "Engine: Stream Ripper Error: Could not get filepath";
             return;
         }
-        else {
 
-            uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
-            /*qDebug() << "Engine: Stream Ripper file = " << filepath;
-            qDebug() << "Engine: Stream Ripper file = " << uri;*/
-        }
-
+        uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
         start_play = false;
 	}
 
@@ -315,11 +312,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 	else if(_playing_stream && !_sr_active){
 		_playing_stream = true;
 
-       // uri = md.filepath.toLocal8Bit();
         uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
-       /* qDebug() << "Engine: Stream Ripper file = " << md.filepath;
-        qDebug() << "Engine: Stream Ripper file = " << uri;*/
-
 	}
 
 	// no stream (not quite right because of mms, rtsp or other streams
@@ -332,17 +325,17 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
         uri =g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
 	}
 
-    if(uri != NULL){
-        // playing src
-        qDebug() << "Engine:  set uri: " << uri;
-        g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
-
-        g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
-
-    }
-
     emit total_time_changed_signal(_meta_data.length_ms);
     emit timeChangedSignal(pos_sec);
+
+
+    if(uri == NULL) return;
+
+
+    // playing src
+    qDebug() << "Engine:  set uri: " << uri;
+    g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
+    g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
 	_seconds_started = 0;
 	_seconds_now = 0;
@@ -366,6 +359,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
     if(start_play)
         play(pos_sec);
 
+    // pause if streamripper is not active
     else if(!start_play && !( _playing_stream && _sr_active))
         pause();
 
@@ -424,14 +418,17 @@ void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings){
 void GST_Engine::jump(int where, bool percent){
 
     gint64 new_time_ms, new_time_ns;
+    if(where < 0) where = 0;
 
     if(percent){
+        if(where > 100) where = 100;
         double p = where / 100.0;
         _seconds_started = (int) (p * _meta_data.length_ms) / 1000;
         new_time_ms = (quint64) (p * _meta_data.length_ms); // msecs
 	}
 
 	else {
+        if(where > _meta_data.length_ms / 1000) where =  _meta_data.length_ms / 1000;
         _seconds_started = where;
         new_time_ms = where * 1000;
 	}
