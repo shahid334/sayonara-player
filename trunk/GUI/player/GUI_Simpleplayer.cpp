@@ -362,6 +362,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 	if(! QFile::exists(cover_path) ){
         if(md.radio_mode != RADIO_STATION){
             cover_path = Helper::getIconPath() + "logo.png";
+	    qDebug() << "Set logo, want cover";
             emit sig_want_cover(md);
         }
 

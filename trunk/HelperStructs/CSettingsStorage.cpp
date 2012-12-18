@@ -164,7 +164,7 @@ void CSettingsStorage::setLastTrack(LastTrack& t){
 
 void CSettingsStorage::updateLastTrack(){
  	QString str = m_lastTrack.toString();
-	emit save_immediatly("last_track", str);
+	emit sig_save(SET_PL_LAST_TRACK, str);
 }
 
 
