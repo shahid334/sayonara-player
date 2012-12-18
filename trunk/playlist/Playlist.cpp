@@ -46,9 +46,11 @@ using namespace std;
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
     _radio_active = RADIO_OFF;
-	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
+    _settings = CSettingsStorage::getInstance();
+    _playlist_mode = _settings->getPlaylistMode();
 	_db = CDatabaseConnector::getInstance();
 	_v_meta_data.clear();
+
 }
 
 Playlist::~Playlist() {
@@ -129,42 +131,120 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 void Playlist::ui_loaded(){
 
     _v_meta_data.clear();
-	bool loadPlaylist = CSettingsStorage::getInstance()->getLoadPlaylist();
 
-	if( loadPlaylist ){
 
-		QString saved_playlist = CSettingsStorage::getInstance()->getPlaylist();
-		QStringList list = saved_playlist.split(',');
+    bool loadPlaylist = _settings->getLoadPlaylist();
+    bool loadLastTrack = _settings->getLoadLastTrack();
+    LastTrack* last_track = _settings->getLastTrack();
+    bool load_last_position = _settings->getRememberTime();
+    bool start_immediatly = _settings->getStartPlaying();
 
-		if(list.size() > 0){
+	if( !loadPlaylist ) return;
 
-			foreach(QString trackid, list){
-				if(trackid == "-1" || trackid == "") continue;
-				MetaData track = CDatabaseConnector::getInstance()->getTrackById(trackid.toInt());
-                _v_meta_data.push_back(track);
-			}
-			_cur_play_idx = -1;
-		}
+    QStringList saved_playlist = _settings->getPlaylist();
 
-        emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    if(saved_playlist.size() == 0) return;
+
+    // the path of the last played track
+        QString last_track_path = last_track->filepath;
+        QDir d2(last_track_path);
+        last_track_path = d2.absolutePath();
+
+	int last_track_idx = -1;
+	
+    // run over all tracks
+    for(int i=0; i<saved_playlist.size(); i++){
+
+        // convert item into MetaData
+
+        QString item = saved_playlist[i];
+        if(item.size() == 0) continue;
+
+        // maybe we can get a track id
+            bool ok;
+            int track_id = item.toInt(&ok);
+
+        // maybe it's an filepath
+            QString path_in_list = item;
+            QDir d(path_in_list);
+            path_in_list = d.absolutePath();
+
+
+        MetaData track;
+        CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+        // we have a track id
+        if(track_id >= 0 && ok){
+            track = db->getTrackById(track_id);
+
+            // this track id cannot be found in db
+            if(track.id < 0){
+                if(!ID3::getMetaDataOfFile(track)) continue;
+                track.is_extern = true;
+            }
+
+            else
+                track.is_extern = false;
+
+            if(track_id == last_track->id)
+                last_track_idx = i;
+        }
+
+        // we have an filepath
+        else{
+            if(!QFile::exists(path_in_list)) continue;
+
+            // maybe it's in the library neverthe less
+            track = db->getTrackByPath(path_in_list);
+            // we expected that.. try to get metadata
+            if(track.id < 0){
+                if(!ID3::getMetaDataOfFile(track)) continue;
+            }
+
+            track.is_extern = true;
+
+            if(!path_in_list.compare(last_track_path, Qt::CaseInsensitive)){
+                last_track_idx = i;
+            }
+        }
+
+        _v_meta_data.push_back(track);
 	}
+
+    if(_v_meta_data.size() == 0) return;
+	
+    _cur_play_idx = 0;
+	if(loadLastTrack && last_track_idx >= 0){
+		_cur_play_idx = last_track_idx;
+	}
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    emit sig_selected_file_changed(_cur_play_idx);
+
+    if(load_last_position){
+            emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx], last_track->pos_sec, start_immediatly);
+    }
+
+    else {
+        emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx], 0, start_immediatly);
+    }
 }
-
-
 
 // save the playlist, for possibly reloading it on next startup
 void Playlist::psl_save_playlist_to_storage(){
 
     if(_radio_active) return;
 
-	QString playlist_str;
-	for(uint i=0; i<_v_meta_data.size(); i++){
+    QStringList playlist_lst;
+    foreach(MetaData md, _v_meta_data){
+        if(md.radio_mode != RADIO_OFF) continue;
 
-		playlist_str += QString::number(_v_meta_data[i].id);
-		if(i != _v_meta_data.size() - 1) playlist_str += ",";
+        if(md.id >= 0) playlist_lst << QString::number(md.id);
+        else
+            playlist_lst << md.filepath;
 	}
 
-	CSettingsStorage::getInstance()->setPlaylist(playlist_str);
+    _settings->setPlaylist(playlist_lst);
 }
 
 // GUI -->
@@ -184,7 +264,7 @@ void Playlist::save_stream_playlist(){
 
     QString title = "Radio_" + QDate::currentDate().toString("yyyy-mm-dd");
     title += QTime::currentTime().toString("hh.mm");
-    QString dir = CSettingsStorage::getInstance()->getStreamRipperPath() + QDir::separator();
+    QString dir = _settings->getStreamRipperPath() + QDir::separator();
 
     psl_save_playlist(dir + title + ".m3u", _v_stream_playlist, false);
 }
@@ -548,9 +628,9 @@ void Playlist::psl_valid_strrec_track(const MetaData& md){
 bool  Playlist::checkTrack(const MetaData& md){
 	if(Helper::checkTrack(md)) return true;
 	else {
-		MetaData md_cp = md;
-		_db->deleteTrack(md_cp);
-		emit sig_library_changed();
+        //MetaData md_cp = md;
+        //_db->deleteTrack(md_cp);
+        //emit sig_library_changed();
 		return false;
 	}
 }
@@ -562,5 +642,4 @@ void Playlist::psl_play_next_tracks(const MetaDataList& v_md){
 uint Playlist::get_num_tracks(){
 
 	return _v_meta_data.size();
-
 }

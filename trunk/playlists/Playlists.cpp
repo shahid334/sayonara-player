@@ -21,6 +21,7 @@
 
 
 #include "playlists/Playlists.h"
+#include "HelperStructs/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -35,7 +36,7 @@
 
 
 Playlists::Playlists() {
-	_import_state = STATE_IMPORT_SUCCESS;
+
 }
 
 Playlists::~Playlists() {
@@ -55,94 +56,40 @@ void Playlists::load_all_playlists(){
 void Playlists::load_single_playlist(int id){
 	CustomPlaylist pl;
     bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
+    qDebug() << "in my stommack are " << pl.tracks.size() << "files";
+
+    MetaDataList v_md;
+    pl.length = 0;
+    pl.num_tracks = 0;
+    foreach(MetaData md, pl.tracks){
+        if(md.is_extern){
+            if(!ID3::getMetaDataOfFile(md)){
+                continue;
+            }
+        }
+
+        pl.length += md.length_ms / 1000;
+        pl.num_tracks ++;
+        v_md.push_back(md);
+    }
+
+    qDebug() << "loaded " << v_md.size() << " tracks";
+
+    pl.tracks = v_md;
 
 	if(success){
 		emit sig_single_playlist_loaded(pl);
 	}
 }
 
-bool Playlists::check_for_extern_track(const MetaDataList& src, MetaDataList& tgt){
-
-	tgt = src;
-
-	bool extern_track_found = false;
-	foreach(MetaData data, src){
-		if(data.is_extern){
-			extern_track_found = true;
-			break;
-		}
-	}
-
-
-	if(extern_track_found){
-		MetaDataList v_md_save = src;
-		_import_state = STATE_WAIT;
-
-		int info = QMessageBox::information(NULL,
-				"Some tracks are not in library",
-				QString("All tracks must be located in library.\n") +
-				"Would you like to import missing tracks?",
-				QMessageBox::Yes | QMessageBox::No);
-
-		if(info == QMessageBox::Yes){
-			emit sig_import_tracks(src);
-		}
-
-		else{
-			return false;
-		}
-
-		// wait until importing is finished
-		// 2 mins
-		long int max = 30000000;
-		while(_import_state == STATE_WAIT){
-			qDebug() << "waiting..." << _import_state;
-			usleep(1000000);
-			max -= 1000000;
-			if(max <= 0){
-				_import_state = STATE_IMPORT_FAIL;
-				return false;
-			}
-		}
-
-		if(_import_state == STATE_IMPORT_FAIL) return -1;
-		else if(_import_state == STATE_IMPORT_SUCCESS){
-
-			tgt.clear();
-			CDatabaseConnector* db = CDatabaseConnector::getInstance();
-			for(uint i=0; i<v_md_save.size(); i++){
-
-				MetaData md_tmp = db->getTrackByPath(v_md_save[i].filepath);
-				if(md_tmp.id > 0){
-					MetaData md = v_md_save.at(i);
-					md.id = md_tmp.id;
-					tgt.push_back(md);
-				}
-			}
-		}
-	}
-
-	return true;
-}
-
-void Playlists::import_result(bool success){
-
-	if(_import_state != STATE_WAIT) return;
-
-	if(success) _import_state = STATE_IMPORT_SUCCESS;
-	else _import_state = STATE_IMPORT_FAIL;
-}
 
 
 void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md){
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	MetaDataList vec_md_copy;
-	bool success = check_for_extern_track(vec_md, vec_md_copy);
-	if(!success)
-		return;
+    qDebug() << "save " << vec_md.size() << " files to " << id;
 
-	success = db->storePlaylist(vec_md_copy, id);
+    bool success = db->storePlaylist(vec_md, id);
 	if(success){
 		qDebug() << "Saved playlist as " << id;
 		_mapping.clear();
@@ -153,8 +100,6 @@ void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md){
 	else{
 		qDebug() << "Could not save playlist " << id;
 	}
-
-	_import_state = STATE_IMPORT_SUCCESS;
 }
 
 
@@ -162,11 +107,9 @@ void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md){
 void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md){
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	MetaDataList vec_md_copy;
-	bool success = check_for_extern_track(vec_md, vec_md_copy);
-	if(!success) return;
 
-	success = db->storePlaylist(vec_md_copy, name);
+    qDebug() << "save " << vec_md.size() << " files to " << name;
+    bool success = db->storePlaylist(vec_md, name);
 	if(success){
 		_mapping.clear();
 		CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
@@ -176,8 +119,6 @@ void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md){
 	else{
 		qDebug() << "Could not save playlist " << name;
 	}
-
-	_import_state = STATE_IMPORT_SUCCESS;
 }
 
 void Playlists::delete_playlist(int id){

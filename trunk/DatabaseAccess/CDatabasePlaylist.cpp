@@ -73,7 +73,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
 
 	QSqlQuery q(this->m_database);
 
-	QString querytext = QString("SELECT ") +
+    QString querytext = QString("SELECT ") +
 			"tracks.filename 	AS filename, "		// 0
 			"albums.name		AS albumName, "		// 1
 			"tracks.albumID		AS albumID, " 		// 2
@@ -84,44 +84,86 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
 			"tracks.length		AS length, "		// 7
 			"tracks.track		AS track, "			// 8
 			"tracks.bitrate		AS bitrate, "		// 9
-			"tracks.TrackID 	AS trackID "		// 10
-			"FROM tracks, albums, artists, playlists, playlisttotracks WHERE "
-			"playlists.playlistID = :playlist_id AND playlists.playlistID = playlistToTracks.playlistID AND " +
+            "tracks.TrackID 	AS trackID, "		// 10
+            "playlistToTracks.filepath    AS filepath "       // 11
+            "FROM tracks, albums, artists, playlists, playlisttotracks WHERE "
+            "playlists.playlistID = :playlist_id AND playlists.playlistID = playlistToTracks.playlistID AND "
 			"playlistToTracks.trackID = tracks.trackID AND "
 			"tracks.albumID = albums.albumID AND tracks.artistID = artists.artistID "
-			"ORDER BY playlistToTracks.position ASC; ";
+            "ORDER BY playlistToTracks.position ASC; ";
+
+    QString querytext2 = QString("SELECT ") +
+            "playlisttotracks.filepath AS filepath, "
+            "playlisttotracks.position AS position "
+            "FROM playlists, playlisttotracks "
+            "WHERE playlists.playlistID = :playlist_id "
+            "AND playlists.playlistID =  playlistToTracks.playlistID "
+            "AND playlistToTracks.trackID <= 0 "
+            "ORDER BY playlistToTracks.position ASC; ";
+
 
 
 	q.prepare(querytext);
 	q.bindValue(":playlist_id", playlist_id);
 
 
-	if (!q.exec()) {
-		return false;
-	}
+    if (q.exec()) {
 
-	while (q.next()) {
-		MetaData data;
-		data.filepath =  q.value(0).toString();
-		data.album = 	 q.value(1).toString().trimmed();
-		data.album_id =  q.value(2).toInt();
-		data.artist_id = q.value(3).toInt();
-		data.artist = 	 q.value(4).toString().trimmed();
-		data.title = 	 q.value(5).toString();
-		data.year = 	 q.value(6).toInt();
-		data.length_ms = q.value(7).toInt();
-		data.track_num = q.value(8).toInt();
-		data.bitrate = 	 q.value(9).toInt();
-		data.id = 		 q.value(10).toInt();
-		data.is_extern = false;
+        while (q.next()) {
+            MetaData data;
+            data.filepath =  q.value(0).toString();
+            data.album = 	 q.value(1).toString().trimmed();
+            data.album_id =  q.value(2).toInt();
+            data.artist_id = q.value(3).toInt();
+            data.artist = 	 q.value(4).toString().trimmed();
+            data.title = 	 q.value(5).toString();
+            data.year = 	 q.value(6).toInt();
+            data.length_ms = q.value(7).toInt();
+            data.track_num = q.value(8).toInt();
+            data.bitrate = 	 q.value(9).toInt();
+            data.id = 		 q.value(10).toInt();
+            data.filepath =  q.value(11).toString().trimmed();
+            data.is_extern = false;
 
-		pl.tracks.push_back(data);
-		pl.num_tracks++;
-		pl.length += (data.length_ms / 1000);
-	}
+            pl.tracks.push_back(data);
+            pl.num_tracks++;
+            pl.length += (data.length_ms / 1000);
+        }
+    }
+
+    else{
+        qDebug() << "DB: Fetch playlist(1) " << q.lastError();
+    }
+
+
+    QSqlQuery q2(this->m_database);
+    q2.prepare(querytext2);
+    q2.bindValue(":playlist_id", playlist_id);
+
+    if(!q2.exec()){
+        qDebug() << "DB: Fetch playlist(1) " << q2.lastError();
+        return false;
+    }
+
+    while (q2.next()) {
+
+        int position = q2.value(1).toInt();
+
+        MetaData data;
+        data.filepath =  q2.value(0).toString();
+        data.id = -1;
+        data.is_extern = true;
+
+        for(uint row=0; row<pl.tracks.size(); row++){
+            if( (int) row >= position){
+                pl.tracks.insert_mid(data, row);
+                pl.num_tracks++;
+                break;
+            }
+        }
+    }
 
 	return true;
-
 }
 
 // negative, if error
@@ -181,12 +223,11 @@ bool CDatabaseConnector::insertTrackIntoPlaylist(MetaData& md, int playlist_id, 
 	if (!this -> m_database.isOpen()) return false;
 
 	QSqlQuery q (this -> m_database);
-	qDebug() << "insert track: " << md.id << " into playlist " << playlist_id << " at " << pos;
 
 	QString query_string = QString("INSERT INTO playlisttotracks ") +
-							"(trackid, playlistid, position) " +
+                            "(trackid, playlistid, position, filepath) " +
 							"VALUES " +
-							"(:track_id, :playlist_id, :position);";
+                            "(:track_id, :playlist_id, :position, :filepath);";
 
 	qDebug() <<
 
@@ -194,6 +235,7 @@ bool CDatabaseConnector::insertTrackIntoPlaylist(MetaData& md, int playlist_id, 
 	q.bindValue(":track_id", QVariant(md.id));
 	q.bindValue(":playlist_id", QVariant(playlist_id));
 	q.bindValue(":position", QVariant(pos));
+    q.bindValue(":filepath", QVariant(md.filepath));
 
 	if (!q.exec()) {
 		qDebug() << "DB: cannot insert track into playlist";
@@ -285,6 +327,8 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_
 
 	if (!this -> m_database.isOpen()) return false;
 
+    qDebug() << "DB: store playlist";
+
 	// create playlist if neccessary
 
 	QString playlist_name = getPlaylistNameById(playlist_id);
@@ -324,7 +368,6 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_
 	m_database.commit();
 
 	return true;
-
 }
 
 bool CDatabaseConnector::emptyPlaylist(int playlist_id){

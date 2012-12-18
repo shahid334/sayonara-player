@@ -116,10 +116,12 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 
 		case Qt::LeftButton:
 
+            delete _qDrag->mimeData();
 			QTableView::mouseReleaseEvent(event);
 			event->accept();
 
 			_drag = false;
+
 			break;
 
 		default: break;
@@ -129,7 +131,7 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 
 void MyTableView::set_mime_data(CustomMimeData* data){
 
-	_qDrag = new QDrag(this);
+    _qDrag = new QDrag(this);
 	_qDrag->setMimeData(data);
 
 	if (data) _drag = true;
@@ -148,7 +150,6 @@ void  MyTableView::keyPressEvent(QKeyEvent* event){
         selectAll();
         emit sig_all_selected();
     }
-
 }
 
 

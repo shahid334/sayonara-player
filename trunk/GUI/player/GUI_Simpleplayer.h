@@ -31,9 +31,11 @@
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
+#include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
+
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -56,7 +58,7 @@ public:
 public slots:
 
 	void cover_changed(QString, QString);
-    void update_track (const MetaData & in);
+    void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
 
@@ -215,6 +217,7 @@ private:
     GUI_LFMRadioWidget*		ui_lfm_radio;
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;
+    GUI_Startup_Dialog*     ui_startup_dialog;
     CoverLookup*			m_cov_lookup;
 
     GUI_Alternate_Covers*	m_alternate_covers;

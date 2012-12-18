@@ -99,7 +99,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Choose target playlist</string>
+      <string>Save playlist as...</string>
      </property>
     </widget>
    </item>

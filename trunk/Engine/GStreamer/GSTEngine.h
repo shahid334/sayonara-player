@@ -35,6 +35,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
+#include "HelperStructs/CSettingsStorage.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
 
@@ -75,7 +76,9 @@ private:
 	GstElement* _file_sink;
 	GstPad*		_audio_pad;
 	GstBus*		_bus;
-    StreamRecorder* _stream_recorder;
+	StreamRecorder* _stream_recorder;
+
+	LastTrack*  _last_track;
 
 
 
@@ -88,14 +91,14 @@ private slots:
 
 
 public slots:
-	virtual void play();
+    virtual void play(int pos_sec=0);
 	virtual void stop();
 	virtual void pause();
 	virtual void setVolume(int vol);
 
 	virtual void jump(int where, bool percent=true);
-	virtual void changeTrack(const MetaData& );
-	virtual void changeTrack(const QString& );
+    virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true);
+    virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true );
     virtual void psl_gapless_track(const MetaData&);
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
@@ -120,6 +123,7 @@ public:
 
 
 private:
+	CSettingsStorage* _settings;
 
 	void init_play_pipeline();
 

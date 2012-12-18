@@ -55,7 +55,7 @@ public:
 
 	signals:
         void sig_playlist_created(MetaDataList&, int, int);
-		void sig_selected_file_changed_md(const MetaData&);
+        void sig_selected_file_changed_md(const MetaData&, int pos=0, bool play=true);
 		void sig_selected_file_changed(int row);
 		void sig_no_track_to_play();
 		void sig_mp3s_loaded_signal(int percent);
@@ -120,6 +120,7 @@ public:
 	Playlist_Mode		_playlist_mode;
 	int					_radio_active;
 	CDatabaseConnector* _db;
+    CSettingsStorage*   _settings;
 	MetaDataList	_v_stream_playlist;
 
 

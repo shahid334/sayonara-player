@@ -43,8 +43,6 @@ public:
 signals:
 	void sig_single_playlist_loaded(CustomPlaylist&);
 	void sig_all_playlists_loaded(QMap<int, QString>&);
-	void sig_import_tracks(const MetaDataList& );
-
 
 public slots:
 
@@ -54,16 +52,13 @@ public slots:
 	void delete_playlist(int id);
 	void load_all_playlists();
 	void load_single_playlist(int id);
-	void import_result(bool);
-
 
 public:
 	void ui_loaded();
+
 private:
 	QMap<int, QString> 	_mapping;
 	int					_import_state;
-	bool				check_for_extern_track(const MetaDataList& src, MetaDataList& tgt);
-
 
 };
 

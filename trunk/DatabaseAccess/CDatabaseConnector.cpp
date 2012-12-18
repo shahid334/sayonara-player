@@ -54,6 +54,7 @@ CDatabaseConnector::CDatabaseConnector()
 
         success = createDB();
     }
+
 }
 
 bool CDatabaseConnector::isExistent() {
@@ -128,9 +129,13 @@ bool CDatabaseConnector::createDB () {
 }
 
 bool CDatabaseConnector::init_settings_storage(){
-    CSettingsStorage* s = CSettingsStorage::getInstance();
-    if(s)
-        return true;
+    _settings = CSettingsStorage::getInstance();
+    if(_settings){
+	        
+    	connect(_settings, SIGNAL(save_immediatly(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+	return true;
+    }
+
     else
         return false;
 }
@@ -165,54 +170,66 @@ CDatabaseConnector::~CDatabaseConnector() {
     }
 }
 
+
+bool CDatabaseConnector::check_and_insert_column(QString tablename, QString column, QString sqltype){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
+
+    QSqlQuery q (this->m_database);
+    QString querytext = "SELECT " + column + " FROM " + tablename + ";";
+    q.prepare(querytext);
+
+    if(!q.exec()){
+        qDebug() << "DB: Could not find " << column << " in " << tablename << ": inserting it";
+
+        QSqlQuery q2 (this -> m_database);
+        querytext = "ALTER TABLE " + tablename + " ADD COLUMN " + column + " " + sqltype + ";";
+        q2.prepare(querytext);
+        bool success = q2.exec();
+        qDebug() << (success ? "Success" : "Fail");
+        return success;
+    }
+
+    return true;
+}
+
+bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_create_str){
+
+    DB_TRY_OPEN(m_database);
+    DB_RETURN_NOT_OPEN_BOOL(m_database);
+
+    QSqlQuery q (this->m_database);
+    QString querytext = "SELECT * FROM " + tablename + ";";
+    q.prepare(querytext);
+
+    if(!q.exec()){
+        qDebug() << "DB: Table " << tablename << " does not exist: creating...";
+        QSqlQuery q2 (this->m_database);
+        q2.prepare(sql_create_str);
+        return q2.exec();
+    }
+
+    return true;
+
+}
+
 bool CDatabaseConnector::apply_fixes(){
 
     DB_TRY_OPEN(m_database);
     DB_RETURN_NOT_OPEN_BOOL(m_database);
 
-	QSqlQuery q (this->m_database);
-	QString querytext = "SELECT position FROM playlisttotracks;";
-	q.prepare(querytext);
-	if(!q.exec()){
+    check_and_insert_column("playlisttotracks", "position", "INTEGER");
+    check_and_insert_column("playlisttotracks", "filepath", "VARCHAR(512)");
+    check_and_insert_column("tracks", "genre", "VARCHAR(1024)");
 
-		QSqlQuery q2 (this -> m_database);
-		querytext = "DROP TABLE playlisttotracks;";
-		q2.prepare(querytext);
-		q2.exec();
-
-		QSqlQuery q3(this->m_database);
-		querytext = QString("CREATE TABLE playlisttotracks ") +
-				"( "
-				"	trackid INTEGER, "
-				"	playlistid INTEGER, "
-				"	position INTEGER, "
-				"	FOREIGN KEY (trackid) REFERENCES tracks(trackid), "
-				"	FOREIGN KEY (playlistid) REFERENCES playlists(playlistid) "
-				");";
-		q3.prepare(querytext);
-		q3.exec();
-	}
-
-
-	// save internet streams
-	QSqlQuery q4 (this->m_database);
-	querytext = "SELECT * FROM savedstreams;";
-	q4.prepare(querytext);
-	if(!q4.exec()){
-		QSqlQuery q5(this->m_database);
-		querytext = QString("CREATE TABLE savedstreams ") +
+    QString create_savedstreams = QString("CREATE TABLE savedstreams ") +
 				"( " +
 				"	name VARCHAR(255) PRIMARY KEY, " +
 				"	url VARCHAR(255) " +
 				");";
-		q5.prepare(querytext);
-		q5.exec();
-    }
 
-    QSqlQuery q6(this->m_database);
-    querytext = "ALTER table tracks ADD genre varchar;";
-    q6.prepare(querytext);
-    q6.exec();
+    check_and_create_table("savedstreams", create_savedstreams);
 
 	return true;
 }

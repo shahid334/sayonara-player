@@ -215,8 +215,8 @@ void Application::init_connections(){
 	   CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 
 
-	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		player,			update_track(const MetaData&));
-	   CONNECT (playlist, sig_selected_file_changed_md(const MetaData&), 		listen, 		changeTrack(const MetaData & ));
+       CONNECT (playlist, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		update_track(const MetaData&, int, bool));
+       CONNECT (playlist, sig_selected_file_changed_md(const MetaData&, int, bool),	listen, 	changeTrack(const MetaData &, int, bool ));
        CONNECT (playlist, sig_gapless_track(const MetaData&),                   listen, 		psl_gapless_track(const MetaData & ));
        CONNECT (playlist, sig_new_stream_session(),                             listen,         psl_new_stream_session());
        CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
@@ -228,7 +228,7 @@ void Application::init_connections(){
 	   //CONNECT (&playlist, sig_cur_played_info_changed(const MetaData&),   	&player,  		update_info(const MetaData&));
        CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&),            playlists,      save_playlist_as_custom(int, MetaDataList&));
        CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&),        playlists,      save_playlist_as_custom(QString, MetaDataList&));
-	   CONNECT (playlist, sig_library_changed(), 								ui_library, 	library_changed());
+       CONNECT (playlist, sig_library_changed(), 								library,        refresh());
        CONNECT (playlist, sig_import_files(const MetaDataList&),                library, 		importFiles(const MetaDataList&));
 	   CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
 
@@ -264,7 +264,6 @@ void Application::init_connections(){
 	   CONNECT(library, sig_all_artists_loaded(ArtistList&), 		ui_library, 	fill_library_artists(ArtistList&));
 	   CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			ui_library, 	track_info_available(const MetaDataList&));
 	   CONNECT(library, sig_tracks_for_playlist_available(MetaDataList&),           	playlist, psl_createPlaylist(MetaDataList&));
-	   CONNECT(library, sig_import_result(bool),						playlists,		import_result(bool));
 	   CONNECT(library, sig_delete_answer(QString), 					ui_library, 	psl_delete_answer(QString));
 	   CONNECT(library, sig_play_next_tracks(const MetaDataList&),  playlist,		psl_play_next_tracks(const MetaDataList&));
 
@@ -318,7 +317,6 @@ void Application::init_connections(){
 
 	   CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
 	   CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
-	   CONNECT(playlists, sig_import_tracks(const MetaDataList&),       library, 				importFiles(const MetaDataList&));
 
         CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
         CONNECT(ui_lfm_radio, close_event(), 								player, 	close_lfm_radio());

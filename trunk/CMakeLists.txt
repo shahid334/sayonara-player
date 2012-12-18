@@ -80,9 +80,7 @@ SET(HEADERS
     GUI/MyTableView.h
     GUI/MyListView.h
     GUI/library/GUIImportFolder.h
-
     GUI/InfoDialog/GUI_InfoDialog.h
-#    GUI/GSTDataPainter/GSTDataPainter.h
     GUI/SocketConfiguration/GUISocketSetup.h
     CoverLookup/CoverLookup.h
     DatabaseAccess/CDatabaseConnector.h
@@ -97,7 +95,9 @@ SET(HEADERS
     GUI/stream/GUI_Stream.h
     GUI/StreamRecorder/GUI_StreamRecorder.h
     GUI/Notifications/GUI_Notifications.h
+    GUI/startup_dialog/GUI_Startup_Dialog.h
     Socket/Socket.h
+    HelperStructs/CSettingsStorage.h
 )
 
 SET(SOURCES
@@ -138,7 +138,6 @@ SET(SOURCES
     GUI/MyListView.cpp
     GUI/library/GUIImportFolder.cpp
     GUI/InfoDialog/GUI_InfoDialog.cpp
-#    GUI/GSTDataPainter/GSTDataPainter.cpp
     GUI/SocketConfiguration/GUISocketSetup.cpp
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
@@ -171,7 +170,9 @@ SET(SOURCES
     GUI/stream/GUI_Stream.cpp
     GUI/StreamRecorder/GUI_StreamRecorder.cpp
     GUI/Notifications/GUI_Notifications.cpp
+    GUI/startup_dialog/GUI_Startup_Dialog.cpp
     Socket/Socket.cpp
+    HelperStructs/CSettingsStorage.cpp
 
 
 )
@@ -193,6 +194,7 @@ SET(FORMS
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui
     GUI/InfoDialog/GUI_InfoDialog.ui
+    GUI/startup_dialog/GUI_Startup_Dialog.ui
 #    GUI/GSTDataPainter/GSTDataPainter.ui
     GUI/SocketConfiguration/GUI_SocketSetup.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui

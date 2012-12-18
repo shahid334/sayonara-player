@@ -589,20 +589,15 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
     this->ui->pb_progress->setVisible(true);
 
-
-
-
     for(uint i=0; i<_vec_tmp_metadata.size(); i++){
 
         this->ui->pb_progress->setValue( (int)(i * 100.0 / _vec_tmp_metadata.size()));
+
         change_mp3_file(_vec_tmp_metadata[i]);
         usleep(100000);
-
     }
 
     return CDatabaseConnector::getInstance()->storeMetadata(_vec_tmp_metadata);
-
-
 }
 
 
@@ -790,9 +785,7 @@ void GUI_TagEdit::tag_from_path_text_changed(const QString& str){
     if(calc_tag(_cur_idx, md)) {
         this->ui->le_tag_from_path->setStyleSheet("");
         this->ui->btn_tag_apply->setEnabled(true);
-
     }
-
 
     else {
         this->ui->le_tag_from_path->setStyleSheet("color: red;");

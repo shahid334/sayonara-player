@@ -166,11 +166,23 @@ bool CDatabaseConnector::load_settings(){
 
 	
 	// playlist
-	QString playlist = load_setting_string("playlist");
+    QStringList playlist = load_setting_string("playlist").split(",");
 	settings->setPlaylist(playlist);
 
     bool load_playlist = load_setting_bool("load_playlist", false);
 	settings->setLoadPlaylist(load_playlist);
+
+	bool load_last_track = load_setting_bool("load_last_track", false);
+    settings->setLoadLastTrack(load_last_track);
+
+    bool remember_time = load_setting_bool("remember_time", false);
+    settings->setRememberTime(remember_time);
+
+    bool start_playing = load_setting_bool("start_playing", false);
+    settings->setStartPlaying(start_playing);
+
+	LastTrack track = LastTrack::fromString(load_setting_string("last_track", ""));
+        settings->setLastTrack(track);
 
 	QString playlist_mode_str = load_setting_string("playlist_mode");
 	Playlist_Mode playlist_mode_typed;
@@ -297,11 +309,23 @@ bool CDatabaseConnector::store_settings(){
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
 	store_setting("player_size", str_size);
 
-	QString cur_playlist = storage->getPlaylist();
+    QString cur_playlist = storage->getPlaylist().join(",");
 	store_setting("playlist", cur_playlist);
 
 	int load_playlist = storage->getLoadPlaylist();
 	store_setting("load_playlist", load_playlist);
+
+	bool load_last_track = storage->getLoadLastTrack();
+	store_setting("load_last_track", load_last_track);
+
+	QString last_track = storage->getLastTrack()->toString();
+	store_setting("last_track", last_track);	
+
+    bool remember_time = storage->getRememberTime();
+    store_setting("remember_time", remember_time);
+
+    bool start_playing = storage->getStartPlaying();
+    store_setting("start_playing", start_playing);
 
 	QString playlist_mode = storage->getPlaylistMode().toString();
 	store_setting("playlist_mode", playlist_mode);

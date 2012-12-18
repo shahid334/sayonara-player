@@ -88,9 +88,13 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_info_dialog = dialog;
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-	_mime_data_artist = 0;
-	_mime_data_album = 0;
-	_mime_data = 0;
+    _mime_data_artist = 0;
+    _mime_data_album = 0;
+    _mime_data = 0;
+
+    _mime_data_album_destroyable = false;
+    _mime_data_artist_destroyable = false;
+    _mime_data_destroyable = false;
 
 	this->_album_model = new LibraryItemModelAlbums();
     this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
@@ -151,6 +155,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
 	connect(this->ui->lv_artist->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_artists_by_column(int)));
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
+
 
 	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
@@ -652,16 +657,17 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
     if(first_selected_md_row >= 0)
         this->ui->lv_album->scrollTo(_track_model->index(first_selected_md_row, 0), QTableView::PositionAtCenter);
 
-	_mime_data_artist = new CustomMimeData();
-	_mime_data_album = new CustomMimeData();
+    create_artist_mime_data();
+    create_album_mime_data();
+
     _mime_data_artist->setText("Artist");
     _mime_data_album->setText("Album");
 
     _mime_data_artist->setMetaData(v_metadata);
     _mime_data_album->setMetaData(v_metadata);
 
-	this->ui->lv_artist->set_mime_data(_mime_data_artist);
-	this->ui->lv_album->set_mime_data(_mime_data_album);
+    this->ui->lv_artist->set_mime_data(_mime_data_artist);
+    this->ui->lv_album->set_mime_data(_mime_data_album);
 }
 
 
@@ -802,7 +808,9 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
     emit sig_artist_pressed(idx_list_int);
 }
 
-void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
+void GUI_Library_windowed::artist_released(const QModelIndex& idx){
+   _mime_data_artist_destroyable = true;
+}
 
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
@@ -818,7 +826,9 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 }
 
 
-void GUI_Library_windowed::album_released(const QModelIndex& idx){}
+void GUI_Library_windowed::album_released(const QModelIndex& idx){
+    _mime_data_album_destroyable = true;
+}
 
 
 
@@ -833,17 +843,19 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
     emit sig_track_pressed(idx_list_int);
 }
 
-void GUI_Library_windowed::track_released(const QModelIndex&){}
+void GUI_Library_windowed::track_released(const QModelIndex&){
+    _mime_data_destroyable = true;
+}
 
 
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
-	_mime_data = new CustomMimeData();
+    _mime_data = new CustomMimeData();
     _mime_data->setText("Tracks");
-	_mime_data->setMetaData(v_md);
+    _mime_data->setMetaData(v_md);
 
-	this->ui->tb_title->set_mime_data(_mime_data);
+    this->ui->tb_title->set_mime_data(_mime_data);
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_md);
 }
@@ -871,6 +883,8 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit){
+
+    qDebug() << "text line edited";
 
     QList<int> lst;
     _album_model->set_selected(lst);
@@ -908,10 +922,10 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
     else{
         filter.filtertext = QString("%") + search + QString("%");
         filter.cleared = false;
-
     }
 
 	_cur_searchfilter = filter;
+    qDebug() << "Filter changed";
     sig_filter_changed(filter);
 }
 
@@ -923,6 +937,7 @@ void GUI_Library_windowed::searchfilter_changed(int idx){
 
 
 void GUI_Library_windowed::refresh(){
+    qDebug() << "Refresh";
 
 	text_line_edited(_cur_searchfilter.filtertext, true);
 }
@@ -1192,4 +1207,39 @@ void GUI_Library_windowed::import_result(bool success){
 
 	//QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
+}
+
+void GUI_Library_windowed::forbid_mime_data_destroyable(){
+    _mime_data_destroyable = false;
+}
+
+
+void GUI_Library_windowed::forbid_album_mime_data_destroyable(){
+    _mime_data_album_destroyable = false;
+}
+
+
+void GUI_Library_windowed::forbid_artist_mime_data_destroyable(){
+    _mime_data_artist_destroyable = false;
+}
+
+void GUI_Library_windowed::create_mime_data(){
+    if(_mime_data_destroyable) delete _mime_data;
+    _mime_data = new CustomMimeData();
+    connect(this->_mime_data, SIGNAL(destroyed()), this, SLOT(forbid_mime_data_destroyable()));
+    _mime_data_destroyable = true;
+}
+
+void GUI_Library_windowed::create_album_mime_data(){
+    if(_mime_data_album_destroyable) delete _mime_data_album;
+    _mime_data_album = new CustomMimeData();
+    connect(this->_mime_data_album, SIGNAL(destroyed()), this, SLOT(forbid_album_mime_data_destroyable()));
+    _mime_data_album_destroyable = true;
+}
+
+void GUI_Library_windowed::create_artist_mime_data(){
+    if(_mime_data_artist_destroyable) delete _mime_data_artist;
+    _mime_data_artist = new CustomMimeData();
+    connect(this->_mime_data_artist, SIGNAL(destroyed()), this, SLOT(forbid_artist_mime_data_destroyable()));
+    _mime_data_artist_destroyable = true;
 }

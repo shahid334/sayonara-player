@@ -27,6 +27,7 @@
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QObject>
 #include <QSqlDatabase>
@@ -63,11 +64,6 @@ public:
     bool init_settings_storage();
     bool load_settings();
     bool store_settings();
-
-
-
-
-
 
 
 
@@ -171,7 +167,7 @@ public:
 	 * SETTINGS
 	 *******************************************/
         void load_setting(QString key, QVariant& val, QVariant def=0);
-		void store_setting(QString key, QVariant val);
+
 
 		bool load_setting_bool(QString key, bool def=false);
 		QString load_setting_string(QString key, QString def="");
@@ -189,15 +185,21 @@ public slots:
       * @return true on success false if failed
       */
     bool storeMetadata (MetaDataList & in);
+    void store_setting(QString, QVariant);
+
 
 
 protected:
     CDatabaseConnector();
 
 
+private slots:
+
+
 
 private:
     CDatabaseConnector(const CDatabaseConnector&);
+    CSettingsStorage* _settings;
 
     QSqlDatabase m_database;
     QString _db_filename;
@@ -213,13 +215,8 @@ private:
     bool createDB();
     bool openDatabase ();
     bool apply_fixes();
-
-
-
-
-
-
-
+    bool check_and_insert_column(QString tablename, QString column, QString sqltype);
+    bool check_and_create_table(QString tablename, QString sql_create_str);
 };
 
 #endif // CDATABASECONNECTOR_H

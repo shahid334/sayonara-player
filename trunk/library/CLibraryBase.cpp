@@ -223,6 +223,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 }
 
 
+
 void CLibraryBase::reloadLibrary(){
 
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
@@ -419,6 +420,11 @@ void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_s
 }
 
 
+void CLibraryBase::refresh(){
+
+    psl_filter_changed(_filter);
+}
+
 void CLibraryBase::psl_filter_changed(const Filter& filter){
 
     if(     _filter.cleared &&
@@ -461,7 +467,10 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
         selected_artists << artist.id;
 	}
 
-    if(selected_artists == _selected_artists && _selected_albums.size() == 0) return;
+    if(selected_artists == _selected_artists && _selected_albums.size() == 0) {
+        emit sig_all_albums_loaded(_vec_albums);
+        emit sig_all_tracks_loaded(_vec_md);
+    }
 
     _vec_albums.clear();
     _vec_md.clear();

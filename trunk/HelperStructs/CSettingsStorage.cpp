@@ -130,10 +130,10 @@ void CSettingsStorage::setLibraryPath(QString path){m_library_path = path;}
 QSize CSettingsStorage::getPlayerSize(){ return m_player_size; }
 void CSettingsStorage::setPlayerSize(QSize size){ m_player_size = size; }
 
-QString CSettingsStorage::getPlaylist(){
+QStringList CSettingsStorage::getPlaylist(){
 	return m_playlist;
 }
-void CSettingsStorage::setPlaylist(QString playlist){
+void CSettingsStorage::setPlaylist(QStringList playlist){
 	m_playlist = playlist;
 }
 
@@ -143,6 +143,46 @@ bool CSettingsStorage::getLoadPlaylist(){
 
 void CSettingsStorage::setLoadPlaylist(bool b){
 	m_loadPlaylist = b;
+}
+
+bool CSettingsStorage::getLoadLastTrack(){
+	return m_loadLastTrack;
+}
+
+void CSettingsStorage::setLoadLastTrack(bool b){
+	m_loadLastTrack = b;
+	
+}
+
+LastTrack* CSettingsStorage::getLastTrack(){
+	return &m_lastTrack;
+}
+
+void CSettingsStorage::setLastTrack(LastTrack& t){
+	m_lastTrack = t;
+}
+
+void CSettingsStorage::updateLastTrack(){
+ 	QString str = m_lastTrack.toString();
+	emit save_immediatly("last_track", str);
+}
+
+
+
+bool CSettingsStorage::getRememberTime(){
+    return m_rememerTime;
+}
+
+void CSettingsStorage::setRememberTime(bool b){
+    m_rememerTime = b;
+}
+
+bool CSettingsStorage::getStartPlaying(){
+    return m_startPlaying;
+}
+
+void CSettingsStorage::setStartPlaying(bool b){
+    m_startPlaying = b;
 }
 
 void CSettingsStorage::setPlaylistMode(const Playlist_Mode& plmode){

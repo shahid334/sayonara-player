@@ -41,6 +41,7 @@ protected:
     MetaData    _md_gapless;
 	int			_seconds_started;
 	int			_seconds_now;
+    int         _vol;
 	qint64		_mseconds_now;
 
 	bool		_scrobbled;
@@ -75,14 +76,14 @@ signals:
     void wanna_gapless_track();
 
 public slots:
-	virtual void play()=0;
+    virtual void play(int pos_sec=0)=0;
 	virtual void stop()=0;
 	virtual void pause()=0;
 	virtual void setVolume(int vol)=0;
 
 	virtual void jump(int where, bool percent=true)=0;
-	virtual void changeTrack(const MetaData& )=0;
-	virtual void changeTrack(const QString& )=0;
+    virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true)=0;
+    virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true )=0;
     virtual void psl_gapless_track(const MetaData&)=0;
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
