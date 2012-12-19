@@ -132,7 +132,8 @@ bool CDatabaseConnector::init_settings_storage(){
     _settings = CSettingsStorage::getInstance();
     if(_settings){
 	        
-    	connect(_settings, SIGNAL(save_immediatly(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+    	connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+    	connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
 	return true;
     }
 

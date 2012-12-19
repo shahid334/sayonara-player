@@ -902,6 +902,7 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <zorder>plugin_widget</zorder>
         </widget>
        </widget>
       </item>

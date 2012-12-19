@@ -368,6 +368,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 
 void GST_Engine::play(int pos_sec){
 
+
 	_track_finished = false;
 	_state = STATE_PLAY;
 

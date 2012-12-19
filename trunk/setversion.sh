@@ -2,7 +2,7 @@
 
 MAJOR=0
 MINOR=3
-SUBMINOR=1
+SUBMINOR=2
 REV=`svn info | grep Revision | tail -c 4`
 
 echo "MAJOR ${MAJOR}" > VERSION

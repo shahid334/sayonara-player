@@ -62,9 +62,6 @@ public:
 
 
     bool init_settings_storage();
-    bool load_settings();
-    bool store_settings();
-
 
 
 
@@ -186,6 +183,9 @@ public slots:
       */
     bool storeMetadata (MetaDataList & in);
     void store_setting(QString, QVariant);
+    bool load_settings();
+    bool store_settings();
+
 
 
 

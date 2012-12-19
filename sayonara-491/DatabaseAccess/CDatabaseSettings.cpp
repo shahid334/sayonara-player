@@ -80,11 +80,11 @@ bool CDatabaseConnector::load_settings(){
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
 	/* Last FM */
-	bool lfm_active = load_setting_bool("LastFM_active", false);
+	bool lfm_active = load_setting_bool(SET_LFM_ACTIVE, false);
 	settings->setLastFMActive(lfm_active);
 
 	QString last_fm_username, last_fm_password;
-	QStringList list = load_setting_strlist("LastFM_login");
+	QStringList list = load_setting_strlist(SET_LFM_LOGIN);
 	if(list.size() >= 2){
 		last_fm_username = list[0];
 		last_fm_password = list[1];
@@ -93,11 +93,11 @@ bool CDatabaseConnector::load_settings(){
 	settings->setLastFMNameAndPW(last_fm_username, last_fm_password);
 
 
-	bool lfm_corrections =	load_setting_bool("lfm_corrections");
+	bool lfm_corrections =	load_setting_bool(SET_LFM_CORRECTIONS);
 	settings->setLastFMCorrections(lfm_corrections);
 
 
-	QString lfm_session_key = load_setting_string("lfm_session_key");
+	QString lfm_session_key = load_setting_string(SET_LFM_SESSION_KEY);
 	if(lfm_session_key.size() != 32) lfm_session_key = "";
 	settings->setLastFMSessionKey(lfm_session_key);
 
@@ -106,7 +106,7 @@ bool CDatabaseConnector::load_settings(){
 	/* Equalizer */
 	QVariant v_eq_last;
 	int eq_last = 0;
-	load_setting("eq_last", v_eq_last);
+	load_setting(SET_EQ_LAST, v_eq_last);
 	if(v_eq_last != 0){
 		eq_last = v_eq_last.toInt();
 	}
@@ -118,14 +118,14 @@ bool CDatabaseConnector::load_settings(){
 		QVariant v_eq_preset;
 		QString eq_preset = 0;
 		switch(i){
-			case 0: load_setting("EQ_pr_flat", v_eq_preset); break;
-			case 1: load_setting("EQ_pr_rock", v_eq_preset); break;
-			case 2: load_setting("EQ_pr_treble", v_eq_preset); break;
-			case 3: load_setting("EQ_pr_bass", v_eq_preset); break;
-			case 4: load_setting("EQ_pr_mid", v_eq_preset); break;
-			case 5: load_setting("EQ_pr_light_rock", v_eq_preset); break;
-			case 6: load_setting("EQ_pr_custom", v_eq_preset); break;
-			default: load_setting("EQ_pr_flat", v_eq_preset); break;
+			case 0: load_setting(SET_EQ_FLAT, v_eq_preset); break;
+			case 1: load_setting(SET_EQ_ROCK, v_eq_preset); break;
+			case 2: load_setting(SET_EQ_TREBLE, v_eq_preset); break;
+			case 3: load_setting(SET_EQ_BASS, v_eq_preset); break;
+			case 4: load_setting(SET_EQ_MID, v_eq_preset); break;
+			case 5: load_setting(SET_EQ_LIGHT_ROCK, v_eq_preset); break;
+			case 6: load_setting(SET_EQ_CUSTOM, v_eq_preset); break;
+			default: load_setting(SET_EQ_FLAT, v_eq_preset); break;
 		}
 
 		if(v_eq_preset != 0){
@@ -138,18 +138,18 @@ bool CDatabaseConnector::load_settings(){
 	settings->setEqualizerSettings(vec_eq_settings);
 
 	/* Volume */
-    int volume = load_setting_int("volume", 50);
+    int volume = load_setting_int(SET_ENGINE_VOL, 50);
 	settings->setVolume(volume);
 
 
 	/* Library path */
-	QString lib_path = load_setting_string("library_path");
+	QString lib_path = load_setting_string(SET_LIB_PATH);
 	settings->setLibraryPath(lib_path);
 
     QStringList lib_shown_cols_title, lib_shown_cols_artist, lib_shown_cols_album;
-    lib_shown_cols_title = load_setting_string("lib_shown_cols_title", "1,1,1,1,1,1,1,1,1,1").split(",");
-    lib_shown_cols_artist = load_setting_string("lib_shown_cols_artist", "1,1,1,1,1,1,1,1,1,1").split(",");
-    lib_shown_cols_album = load_setting_string("lib_shown_cols_album", "1,1,1,1,1,1,1,1,1,1").split(",");
+    lib_shown_cols_title = load_setting_string(SET_LIB_SHOWN_COLS_TITLE, "1,1,1,1,1,1,1,1,1,1").split(",");
+    lib_shown_cols_artist = load_setting_string(SET_LIB_SHOWN_COLS_ARTIST, "1,1,1,1,1,1,1,1,1,1").split(",");
+    lib_shown_cols_album = load_setting_string(SET_LIB_SHOWN_COLS_ALBUM, "1,1,1,1,1,1,1,1,1,1").split(",");
     settings->setLibShownColsTitle(lib_shown_cols_title);
     settings->setLibShownColsAlbum(lib_shown_cols_album);
     settings->setLibShownColsArtist(lib_shown_cols_artist);
@@ -157,7 +157,7 @@ bool CDatabaseConnector::load_settings(){
 
 	/* Player size */
 	QSize player_size(800, 600);
-	QStringList l_player_size = load_setting_strlist("player_size");
+	QStringList l_player_size = load_setting_strlist(SET_PLAYER_SIZE);
 	if(l_player_size.size() >= 2){
 		player_size.setWidth(l_player_size[0].toInt());
 		player_size.setHeight(l_player_size[1].toInt());
@@ -166,97 +166,97 @@ bool CDatabaseConnector::load_settings(){
 
 	
 	// playlist
-    QStringList playlist = load_setting_string("playlist").split(",");
+    QStringList playlist = load_setting_strlist(SET_PL);
 	settings->setPlaylist(playlist);
 
-    bool load_playlist = load_setting_bool("load_playlist", false);
+    bool load_playlist = load_setting_bool(SET_PL_LOAD, false);
 	settings->setLoadPlaylist(load_playlist);
 
-	bool load_last_track = load_setting_bool("load_last_track", false);
+	bool load_last_track = load_setting_bool(SET_PL_LOAD_LAST_TRACK, false);
     settings->setLoadLastTrack(load_last_track);
 
-    bool remember_time = load_setting_bool("remember_time", false);
+    bool remember_time = load_setting_bool(SET_PL_REMEMBER_TIME, false);
     settings->setRememberTime(remember_time);
 
-    bool start_playing = load_setting_bool("start_playing", false);
+    bool start_playing = load_setting_bool(SET_PL_START_PLAYING, false);
     settings->setStartPlaying(start_playing);
 
-	LastTrack track = LastTrack::fromString(load_setting_string("last_track", ""));
+	LastTrack track = LastTrack::fromString(load_setting_string(SET_PL_LAST_TRACK, ""));
         settings->setLastTrack(track);
 
-	QString playlist_mode_str = load_setting_string("playlist_mode");
+	QString playlist_mode_str = load_setting_string(SET_PL_MODE);
 	Playlist_Mode playlist_mode_typed;
 	playlist_mode_typed.fromString(playlist_mode_str);
 	settings->setPlaylistMode(playlist_mode_typed);
 
 	// style
-	int style = load_setting_int("player_style");
+	int style = load_setting_int(SET_PLAYER_STYLE);
 	settings->setPlayerStyle(style);
 
 	/* show notifications */
-    bool show_notifications = load_setting_bool("show_notifications", true);
+    bool show_notifications = load_setting_bool(SET_NOTIFICATION_SHOW, true);
 	settings->setShowNotifications(show_notifications);
 
-    int notification_timeout = load_setting_int("notification_timeout", 5000);
+    int notification_timeout = load_setting_int(SET_NOTIFICATION_TIMEOUT, 5000);
     settings->setNotificationTimout(notification_timeout);
 
-    QString notification_name = load_setting_string("notification_name", "Standard");
+    QString notification_name = load_setting_string(SET_NOTIFICATION_NAME, "Standard");
     settings->setNotification(notification_name);
 
 	/* show library */
-	bool show_library = load_setting_bool("show_library", true);
+	bool show_library = load_setting_bool(SET_LIB_SHOW, true);
 	settings->setShowLibrary(show_library);
 
 
 	/* shown plugin */
-	int shown_plugin = load_setting_int("shown_plugin", PLUGIN_NONE);
+	int shown_plugin = load_setting_int(SET_PLAYER_SHOWN_PLUGIN, PLUGIN_NONE);
 	if(shown_plugin < 0 || shown_plugin > PLUGIN_NUM) 
 		shown_plugin = PLUGIN_NONE;
 	settings->setShownPlugin(shown_plugin);
 
 
 	/* Minimize to tray */
-	bool min2tray = load_setting_bool("min_to_tray", true);
+	bool min2tray = load_setting_bool(SET_PLAYER_MIN_2_TRAY, true);
 	settings->setMinimizeToTray(min2tray);
 
 	/* small playlist items */
-	bool show_small_pl = load_setting_bool("small_playlist_items", true);
+	bool show_small_pl = load_setting_bool(SET_PL_SMALL_ITEMS, true);
 	settings->setShowSmallPlaylist(show_small_pl);
 
 	/* Sound Engine */
-	QString sound_engine = load_setting_string("sound_engine");
+	QString sound_engine = load_setting_string(SET_ENGINE);
 	settings->setSoundEngine(sound_engine);
 
 	/* Stream ripper */
-	bool streamripper = load_setting_bool("streamripper", false);
+	bool streamripper = load_setting_bool(SET_SR_ACTIVE, false);
 	settings->setStreamRipper(streamripper);
 
-	bool streamripper_warning = load_setting_bool("streamripper_warning", true);
+	bool streamripper_warning = load_setting_bool(SET_SR_WARNING, true);
 	settings->setStreamRipperWarning(streamripper_warning);
 
-	QString streamripper_path = load_setting_string("streamripper_path", QDir::homePath());
+	QString streamripper_path = load_setting_string(SET_SR_PATH, QDir::homePath());
 	if(streamripper_path.trimmed().size() == 0 || !QFile::exists(streamripper_path)) streamripper_path = QDir::homePath();
 	settings->setStreamRipperPath(streamripper_path);
 
-	bool streamripper_complete_tracks = load_setting_bool("streamripper_complete_tracks", true);
+	bool streamripper_complete_tracks = load_setting_bool(SET_SR_COMPLETE_TRACKS, true);
 	settings->setStreamRipperCompleteTracks(streamripper_complete_tracks);
 
-    bool streamripper_session_path = load_setting_bool("streamripper_session_path", true);
+    bool streamripper_session_path = load_setting_bool(SET_SR_SESSION_PATH, true);
     settings->setStreamRipperSessionPath(streamripper_session_path);
 
-	bool socket_active = load_setting_bool("socket_active");
+	bool socket_active = load_setting_bool(SET_SOCKET_ACTIVE);
 	settings->setSocketActivated(socket_active);
 
-	int socket_from = load_setting_int("socket_from");
+	int socket_from = load_setting_int(SET_SOCKET_FROM);
 	settings->setSocketFrom(socket_from);
 
-	int socket_to = load_setting_int("socket_to");
+	int socket_to = load_setting_int(SET_SOCKET_TO);
 	settings->setSocketTo(socket_to);
 
-	bool show_playlist_numbers = load_setting_bool("show_playlist_numbers");
+	bool show_playlist_numbers = load_setting_bool(SET_PL_SHOW_NUMBERS);
 	settings->setPlaylistNumbers(show_playlist_numbers);
 
-	bool allow_only_one_instance = load_setting_bool("only_one_instance", true);
+	bool allow_only_one_instance = load_setting_bool(SET_PLAYER_ONE_INSTANCE, true);
 	settings->setAllowOnlyOneInstance(allow_only_one_instance);
 
 	return true;

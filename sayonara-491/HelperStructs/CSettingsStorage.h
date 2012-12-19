@@ -22,6 +22,61 @@
 #ifndef CSettingsStorage_H
 #define CSettingsStorage_H
 
+#define SET_LFM_ACTIVE "LastFM_active"
+#define SET_LFM_LOGIN "LastFM_login"
+#define SET_LFM_CORRECTIONS "lfm_corrections"
+#define SET_LFM_SESSION_KEY "lfm_session_key"
+#define SET_EQ_LAST "eq_last"
+#define SET_EQ_FLAT "EQ_pr_flat"
+#define SET_EQ_ROCK "EQ_pr_rock"
+#define SET_EQ_TREBLE "EQ_pr_treble"
+#define SET_EQ_BASS "EQ_pr_bass"
+#define SET_EQ_MID "EQ_pr_mid"
+#define SET_EQ_LIGHT_ROCK "EQ_pr_light_rock"
+#define SET_EQ_CUSTOM "EQ_pr_custom"
+
+
+#define SET_LIB_SHOW "show_library"
+#define SET_LIB_PATH "library_path"
+#define SET_LIB_SHOWN_COLS_TITLE "lib_shown_cols_title"
+#define SET_LIB_SHOWN_COLS_ARTIST "lib_shown_cols_artist"
+#define SET_LIB_SHOWN_COLS_ALBUM "lib_shown_cols_album"
+
+#define SET_PLAYER_STYLE "player_style"
+#define SET_PLAYER_SIZE "player_size"
+#define SET_PLAYER_SHOWN_PLUGIN "shown_plugin"
+#define SET_PLAYER_ONE_INSTANCE "only_one_instance"
+#define SET_PLAYER_MIN_2_TRAY "min_to_tray"
+
+
+#define SET_PL "playlist"
+#define SET_PL_LOAD "load_playlist"
+#define SET_PL_LOAD_LAST_TRACK "load_last_track"
+#define SET_PL_REMEMBER_TIME "remember_time"
+#define SET_PL_START_PLAYING "start_playing"
+#define SET_PL_LAST_TRACK "last_track"
+#define SET_PL_MODE "playlist_mode"
+#define SET_PL_SHOW_NUMBERS "show_playlist_numbers"
+#define SET_PL_SMALL_ITEMS "small_playlist_items"
+
+#define SET_NOTIFICATION_SHOW "show_notifications"
+#define SET_NOTIFICATION_TIMEOUT "notification_timeout"
+#define SET_NOTIFICATION_NAME "notification_name"
+
+#define SET_ENGINE "sound_engine"
+#define SET_ENGINE_VOL "volume"
+
+#define SET_SR_ACTIVE "streamripper"
+#define SET_SR_WARNING "streamripper_warning"
+#define SET_SR_PATH "streamripper_path"
+#define SET_SR_COMPLETE_TRACKS "streamripper_complete_tracks"
+#define SET_SR_SESSION_PATH "streamripper_session_path"
+
+#define SET_SOCKET_ACTIVE "socket_active"
+#define SET_SOCKET_FROM "socket_from"
+#define SET_SOCKET_TO "socket_to"
+
+
 #include <QString>
 #include <QPair>
 #include <QSize>
@@ -31,6 +86,8 @@
 #include <HelperStructs/PlaylistMode.h>
 #include <HelperStructs/MetaData.h>
 using namespace std;
+
+
 
 /**
   * Class to check if we are running the first time.
@@ -42,7 +99,8 @@ Q_OBJECT
 
 signals: 
 
-	void save_immediatly(QString, QVariant);
+	void sig_save(QString, QVariant);
+	void sig_save_all();
 public:
     static CSettingsStorage * getInstance();
 
@@ -81,10 +139,8 @@ private:
     // listen
     int	m_volume;
     int m_last_eq;
-
-
     vector<EQ_Setting> m_vec_eqSettings;
-
+    
     QSize m_player_size;
 
 
