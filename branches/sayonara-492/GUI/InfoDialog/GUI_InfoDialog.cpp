@@ -132,6 +132,9 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
     connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
 
+    connect(_alternate_covers, SIGNAL(sig_no_cover()),
+            this,				SLOT(no_cover_available()));
+
 
 
     hide();
@@ -741,6 +744,12 @@ void GUI_InfoDialog::cover_clicked(){
 		}
 
 	this->setFocus();
+}
+
+
+
+void GUI_InfoDialog::no_cover_available(){
+    prepare_cover();
 }
 
 void GUI_InfoDialog::alternate_covers_available(QString caller_class){

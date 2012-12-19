@@ -125,7 +125,7 @@ int main(int argc, char *argv[]){
 			params.push_back(param);
 		}
 
-		Application application(&app);
+        Application application(&app, params.size());
 		if(!application.is_initialized()) return 0;
 		application.setFiles2Play(params);
 

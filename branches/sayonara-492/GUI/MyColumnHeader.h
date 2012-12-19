@@ -9,6 +9,7 @@
 #define MYCOLUMNHEADER_H_
 
 #include <QString>
+#include <QDebug>
 #include "HelperStructs/globals.h"
 
 #define COL_HEADER_SIZE_TYPE_ABS 0
@@ -34,18 +35,17 @@ class ColumnHeader {
 
 			_title = title;
 			_switchable = switchable;
-			_preferred_size_abs = 25;
 			_abs_size = true;
 			_sort_asc = sort_asc;
 			_sort_desc = sort_desc;
+            _preferred_size_abs = preferred_size_abs;
+            _preferred_size_rel = preferred_size_rel;
 
 			if(preferred_size_rel < 0){
-				_preferred_size_abs = 25;
 				_abs_size = true;
 			}
 
 			else{
-				_preferred_size_rel = preferred_size_rel;
 				_abs_size = false;
 			}
 		}
@@ -66,7 +66,7 @@ class ColumnHeader {
 		bool getSwitchable(){ return _switchable; }
 		int getSizeType(){ return (_abs_size ? COL_HEADER_SIZE_TYPE_ABS : COL_HEADER_SIZE_TYPE_REL); }
 		int get_preferred_size_abs(){ return _preferred_size_abs; }
-		int get_preferred_size_rel(){ return _preferred_size_rel; }
+        double get_preferred_size_rel(){ return _preferred_size_rel; }
 		Sort::SortOrder get_asc_sortorder() { return _sort_asc; }
 		Sort::SortOrder get_desc_sortorder() { return _sort_desc; }
 

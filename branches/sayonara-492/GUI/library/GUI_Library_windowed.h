@@ -163,6 +163,14 @@ private slots:
 	void play_next();
 	void play_next_tracks();
 
+    void sortorder_title_changed(Sort::SortOrder);
+    void sortorder_album_changed(Sort::SortOrder);
+    void sortorder_artist_changed(Sort::SortOrder);
+
+    void columns_title_changed(QStringList&);
+    void columns_album_changed(QStringList&);
+    void columns_artist_changed(QStringList&);
+
 
 protected:
 	void resizeEvent(QResizeEvent* e);
@@ -173,6 +181,10 @@ private:
     SortOrder _sort_albums;  /* [name | year] [asc | desc] */
     SortOrder _sort_artists; /* [name | tracks] [asc | desc] */
     SortOrder _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
+
+    QStringList _shown_cols_albums;
+    QStringList _shown_cols_artist;
+    QStringList _shown_cols_tracks;
 
 	GUI_InfoDialog* _info_dialog;
 	GUI_Library_Info_Box* _lib_info_dialog;

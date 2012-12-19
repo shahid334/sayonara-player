@@ -83,6 +83,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
 
 	_sort_albums = AlbumNameAsc;
 	_sort_artists = ArtistNameAsc;
@@ -101,7 +102,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     ColumnHeader t_h2("Artist", true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0, 0.3);
     ColumnHeader t_h3("Album", true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0, 0.3);
     ColumnHeader t_h4("Year", true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
-    ColumnHeader t_h5("Length", true, Sort::TrackLenghtAsc, Sort::TrackYearDesc, 50);
+    ColumnHeader t_h5("Length", true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
     ColumnHeader t_h6("Bitrate", true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
     ColumnHeader t_h7("Filesize", true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
 
@@ -113,18 +114,22 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 
     ColumnHeader ar_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
     ColumnHeader ar_h1("Artist", false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 0, 1.0 );
-    ColumnHeader ar_h2("#Tracks", true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 20);
+    ColumnHeader ar_h2("#Tracks", true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 80);
 
     track_columns  << t_h0  << t_h1  << t_h2  << t_h3  << t_h4  << t_h5  << t_h6  << t_h7;
     album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
     artist_columns << ar_h0 << ar_h1 << ar_h2;
+
+    _shown_cols_tracks = settings->getLibShownColsTitle();
+    _shown_cols_artist = settings->getLibShownColsArtist();
+    _shown_cols_albums = settings->getLibShownColsAlbum();
 
 
     this->_album_model = new LibraryItemModelAlbums(album_columns);
     this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
 	this->_artist_model = new LibraryItemModelArtists(artist_columns);
     this->_artist_delegate = new LibraryItemDelegateArtists(_artist_model, this->ui->lv_artist);
-	this->_track_model = new LibraryItemModelTracks(track_columns);
+    this->_track_model = new LibraryItemModelTracks(track_columns);
     this->_track_delegate = new LibraryItemDelegateTracks(_track_model, this->ui->tb_title);
 
 
@@ -132,49 +137,72 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     this->ui->tb_title->setItemDelegate(_track_delegate);
 	this->ui->tb_title->setAlternatingRowColors(true);
 	this->ui->tb_title->setDragEnabled(true);
+    this->ui->tb_title->set_table_headers(track_columns);
+    this->ui->tb_title->rc_header_menu_init(_shown_cols_tracks);
 
 	this->ui->lv_artist->setModel(_artist_model);
 	this->ui->lv_artist->setItemDelegate(_artist_delegate);
 	this->ui->lv_artist->setAlternatingRowColors(true);
 	this->ui->lv_artist->setDragEnabled(true);
+    this->ui->lv_artist->set_table_headers(artist_columns);
+    this->ui->lv_artist->rc_header_menu_init(_shown_cols_artist);
 
 	this->ui->lv_album->setModel(this->_album_model);
 	this->ui->lv_album->setItemDelegate(this->_album_delegate);
 	this->ui->lv_album->setAlternatingRowColors(true);
 	this->ui->lv_album->setDragEnabled(true);
+    this->ui->lv_album->set_table_headers(album_columns);
+    this->ui->lv_album->rc_header_menu_init(_shown_cols_albums);
 
-	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
-	this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
-
-
-	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
-	connect(this->ui->btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
-
-	connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(sig_all_selected()), this, SLOT(album_pressed()));
     connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
-	connect(this->ui->lv_album, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_album_context_menu(const QPoint&)));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
+    connect(this->ui->lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
+    connect(this->ui->lv_album, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_album_changed(QStringList&)));
+    connect(this->ui->lv_album, SIGNAL(sig_edit_clicked()), this, SLOT(edit_album()));
+    connect(this->ui->lv_album, SIGNAL(sig_info_clicked()), this, SLOT(info_album()));
+    connect(this->ui->lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
+    connect(this->ui->lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
     connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
     connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
     connect(this->ui->tb_title, SIGNAL(clicked(const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex & )));
-	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
 	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
+    connect(this->ui->tb_title, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_title_changed(Sort::SortOrder)));
+    connect(this->ui->tb_title, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_title_changed(QStringList&)));
+    connect(this->ui->tb_title, SIGNAL(sig_edit_clicked()), this, SLOT(edit_tracks()));
+    connect(this->ui->tb_title, SIGNAL(sig_info_clicked()), this, SLOT(info_tracks()));
+    connect(this->ui->tb_title, SIGNAL(sig_delete_clicked()), this, SLOT(delete_tracks()));
+    connect(this->ui->tb_title, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_tracks()));
+
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
     connect(this->ui->lv_artist, SIGNAL(sig_all_selected()), this, SLOT(artist_pressed()));
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
     connect(this->ui->lv_artist, SIGNAL(clicked(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
-	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
+    connect(this->ui->lv_artist, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_artist_changed(Sort::SortOrder)));
+    connect(this->ui->lv_artist, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_artist_changed(QStringList&)));
+    connect(this->ui->lv_artist, SIGNAL(sig_edit_clicked()), this, SLOT(edit_artist()));
+    connect(this->ui->lv_artist, SIGNAL(sig_info_clicked()), this, SLOT(info_artist()));
+    connect(this->ui->lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
+    connect(this->ui->lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 
 
-	connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
+
+
+    this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
+    this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
+
+    connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
+    connect(this->ui->btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
+    connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
+    connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
+
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
@@ -205,58 +233,38 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	Q_UNUSED(e);
 
-    this->ui->lv_artist->setColumnWidth(0, 20);
-    this->ui->lv_artist->setColumnWidth(1, this->ui->lv_artist->width() - 120);
-    this->ui->lv_artist->setColumnWidth(2, 60);
+    this->ui->lv_album->set_col_sizes();
+    this->ui->lv_artist->set_col_sizes();
+    this->ui->tb_title->set_col_sizes();
 
 
-	this->ui->lv_album->setColumnWidth(0, 20);
-    this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 100);
-	this->ui->lv_album->setColumnWidth(2, 40);
+}
 
+void  GUI_Library_windowed::columns_album_changed(QStringList& list){
+    _shown_cols_albums = list;
+    CSettingsStorage::getInstance()->setLibShownColsAlbum(list);
+}
+
+
+void  GUI_Library_windowed::columns_artist_changed(QStringList& list){
+    _shown_cols_artist = list;
+    CSettingsStorage::getInstance()->setLibShownColsArtist(list);
+}
+
+
+void  GUI_Library_windowed::columns_title_changed(QStringList & list){
+    _shown_cols_tracks = list;
+    CSettingsStorage::getInstance()->setLibShownColsTitle(list);
 }
 
 
 
 void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
-    QList<int> lst;
-    _track_model->set_selected(lst);
+    this->ui->tb_title->fill_metadata(v_metadata);
 
-
-	if(_info_dialog)
+    if(_info_dialog)
 		_info_dialog->setMetaData(v_metadata);
-
-	this->_track_model->removeRows(0, this->_track_model->rowCount());
-	this->_track_model->insertRows(0, v_metadata.size());
-
-    int first_selected_md_row = -1;
-
-    QItemSelectionModel* sm = this->ui->tb_title->selectionModel();
-    QItemSelection sel = sm->selection();
-
-    for(uint row=0; row<v_metadata.size(); row++){
-        MetaData md = v_metadata[row];
-
-        if(md.is_lib_selected){
-            if(first_selected_md_row == -1)
-                first_selected_md_row = row;
-
-            this->ui->tb_title->selectRow(row);
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
-
-        QModelIndex idx = _track_model->index(row, 0);
-
-		this->_track_model->setData(idx, md.toVariant(), Qt::EditRole);
-    }
-
-    sm->clearSelection();
-    sm->select(sel,QItemSelectionModel::Select);
-
-    if(first_selected_md_row >= 0)
-        this->ui->lv_album->scrollTo(_track_model->index(first_selected_md_row, 0), QTableView::PositionAtCenter);
-
 
     this->ui->lv_artist->set_mimedata(v_metadata, "Artist");
     this->ui->lv_album->set_mimedata(v_metadata, "Album");
@@ -265,82 +273,13 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
 void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 
-    QList<int> lst;
-    _album_model->set_selected(lst);
-
-	this->_album_model->removeRows(0, this->_album_model->rowCount());
-	this->_album_model->insertRows(0, albums.size()); // fake "all albums row"
-
-	QModelIndex idx;
-    int first_selected_album_row = -1;
-
-    QItemSelectionModel* sm = this->ui->lv_album->selectionModel();
-    QItemSelection sel = sm->selection();
-
-
-    for(uint row=0; row < albums.size(); row++){
-        Album album = albums[row];
-
-        idx = this->_album_model->index(row, 1);
-
-        if(album.is_lib_selected){
-            if(first_selected_album_row == -1)
-                first_selected_album_row = row;
-
-            this->ui->lv_album->selectRow(row);
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
-
-
-        QStringList data = album.toStringList();
-
-		this->_album_model->setData(idx, data, Qt::EditRole );
-	}
-
-    sm->clearSelection();
-    sm->select(sel,QItemSelectionModel::Select);
-
-    if(first_selected_album_row >= 0)
-        this->ui->lv_album->scrollTo(_album_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
+   this->ui->lv_album->fill_albums(albums);
 }
 
 
 void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
-    this->_artist_model->removeRows(0, this->_artist_model->rowCount());
-	this->_artist_model->insertRows(0, artists.size());
-
-	QModelIndex idx;
-    int first_selected_artist_row = -1;
-
-
-    QItemSelectionModel* sm = this->ui->lv_artist->selectionModel();
-    QItemSelection sel = sm->selection();
-
-    for(uint row=0; row<artists.size(); row++){
-
-        Artist artist = artists[row];
-        idx = this->_artist_model->index(row, 0);
-
-        QStringList data = artist.toStringList();
-        this->_artist_model->setData(idx, data, Qt::EditRole );
-
-        if(artist.is_lib_selected){
-
-            if(first_selected_artist_row == -1)
-                first_selected_artist_row = row;
-
-            this->ui->lv_artist->selectRow(row);
-
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
-	}
-
-   sm->clearSelection();
-   sm->select(sel,QItemSelectionModel::Select);
-
-    if(first_selected_artist_row >= 0)
-        this->ui->lv_artist->scrollTo(_artist_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
+    this->ui->lv_artist->fill_artists(artists);
 }
 
 
@@ -412,6 +351,23 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
 }
 
 
+void GUI_Library_windowed::sortorder_artist_changed(Sort::SortOrder s){
+    _sort_artists = s;
+    emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
+}
+
+
+void GUI_Library_windowed::sortorder_album_changed(Sort::SortOrder s){
+    _sort_albums = s;
+    emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
+}
+
+
+void GUI_Library_windowed::sortorder_title_changed(Sort::SortOrder s){
+    _sort_tracks = s;
+    emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
+}
+
 
 void GUI_Library_windowed::clear_button_pressed(){
 
@@ -421,8 +377,6 @@ void GUI_Library_windowed::clear_button_pressed(){
 
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit){
-
-    qDebug() << "text line edited";
 
     QList<int> lst;
     _album_model->set_selected(lst);
@@ -463,7 +417,7 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
     }
 
 	_cur_searchfilter = filter;
-    qDebug() << "Filter changed";
+
     sig_filter_changed(filter);
 }
 

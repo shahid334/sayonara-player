@@ -55,9 +55,9 @@ namespace Helper{
 	QString getSayonaraPath();
     QString getSharePath();
 
-	QString get_artist_image_path(QString artist);
-	QString get_cover_path(QString artist, QString album);
-	QString calc_cover_token(QString artist, QString album);
+    QString get_artist_image_path(QString artist, QString extension="jpg");
+    QString get_cover_path(QString artist, QString album, QString extension="jpg");
+    QString calc_cover_token(QString artist, QString album);
 
 	QString calc_google_image_search_adress(QString searchstring,  QString size, QString filetype);
 	QString calc_google_artist_adress(QString artist);
@@ -68,6 +68,7 @@ namespace Helper{
 
 	QStringList get_soundfile_extensions();
 	QStringList get_playlistfile_extensions();
+    QString calc_file_extension(QString filename);
 
 	bool is_soundfile(QString filename);
 	bool is_playlistfile(QString filename);

@@ -132,10 +132,11 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 	 if (index.isValid() && role == Qt::EditRole) {
 
 		 if(index.column() == 1) {
-			 QStringList list = value.toStringList();
 
-			 Album album;
-			 album.fromStringList(list);
+
+             Album album;
+             album.fromVariant(value);
+
              if(album.is_lib_selected)
                 _selected_rows << index.row();
 

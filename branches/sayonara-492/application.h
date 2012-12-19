@@ -49,7 +49,7 @@ class Application : public QObject
     Q_OBJECT
 
 public:
-    Application( QApplication* qapp, QObject *parent = 0);
+    Application( QApplication* qapp, int n_files, QObject *parent = 0);
     virtual ~Application();
     
 signals:

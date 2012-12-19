@@ -50,14 +50,11 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_parent = parent;
 	_qDrag = 0;
 
-	_mimedata_destroyable = false;
 	_mimedata = 0;
 
 	rc_menu_init();
 
-
-	//connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
-
+    connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
 }
 
 MyTableView::~MyTableView() {
@@ -72,7 +69,6 @@ void MyTableView::setModel(QAbstractItemModel * model){
 	QTableView::setModel(model);
 
 	_model = (LibraryItemModel*) model;
-
 }
 
 void MyTableView::mousePressEvent(QMouseEvent* event){
@@ -104,7 +100,7 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 			pos.setY(pos.y() + 35);
 			pos.setX(pos.x() + 10);
 			rc_menu_show(pos);
-			emit sig_context_menu_emitted(pos);
+
 			break;
 
 		case Qt::MidButton:
@@ -139,9 +135,12 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 	switch (event->button()) {
 
 		case Qt::LeftButton:
+            if(_mimedata) {
+                delete _mimedata;
+                _mimedata = 0;
+            }
 
-            delete _qDrag->mimeData();
-			QTableView::mouseReleaseEvent(event);
+            QTableView::mouseReleaseEvent(event);
 			event->accept();
 
 			_drag = false;
@@ -155,10 +154,9 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 
 void MyTableView::set_mimedata(const MetaDataList& v_md, QString text){
 
-	if(_mimedata_destroyable) delete _mimedata;
+    if(_mimedata) delete _mimedata;
 	_mimedata = new CustomMimeData();
 	connect(_mimedata, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
-	_mimedata_destroyable = true;
 
 	_mimedata->setMetaData(v_md);
 	_mimedata->setText(text);
@@ -172,7 +170,7 @@ void MyTableView::set_mimedata(const MetaDataList& v_md, QString text){
 
 void MyTableView::forbid_mimedata_destroyable(){
 
-	_mimedata_destroyable = false;
+    _mimedata = 0;
 }
 
 
@@ -190,11 +188,6 @@ void MyTableView::keyPressEvent(QKeyEvent* event){
 }
 
 
-void MyTableView::set_table_headers(QList<ColumnHeader>& headers){
-
-	_table_headers = headers;
-
-}
 
 
 QList<int> MyTableView::calc_selections(){
@@ -223,11 +216,12 @@ void switch_sorters(T& srcdst, T src1, T src2){
 
 void MyTableView::sort_by_column(int col){
 
-	int idx_col = _model->calc_shown_col(col);
+    int idx_col = col;
 
-	if(idx_col >= _table_headers.size()) return;
+    if(idx_col >= _table_headers.size()) return;
+
 	ColumnHeader h = _table_headers[idx_col];
-	switch_sorters(_sort_order, h.get_asc_sortorder(), h.get_asc_sortorder());
+    switch_sorters(_sort_order, h.get_asc_sortorder(), h.get_desc_sortorder());
 
 	emit sig_sortorder_changed(_sort_order);
 
@@ -280,42 +274,47 @@ void MyTableView::play_next_clicked(){
 }
 
 
+void MyTableView::set_table_headers(QList<ColumnHeader>& headers){
+
+    _table_headers = headers;
+}
+
+
 void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 
 	_rc_header_menu = new QMenu( this->horizontalHeader() );
 
-	//QStringList header_names = _model->get_header_names();
-
-
 	int i =0;
 	foreach(ColumnHeader header, _table_headers){
 		QAction* action = new QAction(header.getTitle(), this);
+        action->setCheckable(true);
 
-		_header_rc_actions << action;
+        action->setEnabled(header.getSwitchable());
 
-
-		if( header.getSwitchable() ) {
-			action->setEnabled(false);
-			action->setChecked(true);
+        if( !header.getSwitchable() ) {
+            action->setChecked(true);
 		}
 
-		if(i < shown_cols.size())
-			action->setChecked(shown_cols[i] == "1");
-		else
-			action->setChecked(false);
+        else {
 
-		rc_header_menu_changed();
+            if(i < shown_cols.size())
+                action->setChecked(shown_cols[i] == "1");
+            else
+                action->setChecked(false);
+        }
 
-		connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_title_changed(bool)));
+
+        connect(action, SIGNAL(toggled(bool)), this, SLOT(rc_header_menu_changed(bool)));
+
+        _header_rc_actions << action;
 		this->horizontalHeader()->addAction(action);
 		i++;
-	}
+    }
 
+    rc_header_menu_changed();
 
 	this->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
-
-
 
 
 
@@ -339,6 +338,7 @@ void MyTableView::rc_header_menu_changed(bool b){
 		col_idx++;
 	}
 
+    emit sig_columns_changed(lst);
 	set_col_sizes();
 }
 
@@ -347,7 +347,7 @@ void MyTableView::rc_header_menu_changed(bool b){
 void MyTableView::set_col_sizes(){
 
 	int altogether_width = 0;
-	int tolerance = 20;
+    int tolerance = 30;
 	double altogether_percentage = 0;
 	int n_cols = _model->columnCount();
 
@@ -363,8 +363,8 @@ void MyTableView::set_col_sizes(){
 		}
 
 		else{
+
 			altogether_percentage += h.get_preferred_size_rel();
-			continue;
 		}
 
 		altogether_width += preferred_size;
@@ -376,8 +376,10 @@ void MyTableView::set_col_sizes(){
 
 	int target_width = this->width();
 
-	if(target_width < 600) {
-		target_width = 600;
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    if(target_width < (altogether_width * 2)) {
+        target_width = altogether_width * 2;
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	}
 
 	// width for percentage stuff
@@ -399,3 +401,110 @@ void MyTableView::set_col_sizes(){
 		this->setColumnWidth(i, preferred_size);
 	}
 }
+
+
+void MyTableView::fill_metadata(const MetaDataList& v_md){
+
+    QList<int> lst;
+    _model->set_selected(lst);
+
+    _model->removeRows(0, _model->rowCount());
+    _model->insertRows(0, v_md.size());
+
+    QItemSelectionModel* sm = this->selectionModel();
+    QItemSelection sel = sm->selection();
+
+    for(uint row=0; row<v_md.size(); row++){
+        MetaData md = v_md[row];
+
+        if(md.is_lib_selected){
+            this->selectRow(row);
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
+
+        QModelIndex idx = _model->index(row, 0);
+
+        _model->setData(idx, md.toVariant(), Qt::EditRole);
+    }
+
+    sm->clearSelection();
+    sm->select(sel,QItemSelectionModel::Select);
+}
+
+void MyTableView::fill_albums(const AlbumList& albums){
+
+    QList<int> lst;
+    _model->set_selected(lst);
+
+    _model->removeRows(0, _model->rowCount());
+    _model->insertRows(0, albums.size()); // fake "all albums row"
+
+    QModelIndex idx;
+    int first_selected_album_row = -1;
+
+    QItemSelectionModel* sm = this->selectionModel();
+    QItemSelection sel = sm->selection();
+
+    for(uint row=0; row < albums.size(); row++){
+        Album album = albums[row];
+
+        idx = _model->index(row, 1);
+
+        if(album.is_lib_selected){
+            if(first_selected_album_row == -1)
+                first_selected_album_row = row;
+
+            this->selectRow(row);
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
+
+
+        QVariant data = album.toVariant();
+        _model->setData(idx, data, Qt::EditRole );
+    }
+
+    sm->clearSelection();
+    sm->select(sel,QItemSelectionModel::Select);
+
+    if(first_selected_album_row >= 0)
+        this->scrollTo(_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
+}
+
+
+void MyTableView::fill_artists(const ArtistList& artists){
+    _model->removeRows(0, _model->rowCount());
+    _model->insertRows(0, artists.size());
+
+    QModelIndex idx;
+    int first_selected_artist_row = -1;
+
+
+    QItemSelectionModel* sm = this->selectionModel();
+    QItemSelection sel = sm->selection();
+
+    for(uint row=0; row<artists.size(); row++){
+
+        Artist artist = artists[row];
+        idx = _model->index(row, 0);
+
+        QVariant data = artist.toVariant();
+        _model->setData(idx, data, Qt::EditRole );
+
+        if(artist.is_lib_selected){
+
+            if(first_selected_artist_row == -1)
+                first_selected_artist_row = row;
+
+            this->selectRow(row);
+
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
+    }
+
+   sm->clearSelection();
+   sm->select(sel,QItemSelectionModel::Select);
+
+    if(first_selected_artist_row >= 0)
+        this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
+}
+

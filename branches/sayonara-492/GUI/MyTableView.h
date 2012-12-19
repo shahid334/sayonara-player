@@ -56,7 +56,8 @@ class MyTableView : public QTableView{
 
 	signals:
 
-		void sig_context_menu_emitted(const QPoint&);
+        void sig_columns_changed(QStringList& );
+
         void sig_middle_button_clicked(const QPoint&);
         void sig_all_selected();
         void sig_info_clicked();
@@ -81,17 +82,23 @@ class MyTableView : public QTableView{
 	private:
         void rc_menu_init();
 
-        void rc_header_menu_init(QStringList& lst);
-        void set_col_sizes();
-
 
 	public:
 		MyTableView(QWidget* parent=0);
 		virtual ~MyTableView();
 
+        void rc_header_menu_init(QStringList& lst);
 		void set_mimedata(const MetaDataList& v_md, QString text);
 		void set_table_headers(QList<ColumnHeader>& headers);
 		void setModel(QAbstractItemModel * model);
+
+
+        void fill_metadata(const MetaDataList& v_md);
+        void fill_albums(const AlbumList& v_albums);
+        void fill_artists(const ArtistList& v_artists);
+
+        void set_col_sizes();
+
 		QList<int> calc_selections();
 
 
@@ -124,8 +131,6 @@ class MyTableView : public QTableView{
 		LibraryItemModel* 	_model;
 		Sort::SortOrder		_sort_order;
 		CustomMimeData*		_mimedata;
-		bool				_mimedata_destroyable;
-
 
 };
 

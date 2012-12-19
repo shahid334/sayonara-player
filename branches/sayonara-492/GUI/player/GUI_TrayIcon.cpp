@@ -126,10 +126,10 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
         Notification* n = m_plugin_loader->get_cur_plugin();
 
         if(n){
-            qDebug() << "Notification: " << md.title << ", " << md.artist+ "," + md.album;
+
             QString text = md.artist+ "\n" + md.album;
-            text.replace("&", "&amp;");
-            n->notification_show(md.title, text);
+
+            n->notification_show(md);
         }
 
         else if (this -> isSystemTrayAvailable()) {

@@ -73,11 +73,13 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
 	connect(this->ui->btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
+    connect(this->ui->btn_no_cover, SIGNAL(clicked()), this, SLOT(no_cover_pressed()));
 	connect(this->ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
 	connect(this->ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
 	connect(this->_cov_lookup, SIGNAL(sig_multi_covers_found(QString, int)), this, SLOT(covers_there(QString, int)));
 	connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
 	connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+
 }
 
 
@@ -93,7 +95,11 @@ void GUI_Alternate_Covers::changeSkin(bool dark){
 
 void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
 
+    _cov_lookup->terminate_thread();
+    _model->removeRows(0, _model->rowCount());
     ui->pb_progress->setTextVisible(false);
+    ui->pb_progress->setVisible(false);
+    ui->btn_search->setText("Search");
     _no_album = true;
     _target_filename = target_filename;
 
@@ -101,16 +107,22 @@ void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
     this->ui->lab_title->setText(searchstring);
 
     this->show();
-    this->search_button_pressed();
+    //this->search_button_pressed();
 }
 
 
 void GUI_Alternate_Covers::start(int album_artist_id, bool search_for_album){
 
+    _cov_lookup->terminate_thread();
+
     _no_album = false;
 
+    _model->removeRows(0, _model->rowCount());
 	ui->pb_progress->setTextVisible(false);
-	_search_for_album = search_for_album;
+    ui->pb_progress->setVisible(false);
+    ui->btn_search->setText("Search");
+
+    _search_for_album = search_for_album;
 
     if(search_for_album){
 		_album = CDatabaseConnector::getInstance()->getAlbumByID(album_artist_id);
@@ -138,10 +150,102 @@ void GUI_Alternate_Covers::start(int album_artist_id, bool search_for_album){
 	}
 
 	this->show();
-    this->search_button_pressed();
+    //this->search_button_pressed();
 }
 
 
+void GUI_Alternate_Covers::delete_token(){
+
+    QString cover_token;
+
+    if(_no_album){
+        cover_token = _target_filename;
+    }
+
+    else if(_search_for_album){
+        if(_album.is_sampler ){
+
+            foreach(QString artist, _album.artists){
+                cover_token = Helper::get_cover_path(artist, _album.name);
+                QFile::remove(cover_token);
+            }
+
+            return;
+
+        }
+
+        else if(_album.artists.size() == 0)
+            cover_token = Helper::get_cover_path("", _album.name);
+
+
+        else
+            cover_token = Helper::get_cover_path(_album.artists[0], _album.name);
+
+    }
+
+    else
+        cover_token = Helper::get_artist_image_path(_artist.name);
+
+    QFile::remove(cover_token);
+
+}
+
+
+QString GUI_Alternate_Covers::copy_and_save(QString src_filename){
+
+    QFile file(src_filename);
+
+    if(!file.exists()) {
+        QMessageBox::warning(this, "Information", "This cover does not exist... Sorry" );
+        return "";
+    }
+
+    QString cover_token;
+    bool success = true;
+
+    if(_no_album){
+
+
+        cover_token = _target_filename;
+        if(QFile::exists(cover_token)) QFile::remove(cover_token);
+        success &= file.copy(cover_token);
+
+    }
+
+
+    else if(_search_for_album){
+        if(_album.is_sampler ){
+
+            foreach(QString artist, _album.artists){
+                cover_token = Helper::get_cover_path(artist, _album.name);
+                if(QFile::exists(cover_token)) QFile::remove(cover_token);
+                success &= file.copy(cover_token);
+            }
+        }
+
+        else if(_album.artists.size() == 0){
+            cover_token = Helper::get_cover_path("", _album.name);
+            if(QFile::exists(cover_token)) QFile::remove(cover_token);
+            success = file.copy(cover_token);
+        }
+
+        else{
+            cover_token = Helper::get_cover_path(_album.artists[0], _album.name);
+            if(QFile::exists(cover_token)) QFile::remove(cover_token);
+            success = file.copy(cover_token);
+        }
+    }
+
+    else{
+        cover_token = Helper::get_artist_image_path(_artist.name);
+        if(QFile::exists(cover_token)) QFile::remove(cover_token);
+        success = file.copy(cover_token);
+    }
+
+
+    if(!success) cover_token = "";
+    return cover_token;
+}
 
 void GUI_Alternate_Covers::save_button_pressed(){
 
@@ -158,57 +262,14 @@ void GUI_Alternate_Covers::save_button_pressed(){
 	}
 
 	QString src_filename = _model->data(idx, Qt::WhatsThisRole).toString().split(',')[0];
-	QFile file(src_filename);
-
-	if(!file.exists()) {
-		QMessageBox::warning(this, "Information", "This cover does not exist... Sorry" );
-		return;
-	}
-
-	bool success = true;
-
-    if(_no_album){
-
-        QString cover_token = _target_filename;
-        if(QFile::exists(cover_token)) QFile::remove(cover_token);
-        success &= file.copy(cover_token);
-
-    }
 
 
-    else if(_search_for_album){
-		if(_album.is_sampler ){
-
-			foreach(QString artist, _album.artists){
-				QString cover_token = Helper::get_cover_path(artist, _album.name);
-				if(QFile::exists(cover_token)) QFile::remove(cover_token);
-				success &= file.copy(cover_token);
-			}
-		}
-
-		else if(_album.artists.size() == 0){
-			QString cover_token = Helper::get_cover_path("", _album.name);
-			if(QFile::exists(cover_token)) QFile::remove(cover_token);
-			success = file.copy(cover_token);
-		}
-
-		else{
-			QString cover_token = Helper::get_cover_path(_album.artists[0], _album.name);
-			if(QFile::exists(cover_token)) QFile::remove(cover_token);
-			success = file.copy(cover_token);
-		}
-	}
-
-	else{
-		QString cover_token = Helper::get_artist_image_path(_artist.name);
-		if(QFile::exists(cover_token)) QFile::remove(cover_token);
-		success = file.copy(cover_token);
-	}
+    QString cover_token = copy_and_save(src_filename);
 
 
-	if(success) {
+    if(cover_token.size() > 0) {
 
-		emit sig_covers_changed(_calling_class);
+        emit sig_covers_changed(_calling_class);
 
 		_filelist.clear();
         update_model();
@@ -222,7 +283,6 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 void GUI_Alternate_Covers::cancel_button_pressed(){
 
-
 	_cov_lookup->terminate_thread();
 	_filelist.clear();
     update_model();
@@ -231,19 +291,36 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 }
 
 
+void GUI_Alternate_Covers::no_cover_pressed(){
+
+    delete_token();
+
+    emit sig_no_cover();
+
+    _filelist.clear();
+    update_model();
+    hide();
+    close();
+
+}
+
 void GUI_Alternate_Covers::search_button_pressed(){
 
     _cur_idx = -1;
 
+    _cov_lookup->terminate_thread();
+
 	if(ui->btn_search->text().compare("Stop") == 0){
-		_cov_lookup->terminate_thread();
+
 		ui->btn_search->setText("Search");
         ui->pb_progress->setVisible(false);
 		return;
 	}
 
+
 	ui->pb_progress->setValue(0);
 	ui->pb_progress->setTextVisible(true);
+    ui->pb_progress->setVisible(true);
 
 	QString searchstring = this->ui->le_search->text();
 

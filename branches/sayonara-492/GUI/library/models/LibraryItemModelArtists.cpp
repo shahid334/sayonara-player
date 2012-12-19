@@ -126,9 +126,10 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 	 if (index.isValid() && role == Qt::EditRole) {
 
 		 QStringList list = value.toStringList();
-		 Artist artist;
 
-		 artist.fromStringList(list);
+         Artist artist;
+         artist.fromVariant(value);
+
          if(artist.is_lib_selected)
             _selected_rows << index.row();
 

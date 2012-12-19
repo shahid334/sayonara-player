@@ -284,8 +284,11 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this,				SIGNAL(sig_fetch_all_covers()),
 			m_cov_lookup, 		SLOT(search_all_covers()));
 
-	connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString)),
-			this,				SLOT(sl_alternate_cover_available(QString)));
+    connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString)),
+            this,				SLOT(sl_alternate_cover_available(QString)));
+
+    connect(m_alternate_covers, SIGNAL(sig_no_cover()),
+            this,				SLOT(sl_no_cover_available()));
 
 
     // notifications

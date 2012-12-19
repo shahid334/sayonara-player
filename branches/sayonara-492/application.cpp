@@ -48,7 +48,7 @@ bool Application::is_initialized(){
 
 
 
-Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
+Application::Application(QApplication* qapp, int n_files, QObject *parent) : QObject(parent)
 {
 
 	app                = qapp;
@@ -140,7 +140,9 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
         LastFM::getInstance()->lfm_login( user,password, true );
     }
 
-    playlist->ui_loaded();
+    bool load_old_playlist = (n_files == 0);
+
+    playlist->ui_loaded(load_old_playlist);
     playlists->ui_loaded();
     player->ui_loaded();
 
@@ -276,8 +278,8 @@ void Application::init_connections(){
 	   CONNECT(ui_library, sig_track_pressed(const QList<int>&),            library, 		psl_selected_tracks_changed(const QList<int>&));
 	   CONNECT(ui_library, sig_filter_changed(const Filter&),               library, 		psl_filter_changed(const Filter&));
 
-	   CONNECT(ui_library, sig_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort),
-			   library, 	 psl_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort));
+       CONNECT(ui_library, sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder),
+               library, 	 psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder));
 
 	   CONNECT(ui_library, sig_show_id3_editor(const QList<int>&),              library, 		psl_change_id3_tags(const QList<int>&));
 	   CONNECT(ui_library, sig_delete_tracks(int),                              library,		psl_delete_tracks(int));
