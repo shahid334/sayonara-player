@@ -15,6 +15,7 @@
 
 LN_Notification::LN_Notification(){
 	_initialized = notify_init("Sayonara"); 
+    _not = 0;
 }
 
 LN_Notification::~LN_Notification(){
@@ -23,7 +24,12 @@ LN_Notification::~LN_Notification(){
 
 void LN_Notification::notification_show(const MetaData& md){
 
+
+
 	if(!_initialized) return;
+
+    not_close();
+
     QString text = md.artist + "\n" + md.album;
     text.replace("&", "&amp;");
 
@@ -37,15 +43,27 @@ void LN_Notification::notification_show(const MetaData& md){
         if(success)
             pixmap_path = Helper::getSayonaraPath() + "not.jpg";
     }
+NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
+                                                 text.toLocal8Bit().data(),
+                                                pixmap_path.toLocal8Bit().data());
+   _not = n;
 
-    NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
-                                                     text.toLocal8Bit().data(),
-                                                    pixmap_path.toLocal8Bit().data());
+
+
     int timeout = CSettingsStorage::getInstance()->getNotificationTimeout();
     notify_notification_set_timeout     (n, timeout);
-	notify_notification_show            (n, NULL);
-    qDebug() << "notification end";
+    notify_notification_show            (n, NULL);
+
 }
+
+void LN_Notification::not_close(){
+
+    NotifyNotification* n = (NotifyNotification*) _not;
+    if(n)
+       notify_notification_close(n,NULL);
+
+}
+
 
 QString LN_Notification::get_name(){
 	return "libnotify";
