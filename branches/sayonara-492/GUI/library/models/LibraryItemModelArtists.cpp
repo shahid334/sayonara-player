@@ -26,16 +26,14 @@
  *      Author: luke
  */
 
-#include "LibraryItemModelArtists.h"
+#include "GUI/library/models/LibraryItemModelArtists.h"
 
 #include <QAbstractListModel>
 #include <QStringList>
 #include <QDebug>
 
-LibraryItemModelArtists::LibraryItemModelArtists() {
-    _headerdata.push_back("#");
-    _headerdata.push_back("Artist");
-    _headerdata.push_back("Tracks");
+LibraryItemModelArtists::LibraryItemModelArtists(QList<ColumnHeader>& headers) : LibraryItemModel(headers){
+
 }
 
 LibraryItemModelArtists::~LibraryItemModelArtists() {
@@ -43,13 +41,6 @@ LibraryItemModelArtists::~LibraryItemModelArtists() {
 }
 
 
-void LibraryItemModelArtists::set_selected(QList<int>& rows){
-    _selected_rows = rows;
-}
-
-bool LibraryItemModelArtists::is_selected(int row){
-    return _selected_rows.contains(row);
-}
 
 int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 {
@@ -57,18 +48,7 @@ int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 	return _artist_list.size();
 }
 
-int LibraryItemModelArtists::columnCount(const QModelIndex& parent) const{
 
-    Q_UNUSED(parent);
-
-    int n_active = 0;
-    for(int i=0; i<N_ARTIST_COLS; i++){
-        if(_cols_active[i]) n_active++;
-    }
-
-    return n_active;
-
-}
 
 
 bool LibraryItemModelArtists::removeRows(int position, int rows, const QModelIndex & index)
@@ -102,32 +82,6 @@ bool LibraryItemModelArtists::insertRows(int position, int rows, const QModelInd
 	 return true;
 }
 
-
-
-bool LibraryItemModelArtists::insertColumns(int position, int cols, const QModelIndex &index){
-
-    beginInsertColumns(QModelIndex(), position, position+cols-1);
-
-    for(int i=position; i<position+cols; i++){
-
-        _cols_active[i] = true;
-    }
-
-    endInsertColumns();
-    return true;
-}
-
-
-bool LibraryItemModelArtists::removeColumns(int position, int cols, const QModelIndex &index){
-
-    beginRemoveColumns(QModelIndex(), position, position+cols-1);
-    for(int i=0; i<N_ARTIST_COLS; i++){
-        _cols_active[i] = false;
-    }
-
-    endRemoveColumns();
-    return true;
-}
 
 
 
@@ -199,36 +153,3 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 }
 
 
-
-QVariant LibraryItemModelArtists::headerData ( int section, Qt::Orientation orientation, int role ) const{
-
-	 if (role != Qt::DisplayRole)
-	         return QVariant();
-
-     int idx_col = calc_shown_col(section);
-     if (orientation == Qt::Horizontal)
-         return _headerdata[idx_col];
-
-	 return QVariant();
-
-}
-
-
-int LibraryItemModelArtists::calc_shown_col(int col) const {
-    int idx_col = 0;
-    int n_true = -1;
-    for(idx_col=0; idx_col<N_ARTIST_COLS; idx_col++){
-        if(_cols_active[idx_col]) n_true++;
-        if(n_true == col) break;
-    }
-
-    return idx_col;
-}
-
-bool LibraryItemModelArtists::is_col_shown(int col) const{
-    return _cols_active[col];
-}
-
-QStringList  LibraryItemModelArtists::get_header_names(){
-    return _headerdata;
-}

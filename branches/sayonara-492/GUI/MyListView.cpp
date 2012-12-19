@@ -128,3 +128,6 @@ void MyListView::set_mime_data(CustomMimeData* data) {
 void MyListView::set_drag_enabled(bool b){
     _drag_allowed = b;
 }
+
+
+

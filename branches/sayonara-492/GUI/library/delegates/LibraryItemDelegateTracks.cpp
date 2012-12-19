@@ -26,7 +26,8 @@
  *      Author: luke
  */
 
-#include "GUI/library/LibraryItemDelegateTracks.h"
+#include "GUI/library/delegates/LibraryItemDelegateTracks.h"
+#include "GUI/library/models/LibraryItemModelTracks.h"
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -37,10 +38,8 @@
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
-#include <HelperStructs/Helper.h>
-#include "GUI/library/LibraryItemModelTracks.h"
 
-LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModelTracks* model, QTableView* parent) {
+LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, QTableView* parent) {
 	this->_parent = parent;
      _model = model;
 

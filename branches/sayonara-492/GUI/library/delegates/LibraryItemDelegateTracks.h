@@ -33,11 +33,11 @@
 #include <QTableView>
 #include <QLabel>
 #include <QPen>
-#include "GUI/library/LibraryItemModelTracks.h"
+#include "GUI/library/models/LibraryItemModelTracks.h"
 
 class LibraryItemDelegateTracks : public QItemDelegate {
 public:
-    LibraryItemDelegateTracks(LibraryItemModelTracks* model, QTableView* parent=0);
+    LibraryItemDelegateTracks(LibraryItemModel* model, QTableView* parent=0);
 	virtual ~LibraryItemDelegateTracks();
 
 public:
@@ -58,7 +58,7 @@ public:
 private:
 		QTableView* _parent;
         QPen        _pen;
-        LibraryItemModelTracks* _model;
+        LibraryItemModel* _model;
 
 };
 

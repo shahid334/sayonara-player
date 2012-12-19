@@ -26,13 +26,13 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "application.h"
 
 #include <QObject>
 #include <QThread>
 #include <QFileSystemWatcher>
 #include <library/ReloadThread.h>
-#include <GUI/library/GUIImportFolder.h>
 
 class Application;
 class CLibraryBase : public QObject
@@ -89,7 +89,7 @@ public slots:
     void psl_prepare_track_for_playlist(int idx);
 
     void psl_filter_changed(const Filter&);
-    void psl_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort);
+    void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
     void psl_change_id3_tags(const QList<int>& lst);
 
     void psl_delete_tracks(int);
@@ -122,9 +122,9 @@ private:
     AlbumList			_vec_albums;
     ArtistList			_vec_artists;
 
-    Sort::TrackSort		_track_sortorder;
-    Sort::AlbumSort	_album_sortorder;
-    Sort::ArtistSort	_artist_sortorder;
+    Sort::SortOrder		_track_sortorder;
+    Sort::SortOrder		_album_sortorder;
+    Sort::SortOrder		_artist_sortorder;
 
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;

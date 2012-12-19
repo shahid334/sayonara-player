@@ -78,11 +78,11 @@ public:
 			Artist getArtistByID( const int& id);
 			int getMaxArtistID();
 
-			void getAllArtists(ArtistList& result, ArtistSort sortorder = ArtistNameAsc);
+			void getAllArtists(ArtistList& result, SortOrder sortorder = ArtistNameAsc);
 
-			void getAllArtistsByAlbum(int album, ArtistList& result, ArtistSort sortorder = ArtistNameAsc);
+			void getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
 
-			void getAllArtistsBySearchString(Filter filter, ArtistList& result, ArtistSort sortorder = ArtistNameAsc);
+			void getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
@@ -98,12 +98,12 @@ public:
 
 			Album getAlbumByID(const int& id);
 
-			void getAllAlbums(AlbumList& result, AlbumSort sortorder=AlbumNameAsc);
+			void getAllAlbums(AlbumList& result, SortOrder sortorder=AlbumNameAsc);
 
-			void getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
-			void getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter=Filter(), AlbumSort sortorder = AlbumNameAsc);
+			void getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
+			void getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
 
-			void getAllAlbumsBySearchString(Filter filter, AlbumList& result, AlbumSort sortorder = AlbumNameAsc);
+			void getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder = AlbumNameAsc);
 
 			int insertAlbumIntoDatabase (const QString & album);
 			int insertAlbumIntoDatabase (const Album& album);
@@ -114,18 +114,18 @@ public:
 		 *  TRACKS
 		 *****************/
 
-			void getAllTracksByAlbum(int album, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
-			void getAllTracksByAlbum(QList<int> albums, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
+			void getAllTracksByAlbum(int album, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc);
+			void getAllTracksByAlbum(QList<int> albums, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
 
-			void getAllTracksByArtist(int artist, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder = TrackArtistAsc);
-			void getAllTracksByArtist(QList<int> artists, MetaDataList& result, Filter filter=Filter(), TrackSort sortorder =TrackArtistAsc);
+			void getAllTracksByArtist(int artist, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc);
+			void getAllTracksByArtist(QList<int> artists, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
 
-			void getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sortorder = TrackArtistAsc);
+			void getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sortorder = TrackArtistAsc);
 
             int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
             int updateTrack(MetaData& data);
 
-			int getTracksFromDatabase (MetaDataList& returndata, TrackSort sortorder = TrackArtistAsc);
+			int getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
 			MetaData getTrackByPath(QString path);
             void getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md);
@@ -204,7 +204,7 @@ private:
     QSqlDatabase m_database;
     QString _db_filename;
 
-    QString append_track_sort_string(QString querytext, TrackSort sortorder);
+    QString append_track_sort_string(QString querytext, SortOrder sortorder);
 
     /**
       * Check if db of m_databaseFileContainer is existent

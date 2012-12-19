@@ -30,16 +30,18 @@
 #define SEL_ALBUMS 1
 #define SEL_TRACKS 2
 
-#include "GUI/library/GUI_Library_windowed.h"
-#include "GUI/library/LibraryItemModelTracks.h"
-#include "GUI/library/LibraryItemDelegateTracks.h"
-#include "GUI/library/LibraryItemModelAlbums.h"
-#include "GUI/library/LibraryItemDelegateAlbums.h"
-#include "GUI/library/LibraryItemDelegateArtists.h"
-#include "GUI/library/LibraryItemModelArtists.h"
-#include "GUI/library/GUILibraryInfoBox.h"
-#include "GUI/InfoDialog/GUI_InfoDialog.h"
+#include "ui_GUI_Library_windowed.h"
 
+#include "GUI/MyColumnHeader.h"
+#include "GUI/library/GUI_Library_windowed.h"
+#include "GUI/library/models/LibraryItemModelTracks.h"
+#include "GUI/library/delegates/LibraryItemDelegateTracks.h"
+#include "GUI/library/models/LibraryItemModelAlbums.h"
+#include "GUI/library/delegates/LibraryItemDelegateAlbums.h"
+#include "GUI/library/delegates/LibraryItemDelegateArtists.h"
+#include "GUI/library/models/LibraryItemModelArtists.h"
+#include "GUI/library/InfoBox/GUILibraryInfoBox.h"
+#include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
@@ -48,16 +50,13 @@
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/CustomMimeData.h"
 
-
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/Style.h"
 
-
-#include "ui_GUI_Library_windowed.h"
-
+#include <QList>
 #include <QDebug>
 #include <QPoint>
 #include <QMouseEvent>
@@ -68,6 +67,10 @@
 #include <QScrollBar>
 #include <QItemSelectionModel>
 #include <QHeaderView>
+
+
+
+
 
 
 #define INFO_IMG_SIZE 220
@@ -88,29 +91,50 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_info_dialog = dialog;
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-    _mime_data_artist = 0;
-    _mime_data_album = 0;
-    _mime_data = 0;
 
-    _mime_data_album_destroyable = false;
-    _mime_data_artist_destroyable = false;
-    _mime_data_destroyable = false;
+    QList<ColumnHeader> track_columns;
+    QList<ColumnHeader> album_columns;
+    QList<ColumnHeader> artist_columns;
 
-	this->_album_model = new LibraryItemModelAlbums();
+    ColumnHeader t_h0("#", true, Sort::TrackNumAsc, Sort::TrackNumDesc, 25);
+    ColumnHeader t_h1("Title", false, Sort::TrackTitleAsc, Sort::TrackTitleDesc, 0, 0.4);
+    ColumnHeader t_h2("Artist", true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0, 0.3);
+    ColumnHeader t_h3("Album", true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0, 0.3);
+    ColumnHeader t_h4("Year", true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
+    ColumnHeader t_h5("Length", true, Sort::TrackLenghtAsc, Sort::TrackYearDesc, 50);
+    ColumnHeader t_h6("Bitrate", true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
+    ColumnHeader t_h7("Filesize", true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
+
+    ColumnHeader al_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
+    ColumnHeader al_h1("Album", false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 0, 1.0);
+    ColumnHeader al_h2("Duration", true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
+    ColumnHeader al_h3("#Tracks", true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
+    ColumnHeader al_h4("Year", true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 70);
+
+    ColumnHeader ar_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
+    ColumnHeader ar_h1("Artist", false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 0, 1.0 );
+    ColumnHeader ar_h2("#Tracks", true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 20);
+
+    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  << t_h4  << t_h5  << t_h6  << t_h7;
+    album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
+    artist_columns << ar_h0 << ar_h1 << ar_h2;
+
+
+    this->_album_model = new LibraryItemModelAlbums(album_columns);
     this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
-	this->_artist_model = new LibraryItemModelArtists();
+	this->_artist_model = new LibraryItemModelArtists(artist_columns);
     this->_artist_delegate = new LibraryItemDelegateArtists(_artist_model, this->ui->lv_artist);
-	this->_track_model = new LibraryItemModelTracks();
+	this->_track_model = new LibraryItemModelTracks(track_columns);
     this->_track_delegate = new LibraryItemDelegateTracks(_track_model, this->ui->tb_title);
 
 
-	this->ui->tb_title->setModel(this->_track_model);
-    this->ui->tb_title->setItemDelegate(this->_track_delegate);
+	this->ui->tb_title->setModel(_track_model);
+    this->ui->tb_title->setItemDelegate(_track_delegate);
 	this->ui->tb_title->setAlternatingRowColors(true);
 	this->ui->tb_title->setDragEnabled(true);
 
-	this->ui->lv_artist->setModel(this->_artist_model);
-	this->ui->lv_artist->setItemDelegate(this->_artist_delegate);
+	this->ui->lv_artist->setModel(_artist_model);
+	this->ui->lv_artist->setItemDelegate(_artist_delegate);
 	this->ui->lv_artist->setAlternatingRowColors(true);
 	this->ui->lv_artist->setDragEnabled(true);
 
@@ -122,10 +146,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
 	this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
 
-	init_menues();
-    init_rc_header_title();
-    init_rc_header_artist();
-    init_rc_header_album();
 
 	connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(this->ui->btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
@@ -137,7 +157,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
 	connect(this->ui->lv_album, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_album_context_menu(const QPoint&)));
-	connect(this->ui->lv_album->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_albums_by_column(int)));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
@@ -145,7 +164,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
     connect(this->ui->tb_title, SIGNAL(clicked(const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex & )));
 	connect(this->ui->tb_title, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_track_context_menu(const QPoint&)));
-    connect(this->ui->tb_title->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_tracks_by_column(int)));
 	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
@@ -153,7 +171,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
     connect(this->ui->lv_artist, SIGNAL(clicked(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
 	connect(this->ui->lv_artist, SIGNAL(context_menu_emitted(const QPoint&)), this, SLOT(show_artist_context_menu(const QPoint&)));
-	connect(this->ui->lv_artist->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_artists_by_column(int)));
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
 
 
@@ -177,426 +194,12 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 	delete _lib_info_dialog;
 }
 
-void GUI_Library_windowed::init_menues(){
-	_right_click_menu = new QMenu(this);
-
-	_info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), "Info", this);
-	_edit_action = new QAction(QIcon(Helper::getIconPath() + "lyrics.png"), "Edit", this);
-	_delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), "Delete", this);
-	_play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), "Play next", this);
-
-	_right_click_menu->addAction(_info_action);
-	_right_click_menu->addAction(_edit_action);
-	_right_click_menu->addAction(_delete_action);
-	_right_click_menu->addAction(_play_next_action);
-}
-
-
-void GUI_Library_windowed::init_rc_header_title(){
-    _header_rc_menu_title = new QMenu(this->ui->tb_title->horizontalHeader());
-
-    QStringList header_names = _track_model->get_header_names();
-    QStringList lst = CSettingsStorage::getInstance()->getLibShownColsTitle();
-
-    int i =0;
-    foreach(QString header_name, header_names){
-        QAction* action = new QAction(header_name, this);
-        _header_rc_actions_title << action;
-
-        action->setCheckable(true);
-        if(i == COL_TITLE) {
-            action->setEnabled(false);
-            action->setChecked(true);
-        }
-
-        if(i < lst.size())
-            action->setChecked(lst[i] == "1");
-        else
-            action->setChecked(false);
-
-        header_rc_menu_title_changed();
-
-        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_title_changed(bool)));
-        ui->tb_title->horizontalHeader()->addAction(action);
-        i++;
-    }
-
-
-    this->ui->tb_title->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
-}
-
-void GUI_Library_windowed::init_rc_header_album(){
-    _header_rc_menu_album = new QMenu(this->ui->lv_album->horizontalHeader());
-
-    QStringList header_names = _album_model->get_header_names();
-    QStringList lst = CSettingsStorage::getInstance()->getLibShownColsAlbum();
-
-    int i =0;
-    foreach(QString header_name, header_names){
-        QAction* action = new QAction(header_name, this);
-        _header_rc_actions_album << action;
-
-        action->setCheckable(true);
-        if(i == COL_ALBUM_NAME) {
-            action->setEnabled(false);
-            action->setChecked(true);
-        }
-
-        if(i < lst.size())
-            action->setChecked(lst[i] == "1");
-        else
-            action->setChecked(false);
-
-        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_album_changed(bool)));
-        ui->lv_album->horizontalHeader()->addAction(action);
-        i++;
-    }
-
-    header_rc_menu_album_changed();
-
-    this->ui->lv_album->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
-}
-
-
-void GUI_Library_windowed::init_rc_header_artist(){
-    _header_rc_menu_artist = new QMenu(this->ui->lv_artist->horizontalHeader());
-
-    QStringList header_names = _artist_model->get_header_names();
-    QStringList lst = CSettingsStorage::getInstance()->getLibShownColsArtist();
-
-    int i =0;
-    foreach(QString header_name, header_names){
-        QAction* action = new QAction(header_name, this);
-        _header_rc_actions_artist << action;
-
-        if(i == COL_ARTIST_NAME) {
-            action->setEnabled(false);
-            action->setChecked(true);
-        }
-
-        action->setCheckable(true);
-
-        if(i < lst.size())
-            action->setChecked(lst[i] == "1");
-        else
-            action->setChecked(false);
-
-        connect(action, SIGNAL(toggled(bool)), this, SLOT(header_rc_menu_artist_changed(bool)));
-        ui->lv_artist->horizontalHeader()->addAction(action);
-        i++;
-    }
-
-    header_rc_menu_artist_changed();
-    this->ui->lv_artist->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
-}
-
-
-void GUI_Library_windowed::header_rc_menu_title_changed(bool b){
-
-    _track_model->removeColumns(0, _track_model->columnCount());
-
-    int col_idx = 0;
-    QStringList lst;
-    foreach(QAction* action, _header_rc_actions_title){
-
-        if(action->isChecked()){
-
-            _track_model->insertColumn(col_idx);
-            lst << "1";
-        }
-
-        else lst << "0";
-
-        col_idx++;
-    }
-
-    CSettingsStorage::getInstance()->setLibShownColsTitle(lst);
-    set_title_sizes();
-}
-
-
-void GUI_Library_windowed::header_rc_menu_artist_changed(bool b){
-
-    _artist_model->removeColumns(0, _artist_model->columnCount());
-    int col_idx = 0;
-    QStringList lst;
-    foreach(QAction* action, _header_rc_actions_artist){
-
-        if(action->isChecked()){
-
-            _artist_model->insertColumn(col_idx);
-            lst << "1";
-        }
-
-        else lst << "0";
-
-        col_idx++;
-    }
-
-    CSettingsStorage::getInstance()->setLibShownColsArtist(lst);
-    set_artist_sizes();
-}
-
-void GUI_Library_windowed::header_rc_menu_album_changed(bool b){
-
-    _album_model->removeColumns(0, _album_model->columnCount());
-
-    int col_idx = 0;
-    QStringList lst;
-    foreach(QAction* action, _header_rc_actions_album){
-
-        if(action->isChecked()){
-
-            _album_model->insertColumn(col_idx);
-            lst << "1";
-        }
-
-        else lst << "0";
-
-        col_idx++;
-    }
-
-    CSettingsStorage::getInstance()->setLibShownColsAlbum(lst);
-    set_album_sizes();
-}
-
-
-void GUI_Library_windowed::show_artist_context_menu(const QPoint& p){
-
-	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));
-	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_artist()));
-	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_artist()));
-	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
-
-	this->_right_click_menu->exec(p);
-
-	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_artist()));
-	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_artist()));
-	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_artist()));
-	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
-}
-
-void GUI_Library_windowed::show_album_context_menu(const QPoint& p){
-	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_album()));
-	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_album()));
-	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_album()));
-	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
-
-	this->_right_click_menu->exec(p);
-
-	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_album()));
-	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_album()));
-	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_album()));
-	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next()));
-}
-
-void GUI_Library_windowed::show_track_context_menu(const QPoint& p){
-
-	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_tracks()));
-	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_tracks()));
-	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_tracks()));
-	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_tracks()));
-
-	this->_right_click_menu->exec(p);
-
-	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_tracks()));
-	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_tracks()));
-	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_tracks()));
-	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_tracks()));
-}
-
 
 
 void GUI_Library_windowed::change_skin(bool dark){
 }
 
 
-
-int GUI_Library_windowed::set_album_sizes(){
-
-    int album_col = -1;
-    const int tolerance = 25;
-    int target_width = this->ui->lv_album->width() - tolerance;
-
-    for(int i=0; i<_album_model->columnCount(); i++){
-        int col = _album_model->calc_shown_col(i);
-        int preferred_size = 0;
-
-        switch(col){
-            case COL_ALBUM_SAMPLER:
-                preferred_size = 20;
-                break;
-            case COL_ALBUM_YEAR:
-                preferred_size = 70;
-                break;
-
-            case COL_ALBUM_N_SONGS:
-                preferred_size = 80;
-                break;
-
-            case COL_ALBUM_DURATION:
-                preferred_size = 90;
-                break;
-
-            case COL_ALBUM_NAME:
-                album_col = i;
-                break;
-
-            default:
-                preferred_size = 0;
-                break;
-        }
-
-        target_width -= preferred_size;
-        this->ui->lv_album->setColumnWidth(i, preferred_size);
-    }
-
-    if(target_width < 100) target_width = 100;
-    this->ui->lv_album->setColumnWidth(album_col, target_width);
-    return 0;
-}
-
-int GUI_Library_windowed::set_artist_sizes(){
-
-    const int tolerance = 25;
-    int target_width = this->ui->lv_artist->width() - tolerance;
-
-    int artist_col = -1;
-
-    for(int i=0; i<_artist_model->columnCount(); i++){
-        int col = _artist_model->calc_shown_col(i);
-        int preferred_size = 0;
-
-        switch(col){
-            case COL_ARTIST_N_ALBUMS:
-                preferred_size = 20;
-                break;
-            case COL_ARTIST_TRACKS:
-                preferred_size = 80;
-                break;
-
-            case COL_ARTIST_NAME:
-                artist_col = i;
-                break;
-
-            default:
-                preferred_size = 0;
-                break;
-        }
-
-        target_width -= preferred_size;
-
-        this->ui->lv_artist->setColumnWidth(i, preferred_size);
-    }
-
-    if(target_width < 100) target_width = 100;
-    this->ui->lv_artist->setColumnWidth(artist_col, target_width);
-    return 0;
-}
-
-
-int GUI_Library_windowed::set_title_sizes(){
-
-    int altogether_width = 0;
-    int tolerance = 20;
-
-    bool artist_shown = false;
-    bool album_shown = false;
-
-    for(int i=0; i<_track_model->columnCount(); i++){
-        int col = _track_model->calc_shown_col(i);
-        int preferred_size = 0;
-
-        switch(col){
-            case COL_FILESIZE:
-                preferred_size = 75;
-                break;
-            case COL_TRACK_NUM:
-                preferred_size = 25;
-                break;
-            case COL_YEAR:
-                preferred_size = 50;
-                break;
-            case COL_LENGTH:
-                preferred_size = 50;
-                break;
-            case COL_BITRATE:
-                preferred_size = 75;
-                break;
-
-            case COL_ALBUM:
-                album_shown = true; break;
-            case COL_ARTIST:
-                artist_shown = true; break;
-
-            default:
-                preferred_size = 0;
-                break;
-        }
-
-        altogether_width += preferred_size;
-
-        this->ui->tb_title->setColumnWidth(i, preferred_size);
-    }
-
-    altogether_width += tolerance;
-
-    int target_width = this->ui->tb_title->width();
-
-    if(target_width < 600) {
-        target_width = 600;
-    }
-
-    target_width -= altogether_width;
-
-    for(int i=0; i<_track_model->columnCount(); i++){
-        int col = _track_model->calc_shown_col(i);
-        int preferred_size = 0;
-
-        switch(col){
-
-            case COL_TITLE:
-                if(artist_shown && album_shown)
-                    preferred_size = (0.4 * target_width);
-                else if(artist_shown || album_shown)
-                    preferred_size = (int) (0.6 * target_width);
-                else
-                    preferred_size = target_width;
-                break;
-
-            case COL_ALBUM:
-
-                if(artist_shown)
-                    preferred_size = (int) (0.3 * target_width);
-                else
-                    preferred_size = (int) (0.4 * target_width);
-
-                break;
-
-            case COL_ARTIST:
-                if(album_shown)
-                    preferred_size = (int) (0.3 * target_width);
-                else
-                    preferred_size = (int) (0.4 * target_width);
-
-                break;
-            default:
-                preferred_size = 0;
-                break;
-        }
-
-        altogether_width += preferred_size;
-
-        if(preferred_size > 0)
-            this->ui->tb_title->setColumnWidth(i, preferred_size);
-    }
-
-    if(altogether_width > this->ui->tb_title->width())
-        this->ui->tb_title->horizontalScrollBar()->show();
-
-
-    return 0;
-}
 
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
@@ -611,9 +214,6 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
     this->ui->lv_album->setColumnWidth(1, this->ui->lv_album->width() - 100);
 	this->ui->lv_album->setColumnWidth(2, 40);
 
-    set_title_sizes();
-    set_album_sizes();
-    set_artist_sizes();
 }
 
 
@@ -657,17 +257,9 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
     if(first_selected_md_row >= 0)
         this->ui->lv_album->scrollTo(_track_model->index(first_selected_md_row, 0), QTableView::PositionAtCenter);
 
-    create_artist_mime_data();
-    create_album_mime_data();
 
-    _mime_data_artist->setText("Artist");
-    _mime_data_album->setText("Album");
-
-    _mime_data_artist->setMetaData(v_metadata);
-    _mime_data_album->setMetaData(v_metadata);
-
-    this->ui->lv_artist->set_mime_data(_mime_data_artist);
-    this->ui->lv_album->set_mime_data(_mime_data_album);
+    this->ui->lv_artist->set_mimedata(v_metadata, "Artist");
+    this->ui->lv_album->set_mimedata(v_metadata, "Album");
 }
 
 
@@ -751,66 +343,20 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
         this->ui->lv_artist->scrollTo(_artist_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
 }
 
-QList<int> GUI_Library_windowed::calc_selections(int table){
-
-    QList<int> idx_list_int;
-    QModelIndexList idx_list;
-
-    switch(table){
-        case SEL_ARTISTS:
-
-            idx_list = this->ui->lv_artist->selectionModel()->selectedRows();
-
-            foreach(QModelIndex model_idx, idx_list){
-                idx_list_int.push_back(model_idx.row());
-            }
-
-            _artist_model->set_selected(idx_list_int);
-            break;
-
-
-        case SEL_ALBUMS:
-            idx_list = this->ui->lv_album->selectionModel()->selectedRows();
-
-            foreach(QModelIndex model_idx, idx_list){
-                idx_list_int.push_back(model_idx.row());
-            }
-
-            _album_model->set_selected(idx_list_int);
-            break;
-
-        case SEL_TRACKS:
-
-            idx_list = this->ui->tb_title->selectionModel()->selectedRows();
-
-            foreach(QModelIndex model_idx, idx_list){
-                idx_list_int.push_back(model_idx.row());
-            }
-
-            _track_model->set_selected(idx_list_int);
-            break;
-        default: break;
-    }
-
-    return idx_list_int;
-}
-
 
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
     QList<int> idx_list_int;
     if(idx.isValid())
-        idx_list_int = calc_selections(SEL_ARTISTS);
+        idx_list_int = ui->lv_artist->calc_selections();
     else
-        calc_selections(SEL_ARTISTS);
+    	ui->lv_artist->calc_selections();
 
     emit sig_artist_pressed(idx_list_int);
 }
 
-void GUI_Library_windowed::artist_released(const QModelIndex& idx){
-   _mime_data_artist_destroyable = true;
-}
+void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
 
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
@@ -818,17 +364,15 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
     QList<int> idx_list_int;
 
     if(idx.isValid())
-        idx_list_int = calc_selections(SEL_ALBUMS);
+        idx_list_int = ui->lv_album->calc_selections();
     else
-        calc_selections(SEL_ALBUMS);
+    	ui->lv_album->calc_selections();
 
     emit sig_album_pressed(idx_list_int);
 }
 
 
-void GUI_Library_windowed::album_released(const QModelIndex& idx){
-    _mime_data_album_destroyable = true;
-}
+void GUI_Library_windowed::album_released(const QModelIndex& idx){}
 
 
 
@@ -836,26 +380,20 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
     QList<int> idx_list_int;
     if(idx.isValid())
-        idx_list_int = calc_selections(SEL_TRACKS);
+        idx_list_int = ui->tb_title->calc_selections();
     else
-        calc_selections(SEL_TRACKS);
+    	ui->tb_title->calc_selections();
 
     emit sig_track_pressed(idx_list_int);
 }
 
-void GUI_Library_windowed::track_released(const QModelIndex&){
-    _mime_data_destroyable = true;
-}
+void GUI_Library_windowed::track_released(const QModelIndex&){}
 
 
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
-    _mime_data = new CustomMimeData();
-    _mime_data->setText("Tracks");
-    _mime_data->setMetaData(v_md);
-
-    this->ui->tb_title->set_mime_data(_mime_data);
+    this->ui->tb_title->set_mimedata(v_md, "Tracks");
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_md);
 }
@@ -947,78 +485,6 @@ void GUI_Library_windowed::id3_tags_changed(){
 	refresh();
 }
 
-template <typename T>
-void switch_sorters(T& srcdst, T src1, T src2){
-	if(srcdst == src1) srcdst = src2;
-	else srcdst = src1;
-}
-
-
-void GUI_Library_windowed::sort_albums_by_column(int col){
-
-    if(col == COL_ALBUM_NAME)
-		switch_sorters(_sort_albums, AlbumNameAsc, AlbumNameDesc);
-
-    else if(col == COL_ALBUM_YEAR)
-		switch_sorters(_sort_albums, AlbumYearAsc, AlbumYearDesc);
-
-    else if(col == COL_ALBUM_N_SONGS)
-        switch_sorters(_sort_albums, AlbumTracksAsc, AlbumTracksDesc);
-
-    else if(col == COL_ALBUM_DURATION)
-        switch_sorters(_sort_albums, AlbumDurationAsc, AlbumDurationDesc);
-
-    else return;
-
-
-
-	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
-}
-
-
-void GUI_Library_windowed::sort_artists_by_column(int col){
-
-    if(col == COL_ARTIST_NAME)
-		switch_sorters(_sort_artists, ArtistNameAsc, ArtistNameDesc);
-
-    else if(col == COL_ARTIST_TRACKS)
-		switch_sorters(_sort_artists, ArtistTrackcountAsc, ArtistTrackcountDesc);
-
-    else return;
-
-	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
-}
-
-void GUI_Library_windowed::sort_tracks_by_column(int col){
-
-		if(col == COL_TRACK_NUM)
-			switch_sorters(_sort_tracks, Sort::TrackNumAsc, Sort::TrackNumDesc);
-
-		else if(col == COL_TITLE)
-			switch_sorters(_sort_tracks, TrackTitleAsc, TrackTitleDesc);
-
-		else if(col == COL_ALBUM)
-			switch_sorters(_sort_tracks, TrackAlbumAsc, TrackAlbumDesc);
-
-		else if(col == COL_ARTIST)
-			switch_sorters(_sort_tracks, TrackArtistAsc, TrackArtistDesc);
-
-		else if(col == COL_YEAR)
-			switch_sorters(_sort_tracks, TrackYearAsc, TrackYearDesc);
-
-		else if(col == COL_LENGTH)
-			switch_sorters(_sort_tracks, TrackLenghtAsc, TrackLengthDesc);
-
-		else if(col == COL_BITRATE)
-			switch_sorters(_sort_tracks, TrackBitrateAsc, TrackBitrateDesc);
-
-        else if(col == COL_FILESIZE)
-            switch_sorters(_sort_tracks, TrackSizeAsc, TrackSizeDesc);
-
-        else return;
-
-	emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
-}
 
 
 void GUI_Library_windowed::reloading_library(QString& str){
@@ -1207,39 +673,4 @@ void GUI_Library_windowed::import_result(bool success){
 
 	//QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
-}
-
-void GUI_Library_windowed::forbid_mime_data_destroyable(){
-    _mime_data_destroyable = false;
-}
-
-
-void GUI_Library_windowed::forbid_album_mime_data_destroyable(){
-    _mime_data_album_destroyable = false;
-}
-
-
-void GUI_Library_windowed::forbid_artist_mime_data_destroyable(){
-    _mime_data_artist_destroyable = false;
-}
-
-void GUI_Library_windowed::create_mime_data(){
-    if(_mime_data_destroyable) delete _mime_data;
-    _mime_data = new CustomMimeData();
-    connect(this->_mime_data, SIGNAL(destroyed()), this, SLOT(forbid_mime_data_destroyable()));
-    _mime_data_destroyable = true;
-}
-
-void GUI_Library_windowed::create_album_mime_data(){
-    if(_mime_data_album_destroyable) delete _mime_data_album;
-    _mime_data_album = new CustomMimeData();
-    connect(this->_mime_data_album, SIGNAL(destroyed()), this, SLOT(forbid_album_mime_data_destroyable()));
-    _mime_data_album_destroyable = true;
-}
-
-void GUI_Library_windowed::create_artist_mime_data(){
-    if(_mime_data_artist_destroyable) delete _mime_data_artist;
-    _mime_data_artist = new CustomMimeData();
-    connect(this->_mime_data_artist, SIGNAL(destroyed()), this, SLOT(forbid_artist_mime_data_destroyable()));
-    _mime_data_artist_destroyable = true;
 }

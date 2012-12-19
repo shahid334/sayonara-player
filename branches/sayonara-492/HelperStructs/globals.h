@@ -76,11 +76,37 @@
 
 namespace Sort{
 
-	enum ArtistSort{ ArtistNameAsc=0, ArtistNameDesc, ArtistTrackcountAsc, ArtistTrackcountDesc};
-
-    enum AlbumSort{AlbumNameAsc=0, AlbumNameDesc, AlbumYearAsc, AlbumYearDesc, AlbumTracksAsc, AlbumTracksDesc, AlbumDurationAsc, AlbumDurationDesc};
-
-    enum TrackSort{TrackNumAsc=0, TrackNumDesc,TrackTitleAsc, TrackTitleDesc, TrackAlbumAsc, TrackAlbumDesc, TrackArtistAsc, TrackArtistDesc, TrackYearAsc, TrackYearDesc, TrackLenghtAsc, TrackLengthDesc, TrackBitrateAsc, TrackBitrateDesc, TrackSizeAsc, TrackSizeDesc};
+	enum SortOrder{
+		NoSorting=0,
+		ArtistNameAsc,
+		ArtistNameDesc,
+		ArtistTrackcountAsc,
+		ArtistTrackcountDesc,
+		AlbumNameAsc,
+		AlbumNameDesc,
+		AlbumYearAsc,
+		AlbumYearDesc,
+		AlbumTracksAsc,
+		AlbumTracksDesc,
+		AlbumDurationAsc,
+		AlbumDurationDesc,
+		TrackNumAsc,
+		TrackNumDesc,
+		TrackTitleAsc,
+		TrackTitleDesc,
+		TrackAlbumAsc,
+		TrackAlbumDesc,
+		TrackArtistAsc,
+		TrackArtistDesc,
+		TrackYearAsc,
+		TrackYearDesc,
+		TrackLenghtAsc,
+		TrackLengthDesc,
+		TrackBitrateAsc,
+		TrackBitrateDesc,
+		TrackSizeAsc,
+		TrackSizeDesc
+	};
 
 };
 

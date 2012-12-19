@@ -35,9 +35,19 @@
 #include <QEvent>
 #include <QPoint>
 #include <QKeyEvent>
+#include <QList>
+#include <QString>
+#include <QMenu>
+#include <QAction>
 
 
+
+#include "GUI/MyColumnHeader.h"
+#include "GUI/library/models/LibraryItemModel.h"
 #include "HelperStructs/CustomMimeData.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/globals.h"
+
 
 
 class MyTableView : public QTableView{
@@ -45,17 +55,45 @@ class MyTableView : public QTableView{
 	Q_OBJECT
 
 	signals:
-        void header_menu_emitted(const QPoint&);
-		void context_menu_emitted(const QPoint&);
-		void sig_middle_button_clicked(const QPoint&);
+
+		void sig_context_menu_emitted(const QPoint&);
+        void sig_middle_button_clicked(const QPoint&);
         void sig_all_selected();
+        void sig_info_clicked();
+        void sig_edit_clicked();
+        void sig_delete_clicked();
+        void sig_play_next_clicked();
+
+        void sig_sortorder_changed(Sort::SortOrder);
+
+    private slots:
+        void rc_header_menu_changed(bool b=true);
+        void rc_menu_show(const QPoint&);
+        void sort_by_column(int);
+        void forbid_mimedata_destroyable();
+
+        void edit_clicked();
+        void info_clicked();
+        void delete_clicked();
+        void play_next_clicked();
+
+
+	private:
+        void rc_menu_init();
+
+        void rc_header_menu_init(QStringList& lst);
+        void set_col_sizes();
 
 
 	public:
 		MyTableView(QWidget* parent=0);
 		virtual ~MyTableView();
 
-		void set_mime_data(CustomMimeData* data);
+		void set_mimedata(const MetaDataList& v_md, QString text);
+		void set_table_headers(QList<ColumnHeader>& headers);
+		void setModel(QAbstractItemModel * model);
+		QList<int> calc_selections();
+
 
 
 	protected:
@@ -66,10 +104,29 @@ class MyTableView : public QTableView{
 
 
 	private:
-		QWidget* 	_parent;
-		bool		_drag;
-		QPoint		_drag_pos;
-		QDrag*		_qDrag;
+		QWidget* 			_parent;
+		bool				_drag;
+		QPoint				_drag_pos;
+		QDrag*				_qDrag;
+		QList<ColumnHeader> _table_headers;
+
+
+		QMenu*				_rc_header_menu;
+		QMenu* 				_right_click_menu;
+		QAction* 			_info_action;
+		QAction* 			_edit_action;
+		QAction* 			_delete_action;
+		QAction*			_play_next_action;
+
+
+	    QList<QAction*> 	_header_rc_actions;
+
+		LibraryItemModel* 	_model;
+		Sort::SortOrder		_sort_order;
+		CustomMimeData*		_mimedata;
+		bool				_mimedata_destroyable;
+
+
 };
 
 #endif /* MYLISTVIEW_H_ */

@@ -94,7 +94,7 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 }
 
 
-QString CDatabaseConnector::append_track_sort_string(QString querytext, TrackSort sort){
+QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrder sort){
 
 
 	if(sort == TrackArtistAsc) querytext += QString(" ORDER BY artistName ASC, albumName ASC, trackNum;");
@@ -188,7 +188,7 @@ MetaData CDatabaseConnector::getTrackById(int id){
 }
 
 
-int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, TrackSort sort) {
+int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOrder sort) {
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -201,13 +201,13 @@ int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, TrackS
     return 0;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort){
 	QList<int> list;
 	list << album;
 	getAllTracksByAlbum(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort){
 	DB_TRY_OPEN(m_database);
 
 	QSqlQuery q (this -> m_database);
@@ -296,13 +296,13 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, SortOrder sort){
 	QList<int> list;
 	list << artist;
 	getAllTracksByArtist(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, TrackSort sort){
+void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, SortOrder sort){
 	DB_TRY_OPEN(m_database);
 
 	MetaData data;
@@ -386,7 +386,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 }
 
 
-void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, TrackSort sort){
+void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sort){
 
 	DB_TRY_OPEN(m_database);
     DB_RETURN_NOT_OPEN_VOID(m_database);

@@ -23,11 +23,11 @@
 #include "HelperStructs/Helper.h"
 #include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
-#include "GUI/library/GUIImportFolder.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "application.h"
+#include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 
 #include <QDebug>
 #include <QProgressDialog>
@@ -324,7 +324,7 @@ void CLibraryBase::emit_stuff(){
 
 
 
-void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_so, TrackSort track_so){
+void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
 
     // artist sort order has changed
 	if(artist_so != _artist_sortorder){

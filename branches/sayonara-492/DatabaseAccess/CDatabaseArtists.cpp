@@ -76,7 +76,7 @@ bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
 	return true;
 }
 
-QString _create_order_string(ArtistSort sort){
+static QString _create_order_string(SortOrder sort){
 
 	switch(sort){
 		case ArtistNameAsc:
@@ -163,7 +163,7 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
     return artistID;
 }
 
-void CDatabaseConnector::getAllArtists(ArtistList& result, ArtistSort sortorder){
+void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -180,7 +180,7 @@ void CDatabaseConnector::getAllArtists(ArtistList& result, ArtistSort sortorder)
 
 }
 
-void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, ArtistSort sortorder){
+void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -195,7 +195,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, Art
 	_db_fetch_artists(q, result);
 }
 
-void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, ArtistSort sortorder){
+void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder){
 
 	DB_TRY_OPEN(m_database);
 

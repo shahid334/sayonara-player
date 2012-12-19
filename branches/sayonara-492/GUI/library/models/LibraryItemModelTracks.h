@@ -29,38 +29,28 @@
 #ifndef LIBRARYITEMMODELTRACKS_H_
 #define LIBRARYITEMMODELTRACKS_H_
 
-#ifndef COL_MACROS
-    #define COL_MACROS
-    #define COL_TRACK_NUM 0
-    #define COL_TITLE 1
-    #define COL_ARTIST 2
-    #define COL_ALBUM 3
-    #define COL_YEAR 4
-    #define COL_LENGTH 5
-    #define COL_BITRATE 6
-    #define COL_FILESIZE 7
-    #define N_COLS 8
-#endif
 
 #include <QObject>
 #include <QStringList>
-#include <QAbstractTableModel>
+#include <QList>
 
 #include "HelperStructs/MetaData.h"
+#include "GUI/library/models/LibraryItemModel.h"
+#include "GUI/MyColumnHeader.h"
 
 
 
-class LibraryItemModelTracks : public QAbstractTableModel {
+class LibraryItemModelTracks : public LibraryItemModel {
 
 Q_OBJECT
 
 public:
-	LibraryItemModelTracks(QObject* parent=0);
+	LibraryItemModelTracks(QList<ColumnHeader>& headers);
 
 	virtual ~LibraryItemModelTracks();
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
 	QVariant data(const QModelIndex &index, int role) const;
 
 	Qt::ItemFlags flags(const QModelIndex &index) const;
@@ -70,24 +60,9 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
-    bool insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
-    bool removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
-
-	QVariant headerData ( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
-
-    bool is_selected(int row);
-    void set_selected(QList<int>& rows);
-
-    int calc_shown_col(int col) const;
-    bool is_col_shown(int col) const;
-    QStringList get_header_names();
-
 
 private:
 	QList<MetaData>			_tracklist;
-	QStringList				_headerdata;
-    QList<int>              _selected_rows;
-    bool                     _cols_active[N_COLS];
 };
 
 #endif /* LIBRARYITEMMODELTRACKS_H_ */

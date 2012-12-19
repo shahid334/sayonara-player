@@ -26,17 +26,19 @@
  *      Author: luke
  */
 
-#include "GUI/library/LibraryItemDelegateArtists.h"
-#include <HelperStructs/MetaData.h>
+#include "GUI/library/delegates/LibraryItemDelegateArtists.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
+
 #include <QObject>
 #include <QLabel>
 #include <QDebug>
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
-#include <HelperStructs/Helper.h>
 
-LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModelArtists* model, QTableView* parent) {
+
+LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent) {
 	this->_parent = parent;
 
 

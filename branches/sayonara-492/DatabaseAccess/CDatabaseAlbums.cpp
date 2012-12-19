@@ -80,7 +80,7 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 		return true;
 }
 
-QString _create_order_string(AlbumSort sortorder){
+static QString _create_order_string(SortOrder sortorder){
 
 	switch(sortorder){
 
@@ -186,7 +186,7 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 	return album;
 }
 
-void CDatabaseConnector::getAllAlbums(AlbumList& result, AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
 
 	DB_TRY_OPEN(m_database);
 
@@ -205,7 +205,7 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, AlbumSort sortorder){
 }
 
 
-void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder){
 	DB_TRY_OPEN(m_database);
 
     QStringList lst_artist_names;
@@ -295,14 +295,14 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, SortOrder sortorder){
 
 	QList<int> list;
 	list << artist;
 	getAllAlbumsByArtist(list, result, filter, sortorder);
 }
 
-void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, AlbumSort sortorder){
+void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder){
 
 	DB_TRY_OPEN(m_database);
 

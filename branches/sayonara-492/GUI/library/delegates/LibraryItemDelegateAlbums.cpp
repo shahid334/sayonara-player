@@ -26,10 +26,10 @@
  *      Author: luke
  */
 
-#include "GUI/library/LibraryItemDelegateAlbums.h"
+#include "GUI/library/delegates/LibraryItemDelegateAlbums.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 
-
-#include <HelperStructs/MetaData.h>
 #include <QObject>
 #include <QLabel>
 #include <QDebug>
@@ -38,10 +38,10 @@
 #include <QPainter>
 #include <QTableView>
 #include <QStyleOptionViewItem>
-#include "HelperStructs/Helper.h"
 
 
-LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModelAlbums* model, QTableView* parent) {
+
+LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent) {
 	this->_parent = parent;
 
         QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";

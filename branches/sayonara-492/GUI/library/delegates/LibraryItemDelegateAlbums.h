@@ -1,4 +1,4 @@
-/* LibraryItemDelegateArtists.h */
+/* LibraryItemDelegateAlbums.h */
 
 /* Copyright (C) 2011  Lucio Carreras
  *
@@ -20,52 +20,53 @@
 
 
 /*
- * LibraryItemDelegateArtists.h
+ * LibraryItemDelegateAlbums.h
  *
- *  Created on: Jun 3, 2011
+ *  Created on: Apr 28, 2011
  *      Author: luke
  */
 
-#ifndef LIBRARYITEMDELEGATEARTISTS_H_
-#define LIBRARYITEMDELEGATEARTISTS_H_
+#ifndef LIBRARYITEMDELEGATEALBUMS_H_
+#define LIBRARYITEMDELEGATEALBUMS_H_
 #include <QObject>
 #include <QLabel>
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPen>
 
-#include "GUI/library/LibraryItemModelArtists.h"
+#include "GUI/library/models/LibraryItemModelAlbums.h"
 
-
-class LibraryItemDelegateArtists : public QItemDelegate {
+class LibraryItemDelegateAlbums : public QItemDelegate {
 	Q_OBJECT
 public:
-    LibraryItemDelegateArtists(LibraryItemModelArtists* model, QTableView* parent=0);
-	virtual ~LibraryItemDelegateArtists();
+    LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent=0);
+	virtual ~LibraryItemDelegateAlbums();
 
 public:
 
 
-	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 
-	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+		QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-	void setEditorData(QWidget *editor, const QModelIndex &index) const;
-	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
+		void setEditorData(QWidget *editor, const QModelIndex &index) const;
+		void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
-    void set_skin(bool dark);
+        void set_skin(bool dark);
 
 
 private:
-
 		QTableView* _parent;
+
         QPixmap _icon_single_album;
         QPixmap _icon_multi_album;
-        QPen _pen;
 
-        LibraryItemModelArtists* _model;
+        QPen _pen;
+        LibraryItemModel* _model;
+
+
 };
 
-#endif /* LIBRARYITEMDELEGATEARTISTS_H_ */
+#endif /* LIBRARYITEMDELEGATEALBUMS_H_ */
