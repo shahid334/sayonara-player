@@ -145,6 +145,13 @@ void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
 	else this->showNormal();
 }
 
+void GUI_SimplePlayer::sl_show_only_tracks(bool b){
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+	settings->setLibShowOnlyTracks(b);
+
+	emit sig_show_only_tracks(b);
+
+}
 
 /** VIEW END **/
 

@@ -354,6 +354,21 @@ QString Helper::calc_file_extension(QString filename){
 
 }
 
+void Helper::remove_files_in_directory(QString dir_name, QStringList filters){
+	if(filters.size() == 0) filters << "*";
+
+	QDir dir(dir_name);
+	dir.setFilter(QDir::Files);
+	dir.setNameFilters(filters);
+	QStringList file_list = dir.entryList();
+
+	foreach(QString filename, file_list){
+
+		QFile file(dir.absoluteFilePath(filename));
+		file.remove();
+	}
+}
+
 bool Helper::checkTrack(const MetaData& md){
 
     if( md.filepath.startsWith("http", Qt::CaseInsensitive)) return true;

@@ -948,6 +948,7 @@
     </property>
     <addaction name="action_viewLibrary"/>
     <addaction name="action_smallPlaylistItems"/>
+    <addaction name="action_showOnlyTracks"/>
     <addaction name="separator"/>
     <addaction name="action_ViewEqualizer"/>
     <addaction name="action_ViewStream"/>
@@ -1153,6 +1154,14 @@
    </property>
    <property name="text">
     <string>Small Playlist Items</string>
+   </property>
+  </action>
+  <action name="action_showOnlyTracks">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Only tracks in library</string>
    </property>
   </action>
   <action name="actionSound_Engine">

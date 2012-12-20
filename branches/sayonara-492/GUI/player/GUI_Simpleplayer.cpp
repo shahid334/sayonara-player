@@ -105,6 +105,9 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	bool showSmallPlaylistItems = settings->getShowSmallPlaylist();
 	ui->action_smallPlaylistItems->setChecked(showSmallPlaylistItems);
 
+	bool showOnlyTracks = settings->getLibShowOnlyTracks();
+	ui->action_showOnlyTracks->setChecked(showOnlyTracks);
+
 	QSizePolicy p = ui->library_widget->sizePolicy();
 	m_library_stretch_factor = p.horizontalStretch();
 
@@ -226,10 +229,13 @@ void GUI_SimplePlayer::setupConnections(){
 
 	connect(ui->action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
 			SLOT(small_playlist_items_toggled(bool)));
+	connect(ui->action_showOnlyTracks, SIGNAL(toggled(bool)), this,
+			SLOT(sl_show_only_tracks(bool)));
 	connect(ui->action_Fullscreen, SIGNAL(toggled(bool)), this,
 			SLOT(show_fullscreen_toggled(bool)));
 
-	// preferences
+
+	// preferencesF
 	connect(ui->action_lastFM, SIGNAL(triggered(bool)), this,
 			SLOT(lastFMClicked(bool)));
 	connect(ui->action_setLibPath, SIGNAL(triggered(bool)), this,

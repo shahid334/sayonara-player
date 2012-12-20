@@ -203,6 +203,10 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
     connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
+    bool show_only_tracks = settings->getLibShowOnlyTracks();
+    this->ui->lv_artist->setVisible(!show_only_tracks);
+    this->ui->lv_album->setVisible(!show_only_tracks);
+
 
 	int style = CSettingsStorage::getInstance()->getPlayerStyle();
 	bool dark = (style == 1);
@@ -222,6 +226,11 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 	delete _lib_info_dialog;
 }
 
+void GUI_Library_windowed::show_only_tracks(bool b){
+
+	this->ui->lv_artist->setVisible(!b);
+	this->ui->lv_album->setVisible(!b);
+}
 
 
 void GUI_Library_windowed::change_skin(bool dark){

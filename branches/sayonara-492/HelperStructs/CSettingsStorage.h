@@ -41,6 +41,7 @@
 #define SET_LIB_SHOWN_COLS_TITLE "lib_shown_cols_title"
 #define SET_LIB_SHOWN_COLS_ARTIST "lib_shown_cols_artist"
 #define SET_LIB_SHOWN_COLS_ALBUM "lib_shown_cols_album"
+#define SET_LIB_SHOWN_ONLY_TRACKS "lib_shown_tracks"
 
 #define SET_PLAYER_STYLE "player_style"
 #define SET_PLAYER_SIZE "player_size"
@@ -150,6 +151,7 @@ private:
     QStringList m_lib_shown_cols_title;
     QStringList m_lib_shown_cols_artist;
     QStringList m_lib_shown_cols_album;
+    bool m_show_only_tracks;
 
     // playlist
     QStringList m_playlist;
@@ -274,6 +276,9 @@ public:
 
     void setLibShownColsArtist(QStringList lst);
     QStringList getLibShownColsArtist();
+
+    void setLibShowOnlyTracks(bool);
+    bool getLibShowOnlyTracks();
 
 	void setShownPlugin(int);
 	int getShownPlugin();

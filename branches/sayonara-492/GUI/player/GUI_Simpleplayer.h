@@ -119,6 +119,7 @@ signals:
     void libpath_changed(QString);
     void setupLastFM();
     void sig_skin_changed(bool);
+    void sig_show_only_tracks(bool);
 
     /* Covers */
     void sig_want_cover(const MetaData &);
@@ -166,6 +167,7 @@ private slots:
     void only_one_instance_toggled(bool);
     void sl_action_streamripper_toggled(bool);
     void sl_action_socket_connection_triggered(bool);
+    void sl_show_only_tracks(bool);
 
     void about(bool b=false);
 

@@ -194,6 +194,8 @@ void Application::init_connections(){
    CONNECT (player, reloadLibrary(), 						library,            reloadLibrary());
    CONNECT (player, importDirectory(QString),				library,            importDirectory(QString));
    CONNECT (player, libpath_changed(QString),               library, 			setLibraryPath(QString));
+   CONNECT (player, sig_show_only_tracks(bool),				ui_library,			show_only_tracks(bool));
+
    CONNECT (player, fileSelected(QStringList &),			playlist, 			psl_createPlaylist(QStringList&));
    CONNECT (player, play(),                                 playlist,			psl_play());
    CONNECT (player, stop(),                                 playlist,			psl_stop());

@@ -96,6 +96,8 @@ public:
         QString             _target_filename;
 
 
+        void cleanup();
+        void remove_old_files();
         void update_model();
         QString copy_and_save(QString src_file);
         void delete_token();

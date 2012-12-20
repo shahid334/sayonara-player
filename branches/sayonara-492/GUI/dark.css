@@ -1,7 +1,19 @@
 QMainWindow, QWidget {
+	border: none;
 	
 	background: #383838;
 	color: #D8D8D8;
+}
+
+
+QFrame {
+	border-bottom: 1px groove qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 transparent, stop: 0.3 #242424, stop: 0.7 #242424, stop: 1.0 transparent);
+	background: transparent;
+}
+
+QLabel, QScrollArea{
+	border: none;
+	background: transparent;
 }
 
 QListView, QTableView{
@@ -15,44 +27,43 @@ QListView, QTableView{
 
 QScrollBar::vertical {
 	border: 0px solid #383838;
-	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2F2F2F, stop: 0.2 #323232, stop: 0.8 #323232, stop:1 #2F2F2F);
+	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #262626, stop: 0.2 #2a2a2a, stop: 0.8 #262626, stop:1 #2a2a2a);
 	width: 20px;
-	margin: 22px 0px 22px 0px;
-	border-left: 5px solid #383838;
+	margin: 22px 0px 22px 5px;
  }
 
 QScrollBar::handle:vertical {
     background: #404040;
     min-height: 20px;
-	   border: 2px solid #2C2C2C;
-     border-radius: 4px;
+    border: 1px solid #2C2C2C;
+    border-radius: 4px;
  }
 
 QScrollBar::add-line:vertical {
     border: 1px solid #383838;
-     background: #383838;
-     height: 20px;
+    background: #383838;
+    height: 20px;
     subcontrol-position: bottom;
-     subcontrol-origin: margin;
-     padding: 2px;
-     border-left: 5px solid #383838;
-     image: url(/usr/share/sayonara//arrow_down.png);
+    subcontrol-origin: margin;
+    padding: 2px;
+    border-left: 5px solid #383838;
+    image: url(/usr/share/sayonara//arrow_down.png);
  }
 
 QScrollBar::sub-line:vertical {
     border: 1px solid #383838;
-     background: #383838;
-     height: 20px;
-	   subcontrol-position: top;
+    background: #383838;
+    height: 20px;
+    subcontrol-position: top;
     subcontrol-origin: margin;
-     padding: 2px;
-     border-left: 5px solid #383838;
-     image: url(/usr/share/sayonara//arrow_up.png);
+    padding: 2px;
+    border-left: 5px solid #383838;
+    image: url(/usr/share/sayonara//arrow_up.png);
  }
 
 QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
     border: 0px solid #3C3C3C;
-     width: 3px;
+    width: 3px;
     height: 0px;
 }
 
@@ -62,40 +73,41 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 
 
 QScrollBar::horizontal {
-border: 0px solid #383838;
- background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #2F2F2F, stop: 0.2 #323232, stop: 0.8 #323232, stop:1 #2F2F2F);
- height: 20px;
-margin: 0 22px 0 22px;
-border-top: 5px solid #383838;
+/*    border: 0px solid #282828;*/
+    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #262626, stop: 0.3 #2a2a2a, stop: 0.7 #2a2a2a, stop:1 #262626);
+    height: 20px;
+    margin: 5px 22px 0 22px;
+    
+    border-top: 0px solid #383838;
  }
 
 QScrollBar::handle:horizontal {
     background: #404040;
     min-width: 20px;
-	   border: 2px solid #2C2C2C;
-     border-radius: 4px;
+    border: 1px solid #2C2C2C;
+    border-radius: 4px;
  }
 
 QScrollBar::add-line:horizontal {
     border: 1px solid #383838;
-     background: #383838;
-     width: 20px;
+    background: #383838;
+    width: 20px;
     subcontrol-position: right;
-     subcontrol-origin: margin;
-     padding: 2px;
-     border-top: 5px solid #383838;
-     image: url(/usr/share/sayonara//arrow_right.png);
+    subcontrol-origin: margin;
+    padding: 2px;
+    border-top: 5px solid #383838;
+    image: url(/usr/share/sayonara//arrow_right.png);
  }
 
 QScrollBar::sub-line:horizontal {
     border: 1px solid #383838;
-     background: #383838;
-     width: 20px;
-	   subcontrol-position: left;
+    background: #383838;
+    width: 20px;
+    subcontrol-position: left;
     subcontrol-origin: margin;
-     padding: 2px;
-     border-top: 5px solid #383838;
-     image: url(/usr/share/sayonara//arrow_left.png);
+    padding: 2px;
+    border-top: 5px solid #383838;
+    image: url(/usr/share/sayonara//arrow_left.png);
  }
 
 QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
@@ -384,33 +396,33 @@ QSlider {
 
 
 
-
 QSlider::handle:vertical {
      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6B6B6B, stop: 0.4 #555555);
      height: 10px;
-     margin-left: -5px;
-     margin-right: -5px;
+     margin-left: -4px;
+     margin-right: -4px;
      border: 1px solid #2C2C2C;
      border-radius: 4px;
- }
+}
 
 QSlider::handle:vertical:disabled {
     background: transparent;
     height: 0px;
-	 border-width: 0px;
+    border-width: 0px;
 }
 
 QSlider::groove:vertical {
      background: #383838;
     width: 6px;
-     left: 10px;
- right: 10px;
+/*     left: 10px;*/
+/* right: 10px;*/
  }
 
 QSlider::add-page:vertical {
    /* background-color: #e8841a;*/
-background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #E88417, stop: 0.3 #C46600, stop: 0.7 #C46600, stop:1 #E88417);
+background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #E88417, stop: 0.3 #CF6a05, stop: 0.7 #CF6a05, stop:1 #E88417);
      border-radius: 2px;
+
 }
 
 QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {
@@ -422,8 +434,8 @@ QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {
 QSlider::handle:horizontal {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6B6B6B, stop: 0.4 #555555);
     width: 10px;
-    margin-top: -4px;
-    margin-bottom: -4px;
+    margin-top: -3px;
+    margin-bottom: -3px;
     border: 1px solid #2c2c2c;
     border-radius: 4px;
  }
@@ -440,11 +452,12 @@ QSlider::handle:horizontal:disabled {
 
 
 QSlider::groove:horizontal {
-     background: #383838;
+    background: #383838;
+    min-height: 6px;
     height: 6px;
-     top: 10px;
- bottom: 10px;
- }
+    top: 10px;
+    bottom: 10px;
+}
 
 QSlider::add-page:horizontal {
    background: #2B2B2B;
