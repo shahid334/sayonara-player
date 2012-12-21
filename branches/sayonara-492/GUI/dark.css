@@ -394,13 +394,19 @@ QSlider {
     background: #383838;
 }
 
+QSlider::groove:vertical {
+     background: #383838;
+     width: 18px;
+     padding-left: -6px;
+     padding-right: -6px;
+}
+
 
 
 QSlider::handle:vertical {
-     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6B6B6B, stop: 0.4 #555555);
+     subcontrol-origin: margin;
+     background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #7F7F7F, stop: 0.4 #555555, stop: 0.8 #555555, stop: 1.0 #6a6a6a);
      height: 10px;
-     margin-left: -4px;
-     margin-right: -4px;
      border: 1px solid #2C2C2C;
      border-radius: 4px;
 }
@@ -410,13 +416,6 @@ QSlider::handle:vertical:disabled {
     height: 0px;
     border-width: 0px;
 }
-
-QSlider::groove:vertical {
-     background: #383838;
-    width: 6px;
-/*     left: 10px;*/
-/* right: 10px;*/
- }
 
 QSlider::add-page:vertical {
    /* background-color: #e8841a;*/
@@ -432,12 +431,10 @@ QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {
 
 
 QSlider::handle:horizontal {
-    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #6B6B6B, stop: 0.4 #555555);
+background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #7F7F7F, stop: 0.4 #555555, stop: 0.8 #555555, stop: 1.0 #6a6a6a);
     width: 10px;
-    margin-top: -3px;
-    margin-bottom: -3px;
     border: 1px solid #2c2c2c;
-    border-radius: 4px;
+    border-radius: 3px;
  }
 
 QSlider::handle:horizontal:disabled {
@@ -454,7 +451,9 @@ QSlider::handle:horizontal:disabled {
 QSlider::groove:horizontal {
     background: #383838;
     min-height: 6px;
-    height: 6px;
+    height: 16px;
+    padding-top: -5px;
+    padding-bottom: -5px;
     top: 10px;
     bottom: 10px;
 }

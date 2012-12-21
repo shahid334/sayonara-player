@@ -129,6 +129,7 @@ int main(int argc, char *argv[]){
 		if(!application.is_initialized()) return 0;
 		application.setFiles2Play(params);
 
+		qDebug() << "Start Loop";
         app.exec();
 
         return 0;

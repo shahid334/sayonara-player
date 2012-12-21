@@ -106,8 +106,9 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
         listen->psl_sr_set_active(set->getStreamRipper());
     }
 
-    init_connections();
+    //init_connections();
 
+    qDebug() << "setting up player";
     player->setWindowTitle("Sayonara " + version);
     player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
@@ -125,6 +126,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     ui_library->resize(player->getParentOfLibrary()->size());
     ui_playlist->resize(player->getParentOfPlaylist()->size());
 
+    qDebug() << "Set up engine...";
     vector<EQ_Setting> vec_eq_setting;
     set->getEqualizerSettings(vec_eq_setting);
 
@@ -133,8 +135,10 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     listen->setVolume(vol);
     listen->load_equalizer(vec_eq_setting);
 
+    qDebug() << "Set up library...";
     library->loadDataFromDb();
 
+    qDebug() << "Set up lastfm...";
     QString user, password;
     if(set->getLastFMActive()){
         set->getLastFMNameAndPW(user, password);
@@ -143,9 +147,10 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 
     bool load_old_playlist = (n_files == 0);
 
-    playlist->ui_loaded(load_old_playlist);
+    qDebug() << "Set up post gui operations...";
+   /* playlist->ui_loaded(load_old_playlist);
     playlists->ui_loaded();
-    player->ui_loaded();
+    player->ui_loaded();*/
 
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
@@ -344,6 +349,8 @@ void Application::init_connections(){
 
 		   remote_socket->start();
 	   }
+
+	   qDebug() << "connections done";
 }
 
 

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>325</width>
+    <width>292</width>
     <height>152</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>325</width>
+    <width>292</width>
     <height>152</height>
    </size>
   </property>
@@ -50,9 +50,12 @@
      <height>152</height>
     </size>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0,0,0,0,0,0,0,0,0,0" columnminimumwidth="0,0,0,0,0,0,0,0,0,0,0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMaximumSize</enum>
+    </property>
     <property name="leftMargin">
-     <number>0</number>
+     <number>2</number>
     </property>
     <property name="topMargin">
      <number>8</number>
@@ -90,7 +93,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -110,7 +113,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -147,7 +150,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -189,7 +192,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -209,7 +212,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -251,7 +254,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -276,7 +279,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -301,7 +304,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -326,7 +329,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -346,7 +349,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -388,7 +391,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -408,7 +411,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -445,7 +448,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -487,14 +490,14 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
     <item row="6" column="1">
      <widget class="QSlider" name="sli_0">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -507,7 +510,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -549,7 +552,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -569,7 +572,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -611,7 +614,7 @@
        <string>0</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -710,7 +713,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -759,7 +762,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
+        <width>24</width>
         <height>5000</height>
        </size>
       </property>
@@ -798,7 +801,7 @@
        <string>29</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -820,7 +823,7 @@
        <string>59</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -842,7 +845,7 @@
        <string>119</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -864,7 +867,7 @@
        <string>237</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -886,7 +889,7 @@
        <string>474</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -908,7 +911,7 @@
        <string>947</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -930,7 +933,7 @@
        <string>1.9k</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -952,7 +955,7 @@
        <string>3.8k</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -974,7 +977,7 @@
        <string>7.5k</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -996,7 +999,7 @@
        <string>15k</string>
       </property>
       <property name="alignment">
-       <set>Qt::AlignCenter</set>
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
