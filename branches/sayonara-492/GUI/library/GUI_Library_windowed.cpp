@@ -78,7 +78,7 @@
 
 using namespace std;
 
-GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dialog) : QWidget(parent) {
+GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
@@ -89,7 +89,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
 	_sort_artists = ArtistNameAsc;
 	_sort_tracks = TrackArtistAsc;
 
-	_info_dialog = dialog;
+
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
 
@@ -98,22 +98,22 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dial
     QList<ColumnHeader> artist_columns;
 
     ColumnHeader t_h0("#", true, Sort::TrackNumAsc, Sort::TrackNumDesc, 25);
-    ColumnHeader t_h1("Title", false, Sort::TrackTitleAsc, Sort::TrackTitleDesc, 0, 0.4);
-    ColumnHeader t_h2("Artist", true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0, 0.3);
-    ColumnHeader t_h3("Album", true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0, 0.3);
+    ColumnHeader t_h1("Title", false, Sort::TrackTitleAsc, Sort::TrackTitleDesc, 0.4, 200);
+    ColumnHeader t_h2("Artist", true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0.3, 160);
+    ColumnHeader t_h3("Album", true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0.3, 160);
     ColumnHeader t_h4("Year", true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
     ColumnHeader t_h5("Length", true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
     ColumnHeader t_h6("Bitrate", true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
     ColumnHeader t_h7("Filesize", true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
 
     ColumnHeader al_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
-    ColumnHeader al_h1("Album", false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 0, 1.0);
+    ColumnHeader al_h1("Album", false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 1.0, 160);
     ColumnHeader al_h2("Duration", true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
     ColumnHeader al_h3("#Tracks", true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
     ColumnHeader al_h4("Year", true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 70);
 
     ColumnHeader ar_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
-    ColumnHeader ar_h1("Artist", false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 0, 1.0 );
+    ColumnHeader ar_h1("Artist", false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 1.0, 160 );
     ColumnHeader ar_h2("#Tracks", true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 80);
 
     track_columns  << t_h0  << t_h1  << t_h2  << t_h3  << t_h4  << t_h5  << t_h6  << t_h7;
@@ -226,6 +226,10 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 	delete _lib_info_dialog;
 }
 
+void GUI_Library_windowed::set_info_dialog(GUI_InfoDialog *dialog){
+    _info_dialog = dialog;
+}
+
 void GUI_Library_windowed::show_only_tracks(bool b){
 
 	this->ui->lv_artist->setVisible(!b);
@@ -275,8 +279,8 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
     if(_info_dialog)
 		_info_dialog->setMetaData(v_metadata);
 
-    this->ui->lv_artist->set_mimedata(v_metadata, "Artist");
-    this->ui->lv_album->set_mimedata(v_metadata, "Album");
+    this->ui->lv_artist->set_mimedata(v_metadata, "tracks", true);
+    this->ui->lv_album->set_mimedata(v_metadata, "tracks", true);
 }
 
 
@@ -327,12 +331,16 @@ void GUI_Library_windowed::album_released(const QModelIndex& idx){}
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
     QList<int> idx_list_int;
-    if(idx.isValid())
+    if(idx.isValid()){
         idx_list_int = ui->tb_title->calc_selections();
-    else
-    	ui->tb_title->calc_selections();
+        emit sig_track_pressed(idx_list_int);
+    }
 
-    emit sig_track_pressed(idx_list_int);
+    /*else
+        ui->tb_title->calc_selections();*/
+
+
+
 }
 
 void GUI_Library_windowed::track_released(const QModelIndex&){}
@@ -341,7 +349,7 @@ void GUI_Library_windowed::track_released(const QModelIndex&){}
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
-    this->ui->tb_title->set_mimedata(v_md, "Tracks");
+    this->ui->tb_title->set_mimedata(v_md, "tracks", false);
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_md);
 }
@@ -637,3 +645,4 @@ void GUI_Library_windowed::import_result(bool success){
 	//QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
 }
+

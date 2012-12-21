@@ -65,8 +65,10 @@ class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
 Q_OBJECT
 
 public:
-	GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dialog);
+    GUI_Library_windowed(QWidget* parent);
 	virtual ~GUI_Library_windowed();
+
+    void set_info_dialog(GUI_InfoDialog* dialog);
 
 
 
@@ -200,3 +202,4 @@ private:
 };
 
 #endif /* GUI_LIBRARY_WINDOWED_H_ */
+

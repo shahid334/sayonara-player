@@ -31,7 +31,7 @@ class ColumnHeader {
 
 	public:
 
-		ColumnHeader(QString title, bool switchable, Sort::SortOrder sort_asc, Sort::SortOrder sort_desc, int preferred_size_abs, double preferred_size_rel=-1){
+        ColumnHeader(QString title, bool switchable, Sort::SortOrder sort_asc, Sort::SortOrder sort_desc, int preferred_size_abs){
 
 			_title = title;
 			_switchable = switchable;
@@ -39,16 +39,21 @@ class ColumnHeader {
 			_sort_asc = sort_asc;
 			_sort_desc = sort_desc;
             _preferred_size_abs = preferred_size_abs;
-            _preferred_size_rel = preferred_size_rel;
-
-			if(preferred_size_rel < 0){
-				_abs_size = true;
-			}
-
-			else{
-				_abs_size = false;
-			}
+            _abs_size = true;
 		}
+
+        ColumnHeader(QString title, bool switchable, Sort::SortOrder sort_asc, Sort::SortOrder sort_desc, double preferred_size_rel, int min_size){
+
+            _title = title;
+            _switchable = switchable;
+            _abs_size = true;
+            _sort_asc = sort_asc;
+            _sort_desc = sort_desc;
+            _preferred_size_abs = min_size;
+            _preferred_size_rel = preferred_size_rel;
+            _abs_size = false;
+
+        }
 
 		void set_preferred_size_abs(int preferred_size){
 			_preferred_size_abs = preferred_size;

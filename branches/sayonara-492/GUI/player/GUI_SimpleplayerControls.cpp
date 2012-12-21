@@ -245,3 +245,4 @@ void GUI_SimplePlayer::muteButtonPressed() {
 
 /** VOLUME END **/
 
+

@@ -151,7 +151,7 @@ private slots:
     void importFolderClicked(bool b = true);
 
     /* View */
-    void showLibrary(bool);
+    void showLibrary(bool, bool resize=true);
     void changeSkin(bool);
     void small_playlist_items_toggled(bool);
     void show_notification_toggled(bool);

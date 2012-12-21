@@ -369,6 +369,22 @@ void Helper::remove_files_in_directory(QString dir_name, QStringList filters){
 	}
 }
 
+QString Helper::get_folder_of_file(QString filename){
+    return filename.left(filename.lastIndexOf(QDir::separator()) + 1);
+}
+
+QStringList Helper::extract_folders_of_files(QStringList files){
+    QStringList folders;
+    foreach(QString file, files){
+        QString folder = get_folder_of_file(file);
+        if(!folders.contains(folder))
+            folders << folder;
+    }
+
+    return folders;
+
+}
+
 bool Helper::checkTrack(const MetaData& md){
 
     if( md.filepath.startsWith("http", Qt::CaseInsensitive)) return true;

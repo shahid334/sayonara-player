@@ -88,7 +88,7 @@ class MyTableView : public QTableView{
 		virtual ~MyTableView();
 
         void rc_header_menu_init(QStringList& lst);
-		void set_mimedata(const MetaDataList& v_md, QString text);
+        void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
 		void set_table_headers(QList<ColumnHeader>& headers);
 		void setModel(QAbstractItemModel * model);
 

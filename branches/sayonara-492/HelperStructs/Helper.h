@@ -70,6 +70,8 @@ namespace Helper{
 	QStringList get_playlistfile_extensions();
     QString calc_file_extension(QString filename);
     void remove_files_in_directory(QString dir_name, QStringList filters);
+    QString get_folder_of_file(QString filename);
+    QStringList extract_folders_of_files(QStringList list);
 
 	bool is_soundfile(QString filename);
 	bool is_playlistfile(QString filename);

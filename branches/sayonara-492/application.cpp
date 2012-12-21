@@ -80,7 +80,8 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
     ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
-    ui_library          = new GUI_Library_windowed(player->getParentOfLibrary(), ui_info_dialog);
+    ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
+    ui_library->set_info_dialog(ui_info_dialog);
     ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
     remote_socket       = new Socket();
@@ -389,3 +390,4 @@ QString Application::getVersion(){
 QMainWindow* Application::getMainWindow(){
     return this->player;
 }
+

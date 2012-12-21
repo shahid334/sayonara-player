@@ -107,34 +107,42 @@ void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 
 /** VIEW **/
 
-void GUI_SimplePlayer::showLibrary(bool b){
+void GUI_SimplePlayer::showLibrary(bool b, bool resize){
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	settings->setShowLibrary(b);
+    settings->setShowLibrary(b);
+    int old_width = this->width();
+    int lib_width = this->ui->library_widget->width();
+    int new_width = old_width;
     this->ui->library_widget->setVisible(b);
 
-	if(!b){
+    if(!b){
 
         QSizePolicy p = this->ui->library_widget->sizePolicy();
-		m_library_width = this->ui->library_widget->width();
-		m_library_stretch_factor = p.horizontalStretch();
+        m_library_stretch_factor = p.horizontalStretch();
 
         p.setHorizontalStretch(0);
         this->ui->library_widget->setSizePolicy(p);
 
-        this->setMinimumWidth(350);
-        this->resize(350, this->height());
+        m_library_width = lib_width;
+        new_width = old_width - lib_width;
+
 	}
 
 	else{
         QSizePolicy p = this->ui->library_widget->sizePolicy();
 		p.setHorizontalStretch(m_library_stretch_factor);
         this->ui->library_widget->setSizePolicy(p);
+        new_width = old_width + m_library_width;
+    }
 
-        this->resize(760, this->height());
-        this->setMinimumWidth(760);
-	}
+    if(resize){
+        QRect rect = this->geometry();
+        rect.setWidth(new_width);
+        rect.setHeight(this->height());
+        this->setGeometry(rect);
+    }
 }
 
 void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
@@ -264,4 +272,5 @@ void GUI_SimplePlayer::about(bool b){
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
     infobox.exec();
 }
+
 

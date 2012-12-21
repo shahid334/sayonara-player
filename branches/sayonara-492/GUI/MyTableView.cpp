@@ -37,6 +37,7 @@
 #include <QHeaderView>
 #include <QAction>
 #include <QIcon>
+#include <QUrl>
 
 
 
@@ -50,7 +51,7 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_parent = parent;
 	_qDrag = 0;
 
-	_mimedata = 0;
+    _mimedata = new CustomMimeData();
 
 	rc_menu_init();
 
@@ -58,10 +59,6 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 }
 
 MyTableView::~MyTableView() {
-
-	/*if(_qDrag) delete _qDrag;
-	_qDrag = 0;*/
-
 }
 
 
@@ -124,7 +121,7 @@ void MyTableView::mouseMoveEvent(QMouseEvent* event){
 	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
 	if (_drag && _qDrag && distance > 20) {
-		_qDrag->exec(Qt::ActionMask);
+        _qDrag->exec(Qt::CopyAction);
 	}
 
 }
@@ -135,9 +132,9 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 	switch (event->button()) {
 
 		case Qt::LeftButton:
-            if(_mimedata) {
-                delete _mimedata;
-                _mimedata = 0;
+            if(_qDrag) {
+               delete _qDrag;
+                _qDrag = NULL;
             }
 
             QTableView::mouseReleaseEvent(event);
@@ -152,25 +149,51 @@ void MyTableView::mouseReleaseEvent(QMouseEvent* event){
 }
 
 
-void MyTableView::set_mimedata(const MetaDataList& v_md, QString text){
+void MyTableView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder){
 
-    if(_mimedata) delete _mimedata;
-	_mimedata = new CustomMimeData();
-	connect(_mimedata, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
+    if(_qDrag){
+        delete _qDrag;
+    }
 
-	_mimedata->setMetaData(v_md);
-	_mimedata->setText(text);
+    _mimedata = new CustomMimeData();
+
+    QList<QUrl> urls;
+    if(!drop_entire_folder){
+        foreach(MetaData md, v_md){
+            QUrl url(QString("file://") + md.filepath);
+            urls << url;
+        }
+    }
+
+    else{
+        QStringList filenames;
+        foreach(MetaData md, v_md)
+            filenames << md.filepath;
+
+        QStringList folders = Helper::extract_folders_of_files(filenames);
+        foreach(QString folder, folders){
+            QUrl url(QString("file://") + folder);
+            urls << url;
+        }
+    }
+
+    _mimedata->setMetaData(v_md);
+    _mimedata->setText(text);
+    _mimedata->setUrls(urls);
 
     _qDrag = new QDrag(this);
-	_qDrag->setMimeData(_mimedata);
+    _qDrag->setMimeData(_mimedata);
 
-	if (_mimedata) _drag = true;
-	else _drag = false;
+
+    connect(_qDrag, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
+
+     _drag = true;
 }
 
 void MyTableView::forbid_mimedata_destroyable(){
 
-    _mimedata = 0;
+    _qDrag = NULL;
+
 }
 
 
@@ -198,11 +221,14 @@ QList<int> MyTableView::calc_selections(){
 
 	foreach(QModelIndex model_idx, idx_list){
 		idx_list_int.push_back(model_idx.row());
+        this->selectRow(model_idx.row());
 	}
 
 	_model->set_selected(idx_list_int);
-	return idx_list_int;
 
+
+
+	return idx_list_int;
 }
 
 
@@ -347,6 +373,7 @@ void MyTableView::rc_header_menu_changed(bool b){
 void MyTableView::set_col_sizes(){
 
 	int altogether_width = 0;
+    int desired_width = 0;
     int tolerance = 30;
 	double altogether_percentage = 0;
 	int n_cols = _model->columnCount();
@@ -365,25 +392,28 @@ void MyTableView::set_col_sizes(){
 		else{
 
 			altogether_percentage += h.get_preferred_size_rel();
+            desired_width += h.get_preferred_size_abs();
 		}
 
 		altogether_width += preferred_size;
-
-		this->setColumnWidth(i, preferred_size);
 	}
 
 	altogether_width += tolerance;
 
-	int target_width = this->width();
+    int target_width = this->width() - altogether_width;
 
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-    if(target_width < (altogether_width * 2)) {
-        target_width = altogether_width * 2;
+
+    if(target_width < desired_width) {
+        target_width = desired_width;
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	}
 
+    else{
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    }
+
 	// width for percentage stuff
-	target_width -= altogether_width;
+    //target_width -= altogether_width;
 
 	for(int i=0; i<n_cols; i++){
 		int col = _model->calc_shown_col(i);
@@ -396,7 +426,9 @@ void MyTableView::set_col_sizes(){
 			preferred_size = (h.get_preferred_size_rel() / altogether_percentage) * target_width;
 		}
 
-		else continue;
+        else{
+            preferred_size = h.get_preferred_size_abs();
+        }
 
 		this->setColumnWidth(i, preferred_size);
 	}
@@ -507,4 +539,5 @@ void MyTableView::fill_artists(const ArtistList& artists){
     if(first_selected_artist_row >= 0)
         this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
 }
+
 

@@ -87,11 +87,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_skinSuffix = "";
 	m_class_name = "Player";
 
-	QSize size = settings->getPlayerSize();
-	QRect rect = this->geometry();
-	rect.setWidth(size.width());
-	rect.setHeight(size.height());
-	this->setGeometry(rect);
+
 
 	m_cov_lookup = new CoverLookup(m_class_name);
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
@@ -112,19 +108,24 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_library_stretch_factor = p.horizontalStretch();
 
 	bool show_library = settings->getShowLibrary();
-	if(!show_library){
-		p.setHorizontalStretch(0);
-		ui->library_widget->setSizePolicy(p);
-		m_library_width = 300;
-	}
 
-	ui->action_viewLibrary->setChecked(show_library);
+    ui->action_viewLibrary->setChecked(show_library);
+    this->showLibrary(show_library);
+
+
+    QSize size = settings->getPlayerSize();
+    QRect rect = this->geometry();
+    rect.setWidth(size.width());
+    rect.setHeight(size.height());
+    this->setGeometry(rect);
+
+    m_library_width = 600;
 
 	/* TRAY ACTIONS */
 	this->setupTrayActions();
 
 	/* SIGNALS AND SLOTS */
-	this->setupConnections();
+    this->setupConnections();
 
 	ui->plugin_widget->resize(ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
@@ -137,7 +138,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 GUI_SimplePlayer::~GUI_SimplePlayer() {
 	qDebug() << "closing player...";
 	delete ui;
-
 }
 
 
@@ -371,7 +371,6 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 	if(! QFile::exists(cover_path) ){
         if(md.radio_mode != RADIO_STATION){
             cover_path = Helper::getIconPath() + "logo.png";
-	    qDebug() << "Set logo, want cover";
             emit sig_want_cover(md);
         }
 
@@ -381,7 +380,7 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 
 	ui->btn_correct->setVisible(false);
 
-	ui->albumCover->setIcon(QIcon(cover_path));
+    ui->albumCover->setIcon(QIcon(cover_path));
 	ui->albumCover->repaint();
 
 	setRadioMode(md.radio_mode);
@@ -613,7 +612,7 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
 
 
 void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
-	ui_library = library;
+    ui_library = library;
     if(ui_library){
         ui_library->show();
         ui_library->resize(ui->library_widget->size());
@@ -702,25 +701,28 @@ void GUI_SimplePlayer::notification_changed(bool active, int timeout_ms){
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
-	Q_UNUSED(e);
-	ui_playlist->resize(ui->playlist_widget->size());
-	ui_library->resize(ui->library_widget->size());
+    QWidget::resizeEvent(e);
+
+    ui_playlist->resize(ui->playlist_widget->size());
+
+    if(ui->library_widget->isVisible())
+        ui_library->resize(ui->library_widget->size());
 
 	QSize sz = ui->plugin_widget->size();
 
-    if(ui_eq && !ui_eq->isHidden())
+    if(ui_eq && !ui_eq->isHidden() && ui_eq->isVisible())
 		ui_eq->resize(sz);
 
-    if(ui_stream && !ui_stream->isHidden())
+    if(ui_stream && !ui_stream->isHidden() && ui_stream->isVisible())
 		ui_stream->resize(sz);
 
-    if(ui_lfm_radio && !ui_lfm_radio->isHidden())
+    if(ui_lfm_radio && !ui_lfm_radio->isHidden() && ui_lfm_radio->isVisible())
 		ui_lfm_radio->resize(sz);
 
-    if(ui_playlist_chooser && !ui_playlist_chooser->isHidden())
-		ui_playlist_chooser->resize(sz);
+    if(ui_playlist_chooser && !ui_playlist_chooser->isHidden() && ui_playlist_chooser->isVisible())
+        ui_playlist_chooser->resize(sz);
 
-	CSettingsStorage::getInstance()->setPlayerSize(this->size());
+    CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }
 
 
@@ -797,4 +799,5 @@ void GUI_SimplePlayer::really_close(bool b){
 	m_min2tray = false;
 	this->close();
 }
+
 
