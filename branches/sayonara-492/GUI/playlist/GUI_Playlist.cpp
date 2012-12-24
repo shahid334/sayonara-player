@@ -231,8 +231,8 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int 
     	QModelIndex model_idx = _pli_model->index(idx, 0);
 		total_msecs += md.length_ms;
 
-        if(md.is_extern)
-			ui->btn_import->setVisible(true);
+        /*if(md.is_extern)
+            ui->btn_import->setVisible(true);*/
 
         md.pl_selected = false;
         md.pl_playing = (cur_play_idx == idx);
@@ -695,12 +695,9 @@ void GUI_Playlist::import_button_clicked(){
 
 void GUI_Playlist::import_result(bool success){
 
-	ui->btn_import->setVisible(!success);
-    if(success)
-        QMessageBox::information(this, "Import files", "All files could be imported");
-    else
-        QMessageBox::warning(this, "Import files", QString("Sorry, but tracks could not be imported <br />") +
-                             "Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+//	ui->btn_import->setVisible(!success);
+        ui->btn_import->setVisible(false);
+
 }
 
 

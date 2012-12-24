@@ -106,7 +106,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
         listen->psl_sr_set_active(set->getStreamRipper());
     }
 
-    //init_connections();
+    init_connections();
 
     qDebug() << "setting up player";
     player->setWindowTitle("Sayonara " + version);

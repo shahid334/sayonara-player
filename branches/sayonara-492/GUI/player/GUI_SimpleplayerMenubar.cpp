@@ -82,6 +82,18 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 void GUI_SimplePlayer::importFolderClicked(bool b){
 	Q_UNUSED(b);
 
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    QString lib_path = settings->getLibraryPath();
+
+    if(lib_path.size() == 0 || !QFile::exists(lib_path)){
+
+        int ret = QMessageBox::warning(this, "No library path", "Please select library path first", QMessageBox::Ok, QMessageBox::Cancel);
+        if(ret == QMessageBox::Cancel) return;
+
+        setLibraryPathClicked();
+        return;
+    }
+
 	QString dir = QFileDialog::getExistingDirectory(this, "Open Directory",
 				QDir::homePath(), QFileDialog::ShowDirsOnly);
 
@@ -174,12 +186,14 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 	QString start_dir = QDir::homePath();
 	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
-	if (old_dir != "")
+
+    if (old_dir.size() > 0 && QFile::exists(old_dir)){
 		start_dir = old_dir;
+    }
 
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 			old_dir, QFileDialog::ShowDirsOnly);
-	if (dir != "") {
+    if (dir.size() > 0) {
 		emit libpath_changed(dir);
 		CSettingsStorage::getInstance()->setLibraryPath(dir);
 

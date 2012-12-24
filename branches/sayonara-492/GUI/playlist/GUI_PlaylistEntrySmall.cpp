@@ -51,7 +51,7 @@ void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx){
 
 	this->ui->lab_title->setText(titlestr);
 	this->ui->lab_artist->setText(md.artist.trimmed());
-	this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+    this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
 }
 
 

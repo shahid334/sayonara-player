@@ -314,17 +314,20 @@ void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
 
     QList<int> idx_list_int;
+    idx_list_int = ui->lv_album->calc_selections();
 
-    if(idx.isValid())
-        idx_list_int = ui->lv_album->calc_selections();
+    /*if(idx.isValid())
+
     else
-    	ui->lv_album->calc_selections();
+        ui->lv_album->calc_selections();*/
 
     emit sig_album_pressed(idx_list_int);
 }
 
 
-void GUI_Library_windowed::album_released(const QModelIndex& idx){}
+void GUI_Library_windowed::album_released(const QModelIndex& idx){
+    album_pressed(idx);
+}
 
 
 

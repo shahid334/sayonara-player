@@ -65,6 +65,7 @@ private:
 
         QPen _pen;
         LibraryItemModel* _model;
+        QColor _selected_background;
 
 
 };

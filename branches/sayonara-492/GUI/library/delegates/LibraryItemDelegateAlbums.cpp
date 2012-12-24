@@ -48,7 +48,11 @@ LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QT
         QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
         _icon_single_album = QPixmap(icon_path_no_sampler);
         _icon_multi_album = QPixmap(icon_path_sampler);
+
         _model = model;
+
+        QPalette palette = _parent->palette();
+        _selected_background = palette.color(QPalette::Active, QPalette::Highlight);
 
 }
 
@@ -94,8 +98,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             rect.translate(2, 0);
             QString name = _model->data(index, Qt::WhatsThisRole).toString();
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
-
-
         }
 
 

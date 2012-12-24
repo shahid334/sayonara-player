@@ -237,7 +237,7 @@ void GUI_Equalizer::preset_changed(int index){
 	QList<double> setting = this->_presets[index].settings;
 
 	for(int i=0; i<setting.size(); i++){
-		int val = (int) setting[i];
+        int val = (int) setting[i];
 		if( i==0) this->_ui->sli_0->setValue(val);
 		else if(i == 1) this->_ui->sli_1->setValue(val);
 		else if(i == 2) this->_ui->sli_2->setValue(val);

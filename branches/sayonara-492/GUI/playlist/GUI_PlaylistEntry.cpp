@@ -100,22 +100,26 @@ void GUI_PlaylistEntry::setWidth(int width){
 
 void GUI_PlaylistEntry::setContent(MetaData& md, int idx){
 
-	QString titlestr = md.title;
-	if(CSettingsStorage::getInstance()->getPlaylistNumbers()){
-		titlestr = QString::number(idx) + ". " + md.title;
-	}
-	this->ui->lab_title->setText(titlestr);
 
 
-	this->ui->lab_artist->setText(md.artist);
-	if(md.album == ""){
-		this->ui->lab_album->setText("");
-		return;
-	}
+    QString titlestr;
 
-	this->ui->lab_album->setText(QString(" [ ") + md.album.trimmed() + " ]");
+    if(CSettingsStorage::getInstance()->getPlaylistNumbers())
+        titlestr = QString::number(idx) + ". " + md.title.trimmed();
 
-	this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+    else
+        titlestr = md.title.trimmed();
+
+    this->ui->lab_title->setText(titlestr);
+    this->ui->lab_artist->setText(md.artist.trimmed());
+    this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+    if(md.album == ""){
+        this->ui->lab_album->setText("");
+        return;
+    }
+
+    this->ui->lab_album->setText(QString(" [ ") + md.album.trimmed() + " ]");
+
 }
 
 

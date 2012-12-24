@@ -76,14 +76,15 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 	switch(event->button()){
 		case Qt::LeftButton:
 
-            QTableView::mousePressEvent(event);
-
-			if(event->pos().y() > this->model()->rowCount() * 20) {
+            if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
+                event->ignore();
 				_drag = false;
 				break;
 			}
 
 			else {
+                 QTableView::mousePressEvent(event);
+
 				_drag_pos = event->pos();
 				_drag = true;
 			}
@@ -206,6 +207,8 @@ void MyTableView::keyPressEvent(QKeyEvent* event){
 
     if(modifiers & Qt::ControlModifier){
         selectAll();
+        calc_selections();
+
         emit sig_all_selected();
     }
 }
@@ -221,7 +224,7 @@ QList<int> MyTableView::calc_selections(){
 
 	foreach(QModelIndex model_idx, idx_list){
 		idx_list_int.push_back(model_idx.row());
-        this->selectRow(model_idx.row());
+        //this->selectRow(model_idx.row());
 	}
 
 	_model->set_selected(idx_list_int);
