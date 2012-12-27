@@ -39,13 +39,19 @@
 #include <QIcon>
 #include <QUrl>
 #include <QLineEdit>
-
-
+#include <QScrollBar>
 
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
+
+bool _is_alphanumeric(int key){
+
+    if(key >= 0x41 && key <= 0x5a) return true;
+    if(key >= 0x30 && key <= 0x39) return true;
+    return false;
+}
 
 
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
@@ -54,6 +60,9 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 
     _mimedata = new CustomMimeData();
     _edit = new QLineEdit(this);
+    _edit->hide();
+
+    this->connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
 
 	rc_menu_init();
 
@@ -75,6 +84,8 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 	QPoint pos_org = event->pos();
 	QPoint pos = QWidget::mapToGlobal(pos_org);
 
+ reset_edit();
+
 	switch(event->button()){
 		case Qt::LeftButton:
 
@@ -90,6 +101,8 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 				_drag_pos = event->pos();
 				_drag = true;
 			}
+
+
 
 			break;
 
@@ -119,7 +132,7 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 }
 
 void MyTableView::mouseMoveEvent(QMouseEvent* event){
-
+reset_edit();
 	QPoint pos = event->pos();
 	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
@@ -131,7 +144,7 @@ void MyTableView::mouseMoveEvent(QMouseEvent* event){
 
 
 void MyTableView::mouseReleaseEvent(QMouseEvent* event){
-
+reset_edit();
 	switch (event->button()) {
 
 		case Qt::LeftButton:
@@ -202,6 +215,7 @@ void MyTableView::forbid_mimedata_destroyable(){
 
 void MyTableView::keyPressEvent(QKeyEvent* event){
     int key = event->key();
+    QString text = event->text();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
@@ -214,18 +228,44 @@ void MyTableView::keyPressEvent(QKeyEvent* event){
         emit sig_all_selected();
     }
 
-    if(key == Qt::Key_A){
-    	_edit->setGeometry(this->width() - 100, this->height()-50, 100, 25);
+    if(text.size() > 0 && text[0].isLetterOrNumber()){
+        int sb_width = this->verticalScrollBar()->width();
+        if(!this->verticalScrollBar()->isVisible()) sb_width = 0;
+
+        int sb_height = this->horizontalScrollBar()->height();
+        if(!this->horizontalScrollBar()->isVisible()) sb_height = 0;
+
+        _edit->setGeometry(this->width() - (sb_width + 105), this->height() - (sb_height + 30), 100, 25);
     	_edit->setFocus();
-    	_edit->setText(_edit->text() + "a");
+        _edit->setText(text);
     	_edit->show();
-    }
-
-    if(key == Qt::Key_Escape){
-    	_edit->setText("");
-    	_edit->hide();
 
     }
+
+    else if(key == Qt::Key_Escape){
+        reset_edit();
+    }
+}
+
+void MyTableView::edit_changed(QString str){
+
+    this->clearSelection();
+    if(str.size() == 0) {
+        reset_edit();
+        calc_selections();
+        return;
+    }
+
+    int line = _model->getFirstRowOf(str);
+    this->scrollTo(_model->index(line, 0));
+    this->selectRow(line);
+    calc_selections();
+}
+
+void MyTableView::reset_edit(){
+    _edit->setText("");
+    _edit->hide();
+    this->setFocus();
 }
 
 

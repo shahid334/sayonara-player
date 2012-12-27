@@ -145,7 +145,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
         LastFM::getInstance()->lfm_login( user,password, true );
     }
 
-    bool load_old_playlist = (n_files == 0);
+    //bool load_old_playlist = (n_files == 0);
 
     qDebug() << "Set up post gui operations...";
    /* playlist->ui_loaded(load_old_playlist);

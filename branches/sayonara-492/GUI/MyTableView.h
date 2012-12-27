@@ -79,9 +79,12 @@ class MyTableView : public QTableView{
         void delete_clicked();
         void play_next_clicked();
 
+        void edit_changed(QString);
+
 
 	private:
         void rc_menu_init();
+        void reset_edit();
 
 
 	public:
