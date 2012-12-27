@@ -56,6 +56,8 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
+	virtual int			getFirstRowOf(QString substr);
+
 
 private:
 	QList<Artist> _artist_list;

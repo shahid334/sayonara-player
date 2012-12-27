@@ -153,4 +153,8 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 	return QAbstractItemModel::flags(index);
 }
 
+int			LibraryItemModelArtists::getFirstRowOf(QString substr){
 
+	return 0;
+
+}

@@ -167,5 +167,8 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 	Q_UNUSED(order);
 }
 
+int LibraryItemModelAlbums::getFirstRowOf(QString substr){
+	return 0;
 
+}
 

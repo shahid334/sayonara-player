@@ -67,6 +67,8 @@ public:
 	virtual bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
 	virtual bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
 
+	virtual int			getFirstRowOf(QString substr)=0;
+
 
 
 

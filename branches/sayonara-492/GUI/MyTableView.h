@@ -39,6 +39,7 @@
 #include <QString>
 #include <QMenu>
 #include <QAction>
+#include <QLineEdit>
 
 
 
@@ -127,6 +128,7 @@ class MyTableView : public QTableView{
 
 
 	    QList<QAction*> 	_header_rc_actions;
+	    QLineEdit*			_edit;
 
 		LibraryItemModel* 	_model;
 		Sort::SortOrder		_sort_order;

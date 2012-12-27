@@ -38,6 +38,7 @@
 #include <QAction>
 #include <QIcon>
 #include <QUrl>
+#include <QLineEdit>
 
 
 
@@ -52,6 +53,7 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 	_qDrag = 0;
 
     _mimedata = new CustomMimeData();
+    _edit = new QLineEdit(this);
 
 	rc_menu_init();
 
@@ -201,15 +203,28 @@ void MyTableView::forbid_mimedata_destroyable(){
 void MyTableView::keyPressEvent(QKeyEvent* event){
     int key = event->key();
 
-    if(key != Qt::Key_A) return;
-
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
-    if(modifiers & Qt::ControlModifier){
+    if( (modifiers & Qt::ControlModifier) &&
+    	(key == Qt::Key_A) ){
+
         selectAll();
         calc_selections();
 
         emit sig_all_selected();
+    }
+
+    if(key == Qt::Key_A){
+    	_edit->setGeometry(this->width() - 100, this->height()-50, 100, 25);
+    	_edit->setFocus();
+    	_edit->setText(_edit->text() + "a");
+    	_edit->show();
+    }
+
+    if(key == Qt::Key_Escape){
+    	_edit->setText("");
+    	_edit->hide();
+
     }
 }
 

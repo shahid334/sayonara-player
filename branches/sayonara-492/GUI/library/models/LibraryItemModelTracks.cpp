@@ -179,3 +179,10 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 	 return true;
 
 }
+
+
+int			LibraryItemModelTracks::getFirstRowOf(QString substr){
+
+	return 0;
+
+}
