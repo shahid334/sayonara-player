@@ -274,121 +274,121 @@ bool CDatabaseConnector::store_settings(){
 	m_database.transaction();
 
 	bool lfm_active = storage->getLastFMActive();
-	store_setting("LastFM_active", lfm_active);
+	store_setting(SET_LFM_ACTIVE, lfm_active);
 
 	storage->getLastFMNameAndPW(last_fm_username, last_fm_password);
-	store_setting("LastFM_login", last_fm_username + "," + last_fm_password);
+	store_setting(SET_LFM_LOGIN, last_fm_username + "," + last_fm_password);
 
 	bool lfm_corrections = storage->getLastFMCorrections();
-	store_setting("lfm_corrections", lfm_corrections);
+	store_setting(SET_LFM_CORRECTIONS, lfm_corrections);
 
 	QString lfm_session_key = storage->getLastFMSessionKey();
-	store_setting("lfm_session_key", lfm_session_key);
+	store_setting(SET_LFM_SESSION_KEY, lfm_session_key);
 
 	int last_eq_used = storage->getLastEqualizer();
-	store_setting("eq_last", last_eq_used);
+	store_setting(SET_EQ_LAST, last_eq_used);
 
 	QString custom_equalizer = storage->getCustomEqualizer().toString();
-	store_setting("EQ_pr_custom", custom_equalizer);
+	store_setting(SET_EQ_CUSTOM, custom_equalizer);
 
 	int volume = storage->getVolume();
-	store_setting("volume", volume);
+	store_setting(SET_ENGINE_VOL, volume);
 
 	QString library_path = storage->getLibraryPath();
-	store_setting("library_path", library_path);
+	store_setting(SET_LIB_PATH, library_path);
 
     QStringList lib_shown_cols_title, lib_shown_cols_artist, lib_shown_cols_album;
     lib_shown_cols_title = storage->getLibShownColsTitle();
     lib_shown_cols_album = storage->getLibShownColsAlbum();
     lib_shown_cols_artist = storage->getLibShownColsArtist();
-    store_setting("lib_shown_cols_title", lib_shown_cols_title.join(","));
-    store_setting("lib_shown_cols_album", lib_shown_cols_album.join(","));
-    store_setting("lib_shown_cols_artist", lib_shown_cols_artist.join(","));
+    store_setting(SET_LIB_SHOWN_COLS_TITLE, lib_shown_cols_title.join(","));
+    store_setting(SET_LIB_SHOWN_COLS_ALBUM, lib_shown_cols_album.join(","));
+    store_setting(SET_LIB_SHOWN_COLS_ARTIST, lib_shown_cols_artist.join(","));
 
 	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
-	store_setting("player_size", str_size);
+	store_setting(SET_PLAYER_SIZE, str_size);
 
     QString cur_playlist = storage->getPlaylist().join(",");
-	store_setting("playlist", cur_playlist);
+	store_setting(SET_PL, cur_playlist);
 
 	int load_playlist = storage->getLoadPlaylist();
-	store_setting("load_playlist", load_playlist);
+	store_setting(SET_PL_LOAD, load_playlist);
 
 	bool load_last_track = storage->getLoadLastTrack();
-	store_setting("load_last_track", load_last_track);
+	store_setting(SET_PL_LOAD_LAST_TRACK, load_last_track);
 
 	QString last_track = storage->getLastTrack()->toString();
-	store_setting("last_track", last_track);	
+	store_setting(SET_PL_LAST_TRACK, last_track);	
 
     bool remember_time = storage->getRememberTime();
-    store_setting("remember_time", remember_time);
+    store_setting(SET_PL_REMEMBER_TIME, remember_time);
 
     bool start_playing = storage->getStartPlaying();
-    store_setting("start_playing", start_playing);
+    store_setting(SET_PL_START_PLAYING, start_playing);
 
 	QString playlist_mode = storage->getPlaylistMode().toString();
-	store_setting("playlist_mode", playlist_mode);
+	store_setting(SET_PL_MODE, playlist_mode);
 
 	int style = storage->getPlayerStyle();
 	if(style == 0 || style == 1)
-		store_setting("player_style", style);
+		store_setting(SET_PLAYER_STYLE, style);
 	else
-		store_setting("player_style", 0);
+		store_setting(SET_PLAYER_STYLE, 0);
 
 	bool show_notifications = storage->getShowNotification();
-	store_setting("show_notifications", show_notifications);
+	store_setting(SET_NOTIFICATION_SHOW, show_notifications);
 
     int notification_timeout = storage->getNotificationTimeout();
-    store_setting("notification_timeout", notification_timeout);
+    store_setting(SET_NOTIFICATION_TIMEOUT, notification_timeout);
 
     QString notification_name = storage->getNotification();
-    store_setting("notification_name", notification_name);
+    store_setting(SET_NOTIFICATION_NAME, notification_name);
 
 	bool show_library = storage->getShowLibrary();
-	store_setting("show_library", show_library);
+	store_setting(SET_LIB_SHOW, show_library);
 
 	int shown_plugin = storage->getShownPlugin();
-	store_setting("shown_plugin", shown_plugin);
+	store_setting(SET_PLAYER_SHOWN_PLUGIN, shown_plugin);
 
 	bool min2tray = storage->getMinimizeToTray();
-	store_setting("min_to_tray", min2tray);
+	store_setting(SET_PLAYER_MIN_2_TRAY, min2tray);
 
 	bool small_playlist_items = storage->getShowSmallPlaylist();
-	store_setting("small_playlist_items", small_playlist_items);
+	store_setting(SET_PL_SMALL_ITEMS, small_playlist_items);
 
 	QString sound_engine = storage->getSoundEngine();
-	store_setting("sound_engine", sound_engine);
+	store_setting(SET_ENGINE, sound_engine);
 
-	bool streamripper = storage->getStreamRipper();
-	store_setting("streamripper", streamripper);
+	bool streamripper_active = storage->getStreamRipper();
+	store_setting(SET_SR_ACTIVE, streamripper_active);
 	
 	bool streamripper_warning = storage->getStreamRipperWarning();
-	store_setting("streamripper_warning", streamripper_warning);
+	store_setting(SET_SR_WARNING, streamripper_warning);
 
 	QString streamripper_path = storage->getStreamRipperPath();
-	store_setting("streamripper_path", streamripper_path);
+	store_setting(SET_SR_PATH, streamripper_path);
 
 	bool streamripper_complete_tracks = storage->getStreamRipperCompleteTracks();
-	store_setting("streamripper_complete_tracks", streamripper_complete_tracks);
+	store_setting(SET_SR_COMPLETE_TRACKS, streamripper_complete_tracks);
 
     bool streamripper_session_path = storage->getStreamRipperSessionPath();
-    store_setting("streamripper_session_path", streamripper_session_path);
+    store_setting(SET_SR_SESSION_PATH, streamripper_session_path);
 
 	bool socket_active = storage->getSocketActivated();
-	store_setting("socket_active", socket_active);
+	store_setting(SET_SOCKET_ACTIVE, socket_active);
 
 	int socket_from = storage->getSocketFrom();
-	store_setting("socket_from", socket_from);
+	store_setting(SET_SOCKET_FROM, socket_from);
 
 	int socket_to = storage->getSocketTo();
-	store_setting("socket_to", socket_to);
+	store_setting(SET_SOCKET_TO, socket_to);
 
 	bool show_playlist_numbers = storage->getPlaylistNumbers();
-	store_setting("show_playlist_numbers", show_playlist_numbers);
+	store_setting(SET_PL_SHOW_NUMBERS, show_playlist_numbers);
 
 	bool allow_only_one_instance = storage->getAllowOnlyOneInstance();
-	store_setting("only_one_instance", allow_only_one_instance);
+	store_setting(SET_PLAYER_ONE_INSTANCE, allow_only_one_instance);
 
 	m_database.commit();
 	return true;

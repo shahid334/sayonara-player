@@ -32,6 +32,7 @@
 #include "ui_GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/MetaData.h"
 
@@ -43,6 +44,8 @@
 #include <QFileSystemWatcher>
 
 
+
+
 using namespace std;
 
 
@@ -50,57 +53,36 @@ using namespace std;
 class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
 
 	Q_OBJECT
+
+signals:
+    void sig_cover_found();
+
+private:
+    bool    _is_sampler;
+    Ui::AlternateCovers* ui;
+    CDatabaseConnector* _db;
+    QString _sel_cover_filename;
+    QString _target_cover_filename;
+
+private slots:
+
+    void save_pressed();
+    void cancel_pressed();
+    void no_cover_pressed();
+    void cover_chosen(QString filename);
+
+
 public:
 	GUI_Alternate_Covers(QWidget* parent, QString calling_class);
 	virtual ~GUI_Alternate_Covers();
 
-	signals:
+    void search_for_artist_image(QString artist_name);
+    void search_for_sampler_image(QString album_name);
+    void search_for_album_image(QString album_name, QString artist_name);
 
-		void sig_search_images(const QString&);
-        void sig_covers_changed(QString);
-        void sig_no_cover();
-
-
-	public slots:
-		void start(int, bool);
-        void start(QString, QString);
-        void changeSkin(bool dark);
-
-	private slots:
-		void save_button_pressed();
-		void cancel_button_pressed();
-        void no_cover_pressed();
-		void search_button_pressed();
-		void cover_pressed(const QModelIndex& idx);
-		void covers_there(QString classname, int n_covers);
-		void tmp_folder_changed(const QString&);
-
-	private:
-		Ui::AlternateCovers* ui;
-
-		int 				_cur_idx;
-		QString				_tmp_dir;
-		QString				_class_name;
-		QString				_calling_class;
-		Album				_album;
-		Artist				_artist;
-		QStringList			_filelist;
-		bool				_search_for_album;
-
-		AlternateCoverItemDelegate* _delegate;
-		AlternateCoverItemModel*	_model;
-		CoverLookup*				_cov_lookup;
-        QFileSystemWatcher*			_watcher;
-
-        bool                _no_album;
-        QString             _target_filename;
-
-
-        void cleanup();
-        void remove_old_files();
-        void update_model();
-        QString copy_and_save(QString src_file);
-        void delete_token();
+    void search_for_artist_image(int artist_id);
+    void search_for_sampler_image(int album_id);
+    void search_for_album_image(int album_id);
 
 
 

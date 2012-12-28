@@ -76,9 +76,11 @@ SET(HEADERS
     GUI/library/InfoBox/GUILibraryInfoBox.h
     GUI/library/ImportFolderDialog/GUIImportFolder.h
     
-    GUI/alternate_covers/AlternateCoverItemDelegate.h
-    GUI/alternate_covers/AlternateCoverItemModel.h
+    #GUI/alternate_covers/AlternateCoverItemDelegate.h
+    #GUI/alternate_covers/AlternateCoverItemModel.h
     GUI/alternate_covers/GUI_Alternate_Covers.h
+    GUI/alternate_covers/GUI_AlternateCovInternet.h
+    GUI/alternate_covers/GUI_AlternateCovLocal.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
     GUI/MyColumnHeader.h
@@ -137,9 +139,11 @@ SET(SOURCES
     GUI/library/InfoBox/GUILibraryInfoBox.cpp
     GUI/library/ImportFolderDialog/GUIImportFolder.cpp
     
-    GUI/alternate_covers/AlternateCoverItemDelegate.cpp
-    GUI/alternate_covers/AlternateCoverItemModel.cpp
+    #GUI/alternate_covers/AlternateCoverItemDelegate.cpp
+    #GUI/alternate_covers/AlternateCoverItemModel.cpp
     GUI/alternate_covers/GUI_Alternate_Covers.cpp
+    GUI/alternate_covers/GUI_AlternateCovInternet.cpp
+    GUI/alternate_covers/GUI_AlternateCovLocal.cpp
     GUI/tagedit/GUI_TagEdit.cpp
     GUI/equalizer/GUI_Equalizer.cpp
     GUI/MyTableView.cpp
@@ -196,7 +200,9 @@ SET(FORMS
     GUI/library/InfoBox/GUI_Library_Info_Box.ui
     GUI/equalizer/GUI_Equalizer.ui
     GUI/tagedit/GUI_TagEdit.ui
-    GUI/alternate_covers/GUI_Alternate_Covers.ui
+    #GUI/alternate_covers/GUI_Alternate_Covers.ui
+    GUI/alternate_covers/GUI_AlternateCovLocal.ui
+    GUI/alternate_covers/GUI_AlternateCovInternet.ui
     GUI/playlist_chooser/GUI_PlaylistChooser.ui
     GUI/LFMRadio/GUI_LFMRadioWidget.ui
     GUI/stream/GUI_Stream.ui
