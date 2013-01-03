@@ -82,6 +82,18 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 void GUI_SimplePlayer::importFolderClicked(bool b){
 	Q_UNUSED(b);
 
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    QString lib_path = settings->getLibraryPath();
+
+    if(lib_path.size() == 0 || !QFile::exists(lib_path)){
+
+        int ret = QMessageBox::warning(this, "No library path", "Please select library path first", QMessageBox::Ok, QMessageBox::Cancel);
+        if(ret == QMessageBox::Cancel) return;
+
+        setLibraryPathClicked();
+        return;
+    }
+
 	QString dir = QFileDialog::getExistingDirectory(this, "Open Directory",
 				QDir::homePath(), QFileDialog::ShowDirsOnly);
 
@@ -107,34 +119,42 @@ void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 
 /** VIEW **/
 
-void GUI_SimplePlayer::showLibrary(bool b){
+void GUI_SimplePlayer::showLibrary(bool b, bool resize){
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	settings->setShowLibrary(b);
+    settings->setShowLibrary(b);
+    int old_width = this->width();
+    int lib_width = this->ui->library_widget->width();
+    int new_width = old_width;
     this->ui->library_widget->setVisible(b);
 
-	if(!b){
+    if(!b){
 
         QSizePolicy p = this->ui->library_widget->sizePolicy();
-		m_library_width = this->ui->library_widget->width();
-		m_library_stretch_factor = p.horizontalStretch();
+        m_library_stretch_factor = p.horizontalStretch();
 
         p.setHorizontalStretch(0);
         this->ui->library_widget->setSizePolicy(p);
 
-        this->setMinimumWidth(350);
-        this->resize(350, this->height());
+        m_library_width = lib_width;
+        new_width = old_width - lib_width;
+
 	}
 
 	else{
         QSizePolicy p = this->ui->library_widget->sizePolicy();
 		p.setHorizontalStretch(m_library_stretch_factor);
         this->ui->library_widget->setSizePolicy(p);
+        new_width = old_width + m_library_width;
+    }
 
-        this->resize(760, this->height());
-        this->setMinimumWidth(760);
-	}
+    if(resize){
+        QRect rect = this->geometry();
+        rect.setWidth(new_width);
+        rect.setHeight(this->height());
+        this->setGeometry(rect);
+    }
 }
 
 void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
@@ -145,6 +165,13 @@ void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
 	else this->showNormal();
 }
 
+void GUI_SimplePlayer::sl_show_only_tracks(bool b){
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+	settings->setLibShowOnlyTracks(b);
+
+	emit sig_show_only_tracks(b);
+
+}
 
 /** VIEW END **/
 
@@ -159,12 +186,14 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 	QString start_dir = QDir::homePath();
 	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
-	if (old_dir != "")
+
+    if (old_dir.size() > 0 && QFile::exists(old_dir)){
 		start_dir = old_dir;
+    }
 
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 			old_dir, QFileDialog::ShowDirsOnly);
-	if (dir != "") {
+    if (dir.size() > 0) {
 		emit libpath_changed(dir);
 		CSettingsStorage::getInstance()->setLibraryPath(dir);
 
@@ -257,4 +286,5 @@ void GUI_SimplePlayer::about(bool b){
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
     infobox.exec();
 }
+
 

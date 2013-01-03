@@ -231,8 +231,8 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int 
     	QModelIndex model_idx = _pli_model->index(idx, 0);
 		total_msecs += md.length_ms;
 
-        if(md.is_extern)
-			ui->btn_import->setVisible(true);
+        /*if(md.is_extern)
+            ui->btn_import->setVisible(true);*/
 
         md.pl_selected = false;
         md.pl_playing = (cur_play_idx == idx);
@@ -304,11 +304,7 @@ void GUI_Playlist::pressed(const QModelIndex& index){
 
     if(_radio_active == RADIO_OFF && v_md.size() > 0){
 
-        CustomMimeData* mime = new CustomMimeData();
-        mime->setText("tracks");
-        mime->setMetaData(v_md);
-
-        ui->listView->set_mime_data(mime);
+        ui->listView->set_mimedata(v_md, "tracks");
 
         if(_cur_selected_rows.contains( index.row() ))
             _inner_drag_drop = true;
@@ -327,7 +323,6 @@ void GUI_Playlist::released(const QModelIndex& index){
 
 	if(!index.isValid() || index.row() < 0 || index.row() >= _pli_model->rowCount()) return;
 
-	ui->listView->set_mime_data(NULL);
 	_inner_drag_drop = false;
 }
 
@@ -580,8 +575,10 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 	MetaDataList v_metadata;
 
+    QString text = "";
+    if(d->hasText()) text = d->text();
 	// extern
-	if( d->hasUrls() ){
+    if( d->hasUrls() && text.compare("tracks", Qt::CaseInsensitive) ){
         qDebug() << "has urls";
 
 		QStringList filelist;
@@ -698,12 +695,9 @@ void GUI_Playlist::import_button_clicked(){
 
 void GUI_Playlist::import_result(bool success){
 
-	ui->btn_import->setVisible(!success);
-    if(success)
-        QMessageBox::information(this, "Import files", "All files could be imported");
-    else
-        QMessageBox::warning(this, "Import files", QString("Sorry, but tracks could not be imported <br />") +
-                             "Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+//	ui->btn_import->setVisible(!success);
+        ui->btn_import->setVisible(false);
+
 }
 
 

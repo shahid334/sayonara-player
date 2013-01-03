@@ -35,14 +35,14 @@
 #include <QPoint>
 
 #include <ui_GUI_Library_windowed.h>
-#include "GUI/library/LibraryItemModelTracks.h"
-#include "GUI/library/LibraryItemDelegateTracks.h"
-#include "GUI/library/LibraryItemModelAlbums.h"
-#include "GUI/library/LibraryItemDelegateAlbums.h"
-#include "GUI/library/LibraryItemDelegateArtists.h"
-#include "GUI/library/LibraryItemModelArtists.h"
-#include "GUI/library/GUILibraryInfoBox.h"
+#include "GUI/library/models/LibraryItemModelTracks.h"
+#include "GUI/library/models/LibraryItemModelArtists.h"
+#include "GUI/library/models/LibraryItemModelAlbums.h"
+#include "GUI/library/delegates/LibraryItemDelegateAlbums.h"
+#include "GUI/library/delegates/LibraryItemDelegateArtists.h"
+#include "GUI/library/delegates/LibraryItemDelegateTracks.h"
 
+#include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/MyTableView.h"
@@ -65,8 +65,10 @@ class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
 Q_OBJECT
 
 public:
-	GUI_Library_windowed(QWidget* parent, GUI_InfoDialog* dialog);
+    GUI_Library_windowed(QWidget* parent);
 	virtual ~GUI_Library_windowed();
+
+    void set_info_dialog(GUI_InfoDialog* dialog);
 
 
 
@@ -80,25 +82,11 @@ private:
 	LibraryItemModelArtists* 		_artist_model;
 	LibraryItemDelegateArtists* 	_artist_delegate;
 
-	QMenu* 		_right_click_menu;
+
     QMenu*      _header_rc_menu_title;
     QMenu*      _header_rc_menu_album;
     QMenu*      _header_rc_menu_artist;
 
-    QMap<QString, int> _header_map_name_col_title;
-    QMap<QString, int> _header_map_name_col_album;
-    QMap<QString, int> _header_map_name_col_artist;
-
-    QList<QAction*> _header_rc_actions_title;
-    QList<QAction*> _header_rc_actions_album;
-    QList<QAction*> _header_rc_actions_artist;
-
-
-
-	QAction* 	_info_action;
-	QAction* 	_edit_action;
-    QAction* 	_delete_action;
-	QAction*	_play_next_action;
 
 	Filter		_cur_searchfilter;
 
@@ -118,7 +106,7 @@ signals:
 	void sig_delete_certain_tracks(const QList<int>&, int);
 
 	void sig_filter_changed(const Filter&);
-	void sig_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort);
+	void sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
 
 	void sig_show_id3_editor(const QList<int>&);
 	void sig_play_next_tracks(const QList<int>& lst);
@@ -137,6 +125,7 @@ public slots:
 	void import_result(bool);
 	void psl_delete_answer(QString);
     void change_skin(bool dark);
+    void show_only_tracks(bool);
 
 
 private slots:
@@ -158,23 +147,9 @@ private slots:
 	void searchfilter_changed(int);
 	void text_line_edited(const QString&, bool force_emit=false);
 
-	void sort_artists_by_column(int);
-	void sort_albums_by_column(int);
-	void sort_tracks_by_column(int);
-
-	void show_artist_context_menu(const QPoint& p);
-	void show_album_context_menu(const QPoint& p);
-	void show_track_context_menu(const QPoint& p);
-
-    void header_rc_menu_title_changed(bool b=false);
-    void header_rc_menu_artist_changed(bool b=false);
-    void header_rc_menu_album_changed(bool b=false);
-
-
 	void artist_middle_clicked(const QPoint& p);
 	void album_middle_clicked(const QPoint& p);
 	void tracks_middle_clicked(const QPoint& p);
-
 
 	void info_artist();
 	void info_album();
@@ -191,15 +166,13 @@ private slots:
 	void play_next();
 	void play_next_tracks();
 
-    void forbid_mime_data_destroyable();
-    void forbid_album_mime_data_destroyable();
-    void forbid_artist_mime_data_destroyable();
+    void sortorder_title_changed(Sort::SortOrder);
+    void sortorder_album_changed(Sort::SortOrder);
+    void sortorder_artist_changed(Sort::SortOrder);
 
-    void create_mime_data();
-    void create_artist_mime_data();
-    void create_album_mime_data();
-
-
+    void columns_title_changed(QStringList&);
+    void columns_album_changed(QStringList&);
+    void columns_artist_changed(QStringList&);
 
 
 protected:
@@ -207,37 +180,26 @@ protected:
 
 
 private:
-	void init_menues();
-    void init_rc_header_title();
-    void init_rc_header_album();
-    void init_rc_header_artist();
 
+    SortOrder _sort_albums;  /* [name | year] [asc | desc] */
+    SortOrder _sort_artists; /* [name | tracks] [asc | desc] */
+    SortOrder _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
-	AlbumSort _sort_albums;  /* [name | year] [asc | desc] */
-	ArtistSort _sort_artists; /* [name | tracks] [asc | desc] */
-	TrackSort _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
+    QStringList _shown_cols_albums;
+    QStringList _shown_cols_artist;
+    QStringList _shown_cols_tracks;
 
 	GUI_InfoDialog* _info_dialog;
 	GUI_Library_Info_Box* _lib_info_dialog;
 
 	MetaDataList _v_md_tmp;
 
-    CustomMimeData* _mime_data_album;
-    CustomMimeData* _mime_data_artist;
-    CustomMimeData* _mime_data;
-    bool            _mime_data_album_destroyable;
-    bool            _mime_data_artist_destroyable;
-    bool            _mime_data_destroyable;
-
 
 	int show_delete_dialog(int n_tracks);
 	void refresh();
 
-    QList<int> calc_selections(int table);
-    int set_title_sizes();
-    int set_album_sizes();
-    int set_artist_sizes();
 
 };
 
 #endif /* GUI_LIBRARY_WINDOWED_H_ */
+

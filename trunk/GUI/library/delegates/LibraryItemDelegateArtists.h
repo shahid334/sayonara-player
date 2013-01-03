@@ -34,13 +34,13 @@
 #include <QItemDelegate>
 #include <QPen>
 
-#include "GUI/library/LibraryItemModelArtists.h"
+#include "GUI/library/models/LibraryItemModelArtists.h"
 
 
 class LibraryItemDelegateArtists : public QItemDelegate {
 	Q_OBJECT
 public:
-    LibraryItemDelegateArtists(LibraryItemModelArtists* model, QTableView* parent=0);
+    LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent=0);
 	virtual ~LibraryItemDelegateArtists();
 
 public:
@@ -65,7 +65,7 @@ private:
         QPixmap _icon_multi_album;
         QPen _pen;
 
-        LibraryItemModelArtists* _model;
+        LibraryItemModel* _model;
 };
 
 #endif /* LIBRARYITEMDELEGATEARTISTS_H_ */

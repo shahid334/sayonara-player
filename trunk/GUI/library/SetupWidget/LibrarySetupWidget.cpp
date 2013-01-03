@@ -29,7 +29,7 @@
 #include <QFileDialog>
 #include <QWidget>
 #include <QObject>
-#include "GUI/library/LibrarySetupWidget.h"
+#include "GUI/library/SetupWidget/LibrarySetupWidget.h"
 
 #include <ui_GUI_LibrarySetup_Widget.h>
 

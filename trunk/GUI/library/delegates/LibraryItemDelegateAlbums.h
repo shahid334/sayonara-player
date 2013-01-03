@@ -34,12 +34,12 @@
 #include <QItemDelegate>
 #include <QPen>
 
-#include "GUI/library/LibraryItemModelAlbums.h"
+#include "GUI/library/models/LibraryItemModelAlbums.h"
 
 class LibraryItemDelegateAlbums : public QItemDelegate {
 	Q_OBJECT
 public:
-    LibraryItemDelegateAlbums(LibraryItemModelAlbums* model, QTableView* parent=0);
+    LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent=0);
 	virtual ~LibraryItemDelegateAlbums();
 
 public:
@@ -64,7 +64,8 @@ private:
         QPixmap _icon_multi_album;
 
         QPen _pen;
-        LibraryItemModelAlbums* _model;
+        LibraryItemModel* _model;
+        QColor _selected_background;
 
 
 };

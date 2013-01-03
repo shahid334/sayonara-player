@@ -50,7 +50,8 @@ public:
     Playlist(QObject * parent=0);
 	virtual ~Playlist();
 
-	void ui_loaded();
+    void ui_loaded(bool load_playlist);
+    void load_old_playlist();
 	uint get_num_tracks();
 
 	signals:

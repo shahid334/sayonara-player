@@ -46,13 +46,16 @@ class MyListView :public QListView{
 	signals:
 		void context_menu_emitted(const QPoint&);
 
+private slots:
+        void forbid_mimedata_destroyable();
 
 	public:
 		MyListView(QWidget* parent=0);
 		virtual ~MyListView();
 
-		void set_mime_data(CustomMimeData* data);
+
         void        set_drag_enabled(bool b);
+        void set_mimedata(MetaDataList& v_md, QString text);
 
 
 	protected:
@@ -68,6 +71,7 @@ class MyListView :public QListView{
 		QWidget* 	_parent;
 		QDrag*		_qDrag;
         bool        _drag_allowed;
+        CustomMimeData* _mimedata;
 };
 
 #endif /* MYLISTVIEW_H_ */

@@ -109,7 +109,7 @@ void GUI_Equalizer::changeSkin(bool dark){
     QString sli_style8 = Style::get_v_slider_style(dark, SCALE(_ui->sli_8->value()));
     QString sli_style9 = Style::get_v_slider_style(dark, SCALE(_ui->sli_9->value()));
 
-    this->_ui->sli_0->setStyleSheet(sli_style0);
+    /*this->_ui->sli_0->setStyleSheet(sli_style0);
     this->_ui->sli_1->setStyleSheet(sli_style1);
     this->_ui->sli_2->setStyleSheet(sli_style2);
     this->_ui->sli_3->setStyleSheet(sli_style3);
@@ -121,7 +121,7 @@ void GUI_Equalizer::changeSkin(bool dark){
     this->_ui->sli_9->setStyleSheet(sli_style9);
 
 	QString stylesheet = Style::get_style(dark);
-	this->setStyleSheet(stylesheet);
+	this->setStyleSheet(stylesheet);*/
 }
 
 
@@ -129,7 +129,7 @@ void GUI_Equalizer::changeSkin(bool dark){
 void GUI_Equalizer::sli_0_changed(int new_val){
 
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val ));
-    this->_ui->sli_0->setStyleSheet(sli_style);
+   // this->_ui->sli_0->setStyleSheet(sli_style);
 
 
     this->_ui->label->setText(calc_lab(new_val));
@@ -138,7 +138,7 @@ void GUI_Equalizer::sli_0_changed(int new_val){
 void GUI_Equalizer::sli_1_changed(int new_val){
 
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_1->setStyleSheet(sli_style);
+    //this->_ui->sli_1->setStyleSheet(sli_style);
 
     this->_ui->label_2->setText(calc_lab(new_val));
 	emit eq_changed_signal(1, new_val);
@@ -146,56 +146,56 @@ void GUI_Equalizer::sli_1_changed(int new_val){
 void GUI_Equalizer::sli_2_changed(int new_val){
 
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_2->setStyleSheet(sli_style);
+    //this->_ui->sli_2->setStyleSheet(sli_style);
 
     this->_ui->label_3->setText(calc_lab(new_val));
 	emit eq_changed_signal(2, new_val);
 }
 void GUI_Equalizer::sli_3_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_3->setStyleSheet(sli_style);
+    //this->_ui->sli_3->setStyleSheet(sli_style);
 
     this->_ui->label_4->setText(calc_lab(new_val));
 	emit eq_changed_signal(3, new_val);
 }
 void GUI_Equalizer::sli_4_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_4->setStyleSheet(sli_style);
+    //this->_ui->sli_4->setStyleSheet(sli_style);
 
     this->_ui->label_5->setText(calc_lab(new_val));
 	emit eq_changed_signal(4, new_val);
 }
 void GUI_Equalizer::sli_5_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_5->setStyleSheet(sli_style);
+    //this->_ui->sli_5->setStyleSheet(sli_style);
 
     this->_ui->label_6->setText(calc_lab(new_val));
 	emit eq_changed_signal(5, new_val);
 }
 void GUI_Equalizer::sli_6_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_6->setStyleSheet(sli_style);
+    //this->_ui->sli_6->setStyleSheet(sli_style);
 
     this->_ui->label_7->setText(calc_lab(new_val));
 	emit eq_changed_signal(6, new_val);
 }
 void GUI_Equalizer::sli_7_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark,SCALE(new_val));
-    this->_ui->sli_7->setStyleSheet(sli_style);
+    //this->_ui->sli_7->setStyleSheet(sli_style);
 
     this->_ui->label_8->setText(calc_lab(new_val));
 	emit eq_changed_signal(7, new_val);
 }
 void GUI_Equalizer::sli_8_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_8->setStyleSheet(sli_style);
+    //this->_ui->sli_8->setStyleSheet(sli_style);
     this->_ui->label_9->setText(calc_lab(new_val));
 
 	emit eq_changed_signal(8, new_val);
 }
 void GUI_Equalizer::sli_9_changed(int new_val){
     QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    this->_ui->sli_9->setStyleSheet(sli_style);
+    //this->_ui->sli_9->setStyleSheet(sli_style);
     this->_ui->label_10->setText(calc_lab(new_val));
 	emit eq_changed_signal(9, new_val);
 }
@@ -237,7 +237,7 @@ void GUI_Equalizer::preset_changed(int index){
 	QList<double> setting = this->_presets[index].settings;
 
 	for(int i=0; i<setting.size(); i++){
-		int val = (int) setting[i];
+        int val = (int) setting[i];
 		if( i==0) this->_ui->sli_0->setValue(val);
 		else if(i == 1) this->_ui->sli_1->setValue(val);
 		else if(i == 2) this->_ui->sli_2->setValue(val);

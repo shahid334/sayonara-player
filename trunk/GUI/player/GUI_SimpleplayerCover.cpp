@@ -34,7 +34,7 @@
 /** COVERS **/
 void GUI_SimplePlayer::coverClicked() {
 
-	if(m_metadata.album_id >= 0)
+    if(m_metadata.album_id >= 0)
 		m_alternate_covers->start(m_metadata.album_id, true);
 
    else if(m_metadata.radio_mode == RADIO_STATION){
@@ -70,10 +70,17 @@ void GUI_SimplePlayer::coverClicked() {
 void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class){
 
 	Q_UNUSED(target_class);
+    QString coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
-	QString coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-	ui->albumCover->setIcon(QIcon(coverpath));
+    ui->albumCover->setIcon(QIcon(coverpath));
 
+}
+
+void GUI_SimplePlayer::sl_no_cover_available(){
+
+
+    QString coverpath = Helper::getIconPath() + "logo.png";
+    ui->albumCover->setIcon(QIcon(coverpath));
 }
 
 
@@ -83,11 +90,8 @@ void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
 
 	if(m_class_name != caller_class) return;
 
-	// found cover is not for the player but for sth else
-	QString our_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
-	if(	our_coverpath.toLower() != cover_path.toLower() ||
-		!QFile::exists(cover_path) ){
+    if(!QFile::exists(cover_path)){
 
         cover_path = Helper::getIconPath() + "logo.png";
 	}

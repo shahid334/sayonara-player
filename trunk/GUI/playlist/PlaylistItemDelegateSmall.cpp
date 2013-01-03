@@ -104,17 +104,17 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
     if(md.pl_playing){
 
-        if(!md.is_extern){
+    //    if(!md.is_extern){
             style = QString("background-color: ") +
                 col_highlight_lighter.name() + ";" +
                 get_fg_color(col_highlight_lighter.lightness());
-        }
+      /*  }
 
         else {
             style = QString("background-color: ") +
                 col_orange_light.name() + ";" +
                 get_fg_color(col_orange_light.lightness());
-        }
+        }*/
     }
 
     else if(md.is_disabled){
@@ -122,8 +122,10 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
     }
 
     else if(!md.pl_selected){
-        if(!md.is_extern) style = QString("background-color: transparent; ") + get_fg_color(background_val);
-        else style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(col_orange.lightness());
+        /*if(!md.is_extern) style = QString("background-color: transparent; ") + get_fg_color(background_val);
+        else style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(col_orange.lightness());*/
+
+        style = QString("background-color: transparent; ") + get_fg_color(background_val);
     }
 
 	// standard selected

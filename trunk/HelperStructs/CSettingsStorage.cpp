@@ -374,3 +374,12 @@ void CSettingsStorage::setLibShownColsArtist(QStringList lst){
 QStringList CSettingsStorage::getLibShownColsArtist(){
     return m_lib_shown_cols_artist;
 }
+
+
+void CSettingsStorage::setLibShowOnlyTracks(bool only_tracks){
+	m_show_only_tracks = only_tracks;
+}
+
+bool CSettingsStorage::getLibShowOnlyTracks(){
+	return m_show_only_tracks;
+}

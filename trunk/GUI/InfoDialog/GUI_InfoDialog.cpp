@@ -132,6 +132,9 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
     connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
 
+    connect(_alternate_covers, SIGNAL(sig_no_cover()),
+            this,				SLOT(no_cover_available()));
+
 
 
     hide();
@@ -406,10 +409,11 @@ void GUI_InfoDialog::prepare_albums(){
 
 		Album album = _db->getAlbumByID(album_id);
 		_album_name = album.name;
-		_artist_name = album.artists[0];
+
+        QString artist_name = ((album.artists.size() > 1) ? QString("Various artists") : album.artists[0]);
 
 		n_songs = album.num_songs;
-		header = album.name + " <font size=\"small\">"+ CAR_RET + "by " + _artist_name + "</font>";
+        header = album.name + " <font size=\"small\">"+ CAR_RET + "by " + artist_name + "</font>";
 
 		info = BOLD("#Tracks:&nbsp;") +  QString::number(album.num_songs) + CAR_RET;
 		info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + CAR_RET;
@@ -427,9 +431,9 @@ void GUI_InfoDialog::prepare_albums(){
 
 		foreach(int album_id, map_albums.keys()){
 			Album album = _db->getAlbumByID(album_id);
-			QString artist_name = ((album.artists.size() > 1) ? QString("Various") : album.artists[0]);
+            QString artist_name = ((album.artists.size() > 1) ? QString("Various artists") : album.artists[0]);
 
-			if(header_entries < 5)
+            if(header_entries < 5)
 				header += album.name + " <font size=\"small\"> by " + artist_name + "</font>" + CAR_RET;
 			else if(header_entries == 5) header += "...";
 
@@ -741,6 +745,12 @@ void GUI_InfoDialog::cover_clicked(){
 		}
 
 	this->setFocus();
+}
+
+
+
+void GUI_InfoDialog::no_cover_available(){
+    prepare_cover();
 }
 
 void GUI_InfoDialog::alternate_covers_available(QString caller_class){

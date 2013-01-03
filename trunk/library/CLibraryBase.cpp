@@ -23,11 +23,11 @@
 #include "HelperStructs/Helper.h"
 #include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
-#include "GUI/library/GUIImportFolder.h"
 #include "HelperStructs/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "application.h"
+#include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 
 #include <QDebug>
 #include <QProgressDialog>
@@ -79,7 +79,10 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 void CLibraryBase::importDirectory(QString directory){
 
+
 	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+
+
 	m_src_dir = directory;
 
 	QDir lib_dir(m_library_path);
@@ -107,6 +110,7 @@ void CLibraryBase::importDirectory(QString directory){
 void CLibraryBase::importFiles(const MetaDataList& v_md){
 
     MetaDataList v_md_new = v_md;
+    qDebug() << "Import files " << v_md.size();
     bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
     emit sig_import_result(success);
 }
@@ -150,7 +154,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
 	QString rel_src_path = tmp_src_dir.relativeFilePath(m_src_dir) + QDir::separator();
 
-	QString target_path = m_library_path +
+    QString target_path = m_library_path +
 				QDir::separator() +
 				chosen_item +
 				QDir::separator() +
@@ -158,7 +162,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
 		QStringList files2copy;
 		files2copy.push_back(src_dir.absolutePath());
-		int num_files = 1;
+        int num_files = 1;
 
 		for(int i=0; i<num_files; i++){
 
@@ -185,7 +189,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 					files2copy.insert(i+j, sub_dir.path() + QDir::separator() + sub_files[j] );
 				}
 
-				num_files += sub_files.size();
+                num_files += sub_files.size();
 				i--;
 			}
 		}
@@ -218,7 +222,20 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 			}
 		}
 
+        m_import_dialog->progress_changed(0);
+
 		success &= db->storeMetadata(v_metadata);
+
+
+        if(success)
+            QMessageBox::information(m_app->getMainWindow(), "Import files", "All files could be imported");
+
+        else
+            QMessageBox::warning(m_app->getMainWindow(), "Import files", QString("Sorry, but tracks could not be imported <br />") +
+                                 "Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+
+        m_import_dialog->close();
+
 		emit sig_import_result(success);
 }
 
@@ -324,7 +341,7 @@ void CLibraryBase::emit_stuff(){
 
 
 
-void CLibraryBase::psl_sortorder_changed(ArtistSort artist_so, AlbumSort album_so, TrackSort track_so){
+void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
 
     // artist sort order has changed
 	if(artist_so != _artist_sortorder){

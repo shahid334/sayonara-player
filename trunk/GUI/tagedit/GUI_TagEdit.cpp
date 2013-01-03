@@ -589,15 +589,21 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
     this->ui->pb_progress->setVisible(true);
 
+    MetaDataList v_md_tmp;
+
     for(uint i=0; i<_vec_tmp_metadata.size(); i++){
 
+        MetaData md = _vec_tmp_metadata[i];
         this->ui->pb_progress->setValue( (int)(i * 100.0 / _vec_tmp_metadata.size()));
 
-        change_mp3_file(_vec_tmp_metadata[i]);
+        change_mp3_file(md);
+        if(!md.is_extern)
+            v_md_tmp.push_back(md);
+
         usleep(100000);
     }
 
-    return CDatabaseConnector::getInstance()->storeMetadata(_vec_tmp_metadata);
+    return CDatabaseConnector::getInstance()->storeMetadata(v_md_tmp);
 }
 
 

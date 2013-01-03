@@ -157,9 +157,9 @@ QString Helper::getSayonaraPath(){
 	return QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator();
 }
 
-QString Helper::get_artist_image_path(QString artist){
+QString Helper::get_artist_image_path(QString artist, QString extension){
 	QString token = QString("artist_") + calc_cover_token(artist, "");
-	QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
+    QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + "." + extension;
 
 
 	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
@@ -169,9 +169,9 @@ QString Helper::get_artist_image_path(QString artist){
 	return image_path;
 }
 
-QString Helper::get_cover_path(QString artist, QString album){
+QString Helper::get_cover_path(QString artist, QString album, QString extension){
 	QString cover_token = calc_cover_token(artist, album);
-	QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + ".jpg";
+    QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + "." + extension;
 
 	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
 		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
@@ -347,7 +347,43 @@ bool Helper::is_playlistfile(QString filename){
 	return false;
 }
 
+QString Helper::calc_file_extension(QString filename){
 
+    int last_point = filename.lastIndexOf(".") + 1;
+    return filename.right(filename.size() - last_point);
+
+}
+
+void Helper::remove_files_in_directory(QString dir_name, QStringList filters){
+	if(filters.size() == 0) filters << "*";
+
+	QDir dir(dir_name);
+	dir.setFilter(QDir::Files);
+	dir.setNameFilters(filters);
+	QStringList file_list = dir.entryList();
+
+	foreach(QString filename, file_list){
+
+		QFile file(dir.absoluteFilePath(filename));
+		file.remove();
+	}
+}
+
+QString Helper::get_folder_of_file(QString filename){
+    return filename.left(filename.lastIndexOf(QDir::separator()) + 1);
+}
+
+QStringList Helper::extract_folders_of_files(QStringList files){
+    QStringList folders;
+    foreach(QString file, files){
+        QString folder = get_folder_of_file(file);
+        if(!folders.contains(folder))
+            folders << folder;
+    }
+
+    return folders;
+
+}
 
 bool Helper::checkTrack(const MetaData& md){
 

@@ -269,7 +269,7 @@ struct Artist{
         is_lib_selected = false;
 	}
 
-	QStringList toStringList(){
+    QVariant toVariant(){
 		QStringList list;
 		QString tmpName = name;
 		if(name.trimmed().size() == 0) tmpName = QString("(Unknown artist)");
@@ -281,7 +281,8 @@ struct Artist{
 		return list;
 	}
 
-	void fromStringList(QStringList& list){
+    void fromVariant(const QVariant& v){
+        QStringList list = v.toStringList();
 		if(list.size() < 4) return;
         name = list[0];
         id = list[1].toInt();
@@ -313,7 +314,7 @@ struct Album{
         is_lib_selected = false;
 	}
 
-	QStringList toStringList(){
+    QVariant toVariant(){
 		QStringList list;
 		QString tmpName = "(Unknown album)";
 		if(name.trimmed().size() > 0) tmpName = name;
@@ -344,9 +345,10 @@ struct Album{
 	}
 
 
-	void fromStringList(QStringList& list){
-
+    void fromVariant(const QVariant& v){
+        QStringList list = v.toStringList();
 		if(list.size() < 7) return;
+
 		name = list.at(0);
 		QString tmp_artists = list.at(1);
 		QStringList tmp_list = tmp_artists.split(',');

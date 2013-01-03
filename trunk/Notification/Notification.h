@@ -2,6 +2,7 @@
 #define NOTIFICATION_H_
 #include <QObject>
 #include <QString>
+#include "HelperStructs/MetaData.h"
 
 
 class Notification : public QObject {
@@ -15,7 +16,8 @@ protected:
 
 public:
 
-	virtual void notification_show(QString title, QString text)=0;
+    virtual void notification_show(const MetaData&)=0;
+    virtual void not_close()=0;
 	virtual QString get_name()=0;
 
 };

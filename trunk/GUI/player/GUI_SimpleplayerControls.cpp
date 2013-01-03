@@ -30,8 +30,6 @@
 /** PLAYER BUTTONS **/
 void GUI_SimplePlayer::playClicked(bool) {
 
-    qDebug() << "play clicked";
-
     if(!m_metadata_available) return;
 
     if (m_playing) {
@@ -246,4 +244,5 @@ void GUI_SimplePlayer::muteButtonPressed() {
 }
 
 /** VOLUME END **/
+
 

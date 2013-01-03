@@ -55,9 +55,12 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
+	void set_n_cols(int cols);
+
 
 private:
 	QStringList _pathlist;
+	int			_n_cols;
 
 
 };

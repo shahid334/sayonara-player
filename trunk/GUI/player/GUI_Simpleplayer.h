@@ -119,6 +119,7 @@ signals:
     void libpath_changed(QString);
     void setupLastFM();
     void sig_skin_changed(bool);
+    void sig_show_only_tracks(bool);
 
     /* Covers */
     void sig_want_cover(const MetaData &);
@@ -150,7 +151,7 @@ private slots:
     void importFolderClicked(bool b = true);
 
     /* View */
-    void showLibrary(bool);
+    void showLibrary(bool, bool resize=true);
     void changeSkin(bool);
     void small_playlist_items_toggled(bool);
     void show_notification_toggled(bool);
@@ -166,11 +167,13 @@ private slots:
     void only_one_instance_toggled(bool);
     void sl_action_streamripper_toggled(bool);
     void sl_action_socket_connection_triggered(bool);
+    void sl_show_only_tracks(bool);
 
     void about(bool b=false);
 
 
     void sl_alternate_cover_available(QString);
+    void sl_no_cover_available();
 
     void really_close(bool=false);
 

@@ -154,6 +154,9 @@ bool CDatabaseConnector::load_settings(){
     settings->setLibShownColsAlbum(lib_shown_cols_album);
     settings->setLibShownColsArtist(lib_shown_cols_artist);
 
+    bool show_only_tracks = load_setting_bool(SET_LIB_SHOWN_ONLY_TRACKS, false);
+    settings->setLibShowOnlyTracks(show_only_tracks);
+
 
 	/* Player size */
 	QSize player_size(800, 600);
@@ -304,6 +307,9 @@ bool CDatabaseConnector::store_settings(){
     store_setting(SET_LIB_SHOWN_COLS_TITLE, lib_shown_cols_title.join(","));
     store_setting(SET_LIB_SHOWN_COLS_ALBUM, lib_shown_cols_album.join(","));
     store_setting(SET_LIB_SHOWN_COLS_ARTIST, lib_shown_cols_artist.join(","));
+
+    bool lib_show_only_tracks = storage->getLibShowOnlyTracks();
+    store_setting(SET_LIB_SHOWN_ONLY_TRACKS, lib_show_only_tracks);
 
 	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());

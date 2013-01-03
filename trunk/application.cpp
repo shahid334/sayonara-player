@@ -5,7 +5,6 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/library/GUI_Library_windowed.h"
-#include "GUI/library/GUILibraryInfoBox.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -49,7 +48,7 @@ bool Application::is_initialized(){
 
 
 
-Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
+Application::Application(QApplication* qapp, int n_files, QObject *parent) : QObject(parent)
 {
 
 	app                = qapp;
@@ -81,7 +80,8 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
     ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
-    ui_library          = new GUI_Library_windowed(player->getParentOfLibrary(), ui_info_dialog);
+    ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
+    ui_library->set_info_dialog(ui_info_dialog);
     ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
     remote_socket       = new Socket();
@@ -108,6 +108,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
 
     init_connections();
 
+    qDebug() << "setting up player";
     player->setWindowTitle("Sayonara " + version);
     player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
@@ -125,6 +126,7 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     ui_library->resize(player->getParentOfLibrary()->size());
     ui_playlist->resize(player->getParentOfPlaylist()->size());
 
+    qDebug() << "Set up engine...";
     vector<EQ_Setting> vec_eq_setting;
     set->getEqualizerSettings(vec_eq_setting);
 
@@ -133,17 +135,22 @@ Application::Application(QApplication* qapp, QObject *parent) : QObject(parent)
     listen->setVolume(vol);
     listen->load_equalizer(vec_eq_setting);
 
+    qDebug() << "Set up library...";
     library->loadDataFromDb();
 
+    qDebug() << "Set up lastfm...";
     QString user, password;
     if(set->getLastFMActive()){
         set->getLastFMNameAndPW(user, password);
         LastFM::getInstance()->lfm_login( user,password, true );
     }
 
-    playlist->ui_loaded();
+    bool load_old_playlist = (n_files == 0);
+
+    qDebug() << "Set up post gui operations...";
+   /* playlist->ui_loaded(load_old_playlist);
     playlists->ui_loaded();
-    player->ui_loaded();
+    player->ui_loaded();*/
 
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
@@ -193,6 +200,8 @@ void Application::init_connections(){
    CONNECT (player, reloadLibrary(), 						library,            reloadLibrary());
    CONNECT (player, importDirectory(QString),				library,            importDirectory(QString));
    CONNECT (player, libpath_changed(QString),               library, 			setLibraryPath(QString));
+   CONNECT (player, sig_show_only_tracks(bool),				ui_library,			show_only_tracks(bool));
+
    CONNECT (player, fileSelected(QStringList &),			playlist, 			psl_createPlaylist(QStringList&));
    CONNECT (player, play(),                                 playlist,			psl_play());
    CONNECT (player, stop(),                                 playlist,			psl_stop());
@@ -277,8 +286,8 @@ void Application::init_connections(){
 	   CONNECT(ui_library, sig_track_pressed(const QList<int>&),            library, 		psl_selected_tracks_changed(const QList<int>&));
 	   CONNECT(ui_library, sig_filter_changed(const Filter&),               library, 		psl_filter_changed(const Filter&));
 
-	   CONNECT(ui_library, sig_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort),
-			   library, 	 psl_sortorder_changed(Sort::ArtistSort, Sort::AlbumSort, Sort::TrackSort));
+       CONNECT(ui_library, sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder),
+               library, 	 psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder));
 
 	   CONNECT(ui_library, sig_show_id3_editor(const QList<int>&),              library, 		psl_change_id3_tags(const QList<int>&));
 	   CONNECT(ui_library, sig_delete_tracks(int),                              library,		psl_delete_tracks(int));
@@ -340,6 +349,8 @@ void Application::init_connections(){
 
 		   remote_socket->start();
 	   }
+
+	   qDebug() << "connections done";
 }
 
 
@@ -386,3 +397,4 @@ QString Application::getVersion(){
 QMainWindow* Application::getMainWindow(){
     return this->player;
 }
+

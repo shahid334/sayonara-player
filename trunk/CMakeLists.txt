@@ -53,6 +53,7 @@ SET(HEADERS
     Engine/SoundPluginLoader.h
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
+    
     GUI/player/GUI_Simpleplayer.h
     GUI/player/GUI_TrayIcon.h
     GUI/player/SearchSlider.h
@@ -66,20 +67,24 @@ SET(HEADERS
     GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
     GUI/LastFM/GUI_LastFM.h
     GUI/library/GUI_Library_windowed.h
-    GUI/library/LibraryItemModelTracks.h
-    GUI/library/LibraryItemModelAlbums.h
-    GUI/library/LibraryItemDelegateAlbums.h
-    GUI/library/LibraryItemDelegateArtists.h
-    GUI/library/LibraryItemModelArtists.h
-    GUI/library/GUILibraryInfoBox.h
+    GUI/library/models/LibraryItemModel.h
+    GUI/library/models/LibraryItemModelTracks.h
+    GUI/library/models/LibraryItemModelAlbums.h
+    GUI/library/models/LibraryItemModelArtists.h
+    GUI/library/delegates/LibraryItemDelegateAlbums.h
+    GUI/library/delegates/LibraryItemDelegateArtists.h
+    GUI/library/InfoBox/GUILibraryInfoBox.h
+    GUI/library/ImportFolderDialog/GUIImportFolder.h
+    
     GUI/alternate_covers/AlternateCoverItemDelegate.h
     GUI/alternate_covers/AlternateCoverItemModel.h
     GUI/alternate_covers/GUI_Alternate_Covers.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
+    GUI/MyColumnHeader.h
     GUI/MyTableView.h
     GUI/MyListView.h
-    GUI/library/GUIImportFolder.h
+    
     GUI/InfoDialog/GUI_InfoDialog.h
     GUI/SocketConfiguration/GUISocketSetup.h
     CoverLookup/CoverLookup.h
@@ -122,13 +127,16 @@ SET(SOURCES
     GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     GUI/LastFM/GUI_LastFM.cpp
     GUI/library/GUI_Library_windowed.cpp
-    GUI/library/LibraryItemModelTracks.cpp
-    GUI/library/LibraryItemModelAlbums.cpp
-    GUI/library/LibraryItemDelegateAlbums.cpp
-    GUI/library/LibraryItemDelegateArtists.cpp
-    GUI/library/LibraryItemModelArtists.cpp
-    GUI/library/LibraryItemDelegateTracks.cpp
-    GUI/library/GUILibraryInfoBox.cpp
+    GUI/library/models/LibraryItemModel.cpp
+    GUI/library/models/LibraryItemModelTracks.cpp
+    GUI/library/models/LibraryItemModelAlbums.cpp
+    GUI/library/models/LibraryItemModelArtists.cpp
+    GUI/library/delegates/LibraryItemDelegateAlbums.cpp
+    GUI/library/delegates/LibraryItemDelegateArtists.cpp
+    GUI/library/delegates/LibraryItemDelegateTracks.cpp
+    GUI/library/InfoBox/GUILibraryInfoBox.cpp
+    GUI/library/ImportFolderDialog/GUIImportFolder.cpp
+    
     GUI/alternate_covers/AlternateCoverItemDelegate.cpp
     GUI/alternate_covers/AlternateCoverItemModel.cpp
     GUI/alternate_covers/GUI_Alternate_Covers.cpp
@@ -136,7 +144,7 @@ SET(SOURCES
     GUI/equalizer/GUI_Equalizer.cpp
     GUI/MyTableView.cpp
     GUI/MyListView.cpp
-    GUI/library/GUIImportFolder.cpp
+    
     GUI/InfoDialog/GUI_InfoDialog.cpp
     GUI/SocketConfiguration/GUISocketSetup.cpp
     HelperStructs/Helper.cpp
@@ -184,8 +192,8 @@ SET(FORMS
     GUI/playlist/GUI_Playlist_EntrySmall.ui
     GUI/LastFM/GUI_LastFM_Dialog.ui
     GUI/library/GUI_Library_windowed.ui
-    GUI/library/GUI_ImportFolder.ui
-    GUI/library/GUI_Library_Info_Box.ui
+    GUI/library/ImportFolderDialog/GUI_ImportFolder.ui
+    GUI/library/InfoBox/GUI_Library_Info_Box.ui
     GUI/equalizer/GUI_Equalizer.ui
     GUI/tagedit/GUI_TagEdit.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui
@@ -282,5 +290,6 @@ IF(${UNIX})
 	execute_process(COMMAND update-menus)
 	execute_process(COMMAND sh ./setversion.sh)
 ENDIF(${UNIX})
+
 
 

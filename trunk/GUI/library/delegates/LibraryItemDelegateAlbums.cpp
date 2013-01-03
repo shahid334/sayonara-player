@@ -26,10 +26,10 @@
  *      Author: luke
  */
 
-#include "GUI/library/LibraryItemDelegateAlbums.h"
+#include "GUI/library/delegates/LibraryItemDelegateAlbums.h"
+#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 
-
-#include <HelperStructs/MetaData.h>
 #include <QObject>
 #include <QLabel>
 #include <QDebug>
@@ -38,17 +38,21 @@
 #include <QPainter>
 #include <QTableView>
 #include <QStyleOptionViewItem>
-#include "HelperStructs/Helper.h"
 
 
-LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModelAlbums* model, QTableView* parent) {
+
+LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent) {
 	this->_parent = parent;
 
         QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
         QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
         _icon_single_album = QPixmap(icon_path_no_sampler);
         _icon_multi_album = QPixmap(icon_path_sampler);
+
         _model = model;
+
+        QPalette palette = _parent->palette();
+        _selected_background = palette.color(QPalette::Active, QPalette::Highlight);
 
 }
 
@@ -94,8 +98,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             rect.translate(2, 0);
             QString name = _model->data(index, Qt::WhatsThisRole).toString();
             painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
-
-
         }
 
 

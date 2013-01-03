@@ -125,13 +125,9 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 }
 
 
+void Playlist::load_old_playlist(){
 
-
-// call this function if all extern signals/slots for this class are defined
-void Playlist::ui_loaded(){
-
-    _v_meta_data.clear();
-
+    if(_v_meta_data.size() > 0) return;
 
     bool loadPlaylist = _settings->getLoadPlaylist();
     bool loadLastTrack = _settings->getLoadLastTrack();
@@ -139,7 +135,7 @@ void Playlist::ui_loaded(){
     bool load_last_position = _settings->getRememberTime();
     bool start_immediatly = _settings->getStartPlaying();
 
-	if( !loadPlaylist ) return;
+    if( !loadPlaylist ) return;
 
     QStringList saved_playlist = _settings->getPlaylist();
 
@@ -150,8 +146,8 @@ void Playlist::ui_loaded(){
         QDir d2(last_track_path);
         last_track_path = d2.absolutePath();
 
-	int last_track_idx = -1;
-	
+    int last_track_idx = -1;
+
     // run over all tracks
     for(int i=0; i<saved_playlist.size(); i++){
 
@@ -209,14 +205,14 @@ void Playlist::ui_loaded(){
         }
 
         _v_meta_data.push_back(track);
-	}
+    }
 
     if(_v_meta_data.size() == 0) return;
-	
+
     _cur_play_idx = 0;
-	if(loadLastTrack && last_track_idx >= 0){
-		_cur_play_idx = last_track_idx;
-	}
+    if(loadLastTrack && last_track_idx >= 0){
+        _cur_play_idx = last_track_idx;
+    }
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
     emit sig_selected_file_changed(_cur_play_idx);
@@ -228,6 +224,14 @@ void Playlist::ui_loaded(){
     else {
         emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx], 0, start_immediatly);
     }
+}
+
+
+// call this function if all extern signals/slots for this class are defined
+void Playlist::ui_loaded(bool load_playlist){
+
+    if(load_playlist)
+        load_old_playlist();
 }
 
 // save the playlist, for possibly reloading it on next startup

@@ -14,7 +14,6 @@
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/library/GUI_Library_windowed.h"
-#include "GUI/library/GUILibraryInfoBox.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -50,7 +49,7 @@ class Application : public QObject
     Q_OBJECT
 
 public:
-    Application( QApplication* qapp, QObject *parent = 0);
+    Application( QApplication* qapp, int n_files, QObject *parent = 0);
     virtual ~Application();
     
 signals:

@@ -32,10 +32,12 @@
 #include <QListView>
 #include <QMouseEvent>
 #include <QDebug>
+#include <QUrl>
 
 
 MyListView::MyListView(QWidget* parent) : QListView(parent) {
 
+    _mimedata = 0;
     _drag_allowed = true;
 	_parent = parent;
 	_qDrag = 0;
@@ -43,8 +45,7 @@ MyListView::MyListView(QWidget* parent) : QListView(parent) {
 }
 
 MyListView::~MyListView() {
-	/*if(_qDrag) delete _qDrag;
-	_qDrag = 0;*/
+
 }
 
 
@@ -93,7 +94,7 @@ void MyListView::mouseMoveEvent(QMouseEvent* event) {
 	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
     if (_drag && _qDrag && distance > 20 && _drag_allowed) {
-		_qDrag->exec(Qt::ActionMask);
+        _qDrag->exec(Qt::CopyAction);
 	}
 }
 
@@ -103,6 +104,11 @@ void MyListView::mouseReleaseEvent(QMouseEvent* event) {
 	switch (event->button()) {
 
 		case Qt::LeftButton:
+
+            if(_qDrag) {
+               delete _qDrag;
+                _qDrag = NULL;
+            }
 
 			QListView::mouseReleaseEvent(event);
 			event->accept();
@@ -114,17 +120,45 @@ void MyListView::mouseReleaseEvent(QMouseEvent* event) {
 	}
 }
 
-void MyListView::set_mime_data(CustomMimeData* data) {
+void MyListView::set_mimedata(MetaDataList& v_md, QString text) {
 
     if(!_drag_allowed) return;
+    if(_qDrag) delete _qDrag;
 
-	_qDrag = new QDrag(this);
-	_qDrag->setMimeData(data);
+    _mimedata = new CustomMimeData();
 
-	if (data) _drag = true;
-	else _drag = false;
+    QList<QUrl> urls;
+    foreach(MetaData md, v_md){
+        QUrl url(QString("file://") + md.filepath);
+        urls << url;
+    }
+
+    _mimedata->setMetaData(v_md);
+    _mimedata->setText(text);
+    _mimedata->setUrls(urls);
+
+
+
+
+    _qDrag = new QDrag(this);
+    _qDrag->setMimeData(_mimedata);
+
+
+
+
+    connect(_qDrag, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
+
+    _drag = true;
+}
+
+void MyListView::forbid_mimedata_destroyable(){
+    _qDrag = NULL;
 }
 
 void MyListView::set_drag_enabled(bool b){
     _drag_allowed = b;
 }
+
+
+
+

@@ -22,7 +22,7 @@
  *
  */
 
-#include "GUI/library/GUILibraryInfoBox.h"
+#include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "ui_GUI_Library_Info_Box.h"
 
 #include "HelperStructs/CSettingsStorage.h"
