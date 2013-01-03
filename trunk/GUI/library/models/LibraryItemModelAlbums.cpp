@@ -167,5 +167,15 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 	Q_UNUSED(order);
 }
 
+int LibraryItemModelAlbums::getFirstRowOf(QString substr){
+    int i = 0;
+    foreach(Album album, _album_list){
+        if(album.name.startsWith(substr, Qt::CaseInsensitive))
+            return i;
 
+        i++;
+    }
+
+    return -1;
+}
 

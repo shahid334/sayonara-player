@@ -39,6 +39,7 @@
 #include <QString>
 #include <QMenu>
 #include <QAction>
+#include <QLineEdit>
 
 
 
@@ -78,9 +79,12 @@ class MyTableView : public QTableView{
         void delete_clicked();
         void play_next_clicked();
 
+        void edit_changed(QString);
+
 
 	private:
         void rc_menu_init();
+        void reset_edit();
 
 
 	public:
@@ -127,6 +131,7 @@ class MyTableView : public QTableView{
 
 
 	    QList<QAction*> 	_header_rc_actions;
+	    QLineEdit*			_edit;
 
 		LibraryItemModel* 	_model;
 		Sort::SortOrder		_sort_order;

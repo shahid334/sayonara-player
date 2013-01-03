@@ -153,4 +153,16 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 	return QAbstractItemModel::flags(index);
 }
 
+int	LibraryItemModelArtists::getFirstRowOf(QString substr){
 
+    int i = 0;
+    foreach(Artist artist, _artist_list){
+        if(artist.name.startsWith(substr, Qt::CaseInsensitive))
+            return i;
+
+        i++;
+    }
+
+    return -1;
+
+}

@@ -59,6 +59,7 @@ public:
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
   	void sort(int column, Qt::SortOrder order);
+  	virtual int			getFirstRowOf(QString substr);
 
 private:
 	QList<Album> 			_album_list;
