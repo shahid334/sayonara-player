@@ -48,19 +48,23 @@ public:
 
 	virtual ~PlaylistItemModel();
 
-	int rowCount(const QModelIndex &parent) const;
+    int rowCount(const QModelIndex &parent=QModelIndex()) const;
 	QVariant data(const QModelIndex &index, int role) const;
 
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
 	bool setData(const QModelIndex &index, const QVariant &value, int role);
 
-	bool insertRows(int position, int rows, const QModelIndex &index);
-	bool removeRows(int position, int rows, const QModelIndex &index);
+    bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
+    bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
+    void set_selected(QList<int>& rows);
+    bool is_selected(int row) const ;
 
-private:
-	QList<QVariant>		_labellist;
+protected:
+    MetaDataList		_v_meta_data;
+    QList<int>          _selected_rows;
+    int					_cur_play_idx;
 
 };
 

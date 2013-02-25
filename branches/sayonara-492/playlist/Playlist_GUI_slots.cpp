@@ -108,21 +108,22 @@ void Playlist::psl_change_track(int new_row){
     if( (uint) new_row >= _v_meta_data.size()) return;
     if( _radio_active == RADIO_LFM) return;
 
+
+    for(uint i=0; i<_v_meta_data.size(); i++){
+        _v_meta_data[i].pl_playing = ( new_row == (int) i );
+        _v_meta_data[i].pl_selected = false;
+    }
+
     MetaData md = _v_meta_data[new_row];
-    md.pl_playing = true;
 
     if( checkTrack(md) ){
-        qDebug() << "check track successful";
         _cur_play_idx = new_row;
-        _v_meta_data.setCurPlayTrack(_cur_play_idx);
 
         emit sig_selected_file_changed_md(md);
         emit sig_selected_file_changed(_cur_play_idx);
     }
 
     else{
-
-        qDebug() << "check track not successful";
 
         _cur_play_idx = -1;
         _v_meta_data.setCurPlayTrack(_cur_play_idx);
@@ -167,8 +168,8 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
             md.radio_mode = RADIO_OFF;
         }
 
-        _v_meta_data.insert_mid(md, i + row);
-        if(md.pl_playing) _cur_play_idx = (i + row);
+        _v_meta_data.insert_mid(md, i + row + 1);
+        if(md.pl_playing) _cur_play_idx = (i + row + 1);
     }
 
 

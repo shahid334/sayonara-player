@@ -70,8 +70,15 @@ public:
 	qint32 track_num;
 	qint32 bitrate;
     qint64 filesize;
+    QString comment;
+    int discnumber;
+    int n_discs;
+
+
 	bool is_extern;
 	int radio_mode;
+
+
 
 	bool pl_selected;
 	bool pl_playing;
@@ -97,6 +104,10 @@ public:
             is_extern = false;
             radio_mode = RADIO_OFF;
             filesize = 0;
+            comment = "";
+            discnumber = -1;
+            n_discs = -1;
+
 
             pl_selected = false;
             pl_playing = false;
@@ -139,6 +150,9 @@ public:
 		list.push_back(QString::number(album_id));
 		list.push_back(QString::number(artist_id));
         list.push_back(QString::number(filesize));
+        list.push_back(comment);
+        list.push_back(QString::number(discnumber));
+        list.push_back(QString::number(n_discs));
         list.push_back(genres.join(","));
 		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
 		list.push_back( QString::number(radio_mode) );
@@ -155,7 +169,7 @@ public:
 
 		QStringList list = v.toStringList();
 
-        if(list.size() < 21) return false;
+        if(list.size() < 24) return false;
 
         md.title =      list[0];
         md.artist =     list[1];
@@ -170,14 +184,17 @@ public:
         md.album_id =   list[10].toInt();
         md.artist_id =  list[11].toInt();
         md.filesize =   list[12].toInt();
-        md.genres =     list[13].split(",");
-        md.is_extern = ( list[14] == "1" );
-        md.radio_mode = list[15].toInt();
-        md.pl_playing = (list[16] == "1");
-        md.pl_selected = (list[17] == "1");
-        md.pl_dragged = (list[18] == "1");
-        md.is_lib_selected = (list[19] == "1");
-        md.is_disabled = (list[20] == "1");
+        md.comment =    list[13];
+        md.discnumber = list[14].toInt();
+        md.n_discs =    list[15].toInt();
+        md.genres =     list[16].split(",");
+        md.is_extern = ( list[17] == "1" );
+        md.radio_mode = list[18].toInt();
+        md.pl_playing = (list[19] == "1");
+        md.pl_selected = (list[20] == "1");
+        md.pl_dragged = (list[21] == "1");
+        md.is_lib_selected = (list[22] == "1");
+        md.is_disabled = (list[23] == "1");
 
 		return true;
 	}
@@ -230,12 +247,14 @@ public:
 
 	void insert_mid(const MetaData& md, int pos){
 
+        if(pos < 0) pos = 0;
+
         if(pos >= (int) size()){
 			push_back(md);
 			return;
 		}
 
-		if(pos < 0) pos = 0;
+
 
         uint sz = size();
 
@@ -301,8 +320,11 @@ struct Album{
 	qint32 	length_sec;
 	qint32	year;
 	QStringList artists;
+    int discnumber;
+    int n_discs;
 	bool is_sampler;
     bool is_lib_selected;
+
 
 	Album(){
 		name = "";
@@ -310,6 +332,8 @@ struct Album{
 		num_songs = 0;
 		length_sec = 0;
 		year = 0;
+        discnumber = -1;
+        n_discs = -1;
 		is_sampler = false;
         is_lib_selected = false;
 	}
@@ -329,7 +353,9 @@ struct Album{
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(length_sec));
-		list.push_back(QString::number(year));
+        list.push_back(QString::number(year));
+        list.push_back(QString::number(discnumber));
+        list.push_back(QString::number(n_discs));
 
 
         if(is_sampler){
@@ -347,18 +373,21 @@ struct Album{
 
     void fromVariant(const QVariant& v){
         QStringList list = v.toStringList();
-		if(list.size() < 7) return;
+        if(list.size() < 10) return;
 
-		name = list.at(0);
+        name =      list.at(0);
 		QString tmp_artists = list.at(1);
 		QStringList tmp_list = tmp_artists.split(',');
-		artists = tmp_list;
-		id = list.at(2).toInt();
-		num_songs = list.at(3).toInt();
-		length_sec = list.at(4).toLong();
-		year = list.at(5).toInt();
-		is_sampler = (list.at(6) == "sampler");
-        is_lib_selected = ((list[7] == "1") ? true : false);
+        artists =       tmp_list;
+        id =            list.at(2).toInt();
+        num_songs =     list.at(3).toInt();
+        length_sec =    list.at(4).toLong();
+        year =          list.at(5).toInt();
+        discnumber =    list.at(6).toInt();
+        n_discs =       list.at(7).toInt();
+
+        is_sampler =    (list.at(8) == "sampler");
+        is_lib_selected = ((list[9] == "1") ? true : false);
 	}
 };
 

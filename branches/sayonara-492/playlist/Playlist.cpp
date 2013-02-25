@@ -127,6 +127,7 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 
 void Playlist::load_old_playlist(){
 
+    qDebug() << "load old playlist " << _v_meta_data.size();
     if(_v_meta_data.size() > 0) return;
 
     bool loadPlaylist = _settings->getLoadPlaylist();
@@ -227,12 +228,6 @@ void Playlist::load_old_playlist(){
 }
 
 
-// call this function if all extern signals/slots for this class are defined
-void Playlist::ui_loaded(bool load_playlist){
-
-    if(load_playlist)
-        load_old_playlist();
-}
 
 // save the playlist, for possibly reloading it on next startup
 void Playlist::psl_save_playlist_to_storage(){

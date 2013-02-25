@@ -284,8 +284,6 @@ QList<int> MyTableView::calc_selections(){
 
 	_model->set_selected(idx_list_int);
 
-
-
 	return idx_list_int;
 }
 

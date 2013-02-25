@@ -145,12 +145,13 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
         LastFM::getInstance()->lfm_login( user,password, true );
     }
 
-    //bool load_old_playlist = (n_files == 0);
 
-    qDebug() << "Set up post gui operations...";
-   /* playlist->ui_loaded(load_old_playlist);
+    bool load_old_playlist = (n_files == 0);
+    if(load_old_playlist)
+        playlist->load_old_playlist();
+
     playlists->ui_loaded();
-    player->ui_loaded();*/
+    player->ui_loaded();
 
     player->hideAllPlugins();
     set->setShownPlugin(shown_plugin);
@@ -247,7 +248,7 @@ void Application::init_connections(){
 	   CONNECT (ui_playlist, clear_playlist(),                              playlist, 	psl_clear_playlist());
 	   CONNECT (ui_playlist, playlist_mode_changed(const Playlist_Mode&),   playlist, 	psl_playlist_mode_changed(const Playlist_Mode&));
 	   CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),      playlist, 	psl_insert_tracks(const MetaDataList&, int));
-	   CONNECT (ui_playlist, rows_removed(const QList<int>&),               playlist, 	psl_remove_rows(const QList<int>&));
+       CONNECT (ui_playlist, sig_rows_removed(const QList<int>&),           playlist, 	psl_remove_rows(const QList<int>&));
 	   CONNECT (ui_playlist, sig_import_to_library(bool),					playlist,	psl_import_new_tracks_to_library(bool));
 
 	   CONNECT (listen, track_finished(),                                   playlist,	psl_next_track() );
