@@ -28,91 +28,360 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <fstream>
+#include <vector>
 
 #include <string>
 	#include <taglib/tag.h>
 	#include <taglib/taglib.h>
 	#include <taglib/fileref.h>
 
+typedef vector<uchar> ByteVector;
+
 using namespace std;
 using namespace Helper;
 
-TagLib::ByteVector get_tag_end(TagLib::FileRef& f){
+void stretch_file(fstream& f, long offset, int n_bytes);
 
-    TagLib::ByteVector vec_len;
-    int taglen = 0;
+long get_mp3_header_size(fstream& f){
+
+    long headersize = 0;
     int multiplier = 1;
-    f.file()->seek(6);
 
-    vec_len = f.file()->readBlock(4);
+    char bytes[4];
+    f.seekg(6, ios_base::beg);
+    f.read(bytes, 4);
+        cout << "headersize " << flush;
     for(int i=3; i>=0; i--){
-            taglen += ((uchar)vec_len[i] * multiplier);
+            headersize += (bytes[i] * multiplier);
+            cout << (int) bytes[i] << "." << flush;
             multiplier *= 128;
     }
+
+    f.seekg(0, ios_base::beg);
+    cout << endl;
+
+    return headersize;
+}
+
+
+void set_mp3_header_size(fstream& f, int new_size){
+
+    // header size (0x -X XX XX XX ) * 4
+    char c_new_size[4];
+
+    c_new_size[0] = new_size >> 21; c_new_size[0] &= 0x7F;
+    c_new_size[1] = new_size >> 14; c_new_size[1] &= 0x7F;
+    c_new_size[2] = new_size >> 7; c_new_size[2] &= 0x7F;
+    c_new_size[3] = new_size; c_new_size[3] &= 0x7F;
+
+    f.seekp(6, ios_base::beg);
+    f.write(c_new_size, 4);
+    f.flush();
+    f.seekp(0, ios_base::beg);
+}
+
+
+
+// input: entire vector, with header, size, flags, content
+// output: of size of content
+int get_mp3_frame_content_size(const ByteVector& vec){
+
+    if(vec.size() < 8) return 0;
+
+    int size = 0;
+    int multiplier = 1;
+    for(int i=7; i>=4; i--){
+
+            size += (vec[i] * multiplier);
+            multiplier *= 256;
+    }
+
+    return size;
+}
+
+// input: entire vector, with header, size, flags, content
+// ountput: same, but modified
+ByteVector set_mp3_frame_content_size(const ByteVector& vec, uint new_size){
+
+    if(vec.size() < 8) return vec;
+    ByteVector result = vec;
+
+    result[7] = new_size;
+    result[6] = new_size >> 8;
+    result[5] = new_size >> 16;
+    result[4] = new_size >> 24;
+    return result;
+}
+
+
+// input: entire vector, with header, size, flags, content
+// output: content
+ByteVector get_mp3_frame_content(const ByteVector& vec){
+
+    ByteVector result;
+    int len_content = get_mp3_frame_content_size(vec);
+    if(len_content+10 > vec.size()) return result;
+
+    for(int i=10; i<10+len_content; i++)
+        result.push_back(vec[i]);
+
+    return result;
+}
+
+// input: entire vector, with header, size, flags, content
+// output: same, but modified
+ByteVector set_mp3_frame_content(const ByteVector& vec_org, const ByteVector& data){
+
+    ByteVector result = vec_org;
+    result = set_mp3_frame_content_size(vec_org, data.size());
+
+    while(result.size() > 10)
+        result.pop_back();
+
+    for(uint i=0; i<data.size(); i++){
+        result.push_back(data[i]);
+    }
+
+    return result;
+}
+
+
+ByteVector get_mp3_header_end_str(fstream& f){
+
+    ByteVector result;
+    char end_tag[8];
+    int taglen = get_mp3_header_size(f);
 
     // max 256 Kbyte
     if(taglen > 262143) taglen = 262143;
 
-    f.file()->seek(taglen +10);
-    TagLib::ByteVector end_of_tag = f.file()->readBlock(8);
+    f.seekg(taglen +10, ios_base::beg);
+    f.read(end_tag, 8);
+    for(int i=0; i<8; i++){
+        result.push_back(end_tag[i]);
+    }
 
-    return end_of_tag;
+    return result;
+}
+
+// input: file, the attribute searching for (e.g. TPOS), a reference to an output vector (EVERYTHING is included there)
+// output: where did we finde the tag, negative if not available
+long get_mp3_attr(fstream& f, char* tag, int tag_size, ByteVector& result){
+
+    ByteVector tag_end = get_mp3_header_end_str(f);
+
+    long offset = -1;
+    const int block_size = 256;
+    char block[block_size];
+
+    bool found = false;
+    int n_blocks = 0;
+    f.seekg(0, ios_base::beg);
+
+    while(true){
+
+        f.read(block, block_size);
+
+        uint found_cs = 0;
+        int ptr_tag = 0;
+        for(int i=0; i<block_size; i++, offset++){
+                if(block[i] == tag[ptr_tag]){
+                        found_cs++;
+                        ptr_tag++;
+                }
+
+                else {
+                        ptr_tag = 0;
+                        found_cs = 0;
+                }
+
+
+            if(found_cs == tag_size) {
+                found = true;
+                offset -= (tag_size -2);
+                break;
+            }
+        }
+
+        n_blocks++;
+
+        if(found || offset > 256000) break;
+    }
+
+    if(!found) return -1;
+
+    char block_data[10];
+
+    f.seekg(offset, ios_base::beg);
+    f.read(block_data, 10);
+    for(int i=0; i<10; i++){
+        cout << (int) block_data[i] << "." << flush;
+        result.push_back(block_data[i]);
+    }
+
+
+   int framesize = get_mp3_frame_content_size(result);
+   char* entire_block = new char[10+framesize];
+
+   f.seekg(offset, ios_base::beg);
+   f.read(entire_block, 10 + framesize);
+
+   result.clear();
+
+   for(int i=0; i<10+framesize; i++){
+       result.push_back(entire_block[i]);
+   }
+
+   f.seekg(0, ios_base::beg);
+   f.seekp(0, ios_base::beg);
+
+   return offset;
 }
 
 
-bool find_discnumber(TagLib::ByteVector vec, int* discnumber, int* n_discs){
+bool write_discnumber(fstream& f, int discnumber, int n_discs=1){
+   long header_size = get_mp3_header_size(f);
+   long new_header_size = header_size;
+   if(discnumber <= 0) return false;
+   n_discs = 1;
+
+   char c_new_frame[] = {'T', 'P', 'O', 'S',
+               0, 0, 0, 0x05,
+               0, 0,
+               0x03, discnumber + '0', '/', n_discs + '0', 0x00 };
+
+   ByteVector bv_new_frame;
+   ByteVector old_frame;
+   long pos = get_mp3_attr(f, "TPOS", 4, bv_new_frame);
+
+   int old_frame_size = 0;
+   if (pos > 0){
+      old_frame_size = get_mp3_frame_content_size(bv_new_frame) + 10;
+   }
+
+   else{
+       old_frame_size = 0;
+       pos = header_size;
+   }
+
+   new_header_size = header_size + (15 - old_frame_size);
+
+   qDebug() << "old frame size = " << old_frame_size;
+   qDebug() << "old header size = " << header_size;
+   qDebug() << "new header size = " << new_header_size;
+
+   set_mp3_header_size(f, new_header_size);
+
+
+
+   stretch_file(f, pos, 15- old_frame_size);
+
+   f.seekg(pos, ios_base::beg);
+   qDebug() << "where are we? " << f.tellg();
+   f.write(c_new_frame, 15);
+
+   qDebug() << "insert at pos " << pos;
+
+}
+
+
+bool extract_discnumber(fstream& f, int* discnumber, int* n_discs){
+
     *discnumber = -1;
     *n_discs = -1;
-    if(vec.size() == 0) return "";
+
     QString ret;
 
-    for(uint i=10; i<vec.size(); i++){
-        char c = vec.at(i);
-        if(c >= 47 && c <= 57)
-            ret += c;
-        if( (c >= 65 && c <= 90) ||
-            (c >=97 && c <= 122) ) break;
-    }
+    ByteVector vec;
+    long pos = get_mp3_attr(f, "TPOS", 4, vec);
 
+    if(vec.size() == 0 || pos < 0) return false;
+
+
+    const int frame_start = 10;
+    int frame_size = get_mp3_frame_content_size(vec);
+
+
+    for(uint i=0; i<frame_size; i++){
+       char c = vec[i+frame_start];
+
+
+       if(c >= 47 && c <= 57){
+           ret += c;
+       }
+       if( (c >= 65 && c <= 90) ||
+           (c >=97 && c <= 122) ) break;
+    }
 
     while(ret.startsWith("/")){
-        ret.remove(0, 1);
+           ret.remove(0, 1);
     }
+
 
     while(ret.endsWith("/")){
         ret.remove(ret.size() - 1, 1);
     }
-
     QStringList lst = ret.split("/");
     if(lst.size() > 1) {
-        *discnumber = lst[0].toInt();
-        *n_discs = lst[1].toInt();
+           *discnumber = lst[0].toInt();
+           *n_discs = lst[1].toInt();
     }
 
     else if(lst.size() == 1){
-        *discnumber = lst[0].toInt();
+          *discnumber = lst[0].toInt();
     }
 
-    return !ret.isEmpty();
+    return true;
 }
 
-TagLib::ByteVector find_attr(TagLib::FileRef& f, const char* attr){
 
+void stretch_file(fstream& f, long offset, int n_bytes){
+    if(n_bytes <= 0 ) return;
 
-    TagLib::ByteVector v(attr);
-    TagLib::ByteVector result;
+    const int buffersize = 50;
 
-    TagLib::ByteVector tag_end = get_tag_end(f);
+    char buffer[buffersize];
+    f.seekg(0, ios_base::end);
 
-    long offset = f.file()->find(v, 0, tag_end);
+    long filesize = f.tellg();
+    f.seekg(-buffersize, ios_base::end);
 
-    if(offset < 0) return result;
+    cout << "Filesize = " << filesize << endl;
 
-    f.file()->seek(offset);
+    long i=filesize - buffersize;
+    int round = 1;
+    while(i>offset){
+           f.read(buffer, buffersize);
 
-    result = f.file()->readBlock(32);
-    return result;
+           round ++;
+           f.seekg(-buffersize + n_bytes,  ios_base::cur);
+           f.write(buffer, buffersize);
+           f.flush();
+
+           i-=buffersize;
+           if(i <= offset) break;
+           f.seekg(-(buffersize + n_bytes + buffersize), ios_base::cur);
+
+           round ++;
+
+    }
+
+    i += buffersize;
+    int rest = (i-offset);
+    char* restbuffer = new char[rest];
+
+    f.seekg(offset, ios_base::beg);
+
+    f.read(restbuffer, rest-1);
+    f.seekg(-rest + n_bytes, ios_base::cur);
+    f.write(restbuffer, rest);
+    f.flush();
+
+    delete restbuffer;
 }
+
+
 
 
 bool ID3::getMetaDataOfFile(MetaData& md){
@@ -139,8 +408,11 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
     int discnumber = -1;
     int n_discs = -1;
-    TagLib::ByteVector vec = find_attr(f, "TPOS");
-    find_discnumber(vec, &discnumber, &n_discs);
+
+    fstream file;
+    file.open(md.filepath.toLocal8Bit(), ios_base::in);
+    extract_discnumber(file, &discnumber, &n_discs);
+    file.close();
 
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
@@ -198,7 +470,16 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	f.tag()->setGenre(genre);
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
+        f.save();
 
-    f.save();
+    qDebug() << "Write Discnumber";
+    fstream file;
+    file.open(md.filepath.toLocal8Bit(), ios_base::out | ios_base::in | ios_base::binary);
+    write_discnumber(file, md.discnumber, md.n_discs);
+    file.close();
+
+
+
+
 	return;
 }

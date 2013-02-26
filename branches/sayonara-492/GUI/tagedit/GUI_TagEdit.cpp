@@ -385,6 +385,7 @@ void GUI_TagEdit::show_metadata(){
     this->ui->sb_track_num->setValue(md.track_num);
     this->ui->sb_year->setValue(md.year);
     this->ui->le_genres->setText(md.genres.join(","));
+    this->ui->sb_discnumber->setValue(md.discnumber);
 
     this->ui->lab_filepath->setText(QDir(md.filepath).absolutePath());
     this->ui->lab_track_num->setText("Track " + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
@@ -422,6 +423,7 @@ void GUI_TagEdit::save_metadata(){
     _vec_tmp_metadata[_cur_idx].track_num = this->ui->sb_track_num->value();
     _vec_tmp_metadata[_cur_idx].year = this->ui->sb_year->value();
     _vec_tmp_metadata[_cur_idx].genres = this->ui->le_genres->text().split(QRegExp(",|\\|/|;|-"));
+    _vec_tmp_metadata[_cur_idx].discnumber = this->ui->sb_discnumber->value();
 
 
     _vec_tmp_metadata[_cur_idx].print();
