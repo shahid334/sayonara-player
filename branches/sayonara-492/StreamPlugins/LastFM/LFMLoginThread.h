@@ -7,10 +7,10 @@
 #include "HelperStructs/globals.h"
 
 struct LFMLoginStuff{
-    QString authToken;
-    QString sessionKey;
-    QString sessionKey2;
+    QString token;
+    QString session_key;
     bool logged_in;
+    bool subscriber;
 };
 
 class LFMLoginThread : public QThread
@@ -27,7 +27,8 @@ protected:
 public:
     void setup_login_thread(QString username, QString password);
     LFMLoginStuff getLoginStuff();
-
+    bool get_token();
+    bool request_authorization();
 
 
 private:
@@ -35,6 +36,7 @@ private:
     QString _password;
 
     LFMLoginStuff _login_info;
+
 
 };
 

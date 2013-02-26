@@ -635,7 +635,7 @@ bool  Playlist::checkTrack(const MetaData& md){
 }
 
 void Playlist::psl_play_next_tracks(const MetaDataList& v_md){
-	psl_insert_tracks(v_md, _cur_play_idx + 1);
+    psl_insert_tracks(v_md, _cur_play_idx);
 }
 
 uint Playlist::get_num_tracks(){

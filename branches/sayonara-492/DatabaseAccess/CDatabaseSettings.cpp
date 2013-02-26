@@ -96,6 +96,9 @@ bool CDatabaseConnector::load_settings(){
 	bool lfm_corrections =	load_setting_bool(SET_LFM_CORRECTIONS);
 	settings->setLastFMCorrections(lfm_corrections);
 
+    bool lfm_show_errors = load_setting_bool(SET_LFM_SHOW_ERRORS);
+    settings->setLastFMShowErrors(lfm_show_errors);
+
 
 	QString lfm_session_key = load_setting_string(SET_LFM_SESSION_KEY);
 	if(lfm_session_key.size() != 32) lfm_session_key = "";
@@ -287,6 +290,9 @@ bool CDatabaseConnector::store_settings(){
 
 	QString lfm_session_key = storage->getLastFMSessionKey();
 	store_setting(SET_LFM_SESSION_KEY, lfm_session_key);
+
+    bool lfm_show_errors = storage->getLastFMShowErrors();
+    store_setting(SET_LFM_SHOW_ERRORS, lfm_show_errors);
 
 	int last_eq_used = storage->getLastEqualizer();
 	store_setting(SET_EQ_LAST, last_eq_used);

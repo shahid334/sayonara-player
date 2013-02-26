@@ -101,6 +101,14 @@ bool CSettingsStorage::getLastFMCorrections(){
 	return m_lfm_corrections;
 }
 
+bool CSettingsStorage::getLastFMShowErrors(){
+    return m_lfm_show_errors;
+}
+
+void CSettingsStorage::setLastFMShowErrors(bool b){
+    m_lfm_show_errors = b;
+}
+
 
 EQ_Setting CSettingsStorage::getCustomEqualizer(){ 
 	if(m_vec_eqSettings.size() == 0) {

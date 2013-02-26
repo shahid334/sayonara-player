@@ -133,7 +133,7 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 	}
 }
 
-bool lfm_wa_call_post_url(const QString& url, string post_data){
+bool lfm_wa_call_post_url(const QString& url, const string& post_data){
 	QString response;
 	return lfm_wa_call_post_url(url, post_data, response);
 
@@ -337,7 +337,7 @@ QString lfm_wa_create_sig_url_post(const QString& base_url, const UrlParams& sig
 	for(UrlParams::iterator it=data_copy.begin(); it != data_copy.end(); it++){
 
 		post_data += string(it.key().toLocal8Bit().data()) + string("=");
-		post_data += string(it.value().replace("&", "%26").toLocal8Bit().data()) + string("&");
+        post_data += string(it.value().replace("&", "%26").toLocal8Bit().data()) + string("&");
 	}
 
 	post_data = post_data.substr(0, post_data.size() -1);

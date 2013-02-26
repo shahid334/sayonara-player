@@ -1,8 +1,10 @@
 #include "StreamPlugins/LastFM/LFMLoginThread.h"
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include <StreamPlugins/LastFM/LFMWebAccess.h>
+#include "HelperStructs/Helper.h"
 #include <QString>
 #include <QCryptographicHash>
+#include <QMessageBox>
 
 
 LFMLoginThread::LFMLoginThread(QObject *parent) :
@@ -12,19 +14,12 @@ LFMLoginThread::LFMLoginThread(QObject *parent) :
 
 LFMLoginThread::~LFMLoginThread(){}
 
+bool LFMLoginThread::get_token(){
 
-
-void LFMLoginThread::run(){
-
-    _login_info.logged_in = false;
-
-    _login_info.authToken = QCryptographicHash::hash(_username.toUtf8() + _password.toUtf8(), QCryptographicHash::Md5).toHex();
-
+    QString token;
     UrlParams signature_data;
         signature_data["api_key"] = LFM_API_KEY;
-        signature_data["authToken"] =  _login_info.authToken;
-        signature_data["method"] = QString("auth.getmobilesession");
-        signature_data["username"] = _username;
+        signature_data["method"] = "auth.gettoken";
 
     QString url = lfm_wa_create_sig_url(QString("http://ws.audioscrobbler.com/2.0/"), signature_data);
 
@@ -34,43 +29,77 @@ void LFMLoginThread::run(){
     if(!success){
         qDebug() << "LFM: could not call login url " << url;
         _login_info.logged_in = false;
-        return;
+        return false;
     }
 
-    _login_info.sessionKey = lfm_wa_parse_session_answer(response);
 
-    if(_login_info.sessionKey.size() != 0) {
-        _login_info.logged_in = true;
-    }
+    token = Helper::easy_tag_finder("lfm.token", response);
+    if(token.size() != 32) return false;
+    qDebug() << "Token = " << token;
+    _login_info.token = token;
+    return true;
+}
 
-    else{
-        qDebug() << "LFM: session key not valid";
+bool LFMLoginThread::request_authorization(){
+
+
+    if(!get_token()) return false;
+
+
+    UrlParams signature_data;
+        signature_data["api_key"] = LFM_API_KEY;
+        signature_data["token"] = _login_info.token;
+
+        qDebug() << "auth: token = " << _login_info.token;
+
+    QString url = lfm_wa_create_std_url("http://www.last.fm/api/auth/", signature_data);
+        int ret = QMessageBox::question(NULL,
+                                 "Last.fm request authorization",
+                                 QString("<b>First login to Last.fm from Sayonara</b><br /><br />") +
+                                 "You will be redirected to this link when clicking on it<br /><br />" +
+                                 "<a href=\"" + url + "\">"+ url + "</a><br /><br />" +
+                                 "When you finished authorization, click OK", QMessageBox::Ok, QMessageBox::Abort);
+
+    if(ret == QMessageBox::Abort) return false;
+    if(ret == QMessageBox::Ok) return true;
+    return false;
+}
+
+
+
+void LFMLoginThread::run(){
+
+    _login_info.logged_in = false;
+
+    UrlParams signature_data;
+        signature_data["api_key"] = LFM_API_KEY;
+        signature_data["method"] = "auth.getSession";
+        signature_data["token"] = _login_info.token;
+
+
+    QString url = lfm_wa_create_sig_url("http://ws.audioscrobbler.com/2.0/", signature_data);
+    QString response;
+
+    qDebug() << "url = " << url;
+
+    bool success = lfm_wa_call_url(url, response);
+    if(!success){
+        qDebug() << "get session: no success!";
+        qDebug() << response;
         _login_info.logged_in = false;
-        return;
+        _login_info.session_key = "";
+        _login_info.subscriber = false;
+
     }
 
+    else {
 
-    // only for radio
-    UrlParams handshake_data;
-        handshake_data["version"] = QString::number(1.5);
-        handshake_data["platform"] = QString("linux");
-        handshake_data["username"] = _username.toLower();
-        handshake_data["passwordmd5"] = _password;
-
-    QString url_handshake = lfm_wa_create_std_url("http://ws.audioscrobbler.com/radio/handshake.php", handshake_data);
-    QString resp_handshake;
-
-    success = lfm_wa_call_url(url_handshake, resp_handshake);
-    if( !success ){
-        _login_info.sessionKey2 = "";
-        qDebug() << "LFM: Handshake was not successful";
-        qDebug() << "LFM: url = " << url_handshake;
-        qDebug() << "LFM: " << resp_handshake;
-        return;
+        qDebug() << "get session: success!!!";
+        qDebug() << response;
+        _login_info.logged_in = true;
+        _login_info.session_key = Helper::easy_tag_finder("lfm.session.key", response);
+        _login_info.subscriber = (Helper::easy_tag_finder("lfm.session.subscriber", response).toInt() == 1);
     }
-
-    resp_handshake.replace("session=", "");
-     _login_info.sessionKey2 = resp_handshake.left(32);
 }
 
 

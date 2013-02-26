@@ -429,6 +429,9 @@
    </item>
    <item row="17" column="7">
     <widget class="QCheckBox" name="cb_discnumber_all">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>all</string>
      </property>

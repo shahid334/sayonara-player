@@ -157,7 +157,12 @@ int	LibraryItemModelArtists::getFirstRowOf(QString substr){
 
     int i = 0;
     foreach(Artist artist, _artist_list){
-        if(artist.name.startsWith(substr, Qt::CaseInsensitive))
+        QString artist_name = artist.name;
+        if( artist_name.startsWith("the ", Qt::CaseInsensitive) ||
+            artist_name.startsWith("die ", Qt::CaseInsensitive) ){
+            artist_name = artist_name.right(artist_name.size() -4);
+        }
+        if(artist.name.startsWith(substr, Qt::CaseInsensitive) || artist_name.startsWith(substr, Qt::CaseInsensitive))
             return i;
 
         i++;

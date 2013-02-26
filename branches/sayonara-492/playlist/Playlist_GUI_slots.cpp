@@ -149,7 +149,7 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
     _radio_active = RADIO_OFF;
 
     // possibly the current playing index has to be updated
-    if(row <= _cur_play_idx && _cur_play_idx != -1)
+    if(row < _cur_play_idx && _cur_play_idx != -1)
         _cur_play_idx += v_metadata.size();
 
 

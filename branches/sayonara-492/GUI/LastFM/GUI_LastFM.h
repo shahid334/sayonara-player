@@ -50,6 +50,7 @@ public:
 
 	private slots:
 		void save_button_pressed();
+        void clear_session_pressed();
 		void cb_correct_id3_toggled(bool);
 		void cb_activate_toggled(bool);
 
