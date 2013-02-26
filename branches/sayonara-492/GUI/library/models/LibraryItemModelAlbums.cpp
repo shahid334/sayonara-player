@@ -170,7 +170,12 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 int LibraryItemModelAlbums::getFirstRowOf(QString substr){
     int i = 0;
     foreach(Album album, _album_list){
-        if(album.name.startsWith(substr, Qt::CaseInsensitive))
+        QString album_name = album.name;
+        if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
+            album_name.startsWith("die ", Qt::CaseInsensitive) ){
+            album_name = album_name.right(album_name.size() -4);
+        }
+        if(album.name.startsWith(substr, Qt::CaseInsensitive) || album_name.startsWith(substr, Qt::CaseInsensitive))
             return i;
 
         i++;
