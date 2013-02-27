@@ -2,7 +2,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/PlaylistParser.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
 
 #include <gst/gst.h>
 #include <gst/gsturi.h>

@@ -21,7 +21,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "Engine/Engine.h"
 #include "Engine/GStreamer/GSTEngine.h"

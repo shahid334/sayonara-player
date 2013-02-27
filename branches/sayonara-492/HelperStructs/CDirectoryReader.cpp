@@ -21,7 +21,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistParser.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include <QDebug>

@@ -23,7 +23,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/WebAccess.h"
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QStringList>

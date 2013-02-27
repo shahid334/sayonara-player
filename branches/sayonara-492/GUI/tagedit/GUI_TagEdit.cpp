@@ -29,7 +29,7 @@
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "ui_GUI_TagEdit.h"

@@ -175,7 +175,8 @@ SET(SOURCES
     playlist/Playlist.cpp
     playlist/Playlist_GUI_slots.cpp
     playlists/Playlists.cpp
-    HelperStructs/id3.cpp
+    HelperStructs/Tagging/id3.cpp
+    HelperStructs/Tagging/id3access.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
