@@ -1,134 +1,134 @@
-#include <QMap>
+#include "HelperStructs/Tagging/id3access.h"
+
 #include <QByteArray>
-#include <QFile>
-#include <QList>
-#include <QMap>
+#include <QDebug>
 
 
-typedef unsigned char uchar;
-typedef unsigned int uint;
-
-struct FileHeader {
-	bool valid;
-	uint header_size;
-	uint org_size;
-
-	QByteArray raw_data;
-	QMap<QByteArray, uint> pos_mapping;
-};
+bool id3_write_discnumber(FileHeader& fh, int discnumber, int n_discs){
+   
+   if(discnumber <= 0) return false;
+   if(n_discs == -1) n_discs = 1;
 
 
-bool       id3_get_file_header_valid(QFile& f);
-long       id3_get_file_header_size(QFile& f);
-void       id3_set_file_header_size(QFile& f, int new_size);
-QByteArray id3_get_file_header_end_str(QFile& f);
+   char c_new_frame[] = {'T', 'P', 'O', 'S',
+               0, 0, 0, 0x05,
+               0, 0,
+               0x03, discnumber + '0', '/', n_discs + '0', 0x00 };
 
-int        id3_get_frame_content_size(const QByteArray& vec);
-QByteArray id3_set_frame_content_size(const QByteArray& vec, uint new_size);
-QByteArray id3_get_frame_content(const QByteArray& vec);
-QByteArray id3_set_frame_content(const QByteArray& vec_org, const QByteArray& data);
+   QByteArray arr(c_new_frame, 15);
+   fh.write(arr);
+   fh.commit();
 
-long       id3_get_mp3_attr(QFile& f, char* tag, uint tag_size, QByteArray& result);
-void       stretch_file(QFile& f, long offset, int n_bytes);
-
-
-
-FileHeader id3_get_file_header(QFile& f){
-	
-/*	FileHeader fh;
-
-	char bytes[11];
-	f.seekg(0, ios_base::beg);
-	f.read(bytes, 10);
-	bytes[11] = '\0';
-
-	string mystr(bytes);
-	if(mystr.cmp(0, 3, "ID3") != 0) {
-		fh.valid = false;
-		fh.header_size = 0;
-		fh.org_size = 0;
-
-		return fh;
-	}
-
-	fh.valid = true;
-	fh.header_size = id3_get_file_header_size(f);
-	fh.org_size = fh.header_size;
-
-	f.seekg(0, ios_base::beg);
-	char* header_bytes = new char[fh.header_size];
-
-	f.read(header_bytes, fh.header_size);
-	for(uint i=0; i<fh.header_size; i++){
-		fh.raw_data.push_back(header_bytes[i]);
-	}
-
-	delete header_bytes;
-
-	return fh;	*/
-	FileHeader fh;
-	return fh;
-}
-
-void id3_set_file_header(QFile& f, FileHeader& fh){
-
-//	stretch_file(f, offset, fh.raw_data.header_size - fh.old_size);
-	
-
+   return true;
 }
 
 
-long id3_get_file_header_size(QFile& f){
+bool id3_extract_discnumber(FileHeader& fh, int* discnumber, int* n_discs){
 
-    long headersize = 0;
-    int multiplier = 1;
+    *discnumber = 0;
+    *n_discs = 0;
 
-    char bytes[4];
-    f.seek(6);
-    f.read(bytes, 4);
-    for(int i=3; i>=0; i--){
-            headersize += (bytes[i] * multiplier);
-            multiplier *= 128;
+    QByteArray vec = fh.read("TPOS");
+    int frame_size = vec.size();
+
+    if(frame_size == 0) return false;
+
+    bool slash_found = false;
+    for(int i=10; i<frame_size; i++){
+
+        char c = vec[i];
+
+        if(c == '/') {
+            slash_found = true;
+            continue;
+        }
+
+        // Ascii: '/'=47, '0'=48, '1'... '9'=57
+        if(c >= '0' && c <= '9'){
+            qDebug() << "c = " << c << ", " << slash_found;
+
+            if(!slash_found)
+                *discnumber = 10*(*discnumber) + (c - '0');
+
+            else
+                *n_discs = 10*(*n_discs) + (c - '0');
+        }
     }
 
-    f.seek(0);
-
-    return headersize;
+    return true;
 }
 
 
-void id3_set_file_header_size(QFile& f, int new_size){
+void stretch_file(QFile* f, long offset, int n_bytes){
+    if(n_bytes <= 0 ) return;
 
-    // header size $(-X XX XX XX ) * 4
-    char c_new_size[4];
+    const int buffersize = 16384;
 
-    c_new_size[0] = new_size >> 21; c_new_size[0] &= 0x7F;
-    c_new_size[1] = new_size >> 14; c_new_size[1] &= 0x7F;
-    c_new_size[2] = new_size >> 7; c_new_size[2] &= 0x7F;
-    c_new_size[3] = new_size; c_new_size[3] &= 0x7F;
+    f->seek(0);
 
-    f.seek(6);
-    f.write(c_new_size, 4);
-    f.seek(0);
+    qint64 filesize = f->size();
+    f->seek(filesize-buffersize);
+
+    qint64 i=filesize - buffersize;
+
+    while(i>offset){
+           QByteArray arr = f->read(buffersize);
+
+           f->seek( f->pos() - buffersize + n_bytes);
+           f->write(arr);
+
+           i-=buffersize;
+           if(i <= offset) break;
+           f->seek(f->pos() - (buffersize + n_bytes + buffersize));
+    }
+
+    i += buffersize;
+    int rest = (i-offset);
+
+    f->seek(offset);
+
+    QByteArray restbuffer = f->read(rest);
+    f->seek(f->pos() - rest + n_bytes);
+    f->write(restbuffer);
 }
 
 
-QByteArray id3_get_file_header_end_str(QFile& f){
+
+
+FileHeader::FileHeader(QString filename){
+
+    header_size = 0;
+    org_size = 0;
+    empty_space_begins = 0;
+    empty_space_len = 0;
+
+    valid = fh_open_and_read_file(filename);
+}
+
+bool FileHeader::is_valid(){
+    return valid;
+}
+
+
+
+// input: entire vector, with header, size, flags, content
+// output: content
+QByteArray FileHeader::fh_get_frame_content(const QByteArray& vec){
 
     QByteArray result;
-    int taglen = id3_get_file_header_size(f);
+    int len_content = fh_get_frame_content_size(vec) + 10;
+    if(len_content > vec.size()) return result;
 
-    // max 256 Kbyte
-    if(taglen > 262143) taglen = 262143;
+    for(int i=10; i<len_content; i++)
+        result.push_back(vec[i]);
 
-    f.seek(taglen + 10);
-    result = f.read(8);
     return result;
 }
 
+
 // input: entire vector, with header, size, flags, content
 // output: of size of content
-int id3_get_frame_content_size(const QByteArray& vec){
+int FileHeader::fh_get_frame_content_size(const QByteArray& vec){
 
     if(vec.size() < 8) return 0;
 
@@ -143,9 +143,43 @@ int id3_get_frame_content_size(const QByteArray& vec){
     return size;
 }
 
+void FileHeader::fh_update_size(){
+
+    // header size $(-X XX XX XX ) * 4
+
+    int new_size = raw_data.size();
+
+
+    char c_new_size[4];
+
+    c_new_size[0] = new_size >> 21; c_new_size[0] &= 0x7F;
+    c_new_size[1] = new_size >> 14; c_new_size[1] &= 0x7F;
+    c_new_size[2] = new_size >> 7; c_new_size[2] &= 0x7F;
+    c_new_size[3] = new_size; c_new_size[3] &= 0x7F;
+
+    raw_data.replace(6, 4, c_new_size, 4);
+
+    header_size = new_size;
+}
+
+
+qint64 FileHeader::fh_read_header_size(const QByteArray& header_10_bytes){
+
+    qint64 headersize = 0;
+    int multiplier = 1;
+
+    for(int i=9; i>=6; i--){
+            headersize += (header_10_bytes[i] * multiplier);
+            multiplier *= 128;
+    }
+
+    return headersize;
+}
+
+
 // input: entire vector, with header, size, flags, content
 // ountput: same, but modified
-QByteArray id3_set_frame_content_size(const QByteArray& vec, uint new_size){
+QByteArray FileHeader::fh_set_frame_content_size(const QByteArray& vec, uint new_size){
 
     if(vec.size() < 8) return vec;
     QByteArray result = vec;
@@ -156,31 +190,17 @@ QByteArray id3_set_frame_content_size(const QByteArray& vec, uint new_size){
     arr[1] = new_size >> 16;
     arr[0] = new_size >> 24;
 
-    result.replace(4, 4, arr);
+    result.replace(4, 4, arr, 4);
     return result;
 }
 
-
-// input: entire vector, with header, size, flags, content
-// output: content
-QByteArray id3_get_frame_content(const QByteArray& vec){
-
-    QByteArray result;
-    int len_content = id3_get_frame_content_size(vec) + 10;
-    if(len_content > vec.size()) return result;
-
-    for(int i=10; i<len_content; i++)
-        result.push_back(vec[i]);
-
-    return result;
-}
 
 // input: entire vector, with header, size, flags, content
 // output: same, but modified
-QByteArray id3_set_frame_content(const QByteArray& vec_org, const QByteArray& data){
+QByteArray FileHeader::fh_set_frame_content(const QByteArray& vec_org, const QByteArray& data){
 
     QByteArray result = vec_org;
-    result = id3_set_frame_content_size(vec_org, data.size());
+    result = fh_set_frame_content_size(vec_org, data.size());
     result = result.left(10);
     result.append(data);
 
@@ -191,124 +211,194 @@ QByteArray id3_set_frame_content(const QByteArray& vec_org, const QByteArray& da
 
 // input: file, the attribute searching for (e.g. TPOS), a reference to an output vector (EVERYTHING is included there)
 // output: where did we finde the tag, negative if not available
-long id3_get_mp3_attr(QFile& f, char* tag, uint tag_size, QByteArray& result){
+int FileHeader::fh_get_mp3_attr(QByteArray tag, QByteArray& result){
 
-    f.seek(0);
-    QByteArray header = f.read(id3_get_file_header_size(f));
-    int offset = header.indexOf(tag);
+    int offset = raw_data.indexOf(tag);
     if(offset < 0) return -1;
 
-    QByteArray tag_header = header.mid(offset, 10);
+    QByteArray tag_header = raw_data.mid(offset, 10);
+    int framesize = fh_get_frame_content_size(tag_header);
 
-    int framesize = id3_get_frame_content_size(tag_header);
-    result = header.mid(offset, 10 + framesize);
+    result = raw_data.mid(offset, 10 + framesize);
 
     return offset;
 }
 
 
-bool id3_write_discnumber(QFile& f, int discnumber, int n_discs=1){
-   
-   if(discnumber <= 0) return false;
 
-   long header_size = id3_get_file_header_size(f);
-   long new_header_size = header_size;
+bool FileHeader::fh_open_and_read_file(QString filename){
+    f = new QFile(filename);
 
-   char c_new_frame[] = {'T', 'P', 'O', 'S',
-               0, 0, 0, 0x05,
-               0, 0,
-               0x03, discnumber + '0', '/', n_discs + '0', 0x00 };
-
-   QByteArray attr_vec;
-   long pos = id3_get_mp3_attr(f, "TPOS", 4, attr_vec);
-
-   int old_frame_size = 0;
-   if (pos > 0){
-      old_frame_size = id3_get_frame_content_size(attr_vec);
-   }
-
-   else{
-       old_frame_size = 0;
-       pos = header_size;
-   }
-
-   new_header_size = header_size + (5 - old_frame_size);
-
-   stretch_file(f, pos, 5 - old_frame_size);
-   id3_set_file_header_size(f, new_header_size);
-
-   f.seek(pos);
-   f.write(c_new_frame, 15);
-}
-
-
-bool id3_extract_discnumber(QFile& f, int* discnumber, int* n_discs){
-
-    *discnumber = -1;
-    *n_discs = -1;
-
-    QByteArray vec;
-    long pos = id3_get_mp3_attr(f, "TPOS", 4, vec);
-
-    if(vec.size() == 0 || pos < 0) return false;
-
-    const int frame_start = 10;        
-    int frame_size = id3_get_frame_content_size(vec);
-
-    bool slash_found = false;
-    for(int i=0; i<frame_size; i++){
-       char c = vec[i+frame_start];
-
-	if(c == '/') {
-	    slash_found = true;
-	    continue;
-	}
-
-	// Ascii: '/'=47, '0'=48, '1'... '9'=57
-	if(c >= '0' && c <= '9'){
-	    if(!slash_found)	
-	       *discnumber = 10*(*discnumber) + c;
-		
-	    else
-	        *n_discs = 10*(*n_discs) + c;
-	}
+    if(!f->open(QIODevice::ReadOnly)){
+        valid = false;
+        return false;
     }
 
+    f->seek(0);
+    QByteArray header_header = f->read(10);
+    valid = header_header.startsWith("ID3");
+
+    if(!valid) {
+        f->close();
+        return false;
+
+    }
+
+    header_size = fh_read_header_size(header_header);
+    org_size = header_size;
+    f->seek(0);
+    raw_data = f->read(10 + header_size);
+
+    for(qint64 i=10; i<raw_data.size(); i++){
+        char c = raw_data.at(i);
+        if(c != 0){
+            if(empty_space_len > 128) break;
+            empty_space_begins = 0;
+            empty_space_len = 0;
+        }
+
+        else{
+            if(empty_space_begins == 0)
+                empty_space_begins = i;
+
+            empty_space_len++;
+        }
+    }
+
+    if(empty_space_begins == 0) {
+        empty_space_begins = header_size;
+        empty_space_len = 0;
+    }
+
+    else{
+        empty_space_begins++;
+        empty_space_len--;
+    }
+
+    f->close();
     return true;
 }
 
 
-void stretch_file(QFile& f, long offset, int n_bytes){
-    if(n_bytes <= 0 ) return;
-
-    const int buffersize = 16384;
-
-    f.seek(0);
-
-    qint64 filesize = f.size();
-    f.seek(filesize-buffersize);
-
-    qint64 i=filesize - buffersize;
-
-    while(i>offset){
-           QByteArray arr = f.read(buffersize);
-
-           f.seek( f.pos() - buffersize + n_bytes);
-           f.write(arr);
-
-           i-=buffersize;
-           if(i <= offset) break;
-           f.seek(f.pos() - (buffersize + n_bytes + buffersize));
-    }
-
-    i += buffersize;
-    int rest = (i-offset);
-
-    f.seek(offset);
-
-    QByteArray restbuffer = f.read(rest);
-    f.seek(f.pos() - rest + n_bytes);
-    f.write(restbuffer);
+QByteArray FileHeader::read(const QByteArray& what){
+    QByteArray result;
+    this->fh_get_mp3_attr(what, result);
+    return result;
 }
 
+
+void FileHeader::write(const QByteArray& arr){
+    things_to_write.push_back(arr);
+}
+
+
+bool FileHeader::commit(){
+
+    int increase_size = 0;
+
+    if(!valid){
+        char c[] = {'I', 'D', '3', 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+        raw_data = QByteArray(c);
+
+        this->fh_update_size();
+
+        for(int i=0; i<1024; i++){
+            raw_data.push_back((char)(0x00));
+        }
+
+        increase_size = 1034;
+        empty_space_begins = 10;
+        empty_space_len = 1024;
+
+        valid = true;
+    }
+
+
+    foreach(QByteArray arr, things_to_write){
+
+        QByteArray attr_arr;
+        int old_frame_size = 0;
+        long pos = fh_get_mp3_attr(arr.left(4), attr_arr);
+
+        if (pos > 0){
+            old_frame_size = attr_arr.size();
+        }
+
+        else{
+            old_frame_size = 0;
+            pos = header_size;
+        }
+
+        // old_vec < new_vec
+        if( old_frame_size <= arr.size() ){
+
+            // vec does not exist...
+            if(old_frame_size <= 0){
+                qDebug() << "old frame size <= 0 " << old_frame_size;
+                // overwrite empty space
+                if(empty_space_len > 128){
+                    qDebug() << "empty space found @" <<empty_space_begins << "; " << empty_space_len;
+                    raw_data.replace(empty_space_begins, arr.size(), arr, arr.size());
+
+                    empty_space_begins += arr.size();
+                    empty_space_len -= arr.size();
+                }
+
+                // append it to end
+                else {
+                    qDebug() << "append to end";
+                    raw_data.push_back(arr);
+                    increase_size += arr.size();
+                }
+            }
+
+            // vec is there but too small
+            else{
+
+                qDebug() << "vec is " << arr.size() -old_frame_size << " too small";
+                raw_data.replace(pos, old_frame_size, arr, old_frame_size);
+                for(int i=old_frame_size; i<arr.size(); i++)
+                    raw_data.insert(pos + i, arr[i]);
+
+                if(empty_space_len > 128){
+                    qDebug() << "remove from empty space @ " << empty_space_begins;
+                    raw_data.remove(empty_space_begins, arr.size() -old_frame_size);
+                    empty_space_len -=  (arr.size() -old_frame_size);
+                }
+
+                else {
+
+                    increase_size += arr.size() - old_frame_size;
+                }
+
+            }
+        }
+
+        else { // old vec > new vec
+
+            raw_data.replace(pos, arr.size(), arr, arr.size());
+            raw_data.remove(pos + arr.size(), old_frame_size - arr.size());
+
+            for(int i=0; i<old_frame_size - arr.size(); i++){
+                raw_data.insert(empty_space_begins+1, (char) 0x00);
+
+            }
+
+            empty_space_len += old_frame_size - arr.size();
+        }
+
+        this->fh_update_size();
+    }
+
+
+
+    qDebug() << "increase the file " << increase_size;
+    f->open(QFile::ReadWrite);
+    if(!f->isOpen()) return false;
+    stretch_file(f, org_size, increase_size);
+    f->seek(0);
+    f->write(raw_data);
+    f->close();
+    return true;
+}
 

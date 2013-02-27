@@ -65,14 +65,11 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	string genre = f.tag()->genre().to8Bit(true);
     string comment = f.tag()->comment().to8Bit(true);
 
-
     int discnumber = -1;
     int n_discs = -1;
 
-    fstream file;
-    file.open(md.filepath.toLocal8Bit(), ios_base::in);
-    id3_extract_discnumber(file, &discnumber, &n_discs);
-    file.close();
+    FileHeader fh(md.filepath);
+    id3_extract_discnumber(fh, &discnumber, &n_discs);
 
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
@@ -100,7 +97,6 @@ bool ID3::getMetaDataOfFile(MetaData& md){
     md.n_discs = n_discs;
     md.comment = cvtQString2FirstUpper(QString::fromLocal8Bit(comment.c_str()));
 
-
 	if(md.title.length() == 0){
         idx = md.filepath.lastIndexOf('/');
         md.title = md.filepath.right(md.filepath.length() - idx -1);
@@ -113,7 +109,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 void ID3::setMetaDataOfFile(MetaData& md){
 
 	md.filepath = QDir(md.filepath).absolutePath();
-	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
+    TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
     if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ){
         qDebug() << "ID3 cannot save";
 		return;
@@ -130,13 +126,10 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	f.tag()->setGenre(genre);
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
-        f.save();
+    f.save();
 
-
-    fstream file;
-    file.open(md.filepath.toLocal8Bit(), ios_base::out | ios_base::in | ios_base::binary);
-    id3_write_discnumber(file, md.discnumber, md.n_discs);
-    file.close();
+    FileHeader fh(md.filepath);
+    id3_write_discnumber(fh, md.discnumber, md.n_discs);
 
 	return;
 }
