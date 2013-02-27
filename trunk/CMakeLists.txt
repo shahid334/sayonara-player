@@ -79,11 +79,14 @@ SET(HEADERS
     GUI/alternate_covers/AlternateCoverItemDelegate.h
     GUI/alternate_covers/AlternateCoverItemModel.h
     GUI/alternate_covers/GUI_Alternate_Covers.h
+    #GUI/alternate_covers/GUI_AlternateCovInternet.h
+    #GUI/alternate_covers/GUI_AlternateCovLocal.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
     GUI/MyColumnHeader.h
     GUI/MyTableView.h
     GUI/MyListView.h
+    GUI/ContextMenu.h
     
     GUI/InfoDialog/GUI_InfoDialog.h
     GUI/SocketConfiguration/GUISocketSetup.h
@@ -140,10 +143,13 @@ SET(SOURCES
     GUI/alternate_covers/AlternateCoverItemDelegate.cpp
     GUI/alternate_covers/AlternateCoverItemModel.cpp
     GUI/alternate_covers/GUI_Alternate_Covers.cpp
+    #GUI/alternate_covers/GUI_AlternateCovInternet.cpp
+    #GUI/alternate_covers/GUI_AlternateCovLocal.cpp
     GUI/tagedit/GUI_TagEdit.cpp
     GUI/equalizer/GUI_Equalizer.cpp
     GUI/MyTableView.cpp
     GUI/MyListView.cpp
+    GUI/ContextMenu.cpp
     
     GUI/InfoDialog/GUI_InfoDialog.cpp
     GUI/SocketConfiguration/GUISocketSetup.cpp
@@ -169,7 +175,8 @@ SET(SOURCES
     playlist/Playlist.cpp
     playlist/Playlist_GUI_slots.cpp
     playlists/Playlists.cpp
-    HelperStructs/id3.cpp
+    HelperStructs/Tagging/id3.cpp
+    HelperStructs/Tagging/id3access.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
@@ -197,6 +204,8 @@ SET(FORMS
     GUI/equalizer/GUI_Equalizer.ui
     GUI/tagedit/GUI_TagEdit.ui
     GUI/alternate_covers/GUI_Alternate_Covers.ui
+    #GUI/alternate_covers/GUI_AlternateCovLocal.ui
+    #GUI/alternate_covers/GUI_AlternateCovInternet.ui
     GUI/playlist_chooser/GUI_PlaylistChooser.ui
     GUI/LFMRadio/GUI_LFMRadioWidget.ui
     GUI/stream/GUI_Stream.ui

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
+    <width>577</width>
     <height>454</height>
    </rect>
   </property>
@@ -35,145 +35,6 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetMaximumSize</enum>
    </property>
-   <item row="15" column="7">
-    <widget class="QCheckBox" name="btn_all_year">
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>all</string>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="4" colspan="2">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Year</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="6">
-    <widget class="QSpinBox" name="sb_year">
-     <property name="maximumSize">
-      <size>
-       <width>1564654</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="minimum">
-      <number>0</number>
-     </property>
-     <property name="maximum">
-      <number>2100</number>
-     </property>
-     <property name="value">
-      <number>2011</number>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="3">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="7" column="1" colspan="6">
-    <widget class="QLineEdit" name="lab_filepath">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>Path</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0" colspan="8">
-    <widget class="Line" name="line_2">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QPushButton" name="btn_tag_help">
-     <property name="maximumSize">
-      <size>
-       <width>30</width>
-       <height>30</height>
-      </size>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="text">
-      <string>?</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_8">
-     <property name="text">
-      <string>Tag from path</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Artist</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="1" colspan="6">
-    <widget class="QLineEdit" name="le_artist"/>
-   </item>
-   <item row="12" column="7">
-    <widget class="QCheckBox" name="btn_all_album">
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="text">
-      <string>all</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="6">
-    <widget class="QPushButton" name="btn_tag_apply">
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="text">
-      <string>Apply expression</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="5">
-    <widget class="QPushButton" name="btn_tag_undo">
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="text">
-      <string>Undo expression</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="1" colspan="6">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -239,6 +100,145 @@
      </item>
     </layout>
    </item>
+   <item row="15" column="7">
+    <widget class="QCheckBox" name="btn_all_year">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>all</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1" colspan="6">
+    <widget class="QLineEdit" name="lab_filepath">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Path</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="8">
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QPushButton" name="btn_tag_help">
+     <property name="maximumSize">
+      <size>
+       <width>30</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>?</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>Tag from path</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Artist</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="6">
+    <widget class="QSpinBox" name="sb_year">
+     <property name="maximumSize">
+      <size>
+       <width>1564654</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="minimum">
+      <number>0</number>
+     </property>
+     <property name="maximum">
+      <number>2100</number>
+     </property>
+     <property name="value">
+      <number>2011</number>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="3">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="15" column="4" colspan="2">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Year</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="1" colspan="6">
+    <widget class="QLineEdit" name="le_artist"/>
+   </item>
+   <item row="12" column="7">
+    <widget class="QCheckBox" name="btn_all_album">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>all</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="6">
+    <widget class="QPushButton" name="btn_tag_apply">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>Apply expression</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="5">
+    <widget class="QPushButton" name="btn_tag_undo">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>Undo expression</string>
+     </property>
+    </widget>
+   </item>
    <item row="10" column="0" colspan="8">
     <widget class="Line" name="line">
      <property name="orientation">
@@ -279,7 +279,7 @@
      </property>
     </widget>
    </item>
-   <item row="18" column="0" colspan="3">
+   <item row="20" column="0" colspan="3">
     <widget class="QProgressBar" name="pb_progress">
      <property name="value">
       <number>24</number>
@@ -289,10 +289,10 @@
    <item row="15" column="1">
     <widget class="QSpinBox" name="sb_track_num"/>
    </item>
-   <item row="16" column="1" colspan="6">
+   <item row="18" column="1" colspan="6">
     <widget class="QLineEdit" name="le_comment"/>
    </item>
-   <item row="17" column="5">
+   <item row="19" column="5">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -305,7 +305,7 @@
      </property>
     </spacer>
    </item>
-   <item row="16" column="0">
+   <item row="18" column="0">
     <widget class="QLabel" name="label_6">
      <property name="text">
       <string>Comment</string>
@@ -349,7 +349,7 @@
      </property>
     </widget>
    </item>
-   <item row="18" column="6">
+   <item row="20" column="6">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QPushButton" name="pb_cancel">
@@ -407,6 +407,33 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="5">
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>Discnumber</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="6">
+    <widget class="QSpinBox" name="sb_discnumber">
+     <property name="value">
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="7">
+    <widget class="QCheckBox" name="cb_discnumber_all">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>all</string>
      </property>
     </widget>
    </item>

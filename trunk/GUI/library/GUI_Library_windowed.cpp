@@ -316,11 +316,6 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
     QList<int> idx_list_int;
     idx_list_int = ui->lv_album->calc_selections();
 
-    /*if(idx.isValid())
-
-    else
-        ui->lv_album->calc_selections();*/
-
     emit sig_album_pressed(idx_list_int);
 }
 
@@ -338,12 +333,6 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
         idx_list_int = ui->tb_title->calc_selections();
         emit sig_track_pressed(idx_list_int);
     }
-
-    /*else
-        ui->tb_title->calc_selections();*/
-
-
-
 }
 
 void GUI_Library_windowed::track_released(const QModelIndex&){}

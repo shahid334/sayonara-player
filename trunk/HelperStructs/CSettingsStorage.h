@@ -26,6 +26,9 @@
 #define SET_LFM_LOGIN "LastFM_login"
 #define SET_LFM_CORRECTIONS "lfm_corrections"
 #define SET_LFM_SESSION_KEY "lfm_session_key"
+#define SET_LFM_SHOW_ERRORS "lfm_show_errors"
+
+
 #define SET_EQ_LAST "eq_last"
 #define SET_EQ_FLAT "EQ_pr_flat"
 #define SET_EQ_ROCK "EQ_pr_rock"
@@ -136,6 +139,7 @@ private:
     QPair<QString,QString> m_lastFm;
     QString m_lfm_sessionKey;
     bool m_lfm_corrections;
+    bool m_lfm_show_errors;
 
     // listen
     int	m_volume;
@@ -208,6 +212,8 @@ public:
     void setLastFMActive(bool b);
     void getLastFMNameAndPW (QString & name, QString & pw);
     void setLastFMNameAndPW (const QString & name,const QString & pw);
+    bool getLastFMShowErrors();
+    void setLastFMShowErrors(bool b);
 
     void setLastFMCorrections(bool checked);
     bool getLastFMCorrections();

@@ -58,7 +58,6 @@ public:
 
 		void sig_search_images(const QString&);
         void sig_covers_changed(QString);
-        void sig_no_cover();
 
 
 	public slots:
@@ -69,7 +68,6 @@ public:
 	private slots:
 		void save_button_pressed();
 		void cancel_button_pressed();
-        void no_cover_pressed();
 		void search_button_pressed();
 		void cover_pressed(const QModelIndex& idx);
 		void covers_there(QString classname, int n_covers);
@@ -96,11 +94,7 @@ public:
         QString             _target_filename;
 
 
-        void cleanup();
-        void remove_old_files();
         void update_model();
-        QString copy_and_save(QString src_file);
-        void delete_token();
 
 
 

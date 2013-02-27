@@ -123,14 +123,15 @@ class MyTableView : public QTableView{
 
 
 		QMenu*				_rc_header_menu;
-		QMenu* 				_right_click_menu;
+        QList<QAction*> 	_header_rc_actions;
+
+        QMenu* 				_right_click_menu;
 		QAction* 			_info_action;
 		QAction* 			_edit_action;
 		QAction* 			_delete_action;
 		QAction*			_play_next_action;
 
 
-	    QList<QAction*> 	_header_rc_actions;
 	    QLineEdit*			_edit;
 
 		LibraryItemModel* 	_model;

@@ -23,7 +23,7 @@
 #include "HelperStructs/Helper.h"
 #include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "application.h"

@@ -30,7 +30,7 @@ SET(SOURCES
         StreamRipperBufferThread.cpp
         StreamRecorder.cpp
 	../../HelperStructs/Helper.cpp
-	../../HelperStructs/id3.cpp
+	../../HelperStructs/Tagging/id3.cpp
 )
 	
 QT4_WRAP_CPP(HEADERS_MOC

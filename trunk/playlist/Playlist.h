@@ -29,6 +29,7 @@
 #ifndef PLAYLIST_H_
 #define PLAYLIST_H_
 
+#include "GUI/playlist/PlaylistItemModel.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/globals.h"
@@ -50,7 +51,7 @@ public:
     Playlist(QObject * parent=0);
 	virtual ~Playlist();
 
-    void ui_loaded(bool load_playlist);
+
     void load_old_playlist();
 	uint get_num_tracks();
 
@@ -114,15 +115,15 @@ public:
 
 
 
-	MetaDataList	_v_meta_data;
+    MetaDataList        _v_meta_data;
     QStringList			_pathlist;
-	int					_cur_play_idx;
+    int					_cur_play_idx;
 
 	Playlist_Mode		_playlist_mode;
 	int					_radio_active;
 	CDatabaseConnector* _db;
     CSettingsStorage*   _settings;
-	MetaDataList	_v_stream_playlist;
+    MetaDataList	_v_stream_playlist;
 
 
 	/* wrapper for Helper::checkTrack */

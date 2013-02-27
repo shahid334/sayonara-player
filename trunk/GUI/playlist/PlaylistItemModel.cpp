@@ -44,9 +44,9 @@ PlaylistItemModel::~PlaylistItemModel() {
 
 
 
-int PlaylistItemModel::rowCount(const QModelIndex &parent = QModelIndex()) const{
+int PlaylistItemModel::rowCount(const QModelIndex &parent) const{
 	Q_UNUSED(parent);
-	return _labellist.size();
+    return (int) (_v_meta_data.size());
 }
 
 QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
@@ -54,7 +54,7 @@ QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
 	if (!index.isValid())
 		 return QVariant();
 
-	 if (index.row() >= _labellist.size())
+    if (index.row() >= (int) _v_meta_data.size() || index.row() < 0)
 		 return QVariant();
 
 	 if (role == Qt::DisplayRole){
@@ -62,7 +62,7 @@ QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
 	 }
 
 	 if (role == Qt::WhatsThisRole){
-		return _labellist.at(index.row());
+         return _v_meta_data[index.row()].toVariant();
 	 }
 
 	 else
@@ -84,8 +84,11 @@ bool PlaylistItemModel::setData(const QModelIndex &index, const QVariant &value,
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 _labellist.replace(index.row(), value.toStringList());
-	     emit dataChanged(index, index);
+         MetaData md;
+         if(MetaData::fromVariant(value, md)){
+            _v_meta_data[index.row()] = md;
+            emit dataChanged(index, index);
+         }
 	     return true;
 	 }
 
@@ -97,13 +100,28 @@ bool PlaylistItemModel::insertRows(int position, int rows, const QModelIndex &in
 
 	Q_UNUSED(index);
 
+
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
+        MetaDataList v_md_new;
 
-		 QStringList lst;
-		 _labellist.insert(position, lst);
-	 }
+        // copy old
+        for(int i=0; i<position; i++){
+            v_md_new.push_back(_v_meta_data[i]);
+        }
+
+        // create new space
+        for(int i=0; i<rows; i++){
+            MetaData md;
+            v_md_new.push_back(md);
+        }
+
+        // copy old
+        for(uint i= (uint) position; i<_v_meta_data.size(); i++){
+            v_md_new.push_back(_v_meta_data[i]);
+        }
+
+        _v_meta_data = v_md_new;
 
 	 endInsertRows();
 	 return true;
@@ -115,9 +133,17 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 _labellist.removeAt(position);
+     MetaDataList v_md_new;
+
+     for (uint i=0; i<_v_meta_data.size(); i++) {
+
+         if(i >= (uint) position && i<=(uint)(position+rows-1)) continue;
+
+         v_md_new.push_back(_v_meta_data[i]);
 	 }
+
+
+     _v_meta_data = v_md_new;
 
 	 endRemoveRows();
 	 return true;
@@ -126,3 +152,13 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
 
 
 
+void PlaylistItemModel::set_selected(QList<int>& rows){
+    _selected_rows = rows;
+    for(uint i=0; i<_v_meta_data.size(); i++){
+        _v_meta_data[i].pl_selected = rows.contains(i);
+    }
+}
+
+bool PlaylistItemModel::is_selected(int row) const {
+    return _selected_rows.contains(row);
+}

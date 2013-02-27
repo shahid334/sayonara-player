@@ -20,7 +20,8 @@
 
 
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/id3.h"
+#include "HelperStructs/Tagging/id3.h"
+#include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Helper.h"
 
 #include <QString>
@@ -28,14 +29,20 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <fstream>
+#include <vector>
 
 #include <string>
 	#include <taglib/tag.h>
 	#include <taglib/taglib.h>
 	#include <taglib/fileref.h>
 
+
+
 using namespace std;
 using namespace Helper;
+
+
 
 bool ID3::getMetaDataOfFile(MetaData& md){
 
@@ -46,6 +53,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
     TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
+
     int idx = md.filepath.lastIndexOf('/');
     md.title = md.filepath.right(md.filepath.length() - idx -1);
 	md.title = md.title.left(md.title.length() - 4);
@@ -55,6 +63,14 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	string album = f.tag()->album().to8Bit(true);
 	string title = f.tag()->title().to8Bit(true);
 	string genre = f.tag()->genre().to8Bit(true);
+    string comment = f.tag()->comment().to8Bit(true);
+
+    int discnumber = -1;
+    int n_discs = -1;
+
+    FileHeader fh(md.filepath);
+    id3_extract_discnumber(fh, &discnumber, &n_discs);
+
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
 	int bitrate = f.audioProperties()->bitrate() * 1000;
@@ -68,8 +84,6 @@ bool ID3::getMetaDataOfFile(MetaData& md){
         genres[i] = genres[i].trimmed();
     }
 
-
-
     //md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
     md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
@@ -79,7 +93,9 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	md.track_num = track;
 	md.bitrate = bitrate;
     md.genres = genres;
-
+    md.discnumber = discnumber;
+    md.n_discs = n_discs;
+    md.comment = cvtQString2FirstUpper(QString::fromLocal8Bit(comment.c_str()));
 
 	if(md.title.length() == 0){
         idx = md.filepath.lastIndexOf('/');
@@ -93,13 +109,11 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 void ID3::setMetaDataOfFile(MetaData& md){
 
 	md.filepath = QDir(md.filepath).absolutePath();
-	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
+    TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
     if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ){
         qDebug() << "ID3 cannot save";
 		return;
 	}
-
-
 
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
 	TagLib::String artist(md.artist.toUtf8().data(), TagLib::String::UTF8);
@@ -112,7 +126,10 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	f.tag()->setGenre(genre);
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
-
     f.save();
+
+    FileHeader fh(md.filepath);
+    id3_write_discnumber(fh, md.discnumber, md.n_discs);
+
 	return;
 }

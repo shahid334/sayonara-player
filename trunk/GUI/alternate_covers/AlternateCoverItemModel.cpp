@@ -27,7 +27,6 @@
  */
 
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
-#include "HelperStructs/Helper.h"
 #include <QModelIndex>
 #include <QVariant>
 #include <QStringList>
@@ -35,7 +34,7 @@
 
 
 AlternateCoverItemModel::AlternateCoverItemModel() {
-	_n_cols = 5;
+	// TODO Auto-generated constructor stub
 
 }
 
@@ -51,16 +50,12 @@ int AlternateCoverItemModel::rowCount(const QModelIndex &parent) const
 {
 	Q_UNUSED(parent);
 	if(_pathlist.size() == 0) return 0;
-	return _pathlist.size() / _n_cols;
+	return _pathlist.size() / 5;
 
 }
 int AlternateCoverItemModel::columnCount(const QModelIndex &parent) const
 {
-	return _n_cols;
-}
-
-void AlternateCoverItemModel::set_n_cols(int cols){
-	_n_cols = cols;
+	return 5;
 }
 
 QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
@@ -70,7 +65,7 @@ QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 		 return QVariant();
 
 	 if(role == Qt::WhatsThisRole){
-		 return _pathlist[index.row() * _n_cols + index.column()];
+		 return _pathlist[index.row() * columnCount() + index.column()];
 	 }
 
 	 else
@@ -90,7 +85,7 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
 		 return false;
 
 	 if(role == Qt::EditRole){
-		 _pathlist[index.row() * _n_cols + index.column()] = value.toString();
+		 _pathlist[index.row() * columnCount() + index.column()] = value.toString();
 		 return true;
 	 }
 
@@ -100,17 +95,15 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
 }
 
 bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelIndex &index){
-
 	Q_UNUSED(index);
-	QString standard_logo = Helper::getIconPath() + "logo.png";
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	_pathlist.clear();
-
+	int z=0;
 	for(int i=0; i<rows; i++){
-		for(int j=0; j<_n_cols; j++){
-			_pathlist << standard_logo;
+		for(int j=0; j<columnCount(); j++, z++){
+			_pathlist << "";
 		}
 	}
 
@@ -118,7 +111,6 @@ bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelInd
 	return true;
 
 }
-
 bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelIndex &index){
 	Q_UNUSED(index);
 

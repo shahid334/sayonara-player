@@ -55,41 +55,10 @@
 			GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog);
 			~GUI_Playlist();
 
-			void dragEnterEvent(QDragEnterEvent* event);
-			void dragLeaveEvent(QDragLeaveEvent* event);
-			void dropEvent(QDropEvent* event);
-			void dragMoveEvent(QDragMoveEvent* event);
-			void clear_drag_lines(int row);
-
-            void *operator new[](size_t size)
-             {
-                 return malloc(size);
-             }
-
-             void *operator new(size_t size)
-             {
-                 return malloc(size);
-             }
-
-             void operator delete[](void *ptr)
-             {
-                 free(ptr);
-             }
-
-             void operator delete[](void *ptr, size_t)
-             {
-                 free(ptr);
-             }
-
-             void operator delete(void *ptr)
-             {
-                 free(ptr);
-             }
-
-             void operator delete(void *ptr, size_t)
-             {
-                 free(ptr);
-             }
+            void dragEnterEvent(QDragEnterEvent* event);
+            void dragLeaveEvent(QDragLeaveEvent* event);
+            void dropEvent(QDropEvent* event);
+            void dragMoveEvent(QDragMoveEvent* event);
 
 
 		signals:
@@ -97,44 +66,36 @@
 			void clear_playlist();
 			void save_playlist(const QString&);
 			void playlist_mode_changed(const Playlist_Mode&);
-			void dropped_tracks(const MetaDataList&, int);
-			void dropped_albums(const AlbumList&, int);
-			void dropped_artists(const ArtistList&, int);
-			void playlist_filled(MetaDataList&);
-			void sound_files_dropped(QStringList&);
-			void directory_dropped(const QString&, int);
-			void rows_removed(const QList<int>&);
+
+            void dropped_tracks(const MetaDataList&, int);
+            void sig_rows_removed(const QList<int>&);
+
 			void search_similar_artists(const QString&);
-			void sig_import_to_library(bool);
+
 
 		public slots:
             void fillPlaylist(MetaDataList&, int, int);
 			void track_changed(int);
-			void change_skin(bool);
-			void library_path_changed(QString);
-            void import_result(bool);
+
+            void library_path_changed(QString);
 			void set_radio_active(int radio);
 			void psl_show_small_playlist_items(bool small_items);
 
 
 		private slots:
-			void double_clicked(const QModelIndex &);
-			void pressed(const QModelIndex&);
-			void released(const QModelIndex&);
-			void clear_playlist_slot();
+
+            void selection_changed(MetaDataList&);
+            void double_clicked(int);
+            void clear_playlist_slot();
 			void playlist_mode_changed_slot();
-			void dummy_pressed();
-			void import_button_clicked();
 
-			void psl_show_context_menu(const QPoint &);
-			void psl_info_tracks();
-			void psl_edit_tracks();
-			void psl_delete_tracks();
+            void psl_info_tracks();
+            void psl_edit_tracks();
 
-			void btn_numbers_changed(bool);
+            void btn_numbers_changed(bool);
+            void metadata_dropped(const MetaDataList&, int);
+            void rows_removed(const QList<int>&);
 
-		protected:
-			void keyPressEvent(QKeyEvent* e);
 
 		private:
 
@@ -143,33 +104,17 @@
 			GUI_InfoDialog*					_info_dialog;
 
 			Playlist_Mode					_playlist_mode;
-			QAbstractItemModel* 			_pli_model;
-			PlaylistItemDelegateInterface* 	_pli_delegate;
+
 
 
 			qint64 		_total_secs;
-			QList<int>	_cur_selected_rows;
-			bool 		_inner_drag_drop;
-			QPoint		_last_known_drag_pos;
-
 			int			_radio_active;
-
-			QMenu* 		_right_click_menu;
-
-			QAction* 	_info_action;
-			QAction* 	_edit_action;
-			QAction* 	_delete_action;
 
 
 			void initGUI();
 
 			void set_total_time_label(qint64 total_msecs);
-			void remove_cur_selected_rows();
 			void check_dynamic_play_button();
-			void init_menues();
-
-			PlaylistItemDelegateInterface* create_item_delegate(bool small_playlist_items);
-
 
 
 
