@@ -157,7 +157,12 @@ void FileHeader::fh_update_size(){
     c_new_size[2] = new_size >> 7; c_new_size[2] &= 0x7F;
     c_new_size[3] = new_size; c_new_size[3] &= 0x7F;
 
-    raw_data.replace(6, 4, c_new_size, 4);
+    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
+        raw_data.replace(6, 4, c_new_size, 4);
+    #else
+    	QByteArray ba(c_new_size, 4);    
+	raw_data.replace(6, 4, ba);
+    #endif
 
     header_size = new_size;
 }
@@ -190,7 +195,15 @@ QByteArray FileHeader::fh_set_frame_content_size(const QByteArray& vec, uint new
     arr[1] = new_size >> 16;
     arr[0] = new_size >> 24;
 
-    result.replace(4, 4, arr, 4);
+
+    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
+        raw_data.replace(4, 4, arr, 4);
+    #else
+    	QByteArray ba(arr, 4);    
+	raw_data.replace(4, 4, ba);
+    #endif
+
+
     return result;
 }
 
@@ -338,7 +351,14 @@ bool FileHeader::commit(){
                 // overwrite empty space
                 if(empty_space_len > 128){
                     qDebug() << "empty space found @" <<empty_space_begins << "; " << empty_space_len;
-                    raw_data.replace(empty_space_begins, arr.size(), arr, arr.size());
+
+		    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
+		        raw_data.replace(empty_space_begins, arr.size(), arr, arr.size());
+		    #else
+			raw_data.replace(empty_space_begins, arr.size(), arr);
+		    #endif
+
+
 
                     empty_space_begins += arr.size();
                     empty_space_len -= arr.size();
@@ -356,7 +376,14 @@ bool FileHeader::commit(){
             else{
 
                 qDebug() << "vec is " << arr.size() -old_frame_size << " too small";
-                raw_data.replace(pos, old_frame_size, arr, old_frame_size);
+
+
+	        #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
+	                raw_data.replace(pos, old_frame_size, arr, old_frame_size);
+		#else
+			raw_data.replace(pos, old_frame_size, arr);
+		#endif
+
                 for(int i=old_frame_size; i<arr.size(); i++)
                     raw_data.insert(pos + i, arr[i]);
 
@@ -375,8 +402,12 @@ bool FileHeader::commit(){
         }
 
         else { // old vec > new vec
-
-            raw_data.replace(pos, arr.size(), arr, arr.size());
+	    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
+                raw_data.replace(pos, arr.size(), arr, arr.size());
+            #else
+		raw_data.replace(pos, arr.size(), arr);
+	    #endif
+       
             raw_data.remove(pos + arr.size(), old_frame_size - arr.size());
 
             for(int i=0; i<old_frame_size - arr.size(); i++){
