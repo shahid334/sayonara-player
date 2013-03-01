@@ -582,10 +582,18 @@ QPushButton[flat=false]:pressed {
    background: #383838;
 }
 
-QPushButton[flat=false]:disabled {
-   border: 1px solid #424242;
-   color: #424242;
+QPushButton[flat=false]:hover {
+   border: 1px solid #e8841a;
+   border-radius: 6px;
+    padding: 4px;
    background: #383838;
+}
+
+
+QPushButton[flat=false]:disabled {
+   border: 1px solid #303030;
+   color: #7f7f7f;
+   background: #424242;
 }
 
 

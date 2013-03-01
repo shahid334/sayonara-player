@@ -275,6 +275,7 @@ SET(ICONS
         GUI/icons/rb_checked_disabled.png
 	GUI/icons/logo.png
         GUI/icons/logo_small.png
+	GUI/icons/podcast.png
 )
 
 

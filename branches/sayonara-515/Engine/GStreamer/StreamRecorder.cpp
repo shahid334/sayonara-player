@@ -331,8 +331,10 @@ bool StreamRecorder::save_file(){
 
 void StreamRecorder::thread_finished(){
 
+
     _thread_is_running = false;
     qint64 size = _sr_thread->getSize();
+    qDebug() << "Thread finished " << size;
 
     if(!QFile::exists(_sr_recording_dst)){
         qDebug() << "SR: Stream not valid (File not existent)";
@@ -367,9 +369,14 @@ void StreamRecorder::thread_finished(){
 
 void StreamRecorder::endOfStream(){
 
+    qDebug() << "SR: End of stream";
+
+
     if(_thread_is_running) return;
 
-    qDebug() << "SR: End of stream";
+    gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+
+
 	_stream_ended = true;
     emit sig_stream_ended();
 }
