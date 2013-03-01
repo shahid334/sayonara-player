@@ -29,6 +29,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
@@ -79,11 +80,13 @@ public slots:
     /* Plugins */
     void show_eq(bool b=false);
 	void show_stream(bool b=false);
+    void show_podcasts(bool b=false);
 	void show_lfm_radio(bool b=false);
 	void show_playlist_chooser(bool b=false);
 	void close_eq();
     void close_playlist_chooser();
     void close_stream();
+    void close_podcasts();
     void close_lfm_radio();
 
 	void showPlugin(QWidget* widget, bool v);
@@ -106,7 +109,6 @@ signals:
 
     /* File */
     void fileSelected (QStringList & filelist);
-    void sig_stream_selected(const QString&, const QString&);
     void baseDirSelected (const QString & baseDir);
     void importDirectory(QString);
     void reloadLibrary();
@@ -126,6 +128,8 @@ signals:
     void sig_fetch_alternate_covers(int);
     void sig_want_more_covers();
     void sig_fetch_all_covers();
+
+    void sig_stream_selected(const QString&, const QString&);
 
 
 
@@ -186,6 +190,7 @@ public:
 	void setEqualizer(GUI_Equalizer* eq);
 	void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
 	void setStream(GUI_Stream* stream);
+    void setPodcasts(GUI_Podcasts* podcasts);
 	void setLFMRadio(GUI_LFMRadioWidget* lfm_radio);
 	void setInfoDialog(GUI_InfoDialog* info_dialog);
 
@@ -217,6 +222,7 @@ private:
     GUI_Equalizer*			ui_eq;
     GUI_PlaylistChooser*	ui_playlist_chooser;
     GUI_Stream*				ui_stream;
+    GUI_Podcasts*           ui_podcasts;
     GUI_LFMRadioWidget*		ui_lfm_radio;
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;

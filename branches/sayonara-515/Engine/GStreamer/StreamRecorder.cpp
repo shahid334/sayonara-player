@@ -67,7 +67,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 StreamRecorder::StreamRecorder(QObject *parent) :
     QObject(parent)
 {
-    _buffer_size = 32769;
+    _buffer_size = 100000;
     _stream_ended = true;
     _settings = CSettingsStorage::getInstance();
     _rec_pipeline = NULL;
@@ -114,7 +114,7 @@ void StreamRecorder::init(){
         _rec_pipeline = gst_pipeline_new("rec_pipeline");
         _bus = gst_pipeline_get_bus(GST_PIPELINE(_rec_pipeline));
         _rec_src = gst_element_factory_make("souphttpsrc", "rec_uri");
-        _rec_cvt = gst_element_factory_make("audioconvert", "rec_cvt");
+        _rec_cvt = gst_element_factory_make("decodebin2", "rec_cvt");
         _rec_enc = gst_element_factory_make("lamemp3enc", "rec_enc");
         _rec_dst = gst_element_factory_make("filesink", "rec_sink");
 
@@ -144,7 +144,7 @@ void StreamRecorder::init(){
         }
 
         gst_bin_add_many(GST_BIN(_rec_pipeline), _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst, NULL);
-        gst_element_link( _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst);
+        gst_element_link_many( _rec_src, /*_rec_cvt, _rec_enc,*/ _rec_dst, NULL);
 
 
     } while(i);
@@ -224,6 +224,7 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
 
+
     // stream file to _sr_recording_dst
     QString title = _md.title;
     QString org_src_filename = _md.filepath;
@@ -240,9 +241,10 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
     // record from org_src_filename to new_src_filename
     g_object_set(G_OBJECT(_rec_src), "location", org_src_filename.toLocal8Bit().data(), NULL);
     g_object_set(G_OBJECT(_rec_dst), "location", _sr_recording_dst.toLocal8Bit().data(), NULL);
-    g_object_set(G_OBJECT(_rec_src), "blocksize", _buffer_size, NULL);
+    g_object_set(G_OBJECT(_rec_dst), "buffer-size", 10000, NULL);
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
+
 
     _stream_ended = false;
     bool success = init_thread(_sr_recording_dst);
@@ -251,6 +253,7 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
         _sr_thread->start();
         _thread_is_running = true;
+
         return _sr_recording_dst;
     }
 
@@ -367,9 +370,16 @@ void StreamRecorder::thread_finished(){
 
 void StreamRecorder::endOfStream(){
 
-    if(_thread_is_running) return;
+    if(_thread_is_running){
+        gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_NULL);
+        qDebug() << "SR: Finished streaming, thread still running";
+        return;
 
-    qDebug() << "SR: End of stream";
+    }
+
+    qDebug() << "SR: Finished streaming";
+
+
 	_stream_ended = true;
     emit sig_stream_ended();
 }
@@ -391,5 +401,6 @@ QString StreamRecorder::check_session_path(QString sr_path){
 
 
 bool StreamRecorder::getFinished(){
+    qDebug() << "Ask for finished";
     return _stream_ended;
 }

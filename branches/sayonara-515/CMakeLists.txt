@@ -83,6 +83,7 @@ SET(HEADERS
     #GUI/alternate_covers/GUI_AlternateCovLocal.h
     GUI/tagedit/GUI_TagEdit.h
     GUI/equalizer/GUI_Equalizer.h
+    GUI/Podcasts/GUI_Podcasts.h
     GUI/MyColumnHeader.h
     GUI/MyTableView.h
     GUI/MyListView.h
@@ -147,6 +148,7 @@ SET(SOURCES
     #GUI/alternate_covers/GUI_AlternateCovLocal.cpp
     GUI/tagedit/GUI_TagEdit.cpp
     GUI/equalizer/GUI_Equalizer.cpp
+    GUI/Podcasts/GUI_Podcasts.cpp
     GUI/MyTableView.cpp
     GUI/MyListView.cpp
     GUI/ContextMenu.cpp
@@ -159,6 +161,7 @@ SET(SOURCES
     HelperStructs/CDirectoryReader.cpp
     HelperStructs/PlaylistParser.cpp
     HelperStructs/WebAccess.cpp
+    HelperStructs/PodcastParser/PodcastParser.cpp
     CoverLookup/CoverLookup.cpp
     LyricLookup/LyricLookup.cpp
     CoverLookup/CoverFetchThread.cpp
@@ -172,6 +175,7 @@ SET(SOURCES
     DatabaseAccess/CDatabaseTracks.cpp
     DatabaseAccess/CDatabasePlaylist.cpp
     DatabaseAccess/CDatabaseStreams.cpp
+    DatabaseAccess/CDatabasePodcasts.cpp
     playlist/Playlist.cpp
     playlist/Playlist_GUI_slots.cpp
     playlists/Playlists.cpp
@@ -207,6 +211,7 @@ SET(FORMS
     #GUI/alternate_covers/GUI_AlternateCovLocal.ui
     #GUI/alternate_covers/GUI_AlternateCovInternet.ui
     GUI/playlist_chooser/GUI_PlaylistChooser.ui
+    GUI/Podcasts/GUI_Podcasts.ui
     GUI/LFMRadio/GUI_LFMRadioWidget.ui
     GUI/stream/GUI_Stream.ui
     GUI/StreamRecorder/GUI_StreamRecorder.ui

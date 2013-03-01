@@ -94,6 +94,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 		case GST_MESSAGE_EOS:
 			if(obj_ref){
+                qDebug() << "Engine: Track finished";
 				obj_ref->set_track_finished();
 			}
 		break;
@@ -114,6 +115,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
             if(__start_at_beginning == false) {
                 __start_at_beginning = true;
                 obj_ref->jump(__start_pos_beginning, false);
+                qDebug() << "Engine: jump";
             }
 
             break;

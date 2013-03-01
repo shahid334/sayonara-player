@@ -105,6 +105,7 @@ public:
         void psl_lfm_radio_init(bool);
         void psl_new_lfm_playlist_available(const MetaDataList&);
 		void psl_play_stream(const QString&, const QString&);
+        void psl_play_podcast(const QString&, const QString&);
 		void psl_valid_strrec_track(const MetaData&);
 		void psl_play_next_tracks(const MetaDataList&);
         void psl_gapless_track();

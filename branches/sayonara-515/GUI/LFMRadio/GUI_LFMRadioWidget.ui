@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
+    <width>363</width>
     <height>100</height>
    </rect>
   </property>
@@ -27,6 +27,9 @@
     <width>524287</width>
     <height>100</height>
    </size>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <property name="features">
    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetVerticalTitleBar</set>
@@ -212,7 +215,9 @@
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../../Desktop/myresource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>le_text</sender>

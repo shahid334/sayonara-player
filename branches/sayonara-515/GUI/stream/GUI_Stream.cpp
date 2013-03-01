@@ -31,9 +31,10 @@
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QPixmap>
 
 
-GUI_Stream::GUI_Stream(QWidget* parent): QDockWidget(parent)  {
+GUI_Stream::GUI_Stream(QWidget* parent): QWidget(parent)  {
 	this->ui = new Ui::GUI_Stream();
 	this->ui->setupUi(this);
 
@@ -120,6 +121,8 @@ void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations){
 void GUI_Stream::init_gui(){
 	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+    QPixmap pixmap = QPixmap(Helper::getIconPath() + "radio.png").scaled(QSize(50, 50), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    this->ui->lab_icon->setPixmap(pixmap);
 }
 
 

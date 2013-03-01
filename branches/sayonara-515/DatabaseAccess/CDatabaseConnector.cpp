@@ -232,5 +232,14 @@ bool CDatabaseConnector::apply_fixes(){
 
     check_and_create_table("savedstreams", create_savedstreams);
 
+
+    QString create_savedpodcasts = QString("CREATE TABLE savedpodcasts ") +
+                "( " +
+                "	name VARCHAR(255) PRIMARY KEY, " +
+                "	url VARCHAR(255) " +
+                ");";
+
+    check_and_create_table("savedpodcasts", create_savedpodcasts);
+
 	return true;
 }

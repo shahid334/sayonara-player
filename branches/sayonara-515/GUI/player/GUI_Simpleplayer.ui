@@ -908,6 +908,7 @@
     <addaction name="separator"/>
     <addaction name="action_ViewEqualizer"/>
     <addaction name="action_ViewStream"/>
+    <addaction name="action_ViewPodcasts"/>
     <addaction name="action_ViewLFMRadio"/>
     <addaction name="action_ViewPlaylistChooser"/>
     <addaction name="separator"/>
@@ -1167,6 +1168,14 @@
   <action name="action_notifications">
    <property name="text">
     <string>Notifications</string>
+   </property>
+  </action>
+  <action name="action_ViewPodcasts">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Podcasts</string>
    </property>
   </action>
  </widget>

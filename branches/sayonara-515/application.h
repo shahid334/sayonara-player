@@ -19,6 +19,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
@@ -65,6 +66,7 @@ private:
     LastFM*					lastfm;
     GUI_LastFM*				ui_lastfm;
     GUI_Stream	*			ui_stream;
+    GUI_Podcasts*           ui_podcasts;
     GUI_Equalizer*			ui_eq;
     GUI_LFMRadioWidget*		ui_lfm_radio;
     GUI_StreamRecorder*		ui_stream_rec;

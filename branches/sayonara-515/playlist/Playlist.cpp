@@ -26,6 +26,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistParser.h"
+#include "HelperStructs/PodcastParser/PodcastParser.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/PlaylistMode.h"
@@ -614,6 +615,55 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
     emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
     emit sig_selected_file_changed(_cur_play_idx);
+}
+
+
+void  Playlist::psl_play_podcast(const QString& url, const QString& name){
+
+    emit sig_new_stream_session();
+    psl_clear_playlist();
+    MetaDataList v_md;
+
+    // playlist radio
+    qDebug() << "is podcast file? ";
+    if(Helper::is_podcastfile(url)){
+        qDebug() << "true";
+
+        if(Podcast::parse_podcast_xml_file(url, v_md) > 0){
+
+            qDebug() << "metadata size = " << v_md.size();
+
+            foreach(MetaData md, v_md){
+
+                md.radio_mode = RADIO_STATION;
+                if(md.title.size() == 0){
+                    if(name.size() > 0)
+                        md.title = name;
+                    else md.title = "Podcast";
+                }
+
+                _v_meta_data.push_back(md);
+            }
+        }
+
+        else {
+            qDebug() << "could not extract metadata";
+
+        }
+    }
+    else {
+        qDebug() << "false";
+    }
+
+    if(_v_meta_data.size() == 0) return;
+
+    _cur_play_idx = 0;
+    _radio_active = RADIO_STATION;
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
+    emit sig_selected_file_changed(_cur_play_idx);
+
 }
 
 void Playlist::psl_valid_strrec_track(const MetaData& md){

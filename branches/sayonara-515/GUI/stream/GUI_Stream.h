@@ -22,12 +22,12 @@
 #ifndef GUI_STREAM_H_
 #define GUI_STREAM_H_
 
-#include <QDockWidget>
+#include <QWidget>
 #include <QMap>
 #include <QCloseEvent>
 #include <ui_GUI_Stream.h>
 
-class GUI_Stream : public QDockWidget, private Ui::GUI_Stream {
+class GUI_Stream : public QWidget, private Ui::GUI_Stream {
 
 	Q_OBJECT
 

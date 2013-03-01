@@ -156,6 +156,13 @@ public:
 			bool deleteStream(QString name);
 			bool addStream(QString name, QString url);
 
+            /*
+             * Podcasts
+             * */
+            bool getAllPodcasts(QMap<QString, QString>& result);
+            bool deletePodcast(QString name);
+            bool addPodcast(QString name, QString url);
+
     void deleteTracksAlbumsArtists();
 
 

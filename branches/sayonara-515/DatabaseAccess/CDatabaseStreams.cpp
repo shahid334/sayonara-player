@@ -61,6 +61,8 @@ bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
 	return true;
 }
 
+
+
 bool CDatabaseConnector::deleteStream(QString name){
 	if (!this -> m_database.isOpen())
 			 this -> m_database.open();
@@ -77,6 +79,7 @@ bool CDatabaseConnector::deleteStream(QString name){
 
 	return true;
 }
+
 
 
 

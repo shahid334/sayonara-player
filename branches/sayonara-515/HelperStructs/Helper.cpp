@@ -29,6 +29,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/WebAccess.h"
 
 #include <string>
 #include <iostream>
@@ -336,6 +337,8 @@ QStringList Helper::get_playlistfile_extensions(){
 	return filters;
 }
 
+
+
 bool Helper::is_playlistfile(QString filename){
 	QStringList extensions = get_playlistfile_extensions();
 	foreach(QString extension, extensions){
@@ -345,6 +348,55 @@ bool Helper::is_playlistfile(QString filename){
 	}
 
 	return false;
+}
+
+
+
+QStringList Helper::get_podcast_extensions(){
+
+    QStringList filters;
+
+    filters << "*.xml"
+            << "*.rss";
+
+    foreach(QString filter, filters){
+        filters.push_back(filter.toUpper());
+    }
+
+    return filters;
+}
+
+
+bool Helper::is_podcastfile(QString filename){
+    QStringList extensions = get_podcast_extensions();
+
+    bool extension_ok = false;
+    foreach(QString extension, extensions){
+        if(filename.toLower().endsWith(extension.right(4).toLower())){
+            extension_ok = true;
+            break;
+
+        }
+    }
+
+    qDebug() << "extension ok? " << extension_ok;
+    if(!extension_ok) return false;
+
+    QString content;
+    if(filename.startsWith("http")){
+        read_http_into_str(filename, content);
+    }
+
+    else{
+        read_file_into_str(filename, content);
+    }
+
+
+    if(content.size() > 1024) content = content.left(1024);
+    qDebug() << "content = " << content;
+
+    if(content.contains("<rss")) return true;
+    return false;
 }
 
 QString Helper::calc_file_extension(QString filename){
@@ -399,8 +451,6 @@ bool Helper::checkTrack(const MetaData& md){
 }
 
 
-
-
 bool Helper::read_file_into_str(QString filename, QString& content){
 
 	QFile file(filename);
@@ -421,6 +471,10 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 	return false;
 
+}
+
+bool Helper::read_http_into_str(QString url, QString& content){
+    return WebAccess::read_http_into_str(url, content);
 }
 
 

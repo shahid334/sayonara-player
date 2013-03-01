@@ -10,6 +10,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
@@ -35,6 +36,7 @@
 
 #include <QMap>
 #include <QSharedMemory>
+
 
 #include <fstream>
 #include <string>
@@ -71,6 +73,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
     ui_stream           = new GUI_Stream(player->getParentOfPlugin());
+    ui_podcasts         = new GUI_Podcasts(player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer(player->getParentOfPlugin());
     ui_lfm_radio        = new GUI_LFMRadioWidget(player->getParentOfPlugin());
 
@@ -116,6 +119,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     player->setLibrary(ui_library);
     player->setPlaylistChooser(ui_playlist_chooser);
     player->setStream(ui_stream);
+    player->setPodcasts(ui_podcasts);
     player->setLFMRadio(ui_lfm_radio);
     player->setEqualizer(ui_eq);
     player->setInfoDialog(ui_info_dialog);
@@ -179,6 +183,7 @@ Application::~Application(){
     delete ui_lfm_radio;
     delete ui_eq;
     delete ui_stream;
+    delete ui_podcasts;
     delete ui_lastfm;
     delete library;
     delete playlist;
@@ -335,6 +340,10 @@ void Application::init_connections(){
 		CONNECT(ui_stream, sig_close_event(), 									player, 	close_stream());
 
 
+        CONNECT(ui_podcasts, sig_play_podcast(const QString&, const QString&), 	playlist, 	psl_play_podcast(const QString&, const QString&));
+        CONNECT(ui_podcasts, sig_close_event(), 								player, 	close_podcasts());
+
+
        CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_sr_set_active(bool));
        CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));
 
@@ -357,7 +366,9 @@ void Application::init_connections(){
 
 void Application::setFiles2Play(QStringList filelist){
 
+    filelist.push_back("http://static.orf.at/podcast/fm4/fm4_ombudsmann.xml");
     if(filelist.size() > 0){
+        qDebug() << "create playlist";
         playlist->psl_createPlaylist(filelist);
 
         if(playlist->get_num_tracks() > 0)
@@ -398,4 +409,11 @@ QString Application::getVersion(){
 QMainWindow* Application::getMainWindow(){
     return this->player;
 }
+
+
+
+
+
+
+
 

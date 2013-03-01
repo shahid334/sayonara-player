@@ -57,7 +57,7 @@ void StreamRipperBufferThread::run(){
         n_loops++;
         if(max <= 0) break;
 
-    } while(_size < 32000 && max > 0);
+    } while(_size < 500000 && max > 0);
 
     _f->close();
 }

@@ -34,6 +34,10 @@ void GUI_SimplePlayer::hideUnneededPlugins(QWidget* wannashow){
 	if(ui_stream != wannashow)
 		this->ui->action_ViewStream->setChecked(false);
 
+    if(ui_podcasts != wannashow){
+        this->ui->action_ViewPodcasts->setChecked(false);
+    }
+
 	if(ui_playlist_chooser != wannashow)
 		this->ui->action_ViewPlaylistChooser->setChecked(false);
 }
@@ -58,6 +62,11 @@ void GUI_SimplePlayer::hideAllPlugins(){
     if(ui_playlist_chooser){
         this->ui_playlist_chooser->hide();
         this->ui_playlist_chooser->close();
+    }
+
+    if(ui_podcasts){
+        this->ui_podcasts->hide();
+        this->ui_podcasts->close();
     }
 
 	this->ui->plugin_widget->setMinimumHeight(0);
@@ -93,6 +102,11 @@ void GUI_SimplePlayer::check_show_plugins(){
 			show_playlist_chooser(true);
 			break;
 
+        case PLUGIN_PODCASTS:
+            if(!ui_podcasts) break;
+            ui->action_ViewPodcasts->setChecked(true);
+            show_podcasts(true);
+            break;
 
 
 		case PLUGIN_NONE:
@@ -117,6 +131,13 @@ void GUI_SimplePlayer::setStream(GUI_Stream* stream){
 	ui_stream = stream;
     if(ui_stream)
         ui_stream->resize(this->ui->plugin_widget->size());
+}
+
+
+void GUI_SimplePlayer::setPodcasts(GUI_Podcasts* podcasts){
+    ui_podcasts = podcasts;
+    if(ui_podcasts)
+        ui_podcasts->resize(this->ui->plugin_widget->size());
 }
 
 void GUI_SimplePlayer::setLFMRadio(GUI_LFMRadioWidget* radio){
@@ -184,13 +205,20 @@ void GUI_SimplePlayer::show_eq(bool vis) {
 
 void GUI_SimplePlayer::show_stream(bool vis){
 
-
 	showPlugin(ui_stream, vis);
 
     if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_STREAM);
     else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
-
 }
+
+void GUI_SimplePlayer::show_podcasts(bool vis){
+    qDebug() << "show podcasts";
+    showPlugin(ui_podcasts, vis);
+
+    if(vis) CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_PODCASTS);
+    else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
+}
+
 
 void GUI_SimplePlayer::show_lfm_radio(bool vis){
 
@@ -226,6 +254,11 @@ void GUI_SimplePlayer::close_lfm_radio() {
 void GUI_SimplePlayer::close_stream() {
 	show_stream(false);
 	ui->action_ViewStream->setChecked(false);
+}
+
+void GUI_SimplePlayer::close_podcasts() {
+    show_podcasts(false);
+    ui->action_ViewPodcasts->setChecked(false);
 }
 
 /** PLUGINS **/

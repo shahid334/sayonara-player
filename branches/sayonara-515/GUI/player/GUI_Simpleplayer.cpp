@@ -24,6 +24,7 @@
 
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/player/GUI_TrayIcon.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "HelperStructs/Helper.h"
@@ -80,6 +81,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui_lfm_radio = 0;
 	ui_eq = 0;
 	ui_stream = 0;
+    ui_podcasts = 0;
 
     ui_notifications = new GUI_Notifications(this);
     ui_startup_dialog = new GUI_Startup_Dialog(this);
@@ -160,6 +162,9 @@ void GUI_SimplePlayer::initGUI() {
     ui->action_ViewStream->setText(tr("&Stream"));
     ui->action_ViewStream->setShortcut(QKeySequence("CTRL+s"));
 
+    ui->action_ViewPodcasts->setText(tr("&Podcasts"));
+    ui->action_ViewPodcasts->setShortcut(QKeySequence("CTRL+o"));
+
     ui->action_ViewPlaylistChooser->setText(tr("&Playlist Chooser"));
     ui->action_ViewPlaylistChooser->setShortcut(QKeySequence("CTRL+p"));
 
@@ -222,6 +227,10 @@ void GUI_SimplePlayer::setupConnections(){
 
 	connect(ui->action_ViewStream, SIGNAL(toggled(bool)), this,
 					SLOT(show_stream(bool)));
+
+    connect(ui->action_ViewPodcasts, SIGNAL(toggled(bool)), this,
+                    SLOT(show_podcasts(bool)));
+
 	connect(ui->action_ViewPlaylistChooser, SIGNAL(toggled(bool)), this,
 				SLOT(show_playlist_chooser(bool)));
 	connect(ui->action_Dark, SIGNAL(toggled(bool)), this,
@@ -716,6 +725,9 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
     if(ui_stream && !ui_stream->isHidden() && ui_stream->isVisible())
 		ui_stream->resize(sz);
 
+    if(ui_podcasts && !ui_podcasts->isHidden() && ui_podcasts->isVisible())
+        ui_podcasts->resize(sz);
+
     if(ui_lfm_radio && !ui_lfm_radio->isHidden() && ui_lfm_radio->isVisible())
 		ui_lfm_radio->resize(sz);
 
@@ -764,8 +776,13 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			break;
 
 		case (Qt::Key_S):
-					ui->action_ViewStream->setChecked(!ui->action_ViewStream->isChecked());
-					break;
+            ui->action_ViewStream->setChecked(!ui->action_ViewStream->isChecked());
+            break;
+
+
+        case (Qt::Key_O):
+            ui->action_ViewPodcasts->setChecked(!ui->action_ViewPodcasts->isChecked());
+            break;
 
 		case (Qt::Key_L):
 			ui->action_viewLibrary->setChecked(!ui->action_viewLibrary->isChecked());

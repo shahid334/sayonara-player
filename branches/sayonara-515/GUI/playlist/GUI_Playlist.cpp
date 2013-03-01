@@ -303,16 +303,18 @@ void GUI_Playlist::set_radio_active(int radio){
 	ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 
     if(radio != RADIO_OFF){
-        ui->listView->set_drag_enabled(false);
+
         ui->listView->set_context_menu_actions(ENTRY_INFO);
         this->_info_dialog->set_tag_edit_visible(false);
     }
 
     else{
-        ui->listView->set_drag_enabled(true);
+
         ui->listView->set_context_menu_actions(ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
         this->_info_dialog->set_tag_edit_visible(true);
     }
+
+    ui->listView->set_drag_enabled(radio != RADIO_LFM);
 }
 
 
