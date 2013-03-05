@@ -42,6 +42,7 @@ void GUI_SimplePlayer::hideUnneededPlugins(QWidget* wannashow){
 		this->ui->action_ViewPlaylistChooser->setChecked(false);
 }
 
+/// TODO change me
 void GUI_SimplePlayer::hideAllPlugins(){
 
     if(ui_eq){
@@ -72,6 +73,7 @@ void GUI_SimplePlayer::hideAllPlugins(){
 	this->ui->plugin_widget->setMinimumHeight(0);
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::check_show_plugins(){
 
 	int shown_plugin = CSettingsStorage::getInstance()->getShownPlugin();
@@ -114,32 +116,32 @@ void GUI_SimplePlayer::check_show_plugins(){
 			break;
 	}
 }
-
+/// TODO remove me
 void GUI_SimplePlayer::setEqualizer(GUI_Equalizer* eq) {
 	ui_eq = eq;
     if(ui_eq)
         ui_eq->resize(this->ui->plugin_widget->size());
 }
-
+/// TODO remove me
 void GUI_SimplePlayer::setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser){
 	ui_playlist_chooser = playlist_chooser;
     if(ui_playlist_chooser)
         ui_playlist_chooser->resize(this->ui->plugin_widget->size());
 }
-
+/// TODO remove me
 void GUI_SimplePlayer::setStream(GUI_Stream* stream){
 	ui_stream = stream;
     if(ui_stream)
         ui_stream->resize(this->ui->plugin_widget->size());
 }
 
-
+/// TODO remove me
 void GUI_SimplePlayer::setPodcasts(GUI_Podcasts* podcasts){
     ui_podcasts = podcasts;
     if(ui_podcasts)
         ui_podcasts->resize(this->ui->plugin_widget->size());
 }
-
+/// TODO remove me
 void GUI_SimplePlayer::setLFMRadio(GUI_LFMRadioWidget* radio){
 	ui_lfm_radio = radio;
     if(ui_lfm_radio)
@@ -183,6 +185,9 @@ void GUI_SimplePlayer::showPlugin(QWidget* widget, bool v){
 
 }
 
+
+/// TODO remove me
+
 void GUI_SimplePlayer::show_playlist_chooser(bool vis){
 
 
@@ -194,6 +199,8 @@ void GUI_SimplePlayer::show_playlist_chooser(bool vis){
 
 }
 
+
+/// TODO remove me
 void GUI_SimplePlayer::show_eq(bool vis) {
 
 	showPlugin(ui_eq, vis);
@@ -203,6 +210,7 @@ void GUI_SimplePlayer::show_eq(bool vis) {
 
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::show_stream(bool vis){
 
 	showPlugin(ui_stream, vis);
@@ -211,6 +219,7 @@ void GUI_SimplePlayer::show_stream(bool vis){
     else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::show_podcasts(bool vis){
     qDebug() << "show podcasts";
     showPlugin(ui_podcasts, vis);
@@ -219,7 +228,7 @@ void GUI_SimplePlayer::show_podcasts(bool vis){
     else CSettingsStorage::getInstance()->setShownPlugin(PLUGIN_NONE);
 }
 
-
+/// TODO remove me
 void GUI_SimplePlayer::show_lfm_radio(bool vis){
 
     bool lfm_active = true;
@@ -236,26 +245,31 @@ void GUI_SimplePlayer::show_lfm_radio(bool vis){
 
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::close_playlist_chooser(){
 	show_playlist_chooser(false);
 	ui->action_ViewPlaylistChooser->setChecked(false);
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::close_eq() {
 	show_eq(false);
 	ui->action_ViewEqualizer->setChecked(false);
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::close_lfm_radio() {
 	show_lfm_radio(false);
 	ui->action_ViewLFMRadio->setChecked(false);
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::close_stream() {
 	show_stream(false);
 	ui->action_ViewStream->setChecked(false);
 }
 
+/// TODO remove me
 void GUI_SimplePlayer::close_podcasts() {
     show_podcasts(false);
     ui->action_ViewPodcasts->setChecked(false);
