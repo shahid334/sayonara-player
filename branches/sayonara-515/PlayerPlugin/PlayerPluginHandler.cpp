@@ -61,8 +61,6 @@ void PlayerPluginHandler::showPlugin(PlayerPlugin* p){
 
     _cur_shown_plugin = p;
      hide_all();
-     p->show();
-
 }
 
 void PlayerPluginHandler::showPlugin(QString name){
