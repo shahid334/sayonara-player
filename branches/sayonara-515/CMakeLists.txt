@@ -93,6 +93,9 @@ SET(HEADERS
     GUI/SocketConfiguration/GUISocketSetup.h
     CoverLookup/CoverLookup.h
     DatabaseAccess/CDatabaseConnector.h
+
+    PlayerPlugin/PlayerPlugin.h
+    PlayerPlugin/PlayerPluginHandler.h
     library/CLibraryBase.h
     library/ReloadThread.h
     playlist/Playlist.h
@@ -155,6 +158,10 @@ SET(SOURCES
     
     GUI/InfoDialog/GUI_InfoDialog.cpp
     GUI/SocketConfiguration/GUISocketSetup.cpp
+
+    PlayerPlugin/PlayerPlugin.cpp
+    PlayerPlugin/PlayerPluginHandler.cpp
+
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
     HelperStructs/Style.cpp
@@ -276,6 +283,7 @@ SET(ICONS
 	GUI/icons/logo.png
         GUI/icons/logo_small.png
 	GUI/icons/podcast.png
+        GUI/icons/playlist.png
 )
 
 

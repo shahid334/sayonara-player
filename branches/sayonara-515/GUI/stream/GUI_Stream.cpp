@@ -199,9 +199,11 @@ void GUI_Stream::delete_clicked(){
 	if(_cur_station == -1) return;
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	QMessageBox msgBox;
+    QMessageBox msgBox(this);
 	msgBox.setText("Really wanna delete" + _cur_station_name + "?" );
 	msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+    msgBox.setModal(true);
+    msgBox.setIcon(QMessageBox::Information);
 	int ret = msgBox.exec();
 	if(ret == QMessageBox::Yes){
 		if(db->deleteStream(_cur_station_name)){

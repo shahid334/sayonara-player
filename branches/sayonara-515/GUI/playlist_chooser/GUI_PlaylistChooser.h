@@ -32,7 +32,7 @@
 
 
 
-class GUI_PlaylistChooser : public QDockWidget, private Ui::GUI_PlaylistChooser {
+class GUI_PlaylistChooser : public QWidget, private Ui::GUI_PlaylistChooser {
 
 Q_OBJECT
 

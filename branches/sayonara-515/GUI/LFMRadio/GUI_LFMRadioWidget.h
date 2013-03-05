@@ -30,11 +30,11 @@
 #define GUIRADIOWIDGET_H_
 
 #include "ui_GUI_LFMRadioWidget.h"
-#include <QDockWidget>
 #include <QWidget>
+
 #include <QCloseEvent>
 
-class GUI_LFMRadioWidget : public QDockWidget, private Ui::GUI_LFMRadioWidget{
+class GUI_LFMRadioWidget : public QWidget, private Ui::GUI_LFMRadioWidget{
 
 Q_OBJECT
 
@@ -54,6 +54,7 @@ public:
 	private slots:
 		void start_listen();
 		void radio_button_changed();
+        void mode_index_changed(int i);
 
 	protected:
 			void 	closeEvent ( QCloseEvent * event );

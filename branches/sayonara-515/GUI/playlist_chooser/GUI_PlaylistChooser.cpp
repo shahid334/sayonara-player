@@ -29,21 +29,18 @@
 #include "HelperStructs/globals.h"
 
 #include <QWidget>
-#include <QDockWidget>
+#include <QWidget>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
 #include <QCloseEvent>
-
+#include <QPixmap>
 
 #include "ui_GUI_PlaylistChooser.h"
 
 
-
-
-
-GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) {
+GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QWidget(parent) {
 
 	_cur_idx = -1;
     _dark = false;
@@ -52,6 +49,9 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 
     this->ui = new Ui::GUI_PlaylistChooser();
 	this->ui->setupUi(this);
+
+    QPixmap p = QPixmap(Helper::getIconPath() + "lyrics.png").scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    this->ui->lab_icon->setPixmap(p);
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
 

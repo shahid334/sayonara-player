@@ -179,9 +179,12 @@ void GUI_Podcasts::delete_clicked(){
     if(_cur_podcast == -1) return;
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    QMessageBox msgBox;
+    QMessageBox msgBox(this);
     msgBox.setText("Really wanna delete" + _cur_podcast_name + "?" );
     msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+    msgBox.setModal(true);
+    msgBox.setIcon(QMessageBox::Information);
+
     int ret = msgBox.exec();
     if(ret == QMessageBox::Yes){
         if(db->deletePodcast(_cur_podcast_name)){

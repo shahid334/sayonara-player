@@ -77,8 +77,10 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_mute = false;
 
 	ui_playlist = 0;
-	ui_playlist_chooser = 0;
-	ui_lfm_radio = 0;
+
+    /// TODO: remove us
+    ui_playlist_chooser = 0;
+    ui_lfm_radio = 0;
 	ui_eq = 0;
 	ui_stream = 0;
     ui_podcasts = 0;
@@ -156,6 +158,7 @@ void GUI_SimplePlayer::initGUI() {
 	ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
     ui->btn_correct->setToolTip(tr("Correct ID3 Tag"));
 
+    /// TODO: remove us
     ui->action_ViewEqualizer->setText(tr("&Equalizer"));
     ui->action_ViewEqualizer->setShortcut(QKeySequence("CTRL+e"));
 
@@ -217,6 +220,7 @@ void GUI_SimplePlayer::setupConnections(){
 
 
 	// view
+    /// TODO: remove us
 	connect(ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
 			SLOT(showLibrary(bool)));
 	connect(ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
@@ -719,6 +723,8 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
 	QSize sz = ui->plugin_widget->size();
 
+    /// TODO: remove us
+
     if(ui_eq && !ui_eq->isHidden() && ui_eq->isVisible())
 		ui_eq->resize(sz);
 
@@ -733,6 +739,9 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
     if(ui_playlist_chooser && !ui_playlist_chooser->isHidden() && ui_playlist_chooser->isVisible())
         ui_playlist_chooser->resize(sz);
+
+
+    // sig_resize -> PanelPluginHandler::resize()
 
     CSettingsStorage::getInstance()->setPlayerSize(this->size());
 }
