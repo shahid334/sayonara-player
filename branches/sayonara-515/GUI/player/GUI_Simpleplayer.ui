@@ -906,12 +906,6 @@
     <addaction name="action_smallPlaylistItems"/>
     <addaction name="action_showOnlyTracks"/>
     <addaction name="separator"/>
-    <addaction name="action_ViewEqualizer"/>
-    <addaction name="action_ViewStream"/>
-    <addaction name="action_ViewPodcasts"/>
-    <addaction name="action_ViewLFMRadio"/>
-    <addaction name="action_ViewPlaylistChooser"/>
-    <addaction name="separator"/>
     <addaction name="action_Dark"/>
     <addaction name="action_Fullscreen"/>
    </widget>

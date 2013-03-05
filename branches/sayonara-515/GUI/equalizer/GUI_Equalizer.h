@@ -40,12 +40,12 @@
 
 using namespace std;
 
-class GUI_Equalizer : public QDockWidget, private Ui::GUI_Equalizer{
+class GUI_Equalizer : public PlayerPlugin, private Ui::GUI_Equalizer{
 
 	Q_OBJECT
 
 public:
-	GUI_Equalizer(QWidget* parent=0);
+	GUI_Equalizer(QString name, QString action_name, QChar shortcut, QWidget* parent=0);
 	virtual ~GUI_Equalizer();
 
 	signals:

@@ -20,6 +20,7 @@
 
 
 #include "ui_GUI_Stream.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
@@ -34,7 +35,7 @@
 #include <QPixmap>
 
 
-GUI_Stream::GUI_Stream(QWidget* parent): QWidget(parent)  {
+GUI_Stream::GUI_Stream(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent)  {
 	this->ui = new Ui::GUI_Stream();
 	this->ui->setupUi(this);
 

@@ -60,11 +60,10 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 	QString version    = getVersion();
 	set->setVersion( version );
 
-    int shown_plugin = set->getShownPlugin();
+	int shown_plugin = set->getShownPlugin();
 
-    player              = new GUI_SimplePlayer();
+	player              = new GUI_SimplePlayer();
 
-    ui_playlist_chooser = new GUI_PlaylistChooser(player->getParentOfPlugin());
 
     playlist            = new Playlist();
     library             = new CLibraryBase(this);
@@ -72,11 +71,12 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 
     lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
-    ui_stream           = new GUI_Stream(player->getParentOfPlugin());
-    ui_podcasts         = new GUI_Podcasts(player->getParentOfPlugin());
-    ui_eq               = new GUI_Equalizer(player->getParentOfPlugin());
-    ui_lfm_radio        = new GUI_LFMRadioWidget(player->getParentOfPlugin());
-
+	
+    ui_stream           = new GUI_Stream("Stream", "Stream", 'S', player->getParentOfPlugin());
+    ui_podcasts         = new GUI_Podcasts("Podcasts", "Podcasts", 'o', player->getParentOfPlugin());
+    ui_eq               = new GUI_Equalizer("Equalizer", "Equalizer", 'E', player->getParentOfPlugin());
+    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "LastFM", 'a', player->getParentOfPlugin());
+	ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", "Playlists", 'P', player->getParentOfPlugin());
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
 
@@ -88,6 +88,15 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
     remote_socket       = new Socket();
+
+    _pph = new PlayerPluginHandler(NULL);
+
+    _pph->addPlugin(ui_eq);
+    _pph->addPlugin(ui_lfm_radio);
+    _pph->addPlugin(ui_stream);
+    _pph->addPlugin(ui_podcasts);
+    _pph->addPlugin(ui_playlist_chooser);
+    
 
 
     QString dir;
@@ -117,12 +126,9 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 
     player->setPlaylist(ui_playlist);
     player->setLibrary(ui_library);
-    player->setPlaylistChooser(ui_playlist_chooser);
-    player->setStream(ui_stream);
-    player->setPodcasts(ui_podcasts);
-    player->setLFMRadio(ui_lfm_radio);
-    player->setEqualizer(ui_eq);
     player->setInfoDialog(ui_info_dialog);
+
+    player->setPlayerPluginHandler(_pph);
 
     player->setStyle( set->getPlayerStyle() );
     player->show();
@@ -157,9 +163,6 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     playlists->ui_loaded();
     player->ui_loaded();
 
-    player->hideAllPlugins();
-    set->setShownPlugin(shown_plugin);
-    player->check_show_plugins();
 
 
     _initialized = true;
@@ -305,43 +308,42 @@ void Application::init_connections(){
        CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));
 
 
-	   CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
-	   CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
-	   CONNECT(ui_eq, close_event(),                                        player, 	close_eq());
-
 
 	   CONNECT(ui_id3_editor, id3_tags_changed(), 						ui_library, 	id3_tags_changed());
 	   CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			playlist, 		psl_id3_tags_changed(MetaDataList&));
 	   CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
 
+	qDebug() << "Equalizer";
+	   CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
+	   CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
 
+	qDebug() << "last fm";
        CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
        CONNECT(lastfm,  sig_radio_initialized(bool),                            playlist,	psl_lfm_radio_init(bool));
        CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
        CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),            playlist,	psl_new_lfm_playlist_available(const MetaDataList&));
        CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),    player,		lfm_info_fetched(const MetaData&, bool, bool));
 
-	   CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
-	   CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
-	   CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist, 	psl_prepare_playlist_for_save(int));
-	   CONNECT(ui_playlist_chooser, sig_save_playlist(QString), 	playlist, 	psl_prepare_playlist_for_save(QString));
-       CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString, bool), 	playlist, 	psl_prepare_playlist_for_save_file(QString, bool));
-	   CONNECT(ui_playlist_chooser, sig_clear_playlist(),           playlist, 	psl_clear_playlist());
-	   CONNECT(ui_playlist_chooser, sig_closed(),                   player, 	close_playlist_chooser());
-       CONNECT(ui_playlist_chooser, sig_files_selected(QStringList &), playlist, psl_createPlaylist(QStringList&));
+	qDebug() << "playlist chooser";
+	CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
+	CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
+	CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist, 	psl_prepare_playlist_for_save(int));
+	CONNECT(ui_playlist_chooser, sig_save_playlist(QString), 	playlist, 	psl_prepare_playlist_for_save(QString));
+	CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString, bool), 	playlist, 	psl_prepare_playlist_for_save_file(QString, bool));
+	CONNECT(ui_playlist_chooser, sig_clear_playlist(),           playlist, 	psl_clear_playlist());
+	CONNECT(ui_playlist_chooser, sig_closed(),                   player, 	close_playlist_chooser());
+	CONNECT(ui_playlist_chooser, sig_files_selected(QStringList &), playlist, psl_createPlaylist(QStringList&));
 
-	   CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
-	   CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
-
+	CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
+	CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
+	qDebug() << "last fm radio";
         CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
-        CONNECT(ui_lfm_radio, close_event(), 								player, 	close_lfm_radio());
 
-		CONNECT(ui_stream, sig_play_stream(const QString&, const QString&), 	playlist, 	psl_play_stream(const QString&, const QString&));
-		CONNECT(ui_stream, sig_close_event(), 									player, 	close_stream());
+	qDebug() << "stream";
+	CONNECT(ui_stream, sig_play_stream(const QString&, const QString&), 	playlist, 	psl_play_stream(const QString&, const QString&));
 
-
+	qDebug() << "podcasts";
         CONNECT(ui_podcasts, sig_play_podcast(const QString&, const QString&), 	playlist, 	psl_play_podcast(const QString&, const QString&));
-        CONNECT(ui_podcasts, sig_close_event(), 								player, 	close_podcasts());
 
 
        CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_sr_set_active(bool));

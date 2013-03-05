@@ -3,12 +3,12 @@
 
 #include <QDockWidget>
 #include "ui_GUI_Podcasts.h"
-
+#include "PlayerPlugin/PlayerPlugin.h"
 #include <QWidget>
 #include <QMap>
 #include <QCloseEvent>
 
-class GUI_Podcasts : public QWidget, private Ui::GUI_Podcasts
+class GUI_Podcasts : public PlayerPlugin, private Ui::GUI_Podcasts
 {
     Q_OBJECT
 
@@ -27,7 +27,7 @@ private slots:
 
 
 public:
-    GUI_Podcasts(QWidget* parent=0);
+    GUI_Podcasts(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
     virtual ~GUI_Podcasts();
 
 

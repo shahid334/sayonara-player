@@ -13,10 +13,11 @@ class PlayerPluginHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit PlayerPluginHandler(QObject *parent = 0);
+    PlayerPluginHandler(QObject *parent = 0);
+    ~PlayerPluginHandler();
     
 signals:
-    void sig_show_plugin(Plugin*);
+    void sig_show_plugin(PlayerPlugin*);
     void sig_hide_all_plugins();
     
 public slots:
@@ -27,7 +28,7 @@ private slots:
     void plugin_action_triggered(PlayerPlugin*, bool);
 
 private:
-    QMap<PlayerPlugin>  _plugins;
+    QList<PlayerPlugin*>  _plugins;
     PlayerPlugin*       _cur_shown_plugin;
 
     PlayerPlugin*       _find_plugin(QString name);
@@ -36,8 +37,10 @@ private:
 
 public:
     void addPlugin(PlayerPlugin*);
-    void showPlugin(QString name, bool b=true);
+    void showPlugin(PlayerPlugin*);
+    void showPlugin(QString name);
 
+    QList<PlayerPlugin*> get_all_plugins();
     QSize getCurPluginSize();
 
 

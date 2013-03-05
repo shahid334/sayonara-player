@@ -26,13 +26,13 @@
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 
 #include <QMap>
-#include <QWidget>
+#include "PlayerPlugin/PlayerPlugin.h"
 #include <QDockWidget>
 #include <ui_GUI_PlaylistChooser.h>
 
 
 
-class GUI_PlaylistChooser : public QWidget, private Ui::GUI_PlaylistChooser {
+class GUI_PlaylistChooser : public PlayerPlugin, private Ui::GUI_PlaylistChooser {
 
 Q_OBJECT
 
@@ -42,12 +42,10 @@ signals:
 	void sig_delete_playlist(int);
 	void sig_save_playlist(int);
 	void sig_save_playlist(QString);
-    void sig_save_playlist_file(QString, bool);
+	void sig_save_playlist_file(QString, bool);
 	void sig_closed();
 	void sig_clear_playlist();
-    void sig_files_selected(QStringList&);
-
-
+        void sig_files_selected(QStringList&);
 
 
 private slots:
@@ -68,7 +66,7 @@ public slots:
     void changeSkin(bool);
 
 public:
-	GUI_PlaylistChooser(QWidget* parent=0);
+	GUI_PlaylistChooser(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
 
 private:

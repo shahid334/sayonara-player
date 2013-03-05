@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>GUI_PlaylistChooser</class>
- <widget class="QWidget" name="GUI_PlaylistChooser">
+ <widget class="PlayerPlugin" name="GUI_PlaylistChooser">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -277,6 +277,15 @@
    </item>
   </layout>
  </widget>
+  <customwidgets>
+    <customwidget>
+       <class>PlayerPlugin</class>
+          <extends>QWidget</extends>
+             <header>PlayerPlugin/PlayerPlugin.h</header>
+                <container>1</container>
+                  </customwidget>
+                   </customwidgets>
+
  <resources/>
  <connections>
   <connection>

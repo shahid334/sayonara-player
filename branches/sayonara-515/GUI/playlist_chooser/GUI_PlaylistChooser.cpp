@@ -21,6 +21,7 @@
 
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
@@ -28,7 +29,6 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 
-#include <QWidget>
 #include <QWidget>
 #include <QInputDialog>
 #include <QFileDialog>
@@ -40,7 +40,7 @@
 #include "ui_GUI_PlaylistChooser.h"
 
 
-GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QWidget(parent) {
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
 
 	_cur_idx = -1;
     _dark = false;

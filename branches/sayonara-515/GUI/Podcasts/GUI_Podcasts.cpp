@@ -1,6 +1,6 @@
 #include "GUI/Podcasts/GUI_Podcasts.h"
 #include "ui_GUI_Podcasts.h"
-
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -14,8 +14,7 @@
 #include <QMessageBox>
 
 
-GUI_Podcasts::GUI_Podcasts(QWidget *parent) :
-    QWidget(parent)
+GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent)
 {
 
     this->ui = new Ui::GUI_Podcasts();

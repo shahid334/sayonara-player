@@ -22,12 +22,13 @@
 #ifndef GUI_STREAM_H_
 #define GUI_STREAM_H_
 
+#include "PlayerPlugin/PlayerPlugin.h"
 #include <QWidget>
 #include <QMap>
 #include <QCloseEvent>
 #include <ui_GUI_Stream.h>
 
-class GUI_Stream : public QWidget, private Ui::GUI_Stream {
+class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 
 	Q_OBJECT
 
@@ -48,7 +49,7 @@ public slots:
 
 
 public:
-	GUI_Stream(QWidget* parent=0);
+	GUI_Stream(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
 	virtual ~GUI_Stream();
 
 

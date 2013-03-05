@@ -128,7 +128,6 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 
 void Playlist::load_old_playlist(){
 
-    qDebug() << "load old playlist " << _v_meta_data.size();
     if(_v_meta_data.size() > 0) return;
 
     bool loadPlaylist = _settings->getLoadPlaylist();
@@ -154,13 +153,12 @@ void Playlist::load_old_playlist(){
     for(int i=0; i<saved_playlist.size(); i++){
 
         // convert item into MetaData
-
         QString item = saved_playlist[i];
         if(item.size() == 0) continue;
 
         // maybe we can get a track id
-            bool ok;
-            int track_id = item.toInt(&ok);
+        bool ok;
+        int track_id = item.toInt(&ok);
 
         // maybe it's an filepath
             QString path_in_list = item;

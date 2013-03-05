@@ -41,6 +41,7 @@
 #include <QMessageBox>
 
 #include <ui_GUI_Equalizer.h>
+#include "PlayerPlugin/PlayerPlugin.h"
 
 #include <vector>
 
@@ -59,7 +60,7 @@ QString calc_lab(int val){
 
 }
 
-GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
+GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
 
     this->_ui = new Ui::GUI_Equalizer( );
 	this->_ui->setupUi(this);

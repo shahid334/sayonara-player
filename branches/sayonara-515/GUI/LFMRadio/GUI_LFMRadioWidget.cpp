@@ -43,13 +43,13 @@
 #include <QPixmap>
 
 #include "ui_GUI_LFMRadioWidget.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 
-GUI_LFMRadioWidget::GUI_LFMRadioWidget(QWidget* parent) : QWidget(parent)  {
+GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
 
 
     this->_ui = new Ui::GUI_LFMRadioWidget();
 	this->_ui->setupUi(this);
-    //this->_ui->rb_artist->setChecked(true);
 	this->_ui->cb_friends->setVisible(false);
 
     QPixmap p = QPixmap(Helper::getIconPath() + "lastfm_red_small.png");
@@ -57,11 +57,7 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QWidget* parent) : QWidget(parent)  {
 
 	_ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-    /*connect(_ui->rb_artist, SIGNAL(released()), this, SLOT(radio_button_changed()));
-	connect(_ui->rb_tag, SIGNAL(released()), this, SLOT(radio_button_changed()));
-	connect(_ui->rb_recom, SIGNAL(released()), this, SLOT(radio_button_changed()));
-    connect(_ui->rb_user, SIGNAL(released()), this, SLOT(radio_button_changed()));*/
-    connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));
+        connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));
 	connect(_ui->btn_listen, SIGNAL(released()), this, SLOT(start_listen()));
 
     hide();

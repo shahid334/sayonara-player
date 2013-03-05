@@ -23,6 +23,7 @@ signals:
 
     
 public slots:
+
 private slots:
     void action_triggered(bool);
 

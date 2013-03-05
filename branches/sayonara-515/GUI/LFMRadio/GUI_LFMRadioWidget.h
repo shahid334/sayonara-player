@@ -30,16 +30,17 @@
 #define GUIRADIOWIDGET_H_
 
 #include "ui_GUI_LFMRadioWidget.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include <QWidget>
 
 #include <QCloseEvent>
 
-class GUI_LFMRadioWidget : public QWidget, private Ui::GUI_LFMRadioWidget{
+class GUI_LFMRadioWidget : public PlayerPlugin, private Ui::GUI_LFMRadioWidget{
 
 Q_OBJECT
 
 public:
-	GUI_LFMRadioWidget(QWidget* parent=0);
+	GUI_LFMRadioWidget(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
 	virtual ~GUI_LFMRadioWidget();
 
 
