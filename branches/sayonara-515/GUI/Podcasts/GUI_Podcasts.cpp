@@ -5,7 +5,6 @@
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <QDockWidget>
 #include <QIcon>
 #include <QPixmap>
 #include <QMap>
@@ -222,10 +221,4 @@ void GUI_Podcasts::save_clicked(){
     url_text_changed(url);
 }
 
-void GUI_Podcasts::closeEvent ( QCloseEvent * event ){
-    event->ignore();
-    hide();
-    close();
-    emit sig_close_event();
-}
 

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QAction>
+#include <QCloseEvent>
 
 class PlayerPlugin : public QWidget
 {
@@ -31,12 +32,13 @@ private:
     QString     _pp_name;
     QAction*    _pp_action;
 
-    QSize       _pp_size;
     bool        _pp_is_shown;
+
 
 protected:
 
     void setSize(QSize size);
+    void closeEvent(QCloseEvent *);
 
 
 

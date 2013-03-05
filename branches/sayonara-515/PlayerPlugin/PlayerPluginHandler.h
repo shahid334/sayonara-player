@@ -23,6 +23,7 @@ signals:
 public slots:
     void resize(QSize sz);
     void hide_all();
+    void hide_all_except(PlayerPlugin* p_ex);
 
 private slots:
     void plugin_action_triggered(PlayerPlugin*, bool);

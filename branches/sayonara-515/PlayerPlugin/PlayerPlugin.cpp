@@ -1,4 +1,5 @@
 #include "PlayerPlugin/PlayerPlugin.h"
+#include <QDebug>
 
 PlayerPlugin::PlayerPlugin(QString name, QString action_text, QChar shortcut, QWidget *parent) :
     QWidget(parent)
@@ -33,12 +34,12 @@ QString PlayerPlugin::getName(){
 
 
 QSize PlayerPlugin::getSize(){
-    return _pp_size;
+    return this->minimumSize();
 }
 
 
 void PlayerPlugin::setSize(QSize size){
-    _pp_size = size;
+    this->setMinimumSize(size);
 }
 
 
@@ -47,7 +48,15 @@ QAction* PlayerPlugin::getAction(){
 }
 
 
+void PlayerPlugin::closeEvent(QCloseEvent* e){
+    QWidget::close();
+    _pp_action->setChecked(false);
+    action_triggered(false);
+
+}
+
 void PlayerPlugin::action_triggered(bool b){
+
     emit sig_action_triggered(this, b);
 }
 

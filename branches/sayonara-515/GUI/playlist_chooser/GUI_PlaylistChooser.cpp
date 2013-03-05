@@ -34,7 +34,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
-#include <QCloseEvent>
 #include <QPixmap>
 
 #include "ui_GUI_PlaylistChooser.h"
@@ -243,15 +242,6 @@ void GUI_PlaylistChooser::apply_button_pressed(){
 
 	if(val >= 0)
 		emit sig_playlist_chosen(val);
-}
-
-
-void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
-
-    event->ignore();
-    hide();
-    close();
-	emit sig_closed();
 }
 
 

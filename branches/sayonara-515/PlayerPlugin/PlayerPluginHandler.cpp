@@ -2,6 +2,7 @@
 #include <QMap>
 #include <QString>
 #include <QAction>
+#include <QDebug>
 
 
 PlayerPluginHandler::PlayerPluginHandler(QObject *parent) :
@@ -34,9 +35,6 @@ void PlayerPluginHandler::addPlugin(PlayerPlugin* p){
 void PlayerPluginHandler::plugin_action_triggered(PlayerPlugin* p, bool b){
 
     if(b){
-        if(_cur_shown_plugin) this->hide_all();
-
-        _cur_shown_plugin = p;
         emit sig_show_plugin(p);
     }
 
@@ -48,7 +46,7 @@ void PlayerPluginHandler::plugin_action_triggered(PlayerPlugin* p, bool b){
 
 
 QSize PlayerPluginHandler::getCurPluginSize(){
-    if(_cur_shown_plugin) return _cur_shown_plugin->maximumSize();
+    if(_cur_shown_plugin) return _cur_shown_plugin->getSize();
     else return QSize(0,0);
 }
 
@@ -56,11 +54,9 @@ QSize PlayerPluginHandler::getCurPluginSize(){
 
 void PlayerPluginHandler::showPlugin(PlayerPlugin* p){
 
-
-     emit sig_show_plugin(p);
-
-    _cur_shown_plugin = p;
-     hide_all();
+     hide_all_except(p);
+     p->show();
+     _cur_shown_plugin = p;
 }
 
 void PlayerPluginHandler::showPlugin(QString name){
@@ -71,29 +67,30 @@ void PlayerPluginHandler::showPlugin(QString name){
 }
 
 void PlayerPluginHandler::hide_all(){
+   hide_all_except(NULL);
+}
+
+void PlayerPluginHandler::hide_all_except(PlayerPlugin* p_ex){
 
     _cur_shown_plugin = NULL;
 
     foreach(PlayerPlugin* p, _plugins){
-        p->hide();
-	p->close();
+        if(p == p_ex) continue;
+        p->close();
     }
-
-    emit sig_hide_all_plugins();
 }
 
 
 
 void PlayerPluginHandler::resize(QSize sz){
 
-    if(!_cur_shown_plugin) return;
 
+    if(!_cur_shown_plugin) return;
     _cur_shown_plugin->resize(sz);
 }
 
 QList<PlayerPlugin*> PlayerPluginHandler::get_all_plugins(){
 	return _plugins;
-
 }
 
 

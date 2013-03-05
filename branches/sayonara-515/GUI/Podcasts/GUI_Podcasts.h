@@ -1,12 +1,13 @@
 #ifndef GUI_PODCASTS_H
 #define GUI_PODCASTS_H
 
-#include <QDockWidget>
+
 #include "ui_GUI_Podcasts.h"
 #include "PlayerPlugin/PlayerPlugin.h"
+
 #include <QWidget>
 #include <QMap>
-#include <QCloseEvent>
+
 
 class GUI_Podcasts : public PlayerPlugin, private Ui::GUI_Podcasts
 {
@@ -43,8 +44,7 @@ private:
 
     void setup_podcasts(const QMap<QString, QString>&);
 
-protected:
-    void 	closeEvent ( QCloseEvent * event );
+
 
 };
 

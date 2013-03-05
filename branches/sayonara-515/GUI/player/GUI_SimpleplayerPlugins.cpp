@@ -25,30 +25,42 @@ void GUI_SimplePlayer::setInfoDialog(GUI_InfoDialog* dialog){
 
 
 void GUI_SimplePlayer::hideAllPlugins(){
-	_pph->hide_all();
 
-	this->ui->plugin_widget->setMinimumHeight(0);
+    if(ui->plugin_widget->isHidden()) return;
+
+    int old_h = this->ui->plugin_widget->minimumHeight();
+    QSize pl_size = ui_playlist->size();
+
+    pl_size.setHeight(pl_size.height() + old_h);
+
+    ui->plugin_widget->setMinimumHeight(0);
+
+    ui_playlist->resize(pl_size);
 }
 
 
 void GUI_SimplePlayer::showPlugin(PlayerPlugin* plugin){
 
-	int old_h = this->ui->plugin_widget->minimumHeight();
-        QSize widget_size = plugin->getSize();
+    if(!plugin) return;
+    if(!ui_playlist) return;
 
-	QSize pl_size;
-	if(!ui_playlist) return;
-	plugin->show();
+
+    QSize pl_size;
+    QSize widget_size = plugin->getSize();
+
+    int old_h = this->ui->plugin_widget->minimumHeight();
+    ui->plugin_widget->show();
+
+    _pph->showPlugin(plugin);
+
 
 	pl_size = ui_playlist->size();
 
-	widget_size.setWidth( ui->plugin_widget->width() );
-        pl_size.setHeight(pl_size.height() - widget_size.height() + old_h);
+    widget_size.setWidth( ui->plugin_widget->width() );
+    pl_size.setHeight(pl_size.height() - widget_size.height() + old_h);
 
-	ui->plugin_widget->setMinimumHeight(plugin->getSize().height());
-	ui->plugin_widget->show();
-       	
-	_pph->resize(plugin_widget->size());
+    ui->plugin_widget->setMinimumHeight(plugin->getSize().height());
+    _pph->resize(ui->plugin_widget->size());
 
 	ui_playlist->resize(pl_size);
 }

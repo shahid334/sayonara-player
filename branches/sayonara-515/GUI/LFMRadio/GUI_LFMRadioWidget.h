@@ -33,8 +33,6 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include <QWidget>
 
-#include <QCloseEvent>
-
 class GUI_LFMRadioWidget : public PlayerPlugin, private Ui::GUI_LFMRadioWidget{
 
 Q_OBJECT
@@ -54,11 +52,8 @@ public:
 
 	private slots:
 		void start_listen();
-		void radio_button_changed();
         void mode_index_changed(int i);
 
-	protected:
-			void 	closeEvent ( QCloseEvent * event );
 
 	private:
 

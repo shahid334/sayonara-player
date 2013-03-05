@@ -30,12 +30,9 @@
 #define GUI_EQUALIZER_H_
 
 #include "HelperStructs/Equalizer_presets.h"
+#include "ui_GUI_Equalizer.h"
 
 #include <QObject>
-#include <QDockWidget>
-#include <QCloseEvent>
-#include <ui_GUI_Equalizer.h>
-
 #include <vector>
 
 using namespace std;
@@ -75,10 +72,6 @@ public:
 		void fill_eq_presets(const vector<EQ_Setting>&);
 		void fill_available_equalizers(const QStringList&);
         void changeSkin(bool);
-
-	protected:
-		void 	closeEvent ( QCloseEvent * event );
-
 
 	private:
         Ui::GUI_Equalizer* _ui;

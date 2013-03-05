@@ -40,7 +40,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include <ui_GUI_Equalizer.h>
+#include "ui_GUI_Equalizer.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
 #include <vector>
@@ -303,9 +303,4 @@ void GUI_Equalizer::btn_preset_clicked(){
 
 }
 
-void 	GUI_Equalizer::closeEvent ( QCloseEvent * event ){
-	event->ignore();
-    hide();
-    close();
-	emit close_event();
-}
+

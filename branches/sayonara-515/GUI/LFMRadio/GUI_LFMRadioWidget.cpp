@@ -38,8 +38,6 @@
 #include "StreamPlugins/LastFM/LastFM.h"
 
 #include <QWidget>
-
-#include <QCloseEvent>
 #include <QPixmap>
 
 #include "ui_GUI_LFMRadioWidget.h"
@@ -165,57 +163,4 @@ void GUI_LFMRadioWidget:: mode_index_changed(int i){
 }
 
 
-void GUI_LFMRadioWidget::radio_button_changed(){
-/*
-	if(_friends.size() == 0){
-		LastFM::getInstance()->lfm_get_friends(_friends);
-		_ui->cb_friends->addItems(_friends);
-	}
 
-
-	if(_ui->rb_artist->isChecked()){
-		_ui->cb_friends->setVisible(false);
-		_ui->le_text->setVisible(true);
-
-		_ui->rb_tag->setChecked(false);
-		_ui->rb_user->setChecked(false);
-		_ui->rb_recom->setChecked(false);
-	}
-
-	else if(_ui->rb_tag->isChecked()){
-		_ui->cb_friends->setVisible(false);
-		_ui->le_text->setVisible(true);
-
-		_ui->rb_artist->setChecked(false);
-		_ui->rb_recom->setChecked(false);
-		_ui->rb_user->setChecked(false);
-	}
-
-
-	else if(_ui->rb_recom->isChecked()){
-		_ui->cb_friends->setVisible(true);
-		_ui->le_text->setVisible(false);
-
-		_ui->rb_artist->setChecked(false);
-		_ui->rb_user->setChecked(false);
-		_ui->rb_tag->setChecked(false);
-	}
-
-	else if(_ui->rb_user->isChecked()){
-		_ui->cb_friends->setVisible(true);
-		_ui->le_text->setVisible(false);
-
-		_ui->rb_artist->setChecked(false);
-		_ui->rb_recom->setChecked(false);
-		_ui->rb_tag->setChecked(false);
-    }*/
-}
-
-void GUI_LFMRadioWidget::closeEvent ( QCloseEvent * event ){
-
-    emit close_event();
-
-    event->ignore();
-    close();
-
-}

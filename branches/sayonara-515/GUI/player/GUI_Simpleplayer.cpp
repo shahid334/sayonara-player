@@ -598,17 +598,21 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
 void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
 	_pph = pph;
 
-	
-
 	QList<PlayerPlugin*> lst = _pph->get_all_plugins();
-	foreach(PlayerPlugin* p, lst){
+    QList<QAction*> actions;
+
+    foreach(PlayerPlugin* p, lst){
 		QAction* action = p->getAction();
 		// action is connected in Plugin itself
-		this->ui->menuView->addAction(action);
-
+        actions << action;
 	}
 
+
+    this->ui->menuView->insertActions(this->ui->action_Dark, actions);
+    this->ui->menuView->insertSeparator(this->ui->action_Dark);
+
 	connect(_pph, SIGNAL(sig_show_plugin(PlayerPlugin*)), this, SLOT(showPlugin(PlayerPlugin*)));
+    connect(_pph, SIGNAL(sig_hide_all_plugins()), this, SLOT(hideAllPlugins()));
 
 }
 
@@ -706,6 +710,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
     _pph->resize(sz);
     CSettingsStorage::getInstance()->setPlayerSize(this->size());
+    this->update();
 }
 
 

@@ -22,11 +22,13 @@
 #ifndef GUI_STREAM_H_
 #define GUI_STREAM_H_
 
+#include "ui_GUI_Stream.h"
 #include "PlayerPlugin/PlayerPlugin.h"
+
 #include <QWidget>
 #include <QMap>
-#include <QCloseEvent>
-#include <ui_GUI_Stream.h>
+
+
 
 class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 
@@ -64,9 +66,6 @@ private:
 	QString _cur_station_adress;
 
 	void setup_stations(const QMap<QString, QString>&);
-
-protected:
-	void 	closeEvent ( QCloseEvent * event );
 
 
 };

@@ -26,9 +26,10 @@
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 
 #include <QMap>
-#include "PlayerPlugin/PlayerPlugin.h"
 #include <QDockWidget>
-#include <ui_GUI_PlaylistChooser.h>
+
+#include "PlayerPlugin/PlayerPlugin.h"
+#include "ui_GUI_PlaylistChooser.h"
 
 
 
@@ -80,8 +81,6 @@ private:
 
     int show_warning(QString title_text);
 
-protected:
-	void closeEvent(QCloseEvent* e);
 };
 
 #endif /* GUIPLAYLISTCHOOSER_H_ */
