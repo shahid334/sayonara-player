@@ -514,7 +514,12 @@ void GUI_InfoDialog::prepare_tracks(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-		filepath = QDir(md.filepath.left(last_sep)).absolutePath();
+        if(md.filepath.startsWith("http", Qt::CaseInsensitive)){
+            filepath = md.filepath;
+        }
+        else
+            filepath = QDir(md.filepath.left(last_sep)).absolutePath();
+
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
 

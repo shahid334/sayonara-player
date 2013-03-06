@@ -32,7 +32,7 @@ private:
     QList<PlayerPlugin*>  _plugins;
     PlayerPlugin*       _cur_shown_plugin;
 
-    PlayerPlugin*       _find_plugin(QString name);
+
 
 
 
@@ -41,6 +41,7 @@ public:
     void showPlugin(PlayerPlugin*);
     void showPlugin(QString name);
 
+    PlayerPlugin*       _find_plugin(QString name);
     QList<PlayerPlugin*> get_all_plugins();
     QSize getCurPluginSize();
 

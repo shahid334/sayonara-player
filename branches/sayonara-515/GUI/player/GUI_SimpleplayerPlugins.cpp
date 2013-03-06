@@ -26,6 +26,7 @@ void GUI_SimplePlayer::setInfoDialog(GUI_InfoDialog* dialog){
 
 void GUI_SimplePlayer::hideAllPlugins(){
 
+    CSettingsStorage::getInstance()->setShownPlugin("");
     if(ui->plugin_widget->isHidden()) return;
 
     int old_h = this->ui->plugin_widget->minimumHeight();
@@ -36,6 +37,7 @@ void GUI_SimplePlayer::hideAllPlugins(){
     ui->plugin_widget->setMinimumHeight(0);
 
     ui_playlist->resize(pl_size);
+
 }
 
 
@@ -63,6 +65,7 @@ void GUI_SimplePlayer::showPlugin(PlayerPlugin* plugin){
     _pph->resize(ui->plugin_widget->size());
 
 	ui_playlist->resize(pl_size);
+    CSettingsStorage::getInstance()->setShownPlugin(plugin->getName());
 }
 
 

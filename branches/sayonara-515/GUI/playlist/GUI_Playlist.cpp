@@ -117,7 +117,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     connect(ui->listView, SIGNAL(sig_selection_changed(MetaDataList&)), this, SLOT(selection_changed(MetaDataList&)));
     connect(ui->listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
 
-	connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
+    //connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	connect(ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
 }
 

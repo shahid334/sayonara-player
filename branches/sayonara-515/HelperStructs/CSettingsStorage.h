@@ -170,7 +170,7 @@ private:
     int	m_style;
 
     /* shown plugin in player */
-    int m_shown_plugin;
+    QString m_shown_plugin;
 
     /* minimize the player to tray */
     bool m_minimize_to_tray;
@@ -286,8 +286,8 @@ public:
     void setLibShowOnlyTracks(bool);
     bool getLibShowOnlyTracks();
 
-	void setShownPlugin(int);
-	int getShownPlugin();
+    void setShownPlugin(QString);
+    QString getShownPlugin();
 
 	void setMinimizeToTray(bool);
 	bool getMinimizeToTray();

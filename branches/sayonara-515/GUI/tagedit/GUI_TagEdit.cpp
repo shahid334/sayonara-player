@@ -51,18 +51,14 @@
 GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     _parent = parent;
 
-
-
     this->ui = new Ui::GUI_TagEdit();
     this->ui->setupUi(this);
 
     _cur_idx = -1;
     _db = CDatabaseConnector::getInstance();
 
-
-    QPixmap pix = QPixmap(Helper::getIconPath() + "edit.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    QPixmap pix = QPixmap(Helper::getIconPath() + "id3.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     this->ui->lab_icon->setPixmap(pix);
-
 
     QStringList complete_list;
     complete_list << TAG_TITLE;

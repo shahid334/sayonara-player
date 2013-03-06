@@ -44,10 +44,12 @@
 
 
 #include "GUI/MyColumnHeader.h"
+#include "GUI/ContextMenu.h"
 #include "GUI/library/models/LibraryItemModel.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
+
 
 
 
@@ -125,11 +127,7 @@ class MyTableView : public QTableView{
 		QMenu*				_rc_header_menu;
         QList<QAction*> 	_header_rc_actions;
 
-        QMenu* 				_right_click_menu;
-		QAction* 			_info_action;
-		QAction* 			_edit_action;
-		QAction* 			_delete_action;
-		QAction*			_play_next_action;
+        ContextMenu* 	_rc_menu;
 
 
 	    QLineEdit*			_edit;

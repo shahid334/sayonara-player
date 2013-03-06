@@ -413,6 +413,12 @@ QSlider::handle:vertical {
      border-radius: 4px;
 }
 
+
+QSlider::handle:vertical:hover {
+     border: 1px solid #91551b;
+}
+
+
 QSlider::handle:vertical:disabled {
     background: transparent;
     height: 0px;
@@ -438,6 +444,12 @@ background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #7F7F7F, stop: 0
     border: 1px solid #2c2c2c;
     border-radius: 3px;
  }
+
+QSlider::handle:horizontal:hover {
+     border: 1px solid #91551b;
+}
+
+
 
 QSlider::handle:horizontal:disabled {
     background: transparent;

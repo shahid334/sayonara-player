@@ -27,6 +27,8 @@
  */
 
 #include "GUI/MyTableView.h"
+#include "GUI/ContextMenu.h"
+
 #include <QWidget>
 #include <QTableView>
 #include <QMouseEvent>
@@ -70,6 +72,7 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 }
 
 MyTableView::~MyTableView() {
+    delete _rc_menu;
 }
 
 
@@ -312,32 +315,23 @@ void MyTableView::sort_by_column(int col){
 
 
 void MyTableView::rc_menu_init(){
-	_info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), "Info", this);
-	_edit_action = new QAction(QIcon(Helper::getIconPath() + "lyrics.png"), "Edit", this);
-	_delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), "Delete", this);
-	_play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), "Play next", this);
-
-	/// TODO: menu -> tableview
-	_right_click_menu = new QMenu(this);
-	_right_click_menu->addAction(_info_action);
-	_right_click_menu->addAction(_edit_action);
-	_right_click_menu->addAction(_delete_action);
-	_right_click_menu->addAction(_play_next_action);
+    _rc_menu = new ContextMenu(this);
+    _rc_menu->setup_entries(ENTRY_PLAY_NEXT | ENTRY_INFO | ENTRY_DELETE | ENTRY_EDIT);
 }
 
 
 void MyTableView::rc_menu_show(const QPoint& p){
-	connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_clicked()));
-	connect(_info_action, SIGNAL(triggered()), this, SLOT(info_clicked()));
-	connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_clicked()));
-	connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_clicked()));
+    connect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
+    connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
+    connect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
+    connect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
 
-	this->_right_click_menu->exec(p);
+    _rc_menu->exec(p);
 
-	disconnect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_clicked()));
-	disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_clicked()));
-	disconnect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_clicked()));
-	disconnect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
 
 }
 

@@ -58,6 +58,7 @@ public:
 
 		void sig_search_images(const QString&);
         void sig_covers_changed(QString);
+        void sig_no_cover();
 
 
 	public slots:

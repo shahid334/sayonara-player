@@ -264,6 +264,7 @@ SET(ICONS
 	GUI/icons/power_on.png
 	GUI/icons/power_off.png
 	GUI/icons/edit.png
+        GUI/icons/id3.png
 	GUI/icons/reload.png
 	GUI/icons/dynamic.png
 	GUI/icons/arrow_up.png

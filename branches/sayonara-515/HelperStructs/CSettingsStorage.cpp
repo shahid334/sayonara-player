@@ -248,11 +248,11 @@ bool CSettingsStorage::getShowLibrary(){
 	return m_show_library;
 }
 
-void CSettingsStorage::setShownPlugin(int plugin){
+void CSettingsStorage::setShownPlugin(QString plugin){
     m_shown_plugin = plugin;
 }
 
-int CSettingsStorage::getShownPlugin(){
+QString CSettingsStorage::getShownPlugin(){
 	return m_shown_plugin;
 }
 

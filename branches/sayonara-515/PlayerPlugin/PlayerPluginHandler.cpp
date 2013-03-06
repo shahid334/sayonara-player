@@ -56,6 +56,7 @@ void PlayerPluginHandler::showPlugin(PlayerPlugin* p){
 
      hide_all_except(p);
      p->show();
+     p->getAction()->setChecked(true);
      _cur_shown_plugin = p;
 }
 

@@ -215,9 +215,7 @@ bool CDatabaseConnector::load_settings(){
 
 
 	/* shown plugin */
-	int shown_plugin = load_setting_int(SET_PLAYER_SHOWN_PLUGIN, PLUGIN_NONE);
-	if(shown_plugin < 0 || shown_plugin > PLUGIN_NUM) 
-		shown_plugin = PLUGIN_NONE;
+    QString shown_plugin = load_setting_string(SET_PLAYER_SHOWN_PLUGIN, "");
 	settings->setShownPlugin(shown_plugin);
 
 
@@ -360,7 +358,7 @@ bool CDatabaseConnector::store_settings(){
 	bool show_library = storage->getShowLibrary();
 	store_setting(SET_LIB_SHOW, show_library);
 
-	int shown_plugin = storage->getShownPlugin();
+    QString shown_plugin = storage->getShownPlugin();
 	store_setting(SET_PLAYER_SHOWN_PLUGIN, shown_plugin);
 
 	bool min2tray = storage->getMinimizeToTray();

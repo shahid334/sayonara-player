@@ -114,17 +114,21 @@ public:
 
 	private:
 
+        MetaDataList        _v_meta_data;
+        QStringList			_pathlist;
+
+        int					_cur_play_idx;
+        bool                _is_playing;
+        int					_radio_active;
 
 
-    MetaDataList        _v_meta_data;
-    QStringList			_pathlist;
-    int					_cur_play_idx;
+        Playlist_Mode		_playlist_mode;
 
-	Playlist_Mode		_playlist_mode;
-	int					_radio_active;
-	CDatabaseConnector* _db;
-    CSettingsStorage*   _settings;
-    MetaDataList	_v_stream_playlist;
+        CDatabaseConnector* _db;
+        CSettingsStorage*   _settings;
+        MetaDataList        _v_stream_playlist;
+
+        void                send_cur_playing_signal(int);
 
 
 	/* wrapper for Helper::checkTrack */

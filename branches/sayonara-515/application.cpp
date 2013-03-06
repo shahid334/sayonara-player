@@ -57,10 +57,11 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 
 	set                 = CSettingsStorage::getInstance();
 
+
 	QString version    = getVersion();
 	set->setVersion( version );
 
-	int shown_plugin = set->getShownPlugin();
+
 
 	player              = new GUI_SimplePlayer();
 
@@ -75,7 +76,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     ui_stream           = new GUI_Stream("Stream", "Stream", 'S', player->getParentOfPlugin());
     ui_podcasts         = new GUI_Podcasts("Podcasts", "Podcasts", 'o', player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer("Equalizer", "Equalizer", 'E', player->getParentOfPlugin());
-    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "LastFM", 'a', player->getParentOfPlugin());
+    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "LastFM", 'F', player->getParentOfPlugin());
 	ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", "Playlists", 'P', player->getParentOfPlugin());
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
@@ -162,6 +163,10 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 
     playlists->ui_loaded();
     player->ui_loaded();
+
+        QString shown_plugin = set->getShownPlugin();
+    PlayerPlugin* p = _pph->_find_plugin(shown_plugin);
+    player->showPlugin(p);
 
 
 
@@ -257,7 +262,7 @@ void Application::init_connections(){
 	   CONNECT (ui_playlist, playlist_mode_changed(const Playlist_Mode&),   playlist, 	psl_playlist_mode_changed(const Playlist_Mode&));
 	   CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),      playlist, 	psl_insert_tracks(const MetaDataList&, int));
        CONNECT (ui_playlist, sig_rows_removed(const QList<int>&),           playlist, 	psl_remove_rows(const QList<int>&));
-	   CONNECT (ui_playlist, sig_import_to_library(bool),					playlist,	psl_import_new_tracks_to_library(bool));
+       //CONNECT (ui_playlist, sig_import_to_library(bool),					playlist,	psl_import_new_tracks_to_library(bool));
 
 	   CONNECT (listen, track_finished(),                                   playlist,	psl_next_track() );
 	   CONNECT (listen, sig_valid_strrec_track(const MetaData&),            playlist,  psl_valid_strrec_track(const MetaData&));
@@ -273,7 +278,7 @@ void Application::init_connections(){
 
 	   CONNECT(library, sig_playlist_created(QStringList&), 			playlist, 		psl_createPlaylist(QStringList&));
 	   CONNECT(library, sig_import_result(bool),						playlist,		psl_import_result(bool));
-	   CONNECT(library, sig_import_result(bool),						ui_playlist,	import_result(bool));
+      // CONNECT(library, sig_import_result(bool),						ui_playlist,	import_result(bool));
 	   CONNECT(library, sig_reload_library_finished(),                  ui_library, 	reloading_library_finished());
 	   CONNECT(library, sig_reloading_library(QString&),				ui_library, 	reloading_library(QString&));
 	   CONNECT(library, sig_import_result(bool),						ui_library,		import_result(bool));
@@ -331,7 +336,6 @@ void Application::init_connections(){
 	CONNECT(ui_playlist_chooser, sig_save_playlist(QString), 	playlist, 	psl_prepare_playlist_for_save(QString));
 	CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString, bool), 	playlist, 	psl_prepare_playlist_for_save_file(QString, bool));
 	CONNECT(ui_playlist_chooser, sig_clear_playlist(),           playlist, 	psl_clear_playlist());
-	CONNECT(ui_playlist_chooser, sig_closed(),                   player, 	close_playlist_chooser());
 	CONNECT(ui_playlist_chooser, sig_files_selected(QStringList &), playlist, psl_createPlaylist(QStringList&));
 
 	CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
@@ -368,9 +372,7 @@ void Application::init_connections(){
 
 void Application::setFiles2Play(QStringList filelist){
 
-    filelist.push_back("http://static.orf.at/podcast/fm4/fm4_ombudsmann.xml");
     if(filelist.size() > 0){
-        qDebug() << "create playlist";
         playlist->psl_createPlaylist(filelist);
 
         if(playlist->get_num_tracks() > 0)
