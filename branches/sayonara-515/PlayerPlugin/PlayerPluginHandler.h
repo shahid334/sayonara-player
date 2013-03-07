@@ -23,7 +23,6 @@ signals:
 public slots:
     void resize(QSize sz);
     void hide_all();
-    void hide_all_except(PlayerPlugin* p_ex);
 
 private slots:
     void plugin_action_triggered(PlayerPlugin*, bool);
@@ -41,12 +40,8 @@ public:
     void showPlugin(PlayerPlugin*);
     void showPlugin(QString name);
 
-    PlayerPlugin*       _find_plugin(QString name);
+    PlayerPlugin*        find_plugin(QString name);
     QList<PlayerPlugin*> get_all_plugins();
-    QSize getCurPluginSize();
-
-
-    
 };
 
 #endif // PLAYERPLUGINHANDLER_H

@@ -1,6 +1,7 @@
 #include "application.h"
 
 #include <QApplication>
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
@@ -165,10 +166,8 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     player->ui_loaded();
 
         QString shown_plugin = set->getShownPlugin();
-    PlayerPlugin* p = _pph->_find_plugin(shown_plugin);
+    PlayerPlugin* p = _pph->find_plugin(shown_plugin);
     player->showPlugin(p);
-
-
 
     _initialized = true;
 }
@@ -181,7 +180,7 @@ Application::~Application(){
         if(remote_socket->isRunning())
             remote_socket->exit(0);
     }
-
+    delete listen;
     delete remote_socket;
     delete ui_socket_setup;
     delete ui_playlist;
@@ -198,6 +197,8 @@ Application::~Application(){
     delete playlists;
     delete ui_playlist_chooser;
     delete player;
+
+    CDatabaseConnector::getInstance()->closeDatabase();
 }
 
 

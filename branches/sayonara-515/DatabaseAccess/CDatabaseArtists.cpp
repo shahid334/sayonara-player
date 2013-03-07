@@ -93,11 +93,11 @@ static QString _create_order_string(SortOrder sort){
 }
 
 int CDatabaseConnector::getMaxArtistID(){
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
 	int max_id = -1;
 	try {
-		QSqlQuery q (this -> m_database);
+		QSqlQuery q (*_database);
 		q.prepare("SELECT MAX(artistID) FROM artists;");
 
 		if (!q.exec()) {
@@ -113,7 +113,7 @@ int CDatabaseConnector::getMaxArtistID(){
 
 	catch (QString& ex) {
 		qDebug() << ex;
-		QSqlError er = this -> m_database.lastError();
+		QSqlError er = this -> _database->lastError();
 		return max_id;
 	}
 
@@ -122,9 +122,9 @@ int CDatabaseConnector::getMaxArtistID(){
 
 Artist CDatabaseConnector::getArtistByID(const int &id){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 
 	Artist artist;
 	ArtistList artists;
@@ -148,9 +148,9 @@ Artist CDatabaseConnector::getArtistByID(const int &id){
 
 int CDatabaseConnector::getArtistID (const QString & artist)  {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
     int artistID = -1;
     q.prepare("select artistID from artists where name == ?;");
     q.addBindValue(QVariant(artist));
@@ -165,9 +165,9 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
 
 void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	QString query = ARTIST_ALBUM_TRACK_SELECTOR +
 			"WHERE Tracks.albumID = albums.albumID AND artists.artistid = tracks.artistid " +
 			"GROUP BY artists.artistID, artists.name ";
@@ -182,9 +182,9 @@ void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
 
 void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	q.prepare(	ARTIST_ALBUM_TRACK_SELECTOR +
 				"WHERE Tracks.albumID = albums.albumID " +
 				"AND artists.artistid = tracks.artistid " +
@@ -197,9 +197,9 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, Sor
 
 void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	QString query;
 
 	switch(filter.by_searchstring){
@@ -262,9 +262,9 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 
 int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
     q.prepare("INSERT INTO artists (name) values (:artist);");
     q.bindValue(":artist", QVariant(artist));
     if (!q.exec()) {
@@ -276,9 +276,9 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
 
 int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	try{
 		q.prepare("INSERT INTO artists (artistid, name) values (:id, :name);");
 		q.bindValue(":id", QVariant(artist.id));

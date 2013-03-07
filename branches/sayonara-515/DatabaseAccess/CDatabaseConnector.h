@@ -39,17 +39,20 @@ using namespace Sort;
 
 #define INDEX_SIZE 3
 
-#define DB_TRY_OPEN(db) if (!this -> db.isOpen()) \
-                            this -> db.open()
+#define DB_TRY_OPEN(db) if (!this -> db->isOpen()) \
+                            this -> db->open()
 
-#define DB_RETURN_NOT_OPEN_VOID(db) if (!this -> db.isOpen()) \
+#define DB_RETURN_NOT_OPEN_VOID(db) if (!this -> db->isOpen()) \
                                     return
 
-#define DB_RETURN_NOT_OPEN_INT(db)if (!this -> db.isOpen()) \
+#define DB_RETURN_NOT_OPEN_INT(db)if (!this -> db->isOpen()) \
                             return -1
 
-#define DB_RETURN_NOT_OPEN_BOOL(db)if (!this -> db.isOpen()) \
+#define DB_RETURN_NOT_OPEN_BOOL(db)if (!this -> db->isOpen()) \
                             return false
+
+#define DB_RETURN_NOT_OPEN_STRING(db) if(!this->db->isOpen()) \
+			    return ""
 
 
 //class CDatabaseConnector;
@@ -59,10 +62,9 @@ class CDatabaseConnector : public QObject
 public:
     static CDatabaseConnector* getInstance();
     virtual ~CDatabaseConnector();
-
+    void closeDatabase();
 
     bool init_settings_storage();
-
 
 
 	/********************************************
@@ -208,7 +210,7 @@ private:
     CDatabaseConnector(const CDatabaseConnector&);
     CSettingsStorage* _settings;
 
-    QSqlDatabase m_database;
+    QSqlDatabase* _database;
     QString _db_filename;
 
     QString append_track_sort_string(QString querytext, SortOrder sortorder);

@@ -88,7 +88,8 @@ void printHelp(){
 
 
 int main(int argc, char *argv[]){
-    CDatabaseConnector::getInstance()->init_settings_storage();
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+    db->init_settings_storage();
     CSettingsStorage* settings = CSettingsStorage::getInstance();
     bool success = CDatabaseConnector::getInstance()->load_settings();
 	

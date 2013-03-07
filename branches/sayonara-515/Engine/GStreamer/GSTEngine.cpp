@@ -157,16 +157,20 @@ GST_Engine::GST_Engine(){
 }
 
 GST_Engine::~GST_Engine() {
+
     qDebug() << "Engine: close engine... ";
 
-   if(_bus)
-		gst_object_unref(_bus);
+    _settings->updateLastTrack();
+   
+    if(_bus)
+	gst_object_unref(_bus);
 
-	if(_pipeline){
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-		gst_object_unref (GST_OBJECT (_pipeline));
-	}
-	obj_ref = 0;
+    if(_pipeline){
+ 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+	gst_object_unref (GST_OBJECT (_pipeline));
+    }
+
+    obj_ref = 0;
 }
 
 
@@ -478,21 +482,18 @@ void GST_Engine::set_cur_position(quint32 pos_sec){
 
     if((quint32) _seconds_now == pos_sec) return;
     _seconds_now = pos_sec;
+    int playtime = _seconds_now - _seconds_started;
 
-	if (!_scrobbled
-			&& (_seconds_now - _seconds_started == 15
-					|| _seconds_now - _seconds_started
-					== _meta_data.length_ms / 2000)) {
+	if (!_scrobbled &&
+	   ( playtime >= 15 || playtime == _meta_data.length_ms / 2000) ) {
 
-		emit scrobble_track(_meta_data);
-		_scrobbled = true;
-	}
+	emit scrobble_track(_meta_data);
+        _scrobbled = true;
+    }
 
     _last_track->id = _meta_data.id;
     _last_track->filepath = _meta_data.filepath;
     _last_track->pos_sec = pos_sec;
-
-    _settings->updateLastTrack();
  
     emit timeChangedSignal(_seconds_now);
 }

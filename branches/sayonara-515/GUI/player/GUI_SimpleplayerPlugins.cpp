@@ -33,19 +33,18 @@ void GUI_SimplePlayer::hideAllPlugins(){
     QSize pl_size = ui_playlist->size();
 
     pl_size.setHeight(pl_size.height() + old_h);
-
     ui->plugin_widget->setMinimumHeight(0);
 
     ui_playlist->resize(pl_size);
-
 }
 
 
 void GUI_SimplePlayer::showPlugin(PlayerPlugin* plugin){
 
+    hideAllPlugins();
+
     if(!plugin) return;
     if(!ui_playlist) return;
-
 
     QSize pl_size;
     QSize widget_size = plugin->getSize();

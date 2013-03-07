@@ -41,10 +41,10 @@ using namespace std;
 
 bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts){
 
-    if (!this -> m_database.isOpen())
-         this -> m_database.open();
+    if (!this -> _database->isOpen())
+         this -> _database->open();
 
-    QSqlQuery q (this -> m_database);
+    QSqlQuery q (*_database);
     q.prepare("SELECT name, url FROM savedpodcasts;");
 
     if (!q.exec())
@@ -65,10 +65,10 @@ bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts){
 
 
 bool CDatabaseConnector::deletePodcast(QString name){
-    if (!this -> m_database.isOpen())
-             this -> m_database.open();
+    if (!this -> _database->isOpen())
+             this -> _database->open();
 
-    QSqlQuery q (this -> m_database);
+    QSqlQuery q (*_database);
     q.prepare("DELETE FROM savedpodcasts WHERE name = :name;" );
     q.bindValue(":name", name);
     if(!q.exec()) {
@@ -85,10 +85,10 @@ bool CDatabaseConnector::deletePodcast(QString name){
 
 
 bool CDatabaseConnector::addPodcast(QString name, QString url){
-    if (!this -> m_database.isOpen())
-             this -> m_database.open();
+    if (!this -> _database->isOpen())
+             this -> _database->open();
 
-    QSqlQuery q (this -> m_database);
+    QSqlQuery q (*_database);
     q.prepare("INSERT INTO savedpodcasts (name, url) VALUES (:name, :url); " );
     q.bindValue(":name", name);
     q.bindValue(":url", url);
