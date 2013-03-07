@@ -87,4 +87,5 @@ public:
 bool id3_write_discnumber(FileHeader& fh, int discnumber, int n_discs=1);
 bool id3_extract_discnumber(FileHeader& fh, int* discnumber, int* n_discs);
 
+
 #endif

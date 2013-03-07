@@ -16,21 +16,24 @@
 #include <QDomDocument>
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
-
+#include "HelperStructs/WebAccess.h"
 #include "HelperStructs/PodcastParser/PodcastParser.h"
+
 
 #include <QDebug>
 
+int find_year(QString str){
 
-bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_md){
+    int idx = str.indexOf(QRegExp("[0-9]{4,4}"));
 
+    if(idx >= 0){
+        return str.mid(idx, 4).toInt();
+    }
 
-    QString content;
+    return 0;
+}
 
-    if(podcast_filename.startsWith("http"))
-        Helper::read_http_into_str(podcast_filename, content);
-    else
-        Helper::read_file_into_str(podcast_filename, content);
+bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataList& v_md){
 
     v_md.clear();
 
@@ -40,42 +43,73 @@ bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_m
     QDomElement docElement = doc.documentElement();
     QDomNode entry = docElement.firstChildElement("channel");
 
-    qDebug() << "entry has child nodes: " << entry.childNodes().size();
-
     if(!entry.hasChildNodes()) return false;
 
+    QString author;
+    QStringList categories;
+    QString album;
 
-
+    bool image_found = false;
     for(int c = 0; c<entry.childNodes().size(); c++){
-        MetaData md;
 
         QDomNode channel_child = entry.childNodes().at(c);
         QString nodename = channel_child.nodeName();
         QDomElement e = channel_child.toElement();
 
-        qDebug() << "Channel nodename = " << nodename;
-
-        if(!nodename.compare("title")){
-            md.album = e.text();
+        if(!nodename.compare("title", Qt::CaseInsensitive)){
+            album = e.text();
         }
 
-        else if(!nodename.compare("itunes:category")){
+        else if(!nodename.compare("itunes:author", Qt::CaseInsensitive)){
+            author = e.text();
+        }
+
+        else if(!nodename.compare("itunes:category", Qt::CaseInsensitive)){
 
             QStringList genres = e.text().split(QRegExp(",|/|;|\\."));
             for(int i=0; i<genres.size(); i++){
                 genres[i] = genres[i].trimmed();
             }
 
-            md.genres.push_back("Podcasts");
-            md.genres.append(genres);
+            categories.append(genres);
         }
 
-
-
-        else if(!nodename.compare("item")){
-
-            qDebug() << "item " << nodename << " has childnodes? " << channel_child.hasChildNodes();
+        else if(!nodename.compare("image", Qt::CaseInsensitive) && !image_found){
             if(!channel_child.hasChildNodes()) continue;
+
+            for(int i=0; i<channel_child.childNodes().size(); i++){
+                QDomNode item_child = channel_child.childNodes().at(i);
+                QString ic_nodename = item_child.nodeName();
+                QDomElement ic_e = item_child.toElement();
+                if(!ic_nodename.compare("url", Qt::CaseInsensitive)){
+                    QString img_url = ic_e.text();
+                    QImage img;
+                    bool success = WebAccess::read_http_into_img(img_url, img);
+                    if(!success && !img.isNull()) continue;
+                    img.save(Helper::get_cover_path(author, album));
+                }
+            }
+        }
+
+        else if(!nodename.compare("itunes:image", Qt::CaseInsensitive)){
+            QString img_url = e.attribute("href");
+            QImage img;
+            bool success = WebAccess::read_http_into_img(img_url, img);
+            if(!success && !img.isNull()) continue;
+            img.save(Helper::get_cover_path(author, album));
+            image_found = true;
+        }
+
+        // item
+        else if(!nodename.compare("item", Qt::CaseInsensitive)){
+
+            if(!channel_child.hasChildNodes()) continue;
+            MetaData md;
+            md.genres.push_back("Podcasts");
+            md.genres.append(categories);
+
+            md.album = QString::fromUtf8(album.toStdString().c_str());
+            md.artist = QString::fromUtf8(author.toStdString().c_str());
 
             for(int i=0; i<channel_child.childNodes().size(); i++)
             {
@@ -84,41 +118,29 @@ bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_m
                 QString ic_nodename = item_child.nodeName();
                 QDomElement ic_e = item_child.toElement();
 
-                qDebug() << "nodename = " << ic_nodename;
-
-                if(!ic_nodename.compare("title")){
-
-                    md.title = ic_e.text();
-                    qDebug() << "found title: " << md.title;
+                if(!ic_nodename.compare("title", Qt::CaseInsensitive)){
+                    md.title = QString::fromUtf8(ic_e.text().toStdString().c_str());
                 }
 
-                else if(!ic_nodename.compare("link")){
-
+                else if(!ic_nodename.compare("link", Qt::CaseInsensitive)){
                     md.filepath = ic_e.text();
-                    qDebug() << "found url: " << md.filepath;
                 }
 
-                else if(!ic_nodename.compare("enclosure")){
-
+                else if(!ic_nodename.compare("enclosure", Qt::CaseInsensitive)){
                     md.filesize = ic_e.attribute("length").toLong();
-                    qDebug() << "found enclosure: " << md.filesize;
                 }
 
                 else if(!ic_nodename.compare("author") && md.artist.size() == 0){
-                    md.artist = ic_e.text();
-                    qDebug() << "found author: " << md.artist;
+                    md.artist = QString::fromUtf8(ic_e.text().toStdString().c_str());
                 }
 
-                else if(!ic_nodename.compare("itunes:author")){
-                    md.artist = ic_e.text();
-                    qDebug() << "found better author: " << md.artist;
+                else if(!ic_nodename.compare("itunes:author", Qt::CaseInsensitive)){
+                    md.artist = QString::fromUtf8(ic_e.text().toStdString().c_str());
                 }
 
-                else if(!ic_nodename.compare("itunes:duration")){
-
+                else if(!ic_nodename.compare("itunes:duration", Qt::CaseInsensitive)){
 
                     QString text = ic_e.text();
-                    qDebug() << "found durationr: " << text;
                     QStringList lst = text.split(":");
                     int len = 0;
                     for(int i=lst.size() -1; i>=0; i--){
@@ -132,20 +154,37 @@ bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_m
                         }
                     }
 
-                    qDebug() << "found lenght: " << len;
-
                     md.length_ms = len * 1000;
                 }
 
-            } // foreach item entry
-        } // item
 
-        if(md.filepath.size() > 0)
-            v_md.push_back(md);
-        qDebug() << "next ";
-        qDebug() << "";
+                else if(!ic_nodename.compare("pubDate", Qt::CaseInsensitive) ||
+                        !ic_nodename.compare("dc:date", Qt::CaseInsensitive)){
+                    md.year = find_year(ic_e.text());
+                }
+            } // foreach item entry
+
+            if(md.filepath.size() > 0)
+                v_md.push_back(md);
+        } // item
     }
 
     return (v_md.size() > 0);
+}
+
+
+bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_md){
+
+
+    QString content;
+
+    if(Helper::is_www(podcast_filename))
+        Helper::read_http_into_str(podcast_filename, content);
+    else
+        Helper::read_file_into_str(podcast_filename, content);
+
+    return parse_podcast_xml_file_content(content, v_md);
+
+
 
 }

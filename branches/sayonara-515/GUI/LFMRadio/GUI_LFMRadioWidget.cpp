@@ -55,7 +55,7 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QChar 
 
 	_ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-        connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));
+    connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));
 	connect(_ui->btn_listen, SIGNAL(released()), this, SLOT(start_listen()));
 
     hide();
@@ -76,19 +76,6 @@ void GUI_LFMRadioWidget::start_listen(){
 
 	bool text_input = false;
 	int lfm_listen_mode = LFM_RADIO_MODE_TAG;
-
-    /*if(_ui->rb_artist->isChecked()) {
-		lfm_listen_mode = LFM_RADIO_MODE_ARTIST;
-        text_input = true;
-	}
-
-	else if(_ui->rb_tag->isChecked()) {
-		lfm_listen_mode = LFM_RADIO_MODE_TAG;
-		text_input = true;
-	}
-
-	else if(_ui->rb_recom->isChecked()) lfm_listen_mode = LFM_RADIO_MODE_RECOMMENDED;
-    else if(_ui->rb_user->isChecked()) lfm_listen_mode = LFM_RADIO_MODE_USER_LIBRARY;*/
 
     switch(_ui->combo_mode->currentIndex()){
 
@@ -159,8 +146,4 @@ void GUI_LFMRadioWidget:: mode_index_changed(int i){
 
         default: break;
     }
-
 }
-
-
-

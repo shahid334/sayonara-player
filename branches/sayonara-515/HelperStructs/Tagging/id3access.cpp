@@ -59,6 +59,7 @@ bool id3_extract_discnumber(FileHeader& fh, int* discnumber, int* n_discs){
 }
 
 
+
 void stretch_file(QFile* f, long offset, int n_bytes){
     if(n_bytes <= 0 ) return;
 

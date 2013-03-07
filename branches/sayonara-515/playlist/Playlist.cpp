@@ -87,7 +87,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
             MetaData md_tmp = _db->getTrackByPath(md.filepath);
 
             if(md.radio_mode == RADIO_OFF){
-                md.is_extern = (md_tmp.id < 0 && !md.filepath.startsWith("http", Qt::CaseInsensitive));
+                md.is_extern = (md_tmp.id < 0 && !Helper::is_www(md.filepath));
                 _radio_active = RADIO_OFF;
             }
 
@@ -643,10 +643,11 @@ void  Playlist::psl_play_podcast(const QString& url, const QString& name){
 
     // playlist radio
     qDebug() << "is podcast file? ";
-    if(Helper::is_podcastfile(url)){
+    QString content;
+    if(Helper::is_podcastfile(url, content)){
         qDebug() << "true";
 
-        if(Podcast::parse_podcast_xml_file(url, v_md) > 0){
+        if(Podcast::parse_podcast_xml_file_content(content, v_md) > 0){
 
             qDebug() << "metadata size = " << v_md.size();
 
@@ -669,7 +670,7 @@ void  Playlist::psl_play_podcast(const QString& url, const QString& name){
         }
     }
     else {
-        qDebug() << "false";
+        qDebug() << url << " is no podcast file";
     }
 
     if(_v_meta_data.size() == 0) return;

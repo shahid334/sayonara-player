@@ -42,6 +42,7 @@
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QCloseEvent>
+#include <QPainter>
 
 
 
@@ -135,7 +136,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     connect(_alternate_covers, SIGNAL(sig_no_cover()),
             this,				SLOT(no_cover_available()));
 
-
+    this->ui->btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
     hide();
 
@@ -157,6 +158,7 @@ void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename)
 	if(!QFile::exists(filename)) return;
 
 	this->ui->btn_image->setIcon(QIcon(filename));
+
 }
 
 
@@ -336,7 +338,8 @@ void GUI_InfoDialog::prepare_artists(){
 	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
-		QString tmppath = path;
+
+        QString tmppath = QString("file://" + path);
 		//path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
             path.replace(library_path, ".");
@@ -345,7 +348,7 @@ void GUI_InfoDialog::prepare_artists(){
 		paths += (path + CAR_RET);
 	}
 
-	this->ui->lab_heading->setText(header);
+    this->ui->lab_heading->setText(Helper::split_string_to_widget(header, ui->lab_heading));
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
 	this->ui->lab_paths->setOpenExternalLinks(true);
@@ -355,7 +358,6 @@ void GUI_InfoDialog::prepare_artists(){
 
 void GUI_InfoDialog::prepare_albums(){
 
-	QString year_span = "";
 	int n_albums = 0;
 	int n_songs = 0;
 
@@ -451,7 +453,7 @@ void GUI_InfoDialog::prepare_albums(){
 	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
-		QString tmppath = path;
+        QString tmppath = QString("file://" + path);
 		//path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
             path.replace(library_path, ".");
@@ -460,7 +462,7 @@ void GUI_InfoDialog::prepare_albums(){
 	}
 
 
-	this->ui->lab_heading->setText(header);
+    this->ui->lab_heading->setText(Helper::split_string_to_widget(header, ui->lab_heading));
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
 	this->ui->lab_paths->setOpenExternalLinks(true);
@@ -514,7 +516,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-        if(md.filepath.startsWith("http", Qt::CaseInsensitive)){
+        if(Helper::is_www(md.filepath)){
             filepath = md.filepath;
         }
         else
@@ -582,7 +584,8 @@ void GUI_InfoDialog::prepare_tracks(){
     paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
     foreach(QString path, pathlist){
-        QString tmppath = path;
+
+        QString tmppath = QString("file://") + path;
         //path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
             path.replace(library_path, ".");
@@ -590,7 +593,7 @@ void GUI_InfoDialog::prepare_tracks(){
         paths += (path + CAR_RET);
     }
 
-	this->ui->lab_heading->setText(header);
+    this->ui->lab_heading->setText(Helper::split_string_to_widget(header, ui->lab_heading));
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
 	this->ui->lab_paths->setText(paths);
@@ -611,14 +614,14 @@ void GUI_InfoDialog::prepare_cover(){
 		case INFO_MODE_SINGLE:
 
 			if(_mode == INFO_MODE_ARTISTS){
-				emit sig_search_artist_image(_artist_name);
+                //emit sig_search_artist_image(_artist_name);
 			}
 
 			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
 				MetaData md;
 				md.album = _album_name;
 				md.artist = _artist_name;
-				emit sig_search_cover(md);
+                //emit sig_search_cover(md);
 			}
 
 			break;

@@ -192,9 +192,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 
-
-
-
     this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
     this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
 

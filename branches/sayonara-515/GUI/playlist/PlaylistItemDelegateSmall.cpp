@@ -96,8 +96,8 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
     QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light(140);
 
-    QColor col_orange = SAYONARA_ORANGE_COL;
-    QColor col_orange_light = col_orange.light();
+    //QColor col_orange = SAYONARA_ORANGE_COL;
+    //QColor col_orange_light = col_orange.light();
 
 	int highlight_val = col_highlight.lightness();
     int background_val = col_background.lightness();

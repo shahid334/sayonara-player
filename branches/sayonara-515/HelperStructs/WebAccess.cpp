@@ -119,14 +119,15 @@ bool wa_call_url(const QString& url, QString& response){
 bool WebAccess::read_http_into_str(QString url, QString& content){
 
 	content.clear();
-    QString tmp_cont;
     wa_call_url(url, content);
-    //content = tmp_cont.toLatin1();
-    //content = tmp_cont;
 
     if(content.size() > 0)	return true;
+    else{
+        qDebug() << "Read Http into str:: url: " << url;
+        qDebug() << "Read Http into str:: could not get any content";
+    }
 
-	return false;
+    return false;
 }
 
 bool WebAccess::read_http_into_img(QString url, QImage& img){

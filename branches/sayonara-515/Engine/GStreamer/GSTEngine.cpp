@@ -295,7 +295,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 	_meta_data = md;
 
 	_playing_stream = false;
-	if( md.filepath.startsWith("http") ){
+    if( Helper::is_www(md.filepath) ){
 		_playing_stream = true;
 	}
 
