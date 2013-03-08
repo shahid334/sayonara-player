@@ -89,7 +89,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
             else
                 painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
-
         }
 
 
@@ -166,8 +165,9 @@ void LibraryItemDelegateAlbums::set_skin(bool dark){
     QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
     int highlight_val = col_highlight.lightness();
 
-    if(highlight_val > 96)
+    if(highlight_val > 96){
         _pen.setColor(QColor("#202020"));
+    }
 
     else
         _pen.setColor(QColor("#D8D8D8"));

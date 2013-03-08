@@ -253,6 +253,8 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 void  GUI_Library_windowed::columns_album_changed(QStringList& list){
     _shown_cols_albums = list;
     CSettingsStorage::getInstance()->setLibShownColsAlbum(list);
+
+
 }
 
 

@@ -58,7 +58,8 @@ public:
     int 			calc_shown_col(int col) const;
     bool			is_col_shown(int col) const;
     bool 			is_selected(int row) const;
-    void 			set_selected(QList<int>& rows);
+    QList<int>      get_selected() const;
+    virtual void 	set_selected(QList<int>& rows);
 
 
 	/** Overloaded from QAbstractTableModel **/

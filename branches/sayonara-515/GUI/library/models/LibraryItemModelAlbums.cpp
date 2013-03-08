@@ -62,8 +62,6 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 		 _album_list.removeAt(position);
 	 }
 
-
-
 	 endRemoveRows();
 	 return true;
 }
@@ -184,3 +182,9 @@ int LibraryItemModelAlbums::getFirstRowOf(QString substr){
     return -1;
 }
 
+void  LibraryItemModelAlbums::set_selected(QList<int>& rows){
+    LibraryItemModel::set_selected(rows);
+    for(int i=0; i<_album_list.size(); i++){
+        _album_list[i].is_lib_selected = rows.contains(i);
+    }
+}

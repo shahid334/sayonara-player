@@ -45,17 +45,9 @@ void LN_Notification::notification_show(const MetaData& md){
     }
 
 
-#ifdef LIBNOTIFY_NEW
 	NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
                                                  text.toLocal8Bit().data(),
                                                 pixmap_path.toLocal8Bit().data());
-#endif
-#ifdef LIBNOTIFY_OLD
-	
-	NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
-                                                 text.toLocal8Bit().data(),
-                                                pixmap_path.toLocal8Bit().data(), NULL);
-#endif
 
    _not = n;
 

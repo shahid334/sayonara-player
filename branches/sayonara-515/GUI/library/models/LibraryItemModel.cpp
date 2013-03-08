@@ -112,6 +112,10 @@ void LibraryItemModel::set_selected(QList<int>& rows){
     _selected_rows = rows;
 }
 
+QList<int> LibraryItemModel::get_selected() const{
+    return _selected_rows;
+}
+
 bool LibraryItemModel::is_selected(int row) const {
     return _selected_rows.contains(row);
 }

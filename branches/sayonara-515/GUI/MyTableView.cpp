@@ -291,6 +291,24 @@ QList<int> MyTableView::calc_selections(){
 }
 
 
+void MyTableView::force_selections() {
+
+    QItemSelectionModel* sm = this->selectionModel();
+    QItemSelection sel = sm->selection();
+    int rows = _model->rowCount();
+    QList<int> lst = _model->get_selected();
+    for(int row=0; row<rows; row++){
+
+        if(lst.contains(row)){
+            this->selectRow(row);
+            sel.merge(sm->selection(), QItemSelectionModel::Select);
+        }
+    }
+
+    sm->clearSelection();
+    sm->select(sel,QItemSelectionModel::Select);
+}
+
 
 template <typename T>
 void switch_sorters(T& srcdst, T src1, T src2){
@@ -397,15 +415,15 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 void MyTableView::rc_header_menu_changed(bool b){
 
 	Q_UNUSED(b);
-	_model->removeColumns(0, _model->columnCount());
 
-	int col_idx = 0;
+    _model->removeColumns(0, _model->columnCount());
+
+    int col_idx = 0;
 	QStringList lst;
 	foreach(QAction* action, _header_rc_actions){
 
-		if(action->isChecked()){
-
-			_model->insertColumn(col_idx);
+        if(action->isChecked()){
+            _model->insertColumn(col_idx);
 			lst << "1";
 		}
 
@@ -415,7 +433,9 @@ void MyTableView::rc_header_menu_changed(bool b){
 	}
 
     emit sig_columns_changed(lst);
-	set_col_sizes();
+    set_col_sizes();
+
+    force_selections();
 }
 
 
@@ -539,7 +559,6 @@ void MyTableView::fill_albums(const AlbumList& albums){
             this->selectRow(row);
             sel.merge(sm->selection(), QItemSelectionModel::Select);
         }
-
 
         QVariant data = album.toVariant();
         _model->setData(idx, data, Qt::EditRole );

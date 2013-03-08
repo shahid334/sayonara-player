@@ -539,7 +539,7 @@ QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep){
 
         if(idx >= 0){
 
-            lst << subtext.left(idx);
+            lst << subtext.left(idx+1);
             subtext = subtext.right(subtext.size() - idx);
         }
 

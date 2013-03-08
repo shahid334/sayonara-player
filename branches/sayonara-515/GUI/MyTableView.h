@@ -106,6 +106,7 @@ class MyTableView : public QTableView{
         void set_col_sizes();
 
 		QList<int> calc_selections();
+        void force_selections();
 
 
 
