@@ -10,7 +10,6 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "Notification/libnotify/LN_Notification.h"
 #include "HelperStructs/Helper.h"
-#include "Notification/libnotify/LN_Version.h"
 
 
 

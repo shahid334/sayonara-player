@@ -6,9 +6,7 @@ include(FindPkgConfig)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
 
-pkg_check_modules(LIBNOTIFY libnotify)
-MESSAGE(${LIBNOTIFY_VERSION})
-
+pkg_check_modules(LIBNOTIFY libnotify>=0.7)
 if (LIBNOTIFY_FOUND)
 
     INCLUDE_DIRECTORIES("../..")
@@ -21,17 +19,10 @@ if (LIBNOTIFY_FOUND)
 
     FIND_PACKAGE(Qt4 REQUIRED)
 
-    if( ${LIBNOTIFY_VERSION_MINOR} LESS 7 )
-	
-	execute_process(COMMAND sh ./Notification/libnotify/write_version.sh LIBNOTIFY_OLD)
-	
-    endif( ${LIBNOTIFY_VERSION_MINOR} LESS 7 )
-
     SET(HEADERS
             ../../HelperStructs/CSettingsStorage.h
             ../Notification.h
             LN_Notification.h
-            LN_Version.h
     )
     SET(SOURCES
        	    ../../HelperStructs/CSettingsStorage.cpp
