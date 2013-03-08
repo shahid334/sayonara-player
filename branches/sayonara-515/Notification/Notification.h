@@ -17,6 +17,7 @@ protected:
 public:
 
     virtual void notification_show(const MetaData&)=0;
+    virtual void notification_update(const MetaData&)=0;
     virtual void not_close()=0;
 	virtual QString get_name()=0;
 

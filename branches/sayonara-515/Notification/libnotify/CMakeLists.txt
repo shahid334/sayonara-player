@@ -21,26 +21,24 @@ if (LIBNOTIFY_FOUND)
 
     FIND_PACKAGE(Qt4 REQUIRED)
 
+    if( ${LIBNOTIFY_VERSION_MINOR} LESS 7 )
+	
+	execute_process(COMMAND sh ./Notification/libnotify/write_version.sh LIBNOTIFY_OLD)
+	
+    endif( ${LIBNOTIFY_VERSION_MINOR} LESS 7 )
+
     SET(HEADERS
             ../../HelperStructs/CSettingsStorage.h
             ../Notification.h
             LN_Notification.h
+            LN_Version.h
+    )
+    SET(SOURCES
+       	    ../../HelperStructs/CSettingsStorage.cpp
+            LN_Notification.cpp
+            ../../HelperStructs/Helper.cpp
     )
 
-    if( ${LIBNOTIFY_VERSION_MINOR} GREATER EQUAL 7 )
-	    SET(SOURCES
-        	    ../../HelperStructs/CSettingsStorage.cpp
-	            LN_Notification.cpp
-	            ../../HelperStructs/Helper.cpp
-	    )
-    else()
-	     SET(SOURCES
-        	    ../../HelperStructs/CSettingsStorage.cpp
-	            LN_Notification_old.cpp
-	            ../../HelperStructs/Helper.cpp
-	    )
-
-    endif( ${LIBNOTIFY_VERSION_MINOR} GREATER EQUAL 7 )
 
     QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 

@@ -1,0 +1,1 @@
+#define LIBNOTIFY_NEW
