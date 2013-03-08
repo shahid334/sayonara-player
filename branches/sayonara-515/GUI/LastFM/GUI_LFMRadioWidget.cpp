@@ -32,7 +32,7 @@
 #define IDX_RECOMMENDED 3
 
 
-#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
+#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "StreamPlugins/LastFM/LastFM.h"

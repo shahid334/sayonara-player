@@ -26,7 +26,7 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
+#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"

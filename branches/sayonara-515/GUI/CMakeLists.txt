@@ -26,6 +26,7 @@ SET(HEADERS
     playlist_chooser/GUI_PlaylistChooser.h
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
     LastFM/GUI_LastFM.h
+    LastFM/GUI_LFMRadioWidget.h
     library/GUI_Library_windowed.h
     library/models/LibraryItemModel.h
     library/models/LibraryItemModelTracks.h
@@ -47,7 +48,6 @@ SET(HEADERS
     ContextMenu.h
     InfoDialog/GUI_InfoDialog.h
     SocketConfiguration/GUISocketSetup.h
-    LFMRadio/GUI_LFMRadioWidget.h
     stream/GUI_Stream.h
     StreamRecorder/GUI_StreamRecorder.h
     Notifications/GUI_Notifications.h
@@ -73,6 +73,7 @@ SET(SOURCES
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
+    LastFM/GUI_LFMRadioWidget.cpp
     library/GUI_Library_windowed.cpp
     library/models/LibraryItemModel.cpp
     library/models/LibraryItemModelTracks.cpp
@@ -92,7 +93,6 @@ SET(SOURCES
     MyTableView.cpp
     MyListView.cpp
     ContextMenu.cpp
-    LFMRadio/GUI_LFMRadioWidget.cpp
     stream/GUI_Stream.cpp
     StreamRecorder/GUI_StreamRecorder.cpp
     Notifications/GUI_Notifications.cpp
@@ -108,6 +108,7 @@ SET(FORMS
     playlist/GUI_Playlist_Entry.ui
     playlist/GUI_Playlist_EntrySmall.ui
     LastFM/GUI_LastFM_Dialog.ui
+    LastFM/GUI_LFMRadioWidget.ui
     library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
@@ -116,7 +117,6 @@ SET(FORMS
     alternate_covers/GUI_Alternate_Covers.ui
     playlist_chooser/GUI_PlaylistChooser.ui
     Podcasts/GUI_Podcasts.ui
-    LFMRadio/GUI_LFMRadioWidget.ui
     stream/GUI_Stream.ui
     StreamRecorder/GUI_StreamRecorder.ui
     InfoDialog/GUI_InfoDialog.ui

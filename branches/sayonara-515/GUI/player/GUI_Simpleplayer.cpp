@@ -22,15 +22,17 @@
 
 #include "GUI/ui_GUI_Simpleplayer.h"
 #include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_TrayIcon.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
-#include "GUI/player/GUI_TrayIcon.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "CoverLookup/CoverLookup.h"
+
 #include "Engine/Engine.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
