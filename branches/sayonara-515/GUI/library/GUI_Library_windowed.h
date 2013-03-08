@@ -34,7 +34,7 @@
 #include <QAbstractTableModel>
 #include <QPoint>
 
-#include <ui_GUI_Library_windowed.h>
+#include "GUI/ui_GUI_Library_windowed.h"
 #include "GUI/library/models/LibraryItemModelTracks.h"
 #include "GUI/library/models/LibraryItemModelArtists.h"
 #include "GUI/library/models/LibraryItemModelAlbums.h"

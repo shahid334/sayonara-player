@@ -29,7 +29,7 @@
 #ifndef GUI_ALTERNATE_COVERS_H_
 #define GUI_ALTERNATE_COVERS_H_
 
-#include "ui_GUI_Alternate_Covers.h"
+#include "GUI/ui_GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
 #include "CoverLookup/CoverLookup.h"

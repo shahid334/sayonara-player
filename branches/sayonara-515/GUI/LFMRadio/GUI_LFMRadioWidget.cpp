@@ -40,7 +40,7 @@
 #include <QWidget>
 #include <QPixmap>
 
-#include "ui_GUI_LFMRadioWidget.h"
+#include "GUI/ui_GUI_LFMRadioWidget.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
 GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {

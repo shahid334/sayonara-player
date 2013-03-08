@@ -27,12 +27,12 @@
  */
 
 #include "GUI/tagedit/GUI_TagEdit.h"
+#include "GUI/ui_GUI_TagEdit.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include "ui_GUI_TagEdit.h"
 
 #include <QString>
 #include <QStringList>

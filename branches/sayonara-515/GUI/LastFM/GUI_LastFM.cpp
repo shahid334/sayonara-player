@@ -27,7 +27,7 @@
  */
 
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "ui_GUI_LastFM_Dialog.h"
+#include "GUI/ui_GUI_LastFM_Dialog.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"

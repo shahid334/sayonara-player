@@ -27,7 +27,7 @@
 
 #include <QWidget>
 #include <QDialog>
-#include "ui_GUI_StreamRecorder.h"
+#include "GUI/ui_GUI_StreamRecorder.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 class GUI_StreamRecorder : public QDialog, private Ui_GUI_StreamRecorder{

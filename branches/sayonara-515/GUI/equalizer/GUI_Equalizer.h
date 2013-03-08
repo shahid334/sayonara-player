@@ -30,7 +30,7 @@
 #define GUI_EQUALIZER_H_
 
 #include "HelperStructs/Equalizer_presets.h"
-#include "ui_GUI_Equalizer.h"
+#include "GUI/ui_GUI_Equalizer.h"
 
 #include <QObject>
 #include <vector>

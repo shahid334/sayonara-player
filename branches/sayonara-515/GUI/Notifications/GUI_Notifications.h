@@ -5,7 +5,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"
-#include "ui_GUI_Notifications.h"
+#include "GUI/ui_GUI_Notifications.h"
 
 class GUI_Notifications : public QDialog, private Ui_GUI_Notification
 {

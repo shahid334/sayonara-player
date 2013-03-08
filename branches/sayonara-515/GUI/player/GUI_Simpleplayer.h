@@ -21,8 +21,7 @@
 
 #ifndef GUI_SIMPLEPLAYER_H
 #define GUI_SIMPLEPLAYER_H
-#include "ui_GUI_Simpleplayer.h"
-#include "HelperStructs/MetaData.h"
+#include "GUI/ui_GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -39,6 +38,7 @@
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
+#include "HelperStructs/MetaData.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>

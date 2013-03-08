@@ -2,7 +2,7 @@
 #define GUI_PODCASTS_H
 
 
-#include "ui_GUI_Podcasts.h"
+#include "GUI/ui_GUI_Podcasts.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
 #include <QWidget>

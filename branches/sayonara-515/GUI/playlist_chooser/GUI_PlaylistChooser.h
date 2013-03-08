@@ -23,13 +23,14 @@
 #define GUIPLAYLISTCHOOSER_H_
 
 #include "HelperStructs/MetaData.h"
+#include "PlayerPlugin/PlayerPlugin.h"
+
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
+#include "GUI/ui_GUI_PlaylistChooser.h"
 
 #include <QMap>
 #include <QDockWidget>
 
-#include "PlayerPlugin/PlayerPlugin.h"
-#include "ui_GUI_PlaylistChooser.h"
 
 
 

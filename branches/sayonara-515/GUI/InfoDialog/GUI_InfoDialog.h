@@ -32,8 +32,8 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/ui_GUI_InfoDialog.h"
 
-#include <ui_GUI_InfoDialog.h>
 #include <QWidget>
 #include <QDialog>
 #include <QString>

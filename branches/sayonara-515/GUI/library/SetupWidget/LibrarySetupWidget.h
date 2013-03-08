@@ -31,7 +31,7 @@
 
 #include <QDialog>
 #include <QObject>
-#include <ui_GUI_LibrarySetup_Widget.h>
+#include "GUI/ui_GUI_LibrarySetup_Widget.h"
 
 class LibrarySetupWidget : public QWidget, private Ui::LibrarySetup{
 

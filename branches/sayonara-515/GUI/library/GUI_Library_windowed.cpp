@@ -30,7 +30,7 @@
 #define SEL_ALBUMS 1
 #define SEL_TRACKS 2
 
-#include "ui_GUI_Library_windowed.h"
+#include "GUI/ui_GUI_Library_windowed.h"
 
 #include "GUI/MyColumnHeader.h"
 #include "GUI/library/GUI_Library_windowed.h"

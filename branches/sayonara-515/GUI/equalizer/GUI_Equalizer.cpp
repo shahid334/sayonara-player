@@ -32,16 +32,16 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
+#include "GUI/ui_GUI_Equalizer.h"
 
 #include <QObject>
 #include <QDockWidget>
 #include <QDebug>
 #include <QMessageBox>
 
-#include "ui_GUI_Equalizer.h"
-#include "PlayerPlugin/PlayerPlugin.h"
 
 #include <vector>
 

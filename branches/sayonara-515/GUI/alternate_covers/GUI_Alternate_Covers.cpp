@@ -29,11 +29,11 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
+#include "GUI/ui_GUI_Alternate_Covers.h"
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <ui_GUI_Alternate_Covers.h>
 #include <QDialog>
 #include <QPixmap>
 #include <QMessageBox>

@@ -20,8 +20,7 @@
 
 
 
-#include "ui_GUI_Simpleplayer.h"
-
+#include "GUI/ui_GUI_Simpleplayer.h"
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"

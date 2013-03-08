@@ -1,6 +1,6 @@
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
+#include "GUI/ui_GUI_Startup_Dialog.h"
 #include "HelperStructs/CSettingsStorage.h"
-#include <ui_GUI_Startup_Dialog.h>
 
 GUI_Startup_Dialog::GUI_Startup_Dialog(QWidget *parent) :
     QDialog(parent)

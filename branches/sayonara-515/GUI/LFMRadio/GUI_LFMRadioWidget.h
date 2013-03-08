@@ -29,7 +29,7 @@
 #ifndef GUIRADIOWIDGET_H_
 #define GUIRADIOWIDGET_H_
 
-#include "ui_GUI_LFMRadioWidget.h"
+#include "GUI/ui_GUI_LFMRadioWidget.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include <QWidget>
 

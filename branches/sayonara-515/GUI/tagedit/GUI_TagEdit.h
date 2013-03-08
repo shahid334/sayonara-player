@@ -35,7 +35,7 @@
 #define TAG_TRACK_NUM QString("<TRACK>")
 #define TAG_YEAR QString("<YEAR>")
 
-#include "ui_GUI_TagEdit.h"
+#include "GUI/ui_GUI_TagEdit.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 

@@ -19,7 +19,7 @@
  */
 
 
-#include "ui_GUI_Stream.h"
+#include "GUI/ui_GUI_Stream.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "HelperStructs/Helper.h"

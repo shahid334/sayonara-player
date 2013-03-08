@@ -23,7 +23,7 @@
  */
 
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
-#include "ui_GUI_Library_Info_Box.h"
+#include "GUI/ui_GUI_Library_Info_Box.h"
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"

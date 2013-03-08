@@ -1,5 +1,5 @@
 #include "GUI/Podcasts/GUI_Podcasts.h"
-#include "ui_GUI_Podcasts.h"
+#include "GUI/ui_GUI_Podcasts.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"

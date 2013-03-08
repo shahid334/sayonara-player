@@ -25,7 +25,7 @@
 #ifndef GUISOCKETSETUP_H_
 #define GUISOCKETSETUP_H_
 
-#include "ui_GUI_SocketSetup.h"
+#include "GUI/ui_GUI_SocketSetup.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 #include <QDialog>

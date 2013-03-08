@@ -2,7 +2,7 @@
 #define GUI_STARTUP_DIALOG_H
 
 #include <QDialog>
-#include <ui_GUI_Startup_Dialog.h>
+#include "GUI/ui_GUI_Startup_Dialog.h"
 
 class GUI_Startup_Dialog : public QDialog, private Ui::GUI_StartupDialog
 {
