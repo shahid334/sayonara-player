@@ -44,6 +44,7 @@ LINK_DIRECTORIES(${CURL_LIBRARY_DIRS})
 LINK_DIRECTORIES(${QJSON_LIBRARY_DIRS})
 LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 
+ADD_SUBDIRECTORY(GUI)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
 
@@ -54,43 +55,6 @@ SET(HEADERS
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
     
-    GUI/player/GUI_Simpleplayer.h
-    GUI/player/GUI_TrayIcon.h
-    GUI/player/SearchSlider.h
-    GUI/playlist/GUI_Playlist.h
-    GUI/playlist/PlaylistItemModel.h
-    GUI/playlist/PlaylistItemDelegate.h
-    GUI/playlist/PlaylistItemDelegateSmall.h
-    GUI/playlist/GUI_PlaylistEntry.h
-    GUI/playlist/GUI_PlaylistEntrySmall.h
-    GUI/playlist_chooser/GUI_PlaylistChooser.h
-    GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
-    GUI/LastFM/GUI_LastFM.h
-    GUI/library/GUI_Library_windowed.h
-    GUI/library/models/LibraryItemModel.h
-    GUI/library/models/LibraryItemModelTracks.h
-    GUI/library/models/LibraryItemModelAlbums.h
-    GUI/library/models/LibraryItemModelArtists.h
-    GUI/library/delegates/LibraryItemDelegateAlbums.h
-    GUI/library/delegates/LibraryItemDelegateArtists.h
-    GUI/library/InfoBox/GUILibraryInfoBox.h
-    GUI/library/ImportFolderDialog/GUIImportFolder.h
-    
-    GUI/alternate_covers/AlternateCoverItemDelegate.h
-    GUI/alternate_covers/AlternateCoverItemModel.h
-    GUI/alternate_covers/GUI_Alternate_Covers.h
-    #GUI/alternate_covers/GUI_AlternateCovInternet.h
-    #GUI/alternate_covers/GUI_AlternateCovLocal.h
-    GUI/tagedit/GUI_TagEdit.h
-    GUI/equalizer/GUI_Equalizer.h
-    GUI/Podcasts/GUI_Podcasts.h
-    GUI/MyColumnHeader.h
-    GUI/MyTableView.h
-    GUI/MyListView.h
-    GUI/ContextMenu.h
-    
-    GUI/InfoDialog/GUI_InfoDialog.h
-    GUI/SocketConfiguration/GUISocketSetup.h
     CoverLookup/CoverLookup.h
     DatabaseAccess/CDatabaseConnector.h
 
@@ -103,11 +67,6 @@ SET(HEADERS
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
-    GUI/LFMRadio/GUI_LFMRadioWidget.h
-    GUI/stream/GUI_Stream.h
-    GUI/StreamRecorder/GUI_StreamRecorder.h
-    GUI/Notifications/GUI_Notifications.h
-    GUI/startup_dialog/GUI_Startup_Dialog.h
     Socket/Socket.h
     HelperStructs/CSettingsStorage.h
 )
@@ -117,48 +76,6 @@ SET(SOURCES
     application.cpp
     Engine/SoundPluginLoader.cpp
     Notification/NotificationPluginLoader.cpp
-    GUI/player/GUI_Simpleplayer.cpp
-    GUI/player/GUI_SimpleplayerPlugins.cpp
-    GUI/player/GUI_SimpleplayerMenubar.cpp
-    GUI/player/GUI_SimpleplayerControls.cpp
-    GUI/player/GUI_SimpleplayerCover.cpp
-    GUI/player/GUI_TrayIcon.cpp
-    GUI/player/SearchSlider.cpp
-    GUI/playlist/GUI_Playlist.cpp
-    GUI/playlist/PlaylistItemModel.cpp
-    GUI/playlist/PlaylistItemDelegate.cpp
-    GUI/playlist/PlaylistItemDelegateSmall.cpp
-    GUI/playlist/GUI_PlaylistEntry.cpp
-    GUI/playlist/GUI_PlaylistEntrySmall.cpp
-    GUI/playlist_chooser/GUI_PlaylistChooser.cpp
-    GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
-    GUI/LastFM/GUI_LastFM.cpp
-    GUI/library/GUI_Library_windowed.cpp
-    GUI/library/models/LibraryItemModel.cpp
-    GUI/library/models/LibraryItemModelTracks.cpp
-    GUI/library/models/LibraryItemModelAlbums.cpp
-    GUI/library/models/LibraryItemModelArtists.cpp
-    GUI/library/delegates/LibraryItemDelegateAlbums.cpp
-    GUI/library/delegates/LibraryItemDelegateArtists.cpp
-    GUI/library/delegates/LibraryItemDelegateTracks.cpp
-    GUI/library/InfoBox/GUILibraryInfoBox.cpp
-    GUI/library/ImportFolderDialog/GUIImportFolder.cpp
-    
-    GUI/alternate_covers/AlternateCoverItemDelegate.cpp
-    GUI/alternate_covers/AlternateCoverItemModel.cpp
-    GUI/alternate_covers/GUI_Alternate_Covers.cpp
-    #GUI/alternate_covers/GUI_AlternateCovInternet.cpp
-    #GUI/alternate_covers/GUI_AlternateCovLocal.cpp
-    GUI/tagedit/GUI_TagEdit.cpp
-    GUI/equalizer/GUI_Equalizer.cpp
-    GUI/Podcasts/GUI_Podcasts.cpp
-    GUI/MyTableView.cpp
-    GUI/MyListView.cpp
-    GUI/ContextMenu.cpp
-    
-    GUI/InfoDialog/GUI_InfoDialog.cpp
-    GUI/SocketConfiguration/GUISocketSetup.cpp
-
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
 
@@ -192,122 +109,26 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
-    GUI/LFMRadio/GUI_LFMRadioWidget.cpp
-    GUI/stream/GUI_Stream.cpp
-    GUI/StreamRecorder/GUI_StreamRecorder.cpp
-    GUI/Notifications/GUI_Notifications.cpp
-    GUI/startup_dialog/GUI_Startup_Dialog.cpp
     Socket/Socket.cpp
     HelperStructs/CSettingsStorage.cpp
-
-
-)
-
-SET(FORMS
-    GUI/player/GUI_Simpleplayer.ui
-    GUI/playlist/GUI_Playlist.ui
-    GUI/playlist/GUI_Playlist_Entry.ui
-    GUI/playlist/GUI_Playlist_EntrySmall.ui
-    GUI/LastFM/GUI_LastFM_Dialog.ui
-    GUI/library/GUI_Library_windowed.ui
-    GUI/library/ImportFolderDialog/GUI_ImportFolder.ui
-    GUI/library/InfoBox/GUI_Library_Info_Box.ui
-    GUI/equalizer/GUI_Equalizer.ui
-    GUI/tagedit/GUI_TagEdit.ui
-    GUI/alternate_covers/GUI_Alternate_Covers.ui
-    #GUI/alternate_covers/GUI_AlternateCovLocal.ui
-    #GUI/alternate_covers/GUI_AlternateCovInternet.ui
-    GUI/playlist_chooser/GUI_PlaylistChooser.ui
-    GUI/Podcasts/GUI_Podcasts.ui
-    GUI/LFMRadio/GUI_LFMRadioWidget.ui
-    GUI/stream/GUI_Stream.ui
-    GUI/StreamRecorder/GUI_StreamRecorder.ui
-    GUI/InfoDialog/GUI_InfoDialog.ui
-    GUI/startup_dialog/GUI_Startup_Dialog.ui
-#    GUI/GSTDataPainter/GSTDataPainter.ui
-    GUI/SocketConfiguration/GUI_SocketSetup.ui
-    GUI/alternate_covers/GUI_Alternate_Covers.ui
-    GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
-    GUI/Notifications/GUI_Notifications.ui
-)
-
-SET(ICONS 
-	GUI/icons/append.png
-	GUI/icons/append_small.png
-	GUI/icons/broom.png
-	GUI/icons/bwd.png
-	GUI/icons/bwd_orange.png
-	GUI/icons/close.png
-	GUI/icons/fwd.png
-	GUI/icons/fwd_orange.png
-	GUI/icons/pause.png
-	GUI/icons/play.png
-	GUI/icons/rec.png
-        GUI/icons/rec_off.png
-	GUI/icons/rep1.png
-	GUI/icons/repAll.png
-	GUI/icons/save.png
-	GUI/icons/save_as.png
-	GUI/icons/shuffle.png
-	GUI/icons/stop.png
-	GUI/icons/vol_1.png
-	GUI/icons/vol_1_dark.png
-	GUI/icons/vol_2.png
-	GUI/icons/vol_2_dark.png
-	GUI/icons/vol_3.png
-	GUI/icons/vol_3_dark.png
-	GUI/icons/vol_mute.png
-	GUI/icons/gui.jpg
-	GUI/icons/play_small.png
-	GUI/icons/lastfm_logo.jpg
-	GUI/icons/lastfm_red_small.png
-	GUI/icons/power_on.png
-	GUI/icons/power_off.png
-	GUI/icons/edit.png
-        GUI/icons/id3.png
-	GUI/icons/reload.png
-	GUI/icons/dynamic.png
-	GUI/icons/arrow_up.png
-	GUI/icons/arrow_down.png
-	GUI/icons/arrow_right.png
-	GUI/icons/arrow_left.png
-	GUI/icons/delete.png
-	GUI/icons/import.png
-	GUI/icons/lyrics.png
-	GUI/icons/info.png
-	GUI/icons/numbers.png
-        GUI/icons/radio.png
-        GUI/icons/cb_checked.png
-        GUI/icons/cb_checked_disabled.png
-        GUI/icons/rb_checked.png
-        GUI/icons/rb_checked_disabled.png
-	GUI/icons/logo.png
-        GUI/icons/logo_small.png
-	GUI/icons/podcast.png
-        GUI/icons/playlist.png
 )
 
 
-QT4_WRAP_UI(FORMS_HEADERS ${FORMS})
+
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 IF(${UNIX})
 	execute_process(COMMAND sh ./setversion.sh)
 ENDIF(${UNIX})
 
-ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
-TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl)
+ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC})
+TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl sayonara_gui)
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
-INSTALL(FILES ${ICONS} DESTINATION share/sayonara)
-INSTALL(FILES "GUI/icons/sayonara.png" DESTINATION share/icons)
-INSTALL(FILES "GUI/icons/sayonara.png" DESTINATION share/pixmaps)
 INSTALL(FILES "linux_packages/resources/sayonara" DESTINATION share/menu)
-INSTALL(FILES "GUI/standard.css" DESTINATION share/sayonara)
-INSTALL(FILES "GUI/dark.css" DESTINATION share/sayonara)
 INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
 
 IF(${UNIX})
