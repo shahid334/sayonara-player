@@ -135,7 +135,7 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
              Album album;
              album.fromVariant(value);
 
-             if(album.is_lib_selected)
+             if(album.is_lib_selected && !_selected_rows.contains(index.row()))
                 _selected_rows << index.row();
 
 			 _album_list.replace(index.row(), album);

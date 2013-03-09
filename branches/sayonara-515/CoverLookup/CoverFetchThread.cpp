@@ -58,7 +58,9 @@ CoverFetchThread::~CoverFetchThread() {
 }
 
 void CoverFetchThread::search_images_for_artist(const QString& artist_name, int num){
-	vector<QImage> images;
+
+    qDebug() << "search images for artists";
+    vector<QImage> images;
 
 	QString path = Helper::get_artist_image_path(artist_name);
 	if( num == 1 && QFile::exists(path)){
@@ -79,7 +81,7 @@ void CoverFetchThread::search_images_for_artist(const QString& artist_name, int 
 
 void CoverFetchThread::search_images_for_albums(){
 
-
+    qDebug() << "search images for albums";
 		vector<QImage> images;
 		for(uint i=0; i<_vec_albums.size(); i++){
 			Album album = _vec_albums[i];
@@ -95,6 +97,7 @@ void CoverFetchThread::search_images_for_albums(){
 						QStringList cover_adresses = call_and_parse_album( album.artists[j], album.name, 3, _cover_source);
 
 						// download of covers successful
+
 						_n_found_images = download_covers(cover_adresses, _num_covers_2_fetch, images);
 						if(_n_found_images){
 

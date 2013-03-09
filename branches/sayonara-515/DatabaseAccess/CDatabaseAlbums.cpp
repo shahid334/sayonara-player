@@ -163,12 +163,11 @@ int CDatabaseConnector::getMaxAlbumID(){
 	return max_id;
 }
 
-Album CDatabaseConnector::getAlbumByID(const int& id){
+bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
 
 	DB_TRY_OPEN(_database);
 
 	AlbumList albums;
-	Album album;
 
 	QSqlQuery q (*_database);
 	QString querytext =
@@ -180,10 +179,12 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 	q.bindValue(":id", QVariant(id));
 
 	_db_fetch_albums(q, albums);
-	if(albums.size() > 0)
-		album = albums[0];
+    if(albums.size() > 0){
+        album = albums[0];
+        return true;
+    }
 
-	return album;
+    return false;
 }
 
 void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){

@@ -98,7 +98,7 @@ public:
 			int getAlbumID (const QString & album);
 			int getMaxAlbumID();
 
-			Album getAlbumByID(const int& id);
+            bool getAlbumByID(const int& id, Album& album);
 
 			void getAllAlbums(AlbumList& result, SortOrder sortorder=AlbumNameAsc);
 

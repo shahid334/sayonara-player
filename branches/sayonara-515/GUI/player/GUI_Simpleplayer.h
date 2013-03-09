@@ -168,7 +168,7 @@ private slots:
     void about(bool b=false);
 
 
-    void sl_alternate_cover_available(QString);
+    void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
     void really_close(bool=false);

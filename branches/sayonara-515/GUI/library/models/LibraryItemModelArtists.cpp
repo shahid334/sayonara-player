@@ -130,7 +130,7 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
          Artist artist;
          artist.fromVariant(value);
 
-         if(artist.is_lib_selected)
+         if(artist.is_lib_selected && !_selected_rows.contains(index.row()))
             _selected_rows << index.row();
 
 		 _artist_list.replace(index.row(), artist);
@@ -170,4 +170,12 @@ int	LibraryItemModelArtists::getFirstRowOf(QString substr){
 
     return -1;
 
+}
+
+
+void  LibraryItemModelArtists::set_selected(QList<int>& rows){
+    LibraryItemModel::set_selected(rows);
+    for(int i=0; i<_artist_list.size(); i++){
+        _artist_list[i].is_lib_selected = rows.contains(i);
+    }
 }

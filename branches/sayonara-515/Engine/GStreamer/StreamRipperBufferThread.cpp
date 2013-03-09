@@ -49,13 +49,15 @@ void StreamRipperBufferThread::run(){
     int n_loops = 0;
     do{
 
-        _size = _f->size();
+
 
         usleep(interval);
         max -= interval;
 
         n_loops++;
         if(max <= 0) break;
+
+        _size = _f->size();
 
     } while(_size < _buffersize && max > 0);
 

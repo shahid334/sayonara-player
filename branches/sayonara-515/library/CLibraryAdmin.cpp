@@ -286,3 +286,59 @@ void CLibraryBase::loadDataFromDb () {
 
     emit_stuff();
 }
+
+
+
+void CLibraryBase::psl_delete_tracks(int answer){
+    delete_tracks(_vec_md, answer);
+}
+
+
+void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
+
+    MetaDataList vec_md;
+    foreach(int idx, lst){
+        vec_md.push_back(_vec_md[idx]);
+    }
+
+    delete_tracks(vec_md, answer);
+}
+
+
+
+void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
+
+    QStringList file_list;
+    QString file_entry = "files";
+    int n_files = vec_md.size();
+    int n_fails = 0;
+
+    foreach(MetaData md, vec_md){
+        file_list.push_back(md.filepath);
+    }
+
+    _db->deleteTracks(vec_md);
+    vec_md.clear();
+
+    if(answer == 1){
+        file_entry = "entries";
+        foreach(QString filename, file_list){
+            QFile file(filename);
+            if( !file.remove() )
+                n_fails ++;
+        }
+    }
+
+    QString answer_str;
+
+    if(n_fails == 0){
+        answer_str = "All " + file_entry + " could be removed";
+    }
+
+    else {
+        answer_str = QString::number(n_fails) + " of " + QString::number(n_files) + " " + file_entry + " could not be removed";
+    }
+
+    emit sig_delete_answer(answer_str);
+    refresh();
+}

@@ -592,6 +592,7 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
     MetaDataList v_md;
 
     // playlist radio
+    qDebug() << "is playlist file? " << url << ": " << Helper::is_playlistfile(url);
     if(Helper::is_playlistfile(url)){
 
         if(PlaylistParser::parse_playlist(url, v_md) > 0){
@@ -607,7 +608,6 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
                 if(md.album.size() == 0)
                     md.album = md.title;
 
-                md.filepath = url;
                 md.radio_mode = RADIO_STATION;
                 _v_meta_data.push_back(md);
 			}

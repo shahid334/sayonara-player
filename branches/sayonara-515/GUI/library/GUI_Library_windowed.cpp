@@ -297,12 +297,11 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
-this->_info_dialog->set_tag_edit_visible(true);
+
+    this->_info_dialog->set_tag_edit_visible(true);
     QList<int> idx_list_int;
-    if(idx.isValid())
-        idx_list_int = ui->lv_artist->calc_selections();
-    else
-    	ui->lv_artist->calc_selections();
+
+    idx_list_int = ui->lv_artist->calc_selections();
 
     emit sig_artist_pressed(idx_list_int);
 }
@@ -329,10 +328,10 @@ void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
     this->_info_dialog->set_tag_edit_visible(true);
     QList<int> idx_list_int;
-    if(idx.isValid()){
-        idx_list_int = ui->tb_title->calc_selections();
-        emit sig_track_pressed(idx_list_int);
-    }
+
+    idx_list_int = ui->tb_title->calc_selections();
+    emit sig_track_pressed(idx_list_int);
+
 }
 
 void GUI_Library_windowed::track_released(const QModelIndex&){}
@@ -529,7 +528,6 @@ void GUI_Library_windowed::psl_delete_answer(QString answer){
 
 	answerbox.exec();
 	answerbox.close();
-	refresh();
 }
 
 

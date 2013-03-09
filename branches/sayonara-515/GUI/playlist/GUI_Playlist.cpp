@@ -291,8 +291,6 @@ void GUI_Playlist::set_total_time_label(qint64 total_msecs){
 
 
 
-
-
 void GUI_Playlist::set_radio_active(int radio){
 
 	_radio_active = radio;

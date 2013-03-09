@@ -148,7 +148,7 @@ void CoverLookup::search_cover(const MetaData& md) {
 
 	if (_metadata.album_id != -1){
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		album = db->getAlbumByID(_metadata.album_id);
+        db->getAlbumByID(_metadata.album_id, album);
 	}
 
 	else{
@@ -200,8 +200,8 @@ void CoverLookup::search_artist_image(const QString& artist){
 void CoverLookup::research_cover(const MetaData& md) {
 
 	_research_done = true;
-	if (_thread->isRunning())
-		terminate_thread();
+    if (_thread->isRunning()) return;
+
 
 	_metadata = md;
 
@@ -246,7 +246,7 @@ Album CoverLookup::_get_album_from_metadata(const MetaData& md) {
 
 	if (md.album_id != -1) {
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		album = db->getAlbumByID(md.album_id);
+        db->getAlbumByID(md.album_id, album);
 		return album;
 	}
 

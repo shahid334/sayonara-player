@@ -282,7 +282,6 @@ QList<int> MyTableView::calc_selections(){
 
 	foreach(QModelIndex model_idx, idx_list){
 		idx_list_int.push_back(model_idx.row());
-        //this->selectRow(model_idx.row());
 	}
 
 	_model->set_selected(idx_list_int);
@@ -297,6 +296,7 @@ void MyTableView::force_selections() {
     QItemSelection sel = sm->selection();
     int rows = _model->rowCount();
     QList<int> lst = _model->get_selected();
+
     for(int row=0; row<rows; row++){
 
         if(lst.contains(row)){
@@ -573,37 +573,37 @@ void MyTableView::fill_albums(const AlbumList& albums){
 
 
 void MyTableView::fill_artists(const ArtistList& artists){
+    QList<int> lst;
+    _model->set_selected(lst);
+
     _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, artists.size());
+    _model->insertRows(0, artists.size()); // fake "all albums row"
 
     QModelIndex idx;
     int first_selected_artist_row = -1;
 
-
     QItemSelectionModel* sm = this->selectionModel();
     QItemSelection sel = sm->selection();
 
-    for(uint row=0; row<artists.size(); row++){
-
+    for(uint row=0; row < artists.size(); row++){
         Artist artist = artists[row];
-        idx = _model->index(row, 0);
 
-        QVariant data = artist.toVariant();
-        _model->setData(idx, data, Qt::EditRole );
+        idx = _model->index(row, 1);
 
         if(artist.is_lib_selected){
-
             if(first_selected_artist_row == -1)
                 first_selected_artist_row = row;
 
             this->selectRow(row);
-
             sel.merge(sm->selection(), QItemSelectionModel::Select);
         }
+
+        QVariant data = artist.toVariant();
+        _model->setData(idx, data, Qt::EditRole );
     }
 
-   sm->clearSelection();
-   sm->select(sel,QItemSelectionModel::Select);
+    sm->clearSelection();
+    sm->select(sel,QItemSelectionModel::Select);
 
     if(first_selected_artist_row >= 0)
         this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);

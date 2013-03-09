@@ -34,10 +34,7 @@
 /** COVERS **/
 void GUI_SimplePlayer::coverClicked() {
 
-    if(m_metadata.album_id >= 0)
-		m_alternate_covers->start(m_metadata.album_id, true);
-
-   else if(m_metadata.radio_mode == RADIO_STATION){
+   if(m_metadata.radio_mode == RADIO_STATION){
         QString searchstring = QString("Radio ") + m_metadata.title;
         QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
@@ -67,13 +64,19 @@ void GUI_SimplePlayer::coverClicked() {
     this->setFocus();
 }
 
-void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class){
+void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class, QString coverpath){
 
-	Q_UNUSED(target_class);
-    QString coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+    qDebug() << "Album: "
+             << m_metadata.album
+             << ", Artist: "
+             << m_metadata.artist
+             << " - "
+             << Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+
+    QString own_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+    if(coverpath != own_coverpath) return;
 
     ui->albumCover->setIcon(QIcon(coverpath));
-
 }
 
 void GUI_SimplePlayer::sl_no_cover_available(){

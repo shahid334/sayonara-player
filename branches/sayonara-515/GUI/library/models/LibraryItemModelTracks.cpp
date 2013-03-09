@@ -195,3 +195,11 @@ int	LibraryItemModelTracks::getFirstRowOf(QString substr){
     return -1;
 
 }
+
+
+void  LibraryItemModelTracks::set_selected(QList<int>& rows){
+    LibraryItemModel::set_selected(rows);
+    for(int i=0; i<_tracklist.size(); i++){
+        _tracklist[i].is_lib_selected = rows.contains(i);
+    }
+}
