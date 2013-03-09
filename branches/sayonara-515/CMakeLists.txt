@@ -89,6 +89,7 @@ SET(SOURCES
     CoverLookup/CoverLookup.cpp
     LyricLookup/LyricLookup.cpp
     CoverLookup/CoverFetchThread.cpp
+    library/CLibraryAdmin.cpp
     library/CLibraryBase.cpp
     library/ReloadThread.cpp
     DatabaseAccess/CDatabaseConnector.cpp

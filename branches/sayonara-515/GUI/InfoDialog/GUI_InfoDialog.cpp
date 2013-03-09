@@ -623,7 +623,7 @@ void GUI_InfoDialog::prepare_cover(){
 		case INFO_MODE_SINGLE:
 
 			if(_mode == INFO_MODE_ARTISTS){
-                emit sig_search_artist_image(_artist_name);
+               // emit sig_search_artist_image(_artist_name);
 			}
 
 			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
@@ -633,6 +633,7 @@ void GUI_InfoDialog::prepare_cover(){
 
                 qDebug() << "album name " << _album_name;
                 qDebug() << "artist name " << _artist_name;
+                if(_album_name.isEmpty() && _artist_name.isEmpty()) return;
                 emit sig_search_cover(md);
 			}
 
@@ -714,7 +715,6 @@ void GUI_InfoDialog::setMode(int mode){
 			break;
 
 		default: break;
-
 	}
 
 	prepare_cover();

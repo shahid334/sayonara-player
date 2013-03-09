@@ -200,6 +200,8 @@ void GUI_Playlist::clear_playlist_slot(){
 void GUI_Playlist::selection_changed(MetaDataList& v_md){
 
     _info_dialog->setMetaData(v_md);
+
+    this->_info_dialog->set_tag_edit_visible(_radio_active == RADIO_OFF);
 }
 
 
@@ -304,13 +306,13 @@ void GUI_Playlist::set_radio_active(int radio){
     if(radio != RADIO_OFF){
 
         ui->listView->set_context_menu_actions(ENTRY_INFO);
-        this->_info_dialog->set_tag_edit_visible(false);
+
     }
 
     else{
 
         ui->listView->set_context_menu_actions(ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
-        this->_info_dialog->set_tag_edit_visible(true);
+
     }
 
     ui->listView->set_drag_enabled(radio != RADIO_LFM);

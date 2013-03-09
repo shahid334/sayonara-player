@@ -598,12 +598,17 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 
             foreach(MetaData md, v_md){
 
-                md.radio_mode = RADIO_STATION;
-
-                if(name.size() > 0)
-                    md.title = name;
+                if(name.size() > 0) md.title = name;
                 else md.title = "Radio Station";
 
+                if(md.artist.size() == 0)
+                    md.artist = url;
+
+                if(md.album.size() == 0)
+                    md.album = md.title;
+
+                md.filepath = url;
+                md.radio_mode = RADIO_STATION;
                 _v_meta_data.push_back(md);
 			}
 		}
@@ -617,17 +622,17 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		if(name.size() > 0) md.title = name;
 		else md.title = "Radio Station";
 
-		md.artist = url;
+        md.artist = url;
+        md.album = md.title;
 		md.filepath = url;
         md.radio_mode = RADIO_STATION;
+
         _v_meta_data.push_back(md);
 	}
 
     if(_v_meta_data.size() == 0) return;
 
-
     _radio_active = RADIO_STATION;
-
 
     emit sig_playlist_created(_v_meta_data, 0, _radio_active);
     send_cur_playing_signal(0);

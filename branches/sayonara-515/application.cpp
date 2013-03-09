@@ -313,9 +313,7 @@ void Application::init_connections(){
        CONNECT(ui_lastfm, sig_activated(bool),                                  player,         psl_lfm_activated(bool));
        CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));
 
-
-
-	   CONNECT(ui_id3_editor, id3_tags_changed(), 						ui_library, 	id3_tags_changed());
+       CONNECT(ui_id3_editor, id3_tags_changed(), 						library,        refresh());
 	   CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			playlist, 		psl_id3_tags_changed(MetaDataList&));
 	   CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
 

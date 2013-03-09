@@ -22,6 +22,7 @@
 #ifndef CLIBRARYBASE_H
 #define CLIBRARYBASE_H
 
+#include "library/ReloadThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
@@ -29,10 +30,10 @@
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "application.h"
 
-#include <QObject>
 #include <QThread>
+#include <QStringList>
 #include <QFileSystemWatcher>
-#include <library/ReloadThread.h>
+
 
 class Application;
 class CLibraryBase : public QObject
@@ -88,7 +89,7 @@ public slots:
     void psl_prepare_artist_for_playlist();
     void psl_prepare_track_for_playlist(int idx);
 
-    void psl_filter_changed(const Filter&);
+    void psl_filter_changed(const Filter&, bool force=false);
     void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
     void psl_change_id3_tags(const QList<int>& lst);
 

@@ -45,7 +45,7 @@ bool id3_extract_discnumber(FileHeader& fh, int* discnumber, int* n_discs){
 
         // Ascii: '/'=47, '0'=48, '1'... '9'=57
         if(c >= '0' && c <= '9'){
-            qDebug() << "c = " << c << ", " << slash_found;
+
 
             if(!slash_found)
                 *discnumber = 10*(*discnumber) + (c - '0');
@@ -348,10 +348,10 @@ bool FileHeader::commit(){
 
             // vec does not exist...
             if(old_frame_size <= 0){
-                qDebug() << "old frame size <= 0 " << old_frame_size;
+
                 // overwrite empty space
                 if(empty_space_len > 128){
-                    qDebug() << "empty space found @" <<empty_space_begins << "; " << empty_space_len;
+
 
 		    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
 		        raw_data.replace(empty_space_begins, arr.size(), arr, arr.size());
@@ -367,7 +367,7 @@ bool FileHeader::commit(){
 
                 // append it to end
                 else {
-                    qDebug() << "append to end";
+
                     raw_data.push_back(arr);
                     increase_size += arr.size();
                 }
@@ -376,7 +376,7 @@ bool FileHeader::commit(){
             // vec is there but too small
             else{
 
-                qDebug() << "vec is " << arr.size() -old_frame_size << " too small";
+
 
 
 	        #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
@@ -389,7 +389,7 @@ bool FileHeader::commit(){
                     raw_data.insert(pos + i, arr[i]);
 
                 if(empty_space_len > 128){
-                    qDebug() << "remove from empty space @ " << empty_space_begins;
+
                     raw_data.remove(empty_space_begins, arr.size() -old_frame_size);
                     empty_space_len -=  (arr.size() -old_frame_size);
                 }
@@ -424,7 +424,7 @@ bool FileHeader::commit(){
 
 
 
-    qDebug() << "increase the file " << increase_size;
+
     f->open(QFile::ReadWrite);
     if(!f->isOpen()) return false;
     stretch_file(f, org_size, increase_size);
