@@ -18,7 +18,8 @@ protected:
 public:
     void setUri(QString uri);
     QString getUri();
-    qint64 getSize();
+    int getSize();
+    void setBufferSize(int bs);
 
 public slots:
     void terminate();
@@ -28,7 +29,8 @@ public slots:
 private:
 
     QString _uri;
-    qint64 _size;
+    int _size;
+    int _buffersize;
     QFile* _f;
 
 

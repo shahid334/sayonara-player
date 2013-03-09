@@ -57,7 +57,7 @@ void StreamRipperBufferThread::run(){
         n_loops++;
         if(max <= 0) break;
 
-    } while(_size < 32000 && max > 0);
+    } while(_size < _buffersize && max > 0);
 
     _f->close();
 }
@@ -66,8 +66,12 @@ QString StreamRipperBufferThread::getUri(){
     return _uri;
 }
 
-qint64 StreamRipperBufferThread::getSize(){
+int StreamRipperBufferThread::getSize(){
     return _size;
+}
+
+void StreamRipperBufferThread::setBufferSize(int bs){
+    _buffersize = bs;
 }
 
 

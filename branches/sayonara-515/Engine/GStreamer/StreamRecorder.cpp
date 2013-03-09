@@ -67,7 +67,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 StreamRecorder::StreamRecorder(QObject *parent) :
     QObject(parent)
 {
-    _buffer_size = 32769;
+    _buffer_size = 32767;
     _stream_ended = true;
     _settings = CSettingsStorage::getInstance();
     _rec_pipeline = NULL;
@@ -178,9 +178,11 @@ bool StreamRecorder::init_thread(QString filename){
     }
 
     _sr_thread = new StreamRipperBufferThread();
+
     if(!_sr_thread) return false;
 
     _sr_thread->setUri(filename);
+    _sr_thread->setBufferSize(_buffer_size);
 
     connect(_sr_thread, SIGNAL(finished()), this, SLOT(thread_finished()));
     return true;
