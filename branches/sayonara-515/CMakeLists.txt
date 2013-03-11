@@ -47,7 +47,7 @@ LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 ADD_SUBDIRECTORY(GUI)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
-ADD_SUBDIRECTORY(linux_packages/fedora)
+#ADD_SUBDIRECTORY(linux_packages/fedora)
 
 SET(HEADERS
     application.h

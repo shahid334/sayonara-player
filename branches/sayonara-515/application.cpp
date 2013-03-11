@@ -212,7 +212,7 @@ void Application::init_connections(){
    CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,	record_button_toggled(bool));
 
    CONNECT (player, baseDirSelected(const QString &),		library,            baseDirSelected(const QString & ));
-   CONNECT (player, reloadLibrary(), 						library,            reloadLibrary());
+   CONNECT (player, reloadLibrary(bool), 					library,            reloadLibrary(bool));
    CONNECT (player, importDirectory(QString),				library,            importDirectory(QString));
    CONNECT (player, libpath_changed(QString),               library, 			setLibraryPath(QString));
    CONNECT (player, sig_show_only_tracks(bool),				ui_library,			show_only_tracks(bool));

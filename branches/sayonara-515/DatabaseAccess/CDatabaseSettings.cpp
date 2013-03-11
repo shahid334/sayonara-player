@@ -74,6 +74,10 @@ QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
 
 bool CDatabaseConnector::load_settings(){
 
+
+    disconnect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+    disconnect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
+
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
@@ -263,7 +267,10 @@ bool CDatabaseConnector::load_settings(){
 	bool allow_only_one_instance = load_setting_bool(SET_PLAYER_ONE_INSTANCE, true);
 	settings->setAllowOnlyOneInstance(allow_only_one_instance);
 
-	return true;
+    connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+    connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
+
+    return true;
 }
 
 bool CDatabaseConnector::store_settings(){

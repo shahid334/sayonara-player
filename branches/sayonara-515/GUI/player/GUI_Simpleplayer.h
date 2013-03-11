@@ -103,7 +103,7 @@ signals:
     void fileSelected (QStringList & filelist);
     void baseDirSelected (const QString & baseDir);
     void importDirectory(QString);
-    void reloadLibrary();
+    void reloadLibrary(bool clear);
 
     /* Preferences / View */
     void show_playlists();

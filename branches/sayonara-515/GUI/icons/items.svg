@@ -768,9 +768,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
-     inkscape:cx="-6573.7712"
-     inkscape:cy="-2787.8874"
+     inkscape:zoom="0.125"
+     inkscape:cx="-7941.7712"
+     inkscape:cy="-1507.8874"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -1875,23 +1875,6 @@
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <g
-       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_down.png"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90"
-       id="g4177"
-       transform="matrix(1,0,0,0.59239526,-582.85714,67.460279)">
-      <path
-         inkscape:connector-curvature="0"
-         id="path4157"
-         d="m -6548.45,1229.6693 148.5714,257.1429"
-         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path4157-8"
-         d="m -6244.45,1229.6693 -148.5714,257.1429"
-         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-    </g>
-    <g
        id="g4177-0"
        transform="matrix(0,1,0.59239526,0,-6313.1869,8446.2407)"
        inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_right.png"
@@ -2338,60 +2321,6 @@
          x="-4097.2832"
          y="2476.6067">i</tspan></text>
     <g
-       id="g4020"
-       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-515//GUI/icons/numbers.png"
-       inkscape:export-xdpi="16.459999"
-       inkscape:export-ydpi="16.459999"
-       transform="matrix(0.9056222,0,0,0.98343095,-747.60472,37.955196)">
-      <rect
-         inkscape:export-ydpi="90"
-         inkscape:export-xdpi="90"
-         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/repAll.png"
-         ry="172.7276"
-         y="1596.9253"
-         x="-7902.4995"
-         height="675.81232"
-         width="735.1394"
-         id="rect4593-9-1-1-1"
-         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#323232;stroke-width:37.80984497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10" />
-      <text
-         transform="scale(0.95955412,1.0421507)"
-         sodipodi:linespacing="125%"
-         id="text4008"
-         y="2094.8369"
-         x="-8202.7432"
-         style="font-size:434.00790405px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f3841a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
-         xml:space="preserve"><tspan
-           y="2094.8369"
-           x="-8202.7432"
-           id="tspan4010"
-           sodipodi:role="line">1</tspan></text>
-      <text
-         transform="scale(0.95955412,1.0421507)"
-         sodipodi:linespacing="125%"
-         id="text4012"
-         y="1931.6123"
-         x="-8005.1606"
-         style="font-size:434.00790405px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
-         xml:space="preserve"><tspan
-           y="1931.6123"
-           x="-8005.1606"
-           id="tspan4014"
-           sodipodi:role="line">2</tspan></text>
-      <text
-         transform="scale(0.95955412,1.0421507)"
-         sodipodi:linespacing="125%"
-         id="text4016"
-         y="2095.3362"
-         x="-7778.0728"
-         style="font-size:434.00790405px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f3841a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
-         xml:space="preserve"><tspan
-           y="2095.3362"
-           x="-7778.0728"
-           id="tspan4018"
-           sodipodi:role="line">3</tspan></text>
-    </g>
-    <g
        id="g4292"
        inkscape:export-filename="/home/luke/sayonara-player/branches/GUI/icons/rec.png"
        inkscape:export-xdpi="90"
@@ -2791,6 +2720,304 @@
            inkscape:connector-curvature="0"
            sodipodi:nodetypes="cc" />
       </g>
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-6952.3644,771.56897)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_down.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       id="g4177"
+       transform="matrix(1,0,0,-0.59239526,-1326.8571,1716.691)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-4"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-7640.3644,659.56897)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_down.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       id="g4177-5"
+       transform="matrix(1,0,0,0.59239526,-2014.8571,-4.5397211)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-7"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-10"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-1"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-8352.3644,787.56897)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_down.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       id="g4177-51"
+       transform="matrix(0,-1,0.59239526,0,-9911.922,-5452.3743)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-2"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-12"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-0"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-9016.3644,715.56897)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/icons/arrow_down.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"
+       id="g4177-6"
+       transform="matrix(0,1,-0.59239526,0,-8982.6917,7252.5257)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-4"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-6"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:51.09999847;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g4020"
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-515//GUI/icons/numbers.png"
+       inkscape:export-xdpi="16.459999"
+       inkscape:export-ydpi="16.459999"
+       transform="matrix(0.9056222,0,0,0.98343095,-1488.2003,-2002.4109)">
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/repAll.png"
+         ry="172.7276"
+         y="1596.9253"
+         x="-7902.4995"
+         height="675.81232"
+         width="735.1394"
+         id="rect4593-9-1-1-1"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#323232;stroke-width:37.80984497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10" />
+      <text
+         transform="scale(0.95955412,1.0421507)"
+         sodipodi:linespacing="125%"
+         id="text4008"
+         y="2094.8369"
+         x="-8202.7432"
+         style="font-size:434.00790405px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f3841a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="2094.8369"
+           x="-8202.7432"
+           id="tspan4010"
+           sodipodi:role="line">1</tspan></text>
+      <text
+         transform="scale(0.95955412,1.0421507)"
+         sodipodi:linespacing="125%"
+         id="text4012"
+         y="1931.6123"
+         x="-8005.1606"
+         style="font-size:434.00790405px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="1931.6123"
+           x="-8005.1606"
+           id="tspan4014"
+           sodipodi:role="line">2</tspan></text>
+      <text
+         transform="scale(0.95955412,1.0421507)"
+         sodipodi:linespacing="125%"
+         id="text4016"
+         y="2095.3362"
+         x="-7778.0728"
+         style="font-size:434.00790405px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#f3841a;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans Bold"
+         xml:space="preserve"><tspan
+           y="2095.3362"
+           x="-7778.0728"
+           id="tspan4018"
+           sodipodi:role="line">3</tspan></text>
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-10"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-6952.3644,1747.569)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-515/GUI/icons/arrow_up_orange.png"
+       inkscape:export-xdpi="16.200001"
+       inkscape:export-ydpi="16.200001"
+       id="g4177-3"
+       transform="matrix(1,0,0,-0.59239526,-1326.8571,2692.691)"
+       style="stroke:#f3841a;stroke-opacity:1">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-85"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-2"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-4-8"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-7640.3644,1635.569)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-515/GUI/icons/arrow_down_orange.png"
+       inkscape:export-xdpi="16.204535"
+       inkscape:export-ydpi="16.204535"
+       id="g4177-5-5"
+       transform="matrix(1,0,0,0.59239526,-2014.8571,971.46028)"
+       style="stroke:#f3841a;stroke-opacity:1">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-7-6"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-10-9"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-1-8"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-8352.3644,1763.569)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-515/GUI/icons/arrow_right_orange.png"
+       inkscape:export-xdpi="16.20451"
+       inkscape:export-ydpi="16.20451"
+       id="g4177-51-3"
+       transform="matrix(0,-1,0.59239526,0,-9911.922,-4476.3743)"
+       style="stroke:#f3841a;stroke-opacity:1">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-2-2"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-12-2"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:#ffffff;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+       id="path4766-3-2-0-2"
+       sodipodi:cx="-932.37079"
+       sodipodi:cy="227.06755"
+       sodipodi:rx="374.7666"
+       sodipodi:ry="374.7666"
+       d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+       transform="matrix(0.84905665,0,0,0.84905665,-9016.364,1691.569)"
+       inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <g
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-515/GUI/icons/arrow_left_orange.png"
+       inkscape:export-xdpi="16.20451"
+       inkscape:export-ydpi="16.20451"
+       id="g4177-6-3"
+       transform="matrix(0,1,-0.59239526,0,-8982.692,8228.5257)"
+       style="fill:none;fill-opacity:1;stroke:#f3841a;stroke-opacity:1">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-4-3"
+         d="m -6548.45,1229.6693 148.5714,257.1429"
+         style="fill:none;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4157-8-6-8"
+         d="m -6244.45,1229.6693 -148.5714,257.1429"
+         style="fill:none;fill-opacity:1;stroke:#f3841a;stroke-width:51.09999847000000273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
   </g>
 </svg>

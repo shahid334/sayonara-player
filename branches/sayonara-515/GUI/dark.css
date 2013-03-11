@@ -19,7 +19,7 @@ QLabel, QScrollArea{
 QListView, QTableView{
 	background: #2B2B2B;
 	alternate-background-color: #242424;
-	border: 1px groove #202020;
+	border: 1px solid #262626;
 /*	border-radius: 6px;*/
 }
 
@@ -28,37 +28,63 @@ QListView, QTableView{
 QScrollBar::vertical {
 	border: 0px solid #383838;
 	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #262626, stop: 0.2 #2a2a2a, stop: 0.8 #262626, stop:1 #2a2a2a);
-	width: 20px;
-	margin: 22px 0px 22px 5px;
+	width: 18px;
+	margin: 12px 0px 12px 5px;
  }
 
 QScrollBar::handle:vertical {
     background: #404040;
-    min-height: 20px;
-    border: 1px solid #2C2C2C;
-    border-radius: 4px;
+
+    min-height: 40px;
+    width: 18px;
+    margin-left: 1px;
+    margin-right: 1px;
+
+    border-bottom: 1px solid #2C2C2C;
+    border-top: 1px solid #2C2C2C;
+
+    border-left: 0px solid red;
+    border-right: 0px solid red;
+    border-radius: 2px;
  }
+
+QScrollBar::handle:vertical:hover {
+        background: #3b3b3b;
+ }
+
 
 QScrollBar::add-line:vertical {
     border: 1px solid #383838;
     background: #383838;
-    height: 20px;
+    height: 10px;
     subcontrol-position: bottom;
     subcontrol-origin: margin;
-    padding: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 4px;
     border-left: 5px solid #383838;
     image: url(/usr/share/sayonara//arrow_down.png);
+ }
+
+ QScrollBar::add-line:vertical:hover {
+    image: url(/usr/share/sayonara/arrow_down_orange.png);
  }
 
 QScrollBar::sub-line:vertical {
     border: 1px solid #383838;
     background: #383838;
-    height: 20px;
+    height: 10px;
     subcontrol-position: top;
     subcontrol-origin: margin;
-    padding: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 4px;
     border-left: 5px solid #383838;
     image: url(/usr/share/sayonara//arrow_up.png);
+ }
+
+ QScrollBar::sub-line:vertical:hover {
+    image: url(/usr/share/sayonara/arrow_up_orange.png);
  }
 
 QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
@@ -72,48 +98,74 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 }
 
 
+
+
+
 QScrollBar::horizontal {
-/*    border: 0px solid #282828;*/
-    background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #262626, stop: 0.3 #2a2a2a, stop: 0.7 #2a2a2a, stop:1 #262626);
-    height: 20px;
-    margin: 5px 22px 0 22px;
-    
-    border-top: 0px solid #383838;
+	border: 0px solid #383838;
+	background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #262626, stop: 0.2 #2a2a2a, stop: 0.8 #262626, stop:1 #2a2a2a);
+	height: 18px;
+	margin: 5px 12px 0px 12px;
  }
 
 QScrollBar::handle:horizontal {
     background: #404040;
-    min-width: 20px;
-    border: 1px solid #2C2C2C;
-    border-radius: 4px;
+
+
+    min-width: 25px;
+    height: 16px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    border-left: 1px solid #2C2C2C;
+    border-right: 1px solid #2C2C2C;
+    
+    border-top: 0px solid red;
+    border-bottom: 0px solid red;
+    border-radius: 2px;
+ }
+
+QScrollBar::handle:horizontal:hover {
+    background: #3b3b3b;
  }
 
 QScrollBar::add-line:horizontal {
     border: 1px solid #383838;
     background: #383838;
-    width: 20px;
+    width: 10px;
     subcontrol-position: right;
     subcontrol-origin: margin;
-    padding: 2px;
+    padding-left: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     border-top: 5px solid #383838;
-    image: url(/usr/share/sayonara//arrow_right.png);
+    image: url(/usr/share/sayonara/arrow_right.png);
+ }
+
+ QScrollBar::add-line:horizontal:hover {
+    image: url(/usr/share/sayonara/arrow_right_orange.png);
  }
 
 QScrollBar::sub-line:horizontal {
     border: 1px solid #383838;
     background: #383838;
-    width: 20px;
+    width: 10px;
     subcontrol-position: left;
     subcontrol-origin: margin;
-    padding: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
     border-top: 5px solid #383838;
-    image: url(/usr/share/sayonara//arrow_left.png);
+    image: url(/usr/share/sayonara/arrow_left.png);
  }
 
-QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+ QScrollBar::sub-line:horizontal:hover {
+    image: url(/usr/share/sayonara/arrow_left_orange.png);
+ }
+
+QScrollBar::up-arrow:horizontal, QScrollBar::down-arrow:horizontal {
     border: 0px solid #3C3C3C;
-     width: 3px;
-    height: 0px;
+    height: 3px;
+    width: 0px;
 }
 
 QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
@@ -122,10 +174,11 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 
 
 
+
 QTableView QHeaderView::section {
 
 	background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #323232, stop:0.5 #2E2E2E, stop:0.6 #2E2E2E, stop:1 #323232); 
-
+	height: 10px;
 
 	 color: #D8D8D8;
 	 padding-left: 4px;
@@ -150,6 +203,11 @@ QTableView QHeaderView::down-arrow {
 
 	image: url(/usr/share/sayonara//arrow_down.png);
 }
+
+
+
+
+
 
 QMenuBar {
    color: #D8D8D8;

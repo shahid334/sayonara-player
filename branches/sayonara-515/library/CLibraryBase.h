@@ -71,7 +71,8 @@ public slots:
     void baseDirSelected (const QString & baseDir);
     void insertMetaDataIntoDB(MetaDataList& in);
 
-    void reloadLibrary();
+    void reloadLibrary(bool);
+    void clearLibrary();
     void refresh();
     void importDirectory(QString);
     void importFiles(const MetaDataList&);

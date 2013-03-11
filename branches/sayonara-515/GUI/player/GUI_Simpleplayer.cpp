@@ -699,7 +699,7 @@ void GUI_SimplePlayer::notification_changed(bool active, int timeout_ms){
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
-    QWidget::resizeEvent(e);
+    QMainWindow::resizeEvent(e);
 
     ui_playlist->resize(ui->playlist_widget->size());
 

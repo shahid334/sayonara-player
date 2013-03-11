@@ -168,7 +168,11 @@ SET(ICONS
         icons/arrow_down.png
         icons/arrow_right.png
         icons/arrow_left.png
-        icons/delete.png
+        icons/arrow_up_orange.png
+        icons/arrow_down_orange.png
+        icons/arrow_right_orange.png
+        icons/arrow_left_orange.png
+	icons/delete.png
         icons/import.png
         icons/lyrics.png
         icons/info.png

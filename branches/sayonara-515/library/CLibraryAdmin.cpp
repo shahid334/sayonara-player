@@ -194,9 +194,13 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
         emit sig_import_result(success);
 }
 
+void CLibraryBase::clearLibrary(){
+    MetaDataList lst;
+    _db->getTracksFromDatabase(lst);
+    _db->deleteTracks(lst);
+}
 
-
-void CLibraryBase::reloadLibrary(){
+void CLibraryBase::reloadLibrary(bool clear){
 
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
@@ -220,6 +224,10 @@ void CLibraryBase::reloadLibrary(){
         }
     }
 
+
+    if(clear){
+        clearLibrary();
+    }
 
     if(m_thread->isRunning()){
         m_thread->terminate();

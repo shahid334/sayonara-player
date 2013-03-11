@@ -127,8 +127,6 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
 
         if(n){
 
-            QString text = md.artist+ "\n" + md.album;
-
             n->notification_show(md);
         }
 
