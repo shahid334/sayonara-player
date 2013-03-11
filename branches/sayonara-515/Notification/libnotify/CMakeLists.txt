@@ -6,7 +6,10 @@ include(FindPkgConfig)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
 
-pkg_check_modules(LIBNOTIFY libnotify>=0.7)
+#if(LIBNOTIFY_FOUND)
+
+pkg_check_modules(LIBNOTIFY libnotify>=0.7.0)
+
 if (LIBNOTIFY_FOUND)
 
     INCLUDE_DIRECTORIES("../..")
@@ -24,12 +27,12 @@ if (LIBNOTIFY_FOUND)
             ../Notification.h
             LN_Notification.h
     )
+
     SET(SOURCES
-       	    ../../HelperStructs/CSettingsStorage.cpp
+            ../../HelperStructs/CSettingsStorage.cpp
             LN_Notification.cpp
             ../../HelperStructs/Helper.cpp
     )
-
 
     QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
@@ -43,6 +46,7 @@ if (LIBNOTIFY_FOUND)
     INSTALL(TARGETS sayonara_libnotify DESTINATION lib/sayonara)
 
 else ()
+
     MESSAGE("")
     MESSAGE("**********************************************")
     MESSAGE("*         Libnotify was not found!           *")
