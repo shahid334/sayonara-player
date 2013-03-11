@@ -109,7 +109,8 @@ Q_OBJECT
 		QString _lfm_parse_session_answer();
 		bool 	_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& xml);
 		bool 	_lfm_check_login();
-        bool    _parse_error_message(QString& response);
+        bool    _parse_error_message(QString& response, bool force=false);
+        void    _show_error_message(QString err_msg);
 
 
 		QString			_class_name;

@@ -139,25 +139,15 @@ void LastFM::lfm_login(QString username, QString password, bool should_emit){
     _username = username;
     _emit_login = should_emit;
 
-    QString session_key = _settings->getLastFMSessionKey();
+    /*QString session_key = _settings->getLastFMSessionKey();
     if(session_key.size() == 32) {
         _logged_in = true;
         _session_key = session_key;
         return;
-    }
-
-
-    _login_thread->request_authorization();
-
-
-    if(!_settings->getLastFMActive()){
-
-            //emit sig_last_fm_logged_in(false);
-    }
+    }*/
 
     _login_thread->setup_login_thread(username, password);
     _login_thread->start();
-
 }
 
 
@@ -165,16 +155,15 @@ void LastFM::_login_thread_finished(){
 
     LFMLoginStuff login_info = _login_thread->getLoginStuff();
 
+    if(login_info.logged_in){
+        login_info.logged_in = _parse_error_message(login_info.error, true);
+    }
+
     _logged_in = login_info.logged_in;
     _auth_token = login_info.token;
     _session_key = login_info.session_key;
 
-
-    qDebug() << "set last fm session key " << _session_key;
     _settings->setLastFMSessionKey(_session_key);
-
-    //qDebug() << "Logged in? " << _logged_in << ", Auth token? " << _auth_token << ", session key? " << _session_key << ", session key2? " << _session_key2;
-
 
     if(!_logged_in)
         emit sig_last_fm_logged_in(_logged_in);
@@ -515,18 +504,19 @@ bool LastFM::lfm_get_user_info(QMap<QString, QString>& userinfo){
 }
 
 
-bool LastFM::_parse_error_message(QString& response){
+bool LastFM::_parse_error_message(QString& response, bool force){
 
-
-
-    if(response.right(100).contains("failed")){
+    if(response.left(100).contains("failed")){
         QString error_msg = Helper::easy_tag_finder("lfm.error", response);
-        if(_settings->getLastFMShowErrors()) QMessageBox::warning(NULL, "Last.FM Error", error_msg);
+        if(_settings->getLastFMShowErrors() || force) _show_error_message(error_msg);
 
         return false;
     }
 
     return true;
+}
 
+void LastFM::_show_error_message(QString err_msg){
 
+    QMessageBox::warning(NULL, "Last.FM Error", err_msg);
 }

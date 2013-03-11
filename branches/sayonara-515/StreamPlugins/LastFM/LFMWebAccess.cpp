@@ -134,8 +134,8 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 }
 
 bool lfm_wa_call_post_url(const QString& url, const string& post_data){
-	QString response;
-	return lfm_wa_call_post_url(url, post_data, response);
+    QString response;
+    return lfm_wa_call_post_url(url, post_data, response);
 
 }
 
@@ -172,6 +172,43 @@ bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& 
 		qDebug() <<  "LFM: Webpage = null";
 		return false;
 	}
+}
+
+
+bool lfm_wa_call_post_url_https(const QString& url, const string& post_data, QString& response){
+    response.clear();
+
+    lfm_wa_free_webpage();
+
+    CURL* curl = curl_easy_init();
+    if(curl){
+        curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
+        curl_easy_setopt(curl, CURLOPT_POST, 1) ;
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, lfm_wa_get_answer);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
+
+    }
+    curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
+
+    lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
+    lfm_webpage[lfm_webpage_bytes] = '\0';
+
+    if(lfm_webpage_bytes > 0){
+        response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
+        lfm_wa_free_webpage();
+        return true;
+    }
+
+    else {
+        lfm_wa_free_webpage();
+        qDebug() <<  "LFM: Webpage = null";
+        return false;
+    }
 }
 
 

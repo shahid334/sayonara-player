@@ -99,10 +99,10 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrder sort){
 
 
-	if(sort == TrackArtistAsc) querytext += QString(" ORDER BY artistName ASC, albumName ASC, trackNum;");
-	else if(sort == TrackArtistDesc) querytext += QString(" ORDER BY artistName DESC, albumName ASC, trackNum;");
-	else if(sort == TrackAlbumAsc) querytext += QString(" ORDER BY albumName ASC, trackNum;");
-	else if(sort == TrackAlbumDesc) querytext += QString(" ORDER BY albumName DESC, trackNum;");
+    if(sort == TrackArtistAsc) querytext += QString(" ORDER BY artistName ASC, discnumber ASC, albumName ASC, trackNum;");
+    else if(sort == TrackArtistDesc) querytext += QString(" ORDER BY artistName DESC, discnumber ASC, albumName ASC, trackNum;");
+    else if(sort == TrackAlbumAsc) querytext += QString(" ORDER BY discnumber ASC, albumName ASC, trackNum;");
+    else if(sort == TrackAlbumDesc) querytext += QString(" ORDER BY discnumber ASC, albumName DESC, trackNum;");
 	else if(sort == TrackTitleAsc) querytext += QString(" ORDER BY trackTitle ASC;");
 	else if(sort == TrackTitleDesc) querytext += QString(" ORDER BY trackTitle DESC;");
 	else if(sort == TrackNumAsc) querytext += QString(" ORDER BY trackNum ASC;");
@@ -115,6 +115,7 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrde
 	else if(sort == TrackBitrateDesc) querytext += QString(" ORDER BY trackBitrate DESC;");
     else if(sort == TrackSizeAsc) querytext += QString(" ORDER BY filesize ASC;");
     else if(sort == TrackSizeDesc) querytext += QString(" ORDER BY filesize DESC;");
+
 	else querytext += ";";
 
 	return querytext;

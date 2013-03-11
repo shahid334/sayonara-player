@@ -105,7 +105,7 @@ public:
             radio_mode = RADIO_OFF;
             filesize = 0;
             comment = "";
-            discnumber = -1;
+            discnumber = 0;
             n_discs = -1;
 
 

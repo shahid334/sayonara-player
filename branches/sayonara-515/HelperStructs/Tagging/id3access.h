@@ -15,6 +15,15 @@
 #include <QDebug>
 
 
+#include <taglib/tag.h>
+#include <taglib/taglib.h>
+#include <taglib/fileref.h>
+#include "taglib/id3v2tag.h"
+#include "taglib/mpegfile.h"
+#include "taglib/mpegheader.h"
+
+
+
 typedef unsigned char uchar;
 typedef unsigned int uint;
 
@@ -86,6 +95,8 @@ public:
 
 bool id3_write_discnumber(FileHeader& fh, int discnumber, int n_discs=1);
 bool id3_extract_discnumber(FileHeader& fh, int* discnumber, int* n_discs);
+
+bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber);
 
 
 #endif

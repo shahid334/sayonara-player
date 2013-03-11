@@ -88,7 +88,14 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( Helper::cvtMsecs2TitleLengthString(md.length_ms)  );
 
 			 case COL_ALBUM:
-				 return QVariant(md.album);
+                 if(md.discnumber > 1){
+                     return QVariant(md.album + " (CD " + QString::number(md.discnumber) + ")");
+                 }
+
+                return QVariant(md.album);
+
+             /*case COL_DISCNUMBER:
+                return QVariant(md.discnumber);*/
 
 			 case COL_YEAR:
 				 return QVariant(md.year);
@@ -105,7 +112,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
 	 else if (role == Qt::TextAlignmentRole){
 
-          if (idx_col == COL_TRACK_NUM || idx_col == COL_BITRATE || idx_col == COL_LENGTH || idx_col == COL_YEAR || idx_col == COL_FILESIZE)
+          if (idx_col == COL_TRACK_NUM || idx_col == COL_BITRATE || idx_col == COL_LENGTH || idx_col == COL_YEAR || idx_col == COL_FILESIZE /*|| idx_col == COL_DISCNUMBER*/)
           {
               return Qt::AlignRight + Qt::AlignVCenter;
           }

@@ -3,6 +3,66 @@
 #include <QByteArray>
 #include <QDebug>
 
+#include <taglib/tag.h>
+#include <taglib/taglib.h>
+#include <taglib/fileref.h>
+#include "taglib/id3v2tag.h"
+#include "taglib/id3v2frame.h"
+#include "taglib/id3v2header.h"
+#include "taglib/mpegfile.h"
+#include "taglib/mpegheader.h"
+
+
+bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
+
+    TagLib::File* f = fh.file();
+    TagLib::MPEG::File* f_mp3;
+
+    f_mp3 = dynamic_cast<TagLib::MPEG::File*>(f);
+
+    if(!f_mp3) {
+        return false;
+    }
+
+    TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
+    if(!id3_tag){
+        return false;
+    }
+
+    QByteArray vec;
+     TagLib::ID3v2::FrameList l = id3_tag->frameListMap()["TPOS"];
+     if(!l.isEmpty()){
+         vec = QByteArray(l.front()->toString().toCString(false));
+     }
+
+     else return false;
+
+    bool slash_found = false;
+
+    for(int i=0; i<vec.size(); i++){
+
+        char c = vec[i];
+        qDebug() << (unsigned int) c;
+
+        if(c == '/') {
+            slash_found = true;
+            continue;
+        }
+
+        // Ascii: '/'=47, '0'=48, '1'... '9'=57
+        if(c >= '0' && c <= '9'){
+
+
+            if(!slash_found)
+                *discnumber = 10*(*discnumber) + (c - '0');
+        }
+    }
+
+    return true;
+
+}
+
+
 
 bool id3_write_discnumber(FileHeader& fh, int discnumber, int n_discs){
    

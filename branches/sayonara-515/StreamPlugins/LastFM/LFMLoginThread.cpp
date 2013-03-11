@@ -73,16 +73,18 @@ void LFMLoginThread::run(){
 
     UrlParams signature_data;
         signature_data["api_key"] = LFM_API_KEY;
-        signature_data["method"] = "auth.getSession";
-        signature_data["token"] = _login_info.token;
+        signature_data["method"] = "auth.getMobileSession";
+        signature_data["password"] = _password;
+        signature_data["username"] = _username;
 
 
-    QString url = lfm_wa_create_sig_url("http://ws.audioscrobbler.com/2.0/", signature_data);
+    string post_data;
+    QString url = lfm_wa_create_sig_url_post("https://ws.audioscrobbler.com/2.0/", signature_data, post_data);
     QString response;
 
     qDebug() << "url = " << url;
 
-    bool success = lfm_wa_call_url(url, response);
+    bool success = lfm_wa_call_post_url_https(url, post_data, response);
     if(!success){
         qDebug() << "get session: no success!";
         qDebug() << response;
@@ -94,11 +96,10 @@ void LFMLoginThread::run(){
 
     else {
 
-        qDebug() << "get session: success!!!";
-        qDebug() << response;
         _login_info.logged_in = true;
         _login_info.session_key = Helper::easy_tag_finder("lfm.session.key", response);
         _login_info.subscriber = (Helper::easy_tag_finder("lfm.session.subscriber", response).toInt() == 1);
+        _login_info.error = response;
     }
 }
 

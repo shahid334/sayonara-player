@@ -64,12 +64,15 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	string title = f.tag()->title().to8Bit(true);
 	string genre = f.tag()->genre().to8Bit(true);
     string comment = f.tag()->comment().to8Bit(true);
+    f.tag();
 
-    int discnumber = -1;
-    int n_discs = -1;
+    int discnumber = 0;
+    int n_discs = 0;
 
-    FileHeader fh(md.filepath);
-    id3_extract_discnumber(fh, &discnumber, &n_discs);
+    /*FileHeader fh(md.filepath);
+    id3_extract_discnumber(fh, &discnumber, &n_discs);*/
+    taglib_id3_extract_discnumber(f, &discnumber);
+    qDebug() << "Found discnumber " << discnumber;
 
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
