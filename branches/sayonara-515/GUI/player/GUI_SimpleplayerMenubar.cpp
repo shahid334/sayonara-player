@@ -108,6 +108,11 @@ void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
     emit reloadLibrary(false);
 }
 
+void GUI_SimplePlayer::clearLibraryClicked(bool b){
+	Q_UNUSED(b);
+	emit clearLibrary();
+}
+
 
 // prvt slot
 void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {

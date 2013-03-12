@@ -408,6 +408,7 @@ bool CDatabaseConnector::store_settings(){
 	store_setting(SET_PLAYER_ONE_INSTANCE, allow_only_one_instance);
 
 	_database->commit();
+	storage->set_sth_changed(false);
 	return true;
 }
 

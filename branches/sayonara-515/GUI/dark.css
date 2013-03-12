@@ -192,16 +192,18 @@ QTableView QHeaderView::section {
 }
 QTableView QHeaderView::up-arrow {
 
-	width: 10px;
-
+	width: 8px;
+	
 	image: url(/usr/share/sayonara//arrow_up.png);
+        margin-right: 2px;
 }
 
 QTableView QHeaderView::down-arrow {
 
-	width: 10px;
+	width: px;
 
 	image: url(/usr/share/sayonara//arrow_down.png);
+        margin-right: 2px;
 }
 
 

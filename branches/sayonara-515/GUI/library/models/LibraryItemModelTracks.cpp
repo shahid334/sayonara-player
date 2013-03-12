@@ -73,6 +73,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 	 if (role == Qt::DisplayRole){
 
 		 MetaData md = _tracklist.at(row);
+		 QString str_disc;
 
          switch(idx_col){
 			 case COL_TRACK_NUM:
@@ -88,14 +89,12 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( Helper::cvtMsecs2TitleLengthString(md.length_ms)  );
 
 			 case COL_ALBUM:
-                 if(md.discnumber > 1){
-                     return QVariant(md.album + " (CD " + QString::number(md.discnumber) + ")");
-                 }
-
-                return QVariant(md.album);
-
-             /*case COL_DISCNUMBER:
-                return QVariant(md.discnumber);*/
+				str_disc = QString::number(md.discnumber);
+		                if( md.discnumber > 1 && !md.album.contains(str_disc) ){
+		                     return QVariant( md.album + " (CD " + str_disc + ")" );
+                		}
+	
+        		        return QVariant(md.album);
 
 			 case COL_YEAR:
 				 return QVariant(md.year);

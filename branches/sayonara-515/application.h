@@ -87,6 +87,7 @@ private:
     Engine*                     listen;
 
     CSettingsStorage*       set;
+    SettingsThread*           _setting_thread;
     QApplication*           app;
 
     bool					_initialized;

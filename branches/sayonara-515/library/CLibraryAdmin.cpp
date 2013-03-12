@@ -198,6 +198,7 @@ void CLibraryBase::clearLibrary(){
     MetaDataList lst;
     _db->getTracksFromDatabase(lst);
     _db->deleteTracks(lst);
+    refresh();
 }
 
 void CLibraryBase::reloadLibrary(bool clear){

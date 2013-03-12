@@ -97,11 +97,23 @@ void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
     _no_album = true;
     _target_filename = target_filename;
 
-    this->ui->le_search->setText(searchstring);
-    this->ui->lab_title->setText(searchstring);
+    QString old_searchstring = ui->le_search->text();
+    ui->le_search->setText(searchstring);
+    ui->lab_title->setText(searchstring);
+
+    // searchstring is the same
+    if( !searchstring.compare(old_searchstring) ){
+
+    }
+
+    else{
+	_filelist.clear();
+	update_model();
+	this->search_button_pressed();
+    }
+
 
     this->show();
-    this->search_button_pressed();
 }
 
 
@@ -173,12 +185,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 	if(success) {
 
-        emit sig_covers_changed(_calling_class, cover_token);
-
-		_filelist.clear();
-        update_model();
-        hide();
-		close();
+		emit sig_covers_changed(_calling_class, cover_token);
 	}
 
 	else QMessageBox::warning(this, "Information", "Some error appeared when updating cover" );
@@ -187,10 +194,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 void GUI_Alternate_Covers::cancel_button_pressed(){
 
-
-	_cov_lookup->terminate_thread();
-	_filelist.clear();
-    update_model();
+    _cov_lookup->terminate_thread();
     hide();
     close();
 }
@@ -198,12 +202,14 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 
 void GUI_Alternate_Covers::search_button_pressed(){
 
-    _cur_idx = -1;
+        _cur_idx = -1;
+        _filelist.clear();
+        update_model();
 
 	if(ui->btn_search->text().compare("Stop") == 0){
 		_cov_lookup->terminate_thread();
 		ui->btn_search->setText("Search");
-        ui->pb_progress->setVisible(false);
+                ui->pb_progress->setVisible(false);
 		return;
 	}
 
@@ -266,7 +272,7 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
 
 	_cur_idx = row * _model->columnCount() + col;
 
-    update_model();
+        update_model();
 }
 
 
@@ -274,7 +280,7 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 
 	if(classname != _class_name) return;
 
-    _filelist.clear();
+        _filelist.clear();
 
 	QDir dir(_tmp_dir);
 	QStringList entrylist;
@@ -292,7 +298,7 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 	foreach (QString f, entrylist)
 		_filelist << dir.absoluteFilePath(f);
 
-    update_model();
+        update_model();
 
 	ui->pb_progress->setVisible(false);
 	ui->btn_search->setText("Search");
@@ -316,10 +322,10 @@ void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
 	entrylist = dir.entryList();
 
 	foreach (QString f, entrylist)
-		_filelist << dir.absoluteFilePath(f);
+	    _filelist << dir.absoluteFilePath(f);
 
 
-    update_model();
+        update_model();
 
 	ui->pb_progress->setTextVisible(false);
 	ui->pb_progress->setVisible(true);

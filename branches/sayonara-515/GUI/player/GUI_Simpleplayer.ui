@@ -893,6 +893,7 @@
     <addaction name="separator"/>
     <addaction name="action_ImportFolder"/>
     <addaction name="action_reloadLibrary"/>
+    <addaction name="action_clearLibrary"/>
     <addaction name="action_fetch_all_covers"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
@@ -989,7 +990,12 @@
     <string>Reload Library</string>
    </property>
   </action>
-  <action name="action_setLibPath">
+   <action name="action_clearLibrary">
+   <property name="text">
+    <string>Clear Library</string>
+   </property>
+  </action>
+ <action name="action_setLibPath">
    <property name="text">
     <string>Library Path</string>
    </property>

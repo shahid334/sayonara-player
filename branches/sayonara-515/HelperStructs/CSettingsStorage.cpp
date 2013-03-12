@@ -30,6 +30,27 @@
 #include <QDebug>
 
 
+SettingsThread::SettingsThread(){
+	_settings = CSettingsStorage::getInstance();
+	
+}
+
+SettingsThread::~SettingsThread(){}
+
+void SettingsThread::run(){
+
+	while(1){
+		usleep(5000000);
+		if(_settings->get_sth_changed()){
+			qDebug() << "Save stuff";
+			_settings->set_sth_changed(false);
+			_settings->save_all();
+		}
+	}
+
+	qDebug() << "thread finished";
+}
+
 
 CSettingsStorage * CSettingsStorage::getInstance() {
     static CSettingsStorage inst;
@@ -48,12 +69,9 @@ bool CSettingsStorage::isRunFirstTime () {
 }
 
 
-
-
 CSettingsStorage::~CSettingsStorage () {
     //is called
 }
-
 
 void CSettingsStorage::init() {
     m_dbFile = "player.db";
@@ -66,40 +84,64 @@ QString CSettingsStorage::getDBFileName () {
     return Helper::getSayonaraPath() + QDir::separator() + m_dbFile;
 }
 
+
+
+void CSettingsStorage::set_sth_changed(bool b){
+	_sth_changed = b;
+}
+
+bool CSettingsStorage::get_sth_changed(){
+	return _sth_changed;
+}
+
+void CSettingsStorage::save_all(){
+	emit sig_save_all();
+}
+
+
 QString CSettingsStorage::getVersion(){
 	return _version;
 }
 
 void CSettingsStorage::setVersion(QString version){
 	_version = version;
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getLastFMActive(){ return m_lfm_active; }
 
 void CSettingsStorage::setLastFMActive(bool b){
     m_lfm_active = b;
-    emit sig_save_all();
+    _sth_changed = true;
 }
 
 QPair<QString, QString> CSettingsStorage::getLastFMNameAndPW () { return this -> m_lastFm; }
 void CSettingsStorage::getLastFMNameAndPW (QString & name, QString & pw) {
     name= this -> m_lastFm.first;
     pw= this -> m_lastFm.second;
+    _sth_changed = true;
 }
 
 void CSettingsStorage::setLastFMNameAndPW (const QString & name,const QString & pw) {
     this -> m_lastFm.first = name;
     this -> m_lastFm.second = pw;
+    _sth_changed = true;
 }
 
-void CSettingsStorage::setLastFMCorrections(bool b){ m_lfm_corrections = b; }
+void CSettingsStorage::setLastFMCorrections(bool b){ 
+	m_lfm_corrections = b; 
+    _sth_changed = true;
+}
 
 bool CSettingsStorage::getLastFMCorrections(){return m_lfm_corrections;}
 
 bool CSettingsStorage::getLastFMShowErrors(){ return m_lfm_show_errors; }
 
 
-void CSettingsStorage::setLastFMShowErrors(bool b){ m_lfm_show_errors = b; }
+void CSettingsStorage::setLastFMShowErrors(bool b){ 
+	m_lfm_show_errors = b; 
+    _sth_changed = true;
+}
 
 
 EQ_Setting CSettingsStorage::getCustomEqualizer(){ 
@@ -109,12 +151,14 @@ EQ_Setting CSettingsStorage::getCustomEqualizer(){
 	}
 	return this->m_vec_eqSettings[m_vec_eqSettings.size()-1]; }
 void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec){vec = this->m_vec_eqSettings;}
+
 void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec){
 
 	m_vec_eqSettings.clear();
 	for(uint i=0; i<vec.size(); i++){
 		m_vec_eqSettings.push_back(vec[i]);
 	}
+    _sth_changed = true;
 }
 
 
@@ -122,23 +166,34 @@ int CSettingsStorage::getVolume(){ return m_volume; }
 void CSettingsStorage::setVolume(int vol){
     if(vol < 0 || vol > 100) return;
     m_volume = vol;
+    _sth_changed = true;
 }
 
-void CSettingsStorage::setLastEqualizer(int eq_idx){ m_last_eq = eq_idx; emit sig_save_all();}
+void CSettingsStorage::setLastEqualizer(int eq_idx){ 
+	m_last_eq = eq_idx;     
+    _sth_changed = true;
+}
+
 int CSettingsStorage::getLastEqualizer(){ return m_last_eq;}
 
 QString CSettingsStorage::getLibraryPath(){return m_library_path;}
-void CSettingsStorage::setLibraryPath(QString path){m_library_path = path;}
+void CSettingsStorage::setLibraryPath(QString path){
+	m_library_path = path;
+    _sth_changed = true;
+}
 
 QSize CSettingsStorage::getPlayerSize(){ return m_player_size; }
-void CSettingsStorage::setPlayerSize(QSize size){ m_player_size = size;}
+void CSettingsStorage::setPlayerSize(QSize size){ 
+m_player_size = size;
+    _sth_changed = true;
+}
 
 QStringList CSettingsStorage::getPlaylist(){
 	return m_playlist;
 }
 void CSettingsStorage::setPlaylist(QStringList playlist){
 	m_playlist = playlist;
-    emit sig_save(SET_PL, playlist.join(","));
+        _sth_changed = true;
 }
 
 
@@ -146,35 +201,36 @@ bool CSettingsStorage::getLoadLastTrack(){ return m_loadLastTrack; }
 
 void CSettingsStorage::setLoadLastTrack(bool b){
 	m_loadLastTrack = b;
-    emit sig_save_all();
+        _sth_changed = true;
 }
 
 bool CSettingsStorage::getLoadPlaylist(){ return m_loadPlaylist; }
 
-void CSettingsStorage::setLoadPlaylist(bool b){	m_loadPlaylist = b; }
+void CSettingsStorage::setLoadPlaylist(bool b){	m_loadPlaylist = b;     _sth_changed = true;}
 
 
 LastTrack* CSettingsStorage::getLastTrack(){ return &m_lastTrack; }
 
-void CSettingsStorage::setLastTrack(LastTrack& t){ m_lastTrack = t; }
+void CSettingsStorage::setLastTrack(LastTrack& t){ m_lastTrack = t;     _sth_changed = true;}
 
 void CSettingsStorage::updateLastTrack(){
     QString str = m_lastTrack.toString();
-    emit sig_save(SET_PL_LAST_TRACK, str);
+       _sth_changed = true;
 }
 
 
 bool CSettingsStorage::getRememberTime(){ return m_rememerTime; }
 
-void CSettingsStorage::setRememberTime(bool b){ m_rememerTime = b; }
+void CSettingsStorage::setRememberTime(bool b){ m_rememerTime = b;     _sth_changed = true;}
 
 bool CSettingsStorage::getStartPlaying(){ return m_startPlaying; }
 
-void CSettingsStorage::setStartPlaying(bool b){ m_startPlaying = b; }
+void CSettingsStorage::setStartPlaying(bool b){ m_startPlaying = b;     _sth_changed = true;}
 
 
 void CSettingsStorage::setPlaylistMode(const Playlist_Mode& plmode){
 	m_playlistmode = plmode;
+    _sth_changed = true;
 }
 
 Playlist_Mode CSettingsStorage::getPlaylistMode(){
@@ -183,7 +239,7 @@ Playlist_Mode CSettingsStorage::getPlaylistMode(){
 
 void CSettingsStorage::setPlayerStyle(int style){
 	m_style = style;
-    emit sig_save(SET_PLAYER_STYLE, m_style);
+    _sth_changed = true;
 }
 
 int CSettingsStorage::getPlayerStyle(){
@@ -192,11 +248,12 @@ int CSettingsStorage::getPlayerStyle(){
 
 void CSettingsStorage::setShowNotifications(bool active){
 	m_show_notifications = active;
-    emit sig_save_all();
+    _sth_changed = true;
 }
 
 void CSettingsStorage::setNotificationTimout(int timeout){
     m_notification_timeout = timeout;
+    _sth_changed = true;
 
 }
 
@@ -206,6 +263,7 @@ int CSettingsStorage::getNotificationTimeout(){
 
 void CSettingsStorage::setNotification(QString n){
     m_notification_name = n;
+    _sth_changed = true;
 
 }
 
@@ -219,7 +277,7 @@ bool CSettingsStorage::getShowNotification(){
 
 void CSettingsStorage::setLastFMSessionKey(QString key){
 	m_lfm_sessionKey = key;
-    emit sig_save(SET_LFM_SESSION_KEY, key);
+    _sth_changed = true;
 }
 QString CSettingsStorage::getLastFMSessionKey(){
 	return m_lfm_sessionKey;
@@ -227,7 +285,7 @@ QString CSettingsStorage::getLastFMSessionKey(){
 
 void CSettingsStorage::setShowLibrary(bool b){
 	m_show_library = b;
-    emit sig_save(SET_LIB_SHOW, b);
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getShowLibrary(){
@@ -236,6 +294,7 @@ bool CSettingsStorage::getShowLibrary(){
 
 void CSettingsStorage::setShownPlugin(QString plugin){
     m_shown_plugin = plugin;
+    _sth_changed = true;
 }
 
 QString CSettingsStorage::getShownPlugin(){
@@ -244,7 +303,7 @@ QString CSettingsStorage::getShownPlugin(){
 
 void CSettingsStorage::setMinimizeToTray(bool b){
 	m_minimize_to_tray = b;
-    emit sig_save(SET_PLAYER_MIN_2_TRAY, b);
+    _sth_changed = true;
 }
 bool CSettingsStorage::getMinimizeToTray(){
 	return m_minimize_to_tray;
@@ -256,7 +315,7 @@ bool CSettingsStorage::getShowSmallPlaylist(){
 
 void CSettingsStorage::setShowSmallPlaylist(bool b){
 	m_show_small_playlist = b;
-    emit sig_save(SET_PL_SMALL_ITEMS, b);
+    _sth_changed = true;
 }
 
 QString CSettingsStorage::getSoundEngine(){
@@ -265,6 +324,7 @@ QString CSettingsStorage::getSoundEngine(){
 
 void CSettingsStorage::setSoundEngine(QString engine){
 	m_sound_engine = engine;
+    _sth_changed = true;
 
 }
 
@@ -274,7 +334,7 @@ bool CSettingsStorage::getStreamRipper(){
 
 void CSettingsStorage::setStreamRipper(bool b){
 	m_streamripper = b;
-    emit sig_save_all();
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getStreamRipperWarning(){
@@ -283,6 +343,7 @@ bool CSettingsStorage::getStreamRipperWarning(){
 
 void CSettingsStorage::setStreamRipperWarning(bool b){
 	m_streamripper_warning = b;
+    _sth_changed = true;
 }
 
 QString CSettingsStorage::getStreamRipperPath(){
@@ -291,6 +352,7 @@ QString CSettingsStorage::getStreamRipperPath(){
 
 void CSettingsStorage::setStreamRipperPath(QString path){
 	m_streamripper_path = path;
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getStreamRipperCompleteTracks(){
@@ -299,6 +361,7 @@ bool CSettingsStorage::getStreamRipperCompleteTracks(){
 
 void CSettingsStorage::setStreamRipperCompleteTracks(bool b){
 	m_streamripper_complete_tracks = b;
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getStreamRipperSessionPath(){
@@ -307,6 +370,7 @@ bool CSettingsStorage::getStreamRipperSessionPath(){
 
 void CSettingsStorage::setStreamRipperSessionPath(bool b){
     m_streamripper_session_path = b;
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getSocketActivated(){
@@ -314,7 +378,7 @@ bool CSettingsStorage::getSocketActivated(){
 }
 void CSettingsStorage::setSocketActivated(bool b){
 	m_socket_activated = b;
-    emit sig_save_all();
+    _sth_changed = true;
 }
 
 int CSettingsStorage::getSocketFrom(){
@@ -322,6 +386,7 @@ int CSettingsStorage::getSocketFrom(){
 }
 void CSettingsStorage::setSocketFrom(int val){
 	m_socket_from = val;
+    _sth_changed = true;
 }
 
 int CSettingsStorage::getSocketTo(){
@@ -330,6 +395,7 @@ int CSettingsStorage::getSocketTo(){
 
 void CSettingsStorage::setSocketTo(int val){
 	m_socket_to = val;
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getPlaylistNumbers(){
@@ -338,6 +404,7 @@ bool CSettingsStorage::getPlaylistNumbers(){
 
 void CSettingsStorage::setPlaylistNumbers(bool b){
 	m_show_playlist_numbers = b;
+    _sth_changed = true;
 }
 
 
@@ -347,14 +414,13 @@ bool CSettingsStorage::getAllowOnlyOneInstance(){
 
 void CSettingsStorage::setAllowOnlyOneInstance(bool b){
 	m_allow_only_one_instance = b;
-	CDatabaseConnector::getInstance()->store_settings();
-    emit sig_save(SET_PLAYER_ONE_INSTANCE, b);
+    _sth_changed = true;
 }
 
 
 void CSettingsStorage::setLibShownColsTitle(QStringList lst){
     m_lib_shown_cols_title = lst;
-    emit sig_save(SET_LIB_SHOWN_COLS_TITLE, lst.join(","));
+    _sth_changed = true;
 }
 
 QStringList CSettingsStorage::getLibShownColsTitle(){
@@ -363,7 +429,7 @@ QStringList CSettingsStorage::getLibShownColsTitle(){
 
 void CSettingsStorage::setLibShownColsAlbum(QStringList lst){
     m_lib_shown_cols_album = lst;
-    emit sig_save(SET_LIB_SHOWN_COLS_ALBUM, lst.join(","));
+    _sth_changed = true;
 }
 QStringList CSettingsStorage::getLibShownColsAlbum(){
     return m_lib_shown_cols_album;
@@ -371,7 +437,7 @@ QStringList CSettingsStorage::getLibShownColsAlbum(){
 
 void CSettingsStorage::setLibShownColsArtist(QStringList lst){
     m_lib_shown_cols_artist = lst;
-    emit sig_save(SET_LIB_SHOWN_COLS_ARTIST, lst.join(","));
+    _sth_changed = true;
 }
 
 QStringList CSettingsStorage::getLibShownColsArtist(){
@@ -381,10 +447,15 @@ QStringList CSettingsStorage::getLibShownColsArtist(){
 
 void CSettingsStorage::setLibShowOnlyTracks(bool only_tracks){
 	m_show_only_tracks = only_tracks;
-    emit sig_save(SET_LIB_SHOWN_ONLY_TRACKS, only_tracks);
+    _sth_changed = true;
 }
 
 bool CSettingsStorage::getLibShowOnlyTracks(){
 	return m_show_only_tracks;
 
 }
+
+
+
+
+

@@ -104,6 +104,7 @@ signals:
     void baseDirSelected (const QString & baseDir);
     void importDirectory(QString);
     void reloadLibrary(bool clear);
+    void clearLibrary();
 
     /* Preferences / View */
     void show_playlists();
@@ -144,6 +145,7 @@ private slots:
     void fileSelectedClicked(bool);
     void folderSelectedClicked(bool);
     void reloadLibraryClicked(bool b = true);
+    void clearLibraryClicked(bool b = true);
     void importFolderClicked(bool b = true);
 
     /* View */

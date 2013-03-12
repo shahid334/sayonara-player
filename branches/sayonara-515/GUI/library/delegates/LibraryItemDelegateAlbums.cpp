@@ -106,7 +106,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             int year = _model->data(index, Qt::WhatsThisRole).toInt();
 
             QString year_str = QString::number(year);
-            if(year == 0) year_str = "Unknown";
+            if(year == 0) year_str = "None";
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, year_str);
 
         }

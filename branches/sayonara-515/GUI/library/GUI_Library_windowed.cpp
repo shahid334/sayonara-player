@@ -103,7 +103,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     ColumnHeader t_h3("Album", true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0.3, 160);
     ColumnHeader t_h4("D#", true, Sort::TrackDiscnumberAsc, Sort::TrackDiscnumberDesc, 25);
     ColumnHeader t_h5("Year", true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
-    ColumnHeader t_h6("Length", true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
+    ColumnHeader t_h6("Dur", true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
     ColumnHeader t_h7("Bitrate", true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
     ColumnHeader t_h8("Filesize", true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
 
@@ -111,7 +111,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     ColumnHeader al_h1("Album", false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 1.0, 160);
     ColumnHeader al_h2("Duration", true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
     ColumnHeader al_h3("#Tracks", true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
-    ColumnHeader al_h4("Year", true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 70);
+    ColumnHeader al_h4("Year", true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 50);
 
     ColumnHeader ar_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
     ColumnHeader ar_h1("Artist", false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 1.0, 160 );
