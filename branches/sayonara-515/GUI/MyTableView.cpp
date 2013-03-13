@@ -68,11 +68,17 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 
 	rc_menu_init();
 
+    _corner_widget = new QWidget(this);
+    _corner_widget->hide();
+
+
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
 }
 
 MyTableView::~MyTableView() {
     delete _rc_menu;
+    delete _corner_widget;
+    delete _edit;
 }
 
 
@@ -502,6 +508,8 @@ void MyTableView::set_col_sizes(){
 
 		this->setColumnWidth(i, preferred_size);
 	}
+
+    calc_corner_widget();
 }
 
 
@@ -531,6 +539,9 @@ void MyTableView::fill_metadata(const MetaDataList& v_md){
 
     sm->clearSelection();
     sm->select(sel,QItemSelectionModel::Select);
+
+    calc_corner_widget();
+
 }
 
 void MyTableView::fill_albums(const AlbumList& albums){
@@ -569,6 +580,8 @@ void MyTableView::fill_albums(const AlbumList& albums){
 
     if(first_selected_album_row >= 0)
         this->scrollTo(_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
+
+    calc_corner_widget();
 }
 
 
@@ -607,6 +620,37 @@ void MyTableView::fill_artists(const ArtistList& artists){
 
     if(first_selected_artist_row >= 0)
         this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
+
+   calc_corner_widget();
 }
 
+
+void MyTableView::calc_corner_widget(){
+
+
+    if(!this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()){
+        this->setCornerWidget(NULL);
+        _corner_widget->hide();
+        return;
+    }
+
+    if(!this->cornerWidget()){
+        this->setCornerWidget(_corner_widget);
+        _corner_widget->show();
+
+    }
+
+
+    QPalette palette = _parent->palette();
+    QColor bg = palette.color(QPalette::Normal, QPalette::Window);
+    this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
+
+}
+
+
+void MyTableView::resizeEvent(QResizeEvent* event){
+    event->ignore();
+    QTableView::resizeEvent(event);
+    calc_corner_widget();
+}
 

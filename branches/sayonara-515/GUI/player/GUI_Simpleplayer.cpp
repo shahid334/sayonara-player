@@ -503,6 +503,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	else 		m_skinSuffix = QString("");
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
+    this->m_trayIcon->change_skin(stylesheet);
 
     setupVolButton(ui->volumeSlider->value());
     emit sig_skin_changed(dark);
@@ -515,6 +516,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 
 
 	m_trayIcon = new GUI_TrayIcon(this);
+
 
     connect(m_trayIcon, SIGNAL(sig_stop_clicked()), this, SLOT(stopClicked()));
     connect(m_trayIcon, SIGNAL(sig_bwd_clicked()), this, SLOT(backwardClicked()));
@@ -530,6 +532,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)),
    			this, 		SLOT(volumeChangedByTick(int)));
+
 
     m_trayIcon->setPlaying(false);
 

@@ -154,6 +154,7 @@ SET(ICONS
         icons/vol_3.png
         icons/vol_3_dark.png
         icons/vol_mute.png
+	icons/vol_mute_dark.png
         icons/gui.jpg
         icons/play_small.png
         icons/lastfm_logo.jpg

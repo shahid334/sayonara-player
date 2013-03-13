@@ -178,6 +178,8 @@ void GUI_SimplePlayer::volumeChangedByTick(int val) {
         if (currentVolume_perc < ui->volumeSlider->maximum() - vol_step) {
             currentVolume_perc += vol_step;
         }
+
+        else currentVolumeOrig_perc = 100;
     }
 
     else if (val < 0) {
@@ -185,6 +187,8 @@ void GUI_SimplePlayer::volumeChangedByTick(int val) {
         if (currentVolume_perc > ui->volumeSlider->minimum() + vol_step) {
             currentVolume_perc -= vol_step;
         }
+
+        else currentVolume_perc = 0;
     }
 
 
@@ -200,7 +204,7 @@ void GUI_SimplePlayer::setupVolButton(int percent) {
 	QString butFilename = Helper::getIconPath() + "vol_";
 
     if (percent <= 1) {
-        butFilename += QString("mute") + ".png";
+        butFilename += QString("mute") + m_skinSuffix + ".png";
 	}
 
 	else if (percent < 40) {

@@ -87,6 +87,7 @@ class MyTableView : public QTableView{
 	private:
         void rc_menu_init();
         void reset_edit();
+        void calc_corner_widget();
 
 
 	public:
@@ -115,10 +116,12 @@ class MyTableView : public QTableView{
 		void mouseReleaseEvent(QMouseEvent* event);
 		void mouseMoveEvent(QMouseEvent* event);
         void keyPressEvent(QKeyEvent* event);
+        void resizeEvent(QResizeEvent* event);
 
 
 	private:
 		QWidget* 			_parent;
+        QWidget*            _corner_widget;
 		bool				_drag;
 		QPoint				_drag_pos;
 		QDrag*				_qDrag;
