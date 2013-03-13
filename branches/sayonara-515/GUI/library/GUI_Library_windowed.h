@@ -33,8 +33,10 @@
 #include <QWidget>
 #include <QAbstractTableModel>
 #include <QPoint>
+#include <QTimer>
 
 #include "GUI/ui_GUI_Library_windowed.h"
+#include "GUI/library/DiscPopupMenu.h"
 #include "GUI/library/models/LibraryItemModelTracks.h"
 #include "GUI/library/models/LibraryItemModelArtists.h"
 #include "GUI/library/models/LibraryItemModelAlbums.h"
@@ -81,6 +83,7 @@ private:
 	LibraryItemDelegateAlbums* 		_album_delegate;
 	LibraryItemModelArtists* 		_artist_model;
 	LibraryItemDelegateArtists* 	_artist_delegate;
+	
 
 
     QMenu*      _header_rc_menu_title;
@@ -101,6 +104,7 @@ signals:
 	void sig_artist_pressed(const QList<int>&);
 	void sig_album_pressed(const QList<int>&);
 	void sig_track_pressed(const QList<int>&);
+	void sig_disc_pressed(int);
 
 	void sig_delete_tracks(int);
 	void sig_delete_certain_tracks(const QList<int>&, int);
@@ -133,6 +137,7 @@ private slots:
     void artist_pressed(const QModelIndex & = QModelIndex());
     void artist_released(const QModelIndex & = QModelIndex());
     void album_pressed(const QModelIndex & = QModelIndex());
+    void disc_pressed(int);
     void album_released(const QModelIndex & = QModelIndex());
     void track_pressed(const QModelIndex& = QModelIndex());
     void track_released(const QModelIndex & = QModelIndex());
@@ -174,6 +179,9 @@ private slots:
     void columns_album_changed(QStringList&);
     void columns_artist_changed(QStringList&);
 
+    void timer_timed_out();
+    void delete_menu();
+
 
 protected:
 	void resizeEvent(QResizeEvent* e);
@@ -193,6 +201,8 @@ private:
 	GUI_Library_Info_Box* _lib_info_dialog;
 
 	MetaDataList _v_md_tmp;
+	QTimer* _timer;
+	DiscPopupMenu* _discmenu;
 
 
 	int show_delete_dialog(int n_tracks);

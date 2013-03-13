@@ -62,6 +62,7 @@ public:
     virtual int	getFirstRowOf(QString substr);
 
     virtual void set_selected(QList<int>& rows);
+    QList<int> get_discnumbers(const QModelIndex& idx);
 
 private:
 	QList<Album> 			_album_list;

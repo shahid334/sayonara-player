@@ -111,7 +111,6 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
                      return album.year;
                  case COL_ALBUM_NAME:
                      return album.name;
-
                  case COL_ALBUM_DURATION:
                     return Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000, true, false);
 
@@ -187,4 +186,9 @@ void  LibraryItemModelAlbums::set_selected(QList<int>& rows){
     for(int i=0; i<_album_list.size(); i++){
         _album_list[i].is_lib_selected = rows.contains(i);
     }
+}
+
+
+QList<int> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx){
+	return _album_list[idx.row()].discnumbers;
 }

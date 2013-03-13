@@ -47,6 +47,9 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
+#define VIEW_MODE_METADATA 0
+#define VIEW_MODE_ALBUMS 1
+#define VIEW_MODE_ARTISTS 2
 
 bool _is_alphanumeric(int key){
 
@@ -70,6 +73,8 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
+
+    _view_mode = -1;
 
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
@@ -97,21 +102,21 @@ void MyTableView::mousePressEvent(QMouseEvent* event){
 
 	switch(event->button()){
 		case Qt::LeftButton:
-
-            if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
-                event->ignore();
+                        if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
+	                	event->ignore();
 				_drag = false;
+				QList<int> lst;
+				_model->set_selected(lst);
 				break;
 			}
 
 			else {
-                 QTableView::mousePressEvent(event);
 
-				_drag_pos = event->pos();
+        			QTableView::mousePressEvent(event);
+				_drag_pos = pos_org;
 				_drag = true;
+//				emit sig_pressed(pos, indexAt(pos));
 			}
-
-
 
 			break;
 
@@ -146,7 +151,8 @@ reset_edit();
 	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
 	if (_drag && _qDrag && distance > 20) {
-        _qDrag->exec(Qt::CopyAction);
+	    emit sig_drag_started();
+            _qDrag->exec(Qt::CopyAction);
 	}
 
 }
@@ -515,6 +521,8 @@ void MyTableView::set_col_sizes(){
 
 void MyTableView::fill_metadata(const MetaDataList& v_md){
 
+    _view_mode = VIEW_MODE_METADATA;
+
     QList<int> lst;
     _model->set_selected(lst);
 
@@ -545,6 +553,8 @@ void MyTableView::fill_metadata(const MetaDataList& v_md){
 }
 
 void MyTableView::fill_albums(const AlbumList& albums){
+
+    _view_mode = VIEW_MODE_ALBUMS;
 
     QList<int> lst;
     _model->set_selected(lst);
@@ -586,6 +596,8 @@ void MyTableView::fill_albums(const AlbumList& albums){
 
 
 void MyTableView::fill_artists(const ArtistList& artists){
+
+    _view_mode = VIEW_MODE_ARTISTS;
     QList<int> lst;
     _model->set_selected(lst);
 

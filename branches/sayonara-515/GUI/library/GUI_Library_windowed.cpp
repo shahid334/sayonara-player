@@ -57,6 +57,8 @@
 #include "HelperStructs/Style.h"
 
 #include <QList>
+#include <QTimer>
+#include <QCursor>
 #include <QDebug>
 #include <QPoint>
 #include <QMouseEvent>
@@ -155,11 +157,16 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->ui->lv_album->set_table_headers(album_columns);
     this->ui->lv_album->rc_header_menu_init(_shown_cols_albums);
 
+	_discmenu = 0;
+	_timer = new QTimer(this);
+
+	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
+
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(sig_all_selected()), this, SLOT(album_pressed()));
     connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
-    connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
+    connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_released(const QModelIndex & )));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
     connect(this->ui->lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
     connect(this->ui->lv_album, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_album_changed(QStringList&)));
@@ -167,6 +174,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_album, SIGNAL(sig_info_clicked()), this, SLOT(info_album()));
     connect(this->ui->lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
     connect(this->ui->lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
+    connect(this->ui->lv_album, SIGNAL(sig_drag_started()), this, SLOT(delete_menu()));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
     connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
@@ -192,6 +200,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_artist, SIGNAL(sig_info_clicked()), this, SLOT(info_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
+
+    
 
     this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
     this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
@@ -310,17 +320,35 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
 
 
+void GUI_Library_windowed::disc_pressed(int disc){
+	qDebug() << "disc pressed";
+	emit sig_disc_pressed(disc);
+}
+
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
-this->_info_dialog->set_tag_edit_visible(true);
+    _info_dialog->set_tag_edit_visible(true);
     QList<int> idx_list_int;
     idx_list_int = ui->lv_album->calc_selections();
 
+//    QList<int> discnumbers = _album_model->get_discnumbers(idx);
+	QList<int> discnumbers;
+	discnumbers << 1 << 2 << 3 << 4;
+    if(discnumbers.size() > 1 && idx_list_int.size() == 1 ){
+	delete_menu();
+	_discmenu = new DiscPopupMenu(ui->lv_album, discnumbers);
+	
+	connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
+	_timer->start(300);
+    } 
+    
     emit sig_album_pressed(idx_list_int);
 }
 
 
 void GUI_Library_windowed::album_released(const QModelIndex& idx){
     album_pressed(idx);
+    delete_menu();
+    
 }
 
 
@@ -635,3 +663,24 @@ void GUI_Library_windowed::import_result(bool success){
 	library_changed();
 }
 
+void GUI_Library_windowed::delete_menu(){
+	if(!_discmenu)return;
+	
+	_discmenu->hide();
+	_discmenu->close();
+		
+    	disconnect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
+	delete _discmenu;
+	_discmenu = 0;
+	
+}
+
+void GUI_Library_windowed::timer_timed_out(){
+	_timer->stop();
+	if(!_discmenu) return;
+
+	QPoint p = QCursor::pos();
+	_discmenu->popup(p);
+	
+	
+}

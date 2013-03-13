@@ -204,10 +204,20 @@ int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOr
     return 0;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort){
+void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort, int discnumber){
 	QList<int> list;
+	MetaDataList mdlist;
 	list << album;
-	getAllTracksByAlbum(list, returndata, filter, sort);
+	returndata.clear();
+
+	getAllTracksByAlbum(list, mdlist, filter, sort);
+	
+	if(discnumber < 0) returndata = mdlist;
+	
+	foreach(MetaData md, mdlist){
+		if(discnumber != md.discnumber) continue;
+		returndata.push_back(md);
+	}
 }
 
 void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort){

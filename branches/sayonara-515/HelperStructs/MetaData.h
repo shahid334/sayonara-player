@@ -320,10 +320,11 @@ struct Album{
 	qint32 	length_sec;
 	qint32	year;
 	QStringList artists;
-    int discnumber;
-    int n_discs;
+	QList<int> discnumbers;
+        int n_discs;
+	bool is_splitted;
 	bool is_sampler;
-    bool is_lib_selected;
+        bool is_lib_selected;
 
 
 	Album(){
@@ -332,10 +333,10 @@ struct Album{
 		num_songs = 0;
 		length_sec = 0;
 		year = 0;
-        discnumber = -1;
-        n_discs = -1;
+        	n_discs = 1;
+		is_splitted = false;
 		is_sampler = false;
-        is_lib_selected = false;
+	        is_lib_selected = false;
 	}
 
     QVariant toVariant(){
@@ -345,7 +346,7 @@ struct Album{
 
 		list.push_back(tmpName);
 		if(artists.size() > 0){
-            list.push_back(artists.join(","));
+ 	        list.push_back(artists.join(","));
 		}
 		else list.push_back("");
 
@@ -353,42 +354,52 @@ struct Album{
 		list.push_back(QString::number(id));
 		list.push_back(QString::number(num_songs));
 		list.push_back(QString::number(length_sec));
-        list.push_back(QString::number(year));
-        list.push_back(QString::number(discnumber));
-        list.push_back(QString::number(n_discs));
+	list.push_back(QString::number(year));
 
-
-        if(is_sampler){
-			list.push_back("sampler");
-		}
-		else{
-			list.push_back("no_sampler");
-		}
-
-        list.push_back((is_lib_selected ? "1" : "0"));
-
-		return list;
+	QStringList strl_discnumbers;
+	foreach(int disc, discnumbers){
+		strl_discnumbers << QString::number(disc);
 	}
+	list.push_back(strl_discnumbers.join(","));
+
+	list.push_back(QString::number(n_discs));
+	list.push_back( (is_splitted == true) ? "1" : "0" ); 
+	list.push_back( (is_sampler == true) ? "1" : "0" );
+        list.push_back( (is_lib_selected == true) ? "1" : "0" ) ;
+        
+
+
+	return list;
+    }
 
 
     void fromVariant(const QVariant& v){
         QStringList list = v.toStringList();
-        if(list.size() < 10) return;
+        if(list.size() < 11) return;
 
-        name =      list.at(0);
-		QString tmp_artists = list.at(1);
+
+        name =      list[0];
+		QString tmp_artists = list[1];
 		QStringList tmp_list = tmp_artists.split(',');
         artists =       tmp_list;
-        id =            list.at(2).toInt();
-        num_songs =     list.at(3).toInt();
-        length_sec =    list.at(4).toLong();
-        year =          list.at(5).toInt();
-        discnumber =    list.at(6).toInt();
-        n_discs =       list.at(7).toInt();
+        id =            list[2].toInt();
+        num_songs =     list[3].toInt();
+        length_sec =    list[4].toLong();
+        year =          list[5].toInt();
+	
+	QStringList strl_discnumbers = list[6].split(',');
+	discnumbers.clear();
+	foreach(QString disc, strl_discnumbers){
+		discnumbers << disc.toInt();
+	}	
 
-        is_sampler =    (list.at(8) == "sampler");
-        is_lib_selected = ((list[9] == "1") ? true : false);
-	}
+        n_discs =       list[7].toInt();
+	is_splitted = (list[8] == "1");
+
+        is_sampler =    (list[9] == "1");
+        is_lib_selected = (list[10] == "1");
+    }
+	
 };
 
 

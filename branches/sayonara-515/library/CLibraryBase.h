@@ -84,6 +84,7 @@ public slots:
 /* New way */
     void psl_selected_artists_changed(const QList<int>&);
     void psl_selected_albums_changed(const QList<int>&);
+    void psl_disc_pressed(int);
     void psl_selected_tracks_changed(const QList<int>&);
 
     void psl_prepare_album_for_playlist();

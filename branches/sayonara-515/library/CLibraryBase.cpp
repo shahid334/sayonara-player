@@ -254,7 +254,22 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
     emit sig_all_tracks_loaded(_vec_md);
 }
 
+void CLibraryBase::psl_disc_pressed(int disc){
+	
+	if( _selected_albums.size() == 0 ||
+            _selected_albums.size() > 1 ||
+	    disc < 0 ) return;
 
+	MetaDataList v_metadata;
+	foreach(MetaData md, _vec_md){
+		if(md.discnumber != disc) continue;
+		v_metadata.push_back(md);
+	}
+
+	_vec_md = v_metadata;
+
+	emit sig_all_tracks_loaded(_vec_md);
+}
 
 void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 

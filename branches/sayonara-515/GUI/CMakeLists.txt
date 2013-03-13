@@ -36,6 +36,7 @@ SET(HEADERS
     library/delegates/LibraryItemDelegateArtists.h
     library/InfoBox/GUILibraryInfoBox.h
     library/ImportFolderDialog/GUIImportFolder.h
+    library/DiscPopupMenu.h
     alternate_covers/AlternateCoverItemDelegate.h
     alternate_covers/AlternateCoverItemModel.h
     alternate_covers/GUI_Alternate_Covers.h

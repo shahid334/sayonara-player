@@ -40,7 +40,8 @@ using namespace Sort;
 			"SUM(tracks.length) / 1000 AS albumLength, " + \
 			"COUNT(tracks.trackid) AS albumNTracks, " + \
 			"MAX(tracks.year) AS albumYear, " + \
-			"group_concat(artists.name) AS albumArtists " + \
+			"group_concat(artists.name) AS albumArtists, " + \
+			"group_concat(tracks.discnumber) AS discnumbers " + \
 			"FROM albums, artists, tracks "
 
 bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
@@ -63,6 +64,20 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 				QStringList artistList = q.value(5).toString().split(',');
 				artistList.removeDuplicates();
 				album.artists = artistList;
+
+				QStringList discnumberList = q.value(6).toString().split(',');
+				album.discnumbers.clear();
+				foreach(QString disc, discnumberList){
+					int d = disc.toInt();
+					if(album.discnumbers.contains(d)) continue;
+					
+					album.discnumbers << d;
+				}
+
+				if(album.discnumbers.size() == 0)
+					album.discnumbers << 1;
+				album.n_discs = album.discnumbers.size();
+
 				album.is_sampler = (artistList.size() > 1);
 
 				result.push_back(album);

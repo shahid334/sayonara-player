@@ -51,8 +51,6 @@
 #include "HelperStructs/globals.h"
 
 
-
-
 class MyTableView : public QTableView{
 
 	Q_OBJECT
@@ -69,6 +67,8 @@ class MyTableView : public QTableView{
         void sig_play_next_clicked();
 
         void sig_sortorder_changed(Sort::SortOrder);
+	void sig_pressed(QPoint&, const QModelIndex&);
+	void sig_drag_started();
 
     private slots:
         void rc_header_menu_changed(bool b=true);
@@ -139,6 +139,7 @@ class MyTableView : public QTableView{
 		LibraryItemModel* 	_model;
 		Sort::SortOrder		_sort_order;
 		CustomMimeData*		_mimedata;
+		int			_view_mode;
 
 };
 
