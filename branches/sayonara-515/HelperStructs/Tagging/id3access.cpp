@@ -1,6 +1,7 @@
 #include "HelperStructs/Tagging/id3access.h"
 
 #include <QByteArray>
+#include <QStringList>
 #include <QDebug>
 
 #include <taglib/tag.h>
@@ -11,7 +12,18 @@
 #include "taglib/id3v2header.h"
 #include "taglib/mpegfile.h"
 #include "taglib/mpegheader.h"
+#include "taglib/tmap.h"
 
+
+char* taglist[] = {
+    "AENC", "APIC", "COMM", "COMR", "ENCR", "EQUA", "ETCO", "GEOB", "GRID", "IPLS", "LINK", "MCDI",
+    "MLLT", "OWNE", "PRIV", "PCNT", "POPM", "POSS", "RBUF", "RVAD", "RVRB", "SYLT", "SYTC", "TALB",
+    "TBPM", "TCOM", "TCON", "TCOP", "TDAT", "TDLY", "TENC", "TEXT", "TFLT", "TIME", "TIT1", "TIT2",
+    "TIT3", "TKEY", "TLAN", "TLEN", "TMED", "TOAL", "TOFN", "TOLY", "TOPE", "TORY", "TOWN", "TPE1",
+    "TPE2", "TPE3", "TPE4", "TPOS", "TPUB", "TRCK", "TRDA", "TRSN", "TRSO", "TSIZ", "TSRC", "TSSE",
+    "TYER", "TXXX", "UFID", "USER", "USLT", "WCOM", "WCOP", "WOAF", "WOAR", "WOAS", "WORS", "WPAY",
+    "WPUB", "WXXX", "TDRC", NULL
+};
 
 bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
 
@@ -21,21 +33,31 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     f_mp3 = dynamic_cast<TagLib::MPEG::File*>(f);
 
     if(!f_mp3) {
+        qDebug() << "Tagging: no mp3 header";
         return false;
     }
 
     TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
     if(!id3_tag){
+        qDebug() << "Tagging: no valid id3 tag";
         return false;
     }
 
     QByteArray vec;
-     TagLib::ID3v2::FrameList l = id3_tag->frameListMap()["TPOS"];
+    TagLib::ID3v2::FrameListMap map = id3_tag->frameListMap();
+     TagLib::ID3v2::FrameList l = map["TPOS"];
      if(!l.isEmpty()){
+         qDebug() << "Tagging: list is not empty";
          vec = QByteArray(l.front()->toString().toCString(false));
      }
 
-     else return false;
+     else {
+         for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++){
+             qDebug() << QString(it->first.data());
+         }
+         qDebug() << "Tagging: list is empty";
+         return false;
+     }
 
     bool slash_found = false;
 
@@ -51,7 +73,6 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
 
         // Ascii: '/'=47, '0'=48, '1'... '9'=57
         if(c >= '0' && c <= '9'){
-
 
             if(!slash_found)
                 *discnumber = 10*(*discnumber) + (c - '0');
@@ -70,13 +91,10 @@ bool id3_write_discnumber(FileHeader& fh, int discnumber, int n_discs){
    if(n_discs == -1) n_discs = 1;
 
 
-   char c_new_frame[] = {'T', 'P', 'O', 'S',
-               0, 0, 0, 0x05,
-               0, 0,
-               0x03, discnumber + '0', '/', n_discs + '0', 0x00 };
+   char c_new_frame[] = { 0x03, discnumber + '0', '/', n_discs + '0', 0x00 };
 
-   QByteArray arr(c_new_frame, 15);
-   fh.write(arr);
+   QByteArray arr(c_new_frame, 5);
+   fh.fh_set_frame_content("TPOS", arr);
    fh.commit();
 
    return true;
@@ -156,12 +174,11 @@ void stretch_file(QFile* f, long offset, int n_bytes){
 
 
 
+
 FileHeader::FileHeader(QString filename){
 
     header_size = 0;
     org_size = 0;
-    empty_space_begins = 0;
-    empty_space_len = 0;
 
     valid = fh_open_and_read_file(filename);
 }
@@ -172,37 +189,9 @@ bool FileHeader::is_valid(){
 
 
 
-// input: entire vector, with header, size, flags, content
-// output: content
-QByteArray FileHeader::fh_get_frame_content(const QByteArray& vec){
-
-    QByteArray result;
-    int len_content = fh_get_frame_content_size(vec) + 10;
-    if(len_content > vec.size()) return result;
-
-    for(int i=10; i<len_content; i++)
-        result.push_back(vec[i]);
-
-    return result;
-}
 
 
-// input: entire vector, with header, size, flags, content
-// output: of size of content
-int FileHeader::fh_get_frame_content_size(const QByteArray& vec){
 
-    if(vec.size() < 8) return 0;
-
-    int size = 0;
-    int multiplier = 1;
-    for(int i=7; i>=4; i--){
-
-            size += (vec[i] * multiplier);
-            multiplier *= 256;
-    }
-
-    return size;
-}
 
 void FileHeader::fh_update_size(){
 
@@ -229,13 +218,13 @@ void FileHeader::fh_update_size(){
 }
 
 
-qint64 FileHeader::fh_read_header_size(const QByteArray& header_10_bytes){
+qint64 FileHeader::fh_read_header_size(const QByteArray& ten){
 
     qint64 headersize = 0;
     int multiplier = 1;
 
     for(int i=9; i>=6; i--){
-            headersize += (header_10_bytes[i] * multiplier);
+            headersize += (ten[i] * multiplier);
             multiplier *= 128;
     }
 
@@ -244,65 +233,75 @@ qint64 FileHeader::fh_read_header_size(const QByteArray& header_10_bytes){
 
 
 // input: entire vector, with header, size, flags, content
-// ountput: same, but modified
-QByteArray FileHeader::fh_set_frame_content_size(const QByteArray& vec, uint new_size){
+// ountput: only size str
+QByteArray FileHeader::fh_calc_frame_content_size_int_to_byte(uint new_size){
 
-    if(vec.size() < 8) return vec;
-    QByteArray result = vec;
+    char c_new_size[4];
 
-    char arr[4];
-    arr[3] = new_size;
-    arr[2] = new_size >> 8;
-    arr[1] = new_size >> 16;
-    arr[0] = new_size >> 24;
+    c_new_size[0] = new_size >> 21; c_new_size[0] &= 0x7F;
+    c_new_size[1] = new_size >> 14; c_new_size[1] &= 0x7F;
+    c_new_size[2] = new_size >> 7; c_new_size[2] &= 0x7F;
+    c_new_size[3] = new_size; c_new_size[3] &= 0x7F;
 
-
-    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
-        raw_data.replace(4, 4, arr, 4);
-    #else
-    	QByteArray ba(arr, 4);    
-	raw_data.replace(4, 4, ba);
-    #endif
+    return QByteArray(c_new_size, 4);
+}
 
 
-    return result;
+// input: entire vector, with header, size, flags, content
+// output: of size of content
+int FileHeader::fh_calc_frame_content_size_byte_to_int(const QByteArray& ten){
+
+    if(ten.size() < 10) return 0;
+
+    int size = 0;
+    int multiplier = 1;
+    for(int i=7; i>=4; i--){
+
+            size += (ten[i] * multiplier);
+            multiplier *= 128;
+    }
+
+    return size;
 }
 
 
 // input: entire vector, with header, size, flags, content
 // output: same, but modified
-QByteArray FileHeader::fh_set_frame_content(const QByteArray& vec_org, const QByteArray& data){
+void FileHeader::fh_set_frame_content(const QByteArray& four, const QByteArray& data_wo_header){
 
-    QByteArray result = vec_org;
-    result = fh_set_frame_content_size(vec_org, data.size());
-    result = result.left(10);
-    result.append(data);
+    QByteArray result = four;
+    QByteArray sz = fh_calc_frame_content_size_int_to_byte(data_wo_header.size());
+    result.push_back(sz);
+    result.push_back((char)0x00);
+    result.push_back((char)0x00);
+    result.append(data_wo_header);
+
+    all_frames[four] = result;
+}
+
+
+// input: entire vector, with header, size, flags, content
+// output: only content
+QByteArray FileHeader::fh_extract_frame_content(const QByteArray& data_w_header){
+
+    QByteArray result;
+    int len_frame = fh_calc_frame_content_size_byte_to_int(data_w_header.left(10)) + 10;
+
+    if(len_frame > data_w_header.size()) return result;
+
+    for(int i=10; i<len_frame; i++)
+        result.push_back(data_w_header[i]);
 
     return result;
 }
 
 
 
-// input: file, the attribute searching for (e.g. TPOS), a reference to an output vector (EVERYTHING is included there)
-// output: where did we finde the tag, negative if not available
-int FileHeader::fh_get_mp3_attr(QByteArray tag, QByteArray& result){
-
-    int offset = raw_data.indexOf(tag);
-    if(offset < 0) return -1;
-
-    QByteArray tag_header = raw_data.mid(offset, 10);
-    int framesize = fh_get_frame_content_size(tag_header);
-
-    result = raw_data.mid(offset, 10 + framesize);
-
-    return offset;
-}
-
 
 
 bool FileHeader::fh_open_and_read_file(QString filename){
     f = new QFile(filename);
-
+    qDebug() << "Read file";
     if(!f->open(QIODevice::ReadOnly)){
         valid = false;
         return false;
@@ -318,35 +317,49 @@ bool FileHeader::fh_open_and_read_file(QString filename){
 
     }
 
+
+
     header_size = fh_read_header_size(header_header);
+    qDebug() << "Header size = " << header_size;
     org_size = header_size;
     f->seek(0);
     raw_data = f->read(10 + header_size);
 
+
+
     for(qint64 i=10; i<raw_data.size(); i++){
-        char c = raw_data.at(i);
-        if(c != 0){
-            if(empty_space_len > 128) break;
-            empty_space_begins = 0;
-            empty_space_len = 0;
-        }
 
-        else{
-            if(empty_space_begins == 0)
-                empty_space_begins = i;
+        QByteArray four = raw_data.mid(i, 4);
 
-            empty_space_len++;
+        int t=0;
+        while(taglist[t]){
+
+
+            // tag found
+            if( four == QByteArray(taglist[t], 4) ){
+
+                QByteArray arr(raw_data.mid(i, 10));
+                int framesize = fh_calc_frame_content_size_byte_to_int(arr);
+                //qDebug() << "Found tag = " << four << ", " << framesize;
+                /*for(int i=0; i<arr.size(); i++){
+                    qDebug() << (uint) arr.at(i);
+                }*/
+
+
+                all_frames.insert(four, raw_data.mid(i, 10+framesize));
+
+                i += 10 + framesize - 1;
+                break;
+            }
+
+            // tag not found
+            t++;
         }
     }
 
-    if(empty_space_begins == 0) {
-        empty_space_begins = header_size;
-        empty_space_len = 0;
-    }
-
-    else{
-        empty_space_begins++;
-        empty_space_len--;
+    QList<QByteArray> keys = all_frames.keys();
+    foreach(QByteArray key, keys){
+        //qDebug() << "have " << key;
     }
 
     f->close();
@@ -354,135 +367,47 @@ bool FileHeader::fh_open_and_read_file(QString filename){
 }
 
 
-QByteArray FileHeader::read(const QByteArray& what){
-    QByteArray result;
-    this->fh_get_mp3_attr(what, result);
-    return result;
+
+QByteArray FileHeader::read(const QByteArray& four){
+
+    return all_frames.value(four);
 }
 
 
-void FileHeader::write(const QByteArray& arr){
-    things_to_write.push_back(arr);
-}
 
 
 bool FileHeader::commit(){
 
     int increase_size = 0;
+    int raw_data_size = raw_data.size();
+    //qDebug() << "old array size = " << raw_data_size;
+    raw_data.clear();
 
-    if(!valid){
-        char c[] = {'I', 'D', '3', 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-        raw_data = QByteArray(c);
+    char c[] = {'I', 'D', '3', 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    raw_data = QByteArray(c, 10);
 
-        this->fh_update_size();
-
-        for(int i=0; i<1024; i++){
-            raw_data.push_back((char)(0x00));
-        }
-
-        increase_size = 1034;
-        empty_space_begins = 10;
-        empty_space_len = 1024;
-
-        valid = true;
+    QList<QByteArray> keys = all_frames.keys();
+    foreach(QByteArray key, keys){
+        //qDebug() << "write " << key;
+        raw_data.push_back(all_frames.value(key));
     }
 
+   // qDebug() << "new array size " << raw_data.size();
 
-    foreach(QByteArray arr, things_to_write){
+    int arr_difference = raw_data_size - raw_data.size();
 
-        QByteArray attr_arr;
-        int old_frame_size = 0;
-        long pos = fh_get_mp3_attr(arr.left(4), attr_arr);
-
-        if (pos > 0){
-            old_frame_size = attr_arr.size();
+    //old array was bigger
+    if(arr_difference >= 0){
+        for(int i=0; i<arr_difference; i++){
+            raw_data.push_back((char) 0x00);
         }
-
-        else{
-            old_frame_size = 0;
-            pos = header_size;
-        }
-
-        // old_vec < new_vec
-        if( old_frame_size <= arr.size() ){
-
-            // vec does not exist...
-            if(old_frame_size <= 0){
-
-                // overwrite empty space
-                if(empty_space_len > 128){
-
-
-		    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
-		        raw_data.replace(empty_space_begins, arr.size(), arr, arr.size());
-		    #else
-			raw_data.replace(empty_space_begins, arr.size(), arr);
-		    #endif
-
-
-
-                    empty_space_begins += arr.size();
-                    empty_space_len -= arr.size();
-                }
-
-                // append it to end
-                else {
-
-                    raw_data.push_back(arr);
-                    increase_size += arr.size();
-                }
-            }
-
-            // vec is there but too small
-            else{
-
-
-
-
-	        #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
-	                raw_data.replace(pos, old_frame_size, arr, old_frame_size);
-		#else
-			raw_data.replace(pos, old_frame_size, arr);
-		#endif
-
-                for(int i=old_frame_size; i<arr.size(); i++)
-                    raw_data.insert(pos + i, arr[i]);
-
-                if(empty_space_len > 128){
-
-                    raw_data.remove(empty_space_begins, arr.size() -old_frame_size);
-                    empty_space_len -=  (arr.size() -old_frame_size);
-                }
-
-                else {
-
-                    increase_size += arr.size() - old_frame_size;
-                }
-
-            }
-        }
-
-        else { // old vec > new vec
-	    #if QT_VERSION >= QT_VERSION_CHECK(4,7,0)
-                raw_data.replace(pos, arr.size(), arr, arr.size());
-            #else
-		raw_data.replace(pos, arr.size(), arr);
-	    #endif
-       
-            raw_data.remove(pos + arr.size(), old_frame_size - arr.size());
-
-            for(int i=0; i<old_frame_size - arr.size(); i++){
-                raw_data.insert(empty_space_begins+1, (char) 0x00);
-
-            }
-
-            empty_space_len += old_frame_size - arr.size();
-        }
-
-        this->fh_update_size();
     }
 
+    else {
+        increase_size = -arr_difference;
+    }
 
+    this->fh_update_size();
 
 
     f->open(QFile::ReadWrite);

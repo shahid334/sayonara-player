@@ -80,14 +80,14 @@ void GUI_PlaylistEntry::setTime(QString time){
 
 void GUI_PlaylistEntry::setBackgroundColorPlaying(){
 
-	this->setStyleSheet("background-color: #C0C0C0;");
+    //this->setStyleSheet("background-color: #C0C0C0;");
 
 }
 
 
 void GUI_PlaylistEntry::setBackgroundColorNotPlaying(){
 
-	this->setStyleSheet("background-color: transparent;");
+    //this->setStyleSheet("background-color: transparent;");
 }
 
 

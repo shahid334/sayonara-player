@@ -52,7 +52,7 @@ LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QT
         _model = model;
 
         QPalette palette = _parent->palette();
-        _selected_background = palette.color(QPalette::Active, QPalette::Highlight);
+        _selected_background = QColor(25, 57, 95);
 
 }
 
@@ -73,9 +73,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         int idx_col = _model->calc_shown_col(col);
 
 
-        if(_model->is_selected(index.row())) {
+        /*if(_model->is_selected(index.row())) {
             painter->setPen(_pen);
-        }
+        }*/
 
         if(idx_col == COL_ALBUM_SAMPLER){
             int col_width = _parent->columnWidth(0)-4;
@@ -165,7 +165,7 @@ void LibraryItemDelegateAlbums::set_skin(bool dark){
     QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
     int highlight_val = col_highlight.lightness();
 
-    if(highlight_val > 96){
+    if(highlight_val > 128){
         _pen.setColor(QColor("#202020"));
     }
 

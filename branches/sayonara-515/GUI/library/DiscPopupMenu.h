@@ -48,7 +48,6 @@ class DiscPopupMenu : public QMenu {
 
 	public: 
 		DiscPopupMenu(QWidget* parent, QList<int> discs): QMenu(parent){
-			QMenu::QMenu();
 
 			for(int i= -1; i<discs.size(); i++){
 				QString text;

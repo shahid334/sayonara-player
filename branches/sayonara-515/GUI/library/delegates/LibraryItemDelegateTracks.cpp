@@ -63,9 +63,9 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
     QRect 	rect(option.rect);
     QString	text = index.model()->data(index, Qt::DisplayRole).toString();
 
-    if(_model->is_selected(index.row())) {
+    /*if(_model->is_selected(index.row())) {
         painter->setPen(_pen);
-    }
+    }*/
 
     switch(idx_col){
 

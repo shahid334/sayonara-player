@@ -181,13 +181,11 @@ Application::~Application(){
 
     if( set->getSocketActivated() ){
         if(remote_socket->isRunning()){
-	    remote_socket->terminate();
-            remote_socket->exit(0);
-	}
+            remote_socket->quit();
+        }
     }
 
-    _setting_thread->terminate();
-    delete _setting_thread;
+    _setting_thread->quit();
 
     delete listen;
     delete ui_socket_setup;
@@ -205,7 +203,7 @@ Application::~Application(){
     delete playlists;
     delete ui_playlist_chooser;
     delete player;
-    delete remote_socket;
+
     
     
 CDatabaseConnector::getInstance()->closeDatabase();

@@ -60,8 +60,8 @@ bool _is_alphanumeric(int key){
 
 
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
-	_parent = parent;
-	_qDrag = 0;
+    _parent = parent;
+    _qDrag = 0;
 
     _mimedata = new CustomMimeData();
     _edit = new QLineEdit(this);
@@ -69,7 +69,7 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
 
     this->connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
 
-	rc_menu_init();
+    rc_menu_init();
 
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
@@ -88,95 +88,97 @@ MyTableView::~MyTableView() {
 
 
 void MyTableView::setModel(QAbstractItemModel * model){
-	QTableView::setModel(model);
+    QTableView::setModel(model);
 
-	_model = (LibraryItemModel*) model;
+    _model = (LibraryItemModel*) model;
 }
 
 void MyTableView::mousePressEvent(QMouseEvent* event){
 
-	QPoint pos_org = event->pos();
-	QPoint pos = QWidget::mapToGlobal(pos_org);
+    QPoint pos_org = event->pos();
+    QPoint pos = QWidget::mapToGlobal(pos_org);
 
- reset_edit();
+    reset_edit();
 
-	switch(event->button()){
-		case Qt::LeftButton:
-                        if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
-	                	event->ignore();
-				_drag = false;
-				QList<int> lst;
-				_model->set_selected(lst);
-				break;
-			}
+    switch(event->button()){
+    case Qt::LeftButton:
+        if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
+            event->ignore();
+            _drag = false;
+            QList<int> lst;
+            _model->set_selected(lst);
+            break;
+        }
 
-			else {
+        else {
 
-        			QTableView::mousePressEvent(event);
-				_drag_pos = pos_org;
-				_drag = true;
-//				emit sig_pressed(pos, indexAt(pos));
-			}
+            QTableView::mousePressEvent(event);
+            _drag_pos = pos_org;
+            _drag = true;
+            //				emit sig_pressed(pos, indexAt(pos));
+        }
 
-			break;
+        break;
 
-		case Qt::RightButton:
-			_drag = false;
+    case Qt::RightButton:
+        _drag = false;
 
-			QTableView::mousePressEvent(event);
-			pos.setY(pos.y() + 35);
-			pos.setX(pos.x() + 10);
-			rc_menu_show(pos);
+        QTableView::mousePressEvent(event);
+        pos.setY(pos.y() + 35);
+        pos.setX(pos.x() + 10);
+        rc_menu_show(pos);
 
-			break;
+        break;
 
-		case Qt::MidButton:
-			_drag = false;
+    case Qt::MidButton:
+        _drag = false;
 
-			QTableView::mousePressEvent(event);
+        QTableView::mousePressEvent(event);
 
-			emit sig_middle_button_clicked(pos);
-			break;
+        emit sig_middle_button_clicked(pos);
+        break;
 
-		default:
-			_drag = false;
-			break;
-	}
+    default:
+        _drag = false;
+        break;
+    }
 
 }
 
 void MyTableView::mouseMoveEvent(QMouseEvent* event){
-reset_edit();
-	QPoint pos = event->pos();
-	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
+    reset_edit();
+    QPoint pos = event->pos();
+    int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
-	if (_drag && _qDrag && distance > 20) {
-	    emit sig_drag_started();
-            _qDrag->exec(Qt::CopyAction);
-	}
+    if (_drag && _qDrag && distance > 20) {
+        emit sig_no_disc_menu();
+        _qDrag->exec(Qt::CopyAction);
+    }
 
 }
 
 
 void MyTableView::mouseReleaseEvent(QMouseEvent* event){
-reset_edit();
-	switch (event->button()) {
+    reset_edit();
 
-		case Qt::LeftButton:
-            if(_qDrag) {
-               delete _qDrag;
-                _qDrag = NULL;
-            }
+    switch (event->button()) {
 
-            QTableView::mouseReleaseEvent(event);
-			event->accept();
+    case Qt::LeftButton:
+        if(_qDrag) {
+            delete _qDrag;
+            _qDrag = NULL;
+        }
 
-			_drag = false;
+        QTableView::mouseReleaseEvent(event);
+        event->accept();
 
-			break;
+        _drag = false;
 
-		default: break;
-	}
+        break;
+
+    default:
+        break;
+    }
 }
 
 
@@ -218,7 +220,7 @@ void MyTableView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
 
     connect(_qDrag, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
 
-     _drag = true;
+    _drag = true;
 }
 
 void MyTableView::forbid_mimedata_destroyable(){
@@ -235,7 +237,7 @@ void MyTableView::keyPressEvent(QKeyEvent* event){
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
     if( (modifiers & Qt::ControlModifier) &&
-    	(key == Qt::Key_A) ){
+            (key == Qt::Key_A) ){
 
         selectAll();
         calc_selections();
@@ -251,9 +253,9 @@ void MyTableView::keyPressEvent(QKeyEvent* event){
         if(!this->horizontalScrollBar()->isVisible()) sb_height = 0;
 
         _edit->setGeometry(this->width() - (sb_width + 105), this->height() - (sb_height + 30), 100, 25);
-    	_edit->setFocus();
+        _edit->setFocus();
         _edit->setText(text);
-    	_edit->show();
+        _edit->show();
 
     }
 
@@ -288,17 +290,17 @@ void MyTableView::reset_edit(){
 
 QList<int> MyTableView::calc_selections(){
 
-	QList<int> idx_list_int;
+    QList<int> idx_list_int;
 
-	QModelIndexList idx_list = this->selectionModel()->selectedRows();
+    QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
-	foreach(QModelIndex model_idx, idx_list){
-		idx_list_int.push_back(model_idx.row());
-	}
+    foreach(QModelIndex model_idx, idx_list){
+        idx_list_int.push_back(model_idx.row());
+    }
 
-	_model->set_selected(idx_list_int);
+    _model->set_selected(idx_list_int);
 
-	return idx_list_int;
+    return idx_list_int;
 }
 
 
@@ -324,8 +326,8 @@ void MyTableView::force_selections() {
 
 template <typename T>
 void switch_sorters(T& srcdst, T src1, T src2){
-	if(srcdst == src1) srcdst = src2;
-	else srcdst = src1;
+    if(srcdst == src1) srcdst = src2;
+    else srcdst = src1;
 }
 
 
@@ -335,10 +337,10 @@ void MyTableView::sort_by_column(int col){
 
     if(idx_col >= _table_headers.size()) return;
 
-	ColumnHeader h = _table_headers[idx_col];
+    ColumnHeader h = _table_headers[idx_col];
     switch_sorters(_sort_order, h.get_asc_sortorder(), h.get_desc_sortorder());
 
-	emit sig_sortorder_changed(_sort_order);
+    emit sig_sortorder_changed(_sort_order);
 
 }
 
@@ -351,6 +353,8 @@ void MyTableView::rc_menu_init(){
 
 
 void MyTableView::rc_menu_show(const QPoint& p){
+
+    emit sig_no_disc_menu();
     connect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
     connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
     connect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
@@ -363,20 +367,21 @@ void MyTableView::rc_menu_show(const QPoint& p){
     disconnect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
     disconnect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
 
+
 }
 
 
 void MyTableView::edit_clicked(){
-	emit sig_edit_clicked();
+    emit sig_edit_clicked();
 }
 void MyTableView::info_clicked(){
-	emit sig_info_clicked();
+    emit sig_info_clicked();
 }
 void MyTableView::delete_clicked(){
-	emit sig_delete_clicked();
+    emit sig_delete_clicked();
 }
 void MyTableView::play_next_clicked(){
-	emit sig_play_next_clicked();
+    emit sig_play_next_clicked();
 }
 
 
@@ -388,18 +393,18 @@ void MyTableView::set_table_headers(QList<ColumnHeader>& headers){
 
 void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 
-	_rc_header_menu = new QMenu( this->horizontalHeader() );
+    _rc_header_menu = new QMenu( this->horizontalHeader() );
 
-	int i =0;
-	foreach(ColumnHeader header, _table_headers){
-		QAction* action = new QAction(header.getTitle(), this);
+    int i =0;
+    foreach(ColumnHeader header, _table_headers){
+        QAction* action = new QAction(header.getTitle(), this);
         action->setCheckable(true);
 
         action->setEnabled(header.getSwitchable());
 
         if( !header.getSwitchable() ) {
             action->setChecked(true);
-		}
+        }
 
         else {
 
@@ -413,36 +418,36 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
         connect(action, SIGNAL(toggled(bool)), this, SLOT(rc_header_menu_changed(bool)));
 
         _header_rc_actions << action;
-		this->horizontalHeader()->addAction(action);
-		i++;
+        this->horizontalHeader()->addAction(action);
+        i++;
     }
 
     rc_header_menu_changed();
 
-	this->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+    this->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
 
 
 void MyTableView::rc_header_menu_changed(bool b){
 
-	Q_UNUSED(b);
+    Q_UNUSED(b);
 
     _model->removeColumns(0, _model->columnCount());
 
     int col_idx = 0;
-	QStringList lst;
-	foreach(QAction* action, _header_rc_actions){
+    QStringList lst;
+    foreach(QAction* action, _header_rc_actions){
 
         if(action->isChecked()){
             _model->insertColumn(col_idx);
-			lst << "1";
-		}
+            lst << "1";
+        }
 
-		else lst << "0";
+        else lst << "0";
 
-		col_idx++;
-	}
+        col_idx++;
+    }
 
     emit sig_columns_changed(lst);
     set_col_sizes();
@@ -454,33 +459,33 @@ void MyTableView::rc_header_menu_changed(bool b){
 
 void MyTableView::set_col_sizes(){
 
-	int altogether_width = 0;
+    int altogether_width = 0;
     int desired_width = 0;
     int tolerance = 30;
-	double altogether_percentage = 0;
-	int n_cols = _model->columnCount();
+    double altogether_percentage = 0;
+    int n_cols = _model->columnCount();
 
 
-	for(int i=0; i<n_cols; i++){
-		int col = _model->calc_shown_col(i);
-		int preferred_size = 0;
+    for(int i=0; i<n_cols; i++){
+        int col = _model->calc_shown_col(i);
+        int preferred_size = 0;
 
-		ColumnHeader h = _table_headers[col];
-		if(h.getSizeType() == COL_HEADER_SIZE_TYPE_ABS){
+        ColumnHeader h = _table_headers[col];
+        if(h.getSizeType() == COL_HEADER_SIZE_TYPE_ABS){
 
-			preferred_size = h.get_preferred_size_abs();
-		}
+            preferred_size = h.get_preferred_size_abs();
+        }
 
-		else{
+        else{
 
-			altogether_percentage += h.get_preferred_size_rel();
+            altogether_percentage += h.get_preferred_size_rel();
             desired_width += h.get_preferred_size_abs();
-		}
+        }
 
-		altogether_width += preferred_size;
-	}
+        altogether_width += preferred_size;
+    }
 
-	altogether_width += tolerance;
+    altogether_width += tolerance;
 
     int target_width = this->width() - altogether_width;
 
@@ -488,32 +493,32 @@ void MyTableView::set_col_sizes(){
     if(target_width < desired_width) {
         target_width = desired_width;
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	}
+    }
 
     else{
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     }
 
-	// width for percentage stuff
+    // width for percentage stuff
     //target_width -= altogether_width;
 
-	for(int i=0; i<n_cols; i++){
-		int col = _model->calc_shown_col(i);
-		int preferred_size = 0;
+    for(int i=0; i<n_cols; i++){
+        int col = _model->calc_shown_col(i);
+        int preferred_size = 0;
 
 
-		ColumnHeader h = _table_headers[col];
-		if(h.getSizeType() == COL_HEADER_SIZE_TYPE_REL){
+        ColumnHeader h = _table_headers[col];
+        if(h.getSizeType() == COL_HEADER_SIZE_TYPE_REL){
 
-			preferred_size = (h.get_preferred_size_rel() / altogether_percentage) * target_width;
-		}
+            preferred_size = (h.get_preferred_size_rel() / altogether_percentage) * target_width;
+        }
 
         else{
             preferred_size = h.get_preferred_size_abs();
         }
 
-		this->setColumnWidth(i, preferred_size);
-	}
+        this->setColumnWidth(i, preferred_size);
+    }
 
     calc_corner_widget();
 }
@@ -633,7 +638,7 @@ void MyTableView::fill_artists(const ArtistList& artists){
     if(first_selected_artist_row >= 0)
         this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
 
-   calc_corner_widget();
+    calc_corner_widget();
 }
 
 

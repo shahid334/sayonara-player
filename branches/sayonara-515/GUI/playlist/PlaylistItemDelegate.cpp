@@ -42,7 +42,7 @@ using namespace std;
 
 static QString get_fg_color(int val_bg){
 
-	if(val_bg > 96)
+    if(val_bg > 96)
 		return  QString(" color: #202020; ");
 
 	else
@@ -101,19 +101,19 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 	QString style;
 
-	QPalette palette = _parent->palette();
+    QPalette palette = _parent->palette();
 
-	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
-	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+    QColor col_background = palette.color(QPalette::Active, QPalette::Background);
+    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
     QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light(140);
 
     //QColor col_orange = SAYONARA_ORANGE_COL;
     //QColor col_orange_light = col_orange.light();
 
 
-	int highlight_val = col_highlight.lightness();
-	int highlight_lighter_val = col_highlight_lighter.lightness();
-	int background_val = col_background.lightness();
+    int highlight_val = col_highlight.lightness();
+    int highlight_lighter_val = col_highlight_lighter.lightness();
+    int background_val = col_background.lightness();
 
 
     if(cur_track){
@@ -159,7 +159,7 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 
 
-	_pl_entry->setStyleSheet(style);
+    _pl_entry->setStyleSheet(style);
 	_pl_entry->render(painter, rect.topLeft() );
 
 	if(insert) {

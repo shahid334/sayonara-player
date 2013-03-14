@@ -131,6 +131,22 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	f.tag()->setTrack(md.track_num);
     f.save();
 
+
+    TagLib::File* file = f.file();
+    TagLib::MPEG::File* f_mp3;
+
+    f_mp3 = dynamic_cast<TagLib::MPEG::File*>(file);
+
+    if(!f_mp3) {
+        qDebug() << "Tagging: no mp3 header";
+        return;
+    }
+
+    TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
+    if(!id3_tag){
+        qDebug() << "Tagging: no valid id3 tag";
+        return;
+    }
     FileHeader fh(md.filepath);
     id3_write_discnumber(fh, md.discnumber, md.n_discs);
 

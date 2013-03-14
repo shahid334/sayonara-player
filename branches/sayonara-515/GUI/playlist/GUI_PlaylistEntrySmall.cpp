@@ -44,13 +44,13 @@ void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx){
 	QString titlestr;
 
 	if(CSettingsStorage::getInstance()->getPlaylistNumbers())
-		titlestr = QString::number(idx) + ". " + md.title.trimmed();
+        titlestr = QString::number(idx) + ". " + md.title.trimmed();
 
 	else
-		titlestr = md.title.trimmed();
+        titlestr = md.title.trimmed();
 
-	this->ui->lab_title->setText(titlestr);
-	this->ui->lab_artist->setText(md.artist.trimmed());
+    this->ui->lab_title->setText(titlestr);
+    this->ui->lab_artist->setText(md.artist.trimmed());
     this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
 }
 
@@ -59,13 +59,13 @@ void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx){
 
 void GUI_PlaylistEntrySmall::setBackgroundColorPlaying(){
 
-	this->setStyleSheet("background-color: #C0C0C0;");
+    //this->setStyleSheet("background-color: #C0C0C0;");
 }
 
 
 void GUI_PlaylistEntrySmall::setBackgroundColorNotPlaying(){
 
-	this->setStyleSheet("background-color: transparent;");
+    //this->setStyleSheet("background-color: transparent;");
 }
 
 

@@ -3,6 +3,7 @@ QMainWindow, QWidget {
 	
 	background: #383838;
 	color: #D8D8D8;
+	selection-background-color: #424e72;
 }
 
 
@@ -19,9 +20,12 @@ QLabel, QScrollArea{
 QListView, QTableView{
 	background: #2B2B2B;
 	alternate-background-color: #242424;
+	selection-background-color: #424e72;
+
 	border: 1px solid #262626;
 /*	border-radius: 6px;*/
 }
+
 
 
 
@@ -678,4 +682,20 @@ QPushButton[flat=false]:disabled {
    background: #424242;
 }
 
+QProgressBar {
+     border: 2px solid #2B2B2B;
+     border-radius: 5px;
+     max-height: 20px;
+     background: #828282;
+   text-align: center;
+    vertical-align: center;
+    color: #f8f8f8;
+     
+ }
 
+
+ QProgressBar::chunk {
+     background-color: #424e72;
+     width: 8px;
+     margin: 0.5px;
+ }

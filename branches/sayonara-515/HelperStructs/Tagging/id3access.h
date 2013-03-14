@@ -39,6 +39,9 @@ if(!valid){
 */
 
 
+
+
+
 void stretch_file(QFile* f, long offset, int n_bytes);
 
 
@@ -49,28 +52,21 @@ private:
     bool    valid;
     qint64  header_size;
     qint64  org_size;
-    qint64  empty_space_begins;
-    qint64  empty_space_len;
     QFile*  f;
 
 
     QByteArray raw_data;
     QList<QByteArray> things_to_write;
+    QMap<QByteArray, QByteArray> all_frames;
+    QMap<QString, int>        all_frames_indexes;
 
 
 private:
 
     void        fh_update_size();
-
-    qint64      fh_read_header_size(const QByteArray& header_10_bytes);
-
-    QByteArray  fh_set_frame_content_size(const QByteArray& vec, uint new_size);
-
-    QByteArray  fh_set_frame_content(const QByteArray& vec_org, const QByteArray& data);
-
-    int         fh_get_mp3_attr(QByteArray tag, QByteArray& result);
-
     bool        fh_open_and_read_file(QString filename);
+    qint64      fh_read_header_size(const QByteArray& ten);
+
 
 
 public:
@@ -83,12 +79,14 @@ public:
 
     QByteArray  fh_get_frame_content(const QByteArray& vec);
 
-    int         fh_get_frame_content_size(const QByteArray& vec);
 
-    QByteArray read(const QByteArray& what);
+    QByteArray fh_calc_frame_content_size_int_to_byte(uint new_size);
+    int        fh_calc_frame_content_size_byte_to_int(const QByteArray& ten);
+    void       fh_set_frame_content(const QByteArray& four, const QByteArray& data_wo_header);
+    QByteArray fh_extract_frame_content(const QByteArray& data_w_header);
 
 
-    void write(const QByteArray& arr);
+    QByteArray read(const QByteArray& four);
 
     bool commit();
 };

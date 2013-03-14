@@ -174,7 +174,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_album, SIGNAL(sig_info_clicked()), this, SLOT(info_album()));
     connect(this->ui->lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
     connect(this->ui->lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
-    connect(this->ui->lv_album, SIGNAL(sig_drag_started()), this, SLOT(delete_menu()));
+    connect(this->ui->lv_album, SIGNAL(sig_no_disc_menu()), this, SLOT(delete_menu()));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
     connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
@@ -321,8 +321,7 @@ void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
 
 
 void GUI_Library_windowed::disc_pressed(int disc){
-	qDebug() << "disc pressed";
-	emit sig_disc_pressed(disc);
+    emit sig_disc_pressed(disc);
 }
 
 void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
@@ -330,9 +329,8 @@ void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
     QList<int> idx_list_int;
     idx_list_int = ui->lv_album->calc_selections();
 
-//    QList<int> discnumbers = _album_model->get_discnumbers(idx);
-	QList<int> discnumbers;
-	discnumbers << 1 << 2 << 3 << 4;
+    QList<int> discnumbers = _album_model->get_discnumbers(idx);
+
     if(discnumbers.size() > 1 && idx_list_int.size() == 1 ){
 	delete_menu();
 	_discmenu = new DiscPopupMenu(ui->lv_album, discnumbers);
