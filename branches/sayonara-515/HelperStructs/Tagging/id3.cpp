@@ -20,6 +20,7 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Tagging/ID3_Fileheader.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Helper.h"
@@ -147,8 +148,11 @@ void ID3::setMetaDataOfFile(MetaData& md){
         qDebug() << "Tagging: no valid id3 tag";
         return;
     }
-    FileHeader fh(md.filepath);
-    id3_write_discnumber(fh, md.discnumber, md.n_discs);
+
+    ID3_FileHeader fh(md.filepath);
+
+    if(fh.is_valid())
+        id3_write_discnumber(fh, md.discnumber, md.n_discs);
 
 	return;
 }

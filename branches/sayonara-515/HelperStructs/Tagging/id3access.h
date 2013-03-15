@@ -2,10 +2,9 @@
 #ifndef ID3_ACCESS_H_
 #define ID3_ACCESS_H_
 
+#include "HelperStructs/Tagging/ID3_Fileheader.h"
 
 #include <QFile>
-
-
 
 #include <QMap>
 #include <QByteArray>
@@ -91,8 +90,17 @@ public:
     bool commit();
 };
 
-bool id3_write_discnumber(FileHeader& fh, int discnumber, int n_discs=1);
-bool id3_extract_discnumber(FileHeader& fh, int* discnumber, int* n_discs);
+bool id3_write_discnumber(ID3_FileHeader& fh, int discnumber, int n_discs=1);
+bool id3_extract_discnumber(ID3_FileHeader& fh, int* discnumber, int* n_discs);
+QString id3_extract_artist(ID3_FileHeader& fh);
+QString id3_extract_album(ID3_FileHeader& fh);
+QString id3_extract_title(ID3_FileHeader& fh);
+int id3_extract_tracknumber(ID3_FileHeader& fh);
+int id3_extract_year(ID3_FileHeader& fh);
+QString id3_extract_genres(ID3_FileHeader& fh);
+QString id3_extract_comment(ID3_FileHeader& fh);
+
+
 
 bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber);
 

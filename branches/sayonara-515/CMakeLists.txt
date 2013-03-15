@@ -55,10 +55,8 @@ SET(HEADERS
     Engine/SoundPluginLoader.h
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
-    
     CoverLookup/CoverLookup.h
     DatabaseAccess/CDatabaseConnector.h
-
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
     library/CLibraryBase.h
@@ -70,6 +68,7 @@ SET(HEADERS
     StreamPlugins/LastFM/LFMLoginThread.h
     Socket/Socket.h
     HelperStructs/CSettingsStorage.h
+    HelperStructs/Tagging/ID3_Fileheader.h
 )
 
 SET(SOURCES
@@ -79,7 +78,6 @@ SET(SOURCES
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
-
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
     HelperStructs/Style.cpp
@@ -87,6 +85,10 @@ SET(SOURCES
     HelperStructs/PlaylistParser.cpp
     HelperStructs/WebAccess.cpp
     HelperStructs/PodcastParser/PodcastParser.cpp
+    HelperStructs/Tagging/id3.cpp
+    HelperStructs/Tagging/id3access.cpp
+    HelperStructs/Tagging/ID3_Fileheader.cpp
+    HelperStructs/CSettingsStorage.cpp
     CoverLookup/CoverLookup.cpp
     LyricLookup/LyricLookup.cpp
     CoverLookup/CoverFetchThread.cpp
@@ -105,14 +107,11 @@ SET(SOURCES
     playlist/Playlist.cpp
     playlist/Playlist_GUI_slots.cpp
     playlists/Playlists.cpp
-    HelperStructs/Tagging/id3.cpp
-    HelperStructs/Tagging/id3access.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
     Socket/Socket.cpp
-    HelperStructs/CSettingsStorage.cpp
 )
 
 
