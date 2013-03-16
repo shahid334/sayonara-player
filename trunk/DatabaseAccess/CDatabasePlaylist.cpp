@@ -33,12 +33,10 @@ using namespace std;
 
 bool CDatabaseConnector::getAllPlaylists(QMap<int, QString>& mapping){
 
-	if (!this -> m_database.isOpen())
-			this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return false;
-
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 
 	QString querytext = QString("SELECT playlists.playlistID, playlists.playlist ") +
 			"FROM playlists, playlisttotracks " +
@@ -60,10 +58,8 @@ bool CDatabaseConnector::getAllPlaylists(QMap<int, QString>& mapping){
 
 bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
 
-	if (!this -> m_database.isOpen())
-		this -> m_database.open();
-
-	if (!this -> m_database.isOpen()) return false;
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	pl.tracks.clear();
 	pl.num_tracks = 0;
@@ -71,7 +67,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
 	pl.id = playlist_id;
 	pl.name = getPlaylistNameById(playlist_id);
 
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 
     QString querytext = QString("SELECT ") +
 			"tracks.filename 	AS filename, "		// 0
@@ -136,7 +132,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
     }
 
 
-    QSqlQuery q2(this->m_database);
+    QSqlQuery q2(*_database);
     q2.prepare(querytext2);
     q2.bindValue(":playlist_id", playlist_id);
 
@@ -169,12 +165,10 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl){
 // negative, if error
 // nonnegative else
 int CDatabaseConnector::getPlaylistIdByName(QString playlist_name){
-	if (!this -> m_database.isOpen())
-			this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
-	if (!this -> m_database.isOpen()) return -1;
-
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 
 	q.prepare("SELECT playlistid FROM playlists WHERE playlist = :playlist_name;");
 	q.bindValue(":playlist_name", QVariant(playlist_name));
@@ -192,12 +186,11 @@ int CDatabaseConnector::getPlaylistIdByName(QString playlist_name){
 }
 
 QString CDatabaseConnector::getPlaylistNameById(int playlist_id){
-	if (!this -> m_database.isOpen())
-				this -> m_database.open();
+	
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_STRING(_database);
 
-		if (!this -> m_database.isOpen()) return "";
-
-		QSqlQuery q(this->m_database);
+		QSqlQuery q(*_database);
 
 		q.prepare("SELECT playlistname FROM playlists WHERE playlistid = :playlistid;");
 		q.bindValue(":playlistid", QVariant(playlist_id));
@@ -217,19 +210,16 @@ QString CDatabaseConnector::getPlaylistNameById(int playlist_id){
 
 bool CDatabaseConnector::insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos){
 
-	if (!this -> m_database.isOpen())
-	        this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return false;
-
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 
 	QString query_string = QString("INSERT INTO playlisttotracks ") +
                             "(trackid, playlistid, position, filepath) " +
 							"VALUES " +
                             "(:track_id, :playlist_id, :position, :filepath);";
 
-	qDebug() <<
 
 	q.prepare(query_string);
 	q.bindValue(":track_id", QVariant(md.id));
@@ -250,13 +240,11 @@ bool CDatabaseConnector::insertTrackIntoPlaylist(MetaData& md, int playlist_id, 
 // negative otherwise
 int CDatabaseConnector::createPlaylist(QString playlist_name){
 
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
-	if (!this -> m_database.isOpen())
-	        this -> m_database.open();
 
-	if (!this -> m_database.isOpen()) return -1;
-
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 	qDebug() << "DB: create playlist " << playlist_name;
 	QString query_string = "INSERT INTO playlists (playlist) VALUES (:playlist_name);";
 	q.prepare(query_string);
@@ -273,10 +261,9 @@ int CDatabaseConnector::createPlaylist(QString playlist_name){
 
 
 bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playlist_name){
-	if (!this -> m_database.isOpen())
-	        this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return false;
 
 	// create playlist if neccessary
 
@@ -299,7 +286,7 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playl
 	}
 
 
-	m_database.transaction();
+	_database->transaction();
 
 	// fill playlist
 	for(uint i=0; i<vec_md.size(); i++){
@@ -308,12 +295,12 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playl
 		bool success = insertTrackIntoPlaylist(md, playlist_id, i);
 		if( !success ){
 			qDebug() << "DB: Error during inserting track into playlist.. aborting";
-			m_database.rollback();
+			_database->rollback();
 			return false;
 		}
 	}
 
-	m_database.commit();
+	_database->commit();
 
 	return true;
 
@@ -322,10 +309,9 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playl
 
 
 bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_id){
-	if (!this -> m_database.isOpen())
-	        this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return false;
 
     qDebug() << "DB: store playlist";
 
@@ -351,7 +337,7 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_
 	}
 
 
-	m_database.transaction();
+	_database->transaction();
 
 	// fill playlist
 	for(uint i=0; i<vec_md.size(); i++){
@@ -360,23 +346,22 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_
 		bool success = insertTrackIntoPlaylist(md, playlist_id, i);
 		if( !success ){
 			qDebug() << "DB: Error during inserting track into playlist.. aborting";
-			m_database.rollback();
+			_database->rollback();
 			return false;
 		}
 	}
 
-	m_database.commit();
+	_database->commit();
 
 	return true;
 }
 
 bool CDatabaseConnector::emptyPlaylist(int playlist_id){
-	if (!this -> m_database.isOpen())
-			this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return -1;
 
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 	QString querytext = QString("DELETE FROM playlistToTracks WHERE playlistID = :playlist_id;");
 	q.prepare(querytext);
 	q.bindValue(":playlist_id", playlist_id);
@@ -391,14 +376,13 @@ bool CDatabaseConnector::emptyPlaylist(int playlist_id){
 
 
 bool CDatabaseConnector::deletePlaylist(int playlist_id){
-	if (!this -> m_database.isOpen())
-			this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return -1;
 
 	emptyPlaylist(playlist_id);
 
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 	QString querytext = QString("DELETE FROM playlists WHERE playlistID = :playlist_id;");
 	q.prepare(querytext);
 	q.bindValue(":playlist_id", playlist_id);
@@ -409,12 +393,10 @@ bool CDatabaseConnector::deletePlaylist(int playlist_id){
 
 bool CDatabaseConnector::deleteFromAllPlaylists(int track_id){
 
-	if (!this -> m_database.isOpen())
-			this -> m_database.open();
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen()) return -1;
-
-	QSqlQuery q(this->m_database);
+	QSqlQuery q(*_database);
 	QString querytext = QString("DELETE FROM playlistToTracks WHERE trackID = :track_id;");
 	q.prepare(querytext);
 	q.bindValue(":track_id", track_id);

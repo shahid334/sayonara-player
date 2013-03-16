@@ -101,7 +101,7 @@
     </layout>
    </item>
    <item row="15" column="7">
-    <widget class="QCheckBox" name="btn_all_year">
+    <widget class="QCheckBox" name="cb_year_all">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -210,7 +210,7 @@
     <widget class="QLineEdit" name="le_artist"/>
    </item>
    <item row="12" column="7">
-    <widget class="QCheckBox" name="btn_all_album">
+    <widget class="QCheckBox" name="cb_album_all">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -270,7 +270,7 @@
     </widget>
    </item>
    <item row="13" column="7">
-    <widget class="QCheckBox" name="btn_all_artist">
+    <widget class="QCheckBox" name="cb_artist_all">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -340,7 +340,7 @@
     <widget class="QLineEdit" name="le_genres"/>
    </item>
    <item row="14" column="7">
-    <widget class="QCheckBox" name="btn_all_genre">
+    <widget class="QCheckBox" name="cb_genre_all">
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>

@@ -41,10 +41,7 @@ void Playlist::psl_play(){
         MetaData md = _v_meta_data[track_num];
 
         if( checkTrack(md) ){
-            _cur_play_idx = track_num;
-
-            emit sig_selected_file_changed(track_num);
-            emit sig_selected_file_changed_md(md);
+            send_cur_playing_signal(track_num);
         }
     }
 
@@ -68,7 +65,7 @@ void Playlist::psl_stop(){
     _radio_active = RADIO_OFF;
 
     _cur_play_idx = -1;
-
+    _is_playing = false;
     emit sig_no_track_to_play();
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }
@@ -88,14 +85,13 @@ void Playlist::psl_backward(){
     if(_cur_play_idx <= 0) return;
 
     int track_num = _cur_play_idx - 1;
-    MetaData md = _v_meta_data[track_num];
-    md.radio_mode = _radio_active;
+    _v_meta_data[track_num].radio_mode = _radio_active;
 
+    MetaData md = _v_meta_data[track_num];
     if( checkTrack(md) ){
-        _cur_play_idx = track_num;
+
         _v_meta_data.setCurPlayTrack(track_num);
-        emit sig_selected_file_changed(track_num);
-        emit sig_selected_file_changed_md(md);
+        send_cur_playing_signal(track_num);
     }
 }
 
@@ -117,10 +113,7 @@ void Playlist::psl_change_track(int new_row){
     MetaData md = _v_meta_data[new_row];
 
     if( checkTrack(md) ){
-        _cur_play_idx = new_row;
-
-        emit sig_selected_file_changed_md(md);
-        emit sig_selected_file_changed(_cur_play_idx);
+       send_cur_playing_signal(new_row);
     }
 
     else{
@@ -129,7 +122,7 @@ void Playlist::psl_change_track(int new_row){
         _v_meta_data.setCurPlayTrack(_cur_play_idx);
 
         remove_row(new_row);
-
+        _is_playing = false;
         emit sig_no_track_to_play();
     }
 }
@@ -137,6 +130,8 @@ void Playlist::psl_change_track(int new_row){
 
 // insert tracks (also drag & drop)
 void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
+
+    bool instant_play = ((_v_meta_data.size() == 0) && (!_is_playing));
 
     // turn off radio
     bool switched_from_radio = false;
@@ -177,10 +172,8 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
     // radio was turned off, so we start at beginning of playlist
-    if(switched_from_radio && _v_meta_data.size() > 0){
-        _cur_play_idx = 0;
-        emit sig_selected_file_changed(0);
-        emit sig_selected_file_changed_md(_v_meta_data[0]);
+    if((switched_from_radio && _v_meta_data.size() > 0) || instant_play){
+       send_cur_playing_signal(0);
     }
 }
 

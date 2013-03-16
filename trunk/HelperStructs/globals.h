@@ -42,8 +42,9 @@
 #define PLUGIN_NONE 0
 #define PLUGIN_LFM_RADIO 1
 #define PLUGIN_STREAM 2
-#define PLUGIN_EQUALIZER 3
-#define PLUGIN_PLAYLIST_CHOOSER 4
+#define PLUGIN_PODCASTS 3
+#define PLUGIN_EQUALIZER 4
+#define PLUGIN_PLAYLIST_CHOOSER 5
 
 
 #define GOOGLE_IMG_ICON QString("icon")
@@ -105,7 +106,9 @@ namespace Sort{
 		TrackBitrateAsc,
 		TrackBitrateDesc,
 		TrackSizeAsc,
-		TrackSizeDesc
+        TrackSizeDesc,
+        TrackDiscnumberAsc,
+        TrackDiscnumberDesc
 	};
 
 };

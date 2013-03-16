@@ -32,7 +32,7 @@
 #include <QDialog>
 #include <QObject>
 #include <QString>
-#include <ui_GUI_LastFM_Dialog.h>
+#include "GUI/ui_GUI_LastFM_Dialog.h"
 
 class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Dialog{
 

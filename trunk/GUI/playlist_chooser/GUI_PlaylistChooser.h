@@ -23,16 +23,18 @@
 #define GUIPLAYLISTCHOOSER_H_
 
 #include "HelperStructs/MetaData.h"
+#include "PlayerPlugin/PlayerPlugin.h"
+
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
+#include "GUI/ui_GUI_PlaylistChooser.h"
 
 #include <QMap>
-#include <QWidget>
 #include <QDockWidget>
-#include <ui_GUI_PlaylistChooser.h>
 
 
 
-class GUI_PlaylistChooser : public QDockWidget, private Ui::GUI_PlaylistChooser {
+
+class GUI_PlaylistChooser : public PlayerPlugin, private Ui::GUI_PlaylistChooser {
 
 Q_OBJECT
 
@@ -42,12 +44,10 @@ signals:
 	void sig_delete_playlist(int);
 	void sig_save_playlist(int);
 	void sig_save_playlist(QString);
-    void sig_save_playlist_file(QString, bool);
+	void sig_save_playlist_file(QString, bool);
 	void sig_closed();
 	void sig_clear_playlist();
-    void sig_files_selected(QStringList&);
-
-
+        void sig_files_selected(QStringList&);
 
 
 private slots:
@@ -68,7 +68,7 @@ public slots:
     void changeSkin(bool);
 
 public:
-	GUI_PlaylistChooser(QWidget* parent=0);
+	GUI_PlaylistChooser(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
 
 private:
@@ -82,8 +82,6 @@ private:
 
     int show_warning(QString title_text);
 
-protected:
-	void closeEvent(QCloseEvent* e);
 };
 
 #endif /* GUIPLAYLISTCHOOSER_H_ */

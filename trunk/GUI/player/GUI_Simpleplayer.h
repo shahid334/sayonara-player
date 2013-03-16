@@ -21,21 +21,24 @@
 
 #ifndef GUI_SIMPLEPLAYER_H
 #define GUI_SIMPLEPLAYER_H
-#include "ui_GUI_Simpleplayer.h"
-#include "HelperStructs/MetaData.h"
+#include "GUI/ui_GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
+#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
+#include "PlayerPlugin/PlayerPluginHandler.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 
+#include "HelperStructs/MetaData.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -77,17 +80,9 @@ public slots:
 
 
     /* Plugins */
-    void show_eq(bool b=false);
-	void show_stream(bool b=false);
-	void show_lfm_radio(bool b=false);
-	void show_playlist_chooser(bool b=false);
-	void close_eq();
-    void close_playlist_chooser();
-    void close_stream();
-    void close_lfm_radio();
 
-	void showPlugin(QWidget* widget, bool v);
-	void hideUnneededPlugins(QWidget* wannashow);
+    void showPlugin(PlayerPlugin* plugin);
+    void hideAllPlugins();
 
 signals:
 
@@ -106,10 +101,10 @@ signals:
 
     /* File */
     void fileSelected (QStringList & filelist);
-    void sig_stream_selected(const QString&, const QString&);
     void baseDirSelected (const QString & baseDir);
     void importDirectory(QString);
-    void reloadLibrary();
+    void reloadLibrary(bool clear);
+    void clearLibrary();
 
     /* Preferences / View */
     void show_playlists();
@@ -126,6 +121,8 @@ signals:
     void sig_fetch_alternate_covers(int);
     void sig_want_more_covers();
     void sig_fetch_all_covers();
+
+    void sig_stream_selected(const QString&, const QString&);
 
 
 
@@ -148,6 +145,7 @@ private slots:
     void fileSelectedClicked(bool);
     void folderSelectedClicked(bool);
     void reloadLibraryClicked(bool b = true);
+    void clearLibraryClicked(bool b = true);
     void importFolderClicked(bool b = true);
 
     /* View */
@@ -172,7 +170,7 @@ private slots:
     void about(bool b=false);
 
 
-    void sl_alternate_cover_available(QString);
+    void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
     void really_close(bool=false);
@@ -183,14 +181,8 @@ private slots:
 public:
 	void setPlaylist(GUI_Playlist* playlist);
 	void setLibrary(GUI_Library_windowed* library);
-	void setEqualizer(GUI_Equalizer* eq);
-	void setPlaylistChooser(GUI_PlaylistChooser* playlist_chooser);
-	void setStream(GUI_Stream* stream);
-	void setLFMRadio(GUI_LFMRadioWidget* lfm_radio);
 	void setInfoDialog(GUI_InfoDialog* info_dialog);
-
-	void hideAllPlugins();
-	void check_show_plugins();
+	void setPlayerPluginHandler(PlayerPluginHandler* pph);
 
 	QWidget* getParentOfPlaylist();
 	QWidget* getParentOfLibrary();
@@ -210,36 +202,33 @@ protected:
 
 private:
 
-    Ui::SimplePlayer*		ui;
+    Ui::SimplePlayer*       ui;
 
-    GUI_Playlist* 			ui_playlist;
-    GUI_Library_windowed*	ui_library;
-    GUI_Equalizer*			ui_eq;
-    GUI_PlaylistChooser*	ui_playlist_chooser;
-    GUI_Stream*				ui_stream;
-    GUI_LFMRadioWidget*		ui_lfm_radio;
+    GUI_Playlist*           ui_playlist;
+    GUI_Library_windowed*   ui_library;
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;
     GUI_Startup_Dialog*     ui_startup_dialog;
-    CoverLookup*			m_cov_lookup;
+    CoverLookup*            m_cov_lookup;
+    PlayerPluginHandler*    _pph;
 
-    GUI_Alternate_Covers*	m_alternate_covers;
+    GUI_Alternate_Covers*   m_alternate_covers;
 
-    QString					m_class_name;
-    quint32 				m_completeLength_ms;
-    bool 					m_playing;
-    bool					m_mute;
-    GUI_TrayIcon *			m_trayIcon;
+    QString			m_class_name;
+    quint32 			m_completeLength_ms;
+    bool 			m_playing;
+    bool			m_mute;
+    GUI_TrayIcon *		m_trayIcon;
 
-    QString					m_skinSuffix;
+    QString			m_skinSuffix;
 
-    MetaData				m_metadata;
-    MetaData				m_metadata_corrected;
-    bool                    m_metadata_available;
-    bool					m_min2tray;
+    MetaData			m_metadata;
+    MetaData			m_metadata_corrected;
+    bool			m_metadata_available;
+    bool			m_min2tray;
 
-    int 					m_library_width;
-    int						m_library_stretch_factor;
+    int 			m_library_width;
+    int				m_library_stretch_factor;
 
 
     void setupTrayActions ();

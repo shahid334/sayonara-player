@@ -82,6 +82,7 @@
 
 
 #include <QString>
+#include <QThread>
 #include <QPair>
 #include <QSize>
 #include <vector>
@@ -89,8 +90,28 @@
 #include <HelperStructs/Equalizer_presets.h>
 #include <HelperStructs/PlaylistMode.h>
 #include <HelperStructs/MetaData.h>
+
+class CSettingsStorage;
+
 using namespace std;
 
+
+
+	class SettingsThread : public QThread {
+
+
+	private:
+		CSettingsStorage* _settings;
+
+	protected: 
+		void run();
+
+	public:
+		SettingsThread();
+		virtual ~SettingsThread();
+
+
+};
 
 
 /**
@@ -123,6 +144,8 @@ public:
 
 
 
+
+
 private:
 
     void init();
@@ -133,6 +156,8 @@ private:
 
     QString m_dbFile, m_sayonaraPath, m_dbSource;
     QString _version;
+    bool _sth_changed;
+	
 
     // last fm
     bool m_lfm_active;
@@ -170,7 +195,7 @@ private:
     int	m_style;
 
     /* shown plugin in player */
-    int m_shown_plugin;
+    QString m_shown_plugin;
 
     /* minimize the player to tray */
     bool m_minimize_to_tray;
@@ -202,8 +227,15 @@ private:
 
     bool	m_allow_only_one_instance;
 
+protected:
+    void save_all();
+
 public:
 
+
+	void set_sth_changed(bool);
+
+	bool get_sth_changed();
     QString getVersion();
     void setVersion(QString str);
 
@@ -286,8 +318,8 @@ public:
     void setLibShowOnlyTracks(bool);
     bool getLibShowOnlyTracks();
 
-	void setShownPlugin(int);
-	int getShownPlugin();
+    void setShownPlugin(QString);
+    QString getShownPlugin();
 
 	void setMinimizeToTray(bool);
 	bool getMinimizeToTray();
@@ -328,6 +360,11 @@ public:
 	bool getAllowOnlyOneInstance();
 	void setAllowOnlyOneInstance(bool b);
 
+	friend class SettingsThread;
 };
+
+
+
+
 
 #endif // CSettingsStorage_H

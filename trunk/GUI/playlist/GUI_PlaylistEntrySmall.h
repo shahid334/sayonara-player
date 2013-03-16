@@ -22,7 +22,7 @@
 #ifndef GUI_PLAYLISTENTRYSMALL_H_
 #define GUI_PLAYLISTENTRYSMALL_H_
 
-#include "ui_GUI_Playlist_EntrySmall.h"
+#include "GUI/ui_GUI_Playlist_EntrySmall.h"
 #include "HelperStructs/MetaData.h"
 
 #include <QObject>

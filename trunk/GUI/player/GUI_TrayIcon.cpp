@@ -70,18 +70,19 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 	m_closeAction->setIcon(QIcon(icon_path + "close.png"));
 	m_showAction = new QAction(tr("Show"), this);
 
-	QMenu* trayContextMenu = new QMenu();
-	    trayContextMenu->addAction(m_playAction);
-	    trayContextMenu->addAction(m_stopAction);
-	    trayContextMenu->addSeparator();
-	    trayContextMenu->addAction(m_fwdAction);
-	    trayContextMenu->addAction(m_bwdAction);
-	    trayContextMenu->addSeparator();
-	    trayContextMenu->addAction(m_muteAction);
-	    trayContextMenu->addSeparator();
-	    trayContextMenu->addAction(m_showAction);
-	    trayContextMenu->addAction(m_closeAction);
-	this->setContextMenu(trayContextMenu);
+    m_trayContextMenu = new QMenu();
+        m_trayContextMenu->addAction(m_playAction);
+        m_trayContextMenu->addAction(m_stopAction);
+        m_trayContextMenu->addSeparator();
+        m_trayContextMenu->addAction(m_fwdAction);
+        m_trayContextMenu->addAction(m_bwdAction);
+        m_trayContextMenu->addSeparator();
+        m_trayContextMenu->addAction(m_muteAction);
+        m_trayContextMenu->addSeparator();
+        m_trayContextMenu->addAction(m_showAction);
+        m_trayContextMenu->addAction(m_closeAction);
+    this->setContextMenu(m_trayContextMenu);
+
 
 
     this->setToolTip("Sayonara Player");
@@ -107,6 +108,9 @@ GUI_TrayIcon::~GUI_TrayIcon() {
 }
 
 
+void GUI_TrayIcon::change_skin(QString stylesheet){
+    this->m_trayContextMenu->setStyleSheet(stylesheet);
+}
 
 bool GUI_TrayIcon::event ( QEvent * e ) {
     if (e->type() == QEvent::Wheel) {
@@ -126,8 +130,6 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
         Notification* n = m_plugin_loader->get_cur_plugin();
 
         if(n){
-
-            QString text = md.artist+ "\n" + md.album;
 
             n->notification_show(md);
         }

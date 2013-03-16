@@ -13,12 +13,13 @@
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
+#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
-#include "GUI/LFMRadio/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
@@ -39,6 +40,7 @@
 #include "HelperStructs/globals.h"
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
+#include "PlayerPlugin/PlayerPluginHandler.h"
 #include "Socket/Socket.h"
 
 
@@ -59,17 +61,21 @@ public slots:
 private:
     GUI_SimplePlayer* 		player;
     GUI_PlaylistChooser*	ui_playlist_chooser;
-    Playlists*				playlists;
-    Playlist* 				playlist;
-    CLibraryBase* 			library;
-    LastFM*					lastfm;
-    GUI_LastFM*				ui_lastfm;
-    GUI_Stream	*			ui_stream;
-    GUI_Equalizer*			ui_eq;
+    Playlists*			playlists;
+    Playlist* 			playlist;
+    CLibraryBase* 		library;
+    LastFM*			lastfm;
+
+    GUI_LastFM*			ui_lastfm;
+    GUI_Stream	*		ui_stream;
+    GUI_Podcasts*               ui_podcasts;
+    GUI_Equalizer*		ui_eq;
     GUI_LFMRadioWidget*		ui_lfm_radio;
+    PlayerPluginHandler*	_pph;
+
     GUI_StreamRecorder*		ui_stream_rec;
-    GUI_TagEdit*			ui_id3_editor;
-    GUI_InfoDialog*			ui_info_dialog;
+    GUI_TagEdit*		ui_id3_editor;
+    GUI_InfoDialog*		ui_info_dialog;
     GUI_Library_windowed*	ui_library;
     //GUI_Library_Info_Box*	ui_library_info_box;
     GUI_Playlist* 			ui_playlist;
@@ -81,6 +87,7 @@ private:
     Engine*                     listen;
 
     CSettingsStorage*       set;
+    SettingsThread*           _setting_thread;
     QApplication*           app;
 
     bool					_initialized;

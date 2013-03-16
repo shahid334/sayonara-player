@@ -105,7 +105,12 @@ void GUI_SimplePlayer::importFolderClicked(bool b){
 
 void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
 	Q_UNUSED(b);
-	emit reloadLibrary();
+    emit reloadLibrary(false);
+}
+
+void GUI_SimplePlayer::clearLibraryClicked(bool b){
+	Q_UNUSED(b);
+	emit clearLibrary();
 }
 
 
@@ -139,7 +144,7 @@ void GUI_SimplePlayer::showLibrary(bool b, bool resize){
 
         m_library_width = lib_width;
         new_width = old_width - lib_width;
-
+        this->setMinimumSize(300, 500);
 	}
 
 	else{
@@ -147,6 +152,7 @@ void GUI_SimplePlayer::showLibrary(bool b, bool resize){
 		p.setHorizontalStretch(m_library_stretch_factor);
         this->ui->library_widget->setSizePolicy(p);
         new_width = old_width + m_library_width;
+        this->setMinimumSize(850, 500);
     }
 
     if(resize){
@@ -193,7 +199,7 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 			old_dir, QFileDialog::ShowDirsOnly);
-    if (dir.size() > 0) {
+    if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
 		emit libpath_changed(dir);
 		CSettingsStorage::getInstance()->setLibraryPath(dir);
 
@@ -208,7 +214,7 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 		int answer = dialog.exec();
 		if(answer == QMessageBox::Yes)
-			emit reloadLibrary();
+            emit reloadLibrary(true);
 
 		dialog.close();
 	}

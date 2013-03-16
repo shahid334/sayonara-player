@@ -676,13 +676,13 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>50</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>30</width>
+          <width>50</width>
           <height>16</height>
          </size>
         </property>
@@ -729,7 +729,7 @@
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>50</width>
           <height>0</height>
          </size>
         </property>
@@ -750,6 +750,9 @@
         </property>
         <property name="text">
          <string>00:00</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -890,6 +893,7 @@
     <addaction name="separator"/>
     <addaction name="action_ImportFolder"/>
     <addaction name="action_reloadLibrary"/>
+    <addaction name="action_clearLibrary"/>
     <addaction name="action_fetch_all_covers"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
@@ -905,11 +909,6 @@
     <addaction name="action_viewLibrary"/>
     <addaction name="action_smallPlaylistItems"/>
     <addaction name="action_showOnlyTracks"/>
-    <addaction name="separator"/>
-    <addaction name="action_ViewEqualizer"/>
-    <addaction name="action_ViewStream"/>
-    <addaction name="action_ViewLFMRadio"/>
-    <addaction name="action_ViewPlaylistChooser"/>
     <addaction name="separator"/>
     <addaction name="action_Dark"/>
     <addaction name="action_Fullscreen"/>
@@ -991,7 +990,12 @@
     <string>Reload Library</string>
    </property>
   </action>
-  <action name="action_setLibPath">
+   <action name="action_clearLibrary">
+   <property name="text">
+    <string>Clear Library</string>
+   </property>
+  </action>
+ <action name="action_setLibPath">
    <property name="text">
     <string>Library Path</string>
    </property>
@@ -1167,6 +1171,14 @@
   <action name="action_notifications">
    <property name="text">
     <string>Notifications</string>
+   </property>
+  </action>
+  <action name="action_ViewPodcasts">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Podcasts</string>
    </property>
   </action>
  </widget>

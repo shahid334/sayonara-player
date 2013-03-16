@@ -29,7 +29,7 @@
 #ifndef GUI_ALTERNATE_COVERS_H_
 #define GUI_ALTERNATE_COVERS_H_
 
-#include "ui_GUI_Alternate_Covers.h"
+#include "GUI/ui_GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
 #include "CoverLookup/CoverLookup.h"
@@ -57,11 +57,11 @@ public:
 	signals:
 
 		void sig_search_images(const QString&);
-        void sig_covers_changed(QString);
+        void sig_covers_changed(QString, QString);
+        void sig_no_cover();
 
 
 	public slots:
-		void start(int, bool);
         void start(QString, QString);
         void changeSkin(bool dark);
 

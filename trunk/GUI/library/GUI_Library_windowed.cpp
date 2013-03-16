@@ -30,7 +30,7 @@
 #define SEL_ALBUMS 1
 #define SEL_TRACKS 2
 
-#include "ui_GUI_Library_windowed.h"
+#include "GUI/ui_GUI_Library_windowed.h"
 
 #include "GUI/MyColumnHeader.h"
 #include "GUI/library/GUI_Library_windowed.h"
@@ -57,6 +57,8 @@
 #include "HelperStructs/Style.h"
 
 #include <QList>
+#include <QTimer>
+#include <QCursor>
 #include <QDebug>
 #include <QPoint>
 #include <QMouseEvent>
@@ -101,22 +103,23 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     ColumnHeader t_h1("Title", false, Sort::TrackTitleAsc, Sort::TrackTitleDesc, 0.4, 200);
     ColumnHeader t_h2("Artist", true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0.3, 160);
     ColumnHeader t_h3("Album", true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0.3, 160);
-    ColumnHeader t_h4("Year", true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
-    ColumnHeader t_h5("Length", true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
-    ColumnHeader t_h6("Bitrate", true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
-    ColumnHeader t_h7("Filesize", true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
+    ColumnHeader t_h4("D#", true, Sort::TrackDiscnumberAsc, Sort::TrackDiscnumberDesc, 25);
+    ColumnHeader t_h5("Year", true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
+    ColumnHeader t_h6("Dur.", true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
+    ColumnHeader t_h7("Bitrate", true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
+    ColumnHeader t_h8("Filesize", true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
 
     ColumnHeader al_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
     ColumnHeader al_h1("Album", false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 1.0, 160);
     ColumnHeader al_h2("Duration", true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
     ColumnHeader al_h3("#Tracks", true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
-    ColumnHeader al_h4("Year", true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 70);
+    ColumnHeader al_h4("Year", true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 50);
 
     ColumnHeader ar_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
     ColumnHeader ar_h1("Artist", false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 1.0, 160 );
     ColumnHeader ar_h2("#Tracks", true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 80);
 
-    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  << t_h4  << t_h5  << t_h6  << t_h7;
+    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  << /*t_h4  <<*/ t_h5  << t_h6  << t_h7 << t_h8;
     album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
     artist_columns << ar_h0 << ar_h1 << ar_h2;
 
@@ -154,11 +157,16 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->ui->lv_album->set_table_headers(album_columns);
     this->ui->lv_album->rc_header_menu_init(_shown_cols_albums);
 
+	_discmenu = 0;
+	_timer = new QTimer(this);
+
+	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
+
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(sig_all_selected()), this, SLOT(album_pressed()));
     connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
-    connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
+    connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_released(const QModelIndex & )));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
     connect(this->ui->lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
     connect(this->ui->lv_album, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_album_changed(QStringList&)));
@@ -166,6 +174,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_album, SIGNAL(sig_info_clicked()), this, SLOT(info_album()));
     connect(this->ui->lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
     connect(this->ui->lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
+    connect(this->ui->lv_album, SIGNAL(sig_no_disc_menu()), this, SLOT(delete_menu()));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
     connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
@@ -192,8 +201,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 
-
-
+    
 
     this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
     this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
@@ -256,6 +264,8 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 void  GUI_Library_windowed::columns_album_changed(QStringList& list){
     _shown_cols_albums = list;
     CSettingsStorage::getInstance()->setLibShownColsAlbum(list);
+
+
 }
 
 
@@ -299,11 +309,10 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
 void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 
+    this->_info_dialog->set_tag_edit_visible(true);
     QList<int> idx_list_int;
-    if(idx.isValid())
-        idx_list_int = ui->lv_artist->calc_selections();
-    else
-    	ui->lv_artist->calc_selections();
+
+    idx_list_int = ui->lv_artist->calc_selections();
 
     emit sig_artist_pressed(idx_list_int);
 }
@@ -311,28 +320,45 @@ void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
 void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
 
 
-void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
+void GUI_Library_windowed::disc_pressed(int disc){
+    emit sig_disc_pressed(disc);
+}
 
+void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
+    _info_dialog->set_tag_edit_visible(true);
     QList<int> idx_list_int;
     idx_list_int = ui->lv_album->calc_selections();
 
+    QList<int> discnumbers = _album_model->get_discnumbers(idx);
+
+    if(discnumbers.size() > 1 && idx_list_int.size() == 1 ){
+	delete_menu();
+	_discmenu = new DiscPopupMenu(ui->lv_album, discnumbers);
+	
+	connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
+	_timer->start(300);
+    } 
+    
     emit sig_album_pressed(idx_list_int);
 }
 
 
 void GUI_Library_windowed::album_released(const QModelIndex& idx){
     album_pressed(idx);
+    delete_menu();
+    
 }
 
 
 
 void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
 
+    this->_info_dialog->set_tag_edit_visible(true);
     QList<int> idx_list_int;
-    if(idx.isValid()){
-        idx_list_int = ui->tb_title->calc_selections();
-        emit sig_track_pressed(idx_list_int);
-    }
+
+    idx_list_int = ui->tb_title->calc_selections();
+    emit sig_track_pressed(idx_list_int);
+
 }
 
 void GUI_Library_windowed::track_released(const QModelIndex&){}
@@ -438,8 +464,6 @@ void GUI_Library_windowed::searchfilter_changed(int idx){
 
 
 void GUI_Library_windowed::refresh(){
-    qDebug() << "Refresh";
-
 	text_line_edited(_cur_searchfilter.filtertext, true);
 }
 
@@ -531,7 +555,6 @@ void GUI_Library_windowed::psl_delete_answer(QString answer){
 
 	answerbox.exec();
 	answerbox.close();
-	refresh();
 }
 
 
@@ -638,3 +661,24 @@ void GUI_Library_windowed::import_result(bool success){
 	library_changed();
 }
 
+void GUI_Library_windowed::delete_menu(){
+	if(!_discmenu)return;
+	
+	_discmenu->hide();
+	_discmenu->close();
+		
+    	disconnect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
+	delete _discmenu;
+	_discmenu = 0;
+	
+}
+
+void GUI_Library_windowed::timer_timed_out(){
+	_timer->stop();
+	if(!_discmenu) return;
+
+	QPoint p = QCursor::pos();
+	_discmenu->popup(p);
+	
+	
+}

@@ -1,4 +1,4 @@
-#include "ui_GUI_Target_Playlist_Dialog.h"
+#include "GUI/ui_GUI_Target_Playlist_Dialog.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"

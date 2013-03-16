@@ -20,17 +20,19 @@
 
 
 
-#include "ui_GUI_Simpleplayer.h"
-
+#include "GUI/ui_GUI_Simpleplayer.h"
 #include "GUI/player/GUI_Simpleplayer.h"
-#include "GUI/stream/GUI_Stream.h"
 #include "GUI/player/GUI_TrayIcon.h"
+#include "GUI/stream/GUI_Stream.h"
+#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "CoverLookup/CoverLookup.h"
+
 #include "Engine/Engine.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
@@ -76,10 +78,6 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_mute = false;
 
 	ui_playlist = 0;
-	ui_playlist_chooser = 0;
-	ui_lfm_radio = 0;
-	ui_eq = 0;
-	ui_stream = 0;
 
     ui_notifications = new GUI_Notifications(this);
     ui_startup_dialog = new GUI_Startup_Dialog(this);
@@ -154,18 +152,6 @@ void GUI_SimplePlayer::initGUI() {
 	ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
     ui->btn_correct->setToolTip(tr("Correct ID3 Tag"));
 
-    ui->action_ViewEqualizer->setText(tr("&Equalizer"));
-    ui->action_ViewEqualizer->setShortcut(QKeySequence("CTRL+e"));
-
-    ui->action_ViewStream->setText(tr("&Stream"));
-    ui->action_ViewStream->setShortcut(QKeySequence("CTRL+s"));
-
-    ui->action_ViewPlaylistChooser->setText(tr("&Playlist Chooser"));
-    ui->action_ViewPlaylistChooser->setShortcut(QKeySequence("CTRL+p"));
-
-    ui->action_ViewLFMRadio->setText(tr("Last.fm &Radio"));
-    ui->action_ViewLFMRadio->setShortcut(QKeySequence("CTRL+r"));
-
     ui->action_viewLibrary->setText(tr("&Library"));
     ui->action_viewLibrary->setShortcut(QKeySequence("CTRL+l"));
 
@@ -206,6 +192,8 @@ void GUI_SimplePlayer::setupConnections(){
 				SLOT(importFolderClicked()));
 	connect(ui->action_reloadLibrary, SIGNAL(triggered(bool)), this,
 				SLOT(reloadLibraryClicked(bool)));
+        connect(ui->action_clearLibrary, SIGNAL(triggered(bool)), this,
+				SLOT(clearLibraryClicked(bool)));
 
 	connect(ui->action_Close, SIGNAL(triggered(bool)), this,
 				SLOT(really_close(bool)));
@@ -214,16 +202,6 @@ void GUI_SimplePlayer::setupConnections(){
 	// view
 	connect(ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
 			SLOT(showLibrary(bool)));
-	connect(ui->action_ViewEqualizer, SIGNAL(toggled(bool)), this,
-				SLOT(show_eq(bool)));
-	connect(ui->action_ViewLFMRadio, SIGNAL(toggled(bool)), this,
-				SLOT(show_lfm_radio(bool)));
-
-
-	connect(ui->action_ViewStream, SIGNAL(toggled(bool)), this,
-					SLOT(show_stream(bool)));
-	connect(ui->action_ViewPlaylistChooser, SIGNAL(toggled(bool)), this,
-				SLOT(show_playlist_chooser(bool)));
 	connect(ui->action_Dark, SIGNAL(toggled(bool)), this,
 			SLOT(changeSkin(bool)));
 
@@ -290,8 +268,8 @@ void GUI_SimplePlayer::setupConnections(){
 	connect(this,				SIGNAL(sig_fetch_all_covers()),
 			m_cov_lookup, 		SLOT(search_all_covers()));
 
-    connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString)),
-            this,				SLOT(sl_alternate_cover_available(QString)));
+    connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)),
+            this,				SLOT(sl_alternate_cover_available(QString, QString)));
 
     connect(m_alternate_covers, SIGNAL(sig_no_cover()),
             this,				SLOT(sl_no_cover_available()));
@@ -435,7 +413,8 @@ void GUI_SimplePlayer::last_fm_logged_in(bool b){
         QMessageBox::warning(ui->centralwidget, "Warning", "Cannot login to LastFM");
 
     if(!b){
-        show_lfm_radio(false);
+	/// TODO
+//        show_lfm_radio(false);
         ui->action_ViewLFMRadio->setChecked(false);
     }
 
@@ -444,8 +423,8 @@ void GUI_SimplePlayer::last_fm_logged_in(bool b){
 
 
 void GUI_SimplePlayer::psl_lfm_activated(bool b){
-
-    show_lfm_radio(false);
+/// TODO
+//    show_lfm_radio(false);
 	ui->action_ViewLFMRadio->setChecked(false);
 
 	ui->action_ViewLFMRadio->setVisible(b);
@@ -524,6 +503,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	else 		m_skinSuffix = QString("");
 
 	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
+    this->m_trayIcon->change_skin(stylesheet);
 
     setupVolButton(ui->volumeSlider->value());
     emit sig_skin_changed(dark);
@@ -536,6 +516,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 
 
 	m_trayIcon = new GUI_TrayIcon(this);
+
 
     connect(m_trayIcon, SIGNAL(sig_stop_clicked()), this, SLOT(stopClicked()));
     connect(m_trayIcon, SIGNAL(sig_bwd_clicked()), this, SLOT(backwardClicked()));
@@ -551,6 +532,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)),
    			this, 		SLOT(volumeChangedByTick(int)));
+
 
     m_trayIcon->setPlaying(false);
 
@@ -617,6 +599,27 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
         ui_library->show();
         ui_library->resize(ui->library_widget->size());
     }
+}
+
+void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
+	_pph = pph;
+
+	QList<PlayerPlugin*> lst = _pph->get_all_plugins();
+    QList<QAction*> actions;
+
+    foreach(PlayerPlugin* p, lst){
+		QAction* action = p->getAction();
+		// action is connected in Plugin itself
+        actions << action;
+	}
+
+
+    this->ui->menuView->insertActions(this->ui->action_Dark, actions);
+    this->ui->menuView->insertSeparator(this->ui->action_Dark);
+
+	connect(_pph, SIGNAL(sig_show_plugin(PlayerPlugin*)), this, SLOT(showPlugin(PlayerPlugin*)));
+    connect(_pph, SIGNAL(sig_hide_all_plugins()), this, SLOT(hideAllPlugins()));
+
 }
 
 /** LIBRARY AND PLAYLIST END **/
@@ -701,7 +704,7 @@ void GUI_SimplePlayer::notification_changed(bool active, int timeout_ms){
 
 void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
-    QWidget::resizeEvent(e);
+    QMainWindow::resizeEvent(e);
 
     ui_playlist->resize(ui->playlist_widget->size());
 
@@ -710,19 +713,10 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
 	QSize sz = ui->plugin_widget->size();
 
-    if(ui_eq && !ui_eq->isHidden() && ui_eq->isVisible())
-		ui_eq->resize(sz);
 
-    if(ui_stream && !ui_stream->isHidden() && ui_stream->isVisible())
-		ui_stream->resize(sz);
-
-    if(ui_lfm_radio && !ui_lfm_radio->isHidden() && ui_lfm_radio->isVisible())
-		ui_lfm_radio->resize(sz);
-
-    if(ui_playlist_chooser && !ui_playlist_chooser->isHidden() && ui_playlist_chooser->isVisible())
-        ui_playlist_chooser->resize(sz);
-
+    _pph->resize(sz);
     CSettingsStorage::getInstance()->setPlayerSize(this->size());
+    this->update();
 }
 
 
@@ -752,20 +746,11 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 			break;
 
 		case (Qt::Key_E):
-			ui->action_ViewEqualizer->setChecked(!ui->action_ViewEqualizer->isChecked());
-			break;
-
 		case (Qt::Key_P):
-			ui->action_ViewPlaylistChooser->setChecked(!ui->action_ViewPlaylistChooser->isChecked());
-			break;
-
 		case (Qt::Key_R):
-			ui->action_ViewLFMRadio->setChecked(!ui->action_ViewLFMRadio->isChecked());
-			break;
-
 		case (Qt::Key_S):
-					ui->action_ViewStream->setChecked(!ui->action_ViewStream->isChecked());
-					break;
+	        case (Qt::Key_O):
+			break;
 
 		case (Qt::Key_L):
 			ui->action_viewLibrary->setChecked(!ui->action_viewLibrary->isChecked());

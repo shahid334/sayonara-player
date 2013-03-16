@@ -40,7 +40,8 @@ using namespace Sort;
 			"SUM(tracks.length) / 1000 AS albumLength, " + \
 			"COUNT(tracks.trackid) AS albumNTracks, " + \
 			"MAX(tracks.year) AS albumYear, " + \
-			"group_concat(artists.name) AS albumArtists " + \
+			"group_concat(artists.name) AS albumArtists, " + \
+			"group_concat(tracks.discnumber) AS discnumbers " + \
 			"FROM albums, artists, tracks "
 
 bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
@@ -63,6 +64,20 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 				QStringList artistList = q.value(5).toString().split(',');
 				artistList.removeDuplicates();
 				album.artists = artistList;
+
+				QStringList discnumberList = q.value(6).toString().split(',');
+				album.discnumbers.clear();
+				foreach(QString disc, discnumberList){
+					int d = disc.toInt();
+					if(album.discnumbers.contains(d)) continue;
+					
+					album.discnumbers << d;
+				}
+
+				if(album.discnumbers.size() == 0)
+					album.discnumbers << 1;
+				album.n_discs = album.discnumbers.size();
+
 				album.is_sampler = (artistList.size() > 1);
 
 				result.push_back(album);
@@ -115,9 +130,9 @@ static QString _create_order_string(SortOrder sortorder){
 
 int CDatabaseConnector::getAlbumID (const QString & album)  {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	int albumID = -1;
 
 	q.prepare("SELECT albumID FROM albums WHERE name == ?;");
@@ -135,12 +150,12 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 }
 
 int CDatabaseConnector::getMaxAlbumID(){
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
 	int max_id = -1;
 
 	try {
-		QSqlQuery q (this -> m_database);
+		QSqlQuery q (*_database);
 		q.prepare("SELECT MAX(albumID) FROM albums;");
 
 		if (!q.exec()) {
@@ -156,21 +171,20 @@ int CDatabaseConnector::getMaxAlbumID(){
 
 	catch (QString& ex) {
 		qDebug() << ex;
-		QSqlError er = this -> m_database.lastError();
+		QSqlError er = this -> _database->lastError();
 		return max_id;
 	}
 
 	return max_id;
 }
 
-Album CDatabaseConnector::getAlbumByID(const int& id){
+bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
 	AlbumList albums;
-	Album album;
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	QString querytext =
 			ALBUM_ARTIST_TRACK_SELECTOR +
 			"WHERE albums.albumID = :id AND tracks.albumID = albums.albumID AND artists.artistID = tracks.artistID;";
@@ -180,17 +194,19 @@ Album CDatabaseConnector::getAlbumByID(const int& id){
 	q.bindValue(":id", QVariant(id));
 
 	_db_fetch_albums(q, albums);
-	if(albums.size() > 0)
-		album = albums[0];
+    if(albums.size() > 0){
+        album = albums[0];
+        return true;
+    }
 
-	return album;
+    return false;
 }
 
 void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	QString querytext =
 			ALBUM_ARTIST_TRACK_SELECTOR +
 			"WHERE tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
@@ -206,12 +222,12 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
 
 
 void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder){
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
     QStringList lst_artist_names;
 
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 
 	// fetch all albums
 	QString querytext =
@@ -304,9 +320,9 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Fil
 
 void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder){
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	QString query;
 	if(filter.by_searchstring == BY_FULLTEXT){
 			query = QString("SELECT * FROM ( ") +
@@ -361,9 +377,9 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
     q.prepare("INSERT INTO albums (name) values (:album);");
     q.bindValue(":album", QVariant(album));
     if (!q.exec()) {
@@ -374,9 +390,9 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
     try{
     	q.prepare("INSERT INTO albums (albumid, name) values (:id, :name);");
     	q.bindValue(":id", QVariant(album.id));
@@ -389,7 +405,7 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 
     catch (QString& ex) {
     		qDebug() << ex;
-    		QSqlError er = this -> m_database.lastError();
+    		QSqlError er = this -> _database->lastError();
     		qDebug() << er.driverText();
     		qDebug() << er.databaseText();
     		qDebug() << er.databaseText();

@@ -2,7 +2,7 @@
 #define GUI_TARGET_PLAYLIST_DIALOG_H
 
 #include <QDialog>
-#include <ui_GUI_Target_Playlist_Dialog.h>
+#include "GUI/ui_GUI_Target_Playlist_Dialog.h"
 
 class GUI_Target_Playlist_Dialog : public QDialog, private Ui_GUI_Target_Playlist_Dialog
 {

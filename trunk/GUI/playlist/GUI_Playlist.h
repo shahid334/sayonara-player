@@ -29,14 +29,14 @@
 #ifndef GUI_PLAYLIST_H_
 #define GUI_PLAYLIST_H_
 
-#include "ui_GUI_Playlist.h"
+#include "GUI/ui_GUI_Playlist.h"
+#include "GUI/playlist/PlaylistItemDelegateInterface.h"
+#include "GUI/InfoDialog/GUI_InfoDialog.h"
+
 
 #include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "GUI/playlist/PlaylistItemDelegateInterface.h"
-#include "GUI/InfoDialog/GUI_InfoDialog.h"
-
 #include <QObject>
 #include <QMainWindow>
 #include <QWidget>

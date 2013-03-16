@@ -9,7 +9,7 @@ ContextMenu::ContextMenu(QWidget *parent) :
     QMenu(parent)
 {
     _info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), "Info", this);
-    _edit_action = new QAction(QIcon(Helper::getIconPath() + "lyrics.png"), "Edit", this);
+    _edit_action = new QAction(QIcon(Helper::getIconPath() + "edit.png"), "Edit", this);
     _remove_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), "Remove", this);
     _delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), "Delete", this);
     _play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), "Play next", this);

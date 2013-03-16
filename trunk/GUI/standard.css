@@ -1,3 +1,11 @@
+QListView, QTableView{
+        background: #FFFFFF;
+        alternate-background-color: #DADADA;
+}
+
+
+
+
 QPushButton[flat=true]{
     color: white;
      border-radius: 7;

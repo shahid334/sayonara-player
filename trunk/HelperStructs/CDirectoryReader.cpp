@@ -30,6 +30,7 @@
 #include <QStringList>
 
 
+
 CDirectoryReader::CDirectoryReader () {
 
 	this->m_filters = Helper::get_soundfile_extensions();
@@ -86,7 +87,7 @@ void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & file
 
 void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_md){
 
-
+    qDebug() << "get metadata of filelist";
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
     QStringList files;
@@ -95,9 +96,11 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
     // fetch sound and playlist files
     QStringList filter = Helper::get_soundfile_extensions();
     filter.append(Helper::get_playlistfile_extensions());
+
     setFilter(filter);
 
     foreach(QString str, lst){
+
         if(!QFile::exists(str)) continue;
 
         QFileInfo fileinfo(str);
@@ -124,11 +127,14 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
     db->getMultipleTracksByPath(files, v_possible_md);
 
     foreach(MetaData md, v_possible_md){
-    	QString filepath = QDir(md.filepath).absolutePath();
+        QString filepath = QDir(md.filepath).absolutePath();
+
         if(Helper::is_playlistfile(filepath)){
             playlist_paths.push_back(filepath);
             continue;
         }
+
+
 
         if(Helper::is_soundfile(filepath)){
 
@@ -163,6 +169,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             }
         }
 	}
+
 
 
 }

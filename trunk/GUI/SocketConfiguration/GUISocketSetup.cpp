@@ -22,7 +22,7 @@
  *
  */
 
-#include "ui_GUI_SocketSetup.h"
+#include "GUI/ui_GUI_SocketSetup.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "HelperStructs/CSettingsStorage.h"
 

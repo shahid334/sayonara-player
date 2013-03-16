@@ -22,6 +22,7 @@
 #ifndef CLIBRARYBASE_H
 #define CLIBRARYBASE_H
 
+#include "library/ReloadThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
@@ -29,10 +30,10 @@
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "application.h"
 
-#include <QObject>
 #include <QThread>
+#include <QStringList>
 #include <QFileSystemWatcher>
-#include <library/ReloadThread.h>
+
 
 class Application;
 class CLibraryBase : public QObject
@@ -70,7 +71,8 @@ public slots:
     void baseDirSelected (const QString & baseDir);
     void insertMetaDataIntoDB(MetaDataList& in);
 
-    void reloadLibrary();
+    void reloadLibrary(bool);
+    void clearLibrary();
     void refresh();
     void importDirectory(QString);
     void importFiles(const MetaDataList&);
@@ -82,13 +84,14 @@ public slots:
 /* New way */
     void psl_selected_artists_changed(const QList<int>&);
     void psl_selected_albums_changed(const QList<int>&);
+    void psl_disc_pressed(int);
     void psl_selected_tracks_changed(const QList<int>&);
 
     void psl_prepare_album_for_playlist();
     void psl_prepare_artist_for_playlist();
     void psl_prepare_track_for_playlist(int idx);
 
-    void psl_filter_changed(const Filter&);
+    void psl_filter_changed(const Filter&, bool force=false);
     void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
     void psl_change_id3_tags(const QList<int>& lst);
 

@@ -66,7 +66,7 @@ int CDatabaseConnector::load_setting_int(QString key, int def){
 
 QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
 
-    DB_TRY_OPEN(m_database);
+    DB_TRY_OPEN(_database);
 
 	return load_setting_string(key).split(sep);
 }
@@ -74,8 +74,12 @@ QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
 
 bool CDatabaseConnector::load_settings(){
 
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_BOOL(m_database);
+
+    disconnect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+    disconnect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
+
+    DB_TRY_OPEN(_database);
+    DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
@@ -215,9 +219,7 @@ bool CDatabaseConnector::load_settings(){
 
 
 	/* shown plugin */
-	int shown_plugin = load_setting_int(SET_PLAYER_SHOWN_PLUGIN, PLUGIN_NONE);
-	if(shown_plugin < 0 || shown_plugin > PLUGIN_NUM) 
-		shown_plugin = PLUGIN_NONE;
+    QString shown_plugin = load_setting_string(SET_PLAYER_SHOWN_PLUGIN, "");
 	settings->setShownPlugin(shown_plugin);
 
 
@@ -265,19 +267,22 @@ bool CDatabaseConnector::load_settings(){
 	bool allow_only_one_instance = load_setting_bool(SET_PLAYER_ONE_INSTANCE, true);
 	settings->setAllowOnlyOneInstance(allow_only_one_instance);
 
-	return true;
+    connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
+    connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
+
+    return true;
 }
 
 bool CDatabaseConnector::store_settings(){
 
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_BOOL(m_database);
+    DB_TRY_OPEN(_database);
+    DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QString last_fm_username;
 	QString last_fm_password;
 	CSettingsStorage* storage = CSettingsStorage::getInstance();
 
-	m_database.transaction();
+	_database->transaction();
 
 	bool lfm_active = storage->getLastFMActive();
 	store_setting(SET_LFM_ACTIVE, lfm_active);
@@ -360,7 +365,7 @@ bool CDatabaseConnector::store_settings(){
 	bool show_library = storage->getShowLibrary();
 	store_setting(SET_LIB_SHOW, show_library);
 
-	int shown_plugin = storage->getShownPlugin();
+    QString shown_plugin = storage->getShownPlugin();
 	store_setting(SET_PLAYER_SHOWN_PLUGIN, shown_plugin);
 
 	bool min2tray = storage->getMinimizeToTray();
@@ -402,7 +407,8 @@ bool CDatabaseConnector::store_settings(){
 	bool allow_only_one_instance = storage->getAllowOnlyOneInstance();
 	store_setting(SET_PLAYER_ONE_INSTANCE, allow_only_one_instance);
 
-	m_database.commit();
+	_database->commit();
+	storage->set_sth_changed(false);
 	return true;
 }
 
@@ -413,7 +419,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant
 
 	tgt_value = 0;
 	try {
-		QSqlQuery q (this -> m_database);
+		QSqlQuery q (*_database);
 		q.prepare("select value from settings where key = ?;");
 		q.addBindValue(QVariant(key));
 
@@ -440,7 +446,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant
 void CDatabaseConnector::store_setting(QString key, QVariant value){
 	 try {
 
-		QSqlQuery q (this -> m_database);
+		QSqlQuery q (*_database);
 		q.prepare("select value from settings where key = :key;");
 		q.bindValue(":key", key);
 

@@ -39,7 +39,6 @@
 
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/playlist/PlaylistItemModel.h"
-
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
@@ -117,7 +116,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     connect(ui->listView, SIGNAL(sig_selection_changed(MetaDataList&)), this, SLOT(selection_changed(MetaDataList&)));
     connect(ui->listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
 
-	connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
+    //connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	connect(ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
 }
 
@@ -201,6 +200,8 @@ void GUI_Playlist::clear_playlist_slot(){
 void GUI_Playlist::selection_changed(MetaDataList& v_md){
 
     _info_dialog->setMetaData(v_md);
+
+    this->_info_dialog->set_tag_edit_visible(_radio_active == RADIO_OFF);
 }
 
 
@@ -290,8 +291,6 @@ void GUI_Playlist::set_total_time_label(qint64 total_msecs){
 
 
 
-
-
 void GUI_Playlist::set_radio_active(int radio){
 
 	_radio_active = radio;
@@ -303,16 +302,18 @@ void GUI_Playlist::set_radio_active(int radio){
 	ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 
     if(radio != RADIO_OFF){
-        ui->listView->set_drag_enabled(false);
+
         ui->listView->set_context_menu_actions(ENTRY_INFO);
-        this->_info_dialog->set_tag_edit_visible(false);
+
     }
 
     else{
-        ui->listView->set_drag_enabled(true);
+
         ui->listView->set_context_menu_actions(ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
-        this->_info_dialog->set_tag_edit_visible(true);
+
     }
+
+    ui->listView->set_drag_enabled(radio != RADIO_LFM);
 }
 
 

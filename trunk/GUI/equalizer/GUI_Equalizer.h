@@ -30,22 +30,19 @@
 #define GUI_EQUALIZER_H_
 
 #include "HelperStructs/Equalizer_presets.h"
+#include "GUI/ui_GUI_Equalizer.h"
 
 #include <QObject>
-#include <QDockWidget>
-#include <QCloseEvent>
-#include <ui_GUI_Equalizer.h>
-
 #include <vector>
 
 using namespace std;
 
-class GUI_Equalizer : public QDockWidget, private Ui::GUI_Equalizer{
+class GUI_Equalizer : public PlayerPlugin, private Ui::GUI_Equalizer{
 
 	Q_OBJECT
 
 public:
-	GUI_Equalizer(QWidget* parent=0);
+	GUI_Equalizer(QString name, QString action_name, QChar shortcut, QWidget* parent=0);
 	virtual ~GUI_Equalizer();
 
 	signals:
@@ -75,10 +72,6 @@ public:
 		void fill_eq_presets(const vector<EQ_Setting>&);
 		void fill_available_equalizers(const QStringList&);
         void changeSkin(bool);
-
-	protected:
-		void 	closeEvent ( QCloseEvent * event );
-
 
 	private:
         Ui::GUI_Equalizer* _ui;

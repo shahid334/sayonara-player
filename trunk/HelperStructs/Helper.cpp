@@ -29,6 +29,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/WebAccess.h"
 
 #include <string>
 #include <iostream>
@@ -47,6 +48,7 @@
 #include <QDebug>
 #include <QList>
 #include <QFile>
+#include <QFontMetrics>
 
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 
@@ -336,6 +338,8 @@ QStringList Helper::get_playlistfile_extensions(){
 	return filters;
 }
 
+
+
 bool Helper::is_playlistfile(QString filename){
 	QStringList extensions = get_playlistfile_extensions();
 	foreach(QString extension, extensions){
@@ -345,6 +349,55 @@ bool Helper::is_playlistfile(QString filename){
 	}
 
 	return false;
+}
+
+
+
+QStringList Helper::get_podcast_extensions(){
+
+    QStringList filters;
+
+    filters << "*.xml"
+            << "*.rss";
+
+    foreach(QString filter, filters){
+        filters.push_back(filter.toUpper());
+    }
+
+    return filters;
+}
+
+
+bool Helper::is_podcastfile(QString filename, QString& content){
+    QStringList extensions = get_podcast_extensions();
+
+    bool extension_ok = false;
+    foreach(QString extension, extensions){
+
+        if(filename.toLower().endsWith(extension.right(4).toLower())){
+            extension_ok = true;
+            break;
+
+        }
+    }
+
+    qDebug() << "extension ok? " << extension_ok;
+    if(!extension_ok) return false;
+
+    if( Helper::is_www(filename) ){
+        qDebug() << "read http into str";
+        read_http_into_str(filename, content);
+    }
+
+    else{
+        read_file_into_str(filename, content);
+    }
+
+    QString header = content;
+    if(content.size() > 1024) header = content.left(1024);
+
+    if(header.contains("<rss")) return true;
+    return false;
 }
 
 QString Helper::calc_file_extension(QString filename){
@@ -387,9 +440,8 @@ QStringList Helper::extract_folders_of_files(QStringList files){
 
 bool Helper::checkTrack(const MetaData& md){
 
-    if( md.filepath.startsWith("http", Qt::CaseInsensitive)) return true;
-    if( md.filepath.startsWith("ftp", Qt::CaseInsensitive)) return true;
-    if( md.filepath.startsWith("mms", Qt::CaseInsensitive)) return true;
+
+    if( is_www(md.filepath)) return true;
 
 	if( !QFile::exists(md.filepath) && md.id >= 0 ){
 		return false;
@@ -397,8 +449,6 @@ bool Helper::checkTrack(const MetaData& md){
 
 	return true;
 }
-
-
 
 
 bool Helper::read_file_into_str(QString filename, QString& content){
@@ -421,6 +471,10 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 	return false;
 
+}
+
+bool Helper::read_http_into_str(QString url, QString& content){
+    return WebAccess::read_http_into_str(url, content);
 }
 
 
@@ -463,3 +517,51 @@ QString Helper::calc_hash(QString data){
 }
 
 
+QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep){
+
+    QFontMetrics fm(w->font());
+
+    int width = w->width();
+
+
+    QString subtext = str;
+    QStringList lst;
+
+    while(fm.width(subtext) > width){
+        int textsize = fm.width(subtext);
+        double scale = (width * 1.0) / textsize;
+        int idx = subtext.size() * scale - 2;
+        if(idx < 0) idx = 0;
+
+        while(subtext.at(idx) != sep && idx >= 0){
+            idx --;
+        }
+
+        if(idx >= 0){
+
+            lst << subtext.left(idx+1);
+            subtext = subtext.right(subtext.size() - idx);
+        }
+
+        else
+            break;
+
+    }
+
+    lst << subtext;
+    return lst.join("<br />");
+}
+
+bool Helper::is_url(QString str){
+    if(is_www(str)) return true;
+    if(str.startsWith("file"), Qt::CaseInsensitive) return true;
+    return false;
+}
+
+bool Helper::is_www(QString str){
+
+
+    if(str.startsWith("http")) return true;
+    else if(str.startsWith("ftp")) return true;
+    return false;
+}

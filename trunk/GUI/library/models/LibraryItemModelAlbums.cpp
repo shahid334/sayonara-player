@@ -62,8 +62,6 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 		 _album_list.removeAt(position);
 	 }
 
-
-
 	 endRemoveRows();
 	 return true;
 }
@@ -113,7 +111,6 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
                      return album.year;
                  case COL_ALBUM_NAME:
                      return album.name;
-
                  case COL_ALBUM_DURATION:
                     return Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000, true, false);
 
@@ -137,7 +134,7 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
              Album album;
              album.fromVariant(value);
 
-             if(album.is_lib_selected)
+             if(album.is_lib_selected && !_selected_rows.contains(index.row()))
                 _selected_rows << index.row();
 
 			 _album_list.replace(index.row(), album);
@@ -184,3 +181,14 @@ int LibraryItemModelAlbums::getFirstRowOf(QString substr){
     return -1;
 }
 
+void  LibraryItemModelAlbums::set_selected(QList<int>& rows){
+    LibraryItemModel::set_selected(rows);
+    for(int i=0; i<_album_list.size(); i++){
+        _album_list[i].is_lib_selected = rows.contains(i);
+    }
+}
+
+
+QList<int> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx){
+	return _album_list[idx.row()].discnumbers;
+}

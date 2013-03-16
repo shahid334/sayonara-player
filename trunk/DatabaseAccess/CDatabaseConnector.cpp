@@ -76,7 +76,7 @@ bool CDatabaseConnector::isExistent() {
     success = openDatabase();
 
     if (success)
-        m_database.close();
+        _database->close();
 
     else
         qDebug() << "Could not open Database";
@@ -142,15 +142,14 @@ bool CDatabaseConnector::init_settings_storage(){
 }
 
 bool CDatabaseConnector::openDatabase () {
+    _database = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", _db_filename));
+    if(_database->isOpen()) _database->close();
 
-    if(m_database.isOpen()) m_database.close();
-
-    m_database = QSqlDatabase::addDatabase("QSQLITE", _db_filename);
-    m_database.setDatabaseName( _db_filename );
-    bool e = m_database.open();
+    _database->setDatabaseName( _db_filename );
+    bool e = _database->open();
     if (!e) {
     	qDebug() << "DatabaseConnector database cannot be opened!";
-        QSqlError er = m_database.lastError();
+        QSqlError er = _database->lastError();
         qDebug() << er.driverText();
         qDebug() << er.databaseText();
     }
@@ -162,29 +161,49 @@ bool CDatabaseConnector::openDatabase () {
 
     return e;
 }
+void CDatabaseConnector::closeDatabase(){
+    qDebug() << "close database... ";
+    if ( _database->isOpen()) {
+         _database->close();
+    }
+    delete _database;
+
+   
+    QStringList connectionList = QSqlDatabase::connectionNames();
+    for(int i = 0; i < connectionList.count(); ++i) {
+        QSqlDatabase::removeDatabase(connectionList[i]);
+    }
+    
+
+    _database = 0;
+
+}
+
 
 CDatabaseConnector::~CDatabaseConnector() {
+    if(_database){
 
-	qDebug() << "close database... ";
-    if (this -> m_database.isOpen()) {
-        this -> m_database.close();
+ 	closeDatabase();
     }
+ 
 }
+
+
 
 
 bool CDatabaseConnector::check_and_insert_column(QString tablename, QString column, QString sqltype){
 
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_BOOL(m_database);
+    DB_TRY_OPEN(_database);
+    DB_RETURN_NOT_OPEN_BOOL(_database);
 
-    QSqlQuery q (this->m_database);
+    QSqlQuery q (*_database);
     QString querytext = "SELECT " + column + " FROM " + tablename + ";";
     q.prepare(querytext);
 
     if(!q.exec()){
         qDebug() << "DB: Could not find " << column << " in " << tablename << ": inserting it";
 
-        QSqlQuery q2 (this -> m_database);
+        QSqlQuery q2 (*_database);
         querytext = "ALTER TABLE " + tablename + " ADD COLUMN " + column + " " + sqltype + ";";
         q2.prepare(querytext);
         bool success = q2.exec();
@@ -197,28 +216,27 @@ bool CDatabaseConnector::check_and_insert_column(QString tablename, QString colu
 
 bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_create_str){
 
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_BOOL(m_database);
+    DB_TRY_OPEN(_database);
+    DB_RETURN_NOT_OPEN_BOOL(_database);
 
-    QSqlQuery q (this->m_database);
+    QSqlQuery q (*_database);
     QString querytext = "SELECT * FROM " + tablename + ";";
     q.prepare(querytext);
 
     if(!q.exec()){
         qDebug() << "DB: Table " << tablename << " does not exist: creating...";
-        QSqlQuery q2 (this->m_database);
+        QSqlQuery q2 (*_database);
         q2.prepare(sql_create_str);
         return q2.exec();
     }
 
     return true;
-
 }
 
 bool CDatabaseConnector::apply_fixes(){
 
-    DB_TRY_OPEN(m_database);
-    DB_RETURN_NOT_OPEN_BOOL(m_database);
+    DB_TRY_OPEN(_database);
+    DB_RETURN_NOT_OPEN_BOOL(_database);
 
     check_and_insert_column("playlisttotracks", "position", "INTEGER");
     check_and_insert_column("playlisttotracks", "filepath", "VARCHAR(512)");
@@ -231,6 +249,15 @@ bool CDatabaseConnector::apply_fixes(){
 				");";
 
     check_and_create_table("savedstreams", create_savedstreams);
+
+
+    QString create_savedpodcasts = QString("CREATE TABLE savedpodcasts ") +
+                "( " +
+                "	name VARCHAR(255) PRIMARY KEY, " +
+                "	url VARCHAR(255) " +
+                ");";
+
+    check_and_create_table("savedpodcasts", create_savedpodcasts);
 
 	return true;
 }

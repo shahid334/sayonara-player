@@ -105,6 +105,7 @@ public:
         void psl_lfm_radio_init(bool);
         void psl_new_lfm_playlist_available(const MetaDataList&);
 		void psl_play_stream(const QString&, const QString&);
+        void psl_play_podcast(const QString&, const QString&);
 		void psl_valid_strrec_track(const MetaData&);
 		void psl_play_next_tracks(const MetaDataList&);
         void psl_gapless_track();
@@ -113,17 +114,21 @@ public:
 
 	private:
 
+        MetaDataList        _v_meta_data;
+        QStringList			_pathlist;
+
+        int					_cur_play_idx;
+        bool                _is_playing;
+        int					_radio_active;
 
 
-    MetaDataList        _v_meta_data;
-    QStringList			_pathlist;
-    int					_cur_play_idx;
+        Playlist_Mode		_playlist_mode;
 
-	Playlist_Mode		_playlist_mode;
-	int					_radio_active;
-	CDatabaseConnector* _db;
-    CSettingsStorage*   _settings;
-    MetaDataList	_v_stream_playlist;
+        CDatabaseConnector* _db;
+        CSettingsStorage*   _settings;
+        MetaDataList        _v_stream_playlist;
+
+        void                send_cur_playing_signal(int);
 
 
 	/* wrapper for Helper::checkTrack */

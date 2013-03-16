@@ -66,272 +66,6 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 }
 
 
-void CLibraryBase::baseDirSelected (const QString & baseDir) {
-
-    QStringList fileList;
-    int num_files = 0;
-
-    m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
-
-    emit sig_playlist_created(fileList);
-
-}
-
-void CLibraryBase::importDirectory(QString directory){
-
-
-	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
-
-
-	m_src_dir = directory;
-
-	QDir lib_dir(m_library_path);
-	QDir src_dir(directory);
-
-	QDir tmp_src_dir = src_dir;
-	tmp_src_dir.cdUp();
-
-	QString rel_src_path = tmp_src_dir.relativeFilePath(directory) + QDir::separator();
-	QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-
-	content.push_front("");
-
-	if(m_import_dialog){
-		disconnect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
-		delete m_import_dialog;
-		m_import_dialog = 0;
-	}
-
-    m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), content, true);
-	connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
-	m_import_dialog->show();
-}
-
-void CLibraryBase::importFiles(const MetaDataList& v_md){
-
-    MetaDataList v_md_new = v_md;
-    qDebug() << "Import files " << v_md.size();
-    bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
-    emit sig_import_result(success);
-}
-
-
-
-
-void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy){
-
-    QDir lib_dir(m_library_path);
-    QDir src_dir(m_src_dir);
-	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-
-	if(!copy){
-		CDirectoryReader reader;
-		QStringList files;
-		int n_files;
-		reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
-		MetaDataList v_md;
-		foreach(QString filename, files){
-			MetaData md;
-            md = _db->getTrackByPath(filename);
-
-			if(md.id < 0){
-                if(!ID3::getMetaDataOfFile(md)) continue;
-			}
-
-			v_md.push_back(md);
-		}
-
-		bool success = db->storeMetadata(v_md);
-
-		emit sig_import_result(success);
-		emit sig_reload_library_finished();
-
-		return;
-	}
-
-	QDir tmp_src_dir = src_dir;
-	tmp_src_dir.cdUp();
-
-	QString rel_src_path = tmp_src_dir.relativeFilePath(m_src_dir) + QDir::separator();
-
-    QString target_path = m_library_path +
-				QDir::separator() +
-				chosen_item +
-				QDir::separator() +
-				rel_src_path.replace(" ", "_");
-
-		QStringList files2copy;
-		files2copy.push_back(src_dir.absolutePath());
-        int num_files = 1;
-
-		for(int i=0; i<num_files; i++){
-
-			// fetch all entries of a file, maybe it's a directory
-			QDir sub_dir(files2copy[i]);
-			QStringList sub_files = sub_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDir::DirsFirst);
-
-			// it is a directory
-			if(sub_files.size() != 0){
-
-				// create this directory
-				QDir tmp_src_dir(src_dir);
-				QDir new_sub_dir( target_path + tmp_src_dir.relativeFilePath(files2copy[i]) );
-				sub_dir.mkpath(new_sub_dir.path());
-
-				// remove this "file" from list
-				files2copy.removeAt(i);
-				num_files--;
-
-
-				// insert all files/directories from subdir
-				// into array
-				for(int j=0; j<sub_files.size(); j++){
-					files2copy.insert(i+j, sub_dir.path() + QDir::separator() + sub_files[j] );
-				}
-
-                num_files += sub_files.size();
-				i--;
-			}
-		}
-
-
-		// copy & save to database
-		MetaDataList v_metadata;
-
-		bool success = false;
-		for(int i=0; i<files2copy.size(); i++){
-
-			// target path + relative src path
-			QDir tmp_src_dir(src_dir);
-			QString new_filename = target_path + tmp_src_dir.relativeFilePath(files2copy[i]);
-
-			QFile f(files2copy[i]);
-			if( f.copy(new_filename) ){
-				success = true;
-				int percent = (i * 10000) / (100 * files2copy.size());
-				if( i== files2copy.size() -1) {
-					m_import_dialog->close();
-				}
-				else m_import_dialog->progress_changed(percent);
-				if(Helper::is_soundfile(new_filename)){
-					MetaData md;
-                    md.filepath = QDir(new_filename).absolutePath();
-                    if( ID3::getMetaDataOfFile( md))
-						v_metadata.push_back( md );
-				}
-			}
-		}
-
-        m_import_dialog->progress_changed(0);
-
-		success &= db->storeMetadata(v_metadata);
-
-
-        if(success)
-            QMessageBox::information(m_app->getMainWindow(), "Import files", "All files could be imported");
-
-        else
-            QMessageBox::warning(m_app->getMainWindow(), "Import files", QString("Sorry, but tracks could not be imported <br />") +
-                                 "Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
-
-        m_import_dialog->close();
-
-		emit sig_import_result(success);
-}
-
-
-
-void CLibraryBase::reloadLibrary(){
-
-	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
-
-	if(m_library_path.length() == 0) {
-		QMessageBox msgBox;
-		msgBox.setText("Please select your library first");
-		msgBox.exec();
-
-		QString dir = QFileDialog::getExistingDirectory(0, tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
-
-		if(dir.length() < 3) {
-			QMessageBox msgBox;
-			msgBox.setText("I said: \"Please select your library first\". Bye bye!");
-			msgBox.exec();
-			return;
-		}
-
-		else {
-			m_library_path = dir;
-			CSettingsStorage::getInstance()->setLibraryPath(dir);
-		}
-	}
-
-
-	if(m_thread->isRunning()){
-		m_thread->terminate();
-	}
-
-	m_thread->set_lib_path(m_library_path);
-	m_thread->start();
-}
-
-
-// TODO:
-void CLibraryBase::reload_thread_finished(){
-
-	_db->getAllAlbums(_vec_albums);
-	_db->getAllArtists(_vec_artists);
-    _db->getTracksFromDatabase(_vec_md);
-
-    emit sig_all_artists_loaded(_vec_artists);
-    emit sig_all_albums_loaded(_vec_albums);
-    emit sig_all_tracks_loaded(_vec_md);
-	emit sig_reload_library_finished();
-}
-
-void CLibraryBase::library_reloading_state_new_block(){
-    m_thread->pause();
-    _db->getAllAlbums(_vec_albums);
-    _db->getAllArtists(_vec_artists);
-    _db->getTracksFromDatabase(_vec_md);
-
-    emit sig_all_artists_loaded(_vec_artists);
-    emit sig_all_albums_loaded(_vec_albums);
-    emit sig_all_tracks_loaded(_vec_md);
-
-    m_thread->goon();
-
-}
-
-void CLibraryBase::library_reloading_state_slot(QString str){
-
-	emit sig_reloading_library(str);
-}
-
-
-
-void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
-
-    _db->storeMetadata(v_md);
-
-    MetaDataList data;
-    _db->getTracksFromDatabase(data);
-    emit sig_all_tracks_loaded(data);
-}
-
-
-
-void CLibraryBase::loadDataFromDb () {
-
-	_filter.cleared = true;
-	_filter.filtertext = "";
-
-	_db->getAllArtists(_vec_artists);
-	_db->getAllAlbums(_vec_albums);
-	_db->getTracksFromDatabase(_vec_md);
-
-	emit_stuff();
-}
-
 
 void CLibraryBase::emit_stuff(){
 	emit sig_all_albums_loaded(_vec_albums);
@@ -359,8 +93,9 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 		}
 
         foreach(Artist artist, tmp_artists){
-            if(_selected_artists.contains(artist.id))
-                artist.is_lib_selected = true;
+
+            artist.is_lib_selected = _selected_artists.contains(artist.id);
+
 
             _vec_artists.push_back(artist);
         }
@@ -392,8 +127,8 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 		}
 
         foreach(Album album, tmp_albums){
-            if(_selected_albums.contains(album.id))
-                album.is_lib_selected = true;
+
+            album.is_lib_selected = _selected_albums.contains(album.id);
 
             _vec_albums.push_back(album);
         }
@@ -426,9 +161,9 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 
 
         foreach(MetaData md, v_md_tmp){
-            if(_selected_tracks.contains(md.id)){
-                md.is_lib_selected = true;
-            }
+
+            md.is_lib_selected = _selected_tracks.contains(md.id);
+
             _vec_md.push_back(md);
         }
 
@@ -439,16 +174,17 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 
 void CLibraryBase::refresh(){
 
-    psl_filter_changed(_filter);
+    psl_filter_changed(_filter, true);
 }
 
-void CLibraryBase::psl_filter_changed(const Filter& filter){
+void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
     if(     _filter.cleared &&
             filter.cleared &&
             filter.filtertext.size() < 5 &&
             (_selected_artists.size() == 0) &&
-            (_selected_albums.size() == 0)) return;
+            (_selected_albums.size() == 0) &&
+            !force) return;
 
     _filter = filter;
 
@@ -458,6 +194,7 @@ void CLibraryBase::psl_filter_changed(const Filter& filter){
 
     _selected_albums.clear();
     _selected_artists.clear();
+
 
 	if(_filter.cleared){
 		_db->getAllArtists(_vec_artists, _artist_sortorder);
@@ -512,43 +249,27 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
 
     _selected_albums.clear();
     _selected_tracks.clear();
-    /*
-    QList<int> new_selected_albums;
-    QList<int> new_selected_tracks;
-    for(uint i=0; i<_vec_albums.size(); i++){
-        if(!_selected_albums.contains(_vec_albums[i].id)) continue;
-        _vec_albums[i].is_lib_selected = true;
-        new_selected_albums << _vec_albums[i].id;
-    }
 
-
-    MetaDataList v_md;
-    for(uint i=0; i<_vec_md.size(); i++){
-
-        if(new_selected_albums.size() > 0 && !new_selected_albums.contains(_vec_md[i].album_id) ) continue;
-
-        MetaData md = _vec_md[i];
-
-        if(!_selected_tracks.contains(md.id)) {
-            v_md.push_back(md);
-            continue;
-        }
-
-        md.is_lib_selected = true;
-        v_md.push_back(md);
-
-        new_selected_tracks << md.id;
-    }
-
-    _vec_md = v_md;
-    _selected_albums = new_selected_albums;
-    _selected_tracks = new_selected_tracks;
-*/
 	emit sig_all_albums_loaded(_vec_albums);
     emit sig_all_tracks_loaded(_vec_md);
 }
 
+void CLibraryBase::psl_disc_pressed(int disc){
+	
+	if( _selected_albums.size() == 0 ||
+            _selected_albums.size() > 1 ||
+	    disc < 0 ) return;
 
+	MetaDataList v_metadata;
+	foreach(MetaData md, _vec_md){
+		if(md.discnumber != disc) continue;
+		v_metadata.push_back(md);
+	}
+
+	_vec_md = v_metadata;
+
+	emit sig_all_tracks_loaded(_vec_md);
+}
 
 void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 
@@ -619,6 +340,7 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
     emit sig_all_tracks_loaded(_vec_md);
 }
 
+
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
 
     _selected_tracks.clear();
@@ -632,8 +354,8 @@ void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
 	}
 
 	emit sig_track_mime_data_available(v_md);
-
 }
+
 
 void CLibraryBase::psl_change_id3_tags(const QList<int>& lst){
 
@@ -684,57 +406,6 @@ void CLibraryBase::psl_prepare_track_for_playlist(int idx){
 
 
 
-void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
-
-	QStringList file_list;
-	QString file_entry = "files";
-	int n_files = vec_md.size();
-	int n_fails = 0;
-
-	foreach(MetaData md, vec_md){
-		file_list.push_back(md.filepath);
-	}
-
-	_db->deleteTracks(vec_md);
-	vec_md.clear();
-
-	if(answer == 1){
-		file_entry = "entries";
-		foreach(QString filename, file_list){
-			QFile file(filename);
-			if( !file.remove() )
-				n_fails ++;
-		}
-	}
-
-	QString answer_str;
-
-	if(n_fails == 0){
-		answer_str = "All " + file_entry + " could be removed";
-	}
-
-	else {
-		answer_str = QString::number(n_fails) + " of " + QString::number(n_files) + " " + file_entry + " could not be removed";
-	}
-
-	emit sig_delete_answer(answer_str);
-}
-
-
-void CLibraryBase::psl_delete_tracks(int answer){
-	delete_tracks(_vec_md, answer);
-}
-
-
-void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
-
-	MetaDataList vec_md;
-	foreach(int idx, lst){
-		vec_md.push_back(_vec_md[idx]);
-	}
-
-	delete_tracks(vec_md, answer);
-}
 
 void CLibraryBase::psl_play_next_all_tracks(){
 	emit sig_play_next_tracks(_vec_md);

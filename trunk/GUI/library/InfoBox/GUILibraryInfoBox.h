@@ -28,7 +28,7 @@
 #include <QObject>
 #include <QDialog>
 #include <QString>
-#include "ui_GUI_Library_Info_Box.h"
+#include "GUI/ui_GUI_Library_Info_Box.h"
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"

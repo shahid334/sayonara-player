@@ -35,9 +35,9 @@
 
 void CDatabaseConnector::deleteTracksAlbumsArtists(){
 
-		QSqlQuery q (this -> m_database);
+		QSqlQuery q (*_database);
 
-		m_database.transaction();
+		_database->transaction();
 
 		bool err = false;
 		for(int i=0; i<3; i++){
@@ -58,19 +58,19 @@ void CDatabaseConnector::deleteTracksAlbumsArtists(){
 			}
 		}
 
-		 if(!err) m_database.commit();
+		 if(!err) _database->commit();
 }
 
 
 
 bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
-	DB_TRY_OPEN(m_database);
+	DB_TRY_OPEN(_database);
 
     int artistID = -1, albumID = -1;
 
 
-    m_database.transaction();
+    _database->transaction();
     foreach (MetaData data, v_md) {
 
     	try {
@@ -93,11 +93,11 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
         catch (QString ex) {
             qDebug() << "Error during inserting of metadata into database";
             qDebug() << ex;
-            QSqlError er = this -> m_database.lastError();
+            QSqlError er = this -> _database->lastError();
         }
 
     }
-    return m_database.commit();
+    return _database->commit();
 
 }
 

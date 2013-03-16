@@ -126,6 +126,7 @@ private:
 	CSettingsStorage* _settings;
 
 	void init_play_pipeline();
+    bool set_uri(const MetaData& md, bool& start_play);
 
 
 

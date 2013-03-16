@@ -35,7 +35,7 @@ using namespace std;
 
 static QString get_fg_color(int val_bg){
 
-	if(val_bg > 96)
+    if(val_bg > 160)
 		return  QString(" color: #202020; ");
 
 	else
@@ -52,11 +52,6 @@ PlaylistItemDelegateSmall::PlaylistItemDelegateSmall(QListView *parent ) {
 	_parent = parent;
 	_row_height = 20;
 
-
-	_pl_entry = new GUI_PlaylistEntrySmall();
-
-	_pl_entry->setMinimumHeight(_row_height);
-	_pl_entry->setMaximumHeight(_row_height);
 }
 
 PlaylistItemDelegateSmall::~PlaylistItemDelegateSmall() {
@@ -73,6 +68,11 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	if(!index.isValid()) return;
 
+    GUI_PlaylistEntrySmall* pl_entry = new GUI_PlaylistEntrySmall(_parent);
+
+    pl_entry->setMinimumHeight(_row_height);
+    pl_entry->setMaximumHeight(_row_height);
+
 	QVariant mdVariant = index.model()->data(index, Qt::WhatsThisRole);
 	MetaData md;
 	if( !MetaData::fromVariant(mdVariant, md) ) return;
@@ -81,67 +81,51 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	painter->save();
 	painter->translate(0, 0);
 
-	_pl_entry->setContent(md, index.row() +1 );
+    pl_entry->setContent(md, index.row() +1 );
 
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
 						this->_parent->verticalScrollBar()->width() + 4 : 4;
 
-	_pl_entry->setWidth(_parent->width() - offset);
+    pl_entry->setWidth(_parent->width() - offset);
 
-	QString style;
-	QString col_fg;
-	QPalette palette = _parent->palette();
+    QString style;
+    QPalette palette = _parent->palette();
 
-	QColor col_background = palette.color(QPalette::Active, QPalette::Background);
-	QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-    QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light(140);
+    QColor col_background = palette.color(QPalette::Active, QPalette::Background);
+    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
+    QColor col_highlight_lighter = col_highlight.darker(140);
 
-    QColor col_orange = SAYONARA_ORANGE_COL;
-    QColor col_orange_light = col_orange.light();
-
-	int highlight_val = col_highlight.lightness();
+    int highlight_val = col_highlight.lightness();
+    int playing_val = col_highlight_lighter.lightness();
     int background_val = col_background.lightness();
 
     if(md.pl_playing){
-
-    //    if(!md.is_extern){
-            style = QString("background-color: ") +
-                col_highlight_lighter.name() + ";" +
-                get_fg_color(col_highlight_lighter.lightness());
-      /*  }
-
-        else {
-            style = QString("background-color: ") +
-                col_orange_light.name() + ";" +
-                get_fg_color(col_orange_light.lightness());
-        }*/
+            style = QString("background-color: ") + col_highlight_lighter.name() + "; " +
+                    get_fg_color(playing_val);
     }
 
     else if(md.is_disabled){
-        style = QString("background-color: transparent; color: #888888;");
+            style = QString("color: #A0A0A0;");
     }
 
     else if(!md.pl_selected){
-        /*if(!md.is_extern) style = QString("background-color: transparent; ") + get_fg_color(background_val);
-        else style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(col_orange.lightness());*/
-
-        style = QString("background-color: transparent; ") + get_fg_color(background_val);
+        style = QString("background-color: transparent; ") +
+                get_fg_color(background_val);
     }
 
-	// standard selected
-	else
-		style = QString("background-color: ") +
-				col_highlight.name() + "; " +
-				get_fg_color(highlight_val);
+    // standard selected
+    else{
+       style = QString("background-color: ") + col_highlight.name() + ";" +
+                get_fg_color(highlight_val);
+    }
 
-
-	int y = rect.topLeft().y() +  _pl_entry->height()-1;
-    _pl_entry->setStyleSheet(style);
-    if(md.is_disabled) _pl_entry->setDisabled(true);
-	_pl_entry->render(painter, rect.topLeft() );
+    int y = rect.topLeft().y() +  pl_entry->height()-1;
+    pl_entry->setStyleSheet(style);
+    if(md.is_disabled) pl_entry->setDisabled(true);
+    pl_entry->render(painter, rect.topLeft() );
 
 	if(md.pl_dragged) {
-		painter->drawLine(QLine(0, y, _pl_entry->width(), y));
+        painter->drawLine(QLine(0, y, pl_entry->width(), y));
 	}
 
 	painter->restore();

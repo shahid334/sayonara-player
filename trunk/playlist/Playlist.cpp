@@ -26,6 +26,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistParser.h"
+#include "HelperStructs/PodcastParser/PodcastParser.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/PlaylistMode.h"
@@ -50,6 +51,8 @@ Playlist::Playlist(QObject * parent) : QObject (parent){
     _playlist_mode = _settings->getPlaylistMode();
 	_db = CDatabaseConnector::getInstance();
 	_v_meta_data.clear();
+    _is_playing = false;
+
 
 }
 
@@ -60,6 +63,9 @@ Playlist::~Playlist() {
 
 // create a playlist, where metadata is already available
 void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
+
+
+    bool instant_play = ((_v_meta_data.size() == 0) && (!_is_playing));
 
     if(!_playlist_mode.append){
         _v_meta_data.clear();
@@ -81,7 +87,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
             MetaData md_tmp = _db->getTrackByPath(md.filepath);
 
             if(md.radio_mode == RADIO_OFF){
-                md.is_extern = (md_tmp.id < 0 && !md.filepath.startsWith("http", Qt::CaseInsensitive));
+                md.is_extern = (md_tmp.id < 0 && !Helper::is_www(md.filepath));
                 _radio_active = RADIO_OFF;
             }
 
@@ -94,13 +100,17 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
     if(_radio_active != old_radio_active){
         _cur_play_idx = 0;
-        emit sig_selected_file_changed(0);
-        emit sig_selected_file_changed_md(_v_meta_data[0]);
+        send_cur_playing_signal(0);
     }
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+
+    if(instant_play)
+        send_cur_playing_signal(0);
+
     psl_save_playlist_to_storage();
 }
+
 
 
 
@@ -125,9 +135,16 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
 }
 
 
+void Playlist::send_cur_playing_signal(int i){
+    _is_playing = true;
+    emit sig_selected_file_changed(i);
+    emit sig_selected_file_changed_md(_v_meta_data[i]);
+    _cur_play_idx = i;
+}
+
+
 void Playlist::load_old_playlist(){
 
-    qDebug() << "load old playlist " << _v_meta_data.size();
     if(_v_meta_data.size() > 0) return;
 
     bool loadPlaylist = _settings->getLoadPlaylist();
@@ -153,13 +170,12 @@ void Playlist::load_old_playlist(){
     for(int i=0; i<saved_playlist.size(); i++){
 
         // convert item into MetaData
-
         QString item = saved_playlist[i];
         if(item.size() == 0) continue;
 
         // maybe we can get a track id
-            bool ok;
-            int track_id = item.toInt(&ok);
+        bool ok;
+        int track_id = item.toInt(&ok);
 
         // maybe it's an filepath
             QString path_in_list = item;
@@ -211,12 +227,16 @@ void Playlist::load_old_playlist(){
     if(_v_meta_data.size() == 0) return;
 
     _cur_play_idx = 0;
+
     if(loadLastTrack && last_track_idx >= 0){
         _cur_play_idx = last_track_idx;
     }
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+
     emit sig_selected_file_changed(_cur_play_idx);
+
+    _is_playing = start_immediatly;
 
     if(load_last_position){
             emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx], last_track->pos_sec, start_immediatly);
@@ -278,6 +298,7 @@ void Playlist::psl_next_track(){
 
     	if(_v_meta_data.size() == 0){
     		_cur_play_idx = -1;
+            _is_playing = false;
             emit sig_no_track_to_play();
             emit sig_need_more_radio();
             return;
@@ -288,6 +309,7 @@ void Playlist::psl_next_track(){
         // track too high
         if(track_num >= (int) _v_meta_data.size()){
             _cur_play_idx = -1;
+            _is_playing = false;
             emit sig_no_track_to_play();
             emit sig_need_more_radio();
             return;
@@ -308,10 +330,8 @@ void Playlist::psl_next_track(){
 
 
         emit sig_playlist_created(v_md, track_num, _radio_active);
-        emit sig_selected_file_changed(track_num);
-        emit sig_selected_file_changed_md(v_md[track_num]);
+        send_cur_playing_signal(track_num);
 
-        _cur_play_idx = track_num;
         return;
     }
 
@@ -320,6 +340,7 @@ void Playlist::psl_next_track(){
     int track_num = -1;
     if(_v_meta_data.size() == 0){
         _cur_play_idx = -1;
+        _is_playing = false;
 		emit sig_no_track_to_play();
 		return;
 	}
@@ -344,6 +365,7 @@ void Playlist::psl_next_track(){
 				track_num = 0;
 
             else{
+                _is_playing = false;
                 emit sig_no_track_to_play();
                 return;
             }
@@ -362,10 +384,7 @@ void Playlist::psl_next_track(){
 
 		// maybe track is deleted here
 		if( checkTrack(md) ){
-
-            emit sig_selected_file_changed(track_num);
-			emit sig_selected_file_changed_md(_v_meta_data[track_num]);
-			_cur_play_idx = track_num;
+            send_cur_playing_signal(track_num);
 		}
 
 		else{
@@ -551,13 +570,11 @@ void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
 
     if(_cur_play_idx == -1) {
 
-        _cur_play_idx = 0;
 
         emit sig_new_stream_session();
 
-        emit sig_playlist_created(v_md, _cur_play_idx, RADIO_LFM);
-        emit sig_selected_file_changed_md(v_md[_cur_play_idx]);
-        emit sig_selected_file_changed(_cur_play_idx);
+        emit sig_playlist_created(v_md, 0, RADIO_LFM);
+        send_cur_playing_signal(0);
     }
 
     else{
@@ -575,18 +592,23 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
     MetaDataList v_md;
 
     // playlist radio
+    qDebug() << "is playlist file? " << url << ": " << Helper::is_playlistfile(url);
     if(Helper::is_playlistfile(url)){
 
         if(PlaylistParser::parse_playlist(url, v_md) > 0){
 
             foreach(MetaData md, v_md){
 
-                md.radio_mode = RADIO_STATION;
-
-                if(name.size() > 0)
-                    md.title = name;
+                if(name.size() > 0) md.title = name;
                 else md.title = "Radio Station";
 
+                if(md.artist.size() == 0)
+                    md.artist = url;
+
+                if(md.album.size() == 0)
+                    md.album = md.title;
+
+                md.radio_mode = RADIO_STATION;
                 _v_meta_data.push_back(md);
 			}
 		}
@@ -600,20 +622,68 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
 		if(name.size() > 0) md.title = name;
 		else md.title = "Radio Station";
 
-		md.artist = url;
+        md.artist = url;
+        md.album = md.title;
 		md.filepath = url;
         md.radio_mode = RADIO_STATION;
+
         _v_meta_data.push_back(md);
 	}
 
     if(_v_meta_data.size() == 0) return;
 
-    _cur_play_idx = 0;
     _radio_active = RADIO_STATION;
 
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
-    emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx]);
-    emit sig_selected_file_changed(_cur_play_idx);
+    emit sig_playlist_created(_v_meta_data, 0, _radio_active);
+    send_cur_playing_signal(0);
+
+}
+
+
+void  Playlist::psl_play_podcast(const QString& url, const QString& name){
+
+    emit sig_new_stream_session();
+    psl_clear_playlist();
+    MetaDataList v_md;
+
+    // playlist radio
+    qDebug() << "is podcast file? ";
+    QString content;
+    if(Helper::is_podcastfile(url, content)){
+        qDebug() << "true";
+
+        if(Podcast::parse_podcast_xml_file_content(content, v_md) > 0){
+
+            qDebug() << "metadata size = " << v_md.size();
+
+            foreach(MetaData md, v_md){
+
+                md.radio_mode = RADIO_STATION;
+                if(md.title.size() == 0){
+                    if(name.size() > 0)
+                        md.title = name;
+                    else md.title = "Podcast";
+                }
+
+                _v_meta_data.push_back(md);
+            }
+        }
+
+        else {
+            qDebug() << "could not extract metadata";
+
+        }
+    }
+    else {
+        qDebug() << url << " is no podcast file";
+    }
+
+    if(_v_meta_data.size() == 0) return;
+
+    _radio_active = RADIO_STATION;
+
+    emit sig_playlist_created(_v_meta_data, 0, _radio_active);
+    send_cur_playing_signal(0);
 }
 
 void Playlist::psl_valid_strrec_track(const MetaData& md){

@@ -21,6 +21,7 @@
 
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
@@ -29,21 +30,16 @@
 #include "HelperStructs/globals.h"
 
 #include <QWidget>
-#include <QDockWidget>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDebug>
-#include <QCloseEvent>
+#include <QPixmap>
+
+#include "GUI/ui_GUI_PlaylistChooser.h"
 
 
-#include "ui_GUI_PlaylistChooser.h"
-
-
-
-
-
-GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) {
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
 
 	_cur_idx = -1;
     _dark = false;
@@ -52,6 +48,9 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QWidget* parent) : QDockWidget(parent) 
 
     this->ui = new Ui::GUI_PlaylistChooser();
 	this->ui->setupUi(this);
+
+    QPixmap p = QPixmap(Helper::getIconPath() + "lyrics.png").scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    this->ui->lab_icon->setPixmap(p);
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
 
@@ -243,15 +242,6 @@ void GUI_PlaylistChooser::apply_button_pressed(){
 
 	if(val >= 0)
 		emit sig_playlist_chosen(val);
-}
-
-
-void GUI_PlaylistChooser::closeEvent ( QCloseEvent * event ){
-
-    event->ignore();
-    hide();
-    close();
-	emit sig_closed();
 }
 
 

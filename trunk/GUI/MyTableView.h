@@ -44,99 +44,101 @@
 
 
 #include "GUI/MyColumnHeader.h"
+#include "GUI/ContextMenu.h"
 #include "GUI/library/models/LibraryItemModel.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
 
 
-
 class MyTableView : public QTableView{
 
-	Q_OBJECT
+    Q_OBJECT
 
-	signals:
+signals:
 
-        void sig_columns_changed(QStringList& );
+    void sig_columns_changed(QStringList& );
 
-        void sig_middle_button_clicked(const QPoint&);
-        void sig_all_selected();
-        void sig_info_clicked();
-        void sig_edit_clicked();
-        void sig_delete_clicked();
-        void sig_play_next_clicked();
+    void sig_middle_button_clicked(const QPoint&);
+    void sig_all_selected();
+    void sig_info_clicked();
+    void sig_edit_clicked();
+    void sig_delete_clicked();
+    void sig_play_next_clicked();
+    void sig_sortorder_changed(Sort::SortOrder);
+    void sig_pressed(QPoint&, const QModelIndex&);
+    void sig_no_disc_menu();
 
-        void sig_sortorder_changed(Sort::SortOrder);
+private slots:
+    void rc_header_menu_changed(bool b=true);
+    void rc_menu_show(const QPoint&);
+    void sort_by_column(int);
+    void forbid_mimedata_destroyable();
 
-    private slots:
-        void rc_header_menu_changed(bool b=true);
-        void rc_menu_show(const QPoint&);
-        void sort_by_column(int);
-        void forbid_mimedata_destroyable();
+    void edit_clicked();
+    void info_clicked();
+    void delete_clicked();
+    void play_next_clicked();
 
-        void edit_clicked();
-        void info_clicked();
-        void delete_clicked();
-        void play_next_clicked();
-
-        void edit_changed(QString);
-
-
-	private:
-        void rc_menu_init();
-        void reset_edit();
+    void edit_changed(QString);
 
 
-	public:
-		MyTableView(QWidget* parent=0);
-		virtual ~MyTableView();
-
-        void rc_header_menu_init(QStringList& lst);
-        void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
-		void set_table_headers(QList<ColumnHeader>& headers);
-		void setModel(QAbstractItemModel * model);
+private:
+    void rc_menu_init();
+    void reset_edit();
+    void calc_corner_widget();
 
 
-        void fill_metadata(const MetaDataList& v_md);
-        void fill_albums(const AlbumList& v_albums);
-        void fill_artists(const ArtistList& v_artists);
+public:
+    MyTableView(QWidget* parent=0);
+    virtual ~MyTableView();
 
-        void set_col_sizes();
-
-		QList<int> calc_selections();
-
-
-
-	protected:
-		void mousePressEvent(QMouseEvent* event);
-		void mouseReleaseEvent(QMouseEvent* event);
-		void mouseMoveEvent(QMouseEvent* event);
-        void keyPressEvent(QKeyEvent* event);
+    void rc_header_menu_init(QStringList& lst);
+    void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
+    void set_table_headers(QList<ColumnHeader>& headers);
+    void setModel(QAbstractItemModel * model);
 
 
-	private:
-		QWidget* 			_parent;
-		bool				_drag;
-		QPoint				_drag_pos;
-		QDrag*				_qDrag;
-		QList<ColumnHeader> _table_headers;
+    void fill_metadata(const MetaDataList& v_md);
+    void fill_albums(const AlbumList& v_albums);
+    void fill_artists(const ArtistList& v_artists);
+
+    void set_col_sizes();
+
+    QList<int> calc_selections();
+    void force_selections();
 
 
-		QMenu*				_rc_header_menu;
-        QList<QAction*> 	_header_rc_actions;
 
-        QMenu* 				_right_click_menu;
-		QAction* 			_info_action;
-		QAction* 			_edit_action;
-		QAction* 			_delete_action;
-		QAction*			_play_next_action;
+protected:
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void keyPressEvent(QKeyEvent* event);
+    void resizeEvent(QResizeEvent* event);
 
 
-	    QLineEdit*			_edit;
+private:
+    QWidget* 			_parent;
+    QWidget*            _corner_widget;
+    bool				_drag;
+    QPoint				_drag_pos;
+    QDrag*				_qDrag;
+    QList<ColumnHeader> _table_headers;
 
-		LibraryItemModel* 	_model;
-		Sort::SortOrder		_sort_order;
-		CustomMimeData*		_mimedata;
+
+    QMenu*              _rc_header_menu;
+    QList<QAction*> 	_header_rc_actions;
+
+    ContextMenu*        _rc_menu;
+
+
+    QLineEdit*			_edit;
+
+    LibraryItemModel* 	_model;
+    Sort::SortOrder		_sort_order;
+    CustomMimeData*		_mimedata;
+    int                 _view_mode;
 
 };
 

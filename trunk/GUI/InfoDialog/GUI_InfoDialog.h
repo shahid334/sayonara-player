@@ -32,8 +32,8 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/ui_GUI_InfoDialog.h"
 
-#include <ui_GUI_InfoDialog.h>
 #include <QWidget>
 #include <QDialog>
 #include <QString>
@@ -53,9 +53,6 @@
 class GUI_InfoDialog : public QDialog, private Ui::InfoDialog{
 Q_OBJECT
 
-signals:
-	void sig_search_cover(const MetaData&);
-	void sig_search_artist_image(const QString&);
 
 public slots:
 	void psl_image_available(QString, QString);
@@ -68,7 +65,7 @@ private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
 	void psl_id3_success(bool);
-    void alternate_covers_available(QString);
+    void alternate_covers_available(QString, QString);
     void no_cover_available();
 	void cover_clicked();
 

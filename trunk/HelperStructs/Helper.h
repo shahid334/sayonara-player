@@ -40,6 +40,7 @@
 #include <QString>
 #include <QList>
 #include <ctime>
+#include <QWidget>
 
 using namespace std;
 
@@ -68,13 +69,20 @@ namespace Helper{
 
 	QStringList get_soundfile_extensions();
 	QStringList get_playlistfile_extensions();
+    QStringList get_podcast_extensions();
+
     QString calc_file_extension(QString filename);
     void remove_files_in_directory(QString dir_name, QStringList filters);
     QString get_folder_of_file(QString filename);
     QStringList extract_folders_of_files(QStringList list);
 
+    QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');
+    bool is_url(QString str);
+    bool is_www(QString str);
+
 	bool is_soundfile(QString filename);
 	bool is_playlistfile(QString filename);
+    bool is_podcastfile(QString filename, QString& content);
 
 	template <typename T> QList<T> randomize_list(const QList<T>& list){
 		srand ( time(NULL) );

@@ -22,7 +22,7 @@
  *
  */
 
-#include "GUI_StreamRecorder.h"
+#include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"

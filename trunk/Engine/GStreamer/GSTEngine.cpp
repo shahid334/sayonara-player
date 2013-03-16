@@ -94,6 +94,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 		case GST_MESSAGE_EOS:
 			if(obj_ref){
+                qDebug() << "Engine: Track finished";
 				obj_ref->set_track_finished();
 			}
 		break;
@@ -114,6 +115,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
             if(__start_at_beginning == false) {
                 __start_at_beginning = true;
                 obj_ref->jump(__start_pos_beginning, false);
+                qDebug() << "Engine: jump";
             }
 
             break;
@@ -155,16 +157,20 @@ GST_Engine::GST_Engine(){
 }
 
 GST_Engine::~GST_Engine() {
+
     qDebug() << "Engine: close engine... ";
 
-   if(_bus)
-		gst_object_unref(_bus);
+    _settings->updateLastTrack();
+   
+    if(_bus)
+	gst_object_unref(_bus);
 
-	if(_pipeline){
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-		gst_object_unref (GST_OBJECT (_pipeline));
-	}
-	obj_ref = 0;
+    if(_pipeline){
+ 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+	gst_object_unref (GST_OBJECT (_pipeline));
+    }
+
+    obj_ref = 0;
 }
 
 
@@ -235,7 +241,7 @@ void GST_Engine::init_play_pipeline(){
 			g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 		}
 
-       // g_signal_connect (_pipeline, "about-to-finish", G_CALLBACK (player_change_file), NULL);
+        g_signal_connect (_pipeline, "about-to-finish", G_CALLBACK (player_change_file), NULL);
 
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
 	} while(i);
@@ -252,11 +258,8 @@ void GST_Engine::init(){
 }
 
 
-
-
-
 void GST_Engine::psl_gapless_track(const MetaData& md){
-    qDebug() << "Engine: Gapless track " << md.title;
+    //qDebug() << "Engine: Gapless track " << md.title;
     _md_gapless = md;
     _gapless_track_available = true;
 }
@@ -278,73 +281,47 @@ void GST_Engine::changeTrack(const QString& filepath, int pos_sec, bool start_pl
 
 void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 
-    obj_ref = NULL;
+    //qDebug() << "new track " << md.title << ", " << (md.filepath != _md_gapless.filepath);
+
+    obj_ref = this;
+
     _last_track = _settings->getLastTrack();
 
-    // Gstreamer needs an URI
-    const gchar* uri = NULL;
+    if(!_track_finished || (md.filepath != _md_gapless.filepath) || true){
+        stop();
+        _meta_data = md;
+        // when stream ripper, do not start playing
+        _playing_stream = Helper::is_www(md.filepath);
 
-    // when stream ripper, do not start playing
-    stop();
-	_meta_data = md;
+        bool success = set_uri(md, start_play);
+        if(!success) return;
 
-	_playing_stream = false;
-	if( md.filepath.startsWith("http") ){
-		_playing_stream = true;
-	}
+        g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
 
-	// stream && streamripper active
-    if( _playing_stream && _sr_active ){
+        _gapless_track_available = false;
+        //emit wanna_gapless_track();
+        emit total_time_changed_signal(_meta_data.length_ms);
+        emit timeChangedSignal(pos_sec);
+    }
 
-        int max_tries = 10;
+    else {
+        _meta_data = _md_gapless;
+        _gapless_track_available = false;
 
-        QString filepath = _stream_recorder->changeTrack(md, max_tries);
-        if(filepath.size() == 0) {
-            qDebug() << "Engine: Stream Ripper Error: Could not get filepath";
-            return;
-        }
+        emit wanna_gapless_track();
+        emit total_time_changed_signal(_meta_data.length_ms);
 
-        uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
-        start_play = false;
-	}
-
-	// stream, but don't wanna record
-	else if(_playing_stream && !_sr_active){
-		_playing_stream = true;
-
-        uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
-	}
-
-	// no stream (not quite right because of mms, rtsp or other streams
-	else if( !md.filepath.contains("://") ){
-
-         uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
-	}
-
-	else {
-        uri =g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
-	}
-
-    emit total_time_changed_signal(_meta_data.length_ms);
-    emit timeChangedSignal(pos_sec);
-
-
-    if(uri == NULL) return;
-
-
-    // playing src
-    qDebug() << "Engine:  set uri: " << uri;
-    g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
-    g_timeout_add (500, (GSourceFunc) show_position, _pipeline);
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    }
 
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
 	_track_finished = false;
-    _gapless_track_available = false;
 
 
-    obj_ref = this;
+
+    //if(md.filepath == _md_gapless.filepath) return;
 
     if(pos_sec > 0){
         __start_pos_beginning = pos_sec;
@@ -366,6 +343,59 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 }
 
 
+bool GST_Engine::set_uri(const MetaData& md, bool& start_play){
+    // Gstreamer needs an URI
+    const gchar* uri = NULL;
+
+
+    // stream && streamripper active
+    if( _playing_stream && _sr_active ){
+
+        int max_tries = 10;
+
+        QString filepath = _stream_recorder->changeTrack(md, max_tries);
+        if(filepath.size() == 0) {
+            qDebug() << "Engine: Stream Ripper Error: Could not get filepath";
+            return false;
+        }
+
+        if(md.radio_mode == RADIO_LFM){
+            uri = g_filename_to_uri(g_filename_from_utf8(filepath.toUtf8(), filepath.toUtf8().size(), NULL, NULL, NULL), NULL, NULL);
+        }
+
+        else{
+             uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
+        }
+
+        start_play = false;
+    }
+
+    // stream, but don't wanna record
+    else if(_playing_stream && !_sr_active){
+        uri = g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
+    }
+
+    // no stream (not quite right because of mms, rtsp or other streams
+    else if( !md.filepath.contains("://") ){
+
+         uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
+    }
+
+    else {
+        uri =g_filename_from_utf8(md.filepath.toUtf8(), md.filepath.toUtf8().size(), NULL, NULL, NULL);
+    }
+
+
+
+    if(!uri) return NULL;
+
+    // playing src
+    g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
+    qDebug() << "Engine:  set uri: " << uri;
+
+    return true;
+}
+
 void GST_Engine::play(int pos_sec){
 
 
@@ -380,11 +410,12 @@ void GST_Engine::play(int pos_sec){
 
 void GST_Engine::stop(){
 
+    //qDebug() << "Engine: stop";
     _state = STATE_STOP;
 
 	// streamripper, wanna record is set when record button is pressed
     if( _playing_stream && _sr_active ){
-        qDebug() << "Playing stream";
+        qDebug() << "Engine: stop... Playing stream";
         _stream_recorder->stop(!_sr_wanna_record);
 	}
 
@@ -476,21 +507,18 @@ void GST_Engine::set_cur_position(quint32 pos_sec){
 
     if((quint32) _seconds_now == pos_sec) return;
     _seconds_now = pos_sec;
+    int playtime = _seconds_now - _seconds_started;
 
-	if (!_scrobbled
-			&& (_seconds_now - _seconds_started == 15
-					|| _seconds_now - _seconds_started
-					== _meta_data.length_ms / 2000)) {
+	if (!_scrobbled &&
+	   ( playtime >= 15 || playtime == _meta_data.length_ms / 2000) ) {
 
-		emit scrobble_track(_meta_data);
-		_scrobbled = true;
-	}
+	emit scrobble_track(_meta_data);
+        _scrobbled = true;
+    }
 
     _last_track->id = _meta_data.id;
     _last_track->filepath = _meta_data.filepath;
     _last_track->pos_sec = pos_sec;
-
-    _settings->updateLastTrack();
  
     emit timeChangedSignal(_seconds_now);
 }
@@ -502,19 +530,22 @@ void GST_Engine::set_track_finished(){
         _stream_recorder->stop(!_sr_wanna_record);
     }
 
-	_track_finished = true;
-	emit track_finished();
+    qDebug() << "Engine: track finished";
+    emit track_finished();
+    _track_finished = true;
 }
 
 void GST_Engine::set_about_to_finish(){
 
-    if(_gapless_track_available){
-        _track_finished = true;
-        //emit track_finished();
 
-        changeTrack(_md_gapless);
-        //_track_finished = true;
-        //emit track_finished();
+    //qDebug() << "Engine: about to finish " << _gapless_track_available;
+    if(_gapless_track_available && 0){
+
+        bool b = true;
+        set_uri(_md_gapless, b);
+        _gapless_track_available = false;
+        _track_finished = true;
+        emit track_finished();
     }
 }
 

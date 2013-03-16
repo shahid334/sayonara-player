@@ -133,19 +133,22 @@ void CoverLookup::search_cover(const MetaData& md) {
 	QString cover_path = Helper::get_cover_path(_metadata.artist, _metadata.album);
 
 	if (QFile::exists(cover_path) && cover_path != "") {
+        qDebug() << "cover found";
 		emit sig_cover_found(_caller_class, Helper::get_cover_path(_metadata.artist, _metadata.album));
 		return;
 	}
 
-	if (_thread->isRunning())
-		terminate_thread();
+    if (_thread->isRunning()){
+        qDebug() << "sorry, thread is running already";
+        return;
+    }
 
 	AlbumList albums;
 	Album album;
 
 	if (_metadata.album_id != -1){
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		album = db->getAlbumByID(_metadata.album_id);
+        db->getAlbumByID(_metadata.album_id, album);
 	}
 
 	else{
@@ -197,8 +200,8 @@ void CoverLookup::search_artist_image(const QString& artist){
 void CoverLookup::research_cover(const MetaData& md) {
 
 	_research_done = true;
-	if (_thread->isRunning())
-		terminate_thread();
+    if (_thread->isRunning()) return;
+
 
 	_metadata = md;
 
@@ -243,7 +246,7 @@ Album CoverLookup::_get_album_from_metadata(const MetaData& md) {
 
 	if (md.album_id != -1) {
 		CDatabaseConnector* db = CDatabaseConnector::getInstance();
-		album = db->getAlbumByID(md.album_id);
+        db->getAlbumByID(md.album_id, album);
 		return album;
 	}
 

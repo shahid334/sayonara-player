@@ -32,15 +32,16 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
+#include "GUI/ui_GUI_Equalizer.h"
 
 #include <QObject>
 #include <QDockWidget>
 #include <QDebug>
 #include <QMessageBox>
 
-#include <ui_GUI_Equalizer.h>
 
 #include <vector>
 
@@ -59,7 +60,7 @@ QString calc_lab(int val){
 
 }
 
-GUI_Equalizer::GUI_Equalizer(QWidget* parent) : QDockWidget(parent) {
+GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
 
     this->_ui = new Ui::GUI_Equalizer( );
 	this->_ui->setupUi(this);
@@ -302,9 +303,4 @@ void GUI_Equalizer::btn_preset_clicked(){
 
 }
 
-void 	GUI_Equalizer::closeEvent ( QCloseEvent * event ){
-	event->ignore();
-    hide();
-    close();
-	emit close_event();
-}
+

@@ -30,8 +30,7 @@
 #include <QWidget>
 #include <QObject>
 #include "GUI/library/SetupWidget/LibrarySetupWidget.h"
-
-#include <ui_GUI_LibrarySetup_Widget.h>
+#include "GUI/ui_GUI_LibrarySetup_Widget.h"
 
 LibrarySetupWidget::LibrarySetupWidget(QWidget* parent) : QWidget(parent) {
 	this->ui = new Ui::LibrarySetup();

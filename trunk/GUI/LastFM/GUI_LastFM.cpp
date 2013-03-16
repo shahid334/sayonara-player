@@ -27,7 +27,7 @@
  */
 
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "ui_GUI_LastFM_Dialog.h"
+#include "GUI/ui_GUI_LastFM_Dialog.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -86,34 +86,19 @@ void GUI_LastFM::save_button_pressed(){
 	if(this->ui->tf_password->text().length() < 3) return;
     CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-	char c_buffer[33];
-	memset(c_buffer, 0, 33);
+    QString user, password;
+    settings-> getLastFMNameAndPW(user, password);
 
-        QString user, password;
-        settings-> getLastFMNameAndPW(user, password);
+    if (this->ui->tf_password->text() != password){
 
-        if (this->ui->tf_password->text() != password){
-            QByteArray password_hashed = QCryptographicHash::hash(this->ui->tf_password->text().toUtf8(), QCryptographicHash::Md5).toHex();
-            for(int i=0; i<password_hashed.length(); i++){
-                    c_buffer[i] = password_hashed.at(i);
-            }
+        emit new_lfm_credentials(this->ui->tf_username->text(), this->ui->tf_password->text());
+        settings->setLastFMNameAndPW(this->ui->tf_username->text(), this->ui->tf_password->text());
+    }
 
-            c_buffer[32] = '\0';
-            emit new_lfm_credentials(this->ui->tf_username->text(), QString(c_buffer));
-            settings->setLastFMNameAndPW(this->ui->tf_username->text(), QString(c_buffer));
-        }
+    settings->setLastFMShowErrors(this->ui->cb_error_messages->isChecked());
 
-        else {
-            emit new_lfm_credentials(this->ui->tf_username->text(), password);
-            settings->setLastFMNameAndPW(this->ui->tf_username->text(), password);
-        }
-
-        settings->setLastFMShowErrors(this->ui->cb_error_messages->isChecked());
-
-
-
-        hide();
-        close();
+    hide();
+    close();
 }
 
 

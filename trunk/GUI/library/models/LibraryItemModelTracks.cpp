@@ -73,6 +73,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 	 if (role == Qt::DisplayRole){
 
 		 MetaData md = _tracklist.at(row);
+		 QString str_disc;
 
          switch(idx_col){
 			 case COL_TRACK_NUM:
@@ -88,7 +89,12 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( Helper::cvtMsecs2TitleLengthString(md.length_ms)  );
 
 			 case COL_ALBUM:
-				 return QVariant(md.album);
+				str_disc = QString::number(md.discnumber);
+		                if( md.discnumber > 1 && !md.album.contains(str_disc) ){
+		                     return QVariant( md.album + " (CD " + str_disc + ")" );
+                		}
+	
+        		        return QVariant(md.album);
 
 			 case COL_YEAR:
 				 return QVariant(md.year);
@@ -105,7 +111,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
 	 else if (role == Qt::TextAlignmentRole){
 
-          if (idx_col == COL_TRACK_NUM || idx_col == COL_BITRATE || idx_col == COL_LENGTH || idx_col == COL_YEAR || idx_col == COL_FILESIZE)
+          if (idx_col == COL_TRACK_NUM || idx_col == COL_BITRATE || idx_col == COL_LENGTH || idx_col == COL_YEAR || idx_col == COL_FILESIZE /*|| idx_col == COL_DISCNUMBER*/)
           {
               return Qt::AlignRight + Qt::AlignVCenter;
           }
@@ -194,4 +200,12 @@ int	LibraryItemModelTracks::getFirstRowOf(QString substr){
 
     return -1;
 
+}
+
+
+void  LibraryItemModelTracks::set_selected(QList<int>& rows){
+    LibraryItemModel::set_selected(rows);
+    for(int i=0; i<_tracklist.size(); i++){
+        _tracklist[i].is_lib_selected = rows.contains(i);
+    }
 }

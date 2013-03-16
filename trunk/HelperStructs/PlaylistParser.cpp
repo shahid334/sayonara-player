@@ -42,7 +42,7 @@ static CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 QString _correct_filepath(QString filepath, QString abs_path){
 
-    if(filepath.startsWith("http")) return filepath;
+    if(Helper::is_www(filepath)) return filepath;
 
 
     bool is_absolute = QDir(filepath).isAbsolute();
@@ -103,7 +103,7 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
         MetaData md;
        /* if(ext_md.artist.size() > 0 || ext_md.title.size() > 0) md = ext_md;*/
 
-        if( !line.startsWith("http")){
+        if( !Helper::is_www(line)){
             md.filepath = _correct_filepath(line, abs_path);
             //qDebug() << "Filepath = " << md.filepath;
             MetaData md_tmp = db->getTrackByPath(md.filepath);
@@ -289,7 +289,7 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md){
 	bool is_local_file = true;
 
 	QString content;
-	if(playlist_file.startsWith("http")){
+    if(Helper::is_www(playlist_file)){
 		success = WebAccess::read_http_into_str(playlist_file, content);
 		is_local_file = false;
 	}

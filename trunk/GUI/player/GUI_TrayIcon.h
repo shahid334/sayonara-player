@@ -64,6 +64,7 @@ public slots:
     void songChangedMessage (const MetaData& md);
     void setPlaying(bool);
     void setMute(bool mute);
+    void change_skin(QString stylesheet);
 
 
 signals:
@@ -103,6 +104,8 @@ private:
     QAction*					m_fwdAction;
     QAction*					m_bwdAction;
     QAction*                    m_showAction;
+
+    QMenu*                      m_trayContextMenu;
 
 
     QIcon                   m_playIcon;

@@ -42,6 +42,7 @@
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QCloseEvent>
+#include <QPainter>
 
 
 
@@ -109,11 +110,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     connect( _lfm_thread, SIGNAL(sig_artist_info_available(const QString&)),
              this, SLOT(psl_artist_info_available(const QString&)));
 
-    connect(this, SIGNAL(sig_search_cover(const MetaData&)),
-            _cover_lookup, SLOT(search_cover(const MetaData&)));
-
-    connect(this, SIGNAL(sig_search_artist_image(const QString&)),
-            _cover_lookup, SLOT(search_artist_image(const QString&)));
 
     connect(_cover_lookup, SIGNAL(sig_cover_found(QString, QString)),
             this, 			SLOT(psl_image_available(QString, QString)));
@@ -130,12 +126,12 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
             this, 					SLOT(psl_lyrics_server_changed(int)));
 
     connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
-    connect(_alternate_covers, SIGNAL(sig_covers_changed(QString)), this, SLOT(alternate_covers_available(QString)));
+    connect(_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)), this, SLOT(alternate_covers_available(QString, QString)));
 
     connect(_alternate_covers, SIGNAL(sig_no_cover()),
             this,				SLOT(no_cover_available()));
 
-
+    this->ui->btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
     hide();
 
@@ -153,10 +149,14 @@ void GUI_InfoDialog::changeSkin(bool dark){
 
 void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
 
+    qDebug() << "Image available for " << caller_class << ": " << filename;
+
 	if(_class_name != caller_class) return;
 	if(!QFile::exists(filename)) return;
 
 	this->ui->btn_image->setIcon(QIcon(filename));
+
+
 }
 
 
@@ -336,7 +336,8 @@ void GUI_InfoDialog::prepare_artists(){
 	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
-		QString tmppath = path;
+
+        QString tmppath = QString("file://" + path);
 		//path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
             path.replace(library_path, ".");
@@ -345,7 +346,7 @@ void GUI_InfoDialog::prepare_artists(){
 		paths += (path + CAR_RET);
 	}
 
-	this->ui->lab_heading->setText(header);
+    this->ui->lab_heading->setText(Helper::split_string_to_widget(header, ui->lab_heading));
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
 	this->ui->lab_paths->setOpenExternalLinks(true);
@@ -355,7 +356,6 @@ void GUI_InfoDialog::prepare_artists(){
 
 void GUI_InfoDialog::prepare_albums(){
 
-	QString year_span = "";
 	int n_albums = 0;
 	int n_songs = 0;
 
@@ -407,13 +407,22 @@ void GUI_InfoDialog::prepare_albums(){
 		int album_id = map_albums.keys().at(0);
 
 
-		Album album = _db->getAlbumByID(album_id);
+        Album album;
+        _db->getAlbumByID(album_id, album);
 		_album_name = album.name;
+
+        if(album.is_sampler){
+                _artist_name = "";
+        }
+
+        else{
+            _artist_name = album.artists[0];
+        }
 
         QString artist_name = ((album.artists.size() > 1) ? QString("Various artists") : album.artists[0]);
 
 		n_songs = album.num_songs;
-        header = album.name + " <font size=\"small\">"+ CAR_RET + "by " + artist_name + "</font>";
+        header =  Helper::split_string_to_widget(album.name, ui->lab_heading) + " <font size=\"small\">"+ CAR_RET + "by " + artist_name + "</font>";
 
 		info = BOLD("#Tracks:&nbsp;") +  QString::number(album.num_songs) + CAR_RET;
 		info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + CAR_RET;
@@ -428,13 +437,15 @@ void GUI_InfoDialog::prepare_albums(){
 		tooltip = "";
 		_diff_mode = INFO_MODE_MULTI;
 		int header_entries = 0;
+         _artist_name = "";
 
 		foreach(int album_id, map_albums.keys()){
-			Album album = _db->getAlbumByID(album_id);
+            Album album;
+            _db->getAlbumByID(album_id, album);
             QString artist_name = ((album.artists.size() > 1) ? QString("Various artists") : album.artists[0]);
 
             if(header_entries < 5)
-				header += album.name + " <font size=\"small\"> by " + artist_name + "</font>" + CAR_RET;
+                header += Helper::split_string_to_widget(album.name, ui->lab_heading) + "<font size=\"small\"> by " + artist_name + "</font>" + CAR_RET;
 			else if(header_entries == 5) header += "...";
 
 			tooltip += album.name + " (" + QString::number(map_albums[album_id]) + ")" + CAR_RET;
@@ -451,7 +462,7 @@ void GUI_InfoDialog::prepare_albums(){
 	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
-		QString tmppath = path;
+        QString tmppath = QString("file://" + path);
 		//path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
             path.replace(library_path, ".");
@@ -460,7 +471,7 @@ void GUI_InfoDialog::prepare_albums(){
 	}
 
 
-	this->ui->lab_heading->setText(header);
+    this->ui->lab_heading->setText(header);
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
 	this->ui->lab_paths->setOpenExternalLinks(true);
@@ -514,7 +525,12 @@ void GUI_InfoDialog::prepare_tracks(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-		filepath = QDir(md.filepath.left(last_sep)).absolutePath();
+        if(Helper::is_www(md.filepath)){
+            filepath = md.filepath;
+        }
+        else
+            filepath = QDir(md.filepath.left(last_sep)).absolutePath();
+
 		if( !pathlist.contains(filepath) )
 			pathlist << filepath;
 
@@ -577,7 +593,8 @@ void GUI_InfoDialog::prepare_tracks(){
     paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
     foreach(QString path, pathlist){
-        QString tmppath = path;
+
+        QString tmppath = QString("file://") + path;
         //path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
             path.replace(library_path, ".");
@@ -585,7 +602,7 @@ void GUI_InfoDialog::prepare_tracks(){
         paths += (path + CAR_RET);
     }
 
-	this->ui->lab_heading->setText(header);
+    this->ui->lab_heading->setText(Helper::split_string_to_widget(header, ui->lab_heading));
 	this->ui->lab_heading->setToolTip(tooltip);
 	this->ui->lab_info->setText(info);
 	this->ui->lab_paths->setText(paths);
@@ -606,14 +623,16 @@ void GUI_InfoDialog::prepare_cover(){
 		case INFO_MODE_SINGLE:
 
 			if(_mode == INFO_MODE_ARTISTS){
-				emit sig_search_artist_image(_artist_name);
+                _cover_lookup->search_artist_image(_artist_name);
 			}
 
 			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
 				MetaData md;
 				md.album = _album_name;
 				md.artist = _artist_name;
-				emit sig_search_cover(md);
+
+                if(_album_name.isEmpty() && _artist_name.isEmpty()) return;
+                _cover_lookup->search_cover(md);
 			}
 
 			break;
@@ -694,7 +713,6 @@ void GUI_InfoDialog::setMode(int mode){
 			break;
 
 		default: break;
-
 	}
 
 	prepare_cover();
@@ -728,22 +746,27 @@ void GUI_InfoDialog::psl_id3_success(bool b){
 
 
 void GUI_InfoDialog::cover_clicked(){
-	switch(_diff_mode){
+    MetaData md = _v_md[0];
 
-			case INFO_MODE_SINGLE:
-				if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
-									_alternate_covers->start(_v_md[0].album_id, true);
-								}
-				else if(_mode == INFO_MODE_ARTISTS){
-					_alternate_covers->start(_v_md[0].artist_id, false);
-				}
+    switch(_diff_mode){
 
-				break;
+        case INFO_MODE_SINGLE:
+            if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
 
-			case INFO_MODE_MULTI:
-			default:
-				return;
-		}
+                _alternate_covers->start(md.artist + " " + md.album, Helper::get_cover_path(md.artist, md.album));
+
+            }
+            else if(_mode == INFO_MODE_ARTISTS){
+
+                _alternate_covers->start(md.artist, Helper::get_artist_image_path(md.artist));
+            }
+
+            break;
+
+        case INFO_MODE_MULTI:
+        default:
+            return;
+    }
 
 	this->setFocus();
 }
@@ -751,21 +774,18 @@ void GUI_InfoDialog::cover_clicked(){
 
 
 void GUI_InfoDialog::no_cover_available(){
-    prepare_cover();
+    //prepare_cover();
+    this->ui->btn_image->setIcon(QIcon(Helper::getIconPath() + "/logo.png"));
 }
 
-void GUI_InfoDialog::alternate_covers_available(QString caller_class){
+void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString cover_path){
 
-	Q_UNUSED(caller_class);
-
-	prepare_cover();
-
+    if(caller_class == _class_name)
+        prepare_cover();
 }
 
 
 void GUI_InfoDialog::init(){
-
-
 }
 
 

@@ -11,6 +11,7 @@ struct LFMLoginStuff{
     QString session_key;
     bool logged_in;
     bool subscriber;
+    QString error;
 };
 
 class LFMLoginThread : public QThread

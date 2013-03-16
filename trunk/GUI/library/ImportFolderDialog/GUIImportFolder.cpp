@@ -19,10 +19,10 @@
  */
 
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
+#include "GUI/ui_GUI_ImportFolder.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include "ui_GUI_ImportFolder.h"
 #include <QDialog>
 #include <QString>
 #include <QWidget>

@@ -65,9 +65,9 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
         int col = index.column();
         int idx_col = _model->calc_shown_col(col);
 
-        if(_model->is_selected(index.row())) {
+        /*if(_model->is_selected(index.row())) {
             painter->setPen(_pen);
-        }
+        }*/
 
         if(idx_col == COL_ARTIST_N_ALBUMS){
             int col_width = _parent->columnWidth(0)-4;

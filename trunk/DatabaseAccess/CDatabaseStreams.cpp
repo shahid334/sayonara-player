@@ -39,11 +39,10 @@ using namespace std;
 
 
 bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	if (!this -> m_database.isOpen())
-		 this -> m_database.open();
-
-	QSqlQuery q (this -> m_database);
+	QSqlQuery q (*_database);
 	q.prepare("SELECT name, url FROM savedstreams;");
 
 	if (!q.exec())
@@ -61,11 +60,13 @@ bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
 	return true;
 }
 
-bool CDatabaseConnector::deleteStream(QString name){
-	if (!this -> m_database.isOpen())
-			 this -> m_database.open();
 
-	QSqlQuery q (this -> m_database);
+
+bool CDatabaseConnector::deleteStream(QString name){
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	QSqlQuery q (*_database);
 	q.prepare("DELETE FROM savedstreams WHERE name = :name;" );
 	q.bindValue(":name", name);
 	if(!q.exec()) {
@@ -80,11 +81,13 @@ bool CDatabaseConnector::deleteStream(QString name){
 
 
 
-bool CDatabaseConnector::addStream(QString name, QString url){
-	if (!this -> m_database.isOpen())
-			 this -> m_database.open();
 
-	QSqlQuery q (this -> m_database);
+bool CDatabaseConnector::addStream(QString name, QString url){
+	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	QSqlQuery q (*_database);
+
 	q.prepare("INSERT INTO savedstreams (name, url) VALUES (:name, :url); " );
 	q.bindValue(":name", name);
 	q.bindValue(":url", url);

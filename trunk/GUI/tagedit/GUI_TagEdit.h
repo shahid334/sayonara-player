@@ -35,7 +35,7 @@
 #define TAG_TRACK_NUM QString("<TRACK>")
 #define TAG_YEAR QString("<YEAR>")
 
-#include "ui_GUI_TagEdit.h"
+#include "GUI/ui_GUI_TagEdit.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -74,7 +74,8 @@ public:
 		void all_artists_clicked();
 		void all_genre_clicked();
 		void all_year_clicked();
-        void all_tag_clicked();
+		void all_discnumber_clicked();
+	        void all_tag_clicked();
 
         void help_tag_clicked();
         void undo_tag_clicked();
@@ -111,6 +112,7 @@ public:
 		int _max_artist_id;
 
 		void init();
+		void clear_checkboxes();
 
 		void show_metadata();
 		void save_metadata();

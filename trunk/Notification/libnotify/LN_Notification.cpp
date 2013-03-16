@@ -26,7 +26,7 @@ void LN_Notification::notification_show(const MetaData& md){
 
 
 
-	if(!_initialized) return;
+    if(!_initialized) return;
 
     not_close();
 
@@ -43,9 +43,12 @@ void LN_Notification::notification_show(const MetaData& md){
         if(success)
             pixmap_path = Helper::getSayonaraPath() + "not.jpg";
     }
-NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
+
+
+	NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
                                                  text.toLocal8Bit().data(),
                                                 pixmap_path.toLocal8Bit().data());
+
    _not = n;
 
 
@@ -56,11 +59,31 @@ NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
 
 }
 
+void LN_Notification::notification_update(const MetaData& md){
+
+   if(!_not) return;
+
+   QString text = md.artist + "\n" + md.album;
+   text.replace("&", "&amp;");
+   QString pixmap_path = Helper::get_cover_path(md.artist, md.album);
+
+   notify_notification_update( (NotifyNotification*) _not, 
+				md.title.toLocal8Bit().data(),
+				text.toLocal8Bit().data(),
+				pixmap_path.toLocal8Bit().data());
+
+				    
+
+}
+
 void LN_Notification::not_close(){
+
+    if(!_not) return;
 
     NotifyNotification* n = (NotifyNotification*) _not;
     if(n)
        notify_notification_close(n,NULL);
+    _not = NULL;
 
 }
 

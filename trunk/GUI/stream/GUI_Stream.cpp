@@ -19,21 +19,23 @@
  */
 
 
-#include "ui_GUI_Stream.h"
+#include "GUI/ui_GUI_Stream.h"
+#include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <QDockWidget>
+
 #include <QIcon>
 #include <QMap>
 #include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QPixmap>
 
 
-GUI_Stream::GUI_Stream(QWidget* parent): QDockWidget(parent)  {
+GUI_Stream::GUI_Stream(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent)  {
 	this->ui = new Ui::GUI_Stream();
 	this->ui->setupUi(this);
 
@@ -120,6 +122,8 @@ void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations){
 void GUI_Stream::init_gui(){
 	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+    QPixmap pixmap = QPixmap(Helper::getIconPath() + "radio.png").scaled(QSize(50, 50), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    this->ui->lab_icon->setPixmap(pixmap);
 }
 
 
@@ -196,9 +200,11 @@ void GUI_Stream::delete_clicked(){
 	if(_cur_station == -1) return;
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	QMessageBox msgBox;
+    QMessageBox msgBox(this);
 	msgBox.setText("Really wanna delete" + _cur_station_name + "?" );
 	msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
+    msgBox.setModal(true);
+    msgBox.setIcon(QMessageBox::Information);
 	int ret = msgBox.exec();
 	if(ret == QMessageBox::Yes){
 		if(db->deleteStream(_cur_station_name)){
@@ -237,11 +243,5 @@ void GUI_Stream::save_clicked(){
     url_text_changed(url);
 }
 
-void GUI_Stream::closeEvent ( QCloseEvent * event ){
-	event->ignore();
-    hide();
-    close();
-	emit sig_close_event();
-}
 
 

@@ -88,7 +88,8 @@ void printHelp(){
 
 
 int main(int argc, char *argv[]){
-    CDatabaseConnector::getInstance()->init_settings_storage();
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+    db->init_settings_storage();
     CSettingsStorage* settings = CSettingsStorage::getInstance();
     bool success = CDatabaseConnector::getInstance()->load_settings();
 	
@@ -129,7 +130,6 @@ int main(int argc, char *argv[]){
 		if(!application.is_initialized()) return 0;
 		application.setFiles2Play(params);
 
-		qDebug() << "Start Loop";
         app.exec();
 
         return 0;

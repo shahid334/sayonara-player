@@ -21,6 +21,7 @@ public:
 	virtual ~LN_Notification();
 
     virtual void notification_show(const MetaData& md);
+    virtual void notification_update(const MetaData& md);
     virtual void not_close();
 	virtual QString get_name();
 };

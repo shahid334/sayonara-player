@@ -26,11 +26,11 @@
 #define COL_TITLE 1
 #define COL_ARTIST 2
 #define COL_ALBUM 3
+//#define COL_DISCNUMBER 4
 #define COL_YEAR 4
 #define COL_LENGTH 5
 #define COL_BITRATE 6
 #define COL_FILESIZE 7
-
 
 #include <QAbstractTableModel>
 #include <QModelIndex>
@@ -58,7 +58,8 @@ public:
     int 			calc_shown_col(int col) const;
     bool			is_col_shown(int col) const;
     bool 			is_selected(int row) const;
-    void 			set_selected(QList<int>& rows);
+    QList<int>      get_selected() const;
+    virtual void 	set_selected(QList<int>& rows);
 
 
 	/** Overloaded from QAbstractTableModel **/

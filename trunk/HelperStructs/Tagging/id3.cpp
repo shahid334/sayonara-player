@@ -20,6 +20,7 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/Tagging/ID3_Fileheader.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Helper.h"
@@ -64,12 +65,15 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 	string title = f.tag()->title().to8Bit(true);
 	string genre = f.tag()->genre().to8Bit(true);
     string comment = f.tag()->comment().to8Bit(true);
+    f.tag();
 
-    int discnumber = -1;
-    int n_discs = -1;
+    int discnumber = 0;
+    int n_discs = 0;
 
-    FileHeader fh(md.filepath);
-    id3_extract_discnumber(fh, &discnumber, &n_discs);
+    /*FileHeader fh(md.filepath);
+    id3_extract_discnumber(fh, &discnumber, &n_discs);*/
+    taglib_id3_extract_discnumber(f, &discnumber);
+    qDebug() << "Found discnumber " << discnumber;
 
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
@@ -128,8 +132,27 @@ void ID3::setMetaDataOfFile(MetaData& md){
 	f.tag()->setTrack(md.track_num);
     f.save();
 
-    FileHeader fh(md.filepath);
-    id3_write_discnumber(fh, md.discnumber, md.n_discs);
+
+    TagLib::File* file = f.file();
+    TagLib::MPEG::File* f_mp3;
+
+    f_mp3 = dynamic_cast<TagLib::MPEG::File*>(file);
+
+    if(!f_mp3) {
+        qDebug() << "Tagging: no mp3 header";
+        return;
+    }
+
+    TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
+    if(!id3_tag){
+        qDebug() << "Tagging: no valid id3 tag";
+        return;
+    }
+
+    ID3_FileHeader fh(md.filepath);
+
+    if(fh.is_valid())
+        id3_write_discnumber(fh, md.discnumber, md.n_discs);
 
 	return;
 }
