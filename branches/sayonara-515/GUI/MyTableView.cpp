@@ -333,7 +333,7 @@ void switch_sorters(T& srcdst, T src1, T src2){
 
 void MyTableView::sort_by_column(int col){
 
-    int idx_col = col;
+    int idx_col = _model->calc_shown_col(col);
 
     if(idx_col >= _table_headers.size()) return;
 
