@@ -59,6 +59,14 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 	_filter.filtertext = "";
 	_reload_progress = 0;
 
+		// start thread
+		_db->getAllArtists(_vec_artists_searched, _artist_sortorder);
+		_db->getAllAlbums(_vec_albums_searched, _album_sortorder);
+		_db->getTracksFromDatabase(_vec_md_searched, _track_sortorder);
+
+	qDebug() << "Got " << _vec_md_searched.size() << " Tracks";
+
+		
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
     connect(m_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
@@ -77,9 +85,9 @@ void CLibraryBase::emit_stuff(){
 
 void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
 
-	_vec_albums_searched.clear();
+/*	_vec_albums_searched.clear();
 	_vec_artists_searched.clear();
-	_vec_md_searched.clear();
+	_vec_md_searched.clear();*/
 
 
     // artist sort order has changed
@@ -202,51 +210,42 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
     
 	if(_filter.cleared){
-		_db->getAllArtists(_vec_artists, _artist_sortorder);
+	/*	_db->getAllArtists(_vec_artists, _artist_sortorder);
 		_db->getAllAlbums(_vec_albums, _album_sortorder);
-		_db->getTracksFromDatabase(_vec_md, _track_sortorder);
-		_vec_artists_searched.clear();
-		_vec_albums_searched.clear();
-		_vec_md_searched.clear();
-        }
-
-	else if(_filter.filtertext.size() == 3){
-
-		// start thread
-		_db->getAllArtistsBySearchString(_filter, _vec_artists_searched, _artist_sortorder);
-		_db->getAllAlbumsBySearchString(_filter, _vec_albums_searched, _album_sortorder);
-		_db->getAllTracksBySearchString(_filter, _vec_md_searched, _track_sortorder);
-
+		_db->getTracksFromDatabase(_vec_md, _track_sortorder);*/
 		_vec_artists = _vec_artists_searched;
 		_vec_albums = _vec_albums_searched;
 		_vec_md = _vec_md_searched;
-		
-	}
+        }
 
-	else{
+
+
+	else if(_vec_md_searched.size() > 0){
+
+		QString tmp_str = filter.filtertext.mid(1, filter.filtertext.size() - 2);
 		_vec_artists.clear();
 		_vec_albums.clear();
 		_vec_md.clear();
 		QList<int> album_ids;
 		QList<int> artist_ids;
-		for(MetaData md, _vec_md_searched){
-			if(md.title.contains(filter.filtertext, Qt::CaseInsensitive) ||
-			   md.album.contains(filter.filtertext, Qt::CaseInsensitive) ||
-			   md.artist.contains(filter.filtertext, Qt::CaseInsensitive) ){
+		foreach(MetaData md, _vec_md_searched){
+			if(md.title.contains(tmp_str, Qt::CaseInsensitive) ||
+			   md.album.contains(tmp_str, Qt::CaseInsensitive) ||
+			   md.artist.contains(tmp_str, Qt::CaseInsensitive) ){
 				_vec_md.push_back(md);
 				album_ids << md.album_id;
 				artist_ids << md.artist_id;
 			}
 		}
 
-		for(Album album, _vec_albums_searched){
-			if(album_ids.contains(album.id, Qt::CaseInsensitive)){
+		foreach(Album album, _vec_albums_searched){
+			if(album_ids.contains(album.id)){
 				_vec_albums.push_back(album);
 			}
 		}
 
-		for(Artist artist, _vec_artists_searched){
-			if(artist_ids.contains(artist.id, Qt::CaseInsensitive)){
+		foreach(Artist artist, _vec_artists_searched){
+			if(artist_ids.contains(artist.id)){
 				_vec_artists.push_back(artist);
 			}
 		}
