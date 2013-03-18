@@ -1,0 +1,16 @@
+# have a look at freedesktop desktop specifications
+
+
+[Desktop Entry]
+Type=Application
+Version=0.3
+Name=Sayonara Player
+GenericName=edia player
+Comment=Music player and music library admininstration
+Exec=sayonara %F
+Icon=sayonara.png
+Terminal=false
+Categories=Audio;Music;Player;AudioVideo
+FilePattern=mp3;MP3;wav;WAV;ogg;OGG;flac;FLAC;m4a;M4A;aac;AAC;wma;WMA;m3u;pls;ram;asx;
+MimeType=audio/mpeg;audio/x-mpegurl;audio/wav;audio/x-wav;audio/basic; application/x-ogg;application/ogg;audio/x-vorbis+ogg;audio/x-scpls;audio/x-mp3;audio/x-mpeg;audio/x-flac;x-content/audio-player;
+
