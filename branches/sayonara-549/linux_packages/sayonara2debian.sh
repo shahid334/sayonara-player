@@ -1,8 +1,7 @@
 #!/bin/bash
 
 cd ..
-
-sh setversion.sh
+sh scripts/setversion.sh
 
 STR_MAJOR=`grep -e "^MAJOR" ./VERSION`
 STR_MINOR=`grep -e "^MINOR" ./VERSION`

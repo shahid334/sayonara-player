@@ -156,6 +156,7 @@ void MyListView::keyPressEvent(QKeyEvent* event){
     int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
+    qDebug() << "Key press event";
 
     if( (modifiers & Qt::ControlModifier) &&
         (key == Qt::Key_A) ){
@@ -287,9 +288,12 @@ void MyListView::fill(MetaDataList &v_metadata, int cur_play_idx){
         idx++;
     }
 
+    qDebug() << "Cur selected = " << _cur_selected_rows;
+
     _model->set_selected(_cur_selected_rows);
     this->select_rows(_cur_selected_rows);
 
+    qDebug() << "Cur selected = " << _cur_selected_rows;
     this->scrollTo(idx_cur_playing, QListView::EnsureVisible);
 
 }
@@ -556,7 +560,10 @@ void MyListView::scrollDown(){
 }
 
 void MyListView::remove_cur_selected_rows(){
+    qDebug() << "remove cur selected rows " << _cur_selected_rows;
+
     emit sig_rows_removed(_cur_selected_rows);
+
     _cur_selected_rows.clear();
 }
 

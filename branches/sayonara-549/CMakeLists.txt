@@ -16,7 +16,7 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 SET(CMAKE_BUILD_TYPE "Release")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 SET(CMAKE_C_FLAGS "-Wall")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTNETWORK TRUE)
@@ -119,7 +119,7 @@ SET(SOURCES
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 IF(${UNIX})
-	execute_process(COMMAND sh ./setversion.sh)
+	execute_process(COMMAND sh ./scripts/setversion.sh)
 ENDIF(${UNIX})
 
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC})
@@ -134,7 +134,7 @@ INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/appl
 
 IF(${UNIX})
 	execute_process(COMMAND update-menus)
-	execute_process(COMMAND sh ./setversion.sh)
+	execute_process(COMMAND sh ./scripts/setversion.sh)
 ENDIF(${UNIX})
 
 
