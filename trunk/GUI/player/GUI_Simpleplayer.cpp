@@ -106,9 +106,11 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_library_stretch_factor = p.horizontalStretch();
 
 	bool show_library = settings->getShowLibrary();
-
     ui->action_viewLibrary->setChecked(show_library);
     this->showLibrary(show_library);
+
+    bool live_search = settings->getLibLiveSheach();
+    this->ui->action_livesearch->setChecked(live_search);
 
 
     QSize size = settings->getPlayerSize();
@@ -231,6 +233,9 @@ void GUI_SimplePlayer::setupConnections(){
             SLOT(show()));
 	connect(ui->action_SocketConnection, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_socket_connection_triggered(bool)));
+
+    connect(ui->action_livesearch, SIGNAL(triggered(bool)), this,
+            SLOT(sl_live_search(bool)));
 
 
 	// about

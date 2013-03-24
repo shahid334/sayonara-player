@@ -85,7 +85,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
 
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    _settings = CSettingsStorage::getInstance();
 
 	_sort_albums = AlbumNameAsc;
 	_sort_artists = ArtistNameAsc;
@@ -123,9 +123,9 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
     artist_columns << ar_h0 << ar_h1 << ar_h2;
 
-    _shown_cols_tracks = settings->getLibShownColsTitle();
-    _shown_cols_artist = settings->getLibShownColsArtist();
-    _shown_cols_albums = settings->getLibShownColsAlbum();
+    _shown_cols_tracks = _settings->getLibShownColsTitle();
+    _shown_cols_artist = _settings->getLibShownColsArtist();
+    _shown_cols_albums = _settings->getLibShownColsAlbum();
 
 
     this->_album_model = new LibraryItemModelAlbums(album_columns);
@@ -209,16 +209,12 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
     connect(this->ui->btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
     connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
+    connect(ui->le_search, SIGNAL(returnPressed()), this, SLOT(return_pressed()));
     connect(this->ui->combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
-    bool show_only_tracks = settings->getLibShowOnlyTracks();
+    bool show_only_tracks = _settings->getLibShowOnlyTracks();
     this->ui->lv_artist->setVisible(!show_only_tracks);
     this->ui->lv_album->setVisible(!show_only_tracks);
-
-
-	int style = CSettingsStorage::getInstance()->getPlayerStyle();
-	bool dark = (style == 1);
-	change_skin(dark);
 
     hide();
 }
@@ -245,11 +241,6 @@ void GUI_Library_windowed::show_only_tracks(bool b){
 }
 
 
-void GUI_Library_windowed::change_skin(bool dark){
-}
-
-
-
 void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 	Q_UNUSED(e);
@@ -263,7 +254,7 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 void  GUI_Library_windowed::columns_album_changed(QStringList& list){
     _shown_cols_albums = list;
-    CSettingsStorage::getInstance()->setLibShownColsAlbum(list);
+    _settings->setLibShownColsAlbum(list);
 
 
 }
@@ -271,13 +262,13 @@ void  GUI_Library_windowed::columns_album_changed(QStringList& list){
 
 void  GUI_Library_windowed::columns_artist_changed(QStringList& list){
     _shown_cols_artist = list;
-    CSettingsStorage::getInstance()->setLibShownColsArtist(list);
+    _settings->setLibShownColsArtist(list);
 }
 
 
 void  GUI_Library_windowed::columns_title_changed(QStringList & list){
     _shown_cols_tracks = list;
-    CSettingsStorage::getInstance()->setLibShownColsTitle(list);
+    _settings->setLibShownColsTitle(list);
 }
 
 
@@ -410,8 +401,14 @@ void GUI_Library_windowed::clear_button_pressed(){
 	text_line_edited("", true);
 }
 
+void GUI_Library_windowed::return_pressed(){
+
+    text_line_edited(this->ui->le_search->text(), true);
+}
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit){
+
+    if(!force_emit && !_settings->getLibLiveSheach()) return;
 
     QList<int> lst;
     _album_model->set_selected(lst);
@@ -453,7 +450,7 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 
 	_cur_searchfilter = filter;
 
-    sig_filter_changed(filter);
+    emit sig_filter_changed(filter);
 }
 
 void GUI_Library_windowed::searchfilter_changed(int idx){
@@ -652,7 +649,7 @@ void GUI_Library_windowed::import_result(bool success){
 
 	QString success_string;
 	if(success){
-		success_string = "Importing was successful"; CSettingsStorage::getInstance()->getPlayerStyle();
+        success_string = "Importing was successful"; _settings->getPlayerStyle();
 	}
 
 	else success_string = "Importing failed";

@@ -155,7 +155,8 @@ bool CDatabaseConnector::openDatabase () {
     }
 
     else{
-        qDebug() << "Apply fixes";
+
+        _settings = CSettingsStorage::getInstance();
     	apply_fixes();
     }
 
@@ -235,8 +236,14 @@ bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_c
 
 bool CDatabaseConnector::apply_fixes(){
 
+
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
+
+    int version = load_setting_int("version", 0);
+    if(version == 1) return true;
+
+    qDebug() << "Apply fixes";
 
     check_and_insert_column("playlisttotracks", "position", "INTEGER");
     check_and_insert_column("playlisttotracks", "filepath", "VARCHAR(512)");
@@ -258,6 +265,8 @@ bool CDatabaseConnector::apply_fixes(){
                 ");";
 
     check_and_create_table("savedpodcasts", create_savedpodcasts);
+
+    store_setting("version", 1);
 
 	return true;
 }

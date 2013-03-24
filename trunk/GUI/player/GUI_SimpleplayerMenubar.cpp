@@ -268,6 +268,10 @@ void GUI_SimplePlayer::lastFMClicked(bool b) {
 
 }
 
+void GUI_SimplePlayer::sl_live_search(bool b){
+    CSettingsStorage::getInstance()->setLibLiveSearch(b);
+}
+
 /** PREFERENCES END **/
 
 

@@ -167,6 +167,7 @@ private slots:
     void sl_action_streamripper_toggled(bool);
     void sl_action_socket_connection_triggered(bool);
     void sl_show_only_tracks(bool);
+    void sl_live_search(bool);
 
     void about(bool b=false);
 

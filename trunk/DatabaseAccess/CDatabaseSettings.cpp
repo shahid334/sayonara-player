@@ -164,6 +164,9 @@ bool CDatabaseConnector::load_settings(){
     bool show_only_tracks = load_setting_bool(SET_LIB_SHOWN_ONLY_TRACKS, false);
     settings->setLibShowOnlyTracks(show_only_tracks);
 
+    bool lib_live_search = load_setting_bool(SET_LIB_LIVE_SEARCH, true);
+    settings->setLibLiveSearch(lib_live_search);
+
 
 	/* Player size */
 	QSize player_size(800, 600);
@@ -321,6 +324,9 @@ bool CDatabaseConnector::store_settings(){
 
     bool lib_show_only_tracks = storage->getLibShowOnlyTracks();
     store_setting(SET_LIB_SHOWN_ONLY_TRACKS, lib_show_only_tracks);
+
+    bool lib_live_search = storage->getLibLiveSheach();
+    store_setting(SET_LIB_LIVE_SEARCH, lib_live_search);
 
 	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());

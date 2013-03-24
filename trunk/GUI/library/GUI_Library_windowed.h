@@ -92,6 +92,7 @@ private:
 
 
 	Filter		_cur_searchfilter;
+    CSettingsStorage* _settings;
 
 
 
@@ -128,7 +129,6 @@ public slots:
 	void library_changed();
 	void import_result(bool);
 	void psl_delete_answer(QString);
-    void change_skin(bool dark);
     void show_only_tracks(bool);
 
 
@@ -151,6 +151,7 @@ private slots:
 
 	void searchfilter_changed(int);
 	void text_line_edited(const QString&, bool force_emit=false);
+    void return_pressed();
 
 	void artist_middle_clicked(const QPoint& p);
 	void album_middle_clicked(const QPoint& p);

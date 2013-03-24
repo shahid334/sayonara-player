@@ -454,6 +454,15 @@ bool CSettingsStorage::getLibShowOnlyTracks(){
 
 }
 
+void CSettingsStorage::setLibLiveSearch(bool b){
+    m_lib_live_search = b;
+    _sth_changed = true;
+}
+
+bool CSettingsStorage::getLibLiveSheach(){
+    return m_lib_live_search;
+}
+
 
 
 

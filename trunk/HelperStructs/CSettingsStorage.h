@@ -45,6 +45,7 @@
 #define SET_LIB_SHOWN_COLS_ARTIST "lib_shown_cols_artist"
 #define SET_LIB_SHOWN_COLS_ALBUM "lib_shown_cols_album"
 #define SET_LIB_SHOWN_ONLY_TRACKS "lib_shown_tracks"
+#define SET_LIB_LIVE_SEARCH "lib_live_search"
 
 #define SET_PLAYER_STYLE "player_style"
 #define SET_PLAYER_SIZE "player_size"
@@ -79,6 +80,8 @@
 #define SET_SOCKET_ACTIVE "socket_active"
 #define SET_SOCKET_FROM "socket_from"
 #define SET_SOCKET_TO "socket_to"
+
+
 
 
 #include <QString>
@@ -181,6 +184,7 @@ private:
     QStringList m_lib_shown_cols_artist;
     QStringList m_lib_shown_cols_album;
     bool m_show_only_tracks;
+    bool m_lib_live_search;
 
     // playlist
     QStringList m_playlist;
@@ -317,6 +321,9 @@ public:
 
     void setLibShowOnlyTracks(bool);
     bool getLibShowOnlyTracks();
+
+    void setLibLiveSearch(bool);
+    bool getLibLiveSheach();
 
     void setShownPlugin(QString);
     QString getShownPlugin();
