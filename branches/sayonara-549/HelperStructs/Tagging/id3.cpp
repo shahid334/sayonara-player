@@ -54,7 +54,6 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
     TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
-
     int idx = md.filepath.lastIndexOf('/');
     md.title = md.filepath.right(md.filepath.length() - idx -1);
 	md.title = md.title.left(md.title.length() - 4);
@@ -73,7 +72,6 @@ bool ID3::getMetaDataOfFile(MetaData& md){
     /*FileHeader fh(md.filepath);
     id3_extract_discnumber(fh, &discnumber, &n_discs);*/
     taglib_id3_extract_discnumber(f, &discnumber);
-    qDebug() << "Found discnumber " << discnumber;
 
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
@@ -88,7 +86,6 @@ bool ID3::getMetaDataOfFile(MetaData& md){
         genres[i] = genres[i].trimmed();
     }
 
-    //md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
     md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
 	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
 	md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));

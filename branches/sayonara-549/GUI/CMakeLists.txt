@@ -1,8 +1,8 @@
 PROJECT(sayonara_gui)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
-SET(CMAKE_C_FLAGS "-Wall")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
+SET(CMAKE_C_FLAGS "-Wall -O3")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O3")
 
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)

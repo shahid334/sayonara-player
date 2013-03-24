@@ -116,7 +116,7 @@ bool id3_extract_discnumber(ID3_FileHeader& fh, int* discnumber, int* n_discs){
 
     if(!text.size()) return false;
 
-	qDebug() << "TPOS" << text;
+    //qDebug() << "TPOS" << text;
 
     return true;
 }
@@ -151,13 +151,13 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     f_mp3 = dynamic_cast<TagLib::MPEG::File*>(f);
 
     if(!f_mp3) {
-        qDebug() << "Tagging: no mp3 header";
+        //qDebug() << "Tagging: no mp3 header";
         return false;
     }
 
     TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
     if(!id3_tag){
-        qDebug() << "Tagging: no valid id3 tag";
+        //qDebug() << "Tagging: no valid id3 tag";
         return false;
     }
 
@@ -165,15 +165,15 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     TagLib::ID3v2::FrameListMap map = id3_tag->frameListMap();
      TagLib::ID3v2::FrameList l = map["TPOS"];
      if(!l.isEmpty()){
-         qDebug() << "Tagging: list is not empty";
+         //qDebug() << "Tagging: list is not empty";
          vec = QByteArray(l.front()->toString().toCString(false));
      }
 
      else {
-         for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++){
+        /* for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++){
              qDebug() << QString(it->first.data());
-         }
-         qDebug() << "Tagging: list is empty";
+         }*/
+         //qDebug() << "Tagging: list is empty";
          return false;
      }
 
@@ -182,7 +182,7 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     for(int i=0; i<vec.size(); i++){
 
         char c = vec[i];
-        qDebug() << (unsigned int) c;
+       // qDebug() << (unsigned int) c;
 
         if(c == '/') {
             slash_found = true;

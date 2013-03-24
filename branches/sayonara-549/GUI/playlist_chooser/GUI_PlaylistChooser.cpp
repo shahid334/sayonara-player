@@ -53,6 +53,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QCha
     this->ui->lab_icon->setPixmap(p);
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
+    _last_dir = CSettingsStorage::getInstance()->getLibraryPath();
 
 	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
 	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
@@ -208,16 +209,18 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 
 
 void GUI_PlaylistChooser::load_button_pressed(){
+
     QStringList filelist = QFileDialog::getOpenFileNames(
                     this,
                     tr("Open Playlist files"),
-                    CSettingsStorage::getInstance()->getLibraryPath(),
+                    _last_dir,
                     Helper::get_playlistfile_extensions().join(" "));
-
 
     QString lab_text = "";
     foreach(QString filename, filelist){
         int last_index_of_sep = filename.lastIndexOf(QDir::separator());
+        _last_dir = filename.left(last_index_of_sep);
+
         QString trimmed_filename = filename.right(filename.size() - last_index_of_sep - 1);
         trimmed_filename = trimmed_filename.left(trimmed_filename.lastIndexOf('.'));
         lab_text += trimmed_filename + ", ";

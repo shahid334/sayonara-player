@@ -175,6 +175,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
         MetaDataList v_metadata;
 
         bool success = false;
+        qDebug() << "Files 2 copy: " << files2copy;
         for(int i=0; i<files2copy.size(); i++){
 
             // target path + relative src path
@@ -182,6 +183,8 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
             QString new_filename = target_path + tmp_src_dir.relativeFilePath(files2copy[i]);
 
             QFile f(files2copy[i]);
+
+
             if( f.copy(new_filename) ){
                 success = true;
                 int percent = (i * 10000) / (100 * files2copy.size());
@@ -200,7 +203,9 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
         m_import_dialog->progress_changed(0);
 
+        qDebug() << "Copy files: " << success;
         success &= db->storeMetadata(v_metadata);
+        qDebug() << "Library: " << success;
 
         if(success){
             QMessageBox::information(m_app->getMainWindow(), "Import files", "All files could be imported");

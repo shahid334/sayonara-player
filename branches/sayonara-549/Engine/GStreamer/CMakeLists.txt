@@ -3,8 +3,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
 include(FindPkgConfig)
 
-SET(CMAKE_C_FLAGS "-Wall")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
+SET(CMAKE_C_FLAGS "-Wall -O3")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O3")
 
 INCLUDE_DIRECTORIES(../..)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})

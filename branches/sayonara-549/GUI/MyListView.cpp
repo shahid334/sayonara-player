@@ -560,11 +560,7 @@ void MyListView::scrollDown(){
 }
 
 void MyListView::remove_cur_selected_rows(){
-    qDebug() << "remove cur selected rows " << _cur_selected_rows;
-
     emit sig_rows_removed(_cur_selected_rows);
-
-    _cur_selected_rows.clear();
 }
 
 

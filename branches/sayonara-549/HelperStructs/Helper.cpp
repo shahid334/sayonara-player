@@ -455,12 +455,15 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 	QFile file(filename);
 	content.clear();
-	if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+    if(!file.open(QIODevice::ReadOnly)){
 		return false;
 	}
 
 	while (!file.atEnd()) {
-		content += file.readLine();
+        QByteArray arr = file.readLine();
+        QString str = QString::fromLocal8Bit(arr);
+
+        content += str;
 	}
 
 	file.close();

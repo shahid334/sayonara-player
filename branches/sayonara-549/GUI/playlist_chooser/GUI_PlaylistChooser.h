@@ -73,12 +73,18 @@ public:
 
 private:
     Ui::GUI_PlaylistChooser* ui;
+    GUI_Target_Playlist_Dialog* _target_playlist_dialog;
+
 	QMap<int, QString> _playlists;
-	int	_cur_idx;
+
+    int	_cur_idx;
 	bool _started;
     bool _dark;
     QString _text_before_save;
-    GUI_Target_Playlist_Dialog* _target_playlist_dialog;
+    QString _last_dir;
+
+
+
 
     int show_warning(QString title_text);
 

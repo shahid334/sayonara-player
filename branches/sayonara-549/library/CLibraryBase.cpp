@@ -60,11 +60,9 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 	_reload_progress = 0;
 
 		// start thread
-		_db->getAllArtists(_vec_artists_searched, _artist_sortorder);
-		_db->getAllAlbums(_vec_albums_searched, _album_sortorder);
-		_db->getTracksFromDatabase(_vec_md_searched, _track_sortorder);
-
-	qDebug() << "Got " << _vec_md_searched.size() << " Tracks";
+        _db->getAllArtists(_vec_artists, _artist_sortorder);
+        _db->getAllAlbums(_vec_albums, _album_sortorder);
+        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
 
 		
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
@@ -84,10 +82,6 @@ void CLibraryBase::emit_stuff(){
 
 
 void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
-
-/*	_vec_albums_searched.clear();
-	_vec_artists_searched.clear();
-	_vec_md_searched.clear();*/
 
 
     // artist sort order has changed
@@ -210,49 +204,20 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
     
 	if(_filter.cleared){
-	/*	_db->getAllArtists(_vec_artists, _artist_sortorder);
-		_db->getAllAlbums(_vec_albums, _album_sortorder);
-		_db->getTracksFromDatabase(_vec_md, _track_sortorder);*/
-		_vec_artists = _vec_artists_searched;
-		_vec_albums = _vec_albums_searched;
-		_vec_md = _vec_md_searched;
-        }
+        _db->getAllArtists(_vec_artists, _artist_sortorder);
+        _db->getAllAlbums(_vec_albums, _album_sortorder);
+        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    }
+
+    else {
+       _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
+       _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+       _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
+   }
+
+   emit_stuff();
 
 
-
-	else if(_vec_md_searched.size() > 0){
-
-		QString tmp_str = filter.filtertext.mid(1, filter.filtertext.size() - 2);
-		_vec_artists.clear();
-		_vec_albums.clear();
-		_vec_md.clear();
-		QList<int> album_ids;
-		QList<int> artist_ids;
-		foreach(MetaData md, _vec_md_searched){
-			if(md.title.contains(tmp_str, Qt::CaseInsensitive) ||
-			   md.album.contains(tmp_str, Qt::CaseInsensitive) ||
-			   md.artist.contains(tmp_str, Qt::CaseInsensitive) ){
-				_vec_md.push_back(md);
-				album_ids << md.album_id;
-				artist_ids << md.artist_id;
-			}
-		}
-
-		foreach(Album album, _vec_albums_searched){
-			if(album_ids.contains(album.id)){
-				_vec_albums.push_back(album);
-			}
-		}
-
-		foreach(Artist artist, _vec_artists_searched){
-			if(artist_ids.contains(artist.id)){
-				_vec_artists.push_back(artist);
-			}
-		}
-
-	}
-
-	emit_stuff();
 }
 
 

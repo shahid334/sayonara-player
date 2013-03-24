@@ -109,7 +109,7 @@ private slots:
 
 
 private:
-    Application*            m_app;
+    Application*        m_app;
     CDirectoryReader    m_reader;
 
     QString				m_library_path;
@@ -125,10 +125,6 @@ private:
     MetaDataList        _vec_md;
     AlbumList			_vec_albums;
     ArtistList			_vec_artists;
-
-    MetaDataList	_vec_md_searched;
-    AlbumList		_vec_albums_searched;
-    ArtistList		_vec_artists_searched;
 
     Sort::SortOrder		_track_sortorder;
     Sort::SortOrder		_album_sortorder;
