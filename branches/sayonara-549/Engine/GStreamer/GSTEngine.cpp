@@ -410,7 +410,7 @@ void GST_Engine::play(int pos_sec){
 
 void GST_Engine::stop(){
 
-    //qDebug() << "Engine: stop";
+    qDebug() << "Engine: stop";
     _state = STATE_STOP;
 
 	// streamripper, wanna record is set when record button is pressed

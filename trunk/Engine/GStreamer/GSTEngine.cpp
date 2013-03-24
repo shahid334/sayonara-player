@@ -115,7 +115,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
             if(__start_at_beginning == false) {
                 __start_at_beginning = true;
                 obj_ref->jump(__start_pos_beginning, false);
-                qDebug() << "Engine: jump";
             }
 
             break;
@@ -410,7 +409,6 @@ void GST_Engine::play(int pos_sec){
 
 void GST_Engine::stop(){
 
-    //qDebug() << "Engine: stop";
     _state = STATE_STOP;
 
 	// streamripper, wanna record is set when record button is pressed
@@ -530,7 +528,6 @@ void GST_Engine::set_track_finished(){
         _stream_recorder->stop(!_sr_wanna_record);
     }
 
-    qDebug() << "Engine: track finished";
     emit track_finished();
     _track_finished = true;
 }
@@ -571,9 +568,9 @@ void GST_Engine::psl_new_stream_session(){
 }
 
 void GST_Engine::sr_initialized(bool b){
-    qDebug() << "SR init " << b;
+
     if(b) play();
-    //else stop();
+
 }
 
 void GST_Engine::sr_ended(){

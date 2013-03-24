@@ -42,7 +42,6 @@ void SettingsThread::run(){
 	while(1){
 		usleep(5000000);
 		if(_settings->get_sth_changed()){
-			qDebug() << "Save stuff";
 			_settings->set_sth_changed(false);
 			_settings->save_all();
 		}

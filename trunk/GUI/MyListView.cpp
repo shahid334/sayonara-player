@@ -42,7 +42,7 @@
 #include <QUrl>
 #include <QMenu>
 #include <QModelIndex>
-#include <QDebug>
+
 
 
 
@@ -156,7 +156,7 @@ void MyListView::keyPressEvent(QKeyEvent* event){
     int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
-    qDebug() << "Key press event";
+
 
     if( (modifiers & Qt::ControlModifier) &&
         (key == Qt::Key_A) ){
@@ -250,7 +250,6 @@ void MyListView::info_clicked(){
 }
 
 void MyListView::remove_clicked(){
-    qDebug() << "Remove clicked" << _cur_selected_rows;
     remove_cur_selected_rows();
 }
 
@@ -288,12 +287,9 @@ void MyListView::fill(MetaDataList &v_metadata, int cur_play_idx){
         idx++;
     }
 
-    qDebug() << "Cur selected = " << _cur_selected_rows;
-
     _model->set_selected(_cur_selected_rows);
     this->select_rows(_cur_selected_rows);
 
-    qDebug() << "Cur selected = " << _cur_selected_rows;
     this->scrollTo(idx_cur_playing, QListView::EnsureVisible);
 
 }

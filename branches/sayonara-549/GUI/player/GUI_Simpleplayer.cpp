@@ -172,8 +172,8 @@ void GUI_SimplePlayer::setupConnections(){
 			SLOT(forwardClicked(bool)));
 	connect(ui->btn_bw, SIGNAL(clicked(bool)), this,
 			SLOT(backwardClicked(bool)));
-	connect(ui->btn_stop, SIGNAL(clicked(bool)), this,
-			SLOT(stopClicked(bool)));
+    connect(ui->btn_stop, SIGNAL(clicked()), this,
+            SLOT(stopClicked()));
 	connect(ui->btn_mute, SIGNAL(released()), this,
 			SLOT(muteButtonPressed()));
 	connect(ui->btn_rec, SIGNAL(toggled(bool)), this,

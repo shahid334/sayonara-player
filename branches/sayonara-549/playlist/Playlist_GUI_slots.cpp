@@ -75,6 +75,7 @@ void Playlist::psl_play(){
 
 void Playlist::psl_stop(){
 
+    qDebug() << "Playlist stop";
     LastTrack* last_track = _settings->getLastTrack();
     last_track->reset();
     _settings->updateLastTrack();
@@ -89,7 +90,7 @@ void Playlist::psl_stop(){
     _cur_play_idx = -1;
     _is_playing = false;
     emit sig_no_track_to_play();
-    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+    //emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }
 
 // fwd was pressed -> next track
