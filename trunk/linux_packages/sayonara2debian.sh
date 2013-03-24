@@ -3,6 +3,7 @@
 cd ..
 sh scripts/setversion.sh
 
+
 STR_MAJOR=`grep -e "^MAJOR" ./VERSION`
 STR_MINOR=`grep -e "^MINOR" ./VERSION`
 STR_SUBMINOR=`grep -e "^SUBMINOR" ./VERSION`
@@ -68,6 +69,7 @@ cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara
+cp ../Notification/libnotify/libsayonara_libnotify.so $DEBIAN_DIR/usr/lib/sayonara
 
 dpkg-deb -b $DEBIAN_DIR $OUTPUT_FILE
 echo Written to $OUTPUT_FILE

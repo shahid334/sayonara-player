@@ -42,6 +42,7 @@
 #include <QUrl>
 #include <QLineEdit>
 #include <QScrollBar>
+#include <QFont>
 
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/MetaData.h"
@@ -75,6 +76,11 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
     _corner_widget->hide();
 
     _view_mode = -1;
+
+    QFont f = horizontalHeader()->font();
+    f.setFamily("DejaVu Sans");
+    f.setPixelSize(12);
+    this->horizontalHeader()->setFont(f);
 
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
