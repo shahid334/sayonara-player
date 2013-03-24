@@ -63,6 +63,8 @@ cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/icons
 cp ../VERSION ${DEBIAN_DIR}/usr/share/sayonara
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/player.db
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/empty.db
+cp ../GUI/dark.css $DEBIAN_DIR/usr/share/sayonara/dark.css
+cp ../GUI/standard.css $DEBIAN_DIR/usr/share/sayonara/standard.css
 cp ./resources/sayonara.postinst $DEBIAN_DIR
 cp ./resources/sayonara.prerm $DEBIAN_DIR
 cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu

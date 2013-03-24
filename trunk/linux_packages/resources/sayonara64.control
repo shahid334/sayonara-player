@@ -3,7 +3,7 @@ Version: 0.3.2
 Section: sound
 Priority: extra
 Architecture: amd64
-Depends: libtag1-vanilla, libqt4-gui, libqt4-sql-sqlite, libqt4-xml, libqt4-core, libcurl3, gstreamer0.10-ffmpeg, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good, libgstreamer0.10-0, libgstreamer-plugins-base0.10-0
+Depends: libtag1-vanilla, libqt4-gui, libqt4-sql-sqlite, libqt4-xml, libqt4-core, libcurl3, gstreamer0.10-ffmpeg, gstreamer0.10-plugins-base, gstreamer0.10-plugins-good, libgstreamer0.10-0, libgstreamer-plugins-base0.10-0, libnotify4
 Recommends: gstreamer0.10-plugins-ugly, gstreamer0.10-plugins-bad-multiverse, gstreamer0.10-plugins-bad
 Installed-Size: 2300
 Maintainer: Lucio Carreras <LucioCarreras@gmail.com>
