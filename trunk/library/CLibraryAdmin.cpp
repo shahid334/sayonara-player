@@ -1,3 +1,25 @@
+/* CLibraryAdmin.cpp */
+
+/* Copyright (C) 2013  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
@@ -153,6 +175,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
         MetaDataList v_metadata;
 
         bool success = false;
+        qDebug() << "Files 2 copy: " << files2copy;
         for(int i=0; i<files2copy.size(); i++){
 
             // target path + relative src path
@@ -160,6 +183,8 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
             QString new_filename = target_path + tmp_src_dir.relativeFilePath(files2copy[i]);
 
             QFile f(files2copy[i]);
+
+
             if( f.copy(new_filename) ){
                 success = true;
                 int percent = (i * 10000) / (100 * files2copy.size());
@@ -178,7 +203,9 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
         m_import_dialog->progress_changed(0);
 
+        qDebug() << "Copy files: " << success;
         success &= db->storeMetadata(v_metadata);
+        qDebug() << "Library: " << success;
 
         if(success){
             QMessageBox::information(m_app->getMainWindow(), "Import files", "All files could be imported");

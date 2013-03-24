@@ -84,6 +84,7 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 
     MetaData ext_md;
 	foreach(QString line, list){
+        qDebug() << "line = " << line;
 
 		// remove comments
 		int comment_idx=line.indexOf('#');
@@ -105,7 +106,7 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
 
         if( !Helper::is_www(line)){
             md.filepath = _correct_filepath(line, abs_path);
-            //qDebug() << "Filepath = " << md.filepath;
+
             MetaData md_tmp = db->getTrackByPath(md.filepath);
 
             if( md_tmp.id >= 0) v_md.push_back(md_tmp);
@@ -120,6 +121,7 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path){
                 md.artist = line;
 
             md.filepath = _correct_filepath(line, abs_path);
+
 			md.album = "";
             v_md.push_back(md);
 		}

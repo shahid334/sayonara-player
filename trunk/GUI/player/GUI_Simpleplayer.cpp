@@ -622,6 +622,11 @@ void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
 
 }
 
+void GUI_SimplePlayer::stopped(){
+    stopClicked(false);
+}
+
+
 /** LIBRARY AND PLAYLIST END **/
 
 

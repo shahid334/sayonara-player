@@ -1,3 +1,25 @@
+/* id3access.cpp */
+
+/* Copyright (C) 2013  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 #include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Tagging/ID3_Fileheader.h"
 
@@ -94,7 +116,7 @@ bool id3_extract_discnumber(ID3_FileHeader& fh, int* discnumber, int* n_discs){
 
     if(!text.size()) return false;
 
-	qDebug() << "TPOS" << text;
+    //qDebug() << "TPOS" << text;
 
     return true;
 }
@@ -129,13 +151,13 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     f_mp3 = dynamic_cast<TagLib::MPEG::File*>(f);
 
     if(!f_mp3) {
-        qDebug() << "Tagging: no mp3 header";
+        //qDebug() << "Tagging: no mp3 header";
         return false;
     }
 
     TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
     if(!id3_tag){
-        qDebug() << "Tagging: no valid id3 tag";
+        //qDebug() << "Tagging: no valid id3 tag";
         return false;
     }
 
@@ -143,15 +165,15 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     TagLib::ID3v2::FrameListMap map = id3_tag->frameListMap();
      TagLib::ID3v2::FrameList l = map["TPOS"];
      if(!l.isEmpty()){
-         qDebug() << "Tagging: list is not empty";
+         //qDebug() << "Tagging: list is not empty";
          vec = QByteArray(l.front()->toString().toCString(false));
      }
 
      else {
-         for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++){
+        /* for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++){
              qDebug() << QString(it->first.data());
-         }
-         qDebug() << "Tagging: list is empty";
+         }*/
+         //qDebug() << "Tagging: list is empty";
          return false;
      }
 
@@ -160,7 +182,7 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     for(int i=0; i<vec.size(); i++){
 
         char c = vec[i];
-        qDebug() << (unsigned int) c;
+       // qDebug() << (unsigned int) c;
 
         if(c == '/') {
             slash_found = true;

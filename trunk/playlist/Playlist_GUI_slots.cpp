@@ -1,3 +1,25 @@
+/* Playlist_GUI_slots.cpp */
+
+/* Copyright (C) 2013  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 #include "playlist/Playlist.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/MetaData.h"
@@ -188,12 +210,15 @@ void Playlist::remove_row(int row){
 // remove one row
 void Playlist::psl_remove_rows(const QList<int> & rows){
 
+    if(rows.size() == 0) return;
+
     MetaDataList v_tmp_md;
 
     int n_tracks = (int) _v_meta_data.size();
     int n_tracks_before_cur_idx = 0;
 
     if(rows.contains(_cur_play_idx)) _cur_play_idx = -1;
+    int first_row = rows[0];
 
     for(int i=0; i<n_tracks; i++){
 
@@ -222,8 +247,10 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
         v_tmp_md[_cur_play_idx].pl_playing = true;
 
     _v_meta_data = v_tmp_md;
+    _v_meta_data[first_row].pl_selected = true;
 
     psl_save_playlist_to_storage();
+    qDebug() << "emit sig playlist created";
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }

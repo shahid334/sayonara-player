@@ -59,6 +59,12 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 	_filter.filtertext = "";
 	_reload_progress = 0;
 
+		// start thread
+        _db->getAllArtists(_vec_artists, _artist_sortorder);
+        _db->getAllAlbums(_vec_albums, _album_sortorder);
+        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
+
+		
 	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
     connect(m_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
@@ -76,6 +82,7 @@ void CLibraryBase::emit_stuff(){
 
 
 void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
+
 
     // artist sort order has changed
 	if(artist_so != _artist_sortorder){
@@ -195,20 +202,22 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
     _selected_albums.clear();
     _selected_artists.clear();
 
-
+    
 	if(_filter.cleared){
-		_db->getAllArtists(_vec_artists, _artist_sortorder);
-		_db->getAllAlbums(_vec_albums, _album_sortorder);
-		_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+        _db->getAllArtists(_vec_artists, _artist_sortorder);
+        _db->getAllAlbums(_vec_albums, _album_sortorder);
+        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
     }
 
-	else {
-		_db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
-		_db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
-		_db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
-	}
+    else {
+       _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
+       _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+       _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
+   }
 
-	emit_stuff();
+   emit_stuff();
+
+
 }
 
 

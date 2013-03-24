@@ -77,6 +77,7 @@ public slots:
     void psl_strrip_set_active(bool);
     void setVolume(int vol);
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
+    void stopped();
 
 
     /* Plugins */

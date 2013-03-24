@@ -10,7 +10,11 @@ echo "Checking out..."
 svn export "https://sayonara-player.googlecode.com/svn/trunk" ${TARGET_PATH} 
 
 echo "Creating archive"
-tar czvf "${TARGET_FILENAME}.tar.gz" ${TARGET_PATH}
+
+CUR_PATH=$PWD
+cd /tmp
+tar czvf "${CUR_PATH}/${TARGET_FILENAME}.tar.gz" ${TARGET_FILENAME}
+cd $CUR_PATH
 
 echo "Removing tmp files"
 
@@ -20,5 +24,4 @@ if [ -f "${TARGET_FILENAME}.tar.gz" ] ; then
 else 
 	echo "Could not write ${TARGET_FILENAME}.tar.gz"
 fi
-
 

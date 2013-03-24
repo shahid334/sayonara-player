@@ -39,6 +39,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 	ui->setupUi(this);
 
     this->ui->combo_folders->addItems(folder_list);
+    ui->combo_folders->setAutoCompletionCaseSensitivity(Qt::CaseSensitive);
     this->ui->cb_copy2lib->setEnabled(copy_enabled);
 
     this->ui->cb_copy2lib->setChecked(copy_enabled);

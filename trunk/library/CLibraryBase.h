@@ -109,7 +109,7 @@ private slots:
 
 
 private:
-    Application*            m_app;
+    Application*        m_app;
     CDirectoryReader    m_reader;
 
     QString				m_library_path;
@@ -121,6 +121,7 @@ private:
 	int					_reload_progress;
 
     CDatabaseConnector*	_db;
+
     MetaDataList        _vec_md;
     AlbumList			_vec_albums;
     ArtistList			_vec_artists;
@@ -131,7 +132,9 @@ private:
 
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;
-    QList<int>          _selected_tracks;
+    QList<int>          	_selected_tracks;
+
+
 
     Filter				_filter;
 
