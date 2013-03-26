@@ -650,8 +650,7 @@ void MyTableView::fill_artists(const ArtistList& artists){
 
 void MyTableView::calc_corner_widget(){
 
-
-    if(!this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()){
+    if(!this->verticalScrollBar() || !this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()){
         this->setCornerWidget(NULL);
         _corner_widget->hide();
         return;
@@ -666,7 +665,8 @@ void MyTableView::calc_corner_widget(){
 
     QPalette palette = _parent->palette();
     QColor bg = palette.color(QPalette::Normal, QPalette::Window);
-    this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
+    if(this->cornerWidget())
+        this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
 
 }
 
