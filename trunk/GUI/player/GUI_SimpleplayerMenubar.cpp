@@ -273,8 +273,22 @@ void GUI_SimplePlayer::sl_live_search(bool b){
 }
 
 /** PREFERENCES END **/
+#define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
+#define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
 
+void GUI_SimplePlayer::help(bool b){
+	Q_UNUSED(b);
+	QString link;
+	int style = CSettingsStorage::getInstance()->getPlayerStyle();
+	if(style == 0){
+		link = "<a href=\"http://sayonara.luciocarreras.de\">"+ DARK_BLUE("http://sayonara.luciocarreras.de") + "</a>";
+	}
+	else
 
+		link = "<a href=\"http://sayonara.luciocarreras.de\">"+ LIGHT_BLUE("http://sayonara.luciocarreras.de") + "</a>";
+	QMessageBox::information(this, "Help", "Please visit the forum at <br />" + link);
+
+}
 
 // private slot
 void GUI_SimplePlayer::about(bool b){

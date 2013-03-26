@@ -241,6 +241,7 @@ void GUI_SimplePlayer::setupConnections(){
 	// about
 	connect(ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
+	connect(ui->action_help, SIGNAL(triggered(bool)), this, SLOT(help(bool)));
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
 
 

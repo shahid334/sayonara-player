@@ -170,6 +170,7 @@ private slots:
     void sl_live_search(bool);
 
     void about(bool b=false);
+    void help(bool b=false);
 
 
     void sl_alternate_cover_available(QString, QString);
