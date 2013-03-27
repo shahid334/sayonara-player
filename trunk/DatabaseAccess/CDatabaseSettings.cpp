@@ -227,7 +227,7 @@ bool CDatabaseConnector::load_settings(){
 
 
 	/* Minimize to tray */
-	bool min2tray = load_setting_bool(SET_PLAYER_MIN_2_TRAY, true);
+	bool min2tray = load_setting_bool(SET_PLAYER_MIN_2_TRAY, false);
 	settings->setMinimizeToTray(min2tray);
 
 	/* small playlist items */

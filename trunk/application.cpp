@@ -207,7 +207,7 @@ Application::~Application(){
         }
     }
 
-    _setting_thread->quit();
+    _setting_thread->stop();
 
     delete listen;
     delete ui_socket_setup;

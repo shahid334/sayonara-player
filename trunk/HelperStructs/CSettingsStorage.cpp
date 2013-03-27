@@ -32,6 +32,7 @@
 
 SettingsThread::SettingsThread(){
 	_settings = CSettingsStorage::getInstance();
+	_goon = true;
 	
 }
 
@@ -39,7 +40,7 @@ SettingsThread::~SettingsThread(){}
 
 void SettingsThread::run(){
 
-	while(1){
+	while(_goon){
 		usleep(5000000);
 		if(_settings->get_sth_changed()){
 			_settings->set_sth_changed(false);
@@ -48,6 +49,11 @@ void SettingsThread::run(){
 	}
 
 	qDebug() << "thread finished";
+}
+
+void SettingsThread::stop(){
+	_goon = false;
+
 }
 
 

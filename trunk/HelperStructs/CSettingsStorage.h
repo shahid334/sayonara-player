@@ -105,6 +105,7 @@ using namespace std;
 
 	private:
 		CSettingsStorage* _settings;
+		bool _goon;
 
 	protected: 
 		void run();
@@ -112,6 +113,7 @@ using namespace std;
 	public:
 		SettingsThread();
 		virtual ~SettingsThread();
+		void stop();
 
 
 };
