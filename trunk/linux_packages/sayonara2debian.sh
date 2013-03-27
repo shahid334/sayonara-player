@@ -45,6 +45,7 @@ mkdir -p $DEBIAN_DIR/usr/share/icons
 mkdir -p $DEBIAN_DIR/usr/share/applications
 mkdir -p $DEBIAN_DIR/usr/bin
 mkdir -p $DEBIAN_DIR/usr/lib/sayonara
+mkdir -p $DEBIAN_DIR/usr/share/doc/sayonara
 
 cd ..
 make all
@@ -65,14 +66,16 @@ cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/player.db
 cp ../empty.db $DEBIAN_DIR/usr/share/sayonara/empty.db
 cp ../GUI/dark.css $DEBIAN_DIR/usr/share/sayonara/dark.css
 cp ../GUI/standard.css $DEBIAN_DIR/usr/share/sayonara/standard.css
-cp ./resources/sayonara.postinst $DEBIAN_DIR
-cp ./resources/sayonara.prerm $DEBIAN_DIR
+cp ./resources/sayonara.postinst $DEBIAN_DIR/DEBIAN/postinst
+cp ./resources/sayonara.prerm $DEBIAN_DIR/DEBIAN/prerm
 cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
+cp ./resources/copyright ${DEBIAN_DIR}/usr/share/doc/sayonara/copyright
 cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara
+chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_gstreamer.so
 cp ../Notification/libnotify/libsayonara_libnotify.so $DEBIAN_DIR/usr/lib/sayonara
-
-dpkg-deb -b $DEBIAN_DIR $OUTPUT_FILE
+gzip --best -c resources/changelog > $DEBIAN_DIR/usr/share/doc/sayonara/changelog.gz 
+fakeroot dpkg-deb -b $DEBIAN_DIR $OUTPUT_FILE
 echo Written to $OUTPUT_FILE
 

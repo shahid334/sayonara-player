@@ -1,0 +1,31 @@
+sayonara (0.3.2) unstable; urgency=low
+  
+  * Sayonara 0.3.2 was a bufix release
+  * Podcasts
+  * Only one instance
+  * Notifications with libnotify
+  * Startup options
+  * Podcasts
+  * Window specific search in library
+  * Optional columns in library
+  * Streams are more stable
+  * Better LastFM support
+  * Playlists load and save to m3u
+  * Sayonara in file manager context menu
+  * Discnumbers
+  * Dark skin
+  * Numbers in playlist
+  * Streamrecorder improved (playlists, session folders)
+  * Faster library handling
+  * Clear library
+  * playlist issues
+  * library marks
+  * streaming with activated stream recorder
+  * Menu icons
+  * Better font for non-latin characters
+  * Better Unicode support
+ -- Lucio Carreras <luciocarreras@gmail.com>  Mon, 25 Mar 2013 23:00:00 +0100
+
+Old Changelog:
+
+

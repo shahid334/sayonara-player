@@ -1,4 +1,4 @@
 #!/bin/bash
-
-update-menus
+set -e
+if [ -x /usr/bin/update-menus ] ; then update-menus ; fi
 
