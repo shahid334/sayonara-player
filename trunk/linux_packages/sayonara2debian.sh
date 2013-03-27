@@ -25,6 +25,7 @@ CONTROL_FILE=./resources/sayonara32.control
 DEBIAN_DIR=sayonara.debian
 rm -rf $DEBIAN_DIR
 
+
 CUR_DIR=$PWD
 
 if [ "$1" = "clean" ] ; then
@@ -36,6 +37,8 @@ if [ "$1" = "-ax64" ] ; then
 	CONTROL_FILE=./resources/sayonara64.control
 fi
 	
+chmod +x resources/sayonara.postinst
+chmod +x resources/sayonara.prerm
 
 mkdir -p $DEBIAN_DIR/DEBIAN
 mkdir -p $DEBIAN_DIR/usr/share/sayonara
@@ -59,6 +62,7 @@ cd $CUR_DIR
 
 cp ../bin/sayonara $DEBIAN_DIR/usr/bin
 cp ../GUI/icons/* $DEBIAN_DIR/usr/share/sayonara
+chmod -x $DEBIAN_DIR/usr/share/sayonara/logo.png
 cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/pixmaps
 cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/icons
 cp ../VERSION ${DEBIAN_DIR}/usr/share/sayonara
@@ -72,10 +76,16 @@ cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/copyright ${DEBIAN_DIR}/usr/share/doc/sayonara/copyright
 cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
+
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara
 chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_gstreamer.so
+
 cp ../Notification/libnotify/libsayonara_libnotify.so $DEBIAN_DIR/usr/lib/sayonara
+chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_libnotify.so
+
 gzip --best -c resources/changelog > $DEBIAN_DIR/usr/share/doc/sayonara/changelog.gz 
 fakeroot dpkg-deb -b $DEBIAN_DIR $OUTPUT_FILE
 echo Written to $OUTPUT_FILE
+
+lintian $OUTPUT_FILE
 
