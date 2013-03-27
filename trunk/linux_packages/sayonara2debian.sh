@@ -72,6 +72,7 @@ cp ../GUI/dark.css $DEBIAN_DIR/usr/share/sayonara/dark.css
 cp ../GUI/standard.css $DEBIAN_DIR/usr/share/sayonara/standard.css
 cp ./resources/sayonara.postinst $DEBIAN_DIR/DEBIAN/postinst
 cp ./resources/sayonara.prerm $DEBIAN_DIR/DEBIAN/prerm
+cp ./resources/md5sums $DEBIAN_DIR/DEBIAN
 cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/copyright ${DEBIAN_DIR}/usr/share/doc/sayonara/copyright

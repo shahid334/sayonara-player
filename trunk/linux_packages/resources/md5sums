@@ -75,6 +75,3 @@ be722d0ca07dbbeb0d08fbf391ad3a05 usr/share/sayonara/bwd.png
 053e73c12760c1068aa1a70b37be7869 usr/share/sayonara/rep1.png
 6fd391213a526145b0d2cfb2dc27f046 usr/share/sayonara/arrow_up.png
 9b6e153802bd61429e7f466bb0c10dc0 usr/share/applications/sayonara.desktop
-de98ad74378bd9d296a76a167e37bfa4 DEBIAN/prerm
-d17860f5ea4edb41429e70c3df03b95c DEBIAN/control
-2cda73b2f467b411b2f34ff5d119f8c4 DEBIAN/postinst
