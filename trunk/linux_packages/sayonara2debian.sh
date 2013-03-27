@@ -72,7 +72,6 @@ cp ../GUI/dark.css $DEBIAN_DIR/usr/share/sayonara/dark.css
 cp ../GUI/standard.css $DEBIAN_DIR/usr/share/sayonara/standard.css
 cp ./resources/sayonara.postinst $DEBIAN_DIR/DEBIAN/postinst
 cp ./resources/sayonara.prerm $DEBIAN_DIR/DEBIAN/prerm
-cp ./resources/md5sums $DEBIAN_DIR/DEBIAN
 cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/copyright ${DEBIAN_DIR}/usr/share/doc/sayonara/copyright
@@ -84,8 +83,13 @@ chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_gstreamer.so
 cp ../Notification/libnotify/libsayonara_libnotify.so $DEBIAN_DIR/usr/lib/sayonara
 chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_libnotify.so
 
+
 gzip --best -c resources/changelog > $DEBIAN_DIR/usr/share/doc/sayonara/changelog.gz 
+
+fakeroot chmod -R g-w $DEBIAN_DIR
+
 fakeroot dpkg-deb -b $DEBIAN_DIR $OUTPUT_FILE
+
 echo Written to $OUTPUT_FILE
 
 lintian $OUTPUT_FILE
