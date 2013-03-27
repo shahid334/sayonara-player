@@ -21,7 +21,7 @@ cd linux_packages
 
 OUTPUT_FILE="sayonara-${VER_MAJOR}.${VER_MINOR}.${VER_SUBMINOR}-r${VER_BUILD}-${ARCH}.deb"
 
-CONTROL_FILE=./resources/sayonara32.control
+CONTROL_FILE=$1
 DEBIAN_DIR=sayonara.debian
 rm -rf $DEBIAN_DIR
 
@@ -31,10 +31,6 @@ CUR_DIR=$PWD
 if [ "$1" = "clean" ] ; then
 	rm -rf $DEBIAN_DIR
 	exit
-fi
-
-if [ "$1" = "-ax64" ] ; then
-	CONTROL_FILE=./resources/sayonara64.control
 fi
 	
 chmod +x resources/sayonara.postinst
