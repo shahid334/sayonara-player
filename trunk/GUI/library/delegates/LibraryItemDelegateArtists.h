@@ -33,6 +33,7 @@
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPen>
+#include <QColor>
 
 #include "GUI/library/models/LibraryItemModelArtists.h"
 
@@ -66,6 +67,7 @@ private:
         QPen _pen;
 
         LibraryItemModel* _model;
+        QColor _selected_background;
 };
 
 #endif /* LIBRARYITEMDELEGATEARTISTS_H_ */

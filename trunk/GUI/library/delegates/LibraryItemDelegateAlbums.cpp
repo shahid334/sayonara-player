@@ -52,7 +52,8 @@ LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QT
         _model = model;
 
         QPalette palette = _parent->palette();
-        _selected_background = QColor(25, 57, 95);
+
+	_selected_background = QColor(66,78,114);
 
 }
 
@@ -72,10 +73,9 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         int col = index.column();
         int idx_col = _model->calc_shown_col(col);
 
-
-        /*if(_model->is_selected(index.row())) {
-            painter->setPen(_pen);
-        }*/
+	if(_model->is_selected(index.row())){
+		painter->fillRect(rect, _selected_background);
+	}
 
         if(idx_col == COL_ALBUM_SAMPLER){
             int col_width = _parent->columnWidth(0)-4;
@@ -83,6 +83,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
             rect.translate(2, 2);
 
             int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
+
 
             if(num_albums <= 1)
                 painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
@@ -161,14 +162,13 @@ void LibraryItemDelegateAlbums::setEditorData(QWidget *editor, const QModelIndex
 }
 
 void LibraryItemDelegateAlbums::set_skin(bool dark){
-    QPalette palette = _parent->palette();
-    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-    int highlight_val = col_highlight.lightness();
+	if(dark){
+		_selected_background = QColor(66,78,114);
+	}
 
-    if(highlight_val > 128){
-        _pen.setColor(QColor("#202020"));
-    }
+	else{
+		_selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
+	}
 
-    else
-        _pen.setColor(QColor("#D8D8D8"));
 }
+

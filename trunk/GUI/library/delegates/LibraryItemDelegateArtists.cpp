@@ -45,7 +45,7 @@ LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, 
     _icon_single_album = QPixmap(Helper::getIconPath() + "play_small.png");
     _icon_multi_album = QPixmap(Helper::getIconPath() + "fwd_orange.png");
     _model = model;
-
+    _selected_background = QColor(66,78,114);
 }
 
 LibraryItemDelegateArtists::~LibraryItemDelegateArtists() {
@@ -65,9 +65,10 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
         int col = index.column();
         int idx_col = _model->calc_shown_col(col);
 
-        /*if(_model->is_selected(index.row())) {
-            painter->setPen(_pen);
-        }*/
+        if(_model->is_selected(index.row())){
+		painter->fillRect(rect, _selected_background);
+	}
+
 
         if(idx_col == COL_ARTIST_N_ALBUMS){
             int col_width = _parent->columnWidth(0)-4;
@@ -153,13 +154,11 @@ void LibraryItemDelegateArtists::setEditorData(QWidget *editor, const QModelInde
 
 
 void LibraryItemDelegateArtists::set_skin(bool dark){
-    QPalette palette = _parent->palette();
-    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-    int highlight_val = col_highlight.lightness();
+    if(dark){
+		_selected_background = QColor(66,78,114);
+	}
 
-    if(highlight_val > 96)
-        _pen.setColor(QColor("#202020"));
-
-    else
-        _pen.setColor(QColor("#D8D8D8"));
+	else{
+		_selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
+	}
 }

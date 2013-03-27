@@ -679,3 +679,13 @@ void GUI_Library_windowed::timer_timed_out(){
 	
 	
 }
+
+void GUI_Library_windowed::change_skin(bool b){
+if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
+    this->_album_delegate->set_skin(b);
+    this->_artist_delegate->set_skin(b);
+    this->_track_delegate->set_skin(b);
+
+
+
+}

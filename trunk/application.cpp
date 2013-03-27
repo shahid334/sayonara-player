@@ -265,7 +265,7 @@ void Application::init_connections(){
 
     CONNECT (player, sig_skin_changed(bool),                      ui_eq,              changeSkin(bool));
     CONNECT (player, sig_skin_changed(bool),                      ui_info_dialog,     changeSkin(bool));
-
+    CONNECT (player, sig_skin_changed(bool),                      ui_library,     change_skin(bool));
 
     CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 

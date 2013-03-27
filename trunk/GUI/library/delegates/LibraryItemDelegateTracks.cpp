@@ -41,7 +41,8 @@
 
 LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, QTableView* parent) {
 	this->_parent = parent;
-     _model = model;
+	_model = model;
+	_selected_background = QColor(66,78,114);
 
 
 }
@@ -63,9 +64,10 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
     QRect 	rect(option.rect);
     QString	text = index.model()->data(index, Qt::DisplayRole).toString();
 
-    /*if(_model->is_selected(index.row())) {
-        painter->setPen(_pen);
-    }*/
+	if(_model->is_selected(index.row())){
+		painter->fillRect(rect, _selected_background);
+	}
+
 
     switch(idx_col){
 
@@ -139,13 +141,11 @@ void LibraryItemDelegateTracks::setEditorData(QWidget *editor, const QModelIndex
 
 
 void LibraryItemDelegateTracks::set_skin(bool dark){
-    QPalette palette = _parent->palette();
-    QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
-    int highlight_val = col_highlight.lightness();
+    if(dark){
+		_selected_background = QColor(66,78,114);
+	}
 
-    if(highlight_val > 96)
-        _pen.setColor(QColor("#202020"));
-
-    else
-        _pen.setColor(QColor("#D8D8D8"));
+	else{
+		_selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
+	}
 }

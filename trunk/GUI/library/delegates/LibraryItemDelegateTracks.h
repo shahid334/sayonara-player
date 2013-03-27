@@ -33,6 +33,7 @@
 #include <QTableView>
 #include <QLabel>
 #include <QPen>
+#include <QColor>
 #include "GUI/library/models/LibraryItemModelTracks.h"
 
 class LibraryItemDelegateTracks : public QItemDelegate {
@@ -59,6 +60,7 @@ private:
 		QTableView* _parent;
         QPen        _pen;
         LibraryItemModel* _model;
+        QColor _selected_background;
 
 };
 

@@ -130,6 +130,7 @@ public slots:
 	void import_result(bool);
 	void psl_delete_answer(QString);
     void show_only_tracks(bool);
+	void change_skin(bool);
 
 
 private slots:
