@@ -128,6 +128,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     _shown_cols_albums = _settings->getLibShownColsAlbum();
 
 
+	QList<int> sorting = _settings->getLibSorting();
     this->_album_model = new LibraryItemModelAlbums(album_columns);
     this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
 	this->_artist_model = new LibraryItemModelArtists(artist_columns);
@@ -140,25 +141,27 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->ui->tb_title->setItemDelegate(_track_delegate);
 	this->ui->tb_title->setAlternatingRowColors(true);
 	this->ui->tb_title->setDragEnabled(true);
-    this->ui->tb_title->set_table_headers(track_columns);
+    this->ui->tb_title->set_table_headers(track_columns, (Sort::SortOrder) sorting[2]);
     this->ui->tb_title->rc_header_menu_init(_shown_cols_tracks);
 
 	this->ui->lv_artist->setModel(_artist_model);
 	this->ui->lv_artist->setItemDelegate(_artist_delegate);
 	this->ui->lv_artist->setAlternatingRowColors(true);
 	this->ui->lv_artist->setDragEnabled(true);
-    this->ui->lv_artist->set_table_headers(artist_columns);
+    this->ui->lv_artist->set_table_headers(artist_columns, (Sort::SortOrder) sorting[0]);
     this->ui->lv_artist->rc_header_menu_init(_shown_cols_artist);
 
 	this->ui->lv_album->setModel(this->_album_model);
 	this->ui->lv_album->setItemDelegate(this->_album_delegate);
 	this->ui->lv_album->setAlternatingRowColors(true);
 	this->ui->lv_album->setDragEnabled(true);
-    this->ui->lv_album->set_table_headers(album_columns);
+    this->ui->lv_album->set_table_headers(album_columns, (Sort::SortOrder) sorting[1]);
     this->ui->lv_album->rc_header_menu_init(_shown_cols_albums);
 
 	_discmenu = 0;
 	_timer = new QTimer(this);
+
+
 
 	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
 

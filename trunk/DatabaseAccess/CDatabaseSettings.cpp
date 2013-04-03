@@ -161,6 +161,15 @@ bool CDatabaseConnector::load_settings(){
     settings->setLibShownColsAlbum(lib_shown_cols_album);
     settings->setLibShownColsArtist(lib_shown_cols_artist);
 
+    QList<int> lib_sorting;
+    QString str_sorting = load_setting_string(SET_LIB_SORTING, "");
+    QStringList lst_sorting = str_sorting.split(",");
+    if(lst_sorting.size() < 3) lib_sorting << ArtistNameAsc << AlbumNameAsc << TrackAlbumAsc;
+    else lib_sorting << lst_sorting[0].toInt() << lst_sorting[1].toInt() << lst_sorting[2].toInt();
+
+    settings->setLibSorting(lib_sorting);
+
+
     bool show_only_tracks = load_setting_bool(SET_LIB_SHOWN_ONLY_TRACKS, false);
     settings->setLibShowOnlyTracks(show_only_tracks);
 
@@ -321,6 +330,10 @@ bool CDatabaseConnector::store_settings(){
     store_setting(SET_LIB_SHOWN_COLS_TITLE, lib_shown_cols_title.join(","));
     store_setting(SET_LIB_SHOWN_COLS_ALBUM, lib_shown_cols_album.join(","));
     store_setting(SET_LIB_SHOWN_COLS_ARTIST, lib_shown_cols_artist.join(","));
+
+    QList<int> lib_sortings = storage->getLibSorting();
+    QString str_sortings = QString::number(lib_sortings[0]) + "," + QString::number(lib_sortings[1]) + "," + QString::number(lib_sortings[2]);
+    store_setting(SET_LIB_SORTING, str_sortings);
 
     bool lib_show_only_tracks = storage->getLibShowOnlyTracks();
     store_setting(SET_LIB_SHOWN_ONLY_TRACKS, lib_show_only_tracks);

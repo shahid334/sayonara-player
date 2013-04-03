@@ -449,6 +449,15 @@ QStringList CSettingsStorage::getLibShownColsArtist(){
     return m_lib_shown_cols_artist;
 }
 
+void CSettingsStorage::setLibSorting(QList<int> lst){
+	m_lib_sortings = lst;
+	_sth_changed = true;
+}
+QList<int> CSettingsStorage::getLibSorting(){
+	return m_lib_sortings;
+}
+
+
 
 void CSettingsStorage::setLibShowOnlyTracks(bool only_tracks){
 	m_show_only_tracks = only_tracks;

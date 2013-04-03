@@ -391,9 +391,29 @@ void MyTableView::play_next_clicked(){
 }
 
 
-void MyTableView::set_table_headers(QList<ColumnHeader>& headers){
+void MyTableView::set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting){
 
     _table_headers = headers;
+    for(int i=0; i<headers.size(); i++){
+
+	
+	if(headers[i].get_asc_sortorder() == sorting){
+		qDebug() << "Sort column " << i << " ascending";
+		_sort_order = sorting;
+		this->horizontalHeader()->setSortIndicator(i, Qt::AscendingOrder);
+		break;
+
+	}
+
+	else if(headers[i].get_desc_sortorder() == sorting){
+		
+		qDebug() << "Sort column " << i << " descending";
+		_sort_order = sorting;
+		this->horizontalHeader()->setSortIndicator(i, Qt::DescendingOrder);
+		break;
+	}
+    }
+
 }
 
 

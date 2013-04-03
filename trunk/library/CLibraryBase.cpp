@@ -43,7 +43,8 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     QObject(parent)
 {
     m_app = app;
-	m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+	m_library_path = settings->getLibraryPath();
 	m_thread = new ReloadThread();
 	m_watcher = new QFileSystemWatcher();
 	m_watcher->addPath(m_library_path);
@@ -51,9 +52,10 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 
 	_db = CDatabaseConnector::getInstance();
 
-	_track_sortorder = TrackArtistAsc;
-	_album_sortorder = AlbumNameAsc;
-	_artist_sortorder = ArtistNameAsc;
+	QList<int> sortings = settings->getLibSorting();
+	_artist_sortorder = (SortOrder) sortings[0];
+	_album_sortorder = (SortOrder) sortings[1];
+	_track_sortorder = (SortOrder) sortings[2];
 
 	_filter.by_searchstring = BY_FULLTEXT;
 	_filter.filtertext = "";
@@ -83,6 +85,9 @@ void CLibraryBase::emit_stuff(){
 
 void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
 
+	QList<int> lst;
+	lst << artist_so << album_so << track_so;
+	CSettingsStorage::getInstance()->setLibSorting(lst);
 
     // artist sort order has changed
 	if(artist_so != _artist_sortorder){
