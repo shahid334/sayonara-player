@@ -83,7 +83,7 @@ QList<Notification*> NotificationPluginLoader::get_plugins(){
 
 void NotificationPluginLoader::set_cur_plugin(QString name){
 
-    _cur_idx = -1;
+    _cur_idx = 0;
 
     for(int i=0; i<_notification_plugins.size(); i++){
         QString name_tmp = _notification_plugins[i]->get_name();

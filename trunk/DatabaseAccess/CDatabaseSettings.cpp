@@ -213,7 +213,7 @@ bool CDatabaseConnector::load_settings(){
     int notification_timeout = load_setting_int(SET_NOTIFICATION_TIMEOUT, 5000);
     settings->setNotificationTimout(notification_timeout);
 
-    QString notification_name = load_setting_string(SET_NOTIFICATION_NAME, "Standard");
+    QString notification_name = load_setting_string(SET_NOTIFICATION_NAME, "libnotify");
     settings->setNotification(notification_name);
 
 	/* show library */

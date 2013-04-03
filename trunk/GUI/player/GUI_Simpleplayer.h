@@ -65,6 +65,7 @@ public slots:
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
 
+    void really_close(bool=false);
 
     /* Last FM */
     void last_fm_logged_in(bool);
@@ -176,7 +177,6 @@ private slots:
     void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
-    void really_close(bool=false);
 
     void notification_changed(bool active, int ms);
 

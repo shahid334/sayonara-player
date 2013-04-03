@@ -56,6 +56,11 @@ void signal_handler(int sig){
 		obj_ref->showNormal();
 		obj_ref->activateWindow();
 	}
+
+	else if(sig == 15 && obj_ref){
+		qDebug() << "extern close event";
+		obj_ref->really_close();
+	}
 }
 
 #endif
@@ -698,6 +703,7 @@ void GUI_SimplePlayer::ui_loaded(){
 	#ifdef Q_OS_UNIX
 		obj_ref = this;
 		signal(SIGWINCH, signal_handler);
+		signal(15, signal_handler);
 	#endif
 
     changeSkin(CSettingsStorage::getInstance()->getPlayerStyle() == 1);

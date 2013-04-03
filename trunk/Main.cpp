@@ -103,6 +103,7 @@ int main(int argc, char *argv[]){
 		int pid = check_for_another_instance_unix();
 		if(pid > 0) {
 			qDebug() << "another instance is already running";
+			// other instance should pop up
 			QString kill_cmd = "kill -s 28 " + QString::number(pid);
 			int success = system(kill_cmd.toLocal8Bit());
 			Q_UNUSED(success);
