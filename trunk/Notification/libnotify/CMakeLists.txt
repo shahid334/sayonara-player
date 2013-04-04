@@ -6,10 +6,9 @@ include(FindPkgConfig)
 SET(CMAKE_C_FLAGS "-Wall")
 SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s")
 
-#if(LIBNOTIFY_FOUND)
 
-pkg_check_modules(LIBNOTIFY libnotify>=0.7.0)
-
+PKG_CHECK_MODULES(LIBNOTIFY libnotify)
+MESSAGE("Libnotify")
 if (LIBNOTIFY_FOUND)
 
     INCLUDE_DIRECTORIES("../..")
@@ -35,6 +34,11 @@ if (LIBNOTIFY_FOUND)
     )
 
     QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
+
+    IF(${UNIX})
+        execute_process(COMMAND scripts/libnotify-version)
+    ENDIF(${UNIX})
+
 
     INCLUDE(${QT_USE_FILE})
     ADD_DEFINITIONS(${QT_DEFINITIONS})

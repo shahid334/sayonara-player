@@ -1,0 +1,21 @@
+#!/bin/bash
+
+echo "do script"
+
+VERSIONA=`pkg-config --modversion libnotify`
+MAJOR=${VERSIONA:0:1}
+MINOR=${VERSIONA:2:1}
+
+echo "Major = $MAJOR"
+echo "Minor = $MINOR"
+
+if [ $MAJOR -gt 0 ] ; then
+	cp Notification/libnotify/LN_Notification.cpp.new Notification/libnotify/LN_Notification.cpp
+else
+	if [ $MINOR -gt 6 ] ; then
+		cp Notification/libnotify/LN_Notification.cpp.new Notification/libnotify/LN_Notification.cpp
+	else
+		cp Notification/libnotify/LN_Notification.cpp.old Notification/libnotify/LN_Notification.cpp
+	fi
+fi
+
