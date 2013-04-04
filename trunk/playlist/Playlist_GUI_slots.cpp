@@ -208,7 +208,7 @@ void Playlist::remove_row(int row){
 }
 
 // remove one row
-void Playlist::psl_remove_rows(const QList<int> & rows){
+void Playlist::psl_remove_rows(const QList<int> & rows, bool select_next_row){
 
     if(rows.size() == 0) return;
 
@@ -247,10 +247,11 @@ void Playlist::psl_remove_rows(const QList<int> & rows){
         v_tmp_md[_cur_play_idx].pl_playing = true;
 
     _v_meta_data = v_tmp_md;
-    _v_meta_data[first_row].pl_selected = true;
+
+    if(select_next_row)
+        _v_meta_data[first_row].pl_selected = true;
 
     psl_save_playlist_to_storage();
-    qDebug() << "emit sig playlist created";
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }

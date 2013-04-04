@@ -153,6 +153,8 @@ void Playlist::load_old_playlist(){
     bool load_last_position = _settings->getRememberTime();
     bool start_immediatly = _settings->getStartPlaying();
 
+    qDebug() << "Last track has been " << last_track->filepath;
+
     if( !loadPlaylist ) return;
 
     QStringList saved_playlist = _settings->getPlaylist();
@@ -526,7 +528,7 @@ void Playlist::psl_import_new_tracks_to_library(bool copy){
 
 void Playlist::psl_import_result(bool success){
 
-	if(success){
+    if(success && _radio_active == RADIO_OFF){
 
         for(uint i=0; i<_v_meta_data.size(); i++){
             _v_meta_data[i].is_extern = false;

@@ -30,6 +30,8 @@
 
 #include <QSystemTrayIcon>
 #include <QAction>
+#include <QTimer>
+
 
 
 
@@ -65,6 +67,7 @@ public slots:
     void setPlaying(bool);
     void setMute(bool mute);
     void change_skin(QString stylesheet);
+    void stop();
 
 
 signals:
@@ -92,6 +95,7 @@ private slots:
 	void show_clicked();
 	void close_clicked();
 	void mute_clicked();
+	void timer_timed_out();
 
 
 
@@ -120,6 +124,10 @@ private:
     bool                    m_playing;
     bool                    m_mute;
     CSettingsStorage*       m_settings;
+
+    bool 		    _md_set;
+    MetaData		    _md;
+    QTimer*		    _timer;
 
 
 

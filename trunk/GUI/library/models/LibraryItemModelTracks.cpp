@@ -89,12 +89,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( Helper::cvtMsecs2TitleLengthString(md.length_ms)  );
 
 			 case COL_ALBUM:
-				str_disc = QString::number(md.discnumber);
-		                if( md.discnumber > 1 && !md.album.contains(str_disc) ){
-		                     return QVariant( md.album + " (CD " + str_disc + ")" );
-                		}
-	
-        		        return QVariant(md.album);
+                return QVariant(Helper::get_album_w_disc(md));
 
 			 case COL_YEAR:
 				 return QVariant(md.year);

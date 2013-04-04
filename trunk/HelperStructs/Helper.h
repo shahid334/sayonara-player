@@ -84,6 +84,8 @@ namespace Helper{
 	bool is_playlistfile(QString filename);
     bool is_podcastfile(QString filename, QString& content);
 
+    QString get_album_w_disc(const MetaData& md);
+
 	template <typename T> QList<T> randomize_list(const QList<T>& list){
 		srand ( time(NULL) );
 

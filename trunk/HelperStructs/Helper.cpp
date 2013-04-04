@@ -30,6 +30,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/WebAccess.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <string>
 #include <iostream>
@@ -567,4 +568,23 @@ bool Helper::is_www(QString str){
     if(str.startsWith("http")) return true;
     else if(str.startsWith("ftp")) return true;
     return false;
+}
+
+
+QString Helper::get_album_w_disc(const MetaData& md){
+
+    if(md.album_id <= 0) return md.album.trimmed();
+
+    QRegExp re(QString("(\\s)?-?(\\s)?((cd)|(CD)|((d|D)((is)|(IS))(c|C|k|K)))(\\d|(\\s\\d))"));
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+    Album album;
+    bool success = db->getAlbumByID(md.album_id, album);
+
+    if(!success) return md.album.trimmed();
+
+    if(album.discnumbers.size() > 1 && !album.name.contains(re))
+        return album.name.trimmed() + " (Disc " + QString::number(md.discnumber) + ")";
+
+    else return album.name.trimmed();
+
 }

@@ -51,6 +51,7 @@ PlaylistItemDelegateSmall::PlaylistItemDelegateSmall(QListView *parent ) {
 
 	_parent = parent;
 	_row_height = 20;
+    _pl_entry = new GUI_PlaylistEntrySmall();
 
 }
 
@@ -68,10 +69,10 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 
 	if(!index.isValid()) return;
 
-    GUI_PlaylistEntrySmall* pl_entry = new GUI_PlaylistEntrySmall(_parent);
 
-    pl_entry->setMinimumHeight(_row_height);
-    pl_entry->setMaximumHeight(_row_height);
+
+    _pl_entry->setMinimumHeight(_row_height);
+    _pl_entry->setMaximumHeight(_row_height);
 
 	QVariant mdVariant = index.model()->data(index, Qt::WhatsThisRole);
 	MetaData md;
@@ -81,12 +82,12 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 	painter->save();
 	painter->translate(0, 0);
 
-    pl_entry->setContent(md, index.row() +1 );
+    _pl_entry->setContent(md, index.row() +1 );
 
 	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
 						this->_parent->verticalScrollBar()->width() + 4 : 4;
 
-    pl_entry->setWidth(_parent->width() - offset);
+    _pl_entry->setWidth(_parent->width() - offset);
 
     QString style;
     QPalette palette = _parent->palette();
@@ -119,13 +120,13 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
                 get_fg_color(highlight_val);
     }
 
-    int y = rect.topLeft().y() +  pl_entry->height()-1;
-    pl_entry->setStyleSheet(style);
-    if(md.is_disabled) pl_entry->setDisabled(true);
-    pl_entry->render(painter, rect.topLeft() );
+    int y = rect.topLeft().y() +  _pl_entry->height()-1;
+    _pl_entry->setStyleSheet(style);
+    if(md.is_disabled) _pl_entry->setDisabled(true);
+    _pl_entry->render(painter, rect.topLeft() );
 
 	if(md.pl_dragged) {
-        painter->drawLine(QLine(0, y, pl_entry->width(), y));
+        painter->drawLine(QLine(0, y, _pl_entry->width(), y));
 	}
 
 	painter->restore();

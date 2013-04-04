@@ -118,7 +118,7 @@ void GUI_PlaylistEntry::setContent(MetaData& md, int idx){
         return;
     }
 
-    this->ui->lab_album->setText(QString(" [ ") + md.album.trimmed() + " ]");
+    this->ui->lab_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
 
 }
 

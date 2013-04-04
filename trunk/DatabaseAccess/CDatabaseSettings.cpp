@@ -186,6 +186,9 @@ bool CDatabaseConnector::load_settings(){
 	}
 	settings->setPlayerSize(player_size);
 
+    bool player_fullscreen = load_setting_bool(SET_PLAYER_FULLSCREEN, false);
+    settings->setPlayerFullscreen(player_fullscreen);
+
 	
 	// playlist
     QStringList playlist = load_setting_strlist(SET_PL);
@@ -344,6 +347,9 @@ bool CDatabaseConnector::store_settings(){
 	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
 	store_setting(SET_PLAYER_SIZE, str_size);
+
+    bool player_fullscreen = storage->getPlayerFullscreen();
+    store_setting(SET_PLAYER_FULLSCREEN, player_fullscreen);
 
     QString cur_playlist = storage->getPlaylist().join(",");
 	store_setting(SET_PL, cur_playlist);

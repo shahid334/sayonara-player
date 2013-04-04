@@ -487,7 +487,7 @@ void MyListView::handle_drop(QDropEvent* event, bool from_outside){
             row -= _cur_selected_rows.size();
         }
 
-        remove_cur_selected_rows();
+        remove_cur_selected_rows(false);
     }
 
     const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
@@ -555,8 +555,8 @@ void MyListView::scrollDown(){
     this->scrollTo(_model->index(cur_row - 1));
 }
 
-void MyListView::remove_cur_selected_rows(){
-    emit sig_rows_removed(_cur_selected_rows);
+void MyListView::remove_cur_selected_rows(bool select_next_row){
+    emit sig_rows_removed(_cur_selected_rows, select_next_row);
 }
 
 

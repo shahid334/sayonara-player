@@ -646,7 +646,7 @@ void GUI_InfoDialog::prepare_cover(){
 void GUI_InfoDialog::prepare_lfm_info(){
 
 	if(!CSettingsStorage::getInstance()->getLastFMActive()){
-		this->ui->lab_playcount->setText("LastFM not active");
+        this->ui->lab_playcount->setText("Last.fm not active");
 		return;
 	}
 

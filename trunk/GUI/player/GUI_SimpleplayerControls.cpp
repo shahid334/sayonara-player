@@ -30,7 +30,10 @@
 /** PLAYER BUTTONS **/
 void GUI_SimplePlayer::playClicked(bool) {
 
-    if(!m_metadata_available) return;
+    if(!m_metadata_available) {
+        emit play();
+        return;
+    }
 
     if (m_playing) {
 		ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -51,13 +54,13 @@ void GUI_SimplePlayer::stopClicked(bool b) {
 
     ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     m_trayIcon->setPlaying(false);
-
+	m_trayIcon->stop();
 	m_playing = false;
 
 	ui->title->setText("Sayonara Player");
 	ui->rating->setText("");
 	ui->album->setText("Written by Lucio Carreras");
-    ui->artist->setText(CSettingsStorage::getInstance()->getVersion());
+    ui->artist->setText(m_settings->getVersion());
 	this->setWindowTitle("Sayonara");
     ui->songProgress->setValue(0);
     ui->curTime->setText("0:00");
@@ -70,8 +73,10 @@ void GUI_SimplePlayer::stopClicked(bool b) {
         emit sig_rec_button_toggled(false);
     }
 
-    if(b)
+    if(b){
         emit stop();
+	
+    }
 }
 
 void GUI_SimplePlayer::backwardClicked(bool) {
@@ -165,7 +170,7 @@ void GUI_SimplePlayer::volumeChanged(int volume_percent) {
     ui->volumeSlider->setValue(volume_percent);
 	emit sig_volume_changed(volume_percent);
 
-	CSettingsStorage::getInstance()->setVolume(volume_percent);
+    m_settings->setVolume(volume_percent);
 }
 
 void GUI_SimplePlayer::volumeChangedByTick(int val) {

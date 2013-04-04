@@ -71,11 +71,11 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui->setupUi(this);
 	initGUI();
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
+    m_settings = CSettingsStorage::getInstance();
 
     ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
-	ui->artist->setText(settings->getVersion());
+    ui->artist->setText(m_settings->getVersion());
 	ui->album->setText("Written by Lucio Carreras");
 
     m_metadata_available = false;
@@ -95,34 +95,37 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	m_cov_lookup = new CoverLookup(m_class_name);
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
 
-	ui->action_ViewLFMRadio->setVisible(settings->getLastFMActive());
+    ui->action_ViewLFMRadio->setVisible(m_settings->getLastFMActive());
 
-    m_min2tray = settings->getMinimizeToTray();
+    m_min2tray = m_settings->getMinimizeToTray();
     ui->action_min2tray->setChecked(m_min2tray);
-    ui->action_only_one_instance->setChecked(settings->getAllowOnlyOneInstance());
+    ui->action_only_one_instance->setChecked(m_settings->getAllowOnlyOneInstance());
 
-	bool showSmallPlaylistItems = settings->getShowSmallPlaylist();
+    bool showSmallPlaylistItems = m_settings->getShowSmallPlaylist();
 	ui->action_smallPlaylistItems->setChecked(showSmallPlaylistItems);
 
-	bool showOnlyTracks = settings->getLibShowOnlyTracks();
+    bool showOnlyTracks = m_settings->getLibShowOnlyTracks();
 	ui->action_showOnlyTracks->setChecked(showOnlyTracks);
 
 	QSizePolicy p = ui->library_widget->sizePolicy();
 	m_library_stretch_factor = p.horizontalStretch();
 
-	bool show_library = settings->getShowLibrary();
+    bool show_library = m_settings->getShowLibrary();
     ui->action_viewLibrary->setChecked(show_library);
     this->showLibrary(show_library);
 
-    bool live_search = settings->getLibLiveSheach();
+    bool live_search = m_settings->getLibLiveSheach();
     this->ui->action_livesearch->setChecked(live_search);
 
 
-    QSize size = settings->getPlayerSize();
-    QRect rect = this->geometry();
-    rect.setWidth(size.width());
-    rect.setHeight(size.height());
-    this->setGeometry(rect);
+    bool is_fullscreen = m_settings->getPlayerFullscreen();
+    if(!is_fullscreen){
+        QSize size = m_settings->getPlayerSize();
+        QRect rect = this->geometry();
+        rect.setWidth(size.width());
+        rect.setHeight(size.height());
+        this->setGeometry(rect);
+    }
 
     m_library_width = 600;
 
@@ -135,8 +138,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 	ui->plugin_widget->resize(ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
 
-    changeSkin(settings->getPlayerStyle() == 1);
-
+    changeSkin(m_settings->getPlayerStyle() == 1);
 }
 
 
@@ -307,22 +309,22 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 
 	// sometimes ignore the date
 	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
-		ui->album->setText(md.album);
+        ui->album->setText(Helper::get_album_w_disc(md));
 
 	else
 		ui->album->setText(
-				md.album + " (" + QString::number(md.year) + ")");
+                Helper::get_album_w_disc(md) + " (" + QString::number(md.year) + ")");
 
 	ui->artist->setText(md.artist);
 	ui->title->setText(md.title);
 
 
     m_trayIcon->songChangedMessage(md);
-	m_trayIcon->setToolTip(QString("\"") +
+	/*m_trayIcon->setToolTip(QString("\"") +
 			md.title +
 			"\" by \"" +
 			md.artist +
-			QString("\""));
+			QString("\""));*/
 
 	QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
 	ui->maxTime->setText(lengthString);
@@ -418,8 +420,8 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 /** LAST FM **/
 void GUI_SimplePlayer::last_fm_logged_in(bool b){
 
-    if(!b && CSettingsStorage::getInstance()->getLastFMActive())
-        QMessageBox::warning(ui->centralwidget, "Warning", "Cannot login to LastFM");
+    if(!b && m_settings->getLastFMActive())
+        QMessageBox::warning(ui->centralwidget, "Warning", "Cannot login to Last.fm");
 
     if(!b){
 	/// TODO
@@ -445,7 +447,7 @@ void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool cor
     m_metadata_corrected = md;
 
     bool radio_off = (m_metadata.radio_mode == RADIO_OFF);
-    bool get_lfm_corrections = CSettingsStorage::getInstance()->getLastFMCorrections();
+    bool get_lfm_corrections = m_settings->getLastFMCorrections();
 
     ui->btn_correct->setVisible(corrected &&
     							radio_off &&
@@ -511,7 +513,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 	if (dark) 	m_skinSuffix = QString("_dark");
 	else 		m_skinSuffix = QString("");
 
-	CSettingsStorage::getInstance()->setPlayerStyle(dark ? 1 : 0);
+    m_settings->setPlayerStyle(dark ? 1 : 0);
     this->m_trayIcon->change_skin(stylesheet);
 
     setupVolButton(ui->volumeSlider->value());
@@ -632,6 +634,7 @@ void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
 }
 
 void GUI_SimplePlayer::stopped(){
+    m_metadata_available = false;
     stopClicked(false);
 }
 
@@ -642,7 +645,7 @@ void GUI_SimplePlayer::stopped(){
 // prvt fct
 void GUI_SimplePlayer::setRadioMode(int radio){
 
-	bool stream_ripper = CSettingsStorage::getInstance()->getStreamRipper();
+    bool stream_ripper = m_settings->getStreamRipper();
 	ui->btn_bw->setEnabled(radio == RADIO_OFF);
 	ui->btn_fw->setEnabled(radio != RADIO_STATION);
 
@@ -700,13 +703,14 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 
 void GUI_SimplePlayer::ui_loaded(){
 
-	#ifdef Q_OS_UNIX
+    #ifdef Q_OS_UNIX
 		obj_ref = this;
 		signal(SIGWINCH, signal_handler);
 		signal(15, signal_handler);
 	#endif
 
-    changeSkin(CSettingsStorage::getInstance()->getPlayerStyle() == 1);
+    changeSkin(m_settings->getPlayerStyle() == 1);
+    this->ui->action_Fullscreen->setChecked(m_settings->getPlayerFullscreen());
 }
 
 
@@ -730,7 +734,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 
 
     _pph->resize(sz);
-    CSettingsStorage::getInstance()->setPlayerSize(this->size());
+    m_settings->setPlayerSize(this->size());
     this->update();
 }
 

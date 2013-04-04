@@ -189,7 +189,13 @@ void CSettingsStorage::setLibraryPath(QString path){
 
 QSize CSettingsStorage::getPlayerSize(){ return m_player_size; }
 void CSettingsStorage::setPlayerSize(QSize size){ 
-m_player_size = size;
+    m_player_size = size;
+    _sth_changed = true;
+}
+
+bool CSettingsStorage::getPlayerFullscreen(){ return m_player_fullscreen;}
+void CSettingsStorage::setPlayerFullscreen(bool b){
+    m_player_fullscreen = b;
     _sth_changed = true;
 }
 

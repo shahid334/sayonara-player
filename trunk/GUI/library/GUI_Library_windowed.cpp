@@ -87,9 +87,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
     _settings = CSettingsStorage::getInstance();
 
-	_sort_albums = AlbumNameAsc;
-	_sort_artists = ArtistNameAsc;
-	_sort_tracks = TrackArtistAsc;
 
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
@@ -129,6 +126,13 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 
 	QList<int> sorting = _settings->getLibSorting();
+
+    _sort_albums = (Sort::SortOrder) sorting[1];
+    _sort_artists = (Sort::SortOrder) sorting[0];
+    _sort_tracks = (Sort::SortOrder) sorting[2];
+
+
+
     this->_album_model = new LibraryItemModelAlbums(album_columns);
     this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
 	this->_artist_model = new LibraryItemModelArtists(artist_columns);
@@ -141,21 +145,22 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->ui->tb_title->setItemDelegate(_track_delegate);
 	this->ui->tb_title->setAlternatingRowColors(true);
 	this->ui->tb_title->setDragEnabled(true);
-    this->ui->tb_title->set_table_headers(track_columns, (Sort::SortOrder) sorting[2]);
+    this->ui->tb_title->set_table_headers(track_columns, _sort_tracks);
     this->ui->tb_title->rc_header_menu_init(_shown_cols_tracks);
+
 
 	this->ui->lv_artist->setModel(_artist_model);
 	this->ui->lv_artist->setItemDelegate(_artist_delegate);
 	this->ui->lv_artist->setAlternatingRowColors(true);
 	this->ui->lv_artist->setDragEnabled(true);
-    this->ui->lv_artist->set_table_headers(artist_columns, (Sort::SortOrder) sorting[0]);
+    this->ui->lv_artist->set_table_headers(artist_columns, _sort_artists);
     this->ui->lv_artist->rc_header_menu_init(_shown_cols_artist);
 
 	this->ui->lv_album->setModel(this->_album_model);
 	this->ui->lv_album->setItemDelegate(this->_album_delegate);
 	this->ui->lv_album->setAlternatingRowColors(true);
 	this->ui->lv_album->setDragEnabled(true);
-    this->ui->lv_album->set_table_headers(album_columns, (Sort::SortOrder) sorting[1]);
+    this->ui->lv_album->set_table_headers(album_columns, _sort_albums);
     this->ui->lv_album->rc_header_menu_init(_shown_cols_albums);
 
 	_discmenu = 0;
@@ -688,7 +693,6 @@ if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
     this->_album_delegate->set_skin(b);
     this->_artist_delegate->set_skin(b);
     this->_track_delegate->set_skin(b);
-
 
 
 }

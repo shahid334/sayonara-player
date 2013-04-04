@@ -101,7 +101,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     ui_stream           = new GUI_Stream("Stream", "Stream", 'S', player->getParentOfPlugin());
     ui_podcasts         = new GUI_Podcasts("Podcasts", "Podcasts", 'o', player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer("Equalizer", "Equalizer", 'E', player->getParentOfPlugin());
-    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "LastFM", 'F', player->getParentOfPlugin());
+    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "Last.fm", 'F', player->getParentOfPlugin());
     ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", "Playlists", 'P', player->getParentOfPlugin());
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
@@ -174,7 +174,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     qDebug() << "Set up library...";
     library->loadDataFromDb();
 
-    qDebug() << "Set up lastfm...";
+    qDebug() << "Set up Last.fm...";
     QString user, password;
     if(set->getLastFMActive()){
         set->getLastFMNameAndPW(user, password);
@@ -272,7 +272,7 @@ void Application::init_connections(){
 
     CONNECT (playlist, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		update_track(const MetaData&, int, bool));
     CONNECT (playlist, sig_selected_file_changed_md(const MetaData&, int, bool),	listen, 	changeTrack(const MetaData &, int, bool ));
-    CONNECT (playlist, sig_gapless_track(const MetaData&),                   listen, 		psl_gapless_track(const MetaData & ));
+    //CONNECT (playlist, sig_gapless_track(const MetaData&),                   listen, 		psl_gapless_track(const MetaData & ));
     CONNECT (playlist, sig_new_stream_session(),                             listen,         psl_new_stream_session());
     CONNECT (playlist, sig_selected_file_changed_md(const MetaData&),		lastfm,			psl_track_changed(const MetaData&));
     CONNECT (playlist, sig_no_track_to_play(),								listen,			stop());
@@ -294,7 +294,7 @@ void Application::init_connections(){
     CONNECT (ui_playlist, clear_playlist(),                              playlist, 	psl_clear_playlist());
     CONNECT (ui_playlist, playlist_mode_changed(const Playlist_Mode&),   playlist, 	psl_playlist_mode_changed(const Playlist_Mode&));
     CONNECT (ui_playlist, dropped_tracks(const MetaDataList&, int),      playlist, 	psl_insert_tracks(const MetaDataList&, int));
-    CONNECT (ui_playlist, sig_rows_removed(const QList<int>&),           playlist, 	psl_remove_rows(const QList<int>&));
+    CONNECT (ui_playlist, sig_rows_removed(const QList<int>&, bool),     playlist, 	psl_remove_rows(const QList<int>&, bool));
     //CONNECT (ui_playlist, sig_import_to_library(bool),					playlist,	psl_import_new_tracks_to_library(bool));
 
     CONNECT (listen, track_finished(),                                   playlist,	psl_next_track() );
@@ -328,7 +328,7 @@ void Application::init_connections(){
     CONNECT(ui_library, sig_track_dbl_clicked(int),                      library, 		psl_prepare_track_for_playlist(int));
     CONNECT(ui_library, sig_artist_pressed(const QList<int>&),           library, 		psl_selected_artists_changed(const QList<int>&));
     CONNECT(ui_library, sig_album_pressed(const QList<int>&),            library, 		psl_selected_albums_changed(const QList<int>&));
-    CONNECT(ui_library, sig_disc_pressed(int),				library,		psl_disc_pressed(int));
+    CONNECT(ui_library, sig_disc_pressed(int),                          library,		psl_disc_pressed(int));
     CONNECT(ui_library, sig_track_pressed(const QList<int>&),            library, 		psl_selected_tracks_changed(const QList<int>&));
     CONNECT(ui_library, sig_filter_changed(const Filter&),               library, 		psl_filter_changed(const Filter&));
 

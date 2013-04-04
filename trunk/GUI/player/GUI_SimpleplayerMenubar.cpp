@@ -82,8 +82,7 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 void GUI_SimplePlayer::importFolderClicked(bool b){
 	Q_UNUSED(b);
 
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
-    QString lib_path = settings->getLibraryPath();
+    QString lib_path = m_settings->getLibraryPath();
 
     if(lib_path.size() == 0 || !QFile::exists(lib_path)){
 
@@ -126,9 +125,7 @@ void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 
 void GUI_SimplePlayer::showLibrary(bool b, bool resize){
 
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
-
-    settings->setShowLibrary(b);
+    m_settings->setShowLibrary(b);
     int old_width = this->width();
     int lib_width = this->ui->library_widget->width();
     int new_width = old_width;
@@ -169,11 +166,13 @@ void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
 	if(b)
 		this->showFullScreen();
 	else this->showNormal();
+
+    m_settings->setPlayerFullscreen(b);
 }
 
 void GUI_SimplePlayer::sl_show_only_tracks(bool b){
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
-	settings->setLibShowOnlyTracks(b);
+
+    m_settings->setLibShowOnlyTracks(b);
 
 	emit sig_show_only_tracks(b);
 
@@ -191,7 +190,7 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 	Q_UNUSED(b);
 
 	QString start_dir = QDir::homePath();
-	QString old_dir = CSettingsStorage::getInstance()->getLibraryPath();
+    QString old_dir = m_settings->getLibraryPath();
 
     if (old_dir.size() > 0 && QFile::exists(old_dir)){
 		start_dir = old_dir;
@@ -201,7 +200,7 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 			old_dir, QFileDialog::ShowDirsOnly);
     if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
 		emit libpath_changed(dir);
-		CSettingsStorage::getInstance()->setLibraryPath(dir);
+        m_settings->setLibraryPath(dir);
 
         QMessageBox dialog(this);
 
@@ -229,28 +228,28 @@ void GUI_SimplePlayer::sl_action_socket_connection_triggered(bool b){
 // prvt slot
 void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){
 
-	CSettingsStorage::getInstance()->setLoadPlaylist(b);
+    m_settings->setLoadPlaylist(b);
 }
 
 // prvt slot
 void GUI_SimplePlayer::show_notification_toggled(bool active){
 
-	CSettingsStorage::getInstance()->setShowNotifications(active);
+    m_settings->setShowNotifications(active);
 }
 
 // prvt slot
 void GUI_SimplePlayer::min2tray_toggled(bool b){
-	CSettingsStorage::getInstance()->setMinimizeToTray(b);
+    m_settings->setMinimizeToTray(b);
 	m_min2tray = b;
 }
 
 void GUI_SimplePlayer::only_one_instance_toggled(bool b){
-	CSettingsStorage::getInstance()->setAllowOnlyOneInstance(b);
+    m_settings->setAllowOnlyOneInstance(b);
 }
 
 // prvt slot
 void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
-	CSettingsStorage::getInstance()->setShowSmallPlaylist(b);
+    m_settings->setShowSmallPlaylist(b);
 	emit show_small_playlist_items(b);
 }
 
@@ -269,7 +268,7 @@ void GUI_SimplePlayer::lastFMClicked(bool b) {
 }
 
 void GUI_SimplePlayer::sl_live_search(bool b){
-    CSettingsStorage::getInstance()->setLibLiveSearch(b);
+   m_settings->setLibLiveSearch(b);
 }
 
 /** PREFERENCES END **/
@@ -279,7 +278,7 @@ void GUI_SimplePlayer::sl_live_search(bool b){
 void GUI_SimplePlayer::help(bool b){
 	Q_UNUSED(b);
 	QString link;
-	int style = CSettingsStorage::getInstance()->getPlayerStyle();
+    int style = m_settings->getPlayerStyle();
 	if(style == 0){
 		link = "<a href=\"http://sayonara.luciocarreras.de\">"+ DARK_BLUE("http://sayonara.luciocarreras.de") + "</a>";
 	}
@@ -294,7 +293,7 @@ void GUI_SimplePlayer::help(bool b){
 void GUI_SimplePlayer::about(bool b){
 	Q_UNUSED(b);
 
-	QString version = CSettingsStorage::getInstance()->getVersion();
+    QString version = m_settings->getVersion();
 
     QMessageBox infobox;
     infobox.setParent(this);

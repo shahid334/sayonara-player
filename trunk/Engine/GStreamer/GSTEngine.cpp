@@ -282,6 +282,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play){
 
     //qDebug() << "new track " << md.title << ", " << (md.filepath != _md_gapless.filepath);
 
+    gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
     obj_ref = this;
 
     _last_track = _settings->getLastTrack();

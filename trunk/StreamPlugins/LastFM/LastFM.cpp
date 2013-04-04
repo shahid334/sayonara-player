@@ -518,5 +518,5 @@ bool LastFM::_parse_error_message(QString& response, bool force){
 
 void LastFM::_show_error_message(QString err_msg){
 
-    QMessageBox::warning(NULL, "Last.FM Error", err_msg);
+    QMessageBox::warning(NULL, "Last.fm Error", err_msg);
 }

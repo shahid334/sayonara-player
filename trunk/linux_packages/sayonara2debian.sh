@@ -45,6 +45,7 @@ mkdir -p $DEBIAN_DIR/usr/share/applications
 mkdir -p $DEBIAN_DIR/usr/bin
 mkdir -p $DEBIAN_DIR/usr/lib/sayonara
 mkdir -p $DEBIAN_DIR/usr/share/doc/sayonara
+mkdir -p $DEBIAN_DIR/usr/share/icons/hicolor
 
 cd ..
 make all
@@ -72,6 +73,7 @@ cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp $CONTROL_FILE $DEBIAN_DIR/DEBIAN/control
 cp ./resources/copyright ${DEBIAN_DIR}/usr/share/doc/sayonara/copyright
 cp ./resources/sayonara.desktop $DEBIAN_DIR/usr/share/applications
+cp -r ./resources/logos/*  $DEBIAN_DIR/usr/share/icons/hicolor
 
 cp ../Engine/GStreamer/libsayonara_gstreamer.so $DEBIAN_DIR/usr/lib/sayonara
 chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_gstreamer.so

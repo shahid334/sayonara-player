@@ -68,7 +68,7 @@
 			void playlist_mode_changed(const Playlist_Mode&);
 
             void dropped_tracks(const MetaDataList&, int);
-            void sig_rows_removed(const QList<int>&);
+            void sig_rows_removed(const QList<int>&, bool);
 
 			void search_similar_artists(const QString&);
 
@@ -94,7 +94,7 @@
 
             void btn_numbers_changed(bool);
             void metadata_dropped(const MetaDataList&, int);
-            void rows_removed(const QList<int>&);
+            void rows_removed(const QList<int>&, bool select_next_row);
 
 
 		private:

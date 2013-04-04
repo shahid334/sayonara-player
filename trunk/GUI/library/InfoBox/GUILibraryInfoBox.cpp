@@ -99,7 +99,7 @@ void GUI_Library_Info_Box::psl_refresh(){
 	if( !CSettingsStorage::getInstance()->getLastFMActive() ) {
 		_n_lfm_playcount = -1;
 		_n_lfm_days_registered = -1;
-		this->ui->lab_lfm_playcount->setText("LastFM not active");
+        this->ui->lab_lfm_playcount->setText("Last.fm not active");
 	}
 
 	else {

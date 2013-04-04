@@ -8,3 +8,4 @@ rm -r /usr/share/menu/sayonara
 rm -f /usr/share/icons/sayonara.png
 rm -f /usr/share/pixmaps/sayonara.png
 rm -f /usr/share/applications/sayonara.desktop
+find /usr/share/icons/hicolor -name "sayonara.png" | xargs rm 

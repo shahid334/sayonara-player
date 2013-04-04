@@ -26,9 +26,11 @@
 #include <QMenu>
 #include <QEvent>
 #include <QWheelEvent>
+#include <QHoverEvent>
 #include <QDebug>
 #include <QIcon>
 #include <QPixmap>
+#include <QTimer>
 #include <Notification/Notification.h>
 
 
@@ -54,6 +56,12 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     m_plugin_loader = NotificationPluginLoader::getInstance();
     m_notification_active = m_settings->getShowNotification();
     m_timeout = m_settings->getNotificationTimeout();
+    
+    _timer = new QTimer(this);
+    _timer->setInterval(300);
+    _md_set = false;
+    
+    
 
 
     m_playAction = new QAction(tr("Play"), this);
@@ -85,7 +93,7 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 
 
 
-    this->setToolTip("Sayonara Player");
+//    this->setToolTip("Sayonara Player");*/
     this->setIcon(m_playIcon);
 
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(play_clicked()));
@@ -95,6 +103,7 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     connect(m_showAction, SIGNAL(triggered()), this, SLOT(show_clicked()));
     connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close_clicked()));
     connect(m_muteAction, SIGNAL(triggered()), this, SLOT(mute_clicked()));
+    connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
 }
 
 
@@ -117,15 +126,22 @@ bool GUI_TrayIcon::event ( QEvent * e ) {
         QWheelEvent * wheelEvent = dynamic_cast <QWheelEvent *> (e);
         emit onVolumeChangedByWheel (wheelEvent->delta());
     }
+
     return true;
 }
 
-
-
+void GUI_TrayIcon::timer_timed_out()
+{
+	qDebug() << "Timed out";
+	_timer->stop();
+	if(_md_set)
+		trackChanged(_md);
+}
 
 
 void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
-
+    _md = md;
+    _md_set = true;
     if(m_notification_active){
         Notification* n = m_plugin_loader->get_cur_plugin();
 
@@ -140,13 +156,13 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
         }
     }
 
-    this -> setToolTip(md.title + " by " + md.artist);
+/*    this -> setToolTip(md.title + " by " + md.artist);*/
 }
 
 
 
 void GUI_TrayIcon::trackChanged(const MetaData& md){
-	this->setToolTip(md.title + " by " + md.artist);
+/*	this->setToolTip(md.title + " by " + md.artist);*/
     songChangedMessage(md);
 }
 
@@ -194,6 +210,10 @@ void GUI_TrayIcon::play_clicked(){
 
 void GUI_TrayIcon::stop_clicked(){
 	emit sig_stop_clicked();
+}
+
+void GUI_TrayIcon::stop(){
+	_md_set = false;
 }
 
 void GUI_TrayIcon::fwd_clicked(){

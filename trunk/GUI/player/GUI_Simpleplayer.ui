@@ -936,7 +936,6 @@
     </property>
     <addaction name="action_help"/>
     <addaction name="action_about"/>
-    
    </widget>
    <addaction name="menuFle"/>
    <addaction name="menuView"/>
@@ -986,7 +985,7 @@
      <normaloff>../../Desktop/lastfm-icon.png</normaloff>../../Desktop/lastfm-icon.png</iconset>
    </property>
    <property name="text">
-    <string>LastFM</string>
+    <string>Last.fm</string>
    </property>
   </action>
   <action name="action_reloadLibrary">
@@ -1053,7 +1052,7 @@
     <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
-   <action name="action_help">
+  <action name="action_help">
    <property name="text">
     <string>Help</string>
    </property>

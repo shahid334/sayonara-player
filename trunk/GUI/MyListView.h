@@ -54,7 +54,7 @@ class MyListView :public QListView{
 	signals:
 		void context_menu_emitted(const QPoint&);
         void sig_metadata_dropped(const MetaDataList&, int);
-        void sig_rows_removed(const QList<int> &);
+        void sig_rows_removed(const QList<int> &, bool);
         void sig_info_clicked();
         void sig_remove_clicked();
         void sig_edit_clicked();
@@ -111,7 +111,7 @@ class MyListView :public QListView{
         void dropEvent(QDropEvent* event);
         void handle_drop(QDropEvent* event, bool from_outside=false);
 
-        void remove_cur_selected_rows();
+        void remove_cur_selected_rows(bool select_next_row=true);
         void select_rows(QList<int> lst);
 
         void init_rc_menu();

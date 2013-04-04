@@ -108,7 +108,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
     connect(ui->listView, SIGNAL(sig_metadata_dropped(const MetaDataList&,int)), this, SLOT(metadata_dropped(const MetaDataList&,int)));
-    connect(ui->listView, SIGNAL(sig_rows_removed(const QList<int>&)), this, SLOT(rows_removed(const QList<int>&)));
+    connect(ui->listView, SIGNAL(sig_rows_removed(const QList<int>&, bool)), this, SLOT(rows_removed(const QList<int>&, bool)));
 
     connect(ui->listView, SIGNAL(sig_edit_clicked()), this, SLOT(psl_edit_tracks()));
     connect(ui->listView, SIGNAL(sig_info_clicked()), this, SLOT(psl_info_tracks()));
@@ -331,6 +331,6 @@ void GUI_Playlist::btn_numbers_changed(bool b){
 }
 
 
-void GUI_Playlist::rows_removed(const QList<int>& lst){
-    emit sig_rows_removed(lst);
+void GUI_Playlist::rows_removed(const QList<int>& lst, bool select_next_row){
+    emit sig_rows_removed(lst, select_next_row);
 }

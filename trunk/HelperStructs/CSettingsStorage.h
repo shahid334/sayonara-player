@@ -50,6 +50,7 @@
 
 #define SET_PLAYER_STYLE "player_style"
 #define SET_PLAYER_SIZE "player_size"
+#define SET_PLAYER_FULLSCREEN "player_fullscreen"
 #define SET_PLAYER_SHOWN_PLUGIN "shown_plugin"
 #define SET_PLAYER_ONE_INSTANCE "only_one_instance"
 #define SET_PLAYER_MIN_2_TRAY "min_to_tray"
@@ -178,6 +179,7 @@ private:
     vector<EQ_Setting> m_vec_eqSettings;
     
     QSize m_player_size;
+    bool m_player_fullscreen;
 
 
     // library
@@ -273,6 +275,9 @@ public:
 
 	QSize getPlayerSize();
 	void setPlayerSize(QSize size);
+
+    bool getPlayerFullscreen();
+    void setPlayerFullscreen(bool);
 
     QStringList getPlaylist();
     void setPlaylist(QStringList playlist);

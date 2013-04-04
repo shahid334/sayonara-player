@@ -96,7 +96,7 @@ public:
 		void psl_stop();
 		void psl_forward();
 		void psl_backward();
-		void psl_remove_rows(const QList<int> &);
+        void psl_remove_rows(const QList<int> &, bool select_next_row=true);
 		void psl_save_playlist_to_storage();
 		void psl_edit_id3_request();
 		void psl_id3_tags_changed(MetaDataList&);

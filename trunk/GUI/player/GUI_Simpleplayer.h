@@ -60,7 +60,7 @@ public:
 
 public slots:
 
-	void cover_changed(QString, QString);
+    void cover_changed(QString, QString);
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
@@ -88,7 +88,7 @@ public slots:
 
 signals:
 
-	/* Player*/
+    /* Player*/
     void play();
     void pause();
     void stop();
@@ -182,17 +182,17 @@ private slots:
 
 
 public:
-	void setPlaylist(GUI_Playlist* playlist);
-	void setLibrary(GUI_Library_windowed* library);
-	void setInfoDialog(GUI_InfoDialog* info_dialog);
-	void setPlayerPluginHandler(PlayerPluginHandler* pph);
+    void setPlaylist(GUI_Playlist* playlist);
+    void setLibrary(GUI_Library_windowed* library);
+    void setInfoDialog(GUI_InfoDialog* info_dialog);
+    void setPlayerPluginHandler(PlayerPluginHandler* pph);
 
-	QWidget* getParentOfPlaylist();
-	QWidget* getParentOfLibrary();
-	QWidget* getParentOfPlugin();
+    QWidget* getParentOfPlaylist();
+    QWidget* getParentOfLibrary();
+    QWidget* getParentOfPlugin();
 
-	void ui_loaded();
-	void setStyle(int);
+    void ui_loaded();
+    void setStyle(int);
 
 
 protected:
@@ -232,6 +232,7 @@ private:
 
     int 			m_library_width;
     int				m_library_stretch_factor;
+    CSettingsStorage* m_settings;
 
 
     void setupTrayActions ();

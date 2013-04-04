@@ -82,7 +82,6 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
     f.setPixelSize(12);
     this->horizontalHeader()->setFont(f);
 
-
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
 }
 
@@ -372,8 +371,6 @@ void MyTableView::rc_menu_show(const QPoint& p){
     disconnect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
     disconnect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
     disconnect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
-
-
 }
 
 
@@ -394,26 +391,24 @@ void MyTableView::play_next_clicked(){
 void MyTableView::set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting){
 
     _table_headers = headers;
+
     for(int i=0; i<headers.size(); i++){
 
-	
-	if(headers[i].get_asc_sortorder() == sorting){
-		qDebug() << "Sort column " << i << " ascending";
-		_sort_order = sorting;
-		this->horizontalHeader()->setSortIndicator(i, Qt::AscendingOrder);
-		break;
+        if(headers[i].get_asc_sortorder() == sorting){
+            this->horizontalHeader()->setSortIndicator(i, Qt::AscendingOrder);
+            _sort_order = sorting;
+            break;
 
-	}
+        }
 
-	else if(headers[i].get_desc_sortorder() == sorting){
-		
-		qDebug() << "Sort column " << i << " descending";
-		_sort_order = sorting;
-		this->horizontalHeader()->setSortIndicator(i, Qt::DescendingOrder);
-		break;
-	}
+        else if(headers[i].get_desc_sortorder() == sorting){
+
+            _sort_order = sorting;
+            this->horizontalHeader()->setSortIndicator(i, Qt::DescendingOrder);
+            break;
+
+        }
     }
-
 }
 
 
@@ -448,7 +443,13 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
         i++;
     }
 
+    int sec = _model->calc_shown_col(this->horizontalHeader()->sortIndicatorSection());
+    Qt::SortOrder asc = this->horizontalHeader()->sortIndicatorOrder();
+
     rc_header_menu_changed();
+
+
+    this->horizontalHeader()->setSortIndicator(sec, asc);
 
     this->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
@@ -458,6 +459,7 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 void MyTableView::rc_header_menu_changed(bool b){
 
     Q_UNUSED(b);
+
 
     _model->removeColumns(0, _model->columnCount());
 

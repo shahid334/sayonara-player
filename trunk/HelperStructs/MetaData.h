@@ -450,7 +450,7 @@ struct LastTrack{
 		LastTrack tr;
 		if(lst.size() < 3) return tr;
 		tr.id = lst[0].toInt();
-		tr.filepath = lst[1].toInt();
+        tr.filepath = lst[1];
 		tr.pos_sec = lst[2].toInt();
 		tr.valid = true;
 		return tr;

@@ -117,17 +117,10 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
 
     if(cur_track){
-       // if(!md.is_extern){
+
             style = QString("background-color: ") +
                     col_highlight_lighter.name() + ";" +
                     get_fg_color(highlight_lighter_val);
-      /*  }
-
-        else {
-            style = QString("background-color: ") +
-                col_orange_light.name() + ";" +
-                get_fg_color(col_orange_light.lightness());
-        }*/
 
 
     }
@@ -138,11 +131,8 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     }
 
     else if(!is_selected){
-       // if(!md.is_extern)
+
             style = QString("background-color: transparent;") + get_fg_color(background_val);
-       /* else{
-            style = QString("background-color: ") + col_orange.name() + "; " + get_fg_color(background_val);
-        }*/
 
     }
 
