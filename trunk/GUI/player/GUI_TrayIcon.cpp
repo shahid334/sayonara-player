@@ -156,13 +156,11 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
         }
     }
 
-/*    this -> setToolTip(md.title + " by " + md.artist);*/
 }
 
 
 
 void GUI_TrayIcon::trackChanged(const MetaData& md){
-/*	this->setToolTip(md.title + " by " + md.artist);*/
     songChangedMessage(md);
 }
 

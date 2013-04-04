@@ -41,6 +41,7 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
     _settings = CSettingsStorage::getInstance();
     int timeout = _settings->getNotificationTimeout();
     bool active = _settings->getShowNotification();
+    int scale = _settings->getNotificationScale();
 
     QList<Notification*> l_notifications = _plugin_loader->get_plugins();
 
@@ -61,8 +62,16 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
     ui->combo_notification->setCurrentIndex(idx);
     ui->sb_timeout->setValue(timeout);
     ui->cb_activate->setChecked(active);
+    if(scale > 0)
+	    ui->sb_scale->setValue(scale);
+    else
+	    ui->sb_scale->setValue(80);
+
+    ui->sb_scale->setEnabled(scale > 0);
+    ui->cb_scale->setChecked(scale > 0);
 
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
+
 }
 
 GUI_Notifications::~GUI_Notifications(){
@@ -75,12 +84,16 @@ void GUI_Notifications::ok_clicked(){
     bool active =       ui->cb_activate->isChecked();
     int timeout =       ui->sb_timeout->value();
     QString cur_text =  ui->combo_notification->currentText();
+    
+    int scale = 	ui->sb_scale->value();
+    if(!ui->cb_scale->isChecked()) scale = 0;
 
     _plugin_loader->set_cur_plugin(cur_text);
 
     _settings->setNotification(cur_text);
     _settings->setNotificationTimout(timeout);
     _settings->setShowNotifications(active);
+    _settings->setNotificationScale(scale);
 
     emit sig_settings_changed(active, timeout);
 

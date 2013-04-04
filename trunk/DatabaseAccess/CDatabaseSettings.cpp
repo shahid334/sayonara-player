@@ -164,7 +164,7 @@ bool CDatabaseConnector::load_settings(){
     QList<int> lib_sorting;
     QString str_sorting = load_setting_string(SET_LIB_SORTING, "");
     QStringList lst_sorting = str_sorting.split(",");
-    if(lst_sorting.size() < 3) lib_sorting << ArtistNameAsc << AlbumNameAsc << TrackAlbumAsc;
+    if(lst_sorting.size() < 3) lib_sorting << ArtistNameAsc << AlbumNameAsc << TrackArtistAsc;
     else lib_sorting << lst_sorting[0].toInt() << lst_sorting[1].toInt() << lst_sorting[2].toInt();
 
     settings->setLibSorting(lib_sorting);
@@ -227,6 +227,9 @@ bool CDatabaseConnector::load_settings(){
 
     QString notification_name = load_setting_string(SET_NOTIFICATION_NAME, "libnotify");
     settings->setNotification(notification_name);
+
+    int notification_scale = load_setting_int(SET_NOTIFICATION_SCALE, 64);
+    settings->setNotificationScale(notification_scale);
 
 	/* show library */
 	bool show_library = load_setting_bool(SET_LIB_SHOW, true);
@@ -386,6 +389,9 @@ bool CDatabaseConnector::store_settings(){
 
     QString notification_name = storage->getNotification();
     store_setting(SET_NOTIFICATION_NAME, notification_name);
+
+    int notification_scale = storage->getNotificationScale();
+    store_setting(SET_NOTIFICATION_SCALE, notification_scale);
 
 	bool show_library = storage->getShowLibrary();
 	store_setting(SET_LIB_SHOW, show_library);

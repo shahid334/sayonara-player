@@ -416,7 +416,13 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 
     _rc_header_menu = new QMenu( this->horizontalHeader() );
 
+    // in this moment all columns are still shown
+    int col_idx = this->horizontalHeader()->sortIndicatorSection();
+    Qt::SortOrder asc = this->horizontalHeader()->sortIndicatorOrder();
+
+
     int i =0;
+    bool show_sorter = true;
     foreach(ColumnHeader header, _table_headers){
         QAction* action = new QAction(header.getTitle(), this);
         action->setCheckable(true);
@@ -429,10 +435,18 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 
         else {
 
-            if(i < shown_cols.size())
+            if(i < shown_cols.size()){
                 action->setChecked(shown_cols[i] == "1");
-            else
+
+		// where should we put the sorters?
+		// if a few columns are missing before the origin position,
+		// the index of the sorted column has to be decreased
+		if(i<col_idx && !action->isChecked()) col_idx --;
+		else if(i == col_idx && !action->isChecked()) show_sorter = false;
+	    }
+            else{
                 action->setChecked(false);
+	    }
         }
 
 
@@ -443,13 +457,11 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
         i++;
     }
 
-    int sec = _model->calc_shown_col(this->horizontalHeader()->sortIndicatorSection());
-    Qt::SortOrder asc = this->horizontalHeader()->sortIndicatorOrder();
-
     rc_header_menu_changed();
 
-
-    this->horizontalHeader()->setSortIndicator(sec, asc);
+    if(show_sorter){
+	    this->horizontalHeader()->setSortIndicator(col_idx, asc);
+    }
 
     this->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
 }

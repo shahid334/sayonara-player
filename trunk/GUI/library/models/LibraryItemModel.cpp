@@ -74,7 +74,8 @@ int LibraryItemModel::get_n_cols() const {
 	return _n_all_cols;
 }
 
-
+// input: seen column
+// returns: real index of column
 int LibraryItemModel::calc_shown_col(int col) const {
 	int idx_col = 0;
 	int n_true = -1;

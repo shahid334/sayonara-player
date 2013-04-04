@@ -50,6 +50,8 @@ void LN_Notification::notification_show(const MetaData& md){
 
     if(!_initialized) return;
 
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
+
     not_close();
 
     QString text = md.artist + "\n" + md.album;
@@ -59,8 +61,11 @@ void LN_Notification::notification_show(const MetaData& md){
     if(!QFile::exists(pixmap_path)) pixmap_path = Helper::getIconPath() + "logo_small.png";
     else{
 
+	int scale = settings->getNotificationScale();
+	if(scale == 0) scale = 35;
+
         QPixmap p(pixmap_path);
-        p = p.scaled(35, 35, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        p = p.scaled(scale, scale, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         bool success = p.save(Helper::getSayonaraPath() + "not.jpg");
         if(success)
             pixmap_path = Helper::getSayonaraPath() + "not.jpg";
@@ -75,7 +80,7 @@ void LN_Notification::notification_show(const MetaData& md){
 
 
 
-    int timeout = CSettingsStorage::getInstance()->getNotificationTimeout();
+    int timeout = settings->getNotificationTimeout();
     notify_notification_set_timeout     (n, timeout);
     notify_notification_show            (n, NULL);
 

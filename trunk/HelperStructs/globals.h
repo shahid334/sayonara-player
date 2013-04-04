@@ -106,9 +106,9 @@ namespace Sort{
 		TrackBitrateAsc,
 		TrackBitrateDesc,
 		TrackSizeAsc,
-        TrackSizeDesc,
-        TrackDiscnumberAsc,
-        TrackDiscnumberDesc
+	        TrackSizeDesc,
+        	TrackDiscnumberAsc,
+	        TrackDiscnumberDesc
 	};
 
 };

@@ -69,6 +69,7 @@
 #define SET_NOTIFICATION_SHOW "show_notifications"
 #define SET_NOTIFICATION_TIMEOUT "notification_timeout"
 #define SET_NOTIFICATION_NAME "notification_name"
+#define SET_NOTIFICATION_SCALE "notification_scale"
 
 #define SET_ENGINE "sound_engine"
 #define SET_ENGINE_VOL "volume"
@@ -229,6 +230,7 @@ private:
     bool    m_show_notifications;
     int     m_notification_timeout;
     QString m_notification_name;
+    int     m_notification_scale;
 
     /* socket stuff */
     bool	m_socket_activated;
@@ -312,6 +314,9 @@ public:
 
     void setNotification(QString);
     QString getNotification();
+
+    void setNotificationScale(int);
+    int getNotificationScale();
 
 	void setLastFMSessionKey(QString);
 	QString getLastFMSessionKey();

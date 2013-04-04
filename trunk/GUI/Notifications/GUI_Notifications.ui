@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>264</width>
-    <height>185</height>
+    <width>279</width>
+    <height>208</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -17,18 +17,6 @@
    <string>Notification settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="5" column="0" colspan="2">
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-     <property name="text">
-      <string>Timeout may depend on server settings</string>
-     </property>
-    </widget>
-   </item>
    <item row="1" column="0" colspan="2">
     <widget class="Line" name="line">
      <property name="orientation">
@@ -87,7 +75,7 @@
    <item row="4" column="1">
     <widget class="QSpinBox" name="sb_timeout">
      <property name="focusPolicy">
-      <enum>Qt::TabFocus</enum>
+      <enum>Qt::WheelFocus</enum>
      </property>
      <property name="minimum">
       <number>1000</number>
@@ -124,8 +112,48 @@
      </property>
     </widget>
    </item>
+   <item row="5" column="1">
+    <widget class="QSpinBox" name="sb_scale">
+     <property name="minimum">
+      <number>32</number>
+     </property>
+     <property name="maximum">
+      <number>128</number>
+     </property>
+     <property name="value">
+      <number>64</number>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="cb_scale">
+     <property name="text">
+      <string>Icon scaling</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>cb_scale</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sb_scale</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>96</x>
+     <y>143</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>144</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -286,6 +286,17 @@ bool CSettingsStorage::getShowNotification(){
 	return m_show_notifications;
 }
 
+int CSettingsStorage::getNotificationScale(){
+	return m_notification_scale;
+}
+
+void CSettingsStorage::setNotificationScale(int scale){
+	m_notification_scale = scale;
+	_sth_changed = true;
+}
+
+
+
 void CSettingsStorage::setLastFMSessionKey(QString key){
 	m_lfm_sessionKey = key;
     _sth_changed = true;
