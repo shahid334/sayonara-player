@@ -45,7 +45,7 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 
 	QStringList filetypes = Helper::get_soundfile_extensions();
     filetypes.append(Helper::get_playlistfile_extensions());
-	QString filetypes_str = QString("Media files (");
+	QString filetypes_str = QString(tr("Media files") + " (");
 	foreach(QString filetype, filetypes){
 		filetypes_str += filetype;
 		if(filetype != filetypes.last()){
@@ -86,14 +86,14 @@ void GUI_SimplePlayer::importFolderClicked(bool b){
 
     if(lib_path.size() == 0 || !QFile::exists(lib_path)){
 
-        int ret = QMessageBox::warning(this, "No library path", "Please select library path first", QMessageBox::Ok, QMessageBox::Cancel);
+        int ret = QMessageBox::warning(this, tr("No library path"), tr("Please select library path first"), QMessageBox::Ok, QMessageBox::Cancel);
         if(ret == QMessageBox::Cancel) return;
 
         setLibraryPathClicked();
         return;
     }
 
-	QString dir = QFileDialog::getExistingDirectory(this, "Open Directory",
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 				QDir::homePath(), QFileDialog::ShowDirsOnly);
 
 	if(dir.size() > 0){
@@ -206,8 +206,8 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 		dialog.setFocus();
 		dialog.setIcon(QMessageBox::Question);
-		dialog.setText("<b>Library</b>");
-		dialog.setInformativeText("Do you want to reload the Library?");
+		dialog.setText("<b>" + tr("Library") + "</b>");
+		dialog.setInformativeText(tr("Do you want to reload the Library?"));
 		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		dialog.setDefaultButton(QMessageBox::Yes);
 
@@ -280,12 +280,12 @@ void GUI_SimplePlayer::help(bool b){
 	QString link;
     int style = m_settings->getPlayerStyle();
 	if(style == 0){
-		link = "<a href=\"http://sayonara.luciocarreras.de\">"+ DARK_BLUE("http://sayonara.luciocarreras.de") + "</a>";
+		link = "<a href=\"http://sayonara.luciocarreras.de/Forum/xmb\">"+ DARK_BLUE("http://sayonara.luciocarreras.de/Forum/xmb") + "</a>";
 	}
 	else
 
 		link = "<a href=\"http://sayonara.luciocarreras.de\">"+ LIGHT_BLUE("http://sayonara.luciocarreras.de") + "</a>";
-	QMessageBox::information(this, "Help", "Please visit the forum at <br />" + link);
+	QMessageBox::information(this, tr("Help"), tr("Please visit the forum at") + "<br />" + link);
 
 }
 
@@ -294,6 +294,16 @@ void GUI_SimplePlayer::about(bool b){
 	Q_UNUSED(b);
 
     QString version = m_settings->getVersion();
+    QString link = "";
+    int style = m_settings->getPlayerStyle();
+	if(style == 0){
+            link = "<a href=\"http://sayonara.luciocarreras.de\">" + 
+                   DARK_BLUE("http://sayonara.luciocarreras.de") + "</a>";
+	}
+	else{
+            link = "<a href=\"http://sayonara.luciocarreras.de\">" + 
+                   LIGHT_BLUE("http://sayonara.luciocarreras.de") + "</a>";
+        }
 
     QMessageBox infobox;
     infobox.setParent(this);
@@ -302,9 +312,13 @@ void GUI_SimplePlayer::about(bool b){
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 
-    infobox.setWindowTitle("About Sayonara");
+    infobox.setWindowTitle(tr("About Sayonara"));
     infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
-    infobox.setInformativeText("Written by Lucio Carreras<br /><br />License: GPL<br /><br />Copyright 2011-2012");
+    infobox.setInformativeText( QString("") +
+				tr("Written by Lucio Carreras") + "<br /><br />" +
+				tr("License") + ": GPL<br /><br />" +
+				"Copyright 2011-2013<br /><br />" + link
+                              );
     infobox.setStandardButtons(QMessageBox::Ok);
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
     infobox.exec();

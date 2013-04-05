@@ -62,6 +62,7 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
     ui->combo_notification->setCurrentIndex(idx);
     ui->sb_timeout->setValue(timeout);
     ui->cb_activate->setChecked(active);
+
     if(scale > 0)
 	    ui->sb_scale->setValue(scale);
     else

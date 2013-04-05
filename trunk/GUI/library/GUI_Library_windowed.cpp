@@ -552,9 +552,9 @@ void GUI_Library_windowed::play_next_tracks(){
 
 
 void GUI_Library_windowed::psl_delete_answer(QString answer){
-	QMessageBox answerbox;
+	QMessageBox answerbox(this);
 
-	answerbox.setText("Info");
+	answerbox.setText(tr("Info"));
 	answerbox.setIcon(QMessageBox::Information);
 	answerbox.setInformativeText(answer);
 
@@ -600,21 +600,21 @@ void GUI_Library_windowed::delete_tracks(){
 
 int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 
-		QMessageBox dialog;
+		QMessageBox dialog(this);
 		QString tl = this->ui->le_search->text();
 		QAbstractButton* clicked_button;
 		QPushButton* only_library_button;
 
 		dialog.setFocus();
 		dialog.setIcon(QMessageBox::Warning);
-		dialog.setText("<b>Warning!</b>");
+		dialog.setText("<b>" + tr("Warning") + "!</b>");
 		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		only_library_button = dialog.addButton("Only from library", QMessageBox::AcceptRole);
+		only_library_button = dialog.addButton(tr("Only from library"), QMessageBox::AcceptRole);
 		dialog.setDefaultButton(QMessageBox::No);
+		QString info_text = tr("You are about to delete %1 files").arg(n_tracks);
 
-		dialog.setInformativeText(	QString("You are about to delete ") +
-									QString::number(n_tracks) +
-									" files!\nContinue?" );
+
+		dialog.setInformativeText(info_text + "\n" + tr("Continue?") );
 
 		int answer = dialog.exec();
 		clicked_button = dialog.clickedButton();
@@ -657,10 +657,10 @@ void GUI_Library_windowed::import_result(bool success){
 
 	QString success_string;
 	if(success){
-        success_string = "Importing was successful"; _settings->getPlayerStyle();
+        success_string = tr("Importing was successful"); _settings->getPlayerStyle();
 	}
 
-	else success_string = "Importing failed";
+	else success_string = tr("Importing failed");
 
 	//QMessageBox::information(NULL, "Information", success_string );
 	library_changed();

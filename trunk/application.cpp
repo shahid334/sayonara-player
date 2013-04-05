@@ -42,8 +42,6 @@
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
-#include "Notification/Notification.h"
-#include "Notification/NotificationPluginLoader.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Helper.h"
@@ -98,11 +96,11 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
-    ui_stream           = new GUI_Stream("Stream", "Stream", 'S', player->getParentOfPlugin());
-    ui_podcasts         = new GUI_Podcasts("Podcasts", "Podcasts", 'o', player->getParentOfPlugin());
-    ui_eq               = new GUI_Equalizer("Equalizer", "Equalizer", 'E', player->getParentOfPlugin());
+    ui_stream           = new GUI_Stream("Stream", tr("Stream"), 'S', player->getParentOfPlugin());
+    ui_podcasts         = new GUI_Podcasts("Podcasts", tr("Podcasts"), 'o', player->getParentOfPlugin());
+    ui_eq               = new GUI_Equalizer("Equalizer", tr("Equalizer"), 'E', player->getParentOfPlugin());
     ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "Last.fm", 'F', player->getParentOfPlugin());
-    ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", "Playlists", 'P', player->getParentOfPlugin());
+    ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", tr("Playlists"), 'P', player->getParentOfPlugin());
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
 
@@ -137,6 +135,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
     listen = engine_plugin_loader->get_cur_engine();
     if(!listen){
         qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
+	exit(1);
     }
 
     else{

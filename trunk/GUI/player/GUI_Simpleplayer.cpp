@@ -76,7 +76,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
     ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
     ui->artist->setText(m_settings->getVersion());
-	ui->album->setText("Written by Lucio Carreras");
+	ui->album->setText(tr("Written by") + " Lucio Carreras");
 
     m_metadata_available = false;
 	m_playing = false;
@@ -150,6 +150,8 @@ GUI_SimplePlayer::~GUI_SimplePlayer() {
 
 void GUI_SimplePlayer::initGUI() {
 
+	QString ctrl = tr("Ctrl");
+
 	ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
 	ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
@@ -162,7 +164,7 @@ void GUI_SimplePlayer::initGUI() {
     ui->btn_correct->setToolTip(tr("Correct ID3 Tag"));
 
     ui->action_viewLibrary->setText(tr("&Library"));
-    ui->action_viewLibrary->setShortcut(QKeySequence("CTRL+l"));
+    ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));
 
     ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
     ui->action_Dark->setShortcut(QKeySequence("F10"));
@@ -421,7 +423,7 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 void GUI_SimplePlayer::last_fm_logged_in(bool b){
 
     if(!b && m_settings->getLastFMActive())
-        QMessageBox::warning(ui->centralwidget, "Warning", "Cannot login to Last.fm");
+        QMessageBox::warning(ui->centralwidget, tr("Warning"), tr("Cannot login to Last.fm"));
 
     if(!b){
 	/// TODO

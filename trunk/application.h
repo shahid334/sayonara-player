@@ -50,8 +50,6 @@
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
-#include "Notification/Notification.h"
-#include "Notification/NotificationPluginLoader.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"

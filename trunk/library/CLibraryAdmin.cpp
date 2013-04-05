@@ -32,12 +32,10 @@
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 
 #include <QDebug>
-#include <QProgressDialog>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressBar>
 #include <QFileSystemWatcher>
-#include <QInputDialog>
 #include <QListWidget>
 
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
@@ -208,13 +206,15 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
         qDebug() << "Library: " << success;
 
         if(success){
-            QMessageBox::information(m_app->getMainWindow(), "Import files", "All files could be imported");
+            QMessageBox::information(m_app->getMainWindow(), tr("Import files"), tr("All files could be imported"));
             refresh();
         }
 
         else
-            QMessageBox::warning(m_app->getMainWindow(), "Import files", QString("Sorry, but tracks could not be imported <br />") +
-                                 "Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+            QMessageBox::warning(m_app->getMainWindow(), 
+				tr("Import files"), 
+				tr("Sorry, but tracks could not be imported") + "<br />") +
+                                tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
 
         m_import_dialog->close();
 
@@ -233,15 +233,15 @@ void CLibraryBase::reloadLibrary(bool clear){
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
     if(m_library_path.length() == 0) {
-        QMessageBox msgBox;
-        msgBox.setText("Please select your library first");
+        QMessageBox msgBox(m_app->getMainWindow());
+        msgBox.setText(tr("Please select your library first"));
         msgBox.exec();
 
-        QString dir = QFileDialog::getExistingDirectory(0, tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
+        QString dir = QFileDialog::getExistingDirectory(m_app->getMainWindow(), tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
 
         if(dir.length() < 3) {
-            QMessageBox msgBox;
-            msgBox.setText("I said: \"Please select your library first\". Bye bye!");
+            QMessageBox msgBox(m_app->getMainWindow());
+            msgBox.setText(tr("I said: \"Please select your library first\". Bye bye!"));
             msgBox.exec();
             return;
         }
@@ -345,7 +345,7 @@ void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
 void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
 
     QStringList file_list;
-    QString file_entry = "files";
+    QString file_entry = tr("files");
     int n_files = vec_md.size();
     int n_fails = 0;
 
@@ -357,7 +357,7 @@ void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
     vec_md.clear();
 
     if(answer == 1){
-        file_entry = "entries";
+        file_entry = tr("entries");
         foreach(QString filename, file_list){
             QFile file(filename);
             if( !file.remove() )
@@ -368,11 +368,11 @@ void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
     QString answer_str;
 
     if(n_fails == 0){
-        answer_str = "All " + file_entry + " could be removed";
+        answer_str = tr("All %1 could be removed").arg(file_entry);
     }
 
     else {
-        answer_str = QString::number(n_fails) + " of " + QString::number(n_files) + " " + file_entry + " could not be removed";
+	answer_str = tr("%1 of %2 %3 could not be removed").arg(n_fails).arg(n_files).arg(file_entry);
     }
 
     emit sig_delete_answer(answer_str);

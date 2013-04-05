@@ -30,12 +30,8 @@
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 
 #include <QDebug>
-#include <QProgressDialog>
-#include <QMessageBox>
-#include <QFileDialog>
 #include <QProgressBar>
 #include <QFileSystemWatcher>
-#include <QInputDialog>
 #include <QListWidget>
 
 
