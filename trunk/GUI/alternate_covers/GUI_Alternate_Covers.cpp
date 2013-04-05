@@ -136,7 +136,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 	QFile file(src_filename);
 
 	if(!file.exists()) {
-		QMessageBox::warning(this, "Information", "This cover does not exist... Sorry" );
+		QMessageBox::warning(this, tr("Information"), tr("This cover does not exist") );
 		return;
 	}
 
@@ -188,7 +188,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 		emit sig_covers_changed(_calling_class, cover_token);
 	}
 
-	else QMessageBox::warning(this, "Information", "Some error appeared when updating cover" );
+	else QMessageBox::warning(this, tr("Information"), tr("Some error appeared when updating cover") );
 }
 
 
@@ -206,9 +206,9 @@ void GUI_Alternate_Covers::search_button_pressed(){
         _filelist.clear();
         update_model();
 
-	if(ui->btn_search->text().compare("Stop") == 0){
+	if(ui->btn_search->text().compare(tr("Stop")) == 0){
 		_cov_lookup->terminate_thread();
-		ui->btn_search->setText("Search");
+		ui->btn_search->setText(tr("Search"));
                 ui->pb_progress->setVisible(false);
 		return;
 	}
@@ -234,7 +234,7 @@ void GUI_Alternate_Covers::search_button_pressed(){
 	}
 
     _cov_lookup->search_images_by_searchstring(searchstring, 10, _search_for_album);
-	ui->btn_search->setText("Stop");
+	ui->btn_search->setText(tr("Stop"));
 
 }
 
@@ -301,7 +301,7 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
         update_model();
 
 	ui->pb_progress->setVisible(false);
-	ui->btn_search->setText("Search");
+	ui->btn_search->setText(tr("Search"));
 }
 
 

@@ -73,7 +73,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     ui_tag_edit = tag_edit;
 
     if(ui_tag_edit)
-        ui->tab_widget->addTab(ui_tag_edit, "Edit");
+        ui->tab_widget->addTab(ui_tag_edit, tr("Edit"));
 
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
@@ -206,7 +206,7 @@ void GUI_InfoDialog::psl_corrected_data_available(const QString& target_class){
 
 	_lfm_thread->fetch_corrections(md, loved, corrected);
 	QString text;
-	text = BOLD("Loved: ") + (loved ? "yes" : "no");
+	text = BOLD("Loved: ") + (loved ? tr("yes") : tr("no"));
 	this->ui->lab_playcount->setText(text);
 }
 
@@ -326,14 +326,14 @@ void GUI_InfoDialog::prepare_artists(){
 	else return;
 
 
-	info = BOLD("#Albums:&nbsp;") + QString::number(n_albums) + CAR_RET;
-	info += BOLD("#Tracks:&nbsp;") +  QString::number(n_songs) + CAR_RET;
-	info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
+	info = BOLD(tr("#Albums") + ":&nbsp;") + QString::number(n_albums) + CAR_RET;
+	info += BOLD(tr("#Tracks") + ":&nbsp;") +  QString::number(n_songs) + CAR_RET;
+	info += BOLD(tr("Playing time") + ":&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
 	if(n_artists > 1)
-		info += BOLD("#Artists:&nbsp;") + QString::number(n_artists) + CAR_RET;
-    info+= BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
+		info += BOLD(tr("#Artists") + ":&nbsp;") + QString::number(n_artists) + CAR_RET;
+    info+= BOLD(tr("Filesize") + ":&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 
-	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
+	paths = BOLD(tr("LIBRARY") + " = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
 
@@ -419,17 +419,17 @@ void GUI_InfoDialog::prepare_albums(){
             _artist_name = album.artists[0];
         }
 
-        QString artist_name = ((album.artists.size() > 1) ? QString("Various artists") : album.artists[0]);
+        QString artist_name = ((album.artists.size() > 1) ? tr("Various artists") : album.artists[0]);
 
 		n_songs = album.num_songs;
-        header =  Helper::split_string_to_widget(album.name, ui->lab_heading) + " <font size=\"small\">"+ CAR_RET + "by " + artist_name + "</font>";
+        header =  Helper::split_string_to_widget(album.name, ui->lab_heading) + " <font size=\"small\">"+ CAR_RET + tr("by ") + artist_name + "</font>";
 
-		info = BOLD("#Tracks:&nbsp;") +  QString::number(album.num_songs) + CAR_RET;
-		info += BOLD("Playing time:&nbsp;") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + CAR_RET;
+		info = BOLD(tr("#Tracks") + ":&nbsp;") +  QString::number(album.num_songs) + CAR_RET;
+		info += BOLD(tr("Playing time") + ":&nbsp;") + Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000) + CAR_RET;
 		if(album.year != 0)
-			info += BOLD("Year:&nbsp;") + QString::number(album.year) + CAR_RET;
-        info += BOLD("Sampler?:&nbsp;") + ((album.is_sampler) ? "yes" : "no") + CAR_RET;
-        info += BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
+			info += BOLD(tr("Year") + ":&nbsp;") + QString::number(album.year) + CAR_RET;
+        info += BOLD(tr("Sampler?") + ":&nbsp;") + ((album.is_sampler) ? tr("yes") : tr("no")) + CAR_RET;
+        info += BOLD(tr("Filesize") + ":&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
 
@@ -442,10 +442,10 @@ void GUI_InfoDialog::prepare_albums(){
 		foreach(int album_id, map_albums.keys()){
             Album album;
             _db->getAlbumByID(album_id, album);
-            QString artist_name = ((album.artists.size() > 1) ? QString("Various artists") : album.artists[0]);
+            QString artist_name = ((album.artists.size() > 1) ? tr("Various artists") : album.artists[0]);
 
             if(header_entries < 5)
-                header += Helper::split_string_to_widget(album.name, ui->lab_heading) + "<font size=\"small\"> by " + artist_name + "</font>" + CAR_RET;
+                header += Helper::split_string_to_widget(album.name, ui->lab_heading) + "<font size=\"small\"> " +tr("by") + artist_name + "</font>" + CAR_RET;
 			else if(header_entries == 5) header += "...";
 
 			tooltip += album.name + " (" + QString::number(map_albums[album_id]) + ")" + CAR_RET;
@@ -453,13 +453,13 @@ void GUI_InfoDialog::prepare_albums(){
 			header_entries++;
 		}
 
-		info = BOLD("#Tracks:&nbsp;") + QString::number(n_songs);
-        info += BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
+		info = BOLD(tr("#Tracks") + ":&nbsp;") + QString::number(n_songs);
+        info += BOLD(tr("Filesize") + ":&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
 	else return;
 
-	paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
+	paths = BOLD(tr("LIBRARY") + " = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
 	foreach(QString path, pathlist){
         QString tmppath = QString("file://" + path);
@@ -558,39 +558,39 @@ void GUI_InfoDialog::prepare_tracks(){
 		QString count;
 		switch(tracknum){
 			case 1:
-				count = "1st";
+				count = tr("1st");
 				break;
 			case 2:
-				count = "2nd";
+				count = tr("2nd");
 				break;
 			case 3:
-				count = "3rd";
+				count = tr("3rd");
 				break;
 			default:
-				count = QString::number(md.track_num) + "th";
+				count = QString::number(md.track_num) + tr("th");
 				break;
 		}
-		info = count + " track on " + md.album + CAR_RET;
-		info+= BOLD("Artist:&nbsp;") + md.artist + CAR_RET;
-		info+= BOLD("Length:&nbsp;") + Helper::cvtMsecs2TitleLengthString(md.length_ms) + CAR_RET;
-		info+= BOLD("Year:&nbsp;") + QString::number(md.year) + CAR_RET;
-        info+= BOLD("Bitrate:&nbsp;") + QString::number(md.bitrate) + CAR_RET;
-        info+= BOLD("Genre:&nbsp;") + md.genres.join("<br />") + CAR_RET;
-        info+= BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
+		info = count + tr(" track on ") + md.album + CAR_RET;
+		info+= BOLD(tr("Artist") + ":&nbsp;") + md.artist + CAR_RET;
+		info+= BOLD(tr("Length") + ":&nbsp;") + Helper::cvtMsecs2TitleLengthString(md.length_ms) + CAR_RET;
+		info+= BOLD(tr("Year") + ":&nbsp;") + QString::number(md.year) + CAR_RET;
+        info+= BOLD(tr("Bitrate") + ":&nbsp;") + QString::number(md.bitrate) + CAR_RET;
+        info+= BOLD(tr("Genre") + ":&nbsp;") + md.genres.join("<br />") + CAR_RET;
+        info+= BOLD(tr("Filesize") + ":&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
 	else if(n_tracks > 1){
 
 		_diff_mode = INFO_MODE_MULTI;
-		header = "Various tracks";
-		info+= BOLD("#Tracks:&nbsp;") + QString::number(_v_md.size()) + CAR_RET;
-		info+= BOLD("#Albums:&nbsp;") + QString::number(n_albums) + CAR_RET;
-		info+= BOLD("#Artists:&nbsp;") + QString::number(n_artists) + CAR_RET;
-		info+= BOLD("Length:&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
-        info+= BOLD("Filesize:&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
+		header = tr("Various tracks");
+		info+= BOLD(tr("#Tracks") + ":&nbsp;") + QString::number(_v_md.size()) + CAR_RET;
+		info+= BOLD(tr("#Albums") + ":&nbsp;") + QString::number(n_albums) + CAR_RET;
+		info+= BOLD(tr("#Artists") + ":&nbsp;") + QString::number(n_artists) + CAR_RET;
+		info+= BOLD(tr("Length") + ":&nbsp;") + Helper::cvtMsecs2TitleLengthString(time_msec) + CAR_RET;
+        info+= BOLD(tr("Filesize") + ":&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
-    paths = BOLD("LIBRARY = ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
+    paths = BOLD(tr("LIBRARY") + "= ") + LINK(library_path, library_path) + CAR_RET + CAR_RET;
 
     foreach(QString path, pathlist){
 
@@ -646,7 +646,7 @@ void GUI_InfoDialog::prepare_cover(){
 void GUI_InfoDialog::prepare_lfm_info(){
 
 	if(!CSettingsStorage::getInstance()->getLastFMActive()){
-        this->ui->lab_playcount->setText("Last.fm not active");
+        this->ui->lab_playcount->setText(tr("Last.fm not active"));
 		return;
 	}
 
@@ -739,8 +739,8 @@ void GUI_InfoDialog::psl_id3_success(bool b){
     }
 	else{
 		QMessageBox::warning ( this,
-				"Error",
-				"ID3 tags could not be changed");
+				tr("Error"),
+				tr("ID3 tags could not be changed"));
 	}
 }
 

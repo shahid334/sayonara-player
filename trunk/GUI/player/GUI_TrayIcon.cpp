@@ -152,7 +152,7 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
 
         else if (this -> isSystemTrayAvailable()) {
 
-            this -> showMessage("Sayonara", md.title + " by " + md.artist,QSystemTrayIcon::Information, m_timeout);
+            this -> showMessage("Sayonara", md.title + tr(" by ") + md.artist,QSystemTrayIcon::Information, m_timeout);
         }
     }
 
@@ -238,12 +238,12 @@ void GUI_TrayIcon::setMute(bool mute){
 
 	if(!mute){
 		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
-        m_muteAction->setText("Mute");
+        m_muteAction->setText(tr("Mute"));
 	}
 
 	else {
 		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3.png"));
-        m_muteAction->setText("Unmute");
+        m_muteAction->setText(tr("Unmute"));
 	}
 }
 
@@ -254,12 +254,12 @@ void GUI_TrayIcon::setPlaying(bool play){
 	if(play){
 		setIcon(m_playIcon);
 		m_playAction->setIcon(m_pauseIcon);
-		m_playAction->setText("Pause");
+		m_playAction->setText(tr("Pause"));
 	}
 	else {
 		setIcon(m_pauseIcon);
 		m_playAction->setIcon(m_playIcon);
-		m_playAction->setText("Play");
+		m_playAction->setText(tr("Play"));
 	}
 }
 

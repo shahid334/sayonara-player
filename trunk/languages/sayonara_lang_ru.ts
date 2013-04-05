@@ -111,6 +111,34 @@
     </message>
 </context>
 <context>
+    <name>ContextMenu</name>
+    <message>
+        <location filename="../GUI/ContextMenu.cpp" line="33"/>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/ContextMenu.cpp" line="34"/>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/ContextMenu.cpp" line="35"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/ContextMenu.cpp" line="36"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/ContextMenu.cpp" line="37"/>
+        <source>Play next</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_Alternate_Covers</name>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="14"/>
@@ -135,6 +163,34 @@
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="126"/>
         <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="139"/>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="191"/>
+        <source>Information</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="139"/>
+        <source>This cover does not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="191"/>
+        <source>Some error appeared when updating cover</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="209"/>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="237"/>
+        <source>Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="211"/>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="304"/>
+        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -244,6 +300,161 @@
     </message>
 </context>
 <context>
+    <name>GUI_InfoDialog</name>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="76"/>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="209"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="431"/>
+        <source>yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="209"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="431"/>
+        <source>no</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="329"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="587"/>
+        <source>#Albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="330"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="427"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="456"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="586"/>
+        <source>#Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="331"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="428"/>
+        <source>Playing time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="333"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="588"/>
+        <source>#Artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="334"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="457"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="579"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="590"/>
+        <source>Filesize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="336"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="462"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="593"/>
+        <source>LIBRARY</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="422"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="445"/>
+        <source>Various artists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="425"/>
+        <source>by </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="430"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="576"/>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="431"/>
+        <source>Sampler?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="448"/>
+        <source>by</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="561"/>
+        <source>1st</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="564"/>
+        <source>2nd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="567"/>
+        <source>3rd</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="570"/>
+        <source>th</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="573"/>
+        <source> track on </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="574"/>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="575"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="589"/>
+        <source>Length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="577"/>
+        <source>Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="578"/>
+        <source>Genre</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="585"/>
+        <source>Various tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="649"/>
+        <source>Last.fm not active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="742"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="743"/>
+        <source>ID3 tags could not be changed</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_LFMRadioWidget</name>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="26"/>
@@ -347,6 +558,60 @@
 </context>
 <context>
     <name>GUI_Library_windowed</name>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="100"/>
+        <source>Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="101"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="116"/>
+        <source>Artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="102"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="110"/>
+        <source>Album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="103"/>
+        <source>D#</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="104"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="113"/>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="105"/>
+        <source>Dur.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="106"/>
+        <source>Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="107"/>
+        <source>Filesize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="111"/>
+        <source>Duration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="112"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="117"/>
+        <source>#Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="557"/>
         <source>Info</source>
@@ -959,6 +1224,21 @@ Please choose another folder</source>
         <source>Discnumber</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="318"/>
+        <source>Track </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="504"/>
+        <source>You are about to insert&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; new album(s) and &lt;b&gt;%2&lt;/b&gt; new artist(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="509"/>
+        <source>Proceed?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GUI_Target_Playlist_Dialog</name>
@@ -1003,6 +1283,7 @@ Please choose another folder</source>
     <name>GUI_TrayIcon</name>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="67"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="262"/>
         <source>Play</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1023,6 +1304,7 @@ Please choose another folder</source>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="75"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="241"/>
         <source>Mute</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1034,6 +1316,21 @@ Please choose another folder</source>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="79"/>
         <source>Show</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="155"/>
+        <source> by </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="246"/>
+        <source>Unmute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="257"/>
+        <source>Pause</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1392,6 +1689,19 @@ Please choose another folder</source>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="440"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="260"/>
         <source>Dynamic playing</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ReloadThread</name>
+    <message>
+        <location filename="../library/ReloadThread.cpp" line="101"/>
+        <source>Reloading %1 tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/ReloadThread.cpp" line="156"/>
+        <source>Delete orphaned tracks...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -315,7 +315,7 @@ void GUI_TagEdit::show_metadata(){
     this->ui->sb_discnumber->setValue(md.discnumber);
 
     this->ui->lab_filepath->setText(QDir(md.filepath).absolutePath());
-    this->ui->lab_track_num->setText("Track " + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
+    this->ui->lab_track_num->setText(tr("Track ") + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
 
     tag_from_path_text_changed(this->ui->le_tag_from_path->text());
     this->ui->btn_tag_undo->setEnabled(_idx_affected_by_tag[_cur_idx]);
@@ -501,10 +501,12 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
     if(new_albums.size() > 0 || new_artists.size() > 0){
          QMessageBox msgBox(this);
-         msgBox.setText(QString("You are about to insert<br />") +
-		"<b>" + QString::number(new_albums.size()) + "</b> new album(s) and<br />"
-		"<b>" + QString::number(new_artists.size()) + "</b> new artist(s).");
-         msgBox.setInformativeText("Proceed?");
+	 QString text = tr("You are about to insert<br /><b>%1</b> new album(s) and <b>%2</b> new artist(s)")
+			.arg(new_albums.size())
+			.arg(new_artists.size());
+
+         msgBox.setText(text);
+         msgBox.setInformativeText(tr("Proceed?"));
          msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
          msgBox.setDefaultButton(QMessageBox::Yes);
          int ret = msgBox.exec();
