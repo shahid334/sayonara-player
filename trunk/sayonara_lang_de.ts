@@ -440,7 +440,7 @@
         <location filename="GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="107"/>
         <location filename="GUI/ui_GUI_PlaylistChooser.h" line="183"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">...</translation>
     </message>
     <message>
         <location filename="GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="160"/>
@@ -1304,19 +1304,19 @@ Bitte ein anderes Verzeichnis wählen</translation>
         <location filename="GUI/playlist/GUI_Playlist_EntrySmall.ui" line="82"/>
         <location filename="GUI/ui_GUI_Playlist_EntrySmall.h" line="109"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Titel</translation>
     </message>
     <message>
         <location filename="GUI/playlist/GUI_Playlist_EntrySmall.ui" line="116"/>
         <location filename="GUI/ui_GUI_Playlist_EntrySmall.h" line="110"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Künstler</translation>
     </message>
     <message>
         <location filename="GUI/playlist/GUI_Playlist_EntrySmall.ui" line="153"/>
         <location filename="GUI/ui_GUI_Playlist_EntrySmall.h" line="111"/>
         <source>Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Zeit</translation>
     </message>
 </context>
 <context>
@@ -1526,7 +1526,7 @@ Bitte ein anderes Verzeichnis wählen</translation>
         <location filename="GUI/player/GUI_Simpleplayer.ui" line="1036"/>
         <location filename="GUI/ui_GUI_Simpleplayer.h" line="642"/>
         <source>Load playlist on startup</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lade Wiedergabeliste</translation>
     </message>
     <message>
         <location filename="GUI/player/GUI_Simpleplayer.ui" line="1041"/>
@@ -1657,7 +1657,7 @@ Bitte ein anderes Verzeichnis wählen</translation>
         <location filename="GUI/SocketConfiguration/GUI_SocketSetup.ui" line="14"/>
         <location filename="GUI/ui_GUI_SocketSetup.h" line="101"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dialog</translation>
     </message>
     <message>
         <location filename="GUI/SocketConfiguration/GUI_SocketSetup.ui" line="20"/>
