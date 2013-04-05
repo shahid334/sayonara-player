@@ -50,6 +50,8 @@ void signal_handler(int sig);
 
 
 void signal_handler(int sig){
+
+
 	if(sig == SIGWINCH && obj_ref){
 		qDebug() << "show everything";
 		obj_ref->setHidden(false);
@@ -60,6 +62,10 @@ void signal_handler(int sig){
 	else if(sig == 15 && obj_ref){
 		qDebug() << "extern close event";
 		obj_ref->really_close();
+	}
+	else {
+
+		qDebug() << "signal " << sig << " received";
 	}
 }
 
@@ -707,8 +713,12 @@ void GUI_SimplePlayer::ui_loaded(){
 
     #ifdef Q_OS_UNIX
 		obj_ref = this;
-		signal(SIGWINCH, signal_handler);
-		signal(15, signal_handler);
+
+		for(int i=0; i<60; i++){
+
+		signal(i, signal_handler);
+		}
+
 	#endif
 
     changeSkin(m_settings->getPlayerStyle() == 1);
