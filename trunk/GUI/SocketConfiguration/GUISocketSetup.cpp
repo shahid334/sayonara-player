@@ -84,3 +84,8 @@ void GUI_SocketSetup::show_win(){
     this->show();
 }
 
+void GUI_SocketSetup::language_changed(){
+    if(!ui) return;
+    this->ui->retranslateUi(this);
+}
+

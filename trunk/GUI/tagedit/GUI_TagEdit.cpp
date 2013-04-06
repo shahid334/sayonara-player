@@ -100,6 +100,10 @@ void GUI_TagEdit::changeSkin(bool dark){
 
 }
 
+void GUI_TagEdit::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 
 void GUI_TagEdit::init(){
 

@@ -51,6 +51,7 @@ public:
         void show_win();
         void changeSkin(bool dark);
         void record_button_toggled(bool);
+        void language_changed();
 
 	public:
 		GUI_StreamRecorder(QWidget* parent=0);

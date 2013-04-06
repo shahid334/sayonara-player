@@ -69,6 +69,10 @@ GUI_Podcasts::~GUI_Podcasts() {
 }
 
 
+void GUI_Podcasts::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 
 void GUI_Podcasts::listen_clicked(){
 

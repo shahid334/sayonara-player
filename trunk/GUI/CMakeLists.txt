@@ -53,6 +53,7 @@ SET(HEADERS
     StreamRecorder/GUI_StreamRecorder.h
     Notifications/GUI_Notifications.h
     startup_dialog/GUI_Startup_Dialog.h
+    LanguageChooser/GUI_LanguageChooser.h
 
 )
 
@@ -100,6 +101,7 @@ SET(SOURCES
     startup_dialog/GUI_Startup_Dialog.cpp
     InfoDialog/GUI_InfoDialog.cpp
     SocketConfiguration/GUISocketSetup.cpp
+    LanguageChooser/GUI_LanguageChooser.cpp
 )
 
 
@@ -126,6 +128,7 @@ SET(FORMS
     alternate_covers/GUI_Alternate_Covers.ui
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
     Notifications/GUI_Notifications.ui
+    LanguageChooser/GUI_LanguageChooser.ui
 )
 
 

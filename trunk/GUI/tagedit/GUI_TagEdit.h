@@ -89,6 +89,7 @@ public:
 		void change_meta_data(const MetaData&);
         void show_win();
         void changeSkin(bool dark);
+        void language_changed();
 
 
 	private:

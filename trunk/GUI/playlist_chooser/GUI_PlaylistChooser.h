@@ -66,6 +66,7 @@ public slots:
     void playlist_changed(MetaDataList&, int, int);
 	void all_playlists_fetched(QMap<int, QString>&);
     void changeSkin(bool);
+    void language_changed();
 
 public:
 	GUI_PlaylistChooser(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);

@@ -131,6 +131,7 @@ public slots:
 	void psl_delete_answer(QString);
     void show_only_tracks(bool);
 	void change_skin(bool);
+    void language_changed();
 
 
 private slots:

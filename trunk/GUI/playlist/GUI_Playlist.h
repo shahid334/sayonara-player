@@ -80,6 +80,7 @@
             void library_path_changed(QString);
 			void set_radio_active(int radio);
 			void psl_show_small_playlist_items(bool small_items);
+            void language_changed();
 
 
 		private slots:

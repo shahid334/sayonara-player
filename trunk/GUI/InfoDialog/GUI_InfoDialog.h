@@ -60,6 +60,7 @@ public slots:
 	void psl_artist_info_available(const QString& target_class);
 	void psl_corrected_data_available(const QString& target_class);
     void changeSkin(bool dark);
+    void language_changed();
 
 private slots:
 	void psl_lyrics_available();

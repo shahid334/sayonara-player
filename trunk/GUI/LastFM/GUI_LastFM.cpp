@@ -63,6 +63,8 @@ GUI_LastFM::GUI_LastFM(QString username, QString password){
 }
 
 
+
+
 GUI_LastFM::~GUI_LastFM() {
 	// TODO Auto-generated destructor stub
 }
@@ -70,6 +72,11 @@ GUI_LastFM::~GUI_LastFM() {
 void GUI_LastFM::changeSkin(bool dark){
 
     _skin = dark;
+}
+
+void GUI_LastFM::language_changed(){
+    if(!ui) return;
+    this->ui->retranslateUi(this);
 }
 
 void GUI_LastFM::clear_session_pressed(){

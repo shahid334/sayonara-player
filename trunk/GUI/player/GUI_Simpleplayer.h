@@ -32,16 +32,19 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
+#include "GUI/LanguageChooser/GUI_LanguageChooser.h"
 #include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
+
 #include "HelperStructs/MetaData.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
+#include <QTranslator>
 #include "GUI/player/GUI_TrayIcon.h"
 
 
@@ -55,7 +58,7 @@ class GUI_SimplePlayer : public QMainWindow, private Ui::SimplePlayer
 {
     Q_OBJECT
 public:
-    explicit GUI_SimplePlayer(QWidget *parent = 0);
+    explicit GUI_SimplePlayer(QTranslator* translator, QWidget *parent = 0);
     ~GUI_SimplePlayer();
 
 public slots:
@@ -117,6 +120,7 @@ signals:
     void setupLastFM();
     void sig_skin_changed(bool);
     void sig_show_only_tracks(bool);
+    void sig_language_changed();
 
     /* Covers */
     void sig_want_cover(const MetaData &);
@@ -159,6 +163,7 @@ private slots:
 
 
     /* Preferences */
+    void sl_action_language_toggled(bool b=true);
     void lastFMClicked(bool b = true);
     void setLibraryPathClicked(bool = true);
     void fetch_all_covers_clicked(bool b = true);
@@ -179,6 +184,7 @@ private slots:
 
 
     void notification_changed(bool active, int ms);
+    void language_changed(QString);
 
 
 public:
@@ -212,6 +218,7 @@ private:
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;
     GUI_Startup_Dialog*     ui_startup_dialog;
+    GUI_LanguageChooser*    ui_language_chooser;
     CoverLookup*            m_cov_lookup;
     PlayerPluginHandler*    _pph;
 
@@ -233,6 +240,7 @@ private:
     int 			m_library_width;
     int				m_library_stretch_factor;
     CSettingsStorage* m_settings;
+    QTranslator*    m_translator;
 
 
     void setupTrayActions ();

@@ -23,6 +23,8 @@ SET(EXECUTABLE_OUTPUT_PATH lib)
 SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "Engine/GStreamer")
 SET(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "Notification/libnotify")
 
+SET(LANG ${CMAKE_CURRENT_SOURCE_DIR}/languages/sayonara_lang_de.ts)
+MESSAGE(${LANG})
 
 FIND_PACKAGE(Qt4 REQUIRED)
 
@@ -114,14 +116,28 @@ SET(SOURCES
 
 
 
+FILE(GLOB LANG_SRC languages/*.ts)
+
+MESSAGE("Create translation")
+
+
+
+FILE (GLOB TRANSLATIONS_FILES languages/*.ts)
+QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
+ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
+
+
+
+
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 IF(${UNIX})
 	execute_process(COMMAND sh ./scripts/setversion.sh)
 ENDIF(${UNIX})
 
-ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC})
+ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${QM_FILES})
 TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl sayonara_gui)
+
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(TARGETS sayonara DESTINATION bin)
@@ -129,6 +145,7 @@ INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
 INSTALL(FILES "linux_packages/resources/sayonara" DESTINATION share/menu)
 INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
+INSTALL(FILES ${QM_FILES} DESTINATION share/sayonara/translations)
 
 IF(${UNIX})
 	execute_process(COMMAND update-menus)

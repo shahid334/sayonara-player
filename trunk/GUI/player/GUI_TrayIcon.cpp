@@ -117,6 +117,10 @@ GUI_TrayIcon::~GUI_TrayIcon() {
 }
 
 
+void GUI_TrayIcon::language_changed(){
+  //  this->ui->retranslateUi(this);
+}
+
 void GUI_TrayIcon::change_skin(QString stylesheet){
     this->m_trayContextMenu->setStyleSheet(stylesheet);
 }

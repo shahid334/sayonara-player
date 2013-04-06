@@ -218,6 +218,9 @@ bool CDatabaseConnector::load_settings(){
 	int style = load_setting_int(SET_PLAYER_STYLE);
 	settings->setPlayerStyle(style);
 
+    QString language = load_setting_string(SET_PLAYER_LANGUAGE, "sayonara_lang_en");
+    settings->setLanguage(language);
+
 	/* show notifications */
     bool show_notifications = load_setting_bool(SET_NOTIFICATION_SHOW, true);
 	settings->setShowNotifications(show_notifications);
@@ -380,6 +383,10 @@ bool CDatabaseConnector::store_settings(){
 		store_setting(SET_PLAYER_STYLE, style);
 	else
 		store_setting(SET_PLAYER_STYLE, 0);
+
+
+    QString language = storage->getLanguage();
+    store_setting(SET_PLAYER_LANGUAGE, language);
 
 	bool show_notifications = storage->getShowNotification();
 	store_setting(SET_NOTIFICATION_SHOW, show_notifications);

@@ -25,6 +25,7 @@
 
 #include <QMenu>
 #include <QAction>
+#include <QEvent>
 
 #define ENTRY_INFO (1 << 0)
 #define ENTRY_EDIT (1 << 1)
@@ -67,6 +68,9 @@ private:
     QAction*            _play_next_action;
 
     void clear_actions();
+
+protected:
+    void changeEvent(QEvent* e);
     
 };
 

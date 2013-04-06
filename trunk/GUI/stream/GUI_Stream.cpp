@@ -70,6 +70,10 @@ void GUI_Stream::changeSkin(bool dark){
 
 }
 
+void GUI_Stream::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 
 void GUI_Stream::listen_clicked(){
 

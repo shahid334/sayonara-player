@@ -35,6 +35,7 @@ ContextMenu::ContextMenu(QWidget *parent) :
     _remove_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Remove"), this);
     _delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Delete"), this);
     _play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), tr("Play next"), this);
+
 }
 
 
@@ -47,6 +48,21 @@ ContextMenu::~ContextMenu(){
     delete _remove_action;
     delete _delete_action;
     delete _play_next_action;
+}
+
+void ContextMenu::changeEvent(QEvent* e){
+    if (e->type() == QEvent::LanguageChange) {
+        _info_action->setText(tr("Info"));
+        _edit_action->setText(tr("Edit"));
+        _remove_action->setText(tr("Remove"));
+        _delete_action->setText(tr("Delete"));
+        _play_next_action->setText(tr("Play next"));
+        return;
+    }
+
+    QMenu::changeEvent(e);
+
+
 }
 
 

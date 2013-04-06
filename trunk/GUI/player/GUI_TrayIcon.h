@@ -68,6 +68,7 @@ public slots:
     void setMute(bool mute);
     void change_skin(QString stylesheet);
     void stop();
+    void language_changed();
 
 
 signals:

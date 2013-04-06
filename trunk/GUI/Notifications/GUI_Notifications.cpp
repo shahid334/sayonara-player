@@ -105,3 +105,8 @@ void GUI_Notifications::ok_clicked(){
 void GUI_Notifications::change_skin(bool dark){
 
 }
+
+void GUI_Notifications::language_changed(){
+    this->ui->retranslateUi(this);
+}
+

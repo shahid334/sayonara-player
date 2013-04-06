@@ -94,6 +94,10 @@ GUI_Equalizer::~GUI_Equalizer() {
 }
 
 
+void GUI_Equalizer::language_changed(){
+    _ui->retranslateUi(this);
+}
+
 void GUI_Equalizer::changeSkin(bool dark){
 
     _dark = dark;

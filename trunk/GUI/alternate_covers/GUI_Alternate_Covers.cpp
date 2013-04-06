@@ -91,6 +91,10 @@ void GUI_Alternate_Covers::changeSkin(bool dark){
 
 }
 
+void GUI_Alternate_Covers::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
 
     ui->pb_progress->setTextVisible(false);

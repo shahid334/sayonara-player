@@ -64,6 +64,7 @@ public:
 	public slots:
         void start(QString, QString);
         void changeSkin(bool dark);
+        void language_changed();
 
 	private slots:
 		void save_button_pressed();

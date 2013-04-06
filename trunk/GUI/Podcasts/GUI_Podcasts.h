@@ -52,6 +52,7 @@ private slots:
 public:
     GUI_Podcasts(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
     virtual ~GUI_Podcasts();
+    void language_changed();
 
 
 

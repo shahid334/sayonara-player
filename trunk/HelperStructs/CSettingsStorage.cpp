@@ -496,6 +496,14 @@ bool CSettingsStorage::getLibLiveSheach(){
 }
 
 
+QString CSettingsStorage::getLanguage(){
+    return m_language;
+}
+
+void CSettingsStorage::setLanguage(QString lang){
+    m_language = lang;
+    _sth_changed = true;
+}
 
 
 

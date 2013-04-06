@@ -54,6 +54,11 @@ void GUI_StreamRecorder::changeSkin(bool dark){
 
 }
 
+void GUI_StreamRecorder::language_changed(){
+    if(!ui) return;
+    this->ui->retranslateUi(this);
+}
+
 
 void GUI_StreamRecorder::sl_cb_activate_toggled(bool b){
 	_is_active = b;

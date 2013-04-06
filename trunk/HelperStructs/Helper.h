@@ -44,8 +44,6 @@
 
 using namespace std;
 
-
-
 namespace Helper{
 
     QString cvtMsecs2TitleLengthString(long int msec, bool colon=true, bool show_days=true);

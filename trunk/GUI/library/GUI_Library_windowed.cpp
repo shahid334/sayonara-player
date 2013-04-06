@@ -61,6 +61,7 @@
 #include <QCursor>
 #include <QDebug>
 #include <QPoint>
+#include <QEvent>
 #include <QMouseEvent>
 #include <QPixmap>
 #include <QMessageBox>
@@ -69,6 +70,7 @@
 #include <QScrollBar>
 #include <QItemSelectionModel>
 #include <QHeaderView>
+
 
 
 
@@ -84,6 +86,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	this->ui = new Ui::Library_windowed();
 	this->ui->setupUi(this);
+
 
     _settings = CSettingsStorage::getInstance();
 
@@ -238,6 +241,11 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 	delete _lib_info_dialog;
 }
 
+
+void GUI_Library_windowed::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 void GUI_Library_windowed::set_info_dialog(GUI_InfoDialog *dialog){
     _info_dialog = dialog;
 }
@@ -246,6 +254,7 @@ void GUI_Library_windowed::show_only_tracks(bool b){
 
 	this->ui->lv_artist->setVisible(!b);
 	this->ui->lv_album->setVisible(!b);
+    this->ui->retranslateUi(this);
 }
 
 

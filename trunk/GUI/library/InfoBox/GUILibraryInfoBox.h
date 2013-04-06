@@ -49,6 +49,7 @@ public slots:
 	void psl_refresh();
 	void lfm_data_available();
     void change_skin(bool);
+    void language_changed();
 
 private:
 	Ui::Library_Info_Box* 	ui;

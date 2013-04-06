@@ -127,6 +127,10 @@ GUI_Playlist::~GUI_Playlist() {
 }
 
 
+void GUI_Playlist::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 // initialize gui
 // maybe the button state (pressed/unpressed) should be loaded from db here
 void GUI_Playlist::initGUI(){

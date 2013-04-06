@@ -36,6 +36,7 @@ public:
 signals:
     
 public slots:
+    void language_changed();
 
 private slots:
     void cb_toggled(bool);

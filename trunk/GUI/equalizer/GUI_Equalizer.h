@@ -72,6 +72,7 @@ public:
 		void fill_eq_presets(const vector<EQ_Setting>&);
 		void fill_available_equalizers(const QStringList&);
         void changeSkin(bool);
+        void language_changed();
 
 	private:
         Ui::GUI_Equalizer* _ui;

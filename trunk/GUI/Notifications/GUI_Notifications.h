@@ -42,6 +42,7 @@ signals:
 
 public slots:
     void change_skin(bool dark);
+    void language_changed();
 
 private slots:
     void ok_clicked();

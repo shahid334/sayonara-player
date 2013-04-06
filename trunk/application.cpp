@@ -71,10 +71,11 @@ bool Application::is_initialized(){
 
 
 
-Application::Application(QApplication* qapp, int n_files, QObject *parent) : QObject(parent)
+Application::Application(QApplication* qapp, int n_files, QTranslator* translator, QObject *parent) : QObject(parent)
 {
 
     app                = qapp;
+    _translator        = translator;
 
     set                = CSettingsStorage::getInstance();
     _setting_thread    = new SettingsThread();
@@ -86,7 +87,7 @@ Application::Application(QApplication* qapp, int n_files, QObject *parent) : QOb
 
 
 
-    player              = new GUI_SimplePlayer();
+    player              = new GUI_SimplePlayer(translator);
 
 
     playlist            = new Playlist();
@@ -383,6 +384,8 @@ void Application::init_connections(){
     CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));
 
 
+
+
     bool is_socket_active = set->getSocketActivated();
     if(is_socket_active){
         CONNECT (remote_socket, sig_play(),		playlist,			psl_play());
@@ -395,9 +398,28 @@ void Application::init_connections(){
         remote_socket->start();
     }
 
+    connect_languages();
+
     qDebug() << "connections done";
 }
 
+
+void Application::connect_languages(){
+     CONNECT (player, sig_language_changed(),	ui_playlist_chooser, 	language_changed());
+     CONNECT (player, sig_language_changed(),	ui_lastfm,              language_changed());
+     CONNECT (player, sig_language_changed(),	ui_stream,              language_changed());
+     CONNECT (player, sig_language_changed(),	ui_podcasts,            language_changed());
+     CONNECT (player, sig_language_changed(),	ui_eq,                  language_changed());
+
+     CONNECT (player, sig_language_changed(),	ui_lfm_radio,           language_changed());
+     CONNECT (player, sig_language_changed(),	ui_stream_rec,          language_changed());
+     CONNECT (player, sig_language_changed(),	ui_id3_editor,          language_changed());
+
+     CONNECT (player, sig_language_changed(),	ui_info_dialog,         language_changed());
+     CONNECT (player, sig_language_changed(),	ui_library,             language_changed());
+     CONNECT (player, sig_language_changed(),	ui_playlist,            language_changed());
+     CONNECT (player, sig_language_changed(),	ui_socket_setup,        language_changed());
+}
 
 void Application::setFiles2Play(QStringList filelist){
 

@@ -72,11 +72,11 @@ void signal_handler(int sig){
 #endif
 
 
-GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
+GUI_SimplePlayer::GUI_SimplePlayer(QTranslator* translator, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::SimplePlayer) {
 	ui->setupUi(this);
 	initGUI();
-
+    m_translator = translator;
     m_settings = CSettingsStorage::getInstance();
 
     ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
@@ -92,6 +92,7 @@ GUI_SimplePlayer::GUI_SimplePlayer(QWidget *parent) :
 
     ui_notifications = new GUI_Notifications(this);
     ui_startup_dialog = new GUI_Startup_Dialog(this);
+    ui_language_chooser= new GUI_LanguageChooser(this);
 
 	m_skinSuffix = "";
 	m_class_name = "Player";
@@ -153,6 +154,16 @@ GUI_SimplePlayer::~GUI_SimplePlayer() {
 	delete ui;
 }
 
+
+void GUI_SimplePlayer::language_changed(QString language){
+
+
+    m_translator->load(language, Helper::getSharePath() + "/translations/");
+
+
+    this->ui->retranslateUi(this);
+    emit sig_language_changed();
+}
 
 void GUI_SimplePlayer::initGUI() {
 
@@ -229,6 +240,8 @@ void GUI_SimplePlayer::setupConnections(){
 
 
 	// preferencesF
+    connect(ui->action_Language, SIGNAL(triggered(bool)), this,
+            SLOT(sl_action_language_toggled(bool)));
 	connect(ui->action_lastFM, SIGNAL(triggered(bool)), this,
 			SLOT(lastFMClicked(bool)));
 	connect(ui->action_setLibPath, SIGNAL(triggered(bool)), this,
@@ -297,6 +310,10 @@ void GUI_SimplePlayer::setupConnections(){
     // notifications
     connect(ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
             this, SLOT(notification_changed(bool,int)));
+
+    // language chooser
+    connect(ui_language_chooser, SIGNAL(sig_language_changed(QString)),
+            this, SLOT(language_changed(QString)));
 
 
 
@@ -714,10 +731,8 @@ void GUI_SimplePlayer::ui_loaded(){
     #ifdef Q_OS_UNIX
 		obj_ref = this;
 
-		for(int i=0; i<60; i++){
+        signal(SIGWINCH, signal_handler);
 
-		signal(i, signal_handler);
-		}
 
 	#endif
 

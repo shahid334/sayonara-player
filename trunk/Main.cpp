@@ -38,6 +38,7 @@
 #include <QFile>
 #include <QString>
 #include <QStringList>
+#include <QTranslator>
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -88,6 +89,7 @@ void printHelp(){
 
 
 int main(int argc, char *argv[]){
+
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
     db->init_settings_storage();
     CSettingsStorage* settings = CSettingsStorage::getInstance();
@@ -97,6 +99,7 @@ int main(int argc, char *argv[]){
 	qDebug() << "Database Error: Could not load settings";
 	return 0;
     }
+
 
 #ifdef Q_OS_UNIX
 	if(settings->getAllowOnlyOneInstance()){
@@ -112,11 +115,13 @@ int main(int argc, char *argv[]){
 	}
 #endif
 
+
    	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
-		QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
+        QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 	}
 
-		QApplication app (argc, argv);
+        QApplication app (argc, argv);
+
             app.setApplicationName("Sayonara");
             app.setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
@@ -127,10 +132,17 @@ int main(int argc, char *argv[]){
 			params.push_back(param);
 		}
 
-        Application application(&app, params.size());
+        QString language = CSettingsStorage::getInstance()->getLanguage();
+        QTranslator translator;
+        translator.load(language, Helper::getSharePath() + "/translations");
+        app.installTranslator(&translator);
+
+
+        Application application(&app, params.size(), &translator);
 		if(!application.is_initialized()) return 0;
 		application.setFiles2Play(params);
 
+        app.installTranslator(&translator);
         app.exec();
 
         return 0;

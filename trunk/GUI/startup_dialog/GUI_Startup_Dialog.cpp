@@ -51,6 +51,9 @@ GUI_Startup_Dialog::~GUI_Startup_Dialog(){
 
 }
 
+void GUI_Startup_Dialog::language_changed(){
+    this->ui->retranslateUi(this);
+}
 
 void GUI_Startup_Dialog::cb_toggled(bool b){
     Q_UNUSED(b);

@@ -33,6 +33,7 @@ public:
     GUI_Target_Playlist_Dialog(QWidget *parent = 0);
     virtual ~GUI_Target_Playlist_Dialog();
     void change_skin(bool dark);
+    void language_changed();
     
 signals:
     void sig_target_chosen(const QString&, bool);

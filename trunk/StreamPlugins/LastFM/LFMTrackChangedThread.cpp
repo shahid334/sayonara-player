@@ -392,7 +392,8 @@ bool LFMTrackChangedThread::get_artist_info(QString artist){
 		return false;
 	}
 
-	_artist_data["LastFM plays"] = Helper::easy_tag_finder(QString("artist.stats.userplaycount"), retval);
+    QString lfm_playcount = tr("Last.fm plays");
+    _artist_data[lfm_playcount] = Helper::easy_tag_finder(QString("artist.stats.userplaycount"), retval);
 
 	return true;
 
@@ -418,8 +419,11 @@ bool LFMTrackChangedThread::get_album_info(QString artist, QString album){
 		return false;
 	}
 
-	_album_data["Release Date"] = Helper::easy_tag_finder(QString("album.releasedate"), retval);
-	_album_data["LastFM plays"] = Helper::easy_tag_finder(QString("album.userplaycount"), retval);
+    QString release_date = tr("Release Date");
+    QString lfm_playcount = tr("Last.fm plays");
+
+    _album_data[release_date] = Helper::easy_tag_finder(QString("album.releasedate"), retval);
+    _album_data[lfm_playcount] = Helper::easy_tag_finder(QString("album.userplaycount"), retval);
 
 	return true;
 }

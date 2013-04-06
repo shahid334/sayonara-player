@@ -172,6 +172,7 @@ void MyListView::keyPressEvent(QKeyEvent* event){
 }
 
 void MyListView::init_rc_menu(){
+
     _rc_menu = new ContextMenu(this);
 
     connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));

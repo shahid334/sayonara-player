@@ -46,11 +46,15 @@ void GUI_Target_Playlist_Dialog::change_skin(bool dark){
 
 }
 
+void GUI_Target_Playlist_Dialog::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 
 
 void GUI_Target_Playlist_Dialog::search_button_clicked(){
     QString target_filename = QFileDialog::getSaveFileName(this,
-                                                           "Choose target file",
+                                                           tr("Choose target file"),
                                                            CSettingsStorage::getInstance()->getLibraryPath(),
                                                            "*.m3u");
 

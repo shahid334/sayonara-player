@@ -48,6 +48,7 @@ private slots:
 
 public slots:
     void changeSkin(bool);
+    void language_changed();
 
 
 public:

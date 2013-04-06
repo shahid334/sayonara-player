@@ -85,11 +85,12 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 
 
+void GUI_PlaylistChooser::language_changed(){
+    this->ui->retranslateUi(this);
+}
+
 void GUI_PlaylistChooser::changeSkin(bool dark){
-
     _dark = dark;
-
-
 }
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){

@@ -259,6 +259,9 @@ void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
     emit sig_show_stream_rec();
 }
 
+
+
+
 // prvt slot
 void GUI_SimplePlayer::lastFMClicked(bool b) {
 
@@ -269,6 +272,11 @@ void GUI_SimplePlayer::lastFMClicked(bool b) {
 
 void GUI_SimplePlayer::sl_live_search(bool b){
    m_settings->setLibLiveSearch(b);
+}
+
+void GUI_SimplePlayer::sl_action_language_toggled(bool b){
+    Q_UNUSED(b);
+    ui_language_chooser->show();
 }
 
 /** PREFERENCES END **/

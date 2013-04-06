@@ -38,6 +38,7 @@ class GUI_SocketSetup: public QDialog, private Ui::SocketSetupDialog {
 
 public slots:
     void show_win();
+    void language_changed();
 
 private slots:
 	void _sl_start_changed(int);

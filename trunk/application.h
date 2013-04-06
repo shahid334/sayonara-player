@@ -31,6 +31,7 @@
 #include <QApplication>
 #include <QStringList>
 #include <QMainWindow>
+#include <QTranslator>
 
 #include "GUI/player/GUI_Simpleplayer.h"
 #include "GUI/playlist/GUI_Playlist.h"
@@ -71,7 +72,7 @@ class Application : public QObject
     Q_OBJECT
 
 public:
-    Application( QApplication* qapp, int n_files, QObject *parent = 0);
+    Application( QApplication* qapp, int n_files, QTranslator* translator, QObject *parent = 0);
     virtual ~Application();
     
 signals:
@@ -81,14 +82,14 @@ public slots:
 private:
     GUI_SimplePlayer* 		player;
     GUI_PlaylistChooser*	ui_playlist_chooser;
-    Playlists*			playlists;
-    Playlist* 			playlist;
-    CLibraryBase* 		library;
-    LastFM*			lastfm;
+    Playlists*              playlists;
+    Playlist*               playlist;
+    CLibraryBase*           library;
+    LastFM*                 lastfm;
 
-    GUI_LastFM*			ui_lastfm;
-    GUI_Stream	*		ui_stream;
-    GUI_Podcasts*               ui_podcasts;
+    GUI_LastFM*             ui_lastfm;
+    GUI_Stream	*           ui_stream;
+    GUI_Podcasts*           ui_podcasts;
     GUI_Equalizer*		ui_eq;
     GUI_LFMRadioWidget*		ui_lfm_radio;
     PlayerPluginHandler*	_pph;
@@ -111,10 +112,12 @@ private:
     QApplication*           app;
 
     bool					_initialized;
+    QTranslator*        _translator;
 
 
 
     void init_connections();
+    void connect_languages();
 
 public:
     void setFiles2Play(QStringList filelist);

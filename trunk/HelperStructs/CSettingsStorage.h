@@ -48,6 +48,7 @@
 #define SET_LIB_LIVE_SEARCH "lib_live_search"
 #define SET_LIB_SORTING "lib_sortings"
 
+#define SET_PLAYER_LANGUAGE "player_language"
 #define SET_PLAYER_STYLE "player_style"
 #define SET_PLAYER_SIZE "player_size"
 #define SET_PLAYER_FULLSCREEN "player_fullscreen"
@@ -204,6 +205,7 @@ private:
 
     /* style */
     int	m_style;
+    QString m_language;
 
     /* shown plugin in player */
     QString m_shown_plugin;
@@ -383,6 +385,9 @@ public:
 
 	bool getAllowOnlyOneInstance();
 	void setAllowOnlyOneInstance(bool b);
+
+    QString getLanguage();
+    void setLanguage(QString lang);
 
 	friend class SettingsThread;
 };

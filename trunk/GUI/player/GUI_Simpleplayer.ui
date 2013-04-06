@@ -917,6 +917,8 @@
     <property name="title">
      <string>Preferences</string>
     </property>
+    <addaction name="action_Language"/>
+    <addaction name="separator"/>
     <addaction name="action_setLibPath"/>
     <addaction name="action_lastFM"/>
     <addaction name="action_streamrecorder"/>
@@ -1198,6 +1200,11 @@
    </property>
    <property name="text">
     <string>Library live search</string>
+   </property>
+  </action>
+  <action name="action_Language">
+   <property name="text">
+    <string>Language</string>
    </property>
   </action>
  </widget>

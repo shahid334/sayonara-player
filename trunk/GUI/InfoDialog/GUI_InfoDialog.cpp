@@ -146,6 +146,9 @@ void GUI_InfoDialog::changeSkin(bool dark){
     _dark = dark;
 }
 
+void GUI_InfoDialog::language_changed(){
+    this->ui->retranslateUi(this);
+}
 
 void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
 
@@ -206,7 +209,7 @@ void GUI_InfoDialog::psl_corrected_data_available(const QString& target_class){
 
 	_lfm_thread->fetch_corrections(md, loved, corrected);
 	QString text;
-	text = BOLD("Loved: ") + (loved ? tr("yes") : tr("no"));
+    text = BOLD(tr("Loved: ")) + (loved ? tr("yes") : tr("no"));
 	this->ui->lab_playcount->setText(text);
 }
 

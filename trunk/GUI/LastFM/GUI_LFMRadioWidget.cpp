@@ -70,6 +70,10 @@ void GUI_LFMRadioWidget::changeSkin(bool dark){
 
 }
 
+void GUI_LFMRadioWidget::language_changed(){
+    this->_ui->retranslateUi(this);
+}
+
 void GUI_LFMRadioWidget::start_listen(){
 
 

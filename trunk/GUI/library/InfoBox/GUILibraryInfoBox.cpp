@@ -58,6 +58,11 @@ void GUI_Library_Info_Box::change_skin(bool dark){
 
 }
 
+void GUI_Library_Info_Box::language_changed(){
+    if(!ui) return;
+    this->ui->retranslateUi(this);
+}
+
 
 void GUI_Library_Info_Box::psl_refresh(){
 
