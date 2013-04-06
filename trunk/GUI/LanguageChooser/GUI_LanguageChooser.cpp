@@ -59,17 +59,18 @@ void GUI_LanguageChooser::showEvent(QShowEvent * event){
     foreach(QString file, files){
         int idx = file.lastIndexOf(QDir::separator());
         QString name = file.right(file.size() - idx);
-        qDebug() << "Name = " << name;
 
         name = name.left(name.size() - 3);
 
         QString two = name.right(2);
         QString title = _map.value(two);
+        QString flag = Helper::getSharePath() + "/translations/" + two + ".png";
 
         if(title.size() > 0)
-            ui->combo_lang->addItem(title, name);
+            ui->combo_lang->addItem(QIcon(flag), title, name);
         else
             ui->combo_lang->addItem(name, name);
+
 
         if(name.compare(lang_setting, Qt::CaseInsensitive) == 0) tgt_idx = i;
         i++;

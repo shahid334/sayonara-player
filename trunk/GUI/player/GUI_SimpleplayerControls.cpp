@@ -57,10 +57,21 @@ void GUI_SimplePlayer::stopClicked(bool b) {
 	m_trayIcon->stop();
 	m_playing = false;
 
-	ui->title->setText("Sayonara Player");
-	ui->rating->setText("");
-	ui->album->setText("Written by Lucio Carreras");
-    ui->artist->setText(m_settings->getVersion());
+
+    ui->lab_title->hide();
+    ui->lab_sayonara->show();
+
+    ui->lab_artist->hide();
+    ui->lab_writtenby->show();
+
+    ui->lab_album->hide();
+    ui->lab_version->show();
+
+    ui->lab_rating->hide();
+    ui->lab_copyright->show();
+
+
+
 	this->setWindowTitle("Sayonara");
     ui->songProgress->setValue(0);
     ui->curTime->setText("0:00");

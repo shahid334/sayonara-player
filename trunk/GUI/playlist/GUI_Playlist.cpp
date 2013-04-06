@@ -126,9 +126,14 @@ GUI_Playlist::~GUI_Playlist() {
 	delete ui;
 }
 
+void GUI_Playlist::changeEvent(QEvent* e){
+    e->accept();
+}
 
 void GUI_Playlist::language_changed(){
+
     this->ui->retranslateUi(this);
+    set_total_time_label();
 }
 
 // initialize gui
@@ -160,11 +165,11 @@ void GUI_Playlist::check_dynamic_play_button(){
 	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
 
 	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
-		ui->btn_dynamic->setToolTip("Please set library path first");
+        ui->btn_dynamic->setToolTip(tr("Please set library path first"));
 	}
 
 	else{
-		ui->btn_dynamic->setToolTip("Dynamic playing");
+        ui->btn_dynamic->setToolTip(tr("Dynamic playing"));
 	}
 }
 
@@ -177,22 +182,22 @@ void GUI_Playlist::metadata_dropped(const MetaDataList& v_md, int row){
 void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int radio_mode){
 
     ui->listView->fill(v_metadata, cur_play_idx);
-
+    _total_msecs = 0;
     _radio_active = radio_mode;
     set_radio_active(radio_mode);
 
-    qint64 total_msecs = 0;
     foreach(MetaData md, v_metadata){
-        total_msecs += md.length_ms;
+        _total_msecs += md.length_ms;
 	}
 
-    set_total_time_label(total_msecs);
+    set_total_time_label();
 }
 
 // private SLOT: clear button pressed
 void GUI_Playlist::clear_playlist_slot(){
 
-    ui->lab_totalTime->setText("Playlist empty");
+    _total_msecs = 0;
+    ui->lab_totalTime->setText(tr("Playlist empty"));
 	ui->btn_import->setVisible(false);
     ui->listView->clear();
 
@@ -271,12 +276,13 @@ void GUI_Playlist::dropEvent(QDropEvent* event){
 
 
 
-void GUI_Playlist::set_total_time_label(qint64 total_msecs){
+void GUI_Playlist::set_total_time_label(){
 
     QString text = "";
 
 	if(_radio_active == RADIO_STATION){
-		ui->lab_totalTime->setText("Radio");
+
+        ui->lab_totalTime->setText(tr("Radio"));
 		return;
 	}
 
@@ -285,10 +291,10 @@ void GUI_Playlist::set_total_time_label(qint64 total_msecs){
     int n_rows = ui->listView->get_num_rows();
     QString playlist_string = text + QString::number(n_rows);
 
-	if(n_rows == 1)	playlist_string += " Track - ";
-	else playlist_string += " Tracks - ";
+    if(n_rows == 1)	playlist_string += tr(" Track - ");
+    else playlist_string += tr(" Tracks - ");
 
-	playlist_string += Helper::cvtMsecs2TitleLengthString(total_msecs, false);
+    playlist_string += Helper::cvtMsecs2TitleLengthString(_total_msecs, false);
 
 	ui->lab_totalTime->setText(playlist_string);
 }

@@ -54,7 +54,7 @@ class QCloseEvent;
 
 
 
-class GUI_SimplePlayer : public QMainWindow, private Ui::SimplePlayer
+class GUI_SimplePlayer : public QMainWindow, private Ui::Sayonara
 {
     Q_OBJECT
 public:
@@ -64,6 +64,7 @@ public:
 public slots:
 
     void cover_changed(QString, QString);
+    void show_cur_song();
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
@@ -211,7 +212,7 @@ protected:
 
 private:
 
-    Ui::SimplePlayer*       ui;
+    Ui::Sayonara*       ui;
 
     GUI_Playlist*           ui_playlist;
     GUI_Library_windowed*   ui_library;

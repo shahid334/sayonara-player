@@ -73,7 +73,7 @@ void signal_handler(int sig){
 
 
 GUI_SimplePlayer::GUI_SimplePlayer(QTranslator* translator, QWidget *parent) :
-    QMainWindow(parent), ui(new Ui::SimplePlayer) {
+    QMainWindow(parent), ui(new Ui::Sayonara) {
 	ui->setupUi(this);
 	initGUI();
     m_translator = translator;
@@ -81,8 +81,17 @@ GUI_SimplePlayer::GUI_SimplePlayer(QTranslator* translator, QWidget *parent) :
 
     ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
-    ui->artist->setText(m_settings->getVersion());
-	ui->album->setText(tr("Written by") + " Lucio Carreras");
+    ui->lab_artist->hide();
+    ui->lab_title->hide();
+    ui->lab_rating->hide();
+    ui->lab_album->hide();
+
+    ui->lab_sayonara->setText(tr("Sayonara Player"));
+    ui->lab_version->setText(m_settings->getVersion());
+    ui->lab_writtenby->setText(tr("Written by") + " Lucio Carreras");
+    ui->lab_copyright->setText(tr("Copyright "));
+
+
 
     m_metadata_available = false;
 	m_playing = false;
@@ -163,6 +172,7 @@ void GUI_SimplePlayer::language_changed(QString language){
 
     this->ui->retranslateUi(this);
     emit sig_language_changed();
+
 }
 
 void GUI_SimplePlayer::initGUI() {
@@ -332,54 +342,66 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 
     setCurrentPosition(pos_sec);
 
-	// sometimes ignore the date
-	if (md.year < 1000 || md.album.contains(QString::number(md.year)))
-        ui->album->setText(Helper::get_album_w_disc(md));
+    ui->lab_sayonara->hide();
+    ui->lab_title->show();
 
-	else
-		ui->album->setText(
+    ui->lab_version->hide();
+    ui->lab_artist->show();
+
+    ui->lab_writtenby->hide();
+    ui->lab_album->show();
+
+    ui->lab_copyright->hide();
+    ui->lab_rating->show();
+
+    // sometimes ignore the date
+    if (md.year < 1000 || md.album.contains(QString::number(md.year)))
+        ui->lab_album->setText(Helper::get_album_w_disc(md));
+
+    else
+        ui->lab_album->setText(
                 Helper::get_album_w_disc(md) + " (" + QString::number(md.year) + ")");
 
-	ui->artist->setText(md.artist);
-	ui->title->setText(md.title);
+    ui->lab_artist->setText(md.artist);
+    ui->lab_title->setText(md.title);
 
 
     m_trayIcon->songChangedMessage(md);
-	/*m_trayIcon->setToolTip(QString("\"") +
-			md.title +
-			"\" by \"" +
-			md.artist +
-			QString("\""));*/
+    /*m_trayIcon->setToolTip(QString("\"") +
+            md.title +
+            "\" by \"" +
+            md.artist +
+            QString("\""));*/
 
-	QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
-	ui->maxTime->setText(lengthString);
+    QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
+    ui->maxTime->setText(lengthString);
 
     if(m_playing)
         ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
     else
         ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-	if (md.bitrate < 96000)
-		tmp += "*";
-	else if (md.bitrate < 128000)
-		tmp += "**";
-	else if (md.bitrate < 160000)
-		tmp += "***";
-	else if (md.bitrate < 256000)
-		tmp += "****";
-	else
-		tmp += "*****";
-	tmp += "</font>";
+    QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
+    if (md.bitrate < 96000)
+        tmp += "*";
+    else if (md.bitrate < 128000)
+        tmp += "**";
+    else if (md.bitrate < 160000)
+        tmp += "***";
+    else if (md.bitrate < 256000)
+        tmp += "****";
+    else
+        tmp += "*****";
+    tmp += "</font>";
 
-	ui->rating->setText(tmp);
-	ui->rating->setToolTip(
-			QString("<font color=\"#000000\">") +
-			QString::number(md.bitrate / 1000) +
-			QString(" kBit/s") +
-			QString("</font>"));
+    ui->lab_rating->setText(tmp);
+    ui->lab_rating->setToolTip(
+            QString("<font color=\"#000000\">") +
+            QString::number(md.bitrate / 1000) +
+            QString(" kBit/s") +
+            QString("</font>"));
 
-	this->setWindowTitle(QString("Sayonara - ") + md.title);
+    this->setWindowTitle(QString("Sayonara - ") + md.title);
 
 	QString cover_path = Helper::get_cover_path(md.artist, md.album);
 	if(! QFile::exists(cover_path) ){
@@ -400,6 +422,11 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 	setRadioMode(md.radio_mode);
     m_metadata_available = true;
 	this->repaint();
+}
+
+void GUI_SimplePlayer::show_cur_song(){
+
+
 }
 
 
@@ -423,14 +450,14 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 	ui->btn_correct->setVisible(false);
 
 	if (m_metadata.year < 1000 || m_metadata.album.contains(QString::number(m_metadata.year)))
-		ui->album->setText(m_metadata.album);
+        ui->lab_album->setText(m_metadata.album);
 
 	else
-		ui->album->setText(
+        ui->lab_album->setText(
 				m_metadata.album + " (" + QString::number(m_metadata.year) + ")");
 
-	ui->artist->setText(m_metadata.artist);
-	ui->title->setText(m_metadata.title);
+    ui->lab_artist->setText(m_metadata.artist);
+    ui->lab_title->setText(m_metadata.title);
 
     m_trayIcon->songChangedMessage(m_metadata);
 
@@ -479,7 +506,7 @@ void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool cor
     							get_lfm_corrections);
 
 	if(loved){
-		ui->title->setText(ui->title->text());
+        ui->lab_title->setText(ui->lab_title->text());
 	}
 
 	this->repaint();

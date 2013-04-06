@@ -193,6 +193,16 @@ SET(ICONS
         icons/playlist.png
 )
 
+SET(TRANSLATION_ICONS
+    icons/de.png
+    icons/en.png
+    icons/ru.png
+    icons/ua.png
+    icons/fr.png
+    icons/it.png
+    icons/es.png
+)
+
 
 QT4_WRAP_UI(FORMS_HEADERS ${FORMS})
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
@@ -200,6 +210,7 @@ ADD_LIBRARY(sayonara_gui ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)
+INSTALL(FILES ${TRANSLATION_ICONS} DESTINATION share/sayonara/translations)
 INSTALL(FILES "icons/sayonara.png" DESTINATION share/icons)
 INSTALL(FILES "icons/sayonara.png" DESTINATION share/pixmaps)
 INSTALL(FILES "standard.css" DESTINATION share/sayonara)

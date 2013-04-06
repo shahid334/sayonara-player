@@ -203,105 +203,65 @@
     <name>GUI_Equalizer</name>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="484"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="504"/>
         <source>Form</source>
         <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="77"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="486"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="506"/>
         <source>Save as custom</source>
         <translation>Als Benutzerdefiniert speichern</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="115"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="488"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="508"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="139"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="164"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="189"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="214"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="239"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="264"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="289"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="314"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="339"/>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="364"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="489"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="490"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="491"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="492"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="493"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="494"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="495"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="496"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="497"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="498"/>
         <source>0.0</source>
-        <translation>0.0</translation>
+        <translation type="obsolete">0.0</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="731"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="499"/>
         <source>29</source>
-        <translation>29</translation>
+        <translation type="obsolete">29</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="753"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="500"/>
         <source>59</source>
-        <translation>59</translation>
+        <translation type="obsolete">59</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="775"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="501"/>
         <source>119</source>
-        <translation>119</translation>
+        <translation type="obsolete">119</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="797"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="502"/>
         <source>237</source>
-        <translation>237</translation>
+        <translation type="obsolete">237</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="819"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="503"/>
         <source>474</source>
-        <translation>474</translation>
+        <translation type="obsolete">474</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="841"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="504"/>
         <source>947</source>
-        <translation>947</translation>
+        <translation type="obsolete">947</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="863"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="505"/>
         <source>1.9k</source>
-        <translation>1.9k</translation>
+        <translation type="obsolete">1.9k</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="885"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="506"/>
         <source>3.8k</source>
-        <translation>3.8k</translation>
+        <translation type="obsolete">3.8k</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="907"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="507"/>
         <source>7.5k</source>
-        <translation>7.5k</translation>
+        <translation type="obsolete">7.5k</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="929"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="508"/>
         <source>15k</source>
-        <translation>15k</translation>
+        <translation type="obsolete">15k</translation>
     </message>
 </context>
 <context>
@@ -731,6 +691,39 @@
     </message>
 </context>
 <context>
+    <name>GUI_Playlist</name>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="168"/>
+        <source>Please set library path first</source>
+        <translation>Bitte Pfad für Musiksammlung angeben</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="172"/>
+        <source>Dynamic playing</source>
+        <translation>Dynamische Abspielliste</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="200"/>
+        <source>Playlist empty</source>
+        <translation>Wiedergabeliste ist leer</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="285"/>
+        <source>Radio</source>
+        <translation>Radio</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="294"/>
+        <source> Track - </source>
+        <translation> Titel - </translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="295"/>
+        <source> Tracks - </source>
+        <translation> Titel - </translation>
+    </message>
+</context>
+<context>
     <name>GUI_PlaylistChooser</name>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="26"/>
@@ -852,32 +845,42 @@
 <context>
     <name>GUI_SimplePlayer</name>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="85"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="89"/>
+        <source>Sayonara Player</source>
+        <translation>Sayonara Player</translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="91"/>
         <source>Written by</source>
         <translation>Von</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="170"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="92"/>
+        <source>Copyright </source>
+        <translation>Copyright</translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="180"/>
         <source>Ctrl</source>
         <translation>Strg</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="181"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="191"/>
         <source>Correct ID3 Tag</source>
         <translation>Korrigere ID3 Daten</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="183"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="193"/>
         <source>&amp;Library</source>
         <translation>&amp;Sammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="449"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="476"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="449"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="476"/>
         <source>Cannot login to Last.fm</source>
         <translation>Last.fm Anmeldung fehlgeschlagen</translation>
     </message>
@@ -1680,75 +1683,73 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="222"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="230"/>
         <source>Form</source>
         <translation>Form</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="77"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="227"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="387"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="264"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation>Importiere neue (orangene) Titel in die Sammlung ohne kopieren</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="114"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="230"/>
         <source>Total Time: 0m 0s</source>
-        <translation>Gesamtzeit: 0m 0s</translation>
+        <translation type="obsolete">Gesamtzeit: 0m 0s</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="187"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="232"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="421"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
         <source>Show numbers in playlist</source>
         <translation>Zeige Nummern in der Abspielliste</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="224"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="236"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="77"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="235"/>
         <source>Clear Playlist</source>
         <translation>Lösche Abspielliste</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="264"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="240"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="152"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="239"/>
         <source>Repeat 1</source>
         <translation>Wiederhole 1</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="280"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="324"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="368"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="412"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="456"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="243"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="248"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="253"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="258"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="168"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="212"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="256"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="300"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="242"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="247"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="252"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="257"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="262"/>
         <source>Enter</source>
         <translation>Enter</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="308"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="245"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="196"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="244"/>
         <source>Repeat All</source>
         <translation>Wiederhole alle</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="352"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="250"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="240"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
         <source>Shuffle</source>
         <translation>Zufallsmodus</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="396"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="255"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="284"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
         <source>Append when adding new tracks</source>
         <translation>Füge neue Titel unten an</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="440"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="260"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="328"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
         <source>Dynamic playing</source>
         <translation>Dynamische Abspielliste</translation>
     </message>
@@ -1767,264 +1768,429 @@ Bitte ein anderes Verzeichnis wählen</translation>
     </message>
 </context>
 <context>
-    <name>SimplePlayer</name>
+    <name>Sayonara</name>
     <message>
         <location filename="../GUI/player/GUI_Simpleplayer.ui" line="29"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="632"/>
-        <source>MainWindow</source>
-        <translation>HauptFenster</translation>
-    </message>
-    <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="242"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="675"/>
-        <source>Written by Lucio Carreras</source>
-        <translation>Von Lucio Carreras</translation>
-    </message>
-    <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="477"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="681"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="83"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="690"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="730"/>
         <source>Sayonara Player</source>
         <translation>Sayonara Player</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="702"/>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="752"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="684"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="685"/>
-        <source>00:00</source>
-        <translation>00:00</translation>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="770"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="740"/>
+        <source>Written by Lucio Carreras</source>
+        <translation>Von Lucio Carreras</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="889"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="687"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="842"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="741"/>
+        <source>Copyright 2013</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="966"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="743"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="907"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="688"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="984"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="744"/>
         <source>View</source>
         <translation>Ansicht</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="918"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="689"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="995"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="745"/>
         <source>Preferences</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="937"/>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1059"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="651"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="690"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1014"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1136"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="709"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="746"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="949"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="633"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1026"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="691"/>
         <source>Open File</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="954"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="634"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1031"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="692"/>
         <source>Open Folder</source>
         <translation>Verzeichnis öffnen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="959"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="635"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1036"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="693"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="970"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="636"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1047"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="694"/>
         <source>Equalizer</source>
         <translation>Equalizer</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="981"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="637"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1058"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="695"/>
         <source>Dark</source>
         <translation>Dunkel</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="990"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="638"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1067"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="696"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="995"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="639"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1072"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="697"/>
         <source>Reload Library</source>
         <translation>Sammlung neu laden</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1000"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="640"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1077"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="698"/>
         <source>Clear Library</source>
         <translation>Sammlung löschen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1005"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="641"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1082"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="699"/>
         <source>Library Path</source>
         <translation>Sammlungspfad</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1010"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="642"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1087"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="700"/>
         <source>Fetch all covers</source>
         <translation>Hole alle Covers</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1018"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="643"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1095"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="701"/>
         <source>Radio</source>
         <translation>Radio</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1035"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="645"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1112"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="703"/>
         <source>Start up</source>
         <translation>Startoptionen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1038"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="647"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1115"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="705"/>
         <source>Load playlist on startup</source>
         <translation>Lade Wiedergabeliste</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1043"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="649"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1120"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="707"/>
         <source>Import Folder</source>
         <translation>Verzeichnis importieren</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1051"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="650"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1128"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="708"/>
         <source>Playlist Chooser</source>
         <translation>Wiedergabelisten</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1064"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="652"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1141"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="710"/>
         <source>About</source>
         <translation>Über</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1075"/>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1183"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="653"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="668"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1152"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1260"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="711"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="726"/>
         <source>Notifications</source>
         <translation>Benachrichtigungen</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1080"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="654"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1157"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="712"/>
         <source>Open Stream</source>
         <translation>Öffne Stream</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1091"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="655"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1168"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="713"/>
         <source>Library</source>
         <translation>Musiksammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1102"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="656"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1179"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="714"/>
         <source>Close to tray</source>
         <translation>Schließe ins Tray</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1110"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="657"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1187"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="715"/>
         <source>Only one instance</source>
         <translation>Nur eine Instanz</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1118"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="658"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1195"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="716"/>
         <source>Fullscreen </source>
         <translation>Vollbild</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1126"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="659"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1203"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="717"/>
         <source>Small Playlist Items</source>
         <translation>Kleine Einträge</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1134"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="660"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1211"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="718"/>
         <source>Only tracks in library</source>
         <translation>Zeige nur Titel in der Sammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1139"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="661"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1216"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="719"/>
         <source>Sound Engine</source>
         <translation>Sound Engine</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1144"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="662"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1221"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="720"/>
         <source>Gstreamer</source>
         <translation>Gstreamer</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1149"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="663"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1226"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="721"/>
         <source>Phonon</source>
         <translation>Phonon</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1157"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="664"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1234"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="722"/>
         <source>Stream recorder</source>
         <translation>Stream Recorder</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1162"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="665"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1239"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="723"/>
         <source>Set Streamripper Path</source>
         <translation>Setze Stream Recorder Pfad</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1170"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="666"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1247"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="724"/>
         <source>Stream</source>
         <translation>Stream</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1178"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="667"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1255"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="725"/>
         <source>Socket connection</source>
         <translation>Socketverbindung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1191"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="669"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1268"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="727"/>
         <source>Podcasts</source>
         <translation>Podcasts</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1202"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="670"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1279"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="728"/>
         <source>Library live search</source>
         <translation>Echtzeitsuche</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1207"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="671"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.ui" line="1284"/>
+        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="729"/>
         <source>Language</source>
         <translation>Sprache</translation>
+    </message>
+</context>
+<context>
+    <name>SimplePlayer</name>
+    <message>
+        <source>MainWindow</source>
+        <translation type="obsolete">HauptFenster</translation>
+    </message>
+    <message>
+        <source>Written by Lucio Carreras</source>
+        <translation type="obsolete">Von Lucio Carreras</translation>
+    </message>
+    <message>
+        <source>Sayonara Player</source>
+        <translation type="obsolete">Sayonara Player</translation>
+    </message>
+    <message>
+        <source>00:00</source>
+        <translation type="obsolete">00:00</translation>
+    </message>
+    <message>
+        <source>File</source>
+        <translation type="obsolete">Datei</translation>
+    </message>
+    <message>
+        <source>View</source>
+        <translation type="obsolete">Ansicht</translation>
+    </message>
+    <message>
+        <source>Preferences</source>
+        <translation type="obsolete">Einstellungen</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="obsolete">Hilfe</translation>
+    </message>
+    <message>
+        <source>Open File</source>
+        <translation type="obsolete">Datei öffnen</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation type="obsolete">Verzeichnis öffnen</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="obsolete">Schließen</translation>
+    </message>
+    <message>
+        <source>Equalizer</source>
+        <translation type="obsolete">Equalizer</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation type="obsolete">Dunkel</translation>
+    </message>
+    <message>
+        <source>Last.fm</source>
+        <translation type="obsolete">Last.fm</translation>
+    </message>
+    <message>
+        <source>Reload Library</source>
+        <translation type="obsolete">Sammlung neu laden</translation>
+    </message>
+    <message>
+        <source>Clear Library</source>
+        <translation type="obsolete">Sammlung löschen</translation>
+    </message>
+    <message>
+        <source>Library Path</source>
+        <translation type="obsolete">Sammlungspfad</translation>
+    </message>
+    <message>
+        <source>Fetch all covers</source>
+        <translation type="obsolete">Hole alle Covers</translation>
+    </message>
+    <message>
+        <source>Radio</source>
+        <translation type="obsolete">Radio</translation>
+    </message>
+    <message>
+        <source>Start up</source>
+        <translation type="obsolete">Startoptionen</translation>
+    </message>
+    <message>
+        <source>Load playlist on startup</source>
+        <translation type="obsolete">Lade Wiedergabeliste</translation>
+    </message>
+    <message>
+        <source>Import Folder</source>
+        <translation type="obsolete">Verzeichnis importieren</translation>
+    </message>
+    <message>
+        <source>Playlist Chooser</source>
+        <translation type="obsolete">Wiedergabelisten</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="obsolete">Über</translation>
+    </message>
+    <message>
+        <source>Notifications</source>
+        <translation type="obsolete">Benachrichtigungen</translation>
+    </message>
+    <message>
+        <source>Open Stream</source>
+        <translation type="obsolete">Öffne Stream</translation>
+    </message>
+    <message>
+        <source>Library</source>
+        <translation type="obsolete">Musiksammlung</translation>
+    </message>
+    <message>
+        <source>Close to tray</source>
+        <translation type="obsolete">Schließe ins Tray</translation>
+    </message>
+    <message>
+        <source>Only one instance</source>
+        <translation type="obsolete">Nur eine Instanz</translation>
+    </message>
+    <message>
+        <source>Fullscreen </source>
+        <translation type="obsolete">Vollbild</translation>
+    </message>
+    <message>
+        <source>Small Playlist Items</source>
+        <translation type="obsolete">Kleine Einträge</translation>
+    </message>
+    <message>
+        <source>Only tracks in library</source>
+        <translation type="obsolete">Zeige nur Titel in der Sammlung</translation>
+    </message>
+    <message>
+        <source>Sound Engine</source>
+        <translation type="obsolete">Sound Engine</translation>
+    </message>
+    <message>
+        <source>Gstreamer</source>
+        <translation type="obsolete">Gstreamer</translation>
+    </message>
+    <message>
+        <source>Phonon</source>
+        <translation type="obsolete">Phonon</translation>
+    </message>
+    <message>
+        <source>Stream recorder</source>
+        <translation type="obsolete">Stream Recorder</translation>
+    </message>
+    <message>
+        <source>Set Streamripper Path</source>
+        <translation type="obsolete">Setze Stream Recorder Pfad</translation>
+    </message>
+    <message>
+        <source>Stream</source>
+        <translation type="obsolete">Stream</translation>
+    </message>
+    <message>
+        <source>Socket connection</source>
+        <translation type="obsolete">Socketverbindung</translation>
+    </message>
+    <message>
+        <source>Podcasts</source>
+        <translation type="obsolete">Podcasts</translation>
+    </message>
+    <message>
+        <source>Library live search</source>
+        <translation type="obsolete">Echtzeitsuche</translation>
+    </message>
+    <message>
+        <source>Language</source>
+        <translation type="obsolete">Sprache</translation>
     </message>
 </context>
 <context>

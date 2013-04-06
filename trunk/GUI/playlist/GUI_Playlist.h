@@ -83,6 +83,7 @@
             void language_changed();
 
 
+
 		private slots:
 
             void selection_changed(MetaDataList&);
@@ -106,16 +107,17 @@
 
 			Playlist_Mode					_playlist_mode;
 
-
-
-			qint64 		_total_secs;
 			int			_radio_active;
+            qint64      _total_msecs;
 
 
 			void initGUI();
 
-			void set_total_time_label(qint64 total_msecs);
+            void set_total_time_label();
 			void check_dynamic_play_button();
+
+    protected:
+            void changeEvent(QEvent* e);
 
 
 
