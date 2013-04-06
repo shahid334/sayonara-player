@@ -12,10 +12,14 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     ui = new Ui::GUI_LanguageChooser();
     ui->setupUi(this);
 
-    _map["en"] = "English";
     _map["de"] = "Deutsch";
+    _map["en"] = "English";
+    _map["es"] = "Español";
+    _map["fr"] = "Francais";
+    _map["it"] = "Italiano";
+    _last_idx = -1;
 
-    connect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
 }
 
@@ -24,14 +28,21 @@ GUI_LanguageChooser::~GUI_LanguageChooser(){
 }
 
 
-void GUI_LanguageChooser::language_changed(){
+void GUI_LanguageChooser::language_changed(bool b){
+
+    disconnect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
     ui->retranslateUi(this);
+    connect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+    renew_combo();
 
 }
 
 void GUI_LanguageChooser::combo_changed(int idx){
     int cur_idx = ui->combo_lang->currentIndex();
+    _last_idx = cur_idx;
     emit sig_language_changed(ui->combo_lang->itemData(cur_idx).toString());
+
+
 }
 
 
@@ -44,8 +55,9 @@ void GUI_LanguageChooser::ok_clicked(){
 }
 
 
-void GUI_LanguageChooser::showEvent(QShowEvent * event){
+void GUI_LanguageChooser::renew_combo(){
 
+    disconnect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
     QDir dir(Helper::getSharePath() + "translations/");
     QStringList filters;
     filters << "*.qm";
@@ -54,6 +66,7 @@ void GUI_LanguageChooser::showEvent(QShowEvent * event){
     ui->combo_lang->clear();
 
     QString lang_setting = CSettingsStorage::getInstance()->getLanguage();
+
     int tgt_idx = 0;
     int i=0;
     foreach(QString file, files){
@@ -76,7 +89,19 @@ void GUI_LanguageChooser::showEvent(QShowEvent * event){
         i++;
     }
 
+    if(_last_idx == -1) _last_idx = tgt_idx;
+    else tgt_idx = _last_idx;
+
     ui->combo_lang->setCurrentIndex(tgt_idx);
+    connect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+}
+
+void GUI_LanguageChooser::showEvent(QShowEvent * event){
+
+
+    renew_combo();
+    _last_idx = -1;
+
 
     event->accept();
 }

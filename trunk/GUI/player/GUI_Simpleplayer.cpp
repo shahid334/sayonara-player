@@ -169,10 +169,11 @@ void GUI_SimplePlayer::language_changed(QString language){
 
     m_translator->load(language, Helper::getSharePath() + "/translations/");
 
-
     this->ui->retranslateUi(this);
     emit sig_language_changed();
 
+    if(this->ui_language_chooser)
+        this->ui_language_chooser->language_changed(true);
 }
 
 void GUI_SimplePlayer::initGUI() {

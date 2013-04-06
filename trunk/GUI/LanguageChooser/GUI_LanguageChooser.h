@@ -20,7 +20,7 @@ signals:
     void sig_language_changed(QString);
     
 public slots:
-    void language_changed();
+    void language_changed(bool b);
 
 private slots:
     void combo_changed(int);
@@ -30,6 +30,8 @@ private slots:
 private:
     Ui::GUI_LanguageChooser* ui;
     QMap<QString, QString> _map;
+    int _last_idx;
+    void renew_combo();
 
 protected:
     void showEvent(QShowEvent *);

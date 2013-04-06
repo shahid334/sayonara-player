@@ -472,28 +472,42 @@
 <context>
     <name>GUI_LanguageChooser</name>
     <message>
-        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="83"/>
         <source>Choose Language</source>
+        <translation type="obsolete">Sprache</translation>
+    </message>
+    <message>
+        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="14"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="90"/>
+        <source>Language</source>
         <translation>Sprache</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="84"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="91"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="41"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="87"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="94"/>
         <source>English</source>
         <translation>Englisch</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="55"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="89"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="96"/>
         <source>Select Language</source>
         <translation>Sprache</translation>
+    </message>
+    <message>
+        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="69"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="97"/>
+        <source>For new languages I am always looking for translators</source>
+        <translation>Für neue Sprachen bin ich immer auf der Suche nach Übersetzern</translation>
+    </message>
+    <message>
+        <source>If you miss your language here, please contact me</source>
+        <translation type="obsolete">Für neue Sprachen suche ich immer freiwillige Übersetzer</translation>
     </message>
 </context>
 <context>
@@ -860,27 +874,27 @@
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="180"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="181"/>
         <source>Ctrl</source>
         <translation>Strg</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="191"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="192"/>
         <source>Correct ID3 Tag</source>
         <translation>Korrigere ID3 Daten</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="193"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="194"/>
         <source>&amp;Library</source>
         <translation>&amp;Sammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="476"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="477"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="476"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="477"/>
         <source>Cannot login to Last.fm</source>
         <translation>Last.fm Anmeldung fehlgeschlagen</translation>
     </message>
@@ -1683,13 +1697,13 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="230"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="225"/>
         <source>Form</source>
         <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="387"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="264"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation>Importiere neue (orangene) Titel in die Sammlung ohne kopieren</translation>
     </message>
@@ -1699,19 +1713,19 @@ Bitte ein anderes Verzeichnis wählen</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="421"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
         <source>Show numbers in playlist</source>
         <translation>Zeige Nummern in der Abspielliste</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="77"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="235"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="230"/>
         <source>Clear Playlist</source>
         <translation>Lösche Abspielliste</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="152"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="239"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="234"/>
         <source>Repeat 1</source>
         <translation>Wiederhole 1</translation>
     </message>
@@ -1721,35 +1735,35 @@ Bitte ein anderes Verzeichnis wählen</translation>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="256"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="300"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="237"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="242"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="247"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="252"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="257"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="262"/>
         <source>Enter</source>
         <translation>Enter</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="196"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="244"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="239"/>
         <source>Repeat All</source>
         <translation>Wiederhole alle</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="240"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="244"/>
         <source>Shuffle</source>
         <translation>Zufallsmodus</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="284"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
         <source>Append when adding new tracks</source>
         <translation>Füge neue Titel unten an</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="328"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
         <source>Dynamic playing</source>
         <translation>Dynamische Abspielliste</translation>
     </message>
