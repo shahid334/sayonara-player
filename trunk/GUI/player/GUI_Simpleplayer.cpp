@@ -170,10 +170,33 @@ void GUI_SimplePlayer::language_changed(QString language){
     m_translator->load(language, Helper::getSharePath() + "/translations/");
 
     this->ui->retranslateUi(this);
-    emit sig_language_changed();
 
-    if(this->ui_language_chooser)
-        this->ui_language_chooser->language_changed(true);
+
+    ui_notifications->language_changed();
+    ui_startup_dialog->language_changed();
+    ui_language_chooser->language_changed(true);
+
+    QList<PlayerPlugin*> all_plugins = _pph->get_all_plugins();
+    QList<QAction*> actions = ui->menuView->actions();
+
+    foreach(QAction* action, actions){
+        if(!action->data().isNull()){
+            ui->menuView->removeAction(action);
+        }
+    }
+
+    actions.clear();
+
+    foreach(PlayerPlugin* p, all_plugins){
+        QAction* action = p->getAction();
+        action->setData(p->getName());
+        actions << action;
+    }
+
+    this->ui->menuView->insertActions(this->ui->action_Dark, actions);
+    this->ui->menuView->insertSeparator(this->ui->action_Dark);
+
+    emit sig_language_changed();
 }
 
 void GUI_SimplePlayer::initGUI() {
@@ -673,6 +696,7 @@ void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
 
     foreach(PlayerPlugin* p, lst){
 		QAction* action = p->getAction();
+        action->setData(p->getName());
 		// action is connected in Plugin itself
         actions << action;
 	}

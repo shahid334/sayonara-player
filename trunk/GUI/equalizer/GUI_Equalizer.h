@@ -42,8 +42,10 @@ class GUI_Equalizer : public PlayerPlugin, private Ui::GUI_Equalizer{
 	Q_OBJECT
 
 public:
-	GUI_Equalizer(QString name, QString action_name, QChar shortcut, QWidget* parent=0);
+    GUI_Equalizer(QString name, QString action_name, QWidget* parent=0);
 	virtual ~GUI_Equalizer();
+    static QString getVisName(){ return tr("&Equalizer"); }
+    virtual QAction* getAction();
 
 	signals:
 		void eq_changed_signal(int, int);

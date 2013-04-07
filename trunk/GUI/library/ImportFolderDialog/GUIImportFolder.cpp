@@ -38,27 +38,29 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 	this->ui = new Ui::ImportFolder();
 	ui->setupUi(this);
 
-    this->ui->combo_folders->addItems(folder_list);
+    ui->combo_folders->addItems(folder_list);
     ui->combo_folders->setAutoCompletionCaseSensitivity(Qt::CaseSensitive);
-    this->ui->cb_copy2lib->setEnabled(copy_enabled);
+    ui->cb_copy2lib->setEnabled(copy_enabled);
 
-    this->ui->cb_copy2lib->setChecked(copy_enabled);
-    this->ui->combo_folders->setVisible(copy_enabled);
-    this->ui->lab_target_path->setVisible(copy_enabled);
-    this->ui->lab_target_info->setVisible(copy_enabled);
+    ui->cb_copy2lib->setChecked(copy_enabled);
+    ui->combo_folders->setVisible(copy_enabled);
+    ui->lab_target_path->setVisible(copy_enabled);
+    ui->lab_target_info->setVisible(copy_enabled);
 
     QPixmap pixmap(Helper::getIconPath() + "/import.png");
-    this->ui->lab_img->setPixmap(pixmap.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
-
+    ui->lab_img->setPixmap(pixmap.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 
     QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
-    this->ui->lab_target_path->setText( libpath );
+    ui->lab_target_path->setText( libpath );
 
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(bb_accepted()));
     connect(ui->combo_folders, SIGNAL(editTextChanged(const QString &)), this, SLOT(combo_box_changed(const QString&)));
 
 	ui->pb_progress->setValue(0);
 	ui->pb_progress->setVisible(false);
+
+    this->setModal(true);
+
     bool dark = (CSettingsStorage::getInstance()->getPlayerStyle() == 1);
     changeSkin(dark);
 }
@@ -84,12 +86,12 @@ void GUI_ImportFolder::progress_changed(int val){
 }
 
 void GUI_ImportFolder::bb_accepted(){
-    emit accepted(this->ui->combo_folders->currentText().trimmed(), this->ui->cb_copy2lib->isChecked());
+    emit accepted(ui->combo_folders->currentText().trimmed(), ui->cb_copy2lib->isChecked());
 }
 
 
 void GUI_ImportFolder::combo_box_changed(const QString& text){
 
 	QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
-    this->ui->lab_target_path->setText( libpath + "/" + text );
+    ui->lab_target_path->setText( libpath + "/" + text );
 }

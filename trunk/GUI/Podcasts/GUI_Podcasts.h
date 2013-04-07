@@ -48,11 +48,14 @@ private slots:
     void save_clicked();
 
 
-
-public:
-    GUI_Podcasts(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
-    virtual ~GUI_Podcasts();
+public slots:
     void language_changed();
+public:
+    GUI_Podcasts(QString name, QString action_text, QWidget *parent = 0);
+    virtual ~GUI_Podcasts();
+
+    static QString getVisName(){ return tr("P&odcasts"); }
+    virtual QAction* getAction();
 
 
 

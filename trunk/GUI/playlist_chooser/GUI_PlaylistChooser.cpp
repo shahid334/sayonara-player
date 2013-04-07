@@ -39,7 +39,7 @@
 #include "GUI/ui_GUI_PlaylistChooser.h"
 
 
-GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent) {
 
 	_cur_idx = -1;
     _dark = false;
@@ -59,9 +59,9 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QCha
 	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
 	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
 
-	this->ui->btn_save->setToolTip("Save");
-	this->ui->btn_save_as->setToolTip("Save as");
-	this->ui->btn_delete->setToolTip("Delete");
+    this->ui->btn_save->setToolTip(tr("Save"));
+    this->ui->btn_save_as->setToolTip(tr("Save as"));
+    this->ui->btn_delete->setToolTip(tr("Delete"));
 
     this->ui->btn_delete->setEnabled(false);
     this->ui->btn_save->setEnabled(false);
@@ -91,6 +91,12 @@ void GUI_PlaylistChooser::language_changed(){
 
 void GUI_PlaylistChooser::changeSkin(bool dark){
     _dark = dark;
+}
+
+QAction* GUI_PlaylistChooser::getAction(){
+
+    PlayerPlugin::calc_action(this->getVisName());
+    return _pp_action;
 }
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
@@ -154,7 +160,7 @@ void GUI_PlaylistChooser::save_button_pressed(){
     if( lst.contains(cur_text.toLower()) ){
 
         int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
-        int answer = show_warning("Overwrite?");
+        int answer = show_warning(tr("Overwrite?"));
 
 		if(answer == QMessageBox::Yes)
             emit sig_save_playlist(val);
@@ -181,7 +187,7 @@ void GUI_PlaylistChooser::save_as_button_pressed(){
 void GUI_PlaylistChooser::delete_button_pressed(){
 
     _text_before_save = "";
-    int answer = show_warning("Delete?");
+    int answer = show_warning(tr("Delete?"));
 
 	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1){
 		int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
@@ -273,7 +279,7 @@ int GUI_PlaylistChooser::show_warning(QString title_text){
         warning_box.setIcon(QMessageBox::Warning);
         warning_box.setStandardButtons( QMessageBox::Yes | QMessageBox::No);
         warning_box.setText(QString("<b>") + title_text + "</b>");
-        warning_box.setInformativeText("Are you sure?");
+        warning_box.setInformativeText(tr("Are you sure?"));
         warning_box.setWindowTitle(title_text);
         warning_box.setDefaultButton(QMessageBox::No);
 

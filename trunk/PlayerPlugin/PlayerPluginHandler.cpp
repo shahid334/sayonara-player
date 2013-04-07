@@ -46,6 +46,7 @@ PlayerPlugin* PlayerPluginHandler::find_plugin(QString name){
 }
 
 void PlayerPluginHandler::addPlugin(PlayerPlugin* p){
+
     _plugins.push_back(p);
     connect(p, SIGNAL(sig_action_triggered(PlayerPlugin*,bool)), this, SLOT(plugin_action_triggered(PlayerPlugin*,bool)));
 }

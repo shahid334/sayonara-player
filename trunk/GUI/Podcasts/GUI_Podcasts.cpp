@@ -35,7 +35,7 @@
 #include <QMessageBox>
 
 
-GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent)
+GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent)
 {
 
     this->ui = new Ui::GUI_Podcasts();
@@ -66,6 +66,11 @@ GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QChar shortcut, QW
 
 GUI_Podcasts::~GUI_Podcasts() {
     // TODO Auto-generated destructor stub
+}
+
+QAction* GUI_Podcasts::getAction(){
+    PlayerPlugin::calc_action(this->getVisName());
+    return _pp_action;
 }
 
 
@@ -191,7 +196,7 @@ void GUI_Podcasts::url_text_changed(const QString& text){
         this->ui->btn_listen->setEnabled(text.size() > 5);
         if(_cur_podcast != -1){
             _cur_podcast = -1;
-            this->ui->combo_podcasts->setEditText("new");
+            this->ui->combo_podcasts->setEditText(tr("new"));
             _cur_podcast = -1;
         }
     }
@@ -204,7 +209,8 @@ void GUI_Podcasts::delete_clicked(){
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
     QMessageBox msgBox(this);
-    msgBox.setText("Really wanna delete" + _cur_podcast_name + "?" );
+    QString ask = tr("Really wanna delete %1?").arg(_cur_podcast_name);
+    msgBox.setText(ask );
     msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);

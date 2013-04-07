@@ -51,6 +51,10 @@ LibraryItemModel::~LibraryItemModel(){
 	delete _cols_active;
 }
 
+void LibraryItemModel::set_new_header_names(QStringList& lst){
+    _header_names = lst;
+}
+
 
 QVariant LibraryItemModel::headerData ( int section, Qt::Orientation orientation, int role ) const{
 

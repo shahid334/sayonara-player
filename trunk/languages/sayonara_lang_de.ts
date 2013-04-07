@@ -31,24 +31,40 @@
 <context>
     <name>Application</name>
     <message>
-        <location filename="../application.cpp" line="100"/>
         <source>Stream</source>
-        <translation>Stream</translation>
+        <translation type="obsolete">Stream</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="101"/>
         <source>Podcasts</source>
-        <translation>Podcasts</translation>
+        <translation type="obsolete">Podcasts</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="102"/>
         <source>Equalizer</source>
-        <translation>Equalizer</translation>
+        <translation type="obsolete">Equalizer</translation>
     </message>
     <message>
-        <location filename="../application.cpp" line="104"/>
         <source>Playlists</source>
-        <translation>Wiedergabelisten</translation>
+        <translation type="obsolete">Wiedergabelisten</translation>
+    </message>
+    <message>
+        <source>&amp;Stream</source>
+        <translation type="obsolete">&amp;Stream</translation>
+    </message>
+    <message>
+        <source>P&amp;odcasts</source>
+        <translation type="obsolete">P&amp;odcasts</translation>
+    </message>
+    <message>
+        <source>&amp;Equalizer</source>
+        <translation type="obsolete">&amp;Equalizer</translation>
+    </message>
+    <message>
+        <source>Last.&amp;fm</source>
+        <translation type="obsolete">Last.&amp;fm</translation>
+    </message>
+    <message>
+        <source>&amp;Playlists</source>
+        <translation type="obsolete">&amp;Wiedergabelisten</translation>
     </message>
 </context>
 <context>
@@ -263,163 +279,179 @@
         <source>15k</source>
         <translation type="obsolete">15k</translation>
     </message>
+    <message>
+        <location filename="../GUI/equalizer/GUI_Equalizer.h" line="47"/>
+        <source>&amp;Equalizer</source>
+        <translation>&amp;Equalizer</translation>
+    </message>
+    <message>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="299"/>
+        <source>This will overwrite your custom preset</source>
+        <translation>Das wird Custom überschreiben</translation>
+    </message>
+    <message>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="300"/>
+        <source>Continue?</source>
+        <translation>Weiter?</translation>
+    </message>
 </context>
 <context>
     <name>GUI_InfoDialog</name>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="76"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="156"/>
         <source>Edit</source>
         <translation>Bearbeiten</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="212"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="434"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="219"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="441"/>
         <source>yes</source>
         <translation>ja</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="212"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="434"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="219"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="441"/>
         <source>no</source>
         <translation>nein</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="212"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="219"/>
         <source>Loved: </source>
         <translation>Lieblingslied: </translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="332"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="590"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="339"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="597"/>
         <source>#Albums</source>
         <translation>#Alben</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="333"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="430"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="459"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="589"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="340"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="437"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="466"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="596"/>
         <source>#Tracks</source>
         <translation>#Titel</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="334"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="431"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="341"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="438"/>
         <source>Playing time</source>
         <translation>Spielzeit</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="336"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="591"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="343"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="598"/>
         <source>#Artists</source>
         <translation>#Künstler</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="337"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="435"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="460"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="582"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="593"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="344"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="442"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="467"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="589"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="600"/>
         <source>Filesize</source>
         <translation>Dateigröße</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="339"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="465"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="596"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="346"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="472"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="603"/>
         <source>LIBRARY</source>
         <translation>Musiksammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="425"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="448"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="455"/>
         <source>Various artists</source>
         <translation>Verschiedene Künstler</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="428"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="435"/>
         <source>by </source>
         <translation>von </translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="433"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="579"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="440"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="586"/>
         <source>Year</source>
         <translation>Jahr</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="434"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="441"/>
         <source>Sampler?</source>
         <translation>Sampler?</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="451"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="458"/>
         <source>by</source>
         <translation>von</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="564"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="571"/>
         <source>1st</source>
         <translation>1.</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="567"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="574"/>
         <source>2nd</source>
         <translation>2.</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="570"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="577"/>
         <source>3rd</source>
         <translation>3.</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="573"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="580"/>
         <source>th</source>
         <translation>.</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="576"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="583"/>
         <source> track on </source>
         <translation> Titel auf </translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="577"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="584"/>
         <source>Artist</source>
         <translation>Künstler</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="578"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="592"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="585"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="599"/>
         <source>Length</source>
         <translation>Länge</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="580"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="587"/>
         <source>Bitrate</source>
         <translation>Bitrate</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="581"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="588"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="588"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="595"/>
         <source>Various tracks</source>
         <translation>Verschiedene Titel</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="652"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="659"/>
         <source>Last.fm not active</source>
         <translation>Last.fm nicht aktiviert</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="745"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="752"/>
         <source>Error</source>
         <translation>Fehler</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="746"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="753"/>
         <source>ID3 tags could not be changed</source>
         <translation>ID3 Informationen konnten nicht geändert werden</translation>
     </message>
@@ -468,6 +500,11 @@
         <source>Recommended</source>
         <translation>Empfohlen für</translation>
     </message>
+    <message>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.h" line="43"/>
+        <source>Last.&amp;fm</source>
+        <translation>Last.&amp;fm</translation>
+    </message>
 </context>
 <context>
     <name>GUI_LanguageChooser</name>
@@ -492,6 +529,10 @@
         <location filename="../GUI/ui_GUI_LanguageChooser.h" line="94"/>
         <source>English</source>
         <translation>Englisch</translation>
+    </message>
+    <message>
+        <source>Select Language (restart required)</source>
+        <translation type="obsolete">Sprache (Neustart erforderlich)</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="55"/>
@@ -570,91 +611,103 @@
 <context>
     <name>GUI_Library_windowed</name>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="103"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Title</source>
         <translation>Titel</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="104"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="119"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
         <source>Artist</source>
         <translation>Künstler</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="105"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="113"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="282"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="106"/>
         <source>D#</source>
-        <translation>D#</translation>
+        <translation type="obsolete">D#</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="107"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="116"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="282"/>
         <source>Year</source>
         <translation>Jahr</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="108"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Dur.</source>
         <translation>Dauer</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="109"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Bitrate</source>
         <translation>Bitrate</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="110"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Filesize</source>
         <translation>Dateigröße</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="114"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="282"/>
         <source>Duration</source>
         <translation>Dauer</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="115"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="120"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="282"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
         <source>#Tracks</source>
         <translation>#Titel</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="566"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="607"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="619"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="660"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="621"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="662"/>
         <source>Only from library</source>
         <translation>Nur aus der Sammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="623"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="664"/>
         <source>You are about to delete %1 files</source>
         <translation>Du möchtest %1 Datei(en) löschen</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="626"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="667"/>
         <source>Continue?</source>
-        <translation>Weitermachen?</translation>
+        <translation>Weiter?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="669"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="710"/>
         <source>Importing was successful</source>
         <translation>Importieren war erfolgreich</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="672"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="713"/>
         <source>Importing failed</source>
         <translation>Importieren fehlgeschlagen</translation>
     </message>
@@ -782,9 +835,44 @@
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="216"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="62"/>
+        <source>Save</source>
+        <translation>Speichern</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="63"/>
+        <source>Save as</source>
+        <translation>Speichern als</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="64"/>
+        <source>Delete</source>
+        <translation>Löschen</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="163"/>
+        <source>Overwrite?</source>
+        <translation>Überschreiben?</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="190"/>
+        <source>Delete?</source>
+        <translation>Löschen?</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="222"/>
         <source>Open Playlist files</source>
         <translation>Öffne Wiedergabeliste</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="282"/>
+        <source>Are you sure?</source>
+        <translation>Bist du sicher?</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.h" line="74"/>
+        <source>&amp;Playlists</source>
+        <translation>&amp;Wiedergabelisten</translation>
     </message>
 </context>
 <context>
@@ -855,6 +943,21 @@
         <source>x</source>
         <translation>x</translation>
     </message>
+    <message>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="57"/>
+        <source>P&amp;odcasts</source>
+        <translation>P&amp;odcasts</translation>
+    </message>
+    <message>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="199"/>
+        <source>new</source>
+        <translation>neu</translation>
+    </message>
+    <message>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="212"/>
+        <source>Really wanna delete %1?</source>
+        <translation>Soll %1 wirklich gelöscht werden?</translation>
+    </message>
 </context>
 <context>
     <name>GUI_SimplePlayer</name>
@@ -874,27 +977,27 @@
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="181"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="204"/>
         <source>Ctrl</source>
         <translation>Strg</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="192"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="215"/>
         <source>Correct ID3 Tag</source>
         <translation>Korrigere ID3 Daten</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="194"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="217"/>
         <source>&amp;Library</source>
         <translation>&amp;Sammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="477"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="500"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="477"/>
+        <location filename="../GUI/player/GUI_Simpleplayer.cpp" line="500"/>
         <source>Cannot login to Last.fm</source>
         <translation>Last.fm Anmeldung fehlgeschlagen</translation>
     </message>
@@ -1075,6 +1178,26 @@
         <location filename="../GUI/ui_GUI_Stream.h" line="197"/>
         <source> Start</source>
         <translation>Start</translation>
+    </message>
+    <message>
+        <location filename="../GUI/stream/GUI_Stream.h" line="58"/>
+        <source>&amp;Stream</source>
+        <translation>&amp;Stream</translation>
+    </message>
+    <message>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="90"/>
+        <source>Radio</source>
+        <translation>Radio</translation>
+    </message>
+    <message>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="200"/>
+        <source>new</source>
+        <translation>neu</translation>
+    </message>
+    <message>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="213"/>
+        <source>Really wanna delete %1?</source>
+        <translation>Soll %1 wirklich gelöscht werden?</translation>
     </message>
 </context>
 <context>
@@ -1296,7 +1419,7 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="513"/>
         <source>Proceed?</source>
-        <translation>Weitermachen?</translation>
+        <translation>Weiter?</translation>
     </message>
 </context>
 <context>
@@ -1447,43 +1570,49 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>InfoDialog</name>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="210"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="217"/>
         <source>Info / Edit</source>
         <translation>Info / Bearbeiten</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="56"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="71"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="211"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="217"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="218"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="224"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="87"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="212"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="219"/>
         <source>LFM</source>
         <translation>LFM</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="177"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="252"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="215"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="218"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="222"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="225"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="210"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="216"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="223"/>
         <source>Title</source>
         <translation>Titel</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="221"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="219"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="226"/>
         <source>Lyrics</source>
         <translation>Texte</translation>
+    </message>
+    <message>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="286"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="227"/>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
     </message>
 </context>
 <context>

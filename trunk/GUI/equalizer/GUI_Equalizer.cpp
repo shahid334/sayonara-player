@@ -60,7 +60,7 @@ QString calc_lab(int val){
 
 }
 
-GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
+GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent) {
 
     this->_ui = new Ui::GUI_Equalizer( );
 	this->_ui->setupUi(this);
@@ -93,6 +93,11 @@ GUI_Equalizer::~GUI_Equalizer() {
 	delete _ui;
 }
 
+
+QAction* GUI_Equalizer::getAction(){
+    PlayerPlugin::calc_action(this->getVisName());
+    return _pp_action;
+}
 
 void GUI_Equalizer::language_changed(){
     _ui->retranslateUi(this);
@@ -291,8 +296,8 @@ void GUI_Equalizer::btn_preset_clicked(){
 
 	if( custom_idx != -1 && custom_idx != current_idx ){
 		 QMessageBox msgBox;
-		 msgBox.setText("This will overwrite your custom preset");
-		 msgBox.setInformativeText("Continue?");
+         msgBox.setText(tr("This will overwrite your custom preset"));
+         msgBox.setInformativeText(tr("Continue?"));
 		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		 msgBox.setDefaultButton(QMessageBox::No);
 		 int ret = msgBox.exec();

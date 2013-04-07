@@ -52,8 +52,11 @@ public slots:
 
 
 public:
-	GUI_Stream(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
+    GUI_Stream(QString name, QString action_text, QWidget *parent = 0);
 	virtual ~GUI_Stream();
+
+    static QString getVisName(){return tr("&Stream");}
+    virtual QAction* getAction();
 
 
 

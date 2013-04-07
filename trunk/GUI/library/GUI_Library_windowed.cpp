@@ -95,33 +95,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
 
-    QList<ColumnHeader> track_columns;
-    QList<ColumnHeader> album_columns;
-    QList<ColumnHeader> artist_columns;
-
-    ColumnHeader t_h0("#", true, Sort::TrackNumAsc, Sort::TrackNumDesc, 25);
-    ColumnHeader t_h1(tr("Title"), false, Sort::TrackTitleAsc, Sort::TrackTitleDesc, 0.4, 200);
-    ColumnHeader t_h2(tr("Artist"), true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0.3, 160);
-    ColumnHeader t_h3(tr("Album"), true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0.3, 160);
-    ColumnHeader t_h4(tr("D#"), true, Sort::TrackDiscnumberAsc, Sort::TrackDiscnumberDesc, 25);
-    ColumnHeader t_h5(tr("Year"), true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
-    ColumnHeader t_h6(tr("Dur."), true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
-    ColumnHeader t_h7(tr("Bitrate"), true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
-    ColumnHeader t_h8(tr("Filesize"), true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
-
-    ColumnHeader al_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
-    ColumnHeader al_h1(tr("Album"), false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 1.0, 160);
-    ColumnHeader al_h2(tr("Duration"), true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
-    ColumnHeader al_h3(tr("#Tracks"), true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
-    ColumnHeader al_h4(tr("Year"), true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 50);
-
-    ColumnHeader ar_h0("#", true, Sort::NoSorting, Sort::NoSorting, 20);
-    ColumnHeader ar_h1(tr("Artist"), false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 1.0, 160 );
-    ColumnHeader ar_h2(tr("#Tracks"), true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 80);
-
-    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  << /*t_h4  <<*/ t_h5  << t_h6  << t_h7 << t_h8;
-    album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
-    artist_columns << ar_h0 << ar_h1 << ar_h2;
 
     _shown_cols_tracks = _settings->getLibShownColsTitle();
     _shown_cols_artist = _settings->getLibShownColsArtist();
@@ -130,41 +103,21 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 	QList<int> sorting = _settings->getLibSorting();
 
-    _sort_albums = (Sort::SortOrder) sorting[1];
     _sort_artists = (Sort::SortOrder) sorting[0];
+    _sort_albums = (Sort::SortOrder) sorting[1];
     _sort_tracks = (Sort::SortOrder) sorting[2];
 
+    _album_model = 0;
+    _artist_model = 0;
+    _track_model = 0;
+    _album_delegate = 0;
+    _artist_delegate = 0;
+    _track_delegate = 0;
 
 
-    this->_album_model = new LibraryItemModelAlbums(album_columns);
-    this->_album_delegate = new LibraryItemDelegateAlbums(_album_model, this->ui->lv_album);
-	this->_artist_model = new LibraryItemModelArtists(artist_columns);
-    this->_artist_delegate = new LibraryItemDelegateArtists(_artist_model, this->ui->lv_artist);
-    this->_track_model = new LibraryItemModelTracks(track_columns);
-    this->_track_delegate = new LibraryItemDelegateTracks(_track_model, this->ui->tb_title);
 
 
-	this->ui->tb_title->setModel(_track_model);
-    this->ui->tb_title->setItemDelegate(_track_delegate);
-	this->ui->tb_title->setAlternatingRowColors(true);
-	this->ui->tb_title->setDragEnabled(true);
-    this->ui->tb_title->set_table_headers(track_columns, _sort_tracks);
-    this->ui->tb_title->rc_header_menu_init(_shown_cols_tracks);
-
-
-	this->ui->lv_artist->setModel(_artist_model);
-	this->ui->lv_artist->setItemDelegate(_artist_delegate);
-	this->ui->lv_artist->setAlternatingRowColors(true);
-	this->ui->lv_artist->setDragEnabled(true);
-    this->ui->lv_artist->set_table_headers(artist_columns, _sort_artists);
-    this->ui->lv_artist->rc_header_menu_init(_shown_cols_artist);
-
-	this->ui->lv_album->setModel(this->_album_model);
-	this->ui->lv_album->setItemDelegate(this->_album_delegate);
-	this->ui->lv_album->setAlternatingRowColors(true);
-	this->ui->lv_album->setDragEnabled(true);
-    this->ui->lv_album->set_table_headers(album_columns, _sort_albums);
-    this->ui->lv_album->rc_header_menu_init(_shown_cols_albums);
+    init_headers();
 
 	_discmenu = 0;
 	_timer = new QTimer(this);
@@ -242,8 +195,96 @@ GUI_Library_windowed::~GUI_Library_windowed() {
 }
 
 
+void  GUI_Library_windowed::init_headers(){
+
+    if(_album_model) delete _album_model;
+    if(_artist_model) delete _artist_model;
+    if(_track_model) delete _track_model;
+
+    if(_album_delegate) delete _album_delegate;
+    if(_artist_delegate) delete _artist_delegate;
+    if(_track_delegate) delete _track_delegate;
+
+    QList<ColumnHeader> track_columns;
+    QList<ColumnHeader> album_columns;
+    QList<ColumnHeader> artist_columns;
+
+    _header_names_tracks << "#" << tr("Title") << tr("Artist") << tr("Album") << tr("Year") << tr("Dur.") << tr("Bitrate") << tr("Filesize");
+    _header_names_albums << "#" << tr("Album") << tr("Duration") << tr("#Tracks") << tr("Year");
+    _header_names_artists << "#" << tr("Artist") << tr("#Tracks");
+
+    ColumnHeader t_h0(_header_names_tracks[0], true, Sort::TrackNumAsc, Sort::TrackNumDesc, 25);
+    ColumnHeader t_h1(_header_names_tracks[1], false, Sort::TrackTitleAsc, Sort::TrackTitleDesc, 0.4, 200);
+    ColumnHeader t_h2(_header_names_tracks[2], true, Sort::TrackArtistAsc, Sort::TrackArtistDesc, 0.3, 160);
+    ColumnHeader t_h3(_header_names_tracks[3], true, Sort::TrackAlbumAsc, Sort::TrackAlbumDesc, 0.3, 160);
+    ColumnHeader t_h4(_header_names_tracks[4], true, Sort::TrackYearAsc, Sort::TrackYearDesc, 50);
+    ColumnHeader t_h5(_header_names_tracks[5], true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
+    ColumnHeader t_h6(_header_names_tracks[6], true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
+    ColumnHeader t_h7(_header_names_tracks[7], true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
+
+    ColumnHeader al_h0(_header_names_albums[0], true, Sort::NoSorting, Sort::NoSorting, 20);
+    ColumnHeader al_h1(_header_names_albums[1], false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 1.0, 160);
+    ColumnHeader al_h2(_header_names_albums[2], true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
+    ColumnHeader al_h3(_header_names_albums[3], true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
+    ColumnHeader al_h4(_header_names_albums[4], true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 50);
+
+    ColumnHeader ar_h0(_header_names_artists[0], true, Sort::NoSorting, Sort::NoSorting, 20);
+    ColumnHeader ar_h1(_header_names_artists[1], false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 1.0, 160 );
+    ColumnHeader ar_h2(_header_names_artists[2], true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 80);
+
+    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  <<t_h4  << t_h5  << t_h6 << t_h7;
+    album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
+    artist_columns << ar_h0 << ar_h1 << ar_h2;
+
+
+    _album_model = new LibraryItemModelAlbums(album_columns);
+    _album_delegate = new LibraryItemDelegateAlbums(_album_model, ui->lv_album);
+    _artist_model = new LibraryItemModelArtists(artist_columns);
+    _artist_delegate = new LibraryItemDelegateArtists(_artist_model, ui->lv_artist);
+    _track_model = new LibraryItemModelTracks(track_columns);
+    _track_delegate = new LibraryItemDelegateTracks(_track_model, ui->tb_title);
+
+
+    ui->tb_title->setModel(_track_model);
+    ui->tb_title->setItemDelegate(_track_delegate);
+    ui->tb_title->setAlternatingRowColors(true);
+    ui->tb_title->setDragEnabled(true);
+    ui->tb_title->set_table_headers(track_columns, _sort_tracks);
+    ui->tb_title->rc_header_menu_init(_shown_cols_tracks);
+
+
+    ui->lv_artist->setModel(_artist_model);
+    ui->lv_artist->setItemDelegate(_artist_delegate);
+    ui->lv_artist->setAlternatingRowColors(true);
+    ui->lv_artist->setDragEnabled(true);
+    ui->lv_artist->set_table_headers(artist_columns, _sort_artists);
+    ui->lv_artist->rc_header_menu_init(_shown_cols_artist);
+
+
+    ui->lv_album->setModel(this->_album_model);
+    ui->lv_album->setItemDelegate(this->_album_delegate);
+    ui->lv_album->setAlternatingRowColors(true);
+    ui->lv_album->setDragEnabled(true);
+    ui->lv_album->set_table_headers(album_columns, _sort_albums);
+    ui->lv_album->rc_header_menu_init(_shown_cols_albums);
+}
+
 void GUI_Library_windowed::language_changed(){
+
     this->ui->retranslateUi(this);
+
+    _header_names_tracks.clear();
+    _header_names_albums.clear();
+    _header_names_artists.clear();
+
+
+    _header_names_tracks << "#" << tr("Title") << tr("Artist") << tr("Album") << tr("Year") << tr("Dur.") << tr("Bitrate") << tr("Filesize");
+    _header_names_albums << "#" << tr("Album") << tr("Duration") << tr("#Tracks") << tr("Year");
+    _header_names_artists << "#" << tr("Artist") << tr("#Tracks");
+
+    _album_model->set_new_header_names(_header_names_albums);
+    _artist_model->set_new_header_names(_header_names_artists);
+    _track_model->set_new_header_names(_header_names_tracks);
 }
 
 void GUI_Library_windowed::set_info_dialog(GUI_InfoDialog *dialog){

@@ -35,7 +35,7 @@
 #include <QPixmap>
 
 
-GUI_Stream::GUI_Stream(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent)  {
+GUI_Stream::GUI_Stream(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent)  {
 	this->ui = new Ui::GUI_Stream();
 	this->ui->setupUi(this);
 
@@ -65,6 +65,11 @@ GUI_Stream::~GUI_Stream() {
 	// TODO Auto-generated destructor stub
 }
 
+QAction* GUI_Stream::getAction(){
+    PlayerPlugin::calc_action(this->getVisName());
+    return _pp_action;
+}
+
 
 void GUI_Stream::changeSkin(bool dark){
 
@@ -82,7 +87,7 @@ void GUI_Stream::listen_clicked(){
 
 	if(_cur_station == -1){
         url = this->ui->le_url->text();
-		name = "Radio";
+        name = tr("Radio");
 	}
 
 	else{
@@ -192,7 +197,7 @@ void GUI_Stream::url_text_changed(const QString& text){
 		this->ui->btn_listen->setEnabled(text.size() > 5);
 		if(_cur_station != -1){
 			_cur_station = -1;
-			this->ui->combo_stream->setEditText("new");
+            this->ui->combo_stream->setEditText(tr("new"));
 			_cur_station = -1;
 		}
 	}
@@ -205,7 +210,8 @@ void GUI_Stream::delete_clicked(){
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
     QMessageBox msgBox(this);
-	msgBox.setText("Really wanna delete" + _cur_station_name + "?" );
+    QString ask = tr("Really wanna delete %1?").arg(_cur_station_name);
+    msgBox.setText(ask );
 	msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);

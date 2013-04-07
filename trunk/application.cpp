@@ -85,10 +85,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     QString version    = getVersion();
     set->setVersion( version );
 
-
-
     player              = new GUI_SimplePlayer(translator);
-
 
     playlist            = new Playlist();
     library             = new CLibraryBase(this);
@@ -97,11 +94,12 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
-    ui_stream           = new GUI_Stream("Stream", tr("Stream"), 'S', player->getParentOfPlugin());
-    ui_podcasts         = new GUI_Podcasts("Podcasts", tr("Podcasts"), 'o', player->getParentOfPlugin());
-    ui_eq               = new GUI_Equalizer("Equalizer", tr("Equalizer"), 'E', player->getParentOfPlugin());
-    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", "Last.fm", 'F', player->getParentOfPlugin());
-    ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", tr("Playlists"), 'P', player->getParentOfPlugin());
+    ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
+    ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
+    ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
+    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", GUI_LFMRadioWidget::getVisName(), player->getParentOfPlugin());
+    ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", GUI_PlaylistChooser::getVisName(), player->getParentOfPlugin());
+
     ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
     ui_id3_editor       = new GUI_TagEdit();
 
@@ -121,7 +119,13 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     _pph->addPlugin(ui_stream);
     _pph->addPlugin(ui_podcasts);
     _pph->addPlugin(ui_playlist_chooser);
-    
+
+    qDebug() << "Plugin " << GUI_Stream::getVisName();
+    qDebug() << "Plugin " << GUI_Equalizer::getVisName();
+    qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
+    qDebug() << "Plugin " << GUI_Podcasts::getVisName();
+    qDebug() << "Plugin " << GUI_LFMRadioWidget::getVisName();
+
 
 
     QString dir;

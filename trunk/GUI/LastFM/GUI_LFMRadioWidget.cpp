@@ -43,7 +43,7 @@
 #include "GUI/ui_GUI_LFMRadioWidget.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
-GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QChar shortcut, QWidget *parent) : PlayerPlugin(name, action_text, shortcut, parent) {
+GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent) {
 
 
     this->_ui = new Ui::GUI_LFMRadioWidget();
@@ -64,6 +64,11 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QChar 
 
 GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
 	// TODO Auto-generated destructor stub
+}
+
+QAction* GUI_LFMRadioWidget::getAction(){
+    PlayerPlugin::calc_action(this->getVisName());
+    return _pp_action;
 }
 
 void GUI_LFMRadioWidget::changeSkin(bool dark){

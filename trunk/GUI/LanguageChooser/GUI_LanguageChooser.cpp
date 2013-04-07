@@ -19,6 +19,8 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     _map["it"] = "Italiano";
     _last_idx = -1;
 
+    this->setModal(true);
+
 
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
 }

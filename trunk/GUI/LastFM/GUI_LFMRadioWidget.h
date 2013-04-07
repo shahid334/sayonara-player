@@ -38,8 +38,11 @@ class GUI_LFMRadioWidget : public PlayerPlugin, private Ui::GUI_LFMRadioWidget{
 Q_OBJECT
 
 public:
-	GUI_LFMRadioWidget(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
+    GUI_LFMRadioWidget(QString name, QString action_text, QWidget *parent = 0);
 	virtual ~GUI_LFMRadioWidget();
+    static QString getVisName(){ return tr("Last.&fm"); }
+    virtual QAction* getAction();
+
 
 
 	signals:

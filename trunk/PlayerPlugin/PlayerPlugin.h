@@ -36,7 +36,7 @@ class PlayerPlugin : public QWidget
 
 
 public:
-    PlayerPlugin(QString name, QString action_text, QChar shortcut, QWidget *parent = 0);
+    PlayerPlugin(QString name, QString action_text, QWidget *parent = 0);
     virtual ~PlayerPlugin();
 
     
@@ -52,15 +52,14 @@ private slots:
 
 private:
     QString     _pp_name;
-    QAction*    _pp_action;
-
     bool        _pp_is_shown;
 
 
 protected:
-
+    QAction*    _pp_action;
     void setSize(QSize size);
     void closeEvent(QCloseEvent *);
+    void calc_action(QString text);
 
 
 
@@ -70,7 +69,10 @@ public:
     QString getName();
 
     void setShown(bool b);
-    QAction* getAction();
+    virtual QAction* getAction()=0;
+
+
+    static QString getVisName(){ return ""; }
 
     
 };

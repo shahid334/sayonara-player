@@ -63,6 +63,7 @@ bool _is_alphanumeric(int key){
 MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
     _parent = parent;
     _qDrag = 0;
+    _rc_header_menu = 0;
 
     _mimedata = new CustomMimeData();
     _edit = new QLineEdit(this);
@@ -414,6 +415,7 @@ void MyTableView::set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrde
 
 void MyTableView::rc_header_menu_init(QStringList& shown_cols){
 
+    if(_rc_header_menu) delete _rc_header_menu;
     _rc_header_menu = new QMenu( this->horizontalHeader() );
 
     // in this moment all columns are still shown
@@ -438,15 +440,15 @@ void MyTableView::rc_header_menu_init(QStringList& shown_cols){
             if(i < shown_cols.size()){
                 action->setChecked(shown_cols[i] == "1");
 
-		// where should we put the sorters?
-		// if a few columns are missing before the origin position,
-		// the index of the sorted column has to be decreased
-		if(i<col_idx && !action->isChecked()) col_idx --;
-		else if(i == col_idx && !action->isChecked()) show_sorter = false;
-	    }
+                // where should we put the sorters?
+                // if a few columns are missing before the origin position,
+                // the index of the sorted column has to be decreased
+                if(i<col_idx && !action->isChecked()) col_idx --;
+                else if(i == col_idx && !action->isChecked()) show_sorter = false;
+            }
             else{
                 action->setChecked(false);
-	    }
+            }
         }
 
 

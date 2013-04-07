@@ -45,7 +45,14 @@
 #define PLUGIN_PODCASTS 3
 #define PLUGIN_EQUALIZER 4
 #define PLUGIN_PLAYLIST_CHOOSER 5
+/*
 
+#define PLUGIN_NAME_LFM_RADIO tr("Last.&fm")
+#define PLUGIN_NAME_STREAM tr("&Stream")
+#define PLUGIN_NAME_PODCASTS tr("P&odcasts")
+#define PLUGIN_NAME_EQUALIZER tr("&Equalizer")
+#define PLUGIN_NAME_PLAYLIST_CHOOSER tr("&Playlists")
+*/
 
 #define GOOGLE_IMG_ICON QString("icon")
 #define GOOGLE_IMG_SMALL QString("small")

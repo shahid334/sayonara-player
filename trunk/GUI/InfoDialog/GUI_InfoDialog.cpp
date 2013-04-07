@@ -84,13 +84,12 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
     _lyric_thread = new LyricLookupThread();
     _lyric_server = 0;
+    _lyrics_visible = true;
 
     _cover_lookup = new CoverLookup(_class_name);
-
-    _lyrics_visible = true;
     _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
-    _tag_edit_visible = true;
 
+    _tag_edit_visible = true;
 
     QStringList server_list = _lyric_thread->getServers();
     foreach(QString server, server_list){
@@ -99,6 +98,8 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     }
 
     ui->combo_servers->setCurrentIndex(0);
+
+    //this->setModal(true);
 
 
     connect( _lfm_thread, SIGNAL(sig_corrected_data_available(const QString&)),
@@ -133,6 +134,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
     this->ui->btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
+    ui->tab_widget->removeTab(2);
     hide();
 
 }
@@ -147,7 +149,14 @@ void GUI_InfoDialog::changeSkin(bool dark){
 }
 
 void GUI_InfoDialog::language_changed(){
+
+    MetaDataList v_md = _v_md;
+    ui->tab_widget->removeTab(2);
     this->ui->retranslateUi(this);
+    ui->tab_widget->addTab(ui_tag_edit, tr("Edit"));
+    setMode(_mode);
+    setMetaData(v_md);
+
 }
 
 void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
@@ -158,8 +167,6 @@ void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename)
 	if(!QFile::exists(filename)) return;
 
 	this->ui->btn_image->setIcon(QIcon(filename));
-
-
 }
 
 

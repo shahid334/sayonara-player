@@ -200,6 +200,10 @@ private:
     QStringList _shown_cols_artist;
     QStringList _shown_cols_tracks;
 
+    QStringList _header_names_albums;
+    QStringList _header_names_artists;
+    QStringList _header_names_tracks;
+
 	GUI_InfoDialog* _info_dialog;
 	GUI_Library_Info_Box* _lib_info_dialog;
 
@@ -209,6 +213,7 @@ private:
 
 
 	int show_delete_dialog(int n_tracks);
+    void init_headers();
 	void refresh();
 
 

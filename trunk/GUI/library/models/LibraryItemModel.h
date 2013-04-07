@@ -92,6 +92,8 @@ public:
 
 	virtual int			getFirstRowOf(QString substr)=0;
 
+    void            set_new_header_names(QStringList& lst);
+
 
 
 
