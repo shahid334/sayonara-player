@@ -49,6 +49,7 @@ ADD_SUBDIRECTORY(GUI)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
 ADD_SUBDIRECTORY(linux_packages/resources)
+ADD_SUBDIRECTORY(languages)
 
 SET(HEADERS
     application.h
@@ -115,17 +116,11 @@ SET(SOURCES
     Socket/Socket.cpp
 )
 
-FILE(GLOB LANG_SRC languages/*.ts)
 
 MESSAGE("Create translation")
-
-
-
 FILE (GLOB TRANSLATIONS_FILES languages/*.ts)
 QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
 ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
-
-
 
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
