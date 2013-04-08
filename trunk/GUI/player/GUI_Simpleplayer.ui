@@ -146,6 +146,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="btn_correct">
+	<property name="toolTip">
+	<string>Correct Metadata</string>
+	</property>
         <property name="minimumSize">
          <size>
           <width>0</width>

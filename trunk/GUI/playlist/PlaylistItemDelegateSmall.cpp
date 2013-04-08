@@ -106,7 +106,7 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
     }
 
     else if(md.is_disabled){
-            style = QString("color: #A0A0A0;");
+            style = QString("color: #A0A0A0; background-color: transparent;");
     }
 
     else if(!md.pl_selected){

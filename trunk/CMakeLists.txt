@@ -48,6 +48,7 @@ LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 ADD_SUBDIRECTORY(GUI)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
+ADD_SUBDIRECTORY(linux_packages/resources)
 
 SET(HEADERS
     application.h
@@ -114,8 +115,6 @@ SET(SOURCES
     Socket/Socket.cpp
 )
 
-
-
 FILE(GLOB LANG_SRC languages/*.ts)
 
 MESSAGE("Create translation")
@@ -138,13 +137,11 @@ ENDIF(${UNIX})
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${QM_FILES})
 TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl sayonara_gui)
 
-SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
+#SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
-INSTALL(FILES "linux_packages/resources/sayonara" DESTINATION share/menu)
-INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
 INSTALL(FILES ${QM_FILES} DESTINATION share/sayonara/translations)
 
 IF(${UNIX})

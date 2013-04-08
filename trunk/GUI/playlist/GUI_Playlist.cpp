@@ -134,6 +134,7 @@ void GUI_Playlist::language_changed(){
 
     this->ui->retranslateUi(this);
     set_total_time_label();
+    check_dynamic_play_button();
 }
 
 // initialize gui
@@ -165,11 +166,11 @@ void GUI_Playlist::check_dynamic_play_button(){
 	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
 
 	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
-        ui->btn_dynamic->setToolTip(tr("Please set library path first"));
+	        ui->btn_dynamic->setToolTip(tr("Please set library path first"));
 	}
 
 	else{
-        ui->btn_dynamic->setToolTip(tr("Dynamic playing"));
+        	ui->btn_dynamic->setToolTip(tr("Dynamic playing"));
 	}
 }
 
@@ -188,7 +189,7 @@ void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int 
 
     foreach(MetaData md, v_metadata){
         _total_msecs += md.length_ms;
-	}
+    }
 
     set_total_time_label();
 }

@@ -8,7 +8,6 @@ SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s")
 
 
 PKG_CHECK_MODULES(LIBNOTIFY libnotify)
-MESSAGE("Libnotify")
 if (LIBNOTIFY_FOUND)
 
     INCLUDE_DIRECTORIES("../..")

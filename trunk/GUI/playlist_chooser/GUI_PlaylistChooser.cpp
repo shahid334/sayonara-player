@@ -59,9 +59,6 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QWid
 	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
 	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
 
-    this->ui->btn_save->setToolTip(tr("Save"));
-    this->ui->btn_save_as->setToolTip(tr("Save as"));
-    this->ui->btn_delete->setToolTip(tr("Delete"));
 
     this->ui->btn_delete->setEnabled(false);
     this->ui->btn_save->setEnabled(false);

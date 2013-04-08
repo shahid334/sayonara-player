@@ -61,10 +61,7 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     _timer->setInterval(300);
     _md_set = false;
     
-    
-
-
-    m_playAction = new QAction(tr("Play"), this);
+	m_playAction = new QAction(tr("Play"), this);
 	m_playAction->setIcon(QIcon(icon_path + "play.png"));
 	m_stopAction = new QAction(tr("Stop"), this);
 	m_stopAction->setIcon(QIcon(icon_path + "stop.png"));
@@ -118,8 +115,17 @@ GUI_TrayIcon::~GUI_TrayIcon() {
 
 
 void GUI_TrayIcon::language_changed(){
-  //  this->ui->retranslateUi(this);
+  
+	m_playAction->setText(tr("Play"));
+	m_fwdAction->setText(tr("Next"));
+	m_bwdAction->setText(tr("Previous"));
+	m_stopAction->setText(tr("Stop"));
+	m_muteAction->setText(tr("Mute"));
+	m_closeAction->setText(tr("Close"));
+	m_showAction->setText(tr("Show"));
+
 }
+        
 
 void GUI_TrayIcon::change_skin(QString stylesheet){
     this->m_trayContextMenu->setStyleSheet(stylesheet);

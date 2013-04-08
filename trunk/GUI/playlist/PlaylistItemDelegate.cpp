@@ -72,8 +72,6 @@ PlaylistItemDelegate::~PlaylistItemDelegate() {
 void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
-
-
 	if(!index.isValid()) return;
 
 	QRect rect(option.rect);
@@ -107,14 +105,9 @@ void PlaylistItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     QColor col_highlight = palette.color(QPalette::Active, QPalette::Highlight);
     QColor col_highlight_lighter = palette.color(QPalette::Active, QPalette::Highlight).light(140);
 
-    //QColor col_orange = SAYONARA_ORANGE_COL;
-    //QColor col_orange_light = col_orange.light();
-
-
     int highlight_val = col_highlight.lightness();
     int highlight_lighter_val = col_highlight_lighter.lightness();
     int background_val = col_background.lightness();
-
 
     if(cur_track){
 

@@ -56,7 +56,10 @@
    </item>
    <item row="1" column="3">
     <widget class="QPushButton" name="btn_save_as">
-     <property name="maximumSize">
+     <property name="toolTip">
+    <string>Save as</string>
+    </property>
+      <property name="maximumSize">
       <size>
        <width>25</width>
        <height>25</height>
@@ -113,6 +116,9 @@
    </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="btn_delete">
+    <property name="toolTip">
+    <string>Delete</string>
+    </property>
      <property name="maximumSize">
       <size>
        <width>25</width>
@@ -138,7 +144,10 @@
    </item>
    <item row="2" column="3">
     <widget class="QPushButton" name="btn_save">
-     <property name="maximumSize">
+     <property name="toolTip">
+    <string>Save</string>
+    </property>
+    <property name="maximumSize">
       <size>
        <width>25</width>
        <height>25</height>

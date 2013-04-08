@@ -212,7 +212,6 @@ void GUI_SimplePlayer::initGUI() {
 	ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
-    ui->btn_correct->setToolTip(tr("Correct ID3 Tag"));
 
     ui->action_viewLibrary->setText(tr("&Library"));
     ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));
@@ -391,11 +390,6 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 
 
     m_trayIcon->songChangedMessage(md);
-    /*m_trayIcon->setToolTip(QString("\"") +
-            md.title +
-            "\" by \"" +
-            md.artist +
-            QString("\""));*/
 
     QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
     ui->maxTime->setText(lengthString);
