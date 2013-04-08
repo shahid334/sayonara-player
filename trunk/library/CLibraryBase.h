@@ -23,6 +23,8 @@
 #define CLIBRARYBASE_H
 
 #include "library/ReloadThread.h"
+#include "library/ImportFolderThread.h"
+#include "library/CopyFolderThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
@@ -78,7 +80,7 @@ public slots:
     void importFiles(const MetaDataList&);
 
     void setLibraryPath(QString);
-    void importDirectoryAccepted(const QString&, bool);
+
 
 
 /* New way */
@@ -106,6 +108,12 @@ private slots:
    void file_system_changed(const QString& path);
    void library_reloading_state_slot(QString);
    void library_reloading_state_new_block();
+   void copy_folder_thread_finished();
+   void import_folder_thread_finished();
+   void import_folder_thread_done();
+   void import_folder_thread_progress(int);
+   void importDirectoryAccepted(const QString&, bool);
+   void cancel_import_thread();
 
 
 private:
@@ -114,6 +122,8 @@ private:
 
     QString				m_library_path;
     ReloadThread* 		m_thread;
+    ImportFolderThread* m_import_folder_thread;
+    CopyFolderThread*   m_copy_folder_thread;
     QFileSystemWatcher*	m_watcher;
     QString				m_src_dir;
     GUI_ImportFolder*   m_import_dialog;
@@ -132,7 +142,10 @@ private:
 
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;
-    QList<int>          	_selected_tracks;
+    QList<int>          _selected_tracks;
+
+    QString             _import_to;
+    bool                _import_copy;
 
 
 

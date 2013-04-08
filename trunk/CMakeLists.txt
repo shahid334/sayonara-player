@@ -63,6 +63,8 @@ SET(HEADERS
     PlayerPlugin/PlayerPluginHandler.h
     library/CLibraryBase.h
     library/ReloadThread.h
+    library/ImportFolderThread.h
+    library/CopyFolderThread.h
     playlist/Playlist.h
     playlists/Playlists.h
     StreamPlugins/LastFM/LastFM.h
@@ -97,6 +99,9 @@ SET(SOURCES
     library/CLibraryAdmin.cpp
     library/CLibraryBase.cpp
     library/ReloadThread.cpp
+    library/ImportFolderThread.cpp
+    library/CopyFolderThread.cpp
+
     DatabaseAccess/CDatabaseConnector.cpp
     DatabaseAccess/CDatabaseLibrary.cpp
     DatabaseAccess/CDatabaseSettings.cpp

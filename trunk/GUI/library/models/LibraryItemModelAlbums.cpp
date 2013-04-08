@@ -190,5 +190,7 @@ void  LibraryItemModelAlbums::set_selected(QList<int>& rows){
 
 
 QList<int> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx){
+    if(!idx.isValid()) return QList<int>();
+    if(idx.row() < 0 || idx.row() >= _album_list.size()) return QList<int>();
 	return _album_list[idx.row()].discnumbers;
 }

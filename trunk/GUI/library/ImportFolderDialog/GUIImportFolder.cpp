@@ -55,6 +55,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(bb_accepted()));
     connect(ui->combo_folders, SIGNAL(editTextChanged(const QString &)), this, SLOT(combo_box_changed(const QString&)));
+    connect(ui->btn_cancel, SIGNAL(clicked()), this, SLOT(bb_rejected()));
 
 	ui->pb_progress->setValue(0);
 	ui->pb_progress->setVisible(false);
@@ -74,19 +75,33 @@ void GUI_ImportFolder::changeSkin(bool dark){
 
 }
 
-void GUI_ImportFolder::progress_changed(int val){
 
-	if(val)
-		ui->pb_progress->setVisible(true);
+
+void GUI_ImportFolder::set_status(QString str){
+    this->ui->pb_progress->hide();
+    this->ui->lab_status->setText(str);
+}
+
+void GUI_ImportFolder::set_progress(int val){
+
+    if(val){
+        ui->pb_progress->show();
+        ui->lab_status->hide();
+    }
+
 	else
-		ui->pb_progress->setVisible(false);
+        ui->pb_progress->hide();
 
 	ui->pb_progress->setValue(val);
 	if(val == 100) val = 0;
 }
 
 void GUI_ImportFolder::bb_accepted(){
-    emit accepted(ui->combo_folders->currentText().trimmed(), ui->cb_copy2lib->isChecked());
+    emit sig_accepted(ui->combo_folders->currentText().trimmed(), ui->cb_copy2lib->isChecked());
+}
+
+void GUI_ImportFolder::bb_rejected(){
+    emit sig_cancelled();
 }
 
 

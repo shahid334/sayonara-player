@@ -34,18 +34,20 @@ public:
 	virtual ~GUI_ImportFolder();
 
 	signals:
-		void accepted(const QString&, bool);
-		void rejected();
+        void sig_accepted(const QString&, bool);
+        void sig_cancelled();
 
 
 
 
 	private slots:
 		void bb_accepted();
+        void bb_rejected();
 		void combo_box_changed(const QString&);
 
 	public:
-		void progress_changed(int);
+        void set_progress(int);
+        void set_status(QString str);
 
     public slots:
         void changeSkin(bool);

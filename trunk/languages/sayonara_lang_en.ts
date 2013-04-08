@@ -31,64 +31,90 @@
 <context>
     <name>CLibraryBase</name>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="190"/>
-        <location filename="../library/CLibraryAdmin.cpp" line="198"/>
-        <location filename="../library/CLibraryAdmin.cpp" line="208"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="206"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="212"/>
         <source>Import files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="191"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="201"/>
         <source>All files could be imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="199"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="83"/>
+        <source>Loading files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/CLibraryAdmin.cpp" line="97"/>
+        <source>Cancelled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/CLibraryAdmin.cpp" line="116"/>
+        <source>Ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/CLibraryAdmin.cpp" line="118"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="164"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="182"/>
+        <source>No Tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/CLibraryAdmin.cpp" line="189"/>
+        <source>Rollback...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/CLibraryAdmin.cpp" line="204"/>
         <source>%1 of %2 files could be imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="209"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="213"/>
         <source>Sorry, but tracks could not be imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="210"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="214"/>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="230"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="236"/>
         <source>Please select your library first</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="233"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="239"/>
         <source>Open Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="237"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="243"/>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="341"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="347"/>
         <source>files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="353"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="359"/>
         <source>entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="364"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="370"/>
         <source>All %1 could be removed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="368"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="374"/>
         <source>%1 of %2 %3 could not be removed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1432,43 +1458,43 @@ Please choose another folder</source>
     <name>ImportFolder</name>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="188"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="204"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="71"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="190"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="206"/>
         <source>Copy tracks to library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="98"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="191"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="207"/>
         <source>cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="120"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="192"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="208"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="173"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="193"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="135"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="209"/>
         <source>Import tracks to library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="195"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="194"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="157"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="210"/>
         <source>Select target folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="230"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="195"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="192"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="211"/>
         <source>/music/library</source>
         <translation type="unfinished"></translation>
     </message>

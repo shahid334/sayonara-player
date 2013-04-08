@@ -41,7 +41,11 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     m_app = app;
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 	m_library_path = settings->getLibraryPath();
-	m_thread = new ReloadThread();
+
+    m_thread = new ReloadThread();
+    m_import_folder_thread = new ImportFolderThread(this);
+    m_copy_folder_thread = new CopyFolderThread(this);
+
 	m_watcher = new QFileSystemWatcher();
 	m_watcher->addPath(m_library_path);
 	m_import_dialog = 0;
@@ -63,10 +67,18 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
         _db->getTracksFromDatabase(_vec_md, _track_sortorder);
 
 		
-	connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
+
 	connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
     connect(m_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
     connect(m_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
+    connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
+
+    connect(m_import_folder_thread, SIGNAL(finished()), this, SLOT(import_folder_thread_finished()));
+    connect(m_import_folder_thread, SIGNAL(sig_done()), this, SLOT(import_folder_thread_done()));
+    connect(m_import_folder_thread, SIGNAL(sig_progress(int)), this, SLOT(import_folder_thread_progress(int)));
+
+    connect(m_copy_folder_thread, SIGNAL(finished()), this, SLOT(copy_folder_thread_finished()));
+    connect(m_copy_folder_thread, SIGNAL(sig_progress(int)), this, SLOT(import_folder_thread_progress(int)));
 }
 
 

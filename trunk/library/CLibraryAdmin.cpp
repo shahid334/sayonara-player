@@ -38,6 +38,9 @@
 #include <QFileSystemWatcher>
 #include <QListWidget>
 
+/// TODO: FORBID CLOSE OF window during threads
+/// TODO: FORBIN RELOAD LIBRARY <=> IMPORT at same time
+
 void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
     QStringList fileList;
@@ -49,21 +52,24 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 }
 
+void CLibraryBase::importFiles(const MetaDataList& v_md){
+
+    MetaDataList v_md_new = v_md;
+    qDebug() << "Import files " << v_md.size();
+    bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
+    emit sig_import_result(success);
+}
+
 void CLibraryBase::importDirectory(QString directory){
 
 
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
-
     m_src_dir = directory;
+    m_import_folder_thread->set_src_dir(directory);
+    m_import_folder_thread->start();
 
     QDir lib_dir(m_library_path);
-    QDir src_dir(directory);
-
-    QDir tmp_src_dir = src_dir;
-    tmp_src_dir.cdUp();
-
-    QString rel_src_path = tmp_src_dir.relativeFilePath(directory) + QDir::separator();
     QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
 
     content.push_front("");
@@ -75,32 +81,59 @@ void CLibraryBase::importDirectory(QString directory){
     }
 
     m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), content, true);
-    connect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
+    connect(m_import_dialog, SIGNAL(sig_accepted(const QString&, bool)), this, SLOT(importDirectoryAccepted(const QString&, bool)));
+    connect(m_import_dialog, SIGNAL(sig_cancelled()), this, SLOT(cancel_import_thread()));
+    m_import_dialog->set_status(tr("Loading files..."));
     m_import_dialog->show();
 }
 
-void CLibraryBase::importFiles(const MetaDataList& v_md){
+void CLibraryBase::cancel_import_thread(){
+    if(m_import_folder_thread->isRunning()){
+        m_import_folder_thread->terminate();
+        m_import_dialog->set_status("Cancelled");
+        m_import_dialog->close();
+    }
 
-    MetaDataList v_md_new = v_md;
-    qDebug() << "Import files " << v_md.size();
-    bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
-    emit sig_import_result(success);
+    else if(m_copy_folder_thread->isRunning()){
+        m_copy_folder_thread->terminate();
+        m_copy_folder_thread->set_cancelled();
+        m_import_dialog->set_status(tr("Cancelled"));
+    }
+
+    else{
+        m_import_dialog->close();
+    }
 }
-
-
-
 
 void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy){
 
-    QDir lib_dir(m_library_path);
-    QDir src_dir(m_src_dir);
+    m_import_folder_thread->set_may_terminate(true);
+    _import_to = chosen_item;
+    _import_copy = copy;
+}
+
+void CLibraryBase::import_folder_thread_done(){
+
+    int n_tracks = m_import_folder_thread->get_n_tracks();
+    if(n_tracks > 0)
+        m_import_dialog->set_status(tr("Ready"));
+    else
+        m_import_dialog->set_status(tr("No Tracks"));
+}
+
+void CLibraryBase::import_folder_thread_progress(int i){
+    m_import_dialog->set_progress(i);
+}
+
+
+void CLibraryBase::import_folder_thread_finished(){
+
+    m_import_dialog->set_progress(0);
 
     QStringList files;
-    int n_files;
-    CDirectoryReader reader;
-    reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
+    m_import_folder_thread->get_filelist(files);
 
-    if(!copy){
+    if(!_import_copy){
         MetaDataList v_md;
         foreach(QString filename, files){
             MetaData md;
@@ -124,95 +157,70 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
     }
 
 
-    // extract src_folder_name = the name of the folder to import without stuff in front of it
-    QString src_folder_name = m_src_dir;
-    src_folder_name.remove(Helper::get_parent_folder(src_folder_name));
-    while(src_folder_name.startsWith(QDir::separator())) src_folder_name.remove(0,1);
-    while(src_folder_name.endsWith(QDir::separator())) src_folder_name.remove(src_folder_name.size() - 1, 1);
 
-    // and create folder in library
-    lib_dir.mkpath(chosen_item + QDir::separator() + src_folder_name);
+/******************************************/
 
-    
-    MetaDataList v_md;
-    int n_files_copied = 0;
-    int n_snd_files = 0;
+    QMap<QString, MetaData> map;
 
-    QString target_path = m_library_path + QDir::separator() + 
-                          chosen_item + QDir::separator() + 
-                          src_folder_name;
+    m_import_folder_thread->get_md_map(map);
+    if(map.keys().size() == 0){
+        m_import_dialog->set_status(tr("No Tracks"));
 
-    QDir target_dir(target_path);
-
-
-    foreach(QString filename, files){
-
-        // extract folders and create directories
-	QString target_path;
-	QString folder = Helper::get_parent_folder(filename);
-	folder.remove(m_src_dir);
-	while(folder.startsWith(QDir::separator())) folder.remove(0,1);
-	while(folder.endsWith(QDir::separator())) folder.remove(folder.size() - 1, 1);
-
-	target_dir.mkpath(folder);
-	QString new_target_path = target_path + QDir::separator() + folder;
-
-	// copy file
-	QFile f(filename);
-	QString filename_wo_folder = Helper::get_filename_of_path(filename);
-	QString new_filename = new_target_path + QDir::separator() + filename_wo_folder;
-	bool copied = f.copy(new_filename);
-
-	// insert to db
-	if(!Helper::is_soundfile(filename)) continue;
-	else if(Helper::is_soundfile(filename)){
-		n_snd_files ++;
-
-		if(copied) n_files_copied ++;
-		else continue;
-	}
-
-        MetaData md;
-        md.filepath = new_filename;
-        if( ID3::getMetaDataOfFile(md) )
-            v_md.push_back( md );
+        return;
     }
 
+    m_copy_folder_thread->set_vars(_import_to, m_library_path, m_src_dir, files, map );
+    m_copy_folder_thread->set_mode(COPY_FOLDER_THREAD_COPY);
+    m_copy_folder_thread->start();
+
+}
+
+
+
+void CLibraryBase::copy_folder_thread_finished(){
+
+    MetaDataList v_md;
+    m_copy_folder_thread->get_metadata(v_md);
+    if(v_md.size() == 0) {
+        m_import_dialog->set_status(tr("No Tracks"));
+
+        return;
+    }
+    if(m_copy_folder_thread->get_cancelled()){
+        m_copy_folder_thread->set_mode(COPY_FOLDER_THREAD_ROLLBACK);
+        m_copy_folder_thread->start();
+        m_import_dialog->set_status(tr("Rollback..."));
+        return;
+    }
 
     bool success = _db->storeMetadata(v_md);
+    int n_snd_files = m_copy_folder_thread->get_n_files();
+    int n_files_copied = m_copy_folder_thread->get_copied_files();
 
     if(v_md.size() == 0) success = false;
-
     if(success){
-	    if(n_snd_files == n_files_copied){
-	            QMessageBox::information(
-				m_app->getMainWindow(), 
-				tr("Import files"), 
-				tr("All files could be imported")
-                    );
-            }
+        QString str = "";
+        if(n_snd_files == n_files_copied)
+            str =   tr("All files could be imported");
 
-	    else {
-	            QMessageBox::information(
-				m_app->getMainWindow(), 
-				tr("Import files"), 
-				tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files)
-                    );
-            }
+        else
+            str =  tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files);
 
-            refresh();
+        QMessageBox::information( m_app->getMainWindow(), tr("Import files"), str);
+        refresh();
     }
 
     else{
-            QMessageBox::warning(m_app->getMainWindow(), 
-				tr("Import files"), 
-				tr("Sorry, but tracks could not be imported") + "<br />") +
-                                tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+        QMessageBox::warning(m_app->getMainWindow(),
+                             tr("Import files"),
+                             tr("Sorry, but tracks could not be imported") + "<br />") +
+                tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
     }
 
     m_import_dialog->close();
     emit sig_import_result(success);
 }
+
 
 void CLibraryBase::clearLibrary(){
     MetaDataList lst;
@@ -220,6 +228,7 @@ void CLibraryBase::clearLibrary(){
     _db->deleteTracks(lst);
     refresh();
 }
+
 
 void CLibraryBase::reloadLibrary(bool clear){
 
@@ -365,7 +374,7 @@ void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
     }
 
     else {
-	answer_str = tr("%1 of %2 %3 could not be removed").arg(n_fails).arg(n_files).arg(file_entry);
+        answer_str = tr("%1 of %2 %3 could not be removed").arg(n_fails).arg(n_files).arg(file_entry);
     }
 
     emit sig_delete_answer(answer_str);
