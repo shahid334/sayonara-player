@@ -31,58 +31,64 @@
 <context>
     <name>CLibraryBase</name>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="209"/>
-        <location filename="../library/CLibraryAdmin.cpp" line="215"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="190"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="198"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="208"/>
         <source>Import files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="209"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="191"/>
         <source>All files could be imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="216"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="199"/>
+        <source>%1 of %2 files could be imported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../library/CLibraryAdmin.cpp" line="209"/>
         <source>Sorry, but tracks could not be imported</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="217"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="210"/>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="237"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="230"/>
         <source>Please select your library first</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="240"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="233"/>
         <source>Open Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="244"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="237"/>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="348"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="341"/>
         <source>files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="360"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="353"/>
         <source>entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="371"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="364"/>
         <source>All %1 could be removed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="375"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="368"/>
         <source>%1 of %2 %3 could not be removed</source>
         <translation type="unfinished"></translation>
     </message>

@@ -71,7 +71,8 @@ namespace Helper{
 
     QString calc_file_extension(QString filename);
     void remove_files_in_directory(QString dir_name, QStringList filters);
-    QString get_folder_of_file(QString filename);
+    QString get_parent_folder(QString path);
+    QString get_filename_of_path(QString path);
     QStringList extract_folders_of_files(QStringList list);
 
     QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');

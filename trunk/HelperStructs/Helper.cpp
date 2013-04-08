@@ -423,14 +423,29 @@ void Helper::remove_files_in_directory(QString dir_name, QStringList filters){
 	}
 }
 
-QString Helper::get_folder_of_file(QString filename){
-    return filename.left(filename.lastIndexOf(QDir::separator()) + 1);
+QString Helper::get_parent_folder(QString filename){
+    
+    QString ret= filename.left(filename.lastIndexOf(QDir::separator()) + 1);
+    int last_idx = ret.lastIndexOf(QDir::separator());
+    while(last_idx == ret.size() - 1){
+	ret = ret.left(ret.size() - 1);
+    	last_idx = ret.lastIndexOf(QDir::separator());
+    }
+    return ret;
 }
+
+QString Helper::get_filename_of_path(QString path){
+    path.remove(Helper::get_parent_folder(path));
+    path.remove(QDir::separator());
+    return path;
+}
+
+
 
 QStringList Helper::extract_folders_of_files(QStringList files){
     QStringList folders;
     foreach(QString file, files){
-        QString folder = get_folder_of_file(file);
+        QString folder = get_parent_folder(file);
         if(!folders.contains(folder))
             folders << folder;
     }

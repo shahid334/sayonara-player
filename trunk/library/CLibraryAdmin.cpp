@@ -94,13 +94,13 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
 
     QDir lib_dir(m_library_path);
     QDir src_dir(m_src_dir);
-    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+    QStringList files;
+    int n_files;
+    CDirectoryReader reader;
+    reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
 
     if(!copy){
-        CDirectoryReader reader;
-        QStringList files;
-        int n_files;
-        reader.getFilesInsiderDirRecursive(src_dir, files, n_files);
         MetaDataList v_md;
         foreach(QString filename, files){
             MetaData md;
@@ -113,7 +113,7 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
             v_md.push_back(md);
         }
 
-        bool success = db->storeMetadata(v_md);
+        bool success = _db->storeMetadata(v_md);
 
         emit sig_import_result(success);
         emit sig_reload_library_finished();
@@ -123,102 +123,95 @@ void CLibraryBase::importDirectoryAccepted(const QString& chosen_item, bool copy
         return;
     }
 
-    QDir tmp_src_dir = src_dir;
-    tmp_src_dir.cdUp();
 
-    QString rel_src_path = tmp_src_dir.relativeFilePath(m_src_dir) + QDir::separator();
+    // extract src_folder_name = the name of the folder to import without stuff in front of it
+    QString src_folder_name = m_src_dir;
+    src_folder_name.remove(Helper::get_parent_folder(src_folder_name));
+    while(src_folder_name.startsWith(QDir::separator())) src_folder_name.remove(0,1);
+    while(src_folder_name.endsWith(QDir::separator())) src_folder_name.remove(src_folder_name.size() - 1, 1);
 
-    QString target_path = m_library_path +
-                QDir::separator() +
-                chosen_item +
-                QDir::separator() +
-                rel_src_path.replace(" ", "_");
+    // and create folder in library
+    lib_dir.mkpath(chosen_item + QDir::separator() + src_folder_name);
 
-        QStringList files2copy;
-        files2copy.push_back(src_dir.absolutePath());
-        int num_files = 1;
+    
+    MetaDataList v_md;
+    int n_files_copied = 0;
+    int n_snd_files = 0;
 
-        for(int i=0; i<num_files; i++){
+    QString target_path = m_library_path + QDir::separator() + 
+                          chosen_item + QDir::separator() + 
+                          src_folder_name;
 
-            // fetch all entries of a file, maybe it's a directory
-            QDir sub_dir(files2copy[i]);
-            QStringList sub_files = sub_dir.entryList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot, QDir::DirsFirst);
-
-            // it is a directory
-            if(sub_files.size() != 0){
-
-                // create this directory
-                QDir tmp_src_dir(src_dir);
-                QDir new_sub_dir( target_path + tmp_src_dir.relativeFilePath(files2copy[i]) );
-                sub_dir.mkpath(new_sub_dir.path());
-
-                // remove this "file" from list
-                files2copy.removeAt(i);
-                num_files--;
+    QDir target_dir(target_path);
 
 
-                // insert all files/directories from subdir
-                // into array
-                for(int j=0; j<sub_files.size(); j++){
-                    files2copy.insert(i+j, sub_dir.path() + QDir::separator() + sub_files[j] );
-                }
+    foreach(QString filename, files){
 
-                num_files += sub_files.size();
-                i--;
+        // extract folders and create directories
+	QString target_path;
+	QString folder = Helper::get_parent_folder(filename);
+	folder.remove(m_src_dir);
+	while(folder.startsWith(QDir::separator())) folder.remove(0,1);
+	while(folder.endsWith(QDir::separator())) folder.remove(folder.size() - 1, 1);
+
+	target_dir.mkpath(folder);
+	QString new_target_path = target_path + QDir::separator() + folder;
+
+	// copy file
+	QFile f(filename);
+	QString filename_wo_folder = Helper::get_filename_of_path(filename);
+	QString new_filename = new_target_path + QDir::separator() + filename_wo_folder;
+	bool copied = f.copy(new_filename);
+
+	// insert to db
+	if(!Helper::is_soundfile(filename)) continue;
+	else if(Helper::is_soundfile(filename)){
+		n_snd_files ++;
+
+		if(copied) n_files_copied ++;
+		else continue;
+	}
+
+        MetaData md;
+        md.filepath = new_filename;
+        if( ID3::getMetaDataOfFile(md) )
+            v_md.push_back( md );
+    }
+
+
+    bool success = _db->storeMetadata(v_md);
+
+    if(v_md.size() == 0) success = false;
+
+    if(success){
+	    if(n_snd_files == n_files_copied){
+	            QMessageBox::information(
+				m_app->getMainWindow(), 
+				tr("Import files"), 
+				tr("All files could be imported")
+                    );
             }
-        }
 
-
-        // copy & save to database
-        MetaDataList v_metadata;
-
-        bool success = false;
-        qDebug() << "Files 2 copy: " << files2copy;
-        for(int i=0; i<files2copy.size(); i++){
-
-            // target path + relative src path
-            QDir tmp_src_dir(src_dir);
-            QString new_filename = target_path + tmp_src_dir.relativeFilePath(files2copy[i]);
-
-            QFile f(files2copy[i]);
-
-
-            if( f.copy(new_filename) ){
-                success = true;
-                int percent = (i * 10000) / (100 * files2copy.size());
-                if( i== files2copy.size() -1) {
-                    m_import_dialog->close();
-                }
-                else m_import_dialog->progress_changed(percent);
-                if(Helper::is_soundfile(new_filename)){
-                    MetaData md;
-                    md.filepath = QDir(new_filename).absolutePath();
-                    if( ID3::getMetaDataOfFile( md))
-                        v_metadata.push_back( md );
-                }
+	    else {
+	            QMessageBox::information(
+				m_app->getMainWindow(), 
+				tr("Import files"), 
+				tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files)
+                    );
             }
-        }
 
-        m_import_dialog->progress_changed(0);
-
-        qDebug() << "Copy files: " << success;
-        success &= db->storeMetadata(v_metadata);
-        qDebug() << "Library: " << success;
-
-        if(success){
-            QMessageBox::information(m_app->getMainWindow(), tr("Import files"), tr("All files could be imported"));
             refresh();
-        }
+    }
 
-        else
+    else{
             QMessageBox::warning(m_app->getMainWindow(), 
 				tr("Import files"), 
 				tr("Sorry, but tracks could not be imported") + "<br />") +
                                 tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+    }
 
-        m_import_dialog->close();
-
-        emit sig_import_result(success);
+    m_import_dialog->close();
+    emit sig_import_result(success);
 }
 
 void CLibraryBase::clearLibrary(){
