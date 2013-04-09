@@ -68,12 +68,14 @@ void CopyFolderThread::copy(){
         QFile f(filename);
         QString filename_wo_folder = Helper::get_filename_of_path(filename);
         QString new_filename = new_target_path + QDir::separator() + filename_wo_folder;
+        bool existed = QFile::exists(new_filename);
         bool copied = f.copy(new_filename);
         if(copied) {
-            _copied_files ++;
 
-            if(!QFile::exists(new_filename))
+            if(!existed)
                 _lst_copied_files << new_filename;
+
+            _copied_files++;
         }
 
         // insert to db
@@ -105,6 +107,7 @@ void CopyFolderThread::copy(){
 
 void CopyFolderThread::rollback(){
 
+
     int n_operations = _lst_copied_files.size() + _created_dirs.size();
     int n_ops_todo = n_operations;
     int percent;
@@ -113,15 +116,21 @@ void CopyFolderThread::rollback(){
     foreach(QString f, _lst_copied_files){
         QFile file(f);
         file.remove();
-	percent = ((n_ops_todo--) * (_percent * 1000)) / (n_operations);
-	emit sig_progress(percent/ 1000);
+        percent = ((n_ops_todo--) * (_percent * 1000)) / (n_operations);
+
+        emit sig_progress(percent/ 1000);
     }
 
-    foreach(QString f, _created_dirs){
-        QFile file(f);
-        file.remove();
+    foreach(QString d, _created_dirs){
+        QDir dir(_lib_dir);
+        d.remove(_lib_dir);
+        while(d.startsWith(QDir::separator())) d.remove(0,1);
+
+
+        dir.rmpath(d);
     	percent = ((n_ops_todo--) * (_percent * 1000)) / (n_operations);
-	emit sig_progress(percent/ 1000);
+
+        emit sig_progress(percent/ 1000);
     }
 
     _percent = 0;

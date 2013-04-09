@@ -644,8 +644,6 @@ void MyTableView::fill_albums(const AlbumList& albums){
 
 void MyTableView::fill_artists(const ArtistList& artists){
 
-    qDebug() << "My Table View: Got " << artists.size() << " artists";
-
     _view_mode = VIEW_MODE_ARTISTS;
     QList<int> lst;
     _model->set_selected(lst);

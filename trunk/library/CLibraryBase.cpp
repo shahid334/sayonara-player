@@ -61,10 +61,16 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     _filter.filtertext = "";
     _reload_progress = 0;
 
-    /*_db->getAllArtists(_vec_artists, _artist_sortorder);
-        _db->getAllAlbums(_vec_albums, _album_sortorder);
-        _db->getTracksFromDatabase(_vec_md, _track_sortorder);*/
+    m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), true);
 
+    connect(m_import_dialog, SIGNAL(sig_accepted(const QString&, bool)),
+            this,            SLOT(accept_import(const QString&, bool)));
+    connect(m_import_dialog, SIGNAL(sig_cancelled()),
+            this,            SLOT(cancel_import()));
+    connect(m_import_dialog, SIGNAL(sig_closed()),
+            this,            SLOT(import_dialog_closed()));
+    connect(m_import_dialog, SIGNAL(sig_opened()),
+            this,            SLOT(import_dialog_opened()));
 
 
     connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
@@ -203,20 +209,20 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
     _selected_albums.clear();
     _selected_artists.clear();
 
-    qDebug() << "filter changed";
+
     if(_filter.cleared){
 
         _db->getAllArtists(_vec_artists, _artist_sortorder);
         _db->getAllAlbums(_vec_albums, _album_sortorder);
         _db->getTracksFromDatabase(_vec_md, _track_sortorder);
-        qDebug() << "filter cleared" << _vec_artists.size();
+
     }
 
     else {
         _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
         _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
         _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
-        qDebug() << "filter ot cleared" << _vec_artists.size();
+
     }
 
     emit_stuff();

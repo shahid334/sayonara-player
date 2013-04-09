@@ -72,31 +72,7 @@ void CLibraryBase::importDirectory(QString directory){
     QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
 
     content.push_front("");
-
-    if(m_import_dialog){
-        disconnect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), 
-                   this,            SLOT(accept_import(const QString&, bool)));
-        disconnect(m_import_dialog, SIGNAL(sig_cancelled()),
-                   this,            SLOT(cancel_import()));
-        disconnect(m_import_dialog, SIGNAL(sig_closed()), 
-                   this,            SLOT(import_dialog_closed()));
-        disconnect(m_import_dialog, SIGNAL(sig_opened()), 
-                   this,            SLOT(import_dialog_opened()));
-
-
-        delete m_import_dialog;
-    }
-
-    m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), content, true);
-
-    connect(m_import_dialog, SIGNAL(sig_accepted(const QString&, bool)), 
-            this,            SLOT(accept_import(const QString&, bool)));
-    connect(m_import_dialog, SIGNAL(sig_cancelled()), 
-            this,            SLOT(cancel_import()));
-    connect(m_import_dialog, SIGNAL(sig_closed()),
-            this,            SLOT(import_dialog_closed()));
-    connect(m_import_dialog, SIGNAL(sig_opened()), 
-            this,            SLOT(import_dialog_opened()));
+    m_import_dialog->set_folderlist(content);
 
     m_import_dialog->set_thread_active(true);
     m_import_dialog->set_status(tr("Loading files..."));
@@ -104,10 +80,10 @@ void CLibraryBase::importDirectory(QString directory){
 }
 
 void CLibraryBase::import_dialog_opened(){
-	emit sig_reload_library_allowed(false);
+    emit sig_reload_library_allowed(false);
 }
 void CLibraryBase::import_dialog_closed(){
-	emit sig_reload_library_allowed(true);
+    emit sig_reload_library_allowed(true);
 }
 
 void CLibraryBase::import_progress(int i){
@@ -117,7 +93,7 @@ void CLibraryBase::import_progress(int i){
 // fired if ok was clicked in dialog
 void CLibraryBase::accept_import(const QString& chosen_item, bool copy){
 
-	// the preload thread may terminate now
+    // the preload thread may terminate now
     m_import_folder_thread->set_may_terminate(true);
     _import_to = chosen_item;
     _import_copy = copy;
@@ -128,30 +104,31 @@ void CLibraryBase::cancel_import(){
 
     qDebug() << "Cancel import";
 
-	// preload thread
+    // preload thread
     if(m_import_folder_thread->isRunning()){
 
         m_import_folder_thread->set_cancelled();
         m_import_dialog->set_status("Cancelled");
-    	m_import_dialog->set_thread_active(false);
-      
+        m_import_dialog->set_thread_active(false);
+
         m_import_dialog->close();
     }
 
-	// copy thread
+    // copy thread
     else if(m_copy_folder_thread->isRunning()){
 
-		// useless during rollback
+        qDebug() << "Rollback?";
+        // useless during rollback
         if(m_copy_folder_thread->get_mode() == COPY_FOLDER_THREAD_ROLLBACK){
-			return;		
-		}
+            return;
+        }
 
-        m_copy_folder_thread->terminate();
+        qDebug() << "Rollback";
         m_copy_folder_thread->set_cancelled();
         m_import_dialog->set_status(tr("Cancelled"));
     }
 
-	// close dialog
+    // close dialog
     else{
         m_import_dialog->close();
     }
@@ -191,8 +168,8 @@ void CLibraryBase::import_folder_thread_finished(){
     if(!_import_copy){
         MetaDataList v_md;
         foreach(QString filename, files){
-			bool has_key = map.keys().contains(filename);
-			if(!has_key) continue;
+            bool has_key = map.keys().contains(filename);
+            if(!has_key) continue;
 
             MetaData md;
             md = map.value(filename);
@@ -237,11 +214,12 @@ void CLibraryBase::copy_folder_thread_finished(){
     }
 
     // copy was cancelled
+    qDebug() << "Copy folder thread finished " << m_copy_folder_thread->get_cancelled();
     if(m_copy_folder_thread->get_cancelled()){
         m_copy_folder_thread->set_mode(COPY_FOLDER_THREAD_ROLLBACK);
         m_copy_folder_thread->start();
         m_import_dialog->set_status(tr("Rollback..."));
-	m_import_dialog->set_thread_active(true);
+        m_import_dialog->set_thread_active(true);
         return;
     }
 

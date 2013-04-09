@@ -32,11 +32,12 @@ class GUI_ImportFolder : public QDialog, private Ui::ImportFolder {
 
 Q_OBJECT
 public:
-    GUI_ImportFolder(QWidget* parent, const QStringList&, bool copy_enabled);
+    GUI_ImportFolder(QWidget* parent, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
     void set_progress(int);
     void set_status(QString str);
 	void set_thread_active(bool);
+    void set_folderlist(const QStringList& lst);
 
 signals:
     void sig_accepted(const QString&, bool);
@@ -49,6 +50,7 @@ private slots:
 	void bb_accepted();
     void bb_rejected();
 	void combo_box_changed(const QString&);
+    void choose_dir();
 
 
 public slots:
