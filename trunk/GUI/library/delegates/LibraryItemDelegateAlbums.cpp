@@ -70,8 +70,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
         painter->save();
 
-        int col = index.column();
-        int idx_col = _model->calc_shown_col(col);
+        int idx_col = _model->calc_shown_col(index.column());
 
 	if(_model->is_selected(index.row())){
 		painter->fillRect(rect, _selected_background);
