@@ -473,17 +473,17 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
     _track_model->set_selected(lst);
     _artist_model->set_selected(lst);
 
-    if(search.startsWith("f:", Qt::CaseInsensitve)){
+    if(search.startsWith("f:", Qt::CaseInsensitive)){
         this->ui->combo_searchfilter->setCurrentIndex(0);
         this->ui->le_search->setText("");
     }
 
-    else if(search.startsWith("g:", Qt::CaseInsensitve)) {
+    else if(search.startsWith("g:", Qt::CaseInsensitive)) {
         this->ui->combo_searchfilter->setCurrentIndex(1);
         this->ui->le_search->setText("");
     }
 
-    else if(search.startsWith("p:", Qt::CaseInsensitve)) {
+    else if(search.startsWith("p:", Qt::CaseInsensitive)) {
         this->ui->combo_searchfilter->setCurrentIndex(2);
         this->ui->le_search->setText("");
     }
