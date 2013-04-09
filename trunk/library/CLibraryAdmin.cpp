@@ -75,15 +75,13 @@ void CLibraryBase::importDirectory(QString directory){
 
     if(m_import_dialog){
         disconnect(m_import_dialog, SIGNAL(accepted(const QString&, bool)), 
-                   this,            SLOT(accept_importing(const QString&, bool)));
-        disconnect(m_import_dialog, SIGNAL(sig_cancelled()), 
-                   this,            SLOT(cancel_importing()));
+                   this,            SLOT(accept_import(const QString&, bool)));
+        disconnect(m_import_dialog, SIGNAL(sig_cancelled()),
+                   this,            SLOT(cancel_import()));
         disconnect(m_import_dialog, SIGNAL(sig_closed()), 
                    this,            SLOT(import_dialog_closed()));
         disconnect(m_import_dialog, SIGNAL(sig_opened()), 
                    this,            SLOT(import_dialog_opened()));
-        disconnect(m_import_dialog, SIGNAL(sig_closed()), 
-                   this,            SLOT(import_dialog_closed()));
 
 
         delete m_import_dialog;
@@ -92,16 +90,13 @@ void CLibraryBase::importDirectory(QString directory){
     m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), content, true);
 
     connect(m_import_dialog, SIGNAL(sig_accepted(const QString&, bool)), 
-            this,            SLOT(accept_importing(const QString&, bool)));
+            this,            SLOT(accept_import(const QString&, bool)));
     connect(m_import_dialog, SIGNAL(sig_cancelled()), 
-            this,            SLOT(cancel_importing()));
+            this,            SLOT(cancel_import()));
     connect(m_import_dialog, SIGNAL(sig_closed()),
             this,            SLOT(import_dialog_closed()));
     connect(m_import_dialog, SIGNAL(sig_opened()), 
             this,            SLOT(import_dialog_opened()));
-    connect(m_import_dialog, SIGNAL(sig_closed()), 
-            this,            SLOT(import_dialog_closed()));
-
 
     m_import_dialog->set_thread_active(true);
     m_import_dialog->set_status(tr("Loading files..."));
@@ -111,7 +106,7 @@ void CLibraryBase::importDirectory(QString directory){
 void CLibraryBase::import_dialog_opened(){
 	emit sig_reload_library_allowed(false);
 }
-void CLibraryBase::import_dialgo_closed(){
+void CLibraryBase::import_dialog_closed(){
 	emit sig_reload_library_allowed(true);
 }
 
@@ -131,8 +126,11 @@ void CLibraryBase::accept_import(const QString& chosen_item, bool copy){
 // fired if cancel button was clicked in dialog
 void CLibraryBase::cancel_import(){
 
+    qDebug() << "Cancel import";
+
 	// preload thread
     if(m_import_folder_thread->isRunning()){
+
         m_import_folder_thread->set_cancelled();
         m_import_dialog->set_status("Cancelled");
     	m_import_dialog->set_thread_active(false);
@@ -163,10 +161,15 @@ void CLibraryBase::cancel_import(){
 void CLibraryBase::import_folder_thread_done(){
 
     int n_tracks = m_import_folder_thread->get_n_tracks();
-    if(n_tracks > 0)
-        m_import_dialog->set_status(tr("Ready"));
-    else
-        m_import_dialog->set_status(tr("No Tracks"));
+
+    if(n_tracks > 0){
+        QString status = tr("%1 tracks ready").arg(n_tracks);
+        m_import_dialog->set_status(status);
+    }
+
+    else{
+        m_import_dialog->set_status(tr("No tracks"));
+    }
 }
 
 void CLibraryBase::import_folder_thread_finished(){

@@ -81,6 +81,7 @@ void GUI_ImportFolder::changeSkin(bool dark){
 
 void GUI_ImportFolder::set_status(QString str){
     this->ui->pb_progress->hide();
+    this->ui->lab_status->show();
     this->ui->lab_status->setText(str);
 }
 

@@ -114,7 +114,7 @@ private slots:
    void import_folder_thread_done();
 
    void import_dialog_opened();
-   void import_dialgo_closed();
+   void import_dialog_closed();
    void accept_import(const QString&, bool);
    void cancel_import();
    void import_progress(int);

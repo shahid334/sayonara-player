@@ -85,7 +85,6 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
 void CLibraryBase::emit_stuff(){
     emit sig_all_albums_loaded(_vec_albums);
 
-    qDebug() << "Library: got " << _vec_artists.size() << " artists";
     emit sig_all_artists_loaded(_vec_artists);
     emit sig_all_tracks_loaded(_vec_md);
 }

@@ -4,6 +4,7 @@
 #include "HelperStructs/Helper.h"
 #include <QDir>
 #include <QMap>
+#include <QDebug>
 
 
 ImportFolderThread::ImportFolderThread(QObject *parent) :
