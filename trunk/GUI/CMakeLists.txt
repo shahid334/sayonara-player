@@ -14,7 +14,7 @@ INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 SET(HEADERS
-    player/GUI_Simpleplayer.h
+    player/GUI_Player.h
     player/GUI_TrayIcon.h
     player/SearchSlider.h
     playlist/GUI_Playlist.h
@@ -59,11 +59,12 @@ SET(HEADERS
 
 
 SET(SOURCES
-    player/GUI_Simpleplayer.cpp
-    player/GUI_SimpleplayerPlugins.cpp
-    player/GUI_SimpleplayerMenubar.cpp
-    player/GUI_SimpleplayerControls.cpp
-    player/GUI_SimpleplayerCover.cpp
+    player/GUI_Player.cpp
+    player/GUI_PlayerPlugins.cpp
+    player/GUI_PlayerMenubar.cpp
+    player/GUI_PlayerControls.cpp
+    player/GUI_PlayerCover.cpp
+    player/GUI_PlayerConnections.cpp
     player/GUI_TrayIcon.cpp
     player/SearchSlider.cpp
     playlist/GUI_Playlist.cpp
@@ -106,7 +107,7 @@ SET(SOURCES
 
 
 SET(FORMS
-    player/GUI_Simpleplayer.ui
+    player/GUI_Player.ui
     playlist/GUI_Playlist.ui
     playlist/GUI_Playlist_Entry.ui
     playlist/GUI_Playlist_EntrySmall.ui

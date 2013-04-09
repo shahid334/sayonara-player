@@ -21,7 +21,7 @@
 
 #ifndef GUI_SIMPLEPLAYER_H
 #define GUI_SIMPLEPLAYER_H
-#include "GUI/ui_GUI_Simpleplayer.h"
+#include "GUI/ui_GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -54,12 +54,12 @@ class QCloseEvent;
 
 
 
-class GUI_SimplePlayer : public QMainWindow, private Ui::Sayonara
+class GUI_Player : public QMainWindow, private Ui::Sayonara
 {
     Q_OBJECT
 public:
-    explicit GUI_SimplePlayer(QTranslator* translator, QWidget *parent = 0);
-    ~GUI_SimplePlayer();
+    explicit GUI_Player(QTranslator* translator, QWidget *parent = 0);
+    ~GUI_Player();
 
 public slots:
 
@@ -68,6 +68,7 @@ public slots:
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
+    void psl_reload_library_allowed(bool);
 
     void really_close(bool=false);
 

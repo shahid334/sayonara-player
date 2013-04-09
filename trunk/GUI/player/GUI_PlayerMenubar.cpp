@@ -1,5 +1,5 @@
 /*
- * GUI_SimplePlayerMenubar.cpp
+ * GUI_PlayerMenubar.cpp
  *
  *  Created on: 10.10.2012
  *      Author: luke
@@ -23,7 +23,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Player.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include <HelperStructs/Style.h>
 
@@ -41,7 +41,7 @@
 /** FILE **/
 
 
-void GUI_SimplePlayer::fileSelectedClicked(bool) {
+void GUI_Player::fileSelectedClicked(bool) {
 
 	QStringList filetypes = Helper::get_soundfile_extensions();
     filetypes.append(Helper::get_playlistfile_extensions());
@@ -68,7 +68,7 @@ void GUI_SimplePlayer::fileSelectedClicked(bool) {
 		emit fileSelected(list);
 }
 
-void GUI_SimplePlayer::folderSelectedClicked(bool) {
+void GUI_Player::folderSelectedClicked(bool) {
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 			getenv("$HOME"),
 			QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
@@ -79,7 +79,7 @@ void GUI_SimplePlayer::folderSelectedClicked(bool) {
 
 // TODO: not ok
 // -> base
-void GUI_SimplePlayer::importFolderClicked(bool b){
+void GUI_Player::importFolderClicked(bool b){
 	Q_UNUSED(b);
 
     QString lib_path = m_settings->getLibraryPath();
@@ -102,19 +102,19 @@ void GUI_SimplePlayer::importFolderClicked(bool b){
 }
 
 
-void GUI_SimplePlayer::reloadLibraryClicked(bool b) {
+void GUI_Player::reloadLibraryClicked(bool b) {
 	Q_UNUSED(b);
     emit reloadLibrary(false);
 }
 
-void GUI_SimplePlayer::clearLibraryClicked(bool b){
+void GUI_Player::clearLibraryClicked(bool b){
 	Q_UNUSED(b);
 	emit clearLibrary();
 }
 
 
 // prvt slot
-void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
+void GUI_Player::fetch_all_covers_clicked(bool b) {
 	Q_UNUSED(b);
 	emit sig_fetch_all_covers();
 }
@@ -123,7 +123,7 @@ void GUI_SimplePlayer::fetch_all_covers_clicked(bool b) {
 
 /** VIEW **/
 
-void GUI_SimplePlayer::showLibrary(bool b, bool resize){
+void GUI_Player::showLibrary(bool b, bool resize){
 
     m_settings->setShowLibrary(b);
     int old_width = this->width();
@@ -160,7 +160,7 @@ void GUI_SimplePlayer::showLibrary(bool b, bool resize){
     }
 }
 
-void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
+void GUI_Player::show_fullscreen_toggled(bool b){
 	// may happend because of F11 too
 	ui->action_Fullscreen->setChecked(b);
 	if(b)
@@ -170,7 +170,7 @@ void GUI_SimplePlayer::show_fullscreen_toggled(bool b){
     m_settings->setPlayerFullscreen(b);
 }
 
-void GUI_SimplePlayer::sl_show_only_tracks(bool b){
+void GUI_Player::sl_show_only_tracks(bool b){
 
     m_settings->setLibShowOnlyTracks(b);
 
@@ -186,7 +186,7 @@ void GUI_SimplePlayer::sl_show_only_tracks(bool b){
 
 // TODO: not ok
 // -> base
-void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
+void GUI_Player::setLibraryPathClicked(bool b) {
 	Q_UNUSED(b);
 
 	QString start_dir = QDir::homePath();
@@ -221,40 +221,40 @@ void GUI_SimplePlayer::setLibraryPathClicked(bool b) {
 
 
 // prvt slot
-void GUI_SimplePlayer::sl_action_socket_connection_triggered(bool b){
+void GUI_Player::sl_action_socket_connection_triggered(bool b){
 	emit sig_show_socket();
 }
 
 // prvt slot
-void GUI_SimplePlayer::load_pl_on_startup_toggled(bool b){
+void GUI_Player::load_pl_on_startup_toggled(bool b){
 
     m_settings->setLoadPlaylist(b);
 }
 
 // prvt slot
-void GUI_SimplePlayer::show_notification_toggled(bool active){
+void GUI_Player::show_notification_toggled(bool active){
 
     m_settings->setShowNotifications(active);
 }
 
 // prvt slot
-void GUI_SimplePlayer::min2tray_toggled(bool b){
+void GUI_Player::min2tray_toggled(bool b){
     m_settings->setMinimizeToTray(b);
 	m_min2tray = b;
 }
 
-void GUI_SimplePlayer::only_one_instance_toggled(bool b){
+void GUI_Player::only_one_instance_toggled(bool b){
     m_settings->setAllowOnlyOneInstance(b);
 }
 
 // prvt slot
-void GUI_SimplePlayer::small_playlist_items_toggled(bool b){
+void GUI_Player::small_playlist_items_toggled(bool b){
     m_settings->setShowSmallPlaylist(b);
 	emit show_small_playlist_items(b);
 }
 
 // private slot
-void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
+void GUI_Player::sl_action_streamripper_toggled(bool b){
 
     emit sig_show_stream_rec();
 }
@@ -263,18 +263,18 @@ void GUI_SimplePlayer::sl_action_streamripper_toggled(bool b){
 
 
 // prvt slot
-void GUI_SimplePlayer::lastFMClicked(bool b) {
+void GUI_Player::lastFMClicked(bool b) {
 
 	Q_UNUSED(b);
 	emit setupLastFM();
 
 }
 
-void GUI_SimplePlayer::sl_live_search(bool b){
+void GUI_Player::sl_live_search(bool b){
    m_settings->setLibLiveSearch(b);
 }
 
-void GUI_SimplePlayer::sl_action_language_toggled(bool b){
+void GUI_Player::sl_action_language_toggled(bool b){
     Q_UNUSED(b);
     ui_language_chooser->show();
 }
@@ -283,7 +283,7 @@ void GUI_SimplePlayer::sl_action_language_toggled(bool b){
 #define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
 #define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
 
-void GUI_SimplePlayer::help(bool b){
+void GUI_Player::help(bool b){
 	Q_UNUSED(b);
 	QString link;
     int style = m_settings->getPlayerStyle();
@@ -298,7 +298,7 @@ void GUI_SimplePlayer::help(bool b){
 }
 
 // private slot
-void GUI_SimplePlayer::about(bool b){
+void GUI_Player::about(bool b){
 	Q_UNUSED(b);
 
     QString version = m_settings->getVersion();

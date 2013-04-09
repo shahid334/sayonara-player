@@ -1,5 +1,5 @@
 /*
- * GUI_SimplePlayerCover.cpp
+ * GUI_PlayerCover.cpp
  *
  *  Created on: 07.12.2012
  *      Author: luke
@@ -24,7 +24,7 @@
  */
 
 
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Player.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 
@@ -32,7 +32,7 @@
 #include <QString>
 
 /** COVERS **/
-void GUI_SimplePlayer::coverClicked() {
+void GUI_Player::coverClicked() {
 
    if(m_metadata.radio_mode == RADIO_STATION){
         QString searchstring = QString("Radio ") + m_metadata.title;
@@ -64,7 +64,7 @@ void GUI_SimplePlayer::coverClicked() {
     this->setFocus();
 }
 
-void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class, QString coverpath){
+void GUI_Player::sl_alternate_cover_available(QString target_class, QString coverpath){
 
     qDebug() << "Album: "
              << m_metadata.album
@@ -79,7 +79,7 @@ void GUI_SimplePlayer::sl_alternate_cover_available(QString target_class, QStrin
     ui->albumCover->setIcon(QIcon(coverpath));
 }
 
-void GUI_SimplePlayer::sl_no_cover_available(){
+void GUI_Player::sl_no_cover_available(){
 
 
     QString coverpath = Helper::getIconPath() + "logo.png";
@@ -89,7 +89,7 @@ void GUI_SimplePlayer::sl_no_cover_available(){
 
 // public slot
 // cover was found by CoverLookup
-void GUI_SimplePlayer::cover_changed(QString caller_class, QString cover_path) {
+void GUI_Player::cover_changed(QString caller_class, QString cover_path) {
 
 	if(m_class_name != caller_class) return;
 

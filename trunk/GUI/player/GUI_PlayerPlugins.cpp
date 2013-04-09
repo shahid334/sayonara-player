@@ -1,4 +1,4 @@
-/* GUI_SimpleplayerPlugins.cpp */
+/* GUI_PlayerPlugins.cpp */
 
 /* Copyright (C) 2013  Lucio Carreras
  *
@@ -21,13 +21,13 @@
 
 
 /*
- * GUI_SimplePlayerPlugins.cpp
+ * GUI_PlayerPlugins.cpp
  *
  *  Created on: 10.10.2012
  *      Author: lugmair
  */
 
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Player.h"
 
 #include <QWidget>
 #include <QAction>
@@ -36,17 +36,17 @@
 /** PLUGINS **/
 
 
-QWidget* GUI_SimplePlayer::getParentOfPlugin() {
+QWidget* GUI_Player::getParentOfPlugin() {
 	return ui->plugin_widget;
 }
 
-void GUI_SimplePlayer::setInfoDialog(GUI_InfoDialog* dialog){
+void GUI_Player::setInfoDialog(GUI_InfoDialog* dialog){
     ui_info_dialog = dialog;
     ui_info_dialog->setMode(INFO_MODE_TRACKS);
 }
 
 
-void GUI_SimplePlayer::hideAllPlugins(){
+void GUI_Player::hideAllPlugins(){
 
     m_settings->setShownPlugin("");
     if(ui->plugin_widget->isHidden()) return;
@@ -61,7 +61,7 @@ void GUI_SimplePlayer::hideAllPlugins(){
 }
 
 
-void GUI_SimplePlayer::showPlugin(PlayerPlugin* plugin){
+void GUI_Player::showPlugin(PlayerPlugin* plugin){
 
     hideAllPlugins();
 

@@ -18,6 +18,7 @@ void CopyFolderThread::copy(){
     _copied_files = 0;
     _lst_copied_files.clear();
     _created_dirs.clear();
+    _percent = 0;
 
     QDir lib_dir(_lib_dir);
     // extract src_folder_name = the name of the folder to import without stuff in front of it
@@ -77,7 +78,8 @@ void CopyFolderThread::copy(){
 
         // insert to db
         int percent = (i++ * 100000) / _files.size();
-        emit sig_progress(percent / 1000);
+	_percent = percent / 1000;
+        emit sig_progress(_percent);
 
         if(!Helper::is_soundfile(filename)) continue;
         else if(Helper::is_soundfile(filename)){
@@ -103,17 +105,26 @@ void CopyFolderThread::copy(){
 
 void CopyFolderThread::rollback(){
 
+    int n_operations = _lst_copied_files.size() + _created_dirs.size();
+    int n_ops_todo = n_operations;
+    int percent;
+
     _v_md.clear();
     foreach(QString f, _lst_copied_files){
         QFile file(f);
         file.remove();
+	percent = ((n_ops_todo--) * (_percent * 1000)) / (n_operations);
+	emit sig_progress(percent/ 1000);
     }
 
     foreach(QString f, _created_dirs){
         QFile file(f);
         file.remove();
+    	percent = ((n_ops_todo--) * (_percent * 1000)) / (n_operations);
+	emit sig_progress(percent/ 1000);
     }
 
+    _percent = 0;
     _n_files = 0;
     _copied_files = 0;
 
@@ -164,4 +175,8 @@ void CopyFolderThread::get_metadata(MetaDataList& v_md){
 
 void CopyFolderThread::set_mode(int mode){
     _mode = mode;
+}
+
+int CopyFolderThread::get_mode(){
+	return _mode;
 }

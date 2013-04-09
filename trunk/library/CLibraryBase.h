@@ -58,6 +58,7 @@ signals:
 
     void sig_should_reload_library();
     void sig_reload_library_finished();
+    void sig_reload_library_allowed(bool);
     void sig_reloading_library(QString &);
 
     void sig_import_result(bool);
@@ -111,9 +112,12 @@ private slots:
    void copy_folder_thread_finished();
    void import_folder_thread_finished();
    void import_folder_thread_done();
-   void import_folder_thread_progress(int);
-   void importDirectoryAccepted(const QString&, bool);
-   void cancel_import_thread();
+
+   void import_dialog_opened();
+   void import_dialgo_closed();
+   void accept_import(const QString&, bool);
+   void cancel_import();
+   void import_progress(int);
 
 
 private:

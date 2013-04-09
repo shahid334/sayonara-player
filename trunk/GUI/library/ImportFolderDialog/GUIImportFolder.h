@@ -22,6 +22,8 @@
 #define GUIIMPORTFOLDER_H_
 
 #include <QDialog>
+#include <QCloseEvent>
+#include <QShowEvent>
 #include <QStringList>
 #include "GUI/ui_GUI_ImportFolder.h"
 
@@ -32,29 +34,34 @@ Q_OBJECT
 public:
     GUI_ImportFolder(QWidget* parent, const QStringList&, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
+    void set_progress(int);
+    void set_status(QString str);
+	void set_thread_active(bool);
 
-	signals:
-        void sig_accepted(const QString&, bool);
-        void sig_cancelled();
+signals:
+    void sig_accepted(const QString&, bool);
+    void sig_cancelled();
+	void sig_opened();
+	void sig_closed();
 
 
+private slots:
+	void bb_accepted();
+    void bb_rejected();
+	void combo_box_changed(const QString&);
 
 
-	private slots:
-		void bb_accepted();
-        void bb_rejected();
-		void combo_box_changed(const QString&);
+public slots:
+    void changeSkin(bool);
 
-	public:
-        void set_progress(int);
-        void set_status(QString str);
-
-    public slots:
-        void changeSkin(bool);
+protected:
+	void closeEvent(QCloseEvent* e);
+	void showEvent(QShowEvent* e);
 
 
 private:
 	Ui::ImportFolder* ui;
+	bool	_thread_active;
 
 };
 

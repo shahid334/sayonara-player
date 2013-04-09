@@ -33,7 +33,7 @@
 #include <QMainWindow>
 #include <QTranslator>
 
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/LastFM/GUI_LFMRadioWidget.h"
@@ -80,7 +80,7 @@ signals:
 public slots:
 
 private:
-    GUI_SimplePlayer* 		player;
+    GUI_Player* 		player;
     GUI_PlaylistChooser*	ui_playlist_chooser;
     Playlists*              playlists;
     Playlist*               playlist;

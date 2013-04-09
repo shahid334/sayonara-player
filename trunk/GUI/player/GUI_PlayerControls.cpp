@@ -1,4 +1,4 @@
-// GUI_SimpleplayerButtons.cpp
+// GUI_PlayerButtons.cpp
 
 /* Copyright (C) 2012  Lucio Carreras
  *
@@ -20,7 +20,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Player.h"
 #include "GUI/player/GUI_TrayIcon.h"
 
 
@@ -28,7 +28,7 @@
 #include <QIcon>
 
 /** PLAYER BUTTONS **/
-void GUI_SimplePlayer::playClicked(bool) {
+void GUI_Player::playClicked(bool) {
 
     if(!m_metadata_available) {
         emit play();
@@ -49,7 +49,7 @@ void GUI_SimplePlayer::playClicked(bool) {
         m_trayIcon->setPlaying(m_playing);
 }
 
-void GUI_SimplePlayer::stopClicked(bool b) {
+void GUI_Player::stopClicked(bool b) {
 
 
     ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
@@ -90,7 +90,7 @@ void GUI_SimplePlayer::stopClicked(bool b) {
     }
 }
 
-void GUI_SimplePlayer::backwardClicked(bool) {
+void GUI_Player::backwardClicked(bool) {
 
    // ui->albumCover->setFocus();
     int cur_pos_sec =  (m_completeLength_ms * ui->songProgress->value()) / 100000;
@@ -103,13 +103,13 @@ void GUI_SimplePlayer::backwardClicked(bool) {
     }
 }
 
-void GUI_SimplePlayer::forwardClicked(bool) {
+void GUI_Player::forwardClicked(bool) {
     //ui->albumCover->setFocus();
 	emit forward();
 }
 
 
-void GUI_SimplePlayer::sl_rec_button_toggled(bool b){
+void GUI_Player::sl_rec_button_toggled(bool b){
 
     emit sig_rec_button_toggled(b);
 }
@@ -117,14 +117,14 @@ void GUI_SimplePlayer::sl_rec_button_toggled(bool b){
 
 
 /** PROGRESS BAR **/
-void GUI_SimplePlayer::total_time_changed(qint64 total_time) {
+void GUI_Player::total_time_changed(qint64 total_time) {
 
 	QString length_str = Helper::cvtMsecs2TitleLengthString(total_time, true);
     m_completeLength_ms = total_time;
     ui->maxTime->setText(length_str);
 }
 
-void GUI_SimplePlayer::setProgressJump(int percent){
+void GUI_Player::setProgressJump(int percent){
 
     if(percent > 100 || percent < 0) {
         percent = 0;
@@ -136,7 +136,7 @@ void GUI_SimplePlayer::setProgressJump(int percent){
     emit search(percent);
 }
 
-void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
+void GUI_Player::setCurrentPosition(quint32 pos_sec) {
 
     if (m_completeLength_ms != 0) {
 
@@ -170,13 +170,13 @@ void GUI_SimplePlayer::setCurrentPosition(quint32 pos_sec) {
 
 
 /** VOLUME **/
-void GUI_SimplePlayer::setVolume(int vol) {
+void GUI_Player::setVolume(int vol) {
 	ui->volumeSlider->setValue(vol);
 	setupVolButton(vol);
 	emit sig_volume_changed(vol);
 }
 
-void GUI_SimplePlayer::volumeChanged(int volume_percent) {
+void GUI_Player::volumeChanged(int volume_percent) {
 	setupVolButton(volume_percent);
     ui->volumeSlider->setValue(volume_percent);
 	emit sig_volume_changed(volume_percent);
@@ -184,7 +184,7 @@ void GUI_SimplePlayer::volumeChanged(int volume_percent) {
     m_settings->setVolume(volume_percent);
 }
 
-void GUI_SimplePlayer::volumeChangedByTick(int val) {
+void GUI_Player::volumeChangedByTick(int val) {
 
 
     int currentVolumeOrig_perc = this -> ui->volumeSlider->value();
@@ -217,7 +217,7 @@ void GUI_SimplePlayer::volumeChangedByTick(int val) {
     }
 }
 
-void GUI_SimplePlayer::setupVolButton(int percent) {
+void GUI_Player::setupVolButton(int percent) {
 
 	QString butFilename = Helper::getIconPath() + "vol_";
 
@@ -241,7 +241,7 @@ void GUI_SimplePlayer::setupVolButton(int percent) {
 
 }
 
-void GUI_SimplePlayer::muteButtonPressed() {
+void GUI_Player::muteButtonPressed() {
 
 	if (m_mute) {
 		m_mute = false;

@@ -24,21 +24,23 @@ public:
     void set_cancelled();
     bool get_cancelled();
     void set_mode(int mode);
+	int  get_mode();
 
 
 private:
-    QString _lib_dir;
-    QString _src_dir;
-    QString _chosen_dir;
-    QStringList _files;
+    QString        _lib_dir;
+    QString        _src_dir;
+    QString        _chosen_dir;
+    QStringList    _files;
     QMap<QString, MetaData> _map;
-    MetaDataList _v_md;
-    QStringList _lst_copied_files;
-    QStringList _created_dirs;
-    int _n_files;
-    int _copied_files;
-    bool _cancelled;
-    int _mode;
+    MetaDataList   _v_md;
+    QStringList    _lst_copied_files;
+    QStringList    _created_dirs;
+    int            _n_files;
+    int            _copied_files;
+    int            _mode;
+	int            _percent;
+    bool           _cancelled;
 
     void copy();
     void rollback();

@@ -38,6 +38,8 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, const QStringList& folder_li
 	this->ui = new Ui::ImportFolder();
 	ui->setupUi(this);
 
+    _thread_active = false;
+
     ui->combo_folders->addItems(folder_list);
     ui->combo_folders->setAutoCompletionCaseSensitivity(Qt::CaseSensitive);
     ui->cb_copy2lib->setEnabled(copy_enabled);
@@ -109,4 +111,31 @@ void GUI_ImportFolder::combo_box_changed(const QString& text){
 
 	QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
     ui->lab_target_path->setText( libpath + "/" + text );
+}
+
+void GUI_ImportFolder::set_thread_active(bool b){
+	_thread_active = b;
+
+	if(b)
+		this->ui->btn_cancel->setText(tr("Cancel"));
+	else
+		this->ui->btn_cancel->setText(tr("Close"));
+	
+}
+
+void GUI_ImportFolder::closeEvent(QCloseEvent* e){
+
+	if(!_thread_active){
+		e->accept();
+		emit sig_closed();
+		return;
+	}
+
+	e->ignore();
+	emit sig_cancelled();
+}
+
+void GUI_ImportFolder::showEvent(QShowEvent* e){
+	emit sig_opened();
+	e->accept();
 }

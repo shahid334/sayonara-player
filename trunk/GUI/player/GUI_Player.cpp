@@ -1,4 +1,4 @@
-/* GUI_Simpleplayer.cpp */
+/* GUI_Player.cpp */
 
 /* Copyright (C) 2012  Lucio Carreras
  *
@@ -20,8 +20,8 @@
 
 
 
-#include "GUI/ui_GUI_Simpleplayer.h"
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/ui_GUI_Player.h"
+#include "GUI/player/GUI_Player.h"
 #include "GUI/player/GUI_TrayIcon.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
@@ -42,7 +42,7 @@
 #include <QFileDialog>
 #include <QPalette>
 
-GUI_SimplePlayer* obj_ref = 0;
+GUI_Player* obj_ref = 0;
 void signal_handler(int sig);
 
 #ifdef Q_OS_UNIX
@@ -72,7 +72,7 @@ void signal_handler(int sig){
 #endif
 
 
-GUI_SimplePlayer::GUI_SimplePlayer(QTranslator* translator, QWidget *parent) :
+GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::Sayonara) {
 	ui->setupUi(this);
 	initGUI();
@@ -158,13 +158,13 @@ GUI_SimplePlayer::GUI_SimplePlayer(QTranslator* translator, QWidget *parent) :
 }
 
 
-GUI_SimplePlayer::~GUI_SimplePlayer() {
+GUI_Player::~GUI_Player() {
 	qDebug() << "closing player...";
 	delete ui;
 }
 
 
-void GUI_SimplePlayer::language_changed(QString language){
+void GUI_Player::language_changed(QString language){
 
 
     m_translator->load(language, Helper::getSharePath() + "/translations/");
@@ -199,7 +199,7 @@ void GUI_SimplePlayer::language_changed(QString language){
     emit sig_language_changed();
 }
 
-void GUI_SimplePlayer::initGUI() {
+void GUI_Player::initGUI() {
 
 	QString ctrl = tr("Ctrl");
 
@@ -223,139 +223,10 @@ void GUI_SimplePlayer::initGUI() {
     ui->btn_correct->setVisible(false);
 }
 
-void GUI_SimplePlayer::setupConnections(){
-
-	connect(ui->btn_play, SIGNAL(clicked(bool)), this,
-			SLOT(playClicked(bool)));
-	connect(ui->btn_fw, SIGNAL(clicked(bool)), this,
-			SLOT(forwardClicked(bool)));
-	connect(ui->btn_bw, SIGNAL(clicked(bool)), this,
-			SLOT(backwardClicked(bool)));
-    connect(ui->btn_stop, SIGNAL(clicked()), this,
-            SLOT(stopClicked()));
-	connect(ui->btn_mute, SIGNAL(released()), this,
-			SLOT(muteButtonPressed()));
-	connect(ui->btn_rec, SIGNAL(toggled(bool)), this,
-				SLOT(sl_rec_button_toggled(bool)));
-	connect(ui->btn_correct, SIGNAL(clicked(bool)), this,
-			SLOT(correct_btn_clicked(bool)));
-	connect(ui->albumCover, SIGNAL(clicked()), this, SLOT(coverClicked()));
-
-	// file
-	connect(ui->action_OpenFile, SIGNAL(triggered(bool)), this,
-			SLOT(fileSelectedClicked(bool)));
-
-	connect(ui->action_OpenFolder, SIGNAL(triggered(bool)), this,
-			SLOT(folderSelectedClicked(bool)));
-	connect(ui->action_ImportFolder, SIGNAL(triggered(bool)), this,
-				SLOT(importFolderClicked()));
-	connect(ui->action_reloadLibrary, SIGNAL(triggered(bool)), this,
-				SLOT(reloadLibraryClicked(bool)));
-        connect(ui->action_clearLibrary, SIGNAL(triggered(bool)), this,
-				SLOT(clearLibraryClicked(bool)));
-
-	connect(ui->action_Close, SIGNAL(triggered(bool)), this,
-				SLOT(really_close(bool)));
-
-
-	// view
-	connect(ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
-			SLOT(showLibrary(bool)));
-	connect(ui->action_Dark, SIGNAL(toggled(bool)), this,
-			SLOT(changeSkin(bool)));
-
-	connect(ui->action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
-			SLOT(small_playlist_items_toggled(bool)));
-	connect(ui->action_showOnlyTracks, SIGNAL(toggled(bool)), this,
-			SLOT(sl_show_only_tracks(bool)));
-	connect(ui->action_Fullscreen, SIGNAL(toggled(bool)), this,
-			SLOT(show_fullscreen_toggled(bool)));
-
-
-	// preferencesF
-    connect(ui->action_Language, SIGNAL(triggered(bool)), this,
-            SLOT(sl_action_language_toggled(bool)));
-	connect(ui->action_lastFM, SIGNAL(triggered(bool)), this,
-			SLOT(lastFMClicked(bool)));
-	connect(ui->action_setLibPath, SIGNAL(triggered(bool)), this,
-			SLOT(setLibraryPathClicked(bool)));
-	connect(ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this,
-			SLOT(fetch_all_covers_clicked(bool)));
-    connect(ui->action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
-            SLOT(show()));
-	connect(ui->action_min2tray, SIGNAL(toggled(bool)), this,
-			SLOT(min2tray_toggled(bool)));
-	connect(ui->action_only_one_instance, SIGNAL(toggled(bool)), this,
-				SLOT(only_one_instance_toggled(bool)));
-
-	connect(ui->action_streamrecorder, SIGNAL(triggered(bool)), this,
-			SLOT(sl_action_streamripper_toggled(bool)));
-    connect(ui->action_notifications, SIGNAL(triggered(bool)), ui_notifications,
-            SLOT(show()));
-	connect(ui->action_SocketConnection, SIGNAL(triggered(bool)), this,
-			SLOT(sl_action_socket_connection_triggered(bool)));
-
-    connect(ui->action_livesearch, SIGNAL(triggered(bool)), this,
-            SLOT(sl_live_search(bool)));
-
-
-	// about
-	connect(ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
-
-	connect(ui->action_help, SIGNAL(triggered(bool)), this, SLOT(help(bool)));
-    connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
-
-
-    connect(ui->volumeSlider, SIGNAL(searchSliderMoved(int)), this,
-			SLOT(volumeChanged(int)));
-    connect(ui->volumeSlider, SIGNAL(searchSliderReleased(int)), this,
-    		SLOT(volumeChanged(int)));
-    connect(ui->volumeSlider, SIGNAL(searchSliderPressed(int)), this,
-    		SLOT(volumeChanged(int)));
-
-
-    connect(ui->songProgress, SIGNAL(searchSliderReleased(int)), this,
-    		SLOT(setProgressJump(int)));
-	connect(ui->songProgress, SIGNAL(searchSliderPressed(int)), this,
-			SLOT(setProgressJump(int)));
-	connect(ui->songProgress, SIGNAL(searchSliderMoved(int)), this,
-			SLOT(setProgressJump(int)));
-
-
-
-	// cover lookup
-	connect(m_cov_lookup, SIGNAL(sig_cover_found(QString, QString)),
-			this, 				SLOT(cover_changed(QString, QString)));
-
-	connect(this, 				SIGNAL(sig_want_cover(const MetaData&)),
-			m_cov_lookup, SLOT(search_cover(const MetaData&)));
-
-	connect(this,				SIGNAL(sig_fetch_all_covers()),
-			m_cov_lookup, 		SLOT(search_all_covers()));
-
-    connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)),
-            this,				SLOT(sl_alternate_cover_available(QString, QString)));
-
-    connect(m_alternate_covers, SIGNAL(sig_no_cover()),
-            this,				SLOT(sl_no_cover_available()));
-
-
-    // notifications
-    connect(ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
-            this, SLOT(notification_changed(bool,int)));
-
-    // language chooser
-    connect(ui_language_chooser, SIGNAL(sig_language_changed(QString)),
-            this, SLOT(language_changed(QString)));
-
-
-
-    qDebug() << "connections done";
-}
 
 
 // new track
-void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playing) {
+void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
     m_metadata = md;
 
@@ -442,15 +313,15 @@ void GUI_SimplePlayer::update_track(const MetaData & md, int pos_sec, bool playi
 	this->repaint();
 }
 
-void GUI_SimplePlayer::show_cur_song(){
+void GUI_Player::show_cur_song(){}
 
 
-}
+
 
 
 // public slot:
 // id3 tags have changed
-void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
+void GUI_Player::psl_id3_tags_changed(MetaDataList& v_md) {
 
 	MetaData md_new;
 	bool found = false;
@@ -488,7 +359,7 @@ void GUI_SimplePlayer::psl_id3_tags_changed(MetaDataList& v_md) {
 
 
 /** LAST FM **/
-void GUI_SimplePlayer::last_fm_logged_in(bool b){
+void GUI_Player::last_fm_logged_in(bool b){
 
     if(!b && m_settings->getLastFMActive())
         QMessageBox::warning(ui->centralwidget, tr("Warning"), tr("Cannot login to Last.fm"));
@@ -503,7 +374,7 @@ void GUI_SimplePlayer::last_fm_logged_in(bool b){
 }
 
 
-void GUI_SimplePlayer::psl_lfm_activated(bool b){
+void GUI_Player::psl_lfm_activated(bool b){
 /// TODO
 //    show_lfm_radio(false);
 	ui->action_ViewLFMRadio->setChecked(false);
@@ -512,7 +383,7 @@ void GUI_SimplePlayer::psl_lfm_activated(bool b){
 }
 
 
-void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
+void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected){
 
     m_metadata_corrected = md;
 
@@ -530,7 +401,7 @@ void GUI_SimplePlayer::lfm_info_fetched(const MetaData& md, bool loved, bool cor
 	this->repaint();
 }
 
-void GUI_SimplePlayer::correct_btn_clicked(bool b){
+void GUI_Player::correct_btn_clicked(bool b){
 
     if(!ui_info_dialog)
         return;
@@ -567,14 +438,14 @@ void GUI_SimplePlayer::correct_btn_clicked(bool b){
 /** LAST FM **/
 
 
-void GUI_SimplePlayer::setStyle(int style){
+void GUI_Player::setStyle(int style){
 
 	bool dark = (style == 1);
 	changeSkin(dark);
 	ui->action_Dark->setChecked(dark);
 }
 
-void GUI_SimplePlayer::changeSkin(bool dark) {
+void GUI_Player::changeSkin(bool dark) {
 
     QString stylesheet = Style::get_style(dark);
 
@@ -593,7 +464,7 @@ void GUI_SimplePlayer::changeSkin(bool dark) {
 
 
 /** TRAY ICON **/
-void GUI_SimplePlayer::setupTrayActions() {
+void GUI_Player::setupTrayActions() {
 
 
 	m_trayIcon = new GUI_TrayIcon(this);
@@ -622,7 +493,7 @@ void GUI_SimplePlayer::setupTrayActions() {
 }
 
 
-void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
+void GUI_Player::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
 
     switch (reason) {
 
@@ -656,16 +527,16 @@ void GUI_SimplePlayer::trayItemActivated (QSystemTrayIcon::ActivationReason reas
 
 /** LIBRARY AND PLAYLIST **/
 
-QWidget* GUI_SimplePlayer::getParentOfPlaylist() {
+QWidget* GUI_Player::getParentOfPlaylist() {
 	return ui->playlist_widget;
 }
 
-QWidget* GUI_SimplePlayer::getParentOfLibrary() {
+QWidget* GUI_Player::getParentOfLibrary() {
 	return ui->library_widget;
 }
 
 
-void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
+void GUI_Player::setPlaylist(GUI_Playlist* playlist) {
 	ui_playlist = playlist;
     if(ui_playlist){
         ui_playlist->show();
@@ -674,7 +545,7 @@ void GUI_SimplePlayer::setPlaylist(GUI_Playlist* playlist) {
 }
 
 
-void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
+void GUI_Player::setLibrary(GUI_Library_windowed* library) {
     ui_library = library;
     if(ui_library){
         ui_library->show();
@@ -682,7 +553,7 @@ void GUI_SimplePlayer::setLibrary(GUI_Library_windowed* library) {
     }
 }
 
-void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
+void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph){
 	_pph = pph;
 
 	QList<PlayerPlugin*> lst = _pph->get_all_plugins();
@@ -704,9 +575,13 @@ void GUI_SimplePlayer::setPlayerPluginHandler(PlayerPluginHandler* pph){
 
 }
 
-void GUI_SimplePlayer::stopped(){
+void GUI_Player::stopped(){
     m_metadata_available = false;
     stopClicked(false);
+}
+
+void GUI_Player::psl_reload_library_allowed(bool b){
+	this->ui->action_reloadLibrary->setEnabled(b);	
 }
 
 
@@ -714,7 +589,7 @@ void GUI_SimplePlayer::stopped(){
 
 
 // prvt fct
-void GUI_SimplePlayer::setRadioMode(int radio){
+void GUI_Player::setRadioMode(int radio){
 
     bool stream_ripper = m_settings->getStreamRipper();
 	ui->btn_bw->setEnabled(radio == RADIO_OFF);
@@ -755,7 +630,7 @@ void GUI_SimplePlayer::setRadioMode(int radio){
 
 
 // public slot
-void GUI_SimplePlayer::psl_strrip_set_active(bool b){
+void GUI_Player::psl_strrip_set_active(bool b){
 
 	if(b){
         ui->btn_play->setVisible(m_metadata.radio_mode == RADIO_OFF);
@@ -772,14 +647,12 @@ void GUI_SimplePlayer::psl_strrip_set_active(bool b){
 }
 
 
-void GUI_SimplePlayer::ui_loaded(){
+void GUI_Player::ui_loaded(){
 
     #ifdef Q_OS_UNIX
 		obj_ref = this;
 
         signal(SIGWINCH, signal_handler);
-
-
 	#endif
 
     changeSkin(m_settings->getPlayerStyle() == 1);
@@ -787,14 +660,15 @@ void GUI_SimplePlayer::ui_loaded(){
 }
 
 
-void GUI_SimplePlayer::notification_changed(bool active, int timeout_ms){
+void GUI_Player::notification_changed(bool active, int timeout_ms){
 
     m_trayIcon->set_timeout(timeout_ms);
     m_trayIcon->set_notification_active(active);
 }
 
 
-void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
+
+void GUI_Player::resizeEvent(QResizeEvent* e) {
 
     QMainWindow::resizeEvent(e);
 
@@ -812,7 +686,7 @@ void GUI_SimplePlayer::resizeEvent(QResizeEvent* e) {
 }
 
 
-void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
+void GUI_Player::keyPressEvent(QKeyEvent* e) {
 
     e->accept();
 
@@ -862,7 +736,7 @@ void GUI_SimplePlayer::keyPressEvent(QKeyEvent* e) {
 }
 
 
-void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
+void GUI_Player::closeEvent(QCloseEvent* e){
 
     if(m_min2tray){
         e->ignore();
@@ -871,7 +745,7 @@ void GUI_SimplePlayer::closeEvent(QCloseEvent* e){
 }
 
 
-void GUI_SimplePlayer::really_close(bool b){
+void GUI_Player::really_close(bool b){
 
 	m_min2tray = false;
 	this->close();

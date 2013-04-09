@@ -24,7 +24,7 @@
 
 #include <QApplication>
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "GUI/player/GUI_Simpleplayer.h"
+#include "GUI/player/GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/LastFM/GUI_LFMRadioWidget.h"
@@ -85,7 +85,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     QString version    = getVersion();
     set->setVersion( version );
 
-    player              = new GUI_SimplePlayer(translator);
+    player              = new GUI_Player(translator);
 
     playlist            = new Playlist();
     library             = new CLibraryBase(this);
@@ -313,6 +313,7 @@ void Application::init_connections(){
 
     CONNECT(library, sig_playlist_created(QStringList&), 			playlist, 		psl_createPlaylist(QStringList&));
     CONNECT(library, sig_import_result(bool),						playlist,		psl_import_result(bool));
+    CONNECT(library, sig_reload_library_allowed(bool),			player, psl_reload_library_allowed(bool));
     // CONNECT(library, sig_import_result(bool),						ui_playlist,	import_result(bool));
     CONNECT(library, sig_reload_library_finished(),                  ui_library, 	reloading_library_finished());
     CONNECT(library, sig_reloading_library(QString&),				ui_library, 	reloading_library(QString&));
