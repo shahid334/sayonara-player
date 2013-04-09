@@ -15,7 +15,7 @@ ImportFolderThread::ImportFolderThread(QObject *parent) :
 
 
 void ImportFolderThread::run(){
-
+    _cancelled = false;
     _may_terminate = false;
     if(_src_dir.size() == 0) return;
     _filelist.clear();
@@ -28,6 +28,7 @@ void ImportFolderThread::run(){
 
     int i=0;
     foreach(QString filepath, _filelist){
+	if(_cancelled) break;
         int percent = (i++ * 100000) / _filelist.size();
 
         emit sig_progress(percent / 1000);
@@ -40,11 +41,14 @@ void ImportFolderThread::run(){
         _map[filepath] = md;
     }
 
-    emit sig_done();
-    while(!_may_terminate){
-        usleep(10000);
+    if(_cancelled){
+	_map.clear();
     }
 
+    emit sig_done();
+    while(!_may_terminate && !_cancelled){
+        usleep(10000);
+    }
 }
 
 void ImportFolderThread::set_src_dir(QString dir){
@@ -59,7 +63,12 @@ void ImportFolderThread::set_may_terminate(bool b){
     _may_terminate = b;
 }
 
+void ImportFolderThread::set_cancelled(){
+    _cancelled = true;
+}
+
 void ImportFolderThread::get_md_map(QMap<QString, MetaData> &map){
+    if(_cancelled) _map.clear();
     map = _map;
 }
 

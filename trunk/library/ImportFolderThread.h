@@ -21,6 +21,7 @@ public:
     void set_src_dir(QString dir);
     void get_filelist(QStringList& lst);
     void set_may_terminate(bool);
+    void set_cancelled();
     void get_md_map(QMap<QString, MetaData>& map);
     int get_n_tracks();
 
@@ -39,6 +40,7 @@ private:
     QString                 _src_dir;
     QStringList             _filelist;
     bool                    _may_terminate;
+    bool                    _cancelled;
     QMap<QString, MetaData> _map;
 
 

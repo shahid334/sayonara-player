@@ -76,8 +76,6 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     connect(m_import_folder_thread, SIGNAL(finished()), this, SLOT(import_folder_thread_finished()));
     connect(m_import_folder_thread, SIGNAL(sig_done()), this, SLOT(import_folder_thread_done()));
     connect(m_import_folder_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
-	connect(m_import_folder_thread, SIGNAL(sig_opened()), this, SLOT(import_dialog_opened()));
-	connect(m_import_folder_thread, SIGNAL(sig_closed()), this, SLOT(import_dialog_closed()));
 
     connect(m_copy_folder_thread, SIGNAL(finished()), this, SLOT(copy_folder_thread_finished()));
     connect(m_copy_folder_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));

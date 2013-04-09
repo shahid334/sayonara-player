@@ -67,7 +67,6 @@ void CLibraryBase::importDirectory(QString directory){
     m_src_dir = directory;
     m_import_folder_thread->set_src_dir(directory);
     m_import_folder_thread->start();
-    m_import_dialog->set_thread_active(true);
 
     QDir lib_dir(m_library_path);
     QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
@@ -81,6 +80,11 @@ void CLibraryBase::importDirectory(QString directory){
                    this,            SLOT(cancel_importing()));
         disconnect(m_import_dialog, SIGNAL(sig_closed()), 
                    this,            SLOT(import_dialog_closed()));
+        disconnect(m_import_dialog, SIGNAL(sig_opened()), 
+                   this,            SLOT(import_dialog_opened()));
+        disconnect(m_import_dialog, SIGNAL(sig_closed()), 
+                   this,            SLOT(import_dialog_closed()));
+
 
         delete m_import_dialog;
     }
@@ -93,7 +97,13 @@ void CLibraryBase::importDirectory(QString directory){
             this,            SLOT(cancel_importing()));
     connect(m_import_dialog, SIGNAL(sig_closed()),
             this,            SLOT(import_dialog_closed()));
+    connect(m_import_dialog, SIGNAL(sig_opened()), 
+            this,            SLOT(import_dialog_opened()));
+    connect(m_import_dialog, SIGNAL(sig_closed()), 
+            this,            SLOT(import_dialog_closed()));
 
+
+    m_import_dialog->set_thread_active(true);
     m_import_dialog->set_status(tr("Loading files..."));
     m_import_dialog->show();
 }
@@ -123,9 +133,10 @@ void CLibraryBase::cancel_import(){
 
 	// preload thread
     if(m_import_folder_thread->isRunning()){
-        m_import_folder_thread->terminate();
+        m_import_folder_thread->set_cancelled();
         m_import_dialog->set_status("Cancelled");
     	m_import_dialog->set_thread_active(false);
+      
         m_import_dialog->close();
     }
 
@@ -164,9 +175,9 @@ void CLibraryBase::import_folder_thread_finished(){
     m_import_dialog->set_thread_active(false);
 
     QStringList files;
-	QMap<QString, MetaData> map;
+    QMap<QString, MetaData> map;
     
-	m_import_folder_thread->get_filelist(files);
+    m_import_folder_thread->get_filelist(files);
     m_import_folder_thread->get_md_map(map);
 
     if(map.keys().size() == 0){
