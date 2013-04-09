@@ -65,13 +65,16 @@ cp ./resources/sayonara.postinst $DEBIAN_DIR/DEBIAN/postinst
 cp ./resources/copyright ${DEBIAN_DIR}/usr/share/doc/sayonara/copyright
 
 # linux stuff
+
 cp -r ./resources/logos/*  $DEBIAN_DIR/usr/share/icons/hicolor
+find $DEBIAN_DIR/usr/share/icons/hicolor -iname "*svn*" | xargs rm -rf
 cp ./resources/sayonara $DEBIAN_DIR/usr/share/menu
 cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/pixmaps
 cp ../GUI/icons/sayonara.png ${DEBIAN_DIR}/usr/share/icons
 cp ../GUI/icons/* $DEBIAN_DIR/usr/share/sayonara
 chmod -x $DEBIAN_DIR/usr/share/sayonara/logo.png
 cp ../GUI/icons/sayonara.xpm ${DEBIAN_DIR}/usr/share/sayonara/sayonara.xpm
+
 
 # sayonara stuff
 cp ../VERSION ${DEBIAN_DIR}/usr/share/sayonara
