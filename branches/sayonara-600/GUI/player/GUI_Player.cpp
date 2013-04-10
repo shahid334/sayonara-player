@@ -514,7 +514,7 @@ void GUI_Player::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
 
         break;
     case QSystemTrayIcon::MiddleClick:
-        this -> playClicked (false);
+    	m_trayIcon->songChangedMessage(m_metadata);
         break;
     default:
         break;
