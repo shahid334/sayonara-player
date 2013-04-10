@@ -40,6 +40,11 @@
        <height>0</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -50,6 +55,11 @@
    </item>
    <item row="2" column="1" colspan="2">
     <widget class="Line" name="line_2">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -57,6 +67,11 @@
    </item>
    <item row="6" column="0" colspan="3">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -64,6 +79,11 @@
    </item>
    <item row="1" column="1" colspan="2">
     <widget class="QCheckBox" name="cb_copy2lib">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -91,6 +111,11 @@
          <height>30</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -113,6 +138,11 @@
          <height>30</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -127,6 +157,7 @@
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -144,6 +175,11 @@
        <height>90</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
      </property>
@@ -153,6 +189,11 @@
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
        <widget class="QLabel" name="lab_target_info">
+        <property name="font">
+         <font>
+          <family>DejaVu Sans</family>
+         </font>
+        </property>
         <property name="text">
          <string>Select target folder</string>
         </property>
@@ -178,6 +219,11 @@
           <height>25</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>DejaVu Sans</family>
+         </font>
+        </property>
         <property name="focusPolicy">
          <enum>Qt::ClickFocus</enum>
         </property>
@@ -188,6 +234,11 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="lab_target_path">
+        <property name="font">
+         <font>
+          <family>DejaVu Sans</family>
+         </font>
+        </property>
         <property name="text">
          <string>/music/library</string>
         </property>
@@ -207,6 +258,11 @@
           <height>25</height>
          </size>
         </property>
+        <property name="font">
+         <font>
+          <family>DejaVu Sans</family>
+         </font>
+        </property>
         <property name="focusPolicy">
          <enum>Qt::NoFocus</enum>
         </property>
@@ -220,6 +276,11 @@
    </item>
    <item row="7" column="1">
     <spacer name="horizontalSpacer">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -253,6 +314,11 @@
          <height>25</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="value">
         <number>24</number>
        </property>
@@ -265,6 +331,11 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="text">
         <string/>

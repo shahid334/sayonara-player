@@ -24,6 +24,7 @@
      </property>
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <kerning>true</kerning>
       </font>
      </property>
@@ -67,6 +68,11 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="text">
           <string>Info</string>
          </property>
@@ -82,6 +88,11 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
          </property>
          <property name="text">
           <string>LFM</string>
@@ -99,6 +110,11 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -111,6 +127,11 @@
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <spacer name="verticalSpacer_2">
+           <property name="font">
+            <font>
+             <family>DejaVu Sans</family>
+            </font>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -136,6 +157,11 @@
              <height>220</height>
             </size>
            </property>
+           <property name="font">
+            <font>
+             <family>DejaVu Sans</family>
+            </font>
+           </property>
            <property name="focusPolicy">
             <enum>Qt::NoFocus</enum>
            </property>
@@ -155,6 +181,11 @@
          </item>
          <item>
           <spacer name="verticalSpacer">
+           <property name="font">
+            <font>
+             <family>DejaVu Sans</family>
+            </font>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -170,6 +201,11 @@
        </item>
        <item row="4" column="2">
         <widget class="QPushButton" name="btn_close1">
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
          </property>
@@ -180,6 +216,11 @@
        </item>
        <item row="4" column="1">
         <spacer name="horizontalSpacer_2">
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -201,6 +242,7 @@
          </property>
          <property name="font">
           <font>
+           <family>DejaVu Sans</family>
            <pointsize>12</pointsize>
            <weight>75</weight>
            <bold>true</bold>

@@ -52,6 +52,11 @@
        <height>50</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -64,6 +69,11 @@
        <width>50</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
      </property>
      <property name="text">
       <string>Name</string>
@@ -95,6 +105,11 @@
          <height>18</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -119,6 +134,11 @@
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="toolTip">
       <string>Type name you wanna save the stream as</string>
      </property>
@@ -129,6 +149,11 @@
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Url</string>
      </property>
@@ -148,6 +173,11 @@
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::ClickFocus</enum>
      </property>
@@ -165,6 +195,11 @@
          <width>100</width>
          <height>24</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
@@ -194,6 +229,11 @@
          <height>24</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -219,6 +259,11 @@
      </item>
      <item>
       <spacer name="horizontalSpacer">
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -244,6 +289,11 @@
          <height>25</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -265,6 +315,11 @@
    </item>
    <item row="6" column="0" colspan="3">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -272,15 +327,14 @@
    </item>
   </layout>
  </widget>
-  <customwidgets>
-    <customwidget>
-       <class>PlayerPlugin</class>
-          <extends>QWidget</extends>
-             <header>PlayerPlugin/PlayerPlugin.h</header>
-                <container>1</container>
-                  </customwidget>
-                   </customwidgets>
-
+ <customwidgets>
+  <customwidget>
+   <class>PlayerPlugin</class>
+   <extends>QWidget</extends>
+   <header>PlayerPlugin/PlayerPlugin.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

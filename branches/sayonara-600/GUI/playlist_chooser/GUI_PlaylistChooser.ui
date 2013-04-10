@@ -49,6 +49,11 @@
        <height>50</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -56,17 +61,22 @@
    </item>
    <item row="1" column="3">
     <widget class="QPushButton" name="btn_save_as">
-     <property name="toolTip">
-    <string>Save as</string>
-    </property>
-      <property name="maximumSize">
+     <property name="maximumSize">
       <size>
        <width>25</width>
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Save as</string>
      </property>
      <property name="text">
       <string/>
@@ -84,6 +94,11 @@
    </item>
    <item row="3" column="0" colspan="4">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -103,6 +118,11 @@
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -116,17 +136,22 @@
    </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="btn_delete">
-    <property name="toolTip">
-    <string>Delete</string>
-    </property>
      <property name="maximumSize">
       <size>
        <width>25</width>
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Delete</string>
      </property>
      <property name="text">
       <string/>
@@ -144,17 +169,22 @@
    </item>
    <item row="2" column="3">
     <widget class="QPushButton" name="btn_save">
-     <property name="toolTip">
-    <string>Save</string>
-    </property>
-    <property name="maximumSize">
+     <property name="maximumSize">
       <size>
        <width>25</width>
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Save</string>
      </property>
      <property name="text">
       <string/>
@@ -193,6 +223,11 @@
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -217,6 +252,11 @@
        <width>1000</width>
        <height>25</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
      </property>
      <property name="editable">
       <bool>true</bool>
@@ -277,6 +317,11 @@
          <height>18</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="text">
         <string>x</string>
        </property>
@@ -286,15 +331,14 @@
    </item>
   </layout>
  </widget>
-  <customwidgets>
-    <customwidget>
-       <class>PlayerPlugin</class>
-          <extends>QWidget</extends>
-             <header>PlayerPlugin/PlayerPlugin.h</header>
-                <container>1</container>
-                  </customwidget>
-                   </customwidgets>
-
+ <customwidgets>
+  <customwidget>
+   <class>PlayerPlugin</class>
+   <extends>QWidget</extends>
+   <header>PlayerPlugin/PlayerPlugin.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

@@ -19,6 +19,11 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -62,6 +67,11 @@
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QComboBox" name="combo_notification">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -74,6 +84,11 @@
    </item>
    <item row="4" column="1">
     <widget class="QSpinBox" name="sb_timeout">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::WheelFocus</enum>
      </property>
@@ -93,6 +108,11 @@
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_3">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Timeout (ms)</string>
      </property>
@@ -114,6 +134,11 @@
    </item>
    <item row="5" column="1">
     <widget class="QSpinBox" name="sb_scale">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="minimum">
       <number>32</number>
      </property>
@@ -127,6 +152,11 @@
    </item>
    <item row="5" column="0">
     <widget class="QCheckBox" name="cb_scale">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Icon scaling</string>
      </property>

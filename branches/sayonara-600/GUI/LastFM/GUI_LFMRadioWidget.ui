@@ -57,6 +57,11 @@
          <height>50</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -85,6 +90,11 @@
          <height>18</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -108,14 +118,19 @@
        <property name="minimumSize">
         <size>
          <width>110</width>
-         <height>0</height>
+         <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>120</width>
-         <height>16777215</height>
+         <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <item>
         <property name="text">
@@ -141,11 +156,22 @@
      </item>
      <item>
       <widget class="QLineEdit" name="le_text">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>24</height>
+         <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
@@ -160,11 +186,22 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>25</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>16777215</width>
-         <height>24</height>
+         <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
@@ -185,14 +222,19 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>0</height>
+         <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
          <width>100</width>
-         <height>24</height>
+         <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::TabFocus</enum>
@@ -212,6 +254,11 @@
    </item>
    <item row="10" column="0" colspan="2">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -219,15 +266,6 @@
    </item>
   </layout>
  </widget>
-  <customwidgets>
-    <customwidget>
-       <class>PlayerPlugin</class>
-          <extends>QWidget</extends>
-             <header>PlayerPlugin/PlayerPlugin.h</header>
-                <container>1</container>
-                  </customwidget>
-                   </customwidgets>
-
  <resources/>
  <connections>
   <connection>

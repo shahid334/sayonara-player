@@ -16,6 +16,11 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="12" column="0">
     <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Target path:</string>
      </property>
@@ -28,6 +33,11 @@
        <width>50</width>
        <height>50</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -53,6 +63,11 @@
          <height>654654</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -69,6 +84,11 @@
          <height>654654</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -81,6 +101,11 @@
    </item>
    <item row="3" column="0" colspan="4">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -88,6 +113,11 @@
    </item>
    <item row="4" column="1" colspan="3">
     <widget class="QCheckBox" name="cb_activate">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -100,6 +130,7 @@
     <widget class="QLabel" name="label_5">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -111,6 +142,11 @@
    </item>
    <item row="10" column="0">
     <widget class="QLabel" name="label_3">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Only complete tracks</string>
      </property>
@@ -118,6 +154,11 @@
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Activate</string>
      </property>
@@ -131,6 +172,11 @@
        <height>30</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
@@ -141,6 +187,11 @@
    </item>
    <item row="10" column="1" colspan="3">
     <widget class="QCheckBox" name="cb_complete_tracks">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -154,6 +205,11 @@
    </item>
    <item row="11" column="0">
     <widget class="QLabel" name="label_4">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>Create session folder</string>
      </property>
@@ -163,6 +219,11 @@
     <widget class="QCheckBox" name="cb_create_session_path">
      <property name="enabled">
       <bool>true</bool>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
      </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
@@ -177,6 +238,11 @@
    </item>
    <item row="12" column="1" colspan="2">
     <widget class="QLineEdit" name="le_path">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>

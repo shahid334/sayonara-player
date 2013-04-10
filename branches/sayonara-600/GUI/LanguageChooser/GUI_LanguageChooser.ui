@@ -16,6 +16,11 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="4" column="1">
     <widget class="QPushButton" name="btn_ok">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>OK</string>
      </property>
@@ -23,6 +28,11 @@
    </item>
    <item row="4" column="0">
     <spacer name="horizontalSpacer">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -36,6 +46,11 @@
    </item>
    <item row="2" column="0" colspan="2">
     <widget class="QComboBox" name="combo_lang">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <item>
       <property name="text">
        <string>English</string>
@@ -47,6 +62,7 @@
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -58,6 +74,11 @@
    </item>
    <item row="1" column="0" colspan="2">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -65,6 +86,11 @@
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QLabel" name="label_2">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string>For new languages I am always looking for translators</string>
      </property>

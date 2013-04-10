@@ -277,6 +277,11 @@
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QFrame" name="frame">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -303,6 +308,11 @@
          <width>120</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
@@ -350,6 +360,11 @@
          <height>25</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
@@ -371,6 +386,11 @@
          <width>34</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
@@ -397,6 +417,7 @@
        </property>
        <property name="font">
         <font>
+         <family>DejaVu Sans</family>
          <pointsize>10</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -409,6 +430,11 @@
      </item>
      <item>
       <widget class="QLabel" name="lab_status">
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -427,6 +453,11 @@
          <width>24</width>
          <height>24</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>

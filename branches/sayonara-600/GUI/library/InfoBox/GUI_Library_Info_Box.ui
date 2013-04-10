@@ -16,6 +16,11 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="3" column="2">
     <widget class="QLabel" name="lab_duration_value">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -23,6 +28,11 @@
    </item>
    <item row="1" column="2">
     <widget class="QLabel" name="lab_artist_count">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -64,6 +74,11 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::ClickFocus</enum>
      </property>
@@ -77,6 +92,11 @@
    </item>
    <item row="0" column="2">
     <widget class="QLabel" name="lab_track_count">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -84,6 +104,11 @@
    </item>
    <item row="2" column="2">
     <widget class="QLabel" name="lab_album_count">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -151,6 +176,11 @@
        <height>0</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -161,6 +191,11 @@
    </item>
    <item row="5" column="2">
     <widget class="QLabel" name="lab_lfm_playcount">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -182,6 +217,11 @@
    </item>
    <item row="4" column="2">
     <widget class="QLabel" name="lab_filesize">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="text">
       <string/>
      </property>

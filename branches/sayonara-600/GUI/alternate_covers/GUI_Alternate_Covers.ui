@@ -18,6 +18,7 @@
     <widget class="QLabel" name="lab_title">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -28,7 +29,13 @@
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QLineEdit" name="le_search"/>
+    <widget class="QLineEdit" name="le_search">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
+    </widget>
    </item>
    <item row="1" column="2">
     <widget class="QPushButton" name="btn_search">
@@ -50,6 +57,11 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -60,6 +72,11 @@
    </item>
    <item row="2" column="0" colspan="3">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -72,6 +89,11 @@
        <width>520</width>
        <height>220</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
@@ -131,6 +153,11 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -153,6 +180,11 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -163,6 +195,11 @@
    </item>
    <item row="4" column="0">
     <widget class="QProgressBar" name="pb_progress">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="value">
       <number>24</number>
      </property>
