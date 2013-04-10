@@ -34,11 +34,16 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     ui = new Ui::GUI_LanguageChooser();
     ui->setupUi(this);
 
-    _map["de"] = "Deutsch";
-    _map["en"] = "English";
-    _map["es"] = "Español";
-    _map["fr"] = "Francais";
-    _map["it"] = "Italiano";
+    _map["de"]    = "Deutsch";
+    _map["en"]    = "English";
+    _map["es"]    = "Español";
+    _map["fr"]    = "Francais";
+    _map["it"]    = "Italiano";
+    _map["pt"]    = "Português";
+    _map["sr"]    = "Srpski"
+    _map["sr_cy"] = "Српски";
+    _map["ru"]    = "Pyccĸий";
+    _map["ua"]    = "Українська";
     _last_idx = -1;
 
     this->setModal(true);
@@ -101,7 +106,7 @@ void GUI_LanguageChooser::renew_combo(){
 
         QString two = name.right(2);
         QString title = _map.value(two);
-        QString flag = Helper::getSharePath() + "/translations/" + two + ".png";
+        QString flag = Helper::getSharePath() + "/translations/icons/" + two + ".png";
 
         if(title.size() > 0)
             ui->combo_lang->addItem(QIcon(flag), title, name);

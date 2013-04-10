@@ -262,7 +262,7 @@
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="128"/>
-        <source>%1 is no library directory</source>
+        <source>%1&lt;br /&gt;is no library directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

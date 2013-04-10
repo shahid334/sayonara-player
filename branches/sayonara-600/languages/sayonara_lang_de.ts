@@ -349,8 +349,12 @@
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="128"/>
+        <source>%1&lt;br /&gt;is no library directory</source>
+        <translation>%1&lt;br /&gt;ist nicht in der Musiksammlung</translation>
+    </message>
+    <message>
         <source>%1 is no library directory</source>
-        <translation>%1 ist nicht in der Musiksammlung</translation>
+        <translation type="obsolete">%1 ist nicht in der Musiksammlung</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="152"/>
