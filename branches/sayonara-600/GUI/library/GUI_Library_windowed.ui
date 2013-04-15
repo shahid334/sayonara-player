@@ -312,6 +312,8 @@
        <property name="font">
         <font>
          <family>DejaVu Sans</family>
+         <weight>50</weight>
+         <bold>false</bold>
         </font>
        </property>
        <property name="focusPolicy">
