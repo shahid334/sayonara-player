@@ -73,6 +73,7 @@ SET(HEADERS
     Socket/Socket.h
     HelperStructs/CSettingsStorage.h
     HelperStructs/Tagging/ID3_Fileheader.h
+    HelperStructs/AsyncWebAccess.h
 )
 
 SET(SOURCES
@@ -88,6 +89,7 @@ SET(SOURCES
     HelperStructs/CDirectoryReader.cpp
     HelperStructs/PlaylistParser.cpp
     HelperStructs/WebAccess.cpp
+    HelperStructs/AsyncWebAccess.cpp
     HelperStructs/PodcastParser/PodcastParser.cpp
     HelperStructs/Tagging/id3.cpp
     HelperStructs/Tagging/id3access.cpp

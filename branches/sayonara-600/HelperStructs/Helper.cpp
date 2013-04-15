@@ -603,3 +603,11 @@ QString Helper::get_album_w_disc(const MetaData& md){
     else return album.name.trimmed();
 
 }
+
+QString Helper::get_newest_version(){
+
+    QString str;
+    WebAccess::read_http_into_str("http://sayonara.luciocarreras.de/newest", str);
+    return str;
+
+}

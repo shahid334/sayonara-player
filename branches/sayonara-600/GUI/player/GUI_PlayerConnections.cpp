@@ -149,6 +149,8 @@ void GUI_Player::setupConnections(){
     connect(ui_language_chooser, SIGNAL(sig_language_changed(QString)),
             this, SLOT(language_changed(QString)));
 
+    connect(m_async_wa, SIGNAL(finished()), this, SLOT(async_wa_finished()));
+
 
 
     qDebug() << "connections done";

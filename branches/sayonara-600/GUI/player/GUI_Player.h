@@ -41,6 +41,7 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/AsyncWebAccess.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -184,6 +185,8 @@ private slots:
     void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
+    void async_wa_finished();
+
 
     void notification_changed(bool active, int ms);
     void language_changed(QString);
@@ -225,6 +228,7 @@ private:
     PlayerPluginHandler*    _pph;
 
     GUI_Alternate_Covers*   m_alternate_covers;
+    AsyncWebAccess*		m_async_wa;
 
     QString			m_class_name;
     quint32 			m_completeLength_ms;

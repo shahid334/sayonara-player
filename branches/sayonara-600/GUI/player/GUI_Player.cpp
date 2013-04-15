@@ -31,6 +31,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/AsyncWebAccess.h"
 #include "CoverLookup/CoverLookup.h"
 
 #include "Engine/Engine.h"
@@ -78,8 +79,9 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	initGUI();
     m_translator = translator;
     m_settings = CSettingsStorage::getInstance();
+        ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
-    ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
+    m_async_wa = new AsyncWebAccess(this);
 
     ui->lab_artist->hide();
     ui->lab_title->hide();
@@ -150,6 +152,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	/* SIGNALS AND SLOTS */
     this->setupConnections();
+    m_async_wa->set_url("http://sayonara.luciocarreras.de/current_version");
+    m_async_wa->start();
 
 	ui->plugin_widget->resize(ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
@@ -749,6 +753,27 @@ void GUI_Player::really_close(bool b){
 
 	m_min2tray = false;
 	this->close();
+}
+
+
+void GUI_Player::async_wa_finished(){
+	QString new_version;
+	bool success = m_async_wa->get_data(new_version);
+	if(!success) return;
+
+	QString cur_version = m_settings->getVersion();
+	new_version = new_version.trimmed();
+
+	qDebug() << "Newest Version: " << new_version;
+	qDebug() << "This Version:   " << cur_version;
+
+	if(new_version > cur_version){
+		QMessageBox::information(this, 
+					tr("Info"), 
+					tr("A new version is available!"));
+	}
+
+
 }
 
 
