@@ -24,6 +24,7 @@
 #include "GUI/ui_GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
+#include "GUI/library/GUI_LibraryPath.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/LastFM/GUI_LFMRadioWidget.h"
@@ -33,6 +34,7 @@
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
+
 #include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
@@ -91,6 +93,8 @@ public slots:
 
     void showPlugin(PlayerPlugin* plugin);
     void hideAllPlugins();
+
+    void psl_libpath_changed(QString &);
 
 signals:
 
@@ -168,7 +172,8 @@ private slots:
     /* Preferences */
     void sl_action_language_toggled(bool b=true);
     void lastFMClicked(bool b = true);
-    void setLibraryPathClicked(bool = true);
+    void setLibraryPathClicked(bool b = true);
+
     void fetch_all_covers_clicked(bool b = true);
     void load_pl_on_startup_toggled(bool);
     void min2tray_toggled(bool);
@@ -220,6 +225,7 @@ private:
 
     GUI_Playlist*           ui_playlist;
     GUI_Library_windowed*   ui_library;
+    GUI_LibraryPath*        ui_libpath;
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;
     GUI_Startup_Dialog*     ui_startup_dialog;
@@ -230,23 +236,23 @@ private:
     GUI_Alternate_Covers*   m_alternate_covers;
     AsyncWebAccess*		m_async_wa;
 
-    QString			m_class_name;
-    quint32 			m_completeLength_ms;
-    bool 			m_playing;
-    bool			m_mute;
-    GUI_TrayIcon *		m_trayIcon;
+    QString                 m_class_name;
+    quint32                 m_completeLength_ms;
+    bool                    m_playing;
+    bool                    m_mute;
+    GUI_TrayIcon *          m_trayIcon;
 
-    QString			m_skinSuffix;
+    QString                 m_skinSuffix;
 
     MetaData			m_metadata;
     MetaData			m_metadata_corrected;
-    bool			m_metadata_available;
-    bool			m_min2tray;
+    bool                m_metadata_available;
+    bool                m_min2tray;
 
-    int 			m_library_width;
-    int				m_library_stretch_factor;
-    CSettingsStorage* m_settings;
-    QTranslator*    m_translator;
+    int                 m_library_width;
+    int                 m_library_stretch_factor;
+    CSettingsStorage*   m_settings;
+    QTranslator*        m_translator;
 
 
     void setupTrayActions ();

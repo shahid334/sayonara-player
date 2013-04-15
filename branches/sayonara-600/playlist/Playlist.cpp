@@ -153,7 +153,7 @@ void Playlist::load_old_playlist(){
     bool load_last_position = _settings->getRememberTime();
     bool start_immediatly = _settings->getStartPlaying();
 
-    qDebug() << "Last track has been " << last_track->filepath;
+    //qDebug() << "Last track has been " << last_track->filepath;
 
     if( !loadPlaylist ) return;
 

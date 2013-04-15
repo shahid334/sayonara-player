@@ -37,6 +37,7 @@ SET(HEADERS
     library/InfoBox/GUILibraryInfoBox.h
     library/ImportFolderDialog/GUIImportFolder.h
     library/DiscPopupMenu.h
+    library/GUI_LibraryPath.h
     alternate_covers/AlternateCoverItemDelegate.h
     alternate_covers/AlternateCoverItemModel.h
     alternate_covers/GUI_Alternate_Covers.h
@@ -87,6 +88,7 @@ SET(SOURCES
     library/delegates/LibraryItemDelegateTracks.cpp
     library/InfoBox/GUILibraryInfoBox.cpp
     library/ImportFolderDialog/GUIImportFolder.cpp
+    library/GUI_LibraryPath.cpp
     alternate_covers/AlternateCoverItemDelegate.cpp
     alternate_covers/AlternateCoverItemModel.cpp
     alternate_covers/GUI_Alternate_Covers.cpp
@@ -116,6 +118,7 @@ SET(FORMS
     library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
+    library/GUI_LibraryPath.ui
     equalizer/GUI_Equalizer.ui
     tagedit/GUI_TagEdit.ui
     alternate_covers/GUI_Alternate_Covers.ui

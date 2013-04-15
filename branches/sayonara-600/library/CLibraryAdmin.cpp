@@ -271,6 +271,7 @@ void CLibraryBase::reloadLibrary(bool clear){
 
         QString dir = QFileDialog::getExistingDirectory(m_app->getMainWindow(), tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
 
+
         if(dir.length() < 3) {
             QMessageBox msgBox(m_app->getMainWindow());
             msgBox.setText(tr("I said: \"Please select your library first\". Bye bye!"));
@@ -281,6 +282,7 @@ void CLibraryBase::reloadLibrary(bool clear){
         else {
             m_library_path = dir;
             CSettingsStorage::getInstance()->setLibraryPath(dir);
+            emit sig_libpath_set(dir);
         }
     }
 

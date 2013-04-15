@@ -33,6 +33,7 @@ ImportFolderThread::ImportFolderThread(QObject *parent) :
     QThread(parent)
 {
 
+
 }
 
 

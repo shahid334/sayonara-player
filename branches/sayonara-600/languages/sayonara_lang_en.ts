@@ -5,25 +5,25 @@
     <name>AlternateCovers</name>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="133"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="143"/>
         <source>Search alternative image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="57"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="135"/>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="69"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="145"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="138"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="136"/>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="165"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="146"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="160"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="137"/>
+        <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="192"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="147"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
@@ -98,27 +98,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="276"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="277"/>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="379"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="381"/>
         <source>files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="391"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="393"/>
         <source>entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="402"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="404"/>
         <source>All %1 could be removed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="406"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="408"/>
         <source>%1 of %2 %3 could not be removed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -216,19 +216,19 @@
     <name>GUI_Equalizer</name>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="504"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="520"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="77"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="506"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="87"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="522"/>
         <source>Save as custom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="115"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="508"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="135"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="524"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
@@ -441,43 +441,43 @@
     <name>GUI_LFMRadioWidget</name>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="158"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="168"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="76"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="160"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="81"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="170"/>
         <source>Last.fm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="92"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="161"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="102"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="171"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="122"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="164"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="137"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="174"/>
         <source>Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="127"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="165"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="142"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="175"/>
         <source>User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="132"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="166"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="147"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="176"/>
         <source>Tag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="137"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="167"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="152"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="177"/>
         <source>Recommended</source>
         <translation type="unfinished"></translation>
     </message>
@@ -491,31 +491,31 @@
     <name>GUI_LanguageChooser</name>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="90"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="97"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="91"/>
+        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="25"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="98"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="41"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="94"/>
+        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="56"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="101"/>
         <source>English</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="55"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="96"/>
+        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="71"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="103"/>
         <source>Select Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="69"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="97"/>
+        <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="95"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="104"/>
         <source>For new languages I am always looking for translators</source>
         <translation type="unfinished"></translation>
     </message>
@@ -524,55 +524,55 @@
     <name>GUI_LastFM_Dialog</name>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="160"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="177"/>
         <source>Last.fm Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="40"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="162"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="55"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="179"/>
         <source>Username</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="47"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="163"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="67"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="180"/>
         <source>Activate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="54"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="164"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="79"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="181"/>
         <source>Show error messages</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="61"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="165"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="91"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="182"/>
         <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="88"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="167"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="133"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="184"/>
         <source>Propose ID3 corrections</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="98"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="168"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="148"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="185"/>
         <source>Clear session key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="152"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="171"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="222"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="188"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="162"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="172"/>
+        <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="237"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="189"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -681,43 +681,43 @@
     <name>GUI_Notification</name>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="17"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="129"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="135"/>
         <source>Notification settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="38"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="130"/>
+        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="43"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="136"/>
         <source>Activate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="59"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="131"/>
+        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="64"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="137"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="70"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="134"/>
+        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="80"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="140"/>
         <source>Standard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="97"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="136"/>
+        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="117"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="142"/>
         <source>Timeout (ms)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="111"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="137"/>
+        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="131"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="143"/>
         <source>Notifications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="131"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="138"/>
+        <location filename="../GUI/Notifications/GUI_Notifications.ui" line="161"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="144"/>
         <source>Icon scaling</source>
         <translation type="unfinished"></translation>
     </message>
@@ -740,22 +740,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="204"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="212"/>
         <source>Ctrl</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="216"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="224"/>
         <source>&amp;Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="365"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="373"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="365"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="373"/>
         <source>Cannot login to Last.fm</source>
         <translation type="unfinished"></translation>
     </message>
@@ -772,7 +772,7 @@
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="72"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="96"/>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="199"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="201"/>
         <source>Open Directory</source>
         <translation type="unfinished"></translation>
     </message>
@@ -787,37 +787,37 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="209"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="219"/>
         <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="210"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="220"/>
         <source>Do you want to reload the Library?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="296"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="321"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="296"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="321"/>
         <source>Please visit the forum at</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="323"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="348"/>
         <source>About Sayonara</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="326"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="351"/>
         <source>Written by Lucio Carreras</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="327"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="352"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
@@ -859,61 +859,61 @@
     <name>GUI_PlaylistChooser</name>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="180"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="191"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="110"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="186"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="130"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="197"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="169"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="195"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="199"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="206"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="238"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="196"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="278"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="207"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="251"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="197"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="291"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="208"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="268"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="198"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="308"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="209"/>
         <source>Playlists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="281"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="199"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="326"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="210"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="148"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="192"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="187"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="203"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="60"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="183"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="79"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="194"/>
         <source>Save as</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="120"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="188"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="154"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="199"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -947,67 +947,67 @@
     <name>GUI_Podcasts</name>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="175"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="187"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="53"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="177"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="58"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="189"/>
         <source>Type name you wanna save the stream as</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="91"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="180"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="106"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="192"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="98"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="181"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="118"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="193"/>
         <source>Url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="120"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="183"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="145"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="195"/>
         <source>Enter stream url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="145"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="186"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="180"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="198"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="173"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="190"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="213"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="202"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="223"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="194"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="273"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="206"/>
         <source>Start stream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="226"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="196"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="276"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="208"/>
         <source> Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="251"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="197"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="301"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="209"/>
         <source>Podcasts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="267"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="198"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="322"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="210"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1024,6 +1024,21 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="212"/>
         <source>Really wanna delete %1?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GUI_SetLibrary</name>
+    <message>
+        <location filename="../GUI/library/GUI_LibraryPath.ui" line="53"/>
+        <location filename="../GUI/ui_GUI_LibraryPath.h" line="98"/>
+        <source>You haven&apos;t specified a library path yet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_LibraryPath.ui" line="80"/>
+        <location filename="../GUI/ui_GUI_LibraryPath.h" line="99"/>
+        <source>Set library path</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1078,67 +1093,67 @@
     <name>GUI_Stream</name>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="174"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="186"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="69"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="176"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="79"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="188"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="86"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="177"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="96"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="189"/>
         <source>Webstreams</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="102"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="178"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="117"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="190"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="123"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="180"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="143"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="192"/>
         <source>Type name you wanna save the stream as</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="133"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="182"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="158"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="194"/>
         <source>Url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="155"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="184"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="185"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="196"/>
         <source>Enter stream url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="173"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="187"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="208"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="199"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="201"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="191"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="241"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="203"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="251"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="195"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="301"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="207"/>
         <source>Start stream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="254"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="197"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="304"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="209"/>
         <source> Start</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1167,51 +1182,51 @@
     <name>GUI_StreamRecorder</name>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="14"/>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="108"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="165"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="171"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="139"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="181"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="187"/>
         <source>Stream Recorder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="166"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="25"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="182"/>
         <source>Target path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="60"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="168"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="75"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="184"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="76"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="169"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="96"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="185"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="115"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="172"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="151"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="188"/>
         <source>Only complete tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="122"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="173"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="163"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="189"/>
         <source>Activate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="138"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="174"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="184"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="190"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="158"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="176"/>
+        <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="214"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="192"/>
         <source>Create session folder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1236,131 +1251,131 @@ Please choose another folder</source>
     <name>GUI_TagEdit</name>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="32"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="354"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="394"/>
         <source>ID3 Tagger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="58"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="355"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="63"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="395"/>
         <source>&lt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="72"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="356"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="78"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="396"/>
         <source>Track</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="97"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="357"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="108"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="397"/>
         <source>&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="112"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="218"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="278"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="321"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="348"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="436"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="358"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="364"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="369"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="371"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="374"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="379"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="128"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="290"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="398"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="473"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="521"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="639"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="398"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="404"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="409"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="411"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="414"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="419"/>
         <source>all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="126"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="359"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="152"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="399"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="149"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="360"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="185"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="400"/>
         <source>?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="156"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="361"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="197"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="401"/>
         <source>Tag from path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="163"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="362"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="209"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="402"/>
         <source>Artist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="202"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="363"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="263"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="403"/>
         <source>Year</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="228"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="365"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="305"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="405"/>
         <source>Apply expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="238"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="366"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="320"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="406"/>
         <source>Undo expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="258"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="367"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="362"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="407"/>
         <source># Track</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="268"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="368"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="383"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="408"/>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="311"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="370"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="458"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="410"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="328"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="372"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="485"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="412"/>
         <source>Album</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="335"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="373"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="497"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="413"/>
         <source>Genres</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="366"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="375"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="544"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="415"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="382"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="376"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="565"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="416"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="416"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="378"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="609"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="418"/>
         <source>Discnumber</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1384,37 +1399,37 @@ Please choose another folder</source>
     <name>GUI_Target_Playlist_Dialog</name>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="112"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="120"/>
         <source>Choose target playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="39"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="113"/>
+        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="49"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="121"/>
         <source>relative filepaths</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="58"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="114"/>
+        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="73"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="122"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="73"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="115"/>
+        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="93"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="123"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="86"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="116"/>
+        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="111"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="124"/>
         <source>Ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="102"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="117"/>
+        <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="127"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="125"/>
         <source>Save playlist as...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1490,49 +1505,49 @@ Please choose another folder</source>
     <name>ImportFolder</name>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="212"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="228"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="71"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="214"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="91"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="230"/>
         <source>Copy tracks to library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="98"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="215"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="123"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="231"/>
         <source>cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="120"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="216"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="150"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="232"/>
         <source>ok</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="135"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="217"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="166"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="233"/>
         <source>Import tracks to library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="157"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="218"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="198"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="234"/>
         <source>Select target folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="192"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="219"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="243"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="235"/>
         <source>/music/library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="214"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="220"/>
+        <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="270"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="236"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1541,47 +1556,47 @@ Please choose another folder</source>
     <name>InfoDialog</name>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="217"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="226"/>
         <source>Info / Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="56"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="71"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="218"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="224"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="57"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="77"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="227"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="233"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="87"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="219"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="98"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="228"/>
         <source>LFM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="177"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="252"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="222"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="225"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="213"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="294"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="231"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="234"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="210"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="223"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="252"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="232"/>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="221"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="226"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="263"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="235"/>
         <source>Lyrics</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="286"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="227"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="328"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="236"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1608,12 +1623,12 @@ Please choose another folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/SetupWidget/GUI_LibrarySetup_Widget.ui" line="50"/>
+        <location filename="../GUI/library/SetupWidget/GUI_LibrarySetup_Widget.ui" line="65"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/SetupWidget/GUI_LibrarySetup_Widget.ui" line="70"/>
+        <location filename="../GUI/library/SetupWidget/GUI_LibrarySetup_Widget.ui" line="95"/>
         <source>Setup Library Path</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1622,49 +1637,49 @@ Please choose another folder</source>
     <name>Library_Info_Box</name>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="147"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="157"/>
         <source>Info</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="41"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="150"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="51"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="160"/>
         <source>LastFM Playcount</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="55"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="151"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="65"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="161"/>
         <source>Artists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="74"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="152"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="89"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="162"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="102"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="155"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="127"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="165"/>
         <source>Tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="116"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="156"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="141"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="166"/>
         <source>Duration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="130"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="157"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="155"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="167"/>
         <source>Albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="179"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="160"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="214"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="170"/>
         <source>Filesize</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1673,49 +1688,49 @@ Please choose another folder</source>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="23"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="236"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="245"/>
         <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="311"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="244"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="321"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="253"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="324"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="239"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="248"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="329"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="240"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="249"/>
         <source>Genre</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="241"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="250"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="357"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="247"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="372"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
         <source>Search for title, interprets and albums</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="379"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="250"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="399"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="259"/>
         <source>Show all interprets, albums, tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="406"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="253"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="427"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="262"/>
         <source>Music Library  </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1797,69 +1812,69 @@ Please choose another folder</source>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="225"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="236"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="387"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="432"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="270"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="421"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="471"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="274"/>
         <source>Show numbers in playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="77"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="230"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="82"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="241"/>
         <source>Clear Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="152"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="234"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="167"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="245"/>
         <source>Repeat 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="168"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="212"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="256"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="300"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="344"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="237"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="242"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="247"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="252"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="257"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="183"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="232"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="281"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="330"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="379"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="248"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="253"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="258"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
         <source>Enter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="196"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="239"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="216"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="250"/>
         <source>Repeat All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="240"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="244"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="265"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="255"/>
         <source>Shuffle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="284"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="314"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="260"/>
         <source>Append when adding new tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="328"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="363"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="265"/>
         <source>Dynamic playing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1882,303 +1897,258 @@ Please choose another folder</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="29"/>
         <location filename="../GUI/player/GUI_Player.ui" line="83"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="690"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="730"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="690"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="730"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="734"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="774"/>
         <source>Sayonara Player</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="150"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="732"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="732"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="167"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="776"/>
         <source>Correct Metadata</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="773"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="743"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="743"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="844"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="787"/>
         <source>Written by Lucio Carreras</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="845"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="744"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="744"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="916"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="788"/>
         <source>Copyright 2013</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="969"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="746"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="746"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1046"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="790"/>
         <source>File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="987"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="747"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="747"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1064"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="791"/>
         <source>View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="998"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="748"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="748"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1075"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="792"/>
         <source>Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1017"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="1139"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="709"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="749"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="709"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="749"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1094"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1271"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="753"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="793"/>
         <source>Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1029"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="691"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="691"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1106"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="735"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1034"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="692"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="692"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1116"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="736"/>
         <source>Open Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1039"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="693"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="693"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1126"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="737"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1050"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="694"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="694"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1142"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="738"/>
         <source>Equalizer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1061"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="695"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="695"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1153"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="739"/>
         <source>Dark</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1070"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="696"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="696"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1167"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="740"/>
         <source>Last.fm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1075"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="697"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="697"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1177"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="741"/>
         <source>Reload Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1080"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="698"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="698"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1187"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="742"/>
         <source>Clear Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1085"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="699"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="699"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1197"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="743"/>
         <source>Library Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1090"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="700"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="700"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1207"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="744"/>
         <source>Fetch all covers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1098"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="701"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="701"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1220"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="745"/>
         <source>Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1115"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="703"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="703"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1237"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="747"/>
         <source>Start up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1118"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="705"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="705"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1240"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="749"/>
         <source>Load playlist on startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1123"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="707"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="707"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1250"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="751"/>
         <source>Import Folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1131"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="708"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="708"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1263"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="752"/>
         <source>Playlist Chooser</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1144"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="710"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="710"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1281"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="754"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1155"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="1263"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="711"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="726"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="711"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="726"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1297"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1445"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="755"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="770"/>
         <source>Notifications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1160"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="712"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="712"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1302"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="756"/>
         <source>Open Stream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1171"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="713"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="713"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1313"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="757"/>
         <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1182"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="714"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="714"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1329"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="758"/>
         <source>Close to tray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1190"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="715"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="715"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1342"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="759"/>
         <source>Only one instance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1198"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="716"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="716"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1355"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="760"/>
         <source>Fullscreen </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1206"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="717"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="717"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1368"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="761"/>
         <source>Small Playlist Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1214"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="718"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="718"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1381"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="762"/>
         <source>Only tracks in library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1219"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="719"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="719"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1391"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="763"/>
         <source>Sound Engine</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1224"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="720"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="720"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1396"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="764"/>
         <source>Gstreamer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1229"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="721"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="721"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1401"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="765"/>
         <source>Phonon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1237"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="722"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="722"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1409"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="766"/>
         <source>Stream recorder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1242"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="723"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="723"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1419"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="767"/>
         <source>Set Streamripper Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1250"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="724"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="724"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1427"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="768"/>
         <source>Stream</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1258"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="725"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="725"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1435"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="769"/>
         <source>Socket connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1271"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="727"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="727"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1458"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="771"/>
         <source>Podcasts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1282"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="728"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="728"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1469"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="772"/>
         <source>Library live search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1287"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="729"/>
-        <location filename="../GUI/ui_GUI_Simpleplayer.h" line="729"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1479"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="773"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2187,31 +2157,31 @@ Please choose another folder</source>
     <name>SocketSetupDialog</name>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="101"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="110"/>
         <source>Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="102"/>
+        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="25"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="111"/>
         <source>Activate socket connection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="50"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="104"/>
+        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="70"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="113"/>
         <source>Initial Socket port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="70"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="106"/>
+        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="100"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="115"/>
         <source>If no connection can be established, try to increment port until...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="73"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="108"/>
+        <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="103"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="117"/>
         <source>Increment until</source>
         <translation type="unfinished"></translation>
     </message>

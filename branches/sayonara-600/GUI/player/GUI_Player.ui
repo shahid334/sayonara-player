@@ -71,6 +71,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLabel" name="lab_sayonara">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
@@ -90,7 +96,7 @@
       <item>
        <widget class="QLabel" name="lab_title">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -834,6 +840,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
        <widget class="QLabel" name="lab_writtenby">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
@@ -906,6 +918,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="QLabel" name="lab_copyright">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
@@ -966,10 +984,16 @@
      <layout class="QHBoxLayout" name="horizontalLayout_8">
       <item>
        <widget class="QLabel" name="lab_version">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>16</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
-          <pointsize>7</pointsize>
+          <pointsize>8</pointsize>
          </font>
         </property>
         <property name="text">
@@ -1481,9 +1505,9 @@
    <property name="font">
     <font>
      <family>DejaVu Sans</family>
-     <weight>75</weight>
-     <italic>true</italic>
-     <bold>true</bold>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
     </font>
    </property>
   </action>

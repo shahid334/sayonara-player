@@ -325,6 +325,7 @@ void Application::init_connections(){
     CONNECT(library, sig_tracks_for_playlist_available(MetaDataList&),           	playlist, psl_createPlaylist(MetaDataList&));
     CONNECT(library, sig_delete_answer(QString), 					ui_library, 	psl_delete_answer(QString));
     CONNECT(library, sig_play_next_tracks(const MetaDataList&),  playlist,		psl_play_next_tracks(const MetaDataList&));
+    CONNECT(library, sig_libpath_set(QString&),                player,         psl_libpath_changed(QString&));
 
     CONNECT(library, sig_change_id3_tags(const MetaDataList&),	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
 

@@ -60,6 +60,7 @@ signals:
     void sig_reload_library_finished();
     void sig_reload_library_allowed(bool);
     void sig_reloading_library(QString &);
+    void sig_libpath_set(QString&);
 
     void sig_import_result(bool);
     void sig_change_id3_tags(const MetaDataList&);

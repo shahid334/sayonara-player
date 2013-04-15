@@ -131,6 +131,7 @@ void GUI_Player::showLibrary(bool b, bool resize){
     int new_width = old_width;
     this->ui->library_widget->setVisible(b);
 
+    // invisble
     if(!b){
 
         QSizePolicy p = this->ui->library_widget->sizePolicy();
@@ -144,6 +145,7 @@ void GUI_Player::showLibrary(bool b, bool resize){
         this->setMinimumSize(300, 500);
 	}
 
+    // visible
 	else{
         QSizePolicy p = this->ui->library_widget->sizePolicy();
 		p.setHorizontalStretch(m_library_stretch_factor);
@@ -201,6 +203,14 @@ void GUI_Player::setLibraryPathClicked(bool b) {
     if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
 		emit libpath_changed(dir);
         m_settings->setLibraryPath(dir);
+        if(this->ui_libpath && ui_libpath->isVisible()){
+            ui_libpath->hide();
+            ui_libpath = 0;
+            if(m_settings->getShowLibrary()){
+                ui_library->show();
+                ui_library->resize(this->ui->library_widget->size());
+            }
+        }
 
         QMessageBox dialog(this);
 
@@ -217,6 +227,21 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 
 		dialog.close();
 	}
+}
+
+void GUI_Player::psl_libpath_changed(QString & dir){
+
+    if (dir.size() > 0 && ui_libpath) {
+
+        if(ui_libpath->isVisible() && this->ui->library_widget->isVisible()){
+            ui_libpath->hide();
+
+            ui_library->show();
+            ui_library->resize(this->ui->library_widget->size());
+        }
+
+        ui_libpath = 0;
+    }
 }
 
 

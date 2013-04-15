@@ -93,8 +93,6 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     ui->lab_writtenby->setText(tr("Written by") + " Lucio Carreras");
     ui->lab_copyright->setText(tr("Copyright "));
 
-
-
     m_metadata_available = false;
 	m_playing = false;
 	m_mute = false;
@@ -107,8 +105,6 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	m_skinSuffix = "";
 	m_class_name = "Player";
-
-
 
 	m_cov_lookup = new CoverLookup(m_class_name);
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
@@ -147,6 +143,15 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
     m_library_width = 600;
 
+    QString lib_path = m_settings->getLibraryPath();
+    ui_libpath = 0;
+    if(lib_path.size() == 0){
+        ui_libpath = new GUI_LibraryPath(this->ui->library_widget);
+    }
+
+
+
+
 	/* TRAY ACTIONS */
 	this->setupTrayActions();
 
@@ -179,6 +184,9 @@ void GUI_Player::language_changed(QString language){
     ui_notifications->language_changed();
     ui_startup_dialog->language_changed();
     ui_language_chooser->language_changed(true);
+
+    if(ui_libpath)
+        ui_libpath->language_changed();
 
     QList<PlayerPlugin*> all_plugins = _pph->get_all_plugins();
     QList<QAction*> actions = ui->menuView->actions();
@@ -551,9 +559,15 @@ void GUI_Player::setPlaylist(GUI_Playlist* playlist) {
 
 void GUI_Player::setLibrary(GUI_Library_windowed* library) {
     ui_library = library;
-    if(ui_library){
+    if(ui_library && !ui_libpath){
         ui_library->show();
         ui_library->resize(ui->library_widget->size());
+    }
+
+    else if(ui_libpath){
+        ui_library->hide();
+        ui_libpath->show();
+        ui_libpath->resize(ui->library_widget->size());
     }
 }
 
@@ -658,7 +672,8 @@ void GUI_Player::ui_loaded(){
 
         signal(SIGWINCH, signal_handler);
 	#endif
-
+    if(ui_libpath)
+        ui_libpath->resize(this->ui->library_widget->size());
     changeSkin(m_settings->getPlayerStyle() == 1);
     this->ui->action_Fullscreen->setChecked(m_settings->getPlayerFullscreen());
 }
@@ -678,8 +693,13 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
 
     ui_playlist->resize(ui->playlist_widget->size());
 
-    if(ui->library_widget->isVisible())
-        ui_library->resize(ui->library_widget->size());
+    if(ui->library_widget->isVisible()){
+
+        if(ui_libpath)
+            ui_libpath->resize(ui->library_widget->size());
+        else
+            ui_library->resize(ui->library_widget->size());
+    }
 
 	QSize sz = ui->plugin_widget->size();
 

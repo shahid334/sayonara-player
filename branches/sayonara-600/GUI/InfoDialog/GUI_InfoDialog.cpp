@@ -161,8 +161,6 @@ void GUI_InfoDialog::language_changed(){
 
 void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
 
-    qDebug() << "Image available for " << caller_class << ": " << filename;
-
 	if(_class_name != caller_class) return;
 	if(!QFile::exists(filename)) return;
 
