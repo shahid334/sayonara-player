@@ -130,6 +130,7 @@
        <property name="font">
         <font>
          <family>DejaVu Sans</family>
+         <pointsize>9</pointsize>
         </font>
        </property>
        <item>

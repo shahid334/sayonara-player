@@ -82,20 +82,20 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
     // check if there, check if extern
     foreach(MetaData md, v_meta_data){
 
-        if( checkTrack(md) ){
+        if( !checkTrack(md) ) return;
 
-            MetaData md_tmp = _db->getTrackByPath(md.filepath);
+        MetaData md_tmp = _db->getTrackByPath(md.filepath);
 
-            if(md.radio_mode == RADIO_OFF){
-                md.is_extern = (md_tmp.id < 0 && !Helper::is_www(md.filepath));
-                _radio_active = RADIO_OFF;
-            }
-
-            else
-                md.is_extern = false;
-
-            _v_meta_data.push_back(md);
+        if(md.radio_mode == RADIO_OFF){
+            md.is_extern = (md_tmp.id < 0 && !Helper::is_www(md.filepath));
+            _radio_active = RADIO_OFF;
         }
+
+        else
+            md.is_extern = false;
+
+        _v_meta_data.push_back(md);
+
     }
 
     if(_radio_active != old_radio_active){
