@@ -131,6 +131,9 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     bool live_search = m_settings->getLibLiveSheach();
     this->ui->action_livesearch->setChecked(live_search);
 
+    bool notify_new_version = m_settings->getNotifyNewVersion();
+    this->ui->action_notifyNewVersion->setChecked(notify_new_version);
+
 
     bool is_fullscreen = m_settings->getPlayerFullscreen();
     if(!is_fullscreen){
@@ -787,13 +790,15 @@ void GUI_Player::async_wa_finished(){
 	qDebug() << "Newest Version: " << new_version;
 	qDebug() << "This Version:   " << cur_version;
 
-	if(new_version > cur_version){
+	if(new_version > cur_version && m_settings->getNotifyNewVersion()){
 		QMessageBox::information(this, 
 					tr("Info"), 
 					tr("A new version is available!"));
 	}
+}
 
-
+void GUI_Player::sl_notify_new_version(bool b){
+	m_settings->setNotifyNewVersion(b);
 }
 
 

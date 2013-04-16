@@ -288,6 +288,9 @@ bool CDatabaseConnector::load_settings(){
 	bool allow_only_one_instance = load_setting_bool(SET_PLAYER_ONE_INSTANCE, true);
 	settings->setAllowOnlyOneInstance(allow_only_one_instance);
 
+        bool notify_new_version = load_setting_bool(SET_PLAYER_NOTIFY_NEW_VERSION, true);
+	settings->setNotifyNewVersion(notify_new_version);
+
     connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
     connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
 
@@ -444,6 +447,9 @@ bool CDatabaseConnector::store_settings(){
 
 	bool allow_only_one_instance = storage->getAllowOnlyOneInstance();
 	store_setting(SET_PLAYER_ONE_INSTANCE, allow_only_one_instance);
+
+        bool notify_new_version = storage->getNotifyNewVersion();
+        store_setting(SET_PLAYER_NOTIFY_NEW_VERSION, notify_new_version);
 
 	_database->commit();
 	storage->set_sth_changed(false);

@@ -1112,6 +1112,8 @@
     <addaction name="action_SocketConnection"/>
     <addaction name="separator"/>
     <addaction name="action_livesearch"/>
+    <addaction name="separator"/>
+    <addaction name="action_notifyNewVersion"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1491,6 +1493,22 @@
    </property>
    <property name="text">
     <string>Library live search</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>DejaVu Sans</family>
+    </font>
+   </property>
+  </action>
+  <action name="action_notifyNewVersion">
+   <property name="checkable">
+   <bool>true</bool>
+   </property>
+   <property name="text">
+   <string>Update notifier</string>
+   </property>
+   <property name="checked">
+   <bool>true</bool>
    </property>
    <property name="font">
     <font>

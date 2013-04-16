@@ -505,5 +505,11 @@ void CSettingsStorage::setLanguage(QString lang){
     _sth_changed = true;
 }
 
+bool CSettingsStorage::getNotifyNewVersion(){ return m_notify_new_version; }
+void CSettingsStorage::setNotifyNewVersion(bool b){
+	m_notify_new_version = b;
+	_sth_changed = true;
+}
+
 
 

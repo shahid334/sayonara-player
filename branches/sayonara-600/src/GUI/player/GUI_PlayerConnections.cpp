@@ -98,6 +98,8 @@ void GUI_Player::setupConnections(){
 
     connect(ui->action_livesearch, SIGNAL(triggered(bool)), this,
             SLOT(sl_live_search(bool)));
+    connect(ui->action_notifyNewVersion, SIGNAL(triggered(bool)), this,
+            SLOT(sl_notify_new_version(bool)));
 
 
 	// about

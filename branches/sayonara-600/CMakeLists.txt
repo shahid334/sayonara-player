@@ -8,6 +8,9 @@ IF(${UNIX})
         execute_process(COMMAND sh ./scripts/setversion.sh)
 ENDIF(${UNIX})
 
+SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
+SET(CMAKE_INSTALL_PREFIX "/usr")
+
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
 

@@ -182,6 +182,7 @@ private slots:
     void sl_action_socket_connection_triggered(bool);
     void sl_show_only_tracks(bool);
     void sl_live_search(bool);
+    void sl_notify_new_version(bool);
 
     void about(bool b=false);
     void help(bool b=false);

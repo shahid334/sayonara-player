@@ -55,6 +55,7 @@
 #define SET_PLAYER_SHOWN_PLUGIN "shown_plugin"
 #define SET_PLAYER_ONE_INSTANCE "only_one_instance"
 #define SET_PLAYER_MIN_2_TRAY "min_to_tray"
+#define SET_PLAYER_NOTIFY_NEW_VERSION "notify_new_version"
 
 
 #define SET_PL "playlist"
@@ -234,6 +235,8 @@ private:
     QString m_notification_name;
     int     m_notification_scale;
 
+    bool    m_notify_new_version;
+
     /* socket stuff */
     bool	m_socket_activated;
     int		m_socket_from;
@@ -388,6 +391,9 @@ public:
 
     QString getLanguage();
     void setLanguage(QString lang);
+
+    bool getNotifyNewVersion();
+    void setNotifyNewVersion(bool b);
 
 	friend class SettingsThread;
 };
