@@ -1108,12 +1108,11 @@
     <addaction name="action_startup"/>
     <addaction name="action_min2tray"/>
     <addaction name="action_only_one_instance"/>
+    <addaction name="action_notifyNewVersion"/>
     <addaction name="separator"/>
     <addaction name="action_SocketConnection"/>
     <addaction name="separator"/>
     <addaction name="action_livesearch"/>
-    <addaction name="separator"/>
-    <addaction name="action_notifyNewVersion"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1502,13 +1501,13 @@
   </action>
   <action name="action_notifyNewVersion">
    <property name="checkable">
-   <bool>true</bool>
-   </property>
-   <property name="text">
-   <string>Update notifier</string>
+    <bool>true</bool>
    </property>
    <property name="checked">
-   <bool>true</bool>
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Update notifier</string>
    </property>
    <property name="font">
     <font>
