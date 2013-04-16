@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CPP=`find . -iname "*.cpp" | xargs grep -L Copyright`
-HEADER=`find . -iname "*.h" | xargs grep -L Copyright`
+CPP=`find ./src -iname "*.cpp" | xargs grep -L Copyright`
+HEADER=`find ./src -iname "*.h" | xargs grep -L Copyright`
 for FILE in $CPP ; do 
 	BASE=$(basename $FILE)
 	echo "/* ${BASE} */" > /tmp/newfile
