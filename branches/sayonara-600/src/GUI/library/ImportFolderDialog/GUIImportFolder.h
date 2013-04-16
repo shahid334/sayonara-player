@@ -25,7 +25,7 @@
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QStringList>
-#include "GUI/ui_GUI_ImportFolder.h"
+#include "ui_GUI_ImportFolder.h"
 
 
 class GUI_ImportFolder : public QDialog, private Ui::ImportFolder {

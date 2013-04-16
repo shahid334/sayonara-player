@@ -19,13 +19,10 @@
  */
 
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
-#include "GUI/ui_GUI_ImportFolder.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include <QDialog>
 #include <QString>
-#include <QWidget>
 #include <QPixmap>
 #include <QScrollBar>
 #include <QFileDialog>
@@ -121,7 +118,8 @@ void GUI_ImportFolder::choose_dir(){
 
 
     QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Choose target directory"),
+    QString dir = QFileDialog::getExistingDirectory(this, 
+		tr("Choose target directory"),
                 lib_path, QFileDialog::ShowDirsOnly);
 
     if(!dir.contains(lib_path)){
