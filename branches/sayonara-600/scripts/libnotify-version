@@ -7,11 +7,11 @@ MINOR=${VERSIONA:2:1}
 
 if [ $MAJOR -gt 0 ] ; then
 	
-	cp Notification/libnotify/LN_Notification.cpp.new Notification/libnotify/LN_Notification.cpp
+	cp src/Notification/libnotify/LN_Notification.cpp.new src/Notification/libnotify/LN_Notification.cpp
 else
 	if [ $MINOR -gt 6 ] ; then
 		echo "new libnotify version"
-		cp Notification/libnotify/LN_Notification.cpp.new Notification/libnotify/LN_Notification.cpp
+		cp src/Notification/libnotify/LN_Notification.cpp.new src/Notification/libnotify/LN_Notification.cpp
 	else
 		echo "old libnotify version"
 		cp src/Notification/libnotify/LN_Notification.cpp.old src/Notification/libnotify/LN_Notification.cpp
