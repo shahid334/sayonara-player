@@ -19,7 +19,6 @@
  */
 
 
-
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"

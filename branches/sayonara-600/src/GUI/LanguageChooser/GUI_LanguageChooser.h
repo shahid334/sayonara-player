@@ -27,7 +27,7 @@
 #include <QMap>
 #include <QShowEvent>
 
-#include "../ui_GUI_LanguageChooser.h"
+#include "GUI/ui_GUI_LanguageChooser.h"
 
 class GUI_LanguageChooser : public QDialog, private Ui::GUI_LanguageChooser
 {
