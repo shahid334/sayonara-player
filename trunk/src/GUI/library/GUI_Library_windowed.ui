@@ -312,6 +312,7 @@
        <property name="font">
         <font>
          <family>DejaVu Sans</family>
+         <pointsize>9</pointsize>
          <weight>50</weight>
          <bold>false</bold>
         </font>
@@ -365,6 +366,7 @@
        <property name="font">
         <font>
          <family>DejaVu Sans</family>
+         <pointsize>9</pointsize>
         </font>
        </property>
        <property name="focusPolicy">
@@ -420,7 +422,7 @@
        <property name="font">
         <font>
          <family>DejaVu Sans</family>
-         <pointsize>10</pointsize>
+         <pointsize>9</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
