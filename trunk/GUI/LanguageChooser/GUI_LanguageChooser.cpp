@@ -40,7 +40,7 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     _map["fr"]    = "Francais";
     _map["it"]    = "Italiano";
     _map["pt"]    = "Português";
-    _map["sr"]    = "Srpski"
+    _map["sr"]    = "Srpski";
     _map["sr_cy"] = "Српски";
     _map["ru"]    = "Pyccĸий";
     _map["ua"]    = "Українська";
