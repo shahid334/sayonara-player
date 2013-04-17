@@ -83,7 +83,6 @@ void CLibraryBase::importDirectory(const QString& directory){
     m_src_dir = directory;
     QStringList filelist;
     filelist << directory;
-    qDebug() << "i wanna import " << filelist;
     m_import_thread->set_filelist(filelist);
     m_import_thread->start();
 
