@@ -9,7 +9,7 @@ fi
 
 if [ "$1" = "update" ] ; then
 
-	for f in languages/*.ts ; do
+	for f in ./src/languages/*.ts ; do
 
 		lupdate . -ts ./$f
 
