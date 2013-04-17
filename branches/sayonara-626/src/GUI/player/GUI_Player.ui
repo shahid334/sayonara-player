@@ -71,6 +71,12 @@
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLabel" name="lab_sayonara">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
@@ -840,10 +846,16 @@
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
        <widget class="QLabel" name="lab_writtenby">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -877,7 +889,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -918,10 +930,16 @@
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
        <widget class="QLabel" name="lab_copyright">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -955,7 +973,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -984,10 +1002,16 @@
      <layout class="QHBoxLayout" name="horizontalLayout_8">
       <item>
        <widget class="QLabel" name="lab_version">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -1015,7 +1039,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>16</height>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -1292,7 +1316,7 @@
     </font>
    </property>
   </action>
-   <action name="action_ImportFiles">
+  <action name="action_ImportFiles">
    <property name="text">
     <string>Import Files</string>
    </property>
@@ -1303,7 +1327,7 @@
     </font>
    </property>
   </action>
- <action name="action_ViewPlaylistChooser">
+  <action name="action_ViewPlaylistChooser">
    <property name="checkable">
     <bool>true</bool>
    </property>
