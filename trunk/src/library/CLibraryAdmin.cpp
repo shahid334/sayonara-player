@@ -307,21 +307,20 @@ void CLibraryBase::reload_thread_finished(){
     _db->getAllArtists(_vec_artists);
     _db->getTracksFromDatabase(_vec_md);
 
-    emit sig_all_artists_loaded(_vec_artists);
-    emit sig_all_albums_loaded(_vec_albums);
-    emit sig_all_tracks_loaded(_vec_md);
+    emit_stuff();
+
     emit sig_reload_library_finished();
 }
 
 void CLibraryBase::library_reloading_state_new_block(){
+
     m_thread->pause();
+
     _db->getAllAlbums(_vec_albums);
     _db->getAllArtists(_vec_artists);
     _db->getTracksFromDatabase(_vec_md);
 
-    emit sig_all_artists_loaded(_vec_artists);
-    emit sig_all_albums_loaded(_vec_albums);
-    emit sig_all_tracks_loaded(_vec_md);
+    emit_stuff();
 
     m_thread->goon();
 

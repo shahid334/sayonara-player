@@ -43,6 +43,8 @@ using namespace Sort;
 
 bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
 
+	result.clear();
+
 	try{
 		if (!q.exec()) {
 			qDebug() << "SQL-Error: Could not get all artists from database";

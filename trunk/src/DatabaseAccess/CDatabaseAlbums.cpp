@@ -46,6 +46,8 @@ using namespace Sort;
 
 bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
+	result.clear();
+
 		try{
 			if (!q.exec()) {
 

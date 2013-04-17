@@ -56,6 +56,8 @@ using namespace Sort;
 
 bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 
+	result.clear();
+
 	try{
 		if (!q.exec()) {
 			qDebug() << "SQL-Error: Cannot fetch tracks from database";
