@@ -1,7 +1,0 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Sayonara
-Source: http://code.google.com/p/sayonara-player/
-
-Files: *
-Copyright: Copyright 2013 Lucio Carreras <luciocarreras@gmail.com>
-License: /usr/share/common-licenses/GPL-3

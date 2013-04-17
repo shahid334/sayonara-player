@@ -39,6 +39,9 @@ using namespace std;
 
 
 bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
+
+	streams.clear();
+
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 

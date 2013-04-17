@@ -33,6 +33,8 @@ using namespace std;
 
 bool CDatabaseConnector::getAllPlaylists(QMap<int, QString>& mapping){
 
+	mapping.clear();
+
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 

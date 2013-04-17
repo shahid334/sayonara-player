@@ -41,6 +41,8 @@ using namespace std;
 
 bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts){
 
+    podcasts.clear();
+
     if (!this -> _database->isOpen())
          this -> _database->open();
 
