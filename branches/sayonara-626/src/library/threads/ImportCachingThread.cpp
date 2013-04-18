@@ -1,4 +1,4 @@
-/* ImportFolderThread.cpp */
+/* ImportCachingThread.cpp */
 
 /* Copyright (C) 2013  Lucio Carreras
  *
@@ -20,7 +20,7 @@
 
 
 
-#include "library/threads/ImportFolderThread.h"
+#include "library/threads/ImportCachingThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
@@ -29,36 +29,42 @@
 #include <QDebug>
 
 
-ImportFolderThread::ImportFolderThread(QObject *parent) :
+ImportCachingThread::ImportCachingThread(QObject *parent) :
     QThread(parent)
 {
 
 
 }
 
-void ImportFolderThread::run(){
+void ImportCachingThread::run(){
     _cancelled = false;
     _may_terminate = false;
     _filelist.clear();
-    _map.clear();
+    _md_map.clear();
+    _pd_map.clear();
 
     foreach(QString file, _files){
-	qDebug() << "Controlling " << file;
+
+        if(_cancelled) break;
+
+	// file is a directory
 	if(Helper::is_dir(file)){
 	
             QDir src_dir(file);
-	    qDebug() << "is dir";
 	    int n_files = 0;
 	    CDirectoryReader reader;
 	    QStringList tmp_filelist;
 	    reader.getFilesInsiderDirRecursive(src_dir, tmp_filelist, n_files);
-            qDebug() << "Could extract " << n_files << ", " << tmp_filelist.size() << " files out of it";
-	    
-            _filelist.append(tmp_filelist);
+
+	    // save from which folders these files are
+	    foreach(QString tmpFile, tmp_filelist){
+		_pd_map[tmpFile] = file;
+                _filelist.push_back(tmpFile);
+            }
 	}
 
+	// file is standard file
         else if(Helper::is_file(file)){
-            qDebug() << "is file";
 	    _filelist.push_back(file);
 	}
     }
@@ -73,17 +79,14 @@ void ImportFolderThread::run(){
 
         MetaData md;
         md.filepath = filepath;
-        qDebug() << "Accessing " << filepath;
 
-        if(!ID3::getMetaDataOfFile(md)) {
-		qDebug() << "Could not get Metadata";
-		continue;
-         }
-        _map[filepath] = md;
+        if(!ID3::getMetaDataOfFile(md)) continue;
+        _md_map[filepath] = md;
     }
 
     if(_cancelled){
-	_map.clear();
+	_md_map.clear();
+        _pd_map.clear();
     }
 
     emit sig_done();
@@ -92,27 +95,32 @@ void ImportFolderThread::run(){
     }
 }
 
-void ImportFolderThread::set_filelist(QStringList& lst){
+void ImportCachingThread::set_filelist(const QStringList& lst){
     _files = lst;
 }
 
-void ImportFolderThread::get_extracted_files(QStringList& lst){
+void ImportCachingThread::get_extracted_files(QStringList& lst){
     lst =  _filelist;
 }
 
-void ImportFolderThread::set_may_terminate(bool b){
+void ImportCachingThread::set_may_terminate(bool b){
     _may_terminate = b;
 }
 
-void ImportFolderThread::set_cancelled(){
+void ImportCachingThread::set_cancelled(){
     _cancelled = true;
 }
 
-void ImportFolderThread::get_md_map(QMap<QString, MetaData> &map){
-    if(_cancelled) _map.clear();
-    map = _map;
+void ImportCachingThread::get_md_map(QMap<QString, MetaData> &map){
+    if(_cancelled) _md_map.clear();
+    map = _md_map;
 }
 
-int ImportFolderThread::get_n_tracks(){
-    return _map.keys().size();
+void ImportCachingThread::get_pd_map(QMap<QString, QString> &map){
+    if(_cancelled) _pd_map.clear();
+    map = _pd_map;
+}
+
+int ImportCachingThread::get_n_tracks(){
+    return _md_map.keys().size();
 }

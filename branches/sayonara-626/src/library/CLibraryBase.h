@@ -23,9 +23,8 @@
 #define CLIBRARYBASE_H
 
 #include "library/threads/ReloadThread.h"
-#include "library/threads/ImportFolderThread.h"
-#include "library/threads/CopyFolderThread.h"
-#include "library/threads/CopyFilesThread.h"
+#include "library/threads/ImportCachingThread.h"
+#include "library/threads/ImportCopyThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
@@ -81,8 +80,8 @@ public slots:
     void reloadLibrary(bool);
     void clearLibrary();
     void refresh();
-    void importDirectory(const QString&);
     void importFiles(const QStringList&);
+    void importDirectory(const QString&);
 
     void setLibraryPath(QString);
 
@@ -113,13 +112,13 @@ private slots:
    void file_system_changed(const QString& path);
    void library_reloading_state_slot(QString);
    void library_reloading_state_new_block();
-   void copy_folder_thread_finished();
-   void copy_files_thread_finished();
+   
    void import_thread_finished();
    void import_thread_done();
-
+   void import_copy_thread_finished();
    void import_dialog_opened();
    void import_dialog_closed();
+   
    void accept_import(const QString&, bool);
    void cancel_import();
    void import_progress(int);
@@ -131,9 +130,8 @@ private:
 
     QString				m_library_path;
     ReloadThread* 		m_thread;
-    ImportFolderThread* m_import_thread;
-    CopyFolderThread*   m_copy_folder_thread;
-    CopyFilesThread*    m_copy_files_thread;
+    ImportCachingThread* m_import_thread;
+    ImportCopyThread*   m_import_copy_thread;
     QFileSystemWatcher*	m_watcher;
     QString		m_src_dir;
     QStringList		m_src_files;

@@ -33,6 +33,14 @@ CopyFolderThread::CopyFolderThread(QObject *parent) :
 {
 }
 
+int _emit_percent(int i, int n){
+        int ret_val;
+	int percent = (i * 100000) / n;
+	ret_val = percent / 1000;
+        emit sig_progress(ret_val);
+	return ret_val;
+}
+
 
 QString _calc_target_path(QString src_dir, QString lib_dir, QString chosen_dir){
 	QString src_folder_name, dir;
@@ -61,14 +69,17 @@ void CopyFolderThread::copy(){
     
 
     // Create target dir in library
-        QString target_path = _calc_target_path(_src_dir, _lib_dir, _chosen_dir);
+    foreach(QString dir, _pd_map.values()){
+        if(dir.size() == 0) continue; // some files are imported directly
+
+        QString target_path = _calc_target_path( dir, _lib_dir, _chosen_dir);
     
         if(!QFile::exists(target_path))
             _created_dirs << target_path;
 
         QDir root = QDir::root();
         bool success = root.mkpath(target_path);
-        if(!success) return;
+    }
     // -- end
 
     QDir target_dir(target_path);
@@ -77,20 +88,29 @@ void CopyFolderThread::copy(){
     foreach(QString filename, _files){
         if(_cancelled) return;
 
-        // extract folders between the files and src dir and create directories
-        // /home/user/folder/subfolder/subfolder2/bla.mp3 -> subfolder/subfolder2
-        QString folder = Helper::get_parent_folder(filename);
-        folder.remove(_src_dir);
-        while(folder.startsWith(QDir::separator())) folder.remove(0,1);
-        while(folder.endsWith(QDir::separator())) folder.remove(folder.size() - 1, 1);
+	QString src_dir = _pd_map.value(filename);
+	QString new_target_path;
+        if(src_dir.size() > 0){
+       
+	        // extract folders between the files and src dir and create directories
+       	 	// /home/user/folder/subfolder/subfolder2/bla.mp3 -> subfolder/subfolder2
+       	 	QString folder = Helper::get_parent_folder(filename);
+        	folder.remove(_src_dir);
+        	while(folder.startsWith(QDir::separator())) folder.remove(0,1);
+        	while(folder.endsWith(QDir::separator())) folder.remove(folder.size() - 1, 1);
 
-	QString new_target_path = target_path + QDir::separator() + folder;
-        // file was in the root dir
+		new_target_path = target_path + QDir::separator() + folder;
+        	// file was in the root dir
 
-        if(!folder.size() == 0){
-            if(!QFile::exists(new_target_path)) _created_dirs << new_target_path;
-            target_dir.mkpath(folder);
-        }
+        	if(!folder.size() == 0){
+            		if(!QFile::exists(new_target_path)) _created_dirs << new_target_path;
+            		target_dir.mkpath(folder);
+        	}
+	}
+
+	else{
+		new_target_path = _calc_target_path("", _lib_dir, _chosen_dir);
+	}
 
         // copy file
         QFile f(filename);
@@ -108,9 +128,7 @@ void CopyFolderThread::copy(){
         }
 
         // insert to db
-        int percent = (i++ * 100000) / _files.size();
-	_percent = percent / 1000;
-        emit sig_progress(_percent);
+	_percent = emit_percent(i++, _files.size());
 
         if(!Helper::is_soundfile(filename)) continue;
         else if(Helper::is_soundfile(filename)){
@@ -118,7 +136,7 @@ void CopyFolderThread::copy(){
         }
 
         MetaData md;
-        bool got_md = _map.keys().contains(filename);
+        bool got_md = _md_map.keys().contains(filename);
 
         if( got_md ){
             md = _map.value(filename);
@@ -172,7 +190,3 @@ void CopyFolderThread::rollback(){
 }
 
 
-
-void CopyFolderThread::set_src_dir(QString src_dir){
-	_src_dir = src_dir;
-}

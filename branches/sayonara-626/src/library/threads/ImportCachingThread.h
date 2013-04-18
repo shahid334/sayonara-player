@@ -32,19 +32,20 @@
 #define IMPORT_MODE_EXTRACT 0
 #define IMPORT_MODE_COPY 1
 
-class ImportFolderThread : public QThread
+class ImportCachingThread : public QThread
 {
     Q_OBJECT
 
 public:
-    explicit ImportFolderThread(QObject *parent = 0);
+    explicit ImportCachingThread(QObject *parent = 0);
     void run();
 
-    void set_filelist(QStringList& list);
+    void set_filelist(const QStringList& list);
     void get_extracted_files(QStringList& lst);
     void set_may_terminate(bool);
     void set_cancelled();
     void get_md_map(QMap<QString, MetaData>& map);
+    void get_pd_map(QMap<QString, QString>& map);
     int get_n_tracks();
 
 
@@ -64,7 +65,10 @@ private:
     QStringList             _filelist;
     bool                    _may_terminate;
     bool                    _cancelled;
-    QMap<QString, MetaData> _map;
+    QMap<QString, MetaData> _md_map;
+
+    // map for the parent directories
+    QMap<QString, QString>  _pd_map;
 
 
 

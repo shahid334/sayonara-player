@@ -40,7 +40,6 @@ public:
 private:
 
    QStringList    _created_dirs;
-   QString	  _src_dir;
    virtual void copy();
    virtual void rollback();
 
