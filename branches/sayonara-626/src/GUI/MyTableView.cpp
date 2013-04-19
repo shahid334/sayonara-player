@@ -702,7 +702,9 @@ void MyTableView::calc_corner_widget(){
     QPalette palette = _parent->palette();
     QColor bg = palette.color(QPalette::Normal, QPalette::Window);
     if(this->cornerWidget())
-        this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
+        /*this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");*/
+        this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
+
 
 }
 
