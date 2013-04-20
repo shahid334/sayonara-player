@@ -62,6 +62,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     _class_name = QString("InfoDialog");
 
     _initialized = false;
+
     ui_tag_edit = tag_edit;
 
     if(ui_tag_edit)
