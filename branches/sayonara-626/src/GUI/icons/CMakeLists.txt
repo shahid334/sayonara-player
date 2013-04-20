@@ -47,6 +47,8 @@ SET(ICONS
         arrow_left_orange.png
         scroll_hor_bg.png
         scroll_ver_bg.png
+        slider_hor_bg.png
+        slider_ver_bg.png
         delete.png
         import.png
         lyrics.png
