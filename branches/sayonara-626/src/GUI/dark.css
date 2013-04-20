@@ -469,7 +469,7 @@ QSpinBox:disabled {
 
 QSlider::add-page:vertical {
 
-     background-image: url(/usr/share7sayonara/slider_ver_bg.png);
+     background-image: url(/usr/share/sayonara/slider_ver_bg.png);
      border: 1px solid #cc6f08;
      border-radius: 2px;
 }
