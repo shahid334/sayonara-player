@@ -27,10 +27,9 @@
 #include <QList>
 #include <QDebug>
 
-ContextMenu::ContextMenu(QWidget *parent) :
+ContextMenu::ContextMenu(QWidget* parent) :
     QMenu(parent)
 {
-
 
     _info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), tr("Info"), this);
     _edit_action = new QAction(QIcon(Helper::getIconPath() + "edit.png"), tr("Edit"), this);
@@ -38,16 +37,7 @@ ContextMenu::ContextMenu(QWidget *parent) :
     _delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Delete"), this);
     _play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), tr("Play next"), this);
 
-
-    QFont f = _info_action->font();
-    f.setFamily("DejaVu Sans");
-
-    _info_action->setFont(f);
-    _edit_action->setFont(f);
-    _remove_action->setFont(f);
-    _delete_action->setFont(f);
-    _play_next_action->setFont(f);
-
+    Helper::set_deja_vu_font(this);
 }
 
 

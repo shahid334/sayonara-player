@@ -647,3 +647,10 @@ QString Helper::get_newest_version(){
     return str;
 
 }
+
+
+void Helper::set_deja_vu_font(QWidget* w){
+    QFont f = w->font();
+    f.setFamily("DejaVu Sans");
+    w->setFont(f);
+}

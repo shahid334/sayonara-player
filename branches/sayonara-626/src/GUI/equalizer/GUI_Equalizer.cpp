@@ -295,11 +295,12 @@ void GUI_Equalizer::btn_preset_clicked(){
 	int current_idx = this->_ui->combo_presets->currentIndex();
 
 	if( custom_idx != -1 && custom_idx != current_idx ){
-		 QMessageBox msgBox;
+        QMessageBox msgBox(this);
          msgBox.setText(tr("This will overwrite your custom preset"));
          msgBox.setInformativeText(tr("Continue?"));
 		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 		 msgBox.setDefaultButton(QMessageBox::No);
+         Helper::set_deja_vu_font(&msgBox);
 		 int ret = msgBox.exec();
 
 		 if(ret != QMessageBox::Yes) b_save = false;

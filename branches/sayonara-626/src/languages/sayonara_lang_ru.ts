@@ -126,32 +126,32 @@
 <context>
     <name>ContextMenu</name>
     <message>
-        <location filename="../GUI/ContextMenu.cpp" line="33"/>
-        <location filename="../GUI/ContextMenu.cpp" line="55"/>
+        <location filename="../GUI/ContextMenu.cpp" line="34"/>
+        <location filename="../GUI/ContextMenu.cpp" line="57"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../GUI/ContextMenu.cpp" line="34"/>
-        <location filename="../GUI/ContextMenu.cpp" line="56"/>
+        <location filename="../GUI/ContextMenu.cpp" line="35"/>
+        <location filename="../GUI/ContextMenu.cpp" line="58"/>
         <source>Edit</source>
         <translation>Обработка</translation>
     </message>
     <message>
-        <location filename="../GUI/ContextMenu.cpp" line="35"/>
-        <location filename="../GUI/ContextMenu.cpp" line="57"/>
+        <location filename="../GUI/ContextMenu.cpp" line="36"/>
+        <location filename="../GUI/ContextMenu.cpp" line="59"/>
         <source>Remove</source>
         <translation>Перемещение</translation>
     </message>
     <message>
-        <location filename="../GUI/ContextMenu.cpp" line="36"/>
-        <location filename="../GUI/ContextMenu.cpp" line="58"/>
+        <location filename="../GUI/ContextMenu.cpp" line="37"/>
+        <location filename="../GUI/ContextMenu.cpp" line="60"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../GUI/ContextMenu.cpp" line="37"/>
-        <location filename="../GUI/ContextMenu.cpp" line="59"/>
+        <location filename="../GUI/ContextMenu.cpp" line="38"/>
+        <location filename="../GUI/ContextMenu.cpp" line="61"/>
         <source>Play next</source>
         <translatorcomment>проиграть след..сл.</translatorcomment>
         <translation>Проиграть следующим</translation>
@@ -621,7 +621,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Bitrate</source>
-        <translation>Bitrate</translation>
+        <translation type="unfinished">Битрейт</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
@@ -649,32 +649,32 @@
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="659"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="660"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="661"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="662"/>
         <source>Only from library</source>
         <translation>Только из коллекции</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="663"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="664"/>
         <source>You are about to delete %1 files</source>
         <translation>Вы хотите удалить %1  файла </translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="666"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="668"/>
         <source>Continue?</source>
         <translation>Продолжить?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="709"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="711"/>
         <source>Importing was successful</source>
         <translation>Импортирование успешно</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="712"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="714"/>
         <source>Importing failed</source>
         <translation>Ошибка при импортировании</translation>
     </message>
@@ -826,19 +826,24 @@
         <translation>Пожалуйста, посетите форум на </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="357"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="358"/>
         <source>About Sayonara</source>
         <translation>О Sayonara</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="360"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="361"/>
         <source>Written by Lucio Carreras</source>
         <translation>Написано Lucio Carreras   </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="361"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="362"/>
         <source>License</source>
         <translation>Лицензия</translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="364"/>
+        <source>Special thanks to %1 for translating</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1299,7 +1304,7 @@ Please choose another folder</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="398"/>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="473"/>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="521"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="639"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="593"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="398"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="404"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="409"/>
@@ -1355,7 +1360,7 @@ Please choose another folder</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="362"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="407"/>
         <source># Track</source>
-        <translation>#Треки</translation>
+        <translation type="unfinished">#Трек</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="383"/>
@@ -1382,19 +1387,19 @@ Please choose another folder</source>
         <translation>Жанры</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="544"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="616"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="415"/>
         <source>Cancel</source>
         <translation>Уничтожить</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="565"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="637"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="416"/>
         <source>Ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="609"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="563"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="418"/>
         <source>Discnumber</source>
         <translation>Номер диска</translation>
@@ -1463,61 +1468,61 @@ Please choose another folder</source>
 <context>
     <name>GUI_TrayIcon</name>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="64"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="119"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="272"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="65"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="123"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="276"/>
         <source>Play</source>
         <translation>Воспроизведение</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="66"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="122"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="67"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="126"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="68"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="121"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="69"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="125"/>
         <source>Previous</source>
         <translation>Предыдущая</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="70"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="120"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="71"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="124"/>
         <source>Next</source>
         <translation>Следующая</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="72"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="123"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="251"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="73"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="127"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="255"/>
         <source>Mute</source>
         <translation>Тихо</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="74"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="124"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="75"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="128"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="76"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="125"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="77"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="129"/>
         <source>Show</source>
         <translation>Показать </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="165"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="169"/>
         <source> by </source>
         <translation> от</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="256"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="260"/>
         <source>Unmute</source>
         <translation>Громко</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="267"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="271"/>
         <source>Pause</source>
         <translation>Пауза</translation>
     </message>
@@ -1597,7 +1602,7 @@ Please choose another folder</source>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="213"/>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="294"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="304"/>
         <location filename="../GUI/ui_GUI_InfoDialog.h" line="231"/>
         <location filename="../GUI/ui_GUI_InfoDialog.h" line="234"/>
         <source>Close</source>
@@ -1616,7 +1621,7 @@ Please choose another folder</source>
         <translation>Тексты</translation>
     </message>
     <message>
-        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="328"/>
+        <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="348"/>
         <location filename="../GUI/ui_GUI_InfoDialog.h" line="236"/>
         <source>Edit</source>
         <translation>Обработка</translation>
@@ -1754,6 +1759,14 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="270"/>
         <source>Music Library  </source>
         <translation>Коллекция</translation>
+    </message>
+</context>
+<context>
+    <name>LyricLookupThread</name>
+    <message>
+        <location filename="../LyricLookup/LyricLookup.cpp" line="205"/>
+        <source>Sorry, no lyrics found&lt;br /&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1916,272 +1929,272 @@ Please choose another folder</source>
 <context>
     <name>Sayonara</name>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="29"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="95"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="761"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="803"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="34"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="99"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="733"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="775"/>
         <source>Sayonara Player</source>
         <translation>Sayonara Player</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="179"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="805"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="177"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="777"/>
         <source>Correct Metadata</source>
         <translation>Исправить ID3</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="868"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="816"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="791"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="788"/>
         <source>Written by Lucio Carreras</source>
         <translation>Написано Lucio Carreras   </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="952"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="817"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="873"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="789"/>
         <source>Copyright 2013</source>
         <translation>Авторское право 2011-2013</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1094"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="819"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1014"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="791"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1113"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="820"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1038"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="792"/>
         <source>View</source>
         <translation>Вид</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1124"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="821"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1054"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="793"/>
         <source>Preferences</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1144"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="1343"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="781"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="822"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1079"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1277"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="753"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="794"/>
         <source>Help</source>
         <translation>Помощь</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1156"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="762"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1091"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="734"/>
         <source>Open File</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1167"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="763"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1102"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="735"/>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1178"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="764"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1113"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="736"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1195"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="765"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1130"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="737"/>
         <source>Equalizer</source>
         <translation>Эквалайзер</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1206"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="766"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1141"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="738"/>
         <source>Dark</source>
         <translation>Темно</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1221"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="767"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1156"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="739"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1232"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="768"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1167"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="740"/>
         <source>Reload Library</source>
         <translation>Перезагрузить коллекцию</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1243"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="769"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1178"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="741"/>
         <source>Clear Library</source>
         <translation>Очистить коллекцию</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1254"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="770"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1189"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="742"/>
         <source>Library Path</source>
         <translation>Путь к коллекции </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1265"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="771"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1199"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="743"/>
         <source>Fetch all covers</source>
         <translation>Загрузить все картинки</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1279"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="772"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1213"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="744"/>
         <source>Radio</source>
         <translation>Радио</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1296"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="774"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1230"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="746"/>
         <source>Start up</source>
         <translation>При старте</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1299"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="776"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1233"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="748"/>
         <source>Load playlist on startup</source>
         <translation>Запуск плейлиста при старте</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1310"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="778"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1244"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="750"/>
         <source>Import Folder</source>
         <translation>Импорт списка</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1321"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="779"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1255"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="751"/>
         <source>Import Files</source>
         <translation>Импорт файлов</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1335"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="780"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1269"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="752"/>
         <source>Playlist Chooser</source>
         <translation>Выбор плейлиста </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1354"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="782"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1287"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="754"/>
         <source>About</source>
         <translation>О</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1371"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="1527"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="783"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="798"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1303"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1459"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="755"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="770"/>
         <source>Notifications</source>
         <translation>Уведомления</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1376"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="784"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1308"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="756"/>
         <source>Open Stream</source>
         <translation>Открыть поток</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1387"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="785"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1319"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="757"/>
         <source>Library</source>
         <translation>Коллекция</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1404"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="786"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1336"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="758"/>
         <source>Close to tray</source>
         <translation>Свернуть</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1418"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="787"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1350"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="759"/>
         <source>Only one instance</source>
         <translation>Только одна инстанция</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1432"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="788"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1364"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="760"/>
         <source>Fullscreen </source>
         <translation>Полный экран </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1446"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="789"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1378"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="761"/>
         <source>Small Playlist Items</source>
         <translation>Малогабаритные добавления в плейлисте</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1460"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="790"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1392"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="762"/>
         <source>Only tracks in library</source>
         <translation>Только треки из коллекции </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1471"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="791"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1403"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="763"/>
         <source>Sound Engine</source>
         <translation>Sound Engine</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1476"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="792"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1408"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="764"/>
         <source>Gstreamer</source>
         <translation>Gstreamer</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1481"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="793"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1413"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="765"/>
         <source>Phonon</source>
         <translation>Phonon</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1489"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="794"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1421"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="766"/>
         <source>Stream recorder</source>
         <translation>Поток записи</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1500"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="795"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1432"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="767"/>
         <source>Set Streamripper Path</source>
         <translation>Задать  путь к потоку записи</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1508"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="796"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1440"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="768"/>
         <source>Stream</source>
         <translation>Поток</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1516"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="797"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1448"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="769"/>
         <source>Socket connection</source>
         <translation>Соединение сокет</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1541"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="799"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1473"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="771"/>
         <source>Podcasts</source>
         <translation>Подкасты</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1552"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="800"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1484"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="772"/>
         <source>Library live search</source>
         <translation>Коллекция живого поиска </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1569"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="801"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1501"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="773"/>
         <source>Update notifier</source>
         <translation>Оповещение о новой версии</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1580"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="802"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1512"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="774"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
@@ -2217,6 +2230,19 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_SocketSetup.h" line="117"/>
         <source>Increment until</source>
         <translation>Увеличение до</translation>
+    </message>
+</context>
+<context>
+    <name>SoundPluginLoader</name>
+    <message>
+        <location filename="../Engine/SoundPluginLoader.cpp" line="141"/>
+        <source>Info</source>
+        <translation>Информация</translation>
+    </message>
+    <message>
+        <location filename="../Engine/SoundPluginLoader.cpp" line="141"/>
+        <source>Please restart in order to change engine to </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -202,7 +202,7 @@ void LyricLookupThread::run(){
 		_final_wp.clear();
 
 		if ( !parse_webpage(_final_wp) ){
-			_final_wp = QString("Sorry, no lyrics found<br />" + url);
+            _final_wp = tr("Sorry, no lyrics found<br />") + url;
 			tries++;
 		}
 

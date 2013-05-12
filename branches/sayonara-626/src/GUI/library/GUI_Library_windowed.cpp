@@ -606,6 +606,7 @@ void GUI_Library_windowed::psl_delete_answer(QString answer){
 	answerbox.setText(tr("Info"));
 	answerbox.setIcon(QMessageBox::Information);
 	answerbox.setInformativeText(answer);
+    Helper::set_deja_vu_font(&answerbox);
 
 	answerbox.exec();
 	answerbox.close();
@@ -652,7 +653,7 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 		QMessageBox dialog(this);
 		QString tl = this->ui->le_search->text();
 		QAbstractButton* clicked_button;
-		QPushButton* only_library_button;
+        QPushButton* only_library_button;
 
 		dialog.setFocus();
 		dialog.setIcon(QMessageBox::Warning);
@@ -661,6 +662,7 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 		only_library_button = dialog.addButton(tr("Only from library"), QMessageBox::AcceptRole);
 		dialog.setDefaultButton(QMessageBox::No);
 		QString info_text = tr("You are about to delete %1 files").arg(n_tracks);
+        Helper::set_deja_vu_font(&dialog);
 
 
 		dialog.setInformativeText(info_text + "\n" + tr("Continue?") );

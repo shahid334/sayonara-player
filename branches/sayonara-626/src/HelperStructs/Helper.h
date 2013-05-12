@@ -120,6 +120,8 @@ namespace Helper{
 	QString easy_tag_finder(QString tag, QString& xml_doc);
 	QString calc_hash(QString data);
 	QString get_newest_version();
+
+    void set_deja_vu_font(QWidget* w);
 };
 
 

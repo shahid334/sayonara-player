@@ -31,6 +31,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QTimer>
+#include <QFont>
 #include <Notification/Notification.h>
 
 
@@ -86,6 +87,9 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
         m_trayContextMenu->addSeparator();
         m_trayContextMenu->addAction(m_showAction);
         m_trayContextMenu->addAction(m_closeAction);
+        QFont f = m_trayContextMenu->font();
+        f.setFamily("DejaVu Sans");
+        m_trayContextMenu->setFont(f);
     this->setContextMenu(m_trayContextMenu);
 
 

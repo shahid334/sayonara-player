@@ -269,7 +269,7 @@ void GUI_PlaylistChooser::text_changed(const QString & text){
 
 int GUI_PlaylistChooser::show_warning(QString title_text){
 
-    QMessageBox warning_box;
+    QMessageBox warning_box(this);
         warning_box.setParent(this);
         warning_box.setModal(true);
         warning_box.setWindowFlags(Qt::Dialog);
@@ -279,6 +279,7 @@ int GUI_PlaylistChooser::show_warning(QString title_text){
         warning_box.setInformativeText(tr("Are you sure?"));
         warning_box.setWindowTitle(title_text);
         warning_box.setDefaultButton(QMessageBox::No);
+        Helper::set_deja_vu_font(&warning_box);
 
 
     return warning_box.exec();

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>719</width>
+    <width>646</width>
     <height>427</height>
    </rect>
   </property>
@@ -38,7 +38,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -283,6 +283,11 @@
            <height>0</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="horizontalScrollBarPolicy">
           <enum>Qt::ScrollBarAlwaysOff</enum>
          </property>
@@ -290,6 +295,11 @@
        </item>
        <item row="2" column="2">
         <widget class="QPushButton" name="btn_close">
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="text">
           <string>Close</string>
          </property>
@@ -297,6 +307,11 @@
        </item>
        <item row="2" column="1">
         <spacer name="horizontalSpacer">
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -310,6 +325,11 @@
        </item>
        <item row="2" column="0">
         <widget class="QComboBox" name="combo_servers">
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+          </font>
+         </property>
          <property name="currentIndex">
           <number>-1</number>
          </property>

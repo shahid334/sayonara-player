@@ -214,6 +214,7 @@ void GUI_Podcasts::delete_clicked(){
     msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);
+    Helper::set_deja_vu_font(&msgBox);
 
     int ret = msgBox.exec();
     if(ret == QMessageBox::Yes){
