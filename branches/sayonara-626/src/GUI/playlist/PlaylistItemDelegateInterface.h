@@ -48,11 +48,16 @@ public:
 	    virtual void setModelData(QWidget *editor, QAbstractItemModel *model,
 	   	                      const QModelIndex &index) const = 0;
 
+        void setMaxWidth(int w){
+            _max_width = w;
+        }
+
 	    int rowHeight(){return _row_height;}
 
 	protected:
 	    int					_rendered_items;
 	    int					_row_height;
+        int                 _max_width;
 	    QListView*			_parent;
 
 };

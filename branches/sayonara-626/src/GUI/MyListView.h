@@ -95,7 +95,7 @@ class MyListView :public QListView{
 		void mouseReleaseEvent(QMouseEvent* event);
 		void mouseMoveEvent(QMouseEvent* event);
         void keyPressEvent(QKeyEvent *event);
-
+        void resizeEvent(QResizeEvent *e);
 
     private:
 
@@ -103,6 +103,7 @@ class MyListView :public QListView{
         QList<int> calc_selections();
         void select_all();
         int calc_dd_line(QPoint pos);
+        void set_delegate_max_width(int n_items);
 
         void clear_drag_lines(int row);
         void dragLeaveEvent(QDragLeaveEvent* event);

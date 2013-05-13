@@ -186,6 +186,15 @@ bool CDatabaseConnector::load_settings(){
 	}
 	settings->setPlayerSize(player_size);
 
+    QPoint player_pos(50, 50);
+    QStringList l_player_pos = load_setting_strlist(SET_PLAYER_POS);
+    if(l_player_pos.size() >= 2){
+        player_pos.setX(l_player_pos[0].toInt());
+        player_pos.setY(l_player_pos[1].toInt());
+    }
+
+    settings->setPlayerPos(player_pos);
+
     bool player_fullscreen = load_setting_bool(SET_PLAYER_FULLSCREEN, false);
     settings->setPlayerFullscreen(player_fullscreen);
 
@@ -356,6 +365,10 @@ bool CDatabaseConnector::store_settings(){
 	QSize player_size = storage->getPlayerSize();
 	QString str_size = QString::number(player_size.width()) + "," + QString::number(player_size.height());
 	store_setting(SET_PLAYER_SIZE, str_size);
+
+    QPoint player_pos = storage->getPlayerPos();
+    QString str_pos = QString::number(player_pos.x()) + "," + QString::number(player_pos.y());
+    store_setting(SET_PLAYER_POS, str_pos);
 
     bool player_fullscreen = storage->getPlayerFullscreen();
     store_setting(SET_PLAYER_FULLSCREEN, player_fullscreen);

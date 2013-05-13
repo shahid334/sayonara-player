@@ -95,7 +95,7 @@ public:
 		 *****************/
 
 
-			int getAlbumID (const QString & album);
+            int getAlbumID (const QString& album);
 			int getMaxAlbumID();
 
             bool getAlbumByID(const int& id, Album& album);

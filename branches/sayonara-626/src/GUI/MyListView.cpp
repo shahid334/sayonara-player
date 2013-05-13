@@ -42,6 +42,7 @@
 #include <QUrl>
 #include <QMenu>
 #include <QModelIndex>
+#include <QScrollBar>
 
 
 
@@ -171,6 +172,13 @@ void MyListView::keyPressEvent(QKeyEvent* event){
 
 }
 
+void MyListView::resizeEvent(QResizeEvent *e){
+
+    this->set_delegate_max_width(_model->rowCount());
+    e->accept();
+
+}
+
 void MyListView::init_rc_menu(){
 
     _rc_menu = new ContextMenu(this);
@@ -266,6 +274,9 @@ void MyListView::clear(){
 void MyListView::fill(MetaDataList &v_metadata, int cur_play_idx){
 
 
+    this->set_delegate_max_width((int) v_metadata.size());
+
+
     _model->removeRows(0, _model->rowCount());
     if(v_metadata.size() == 0) return;
 
@@ -273,6 +284,7 @@ void MyListView::fill(MetaDataList &v_metadata, int cur_play_idx){
 
     int idx = 0;
     _cur_selected_rows.clear();
+
 
     QModelIndex idx_cur_playing = _model->index(0);
     foreach(MetaData md, v_metadata){
@@ -567,8 +579,24 @@ void MyListView::show_big_items(bool big){
     else
         _delegate = new PlaylistItemDelegate(this);
 
+
+    this->set_delegate_max_width(_model->rowCount());
     this->setItemDelegate(_delegate);
+
     this->reset();
 }
 
 
+void MyListView::set_delegate_max_width(int n_items){
+
+    bool scrollbar_visible = (( n_items * _delegate->rowHeight() ) >= this->height());
+
+    if(scrollbar_visible){
+        _delegate->setMaxWidth(this->width() - verticalScrollBar()->width());
+    }
+
+    else {
+        _delegate->setMaxWidth(this->width());
+    }
+
+}

@@ -118,6 +118,7 @@
 
     protected:
             void changeEvent(QEvent* e);
+            void resizeEvent(QResizeEvent *e);
 
 
 

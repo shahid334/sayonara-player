@@ -74,7 +74,8 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
     // no tracks in new playlist
     if(v_meta_data.size() == 0) {
-        emit sig_no_track_to_play();
+
+        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_OFF);
         return;
     }
 

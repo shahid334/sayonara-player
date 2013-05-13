@@ -72,8 +72,8 @@ void GUI_PlaylistEntrySmall::setBackgroundColorNotPlaying(){
 void GUI_PlaylistEntrySmall::setWidth(int width){
 
 	this->resize(width, 30);
-	this->setMaximumWidth(width);
-	this->setMinimumWidth(width);
+    /*this->setMaximumWidth(width);
+    this->setMinimumWidth(width);*/
 }
 
 

@@ -65,29 +65,23 @@ PlaylistItemDelegateSmall::~PlaylistItemDelegateSmall() {
 void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const
 {
+    if(!index.isValid()) return;
 
-
-	if(!index.isValid()) return;
-
-
-
-    _pl_entry->setMinimumHeight(_row_height);
-    _pl_entry->setMaximumHeight(_row_height);
+    _pl_entry->setMaximumSize(_max_width, _row_height);
+    _pl_entry->setMinimumSize(_max_width, _row_height);
+    _pl_entry->resize(_max_width, _row_height);
 
 	QVariant mdVariant = index.model()->data(index, Qt::WhatsThisRole);
 	MetaData md;
 	if( !MetaData::fromVariant(mdVariant, md) ) return;
 
 	QRect rect(option.rect);
+
 	painter->save();
 	painter->translate(0, 0);
 
+
     _pl_entry->setContent(md, index.row() +1 );
-
-	int offset = (this->_parent->verticalScrollBar()->isVisible()) ?
-						this->_parent->verticalScrollBar()->width() + 4 : 4;
-
-    _pl_entry->setWidth(_parent->width() - offset);
 
     QString style;
     QPalette palette = _parent->palette();
@@ -120,13 +114,13 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
                 get_fg_color(highlight_val);
     }
 
-    int y = rect.topLeft().y() +  _pl_entry->height()-1;
+    int y = rect.topLeft().y() +  _pl_entry->height() -1;
     _pl_entry->setStyleSheet(style);
     if(md.is_disabled) _pl_entry->setDisabled(true);
     _pl_entry->render(painter, rect.topLeft() );
 
 	if(md.pl_dragged) {
-        painter->drawLine(QLine(0, y, _pl_entry->width(), y));
+        painter->drawLine(QLine(0, y, _max_width, y));
 	}
 
 	painter->restore();
@@ -136,10 +130,10 @@ void PlaylistItemDelegateSmall::paint(QPainter *painter, const QStyleOptionViewI
 QSize PlaylistItemDelegateSmall::sizeHint(const QStyleOptionViewItem &option,
                              const QModelIndex &index) const
 {
-
 	Q_UNUSED(option);
 	Q_UNUSED(index);
-	return QSize(600, _row_height);
+
+    return QSize(_max_width, _row_height);
 }
 
 
@@ -171,4 +165,7 @@ void PlaylistItemDelegateSmall::setModelData(QWidget *editor, QAbstractItemModel
 	Q_UNUSED(index);
 	Q_UNUSED(model);
 }
+
+
+
 

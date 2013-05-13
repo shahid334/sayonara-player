@@ -170,10 +170,9 @@ QStringList call_and_parse_album(QString artist, QString album,	int num_adresses
 // downloads num_covers_to_fetch covers out from adresses. If size of adresses is smaller, then the
 // max number of covers will be fetched
 // result images are stored in vec_images
-int download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images, bool save=false) {
+uint download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImage>& vec_images, bool save=false) {
 
-	vec_images.clear();
-
+    vec_images.clear();
 	uint found = 0;
 
 	// if no adresses, try to fetch some
@@ -213,7 +212,7 @@ int download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QImag
 		vec_images.push_back(QImage(Helper::getIconPath() + "append.png"));
 	}
 
-	return found;
+    return found;
 }
 
 #endif /* COVERDOWNLOADER_H_ */

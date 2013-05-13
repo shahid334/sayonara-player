@@ -138,10 +138,18 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     bool is_fullscreen = m_settings->getPlayerFullscreen();
     if(!is_fullscreen){
         QSize size = m_settings->getPlayerSize();
+        QPoint pos = m_settings->getPlayerPos();
+
         QRect rect = this->geometry();
+        rect.setX(pos.x());
+        rect.setY(pos.y());
         rect.setWidth(size.width());
         rect.setHeight(size.height());
         this->setGeometry(rect);
+
+
+
+
     }
 
     m_library_width = 600;
@@ -308,7 +316,7 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
     this->setWindowTitle(QString("Sayonara - ") + md.title);
 
 	QString cover_path = Helper::get_cover_path(md.artist, md.album);
-	if(! QFile::exists(cover_path) ){
+    if(! QFile::exists(cover_path) ){
         if(md.radio_mode != RADIO_STATION){
             cover_path = Helper::getIconPath() + "logo.png";
             emit sig_want_cover(md);
@@ -318,7 +326,7 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
         	cover_path = Helper::getIconPath() + "radio.png";
 	}
 
-	ui->btn_correct->setVisible(false);
+    ui->btn_correct->setVisible(false);
 
     ui->albumCover->setIcon(QIcon(cover_path));
 	ui->albumCover->repaint();
@@ -689,6 +697,14 @@ void GUI_Player::notification_changed(bool active, int timeout_ms){
 }
 
 
+void GUI_Player::moveEvent(QMoveEvent *e){
+
+    QMainWindow::moveEvent(e);
+
+    QPoint p= this->pos();
+    m_settings->setPlayerPos(p);
+
+}
 
 void GUI_Player::resizeEvent(QResizeEvent* e) {
 

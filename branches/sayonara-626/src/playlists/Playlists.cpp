@@ -54,7 +54,17 @@ void Playlists::load_all_playlists(){
 }
 
 void Playlists::load_single_playlist(int id){
+
+
+
+
 	CustomPlaylist pl;
+
+    if(id <= 0) {
+        emit sig_single_playlist_loaded(pl);
+        return;
+    }
+
     bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
     qDebug() << "in my stommack are " << pl.tracks.size() << "files";
 

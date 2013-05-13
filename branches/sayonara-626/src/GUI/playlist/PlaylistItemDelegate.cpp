@@ -159,7 +159,7 @@ QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 
 	Q_UNUSED(option);
 	Q_UNUSED(index);
-	return QSize(600, _row_height);
+    return QSize(_parent->width(), _row_height);
 }
 
 

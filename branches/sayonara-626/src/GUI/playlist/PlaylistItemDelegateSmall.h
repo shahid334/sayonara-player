@@ -32,6 +32,10 @@
 class PlaylistItemDelegateSmall : public PlaylistItemDelegateInterface{
 	 Q_OBJECT
 
+private:
+
+    GUI_PlaylistEntrySmall* _pl_entry;
+
 public:
 	 PlaylistItemDelegateSmall(QListView *parent = 0);
 	 virtual ~PlaylistItemDelegateSmall();
@@ -51,13 +55,6 @@ public:
 	    virtual void setModelData(QWidget *editor, QAbstractItemModel *model,
 	   	                      const QModelIndex &index) const;
 
-
-
-
-
-	protected:
-
-	    GUI_PlaylistEntrySmall* _pl_entry;
 
 };
 

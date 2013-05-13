@@ -58,6 +58,7 @@ namespace Helper{
 
     QString get_artist_image_path(QString artist, QString extension="jpg");
     QString get_cover_path(QString artist, QString album, QString extension="jpg");
+    QString get_cover_path(int album_id);
     QString calc_cover_token(QString artist, QString album);
 
 	QString calc_google_image_search_adress(QString searchstring,  QString size, QString filetype);
@@ -120,8 +121,13 @@ namespace Helper{
 	QString easy_tag_finder(QString tag, QString& xml_doc);
 	QString calc_hash(QString data);
 	QString get_newest_version();
+    QString get_album_major_artist(int album_id);
+    Album get_album_from_metadata(const MetaData& md);
+
 
     void set_deja_vu_font(QWidget* w);
+
+
 };
 
 

@@ -111,9 +111,9 @@ void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
     }
 
     else{
-	_filelist.clear();
-	update_model();
-	this->search_button_pressed();
+        _filelist.clear();
+        update_model();
+        this->search_button_pressed();
     }
 
 
@@ -150,12 +150,13 @@ void GUI_Alternate_Covers::save_button_pressed(){
     if(_no_album){
 
         cover_token = _target_filename;
-        if(QFile::exists(cover_token)) QFile::remove(cover_token);
-        success &= file.copy(cover_token);
 
+        QFile f2(cover_token);
+        if(f2.exists()) f2.remove();
+        success = file.copy(cover_token);
     }
 
-
+    // should never happen
     else if(_search_for_album){
 		if(_album.is_sampler ){
 

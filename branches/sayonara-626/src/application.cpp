@@ -78,7 +78,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     _translator        = translator;
 
     set                = CSettingsStorage::getInstance();
-    _setting_thread    = new SettingsThread();
+
 
 
 
@@ -86,6 +86,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     set->setVersion( version );
 
     player              = new GUI_Player(translator);
+    _setting_thread    = new SettingsThread(player);
 
     playlist            = new Playlist();
     library             = new CLibraryBase(this);

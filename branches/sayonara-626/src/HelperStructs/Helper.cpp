@@ -51,6 +51,8 @@
 #include <QFile>
 #include <QFontMetrics>
 #include <QFileInfo>
+#include <QMap>
+#include <QString>
 
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 
@@ -184,6 +186,29 @@ QString Helper::get_cover_path(QString artist, QString album, QString extension)
 	return cover_path;
 }
 
+QString Helper::get_cover_path(int album_id){
+
+    if(album_id == -1) return "";
+
+    Album album;
+    bool success = CDatabaseConnector::getInstance()->getAlbumByID(album_id, album);
+    if(!success) return "";
+
+    if(album.artists.size() == 0){
+        return get_cover_path("", album.name);
+    }
+
+    else if(album.artists.size() == 1){
+        return get_cover_path(album.artists[0], album.name);
+    }
+
+    else if(album.artists.size() == 2){
+        return get_cover_path("Various", album.name);
+    }
+
+    else return "";
+}
+
 QString Helper::createLink(QString name, QString target, bool underline){
 	
 	int dark = CSettingsStorage::getInstance()->getPlayerStyle();
@@ -293,7 +318,7 @@ QString Helper::calc_google_album_adress(QString artist, QString album){
 
 
 QString Helper::calc_cover_token(QString artist, QString album){
-	QString ret = QCryptographicHash::hash(artist.toUtf8() + album.toUtf8(), QCryptographicHash::Md5).toHex();
+    QString ret = QCryptographicHash::hash(artist.trimmed().toLower().toUtf8() + album.trimmed().toLower().toUtf8(), QCryptographicHash::Md5).toHex();
 	return ret;
 }
 
@@ -639,6 +664,72 @@ QString Helper::get_album_w_disc(const MetaData& md){
     else return album.name.trimmed();
 
 }
+
+
+QString Helper::get_album_major_artist(int albumid){
+
+    if(albumid == -1) return "";
+
+    MetaDataList v_md;
+    QList<int> idlist;
+    idlist << albumid;
+    CDatabaseConnector::getInstance()->getAllTracksByAlbum(idlist, v_md);
+
+    if(v_md.size() == 0) return "";
+    if(v_md.size() == 1) return v_md[0].artist;
+
+    QMap<QString, int> map;
+
+
+    foreach(MetaData md, v_md){
+
+        QString alower = md.artist.toLower().trimmed();
+        if(!map.keys().contains(alower)) map.insert(alower, 1);
+        else map[alower] = map.value(alower) + 1;
+
+    }
+
+    if(map.keys().size() == 0) return "";
+
+    foreach(QString artist, map.keys()){
+        if( (map.value(artist) * 100) >= (((int)v_md.size() * 200) / 3)) return artist;
+    }
+
+    return QString("Various");
+
+}
+
+
+
+Album Helper::get_album_from_metadata(const MetaData& md) {
+
+    Album album;
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+    bool success = false;
+
+    // perfect metadata
+    if (md.album_id >= 0){
+
+        success = db->getAlbumByID(md.album_id, album);
+    }
+
+    if(success) return album;
+
+    // guess
+    int albumID = db->getAlbumID(md.album);
+    if(albumID >= 0) success = db->getAlbumByID(albumID, album);
+
+    if(success) return album;
+
+    // assemble album
+    album.name = md.album;
+    album.artists.clear();
+    album.artists.push_back(md.artist);
+
+    return album;
+}
+
+
 
 QString Helper::get_newest_version(){
 
