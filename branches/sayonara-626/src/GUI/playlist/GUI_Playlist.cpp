@@ -133,11 +133,8 @@ void GUI_Playlist::changeEvent(QEvent* e){
 void GUI_Playlist::resizeEvent(QResizeEvent* e){
 
     e->accept();
-    qDebug() << this->size();
-    qDebug() << this->ui->listView->size();
-
-    //this->ui->listView->resize(this->width(), this->ui->listView->height());
-
+    this->ui->listView->update();
+    this->ui->listView->reset();
 }
 
 void GUI_Playlist::language_changed(){
