@@ -1,7 +1,5 @@
 QMainWindow, QDialog {
 	border: none;
-	/*background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #404040, stop:0.3 #323232, stop:0.7 #323232, stop:1);*/
-
 	background-color: #3c3c3c;
 	color: #D8D8D8;
 	selection-background-color: #424e72;
@@ -240,6 +238,8 @@ QMenu {
       border: 1px solid #202020;
       border-radius: 4px;
       background-color: #383838;
+      padding-left: 2px;
+      padding-right: 2px;
 
 }
 
@@ -286,8 +286,7 @@ QMenu::indicator:non-exclusive:checked {
 QComboBox {
      border: 1px solid #2B2B2B;
      border-radius: 3px;
-     padding: 1px 5px 1px 3px;
-     min-width: 6em;
+     padding: 1px 3px 1px 3px;
  }
 
 
@@ -313,7 +312,9 @@ QComboBox:!editable:off, QComboBox::drop-down:editable:off {
 
 
 QComboBox QAbstractItemView {
-	min-width: 9em;
+/*	min-width: 9em;*/
+     padding-top: 5px;
+     
 }
 
 
@@ -662,7 +663,7 @@ QPushButton[flat=true]:pressed{
 QPushButton[flat=false] {
    border: 1px solid #282828;
    border-radius: 6px;
-    background: #424242;
+   background: #505050;
    padding: 4px;
 }
 
@@ -670,7 +671,7 @@ QPushButton[flat=false]:hover {
    border: 1px solid #e8841a;
    border-radius: 6px;
     padding: 4px;
-   background: #3b3b3b;
+/*   background: #3b3b3b;*/
 }
 
 QPushButton[flat=false]:pressed {

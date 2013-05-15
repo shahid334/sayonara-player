@@ -746,4 +746,9 @@ if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
     this->_track_delegate->set_skin(b);
 
 
+    this->ui->lv_album->set_skin(b);
+    this->ui->lv_artist->set_skin(b);
+    this->ui->tb_title->set_skin(b);
+
+
 }

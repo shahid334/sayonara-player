@@ -64,6 +64,7 @@ MyTableView::MyTableView(QWidget* parent) : QTableView(parent) {
     _parent = parent;
     _qDrag = 0;
     _rc_header_menu = 0;
+    _dark = true;
 
     _mimedata = new CustomMimeData();
     _edit = new QLineEdit(this);
@@ -683,6 +684,10 @@ void MyTableView::fill_artists(const ArtistList& artists){
     calc_corner_widget();
 }
 
+void MyTableView::set_skin(bool dark){
+    _dark = dark;
+    calc_corner_widget();
+}
 
 void MyTableView::calc_corner_widget(){
 
@@ -699,11 +704,19 @@ void MyTableView::calc_corner_widget(){
     }
 
 
-    //QPalette palette = _parent->palette();
-    //QColor bg = palette.color(QPalette::Normal, QPalette::Window);
-    if(this->cornerWidget())
-        /*this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");*/
-        this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
+
+    if(this->cornerWidget()){
+        if(_dark)
+            this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
+        else{
+            QPalette palette = _parent->palette();
+            QColor bg = palette.color(QPalette::Normal, QPalette::Window);
+            this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
+        }
+    }
+
+
+
 
 
 }

@@ -110,20 +110,20 @@
      <item>
       <widget class="QComboBox" name="combo_mode">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
-         <width>110</width>
+         <width>25</width>
          <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>120</width>
+         <width>500</width>
          <height>25</height>
         </size>
        </property>
@@ -132,6 +132,9 @@
          <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
+       </property>
+       <property name="sizeAdjustPolicy">
+        <enum>QComboBox::AdjustToContents</enum>
        </property>
        <item>
         <property name="text">
@@ -222,13 +225,13 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>24</width>
          <height>25</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>100</width>
+         <width>24</width>
          <height>25</height>
         </size>
        </property>
@@ -245,9 +248,12 @@
        </property>
        <property name="iconSize">
         <size>
-         <width>18</width>
-         <height>18</height>
+         <width>21</width>
+         <height>21</height>
         </size>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

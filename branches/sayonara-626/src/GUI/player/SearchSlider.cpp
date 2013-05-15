@@ -53,8 +53,6 @@ bool SearchSlider::event(QEvent* e){
     QWheelEvent* wheelEvent;
 
 
-
-
     switch(e->type()){
         case QEvent::MouseTrackingChange:
         break;
@@ -74,6 +72,8 @@ bool SearchSlider::event(QEvent* e){
 			else
 				percent = 100 - (mouseEvent->y() * 100 / this->height());
 
+            if (percent < 0) percent = 0;
+            if (percent > 100) percent = 100;
 			this->setValue(percent);
 
 			emit searchSliderPressed(percent);
@@ -90,6 +90,8 @@ bool SearchSlider::event(QEvent* e){
 			else
 				percent = 100 - (mouseEvent->y() * 100 / this->height());
 
+            if (percent < 0) percent = 0;
+            if (percent > 100) percent = 100;
 			this->setValue(percent);
 
 			if(_searching)
@@ -107,6 +109,9 @@ bool SearchSlider::event(QEvent* e){
 				percent = (mouseEvent->x() * 100) / this->width();
 			else
 				percent = 100 - (mouseEvent->y() * 100 / this->height());
+
+            if (percent < 0) percent = 0;
+            if (percent > 100) percent = 100;
 
 			this->setValue(percent);
 

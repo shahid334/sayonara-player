@@ -129,6 +129,7 @@ private:
     bool 		    _md_set;
     MetaData		    _md;
     QTimer*		    _timer;
+    bool            _mute;
 
 
 

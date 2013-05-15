@@ -107,6 +107,7 @@ public:
 
     QList<int> calc_selections();
     void force_selections();
+    void set_skin(bool dark);
 
 
 
@@ -139,6 +140,7 @@ private:
     Sort::SortOrder		_sort_order;
     CustomMimeData*		_mimedata;
     int                 _view_mode;
+    bool                _dark;
 
 };
 
