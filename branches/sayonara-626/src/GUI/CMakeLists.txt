@@ -22,22 +22,24 @@ SET(HEADERS
     player/GUI_TrayIcon.h
     player/SearchSlider.h
     playlist/GUI_Playlist.h
-    playlist/PlaylistItemModel.h
-    playlist/PlaylistItemDelegate.h
-    playlist/PlaylistItemDelegateSmall.h
-    playlist/GUI_PlaylistEntry.h
-    playlist/GUI_PlaylistEntrySmall.h
+    playlist/view/PlaylistView.h
+    playlist/model/PlaylistItemModel.h
+    playlist/delegate/PlaylistItemDelegate.h
+    playlist/entry/GUI_PlaylistEntry.h
+    playlist/entry/GUI_PlaylistEntryBig.h
+    playlist/entry/GUI_PlaylistEntrySmall.h
     playlist_chooser/GUI_PlaylistChooser.h
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
     LastFM/GUI_LastFM.h
     LastFM/GUI_LFMRadioWidget.h
     library/GUI_Library_windowed.h
-    library/models/LibraryItemModel.h
-    library/models/LibraryItemModelTracks.h
-    library/models/LibraryItemModelAlbums.h
-    library/models/LibraryItemModelArtists.h
-    library/delegates/LibraryItemDelegateAlbums.h
-    library/delegates/LibraryItemDelegateArtists.h
+    library/view/LibraryView.h    
+    library/model/LibraryItemModel.h
+    library/model/LibraryItemModelTracks.h
+    library/model/LibraryItemModelAlbums.h
+    library/model/LibraryItemModelArtists.h
+    library/delegate/LibraryItemDelegateAlbums.h
+    library/delegate/LibraryItemDelegateArtists.h
     library/InfoBox/GUILibraryInfoBox.h
     library/ImportFolderDialog/GUIImportFolder.h
     library/DiscPopupMenu.h
@@ -49,8 +51,6 @@ SET(HEADERS
     equalizer/GUI_Equalizer.h
     Podcasts/GUI_Podcasts.h
     MyColumnHeader.h
-    MyTableView.h
-    MyListView.h
     ContextMenu.h
     InfoDialog/GUI_InfoDialog.h
     SocketConfiguration/GUISocketSetup.h
@@ -73,23 +73,24 @@ SET(SOURCES
     player/GUI_TrayIcon.cpp
     player/SearchSlider.cpp
     playlist/GUI_Playlist.cpp
-    playlist/PlaylistItemModel.cpp
-    playlist/PlaylistItemDelegate.cpp
-    playlist/PlaylistItemDelegateSmall.cpp
-    playlist/GUI_PlaylistEntry.cpp
-    playlist/GUI_PlaylistEntrySmall.cpp
+    playlist/view/PlaylistView.cpp
+    playlist/model/PlaylistItemModel.cpp
+    playlist/delegate/PlaylistItemDelegate.cpp
+    playlist/entry/GUI_PlaylistEntryBig.cpp
+    playlist/entry/GUI_PlaylistEntrySmall.cpp
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
     LastFM/GUI_LFMRadioWidget.cpp
     library/GUI_Library_windowed.cpp
-    library/models/LibraryItemModel.cpp
-    library/models/LibraryItemModelTracks.cpp
-    library/models/LibraryItemModelAlbums.cpp
-    library/models/LibraryItemModelArtists.cpp
-    library/delegates/LibraryItemDelegateAlbums.cpp
-    library/delegates/LibraryItemDelegateArtists.cpp
-    library/delegates/LibraryItemDelegateTracks.cpp
+    library/view/LibraryView.cpp
+    library/model/LibraryItemModel.cpp
+    library/model/LibraryItemModelTracks.cpp
+    library/model/LibraryItemModelAlbums.cpp
+    library/model/LibraryItemModelArtists.cpp
+    library/delegate/LibraryItemDelegateAlbums.cpp
+    library/delegate/LibraryItemDelegateArtists.cpp
+    library/delegate/LibraryItemDelegateTracks.cpp
     library/InfoBox/GUILibraryInfoBox.cpp
     library/ImportFolderDialog/GUIImportFolder.cpp
     library/GUI_LibraryPath.cpp
@@ -99,8 +100,6 @@ SET(SOURCES
     tagedit/GUI_TagEdit.cpp
     equalizer/GUI_Equalizer.cpp
     Podcasts/GUI_Podcasts.cpp
-    MyTableView.cpp
-    MyListView.cpp
     ContextMenu.cpp
     stream/GUI_Stream.cpp
     StreamRecorder/GUI_StreamRecorder.cpp
@@ -115,8 +114,8 @@ SET(SOURCES
 SET(FORMS
     player/GUI_Player.ui
     playlist/GUI_Playlist.ui
-    playlist/GUI_Playlist_Entry.ui
-    playlist/GUI_Playlist_EntrySmall.ui
+    playlist/entry/GUI_PlaylistEntryBig.ui
+    playlist/entry/GUI_PlaylistEntrySmall.ui
     LastFM/GUI_LastFM_Dialog.ui
     LastFM/GUI_LFMRadioWidget.ui
     library/GUI_Library_windowed.ui

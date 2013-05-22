@@ -411,7 +411,9 @@ struct CustomPlaylist{
     MetaDataList tracks;
     qint32 length;
     qint32 num_tracks;
+    bool is_valid;
     CustomPlaylist(){
+        is_valid = false;
         id = -1;
         name = "";
         length = 0;
@@ -458,7 +460,17 @@ struct LastTrack{
         if(lst.size() < 3) return tr;
         tr.id = lst[0].toInt();
         tr.filepath = lst[1];
-        tr.pos_sec = lst[2].toInt();
+        bool ok;
+        tr.pos_sec = lst[2].toInt(&ok);
+
+        if(!ok && lst.size() > 3){
+            tr.pos_sec = lst[lst.size() - 1].toInt();
+            tr.filepath.clear();
+            for(int i=1; i<lst.size() - 1; i++){
+                tr.filepath += lst[i];
+            }
+        }
+
         tr.valid = true;
         return tr;
     }

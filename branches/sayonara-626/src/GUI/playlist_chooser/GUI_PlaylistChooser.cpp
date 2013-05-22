@@ -123,7 +123,7 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
     text_changed(this->ui->combo_playlistchooser->currentText());
 }
 
-
+// Playlist -> this
 void GUI_PlaylistChooser::playlist_changed(MetaDataList& v_md, int i, int radio_mode){
 
     Q_UNUSED(i);
@@ -237,17 +237,6 @@ void GUI_PlaylistChooser::load_button_pressed(){
     if(filelist.size() > 0){
         emit sig_files_selected(filelist);
     }
-}
-
-
-
-void GUI_PlaylistChooser::apply_button_pressed(){
-
-	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx == -1) return;
-	int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
-
-	if(val >= 0)
-		emit sig_playlist_chosen(val);
 }
 
 

@@ -30,6 +30,10 @@
 #include <gst/gst.h>
 #include <gst/gsturi.h>
 #include <gst/app/gstappsrc.h>
+#include <gst/gstbuffer.h>
+#include <glib.h>
+#include <glib/gtypes.h>
+
 
 #include <string>
 #include <vector>
@@ -208,6 +212,13 @@ void GST_Engine::init_play_pipeline(){
 		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
 		_audio_bin = gst_bin_new("audio-bin");
 
+        _app_sink = gst_element_factory_make("appsink", "signal_sink");
+        _buffer = gst_buffer_new_and_alloc(1024);
+
+
+
+
+
 		if(!_bus){
             qDebug() << "Engine: Something went wrong with the bus";
 			break;
@@ -231,14 +242,30 @@ void GST_Engine::init_play_pipeline(){
 
 		// create, link and add ghost pad
 		gst_bus_add_watch(_bus, bus_state_changed, this);
-		gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
-		gst_element_link(_equalizer, _audio_sink);
-		_audio_pad = gst_element_get_static_pad(_equalizer, "sink");
+        gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _app_sink, _audio_sink, NULL);
+
+
+        success = gst_element_link(_equalizer, _audio_sink);
+        qDebug() << "link eq with sink: " << success;
+
+
+        if(!success) exit(0);
+
+        _audio_pad = gst_element_get_static_pad(_equalizer, "sink");
 		if(_audio_pad) {
 			success = gst_element_add_pad(GST_ELEMENT(_audio_bin),  gst_ghost_pad_new("sink", _audio_pad));
 			if(!success) break;
-			g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-		}
+
+        }
+
+        _audio_pad2 = gst_element_get_static_pad(_app_sink, "sink2");
+        if(_audio_pad2){
+            success = gst_element_add_pad(GST_ELEMENT(_audio_bin), gst_ghost_pad_new("sink", _audio_pad2));
+            if(!success) break;
+            g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+            g_object_set(G_OBJECT(_app_sink), "blocksize", 1023, NULL);
+
+        }
 
         g_signal_connect (_pipeline, "about-to-finish", G_CALLBACK (player_change_file), NULL);
 
@@ -391,6 +418,7 @@ bool GST_Engine::set_uri(const MetaData& md, bool& start_play){
 
     // playing src
     g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
+
     qDebug() << "Engine:  set uri: " << uri;
 
     return true;
@@ -504,6 +532,8 @@ void GST_Engine::state_changed(){
 
 void GST_Engine::set_cur_position(quint32 pos_sec){
 
+   // g_object_set(G_OBJECT(_app_sink), "ts-offset", 1, NULL);
+
     if((quint32) _seconds_now == pos_sec) return;
     _seconds_now = pos_sec;
     int playtime = _seconds_now - _seconds_started;
@@ -518,6 +548,30 @@ void GST_Engine::set_cur_position(quint32 pos_sec){
     _last_track->id = _meta_data.id;
     _last_track->filepath = _meta_data.filepath;
     _last_track->pos_sec = pos_sec;
+
+
+    GstBuffer* b = gst_buffer_new_and_alloc(1025);
+
+    g_object_get(G_OBJECT(_app_sink), "last-buffer", &b, NULL);
+
+    g_object_get_property(G_OBJECT(_app_sink), "last-buffer", g_value_init());
+
+    if(b){
+        guint8* data = GST_BUFFER_DATA(b);
+        float l=0;
+        float r=0;
+        for(int i=0; i<10; i+=2){
+            l += abs(data[i]);
+            r += abs(data[i+1]);
+        }
+
+        l /= 1024.0f;
+        r /= 1024.0f;
+
+        qDebug() << l << r;
+    }
+
+
  
     emit timeChangedSignal(_seconds_now);
 }

@@ -964,6 +964,8 @@
         <property name="font">
          <font>
           <pointsize>8</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
          </font>
         </property>
         <property name="autoFillBackground">
@@ -1316,7 +1318,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Library</string>
+    <string>&amp;Library</string>
    </property>
    <property name="font">
     <font>

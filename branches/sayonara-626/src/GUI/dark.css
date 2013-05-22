@@ -6,7 +6,6 @@ QMainWindow, QDialog {
 }
 
 QWidget {
-	
 	border: none;
 	color: #D8D8D8;
 	selection-background-color: #424e72;
@@ -287,6 +286,7 @@ QComboBox {
      border: 1px solid #2B2B2B;
      border-radius: 3px;
      padding: 1px 3px 1px 3px;
+     background-color: #505050;
  }
 
 
@@ -312,14 +312,14 @@ QComboBox:!editable:off, QComboBox::drop-down:editable:off {
 
 
 QComboBox QAbstractItemView {
-/*	min-width: 9em;*/
-     padding-top: 5px;
-     
+	border-radius: 0px;
+        
 }
 
 
 QComboBox:on {
- /* shift the text when the popup opens */    padding-top: 3px;
+ /* shift the text when the popup opens */
+    padding-top: 3px;
     padding-left: 4px;
 
 }
@@ -362,15 +362,13 @@ QLineEdit:read-only {
      border: 1px solid #2B2B2B;
 }
 
+
 QLineEdit:disabled {
     border-radius: 4px;
      border: 1px solid #2B2B2B;
     background: #383838;
     color: #525252;
- }
-
-
-
+}
 
 
 QTabWidget::pane {

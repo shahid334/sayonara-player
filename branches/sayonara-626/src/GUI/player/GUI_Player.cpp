@@ -236,8 +236,8 @@ void GUI_Player::initGUI() {
 	ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 
-    ui->action_viewLibrary->setText(tr("&Library"));
-    ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));
+/*    ui->action_viewLibrary->setText(tr("&Library"));
+    ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));*/
 
     ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
     ui->action_Dark->setShortcut(QKeySequence("F10"));
@@ -752,17 +752,6 @@ void GUI_Player::keyPressEvent(QKeyEvent* e) {
 		case Qt::Key_MediaPrevious:
             if(m_metadata.radio_mode == RADIO_OFF)
 				backwardClicked(true);
-			break;
-
-		case (Qt::Key_E):
-		case (Qt::Key_P):
-		case (Qt::Key_R):
-		case (Qt::Key_S):
-	        case (Qt::Key_O):
-			break;
-
-		case (Qt::Key_L):
-			ui->action_viewLibrary->setChecked(!ui->action_viewLibrary->isChecked());
 			break;
 
         case (Qt::Key_F10):

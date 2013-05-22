@@ -40,6 +40,8 @@
 #include "Engine/Engine.h"
 
 #include <gst/gst.h>
+#include <gst/gstbuffer.h>
+
 
 
 #include <QObject>
@@ -72,9 +74,13 @@ private:
 	GstElement* _equalizer;
 	GstElement* _volume;
 	GstElement* _audio_bin;
+    GstElement* _audio_bin2;
 	GstElement* _audio_sink;
 	GstElement* _file_sink;
+    GstElement* _app_sink;
+    GstBuffer* _buffer;
 	GstPad*		_audio_pad;
+    GstPad*		_audio_pad2;
 	GstBus*		_bus;
 	StreamRecorder* _stream_recorder;
 

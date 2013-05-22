@@ -101,8 +101,11 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
     if(_radio_active != old_radio_active){
         _cur_play_idx = 0;
-        send_cur_playing_signal(0);
+        send_cur_playing_signal(_cur_play_idx);
     }
+
+    if(_backup_playlist.is_valid)
+        _cur_play_idx = _backup_playlist.cur_play_idx;
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
@@ -131,8 +134,26 @@ void Playlist::psl_createPlaylist(QStringList& pathlist){
 
 // create playlist from saved custom playlist
 void Playlist::psl_createPlaylist(CustomPlaylist& pl){
-    _radio_active = RADIO_OFF;
-    psl_createPlaylist(pl.tracks);
+
+    // save old playlist
+    if(pl.is_valid){
+        _backup_playlist.v_md = _v_meta_data;
+        _backup_playlist.radio_mode = _radio_active;
+        _backup_playlist.is_valid = true;
+        _backup_playlist.cur_play_idx = _cur_play_idx;
+        _backup_playlist.is_valid = false;
+        _radio_active = RADIO_OFF;
+
+        psl_createPlaylist(pl.tracks);
+    }
+
+    // load old playlist
+    else{
+        _radio_active = _backup_playlist.radio_mode;
+        _backup_playlist.is_valid = true;
+        psl_createPlaylist(_backup_playlist.v_md);
+
+    }
 }
 
 
@@ -244,7 +265,12 @@ void Playlist::load_old_playlist(){
 
     _is_playing = start_immediatly;
 
+    qDebug() << "Load last position? " << load_last_position;
+
+    qDebug() << "Start immediatly? " << start_immediatly;
+
     if(load_last_position){
+        qDebug() << "Position: " << last_track->pos_sec;
             emit sig_selected_file_changed_md(_v_meta_data[_cur_play_idx], last_track->pos_sec, start_immediatly);
     }
 

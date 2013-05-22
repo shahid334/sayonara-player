@@ -161,8 +161,19 @@ void GUI_Podcasts::combo_index_changed(int idx){
 void GUI_Podcasts::combo_text_changed(const QString& text){
     _cur_podcast = -1;
 
-    this->ui->btn_delete->setEnabled(false);
-    this->ui->btn_save->setEnabled((text.size() > 0));
+
+    bool name_there = false;
+    for(int i=0; i<this->ui->combo_podcasts->count(); i++){
+        QString str = this->ui->combo_podcasts->itemText(i);
+        if(!str.compare(text, Qt::CaseSensitive)){
+            name_there = true;
+            break;
+        }
+    }
+
+
+    this->ui->btn_delete->setEnabled(name_there);
+    this->ui->btn_save->setEnabled(!name_there && (text.size() > 0));
     this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
     this->ui->combo_podcasts->setToolTip("");
 }

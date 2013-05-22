@@ -47,31 +47,31 @@ void ImportCachingThread::run(){
 
         if(_cancelled) break;
 
-	// file is a directory
-	if(Helper::is_dir(file)){
-	
-            QDir src_dir(file);
-	    int n_files = 0;
-	    CDirectoryReader reader;
-	    QStringList tmp_filelist;
-	    reader.getFilesInsiderDirRecursive(src_dir, tmp_filelist, n_files);
+        // file is a directory
+        if(Helper::is_dir(file)){
 
-	    // save from which folders these files are
-	    foreach(QString tmpFile, tmp_filelist){
-		_pd_map[tmpFile] = file;
+            QDir src_dir(file);
+            int n_files = 0;
+            CDirectoryReader reader;
+            QStringList tmp_filelist;
+            reader.getFilesInsiderDirRecursive(src_dir, tmp_filelist, n_files);
+
+            // save from which folders these files are
+            foreach(QString tmpFile, tmp_filelist){
+                _pd_map[tmpFile] = file;
                 _filelist.push_back(tmpFile);
             }
-	}
+        }
 
-	// file is standard file
+        // file is standard file
         else if(Helper::is_file(file)){
-	    _filelist.push_back(file);
-	}
+            _filelist.push_back(file);
+        }
     }
 
     int i=0;
     foreach(QString filepath, _filelist){
-	if(_cancelled) break;
+        if(_cancelled) break;
         int percent = (i++ * 100000) / _filelist.size();
 
         emit sig_progress(percent / 1000);
@@ -85,7 +85,7 @@ void ImportCachingThread::run(){
     }
 
     if(_cancelled){
-	_md_map.clear();
+        _md_map.clear();
         _pd_map.clear();
     }
 

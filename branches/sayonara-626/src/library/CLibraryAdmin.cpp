@@ -63,7 +63,7 @@ void CLibraryBase::importFiles(const QStringList& list){
 
     m_src_files = list;
     m_import_thread->set_filelist(list);
-    m_import_thread->start();
+
 
     QDir lib_dir(m_library_path);
     QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
@@ -74,6 +74,8 @@ void CLibraryBase::importFiles(const QStringList& list){
     m_import_dialog->set_thread_active(true);
     m_import_dialog->set_status(tr("Loading files..."));
     m_import_dialog->show();
+
+    m_import_thread->start();
 
 }
 
@@ -97,6 +99,7 @@ void CLibraryBase::accept_import(const QString& chosen_item, bool copy){
     _import_to = chosen_item;
     _import_copy = copy;
 }
+
 
 // fired if cancel button was clicked in dialog
 void CLibraryBase::cancel_import(){
@@ -133,6 +136,7 @@ void CLibraryBase::cancel_import(){
     }
 }
 
+
 // preload thread has cached everything, but maybe ok button has not been clicked yet
 void CLibraryBase::import_thread_done(){
 
@@ -147,6 +151,7 @@ void CLibraryBase::import_thread_done(){
         m_import_dialog->set_status(tr("No tracks"));
     }
 }
+
 
 // Caching is done, ok has been clicked
 void CLibraryBase::import_thread_finished(){

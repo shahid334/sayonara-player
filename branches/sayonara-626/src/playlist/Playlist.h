@@ -29,7 +29,7 @@
 #ifndef PLAYLIST_H_
 #define PLAYLIST_H_
 
-#include "GUI/playlist/PlaylistItemModel.h"
+#include "GUI/playlist/model/PlaylistItemModel.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/globals.h"
@@ -39,9 +39,19 @@
 
 #include <QObject>
 #include <QList>
+#include <QMap>
 #include <QStringList>
 
 using namespace std;
+
+struct BackupPlaylist{
+    int radio_mode;
+    bool is_valid;
+    int cur_play_idx;
+
+    MetaDataList v_md;
+
+};
 
 
 class Playlist  : public QObject {
@@ -127,6 +137,7 @@ public:
         CDatabaseConnector* _db;
         CSettingsStorage*   _settings;
         MetaDataList        _v_stream_playlist;
+        BackupPlaylist      _backup_playlist;
 
         void                send_cur_playing_signal(int);
 
@@ -136,12 +147,6 @@ public:
 	void				save_stream_playlist();
 
 	void				remove_row(int row);
-
-
-
-
-
-
 
 };
 

@@ -38,7 +38,7 @@
 #include "HelperStructs/CDirectoryReader.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
-#include "GUI/playlist/PlaylistItemModel.h"
+#include "GUI/playlist/model/PlaylistItemModel.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"

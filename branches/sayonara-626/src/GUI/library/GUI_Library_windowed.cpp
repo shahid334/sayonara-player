@@ -33,12 +33,12 @@
 
 #include "GUI/MyColumnHeader.h"
 #include "GUI/library/GUI_Library_windowed.h"
-#include "GUI/library/models/LibraryItemModelTracks.h"
-#include "GUI/library/delegates/LibraryItemDelegateTracks.h"
-#include "GUI/library/models/LibraryItemModelAlbums.h"
-#include "GUI/library/delegates/LibraryItemDelegateAlbums.h"
-#include "GUI/library/delegates/LibraryItemDelegateArtists.h"
-#include "GUI/library/models/LibraryItemModelArtists.h"
+#include "GUI/library/model/LibraryItemModelTracks.h"
+#include "GUI/library/model/LibraryItemModelArtists.h"
+#include "GUI/library/model/LibraryItemModelAlbums.h"
+#include "GUI/library/delegate/LibraryItemDelegateTracks.h"
+#include "GUI/library/delegate/LibraryItemDelegateAlbums.h"
+#include "GUI/library/delegate/LibraryItemDelegateArtists.h"
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 

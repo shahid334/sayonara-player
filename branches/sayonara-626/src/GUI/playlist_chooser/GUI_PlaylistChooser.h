@@ -51,7 +51,6 @@ signals:
 
 
 private slots:
-	void apply_button_pressed();
 	void save_button_pressed();
 	void save_as_button_pressed();
 	void delete_button_pressed();
