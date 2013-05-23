@@ -26,12 +26,8 @@
 #define EQ_TYPE_KEQ 0
 #define EQ_TYPE_10B 1
 
-
-
 #ifndef GSTENGINE_H_
 #define GSTENGINE_H_
-
-
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
@@ -41,8 +37,6 @@
 
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
-
-
 
 #include <QObject>
 #include <QDebug>
@@ -73,14 +67,15 @@ private:
 	GstElement* _pipeline;
 	GstElement* _equalizer;
 	GstElement* _volume;
-	GstElement* _audio_bin;
-    GstElement* _audio_bin2;
 	GstElement* _audio_sink;
-	GstElement* _file_sink;
-    GstElement* _app_sink;
-    GstBuffer* _buffer;
-	GstPad*		_audio_pad;
-    GstPad*		_audio_pad2;
+	GstElement* _audio_bin;
+	
+	GstElement* _app_sink;
+	GstElement* _app_queue;
+	
+	GstBuffer* _buffer;
+        GstElement* _tee;
+	
 	GstBus*		_bus;
 	StreamRecorder* _stream_recorder;
 
@@ -121,7 +116,8 @@ public:
 	void		state_changed();
 	void		set_cur_position(quint32);
 	void		set_track_finished();
-    void        set_about_to_finish();
+        void        set_about_to_finish();
+	void 		set_buffer(GstBuffer*);
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();
