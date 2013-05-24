@@ -51,7 +51,6 @@ class GST_Engine : public Engine {
 	Q_INTERFACES(Engine)
 
 
-
 public:
 
 	GST_Engine();
@@ -66,9 +65,10 @@ private:
 
 	GstElement* _pipeline;
 	GstElement* _equalizer;
+    GstElement* _eq_queue;
 	GstElement* _volume;
 	GstElement* _audio_sink;
-	GstElement* _audio_bin;
+    GstElement* _audio_bin;
 	
 	GstElement* _app_sink;
 	GstElement* _app_queue;
@@ -108,6 +108,7 @@ public slots:
  	virtual void record_button_toggled(bool);
 
     virtual void psl_sr_set_active(bool);
+    virtual void psl_calc_level(bool);
 
 
 

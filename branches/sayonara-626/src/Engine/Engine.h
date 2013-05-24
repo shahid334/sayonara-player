@@ -74,6 +74,7 @@ signals:
 	void eq_found(const QStringList&);
 	void sig_valid_strrec_track(const MetaData&);
     void wanna_gapless_track();
+    void sig_level(float, float);
 
 public slots:
     virtual void play(int pos_sec=0)=0;
@@ -91,6 +92,7 @@ public slots:
 
     virtual void psl_sr_set_active(bool)=0;
     virtual void psl_new_stream_session()=0;
+    virtual void psl_calc_level(bool)=0;
 
 private slots:
     virtual void sr_initialized(bool)=0;

@@ -24,13 +24,14 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "Engine/Engine.h"
 #include "Engine/GStreamer/GSTEngine.h"
+#include "Engine/GStreamer/GSTEngineHelper.h"
 
 #include <gst/gst.h>
 #include <gst/gsturi.h>
-#include <gst/app/gstappsrc.h>
+#include <gst/app/gstappsink.h>
 #include <gst/gstbuffer.h>
 #include <glib.h>
-#include <glib/gtypes.h>
+
 
 #include <string>
 #include <vector>
@@ -51,101 +52,24 @@
 
 using namespace std;
 
-#define CHUNK_SIZE 1024   /* Amount of bytes we are sending in each buffer */
-#define SAMPLE_RATE 44100 /* Samples per second we are sending */
-#define AUDIO_CAPS "audio/x-raw-int,channels=1,rate=%d,signed=(boolean)true,width=16,depth=16,endianness=BYTE_ORDER"
 
-static GST_Engine* obj_ref;
-static bool __start_at_beginning = false;
-static int __start_pos_beginning = 0;
-
-
-
-gboolean player_change_file(GstBin* pipeline, void* app) {
-
-	qDebug() << "Engine: player change file";
-	Q_UNUSED(pipeline);
-	Q_UNUSED(app);
-
-	obj_ref->set_about_to_finish();
-
-	return true;
-}
-
-
-static void new_buffer(GstElement* sink, void* data){
-	qDebug() << "New buffer";
-/*	GstBuffer* buffer;
-	g_signal_emit_by_name(sink, "pull-buffer", &buffer);
-	if(buffer && obj_ref) obj_ref->set_buffer(buffer);*/
-}
-
-static gboolean show_position(GstElement* pipeline) {
-
-	if (!__start_at_beginning)
-		return false;
-
-	gint64 pos;
-
-	GstFormat fmt = GST_FORMAT_TIME;
-	gst_element_query_position(pipeline, &fmt, &pos);
-
-	if (obj_ref != NULL && obj_ref->getState() == STATE_PLAY) {
-		obj_ref->set_cur_position((quint32)(pos / 1000000000)); // ms
-	}
-
-	return true;
-}
-
-static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
-		void *user_data) {
-
-	(void) bus;
-	(void) user_data;
-
-	switch (GST_MESSAGE_TYPE(msg)) {
-
-	case GST_MESSAGE_EOS:
-		if (obj_ref) {
-			qDebug() << "Engine: Track finished";
-			obj_ref->set_track_finished();
-		}
-		break;
-
-	case GST_MESSAGE_ERROR:
-		GError *err;
-
-		gst_message_parse_error(msg, &err, NULL);
-
-		qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
-				<< GST_MESSAGE_SRC_NAME(msg);
-		obj_ref->set_track_finished();
-		g_error_free(err);
-
-		break;
-
-	case GST_MESSAGE_ASYNC_DONE:
-
-		if (__start_at_beginning == false) {
-			__start_at_beginning = true;
-			obj_ref->jump(__start_pos_beginning, false);
-		}
-
-		break;
-
-	default:
-		obj_ref->state_changed();
-		break;
-	}
-
-	return true;
-}
 
 /*****************************************************************************************/
 /* Engine */
 /*****************************************************************************************/
 
+void _calc_log10_lut(){
+    for(int i=0; i<=10000; i++){
+        log_10[i] = log10(i / 10000.0f);
+    }
+
+    for(int i=0; i<128; i++){
+        lo_128[i] = i*128.0f;
+    }
+}
+
 GST_Engine::GST_Engine() {
+    _calc_log10_lut();
 	_settings = CSettingsStorage::getInstance();
 	_name = "GStreamer Backend";
 	_state = STATE_STOP;
@@ -182,37 +106,15 @@ GST_Engine::~GST_Engine() {
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 		gst_object_unref (GST_OBJECT(_pipeline));}
 
-	obj_ref = 0;
+    gst_obj_ref = 0;
 }
 
-bool _test_and_error(void* element, QString errorstr){
-	if(!element){
-		qDebug() << errorstr;
-		return false;
-	}
 
-	return true;
-}
-bool _test_and_error_bool(bool b, QString errorstr){
-	if(!b){
-		qDebug() << errorstr;
-		return false;
-	}
 
-	return true;
-}
 void GST_Engine::init_play_pipeline() {
 
-	/*
-	 * Play pipeline:
-	 *
-	 * _audio_bin:
-	 * =(O _audio_pad )  _equalizer -> _audio_sink
-	 *
-	 * Is mounted at audio sink of playbin2
-	 */
-
 	bool success = false;
+    bool with_app_sink = true;
 	int i;
 
 	i = 0;
@@ -224,101 +126,120 @@ void GST_Engine::init_play_pipeline() {
 		_test_and_error(_pipeline, "Engine: Pipeline sucks");
 
 		_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
-		_audio_bin = gst_bin_new("audio-bin");
+        _audio_bin = gst_bin_new("audio-bin");
 		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
+
 		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
-		_tee = gst_element_factory_make("tee", "tee");
-/*		_app_queue = gst_element_factory_make("queue", "app_queue");	
-		_app_sink = gst_element_factory_make("appsink", "app_sink");*/
+        _eq_queue = gst_element_factory_make("queue", "eq_queue");
+        _tee = gst_element_factory_make("tee", "tee");
+        _app_queue = gst_element_factory_make("queue", "app_queue");
+        _app_sink = gst_element_factory_make("appsink", "app_sink");
 
 		if(!_test_and_error(_bus, "Engine: Something went wrong with the bus")) break;
-		if(!_test_and_error(_audio_bin, "Engine: Bin cannot be created")) break;
+        if(!_test_and_error(_audio_bin, "Engine: Bin cannot be created")) break;
 		if(!_test_and_error(_tee, "Engine: Tee cannot be created")) break;
 		if(!_test_and_error(_equalizer, "Engine: Equalizer cannot be created")) break;
+        if(!_test_and_error(_eq_queue, "Engine: Equalizer cannot be created")) break;
 		if(!_test_and_error(_audio_sink, "Engine: Audio Sink cannot be created")) break;
-/*		if(!_test_and_error(_app_queue, "Engine: Queue cannot be created")) break;
-		if(!_test_and_error(_app_sink, "Engine: App Sink cannot be created")) break;*/
+        if(!_test_and_error(_app_queue, "Engine: Queue cannot be created")) break;
+        if(!_test_and_error(_app_sink, "Engine: App Sink cannot be created")) break;
 
 		gst_bus_add_watch(_bus, bus_state_changed, this);
 	
-  		// create a bin that includes an equalizer and replace the sink with this bin
-		gst_bin_add_many(GST_BIN(_audio_bin), _tee, _equalizer, _audio_sink, /*_app_queue, _app_sink,*/ NULL);
+        // create a bin that includes an equalizer and replace the sink with this bin
+        if(with_app_sink){
+            gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _audio_sink, _app_queue, _app_sink, NULL);
+            success = gst_element_link_many(_app_queue, _app_sink, NULL);
+            _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
+            success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
+        }
 
-		success = gst_element_link(_equalizer, _audio_sink);
-		_test_and_error_bool(success, "Engine: Cannot link eq with audio sink");
-/*		success = gst_element_link(_app_queue, _app_sink);
-		_test_and_error_bool(success, "Engine: Cannot link queue with app sink");*/
+        if(!with_app_sink || !success){
+            with_app_sink = false;
+            gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
+            success = gst_element_link_many(_equalizer, _audio_sink, NULL);
+        }
+
+        if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
 		// Connect tee
 		GstPadTemplate* tee_src_pad_template;
-		GstPadTemplate* tee_sink_pad_template;
 		GstPad* tee_pad;
 		GstPad* tee_eq_pad;
 		GstPad* tee_app_pad;
 		GstPad* eq_pad;
 		GstPad* app_pad;
+        GstPadLinkReturn s;
 
-		// create tee pads
-		tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
-		// "outputs" of tee to eq and queue
-		// gstreamer >= 0.10.32
-		/*tee_eq_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
-		tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);*/
-		
-		tee_eq_pad = gst_pad_new_from_template(tee_src_pad_template, NULL);
-		_test_and_error(tee_eq_pad, "Engine: tee eq pad NULL");
-//		tee_app_pad = gst_pad_new_from_template(tee_src_pad_template, "tee_app_pad");
-//		_test_and_error(tee_app_pad, "Engine: tee app pad NULL");
+        if(with_app_sink){
+            // create tee pads
+            tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
 
-	 	success = gst_element_add_pad(_tee, tee_eq_pad);
-		_test_and_error_bool(success, "Engine: cannot add tee eq pad");
-/*		success = gst_element_add_pad(_tee, tee_app_pad);
-		_test_and_error_bool(success, "Engine: cannot tee app pad");
-*/
-	 	success = gst_pad_set_active(tee_eq_pad, true);
-		_test_and_error_bool(success, "Engine: cannot activate tee eq pad");
-/*		success = gst_pad_set_active(tee_app_pad, true);
-		_test_and_error_bool(success, "Engine: cannot activate app pad");*/
+            // "outputs" of tee to eq and queue
+
+            tee_eq_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
+                if(!_test_and_error(tee_eq_pad, "Engine: tee_eq_pad is NULL")) break;
+            eq_pad = gst_element_get_static_pad(_eq_queue, "sink");
+                if(!_test_and_error(eq_pad, "Engine: eq pad is NULL")) break;
+
+            tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
+                if(!_test_and_error(tee_app_pad, "Engine: tee_app_pad is NULL")) break;
+            app_pad = gst_element_get_static_pad(_app_queue, "sink");
+                if(!_test_and_error(app_pad, "Engine: app pad NULL")) break;
+
+            s = gst_pad_link (tee_eq_pad, eq_pad);
+                _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
+            s = gst_pad_link (tee_app_pad, app_pad);
+                _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
 
 
-		// "inputs" of eq and queue
-		eq_pad = gst_element_get_static_pad(_equalizer, "sink");
-		_test_and_error(eq_pad, "Engine: eq pad is NULL");
-/*		app_pad = gst_element_get_static_pad(_app_queue, "sink");
-		_test_and_error(app_pad, "Engine: app pad NULL");*/
+            // "input" of tee pad
+            tee_pad = gst_element_get_static_pad(_tee, "sink");
+        }
 
-		// link tee
-		GstPadLinkReturn s = gst_pad_link (tee_eq_pad, eq_pad);
-		_test_and_error_bool(GST_PAD_LINK_SUCCESSFUL(s), "Engine: Cannot link tee eq with eq");
-/*		s = gst_pad_link (tee_app_pad, app_pad);
-		_test_and_error_bool(GST_PAD_LINK_SUCCESSFUL(s), "Engine: Cannot link tee app with app");*/
-		
-		// "input" of tee pad
-		tee_pad = gst_element_get_static_pad(_tee, "sink");
-/*		tee_pad = gst_pad_new_from_template(tee_src_pad_template, NULL);
-		gst_element_add_pad(_tee, tee_pad);
-		gst_pad_set_active(tee_pad, true);*/
-		
-		_test_and_error(tee_pad, "Engine: Cannot create tee pad");
+        else {
+            tee_pad = gst_element_get_static_pad(_equalizer, "sink");
+        }
 
-		// tell the sink_bin, that the input of tee = input of sink_bin
+        if(!_test_and_error(tee_pad, "Engine: Cannot create tee pad")) break;
+
+        // tell the sink_bin, that the input of tee = input of sink_bin
 		success = gst_element_add_pad(GST_ELEMENT(_audio_bin), gst_ghost_pad_new("sink", tee_pad));
-		_test_and_error_bool(success, "Engine: cannot add pad to audio bin");
-		// replace playbin sink with this bin
+        _test_and_error_bool(success, "Engine: cannot add pad to audio bin");
+
+        // replace playbin sink with this bin
 		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 
-/*		gchar* audio_caps_text = g_strdup_printf (AUDIO_CAPS, SAMPLE_RATE);
-		GstCaps* audio_caps = gst_caps_from_string (audio_caps_text);
+        if(with_app_sink){
+            g_object_set (_app_queue,
+                          "silent", TRUE,
+                          NULL);
 
-		g_object_set (_app_sink, "emit-signals", TRUE, NULL);	*/
-/*		g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);*/
+            g_object_set(_eq_queue,
+                         "silent", TRUE,
+                         NULL);
+
+
+            GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
+            g_object_set (_app_sink,
+                          "drop", TRUE,
+                          "max-buffers", 1,
+                          "caps", audio_caps,
+                          "emit-signals", FALSE,
+                          NULL);
+
+            g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+        }
+
 		g_signal_connect(_pipeline, "about-to-finish", G_CALLBACK(player_change_file), NULL);
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
-		
 
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
+        success = true;
+		
+        break;
 	} while (i);
 
-qDebug() << "Engine: constructor finished";
+    qDebug() << "Engine: constructor finished: " << success;
 }
 
 void GST_Engine::init() {
@@ -353,7 +274,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
 	//qDebug() << "new track " << md.title << ", " << (md.filepath != _md_gapless.filepath);
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-	obj_ref = this;
+    gst_obj_ref = this;
 
 	_last_track = _settings->getLastTrack();
 
@@ -367,7 +288,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
 		if (!success)
 			return;
 
-		g_timeout_add(500, (GSourceFunc) show_position, _pipeline);
+        g_timeout_add(500, (GSourceFunc) show_position, _pipeline);
 
 		_gapless_track_available = false;
 		//emit wanna_gapless_track();
@@ -476,7 +397,7 @@ void GST_Engine::play(int pos_sec) {
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
 
-	obj_ref = this;
+    gst_obj_ref = this;
 }
 
 void GST_Engine::stop() {
@@ -566,6 +487,14 @@ void GST_Engine::eq_enable(bool) {
 
 }
 
+void GST_Engine::psl_calc_level(bool b){
+
+        g_object_set (_app_sink,
+                               "emit-signals", b,
+                               NULL);
+
+}
+
 void GST_Engine::state_changed() {
 
 }
@@ -616,10 +545,66 @@ void GST_Engine::set_about_to_finish() {
 
 
 void GST_Engine::set_buffer(GstBuffer* buffer){
-	if(!buffer) return;
-	guint64 dur = GST_BUFFER_DURATION(buffer);
-	gsize sz = GST_BUFFER_SIZE(buffer);
-	
+
+    /* GstCaps* caps = gst_buffer_get_caps(buffer);
+     gchar* info = gst_caps_to_string(caps);
+     qDebug() << info;*/
+
+     //guint64 dur = GST_BUFFER_DURATION(buffer);
+     gsize sz = GST_BUFFER_SIZE(buffer);
+     guint8* c_buf = GST_BUFFER_DATA(buffer);
+
+
+     const float two_size = 1.0 / (sz / 4.0);
+     const float c1 = 1.0 / 16384.0f;
+     const float c2 = 1.0 / 16384.0f;
+
+
+
+     gsize start = 0;
+     gsize end = sz;
+
+
+
+         float f_l = 0;
+         float f_r = 0;
+
+         for(gsize i=start; i<end-3; i+=4){
+            float c1_tmp = c1;
+            float c2_tmp = c2;
+             // >= 128 (negativ)
+             if(c_buf[i+1] & 0x80){
+                 c_buf[i] = ~c_buf[i];
+                 c_buf[i+1] = ~c_buf[i+1];
+                 c1_tmp = c1 * -1.0f;
+             }
+
+             if(c_buf[i+3] & 0x80){
+                 c_buf[i+2] = ~c_buf[i+2];
+                 c_buf[i+3] = ~c_buf[i+3];
+                 c2_tmp = c2 * -1.0f;
+             }
+
+             float v1 = (float) c_buf[i]   + lo_128[c_buf[i+1] & 0x7F];
+             float v2 = (float) c_buf[i+2] + lo_128[c_buf[i+3] & 0x7F];
+
+             v1 *= c1_tmp;
+             v2 *= c2_tmp;
+
+             f_l += (v1*v1);
+             f_r += (v2*v2);
+         }
+
+
+         f_l = 10 * LOOKUP_LOG(f_l*two_size);
+         f_r = 10 * LOOKUP_LOG(f_r*two_size);
+
+
+         emit sig_level(f_l, f_r);
+
+
+     gst_buffer_unref(buffer);
+
 
 }
 

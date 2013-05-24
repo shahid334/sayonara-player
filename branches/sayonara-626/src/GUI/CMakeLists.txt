@@ -18,6 +18,7 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
+    engine/GUI_Level.h
     player/GUI_Player.h
     player/GUI_TrayIcon.h
     player/SearchSlider.h
@@ -64,6 +65,7 @@ SET(HEADERS
 
 
 SET(SOURCES
+    engine/GUI_Level.cpp
     player/GUI_Player.cpp
     player/GUI_PlayerPlugins.cpp
     player/GUI_PlayerMenubar.cpp
@@ -112,6 +114,7 @@ SET(SOURCES
 
 
 SET(FORMS
+    engine/GUI_Level.ui
     player/GUI_Player.ui
     playlist/GUI_Playlist.ui
     playlist/entry/GUI_PlaylistEntryBig.ui
