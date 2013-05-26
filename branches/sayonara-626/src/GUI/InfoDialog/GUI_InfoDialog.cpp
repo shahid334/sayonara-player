@@ -43,6 +43,7 @@
 #include <QScrollBar>
 #include <QCloseEvent>
 #include <QPainter>
+#include <QDateTime>
 
 
 
@@ -79,7 +80,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     _lyric_server = 0;
     _lyrics_visible = true;
 
-    _cover_lookup = new CoverLookup(_class_name);
+    _cover_lookup = new CoverLookup();
     _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
 
     _tag_edit_visible = true;
@@ -105,8 +106,8 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
              this, SLOT(psl_artist_info_available(const QString&)));
 
 
-    connect(_cover_lookup, SIGNAL(sig_cover_found(QString, QString)),
-            this, 			SLOT(psl_image_available(QString, QString)));
+    connect(_cover_lookup, SIGNAL(sig_covers_found(const QStringList&, QString)),
+            this, 			SLOT(psl_cover_available(const QStringList&, QString)));
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
     connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
@@ -152,13 +153,7 @@ void GUI_InfoDialog::language_changed(){
 
 }
 
-void GUI_InfoDialog::psl_image_available(QString caller_class, QString filename){
 
-	if(_class_name != caller_class) return;
-	if(!QFile::exists(filename)) return;
-
-	this->ui->btn_image->setIcon(QIcon(filename));
-}
 
 
 void GUI_InfoDialog::psl_lyrics_server_changed(int idx){
@@ -296,7 +291,8 @@ void GUI_InfoDialog::prepare_artists(){
 		tooltip = "";
 		_diff_mode = INFO_MODE_SINGLE;
 		int artist_id =map_artists.keys().at(0);
-		Artist artist = _db->getArtistByID(artist_id);
+        Artist artist;
+        _db->getArtistByID(artist_id, artist);
 		_artist_name = artist.name;
 
 		n_albums = artist.num_albums;
@@ -311,7 +307,8 @@ void GUI_InfoDialog::prepare_artists(){
 		_diff_mode = INFO_MODE_MULTI;
 		int header_entries = 0;
 		foreach(int artist_id, map_artists.keys()){
-			Artist artist = _db->getArtistByID(artist_id);
+            Artist artist;
+            _db->getArtistByID(artist_id, artist);
 
 			if(header_entries < 5)
 				header += artist.name + CAR_RET;
@@ -633,29 +630,45 @@ void GUI_InfoDialog::prepare_tracks(){
 }
 
 
+void GUI_InfoDialog::psl_cover_available(const QStringList& cover_paths, QString call_id){
 
+    if(cover_paths.size() == 0) return;
+    if(call_id != _call_id) return;
+    this->ui->btn_image->setIcon(QIcon(cover_paths[0]));
+}
 
 void GUI_InfoDialog::prepare_cover(){
 
+    QStringList cover_paths;
+    cover_paths << Helper::getIconPath() + "logo.png";
 
-    psl_image_available(_class_name, Helper::getIconPath() + "logo.png");
-
+    _call_id = QString("InfoDialog") + QDateTime::currentDateTimeUtc().toString();
+    psl_cover_available(cover_paths, _call_id);
 
 	switch(_diff_mode){
 
 		case INFO_MODE_SINGLE:
 
 			if(_mode == INFO_MODE_ARTISTS){
-                _cover_lookup->search_artist_image(_artist_name);
+
+                int artist_id = _db->getArtistID(_artist_name);
+                if(artist_id >= 0)
+                    _cover_lookup->fetch_cover_artist(artist_id, _call_id);
+
+                else{
+                    Artist artist;
+                    artist.name = _artist_name;
+                    _cover_lookup->fetch_cover_artist(artist, _call_id);
+                }
 			}
 
 			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
-				MetaData md;
-				md.album = _album_name;
-				md.artist = _artist_name;
+                Album album;
+                album.name = _album_name;
+                album.artists << _artist_name;
 
                 if(_album_name.isEmpty() && _artist_name.isEmpty()) return;
-                _cover_lookup->search_cover(md);
+                _cover_lookup->fetch_cover_album(album, _call_id);
 			}
 
 			break;
@@ -663,12 +676,12 @@ void GUI_InfoDialog::prepare_cover(){
 
 		case INFO_MODE_MULTI:
             if(_mode == INFO_MODE_TRACKS){
-                MetaData md;
-                md.album = _album_name;
-                md.artist = _artist_name;
+                Album album;
+                album.name = _album_name;
+                album.artists << _artist_name;
 
                 if(_album_name.isEmpty() && _artist_name.isEmpty()) return;
-                _cover_lookup->search_cover(md);
+                _cover_lookup->fetch_cover_album(album, _call_id);
             }
 
             break;

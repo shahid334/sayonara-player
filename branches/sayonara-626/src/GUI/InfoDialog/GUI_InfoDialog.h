@@ -55,7 +55,7 @@ Q_OBJECT
 
 
 public slots:
-	void psl_image_available(QString, QString);
+
 	void psl_album_info_available(const QString& target_class);
 	void psl_artist_info_available(const QString& target_class);
 	void psl_corrected_data_available(const QString& target_class);
@@ -69,6 +69,7 @@ private slots:
     void alternate_covers_available(QString, QString);
     void no_cover_available();
 	void cover_clicked();
+    void psl_cover_available(const QStringList&, QString);
 
 
 protected:
@@ -100,6 +101,7 @@ private:
     bool                    _initialized;
     bool                    _tag_edit_visible;
     bool                    _dark;
+    QString                 _call_id;
 
 	MetaDataList _v_md;
 

@@ -66,7 +66,7 @@ public:
 
 public slots:
 
-    void cover_changed(QString, QString);
+    void covers_found(const QStringList& lst, QString call_id);
     void show_cur_song();
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
@@ -268,6 +268,7 @@ private:
     void setupConnections();
     void setRadioMode(int);
     void total_time_changed(qint64);
+    void fetch_cover();
 
 };
 

@@ -275,7 +275,7 @@ QString Helper::calc_lfm_album_adress(QString artist, QString album){
 }
 
 
-QString Helper::calc_google_image_search_adress(QString searchstring, QString size, QString filetype){
+QString Helper::calc_google_image_search_adress(QString searchstring){
 
 	searchstring.replace(" ", "%20");
 	searchstring.replace("/", "%2F");
@@ -292,7 +292,7 @@ QString Helper::calc_google_image_search_adress(QString searchstring, QString si
 
 QString Helper::calc_google_artist_adress(QString artist){
 
-	return calc_google_image_search_adress(QUrl::toPercentEncoding(artist), GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
+    return calc_google_image_search_adress(QUrl::toPercentEncoding(artist));
 }
 
 
@@ -312,7 +312,7 @@ QString Helper::calc_google_album_adress(QString artist, QString album){
 	if(searchstring.size() > 0) searchstring += "+";
 	searchstring += album;
 
-	return calc_google_image_search_adress(searchstring, GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
+    return calc_google_image_search_adress(searchstring);
 }
 
 

@@ -54,49 +54,42 @@ AlternateCoverItemDelegate::~AlternateCoverItemDelegate() {
 void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const{
 	QItemDelegate::paint(painter, option, index);
 
-		if(!index.isValid()) return;
+    if(!index.isValid()) return;
 
-			QLabel label;
+    QLabel label;
+    QRect rect(option.rect);
 
-			QItemDelegate::paint(painter, option, index);
+    painter->save();
+    painter->translate(2, 0);
 
-			QRect rect(option.rect);
+    QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
 
-			painter->save();
-			painter->translate(2, 0);
+    bool is_selected = false;
+    if(data_lst.size() >= 2){
 
+        QString filename = data_lst[0];
+        is_selected = (data_lst[1].toInt() == 1);
 
-			QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
+        if(is_selected) label.setStyleSheet("background-color: #e8841a;");
 
-			bool is_selected = false;
-			if(data_lst.size() >= 2){
+        QImage image(filename);
+        if(!image.isNull()){
+            QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(80,80), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            if(!pixmap.isNull()){
 
-				QString filename = data_lst[0];
-				is_selected = (data_lst[1].toInt() == 1);
+                label.setPixmap(pixmap);
+            }
+        }
+    }
 
-                if(is_selected) label.setStyleSheet("background-color: #e8841a;");
-
-
-
-				QImage image(filename);
-				if(!image.isNull()){
-					QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(80,80), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-					if(!pixmap.isNull()){
-
-						label.setPixmap(pixmap);
-
-					}
-				}
-			}
-
-			if(!is_selected)
-				label.setStyleSheet("background-color: transparent;");
-			label.resize(100, 100);
-			label.setContentsMargins(10, 10, 10, 10);
+    if(!is_selected)
+        label.setStyleSheet("background-color: transparent;");
+    label.resize(100, 100);
+    label.setContentsMargins(10, 10, 10, 10);
 
 
-			label.render(painter, rect.topLeft() );
-			painter->restore();
+    label.render(painter, rect.topLeft() );
+    painter->restore();
 
 }
 

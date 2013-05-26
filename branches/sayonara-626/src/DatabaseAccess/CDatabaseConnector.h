@@ -77,7 +77,7 @@ public:
 		 *****************/
 
 			int getArtistID (const QString & artist);
-			Artist getArtistByID( const int& id);
+            bool getArtistByID( const int& id, Artist& artist);
 			int getMaxArtistID();
 
 			void getAllArtists(ArtistList& result, SortOrder sortorder = ArtistNameAsc);

@@ -59,8 +59,8 @@ using namespace std;
 /*****************************************************************************************/
 
 void _calc_log10_lut(){
-    for(int i=0; i<=10000; i++){
-        log_10[i] = log10(i / 10000.0f);
+    for(int i=0; i<=20000; i++){
+        log_10[i] = log10(i / 20000.0f);
     }
 
     for(int i=0; i<128; i++){
@@ -69,42 +69,52 @@ void _calc_log10_lut(){
 }
 
 GST_Engine::GST_Engine() {
+
+    _caps.is_parsed = false;
     _calc_log10_lut();
-	_settings = CSettingsStorage::getInstance();
-	_name = "GStreamer Backend";
-	_state = STATE_STOP;
+    _settings = CSettingsStorage::getInstance();
+    _name = "GStreamer Backend";
+    _state = STATE_STOP;
 
-	_seconds_started = 0;
-	_seconds_now = 0;
-	_scrobbled = false;
-	_track_finished = true;
+    _seconds_started = 0;
+    _seconds_now = 0;
+    _scrobbled = false;
+    _track_finished = true;
 
-	_playing_stream = false;
-	_sr_active = false;
-	_sr_wanna_record = false;
+    _playing_stream = false;
+    _sr_active = false;
+    _sr_wanna_record = false;
 
-	_gapless_track_available = false;
-	_stream_recorder = new StreamRecorder();
+    _gapless_track_available = false;
+    _stream_recorder = new StreamRecorder();
 
-	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
-	connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
-			SLOT(sr_ended()));
-	connect(_stream_recorder, SIGNAL(sig_stream_not_valid()), this,
-			SLOT(sr_not_valid()));
+   /* _timer = new QTimer(this);
+    _timer->setInterval(10);
+
+    connect(_timer, SIGNAL(timeout()), this, SLOT(timeout()));*/
+
+
+    connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
+    connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
+            SLOT(sr_ended()));
+    connect(_stream_recorder, SIGNAL(sig_stream_not_valid()), this,
+            SLOT(sr_not_valid()));
+
+    //_timer->start();
 }
 
 GST_Engine::~GST_Engine() {
 
-	qDebug() << "Engine: close engine... ";
+    qDebug() << "Engine: close engine... ";
 
-	_settings->updateLastTrack();
+    _settings->updateLastTrack();
 
-	if (_bus)
-		gst_object_unref (_bus);
+    if (_bus)
+        gst_object_unref (_bus);
 
-	if (_pipeline) {
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-		gst_object_unref (GST_OBJECT(_pipeline));}
+    if (_pipeline) {
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+        gst_object_unref (GST_OBJECT(_pipeline));}
 
     gst_obj_ref = 0;
 }
@@ -113,40 +123,49 @@ GST_Engine::~GST_Engine() {
 
 void GST_Engine::init_play_pipeline() {
 
-	bool success = false;
+    bool success = false;
     bool with_app_sink = true;
-	int i;
+    int i;
 
-	i = 0;
+    i = 0;
 
-	// eq -> autoaudiosink is packaged into a bin
-	do {
-		// create equalizer element
-		_pipeline = gst_element_factory_make("playbin2", "player");
-		_test_and_error(_pipeline, "Engine: Pipeline sucks");
+    // eq -> autoaudiosink is packaged into a bin
+    do {
+        // create equalizer element
+        _pipeline = gst_element_factory_make("playbin2", "player");
+        _test_and_error(_pipeline, "Engine: Pipeline sucks");
 
-		_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
+
+        _bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
         _audio_bin = gst_bin_new("audio-bin");
-		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
+        _equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
 
-		_audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
+
+        _decodebin = gst_element_factory_make("decodebin2", "decoder");
+        _audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
         _eq_queue = gst_element_factory_make("queue", "eq_queue");
         _tee = gst_element_factory_make("tee", "tee");
         _app_queue = gst_element_factory_make("queue", "app_queue");
         _app_sink = gst_element_factory_make("appsink", "app_sink");
 
-		if(!_test_and_error(_bus, "Engine: Something went wrong with the bus")) break;
+
+        if(!_test_and_error(_bus, "Engine: Something went wrong with the bus")) break;
+        //if(!_test_and_error(_gio_src, "Engine: Giosrc fail")) break;
+        if(!_test_and_error(_decodebin, "Engine: decodebin fail")) break;
         if(!_test_and_error(_audio_bin, "Engine: Bin cannot be created")) break;
-		if(!_test_and_error(_tee, "Engine: Tee cannot be created")) break;
-		if(!_test_and_error(_equalizer, "Engine: Equalizer cannot be created")) break;
+        if(!_test_and_error(_tee, "Engine: Tee cannot be created")) break;
+        if(!_test_and_error(_equalizer, "Engine: Equalizer cannot be created")) break;
         if(!_test_and_error(_eq_queue, "Engine: Equalizer cannot be created")) break;
-		if(!_test_and_error(_audio_sink, "Engine: Audio Sink cannot be created")) break;
+        if(!_test_and_error(_audio_sink, "Engine: Audio Sink cannot be created")) break;
         if(!_test_and_error(_app_queue, "Engine: Queue cannot be created")) break;
         if(!_test_and_error(_app_sink, "Engine: App Sink cannot be created")) break;
 
-		gst_bus_add_watch(_bus, bus_state_changed, this);
-	
+        gst_bus_add_watch(_bus, bus_state_changed, this);
+
         // create a bin that includes an equalizer and replace the sink with this bin
+
+        //if(!_test_and_error_bool(success, "Engine: Cannot link src with decoder")) break;
+
         if(with_app_sink){
             gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _audio_sink, _app_queue, _app_sink, NULL);
             success = gst_element_link_many(_app_queue, _app_sink, NULL);
@@ -162,13 +181,13 @@ void GST_Engine::init_play_pipeline() {
 
         if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
-		// Connect tee
-		GstPadTemplate* tee_src_pad_template;
-		GstPad* tee_pad;
-		GstPad* tee_eq_pad;
-		GstPad* tee_app_pad;
-		GstPad* eq_pad;
-		GstPad* app_pad;
+        // Connect tee
+        GstPadTemplate* tee_src_pad_template;
+        GstPad* tee_pad;
+        GstPad* tee_eq_pad;
+        GstPad* tee_app_pad;
+        GstPad* eq_pad;
+        GstPad* app_pad;
         GstPadLinkReturn s;
 
         if(with_app_sink){
@@ -204,11 +223,12 @@ void GST_Engine::init_play_pipeline() {
         if(!_test_and_error(tee_pad, "Engine: Cannot create tee pad")) break;
 
         // tell the sink_bin, that the input of tee = input of sink_bin
-		success = gst_element_add_pad(GST_ELEMENT(_audio_bin), gst_ghost_pad_new("sink", tee_pad));
+        success = gst_element_add_pad(GST_ELEMENT(_audio_bin), gst_ghost_pad_new("sink", tee_pad));
         _test_and_error_bool(success, "Engine: cannot add pad to audio bin");
 
         // replace playbin sink with this bin
-		g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+        g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+
 
         if(with_app_sink){
             g_object_set (_app_queue,
@@ -223,264 +243,270 @@ void GST_Engine::init_play_pipeline() {
             GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
             g_object_set (_app_sink,
                           "drop", TRUE,
-                          "max-buffers", 1,
+                          "max-buffers", 10,
                           "caps", audio_caps,
                           "emit-signals", FALSE,
                           NULL);
 
             g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+
         }
 
-		g_signal_connect(_pipeline, "about-to-finish", G_CALLBACK(player_change_file), NULL);
+        g_signal_connect(_pipeline, "about-to-finish", G_CALLBACK(player_change_file), NULL);
 
         gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
         success = true;
-		
+
         break;
-	} while (i);
+    } while (i);
+
+
 
     qDebug() << "Engine: constructor finished: " << success;
 }
 
+
+
+
 void GST_Engine::init() {
 
-	gst_init(0, 0);
+    gst_init(0, 0);
 
-	_stream_recorder->init();
+    _stream_recorder->init();
 
-	init_play_pipeline();
+    init_play_pipeline();
 
 }
 
 void GST_Engine::psl_gapless_track(const MetaData& md) {
-	//qDebug() << "Engine: Gapless track " << md.title;
-	_md_gapless = md;
-	_gapless_track_available = true;
+    //qDebug() << "Engine: Gapless track " << md.title;
+    _md_gapless = md;
+    _gapless_track_available = true;
 }
 
 void GST_Engine::changeTrack(const QString& filepath, int pos_sec,
-		bool start_play) {
-	MetaData md;
-	md.filepath = filepath;
-	if (!ID3::getMetaDataOfFile(md)) {
-		stop();
-		return;
-	}
-	changeTrack(md, pos_sec, start_play);
+        bool start_play) {
+    MetaData md;
+    md.filepath = filepath;
+    if (!ID3::getMetaDataOfFile(md)) {
+        stop();
+        return;
+    }
+    changeTrack(md, pos_sec, start_play);
 }
 
 void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
 
-	//qDebug() << "new track " << md.title << ", " << (md.filepath != _md_gapless.filepath);
+    _caps.is_parsed = false;
 
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+    gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
     gst_obj_ref = this;
 
-	_last_track = _settings->getLastTrack();
+    _last_track = _settings->getLastTrack();
 
-	if (!_track_finished || (md.filepath != _md_gapless.filepath) || true) {
-		stop();
-		_meta_data = md;
-		// when stream ripper, do not start playing
-		_playing_stream = Helper::is_www(md.filepath);
+    if (!_track_finished || (md.filepath != _md_gapless.filepath) || true) {
+        stop();
+        _meta_data = md;
+        // when stream ripper, do not start playing
+        _playing_stream = Helper::is_www(md.filepath);
 
-		bool success = set_uri(md, start_play);
-		if (!success)
-			return;
+        bool success = set_uri(md, start_play);
+        if (!success)
+            return;
 
         g_timeout_add(500, (GSourceFunc) show_position, _pipeline);
 
-		_gapless_track_available = false;
-		//emit wanna_gapless_track();
-		emit total_time_changed_signal(_meta_data.length_ms);
-		emit timeChangedSignal(pos_sec);
-	}
+        _gapless_track_available = false;
+        //emit wanna_gapless_track();
+        emit total_time_changed_signal(_meta_data.length_ms);
+        emit timeChangedSignal(pos_sec);
+    }
 
-	else {
-		_meta_data = _md_gapless;
-		_gapless_track_available = false;
+    else {
+        _meta_data = _md_gapless;
+        _gapless_track_available = false;
 
-		emit wanna_gapless_track();
-		emit total_time_changed_signal(_meta_data.length_ms);
+        emit wanna_gapless_track();
+        emit total_time_changed_signal(_meta_data.length_ms);
 
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-	}
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    }
 
-	_seconds_started = 0;
-	_seconds_now = 0;
-	_scrobbled = false;
-	_track_finished = false;
+    _seconds_started = 0;
+    _seconds_now = 0;
+    _scrobbled = false;
+    _track_finished = false;
 
-	//if(md.filepath == _md_gapless.filepath) return;
+    //if(md.filepath == _md_gapless.filepath) return;
 
-	if (pos_sec > 0) {
-		__start_pos_beginning = pos_sec;
-		__start_at_beginning = false;
-	}
+    if (pos_sec > 0) {
+        __start_pos_beginning = pos_sec;
+        __start_at_beginning = false;
+    }
 
-	else {
-		__start_at_beginning = true;
-	}
+    else {
+        __start_at_beginning = true;
+    }
 
-	if (start_play)
-		play(pos_sec);
+    if (start_play)
+        play(pos_sec);
 
-	// pause if streamripper is not active
-	else if (!start_play && !(_playing_stream && _sr_active))
-		pause();
+    // pause if streamripper is not active
+    else if (!start_play && !(_playing_stream && _sr_active))
+        pause();
 
 }
 
 bool GST_Engine::set_uri(const MetaData& md, bool& start_play) {
-	// Gstreamer needs an URI
-	const gchar* uri = NULL;
+    // Gstreamer needs an URI
+    const gchar* uri = NULL;
 
-	// stream && streamripper active
-	if (_playing_stream && _sr_active) {
+    // stream && streamripper active
+    if (_playing_stream && _sr_active) {
 
-		int max_tries = 10;
+        int max_tries = 10;
 
-		QString filepath = _stream_recorder->changeTrack(md, max_tries);
-		if (filepath.size() == 0) {
-			qDebug() << "Engine: Stream Ripper Error: Could not get filepath";
-			return false;
-		}
+        QString filepath = _stream_recorder->changeTrack(md, max_tries);
+        if (filepath.size() == 0) {
+            qDebug() << "Engine: Stream Ripper Error: Could not get filepath";
+            return false;
+        }
 
-		if (md.radio_mode == RADIO_LFM) {
-			uri = g_filename_to_uri(
-					g_filename_from_utf8(filepath.toUtf8(),
-							filepath.toUtf8().size(), NULL, NULL, NULL), NULL,
-							NULL);
-		}
+        if (md.radio_mode == RADIO_LFM) {
+            uri = g_filename_to_uri(
+                    g_filename_from_utf8(filepath.toUtf8(),
+                            filepath.toUtf8().size(), NULL, NULL, NULL), NULL,
+                            NULL);
+        }
 
-		else {
-			uri = g_filename_from_utf8(md.filepath.toUtf8(),
-					md.filepath.toUtf8().size(), NULL, NULL, NULL);
-		}
+        else {
+            uri = g_filename_from_utf8(md.filepath.toUtf8(),
+                    md.filepath.toUtf8().size(), NULL, NULL, NULL);
+        }
 
-		start_play = false;
-	}
+        start_play = false;
+    }
 
-	// stream, but don't wanna record
-	else if (_playing_stream && !_sr_active) {
-		uri = g_filename_from_utf8(md.filepath.toUtf8(),
-				md.filepath.toUtf8().size(), NULL, NULL, NULL);
-	}
+    // stream, but don't wanna record
+    else if (_playing_stream && !_sr_active) {
+        uri = g_filename_from_utf8(md.filepath.toUtf8(),
+                md.filepath.toUtf8().size(), NULL, NULL, NULL);
+    }
 
-	// no stream (not quite right because of mms, rtsp or other streams
-	else if (!md.filepath.contains("://")) {
+    // no stream (not quite right because of mms, rtsp or other streams
+    else if (!md.filepath.contains("://")) {
 
-		uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
-	}
+        uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
+    }
 
-	else {
-		uri = g_filename_from_utf8(md.filepath.toUtf8(),
-				md.filepath.toUtf8().size(), NULL, NULL, NULL);
-	}
+    else {
+        uri = g_filename_from_utf8(md.filepath.toUtf8(),
+                md.filepath.toUtf8().size(), NULL, NULL, NULL);
+    }
 
-	if (!uri)
-		return NULL;
+    if (!uri)
+        return NULL;
 
-	// playing src
-	_test_and_error(_pipeline, "Engine: pipeline is null");
-		g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
+    // playing src
+    _test_and_error(_pipeline, "Engine: pipeline is null");
+        g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
 
-	qDebug() << "Engine:  set uri: " << uri;
+    qDebug() << "Engine:  set uri: " << uri;
 
-	return true;
+    return true;
 }
 
 void GST_Engine::play(int pos_sec) {
 
-	_track_finished = false;
-	_state = STATE_PLAY;
+    _track_finished = false;
+    _state = STATE_PLAY;
 
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
 
     gst_obj_ref = this;
 }
 
 void GST_Engine::stop() {
 
-	_state = STATE_STOP;
+    _state = STATE_STOP;
 
-	// streamripper, wanna record is set when record button is pressed
-	if (_playing_stream && _sr_active) {
-		qDebug() << "Engine: stop... Playing stream";
-		_stream_recorder->stop(!_sr_wanna_record);
-	}
+    // streamripper, wanna record is set when record button is pressed
+    if (_playing_stream && _sr_active) {
+        qDebug() << "Engine: stop... Playing stream";
+        _stream_recorder->stop(!_sr_wanna_record);
+    }
 
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+    gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 
-	_track_finished = true;
+    _track_finished = true;
 }
 
 void GST_Engine::pause() {
-	_state = STATE_PAUSE;
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
+    _state = STATE_PAUSE;
+    gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 }
 
 void GST_Engine::setVolume(int vol) {
 
-	_vol = vol;
+    _vol = vol;
 
-	float vol_val = (float) (vol * 1.0f / 100.0f);
+    float vol_val = (float) (vol * 1.0f / 100.0f);
 
-	g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
+    g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
 
 }
 
 void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings) {
 
-	emit eq_presets_loaded(vec_eq_settings);
+    emit eq_presets_loaded(vec_eq_settings);
 }
 
 void GST_Engine::jump(int where, bool percent) {
 
-	gint64 new_time_ms, new_time_ns;
-	if (where < 0)
-		where = 0;
+    gint64 new_time_ms, new_time_ns;
+    if (where < 0)
+        where = 0;
 
-	if (percent) {
-		if (where > 100)
-			where = 100;
-		double p = where / 100.0;
-		_seconds_started = (int) (p * _meta_data.length_ms) / 1000;
-		new_time_ms = (quint64)(p * _meta_data.length_ms); // msecs
-	}
+    if (percent) {
+        if (where > 100)
+            where = 100;
+        double p = where / 100.0;
+        _seconds_started = (int) (p * _meta_data.length_ms) / 1000;
+        new_time_ms = (quint64)(p * _meta_data.length_ms); // msecs
+    }
 
-	else {
-		if (where > _meta_data.length_ms / 1000)
-			where = _meta_data.length_ms / 1000;
-		_seconds_started = where;
-		new_time_ms = where * 1000;
-	}
+    else {
+        if (where > _meta_data.length_ms / 1000)
+            where = _meta_data.length_ms / 1000;
+        _seconds_started = where;
+        new_time_ms = where * 1000;
+    }
 
-	new_time_ns = new_time_ms * GST_MSECOND;
+    new_time_ns = new_time_ms * GST_MSECOND;
 
-	if (!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME,
-			(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-			new_time_ns)) {
-		qDebug() << "seeking failed ";
-	}
+    if (!gst_element_seek_simple(_pipeline, GST_FORMAT_TIME,
+            (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
+            new_time_ns)) {
+        qDebug() << "seeking failed ";
+    }
 }
 
 void GST_Engine::eq_changed(int band, int val) {
 
-	double new_val = 0;
-	new_val = val * 1.0;
-	if (val > 0) {
-		new_val = val * 0.25;
-	}
+    double new_val = 0;
+    new_val = val * 1.0;
+    if (val > 0) {
+        new_val = val * 0.25;
+    }
 
-	else
-		new_val = val * 0.75;
+    else
+        new_val = val * 0.75;
 
-	char band_name[6];
-	sprintf(band_name, "band%d", band);
-	band_name[5] = '\0';
+    char band_name[6];
+    sprintf(band_name, "band%d", band);
+    band_name[5] = '\0';
 
-	g_object_set(G_OBJECT(_equalizer), band_name, new_val, NULL);
+    g_object_set(G_OBJECT(_equalizer), band_name, new_val, NULL);
 }
 
 void GST_Engine::eq_enable(bool) {
@@ -501,147 +527,168 @@ void GST_Engine::state_changed() {
 
 void GST_Engine::set_cur_position(quint32 pos_sec) {
 
-	if ((quint32) _seconds_now == pos_sec)
-		return;
-	_seconds_now = pos_sec;
-	int playtime = _seconds_now - _seconds_started;
+    if ((quint32) _seconds_now == pos_sec)
+        return;
+    _seconds_now = pos_sec;
+    int playtime = _seconds_now - _seconds_started;
 
-	if (!_scrobbled
-			&& (playtime >= 15 || playtime == _meta_data.length_ms / 2000)) {
+    if (!_scrobbled
+            && (playtime >= 15 || playtime == _meta_data.length_ms / 2000)) {
 
-		emit scrobble_track(_meta_data);
-		_scrobbled = true;
-	}
+        emit scrobble_track(_meta_data);
+        _scrobbled = true;
+    }
 
-	_last_track->id = _meta_data.id;
-	_last_track->filepath = _meta_data.filepath;
-	_last_track->pos_sec = pos_sec;
+    _last_track->id = _meta_data.id;
+    _last_track->filepath = _meta_data.filepath;
+    _last_track->pos_sec = pos_sec;
 
-	emit timeChangedSignal(_seconds_now);
+    emit timeChangedSignal(_seconds_now);
 }
 
 void GST_Engine::set_track_finished() {
 
-	if (_sr_active && _playing_stream) {
-		_stream_recorder->stop(!_sr_wanna_record);
-	}
+    if (_sr_active && _playing_stream) {
+        _stream_recorder->stop(!_sr_wanna_record);
+    }
 
-	emit track_finished();
-	_track_finished = true;
+    emit track_finished();
+    _track_finished = true;
 }
 
 void GST_Engine::set_about_to_finish() {
 
-	//qDebug() << "Engine: about to finish " << _gapless_track_available;
-	if (_gapless_track_available && 0) {
+    //qDebug() << "Engine: about to finish " << _gapless_track_available;
+    if (_gapless_track_available && 0) {
 
-		bool b = true;
-		set_uri(_md_gapless, b);
-		_gapless_track_available = false;
-		_track_finished = true;
-		emit track_finished();
-	}
+        bool b = true;
+        set_uri(_md_gapless, b);
+        _gapless_track_available = false;
+        _track_finished = true;
+        emit track_finished();
+    }
+}
+
+
+float f_channel[2];
+#define SCALE_SHORT 0.000000004f
+#define BUFFER_SIZE 4096
+
+void GST_Engine::emit_buffer(float inv_arr_channel_elements, float scale){
+
+    for(int i=0; i<_caps.channels; i++){
+        float val = f_channel[i] * inv_arr_channel_elements * scale;
+        if(val > 1.0f) val = 1.0f;
+        f_channel[i] = 10.0f * LOOKUP_LOG(val);
+    }
+
+    if(_caps.channels >= 2)
+        emit sig_level(f_channel[0], f_channel[1]);
+
+    else if(_caps.channels == 1)
+        emit sig_level(f_channel[0], -100.0f);
+
+    f_channel[0] = 0;
+    f_channel[1] = 0;
 }
 
 
 void GST_Engine::set_buffer(GstBuffer* buffer){
 
-    /* GstCaps* caps = gst_buffer_get_caps(buffer);
-     gchar* info = gst_caps_to_string(caps);
-     qDebug() << info;*/
+    if(!_caps.is_parsed){
+
+         GstCaps* caps = gst_buffer_get_caps(buffer);
+         _caps.parse(caps);
+    }
+
+    f_channel[0] = 0;
+    f_channel[1] = 0;
 
      //guint64 dur = GST_BUFFER_DURATION(buffer);
      gsize sz = GST_BUFFER_SIZE(buffer);
      guint8* c_buf = GST_BUFFER_DATA(buffer);
-
-
-     const float two_size = 1.0 / (sz / 4.0);
-     const float c1 = 1.0 / 16384.0f;
-     const float c2 = 1.0 / 16384.0f;
+     float scale = 1.0f;
 
 
 
-     gsize start = 0;
-     gsize end = sz;
+     // size of one element in bytes
+     int item_size = _caps.width / 8;
 
+     // array has sz bytes, but only sz / el_size elements
+     // and every channel has it
+     float inv_arr_channel_elements = (item_size * _caps.channels * 1.0) / sz ;
 
+     gsize end = sz - item_size;
 
-         float f_l = 0;
-         float f_r = 0;
+     int channel=0;
 
-         for(gsize i=start; i<end-3; i+=4){
-            float c1_tmp = c1;
-            float c2_tmp = c2;
-             // >= 128 (negativ)
-             if(c_buf[i+1] & 0x80){
-                 c_buf[i] = ~c_buf[i];
-                 c_buf[i+1] = ~c_buf[i+1];
-                 c1_tmp = c1 * -1.0f;
-             }
+     if(_caps.type == CAPS_TYPE_FLOAT){
 
-             if(c_buf[i+3] & 0x80){
-                 c_buf[i+2] = ~c_buf[i+2];
-                 c_buf[i+3] = ~c_buf[i+3];
-                 c2_tmp = c2 * -1.0f;
-             }
+        float *v_f;
 
-             float v1 = (float) c_buf[i]   + lo_128[c_buf[i+1] & 0x7F];
-             float v2 = (float) c_buf[i+2] + lo_128[c_buf[i+3] & 0x7F];
+        for(gsize i=0; i<end; i+=item_size){
 
-             v1 *= c1_tmp;
-             v2 *= c2_tmp;
+             v_f = (float*) (c_buf+i);
 
-             f_l += (v1*v1);
-             f_r += (v2*v2);
+             f_channel[channel] += ( (*v_f) * (*v_f));
+             channel = (channel + 1) % _caps.channels;
          }
+     }
 
+     else if(_caps.type == CAPS_TYPE_INT){
+         short* v_s;
+         float v;
+         scale = SCALE_SHORT;
 
-         f_l = 10 * LOOKUP_LOG(f_l*two_size);
-         f_r = 10 * LOOKUP_LOG(f_r*two_size);
+         for(gsize i=0; i<end; i+=item_size){
 
+             v_s = (short*) (c_buf + i);
+             v = (float) (*v_s);
+             f_channel[channel] += (v * v);
+             channel = (channel + 1) % _caps.channels;
+         }
+     }
 
-         emit sig_level(f_l, f_r);
-
+     emit_buffer(inv_arr_channel_elements, scale);
 
      gst_buffer_unref(buffer);
-
 
 }
 
 int GST_Engine::getState() {
-	return _state;
+    return _state;
 }
 
 QString GST_Engine::getName() {
-	return _name;
+    return _name;
 }
 
 void GST_Engine::record_button_toggled(bool b) {
-	_sr_wanna_record = b;
+    _sr_wanna_record = b;
 }
 
 void GST_Engine::psl_sr_set_active(bool b) {
-	_sr_active = b;
+    _sr_active = b;
 }
 
 void GST_Engine::psl_new_stream_session() {
-	_stream_recorder->set_new_stream_session();
+    _stream_recorder->set_new_stream_session();
 }
 
 void GST_Engine::sr_initialized(bool b) {
 
-	if (b)
-		play();
+    if (b)
+        play();
 
 }
 
 void GST_Engine::sr_ended() {
-	//emit track_finished();
+    //emit track_finished();
 }
 
 void GST_Engine::sr_not_valid() {
-	qDebug() << "Engine: Stream not valid.. Next file";
-	emit track_finished();
+    qDebug() << "Engine: Stream not valid.. Next file";
+    emit track_finished();
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

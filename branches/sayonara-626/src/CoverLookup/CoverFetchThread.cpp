@@ -28,28 +28,33 @@
 
 #include "CoverLookup/CoverFetchThread.h"
 #include "CoverLookup/CoverDownloader.h"
-#include "HelperStructs/MetaData.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
+
+
 #include <QDebug>
-#include <QMessageBox>
-#include <QImage>
-#include <QStringList>
 #include <QFile>
 #include <QDir>
 
-#include <vector>
-
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
-using namespace std;
 
 
-CoverFetchThread::CoverFetchThread() {
-    _cover_source = COV_SRC_LFM;
-    _num_covers_2_fetch = 1;
+CoverFetchThread::CoverFetchThread(QObject* parent, int id, QString url, const QStringList& target_names, QString call_id): QThread(parent) {
+    _id = id;
+    _url = url;
+    _target_names = target_names;
+    _call_id = call_id;
+    _mode = CFT_SINGLE;
 
+
+
+}
+
+CoverFetchThread::CoverFetchThread(QObject* parent, int id, QString url, int n_images) : QThread(parent){
+
+    _id = id;
+    _url = url;
+    _n_images = n_images;
+    _mode = CFT_MULTI;
+    _cur_awa_idx = 1;
+    _run = true;
 }
 
 CoverFetchThread::~CoverFetchThread() {
@@ -57,251 +62,123 @@ CoverFetchThread::~CoverFetchThread() {
     // TODO Auto-generated destructor stub
 }
 
-void CoverFetchThread::search_images_for_artist(const QString& artist_name, int num){
-
-    vector<QImage> images;
-
-    QString path = Helper::get_artist_image_path(artist_name);
-    if( num == 1 && QFile::exists(path)){
-        _images.push_back(QImage(path));
-        return;
-    }
-
-    QStringList image_adresses = call_and_parse_artist(artist_name, num + num / 2, _cover_source);
-    _n_found_images = download_covers(image_adresses, _num_covers_2_fetch, images, true);
-
-    for(int c=0; c<_n_found_images; c++){
-        _images.push_back(images[c]);
-        if(c == 0){
-            images[c].save(path);
-        }
-    }
-}
-
-
-void CoverFetchThread::search_images_for_albums(){
-
-    if (_num_covers_2_fetch <= 0) return;
-
-    foreach(Album album, _vec_albums){
-
-        vector<QImage> images;
-
-        // major artists only helps to get best search results
-        QString major_artist;
-        if(album.id == -1 && album.artists.size() > 0) major_artist = album.artists[0];
-        else major_artist = Helper::get_album_major_artist(album.id);
-
-        QString path = Helper::get_cover_path(major_artist, album.name);
-
-        if(major_artist.size() + album.name.size() == 0) continue;
-        int n_images = 0;
-
-        // Cover is not there for major artist
-        if( !QFile::exists(path) ){
-
-            // create cover adresses
-            // call the containing webpage (lfm or google)
-            // parse image urls out of it
-            int n_cover_adresses = 3;
-            if(_num_covers_2_fetch * 2 > 3) n_cover_adresses = _num_covers_2_fetch * 2;
-            QStringList cover_adresses = call_and_parse_album( major_artist, album.name, n_cover_adresses, _cover_source);
-
-            // download it
-            n_images = download_covers(cover_adresses, _num_covers_2_fetch, images);
-            if(n_images == 0) continue;
-        }
-
-        // cover for major artist is there
-        else{
-            QImage img(path);
-            images.push_back(img);
-            n_images = 1;
-        }
-
-
-        // save first image for all artists
-        for(uint i=0; i<images.size(); i++){
-            QImage img = images[i];
-            if(i == 0){
-                foreach(QString artist, album.artists){
-                    QString target_path =  Helper::get_cover_path(artist, album.name);
-                    QFile f(target_path);
-                    if(f.exists()) f.remove();
-                    img.save(target_path);
-                }
-
-                QString target_path =  Helper::get_cover_path(major_artist, album.name);
-                QFile f(target_path);
-                if(!f.exists()){
-                    img.save(target_path);
-                }
-            }
-
-            _images.push_back(images[i]);
-        }
-
-        if(_vec_albums.size() > 1) usleep(500000);
-    }
-
-    _n_found_images = _images.size();
-}
-
-
-
-
-
-void CoverFetchThread::search_images_for_album_str(const QString album_name, int num){
-
-    //search_covers_by_album_name(album_name, _images, num);
-
-}
-
-void CoverFetchThread::search_images_for_artist_str(const QString artist_name, int num){
-
-    QString tmp_artist_name = artist_name;
-
-    search_images_for_artist(tmp_artist_name, num);
-
-}
-
-void CoverFetchThread::search_images_for_searchstring(){
-
-
-    QString adress = Helper::calc_google_image_search_adress(_universal_searchstring, GOOGLE_IMG_SMALL, GOOGLE_FT_JPG);
-
-
-
-    QStringList lst = call_and_parse(adress, _num_covers_2_fetch * 2);
-
-    if(lst.size() > 0)
-        _n_found_images = download_covers(lst, _num_covers_2_fetch, _images, true );
-    else
-        qDebug() << "cannot find cover paths";
-
-}
-
-
-// run through all albums and search their covers
 void CoverFetchThread::run(){
 
-    this->_images.clear();
+    if(_mode == CFT_SINGLE)
+        search_single();
+    else
+        search_multi();
 
-    switch(_cover_fetch_mode){
+}
 
-    case COV_FETCH_MODE_ALBUM_STR:
-        search_images_for_album_str(_album_searchstring, _num_covers_2_fetch);
-        break;
+void CoverFetchThread::search_single(){
 
-    case COV_FETCH_MODE_ARTIST_STR:
-        search_images_for_artist_str(_artist_searchstring, _num_covers_2_fetch);
-        break;
+    QStringList adresses = cov_call_and_parse(_url, 10);
 
-    case COV_FETCH_MODE_SINGLE_ALBUM:
-    case COV_FETCH_MODE_ALL_ALBUMS:
-        search_images_for_albums();
-        break;
+    _found_cover_paths.clear();
+    foreach(QString adress, adresses){
+        QImage img;
+        bool success = cov_download_cover(adress, img);
 
-    case COV_FETCH_MODE_SEARCHSTRING:
-        search_images_for_searchstring();
-        break;
+        if(success){
 
-    default: break;
+            for(int i=0; i<_target_names.size(); i++){
+                QString target_name = _target_names[i];
+                img.save(target_name);
+                _found_cover_paths << target_name;
+            }
+        }
+
+        if(_found_cover_paths.size() > 0) break;
     }
 
+    emit sig_finished(_id);
+}
+
+void CoverFetchThread::search_multi(){
+
+      QStringList adresses = cov_call_and_parse(_url, _n_images);
+
+      _cur_awa_idx = 1;
+      _n_running = 0;
+
+      foreach(QString adress, adresses){
+
+          AsyncWebAccess* awa = new AsyncWebAccess(this->parent());
+          _lst.push_back(awa);
+          awa->set_url(adress);
+          connect(awa, SIGNAL(finished(QString)), this, SLOT(awa_finished(QString)));
+          awa->start();
+          _n_running ++;
+
+      }
+
+      QString path = Helper::getSayonaraPath() + "/tmp/";
+      QDir dir(Helper::getSayonaraPath());
+      dir.mkpath("tmp");
+
+      while(_run){
+          usleep(100000);
+          if(_datalist.size() == 0) {
+              continue;
+          }
+
+          QString data = _datalist[0];
+          _datalist.removeAt(0);
+          if(data.size() == 0){
+              continue;
+          }
+
+          QImage img;
+          bool success = img.loadFromData(data.toAscii());
+
+          if(!success){
+              continue;
+          }
+
+          success = img.save(path + "img_" + QString::number(_cur_awa_idx) + ".jpg");
+          _cur_awa_idx++;
+      }
+
+      qDebug() << "Alternative cover thread dies";
 }
 
 
-/***************************
- * GETTER / SETTER
- ***************************/
 
-void CoverFetchThread::get_images(vector<QImage>& images){
+QStringList CoverFetchThread::get_found_covers(){
 
-    images = _images;
+    return _found_cover_paths;
 }
 
-bool CoverFetchThread::get_certain_image(int idx, QImage& img){
-    if(idx >= (int) _images.size()) return false;
-    img = _images[idx];
-    return true;
-
+int CoverFetchThread::get_id(){
+    return _id;
 }
 
-int CoverFetchThread::get_num_images(){
-    return _images.size();
+QString CoverFetchThread::get_call_id(){
+    return _call_id;
 }
 
+void CoverFetchThread::awa_finished(QString data){
 
-int CoverFetchThread::get_cover_source(){
-    return _cover_source;
+    _datalist << data;
+    _n_running --;
 }
 
-
-int CoverFetchThread::get_cover_fetch_mode(){
-    return _cover_fetch_mode;
+void CoverFetchThread::set_run(bool run){
+    _n_running = 0;
+    _run = run;
 }
 
+void CoverFetchThread::quit(){
+    foreach(AsyncWebAccess* awa, _lst){
+        if(awa->isRunning()){
+            awa->quit();
+        }
 
-void CoverFetchThread::setup_fetch_artist_image(const QString& artist, int source, int n_covers){
-    _album_searchstring = "";
-    _artist_searchstring = artist;
-    _cover_source = source;
-    _cover_fetch_mode = COV_FETCH_MODE_ARTIST_STR;
-    _num_covers_2_fetch = n_covers;
-    _vec_albums.clear();
-    _images.clear();
-}
+        delete awa;
+    }
 
+    _lst.clear();
 
-void CoverFetchThread::setup_fetch_album_covers(const AlbumList& albums, int source, int n_covers){
-
-    _album_searchstring = "";
-    _artist_searchstring = "";
-    _cover_source = source;
-    _cover_fetch_mode = COV_FETCH_MODE_ALL_ALBUMS;
-    _num_covers_2_fetch = n_covers;
-    _vec_albums = albums;
-    _images.clear();
-}
-
-void CoverFetchThread::setup_fetch_single_album(QString album_str, QString artist_str, int source){
-    Album album;
-    album.artists << artist_str;
-    album.name = album_str;
-    setup_fetch_single_album(album, source);
-
-}
-
-void CoverFetchThread::setup_fetch_single_album(const Album& album, int source, int n_covers){
-    _album_searchstring = album.name;
-    _artist_searchstring = album.artists[0];
-    _cover_source = source;
-    _cover_fetch_mode = COV_FETCH_MODE_SINGLE_ALBUM;
-    _num_covers_2_fetch = n_covers;
-    _vec_albums.clear();
-    _vec_albums.push_back(album);
-    _images.clear();
-}
-
-void CoverFetchThread::setup_fetch_by_searchstring(QString searchstring, int n_covers){
-
-
-    _universal_searchstring = searchstring;
-    _cover_source = COV_SRC_GOOGLE;
-    _num_covers_2_fetch = n_covers;
-    _cover_fetch_mode = COV_FETCH_MODE_SEARCHSTRING;
-    _images.clear();
-}
-
-void CoverFetchThread::reset(){
-    _vec_albums.clear();
-    _images.clear();
-    _cover_source = -1;
-    _num_covers_2_fetch = -1;
-    _album_searchstring = "";
-    _artist_searchstring = "";
-    _universal_searchstring = "";
-    _cover_fetch_mode = -1;
-
+    QThread::quit();
 }

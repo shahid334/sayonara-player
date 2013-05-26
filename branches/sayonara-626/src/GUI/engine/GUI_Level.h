@@ -6,6 +6,9 @@
 #include <QString>
 #include <QCloseEvent>
 #include <QShowEvent>
+#include <QTimer>
+#include <QList>
+#include <QPair>
 
 class GUI_Level : public PlayerPlugin, private Ui::GUI_Level
 {
@@ -19,6 +22,7 @@ public:
     
 signals:
     void sig_show(bool);
+    void closeEvent();
 
 protected:
 
@@ -28,13 +32,21 @@ protected:
 public slots:
     void set_level(float, float);
 
+private slots:
+    void timeout();
+
 private:
     float* _levels_l;
     float* _levels_r;
     int    _cur_idx;
     int    _buffer_size;
 
+    QList<QPair<float, float> > _queue;
+
     Ui::GUI_Level* ui;
+
+    QTimer* _timer;
+    bool _queue_it;
     
 };
 

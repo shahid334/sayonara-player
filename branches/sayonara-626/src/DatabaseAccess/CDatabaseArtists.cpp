@@ -122,30 +122,36 @@ int CDatabaseConnector::getMaxArtistID(){
 	return max_id;
 }
 
-Artist CDatabaseConnector::getArtistByID(const int &id){
+bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist){
 
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
 
-	Artist artist;
 	ArtistList artists;
+    if(id == -1) return false;
 
-	if (id!=-1) {
-		QString query = ARTIST_ALBUM_TRACK_SELECTOR +
-					"WHERE artists.artistID = ? " +
-					"AND tracks.artistID = artists.artistID " +
-					"AND tracks.albumID = albums.albumID " +
-					"GROUP BY artistName;";
 
-		q.prepare(query);
-		q.addBindValue(QVariant (id));
+    QString query = ARTIST_ALBUM_TRACK_SELECTOR +
+                "WHERE artists.artistID = ? " +
+                "AND tracks.artistID = artists.artistID " +
+                "AND tracks.albumID = albums.albumID " +
+                "GROUP BY artistName;";
 
-		_db_fetch_artists(q, artists);
-		if(artists.size() > 0) artist = artists[0];
-	}
+    q.prepare(query);
+    q.addBindValue(QVariant (id));
 
-	return artist;
+    bool success = _db_fetch_artists(q, artists);
+
+    if(artists.size() > 0){
+        success = true;
+        artist = artists[0];
+    }
+
+    else success = false;
+
+
+    return success;
 }
 
 int CDatabaseConnector::getArtistID (const QString & artist)  {

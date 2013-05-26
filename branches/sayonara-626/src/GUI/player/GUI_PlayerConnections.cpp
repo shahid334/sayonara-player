@@ -129,14 +129,8 @@ void GUI_Player::setupConnections(){
 
 
 	// cover lookup
-	connect(m_cov_lookup, SIGNAL(sig_cover_found(QString, QString)),
-			this, 				SLOT(cover_changed(QString, QString)));
-
-	connect(this, 				SIGNAL(sig_want_cover(const MetaData&)),
-			m_cov_lookup, SLOT(search_cover(const MetaData&)));
-
-	connect(this,				SIGNAL(sig_fetch_all_covers()),
-			m_cov_lookup, 		SLOT(search_all_covers()));
+    connect(m_cov_lookup, SIGNAL(sig_covers_found(const QStringList&, QString)),
+            this, SLOT(covers_found(const QStringList&, QString)));
 
     connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)),
             this,				SLOT(sl_alternate_cover_available(QString, QString)));

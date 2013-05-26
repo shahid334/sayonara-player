@@ -40,10 +40,56 @@
 
 #include <QObject>
 #include <QDebug>
+#include <QTimer>
 
 #include <vector>
 
 using namespace std;
+
+
+#define CAPS_TYPE_INT 0
+#define CAPS_TYPE_FLOAT 1
+#define CAPS_TYPE_UNKNOWN -1
+struct MyCaps {
+    int type;
+    bool sig;
+    int width;
+    int channels;
+    bool is_parsed;
+
+    void parse(GstCaps* caps){
+        QString info = gst_caps_to_string(caps);
+        //qDebug() << info;
+
+        QStringList lst = info.split(",");
+        foreach(QString s, lst){
+
+            s = s.trimmed();
+            if(s.startsWith("audio", Qt::CaseInsensitive)){
+                if(s.contains("int", Qt::CaseInsensitive)) type = CAPS_TYPE_INT;
+                else if(s.contains("float", Qt::CaseInsensitive)) type = CAPS_TYPE_FLOAT;
+                else type = CAPS_TYPE_UNKNOWN;
+            }
+
+            else if(s.startsWith("signed", Qt::CaseInsensitive)){
+                if(s.contains("true", Qt::CaseInsensitive)) sig = true;
+                else sig = false;
+            }
+
+            else if(s.startsWith("width", Qt::CaseInsensitive)){
+                width = s.right(2).toInt();
+            }
+
+            else if(s.startsWith("channels", Qt::CaseInsensitive)){
+                channels = s.right(1).toInt();
+                if(channels > 2) channels = 2;
+            }
+        }
+        is_parsed = true;
+    }
+};
+
+
 
 class GST_Engine : public Engine {
 
@@ -66,9 +112,12 @@ private:
 	GstElement* _pipeline;
 	GstElement* _equalizer;
     GstElement* _eq_queue;
-	GstElement* _volume;
+    GstElement* _volume;
+
 	GstElement* _audio_sink;
     GstElement* _audio_bin;
+    GstElement* _gio_src;
+    GstElement* _decodebin;
 	
 	GstElement* _app_sink;
 	GstElement* _app_queue;
@@ -80,6 +129,7 @@ private:
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;
+    MyCaps     _caps;
 
 
 
@@ -88,6 +138,7 @@ private slots:
     virtual void sr_initialized(bool);
     virtual void sr_ended();
     virtual void sr_not_valid();
+    void timeout();
     
 
 
@@ -117,7 +168,8 @@ public:
 	void		state_changed();
 	void		set_cur_position(quint32);
 	void		set_track_finished();
-        void        set_about_to_finish();
+    void        set_about_to_finish();
+    void        emit_buffer(float inv_array_elements, float scale);
 	void 		set_buffer(GstBuffer*);
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
@@ -130,13 +182,10 @@ private:
 
 	void init_play_pipeline();
     bool set_uri(const MetaData& md, bool& start_play);
-
-
-
-
-
-
+    QTimer* _timer;
 
 };
+
+
 
 #endif /* GSTENGINE_H_ */

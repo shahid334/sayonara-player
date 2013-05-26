@@ -31,6 +31,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "CoverLookup/CoverFetchThread.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <string>
 #include <vector>
@@ -40,6 +41,7 @@
 #include <QPixmap>
 #include <QCryptographicHash>
 #include <QDir>
+#include <QMap>
 
 #define EMIT_NONE 0
 #define EMIT_ONE 1
@@ -48,57 +50,49 @@
 
 using namespace std;
 
+typedef QString WWWAdress;
+typedef QString TargetFileName;
 
 class CoverLookup : public QObject{
 
 	Q_OBJECT
 
 	signals:
-		// caller class, pixmaps
-		void sig_covers_found(QString, vector<QPixmap>&);		/* emit if multiple covers are found (player) */
-		// caller class, path
-		void sig_cover_found(QString, QString);					/* emit if single cover is found (player) */
-		// caller class, pixmap
-		void sig_new_cover_found(QString, const QPixmap&);		/* emit if a new cover is found (alternate covers) */
-		void sig_multi_covers_found(QString, int);
+    void sig_covers_found(const QStringList&, QString call_id);
+    void sig_alt_cover_found(const QString&, QString call_id);
 
 	public slots:
-		void search_artist_image(const QString& artist); /* artist image */
 
-        void search_cover(const MetaData& md);			 /* search a cover for certain metadata */
-		void search_covers(const AlbumList&);		 /* search multiple covers */
+    void fetch_cover_album(const int album_id, QString call_id="", bool for_all_tracks=true);
+    void fetch_cover_album(const Album& album, QString call_id="", bool for_all_tracks=true);
 
-		void search_images_by_searchstring(QString searchstring, int n_images, bool search_for_album);
+    void fetch_cover_artist(const int artist_id, QString call_id="");
+    void fetch_cover_artist(const Artist& artist, QString call_id="");
 
 
-		void research_cover(const MetaData&);	/* search alternative covers for one album */
-		void search_all_covers();					/* search all covers*/
-		void terminate_thread();					/* stop to search for covers */
-
-	private slots:
-		void thread_finished();
+private slots:
+   void thread_finished(int id);
 
 
 public:
 
-	CoverLookup(QString caller_class);
+    CoverLookup();
 	virtual ~CoverLookup();
-	bool get_found_cover(int idx, QPixmap& p);
+
+
 
 
 private:
 
+    CDatabaseConnector* _db;
+    QList<CoverFetchThread*> _threads;
+    QList<int> _finished_queue;
+    bool _finish_locked;
+    int _cur_thread_id;
 
-	MetaData			_metadata;
-	CoverFetchThread* 	_thread;
-	vector<QPixmap> 	_alternative_covers;
 
-	int 				_emit_type;
-	bool				_research_done;
-	QString				_caller_class;
+    void start_new_thread(QString url, const QStringList& target_names, QString call_id );
 
-	void 	_download_covers(QStringList adresses, uint num_covers_to_fetch, vector<QPixmap>& vec_pixmaps);
-	Album 	_get_album_from_metadata(const MetaData& md);
 
 };
 

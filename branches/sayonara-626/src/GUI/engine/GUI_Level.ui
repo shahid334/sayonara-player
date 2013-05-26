@@ -6,35 +6,65 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>549</width>
-    <height>30</height>
+    <width>451</width>
+    <height>36</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>0</width>
-    <height>30</height>
+    <height>36</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>51</height>
+    <height>52</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Level</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(50,50,50);</string>
+   <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="horizontalSpacing">
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
+   </property>
+   <property name="horizontalSpacing">
+    <number>3</number>
    </property>
    <property name="verticalSpacing">
     <number>5</number>
    </property>
+   <item row="0" column="5">
+    <widget class="QLabel" name="lab_l_25">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="9">
     <widget class="QLabel" name="lab_l_45">
      <property name="enabled">
@@ -42,7 +72,8 @@
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -65,7 +96,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -88,7 +120,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -111,7 +144,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -134,7 +168,7 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+	border-radius:1px;
 }
 
 QLabel::disabled{
@@ -150,6 +184,27 @@ background: rgb(192, 0, 0);
      </property>
     </widget>
    </item>
+   <item row="3" column="0" colspan="22">
+    <widget class="Line" name="line">
+     <property name="styleSheet">
+      <string>QLabel{
+	border-radius: 1px;
+    border: 1px solid #383838;
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="8">
     <widget class="QLabel" name="lab_l_4">
      <property name="enabled">
@@ -157,7 +212,8 @@ background: rgb(192, 0, 0);
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -180,7 +236,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -203,7 +260,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -226,7 +284,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -249,7 +308,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -272,7 +332,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -295,7 +356,7 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+	border-radius:1px;
 }
 
 QLabel::disabled{
@@ -318,7 +379,8 @@ background: rgb(192, 0, 0);
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -341,7 +403,7 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+	border-radius:1px;
 }
 
 QLabel::disabled{
@@ -364,467 +426,8 @@ background: rgb(192, 0, 0);
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
-}
+border-radius: 1px;
 
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QLabel" name="lab_l_25">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="12">
-    <widget class="QLabel" name="lab_l_6">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="3">
-    <widget class="QLabel" name="lab_l_15">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="13">
-    <widget class="QLabel" name="lab_l_65">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="16">
-    <widget class="QLabel" name="lab_l_8">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="8">
-    <widget class="QLabel" name="lab_r_4">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="10">
-    <widget class="QLabel" name="lab_l_5">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLabel" name="lab_l_1">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="10">
-    <widget class="QLabel" name="lab_r_5">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="lab_r_1">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="15">
-    <widget class="QLabel" name="lab_l_75">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="17">
-    <widget class="QLabel" name="lab_l_85">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="14">
-    <widget class="QLabel" name="lab_l_7">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QLabel" name="lab_l_05">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="19">
-    <widget class="QLabel" name="lab_r_95">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="17">
-    <widget class="QLabel" name="lab_r_85">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="15">
-    <widget class="QLabel" name="lab_r_75">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="13">
-    <widget class="QLabel" name="lab_r_65">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="11">
-    <widget class="QLabel" name="lab_r_55">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius: 3px;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="9">
-    <widget class="QLabel" name="lab_r_45">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 3px;
 }
 
 QLabel::disabled{
@@ -847,7 +450,460 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="12">
+    <widget class="QLabel" name="lab_l_6">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="lab_l_15">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="13">
+    <widget class="QLabel" name="lab_l_65">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="16">
+    <widget class="QLabel" name="lab_l_8">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+	border-radius:1px;
+}
+
+QLabel::disabled{
+background: rgb(50, 0, 0);
+}
+
+QLabel::enabled{
+background: rgb(192, 0, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="8">
+    <widget class="QLabel" name="lab_r_4">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="10">
+    <widget class="QLabel" name="lab_l_5">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="lab_l_1">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="10">
+    <widget class="QLabel" name="lab_r_5">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QLabel" name="lab_r_1">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="15">
+    <widget class="QLabel" name="lab_l_75">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="17">
+    <widget class="QLabel" name="lab_l_85">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+	border-radius:1px;
+}
+
+QLabel::disabled{
+background: rgb(50, 0, 0);
+}
+
+QLabel::enabled{
+background: rgb(192, 0, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="14">
+    <widget class="QLabel" name="lab_l_7">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QLabel" name="lab_l_05">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(0, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(0, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="19">
+    <widget class="QLabel" name="lab_r_95">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+	border-radius:1px;
+}
+
+QLabel::disabled{
+background: rgb(50, 0, 0);
+}
+
+QLabel::enabled{
+background: rgb(192, 0, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="17">
+    <widget class="QLabel" name="lab_r_85">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+	border-radius:1px;
+}
+
+QLabel::disabled{
+background: rgb(50, 0, 0);
+}
+
+QLabel::enabled{
+background: rgb(192, 0, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="15">
+    <widget class="QLabel" name="lab_r_75">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="13">
+    <widget class="QLabel" name="lab_r_65">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="11">
+    <widget class="QLabel" name="lab_r_55">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
+}
+
+QLabel::disabled{
+	background: rgb(50, 50, 0);
+}
+
+QLabel::enabled{
+	background: rgb(216, 216, 0);
+}</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="9">
+    <widget class="QLabel" name="lab_r_45">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel{
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -870,7 +926,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -893,7 +950,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -916,7 +974,8 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-border-radius: 3px;
+border-radius: 1px;
+
 }
 
 QLabel::disabled{
@@ -939,7 +998,7 @@ QLabel::enabled{
      </property>
      <property name="styleSheet">
       <string notr="true">QLabel{
-	border-radius: 3px;
+	border-radius:1px;
 }
 
 QLabel::disabled{
@@ -949,6 +1008,47 @@ background: rgb(50, 0, 0);
 QLabel::enabled{
 background: rgb(192, 0, 0);
 }</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="21">
+    <widget class="QPushButton" name="pushButton">
+     <property name="minimumSize">
+      <size>
+       <width>18</width>
+       <height>18</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>18</width>
+       <height>100</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>x</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="20">
+    <widget class="QLabel" name="label">
+     <property name="minimumSize">
+      <size>
+       <width>3</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>3</width>
+       <height>16777215</height>
+      </size>
      </property>
      <property name="text">
       <string/>
@@ -966,5 +1066,22 @@ background: rgb(192, 0, 0);
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>GUI_Level</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>432</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>225</x>
+     <y>17</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

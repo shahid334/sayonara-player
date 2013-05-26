@@ -61,7 +61,7 @@ namespace Helper{
     QString get_cover_path(int album_id);
     QString calc_cover_token(QString artist, QString album);
 
-	QString calc_google_image_search_adress(QString searchstring,  QString size, QString filetype);
+    QString calc_google_image_search_adress(QString searchstring);
 	QString calc_google_artist_adress(QString artist);
 	QString calc_google_album_adress(QString artist, QString album);
 

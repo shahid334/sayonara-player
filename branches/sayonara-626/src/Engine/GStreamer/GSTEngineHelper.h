@@ -18,11 +18,11 @@
 
 #define CHUNK_SIZE 1024
 #define SAMPLE_RATE 44100 /* Samples per second we are sending */
-#define AUDIO_CAPS "audio/x-raw-int,channels=1,rate=%d,signed=(boolean)true,width=16,depth=16,endianness=BYTE_ORDER"
+#define AUDIO_CAPS "audio/x-raw-int,channels=2,rate=%d,signed=(boolean)true,width=16,depth=16,endianness=BYTE_ORDER"
 
-#define LOOKUP_LOG(x) log_10[(int) (10000 * x)]
+#define LOOKUP_LOG(x) log_10[(int) (20000 * x)]
 
-float log_10[10001];
+float log_10[20001];
 float lo_128[128];
 
 static GST_Engine* gst_obj_ref;
@@ -52,6 +52,8 @@ static void new_buffer(GstElement* sink, void* data){
 
     gst_obj_ref->set_buffer(buffer);
 }
+
+
 
 static gboolean show_position(GstElement* pipeline) {
 
