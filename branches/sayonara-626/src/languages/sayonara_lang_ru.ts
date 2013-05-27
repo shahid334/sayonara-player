@@ -1908,7 +1908,7 @@ Please choose another folder</source>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="432"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="271"/>
         <source>Import new (orange) tracks to library w/o copying</source>
-        <translation type="unfinished"></translation>
+        <translation>Muss man nicht uebersetzen</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="471"/>
@@ -2213,7 +2213,7 @@ Please choose another folder</source>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="14"/>
         <location filename="../GUI/ui_GUI_SocketSetup.h" line="110"/>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="25"/>
@@ -2250,7 +2250,7 @@ Please choose another folder</source>
     <message>
         <location filename="../Engine/SoundPluginLoader.cpp" line="141"/>
         <source>Please restart in order to change engine to </source>
-        <translation type="unfinished"></translation>
+        <translation>asdf</translation>
     </message>
 </context>
 </TS>
