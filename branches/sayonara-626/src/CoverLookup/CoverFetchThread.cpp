@@ -124,6 +124,7 @@ void CoverFetchThread::search_multi(){
           }
 
           QString data = _datalist[0];
+          _datalist[0].clear();
           _datalist.removeAt(0);
           if(data.size() == 0){
               continue;

@@ -36,8 +36,9 @@ void AsyncWebAccess::run(){
 
 	_data.clear();
 	if(_url.size() == 0) return;
-	Helper::read_http_into_str(_url, _data);
-    emit finished(_data);
+    QString data;
+    Helper::read_http_into_str(_url, data);
+    emit finished(data);
 }
 
 bool AsyncWebAccess::get_data(QString& data){

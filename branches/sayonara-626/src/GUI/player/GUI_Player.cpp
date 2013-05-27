@@ -808,10 +808,7 @@ void GUI_Player::really_close(bool b){
 }
 
 
-void GUI_Player::async_wa_finished(){
-	QString new_version;
-	bool success = m_async_wa->get_data(new_version);
-	if(!success) return;
+void GUI_Player::async_wa_finished(QString new_version){
 
 	QString cur_version = m_settings->getVersion();
 	new_version = new_version.trimmed();
