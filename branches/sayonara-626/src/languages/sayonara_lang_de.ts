@@ -477,7 +477,7 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="598"/>
         <source>on </source>
-        <translation type="unfinished"></translation>
+        <translation>auf</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="684"/>
@@ -1839,7 +1839,7 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <message>
         <location filename="../LyricLookup/LyricLookup.cpp" line="205"/>
         <source>Sorry, no lyrics found&lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Texte gefunden&lt;br /&gt;</translation>
     </message>
 </context>
 <context>

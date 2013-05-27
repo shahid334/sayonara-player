@@ -627,7 +627,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Bitrate</source>
-        <translation type="unfinished">Битрейт</translation>
+        <translation>Битрейт</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
@@ -1364,7 +1364,7 @@ Please choose another folder</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="362"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="407"/>
         <source># Track</source>
-        <translation type="unfinished">#Трек</translation>
+        <translation>#Трек</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="383"/>

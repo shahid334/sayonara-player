@@ -849,7 +849,7 @@
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
-          <pointsize>7</pointsize>
+          <pointsize>6</pointsize>
          </font>
         </property>
         <property name="text">
@@ -883,7 +883,7 @@
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
-          <pointsize>7</pointsize>
+          <pointsize>6</pointsize>
          </font>
         </property>
         <property name="styleSheet">
@@ -927,7 +927,7 @@
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
-          <pointsize>7</pointsize>
+          <pointsize>6</pointsize>
          </font>
         </property>
         <property name="text">
@@ -961,7 +961,7 @@
         <property name="font">
          <font>
           <family>DejaVu Sans</family>
-          <pointsize>7</pointsize>
+          <pointsize>6</pointsize>
          </font>
         </property>
         <property name="styleSheet">
