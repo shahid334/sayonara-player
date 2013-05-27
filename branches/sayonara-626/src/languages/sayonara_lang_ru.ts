@@ -355,7 +355,7 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="427"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="608"/>
         <source>by </source>
-        <translation type="unfinished">от </translation>
+        <translation> от</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
@@ -2213,7 +2213,7 @@ Please choose another folder</source>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="14"/>
         <location filename="../GUI/ui_GUI_SocketSetup.h" line="110"/>
         <source>Dialog</source>
-        <translation>Dialog</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="25"/>
