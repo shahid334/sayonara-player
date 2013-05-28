@@ -427,7 +427,7 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="598"/>
         <source>on </source>
-        <translation type="unfinished"></translation>
+        <translation>на</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="684"/>
@@ -849,7 +849,7 @@
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="364"/>
         <source>Special thanks to %1 for translating</source>
-        <translation type="unfinished"></translation>
+        <translation>Особая благодарность за %1 для перевода</translation>
     </message>
 </context>
 <context>
@@ -1770,7 +1770,7 @@ Please choose another folder</source>
     <message>
         <location filename="../LyricLookup/LyricLookup.cpp" line="205"/>
         <source>Sorry, no lyrics found&lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Извините, но текст песни не найден &lt;br/&gt;</translation>
     </message>
 </context>
 <context>
@@ -1778,7 +1778,7 @@ Please choose another folder</source>
     <message>
         <location filename="../Engine/Phonon/PhononEngine.cpp" line="359"/>
         <source>Fatal Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Неизбежная ошибка</translation>
     </message>
     <message>
         <location filename="../Engine/Phonon/PhononEngine.cpp" line="361"/>
