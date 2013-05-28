@@ -40,8 +40,8 @@ class AlternateCoverItemModel : public QAbstractTableModel {
 
 Q_OBJECT
 public:
-	AlternateCoverItemModel();
-	virtual ~AlternateCoverItemModel();
+    AlternateCoverItemModel(QObject* parent);
+    virtual ~AlternateCoverItemModel();
 
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;

@@ -120,6 +120,7 @@ bool WebAccess::read_http_into_str(QString url, QString& content){
 bool WebAccess::read_http_into_img(QString url, QImage& img){
 
     QString content;
+
     if( !wa_call_url(url, content) ) return false;
 
     return img.loadFromData(content.toAscii());

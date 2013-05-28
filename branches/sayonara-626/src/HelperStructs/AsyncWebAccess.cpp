@@ -25,7 +25,8 @@
 
 
 
-AsyncWebAccess::AsyncWebAccess(QObject* parent) : QThread(parent){
+AsyncWebAccess::AsyncWebAccess(QObject* parent, int id) : QThread(parent){
+    _id = id;
 }
 
 AsyncWebAccess::~AsyncWebAccess(){
@@ -36,9 +37,9 @@ void AsyncWebAccess::run(){
 
 	_data.clear();
 	if(_url.size() == 0) return;
-    QString data;
-    Helper::read_http_into_str(_url, data);
-    emit finished(data);
+
+    Helper::read_http_into_str(_url, _data);
+    emit finished(_id);
 }
 
 bool AsyncWebAccess::get_data(QString& data){

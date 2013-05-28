@@ -97,19 +97,24 @@ void CoverFetchThread::search_single(){
 
 void CoverFetchThread::search_multi(){
 
-      QStringList adresses = cov_call_and_parse(_url, _n_images);
+      //QStringList adresses = cov_call_and_parse(_url, _n_images);
+    QStringList adresses = cov_call_and_parse(_url, 50);
 
       _cur_awa_idx = 1;
       _n_running = 0;
 
+      int id=100;
       foreach(QString adress, adresses){
 
-          AsyncWebAccess* awa = new AsyncWebAccess(this->parent());
-          _lst.push_back(awa);
+          AsyncWebAccess* awa = new AsyncWebAccess(0, id);
+          _map.insert(id, awa);
+
           awa->set_url(adress);
-          connect(awa, SIGNAL(finished(QString)), this, SLOT(awa_finished(QString)));
+          connect(awa, SIGNAL(finished(int)), this, SLOT(awa_finished(int)));
+
           awa->start();
           _n_running ++;
+          id++;
 
       }
 
@@ -132,7 +137,6 @@ void CoverFetchThread::search_multi(){
 
           QImage img;
           bool success = img.loadFromData(data.toAscii());
-
           if(!success){
               continue;
           }
@@ -159,9 +163,19 @@ QString CoverFetchThread::get_call_id(){
     return _call_id;
 }
 
-void CoverFetchThread::awa_finished(QString data){
+void CoverFetchThread::awa_finished(int id){
+
+    qDebug() << "awa finished";
+    QString data;
+    AsyncWebAccess* awa = _map.value(id);
+    awa->get_data(data);
+
+
+
+    _map.remove(id);
 
     _datalist << data;
+    awa->deleteLater();
     _n_running --;
 }
 
@@ -170,16 +184,3 @@ void CoverFetchThread::set_run(bool run){
     _run = run;
 }
 
-void CoverFetchThread::quit(){
-    foreach(AsyncWebAccess* awa, _lst){
-        if(awa->isRunning()){
-            awa->quit();
-        }
-
-        delete awa;
-    }
-
-    _lst.clear();
-
-    QThread::quit();
-}

@@ -40,8 +40,8 @@
 
 
 
-AlternateCoverItemDelegate::AlternateCoverItemDelegate(QTableView* parent) {
-	this->_parent = parent;
+AlternateCoverItemDelegate::AlternateCoverItemDelegate(QObject* parent) : QItemDelegate(parent) {
+label = new QLabel();
 
 }
 
@@ -56,7 +56,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
     if(!index.isValid()) return;
 
-    QLabel label;
+
     QRect rect(option.rect);
 
     painter->save();
@@ -65,30 +65,38 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
     QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
 
     bool is_selected = false;
+
+    label->resize(100, 100);
+    label->setContentsMargins(10, 10, 10, 10);
+
+
     if(data_lst.size() >= 2){
 
         QString filename = data_lst[0];
         is_selected = (data_lst[1].toInt() == 1);
 
-        if(is_selected) label.setStyleSheet("background-color: #e8841a;");
+        if(is_selected) label->setStyleSheet("background-color: #e8841a;");
 
-        QImage image(filename);
-        if(!image.isNull()){
-            QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(80,80), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            if(!pixmap.isNull()){
 
-                label.setPixmap(pixmap);
-            }
+        QPixmap pixmap(filename);
+        if(!pixmap.isNull()){
+
+            label->setScaledContents(true);
+            label->setPixmap(pixmap);
+
         }
+
+
+
+        if(!is_selected)
+            label->setStyleSheet("background-color: transparent;");
+
+        label->render(painter, rect.topLeft() );
     }
 
-    if(!is_selected)
-        label.setStyleSheet("background-color: transparent;");
-    label.resize(100, 100);
-    label.setContentsMargins(10, 10, 10, 10);
 
 
-    label.render(painter, rect.topLeft() );
+
     painter->restore();
 
 }

@@ -36,6 +36,7 @@
 #include <QThread>
 #include <QString>
 #include <QStringList>
+#include <QMap>
 
 #define CFT_SINGLE 0
 #define CFT_MULTI 1
@@ -59,8 +60,7 @@ public:
     QString get_call_id();
     void set_run(bool);
 
-public slots:
-    void quit();
+
 
 protected:
     void run();
@@ -81,6 +81,7 @@ private:
     bool         _run;
     int          _n_running;
     QList<AsyncWebAccess*> _lst;
+    QMap<int, AsyncWebAccess*> _map;
 
 
 
@@ -88,7 +89,8 @@ private:
     void search_multi();
 
 private slots:
-    void awa_finished(QString data);
+    void awa_finished(int);
+
 
 
 };

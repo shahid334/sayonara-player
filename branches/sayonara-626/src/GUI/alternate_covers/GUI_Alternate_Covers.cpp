@@ -49,16 +49,17 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 
 	this->ui = new Ui::AlternateCovers();
 	this->ui->setupUi(this);
+    _cov_fetch_thread = 0;
 
 	_calling_class = calling_class;
 	_class_name = "Alternate Covers";
 	_cur_idx = -1;
 
-	_model = new AlternateCoverItemModel();
-	_delegate = new AlternateCoverItemDelegate();
+    _model = new AlternateCoverItemModel(this);
+    _delegate = new AlternateCoverItemDelegate(this);
 
-	this->ui->tv_images->setModel(_model);
-	this->ui->tv_images->setItemDelegate(_delegate);
+    this->ui->tv_images->setModel(_model);
+    this->ui->tv_images->setItemDelegate(_delegate);
     _cov_fetch_thread = 0;
 
 	_tmp_dir = Helper::getSayonaraPath() + QDir::separator() + "tmp";
@@ -70,14 +71,15 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 	QStringList paths;
 	paths << _tmp_dir;
 
-	_watcher= new QFileSystemWatcher(paths);
+    _watcher= new QFileSystemWatcher(paths);
 
 	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
 	connect(this->ui->btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
 	connect(this->ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
 	connect(this->ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
-	connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
-	connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+    connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+        connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+
 }
 
 
@@ -199,12 +201,22 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 void GUI_Alternate_Covers::cancel_button_pressed(){
 
+    for(int r=0; r<2; r++){
+        for(int c=0; c<5; c++){
+            QModelIndex idx = _model->index(r, c);
+            _model->setData(idx, "0,0", Qt::EditRole);
+        }
+    }
+
+
     hide();
     close();
 }
 
 
 void GUI_Alternate_Covers::search_button_pressed(){
+
+    if(_cov_fetch_thread && _cov_fetch_thread->isRunning()) return;
 
     _cur_idx = -1;
     _filelist.clear();
@@ -224,26 +236,20 @@ void GUI_Alternate_Covers::search_button_pressed(){
 	QString searchstring = this->ui->le_search->text();
     QString url = Helper::calc_google_image_search_adress(searchstring);
 
-    if(_cov_fetch_thread){
-        int max = 10;
-        while(_cov_fetch_thread->isRunning() && max) {
-            _cov_fetch_thread->quit();
-            usleep(50000);
-            max--;
-        }
-        if(_cov_fetch_thread->isRunning()) _cov_fetch_thread->terminate();
-        else delete _cov_fetch_thread;
-    }
 
+    _blocked = false;
     _cov_fetch_thread = new CoverFetchThread(0, 1, url, 20);
 
-
     connect(_cov_fetch_thread, SIGNAL(destroyed()), this, SLOT(cft_destroyed()));
+    connect(_cov_fetch_thread, SIGNAL(finished()), _cov_fetch_thread, SLOT(deleteLater()));
 
 	QStringList filters;
 	filters << "*.jpg";
 	filters << "*.png";
 	filters << "*.gif";
+
+    disconnect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+    disconnect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
 
 	QDir dir(_tmp_dir);
 	dir.setFilter(QDir::Files);
@@ -254,6 +260,9 @@ void GUI_Alternate_Covers::search_button_pressed(){
 		QFile file(dir.absoluteFilePath(filename));
 		file.remove();
 	}
+
+    connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+    connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
 
 	ui->btn_search->setText(tr("Stop"));
     _cov_fetch_thread->start();
@@ -266,6 +275,7 @@ void GUI_Alternate_Covers::cft_destroyed(){
 }
 
 void GUI_Alternate_Covers::update_model(){
+
 
     _model->removeRows(0, _model->rowCount());
     _model->insertRows(0, 2);
@@ -299,7 +309,9 @@ void GUI_Alternate_Covers::update_model(){
 
     //if(_cov_fetch_thread) qDebug() << "is running? " << _cov_fetch_thread->isRunning();
     if(lst.isEmpty() && _cov_fetch_thread) {
-        _cov_fetch_thread->exit();
+        _cov_fetch_thread->set_run(false);
+        _blocked = false;
+        //_cov_fetch_thread->quit();
     }
 
 }
@@ -345,7 +357,10 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 
 void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
 
-	_filelist.clear();
+    if(_blocked ) return;
+    _blocked = true;
+
+    _filelist.clear();
 
 	QDir dir(directory);
 	QStringList entrylist;
@@ -359,12 +374,10 @@ void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
 
 	entrylist = dir.entryList();
 
-
 	foreach (QString f, entrylist)
 	    _filelist << dir.absoluteFilePath(f);
 
-
-        update_model();
+    update_model();
 
 	ui->pb_progress->setTextVisible(false);
 	ui->pb_progress->setVisible(true);
@@ -376,8 +389,7 @@ void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
         ui->btn_search->setText(tr("Search"));
     }
 
-
-
+    _blocked = false;
 }
 
 

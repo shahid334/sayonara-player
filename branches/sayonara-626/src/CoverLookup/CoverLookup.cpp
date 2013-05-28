@@ -60,6 +60,7 @@ void CoverLookup::start_new_thread(QString url, const QStringList& target_names,
     CoverFetchThread* thread = new CoverFetchThread(this, _cur_thread_id, url, target_names, call_id);
 
     connect(thread, SIGNAL(sig_finished(int)), this, SLOT(thread_finished(int)));
+    //connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
     _cur_thread_id ++;
     _threads.push_back(thread);
