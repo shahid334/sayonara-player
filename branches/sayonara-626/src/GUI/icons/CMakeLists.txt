@@ -53,6 +53,7 @@ SET(ICONS
         import.png
         lyrics.png
         info.png
+	info_small.png
         numbers.png
         radio.png
         cb_checked.png
