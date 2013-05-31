@@ -57,7 +57,7 @@ CoverLookup::~CoverLookup() {
 
 void CoverLookup::start_new_thread(QString url, const QStringList& target_names, QString call_id ){
 
-    CoverFetchThread* thread = new CoverFetchThread(this, _cur_thread_id, url, target_names, call_id);
+    CoverFetchThread* thread = new CoverFetchThread(0, _cur_thread_id, url, target_names, call_id);
 
     connect(thread, SIGNAL(sig_finished(int)), this, SLOT(thread_finished(int)));
     //connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
@@ -291,15 +291,25 @@ CoverLookup* CoverLookupAllCoverThread::getCoverLookup(){
 void CoverLookupAllCoverThread::run(){
     _run = true;
 
-    Album tmp_album;
-    CDatabaseConnector::getInstance()->getAlbumByID(234, tmp_album);
-
     foreach(Album album, _albumlist){
 
-        _cover_lookup->fetch_cover_album(album, "coverlookupthread");
-        // wait 1 sec
-        usleep(1000000);
-        qDebug() << "Fetch cov for " << album.name;
+        bool found = true;
+        foreach(QString artist, album.artists){
+
+            QString target_name = Helper::get_cover_path(artist, album.name);
+            if(!QFile::exists(target_name)) found = false;
+
+        }
+
+        //qDebug() << "fetch cov for " << album.name;
+
+        if(!found){
+            _cover_lookup->fetch_cover_album(album, "coverlookupthread");
+            // wait 1 sec
+            // because of google we have to wait otherwise sayonara is recognized as a bot
+            usleep(1000000);
+        }
+
         if(!_run) return;
     }
 }

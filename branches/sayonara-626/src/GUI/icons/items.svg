@@ -2449,6 +2449,209 @@
          k2="0"
          k3="0.6" />
     </filter>
+    <filter
+       id="filter6770-3"
+       inkscape:label="Specular light"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Basic specular bevel to use for building textures"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur6772-05"
+         result="result0"
+         in="SourceAlpha"
+         stdDeviation="24.467985611510791" />
+      <feSpecularLighting
+         id="feSpecularLighting6774-4"
+         specularExponent="20"
+         specularConstant="0.88"
+         surfaceScale="16.72240829"
+         lighting-color="#ffffff"
+         result="result1"
+         in="result0">
+        <feDistantLight
+           id="feDistantLight6776-7"
+           azimuth="235"
+           elevation="45" />
+      </feSpecularLighting>
+      <feComposite
+         k4="0"
+         k1="0"
+         id="feComposite6778-45"
+         in2="result1"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result4"
+         in="SourceGraphic" />
+      <feComposite
+         id="feComposite6780-1"
+         in2="SourceAlpha"
+         operator="in"
+         result="result2"
+         in="result4" />
+    </filter>
+    <filter
+       id="filter6872-1"
+       inkscape:label="Inner Shadow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:menu-tooltip="Adds a colorizable drop shadow inside"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur6874-9"
+         stdDeviation="4"
+         result="result8" />
+      <feOffset
+         id="feOffset6876-1"
+         dx="4"
+         dy="4"
+         result="result11" />
+      <feComposite
+         id="feComposite6878-1"
+         in2="result11"
+         result="result6"
+         in="SourceGraphic"
+         operator="in" />
+      <feFlood
+         id="feFlood6880-88"
+         result="result10"
+         in="result6"
+         flood-opacity="1"
+         flood-color="rgb(0,0,0)" />
+      <feBlend
+         id="feBlend6882-1"
+         in2="result10"
+         mode="normal"
+         in="result6"
+         result="result12" />
+      <feComposite
+         id="feComposite6884-93"
+         in2="SourceGraphic"
+         result="result2"
+         operator="in" />
+    </filter>
+    <filter
+       id="filter6770-3-5"
+       inkscape:label="Specular light"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Basic specular bevel to use for building textures"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur6772-05-4"
+         result="result0"
+         in="SourceAlpha"
+         stdDeviation="24.467985611510791" />
+      <feSpecularLighting
+         id="feSpecularLighting6774-4-5"
+         specularExponent="20"
+         specularConstant="0.88"
+         surfaceScale="16.72240829"
+         lighting-color="#ffffff"
+         result="result1"
+         in="result0">
+        <feDistantLight
+           id="feDistantLight6776-7-6"
+           azimuth="235"
+           elevation="45" />
+      </feSpecularLighting>
+      <feComposite
+         k4="0"
+         k1="0"
+         id="feComposite6778-45-1"
+         in2="result1"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result4"
+         in="SourceGraphic" />
+      <feComposite
+         id="feComposite6780-1-1"
+         in2="SourceAlpha"
+         operator="in"
+         result="result2"
+         in="result4" />
+    </filter>
+    <filter
+       id="filter6770-3-3"
+       inkscape:label="Specular light"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Basic specular bevel to use for building textures"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur6772-05-3"
+         result="result0"
+         in="SourceAlpha"
+         stdDeviation="24.467985611510791" />
+      <feSpecularLighting
+         id="feSpecularLighting6774-4-0"
+         specularExponent="20"
+         specularConstant="0.88"
+         surfaceScale="16.72240829"
+         lighting-color="#ffffff"
+         result="result1"
+         in="result0">
+        <feDistantLight
+           id="feDistantLight6776-7-1"
+           azimuth="235"
+           elevation="45" />
+      </feSpecularLighting>
+      <feComposite
+         k4="0"
+         k1="0"
+         id="feComposite6778-45-3"
+         in2="result1"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result4"
+         in="SourceGraphic" />
+      <feComposite
+         id="feComposite6780-1-3"
+         in2="SourceAlpha"
+         operator="in"
+         result="result2"
+         in="result4" />
+    </filter>
+    <filter
+       id="filter6770-3-8"
+       inkscape:label="Specular light"
+       inkscape:menu="ABCs"
+       inkscape:menu-tooltip="Basic specular bevel to use for building textures"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur6772-05-5"
+         result="result0"
+         in="SourceAlpha"
+         stdDeviation="24.467985611510791" />
+      <feSpecularLighting
+         id="feSpecularLighting6774-4-9"
+         specularExponent="20"
+         specularConstant="0.88"
+         surfaceScale="16.72240829"
+         lighting-color="#ffffff"
+         result="result1"
+         in="result0">
+        <feDistantLight
+           id="feDistantLight6776-7-4"
+           azimuth="235"
+           elevation="45" />
+      </feSpecularLighting>
+      <feComposite
+         k4="0"
+         k1="0"
+         id="feComposite6778-45-8"
+         in2="result1"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result4"
+         in="SourceGraphic" />
+      <feComposite
+         id="feComposite6780-1-8"
+         in2="SourceAlpha"
+         operator="in"
+         result="result2"
+         in="result4" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -2457,8 +2660,8 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5"
-     inkscape:cx="-33.09448"
+     inkscape:zoom="0.70710678"
+     inkscape:cx="-35.09448"
      inkscape:cy="-184.31528"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -3620,8 +3823,8 @@
     <g
        id="g4533"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/fwd_orange.png"
-       inkscape:export-xdpi="44.990002"
-       inkscape:export-ydpi="44.990002">
+       inkscape:export-xdpi="44.994488"
+       inkscape:export-ydpi="44.994488">
       <path
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
@@ -4946,10 +5149,10 @@
            sodipodi:role="line" /></text>
     </g>
     <g
-       id="g4529"
+       id="g4815"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/play_small.png"
-       inkscape:export-xdpi="44.990002"
-       inkscape:export-ydpi="44.990002">
+       inkscape:export-xdpi="44.994495"
+       inkscape:export-ydpi="44.994495">
       <path
          inkscape:export-ydpi="1.9782559"
          inkscape:export-xdpi="1.9782559"
@@ -5245,6 +5448,141 @@
            x="248.05219"
            id="tspan3199-7-7"
            sodipodi:role="line">i</tspan></text>
+    </g>
+    <g
+       id="g4810"
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/info_small.png"
+       inkscape:export-xdpi="43.509998"
+       inkscape:export-ydpi="43.509998">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+         transform="matrix(0.17077295,0,0,0.17077295,121.22372,1049.5852)"
+         d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+         sodipodi:ry="374.7666"
+         sodipodi:rx="374.7666"
+         sodipodi:cy="227.06755"
+         sodipodi:cx="-932.37079"
+         id="path4766-17"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10;filter:url(#filter6770-3)"
+         sodipodi:type="arc" />
+      <text
+         transform="scale(1.6093864,0.62135482)"
+         sodipodi:linespacing="125%"
+         id="text3197-0-3"
+         y="1813.2789"
+         x="-46.207645"
+         style="font-size:162.37527466px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#f3841a;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="1813.2789"
+           x="-46.207645"
+           id="tspan3199-7-8"
+           sodipodi:role="line">i</tspan></text>
+    </g>
+    <g
+       id="g4804"
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/delete.png"
+       inkscape:export-xdpi="43.509998"
+       inkscape:export-ydpi="43.509998">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+         transform="matrix(0.17077295,0,0,0.17077295,127.22371,1205.5852)"
+         d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+         sodipodi:ry="374.7666"
+         sodipodi:rx="374.7666"
+         sodipodi:cy="227.06755"
+         sodipodi:cx="-932.37079"
+         id="path4766-17-9"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10;filter:url(#filter6770-3-5)"
+         sodipodi:type="arc" />
+      <g
+         inkscape:export-ydpi="45"
+         inkscape:export-xdpi="45"
+         inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/close.png"
+         transform="matrix(0.97814918,0,0,0.9885746,-1850.725,681.96137)"
+         style="stroke-width:25;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter6872-1)"
+         id="g6800-6">
+        <path
+           style="fill:#323232;fill-opacity:1;stroke:#f3841a;stroke-width:25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 1885.1343,593.75001 -50.4436,-50.44362"
+           id="path4562-3-3-2"
+           inkscape:connector-curvature="0" />
+        <path
+           style="fill:#323232;fill-opacity:1;stroke:#f3841a;stroke-width:25;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           d="m 1834.6907,593.75002 50.4436,-50.44364"
+           id="path4562-8-6-5-4"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+    <g
+       id="g4794"
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/fwd_orange.png"
+       inkscape:export-xdpi="43.509998"
+       inkscape:export-ydpi="43.509998">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+         transform="matrix(0.17077295,0,0,0.17077295,145.22371,1387.5852)"
+         d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+         sodipodi:ry="374.7666"
+         sodipodi:rx="374.7666"
+         sodipodi:cy="227.06755"
+         sodipodi:cx="-932.37079"
+         id="path4766-17-2"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10;filter:url(#filter6770-3-3)"
+         sodipodi:type="arc" />
+      <g
+         style="fill:#f3841a;fill-opacity:1;stroke:#f3841a;stroke-opacity:1"
+         transform="matrix(0.17579548,0,0,0.17579548,545.81067,1149.3564)"
+         id="g3326-5-6">
+        <path
+           style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:52.86169434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+           d="m -3181.2454,1576.4788 c 0,-64.8193 0.4072,-117.6955 0.9048,-117.5027 3.043,1.1786 209.49,117.1892 209.5079,117.7306 0.023,0.6974 -208.4191,117.6253 -209.6853,117.6253 -0.4001,0 -0.7274,-53.034 -0.7274,-117.8532 z"
+           id="path3999-7-9-6-1"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/fwd.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:52.86169434;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10"
+           d="m -3316.161,1574.6265 c 0,-64.8193 0.4072,-117.6955 0.9048,-117.5027 3.043,1.1786 209.49,117.1892 209.5079,117.7306 0.023,0.6974 -208.4191,117.6253 -209.6853,117.6253 -0.4001,0 -0.7274,-53.034 -0.7274,-117.8532 z"
+           id="path3999-7-9-7-9-7"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/fwd.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+    </g>
+    <g
+       id="g4800"
+       inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/play_small.png"
+       inkscape:export-xdpi="43.509998"
+       inkscape:export-ydpi="43.509998">
+      <path
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/luke/svn/trunk/MP3_Player/icons/play.png"
+         transform="matrix(0.17077295,0,0,0.17077295,147.22371,1573.5852)"
+         d="m -557.60419,227.06755 a 374.7666,374.7666 0 1 1 -749.53321,0 374.7666,374.7666 0 1 1 749.53321,0 z"
+         sodipodi:ry="374.7666"
+         sodipodi:rx="374.7666"
+         sodipodi:cy="227.06755"
+         sodipodi:cx="-932.37079"
+         id="path4766-17-90"
+         style="fill:#323232;fill-opacity:1;fill-rule:nonzero;stroke:#000048;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10;filter:url(#filter6770-3-8)"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="1.9782559"
+         inkscape:export-xdpi="1.9782559"
+         inkscape:export-filename="/home/luke/sayonara-player/icons/play_small.png"
+         inkscape:connector-curvature="0"
+         id="path3999-7-8-7-0-2"
+         d="m -27.734865,1612.3264 c 0,-13.239 0.08523,-24.0386 0.189685,-23.9991 0.637274,0.2408 43.87361,23.935 43.877396,24.0456 0,0.1432 -43.649354,24.0242 -43.914557,24.0242 -0.08382,0 -0.152307,-10.8318 -0.152307,-24.0707 z"
+         style="fill:#f3841a;fill-opacity:1;fill-rule:nonzero;stroke:#f3841a;stroke-width:10.93291855;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:10" />
     </g>
   </g>
 </svg>

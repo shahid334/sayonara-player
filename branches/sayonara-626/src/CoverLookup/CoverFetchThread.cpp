@@ -144,8 +144,6 @@ void CoverFetchThread::search_multi(){
           success = img.save(path + "img_" + QString::number(_cur_awa_idx) + ".jpg");
           _cur_awa_idx++;
       }
-
-      qDebug() << "Alternative cover thread dies";
 }
 
 
@@ -165,7 +163,6 @@ QString CoverFetchThread::get_call_id(){
 
 void CoverFetchThread::awa_finished(int id){
 
-    qDebug() << "awa finished";
     QString data;
     AsyncWebAccess* awa = _map.value(id);
     awa->get_data(data);
