@@ -53,6 +53,32 @@ using namespace std;
 typedef QString WWWAdress;
 typedef QString TargetFileName;
 
+
+
+class CoverLookup;
+
+class CoverLookupAllCoverThread : public QThread
+{
+
+    AlbumList _albumlist;
+    CoverLookup* _cover_lookup;
+    bool _run;
+
+public:
+
+
+    CoverLookupAllCoverThread(QObject* parent, const AlbumList& albumlist);
+    ~CoverLookupAllCoverThread();
+
+
+    void stop();
+    CoverLookup* getCoverLookup();
+
+protected:
+    void run();
+};
+
+
 class CoverLookup : public QObject{
 
 	Q_OBJECT
@@ -69,9 +95,14 @@ class CoverLookup : public QObject{
     void fetch_cover_artist(const int artist_id, QString call_id="");
     void fetch_cover_artist(const Artist& artist, QString call_id="");
 
+    void fetch_all_album_covers();
+    void fetch_all_album_covers_stop();
+
+
 
 private slots:
    void thread_finished(int id);
+   void fetch_all_album_covers_destroyed();
 
 
 public:
@@ -85,6 +116,7 @@ public:
 private:
 
     CDatabaseConnector* _db;
+    CoverLookupAllCoverThread* _all_covers_thread;
     QList<CoverFetchThread*> _threads;
     QList<int> _finished_queue;
     bool _finish_locked;

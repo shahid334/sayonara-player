@@ -41,13 +41,13 @@
 #include <unistd.h>
 
 
-using namespace std;
 
 
 CoverLookup::CoverLookup() {
     _db = CDatabaseConnector::getInstance();
     _cur_thread_id = 0;
     _finish_locked = false;
+    _all_covers_thread = 0;
 }
 
 CoverLookup::~CoverLookup() {
@@ -231,3 +231,76 @@ void CoverLookup::thread_finished(int id){
 
     _finish_locked = false;
 }
+
+void CoverLookup::fetch_all_album_covers(){
+
+    if(_all_covers_thread && _all_covers_thread->isRunning()){
+        _all_covers_thread->stop();
+        return;
+    }
+
+
+    AlbumList album_list;
+    _db->getAllAlbums(album_list);
+    if(album_list.size() == 0) return;
+
+    _all_covers_thread = new CoverLookupAllCoverThread(this, album_list);
+
+    connect(_all_covers_thread, SIGNAL(finished()), _all_covers_thread, SLOT(deleteLater()));
+    connect(_all_covers_thread, SIGNAL(destroyed()), this, SLOT(fetch_all_album_covers_destroyed()));
+
+    _all_covers_thread->start();
+}
+
+
+void CoverLookup::fetch_all_album_covers_stop(){
+    _all_covers_thread->stop();
+}
+
+void CoverLookup::fetch_all_album_covers_destroyed(){
+    _all_covers_thread = 0;
+    qDebug() << "Fetch all albums covers thread destroyed";
+}
+
+
+
+/**************************************
+ ALL COVER LOOKUP THREAD
+***************************************/
+
+
+CoverLookupAllCoverThread::CoverLookupAllCoverThread(QObject* parent, const AlbumList& albumlist) : QThread(parent){
+    _run = true;
+    _albumlist = albumlist;
+    _cover_lookup = new CoverLookup();
+}
+
+CoverLookupAllCoverThread::~CoverLookupAllCoverThread(){
+    delete _cover_lookup;
+}
+
+void CoverLookupAllCoverThread::stop(){
+    _run = false;
+}
+
+CoverLookup* CoverLookupAllCoverThread::getCoverLookup(){
+    return _cover_lookup;
+}
+
+
+void CoverLookupAllCoverThread::run(){
+    _run = true;
+
+    Album tmp_album;
+    CDatabaseConnector::getInstance()->getAlbumByID(234, tmp_album);
+
+    foreach(Album album, _albumlist){
+
+        _cover_lookup->fetch_cover_album(album, "coverlookupthread");
+        // wait 1 sec
+        usleep(1000000);
+        qDebug() << "Fetch cov for " << album.name;
+        if(!_run) return;
+    }
+}
+

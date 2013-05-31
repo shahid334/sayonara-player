@@ -296,7 +296,7 @@ void Application::init_connections(){
     CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&),            playlists,      save_playlist_as_custom(int, MetaDataList&));
     CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&),        playlists,      save_playlist_as_custom(QString, MetaDataList&));
     CONNECT (playlist, sig_library_changed(), 								library,        refresh());
-    CONNECT (playlist, sig_import_files(const MetaDataList&),                library, 		importFiles(const MetaDataList&));
+    //CONNECT (playlist, sig_import_files(const MetaDataList&),                library, 		importFiles(const MetaDataList&));
     CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
 
     CONNECT (playlist, sig_data_for_id3_change(const MetaDataList&), 	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
