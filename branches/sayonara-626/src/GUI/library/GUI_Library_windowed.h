@@ -145,6 +145,11 @@ private slots:
     void track_released(const QModelIndex & = QModelIndex());
 	void track_info_available(const MetaDataList& v_md);
 
+    void artist_tab_pressed(bool);
+    void album_tab_pressed(bool);
+    void track_tab_pressed(bool);
+
+
 	void clear_button_pressed();
 
 	void artist_dbl_clicked(const QModelIndex &);

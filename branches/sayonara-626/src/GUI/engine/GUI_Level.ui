@@ -47,21 +47,10 @@
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -71,21 +60,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -95,21 +73,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -119,21 +86,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -143,21 +99,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -167,38 +112,17 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="22">
     <widget class="Line" name="line">
      <property name="styleSheet">
-      <string>QLabel{
-	border-radius: 1px;
-    border: 1px solid #383838;
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -211,21 +135,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -235,21 +148,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -259,21 +161,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -283,21 +174,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -307,21 +187,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -331,21 +200,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -355,20 +213,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -378,21 +226,10 @@ background: rgb(192, 0, 0);
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -402,20 +239,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -425,21 +252,10 @@ background: rgb(192, 0, 0);
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -449,21 +265,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -473,21 +278,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -497,21 +291,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -521,21 +304,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -545,20 +317,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -568,21 +330,10 @@ background: rgb(192, 0, 0);
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -592,21 +343,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -616,21 +356,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -640,21 +369,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -664,21 +382,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -688,21 +395,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -712,20 +408,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -735,21 +421,10 @@ background: rgb(192, 0, 0);
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -759,21 +434,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -783,20 +447,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -806,20 +460,10 @@ background: rgb(192, 0, 0);
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -829,21 +473,10 @@ background: rgb(192, 0, 0);
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -853,21 +486,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -877,21 +499,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(50, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(216, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -901,21 +512,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -925,21 +525,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -949,21 +538,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -973,21 +551,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-border-radius: 1px;
-
-}
-
-QLabel::disabled{
-	background: rgb(0, 50, 0);
-}
-
-QLabel::enabled{
-	background: rgb(0, 216, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -997,20 +564,10 @@ QLabel::enabled{
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">QLabel{
-	border-radius:1px;
-}
-
-QLabel::disabled{
-background: rgb(50, 0, 0);
-}
-
-QLabel::enabled{
-background: rgb(192, 0, 0);
-}</string>
+      <string notr="true"/>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>
@@ -1051,7 +608,7 @@ background: rgb(192, 0, 0);
       </size>
      </property>
      <property name="text">
-      <string/>
+      <string notr="true"/>
      </property>
     </widget>
    </item>

@@ -799,6 +799,7 @@ void GUI_InfoDialog::cover_clicked(){
 
         case INFO_MODE_SINGLE:
             if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
+                qDebug() << "album name = " << _album_name << ", " << _artist_name;
                 _alternate_covers->start(_artist_name + " " + _album_name, Helper::get_cover_path(_artist_name, _album_name));
             }
 
@@ -828,7 +829,6 @@ void GUI_InfoDialog::no_cover_available(){
 
 void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString cover_path){
 
-
     if(caller_class != _class_name) return;
 
     bool is_mode_single = (_diff_mode == INFO_MODE_SINGLE);
@@ -849,27 +849,21 @@ void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString co
         }
 
         // copy cover
+        QString major_artist_cover_path = Helper::get_cover_path(Helper::get_album_major_artist(album.id), album.name);
+        lst << major_artist_cover_path;
+
+
         if(lst.contains(cover_path)){
+
             QFile cover_file(cover_path);
             // copy to all cover paths
             foreach(QString path, lst){
 
+                // no need for the cover path
                 if(!path.compare(cover_path)) continue;
 
-                QFile f(path);
-                if(f.exists()) f.remove();
-
+                if(QFile::exists(path)) QFile::remove(path);
                 cover_file.copy(path);
-            }
-
-            // Copy major artist string
-            QString major_artist = Helper::get_album_major_artist(album.id);
-
-            // do it only for other artist strings than in normal artists array
-            if(!album.artists.contains(major_artist, Qt::CaseInsensitive)){
-                QFile f(Helper::get_cover_path(major_artist, album.name));
-                if(f.exists()) f.remove();
-                cover_file.copy(Helper::get_cover_path(major_artist, album.name));
             }
         }
     }

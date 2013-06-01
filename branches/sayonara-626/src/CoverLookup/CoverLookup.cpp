@@ -97,7 +97,12 @@ void CoverLookup::fetch_cover_album(const Album& album, QString call_id, bool fo
         if (tmp_album.artists.size() == 1) url_artist_name = tmp_album.artists[0];
         else url_artist_name = "Various";
 
+        if(tmp_album.artists.size() > 1) tmp_album.artists << "Various";
+
         QString url = Helper::calc_google_album_adress(url_artist_name, tmp_album.name);
+
+        QString major_artist = Helper::get_album_major_artist(tmp_album.id);
+        if(tmp_album.artists.contains(major_artist)) tmp_album.artists << major_artist;
 
         foreach(QString artist, tmp_album.artists){
 

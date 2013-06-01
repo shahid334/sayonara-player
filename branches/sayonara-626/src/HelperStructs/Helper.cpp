@@ -329,6 +329,7 @@ QStringList Helper::get_soundfile_extensions(){
 	QStringList filters;
 	filters << "*.mp3"
 			<< "*.ogg"
+            << "*.oga"
 			<< "*.m4a"
 			<< "*.wav"
 			<< "*.flac"

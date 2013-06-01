@@ -75,9 +75,6 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
         QString filename = data_lst[0];
         is_selected = (data_lst[1].toInt() == 1);
 
-        if(is_selected) label->setStyleSheet("background-color: #e8841a;");
-
-
         QPixmap pixmap(filename);
         if(!pixmap.isNull()){
 
@@ -86,10 +83,9 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
         }
 
-
-
         if(!is_selected)
             label->setStyleSheet("background-color: transparent;");
+        else label->setStyleSheet("background-color: #e8841a;");
 
         label->render(painter, rect.topLeft() );
     }

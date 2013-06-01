@@ -242,6 +242,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
     QString text = event->text();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
+    //qDebug() << "key = " << key;
 
     if( (modifiers & Qt::ControlModifier) &&
             (key == Qt::Key_A) ){
@@ -263,12 +264,73 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         _edit->setFocus();
         _edit->setText(text);
         _edit->show();
-
     }
 
     else if(key == Qt::Key_Escape){
         reset_edit();
     }
+
+    else if(key == Qt::Key_Up){
+
+        QList<int> selections = _model->get_selected();
+        int min = 10000;
+        foreach(int i, selections){
+            if(i < min) min = i;
+        }
+
+        if(min > 0) min--;
+        else min = 0;
+
+        selections.clear();
+        selections << min;
+
+
+        this->clearSelection();
+        this->selectRow(min);
+        QModelIndex idx = _model->index(min, 0);
+        this->scrollTo(idx);
+        emit pressed(idx);
+    }
+
+
+    else if(key == Qt::Key_Down){
+
+        this->clearSelection();
+        QList<int> selections = _model->get_selected();
+        int min = 10000;
+        foreach(int i, selections){
+            if(i < min) min = i;
+        }
+
+        if(min < _model->rowCount() - 1) min++;
+        else min =  _model->rowCount() - 1;
+
+
+        selections.clear();
+        selections << min;
+
+        this->clearSelection();
+        this->selectRow(min);
+        QModelIndex idx = _model->index(min, 0);
+        this->scrollTo(idx);
+        emit pressed(idx);
+    }
+
+    else if((key == Qt::Key_Left) || (key == Qt::Key_Return) || (key == Qt::Key_Enter)){
+
+        QList<int> selections = calc_selections();
+        if(selections.size() == 0) return;
+
+        QModelIndex idx = _model->index(selections[0], 0);
+        emit doubleClicked(idx);
+    }
+
+    else if(key == Qt::Key_Tab){
+        bool mod = (modifiers & Qt::ControlModifier) || (modifiers & Qt::ShiftModifier);
+
+        emit sig_tab_pressed(mod);
+    }
+
 }
 
 void LibraryView::edit_changed(QString str){
