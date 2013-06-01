@@ -81,9 +81,6 @@ void GUI_LastFM::language_changed(){
 
 void GUI_LastFM::clear_session_pressed(){
 
-  CSettingsStorage* settings = CSettingsStorage::getInstance();
-  int ret = QMessageBox::warning(this, "Warning", "If you click yes, you will have to authorize Sayonara again on Last.fm<br /><br />Only use this, if Last.fm does not work as expected!<br /><br />Continue?", QMessageBox::Yes, QMessageBox::No);
-  if(ret == QMessageBox::Yes) settings->setLastFMSessionKey("");
 }
 
 

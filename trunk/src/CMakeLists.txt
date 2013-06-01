@@ -13,9 +13,9 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-SET(CMAKE_BUILD_TYPE "Release")
-SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s")
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_C_FLAGS "-Wall")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTNETWORK TRUE)
@@ -53,13 +53,14 @@ SET(HEADERS
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
     CoverLookup/CoverLookup.h
+    CoverLookup/CoverFetchThread.h
     DatabaseAccess/CDatabaseConnector.h
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
     library/CLibraryBase.h
-    library/ReloadThread.h
-    library/ImportFolderThread.h
-    library/CopyFolderThread.h
+    library/threads/ReloadThread.h
+    library/threads/ImportCachingThread.h
+    library/threads/ImportCopyThread.h
     playlist/Playlist.h
     playlists/Playlists.h
     StreamPlugins/LastFM/LastFM.h
@@ -91,13 +92,14 @@ SET(SOURCES
     HelperStructs/Tagging/ID3_Fileheader.cpp
     HelperStructs/CSettingsStorage.cpp
     CoverLookup/CoverLookup.cpp
-    LyricLookup/LyricLookup.cpp
     CoverLookup/CoverFetchThread.cpp
+    LyricLookup/LyricLookup.cpp
     library/CLibraryAdmin.cpp
     library/CLibraryBase.cpp
-    library/ReloadThread.cpp
-    library/ImportFolderThread.cpp
-    library/CopyFolderThread.cpp
+    library/threads/ReloadThread.cpp
+
+    library/threads/ImportCachingThread.cpp
+    library/threads/ImportCopyThread.cpp
 
     DatabaseAccess/CDatabaseConnector.cpp
     DatabaseAccess/CDatabaseLibrary.cpp

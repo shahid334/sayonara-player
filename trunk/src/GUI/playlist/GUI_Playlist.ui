@@ -102,7 +102,7 @@
    <item row="1" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="MyListView" name="listView">
+      <widget class="PlaylistView" name="listView">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
          <horstretch>0</horstretch>
@@ -525,9 +525,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MyListView</class>
+   <class>PlaylistView</class>
    <extends>QListView</extends>
-   <header>GUI/MyListView.h</header>
+   <header>GUI/playlist/view/PlaylistView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

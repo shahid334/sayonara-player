@@ -88,15 +88,19 @@ public:
 
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
-		CoverLookup*				_cov_lookup;
+        CoverFetchThread*           _cov_fetch_thread;
         QFileSystemWatcher*			_watcher;
 
         bool                _no_album;
         QString             _target_filename;
+        bool                _blocked;
 
 
         void update_model();
 
+
+private slots:
+        void cft_destroyed();
 
 
 

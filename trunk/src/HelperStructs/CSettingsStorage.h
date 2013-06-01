@@ -51,6 +51,7 @@
 #define SET_PLAYER_LANGUAGE "player_language"
 #define SET_PLAYER_STYLE "player_style"
 #define SET_PLAYER_SIZE "player_size"
+#define SET_PLAYER_POS "player_pos"
 #define SET_PLAYER_FULLSCREEN "player_fullscreen"
 #define SET_PLAYER_SHOWN_PLUGIN "shown_plugin"
 #define SET_PLAYER_ONE_INSTANCE "only_one_instance"
@@ -93,6 +94,7 @@
 #include <QThread>
 #include <QPair>
 #include <QSize>
+#include <QPoint>
 #include <vector>
 
 #include <HelperStructs/Equalizer_presets.h>
@@ -111,12 +113,13 @@ using namespace std;
 	private:
 		CSettingsStorage* _settings;
 		bool _goon;
+        QWidget* _parent;
 
 	protected: 
 		void run();
 
 	public:
-		SettingsThread();
+        SettingsThread(QWidget* parent);
 		virtual ~SettingsThread();
 		void stop();
 
@@ -182,6 +185,7 @@ private:
     vector<EQ_Setting> m_vec_eqSettings;
     
     QSize m_player_size;
+    QPoint m_player_pos;
     bool m_player_fullscreen;
 
 
@@ -282,6 +286,9 @@ public:
 
 	QSize getPlayerSize();
 	void setPlayerSize(QSize size);
+
+    QPoint getPlayerPos();
+    void setPlayerPos(QPoint p);
 
     bool getPlayerFullscreen();
     void setPlayerFullscreen(bool);

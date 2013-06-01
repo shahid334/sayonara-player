@@ -33,12 +33,13 @@
 #include <QWidget>
 #include <QTableView>
 #include <QItemDelegate>
+#include <QLabel>
 
 class AlternateCoverItemDelegate : public QItemDelegate{
 
 	Q_OBJECT
 public:
-	AlternateCoverItemDelegate(QTableView* parent=0);
+    AlternateCoverItemDelegate(QObject* parent=0);
 	virtual ~AlternateCoverItemDelegate();
 
 public:
@@ -54,8 +55,8 @@ public:
 
 private:
 
-		QTableView* _parent;
 		int _m_column_width;
+        QLabel* label;
 
 };
 

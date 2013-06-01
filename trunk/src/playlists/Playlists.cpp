@@ -54,7 +54,16 @@ void Playlists::load_all_playlists(){
 }
 
 void Playlists::load_single_playlist(int id){
+
 	CustomPlaylist pl;
+
+    // empty loaded (load old playlist)
+    if(id <= 0) {
+        pl.is_valid = false;
+        emit sig_single_playlist_loaded(pl);
+        return;
+    }
+
     bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
     qDebug() << "in my stommack are " << pl.tracks.size() << "files";
 
@@ -76,7 +85,7 @@ void Playlists::load_single_playlist(int id){
     qDebug() << "loaded " << v_md.size() << " tracks";
 
     pl.tracks = v_md;
-
+    pl.is_valid = success;
 	if(success){
 		emit sig_single_playlist_loaded(pl);
 	}

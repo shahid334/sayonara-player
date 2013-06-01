@@ -39,6 +39,7 @@
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 
+
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
@@ -78,7 +79,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     _translator        = translator;
 
     set                = CSettingsStorage::getInstance();
-    _setting_thread    = new SettingsThread();
+
 
 
 
@@ -86,6 +87,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     set->setVersion( version );
 
     player              = new GUI_Player(translator);
+    _setting_thread    = new SettingsThread(player);
 
     playlist            = new Playlist();
     library             = new CLibraryBase(this);
@@ -94,6 +96,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
+    ui_level            = new GUI_Level("Level", GUI_Level::getVisName(), player->getParentOfPlugin());
     ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
     ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
@@ -114,12 +117,14 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
 
     _pph = new PlayerPluginHandler(NULL);
 
+    _pph->addPlugin(ui_level);
     _pph->addPlugin(ui_eq);
     _pph->addPlugin(ui_lfm_radio);
     _pph->addPlugin(ui_stream);
     _pph->addPlugin(ui_podcasts);
     _pph->addPlugin(ui_playlist_chooser);
 
+    qDebug() << "Plugin " << GUI_Level::getVisName();
     qDebug() << "Plugin " << GUI_Stream::getVisName();
     qDebug() << "Plugin " << GUI_Equalizer::getVisName();
     qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
@@ -198,6 +203,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     player->showPlugin(p);
 
     _initialized = true;
+
     _setting_thread->start();
 }
 
@@ -248,7 +254,8 @@ void Application::init_connections(){
     CONNECT (player, baseDirSelected(const QString &),		library,            baseDirSelected(const QString & ));
     CONNECT (player, reloadLibrary(bool), 					library,            reloadLibrary(bool));
     CONNECT (player, clearLibrary(),					library,	clearLibrary());
-    CONNECT (player, importDirectory(QString),				library,            importDirectory(QString));
+    CONNECT (player, sig_import_dir(const QString&),			library,        importDirectory(const QString&));
+    CONNECT (player, sig_import_files(const QStringList&),		library,        importFiles(const QStringList&));
     CONNECT (player, libpath_changed(QString),               library, 			setLibraryPath(QString));
     CONNECT (player, sig_show_only_tracks(bool),				ui_library,			show_only_tracks(bool));
 
@@ -289,7 +296,7 @@ void Application::init_connections(){
     CONNECT (playlist, sig_playlist_prepared(int, MetaDataList&),            playlists,      save_playlist_as_custom(int, MetaDataList&));
     CONNECT (playlist, sig_playlist_prepared(QString, MetaDataList&),        playlists,      save_playlist_as_custom(QString, MetaDataList&));
     CONNECT (playlist, sig_library_changed(), 								library,        refresh());
-    CONNECT (playlist, sig_import_files(const MetaDataList&),                library, 		importFiles(const MetaDataList&));
+    //CONNECT (playlist, sig_import_files(const MetaDataList&),                library, 		importFiles(const MetaDataList&));
     CONNECT (playlist, sig_need_more_radio(),								lastfm, 		psl_radio_playlist_request());
 
     CONNECT (playlist, sig_data_for_id3_change(const MetaDataList&), 	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
@@ -305,6 +312,7 @@ void Application::init_connections(){
     CONNECT (listen, sig_valid_strrec_track(const MetaData&),            playlist,  psl_valid_strrec_track(const MetaData&));
     CONNECT (listen, scrobble_track(const MetaData&),                    lastfm, 	psl_scrobble(const MetaData&));
     CONNECT (listen, wanna_gapless_track(),                              playlist,   psl_gapless_track() );
+    CONNECT (listen, sig_level(float, float),                            ui_level,  set_level(float,float));
 
     // should be sent to player
     CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&),       ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
@@ -354,18 +362,20 @@ void Application::init_connections(){
     CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			playlist, 		psl_id3_tags_changed(MetaDataList&));
     CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
 
-    qDebug() << "Equalizer";
+
     CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
     CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
 
-    qDebug() << "last fm";
+    CONNECT(ui_level, sig_show(bool), listen, psl_calc_level(bool));
+
+
     CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
     CONNECT(lastfm,  sig_radio_initialized(bool),                            playlist,	psl_lfm_radio_init(bool));
     CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
     CONNECT(lastfm,	sig_new_radio_playlist(const MetaDataList&),            playlist,	psl_new_lfm_playlist_available(const MetaDataList&));
     CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),    player,		lfm_info_fetched(const MetaData&, bool, bool));
 
-    qDebug() << "playlist chooser";
+
     CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
     CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
     CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist, 	psl_prepare_playlist_for_save(int));
@@ -376,7 +386,7 @@ void Application::init_connections(){
 
     CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist, 				psl_createPlaylist(CustomPlaylist&));
     CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
-    qDebug() << "last fm radio";
+
     CONNECT(ui_lfm_radio, listen_clicked(const QString&, int),          lastfm,		psl_radio_init(const QString&, int));
 
     qDebug() << "stream";

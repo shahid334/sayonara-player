@@ -18,18 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#define IMPORT_FILES 0
+#define IMPORT_DIR 1
 
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
-#include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "application.h"
-#include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -51,22 +49,21 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 }
 
-void CLibraryBase::importFiles(const MetaDataList& v_md){
 
-    MetaDataList v_md_new = v_md;
-    qDebug() << "Import files " << v_md.size();
-    bool success = CDatabaseConnector::getInstance()->storeMetadata(v_md_new);
-    emit sig_import_result(success);
+
+void CLibraryBase::importDirectory(const QString& dir){
+	QStringList lst;
+	lst << dir;
+	importFiles(lst);	
 }
 
-void CLibraryBase::importDirectory(QString directory){
-
-
+void CLibraryBase::importFiles(const QStringList& list){
+    
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
-    m_src_dir = directory;
-    m_import_folder_thread->set_src_dir(directory);
-    m_import_folder_thread->start();
+    m_src_files = list;
+    m_import_thread->set_filelist(list);
+
 
     QDir lib_dir(m_library_path);
     QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
@@ -77,7 +74,11 @@ void CLibraryBase::importDirectory(QString directory){
     m_import_dialog->set_thread_active(true);
     m_import_dialog->set_status(tr("Loading files..."));
     m_import_dialog->show();
+
+    m_import_thread->start();
+
 }
+
 
 void CLibraryBase::import_dialog_opened(){
     emit sig_reload_library_allowed(false);
@@ -94,10 +95,11 @@ void CLibraryBase::import_progress(int i){
 void CLibraryBase::accept_import(const QString& chosen_item, bool copy){
 
     // the preload thread may terminate now
-    m_import_folder_thread->set_may_terminate(true);
+    m_import_thread->set_may_terminate(true);
     _import_to = chosen_item;
     _import_copy = copy;
 }
+
 
 // fired if cancel button was clicked in dialog
 void CLibraryBase::cancel_import(){
@@ -105,26 +107,26 @@ void CLibraryBase::cancel_import(){
     qDebug() << "Cancel import";
 
     // preload thread
-    if(m_import_folder_thread->isRunning()){
+    if(m_import_thread->isRunning()){
 
-        m_import_folder_thread->set_cancelled();
+        m_import_thread->set_cancelled();
         m_import_dialog->set_status("Cancelled");
         m_import_dialog->set_thread_active(false);
 
         m_import_dialog->close();
     }
 
-    // copy thread
-    else if(m_copy_folder_thread->isRunning()){
+    // copy folder thread
+    else if(m_import_copy_thread->isRunning()){
 
         qDebug() << "Rollback?";
         // useless during rollback
-        if(m_copy_folder_thread->get_mode() == COPY_FOLDER_THREAD_ROLLBACK){
+        if(m_import_copy_thread->get_mode() == IMPORT_COPY_THREAD_ROLLBACK){
             return;
         }
 
         qDebug() << "Rollback";
-        m_copy_folder_thread->set_cancelled();
+        m_import_copy_thread->set_cancelled();
         m_import_dialog->set_status(tr("Cancelled"));
     }
 
@@ -134,10 +136,11 @@ void CLibraryBase::cancel_import(){
     }
 }
 
-// preload thread
-void CLibraryBase::import_folder_thread_done(){
 
-    int n_tracks = m_import_folder_thread->get_n_tracks();
+// preload thread has cached everything, but maybe ok button has not been clicked yet
+void CLibraryBase::import_thread_done(){
+
+    int n_tracks = m_import_thread->get_n_tracks();
 
     if(n_tracks > 0){
         QString status = tr("%1 tracks ready").arg(n_tracks);
@@ -149,18 +152,22 @@ void CLibraryBase::import_folder_thread_done(){
     }
 }
 
-void CLibraryBase::import_folder_thread_finished(){
+
+// Caching is done, ok has been clicked
+void CLibraryBase::import_thread_finished(){
 
     m_import_dialog->set_progress(0);
     m_import_dialog->set_thread_active(false);
 
     QStringList files;
-    QMap<QString, MetaData> map;
+    QMap<QString, MetaData> md_map;
+    QMap<QString, QString> pd_map;
     
-    m_import_folder_thread->get_filelist(files);
-    m_import_folder_thread->get_md_map(map);
+    m_import_thread->get_extracted_files(files);
+    m_import_thread->get_md_map(md_map);
+    m_import_thread->get_pd_map(pd_map);
 
-    if(map.keys().size() == 0){
+    if(md_map.keys().size() == 0){
         m_import_dialog->set_status(tr("No Tracks"));
         return;
     }
@@ -168,11 +175,11 @@ void CLibraryBase::import_folder_thread_finished(){
     if(!_import_copy){
         MetaDataList v_md;
         foreach(QString filename, files){
-            bool has_key = map.keys().contains(filename);
+            bool has_key = md_map.keys().contains(filename);
             if(!has_key) continue;
 
             MetaData md;
-            md = map.value(filename);
+            md = md_map.value(filename);
             v_md.push_back(md);
         }
 
@@ -185,25 +192,22 @@ void CLibraryBase::import_folder_thread_finished(){
 
         return;
     }
-    
+  
 
     m_import_dialog->set_thread_active(true);
-    m_copy_folder_thread->set_vars(_import_to, m_library_path, m_src_dir, files, map );
-    m_copy_folder_thread->set_mode(COPY_FOLDER_THREAD_COPY);
-    m_copy_folder_thread->start();
+
+    m_import_copy_thread->set_vars(_import_to, files, md_map, pd_map);
+    m_import_copy_thread->set_mode(IMPORT_COPY_THREAD_COPY);
+    m_import_copy_thread->start();
 
 }
 
 
 
-
-
-
-
-void CLibraryBase::copy_folder_thread_finished(){
+void CLibraryBase::import_copy_thread_finished(){
 
     MetaDataList v_md;
-    m_copy_folder_thread->get_metadata(v_md);
+    m_import_copy_thread->get_metadata(v_md);
     m_import_dialog->set_thread_active(false);
 
     // no tracks were copied or rollback was finished
@@ -214,19 +218,21 @@ void CLibraryBase::copy_folder_thread_finished(){
     }
 
     // copy was cancelled
-    qDebug() << "Copy folder thread finished " << m_copy_folder_thread->get_cancelled();
-    if(m_copy_folder_thread->get_cancelled()){
-        m_copy_folder_thread->set_mode(COPY_FOLDER_THREAD_ROLLBACK);
-        m_copy_folder_thread->start();
+    qDebug() << "Copy folder thread finished " << m_import_copy_thread->get_cancelled();
+    if(m_import_copy_thread->get_cancelled()){
+        m_import_copy_thread->set_mode(IMPORT_COPY_THREAD_ROLLBACK);
+        m_import_copy_thread->start();
         m_import_dialog->set_status(tr("Rollback..."));
         m_import_dialog->set_thread_active(true);
         return;
     }
 
+    // store to db
     bool success = _db->storeMetadata(v_md);
-    int n_snd_files = m_copy_folder_thread->get_n_files();
-    int n_files_copied = m_copy_folder_thread->get_copied_files();
+    int n_snd_files = m_import_copy_thread->get_n_files();
+    int n_files_copied = m_import_copy_thread->get_copied_files();
 
+    // error and success messages
     if(v_md.size() == 0) success = false;
     if(success){
         QString str = "";
@@ -250,6 +256,8 @@ void CLibraryBase::copy_folder_thread_finished(){
     m_import_dialog->close();
     emit sig_import_result(success);
 }
+
+
 
 
 void CLibraryBase::clearLibrary(){

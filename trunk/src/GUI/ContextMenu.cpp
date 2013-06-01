@@ -27,15 +27,17 @@
 #include <QList>
 #include <QDebug>
 
-ContextMenu::ContextMenu(QWidget *parent) :
+ContextMenu::ContextMenu(QWidget* parent) :
     QMenu(parent)
 {
-    _info_action = new QAction(QIcon(Helper::getIconPath() + "info.png"), tr("Info"), this);
+
+    _info_action = new QAction(QIcon(Helper::getIconPath() + "info_small.png"), tr("Info"), this);
     _edit_action = new QAction(QIcon(Helper::getIconPath() + "edit.png"), tr("Edit"), this);
     _remove_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Remove"), this);
     _delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Delete"), this);
     _play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), tr("Play next"), this);
 
+    Helper::set_deja_vu_font(this);
 }
 
 

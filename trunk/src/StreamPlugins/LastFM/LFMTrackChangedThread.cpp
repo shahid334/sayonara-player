@@ -134,6 +134,9 @@ bool LFMTrackChangedThread::update_now_playing(){
 	QString artist = _md.artist;
 	QString title = _md.title;
 
+    if(artist.trimmed().size() == 0) artist = "Unknown";
+    artist.replace("&", "&amp;");
+
 	UrlParams sig_data;
 		sig_data["api_key"] = LFM_API_KEY;
 		sig_data["artist"] = artist;
@@ -165,7 +168,10 @@ bool LFMTrackChangedThread::search_similar_artists(){
     bool callLFM = true;
 
 
+
+    if(artist_name.trimmed().size() == 0) return false;
     artist_name.replace("&", "&amp;");
+
 
     ArtistMatch artist_match;
     artist_match.artist = artist_name;
@@ -320,8 +326,12 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 	QString retval;
 	QMap<QString, QString> values;
 
+    QString artist = _md.artist;
+    if(artist.trimmed().size() == 0) artist = "Unknown";
+    artist.replace("&", "&amp;");
+
 		UrlParams params;
-		params["artist"] = QUrl::toPercentEncoding(_md.artist);
+        params["artist"] = QUrl::toPercentEncoding(artist);
 		params["track"] = QUrl::toPercentEncoding(_md.title);
 		params["username"] = _username;
 		params["method"] = QString("track.getinfo");
@@ -352,7 +362,7 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 		corrected = false;
 		loved = (values[LFM_TAG_TRACK_LOVED].toInt() == 1);
 
-		QString artist = values[LFM_TAG_TRACK_ARTIST];
+                artist = values[LFM_TAG_TRACK_ARTIST];
         QString album = values[LFM_TAG_TRACK_ALBUM];
 		QString title = values[LFM_TAG_TRACK_TITLE];
 
@@ -376,6 +386,9 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 bool LFMTrackChangedThread::get_artist_info(QString artist){
 
 	QString retval;
+
+    if(artist.trimmed().size() == 0) artist = "Unknown";
+    artist.replace("&", "&amp;");
 
 	UrlParams params;
 	params["artist"] = QUrl::toPercentEncoding(artist);
@@ -402,6 +415,12 @@ bool LFMTrackChangedThread::get_artist_info(QString artist){
 bool LFMTrackChangedThread::get_album_info(QString artist, QString album){
 
 	QString retval;
+
+    if(artist.trimmed().size() == 0) artist = "Unknown";
+    artist.replace("&", "&amp;");
+
+    if(album.trimmed().size() == 0) artist = "Unknown";
+    album.replace("&", "&amp;");
 
 	UrlParams params;
 	params["artist"] = QUrl::toPercentEncoding(artist);

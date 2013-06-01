@@ -38,7 +38,7 @@
 #include "HelperStructs/CDirectoryReader.h"
 
 #include "GUI/playlist/GUI_Playlist.h"
-#include "GUI/playlist/PlaylistItemModel.h"
+#include "GUI/playlist/model/PlaylistItemModel.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
@@ -128,6 +128,13 @@ GUI_Playlist::~GUI_Playlist() {
 
 void GUI_Playlist::changeEvent(QEvent* e){
     e->accept();
+}
+
+void GUI_Playlist::resizeEvent(QResizeEvent* e){
+
+    e->accept();
+    this->ui->listView->update();
+    this->ui->listView->reset();
 }
 
 void GUI_Playlist::language_changed(){

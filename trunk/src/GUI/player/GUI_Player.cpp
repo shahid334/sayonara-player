@@ -106,7 +106,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	m_skinSuffix = "";
 	m_class_name = "Player";
 
-	m_cov_lookup = new CoverLookup(m_class_name);
+    m_cov_lookup = new CoverLookup();
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
 
     ui->action_ViewLFMRadio->setVisible(m_settings->getLastFMActive());
@@ -138,10 +138,18 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     bool is_fullscreen = m_settings->getPlayerFullscreen();
     if(!is_fullscreen){
         QSize size = m_settings->getPlayerSize();
+        QPoint pos = m_settings->getPlayerPos();
+
         QRect rect = this->geometry();
+        rect.setX(pos.x());
+        rect.setY(pos.y());
         rect.setWidth(size.width());
         rect.setHeight(size.height());
         this->setGeometry(rect);
+
+
+
+
     }
 
     m_library_width = 600;
@@ -228,8 +236,8 @@ void GUI_Player::initGUI() {
 	ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 	ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 
-    ui->action_viewLibrary->setText(tr("&Library"));
-    ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));
+/*    ui->action_viewLibrary->setText(tr("&Library"));
+    ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));*/
 
     ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
     ui->action_Dark->setShortcut(QKeySequence("F10"));
@@ -307,25 +315,49 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
     this->setWindowTitle(QString("Sayonara - ") + md.title);
 
-	QString cover_path = Helper::get_cover_path(md.artist, md.album);
-	if(! QFile::exists(cover_path) ){
-        if(md.radio_mode != RADIO_STATION){
-            cover_path = Helper::getIconPath() + "logo.png";
-            emit sig_want_cover(md);
-        }
 
-        else
-        	cover_path = Helper::getIconPath() + "radio.png";
-	}
+    ui->btn_correct->setVisible(false);
 
-	ui->btn_correct->setVisible(false);
-
-    ui->albumCover->setIcon(QIcon(cover_path));
-	ui->albumCover->repaint();
+    fetch_cover();
 
 	setRadioMode(md.radio_mode);
     m_metadata_available = true;
 	this->repaint();
+}
+
+void GUI_Player::fetch_cover(){
+
+    QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+
+    if(! QFile::exists(cover_path) ){
+        if(m_metadata.radio_mode != RADIO_STATION){
+
+            if(m_metadata.album.trimmed().size() == 0 && m_metadata.artist.size() == 0)
+                cover_path = Helper::getIconPath() + "logo.png";
+
+            else if(m_metadata.album_id > -1)
+                m_cov_lookup->fetch_cover_album(m_metadata.album_id);
+
+            else{
+                Album album;
+                album.name = m_metadata.album;
+                album.artists << m_metadata.artist;
+
+
+                m_cov_lookup->fetch_cover_album(album);
+            }
+
+            cover_path = Helper::getIconPath() + "logo.png";
+        }
+
+        else
+            cover_path = Helper::getIconPath() + "radio.png";
+    }
+
+    ui->albumCover->setIcon(QIcon(cover_path));
+    ui->albumCover->repaint();
+
+
 }
 
 void GUI_Player::show_cur_song(){}
@@ -689,6 +721,14 @@ void GUI_Player::notification_changed(bool active, int timeout_ms){
 }
 
 
+void GUI_Player::moveEvent(QMoveEvent *e){
+
+    QMainWindow::moveEvent(e);
+
+    QPoint p= this->pos();
+    m_settings->setPlayerPos(p);
+
+}
 
 void GUI_Player::resizeEvent(QResizeEvent* e) {
 
@@ -738,17 +778,6 @@ void GUI_Player::keyPressEvent(QKeyEvent* e) {
 				backwardClicked(true);
 			break;
 
-		case (Qt::Key_E):
-		case (Qt::Key_P):
-		case (Qt::Key_R):
-		case (Qt::Key_S):
-	        case (Qt::Key_O):
-			break;
-
-		case (Qt::Key_L):
-			ui->action_viewLibrary->setChecked(!ui->action_viewLibrary->isChecked());
-			break;
-
         case (Qt::Key_F10):
             ui->action_Dark->setChecked(!ui->action_Dark->isChecked());
             break;
@@ -779,10 +808,7 @@ void GUI_Player::really_close(bool b){
 }
 
 
-void GUI_Player::async_wa_finished(){
-	QString new_version;
-	bool success = m_async_wa->get_data(new_version);
-	if(!success) return;
+void GUI_Player::async_wa_finished(QString new_version){
 
 	QString cur_version = m_settings->getVersion();
 	new_version = new_version.trimmed();

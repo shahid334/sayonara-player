@@ -21,13 +21,12 @@
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
-#include "library/ReloadThread.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "application.h"
-#include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
+
 
 #include <QDebug>
 #include <QProgressBar>
@@ -43,8 +42,9 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     m_library_path = settings->getLibraryPath();
 
     m_thread = new ReloadThread();
-    m_import_folder_thread = new ImportFolderThread(this);
-    m_copy_folder_thread = new CopyFolderThread(this);
+    m_import_thread = new ImportCachingThread(this);
+    m_import_copy_thread = new ImportCopyThread(this);
+
 
     m_watcher = new QFileSystemWatcher();
     m_watcher->addPath(m_library_path);
@@ -78,12 +78,13 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     connect(m_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
     connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 
-    connect(m_import_folder_thread, SIGNAL(finished()), this, SLOT(import_folder_thread_finished()));
-    connect(m_import_folder_thread, SIGNAL(sig_done()), this, SLOT(import_folder_thread_done()));
-    connect(m_import_folder_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
+    connect(m_import_thread, SIGNAL(finished()), this, SLOT(import_thread_finished()));
+    connect(m_import_thread, SIGNAL(sig_done()), this, SLOT(import_thread_done()));
+    connect(m_import_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
 
-    connect(m_copy_folder_thread, SIGNAL(finished()), this, SLOT(copy_folder_thread_finished()));
-    connect(m_copy_folder_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
+    connect(m_import_copy_thread, SIGNAL(finished()), this, SLOT(import_copy_thread_finished()));
+    connect(m_import_copy_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
+
 }
 
 

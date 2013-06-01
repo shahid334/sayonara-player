@@ -135,18 +135,16 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
-	int albumID = -1;
+    int albumID = -1;
 
-	q.prepare("SELECT albumID FROM albums WHERE name == ?;");
+    q.prepare("SELECT albumID FROM albums WHERE name = ?;");
 	q.addBindValue(QVariant(album));
 
-	if (!q.exec()) {
-		throw QString ("SQL - Error: getAlbumID" + album);
-	}
-
-	if (q.next()) {
-		albumID = q.value(0).toInt();
-	}
+    if (q.exec()) {
+        if (q.next()) {
+            albumID = q.value(0).toInt();
+        }
+    }
 
 	return albumID;
 }

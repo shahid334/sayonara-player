@@ -62,6 +62,7 @@ void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & 
     }
 
     QStringList tmp;
+
     baseDir.setFilter(QDir::Files);
     baseDir.setNameFilters(this -> m_filters);
     this -> getFilesInsideDirectory (baseDir, tmp);
@@ -103,8 +104,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
         if(!QFile::exists(str)) continue;
 
-        QFileInfo fileinfo(str);
-        if(fileinfo.isDir()){
+        if(Helper::is_dir(str)){
 
             int n_files;
 
@@ -114,7 +114,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             getFilesInsiderDirRecursive(dir, files, n_files);
         }
 
-        else if(fileinfo.isFile()){
+        else if(Helper::is_file(str)){
             files.push_back(str);
         }
     }

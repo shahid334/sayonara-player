@@ -30,7 +30,7 @@ namespace WebAccess {
 
 	bool read_http_into_str(QString url, QString& content);
 	bool read_http_into_img(QString url, QImage& image);
-};
+}
 
 
 #endif /* WEBACCESS_H_ */

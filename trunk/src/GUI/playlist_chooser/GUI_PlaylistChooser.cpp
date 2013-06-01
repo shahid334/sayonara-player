@@ -68,7 +68,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QWid
     connect(this->ui->btn_save_as, SIGNAL(clicked()), this, SLOT(save_as_button_pressed()));
     connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_button_pressed()));
     connect(this->ui->btn_load, SIGNAL(clicked()), this, SLOT(load_button_pressed()));
-    connect(this->ui->combo_playlistchooser, SIGNAL(currentIndexChanged(int)), this, SLOT(playlist_selected(int)));
+    connect(this->ui->combo_playlistchooser, SIGNAL(activated(int)), this, SLOT(playlist_selected(int)));
     connect(this->ui->combo_playlistchooser, SIGNAL(editTextChanged( const QString & )), this, SLOT(text_changed ( const QString & )));
     connect(_target_playlist_dialog, SIGNAL(sig_target_chosen(QString,bool)), this, SLOT(got_save_params(QString,bool)));
 
@@ -123,7 +123,7 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
     text_changed(this->ui->combo_playlistchooser->currentText());
 }
 
-
+// Playlist -> this
 void GUI_PlaylistChooser::playlist_changed(MetaDataList& v_md, int i, int radio_mode){
 
     Q_UNUSED(i);
@@ -200,13 +200,12 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
     if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx < 0) return;
 
 	int val = this->ui->combo_playlistchooser->itemData(idx).toInt();
-	bool val_bigger_zero = (val >= 0);
-
+    bool val_bigger_zero = (val > 0);
 	this->ui->btn_delete->setEnabled(val_bigger_zero);
     text_changed(this->ui->combo_playlistchooser->currentText());
 
-	if(val_bigger_zero)
-		emit sig_playlist_chosen(val);
+
+    emit sig_playlist_chosen(val);
 
     this->ui->le_playlist_file->clear();
 }
@@ -241,17 +240,6 @@ void GUI_PlaylistChooser::load_button_pressed(){
 }
 
 
-
-void GUI_PlaylistChooser::apply_button_pressed(){
-
-	if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx == -1) return;
-	int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
-
-	if(val >= 0)
-		emit sig_playlist_chosen(val);
-}
-
-
 void GUI_PlaylistChooser::text_changed(const QString & text){
 
     this->ui->btn_save->setEnabled(text.size() > 0);
@@ -269,7 +257,7 @@ void GUI_PlaylistChooser::text_changed(const QString & text){
 
 int GUI_PlaylistChooser::show_warning(QString title_text){
 
-    QMessageBox warning_box;
+    QMessageBox warning_box(this);
         warning_box.setParent(this);
         warning_box.setModal(true);
         warning_box.setWindowFlags(Qt::Dialog);
@@ -279,6 +267,7 @@ int GUI_PlaylistChooser::show_warning(QString title_text){
         warning_box.setInformativeText(tr("Are you sure?"));
         warning_box.setWindowTitle(title_text);
         warning_box.setDefaultButton(QMessageBox::No);
+        Helper::set_deja_vu_font(&warning_box);
 
 
     return warning_box.exec();

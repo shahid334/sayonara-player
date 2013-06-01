@@ -39,7 +39,7 @@
     <number>5</number>
    </property>
    <item row="4" column="0" colspan="4">
-    <widget class="MyTableView" name="tb_title">
+    <widget class="LibraryView" name="tb_title">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
@@ -132,7 +132,7 @@
     </widget>
    </item>
    <item row="2" column="2" colspan="2">
-    <widget class="MyTableView" name="lv_album">
+    <widget class="LibraryView" name="lv_album">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>1</horstretch>
@@ -204,7 +204,7 @@
     </widget>
    </item>
    <item row="2" column="0" colspan="2">
-    <widget class="MyTableView" name="lv_artist">
+    <widget class="LibraryView" name="lv_artist">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>1</horstretch>
@@ -466,13 +466,16 @@
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
+       <property name="toolTip">
+        <string>Information</string>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="iconSize">
         <size>
-         <width>24</width>
-         <height>24</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
        <property name="flat">
@@ -486,9 +489,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MyTableView</class>
+   <class>LibraryView</class>
    <extends>QTableView</extends>
-   <header>GUI/MyTableView.h</header>
+   <header>GUI/library/view/LibraryView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

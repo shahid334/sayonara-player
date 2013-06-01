@@ -31,6 +31,7 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QTimer>
+#include <QFont>
 #include <Notification/Notification.h>
 
 
@@ -86,6 +87,9 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
         m_trayContextMenu->addSeparator();
         m_trayContextMenu->addAction(m_showAction);
         m_trayContextMenu->addAction(m_closeAction);
+        QFont f = m_trayContextMenu->font();
+        f.setFamily("DejaVu Sans");
+        m_trayContextMenu->setFont(f);
     this->setContextMenu(m_trayContextMenu);
 
 
@@ -123,12 +127,12 @@ void GUI_TrayIcon::language_changed(){
 	m_muteAction->setText(tr("Mute"));
 	m_closeAction->setText(tr("Close"));
 	m_showAction->setText(tr("Show"));
-
 }
         
 
 void GUI_TrayIcon::change_skin(QString stylesheet){
     this->m_trayContextMenu->setStyleSheet(stylesheet);
+    this->setMute(_mute);
 }
 
 bool GUI_TrayIcon::event ( QEvent * e ) {
@@ -246,13 +250,22 @@ void GUI_TrayIcon::mute_clicked(){
 
 void GUI_TrayIcon::setMute(bool mute){
 
+    _mute = mute;
+
+    QString suffix = "";
+    int style = CSettingsStorage::getInstance()->getPlayerStyle();
+
+    if(style == 1){
+        suffix = "_dark";
+    }
+
 	if(!mute){
-		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
+        m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute" + suffix + ".png"));
         m_muteAction->setText(tr("Mute"));
 	}
 
 	else {
-		m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3.png"));
+        m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3" + suffix + ".png"));
         m_muteAction->setText(tr("Unmute"));
 	}
 }

@@ -56,6 +56,7 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QWidge
 	_ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
     connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));
+    connect(_ui->le_text, SIGNAL(returnPressed()), this, SLOT(start_listen()));
 	connect(_ui->btn_listen, SIGNAL(released()), this, SLOT(start_listen()));
 
     hide();

@@ -40,8 +40,8 @@
 
 
 
-AlternateCoverItemDelegate::AlternateCoverItemDelegate(QTableView* parent) {
-	this->_parent = parent;
+AlternateCoverItemDelegate::AlternateCoverItemDelegate(QObject* parent) : QItemDelegate(parent) {
+label = new QLabel();
 
 }
 
@@ -54,49 +54,50 @@ AlternateCoverItemDelegate::~AlternateCoverItemDelegate() {
 void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const{
 	QItemDelegate::paint(painter, option, index);
 
-		if(!index.isValid()) return;
-
-			QLabel label;
-
-			QItemDelegate::paint(painter, option, index);
-
-			QRect rect(option.rect);
-
-			painter->save();
-			painter->translate(2, 0);
+    if(!index.isValid()) return;
 
 
-			QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
+    QRect rect(option.rect);
 
-			bool is_selected = false;
-			if(data_lst.size() >= 2){
+    painter->save();
+    painter->translate(2, 0);
 
-				QString filename = data_lst[0];
-				is_selected = (data_lst[1].toInt() == 1);
+    QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
 
-                if(is_selected) label.setStyleSheet("background-color: #e8841a;");
+    bool is_selected = false;
 
-
-
-				QImage image(filename);
-				if(!image.isNull()){
-					QPixmap pixmap = QPixmap::fromImage(QImage(filename)).scaled(QSize(80,80), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-					if(!pixmap.isNull()){
-
-						label.setPixmap(pixmap);
-
-					}
-				}
-			}
-
-			if(!is_selected)
-				label.setStyleSheet("background-color: transparent;");
-			label.resize(100, 100);
-			label.setContentsMargins(10, 10, 10, 10);
+    label->resize(100, 100);
+    label->setContentsMargins(10, 10, 10, 10);
 
 
-			label.render(painter, rect.topLeft() );
-			painter->restore();
+    if(data_lst.size() >= 2){
+
+        QString filename = data_lst[0];
+        is_selected = (data_lst[1].toInt() == 1);
+
+        if(is_selected) label->setStyleSheet("background-color: #e8841a;");
+
+
+        QPixmap pixmap(filename);
+        if(!pixmap.isNull()){
+
+            label->setScaledContents(true);
+            label->setPixmap(pixmap);
+
+        }
+
+
+
+        if(!is_selected)
+            label->setStyleSheet("background-color: transparent;");
+
+        label->render(painter, rect.topLeft() );
+    }
+
+
+
+
+    painter->restore();
 
 }
 

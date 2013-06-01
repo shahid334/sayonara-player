@@ -50,6 +50,8 @@ void GUI_Player::setupConnections(){
 			SLOT(folderSelectedClicked(bool)));
 	connect(ui->action_ImportFolder, SIGNAL(triggered(bool)), this,
 				SLOT(importFolderClicked()));
+        connect(ui->action_ImportFiles, SIGNAL(triggered(bool)), this,
+                        SLOT(importFilesClicked()));
 	connect(ui->action_reloadLibrary, SIGNAL(triggered(bool)), this,
 				SLOT(reloadLibraryClicked(bool)));
         connect(ui->action_clearLibrary, SIGNAL(triggered(bool)), this,
@@ -127,14 +129,8 @@ void GUI_Player::setupConnections(){
 
 
 	// cover lookup
-	connect(m_cov_lookup, SIGNAL(sig_cover_found(QString, QString)),
-			this, 				SLOT(cover_changed(QString, QString)));
-
-	connect(this, 				SIGNAL(sig_want_cover(const MetaData&)),
-			m_cov_lookup, SLOT(search_cover(const MetaData&)));
-
-	connect(this,				SIGNAL(sig_fetch_all_covers()),
-			m_cov_lookup, 		SLOT(search_all_covers()));
+    connect(m_cov_lookup, SIGNAL(sig_covers_found(const QStringList&, QString)),
+            this, SLOT(covers_found(const QStringList&, QString)));
 
     connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)),
             this,				SLOT(sl_alternate_cover_available(QString, QString)));
@@ -151,7 +147,8 @@ void GUI_Player::setupConnections(){
     connect(ui_language_chooser, SIGNAL(sig_language_changed(QString)),
             this, SLOT(language_changed(QString)));
 
-    connect(m_async_wa, SIGNAL(finished()), this, SLOT(async_wa_finished()));
+
+    connect(m_async_wa, SIGNAL(finished(QString)), this, SLOT(async_wa_finished(QString)));
     
     if(ui_libpath)
         connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(setLibraryPathClicked()));

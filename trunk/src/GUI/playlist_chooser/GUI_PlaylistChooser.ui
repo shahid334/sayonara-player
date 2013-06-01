@@ -61,10 +61,16 @@
    </item>
    <item row="1" column="3">
     <widget class="QPushButton" name="btn_save_as">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
-       <width>25</width>
-       <height>25</height>
+       <width>24</width>
+       <height>24</height>
       </size>
      </property>
      <property name="font">
@@ -83,8 +89,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>19</width>
-       <height>19</height>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
      <property name="flat">
@@ -108,14 +114,14 @@
     <widget class="QPushButton" name="btn_load">
      <property name="minimumSize">
       <size>
-       <width>0</width>
-       <height>25</height>
+       <width>24</width>
+       <height>24</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>25</width>
-       <height>25</height>
+       <width>24</width>
+       <height>24</height>
       </size>
      </property>
      <property name="font">
@@ -136,10 +142,16 @@
    </item>
    <item row="2" column="2">
     <widget class="QPushButton" name="btn_delete">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
-       <width>25</width>
-       <height>25</height>
+       <width>24</width>
+       <height>24</height>
       </size>
      </property>
      <property name="font">
@@ -158,8 +170,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>19</width>
-       <height>19</height>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
      <property name="flat">
@@ -169,10 +181,16 @@
    </item>
    <item row="2" column="3">
     <widget class="QPushButton" name="btn_save">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
-       <width>25</width>
-       <height>25</height>
+       <width>24</width>
+       <height>24</height>
       </size>
      </property>
      <property name="font">
@@ -191,12 +209,9 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>19</width>
-       <height>19</height>
+       <width>16</width>
+       <height>16</height>
       </size>
-     </property>
-     <property name="shortcut">
-      <string>Ctrl+S</string>
      </property>
      <property name="flat">
       <bool>false</bool>

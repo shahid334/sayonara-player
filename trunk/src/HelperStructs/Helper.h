@@ -44,6 +44,7 @@
 
 using namespace std;
 
+
 namespace Helper{
 
     QString cvtMsecs2TitleLengthString(long int msec, bool colon=true, bool show_days=true);
@@ -57,9 +58,10 @@ namespace Helper{
 
     QString get_artist_image_path(QString artist, QString extension="jpg");
     QString get_cover_path(QString artist, QString album, QString extension="jpg");
+    QString get_cover_path(int album_id);
     QString calc_cover_token(QString artist, QString album);
 
-	QString calc_google_image_search_adress(QString searchstring,  QString size, QString filetype);
+    QString calc_google_image_search_adress(QString searchstring);
 	QString calc_google_artist_adress(QString artist);
 	QString calc_google_album_adress(QString artist, QString album);
 
@@ -74,12 +76,14 @@ namespace Helper{
     void remove_files_in_directory(QString dir_name, QStringList filters);
     QString get_parent_folder(QString path);
     QString get_filename_of_path(QString path);
+    void split_filename(QString src, QString& path, QString& filename);
     QStringList extract_folders_of_files(QStringList list);
 
     QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');
     bool is_url(QString str);
     bool is_www(QString str);
-
+    bool is_file(QString filename);
+    bool is_dir(QString filename);
 	bool is_soundfile(QString filename);
 	bool is_playlistfile(QString filename);
     bool is_podcastfile(QString filename, QString& content);
@@ -117,6 +121,13 @@ namespace Helper{
 	QString easy_tag_finder(QString tag, QString& xml_doc);
 	QString calc_hash(QString data);
 	QString get_newest_version();
+    QString get_album_major_artist(int album_id);
+    Album get_album_from_metadata(const MetaData& md);
+
+
+    void set_deja_vu_font(QWidget* w);
+
+
 };
 
 

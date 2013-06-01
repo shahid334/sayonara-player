@@ -31,13 +31,8 @@
 #define DOWNLOAD_INCOMPLETE 0
 #define DOWNLOAD_COMPLETE 1
 
-int download_status;
 
-static QString webpage;
-static int webpage_bytes;;
-
-static void wa_free_webpage();
-static size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata);
+size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata);
 static bool wa_call_url(const QString& url, QString& response);
 static int wa_progress(void *p, double dltotal, double dlnow, double ultotal, double ulnow);
 
@@ -47,34 +42,25 @@ static int wa_progress(void *p,
                     double ultotal, double ulnow)
 {
 
-  (void) p;
-
- // qDebug() << dlnow << "/" << dltotal;
-
-  if(dlnow >= dltotal) download_status = DOWNLOAD_COMPLETE;
-  else download_status = DOWNLOAD_INCOMPLETE;
+  short* download_status = (short*) p;
+  if(dlnow >= dltotal) *download_status = DOWNLOAD_COMPLETE;
+  else *download_status = DOWNLOAD_INCOMPLETE;
 
   return 0;
 }
 
 
-static
-void wa_free_webpage(){
 
-	webpage.clear();
-	webpage_bytes = 0;
 
-}
-
-static
-size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
+size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata){
 
 	(void) userdata;
 
-	char* cptr = (char*) ptr;
-	webpage.append(QString::fromLatin1(cptr, size*nmemb));
+    QString* webpage = (QString*) userdata;
 
-	webpage_bytes += (size * nmemb);
+	char* cptr = (char*) ptr;
+    webpage->append(QString::fromLatin1(cptr, size*nmemb));
+
 	return size * nmemb;
 }
 
@@ -82,18 +68,18 @@ size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 
 bool wa_call_url(const QString& url, QString& response){
 
-	wa_free_webpage();
-
-	download_status = DOWNLOAD_INCOMPLETE;
+    short download_status = DOWNLOAD_INCOMPLETE;
 	CURL *curl = curl_easy_init();
+    QString tmp_response = response;
 
 	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wa_get_answer);
-		//curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, 2500);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &tmp_response);
         curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, wa_progress);
+        curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &download_status);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
 
 		curl_easy_perform(curl);
@@ -101,11 +87,12 @@ bool wa_call_url(const QString& url, QString& response){
 	}
 
 
-	if(webpage_bytes > 0){
+    if(tmp_response.size() > 0){
 
-		response = webpage;
-		if(download_status == DOWNLOAD_COMPLETE)
+        response = tmp_response;
+        if(download_status == DOWNLOAD_COMPLETE)
 			return true;
+
 		else return false;
 	}
 
@@ -133,9 +120,8 @@ bool WebAccess::read_http_into_str(QString url, QString& content){
 bool WebAccess::read_http_into_img(QString url, QImage& img){
 
     QString content;
+
     if( !wa_call_url(url, content) ) return false;
-
-
 
     return img.loadFromData(content.toAscii());
 }

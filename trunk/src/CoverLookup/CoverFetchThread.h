@@ -31,72 +31,66 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/AsyncWebAccess.h"
 
 #include <QThread>
-#include <QObject>
-#include <QImage>
+#include <QString>
+#include <QStringList>
+#include <QMap>
 
-#include <vector>
-
-#define COV_SRC_GOOGLE 0
-#define COV_SRC_LFM 1
-
-#define COV_FETCH_MODE_ALBUM_STR 0
-#define COV_FETCH_MODE_ARTIST_STR 1
-#define COV_FETCH_MODE_SINGLE_ALBUM 2
-#define COV_FETCH_MODE_ALL_ALBUMS 3
-#define COV_FETCH_MODE_SEARCHSTRING 4
-
-
-using namespace std;
-
+#define CFT_SINGLE 0
+#define CFT_MULTI 1
 
 class CoverFetchThread : public QThread {
 
+Q_OBJECT
+
+signals:
+    void sig_finished(int);
+    void sig_one_image_available();
 
 
 public:
-	CoverFetchThread();
+    CoverFetchThread(QObject* parent, int id, QString url, const QStringList& target_names, QString call_id);
+    CoverFetchThread(QObject* parent, int id, QString url, int n_images);
 	virtual ~CoverFetchThread();
 
-	int		get_cover_fetch_mode();
-	void 	get_images(vector<QImage>&);
-	bool 	get_certain_image(int idx, QImage& );
-	int 	get_num_images();
-	int		get_found_images();
+    QStringList get_found_covers();
+    int get_id();
+    QString get_call_id();
+    void set_run(bool);
 
-	int 	get_cover_source();
-	void 	reset();
 
-	void	setup_fetch_artist_image(const QString& artist, int source, int n_covers=1);
-	void	setup_fetch_album_covers(const AlbumList& albums, int source, int n_covers=1);
-	void	setup_fetch_single_album(const Album& album, int source, int n_covers=1);
-	void	setup_fetch_single_album(QString album, QString artist, int source);
-	void	setup_fetch_by_searchstring(QString searchstring, int n_covers);
 
 protected:
-	void run();
+    void run();
 
 
 private:
 
-	AlbumList 		_vec_albums;
-	vector<QImage> 	_images;
-	int 			_cover_source;
-	int 			_num_covers_2_fetch;
-	QString 		_album_searchstring;
-	QString 		_artist_searchstring;
-	QString			_universal_searchstring;
+    int         _mode;
+    int         _id;
+    int         _n_images;
+    QString     _url;
+    QString     _call_id;
+    QStringList _target_names;
+    QStringList _found_cover_paths;
 
-	int 			_cover_fetch_mode;
-	int				_n_found_images;
+    int         _cur_awa_idx;
+    QStringList _datalist;
+    bool         _run;
+    int          _n_running;
+    QList<AsyncWebAccess*> _lst;
+    QMap<int, AsyncWebAccess*> _map;
 
 
-	void search_images_for_albums();
-	void search_images_for_artist(const QString& artist_name, int num);
-	void search_images_for_album_str(const QString album_name, int num);
-	void search_images_for_artist_str(const QString artist_name, int num);
-	void search_images_for_searchstring();
+
+    void search_single();
+    void search_multi();
+
+private slots:
+    void awa_finished(int);
+
 
 
 };

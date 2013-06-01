@@ -66,13 +66,6 @@ void GUI_Player::coverClicked() {
 
 void GUI_Player::sl_alternate_cover_available(QString target_class, QString coverpath){
 
-    qDebug() << "Album: "
-             << m_metadata.album
-             << ", Artist: "
-             << m_metadata.artist
-             << " - "
-             << Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-
     QString own_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
     if(coverpath != own_coverpath) return;
 
@@ -89,17 +82,16 @@ void GUI_Player::sl_no_cover_available(){
 
 // public slot
 // cover was found by CoverLookup
-void GUI_Player::cover_changed(QString caller_class, QString cover_path) {
+void GUI_Player::covers_found(const QStringList& cover_paths, QString call_id) {
 
-	if(m_class_name != caller_class) return;
+    Q_UNUSED(cover_paths);
+    Q_UNUSED(call_id);
+    QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
+    /*if(!cover_paths.contains(cover_path)) return;*/
+    if(!QFile::exists(cover_path)) return;
 
-    if(!QFile::exists(cover_path)){
-
-        cover_path = Helper::getIconPath() + "logo.png";
-	}
-
-	ui->albumCover->setIcon(QIcon(cover_path));
+    ui->albumCover->setIcon(QIcon(cover_path));
 	ui->albumCover->repaint();
 }
 

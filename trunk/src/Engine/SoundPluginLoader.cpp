@@ -138,7 +138,7 @@ void SoundPluginLoader::psl_switch_engine(QString& new_engine){
 	}
 
 	if(engine_found){
-		QMessageBox::information(NULL, "Info", QString("Please restart in order to change engine to ") + new_engine);
+        QMessageBox::information(NULL, tr("Info"), tr("Please restart in order to change engine to ") + new_engine);
 		CSettingsStorage::getInstance()->setSoundEngine(_cur_engine_name);
 	}
 

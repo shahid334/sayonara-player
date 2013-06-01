@@ -66,7 +66,7 @@ public:
 
 public slots:
 
-    void cover_changed(QString, QString);
+    void covers_found(const QStringList& lst, QString call_id);
     void show_cur_song();
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
@@ -114,7 +114,8 @@ signals:
     /* File */
     void fileSelected (QStringList & filelist);
     void baseDirSelected (const QString & baseDir);
-    void importDirectory(QString);
+    void sig_import_dir(const QString&);
+    void sig_import_files(const QStringList&);
     void reloadLibrary(bool clear);
     void clearLibrary();
 
@@ -160,6 +161,7 @@ private slots:
     void reloadLibraryClicked(bool b = true);
     void clearLibraryClicked(bool b = true);
     void importFolderClicked(bool b = true);
+    void importFilesClicked(bool b = true);
 
     /* View */
     void showLibrary(bool, bool resize=true);
@@ -191,7 +193,7 @@ private slots:
     void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
-    void async_wa_finished();
+    void async_wa_finished(QString);
 
 
     void notification_changed(bool active, int ms);
@@ -218,6 +220,9 @@ protected:
 
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
+    void moveEvent(QMoveEvent* e);
+
+
 
 
 private:
@@ -263,6 +268,7 @@ private:
     void setupConnections();
     void setRadioMode(int);
     void total_time_changed(qint64);
+    void fetch_cover();
 
 };
 

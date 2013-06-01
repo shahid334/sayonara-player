@@ -30,9 +30,10 @@
 #include <QDebug>
 
 
-SettingsThread::SettingsThread(){
+SettingsThread::SettingsThread(QWidget* parent){
 	_settings = CSettingsStorage::getInstance();
 	_goon = true;
+    _parent = parent;
 	
 }
 
@@ -42,6 +43,16 @@ void SettingsThread::run(){
 
 	while(_goon){
 		usleep(5000000);
+
+        /*QPoint p = _parent->pos();
+        qDebug() << p;*/
+       // qDebug() << _settings->getPlayerPos();
+        /*QPoint p2 = QPoint(100, 100);//_settings->getPlayerPos();
+
+        if(p.x() != p2.x() || p.y() != p2.y()){
+            qDebug() << p;
+        }*/
+
 		if(_settings->get_sth_changed()){
 			_settings->set_sth_changed(false);
 			_settings->save_all();
@@ -190,6 +201,15 @@ void CSettingsStorage::setLibraryPath(QString path){
 QSize CSettingsStorage::getPlayerSize(){ return m_player_size; }
 void CSettingsStorage::setPlayerSize(QSize size){ 
     m_player_size = size;
+    _sth_changed = true;
+}
+
+QPoint CSettingsStorage::getPlayerPos(){
+    return m_player_pos;
+}
+
+void CSettingsStorage::setPlayerPos(QPoint p){
+    m_player_pos = p;
     _sth_changed = true;
 }
 

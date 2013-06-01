@@ -30,7 +30,7 @@
 #define GUI_PLAYLIST_H_
 
 #include "GUI/ui_GUI_Playlist.h"
-#include "GUI/playlist/PlaylistItemDelegateInterface.h"
+#include "GUI/playlist/delegate/PlaylistItemDelegate.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 
@@ -118,6 +118,7 @@
 
     protected:
             void changeEvent(QEvent* e);
+            void resizeEvent(QResizeEvent *e);
 
 
 

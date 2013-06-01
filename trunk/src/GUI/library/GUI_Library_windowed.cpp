@@ -33,12 +33,12 @@
 
 #include "GUI/MyColumnHeader.h"
 #include "GUI/library/GUI_Library_windowed.h"
-#include "GUI/library/models/LibraryItemModelTracks.h"
-#include "GUI/library/delegates/LibraryItemDelegateTracks.h"
-#include "GUI/library/models/LibraryItemModelAlbums.h"
-#include "GUI/library/delegates/LibraryItemDelegateAlbums.h"
-#include "GUI/library/delegates/LibraryItemDelegateArtists.h"
-#include "GUI/library/models/LibraryItemModelArtists.h"
+#include "GUI/library/model/LibraryItemModelTracks.h"
+#include "GUI/library/model/LibraryItemModelArtists.h"
+#include "GUI/library/model/LibraryItemModelAlbums.h"
+#include "GUI/library/delegate/LibraryItemDelegateTracks.h"
+#include "GUI/library/delegate/LibraryItemDelegateAlbums.h"
+#include "GUI/library/delegate/LibraryItemDelegateArtists.h"
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
@@ -606,6 +606,7 @@ void GUI_Library_windowed::psl_delete_answer(QString answer){
 	answerbox.setText(tr("Info"));
 	answerbox.setIcon(QMessageBox::Information);
 	answerbox.setInformativeText(answer);
+    Helper::set_deja_vu_font(&answerbox);
 
 	answerbox.exec();
 	answerbox.close();
@@ -652,7 +653,7 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 		QMessageBox dialog(this);
 		QString tl = this->ui->le_search->text();
 		QAbstractButton* clicked_button;
-		QPushButton* only_library_button;
+        QPushButton* only_library_button;
 
 		dialog.setFocus();
 		dialog.setIcon(QMessageBox::Warning);
@@ -661,6 +662,7 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 		only_library_button = dialog.addButton(tr("Only from library"), QMessageBox::AcceptRole);
 		dialog.setDefaultButton(QMessageBox::No);
 		QString info_text = tr("You are about to delete %1 files").arg(n_tracks);
+        Helper::set_deja_vu_font(&dialog);
 
 
 		dialog.setInformativeText(info_text + "\n" + tr("Continue?") );
@@ -742,6 +744,11 @@ if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
     this->_album_delegate->set_skin(b);
     this->_artist_delegate->set_skin(b);
     this->_track_delegate->set_skin(b);
+
+
+    this->ui->lv_album->set_skin(b);
+    this->ui->lv_artist->set_skin(b);
+    this->ui->tb_title->set_skin(b);
 
 
 }

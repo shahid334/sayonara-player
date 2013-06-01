@@ -41,6 +41,7 @@
 #include <QPair>
 #include <QDebug>
 #include <QVariant>
+#include <QMap>
 
 #include <vector>
 
@@ -56,118 +57,118 @@ private:
 
 
 public:
-	qint32 id;
-	qint32 album_id;
-	qint32 artist_id;
-	QString title;
-	QString artist;
-	QString album;
+    qint32 id;
+    qint32 album_id;
+    qint32 artist_id;
+    QString title;
+    QString artist;
+    QString album;
     QStringList genres;
-	qint32 rating;
-	qint64 length_ms;
-	qint32 year;
-	QString filepath;
-	qint32 track_num;
-	qint32 bitrate;
+    qint32 rating;
+    qint64 length_ms;
+    qint32 year;
+    QString filepath;
+    qint32 track_num;
+    qint32 bitrate;
     qint64 filesize;
     QString comment;
     int discnumber;
     int n_discs;
 
 
-	bool is_extern;
-	int radio_mode;
+    bool is_extern;
+    int radio_mode;
 
 
 
-	bool pl_selected;
-	bool pl_playing;
-	bool pl_dragged;
+    bool pl_selected;
+    bool pl_playing;
+    bool pl_dragged;
 
     bool is_lib_selected;
     bool is_disabled;
 
 
     inline MetaData () {
-            id = -1;
-            artist_id = -1;
-            album_id = -1;
-			title = "";
-            artist = "";
-            album = "";
-            rating = 0;
-            length_ms = 0;
-            year = 0;
-            filepath = "";
-            track_num = 0;
-            bitrate = 0;
-            is_extern = false;
-            radio_mode = RADIO_OFF;
-            filesize = 0;
-            comment = "";
-            discnumber = 0;
-            n_discs = -1;
+        id = -1;
+        artist_id = -1;
+        album_id = -1;
+        title = "";
+        artist = "";
+        album = "";
+        rating = 0;
+        length_ms = 0;
+        year = 0;
+        filepath = "";
+        track_num = 0;
+        bitrate = 0;
+        is_extern = false;
+        radio_mode = RADIO_OFF;
+        filesize = 0;
+        comment = "";
+        discnumber = 0;
+        n_discs = -1;
 
 
-            pl_selected = false;
-            pl_playing = false;
-            pl_dragged = false;
+        pl_selected = false;
+        pl_playing = false;
+        pl_dragged = false;
 
-            is_lib_selected = false;
-            is_disabled = false;
-        }
+        is_lib_selected = false;
+        is_disabled = false;
+    }
 
-	void print(){
+    void print(){
 
-		qDebug() << title
-				<< " by " << artist
-				<< " from " << album
-                << " (" << length_ms << " m_sec) :: " << filepath;
-	}
+        qDebug() << title
+                 << " by " << artist
+                 << " from " << album
+                 << " (" << length_ms << " m_sec) :: " << filepath;
+    }
 
-	QVariant toVariant() const{
+    QVariant toVariant() const{
 
-		QStringList list;
+        QStringList list;
 
-		QString tmpTitle = title;
-		QString tmpArtist = artist;
-		QString tmpAlbum = album;
+        QString tmpTitle = title;
+        QString tmpArtist = artist;
+        QString tmpAlbum = album;
 
-		if(title.trimmed().size() == 0) tmpTitle = QString("(Unknown title)");
-		if(artist.trimmed().size() == 0) tmpArtist = QString("");
-		if(album.trimmed().size() == 0) tmpAlbum = QString("");
+        if(title.trimmed().size() == 0) tmpTitle = QString("(Unknown title)");
+        if(artist.trimmed().size() == 0) tmpArtist = QString("");
+        if(album.trimmed().size() == 0) tmpAlbum = QString("");
 
         list.push_back(tmpTitle);
-		list.push_back(tmpArtist);
-		list.push_back(tmpAlbum);
-		list.push_back(QString::number(rating));
-		list.push_back(QString::number(length_ms));
-		list.push_back(QString::number(year));
-		list.push_back(filepath);
-		list.push_back(QString::number(track_num));
-		list.push_back(QString::number(bitrate));
-		list.push_back(QString::number(id));
-		list.push_back(QString::number(album_id));
-		list.push_back(QString::number(artist_id));
+        list.push_back(tmpArtist);
+        list.push_back(tmpAlbum);
+        list.push_back(QString::number(rating));
+        list.push_back(QString::number(length_ms));
+        list.push_back(QString::number(year));
+        list.push_back(filepath);
+        list.push_back(QString::number(track_num));
+        list.push_back(QString::number(bitrate));
+        list.push_back(QString::number(id));
+        list.push_back(QString::number(album_id));
+        list.push_back(QString::number(artist_id));
         list.push_back(QString::number(filesize));
         list.push_back(comment);
         list.push_back(QString::number(discnumber));
         list.push_back(QString::number(n_discs));
         list.push_back(genres.join(","));
-		list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
-		list.push_back( QString::number(radio_mode) );
-		list.push_back( (pl_playing) ? "1" : "0" );
-		list.push_back( (pl_selected) ? "1" : "0" );
-		list.push_back( (pl_dragged) ? "1" : "0" );
+        list.push_back(QString::number(   (is_extern) ? 1 : 0  ));
+        list.push_back( QString::number(radio_mode) );
+        list.push_back( (pl_playing) ? "1" : "0" );
+        list.push_back( (pl_selected) ? "1" : "0" );
+        list.push_back( (pl_dragged) ? "1" : "0" );
         list.push_back( (is_lib_selected) ? "1" : "0" );
         list.push_back( (is_disabled) ? "1" : "0");
 
-		return list;
-	}
+        return list;
+    }
 
-	static bool fromVariant(QVariant v, MetaData& md){
+    static bool fromVariant(QVariant v, MetaData& md){
 
-		QStringList list = v.toStringList();
+        QStringList list = v.toStringList();
 
         if(list.size() < 24) return false;
 
@@ -196,8 +197,8 @@ public:
         md.is_lib_selected = (list[22] == "1");
         md.is_disabled = (list[23] == "1");
 
-		return true;
-	}
+        return true;
+    }
 };
 
 class MetaDataList : public vector<MetaData>{
@@ -216,43 +217,43 @@ public:
         }
     }
 
-	bool contains(const MetaData& md, bool cs=false){
-		QString filepath;
+    bool contains(const MetaData& md, bool cs=false){
+        QString filepath;
 
-		if(cs){
-			filepath = md.filepath.trimmed();
+        if(cs){
+            filepath = md.filepath.trimmed();
 
-			for(uint i=0; i<size(); i++){
-				MetaData md =  vector<MetaData>::at(i);
-				QString filepath2 = md.filepath.trimmed();
-				if(!filepath.compare(filepath2)) return true;
+            for(uint i=0; i<size(); i++){
+                MetaData md =  vector<MetaData>::at(i);
+                QString filepath2 = md.filepath.trimmed();
+                if(!filepath.compare(filepath2)) return true;
 
-			}
-		}
+            }
+        }
 
-		else{
+        else{
 
-			filepath = md.filepath.toLower().trimmed();
+            filepath = md.filepath.toLower().trimmed();
 
-			for(uint i=0; i<size(); i++){
-				MetaData md =  vector<MetaData>::at(i);
-				QString filepath2 = md.filepath.toLower().trimmed();
-				if(!filepath.compare(filepath2)) return true;
+            for(uint i=0; i<size(); i++){
+                MetaData md =  vector<MetaData>::at(i);
+                QString filepath2 = md.filepath.toLower().trimmed();
+                if(!filepath.compare(filepath2)) return true;
 
-			}
-		}
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	void insert_mid(const MetaData& md, int pos){
+    void insert_mid(const MetaData& md, int pos){
 
         if(pos < 0) pos = 0;
 
         if(pos >= (int) size()){
-			push_back(md);
-			return;
-		}
+            push_back(md);
+            return;
+        }
 
 
 
@@ -273,103 +274,101 @@ public:
 };
 
 struct Artist{
-	QString name;
-	qint32	id;
-	qint32	num_songs;
-	qint32  num_albums;
+    QString name;
+    qint32	id;
+    qint32	num_songs;
+    qint32  num_albums;
     bool is_lib_selected;
 
 
-	Artist(){
-		id = -1;
-		name = "";
-		num_songs = 0;
-		num_albums = 0;
+    Artist(){
+        id = -1;
+        name = "";
+        num_songs = 0;
+        num_albums = 0;
         is_lib_selected = false;
-	}
+    }
 
     QVariant toVariant(){
-		QStringList list;
-		QString tmpName = name;
-		if(name.trimmed().size() == 0) tmpName = QString("(Unknown artist)");
-		list.push_back(tmpName);
-		list.push_back(QString::number(id));
-		list.push_back(QString::number(num_songs));
-		list.push_back(QString::number(num_albums));
+        QStringList list;
+        QString tmpName = name;
+        if(name.trimmed().size() == 0) tmpName = QString("(Unknown artist)");
+        list.push_back(tmpName);
+        list.push_back(QString::number(id));
+        list.push_back(QString::number(num_songs));
+        list.push_back(QString::number(num_albums));
         list.push_back((is_lib_selected ? "1" : "0"));
-		return list;
-	}
+        return list;
+    }
 
     void fromVariant(const QVariant& v){
         QStringList list = v.toStringList();
-		if(list.size() < 4) return;
+        if(list.size() < 4) return;
         name = list[0];
         id = list[1].toInt();
         num_songs = list[2].toInt();
         num_albums = list[3].toInt();
         is_lib_selected = ((list[4] == "1") ? true : false);
-	}
+    }
 
 };
 
 
 struct Album{
-	QString name;
-	qint32	id;
-	qint32 	num_songs;
-	qint32 	length_sec;
-	qint32	year;
-	QStringList artists;
-	QList<int> discnumbers;
-        int n_discs;
-	bool is_splitted;
-	bool is_sampler;
-        bool is_lib_selected;
+    QString name;
+    qint32	id;
+    qint32 	num_songs;
+    qint32 	length_sec;
+    qint32	year;
+    QStringList artists;
+    QList<int> discnumbers;
+    int n_discs;
+    bool is_splitted;
+    bool is_sampler;
+    bool is_lib_selected;
 
 
-	Album(){
-		name = "";
-		id = -1;
-		num_songs = 0;
-		length_sec = 0;
-		year = 0;
-        	n_discs = 1;
-		is_splitted = false;
-		is_sampler = false;
-	        is_lib_selected = false;
-	}
+    Album(){
+        name = "";
+        id = -1;
+        num_songs = 0;
+        length_sec = 0;
+        year = 0;
+        n_discs = 1;
+        is_splitted = false;
+        is_sampler = false;
+        is_lib_selected = false;
+    }
 
     QVariant toVariant(){
-		QStringList list;
-		QString tmpName = "(Unknown album)";
-		if(name.trimmed().size() > 0) tmpName = name;
+        QStringList list;
+        QString tmpName = "(Unknown album)";
+        if(name.trimmed().size() > 0) tmpName = name;
 
-		list.push_back(tmpName);
-		if(artists.size() > 0){
- 	        list.push_back(artists.join(","));
-		}
-		else list.push_back("");
+        list.push_back(tmpName);
+        if(artists.size() > 0){
+            list.push_back(artists.join(","));
+        }
+        else list.push_back("");
 
 
-		list.push_back(QString::number(id));
-		list.push_back(QString::number(num_songs));
-		list.push_back(QString::number(length_sec));
-	list.push_back(QString::number(year));
+        list.push_back(QString::number(id));
+        list.push_back(QString::number(num_songs));
+        list.push_back(QString::number(length_sec));
+        list.push_back(QString::number(year));
 
-	QStringList strl_discnumbers;
-	foreach(int disc, discnumbers){
-		strl_discnumbers << QString::number(disc);
-	}
-	list.push_back(strl_discnumbers.join(","));
+        QStringList strl_discnumbers;
+        foreach(int disc, discnumbers){
+            strl_discnumbers << QString::number(disc);
+        }
 
-	list.push_back(QString::number(n_discs));
-	list.push_back( (is_splitted == true) ? "1" : "0" ); 
-	list.push_back( (is_sampler == true) ? "1" : "0" );
+        list.push_back(strl_discnumbers.join(","));
+        list.push_back(QString::number(n_discs));
+        list.push_back( (is_splitted == true) ? "1" : "0" );
+        list.push_back( (is_sampler == true) ? "1" : "0" );
         list.push_back( (is_lib_selected == true) ? "1" : "0" ) ;
         
-
-
-	return list;
+        return list;
     }
 
 
@@ -379,37 +378,47 @@ struct Album{
 
 
         name =      list[0];
-		QString tmp_artists = list[1];
-		QStringList tmp_list = tmp_artists.split(',');
+        QString tmp_artists = list[1];
+        QStringList tmp_list = tmp_artists.split(',');
         artists =       tmp_list;
         id =            list[2].toInt();
         num_songs =     list[3].toInt();
         length_sec =    list[4].toLong();
         year =          list[5].toInt();
-	
-	QStringList strl_discnumbers = list[6].split(',');
-	discnumbers.clear();
-	foreach(QString disc, strl_discnumbers){
-		discnumbers << disc.toInt();
-	}	
+
+        QStringList strl_discnumbers = list[6].split(',');
+        discnumbers.clear();
+        foreach(QString disc, strl_discnumbers){
+            discnumbers << disc.toInt();
+        }
 
         n_discs =       list[7].toInt();
-	is_splitted = (list[8] == "1");
+        is_splitted = (list[8] == "1");
 
         is_sampler =    (list[9] == "1");
         is_lib_selected = (list[10] == "1");
     }
-	
+
+
+
 };
 
 
 
 struct CustomPlaylist{
-	QString name;
-	qint32 id;
-	MetaDataList tracks;
-	qint32 length;
-	qint32 num_tracks;
+    QString name;
+    qint32 id;
+    MetaDataList tracks;
+    qint32 length;
+    qint32 num_tracks;
+    bool is_valid;
+    CustomPlaylist(){
+        is_valid = false;
+        id = -1;
+        name = "";
+        length = 0;
+        num_tracks = 0;
+    }
 };
 
 
@@ -417,17 +426,17 @@ typedef struct vector<Album> AlbumList;
 typedef struct vector<Artist> ArtistList;
 
 struct LastTrack{
-	qint32 id;
-	QString filepath;
-	qint32 pos_sec;
-	bool valid;
+    qint32 id;
+    QString filepath;
+    qint32 pos_sec;
+    bool valid;
 
-	LastTrack(){
-		id = -1;
-		filepath = "";
-		pos_sec = -1;
-		valid = false;
-	}
+    LastTrack(){
+        id = -1;
+        filepath = "";
+        pos_sec = -1;
+        valid = false;
+    }
 
     void reset(){
         id = -1;
@@ -436,25 +445,35 @@ struct LastTrack{
         valid = false;
     }
 
-	QString toString(){
-		
-		QString str;
-		str += QString::number(id) + ",";
-		str += filepath + ",";
-		str += QString::number(pos_sec);
-		return str;
-	}
+    QString toString(){
 
-	static LastTrack fromString(QString str){
-		QStringList lst = str.split(",");
-		LastTrack tr;
-		if(lst.size() < 3) return tr;
-		tr.id = lst[0].toInt();
+        QString str;
+        str += QString::number(id) + ",";
+        str += filepath + ",";
+        str += QString::number(pos_sec);
+        return str;
+    }
+
+    static LastTrack fromString(QString str){
+        QStringList lst = str.split(",");
+        LastTrack tr;
+        if(lst.size() < 3) return tr;
+        tr.id = lst[0].toInt();
         tr.filepath = lst[1];
-		tr.pos_sec = lst[2].toInt();
-		tr.valid = true;
-		return tr;
-	}
+        bool ok;
+        tr.pos_sec = lst[2].toInt(&ok);
+
+        if(!ok && lst.size() > 3){
+            tr.pos_sec = lst[lst.size() - 1].toInt();
+            tr.filepath.clear();
+            for(int i=1; i<lst.size() - 1; i++){
+                tr.filepath += lst[i];
+            }
+        }
+
+        tr.valid = true;
+        return tr;
+    }
 };
 
 

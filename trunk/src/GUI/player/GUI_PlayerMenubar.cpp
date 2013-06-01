@@ -97,8 +97,34 @@ void GUI_Player::importFolderClicked(bool b){
 				QDir::homePath(), QFileDialog::ShowDirsOnly);
 
 	if(dir.size() > 0){
-		emit importDirectory(dir);
+		emit sig_import_dir(dir);
 	}
+}
+
+void GUI_Player::importFilesClicked( bool b ){
+   Q_UNUSED(b);
+
+    QString lib_path = m_settings->getLibraryPath();
+
+    if(lib_path.size() == 0 || !QFile::exists(lib_path)){
+
+        int ret = QMessageBox::warning(this, 
+                                       tr("No library path"), 
+                                       tr("Please select library path first"), 
+                                       QMessageBox::Ok, QMessageBox::Cancel);
+        if(ret == QMessageBox::Cancel) return;
+
+        setLibraryPathClicked();
+        return;
+    }
+
+    QStringList extensions = Helper::get_soundfile_extensions();
+    QString filter = QString("Soundfiles (") + extensions.join(" ") + ")";
+    QStringList files = QFileDialog::getOpenFileNames(this, tr("Import Files"),
+					QDir::homePath(), filter);
+
+    if(files.size() > 0) emit sig_import_files(files);
+
 }
 
 
@@ -116,7 +142,8 @@ void GUI_Player::clearLibraryClicked(bool b){
 // prvt slot
 void GUI_Player::fetch_all_covers_clicked(bool b) {
 	Q_UNUSED(b);
-	emit sig_fetch_all_covers();
+    m_cov_lookup->fetch_all_album_covers();
+    qDebug() << "Fetch all covers triggered";
 }
 /** FILE END **/
 
@@ -321,22 +348,25 @@ void GUI_Player::about(bool b){
     QString version = m_settings->getVersion();
     QString link = Helper::createLink("http://sayonara.luciocarreras.de");
 
-    QMessageBox infobox;
+    QMessageBox infobox(this);
     infobox.setParent(this);
     QPixmap p = QPixmap(Helper::getIconPath() + "logo.png").scaled(150, 150, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     infobox.setIconPixmap(p);
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 
+
     infobox.setWindowTitle(tr("About Sayonara"));
     infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
     infobox.setInformativeText( QString("") +
 				tr("Written by Lucio Carreras") + "<br /><br />" +
 				tr("License") + ": GPL<br /><br />" +
-				"Copyright 2011-2013<br /><br />" + link
+                "Copyright 2011-2013<br /><br />" + link + "<br /><br /><br />" +
+ 				tr("Special thanks to %1 for translating").arg("Julia Karakoz") 
                               );
     infobox.setStandardButtons(QMessageBox::Ok);
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
+    Helper::set_deja_vu_font(&infobox);
     infobox.exec();
 }
 
