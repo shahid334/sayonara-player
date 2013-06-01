@@ -25,20 +25,20 @@
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="232"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="185"/>
         <source>Online search</source>
-        <translation type="unfinished"></translation>
+        <translation>Онлайн поиск</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="239"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="186"/>
         <source>Local search</source>
-        <translation type="unfinished"></translation>
+        <translation>Локальный поиск</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="249"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="187"/>
         <source>Select and preview multiple covers</source>
         <translatorcomment>Machs nicht zu lang!</translatorcomment>
-        <translation type="unfinished"></translation>
+        <translation>Выбор и предварительный просмотр разных обложек</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="55"/>
@@ -233,7 +233,7 @@
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="417"/>
         <source>Open image files</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть файлы изображения</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="225"/>
@@ -622,7 +622,7 @@
         <location filename="../GUI/engine/GUI_Level.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Level.h" line="440"/>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Уровень звучания</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Level.ui" line="592"/>
@@ -633,7 +633,7 @@
     <message>
         <location filename="../GUI/engine/GUI_Level.h" line="20"/>
         <source>Le&amp;vel</source>
-        <translation type="unfinished"></translation>
+        <translation>Уровень&amp;звучания</translation>
     </message>
 </context>
 <context>
