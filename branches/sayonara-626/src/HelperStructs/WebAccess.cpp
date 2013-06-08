@@ -66,18 +66,18 @@ size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata){
 
 
 
-bool wa_call_url(const QString& url, QString& response){
+bool wa_call_url(const QString& url, QString* response){
 
     short download_status = DOWNLOAD_INCOMPLETE;
 	CURL *curl = curl_easy_init();
-    QString tmp_response = response;
+
 
 	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wa_get_answer);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &tmp_response);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
         curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, wa_progress);
         curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &download_status);
         curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L);
@@ -87,9 +87,8 @@ bool wa_call_url(const QString& url, QString& response){
 	}
 
 
-    if(tmp_response.size() > 0){
+    if(response->size() > 0){
 
-        response = tmp_response;
         if(download_status == DOWNLOAD_COMPLETE)
 			return true;
 
@@ -103,12 +102,12 @@ bool wa_call_url(const QString& url, QString& response){
 }
 
 
-bool WebAccess::read_http_into_str(QString url, QString& content){
+bool WebAccess::read_http_into_str(QString url, QString* content){
 
-	content.clear();
+    content->clear();
     wa_call_url(url, content);
 
-    if(content.size() > 0)	return true;
+    if(content->size() > 0)	return true;
     else{
         qDebug() << "Read Http into str:: url: " << url;
         qDebug() << "Read Http into str:: could not get any content";
@@ -117,13 +116,13 @@ bool WebAccess::read_http_into_str(QString url, QString& content){
     return false;
 }
 
-bool WebAccess::read_http_into_img(QString url, QImage& img){
+bool WebAccess::read_http_into_img(QString url, QImage* img){
 
     QString content;
 
-    if( !wa_call_url(url, content) ) return false;
+    if( !wa_call_url(url, &content) ) return false;
 
-    return img.loadFromData(content.toAscii());
+    return img->loadFromData(content.toAscii());
 }
 
 

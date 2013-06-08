@@ -193,7 +193,7 @@ private slots:
     void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
-    void async_wa_finished(QString);
+    void async_wa_finished();
 
 
     void notification_changed(bool active, int ms);

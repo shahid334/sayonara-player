@@ -523,7 +523,7 @@
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.h" line="43"/>
         <source>Last.&amp;fm</source>
-        <translation>Last.&amp;fm</translation>
+        <translation>&amp;Last.fm</translation>
     </message>
 </context>
 <context>
@@ -633,7 +633,7 @@
     <message>
         <location filename="../GUI/engine/GUI_Level.h" line="20"/>
         <source>Le&amp;vel</source>
-        <translation>Уровень&amp;звучания</translation>
+        <translation>&amp;Уровень звучания</translation>
     </message>
 </context>
 <context>

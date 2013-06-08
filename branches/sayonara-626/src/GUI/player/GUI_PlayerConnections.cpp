@@ -148,7 +148,7 @@ void GUI_Player::setupConnections(){
             this, SLOT(language_changed(QString)));
 
 
-    connect(m_async_wa, SIGNAL(finished(QString)), this, SLOT(async_wa_finished(QString)));
+    connect(m_async_wa, SIGNAL(finished()), this, SLOT(async_wa_finished()));
     
     if(ui_libpath)
         connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(setLibraryPathClicked()));

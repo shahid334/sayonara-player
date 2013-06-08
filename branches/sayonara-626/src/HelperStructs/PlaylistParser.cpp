@@ -292,12 +292,12 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md){
 
 	QString content;
     if(Helper::is_www(playlist_file)){
-		success = WebAccess::read_http_into_str(playlist_file, content);
+        success = WebAccess::read_http_into_str(playlist_file, &content);
 		is_local_file = false;
 	}
 
 	else
-		success = Helper::read_file_into_str(playlist_file, content);
+        success = Helper::read_file_into_str(playlist_file, &content);
 
 	if(!success) return 0;
 

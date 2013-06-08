@@ -681,12 +681,10 @@ void  Playlist::psl_play_podcast(const QString& url, const QString& name){
     // playlist radio
     qDebug() << "is podcast file? ";
     QString content;
-    if(Helper::is_podcastfile(url, content)){
+    if(Helper::is_podcastfile(url, &content)){
         qDebug() << "true";
 
         if(Podcast::parse_podcast_xml_file_content(content, v_md) > 0){
-
-            qDebug() << "metadata size = " << v_md.size();
 
             foreach(MetaData md, v_md){
 

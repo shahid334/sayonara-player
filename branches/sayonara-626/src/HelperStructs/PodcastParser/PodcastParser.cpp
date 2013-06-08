@@ -106,7 +106,7 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
                 if(!ic_nodename.compare("url", Qt::CaseInsensitive)){
                     QString img_url = ic_e.text();
                     QImage img;
-                    bool success = WebAccess::read_http_into_img(img_url, img);
+                    bool success = WebAccess::read_http_into_img(img_url, &img);
                     if(!success && !img.isNull()) continue;
                     img.save(Helper::get_cover_path(author, album));
                 }
@@ -116,7 +116,7 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
         else if(!nodename.compare("itunes:image", Qt::CaseInsensitive)){
             QString img_url = e.attribute("href");
             QImage img;
-            bool success = WebAccess::read_http_into_img(img_url, img);
+            bool success = WebAccess::read_http_into_img(img_url, &img);
             if(!success && !img.isNull()) continue;
             img.save(Helper::get_cover_path(author, album));
             image_found = true;
@@ -201,9 +201,9 @@ bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_m
     QString content;
 
     if(Helper::is_www(podcast_filename))
-        Helper::read_http_into_str(podcast_filename, content);
+        Helper::read_http_into_str(podcast_filename, &content);
     else
-        Helper::read_file_into_str(podcast_filename, content);
+        Helper::read_file_into_str(podcast_filename, &content);
 
     return parse_podcast_xml_file_content(content, v_md);
 
