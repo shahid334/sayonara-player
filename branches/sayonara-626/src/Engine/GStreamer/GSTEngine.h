@@ -109,10 +109,13 @@ private:
 
 
 
-	GstElement* _pipeline;
+    GstElement* _pipeline;
 	GstElement* _equalizer;
     GstElement* _eq_queue;
     GstElement* _volume;
+
+    GstPad* _tee_app_pad;
+    GstPad* _app_pad;
 
 	GstElement* _audio_sink;
     GstElement* _audio_bin;
@@ -125,7 +128,7 @@ private:
 	GstBuffer* _buffer;
         GstElement* _tee;
 	
-	GstBus*		_bus;
+    GstBus*		_bus;
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;

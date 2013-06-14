@@ -167,18 +167,12 @@ void GST_Engine::init_play_pipeline() {
 
         //if(!_test_and_error_bool(success, "Engine: Cannot link src with decoder")) break;
 
-        if(with_app_sink){
-            gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _audio_sink, _app_queue, _app_sink, NULL);
-            success = gst_element_link_many(_app_queue, _app_sink, NULL);
-            _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
-            success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
-        }
 
-        if(!with_app_sink || !success){
-            with_app_sink = false;
-            gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
-            success = gst_element_link_many(_equalizer, _audio_sink, NULL);
-        }
+        gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _audio_sink, _app_queue, _app_sink, NULL);
+        success = gst_element_link_many(_app_queue, _app_sink, NULL);
+        _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
+        success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
+
 
         if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
@@ -186,9 +180,7 @@ void GST_Engine::init_play_pipeline() {
         GstPadTemplate* tee_src_pad_template;
         GstPad* tee_pad;
         GstPad* tee_eq_pad;
-        GstPad* tee_app_pad;
         GstPad* eq_pad;
-        GstPad* app_pad;
         GstPadLinkReturn s;
 
         if(with_app_sink){
@@ -202,23 +194,20 @@ void GST_Engine::init_play_pipeline() {
             eq_pad = gst_element_get_static_pad(_eq_queue, "sink");
                 if(!_test_and_error(eq_pad, "Engine: eq pad is NULL")) break;
 
-            tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
-                if(!_test_and_error(tee_app_pad, "Engine: tee_app_pad is NULL")) break;
-            app_pad = gst_element_get_static_pad(_app_queue, "sink");
-                if(!_test_and_error(app_pad, "Engine: app pad NULL")) break;
+            // global because of unlinking
+            _tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
+                if(!_test_and_error(_tee_app_pad, "Engine: tee_app_pad is NULL")) break;
+            _app_pad = gst_element_get_static_pad(_app_queue, "sink");
+                if(!_test_and_error(_app_pad, "Engine: app pad NULL")) break;
 
             s = gst_pad_link (tee_eq_pad, eq_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
-            s = gst_pad_link (tee_app_pad, app_pad);
+            s = gst_pad_link (_tee_app_pad, _app_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
 
 
             // "input" of tee pad
             tee_pad = gst_element_get_static_pad(_tee, "sink");
-        }
-
-        else {
-            tee_pad = gst_element_get_static_pad(_equalizer, "sink");
         }
 
         if(!_test_and_error(tee_pad, "Engine: Cannot create tee pad")) break;
@@ -517,10 +506,10 @@ void GST_Engine::eq_enable(bool) {
 
 void GST_Engine::psl_calc_level(bool b){
 
-        g_object_set (_app_sink,
-                               "emit-signals", b,
-                               NULL);
-
+    if(!b)
+        gst_pad_unlink(_tee_app_pad, _app_pad);
+    else
+        gst_pad_link(_tee_app_pad, _app_pad);
 }
 
 void GST_Engine::state_changed() {
