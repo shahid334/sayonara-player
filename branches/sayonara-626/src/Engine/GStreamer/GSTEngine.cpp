@@ -124,6 +124,7 @@ GST_Engine::~GST_Engine() {
 void GST_Engine::init_play_pipeline() {
 
     bool success = false;
+    bool with_app_sink = true;
     int i;
 
     i = 0;
@@ -166,12 +167,18 @@ void GST_Engine::init_play_pipeline() {
 
         //if(!_test_and_error_bool(success, "Engine: Cannot link src with decoder")) break;
 
+        if(with_app_sink){
+            gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _audio_sink, _app_queue, _app_sink, NULL);
+            success = gst_element_link_many(_app_queue, _app_sink, NULL);
+            _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
+            success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
+        }
 
-        gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _audio_sink, _app_queue, _app_sink, NULL);
-        success = gst_element_link_many(_app_queue, _app_sink, NULL);
-        _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
-        success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
-
+        if(!with_app_sink || !success){
+            with_app_sink = false;
+            gst_bin_add_many(GST_BIN(_audio_bin), _equalizer, _audio_sink, NULL);
+            success = gst_element_link_many(_equalizer, _audio_sink, NULL);
+        }
 
         if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
@@ -179,10 +186,12 @@ void GST_Engine::init_play_pipeline() {
         GstPadTemplate* tee_src_pad_template;
         GstPad* tee_pad;
         GstPad* tee_eq_pad;
+        //GstPad* tee_app_pad;
         GstPad* eq_pad;
+        //GstPad* app_pad;
         GstPadLinkReturn s;
 
-
+        if(with_app_sink){
             // create tee pads
             tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
 
@@ -193,7 +202,6 @@ void GST_Engine::init_play_pipeline() {
             eq_pad = gst_element_get_static_pad(_eq_queue, "sink");
                 if(!_test_and_error(eq_pad, "Engine: eq pad is NULL")) break;
 
-            // global because of unlinking
             _tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
                 if(!_test_and_error(_tee_app_pad, "Engine: tee_app_pad is NULL")) break;
             _app_pad = gst_element_get_static_pad(_app_queue, "sink");
@@ -201,14 +209,17 @@ void GST_Engine::init_play_pipeline() {
 
             s = gst_pad_link (tee_eq_pad, eq_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
-
             s = gst_pad_link (_tee_app_pad, _app_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
 
 
             // "input" of tee pad
             tee_pad = gst_element_get_static_pad(_tee, "sink");
+        }
 
+        else {
+            tee_pad = gst_element_get_static_pad(_equalizer, "sink");
+        }
 
         if(!_test_and_error(tee_pad, "Engine: Cannot create tee pad")) break;
 
@@ -218,25 +229,29 @@ void GST_Engine::init_play_pipeline() {
 
         // replace playbin sink with this bin
         g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
-        g_object_set (_app_queue,
-                      "silent", TRUE,
-                      NULL);
-
-        g_object_set(_eq_queue,
-                     "silent", TRUE,
-                     NULL);
 
 
-        GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
-        g_object_set (_app_sink,
-                      "drop", TRUE,
-                      "max-buffers", 10,
-                      "caps", audio_caps,
-                      "emit-signals", FALSE,
-                      NULL);
+        if(with_app_sink){
+            g_object_set (_app_queue,
+                          "silent", TRUE,
+                          NULL);
 
-        g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+            g_object_set(_eq_queue,
+                         "silent", TRUE,
+                         NULL);
 
+
+            GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
+            g_object_set (_app_sink,
+                          "drop", TRUE,
+                          "max-buffers", 10,
+                          "caps", audio_caps,
+                          "emit-signals", FALSE,
+                          NULL);
+
+            g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+
+        }
 
         g_signal_connect(_pipeline, "about-to-finish", G_CALLBACK(player_change_file), NULL);
 
@@ -503,13 +518,10 @@ void GST_Engine::eq_enable(bool) {
 void GST_Engine::psl_calc_level(bool b){
 
 
-    bool is_linked = gst_pad_is_linked(_app_pad);
-    if(!b && is_linked)
-        gst_pad_unlink(_tee_app_pad, _app_pad);
-    else if(b && !is_linked){
-        bool s = gst_pad_link (_tee_app_pad, _app_pad);
-        _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
-    }
+        g_object_set (_app_sink,
+                               "emit-signals", b,
+                               NULL);
+
 }
 
 void GST_Engine::state_changed() {
