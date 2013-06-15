@@ -326,7 +326,10 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
 	setRadioMode(md.radio_mode);
     m_metadata_available = true;
-	this->repaint();
+
+    this->repaint();
+
+
 }
 
 void GUI_Player::fetch_cover(){
@@ -713,8 +716,13 @@ void GUI_Player::ui_loaded(){
 	#endif
     if(ui_libpath)
         ui_libpath->resize(this->ui->library_widget->size());
+
+
+
     changeSkin(m_settings->getPlayerStyle() == 1);
     this->ui->action_Fullscreen->setChecked(m_settings->getPlayerFullscreen());
+
+    this->ui_playlist->resize(this->ui->playlist_widget->size());
 }
 
 
