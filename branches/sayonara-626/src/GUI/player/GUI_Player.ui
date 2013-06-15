@@ -93,6 +93,7 @@
           <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="text">
@@ -128,6 +129,7 @@
           <pointsize>10</pointsize>
           <weight>75</weight>
           <bold>true</bold>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="styleSheet">
@@ -789,6 +791,7 @@
         <property name="font">
          <font>
           <pointsize>7</pointsize>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="text">
@@ -822,6 +825,7 @@
         <property name="font">
          <font>
           <pointsize>7</pointsize>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="styleSheet">
@@ -871,6 +875,7 @@
         <property name="font">
          <font>
           <pointsize>7</pointsize>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="text">
@@ -904,6 +909,7 @@
         <property name="font">
          <font>
           <pointsize>7</pointsize>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="styleSheet">
@@ -941,6 +947,7 @@
         <property name="font">
          <font>
           <pointsize>8</pointsize>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="text">
@@ -970,6 +977,7 @@
           <pointsize>8</pointsize>
           <weight>75</weight>
           <bold>true</bold>
+          <stylestrategy>PreferAntialias</stylestrategy>
          </font>
         </property>
         <property name="autoFillBackground">
