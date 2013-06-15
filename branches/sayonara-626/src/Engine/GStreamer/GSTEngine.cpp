@@ -202,8 +202,9 @@ void GST_Engine::init_play_pipeline() {
 
             s = gst_pad_link (tee_eq_pad, eq_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
-            s = gst_pad_link (_tee_app_pad, _app_pad);
-                _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
+
+/*            s = gst_pad_link (_tee_app_pad, _app_pad);
+                _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");*/
 
 
             // "input" of tee pad
@@ -508,8 +509,10 @@ void GST_Engine::psl_calc_level(bool b){
 
     if(!b)
         gst_pad_unlink(_tee_app_pad, _app_pad);
-    else
-        gst_pad_link(_tee_app_pad, _app_pad);
+    else{
+        bool s = gst_pad_link (_tee_app_pad, _app_pad);
+        _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
+    }
 }
 
 void GST_Engine::state_changed() {
