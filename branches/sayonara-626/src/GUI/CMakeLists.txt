@@ -148,6 +148,4 @@ ADD_LIBRARY(sayonara_gui ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
 SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(FILES "standard.css" DESTINATION share/sayonara)
 INSTALL(FILES "dark.css" DESTINATION share/sayonara)
-INSTALL(FILES "fonts/DejaVuSans.ttf" DESTINATION share/sayonara)
-INSTALL(FILES "fonts/DejaVuSans-Bold.ttf" DESTINATION share/sayonara)
 
