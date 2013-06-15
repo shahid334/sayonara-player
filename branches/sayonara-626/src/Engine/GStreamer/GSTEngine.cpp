@@ -617,6 +617,8 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
      guint8* c_buf = GST_BUFFER_DATA(buffer);
      float scale = 1.0f;
 
+     qDebug() << "Gst Buffer: " << sz;
+
 
 
      // size of one element in bytes

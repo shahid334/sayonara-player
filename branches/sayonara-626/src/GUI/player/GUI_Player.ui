@@ -120,7 +120,7 @@
         <property name="maximumSize">
          <size>
           <width>16777215</width>
-          <height>30</height>
+          <height>40</height>
          </size>
         </property>
         <property name="font">
@@ -178,6 +178,10 @@
         </property>
         <property name="text">
          <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/id3.png</normaloff>:/icons/id3.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -321,8 +325,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../../.designer/backup/icons/bwd.png</normaloff>
-          <selectedoff>../../.designer/backup/icons/bwd.png</selectedoff>../../.designer/backup/icons/bwd.png</iconset>
+          <normaloff>:/icons/bwd.png</normaloff>:/icons/bwd.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -363,8 +366,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../../.designer/backup/icons/play.png</normaloff>
-          <selectedoff>../../.designer/backup/icons/play.png</selectedoff>../../.designer/backup/icons/play.png</iconset>
+          <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -405,6 +407,10 @@
         </property>
         <property name="text">
          <string/>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>:/icons/rec.png</normaloff>:/icons/rec.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -448,8 +454,7 @@
         </property>
         <property name="icon">
          <iconset>
-          <normaloff>../../.designer/backup/icons/fwd.png</normaloff>
-          <selectedoff>../../.designer/backup/icons/fwd.png</selectedoff>../../.designer/backup/icons/fwd.png</iconset>
+          <normaloff>:/icons/fwd.png</normaloff>:/icons/fwd.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -683,8 +688,7 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>../../.designer/backup/icons/stop.png</normaloff>
-        <selectedoff>../../.designer/backup/icons/stop.png</selectedoff>../../.designer/backup/icons/stop.png</iconset>
+        <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -713,7 +717,7 @@
       </property>
       <property name="icon">
        <iconset>
-        <normaloff>../../.designer/backup/icons/vol_mute.png</normaloff>../../.designer/backup/icons/vol_mute.png</iconset>
+        <normaloff>:/icons/vol_mute.png</normaloff>:/icons/vol_mute.png</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -1527,6 +1531,8 @@
    <header location="global">GUI/player/SearchSlider.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../sayonara.qrc"/>
+ </resources>
  <connections/>
 </ui>

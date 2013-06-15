@@ -39,6 +39,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTranslator>
+#include <QFontDatabase>
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -137,6 +138,11 @@ int main(int argc, char *argv[]){
         QTranslator translator;
         translator.load(language, Helper::getSharePath() + "/translations");
         app.installTranslator(&translator);
+
+        int i = QFontDatabase::addApplicationFont(Helper::getSharePath() + "DejaVuSans.ttf");
+        qDebug() << "adding font " << Helper::getSharePath() + "DejaVuSans.ttf" << i;
+        i = QFontDatabase::addApplicationFont(Helper::getSharePath() + "DejaVuSans-Bold.ttf");
+        qDebug() << "adding font " <<Helper::getSharePath() + "DejaVuSans-Bold.ttf"<< i;
 
 
         Application application(&app, params.size(), &translator);
