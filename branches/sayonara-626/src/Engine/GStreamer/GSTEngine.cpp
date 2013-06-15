@@ -124,7 +124,6 @@ GST_Engine::~GST_Engine() {
 void GST_Engine::init_play_pipeline() {
 
     bool success = false;
-    bool with_app_sink = true;
     int i;
 
     i = 0;
@@ -183,7 +182,7 @@ void GST_Engine::init_play_pipeline() {
         GstPad* eq_pad;
         GstPadLinkReturn s;
 
-        if(with_app_sink){
+
             // create tee pads
             tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
 
@@ -203,13 +202,13 @@ void GST_Engine::init_play_pipeline() {
             s = gst_pad_link (tee_eq_pad, eq_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
 
-/*            s = gst_pad_link (_tee_app_pad, _app_pad);
-                _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");*/
+            s = gst_pad_link (_tee_app_pad, _app_pad);
+                _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
 
 
             // "input" of tee pad
             tee_pad = gst_element_get_static_pad(_tee, "sink");
-        }
+
 
         if(!_test_and_error(tee_pad, "Engine: Cannot create tee pad")) break;
 
@@ -219,29 +218,25 @@ void GST_Engine::init_play_pipeline() {
 
         // replace playbin sink with this bin
         g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
+        g_object_set (_app_queue,
+                      "silent", TRUE,
+                      NULL);
+
+        g_object_set(_eq_queue,
+                     "silent", TRUE,
+                     NULL);
 
 
-        if(with_app_sink){
-            g_object_set (_app_queue,
-                          "silent", TRUE,
-                          NULL);
+        GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
+        g_object_set (_app_sink,
+                      "drop", TRUE,
+                      "max-buffers", 10,
+                      "caps", audio_caps,
+                      "emit-signals", FALSE,
+                      NULL);
 
-            g_object_set(_eq_queue,
-                         "silent", TRUE,
-                         NULL);
+        g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
 
-
-            GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
-            g_object_set (_app_sink,
-                          "drop", TRUE,
-                          "max-buffers", 10,
-                          "caps", audio_caps,
-                          "emit-signals", FALSE,
-                          NULL);
-
-            g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
-
-        }
 
         g_signal_connect(_pipeline, "about-to-finish", G_CALLBACK(player_change_file), NULL);
 
@@ -507,9 +502,11 @@ void GST_Engine::eq_enable(bool) {
 
 void GST_Engine::psl_calc_level(bool b){
 
-    if(!b)
+
+    bool is_linked = gst_pad_is_linked(_app_pad);
+    if(!b && is_linked)
         gst_pad_unlink(_tee_app_pad, _app_pad);
-    else{
+    else if(b && !is_linked){
         bool s = gst_pad_link (_tee_app_pad, _app_pad);
         _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
     }
