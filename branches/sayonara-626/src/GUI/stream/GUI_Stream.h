@@ -55,7 +55,7 @@ public:
     GUI_Stream(QString name, QString action_text, QWidget *parent = 0);
 	virtual ~GUI_Stream();
 
-    static QString getVisName(){return tr("&Stream");}
+    static QString getVisName(){return tr("&Webstreams");}
     virtual QAction* getAction();
 
 

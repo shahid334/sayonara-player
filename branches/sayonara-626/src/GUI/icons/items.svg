@@ -2660,9 +2660,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70710678"
+     inkscape:zoom="0.35355339"
      inkscape:cx="-35.09448"
-     inkscape:cy="-184.31528"
+     inkscape:cy="381.37015"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -3201,8 +3201,8 @@
     <g
        id="g6660"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/append.png"
-       inkscape:export-xdpi="45"
-       inkscape:export-ydpi="45">
+       inkscape:export-xdpi="14.1"
+       inkscape:export-ydpi="14.1">
       <rect
          inkscape:export-ydpi="16.51"
          inkscape:export-xdpi="16.51"
@@ -3266,8 +3266,8 @@
     <g
        id="g6654"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/repAll.png"
-       inkscape:export-xdpi="45"
-       inkscape:export-ydpi="45">
+       inkscape:export-xdpi="14.07"
+       inkscape:export-ydpi="14.07">
       <rect
          inkscape:export-ydpi="16.469999"
          inkscape:export-xdpi="16.469999"
@@ -3310,8 +3310,8 @@
     <g
        id="g6669"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/shuffle.png"
-       inkscape:export-xdpi="45"
-       inkscape:export-ydpi="45">
+       inkscape:export-xdpi="14.04"
+       inkscape:export-ydpi="14.04">
       <rect
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
@@ -3639,8 +3639,8 @@
     <g
        id="g6687"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/dynamic.png"
-       inkscape:export-xdpi="45"
-       inkscape:export-ydpi="45">
+       inkscape:export-xdpi="14.06"
+       inkscape:export-ydpi="14.06">
       <rect
          inkscape:export-ydpi="32.799999"
          inkscape:export-xdpi="32.799999"
@@ -4305,8 +4305,8 @@
     <g
        id="g6718"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/numbers.png"
-       inkscape:export-xdpi="45"
-       inkscape:export-ydpi="45">
+       inkscape:export-xdpi="14.04"
+       inkscape:export-ydpi="14.04">
       <rect
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
@@ -4475,8 +4475,8 @@
        id="g4213"
        transform="matrix(0.18277963,0,0,0.18277963,1305.2715,75.741775)"
        inkscape:export-filename="/home/luke/sayonara-player/branches/sayonara-626/src/GUI/icons/rep1.png"
-       inkscape:export-xdpi="43.43"
-       inkscape:export-ydpi="43.43"
+       inkscape:export-xdpi="13.57"
+       inkscape:export-ydpi="13.57"
        style="filter:url(#filter4705)">
       <g
          transform="matrix(0.9056222,0,0,0.98343095,-210.15691,703.96834)"

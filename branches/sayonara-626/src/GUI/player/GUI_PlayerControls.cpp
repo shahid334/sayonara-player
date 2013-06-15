@@ -217,6 +217,15 @@ void GUI_Player::volumeChangedByTick(int val) {
     }
 }
 
+
+void GUI_Player::volumeHigher(){
+    volumeChangedByTick(5);
+}
+
+void GUI_Player::volumeLower(){
+    volumeChangedByTick(-5);
+}
+
 void GUI_Player::setupVolButton(int percent) {
 
 	QString butFilename = Helper::getIconPath() + "vol_";

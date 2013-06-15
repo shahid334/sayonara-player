@@ -113,18 +113,33 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     _artist_delegate = 0;
     _track_delegate = 0;
 
-
-
-
     init_headers();
 
 	_discmenu = 0;
 	_timer = new QTimer(this);
 
 
+    QAction* clear_search_action = new QAction("Clear search", this);
+    QKeySequence sequence_clear(tr("Ctrl+."));
+    clear_search_action->setShortcut(sequence_clear);
+    clear_search_action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    connect(clear_search_action, SIGNAL(triggered()), this->ui->btn_clear, SLOT(click()));
+    connect(clear_search_action, SIGNAL(triggered()), this->ui->le_search, SLOT(clear()));
+    this->addAction(clear_search_action);
+
+
+    QAction* search_action = new QAction("Search", this);
+    QKeySequence sequence_search(tr("Ctrl+S"));
+    search_action->setShortcut(sequence_search);
+    search_action->setShortcutContext(Qt::WindowShortcut);
+    connect(search_action, SIGNAL(triggered()), this->ui->le_search, SLOT(setFocus()));
+    this->addAction(search_action);
+
+
+
+
 
 	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
-
 
 	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(sig_all_selected()), this, SLOT(album_pressed()));
@@ -312,6 +327,12 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 
 }
 
+void GUI_Library_windowed::focusInEvent(QFocusEvent *e){
+
+    QWidget::focusInEvent(e);
+    this->ui->lv_artist->setFocus();
+}
+
 void  GUI_Library_windowed::columns_album_changed(QStringList& list){
     _shown_cols_albums = list;
     _settings->setLibShownColsAlbum(list);
@@ -342,8 +363,8 @@ void GUI_Library_windowed::album_tab_pressed(bool mod){
 }
 void GUI_Library_windowed::track_tab_pressed(bool mod){
     if(mod) this->ui->lv_album->setFocus();
-    else this->ui->lv_artist->setFocus();
-
+    //else this->ui->lv_artist->setFocus();
+    else emit sig_no_focus();
 }
 
 

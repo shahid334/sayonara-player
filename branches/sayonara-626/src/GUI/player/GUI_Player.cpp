@@ -146,10 +146,6 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
         rect.setWidth(size.width());
         rect.setHeight(size.height());
         this->setGeometry(rect);
-
-
-
-
     }
 
     m_library_width = 600;
@@ -195,6 +191,7 @@ void GUI_Player::language_changed(QString language){
     ui_notifications->language_changed();
     ui_startup_dialog->language_changed();
     ui_language_chooser->language_changed(true);
+    m_alternate_covers->language_changed();
 
     if(ui_libpath)
         ui_libpath->language_changed();
@@ -224,8 +221,6 @@ void GUI_Player::language_changed(QString language){
 
 void GUI_Player::initGUI() {
 
-
-
 	ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
     ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
@@ -233,6 +228,47 @@ void GUI_Player::initGUI() {
 	ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
     ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
+
+    QAction* play_pause_action = new QAction(this);
+    QList<QKeySequence> lst;
+    lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);
+    play_pause_action->setShortcuts(lst);
+    play_pause_action->setShortcutContext(Qt::ApplicationShortcut);
+    connect(play_pause_action, SIGNAL(triggered()), ui->btn_play, SLOT(click()));
+    this->addAction(play_pause_action);
+
+
+    QAction* fwd_action = new QAction(this);
+    QList<QKeySequence> lst_fwd;
+    lst_fwd << QKeySequence(Qt::Key_MediaNext) << QKeySequence(Qt::ControlModifier | Qt::Key_Right);
+    fwd_action->setShortcuts(lst_fwd);
+    fwd_action->setShortcutContext(Qt::ApplicationShortcut);
+    connect(fwd_action, SIGNAL(triggered()), ui->btn_fw, SLOT(click()));
+    this->addAction(fwd_action);
+
+
+    QAction* bwd_action = new QAction(this);
+    QList<QKeySequence> lst_bwd;
+    lst_bwd << QKeySequence(Qt::Key_MediaPrevious) << QKeySequence(Qt::ControlModifier | Qt::Key_Left);
+    bwd_action->setShortcuts(lst_bwd);
+    bwd_action->setShortcutContext(Qt::ApplicationShortcut);
+    connect(bwd_action, SIGNAL(triggered()), ui->btn_bw, SLOT(click()));
+    this->addAction(bwd_action);
+
+
+    QAction* louder_action = new QAction(this);
+    louder_action->setShortcut(QKeySequence(Qt::ControlModifier | Qt::Key_Up));
+    louder_action->setShortcutContext(Qt::ApplicationShortcut);
+    connect(louder_action, SIGNAL(triggered()), this, SLOT(volumeHigher()));
+    this->addAction(louder_action);
+
+
+    QAction* leiser_action = new QAction(this);
+    leiser_action->setShortcut(QKeySequence(Qt::ControlModifier | Qt::Key_Down));
+    leiser_action->setShortcutContext(Qt::ApplicationShortcut);
+    connect(leiser_action, SIGNAL(triggered()), this, SLOT(volumeLower()));
+    this->addAction(leiser_action);
+
 
 
 
@@ -595,6 +631,11 @@ void GUI_Player::setPlaylist(GUI_Playlist* playlist) {
     if(ui_playlist){
         ui_playlist->show();
         ui_playlist->resize(ui->playlist_widget->size());
+        QAction* action = new QAction(this);
+        action->setShortcut(QKeySequence(tr("Ctrl+P")));
+        action->setShortcutContext(Qt::WindowShortcut);
+        connect(action, SIGNAL(triggered()), ui_playlist, SLOT(setFocus()));
+        this->addAction(action);
     }
 }
 
@@ -604,6 +645,11 @@ void GUI_Player::setLibrary(GUI_Library_windowed* library) {
     if(ui_library && !ui_libpath){
         ui_library->show();
         ui_library->resize(ui->library_widget->size());
+        QAction* action = new QAction(this);
+        action->setShortcut(QKeySequence(tr("Ctrl+L")));
+        action->setShortcutContext(Qt::WindowShortcut);
+        connect(action, SIGNAL(triggered()), ui_library, SLOT(setFocus()));
+        this->addAction(action);
     }
 
     else if(ui_libpath){
@@ -770,25 +816,6 @@ void GUI_Player::keyPressEvent(QKeyEvent* e) {
     e->accept();
 
 	switch (e->key()) {
-
-		case Qt::Key_MediaPlay:
-            if(m_metadata.radio_mode == RADIO_OFF)
-				playClicked(true);
-			break;
-
-		case Qt::Key_MediaStop:
-			stopClicked();
-			break;
-
-		case Qt::Key_MediaNext:
-			forwardClicked(true);
-			break;
-
-
-		case Qt::Key_MediaPrevious:
-            if(m_metadata.radio_mode == RADIO_OFF)
-				backwardClicked(true);
-			break;
 
         case (Qt::Key_F10):
             ui->action_Dark->setChecked(!ui->action_Dark->isChecked());

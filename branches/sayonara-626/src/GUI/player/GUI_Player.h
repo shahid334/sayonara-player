@@ -154,6 +154,8 @@ private slots:
     void muteButtonPressed();
     void volumeChanged(int volume_percent);
     void volumeChangedByTick(int val);
+    void volumeHigher();
+    void volumeLower();
 
     /* File */
     void fileSelectedClicked(bool);

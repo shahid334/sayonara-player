@@ -78,6 +78,12 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	ui->setupUi(this);
 	initGUI();
 
+    QAction* clear_action = new QAction(this);
+    clear_action->setShortcut(QKeySequence("Ctrl+."));
+    clear_action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+    connect(clear_action, SIGNAL(triggered()), this->ui->btn_clear, SLOT(click()));
+    this->addAction(clear_action);
+
 
 	CSettingsStorage* settings = CSettingsStorage::getInstance();
 	bool small_playlist_items = settings->getShowSmallPlaylist();
@@ -115,6 +121,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     connect(ui->listView, SIGNAL(sig_selection_changed(MetaDataList&)), this, SLOT(selection_changed(MetaDataList&)));
     connect(ui->listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
+    connect(ui->listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
 
     //connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	connect(ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
@@ -135,6 +142,16 @@ void GUI_Playlist::resizeEvent(QResizeEvent* e){
     e->accept();
     this->ui->listView->update();
     this->ui->listView->reset();
+}
+
+void GUI_Playlist::focusInEvent(QFocusEvent *e){
+
+    this->ui->listView->setFocus();
+}
+
+void GUI_Playlist::no_focus(){
+    this->parentWidget()->setFocus();
+    emit sig_no_focus();
 }
 
 void GUI_Playlist::language_changed(){
