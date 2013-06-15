@@ -111,7 +111,7 @@ QStringList cov_calc_adresses_from_webpage(uint num, QString& qwebpage) {
 QStringList cov_call_and_parse(QString url, int num_adresses){
 
 	QString content;
-	bool success = WebAccess::read_http_into_str(url, content);
+    bool success = WebAccess::read_http_into_str(url, &content);
 
 	QStringList cover_adresses;
 	if(success){
@@ -125,7 +125,7 @@ QStringList cov_call_and_parse(QString url, int num_adresses){
 }
 
 
-bool cov_download_cover(QString adress, QImage& img) {
+bool cov_download_cover(QString adress, QImage* img) {
 
     return WebAccess::read_http_into_img(adress, img);
 

@@ -186,9 +186,9 @@ void GST_Engine::init_play_pipeline() {
         GstPadTemplate* tee_src_pad_template;
         GstPad* tee_pad;
         GstPad* tee_eq_pad;
-        //GstPad* tee_app_pad;
+        GstPad* tee_app_pad;
         GstPad* eq_pad;
-        //GstPad* app_pad;
+        GstPad* app_pad;
         GstPadLinkReturn s;
 
         if(with_app_sink){
@@ -202,14 +202,14 @@ void GST_Engine::init_play_pipeline() {
             eq_pad = gst_element_get_static_pad(_eq_queue, "sink");
                 if(!_test_and_error(eq_pad, "Engine: eq pad is NULL")) break;
 
-            _tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
-                if(!_test_and_error(_tee_app_pad, "Engine: tee_app_pad is NULL")) break;
-            _app_pad = gst_element_get_static_pad(_app_queue, "sink");
-                if(!_test_and_error(_app_pad, "Engine: app pad NULL")) break;
+            tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
+                if(!_test_and_error(tee_app_pad, "Engine: tee_app_pad is NULL")) break;
+            app_pad = gst_element_get_static_pad(_app_queue, "sink");
+                if(!_test_and_error(app_pad, "Engine: app pad NULL")) break;
 
             s = gst_pad_link (tee_eq_pad, eq_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
-            s = gst_pad_link (_tee_app_pad, _app_pad);
+            s = gst_pad_link (tee_app_pad, app_pad);
                 _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
 
 
@@ -235,8 +235,6 @@ void GST_Engine::init_play_pipeline() {
             g_object_set (_app_queue,
                           "silent", TRUE,
                           NULL);
-            g_object_set(_app_queue, "max-size-bytes", 120000, NULL);
-            //g_object_set(_app_queue, "max-size-buffers", 5, NULL);
 
             g_object_set(_eq_queue,
                          "silent", TRUE,
@@ -248,13 +246,10 @@ void GST_Engine::init_play_pipeline() {
                           "drop", TRUE,
                           "max-buffers", 10,
                           "caps", audio_caps,
-                          //"max-lateness", (guint64)10000000,
-                          //"qos", TRUE,
                           "emit-signals", FALSE,
                           NULL);
 
             g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
-
 
         }
 
@@ -522,7 +517,6 @@ void GST_Engine::eq_enable(bool) {
 
 void GST_Engine::psl_calc_level(bool b){
 
-
         g_object_set (_app_sink,
                                "emit-signals", b,
                                NULL);
@@ -617,8 +611,6 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
      guint8* c_buf = GST_BUFFER_DATA(buffer);
      float scale = 1.0f;
 
-     qDebug() << "Gst Buffer: " << sz;
-
 
 
      // size of one element in bytes
@@ -626,9 +618,12 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
 
      // array has sz bytes, but only sz / el_size elements
      // and every channel has it
-     float inv_arr_channel_elements = (item_size * _caps.channels * 1.0) / sz ;
-
      gsize end = sz - item_size;
+     gsize start = 0;
+     if(sz > 2048) start = sz - 2048;
+     float inv_arr_channel_elements = (item_size * _caps.channels * 1.0) / (sz -start);
+
+
 
      int channel=0;
 
@@ -636,7 +631,7 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
 
         float *v_f;
 
-        for(gsize i=0; i<end; i+=item_size){
+        for(gsize i=start; i<end; i+=item_size){
 
              v_f = (float*) (c_buf+i);
 
@@ -650,7 +645,7 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
          float v;
          scale = SCALE_SHORT;
 
-         for(gsize i=0; i<end; i+=item_size){
+         for(gsize i=start; i<end; i+=item_size){
 
              v_s = (short*) (c_buf + i);
              v = (float) (*v_s);

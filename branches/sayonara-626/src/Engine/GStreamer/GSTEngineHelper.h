@@ -34,7 +34,6 @@ int __start_pos_beginning = 0;
 
 gboolean player_change_file(GstBin* pipeline, void* app) {
 
-    qDebug() << "Engine: player change file";
     Q_UNUSED(pipeline);
     Q_UNUSED(app);
 

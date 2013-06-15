@@ -62,7 +62,7 @@ public:
 
 
 	public slots:
-        void start(QString, QString);
+        void start(QString, QString, QString dir="");
         void changeSkin(bool dark);
         void language_changed();
 
@@ -73,6 +73,7 @@ public:
 		void cover_pressed(const QModelIndex& idx);
 		void covers_there(QString classname, int n_covers);
 		void tmp_folder_changed(const QString&);
+        void open_file_dialog();
 
 	private:
 		Ui::AlternateCovers* ui;
@@ -94,6 +95,7 @@ public:
         bool                _no_album;
         QString             _target_filename;
         bool                _blocked;
+        QString             _last_path;
 
 
         void update_model();

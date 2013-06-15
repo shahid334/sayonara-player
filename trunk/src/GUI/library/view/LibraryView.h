@@ -68,6 +68,7 @@ signals:
     void sig_sortorder_changed(Sort::SortOrder);
     void sig_pressed(QPoint&, const QModelIndex&);
     void sig_no_disc_menu();
+    void sig_tab_pressed(bool);
 
 private slots:
     void rc_header_menu_changed(bool b=true);

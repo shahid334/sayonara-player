@@ -9,9 +9,9 @@ float borders[] = {-45.0f, -39.0f,  // green
                    -16.5f, -14.5f,    // green
                    -12.5f, -10.5f,    // yellow
                    -9.0f,  -7.5f,    // yellow
-                    -6.0f,  -5.0f,    // yellow
-                    -4.0f,  -3.0f,    // red
-                    -2.0f,  -1.0f};   // red
+                    -6.0f,  -4.75f,    // yellow
+                    -3.5f,  -2.5f,    // red
+                    -1.5f,  -0.5f};   // red
 
 GUI_Level::GUI_Level(QString name, QString action_name, QWidget* parent) : PlayerPlugin(name, action_name, parent)
 
@@ -31,10 +31,58 @@ GUI_Level::GUI_Level(QString name, QString action_name, QWidget* parent) : Playe
 
     _queue_it = false;
 
-  /*  _timer = new QTimer(this);
-    _timer->setInterval(40);
-    connect(_timer, SIGNAL(timeout()), this, SLOT(timeout()));
-    _timer->start();*/
+    QString style_green = "QLabel{border-radius: 1px;}QLabel::disabled{background: rgb(0, 50, 0);}QLabel::enabled{	background: rgb(0, 216, 0);}";
+    QString style_yellow = "QLabel{border-radius: 1px;}QLabel::disabled{background: rgb(50, 50, 0);}QLabel::enabled{	background: rgb(216, 216, 0);}";
+    QString style_red = "QLabel{border-radius: 1px;}QLabel::disabled{background: rgb(50, 0, 0);}QLabel::enabled{	background: rgb(192, 0, 0);}";
+
+    ui->lab_l_0->setStyleSheet(style_green);
+    ui->lab_l_05->setStyleSheet(style_green);
+    ui->lab_l_1->setStyleSheet(style_green);
+    ui->lab_l_15->setStyleSheet(style_green);
+    ui->lab_l_2->setStyleSheet(style_green);
+    ui->lab_l_25->setStyleSheet(style_green);
+    ui->lab_l_3->setStyleSheet(style_green);
+    ui->lab_l_35->setStyleSheet(style_green);
+    ui->lab_l_4->setStyleSheet(style_green);
+    ui->lab_l_45->setStyleSheet(style_green);
+
+    ui->lab_l_5->setStyleSheet(style_yellow);
+    ui->lab_l_55->setStyleSheet(style_yellow);
+    ui->lab_l_6->setStyleSheet(style_yellow);
+    ui->lab_l_65->setStyleSheet(style_yellow);
+    ui->lab_l_7->setStyleSheet(style_yellow);
+    ui->lab_l_75->setStyleSheet(style_yellow);
+
+    ui->lab_l_8->setStyleSheet(style_red);
+    ui->lab_l_85->setStyleSheet(style_red);
+    ui->lab_l_9->setStyleSheet(style_red);
+    ui->lab_l_95->setStyleSheet(style_red);
+
+
+    ui->lab_r_0->setStyleSheet(style_green);
+    ui->lab_r_05->setStyleSheet(style_green);
+    ui->lab_r_1->setStyleSheet(style_green);
+    ui->lab_r_15->setStyleSheet(style_green);
+    ui->lab_r_2->setStyleSheet(style_green);
+    ui->lab_r_25->setStyleSheet(style_green);
+    ui->lab_r_3->setStyleSheet(style_green);
+    ui->lab_r_35->setStyleSheet(style_green);
+    ui->lab_r_4->setStyleSheet(style_green);
+    ui->lab_r_45->setStyleSheet(style_green);
+
+    ui->lab_r_5->setStyleSheet(style_yellow);
+    ui->lab_r_55->setStyleSheet(style_yellow);
+    ui->lab_r_6->setStyleSheet(style_yellow);
+    ui->lab_r_65->setStyleSheet(style_yellow);
+    ui->lab_r_7->setStyleSheet(style_yellow);
+    ui->lab_r_75->setStyleSheet(style_yellow);
+
+    ui->lab_r_8->setStyleSheet(style_red);
+    ui->lab_r_85->setStyleSheet(style_red);
+    ui->lab_r_9->setStyleSheet(style_red);
+    ui->lab_r_95->setStyleSheet(style_red);
+
+
 
     ui->lab_l_0 ->setToolTip(QString::number((double) borders[0])  + " db");
     ui->lab_l_05->setToolTip(QString::number((double) borders[1])  + " db");

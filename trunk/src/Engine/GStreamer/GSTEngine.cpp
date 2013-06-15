@@ -142,7 +142,8 @@ void GST_Engine::init_play_pipeline() {
 
 
         _decodebin = gst_element_factory_make("decodebin2", "decoder");
-        _audio_sink = gst_element_factory_make("autoaudiosink", "alsasink");
+        _audio_sink = gst_element_factory_make("autoaudiosink", "autoaudiosink");
+
         _eq_queue = gst_element_factory_make("queue", "eq_queue");
         _tee = gst_element_factory_make("tee", "tee");
         _app_queue = gst_element_factory_make("queue", "app_queue");
@@ -453,6 +454,7 @@ void GST_Engine::setVolume(int vol) {
     float vol_val = (float) (vol * 1.0f / 100.0f);
 
     g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
+
 
 }
 

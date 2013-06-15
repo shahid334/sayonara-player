@@ -78,7 +78,7 @@ void CoverFetchThread::search_single(){
     _found_cover_paths.clear();
     foreach(QString adress, adresses){
         QImage img;
-        bool success = cov_download_cover(adress, img);
+        bool success = cov_download_cover(adress, &img);
 
         if(success){
 
@@ -163,15 +163,15 @@ QString CoverFetchThread::get_call_id(){
 
 void CoverFetchThread::awa_finished(int id){
 
-    QString data;
+
     AsyncWebAccess* awa = _map.value(id);
-    awa->get_data(data);
-
-
+    QString data = awa->get_data();
 
     _map.remove(id);
 
-    _datalist << data;
+    if(data.size() > 0)
+        _datalist << data;
+
     awa->deleteLater();
     _n_running --;
 }

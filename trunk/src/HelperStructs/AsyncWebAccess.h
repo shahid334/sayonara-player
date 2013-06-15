@@ -38,7 +38,7 @@ public:
     AsyncWebAccess(QObject* parent=0, int id=0);
 	virtual ~AsyncWebAccess();
 
-	bool get_data(QString& data);
+    QString get_data();
 	void set_url(QString url);
 
 protected:

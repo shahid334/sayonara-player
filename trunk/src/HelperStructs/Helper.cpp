@@ -329,6 +329,7 @@ QStringList Helper::get_soundfile_extensions(){
 	QStringList filters;
 	filters << "*.mp3"
 			<< "*.ogg"
+            << "*.oga"
 			<< "*.m4a"
 			<< "*.wav"
 			<< "*.flac"
@@ -412,7 +413,7 @@ QStringList Helper::get_podcast_extensions(){
 }
 
 
-bool Helper::is_podcastfile(QString filename, QString& content){
+bool Helper::is_podcastfile(QString filename, QString* content){
     QStringList extensions = get_podcast_extensions();
 
     bool extension_ok = false;
@@ -437,8 +438,9 @@ bool Helper::is_podcastfile(QString filename, QString& content){
         read_file_into_str(filename, content);
     }
 
-    QString header = content;
-    if(content.size() > 1024) header = content.left(1024);
+    QString header = content->left(content->size());
+    if(content->size() > 1024) header = content->left(1024);
+
 
     if(header.contains("<rss")) return true;
     return false;
@@ -517,10 +519,10 @@ bool Helper::checkTrack(const MetaData& md){
 }
 
 
-bool Helper::read_file_into_str(QString filename, QString& content){
+bool Helper::read_file_into_str(QString filename, QString* content){
 
 	QFile file(filename);
-	content.clear();
+    content->clear();
     if(!file.open(QIODevice::ReadOnly)){
 		return false;
 	}
@@ -529,12 +531,12 @@ bool Helper::read_file_into_str(QString filename, QString& content){
         QByteArray arr = file.readLine();
         QString str = QString::fromLocal8Bit(arr);
 
-        content += str;
+        content->append(str);
 	}
 
 	file.close();
 
-	if(content.size() > 0 ){
+    if(content->size() > 0 ){
 		return true;
 	}
 
@@ -542,7 +544,7 @@ bool Helper::read_file_into_str(QString filename, QString& content){
 
 }
 
-bool Helper::read_http_into_str(QString url, QString& content){
+bool Helper::read_http_into_str(QString url, QString* content){
     return WebAccess::read_http_into_str(url, content);
 }
 
@@ -734,7 +736,7 @@ Album Helper::get_album_from_metadata(const MetaData& md) {
 QString Helper::get_newest_version(){
 
     QString str;
-    WebAccess::read_http_into_str("http://sayonara.luciocarreras.de/newest", str);
+    WebAccess::read_http_into_str("http://sayonara.luciocarreras.de/newest", &str);
     return str;
 
 }

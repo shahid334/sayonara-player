@@ -139,11 +139,11 @@ int main(int argc, char *argv[]){
         translator.load(language, Helper::getSharePath() + "/translations");
         app.installTranslator(&translator);
 
-        int i = QFontDatabase::addApplicationFont(Helper::getSharePath() + "DejaVuSans.ttf");
-        qDebug() << "adding font " << Helper::getSharePath() + "DejaVuSans.ttf" << i;
-        i = QFontDatabase::addApplicationFont(Helper::getSharePath() + "DejaVuSans-Bold.ttf");
-        qDebug() << "adding font " <<Helper::getSharePath() + "DejaVuSans-Bold.ttf"<< i;
-
+    QFont font("DejaVu Sans", 9, 55,  false);
+	font.setHintingPreference(QFont::PreferNoHinting);
+	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
+	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
+    app.setFont(font);
 
         Application application(&app, params.size(), &translator);
 		if(!application.is_initialized()) return 0;

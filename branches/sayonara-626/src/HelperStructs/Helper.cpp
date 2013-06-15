@@ -745,5 +745,7 @@ QString Helper::get_newest_version(){
 void Helper::set_deja_vu_font(QWidget* w){
     QFont f = w->font();
     f.setFamily("DejaVu Sans");
+    f.setStyleStrategy(QFont::PreferAntialias);
+    f.setHintingPreference(QFont::PreferNoHinting);
     w->setFont(f);
 }

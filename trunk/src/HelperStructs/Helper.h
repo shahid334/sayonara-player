@@ -86,7 +86,7 @@ namespace Helper{
     bool is_dir(QString filename);
 	bool is_soundfile(QString filename);
 	bool is_playlistfile(QString filename);
-    bool is_podcastfile(QString filename, QString& content);
+    bool is_podcastfile(QString filename, QString* content);
 
     QString get_album_w_disc(const MetaData& md);
 
@@ -114,8 +114,8 @@ namespace Helper{
 	bool checkTrack(const MetaData& md);
 
 
-	bool read_file_into_str(QString filename, QString& content);
-	bool read_http_into_str(QString url, QString& content);
+    bool read_file_into_str(QString filename, QString* content);
+    bool read_http_into_str(QString url, QString* content);
 
 
 	QString easy_tag_finder(QString tag, QString& xml_doc);

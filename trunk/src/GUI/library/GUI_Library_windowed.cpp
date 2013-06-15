@@ -138,6 +138,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
     connect(this->ui->lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
     connect(this->ui->lv_album, SIGNAL(sig_no_disc_menu()), this, SLOT(delete_menu()));
+    connect(this->ui->lv_album, SIGNAL(sig_tab_pressed(bool)), this, SLOT(album_tab_pressed(bool)));
 
 	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
     connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
@@ -150,6 +151,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->tb_title, SIGNAL(sig_info_clicked()), this, SLOT(info_tracks()));
     connect(this->ui->tb_title, SIGNAL(sig_delete_clicked()), this, SLOT(delete_tracks()));
     connect(this->ui->tb_title, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_tracks()));
+    connect(this->ui->tb_title, SIGNAL(sig_tab_pressed(bool)), this, SLOT(track_tab_pressed(bool)));
 
 
 	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
@@ -163,6 +165,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_artist, SIGNAL(sig_info_clicked()), this, SLOT(info_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
+    connect(this->ui->lv_artist, SIGNAL(sig_tab_pressed(bool)), this, SLOT(artist_tab_pressed(bool)));
 
     
 
@@ -326,6 +329,21 @@ void  GUI_Library_windowed::columns_artist_changed(QStringList& list){
 void  GUI_Library_windowed::columns_title_changed(QStringList & list){
     _shown_cols_tracks = list;
     _settings->setLibShownColsTitle(list);
+}
+
+
+void GUI_Library_windowed::artist_tab_pressed(bool mod){
+    if(mod) this->ui->tb_title->setFocus();
+    else this->ui->lv_album->setFocus();
+}
+void GUI_Library_windowed::album_tab_pressed(bool mod){
+    if(mod) this->ui->lv_artist->setFocus();
+    else this->ui->tb_title->setFocus();
+}
+void GUI_Library_windowed::track_tab_pressed(bool mod){
+    if(mod) this->ui->lv_album->setFocus();
+    else this->ui->lv_artist->setFocus();
+
 }
 
 

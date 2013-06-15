@@ -38,6 +38,8 @@
 #include <QPixmap>
 #include <QMessageBox>
 #include <QFile>
+#include <QDir>
+#include <QFileDialog>
 #include <QString>
 #include <QDebug>
 #include <QFileSystemWatcher>
@@ -49,6 +51,13 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 
 	this->ui = new Ui::AlternateCovers();
 	this->ui->setupUi(this);
+
+    QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+    if(QFile::exists(lib_path))
+        _last_path = lib_path;
+    else _last_path = QDir::homePath();
+
+
     _cov_fetch_thread = 0;
 
 	_calling_class = calling_class;
@@ -78,7 +87,9 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 	connect(this->ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
 	connect(this->ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
     connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
-        connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+    connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
+
+    connect(this->ui->btn_file, SIGNAL(clicked()), this, SLOT(open_file_dialog()));
 
 }
 
@@ -97,9 +108,11 @@ void GUI_Alternate_Covers::language_changed(){
     this->ui->retranslateUi(this);
 }
 
-void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
+void GUI_Alternate_Covers::start(QString searchstring, QString target_filename, QString dir){
 
-    ui->pb_progress->setTextVisible(false);
+    if(dir.size() > 0){
+        _last_path = dir;
+    }
     _no_album = true;
     _target_filename = target_filename;
 
@@ -107,17 +120,8 @@ void GUI_Alternate_Covers::start(QString searchstring, QString target_filename){
     ui->le_search->setText(searchstring);
     ui->lab_title->setText(searchstring);
 
-    // searchstring is the same
-    if( !searchstring.compare(old_searchstring) ){
-
-    }
-
-    else{
-        _filelist.clear();
-        update_model();
-        this->search_button_pressed();
-    }
-
+    _filelist.clear();
+    update_model();
 
     this->show();
 }
@@ -216,22 +220,17 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 
 void GUI_Alternate_Covers::search_button_pressed(){
 
-    if(_cov_fetch_thread && _cov_fetch_thread->isRunning()) return;
+    if(_cov_fetch_thread && _cov_fetch_thread->isRunning()) {
+        _cov_fetch_thread->set_run(false);
+        ui->btn_search->setText(tr("Search"));
+        return;
+    }
+
+    ui->btn_search->setText(tr("Stop"));
 
     _cur_idx = -1;
     _filelist.clear();
     update_model();
-
-
-    if(ui->btn_search->text().compare(tr("Stop")) == 0){
-
-		ui->btn_search->setText(tr("Search"));
-        ui->pb_progress->setVisible(false);
-		return;
-	}
-
-	ui->pb_progress->setValue(0);
-	ui->pb_progress->setTextVisible(true);
 
 	QString searchstring = this->ui->le_search->text();
     QString url = Helper::calc_google_image_search_adress(searchstring);
@@ -264,14 +263,14 @@ void GUI_Alternate_Covers::search_button_pressed(){
     connect(this->_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
     connect(this->_watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(tmp_folder_changed(const QString&)));
 
-	ui->btn_search->setText(tr("Stop"));
     _cov_fetch_thread->start();
 
 }
 
 void GUI_Alternate_Covers::cft_destroyed(){
-    qDebug() << "CFT destroyed";
+
     _cov_fetch_thread = 0;
+    this->ui->btn_search->setText(tr("Search"));
 }
 
 void GUI_Alternate_Covers::update_model(){
@@ -291,7 +290,7 @@ void GUI_Alternate_Covers::update_model(){
         str_tmp = str_tmp.left(str_tmp.size() - 4);
         str_tmp.replace("img_", "");
         int number = str_tmp.toInt() - 1;
-        if(number > 9) continue;
+        if(number > 9) break;
         if(lst.contains(number))lst.removeAt(lst.indexOf(number));
 
         int row = number / _model->columnCount();
@@ -307,22 +306,30 @@ void GUI_Alternate_Covers::update_model(){
 		_model->setData(idx, str, Qt::EditRole);
 	}
 
-    //if(_cov_fetch_thread) qDebug() << "is running? " << _cov_fetch_thread->isRunning();
-    if(lst.isEmpty() && _cov_fetch_thread) {
-        _cov_fetch_thread->set_run(false);
-        _blocked = false;
-        //_cov_fetch_thread->quit();
+
+
+    if(ui->rb_online->isChecked()){
+
+        if(lst.isEmpty() && _cov_fetch_thread) {
+            _cov_fetch_thread->set_run(false);
+            _blocked = false;
+        }
+    }
+
+    else {
+        ui->btn_search->setText(tr("Search"));
     }
 
 }
 
 void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
+
 	int row = idx.row();
 	int col = idx.column();
 
 	_cur_idx = row * _model->columnCount() + col;
 
-        update_model();
+    update_model();
 }
 
 
@@ -350,7 +357,6 @@ void GUI_Alternate_Covers::covers_there(QString classname, int n_covers){
 
         update_model();
 
-	ui->pb_progress->setVisible(false);
 	ui->btn_search->setText(tr("Search"));
 }
 
@@ -379,20 +385,52 @@ void GUI_Alternate_Covers::tmp_folder_changed(const QString& directory){
 
     update_model();
 
-	ui->pb_progress->setTextVisible(false);
-	ui->pb_progress->setVisible(true);
-    ui->btn_search->setText(tr("Stop"));
-	ui->pb_progress->setValue(_filelist.size() * 10);
-
-    if(ui->pb_progress->value() == 100){
-        ui->pb_progress->setVisible(false);
-        ui->btn_search->setText(tr("Search"));
-    }
-
     _blocked = false;
 }
 
 
+void GUI_Alternate_Covers::open_file_dialog(){
 
+
+    if(_cov_fetch_thread && _cov_fetch_thread->isRunning()) {
+        _cov_fetch_thread->set_run(false);
+        return;
+    }
+
+    QDir dir(Helper::getSayonaraPath() + "/tmp");
+    QStringList entrylist;
+    QStringList filters;
+        filters << "*.jpg";
+        filters << "*.png";
+        filters << "*.gif";
+
+    dir.setFilter(QDir::Files);
+    dir.setNameFilters(filters);
+
+    entrylist = dir.entryList();
+
+    foreach (QString f, entrylist)
+        QFile::remove(dir.absoluteFilePath(f));
+
+
+    QStringList lst = QFileDialog::getOpenFileNames(this,
+                                  tr("Open image files"),
+                                  _last_path,
+                                  filters.join(" "));
+
+
+    int i=1;
+    foreach(QString f, lst){
+        QImage img(f);
+
+
+        QString filename =Helper::getSayonaraPath() + "tmp/img_" + QString::number(i) + ".jpg" ;
+        _filelist << filename;
+        img.save(filename);
+        i++;
+    }
+
+    update_model();
+}
 
 
