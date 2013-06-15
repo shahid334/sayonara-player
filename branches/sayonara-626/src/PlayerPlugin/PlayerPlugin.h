@@ -53,6 +53,7 @@ private slots:
 private:
     QString     _pp_name;
     bool        _pp_is_shown;
+    bool        _pp_is_closed;
 
 
 protected:
@@ -68,11 +69,13 @@ public:
     QSize getSize();
     QString getName();
 
-    void setShown(bool b);
+    //void setShown(bool b);
+    bool isClosed();
     virtual QAction* getAction()=0;
 
 
     static QString getVisName(){ return ""; }
+
 
     
 };

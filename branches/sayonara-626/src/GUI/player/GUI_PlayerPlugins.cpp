@@ -63,8 +63,6 @@ void GUI_Player::hideAllPlugins(){
 
 void GUI_Player::showPlugin(PlayerPlugin* plugin){
 
-    hideAllPlugins();
-
     if(!plugin) return;
     if(!ui_playlist) return;
 

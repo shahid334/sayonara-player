@@ -54,24 +54,25 @@ void PlayerPluginHandler::addPlugin(PlayerPlugin* p){
 
 void PlayerPluginHandler::plugin_action_triggered(PlayerPlugin* p, bool b){
 
-    
     if(b){
         emit sig_show_plugin(p);
     }
 
     else{
 	
-	hide_all();
+        hide_all();
         _cur_shown_plugin = NULL;
     }
 }
 
 
 void PlayerPluginHandler::showPlugin(PlayerPlugin* p){
+
      hide_all();
 
      p->show();
      p->getAction()->setChecked(true);
+
      _cur_shown_plugin = p;
 }
 
@@ -86,9 +87,12 @@ void PlayerPluginHandler::showPlugin(QString name){
 
 
 void PlayerPluginHandler::hide_all(){
+
    _cur_shown_plugin = NULL;
+
    foreach(PlayerPlugin* p, _plugins){
-	p->close();
+       if(!p->isHidden())
+            p->close();
    }
 
    emit sig_hide_all_plugins();
