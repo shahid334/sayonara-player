@@ -395,7 +395,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         emit doubleClicked(idx);
     }
 
-    else if((key == Qt::Key_Left) && (modifiers & Qt::ControlModifier)){
+    else if((key == Qt::Key_Left) && (modifiers & Qt::ShiftModifier)){
         QList<int> selections = calc_selections();
         if(selections.size() == 0) return;
 
