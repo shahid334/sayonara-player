@@ -39,6 +39,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTranslator>
+#include <QFontDatabase>
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -122,6 +123,7 @@ int main(int argc, char *argv[]){
 
         QApplication app (argc, argv);
 
+
             app.setApplicationName("Sayonara");
             app.setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
@@ -137,6 +139,11 @@ int main(int argc, char *argv[]){
         translator.load(language, Helper::getSharePath() + "/translations");
         app.installTranslator(&translator);
 
+    QFont font("DejaVu Sans", 9, 55,  false);
+	font.setHintingPreference(QFont::PreferNoHinting);
+	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
+	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
+    app.setFont(font);
 
         Application application(&app, params.size(), &translator);
 		if(!application.is_initialized()) return 0;

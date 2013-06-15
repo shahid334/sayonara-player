@@ -244,7 +244,7 @@ void GST_Engine::init_play_pipeline() {
             GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
             g_object_set (_app_sink,
                           "drop", TRUE,
-                          "max-buffers", 10,
+                          "max-buffers", 1,
                           "caps", audio_caps,
                           "emit-signals", FALSE,
                           NULL);
@@ -618,9 +618,13 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
 
      // array has sz bytes, but only sz / el_size elements
      // and every channel has it
-     float inv_arr_channel_elements = (item_size * _caps.channels * 1.0) / sz ;
-
      gsize end = sz - item_size;
+     gsize start = 0;
+     gsize thousand_samples = item_size * _caps.channels * 512;
+     if(sz > thousand_samples) start = sz - thousand_samples;
+     float inv_arr_channel_elements = (item_size * _caps.channels * 1.0) / (sz -start);
+
+
 
      int channel=0;
 
@@ -628,7 +632,7 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
 
         float *v_f;
 
-        for(gsize i=0; i<end; i+=item_size){
+        for(gsize i=start; i<end; i+=item_size){
 
              v_f = (float*) (c_buf+i);
 
@@ -642,7 +646,7 @@ void GST_Engine::set_buffer(GstBuffer* buffer){
          float v;
          scale = SCALE_SHORT;
 
-         for(gsize i=0; i<end; i+=item_size){
+         for(gsize i=start; i<end; i+=item_size){
 
              v_s = (short*) (c_buf + i);
              v = (float) (*v_s);

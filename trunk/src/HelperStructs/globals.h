@@ -45,13 +45,14 @@
 #define RADIO_LFM 1
 #define RADIO_STATION 2
 
-#define PLUGIN_NUM 4
+#define PLUGIN_NUM 5
 #define PLUGIN_NONE 0
 #define PLUGIN_LFM_RADIO 1
 #define PLUGIN_STREAM 2
 #define PLUGIN_PODCASTS 3
 #define PLUGIN_EQUALIZER 4
 #define PLUGIN_PLAYLIST_CHOOSER 5
+#define PLUGIN_LEVEL 6
 /*
 
 #define PLUGIN_NAME_LFM_RADIO tr("Last.&fm")

@@ -57,6 +57,7 @@ struct MyCaps {
     int channels;
     bool is_parsed;
 
+
     void parse(GstCaps* caps){
         QString info = gst_caps_to_string(caps);
         //qDebug() << info;
@@ -109,10 +110,13 @@ private:
 
 
 
-	GstElement* _pipeline;
+    GstElement* _pipeline;
 	GstElement* _equalizer;
     GstElement* _eq_queue;
     GstElement* _volume;
+
+    GstPad* _tee_app_pad;
+    GstPad* _app_pad;
 
 	GstElement* _audio_sink;
     GstElement* _audio_bin;
@@ -122,14 +126,14 @@ private:
 	GstElement* _app_sink;
 	GstElement* _app_queue;
 	
-	GstBuffer* _buffer;
-        GstElement* _tee;
+    GstElement* _tee;
 	
-	GstBus*		_bus;
+    GstBus*		_bus;
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;
     MyCaps     _caps;
+
 
 
 

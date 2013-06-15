@@ -30,6 +30,7 @@ PlayerPlugin::PlayerPlugin(QString name, QString action_text, QWidget *parent) :
     _pp_is_shown = false;
     _pp_action = new QAction("", NULL);
     _pp_action->setCheckable(true);
+    _pp_is_closed = true;
     connect(_pp_action, SIGNAL(triggered(bool)), this, SLOT(action_triggered(bool)));
 
 }
@@ -66,17 +67,23 @@ void PlayerPlugin::setSize(QSize size){
 }
 
 
-
-
 void PlayerPlugin::closeEvent(QCloseEvent* e){
     QWidget::close();
+
     _pp_action->setChecked(false);
     action_triggered(false);
-
 }
+
 
 void PlayerPlugin::action_triggered(bool b){
 
+    qDebug() << "Plugin " << this->_pp_name << " action triggered " << b;
+    _pp_action->setChecked(b);
+    _pp_is_closed = !b;
     emit sig_action_triggered(this, b);
+}
+
+bool PlayerPlugin::isClosed(){
+    return _pp_is_closed;
 }
 

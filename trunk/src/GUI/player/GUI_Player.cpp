@@ -224,20 +224,24 @@ void GUI_Player::language_changed(QString language){
 
 void GUI_Player::initGUI() {
 
-	QString ctrl = tr("Ctrl");
+
 
 	ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
-	ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
     ui->btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
-	ui->btn_rec->setVisible(false);
-
 	ui->btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
 	ui->btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 	ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
-	ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
+    ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 
-/*    ui->action_viewLibrary->setText(tr("&Library"));
-    ui->action_viewLibrary->setShortcut(QKeySequence(ctrl+"+l"));*/
+
+
+    ui->action_viewLibrary->setText(tr("&Library"));
+
+
+
+
+    ui->btn_rec->setVisible(false);
 
     ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
     ui->action_Dark->setShortcut(QKeySequence("F10"));

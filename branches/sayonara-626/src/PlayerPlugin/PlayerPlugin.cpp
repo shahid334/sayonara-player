@@ -77,7 +77,6 @@ void PlayerPlugin::closeEvent(QCloseEvent* e){
 
 void PlayerPlugin::action_triggered(bool b){
 
-    qDebug() << "Plugin " << this->_pp_name << " action triggered " << b;
     _pp_action->setChecked(b);
     _pp_is_closed = !b;
     emit sig_action_triggered(this, b);
