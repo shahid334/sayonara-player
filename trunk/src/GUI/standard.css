@@ -3,6 +3,10 @@ QListView, QTableView{
         alternate-background-color: #DADADA;
 }
 
+QListView:focus, QTableView:focus{
+
+        border: 2px solid #424e72;
+}
 
 
 

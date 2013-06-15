@@ -82,6 +82,7 @@ private slots:
     void play_next_clicked();
 
     void edit_changed(QString);
+    void edit_return_clicked();
 
 
 private:

@@ -63,8 +63,6 @@ PlaylistView::PlaylistView(QWidget* parent) : QListView(parent) {
     this->setAlternatingRowColors(true);
     this->setMovement(QListView::Free);
 
-
-
     connect(this, SIGNAL(pressed(const QModelIndex&)), this, SLOT(row_pressed(const QModelIndex&)));
     connect(this, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(row_double_clicked(const QModelIndex&)));
     connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(row_released(const QModelIndex&)));
@@ -163,11 +161,184 @@ void PlaylistView::keyPressEvent(QKeyEvent* event){
         select_all();
     }
 
-    if( key == Qt::Key_Delete){
+    else if( key == Qt::Key_Delete){
         remove_cur_selected_rows();
     }
 
+    else if((key == Qt::Key_Up) && !(modifiers & Qt::ControlModifier)){
 
+       QModelIndexList lst = this->selectedIndexes();
+       QModelIndex idx;
+       int min_row = 5000000;
+       if(lst.size() == 0){
+           min_row = 0;
+       }
+
+       else {
+
+          foreach(QModelIndex i, lst){
+              if(i.row() < min_row){
+                  min_row = i.row();
+              }
+          }
+
+          if(min_row > 0) min_row --;
+          else min_row = 0;
+       }
+
+       this->clearSelection();
+
+       idx = _model->index(min_row, 0);
+       QList<int> lst_rows;
+       lst_rows << min_row;
+       this->select_rows(lst_rows);
+       row_released(idx);
+       this->scrollTo(idx);
+
+    }
+
+     else if((key == Qt::Key_Down) && !(modifiers & Qt::ControlModifier)){
+        QModelIndexList lst = this->selectedIndexes();
+        QModelIndex idx;
+        int min_row = 5000000;
+        if(lst.size() == 0){
+            min_row = 0;
+        }
+
+        else {
+
+           foreach(QModelIndex i, lst){
+               if(i.row() < min_row){
+                   min_row = i.row();
+               }
+           }
+
+           if(min_row < _model->rowCount() - 1) min_row ++;
+           else min_row = _model->rowCount() - 1;
+        }
+
+        this->clearSelection();
+
+        idx = _model->index(min_row, 0);
+        QList<int> lst_rows;
+        lst_rows << min_row;
+        this->select_rows(lst_rows);
+        row_released(idx);
+
+        calc_selections();
+        this->scrollTo(idx);
+    }
+
+    else if( key == Qt::Key_PageUp){
+        QModelIndexList lst = this->selectedIndexes();
+        QModelIndex idx;
+        int min_row = 5000000;
+        if(lst.size() == 0){
+            min_row = 0;
+        }
+
+        else {
+
+           foreach(QModelIndex i, lst){
+               if(i.row() < min_row){
+                   min_row = i.row();
+               }
+           }
+
+           if(min_row > 10) min_row -= 10;
+           else min_row = 0;
+        }
+
+        this->clearSelection();
+
+        idx = _model->index(min_row, 0);
+        QList<int> lst_rows;
+        lst_rows << min_row;
+        this->select_rows(lst_rows);
+        row_released(idx);
+        this->scrollTo(idx);
+    }
+
+    else if( key == Qt::Key_PageDown){
+        QModelIndexList lst = this->selectedIndexes();
+        QModelIndex idx;
+        int min_row = 5000000;
+        if(lst.size() == 0){
+            min_row = 0;
+        }
+
+        else {
+
+           foreach(QModelIndex i, lst){
+               if(i.row() < min_row){
+                   min_row = i.row();
+               }
+           }
+
+          if(min_row < _model->rowCount() - 10) min_row += 10;
+          else min_row =  _model->rowCount() - 1;
+        }
+
+        this->clearSelection();
+
+        idx = _model->index(min_row, 0);
+        QList<int> lst_rows;
+        lst_rows << min_row;
+        this->select_rows(lst_rows);
+        row_released(idx);
+        this->scrollTo(idx);
+    }
+
+    else if( (key == Qt::Key_Return) || (key == Qt::Key_Enter) ){
+
+        QList<int> selections = calc_selections();
+        if(selections.size() == 0){
+            return;
+        }
+
+        else{
+            int min_row = 5000000;
+            QModelIndexList lst = this->selectedIndexes();
+            if(lst.size() == 0) return;
+            foreach(QModelIndex i, lst){
+                if(i.row() < min_row){
+                    min_row = i.row();
+                }
+            }
+
+            this->sig_double_clicked(min_row);
+        }
+    }
+
+    else if(key == Qt::Key_End){
+        this->clearSelection();
+        if(_model->rowCount() == 0 ) return;
+        QModelIndex idx = _model->index(_model->rowCount() - 1, 0);
+        QList<int> lst_rows;
+        lst_rows << _model->rowCount() - 1;
+        this->select_rows(lst_rows);
+        row_released(idx);
+        calc_selections();
+        this->scrollToBottom();
+    }
+
+    else if(key == Qt::Key_Home){
+        this->clearSelection();
+
+        if(_model->rowCount() == 0 ) return;
+        QModelIndex idx = _model->index(0, 0);
+        row_released(idx);
+        QList<int> lst_rows;
+        lst_rows << 0;
+        this->select_rows(lst_rows);
+        calc_selections();
+        this->scrollToTop();
+    }
+
+    else if(key == Qt::Key_Tab){
+
+        emit sig_no_focus();
+    }
 }
 
 void PlaylistView::resizeEvent(QResizeEvent *e){
@@ -367,7 +538,7 @@ void PlaylistView::select_rows(QList<int> lst){
 
 void PlaylistView::select_all(){
     selectAll();
-    QList<int> list =  calc_selections();
+    calc_selections();
 }
 
 QList<int> PlaylistView::calc_selections(){

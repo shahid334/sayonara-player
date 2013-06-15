@@ -70,7 +70,7 @@ public slots:
 public:
     GUI_PlaylistChooser(QString name, QString action_text, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
-    static QString getVisName(){ return tr("&Playlists"); }
+    static QString getVisName(){ return tr("Pla&ylists"); }
     virtual QAction* getAction();
 
 private:

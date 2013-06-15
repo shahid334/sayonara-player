@@ -60,6 +60,7 @@ class PlaylistView :public QListView{
         void sig_edit_clicked();
         void sig_selection_changed(MetaDataList&);
         void sig_double_clicked(int);
+        void sig_no_focus();
 
     private slots:
         void forbid_mimedata_destroyable();

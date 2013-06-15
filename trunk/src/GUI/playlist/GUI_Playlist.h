@@ -43,7 +43,7 @@
 #include <QKeyEvent>
 #include <QTextEdit>
 #include <QList>
-
+#include <QFocusEvent>
 #include <string>
 
 
@@ -71,6 +71,8 @@
             void sig_rows_removed(const QList<int>&, bool);
 
 			void search_similar_artists(const QString&);
+            void sig_no_focus();
+
 
 
 		public slots:
@@ -97,6 +99,7 @@
             void btn_numbers_changed(bool);
             void metadata_dropped(const MetaDataList&, int);
             void rows_removed(const QList<int>&, bool select_next_row);
+            void no_focus();
 
 
 		private:
@@ -119,7 +122,7 @@
     protected:
             void changeEvent(QEvent* e);
             void resizeEvent(QResizeEvent *e);
-
+            void focusInEvent(QFocusEvent *e);
 
 
 };

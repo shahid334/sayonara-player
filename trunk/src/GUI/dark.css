@@ -33,6 +33,14 @@ QListView, QTableView{
 	selection-background-color: #424e72;
 }
 
+QListView:focus, QTableView:focus{
+
+	border: 1px solid #424e72;
+}
+
+
+
+
 
 QScrollBar::vertical {
 

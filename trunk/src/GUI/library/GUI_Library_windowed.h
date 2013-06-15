@@ -59,6 +59,7 @@
 #include <QMenu>
 #include <QMap>
 #include <QMessageBox>
+#include <QFocusEvent>
 
 using namespace Sort;
 
@@ -118,6 +119,7 @@ signals:
 	void sig_play_next_all_tracks();
 
 	void sig_info_btn_clicked();
+    void sig_no_focus();
 
 public slots:
 	void fill_library_tracks(MetaDataList&);
@@ -193,6 +195,7 @@ private slots:
 
 protected:
 	void resizeEvent(QResizeEvent* e);
+    void focusInEvent(QFocusEvent *e);
 
 
 private:

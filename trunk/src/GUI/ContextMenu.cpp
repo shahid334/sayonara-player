@@ -98,16 +98,24 @@ void ContextMenu::setup_entries(int entries){
     }
 
     if(entries & ENTRY_REMOVE){
+
         this->addAction(_remove_action);
         connect(_remove_action, SIGNAL(triggered()), this, SLOT(remove_clicked()));
+
+
     }
+
     if(entries & ENTRY_DELETE){
+
         this->addAction(_delete_action);
         connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_clicked()));
     }
+
     if(entries & ENTRY_PLAY_NEXT){
+
         this->addAction(_play_next_action);
         connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_clicked()));
+
     }
 }
 
@@ -129,5 +137,6 @@ void ContextMenu::delete_clicked(){
 }
 
 void ContextMenu::play_next_clicked(){
+    qDebug() << "Play next clicked";
     emit sig_play_next_clicked();
 }

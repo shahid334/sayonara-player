@@ -118,7 +118,6 @@ void GUI_Player::setupConnections(){
     connect(ui->volumeSlider, SIGNAL(searchSliderPressed(int)), this,
     		SLOT(volumeChanged(int)));
 
-
     connect(ui->songProgress, SIGNAL(searchSliderReleased(int)), this,
     		SLOT(setProgressJump(int)));
 	connect(ui->songProgress, SIGNAL(searchSliderPressed(int)), this,

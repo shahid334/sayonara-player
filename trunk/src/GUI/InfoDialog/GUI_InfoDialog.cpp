@@ -151,6 +151,8 @@ void GUI_InfoDialog::language_changed(){
     setMode(_mode);
     setMetaData(v_md);
 
+    _alternate_covers->language_changed();
+
 }
 
 

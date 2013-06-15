@@ -690,7 +690,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Duration</source>
-        <translation>Длительнность</translation>
+        <translation>Дли.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
