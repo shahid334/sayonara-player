@@ -5,6 +5,8 @@
 #include <gst/gsturi.h>
 #include <gst/app/gstappsink.h>
 #include <gst/gstbuffer.h>
+#include <gst/gstelement.h>
+
 #include <glib.h>
 
 #include <cmath>
@@ -55,6 +57,8 @@ static void new_buffer(GstElement* sink, void* data){
 
 
 
+
+
 static gboolean show_position(GstElement* pipeline) {
 
     if (!__start_at_beginning)
@@ -66,6 +70,8 @@ static gboolean show_position(GstElement* pipeline) {
     gst_element_query_position(pipeline, &fmt, &pos);
 
     if (gst_obj_ref && gst_obj_ref->getState() == STATE_PLAY) {
+
+
         gst_obj_ref->set_cur_position((quint32)(pos / 1000000000)); // ms
     }
 

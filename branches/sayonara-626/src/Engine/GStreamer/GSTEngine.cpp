@@ -235,6 +235,8 @@ void GST_Engine::init_play_pipeline() {
             g_object_set (_app_queue,
                           "silent", TRUE,
                           NULL);
+            g_object_set(_app_queue, "max-size-bytes", 120000, NULL);
+            //g_object_set(_app_queue, "max-size-buffers", 5, NULL);
 
             g_object_set(_eq_queue,
                          "silent", TRUE,
@@ -246,10 +248,13 @@ void GST_Engine::init_play_pipeline() {
                           "drop", TRUE,
                           "max-buffers", 10,
                           "caps", audio_caps,
+                          //"max-lateness", (guint64)10000000,
+                          //"qos", TRUE,
                           "emit-signals", FALSE,
                           NULL);
 
             g_signal_connect (_app_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+
 
         }
 
