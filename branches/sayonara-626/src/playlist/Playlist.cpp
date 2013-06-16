@@ -52,6 +52,7 @@ Playlist::Playlist(QObject * parent) : QObject (parent){
 	_db = CDatabaseConnector::getInstance();
 	_v_meta_data.clear();
     _is_playing = false;
+    _pause = false;
 
 
 }

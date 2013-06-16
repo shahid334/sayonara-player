@@ -18,14 +18,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
+
 #include "GUI/player/GUI_Player.h"
 #include "GUI/player/GUI_TrayIcon.h"
-
-
-#include <QString>
-#include <QIcon>
 
 /** PLAYER BUTTONS **/
 void GUI_Player::playClicked(bool) {
@@ -122,6 +117,23 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 	QString length_str = Helper::cvtMsecs2TitleLengthString(total_time, true);
     m_completeLength_ms = total_time;
     ui->maxTime->setText(length_str);
+}
+
+void GUI_Player::jump_forward(){
+
+    int percent = this->ui->songProgress->value();
+    percent += 2;
+    setProgressJump(percent);
+    this->ui->songProgress->setValue(percent);
+
+}
+
+void GUI_Player::jump_backward(){
+    int percent = this->ui->songProgress->value();
+    percent -= 2;
+
+    setProgressJump(percent);
+    this->ui->songProgress->setValue(percent);
 }
 
 void GUI_Player::setProgressJump(int percent){

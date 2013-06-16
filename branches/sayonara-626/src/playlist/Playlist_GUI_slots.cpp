@@ -54,6 +54,14 @@ void Playlist::psl_clear_playlist(){
 // play a track
 void Playlist::psl_play(){
 
+    bool pause_old = _pause;
+    _pause = false;
+
+    if(pause_old){
+        emit sig_goon_playing();
+        return;
+    }
+
     if(_v_meta_data.size() == 0) return;
 
     // state was stop until now
@@ -71,6 +79,10 @@ void Playlist::psl_play(){
         emit sig_goon_playing();
     }
 
+}
+
+void Playlist::psl_pause(){
+    _pause = true;
 }
 
 void Playlist::psl_stop(){
@@ -197,6 +209,13 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
     if((switched_from_radio && _v_meta_data.size() > 0) || instant_play){
        send_cur_playing_signal(0);
     }
+}
+
+void Playlist::psl_append_tracks(MetaDataList& v_md){
+    foreach(MetaData md, v_md)
+        _v_meta_data.push_back(md);
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 }
 
 

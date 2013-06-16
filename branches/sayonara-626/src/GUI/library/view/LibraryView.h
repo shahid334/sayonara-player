@@ -29,26 +29,20 @@
 #ifndef MYTABLEVIEW_H_
 #define MYTABLEVIEW_H_
 
-#include <QTableView>
-#include <QObject>
-#include <QWidget>
-#include <QEvent>
-#include <QPoint>
-#include <QKeyEvent>
-#include <QList>
-#include <QString>
-#include <QMenu>
-#include <QAction>
-#include <QLineEdit>
-
-
-
 #include "GUI/MyColumnHeader.h"
 #include "GUI/ContextMenu.h"
 #include "GUI/library/model/LibraryItemModel.h"
 #include "HelperStructs/CustomMimeData.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
+#include "HelperStructs/Helper.h"
+
+#include <QTableView>
+#include <QPoint>
+#include <QKeyEvent>
+#include <QList>
+#include <QMenu>
+#include <QAction>
+#include <QLineEdit>
 
 
 class LibraryView : public QTableView{
@@ -65,6 +59,7 @@ signals:
     void sig_edit_clicked();
     void sig_delete_clicked();
     void sig_play_next_clicked();
+    void sig_append_clicked();
     void sig_sortorder_changed(Sort::SortOrder);
     void sig_pressed(QPoint&, const QModelIndex&);
     void sig_no_disc_menu();
@@ -80,6 +75,7 @@ private slots:
     void info_clicked();
     void delete_clicked();
     void play_next_clicked();
+    void append_clicked();
 
     void edit_changed(QString);
     void edit_return_clicked();
@@ -143,6 +139,25 @@ private:
     CustomMimeData*		_mimedata;
     int                 _view_mode;
     bool                _dark;
+
+    int get_min_selected();
+    void goto_row(int row);
+
+    // calc selections and insert into db
+    // row = row of item in list
+    // is selected
+    // variant = converted to variant
+    // selection in list
+    // current first selected row
+    // returns updated selected row
+    int run_loop(int row, QVariant& variant, bool is_selected, QItemSelection& sel, int first_selected_row);
+
+    // prepares model and returns the QItemSelection for the table
+    QItemSelection reset_and_get_selection(int size);
+
+    // selects according to selctions
+    void select_and_scroll_to(int row);
+
 
 };
 

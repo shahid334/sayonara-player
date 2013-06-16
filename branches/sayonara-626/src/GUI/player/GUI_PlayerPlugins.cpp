@@ -29,13 +29,8 @@
 
 #include "GUI/player/GUI_Player.h"
 
-#include <QWidget>
-#include <QAction>
-
 
 /** PLUGINS **/
-
-
 QWidget* GUI_Player::getParentOfPlugin() {
 	return ui->plugin_widget;
 }

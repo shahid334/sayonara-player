@@ -33,23 +33,15 @@
 #include "GUI/playlist/view/PlaylistView.h"
 #include "GUI/playlist/delegate/PlaylistItemDelegate.h"
 
-#include <QWidget>
-#include <QListView>
-#include <QMouseEvent>
 #include <QDebug>
 #include <QUrl>
-#include <QMenu>
-#include <QModelIndex>
 #include <QScrollBar>
-
-
-
 
 PlaylistView::PlaylistView(QWidget* parent) : QListView(parent) {
 
     _drag_allowed = true;
     _inner_drag_drop = false;
-	_parent = parent;
+    _parent = parent;
     _qDrag = 0;
     _last_known_drag_row = -1;
     _model = new PlaylistItemModel(this);
@@ -77,268 +69,172 @@ PlaylistView::~PlaylistView() {
 
 void PlaylistView::mousePressEvent(QMouseEvent* event) {
 
-	QPoint pos_org = event->pos();
-	QPoint pos = QWidget::mapToGlobal(pos_org);
+    QPoint pos_org = event->pos();
+    QPoint pos = QWidget::mapToGlobal(pos_org);
 
-	switch (event->button()) {
+    switch (event->button()) {
 
     case Qt::LeftButton:
         if(!_drag_allowed) break;
 
-		QListView::mousePressEvent(event);
+        QListView::mousePressEvent(event);
 
-		if ((this->model()->rowCount()) * 33 > event->pos().y())
-			_drag_pos = event->pos();
+        if ((this->model()->rowCount()) * 33 > event->pos().y())
+            _drag_pos = event->pos();
 
-		else {
-			_drag_pos.setY(-10);
-			_drag = false;
-		}
+        else {
+            _drag_pos.setY(-10);
+            _drag = false;
+        }
 
-		break;
+        break;
 
-	case Qt::RightButton:
-		_drag = false;
+    case Qt::RightButton:
+        _drag = false;
 
-		QListView::mousePressEvent(event);
-		pos.setY(pos.y());
-		pos.setX(pos.x() + 10);
-
+        QListView::mousePressEvent(event);
+        pos.setY(pos.y());
+        pos.setX(pos.x() + 10);
 
         _rc_menu->exec(pos);
 
         break;
 
-	default:
-		_drag = false;
-		break;
-	}
+    default:
+        _drag = false;
+        break;
+    }
 }
 
 
 void PlaylistView::mouseMoveEvent(QMouseEvent* event) {
 
-	QPoint pos = event->pos();
-	int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
+    QPoint pos = event->pos();
+    int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
-    if (_drag && _qDrag && distance > 10 && _drag_allowed) {
+    if (_drag && _qDrag && (distance > 10) && _drag_allowed) {
         _qDrag->exec(Qt::CopyAction);
-	}
+    }
 }
 
 
 void PlaylistView::mouseReleaseEvent(QMouseEvent* event) {
 
-	switch (event->button()) {
+    switch (event->button()) {
 
-		case Qt::LeftButton:
+        case Qt::LeftButton:
 
             if(_qDrag) {
-               delete _qDrag;
+                delete _qDrag;
                 _qDrag = NULL;
             }
 
-			QListView::mouseReleaseEvent(event);
-			event->accept();
+            QListView::mouseReleaseEvent(event);
+            event->accept();
 
-			_drag = false;
-			break;
+            _drag = false;
+            break;
 
-		default: break;
-	}
+        default: break;
+    }
 }
+
+
+// get the min index of selected rows
+int PlaylistView::get_min_selected(){
+
+    QModelIndexList lst = this->selectedIndexes();
+    int min_row = 5000000;
+
+    if(lst.size() == 0) return 0;
+
+    foreach(QModelIndex i, lst){
+        if(i.row() < min_row){
+            min_row = i.row();
+        }
+    }
+
+    return min_row;
+}
+
+// mark row as currently pressed
+void PlaylistView::goto_row(int row){
+    if( (row >= _model->rowCount()) || (row < 0) ) return;
+
+    this->clearSelection();
+
+    QModelIndex idx = _model->index(row, 0);
+    QList<int> lst_rows;
+    lst_rows << row;
+    this->select_rows(lst_rows);
+    row_released(idx);
+    this->scrollTo(idx);
+}
+
 
 void PlaylistView::keyPressEvent(QKeyEvent* event){
 
     int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
+    int min_row = get_min_selected();
+    int new_row = -1;
 
 
-    if( (modifiers & Qt::ControlModifier) &&
-        (key == Qt::Key_A) ){
+    switch(key){
+        case Qt::Key_A:
+            if( modifiers & Qt::ControlModifier ) select_all();
+            break;
 
-        select_all();
-    }
+        case Qt::Key_Delete:
+            remove_cur_selected_rows();
+            break;
 
-    else if( key == Qt::Key_Delete){
-        remove_cur_selected_rows();
-    }
+        case Qt::Key_Up:
+            if( modifiers & Qt::ControlModifier ) break;
 
-    else if((key == Qt::Key_Up) && !(modifiers & Qt::ControlModifier)){
+            if(min_row > 0) new_row = min_row - 1;
+            else new_row = 0;
+            break;
 
-       QModelIndexList lst = this->selectedIndexes();
-       QModelIndex idx;
-       int min_row = 5000000;
-       if(lst.size() == 0){
-           min_row = 0;
-       }
+        case Qt::Key_Down:
+            if( modifiers & Qt::ControlModifier ) break;
 
-       else {
+            if(min_row < _model->rowCount() - 1) new_row = min_row + 1;
+            else new_row = _model->rowCount() - 1;
+            break;
 
-          foreach(QModelIndex i, lst){
-              if(i.row() < min_row){
-                  min_row = i.row();
-              }
-          }
+        case Qt::Key_PageUp:
+            if(min_row > 10) new_row = min_row - 10;
+            else new_row = 0;
+            break;
 
-          if(min_row > 0) min_row --;
-          else min_row = 0;
-       }
+        case Qt::Key_PageDown:
+            if(min_row < _model->rowCount() - 10) new_row = min_row + 10;
+            else new_row =  _model->rowCount() - 1;
+            break;
 
-       this->clearSelection();
+        case Qt::Key_End:
+            new_row = _model->rowCount() - 1;
+            break;
 
-       idx = _model->index(min_row, 0);
-       QList<int> lst_rows;
-       lst_rows << min_row;
-       this->select_rows(lst_rows);
-       row_released(idx);
-       this->scrollTo(idx);
+        case Qt::Key_Home:
+            new_row = 0;
+            break;
 
-    }
-
-     else if((key == Qt::Key_Down) && !(modifiers & Qt::ControlModifier)){
-        QModelIndexList lst = this->selectedIndexes();
-        QModelIndex idx;
-        int min_row = 5000000;
-        if(lst.size() == 0){
-            min_row = 0;
-        }
-
-        else {
-
-           foreach(QModelIndex i, lst){
-               if(i.row() < min_row){
-                   min_row = i.row();
-               }
-           }
-
-           if(min_row < _model->rowCount() - 1) min_row ++;
-           else min_row = _model->rowCount() - 1;
-        }
-
-        this->clearSelection();
-
-        idx = _model->index(min_row, 0);
-        QList<int> lst_rows;
-        lst_rows << min_row;
-        this->select_rows(lst_rows);
-        row_released(idx);
-
-        calc_selections();
-        this->scrollTo(idx);
-    }
-
-    else if( key == Qt::Key_PageUp){
-        QModelIndexList lst = this->selectedIndexes();
-        QModelIndex idx;
-        int min_row = 5000000;
-        if(lst.size() == 0){
-            min_row = 0;
-        }
-
-        else {
-
-           foreach(QModelIndex i, lst){
-               if(i.row() < min_row){
-                   min_row = i.row();
-               }
-           }
-
-           if(min_row > 10) min_row -= 10;
-           else min_row = 0;
-        }
-
-        this->clearSelection();
-
-        idx = _model->index(min_row, 0);
-        QList<int> lst_rows;
-        lst_rows << min_row;
-        this->select_rows(lst_rows);
-        row_released(idx);
-        this->scrollTo(idx);
-    }
-
-    else if( key == Qt::Key_PageDown){
-        QModelIndexList lst = this->selectedIndexes();
-        QModelIndex idx;
-        int min_row = 5000000;
-        if(lst.size() == 0){
-            min_row = 0;
-        }
-
-        else {
-
-           foreach(QModelIndex i, lst){
-               if(i.row() < min_row){
-                   min_row = i.row();
-               }
-           }
-
-          if(min_row < _model->rowCount() - 10) min_row += 10;
-          else min_row =  _model->rowCount() - 1;
-        }
-
-        this->clearSelection();
-
-        idx = _model->index(min_row, 0);
-        QList<int> lst_rows;
-        lst_rows << min_row;
-        this->select_rows(lst_rows);
-        row_released(idx);
-        this->scrollTo(idx);
-    }
-
-    else if( (key == Qt::Key_Return) || (key == Qt::Key_Enter) ){
-
-        QList<int> selections = calc_selections();
-        if(selections.size() == 0){
-            return;
-        }
-
-        else{
-            int min_row = 5000000;
-            QModelIndexList lst = this->selectedIndexes();
-            if(lst.size() == 0) return;
-            foreach(QModelIndex i, lst){
-                if(i.row() < min_row){
-                    min_row = i.row();
-                }
-            }
-
+        case Qt::Key_Return:
+        case Qt::Key_Enter:
             this->sig_double_clicked(min_row);
-        }
+            break;
+
+        case Qt::Key_Tab:
+            emit sig_no_focus();
+            break;
+
+        default: break;
     }
 
-    else if(key == Qt::Key_End){
-        this->clearSelection();
-        if(_model->rowCount() == 0 ) return;
-        QModelIndex idx = _model->index(_model->rowCount() - 1, 0);
-        QList<int> lst_rows;
-        lst_rows << _model->rowCount() - 1;
-        this->select_rows(lst_rows);
-        row_released(idx);
-        calc_selections();
-        this->scrollToBottom();
-    }
-
-    else if(key == Qt::Key_Home){
-        this->clearSelection();
-
-        if(_model->rowCount() == 0 ) return;
-        QModelIndex idx = _model->index(0, 0);
-        row_released(idx);
-        QList<int> lst_rows;
-        lst_rows << 0;
-        this->select_rows(lst_rows);
-        calc_selections();
-        this->scrollToTop();
-    }
-
-    else if(key == Qt::Key_Tab){
-
-        emit sig_no_focus();
-    }
+    if(new_row != -1) goto_row(new_row);
 }
 
 void PlaylistView::resizeEvent(QResizeEvent *e){
@@ -431,9 +327,6 @@ void PlaylistView::remove_clicked(){
     remove_cur_selected_rows();
 }
 
-
-
-
 void PlaylistView::clear(){
     clear_selection();
     _model->removeRows(0, _model->rowCount());
@@ -442,31 +335,27 @@ void PlaylistView::clear(){
 
 void PlaylistView::fill(MetaDataList &v_metadata, int cur_play_idx){
 
-
     this->set_delegate_max_width((int) v_metadata.size());
-
 
     _model->removeRows(0, _model->rowCount());
     if(v_metadata.size() == 0) return;
 
     _model->insertRows(0, v_metadata.size());
-
-    int idx = 0;
     _cur_selected_rows.clear();
 
-
     QModelIndex idx_cur_playing = _model->index(0);
-    foreach(MetaData md, v_metadata){
+    for(uint i=0; i<v_metadata.size(); i++){
+        MetaData md = v_metadata[i];
 
-        QModelIndex model_idx = _model->index(idx, 0);
-        md.pl_playing = (cur_play_idx == idx);
+        QModelIndex model_idx = _model->index(i, 0);
+
+        md.pl_playing = (cur_play_idx == i);
         if(md.pl_playing) idx_cur_playing = model_idx;
 
-        _model->setData(model_idx, md.toVariant(), Qt::EditRole);
         if(md.pl_selected)
-            _cur_selected_rows << idx;
+            _cur_selected_rows << i;
 
-        idx++;
+        _model->setData(model_idx, md.toVariant(), Qt::EditRole);
     }
 
     _model->set_selected(_cur_selected_rows);
@@ -533,7 +422,6 @@ void PlaylistView::select_rows(QList<int> lst){
     sm->select(sel,QItemSelectionModel::Select);
 
     _cur_selected_rows = calc_selections();
-
 }
 
 void PlaylistView::select_all(){
@@ -636,7 +524,6 @@ void PlaylistView::dropEventFromOutside(QDropEvent* event){
 // finally drop it
 void PlaylistView::dropEvent(QDropEvent* event){
 
-
     event->accept();
 
     if(!event->mimeData()) return;
@@ -684,11 +571,11 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside){
 
         QStringList filelist;
         foreach(QUrl url, d->urls()){
-                QString path;
-                QString url_str = url.toString();
-                path =  url_str.right(url_str.length() - 7).trimmed();
-                path = path.replace("%20", " ");
-                filelist.push_back(path);
+            QString path;
+            QString url_str = url.toString();
+            path =  url_str.right(url_str.length() - 7).trimmed();
+            path = path.replace("%20", " ");
+            filelist.push_back(path);
 
         } // end foreach
 
@@ -758,12 +645,9 @@ void PlaylistView::set_delegate_max_width(int n_items){
 
     bool scrollbar_visible = (( n_items * _delegate->rowHeight() ) >= this->height());
 
-    if(scrollbar_visible){
-        _delegate->setMaxWidth(this->width() - verticalScrollBar()->width());
-    }
+    int max_width = this->width();
+    if(scrollbar_visible)
+        max_width -= verticalScrollBar()->width();
 
-    else {
-        _delegate->setMaxWidth(this->width());
-    }
-
+    _delegate->setMaxWidth(max_width);
 }

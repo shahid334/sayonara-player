@@ -36,6 +36,7 @@ ContextMenu::ContextMenu(QWidget* parent) :
     _remove_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Remove"), this);
     _delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Delete"), this);
     _play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), tr("Play next"), this);
+    _append_action = new QAction(QIcon(Helper::getIconPath() + "append.png"), tr("Append"), this);
 
     Helper::set_deja_vu_font(this);
 }
@@ -112,10 +113,13 @@ void ContextMenu::setup_entries(int entries){
     }
 
     if(entries & ENTRY_PLAY_NEXT){
-
         this->addAction(_play_next_action);
         connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_clicked()));
+    }
 
+    if(entries & ENTRY_APPEND){
+        this->addAction(_append_action);
+        connect(_append_action, SIGNAL(triggered()), this, SLOT(append_clicked()));
     }
 }
 
@@ -137,6 +141,9 @@ void ContextMenu::delete_clicked(){
 }
 
 void ContextMenu::play_next_clicked(){
-    qDebug() << "Play next clicked";
     emit sig_play_next_clicked();
+}
+
+void ContextMenu::append_clicked(){
+    emit sig_append_clicked();
 }

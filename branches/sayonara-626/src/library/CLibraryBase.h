@@ -56,6 +56,7 @@ signals:
     void sig_all_albums_loaded(AlbumList&);
     void sig_all_artists_loaded(ArtistList&);
     void sig_tracks_for_playlist_available(MetaDataList&);
+    void sig_append_tracks_to_playlist(MetaDataList&);
     void sig_mp3s_loaded(int);
 
     void sig_should_reload_library();
@@ -69,6 +70,7 @@ signals:
 
     void sig_delete_answer(QString);
     void sig_play_next_tracks(const MetaDataList&);
+
 
 
 
@@ -106,6 +108,11 @@ public slots:
 
     void psl_play_next_all_tracks();
     void psl_play_next_tracks(const QList<int>&);
+
+    void psl_append_all_tracks();
+    void psl_append_tracks(const QList<int>&);
+
+
 
 private slots:
    void reload_thread_finished();

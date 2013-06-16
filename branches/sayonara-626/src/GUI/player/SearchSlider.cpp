@@ -43,6 +43,7 @@ bool SearchSlider::isSearching(){
 	return _searching;
 }
 
+
 bool SearchSlider::event(QEvent* e){
 
 

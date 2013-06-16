@@ -32,6 +32,7 @@
 #define ENTRY_REMOVE (1 << 2)
 #define ENTRY_DELETE (1 << 3)
 #define ENTRY_PLAY_NEXT (1 << 4)
+#define ENTRY_APPEND (1 << 5)
 
 
 class ContextMenu : public QMenu
@@ -50,6 +51,7 @@ signals:
     void sig_remove_clicked();
     void sig_delete_clicked();
     void sig_play_next_clicked();
+    void sig_append_clicked();
 
 private slots:
     void info_clicked();
@@ -57,6 +59,7 @@ private slots:
     void remove_clicked();
     void delete_clicked();
     void play_next_clicked();
+    void append_clicked();
 
 public slots:
 
@@ -66,6 +69,7 @@ private:
     QAction* 			_remove_action;
     QAction* 			_delete_action;
     QAction*            _play_next_action;
+    QAction*            _append_action;
 
     void clear_actions();
 

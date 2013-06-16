@@ -18,11 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "GUI/player/GUI_Player.h"
-#include <QDebug>
-#include <QObject>
 
 void GUI_Player::setupConnections(){
 
@@ -153,6 +149,36 @@ void GUI_Player::setupConnections(){
         connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(setLibraryPathClicked()));
 
 
+
+    QList<QKeySequence> lst;
+    lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);
+    QAction* play_pause_action = createAction(lst);
+    connect(play_pause_action, SIGNAL(triggered()), ui->btn_play, SLOT(click()));
+
+    QList<QKeySequence> lst_fwd;
+    lst_fwd << QKeySequence(Qt::Key_MediaNext) << QKeySequence(Qt::ControlModifier | Qt::Key_Right);
+    QAction* fwd_action = createAction(lst_fwd);
+    connect(fwd_action, SIGNAL(triggered()), ui->btn_fw, SLOT(click()));
+
+    QList<QKeySequence> lst_bwd;
+    lst_bwd << QKeySequence(Qt::Key_MediaPrevious) << QKeySequence(Qt::ControlModifier | Qt::Key_Left);
+    QAction* bwd_action = createAction(lst_bwd);
+    connect(bwd_action, SIGNAL(triggered()), ui->btn_bw, SLOT(click()));
+
+    QAction* stop_action = createAction(QKeySequence(Qt::ControlModifier | Qt::Key_Space));
+    connect(stop_action, SIGNAL(triggered()), ui->btn_stop, SLOT(click()));
+
+    QAction* louder_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Up));
+    connect(louder_action, SIGNAL(triggered()), this, SLOT(volumeHigher()));
+
+    QAction* leiser_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Down));
+    connect(leiser_action, SIGNAL(triggered()), this, SLOT(volumeLower()));
+
+    QAction* two_perc_plus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Right));
+    connect(two_perc_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward()));
+
+    QAction* two_perc_minus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Left));
+    connect(two_perc_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward()));
 
     qDebug() << "connections done";
 }

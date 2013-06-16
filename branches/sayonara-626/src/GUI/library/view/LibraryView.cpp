@@ -28,13 +28,11 @@
 
 #include "GUI/library/view/LibraryView.h"
 #include "GUI/ContextMenu.h"
+#include "HelperStructs/CustomMimeData.h"
 
-#include <QWidget>
 #include <QTableView>
 #include <QMouseEvent>
 #include <QDebug>
-#include <QMenu>
-#include <QString>
 #include <QStringList>
 #include <QHeaderView>
 #include <QAction>
@@ -44,9 +42,7 @@
 #include <QScrollBar>
 #include <QFont>
 
-#include "HelperStructs/CustomMimeData.h"
-#include "HelperStructs/MetaData.h"
-#include "HelperStructs/Helper.h"
+
 
 #define VIEW_MODE_METADATA 0
 #define VIEW_MODE_ALBUMS 1
@@ -234,26 +230,37 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
 void LibraryView::forbid_mimedata_destroyable(){
 
     _qDrag = NULL;
+}
 
+int LibraryView::get_min_selected(){
+
+    QList<int> selections = _model->get_selected();
+    int min = 10000;
+    foreach(int i, selections){
+        if(i < min) min = i;
+    }
+    return min;
+}
+
+void LibraryView::goto_row(int row){
+
+    if(_model->rowCount() == 0) return;
+
+    if( row < 0 ) row = 0;
+    else if( row > _model->rowCount() - 1) row = _model->rowCount() - 1;
+
+    this->clearSelection();
+    this->selectRow(row);
+    QModelIndex idx = _model->index(row, 0);
+    this->scrollTo(idx);
+    emit clicked(idx);
 }
 
 
 void LibraryView::keyPressEvent(QKeyEvent* event){
-    int key = event->key();
+
+    // _edit has changed
     QString text = event->text();
-
-    Qt::KeyboardModifiers  modifiers = event->modifiers();
-    //qDebug() << "key = " << key;
-
-    if( (modifiers & Qt::ControlModifier) &&
-            (key == Qt::Key_A) ){
-
-        selectAll();
-        calc_selections();
-
-        emit sig_all_selected();
-    }
-
     if(text.size() > 0 && text[0].isLetterOrNumber()){
         int sb_width = this->verticalScrollBar()->width();
         if(!this->verticalScrollBar()->isVisible()) sb_width = 0;
@@ -265,149 +272,113 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         _edit->setFocus();
         _edit->setText(text);
         _edit->show();
+        return;
     }
 
 
-    else if(key == Qt::Key_Escape){
-        reset_edit();
+    int key = event->key();
+    //qDebug() << "key = " << key;
+
+    Qt::KeyboardModifiers  modifiers = event->modifiers();
+
+    bool shift_pressed = (modifiers & Qt::ShiftModifier);
+    bool alt_pressed = (modifiers & Qt::AltModifier);
+    bool ctrl_pressed = (modifiers & Qt::ControlModifier);
+
+    int min_row = get_min_selected();
+    int new_row = -1;
+
+    QList<int> selections = calc_selections();
+    int last_row =  _model->rowCount() - 1;
+
+    switch(key){
+        case Qt::Key_A:
+            if( ctrl_pressed ){
+                selectAll();
+                calc_selections();
+                emit sig_all_selected();
+            }
+            break;
+
+        case Qt::Key_Escape:
+            reset_edit();
+            break;
+
+        case Qt::Key_Up:
+            if(ctrl_pressed) break;
+
+            if(selections.size() == 0) new_row = last_row;
+            else if(min_row > 0) new_row = min_row - 1;
+            else new_row = 0;
+            break;
+
+
+        case Qt::Key_Down:
+            if(ctrl_pressed) break;
+
+            if(selections.size() == 0) new_row = 0;
+            else if(min_row < last_row) new_row = min_row + 1;
+            else new_row = last_row;
+            break;
+
+        case Qt::Key_PageUp:
+            if(ctrl_pressed) break;
+
+            if(selections.size() == 0) new_row = last_row;
+            if(min_row >= 10) new_row = min_row - 10;
+            else new_row = 0;
+
+            break;
+
+        case Qt::Key_PageDown:
+            if(ctrl_pressed) break;
+
+            if(selections.size() == 0) new_row = 0;
+            else if(min_row < _model->rowCount() - 10) new_row = min_row + 10;
+            else new_row = last_row;
+            break;
+
+        case Qt::Key_End:
+            new_row = _model->rowCount() - 1;
+            break;
+
+        case Qt::Key_Home:
+            new_row = 0;
+            break;
+
+
+        case Qt::Key_Return:
+        case Qt::Key_Enter:
+            if(selections.size() == 0) break;
+            if(ctrl_pressed) break;
+
+            // standard enter
+            if(!shift_pressed && !alt_pressed)
+                emit doubleClicked( _model->index(selections[0], 0));
+
+            // enter with shift
+            else if(shift_pressed && !alt_pressed){
+                append_clicked();
+            }
+
+            else if(alt_pressed){
+
+                play_next_clicked();
+            }
+
+            break;
+
+
+        case Qt::Key_Tab:
+            if(alt_pressed || ctrl_pressed) break;
+            emit sig_tab_pressed(shift_pressed);
+            break;
+
+        default: break;
     }
 
-    else if((key == Qt::Key_Up) && !(modifiers & Qt::ControlModifier)){
+    if(new_row != -1) goto_row(new_row);
 
-        QList<int> selections = _model->get_selected();
-        int min = 10000;
-        foreach(int i, selections){
-            if(i < min) min = i;
-        }
-
-        if(min > 0 && min < _model->rowCount()) min--;
-        else min = 0;
-
-        selections.clear();
-        selections << min;
-
-
-        this->clearSelection();
-        this->selectRow(min);
-        QModelIndex idx = _model->index(min, 0);
-        this->scrollTo(idx);
-        emit clicked(idx);
-    }
-
-
-     else if((key == Qt::Key_Down) && !(modifiers & Qt::ControlModifier)){
-
-        this->clearSelection();
-        QList<int> selections = _model->get_selected();
-        int min = 10000;
-        foreach(int i, selections){
-            if(i < min) min = i;
-        }
-
-        if(min < _model->rowCount() - 1 && min >= 0) min++;
-        else min = _model->rowCount() - 1;
-
-
-        selections.clear();
-        selections << min;
-
-        this->clearSelection();
-        this->selectRow(min);
-        QModelIndex idx = _model->index(min, 0);
-        this->scrollTo(idx);
-        emit clicked(idx);
-    }
-
-
-    else if((key == Qt::Key_PageUp) && !(modifiers & Qt::ControlModifier)){
-
-        QList<int> selections = _model->get_selected();
-        int min = 10000;
-        foreach(int i, selections){
-            if(i < min) min = i;
-        }
-
-        if(min >= 10 && min < _model->rowCount()) min-=10;
-        else min = 0;
-
-        selections.clear();
-        selections << min;
-
-
-        this->clearSelection();
-        this->selectRow(min);
-        QModelIndex idx = _model->index(min, 0);
-        this->scrollTo(idx);
-        emit clicked(idx);
-    }
-
-
-     else if((key == Qt::Key_PageDown) && !(modifiers & Qt::ControlModifier)){
-
-        this->clearSelection();
-        QList<int> selections = _model->get_selected();
-        int min = 10000;
-        foreach(int i, selections){
-            if(i < min) min = i;
-        }
-
-        if(min < _model->rowCount() - 10 && min >= 0) min+=10;
-        else min = _model->rowCount() -1;
-
-
-        selections.clear();
-        selections << min;
-
-        this->clearSelection();
-        this->selectRow(min);
-        QModelIndex idx = _model->index(min, 0);
-        this->scrollTo(idx);
-        emit clicked(idx);
-    }
-
-
-
-    else if(key == Qt::Key_End){
-        if(_model->rowCount() == 0 ) return;
-        this->clearSelection();
-        this->selectRow(_model->rowCount() - 1);
-        QModelIndex idx = _model->index(_model->rowCount() - 1, 0);
-        this->scrollToBottom();
-        emit clicked(idx);
-    }
-
-    else if(key == Qt::Key_Home){
-        if(_model->rowCount() == 0 ) return;
-        this->clearSelection();
-        this->selectRow(0);
-        QModelIndex idx = _model->index(0, 0);
-        this->scrollToTop();
-        emit clicked(idx);
-
-    }
-
-    else if( (key == Qt::Key_Left) && !(modifiers & Qt::ControlModifier)){
-
-        QList<int> selections = calc_selections();
-        if(selections.size() == 0) return;
-
-        QModelIndex idx = _model->index(selections[0], 0);
-        emit doubleClicked(idx);
-    }
-
-    else if((key == Qt::Key_Left) && (modifiers & Qt::ShiftModifier)){
-        QList<int> selections = calc_selections();
-        if(selections.size() == 0) return;
-
-        play_next_clicked();
-
-    }
-
-    else if(key == Qt::Key_Tab){
-        bool mod = (modifiers & Qt::ControlModifier) || (modifiers & Qt::ShiftModifier);
-
-        emit sig_tab_pressed(mod);
-    }
 
 }
 
@@ -454,8 +425,6 @@ void LibraryView::reset_edit(){
     _edit->hide();
     this->setFocus();
 }
-
-
 
 
 QList<int> LibraryView::calc_selections(){
@@ -518,7 +487,7 @@ void LibraryView::sort_by_column(int col){
 
 void LibraryView::rc_menu_init(){
     _rc_menu = new ContextMenu(this);
-    _rc_menu->setup_entries(ENTRY_PLAY_NEXT | ENTRY_INFO | ENTRY_DELETE | ENTRY_EDIT);
+    _rc_menu->setup_entries(ENTRY_PLAY_NEXT | ENTRY_INFO | ENTRY_DELETE | ENTRY_EDIT | ENTRY_APPEND);
 }
 
 
@@ -530,6 +499,7 @@ void LibraryView::rc_menu_show(const QPoint& p){
     connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
     connect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
     connect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
+    connect(_rc_menu, SIGNAL(sig_append_clicked()), this, SLOT(append_clicked()));
 
     _rc_menu->exec(p);
 
@@ -537,6 +507,7 @@ void LibraryView::rc_menu_show(const QPoint& p){
     disconnect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
     disconnect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
     disconnect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_append_clicked()), this, SLOT(append_clicked()));
 }
 
 
@@ -553,6 +524,9 @@ void LibraryView::play_next_clicked(){
     emit sig_play_next_clicked();
 }
 
+void LibraryView::append_clicked(){
+    emit sig_append_clicked();
+}
 
 void LibraryView::set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting){
 
@@ -738,13 +712,15 @@ void LibraryView::fill_metadata(const MetaDataList& v_md){
     QList<int> lst;
     _model->set_selected(lst);
 
+    uint metadata_size = v_md.size();
+
     _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, v_md.size());
+    _model->insertRows(0, metadata_size);
 
     QItemSelectionModel* sm = this->selectionModel();
     QItemSelection sel = sm->selection();
 
-    for(uint row=0; row<v_md.size(); row++){
+    for(uint row=0; row<metadata_size; row++){
         MetaData md = v_md[row];
 
         if(md.is_lib_selected){
@@ -770,9 +746,10 @@ void LibraryView::fill_albums(const AlbumList& albums){
 
     QList<int> lst;
     _model->set_selected(lst);
+    uint albums_size = albums.size();
 
     _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, albums.size()); // fake "all albums row"
+    _model->insertRows(0, albums_size); // fake "all albums row"
 
     QModelIndex idx;
     int first_selected_album_row = -1;
@@ -780,7 +757,7 @@ void LibraryView::fill_albums(const AlbumList& albums){
     QItemSelectionModel* sm = this->selectionModel();
     QItemSelection sel = sm->selection();
 
-    for(uint row=0; row < albums.size(); row++){
+    for(uint row=0; row < albums_size; row++){
         Album album = albums[row];
 
         idx = _model->index(row, 1);
@@ -812,9 +789,10 @@ void LibraryView::fill_artists(const ArtistList& artists){
     _view_mode = VIEW_MODE_ARTISTS;
     QList<int> lst;
     _model->set_selected(lst);
+    uint artist_size = artists.size();
 
     _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, artists.size()); // fake "all albums row"
+    _model->insertRows(0, artist_size); // fake "all albums row"
 
     QModelIndex idx;
     int first_selected_artist_row = -1;
@@ -822,7 +800,7 @@ void LibraryView::fill_artists(const ArtistList& artists){
     QItemSelectionModel* sm = this->selectionModel();
     QItemSelection sel = sm->selection();
 
-    for(uint row=0; row < artists.size(); row++){
+    for(uint row=0; row < artist_size; row++){
         Artist artist = artists[row];
 
         idx = _model->index(row, 1);
@@ -867,8 +845,6 @@ void LibraryView::calc_corner_widget(){
 
     }
 
-
-
     if(this->cornerWidget()){
         if(_dark)
             this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
@@ -878,11 +854,6 @@ void LibraryView::calc_corner_widget(){
             this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
         }
     }
-
-
-
-
-
 }
 
 

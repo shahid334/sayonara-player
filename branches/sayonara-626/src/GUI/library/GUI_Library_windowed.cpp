@@ -152,6 +152,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_album, SIGNAL(sig_info_clicked()), this, SLOT(info_album()));
     connect(this->ui->lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
     connect(this->ui->lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
+    connect(this->ui->lv_album, SIGNAL(sig_append_clicked()), this, SLOT(append()));
     connect(this->ui->lv_album, SIGNAL(sig_no_disc_menu()), this, SLOT(delete_menu()));
     connect(this->ui->lv_album, SIGNAL(sig_tab_pressed(bool)), this, SLOT(album_tab_pressed(bool)));
 
@@ -166,6 +167,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->tb_title, SIGNAL(sig_info_clicked()), this, SLOT(info_tracks()));
     connect(this->ui->tb_title, SIGNAL(sig_delete_clicked()), this, SLOT(delete_tracks()));
     connect(this->ui->tb_title, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_tracks()));
+    connect(this->ui->tb_title, SIGNAL(sig_append_clicked()), this, SLOT(append_tracks()));
     connect(this->ui->tb_title, SIGNAL(sig_tab_pressed(bool)), this, SLOT(track_tab_pressed(bool)));
 
 
@@ -180,6 +182,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_artist, SIGNAL(sig_info_clicked()), this, SLOT(info_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
     connect(this->ui->lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
+    connect(this->ui->lv_artist, SIGNAL(sig_append_clicked()), this, SLOT(append()));
     connect(this->ui->lv_artist, SIGNAL(sig_tab_pressed(bool)), this, SLOT(artist_tab_pressed(bool)));
 
     
@@ -638,6 +641,22 @@ void GUI_Library_windowed::play_next_tracks(){
 	emit sig_play_next_tracks(lst);
 }
 
+void GUI_Library_windowed::append(){
+
+    emit sig_append_all_tracks();
+
+}
+
+void GUI_Library_windowed::append_tracks(){
+    QModelIndexList idx_list = this->ui->tb_title->selectionModel()->selectedRows(0);
+    QList<int> lst;
+    foreach(QModelIndex idx, idx_list){
+        lst.push_back(idx.row());
+    }
+
+    emit sig_append_tracks(lst);
+}
+
 
 void GUI_Library_windowed::psl_delete_answer(QString answer){
 	QMessageBox answerbox(this);
@@ -725,16 +744,16 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks){
 }
 
 void GUI_Library_windowed::artist_middle_clicked(const QPoint& pt){
-	play_next();
+    append();
 }
 
 
 void GUI_Library_windowed::album_middle_clicked(const QPoint& pt){
-	play_next();
+    append();
 }
 
 void GUI_Library_windowed::tracks_middle_clicked(const QPoint& pt){
-	play_next_tracks();
+    append_tracks();
 }
 
 
