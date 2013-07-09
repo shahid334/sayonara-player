@@ -1,9 +1,14 @@
-sayonara (0.3.3) unstable; urgency=low
+sayonara (0.4) unstable; urgency=low
   
   * Language support
   * Memory leak fixed
   * Asynchronous import to library
   * No blurred notifications
+  * Improved alternative cover fetcher
+  * Keyboard shortcuts
+  * Update notifier
+  * Level meter
+  * Less memory consumption
   * Sorting in library is saved
   * Load last track for non-library tracks fixed
   * Trusted debian packages
