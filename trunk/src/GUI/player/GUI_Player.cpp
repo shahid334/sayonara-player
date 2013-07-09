@@ -81,7 +81,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     ui->lab_sayonara->setText(tr("Sayonara Player"));
     ui->lab_version->setText(m_settings->getVersion());
     ui->lab_writtenby->setText(tr("Written by") + " Lucio Carreras");
-    ui->lab_copyright->setText(tr("Copyright "));
+    ui->lab_copyright->setText(tr("Copyright") + " 2011-2013");
 
     m_metadata_available = false;
 	m_playing = false;

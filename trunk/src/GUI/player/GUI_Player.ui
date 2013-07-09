@@ -885,7 +885,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Copyright 2013</string>
+         <string>Copyright 2011-2013</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
