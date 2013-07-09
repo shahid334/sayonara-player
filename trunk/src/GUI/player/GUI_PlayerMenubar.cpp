@@ -24,23 +24,13 @@
  */
 
 #include "GUI/player/GUI_Player.h"
-#include "HelperStructs/CSettingsStorage.h"
-#include <HelperStructs/Style.h>
 
-#include <QWidget>
 #include <QDir>
-#include <QStringList>
 #include <QFileDialog>
-
-
-#include <cstdio>
-#include <cstdlib>
 
 
 
 /** FILE **/
-
-
 void GUI_Player::fileSelectedClicked(bool) {
 
 	QStringList filetypes = Helper::get_soundfile_extensions();

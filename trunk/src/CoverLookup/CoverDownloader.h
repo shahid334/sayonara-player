@@ -35,15 +35,10 @@
 #ifndef COVERDOWNLOADER_H_
 #define COVERDOWNLOADER_H_
 
-#include <vector>
-#include <string>
-#include <string.h>
-#include <stdio.h>
 #include "HelperStructs/WebAccess.h"
 
 #include <curl/curl.h>
 
-#include <QString>
 #include <QStringList>
 #include <QImage>
 #include <QUrl>
@@ -51,15 +46,11 @@
 #include <QRegExp>
 #include <QDir>
 
-
-using namespace std;
-
-
 QStringList cov_calc_adresses_from_webpage(uint num, QString& qwebpage) {
 
 	QStringList adresses;
 	if (qwebpage.size() == 0) {
-		cout << "No webpage found" << endl;
+        qDebug() << "No webpage found" << endl;
 		return adresses;
 	}
 

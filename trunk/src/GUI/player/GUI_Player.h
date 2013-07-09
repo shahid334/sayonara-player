@@ -35,14 +35,13 @@
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
 
-#include "Engine/Engine.h"
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/AsyncWebAccess.h"
 
 #include <QMainWindow>
@@ -50,11 +49,13 @@
 #include <QTranslator>
 #include "GUI/player/GUI_TrayIcon.h"
 
-
-#include <string>
-
-class QCloseEvent;
-
+#include <QList>
+#include <QCloseEvent>
+#include <QKeySequence>
+#include <QTranslator>
+#include <QWidget>
+#include <QAction>
+#include <QDebug>
 
 
 class GUI_Player : public QMainWindow, private Ui::Sayonara
@@ -67,7 +68,6 @@ public:
 public slots:
 
     void covers_found(const QStringList& lst, QString call_id);
-    void show_cur_song();
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
@@ -150,6 +150,8 @@ private slots:
     void correct_btn_clicked(bool b=false);
     void coverClicked();
     void setProgressJump(int percent);
+    void jump_forward();
+    void jump_backward();
 
     void muteButtonPressed();
     void volumeChanged(int volume_percent);
@@ -271,7 +273,10 @@ private:
     void setRadioMode(int);
     void total_time_changed(qint64);
     void fetch_cover();
+    QAction* createAction(QKeySequence key_sequence);
+    QAction* createAction(QList<QKeySequence>& key_sequences);
 
 };
+
 
 #endif // GUI_SIMPLEPLAYER_H

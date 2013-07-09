@@ -29,21 +29,11 @@
 #ifndef _HELPER_H
 #define _HELPER_H
 
-#include <HelperStructs/MetaData.h>
+#include "HelperStructs/MetaData.h"
 
-#include <string>
-#include <sstream>
-#include <iostream>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <QString>
 #include <QList>
-#include <ctime>
 #include <QWidget>
-
-using namespace std;
-
 
 namespace Helper{
 

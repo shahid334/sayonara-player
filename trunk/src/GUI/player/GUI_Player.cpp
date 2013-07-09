@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "GUI/ui_GUI_Player.h"
 #include "GUI/player/GUI_Player.h"
 #include "GUI/player/GUI_TrayIcon.h"
@@ -27,51 +25,43 @@
 #include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 
-#include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/AsyncWebAccess.h"
 #include "CoverLookup/CoverLookup.h"
 
-#include "Engine/Engine.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
-#include <QList>
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPalette>
 
 GUI_Player* obj_ref = 0;
-void signal_handler(int sig);
 
 #ifdef Q_OS_UNIX
 #include <signal.h>
 
-
 void signal_handler(int sig){
 
+    if(sig == SIGWINCH && obj_ref){
+        qDebug() << "show everything";
+        obj_ref->setHidden(false);
+        obj_ref->showNormal();
+        obj_ref->activateWindow();
+    }
 
-	if(sig == SIGWINCH && obj_ref){
-		qDebug() << "show everything";
-		obj_ref->setHidden(false);
-		obj_ref->showNormal();
-		obj_ref->activateWindow();
-	}
+    else if(sig == 15 && obj_ref){
+        qDebug() << "extern close event";
+        obj_ref->really_close();
+    }
+    else {
 
-	else if(sig == 15 && obj_ref){
-		qDebug() << "extern close event";
-		obj_ref->really_close();
-	}
-	else {
-
-		qDebug() << "signal " << sig << " received";
-	}
+        qDebug() << "signal " << sig << " received";
+    }
 }
 
 #endif
-
 
 GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     QMainWindow(parent), ui(new Ui::Sayonara) {
@@ -157,8 +147,6 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     }
 
 
-
-
 	/* TRAY ACTIONS */
 	this->setupTrayActions();
 
@@ -182,11 +170,9 @@ GUI_Player::~GUI_Player() {
 
 void GUI_Player::language_changed(QString language){
 
-
     m_translator->load(language, Helper::getSharePath() + "/translations/");
 
     this->ui->retranslateUi(this);
-
 
     ui_notifications->language_changed();
     ui_startup_dialog->language_changed();
@@ -219,6 +205,25 @@ void GUI_Player::language_changed(QString language){
     emit sig_language_changed();
 }
 
+
+QAction* GUI_Player::createAction(QList<QKeySequence>& seq_list){
+    QAction* action = new QAction(this);
+
+    action->setShortcuts(seq_list);
+    action->setShortcutContext(Qt::ApplicationShortcut);
+    this->addAction(action);
+    connect(this, SIGNAL(destroyed()), action, SLOT(deleteLater()));
+
+    return action;
+}
+
+QAction* GUI_Player::createAction(QKeySequence seq){
+    QList<QKeySequence> seq_list;
+    seq_list << seq;
+    return createAction(seq_list);
+}
+
+
 void GUI_Player::initGUI() {
 
 	ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
@@ -229,59 +234,11 @@ void GUI_Player::initGUI() {
 	ui->btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
     ui->btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
 
-    QAction* play_pause_action = new QAction(this);
-    QList<QKeySequence> lst;
-    lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);
-    play_pause_action->setShortcuts(lst);
-    play_pause_action->setShortcutContext(Qt::ApplicationShortcut);
-    connect(play_pause_action, SIGNAL(triggered()), ui->btn_play, SLOT(click()));
-    this->addAction(play_pause_action);
-
-
-    QAction* fwd_action = new QAction(this);
-    QList<QKeySequence> lst_fwd;
-    lst_fwd << QKeySequence(Qt::Key_MediaNext) << QKeySequence(Qt::ControlModifier | Qt::Key_Right);
-    fwd_action->setShortcuts(lst_fwd);
-    fwd_action->setShortcutContext(Qt::ApplicationShortcut);
-    connect(fwd_action, SIGNAL(triggered()), ui->btn_fw, SLOT(click()));
-    this->addAction(fwd_action);
-
-
-    QAction* bwd_action = new QAction(this);
-    QList<QKeySequence> lst_bwd;
-    lst_bwd << QKeySequence(Qt::Key_MediaPrevious) << QKeySequence(Qt::ControlModifier | Qt::Key_Left);
-    bwd_action->setShortcuts(lst_bwd);
-    bwd_action->setShortcutContext(Qt::ApplicationShortcut);
-    connect(bwd_action, SIGNAL(triggered()), ui->btn_bw, SLOT(click()));
-    this->addAction(bwd_action);
-
-
-    QAction* louder_action = new QAction(this);
-    louder_action->setShortcut(QKeySequence(Qt::ControlModifier | Qt::Key_Up));
-    louder_action->setShortcutContext(Qt::ApplicationShortcut);
-    connect(louder_action, SIGNAL(triggered()), this, SLOT(volumeHigher()));
-    this->addAction(louder_action);
-
-
-    QAction* leiser_action = new QAction(this);
-    leiser_action->setShortcut(QKeySequence(Qt::ControlModifier | Qt::Key_Down));
-    leiser_action->setShortcutContext(Qt::ApplicationShortcut);
-    connect(leiser_action, SIGNAL(triggered()), this, SLOT(volumeLower()));
-    this->addAction(leiser_action);
-
-
-
-
     ui->action_viewLibrary->setText(tr("&Library"));
-
-
-
-
     ui->btn_rec->setVisible(false);
 
     ui->action_Fullscreen->setShortcut(QKeySequence("F11"));
     ui->action_Dark->setShortcut(QKeySequence("F10"));
-
 
     ui->btn_correct->setVisible(false);
 }
@@ -364,9 +321,8 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
     m_metadata_available = true;
 
     this->repaint();
-
-
 }
+
 
 void GUI_Player::fetch_cover(){
 
@@ -399,14 +355,7 @@ void GUI_Player::fetch_cover(){
 
     ui->albumCover->setIcon(QIcon(cover_path));
     ui->albumCover->repaint();
-
-
 }
-
-void GUI_Player::show_cur_song(){}
-
-
-
 
 
 // public slot:
@@ -631,11 +580,8 @@ void GUI_Player::setPlaylist(GUI_Playlist* playlist) {
     if(ui_playlist){
         ui_playlist->show();
         ui_playlist->resize(ui->playlist_widget->size());
-        QAction* action = new QAction(this);
-        action->setShortcut(QKeySequence(tr("Ctrl+P")));
-        action->setShortcutContext(Qt::WindowShortcut);
+        QAction* action = createAction( QKeySequence(tr("Ctrl+P")) );
         connect(action, SIGNAL(triggered()), ui_playlist, SLOT(setFocus()));
-        this->addAction(action);
     }
 }
 
@@ -645,11 +591,8 @@ void GUI_Player::setLibrary(GUI_Library_windowed* library) {
     if(ui_library && !ui_libpath){
         ui_library->show();
         ui_library->resize(ui->library_widget->size());
-        QAction* action = new QAction(this);
-        action->setShortcut(QKeySequence(tr("Ctrl+L")));
-        action->setShortcutContext(Qt::WindowShortcut);
+        QAction* action = createAction(QKeySequence( tr("Ctrl+L")) );
         connect(action, SIGNAL(triggered()), ui_library, SLOT(setFocus()));
-        this->addAction(action);
     }
 
     else if(ui_libpath){

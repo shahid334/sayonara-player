@@ -17,11 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "Notification/NotificationPluginLoader.h"
 #include "HelperStructs/CSettingsStorage.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "GUI/player/GUI_TrayIcon.h"
+
 #include <QAction>
 #include <QMenu>
 #include <QEvent>
@@ -32,8 +33,6 @@
 #include <QPixmap>
 #include <QTimer>
 #include <QFont>
-#include <Notification/Notification.h>
-
 
 
 GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {

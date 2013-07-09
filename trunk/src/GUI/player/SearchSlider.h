@@ -44,6 +44,8 @@ public:
 
 	bool isSearching();
 
+
+
 protected:
 	virtual bool event(QEvent* e);
 

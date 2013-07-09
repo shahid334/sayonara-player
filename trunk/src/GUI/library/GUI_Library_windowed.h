@@ -117,6 +117,8 @@ signals:
 	void sig_show_id3_editor(const QList<int>&);
 	void sig_play_next_tracks(const QList<int>& lst);
 	void sig_play_next_all_tracks();
+    void sig_append_tracks(const QList<int>& lst);
+    void sig_append_all_tracks();
 
 	void sig_info_btn_clicked();
     void sig_no_focus();
@@ -180,6 +182,8 @@ private slots:
 
 	void play_next();
 	void play_next_tracks();
+    void append();
+    void append_tracks();
 
     void sortorder_title_changed(Sort::SortOrder);
     void sortorder_album_changed(Sort::SortOrder);

@@ -440,3 +440,16 @@ void CLibraryBase::psl_play_next_tracks(const QList<int>& lst){
     emit sig_play_next_tracks(v_md);
 }
 
+
+void CLibraryBase::psl_append_all_tracks(){
+    emit sig_append_tracks_to_playlist(_vec_md);
+}
+
+void CLibraryBase::psl_append_tracks(const QList<int>& lst){
+    MetaDataList v_md;
+    foreach(int i, lst){
+        v_md.push_back(_vec_md[i]);
+    }
+    emit sig_append_tracks_to_playlist(v_md);
+}
+

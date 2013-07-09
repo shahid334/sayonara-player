@@ -27,7 +27,6 @@
  */
 
 
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistMode.h"
@@ -42,7 +41,7 @@
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
-#include <QWidget>
+
 #include <QDebug>
 #include <QKeyEvent>
 #include <QFileDialog>
@@ -50,8 +49,6 @@
 #include <QMacStyle>
 #include <QAbstractListModel>
 #include <QStyleFactory>
-#include <QPaintDevice>
-#include <QPainter>
 #include <QMessageBox>
 #include <QTextEdit>
 #include <QAction>
@@ -60,23 +57,16 @@
 #include <QFileInfo>
 
 
-#include <iostream>
-
-class QPaintEngine;
-class QPaintDevice;
-
-
-using namespace std;
 // CTOR
 GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
-	QWidget(parent)
-	 {
+    QWidget(parent)
+{
 
-	_parent = parent;
+    _parent = parent;
 
-	ui = new Ui::Playlist_Window();
-	ui->setupUi(this);
-	initGUI();
+    ui = new Ui::Playlist_Window();
+    ui->setupUi(this);
+    initGUI();
 
     QAction* clear_action = new QAction(this);
     clear_action->setShortcut(QKeySequence("Ctrl+."));
@@ -85,33 +75,33 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     this->addAction(clear_action);
 
 
-	CSettingsStorage* settings = CSettingsStorage::getInstance();
-	bool small_playlist_items = settings->getShowSmallPlaylist();
+    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    bool small_playlist_items = settings->getShowSmallPlaylist();
     ui->listView->show_big_items(!small_playlist_items);
 
-	_info_dialog = dialog;
+    _info_dialog = dialog;
 
     _radio_active = RADIO_OFF;
 
     _playlist_mode = settings->getPlaylistMode();
 
-	ui->btn_append->setChecked(_playlist_mode.append);
-	ui->btn_repAll->setChecked(_playlist_mode.repAll);
+    ui->btn_append->setChecked(_playlist_mode.append);
+    ui->btn_repAll->setChecked(_playlist_mode.repAll);
     ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
-	ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
-	ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
-	ui->btn_import->setVisible(false);
+    ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
+    ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
+    ui->btn_import->setVisible(false);
 
-	check_dynamic_play_button();
-	setAcceptDrops(true);
+    check_dynamic_play_button();
+    setAcceptDrops(true);
 
     connect(ui->btn_clear, SIGNAL(clicked()), this, SLOT(clear_playlist_slot()));
 
-	connect(ui->btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(ui->btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(ui->btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+    connect(ui->btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+    connect(ui->btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+    connect(ui->btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+    connect(ui->btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+    connect(ui->btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
 
     connect(ui->listView, SIGNAL(sig_metadata_dropped(const MetaDataList&,int)), this, SLOT(metadata_dropped(const MetaDataList&,int)));
     connect(ui->listView, SIGNAL(sig_rows_removed(const QList<int>&, bool)), this, SLOT(rows_removed(const QList<int>&, bool)));
@@ -124,13 +114,13 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     connect(ui->listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
 
     //connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
-	connect(ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
+    connect(ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
 }
 
 
 // DTOR
 GUI_Playlist::~GUI_Playlist() {
-	delete ui;
+    delete ui;
 }
 
 void GUI_Playlist::changeEvent(QEvent* e){
@@ -165,17 +155,17 @@ void GUI_Playlist::language_changed(){
 // maybe the button state (pressed/unpressed) should be loaded from db here
 void GUI_Playlist::initGUI(){
 
-	QString icon_path = Helper::getIconPath();
+    QString icon_path = Helper::getIconPath();
 
-	ui->btn_append->setIcon(QIcon(icon_path + "append.png"));
-	ui->btn_rep1->setIcon(QIcon(icon_path + "rep1.png"));
-	ui->btn_rep1->setVisible(false);
-	ui->btn_repAll->setIcon(QIcon(icon_path + "repAll.png"));
-	ui->btn_dynamic->setIcon(QIcon(icon_path + "dynamic.png"));
-	ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
-	ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
-	ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
-	ui->btn_numbers->setIcon(QIcon(icon_path + "numbers.png"));
+    ui->btn_append->setIcon(QIcon(icon_path + "append.png"));
+    ui->btn_rep1->setIcon(QIcon(icon_path + "rep1.png"));
+    ui->btn_rep1->setVisible(false);
+    ui->btn_repAll->setIcon(QIcon(icon_path + "repAll.png"));
+    ui->btn_dynamic->setIcon(QIcon(icon_path + "dynamic.png"));
+    ui->btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
+    ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
+    ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
+    ui->btn_numbers->setIcon(QIcon(icon_path + "numbers.png"));
 }
 
 
@@ -187,15 +177,15 @@ void GUI_Playlist::library_path_changed(QString path){
 
 void GUI_Playlist::check_dynamic_play_button(){
 
-	QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
+    QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
 
-	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
-	        ui->btn_dynamic->setToolTip(tr("Please set library path first"));
-	}
+    if(libraryPath.size() == 0 || !QFile::exists(libraryPath)){
+        ui->btn_dynamic->setToolTip(tr("Please set library path first"));
+    }
 
-	else{
-        	ui->btn_dynamic->setToolTip(tr("Dynamic playing"));
-	}
+    else{
+        ui->btn_dynamic->setToolTip(tr("Dynamic playing"));
+    }
 }
 
 // Slot: comes from listview
@@ -223,10 +213,10 @@ void GUI_Playlist::clear_playlist_slot(){
 
     _total_msecs = 0;
     ui->lab_totalTime->setText(tr("Playlist empty"));
-	ui->btn_import->setVisible(false);
+    ui->btn_import->setVisible(false);
     ui->listView->clear();
 
-	emit clear_playlist();
+    emit clear_playlist();
 }
 
 
@@ -251,29 +241,29 @@ void GUI_Playlist::track_changed(int row){
 // private SLOT: rep1, repAll, shuffle or append has changed
 void GUI_Playlist::playlist_mode_changed_slot(){
 
-	this->parentWidget()->setFocus();
+    this->parentWidget()->setFocus();
 
-	_playlist_mode.rep1 = ui->btn_rep1->isChecked();
-	_playlist_mode.repAll = ui->btn_repAll->isChecked();
-	_playlist_mode.shuffle = ui->btn_shuffle->isChecked();
-	_playlist_mode.append = ui->btn_append->isChecked();
-	_playlist_mode.dynamic = ui->btn_dynamic->isChecked();
+    _playlist_mode.rep1 = ui->btn_rep1->isChecked();
+    _playlist_mode.repAll = ui->btn_repAll->isChecked();
+    _playlist_mode.shuffle = ui->btn_shuffle->isChecked();
+    _playlist_mode.append = ui->btn_append->isChecked();
+    _playlist_mode.dynamic = ui->btn_dynamic->isChecked();
 
-	emit playlist_mode_changed(_playlist_mode);
-	emit save_playlist("bla");
+    emit playlist_mode_changed(_playlist_mode);
+    emit save_playlist("bla");
 }
 
 
 void GUI_Playlist::psl_edit_tracks(){
-	if(!_info_dialog) return;
-	_info_dialog->setMode(INFO_MODE_TRACKS);
-	_info_dialog->show(TAB_EDIT);
+    if(!_info_dialog) return;
+    _info_dialog->setMode(INFO_MODE_TRACKS);
+    _info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Playlist::psl_info_tracks(){
-	if(!_info_dialog) return;
-	_info_dialog->setMode(INFO_MODE_TRACKS);
-	_info_dialog->show(TAB_INFO);
+    if(!_info_dialog) return;
+    _info_dialog->setMode(INFO_MODE_TRACKS);
+    _info_dialog->show(TAB_INFO);
 }
 
 
@@ -305,13 +295,13 @@ void GUI_Playlist::set_total_time_label(){
 
     QString text = "";
 
-	if(_radio_active == RADIO_STATION){
+    if(_radio_active == RADIO_STATION){
 
         ui->lab_totalTime->setText(tr("Radio"));
-		return;
-	}
+        return;
+    }
 
-	ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
+    ui->lab_totalTime->setContentsMargins(0, 2, 0, 2);
 
     int n_rows = ui->listView->get_num_rows();
     QString playlist_string = text + QString::number(n_rows);
@@ -321,33 +311,29 @@ void GUI_Playlist::set_total_time_label(){
 
     playlist_string += Helper::cvtMsecs2TitleLengthString(_total_msecs, false);
 
-	ui->lab_totalTime->setText(playlist_string);
+    ui->lab_totalTime->setText(playlist_string);
 }
 
 
 
 void GUI_Playlist::set_radio_active(int radio){
 
-	_radio_active = radio;
+    _radio_active = radio;
 
+    ui->btn_append->setVisible(radio == RADIO_OFF);
+    ui->btn_dynamic->setVisible(radio == RADIO_OFF);
+    ui->btn_repAll->setVisible(radio == RADIO_OFF);
+    ui->btn_shuffle->setVisible(radio == RADIO_OFF);
 
-	ui->btn_append->setVisible(radio == RADIO_OFF);
-	ui->btn_dynamic->setVisible(radio == RADIO_OFF);
-	ui->btn_repAll->setVisible(radio == RADIO_OFF);
-	ui->btn_shuffle->setVisible(radio == RADIO_OFF);
+    int actions = 0;
 
-    if(radio != RADIO_OFF){
+    if(radio != RADIO_OFF)
+        actions = ENTRY_INFO;
 
-        ui->listView->set_context_menu_actions(ENTRY_INFO);
+    else
+        actions = (ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
 
-    }
-
-    else{
-
-        ui->listView->set_context_menu_actions(ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
-
-    }
-
+    ui->listView->set_context_menu_actions(actions);
     ui->listView->set_drag_enabled(radio != RADIO_LFM);
 }
 
@@ -360,9 +346,9 @@ void GUI_Playlist::psl_show_small_playlist_items(bool small_playlist_items){
 
 
 void GUI_Playlist::btn_numbers_changed(bool b){
-	this->parentWidget()->setFocus();
-	CSettingsStorage::getInstance()->setPlaylistNumbers(b);
-	ui->listView->reset();
+    this->parentWidget()->setFocus();
+    CSettingsStorage::getInstance()->setPlaylistNumbers(b);
+    ui->listView->reset();
 }
 
 

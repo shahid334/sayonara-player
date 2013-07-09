@@ -92,6 +92,7 @@ public:
         void psl_createPlaylist(MetaDataList&);
         void psl_createPlaylist(CustomPlaylist&);
 		void psl_insert_tracks(const MetaDataList&, int idx);
+        void psl_append_tracks(MetaDataList&);
 
 		void psl_change_track(int);
 		void psl_next_track();
@@ -103,6 +104,7 @@ public:
 		void psl_prepare_playlist_for_save(QString name);
         void psl_prepare_playlist_for_save_file(QString, bool);
 		void psl_play();
+        void psl_pause();
 		void psl_stop();
 		void psl_forward();
 		void psl_backward();
@@ -130,6 +132,7 @@ public:
         int					_cur_play_idx;
         bool                _is_playing;
         int					_radio_active;
+        bool                _pause;
 
 
         Playlist_Mode		_playlist_mode;

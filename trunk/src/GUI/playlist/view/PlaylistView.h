@@ -36,15 +36,15 @@
 #include "GUI/ContextMenu.h"
 
 
-#include <QListView>
-#include <QObject>
-#include <QWidget>
 #include <QEvent>
 #include <QPoint>
 #include <QDrag>
 #include <QList>
 #include <QMenu>
 #include <QModelIndex>
+#include <QMouseEvent>
+#include <QListView>
+
 
 
 class PlaylistView :public QListView{
@@ -115,6 +115,8 @@ class PlaylistView :public QListView{
 
         void remove_cur_selected_rows(bool select_next_row=true);
         void select_rows(QList<int> lst);
+        void goto_row(int row);
+        int get_min_selected();
 
         void init_rc_menu();
 

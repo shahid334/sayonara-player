@@ -25,11 +25,6 @@
 
 
 #include "GUI/player/GUI_Player.h"
-#include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
-
-#include <QIcon>
-#include <QString>
 
 /** COVERS **/
 void GUI_Player::coverClicked() {
