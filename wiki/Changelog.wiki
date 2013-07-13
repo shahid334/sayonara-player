@@ -1,6 +1,26 @@
 #labels Featured
 = Changelog = 
 
+== 0.3.2 -> 0.4.0 ==
+  * Language support
+  * Memory leak fixed
+  * Asynchronous import to library
+  * No blurred notifications
+  * Improved alternative cover fetcher
+  * Keyboard shortcuts
+  * Update notifier
+  * Level meter
+  * Less memory consumption
+  * Sorting in library is saved
+  * Load last track for non-library tracks fixed
+  * Trusted debian packages
+  * Fullscreen window state is restored
+  * Icons in hicolor theme
+  * Link to forum in "Help"
+  * Library replaced by other window, if no libpath
+  * Dark skin
+
+
 == 0.3.1 -> 0.3.2 ==
 
 === New features ===
