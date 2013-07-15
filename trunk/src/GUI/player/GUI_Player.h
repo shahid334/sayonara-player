@@ -225,11 +225,6 @@ protected:
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
     void moveEvent(QMoveEvent* e);
-    void changeEvent(QEvent *);
-
-
-
-
 
 private:
 

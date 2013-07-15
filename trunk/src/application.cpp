@@ -156,6 +156,8 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     init_connections();
 
     qDebug() << "setting up player";
+    bool is_maximized = set->getPlayerMaximized();
+
     player->setWindowTitle("Sayonara " + version);
     player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
@@ -166,10 +168,9 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     player->setPlayerPluginHandler(_pph);
 
     player->setStyle( set->getPlayerStyle() );
-    player->show();
-    if(set->getPlayerMaximized()){
-        player->showMaximized();
-    }
+
+    if(is_maximized) player->showMaximized();
+    else player->show();
 
     ui_library->resize(player->getParentOfLibrary()->size());
     ui_playlist->resize(player->getParentOfPlaylist()->size());

@@ -126,7 +126,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 
     bool is_fullscreen = m_settings->getPlayerFullscreen();
-    if(!is_fullscreen){
+    bool is_maximized = m_settings->getPlayerMaximized();
+    if(!is_fullscreen & !is_maximized){
         QSize size = m_settings->getPlayerSize();
         QPoint pos = m_settings->getPlayerPos();
 
@@ -709,14 +710,7 @@ void GUI_Player::ui_loaded(){
     changeSkin(m_settings->getPlayerStyle() == 1);
 
     bool fullscreen = m_settings->getPlayerFullscreen();
-    bool maximized = m_settings->getPlayerMaximized();
-
-
     this->ui->action_Fullscreen->setChecked(fullscreen);
-
-    /*if(!fullscreen && maximized)
-        this->showMaximized();*/
-
 
     this->ui_playlist->resize(this->ui->playlist_widget->size());
 }
@@ -738,15 +732,6 @@ void GUI_Player::moveEvent(QMoveEvent *e){
 
 }
 
-void GUI_Player::changeEvent(QEvent * e){
-
-    QMainWindow::changeEvent(e);
-
-    m_settings->setPlayerMaximized(isMaximized());
-
-
-
-}
 
 void GUI_Player::resizeEvent(QResizeEvent* e) {
 
@@ -763,11 +748,24 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
     }
 
 	QSize sz = ui->plugin_widget->size();
+    QSize target_size = this->size();
+
+    // maybe we started the player maximized, then showNormal will deliver a strange size
+    if(m_settings->getPlayerMaximized() || m_settings->getPlayerFullscreen()){
+        target_size = QSize(1024, 800);
+    }
 
     bool is_maximized = this->isMaximized();
+    bool is_fullscreen = this->isFullScreen();
     m_settings->setPlayerMaximized(is_maximized);
     if(is_maximized){
         m_settings->setPlayerFullscreen(false);
+    }
+
+    // maybe we started the player maximized, then showNormal will deliver a strange size
+    if(target_size != this->size() && !is_maximized && !is_fullscreen) {
+        resize(target_size);
+        return;
     }
 
     _pph->resize(sz);
