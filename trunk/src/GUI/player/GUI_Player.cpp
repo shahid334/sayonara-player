@@ -714,8 +714,8 @@ void GUI_Player::ui_loaded(){
 
     this->ui->action_Fullscreen->setChecked(fullscreen);
 
-    if(!fullscreen && maximized)
-        this->showMaximized();
+    /*if(!fullscreen && maximized)
+        this->showMaximized();*/
 
 
     this->ui_playlist->resize(this->ui->playlist_widget->size());
@@ -741,16 +741,11 @@ void GUI_Player::moveEvent(QMoveEvent *e){
 void GUI_Player::changeEvent(QEvent * e){
 
     QMainWindow::changeEvent(e);
-    return;
-    /*
-    if(!e->type() == QEvent::WindowStateChange){
-        e->accept();
-        return;
-    }
+
+    m_settings->setPlayerMaximized(isMaximized());
 
 
-    QWindowStateChangeEvent* wsce = (QWindowStateChangeEvent*) e;
-    wsce->accept();*/
+
 }
 
 void GUI_Player::resizeEvent(QResizeEvent* e) {
@@ -788,13 +783,19 @@ void GUI_Player::keyPressEvent(QKeyEvent* e) {
 
 	switch (e->key()) {
 
+    case (Qt::Key_F9):
+        if(!isMaximized())
+            this->showMaximized();
+        else this->showNormal();
+            break;
+
         case (Qt::Key_F10):
             ui->action_Dark->setChecked(!ui->action_Dark->isChecked());
             break;
 
 		case (Qt::Key_F11):
 			show_fullscreen_toggled(!this->isFullScreen());
-			break;
+            break;
 
 		default:
 			break;

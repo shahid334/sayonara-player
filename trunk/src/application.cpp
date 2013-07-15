@@ -167,6 +167,9 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
 
     player->setStyle( set->getPlayerStyle() );
     player->show();
+    if(set->getPlayerMaximized()){
+        player->showMaximized();
+    }
 
     ui_library->resize(player->getParentOfLibrary()->size());
     ui_playlist->resize(player->getParentOfPlaylist()->size());
