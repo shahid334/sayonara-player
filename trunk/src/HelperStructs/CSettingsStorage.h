@@ -53,6 +53,7 @@
 #define SET_PLAYER_SIZE "player_size"
 #define SET_PLAYER_POS "player_pos"
 #define SET_PLAYER_FULLSCREEN "player_fullscreen"
+#define SET_PLAYER_MAXIMIZED "player_maximized"
 #define SET_PLAYER_SHOWN_PLUGIN "shown_plugin"
 #define SET_PLAYER_ONE_INSTANCE "only_one_instance"
 #define SET_PLAYER_MIN_2_TRAY "min_to_tray"
@@ -184,9 +185,11 @@ private:
     int m_last_eq;
     vector<EQ_Setting> m_vec_eqSettings;
     
+    // player size
     QSize m_player_size;
     QPoint m_player_pos;
     bool m_player_fullscreen;
+    bool m_player_maximized;
 
 
     // library
@@ -289,6 +292,10 @@ public:
 
     QPoint getPlayerPos();
     void setPlayerPos(QPoint p);
+
+
+    bool getPlayerMaximized();
+    void setPlayerMaximized(bool);
 
     bool getPlayerFullscreen();
     void setPlayerFullscreen(bool);

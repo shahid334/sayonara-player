@@ -706,10 +706,17 @@ void GUI_Player::ui_loaded(){
     if(ui_libpath)
         ui_libpath->resize(this->ui->library_widget->size());
 
-
-
     changeSkin(m_settings->getPlayerStyle() == 1);
-    this->ui->action_Fullscreen->setChecked(m_settings->getPlayerFullscreen());
+
+    bool fullscreen = m_settings->getPlayerFullscreen();
+    bool maximized = m_settings->getPlayerMaximized();
+
+
+    this->ui->action_Fullscreen->setChecked(fullscreen);
+
+    if(!fullscreen && maximized)
+        this->showMaximized();
+
 
     this->ui_playlist->resize(this->ui->playlist_widget->size());
 }
@@ -731,6 +738,21 @@ void GUI_Player::moveEvent(QMoveEvent *e){
 
 }
 
+void GUI_Player::changeEvent(QEvent * e){
+
+    QMainWindow::changeEvent(e);
+    return;
+    /*
+    if(!e->type() == QEvent::WindowStateChange){
+        e->accept();
+        return;
+    }
+
+
+    QWindowStateChangeEvent* wsce = (QWindowStateChangeEvent*) e;
+    wsce->accept();*/
+}
+
 void GUI_Player::resizeEvent(QResizeEvent* e) {
 
     QMainWindow::resizeEvent(e);
@@ -747,10 +769,16 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
 
 	QSize sz = ui->plugin_widget->size();
 
+    bool is_maximized = this->isMaximized();
+    m_settings->setPlayerMaximized(is_maximized);
+    if(is_maximized){
+        m_settings->setPlayerFullscreen(false);
+    }
 
     _pph->resize(sz);
     m_settings->setPlayerSize(this->size());
     this->update();
+
 }
 
 

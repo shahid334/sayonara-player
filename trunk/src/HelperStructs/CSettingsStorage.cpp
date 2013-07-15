@@ -219,6 +219,12 @@ void CSettingsStorage::setPlayerFullscreen(bool b){
     _sth_changed = true;
 }
 
+bool CSettingsStorage::getPlayerMaximized(){ return m_player_maximized;}
+void CSettingsStorage::setPlayerMaximized(bool b){
+    m_player_maximized = b;
+    _sth_changed = true;
+}
+
 QStringList CSettingsStorage::getPlaylist(){
 	return m_playlist;
 }

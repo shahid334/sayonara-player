@@ -198,6 +198,9 @@ bool CDatabaseConnector::load_settings(){
     bool player_fullscreen = load_setting_bool(SET_PLAYER_FULLSCREEN, false);
     settings->setPlayerFullscreen(player_fullscreen);
 
+    bool player_maximized = load_setting_bool(SET_PLAYER_MAXIMIZED, false);
+    settings->setPlayerMaximized(player_maximized);
+
 	
 	// playlist
     QStringList playlist = load_setting_strlist(SET_PL);
@@ -372,6 +375,9 @@ bool CDatabaseConnector::store_settings(){
 
     bool player_fullscreen = storage->getPlayerFullscreen();
     store_setting(SET_PLAYER_FULLSCREEN, player_fullscreen);
+
+    bool player_maximized = storage->getPlayerMaximized();
+    store_setting(SET_PLAYER_MAXIMIZED, player_maximized);
 
     QString cur_playlist = storage->getPlaylist().join(",");
 	store_setting(SET_PL, cur_playlist);

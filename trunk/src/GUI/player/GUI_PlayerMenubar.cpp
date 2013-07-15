@@ -187,6 +187,7 @@ void GUI_Player::show_fullscreen_toggled(bool b){
 	else this->showNormal();
 
     m_settings->setPlayerFullscreen(b);
+
 }
 
 void GUI_Player::sl_show_only_tracks(bool b){
