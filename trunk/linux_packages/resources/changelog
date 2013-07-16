@@ -2,6 +2,8 @@ sayonara (0.4.1) unstable; urgency=low
 
   * Maximize state is restored properly
 
+ -- Lucio Carreras <luciocarreras@gmail.com>  Fri, 07 Jul 2013 02:28:00 +0100
+
 sayonara (0.4) unstable; urgency=low
   
   * Language support
