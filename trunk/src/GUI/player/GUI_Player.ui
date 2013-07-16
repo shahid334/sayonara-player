@@ -1022,7 +1022,7 @@
     <bool>false</bool>
    </property>
    <property name="nativeMenuBar">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <widget class="QMenu" name="menuFle">
     <property name="font">
@@ -1545,8 +1545,6 @@
    <header location="global">GUI/player/SearchSlider.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../sayonara.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

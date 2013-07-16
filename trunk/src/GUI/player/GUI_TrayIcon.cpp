@@ -135,9 +135,15 @@ void GUI_TrayIcon::change_skin(QString stylesheet){
 }
 
 bool GUI_TrayIcon::event ( QEvent * e ) {
+
     if (e->type() == QEvent::Wheel) {
-        QWheelEvent * wheelEvent = dynamic_cast <QWheelEvent *> (e);
-        emit onVolumeChangedByWheel (wheelEvent->delta());
+        int fac = 1;
+        QWheelEvent* wheelEvent = (QWheelEvent*) e;
+        qDebug() << wheelEvent->modifiers();
+        qDebug() << wheelEvent->buttons();
+        if(wheelEvent->modifiers() & Qt::ShiftModifier) fac = -1;
+
+        emit onVolumeChangedByWheel (wheelEvent->delta() * fac);
     }
 
     return true;
