@@ -1,4 +1,5 @@
 sayonara (0.4.1) unstable; urgency=low
+
   * Maximize state is restored properly
 
 sayonara (0.4) unstable; urgency=low
