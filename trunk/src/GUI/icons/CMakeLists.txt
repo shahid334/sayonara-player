@@ -66,10 +66,8 @@ SET(ICONS
         playlist.png
 )
 
-SET(CMAKE_INSTALL_PREFIX "/usr")
-
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)
-INSTALL(FILES "sayonara.png" DESTINATION share/icons)
-INSTALL(FILES "sayonara.png" DESTINATION share/pixmaps)
+INSTALL(FILES "sayonara.png" DESTINATION /usr/share/icons)
+INSTALL(FILES "sayonara.png" DESTINATION /usr/share/pixmaps)
 
 

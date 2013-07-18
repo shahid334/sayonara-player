@@ -112,6 +112,7 @@ public:
 		void psl_save_playlist_to_storage();
 		void psl_edit_id3_request();
 		void psl_id3_tags_changed(MetaDataList&);
+        void psl_track_time_changed(MetaData&);
 		void psl_import_new_tracks_to_library(bool);
 		void psl_import_result(bool);
         void psl_lfm_radio_init(bool);
@@ -121,6 +122,7 @@ public:
 		void psl_valid_strrec_track(const MetaData&);
 		void psl_play_next_tracks(const MetaDataList&);
         void psl_gapless_track();
+
 
 
 

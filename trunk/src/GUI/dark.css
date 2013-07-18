@@ -49,13 +49,13 @@ QScrollBar::vertical {
 	padding-top: -2px;
 	padding-bottom: -2px;
 	width: 14px;
-	background-image: url(/usr/share/sayonara/scroll_ver_bg.png);
+	background-image: url(<<SHARE_PATH>>/scroll_ver_bg.png);
 }
 
 
 /* top */
 QScrollBar::sub-line:vertical {
-    background: #3c3c3c;
+    background-color: #3c3c3c;
     height: 17px;
     width: 8px;
     subcontrol-position: top;
@@ -63,11 +63,11 @@ QScrollBar::sub-line:vertical {
     padding-left: 6px;
     padding-right: 3px;
     padding-top: -2px;
-    image: url(/usr/share/sayonara//arrow_up.png);
+    image: url(<<SHARE_PATH>>/arrow_up.png);
 }
 
  QScrollBar::sub-line:vertical:hover {
-    image: url(/usr/share/sayonara/arrow_up_orange.png);
+    image: url(<<SHARE_PATH>>/arrow_up_orange.png);
 }
 
 /* bottom */
@@ -81,11 +81,11 @@ QScrollBar::add-line:vertical {
     padding-left: 6px;
     padding-right: 3px;
     padding-bottom: -2px;
-    image: url(/usr/share/sayonara//arrow_down.png);
+    image: url(<<SHARE_PATH>>/arrow_down.png);
 }
 
 QScrollBar::add-line:vertical:hover {
-    image: url(/usr/share/sayonara/arrow_down_orange.png);
+    image: url(<<SHARE_PATH>>/arrow_down_orange.png);
 }
 
 
@@ -124,7 +124,7 @@ QScrollBar::horizontal {
 	padding-left: -2px;
 	padding-right: -2px;
 	height: 14px;
-	background-image: url(/usr/share/sayonara/scroll_hor_bg.png);
+	background-image: url(<<SHARE_PATH>>/scroll_hor_bg.png);
 }
 
 
@@ -139,11 +139,11 @@ QScrollBar::sub-line:horizontal {
     padding-top: 6px;
     padding-bottom: 3px;
     padding-left: -2px;
-    image: url(/usr/share/sayonara//arrow_left.png);
+    image: url(<<SHARE_PATH>>/arrow_left.png);
 }
 
  QScrollBar::sub-line:horizontal:hover {
-    image: url(/usr/share/sayonara/arrow_left_orange.png);
+    image: url(<<SHARE_PATH>>/arrow_left_orange.png);
 }
 
 
@@ -158,11 +158,11 @@ QScrollBar::add-line:horizontal {
     padding-top: 6px;
     padding-bottom: 3px;
     padding-right: -2px;
-    image: url(/usr/share/sayonara/arrow_right.png);
+    image: url(<<SHARE_PATH>>/arrow_right.png);
 }
 
 QScrollBar::add-line:horizontal:hover {
-    image: url(/usr/share/sayonara/arrow_right_orange.png);
+    image: url(<<SHARE_PATH>>/arrow_right_orange.png);
 }
 
 
@@ -209,7 +209,7 @@ QTableView QHeaderView::up-arrow {
 
 	width: 8px;
 	
-	image: url(/usr/share/sayonara/arrow_up.png);
+	image: url(<<SHARE_PATH>>arrow_up.png);
         margin-right: 2px;
 }
 
@@ -217,7 +217,7 @@ QTableView QHeaderView::down-arrow {
 
 	width: 8px;
 
-	image: url(/usr/share/sayonara//arrow_down.png);
+	image: url(<<SHARE_PATH>>/arrow_down.png);
         margin-right: 2px;
 }
 
@@ -282,11 +282,11 @@ QMenu::separator {
  }
 
 QMenu::indicator:non-exclusive:checked {
-     image: url(/usr/share/sayonara/cb_checked.png);
+     image: url(<<SHARE_PATH>>cb_checked.png);
 }
 
 QMenu::indicator:non-exclusive:checked {
-     image: url(/usr/share/sayonara/cb_checked.png);
+     image: url(<<SHARE_PATH>>cb_checked.png);
 }
 
 
@@ -345,7 +345,7 @@ QComboBox::down-arrow {
    height: 12px;
     width: 10px;
   padding: 2px;
-     image: url(/usr/share/sayonara//arrow_down.png);
+     image: url(<<SHARE_PATH>>/arrow_down.png);
 }
 
 QComboBox:focus {
@@ -443,7 +443,7 @@ QSpinBox::up-button:hover {
  }
 
 QSpinBox::up-arrow {
-    image: url(/usr/share/sayonara//arrow_up.png);
+    image: url(<<SHARE_PATH>>/arrow_up.png);
      width: 7px;
      height: 7px;
  }
@@ -463,7 +463,7 @@ QSpinBox::down-button:hover {
  }
 
 QSpinBox::down-arrow {
-    image: url(/usr/share/sayonara//arrow_down.png);
+    image: url(<<SHARE_PATH>>/arrow_down.png);
     width: 7px;
     height: 7px;
 }
@@ -476,7 +476,7 @@ QSpinBox:disabled {
 
 QSlider::add-page:vertical {
 
-     background-image: url(/usr/share/sayonara/slider_ver_bg.png);
+     background-image: url(<<SHARE_PATH>>slider_ver_bg.png);
      border: 1px solid #cc6f08;
      border-radius: 2px;
 }
@@ -519,7 +519,7 @@ QSlider::handle:vertical:disabled {
 
 QSlider::sub-page:horizontal {
 
-     background-image: url(/usr/share/sayonara/slider_hor_bg.png);
+     background-image: url(<<SHARE_PATH>>slider_hor_bg.png);
      border: 1px solid #cc6f08;
      border-radius: 2px;
 }
@@ -592,12 +592,12 @@ QCheckBox::indicator:unchecked:disabled {
 
 QCheckBox::indicator:checked:disabled {
     border: 1px solid #2B2B2B;
-    image: url(/usr/share/sayonara//cb_checked_disabled.png);
+    image: url(<<SHARE_PATH>>/cb_checked_disabled.png);
 }
 
 
 QCheckBox::indicator:checked:enabled {
-    image: url(/usr/share/sayonara//cb_checked.png);
+    image: url(<<SHARE_PATH>>/cb_checked.png);
 }
 
 
@@ -633,11 +633,11 @@ QRadioButton::indicator:disabled {
 }
 
 QRadioButton::indicator:checked {
-    image: url(/usr/share/sayonara//rb_checked.png);
+    image: url(<<SHARE_PATH>>/rb_checked.png);
 }
 
 QRadioButton::indicator:checked:disabled {
-    image: url(/usr/share/sayonara//rb_checked_disabled.png);
+    image: url(<<SHARE_PATH>>/rb_checked_disabled.png);
 }
 
 

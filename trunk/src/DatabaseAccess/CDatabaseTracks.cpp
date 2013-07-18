@@ -532,12 +532,14 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 
 	QSqlQuery q (*_database);
 
-        q.prepare("UPDATE Tracks SET albumID=:albumID, artistID=:artistID, title=:title, year=:year, track=:track, genre=:genre, filesize=:filesize, discnumber=:discnumber WHERE TrackID = :trackID;");
+        q.prepare("UPDATE Tracks SET albumID=:albumID, artistID=:artistID, title=:title, year=:year, length=:length, bitrate=:bitrate, track=:track, genre=:genre, filesize=:filesize, discnumber=:discnumber WHERE TrackID = :trackID;");
 
 		q.bindValue(":albumID",QVariant(data.album_id));
 		q.bindValue(":artistID",QVariant(data.artist_id));
         q.bindValue(":title",QVariant(data.title));
 		q.bindValue(":track",QVariant(data.track_num));
+        q.bindValue(":length", QVariant(data.length_ms));
+        q.bindValue(":bitrate", QVariant(data.bitrate));
 		q.bindValue(":year",QVariant(data.year));
 		q.bindValue(":trackID", QVariant(data.id));
         q.bindValue(":genre", QVariant(data.genres.join(",")));

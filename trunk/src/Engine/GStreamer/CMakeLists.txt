@@ -44,5 +44,4 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_LIBRARY(sayonara_gstreamer SHARED ${SOURCES} ${HEADERS_MOC})
 TARGET_LINK_LIBRARIES(sayonara_gstreamer ${QT_LIBRARIES} gstreamer-0.10 gstbase-0.10 gstapp-0.10)
 
-SET(CMAKE_INSTALL_PREFIX "/usr")
 INSTALL(TARGETS sayonara_gstreamer DESTINATION lib/sayonara)

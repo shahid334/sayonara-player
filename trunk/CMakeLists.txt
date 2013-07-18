@@ -7,8 +7,13 @@ IF(${UNIX})
         execute_process(COMMAND sh ./scripts/setversion.sh)
 ENDIF(${UNIX})
 
+IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
+	SET(CMAKE_INSTALL_PREFIX "/usr")
+ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
+
+MESSAGE("Will install to ${CMAKE_INSTALL_PREFIX}")
+
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
-SET(CMAKE_INSTALL_PREFIX "/usr")
 
 SET(CPACK_GENERATOR "RPM")
 SET(CPACK_PACKAGE_SUMMARY "Audio player and library organizer")

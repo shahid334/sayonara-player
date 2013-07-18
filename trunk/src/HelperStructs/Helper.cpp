@@ -58,6 +58,7 @@
 
 using namespace std;
 
+static QString _install_path = "";
 
 QString Helper::cvtQString2FirstUpper(QString str){
 
@@ -127,7 +128,8 @@ QString Helper::getSharePath(){
 
     QString path;
 #ifndef Q_OS_WIN
-        if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
+    if(QFile::exists(_install_path + "/share/sayonara")) path = _install_path + "/share/sayonara/";
+    else if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
     else path = "";
 #else
     path = QDir::homePath() + QString("\\.Sayonara\\images\\");
@@ -137,6 +139,27 @@ QString Helper::getSharePath(){
     else path = "";
 #endif
 
+    qDebug() << "Share path = " << path;
+    return path;
+
+}
+
+QString Helper::getLibPath(){
+    QString path;
+#ifndef Q_OS_WIN
+    qDebug() << "Check for " << _install_path + "/lib/sayonara";
+    if(QFile::exists(_install_path + "/lib/sayonara")) path = _install_path + "/lib/sayonara/";
+    else if(QFile::exists("/usr/lib/sayonara")) path = "/usr/lib/sayonara/";
+    else path = "";
+#else
+    path = QDir::homePath() + QString("\\.Sayonara\\images\\");
+    if(QFile::exists(path)){
+        return path;
+    }
+    else path = "";
+#endif
+
+    qDebug() << "libpath = " << path;
     return path;
 
 }
@@ -145,9 +168,11 @@ QString Helper::getSharePath(){
 QString Helper::getIconPath(){
 
 	QString path;
+
 #ifndef Q_OS_WIN
-		if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
-	else path = "./GUI/icons/";
+    if(QFile::exists(_install_path + "/share/sayonara")) path = _install_path + "/share/sayonara/";
+    else if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
+    else path = "./GUI/icons/";
 #else
 	path = QDir::homePath() + QString("\\.Sayonara\\images\\");
 	if(QFile::exists(path)){
@@ -748,4 +773,13 @@ void Helper::set_deja_vu_font(QWidget* w){
     f.setStyleStrategy(QFont::PreferAntialias);
     f.setHintingPreference(QFont::PreferNoHinting);
     w->setFont(f);
+}
+
+void Helper::set_bin_path(QString str){
+
+    QDir d(str);
+    d.cdUp();
+    _install_path = d.absolutePath();
+    qDebug() << "Install path in " << _install_path;
+
 }

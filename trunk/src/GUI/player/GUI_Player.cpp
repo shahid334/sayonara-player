@@ -359,6 +359,34 @@ void GUI_Player::fetch_cover(){
 }
 
 
+
+void GUI_Player::psl_track_time_changed(MetaData& md){
+    m_completeLength_ms = md.length_ms;
+    QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
+    ui->maxTime->setText(lengthString);
+
+    QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
+    if (md.bitrate < 96000)
+        tmp += "*";
+    else if (md.bitrate < 128000)
+        tmp += "**";
+    else if (md.bitrate < 160000)
+        tmp += "***";
+    else if (md.bitrate < 256000)
+        tmp += "****";
+    else
+        tmp += "*****";
+    tmp += "</font>";
+
+    ui->lab_rating->setText(tmp);
+    ui->lab_rating->setToolTip(
+            QString("<font color=\"#000000\">") +
+            QString::number(md.bitrate / 1000) +
+            QString(" kBit/s") +
+            QString("</font>"));
+
+}
+
 // public slot:
 // id3 tags have changed
 void GUI_Player::psl_id3_tags_changed(MetaDataList& v_md) {

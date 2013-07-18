@@ -377,6 +377,14 @@ void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
 }
 
 
+void CLibraryBase::psl_track_time_changed(MetaData& md){
+
+    if(md.id < 0) return;
+
+    _db->updateTrack(md);
+    emit_stuff();
+}
+
 void CLibraryBase::psl_change_id3_tags(const QList<int>& lst){
 
     // album, artist

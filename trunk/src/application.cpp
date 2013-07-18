@@ -136,7 +136,8 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     QString dir;
 
 #ifdef Q_OS_UNIX
-    dir = "/usr/lib/sayonara";
+    dir = Helper::getLibPath();
+    qDebug() << "Lib path = " << dir;
 #else
     dir = app->applicationDirPath();
 #endif
@@ -324,6 +325,11 @@ void Application::init_connections(){
     CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&),       ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
     CONNECT (listen, eq_found(const QStringList&),                       ui_eq, 	fill_available_equalizers(const QStringList&));
     CONNECT (listen, timeChangedSignal(quint32),                         player,	setCurrentPosition(quint32) );
+    CONNECT (listen, track_time_changed(MetaData&),                      player,    psl_track_time_changed(MetaData&));
+    CONNECT (listen, track_time_changed(MetaData&),                      playlist,    psl_track_time_changed(MetaData&));
+    CONNECT (listen, track_time_changed(MetaData&),                      library,    psl_track_time_changed(MetaData&));
+
+
 
     CONNECT(library, sig_playlist_created(QStringList&), 			playlist, 		psl_createPlaylist(QStringList&));
     CONNECT(library, sig_import_result(bool),						playlist,		psl_import_result(bool));

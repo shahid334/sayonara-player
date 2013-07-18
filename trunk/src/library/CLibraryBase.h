@@ -102,6 +102,7 @@ public slots:
     void psl_filter_changed(const Filter&, bool force=false);
     void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
     void psl_change_id3_tags(const QList<int>& lst);
+    void psl_track_time_changed(MetaData&);
 
     void psl_delete_tracks(int);
     void psl_delete_certain_tracks(const QList<int>&,int);
@@ -111,6 +112,8 @@ public slots:
 
     void psl_append_all_tracks();
     void psl_append_tracks(const QList<int>&);
+
+
 
 
 

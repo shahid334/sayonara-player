@@ -44,6 +44,7 @@ namespace Helper{
 	QString getIconPath();
 	QString getSayonaraPath();
     QString getSharePath();
+    QString getLibPath();
     QString createLink(QString name, QString target="", bool underline=true);
 
     QString get_artist_image_path(QString artist, QString extension="jpg");
@@ -77,6 +78,7 @@ namespace Helper{
 	bool is_soundfile(QString filename);
 	bool is_playlistfile(QString filename);
     bool is_podcastfile(QString filename, QString* content);
+
 
     QString get_album_w_disc(const MetaData& md);
 
@@ -116,6 +118,7 @@ namespace Helper{
 
 
     void set_deja_vu_font(QWidget* w);
+    void set_bin_path(QString str);
 
 
 };

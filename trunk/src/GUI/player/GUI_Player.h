@@ -71,6 +71,7 @@ public slots:
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
+    void psl_track_time_changed(MetaData&);
     void psl_reload_library_allowed(bool);
 
     void really_close(bool=false);

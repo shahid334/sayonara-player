@@ -461,6 +461,30 @@ void Playlist::psl_edit_id3_request(){
 	emit sig_data_for_id3_change(_v_meta_data);
 }
 
+void Playlist::psl_track_time_changed(MetaData& md){
+
+    if(md.id >= 0) _db->updateTrack(md);
+
+    for(uint i=0; i<_v_meta_data.size(); i++){
+        MetaData md_old = _v_meta_data[i];
+        QString old_path = QDir(md_old.filepath).absolutePath();
+        QString new_path = QDir(md.filepath).absolutePath();
+
+        int cmp = old_path.compare(new_path, Qt::CaseInsensitive);
+        if(cmp == 0){
+
+            _v_meta_data[i] = md;
+
+            break;
+        }
+    }
+
+    if(_cur_play_idx >= 0 && _cur_play_idx <= (int) _v_meta_data.size());
+        emit sig_cur_played_info_changed(_v_meta_data[_cur_play_idx]);
+
+    emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
+}
+
 void Playlist::psl_id3_tags_changed(MetaDataList& new_meta_data){
 
     for(uint i=0; i<_v_meta_data.size(); i++){

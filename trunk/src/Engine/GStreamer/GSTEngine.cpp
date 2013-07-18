@@ -529,8 +529,39 @@ void GST_Engine::state_changed() {
 
 void GST_Engine::set_cur_position(quint32 pos_sec) {
 
+    if(_meta_data.length_ms == 0 || _meta_data.bitrate == 0){
+
+        GstFormat format=GST_FORMAT_TIME;
+        GstTagList *tags=NULL;
+        guint rate=0;
+        gint64 duration=0;
+        bool success = false;
+        success = gst_element_query_duration(_pipeline, &format, &duration);
+
+
+        qDebug() << "Duration = " << duration << "(success)";
+        if(duration >= 1000000 && success){
+            _meta_data.length_ms = duration / 1000000;
+
+            g_signal_emit_by_name(_pipeline, "get-audio-tags", 0, &tags);
+            if(tags){
+
+                success = gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate);
+                qDebug() << "tags there, bitrate = " << rate;
+                if(success){
+                    _meta_data.bitrate = rate;
+                }
+            }
+            qDebug() << "Track time changed " << _meta_data.length_ms;
+            emit track_time_changed(_meta_data);
+        }
+    }
+
     if ((quint32) _seconds_now == pos_sec)
         return;
+
+
+
     _seconds_now = pos_sec;
     int playtime = _seconds_now - _seconds_started;
 

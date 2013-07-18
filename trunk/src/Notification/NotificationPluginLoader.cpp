@@ -23,6 +23,7 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "Notification/Notification.h"
+#include "HelperStructs/Helper.h"
 
 #include <QString>
 #include <QStringList>
@@ -43,7 +44,7 @@ NotificationPluginLoader::NotificationPluginLoader(){
 
     QString app_dir;
     #ifdef Q_OS_UNIX
-        app_dir = "/usr/lib/sayonara";
+        app_dir = Helper::getLibPath();
     #else
         app_dir = app->applicationDirPath();
     #endif

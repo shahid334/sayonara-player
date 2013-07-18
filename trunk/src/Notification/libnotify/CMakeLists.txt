@@ -44,7 +44,6 @@ if (LIBNOTIFY_FOUND)
     ADD_LIBRARY(sayonara_libnotify SHARED ${SOURCES} ${HEADERS_MOC})
     TARGET_LINK_LIBRARIES(sayonara_libnotify ${QT_LIBRARIES} notify)
 
-    SET(CMAKE_INSTALL_PREFIX "/usr")
     INSTALL(TARGETS sayonara_libnotify DESTINATION lib/sayonara)
 
 else ()

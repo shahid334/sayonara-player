@@ -91,6 +91,10 @@ void printHelp(){
 
 int main(int argc, char *argv[]){
 
+
+    QApplication app (argc, argv);
+    Helper::set_bin_path(app.applicationDirPath());
+
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
     db->init_settings_storage();
     CSettingsStorage* settings = CSettingsStorage::getInstance();
@@ -121,7 +125,7 @@ int main(int argc, char *argv[]){
         QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 	}
 
-        QApplication app (argc, argv);
+
 
 
             app.setApplicationName("Sayonara");

@@ -67,6 +67,7 @@ public:
 
 signals:
 	void total_time_changed_signal(qint64);
+    void track_time_changed(MetaData&);
 	void timeChangedSignal(quint32);
 	void track_finished();
 	void scrobble_track(const MetaData&);

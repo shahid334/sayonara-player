@@ -104,6 +104,7 @@ chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_gstreamer.so
 chmod -x $DEBIAN_DIR/usr/lib/sayonara/libsayonara_libnotify.so
 
 find ${DEBIAN_DIR} -name "*svn*" | xargs rm -rf
+find ${DEBIAN_DIR} -name "CMakeLists.txt" | xargs rm -rf
 
 
 gzip --best -c resources/changelog > $DEBIAN_DIR/usr/share/doc/sayonara/changelog.gz 
