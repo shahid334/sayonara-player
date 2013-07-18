@@ -69,7 +69,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     initGUI();
 
     QAction* clear_action = new QAction(this);
-    clear_action->setShortcut(QKeySequence("Ctrl+."));
+    clear_action->setShortcut(QKeySequence(tr("Ctrl+.")));
     clear_action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     connect(clear_action, SIGNAL(triggered()), this->ui->btn_clear, SLOT(click()));
     this->addAction(clear_action);

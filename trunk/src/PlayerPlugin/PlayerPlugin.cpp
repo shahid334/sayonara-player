@@ -46,7 +46,7 @@ void PlayerPlugin::calc_action(QString action_text){
     QString new_action_name = action_text;
     if(first_app_of_shortcut != -1 && first_app_of_shortcut < action_text.size()){
 
-       _pp_action->setShortcut( QKeySequence(QString("CTRL+") + new_action_name.at(first_app_of_shortcut) ) );
+       _pp_action->setShortcut( QKeySequence(tr("Ctrl+") + new_action_name.at(first_app_of_shortcut) ) );
     }
 
     _pp_action->setText(new_action_name);

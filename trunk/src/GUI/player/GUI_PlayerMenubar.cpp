@@ -353,7 +353,7 @@ void GUI_Player::about(bool b){
 				tr("Written by Lucio Carreras") + "<br /><br />" +
 				tr("License") + ": GPL<br /><br />" +
                 "Copyright 2011-2013<br /><br />" + link + "<br /><br /><br />" +
-                                tr("Special thanks to %1, %2 for translating").arg("Julia Karakoz").arg("Bruno V")
+                                tr("Special thanks to %1 and %2 for translating").arg("Julia Karakoz").arg("Bruno V")
                               );
     infobox.setStandardButtons(QMessageBox::Ok);
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);

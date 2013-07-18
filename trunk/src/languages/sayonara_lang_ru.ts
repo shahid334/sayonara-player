@@ -940,7 +940,7 @@
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="72"/>
         <source>Ctrl+.</source>
-        <translation type="unfinished">Ctrl+.</translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="183"/>
