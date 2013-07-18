@@ -938,6 +938,11 @@
 <context>
     <name>GUI_Playlist</name>
     <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="72"/>
+        <source>Ctrl+.</source>
+        <translation type="unfinished">Ctrl+.</translation>
+    </message>
+    <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="183"/>
         <source>Please set library path first</source>
         <translation>Пожалуйста, задайте сначала путь к коллекции</translation>
@@ -1881,6 +1886,14 @@ Please choose another folder</source>
         <location filename="../Engine/Phonon/PhononEngine.cpp" line="361"/>
         <source>Error</source>
         <translation>Ошибка</translation>
+    </message>
+</context>
+<context>
+    <name>PlayerPlugin</name>
+    <message>
+        <location filename="../PlayerPlugin/PlayerPlugin.cpp" line="49"/>
+        <source>Ctrl+</source>
+        <translation>Ctrl+</translation>
     </message>
 </context>
 <context>

@@ -923,6 +923,11 @@
 <context>
     <name>GUI_Playlist</name>
     <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="72"/>
+        <source>Ctrl+.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="183"/>
         <source>Please set library path first</source>
         <translation type="unfinished"></translation>
@@ -1851,6 +1856,14 @@ Please choose another folder</source>
     <message>
         <location filename="../Engine/Phonon/PhononEngine.cpp" line="361"/>
         <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PlayerPlugin</name>
+    <message>
+        <location filename="../PlayerPlugin/PlayerPlugin.cpp" line="49"/>
+        <source>Ctrl+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
