@@ -184,7 +184,7 @@
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="39"/>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation>Добавить</translation>
     </message>
 </context>
 <context>
@@ -705,7 +705,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
         <source>Duration</source>
-        <translation>Дли.</translation>
+        <translation>Длит</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
@@ -839,12 +839,12 @@
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="612"/>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="623"/>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="859"/>
@@ -928,7 +928,7 @@
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
         <source>Special thanks to %1 and %2 for translating</source>
-        <translation type="unfinished"></translation>
+        <translation>Особая благодарность за %1 и %2 для перевода</translation>
     </message>
     <message>
         <source>Special thanks to %1 for translating</source>
@@ -1060,7 +1060,7 @@
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.h" line="73"/>
         <source>Pla&amp;ylists</source>
-        <translation type="unfinished"></translation>
+        <translation>Пле&amp;йлисты</translation>
     </message>
 </context>
 <context>
@@ -1299,7 +1299,7 @@
     <message>
         <location filename="../GUI/stream/GUI_Stream.h" line="58"/>
         <source>&amp;Webstreams</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Вебпотоки</translation>
     </message>
 </context>
 <context>
