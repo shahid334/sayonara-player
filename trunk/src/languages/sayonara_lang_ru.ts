@@ -927,7 +927,7 @@
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
-        <source>Special thanks to %1, %2 for translating</source>
+        <source>Special thanks to %1 and %2 for translating</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -918,8 +918,12 @@
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
-        <source>Special thanks to %1, %2 for translating</source>
+        <source>Special thanks to %1 and %2 for translating</source>
         <translation>Remerciements particuliers à %1 et %2 pour les traductions</translation>
+    </message>
+    <message>
+        <source>Special thanks to %1, %2 for translating</source>
+        <translation type="obsolete">Remerciements particuliers à %1 et %2 pour les traductions</translation>
     </message>
     <message>
         <source>Special thanks to %1 for translating</source>

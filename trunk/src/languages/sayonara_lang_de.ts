@@ -993,8 +993,12 @@
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
-        <source>Special thanks to %1, %2 for translating</source>
+        <source>Special thanks to %1 and %2 for translating</source>
         <translation>Vielen Dank an %1 und %2 fürs Übersetzen</translation>
+    </message>
+    <message>
+        <source>Special thanks to %1, %2 for translating</source>
+        <translation type="obsolete">Vielen Dank an %1 und %2 fürs Übersetzen</translation>
     </message>
     <message>
         <source>Special thanks to %1 for translating</source>
