@@ -60,6 +60,8 @@ void ContextMenu::changeEvent(QEvent* e){
         _remove_action->setText(tr("Remove"));
         _delete_action->setText(tr("Delete"));
         _play_next_action->setText(tr("Play next"));
+        _append_action->setText(tr("Append"));
+
         return;
     }
 

@@ -8,12 +8,14 @@ fi
 
 
 if [ "$1" = "update" ] ; then
-
+	STR=""
 	for f in ./src/languages/*.ts ; do
 
 		lupdate . -ts ./$f
-
-	done	
+		STR="$STR ./$f"
+	done
+	
+	linguist $STR	
 
 elif [ "$1" = "new" ] ; then
 	lupdate . -ts ./src/languages/sayonara_lang_$2.ts

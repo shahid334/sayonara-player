@@ -183,6 +183,7 @@
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="39"/>
+        <location filename="../GUI/ContextMenu.cpp" line="63"/>
         <source>Append</source>
         <translation>Добавить</translation>
     </message>
@@ -1763,49 +1764,49 @@ Please choose another folder</source>
     <name>Library_Info_Box</name>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="157"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="170"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="51"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="160"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="173"/>
         <source>LastFM Playcount</source>
         <translation>Проиграно на LastFM </translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="65"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="161"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="174"/>
         <source>Artists</source>
         <translation>Исполнители</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="89"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="162"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="241"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="184"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="127"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="165"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="103"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="177"/>
         <source>Tracks</source>
         <translation>Треки</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="141"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="166"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="117"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="178"/>
         <source>Duration</source>
         <translation>Длительнность</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="155"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="167"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="131"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="179"/>
         <source>Albums</source>
         <translation>Альбомы</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="214"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="170"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="190"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="182"/>
         <source>Filesize</source>
         <translation>Обьем файла</translation>
     </message>
