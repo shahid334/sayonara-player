@@ -346,6 +346,23 @@ void GUI_Player::about(bool b){
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 
+    QStringList translators;
+    translators << "Julia Karakoz";
+    translators << "Bruno Veilleux";
+    translators << "Pavel Fric";
+
+    QString first_translators;
+    QString last_translator;
+
+    for (int i=0; i<translators.size() - 1; i++){
+
+        first_translators += "<b>" + translators[i] + "</b>";
+        if(i < translators.size() - 2) first_translators += ", ";
+
+    }
+
+
+    last_translator = QString("<b>") + translators[translators.size() - 1] + "</b>";
 
     infobox.setWindowTitle(tr("About Sayonara"));
     infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
@@ -353,8 +370,10 @@ void GUI_Player::about(bool b){
 				tr("Written by Lucio Carreras") + "<br /><br />" +
 				tr("License") + ": GPL<br /><br />" +
                 "Copyright 2011-2013<br /><br />" + link + "<br /><br /><br />" +
-                                tr("Special thanks to %1 and %2 for translating").arg("Julia Karakoz").arg("Bruno V")
-                              );
+                                tr("Special thanks to %1 and %2 for translating")
+                                .arg(first_translators)
+                                .arg(last_translator) );
+
     infobox.setStandardButtons(QMessageBox::Ok);
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
     Helper::set_deja_vu_font(&infobox);

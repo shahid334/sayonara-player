@@ -902,22 +902,22 @@
         <translation>Veuillez visiter le forum au</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="350"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="367"/>
         <source>About Sayonara</source>
         <translation>À propos de Sayonara</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="353"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="370"/>
         <source>Written by Lucio Carreras</source>
         <translation>Écrit par Lucio Carreras</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="354"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
         <source>License</source>
         <translation>Licence</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="373"/>
         <source>Special thanks to %1 and %2 for translating</source>
         <translation>Remerciements particuliers à %1 et %2 pour les traductions</translation>
     </message>

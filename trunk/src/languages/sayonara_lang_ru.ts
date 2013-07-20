@@ -911,22 +911,22 @@
         <translation>Пожалуйста, посетите форум на </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="350"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="367"/>
         <source>About Sayonara</source>
         <translation>О Sayonara</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="353"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="370"/>
         <source>Written by Lucio Carreras</source>
         <translation>Написано Lucio Carreras   </translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="354"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="373"/>
         <source>Special thanks to %1 and %2 for translating</source>
         <translation>Особая благодарность за %1 и %2 для перевода</translation>
     </message>

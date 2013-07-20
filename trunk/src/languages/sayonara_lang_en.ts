@@ -900,22 +900,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="350"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="367"/>
         <source>About Sayonara</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="353"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="370"/>
         <source>Written by Lucio Carreras</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="354"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
         <source>License</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="356"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="373"/>
         <source>Special thanks to %1 and %2 for translating</source>
         <translation type="unfinished"></translation>
     </message>
