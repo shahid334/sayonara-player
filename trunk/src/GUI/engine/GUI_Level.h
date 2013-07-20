@@ -47,6 +47,7 @@ private:
 
     QTimer* _timer;
     bool _queue_it;
+
     
 };
 

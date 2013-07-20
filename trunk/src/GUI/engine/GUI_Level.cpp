@@ -13,6 +13,9 @@ float borders[] = {-45.0f, -39.0f,  // green
                     -3.5f,  -2.5f,    // red
                     -1.5f,  -0.5f};   // red
 
+QLabel* labels_l[20];
+QLabel* labels_r[20];
+
 GUI_Level::GUI_Level(QString name, QString action_name, QWidget* parent) : PlayerPlugin(name, action_name, parent)
 
 {
@@ -35,96 +38,72 @@ GUI_Level::GUI_Level(QString name, QString action_name, QWidget* parent) : Playe
     QString style_yellow = "QLabel{border-radius: 1px;}QLabel::disabled{background: rgb(50, 50, 0);}QLabel::enabled{	background: rgb(216, 216, 0);}";
     QString style_red = "QLabel{border-radius: 1px;}QLabel::disabled{background: rgb(50, 0, 0);}QLabel::enabled{	background: rgb(192, 0, 0);}";
 
-    ui->lab_l_0->setStyleSheet(style_green);
-    ui->lab_l_05->setStyleSheet(style_green);
-    ui->lab_l_1->setStyleSheet(style_green);
-    ui->lab_l_15->setStyleSheet(style_green);
-    ui->lab_l_2->setStyleSheet(style_green);
-    ui->lab_l_25->setStyleSheet(style_green);
-    ui->lab_l_3->setStyleSheet(style_green);
-    ui->lab_l_35->setStyleSheet(style_green);
-    ui->lab_l_4->setStyleSheet(style_green);
-    ui->lab_l_45->setStyleSheet(style_green);
 
-    ui->lab_l_5->setStyleSheet(style_yellow);
-    ui->lab_l_55->setStyleSheet(style_yellow);
-    ui->lab_l_6->setStyleSheet(style_yellow);
-    ui->lab_l_65->setStyleSheet(style_yellow);
-    ui->lab_l_7->setStyleSheet(style_yellow);
-    ui->lab_l_75->setStyleSheet(style_yellow);
+    labels_l[0] = ui->lab_l_0;
+    labels_l[1] = ui->lab_l_05;
+    labels_l[2] = ui->lab_l_1;
+    labels_l[3] = ui->lab_l_15;
+    labels_l[4] = ui->lab_l_2;
+    labels_l[5] = ui->lab_l_25;
+    labels_l[6] = ui->lab_l_3;
+    labels_l[7] = ui->lab_l_35;
+    labels_l[8] = ui->lab_l_4;
+    labels_l[9] = ui->lab_l_45;
+    labels_l[10] = ui->lab_l_5;
+    labels_l[11] = ui->lab_l_55;
+    labels_l[12] = ui->lab_l_6;
+    labels_l[13] = ui->lab_l_65;
+    labels_l[14] = ui->lab_l_7;
+    labels_l[15] = ui->lab_l_75;
+    labels_l[16] = ui->lab_l_8;
+    labels_l[17] = ui->lab_l_85;
+    labels_l[18] = ui->lab_l_9;
+    labels_l[19] = ui->lab_l_95;
 
-    ui->lab_l_8->setStyleSheet(style_red);
-    ui->lab_l_85->setStyleSheet(style_red);
-    ui->lab_l_9->setStyleSheet(style_red);
-    ui->lab_l_95->setStyleSheet(style_red);
+    labels_r[0] = ui->lab_r_0;
+    labels_r[1] = ui->lab_r_05;
+    labels_r[2] = ui->lab_r_1;
+    labels_r[3] = ui->lab_r_15;
+    labels_r[4] = ui->lab_r_2;
+    labels_r[5] = ui->lab_r_25;
+    labels_r[6] = ui->lab_r_3;
+    labels_r[7] = ui->lab_r_35;
+    labels_r[8] = ui->lab_r_4;
+    labels_r[9] = ui->lab_r_45;
+    labels_r[10] = ui->lab_r_5;
+    labels_r[11] = ui->lab_r_55;
+    labels_r[12] = ui->lab_r_6;
+    labels_r[13] = ui->lab_r_65;
+    labels_r[14] = ui->lab_r_7;
+    labels_r[15] = ui->lab_r_75;
+    labels_r[16] = ui->lab_r_8;
+    labels_r[17] = ui->lab_r_85;
+    labels_r[18] = ui->lab_r_9;
+    labels_r[19] = ui->lab_r_95;
+
+    for(int i=0; i<20; i++){
+        if(i < 10){
+
+            labels_l[i]->setStyleSheet(style_green);
+            labels_r[i]->setStyleSheet(style_green);
+        }
+        else if(i< 16){
+            labels_l[i]->setStyleSheet(style_yellow);
+            labels_r[i]->setStyleSheet(style_yellow);
+
+        }
+        else {
+            labels_l[i]->setStyleSheet(style_red);
+            labels_r[i]->setStyleSheet(style_red);
+        }
+
+        labels_l[i]->setToolTip(QString::number((double) borders[i])  + " db");
+        labels_r[i]->setToolTip(QString::number((double) borders[i])  + " db");
+    }
 
 
-    ui->lab_r_0->setStyleSheet(style_green);
-    ui->lab_r_05->setStyleSheet(style_green);
-    ui->lab_r_1->setStyleSheet(style_green);
-    ui->lab_r_15->setStyleSheet(style_green);
-    ui->lab_r_2->setStyleSheet(style_green);
-    ui->lab_r_25->setStyleSheet(style_green);
-    ui->lab_r_3->setStyleSheet(style_green);
-    ui->lab_r_35->setStyleSheet(style_green);
-    ui->lab_r_4->setStyleSheet(style_green);
-    ui->lab_r_45->setStyleSheet(style_green);
-
-    ui->lab_r_5->setStyleSheet(style_yellow);
-    ui->lab_r_55->setStyleSheet(style_yellow);
-    ui->lab_r_6->setStyleSheet(style_yellow);
-    ui->lab_r_65->setStyleSheet(style_yellow);
-    ui->lab_r_7->setStyleSheet(style_yellow);
-    ui->lab_r_75->setStyleSheet(style_yellow);
-
-    ui->lab_r_8->setStyleSheet(style_red);
-    ui->lab_r_85->setStyleSheet(style_red);
-    ui->lab_r_9->setStyleSheet(style_red);
-    ui->lab_r_95->setStyleSheet(style_red);
 
 
-
-    ui->lab_l_0 ->setToolTip(QString::number((double) borders[0])  + " db");
-    ui->lab_l_05->setToolTip(QString::number((double) borders[1])  + " db");
-    ui->lab_l_1 ->setToolTip(QString::number((double) borders[2])  + " db");
-    ui->lab_l_15->setToolTip(QString::number((double) borders[3])  + " db");
-    ui->lab_l_2 ->setToolTip(QString::number((double) borders[4])  + " db");
-    ui->lab_l_25->setToolTip(QString::number((double) borders[5])  + " db");
-    ui->lab_l_3 ->setToolTip(QString::number((double) borders[6])  + " db");
-    ui->lab_l_35->setToolTip(QString::number((double) borders[7])  + " db");
-    ui->lab_l_4 ->setToolTip(QString::number((double) borders[8])  + " db");
-    ui->lab_l_45->setToolTip(QString::number((double) borders[9])  + " db");
-    ui->lab_l_5 ->setToolTip(QString::number((double) borders[10]) + " db");
-    ui->lab_l_55->setToolTip(QString::number((double) borders[11]) + " db");
-    ui->lab_l_6 ->setToolTip(QString::number((double) borders[12]) + " db");
-    ui->lab_l_65->setToolTip(QString::number((double) borders[13]) + " db");
-    ui->lab_l_7 ->setToolTip(QString::number((double) borders[14]) + " db");
-    ui->lab_l_75->setToolTip(QString::number((double) borders[15]) + " db");
-    ui->lab_l_8 ->setToolTip(QString::number((double) borders[16]) + " db");
-    ui->lab_l_85->setToolTip(QString::number((double) borders[17]) + " db");
-    ui->lab_l_9 ->setToolTip(QString::number((double) borders[18]) + " db");
-    ui->lab_l_95->setToolTip(QString::number((double) borders[19]) + " db");
-
-    ui->lab_r_0 ->setToolTip(QString::number((double) borders[0])  + " db");
-    ui->lab_r_05->setToolTip(QString::number((double) borders[1])  + " db");
-    ui->lab_r_1 ->setToolTip(QString::number((double) borders[2])  + " db");
-    ui->lab_r_15->setToolTip(QString::number((double) borders[3])  + " db");
-    ui->lab_r_2 ->setToolTip(QString::number((double) borders[4])  + " db");
-    ui->lab_r_25->setToolTip(QString::number((double) borders[5])  + " db");
-    ui->lab_r_3 ->setToolTip(QString::number((double) borders[6])  + " db");
-    ui->lab_r_35->setToolTip(QString::number((double) borders[7])  + " db");
-    ui->lab_r_4 ->setToolTip(QString::number((double) borders[8])  + " db");
-    ui->lab_r_45->setToolTip(QString::number((double) borders[9])  + " db");
-    ui->lab_r_5 ->setToolTip(QString::number((double) borders[10]) + " db");
-    ui->lab_r_55->setToolTip(QString::number((double) borders[11]) + " db");
-    ui->lab_r_6 ->setToolTip(QString::number((double) borders[12]) + " db");
-    ui->lab_r_65->setToolTip(QString::number((double) borders[13]) + " db");
-    ui->lab_r_7 ->setToolTip(QString::number((double) borders[14]) + " db");
-    ui->lab_r_75->setToolTip(QString::number((double) borders[15]) + " db");
-    ui->lab_r_8 ->setToolTip(QString::number((double) borders[16]) + " db");
-    ui->lab_r_85->setToolTip(QString::number((double) borders[17]) + " db");
-    ui->lab_r_9 ->setToolTip(QString::number((double) borders[18]) + " db");
-    ui->lab_r_95->setToolTip(QString::number((double) borders[19]) + " db");
 }
 
 
@@ -158,52 +137,19 @@ void GUI_Level::set_level(float level_l, float level_r){
     _levels_l[_cur_idx] = level_l;
     _levels_r[_cur_idx] = level_r;
 
-    float max_l = _get_max(_levels_l, _buffer_size);
+ /*   float max_l = _get_max(_levels_l, _buffer_size);
     float max_r = _get_max(_levels_r, _buffer_size);
 
-    bool show_max = false;
+    bool show_max = false;*/
 
-    this->ui->lab_l_0 ->setEnabled(level_l > borders[0]   || (max_l > borders[0]  && max_l < borders[1]  && show_max));
-    this->ui->lab_l_05->setEnabled(level_l > borders[1]   || (max_l > borders[1]  && max_l < borders[2]  && show_max));
-    this->ui->lab_l_1 ->setEnabled(level_l > borders[2]   || (max_l > borders[2]  && max_l < borders[3]  && show_max));
-    this->ui->lab_l_15->setEnabled(level_l > borders[3]   || (max_l > borders[3]  && max_l < borders[4]  && show_max));
-    this->ui->lab_l_2 ->setEnabled(level_l > borders[4]   || (max_l > borders[4]  && max_l < borders[5]  && show_max));
-    this->ui->lab_l_25->setEnabled(level_l > borders[5]   || (max_l > borders[5]  && max_l < borders[6]  && show_max));
-    this->ui->lab_l_3 ->setEnabled(level_l > borders[6]   || (max_l > borders[6]  && max_l < borders[7]  && show_max));
-    this->ui->lab_l_35->setEnabled(level_l > borders[7]   || (max_l > borders[7]  && max_l < borders[8]  && show_max));
-    this->ui->lab_l_4 ->setEnabled(level_l > borders[8]   || (max_l > borders[8]  && max_l < borders[9]  && show_max));
-    this->ui->lab_l_45->setEnabled(level_l > borders[9]   || (max_l > borders[9]  && max_l < borders[10] && show_max));
-    this->ui->lab_l_5 ->setEnabled(level_l > borders[10]  || (max_l > borders[10] && max_l < borders[11] && show_max));
-    this->ui->lab_l_55->setEnabled(level_l > borders[11]  || (max_l > borders[11] && max_l < borders[12] && show_max));
-    this->ui->lab_l_6 ->setEnabled(level_l > borders[12]  || (max_l > borders[12] && max_l < borders[13] && show_max));
-    this->ui->lab_l_65->setEnabled(level_l > borders[13]  || (max_l > borders[13] && max_l < borders[14] && show_max));
-    this->ui->lab_l_7 ->setEnabled(level_l > borders[14]  || (max_l > borders[14] && max_l < borders[15] && show_max));
-    this->ui->lab_l_75->setEnabled(level_l > borders[15]  || (max_l > borders[15] && max_l < borders[16] && show_max));
-    this->ui->lab_l_8 ->setEnabled(level_l > borders[16]  || (max_l > borders[16] && max_l < borders[17] && show_max));
-    this->ui->lab_l_85->setEnabled(level_l > borders[17]  || (max_l > borders[17] && max_l < borders[18] && show_max));
-    this->ui->lab_l_9 ->setEnabled(level_l > borders[18]  || (max_l > borders[18] && max_l < borders[19] && show_max));
-    this->ui->lab_l_95->setEnabled(level_l > borders[19]  || (max_l > borders[19] && show_max));
+    for(int i=0; i<20; i++){
+        labels_l[i]->setEnabled(level_l > borders[i]   /*|| (max_l > borders[0]  && max_l < borders[1]  && show_max)*/);
+        labels_r[i]->setEnabled(level_r > borders[i]   /*|| (max_r > borders[0]  && max_r < borders[1]  && show_max)*/);
 
-    this->ui->lab_r_0 ->setEnabled(level_r > borders[0]   || (max_r > borders[0]  && max_r < borders[1]  && show_max));
-    this->ui->lab_r_05->setEnabled(level_r > borders[1]   || (max_r > borders[1]  && max_r < borders[2]  && show_max));
-    this->ui->lab_r_1 ->setEnabled(level_r > borders[2]   || (max_r > borders[2]  && max_r < borders[3]  && show_max));
-    this->ui->lab_r_15->setEnabled(level_r > borders[3]   || (max_r > borders[3]  && max_r < borders[4]  && show_max));
-    this->ui->lab_r_2 ->setEnabled(level_r > borders[4]   || (max_r > borders[4]  && max_r < borders[5]  && show_max));
-    this->ui->lab_r_25->setEnabled(level_r > borders[5]   || (max_r > borders[5]  && max_r < borders[6]  && show_max));
-    this->ui->lab_r_3 ->setEnabled(level_r > borders[6]   || (max_r > borders[6]  && max_r < borders[7]  && show_max));
-    this->ui->lab_r_35->setEnabled(level_r > borders[7]   || (max_r > borders[7]  && max_r < borders[8]  && show_max));
-    this->ui->lab_r_4 ->setEnabled(level_r > borders[8]   || (max_r > borders[8]  && max_r < borders[9]  && show_max));
-    this->ui->lab_r_45->setEnabled(level_r > borders[9]   || (max_r > borders[9]  && max_r < borders[10] && show_max));
-    this->ui->lab_r_5 ->setEnabled(level_r > borders[10]  || (max_r > borders[10] && max_r < borders[11] && show_max));
-    this->ui->lab_r_55->setEnabled(level_r > borders[11]  || (max_r > borders[11] && max_r < borders[12] && show_max));
-    this->ui->lab_r_6 ->setEnabled(level_r > borders[12]  || (max_r > borders[12] && max_r < borders[13] && show_max));
-    this->ui->lab_r_65->setEnabled(level_r > borders[13]  || (max_r > borders[13] && max_r < borders[14] && show_max));
-    this->ui->lab_r_7 ->setEnabled(level_r > borders[14]  || (max_r > borders[14] && max_r < borders[15] && show_max));
-    this->ui->lab_r_75->setEnabled(level_r > borders[15]  || (max_r > borders[15] && max_r < borders[16] && show_max));
-    this->ui->lab_r_8 ->setEnabled(level_r > borders[16]  || (max_r > borders[16] && max_r < borders[17] && show_max));
-    this->ui->lab_r_85->setEnabled(level_r > borders[17]  || (max_r > borders[17] && max_r < borders[18] && show_max));
-    this->ui->lab_r_9 ->setEnabled(level_r > borders[18]  || (max_r > borders[18] && max_r < borders[19] && show_max));
-    this->ui->lab_r_95->setEnabled(level_r > borders[19]  || (max_r > borders[19] && show_max));
+        labels_l[i]->update();
+        labels_r[i]->update();
+    }
+
 
    // _queue_it = true;
     _cur_idx ++;

@@ -33,12 +33,14 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     ui = new Ui::GUI_LanguageChooser();
     ui->setupUi(this);
 
+    _map["cs"] = QString::fromUtf8("Čeština");
     _map["de"] = "Deutsch";
     _map["en"] = "English";
     _map["es"] = QString::fromUtf8("Español");
     _map["fr"] = "Francais";
     _map["it"] = "Italiano";
     _map["ru"] = QString::fromUtf8("Русский");
+
 
     _last_idx = -1;
 
