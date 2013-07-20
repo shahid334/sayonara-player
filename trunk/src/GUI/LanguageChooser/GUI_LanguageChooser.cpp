@@ -35,11 +35,11 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
 
     _map["de"] = "Deutsch";
     _map["en"] = "English";
-    _map["es"] = "Español";
+    _map["es"] = QString::fromUtf8("Español");
     _map["fr"] = "Francais";
     _map["it"] = "Italiano";
     _map["ru"] = QString::fromUtf8("Русский");
-    //_map["ua"] = "Українська";
+
     _last_idx = -1;
 
     this->setModal(true);
