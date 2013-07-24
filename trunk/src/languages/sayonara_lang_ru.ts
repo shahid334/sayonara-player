@@ -89,12 +89,12 @@
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="240"/>
         <source>All files could be imported</source>
-        <translation>Все файлы могут быть импортированы</translation>
+        <translation>Все файлы импортированы</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="243"/>
         <source>%1 of %2 files could be imported</source>
-        <translation>%1 из %2 файлов могут быть импортированы</translation>
+        <translation>%1 из %2 файлов импортированы</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="245"/>
@@ -140,7 +140,7 @@
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="411"/>
         <source>All %1 could be removed</source>
-        <translation>Все %1 могут быть удалены</translation>
+        <translation>Все %1 удалены</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="415"/>
@@ -2219,7 +2219,7 @@ Please choose another folder</source>
         <location filename="../GUI/player/GUI_Player.ui" line="1301"/>
         <location filename="../GUI/ui_GUI_Player.h" line="769"/>
         <source>About</source>
-        <translation>О</translation>
+        <translation>О Saoynara</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1317"/>

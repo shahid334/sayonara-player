@@ -43,16 +43,6 @@ gboolean player_change_file(GstBin* pipeline, void* app) {
 }
 
 
-static void new_buffer(GstElement* sink, void* data){
-
-    Q_UNUSED(data);
-
-    GstBuffer* buffer;
-    g_signal_emit_by_name(sink, "pull-buffer", &buffer);
-    if(!buffer) return;
-
-    gst_obj_ref->set_buffer(buffer);
-}
 
 static gboolean
 level_handler (GstBus * bus, GstMessage * message, gpointer data){
@@ -70,8 +60,6 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
          GstClockTime endtime;
          const GValue *array_val;
-
-         gint i;
 
          if (!gst_structure_get_clock_time (s, "endtime", &endtime))
              qDebug() << "Could not parse endtime";
@@ -94,6 +82,8 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
                  qDebug() << "Could not find a double";
                  break;
              }
+
+             qDebug() << i << ": " << g_value_get_double(val);
 
              arr[i] = g_value_get_double(val);
          }
