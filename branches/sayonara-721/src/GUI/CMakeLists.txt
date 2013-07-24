@@ -16,6 +16,7 @@ ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
     engine/GUI_Level.h
+    engine/GUI_LevelPainter.h
     player/GUI_Player.h
     player/GUI_TrayIcon.h
     player/SearchSlider.h
@@ -63,6 +64,7 @@ SET(HEADERS
 
 SET(SOURCES
     engine/GUI_Level.cpp
+    engine/GUI_LevelPainter.cpp
     player/GUI_Player.cpp
     player/GUI_PlayerPlugins.cpp
     player/GUI_PlayerMenubar.cpp
@@ -111,6 +113,7 @@ SET(SOURCES
 
 
 SET(FORMS
+    engine/GUI_LevelPainter.ui
     engine/GUI_Level.ui
     player/GUI_Player.ui
     playlist/GUI_Playlist.ui

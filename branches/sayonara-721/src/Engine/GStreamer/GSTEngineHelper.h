@@ -54,7 +54,66 @@ static void new_buffer(GstElement* sink, void* data){
     gst_obj_ref->set_buffer(buffer);
 }
 
+static gboolean
+level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
+
+       const GstStructure *s = gst_message_get_structure (message);
+       const gchar *name = gst_structure_get_name (s);
+
+       if(!s) {
+           qDebug() << "structure is null";
+           return TRUE;
+       }
+
+       if (strcmp (name, "level")) return TRUE;
+
+         GstClockTime endtime;
+         const GValue *array_val;
+
+         gint i;
+
+         if (!gst_structure_get_clock_time (s, "endtime", &endtime))
+             qDebug() << "Could not parse endtime";
+         /* we can get the number of channels as the length of any of the value
+          * lists */
+         array_val = gst_structure_get_value (s, "rms");
+
+         if(!array_val){
+             qDebug() << "Cannot get array-val";
+             return TRUE;
+         }
+
+         guint n_elements = gst_value_list_get_size(array_val);
+         if(n_elements == 0) return TRUE;
+
+         double* arr = new double[n_elements];
+         for(guint i=0; i<n_elements; i++){
+             const GValue* val = gst_value_list_get_value(array_val, i);
+             if(!G_VALUE_HOLDS_DOUBLE(val)) {
+                 qDebug() << "Could not find a double";
+                 break;
+             }
+
+             arr[i] = g_value_get_double(val);
+         }
+
+
+
+         if(n_elements >= 2){
+            gst_obj_ref->set_level(arr[0], arr[1]);
+         }
+
+         else if(n_elements == 1){
+             gst_obj_ref->set_level(arr[0], arr[0]);
+         }
+
+         delete arr;
+
+
+     return TRUE;
+
+}
 
 
 
@@ -103,6 +162,9 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
         g_error_free(err);
 
         break;
+
+    case GST_MESSAGE_ELEMENT:
+        return level_handler(bus, msg, user_data);
 
     case GST_MESSAGE_ASYNC_DONE:
 

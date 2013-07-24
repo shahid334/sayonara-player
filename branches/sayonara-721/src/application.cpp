@@ -96,7 +96,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     lastfm              = LastFM::getInstance();
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
-    ui_level            = new GUI_Level("Level", GUI_Level::getVisName(), player->getParentOfPlugin());
+    ui_level            = new GUI_LevelPainter("Level", GUI_LevelPainter::getVisName(), player->getParentOfPlugin());
     ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
     ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
@@ -124,7 +124,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     _pph->addPlugin(ui_podcasts);
     _pph->addPlugin(ui_playlist_chooser);
 
-    qDebug() << "Plugin " << GUI_Level::getVisName();
+    qDebug() << "Plugin " << GUI_LevelPainter::getVisName();
     qDebug() << "Plugin " << GUI_Stream::getVisName();
     qDebug() << "Plugin " << GUI_Equalizer::getVisName();
     qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
