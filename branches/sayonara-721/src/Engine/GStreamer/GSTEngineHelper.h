@@ -201,7 +201,8 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
         break;
 
     case GST_MESSAGE_ELEMENT:
-        return spectrum_handler(bus, msg, user_data);
+        spectrum_handler(bus, msg, user_data);
+        level_handler(bus, msg, user_data);
 
     case GST_MESSAGE_ASYNC_DONE:
 

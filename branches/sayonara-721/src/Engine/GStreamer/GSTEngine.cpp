@@ -168,7 +168,7 @@ void GST_Engine::init_play_pipeline() {
 
         // create a bin that includes an equalizer and replace the sink with this bin
         gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _volume, _audio_convert, _level, _spectrum, _audio_sink, _app_queue, _app_sink, NULL);
-        success = gst_element_link_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
+        success = gst_element_link_many(_app_queue, _audio_convert, _level, _spectrum, _app_sink, NULL);
         _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
         success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
 
@@ -235,7 +235,7 @@ void GST_Engine::init_play_pipeline() {
                       "bands", 40,
                       "threshold", -80,
                       "message", TRUE,
-                      "message-phase", TRUE, NULL);
+                      "message-magnitude", TRUE, NULL);
 
          /* run synced and not as fast as we can */
         g_object_set (G_OBJECT (_app_sink), "sync", TRUE, NULL);
