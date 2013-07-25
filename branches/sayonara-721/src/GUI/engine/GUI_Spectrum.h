@@ -9,6 +9,7 @@
 #include <QAction>
 #include <QColor>
 #include <QList>
+#include <QMap>
 
 class GUI_Spectrum : public PlayerPlugin, private Ui::GUI_Spectrum
 {
@@ -45,6 +46,8 @@ private:
 
     QList<float> _spec;
 
+    QMap<int, QColor> _map_col_active;
+    QMap<int, QColor> _map_col_inactive;
 
 
 
