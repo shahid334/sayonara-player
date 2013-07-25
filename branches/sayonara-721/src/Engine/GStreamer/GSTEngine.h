@@ -123,6 +123,7 @@ private:
     GstElement* _gio_src;
     GstElement* _audio_convert;
     GstElement* _level;
+    GstElement* _spectrum;
 
 	
 	GstElement* _app_sink;
@@ -178,6 +179,7 @@ public:
     void        emit_buffer(float inv_array_elements, float scale);
 	void 		set_buffer(GstBuffer*);
     void        set_level(double right, double left);
+    void        set_spectrum(QList<float>&);
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();

@@ -48,6 +48,7 @@
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/engine/GUI_LevelPainter.h"
+#include "GUI/engine/GUI_Spectrum.h"
 
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
@@ -89,6 +90,7 @@ private:
     LastFM*                 lastfm;
 
     GUI_LevelPainter*              ui_level;
+    GUI_Spectrum*           ui_spectrum;
     GUI_LastFM*             ui_lastfm;
     GUI_Stream	*           ui_stream;
     GUI_Podcasts*           ui_podcasts;

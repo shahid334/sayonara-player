@@ -97,6 +97,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
     ui_level            = new GUI_LevelPainter("Level", GUI_LevelPainter::getVisName(), player->getParentOfPlugin());
+    ui_spectrum         = new GUI_Spectrum("Spectrum", GUI_Spectrum::getVisName(), player->getParentOfPlugin());
     ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
     ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
     ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
@@ -118,6 +119,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     _pph = new PlayerPluginHandler(NULL);
 
     _pph->addPlugin(ui_level);
+    _pph->addPlugin(ui_spectrum);
     _pph->addPlugin(ui_eq);
     _pph->addPlugin(ui_lfm_radio);
     _pph->addPlugin(ui_stream);
@@ -320,6 +322,7 @@ void Application::init_connections(){
     CONNECT (listen, scrobble_track(const MetaData&),                    lastfm, 	psl_scrobble(const MetaData&));
     CONNECT (listen, wanna_gapless_track(),                              playlist,   psl_gapless_track() );
     CONNECT (listen, sig_level(float, float),                            ui_level,  set_level(float,float));
+    CONNECT (listen, sig_spectrum(QList<float>&),                        ui_spectrum, set_spectrum(QList<float>&));
 
     // should be sent to player
     CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&),       ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));

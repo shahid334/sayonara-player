@@ -48,60 +48,107 @@ static gboolean
 level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
 
-       const GstStructure *s = gst_message_get_structure (message);
-       const gchar *name = gst_structure_get_name (s);
+    const GstStructure *s = gst_message_get_structure (message);
+    const gchar *name = gst_structure_get_name (s);
 
-       if(!s) {
-           qDebug() << "structure is null";
-           return TRUE;
-       }
+    if(!s) {
+        qDebug() << "structure is null";
+        return TRUE;
+    }
 
-       if (strcmp (name, "level")) return TRUE;
+    if (strcmp (name, "level")) return TRUE;
 
-         GstClockTime endtime;
-         const GValue *array_val;
+    GstClockTime endtime;
+    const GValue *array_val;
 
-         if (!gst_structure_get_clock_time (s, "endtime", &endtime))
-             qDebug() << "Could not parse endtime";
-         /* we can get the number of channels as the length of any of the value
+    if (!gst_structure_get_clock_time (s, "endtime", &endtime))
+        qDebug() << "Could not parse endtime";
+    /* we can get the number of channels as the length of any of the value
           * lists */
-         array_val = gst_structure_get_value (s, "rms");
+    array_val = gst_structure_get_value (s, "rms");
 
-         if(!array_val){
-             qDebug() << "Cannot get array-val";
-             return TRUE;
-         }
+    if(!array_val){
+        qDebug() << "Cannot get array-val";
+        return TRUE;
+    }
 
-         guint n_elements = gst_value_list_get_size(array_val);
-         if(n_elements == 0) return TRUE;
+    guint n_elements = gst_value_list_get_size(array_val);
+    if(n_elements == 0) return TRUE;
 
-         double* arr = new double[n_elements];
-         for(guint i=0; i<n_elements; i++){
-             const GValue* val = gst_value_list_get_value(array_val, i);
-             if(!G_VALUE_HOLDS_DOUBLE(val)) {
-                 qDebug() << "Could not find a double";
-                 break;
-             }
-
-             qDebug() << i << ": " << g_value_get_double(val);
-
-             arr[i] = g_value_get_double(val);
-         }
+    double* arr = new double[n_elements];
+    for(guint i=0; i<n_elements; i++){
+        const GValue* val = gst_value_list_get_value(array_val, i);
+        if(!G_VALUE_HOLDS_DOUBLE(val)) {
+            qDebug() << "Could not find a double";
+            break;
+        }
 
 
 
-         if(n_elements >= 2){
-            gst_obj_ref->set_level(arr[0], arr[1]);
-         }
+        arr[i] = g_value_get_double(val);
+    }
 
-         else if(n_elements == 1){
-             gst_obj_ref->set_level(arr[0], arr[0]);
-         }
+    guint64 dur;
+    gst_structure_get_clock_time(s, "timestamp", &dur);
 
-         delete arr;
+    qDebug() << "Duration: " << dur / 1000000;
 
 
-     return TRUE;
+    if(n_elements >= 2){
+        gst_obj_ref->set_level(arr[0], arr[1]);
+    }
+
+    else if(n_elements == 1){
+        gst_obj_ref->set_level(arr[0], arr[0]);
+    }
+
+    delete arr;
+
+
+    return TRUE;
+
+}
+
+
+
+static gboolean
+spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
+
+    const GstStructure *s = gst_message_get_structure (message);
+    const gchar *name = gst_structure_get_name (s);
+
+    if(!s) {
+        qDebug() << "structure is null";
+        return TRUE;
+    }
+
+    if (strcmp (name, "spectrum")) return TRUE;
+
+
+    const GValue *magnitudes;
+    const GValue *mag;
+
+    guint i;
+    GstClockTime endtime;
+
+
+    if (!gst_structure_get_clock_time (s, "endtime", &endtime))
+        qDebug() << "Could not parse endtime";
+
+    magnitudes = gst_structure_get_value (s, "magnitude");
+
+    QList<float> lst;
+    for (i = 0; i < 40; ++i) {
+
+        mag = gst_value_list_get_value (magnitudes, i);
+        if (!mag) continue;
+
+         lst << g_value_get_float (mag);
+    }
+
+    gst_obj_ref->set_spectrum(lst);
+
+    return TRUE;
 
 }
 
@@ -127,7 +174,7 @@ static gboolean show_position(GstElement* pipeline) {
 }
 
 static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
-        void *user_data) {
+                                  void *user_data) {
 
     (void) bus;
     (void) user_data;
@@ -147,14 +194,14 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
         gst_message_parse_error(msg, &err, NULL);
 
         qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
-                << GST_MESSAGE_SRC_NAME(msg);
+                 << GST_MESSAGE_SRC_NAME(msg);
         gst_obj_ref->set_track_finished();
         g_error_free(err);
 
         break;
 
     case GST_MESSAGE_ELEMENT:
-        return level_handler(bus, msg, user_data);
+        return spectrum_handler(bus, msg, user_data);
 
     case GST_MESSAGE_ASYNC_DONE:
 

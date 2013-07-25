@@ -76,6 +76,7 @@ signals:
 	void sig_valid_strrec_track(const MetaData&);
     void wanna_gapless_track();
     void sig_level(float, float);
+    void sig_spectrum(QList<float>&);
 
 public slots:
     virtual void play(int pos_sec=0)=0;

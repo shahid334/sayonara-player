@@ -141,6 +141,7 @@ void GST_Engine::init_play_pipeline() {
         _volume = gst_element_factory_make("volume", "volume");
         _audio_convert = gst_element_factory_make("audioconvert", "covertert");
         _level = gst_element_factory_make("level", "level");
+        _spectrum = gst_element_factory_make("spectrum", "spectrum");
 
         _audio_sink = gst_element_factory_make("autoaudiosink", "autoaudiosink");
 
@@ -166,8 +167,8 @@ void GST_Engine::init_play_pipeline() {
         //gst_bus_add_watch(_bus, level_handler, this);
 
         // create a bin that includes an equalizer and replace the sink with this bin
-        gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _volume, _audio_convert, _level, _audio_sink, _app_queue, _app_sink, NULL);
-        success = gst_element_link_many(_app_queue, /*_audio_convert, */_level, _app_sink, NULL);
+        gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _volume, _audio_convert, _level, _spectrum, _audio_sink, _app_queue, _app_sink, NULL);
+        success = gst_element_link_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
         _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
         success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
 
@@ -217,9 +218,9 @@ void GST_Engine::init_play_pipeline() {
         g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 
 
-       /* g_object_set (_app_queue,
+        g_object_set (_app_queue,
                       "silent", TRUE,
-                      NULL);*/
+                      NULL);
 
         g_object_set(_eq_queue,
                      "silent", TRUE,
@@ -227,6 +228,15 @@ void GST_Engine::init_play_pipeline() {
 
         g_object_set (G_OBJECT (_level), "message", TRUE, NULL);
         g_object_set (G_OBJECT (_level), "interval", 300000, NULL);
+
+
+        g_object_set (G_OBJECT (_spectrum),
+                      "interval", 30000000,
+                      "bands", 40,
+                      "threshold", -80,
+                      "message", TRUE,
+                      "message-phase", TRUE, NULL);
+
          /* run synced and not as fast as we can */
         g_object_set (G_OBJECT (_app_sink), "sync", TRUE, NULL);
         g_object_set (G_OBJECT (_app_sink), "async", FALSE, NULL);
@@ -294,7 +304,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
         if (!success)
             return;
 
-        g_timeout_add(500, (GSourceFunc) show_position, _pipeline);
+        g_timeout_add(700, (GSourceFunc) show_position, _pipeline);
 
         _gapless_track_available = false;
         //emit wanna_gapless_track();
@@ -609,6 +619,10 @@ void GST_Engine::set_level(double right, double left){
 
    // qDebug() << "R: " << right << ", L: " << left;
     emit sig_level(right, left);
+}
+
+void GST_Engine::set_spectrum(QList<float> & lst){
+    emit sig_spectrum(lst);
 }
 
 void GST_Engine::set_buffer(GstBuffer* buffer){
