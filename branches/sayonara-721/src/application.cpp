@@ -387,6 +387,7 @@ void Application::init_connections(){
     CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
 
     CONNECT(ui_level, sig_show(bool), listen, psl_calc_level(bool));
+    CONNECT(ui_spectrum, sig_show(bool), listen, psl_calc_spectrum(bool));
 
 
     CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));

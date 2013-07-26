@@ -156,6 +156,7 @@ void GST_Engine::init_play_pipeline() {
         //if(!_test_and_error(_gio_src, "Engine: Giosrc fail")) break;
         if(!_test_and_error(_audio_convert, "Engine: decodebin fail")) break;
         if(!_test_and_error(_level, "Engine: Level cannot be created")) break;
+        if(!_test_and_error(_spectrum, "Engine: Spectrum cannot be created")) break;
         if(!_test_and_error(_audio_bin, "Engine: Bin cannot be created")) break;
         if(!_test_and_error(_tee, "Engine: Tee cannot be created")) break;
         if(!_test_and_error(_equalizer, "Engine: Equalizer cannot be created")) break;
@@ -169,7 +170,8 @@ void GST_Engine::init_play_pipeline() {
 
         // create a bin that includes an equalizer and replace the sink with this bin
         gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _volume, _audio_convert, _level, _spectrum, _audio_sink, _app_queue, _app_sink, NULL);
-        success = gst_element_link_many(_app_queue, _audio_convert, _level, _spectrum, _app_sink, NULL);
+        //success = gst_element_link_many(_app_queue, _audio_convert, _level, _spectrum, _app_sink, NULL);
+
         _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
         success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
 
@@ -227,18 +229,29 @@ void GST_Engine::init_play_pipeline() {
                      "silent", TRUE,
                      NULL);
 
-        g_object_set (G_OBJECT (_level), "message", TRUE, NULL);
-        g_object_set (G_OBJECT (_level), "interval", 3000000, NULL);
 
+
+        guint64 interval = 30000000;
+        gint threshold = -80;
+
+
+
+        g_object_set (G_OBJECT (_level),
+                      "message", TRUE,
+                      "interval", interval,
+                      NULL);
 
         g_object_set (G_OBJECT (_spectrum),
-                      "interval", 30000000,
+                      "interval", interval,
                       "bands", N_BINS,
-                      "threshold", -80,
+                      "threshold", threshold,
                       "message", TRUE,
-                      "message-phase", TRUE,
+                      "message-phase", FALSE,
                       "message-magnitude", TRUE,
                       NULL);
+
+        _show_level = false;
+        _show_spectrum = false;
 
          /* run synced and not as fast as we can */
         g_object_set (G_OBJECT (_app_sink), "sync", TRUE, NULL);
@@ -509,10 +522,54 @@ void GST_Engine::eq_enable(bool) {
 
 void GST_Engine::psl_calc_level(bool b){
 
-       /* g_object_set (_app_sink,
-                               "emit-signals", b,
-                               NULL);*/
+     _show_level = false;
+    if(_show_spectrum){
+        _show_spectrum = false;
+        gst_element_unlink_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
+    }
 
+    if(!b){
+        gst_element_unlink_many(_app_queue, _audio_convert, _level, _app_sink, NULL);
+    }
+
+    else{
+        _show_level = gst_element_link_many(_app_queue, _audio_convert, _level, _app_sink, NULL);
+    }
+
+    qDebug() << "Show level: " << _show_level;
+
+
+}
+
+
+void GST_Engine::psl_calc_spectrum(bool b){
+    _show_spectrum = false;
+    if(_show_level){
+        _show_level = false;
+        gst_element_unlink_many(_app_queue, _audio_convert, _level, _app_sink, NULL);
+    }
+
+    if(!b){
+        gst_element_unlink_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
+    }
+
+    else{
+        _show_spectrum = gst_element_link_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
+    }
+
+    qDebug() << "Show spectrum: " << _show_spectrum;
+
+
+}
+
+bool GST_Engine::get_show_level(){
+
+    return _show_level;
+}
+
+bool GST_Engine::get_show_spectrum(){
+
+    return _show_spectrum;
 }
 
 void GST_Engine::state_changed() {

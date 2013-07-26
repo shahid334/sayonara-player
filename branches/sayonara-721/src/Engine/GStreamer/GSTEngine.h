@@ -137,6 +137,9 @@ private:
 	LastTrack*  _last_track;
     MyCaps     _caps;
 
+    bool        _show_level;
+    bool        _show_spectrum;
+
 
 
 
@@ -167,6 +170,7 @@ public slots:
 
     virtual void psl_sr_set_active(bool);
     virtual void psl_calc_level(bool);
+    virtual void psl_calc_spectrum(bool);
 
 
 
@@ -184,6 +188,9 @@ public:
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();
 	virtual QString	getName();
+
+    bool get_show_level();
+    bool get_show_spectrum();
 
 
 private:
