@@ -6,6 +6,7 @@
 #include <gst/app/gstappsink.h>
 #include <gst/gstbuffer.h>
 #include <gst/gstelement.h>
+#include "HelperStructs/globals.h"
 
 #include <glib.h>
 
@@ -83,16 +84,11 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
             break;
         }
 
-
-
         arr[i] = g_value_get_double(val);
     }
 
     guint64 dur;
     gst_structure_get_clock_time(s, "timestamp", &dur);
-
-    qDebug() << "Duration: " << dur / 1000000;
-
 
     if(n_elements >= 2){
         gst_obj_ref->set_level(arr[0], arr[1]);
@@ -138,12 +134,15 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
     magnitudes = gst_structure_get_value (s, "magnitude");
 
     QList<float> lst;
-    for (i = 0; i < 40; ++i) {
+
+    for (i = 0; i < N_BINS; ++i) {
 
         mag = gst_value_list_get_value (magnitudes, i);
         if (!mag) continue;
 
-         lst << g_value_get_float (mag);
+        float f;
+        f = ((g_value_get_float (mag) + 80.0f ) * (log10(i + 1.0f)+ 1.0f) - 80.0f) * 0.9;
+         lst << f;
     }
 
     gst_obj_ref->set_spectrum(lst);

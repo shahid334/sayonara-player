@@ -129,7 +129,7 @@ namespace Sort{
 };
 
 
-
+#define N_BINS 50
 
 
 #endif /* GLOBALS_H_ */

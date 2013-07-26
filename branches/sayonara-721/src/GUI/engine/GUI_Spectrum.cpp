@@ -23,17 +23,24 @@ void insertColorOfRect(int bin, int n_bins, QList<float> & borders, QList<QColor
 	float dx = (borders[i] - borders[i-1]);
 
     float dy = colors[i].red() - colors[i-1].red();
-	r = (int) (( dy * x ) / dx + colors[i-1].red());
+    r = (int) (( dy * (x-borders[i-1]) ) / dx + colors[i-1].red());
 
 	dy = colors[i].green() - colors[i-1].green();
-	g = (int) (( dy * x) / dx + colors[i-1].green());
+    g = (int) (( dy * (x-borders[i-1])) / dx + colors[i-1].green());
 
     dy = colors[i].blue() - colors[i-1].blue();
-    b = (int) ((dy * x) / dx + colors[i-1].blue());
+    b = (int) ((dy * (x-borders[i-1])) / dx + colors[i-1].blue());
+
+    qDebug() << "Old gr: " << colors[i-1].green() << ", New gr: " << colors[i].green() << ", " << g << ":: dx: " << dx << ", dy: " << dy << ", x: " << x;
+
+
 
 	col.setRed(r);
     col.setGreen(g);
 	col.setBlue(b);
+    col.setAlpha(colors[0].alpha());
+
+    qDebug() << col;
 
 	map[bin] = col;
 }
@@ -56,11 +63,17 @@ GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
     qDebug() << "n_rects: " << n_rects;
 
     QList<float> borders;
-    borders << 0  << 0.4 << 0.7 << 0.9 << 1.0;
+    /*borders << 0  << 0.4 << 0.7 << 0.9 << 1.0;
     QList<QColor> colors_active;
     colors_active << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
     QList<QColor> colors_inactive;
-    colors_inactive << QColor(0, 25, 0) << QColor(25, 25, 0) << QColor(25, 25, 0) << QColor(25, 0, 0) << QColor(25, 0, 0);
+    colors_inactive << QColor(0, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 0, 0, 96) << QColor(25, 0, 0, 96);*/
+
+    borders << 0  << 0.5  << 0.9 << 1.0;
+    QList<QColor> colors_active;
+    colors_active << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
+    QList<QColor> colors_inactive;
+    colors_inactive << QColor(0, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 0, 0, 96) << QColor(25, 0, 0, 96);
 
     for(int i=0; i<n_rects; i++){
 
@@ -92,7 +105,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
 
     for(int i=0; i<ninety; i++){
 
-        float f = (_spec[i] + 80.0f) / 60.0f;
+        float f = (_spec[i] + 80.0f) / 80.0f;
 
         // if this is one bar, how tall would it be?
         int h =  f * widget_height;

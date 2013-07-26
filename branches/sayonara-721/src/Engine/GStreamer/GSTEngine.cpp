@@ -20,6 +20,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/globals.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "Engine/Engine.h"
@@ -227,15 +228,17 @@ void GST_Engine::init_play_pipeline() {
                      NULL);
 
         g_object_set (G_OBJECT (_level), "message", TRUE, NULL);
-        g_object_set (G_OBJECT (_level), "interval", 300000, NULL);
+        g_object_set (G_OBJECT (_level), "interval", 3000000, NULL);
 
 
         g_object_set (G_OBJECT (_spectrum),
                       "interval", 30000000,
-                      "bands", 40,
+                      "bands", N_BINS,
                       "threshold", -80,
                       "message", TRUE,
-                      "message-magnitude", TRUE, NULL);
+                      "message-phase", TRUE,
+                      "message-magnitude", TRUE,
+                      NULL);
 
          /* run synced and not as fast as we can */
         g_object_set (G_OBJECT (_app_sink), "sync", TRUE, NULL);
