@@ -69,9 +69,12 @@ GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
     QList<QColor> colors_inactive;
     colors_inactive << QColor(0, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 0, 0, 96) << QColor(25, 0, 0, 96);*/
 
-    borders << 0  << 0.5  << 0.9 << 1.0;
+    borders << 0  << 0.2  << 0.7 << 1.0;
     QList<QColor> colors_active;
-    colors_active << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
+    //colors_active << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
+    // /*orange: */ colors_active << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(243, 132, 26) << QColor(243, 132, 26);
+     /*green: */ colors_active << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(0, 255, 0) << QColor(0, 255, 0);
+    // /*blue: */ colors_active << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(26, 132, 243) << QColor(26, 132, 243);
     QList<QColor> colors_inactive;
     colors_inactive << QColor(0, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 0, 0, 96) << QColor(25, 0, 0, 96);
 
@@ -148,10 +151,12 @@ QAction* GUI_Spectrum::getAction(){
 
 void GUI_Spectrum::showEvent(QShowEvent * e){
     Q_UNUSED(e);
+    this->update();
     emit sig_show(true);
 }
 
 void GUI_Spectrum::closeEvent(QCloseEvent *e){
     PlayerPlugin::closeEvent(e);
+    this->update();
     emit sig_show(false);
 }
