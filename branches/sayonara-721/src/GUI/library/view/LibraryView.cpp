@@ -106,17 +106,22 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 
     switch(event->button()){
     case Qt::LeftButton:
+
         if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
             event->ignore();
             _drag = false;
             QList<int> lst;
             _model->set_selected(lst);
+            this->clearSelection();
+
             break;
         }
 
         else {
 
             QTableView::mousePressEvent(event);
+            calc_selections();
+            force_selections();
             _drag_pos = pos_org;
             _drag = true;
             //				emit sig_pressed(pos, indexAt(pos));
@@ -242,6 +247,18 @@ int LibraryView::get_min_selected(){
     return min;
 }
 
+
+int LibraryView::get_max_selected(){
+
+    QList<int> selections = _model->get_selected();
+    int max = -10000;
+    foreach(int i, selections){
+        if(i > max) max = i;
+    }
+    return max;
+}
+
+
 void LibraryView::goto_row(int row){
 
     if(_model->rowCount() == 0) return;
@@ -286,10 +303,12 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
     bool ctrl_pressed = (modifiers & Qt::ControlModifier);
 
     int min_row = get_min_selected();
+    int max_row = get_max_selected();
     int new_row = -1;
 
     QList<int> selections = calc_selections();
     int last_row =  _model->rowCount() - 1;
+
 
     switch(key){
         case Qt::Key_A:
@@ -310,6 +329,9 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             if(selections.size() == 0) new_row = last_row;
             else if(min_row > 0) new_row = min_row - 1;
             else new_row = 0;
+
+            _last_nav_key_up = true;
+            _last_nav_key_down = false;
             break;
 
 
@@ -317,8 +339,11 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             if(ctrl_pressed) break;
 
             if(selections.size() == 0) new_row = 0;
-            else if(min_row < last_row) new_row = min_row + 1;
+            else if(max_row < last_row) new_row = max_row + 1;
             else new_row = last_row;
+
+            _last_nav_key_up = false;
+            _last_nav_key_down = true;
             break;
 
         case Qt::Key_PageUp:
@@ -378,7 +403,6 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
     }
 
     if(new_row != -1) goto_row(new_row);
-
 
 }
 

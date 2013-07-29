@@ -682,6 +682,7 @@ void GST_Engine::set_level(double right, double left){
 }
 
 void GST_Engine::set_spectrum(QList<float> & lst){
+    qDebug() << "set spectrum ";
     emit sig_spectrum(lst);
 }
 

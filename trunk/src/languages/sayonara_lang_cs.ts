@@ -766,7 +766,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
         <source>Filesize</source>
-        <translation type="unfinished">Velikost</translation>
+        <translation>Velikost</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>

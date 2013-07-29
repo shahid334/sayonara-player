@@ -125,6 +125,10 @@ private:
     QDrag*				_qDrag;
     QList<ColumnHeader> _table_headers;
 
+    bool                _last_nav_key_up;
+    bool                _last_nav_key_down;
+
+
 
     QMenu*              _rc_header_menu;
     QList<QAction*> 	_header_rc_actions;
@@ -141,6 +145,7 @@ private:
     bool                _dark;
 
     int get_min_selected();
+    int get_max_selected();
     void goto_row(int row);
 
     // calc selections and insert into db
