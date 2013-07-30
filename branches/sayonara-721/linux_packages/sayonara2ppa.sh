@@ -52,7 +52,8 @@ cd ..
 echo "Upload? y/n"
 UPLOAD="n"
 read UPLOAD
-if [ "$UPLOAD" == "y" ] ; then
+
+if [ "${UPLOAD}" = "y" ] ; then
 	dput ppa:lucioc/sayonara sayonara_${VERSION}_source.changes
 fi
 
