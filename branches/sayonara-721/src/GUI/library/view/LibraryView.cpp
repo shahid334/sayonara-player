@@ -259,16 +259,15 @@ int LibraryView::get_max_selected(){
 }
 
 
-void LibraryView::goto_row(int row){
+void LibraryView::goto_row(int row, bool select){
 
     if(_model->rowCount() == 0) return;
 
     if( row < 0 ) row = 0;
     else if( row > _model->rowCount() - 1) row = _model->rowCount() - 1;
 
-    this->clearSelection();
-    this->selectRow(row);
     QModelIndex idx = _model->index(row, 0);
+    if(select) this->selectRow(row);
     this->scrollTo(idx);
     emit clicked(idx);
 }
@@ -291,8 +290,6 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         _edit->show();
         return;
     }
-
-
     int key = event->key();
     //qDebug() << "key = " << key;
 
@@ -306,8 +303,11 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
     int max_row = get_max_selected();
     int new_row = -1;
 
+    QTableView::keyPressEvent(event);
     QList<int> selections = calc_selections();
+
     int last_row =  _model->rowCount() - 1;
+    bool select = false;
 
 
     switch(key){
@@ -320,55 +320,69 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             break;
 
         case Qt::Key_Escape:
-            reset_edit();
+            if(_edit->isVisible()) reset_edit();
+            else {
+                clearSelection();
+            }
             break;
 
         case Qt::Key_Up:
             if(ctrl_pressed) break;
 
-            if(selections.size() == 0) new_row = last_row;
+            if(selections.size() == 0) {
+                new_row = last_row;
+                select = true;
+            }
+
             else if(min_row > 0) new_row = min_row - 1;
             else new_row = 0;
-
-            _last_nav_key_up = true;
-            _last_nav_key_down = false;
             break;
 
 
         case Qt::Key_Down:
             if(ctrl_pressed) break;
 
-            if(selections.size() == 0) new_row = 0;
+            if(selections.size() == 0) {
+                new_row = 0;
+                select = true;
+            }
+
             else if(max_row < last_row) new_row = max_row + 1;
             else new_row = last_row;
-
-            _last_nav_key_up = false;
-            _last_nav_key_down = true;
             break;
 
         case Qt::Key_PageUp:
             if(ctrl_pressed) break;
 
-            if(selections.size() == 0) new_row = last_row;
+            if(selections.size() == 0) {
+                new_row = last_row;
+                select = true;
+            }
+
             if(min_row >= 10) new_row = min_row - 10;
             else new_row = 0;
-
             break;
 
         case Qt::Key_PageDown:
             if(ctrl_pressed) break;
 
-            if(selections.size() == 0) new_row = 0;
-            else if(min_row < _model->rowCount() - 10) new_row = min_row + 10;
+            if(selections.size() == 0) {
+                new_row = 0;
+                select = true;
+            }
+            else if(max_row < last_row - 10) new_row = max_row + 10;
             else new_row = last_row;
             break;
 
+
         case Qt::Key_End:
             new_row = _model->rowCount() - 1;
+            select = true;
             break;
 
         case Qt::Key_Home:
             new_row = 0;
+            select = true;
             break;
 
 
@@ -402,7 +416,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         default: break;
     }
 
-    if(new_row != -1) goto_row(new_row);
+    if(new_row != -1) goto_row(new_row, select);
 
 }
 
@@ -454,12 +468,14 @@ void LibraryView::reset_edit(){
 QList<int> LibraryView::calc_selections(){
 
     QList<int> idx_list_int;
+    _model->set_selected(idx_list_int);
 
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     foreach(QModelIndex model_idx, idx_list){
         idx_list_int.push_back(model_idx.row());
     }
+
 
     _model->set_selected(idx_list_int);
 
