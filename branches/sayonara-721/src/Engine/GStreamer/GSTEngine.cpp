@@ -556,8 +556,24 @@ void GST_Engine::psl_calc_level(bool b){
 
     _show_level = b;
     if(b) _show_spectrum = false;
+    _show_level = true;
+    _show_spectrum = true;
     qDebug() << "Show level = " << b;
-    //gst_pad_set_active( _level_pad, b);
+
+
+    //gst_pad_set_active(_tee_level_pad, b);
+    gst_element_set_state(_pipeline, GST_STATE_PAUSED);
+    if(!b){
+        gst_element_unlink_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
+        gst_element_link_many(_level_queue, _level_sink, NULL);
+    }
+    else{
+        gst_element_unlink_many(_level_queue, _level_sink, NULL);
+        gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
+
+    }
+    gst_element_set_state(_pipeline, GST_STATE_PLAYING);
+
 
 }
 
@@ -565,9 +581,24 @@ void GST_Engine::psl_calc_level(bool b){
 void GST_Engine::psl_calc_spectrum(bool b){
     _show_spectrum = b;
     if(b) _show_level = false;
+    _show_level = true;
+    _show_spectrum = true;
     qDebug() << "Show spectrum = " << b;
 
-    //gst_pad_set_active( _spectrum_pad, b);
+    gst_element_set_state(_pipeline, GST_STATE_PAUSED);
+    if(!b){
+        gst_element_unlink_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+        gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
+    }
+    else{
+        gst_element_unlink_many(_spectrum_queue, _spectrum_sink, NULL);
+        gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+
+    }
+    gst_element_set_state(_pipeline, GST_STATE_PLAYING);
+
+
+
 
 }
 
