@@ -55,6 +55,9 @@ read UPLOAD
 
 if [ "${UPLOAD}" = "y" ] ; then
 	dput ppa:lucioc/sayonara sayonara_${VERSION}_source.changes
+else
+	echo "Upload command:"
+	echo "   dput ppa:lucioc/sayonara sayonara_${VERSION}_source.changes"
 fi
 
 
