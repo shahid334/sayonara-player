@@ -155,7 +155,7 @@ void GST_Engine::init_play_pipeline() {
         _level_queue = gst_element_factory_make("queue", "level_queue");
         _spectrum_queue = gst_element_factory_make("queue", "spectrum_queue");
 
-        _level_sink = gst_element_factory_make("fakesink", "level_sink");
+        _level_sink = gst_element_factory_make("appsink", "level_sink");
         _spectrum_sink = gst_element_factory_make("fakesink", "spectrum_sink");
 
 
@@ -184,10 +184,10 @@ void GST_Engine::init_play_pipeline() {
                          _spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 
 
-        success = gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
+        success = gst_element_link_many(_level_queue, _level_sink, NULL);
         _test_and_error_bool(success, "Engine: Cannot link Level pipeline");
 
-        success = gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+        success = gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
         _test_and_error_bool(success, "Engine: Cannot link Spectrum pipeline");
 
         success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
@@ -261,10 +261,22 @@ void GST_Engine::init_play_pipeline() {
         gint threshold = -80;
 
 
+/*****/
+        GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
+        g_object_set (_level_sink,
+                      "drop", TRUE,
+                      "max-buffers", 1,
+                      "caps", audio_caps,
+                      "emit-signals", FALSE,
+                      NULL);
+
+        g_signal_connect (_level_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+/*****/
+
 
         g_object_set (G_OBJECT (_level),
                       "message", TRUE,
-                      "interval", interval,
+                      "interval", interval / 10,
                       NULL);
 
         g_object_set (G_OBJECT (_spectrum),
@@ -556,9 +568,13 @@ void GST_Engine::psl_calc_level(bool b){
 
     _show_level = b;
     if(b) _show_spectrum = false;
-    _show_level = true;
-    _show_spectrum = true;
+
     qDebug() << "Show level = " << b;
+    g_object_set(_level_sink,
+        "emit-signals", b,
+        NULL);
+
+    return;
 
 
     //gst_pad_set_active(_tee_level_pad, b);
@@ -581,8 +597,7 @@ void GST_Engine::psl_calc_level(bool b){
 void GST_Engine::psl_calc_spectrum(bool b){
     _show_spectrum = b;
     if(b) _show_level = false;
-    _show_level = true;
-    _show_spectrum = true;
+
     qDebug() << "Show spectrum = " << b;
 
     gst_element_set_state(_pipeline, GST_STATE_PAUSED);
@@ -595,6 +610,7 @@ void GST_Engine::psl_calc_spectrum(bool b){
         gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 
     }
+
     gst_element_set_state(_pipeline, GST_STATE_PLAYING);
 
 
@@ -722,7 +738,7 @@ void GST_Engine::set_level(double right, double left){
 }
 
 void GST_Engine::set_spectrum(QList<float> & lst){
-    qDebug() << "set spectrum ";
+
     emit sig_spectrum(lst);
 }
 

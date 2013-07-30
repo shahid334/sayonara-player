@@ -704,6 +704,20 @@
     </message>
 </context>
 <context>
+    <name>GUI_LevelPainter</name>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_LevelPainter.h" line="52"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.h" line="18"/>
+        <source>Le&amp;vel</source>
+        <translation>Pe&amp;gel</translation>
+    </message>
+</context>
+<context>
     <name>GUI_Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
@@ -1231,6 +1245,21 @@
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="100"/>
         <source>Set library path</source>
         <translation>Setze Pfad</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_Spectrum</name>
+    <message>
+        <location filename="../GUI/engine/GUI_Form.ui" line="14"/>
+        <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_Spectrum.h" line="52"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Spectrum.h" line="21"/>
+        <source>Sp&amp;ectrum</source>
+        <translation>Sp&amp;ektrum</translation>
     </message>
 </context>
 <context>
@@ -1888,55 +1917,55 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="23"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="253"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="252"/>
         <source>Library</source>
         <translation>Musiksammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="324"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="261"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="321"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="260"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Kürzel: &lt;br /&gt;Suche &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Pfad &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="337"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="255"/>
         <source>Search</source>
         <translation>Suche</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="342"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="347"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="258"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
         <source>Path</source>
         <translation>Dateipfad</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="376"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="264"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="263"/>
         <source>Search for title, interprets and albums</source>
         <translation>Suche nach Titel, Künstler und Alben</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="403"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="267"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="400"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Zeige alle Künstler, Alben und Titel</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="431"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="270"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="428"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
         <source>Music Library  </source>
         <translation>Musiksammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="470"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="273"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="467"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>

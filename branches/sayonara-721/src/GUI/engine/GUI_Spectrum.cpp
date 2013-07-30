@@ -63,27 +63,52 @@ GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
     qDebug() << "n_rects: " << n_rects;
 
     QList<float> borders;
-    /*borders << 0  << 0.4 << 0.7 << 0.9 << 1.0;
-    QList<QColor> colors_active;
-    colors_active << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
-    QList<QColor> colors_inactive;
-    colors_inactive << QColor(0, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 0, 0, 96) << QColor(25, 0, 0, 96);*/
-
     borders << 0  << 0.2  << 0.7 << 1.0;
-    QList<QColor> colors_active;
-    //colors_active << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
-    // /*orange: */ colors_active << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(243, 132, 26) << QColor(243, 132, 26);
-     /*green: */ colors_active << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(0, 255, 0) << QColor(0, 255, 0);
-    // /*blue: */ colors_active << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(26, 132, 243) << QColor(26, 132, 243);
+    QList< QList<QColor> > colors_active;
+
+    QList<QColor> fancy;
+    fancy << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);
+
+    QList<QColor> orange;
+    orange << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(243, 132, 26) << QColor(243, 132, 26);
+
+    QList<QColor> green;
+    green << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(0, 255, 0) << QColor(0, 255, 0);
+
+    QList<QColor> blue;
+    blue << QColor(50, 50, 50)  << QColor(128, 128, 128) << QColor(26, 132, 243) << QColor(26, 132, 243);
+
+    colors_active << fancy << green << blue << orange;
+
     QList<QColor> colors_inactive;
     colors_inactive << QColor(0, 25, 0, 96) << QColor(25, 25, 0, 96) << QColor(25, 0, 0, 96) << QColor(25, 0, 0, 96);
 
+
+
+    foreach(QList<QColor> lst, colors_active){
+        QMap<int, QColor> map;
+
+        for(int i=0; i<n_rects; i++){
+            insertColorOfRect(i, n_rects, borders, lst, map);
+        }
+
+        _maps_col_active << map;
+    }
+
+
+
     for(int i=0; i<n_rects; i++){
 
-        insertColorOfRect(i, n_rects, borders, colors_active, _map_col_active);
         insertColorOfRect(i, n_rects, borders, colors_inactive, _map_col_inactive);
-
     }
+
+    _cur_col = 0;
+}
+
+
+void
+GUI_Spectrum::mousePressEvent(QMouseEvent *e){
+    _cur_col = (_cur_col + 1) % _maps_col_active.size();
 
 }
 
@@ -97,7 +122,9 @@ GUI_Spectrum::set_spectrum(QList<float>& lst){
 
 void
 GUI_Spectrum::paintEvent(QPaintEvent *e){
+
      QPainter painter(this);
+
 
     int x=10;
     int ninety = (_spec.size() * 500) / 1000;
@@ -125,7 +152,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
             QColor col;
 
             if( r < colored_rects){
-                col = _map_col_active[r];
+                col = _maps_col_active[_cur_col].value(r);
             }
 
             else{

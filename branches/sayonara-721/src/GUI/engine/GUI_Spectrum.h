@@ -6,6 +6,7 @@
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QPaintEvent>
+#include <QMouseEvent>
 #include <QAction>
 #include <QColor>
 #include <QList>
@@ -17,7 +18,7 @@ class GUI_Spectrum : public PlayerPlugin, private Ui::GUI_Spectrum
 public:
     explicit GUI_Spectrum(QString name, QString action_text, QWidget *parent=0);
 
-    static QString getVisName(){ return tr("S&pectrum"); }
+    static QString getVisName(){ return tr("Sp&ectrum"); }
     virtual QAction* getAction();
 
 signals:
@@ -29,6 +30,7 @@ protected:
     void showEvent(QShowEvent *);
     void closeEvent(QCloseEvent *);
     void paintEvent(QPaintEvent* e);
+    void mousePressEvent(QMouseEvent *e);
 
 public slots:
     void set_spectrum(QList<float>&);
@@ -44,9 +46,12 @@ private:
     QColor _yellow, _yellow_dark;
     QColor _black;
 
+    int _cur_col;
+
     QList<float> _spec;
 
-    QMap<int, QColor> _map_col_active;
+    QList< QMap<int, QColor> > _maps_col_active;
+
     QMap<int, QColor> _map_col_inactive;
 
 

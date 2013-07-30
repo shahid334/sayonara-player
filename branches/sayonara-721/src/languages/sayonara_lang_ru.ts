@@ -31,14 +31,14 @@
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="275"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="195"/>
         <source>Local search</source>
-        <translation type="unfinished">Локальный поиск</translation>
+        <translation>Локальный поиск</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="285"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="196"/>
         <source>Select and preview multiple covers</source>
         <translatorcomment>Machs nicht zu lang!</translatorcomment>
-        <translation type="unfinished">Выбор и предварительный просмотр обложек</translation>
+        <translation>Выбор и предварительный просмотр обложек</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="55"/>
@@ -207,12 +207,12 @@
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="95"/>
         <source>Album</source>
-        <translation type="unfinished">Альбом</translation>
+        <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="126"/>
         <source>Artist</source>
-        <translation type="unfinished">Исполнитель</translation>
+        <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="149"/>
@@ -587,7 +587,7 @@
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="79"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="181"/>
         <source>Show error messages</source>
-        <translation type="unfinished">Показывать ошибки</translation>
+        <translation>Показывать ошибки</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="91"/>
@@ -599,13 +599,13 @@
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="133"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="184"/>
         <source>Propose ID3 corrections</source>
-        <translation type="unfinished">Предлагать исправления для ID3</translation>
+        <translation>Предлагать исправления для ID3</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="148"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="185"/>
         <source>Clear session key</source>
-        <translation type="unfinished">Очистить ключ сессии</translation>
+        <translation>Очистить ключ сессии</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="222"/>
@@ -636,6 +636,20 @@
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Level.h" line="20"/>
+        <source>Le&amp;vel</source>
+        <translation>&amp;Уровень</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_LevelPainter</name>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_LevelPainter.h" line="52"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.h" line="18"/>
         <source>Le&amp;vel</source>
         <translation>&amp;Уровень</translation>
     </message>
@@ -792,7 +806,7 @@
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="161"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="144"/>
         <source>Icon scaling</source>
-        <translation type="unfinished">Размер иконки</translation>
+        <translation>Размер иконки</translation>
     </message>
 </context>
 <context>
@@ -1162,6 +1176,21 @@
     </message>
 </context>
 <context>
+    <name>GUI_Spectrum</name>
+    <message>
+        <location filename="../GUI/engine/GUI_Form.ui" line="14"/>
+        <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_Spectrum.h" line="52"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Spectrum.h" line="21"/>
+        <source>Sp&amp;ectrum</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_StartupDialog</name>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="20"/>
@@ -1447,13 +1476,13 @@ Please choose another folder</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="305"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="405"/>
         <source>Apply expression</source>
-        <translation type="unfinished">Применить выражение</translation>
+        <translation>Применить выражение</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="320"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="406"/>
         <source>Undo expression</source>
-        <translation type="unfinished">Отменить выражение</translation>
+        <translation>Отменить выражение</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="362"/>
@@ -1531,7 +1560,7 @@ Please choose another folder</source>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="49"/>
         <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="121"/>
         <source>relative filepaths</source>
-        <translation type="unfinished">относительные пути</translation>
+        <translation>относительные пути</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="73"/>
@@ -1637,13 +1666,13 @@ Please choose another folder</source>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="91"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="230"/>
         <source>Copy tracks to library</source>
-        <translation type="unfinished">Копировать треки в библиотеку</translation>
+        <translation>Копировать треки в библиотеку</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="123"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="231"/>
         <source>cancel</source>
-        <translation type="unfinished">Отменить</translation>
+        <translation>Отменить</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="150"/>
@@ -1769,7 +1798,7 @@ Please choose another folder</source>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="51"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="173"/>
         <source>LastFM Playcount</source>
-        <translation type="unfinished">Проигрываний на Last.fm</translation>
+        <translation>Проигрываний на Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="65"/>
@@ -1812,55 +1841,55 @@ Please choose another folder</source>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="23"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="253"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="252"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="324"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="261"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="321"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="260"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Комбинация клавиш:&lt;br /&gt;Поиск &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Жанр &lt;span style=&quot; font-weight:600;&quot;&gt;g:&lt;br /&gt;&lt;/span&gt;Путь &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="337"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="255"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="342"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
         <source>Genre</source>
         <translation>Жанр</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="347"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="258"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
         <source>Path</source>
         <translation>Путь</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="376"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="264"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="263"/>
         <source>Search for title, interprets and albums</source>
         <translation>Искать по названию, исполнителю и альбому</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="403"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="267"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="400"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Показать все альбомы, треки и исполнителей</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="431"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="270"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="428"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
         <source>Music Library  </source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="470"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="273"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="467"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
         <source>Information</source>
         <translation>Информация</translation>
     </message>
@@ -1941,7 +1970,7 @@ Please choose another folder</source>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="167"/>
         <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="129"/>
         <source>(Album)</source>
-        <translation type="unfinished">(Альбом)</translation>
+        <translation>(Альбом)</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="217"/>
@@ -1962,13 +1991,13 @@ Please choose another folder</source>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="82"/>
         <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="109"/>
         <source>Title</source>
-        <translation type="unfinished">Название</translation>
+        <translation>Название</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="116"/>
         <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="110"/>
         <source>Artist</source>
-        <translation type="unfinished">Исполнитель</translation>
+        <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="153"/>
@@ -2354,7 +2383,7 @@ Please choose another folder</source>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="25"/>
         <location filename="../GUI/ui_GUI_SocketSetup.h" line="111"/>
         <source>Activate socket connection</source>
-        <translation type="unfinished">Активировать подключение через сокет</translation>
+        <translation>Активировать подключение через сокет</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="70"/>

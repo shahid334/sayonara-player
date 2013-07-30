@@ -43,6 +43,17 @@ gboolean player_change_file(GstBin* pipeline, void* app) {
     return true;
 }
 
+static void new_buffer(GstElement* sink, void* data){
+
+    Q_UNUSED(data);
+
+    GstBuffer* buffer;
+    g_signal_emit_by_name(sink, "pull-buffer", &buffer);
+    if(!buffer) return;
+
+    gst_obj_ref->set_buffer(buffer);
+}
+
 
 
 static gboolean
