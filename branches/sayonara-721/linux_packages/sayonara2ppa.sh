@@ -1,11 +1,16 @@
 #!/bin/bash
 
+CUR=$PWD
+
+cd ..
+svn commit
+svn update
+cd $CUR
+
 if [ $# -ne 2 ] ; then
 	echo "$0 <VERSION> <KEY>"
 	exit 1
 fi
-svn commit
-svn update
 
 mkdir ppa
 
@@ -63,7 +68,7 @@ else
 	echo "   dput ppa:lucioc/sayonara sayonara_${VERSION}_source.changes"
 fi
 
-cd ..
+cd $CUR
 
 echo "Delete PPA? y/n"
 DEL_PPA="n"
