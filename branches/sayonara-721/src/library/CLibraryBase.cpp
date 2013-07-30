@@ -267,7 +267,6 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
         _db->getAllAlbums(_vec_albums, _album_sortorder);
     }
 
-
     _selected_albums.clear();
     _selected_tracks.clear();
 

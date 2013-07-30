@@ -120,14 +120,17 @@ private:
 
 	GstElement* _audio_sink;
     GstElement* _audio_bin;
-    GstElement* _gio_src;
-    GstElement* _audio_convert;
-    GstElement* _level;
-    GstElement* _spectrum;
 
-	
-	GstElement* _app_sink;
-	GstElement* _app_queue;
+    GstPadTemplate* _tee_src_pad_template;
+
+    GstElement* _level_audio_convert, *_spectrum_audio_convert;
+    GstElement* _level, *_spectrum;
+    GstPad*     _level_pad, *_spectrum_pad;
+    GstPad*     _tee_level_pad, *_tee_spectrum_pad;
+
+    GstElement* _level_sink, *_spectrum_sink;
+    GstElement* _level_queue, *_spectrum_queue;
+
 	
     GstElement* _tee;
 	

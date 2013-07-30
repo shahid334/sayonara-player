@@ -31,7 +31,7 @@ void insertColorOfRect(int bin, int n_bins, QList<float> & borders, QList<QColor
     dy = colors[i].blue() - colors[i-1].blue();
     b = (int) ((dy * (x-borders[i-1])) / dx + colors[i-1].blue());
 
-    qDebug() << "Old gr: " << colors[i-1].green() << ", New gr: " << colors[i].green() << ", " << g << ":: dx: " << dx << ", dy: " << dy << ", x: " << x;
+    //qDebug() << "Old gr: " << colors[i-1].green() << ", New gr: " << colors[i].green() << ", " << g << ":: dx: " << dx << ", dy: " << dy << ", x: " << x;
 
 
 

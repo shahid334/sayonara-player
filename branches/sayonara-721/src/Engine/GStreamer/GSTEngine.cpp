@@ -138,23 +138,31 @@ void GST_Engine::init_play_pipeline() {
 
         _bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
         _audio_bin = gst_bin_new("audio-bin");
+
         _equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
         _volume = gst_element_factory_make("volume", "volume");
-        _audio_convert = gst_element_factory_make("audioconvert", "covertert");
+
         _level = gst_element_factory_make("level", "level");
         _spectrum = gst_element_factory_make("spectrum", "spectrum");
+
+        _level_audio_convert = gst_element_factory_make("audioconvert", "level_convert");
+        _spectrum_audio_convert = gst_element_factory_make("audioconvert", "spectrum_convert");
 
         _audio_sink = gst_element_factory_make("autoaudiosink", "autoaudiosink");
 
         _eq_queue = gst_element_factory_make("queue", "eq_queue");
         _tee = gst_element_factory_make("tee", "tee");
-        _app_queue = gst_element_factory_make("queue", "app_queue");
-        _app_sink = gst_element_factory_make("fakesink", "app_sink");
+        _level_queue = gst_element_factory_make("queue", "level_queue");
+        _spectrum_queue = gst_element_factory_make("queue", "spectrum_queue");
+
+        _level_sink = gst_element_factory_make("fakesink", "level_sink");
+        _spectrum_sink = gst_element_factory_make("fakesink", "spectrum_sink");
 
 
         if(!_test_and_error(_bus, "Engine: Something went wrong with the bus")) break;
         //if(!_test_and_error(_gio_src, "Engine: Giosrc fail")) break;
-        if(!_test_and_error(_audio_convert, "Engine: decodebin fail")) break;
+        if(!_test_and_error(_level_audio_convert, "Engine: Level converter fail")) break;
+        if(!_test_and_error(_spectrum_audio_convert, "Engine: Spectrum converter fail")) break;
         if(!_test_and_error(_level, "Engine: Level cannot be created")) break;
         if(!_test_and_error(_spectrum, "Engine: Spectrum cannot be created")) break;
         if(!_test_and_error(_audio_bin, "Engine: Bin cannot be created")) break;
@@ -162,50 +170,64 @@ void GST_Engine::init_play_pipeline() {
         if(!_test_and_error(_equalizer, "Engine: Equalizer cannot be created")) break;
         if(!_test_and_error(_eq_queue, "Engine: Equalizer cannot be created")) break;
         if(!_test_and_error(_audio_sink, "Engine: Audio Sink cannot be created")) break;
-        if(!_test_and_error(_app_queue, "Engine: Queue cannot be created")) break;
+        if(!_test_and_error(_level_queue, "Engine: Queue cannot be created")) break;
+        if(!_test_and_error(_spectrum_queue, "Engine: Queue cannot be created")) break;
 
 
         gst_bus_add_watch(_bus, bus_state_changed, this);
         //gst_bus_add_watch(_bus, level_handler, this);
 
         // create a bin that includes an equalizer and replace the sink with this bin
-        gst_bin_add_many(GST_BIN(_audio_bin), _tee, _eq_queue, _equalizer, _volume, _audio_convert, _level, _spectrum, _audio_sink, _app_queue, _app_sink, NULL);
-        //success = gst_element_link_many(_app_queue, _audio_convert, _level, _spectrum, _app_sink, NULL);
+        gst_bin_add_many(GST_BIN(_audio_bin), _tee,
+                         _eq_queue, _equalizer, _volume, _audio_sink,
+                         _level_queue, _level_audio_convert, _level, _level_sink,
+                         _spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 
-        _test_and_error_bool(success, "Engine: Cannot link queue with app sink");
+
+        success = gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
+        _test_and_error_bool(success, "Engine: Cannot link Level pipeline");
+
+        success = gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+        _test_and_error_bool(success, "Engine: Cannot link Spectrum pipeline");
+
         success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
-
         if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
         // Connect tee
-        GstPadTemplate* tee_src_pad_template;
+
         GstPad* tee_pad;
         GstPad* tee_eq_pad;
-        GstPad* tee_app_pad;
         GstPad* eq_pad;
-        GstPad* app_pad;
+
         GstPadLinkReturn s;
 
 
         // create tee pads
-        tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
+        _tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
 
         // "outputs" of tee to eq and queue
 
-        tee_eq_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
+        tee_eq_pad = gst_element_request_pad(_tee, _tee_src_pad_template, NULL, NULL);
             if(!_test_and_error(tee_eq_pad, "Engine: tee_eq_pad is NULL")) break;
         eq_pad = gst_element_get_static_pad(_eq_queue, "sink");
             if(!_test_and_error(eq_pad, "Engine: eq pad is NULL")) break;
 
-        tee_app_pad = gst_element_request_pad(_tee, tee_src_pad_template, NULL, NULL);
-            if(!_test_and_error(tee_app_pad, "Engine: tee_app_pad is NULL")) break;
-        app_pad = gst_element_get_static_pad(_app_queue, "sink");
-            if(!_test_and_error(app_pad, "Engine: app pad NULL")) break;
+        _tee_level_pad = gst_element_request_pad(_tee, _tee_src_pad_template, NULL, NULL);
+            if(!_test_and_error(_tee_level_pad, "Engine: Tee-Level Pad NULL")) break;
+        _level_pad = gst_element_get_static_pad(_level_queue, "sink");
+            if(!_test_and_error(_level_pad, "Engine: Level Pad NULL")) break;
+
+        _tee_spectrum_pad = gst_element_request_pad(_tee, _tee_src_pad_template, NULL, NULL);
+            if(!_test_and_error(_tee_spectrum_pad, "Engine: Tee-Spectrum Pad NULL")) break;
+        _spectrum_pad = gst_element_get_static_pad(_spectrum_queue, "sink");
+            if(!_test_and_error(_spectrum_pad, "Engine: Spectrum Pad NULL")) break;
 
         s = gst_pad_link (tee_eq_pad, eq_pad);
             _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
-        s = gst_pad_link (tee_app_pad, app_pad);
-            _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee app with app");
+        s = gst_pad_link (_tee_level_pad, _level_pad);
+            _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee with level");
+        s = gst_pad_link (_tee_spectrum_pad, _spectrum_pad);
+            _test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee with spectrum");
 
 
         // "input" of tee pad
@@ -221,11 +243,15 @@ void GST_Engine::init_play_pipeline() {
         g_object_set(G_OBJECT(_pipeline), "audio-sink", _audio_bin, NULL);
 
 
-        g_object_set (_app_queue,
+        g_object_set (_eq_queue,
                       "silent", TRUE,
                       NULL);
 
-        g_object_set(_eq_queue,
+        g_object_set (_level_queue,
+                      "silent", TRUE,
+                      NULL);
+
+        g_object_set(_spectrum_queue,
                      "silent", TRUE,
                      NULL);
 
@@ -254,8 +280,14 @@ void GST_Engine::init_play_pipeline() {
         _show_spectrum = false;
 
          /* run synced and not as fast as we can */
-        g_object_set (G_OBJECT (_app_sink), "sync", TRUE, NULL);
-        g_object_set (G_OBJECT (_app_sink), "async", FALSE, NULL);
+        g_object_set (G_OBJECT (_level_sink), "sync", TRUE, NULL);
+        g_object_set (G_OBJECT (_level_sink), "async", FALSE, NULL);
+
+        g_object_set (G_OBJECT (_spectrum_sink), "sync", TRUE, NULL);
+        g_object_set (G_OBJECT (_spectrum_sink), "async", FALSE, NULL);
+
+        gst_pad_set_active(_level_pad, false);
+        gst_pad_set_active(_level_pad, true);
 
         g_signal_connect(_pipeline, "about-to-finish", G_CALLBACK(player_change_file), NULL);
 
@@ -522,43 +554,20 @@ void GST_Engine::eq_enable(bool) {
 
 void GST_Engine::psl_calc_level(bool b){
 
-     _show_level = false;
-    if(_show_spectrum){
-        _show_spectrum = false;
-        gst_element_unlink_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
-    }
-
-    if(!b){
-        gst_element_unlink_many(_app_queue, _audio_convert, _level, _app_sink, NULL);
-    }
-
-    else{
-        _show_level = gst_element_link_many(_app_queue, _audio_convert, _level, _app_sink, NULL);
-    }
-
-    qDebug() << "Show level: " << _show_level;
-
+    _show_level = b;
+    if(b) _show_spectrum = false;
+    qDebug() << "Show level = " << b;
+    //gst_pad_set_active( _level_pad, b);
 
 }
 
 
 void GST_Engine::psl_calc_spectrum(bool b){
-    _show_spectrum = false;
-    if(_show_level){
-        _show_level = false;
-        gst_element_unlink_many(_app_queue, _audio_convert, _level, _app_sink, NULL);
-    }
+    _show_spectrum = b;
+    if(b) _show_level = false;
+    qDebug() << "Show spectrum = " << b;
 
-    if(!b){
-        gst_element_unlink_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
-    }
-
-    else{
-        _show_spectrum = gst_element_link_many(_app_queue, _audio_convert, _spectrum, _app_sink, NULL);
-    }
-
-    qDebug() << "Show spectrum: " << _show_spectrum;
-
+    //gst_pad_set_active( _spectrum_pad, b);
 
 }
 
