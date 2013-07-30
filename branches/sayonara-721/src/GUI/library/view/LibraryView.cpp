@@ -240,6 +240,7 @@ void LibraryView::forbid_mimedata_destroyable(){
 int LibraryView::get_min_selected(){
 
     QList<int> selections = _model->get_selected();
+    if(selections.size() == 0) return 0;
     int min = 10000;
     foreach(int i, selections){
         if(i < min) min = i;
@@ -252,6 +253,7 @@ int LibraryView::get_max_selected(){
 
     QList<int> selections = _model->get_selected();
     int max = -10000;
+    if(selections.size() == 0) return _model->rowCount() - 1;
     foreach(int i, selections){
         if(i > max) max = i;
     }
@@ -274,6 +276,8 @@ void LibraryView::goto_row(int row, bool select){
 
 
 void LibraryView::keyPressEvent(QKeyEvent* event){
+
+
 
     // _edit has changed
     QString text = event->text();
@@ -303,12 +307,30 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
     int max_row = get_max_selected();
     int new_row = -1;
 
-    QTableView::keyPressEvent(event);
-    QList<int> selections = calc_selections();
 
     int last_row =  _model->rowCount() - 1;
     bool select = false;
 
+    int step = 10;
+    QList<int> selections = _model->get_selected();
+    if(this->verticalScrollBar()){
+        int pagestep = this->verticalScrollBar()->pageStep();
+        if(this->_model->rowCount() > 0)
+            step = pagestep / this->rowHeight(0) + 1 ;
+    }
+
+    switch(key){
+        case Qt::Key_Left:
+        case Qt::Key_Right:
+        case Qt::Key_Tab:
+            break;
+        default:
+            QTableView::keyPressEvent(event);
+            break;
+    }
+
+
+//    QList<int> selections = calc_selections();
 
     switch(key){
         case Qt::Key_A:
@@ -323,6 +345,8 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             if(_edit->isVisible()) reset_edit();
             else {
                 clearSelection();
+                QModelIndex idx;
+                emit clicked(idx);
             }
             break;
 
@@ -334,7 +358,10 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
                 select = true;
             }
 
-            else if(min_row > 0) new_row = min_row - 1;
+            else if(min_row > 0){
+
+                new_row = min_row - 1;
+            }
             else new_row = 0;
             break;
 
@@ -359,7 +386,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
                 select = true;
             }
 
-            if(min_row >= 10) new_row = min_row - 10;
+            if(min_row >= step) new_row = min_row - step;
             else new_row = 0;
             break;
 
@@ -370,7 +397,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
                 new_row = 0;
                 select = true;
             }
-            else if(max_row < last_row - 10) new_row = max_row + 10;
+            else if(max_row < last_row - step) new_row = max_row + step;
             else new_row = last_row;
             break;
 
@@ -415,6 +442,9 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
 
         default: break;
     }
+
+    calc_selections();
+
 
     if(new_row != -1) goto_row(new_row, select);
 
@@ -471,6 +501,7 @@ QList<int> LibraryView::calc_selections(){
     _model->set_selected(idx_list_int);
 
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
+    //if(idx_list.size() == 0) return idx_list_int;
 
     foreach(QModelIndex model_idx, idx_list){
         idx_list_int.push_back(model_idx.row());
