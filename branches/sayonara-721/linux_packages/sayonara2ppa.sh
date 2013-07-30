@@ -7,11 +7,14 @@ fi
 svn commit
 svn update
 
+mkdir ppa
+
 VERSION=$1
 TARGET_FILENAME="sayonara-${VERSION}"
-TARGET_PATH="./${TARGET_FILENAME}-ppa"
+TARGET_PATH="./ppa/${TARGET_FILENAME}-ppa"
 DEBIAN_DIR=${TARGET_PATH}/debian
 APP_DIR=${TARGET_PATH}/applications
+
 
 echo "Checking out..."
 svn export "https://sayonara-player.googlecode.com/svn/trunk" ${TARGET_PATH} 
@@ -58,6 +61,16 @@ if [ "${UPLOAD}" = "y" ] ; then
 else
 	echo "Upload command:"
 	echo "   dput ppa:lucioc/sayonara sayonara_${VERSION}_source.changes"
+fi
+
+cd ..
+
+echo "Delete PPA? y/n"
+DEL_PPA="n"
+read DEL_PPA
+
+if [ "${DEL_PPA}" = "y" ] ; then
+	rm -rf ppa
 fi
 
 
