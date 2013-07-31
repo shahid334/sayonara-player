@@ -129,7 +129,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
 
     QAction* search_action = new QAction("Search", this);
-    QKeySequence sequence_search(tr("Ctrl+S"));
+    QKeySequence sequence_search(tr("Ctrl+?"));
     search_action->setShortcut(sequence_search);
     search_action->setShortcutContext(Qt::WindowShortcut);
     connect(search_action, SIGNAL(triggered()), this->ui->le_search, SLOT(setFocus()));

@@ -27,6 +27,7 @@
 
 float log_10[20001];
 float lo_128[128];
+int crop_spectrum_at = 75;
 
 static GST_Engine* gst_obj_ref;
 bool __start_at_beginning = false;
@@ -152,7 +153,7 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
         if (!mag) continue;
 
         float f;
-        f = ((g_value_get_float (mag) + 80.0f ) * (log10(i + 1.0f)+ 1.0f) - 80.0f) * 0.9;
+        f = (g_value_get_float (mag) + crop_spectrum_at) / (crop_spectrum_at * 1.0f);
          lst << f;
     }
 

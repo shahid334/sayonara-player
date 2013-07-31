@@ -662,8 +662,8 @@
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="132"/>
-        <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <source>Ctrl+?</source>
+        <translation>Ctrl+?</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
@@ -1165,7 +1165,7 @@
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Spectrum.h" line="21"/>
-        <source>Sp&amp;ectrum</source>
+        <source>&amp;Spectrum</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1961,69 +1961,69 @@ Please choose another folder</source>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="239"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="240"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="82"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="244"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="245"/>
         <source>Clear Playlist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="173"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="248"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="176"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
         <source>Repeat 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="189"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="238"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="287"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="336"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="385"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="251"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="256"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="261"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="266"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="271"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="192"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="241"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="290"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="339"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="388"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="252"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="257"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="262"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="267"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="272"/>
         <source>Enter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="222"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="253"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="225"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
         <source>Repeat All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="271"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="258"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="274"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
         <source>Shuffle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="320"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="323"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="264"/>
         <source>Append when adding new tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="369"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="372"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="269"/>
         <source>Dynamic playing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="438"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="273"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="441"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="274"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="477"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="277"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="480"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="278"/>
         <source>Show numbers in playlist</source>
         <translation type="unfinished"></translation>
     </message>

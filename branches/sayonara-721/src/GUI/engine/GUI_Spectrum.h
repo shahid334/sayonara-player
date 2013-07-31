@@ -18,7 +18,7 @@ class GUI_Spectrum : public PlayerPlugin, private Ui::GUI_Spectrum
 public:
     explicit GUI_Spectrum(QString name, QString action_text, QWidget *parent=0);
 
-    static QString getVisName(){ return tr("Sp&ectrum"); }
+    static QString getVisName(){ return tr("&Spectrum"); }
     virtual QAction* getAction();
 
 signals:
@@ -51,8 +51,10 @@ private:
     QList<float> _spec;
 
     QList< QMap<int, QColor> > _maps_col_active;
+    QList< QList< QMap<int, QColor> > > _scheme_fading_rect_color;
 
     QMap<int, QColor> _map_col_inactive;
+    int** _steps;
 
 
 

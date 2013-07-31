@@ -258,7 +258,7 @@ void GST_Engine::init_play_pipeline() {
 
 
         guint64 interval = 30000000;
-        gint threshold = -80;
+        gint threshold = - crop_spectrum_at;
 
 
 /*****/

@@ -88,7 +88,7 @@
 #define SET_SOCKET_FROM "socket_from"
 #define SET_SOCKET_TO "socket_to"
 
-
+#define SET_SPECTRUM_STYLE "spectrum_style"
 
 
 #include <QString>
@@ -251,6 +251,8 @@ private:
 
     bool	m_allow_only_one_instance;
 
+    int     m_spectrum_style;
+
 protected:
     void save_all();
 
@@ -408,6 +410,9 @@ public:
 
     bool getNotifyNewVersion();
     void setNotifyNewVersion(bool b);
+
+    int getSpectrumStyle();
+    void setSpectrumStyle(int style);
 
 	friend class SettingsThread;
 };
