@@ -577,6 +577,7 @@ void GST_Engine::psl_calc_level(bool b){
     return;
 
 
+
     //gst_pad_set_active(_tee_level_pad, b);
     gst_element_set_state(_pipeline, GST_STATE_PAUSED);
     if(!b){
@@ -588,7 +589,9 @@ void GST_Engine::psl_calc_level(bool b){
         gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
 
     }
-    gst_element_set_state(_pipeline, GST_STATE_PLAYING);
+
+    if(_state == STATE_PLAY)
+        gst_element_set_state(_pipeline, GST_STATE_PLAYING);
 
 
 }
@@ -611,7 +614,8 @@ void GST_Engine::psl_calc_spectrum(bool b){
 
     }
 
-    gst_element_set_state(_pipeline, GST_STATE_PLAYING);
+    if(_state == STATE_PLAY)
+        gst_element_set_state(_pipeline, GST_STATE_PLAYING);
 
 
 

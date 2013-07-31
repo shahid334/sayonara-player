@@ -1,4 +1,5 @@
 #include "GUI_Spectrum.h"
+#include "HelperStructs/globals.h"
 #include <QPainter>
 #include <QList>
 #include <QDebug>
@@ -103,6 +104,12 @@ GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
     }
 
     _cur_col = 0;
+    for(int i=0; i<N_BINS; i++){
+
+        _spec << 0.0f;
+    }
+    this->update();
+
 }
 
 
