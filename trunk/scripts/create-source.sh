@@ -1,10 +1,11 @@
 #!/bin/bash
 
+svn update
+
 REV=`svn info | grep Revision | tail -c 4`
 TARGET_FILENAME="sayonara-player-r${REV}"
 TARGET_PATH="/tmp/${TARGET_FILENAME}"
 
-svn update
 
 echo "Checking out..."
 svn export "https://sayonara-player.googlecode.com/svn/trunk" ${TARGET_PATH} 
