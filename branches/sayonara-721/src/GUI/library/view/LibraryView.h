@@ -43,6 +43,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QLineEdit>
+#include <QDropEvent>
 
 
 class LibraryView : public QTableView{
@@ -64,6 +65,7 @@ signals:
     void sig_pressed(QPoint&, const QModelIndex&);
     void sig_no_disc_menu();
     void sig_tab_pressed(bool);
+    void sig_import_files(const QStringList&);
 
 private slots:
     void rc_header_menu_changed(bool b=true);
@@ -115,6 +117,10 @@ protected:
     void mouseMoveEvent(QMouseEvent* event);
    void keyPressEvent(QKeyEvent* event);
     void resizeEvent(QResizeEvent* event);
+    void dropEvent(QDropEvent* event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+
 
 
 private:

@@ -19,6 +19,8 @@
 #include <QDebug>
 #include <QString>
 
+#define ENGINE_DEBUG if(_debug) qDebug() << Q_FUNC_INFO
+
 #define CHUNK_SIZE 1024
 #define SAMPLE_RATE 44100 /* Samples per second we are sending */
 #define AUDIO_CAPS "audio/x-raw-int,channels=2,rate=%d,signed=(boolean)true,width=16,depth=16,endianness=BYTE_ORDER"
@@ -29,30 +31,35 @@ float log_10[20001];
 float lo_128[128];
 int crop_spectrum_at = 75;
 
-static GST_Engine* gst_obj_ref;
+static GST_Engine* gst_obj_ref=NULL;
 bool __start_at_beginning = false;
 int __start_pos_beginning = 0;
+bool _debug = true;
 
 
 gboolean player_change_file(GstBin* pipeline, void* app) {
 
+    ENGINE_DEBUG;
+
     Q_UNUSED(pipeline);
     Q_UNUSED(app);
 
-    gst_obj_ref->set_about_to_finish();
+    if(gst_obj_ref)
+        gst_obj_ref->set_about_to_finish();
 
     return true;
 }
 
 static void new_buffer(GstElement* sink, void* data){
-
+ENGINE_DEBUG;
     Q_UNUSED(data);
 
     GstBuffer* buffer;
     g_signal_emit_by_name(sink, "pull-buffer", &buffer);
     if(!buffer) return;
 
-    gst_obj_ref->set_buffer(buffer);
+    if(gst_obj_ref)
+        gst_obj_ref->set_buffer(buffer);
 }
 
 
@@ -60,7 +67,7 @@ static void new_buffer(GstElement* sink, void* data){
 static gboolean
 level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
-
+ENGINE_DEBUG;
     const GstStructure *s = gst_message_get_structure (message);
     const gchar *name = gst_structure_get_name (s);
 
@@ -102,11 +109,11 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
     guint64 dur;
     gst_structure_get_clock_time(s, "timestamp", &dur);
 
-    if(n_elements >= 2){
+    if(n_elements >= 2 && gst_obj_ref){
         gst_obj_ref->set_level(arr[0], arr[1]);
     }
 
-    else if(n_elements == 1){
+    else if(n_elements == 1 && gst_obj_ref){
         gst_obj_ref->set_level(arr[0], arr[0]);
     }
 
@@ -121,7 +128,7 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
 static gboolean
 spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
-
+ENGINE_DEBUG;
     const GstStructure *s = gst_message_get_structure (message);
     const gchar *name = gst_structure_get_name (s);
 
@@ -157,7 +164,8 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
          lst << f;
     }
 
-    gst_obj_ref->set_spectrum(lst);
+    if(gst_obj_ref)
+        gst_obj_ref->set_spectrum(lst);
 
     return TRUE;
 
@@ -166,7 +174,7 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
 
 
 static gboolean show_position(GstElement* pipeline) {
-
+ENGINE_DEBUG;
     if (!__start_at_beginning)
         return false;
 
@@ -186,7 +194,7 @@ static gboolean show_position(GstElement* pipeline) {
 
 static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
                                   void *user_data) {
-
+ENGINE_DEBUG;
     (void) bus;
     (void) user_data;
 
@@ -206,28 +214,33 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
 
         qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
                  << GST_MESSAGE_SRC_NAME(msg);
-        gst_obj_ref->set_track_finished();
+        if(gst_obj_ref)
+            gst_obj_ref->set_track_finished();
         g_error_free(err);
 
         break;
 
     case GST_MESSAGE_ELEMENT:
+        if(!gst_obj_ref) break;
+
         if(gst_obj_ref->get_show_spectrum())
-            spectrum_handler(bus, msg, user_data);
+            return spectrum_handler(bus, msg, user_data);
         if(gst_obj_ref->get_show_level())
-            level_handler(bus, msg, user_data);
+            return level_handler(bus, msg, user_data);
 
     case GST_MESSAGE_ASYNC_DONE:
 
         if (__start_at_beginning == false) {
             __start_at_beginning = true;
-            gst_obj_ref->jump(__start_pos_beginning, false);
+            if(gst_obj_ref)
+                gst_obj_ref->jump(__start_pos_beginning, false);
         }
 
         break;
 
     default:
-        gst_obj_ref->state_changed();
+        if(gst_obj_ref)
+            gst_obj_ref->state_changed();
         break;
     }
 
@@ -236,6 +249,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg,
 
 
 bool _test_and_error(void* element, QString errorstr){
+
     if(!element){
         qDebug() << errorstr;
         return false;

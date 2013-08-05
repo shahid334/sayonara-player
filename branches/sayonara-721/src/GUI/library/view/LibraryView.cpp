@@ -30,7 +30,9 @@
 #include "GUI/ContextMenu.h"
 #include "HelperStructs/CustomMimeData.h"
 
+
 #include <QTableView>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QDebug>
 #include <QStringList>
@@ -41,6 +43,7 @@
 #include <QLineEdit>
 #include <QScrollBar>
 #include <QFont>
+#include <QMimeData>
 
 
 
@@ -74,6 +77,7 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
 
+
     _view_mode = -1;
 
     QFont f = horizontalHeader()->font();
@@ -82,6 +86,7 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     this->horizontalHeader()->setFont(f);
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
+    setAcceptDrops(true);
 }
 
 LibraryView::~LibraryView() {
@@ -934,3 +939,47 @@ void LibraryView::resizeEvent(QResizeEvent* event){
     calc_corner_widget();
 }
 
+void LibraryView::dropEvent(QDropEvent *event){
+
+    event->accept();
+    const QMimeData* mime_data = event->mimeData();
+
+    if(!mime_data) return;
+
+    QString text = "";
+    if(mime_data->hasText()) text = mime_data->text();
+
+    // extern drops
+    if( mime_data->hasUrls() && text.compare("tracks", Qt::CaseInsensitive) != 0){
+
+
+        QStringList filelist;
+        foreach(QUrl url, mime_data->urls()){
+            QString path;
+            QString url_str = url.toString();
+            path =  url_str.right(url_str.length() - 7).trimmed();
+            path = path.replace("%20", " ");
+
+
+            if(QFile::exists(path)){
+                filelist << path;
+            }
+
+
+        } // end foreach
+
+
+        emit sig_import_files(filelist);
+
+
+    }
+}
+
+void LibraryView::dragEnterEvent(QDragEnterEvent *event){
+    event->accept();
+}
+
+
+void  LibraryView::dragMoveEvent(QDragMoveEvent *event){
+    event->accept();
+}

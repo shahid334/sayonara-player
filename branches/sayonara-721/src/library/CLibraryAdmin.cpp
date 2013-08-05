@@ -52,12 +52,12 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 
 void CLibraryBase::importDirectory(const QString& dir){
-	QStringList lst;
-	lst << dir;
-	importFiles(lst);	
+    QStringList lst;
+    lst << dir;
+    psl_import_files(lst);
 }
 
-void CLibraryBase::importFiles(const QStringList& list){
+void CLibraryBase::psl_import_files(const QStringList& list){
     
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 

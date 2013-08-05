@@ -122,6 +122,7 @@ signals:
 
 	void sig_info_btn_clicked();
     void sig_no_focus();
+    void sig_import_files(const QStringList&);
 
 public slots:
 	void fill_library_tracks(MetaDataList&);
@@ -195,6 +196,7 @@ private slots:
 
     void timer_timed_out();
     void delete_menu();
+    void import_files(const QStringList&);
 
 
 protected:

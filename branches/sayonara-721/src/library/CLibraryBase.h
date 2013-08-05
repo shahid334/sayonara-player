@@ -82,7 +82,7 @@ public slots:
     void reloadLibrary(bool);
     void clearLibrary();
     void refresh();
-    void importFiles(const QStringList&);
+    void psl_import_files(const QStringList&);
     void importDirectory(const QString&);
 
     void setLibraryPath(QString);

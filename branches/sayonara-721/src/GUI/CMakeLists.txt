@@ -15,7 +15,6 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
-    engine/GUI_Level.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     player/GUI_Player.h
@@ -64,7 +63,6 @@ SET(HEADERS
 
 
 SET(SOURCES
-    engine/GUI_Level.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     player/GUI_Player.cpp
@@ -116,7 +114,6 @@ SET(SOURCES
 
 SET(FORMS
     engine/GUI_LevelPainter.ui
-    engine/GUI_Level.ui
     engine/GUI_Spectrum.ui
     player/GUI_Player.ui
     playlist/GUI_Playlist.ui

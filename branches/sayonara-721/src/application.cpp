@@ -262,7 +262,7 @@ void Application::init_connections(){
     CONNECT (player, reloadLibrary(bool), 					library,            reloadLibrary(bool));
     CONNECT (player, clearLibrary(),					library,	clearLibrary());
     CONNECT (player, sig_import_dir(const QString&),			library,        importDirectory(const QString&));
-    CONNECT (player, sig_import_files(const QStringList&),		library,        importFiles(const QStringList&));
+    CONNECT (player, sig_import_files(const QStringList&),		library,        psl_import_files(const QStringList&));
     CONNECT (player, libpath_changed(QString),               library, 			setLibraryPath(QString));
     CONNECT (player, sig_show_only_tracks(bool),				ui_library,			show_only_tracks(bool));
 
@@ -374,6 +374,7 @@ void Application::init_connections(){
     CONNECT(ui_library, sig_append_tracks(const QList<int>&),             library,		psl_append_tracks(const QList<int>&));
     CONNECT(ui_library, sig_append_all_tracks(),                          library,		psl_append_all_tracks());
     CONNECT(ui_library, sig_no_focus(),                                      ui_playlist,   setFocus());
+    CONNECT(ui_library, sig_import_files(const QStringList&),               library,        psl_import_files(const QStringList&));
 
     CONNECT(ui_lastfm, sig_activated(bool),                                  player,         psl_lfm_activated(bool));
     CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));
