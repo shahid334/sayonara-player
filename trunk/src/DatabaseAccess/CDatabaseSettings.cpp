@@ -303,6 +303,9 @@ bool CDatabaseConnector::load_settings(){
         bool notify_new_version = load_setting_bool(SET_PLAYER_NOTIFY_NEW_VERSION, true);
 	settings->setNotifyNewVersion(notify_new_version);
 
+    int spectrum_style = load_setting_int(SET_SPECTRUM_STYLE, 0);
+    settings->setSpectrumStyle(spectrum_style);
+
     connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
     connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
 
@@ -467,8 +470,11 @@ bool CDatabaseConnector::store_settings(){
 	bool allow_only_one_instance = storage->getAllowOnlyOneInstance();
 	store_setting(SET_PLAYER_ONE_INSTANCE, allow_only_one_instance);
 
-        bool notify_new_version = storage->getNotifyNewVersion();
-        store_setting(SET_PLAYER_NOTIFY_NEW_VERSION, notify_new_version);
+    bool notify_new_version = storage->getNotifyNewVersion();
+    store_setting(SET_PLAYER_NOTIFY_NEW_VERSION, notify_new_version);
+
+    int spectrum_style = storage->getSpectrumStyle();
+    store_setting(SET_SPECTRUM_STYLE, spectrum_style);
 
 	_database->commit();
 	storage->set_sth_changed(false);

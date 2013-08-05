@@ -146,9 +146,12 @@ int PlaylistView::get_min_selected(){
     QModelIndexList lst = this->selectedIndexes();
     int min_row = 5000000;
 
-    if(lst.size() == 0) return 0;
+    if(lst.size() == 0) {
+        return 0;
+    }
 
     foreach(QModelIndex i, lst){
+
         if(i.row() < min_row){
             min_row = i.row();
         }
@@ -159,15 +162,13 @@ int PlaylistView::get_min_selected(){
 
 // mark row as currently pressed
 void PlaylistView::goto_row(int row){
+
     if( (row >= _model->rowCount()) || (row < 0) ) return;
 
-    this->clearSelection();
-
     QModelIndex idx = _model->index(row, 0);
-    QList<int> lst_rows;
-    lst_rows << row;
-    this->select_rows(lst_rows);
     row_released(idx);
+
+
     this->scrollTo(idx);
 }
 
@@ -176,10 +177,12 @@ void PlaylistView::keyPressEvent(QKeyEvent* event){
 
     int key = event->key();
 
+
     Qt::KeyboardModifiers  modifiers = event->modifiers();
     int min_row = get_min_selected();
     int new_row = -1;
 
+    QAbstractItemView::keyPressEvent(event);
 
     switch(key){
         case Qt::Key_A:
@@ -358,9 +361,7 @@ void PlaylistView::fill(MetaDataList &v_metadata, int cur_play_idx){
         _model->setData(model_idx, md.toVariant(), Qt::EditRole);
     }
 
-    _model->set_selected(_cur_selected_rows);
     this->select_rows(_cur_selected_rows);
-
     this->scrollTo(idx_cur_playing, QListView::EnsureVisible);
 
 }
@@ -407,9 +408,10 @@ void PlaylistView::clear_selection(){
 
 void PlaylistView::select_rows(QList<int> lst){
 
+
+    this->clear_selection();
     QItemSelectionModel* sm = this->selectionModel();
     QItemSelection sel;
-
 
     foreach(int row, lst){
         QModelIndex idx = _model->index(row);
@@ -418,9 +420,9 @@ void PlaylistView::select_rows(QList<int> lst){
         sel.merge(sm->selection(), QItemSelectionModel::Select);
     }
 
-    sm->clearSelection();
     sm->select(sel,QItemSelectionModel::Select);
 
+    this->setSelectionModel(sm);
     _cur_selected_rows = calc_selections();
 }
 
@@ -433,7 +435,7 @@ QList<int> PlaylistView::calc_selections(){
 
     QList<int> selections;
 
-    QModelIndexList idx_list = this->selectionModel()->selectedRows();
+    QModelIndexList idx_list = this->selectedIndexes();
 
     foreach(QModelIndex model_idx, idx_list){
         selections.push_back(model_idx.row());

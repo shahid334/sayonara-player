@@ -113,7 +113,7 @@ protected:
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
-    void keyPressEvent(QKeyEvent* event);
+   void keyPressEvent(QKeyEvent* event);
     void resizeEvent(QResizeEvent* event);
 
 
@@ -124,7 +124,6 @@ private:
     QPoint				_drag_pos;
     QDrag*				_qDrag;
     QList<ColumnHeader> _table_headers;
-
 
     QMenu*              _rc_header_menu;
     QList<QAction*> 	_header_rc_actions;
@@ -141,16 +140,17 @@ private:
     bool                _dark;
 
     int get_min_selected();
-    void goto_row(int row);
+    int get_max_selected();
+    void goto_row(int row, bool select=false);
 
-    // calc selections and insert into db
+    /*// calc selections and insert into db
     // row = row of item in list
     // is selected
     // variant = converted to variant
     // selection in list
     // current first selected row
     // returns updated selected row
-    int run_loop(int row, QVariant& variant, bool is_selected, QItemSelection& sel, int first_selected_row);
+    int run_loop(int row, QVariant& variant, bool is_selected, QItemSelection& sel, int first_selected_row);*/
 
     // prepares model and returns the QItemSelection for the table
     QItemSelection reset_and_get_selection(int size);

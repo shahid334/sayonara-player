@@ -350,6 +350,7 @@ void GUI_Player::about(bool b){
     translators << "Julia Karakoz";
     translators << "Bruno Veilleux";
     translators << "Pavel Fric";
+    translators << "Kallisto";
 
     QString first_translators;
     QString last_translator;
@@ -368,7 +369,7 @@ void GUI_Player::about(bool b){
     infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
     infobox.setInformativeText( QString("") +
 				tr("Written by Lucio Carreras") + "<br /><br />" +
-				tr("License") + ": GPL<br /><br />" +
+                tr("License") + ": GPLv3<br /><br />" +
                 "Copyright 2011-2013<br /><br />" + link + "<br /><br /><br />" +
                                 tr("Special thanks to %1 and %2 for translating")
                                 .arg(first_translators)

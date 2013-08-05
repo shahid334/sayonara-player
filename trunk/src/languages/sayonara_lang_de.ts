@@ -704,6 +704,20 @@
     </message>
 </context>
 <context>
+    <name>GUI_LevelPainter</name>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_LevelPainter.h" line="52"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.h" line="18"/>
+        <source>Le&amp;vel</source>
+        <translation>Pe&amp;gel</translation>
+    </message>
+</context>
+<context>
     <name>GUI_Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
@@ -734,13 +748,16 @@
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="123"/>
         <source>Ctrl+.</source>
-        <translatorcomment>Strg + .</translatorcomment>
-        <translation></translation>
+        <translation>Ctrl+.</translation>
+    </message>
+    <message>
+        <source>Ctrl+S</source>
+        <translation type="obsolete">Strg+S</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="132"/>
-        <source>Ctrl+S</source>
-        <translation>Strg+S</translation>
+        <source>Ctrl+?</source>
+        <translation>Ctrl+?</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
@@ -906,12 +923,12 @@
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="612"/>
         <source>Ctrl+P</source>
-        <translation>Strg+P</translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="623"/>
         <source>Ctrl+L</source>
-        <translation>Strg+L</translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="859"/>
@@ -1011,7 +1028,7 @@
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="72"/>
         <source>Ctrl+.</source>
-        <translation>Strg+.</translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="183"/>
@@ -1205,7 +1222,7 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="57"/>
         <source>P&amp;odcasts</source>
-        <translation>P&amp;odcasts</translation>
+        <translation>Po&amp;dcasts</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="210"/>
@@ -1231,6 +1248,25 @@
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="100"/>
         <source>Set library path</source>
         <translation>Setze Pfad</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_Spectrum</name>
+    <message>
+        <location filename="../GUI/engine/GUI_Form.ui" line="14"/>
+        <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_Spectrum.h" line="52"/>
+        <source>Form</source>
+        <translation>Form</translation>
+    </message>
+    <message>
+        <source>Sp&amp;ectrum</source>
+        <translation type="obsolete">Sp&amp;ektrum</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Spectrum.h" line="21"/>
+        <source>&amp;Spectrum</source>
+        <translation>&amp;Spektrum</translation>
     </message>
 </context>
 <context>
@@ -1888,55 +1924,55 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="23"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="253"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="252"/>
         <source>Library</source>
         <translation>Musiksammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="324"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="261"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="321"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="260"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Kürzel: &lt;br /&gt;Suche &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Pfad &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="337"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="255"/>
         <source>Search</source>
         <translation>Suche</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="342"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
         <source>Genre</source>
         <translation>Genre</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="347"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="258"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
         <source>Path</source>
         <translation>Dateipfad</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="376"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="264"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="263"/>
         <source>Search for title, interprets and albums</source>
         <translation>Suche nach Titel, Künstler und Alben</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="403"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="267"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="400"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Zeige alle Künstler, Alben und Titel</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="431"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="270"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="428"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
         <source>Music Library  </source>
         <translation>Musiksammlung</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="470"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="273"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="467"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
@@ -1967,7 +2003,7 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <message>
         <location filename="../PlayerPlugin/PlayerPlugin.cpp" line="49"/>
         <source>Ctrl+</source>
-        <translation>Strg+</translation>
+        <translation>Ctrl+</translation>
     </message>
 </context>
 <context>
@@ -2057,13 +2093,13 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="239"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="240"/>
         <source>Form</source>
         <translation>Form</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="438"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="273"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="441"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="274"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation>Importiere neue (orangene) Titel in die Sammlung ohne kopieren</translation>
     </message>
@@ -2072,58 +2108,58 @@ Bitte ein anderes Verzeichnis wählen</translation>
         <translation type="obsolete">Gesamtzeit: 0m 0s</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="477"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="277"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="480"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="278"/>
         <source>Show numbers in playlist</source>
         <translation>Zeige Nummern in der Abspielliste</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="82"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="244"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="245"/>
         <source>Clear Playlist</source>
         <translation>Lösche Abspielliste</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="173"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="248"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="176"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
         <source>Repeat 1</source>
         <translation>Wiederhole 1</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="189"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="238"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="287"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="336"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="385"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="251"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="256"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="261"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="266"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="271"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="192"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="241"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="290"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="339"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="388"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="252"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="257"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="262"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="267"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="272"/>
         <source>Enter</source>
         <translation>Enter</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="222"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="253"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="225"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
         <source>Repeat All</source>
         <translation>Wiederhole alle</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="271"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="258"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="274"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
         <source>Shuffle</source>
         <translation>Zufallsmodus</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="320"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="323"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="264"/>
         <source>Append when adding new tracks</source>
         <translation>Füge neue Titel unten an</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="369"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="372"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="269"/>
         <source>Dynamic playing</source>
         <translation>Dynamische Abspielliste</translation>
     </message>

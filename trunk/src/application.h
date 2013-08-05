@@ -47,7 +47,8 @@
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
-#include "GUI/engine/GUI_Level.h"
+#include "GUI/engine/GUI_LevelPainter.h"
+#include "GUI/engine/GUI_Spectrum.h"
 
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
@@ -88,7 +89,8 @@ private:
     CLibraryBase*           library;
     LastFM*                 lastfm;
 
-    GUI_Level*              ui_level;
+    GUI_LevelPainter*              ui_level;
+    GUI_Spectrum*           ui_spectrum;
     GUI_LastFM*             ui_lastfm;
     GUI_Stream	*           ui_stream;
     GUI_Podcasts*           ui_podcasts;

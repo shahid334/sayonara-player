@@ -120,11 +120,17 @@ private:
 
 	GstElement* _audio_sink;
     GstElement* _audio_bin;
-    GstElement* _gio_src;
-    GstElement* _decodebin;
-	
-	GstElement* _app_sink;
-	GstElement* _app_queue;
+
+    GstPadTemplate* _tee_src_pad_template;
+
+    GstElement* _level_audio_convert, *_spectrum_audio_convert;
+    GstElement* _level, *_spectrum;
+    GstPad*     _level_pad, *_spectrum_pad;
+    GstPad*     _tee_level_pad, *_tee_spectrum_pad;
+
+    GstElement* _level_sink, *_spectrum_sink;
+    GstElement* _level_queue, *_spectrum_queue;
+
 	
     GstElement* _tee;
 	
@@ -133,6 +139,9 @@ private:
 
 	LastTrack*  _last_track;
     MyCaps     _caps;
+
+    bool        _show_level;
+    bool        _show_spectrum;
 
 
 
@@ -164,6 +173,7 @@ public slots:
 
     virtual void psl_sr_set_active(bool);
     virtual void psl_calc_level(bool);
+    virtual void psl_calc_spectrum(bool);
 
 
 
@@ -175,10 +185,15 @@ public:
     void        set_about_to_finish();
     void        emit_buffer(float inv_array_elements, float scale);
 	void 		set_buffer(GstBuffer*);
+    void        set_level(double right, double left);
+    void        set_spectrum(QList<float>&);
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();
 	virtual QString	getName();
+
+    bool get_show_level();
+    bool get_show_spectrum();
 
 
 private:

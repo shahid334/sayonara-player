@@ -259,6 +259,7 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
     else if(!_filter.cleared){
         _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
         _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+        _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
     }
 
     else{
@@ -266,9 +267,9 @@ void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
         _db->getAllAlbums(_vec_albums, _album_sortorder);
     }
 
-
     _selected_albums.clear();
     _selected_tracks.clear();
+
 
     emit sig_all_albums_loaded(_vec_albums);
     emit sig_all_tracks_loaded(_vec_md);

@@ -538,4 +538,10 @@ void CSettingsStorage::setNotifyNewVersion(bool b){
 }
 
 
+int CSettingsStorage::getSpectrumStyle(){ return m_spectrum_style; }
+void CSettingsStorage::setSpectrumStyle(int style){
+    m_spectrum_style = style;
+    _sth_changed = true;
+}
+
 
