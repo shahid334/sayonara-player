@@ -86,9 +86,9 @@ bool ID3::getMetaDataOfFile(MetaData& md){
         genres[i] = genres[i].trimmed();
     }
 
-    md.album = cvtQString2FirstUpper(QString::fromLocal8Bit(album.c_str()));
-	md.artist = cvtQString2FirstUpper(QString::fromLocal8Bit(artist.c_str()));
-	md.title = cvtQString2FirstUpper(QString::fromLocal8Bit(title.c_str()));
+    md.album = QString::fromLocal8Bit(album.c_str());
+    md.artist = QString::fromLocal8Bit(artist.c_str());
+    md.title = QString::fromLocal8Bit(title.c_str());
     md.length_ms = length * 1000;
 	md.year = year;
 	md.track_num = track;
@@ -96,7 +96,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
     md.genres = genres;
     md.discnumber = discnumber;
     md.n_discs = n_discs;
-    md.comment = cvtQString2FirstUpper(QString::fromLocal8Bit(comment.c_str()));
+    md.comment = QString::fromLocal8Bit(comment.c_str());
 
 	if(md.title.length() == 0){
         idx = md.filepath.lastIndexOf('/');
