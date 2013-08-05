@@ -4,5 +4,6 @@ FIND_PACKAGE(Qt4 REQUIRED)
 
 INSTALL(DIRECTORY ./icons DESTINATION share/sayonara/translations FILES_MATCHING
     PATTERN "*.png"
-    PATTERN "*.svn" EXCLUDE)
+    PATTERN "*.svn" EXCLUDE
+)
 
