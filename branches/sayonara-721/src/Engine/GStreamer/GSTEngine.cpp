@@ -703,7 +703,7 @@ ENGINE_DEBUG;
     int playtime = _seconds_now - _seconds_started;
 
     if (!_scrobbled
-            && (playtime >= 15 || playtime == _meta_data.length_ms / 2000)) {
+            && (playtime >= 5 || playtime == _meta_data.length_ms / 2000)) {
 
         emit scrobble_track(_meta_data);
         _scrobbled = true;

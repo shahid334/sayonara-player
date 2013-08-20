@@ -351,6 +351,8 @@ void GUI_Player::about(bool b){
     translators << "Bruno Veilleux";
     translators << "Pavel Fric";
     translators << "Kallisto";
+    translators << "Andrej Hamburg";
+    translators << QString::fromUtf8("Veszter Márton");
 
     QString first_translators;
     QString last_translator;
