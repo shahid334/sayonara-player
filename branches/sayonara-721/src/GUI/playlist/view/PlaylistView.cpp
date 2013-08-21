@@ -203,19 +203,7 @@ void PlaylistView::keyPressEvent(QKeyEvent* event){
 
     case Qt::Key_Delete:
         remove_cur_selected_rows();
-
-
         break;
-
-    /*case Qt::Key_PageUp:
-        if(min_row > 10) new_row = min_row - 10;
-        else new_row = 0;
-        break;
-
-    case Qt::Key_PageDown:
-        if(min_row < _model->rowCount() - 10) new_row = min_row + 10;
-        else new_row =  _model->rowCount() - 1;
-        break;*/
 
     case Qt::Key_End:
         new_row = _model->rowCount() - 1;

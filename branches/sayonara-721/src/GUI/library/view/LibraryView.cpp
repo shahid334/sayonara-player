@@ -45,20 +45,6 @@
 #include <QFont>
 #include <QMimeData>
 
-
-
-#define VIEW_MODE_METADATA 0
-#define VIEW_MODE_ALBUMS 1
-#define VIEW_MODE_ARTISTS 2
-
-bool _is_alphanumeric(int key){
-
-    if(key >= 0x41 && key <= 0x5a) return true;
-    if(key >= 0x30 && key <= 0x39) return true;
-    return false;
-}
-
-
 LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     _parent = parent;
     _qDrag = 0;
@@ -75,12 +61,8 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
 
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
-    _view_mode = -1;
 
-    QFont f = horizontalHeader()->font();
-    f.setFamily("DejaVu Sans");
-    f.setPixelSize(12);
-    this->horizontalHeader()->setFont(f);
+    Helper::set_deja_vu_font(horizontalHeader(), 12);
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
@@ -168,6 +150,11 @@ void LibraryView::mouseMoveEvent(QMouseEvent* event){
 
 }
 
+void LibraryView::mouseDoubleClickEvent(QMouseEvent *event){
+
+    event->setModifiers(Qt::NoModifier);
+    QTableView::mouseDoubleClickEvent(event);
+}
 
 void LibraryView::mouseReleaseEvent(QMouseEvent* event){
     reset_edit();
@@ -359,7 +346,6 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             emit sig_tab_pressed(true);
             break;
 
-
         case Qt::Key_End:
             this->selectRow(_model->rowCount() - 1);
             break;
@@ -398,15 +384,12 @@ void LibraryView::reset_edit(){
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
 
-
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
-    qDebug() << idx_list;
 
     if(_qDrag) {
         delete _qDrag;
         _qDrag = NULL;
     }
-
 
     QTableView::selectionChanged(selected, deselected);
 
@@ -459,9 +442,7 @@ void LibraryView::sort_by_column(int col){
     switch_sorters(_sort_order, h.get_asc_sortorder(), h.get_desc_sortorder());
 
     emit sig_sortorder_changed(_sort_order);
-
 }
-
 
 
 void LibraryView::rc_menu_init(){
@@ -661,8 +642,6 @@ void LibraryView::set_col_sizes(){
     }
 
     // width for percentage stuff
-    //target_width -= altogether_width;
-
     for(int i=0; i<n_cols; i++){
         int col = _model->calc_shown_col(i);
         int preferred_size = 0;
@@ -686,8 +665,6 @@ void LibraryView::set_col_sizes(){
 
 
 void LibraryView::fill_metadata(const MetaDataList& v_md){
-
-    _view_mode = VIEW_MODE_METADATA;
 
     QList<int> lst;
     _model->set_selected(lst);
@@ -717,12 +694,9 @@ void LibraryView::fill_metadata(const MetaDataList& v_md){
     sm->select(sel,QItemSelectionModel::Select);
 
     calc_corner_widget();
-
 }
 
 void LibraryView::fill_albums(const AlbumList& albums){
-
-    _view_mode = VIEW_MODE_ALBUMS;
 
     QList<int> lst;
     _model->set_selected(lst);
@@ -766,7 +740,6 @@ void LibraryView::fill_albums(const AlbumList& albums){
 
 void LibraryView::fill_artists(const ArtistList& artists){
 
-    _view_mode = VIEW_MODE_ARTISTS;
     QList<int> lst;
     _model->set_selected(lst);
     uint artist_size = artists.size();

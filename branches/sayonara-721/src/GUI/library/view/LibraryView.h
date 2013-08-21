@@ -115,6 +115,7 @@ protected:
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
    void keyPressEvent(QKeyEvent* event);
     void resizeEvent(QResizeEvent* event);
     void dropEvent(QDropEvent* event);
@@ -143,7 +144,7 @@ private:
     LibraryItemModel* 	_model;
     Sort::SortOrder		_sort_order;
     CustomMimeData*		_mimedata;
-    int                 _view_mode;
+
     bool                _dark;
     bool                _sel_changed;
 
