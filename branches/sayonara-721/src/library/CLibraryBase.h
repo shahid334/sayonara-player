@@ -95,8 +95,8 @@ public slots:
     void psl_disc_pressed(int);
     void psl_selected_tracks_changed(const QList<int>&);
 
-    void psl_prepare_album_for_playlist();
-    void psl_prepare_artist_for_playlist();
+    void psl_prepare_album_for_playlist(int idx=0);
+    void psl_prepare_artist_for_playlist(int idx=0);
     void psl_prepare_track_for_playlist(int idx);
 
     void psl_filter_changed(const Filter&, bool force=false);

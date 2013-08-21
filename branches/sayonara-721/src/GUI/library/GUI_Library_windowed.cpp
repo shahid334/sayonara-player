@@ -71,14 +71,6 @@
 #include <QHeaderView>
 
 
-
-
-
-
-
-#define INFO_IMG_SIZE 220
-
-
 using namespace std;
 
 GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
@@ -89,22 +81,16 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
     _settings = CSettingsStorage::getInstance();
 
-
-
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-
+    QList<int> sorting = _settings->getLibSorting();
+    _sort_artists = (Sort::SortOrder) sorting[0];
+    _sort_albums = (Sort::SortOrder) sorting[1];
+    _sort_tracks = (Sort::SortOrder) sorting[2];
 
     _shown_cols_tracks = _settings->getLibShownColsTitle();
     _shown_cols_artist = _settings->getLibShownColsArtist();
     _shown_cols_albums = _settings->getLibShownColsAlbum();
-
-
-	QList<int> sorting = _settings->getLibSorting();
-
-    _sort_artists = (Sort::SortOrder) sorting[0];
-    _sort_albums = (Sort::SortOrder) sorting[1];
-    _sort_tracks = (Sort::SortOrder) sorting[2];
 
     _album_model = 0;
     _artist_model = 0;
@@ -137,15 +123,10 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->addAction(search_action);
 
 
-
-
-
 	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
 
-	connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
-    connect(this->ui->lv_album, SIGNAL(sig_all_selected()), this, SLOT(album_pressed()));
-    connect(this->ui->lv_album, SIGNAL(pressed(const QModelIndex & )), this, SLOT(album_pressed(const QModelIndex & )));
-    connect(this->ui->lv_album, SIGNAL(clicked(const QModelIndex & )), this, SLOT(album_released(const QModelIndex & )));
+    connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
+    connect(this->ui->lv_album, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(album_sel_changed(const QList<int>&)));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
     connect(this->ui->lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
     connect(this->ui->lv_album, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_album_changed(QStringList&)));
@@ -158,10 +139,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_album, SIGNAL(sig_tab_pressed(bool)), this, SLOT(album_tab_pressed(bool)));
     connect(this->ui->lv_album, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
-	connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
-    connect(this->ui->tb_title, SIGNAL(sig_all_selected ()), this, SLOT(track_pressed()));
-    connect(this->ui->tb_title, SIGNAL(pressed ( const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex&)));
-    connect(this->ui->tb_title, SIGNAL(clicked(const QModelIndex & )), this, SLOT(track_pressed(const QModelIndex & )));
+    connect(this->ui->tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
+    connect(this->ui->tb_title, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(track_sel_changed(const QList<int>&)));
 	connect(this->ui->tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
     connect(this->ui->tb_title, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_title_changed(Sort::SortOrder)));
     connect(this->ui->tb_title, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_title_changed(QStringList&)));
@@ -173,10 +152,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->tb_title, SIGNAL(sig_tab_pressed(bool)), this, SLOT(track_tab_pressed(bool)));
     connect(this->ui->tb_title, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
-	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
-    connect(this->ui->lv_artist, SIGNAL(sig_all_selected()), this, SLOT(artist_pressed()));
-	connect(this->ui->lv_artist, SIGNAL(pressed(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
-    connect(this->ui->lv_artist, SIGNAL(clicked(const QModelIndex & )), this, SLOT(artist_pressed(const QModelIndex & )));
+    connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
+    connect(this->ui->lv_artist, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(artist_sel_changed(const QList<int>&)));
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
     connect(this->ui->lv_artist, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_artist_changed(Sort::SortOrder)));
     connect(this->ui->lv_artist, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_artist_changed(QStringList&)));
@@ -187,8 +164,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->lv_artist, SIGNAL(sig_append_clicked()), this, SLOT(append()));
     connect(this->ui->lv_artist, SIGNAL(sig_tab_pressed(bool)), this, SLOT(artist_tab_pressed(bool)));
     connect(this->ui->lv_artist, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
-
-    
 
     this->ui->btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
     this->ui->btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
@@ -329,8 +304,6 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
     this->ui->lv_album->set_col_sizes();
     this->ui->lv_artist->set_col_sizes();
     this->ui->tb_title->set_col_sizes();
-
-
 }
 
 void GUI_Library_windowed::focusInEvent(QFocusEvent *e){
@@ -342,8 +315,6 @@ void GUI_Library_windowed::focusInEvent(QFocusEvent *e){
 void  GUI_Library_windowed::columns_album_changed(QStringList& list){
     _shown_cols_albums = list;
     _settings->setLibShownColsAlbum(list);
-
-
 }
 
 
@@ -363,16 +334,19 @@ void GUI_Library_windowed::artist_tab_pressed(bool mod){
     if(mod) this->ui->tb_title->setFocus();
     else this->ui->lv_album->setFocus();
 }
+
+
 void GUI_Library_windowed::album_tab_pressed(bool mod){
     if(mod) this->ui->lv_artist->setFocus();
     else this->ui->tb_title->setFocus();
 }
+
+
 void GUI_Library_windowed::track_tab_pressed(bool mod){
     if(mod) this->ui->lv_album->setFocus();
     //else this->ui->lv_artist->setFocus();
     else emit sig_no_focus();
 }
-
 
 
 void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
@@ -398,64 +372,23 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
     this->ui->lv_artist->fill_artists(artists);
 }
 
+void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst){
 
-
-void GUI_Library_windowed::artist_pressed(const QModelIndex& idx){
-
-    this->_info_dialog->set_tag_edit_visible(true);
-    QList<int> idx_list_int;
-
-    idx_list_int = ui->lv_artist->calc_selections();
-
-    emit sig_artist_pressed(idx_list_int);
+    sig_artist_sel_changed(lst);
 }
 
-void GUI_Library_windowed::artist_released(const QModelIndex& idx){}
+void GUI_Library_windowed::album_sel_changed(const QList<int>& lst){
+    sig_album_sel_changed(lst);
+}
+
+void GUI_Library_windowed::track_sel_changed(const QList<int>& lst){
+    sig_track_sel_changed(lst);
+}
 
 
 void GUI_Library_windowed::disc_pressed(int disc){
     emit sig_disc_pressed(disc);
 }
-
-void GUI_Library_windowed::album_pressed(const QModelIndex& idx){
-    _info_dialog->set_tag_edit_visible(true);
-    QList<int> idx_list_int;
-    idx_list_int = ui->lv_album->calc_selections();
-
-    QList<int> discnumbers = _album_model->get_discnumbers(idx);
-
-    if(discnumbers.size() > 1 && idx_list_int.size() == 1 ){
-	delete_menu();
-	_discmenu = new DiscPopupMenu(ui->lv_album, discnumbers);
-	
-	connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
-	_timer->start(300);
-    } 
-    
-    emit sig_album_pressed(idx_list_int);
-}
-
-
-void GUI_Library_windowed::album_released(const QModelIndex& idx){
-    album_pressed(idx);
-    delete_menu();
-    
-}
-
-
-
-void GUI_Library_windowed::track_pressed(const QModelIndex& idx){
-
-    this->_info_dialog->set_tag_edit_visible(true);
-    QList<int> idx_list_int;
-
-    idx_list_int = ui->tb_title->calc_selections();
-    emit sig_track_pressed(idx_list_int);
-
-}
-
-void GUI_Library_windowed::track_released(const QModelIndex&){}
-
 
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
@@ -467,15 +400,15 @@ void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
 
 void GUI_Library_windowed::album_dbl_clicked(const QModelIndex & idx){
-	emit sig_album_dbl_clicked();
+    emit sig_album_dbl_clicked(idx.row());
 }
 
 void GUI_Library_windowed::artist_dbl_clicked(const QModelIndex & idx){
-	emit sig_artist_dbl_clicked();
+    emit sig_artist_dbl_clicked(idx.row());
 }
 
 void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
-	emit sig_track_dbl_clicked(idx.row());
+    emit sig_track_dbl_clicked(idx.row());
 }
 
 
@@ -796,24 +729,21 @@ void GUI_Library_windowed::timer_timed_out(){
 
 	QPoint p = QCursor::pos();
 	_discmenu->popup(p);
-	
-	
 }
 
+
 void GUI_Library_windowed::change_skin(bool b){
-if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
+
+    if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
+
     this->_album_delegate->set_skin(b);
     this->_artist_delegate->set_skin(b);
     this->_track_delegate->set_skin(b);
 
-
     this->ui->lv_album->set_skin(b);
     this->ui->lv_artist->set_skin(b);
     this->ui->tb_title->set_skin(b);
-
-
 }
-
 
 void GUI_Library_windowed::import_files(const QStringList & lst){
     emit sig_import_files(lst);

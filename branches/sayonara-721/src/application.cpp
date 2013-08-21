@@ -353,28 +353,32 @@ void Application::init_connections(){
 
     CONNECT(library, sig_change_id3_tags(const MetaDataList&),	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
 
-    CONNECT(ui_library, sig_album_dbl_clicked(), 						library, 		psl_prepare_album_for_playlist());
-    CONNECT(ui_library, sig_artist_dbl_clicked(), 						library, 		psl_prepare_artist_for_playlist());
-    CONNECT(ui_library, sig_track_dbl_clicked(int),                      library, 		psl_prepare_track_for_playlist(int));
-    CONNECT(ui_library, sig_artist_pressed(const QList<int>&),           library, 		psl_selected_artists_changed(const QList<int>&));
-    CONNECT(ui_library, sig_album_pressed(const QList<int>&),            library, 		psl_selected_albums_changed(const QList<int>&));
+    CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));
+    CONNECT(ui_library, sig_artist_dbl_clicked(int), 					library, 		psl_prepare_artist_for_playlist(int));
+    CONNECT(ui_library, sig_track_dbl_clicked(int),                     library, 		psl_prepare_track_for_playlist(int));
+    CONNECT(ui_library, sig_artist_sel_changed(const QList<int>&),      library, 		psl_selected_artists_changed(const QList<int>&));
+    CONNECT(ui_library, sig_album_sel_changed(const QList<int>&),       library, 		psl_selected_albums_changed(const QList<int>&));
+    CONNECT(ui_library, sig_track_sel_changed(const QList<int>&),       library, 		psl_selected_tracks_changed(const QList<int>&));
     CONNECT(ui_library, sig_disc_pressed(int),                          library,		psl_disc_pressed(int));
-    CONNECT(ui_library, sig_track_pressed(const QList<int>&),            library, 		psl_selected_tracks_changed(const QList<int>&));
-    CONNECT(ui_library, sig_filter_changed(const Filter&),               library, 		psl_filter_changed(const Filter&));
-
-    CONNECT(ui_library, sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder),
-            library, 	 psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder));
 
 
     CONNECT(ui_library, sig_show_id3_editor(const QList<int>&),              library, 		psl_change_id3_tags(const QList<int>&));
     CONNECT(ui_library, sig_delete_tracks(int),                              library,		psl_delete_tracks(int));
-    CONNECT(ui_library, sig_delete_certain_tracks(const QList<int>&, int),	library,		psl_delete_certain_tracks(const QList<int>&, int));
+    CONNECT(ui_library, sig_delete_certain_tracks(const QList<int>&, int),	 library,		psl_delete_certain_tracks(const QList<int>&, int));
     CONNECT(ui_library, sig_play_next_tracks(const QList<int>&),             library,		psl_play_next_tracks(const QList<int>&));
     CONNECT(ui_library, sig_play_next_all_tracks(),                          library,		psl_play_next_all_tracks());
-    CONNECT(ui_library, sig_append_tracks(const QList<int>&),             library,		psl_append_tracks(const QList<int>&));
-    CONNECT(ui_library, sig_append_all_tracks(),                          library,		psl_append_all_tracks());
+    CONNECT(ui_library, sig_append_tracks(const QList<int>&),                library,		psl_append_tracks(const QList<int>&));
+    CONNECT(ui_library, sig_append_all_tracks(),                             library,		psl_append_all_tracks());
+
+    CONNECT(ui_library, sig_import_files(const QStringList&),                library,       psl_import_files(const QStringList&));
+
+    CONNECT(ui_library, sig_filter_changed(const Filter&),                   library, 		psl_filter_changed(const Filter&));
+    CONNECT(ui_library, sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder),
+            library, 	psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder));
+
     CONNECT(ui_library, sig_no_focus(),                                      ui_playlist,   setFocus());
-    CONNECT(ui_library, sig_import_files(const QStringList&),               library,        psl_import_files(const QStringList&));
+
+
 
     CONNECT(ui_lastfm, sig_activated(bool),                                  player,         psl_lfm_activated(bool));
     CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));

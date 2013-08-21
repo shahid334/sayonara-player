@@ -58,7 +58,7 @@ class PlaylistView :public QListView{
         void sig_info_clicked();
         void sig_remove_clicked();
         void sig_edit_clicked();
-        void sig_selection_changed(MetaDataList&);
+        void sig_sel_changed(const MetaDataList&);
         void sig_double_clicked(int);
         void sig_no_focus();
 
@@ -97,11 +97,13 @@ class PlaylistView :public QListView{
 		void mouseMoveEvent(QMouseEvent* event);
         void keyPressEvent(QKeyEvent *event);
         void resizeEvent(QResizeEvent *e);
+        void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+
 
     private:
 
         void clear_selection();
-        QList<int> calc_selections();
+        QList<int> get_selections();
         void select_all();
         int calc_dd_line(QPoint pos);
         void set_delegate_max_width(int n_items);
@@ -114,6 +116,7 @@ class PlaylistView :public QListView{
         void handle_drop(QDropEvent* event, bool from_outside=false);
 
         void remove_cur_selected_rows(bool select_next_row=true);
+        void select_row(int i);
         void select_rows(QList<int> lst);
         void goto_row(int row);
         int get_min_selected();
@@ -141,6 +144,7 @@ class PlaylistView :public QListView{
 
         PlaylistItemModel*              _model;
         PlaylistItemDelegate* 	        _delegate;
+        bool            _sel_changed;
 
 };
 

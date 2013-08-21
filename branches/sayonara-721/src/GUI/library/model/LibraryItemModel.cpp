@@ -111,14 +111,14 @@ int LibraryItemModel::columnCount(const QModelIndex& parent) const{
 
 bool LibraryItemModel::insertColumns(int position, int cols, const QModelIndex &index){
 
-	beginInsertColumns(QModelIndex(), position, position+cols-1);
+    beginInsertColumns(QModelIndex(), position, position+cols-1);
 
 	for(int i=position; i<position+cols; i++){
 
 		_cols_active[i] = true;
 	}
 
-	endInsertColumns();
+    endInsertColumns();
 	return true;
 }
 

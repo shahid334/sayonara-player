@@ -70,14 +70,11 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     _edit->hide();
 
     this->connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
-    this->connect(_edit, SIGNAL(returnPressed()), this, SLOT(edit_return_clicked()));
 
     rc_menu_init();
 
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
-
-
     _view_mode = -1;
 
     QFont f = horizontalHeader()->font();
@@ -88,19 +85,17 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
 }
-
 LibraryView::~LibraryView() {
     delete _rc_menu;
     delete _corner_widget;
     delete _edit;
 }
-
-
 void LibraryView::setModel(QAbstractItemModel * model){
     QTableView::setModel(model);
 
     _model = (LibraryItemModel*) model;
 }
+
 
 void LibraryView::mousePressEvent(QMouseEvent* event){
 
@@ -118,18 +113,20 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
             QList<int> lst;
             _model->set_selected(lst);
             this->clearSelection();
+            this->selectionModel()->clearSelection();
 
             break;
         }
 
         else {
-
+            _sel_changed = false;
             QTableView::mousePressEvent(event);
-            calc_selections();
-            force_selections();
+            if(!_sel_changed){
+                QItemSelection sel, desel;
+                selectionChanged(sel, desel);
+            }
             _drag_pos = pos_org;
             _drag = true;
-            //				emit sig_pressed(pos, indexAt(pos));
         }
 
         break;
@@ -178,10 +175,6 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
     switch (event->button()) {
 
     case Qt::LeftButton:
-        if(_qDrag) {
-            delete _qDrag;
-            _qDrag = NULL;
-        }
 
         QTableView::mouseReleaseEvent(event);
         event->accept();
@@ -280,12 +273,12 @@ void LibraryView::goto_row(int row, bool select){
 }
 
 
+
 void LibraryView::keyPressEvent(QKeyEvent* event){
-
-
 
     // _edit has changed
     QString text = event->text();
+
     if(text.size() > 0 && text[0].isLetterOrNumber()){
         int sb_width = this->verticalScrollBar()->width();
         if(!this->verticalScrollBar()->isVisible()) sb_width = 0;
@@ -299,127 +292,45 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         _edit->show();
         return;
     }
-    int key = event->key();
-    //qDebug() << "key = " << key;
 
+    int key = event->key();
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
     bool shift_pressed = (modifiers & Qt::ShiftModifier);
     bool alt_pressed = (modifiers & Qt::AltModifier);
     bool ctrl_pressed = (modifiers & Qt::ControlModifier);
 
-    int min_row = get_min_selected();
-    int max_row = get_max_selected();
-    int new_row = -1;
+    if((key == Qt::Key_Up || key == Qt::Key_Down)){
+        if(_edit->isVisible()) reset_edit();
 
-
-    int last_row =  _model->rowCount() - 1;
-    bool select = false;
-
-    int step = 10;
-    QList<int> selections = _model->get_selected();
-    if(this->verticalScrollBar()){
-        int pagestep = this->verticalScrollBar()->pageStep();
-        if(this->_model->rowCount() > 0)
-            step = pagestep / this->rowHeight(0) + 1 ;
-    }
-
-    switch(key){
-        case Qt::Key_Left:
-        case Qt::Key_Right:
-        case Qt::Key_Tab:
-            break;
-        default:
-            QTableView::keyPressEvent(event);
-            break;
+        if(ctrl_pressed)
+            event->setModifiers(Qt::NoModifier);
     }
 
 
-//    QList<int> selections = calc_selections();
+    if(key != Qt::Key_Tab && key != Qt::Key_Backtab)
+        QTableView::keyPressEvent(event);
+
+    QList<int> selections = get_selections();
 
     switch(key){
-        case Qt::Key_A:
-            if( ctrl_pressed ){
-                selectAll();
-                calc_selections();
-                emit sig_all_selected();
-            }
-            break;
 
         case Qt::Key_Escape:
             if(_edit->isVisible()) reset_edit();
+
             else {
                 clearSelection();
-                QModelIndex idx;
-                emit clicked(idx);
+                this->selectionModel()->clearSelection();
             }
             break;
-
-        case Qt::Key_Up:
-            if(ctrl_pressed) break;
-
-            if(selections.size() == 0) {
-                new_row = last_row;
-                select = true;
-            }
-
-            else if(min_row > 0){
-
-                new_row = min_row - 1;
-            }
-            else new_row = 0;
-            break;
-
-
-        case Qt::Key_Down:
-            if(ctrl_pressed) break;
-
-            if(selections.size() == 0) {
-                new_row = 0;
-                select = true;
-            }
-
-            else if(max_row < last_row) new_row = max_row + 1;
-            else new_row = last_row;
-            break;
-
-        case Qt::Key_PageUp:
-            if(ctrl_pressed) break;
-
-            if(selections.size() == 0) {
-                new_row = last_row;
-                select = true;
-            }
-
-            if(min_row >= step) new_row = min_row - step;
-            else new_row = 0;
-            break;
-
-        case Qt::Key_PageDown:
-            if(ctrl_pressed) break;
-
-            if(selections.size() == 0) {
-                new_row = 0;
-                select = true;
-            }
-            else if(max_row < last_row - step) new_row = max_row + step;
-            else new_row = last_row;
-            break;
-
-
-        case Qt::Key_End:
-            new_row = _model->rowCount() - 1;
-            select = true;
-            break;
-
-        case Qt::Key_Home:
-            new_row = 0;
-            select = true;
-            break;
-
 
         case Qt::Key_Return:
         case Qt::Key_Enter:
+
+            if(_edit->isVisible()) {
+                reset_edit();
+                break;
+            }
             if(selections.size() == 0) break;
             if(ctrl_pressed) break;
 
@@ -433,62 +344,47 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             }
 
             else if(alt_pressed){
-
                 play_next_clicked();
             }
 
             break;
 
-
         case Qt::Key_Tab:
             if(alt_pressed || ctrl_pressed) break;
-            emit sig_tab_pressed(shift_pressed);
+            emit sig_tab_pressed(false);
+            break;
+
+        case Qt::Key_Backtab:
+            if(alt_pressed || ctrl_pressed) break;
+            emit sig_tab_pressed(true);
+            break;
+
+
+        case Qt::Key_End:
+            this->selectRow(_model->rowCount() - 1);
+            break;
+
+        case Qt::Key_Home:
+            this->selectRow(0);
             break;
 
         default: break;
     }
 
-    calc_selections();
-
-
-    if(new_row != -1) goto_row(new_row, select);
-
 }
 
 
-void LibraryView::edit_return_clicked(){
-
-    QList<int> selections = calc_selections();
-    if(selections.size() == 0) return;
-
-    QModelIndex idx = _model->index(selections[0], 0);
-
-    emit clicked(idx);
-
-    reset_edit();
-}
 
 void LibraryView::edit_changed(QString str){
 
-    this->clearSelection();
     if(str.size() == 0) {
         reset_edit();
-        calc_selections();
         return;
     }
 
     int line = _model->getFirstRowOf(str);
     this->scrollTo(_model->index(line, 0));
     this->selectRow(line);
-   // calc_selections();
-
-    QList<int> selections = calc_selections();
-    if(selections.size() == 0) return;
-
-    QModelIndex idx = _model->index(selections[0], 0);
-
-    emit clicked(idx);
-
 }
 
 void LibraryView::reset_edit(){
@@ -500,43 +396,50 @@ void LibraryView::reset_edit(){
 }
 
 
-QList<int> LibraryView::calc_selections(){
+void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
 
-    QList<int> idx_list_int;
-    _model->set_selected(idx_list_int);
 
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
-    //if(idx_list.size() == 0) return idx_list_int;
+    qDebug() << idx_list;
+
+    if(_qDrag) {
+        delete _qDrag;
+        _qDrag = NULL;
+    }
+
+
+    QTableView::selectionChanged(selected, deselected);
+
+    QList<int> idx_list_int;
+
+    foreach(QModelIndex model_idx, idx_list){
+        if(idx_list_int.contains(model_idx.row())) continue;
+
+        idx_list_int.push_back(model_idx.row());
+    }
+
+    _model->set_selected(idx_list_int);
+
+    if(selected.indexes().size() > 0)
+        this->scrollTo(selected.indexes()[0]);
+
+    emit sig_sel_changed(idx_list_int);
+    _sel_changed = true;
+}
+
+
+QList<int> LibraryView::get_selections(){
+
+    QList<int> idx_list_int;
+    QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     foreach(QModelIndex model_idx, idx_list){
         idx_list_int.push_back(model_idx.row());
     }
 
-
-    _model->set_selected(idx_list_int);
-
     return idx_list_int;
 }
 
-
-void LibraryView::force_selections() {
-
-    QItemSelectionModel* sm = this->selectionModel();
-    QItemSelection sel = sm->selection();
-    int rows = _model->rowCount();
-    QList<int> lst = _model->get_selected();
-
-    for(int row=0; row<rows; row++){
-
-        if(lst.contains(row)){
-            this->selectRow(row);
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
-    }
-
-    sm->clearSelection();
-    sm->select(sel,QItemSelectionModel::Select);
-}
 
 
 template <typename T>
@@ -689,6 +592,7 @@ void LibraryView::rc_header_menu_changed(bool b){
 
     Q_UNUSED(b);
 
+    QList<int> sel_list = get_selections();
 
     _model->removeColumns(0, _model->columnCount());
 
@@ -709,9 +613,9 @@ void LibraryView::rc_header_menu_changed(bool b){
     emit sig_columns_changed(lst);
     set_col_sizes();
 
-    force_selections();
+    foreach(int row, sel_list)
+        this->selectRow(row);
 }
-
 
 
 void LibraryView::set_col_sizes(){
@@ -950,29 +854,26 @@ void LibraryView::dropEvent(QDropEvent *event){
     if(mime_data->hasText()) text = mime_data->text();
 
     // extern drops
-    if( mime_data->hasUrls() && text.compare("tracks", Qt::CaseInsensitive) != 0){
+    if( !mime_data->hasUrls() || text.compare("tracks", Qt::CaseInsensitive) == 0) {
 
-
-        QStringList filelist;
-        foreach(QUrl url, mime_data->urls()){
-            QString path;
-            QString url_str = url.toString();
-            path =  url_str.right(url_str.length() - 7).trimmed();
-            path = path.replace("%20", " ");
-
-
-            if(QFile::exists(path)){
-                filelist << path;
-            }
-
-
-        } // end foreach
-
-
-        emit sig_import_files(filelist);
-
-
+        return;
     }
+
+
+    QStringList filelist;
+    foreach(QUrl url, mime_data->urls()){
+        QString path;
+        QString url_str = url.toString();
+        path =  url_str.right(url_str.length() - 7).trimmed();
+        path = path.replace("%20", " ");
+
+        if(QFile::exists(path)){
+            filelist << path;
+        }
+    } // end foreach
+
+    emit sig_import_files(filelist);
+
 }
 
 void LibraryView::dragEnterEvent(QDragEnterEvent *event){

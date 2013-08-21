@@ -417,12 +417,12 @@ void CLibraryBase::file_system_changed(const QString& path){
     emit sig_should_reload_library();
 }
 
-void CLibraryBase::psl_prepare_artist_for_playlist(){
+void CLibraryBase::psl_prepare_artist_for_playlist(int idx){
     emit sig_tracks_for_playlist_available(_vec_md);
 }
 
 
-void CLibraryBase::psl_prepare_album_for_playlist(){
+void CLibraryBase::psl_prepare_album_for_playlist(int idx){
     emit sig_tracks_for_playlist_available(_vec_md);
 }
 
