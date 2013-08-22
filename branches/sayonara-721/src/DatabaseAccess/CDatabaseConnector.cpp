@@ -155,7 +155,12 @@ bool CDatabaseConnector::openDatabase () {
     }
 
     else{
-
+        QSqlQuery q(*_database);
+        QString text="PRAGMA case_sensitive_like=ON;\n"
+                "PRAGMA cache_size=200000;\n"
+                "PRAGMA page_size=4096;";
+        q.prepare(text);
+        qDebug() << "Case sensitive like: " << q.exec();
         _settings = CSettingsStorage::getInstance();
     	apply_fixes();
     }
@@ -191,7 +196,6 @@ CDatabaseConnector::~CDatabaseConnector() {
 
 
 
-
 bool CDatabaseConnector::check_and_insert_column(QString tablename, QString column, QString sqltype){
 
     DB_TRY_OPEN(_database);
@@ -200,6 +204,8 @@ bool CDatabaseConnector::check_and_insert_column(QString tablename, QString colu
     QSqlQuery q (*_database);
     QString querytext = "SELECT " + column + " FROM " + tablename + ";";
     q.prepare(querytext);
+
+
 
     if(!q.exec()){
         qDebug() << "DB: Could not find " << column << " in " << tablename << ": inserting it";
@@ -234,6 +240,51 @@ bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_c
     return true;
 }
 
+bool CDatabaseConnector::updateAlbumCissearch(){
+
+    AlbumList albums;
+    getAllAlbums(albums);
+    foreach(Album album, albums){
+        QString str = "UPDATE albums SET cissearch=:cissearch WHERE albumID=:id;";
+        QSqlQuery q(*_database);
+        q.prepare(str);
+        q.bindValue(":cissearch", album.name.toLower());
+        q.bindValue(":id", album.id);
+
+        qDebug() << q.exec();
+    }
+
+    return true;
+}
+
+
+bool CDatabaseConnector::updateArtistCissearch(){
+
+    ArtistList artists;
+    getAllArtists(artists);
+    foreach(Artist artist, artists){
+        QString str = "UPDATE artists SET cissearch=:cissearch WHERE artistID=:id;";
+        QSqlQuery q(*_database);
+        q.prepare(str);
+        q.bindValue(":cissearch", artist.name.toLower());
+        q.bindValue(":id", artist.id);
+        q.exec();
+    }
+
+    return true;
+}
+
+bool CDatabaseConnector::updateTrackCissearch(){
+
+    MetaDataList v_md;
+    getTracksFromDatabase(v_md);
+    foreach(MetaData md, v_md){
+        updateTrack(md);
+    }
+
+    return true;
+}
+
 bool CDatabaseConnector::apply_fixes(){
 
 
@@ -241,32 +292,55 @@ bool CDatabaseConnector::apply_fixes(){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int version = load_setting_int("version", 0);
-    if(version == 1) return true;
+    if(version == 2) return true;
 
     qDebug() << "Apply fixes";
 
-    check_and_insert_column("playlisttotracks", "position", "INTEGER");
-    check_and_insert_column("playlisttotracks", "filepath", "VARCHAR(512)");
-    check_and_insert_column("tracks", "genre", "VARCHAR(1024)");
+    if(version < 1){
 
-    QString create_savedstreams = QString("CREATE TABLE savedstreams ") +
-				"( " +
-				"	name VARCHAR(255) PRIMARY KEY, " +
-				"	url VARCHAR(255) " +
-				");";
+        check_and_insert_column("playlisttotracks", "position", "INTEGER");
+        check_and_insert_column("playlisttotracks", "filepath", "VARCHAR(512)");
+        check_and_insert_column("tracks", "genre", "VARCHAR(1024)");
 
-    check_and_create_table("savedstreams", create_savedstreams);
+        QString create_savedstreams = QString("CREATE TABLE savedstreams ") +
+                    "( " +
+                    "	name VARCHAR(255) PRIMARY KEY, " +
+                    "	url VARCHAR(255) " +
+                    ");";
+
+        check_and_create_table("savedstreams", create_savedstreams);
 
 
-    QString create_savedpodcasts = QString("CREATE TABLE savedpodcasts ") +
-                "( " +
-                "	name VARCHAR(255) PRIMARY KEY, " +
-                "	url VARCHAR(255) " +
-                ");";
+        QString create_savedpodcasts = QString("CREATE TABLE savedpodcasts ") +
+                    "( " +
+                    "	name VARCHAR(255) PRIMARY KEY, " +
+                    "	url VARCHAR(255) " +
+                    ");";
 
-    check_and_create_table("savedpodcasts", create_savedpodcasts);
+        check_and_create_table("savedpodcasts", create_savedpodcasts);
+    }
 
-    store_setting("version", 1);
+    if(version < 2){
+
+        _database->transaction();
+
+        bool success = true;
+        success &= check_and_insert_column("tracks", "cissearch", "VARCHAR(512)");
+        success &= check_and_insert_column("albums", "cissearch", "VARCHAR(512)");
+        success &= check_and_insert_column("artists", "cissearch", "VARCHAR(512)");
+
+        updateAlbumCissearch();
+        updateArtistCissearch();
+        updateTrackCissearch();
+
+
+        _database->commit();
+
+
+
+
+        if(success) store_setting("version", 2);
+    }
 
 	return true;
 }

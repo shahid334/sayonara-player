@@ -362,7 +362,6 @@ void GUI_Spectrum::psl_stop(){
 
 void GUI_Spectrum::timed_out(){
 
-    qDebug() << "Timed out";
     for(int i=0; i<N_BINS; i++)
         _spec[i] -= 0.1f;
 

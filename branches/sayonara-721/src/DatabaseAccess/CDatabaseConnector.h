@@ -226,6 +226,10 @@ private:
     bool apply_fixes();
     bool check_and_insert_column(QString tablename, QString column, QString sqltype);
     bool check_and_create_table(QString tablename, QString sql_create_str);
+
+    bool updateAlbumCissearch();
+    bool updateArtistCissearch();
+    bool updateTrackCissearch();
 };
 
 #endif // CDATABASECONNECTOR_H

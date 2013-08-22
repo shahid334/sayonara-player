@@ -262,17 +262,17 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 				querytext += QString("AND tracks.trackid IN ( ") +
 									"	SELECT t2.trackid " +
 									"	FROM tracks t2 "+
-									"	WHERE t2.title LIKE :filter1 "+
+                                    "	WHERE t2.cissearch LIKE :filter1 "+
 
 									"	UNION SELECT t3.trackid "+
 									"	FROM tracks t3, albums a2 "+
-									"	WHERE a2.albumid = t3.albumid AND a2.name LIKE :filter2 "+
+                                    "	WHERE a2.albumid = t3.albumid AND a2.cissearch LIKE :filter2 "+
 
 									"	UNION SELECT t4.trackid " +
 									"	FROM tracks t4, albums a3, artists ar2" +
 									"	WHERE t4.albumid = a3.albumid " +
 									"	AND t4.artistid = ar2.artistid " +
-									"	AND ar2.name LIKE :filter3 "
+                                    "	AND ar2.cissearch LIKE :filter3 "
 
 								") ";
 				break;
@@ -358,13 +358,13 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 				querytext += QString("AND tracks.trackid IN ( ") +
 							"	SELECT t2.trackid "
 							"	FROM tracks t2 "
-							"	WHERE t2.title LIKE :filter1 "
+                            "	WHERE t2.cissearch LIKE :filter1 "
 							"	UNION SELECT t3.trackID "
 							"	FROM tracks t3, albums a2"
-							"	WHERE a2.albumID = t3.albumID AND a2.name LIKE :filter2 "
+                            "	WHERE a2.albumID = t3.albumID AND a2.cissearch LIKE :filter2 "
 							"	UNION SELECT t4.trackID "
 							"	FROM tracks t4, albums a3, artists ar2"
-							"	WHERE t4.albumid = a3.albumid AND t4.artistID = ar2.artistID AND ar2.name LIKE :filter3 "
+                            "	WHERE t4.albumid = a3.albumid AND t4.artistID = ar2.artistID AND ar2.cissearch LIKE :filter3 "
 						") ";
 				break;
 		}
@@ -429,11 +429,11 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 		default:
 
                   querytext = TRACK_SELECTOR + " AND tracks.trackID IN ("+
-                            "SELECT tracks.trackID FROM tracks WHERE tracks.title LIKE :search_in_title " +
+                            "SELECT tracks.trackID FROM tracks WHERE tracks.cissearch LIKE :search_in_title " +
                             "UNION "+
-                            "SELECT tracks.trackID FROM tracks INNER JOIN albums ON tracks.albumID = albums.albumID AND albums.name LIKE :search_in_album "
+                            "SELECT tracks.trackID FROM tracks INNER JOIN albums ON tracks.albumID = albums.albumID AND albums.cissearch LIKE :search_in_album "
                             "UNION "+
-                            "SELECT tracks.trackID FROM tracks INNER JOIN artists ON tracks.artistID = artists.artistID AND artists.name LIKE :search_in_artist "
+                            "SELECT tracks.trackID FROM tracks INNER JOIN artists ON tracks.artistID = artists.artistID AND artists.cissearch LIKE :search_in_artist "
                             ") ";
 
 			break;
@@ -532,7 +532,19 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 
 	QSqlQuery q (*_database);
 
-        q.prepare("UPDATE Tracks SET albumID=:albumID, artistID=:artistID, title=:title, year=:year, length=:length, bitrate=:bitrate, track=:track, genre=:genre, filesize=:filesize, discnumber=:discnumber WHERE TrackID = :trackID;");
+        q.prepare("UPDATE Tracks "
+                  "SET albumID=:albumID, "
+                       "artistID=:artistID, "
+                       "title=:title, "
+                       "year=:year, "
+                       "length=:length, "
+                       "bitrate=:bitrate, "
+                       "track=:track, "
+                       "genre=:genre, "
+                       "filesize=:filesize, "
+                       "discnumber=:discnumber, "
+                       "cissearch=:cissearch "
+                    "WHERE TrackID = :trackID;");
 
 		q.bindValue(":albumID",QVariant(data.album_id));
 		q.bindValue(":artistID",QVariant(data.artist_id));
@@ -545,6 +557,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
         q.bindValue(":genre", QVariant(data.genres.join(",")));
         q.bindValue(":filesize", QVariant(data.filesize));
         q.bindValue(":discnumber", QVariant(data.discnumber));
+        q.bindValue(":cissearch", QVariant(data.title.toLower()));
 
         if (!q.exec()) {
             qDebug() << ("SQL - Error: update track " + data.filepath);
@@ -579,9 +592,9 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 
 
 	QString querytext = QString("INSERT INTO tracks ") +
-                "(filename,albumID,artistID,title,year,length,track,bitrate,genre,filesize,discnumber) " +
+                "(filename,albumID,artistID,title,year,length,track,bitrate,genre,filesize,discnumber,cissearch) " +
 				"VALUES "+
-                "(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate,:genre,:filesize,:discnumber); ";
+                "(:filename,:albumID,:artistID,:title,:year,:length,:track,:bitrate,:genre,:filesize,:discnumber,:cissearch); ";
 
 	q.prepare(querytext);
 
@@ -596,6 +609,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     q.bindValue(":genre", QVariant(data.genres.join(",")));
     q.bindValue(":filesize", QVariant(data.filesize));
     q.bindValue(":discnumber", QVariant(data.discnumber));
+    q.bindValue(":cissearch", QVariant(data.title.toLower()));
 
 
     if (!q.exec()) {

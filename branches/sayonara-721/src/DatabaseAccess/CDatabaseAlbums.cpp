@@ -41,7 +41,7 @@ using namespace Sort;
 			"COUNT(tracks.trackid) AS albumNTracks, " + \
 			"MAX(tracks.year) AS albumYear, " + \
 			"group_concat(artists.name) AS albumArtists, " + \
-			"group_concat(tracks.discnumber) AS discnumbers " + \
+            "group_concat(tracks.discnumber) AS discnumbers " + \
 			"FROM albums, artists, tracks "
 
 bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
@@ -267,15 +267,15 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
                 querytext += QString("AND tracks.trackID IN ( "
                                      "SELECT t2.trackID "
                                      "FROM tracks t2 "
-                                     "WHERE t2.title LIKE :filter1 ") +			// track title is like filter
+                                     "WHERE t2.cissearch LIKE :filter1 ") +			// track title is like filter
 
 								"UNION SELECT t3.trackid "+			// album title is like filter
 								"FROM tracks t3, albums "+
-								"WHERE albums.albumid = t3.albumid AND albums.name LIKE :filter2 "+
+                                "WHERE albums.albumid = t3.albumid AND albums.cissearch LIKE :filter2 "+
 
 								"UNION SELECT t4.trackid " +		// artist title is like filter
 								"FROM tracks t4, albums, artists " +
-								"WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.name LIKE :filter3 "
+                                "WHERE t4.albumid = albums.albumid AND t4.artistid = artists.artistid AND artists.cissearch LIKE :filter3 "
 							") ";
 				break;
 		}
@@ -327,15 +327,15 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 	if(filter.by_searchstring == BY_FULLTEXT){
 			query = QString("SELECT * FROM ( ") +
 					ALBUM_ARTIST_TRACK_SELECTOR +
-						"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
+                        "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.cissearch LIKE :search_in_album " +
 						"GROUP BY albums.albumid, albums.name " +
 					"UNION " +
 					ALBUM_ARTIST_TRACK_SELECTOR +
-						"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
+                        "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.cissearch LIKE :search_in_title " +
 						"GROUP BY albums.albumid, albums.name " +
 					"UNION " +
 					ALBUM_ARTIST_TRACK_SELECTOR +
-						"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
+                        "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.cissearch LIKE :search_in_artist " +
 						"GROUP BY albums.albumid, albums.name " +
 				") " +
 				"GROUP BY albumID, albumName";
@@ -380,8 +380,9 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
-    q.prepare("INSERT INTO albums (name) values (:album);");
+    q.prepare("INSERT INTO albums (name, cissearch) values (:album, :cissearch);");
     q.bindValue(":album", QVariant(album));
+    q.bindValue(":cissearch", QVariant(album.toLower()));
     if (!q.exec()) {
         throw QString ("SQL - Error: insertAlbumIntoDatabase " + album);
     }
@@ -394,13 +395,15 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 
 	QSqlQuery q (*_database);
     try{
-    	q.prepare("INSERT INTO albums (albumid, name) values (:id, :name);");
+        q.prepare("INSERT INTO albums (albumid, name, cissearch) values (:id, :name, :cissearch);");
     	q.bindValue(":id", QVariant(album.id));
-    	    q.bindValue(":name", QVariant(album.name));
-    	    if (!q.exec()) {
-    	        throw QString ("SQL - Error: insertAlbumIntoDatabase " + album.name);
-    	    }
-    	    return this -> getAlbumID (album.name);
+        q.bindValue(":name", QVariant(album.name));
+        q.bindValue(":cissearch", QVariant(album.name.toLower()));
+
+        if (!q.exec()) {
+            throw QString ("SQL - Error: insertAlbumIntoDatabase " + album.name);
+        }
+        return this -> getAlbumID (album.name);
     }
 
     catch (QString& ex) {

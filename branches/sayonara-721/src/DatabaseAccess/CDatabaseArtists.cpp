@@ -38,7 +38,7 @@ using namespace Sort;
 				"artists.artistid AS artistID, " + \
 				"artists.name AS artistName, " + \
 				"COUNT(tracks.trackid) AS artistNTracks, " + \
-				"GROUP_CONCAT(albums.albumid) AS artistAlbums " + \
+                "GROUP_CONCAT(albums.albumid) AS artistAlbums " + \
 				"FROM artists, albums, tracks "
 
 bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
@@ -228,15 +228,15 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 		default:
 			query = QString("SELECT * FROM ( ") +
 					ARTIST_ALBUM_TRACK_SELECTOR +
-			"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.name LIKE :search_in_artist " +
+            "			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.cissearch LIKE :search_in_artist " +
 			"			GROUP BY artists.artistid, artists.name " +
 			"		UNION " +
 					ARTIST_ALBUM_TRACK_SELECTOR +
-			"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.name LIKE :search_in_album " +
+            "			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.cissearch LIKE :search_in_album " +
 			"			GROUP BY artists.artistid, artists.name " +
 			"		UNION " +
 					ARTIST_ALBUM_TRACK_SELECTOR +
-			"			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.title LIKE :search_in_title " +
+            "			WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.cissearch LIKE :search_in_title " +
 			"			GROUP BY artists.artistid, artists.name " +
 			"	)  " +
 			"	GROUP BY artistID, artistName ";
@@ -273,8 +273,9 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
-    q.prepare("INSERT INTO artists (name) values (:artist);");
+    q.prepare("INSERT INTO artists (name, cissearch) values (:artist, :cissearch);");
     q.bindValue(":artist", QVariant(artist));
+    q.bindValue(":cissearch", QVariant(artist.toLower()));
     if (!q.exec()) {
         qDebug()<< q.lastQuery() << q.executedQuery();
         throw QString ("SQL - Error: insertArtistIntoDatabase " + artist);
@@ -288,9 +289,10 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
 	QSqlQuery q (*_database);
 	try{
-		q.prepare("INSERT INTO artists (artistid, name) values (:id, :name);");
+        q.prepare("INSERT INTO artists (artistid, name, cissearch) values (:id, :name, :cissearch);");
 		q.bindValue(":id", QVariant(artist.id));
 		q.bindValue(":name", QVariant(artist.name));
+        q.bindValue(":cissearch", QVariant(artist.name.toLower()));
 		if (!q.exec()) {
 			qDebug()<< q.lastQuery() << q.executedQuery();
 			throw QString ("SQL - Error: insertArtistIntoDatabase " + artist.name);
