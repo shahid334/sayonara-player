@@ -67,11 +67,15 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
 }
+
+
 LibraryView::~LibraryView() {
     delete _rc_menu;
     delete _corner_widget;
     delete _edit;
 }
+
+
 void LibraryView::setModel(QAbstractItemModel * model){
     QTableView::setModel(model);
 
@@ -79,6 +83,8 @@ void LibraryView::setModel(QAbstractItemModel * model){
 }
 
 
+
+// mouse events
 void LibraryView::mousePressEvent(QMouseEvent* event){
 
     QPoint pos_org = event->pos();
@@ -174,93 +180,11 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
         break;
     }
 }
-
-
-void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder){
-
-    if(_qDrag){
-        delete _qDrag;
-    }
-
-    _mimedata = new CustomMimeData();
-
-    QList<QUrl> urls;
-    if(!drop_entire_folder){
-        foreach(MetaData md, v_md){
-            QUrl url(QString("file://") + md.filepath);
-            urls << url;
-        }
-    }
-
-    else{
-        QStringList filenames;
-        foreach(MetaData md, v_md)
-            filenames << md.filepath;
-
-        QStringList folders = Helper::extract_folders_of_files(filenames);
-        foreach(QString folder, folders){
-            QUrl url(QString("file://") + folder);
-            urls << url;
-        }
-    }
-
-    _mimedata->setMetaData(v_md);
-    _mimedata->setText(text);
-    _mimedata->setUrls(urls);
-
-    _qDrag = new QDrag(this);
-    _qDrag->setMimeData(_mimedata);
-
-
-    connect(_qDrag, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
-
-    _drag = true;
-}
-
-void LibraryView::forbid_mimedata_destroyable(){
-
-    _qDrag = NULL;
-}
-
-int LibraryView::get_min_selected(){
-
-    QList<int> selections = _model->get_selected();
-    if(selections.size() == 0) return 0;
-    int min = 10000;
-    foreach(int i, selections){
-        if(i < min) min = i;
-    }
-    return min;
-}
-
-
-int LibraryView::get_max_selected(){
-
-    QList<int> selections = _model->get_selected();
-    int max = -10000;
-    if(selections.size() == 0) return _model->rowCount() - 1;
-    foreach(int i, selections){
-        if(i > max) max = i;
-    }
-    return max;
-}
-
-
-void LibraryView::goto_row(int row, bool select){
-
-    if(_model->rowCount() == 0) return;
-
-    if( row < 0 ) row = 0;
-    else if( row > _model->rowCount() - 1) row = _model->rowCount() - 1;
-
-    QModelIndex idx = _model->index(row, 0);
-    if(select) this->selectRow(row);
-    this->scrollTo(idx);
-    emit clicked(idx);
-}
+// mouse events end
 
 
 
+// keyboard events
 void LibraryView::keyPressEvent(QKeyEvent* event){
 
     // _edit has changed
@@ -356,30 +280,38 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
 
         default: break;
     }
-
 }
+// keyboard end
 
 
 
-void LibraryView::edit_changed(QString str){
 
-    if(str.size() == 0) {
-        reset_edit();
-        return;
+// selections
+int LibraryView::get_min_selected(){
+
+    QList<int> selections = _model->get_selected();
+    if(selections.size() == 0) return 0;
+    int min = 10000;
+    foreach(int i, selections){
+        if(i < min) min = i;
     }
-
-    int line = _model->getFirstRowOf(str);
-    this->scrollTo(_model->index(line, 0));
-    this->selectRow(line);
+    return min;
 }
 
-void LibraryView::reset_edit(){
-    disconnect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
-    _edit->setText("");
-    connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
-    _edit->hide();
-    this->setFocus();
+
+void LibraryView::goto_row(int row, bool select){
+
+    if(_model->rowCount() == 0) return;
+
+    if( row < 0 ) row = 0;
+    else if( row > _model->rowCount() - 1) row = _model->rowCount() - 1;
+
+    QModelIndex idx = _model->index(row, 0);
+    if(select) this->selectRow(row);
+    this->scrollTo(idx);
+    emit clicked(idx);
 }
+
 
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
@@ -422,248 +354,35 @@ QList<int> LibraryView::get_selections(){
 
     return idx_list_int;
 }
+// selections end
 
 
 
-template <typename T>
-void switch_sorters(T& srcdst, T src1, T src2){
-    if(srcdst == src1) srcdst = src2;
-    else srcdst = src1;
-}
+// edit
+void LibraryView::edit_changed(QString str){
 
-
-void LibraryView::sort_by_column(int col){
-
-    int idx_col = _model->calc_shown_col(col);
-
-    if(idx_col >= _table_headers.size()) return;
-
-    ColumnHeader h = _table_headers[idx_col];
-    switch_sorters(_sort_order, h.get_asc_sortorder(), h.get_desc_sortorder());
-
-    emit sig_sortorder_changed(_sort_order);
-}
-
-
-void LibraryView::rc_menu_init(){
-    _rc_menu = new ContextMenu(this);
-    _rc_menu->setup_entries(ENTRY_PLAY_NEXT | ENTRY_INFO | ENTRY_DELETE | ENTRY_EDIT | ENTRY_APPEND);
-}
-
-
-void LibraryView::rc_menu_show(const QPoint& p){
-
-    emit sig_no_disc_menu();
-
-    connect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
-    connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
-    connect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
-    connect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
-    connect(_rc_menu, SIGNAL(sig_append_clicked()), this, SLOT(append_clicked()));
-
-    _rc_menu->exec(p);
-
-    disconnect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
-    disconnect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
-    disconnect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
-    disconnect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
-    disconnect(_rc_menu, SIGNAL(sig_append_clicked()), this, SLOT(append_clicked()));
-}
-
-
-void LibraryView::edit_clicked(){
-    emit sig_edit_clicked();
-}
-void LibraryView::info_clicked(){
-    emit sig_info_clicked();
-}
-void LibraryView::delete_clicked(){
-    emit sig_delete_clicked();
-}
-void LibraryView::play_next_clicked(){
-    emit sig_play_next_clicked();
-}
-
-void LibraryView::append_clicked(){
-    emit sig_append_clicked();
-}
-
-void LibraryView::set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting){
-
-    _table_headers = headers;
-
-    for(int i=0; i<headers.size(); i++){
-
-        if(headers[i].get_asc_sortorder() == sorting){
-            this->horizontalHeader()->setSortIndicator(i, Qt::AscendingOrder);
-            _sort_order = sorting;
-            break;
-
-        }
-
-        else if(headers[i].get_desc_sortorder() == sorting){
-
-            _sort_order = sorting;
-            this->horizontalHeader()->setSortIndicator(i, Qt::DescendingOrder);
-            break;
-
-        }
-    }
-}
-
-
-void LibraryView::rc_header_menu_init(QStringList& shown_cols){
-
-    if(_rc_header_menu) delete _rc_header_menu;
-    _rc_header_menu = new QMenu( this->horizontalHeader() );
-
-    // in this moment all columns are still shown
-    int col_idx = this->horizontalHeader()->sortIndicatorSection();
-    Qt::SortOrder asc = this->horizontalHeader()->sortIndicatorOrder();
-
-
-    int i =0;
-    bool show_sorter = true;
-    foreach(ColumnHeader header, _table_headers){
-        QAction* action = new QAction(header.getTitle(), this);
-        action->setCheckable(true);
-
-        action->setEnabled(header.getSwitchable());
-
-        if( !header.getSwitchable() ) {
-            action->setChecked(true);
-        }
-
-        else {
-
-            if(i < shown_cols.size()){
-                action->setChecked(shown_cols[i] == "1");
-
-                // where should we put the sorters?
-                // if a few columns are missing before the origin position,
-                // the index of the sorted column has to be decreased
-                if(i<col_idx && !action->isChecked()) col_idx --;
-                else if(i == col_idx && !action->isChecked()) show_sorter = false;
-            }
-            else{
-                action->setChecked(false);
-            }
-        }
-
-
-        connect(action, SIGNAL(toggled(bool)), this, SLOT(rc_header_menu_changed(bool)));
-
-        _header_rc_actions << action;
-        this->horizontalHeader()->addAction(action);
-        i++;
+    if(str.size() == 0) {
+        reset_edit();
+        return;
     }
 
-    rc_header_menu_changed();
-
-    if(show_sorter){
-	    this->horizontalHeader()->setSortIndicator(col_idx, asc);
-    }
-
-    this->horizontalHeader()->setContextMenuPolicy(Qt::ActionsContextMenu);
+    int line = _model->getFirstRowOf(str);
+    this->scrollTo(_model->index(line, 0));
+    this->selectRow(line);
 }
 
-
-
-void LibraryView::rc_header_menu_changed(bool b){
-
-    Q_UNUSED(b);
-
-    QList<int> sel_list = get_selections();
-
-    _model->removeColumns(0, _model->columnCount());
-
-    int col_idx = 0;
-    QStringList lst;
-    foreach(QAction* action, _header_rc_actions){
-
-        if(action->isChecked()){
-            _model->insertColumn(col_idx);
-            lst << "1";
-        }
-
-        else lst << "0";
-
-        col_idx++;
-    }
-
-    emit sig_columns_changed(lst);
-    set_col_sizes();
-
-    foreach(int row, sel_list)
-        this->selectRow(row);
+void LibraryView::reset_edit(){
+    disconnect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
+    _edit->setText("");
+    connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
+    _edit->hide();
+    this->setFocus();
 }
+// edit end
 
 
-void LibraryView::set_col_sizes(){
 
-    int altogether_width = 0;
-    int desired_width = 0;
-    int tolerance = 30;
-    double altogether_percentage = 0;
-    int n_cols = _model->columnCount();
-
-
-    for(int i=0; i<n_cols; i++){
-        int col = _model->calc_shown_col(i);
-        int preferred_size = 0;
-
-        ColumnHeader h = _table_headers[col];
-        if(h.getSizeType() == COL_HEADER_SIZE_TYPE_ABS){
-
-            preferred_size = h.get_preferred_size_abs();
-        }
-
-        else{
-
-            altogether_percentage += h.get_preferred_size_rel();
-            desired_width += h.get_preferred_size_abs();
-        }
-
-        altogether_width += preferred_size;
-    }
-
-    altogether_width += tolerance;
-
-    int target_width = this->width() - altogether_width;
-
-
-    if(target_width < desired_width) {
-        target_width = desired_width;
-        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    }
-
-    else{
-        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    }
-
-    // width for percentage stuff
-    for(int i=0; i<n_cols; i++){
-        int col = _model->calc_shown_col(i);
-        int preferred_size = 0;
-
-
-        ColumnHeader h = _table_headers[col];
-        if(h.getSizeType() == COL_HEADER_SIZE_TYPE_REL){
-
-            preferred_size = (h.get_preferred_size_rel() / altogether_percentage) * target_width;
-        }
-
-        else{
-            preferred_size = h.get_preferred_size_abs();
-        }
-
-        this->setColumnWidth(i, preferred_size);
-    }
-
-    calc_corner_widget();
-}
-
-
+// fill
 void LibraryView::fill_metadata(const MetaDataList& v_md){
 
     QList<int> lst;
@@ -779,6 +498,56 @@ void LibraryView::fill_artists(const ArtistList& artists){
     calc_corner_widget();
 }
 
+void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder){
+
+    if(_qDrag){
+        delete _qDrag;
+    }
+
+    _mimedata = new CustomMimeData();
+
+    QList<QUrl> urls;
+    if(!drop_entire_folder){
+        foreach(MetaData md, v_md){
+            QUrl url(QString("file://") + md.filepath);
+            urls << url;
+        }
+    }
+
+    else{
+        QStringList filenames;
+        foreach(MetaData md, v_md)
+            filenames << md.filepath;
+
+        QStringList folders = Helper::extract_folders_of_files(filenames);
+        foreach(QString folder, folders){
+            QUrl url(QString("file://") + folder);
+            urls << url;
+        }
+    }
+
+    _mimedata->setMetaData(v_md);
+    _mimedata->setText(text);
+    _mimedata->setUrls(urls);
+
+    _qDrag = new QDrag(this);
+    _qDrag->setMimeData(_mimedata);
+
+
+    connect(_qDrag, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
+
+    _drag = true;
+}
+
+void LibraryView::forbid_mimedata_destroyable(){
+
+    _qDrag = NULL;
+}
+// fill end
+
+
+
+// appearance
 void LibraryView::set_skin(bool dark){
     _dark = dark;
     calc_corner_widget();
@@ -809,13 +578,17 @@ void LibraryView::calc_corner_widget(){
     }
 }
 
-
 void LibraryView::resizeEvent(QResizeEvent* event){
     event->ignore();
     QTableView::resizeEvent(event);
     calc_corner_widget();
 }
+// appearance end
 
+
+
+
+// drag drop
 void LibraryView::dropEvent(QDropEvent *event){
 
     event->accept();
@@ -828,7 +601,6 @@ void LibraryView::dropEvent(QDropEvent *event){
 
     // extern drops
     if( !mime_data->hasUrls() || text.compare("tracks", Qt::CaseInsensitive) == 0) {
-
         return;
     }
 
@@ -853,7 +625,53 @@ void LibraryView::dragEnterEvent(QDragEnterEvent *event){
     event->accept();
 }
 
-
 void  LibraryView::dragMoveEvent(QDragMoveEvent *event){
     event->accept();
 }
+// drag drop end
+
+
+
+// Right click stuff
+void LibraryView::rc_menu_init(){
+    _rc_menu = new ContextMenu(this);
+    _rc_menu->setup_entries(ENTRY_PLAY_NEXT | ENTRY_INFO | ENTRY_DELETE | ENTRY_EDIT | ENTRY_APPEND);
+}
+
+void LibraryView::rc_menu_show(const QPoint& p){
+
+    emit sig_no_disc_menu();
+
+    connect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
+    connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
+    connect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
+    connect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
+    connect(_rc_menu, SIGNAL(sig_append_clicked()), this, SLOT(append_clicked()));
+
+    _rc_menu->exec(p);
+
+    disconnect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_delete_clicked()), this, SLOT(delete_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_clicked()));
+    disconnect(_rc_menu, SIGNAL(sig_append_clicked()), this, SLOT(append_clicked()));
+}
+
+
+void LibraryView::edit_clicked(){
+    emit sig_edit_clicked();
+}
+void LibraryView::info_clicked(){
+    emit sig_info_clicked();
+}
+void LibraryView::delete_clicked(){
+    emit sig_delete_clicked();
+}
+void LibraryView::play_next_clicked(){
+    emit sig_play_next_clicked();
+}
+
+void LibraryView::append_clicked(){
+    emit sig_append_clicked();
+}
+// right click stuff end

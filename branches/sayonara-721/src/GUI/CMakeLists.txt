@@ -85,6 +85,7 @@ SET(SOURCES
     LastFM/GUI_LFMRadioWidget.cpp
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
+    library/view/LibraryViewHeader.cpp
     library/model/LibraryItemModel.cpp
     library/model/LibraryItemModelTracks.cpp
     library/model/LibraryItemModelAlbums.cpp

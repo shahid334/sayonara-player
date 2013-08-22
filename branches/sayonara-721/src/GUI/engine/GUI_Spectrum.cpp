@@ -1,3 +1,25 @@
+/* GUI_Spectrum.cpp */
+
+/* Copyright (C) 2013  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 #include "GUI_Spectrum.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -5,6 +27,7 @@
 #include <QList>
 #include <QDebug>
 #include <cmath>
+#include <QTimer>
 
 float log_lu[1100];
 
@@ -49,7 +72,7 @@ void insertColorOfRect(int bin, int n_bins, QList<float> & borders, QList<QColor
 
 const int border_y = 1;
 const int border_x = 2;
-const int h_rect = 3;
+const int h_rect = 2;
 const int n_fading_steps = 20;
 int n_rects;
 
@@ -62,9 +85,13 @@ GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
     _cur_col = CSettingsStorage::getInstance()->getSpectrumStyle();
     ui = new Ui::GUI_Spectrum();
     ui->setupUi(this);
+    _timer = new QTimer();
+    _timer->setInterval(30);
+    _timer_stopped = true;
+    connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
 
     n_rects = this->height() / (h_rect + border_y);
-    qDebug() << "n_rects: " << n_rects;
+
 
     QList<float> borders_4, borders_3, borders_2;
     borders_4 << 0  << 0.33  << 0.66 << 1.0;
@@ -231,6 +258,7 @@ GUI_Spectrum::mousePressEvent(QMouseEvent *e){
 
 void
 GUI_Spectrum::set_spectrum(QList<float>& lst){
+    if(!_timer_stopped) _timer->stop();
 
     _spec = lst;
     this->update();
@@ -250,6 +278,9 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
     int w_bin = ((this->width()) / (ninety - offset)) - border_x;
     float widget_height = (float) this->height();
 
+    int n_zero = 0;
+
+    // run through all bins
     for(int i=offset; i<ninety + 1; i++){
 
 
@@ -265,7 +296,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
         // we start from bottom with painting
         int y = widget_height - h_rect;
 
-
+        // run vertical
         for(int r=0; r<n_rects; r++){
 
             QColor col;
@@ -282,7 +313,12 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
                 }
 
                 if(_steps[i][r] > 0) _steps[i][r]--;
+                else n_zero++;
 
+                if(n_zero == (ninety - offset) * n_rects && _timer->isActive()){
+                    _timer->stop();
+                    _timer_stopped = true;
+                }
             }
 
 
@@ -313,4 +349,22 @@ void GUI_Spectrum::closeEvent(QCloseEvent *e){
     PlayerPlugin::closeEvent(e);
     this->update();
     emit sig_show(false);
+}
+
+void GUI_Spectrum::psl_stop(){
+
+
+    if(this->isVisible()){
+        _timer->start();
+        _timer_stopped = false;
+    }
+}
+
+void GUI_Spectrum::timed_out(){
+
+    qDebug() << "Timed out";
+    for(int i=0; i<N_BINS; i++)
+        _spec[i] -= 0.1f;
+
+    update();
 }

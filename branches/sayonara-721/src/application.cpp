@@ -270,6 +270,8 @@ void Application::init_connections(){
     CONNECT (player, play(),                                 playlist,			psl_play());
     CONNECT (player, pause(),                                 playlist,			psl_pause());
     CONNECT (player, stop(),                                 playlist,			psl_stop());
+    CONNECT (player, stop(),                                 ui_spectrum,		psl_stop());
+    CONNECT (player, pause(),                                 ui_spectrum,		psl_stop());
     CONNECT (player, forward(),                              playlist,			psl_forward());
     CONNECT (player, backward(),                             playlist,			psl_backward());
     CONNECT (player, sig_stream_selected(const QString&, const QString&), 		playlist, psl_play_stream(const QString&, const QString&));

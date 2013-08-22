@@ -149,7 +149,7 @@ private:
     bool                _sel_changed;
 
     int get_min_selected();
-    int get_max_selected();
+
     void goto_row(int row, bool select=false);
 
     /*// calc selections and insert into db
