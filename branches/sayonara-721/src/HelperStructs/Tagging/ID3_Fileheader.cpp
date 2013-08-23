@@ -260,7 +260,7 @@ QString ID3_FileHeader::fh_convert_frame_content_to_text(const QByteArray& data_
 
 bool ID3_FileHeader::fh_open_and_read_file(QString filename){
     f = new QFile(filename);
-    qDebug() << "Read file";
+    //qDebug() << "Read file";
     if(!f->open(QIODevice::ReadOnly)){
         valid = false;
         return false;
@@ -277,7 +277,7 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
     }
 
     header_size = fh_read_header_size(header_header);
-    qDebug() << "Header size = " << header_size;
+    //qDebug() << "Header size = " << header_size;
     org_size = header_size;
     f->seek(0);
     raw_data = f->read(10 + header_size);

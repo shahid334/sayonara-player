@@ -106,32 +106,6 @@ void GUI_Equalizer::language_changed(){
 void GUI_Equalizer::changeSkin(bool dark){
 
     _dark = dark;
-
-
-    QString sli_style0 = Style::get_v_slider_style(dark, SCALE(_ui->sli_0->value()));
-    QString sli_style1 = Style::get_v_slider_style(dark, SCALE(_ui->sli_1->value()));
-    QString sli_style2 = Style::get_v_slider_style(dark, SCALE(_ui->sli_2->value()));
-    QString sli_style3 = Style::get_v_slider_style(dark, SCALE(_ui->sli_3->value()));
-    QString sli_style4 = Style::get_v_slider_style(dark, SCALE(_ui->sli_4->value()));
-    QString sli_style5 = Style::get_v_slider_style(dark, SCALE(_ui->sli_5->value()));
-    QString sli_style6 = Style::get_v_slider_style(dark, SCALE(_ui->sli_6->value()));
-    QString sli_style7 = Style::get_v_slider_style(dark, SCALE(_ui->sli_7->value()));
-    QString sli_style8 = Style::get_v_slider_style(dark, SCALE(_ui->sli_8->value()));
-    QString sli_style9 = Style::get_v_slider_style(dark, SCALE(_ui->sli_9->value()));
-
-    /*this->_ui->sli_0->setStyleSheet(sli_style0);
-    this->_ui->sli_1->setStyleSheet(sli_style1);
-    this->_ui->sli_2->setStyleSheet(sli_style2);
-    this->_ui->sli_3->setStyleSheet(sli_style3);
-    this->_ui->sli_4->setStyleSheet(sli_style4);
-    this->_ui->sli_5->setStyleSheet(sli_style5);
-    this->_ui->sli_6->setStyleSheet(sli_style6);
-    this->_ui->sli_7->setStyleSheet(sli_style7);
-    this->_ui->sli_8->setStyleSheet(sli_style8);
-    this->_ui->sli_9->setStyleSheet(sli_style9);
-
-	QString stylesheet = Style::get_style(dark);
-	this->setStyleSheet(stylesheet);*/
 }
 
 
@@ -222,7 +196,6 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 	for(uint i=0; i<presets.size(); i++){
 
 		this->_ui->combo_presets->insertItem(i, presets[i].name);
-
 	}
 
 	int last_idx = CSettingsStorage::getInstance()->getLastEqualizer();
@@ -231,7 +204,6 @@ void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
 		this->_ui->combo_presets->setCurrentIndex(last_idx);
 		preset_changed(last_idx);
 	}
-
 
 	connect(this->_ui->combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
 }

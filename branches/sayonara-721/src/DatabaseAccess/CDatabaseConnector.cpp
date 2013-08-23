@@ -251,7 +251,7 @@ bool CDatabaseConnector::updateAlbumCissearch(){
         q.bindValue(":cissearch", album.name.toLower());
         q.bindValue(":id", album.id);
 
-        qDebug() << q.exec();
+        q.exec();
     }
 
     return true;
@@ -292,7 +292,7 @@ bool CDatabaseConnector::apply_fixes(){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int version = load_setting_int("version", 0);
-    if(version == 2) return true;
+    if(version == 3) return true;
 
     qDebug() << "Apply fixes";
 
@@ -320,7 +320,7 @@ bool CDatabaseConnector::apply_fixes(){
         check_and_create_table("savedpodcasts", create_savedpodcasts);
     }
 
-    if(version < 2){
+    if(version < 3){
 
         _database->transaction();
 
@@ -333,13 +333,29 @@ bool CDatabaseConnector::apply_fixes(){
         updateArtistCissearch();
         updateTrackCissearch();
 
-
         _database->commit();
 
 
+        QString create_vis_styles = QString("CREATE TABLE VisualStyles ") +
+                "( " +
+                "  name VARCHAR(255) PRIMARY KEY, " +
+                "  col1 VARCHAR(20), " +
+                "  col2 VARCHAR(20), " +
+                "  col3 VARCHAR(20), " +
+                "  col4 VARCHAR(20), " +
+                "  nBinsSpectrum INTEGER, " +
+                "  rectHeightSpectrum INTEGER, " +
+                "  fadingStepsSpectrum INTEGER, " +
+                "  horSpacingSpectrum INTEGER, " +
+                "  vertSpacingSpectrum INTEGER, " +
+                "  nRectsLevel INTEGER, "
+                "  horSpacingLevel INTEGER, " +
+                "  verSpacingLevel INTEGER, " +
+                "  fadingStepsLevel INTEGER " +
+                ");";
 
-
-        if(success) store_setting("version", 2);
+        success = check_and_create_table("VisualStyles", create_vis_styles);
+        if(success) store_setting("version", 3);
     }
 
 	return true;

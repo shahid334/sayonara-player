@@ -17,6 +17,7 @@ ADD_SUBDIRECTORY(icons)
 SET(HEADERS
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
+    engine/EngineColorStyleChooser.h
     player/GUI_Player.h
     player/GUI_TrayIcon.h
     player/SearchSlider.h
@@ -65,6 +66,7 @@ SET(HEADERS
 SET(SOURCES
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
+    engine/EngineColorStyleChooser.cpp
     player/GUI_Player.cpp
     player/GUI_PlayerPlugins.cpp
     player/GUI_PlayerMenubar.cpp

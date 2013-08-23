@@ -12,12 +12,12 @@ PKG_CHECK_MODULES(TAGLIB REQUIRED taglib>=1.6)
 PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-SET(CMAKE_BUILD_TYPE "Release")
-SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s")
-#SET(CMAKE_BUILD_TYPE "Debug")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
-#SET(CMAKE_C_FLAGS "-Wall")
+#SET(CMAKE_BUILD_TYPE "Release")
+#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
+#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s")
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall")
+SET(CMAKE_C_FLAGS "-Wall")
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
 #SET(QT_USE_QTNETWORK TRUE)
@@ -112,6 +112,7 @@ SET(SOURCES
     DatabaseAccess/CDatabasePlaylist.cpp
     DatabaseAccess/CDatabaseStreams.cpp
     DatabaseAccess/CDatabasePodcasts.cpp
+    DatabaseAccess/CDatabaseVisStyles.cpp
     playlist/Playlist.cpp
     playlist/Playlist_GUI_slots.cpp
     playlists/Playlists.cpp

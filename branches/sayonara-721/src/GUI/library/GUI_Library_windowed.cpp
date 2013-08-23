@@ -378,6 +378,22 @@ void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst){
 }
 
 void GUI_Library_windowed::album_sel_changed(const QList<int>& lst){
+
+    _info_dialog->set_tag_edit_visible(true);
+    _timer->stop();
+    if(lst.size() == 1){
+        QModelIndex idx = _album_model->index(lst[0], 0);
+        QList<int> discnumbers = _album_model->get_discnumbers(idx);
+
+        if(discnumbers.size() > 1 && lst.size() == 1 ){
+            delete_menu();
+            _discmenu = new DiscPopupMenu(ui->lv_album, discnumbers);
+
+            connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
+            _timer->start(500);
+        }
+    }
+
     sig_album_sel_changed(lst);
 }
 

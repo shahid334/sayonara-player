@@ -25,11 +25,14 @@
 
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/ui_GUI_LevelPainter.h"
+#include "GUI/engine/EngineColorStyleChooser.h"
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QPaintEvent>
+#include <QMouseEvent>
 #include <QAction>
 #include <QColor>
+#include <QTimer>
 
 class GUI_LevelPainter : public PlayerPlugin, private Ui::GUI_LevelPainter
 {
@@ -49,27 +52,30 @@ protected:
     void showEvent(QShowEvent *);
     void closeEvent(QCloseEvent *);
     void paintEvent(QPaintEvent* e);
+    void mousePressEvent(QMouseEvent *e);
 
 public slots:
     void set_level(float, float);
+    void psl_stop();
+
+
+private slots:
+    void timed_out();
 
 private:
     Ui::GUI_LevelPainter* ui;
 
-    float _level_l, _level_l_old;
-    float _level_r, _level_r_old;
-
-    QColor _white;
-    QColor _red, _red_dark;
-    QColor _blue;
-    QColor _green, _green_dark;
-    QColor _yellow, _yellow_dark;
-    QColor _black;
-
-    QColor _col_r;
-    QColor _col_l;
+    float _level[2];
 
     int get_last_bright_light(float level);
+
+    EngineColorStyleChooser* _ecsc;
+    ColorStyle _cur_style;
+    int _cur_style_idx;
+
+    int** _steps;
+    QTimer* _timer;
+    bool    _timer_stopped;
 
 
     

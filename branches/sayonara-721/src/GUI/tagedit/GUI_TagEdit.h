@@ -29,11 +29,14 @@
 #ifndef GUI_TAGEDIT_H_
 #define GUI_TAGEDIT_H_
 
-#define TAG_TITLE QString("<TITLE>")
-#define TAG_ALBUM QString("<ALBUM>")
-#define TAG_ARTIST QString("<ARTIST>")
-#define TAG_TRACK_NUM QString("<TRACK>")
-#define TAG_YEAR QString("<YEAR>")
+#define TAG_TITLE QString("<t>")
+#define TAG_ALBUM QString("<al>")
+#define TAG_ARTIST QString("<ar>")
+#define TAG_TRACK_NUM QString("<nr>")
+#define TAG_YEAR QString("<y>")
+#define TAG_DISC QString("<d>")
+
+
 
 #include "GUI/ui_GUI_TagEdit.h"
 #include "HelperStructs/MetaData.h"

@@ -24,6 +24,7 @@
 #define GUI_SPECTRUM_H
 
 #include "PlayerPlugin/PlayerPlugin.h"
+#include "GUI/engine/EngineColorStyleChooser.h"
 #include "GUI/ui_GUI_Spectrum.h"
 #include <QCloseEvent>
 #include <QShowEvent>
@@ -65,27 +66,18 @@ private slots:
 private:
     Ui::GUI_Spectrum* ui;
 
-
-    QColor _white;
-    QColor _red, _red_dark;
-    QColor _blue;
-    QColor _green, _green_dark;
-    QColor _yellow, _yellow_dark;
-    QColor _black;
-
-    int _cur_col;
-
     QList<float> _spec;
 
-    QList< QMap<int, QColor> > _maps_col_active;
-    QList< QList< QMap<int, QColor> > > _scheme_fading_rect_color;
-
-    QMap<int, QColor> _map_col_inactive;
     int** _steps;
+    int   _cur_style_idx;
+    ColorStyle _cur_style;
+
 
     QTimer* _timer;
     bool    _timer_stopped;
+    EngineColorStyleChooser* _ecsc;
 
+    void resize_steps(int bins, int rects);
 
 };
 
