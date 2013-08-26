@@ -18,6 +18,7 @@ SET(HEADERS
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
+    engine/GUI_StyleSettings.h
     player/GUI_Player.h
     player/GUI_TrayIcon.h
     player/SearchSlider.h
@@ -67,6 +68,7 @@ SET(SOURCES
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp
+    engine/GUI_StyleSettings.cpp
     player/GUI_Player.cpp
     player/GUI_PlayerPlugins.cpp
     player/GUI_PlayerMenubar.cpp
@@ -118,6 +120,7 @@ SET(SOURCES
 SET(FORMS
     engine/GUI_LevelPainter.ui
     engine/GUI_Spectrum.ui
+    engine/GUI_Style.ui
     player/GUI_Player.ui
     playlist/GUI_Playlist.ui
     playlist/entry/GUI_PlaylistEntryBig.ui
@@ -142,6 +145,7 @@ SET(FORMS
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
     Notifications/GUI_Notifications.ui
     LanguageChooser/GUI_LanguageChooser.ui
+
 )
 
 

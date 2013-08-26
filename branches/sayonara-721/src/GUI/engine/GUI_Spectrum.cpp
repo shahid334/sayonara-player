@@ -50,7 +50,7 @@ GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
     _ecsc = new EngineColorStyleChooser(this->minimumWidth(), this->minimumHeight());
     _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
 
-
+    _update_running = false;
 
     for(int i=0; i<N_BINS; i++){
 
@@ -86,7 +86,7 @@ GUI_Spectrum::mousePressEvent(QMouseEvent *e){
     }
 
     else if (e->button() == Qt::RightButton)
-        _cur_style_idx = (_cur_style_idx > 0) ? (_cur_style_idx - 1) : (n_styles - 1);
+        emit sig_right_clicked(_cur_style_idx);
 
     else if (e->button() == Qt::MidButton){
         close();
@@ -94,6 +94,7 @@ GUI_Spectrum::mousePressEvent(QMouseEvent *e){
     }
 
     _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
+    resize_steps(N_BINS, _cur_style.n_rects);
 
     CSettingsStorage::getInstance()->setSpectrumStyle(_cur_style_idx);
 
@@ -111,6 +112,7 @@ GUI_Spectrum::set_spectrum(QList<float>& lst){
 void
 GUI_Spectrum::paintEvent(QPaintEvent *e){
 
+    if(_update_running) return;
      QPainter painter(this);
 
     float widget_height = (float) this->height();
@@ -231,14 +233,26 @@ void GUI_Spectrum::resize_steps(int bins, int rects){
         _steps[b] = 0;
     }
 
-    delete[] _steps;
+    delete _steps;
 
-
-    _steps = new int*[bins];
-    for(int i=0; i<bins; i++){
+    _steps = new int*[N_BINS];
+    for(int i=0; i<N_BINS; i++){
         _steps[i] = new int[rects];
         for(int r=0; r<rects; r++){
             _steps[i][r] = 0;
         }
     }
+}
+
+
+void GUI_Spectrum::psl_style_update(){
+
+   _ecsc->reload(this->width(), this->height());
+
+   _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
+   resize_steps(N_BINS, _cur_style.n_rects);
+
+
+   _update_running = false;
+   this->update();
 }

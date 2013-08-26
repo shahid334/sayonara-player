@@ -189,8 +189,9 @@ public:
 
     QList<RawColorStyle> get_raw_color_styles();
     bool insert_raw_color_style_to_db(const RawColorStyle& rcs);
-		 
-
+    bool update_raw_color_style(const RawColorStyle& rcs);
+    bool raw_color_style_exists(QString name);
+    bool delete_raw_color_style(QString name);
 
 
 

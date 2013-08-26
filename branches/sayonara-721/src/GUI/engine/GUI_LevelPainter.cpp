@@ -79,7 +79,7 @@ GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
     }
 
     else if (e->button() == Qt::RightButton)
-        _cur_style_idx = (_cur_style_idx > 0) ? (_cur_style_idx - 1) : (n_styles - 1);
+       emit sig_right_clicked(_cur_style_idx);
 
     else if (e->button() == Qt::MidButton){
         close();
@@ -87,7 +87,7 @@ GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
     }
 
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
-
+    resize_steps(_cur_style.n_rects);
 }
 
 void GUI_LevelPainter::paintEvent(QPaintEvent* e){
@@ -98,10 +98,8 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
     int border_x = _cur_style.hor_spacing;
     int border_y = _cur_style.ver_spacing;
     int n_fading_steps = _cur_style.n_fading_steps;
-    int h_rect = 5;
-
-    float w = (float) this->width();
-    int w_rect = w / n_rects;
+    int h_rect = 6;
+    int w_rect = _cur_style.rect_width;
 
     int y = 10;
     int num_zero = 0;
@@ -132,7 +130,7 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
             _timer_stopped = true;
         }
 
-        y+= h_rect + 3;
+        y+= h_rect + border_y;
     }
 }
 
@@ -143,7 +141,14 @@ QAction* GUI_LevelPainter::getAction(){
 
 
 void GUI_LevelPainter::showEvent(QShowEvent * e){
-    Q_UNUSED(e);
+
+    e->accept();
+
+    _ecsc->reload(this->width(), this->height());
+    _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
+    resize_steps(_cur_style.n_rects);
+
+
     emit sig_show(true);
 }
 
@@ -154,7 +159,6 @@ void GUI_LevelPainter::closeEvent(QCloseEvent *e){
 
 
 void GUI_LevelPainter::psl_stop(){
-
 
     _timer->start();
     _timer_stopped = false;
@@ -167,4 +171,24 @@ void GUI_LevelPainter::timed_out(){
         _level[i] -= 2.0f;
 
     update();
+}
+
+
+void GUI_LevelPainter::psl_style_update(){
+    _ecsc->reload(this->width(), this->height());
+    _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
+    resize_steps(_cur_style.n_rects);
+
+}
+
+void GUI_LevelPainter::resize_steps(int n_rects){
+
+    for(int i=0; i<2; i++){
+        delete[] _steps[i];
+        _steps[i] = new int[n_rects];
+        for(int j=0; j<n_rects; j++){
+            _steps[i][j] = 0;
+        }
+    }
+
 }

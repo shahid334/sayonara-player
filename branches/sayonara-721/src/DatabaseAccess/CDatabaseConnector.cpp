@@ -348,7 +348,7 @@ bool CDatabaseConnector::apply_fixes(){
                 "  fadingStepsSpectrum INTEGER, " +
                 "  horSpacingSpectrum INTEGER, " +
                 "  vertSpacingSpectrum INTEGER, " +
-                "  nRectsLevel INTEGER, "
+                "  rectWidthLevel INTEGER, "
                 "  horSpacingLevel INTEGER, " +
                 "  verSpacingLevel INTEGER, " +
                 "  fadingStepsLevel INTEGER " +

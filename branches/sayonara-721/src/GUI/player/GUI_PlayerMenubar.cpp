@@ -353,6 +353,7 @@ void GUI_Player::about(bool b){
     translators << "Kallisto";
     translators << "Andrej Hamburg";
     translators << QString::fromUtf8("Veszter Márton");
+    translators << QString::fromUtf8("Arthur Țițeică");
 
     QString first_translators;
     QString last_translator;

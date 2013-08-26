@@ -45,6 +45,7 @@ public:
 
 signals:
     void sig_show(bool);
+    void sig_right_clicked(int);
     void closeEvent();
 
 protected:
@@ -57,6 +58,7 @@ protected:
 public slots:
     void set_level(float, float);
     void psl_stop();
+    void psl_style_update();
 
 
 private slots:
@@ -67,8 +69,6 @@ private:
 
     float _level[2];
 
-    int get_last_bright_light(float level);
-
     EngineColorStyleChooser* _ecsc;
     ColorStyle _cur_style;
     int _cur_style_idx;
@@ -76,6 +76,8 @@ private:
     int** _steps;
     QTimer* _timer;
     bool    _timer_stopped;
+
+    void resize_steps(int n_rects);
 
 
     

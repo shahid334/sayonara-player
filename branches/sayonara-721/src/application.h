@@ -49,6 +49,7 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/engine/GUI_LevelPainter.h"
 #include "GUI/engine/GUI_Spectrum.h"
+#include "GUI/engine/GUI_StyleSettings.h"
 
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
@@ -98,6 +99,7 @@ private:
     GUI_LFMRadioWidget*		ui_lfm_radio;
     PlayerPluginHandler*	_pph;
 
+    GUI_StyleSettings*     ui_style_settings;
     GUI_StreamRecorder*		ui_stream_rec;
     GUI_TagEdit*		ui_id3_editor;
     GUI_InfoDialog*		ui_info_dialog;

@@ -270,12 +270,12 @@
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="299"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="271"/>
         <source>This will overwrite your custom preset</source>
         <translation>Это перезапишет ваши настройки</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="300"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="272"/>
         <source>Continue?</source>
         <translation>Продолжить?</translation>
     </message>
@@ -623,21 +623,18 @@
 <context>
     <name>GUI_Level</name>
     <message>
-        <location filename="../GUI/engine/GUI_Level.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Level.h" line="440"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="462"/>
         <source>Level</source>
         <translation>Уровень</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Level.ui" line="592"/>
-        <location filename="../GUI/ui_GUI_Level.h" line="441"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="463"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Level.h" line="20"/>
         <source>Le&amp;vel</source>
-        <translation>&amp;Уровень</translation>
+        <translation type="obsolete">&amp;Уровень</translation>
     </message>
 </context>
 <context>
@@ -649,7 +646,7 @@
         <translation>Form</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_LevelPainter.h" line="18"/>
+        <location filename="../GUI/engine/GUI_LevelPainter.h" line="43"/>
         <source>Le&amp;vel</source>
         <translation>&amp;Уровень</translation>
     </message>
@@ -657,7 +654,7 @@
 <context>
     <name>GUI_Library_windowed</name>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="123"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="110"/>
         <source>Ctrl+.</source>
         <translation>Ctrl+.</translation>
     </message>
@@ -666,104 +663,104 @@
         <translation type="obsolete">Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="132"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="119"/>
         <source>Ctrl+?</source>
         <translation>Ctrl+?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="234"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="303"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Dur.</source>
         <translation>Длит.</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Bitrate</source>
         <translation>Битрейт</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Filesize</source>
         <translation>Размер файла</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Duration</source>
         <translation>Длительность</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="234"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="303"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>#Tracks</source>
         <translation>Треков</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="664"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="616"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="718"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="670"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="720"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="672"/>
         <source>Only from library</source>
         <translation>Только из библиотеки</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="722"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="674"/>
         <source>You are about to delete %1 files</source>
         <translation>Вы действительно хотите удалить %1 файлов</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="726"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="678"/>
         <source>Continue?</source>
         <translation>Продолжить?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="769"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="721"/>
         <source>Importing was successful</source>
         <translation>Импорт завершен успешно</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="772"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="724"/>
         <source>Importing failed</source>
         <translation>Ошибка при импорте</translation>
     </message>
@@ -928,22 +925,22 @@
         <translation>Пожалуйста, посетите форум</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="367"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
         <source>About Sayonara</source>
         <translation>О Sayonara</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="370"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="374"/>
         <source>Written by Lucio Carreras</source>
         <translation>Автор Lucio Carreras</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="375"/>
         <source>License</source>
         <translation>Лицензия</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="373"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="377"/>
         <source>Special thanks to %1 and %2 for translating</source>
         <translation>Особая благодарность %1 и %2 за перевод</translation>
     </message>
@@ -955,37 +952,37 @@
 <context>
     <name>GUI_Playlist</name>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="72"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="71"/>
         <source>Ctrl+.</source>
         <translation>Ctrl+.</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="183"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="182"/>
         <source>Please set library path first</source>
         <translation>Пожалуйста, сначала задайте путь к библиотеке</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="187"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="186"/>
         <source>Dynamic playing</source>
         <translation>Динамическое воспроизведение</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="215"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="214"/>
         <source>Playlist empty</source>
         <translation>Плейлист пуст</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="300"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="299"/>
         <source>Radio</source>
         <translation>Радио</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="309"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="308"/>
         <source> Track - </source>
         <translation> Трек - </translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="310"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="309"/>
         <source> Tracks - </source>
         <translation> Треки - </translation>
     </message>
@@ -1189,7 +1186,7 @@
         <translation>Form</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Spectrum.h" line="21"/>
+        <location filename="../GUI/engine/GUI_Spectrum.h" line="45"/>
         <source>&amp;Spectrum</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1405,151 +1402,351 @@ Please choose another folder</source>
     </message>
 </context>
 <context>
+    <name>GUI_Style</name>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="447"/>
+        <source>Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="448"/>
+        <source>Close</source>
+        <translation type="unfinished">Закрыть</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="449"/>
+        <source>Spectrum</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="450"/>
+        <source>Bins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="451"/>
+        <source>Vert. spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="181"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="452"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="456"/>
+        <source>Fading steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="132"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="224"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="453"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="459"/>
+        <source>Hor. spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="156"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="454"/>
+        <source>Rect height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="166"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="455"/>
+        <source>Level</source>
+        <translation type="unfinished">Уровень</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="196"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="457"/>
+        <source>#Rectangles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="212"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="458"/>
+        <source>Rect width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="231"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="460"/>
+        <source>Ver. spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="257"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="461"/>
+        <source>Style settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="271"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="462"/>
+        <source>Preset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="429"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="467"/>
+        <source>Color 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="436"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="468"/>
+        <source>Color 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="473"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="470"/>
+        <source>Color 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="480"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="471"/>
+        <source>Color 4</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GUI_StyleSettings</name>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="192"/>
+        <source>Warning</source>
+        <translation type="unfinished">Предупреждение</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="192"/>
+        <source>Saved everything?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_TagEdit</name>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="32"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="394"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="421"/>
         <source>ID3 Tagger</source>
         <translation>ID3 Тэги</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="63"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="395"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="436"/>
+        <source>Tag
+expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="445"/>
         <source>&lt;</source>
         <translation>&lt;</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="78"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="396"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="553"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="446"/>
         <source>Track</source>
         <translation>Трек</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="108"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="397"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="583"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="447"/>
         <source>&gt;</source>
         <translation>&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="128"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="290"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="398"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="473"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="521"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="593"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="398"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="404"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="409"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="411"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="414"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="417"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="79"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="115"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="184"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="302"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="415"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="639"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="423"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="424"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="427"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="434"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="441"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="449"/>
         <source>all</source>
         <translation>все</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="152"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="399"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="352"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="438"/>
         <source>Path</source>
         <translation>Путь</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="185"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="400"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="275"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="432"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="197"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="401"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="321"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="435"/>
         <source>Tag from path</source>
         <translation>Тэг из пути</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="209"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="402"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="230"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="431"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="263"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="403"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="215"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="430"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="305"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="405"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="130"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="425"/>
         <source>Apply expression</source>
         <translation>Применить выражение</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="320"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="406"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="624"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="448"/>
         <source>Undo expression</source>
         <translation>Отменить выражение</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="362"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="407"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="287"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="433"/>
         <source># Track</source>
         <translation>Треки</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="383"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="408"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="46"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="422"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="458"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="410"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="364"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="439"/>
         <source>Comment</source>
         <translation>Комментарий</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="485"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="412"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="427"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="442"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="497"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="413"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="196"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="428"/>
         <source>Genres</source>
         <translation>Жанры</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="616"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="418"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="450"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="443"/>
         <source>Cancel</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="637"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="419"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="471"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="444"/>
         <source>Ok</source>
         <translation>ОК</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="563"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="416"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="376"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="440"/>
         <source>Discnumber</source>
         <translation>Номер диска</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="322"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="326"/>
         <source>Track </source>
         <translation>Трек </translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="508"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="510"/>
         <source>You are about to insert&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; new album(s) and &lt;b&gt;%2&lt;/b&gt; new artist(s)</source>
         <translation>Вы действительно хотите вставить&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; новых альбомов &lt;b&gt;%2&lt;/b&gt; новых исполнителей</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="513"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="515"/>
         <source>Proceed?</source>
         <translation>Продолжить?</translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
+        <source>Here you can setup an expression for fast tagging</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
+        <source>Valid macros are:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
+        <source>for artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
+        <source>for album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
+        <source>for title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
+        <source>for track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
+        <source>for year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
+        <source>for discnumber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
+        <source>Example: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
+        <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
+        <source>Then your expression should look like this:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
+        <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
+        <source>How to use</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1844,56 +2041,56 @@ Please choose another folder</source>
 <context>
     <name>Library_windowed</name>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="23"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="252"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="258"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="321"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="260"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Комбинация клавиш:&lt;br /&gt;Поиск &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Жанр &lt;span style=&quot; font-weight:600;&quot;&gt;g:&lt;br /&gt;&lt;/span&gt;Путь &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="255"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="352"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="261"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="256"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="357"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="262"/>
         <source>Genre</source>
         <translation>Жанр</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="344"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="362"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="263"/>
         <source>Path</source>
         <translation>Путь</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="263"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="391"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
         <source>Search for title, interprets and albums</source>
         <translation>Искать по названию, исполнителю и альбому</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="400"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="418"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Показать все альбомы, треки и исполнителей</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="428"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="446"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="275"/>
         <source>Music Library  </source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="467"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="485"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="278"/>
         <source>Information</source>
         <translation>Информация</translation>
     </message>

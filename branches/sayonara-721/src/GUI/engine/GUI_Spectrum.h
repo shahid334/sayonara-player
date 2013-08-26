@@ -48,6 +48,7 @@ public:
 signals:
     void sig_show(bool);
     void closeEvent();
+    void sig_right_clicked(int);
 
 protected:
 
@@ -59,6 +60,7 @@ protected:
 public slots:
     void set_spectrum(QList<float>&);
     void psl_stop();
+    void psl_style_update();
 
 private slots:
     void timed_out();
@@ -76,6 +78,7 @@ private:
     QTimer* _timer;
     bool    _timer_stopped;
     EngineColorStyleChooser* _ecsc;
+    bool _update_running;
 
     void resize_steps(int bins, int rects);
 

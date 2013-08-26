@@ -114,6 +114,8 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
     ui_library->set_info_dialog(ui_info_dialog);
     ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
+    ui_style_settings = new GUI_StyleSettings(player);
+
     remote_socket       = new Socket();
 
     _pph = new PlayerPluginHandler(NULL);
@@ -397,6 +399,8 @@ void Application::init_connections(){
 
     CONNECT(ui_level, sig_show(bool), listen, psl_calc_level(bool));
     CONNECT(ui_spectrum, sig_show(bool), listen, psl_calc_spectrum(bool));
+    CONNECT(ui_level, sig_right_clicked(int), ui_style_settings, show(int));
+    CONNECT(ui_spectrum, sig_right_clicked(int), ui_style_settings, show(int));
 
 
     CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist,	psl_similar_artists_available(const QList<int>&));
@@ -428,6 +432,9 @@ void Application::init_connections(){
 
     CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_sr_set_active(bool));
     CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));
+
+    CONNECT (ui_style_settings, sig_style_update(),             ui_spectrum, psl_style_update());
+    CONNECT (ui_style_settings, sig_style_update(),             ui_level, psl_style_update());
 
 
 
@@ -465,6 +472,7 @@ void Application::connect_languages(){
      CONNECT (player, sig_language_changed(),	ui_library,             language_changed());
      CONNECT (player, sig_language_changed(),	ui_playlist,            language_changed());
      CONNECT (player, sig_language_changed(),	ui_socket_setup,        language_changed());
+     CONNECT (player, sig_language_changed(),	ui_style_settings,      language_changed());
 }
 
 void Application::setFiles2Play(QStringList filelist){
