@@ -1191,7 +1191,7 @@
     <message>
         <location filename="../GUI/engine/GUI_Spectrum.h" line="21"/>
         <source>&amp;Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Диапазон</translation>
     </message>
 </context>
 <context>
