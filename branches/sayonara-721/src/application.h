@@ -57,6 +57,7 @@
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
+#include "library/LibraryImporter.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -67,9 +68,6 @@
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "Socket/Socket.h"
 
-
-
-class CLibraryBase;
 class Application : public QObject
 {
     Q_OBJECT
@@ -88,6 +86,7 @@ private:
     Playlists*              playlists;
     Playlist*               playlist;
     CLibraryBase*           library;
+    LibraryImporter*        library_importer;
     LastFM*                 lastfm;
 
     GUI_LevelPainter*              ui_level;

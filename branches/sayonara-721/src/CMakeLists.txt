@@ -60,6 +60,7 @@ SET(HEADERS
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
     library/CLibraryBase.h
+    library/LibraryImporter.h
     library/threads/ReloadThread.h
     library/threads/ImportCachingThread.h
     library/threads/ImportCopyThread.h
@@ -98,6 +99,7 @@ SET(SOURCES
     LyricLookup/LyricLookup.cpp
     library/CLibraryAdmin.cpp
     library/CLibraryBase.cpp
+    library/LibraryImporter.cpp
     library/threads/ReloadThread.cpp
 
     library/threads/ImportCachingThread.cpp

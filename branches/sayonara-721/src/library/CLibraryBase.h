@@ -23,28 +23,21 @@
 #define CLIBRARYBASE_H
 
 #include "library/threads/ReloadThread.h"
-#include "library/threads/ImportCachingThread.h"
-#include "library/threads/ImportCopyThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
-#include "application.h"
 
 #include <QThread>
 #include <QStringList>
 #include <QFileSystemWatcher>
 
 
-
-
-class Application;
 class CLibraryBase : public QObject
 {
     Q_OBJECT
 public:
-    CLibraryBase(Application* app, QObject *parent = 0);
+    CLibraryBase(QWidget* main_window, QObject *parent = 0);
 
     void loadDataFromDb ();
 
@@ -57,7 +50,6 @@ signals:
     void sig_all_artists_loaded(ArtistList&);
     void sig_tracks_for_playlist_available(MetaDataList&);
     void sig_append_tracks_to_playlist(MetaDataList&);
-    void sig_mp3s_loaded(int);
 
     void sig_should_reload_library();
     void sig_reload_library_finished();
@@ -65,14 +57,10 @@ signals:
     void sig_reloading_library(QString &);
     void sig_libpath_set(QString&);
 
-    void sig_import_result(bool);
     void sig_change_id3_tags(const MetaDataList&);
 
     void sig_delete_answer(QString);
     void sig_play_next_tracks(const MetaDataList&);
-
-
-
 
 
 public slots:
@@ -81,12 +69,9 @@ public slots:
 
     void reloadLibrary(bool);
     void clearLibrary();
-    void refresh();
-    void psl_import_files(const QStringList&);
-    void importDirectory(const QString&);
+    void refresh(bool b=true);
 
     void setLibraryPath(QString);
-
 
 
 /* New way */
@@ -114,43 +99,24 @@ public slots:
     void psl_append_tracks(const QList<int>&);
 
 
-
-
-
 private slots:
-   void reload_thread_finished();
-   void file_system_changed(const QString& path);
+
    void library_reloading_state_slot(QString);
    void library_reloading_state_new_block();
-   
-   void import_thread_finished();
-   void import_thread_done();
-   void import_copy_thread_finished();
-   void import_dialog_opened();
-   void import_dialog_closed();
-   
-   void accept_import(const QString&, bool);
-   void cancel_import();
-   void import_progress(int);
+   void reload_thread_finished();
+
 
 
 private:
-    Application*        m_app;
-    CDirectoryReader    m_reader;
+    QWidget*            _main_window;
+    CDatabaseConnector*	_db;
+
+    CDirectoryReader    _reader;
 
     QString				m_library_path;
-    ReloadThread* 		m_thread;
-    ImportCachingThread* m_import_thread;
-    ImportCopyThread*   m_import_copy_thread;
-    QFileSystemWatcher*	m_watcher;
-    QString		m_src_dir;
-    QStringList		m_src_files;
-    int			m_import_f_or_d;
-    GUI_ImportFolder*   m_import_dialog;
 
+    ReloadThread* 		_reload_thread;
 	int					_reload_progress;
-
-    CDatabaseConnector*	_db;
 
     MetaDataList        _vec_md;
     AlbumList			_vec_albums;
@@ -164,17 +130,10 @@ private:
     QList<int>			_selected_albums;
     QList<int>          _selected_tracks;
 
-    QString             _import_to;
-    bool                _import_copy;
-
-
-
     Filter				_filter;
 
     void 				emit_stuff();
     void				delete_tracks(MetaDataList& v_md, int answer);
-
-
 
 };
 

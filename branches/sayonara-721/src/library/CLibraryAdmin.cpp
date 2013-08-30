@@ -18,9 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define IMPORT_FILES 0
-#define IMPORT_DIR 1
-
 
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
@@ -43,220 +40,11 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
     QStringList fileList;
     int num_files = 0;
 
-    m_reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
+    _reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
 
     emit sig_playlist_created(fileList);
 
 }
-
-
-
-void CLibraryBase::importDirectory(const QString& dir){
-    QStringList lst;
-    lst << dir;
-    psl_import_files(lst);
-}
-
-void CLibraryBase::psl_import_files(const QStringList& list){
-    
-    m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
-
-    m_src_files = list;
-    m_import_thread->set_filelist(list);
-
-
-    QDir lib_dir(m_library_path);
-    QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-
-    content.push_front("");
-
-    m_import_dialog->set_folderlist(content);
-    m_import_dialog->set_thread_active(true);
-    m_import_dialog->set_status(tr("Loading files..."));
-    m_import_dialog->show();
-
-    m_import_thread->start();
-
-}
-
-
-void CLibraryBase::import_dialog_opened(){
-    emit sig_reload_library_allowed(false);
-}
-void CLibraryBase::import_dialog_closed(){
-    emit sig_reload_library_allowed(true);
-}
-
-void CLibraryBase::import_progress(int i){
-    m_import_dialog->set_progress(i);
-}
-
-// fired if ok was clicked in dialog
-void CLibraryBase::accept_import(const QString& chosen_item, bool copy){
-
-    // the preload thread may terminate now
-    m_import_thread->set_may_terminate(true);
-    _import_to = chosen_item;
-    _import_copy = copy;
-}
-
-
-// fired if cancel button was clicked in dialog
-void CLibraryBase::cancel_import(){
-
-    qDebug() << "Cancel import";
-
-    // preload thread
-    if(m_import_thread->isRunning()){
-
-        m_import_thread->set_cancelled();
-        m_import_dialog->set_status("Cancelled");
-        m_import_dialog->set_thread_active(false);
-
-        m_import_dialog->close();
-    }
-
-    // copy folder thread
-    else if(m_import_copy_thread->isRunning()){
-
-        qDebug() << "Rollback?";
-        // useless during rollback
-        if(m_import_copy_thread->get_mode() == IMPORT_COPY_THREAD_ROLLBACK){
-            return;
-        }
-
-        qDebug() << "Rollback";
-        m_import_copy_thread->set_cancelled();
-        m_import_dialog->set_status(tr("Cancelled"));
-    }
-
-    // close dialog
-    else{
-        m_import_dialog->close();
-    }
-}
-
-
-// preload thread has cached everything, but maybe ok button has not been clicked yet
-void CLibraryBase::import_thread_done(){
-
-    int n_tracks = m_import_thread->get_n_tracks();
-
-    if(n_tracks > 0){
-        QString status = tr("%1 tracks ready").arg(n_tracks);
-        m_import_dialog->set_status(status);
-    }
-
-    else{
-        m_import_dialog->set_status(tr("No tracks"));
-    }
-}
-
-
-// Caching is done, ok has been clicked
-void CLibraryBase::import_thread_finished(){
-
-    m_import_dialog->set_progress(0);
-    m_import_dialog->set_thread_active(false);
-
-    QStringList files;
-    QMap<QString, MetaData> md_map;
-    QMap<QString, QString> pd_map;
-    
-    m_import_thread->get_extracted_files(files);
-    m_import_thread->get_md_map(md_map);
-    m_import_thread->get_pd_map(pd_map);
-
-    if(md_map.keys().size() == 0){
-        m_import_dialog->set_status(tr("No Tracks"));
-        return;
-    }
-
-    if(!_import_copy){
-        MetaDataList v_md;
-        foreach(QString filename, files){
-            bool has_key = md_map.keys().contains(filename);
-            if(!has_key) continue;
-
-            MetaData md;
-            md = md_map.value(filename);
-            v_md.push_back(md);
-        }
-
-        bool success = _db->storeMetadata(v_md);
-
-        emit sig_import_result(success);
-        emit sig_reload_library_finished();
-
-        refresh();
-
-        return;
-    }
-  
-
-    m_import_dialog->set_thread_active(true);
-
-    m_import_copy_thread->set_vars(_import_to, files, md_map, pd_map);
-    m_import_copy_thread->set_mode(IMPORT_COPY_THREAD_COPY);
-    m_import_copy_thread->start();
-
-}
-
-
-
-void CLibraryBase::import_copy_thread_finished(){
-
-    MetaDataList v_md;
-    m_import_copy_thread->get_metadata(v_md);
-    m_import_dialog->set_thread_active(false);
-
-    // no tracks were copied or rollback was finished
-    if(v_md.size() == 0) {
-        m_import_dialog->set_status(tr("No Tracks"));
-
-        return;
-    }
-
-    // copy was cancelled
-    qDebug() << "Copy folder thread finished " << m_import_copy_thread->get_cancelled();
-    if(m_import_copy_thread->get_cancelled()){
-        m_import_copy_thread->set_mode(IMPORT_COPY_THREAD_ROLLBACK);
-        m_import_copy_thread->start();
-        m_import_dialog->set_status(tr("Rollback..."));
-        m_import_dialog->set_thread_active(true);
-        return;
-    }
-
-    // store to db
-    bool success = _db->storeMetadata(v_md);
-    int n_snd_files = m_import_copy_thread->get_n_files();
-    int n_files_copied = m_import_copy_thread->get_copied_files();
-
-    // error and success messages
-    if(v_md.size() == 0) success = false;
-    if(success){
-        QString str = "";
-        if(n_snd_files == n_files_copied)
-            str =   tr("All files could be imported");
-
-        else
-            str =  tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files);
-
-        QMessageBox::information( m_app->getMainWindow(), tr("Import files"), str);
-        refresh();
-    }
-
-    else{
-        QMessageBox::warning(m_app->getMainWindow(),
-                             tr("Import files"),
-                             tr("Sorry, but tracks could not be imported") + "<br />") +
-                tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
-    }
-
-    m_import_dialog->close();
-    emit sig_import_result(success);
-}
-
 
 
 
@@ -273,15 +61,15 @@ void CLibraryBase::reloadLibrary(bool clear){
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
     if(m_library_path.length() == 0) {
-        QMessageBox msgBox(m_app->getMainWindow());
+        QMessageBox msgBox(_main_window);
         msgBox.setText(tr("Please select your library first"));
         msgBox.exec();
 
-        QString dir = QFileDialog::getExistingDirectory(m_app->getMainWindow(), tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
+        QString dir = QFileDialog::getExistingDirectory(_main_window, tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
 
 
         if(dir.length() < 3) {
-            QMessageBox msgBox(m_app->getMainWindow());
+            QMessageBox msgBox(_main_window);
             msgBox.setText(tr("I said: \"Please select your library first\". Bye bye!"));
             msgBox.exec();
             return;
@@ -299,12 +87,12 @@ void CLibraryBase::reloadLibrary(bool clear){
         clearLibrary();
     }
 
-    if(m_thread->isRunning()){
-        m_thread->terminate();
+    if(_reload_thread->isRunning()){
+        _reload_thread->terminate();
     }
 
-    m_thread->set_lib_path(m_library_path);
-    m_thread->start();
+    _reload_thread->set_lib_path(m_library_path);
+    _reload_thread->start();
 }
 
 
@@ -322,7 +110,7 @@ void CLibraryBase::reload_thread_finished(){
 
 void CLibraryBase::library_reloading_state_new_block(){
 
-    m_thread->pause();
+    _reload_thread->pause();
 
     _db->getAllAlbums(_vec_albums);
     _db->getAllArtists(_vec_artists);
@@ -330,7 +118,7 @@ void CLibraryBase::library_reloading_state_new_block(){
 
     emit_stuff();
 
-    m_thread->goon();
+    _reload_thread->goon();
 
 }
 
