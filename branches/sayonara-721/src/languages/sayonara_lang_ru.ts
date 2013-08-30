@@ -1424,7 +1424,7 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
         <location filename="../GUI/ui_GUI_Style.h" line="425"/>
         <source>Bins</source>
-        <translation>Балки</translation>
+        <translation type="unfinished">Балки</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
@@ -1545,7 +1545,7 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="436"/>
         <source>Tag
 expression</source>
-        <translation>Тег выражения</translation>
+        <translation type="unfinished">Тег выражения</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
@@ -1739,12 +1739,12 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
         <source>Then your expression should look like this:</source>
-        <translation>Тогда выражение должно как следовательно выглядеть:</translation>
+        <translation type="unfinished">Тогда выражение должно как следовательно выглядеть:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
-        <translation>Важно: Никакие теги не могут всплывать несколько раз. Если что-то должно игнорироваться,тогда оно как сделовательно должно быть указано</translation>
+        <translation type="unfinished">Важно: Никакие теги не могут всплывать несколько раз. Если что-то должно игнорироваться,тогда оно как сделовательно должно быть указано</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
