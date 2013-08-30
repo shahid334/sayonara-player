@@ -1187,7 +1187,7 @@
     <message>
         <location filename="../GUI/engine/GUI_Spectrum.h" line="45"/>
         <source>&amp;Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Диапазон</translation>
     </message>
 </context>
 <context>
@@ -1406,31 +1406,31 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
         <location filename="../GUI/ui_GUI_Style.h" line="422"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
+        <translation>Стиль</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
         <location filename="../GUI/ui_GUI_Style.h" line="423"/>
         <source>Close</source>
-        <translation type="unfinished">Закрыть</translation>
+        <translation>Закрыть</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
         <location filename="../GUI/ui_GUI_Style.h" line="424"/>
         <source>Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>Диапазон</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
         <location filename="../GUI/ui_GUI_Style.h" line="425"/>
         <source>Bins</source>
-        <translation type="unfinished"></translation>
+        <translation>Балки</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
         <location filename="../GUI/ui_GUI_Style.h" line="426"/>
         <source>Vert. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Вертикальное расположение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
@@ -1438,7 +1438,7 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_Style.h" line="427"/>
         <location filename="../GUI/ui_GUI_Style.h" line="431"/>
         <source>Fading steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки перехода</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="132"/>
@@ -1446,61 +1446,61 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_Style.h" line="428"/>
         <location filename="../GUI/ui_GUI_Style.h" line="433"/>
         <source>Hor. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Горизонтальное расположение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="156"/>
         <location filename="../GUI/ui_GUI_Style.h" line="429"/>
         <source>Rect height</source>
-        <translation type="unfinished"></translation>
+        <translation>Высота прямоугольника</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="166"/>
         <location filename="../GUI/ui_GUI_Style.h" line="430"/>
         <source>Level</source>
-        <translation type="unfinished">Уровень</translation>
+        <translation>Уровень</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="191"/>
         <location filename="../GUI/ui_GUI_Style.h" line="432"/>
         <source>Rect width</source>
-        <translation type="unfinished"></translation>
+        <translation>Ширина прямоугольника</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="210"/>
         <location filename="../GUI/ui_GUI_Style.h" line="434"/>
         <source>Ver. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Вертикальное расположение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="243"/>
         <location filename="../GUI/ui_GUI_Style.h" line="436"/>
         <source>Style settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки стиля</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="375"/>
         <location filename="../GUI/ui_GUI_Style.h" line="440"/>
         <source>Color 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвет 2</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="382"/>
         <location filename="../GUI/ui_GUI_Style.h" line="441"/>
         <source>Color 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвет 1</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="419"/>
         <location filename="../GUI/ui_GUI_Style.h" line="443"/>
         <source>Color 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвет 3</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="426"/>
         <location filename="../GUI/ui_GUI_Style.h" line="444"/>
         <source>Color 4</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвет 4</translation>
     </message>
 </context>
 <context>
@@ -1509,27 +1509,27 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="119"/>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="359"/>
         <source>Warning</source>
-        <translation type="unfinished">Предупреждение</translation>
+        <translation>Предупреждение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="120"/>
         <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки еще не сохранены&lt;br /&gt;Сохранить?</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="199"/>
         <source>Error</source>
-        <translation type="unfinished">Ошибка</translation>
+        <translation>Ошибка</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="199"/>
         <source>Please specify a name</source>
-        <translation type="unfinished"></translation>
+        <translation>Пожалуйста, укажите имя</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="359"/>
         <source>Save changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить изменения?</translation>
     </message>
 </context>
 <context>
@@ -1545,7 +1545,7 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="436"/>
         <source>Tag
 expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Тег выражения</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
@@ -1689,67 +1689,67 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
         <source>Here you can setup an expression for fast tagging</source>
-        <translation type="unfinished"></translation>
+        <translation>На этом месте может быть указано выражение для группового  тегирования</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
         <source>Valid macros are:</source>
-        <translation type="unfinished"></translation>
+        <translation>Действующие подстановочные знаки:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
         <source>for artist</source>
-        <translation type="unfinished"></translation>
+        <translation>для артиста</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
         <source>for album</source>
-        <translation type="unfinished"></translation>
+        <translation>для альбома</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
         <source>for title</source>
-        <translation type="unfinished"></translation>
+        <translation>для названия</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
         <source>for track number</source>
-        <translation type="unfinished"></translation>
+        <translation>для номера трека</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
         <source>for year</source>
-        <translation type="unfinished"></translation>
+        <translation>для года</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
         <source>for discnumber</source>
-        <translation type="unfinished"></translation>
+        <translation>для номера диска</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
         <source>Example: </source>
-        <translation type="unfinished"></translation>
+        <translation>Пример:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
         <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Метаданные не закончены или недоступны, но все  пути выглядят так:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
         <source>Then your expression should look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Тогда выражение должно как следовательно выглядеть:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
-        <translation type="unfinished"></translation>
+        <translation>Важно: Никакие теги не могут всплывать несколько раз. Если что-то должно игнорироваться,тогда оно как сделовательно должно быть указано</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
         <source>How to use</source>
-        <translation type="unfinished"></translation>
+        <translation>Руководство</translation>
     </message>
 </context>
 <context>
