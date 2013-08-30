@@ -1055,10 +1055,6 @@ Kérjük, válasszon egy másik mappát</translation>
         <translation type="unfinished">Szint</translation>
     </message>
     <message>
-        <source>#Rectangles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Rect width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1068,10 +1064,6 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Style settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1098,7 +1090,19 @@ Kérjük, válasszon egy másik mappát</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Saved everything?</source>
+        <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please specify a name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save changes?</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

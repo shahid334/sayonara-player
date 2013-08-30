@@ -686,12 +686,12 @@
 <context>
     <name>GUI_Level</name>
     <message>
-        <location filename="../GUI/ui_GUI_Level.h" line="462"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="440"/>
         <source>Level</source>
         <translation>Pegel</translation>
     </message>
     <message>
-        <location filename="../GUI/ui_GUI_Level.h" line="463"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="441"/>
         <source>x</source>
         <translation>x</translation>
     </message>
@@ -1250,7 +1250,6 @@
 <context>
     <name>GUI_Spectrum</name>
     <message>
-        <location filename="../GUI/engine/GUI_Form.ui" line="14"/>
         <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Spectrum.h" line="52"/>
         <source>Form</source>
@@ -1480,113 +1479,109 @@ Bitte ein anderes Verzeichnis wählen</translation>
     <name>GUI_Style</name>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="447"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="422"/>
         <source>Style</source>
         <translation>Style</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="448"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="423"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="449"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="424"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="450"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="425"/>
         <source>Bins</source>
         <translation>Balken</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="451"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="426"/>
         <source>Vert. spacing</source>
         <translation>Vert. Abstand</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
         <location filename="../GUI/engine/GUI_Style.ui" line="181"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="452"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="456"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="427"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="431"/>
         <source>Fading steps</source>
         <translation>Übbergangsgeschw.</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="132"/>
-        <location filename="../GUI/engine/GUI_Style.ui" line="224"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="453"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="459"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="203"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="428"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="433"/>
         <source>Hor. spacing</source>
         <translation>Hor. Abstand</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="156"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="454"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="429"/>
         <source>Rect height</source>
         <translation>Rechteck-Höhe</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="166"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="455"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="430"/>
         <source>Level</source>
         <translation>Pegel</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="196"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="457"/>
         <source>#Rectangles</source>
-        <translation>#Rechtecke</translation>
+        <translation type="obsolete">#Rechtecke</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="212"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="458"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="191"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="432"/>
         <source>Rect width</source>
         <translation>Rechteck-Breite</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="231"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="460"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="210"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="434"/>
         <source>Ver. spacing</source>
         <translation>Vert. Abstand</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="257"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="461"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="243"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="436"/>
         <source>Style settings</source>
         <translation>Style Eingstellungen</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="271"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="462"/>
         <source>Preset</source>
-        <translation>Voreinstellung</translation>
+        <translation type="obsolete">Voreinstellung</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="429"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="467"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="375"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="440"/>
         <source>Color 2</source>
         <translation>Farbe 2</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="436"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="468"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="382"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="441"/>
         <source>Color 1</source>
         <translation>Farbe 1</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="473"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="470"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="419"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="443"/>
         <source>Color 3</source>
         <translation>Farbe 3</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="480"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="471"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="426"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="444"/>
         <source>Color 4</source>
         <translation>Farbe 4</translation>
     </message>
@@ -1594,14 +1589,34 @@ Bitte ein anderes Verzeichnis wählen</translation>
 <context>
     <name>GUI_StyleSettings</name>
     <message>
-        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="192"/>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="119"/>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="359"/>
         <source>Warning</source>
         <translation>Warnung</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="192"/>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="120"/>
+        <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
+        <translation>Einstellungen sind noch nicht gespeichert&lt;br /&gt;Speichern?</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="199"/>
+        <source>Error</source>
+        <translation>Fehler</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="199"/>
+        <source>Please specify a name</source>
+        <translation>Bitte Name angeben</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="359"/>
+        <source>Save changes?</source>
+        <translation>Änderungen speichern?</translation>
+    </message>
+    <message>
         <source>Saved everything?</source>
-        <translation>Alles gespeichert?</translation>
+        <translation type="obsolete">Alles gespeichert?</translation>
     </message>
 </context>
 <context>
