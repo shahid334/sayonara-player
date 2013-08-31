@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.0" language="uk_UA" sourcelanguage="ru_RU">
 <context>
     <name>AlternateCovers</name>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="14"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="210"/>
         <source>Search alternative image</source>
-        <translation type="unfinished"></translation>
+        <translation>Пошук альтернативних обкладинок</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="55"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="211"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="82"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="212"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="206"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="214"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Пошук</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="228"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="215"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="265"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="216"/>
         <source>Online search</source>
-        <translation type="unfinished"></translation>
+        <translation>Пошук онлайн</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="275"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="217"/>
         <source>Local search</source>
-        <translation type="unfinished"></translation>
+        <translation>Локальний пошук</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="285"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="218"/>
         <source>Select and preview multiple covers</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибір та попередній перегляд обкладинок</translation>
     </message>
 </context>
 <context>
@@ -57,37 +57,37 @@
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="65"/>
         <source>Please select your library first</source>
-        <translation type="unfinished"></translation>
+        <translation>Будь ласка, оберіть спочатку бібліотеку</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="68"/>
         <source>Open Directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкрити каталог</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="73"/>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
-        <translation type="unfinished"></translation>
+        <translation>Я сказав:&quot;Оберіть спочатку бібліотеку&quot;.До побачення!</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="176"/>
         <source>files</source>
-        <translation type="unfinished"></translation>
+        <translation>файли</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="188"/>
         <source>entries</source>
-        <translation type="unfinished"></translation>
+        <translation>елементи</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="199"/>
         <source>All %1 could be removed</source>
-        <translation type="unfinished"></translation>
+        <translation>Всі %1 видалені</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="203"/>
         <source>%1 of %2 %3 could not be removed</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 із %2 %3 не можуть бути видалені</translation>
     </message>
 </context>
 <context>
