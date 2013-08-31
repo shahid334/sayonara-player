@@ -96,37 +96,37 @@
         <location filename="../GUI/ContextMenu.cpp" line="34"/>
         <location filename="../GUI/ContextMenu.cpp" line="58"/>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Інформація</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="35"/>
         <location filename="../GUI/ContextMenu.cpp" line="59"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="36"/>
         <location filename="../GUI/ContextMenu.cpp" line="60"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити зі списку</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="37"/>
         <location filename="../GUI/ContextMenu.cpp" line="61"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="38"/>
         <location filename="../GUI/ContextMenu.cpp" line="62"/>
         <source>Play next</source>
-        <translation type="unfinished"></translation>
+        <translation>Програти наступним</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="39"/>
         <location filename="../GUI/ContextMenu.cpp" line="63"/>
         <source>Append</source>
-        <translation type="unfinished"></translation>
+        <translation>Додати</translation>
     </message>
 </context>
 <context>
@@ -134,43 +134,43 @@
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="55"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="74"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="95"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="126"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Виконавець</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="149"/>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="202"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Інформація</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="149"/>
         <source>This cover does not exist</source>
-        <translation type="unfinished"></translation>
+        <translation>Обкладинка не існує</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="202"/>
         <source>Some error appeared when updating cover</source>
-        <translation type="unfinished"></translation>
+        <translation>Помилка при оновленні обкладинки</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="225"/>
@@ -178,17 +178,17 @@
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="320"/>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="360"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Пошук</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="229"/>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Стоп</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="417"/>
         <source>Open image files</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкрити файли зображень</translation>
     </message>
 </context>
 <context>
@@ -197,34 +197,34 @@
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="20"/>
         <location filename="../GUI/ui_GUI_Equalizer.h" line="542"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="87"/>
         <location filename="../GUI/ui_GUI_Equalizer.h" line="544"/>
         <source>Save as custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти як свої налаштування</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="135"/>
         <location filename="../GUI/ui_GUI_Equalizer.h" line="546"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation>х</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="271"/>
         <source>This will overwrite your custom preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Це перезапише ваші налаштування</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="272"/>
         <source>Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Продовжити?</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.h" line="47"/>
         <source>&amp;Equalizer</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Еквалайзер</translation>
     </message>
 </context>
 <context>
@@ -232,27 +232,27 @@
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="122"/>
         <source>Choose target directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Виберіть каталог</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="126"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Попередження</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="126"/>
         <source>%1&lt;br /&gt;is no library directory</source>
-        <translation type="unfinished"></translation>
+        <translation>%1&lt;br /&gt;не каталог з бібліотекою</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="150"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="152"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрити</translation>
     </message>
 </context>
 <context>
@@ -261,30 +261,30 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="70"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="150"/>
         <source>Edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Змінити</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="207"/>
         <source>Loved: </source>
-        <translation type="unfinished"></translation>
+        <translation>Улюблена:</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="207"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
         <source>yes</source>
-        <translation type="unfinished"></translation>
+        <translation>так</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="207"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
         <source>no</source>
-        <translation type="unfinished"></translation>
+        <translation>ні</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="329"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="592"/>
         <source>#Albums</source>
-        <translation type="unfinished"></translation>
+        <translation>#Альбомів</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="330"/>
@@ -292,19 +292,19 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="457"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="589"/>
         <source>#Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>#Треків</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="331"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="429"/>
         <source>Playing time</source>
-        <translation type="unfinished"></translation>
+        <translation>Час відтворення</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="333"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="602"/>
         <source>#Artists</source>
-        <translation type="unfinished"></translation>
+        <translation>#Виконавців</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="334"/>
@@ -313,113 +313,113 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="580"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="612"/>
         <source>Filesize</source>
-        <translation type="unfinished"></translation>
+        <translation>Розмір файла</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="336"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="463"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="615"/>
         <source>LIBRARY</source>
-        <translation type="unfinished"></translation>
+        <translation>БІБЛІОТЕКА</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="417"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="446"/>
         <source>Various artists</source>
-        <translation type="unfinished"></translation>
+        <translation>Різні виконавці</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="426"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="607"/>
         <source>by </source>
-        <translation type="unfinished"></translation>
+        <translation>від</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="431"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="577"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Рік</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
         <source>Sampler?</source>
-        <translation type="unfinished"></translation>
+        <translation>Збірник?</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="449"/>
         <source>by</source>
-        <translation type="unfinished"></translation>
+        <translation>від</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="562"/>
         <source>1st</source>
-        <translation type="unfinished"></translation>
+        <translation>1-й</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="565"/>
         <source>2nd</source>
-        <translation type="unfinished"></translation>
+        <translation>2-й</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="568"/>
         <source>3rd</source>
-        <translation type="unfinished"></translation>
+        <translation>3-й</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="571"/>
         <source>th</source>
-        <translation type="unfinished"></translation>
+        <translation>й</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="574"/>
         <source> track on </source>
-        <translation type="unfinished"></translation>
+        <translation>трек в </translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="575"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Виконавець</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="576"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="611"/>
         <source>Length</source>
-        <translation type="unfinished"></translation>
+        <translation>Тривалість</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="578"/>
         <source>Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation>Бітрейт</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="579"/>
         <source>Genre</source>
-        <translation type="unfinished"></translation>
+        <translation>Жанр</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="587"/>
         <source>Various tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Різні треки</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="597"/>
         <source>on </source>
-        <translation type="unfinished"></translation>
+        <translation>на</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="699"/>
         <source>Last.fm not active</source>
-        <translation type="unfinished"></translation>
+        <translation>Last.fm не активне</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="792"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Помилка</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="793"/>
         <source>ID3 tags could not be changed</source>
-        <translation type="unfinished"></translation>
+        <translation>ID3 теги не можуть бути замінені</translation>
     </message>
 </context>
 <context>
@@ -428,48 +428,48 @@
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="26"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="192"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="81"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="194"/>
         <source>Last.fm</source>
-        <translation type="unfinished"></translation>
+        <translation>Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="102"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="195"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation>х</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="141"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="198"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Виконавець</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="146"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="199"/>
         <source>User</source>
-        <translation type="unfinished"></translation>
+        <translation>Користувач</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="151"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="200"/>
         <source>Tag</source>
-        <translation type="unfinished"></translation>
+        <translation>Тег</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="156"/>
         <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="201"/>
         <source>Recommended</source>
-        <translation type="unfinished"></translation>
+        <translation>Рекомендоване</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.h" line="43"/>
         <source>Last.&amp;fm</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Last.fm</translation>
     </message>
 </context>
 <context>
@@ -478,31 +478,31 @@
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="14"/>
         <location filename="../GUI/ui_GUI_LanguageChooser.h" line="119"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Мова</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="25"/>
         <location filename="../GUI/ui_GUI_LanguageChooser.h" line="120"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="56"/>
         <location filename="../GUI/ui_GUI_LanguageChooser.h" line="123"/>
         <source>English</source>
-        <translation type="unfinished"></translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="71"/>
         <location filename="../GUI/ui_GUI_LanguageChooser.h" line="125"/>
         <source>Select Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Оберіть мову</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="95"/>
         <location filename="../GUI/ui_GUI_LanguageChooser.h" line="126"/>
         <source>For new languages I am always looking for translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Для нових мов я постійно шукаю перекладачів</translation>
     </message>
 </context>
 <context>
@@ -511,55 +511,55 @@
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="14"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="199"/>
         <source>Last.fm Preferences</source>
-        <translation type="unfinished"></translation>
+        <translation>Налаштування Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="55"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="201"/>
         <source>Username</source>
-        <translation type="unfinished"></translation>
+        <translation>Ім&apos;я користувача</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="67"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="202"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Активувати</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="79"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="203"/>
         <source>Show error messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Показувати помилки</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="91"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="204"/>
         <source>Password</source>
-        <translation type="unfinished"></translation>
+        <translation>Пароль</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="133"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="206"/>
         <source>Propose ID3 corrections</source>
-        <translation type="unfinished"></translation>
+        <translation>Пропонувати виправлення для ID3</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="148"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="207"/>
         <source>Clear session key</source>
-        <translation type="unfinished"></translation>
+        <translation>Очистити ключ сесії</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="222"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="210"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="237"/>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="211"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити</translation>
     </message>
 </context>
 <context>
@@ -567,12 +567,12 @@
     <message>
         <location filename="../GUI/ui_GUI_Level.h" line="462"/>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Рівень</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Level.h" line="463"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation>х</translation>
     </message>
 </context>
 <context>
@@ -581,12 +581,12 @@
         <location filename="../GUI/engine/GUI_LevelPainter.ui" line="26"/>
         <location filename="../GUI/ui_GUI_LevelPainter.h" line="74"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_LevelPainter.h" line="43"/>
         <source>Le&amp;vel</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Рівень</translation>
     </message>
 </context>
 <context>
@@ -594,18 +594,18 @@
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="110"/>
         <source>Ctrl+.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="119"/>
         <source>Ctrl+?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+?</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Назва</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
@@ -613,7 +613,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Виконавець</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
@@ -621,7 +621,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
@@ -629,31 +629,31 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Рік</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Dur.</source>
-        <translation type="unfinished"></translation>
+        <translation>Трив.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Bitrate</source>
-        <translation type="unfinished"></translation>
+        <translation>Бітрейт</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Filesize</source>
-        <translation type="unfinished"></translation>
+        <translation>Розмір файла</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>Тривалість</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
@@ -661,42 +661,42 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>#Tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>#Треків</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="616"/>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Інформація</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="670"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Попередження</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="672"/>
         <source>Only from library</source>
-        <translation type="unfinished"></translation>
+        <translation>Тільки з бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="674"/>
         <source>You are about to delete %1 files</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви дійсно бажаєте видалити %1 файлів</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="678"/>
         <source>Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Продовжити?</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="721"/>
         <source>Importing was successful</source>
-        <translation type="unfinished"></translation>
+        <translation>Імпорт завершено успішно</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="724"/>
         <source>Importing failed</source>
-        <translation type="unfinished"></translation>
+        <translation>Помилка при імпорті</translation>
     </message>
 </context>
 <context>
