@@ -1158,87 +1158,87 @@
         <location filename="../GUI/stream/GUI_Stream.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="210"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="79"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="212"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Ім&apos;я</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="96"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="213"/>
         <source>Webstreams</source>
-        <translation type="unfinished"></translation>
+        <translation>Веб-потік</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="117"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="214"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation>х</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="143"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="216"/>
         <source>Type name you wanna save the stream as</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти як</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="158"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="218"/>
         <source>Url</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="185"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="220"/>
         <source>Enter stream url</source>
-        <translation type="unfinished"></translation>
+        <translation>Введіть URL потока</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="214"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="223"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="253"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="227"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="313"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="231"/>
         <source>Start stream</source>
-        <translation type="unfinished"></translation>
+        <translation>Розпочати стрімінг</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="316"/>
         <location filename="../GUI/ui_GUI_Stream.h" line="233"/>
         <source> Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Розпочати</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="90"/>
         <source>Radio</source>
-        <translation type="unfinished"></translation>
+        <translation>Радіо</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="209"/>
         <source>new</source>
-        <translation type="unfinished"></translation>
+        <translation>нове</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="222"/>
         <source>Really wanna delete %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви дійсно бажаєте видалити %1?</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.h" line="58"/>
         <source>&amp;Webstreams</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Веб-потоки</translation>
     </message>
 </context>
 <context>
@@ -1249,65 +1249,66 @@
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="203"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="209"/>
         <source>Stream Recorder</source>
-        <translation type="unfinished"></translation>
+        <translation>Запис потоку</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="25"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="204"/>
         <source>Target path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Шлях:</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="75"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="206"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="96"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="207"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Оk</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="151"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="210"/>
         <source>Only complete tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Тільки повні треки</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="163"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="211"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Активувати</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="184"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="212"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="214"/>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="214"/>
         <source>Create session folder</source>
-        <translation type="unfinished"></translation>
+        <translation>Створювати каталог для сесії</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.cpp" line="81"/>
         <source>Choose target directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибрати каталог</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.cpp" line="139"/>
         <source>Could not create directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Не вдалось створити каталог</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.cpp" line="139"/>
         <source> could not be created
 Please choose another folder</source>
-        <translation type="unfinished"></translation>
+        <translation>не може бути створений.
+Будь ласка, виберіть інший каталог</translation>
     </message>
 </context>
 <context>
@@ -1316,31 +1317,31 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
         <location filename="../GUI/ui_GUI_Style.h" line="444"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
+        <translation>Стиль</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
         <location filename="../GUI/ui_GUI_Style.h" line="445"/>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Закрити</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
         <location filename="../GUI/ui_GUI_Style.h" line="446"/>
         <source>Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>Діапазон</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
         <location filename="../GUI/ui_GUI_Style.h" line="447"/>
         <source>Bins</source>
-        <translation type="unfinished"></translation>
+        <translation>Балки</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
         <location filename="../GUI/ui_GUI_Style.h" line="448"/>
         <source>Vert. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Верт. розположення</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
@@ -1348,7 +1349,7 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_Style.h" line="449"/>
         <location filename="../GUI/ui_GUI_Style.h" line="453"/>
         <source>Fading steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Налаштування переходу</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="132"/>
@@ -1356,61 +1357,61 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_Style.h" line="450"/>
         <location filename="../GUI/ui_GUI_Style.h" line="455"/>
         <source>Hor. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Гориз. розположення</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="156"/>
         <location filename="../GUI/ui_GUI_Style.h" line="451"/>
         <source>Rect height</source>
-        <translation type="unfinished"></translation>
+        <translation>Висота прямокутника</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="166"/>
         <location filename="../GUI/ui_GUI_Style.h" line="452"/>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Рівень</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="191"/>
         <location filename="../GUI/ui_GUI_Style.h" line="454"/>
         <source>Rect width</source>
-        <translation type="unfinished"></translation>
+        <translation>Ширина прямокутника</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="210"/>
         <location filename="../GUI/ui_GUI_Style.h" line="456"/>
         <source>Ver. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Верт. розположення</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="243"/>
         <location filename="../GUI/ui_GUI_Style.h" line="458"/>
         <source>Style settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Налаштування стилю</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="375"/>
         <location filename="../GUI/ui_GUI_Style.h" line="462"/>
         <source>Color 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Фарба 2</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="382"/>
         <location filename="../GUI/ui_GUI_Style.h" line="463"/>
         <source>Color 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Фарба 1</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="419"/>
         <location filename="../GUI/ui_GUI_Style.h" line="465"/>
         <source>Color 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Фарба 3</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="426"/>
         <location filename="../GUI/ui_GUI_Style.h" line="466"/>
         <source>Color 4</source>
-        <translation type="unfinished"></translation>
+        <translation>Фарба 4</translation>
     </message>
 </context>
 <context>
@@ -1419,27 +1420,27 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="141"/>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Попередження</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="142"/>
         <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Налаштування ще не збережені&lt;br /&gt;Зберегти?</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Помилка</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
         <source>Please specify a name</source>
-        <translation type="unfinished"></translation>
+        <translation>Будь ласка, вкажіть ім&apos;я</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
         <source>Save changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберігти зміни?</translation>
     </message>
 </context>
 <context>
@@ -1448,13 +1449,13 @@ Please choose another folder</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="32"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="443"/>
         <source>ID3 Tagger</source>
-        <translation type="unfinished"></translation>
+        <translation>ID3 Теги</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="46"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="444"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Назва</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="79"/>
@@ -1470,196 +1471,196 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="463"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="471"/>
         <source>all</source>
-        <translation type="unfinished"></translation>
+        <translation>все</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="130"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="447"/>
         <source>Apply expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Примінити вираз</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="196"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="450"/>
         <source>Genres</source>
-        <translation type="unfinished"></translation>
+        <translation>Жанри</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="215"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="452"/>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Рік</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="230"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="453"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Виконавець</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="275"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="454"/>
         <source>?</source>
-        <translation type="unfinished"></translation>
+        <translation>?</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="287"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="455"/>
         <source># Track</source>
-        <translation type="unfinished"></translation>
+        <translation>#Трек</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="321"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="457"/>
         <source>Tag from path</source>
-        <translation type="unfinished"></translation>
+        <translation>Тег із шляху</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="339"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="458"/>
         <source>Tag
 expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Тег виразу</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="352"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="460"/>
         <source>Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Шлях</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="364"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="461"/>
         <source>Comment</source>
-        <translation type="unfinished"></translation>
+        <translation>Коментарій</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="376"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="462"/>
         <source>Discnumber</source>
-        <translation type="unfinished"></translation>
+        <translation>Номер диска</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="427"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="464"/>
         <source>Album</source>
-        <translation type="unfinished"></translation>
+        <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="450"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="465"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="471"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="466"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Оk</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="467"/>
         <source>&lt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="553"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="468"/>
         <source>Track</source>
-        <translation type="unfinished"></translation>
+        <translation>Трек</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="583"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="469"/>
         <source>&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="624"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="470"/>
         <source>Undo expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити вираз</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="326"/>
         <source>Track </source>
-        <translation type="unfinished"></translation>
+        <translation>Трек</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="510"/>
         <source>You are about to insert&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; new album(s) and &lt;b&gt;%2&lt;/b&gt; new artist(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви дійсно бажаєте вставити &lt;br /&gt;&lt;b&gt;%1&lt;/b&gt;нових альбомів &lt;b&gt;%2&lt;/b&gt;нових виконавців</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="515"/>
         <source>Proceed?</source>
-        <translation type="unfinished"></translation>
+        <translation>Продовжити?</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
         <source>Here you can setup an expression for fast tagging</source>
-        <translation type="unfinished"></translation>
+        <translation>На цьому місці може бути вказаний вираз для групового тегування</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
         <source>Valid macros are:</source>
-        <translation type="unfinished"></translation>
+        <translation>Дійсні підставні знаки:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
         <source>for artist</source>
-        <translation type="unfinished"></translation>
+        <translation>для виконавця</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
         <source>for album</source>
-        <translation type="unfinished"></translation>
+        <translation>для альбому</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
         <source>for title</source>
-        <translation type="unfinished"></translation>
+        <translation>для назви</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
         <source>for track number</source>
-        <translation type="unfinished"></translation>
+        <translation>для номеру трека</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
         <source>for year</source>
-        <translation type="unfinished"></translation>
+        <translation>для року</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
         <source>for discnumber</source>
-        <translation type="unfinished"></translation>
+        <translation>для номеру диска</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
         <source>Example: </source>
-        <translation type="unfinished"></translation>
+        <translation>Приклад:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
         <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Метадані не закінчені або недоступні, але всі шляхи виглядають так:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
         <source>Then your expression should look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Тоді згідно вираз повинен виглядати:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
-        <translation type="unfinished"></translation>
+        <translation>Важливо:Ніякі теги не можуть з&apos;являтися декілька разів.Якщо щось повино ігноруватись,тоді воно,отже, повинно бути вказане</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
         <source>How to use</source>
-        <translation type="unfinished"></translation>
+        <translation>Інструкція</translation>
     </message>
 </context>
 <context>

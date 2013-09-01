@@ -1430,7 +1430,7 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
         <location filename="../GUI/ui_GUI_Style.h" line="426"/>
         <source>Vert. spacing</source>
-        <translation>Вертикальное расположение</translation>
+        <translation>Верт. расположение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
@@ -1446,7 +1446,7 @@ Please choose another folder</source>
         <location filename="../GUI/ui_GUI_Style.h" line="428"/>
         <location filename="../GUI/ui_GUI_Style.h" line="433"/>
         <source>Hor. spacing</source>
-        <translation>Горизонтальное расположение</translation>
+        <translation>Гориз. расположение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="156"/>
@@ -1470,7 +1470,7 @@ Please choose another folder</source>
         <location filename="../GUI/engine/GUI_Style.ui" line="210"/>
         <location filename="../GUI/ui_GUI_Style.h" line="434"/>
         <source>Ver. spacing</source>
-        <translation>Вертикальное расположение</translation>
+        <translation>Верт. расположение</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="243"/>
@@ -1739,12 +1739,12 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
         <source>Then your expression should look like this:</source>
-        <translation type="unfinished">Тогда выражение должно как следовательно выглядеть:</translation>
+        <translation type="unfinished">Тогда следовательно выражение должно выглядеть:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
-        <translation type="unfinished">Важно: Никакие теги не могут всплывать несколько раз. Если что-то должно игнорироваться,тогда оно как сделовательно должно быть указано</translation>
+        <translation type="unfinished">Важно: Никакие теги не могут всплывать несколько раз. Если что-то должно игнорироваться,тогда оно сделовательно должно быть указано</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
