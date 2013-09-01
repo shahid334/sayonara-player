@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>%1 of %2 files could be imported</source>
-        <translation>%1 von %2 Dateien wurden importiert</translation>
+        <translation type="obsolete">%1 von %2 Dateien wurden importiert</translation>
     </message>
     <message>
         <source>All %1 could be removed</source>
@@ -52,23 +52,23 @@
     </message>
     <message>
         <source>%1 tracks ready</source>
-        <translation>%1 Titel bereit</translation>
+        <translation type="obsolete">%1 Titel bereit</translation>
     </message>
     <message>
         <source>Import files</source>
-        <translation>Dateien importieren</translation>
+        <translation type="obsolete">Dateien importieren</translation>
     </message>
     <message>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
-        <translation>Bitte benutze Importieren im Datei Menu&lt;br /&gt;oder kopiere die Musikstücke in die Sammlung und lade diese neu</translation>
+        <translation type="obsolete">Bitte benutze Importieren im Datei Menu&lt;br /&gt;oder kopiere die Musikstücke in die Sammlung und lade diese neu</translation>
     </message>
     <message>
         <source>Cancelled</source>
-        <translation>Abgebrochen</translation>
+        <translation type="obsolete">Abgebrochen</translation>
     </message>
     <message>
         <source>Loading files...</source>
-        <translation>Lade Dateien...</translation>
+        <translation type="obsolete">Lade Dateien...</translation>
     </message>
     <message>
         <source>Please select your library first</source>
@@ -76,23 +76,23 @@
     </message>
     <message>
         <source>No Tracks</source>
-        <translation>Keine Titel</translation>
+        <translation type="obsolete">Keine Titel</translation>
     </message>
     <message>
         <source>Sorry, but tracks could not be imported</source>
-        <translation>Leider konnten die Musiktitel nicht importiert werden</translation>
+        <translation type="obsolete">Leider konnten die Musiktitel nicht importiert werden</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation>Keine Titel</translation>
+        <translation type="obsolete">Keine Titel</translation>
     </message>
     <message>
         <source>Rollback...</source>
-        <translation>Rückgängig...</translation>
+        <translation type="obsolete">Rückgängig...</translation>
     </message>
     <message>
         <source>All files could be imported</source>
-        <translation>Alle Dateien konnten importiert werden</translation>
+        <translation type="obsolete">Alle Dateien konnten importiert werden</translation>
     </message>
     <message>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
@@ -470,11 +470,11 @@
     <name>GUI_LevelPainter</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <source>Le&amp;vel</source>
-        <translation type="unfinished">Szi&amp;nt</translation>
+        <translation>Szi&amp;nt</translation>
     </message>
 </context>
 <context>
@@ -541,11 +541,11 @@
     </message>
     <message>
         <source>Ctrl+.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <source>Ctrl+?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+?</translation>
     </message>
     <message>
         <source>Dur.</source>
@@ -675,19 +675,19 @@
     </message>
     <message>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright</translation>
     </message>
     <message>
         <source>&amp;Library</source>
-        <translation type="unfinished">könyvtár</translation>
+        <translation>&amp;Könyvtár</translation>
     </message>
     <message>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <source>Special thanks to %1 and %2 for translating</source>
@@ -718,11 +718,11 @@
     </message>
     <message>
         <source>Ctrl+.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <source>Please set library path first</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérem válasszon könyvtárat</translation>
     </message>
 </context>
 <context>
@@ -862,7 +862,7 @@
     <name>GUI_Spectrum</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <source>&amp;Spectrum</source>
@@ -1052,7 +1052,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation type="unfinished">Szint</translation>
+        <translation>Szint</translation>
     </message>
     <message>
         <source>Rect width</source>
@@ -1095,7 +1095,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Hiba</translation>
     </message>
     <message>
         <source>Please specify a name</source>
@@ -1410,6 +1410,53 @@ expression</source>
     </message>
 </context>
 <context>
+    <name>LibraryImporter</name>
+    <message>
+        <source>Loading files...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 tracks ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No tracks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Tracks</source>
+        <translation type="obsolete">Keine Titel</translation>
+    </message>
+    <message>
+        <source>Rollback...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>All files could be imported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 of %2 files could be imported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sorry, but tracks could not be imported</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancelled</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LibrarySetup</name>
     <message>
         <source>Form</source>
@@ -1520,7 +1567,7 @@ expression</source>
     <name>PlayerPlugin</name>
     <message>
         <source>Ctrl+</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+</translation>
     </message>
 </context>
 <context>
@@ -1562,7 +1609,7 @@ expression</source>
     </message>
     <message>
         <source>PlaylistEntrySmall</source>
-        <translation type="unfinished"></translation>
+        <translation>PlaylistEntrySmall</translation>
     </message>
 </context>
 <context>
@@ -1779,7 +1826,7 @@ expression</source>
     </message>
     <message>
         <source>Copyright 2011-2013</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright 2011-2013</translation>
     </message>
     <message>
         <source>Library Path</source>

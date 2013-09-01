@@ -1897,13 +1897,9 @@ expression</source>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="102"/>
-        <source>No tracks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../library/LibraryImporter.cpp" line="122"/>
         <location filename="../library/LibraryImporter.cpp" line="163"/>
-        <source>No Tracks</source>
+        <source>No tracks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
