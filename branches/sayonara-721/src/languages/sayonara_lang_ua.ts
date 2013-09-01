@@ -1113,7 +1113,7 @@
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="160"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="165"/>
         <source>Startup options</source>
-        <translation>При запуску додатку</translation>
+        <translation>При запуску додатка</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="46"/>
@@ -1440,7 +1440,7 @@ Please choose another folder</source>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
         <source>Save changes?</source>
-        <translation>Зберігти зміни?</translation>
+        <translation>Зберегти зміни?</translation>
     </message>
 </context>
 <context>
@@ -1775,7 +1775,7 @@ expression</source>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="14"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="250"/>
         <source>Dialog</source>
-        <translation>Діалог</translation>
+        <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="91"/>
@@ -1888,34 +1888,34 @@ expression</source>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="83"/>
         <source>Loading files...</source>
-        <translation>Завантаження файлів</translation>
+        <translation>Завантаження файлів...</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="97"/>
         <source>%1 tracks ready</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 треків готові</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="102"/>
         <location filename="../library/LibraryImporter.cpp" line="122"/>
         <location filename="../library/LibraryImporter.cpp" line="163"/>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Немає треків</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="173"/>
         <source>Rollback...</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкат...</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="188"/>
         <source>All files could be imported</source>
-        <translation type="unfinished"></translation>
+        <translation>Всі файли можуть імпортуватись</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="191"/>
         <source>%1 of %2 files could be imported</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 із %2 файлів можуть імпортуватись</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="193"/>
@@ -1926,17 +1926,17 @@ expression</source>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="199"/>
         <source>Sorry, but tracks could not be imported</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибачте,але треки не можуть бути імпортовані</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="200"/>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Будь ласка, використовуйте функцію імпорту у файловому меню &lt;br /&gt; або перемістіть треки в бібліотеку та примініть &quot;Перезавантаження бібліотеки&quot;</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="254"/>
         <source>Cancelled</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінено</translation>
     </message>
 </context>
 <context>
