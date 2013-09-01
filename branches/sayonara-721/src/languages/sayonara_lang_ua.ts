@@ -705,43 +705,43 @@
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="17"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="157"/>
         <source>Notification settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Налаштування повідомлень</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="43"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="158"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Активувати</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="64"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="159"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="80"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="162"/>
         <source>Standard</source>
-        <translation type="unfinished"></translation>
+        <translation>Стандарт</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="117"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="164"/>
         <source>Timeout (ms)</source>
-        <translation type="unfinished"></translation>
+        <translation>Затримка(мс)</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="131"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="165"/>
         <source>Notifications</source>
-        <translation type="unfinished"></translation>
+        <translation>Повідомлення</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="161"/>
         <location filename="../GUI/ui_GUI_Notifications.h" line="166"/>
         <source>Icon scaling</source>
-        <translation type="unfinished"></translation>
+        <translation>Розмір іконки</translation>
     </message>
 </context>
 <context>
@@ -749,126 +749,126 @@
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="81"/>
         <source>Sayonara Player</source>
-        <translation type="unfinished"></translation>
+        <translation>Sayonara Player</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="83"/>
         <source>Written by</source>
-        <translation type="unfinished"></translation>
+        <translation>Автор</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="84"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>Copyright</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="238"/>
         <source>&amp;Library</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Бібліотека</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="433"/>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Попередження</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="433"/>
         <source>Cannot login to Last.fm</source>
-        <translation type="unfinished"></translation>
+        <translation>Не вдається ввійти у Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="612"/>
         <source>Ctrl+P</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+P</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="623"/>
         <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+L</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="859"/>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Інформація</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="860"/>
         <source>A new version is available!</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступна нова версія!</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="38"/>
         <source>Media files</source>
-        <translation type="unfinished"></translation>
+        <translation>Медіа файли</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="53"/>
         <source>Open Media files</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкрити медіа файли</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="62"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="86"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="219"/>
         <source>Open Directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкрити каталог</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="79"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="102"/>
         <source>No library path</source>
-        <translation type="unfinished"></translation>
+        <translation>Нема шляху до бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="79"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="103"/>
         <source>Please select library path first</source>
-        <translation type="unfinished"></translation>
+        <translation>Будь ласка, виберіть спочатку бібліотеку</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="113"/>
         <source>Import Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Імпорт файлів</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="237"/>
         <source>Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Бібліотека</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="238"/>
         <source>Do you want to reload the Library?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви дійсно бажаєте  перезавантажити бібліотеку?</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="331"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Допомога</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="331"/>
         <source>Please visit the forum at</source>
-        <translation type="unfinished"></translation>
+        <translation>Будь ласка, завітайте до форуму</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
         <source>About Sayonara</source>
-        <translation type="unfinished"></translation>
+        <translation>Про Sayonara</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="374"/>
         <source>Written by Lucio Carreras</source>
-        <translation type="unfinished"></translation>
+        <translation>Автор Lucio Carreras</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="375"/>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>Ліцензія</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="377"/>
         <source>Special thanks to %1 and %2 for translating</source>
-        <translation type="unfinished"></translation>
+        <translation>Особлива подяка %1 и %2за переклад</translation>
     </message>
 </context>
 <context>
@@ -876,37 +876,37 @@
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="71"/>
         <source>Ctrl+.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="182"/>
         <source>Please set library path first</source>
-        <translation type="unfinished"></translation>
+        <translation>Будь ласка,задайте спочатку шлях до бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="186"/>
         <source>Dynamic playing</source>
-        <translation type="unfinished"></translation>
+        <translation>Динамічне відтворення</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="214"/>
         <source>Playlist empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Плейлист порожній</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="299"/>
         <source>Radio</source>
-        <translation type="unfinished"></translation>
+        <translation>Радіо</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="308"/>
         <source> Track - </source>
-        <translation type="unfinished"></translation>
+        <translation>Трек-</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="309"/>
         <source> Tracks - </source>
-        <translation type="unfinished"></translation>
+        <translation>Треки-</translation>
     </message>
 </context>
 <context>
@@ -915,80 +915,80 @@
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="26"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="216"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="85"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="219"/>
         <source>Save as</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти як</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="136"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="222"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="166"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="224"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="205"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="228"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="293"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="231"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Файл&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="306"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="232"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Збережені&lt;br/&gt;плейлисти&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="323"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="233"/>
         <source>Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Плейлисти</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="341"/>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="234"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation>х</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="160"/>
         <source>Overwrite?</source>
-        <translation type="unfinished"></translation>
+        <translation>Перезаписати?</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="187"/>
         <source>Delete?</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити?</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="218"/>
         <source>Open Playlist files</source>
-        <translation type="unfinished"></translation>
+        <translation>Відкрити файли плейлиста</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="267"/>
         <source>Are you sure?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви впевнені?</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.h" line="73"/>
         <source>Pla&amp;ylists</source>
-        <translation type="unfinished"></translation>
+        <translation>Пле&amp;йлисти</translation>
     </message>
 </context>
 <context>
@@ -997,82 +997,82 @@
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="211"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="58"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="213"/>
         <source>Type name you wanna save the stream as</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти як</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="106"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="216"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Ім&apos;я</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="118"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="217"/>
         <source>Url</source>
-        <translation type="unfinished"></translation>
+        <translation>URL</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="145"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="219"/>
         <source>Enter stream url</source>
-        <translation type="unfinished"></translation>
+        <translation>Введіть URL потока</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="186"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="222"/>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Видалити</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="225"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="226"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation>Зберегти</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="285"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="230"/>
         <source>Start stream</source>
-        <translation type="unfinished"></translation>
+        <translation>Розпочати стрімінг</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="288"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="232"/>
         <source> Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Розпочати</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="313"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="233"/>
         <source>Podcasts</source>
-        <translation type="unfinished"></translation>
+        <translation>Подкасти</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="334"/>
         <location filename="../GUI/ui_GUI_Podcasts.h" line="234"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation>х</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="210"/>
         <source>new</source>
-        <translation type="unfinished"></translation>
+        <translation>нове</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="223"/>
         <source>Really wanna delete %1?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви дійсно бажаєте видалити %1?</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="57"/>
         <source>P&amp;odcasts</source>
-        <translation type="unfinished"></translation>
+        <translation>П&amp;одкасти</translation>
     </message>
 </context>
 <context>
@@ -1081,13 +1081,13 @@
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="53"/>
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="121"/>
         <source>You haven&apos;t specified a library path yet</source>
-        <translation type="unfinished"></translation>
+        <translation>Ви ще не вказали шлях до бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="83"/>
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="122"/>
         <source>Set library path</source>
-        <translation type="unfinished"></translation>
+        <translation>Вказати шлях до бібліотеки</translation>
     </message>
 </context>
 <context>
@@ -1097,12 +1097,12 @@
         <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Spectrum.h" line="74"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Spectrum.h" line="45"/>
         <source>&amp;Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Діапазон</translation>
     </message>
 </context>
 <context>
@@ -1113,43 +1113,43 @@
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="160"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="165"/>
         <source>Startup options</source>
-        <translation type="unfinished"></translation>
+        <translation>При запуску додатку</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="46"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="161"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="58"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="162"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>Оk</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="72"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="163"/>
         <source>Load last track on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Вибрати останній відтворюваний трек</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="84"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="164"/>
         <source>Remember time of last track</source>
-        <translation type="unfinished"></translation>
+        <translation>Запам&apos;ятовувати позицію відтворення останнього треку</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="110"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="166"/>
         <source>Load playlist on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Завантажити плейлист</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="139"/>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="167"/>
         <source>Start playing</source>
-        <translation type="unfinished"></translation>
+        <translation>Розпочати відтворення</translation>
     </message>
 </context>
 <context>
