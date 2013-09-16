@@ -162,3 +162,10 @@ void PlaylistItemModel::set_selected(QList<int>& rows){
 bool PlaylistItemModel::is_selected(int row) const {
     return _selected_rows.contains(row);
 }
+
+void PlaylistItemModel::get_metadata(const QList<int>& rows, MetaDataList& v_md){
+
+    v_md.clear();
+    foreach(int row, rows)
+        v_md.push_back( this->_v_meta_data[row] );
+}

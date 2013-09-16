@@ -270,6 +270,7 @@ void Playlist::psl_remove_rows(const QList<int> & rows, bool select_next_row){
     if(select_next_row)
         _v_meta_data[first_row].pl_selected = true;
 
+
     psl_save_playlist_to_storage();
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);

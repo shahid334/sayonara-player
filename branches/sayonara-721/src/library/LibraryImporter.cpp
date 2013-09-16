@@ -119,7 +119,7 @@ void LibraryImporter::caching_thread_finished(){
     _caching_thread->get_pd_map(pd_map);
 
     if(md_map.keys().size() == 0){
-        _import_dialog->set_status(tr("No Tracks"));
+        _import_dialog->set_status(tr("No tracks"));
         return;
     }
 
@@ -160,7 +160,7 @@ void LibraryImporter::copy_thread_finished(){
 
     // no tracks were copied or rollback was finished
     if(v_md.size() == 0) {
-        _import_dialog->set_status(tr("No Tracks"));
+        _import_dialog->set_status(tr("No tracks"));
 
         return;
     }

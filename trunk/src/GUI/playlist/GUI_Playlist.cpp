@@ -47,7 +47,6 @@
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QMacStyle>
-#include <QAbstractListModel>
 #include <QStyleFactory>
 #include <QMessageBox>
 #include <QTextEdit>
@@ -109,7 +108,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     connect(ui->listView, SIGNAL(sig_edit_clicked()), this, SLOT(psl_edit_tracks()));
     connect(ui->listView, SIGNAL(sig_info_clicked()), this, SLOT(psl_info_tracks()));
 
-    connect(ui->listView, SIGNAL(sig_selection_changed(MetaDataList&)), this, SLOT(selection_changed(MetaDataList&)));
+    connect(ui->listView, SIGNAL(sig_sel_changed(const MetaDataList&)), this, SLOT(sel_changed(const MetaDataList&)));
     connect(ui->listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
     connect(ui->listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
 
@@ -221,7 +220,7 @@ void GUI_Playlist::clear_playlist_slot(){
 
 
 // private SLOT: playlist item pressed (init drag & drop)
-void GUI_Playlist::selection_changed(MetaDataList& v_md){
+void GUI_Playlist::sel_changed(const MetaDataList& v_md){
 
     _info_dialog->setMetaData(v_md);
 
@@ -229,7 +228,7 @@ void GUI_Playlist::selection_changed(MetaDataList& v_md){
 }
 
 
-void GUI_Playlist::double_clicked(int row ){
+void GUI_Playlist::double_clicked(int row){
     emit selected_row_changed(row);
 }
 

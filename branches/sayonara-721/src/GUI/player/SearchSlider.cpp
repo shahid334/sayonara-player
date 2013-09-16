@@ -53,6 +53,8 @@ bool SearchSlider::event(QEvent* e){
     QMouseEvent* mouseEvent;
     QWheelEvent* wheelEvent;
 
+    if(isEnabled())
+        e->accept();
 
     switch(e->type()){
         case QEvent::MouseTrackingChange:
@@ -62,11 +64,13 @@ bool SearchSlider::event(QEvent* e){
         break;
 
 		case QEvent::MouseButtonPress:
-            if(!isEnabled()) break;
-			_searching = true;
 
-			e->ignore();
-			mouseEvent = (QMouseEvent*) e;
+            if(!isEnabled()) break;
+
+            _searching = true;
+
+
+            mouseEvent = (QMouseEvent*) e;
 
 			if(this->orientation() == Qt::Horizontal)
 				percent = (mouseEvent->x() * 100) / this->width();
@@ -83,7 +87,7 @@ bool SearchSlider::event(QEvent* e){
 
 		case QEvent::MouseMove:
             if(!isEnabled()) break;
-			e->ignore();
+
 			mouseEvent = (QMouseEvent*) e;
 
 			if(this->orientation() == Qt::Horizontal)
@@ -103,7 +107,7 @@ bool SearchSlider::event(QEvent* e){
 		case QEvent::MouseButtonRelease:
 
             if(!isEnabled()) break;
-			e->ignore();
+
 			mouseEvent = (QMouseEvent*) e;
 
 			if(this->orientation() == Qt::Horizontal)
@@ -122,12 +126,8 @@ bool SearchSlider::event(QEvent* e){
 
         case QEvent::Wheel:
 
-        if(!isEnabled()) break;
-            if(this->orientation() == Qt::Horizontal){
-                e->ignore();
-                break;
-            }
-            e->ignore();
+            if(!isEnabled()) break;
+            if(this->orientation() == Qt::Horizontal) break;
 
             wheelEvent = (QWheelEvent*) e;
 
@@ -138,8 +138,8 @@ bool SearchSlider::event(QEvent* e){
             break;
 
 		default:
-
             QSlider::event(e);
+
 			break;
 	}
 

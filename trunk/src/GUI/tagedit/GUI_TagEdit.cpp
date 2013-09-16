@@ -66,6 +66,7 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     complete_list << TAG_ALBUM;
     complete_list << TAG_TRACK_NUM;
     complete_list << TAG_YEAR;
+    complete_list << TAG_DISC;
     QCompleter* completer = new QCompleter(complete_list);
     ui->le_tag_from_path->setCompleter(completer);
 
@@ -75,6 +76,8 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
     ui->btn_tag_help->setVisible(false);
     ui->btn_tag_undo->setVisible(false);
     ui->label_8->setVisible(false);
+    ui->label_10->setVisible(false);
+    ui->line->setVisible(false);
 
     connect(ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
     connect(ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
@@ -318,7 +321,8 @@ void GUI_TagEdit::show_metadata(){
     this->ui->le_genres->setText(md.genres.join(","));
     this->ui->sb_discnumber->setValue(md.discnumber);
 
-    this->ui->lab_filepath->setText(QDir(md.filepath).absolutePath());
+    this->ui->lab_filepath->clear();
+    this->ui->lab_filepath->insertPlainText(QDir(md.filepath).absolutePath());
     this->ui->lab_track_num->setText(tr("Track ") + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
 
     tag_from_path_text_changed(this->ui->le_tag_from_path->text());
@@ -358,8 +362,6 @@ void GUI_TagEdit::save_metadata(){
     _vec_tmp_metadata[_cur_idx].genres = this->ui->le_genres->text().split(QRegExp(",|\\|/|;|-"));
     _vec_tmp_metadata[_cur_idx].discnumber = this->ui->sb_discnumber->value();
 
-
-    _vec_tmp_metadata[_cur_idx].print();
 }
 
 
@@ -518,12 +520,11 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
          if(ret != QMessageBox::Yes) return false;
     }
 
-    qDebug() << "insert albums into db";
     foreach(Album album, new_albums){
         _db->insertAlbumIntoDatabase(album);
     }
 
-    qDebug() << "insert artists into db";
+
     foreach(Artist artist, new_artists){
         _db->insertArtistIntoDatabase(artist);
     }
@@ -568,7 +569,8 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
              str.contains(TAG_ALBUM) ||
              str.contains(TAG_ARTIST) ||
              str.contains(TAG_TRACK_NUM) ||
-             str.contains(TAG_YEAR);
+             str.contains(TAG_YEAR) ||
+             str.contains(TAG_DISC);
  }
 
 
@@ -593,8 +595,6 @@ bool GUI_TagEdit::remove_aftertag_str(QString& str, QString aftertag, bool looki
         if(str.size() == 0) break;
     }
 
-    qDebug() << "false";
-
     return false;
 
 }
@@ -603,6 +603,7 @@ bool GUI_TagEdit::remove_aftertag_str(QString& str, QString aftertag, bool looki
 bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
 
     QString str = this->ui->le_tag_from_path->text();
+    QString tag_str = str;
 
     md = _vec_org_metadata[idx];
 
@@ -612,10 +613,6 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
 
     QString path = QDir(_vec_org_metadata[idx].filepath).absolutePath();
     QString path_copy; // we wait until extension is removed
-
-
-    QString tag_str = str;
-
 
     // get && remove extensions
     int cur_pos=0;
@@ -638,6 +635,11 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
     tag_positions[tag_str.indexOf(TAG_ARTIST)] = TAG_ARTIST;
     tag_positions[tag_str.indexOf(TAG_TRACK_NUM)] = TAG_TRACK_NUM;
     tag_positions[tag_str.indexOf(TAG_YEAR)] = TAG_YEAR;
+    tag_positions[tag_str.indexOf(TAG_DISC)] = TAG_DISC;
+
+    int min_of_idx = 100000;
+    foreach(int i, tag_positions.keys())
+        if(i < min_of_idx && i >= 0) min_of_idx = i;
 
 
     QString tmp_str;
@@ -647,19 +649,28 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
 
     for(int i=tag_str.size(); i>=0; i--){
 
+        // we are only interested in an i where the tag is
         if(!tag_positions.contains(i)) continue;
 
+        // e.g. title, artist, album, year
+        int tag_key = i;
         QString tag_value = tag_positions[i];
 
+
+
+
         bool looking_for_num = false;
-        if(tag_value == TAG_YEAR || tag_value == TAG_TRACK_NUM)
+        if(tag_value == TAG_YEAR || tag_value == TAG_TRACK_NUM || tag_value == TAG_DISC)
             looking_for_num = true;
 
         // found a tag at i. We are only interested in
         // everything what happens right of the tag
         tmp_str = tag_str.right(tag_str.size() - i);
         QString after_tag = "";
+
+        // remove delim signs after the tag string
         after_tag = tmp_str.right(tmp_str.size() - tag_positions[i].length());
+
 
         // remove everything after tag if it's like int the tag string
         if(!remove_aftertag_str(path, after_tag, looking_for_num)) {
@@ -676,14 +687,12 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
         // tag does not interest anymore. Remove
         tag_str = tag_str.left(i);
 
+        if(tag_key == min_of_idx){
+            start_positions_path[tag_value] = path.lastIndexOf(tag_str) + tag_str.length();
+            break;
+        }
 
         last_tag = tag_value;
-
-        if(tag_str.size() == 1){
-            QString last_sign = tag_str.left(1);
-            remove_aftertag_str(path, last_sign, false);
-            start_positions_path[last_tag] = path.size() + 1;
-        }
     }
 
     if(!success) {
@@ -716,6 +725,10 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
         else if(final_key == TAG_TRACK_NUM){
             md.track_num = final_value.toInt();
         }
+
+        else if(final_key == TAG_DISC){
+            md.discnumber = final_value.toInt();
+        }
     }
 
     return true;
@@ -738,22 +751,26 @@ void GUI_TagEdit::tag_from_path_text_changed(const QString& str){
 
 void GUI_TagEdit::help_tag_clicked(){
 
-    QString info_str = QString("Here you can setup an expression for fast tagging") + "<br />" +
+    QString info_str = tr("Here you can setup an expression for fast tagging") + "<br />" +
             "<br />" +
-            "Valid macros are: <br />" +
-            "&lt;ARTIST&gt;" + "<br />" +
-            "&lt;ALBUM&gt;" + "<br />" +
-            "&lt;TITLE&gt;" + "<br />" +
-            "&lt;TRACK&gt;" + "<br />" +
-            "&lt;YEAR&gt;" + "<br />" +
+            tr("Valid macros are:") + CAR_RET +
+            "&lt;ar&gt;" + tr("for artist") + CAR_RET +
+            "&lt;al&gt;" + tr("for album") + CAR_RET +
+            "&lt;t&gt;" +  tr("for title") + CAR_RET +
+            "&lt;nr&gt;" + tr("for track number") + CAR_RET +
+            "&lt;y&gt;" +  tr("for year") + CAR_RET +
+            "&lt;d&gt;" +  tr("for discnumber") + CAR_RET +
             "<br /><br />" +
-            "Example: " + "<br />" +
-            "Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this: <br />" +
-            "/home/lucky/Sound/Megadeth/Megadeth - 1997 - Cryptic writings/01 - Trust.mp3<br />" +
-            "Then your expression should look like this: " +
-            "/&lt;ARTIST&gt; - &lt;YEAR&gt; - &lt;ALBUM&gt;/&lt;TRACK&gt; - &lt;TITLE&gt;";
+            tr("Example: ") +  CAR_RET +
+            tr("Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:") + CAR_RET +
+            "/home/lucky/Sound/Megadeth/Megadeth - 1997 - Cryptic writings/01 - Trust.mp3" + CAR_RET +
+            tr("Then your expression should look like this:") + CAR_RET +
+            "<b>/&lt;ar&gt; - &lt;y&gt; - &lt;al&gt;/&lt;nr&gt; - &lt;t&gt;</b>" + CAR_RET + CAR_RET +
+            tr("Note that no tag may appear twice. If you want to ignore something you have to write it like") + CAR_RET +
+            "/home/lucky/Sound/Megadeth/Megadeth - 1997 - Cryptic writings/01 - 1997_Trust.mp3" + CAR_RET +
+            "<b>/&lt;ar&gt; - &lt;y&gt; - &lt;al&gt;/&lt;tn&gt; - 1997_&lt;t&gt;</b>";
 
-    QMessageBox::information(NULL, "How to use", info_str);
+    QMessageBox::information(this, tr("How to use"), info_str);
 
 
 }

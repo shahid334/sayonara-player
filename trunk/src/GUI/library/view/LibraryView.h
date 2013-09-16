@@ -43,6 +43,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QLineEdit>
+#include <QDropEvent>
 
 
 class LibraryView : public QTableView{
@@ -61,9 +62,12 @@ signals:
     void sig_play_next_clicked();
     void sig_append_clicked();
     void sig_sortorder_changed(Sort::SortOrder);
-    void sig_pressed(QPoint&, const QModelIndex&);
+
     void sig_no_disc_menu();
     void sig_tab_pressed(bool);
+    void sig_import_files(const QStringList&);
+    void sig_double_clicked(const QList<int>&);
+    void sig_sel_changed(const QList<int>&);
 
 private slots:
     void rc_header_menu_changed(bool b=true);
@@ -78,8 +82,6 @@ private slots:
     void append_clicked();
 
     void edit_changed(QString);
-    void edit_return_clicked();
-
 
 private:
     void rc_menu_init();
@@ -103,7 +105,7 @@ public:
 
     void set_col_sizes();
 
-    QList<int> calc_selections();
+    QList<int> get_selections();
     void force_selections();
     void set_skin(bool dark);
 
@@ -113,9 +115,15 @@ protected:
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
    void keyPressEvent(QKeyEvent* event);
     void resizeEvent(QResizeEvent* event);
+    void dropEvent(QDropEvent* event);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
 
+
+    void 	selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 
 private:
     QWidget* 			_parent;
@@ -136,11 +144,12 @@ private:
     LibraryItemModel* 	_model;
     Sort::SortOrder		_sort_order;
     CustomMimeData*		_mimedata;
-    int                 _view_mode;
+
     bool                _dark;
+    bool                _sel_changed;
 
     int get_min_selected();
-    int get_max_selected();
+
     void goto_row(int row, bool select=false);
 
     /*// calc selections and insert into db

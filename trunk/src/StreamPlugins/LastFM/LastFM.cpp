@@ -45,7 +45,7 @@
 #include <curl/curl.h>
 
 #include <string>
-#include <ctime>
+#include <time.h>
 
 #include <QObject>
 #include <QDebug>
@@ -210,16 +210,10 @@ void LastFM::psl_scrobble(const MetaData& metadata){
 
 	if(!_lfm_check_login())	return;
 
-	time_t rawtime;
-	time(&rawtime);
-
-	tm* ptm = gmtime( &rawtime );
-
-	time_t started = mktime(ptm);
-	if(!ptm->tm_isdst){ // if(no summertime)
-		ptm->tm_hour += 1;
-		started = mktime(ptm);
-	}
+    time_t rawtime, started;
+    rawtime = time(NULL);
+    struct tm* ptm = localtime(&rawtime);
+    started = mktime(ptm);
 
 	QString artist = metadata.artist;
 	QString title = metadata.title;
@@ -230,10 +224,10 @@ void LastFM::psl_scrobble(const MetaData& metadata){
 		sig_data["duration"] = QString::number(metadata.length_ms / 1000);
 		sig_data["method"] = QString("track.scrobble");
 		sig_data["sk"] = _session_key;
-		sig_data["timestamp"] = QString::number((uint)started);
+        sig_data["timestamp"] = QString::number(started);
 		sig_data["track"] = title;
 
-	string post_data;
+    string post_data;
 	QString url = lfm_wa_create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), sig_data, post_data);
 	QString response;
 

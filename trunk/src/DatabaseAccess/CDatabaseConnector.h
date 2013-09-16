@@ -28,11 +28,13 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "GUI/engine/StyleTypes.h"
 
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
 #include <QList>
+
 
 
 using namespace Sort;
@@ -179,8 +181,17 @@ public:
 		QString load_setting_string(QString key, QString def="");
 		int load_setting_int(QString key, int def=0);
 		QStringList load_setting_strlist(QString key, QChar sep=',');
-		 
 
+
+   /************************************
+    *styles
+    ***********************************/
+
+    QList<RawColorStyle> get_raw_color_styles();
+    bool insert_raw_color_style_to_db(const RawColorStyle& rcs);
+    bool update_raw_color_style(const RawColorStyle& rcs);
+    bool raw_color_style_exists(QString name);
+    bool delete_raw_color_style(QString name);
 
 
 
@@ -226,6 +237,10 @@ private:
     bool apply_fixes();
     bool check_and_insert_column(QString tablename, QString column, QString sqltype);
     bool check_and_create_table(QString tablename, QString sql_create_str);
+
+    bool updateAlbumCissearch();
+    bool updateArtistCissearch();
+    bool updateTrackCissearch();
 };
 
 #endif // CDATABASECONNECTOR_H

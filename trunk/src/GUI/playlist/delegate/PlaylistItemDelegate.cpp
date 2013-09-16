@@ -100,11 +100,11 @@ void PlaylistItemDelegate::paint( QPainter *painter, const QStyleOptionViewItem 
 	}
 
 	// standard selected
-	else{
+    else{
 		style = QString("background-color: ") + 
 			col_highlight.name() + ";" + 
 			get_fg_color(highlight_val);
-	}
+    }
 
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
 	_pl_entry->setStyleSheet(style);

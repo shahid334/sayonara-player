@@ -88,7 +88,7 @@
 
 		private slots:
 
-            void selection_changed(MetaDataList&);
+            void sel_changed(const MetaDataList&);
             void double_clicked(int);
             void clear_playlist_slot();
 			void playlist_mode_changed_slot();

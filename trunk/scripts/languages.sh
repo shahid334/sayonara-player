@@ -15,7 +15,7 @@ if [ "$1" = "update" ] ; then
 		STR="$STR ./$f"
 	done
 	
-	linguist $STR	
+#	linguist $STR	
 
 elif [ "$1" = "new" ] ; then
 	lupdate . -ts ./src/languages/sayonara_lang_$2.ts

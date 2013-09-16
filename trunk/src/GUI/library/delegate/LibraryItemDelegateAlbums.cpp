@@ -42,18 +42,18 @@
 
 
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent) {
-	this->_parent = parent;
+    this->_parent = parent;
 
-        QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
-        QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
-        _icon_single_album = QPixmap(icon_path_no_sampler);
-        _icon_multi_album = QPixmap(icon_path_sampler);
+    QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
+    QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
+    _icon_single_album = QPixmap(icon_path_no_sampler);
+    _icon_multi_album = QPixmap(icon_path_sampler);
 
-        _model = model;
+    _model = model;
 
-        QPalette palette = _parent->palette();
+    QPalette palette = _parent->palette();
 
-	_selected_background = QColor(66,78,114);
+    _selected_background = QColor(66,78,114);
 
 }
 
@@ -66,108 +66,108 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 {
     if(!index.isValid()) return;
 
-        QRect rect(option.rect);
+    QRect rect(option.rect);
 
-        painter->save();
+    painter->save();
 
-        int idx_col = _model->calc_shown_col(index.column());
+    int idx_col = _model->calc_shown_col(index.column());
 
-	if(_model->is_selected(index.row())){
-		painter->fillRect(rect, _selected_background);
-	}
+    if(_model->is_selected(index.row())){
+        painter->fillRect(rect, _selected_background);
+    }
 
-        if(idx_col == COL_ALBUM_SAMPLER){
-            int col_width = _parent->columnWidth(0)-4;
-            int row_height = _parent->rowHeight(0)-4;
-            rect.translate(2, 2);
+    if(idx_col == COL_ALBUM_SAMPLER){
+        int col_width = _parent->columnWidth(0)-4;
+        int row_height = _parent->rowHeight(0)-4;
+        rect.translate(2, 2);
 
-            int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
-
-
-            if(num_albums <= 1)
-                painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
-
-            else
-                painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
-        }
+        int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
 
 
-        else if(idx_col == COL_ALBUM_NAME){
+        if(num_albums <= 1)
+            painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
 
-            rect.translate(2, 0);
-            QString name = _model->data(index, Qt::WhatsThisRole).toString();
-            painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
-        }
+        else
+            painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
+    }
 
 
-        else if(idx_col == COL_ALBUM_YEAR){
+    else if(idx_col == COL_ALBUM_NAME){
 
-            rect.translate(-2, 0);
-            int year = _model->data(index, Qt::WhatsThisRole).toInt();
+        rect.translate(2, 0);
+        QString name = _model->data(index, Qt::WhatsThisRole).toString();
+        painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
+    }
 
-            QString year_str = QString::number(year);
-            if(year == 0) year_str = "None";
-            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, year_str);
 
-        }
+    else if(idx_col == COL_ALBUM_YEAR){
 
-        else if(idx_col == COL_ALBUM_N_SONGS){
+        rect.translate(-2, 0);
+        int year = _model->data(index, Qt::WhatsThisRole).toInt();
 
-            rect.translate(-2, 0);
-            QString n_songs = _model->data(index, Qt::WhatsThisRole).toString() + " tracks";
-            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, n_songs);
-        }
+        QString year_str = QString::number(year);
+        if(year == 0) year_str = "None";
+        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, year_str);
 
-        else if(idx_col == COL_ALBUM_DURATION){
+    }
 
-            rect.translate(-2, 0);
-            QString duration = _model->data(index, Qt::WhatsThisRole).toString();
-            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, duration);
-        }
+    else if(idx_col == COL_ALBUM_N_SONGS){
 
-        painter->restore();
+        rect.translate(-2, 0);
+        QString n_songs = _model->data(index, Qt::WhatsThisRole).toString() + " tracks";
+        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, n_songs);
+    }
+
+    else if(idx_col == COL_ALBUM_DURATION){
+
+        rect.translate(-2, 0);
+        QString duration = _model->data(index, Qt::WhatsThisRole).toString();
+        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, duration);
+    }
+
+    painter->restore();
 }
 
 
 QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-	Q_UNUSED(option);
-	Q_UNUSED(index);
+    Q_UNUSED(option);
+    Q_UNUSED(index);
 
-	return QSize(1, _parent->rowHeight(index.row()));
+    return QSize(1, _parent->rowHeight(index.row()));
 }
 
 
 void LibraryItemDelegateAlbums::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex & index) const
 {
-	Q_UNUSED(editor);
-	Q_UNUSED(model);
-	Q_UNUSED(index);
+    Q_UNUSED(editor);
+    Q_UNUSED(model);
+    Q_UNUSED(index);
 }
 
 QWidget *LibraryItemDelegateAlbums::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-	Q_UNUSED(parent);
-	Q_UNUSED(option);
-	Q_UNUSED(index);
-	return 0;
+    Q_UNUSED(parent);
+    Q_UNUSED(option);
+    Q_UNUSED(index);
+    return 0;
 }
 
 
 void LibraryItemDelegateAlbums::setEditorData(QWidget *editor, const QModelIndex & index) const
 {
-	Q_UNUSED(editor);
-	Q_UNUSED(index);
+    Q_UNUSED(editor);
+    Q_UNUSED(index);
 }
 
 void LibraryItemDelegateAlbums::set_skin(bool dark){
-	if(dark){
-		_selected_background = QColor(66,78,114);
-	}
+    if(dark){
+        _selected_background = QColor(66,78,114);
+    }
 
-	else{
-		_selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-	}
+    else{
+        _selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
+    }
 
 }
 

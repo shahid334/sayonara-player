@@ -49,6 +49,7 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/engine/GUI_LevelPainter.h"
 #include "GUI/engine/GUI_Spectrum.h"
+#include "GUI/engine/GUI_StyleSettings.h"
 
 #include "playlist/Playlist.h"
 #include "Engine/Engine.h"
@@ -56,6 +57,7 @@
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
+#include "library/LibraryImporter.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -66,9 +68,6 @@
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "Socket/Socket.h"
 
-
-
-class CLibraryBase;
 class Application : public QObject
 {
     Q_OBJECT
@@ -87,6 +86,7 @@ private:
     Playlists*              playlists;
     Playlist*               playlist;
     CLibraryBase*           library;
+    LibraryImporter*        library_importer;
     LastFM*                 lastfm;
 
     GUI_LevelPainter*              ui_level;
@@ -98,6 +98,7 @@ private:
     GUI_LFMRadioWidget*		ui_lfm_radio;
     PlayerPluginHandler*	_pph;
 
+    GUI_StyleSettings*     ui_style_settings;
     GUI_StreamRecorder*		ui_stream_rec;
     GUI_TagEdit*		ui_id3_editor;
     GUI_InfoDialog*		ui_info_dialog;

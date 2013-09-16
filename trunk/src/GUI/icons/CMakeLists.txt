@@ -64,6 +64,7 @@ SET(ICONS
         logo_small.png
         podcast.png
         playlist.png
+        undo.png
 )
 
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)

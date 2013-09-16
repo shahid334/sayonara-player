@@ -99,13 +99,14 @@ private:
 
 signals:
 
-	void sig_album_dbl_clicked();
-	void sig_artist_dbl_clicked();
+    void sig_album_sel_changed(const QList<int>&);
+    void sig_artist_sel_changed(const QList<int>&);
+    void sig_track_sel_changed(const QList<int>&);
+
+    void sig_album_dbl_clicked(int);
+    void sig_artist_dbl_clicked(int);
 	void sig_track_dbl_clicked(int);
 
-	void sig_artist_pressed(const QList<int>&);
-	void sig_album_pressed(const QList<int>&);
-	void sig_track_pressed(const QList<int>&);
 	void sig_disc_pressed(int);
 
 	void sig_delete_tracks(int);
@@ -122,6 +123,7 @@ signals:
 
 	void sig_info_btn_clicked();
     void sig_no_focus();
+    void sig_import_files(const QStringList&);
 
 public slots:
 	void fill_library_tracks(MetaDataList&);
@@ -140,14 +142,12 @@ public slots:
 
 private slots:
 
-    void artist_pressed(const QModelIndex & = QModelIndex());
-    void artist_released(const QModelIndex & = QModelIndex());
-    void album_pressed(const QModelIndex & = QModelIndex());
-    void disc_pressed(int);
-    void album_released(const QModelIndex & = QModelIndex());
-    void track_pressed(const QModelIndex& = QModelIndex());
-    void track_released(const QModelIndex & = QModelIndex());
+    void artist_sel_changed(const QList<int>&);
+    void album_sel_changed(const QList<int>&);
+    void track_sel_changed(const QList<int>&);
 	void track_info_available(const MetaDataList& v_md);
+
+     void disc_pressed(int);
 
     void artist_tab_pressed(bool);
     void album_tab_pressed(bool);
@@ -195,6 +195,7 @@ private slots:
 
     void timer_timed_out();
     void delete_menu();
+    void import_files(const QStringList&);
 
 
 protected:

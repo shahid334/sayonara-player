@@ -61,6 +61,8 @@ public:
     void set_selected(QList<int>& rows);
     bool is_selected(int row) const ;
 
+    void get_metadata(const QList<int>& rows, MetaDataList& v_md);
+
 protected:
     MetaDataList		_v_meta_data;
     QList<int>          _selected_rows;

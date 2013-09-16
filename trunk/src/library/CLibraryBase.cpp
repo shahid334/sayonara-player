@@ -34,23 +34,17 @@
 #include <QListWidget>
 
 
-CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
+CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
     QObject(parent)
 {
-    m_app = app;
+    _main_window = main_window;
+
     CSettingsStorage* settings = CSettingsStorage::getInstance();
+    _db = CDatabaseConnector::getInstance();
+
     m_library_path = settings->getLibraryPath();
 
-    m_thread = new ReloadThread();
-    m_import_thread = new ImportCachingThread(this);
-    m_import_copy_thread = new ImportCopyThread(this);
-
-
-    m_watcher = new QFileSystemWatcher();
-    m_watcher->addPath(m_library_path);
-    m_import_dialog = 0;
-
-    _db = CDatabaseConnector::getInstance();
+    _reload_thread = new ReloadThread();
 
     QList<int> sortings = settings->getLibSorting();
     _artist_sortorder = (SortOrder) sortings[0];
@@ -61,37 +55,15 @@ CLibraryBase::CLibraryBase(Application* app, QObject *parent) :
     _filter.filtertext = "";
     _reload_progress = 0;
 
-    m_import_dialog = new GUI_ImportFolder(m_app->getMainWindow(), true);
-
-    connect(m_import_dialog, SIGNAL(sig_accepted(const QString&, bool)),
-            this,            SLOT(accept_import(const QString&, bool)));
-    connect(m_import_dialog, SIGNAL(sig_cancelled()),
-            this,            SLOT(cancel_import()));
-    connect(m_import_dialog, SIGNAL(sig_closed()),
-            this,            SLOT(import_dialog_closed()));
-    connect(m_import_dialog, SIGNAL(sig_opened()),
-            this,            SLOT(import_dialog_opened()));
-
-
-    connect(m_watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(file_system_changed(const QString&)));
-    connect(m_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
-    connect(m_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
-    connect(m_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
-
-    connect(m_import_thread, SIGNAL(finished()), this, SLOT(import_thread_finished()));
-    connect(m_import_thread, SIGNAL(sig_done()), this, SLOT(import_thread_done()));
-    connect(m_import_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
-
-    connect(m_import_copy_thread, SIGNAL(finished()), this, SLOT(import_copy_thread_finished()));
-    connect(m_import_copy_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
-
+    connect(_reload_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
+    connect(_reload_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
+    connect(_reload_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
 }
 
 
 
 void CLibraryBase::emit_stuff(){
     emit sig_all_albums_loaded(_vec_albums);
-
     emit sig_all_artists_loaded(_vec_artists);
     emit sig_all_tracks_loaded(_vec_md);
 }
@@ -187,9 +159,10 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
     }
 
 }
-void CLibraryBase::refresh(){
+void CLibraryBase::refresh(bool b){
 
-    psl_filter_changed(_filter, true);
+    if(b)
+        psl_filter_changed(_filter, true);
 }
 
 void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
@@ -411,18 +384,14 @@ void CLibraryBase::setLibraryPath(QString path){
     m_library_path = path;
 }
 
-void CLibraryBase::file_system_changed(const QString& path){
-    Q_UNUSED(path);
 
-    emit sig_should_reload_library();
-}
 
-void CLibraryBase::psl_prepare_artist_for_playlist(){
+void CLibraryBase::psl_prepare_artist_for_playlist(int idx){
     emit sig_tracks_for_playlist_available(_vec_md);
 }
 
 
-void CLibraryBase::psl_prepare_album_for_playlist(){
+void CLibraryBase::psl_prepare_album_for_playlist(int idx){
     emit sig_tracks_for_playlist_available(_vec_md);
 }
 

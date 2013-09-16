@@ -117,7 +117,7 @@ namespace Helper{
     Album get_album_from_metadata(const MetaData& md);
 
 
-    void set_deja_vu_font(QWidget* w);
+    void set_deja_vu_font(QWidget* w, int font_size=-1);
     void set_bin_path(QString str);
 
 
