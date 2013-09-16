@@ -36,10 +36,15 @@
 #include <QDir>
 #include <QDateTime>
 
+static bool _sr_debug = false;
+#define SR_DEBUG if(_sr_debug) qDebug() << Q_FUNC_INFO
+
 
 StreamRecorder* obj_ref = 0;
 
 static QString get_time_str(){
+
+
     QString time_str;
     QDateTime cur = QDateTime::currentDateTime();
 
@@ -130,6 +135,7 @@ void StreamRecorder::init(){
      *
      */
 
+    SR_DEBUG;
 
     int i = 0;
     do{
@@ -186,7 +192,7 @@ void StreamRecorder::init(){
 
 
 bool StreamRecorder::init_thread(QString filename){
-
+SR_DEBUG;
 
     if(_sr_thread) {
 
@@ -212,6 +218,7 @@ bool StreamRecorder::init_thread(QString filename){
 }
 
 bool StreamRecorder::terminate_thread_if_running(){
+    SR_DEBUG;
     if(_sr_thread){
         if(_sr_thread->isRunning()){
             _sr_thread->terminate();
@@ -227,6 +234,7 @@ bool StreamRecorder::terminate_thread_if_running(){
 
 void StreamRecorder::set_new_stream_session(){
 
+    SR_DEBUG;
     _session_path = get_time_str();
     _session_collector.clear();
 
@@ -240,6 +248,8 @@ void StreamRecorder::set_new_stream_session(){
 
 
 QString StreamRecorder::changeTrack(const MetaData& md, int trys){
+
+    SR_DEBUG;
 
 	_md = md;
     _max_tries = trys;
@@ -286,6 +296,8 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
 bool StreamRecorder::stop(bool delete_track){
 
+    SR_DEBUG;
+
     bool complete_tracks = _settings->getStreamRipperCompleteTracks();
     bool save_success = true;
 
@@ -312,6 +324,8 @@ bool StreamRecorder::stop(bool delete_track){
 
 
 bool StreamRecorder::save_file(){
+
+    SR_DEBUG;
 
     QString sr_path = _settings->getStreamRipperPath();
     QString session_path = check_session_path(sr_path);
@@ -357,6 +371,7 @@ bool StreamRecorder::save_file(){
 
 void StreamRecorder::thread_finished(){
 
+    SR_DEBUG;
 
     _thread_is_running = false;
     qint64 size = _sr_thread->getSize();
@@ -395,9 +410,9 @@ void StreamRecorder::thread_finished(){
 
 void StreamRecorder::endOfStream(){
 
-    if(_thread_is_running) return;
+    SR_DEBUG;
 
-    qDebug() << "SR: End of stream";
+    if(_thread_is_running) return;
 
 	_stream_ended = true;
     emit sig_stream_ended();
@@ -405,6 +420,8 @@ void StreamRecorder::endOfStream(){
 
 
 QString StreamRecorder::check_session_path(QString sr_path){
+
+    SR_DEBUG;
 
     bool create_session_path = _settings->getStreamRipperSessionPath();
     if(!create_session_path) return sr_path;
@@ -420,5 +437,6 @@ QString StreamRecorder::check_session_path(QString sr_path){
 
 
 bool StreamRecorder::getFinished(){
+
     return _stream_ended;
 }

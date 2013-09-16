@@ -56,7 +56,7 @@ int crop_spectrum_at = 75;
 static GST_Engine* gst_obj_ref=NULL;
 bool __start_at_beginning = false;
 int __start_pos_beginning = 0;
-bool _debug = false;
+static bool _debug = false;
 
 
 gboolean player_change_file(GstBin* pipeline, void* app) {

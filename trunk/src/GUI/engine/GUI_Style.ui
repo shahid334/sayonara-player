@@ -124,6 +124,12 @@
             <family>DejaVu Sans</family>
            </font>
           </property>
+          <property name="minimum">
+           <number>0</number>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
          </widget>
         </item>
         <item row="2" column="0">
@@ -142,6 +148,9 @@
            <font>
             <family>DejaVu Sans</family>
            </font>
+          </property>
+          <property name="minimum">
+           <number>1</number>
           </property>
          </widget>
         </item>
@@ -212,7 +221,11 @@
          </widget>
         </item>
         <item row="8" column="1">
-         <widget class="QSpinBox" name="sb_rect_width_lv"/>
+         <widget class="QSpinBox" name="sb_rect_width_lv">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+         </widget>
         </item>
         <item row="4" column="1">
          <widget class="QSpinBox" name="sb_v_spacing_lv"/>

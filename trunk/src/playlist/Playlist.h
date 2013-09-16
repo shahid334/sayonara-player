@@ -91,15 +91,11 @@ public:
         void psl_createPlaylist(QStringList&);
         void psl_createPlaylist(MetaDataList&);
         void psl_createPlaylist(CustomPlaylist&);
-		void psl_insert_tracks(const MetaDataList&, int idx);
-        void psl_append_tracks(MetaDataList&);
 
 		void psl_change_track(int);
 		void psl_next_track();
 		void psl_playlist_mode_changed(const Playlist_Mode&);
-		void psl_clear_playlist();
         void psl_save_playlist(const QString&, const MetaDataList& v_md, bool relative);
-		void psl_similar_artists_available(const QList<int>&);
         void psl_prepare_playlist_for_save(int id);
 		void psl_prepare_playlist_for_save(QString name);
         void psl_prepare_playlist_for_save_file(QString, bool);
@@ -108,7 +104,7 @@ public:
 		void psl_stop();
 		void psl_forward();
 		void psl_backward();
-        void psl_remove_rows(const QList<int> &, bool select_next_row=true);
+
 		void psl_save_playlist_to_storage();
 		void psl_edit_id3_request();
 		void psl_id3_tags_changed(MetaDataList&);
@@ -122,6 +118,12 @@ public:
 		void psl_valid_strrec_track(const MetaData&);
 		void psl_play_next_tracks(const MetaDataList&);
         void psl_gapless_track();
+
+        void psl_insert_tracks(const MetaDataList&, int idx);
+        void psl_append_tracks(MetaDataList&);
+        void psl_remove_rows(const QList<int> &, bool select_next_row=true);
+        void psl_clear_playlist();
+        void psl_similar_artists_available(const QList<int>&);
 
 
 
