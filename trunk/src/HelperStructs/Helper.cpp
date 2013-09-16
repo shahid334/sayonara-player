@@ -629,7 +629,7 @@ QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep){
         int idx = subtext.size() * scale - 2;
         if(idx < 0) idx = 0;
 
-        while(subtext.at(idx) != sep && idx >= 0){
+        while(idx < subtext.size() && idx >= 0 && subtext.at(idx) != sep){
             idx --;
         }
 
