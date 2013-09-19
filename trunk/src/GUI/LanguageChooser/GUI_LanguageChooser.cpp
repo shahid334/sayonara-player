@@ -37,6 +37,7 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     _map["de"] = "Deutsch";
     _map["en"] = "English";
     _map["es"] = QString::fromUtf8("Español");
+    _map["mx"] = QString::fromUtf8("Español (mexicano)");
     _map["fr"] = "Francais";
     _map["hu"] = "Magyar";
     _map["it"] = "Italiano";

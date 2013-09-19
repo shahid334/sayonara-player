@@ -5,49 +5,49 @@
     <name>AlternateCovers</name>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="210"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="188"/>
         <source>Search alternative image</source>
         <translation>Caută o altă imagine</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="206"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="214"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="192"/>
         <source>Search</source>
         <translation>Caută</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="228"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="215"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="193"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="265"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="216"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="194"/>
         <source>Online search</source>
         <translation>Căutare online</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="275"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="217"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="195"/>
         <source>Local search</source>
         <translation>Căutare locală</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="285"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="218"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="196"/>
         <source>Select and preview multiple covers</source>
         <translation>Selectează si previzualizează mai multe coperte</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="55"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="211"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="189"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="82"/>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="212"/>
+        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="190"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
@@ -239,19 +239,19 @@
     <name>GUI_Equalizer</name>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="542"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="520"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="87"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="544"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="522"/>
         <source>Save as custom</source>
         <translation>Salvează ca personalizat</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="135"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="546"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="524"/>
         <source>x</source>
         <translation>x</translation>
     </message>
@@ -471,43 +471,43 @@
     <name>GUI_LFMRadioWidget</name>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="192"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="170"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="81"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="194"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="172"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="102"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="195"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="173"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="141"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="198"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="176"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="146"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="199"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="177"/>
         <source>User</source>
         <translation>Utilizator</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="151"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="200"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="178"/>
         <source>Tag</source>
         <translation>Etichetă</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="156"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="201"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="179"/>
         <source>Recommended</source>
         <translation>Recomandat</translation>
     </message>
@@ -521,31 +521,31 @@
     <name>GUI_LanguageChooser</name>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="119"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="97"/>
         <source>Language</source>
         <translation>Limbă</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="25"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="120"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="98"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="56"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="123"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="101"/>
         <source>English</source>
         <translation>Engleză</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="71"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="125"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="103"/>
         <source>Select Language</source>
         <translation>Alege limba</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="95"/>
-        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="126"/>
+        <location filename="../GUI/ui_GUI_LanguageChooser.h" line="104"/>
         <source>For new languages I am always looking for translators</source>
         <translation>Mereu sunt în căutare de traducători pentru alte limbi</translation>
     </message>
@@ -554,55 +554,55 @@
     <name>GUI_LastFM_Dialog</name>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="199"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="177"/>
         <source>Last.fm Preferences</source>
         <translation>Preferințe Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="55"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="201"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="179"/>
         <source>Username</source>
         <translation>Utilizator</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="67"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="202"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="180"/>
         <source>Activate</source>
         <translation>Activează</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="79"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="203"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="181"/>
         <source>Show error messages</source>
         <translation>Arată mesaje de eroare</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="91"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="204"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="182"/>
         <source>Password</source>
         <translation>Parolă</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="133"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="206"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="184"/>
         <source>Propose ID3 corrections</source>
         <translation>Propune corecții ID3</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="148"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="207"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="185"/>
         <source>Clear session key</source>
         <translation>Șterge cheia de sesiune</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="222"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="210"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="188"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="237"/>
-        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="211"/>
+        <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="189"/>
         <source>Cancel</source>
         <translation>Renunță</translation>
     </message>
@@ -610,12 +610,12 @@
 <context>
     <name>GUI_Level</name>
     <message>
-        <location filename="../GUI/ui_GUI_Level.h" line="462"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="440"/>
         <source>Level</source>
         <translation>Nivel</translation>
     </message>
     <message>
-        <location filename="../GUI/ui_GUI_Level.h" line="463"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="441"/>
         <source>x</source>
         <translation>x</translation>
     </message>
@@ -628,7 +628,7 @@
     <name>GUI_LevelPainter</name>
     <message>
         <location filename="../GUI/engine/GUI_LevelPainter.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_LevelPainter.h" line="74"/>
+        <location filename="../GUI/ui_GUI_LevelPainter.h" line="52"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
@@ -752,43 +752,43 @@
     <name>GUI_Notification</name>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="17"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="157"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="135"/>
         <source>Notification settings</source>
         <translation>Setări pentru notificări</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="43"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="158"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="136"/>
         <source>Activate</source>
         <translation>Activează</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="64"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="159"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="137"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="80"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="162"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="140"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="117"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="164"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="142"/>
         <source>Timeout (ms)</source>
         <translation>Temporizare (ms)</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="131"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="165"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="143"/>
         <source>Notifications</source>
         <translation>Notificări</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="161"/>
-        <location filename="../GUI/ui_GUI_Notifications.h" line="166"/>
+        <location filename="../GUI/ui_GUI_Notifications.h" line="144"/>
         <source>Icon scaling</source>
         <translation>Scalare pictograme</translation>
     </message>
@@ -901,22 +901,22 @@
         <translation>Te rog vizitează forumul la</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="372"/>
         <source>About Sayonara</source>
         <translation>Despre Sayonara</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="374"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="375"/>
         <source>Written by Lucio Carreras</source>
         <translation>Scris de către Lucio Carreras</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="375"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="376"/>
         <source>License</source>
         <translation>Licență</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="377"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="378"/>
         <source>Special thanks to %1 and %2 for translating</source>
         <translation>Mulțumiri speciale %1 și %2 pentru traducere</translation>
     </message>
@@ -963,55 +963,55 @@
     <name>GUI_PlaylistChooser</name>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="216"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="194"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="136"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="222"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="200"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="293"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="231"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="209"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fișier&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="306"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="232"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="210"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Liste de piese&lt;br/&gt;salvate&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="323"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="233"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="211"/>
         <source>Playlists</source>
         <translation>Liste de piese</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="341"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="234"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="212"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="205"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="228"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="206"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="85"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="219"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="197"/>
         <source>Save as</source>
         <translation>Salvează ca</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="166"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="224"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="202"/>
         <source>Delete</source>
         <translation>Șterge</translation>
     </message>
@@ -1045,67 +1045,67 @@
     <name>GUI_Podcasts</name>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="211"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="189"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="58"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="213"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="191"/>
         <source>Type name you wanna save the stream as</source>
         <translation>Introdu numele sub care vrei să salvezi acest flux</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="106"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="216"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="194"/>
         <source>Name</source>
         <translation>Nume</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="118"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="217"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="195"/>
         <source>Url</source>
         <translation>URL</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="145"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="219"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="197"/>
         <source>Enter stream url</source>
         <translation>Introdu URL-ul fluxului</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="186"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="222"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="200"/>
         <source>Delete</source>
         <translation>Șterge</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="225"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="226"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="204"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="285"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="230"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="208"/>
         <source>Start stream</source>
         <translation>Pornește flux</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="288"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="232"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="210"/>
         <source> Start</source>
         <translation>Pornește</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="313"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="233"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="211"/>
         <source>Podcasts</source>
         <translation>Podcasturi</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="334"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="234"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="212"/>
         <source>x</source>
         <translation>x</translation>
     </message>
@@ -1129,13 +1129,13 @@
     <name>GUI_SetLibrary</name>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="53"/>
-        <location filename="../GUI/ui_GUI_LibraryPath.h" line="121"/>
+        <location filename="../GUI/ui_GUI_LibraryPath.h" line="99"/>
         <source>You haven&apos;t specified a library path yet</source>
         <translation>Încă nu ai specificat o cale pentru bibliotecă</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="83"/>
-        <location filename="../GUI/ui_GUI_LibraryPath.h" line="122"/>
+        <location filename="../GUI/ui_GUI_LibraryPath.h" line="100"/>
         <source>Set library path</source>
         <translation>Setează calea către bibliotecă</translation>
     </message>
@@ -1143,9 +1143,8 @@
 <context>
     <name>GUI_Spectrum</name>
     <message>
-        <location filename="../GUI/engine/GUI_Form.ui" line="14"/>
         <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Spectrum.h" line="74"/>
+        <location filename="../GUI/ui_GUI_Spectrum.h" line="52"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
@@ -1160,44 +1159,44 @@
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="20"/>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="98"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="160"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="165"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="138"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="143"/>
         <source>Startup options</source>
         <translation>Opțiuni pentru pornire</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="46"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="161"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="139"/>
         <source>Cancel</source>
         <translation>Renunță</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="58"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="162"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="140"/>
         <source>Ok</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="72"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="163"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="141"/>
         <source>Load last track on startup</source>
         <translation>Încarcă ultima piesă la pornire</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="84"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="164"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="142"/>
         <source>Remember time of last track</source>
         <translation>Ține minte poziția în ultima piesă</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="110"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="166"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="144"/>
         <source>Load playlist on startup</source>
         <translation>Încarcă lista de piese la pornire</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="139"/>
-        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="167"/>
+        <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="145"/>
         <source>Start playing</source>
         <translation>Pornește redarea</translation>
     </message>
@@ -1206,67 +1205,67 @@
     <name>GUI_Stream</name>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="210"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="188"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="79"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="212"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="190"/>
         <source>Name</source>
         <translation>Nume</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="96"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="213"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="191"/>
         <source>Webstreams</source>
         <translation>Fluxuri Web</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="117"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="214"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="192"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="143"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="216"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="194"/>
         <source>Type name you wanna save the stream as</source>
         <translation>Introdu numele sub care vrei să salvezi acest flux</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="158"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="218"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="196"/>
         <source>Url</source>
         <translation>URL</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="185"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="220"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="198"/>
         <source>Enter stream url</source>
         <translation>Introdu URL-ul fluxului</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="214"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="223"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="201"/>
         <source>Delete</source>
         <translation>Șterge</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="253"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="227"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="205"/>
         <source>Save</source>
         <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="313"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="231"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="209"/>
         <source>Start stream</source>
         <translation>Pornește flux</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="316"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="233"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="211"/>
         <source> Start</source>
         <translation>Pornește</translation>
     </message>
@@ -1296,50 +1295,50 @@
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="14"/>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="139"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="203"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="209"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="181"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="187"/>
         <source>Stream Recorder</source>
         <translation>Înregistrare flux</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="25"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="204"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="182"/>
         <source>Target path:</source>
         <translation>Calea destinație:</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="75"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="206"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="184"/>
         <source>Cancel</source>
         <translation>Renunță</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="96"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="207"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="185"/>
         <source>Ok</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="151"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="210"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="188"/>
         <source>Only complete tracks</source>
         <translation>Doar piese complete</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="163"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="211"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="189"/>
         <source>Activate</source>
         <translation>Activează</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="184"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="212"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="190"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="214"/>
-        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="214"/>
+        <location filename="../GUI/ui_GUI_StreamRecorder.h" line="192"/>
         <source>Create session folder</source>
         <translation>Crează dosarul pentru sesiune</translation>
     </message>
@@ -1365,101 +1364,101 @@ Te rog alege un alt dosar</translation>
     <name>GUI_Style</name>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="444"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="426"/>
         <source>Style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="445"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="427"/>
         <source>Close</source>
         <translation type="unfinished">Închide</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="446"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="428"/>
         <source>Spectrum</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="447"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="429"/>
         <source>Bins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="448"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="430"/>
         <source>Vert. spacing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
-        <location filename="../GUI/engine/GUI_Style.ui" line="181"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="449"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="453"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="190"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="431"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="435"/>
         <source>Fading steps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="132"/>
-        <location filename="../GUI/engine/GUI_Style.ui" line="203"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="450"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="455"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="138"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="212"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="432"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="437"/>
         <source>Hor. spacing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="156"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="451"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="165"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="433"/>
         <source>Rect height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="166"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="452"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="175"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="434"/>
         <source>Level</source>
         <translation type="unfinished">Nivel</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="191"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="454"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="200"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="436"/>
         <source>Rect width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="210"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="456"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="219"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="438"/>
         <source>Ver. spacing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="243"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="458"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="256"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="440"/>
         <source>Style settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="375"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="462"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="388"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="444"/>
         <source>Color 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="382"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="463"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="395"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="445"/>
         <source>Color 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="419"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="465"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="432"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="447"/>
         <source>Color 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Style.ui" line="426"/>
-        <location filename="../GUI/ui_GUI_Style.h" line="466"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="439"/>
+        <location filename="../GUI/ui_GUI_Style.h" line="448"/>
         <source>Color 4</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1497,32 +1496,32 @@ Te rog alege un alt dosar</translation>
     <name>GUI_TagEdit</name>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="32"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="443"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="421"/>
         <source>ID3 Tagger</source>
         <translation>Etichetare ID3</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="339"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="458"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="436"/>
         <source>Tag
 expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="467"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="445"/>
         <source>&lt;</source>
         <translation>&lt;</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="553"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="468"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="446"/>
         <source>Track</source>
         <translation>Piesă</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="583"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="469"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="447"/>
         <source>&gt;</source>
         <translation>&gt;</translation>
     </message>
@@ -1533,102 +1532,102 @@ expression</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="302"/>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="415"/>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="639"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="445"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="446"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="423"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="424"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="427"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="434"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="441"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="449"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="456"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="463"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="471"/>
         <source>all</source>
         <translation>tot</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="352"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="460"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="438"/>
         <source>Path</source>
         <translation>Cale</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="275"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="454"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="432"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="321"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="457"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="435"/>
         <source>Tag from path</source>
         <translation>Etichetă din calea</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="230"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="453"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="431"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="215"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="452"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="430"/>
         <source>Year</source>
         <translation>An</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="130"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="447"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="425"/>
         <source>Apply expression</source>
         <translation>Aplică expresia</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="624"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="470"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="448"/>
         <source>Undo expression</source>
         <translation>Refă expresia</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="287"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="455"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="433"/>
         <source># Track</source>
         <translation>Nr. piesei</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="46"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="444"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="422"/>
         <source>Title</source>
         <translation>Titlu</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="364"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="461"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="439"/>
         <source>Comment</source>
         <translation>Comentariu</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="427"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="464"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="442"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="196"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="450"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="428"/>
         <source>Genres</source>
         <translation>Genuri</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="450"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="465"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="443"/>
         <source>Cancel</source>
         <translation>Renunță</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="471"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="466"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="444"/>
         <source>Ok</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="376"/>
-        <location filename="../GUI/ui_GUI_TagEdit.h" line="462"/>
+        <location filename="../GUI/ui_GUI_TagEdit.h" line="440"/>
         <source>Discnumber</source>
         <translation>Număr disc</translation>
     </message>
@@ -1717,37 +1716,37 @@ expression</source>
     <name>GUI_Target_Playlist_Dialog</name>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="142"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="120"/>
         <source>Choose target playlist</source>
         <translation>Alege lista de piese destinație</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="49"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="143"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="121"/>
         <source>relative filepaths</source>
         <translation>căi fișiere relative</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="73"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="144"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="122"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="93"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="145"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="123"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="111"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="146"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="124"/>
         <source>Ok</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="127"/>
-        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="147"/>
+        <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="125"/>
         <source>Save playlist as...</source>
         <translation>Salvează lista de piese ca...</translation>
     </message>
@@ -1823,49 +1822,49 @@ expression</source>
     <name>ImportFolder</name>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="250"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="228"/>
         <source>Dialog</source>
         <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="91"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="252"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="230"/>
         <source>Copy tracks to library</source>
         <translation>Copiază piesele în bibliotecă</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="123"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="253"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="231"/>
         <source>cancel</source>
         <translation>Renunță</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="150"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="254"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="232"/>
         <source>ok</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="166"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="255"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="233"/>
         <source>Import tracks to library</source>
         <translation>Importă piesele în bibliotecă</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="198"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="256"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="234"/>
         <source>Select target folder</source>
         <translation>Alege dosarul destinație</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="243"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="257"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="235"/>
         <source>/music/library</source>
         <translation>/music/library</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="270"/>
-        <location filename="../GUI/ui_GUI_ImportFolder.h" line="258"/>
+        <location filename="../GUI/ui_GUI_ImportFolder.h" line="236"/>
         <source>...</source>
         <translation>...</translation>
     </message>
@@ -1874,47 +1873,47 @@ expression</source>
     <name>InfoDialog</name>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="252"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="230"/>
         <source>Info / Edit</source>
         <translation>Info / Editare</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="57"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="77"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="253"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="259"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="231"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="237"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="98"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="254"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="232"/>
         <source>LFM</source>
         <translation>LFM</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="213"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="304"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="257"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="260"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="235"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="238"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="252"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="258"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="236"/>
         <source>Title</source>
         <translation>Titlu</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="263"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="261"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="239"/>
         <source>Lyrics</source>
         <translation>Versuri</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="351"/>
-        <location filename="../GUI/ui_GUI_InfoDialog.h" line="262"/>
+        <location filename="../GUI/ui_GUI_InfoDialog.h" line="240"/>
         <source>Edit</source>
         <translation>Editare</translation>
     </message>
@@ -2015,49 +2014,49 @@ expression</source>
     <name>Library_Info_Box</name>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="192"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="170"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="51"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="195"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="173"/>
         <source>LastFM Playcount</source>
         <translation>Rulări LastFM</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="65"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="196"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="174"/>
         <source>Artists</source>
         <translation>Artiști</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="241"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="206"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="184"/>
         <source>Close</source>
         <translation>Închide</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="103"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="199"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="177"/>
         <source>Tracks</source>
         <translation>Piese</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="117"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="200"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="178"/>
         <source>Duration</source>
         <translation>Durată</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="131"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="201"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="179"/>
         <source>Albums</source>
         <translation>Albume</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="190"/>
-        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="204"/>
+        <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="182"/>
         <source>Filesize</source>
         <translation>Mărime</translation>
     </message>
@@ -2066,55 +2065,55 @@ expression</source>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="280"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="258"/>
         <source>Library</source>
         <translation>Bibliotecă</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="288"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Comenzi rapide: &lt;br /&gt;Caută &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Gen &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Cale &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="352"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="283"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="261"/>
         <source>Search</source>
         <translation>Caută</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="357"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="284"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="262"/>
         <source>Genre</source>
         <translation>Gen</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="362"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="285"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="263"/>
         <source>Path</source>
         <translation>Cale</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="391"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="291"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
         <source>Search for title, interprets and albums</source>
         <translation>Caută după titlu, interpreți si albume</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="418"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="294"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Afișează toți interpreții, toate albumele, toate piesele</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="446"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="297"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="275"/>
         <source>Music Library  </source>
         <translation>Bibliotecă muzicală</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="485"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="300"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="278"/>
         <source>Information</source>
         <translation>Informație</translation>
     </message>
@@ -2152,31 +2151,31 @@ expression</source>
     <name>PlaylistEntryBig</name>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="37"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="148"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="126"/>
         <source>PlaylistEntryBig</source>
         <translation>PlaylistEntryBig</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="93"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="149"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="127"/>
         <source>Title</source>
         <translation>Titlu</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="133"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="150"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="128"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="167"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="151"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="129"/>
         <source>(Album)</source>
         <translation>(Album)</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntryBig.ui" line="217"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="152"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntryBig.h" line="130"/>
         <source>Time</source>
         <translation>Durată</translation>
     </message>
@@ -2185,25 +2184,25 @@ expression</source>
     <name>PlaylistEntrySmall</name>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="130"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="108"/>
         <source>PlaylistEntrySmall</source>
         <translation>PlaylistEntrySmall</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="82"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="131"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="109"/>
         <source>Title</source>
         <translation>Titlu</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="116"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="132"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="110"/>
         <source>Artist</source>
         <translation>Artist</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/entry/GUI_PlaylistEntrySmall.ui" line="153"/>
-        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="133"/>
+        <location filename="../GUI/ui_GUI_PlaylistEntrySmall.h" line="111"/>
         <source>Time</source>
         <translation>Durată</translation>
     </message>
@@ -2212,31 +2211,31 @@ expression</source>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="262"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="240"/>
         <source>Form</source>
         <translation>Formular</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="441"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="296"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="274"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation>Importă piesele noi (portocaliu) în bibliotecă fără a le copia</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="480"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="300"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="278"/>
         <source>Show numbers in playlist</source>
         <translation>Afișează numere în lista de piese</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="82"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="267"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="245"/>
         <source>Clear Playlist</source>
         <translation>Golește lista de piese</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="176"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="271"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="249"/>
         <source>Repeat 1</source>
         <translation>Repetă 1</translation>
     </message>
@@ -2246,35 +2245,35 @@ expression</source>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="290"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="339"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="388"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="274"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="279"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="284"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="289"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="294"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="252"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="257"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="262"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="267"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="272"/>
         <source>Enter</source>
         <translation>Enter</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="225"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="276"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
         <source>Repeat All</source>
         <translation>Repetă tot</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="274"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="281"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
         <source>Shuffle</source>
         <translation>Amestecat</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="323"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="286"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="264"/>
         <source>Append when adding new tracks</source>
         <translation>Adaugă la introducerea de noi piese</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="372"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="291"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="269"/>
         <source>Dynamic playing</source>
         <translation>Rulare dinamică</translation>
     </message>
@@ -2569,31 +2568,31 @@ expression</source>
     <name>SocketSetupDialog</name>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="14"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="132"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="110"/>
         <source>Dialog</source>
         <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="25"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="133"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="111"/>
         <source>Activate socket connection</source>
         <translation>Activează conectare socket</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="70"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="135"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="113"/>
         <source>Initial Socket port</source>
         <translation>Port socket inițial</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="100"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="137"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="115"/>
         <source>If no connection can be established, try to increment port until...</source>
         <translation>Dacă nu se poate stabili o conexiune încercă incrementarea portului până la...</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="103"/>
-        <location filename="../GUI/ui_GUI_SocketSetup.h" line="139"/>
+        <location filename="../GUI/ui_GUI_SocketSetup.h" line="117"/>
         <source>Increment until</source>
         <translation>Incrementează până la</translation>
     </message>

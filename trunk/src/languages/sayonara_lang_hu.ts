@@ -1413,15 +1413,15 @@ expression</source>
     <name>LibraryImporter</name>
     <message>
         <source>Loading files...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Lade Dateien...</translation>
     </message>
     <message>
         <source>%1 tracks ready</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 Titel bereit</translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Keine Titel</translation>
     </message>
     <message>
         <source>No Tracks</source>
@@ -1429,31 +1429,31 @@ expression</source>
     </message>
     <message>
         <source>Rollback...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Rückgängig...</translation>
     </message>
     <message>
         <source>All files could be imported</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Alle Dateien konnten importiert werden</translation>
     </message>
     <message>
         <source>%1 of %2 files could be imported</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 von %2 Dateien wurden importiert</translation>
     </message>
     <message>
         <source>Import files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dateien importieren</translation>
     </message>
     <message>
         <source>Sorry, but tracks could not be imported</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Leider konnten die Musiktitel nicht importiert werden</translation>
     </message>
     <message>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bitte benutze Importieren im Datei Menu&lt;br /&gt;oder kopiere die Musikstücke in die Sammlung und lade diese neu</translation>
     </message>
     <message>
         <source>Cancelled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Abgebrochen</translation>
     </message>
 </context>
 <context>
