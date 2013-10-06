@@ -106,6 +106,7 @@ signals:
     void sig_album_dbl_clicked(int);
     void sig_artist_dbl_clicked(int);
 	void sig_track_dbl_clicked(int);
+    void sig_tracks_dbl_clicked(QList<int>);
 
 	void sig_disc_pressed(int);
 

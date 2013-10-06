@@ -346,38 +346,32 @@ void GUI_Player::about(bool b){
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 
-    QStringList translators;
-    translators << "Julia Karakoz";
-    translators << "Bruno Veilleux";
-    translators << "Pavel Fric";
-    translators << "Kallisto";
-    translators << "Andrej Hamburg";
-    translators << QString::fromUtf8("Veszter Márton");
-    translators << QString::fromUtf8("Arthur Țițeică");
-    translators << "Roberto Antonio Rodriguez Molina";
-
     QString first_translators;
     QString last_translator;
+    QString translator_str = "";
 
-    for (int i=0; i<translators.size() - 1; i++){
+    if(m_translators.size() > 2){
 
-        first_translators += "<b>" + translators[i] + "</b>";
-        if(i < translators.size() - 2) first_translators += ", ";
+        for (int i=0; i<m_translators.size() - 1; i++){
 
+            first_translators += "<b>" + m_translators[i] + "</b>";
+            if(i < m_translators.size() - 2) first_translators += ", ";
+        }
+
+        last_translator = QString("<b>") + m_translators[m_translators.size() - 1] + "</b>";
+        translator_str = QString("<br /><br /><br />") +
+                tr("Special thanks to %1 and %2 for translating")
+                .arg(first_translators)
+                .arg(last_translator);
     }
-
-
-    last_translator = QString("<b>") + translators[translators.size() - 1] + "</b>";
 
     infobox.setWindowTitle(tr("About Sayonara"));
     infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
     infobox.setInformativeText( QString("") +
 				tr("Written by Lucio Carreras") + "<br /><br />" +
                 tr("License") + ": GPLv3<br /><br />" +
-                "Copyright 2011-2013<br /><br />" + link + "<br /><br /><br />" +
-                                tr("Special thanks to %1 and %2 for translating")
-                                .arg(first_translators)
-                                .arg(last_translator) );
+                "Copyright 2011-2013<br /><br />" + link + translator_str
+                                );
 
     infobox.setStandardButtons(QMessageBox::Ok);
     infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);

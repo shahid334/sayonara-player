@@ -143,7 +143,8 @@ void GUI_Player::setupConnections(){
             this, SLOT(language_changed(QString)));
 
 
-    connect(m_async_wa, SIGNAL(finished()), this, SLOT(async_wa_finished()));
+    connect(m_awa_version, SIGNAL(finished()), this, SLOT(awa_version_finished()));
+    connect(m_awa_translators, SIGNAL(finished()), this, SLOT(awa_translators_finished()));
     
     if(ui_libpath)
         connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(setLibraryPathClicked()));

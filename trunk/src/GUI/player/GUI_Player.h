@@ -198,7 +198,8 @@ private slots:
     void sl_alternate_cover_available(QString, QString);
     void sl_no_cover_available();
 
-    void async_wa_finished();
+    void awa_version_finished();
+    void awa_translators_finished();
 
 
     void notification_changed(bool active, int ms);
@@ -242,7 +243,8 @@ private:
     PlayerPluginHandler*    _pph;
 
     GUI_Alternate_Covers*   m_alternate_covers;
-    AsyncWebAccess*		m_async_wa;
+    AsyncWebAccess*         m_awa_version;
+    AsyncWebAccess*         m_awa_translators;
 
     QString                 m_class_name;
     quint32                 m_completeLength_ms;
@@ -261,6 +263,7 @@ private:
     int                 m_library_stretch_factor;
     CSettingsStorage*   m_settings;
     QTranslator*        m_translator;
+    QStringList         m_translators;
 
 
     void setupTrayActions ();

@@ -71,7 +71,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     m_settings = CSettingsStorage::getInstance();
         ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
-    m_async_wa = new AsyncWebAccess(this);
+    m_awa_version = new AsyncWebAccess(this);
+    m_awa_translators = new AsyncWebAccess(this);
 
     ui->lab_artist->hide();
     ui->lab_title->hide();
@@ -153,8 +154,10 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	/* SIGNALS AND SLOTS */
     this->setupConnections();
-    m_async_wa->set_url("http://sayonara.luciocarreras.de/current_version");
-    m_async_wa->start();
+    m_awa_version->set_url("http://sayonara.luciocarreras.de/current_version");
+    m_awa_translators->set_url("http://sayonara.luciocarreras.de/translators");
+    m_awa_version->start();
+    m_awa_translators->start();
 
 	ui->plugin_widget->resize(ui->plugin_widget->width(), 0);
     ui_info_dialog = 0;
@@ -845,9 +848,9 @@ void GUI_Player::really_close(bool b){
 }
 
 
-void GUI_Player::async_wa_finished(){
+void GUI_Player::awa_version_finished(){
 
-    QString new_version = m_async_wa->get_data();
+    QString new_version = m_awa_version->get_data();
 	QString cur_version = m_settings->getVersion();
 	new_version = new_version.trimmed();
 
@@ -859,6 +862,20 @@ void GUI_Player::async_wa_finished(){
 					tr("Info"), 
 					tr("A new version is available!"));
 	}
+}
+
+void GUI_Player::awa_translators_finished(){
+
+ QString data = QString::fromUtf8(m_awa_translators->get_data().toStdString().c_str());
+ QStringList translators = data.split('\n');
+
+ m_translators.clear();
+
+ foreach(QString str, translators){
+     if(str.trimmed().size() > 0){
+        m_translators.push_back(str);
+     }
+ }
 }
 
 void GUI_Player::sl_notify_new_version(bool b){

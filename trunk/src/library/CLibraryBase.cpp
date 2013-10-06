@@ -397,12 +397,20 @@ void CLibraryBase::psl_prepare_album_for_playlist(int idx){
 
 
 void CLibraryBase::psl_prepare_track_for_playlist(int idx){
-    MetaDataList v_md;
-    v_md.push_back(_vec_md[idx]);
-    emit sig_tracks_for_playlist_available(v_md);
+    QList<int> lst;
+    lst << idx;
+    psl_prepare_tracks_for_playlist(lst);
 }
 
+void CLibraryBase::psl_prepare_tracks_for_playlist(QList<int> lst){
+    MetaDataList v_md;
 
+    foreach(int idx, lst){
+        v_md.push_back(_vec_md[idx]);
+    }
+
+    emit sig_tracks_for_playlist_available(v_md);
+}
 
 
 void CLibraryBase::psl_play_next_all_tracks(){

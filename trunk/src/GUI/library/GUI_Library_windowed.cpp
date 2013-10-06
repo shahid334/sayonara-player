@@ -424,7 +424,10 @@ void GUI_Library_windowed::artist_dbl_clicked(const QModelIndex & idx){
 }
 
 void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx){
-    emit sig_track_dbl_clicked(idx.row());
+
+    QList<int> lst = _track_model->get_selected();
+    if(lst.size() ==0 ) lst << idx.row();
+    emit sig_tracks_dbl_clicked(lst);
 }
 
 

@@ -356,7 +356,7 @@ void Application::init_connections(){
 
     CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));
     CONNECT(ui_library, sig_artist_dbl_clicked(int), 					library, 		psl_prepare_artist_for_playlist(int));
-    CONNECT(ui_library, sig_track_dbl_clicked(int),                     library, 		psl_prepare_track_for_playlist(int));
+    CONNECT(ui_library, sig_tracks_dbl_clicked(QList<int>),             library, 		psl_prepare_tracks_for_playlist(QList<int>));
     CONNECT(ui_library, sig_artist_sel_changed(const QList<int>&),      library, 		psl_selected_artists_changed(const QList<int>&));
     CONNECT(ui_library, sig_album_sel_changed(const QList<int>&),       library, 		psl_selected_albums_changed(const QList<int>&));
     CONNECT(ui_library, sig_track_sel_changed(const QList<int>&),       library, 		psl_selected_tracks_changed(const QList<int>&));

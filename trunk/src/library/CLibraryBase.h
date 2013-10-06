@@ -83,6 +83,7 @@ public slots:
     void psl_prepare_album_for_playlist(int idx=0);
     void psl_prepare_artist_for_playlist(int idx=0);
     void psl_prepare_track_for_playlist(int idx);
+    void psl_prepare_tracks_for_playlist(QList<int> lst);
 
     void psl_filter_changed(const Filter&, bool force=false);
     void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
