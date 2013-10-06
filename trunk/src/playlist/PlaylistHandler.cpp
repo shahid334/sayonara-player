@@ -150,7 +150,8 @@ void PlaylistHandler::psl_createPlaylist(CustomPlaylist& pl, bool start_playing)
     if(start_playing) _state = PlaylistPlay;
     else if(_state != PlaylistPause) _state = PlaylistStop;
 
-    // TDOD: Save old playlist
+
+    psl_createPlaylist(pl.tracks, start_playing);
 }
 
 

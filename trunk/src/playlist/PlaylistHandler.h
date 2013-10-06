@@ -133,9 +133,10 @@ public:
 
         CDatabaseConnector* _db;
         CSettingsStorage*   _settings;
-        Playlist*    _playlist;
+        Playlist*           _playlist;
         PlaylistState       _state;
         qint32              _last_pos;
+        BackupPlaylist      _ba_playlist;
 
         PlaylistType determine_playlist_type(const MetaDataList& v_md);
         bool new_playlist(PlaylistType type);

@@ -178,21 +178,39 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height){
     _styles_level.clear();
 
     if(colors_active.size() == 0){
-        RawColorStyle fallback;
 
-        fallback.col_list.colors << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);;
-        fallback.col_list.name = "Fancy";
-        fallback.hor_spacing_level = 2;
-        fallback.hor_spacing_level = 2;
-        fallback.ver_spacing_spectrum = 1;
-        fallback.hor_spacing_spectrum = 1;
-        fallback.n_bins_spectrum = 50;
-        fallback.n_fading_steps_level = 20;
-        fallback.n_fading_steps_spectrum = 20;
-        fallback.rect_height_spectrum = 2;
-        fallback.rect_width_level = 5;
 
-        colors_active << fallback;
+        RawColorStyle fallback1, fallback2;
+
+        fallback1.col_list.colors << QColor(0, 216, 0)  << QColor(216, 216, 0) << QColor(216, 0, 0) << QColor(216, 0, 0);;
+        fallback1.col_list.name = "Fancy";
+        fallback1.hor_spacing_level = 2;
+        fallback1.hor_spacing_level = 2;
+        fallback1.ver_spacing_spectrum = 1;
+        fallback1.hor_spacing_spectrum = 1;
+        fallback1.n_bins_spectrum = 50;
+        fallback1.n_fading_steps_level = 20;
+        fallback1.n_fading_steps_spectrum = 20;
+        fallback1.rect_height_spectrum = 2;
+        fallback1.rect_width_level = 5;
+
+
+        fallback2.col_list.colors << QColor(27, 32, 47)  << QColor(134, 134, 134) << QColor(216, 216, 216) << QColor(255, 255, 255);
+        fallback2.col_list.name = "B/W";
+        fallback2.hor_spacing_level = 2;
+        fallback2.hor_spacing_level = 2;
+        fallback2.ver_spacing_spectrum = 1;
+        fallback2.hor_spacing_spectrum = 1;
+        fallback2.n_bins_spectrum = 50;
+        fallback2.n_fading_steps_level = 20;
+        fallback2.n_fading_steps_spectrum = 20;
+        fallback2.rect_height_spectrum = 2;
+        fallback2.rect_width_level = 3;
+
+        colors_active << fallback1 << fallback2;
+
+        CDatabaseConnector::getInstance()->insert_raw_color_style_to_db(fallback1);
+        CDatabaseConnector::getInstance()->insert_raw_color_style_to_db(fallback2);
     }
 
 

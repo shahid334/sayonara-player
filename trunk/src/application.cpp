@@ -404,7 +404,7 @@ void Application::init_connections(){
 
 
     CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
-    CONNECT(ui_playlist_chooser, sig_delete_playlist(int),       playlists, delete_playlist(int));
+    CONNECT(ui_playlist_chooser, sig_delete_playlist(int),      playlists, delete_playlist(int));
     CONNECT(ui_playlist_chooser, sig_save_playlist(int), 		playlist_handler, 	psl_prepare_playlist_for_save(int));
     CONNECT(ui_playlist_chooser, sig_save_playlist(QString), 	playlist_handler, 	psl_prepare_playlist_for_save(QString));
     CONNECT(ui_playlist_chooser, sig_save_playlist_file(QString, bool), 	playlist_handler, 	psl_save_playlist(QString, bool));

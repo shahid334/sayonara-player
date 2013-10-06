@@ -139,7 +139,6 @@ QString Helper::getSharePath(){
     else path = "";
 #endif
 
-    qDebug() << "Share path = " << path;
     return path;
 
 }
