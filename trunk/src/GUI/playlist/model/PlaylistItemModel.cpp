@@ -135,9 +135,11 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
 
      MetaDataList v_md_new;
 
-     for (uint i=0; i<_v_meta_data.size(); i++) {
+     int md_size = (int) _v_meta_data.size();
+     for (int i=0; i<md_size; i++) {
 
-         if(i >= (uint) position && i<=(uint)(position+rows-1)) continue;
+         if(i >= position &&
+            i<=(position+rows-1)) continue;
 
          v_md_new.push_back(_v_meta_data[i]);
 	 }

@@ -33,8 +33,6 @@
 #include "GUI/playlist/delegate/PlaylistItemDelegate.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
-
-#include "playlist/Playlist.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include <QObject>
@@ -62,36 +60,43 @@
 
 
 		signals:
-			void selected_row_changed(int);
-			void clear_playlist();
+            void sig_cur_idx_changed(int);
+            void sig_selection_changed(const QList<int>&);
+
+
 			void save_playlist(const QString&);
 			void playlist_mode_changed(const Playlist_Mode&);
 
-            void dropped_tracks(const MetaDataList&, int);
+            void sig_rows_moved(const QList<int>&, int);
+            void sig_tracks_dropped(const MetaDataList&, int);
             void sig_rows_removed(const QList<int>&, bool);
+            void sig_cleared();
 
 			void search_similar_artists(const QString&);
             void sig_no_focus();
 
 
 
+
 		public slots:
-            void fillPlaylist(MetaDataList&, int, int);
+            void fillPlaylist(const MetaDataList&, int, PlaylistType);
 			void track_changed(int);
 
             void library_path_changed(QString);
-			void set_radio_active(int radio);
+            void set_playlist_type(PlaylistType playlist_type);
 			void psl_show_small_playlist_items(bool small_items);
             void language_changed();
 
 
 
+
 		private slots:
 
-            void sel_changed(const MetaDataList&);
+            void sel_changed(const MetaDataList&, const QList<int>&);
             void double_clicked(int);
             void clear_playlist_slot();
 			void playlist_mode_changed_slot();
+            void rows_moved(const QList<int>&, int);
 
             void psl_info_tracks();
             void psl_edit_tracks();
@@ -110,7 +115,7 @@
 
 			Playlist_Mode					_playlist_mode;
 
-			int			_radio_active;
+            PlaylistType _playlist_type;
             qint64      _total_msecs;
 
 

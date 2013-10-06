@@ -129,6 +129,22 @@ namespace Sort{
 };
 
 
+enum PlaylistType{
+    PlaylistTypeStd=0,
+    PlaylistTypeLFM,
+    PlaylistTypeStream
+};
+
+
+enum PlaylistState{
+
+    PlaylistUndefState=0,
+    PlaylistPlay=1,
+    PlaylistPause=2,
+    PlaylistStop=3
+};
+
+
 #define N_BINS 70
 
 

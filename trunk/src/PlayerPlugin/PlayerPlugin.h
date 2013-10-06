@@ -31,10 +31,6 @@ class PlayerPlugin : public QWidget
 {
     Q_OBJECT
 
-
-
-
-
 public:
     PlayerPlugin(QString name, QString action_text, QWidget *parent = 0);
     virtual ~PlayerPlugin();

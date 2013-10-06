@@ -124,13 +124,13 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 }
 
 // Playlist -> this
-void GUI_PlaylistChooser::playlist_changed(MetaDataList& v_md, int i, int radio_mode){
+void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, PlaylistType playlist_type){
 
     Q_UNUSED(i);
     bool empty = (v_md.size() == 0);
 
-    this->ui->btn_save->setEnabled(!empty && radio_mode == RADIO_OFF);
-    this->ui->btn_save_as->setEnabled(!empty && radio_mode == RADIO_OFF);
+    this->ui->btn_save->setEnabled(!empty && playlist_type == PlaylistTypeStd);
+    this->ui->btn_save_as->setEnabled(!empty && playlist_type == PlaylistTypeStd);
 
     if(empty)
         this->ui->le_playlist_file->clear();

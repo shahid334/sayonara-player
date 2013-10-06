@@ -879,32 +879,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="182"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="184"/>
         <source>Please set library path first</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="186"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="188"/>
         <source>Dynamic playing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="214"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="216"/>
         <source>Playlist empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="299"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="306"/>
         <source>Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="308"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="315"/>
         <source> Track - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="309"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="316"/>
         <source> Tracks - </source>
         <translation type="unfinished"></translation>
     </message>
@@ -1060,17 +1060,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="210"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="211"/>
         <source>new</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="223"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="224"/>
         <source>Really wanna delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="57"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="59"/>
         <source>P&amp;odcasts</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1220,22 +1220,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.cpp" line="90"/>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="91"/>
         <source>Radio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.cpp" line="209"/>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="210"/>
         <source>new</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.cpp" line="222"/>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="223"/>
         <source>Really wanna delete %1?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.h" line="58"/>
+        <location filename="../GUI/stream/GUI_Stream.h" line="63"/>
         <source>&amp;Webstreams</source>
         <translation type="unfinished"></translation>
     </message>

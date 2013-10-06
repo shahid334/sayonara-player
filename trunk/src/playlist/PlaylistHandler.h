@@ -26,15 +26,15 @@
  *      Author: luke
  */
 
-#ifndef PLAYLISTNEW_H_
-#define PLAYLISTNEW_H_
+#ifndef PLAYLISTHANDLER_H_
+#define PLAYLISTHANDLER_H_
 
 #include "GUI/playlist/model/PlaylistItemModel.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "playlist/PlaylistHandler.h"
+#include "playlist/Playlist.h"
 
 #include <iostream>
 
@@ -56,13 +56,13 @@ struct BackupPlaylist{
 
 
 
-class PlaylistHandler;
-class PlaylistNew  : public QObject {
+class Playlist;
+class PlaylistHandler  : public QObject {
 
 	Q_OBJECT
 public:
-    PlaylistNew(QObject * parent=0);
-    virtual ~PlaylistNew();
+    PlaylistHandler(QObject * parent=0);
+    virtual ~PlaylistHandler();
 
 
 
@@ -111,7 +111,7 @@ public:
         void psl_clear_playlist();
         void psl_insert_tracks(const MetaDataList&, int idx);
         void psl_play_next(const MetaDataList&);
-        void psl_append_tracks(const MetaDataList&);
+        void psl_append_tracks(MetaDataList&);
         void psl_move_rows(const QList<int>&, int);
         void psl_remove_rows(const QList<int> &, bool select_next_row=true);
 
@@ -124,7 +124,7 @@ public:
         void psl_similar_artists_available(const QList<int>&);
 
         void psl_save_playlist_to_storage();
-        void psl_save_playlist(const QString& filename, bool relative);
+        void psl_save_playlist(QString filename, bool relative);
         void psl_prepare_playlist_for_save(int id);
         void psl_prepare_playlist_for_save(QString name);
 
@@ -133,7 +133,7 @@ public:
 
         CDatabaseConnector* _db;
         CSettingsStorage*   _settings;
-        PlaylistHandler*    _playlist;
+        Playlist*    _playlist;
         PlaylistState       _state;
         qint32              _last_pos;
 
@@ -148,4 +148,4 @@ private slots:
 
 };
 
-#endif /* PLAYLISTNEW_H_ */
+#endif /* PLAYLISTHANDLER_H_ */

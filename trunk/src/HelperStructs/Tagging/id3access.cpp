@@ -127,7 +127,9 @@ bool id3_write_discnumber(ID3_FileHeader& fh, int discnumber, int n_discs){
    if(discnumber <= 0) return false;
    if(n_discs == -1) n_discs = 1;
 
-   char c_new_frame[] = { 0x03, discnumber + '0', '/', n_discs + '0', 0x00 };
+   char c_discnumber = discnumber + '0';
+   char c_n_discs = n_discs + '0';
+   char c_new_frame[] = { 0x03, c_discnumber, '/', c_n_discs, 0x00 };
 
    QByteArray arr(c_new_frame, 5);
    fh.fh_set_frame_content("TPOS", arr);

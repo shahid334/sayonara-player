@@ -14,7 +14,7 @@ void Playlist::report_changes(bool pl_changed, bool track_changed){
         emit sig_playlist_changed(_v_md, _cur_play_idx);
 
     if(track_changed){
-        if(_cur_play_idx < 0 || _cur_play_idx >= _v_md.size() )
+        if(_cur_play_idx < 0 || _cur_play_idx >= (int) _v_md.size() )
             emit sig_stopped();
         else
             emit sig_track_changed(_v_md[_cur_play_idx], _cur_play_idx);
@@ -116,11 +116,11 @@ void Playlist::delete_tracks(const QList<int>& lst){
         }
     }
 
-    if(first_selected == -1 && v_md.size() > lst[0]){
+    if(first_selected == -1 && ((int) v_md.size()) > lst[0]){
         v_md[lst[0]].pl_selected = true;
     }
 
-    else if(first_selected == -1 && v_md.size() <= lst[0] && v_md.size() > 0){
+    else if(first_selected == -1 && ((int) v_md.size() <= lst[0]) && v_md.size() > 0){
         v_md[v_md.size() - 1].pl_selected = true;
     }
 
@@ -147,8 +147,8 @@ void Playlist::insert_tracks(const MetaDataList& lst, int tgt){
     if(lst.size() == 0) return;
     if(tgt < 0) tgt = 0;
 
-    if(tgt > _v_md.size()){
-        tgt = _v_md.size();
+    if(tgt > (int) _v_md.size()){
+        tgt = (int) _v_md.size();
     }
 
    MetaDataList v_md;
@@ -228,7 +228,7 @@ int Playlist::find_track_by_path(QString path){
 
 
 void Playlist::replace_track(int idx, const MetaData& md){
-    if(idx < 0 || idx >= _v_md.size()) return;
+    if(idx < 0 || idx >= (int) _v_md.size()) return;
 
     _v_md[idx] = md;
     report_changes(true, false);

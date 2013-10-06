@@ -55,12 +55,14 @@ class PlaylistView :public QListView{
 		void context_menu_emitted(const QPoint&);
         void sig_metadata_dropped(const MetaDataList&, int);
         void sig_rows_removed(const QList<int> &, bool);
+        void sig_rows_moved(const QList<int>&, int);
         void sig_info_clicked();
         void sig_remove_clicked();
         void sig_edit_clicked();
-        void sig_sel_changed(const MetaDataList&);
+        void sig_sel_changed(const MetaDataList&, const QList<int>&);
         void sig_double_clicked(int);
         void sig_no_focus();
+
 
     private slots:
         void forbid_mimedata_destroyable();
@@ -80,7 +82,7 @@ class PlaylistView :public QListView{
         void set_drag_enabled(bool b);
         void set_mimedata(MetaDataList& v_md, QString text);
         void clear();
-        void fill(MetaDataList& v_metadata, int cur_play_idx);
+        void fill(const MetaDataList& v_metadata, int cur_play_idx);
         void scrollUp();
         void scrollDown();
         void dropEventFromOutside(QDropEvent* event);
@@ -136,6 +138,7 @@ class PlaylistView :public QListView{
         QPoint          _drag_pos;
         QDrag*          _qDrag;
         int             _last_known_drag_row;
+        bool            _ignore_selection_changes;
 
         QList<int>      _cur_selected_rows;
 

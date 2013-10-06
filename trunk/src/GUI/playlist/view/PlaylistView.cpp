@@ -323,22 +323,29 @@ void PlaylistView::clear(){
     _model->removeRows(0, _model->rowCount());
 }
 
+#define IGNORE_SELECTION_CHANGES(b) _ignore_selection_changes = b
 
-void PlaylistView::fill(MetaDataList &v_metadata, int cur_play_idx){
+void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx){
 
-    this->set_delegate_max_width((int) v_metadata.size());
+
+    this->set_delegate_max_width((int) v_md.size());
     _cur_selected_rows.clear();
 
-    _model->removeRows(0, _model->rowCount());
-    if(v_metadata.size() == 0) return;
+    IGNORE_SELECTION_CHANGES(true);
+        _model->removeRows(0, _model->rowCount());
+    IGNORE_SELECTION_CHANGES(false);
 
-    _model->insertRows(0, v_metadata.size());
+    if(v_md.size() == 0) return;
+
+    IGNORE_SELECTION_CHANGES(true);
+        _model->insertRows(0, v_md.size());
+    IGNORE_SELECTION_CHANGES(false);
 
     QList<int> selected_rows;
 
     QModelIndex idx_cur_playing = _model->index(0);
-    for(uint i=0; i<v_metadata.size(); i++){
-        MetaData md = v_metadata[i];
+    for(uint i=0; i<v_md.size(); i++){
+        MetaData md = v_md[i];
 
         QModelIndex model_idx = _model->index(i, 0);
 
@@ -353,7 +360,6 @@ void PlaylistView::fill(MetaDataList &v_metadata, int cur_play_idx){
 
     this->select_rows(selected_rows);
     this->scrollTo(idx_cur_playing, QListView::EnsureVisible);
-
 }
 
 void PlaylistView::row_pressed(const QModelIndex& idx){
@@ -408,6 +414,8 @@ void PlaylistView::select_rows(QList<int> lst){
 
     QItemSelectionModel* sm = this->selectionModel();
     QItemSelection sel;
+    if(lst.size() > 0)
+        this->setCurrentIndex(_model->index(lst[0]));
 
     foreach(int row, lst){
         QModelIndex idx = _model->index(row);
@@ -428,6 +436,7 @@ void PlaylistView::select_all(){
 
 void PlaylistView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
 
+    if(_ignore_selection_changes) return;
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     QListView::selectionChanged(selected, deselected);
@@ -447,7 +456,7 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
 
     MetaDataList v_md;
     _model->get_metadata(idx_list_int, v_md);
-    emit sig_sel_changed(v_md);
+    emit sig_sel_changed(v_md, idx_list_int);
 
     _cur_selected_rows = idx_list_int;
     _sel_changed = true;
@@ -570,11 +579,8 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside){
             return;
         }
 
-        if(_cur_selected_rows[0] < row ) {
-            row -= _cur_selected_rows.size();
-        }
-
-        remove_cur_selected_rows(false);
+        emit sig_rows_moved(_cur_selected_rows, row + 1);
+        return;
     }
 
     const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
@@ -622,7 +628,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside){
         affected_rows << i + row + 1;
     }
 
-    emit sig_metadata_dropped(v_metadata, row);
+    emit sig_metadata_dropped(v_metadata, row + 1);
 }
 
 
@@ -645,13 +651,6 @@ void PlaylistView::scrollDown(){
 void PlaylistView::remove_cur_selected_rows(bool select_next_row){
 
     emit sig_rows_removed(_cur_selected_rows, select_next_row);
-    _cur_selected_rows.clear();
-
-    if(select_next_row){
-        int min_row = get_min_selected();
-        select_row(min_row);
-    }
-
 }
 
 

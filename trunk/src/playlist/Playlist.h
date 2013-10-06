@@ -6,13 +6,9 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-//#include "playlist/PlaylistNew.h"
 
 #include <QString>
 #include <QList>
-
-
-
 
 class Playlist : public QObject
 {

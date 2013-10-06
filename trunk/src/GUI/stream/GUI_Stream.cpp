@@ -23,6 +23,7 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/PlaylistParser.h"
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -98,7 +99,7 @@ void GUI_Stream::listen_clicked(){
 
 	if(url.size() > 5){
 
-        emit sig_play_stream(url.trimmed(), name);
+        play_stream(url, name);
 	}
 }
 
@@ -263,4 +264,51 @@ void GUI_Stream::save_clicked(){
 }
 
 
+void GUI_Stream::play_stream(QString url, QString name){
 
+    MetaDataList v_md;
+
+    // playlist radio
+    qDebug() << "is playlist file? " << url << ": " << Helper::is_playlistfile(url);
+    if(Helper::is_playlistfile(url)){
+        MetaDataList v_md_tmp;
+        if(PlaylistParser::parse_playlist(url, v_md_tmp) > 0){
+
+            foreach(MetaData md, v_md_tmp){
+
+                if(name.size() > 0) md.title = name;
+                else md.title = "Radio Station";
+
+                if(md.artist.size() == 0)
+                    md.artist = url;
+
+                if(md.album.size() == 0)
+                    md.album = md.title;
+
+                md.radio_mode = RADIO_STATION;
+                v_md.push_back(md);
+            }
+        }
+    }
+
+    // real stream
+    else{
+
+        MetaData md;
+
+        if(name.size() > 0) md.title = name;
+        else md.title = "Radio Station";
+
+        md.artist = url;
+        md.album = md.title;
+        md.filepath = url;
+        md.radio_mode = RADIO_STATION;
+
+        v_md.push_back(md);
+    }
+
+    if(v_md.size() == 0) return;
+
+    emit sig_create_playlist(v_md, true);
+    emit sig_play_track(0, 0, true);
+}

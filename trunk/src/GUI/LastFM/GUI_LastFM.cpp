@@ -44,7 +44,6 @@ using namespace std;
 GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 
     ui = 0;
-
     hide();
 }
 
@@ -58,11 +57,7 @@ GUI_LastFM::GUI_LastFM(QString username, QString password){
 
 	this->ui->tf_username->setText(username);
 	this->ui->tf_username->setText(password);
-
-
 }
-
-
 
 
 GUI_LastFM::~GUI_LastFM() {

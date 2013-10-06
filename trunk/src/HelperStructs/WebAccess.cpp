@@ -33,7 +33,7 @@
 
 
 size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata);
-static bool wa_call_url(const QString& url, QString& response);
+
 static int wa_progress(void *p, double dltotal, double dlnow, double ultotal, double ulnow);
 
 
@@ -65,7 +65,7 @@ size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata){
 }
 
 
-
+static
 bool wa_call_url(const QString& url, QString* response){
 
     short download_status = DOWNLOAD_INCOMPLETE;

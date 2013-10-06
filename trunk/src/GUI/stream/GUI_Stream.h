@@ -24,6 +24,7 @@
 
 #include "GUI/ui_GUI_Stream.h"
 #include "PlayerPlugin/PlayerPlugin.h"
+#include "HelperStructs/Helper.h"
 
 #include <QWidget>
 #include <QMap>
@@ -35,7 +36,8 @@ class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 	Q_OBJECT
 
 signals:
-	void sig_play_stream(const QString&, const QString&);
+    void sig_create_playlist(MetaDataList&, bool);
+    void sig_play_track(int, qint32, bool);
 	void sig_close_event();
 
 private slots:
@@ -45,6 +47,9 @@ private slots:
 	void url_text_changed(const QString& text);
 	void delete_clicked();
 	void save_clicked();
+
+private:
+    void play_stream(QString url, QString station_name);
 
 public slots:
     void changeSkin(bool);

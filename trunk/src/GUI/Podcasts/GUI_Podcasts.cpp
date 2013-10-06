@@ -26,6 +26,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/PodcastParser/PodcastParser.h"
 
 #include <QIcon>
 #include <QPixmap>
@@ -97,7 +98,7 @@ void GUI_Podcasts::listen_clicked(){
 
     if(url.size() > 5){
 
-        emit sig_play_podcast(url.trimmed(), name);
+       play_podcasts(url, name);
     }
 }
 
@@ -266,3 +267,45 @@ void GUI_Podcasts::save_clicked(){
 }
 
 
+
+void  GUI_Podcasts::play_podcasts(QString url, QString name){
+
+    MetaDataList v_md;
+
+    // playlist radio
+    qDebug() << "is podcast file? ";
+    QString content;
+    if(Helper::is_podcastfile(url, &content)){
+        qDebug() << "true";
+
+        MetaDataList v_md_tmp;
+        if(Podcast::parse_podcast_xml_file_content(content, v_md_tmp) > 0){
+
+            foreach(MetaData md, v_md_tmp){
+
+                md.radio_mode = RADIO_STATION;
+                if(md.title.size() == 0){
+                    if(name.size() > 0)
+                        md.title = name;
+                    else md.title = "Podcast";
+                }
+
+                v_md.push_back(md);
+            }
+        }
+
+        else {
+            qDebug() << "could not extract metadata";
+
+        }
+    }
+    else {
+        qDebug() << url << " is no podcast file";
+    }
+
+    if(v_md.size() == 0) return;
+
+    emit sig_create_playlist(v_md, true);
+    emit sig_play_track(0, 0, true);
+
+}

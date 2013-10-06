@@ -35,6 +35,7 @@
 
 #include "GUI/player/GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
+
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/library/GUI_Library_windowed.h"
@@ -51,7 +52,8 @@
 #include "GUI/engine/GUI_Spectrum.h"
 #include "GUI/engine/GUI_StyleSettings.h"
 
-#include "playlist/Playlist.h"
+#include "playlist/PlaylistHandler.h"
+#include "playlist/PlaylistLoader.h"
 #include "Engine/Engine.h"
 #include "Engine/SoundPluginLoader.h"
 
@@ -75,16 +77,17 @@ class Application : public QObject
 public:
     Application( QApplication* qapp, int n_files, QTranslator* translator, QObject *parent = 0);
     virtual ~Application();
-    
+
 signals:
-    
+
 public slots:
 
 private:
     GUI_Player* 		player;
     GUI_PlaylistChooser*	ui_playlist_chooser;
     Playlists*              playlists;
-    Playlist*               playlist;
+    PlaylistHandler*        playlist_handler;
+    PlaylistLoader*         playlist_loader;
     CLibraryBase*           library;
     LibraryImporter*        library_importer;
     LastFM*                 lastfm;
@@ -138,4 +141,5 @@ private:
 
 
 #endif // APPLICATION_H
+
 

@@ -255,8 +255,6 @@ public:
             return;
         }
 
-
-
         uint sz = size();
 
         // copy last element

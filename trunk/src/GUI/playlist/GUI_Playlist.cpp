@@ -80,7 +80,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     _info_dialog = dialog;
 
-    _radio_active = RADIO_OFF;
+    _playlist_type = PlaylistTypeStd;
 
     _playlist_mode = settings->getPlaylistMode();
 
@@ -104,11 +104,13 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     connect(ui->listView, SIGNAL(sig_metadata_dropped(const MetaDataList&,int)), this, SLOT(metadata_dropped(const MetaDataList&,int)));
     connect(ui->listView, SIGNAL(sig_rows_removed(const QList<int>&, bool)), this, SLOT(rows_removed(const QList<int>&, bool)));
+    connect(ui->listView, SIGNAL(sig_rows_moved(const QList<int>&, int)), this, SLOT(rows_moved(const QList<int>&, int)));
 
     connect(ui->listView, SIGNAL(sig_edit_clicked()), this, SLOT(psl_edit_tracks()));
     connect(ui->listView, SIGNAL(sig_info_clicked()), this, SLOT(psl_info_tracks()));
 
-    connect(ui->listView, SIGNAL(sig_sel_changed(const MetaDataList&)), this, SLOT(sel_changed(const MetaDataList&)));
+    connect(ui->listView, SIGNAL(sig_sel_changed(const MetaDataList&, const QList<int>&)),
+            this, SLOT(sel_changed(const MetaDataList&, const QList<int>&)));
     connect(ui->listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
     connect(ui->listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
 
@@ -189,16 +191,16 @@ void GUI_Playlist::check_dynamic_play_button(){
 
 // Slot: comes from listview
 void GUI_Playlist::metadata_dropped(const MetaDataList& v_md, int row){
-    emit dropped_tracks(v_md, row);
+    emit sig_tracks_dropped(v_md, row);
 }
 
 // SLOT: fill all tracks in v_metadata into playlist
-void GUI_Playlist::fillPlaylist(MetaDataList& v_metadata, int cur_play_idx, int radio_mode){
+void GUI_Playlist::fillPlaylist(const MetaDataList& v_metadata, int cur_play_idx, PlaylistType playlist_type){
 
     ui->listView->fill(v_metadata, cur_play_idx);
     _total_msecs = 0;
-    _radio_active = radio_mode;
-    set_radio_active(radio_mode);
+    _playlist_type= playlist_type;
+    set_playlist_type(_playlist_type);
 
     foreach(MetaData md, v_metadata){
         _total_msecs += md.length_ms;
@@ -215,21 +217,26 @@ void GUI_Playlist::clear_playlist_slot(){
     ui->btn_import->setVisible(false);
     ui->listView->clear();
 
-    emit clear_playlist();
+    emit sig_cleared();
 }
 
 
 // private SLOT: playlist item pressed (init drag & drop)
-void GUI_Playlist::sel_changed(const MetaDataList& v_md){
+void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_rows){
 
     _info_dialog->setMetaData(v_md);
 
-    this->_info_dialog->set_tag_edit_visible(_radio_active == RADIO_OFF);
+    this->_info_dialog->set_tag_edit_visible(_playlist_type == PlaylistTypeStd);
+    emit sig_selection_changed(sel_rows);
+}
+
+void GUI_Playlist::rows_moved(const QList<int> & lst, int tgt_idx){
+    emit sig_rows_moved(lst, tgt_idx);
 }
 
 
 void GUI_Playlist::double_clicked(int row){
-    emit selected_row_changed(row);
+    emit sig_cur_idx_changed(row);
 }
 
 void GUI_Playlist::track_changed(int row){
@@ -294,7 +301,7 @@ void GUI_Playlist::set_total_time_label(){
 
     QString text = "";
 
-    if(_radio_active == RADIO_STATION){
+    if(_playlist_type == PlaylistTypeStream){
 
         ui->lab_totalTime->setText(tr("Radio"));
         return;
@@ -315,25 +322,25 @@ void GUI_Playlist::set_total_time_label(){
 
 
 
-void GUI_Playlist::set_radio_active(int radio){
+void GUI_Playlist::set_playlist_type(PlaylistType playlist_type){
 
-    _radio_active = radio;
+    _playlist_type = playlist_type;
 
-    ui->btn_append->setVisible(radio == RADIO_OFF);
-    ui->btn_dynamic->setVisible(radio == RADIO_OFF);
-    ui->btn_repAll->setVisible(radio == RADIO_OFF);
-    ui->btn_shuffle->setVisible(radio == RADIO_OFF);
+    ui->btn_append->setVisible(playlist_type == PlaylistTypeStd);
+    ui->btn_dynamic->setVisible(playlist_type == PlaylistTypeStd);
+    ui->btn_repAll->setVisible(playlist_type == PlaylistTypeStd);
+    ui->btn_shuffle->setVisible(playlist_type == PlaylistTypeStd);
 
     int actions = 0;
 
-    if(radio != RADIO_OFF)
+    if(playlist_type != PlaylistTypeStd)
         actions = ENTRY_INFO;
 
     else
         actions = (ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
 
     ui->listView->set_context_menu_actions(actions);
-    ui->listView->set_drag_enabled(radio != RADIO_LFM);
+    ui->listView->set_drag_enabled(playlist_type != PlaylistTypeLFM);
 }
 
 

@@ -65,6 +65,11 @@ SET(HEADERS
     library/threads/ImportCachingThread.h
     library/threads/ImportCopyThread.h
     playlist/Playlist.h
+    playlist/LFMPlaylist.h
+    playlist/StdPlaylist.h
+    playlist/StreamPlaylist.h
+    playlist/PlaylistHandler.h
+    playlist/PlaylistLoader.h
     playlists/Playlists.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
@@ -116,7 +121,11 @@ SET(SOURCES
     DatabaseAccess/CDatabasePodcasts.cpp
     DatabaseAccess/CDatabaseVisStyles.cpp
     playlist/Playlist.cpp
-    playlist/Playlist_GUI_slots.cpp
+    playlist/LFMPlaylist.cpp
+    playlist/StdPlaylist.cpp
+    playlist/StreamPlaylist.cpp
+    playlist/PlaylistHandler.cpp
+    playlist/PlaylistLoader.cpp
     playlists/Playlists.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp

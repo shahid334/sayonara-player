@@ -43,7 +43,7 @@ public:
 
 
 signals:
-	void sig_playlist_created(QStringList&);
+    void sig_playlist_created(QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
     void sig_all_tracks_loaded (MetaDataList&);
     void sig_all_albums_loaded(AlbumList&);
