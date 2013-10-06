@@ -26,14 +26,15 @@
  *      Author: luke
  */
 
-#ifndef PLAYLIST_H_
-#define PLAYLIST_H_
+#ifndef PLAYLISTNEW_H_
+#define PLAYLISTNEW_H_
 
 #include "GUI/playlist/model/PlaylistItemModel.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "playlist/PlaylistHandler.h"
 
 #include <iostream>
 
@@ -54,26 +55,30 @@ struct BackupPlaylist{
 };
 
 
-class Playlist  : public QObject {
+
+class PlaylistHandler;
+class PlaylistNew  : public QObject {
 
 	Q_OBJECT
 public:
-    Playlist(QObject * parent=0);
-	virtual ~Playlist();
+    PlaylistNew(QObject * parent=0);
+    virtual ~PlaylistNew();
 
 
-    void load_old_playlist();
+
 	uint get_num_tracks();
 
 	signals:
-        void sig_playlist_created(MetaDataList&, int, int);
+        void sig_playlist_created(const MetaDataList&, int, PlaylistType);
         void sig_selected_file_changed_md(const MetaData&, int pos=0, bool play=true);
 		void sig_selected_file_changed(int row);
 		void sig_no_track_to_play();
+        void sig_goon_playing();
+
 		void sig_mp3s_loaded_signal(int percent);
 		void sig_data_for_id3_change(const MetaDataList&);
 		void sig_cur_played_info_changed(const MetaData&);
-		void sig_goon_playing();
+
 		void sig_search_similar_artists(const QString&);
 		void sig_playlist_prepared(int, MetaDataList&);
 		void sig_playlist_prepared(QString, MetaDataList&);
@@ -84,77 +89,63 @@ public:
         void sig_new_stream_session();
 
 
-
-
 	public slots:
 
-        void psl_createPlaylist(QStringList&);
-        void psl_createPlaylist(MetaDataList&);
-        void psl_createPlaylist(CustomPlaylist&);
 
-		void psl_change_track(int);
-		void psl_next_track();
-		void psl_playlist_mode_changed(const Playlist_Mode&);
-        void psl_save_playlist(const QString&, const MetaDataList& v_md, bool relative);
-        void psl_prepare_playlist_for_save(int id);
-		void psl_prepare_playlist_for_save(QString name);
-        void psl_prepare_playlist_for_save_file(QString, bool);
-		void psl_play();
+        void psl_createPlaylist(QStringList&, bool start_playing=true);
+        void psl_createPlaylist(MetaDataList&, bool start_playing=true);
+        void psl_createPlaylist(CustomPlaylist&, bool start_playing=false);
+
+
+        void psl_play();
         void psl_pause();
-		void psl_stop();
-		void psl_forward();
-		void psl_backward();
+        void psl_stop();
+        void psl_forward();
+        void psl_backward();
+        void psl_change_track(int, qint32 pos=0, bool start_playing=true);
+        void psl_next();
 
-		void psl_save_playlist_to_storage();
-		void psl_edit_id3_request();
-		void psl_id3_tags_changed(MetaDataList&);
-        void psl_track_time_changed(MetaData&);
-		void psl_import_new_tracks_to_library(bool);
-		void psl_import_result(bool);
-        void psl_lfm_radio_init(bool);
-        void psl_new_lfm_playlist_available(const MetaDataList&);
-		void psl_play_stream(const QString&, const QString&);
-        void psl_play_podcast(const QString&, const QString&);
-		void psl_valid_strrec_track(const MetaData&);
-		void psl_play_next_tracks(const MetaDataList&);
-        void psl_gapless_track();
+        void psl_selection_changed(const QList<int>&);
+        void psl_playlist_mode_changed(const Playlist_Mode&);
 
-        void psl_insert_tracks(const MetaDataList&, int idx);
-        void psl_append_tracks(MetaDataList&);
-        void psl_remove_rows(const QList<int> &, bool select_next_row=true);
         void psl_clear_playlist();
+        void psl_insert_tracks(const MetaDataList&, int idx);
+        void psl_play_next(const MetaDataList&);
+        void psl_append_tracks(const MetaDataList&);
+        void psl_move_rows(const QList<int>&, int);
+        void psl_remove_rows(const QList<int> &, bool select_next_row=true);
+
+
+		void psl_id3_tags_changed(MetaDataList&);
+
+        void psl_track_time_changed(MetaData&);
+
+
         void psl_similar_artists_available(const QList<int>&);
 
-
+        void psl_save_playlist_to_storage();
+        void psl_save_playlist(const QString& filename, bool relative);
+        void psl_prepare_playlist_for_save(int id);
+        void psl_prepare_playlist_for_save(QString name);
 
 
 	private:
 
-        MetaDataList        _v_meta_data;
-        QStringList			_pathlist;
-
-        int					_cur_play_idx;
-        bool                _is_playing;
-        int					_radio_active;
-        bool                _pause;
-
-
-        Playlist_Mode		_playlist_mode;
-
         CDatabaseConnector* _db;
         CSettingsStorage*   _settings;
-        MetaDataList        _v_stream_playlist;
-        BackupPlaylist      _backup_playlist;
+        PlaylistHandler*    _playlist;
+        PlaylistState       _state;
+        qint32              _last_pos;
 
-        void                send_cur_playing_signal(int);
+        PlaylistType determine_playlist_type(const MetaDataList& v_md);
+        bool new_playlist(PlaylistType type);
 
+private slots:
+        void playlist_changed(const MetaDataList&, int);
+        void track_changed(const MetaData&, int);
+        void no_track_to_play();
 
-	/* wrapper for Helper::checkTrack */
-	bool 				checkTrack(const MetaData& md);
-	void				save_stream_playlist();
-
-	void				remove_row(int row);
 
 };
 
-#endif /* PLAYLIST_H_ */
+#endif /* PLAYLISTNEW_H_ */
