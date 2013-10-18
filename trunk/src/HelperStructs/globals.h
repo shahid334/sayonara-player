@@ -18,12 +18,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef GLOBALS_H_
+#define GLOBALS_H_
+
 #include <QString>
 #include <QDebug>
 
-
-#ifndef GLOBALS_H_
-#define GLOBALS_H_
 
 
 #define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")

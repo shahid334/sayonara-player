@@ -49,7 +49,6 @@ protected:
 	int			_eq_type;
 	int			_state;
 	QString		_name;
-	bool		_track_finished;
 
 	bool 		_playing_stream;
     bool        _gapless_track_available;
@@ -79,7 +78,7 @@ signals:
     void sig_spectrum(QList<float>&);
 
 public slots:
-    virtual void play(int pos_sec=0)=0;
+    virtual void play()=0;
 	virtual void stop()=0;
 	virtual void pause()=0;
 	virtual void setVolume(int vol)=0;
@@ -87,7 +86,6 @@ public slots:
 	virtual void jump(int where, bool percent=true)=0;
     virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true)=0;
     virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true )=0;
-    virtual void psl_gapless_track(const MetaData&)=0;
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;

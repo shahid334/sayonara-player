@@ -21,6 +21,7 @@ PKG_CHECK_MODULES(GSTREAMER_BASE REQUIRED gstapp-0.10)
 SET(HEADERS
         GSTEngine.h
         GSTEngineHelper.h
+        GSTPipeline.h
         StreamRipperBufferThread.h
         StreamRecorder.h
 	${CMAKE_SOURCE_DIR}/src/Engine/Engine.h
@@ -28,8 +29,10 @@ SET(HEADERS
 
 SET(SOURCES
 	GSTEngine.cpp
+        GSTEngineCallbacks.cpp
         StreamRipperBufferThread.cpp
         StreamRecorder.cpp
+        GSTPipeline.cpp
 	${CMAKE_SOURCE_DIR}/src/HelperStructs/Helper.cpp
 	${CMAKE_SOURCE_DIR}/src/HelperStructs/Tagging/id3.cpp
 )

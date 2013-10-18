@@ -32,6 +32,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
+#include "Engine/GStreamer/GSTPipeline.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
 
@@ -40,23 +41,45 @@
 
 #include <QObject>
 #include <QDebug>
-#include <QTimer>
+
 
 #include <vector>
 
 using namespace std;
 
 
-#define CAPS_TYPE_INT 0
-#define CAPS_TYPE_FLOAT 1
-#define CAPS_TYPE_UNKNOWN -1
-struct MyCaps {
-    int type;
-    bool sig;
-    int width;
-    int channels;
-    bool is_parsed;
+enum CapsType {
+    CapsTypeUnknown=0,
+    CapsTypeInt=1,
+    CapsTypeFloat=2
+};
 
+class MyCaps {
+
+private:
+    CapsType     _type;
+    bool    _sig;
+    int     _width;
+    int     _channels;
+    bool    _parsed;
+
+public:
+
+    MyCaps(){
+        _type = CapsTypeUnknown;
+        _sig = false;
+        _width = -1;
+        _channels = -1;
+        _parsed = false;
+    }
+
+    bool is_parsed(){ return _parsed; }
+    void set_parsed(bool b){ _parsed = b; }
+
+    CapsType get_type(){ return _type; }
+    bool get_signed() {return _sig; }
+    int get_width() { return _width; }
+    int get_channels() { return _channels; }
 
     void parse(GstCaps* caps){
         QString info = gst_caps_to_string(caps);
@@ -67,28 +90,30 @@ struct MyCaps {
 
             s = s.trimmed();
             if(s.startsWith("audio", Qt::CaseInsensitive)){
-                if(s.contains("int", Qt::CaseInsensitive)) type = CAPS_TYPE_INT;
-                else if(s.contains("float", Qt::CaseInsensitive)) type = CAPS_TYPE_FLOAT;
-                else type = CAPS_TYPE_UNKNOWN;
+                if(s.contains("int", Qt::CaseInsensitive)) _type = CapsTypeInt;
+                else if(s.contains("float", Qt::CaseInsensitive)) _type = CapsTypeFloat;
+                else _type = CapsTypeUnknown;
             }
 
             else if(s.startsWith("signed", Qt::CaseInsensitive)){
-                if(s.contains("true", Qt::CaseInsensitive)) sig = true;
-                else sig = false;
+                if(s.contains("true", Qt::CaseInsensitive)) _sig = true;
+                else _sig = false;
             }
 
             else if(s.startsWith("width", Qt::CaseInsensitive)){
-                width = s.right(2).toInt();
+                _width = s.right(2).toInt();
             }
 
             else if(s.startsWith("channels", Qt::CaseInsensitive)){
-                channels = s.right(1).toInt();
-                if(channels > 2) channels = 2;
+                _channels = s.right(1).toInt();
+                if(_channels > 2) _channels = 2;
             }
         }
-        is_parsed = true;
+        _parsed = true;
     }
 };
+
+
 
 
 
@@ -107,44 +132,17 @@ public:
 
 
 private:
-
-
-
-    GstElement* _pipeline;
-	GstElement* _equalizer;
-    GstElement* _eq_queue;
-    GstElement* _volume;
-
-    GstPad* _tee_app_pad;
-    GstPad* _app_pad;
-
-	GstElement* _audio_sink;
-    GstElement* _audio_bin;
-
-    GstPadTemplate* _tee_src_pad_template;
-
-    GstElement* _level_audio_convert, *_spectrum_audio_convert;
-    GstElement* _level, *_spectrum;
-    GstPad*     _level_pad, *_spectrum_pad;
-    GstPad*     _tee_level_pad, *_tee_spectrum_pad;
-
-    GstElement* _level_sink, *_spectrum_sink;
-    GstElement* _level_queue, *_spectrum_queue;
-
 	
-    GstElement* _tee;
-	
-    GstBus*		_bus;
+    GSTPipeline*    _pipeline;
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;
-    MyCaps     _caps;
+    MyCaps*      _caps;
+
 
     bool        _show_level;
     bool        _show_spectrum;
-
-
-
+    int         _jump_play;
 
 
 private slots:
@@ -156,7 +154,7 @@ private slots:
 
 
 public slots:
-    virtual void play(int pos_sec=0);
+    virtual void play();
 	virtual void stop();
 	virtual void pause();
 	virtual void setVolume(int vol);
@@ -164,7 +162,7 @@ public slots:
 	virtual void jump(int where, bool percent=true);
     virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true);
     virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true );
-    virtual void psl_gapless_track(const MetaData&);
+
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
     virtual void psl_new_stream_session();
@@ -184,8 +182,8 @@ public:
 	void		set_track_finished();
     void        set_about_to_finish();
     void        emit_buffer(float inv_array_elements, float scale);
-	void 		set_buffer(GstBuffer*);
-    void        set_level(double right, double left);
+
+    void        set_level(float right, float left);
     void        set_spectrum(QList<float>&);
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
@@ -194,16 +192,19 @@ public:
 
     bool get_show_level();
     bool get_show_spectrum();
+    MyCaps* get_caps();
+    void do_jump_play();
 
 
 private:
 	CSettingsStorage* _settings;
 
 	void init_play_pipeline();
-    bool set_uri(const MetaData& md, bool& start_play);
-    QTimer* _timer;
+    bool set_uri(const MetaData& md, bool* start_play);
 
 };
+
+extern GST_Engine* gst_obj_ref;
 
 
 
