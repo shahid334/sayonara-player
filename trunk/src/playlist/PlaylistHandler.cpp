@@ -38,6 +38,7 @@ PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent){
 	_db = CDatabaseConnector::getInstance();
     _last_pos = 0;
     _playlist = 0;
+    _state = PlaylistStop;
 
     new_playlist(PlaylistTypeStd);
 }
@@ -123,13 +124,26 @@ bool PlaylistHandler::new_playlist(PlaylistType type){
 // create a playlist, where metadata is already available
 void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing){
 
-    if(start_playing) _state = PlaylistPlay;
-    else if(_state != PlaylistPause) _state = PlaylistStop;
+    bool empty = _playlist->is_empty();
+
+    //if(start_playing) _state = PlaylistPlay;
+    //else if(_state != PlaylistPause) _state = PlaylistStop;
 
     PlaylistType type = determine_playlist_type(v_md);
     bool new_created = new_playlist(type);
 
     _playlist->create_playlist(v_md, start_playing && new_created);
+
+
+    if(empty && _state == PlaylistStop && !_playlist->is_empty() && start_playing)
+        psl_play();
+
+
+    else if(start_playing && !_playlist->is_empty())
+        psl_play();
+
+    else
+        psl_stop();
 }
 
 
@@ -313,10 +327,15 @@ void PlaylistHandler::psl_selection_changed(const QList<int> & lst){
 
 void PlaylistHandler::psl_insert_tracks(const MetaDataList& v_md, int row){
 
+    bool empty = _playlist->is_empty();
+
     if(_playlist->get_type() != PlaylistTypeStd)
         this->new_playlist(PlaylistTypeStd);
 
     _playlist->insert_tracks(v_md, row);
+
+    if(empty && _state == PlaylistStop && !_playlist->is_empty())
+                  psl_play();
 
 }
 
@@ -332,7 +351,14 @@ void PlaylistHandler::psl_play_next(const MetaDataList & v_md){
 
 void PlaylistHandler::psl_append_tracks(MetaDataList& v_md){
 
+    bool empty = _playlist->is_empty();
+
     _playlist->append_tracks(v_md);
+
+    if(empty && _state == PlaylistStop && !_playlist->is_empty()){
+         psl_play();
+    }
+
 }
 
 

@@ -194,6 +194,7 @@ public:
     bool get_show_spectrum();
     MyCaps* get_caps();
     void do_jump_play();
+    void unmute();
 
 
 private:

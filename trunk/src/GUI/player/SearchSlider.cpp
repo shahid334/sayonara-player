@@ -33,6 +33,7 @@
 
 SearchSlider::SearchSlider(QWidget* parent) : QSlider(parent) {
 	_searching = false;
+    _old_value = 0;
 }
 
 SearchSlider::~SearchSlider() {
@@ -53,24 +54,42 @@ bool SearchSlider::event(QEvent* e){
     QMouseEvent* mouseEvent;
     QWheelEvent* wheelEvent;
 
-    if(isEnabled())
-        e->accept();
+    if(!isEnabled()) {
+
+
+        e->ignore();
+        return true;
+    }
+
+    mouseEvent = dynamic_cast<QMouseEvent*>( e );
+    if(mouseEvent && mouseEvent->button() == Qt::MiddleButton){
+        e->ignore();
+        return true;
+    }
+
+
 
     switch(e->type()){
-        case QEvent::MouseTrackingChange:
-        break;
 
         case QEvent::MouseButtonDblClick:
+        e->accept();
         break;
 
 		case QEvent::MouseButtonPress:
 
+
             if(!isEnabled()) break;
+
+            mouseEvent = (QMouseEvent*) e;
+            if(mouseEvent->button() == Qt::MidButton){
+                e->ignore();
+                return true;
+            }
+
+            e->accept();
 
             _searching = true;
 
-
-            mouseEvent = (QMouseEvent*) e;
 
 			if(this->orientation() == Qt::Horizontal)
 				percent = (mouseEvent->x() * 100) / this->width();
@@ -89,6 +108,7 @@ bool SearchSlider::event(QEvent* e){
             if(!isEnabled()) break;
 
 			mouseEvent = (QMouseEvent*) e;
+            e->accept();
 
 			if(this->orientation() == Qt::Horizontal)
 				percent = (mouseEvent->x() * 100) / this->width();
@@ -104,11 +124,16 @@ bool SearchSlider::event(QEvent* e){
 
 			break;
 
+        case QEvent::MouseTrackingChange:
+            e->accept();
+            break;
+
 		case QEvent::MouseButtonRelease:
 
             if(!isEnabled()) break;
 
 			mouseEvent = (QMouseEvent*) e;
+            e->accept();
 
 			if(this->orientation() == Qt::Horizontal)
 				percent = (mouseEvent->x() * 100) / this->width();
@@ -127,8 +152,8 @@ bool SearchSlider::event(QEvent* e){
         case QEvent::Wheel:
 
             if(!isEnabled()) break;
-            if(this->orientation() == Qt::Horizontal) break;
 
+            e->accept();
             wheelEvent = (QWheelEvent*) e;
 
             percent = cur_val + (wheelEvent->delta() / abs(wheelEvent->delta()) * 3);
@@ -139,6 +164,7 @@ bool SearchSlider::event(QEvent* e){
 
 		default:
             QSlider::event(e);
+            e->accept();
 
 			break;
 	}

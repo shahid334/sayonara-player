@@ -47,94 +47,81 @@
 <context>
     <name>CLibraryBase</name>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="75"/>
         <source>Loading files...</source>
-        <translation type="unfinished">Carregar arquivos ...</translation>
+        <translation type="obsolete">Carregar arquivos ...</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="130"/>
         <source>Cancelled</source>
-        <translation>Cancelado</translation>
+        <translation type="obsolete">Cancelado</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="146"/>
         <source>%1 tracks ready</source>
-        <translation type="unfinished">%1 faixas pronto</translation>
+        <translation type="obsolete">%1 faixas pronto</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="151"/>
         <source>No tracks</source>
-        <translation type="unfinished">Não há faixas</translation>
+        <translation type="obsolete">Não há faixas</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="171"/>
-        <location filename="../library/CLibraryAdmin.cpp" line="215"/>
         <source>No Tracks</source>
-        <translation type="unfinished">Não há faixas</translation>
+        <translation type="obsolete">Não há faixas</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="225"/>
         <source>Rollback...</source>
-        <translation type="unfinished">Descarte...</translation>
+        <translation type="obsolete">Descarte...</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="240"/>
         <source>All files could be imported</source>
-        <translation type="unfinished">Todos os arquivos podem ser importados</translation>
+        <translation type="obsolete">Todos os arquivos podem ser importados</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="243"/>
         <source>%1 of %2 files could be imported</source>
-        <translation type="unfinished">%1 de %2 arquivos podem ser importados</translation>
+        <translation type="obsolete">%1 de %2 arquivos podem ser importados</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="245"/>
-        <location filename="../library/CLibraryAdmin.cpp" line="251"/>
         <source>Import files</source>
-        <translation type="unfinished">Importar Arquivos</translation>
+        <translation type="obsolete">Importar Arquivos</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="252"/>
         <source>Sorry, but tracks could not be imported</source>
-        <translation type="unfinished">Faixas não podem ser Impotadas</translation>
+        <translation type="obsolete">Faixas não podem ser Impotadas</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="253"/>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
-        <translation type="unfinished">Use &quot;importação&quot; do menu Arquivo</translation>
+        <translation type="obsolete">Use &quot;importação&quot; do menu Arquivo</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="277"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="65"/>
         <source>Please select your library first</source>
         <translation type="unfinished">Selecione sua biblioteca primeiro</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="280"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="68"/>
         <source>Open Directory</source>
         <translation type="unfinished">Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="285"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="73"/>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
         <translation type="unfinished">Eu disse: &quot;Por favor, escolha a sua biblioteca em primeiro lugar&quot;. Tchau!</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="388"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="176"/>
         <source>files</source>
         <translation type="unfinished">Arquivos</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="400"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="188"/>
         <source>entries</source>
         <translation>Entradas</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="411"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="199"/>
         <source>All %1 could be removed</source>
         <translation type="unfinished">Todos %1 poderia ser removido</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="415"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="203"/>
         <source>%1 of %2 %3 could not be removed</source>
         <translation type="unfinished">%1 de %2 %3 não puderam ser removidos</translation>
     </message>
@@ -173,6 +160,7 @@
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="39"/>
+        <location filename="../GUI/ContextMenu.cpp" line="63"/>
         <source>Append</source>
         <translation type="unfinished">Anexar</translation>
     </message>
@@ -257,12 +245,12 @@
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="299"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="271"/>
         <source>This will overwrite your custom preset</source>
         <translation type="unfinished">Isso irá substituir a predefinição personalizada</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="300"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="272"/>
         <source>Continue?</source>
         <translation>Continuar?</translation>
     </message>
@@ -589,17 +577,29 @@
 <context>
     <name>GUI_Level</name>
     <message>
-        <location filename="../GUI/engine/GUI_Level.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="462"/>
         <source>Level</source>
         <translation type="unfinished">Nível</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Level.ui" line="592"/>
+        <location filename="../GUI/ui_GUI_Level.h" line="463"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/engine/GUI_Level.h" line="20"/>
+        <source>Le&amp;vel</source>
+        <translation type="obsolete">Ní&amp;vel</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_LevelPainter</name>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished">Forma</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_LevelPainter.h" line="43"/>
         <source>Le&amp;vel</source>
         <translation type="unfinished">Ní&amp;vel</translation>
     </message>
@@ -607,109 +607,113 @@
 <context>
     <name>GUI_Library_windowed</name>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="123"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="110"/>
         <source>Ctrl+.</source>
         <translation>Ctrl+.</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="132"/>
         <source>Ctrl+S</source>
-        <translation>Ctrl+G</translation>
+        <translation type="obsolete">Ctrl+G</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="119"/>
+        <source>Ctrl+?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Title</source>
         <translation>Título</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="234"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="303"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>Artist</source>
         <translation>Artista</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Album</source>
         <translation type="unfinished">Álbum</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Year</source>
         <translation type="unfinished">Ano</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Dur.</source>
         <translation>Dur.</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Bitrate</source>
         <translation type="unfinished">Taxa de Amostragem</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="232"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="301"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Filesize</source>
         <translation type="unfinished">Tam de Arquivo</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <source>Duration</source>
         <translation type="unfinished">Duranção</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="233"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="234"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="302"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="303"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>#Tracks</source>
         <translation type="unfinished">#Faixas</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="664"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="619"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="718"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="673"/>
         <source>Warning</source>
         <translation type="unfinished">Advertência</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="720"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="675"/>
         <source>Only from library</source>
         <translation type="unfinished">Apenas as faixas da biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="722"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="677"/>
         <source>You are about to delete %1 files</source>
         <translation type="unfinished">Você está prestes a apagar %1 arquivos</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="726"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="681"/>
         <source>Continue?</source>
         <translation>Continuar?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="769"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="724"/>
         <source>Importing was successful</source>
         <translation type="unfinished">A importação foi bem sucedida</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="772"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="727"/>
         <source>Importing failed</source>
         <translation type="unfinished">Importando falhou</translation>
     </message>
@@ -755,52 +759,52 @@
 <context>
     <name>GUI_Player</name>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="81"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="82"/>
         <source>Sayonara Player</source>
         <translation type="unfinished">Sayonara Player</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="83"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="84"/>
         <source>Written by</source>
         <translation type="unfinished">Desenvolvido por</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="84"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="85"/>
         <source>Copyright</source>
         <translation type="unfinished">Copyright</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="237"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="241"/>
         <source>&amp;Library</source>
         <translation type="unfinished">&amp;Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="404"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="436"/>
         <source>Warning</source>
         <translation type="unfinished">Advertência</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="404"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="436"/>
         <source>Cannot login to Last.fm</source>
         <translation type="unfinished">Não é possível autenticar a Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="583"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="615"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="594"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="626"/>
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="804"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="862"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="805"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="863"/>
         <source>A new version is available!</source>
         <translation type="unfinished">A nova versão está disponível!</translation>
     </message>
@@ -817,7 +821,7 @@
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="62"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="86"/>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="218"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="219"/>
         <source>Open Directory</source>
         <translation type="unfinished">Abrir Diretório</translation>
     </message>
@@ -839,76 +843,85 @@
         <translation type="unfinished">Importar Arquivos</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="236"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="237"/>
         <source>Library</source>
         <translation type="unfinished">Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="237"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="238"/>
         <source>Do you want to reload the Library?</source>
         <translation type="unfinished">Quer atualizar a biblioteca?</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="330"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="331"/>
         <source>Help</source>
         <translation type="unfinished">Ajuda</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="330"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="331"/>
         <source>Please visit the forum at</source>
         <translation type="unfinished">Por favor, visite o fórum em</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="349"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="363"/>
+        <source>Special thanks to %1 and %2 for translating</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="368"/>
         <source>About Sayonara</source>
         <translation type="unfinished">Sobre o Sayonara</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="352"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="371"/>
         <source>Written by Lucio Carreras</source>
         <translation type="unfinished">Desenvolvido por Lucio Carreras</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="353"/>
+        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="372"/>
         <source>License</source>
         <translation type="unfinished">Licença</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="355"/>
         <source>Special thanks to %1 for translating</source>
         <translatorcomment>Leandro Vital dos Santos</translatorcomment>
-        <translation type="unfinished">Agradecimento especial a %1 pela a tradução</translation>
+        <translation type="obsolete">Agradecimento especial a %1 pela a tradução</translation>
     </message>
 </context>
 <context>
     <name>GUI_Playlist</name>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="183"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="71"/>
+        <source>Ctrl+.</source>
+        <translation type="unfinished">Ctrl+.</translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="184"/>
         <source>Please set library path first</source>
         <translation type="unfinished">Por favor, definir o caminho da biblioteca primeiro</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="187"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="188"/>
         <source>Dynamic playing</source>
         <translation type="unfinished">Reprodução Dinâmica</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="215"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="216"/>
         <source>Playlist empty</source>
         <translation type="unfinished">Lista de reprodução vazia</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="300"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="306"/>
         <source>Radio</source>
         <translation type="unfinished">Rádio</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="309"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="315"/>
         <source> Track - </source>
         <translation type="unfinished"> Faixa -</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="310"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="316"/>
         <source> Tracks - </source>
         <translation type="unfinished"> Faixas -</translation>
     </message>
@@ -1044,17 +1057,17 @@
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="210"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="211"/>
         <source>new</source>
         <translation type="unfinished">Novo</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="223"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="224"/>
         <source>Really wanna delete %1?</source>
         <translation type="unfinished">Realmente quer deletar %1?</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="57"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="59"/>
         <source>P&amp;odcasts</source>
         <translation>P&amp;odcasts</translation>
     </message>
@@ -1073,6 +1086,19 @@
         <translation type="unfinished">Selecione
 caminho da
 Biblioteca</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_Spectrum</name>
+    <message>
+        <location filename="../GUI/engine/GUI_Spectrum.ui" line="26"/>
+        <source>Form</source>
+        <translation type="unfinished">Forma</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Spectrum.h" line="45"/>
+        <source>&amp;Spectrum</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1172,22 +1198,22 @@ Biblioteca</translation>
         <translation type="unfinished">Iniciar</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.cpp" line="90"/>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="91"/>
         <source>Radio</source>
         <translation type="unfinished">Rádio</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.cpp" line="209"/>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="210"/>
         <source>new</source>
         <translation type="unfinished">Novo</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.cpp" line="222"/>
+        <location filename="../GUI/stream/GUI_Stream.cpp" line="223"/>
         <source>Really wanna delete %1?</source>
         <translation type="unfinished">Realmente quer deletar %1?</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.h" line="58"/>
+        <location filename="../GUI/stream/GUI_Stream.h" line="63"/>
         <source>&amp;Webstreams</source>
         <translation type="unfinished">&amp;Webstreams</translation>
     </message>
@@ -1256,6 +1282,120 @@ Por favor, escolha outra pasta</translation>
     </message>
 </context>
 <context>
+    <name>GUI_Style</name>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
+        <source>Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
+        <source>Close</source>
+        <translation type="unfinished">Fechar</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
+        <source>Spectrum</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
+        <source>Bins</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
+        <source>Vert. spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="190"/>
+        <source>Fading steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="138"/>
+        <location filename="../GUI/engine/GUI_Style.ui" line="212"/>
+        <source>Hor. spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="165"/>
+        <source>Rect height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="175"/>
+        <source>Level</source>
+        <translation type="unfinished">Nível</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="200"/>
+        <source>Rect width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="219"/>
+        <source>Ver. spacing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="256"/>
+        <source>Style settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="388"/>
+        <source>Color 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="395"/>
+        <source>Color 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="432"/>
+        <source>Color 3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_Style.ui" line="439"/>
+        <source>Color 4</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GUI_StyleSettings</name>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="141"/>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
+        <source>Warning</source>
+        <translation type="unfinished">Advertência</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="142"/>
+        <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
+        <source>Error</source>
+        <translation type="unfinished">Erro</translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
+        <source>Please specify a name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
+        <source>Save changes?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_TagEdit</name>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="32"/>
@@ -1263,119 +1403,190 @@ Por favor, escolha outra pasta</translation>
         <translation type="unfinished">ID3 Tagger</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="63"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="339"/>
+        <source>Tag
+expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
         <source>&lt;</source>
         <translation>&lt;</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="78"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="553"/>
         <source>Track</source>
         <translation type="unfinished">Faixa</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="108"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="583"/>
         <source>&gt;</source>
         <translation>&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="128"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="290"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="398"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="473"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="521"/>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="593"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="79"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="115"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="184"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="302"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="415"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="639"/>
         <source>all</source>
         <translation>Todas</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="152"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="352"/>
         <source>Path</source>
         <translation type="unfinished">Caminho</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="185"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="275"/>
         <source>?</source>
         <translation>?</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="197"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="321"/>
         <source>Tag from path</source>
         <translation type="unfinished">Tag do caminho</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="209"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="230"/>
         <source>Artist</source>
         <translation>Artista</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="263"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="215"/>
         <source>Year</source>
         <translation type="unfinished">Ano</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="305"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="130"/>
         <source>Apply expression</source>
         <translation type="unfinished">Aplicar expressão</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="320"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="624"/>
         <source>Undo expression</source>
         <translation type="unfinished">Desfazer expressão</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="362"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="287"/>
         <source># Track</source>
         <translation type="unfinished"># Faixa</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="383"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="46"/>
         <source>Title</source>
         <translation>Título</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="458"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="364"/>
         <source>Comment</source>
         <translation type="unfinished">Comentário</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="485"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="427"/>
         <source>Album</source>
         <translation type="unfinished">Álbum</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="497"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="196"/>
         <source>Genres</source>
         <translation type="unfinished">Gêneros</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="563"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="376"/>
         <source>Discnumber</source>
         <translation>Num de Disco</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="616"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="450"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="637"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="471"/>
         <source>Ok</source>
         <translation type="unfinished">Aceitar</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="322"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="326"/>
         <source>Track </source>
         <translation type="unfinished">Faixa</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="508"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="510"/>
         <source>You are about to insert&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; new album(s) and &lt;b&gt;%2&lt;/b&gt; new artist(s)</source>
         <translation type="unfinished">Você está prestes a inserir&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; novos álbum(s) y &lt;b&gt;%2&lt;/b&gt; novos artista(s)</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="513"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="515"/>
         <source>Proceed?</source>
         <translation>Proceder?</translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
+        <source>Here you can setup an expression for fast tagging</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
+        <source>Valid macros are:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
+        <source>for artist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
+        <source>for album</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
+        <source>for title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
+        <source>for track number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
+        <source>for year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
+        <source>for discnumber</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
+        <source>Example: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
+        <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
+        <source>Then your expression should look like this:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
+        <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
+        <source>How to use</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1422,7 +1633,7 @@ arquivos relativos</translation>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="64"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="122"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="284"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="285"/>
         <source>Play</source>
         <translation type="unfinished">Reproduzir</translation>
     </message>
@@ -1447,7 +1658,7 @@ arquivos relativos</translation>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="72"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="126"/>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="263"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="264"/>
         <source>Mute</source>
         <translation type="unfinished">Mudo</translation>
     </message>
@@ -1464,17 +1675,17 @@ arquivos relativos</translation>
         <translation>Mostrar</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="168"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="169"/>
         <source> by </source>
         <translation>por</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="268"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="269"/>
         <source>Unmute</source>
         <translation type="unfinished">Desativar mudo</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="279"/>
+        <location filename="../GUI/player/GUI_TrayIcon.cpp" line="280"/>
         <source>Pause</source>
         <translation>Pausar</translation>
     </message>
@@ -1577,6 +1788,62 @@ arquivos relativos</translation>
     </message>
 </context>
 <context>
+    <name>LibraryImporter</name>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="83"/>
+        <source>Loading files...</source>
+        <translation type="unfinished">Carregar arquivos ...</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="97"/>
+        <source>%1 tracks ready</source>
+        <translation type="unfinished">%1 faixas pronto</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="102"/>
+        <location filename="../library/LibraryImporter.cpp" line="122"/>
+        <location filename="../library/LibraryImporter.cpp" line="163"/>
+        <source>No tracks</source>
+        <translation type="unfinished">Não há faixas</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="173"/>
+        <source>Rollback...</source>
+        <translation type="unfinished">Descarte...</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="188"/>
+        <source>All files could be imported</source>
+        <translation type="unfinished">Todos os arquivos podem ser importados</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="191"/>
+        <source>%1 of %2 files could be imported</source>
+        <translation type="unfinished">%1 de %2 arquivos podem ser importados</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="193"/>
+        <location filename="../library/LibraryImporter.cpp" line="198"/>
+        <source>Import files</source>
+        <translation type="unfinished">Importar Arquivos</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="199"/>
+        <source>Sorry, but tracks could not be imported</source>
+        <translation type="unfinished">Faixas não podem ser Impotadas</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="200"/>
+        <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
+        <translation type="unfinished">Use &quot;importação&quot; do menu Arquivo</translation>
+    </message>
+    <message>
+        <location filename="../library/LibraryImporter.cpp" line="254"/>
+        <source>Cancelled</source>
+        <translation type="unfinished">Cancelado</translation>
+    </message>
+</context>
+<context>
     <name>LibrarySetup</name>
     <message>
         <location filename="../GUI/library/SetupWidget/GUI_LibrarySetup_Widget.ui" line="14"/>
@@ -1613,27 +1880,27 @@ Biblioteca Path</translation>
         <translation>Artistas</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="89"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="241"/>
         <source>Close</source>
         <translation type="unfinished">Fechar</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="127"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="103"/>
         <source>Tracks</source>
         <translation type="unfinished">Faixas</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="141"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="117"/>
         <source>Duration</source>
         <translation type="unfinished">Duração</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="155"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="131"/>
         <source>Albums</source>
         <translation type="unfinished">Álbums</translation>
     </message>
     <message>
-        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="214"/>
+        <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="190"/>
         <source>Filesize</source>
         <translation type="unfinished">Tam do Aquivo</translation>
     </message>
@@ -1641,47 +1908,47 @@ Biblioteca Path</translation>
 <context>
     <name>Library_windowed</name>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="23"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
         <source>Library</source>
         <translation type="unfinished">Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="324"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation type="unfinished">Shortcuts: &lt;br /&gt;Buscar &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Gênero &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="337"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="352"/>
         <source>Search</source>
         <translation>Buscar</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="342"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="357"/>
         <source>Genre</source>
         <translation>Genero</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="347"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="362"/>
         <source>Path</source>
         <translation>Ruta</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="376"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="391"/>
         <source>Search for title, interprets and albums</source>
         <translation>Buscar por Título Intérprete y Álbumes</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="403"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="418"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Mostrar todos los Intérpretes Álbumes Pistas</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="431"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="446"/>
         <source>Music Library  </source>
         <translation type="unfinished">Biblioteca de Música</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="470"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="485"/>
         <source>Information</source>
         <translation>Información</translation>
     </message>
@@ -1697,14 +1964,20 @@ Biblioteca Path</translation>
 <context>
     <name>Phonon_Engine</name>
     <message>
-        <location filename="../Engine/Phonon/PhononEngine.cpp" line="359"/>
         <source>Fatal Error</source>
-        <translation type="unfinished">Erro Fatal</translation>
+        <translation type="obsolete">Erro Fatal</translation>
     </message>
     <message>
-        <location filename="../Engine/Phonon/PhononEngine.cpp" line="361"/>
         <source>Error</source>
-        <translation type="unfinished">Erro</translation>
+        <translation type="obsolete">Erro</translation>
+    </message>
+</context>
+<context>
+    <name>PlayerPlugin</name>
+    <message>
+        <location filename="../PlayerPlugin/PlayerPlugin.cpp" line="49"/>
+        <source>Ctrl+</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1771,46 +2044,46 @@ Biblioteca Path</translation>
         <translation type="unfinished">Limpar Lista de Reprodução</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="173"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="176"/>
         <source>Repeat 1</source>
         <translation>Repetir 1</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="189"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="238"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="287"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="336"/>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="385"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="192"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="241"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="290"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="339"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="388"/>
         <source>Enter</source>
         <translation type="unfinished">Entrar</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="222"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="225"/>
         <source>Repeat All</source>
         <translation>Repetir Todas</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="271"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="274"/>
         <source>Shuffle</source>
         <translation type="unfinished">Aleatório</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="320"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="323"/>
         <source>Append when adding new tracks</source>
         <translation type="unfinished">Anexar quando adicionar novas faixas</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="369"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="372"/>
         <source>Dynamic playing</source>
         <translation type="unfinished">Reprodução Dinâmica</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="438"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="441"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation type="unfinished">Importa novas (laranja) faixas a biblioteca sem copiar</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="477"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="480"/>
         <source>Show numbers in playlist</source>
         <translation type="unfinished">Mostrar Números na Lista de Reprodução</translation>
     </message>
@@ -1852,204 +2125,204 @@ Biblioteca Path</translation>
         <translation type="unfinished">Copyright 2011-2013</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1034"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1028"/>
         <source>File</source>
         <translation type="unfinished">Arquivo</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1058"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1052"/>
         <source>View</source>
         <translation>Ver</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1074"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1068"/>
         <source>Preferences</source>
         <translation type="unfinished">Preferências</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1099"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="1297"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1093"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1291"/>
         <source>Help</source>
         <translation type="unfinished">Ajuda</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1111"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1105"/>
         <source>Open File</source>
         <translation type="unfinished">Abrir Arquivos</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1122"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1116"/>
         <source>Open Folder</source>
         <translation type="unfinished">Abrir Pasta</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1133"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1127"/>
         <source>Close</source>
         <translation type="unfinished">Fechar</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1150"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1144"/>
         <source>Equalizer</source>
         <translation type="unfinished">Equalizador</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1161"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1155"/>
         <source>Dark</source>
         <translation type="unfinished">Escuro</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1176"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1170"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1187"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1181"/>
         <source>Reload Library</source>
         <translation type="unfinished">Recarregar Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1198"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1192"/>
         <source>Clear Library</source>
         <translation type="unfinished">Limpar Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1209"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1203"/>
         <source>Library Path</source>
         <translation type="unfinished">Caminho da Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1219"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1213"/>
         <source>Fetch all covers</source>
         <translation type="unfinished">Baixar Capas</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1233"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1227"/>
         <source>Radio</source>
         <translation type="unfinished">Rádio</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1250"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1244"/>
         <source>Start up</source>
         <translation type="unfinished">Inicialização</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1253"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1247"/>
         <source>Load playlist on startup</source>
         <translation type="unfinished">Carregar Lista de Reprodução na Inicialização</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1264"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1258"/>
         <source>Import Folder</source>
         <translation type="unfinished">Importar Pasta</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1275"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1269"/>
         <source>Import Files</source>
         <translation type="unfinished">Importar Arquivos</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1289"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1283"/>
         <source>Playlist Chooser</source>
         <translation type="unfinished">Selecionar Lista de Reprodução</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1307"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1301"/>
         <source>About</source>
         <translation type="unfinished">Sobre</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1323"/>
-        <location filename="../GUI/player/GUI_Player.ui" line="1479"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1317"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1473"/>
         <source>Notifications</source>
         <translation type="unfinished">Notificação</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1328"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1322"/>
         <source>Open Stream</source>
         <translation type="unfinished">Abrir Caminho</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1339"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1333"/>
         <source>&amp;Library</source>
         <translation type="unfinished">&amp;Biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1356"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1350"/>
         <source>Close to tray</source>
         <translation>Minimizar</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1370"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1364"/>
         <source>Only one instance</source>
         <translation type="unfinished">Apenas uma instância</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1384"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1378"/>
         <source>Fullscreen </source>
         <translation type="unfinished">Tela cheia</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1398"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1392"/>
         <source>Small Playlist Items</source>
         <translation type="unfinished">Itens pequenos na lista de reprodução</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1412"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1406"/>
         <source>Only tracks in library</source>
         <translation type="unfinished">Apenas as faixas da biblioteca</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1423"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1417"/>
         <source>Sound Engine</source>
         <translation type="unfinished">Motor de som</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1428"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1422"/>
         <source>Gstreamer</source>
         <translation>Gstreamer</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1433"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1427"/>
         <source>Phonon</source>
         <translation>Phonon</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1441"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1435"/>
         <source>Stream recorder</source>
         <translation type="unfinished">Gravar caminho</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1452"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1446"/>
         <source>Set Streamripper Path</source>
         <translation type="unfinished">Definir Caminho Streamripper</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1460"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1454"/>
         <source>Stream</source>
         <translation type="unfinished">Caminho</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1468"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1462"/>
         <source>Socket connection</source>
         <translation type="unfinished">Conexão de Socket</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1493"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1487"/>
         <source>Podcasts</source>
         <translation>Podcasts</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1504"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1498"/>
         <source>Library live search</source>
         <translation type="unfinished">Pesquisar na Biblioteca Tempo real</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1521"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1515"/>
         <source>Update notifier</source>
         <translation type="unfinished">Atualizar notificação</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.ui" line="1532"/>
+        <location filename="../GUI/player/GUI_Player.ui" line="1526"/>
         <source>Language</source>
         <translation type="unfinished">Idioma</translation>
     </message>
@@ -2085,12 +2358,12 @@ Biblioteca Path</translation>
 <context>
     <name>SoundPluginLoader</name>
     <message>
-        <location filename="../Engine/SoundPluginLoader.cpp" line="141"/>
+        <location filename="../Engine/SoundPluginLoader.cpp" line="142"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
-        <location filename="../Engine/SoundPluginLoader.cpp" line="141"/>
+        <location filename="../Engine/SoundPluginLoader.cpp" line="142"/>
         <source>Please restart in order to change engine to </source>
         <translation type="unfinished">Por favor, reinicie para mudar o motor</translation>
     </message>

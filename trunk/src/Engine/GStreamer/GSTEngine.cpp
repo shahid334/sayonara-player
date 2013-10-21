@@ -244,14 +244,14 @@ void GST_Engine::play() {
 void GST_Engine::do_jump_play(){
 
     if(_playing_stream) {
-        _jump_play = 0;
+        _jump_play = -1;
         return;
     }
-    if(_jump_play <= 0) return;
+    if(_jump_play < 0) return;
     ENGINE_DEBUG;
 
     this->jump(_jump_play, false);
-    _jump_play = 0;
+    _jump_play = -1;
 }
 
 
@@ -304,6 +304,7 @@ ENGINE_DEBUG;
     else {
         new_time_ns = _pipeline->seek_abs(where * MRD);
     }
+
 
     _seconds_started = new_time_ns / MRD;
 }
@@ -483,6 +484,10 @@ void GST_Engine::sr_not_valid() {
     ENGINE_DEBUG;
     qDebug() << "Engine: Stream not valid.. Next file";
     emit track_finished();
+}
+
+void GST_Engine::unmute(){
+    _pipeline->unmute();
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

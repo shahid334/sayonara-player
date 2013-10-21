@@ -272,17 +272,16 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
     ui->lab_copyright->hide();
     ui->lab_rating->show();
 
-    // sometimes ignore the date
-    if (md.year < 1000 || md.album.contains(QString::number(md.year)))
-        ui->lab_album->setText(Helper::get_album_w_disc(md));
 
-    else
-        ui->lab_album->setText(
-                Helper::get_album_w_disc(md) + " (" + QString::number(md.year) + ")");
+    if (md.year < 1000 || md.album.contains(QString::number(md.year)))
+         ui->lab_album->setText(Helper::get_album_w_disc(md));
+
+     else
+         ui->lab_album->setText(
+                 Helper::get_album_w_disc(md) + " (" + QString::number(md.year) + ")");
 
     ui->lab_artist->setText(md.artist);
     ui->lab_title->setText(md.title);
-
 
     m_trayIcon->songChangedMessage(md);
 
@@ -294,25 +293,14 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
     else
         ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-    QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-    if (md.bitrate < 96000)
-        tmp += "*";
-    else if (md.bitrate < 128000)
-        tmp += "**";
-    else if (md.bitrate < 160000)
-        tmp += "***";
-    else if (md.bitrate < 256000)
-        tmp += "****";
-    else
-        tmp += "*****";
-    tmp += "</font>";
+    QString tmp;
+
+
+    tmp += QString::number(md.bitrate / 1000) + " kBit/s";
+    tmp += ", " + QString::number( (double) (md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
 
     ui->lab_rating->setText(tmp);
-    ui->lab_rating->setToolTip(
-            QString("<font color=\"#000000\">") +
-            QString::number(md.bitrate / 1000) +
-            QString(" kBit/s") +
-            QString("</font>"));
+    ui->lab_rating->setToolTip(tmp);
 
     this->setWindowTitle(QString("Sayonara - ") + md.title);
 

@@ -200,6 +200,8 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
 
     GstState old_state, new_state, pending_state;
+
+
     switch (GST_MESSAGE_TYPE(msg)) {
 
     case GST_MESSAGE_EOS:
@@ -209,18 +211,6 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
         }
         break;
 
-    case GST_MESSAGE_ERROR:
-        GError *err;
-
-        gst_message_parse_error(msg, &err, NULL);
-
-        qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
-                 << GST_MESSAGE_SRC_NAME(msg);
-        if(gst_obj_ref)
-            gst_obj_ref->set_track_finished();
-        g_error_free(err);
-
-        break;
 
     case GST_MESSAGE_ELEMENT:
         if(!gst_obj_ref) break;
@@ -237,14 +227,39 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
 
+
         if ( new_state == GST_STATE_PLAYING) {
             gst_obj_ref->do_jump_play();
+
         }
+
+
+
+        break;
+
+    case GST_MESSAGE_ASYNC_DONE:
+        if(!gst_obj_ref) break;
+
+
+        break;
+
+
+    case GST_MESSAGE_ERROR:
+        GError *err;
+
+        gst_message_parse_error(msg, &err, NULL);
+
+        qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
+                 << GST_MESSAGE_SRC_NAME(msg);
+        if(gst_obj_ref)
+            gst_obj_ref->set_track_finished();
+        g_error_free(err);
 
         break;
 
     default:
 
+        gst_obj_ref->unmute();
         if(gst_obj_ref)
             gst_obj_ref->state_changed();
         break;

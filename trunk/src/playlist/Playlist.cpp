@@ -282,3 +282,9 @@ QStringList Playlist::toStringList(){
 
     return playlist_lst;
 }
+
+
+bool Playlist::is_empty(){
+
+    return (_v_md.size() == 0);
+}

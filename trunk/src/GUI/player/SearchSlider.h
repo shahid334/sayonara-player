@@ -51,6 +51,7 @@ protected:
 
 private:
 	bool	_searching;
+    int     _old_value;
 
 
 

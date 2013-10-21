@@ -55,6 +55,7 @@ public:
     guint get_bitrate();
     bool set_uri(gchar* uri);
     void set_eq_band(QString band_name, double val);
+    void unmute();
 
 
 private:
@@ -83,6 +84,8 @@ private:
 
 
     GstElement* _tee;
+
+    int _vol;
 
     
 };

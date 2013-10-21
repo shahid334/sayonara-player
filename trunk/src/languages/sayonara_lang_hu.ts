@@ -1556,11 +1556,11 @@ expression</source>
     <name>Phonon_Engine</name>
     <message>
         <source>Error</source>
-        <translation>hiba</translation>
+        <translation type="obsolete">hiba</translation>
     </message>
     <message>
         <source>Fatal Error</source>
-        <translation>végzetes hiba</translation>
+        <translation type="obsolete">végzetes hiba</translation>
     </message>
 </context>
 <context>

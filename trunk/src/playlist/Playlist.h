@@ -96,6 +96,7 @@ public:
     int find_track_by_id(int id);
     int find_track_by_path(QString path);
 
+    bool is_empty();
     PlaylistType get_type();
     int get_cur_track();
     QStringList toStringList();

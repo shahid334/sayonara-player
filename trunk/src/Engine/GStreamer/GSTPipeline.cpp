@@ -23,6 +23,8 @@
 #include "GSTPipeline.h"
 #include "GSTEngineHelper.h"
 #include "HelperStructs/globals.h"
+#include "gst/interfaces/streamvolume.h"
+#include "unistd.h"
 #include <QDebug>
 
 int crop_spectrum_at = 75;
@@ -96,7 +98,7 @@ GSTPipeline::GSTPipeline(QObject *parent) :
             success = gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
             _test_and_error_bool(success, "Engine: Cannot link Spectrum pipeline");
 
-            success = gst_element_link_many(_eq_queue, _equalizer, _audio_sink, NULL);
+            success = gst_element_link_many(_eq_queue, _volume, _equalizer, _audio_sink, NULL);
             if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
             // Connect tee
@@ -254,14 +256,24 @@ void GSTPipeline::stop(){
 }
 
 void GSTPipeline::set_volume(int vol){
-    float vol_val = (float) (vol * 1.0f / 100.0f);
 
-    g_object_set(G_OBJECT(_pipeline), "volume", vol_val, NULL);
+    _vol = vol;
+
+    float vol_val = (float) (vol * 1.0f / 100.0f);
+   g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
+
+}
+
+void GSTPipeline::unmute(){
+
+    g_object_set(G_OBJECT(_pipeline), "mute", FALSE, NULL);
 }
 
 gint64 GSTPipeline::seek_rel(float percent, gint64 ref_ns){
 
     gint64 new_time_ns;
+
+     g_object_set(G_OBJECT(_pipeline), "mute", TRUE, NULL);
 
     if (percent > 1.0f)
         new_time_ns = ref_ns;
@@ -281,11 +293,14 @@ gint64 GSTPipeline::seek_rel(float percent, gint64 ref_ns){
         return new_time_ns;
     }
 
-    else return 0;
+
+    return 0;
 }
 
 
 gint64 GSTPipeline::seek_abs(gint64 ns){
+
+    g_object_set(G_OBJECT(_pipeline), "mute", TRUE, NULL);
 
     if(gst_element_seek_simple(_pipeline,
         GST_FORMAT_TIME,
@@ -295,12 +310,13 @@ gint64 GSTPipeline::seek_abs(gint64 ns){
         return ns;
     }
 
-    else return 0;
+
+
+    return 0;
 }
 
 void GSTPipeline::enable_level(bool b){
 
-    qDebug() << "Show level = " << b;
     g_object_set(_level_sink,
         "emit-signals", b,
         NULL);

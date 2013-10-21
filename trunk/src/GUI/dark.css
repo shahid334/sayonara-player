@@ -30,6 +30,26 @@ QFrame {
 	background: transparent;
 }
 
+QFrame#my_frame{
+	background: url(<<SHARE_PATH>>/border_a.png);
+	padding: 0px 0px 0px 1px;
+	background-repeat: no-repeat;
+	border: none;
+
+}
+
+QFrame#my_frame_2{
+	background: url(<<SHARE_PATH>>/border_b.png);
+	padding: 1px 0px 0px 1px;
+	background-repeat: no-repeat;
+	border: none;
+}
+
+QFrame#my_frame_3{
+	border: none;
+	margin-top: 2px;
+}
+
 QLabel, QScrollArea{
 	border: none;
 	background: transparent;
@@ -495,15 +515,15 @@ QSlider::add-page:vertical {
 }
 
 QSlider::sub-page:vertical, QSlider::add-page:vertical:disabled {
-   background: #2B2B2B;
-   border: 1px solid #2b2b2b;
+   background: #323232;
    border-radius: 3px;
+   border: 3px solid qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop: 0.0 #161616, stop: 1.0 rgba(0,0,0,0) );
 }
 
 
 QSlider::groove:vertical {
      background: #383838;
-     width: 18px;
+     width: 16px;
      padding-left: -6px;
      padding-right: -6px;
 }
@@ -511,7 +531,7 @@ QSlider::groove:vertical {
 QSlider::handle:vertical {
      subcontrol-origin: margin;
      background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #7F7F7F, stop: 0.4 #555555, stop: 0.8 #555555, stop: 1.0 #6a6a6a);
-     height: 10px;
+     height: 9px;
      border: 1px solid #2C2C2C;
      border-radius: 4px;
 }
@@ -538,23 +558,31 @@ QSlider::sub-page:horizontal {
 }
 
 QSlider::add-page:horizontal, QSlider::sub-page:horizontal:disabled {
-   background: #2B2B2B;
-   border: 1px solid #2b2b2b;
+   background: #323232;
    border-radius: 3px;
+   border: 3px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0.0 #161616, stop: 1.0 rgba(0,0,0,0) );
 }
 
 
 QSlider::groove:horizontal {
      background: #383838;
-     height: 18px;
+     height: 16px;
      padding-top: -6px;
      padding-bottom: -6px;
+
 }
+QSlider::groove:horizontal#volumeSlider {
+     height: 8px;
+     padding-top: -2px;
+     padding-bottom: -2px;
+
+}
+
 
 QSlider::handle:horizontal {
      subcontrol-origin: margin;
      background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #7F7F7F, stop: 0.4 #555555, stop: 0.8 #555555, stop: 1.0 #6a6a6a);
-     width: 10px;
+     width: 9px;
      border: 1px solid #2C2C2C;
      border-radius: 4px;
 }
@@ -677,6 +705,20 @@ QPushButton[flat=true]:checked{
 
 QPushButton[flat=true]:pressed{
     background-color: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.54, fx:0.502, fy:0.500876, stop:0.8 rgba(243, 132, 26, 255), stop:1 rgba(255, 255, 255, 0));
+}
+
+QPushButton#btn_stop{
+
+	margin-left: 2px;
+	margin-top: 2px;
+}
+
+QPushButton#btn_fw{
+	margin-top: 2px;
+}
+
+QPushButton#btn_bw{
+	margin-top: 2px;
 }
 
 QPushButton[flat=false] {
