@@ -283,6 +283,7 @@ void PlaylistHandler::psl_play(){
     }
 
     if(_state == PlaylistPause){
+        _state = PlaylistPlay;
         emit sig_goon_playing();
     }
 

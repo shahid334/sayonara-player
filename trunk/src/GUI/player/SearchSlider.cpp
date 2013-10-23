@@ -54,13 +54,6 @@ bool SearchSlider::event(QEvent* e){
     QMouseEvent* mouseEvent;
     QWheelEvent* wheelEvent;
 
-    if(!isEnabled()) {
-
-
-        e->ignore();
-        return true;
-    }
-
     mouseEvent = dynamic_cast<QMouseEvent*>( e );
     if(mouseEvent && mouseEvent->button() == Qt::MiddleButton){
         e->ignore();
@@ -81,10 +74,7 @@ bool SearchSlider::event(QEvent* e){
             if(!isEnabled()) break;
 
             mouseEvent = (QMouseEvent*) e;
-            if(mouseEvent->button() == Qt::MidButton){
-                e->ignore();
-                return true;
-            }
+
 
             e->accept();
 

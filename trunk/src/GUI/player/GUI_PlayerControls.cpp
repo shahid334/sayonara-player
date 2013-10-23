@@ -265,25 +265,23 @@ void GUI_Player::setupVolButton(int percent) {
 void GUI_Player::muteButtonPressed() {
 
 	if (m_mute) {
-		m_mute = false;
 
-		ui->volumeSlider->setEnabled(true);
-		setupVolButton(ui->volumeSlider->value());
-
+        setupVolButton(ui->volumeSlider->value());
 		emit sig_volume_changed(ui->volumeSlider->value());
 	}
 
 	else {
-		m_mute = true;
-		ui->volumeSlider->setEnabled(false);
-		ui->btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_mute.png"));
 
-		setupVolButton(0);
+        setupVolButton(0);
 		emit sig_volume_changed(0);
 	}
 
+    m_mute = !m_mute;
+
+    ui->volumeSlider->setDisabled(m_mute);
     m_trayIcon->setMute(m_mute);
 
+    ui->volumeSlider->update();
 }
 
 /** VOLUME END **/

@@ -32,8 +32,78 @@ StdPlaylist::StdPlaylist(QObject *parent) :
 }
 
 
+
+void StdPlaylist::change_track(int idx){
+
+    if( idx >= (int) _v_md.size() || idx < 0) return;
+
+    for(uint i=0; i<_v_md.size(); i++){
+        _v_md[i].pl_playing = ( idx == (int) i );
+        _v_md[i].pl_selected = false;
+    }
+
+    MetaData md = _v_md[idx];
+
+    if( !Helper::checkTrack(md) ){
+        _cur_play_idx = -1;
+        _v_md.setCurPlayTrack(_cur_play_idx);
+
+        delete_track(idx);
+    }
+
+    else{
+        _cur_play_idx = idx;
+    }
+
+    report_changes(false, true);
+}
+
+void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing){
+
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+    if(!_playlist_mode.append){
+        _cur_play_idx = -1;
+        disable_reports();
+        clear();
+        enable_reports();
+    }
+
+    // no tracks in new playlist
+    if(lst.size() == 0)
+        return;
+
+    // check if there, check if extern
+    foreach(MetaData md, lst){
+
+        if( !Helper::checkTrack(md) ) continue;
+
+        MetaData md_tmp = db->getTrackByPath(md.filepath);
+        md.is_extern = (md_tmp.id < 0);
+
+        _v_md.push_back(md);
+    }
+
+    if(!_playlist_mode.append)
+        _cur_play_idx = -1;
+
+
+    report_changes(true, start_playing);
+}
+
+void StdPlaylist::create_playlist(const QStringList& lst, bool start_playing){
+
+    MetaDataList v_md;
+
+    CDirectoryReader reader;
+    reader.getMetadataFromFileList(lst, v_md);
+
+    create_playlist(v_md, start_playing);
+}
+
 void StdPlaylist:: play(){
 
+    qDebug() << "Play, cur_play_idx = " << _cur_play_idx;
     if(_v_md.size() == 0) {
         _cur_play_idx = -1;
         stop();
@@ -122,87 +192,7 @@ void StdPlaylist::next(){
         return;
     }
 
-    _cur_play_idx = track_num;
-    _v_md.setCurPlayTrack(track_num);
-
-    MetaData md = _v_md[track_num];
-
-    // maybe track is deleted here
-    if( !Helper::checkTrack(md) ){
-        delete_track(track_num);
-        next();
-        return;
-    }
-
-    report_changes(false, true);
-}
-
-void StdPlaylist::change_track(int idx){
-
-    if( idx >= (int) _v_md.size() || idx < 0) return;
-
-    for(uint i=0; i<_v_md.size(); i++){
-        _v_md[i].pl_playing = ( idx == (int) i );
-        _v_md[i].pl_selected = false;
-    }
-
-    MetaData md = _v_md[idx];
-
-    if( !Helper::checkTrack(md) ){
-        _cur_play_idx = -1;
-        _v_md.setCurPlayTrack(_cur_play_idx);
-
-        delete_track(idx);
-    }
-
-    else{
-        _cur_play_idx = idx;
-    }
-
-    report_changes(false, true);
-}
-
-void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing){
-
-    CDatabaseConnector* db = CDatabaseConnector::getInstance();
-
-    if(!_playlist_mode.append){
-        _cur_play_idx = -1;
-        disable_reports();
-        clear();
-        enable_reports();
-    }
-
-    // no tracks in new playlist
-    if(lst.size() == 0)
-        return;
-
-    // check if there, check if extern
-    foreach(MetaData md, lst){
-
-        if( !Helper::checkTrack(md) ) continue;
-
-        MetaData md_tmp = db->getTrackByPath(md.filepath);
-        md.is_extern = (md_tmp.id < 0);
-
-        _v_md.push_back(md);
-    }
-
-    if(!_playlist_mode.append)
-        _cur_play_idx = 0;
-
-
-    report_changes(true, start_playing);
-}
-
-void StdPlaylist::create_playlist(const QStringList& lst, bool start_playing){
-
-    MetaDataList v_md;
-
-    CDirectoryReader reader;
-    reader.getMetadataFromFileList(lst, v_md);
-
-    create_playlist(v_md, start_playing);
+    change_track(track_num);
 }
 
 

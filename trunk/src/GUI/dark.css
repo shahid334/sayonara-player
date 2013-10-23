@@ -549,6 +549,16 @@ QSlider::handle:vertical:disabled {
 }
 
 
+QSlider::groove:horizontal {
+     background: #383838;
+     height: 16px;
+     padding-top: -6px;
+     padding-bottom: -6px;
+
+}
+
+
+
 
 QSlider::sub-page:horizontal {
 
@@ -557,26 +567,12 @@ QSlider::sub-page:horizontal {
      border-radius: 2px;
 }
 
-QSlider::add-page:horizontal, QSlider::sub-page:horizontal:disabled {
+QSlider::add-page:horizontal {
    background: #323232;
    border-radius: 3px;
    border: 3px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0.0 #161616, stop: 1.0 rgba(0,0,0,0) );
 }
 
-
-QSlider::groove:horizontal {
-     background: #383838;
-     height: 16px;
-     padding-top: -6px;
-     padding-bottom: -6px;
-
-}
-QSlider::groove:horizontal#volumeSlider {
-     height: 8px;
-     padding-top: -2px;
-     padding-bottom: -2px;
-
-}
 
 
 QSlider::handle:horizontal {
@@ -599,6 +595,19 @@ QSlider::handle:horizontal:disabled {
     border: none;
 }
 
+
+QSlider::groove:horizontal#volumeSlider {
+     height: 8px;
+     padding-top: -2px;
+     padding-bottom: -2px;
+}
+
+QSlider::sub-page:horizontal:disabled#volumeSlider {
+   background: #323232;
+   border-radius: 3px;
+   border: 3px solid qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0.0 #161616, stop: 1.0 rgba(0,0,0,0) );
+
+}
 
 
 QCheckBox {

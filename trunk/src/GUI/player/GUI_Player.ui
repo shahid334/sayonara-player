@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>843</width>
-    <height>574</height>
+    <width>686</width>
+    <height>437</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -431,7 +437,7 @@
           <number>0</number>
          </property>
          <property name="sizeConstraint">
-          <enum>QLayout::SetMaximumSize</enum>
+          <enum>QLayout::SetFixedSize</enum>
          </property>
          <property name="bottomMargin">
           <number>0</number>
@@ -992,6 +998,9 @@
     </item>
     <item row="3" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
       <item>
        <widget class="QPushButton" name="btn_mute">
         <property name="minimumSize">
@@ -1035,21 +1044,24 @@
       </item>
       <item>
        <widget class="SearchSlider" name="volumeSlider">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
-          <height>0</height>
+          <width>20</width>
+          <height>10</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>1000</width>
+          <width>73</width>
           <height>1000</height>
          </size>
         </property>
@@ -1085,14 +1097,14 @@
      <widget class="QPushButton" name="albumCover">
       <property name="minimumSize">
        <size>
-        <width>100</width>
-        <height>100</height>
+        <width>95</width>
+        <height>95</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>100</width>
-        <height>100</height>
+        <width>95</width>
+        <height>95</height>
        </size>
       </property>
       <property name="focusPolicy">
@@ -1119,7 +1131,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>843</width>
+     <width>686</width>
      <height>25</height>
     </rect>
    </property>
