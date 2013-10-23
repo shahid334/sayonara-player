@@ -68,6 +68,7 @@ signals:
     void sig_import_files(const QStringList&);
     void sig_double_clicked(const QList<int>&);
     void sig_sel_changed(const QList<int>&);
+    void sig_released();
 
 private slots:
     void rc_header_menu_changed(bool b=true);

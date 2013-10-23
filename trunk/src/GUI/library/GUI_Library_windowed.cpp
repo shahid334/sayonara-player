@@ -127,6 +127,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
     connect(this->ui->lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
     connect(this->ui->lv_album, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(album_sel_changed(const QList<int>&)));
+    connect(this->ui->lv_album, SIGNAL(sig_released()), this, SLOT(album_released()));
 	connect(this->ui->lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
     connect(this->ui->lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
     connect(this->ui->lv_album, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_album_changed(QStringList&)));
@@ -375,6 +376,13 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst){
 
     sig_artist_sel_changed(lst);
+}
+
+void GUI_Library_windowed::album_released(){
+    if(_discmenu){
+        delete _discmenu;
+        _discmenu = 0;
+    }
 }
 
 void GUI_Library_windowed::album_sel_changed(const QList<int>& lst){

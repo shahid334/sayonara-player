@@ -173,6 +173,7 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
         event->accept();
 
         _drag = false;
+        emit sig_released();
 
         break;
 

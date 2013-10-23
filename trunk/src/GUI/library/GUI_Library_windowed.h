@@ -145,6 +145,7 @@ private slots:
 
     void artist_sel_changed(const QList<int>&);
     void album_sel_changed(const QList<int>&);
+    void album_released();
     void track_sel_changed(const QList<int>&);
 	void track_info_available(const MetaDataList& v_md);
 
