@@ -124,12 +124,13 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
      int border_x = _cur_style.hor_spacing;
 
 
-    int x=10;
+    int x=3;
     int ninety = (_spec.size() * 500) / 1000;
     int offset = 0;
     if(ninety == 0) return;
 
-    int w_bin = ((this->width()) / (ninety - offset)) - border_x;
+    int w_bin = ((this->width() + 10) / (ninety - offset)) - border_x;
+
 
 
     int n_zero = 0;

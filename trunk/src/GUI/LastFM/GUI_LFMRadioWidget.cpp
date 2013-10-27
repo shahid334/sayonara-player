@@ -55,12 +55,13 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QWidge
 
 	_ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-    LastFM* lastfm = LastFM::getInstance();
+    _lastfm = LastFM::getInstance();
 
     connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));
     connect(_ui->le_text, SIGNAL(returnPressed()), this, SLOT(start_listen()));
 	connect(_ui->btn_listen, SIGNAL(released()), this, SLOT(start_listen()));
-    connect(this, SIGNAL(listen_clicked(const QString&,int)), lastfm, SLOT(psl_radio_init(const QString&, int)));
+    connect(this, SIGNAL(listen_clicked(const QString&,int)), _lastfm, SLOT(psl_radio_init(const QString&, int)));
+    connect(_lastfm, SIGNAL(sig_radio_initialized(bool)), this, SLOT(psl_radio_initialized(bool)));
 
     hide();
 }
@@ -157,4 +158,10 @@ void GUI_LFMRadioWidget:: mode_index_changed(int i){
 
         default: break;
     }
+}
+
+void GUI_LFMRadioWidget::psl_radio_initialized(bool b){
+    if(b)
+        _lastfm->psl_radio_playlist_request();
+
 }

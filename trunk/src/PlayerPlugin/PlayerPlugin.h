@@ -39,6 +39,7 @@ public:
 signals:
 
     void sig_action_triggered(PlayerPlugin*, bool);
+    void sig_reload(PlayerPlugin*);
 
     
 public slots:

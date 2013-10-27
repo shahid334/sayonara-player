@@ -118,7 +118,7 @@ void CoverFetchThread::search_multi(){
 
       }
 
-      QString path = Helper::getSayonaraPath() + "/tmp/";
+      QString path = Helper::getSayonaraPath() + "tmp/";
       QDir dir(Helper::getSayonaraPath());
       dir.mkpath("tmp");
 

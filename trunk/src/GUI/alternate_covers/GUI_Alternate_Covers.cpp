@@ -71,7 +71,7 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
     this->ui->tv_images->setItemDelegate(_delegate);
     _cov_fetch_thread = 0;
 
-	_tmp_dir = Helper::getSayonaraPath() + QDir::separator() + "tmp";
+    _tmp_dir = Helper::getSayonaraPath() + "tmp";
 	QDir dir(_tmp_dir);
 	if (!dir.exists()) {
 		dir.mkpath(".");
@@ -397,7 +397,7 @@ void GUI_Alternate_Covers::open_file_dialog(){
         return;
     }
 
-    QDir dir(Helper::getSayonaraPath() + "/tmp");
+    QDir dir(Helper::getSayonaraPath() + "tmp");
     QStringList entrylist;
     QStringList filters;
         filters << "*.jpg";

@@ -49,6 +49,7 @@ void PlayerPluginHandler::addPlugin(PlayerPlugin* p){
 
     _plugins.push_back(p);
     connect(p, SIGNAL(sig_action_triggered(PlayerPlugin*,bool)), this, SLOT(plugin_action_triggered(PlayerPlugin*,bool)));
+    connect(p, SIGNAL(sig_reload(PlayerPlugin*)), this, SLOT(reload_plugin(PlayerPlugin*)));
 }
 
 
@@ -85,6 +86,13 @@ void PlayerPluginHandler::showPlugin(QString name){
     }
 }
 
+
+void PlayerPluginHandler::reload_plugin(PlayerPlugin* p){
+    if(p){
+        plugin_action_triggered(p, true);
+
+    }
+}
 
 void PlayerPluginHandler::hide_all(){
 

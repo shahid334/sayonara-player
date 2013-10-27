@@ -151,7 +151,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
     gst_obj_ref = this;
 
     _meta_data = md;
-    _playing_stream = Helper::is_www(md.filepath);
+
     _caps->set_parsed(false);
 
     _seconds_started = 0;
@@ -178,6 +178,8 @@ bool GST_Engine::set_uri(const MetaData& md, bool* start_play) {
 
     // Gstreamer needs an URI
     gchar* uri = NULL;
+
+    _playing_stream = Helper::is_www(md.filepath);
 
     // stream && streamripper active
     if (_playing_stream && _sr_active) {

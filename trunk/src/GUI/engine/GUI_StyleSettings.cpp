@@ -57,6 +57,7 @@ GUI_StyleSettings::GUI_StyleSettings(QWidget *parent) :
     connect(ui->sb_n_bins_sp, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     connect(ui->sb_rect_height_sp, SIGNAL(valueChanged(int)), this,SLOT( spin_box_changed(int)));
     connect(ui->sb_rect_width_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
+    connect(ui->sb_rect_height_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     connect(ui->sb_v_spacing_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     connect(ui->sb_v_spacing_sp, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
 
@@ -112,6 +113,7 @@ void GUI_StyleSettings::connect_spinboxes(){
     connect(ui->sb_n_bins_sp, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     connect(ui->sb_rect_height_sp, SIGNAL(valueChanged(int)), this,SLOT( spin_box_changed(int)));
     connect(ui->sb_rect_width_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
+    connect(ui->sb_rect_height_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     connect(ui->sb_v_spacing_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     connect(ui->sb_v_spacing_sp, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
 
@@ -126,6 +128,7 @@ void GUI_StyleSettings::disconnect_spinboxes(){
     disconnect(ui->sb_n_bins_sp, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     disconnect(ui->sb_rect_height_sp, SIGNAL(valueChanged(int)), this,SLOT( spin_box_changed(int)));
     disconnect(ui->sb_rect_width_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
+    disconnect(ui->sb_rect_height_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     disconnect(ui->sb_v_spacing_lv, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
     disconnect(ui->sb_v_spacing_sp, SIGNAL(valueChanged(int)), this, SLOT(spin_box_changed(int)));
 
@@ -187,6 +190,7 @@ void GUI_StyleSettings::combo_styles_changed(int idx){
     ui->sb_n_bins_sp->setValue(style.n_bins_spectrum);
     ui->sb_rect_height_sp->setValue(style.rect_height_spectrum);
     ui->sb_rect_width_lv->setValue(style.rect_width_level);
+    ui->sb_rect_height_lv->setValue(style.rect_height_level);
 
     ui->cb_col3->setChecked(style.col_list.colors.size() > 2 && style.col_list.colors[2].isValid());
     ui->cb_col4->setChecked(style.col_list.colors.size() > 3 && style.col_list.colors[3].isValid());
@@ -232,6 +236,7 @@ void GUI_StyleSettings::save_pressed(){
     style.n_bins_spectrum = ui->sb_n_bins_sp->value();
     style.rect_height_spectrum = ui->sb_rect_height_sp->value();
     style.rect_width_level = ui->sb_rect_width_lv->value();
+    style.rect_height_level = ui->sb_rect_height_lv->value();
 
     style.col_list.name = _cur_text;
     style.col_list.colors << _colors[0] << _colors[1];
@@ -349,6 +354,7 @@ void GUI_StyleSettings::undo_pressed(){
     ui->sb_n_bins_sp->setValue(_cur_style.n_bins_spectrum);
     ui->sb_rect_height_sp->setValue(_cur_style.rect_height_spectrum);
     ui->sb_rect_width_lv->setValue(_cur_style.rect_width_level);
+    ui->sb_rect_height_lv->setValue(_cur_style.rect_height_level);
 
     ui->cb_col3->setChecked(_cur_style.col_list.colors.size() > 2 && _cur_style.col_list.colors[2].isValid());
     ui->cb_col4->setChecked(_cur_style.col_list.colors.size() > 3 && _cur_style.col_list.colors[3].isValid());

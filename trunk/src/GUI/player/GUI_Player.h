@@ -95,6 +95,7 @@ public slots:
     void showPlugin(PlayerPlugin* plugin);
     void hideAllPlugins();
 
+
     void psl_libpath_changed(QString &);
 
 signals:
@@ -264,6 +265,8 @@ private:
     CSettingsStorage*   m_settings;
     QTranslator*        m_translator;
     QStringList         m_translators;
+
+
 
 
     void setupTrayActions ();

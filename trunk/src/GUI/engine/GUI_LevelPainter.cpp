@@ -37,6 +37,7 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QString action_text, QWidget *p
     _ecsc = new EngineColorStyleChooser(this->minimumWidth(), this->minimumHeight());
     _cur_style_idx = 0;
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
+    reload();
 
     int n_rects = _cur_style.n_rects;
 
@@ -76,6 +77,7 @@ GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
 
     if(e->button() == Qt::LeftButton){
         _cur_style_idx = (_cur_style_idx +  1) % n_styles;
+
     }
 
     else if (e->button() == Qt::RightButton)
@@ -87,6 +89,8 @@ GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
     }
 
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
+
+    reload();
     resize_steps(_cur_style.n_rects);
 }
 
@@ -98,7 +102,7 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
     int border_x = _cur_style.hor_spacing;
     int border_y = _cur_style.ver_spacing;
     int n_fading_steps = _cur_style.n_fading_steps;
-    int h_rect = 6;
+    int h_rect = _cur_style.rect_height;
     int w_rect = _cur_style.rect_width;
 
     int y = 10;
@@ -148,6 +152,7 @@ void GUI_LevelPainter::showEvent(QShowEvent * e){
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
     resize_steps(_cur_style.n_rects);
 
+    psl_style_update(true);
 
     emit sig_show(true);
 }
@@ -155,6 +160,10 @@ void GUI_LevelPainter::showEvent(QShowEvent * e){
 void GUI_LevelPainter::closeEvent(QCloseEvent *e){
     PlayerPlugin::closeEvent(e);
     emit sig_show(false);
+}
+
+void GUI_LevelPainter::resizeEvent(QResizeEvent *e){
+    psl_style_update(true);
 }
 
 
@@ -174,9 +183,12 @@ void GUI_LevelPainter::timed_out(){
 }
 
 
-void GUI_LevelPainter::psl_style_update(){
+void GUI_LevelPainter::psl_style_update(bool inner){
     _ecsc->reload(this->width(), this->height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
+
+    if(!inner) reload();
+
     resize_steps(_cur_style.n_rects);
 
 }
@@ -190,5 +202,18 @@ void GUI_LevelPainter::resize_steps(int n_rects){
             _steps[i][j] = 0;
         }
     }
+}
 
+
+void GUI_LevelPainter::reload(){
+    int new_height = _cur_style.rect_height * 2 + _cur_style.ver_spacing + 12;
+
+    this->setMinimumHeight(0);
+    this->setMaximumHeight(100);
+
+    this->setMinimumHeight(new_height);
+    this->setMaximumHeight(new_height);
+
+    if(this->isVisible())
+        emit sig_reload(this);
 }

@@ -140,7 +140,7 @@ int main(int argc, char *argv[]){
 
         QString language = CSettingsStorage::getInstance()->getLanguage();
         QTranslator translator;
-        translator.load(language, Helper::getSharePath() + "/translations");
+        translator.load(language, Helper::getSharePath() + "translations");
         app.installTranslator(&translator);
 
     QFont font("DejaVu Sans", 9, 55,  false);

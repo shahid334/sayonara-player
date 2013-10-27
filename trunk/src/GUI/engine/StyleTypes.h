@@ -55,6 +55,7 @@ struct RawColorStyle{
 
     int rect_height_spectrum;
     int rect_width_level;
+    int rect_height_level;
     int n_rects_level;
 
     int n_fading_steps_spectrum;
@@ -72,6 +73,7 @@ struct RawColorStyle{
         n_bins_spectrum = 20;
         rect_height_spectrum = 2;
         rect_width_level = 3;
+        rect_height_level = 6;
         n_fading_steps_level = 20;
         n_fading_steps_spectrum = 20;
         hor_spacing_level = 2;
@@ -88,6 +90,7 @@ struct RawColorStyle{
         ret += ", rect_h_sp: " + QString::number(rect_height_spectrum);
         ret += ", fad_s_sp: " +  QString::number(n_fading_steps_spectrum);
         ret += ", rect_w_lv: " + QString::number(rect_width_level);
+        ret += ", rect_h_lv: " + QString::number(rect_height_level);
         ret += ", fad_s_lv: " + QString::number(n_fading_steps_level);
         ret += ", hor_s_lv: " + QString::number(hor_spacing_level);
         ret += ", ver_s_lv: " + QString::number(ver_spacing_level);
@@ -95,12 +98,6 @@ struct RawColorStyle{
         ret += ", ver_s_sp: " + QString::number(ver_spacing_spectrum);
 
         return ret;
-
-
-
-
-
-
     }
 
 };

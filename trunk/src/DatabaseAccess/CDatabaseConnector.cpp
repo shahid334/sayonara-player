@@ -45,7 +45,7 @@ CDatabaseConnector* CDatabaseConnector::getInstance(){
 
 CDatabaseConnector::CDatabaseConnector()
 {
-    _db_filename = Helper::getSayonaraPath() + QDir::separator() + "player.db";
+    _db_filename = Helper::getSayonaraPath() + "player.db";
 
     bool success = isExistent();
 
@@ -105,7 +105,7 @@ bool CDatabaseConnector::createDB () {
             return false;
         }
 
-        QString source_db_file = Helper::getSharePath() + QDir::separator() + "empty.db";
+        QString source_db_file = Helper::getSharePath() + "empty.db";
         QString target_db_file = _db_filename;
         success = QFile::exists(target_db_file);
 
@@ -194,7 +194,15 @@ CDatabaseConnector::~CDatabaseConnector() {
  
 }
 
+bool CDatabaseConnector::check_and_drop_table(QString tablename){
+    DB_TRY_OPEN(_database);
+    DB_RETURN_NOT_OPEN_BOOL(_database);
 
+    QSqlQuery q(*_database);
+    QString querytext = "DROP TABLE " +  tablename + ";";
+    q.prepare(querytext);
+    return q.exec();
+}
 
 bool CDatabaseConnector::check_and_insert_column(QString tablename, QString column, QString sqltype){
 
@@ -292,7 +300,7 @@ bool CDatabaseConnector::apply_fixes(){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int version = load_setting_int("version", 0);
-    if(version == 3) return true;
+    if(version == 4) return true;
 
     qDebug() << "Apply fixes";
 
@@ -321,7 +329,6 @@ bool CDatabaseConnector::apply_fixes(){
     }
 
     if(version < 3){
-
         _database->transaction();
 
         bool success = true;
@@ -334,29 +341,38 @@ bool CDatabaseConnector::apply_fixes(){
         updateTrackCissearch();
 
         _database->commit();
+    }
 
+
+    if(version == 3){
+        check_and_drop_table("VisualStyles");
+    }
+
+    if(version < 4){
 
         QString create_vis_styles = QString("CREATE TABLE VisualStyles ") +
                 "( " +
                 "  name VARCHAR(255) PRIMARY KEY, " +
-                "  col1 VARCHAR(20), " +
-                "  col2 VARCHAR(20), " +
-                "  col3 VARCHAR(20), " +
-                "  col4 VARCHAR(20), " +
-                "  nBinsSpectrum INTEGER, " +
-                "  rectHeightSpectrum INTEGER, " +
-                "  fadingStepsSpectrum INTEGER, " +
-                "  horSpacingSpectrum INTEGER, " +
-                "  vertSpacingSpectrum INTEGER, " +
+                "  col1 VARCHAR(20), "
+                "  col2 VARCHAR(20), "
+                "  col3 VARCHAR(20), "
+                "  col4 VARCHAR(20), "
+                "  nBinsSpectrum INTEGER, "
+                "  rectHeightSpectrum INTEGER, "
+                "  fadingStepsSpectrum INTEGER, "
+                "  horSpacingSpectrum INTEGER, "
+                "  vertSpacingSpectrum INTEGER, "
                 "  rectWidthLevel INTEGER, "
-                "  horSpacingLevel INTEGER, " +
-                "  verSpacingLevel INTEGER, " +
-                "  fadingStepsLevel INTEGER " +
+                "  rectHeightLevel INTEGER, "
+                "  horSpacingLevel INTEGER, "
+                "  verSpacingLevel INTEGER, "
+                "  fadingStepsLevel INTEGER "
                 ");";
 
-        success = check_and_create_table("VisualStyles", create_vis_styles);
-        if(success) store_setting("version", 3);
+        bool success = check_and_create_table("VisualStyles", create_vis_styles);
+        if(success) store_setting("version", 4);
     }
+
 
 	return true;
 }

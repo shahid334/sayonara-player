@@ -193,6 +193,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height){
         fallback1.n_fading_steps_spectrum = 20;
         fallback1.rect_height_spectrum = 2;
         fallback1.rect_width_level = 5;
+        fallback1.rect_height_level = 6;
 
 
         fallback2.col_list.colors << QColor(27, 32, 47)  << QColor(134, 134, 134) << QColor(216, 216, 216) << QColor(255, 255, 255);
@@ -206,6 +207,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height){
         fallback2.n_fading_steps_spectrum = 20;
         fallback2.rect_height_spectrum = 2;
         fallback2.rect_width_level = 3;
+        fallback2.rect_height_level = 3;
 
         colors_active << fallback1 << fallback2;
 
@@ -224,6 +226,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height){
         style_level.ver_spacing = rcs.ver_spacing_level;
         style_level.col_list =  rcs.col_list;
         style_level.rect_width = rcs.rect_width_level;
+        style_level.rect_height = rcs.rect_height_level;
         style_level.n_rects = widget_width / (style_level.rect_width + style_level.hor_spacing);
 
 

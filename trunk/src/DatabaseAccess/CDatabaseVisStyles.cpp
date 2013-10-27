@@ -104,9 +104,10 @@ QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles(){
         rcs.hor_spacing_spectrum = q.value(8).toInt();
         rcs.ver_spacing_spectrum = q.value(9).toInt();
         rcs.rect_width_level = q.value(10).toInt();
-        rcs.hor_spacing_level = q.value(11).toInt();
-        rcs.ver_spacing_level = q.value(12).toInt();
-        rcs.n_fading_steps_level = q.value(13).toInt();
+        rcs.rect_height_level = q.value(11).toInt();
+        rcs.hor_spacing_level = q.value(12).toInt();
+        rcs.ver_spacing_level = q.value(13).toInt();
+        rcs.n_fading_steps_level = q.value(14).toInt();
 
         ret_val << rcs;
     }
@@ -139,6 +140,7 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs){
             ":h_spacing_sp, "
             ":v_spacing_sp, "
             ":rect_width_lv, "
+            ":rect_height_lv, "
             ":h_spacing_lv, "
             ":v_spacing_lv, "
             ":fading_steps_lv"
@@ -161,6 +163,7 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs){
     q.bindValue(":h_spacing_sp", rcs.hor_spacing_spectrum);
     q.bindValue(":v_spacing_sp", rcs.ver_spacing_spectrum);
     q.bindValue(":rect_width_lv", rcs.rect_width_level);
+    q.bindValue(":rect_height_lv", rcs.rect_height_level);
     q.bindValue(":h_spacing_lv", rcs.hor_spacing_level);
     q.bindValue(":v_spacing_lv", rcs.ver_spacing_level);
     q.bindValue(":fading_steps_lv", rcs.n_fading_steps_level);
@@ -200,6 +203,7 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs){
             "horSpacingSpectrum=:h_spacing_sp, "
             "vertSpacingSpectrum=:v_spacing_sp, "
             "rectWidthLevel=:rect_width_lv, "
+            "rectHeightLevel=:rect_height_lv, "
             "horSpacingLevel=:h_spacing_lv, "
             "verSpacingLevel=:v_spacing_lv, "
             "fadingStepsLevel=:fading_steps_lv"
@@ -222,6 +226,7 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs){
     q.bindValue(":h_spacing_sp", rcs.hor_spacing_spectrum);
     q.bindValue(":v_spacing_sp", rcs.ver_spacing_spectrum);
     q.bindValue(":rect_width_lv", rcs.rect_width_level);
+    q.bindValue(":rect_height_lv", rcs.rect_height_level);
     q.bindValue(":h_spacing_lv", rcs.hor_spacing_level);
     q.bindValue(":v_spacing_lv", rcs.ver_spacing_level);
     q.bindValue(":fading_steps_lv", rcs.n_fading_steps_level);

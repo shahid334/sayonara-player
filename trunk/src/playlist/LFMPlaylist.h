@@ -27,6 +27,41 @@
 #include "HelperStructs/MetaData.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
+#include <QThread>
+
+class NewLFMPlaylistThread : public QThread {
+
+    Q_OBJECT
+
+signals:
+    void sig_finished(const MetaDataList&);
+
+private slots:
+    void playlist_fetched(const MetaDataList& v_md){
+        emit sig_finished(v_md);
+    }
+
+public:
+    NewLFMPlaylistThread(LastFM* lfm, QObject* parent=0 ) : QThread(parent){
+        _lfm = lfm;
+    }
+
+    ~NewLFMPlaylistThread(){ this->terminate();}
+
+
+protected:
+    void run(){
+
+        _lfm->psl_radio_playlist_request();
+
+    }
+
+
+private:
+    LastFM* _lfm;
+
+};
+
 
 class LFMPlaylist : public Playlist
 {
@@ -37,6 +72,7 @@ signals:
 
 public:
     LFMPlaylist(QObject* parent);
+    ~LFMPlaylist();
 
     virtual void play();
     virtual void pause();
@@ -64,6 +100,7 @@ public slots:
 private:
     MetaDataList _v_md_hidden;
     LastFM* _lfm;
+    NewLFMPlaylistThread* _thread;
 
 
     

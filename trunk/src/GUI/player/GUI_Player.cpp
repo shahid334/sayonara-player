@@ -174,7 +174,7 @@ GUI_Player::~GUI_Player() {
 
 void GUI_Player::language_changed(QString language){
 
-    m_translator->load(language, Helper::getSharePath() + "/translations/");
+    m_translator->load(language, Helper::getSharePath() + "translations/");
 
     this->ui->retranslateUi(this);
 

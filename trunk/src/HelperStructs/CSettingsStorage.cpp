@@ -97,7 +97,7 @@ void CSettingsStorage::init() {
 
 QString CSettingsStorage::getDBFileName () {
 		
-    return Helper::getSayonaraPath() + QDir::separator() + m_dbFile;
+    return Helper::getSayonaraPath() + m_dbFile;
 }
 
 

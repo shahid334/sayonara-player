@@ -110,7 +110,7 @@ void GUI_LanguageChooser::renew_combo(){
 
         QString two = name.right(2);
         QString title = _map.value(two);
-        QString flag = Helper::getSharePath() + "/translations/icons/" + two + ".png";
+        QString flag = Helper::getSharePath() + "translations/icons/" + two + ".png";
 
         if(title.size() > 0)
             ui->combo_lang->addItem(QIcon(flag), title, name);

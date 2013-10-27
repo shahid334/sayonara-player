@@ -54,11 +54,12 @@ protected:
     void closeEvent(QCloseEvent *);
     void paintEvent(QPaintEvent* e);
     void mousePressEvent(QMouseEvent *e);
+    void resizeEvent(QResizeEvent *e);
 
 public slots:
     void set_level(float, float);
     void psl_stop();
-    void psl_style_update();
+    void psl_style_update(bool inner=false);
 
 
 private slots:
@@ -78,6 +79,7 @@ private:
     bool    _timer_stopped;
 
     void resize_steps(int n_rects);
+    void reload();
 
 
     

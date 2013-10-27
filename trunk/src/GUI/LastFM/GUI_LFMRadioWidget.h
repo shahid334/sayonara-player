@@ -31,6 +31,7 @@
 
 #include "GUI/ui_GUI_LFMRadioWidget.h"
 #include "PlayerPlugin/PlayerPlugin.h"
+#include "StreamPlugins/LastFM/LastFM.h"
 #include <QWidget>
 
 class GUI_LFMRadioWidget : public PlayerPlugin, private Ui::GUI_LFMRadioWidget{
@@ -57,12 +58,14 @@ public:
 	private slots:
 		void start_listen();
         void mode_index_changed(int i);
+        void psl_radio_initialized(bool);
 
 
 	private:
 
         Ui::GUI_LFMRadioWidget* _ui;
 		QStringList _friends;
+        LastFM* _lastfm;
 
 };
 

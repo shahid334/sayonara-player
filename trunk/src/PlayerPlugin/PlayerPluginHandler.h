@@ -48,6 +48,7 @@ public slots:
 
 private slots:
     void plugin_action_triggered(PlayerPlugin*, bool);
+    void reload_plugin(PlayerPlugin*);
 
 private:
     QList<PlayerPlugin*>  _plugins;

@@ -401,6 +401,7 @@ void Application::init_connections(){
     CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
     CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),   player,		lfm_info_fetched(const MetaData&, bool, bool));
     CONNECT(lastfm, sig_create_playlist(MetaDataList&, bool),               playlist_handler,   psl_createPlaylist(MetaDataList&, bool));
+    CONNECT(lastfm, sig_new_radio_playlist(MetaDataList&),                  playlist_handler,   psl_append_tracks(MetaDataList&));
 
 
     CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
@@ -482,7 +483,7 @@ void Application::setFiles2Play(QStringList filelist){
 QString Application::getVersion(){
 
     ifstream istr;
-    QString version_file = Helper::getSharePath() + "/VERSION";
+    QString version_file = Helper::getSharePath() + "VERSION";
 
     istr.open(version_file.toUtf8()  );
     if(!istr || !istr.is_open() ) return "0.3.1";

@@ -288,22 +288,23 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 
     if(!_parse_error_message(response)) success = false;
 
-    emit sig_radio_initialized(success);
-
     if( success ) {
+
         MetaDataList v_md;
         MetaData md;
         md.radio_mode = RADIO_LFM;
         md.id = -2;
         v_md.push_back(md);
-        emit sig_create_playlist(v_md, false);
+        emit sig_create_playlist(v_md, true);
+
     }
+
+    emit sig_radio_initialized(success);
 
 }
 
 
 void LastFM::psl_radio_playlist_request(){
-
 
 	QDomDocument xml_response;
 	MetaDataList v_md;
