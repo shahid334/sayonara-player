@@ -18,9 +18,6 @@ if (LIBNOTIFY_FOUND)
     LINK_DIRECTORIES(${LIBNOTIFY_LIBRARY_DIRS})
 
     FIND_PACKAGE(Qt4 REQUIRED)
-    IF(${UNIX})
-        execute_process(COMMAND ${CMAKE_SOURCE_DIR}/scripts/libnotify-version)
-    ENDIF(${UNIX})
 
 
     SET(HEADERS

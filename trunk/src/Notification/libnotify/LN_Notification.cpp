@@ -21,7 +21,7 @@
 
 
 #include <libnotify/notify.h>
-
+#include <libnotify/notify-features.h>
 #include <QString>
 #include <QtPlugin>
 #include <QDebug>
@@ -32,7 +32,6 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "Notification/libnotify/LN_Notification.h"
 #include "HelperStructs/Helper.h"
-
 
 
 LN_Notification::LN_Notification(){
@@ -73,9 +72,16 @@ void LN_Notification::notification_show(const MetaData& md){
     }
 
 
+#if (NOTIFY_VERSION_MINOR > 6 && NOTIFY_VERSION_MAJOR >= 0)
 	NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
                                                  text.toLocal8Bit().data(),
                                                 pixmap_path.toLocal8Bit().data());
+#else
+	 NotifyNotification* n = notify_notification_new( md.title.toLocal8Bit().data(),
+                                                 text.toLocal8Bit().data(),
+                                                pixmap_path.toLocal8Bit().data(), NULL);
+#endif
+
 
    _not = n;
 
