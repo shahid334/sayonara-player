@@ -1137,7 +1137,7 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="313"/>
         <source>Podcasts</source>
-        <translation>Podcasty</translation>
+        <translation>Zvukové záznamy</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="334"/>
@@ -1147,7 +1147,7 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.h" line="59"/>
         <source>P&amp;odcasts</source>
-        <translation>P&amp;odcasty</translation>
+        <translation>&amp;Zvukové záznamy</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="211"/>
@@ -1183,7 +1183,7 @@
     <message>
         <location filename="../GUI/engine/GUI_Spectrum.h" line="45"/>
         <source>&amp;Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Spektrum</translation>
     </message>
 </context>
 <context>
@@ -1373,7 +1373,7 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
+        <translation>Styl</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
@@ -1383,34 +1383,34 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
         <source>Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>Spektrum</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
         <source>Bins</source>
-        <translation type="unfinished"></translation>
+        <translation>Pruhy</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
         <source>Vert. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Svislý odstup</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
         <location filename="../GUI/engine/GUI_Style.ui" line="190"/>
         <source>Fading steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Rychlost přechodu</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="138"/>
         <location filename="../GUI/engine/GUI_Style.ui" line="212"/>
         <source>Hor. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Vodorovný odstup</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="165"/>
         <source>Rect height</source>
-        <translation type="unfinished"></translation>
+        <translation>Výška obdélníku</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="175"/>
@@ -1420,37 +1420,37 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="200"/>
         <source>Rect width</source>
-        <translation type="unfinished"></translation>
+        <translation>Šířka obdélníku</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="219"/>
         <source>Ver. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Svislý odstup</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="256"/>
         <source>Style settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení stylů</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="388"/>
         <source>Color 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Barva 2</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="395"/>
         <source>Color 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Barva 1</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="432"/>
         <source>Color 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Barva 3</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="439"/>
         <source>Color 4</source>
-        <translation type="unfinished"></translation>
+        <translation>Barva 4</translation>
     </message>
 </context>
 <context>
@@ -1464,7 +1464,7 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="142"/>
         <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavení ještě nejsou uložena&lt;br /&gt;Uložit?</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
@@ -1474,12 +1474,12 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
         <source>Please specify a name</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadejte, prosím, název</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
         <source>Save changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Uložit změny?</translation>
     </message>
 </context>
 <context>
@@ -1567,7 +1567,7 @@ Vyberte, prosím, jinou složku</translation>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="339"/>
         <source>Tag
 expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Značka&lt;br /&gt;Výraz</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="364"/>
@@ -1617,67 +1617,67 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
         <source>Here you can setup an expression for fast tagging</source>
-        <translation type="unfinished"></translation>
+        <translation>Na tomto místě lze zadat výraz pro dávkové značkování</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
         <source>Valid macros are:</source>
-        <translation type="unfinished"></translation>
+        <translation>Platnými zástupnými symboly jsou:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
         <source>for artist</source>
-        <translation type="unfinished"></translation>
+        <translation>pro umělce</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
         <source>for album</source>
-        <translation type="unfinished"></translation>
+        <translation>pro album</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
         <source>for title</source>
-        <translation type="unfinished"></translation>
+        <translation>pro název</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
         <source>for track number</source>
-        <translation type="unfinished"></translation>
+        <translation>pro číslo skladby</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
         <source>for year</source>
-        <translation type="unfinished"></translation>
+        <translation>pro rok</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
         <source>for discnumber</source>
-        <translation type="unfinished"></translation>
+        <translation>pro číslo disku</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
         <source>Example: </source>
-        <translation type="unfinished"></translation>
+        <translation>Příklad:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
         <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Popisná data nejsou buď úplná nebo dostupná, ale všechny souborové cesty vypadají takto:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
         <source>Then your expression should look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Potom má výraz vypadat, jak následuje:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
-        <translation type="unfinished"></translation>
+        <translation>Poznámka: Žádné značky se nesmí objevit vícekrát. Pokud se má něco přehlížet, potom se to musí zadat takto</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
         <source>How to use</source>
-        <translation type="unfinished"></translation>
+        <translation>Poučení</translation>
     </message>
 </context>
 <context>
@@ -2433,7 +2433,7 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1487"/>
         <source>Podcasts</source>
-        <translation>Podcasty</translation>
+        <translation>Zvukové záznamy</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1498"/>

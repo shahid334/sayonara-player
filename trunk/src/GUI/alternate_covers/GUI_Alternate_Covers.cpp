@@ -44,6 +44,7 @@
 #include <QDebug>
 #include <QFileSystemWatcher>
 #include <unistd.h>
+#include <QRegExp>
 
 
 
@@ -280,18 +281,22 @@ void GUI_Alternate_Covers::update_model(){
     _model->insertRows(0, 2);
 
     QList<int> lst;
-    lst << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 9;
+    for(int i=0; i<10; i++) lst << i;
 
     for(int i=0; i<_filelist.size(); i++){
 
         QString str = _filelist[i];
+        QRegExp re("[0-9]{1,2}");
+        re.setMinimal(false);
+        re.indexIn(str);
 
-        QString str_tmp = str.right(str.size() - (str.lastIndexOf(QDir::separator()) + 1));
-        str_tmp = str_tmp.left(str_tmp.size() - 4);
-        str_tmp.replace("img_", "");
+        QString str_tmp = re.cap(0);
+
         int number = str_tmp.toInt() - 1;
-        if(number > 9) break;
-        if(lst.contains(number))lst.removeAt(lst.indexOf(number));
+        if(number > 9) continue;
+
+        if(lst.contains(number)) lst.removeAt(lst.indexOf(number));
+        else continue;
 
         int row = number / _model->columnCount();
         int col = number % _model->columnCount();

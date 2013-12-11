@@ -46,60 +46,36 @@
 #include <QRegExp>
 #include <QDir>
 
-QStringList cov_calc_adresses_from_webpage(uint num, QString& qwebpage) {
+QStringList cov_calc_adresses_from_webpage(uint num, QString& webpage) {
 
 	QStringList adresses;
-	if (qwebpage.size() == 0) {
+    if (webpage.size() == 0) {
         qDebug() << "No webpage found" << endl;
 		return adresses;
 	}
 
+    uint n_covers = 0;
+    int idx=0;
 
-	int search_start = 0;
+    while(n_covers < num){
+        QString re_str("(https://encrypted-tbn)(\\S)+(\")");
+        QRegExp re(re_str);
+        idx = re.indexIn(webpage, idx);
+        if(idx == -1) break;
+        QString str = re.cap(0);
 
-	while (true) {
-
-		QString search_string = QString(".jpg");
-
-		int loc_end = qwebpage.indexOf(search_string, search_start);
-		if (loc_end == -1) {
-			search_string = QString(".png");
-
-			loc_end = qwebpage.indexOf(search_string, search_start);
-		}
-
-		if (loc_end != -1) {
-			loc_end += 4;
-
-			QString tmp_str = "";
-			int tmp_idx = loc_end - 1;
-
-			while (!tmp_str.startsWith("http") && tmp_idx > search_start) {
-				tmp_str.prepend(qwebpage.at(tmp_idx));
-				tmp_idx--;
-			}
-
-			bool adress_found = (tmp_str.startsWith("http"));
-			if (adress_found) {
-				QString adress = tmp_str;
-				QUrl url(adress);
-
-				if (!adresses.contains(adress) && url.isValid()) {
-					adresses.push_back(adress);
-					if((uint) adresses.size() >= num) break;
-				}
-			}
-
-			search_start = loc_end;
-		}
-
-		else return adresses;
-	}
+        idx += str.length();
+        str.remove("\"");
+        adresses << str;
+        n_covers++;
+    }
 
 	return adresses;
 }
 
 QStringList cov_call_and_parse(QString url, int num_adresses){
+
+    qDebug() << "Url = " << url;
 
 	QString content;
     bool success = WebAccess::read_http_into_str(url, &content);
@@ -117,6 +93,8 @@ QStringList cov_call_and_parse(QString url, int num_adresses){
 
 
 bool cov_download_cover(QString adress, QImage* img) {
+
+    qDebug() << "Cover adress = " << adress;
 
     return WebAccess::read_http_into_img(adress, img);
 

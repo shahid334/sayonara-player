@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ro_RO">
+<TS version="2.0" language="ro_RO" sourcelanguage="en_US">
 <context>
     <name>AlternateCovers</name>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="14"/>
         <source>Search alternative image</source>
-        <translation>Caută o altă imagine</translation>
+        <translation>Caută o imagine alternativă</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="206"/>
@@ -31,7 +31,7 @@
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="285"/>
         <source>Select and preview multiple covers</source>
-        <translation>Selectează si previzualizează mai multe coperte</translation>
+        <translation>Alege și previzualizează multiple coperți</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="55"/>
@@ -47,63 +47,19 @@
 <context>
     <name>CLibraryBase</name>
     <message>
-        <source>Import files</source>
-        <translation type="obsolete">Importă fișiere</translation>
-    </message>
-    <message>
-        <source>All files could be imported</source>
-        <translation type="obsolete">Toate fișierele au putut fi importate</translation>
-    </message>
-    <message>
-        <source>Loading files...</source>
-        <translation type="obsolete">Se încarcă fișierele...</translation>
-    </message>
-    <message>
-        <source>Cancelled</source>
-        <translation type="obsolete">Anulat</translation>
-    </message>
-    <message>
-        <source>%1 tracks ready</source>
-        <translation type="obsolete">%1 piese gata</translation>
-    </message>
-    <message>
-        <source>No tracks</source>
-        <translation type="obsolete">Nicio piesă</translation>
-    </message>
-    <message>
-        <source>No Tracks</source>
-        <translation type="obsolete">Nicio piesă</translation>
-    </message>
-    <message>
-        <source>Rollback...</source>
-        <translation type="obsolete">Restaurare...</translation>
-    </message>
-    <message>
-        <source>%1 of %2 files could be imported</source>
-        <translation type="obsolete">%1 din %2 fișiere au fost importate</translation>
-    </message>
-    <message>
-        <source>Sorry, but tracks could not be imported</source>
-        <translation type="obsolete">Ne pare rău dar piesele nu au putut fi importate</translation>
-    </message>
-    <message>
-        <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
-        <translation type="obsolete">Te rog folosește funcția de import din meniul Fișier&lt;br /&gt; sau mută piesele în bibliotecă și folosește &apos;Reîncarcă bibioteca&apos;</translation>
-    </message>
-    <message>
         <location filename="../library/CLibraryAdmin.cpp" line="65"/>
         <source>Please select your library first</source>
-        <translation>Te rog selectează mai întâi biblioteca ta</translation>
+        <translation>Te rog alege mai întâi librăria</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="68"/>
         <source>Open Directory</source>
-        <translation>Deschide dosar</translation>
+        <translation>Deschide director</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="73"/>
         <source>I said: &quot;Please select your library first&quot;. Bye bye!</source>
-        <translation>Am spus: &quot;Te rog selectează mai întâi biblioteca ta&quot;. Pa pa!</translation>
+        <translation>Am spus:&quot;Te rog alege mai întâi librăria&quot;. Pa,pa!</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="176"/>
@@ -118,12 +74,12 @@
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="199"/>
         <source>All %1 could be removed</source>
-        <translation>Toate cele %1 pot fi șterse</translation>
+        <translation>Toate %1 pot fi îndepărtate</translation>
     </message>
     <message>
         <location filename="../library/CLibraryAdmin.cpp" line="203"/>
         <source>%1 of %2 %3 could not be removed</source>
-        <translation>%1 din %2 %3 nu s-au putut șterge</translation>
+        <translation>%1 din %2 %3 nu pot fi îndepărtate</translation>
     </message>
 </context>
 <context>
@@ -138,13 +94,13 @@
         <location filename="../GUI/ContextMenu.cpp" line="35"/>
         <location filename="../GUI/ContextMenu.cpp" line="59"/>
         <source>Edit</source>
-        <translation>Editare</translation>
+        <translation>Editează</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="36"/>
         <location filename="../GUI/ContextMenu.cpp" line="60"/>
         <source>Remove</source>
-        <translation>Elimină</translation>
+        <translation>Îndepărtează</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="37"/>
@@ -156,7 +112,7 @@
         <location filename="../GUI/ContextMenu.cpp" line="38"/>
         <location filename="../GUI/ContextMenu.cpp" line="62"/>
         <source>Play next</source>
-        <translation>Redă următorul</translation>
+        <translation>Redă următoarea</translation>
     </message>
     <message>
         <location filename="../GUI/ContextMenu.cpp" line="39"/>
@@ -180,7 +136,7 @@
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="74"/>
         <source>Cancel</source>
-        <translation>Renunță</translation>
+        <translation>Anulează</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/untitled.ui" line="95"/>
@@ -206,7 +162,7 @@
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="202"/>
         <source>Some error appeared when updating cover</source>
-        <translation>A apărut o eroare la actualizarea coperții</translation>
+        <translation>Au fost erori la actualizarea coperții</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="229"/>
@@ -224,7 +180,7 @@
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="320"/>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="360"/>
         <source>Search</source>
-        <translation>Caută</translation>
+        <translation>Căutare</translation>
     </message>
 </context>
 <context>
@@ -237,7 +193,7 @@
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="87"/>
         <source>Save as custom</source>
-        <translation>Salvează ca personalizat</translation>
+        <translation>Salvează ca personalizare</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="135"/>
@@ -252,12 +208,12 @@
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="271"/>
         <source>This will overwrite your custom preset</source>
-        <translation>Asta va suprascrie setul tău personalizat</translation>
+        <translation>Veți rescrie presetările personalizate</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="272"/>
         <source>Continue?</source>
-        <translation>Continuă?</translation>
+        <translation>Continuare?</translation>
     </message>
 </context>
 <context>
@@ -265,22 +221,22 @@
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="122"/>
         <source>Choose target directory</source>
-        <translation>Alege dosarul destinație</translation>
+        <translation>Alege directorul țintă</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="126"/>
         <source>Warning</source>
-        <translation>Atenție</translation>
+        <translation>Avertisment</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="126"/>
         <source>%1&lt;br /&gt;is no library directory</source>
-        <translation>%1&lt;br /&gt;nu este un dosar de bibliotecă</translation>
+        <translation>%1&lt;br /&gt;nu este director librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="150"/>
         <source>Cancel</source>
-        <translation>Renunță</translation>
+        <translation>Anulează</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="152"/>
@@ -299,7 +255,7 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="207"/>
         <source>Loved: </source>
-        <translation>Îndrăgite:</translation>
+        <translation>Adorate:</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="207"/>
@@ -325,13 +281,13 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="457"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="589"/>
         <source>#Tracks</source>
-        <translation>#Piese</translation>
+        <translation>#Melodii</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="331"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="429"/>
         <source>Playing time</source>
-        <translation>Timp de rulare</translation>
+        <translation>Timp redare</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="333"/>
@@ -346,14 +302,14 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="580"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="612"/>
         <source>Filesize</source>
-        <translation>Mărime</translation>
+        <translation>Dimensiune</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="336"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="463"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="615"/>
         <source>LIBRARY</source>
-        <translation>BIBLIOTECĂ</translation>
+        <translation>LIBRĂRIE</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="417"/>
@@ -376,7 +332,7 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="432"/>
         <source>Sampler?</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostră?</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="449"/>
@@ -386,28 +342,27 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="562"/>
         <source>1st</source>
-        <translation>1-ul</translation>
+        <translation>primul</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="565"/>
         <source>2nd</source>
-        <translation>al 2-lea</translation>
+        <translation>al doilea</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="568"/>
         <source>3rd</source>
-        <translation>al 3-lea</translation>
+        <translation>al treilea</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="571"/>
         <source>th</source>
-        <translatorcomment>trebuie verificat</translatorcomment>
-        <translation>-lea</translation>
+        <translation>lea</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="574"/>
         <source> track on </source>
-        <translation> piesă pe </translation>
+        <translation>melodie</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="575"/>
@@ -418,12 +373,12 @@
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="576"/>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="611"/>
         <source>Length</source>
-        <translation>Lungime</translation>
+        <translation>Durată</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="578"/>
         <source>Bitrate</source>
-        <translation>Rată de biți</translation>
+        <translation>Rată biți</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="579"/>
@@ -433,12 +388,12 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="587"/>
         <source>Various tracks</source>
-        <translation>Piese diverse</translation>
+        <translation>Melodii diverse</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="597"/>
         <source>on </source>
-        <translation>pe</translation>
+        <translation>pe </translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="699"/>
@@ -453,7 +408,7 @@
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="793"/>
         <source>ID3 tags could not be changed</source>
-        <translation>Etichetele ID3 nu au putut fi modificate</translation>
+        <translation>Nu se pot schimba Etichetele ID3</translation>
     </message>
 </context>
 <context>
@@ -509,7 +464,7 @@
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="25"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Bine</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="56"/>
@@ -519,12 +474,12 @@
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="71"/>
         <source>Select Language</source>
-        <translation>Alege limba</translation>
+        <translation>Alege Limba</translation>
     </message>
     <message>
         <location filename="../GUI/LanguageChooser/GUI_LanguageChooser.ui" line="95"/>
         <source>For new languages I am always looking for translators</source>
-        <translation>Mereu sunt în căutare de traducători pentru alte limbi</translation>
+        <translation>Caut mereu traducători pentru limbi noi</translation>
     </message>
 </context>
 <context>
@@ -542,12 +497,12 @@
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="67"/>
         <source>Activate</source>
-        <translation>Activează</translation>
+        <translation>Activare</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="79"/>
         <source>Show error messages</source>
-        <translation>Arată mesaje de eroare</translation>
+        <translation>Arată mesajele eroare</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="91"/>
@@ -562,7 +517,7 @@
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="148"/>
         <source>Clear session key</source>
-        <translation>Șterge cheia de sesiune</translation>
+        <translation>Șterge cheia sesiunii</translation>
     </message>
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="222"/>
@@ -572,7 +527,7 @@
     <message>
         <location filename="../GUI/LastFM/GUI_LastFM_Dialog.ui" line="237"/>
         <source>Cancel</source>
-        <translation>Renunță</translation>
+        <translation>Anulează</translation>
     </message>
 </context>
 <context>
@@ -586,10 +541,6 @@
         <location filename="../GUI/ui_GUI_Level.h" line="463"/>
         <source>x</source>
         <translation>x</translation>
-    </message>
-    <message>
-        <source>Le&amp;vel</source>
-        <translation type="obsolete">Ni&amp;vel</translation>
     </message>
 </context>
 <context>
@@ -657,13 +608,13 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Bitrate</source>
-        <translation>Rată de biți</translation>
+        <translation>Rată biți</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="210"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="279"/>
         <source>Filesize</source>
-        <translation>Mărime fișier</translation>
+        <translation>Dimensiune</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
@@ -677,7 +628,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="280"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="281"/>
         <source>#Tracks</source>
-        <translation>#Piese</translation>
+        <translation>#Melodii</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="619"/>
@@ -687,32 +638,32 @@
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="673"/>
         <source>Warning</source>
-        <translation>Atenție</translation>
+        <translation>Avertisment</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="675"/>
         <source>Only from library</source>
-        <translation>Doar din bibliotecă</translation>
+        <translation>Doar din librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="677"/>
         <source>You are about to delete %1 files</source>
-        <translation>Ești pe cale să ștergi %1 fișiere</translation>
+        <translation>Vei șterge %1 fișiere</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="681"/>
         <source>Continue?</source>
-        <translation>Continuă?</translation>
+        <translation>Continuare?</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="724"/>
         <source>Importing was successful</source>
-        <translation>Importul s-a realizat cu succes</translation>
+        <translation>Importarea a reușit</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="727"/>
         <source>Importing failed</source>
-        <translation>Importul a eșuat</translation>
+        <translation>Importarea a eșuat</translation>
     </message>
 </context>
 <context>
@@ -720,17 +671,17 @@
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="17"/>
         <source>Notification settings</source>
-        <translation>Setări pentru notificări</translation>
+        <translation>Configurare notificări</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="43"/>
         <source>Activate</source>
-        <translation>Activează</translation>
+        <translation>Activare</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="64"/>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Bine</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="80"/>
@@ -740,7 +691,7 @@
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="117"/>
         <source>Timeout (ms)</source>
-        <translation>Temporizare (ms)</translation>
+        <translation>Pauză (ms)</translation>
     </message>
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="131"/>
@@ -750,7 +701,7 @@
     <message>
         <location filename="../GUI/Notifications/GUI_Notifications.ui" line="161"/>
         <source>Icon scaling</source>
-        <translation>Scalare pictograme</translation>
+        <translation>Pictogramă</translation>
     </message>
 </context>
 <context>
@@ -758,33 +709,32 @@
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="82"/>
         <source>Sayonara Player</source>
-        <translatorcomment>Nu se poate efectua logarea pe Last.fm</translatorcomment>
         <translation>Sayonara Player</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="84"/>
         <source>Written by</source>
-        <translation>Scris de</translation>
+        <translation>Scris de către</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="85"/>
         <source>Copyright</source>
-        <translation>Copyright</translation>
+        <translation>Drepturi autor</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="241"/>
         <source>&amp;Library</source>
-        <translation>Bib&amp;liotecă</translation>
+        <translation>&amp;Librărie</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="436"/>
         <source>Warning</source>
-        <translation>Atenție</translation>
+        <translation>Avertisment</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="436"/>
         <source>Cannot login to Last.fm</source>
-        <translation>Nu se poate efectua logarea pe Last.fm</translation>
+        <translation>Last.fm nu se poate autentifica</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="615"/>
@@ -804,51 +754,51 @@
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="863"/>
         <source>A new version is available!</source>
-        <translation>O nouă versiune este disponibilă!</translation>
+        <translation>Este disponibilă o versiune nouă!</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="38"/>
         <source>Media files</source>
-        <translation>Fișiere multimedia</translation>
+        <translation>Fișiere media</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="53"/>
         <source>Open Media files</source>
-        <translation>Deschide fișiere multimedia</translation>
+        <translation>Deschide fișierele Media</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="62"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="86"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="219"/>
         <source>Open Directory</source>
-        <translation>Deschide dosar</translation>
+        <translation>Deschide Director</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="79"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="102"/>
         <source>No library path</source>
-        <translation>Nicio cale pentru bibliotecă</translation>
+        <translation>Librăria nu are cale</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="79"/>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="103"/>
         <source>Please select library path first</source>
-        <translation>Te rog selectează mai întâi calea către bibliotecă</translation>
+        <translation>Te rog mai întâi alege calea librăriei</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="113"/>
         <source>Import Files</source>
-        <translation>Importă fișiere</translation>
+        <translation>Importare Fișiere</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="237"/>
         <source>Library</source>
-        <translation>Bibliotecă</translation>
+        <translation>Librărie</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="238"/>
         <source>Do you want to reload the Library?</source>
-        <translation>Dorești să reîncarci biblioteca?</translation>
+        <translation>Vrei să reîncarci Librăria?</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="331"/>
@@ -878,7 +828,7 @@
     <message>
         <location filename="../GUI/player/GUI_PlayerMenubar.cpp" line="363"/>
         <source>Special thanks to %1 and %2 for translating</source>
-        <translation>Mulțumiri speciale %1 și %2 pentru traducere</translation>
+        <translation>Mulțumesc mult %1 și %2 pentru traducere</translation>
     </message>
 </context>
 <context>
@@ -891,17 +841,17 @@
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="184"/>
         <source>Please set library path first</source>
-        <translation>Te rog setează mai întâi calea către bibliotecă</translation>
+        <translation>Te rog mai întâi alge calea librăriei</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="188"/>
         <source>Dynamic playing</source>
-        <translation>Rulare dinamică</translation>
+        <translation>Redare dinamică</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="216"/>
         <source>Playlist empty</source>
-        <translation>Listă de piese goală</translation>
+        <translation>Listă goală</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="306"/>
@@ -911,12 +861,12 @@
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="315"/>
         <source> Track - </source>
-        <translation> Piesă - </translation>
+        <translation>Melodie - </translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="316"/>
         <source> Tracks - </source>
-        <translation> Piese - </translation>
+        <translation>Melodii - </translation>
     </message>
 </context>
 <context>
@@ -939,12 +889,12 @@
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="306"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Liste de piese&lt;br/&gt;salvate&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Liste&lt;br/&gt;Salvate&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="323"/>
         <source>Playlists</source>
-        <translation>Liste de piese</translation>
+        <translation>Liste melodii</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="341"/>
@@ -979,7 +929,7 @@
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="218"/>
         <source>Open Playlist files</source>
-        <translation>Deschide fișierele listelor de piese</translation>
+        <translation>Deschide Fișiere listă</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.cpp" line="267"/>
@@ -989,7 +939,7 @@
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.h" line="73"/>
         <source>Pla&amp;ylists</source>
-        <translation>&amp;Liste de piese</translation>
+        <translation>Fiș&amp;iere</translation>
     </message>
 </context>
 <context>
@@ -1002,7 +952,7 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="58"/>
         <source>Type name you wanna save the stream as</source>
-        <translation>Introdu numele sub care vrei să salvezi acest flux</translation>
+        <translation>Scrie numele sub care vrei să salvezi fluxul</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="106"/>
@@ -1012,12 +962,12 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="118"/>
         <source>Url</source>
-        <translation>URL</translation>
+        <translation>Adresa</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="145"/>
         <source>Enter stream url</source>
-        <translation>Introdu URL-ul fluxului</translation>
+        <translation>Introdu adresa fluxului</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="186"/>
@@ -1037,7 +987,7 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="288"/>
         <source> Start</source>
-        <translation>Pornește</translation>
+        <translation> Pornește</translation>
     </message>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="313"/>
@@ -1062,7 +1012,7 @@
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.cpp" line="224"/>
         <source>Really wanna delete %1?</source>
-        <translation>Chiar vrei să ștergi %1?</translation>
+        <translation>Sigur vrei să ștergi %1?</translation>
     </message>
 </context>
 <context>
@@ -1070,12 +1020,12 @@
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="53"/>
         <source>You haven&apos;t specified a library path yet</source>
-        <translation>Încă nu ai specificat o cale pentru bibliotecă</translation>
+        <translation>Încă nu ai ales o cale pentru librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="83"/>
         <source>Set library path</source>
-        <translation>Setează calea către bibliotecă</translation>
+        <translation>Alege calea pentru librărie</translation>
     </message>
 </context>
 <context>
@@ -1088,7 +1038,7 @@
     <message>
         <location filename="../GUI/engine/GUI_Spectrum.h" line="45"/>
         <source>&amp;Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Spectru</translation>
     </message>
 </context>
 <context>
@@ -1102,27 +1052,27 @@
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="46"/>
         <source>Cancel</source>
-        <translation>Renunță</translation>
+        <translation>Anulează</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="58"/>
         <source>Ok</source>
-        <translation>OK</translation>
+        <translation>Bine</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="72"/>
         <source>Load last track on startup</source>
-        <translation>Încarcă ultima piesă la pornire</translation>
+        <translation>Încarcă ultimele melodii</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="84"/>
         <source>Remember time of last track</source>
-        <translation>Ține minte poziția în ultima piesă</translation>
+        <translation>Reține timpul ultimei melodii</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="110"/>
         <source>Load playlist on startup</source>
-        <translation>Încarcă lista de piese la pornire</translation>
+        <translation>Încarcă lista la pornire</translation>
     </message>
     <message>
         <location filename="../GUI/startup_dialog/GUI_Startup_Dialog.ui" line="139"/>
@@ -1145,7 +1095,7 @@
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="96"/>
         <source>Webstreams</source>
-        <translation>Fluxuri Web</translation>
+        <translation>Flux web</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="117"/>
@@ -1155,17 +1105,17 @@
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="143"/>
         <source>Type name you wanna save the stream as</source>
-        <translation>Introdu numele sub care vrei să salvezi acest flux</translation>
+        <translation>Scrie numele sub care vrei să salvezi fluxul</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="158"/>
         <source>Url</source>
-        <translation>URL</translation>
+        <translation>Adresa</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="185"/>
         <source>Enter stream url</source>
-        <translation>Introdu URL-ul fluxului</translation>
+        <translation>Scrie adresa fluxului</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="214"/>
@@ -1185,7 +1135,7 @@
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="316"/>
         <source> Start</source>
-        <translation>Pornește</translation>
+        <translation> Pornește</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="91"/>
@@ -1200,12 +1150,12 @@
     <message>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="223"/>
         <source>Really wanna delete %1?</source>
-        <translation>Chiar vrei să ștergi %1?</translation>
+        <translation>Sigur vrei să ștergi %1?</translation>
     </message>
     <message>
         <location filename="../GUI/stream/GUI_Stream.h" line="63"/>
         <source>&amp;Webstreams</source>
-        <translation>Fluxuri &amp;Web</translation>
+        <translation>&amp;Fluxuri web</translation>
     </message>
 </context>
 <context>
@@ -1219,22 +1169,22 @@
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="25"/>
         <source>Target path:</source>
-        <translation>Calea destinație:</translation>
+        <translation>Calea aleasă:</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="75"/>
         <source>Cancel</source>
-        <translation>Renunță</translation>
+        <translation>Anulează</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="96"/>
         <source>Ok</source>
-        <translation>OK</translation>
+        <translation>Bine</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="151"/>
         <source>Only complete tracks</source>
-        <translation>Doar piese complete</translation>
+        <translation>Doar melodii complete</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="163"/>
@@ -1249,24 +1199,24 @@
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.ui" line="214"/>
         <source>Create session folder</source>
-        <translation>Crează dosarul pentru sesiune</translation>
+        <translation>Crează dosar sesiune</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.cpp" line="81"/>
         <source>Choose target directory</source>
-        <translation>Alege dosarul destinație</translation>
+        <translation>Alege directorul țintă</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.cpp" line="139"/>
         <source>Could not create directory</source>
-        <translation>Nu se poate crea dosarul</translation>
+        <translation>Directorul nu a putut fi creat</translation>
     </message>
     <message>
         <location filename="../GUI/StreamRecorder/GUI_StreamRecorder.cpp" line="139"/>
         <source> could not be created
 Please choose another folder</source>
-        <translation>nu a putut fi creat
-Te rog alege un alt dosar</translation>
+        <translation> nu a putut fi creat
+Te rog alege alt dosar</translation>
     </message>
 </context>
 <context>
@@ -1274,84 +1224,84 @@ Te rog alege un alt dosar</translation>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="14"/>
         <source>Style</source>
-        <translation type="unfinished"></translation>
+        <translation>Stil</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="52"/>
         <source>Close</source>
-        <translation type="unfinished">Închide</translation>
+        <translation>Închide</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="63"/>
         <source>Spectrum</source>
-        <translation type="unfinished"></translation>
+        <translation>Spectru</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="74"/>
         <source>Bins</source>
-        <translation type="unfinished"></translation>
+        <translation>Bins</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="86"/>
         <source>Vert. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Spațiere vert.</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="116"/>
         <location filename="../GUI/engine/GUI_Style.ui" line="190"/>
         <source>Fading steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Transparență</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="138"/>
         <location filename="../GUI/engine/GUI_Style.ui" line="212"/>
         <source>Hor. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Spațiere oriz.</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="165"/>
         <source>Rect height</source>
-        <translation type="unfinished"></translation>
+        <translation>Înălțime</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="175"/>
         <source>Level</source>
-        <translation type="unfinished">Nivel</translation>
+        <translation>Nivel</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="200"/>
         <source>Rect width</source>
-        <translation type="unfinished"></translation>
+        <translation>Lățime</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="219"/>
         <source>Ver. spacing</source>
-        <translation type="unfinished"></translation>
+        <translation>Spațiere vert.</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="256"/>
         <source>Style settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurare stil</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="388"/>
         <source>Color 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Culoare 2</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="395"/>
         <source>Color 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Culoare 1</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="432"/>
         <source>Color 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Culoare 3</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_Style.ui" line="439"/>
         <source>Color 4</source>
-        <translation type="unfinished"></translation>
+        <translation>Culoare 4</translation>
     </message>
 </context>
 <context>
@@ -1360,12 +1310,12 @@ Te rog alege un alt dosar</translation>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="141"/>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
         <source>Warning</source>
-        <translation>Atenție</translation>
+        <translation>Avertisment</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="142"/>
         <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
-        <translation type="unfinished"></translation>
+        <translation>Există configurări nesalvate&lt;br /&gt;Le salvezi acum?</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
@@ -1375,12 +1325,12 @@ Te rog alege un alt dosar</translation>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="221"/>
         <source>Please specify a name</source>
-        <translation type="unfinished"></translation>
+        <translation>Te rog alege un nume</translation>
     </message>
     <message>
         <location filename="../GUI/engine/GUI_StyleSettings.cpp" line="381"/>
         <source>Save changes?</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvare schimbări?</translation>
     </message>
 </context>
 <context>
@@ -1388,13 +1338,14 @@ Te rog alege un alt dosar</translation>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="32"/>
         <source>ID3 Tagger</source>
-        <translation>Etichetare ID3</translation>
+        <translation>Editor ID3</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="339"/>
         <source>Tag
 expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Expresie
+tag</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="538"/>
@@ -1404,7 +1355,7 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="553"/>
         <source>Track</source>
-        <translation>Piesă</translation>
+        <translation>Melodie</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="583"/>
@@ -1419,7 +1370,7 @@ expression</source>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="415"/>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="639"/>
         <source>all</source>
-        <translation>tot</translation>
+        <translation>toate</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="352"/>
@@ -1434,7 +1385,7 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="321"/>
         <source>Tag from path</source>
-        <translation>Etichetă din calea</translation>
+        <translation>Etichetă din cale</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="230"/>
@@ -1454,12 +1405,12 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="624"/>
         <source>Undo expression</source>
-        <translation>Refă expresia</translation>
+        <translation>Expresia anterioară</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="287"/>
         <source># Track</source>
-        <translation>Nr. piesei</translation>
+        <translation># Melodie</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="46"/>
@@ -1484,12 +1435,12 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="450"/>
         <source>Cancel</source>
-        <translation>Renunță</translation>
+        <translation>Anulează</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="471"/>
         <source>Ok</source>
-        <translation>OK</translation>
+        <translation>Bine</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="376"/>
@@ -1499,82 +1450,82 @@ expression</source>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="326"/>
         <source>Track </source>
-        <translation>Piesă</translation>
+        <translation>Melodie </translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="510"/>
         <source>You are about to insert&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; new album(s) and &lt;b&gt;%2&lt;/b&gt; new artist(s)</source>
-        <translation>Ești pe cale să adaugi&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; album(e) și &lt;b&gt;%2&lt;/b&gt;artist(i)</translation>
+        <translation>Ești pe cale a introduce&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; albume noi și &lt;b&gt;%2&lt;/b&gt; artiști noi</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="515"/>
         <source>Proceed?</source>
-        <translation>Continui?</translation>
+        <translation>O faci?</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
         <source>Here you can setup an expression for fast tagging</source>
-        <translation type="unfinished"></translation>
+        <translation>Aici poți configura o expresie pentru etichetare rapidă</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
         <source>Valid macros are:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modelele valide sunt:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
         <source>for artist</source>
-        <translation type="unfinished"></translation>
+        <translation>pentru artist</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
         <source>for album</source>
-        <translation type="unfinished"></translation>
+        <translation>pentru album</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
         <source>for title</source>
-        <translation type="unfinished"></translation>
+        <translation>pentru titlu</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
         <source>for track number</source>
-        <translation type="unfinished"></translation>
+        <translation>pentru numărul melodiei</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
         <source>for year</source>
-        <translation type="unfinished"></translation>
+        <translation>pentru an</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
         <source>for discnumber</source>
-        <translation type="unfinished"></translation>
+        <translation>pentru numărul discului</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
         <source>Example: </source>
-        <translation type="unfinished"></translation>
+        <translation>Exemplu: </translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
         <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Fișierele tale mp3 au datele meta incomplete sau lipsă, dar toate fișierele mp3 din dosar arată așa:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
         <source>Then your expression should look like this:</source>
-        <translation type="unfinished"></translation>
+        <translation>Atunci expresia ta va arăta așa:</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
-        <translation type="unfinished"></translation>
+        <translation>Ține minte că nici o etichetă nu trebuie să fie dublă. Dacă vrei să ignori ceva va trebui să o scrii așa</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
         <source>How to use</source>
-        <translation type="unfinished"></translation>
+        <translation>Cum se folosește</translation>
     </message>
 </context>
 <context>
@@ -1582,12 +1533,12 @@ expression</source>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="14"/>
         <source>Choose target playlist</source>
-        <translation>Alege lista de piese destinație</translation>
+        <translation>Alege lista țintă</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="49"/>
         <source>relative filepaths</source>
-        <translation>căi fișiere relative</translation>
+        <translation>căi relative</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="73"/>
@@ -1602,17 +1553,17 @@ expression</source>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="111"/>
         <source>Ok</source>
-        <translation>OK</translation>
+        <translation>Bine</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui" line="127"/>
         <source>Save playlist as...</source>
-        <translation>Salvează lista de piese ca...</translation>
+        <translation>Salvează lista ca...</translation>
     </message>
     <message>
         <location filename="../GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp" line="57"/>
         <source>Choose target file</source>
-        <translation>Alege fișierul destinație</translation>
+        <translation>Alege fișierul țintă</translation>
     </message>
 </context>
 <context>
@@ -1622,7 +1573,7 @@ expression</source>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="122"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="285"/>
         <source>Play</source>
-        <translation>Redare</translation>
+        <translation>Redă</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="66"/>
@@ -1634,20 +1585,20 @@ expression</source>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="68"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="124"/>
         <source>Previous</source>
-        <translation>Înapoi</translation>
+        <translation>Anterioară</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="70"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="123"/>
         <source>Next</source>
-        <translation>Înainte</translation>
+        <translation>Următoarea</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="72"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="126"/>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="264"/>
         <source>Mute</source>
-        <translation>Mut</translation>
+        <translation>Taie sunet</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="74"/>
@@ -1664,12 +1615,12 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="169"/>
         <source> by </source>
-        <translation> de </translation>
+        <translation>de</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="269"/>
         <source>Unmute</source>
-        <translation>Ne-mut</translation>
+        <translation>Redă sunet</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_TrayIcon.cpp" line="280"/>
@@ -1687,32 +1638,32 @@ expression</source>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="91"/>
         <source>Copy tracks to library</source>
-        <translation>Copiază piesele în bibliotecă</translation>
+        <translation>Copiază melodiile în librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="123"/>
         <source>cancel</source>
-        <translation>Renunță</translation>
+        <translation>anulează</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="150"/>
         <source>ok</source>
-        <translation>OK</translation>
+        <translation>bine</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="166"/>
         <source>Import tracks to library</source>
-        <translation>Importă piesele în bibliotecă</translation>
+        <translation>Importă melodiile în librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="198"/>
         <source>Select target folder</source>
-        <translation>Alege dosarul destinație</translation>
+        <translation>Alege dosarul țintă</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="243"/>
         <source>/music/library</source>
-        <translation>/music/library</translation>
+        <translation>/muzică/librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="270"/>
@@ -1725,7 +1676,7 @@ expression</source>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="14"/>
         <source>Info / Edit</source>
-        <translation>Info / Editare</translation>
+        <translation>Info/ Configurare</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="57"/>
@@ -1757,7 +1708,7 @@ expression</source>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="351"/>
         <source>Edit</source>
-        <translation>Editare</translation>
+        <translation>Configurare</translation>
     </message>
 </context>
 <context>
@@ -1766,12 +1717,12 @@ expression</source>
         <location filename="../StreamPlugins/LastFM/LFMTrackChangedThread.cpp" line="408"/>
         <location filename="../StreamPlugins/LastFM/LFMTrackChangedThread.cpp" line="442"/>
         <source>Last.fm plays</source>
-        <translation>Rulări last.fm</translation>
+        <translation>Redări Last.fm</translation>
     </message>
     <message>
         <location filename="../StreamPlugins/LastFM/LFMTrackChangedThread.cpp" line="441"/>
         <source>Release Date</source>
-        <translation>Data lansării</translation>
+        <translation>Data apariției</translation>
     </message>
 </context>
 <context>
@@ -1784,23 +1735,19 @@ expression</source>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="97"/>
         <source>%1 tracks ready</source>
-        <translation>%1 piese gata</translation>
+        <translation>%1 melodii gata</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="102"/>
         <location filename="../library/LibraryImporter.cpp" line="122"/>
         <location filename="../library/LibraryImporter.cpp" line="163"/>
         <source>No tracks</source>
-        <translation>Nicio piesă</translation>
-    </message>
-    <message>
-        <source>No Tracks</source>
-        <translation type="obsolete">Nicio piesă</translation>
+        <translation>Lipsă melodii</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="173"/>
         <source>Rollback...</source>
-        <translation>Restaurare...</translation>
+        <translation>Întoarcere...</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="188"/>
@@ -1810,23 +1757,23 @@ expression</source>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="191"/>
         <source>%1 of %2 files could be imported</source>
-        <translation>%1 din %2 fișiere au fost importate</translation>
+        <translation>%1 din %2 fișiere nu au putut fi importate</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="193"/>
         <location filename="../library/LibraryImporter.cpp" line="198"/>
         <source>Import files</source>
-        <translation>Importă fișiere</translation>
+        <translation>Importare fișiere</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="199"/>
         <source>Sorry, but tracks could not be imported</source>
-        <translation>Ne pare rău dar piesele nu au putut fi importate</translation>
+        <translation>Îmi pare rău, dar melodiile nu au putut fi importate</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="200"/>
         <source>Please use the import function of the file menu&lt;br /&gt; or move tracks to library and use &apos;Reload library&apos;</source>
-        <translation>Te rog folosește funcția de import din meniul Fișier&lt;br /&gt; sau mută piesele în bibliotecă și folosește &apos;Reîncarcă bibioteca&apos;</translation>
+        <translation>Te rog folosește funcția de importare din menu&lt;br /&gt; sau mută melodiile în librărie și folosește &apos;Reîncarcă librăria&apos;</translation>
     </message>
     <message>
         <location filename="../library/LibraryImporter.cpp" line="254"/>
@@ -1849,7 +1796,7 @@ expression</source>
     <message>
         <location filename="../GUI/library/SetupWidget/GUI_LibrarySetup_Widget.ui" line="95"/>
         <source>Setup Library Path</source>
-        <translation>Setează calea pentru bibliotecă</translation>
+        <translation>Configurează Calea Librăriei</translation>
     </message>
 </context>
 <context>
@@ -1862,7 +1809,7 @@ expression</source>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="51"/>
         <source>LastFM Playcount</source>
-        <translation>Rulări LastFM</translation>
+        <translation>Număr redări Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="65"/>
@@ -1877,7 +1824,7 @@ expression</source>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="103"/>
         <source>Tracks</source>
-        <translation>Piese</translation>
+        <translation>Melodii</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="117"/>
@@ -1892,7 +1839,7 @@ expression</source>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="190"/>
         <source>Filesize</source>
-        <translation>Mărime</translation>
+        <translation>Dimensiune</translation>
     </message>
 </context>
 <context>
@@ -1900,17 +1847,17 @@ expression</source>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
         <source>Library</source>
-        <translation>Bibliotecă</translation>
+        <translation>Librărie</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
-        <translation>Comenzi rapide: &lt;br /&gt;Caută &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Gen &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Cale &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
+        <translation>Scurtături: &lt;br /&gt;Căutare &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Gen &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Cale &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="352"/>
         <source>Search</source>
-        <translation>Caută</translation>
+        <translation>Căutare</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="357"/>
@@ -1925,22 +1872,22 @@ expression</source>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="391"/>
         <source>Search for title, interprets and albums</source>
-        <translation>Caută după titlu, interpreți si albume</translation>
+        <translation>Căutare titlu, interpreți și albume</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="418"/>
         <source>Show all interprets, albums, tracks</source>
-        <translation>Afișează toți interpreții, toate albumele, toate piesele</translation>
+        <translation>Arată toți interpreții, albumele și melodiile</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="446"/>
         <source>Music Library  </source>
-        <translation>Bibliotecă muzicală</translation>
+        <translation>Librărie Muzică</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="485"/>
         <source>Information</source>
-        <translation>Informație</translation>
+        <translation>Informații</translation>
     </message>
 </context>
 <context>
@@ -1948,18 +1895,7 @@ expression</source>
     <message>
         <location filename="../LyricLookup/LyricLookup.cpp" line="205"/>
         <source>Sorry, no lyrics found&lt;br /&gt;</source>
-        <translation>Îmi pare rău, nu s-au găsit versuri&lt;br /&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>Phonon_Engine</name>
-    <message>
-        <source>Fatal Error</source>
-        <translation type="obsolete">Eroare fatală</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="obsolete">Eroare</translation>
+        <translation>Îmi pare rău, nu s-au găsit versurile.&lt;br /&gt;</translation>
     </message>
 </context>
 <context>
@@ -2031,17 +1967,17 @@ expression</source>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="441"/>
         <source>Import new (orange) tracks to library w/o copying</source>
-        <translation>Importă piesele noi (portocaliu) în bibliotecă fără a le copia</translation>
+        <translation>Importă noi (portocaliu) melodii în librărie fără copiere</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="480"/>
         <source>Show numbers in playlist</source>
-        <translation>Afișează numere în lista de piese</translation>
+        <translation>Arată numere în listă</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="82"/>
         <source>Clear Playlist</source>
-        <translation>Golește lista de piese</translation>
+        <translation>Golește listă</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="176"/>
@@ -2055,27 +1991,28 @@ expression</source>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="339"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="388"/>
         <source>Enter</source>
+        <translatorcomment>Traducere incertă. Nu știu dacă se referă la Enter (return key) sau la Intrare (în sensul de melodie în listă).</translatorcomment>
         <translation>Enter</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="225"/>
         <source>Repeat All</source>
-        <translation>Repetă tot</translation>
+        <translation>Repetă toate</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="274"/>
         <source>Shuffle</source>
-        <translation>Amestecat</translation>
+        <translation>Aleator</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="323"/>
         <source>Append when adding new tracks</source>
-        <translation>Adaugă la introducerea de noi piese</translation>
+        <translation>Atașează melodiile noi adăugate</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="372"/>
         <source>Dynamic playing</source>
-        <translation>Rulare dinamică</translation>
+        <translation>Redare dinamică</translation>
     </message>
 </context>
 <context>
@@ -2083,12 +2020,12 @@ expression</source>
     <message>
         <location filename="../library/threads/ReloadThread.cpp" line="101"/>
         <source>Reloading %1 tracks</source>
-        <translation>Se reîncarcă %1 piese</translation>
+        <translation>Reîncarc %1 melodii</translation>
     </message>
     <message>
         <location filename="../library/threads/ReloadThread.cpp" line="156"/>
         <source>Delete orphaned tracks...</source>
-        <translation>Șterge piesele orfane...</translation>
+        <translation>Ștergere melodii orfane...</translation>
     </message>
 </context>
 <context>
@@ -2102,7 +2039,7 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="220"/>
         <source>Correct Metadata</source>
-        <translation>Corectează metadatele</translation>
+        <translation>Etichete Corecte</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="804"/>
@@ -2112,7 +2049,7 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="888"/>
         <source>Copyright 2011-2013</source>
-        <translation>Copyright 2011-2013</translation>
+        <translation>Drepturi autor 2011-2013</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1028"/>
@@ -2138,12 +2075,12 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1105"/>
         <source>Open File</source>
-        <translation>Deschide fișier</translation>
+        <translation>Deschide Fișier</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1116"/>
         <source>Open Folder</source>
-        <translation>Deschide dosar</translation>
+        <translation>Deschide Dosar</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1127"/>
@@ -2168,22 +2105,22 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1181"/>
         <source>Reload Library</source>
-        <translation>Reîncarcă biblioteca</translation>
+        <translation>Reîncarcă Librăria</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1192"/>
         <source>Clear Library</source>
-        <translation>Golește biblioteca</translation>
+        <translation>Șterge Librăria</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1203"/>
         <source>Library Path</source>
-        <translation>Calea către bibliotecă</translation>
+        <translation>Calea Librăriei</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1213"/>
         <source>Fetch all covers</source>
-        <translation>Descarcă toate coperțile</translation>
+        <translation>Adună coperțile</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1227"/>
@@ -2198,22 +2135,22 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1247"/>
         <source>Load playlist on startup</source>
-        <translation>Încarcă lista de piese la pornire</translation>
+        <translation>Încarcă lista la pornire</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1258"/>
         <source>Import Folder</source>
-        <translation>Importă dosar</translation>
+        <translation>Importă Dosar</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1269"/>
         <source>Import Files</source>
-        <translation>Importă fișiere</translation>
+        <translation>Importă Fișiere</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1283"/>
         <source>Playlist Chooser</source>
-        <translation>Selector de listă</translation>
+        <translation>Alegere Listă</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1301"/>
@@ -2229,17 +2166,17 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1322"/>
         <source>Open Stream</source>
-        <translation>Deschide flux</translation>
+        <translation>Deschide Flux</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1333"/>
         <source>&amp;Library</source>
-        <translation>Bib&amp;liotecă</translation>
+        <translation>&amp;Librărie</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1350"/>
         <source>Close to tray</source>
-        <translation>Închide în zona de notificare</translation>
+        <translation>Închide în bară</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1364"/>
@@ -2249,7 +2186,7 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1378"/>
         <source>Fullscreen </source>
-        <translation>Pe tot ecranul</translation>
+        <translation>Pe tot ecranul </translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1392"/>
@@ -2259,12 +2196,12 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1406"/>
         <source>Only tracks in library</source>
-        <translation>Doar piese din bibliotecă</translation>
+        <translation>Doar melodii în librărie</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1417"/>
         <source>Sound Engine</source>
-        <translation>Motor audio</translation>
+        <translation>Motor Sunet</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1422"/>
@@ -2284,7 +2221,7 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1446"/>
         <source>Set Streamripper Path</source>
-        <translation>Setază calea către Streamripper</translation>
+        <translation>Alege calea înregistrării fluxului</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1454"/>
@@ -2294,7 +2231,7 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1462"/>
         <source>Socket connection</source>
-        <translation>Conectare socket</translation>
+        <translation>Conexiune socket</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1487"/>
@@ -2304,17 +2241,17 @@ expression</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1498"/>
         <source>Library live search</source>
-        <translation>Căutare directă în bibliotecă</translation>
+        <translation>Căutare directă în librărie</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1515"/>
         <source>Update notifier</source>
-        <translation>Notificări de actualizări</translation>
+        <translation>Notificare actualizări</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1526"/>
         <source>Language</source>
-        <translation>Limba</translation>
+        <translation>Limbă</translation>
     </message>
 </context>
 <context>
@@ -2327,7 +2264,7 @@ expression</source>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="25"/>
         <source>Activate socket connection</source>
-        <translation>Activează conectare socket</translation>
+        <translation>Activare conexiune socket</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="70"/>
@@ -2337,12 +2274,12 @@ expression</source>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="100"/>
         <source>If no connection can be established, try to increment port until...</source>
-        <translation>Dacă nu se poate stabili o conexiune încercă incrementarea portului până la...</translation>
+        <translation>Dacă nu se poate stabili conexiunea, încearcă incrementarea portului până la...</translation>
     </message>
     <message>
         <location filename="../GUI/SocketConfiguration/GUI_SocketSetup.ui" line="103"/>
         <source>Increment until</source>
-        <translation>Incrementează până la</translation>
+        <translation>Incrementare până la</translation>
     </message>
 </context>
 <context>
@@ -2355,7 +2292,7 @@ expression</source>
     <message>
         <location filename="../Engine/SoundPluginLoader.cpp" line="142"/>
         <source>Please restart in order to change engine to </source>
-        <translation>Te rog repornește pentru a schimba motorul în </translation>
+        <translation>Te rog repornește pentru a schimba motorul cu </translation>
     </message>
 </context>
 </TS>
