@@ -108,12 +108,12 @@ public:
 
 private:
 
-
-
     GstElement* _pipeline;
 	GstElement* _equalizer;
     GstElement* _eq_queue;
     GstElement* _volume;
+    GstElement* _audio_convert;
+    GstElement* _audio_resampler;
 
     GstPad* _tee_app_pad;
     GstPad* _app_pad;
@@ -123,7 +123,6 @@ private:
 
     GstPadTemplate* _tee_src_pad_template;
 
-    GstElement* _level_audio_convert, *_spectrum_audio_convert;
     GstElement* _level, *_spectrum;
     GstPad*     _level_pad, *_spectrum_pad;
     GstPad*     _tee_level_pad, *_tee_spectrum_pad;

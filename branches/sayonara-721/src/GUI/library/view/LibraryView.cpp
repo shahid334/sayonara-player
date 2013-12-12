@@ -44,6 +44,7 @@
 #include <QScrollBar>
 #include <QFont>
 #include <QMimeData>
+#include <QElapsedTimer>
 
 LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     _parent = parent;
@@ -54,6 +55,7 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
     _mimedata = new CustomMimeData();
     _edit = new QLineEdit(this);
     _edit->hide();
+    _filling = false;
 
     this->connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
 
@@ -66,6 +68,7 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
+    _timer = new QElapsedTimer();
 }
 
 
@@ -316,6 +319,12 @@ void LibraryView::goto_row(int row, bool select){
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
 
+
+    if(_filling) return;
+    qDebug() << "View selection changed";
+    _timer->restart();
+
+
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     if(_qDrag) {
@@ -385,6 +394,8 @@ void LibraryView::reset_edit(){
 // fill
 void LibraryView::fill_metadata(const MetaDataList& v_md){
 
+
+    _filling = true;
     QList<int> lst;
     _model->set_selected(lst);
 
@@ -413,10 +424,12 @@ void LibraryView::fill_metadata(const MetaDataList& v_md){
     sm->select(sel,QItemSelectionModel::Select);
 
     calc_corner_widget();
+    _filling = false;
 }
 
 void LibraryView::fill_albums(const AlbumList& albums){
 
+    _filling = true;
     QList<int> lst;
     _model->set_selected(lst);
     uint albums_size = albums.size();
@@ -454,11 +467,13 @@ void LibraryView::fill_albums(const AlbumList& albums){
         this->scrollTo(_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
 
     calc_corner_widget();
+    _filling = false;
 }
 
 
 void LibraryView::fill_artists(const ArtistList& artists){
 
+    _filling = true;
     QList<int> lst;
     _model->set_selected(lst);
     uint artist_size = artists.size();
@@ -496,6 +511,7 @@ void LibraryView::fill_artists(const ArtistList& artists){
         this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
 
     calc_corner_widget();
+    _filling = false;
 }
 
 void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder){
@@ -675,3 +691,15 @@ void LibraryView::append_clicked(){
     emit sig_append_clicked();
 }
 // right click stuff end
+
+
+
+qint64 LibraryView::get_timer_time(){
+    return _timer->nsecsElapsed();
+}
+
+void LibraryView::restart_timer(){
+    this->_timer->restart();
+
+}
+

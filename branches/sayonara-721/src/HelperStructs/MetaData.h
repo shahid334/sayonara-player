@@ -64,22 +64,19 @@ public:
     QString artist;
     QString album;
     QStringList genres;
-    qint32 rating;
+    qint8 rating;
     qint64 length_ms;
-    qint32 year;
+    qint16 year;
     QString filepath;
-    qint32 track_num;
+    qint16 track_num;
     qint32 bitrate;
     qint64 filesize;
     QString comment;
-    int discnumber;
-    int n_discs;
-
+    qint8 discnumber;
+    qint8 n_discs;
 
     bool is_extern;
-    int radio_mode;
-
-
+    RadioMode radio_mode;
 
     bool pl_selected;
     bool pl_playing;
@@ -103,12 +100,11 @@ public:
         track_num = 0;
         bitrate = 0;
         is_extern = false;
-        radio_mode = RADIO_OFF;
+        radio_mode = RadioOff;
         filesize = 0;
         comment = "";
         discnumber = 0;
         n_discs = -1;
-
 
         pl_selected = false;
         pl_playing = false;
@@ -190,7 +186,7 @@ public:
         md.n_discs =    list[15].toInt();
         md.genres =     list[16].split(",");
         md.is_extern = ( list[17] == "1" );
-        md.radio_mode = list[18].toInt();
+        md.radio_mode = (RadioMode) list[18].toInt();
         md.pl_playing = (list[19] == "1");
         md.pl_selected = (list[20] == "1");
         md.pl_dragged = (list[21] == "1");
@@ -276,8 +272,8 @@ public:
 struct Artist{
     QString name;
     qint32	id;
-    qint32	num_songs;
-    qint32  num_albums;
+    qint16	num_songs;
+    qint16  num_albums;
     bool is_lib_selected;
 
 
@@ -317,12 +313,13 @@ struct Artist{
 struct Album{
     QString name;
     qint32	id;
-    qint32 	num_songs;
-    qint32 	length_sec;
-    qint32	year;
+    qint16 	num_songs;
+    qint16 	length_sec;
+    qint16	year;
+    qint8 n_discs;
     QStringList artists;
     QList<int> discnumbers;
-    int n_discs;
+
     bool is_splitted;
     bool is_sampler;
     bool is_lib_selected;

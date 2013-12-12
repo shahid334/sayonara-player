@@ -46,7 +46,7 @@ using namespace std;
 
 Playlist::Playlist(QObject * parent) : QObject (parent){
 
-    _radio_active = RADIO_OFF;
+    _radio_active = RadioOff;
     _settings = CSettingsStorage::getInstance();
     _playlist_mode = _settings->getPlaylistMode();
 	_db = CDatabaseConnector::getInstance();
@@ -76,7 +76,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
     // no tracks in new playlist
     if(v_meta_data.size() == 0) {
 
-        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RADIO_OFF);
+        emit sig_playlist_created(_v_meta_data, _cur_play_idx, RadioOff);
         return;
     }
 
@@ -88,9 +88,9 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 
         MetaData md_tmp = _db->getTrackByPath(md.filepath);
 
-        if(md.radio_mode == RADIO_OFF){
+        if(md.radio_mode == RadioOff){
             md.is_extern = (md_tmp.id < 0 && !Helper::is_www(md.filepath));
-            _radio_active = RADIO_OFF;
+            _radio_active = RadioOff;
         }
 
         else
@@ -123,7 +123,7 @@ void Playlist::psl_createPlaylist(MetaDataList& v_meta_data){
 // Load Folder, Load File...
 void Playlist::psl_createPlaylist(QStringList& pathlist){
 
-    _radio_active = RADIO_OFF;
+    _radio_active = RadioOff;
     MetaDataList v_md;
 
     CDirectoryReader reader;
@@ -143,7 +143,7 @@ void Playlist::psl_createPlaylist(CustomPlaylist& pl){
         _backup_playlist.is_valid = true;
         _backup_playlist.cur_play_idx = _cur_play_idx;
         _backup_playlist.is_valid = false;
-        _radio_active = RADIO_OFF;
+        _radio_active = RadioOff;
 
         psl_createPlaylist(pl.tracks);
     }
@@ -289,7 +289,7 @@ void Playlist::psl_save_playlist_to_storage(){
 
     QStringList playlist_lst;
     foreach(MetaData md, _v_meta_data){
-        if(md.radio_mode != RADIO_OFF) continue;
+        if(md.radio_mode != RadioOff) continue;
 
         if(md.id >= 0) playlist_lst << QString::number(md.id);
         else
@@ -325,7 +325,7 @@ void Playlist::save_stream_playlist(){
 void Playlist::psl_next_track(){
 
 	/*** LASTFM ***/
-    if(_radio_active == RADIO_LFM){
+    if(_radio_active == RadioLFM){
 
     	MetaDataList v_md;
 
@@ -512,7 +512,7 @@ void Playlist::psl_id3_tags_changed(MetaDataList& new_meta_data){
 void Playlist::psl_similar_artists_available(const QList<int>& artists){
 
 	// the response came too late, we already switched to radio
-	if(_radio_active != RADIO_OFF ){
+    if(_radio_active != RadioOff ){
 		return;
 	}
 
@@ -583,7 +583,7 @@ void Playlist::psl_import_new_tracks_to_library(bool copy){
 
 void Playlist::psl_import_result(bool success){
 
-    if(success && _radio_active == RADIO_OFF){
+    if(success && _radio_active == RadioOff){
 
         for(uint i=0; i<_v_meta_data.size(); i++){
             _v_meta_data[i].is_extern = false;
@@ -598,7 +598,7 @@ void  Playlist::psl_lfm_radio_init(bool success){
     if(!success) return;
 
     psl_clear_playlist();
-    _radio_active = RADIO_LFM;
+    _radio_active = RadioLFM;
     _cur_play_idx = -1;
 }
 
@@ -615,7 +615,7 @@ void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
     int i=0;
     foreach(MetaData md, playlist){
 
-        if(md.radio_mode != RADIO_LFM) continue;
+        if(md.radio_mode != RadioLFM) continue;
 
         md.is_disabled = true;
         _v_meta_data.push_back(md);
@@ -630,15 +630,15 @@ void Playlist::psl_new_lfm_playlist_available(const MetaDataList& playlist){
 
         emit sig_new_stream_session();
 
-        emit sig_playlist_created(v_md, 0, RADIO_LFM);
+        emit sig_playlist_created(v_md, 0, RadioLFM);
         send_cur_playing_signal(0);
     }
 
     else{
-        emit sig_playlist_created(v_md, _cur_play_idx, RADIO_LFM);
+        emit sig_playlist_created(v_md, _cur_play_idx, RadioLFM);
     }
 
-    _radio_active = RADIO_LFM;
+    _radio_active = RadioLFM;
 }
 
 
@@ -665,7 +665,7 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
                 if(md.album.size() == 0)
                     md.album = md.title;
 
-                md.radio_mode = RADIO_STATION;
+                md.radio_mode = RadioStation;
                 _v_meta_data.push_back(md);
 			}
 		}
@@ -682,14 +682,14 @@ void Playlist::psl_play_stream(const QString& url, const QString& name){
         md.artist = url;
         md.album = md.title;
 		md.filepath = url;
-        md.radio_mode = RADIO_STATION;
+        md.radio_mode = RadioStation;
 
         _v_meta_data.push_back(md);
 	}
 
     if(_v_meta_data.size() == 0) return;
 
-    _radio_active = RADIO_STATION;
+    _radio_active = RadioStation;
 
     emit sig_playlist_created(_v_meta_data, 0, _radio_active);
     send_cur_playing_signal(0);
@@ -713,7 +713,7 @@ void  Playlist::psl_play_podcast(const QString& url, const QString& name){
 
             foreach(MetaData md, v_md){
 
-                md.radio_mode = RADIO_STATION;
+                md.radio_mode = RadioStation;
                 if(md.title.size() == 0){
                     if(name.size() > 0)
                         md.title = name;
@@ -735,7 +735,7 @@ void  Playlist::psl_play_podcast(const QString& url, const QString& name){
 
     if(_v_meta_data.size() == 0) return;
 
-    _radio_active = RADIO_STATION;
+    _radio_active = RadioStation;
 
     emit sig_playlist_created(_v_meta_data, 0, _radio_active);
     send_cur_playing_signal(0);

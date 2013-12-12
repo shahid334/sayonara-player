@@ -29,7 +29,7 @@
 /** COVERS **/
 void GUI_Player::coverClicked() {
 
-   if(m_metadata.radio_mode == RADIO_STATION){
+   if(m_metadata.radio_mode == RadioStation){
         QString searchstring = QString("Radio ") + m_metadata.title;
         QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 

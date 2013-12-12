@@ -391,7 +391,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 		for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++){
 
             md.is_extern = false;
-			md.bitrate = 128000;
+            md.bitrate = 128000;
 
 			QDomNode content = track.childNodes().item(idx_track_content);
 			QString nodename = content.nodeName().toLower();
@@ -418,7 +418,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 			}
 		}
 
-        md.radio_mode = RADIO_LFM;
+        md.radio_mode = RadioLFM;
 
 		v_md.push_back(md);
 	}

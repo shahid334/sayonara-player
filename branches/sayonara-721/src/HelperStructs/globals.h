@@ -41,26 +41,13 @@
 #define SAYONARA_ORANGE_STR QString("#e8841a")
 #define SAYONARA_ORANGE_COL QColor(232, 132, 26)
 
-#define RADIO_OFF 0
-#define RADIO_LFM 1
-#define RADIO_STATION 2
+enum RadioMode {
+    RadioOff=0,
+    RadioLFM=1,
+    RadioStation=2
+};
 
-#define PLUGIN_NUM 5
-#define PLUGIN_NONE 0
-#define PLUGIN_LFM_RADIO 1
-#define PLUGIN_STREAM 2
-#define PLUGIN_PODCASTS 3
-#define PLUGIN_EQUALIZER 4
-#define PLUGIN_PLAYLIST_CHOOSER 5
-#define PLUGIN_LEVEL 6
-/*
 
-#define PLUGIN_NAME_LFM_RADIO tr("Last.&fm")
-#define PLUGIN_NAME_STREAM tr("&Stream")
-#define PLUGIN_NAME_PODCASTS tr("P&odcasts")
-#define PLUGIN_NAME_EQUALIZER tr("&Equalizer")
-#define PLUGIN_NAME_PLAYLIST_CHOOSER tr("&Playlists")
-*/
 
 #define GOOGLE_IMG_ICON QString("icon")
 #define GOOGLE_IMG_SMALL QString("small")

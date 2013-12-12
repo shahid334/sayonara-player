@@ -124,7 +124,17 @@ GST_Engine::~GST_Engine() {
     gst_obj_ref = 0;
 }
 
+GstElement* tmp;
+#define create_element_break(x, y) tmp = create_gst_element(x, y); \
+                                   if(!tmp) break
 
+
+GstElement* create_gst_element(const gchar* factory_name, const gchar* name){
+    GstElement* element = gst_element_factory_make(factory_name, name);
+    QString msg = QString("Engine: ") + factory_name + " could not be created";
+    _test_and_error(element, msg.toLocal8Bit());
+    return element;
+}
 
 void GST_Engine::init_play_pipeline() {
 
@@ -141,53 +151,38 @@ void GST_Engine::init_play_pipeline() {
         _pipeline = gst_element_factory_make("playbin2", "player");
         _test_and_error(_pipeline, "Engine: Pipeline sucks");
 
+        _audio_convert = create_element_break("audioconvert", "level_convert");
+        _audio_resampler = create_element_break("audioresample", "resampler");
+        _audio_sink = create_element_break("autoaudiosink", "autoaudiosink");
+
+
 
         _bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
         _audio_bin = gst_bin_new("audio-bin");
 
-        _equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
-        _volume = gst_element_factory_make("volume", "volume");
+        _equalizer = create_element_break("equalizer-10bands", "equalizer");
+        _volume = create_element_break("volume", "volume");
 
-        _level = gst_element_factory_make("level", "level");
-        _spectrum = gst_element_factory_make("spectrum", "spectrum");
+        _level = create_element_break("level", "level");
+        _spectrum = create_element_break("spectrum", "spectrum");
 
-        _level_audio_convert = gst_element_factory_make("audioconvert", "level_convert");
-        _spectrum_audio_convert = gst_element_factory_make("audioconvert", "spectrum_convert");
 
-        _audio_sink = gst_element_factory_make("autoaudiosink", "autoaudiosink");
+        _eq_queue = create_element_break("queue", "eq_queue");
+        _tee = create_element_break("tee", "tee");
+        _level_queue = create_element_break("queue", "level_queue");
+        _spectrum_queue = create_element_break("queue", "spectrum_queue");
 
-        _eq_queue = gst_element_factory_make("queue", "eq_queue");
-        _tee = gst_element_factory_make("tee", "tee");
-        _level_queue = gst_element_factory_make("queue", "level_queue");
-        _spectrum_queue = gst_element_factory_make("queue", "spectrum_queue");
-
-        _level_sink = gst_element_factory_make("appsink", "level_sink");
-        _spectrum_sink = gst_element_factory_make("fakesink", "spectrum_sink");
+        _level_sink = create_element_break("appsink", "level_sink");
+        _spectrum_sink = create_element_break("fakesink", "spectrum_sink");
 
 
         if(!_test_and_error(_bus, "Engine: Something went wrong with the bus")) break;
-        //if(!_test_and_error(_gio_src, "Engine: Giosrc fail")) break;
-        if(!_test_and_error(_level_audio_convert, "Engine: Level converter fail")) break;
-        if(!_test_and_error(_spectrum_audio_convert, "Engine: Spectrum converter fail")) break;
-        if(!_test_and_error(_level, "Engine: Level cannot be created")) break;
-        if(!_test_and_error(_spectrum, "Engine: Spectrum cannot be created")) break;
-        if(!_test_and_error(_audio_bin, "Engine: Bin cannot be created")) break;
-        if(!_test_and_error(_tee, "Engine: Tee cannot be created")) break;
-        if(!_test_and_error(_equalizer, "Engine: Equalizer cannot be created")) break;
-        if(!_test_and_error(_eq_queue, "Engine: Equalizer cannot be created")) break;
-        if(!_test_and_error(_audio_sink, "Engine: Audio Sink cannot be created")) break;
-        if(!_test_and_error(_level_queue, "Engine: Queue cannot be created")) break;
-        if(!_test_and_error(_spectrum_queue, "Engine: Queue cannot be created")) break;
-
-
-
-        //gst_bus_add_watch(_bus, level_handler, this);
 
         // create a bin that includes an equalizer and replace the sink with this bin
         gst_bin_add_many(GST_BIN(_audio_bin), _tee,
                          _eq_queue, _equalizer, _volume, _audio_sink,
-                         _level_queue, _level_audio_convert, _level, _level_sink,
-                         _spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+                         _level_queue, _level, _level_sink,
+                         _spectrum_queue, _spectrum, _spectrum_sink, NULL);
 
 
         success = gst_element_link_many(_level_queue, _level_sink, NULL);
@@ -443,7 +438,7 @@ bool GST_Engine::set_uri(const MetaData& md, bool& start_play) {
             return false;
         }
 
-        if (md.radio_mode == RADIO_LFM) {
+        if (md.radio_mode == RadioLFM) {
             uri = g_filename_to_uri(
                     g_filename_from_utf8(filepath.toUtf8(),
                             filepath.toUtf8().size(), NULL, NULL, NULL), NULL,
@@ -608,12 +603,12 @@ ENGINE_DEBUG;
     //gst_pad_set_active(_tee_level_pad, b);
     gst_element_set_state(_pipeline, GST_STATE_PAUSED);
     if(!b){
-        gst_element_unlink_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
+        gst_element_unlink_many(_level_queue, /*_level_audio_convert,*/ _level, _level_sink, NULL);
         gst_element_link_many(_level_queue, _level_sink, NULL);
     }
     else{
         gst_element_unlink_many(_level_queue, _level_sink, NULL);
-        gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
+        gst_element_link_many(_level_queue, /*_level_audio_convert,*/ _level, _level_sink, NULL);
 
     }
 
@@ -633,12 +628,12 @@ void GST_Engine::psl_calc_spectrum(bool b){
 
     gst_element_set_state(_pipeline, GST_STATE_PAUSED);
     if(!b){
-        gst_element_unlink_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+        gst_element_unlink_many(_spectrum_queue, _spectrum, _spectrum_sink, NULL);
         gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
     }
     else{
         gst_element_unlink_many(_spectrum_queue, _spectrum_sink, NULL);
-        gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+        gst_element_link_many(_spectrum_queue, _spectrum, _spectrum_sink, NULL);
 
     }
 

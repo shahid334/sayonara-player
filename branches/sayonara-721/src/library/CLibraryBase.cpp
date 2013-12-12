@@ -25,6 +25,7 @@
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
+#include <QElapsedTimer>
 #include "application.h"
 
 
@@ -186,9 +187,14 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
     if(_filter.cleared){
 
+        QElapsedTimer timer;
+        timer.start();
+
         _db->getAllArtists(_vec_artists, _artist_sortorder);
         _db->getAllAlbums(_vec_albums, _album_sortorder);
         _db->getTracksFromDatabase(_vec_md, _track_sortorder);
+
+        qDebug() << "Fetched data in " << timer.elapsed();
 
     }
 

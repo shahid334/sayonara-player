@@ -129,8 +129,8 @@ void GUI_PlaylistChooser::playlist_changed(MetaDataList& v_md, int i, int radio_
     Q_UNUSED(i);
     bool empty = (v_md.size() == 0);
 
-    this->ui->btn_save->setEnabled(!empty && radio_mode == RADIO_OFF);
-    this->ui->btn_save_as->setEnabled(!empty && radio_mode == RADIO_OFF);
+    this->ui->btn_save->setEnabled(!empty && radio_mode == RadioOff);
+    this->ui->btn_save_as->setEnabled(!empty && radio_mode == RadioOff);
 
     if(empty)
         this->ui->le_playlist_file->clear();

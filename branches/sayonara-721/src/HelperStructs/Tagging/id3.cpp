@@ -75,8 +75,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
 	uint year = f.tag()->year();
 	uint track = f.tag()->track();
-	int bitrate = f.audioProperties()->bitrate() * 1000;
-
+    qint32 bitrate = f.audioProperties()->bitrate() * 1000;
 	int length = f.audioProperties()->length();
 
     QStringList genres;

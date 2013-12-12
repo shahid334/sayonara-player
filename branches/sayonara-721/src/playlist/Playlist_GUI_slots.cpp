@@ -40,10 +40,10 @@ void Playlist::psl_clear_playlist(){
     _cur_play_idx = -1;
 
 
-    if(_radio_active == RADIO_OFF)
+    if(_radio_active == RadioOff)
         psl_save_playlist_to_storage();
 
-    _radio_active = RADIO_OFF;
+    _radio_active = RadioOff;
 
     emit sig_playlist_created(_v_meta_data, _cur_play_idx, _radio_active);
 
@@ -92,11 +92,11 @@ void Playlist::psl_stop(){
     _settings->updateLastTrack();
 
     // track no longer valid
-    if(_radio_active == RADIO_LFM){
+    if(_radio_active == RadioLFM){
         psl_clear_playlist();
     }
 
-    _radio_active = RADIO_OFF;
+    _radio_active = RadioOff;
 
     _cur_play_idx = -1;
     _is_playing = false;
@@ -114,7 +114,7 @@ void Playlist::psl_forward(){
 void Playlist::psl_backward(){
 
     // this shouldn't happen, because backward is disabled
-    if(_radio_active != RADIO_OFF) return;
+    if(_radio_active != RadioOff) return;
 
     if(_cur_play_idx <= 0) return;
 
@@ -136,7 +136,7 @@ void Playlist::psl_change_track(int new_row){
 
 
     if( (uint) new_row >= _v_meta_data.size()) return;
-    if( _radio_active == RADIO_LFM) return;
+    if( _radio_active == RadioLFM) return;
 
 
     for(uint i=0; i<_v_meta_data.size(); i++){
@@ -169,13 +169,13 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 
     // turn off radio
     bool switched_from_radio = false;
-    if(_radio_active != RADIO_OFF){
+    if(_radio_active != RadioOff){
         switched_from_radio = true;
         psl_stop();
         row = 0;
     }
 
-    _radio_active = RADIO_OFF;
+    _radio_active = RadioOff;
 
     // possibly the current playing index has to be updated
     if(row < _cur_play_idx && _cur_play_idx != -1)
@@ -194,7 +194,7 @@ void Playlist::psl_insert_tracks(const MetaDataList& v_metadata, int row){
 
         else {
             md.is_extern = true;
-            md.radio_mode = RADIO_OFF;
+            md.radio_mode = RadioOff;
         }
 
         _v_meta_data.insert_mid(md, i + row + 1);

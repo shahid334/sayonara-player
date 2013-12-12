@@ -80,7 +80,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     _info_dialog = dialog;
 
-    _radio_active = RADIO_OFF;
+    _radio_active = RadioOff;
 
     _playlist_mode = settings->getPlaylistMode();
 
@@ -224,7 +224,7 @@ void GUI_Playlist::sel_changed(const MetaDataList& v_md){
 
     _info_dialog->setMetaData(v_md);
 
-    this->_info_dialog->set_tag_edit_visible(_radio_active == RADIO_OFF);
+    this->_info_dialog->set_tag_edit_visible(_radio_active == RadioOff);
 }
 
 
@@ -294,7 +294,7 @@ void GUI_Playlist::set_total_time_label(){
 
     QString text = "";
 
-    if(_radio_active == RADIO_STATION){
+    if(_radio_active == RadioStation){
 
         ui->lab_totalTime->setText(tr("Radio"));
         return;
@@ -319,21 +319,21 @@ void GUI_Playlist::set_radio_active(int radio){
 
     _radio_active = radio;
 
-    ui->btn_append->setVisible(radio == RADIO_OFF);
-    ui->btn_dynamic->setVisible(radio == RADIO_OFF);
-    ui->btn_repAll->setVisible(radio == RADIO_OFF);
-    ui->btn_shuffle->setVisible(radio == RADIO_OFF);
+    ui->btn_append->setVisible(radio == RadioOff);
+    ui->btn_dynamic->setVisible(radio == RadioOff);
+    ui->btn_repAll->setVisible(radio == RadioOff);
+    ui->btn_shuffle->setVisible(radio == RadioOff);
 
     int actions = 0;
 
-    if(radio != RADIO_OFF)
+    if(radio != RadioOff)
         actions = ENTRY_INFO;
 
     else
         actions = (ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
 
     ui->listView->set_context_menu_actions(actions);
-    ui->listView->set_drag_enabled(radio != RADIO_LFM);
+    ui->listView->set_drag_enabled(radio != RadioLFM);
 }
 
 

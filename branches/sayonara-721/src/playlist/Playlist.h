@@ -45,7 +45,7 @@
 using namespace std;
 
 struct BackupPlaylist{
-    int radio_mode;
+    RadioMode radio_mode;
     bool is_valid;
     int cur_play_idx;
 
@@ -135,7 +135,7 @@ public:
 
         int					_cur_play_idx;
         bool                _is_playing;
-        int					_radio_active;
+        RadioMode   		_radio_active;
         bool                _pause;
 
 

@@ -330,7 +330,7 @@ void GUI_Player::fetch_cover(){
     QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
     if(! QFile::exists(cover_path) ){
-        if(m_metadata.radio_mode != RADIO_STATION){
+        if(m_metadata.radio_mode != RadioStation){
 
             if(m_metadata.album.trimmed().size() == 0 && m_metadata.artist.size() == 0)
                 cover_path = Helper::getIconPath() + "logo.png";
@@ -455,7 +455,7 @@ void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected
 
     m_metadata_corrected = md;
 
-    bool radio_off = (m_metadata.radio_mode == RADIO_OFF);
+    bool radio_off = (m_metadata.radio_mode == RadioOff);
     bool get_lfm_corrections = m_settings->getLastFMCorrections();
 
     ui->btn_correct->setVisible(corrected &&
@@ -670,38 +670,38 @@ void GUI_Player::psl_reload_library_allowed(bool b){
 void GUI_Player::setRadioMode(int radio){
 
     bool stream_ripper = m_settings->getStreamRipper();
-	ui->btn_bw->setEnabled(radio == RADIO_OFF);
-	ui->btn_fw->setEnabled(radio != RADIO_STATION);
+    ui->btn_bw->setEnabled(radio == RadioOff);
+    ui->btn_fw->setEnabled(radio != RadioStation);
 
 	if(stream_ripper){
 
-        bool btn_rec_visible = (radio != RADIO_OFF);
+        bool btn_rec_visible = (radio != RadioOff);
 
         if(btn_rec_visible){
-            ui->btn_play->setVisible(radio == RADIO_OFF);
-            ui->btn_rec->setVisible(radio != RADIO_OFF);
+            ui->btn_play->setVisible(radio == RadioOff);
+            ui->btn_rec->setVisible(radio != RadioOff);
         }
 
         else {
-            ui->btn_rec->setVisible(radio != RADIO_OFF);
-            ui->btn_play->setVisible(radio == RADIO_OFF);
+            ui->btn_rec->setVisible(radio != RadioOff);
+            ui->btn_play->setVisible(radio == RadioOff);
         }
 
-        ui->btn_play->setEnabled(radio == RADIO_OFF);
+        ui->btn_play->setEnabled(radio == RadioOff);
 	}
 
 	else{
 
 		ui->btn_rec->setVisible(false);
         ui->btn_play->setVisible(true);
-		ui->btn_play->setEnabled(radio == RADIO_OFF);
+        ui->btn_play->setEnabled(radio == RadioOff);
 	}
 
-    m_trayIcon->set_enable_play(radio == RADIO_OFF);
-    m_trayIcon->set_enable_fwd(radio != RADIO_STATION);
-    m_trayIcon->set_enable_bwd(radio == RADIO_OFF);
+    m_trayIcon->set_enable_play(radio == RadioOff);
+    m_trayIcon->set_enable_fwd(radio != RadioStation);
+    m_trayIcon->set_enable_bwd(radio == RadioOff);
 
-    ui->songProgress->setEnabled(radio == RADIO_OFF);
+    ui->songProgress->setEnabled(radio == RadioOff);
 
     emit sig_rec_button_toggled(ui->btn_rec->isChecked() && ui->btn_rec->isVisible());
 }
@@ -711,13 +711,13 @@ void GUI_Player::setRadioMode(int radio){
 void GUI_Player::psl_strrip_set_active(bool b){
 
 	if(b){
-        ui->btn_play->setVisible(m_metadata.radio_mode == RADIO_OFF);
-        ui->btn_rec->setVisible(m_metadata.radio_mode != RADIO_OFF);
+        ui->btn_play->setVisible(m_metadata.radio_mode == RadioOff);
+        ui->btn_rec->setVisible(m_metadata.radio_mode != RadioOff);
 	}
 
 	else{
 		ui->btn_play->setVisible(true);
-        ui->btn_play->setEnabled(m_metadata.radio_mode == RADIO_OFF);
+        ui->btn_play->setEnabled(m_metadata.radio_mode == RadioOff);
 		ui->btn_rec->setVisible(false);
 	}
 

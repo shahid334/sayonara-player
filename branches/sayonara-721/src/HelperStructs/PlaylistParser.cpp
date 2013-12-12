@@ -154,7 +154,7 @@ int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path){
 
 		for(int entry_child=0; entry_child<entry.childNodes().size(); entry_child++)
 		{
-			md.bitrate = 128000;
+            md.bitrate = 128000;
 
 			QDomNode content = entry.childNodes().at(entry_child);
 			QString nodename = content.nodeName().toLower();

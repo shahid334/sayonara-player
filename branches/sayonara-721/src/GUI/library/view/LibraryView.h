@@ -44,6 +44,7 @@
 #include <QAction>
 #include <QLineEdit>
 #include <QDropEvent>
+#include <QElapsedTimer>
 
 
 class LibraryView : public QTableView{
@@ -147,6 +148,8 @@ private:
 
     bool                _dark;
     bool                _sel_changed;
+    QElapsedTimer*             _timer;
+    bool                _filling;
 
     int get_min_selected();
 
@@ -166,6 +169,11 @@ private:
 
     // selects according to selctions
     void select_and_scroll_to(int row);
+
+public:
+    qint64 get_timer_time();
+    void restart_timer();
+
 
 
 };

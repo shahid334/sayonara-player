@@ -39,6 +39,7 @@
 #include "GUI/library/delegate/LibraryItemDelegateTracks.h"
 #include "GUI/library/delegate/LibraryItemDelegateAlbums.h"
 #include "GUI/library/delegate/LibraryItemDelegateArtists.h"
+#include "GUI/library/view/LibraryView.h"
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
@@ -351,33 +352,41 @@ void GUI_Library_windowed::track_tab_pressed(bool mod){
 
 void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
+    qDebug() << "fill tracks start " << this->ui->lv_artist->get_timer_time();
     this->ui->tb_title->fill_metadata(v_metadata);
-
-    if(_info_dialog)
-		_info_dialog->setMetaData(v_metadata);
-
+    qDebug() << "fill tracks after md " << this->ui->lv_artist->get_timer_time();
     this->ui->lv_artist->set_mimedata(v_metadata, "tracks", true);
     this->ui->lv_album->set_mimedata(v_metadata, "tracks", true);
+qDebug() << "fill tracks after mime " << this->ui->lv_artist->get_timer_time();
+
+    if(_info_dialog)
+        _info_dialog->setMetaData(v_metadata);
+
+    qDebug() << "fill tracks end " << this->ui->lv_artist->get_timer_time();
 }
 
 
 void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
-
+qDebug() << "fill albums start " << this->ui->lv_artist->get_timer_time();
    this->ui->lv_album->fill_albums(albums);
+qDebug() << "fill albums end " << this->ui->lv_artist->get_timer_time();
 }
 
 
 void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
     this->ui->lv_artist->fill_artists(artists);
+
 }
 
 void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst){
 
+    qDebug() << "Artist changed " << this->ui->lv_artist->get_timer_time();
     sig_artist_sel_changed(lst);
 }
 
 void GUI_Library_windowed::album_sel_changed(const QList<int>& lst){
+
 
     _info_dialog->set_tag_edit_visible(true);
     _timer->stop();
@@ -409,9 +418,11 @@ void GUI_Library_windowed::disc_pressed(int disc){
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md){
 
+    qDebug() << "track info available " << this->ui->lv_artist->get_timer_time();
     this->ui->tb_title->set_mimedata(v_md, "tracks", false);
 	if(_info_dialog)
 		_info_dialog->setMetaData(v_md);
+    qDebug() << "track info available finished " << this->ui->lv_artist->get_timer_time();
 }
 
 
@@ -448,8 +459,17 @@ void GUI_Library_windowed::sortorder_title_changed(Sort::SortOrder s){
 
 void GUI_Library_windowed::clear_button_pressed(){
 
-	this->ui->le_search->setText("");
-	text_line_edited("", true);
+    qDebug() << "Clear pressed";
+    this->ui->lv_artist->restart_timer();
+    this->ui->le_search->setText("");
+
+    Filter filter;
+    filter.cleared = true;
+    filter.filtertext = "";
+    _cur_searchfilter = filter;
+
+    emit sig_filter_changed(filter);
+
 }
 
 void GUI_Library_windowed::return_pressed(){
