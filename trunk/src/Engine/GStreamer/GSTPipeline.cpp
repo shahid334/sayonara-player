@@ -27,7 +27,7 @@
 #include "unistd.h"
 #include <QDebug>
 
-int crop_spectrum_at = 75;
+
 
 GSTPipeline::GSTPipeline(QObject *parent) :
     QObject(parent)
@@ -266,14 +266,14 @@ void GSTPipeline::set_volume(int vol){
 
 void GSTPipeline::unmute(){
 
-    g_object_set(G_OBJECT(_pipeline), "mute", FALSE, NULL);
+    g_object_set(G_OBJECT(_volume), "mute", FALSE, NULL);
 }
 
 gint64 GSTPipeline::seek_rel(float percent, gint64 ref_ns){
 
     gint64 new_time_ns;
 
-     g_object_set(G_OBJECT(_pipeline), "mute", TRUE, NULL);
+     g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 
     if (percent > 1.0f)
         new_time_ns = ref_ns;
@@ -300,7 +300,7 @@ gint64 GSTPipeline::seek_rel(float percent, gint64 ref_ns){
 
 gint64 GSTPipeline::seek_abs(gint64 ns){
 
-    g_object_set(G_OBJECT(_pipeline), "mute", TRUE, NULL);
+    g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 
     if(gst_element_seek_simple(_pipeline,
         GST_FORMAT_TIME,

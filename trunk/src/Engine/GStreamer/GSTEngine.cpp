@@ -26,6 +26,7 @@
 #include "Engine/Engine.h"
 #include "Engine/GStreamer/GSTEngine.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
+#include "Engine/GStreamer/GSTPipelineExperimental.h"
 
 #include <gst/gst.h>
 #include <gst/gsturi.h>
@@ -114,7 +115,8 @@ void GST_Engine::init() {
     gst_init(0, 0);
 
     _stream_recorder->init();
-    _pipeline = new GSTPipeline();
+    //_pipeline = new GSTPipeline();
+    _pipeline = new GSTPipelineExperimental();
 
     _show_level = false;
     _show_spectrum = false;

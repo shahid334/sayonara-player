@@ -53,12 +53,12 @@ public:
 
     gint64 get_duration_ns();
     guint get_bitrate();
-    bool set_uri(gchar* uri);
+    virtual bool set_uri(gchar* uri);
     void set_eq_band(QString band_name, double val);
     void unmute();
 
 
-private:
+protected:
 
     GstBus*		_bus;
     GstElement* _pipeline;
@@ -76,6 +76,7 @@ private:
 
     GstElement* _level_audio_convert, *_spectrum_audio_convert;
     GstElement* _level, *_spectrum;
+
     GstPad*     _level_pad, *_spectrum_pad;
     GstPad*     _tee_level_pad, *_tee_spectrum_pad;
 

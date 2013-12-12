@@ -22,6 +22,7 @@ SET(HEADERS
         GSTEngine.h
         GSTEngineHelper.h
         GSTPipeline.h
+        GSTPipelineExperimental.h
         StreamRipperBufferThread.h
         StreamRecorder.h
 	${CMAKE_SOURCE_DIR}/src/Engine/Engine.h
@@ -33,6 +34,7 @@ SET(SOURCES
         StreamRipperBufferThread.cpp
         StreamRecorder.cpp
         GSTPipeline.cpp
+        GSTPipelineExperimental.cpp
 	${CMAKE_SOURCE_DIR}/src/HelperStructs/Helper.cpp
 	${CMAKE_SOURCE_DIR}/src/HelperStructs/Tagging/id3.cpp
 )

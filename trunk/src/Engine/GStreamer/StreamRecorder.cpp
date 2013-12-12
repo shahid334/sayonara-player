@@ -36,8 +36,8 @@
 #include <QDir>
 #include <QDateTime>
 
-static bool _sr_debug = false;
-#define SR_DEBUG if(_sr_debug) qDebug() << Q_FUNC_INFO
+static bool _sr_debug = true;
+#define SR_DEBUG if(_sr_debug) qDebug() << "SR: " << Q_FUNC_INFO
 
 
 StreamRecorder* obj_ref = 0;

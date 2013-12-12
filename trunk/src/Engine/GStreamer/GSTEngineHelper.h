@@ -42,7 +42,7 @@ extern bool _debug;
 
 extern float log_10[20001];
 extern float lo_128[128];
-extern int crop_spectrum_at;
+const int crop_spectrum_at = 75;
 
 extern bool __start_at_beginning;
 extern int __start_pos_beginning;
