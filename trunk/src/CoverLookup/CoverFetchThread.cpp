@@ -55,11 +55,14 @@ CoverFetchThread::CoverFetchThread(QObject* parent, int id, QString url, int n_i
     _mode = CFT_MULTI;
     _cur_awa_idx = 1;
     _run = true;
+    _awa_id = 100;
 }
 
 CoverFetchThread::~CoverFetchThread() {
 
-    // TODO Auto-generated destructor stub
+    foreach(AsyncWebAccess* awa, _map.values()){
+        awa->terminate();
+    }
 }
 
 void CoverFetchThread::run(){
@@ -103,18 +106,21 @@ void CoverFetchThread::search_multi(){
       _cur_awa_idx = 1;
       _n_running = 0;
 
-      int id=100;
+
       foreach(QString adress, adresses){
 
-          AsyncWebAccess* awa = new AsyncWebAccess(0, id);
-          _map.insert(id, awa);
-
+          AsyncWebAccess* awa = new AsyncWebAccess(0, _awa_id);
+          awa->deleteLater();
           awa->set_url(adress);
+
+          _map.insert(_awa_id, awa);
           connect(awa, SIGNAL(finished(int)), this, SLOT(awa_finished(int)));
+          connect(awa, SIGNAL(terminated(int)), this, SLOT(awa_terminated(int)));
 
           awa->start();
+          qDebug() << "Thread " << _awa_id << " started";
           _n_running ++;
-          id++;
+          _awa_id++;
 
       }
 
@@ -122,8 +128,8 @@ void CoverFetchThread::search_multi(){
       QDir dir(Helper::getSayonaraPath());
       dir.mkpath("tmp");
 
-      while(_run){
-          usleep(100000);
+      while(_map.size() > 0){
+          usleep(1000000);
           if(_datalist.size() == 0) {
               continue;
           }
@@ -143,8 +149,6 @@ void CoverFetchThread::search_multi(){
 
           success = img.save(path + "img_" + QString::number(_cur_awa_idx) + ".jpg");
           _cur_awa_idx++;
-
-          if(_cur_awa_idx == _n_images) break;
       }
 
 
@@ -167,23 +171,35 @@ QString CoverFetchThread::get_call_id(){
 
 void CoverFetchThread::awa_finished(int id){
 
-    qDebug() << "awa " << id << " finished";
+    if(!_map.contains(id)) return;
+
+    qDebug() << "Awa " << id << " finished";
+
 
     AsyncWebAccess* awa = _map.value(id);
-    QString data = awa->get_data();
+    QString* data = awa->get_data();
 
     _map.remove(id);
 
-    if(data.size() > 0)
-        _datalist << data;
-
-    awa->deleteLater();
+    if(data->size() > 0)
+        _datalist << *data;
 
     _n_running --;
 }
 
+void CoverFetchThread::awa_terminated(int id){
+
+    qDebug() << "Awa " << id << " terminated";
+    _map.remove(id);
+    _n_running --;
+}
+
+
 void CoverFetchThread::set_run(bool run){
     _n_running = 0;
     _run = run;
+    foreach(AsyncWebAccess* awa, _map.values()){
+        awa->terminate();
+    }
 }
 

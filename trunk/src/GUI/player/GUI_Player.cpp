@@ -71,6 +71,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     m_settings = CSettingsStorage::getInstance();
         ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
+
     m_awa_version = new AsyncWebAccess(this);
     m_awa_translators = new AsyncWebAccess(this);
 
@@ -838,7 +839,7 @@ void GUI_Player::really_close(bool b){
 
 void GUI_Player::awa_version_finished(){
 
-    QString new_version = m_awa_version->get_data();
+    QString new_version = *(m_awa_version->get_data());
 	QString cur_version = m_settings->getVersion();
 	new_version = new_version.trimmed();
 
@@ -854,7 +855,7 @@ void GUI_Player::awa_version_finished(){
 
 void GUI_Player::awa_translators_finished(){
 
- QString data = QString::fromUtf8(m_awa_translators->get_data().toStdString().c_str());
+ QString data = QString::fromUtf8(m_awa_translators->get_data()->toStdString().c_str());
  QStringList translators = data.split('\n');
 
  m_translators.clear();

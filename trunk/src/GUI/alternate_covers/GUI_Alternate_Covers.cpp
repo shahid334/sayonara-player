@@ -238,7 +238,7 @@ void GUI_Alternate_Covers::search_button_pressed(){
 
 
     _blocked = false;
-    _cov_fetch_thread = new CoverFetchThread(0, 1, url, 20);
+    _cov_fetch_thread = new CoverFetchThread(this, 1, url, 20);
 
     connect(_cov_fetch_thread, SIGNAL(destroyed()), this, SLOT(cft_destroyed()));
     connect(_cov_fetch_thread, SIGNAL(finished()), _cov_fetch_thread, SLOT(deleteLater()));

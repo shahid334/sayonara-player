@@ -33,12 +33,16 @@ class AsyncWebAccess : public QThread {
 signals:
     void finished(int);
     void finshed(QString);
+    void terminated(int);
+
+public slots:
+    void terminate();
 
 public:
     AsyncWebAccess(QObject* parent=0, int id=0);
 	virtual ~AsyncWebAccess();
 
-    QString get_data();
+    QString* get_data();
 	void set_url(QString url);
     void stop();
 
@@ -46,9 +50,10 @@ protected:
 	void run();
 
 
+
 private:
 	QString _url;
-	QString _data;
+    QString* _data;
     int _id;
 
 };

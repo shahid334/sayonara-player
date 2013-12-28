@@ -54,14 +54,14 @@ static int wa_progress(void *p,
 
 size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata){
 
-	(void) userdata;
-
     QString* webpage = (QString*) userdata;
+    char* cptr = (char*) ptr;
 
-	char* cptr = (char*) ptr;
-    webpage->append(QString::fromLatin1(cptr, size*nmemb));
+    if(webpage && cptr)
+        webpage->append(QString::fromLatin1(cptr, size*nmemb));
 
-	return size * nmemb;
+
+     return size * nmemb;
 }
 
 
@@ -77,6 +77,7 @@ bool wa_call_url(const QString& url, QString* response){
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, wa_get_answer);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 10);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
         curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, wa_progress);
         curl_easy_setopt(curl, CURLOPT_PROGRESSDATA, &download_status);

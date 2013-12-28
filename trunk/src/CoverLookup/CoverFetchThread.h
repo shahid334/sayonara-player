@@ -77,6 +77,7 @@ private:
     QStringList _found_cover_paths;
 
     int         _cur_awa_idx;
+    int         _awa_id;
     QStringList _datalist;
     bool         _run;
     int          _n_running;
@@ -90,8 +91,7 @@ private:
 
 private slots:
     void awa_finished(int);
-
-
+    void awa_terminated(int);
 
 };
 

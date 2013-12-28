@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "HelperStructs/AsyncWebAccess.h"
 #include "HelperStructs/Helper.h"
 
@@ -27,10 +25,23 @@
 
 AsyncWebAccess::AsyncWebAccess(QObject* parent, int id) : QThread(parent){
     _id = id;
+    _data = new QString();
 }
 
 AsyncWebAccess::~AsyncWebAccess(){
-    _data.clear();
+
+
+    if(this->isRunning()) return;
+    qDebug() << "Thread " << _id << " deleted";
+    QString** data_ptr = &(this->_data);
+    delete _data;
+    *data_ptr = 0;
+
+}
+
+void AsyncWebAccess::terminate(){
+    emit terminated(_id);
+    QThread::terminate();
 }
 
 void AsyncWebAccess::stop(){
@@ -42,15 +53,17 @@ void AsyncWebAccess::stop(){
 
 void AsyncWebAccess::run(){
 
-    _data.clear();
+    _data->clear();
 	if(_url.size() == 0) return;
 
-    Helper::read_http_into_str(_url, &_data);
+    Helper::read_http_into_str(_url, _data);
 
     emit finished(_id);
 }
 
-QString AsyncWebAccess::get_data(){
+
+
+QString* AsyncWebAccess::get_data(){
     return _data;
 }
 
