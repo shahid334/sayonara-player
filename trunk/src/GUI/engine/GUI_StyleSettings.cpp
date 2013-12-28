@@ -413,8 +413,11 @@ void GUI_StyleSettings::combo_text_changed(const QString & str){
 void GUI_StyleSettings::set_sth_changed(bool b){
     ui->btn_undo->setEnabled(b);
     _sth_changed = b;
-    if(b)
-        this->setWindowTitle(windowTitle() + "*");
+    if(b){
+        if(!this->windowTitle().endsWith("*")){
+            this->setWindowTitle(windowTitle() + "*");
+        }
+    }
     else
         this->setWindowTitle(windowTitle().remove("*"));
 }

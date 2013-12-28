@@ -40,9 +40,11 @@ public:
 
     QString get_data();
 	void set_url(QString url);
+    void stop();
 
 protected:
 	void run();
+
 
 private:
 	QString _url;

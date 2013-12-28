@@ -135,12 +135,17 @@ void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing)
     _playlist->create_playlist(v_md, start_playing && new_created);
 
 
-    if(empty && _state == PlaylistStop && !_playlist->is_empty() && start_playing)
-        psl_play();
+    if(start_playing && !_playlist->is_empty()){
 
+        // is stopped now
+        if(_state == PlaylistStop)
+            psl_play();
 
-    else if(start_playing && !_playlist->is_empty())
-        psl_play();
+        else{
+
+            /* ... */
+        }
+    }
 
     else
         psl_stop();

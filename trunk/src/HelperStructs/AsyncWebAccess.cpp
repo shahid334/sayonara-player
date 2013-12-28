@@ -33,6 +33,13 @@ AsyncWebAccess::~AsyncWebAccess(){
     _data.clear();
 }
 
+void AsyncWebAccess::stop(){
+
+    emit finished(_id);
+    this->quit();
+
+}
+
 void AsyncWebAccess::run(){
 
     _data.clear();

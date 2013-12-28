@@ -55,7 +55,9 @@ QStringList cov_calc_adresses_from_webpage(uint num, QString& webpage) {
 	}
 
     uint n_covers = 0;
-    int idx=0;
+    int idx=40000;
+
+    //qDebug() << webpage;
 
     while(n_covers < num){
         QString re_str("(https://encrypted-tbn)(\\S)+(\")");
@@ -69,6 +71,8 @@ QStringList cov_calc_adresses_from_webpage(uint num, QString& webpage) {
         adresses << str;
         n_covers++;
     }
+
+    qDebug() << "Got Adresses";
 
 	return adresses;
 }

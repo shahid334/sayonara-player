@@ -294,7 +294,7 @@ void Application::init_connections(){
 
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		update_track(const MetaData&, int, bool));
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	listen, 	changeTrack(const MetaData &, int, bool ));
-    CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               lastfm,			psl_track_changed(const MetaData&));
+    CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               lastfm,		psl_track_changed(const MetaData&));
     CONNECT (playlist_handler, sig_selected_file_changed(int),                              ui_playlist, 	track_changed(int));
 
     CONNECT (playlist_handler, sig_no_track_to_play(),								listen,			stop());
