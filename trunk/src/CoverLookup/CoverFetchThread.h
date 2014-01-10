@@ -37,6 +37,7 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
+#include <QImage>
 
 #define CFT_SINGLE 0
 #define CFT_MULTI 1
@@ -78,11 +79,13 @@ private:
 
     int         _cur_awa_idx;
     int         _awa_id;
-    QStringList _datalist;
+
     bool         _run;
     int          _n_running;
+
     QList<AsyncWebAccess*> _lst;
     QMap<int, AsyncWebAccess*> _map;
+    QList<QImage> _imglist;
 
 
 

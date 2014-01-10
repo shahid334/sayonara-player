@@ -23,19 +23,26 @@
 
 
 
-AsyncWebAccess::AsyncWebAccess(QObject* parent, int id) : QThread(parent){
+AsyncWebAccess::AsyncWebAccess(QObject* parent, int id, AwaDataType type) : QThread(parent){
     _id = id;
     _data = new QString();
+    _img = new QImage();
+    _type = type;
 }
 
 AsyncWebAccess::~AsyncWebAccess(){
 
 
     if(this->isRunning()) return;
-    qDebug() << "Thread " << _id << " deleted";
+    //qDebug() << "Thread " << _id << " deleted";
     QString** data_ptr = &(this->_data);
+    QImage** img_ptr = &(this->_img);
+
     delete _data;
+    delete _img;
+
     *data_ptr = 0;
+    *img_ptr = 0;
 
 }
 
@@ -56,7 +63,12 @@ void AsyncWebAccess::run(){
     _data->clear();
 	if(_url.size() == 0) return;
 
-    Helper::read_http_into_str(_url, _data);
+    switch(_type){
+        case AwaDataTypeImage:
+            Helper::read_http_into_img(_url, _img);
+        default:
+            Helper::read_http_into_str(_url, _data);
+    }
 
     emit finished(_id);
 }
@@ -65,6 +77,10 @@ void AsyncWebAccess::run(){
 
 QString* AsyncWebAccess::get_data(){
     return _data;
+}
+
+QImage* AsyncWebAccess::get_image(){
+    return _img;
 }
 
 void AsyncWebAccess::set_url(QString url){

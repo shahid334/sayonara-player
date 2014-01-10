@@ -124,7 +124,7 @@ bool PlaylistHandler::new_playlist(PlaylistType type){
 // create a playlist, where metadata is already available
 void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing){
 
-    bool empty = _playlist->is_empty();
+    //bool empty = _playlist->is_empty();
 
     //if(start_playing) _state = PlaylistPlay;
     //else if(_state != PlaylistPause) _state = PlaylistStop;

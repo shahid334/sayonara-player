@@ -34,6 +34,7 @@
 #include <QString>
 #include <QList>
 #include <QWidget>
+#include <QImage>
 
 namespace Helper{
 
@@ -108,6 +109,7 @@ namespace Helper{
 
     bool read_file_into_str(QString filename, QString* content);
     bool read_http_into_str(QString url, QString* content);
+    bool read_http_into_img(QString url, QImage* image);
 
 
 	QString easy_tag_finder(QString tag, QString& xml_doc);

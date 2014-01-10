@@ -98,6 +98,8 @@ void CoverFetchThread::search_single(){
     emit sig_finished(_id);
 }
 
+
+QString path;
 void CoverFetchThread::search_multi(){
 
       //QStringList adresses = cov_call_and_parse(_url, _n_images);
@@ -109,7 +111,7 @@ void CoverFetchThread::search_multi(){
 
       foreach(QString adress, adresses){
 
-          AsyncWebAccess* awa = new AsyncWebAccess(0, _awa_id);
+          AsyncWebAccess* awa = new AsyncWebAccess(0, _awa_id, AwaDataTypeImage);
           awa->deleteLater();
           awa->set_url(adress);
 
@@ -124,34 +126,13 @@ void CoverFetchThread::search_multi(){
 
       }
 
-      QString path = Helper::getSayonaraPath() + "tmp/";
+      path = Helper::getSayonaraPath() + "tmp/";
       QDir dir(Helper::getSayonaraPath());
       dir.mkpath("tmp");
 
-      while(_map.size() > 0){
+      while(_run){
           usleep(1000000);
-          if(_datalist.size() == 0) {
-              continue;
-          }
-
-          QString data = _datalist[0];
-          _datalist[0].clear();
-          _datalist.removeAt(0);
-          if(data.size() == 0){
-              continue;
-          }
-
-          QImage img;
-          bool success = img.loadFromData(data.toAscii());
-          if(!success){
-              continue;
-          }
-
-          success = img.save(path + "img_" + QString::number(_cur_awa_idx) + ".jpg");
-          _cur_awa_idx++;
       }
-
-
 }
 
 
@@ -175,14 +156,17 @@ void CoverFetchThread::awa_finished(int id){
 
     qDebug() << "Awa " << id << " finished";
 
-
     AsyncWebAccess* awa = _map.value(id);
-    QString* data = awa->get_data();
+    QImage* img = awa->get_image();
 
     _map.remove(id);
 
-    if(data->size() > 0)
-        _datalist << *data;
+    if(img->isNull()){
+        qDebug() << "Cannot get image from Data (2)";
+    }
+
+    bool success = img->save(path + "img_" + QString::number(_cur_awa_idx++) + ".jpg");
+    Q_UNUSED(success);
 
     _n_running --;
 }

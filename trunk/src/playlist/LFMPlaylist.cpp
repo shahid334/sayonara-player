@@ -110,9 +110,9 @@ void LFMPlaylist::insert_tracks(const MetaDataList& lst, int tgt){
 void LFMPlaylist::append_tracks(const MetaDataList& lst){
     if(lst.size() == 0) return;
 
-    bool start_playing = false;
+    //bool start_playing = false;
     if(_cur_play_idx == -1){
-        start_playing = true;
+        //start_playing = true;
         _cur_play_idx = 0;
         _v_md.setCurPlayTrack(0);
         _v_md.push_back(lst[0]);

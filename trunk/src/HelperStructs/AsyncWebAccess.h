@@ -25,6 +25,12 @@
 
 #include <QThread>
 #include <QString>
+#include <QImage>
+
+enum AwaDataType{
+    AwaDataTypeString=0,
+    AwaDataTypeImage
+};
 
 class AsyncWebAccess : public QThread {
 
@@ -39,10 +45,11 @@ public slots:
     void terminate();
 
 public:
-    AsyncWebAccess(QObject* parent=0, int id=0);
+    AsyncWebAccess(QObject* parent=0, int id=0, AwaDataType t=AwaDataTypeString);
 	virtual ~AsyncWebAccess();
 
     QString* get_data();
+    QImage* get_image();
 	void set_url(QString url);
     void stop();
 
@@ -54,6 +61,8 @@ protected:
 private:
 	QString _url;
     QString* _data;
+    QImage* _img;
+    int _type;
     int _id;
 
 };

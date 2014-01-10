@@ -572,6 +572,10 @@ bool Helper::read_http_into_str(QString url, QString* content){
     return WebAccess::read_http_into_str(url, content);
 }
 
+bool Helper::read_http_into_img(QString url, QImage* image){
+    return WebAccess::read_http_into_img(url, image);
+}
+
 
 QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
 
