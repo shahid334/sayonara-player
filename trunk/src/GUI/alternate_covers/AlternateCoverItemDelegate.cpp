@@ -80,6 +80,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
             label->setScaledContents(true);
             label->setPixmap(pixmap);
+	    label->setToolTip(QString::number(pixmap.width()) + "x" + QString::number(pixmap.height()) );
 
         }
 

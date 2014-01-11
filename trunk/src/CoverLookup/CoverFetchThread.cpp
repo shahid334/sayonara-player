@@ -119,11 +119,11 @@ void CoverFetchThread::search_multi(){
           connect(awa, SIGNAL(finished(int)), this, SLOT(awa_finished(int)));
           connect(awa, SIGNAL(terminated(int)), this, SLOT(awa_terminated(int)));
 
-          awa->start();
           qDebug() << "Thread " << _awa_id << " started";
           _n_running ++;
           _awa_id++;
-
+	
+	  if(_n_running <= 8)          awa->start();
       }
 
       path = Helper::getSayonaraPath() + "tmp/";
@@ -165,6 +165,13 @@ void CoverFetchThread::awa_finished(int id){
         qDebug() << "Cannot get image from Data (2)";
     }
 
+    foreach(AsyncWebAccess* a, _map){
+	if(!a->isRunning() && _run) {
+		a->start();
+		break;
+	}
+    }
+
     bool success = img->save(path + "img_" + QString::number(_cur_awa_idx++) + ".jpg");
     Q_UNUSED(success);
 
@@ -185,5 +192,6 @@ void CoverFetchThread::set_run(bool run){
     foreach(AsyncWebAccess* awa, _map.values()){
         awa->terminate();
     }
+    
 }
 
