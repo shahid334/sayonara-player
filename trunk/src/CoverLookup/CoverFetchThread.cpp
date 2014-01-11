@@ -76,12 +76,12 @@ void CoverFetchThread::run(){
 
 void CoverFetchThread::search_single(){
 
-    QStringList adresses = cov_call_and_parse(_url, 10);
+    QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
 
     _found_cover_paths.clear();
     foreach(QString adress, adresses){
         QImage img;
-        bool success = cov_download_cover(adress, &img);
+        bool success = CoverDownloader::cov_download_cover(adress, &img);
 
         if(success){
 
@@ -103,7 +103,7 @@ QString path;
 void CoverFetchThread::search_multi(){
 
       //QStringList adresses = cov_call_and_parse(_url, _n_images);
-    QStringList adresses = cov_call_and_parse(_url, 50);
+    QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 50);
 
       _cur_awa_idx = 1;
       _n_running = 0;
@@ -119,7 +119,7 @@ void CoverFetchThread::search_multi(){
           connect(awa, SIGNAL(finished(int)), this, SLOT(awa_finished(int)));
           connect(awa, SIGNAL(terminated(int)), this, SLOT(awa_terminated(int)));
 
-          qDebug() << "Thread " << _awa_id << " started";
+          //qDebug() << "Thread " << _awa_id << " started";
           _n_running ++;
           _awa_id++;
 	
@@ -154,7 +154,7 @@ void CoverFetchThread::awa_finished(int id){
 
     if(!_map.contains(id)) return;
 
-    qDebug() << "Awa " << id << " finished";
+    //qDebug() << "Awa " << id << " finished";
 
     AsyncWebAccess* awa = _map.value(id);
     QImage* img = awa->get_image();
@@ -166,10 +166,11 @@ void CoverFetchThread::awa_finished(int id){
     }
 
     foreach(AsyncWebAccess* a, _map){
-	if(!a->isRunning() && _run) {
-		a->start();
-		break;
-	}
+        if(!a->isRunning() && _run) {
+            a->start();
+            _n_running ++;
+            break;
+        }
     }
 
     bool success = img->save(path + "img_" + QString::number(_cur_awa_idx++) + ".jpg");

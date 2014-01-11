@@ -99,6 +99,7 @@ SET(SOURCES
     HelperStructs/Tagging/id3access.cpp
     HelperStructs/Tagging/ID3_Fileheader.cpp
     HelperStructs/CSettingsStorage.cpp
+    CoverLookup/CoverDownloader.cpp
     CoverLookup/CoverLookup.cpp
     CoverLookup/CoverFetchThread.cpp
     LyricLookup/LyricLookup.cpp

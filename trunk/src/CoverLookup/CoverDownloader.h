@@ -46,62 +46,13 @@
 #include <QRegExp>
 #include <QDir>
 
-QStringList cov_calc_adresses_from_webpage(uint num, QString& webpage) {
+namespace CoverDownloader {
 
-	QStringList adresses;
-    if (webpage.size() == 0) {
-        qDebug() << "No webpage found" << endl;
-		return adresses;
-	}
+    QStringList cov_calc_adresses_from_webpage(uint num, QString& webpage);
+    QStringList cov_call_and_parse(QString url, int num_adresses);
+    bool cov_download_cover(QString adress, QImage* img);
 
-    uint n_covers = 0;
-    int idx=40000;
+};
 
-    //qDebug() << webpage;
-
-    while(n_covers < num){
-        QString re_str("(https://encrypted-tbn)(\\S)+(\")");
-        QRegExp re(re_str);
-        idx = re.indexIn(webpage, idx);
-        if(idx == -1) break;
-        QString str = re.cap(0);
-
-        idx += str.length();
-        str.remove("\"");
-        adresses << str;
-        n_covers++;
-    }
-
-    qDebug() << "Got Adresses";
-
-	return adresses;
-}
-
-QStringList cov_call_and_parse(QString url, int num_adresses){
-
-    qDebug() << "Url = " << url;
-
-	QString content;
-    bool success = WebAccess::read_http_into_str(url, &content);
-
-	QStringList cover_adresses;
-	if(success){
-        cover_adresses = cov_calc_adresses_from_webpage(num_adresses, content);
-	}
-	else{
-		qDebug() << "could not get cover adresses from " << url;
-	}
-
-	return cover_adresses;
-}
-
-
-bool cov_download_cover(QString adress, QImage* img) {
-
-    qDebug() << "Cover adress = " << adress;
-
-    return WebAccess::read_http_into_img(adress, img);
-
-}
 
 #endif /* COVERDOWNLOADER_H_ */
