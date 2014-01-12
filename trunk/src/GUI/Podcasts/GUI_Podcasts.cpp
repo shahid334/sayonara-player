@@ -66,7 +66,7 @@ GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QWidget *parent) :
 
 
 GUI_Podcasts::~GUI_Podcasts() {
-    // TODO Auto-generated destructor stub
+
 }
 
 QAction* GUI_Podcasts::getAction(){

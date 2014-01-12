@@ -68,7 +68,7 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QString action_text, QWidge
 
 
 GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
-	// TODO Auto-generated destructor stub
+
 }
 
 QAction* GUI_LFMRadioWidget::getAction(){

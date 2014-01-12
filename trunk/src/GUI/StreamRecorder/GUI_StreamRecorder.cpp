@@ -45,7 +45,7 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) : QDialog(parent) {
 
 
 GUI_StreamRecorder::~GUI_StreamRecorder() {
-	// TODO Auto-generated destructor stub
+
 }
 
 

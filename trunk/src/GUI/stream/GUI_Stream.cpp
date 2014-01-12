@@ -63,7 +63,7 @@ GUI_Stream::GUI_Stream(QString name, QString action_text, QWidget *parent) : Pla
 
 
 GUI_Stream::~GUI_Stream() {
-	// TODO Auto-generated destructor stub
+
 }
 
 QAction* GUI_Stream::getAction(){

@@ -71,7 +71,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) : QDialog
 
 
 GUI_ImportFolder::~GUI_ImportFolder() {
-    // TODO Auto-generated destructor stub
+
 }
 
 void GUI_ImportFolder::changeSkin(bool dark){

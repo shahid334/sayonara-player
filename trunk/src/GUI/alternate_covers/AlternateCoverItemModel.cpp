@@ -34,7 +34,6 @@
 
 
 AlternateCoverItemModel::AlternateCoverItemModel(QObject* parent) : QAbstractTableModel(parent) {
-	// TODO Auto-generated constructor stub
 
 }
 

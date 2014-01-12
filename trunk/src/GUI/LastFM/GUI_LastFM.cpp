@@ -61,7 +61,7 @@ GUI_LastFM::GUI_LastFM(QString username, QString password){
 
 
 GUI_LastFM::~GUI_LastFM() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void GUI_LastFM::changeSkin(bool dark){

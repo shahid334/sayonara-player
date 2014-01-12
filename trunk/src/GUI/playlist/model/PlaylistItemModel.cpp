@@ -39,7 +39,7 @@ PlaylistItemModel::PlaylistItemModel(QObject* parent) : QAbstractListModel(paren
 }
 
 PlaylistItemModel::~PlaylistItemModel() {
-	// TODO Auto-generated destructor stub
+
 }
 
 

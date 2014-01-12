@@ -41,7 +41,7 @@ LibraryItemModelAlbums::LibraryItemModelAlbums(QList<ColumnHeader>& headers) : L
 }
 
 LibraryItemModelAlbums::~LibraryItemModelAlbums() {
-	// TODO Auto-generated destructor stub
+
 }
 
 

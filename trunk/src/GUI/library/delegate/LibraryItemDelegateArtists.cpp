@@ -49,7 +49,7 @@ LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, 
 }
 
 LibraryItemDelegateArtists::~LibraryItemDelegateArtists() {
-    // TODO Auto-generated destructor stub
+
 }
 
 

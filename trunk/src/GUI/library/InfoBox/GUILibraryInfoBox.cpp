@@ -49,7 +49,7 @@ GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) : QDialog(parent){
 }
 
 GUI_Library_Info_Box::~GUI_Library_Info_Box() {
-	// TODO Auto-generated destructor stub
+
 }
 
 

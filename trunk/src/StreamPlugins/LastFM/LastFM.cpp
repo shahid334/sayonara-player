@@ -174,6 +174,8 @@ void LastFM::_login_thread_finished(){
 void LastFM::psl_track_changed(const MetaData& md){
 
 
+
+
     if(!_track_changed_thread) {
         if(!_lfm_init_track_changed_thread()) return;
     }
@@ -183,6 +185,8 @@ void LastFM::psl_track_changed(const MetaData& md){
 
     if(!_settings->getLastFMActive() || !_logged_in) {
 
+        if(!_settings->getPlaylistMode().dynamic) return;
+
         _track_changed_thread->setThreadTask( LFM_THREAD_TASK_SIM_ARTISTS );
         _track_changed_thread->setTrackInfo(md);
         _track_changed_thread->start();
@@ -190,11 +194,12 @@ void LastFM::psl_track_changed(const MetaData& md){
         return;
      }
 
+    int thread_task = LFM_THREAD_TASK_UPDATE_TRACK | LFM_THREAD_TASK_FETCH_TRACK_INFO;
+    if(_settings->getPlaylistMode().dynamic)
+        thread_task |= LFM_THREAD_TASK_SIM_ARTISTS;
 
-	_track_changed_thread->setThreadTask(
-			LFM_THREAD_TASK_UPDATE_TRACK 		|
-			LFM_THREAD_TASK_SIM_ARTISTS 		|
-			LFM_THREAD_TASK_FETCH_TRACK_INFO);
+    _track_changed_thread->setThreadTask(thread_task);
+
 
 	_track_changed_thread->setTrackInfo(md);
 	_track_changed_thread->setUsername(_username);

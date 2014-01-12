@@ -134,7 +134,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void GUI_InfoDialog::changeSkin(bool dark){

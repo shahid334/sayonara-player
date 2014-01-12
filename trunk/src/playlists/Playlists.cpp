@@ -40,7 +40,7 @@ Playlists::Playlists() {
 }
 
 Playlists::~Playlists() {
-	// TODO Auto-generated destructor stub
+
 }
 
 void Playlists::load_all_playlists(){

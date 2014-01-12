@@ -69,7 +69,6 @@ LyricLookupThread::LyricLookupThread() {
 }
 
 LyricLookupThread::~LyricLookupThread() {
-	// TODO Auto-generated destructor stub
 }
 
 QString get_artist_wo_the(QString artist){

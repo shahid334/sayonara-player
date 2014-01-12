@@ -50,7 +50,7 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
 		try{
 			if (!q.exec()) {
-
+                qDebug() << q.executedQuery() << ",   " << q.boundValues();
 					qDebug() << "SQL-Error: Could not get all albums from database";
 					//qDebug() << q.executedQuery();
 					return false;
@@ -210,7 +210,7 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
 	QString querytext =
 			ALBUM_ARTIST_TRACK_SELECTOR +
 			"WHERE tracks.albumID = albums.albumID and artists.artistid = tracks.artistid " +
-			"GROUP BY albumID, albumName";
+            "GROUP BY albums.albumID, albumName";
 
 
 	querytext += _create_order_string(sortorder) + ";";
@@ -281,7 +281,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 		}
 	}
 
-	querytext += QString("GROUP BY albumID, albumName ");
+    querytext += QString("GROUP BY albums.albumID, albumName ");
 	querytext += _create_order_string(sortorder) + ";";
 
 	q.prepare(querytext);
@@ -338,18 +338,18 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
                         "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.cissearch LIKE :search_in_artist " +
 						"GROUP BY albums.albumid, albums.name " +
 				") " +
-				"GROUP BY albumID, albumName";
+                "GROUP BY albums.albumID, albumName";
 	}
 	else if(filter.by_searchstring == BY_FILENAME){
 		query = ALBUM_ARTIST_TRACK_SELECTOR +
 					"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.filename LIKE :search_in_filename " +
-					"GROUP BY albumID, albumName";
+                    "GROUP BY albums.albumID, albumName";
 	}
 
     else if(filter.by_searchstring == BY_GENRE){
        query = ALBUM_ARTIST_TRACK_SELECTOR +
                     "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.genre LIKE :search_in_genre " +
-                    "GROUP BY albumID, albumName";
+                    "GROUP BY albums.albumID, albumName";
     }
 
 	query += _create_order_string(sortorder) + ";";

@@ -47,7 +47,6 @@ label = new QLabel();
 
 AlternateCoverItemDelegate::~AlternateCoverItemDelegate() {
 
-	// TODO Auto-generated destructor stub
 }
 
 

@@ -45,7 +45,7 @@ LibraryItemModelTracks::LibraryItemModelTracks(QList<ColumnHeader>& headers) : L
 
 
 LibraryItemModelTracks::~LibraryItemModelTracks() {
-	// TODO Auto-generated destructor stub
+
 }
 
 

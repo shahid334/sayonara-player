@@ -29,13 +29,20 @@ StdPlaylist::StdPlaylist(QObject *parent) :
     Playlist(parent)
 {
     _playlist_type = PlaylistTypeStd;
+    _last_track = -1;
 }
 
 
 
 void StdPlaylist::change_track(int idx){
 
-    if( idx >= (int) _v_md.size() || idx < 0) return;
+    _last_track = _cur_play_idx;
+    if( idx >= (int) _v_md.size() || idx < 0) {
+        stop();
+        return;
+    }
+
+    _last_track = _cur_play_idx;
 
     for(uint i=0; i<_v_md.size(); i++){
         _v_md[i].pl_playing = ( idx == (int) i );
@@ -138,30 +145,21 @@ void StdPlaylist::fwd(){
 
 void StdPlaylist::bwd(){
 
-    int track_num = _cur_play_idx - 1;
-    if(_cur_play_idx <= 0 && _v_md.size() > 0) {
-        _cur_play_idx = 0;
-    }
+    int track_num;
+    if(_playlist_mode.shuffle && _last_track != -1 ) track_num = _last_track;
+    else  track_num = _cur_play_idx - 1;
 
-    else if(track_num >= (int) _v_md.size() || track_num < 0) {
-        _cur_play_idx = -1;
-    }
-
-    else if( Helper::checkTrack(_v_md[track_num]) ){
-        _v_md.setCurPlayTrack(track_num);
-        _cur_play_idx = track_num;
-    }
-
-    report_changes(false, true);
+    change_track(track_num);
 }
 
 
 void StdPlaylist::next(){
 
+    _last_track = _cur_play_idx;
     int track_num = -1;
     if(_v_md.size() == 0){
-        _cur_play_idx = -1;
-        report_changes(false, true);
+        change_track(-1);
+        stop();
         return;
     }
 
@@ -175,24 +173,24 @@ void StdPlaylist::next(){
 
     else {
         if(_cur_play_idx >= (int) _v_md.size() -1){
-            track_num = _cur_play_idx;
 
             if(_playlist_mode.repAll)
                 track_num = 0;
+            else
+                track_num = -1;
         }
 
-        else
+        else{
             track_num = _cur_play_idx + 1;
+            if(track_num == _cur_play_idx) {
+                stop();
+                return;
+            }
+        }
     }
 
-    if(track_num == _cur_play_idx) return;
-    if(track_num == -1){
-        _cur_play_idx = -1;
-        report_changes(false, true);
-        return;
-    }
 
-    change_track(track_num);
+        change_track(track_num);
 }
 
 

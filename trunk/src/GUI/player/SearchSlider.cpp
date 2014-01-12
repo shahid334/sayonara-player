@@ -37,7 +37,7 @@ SearchSlider::SearchSlider(QWidget* parent) : QSlider(parent) {
 }
 
 SearchSlider::~SearchSlider() {
-	// TODO Auto-generated destructor stub
+
 }
 
 bool SearchSlider::isSearching(){

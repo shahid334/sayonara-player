@@ -37,7 +37,7 @@ LibraryItemModelArtists::LibraryItemModelArtists(QList<ColumnHeader>& headers) :
 }
 
 LibraryItemModelArtists::~LibraryItemModelArtists() {
-	// TODO Auto-generated destructor stub
+
 }
 
 

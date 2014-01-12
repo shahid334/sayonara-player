@@ -255,6 +255,8 @@ void GUI_Playlist::playlist_mode_changed_slot(){
     _playlist_mode.append = ui->btn_append->isChecked();
     _playlist_mode.dynamic = ui->btn_dynamic->isChecked();
 
+    CSettingsStorage::getInstance()->setPlaylistMode(_playlist_mode);
+
     emit playlist_mode_changed(_playlist_mode);
     emit save_playlist("bla");
 }
