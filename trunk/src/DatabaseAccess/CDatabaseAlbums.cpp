@@ -338,7 +338,7 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
                         "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND artists.cissearch LIKE :search_in_artist " +
 						"GROUP BY albums.albumid, albums.name " +
 				") " +
-                "GROUP BY albums.albumID, albumName";
+                "GROUP BY albumID, albumName";
 	}
 	else if(filter.by_searchstring == BY_FILENAME){
 		query = ALBUM_ARTIST_TRACK_SELECTOR +
