@@ -45,17 +45,16 @@
 #include <QFont>
 #include <QMimeData>
 
-LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
+LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
     _parent = parent;
     _qDrag = 0;
     _rc_header_menu = 0;
     _dark = true;
 
     _mimedata = new CustomMimeData();
-    _edit = new QLineEdit(this);
-    _edit->hide();
+    _mini_searcher = new MiniSearcher(this);
 
-    this->connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
+    this->connect(_mini_searcher, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
 
     rc_menu_init();
 
@@ -72,7 +71,7 @@ LibraryView::LibraryView(QWidget* parent) : QTableView(parent) {
 LibraryView::~LibraryView() {
     delete _rc_menu;
     delete _corner_widget;
-    delete _edit;
+    delete _mini_searcher;
 }
 
 
@@ -90,8 +89,6 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
     QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
 
-    reset_edit();
-
     switch(event->button()){
     case Qt::LeftButton:
 
@@ -108,7 +105,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 
         else {
             _sel_changed = false;
-            QTableView::mousePressEvent(event);
+            SearchableTableView::mousePressEvent(event);
             if(!_sel_changed){
                 QItemSelection sel, desel;
                 selectionChanged(sel, desel);
@@ -122,7 +119,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
     case Qt::RightButton:
         _drag = false;
 
-        QTableView::mousePressEvent(event);
+        SearchableTableView::mousePressEvent(event);
         pos.setY(pos.y() + 35);
         pos.setX(pos.x() + 10);
         rc_menu_show(pos);
@@ -132,7 +129,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
     case Qt::MidButton:
         _drag = false;
 
-        QTableView::mousePressEvent(event);
+        SearchableTableView::mousePressEvent(event);
 
         emit sig_middle_button_clicked(pos);
         break;
@@ -145,7 +142,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 }
 
 void LibraryView::mouseMoveEvent(QMouseEvent* event){
-    reset_edit();
+    SearchableTableView::mouseMoveEvent(event);
     QPoint pos = event->pos();
     int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
@@ -163,13 +160,14 @@ void LibraryView::mouseDoubleClickEvent(QMouseEvent *event){
 }
 
 void LibraryView::mouseReleaseEvent(QMouseEvent* event){
-    reset_edit();
+
+
 
     switch (event->button()) {
 
     case Qt::LeftButton:
 
-        QTableView::mouseReleaseEvent(event);
+        SearchableTableView::mouseReleaseEvent(event);
         event->accept();
 
         _drag = false;
@@ -188,24 +186,9 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
 // keyboard events
 void LibraryView::keyPressEvent(QKeyEvent* event){
 
-    // _edit has changed
-    QString text = event->text();
 
-    if(text.size() > 0 && text[0].isLetterOrNumber()){
-        int sb_width = this->verticalScrollBar()->width();
-        if(!this->verticalScrollBar()->isVisible()) sb_width = 0;
+int key = event->key();
 
-        int sb_height = this->horizontalScrollBar()->height();
-        if(!this->horizontalScrollBar()->isVisible()) sb_height = 0;
-
-        _edit->setGeometry(this->width() - (sb_width + 105), this->height() - (sb_height + 30), 100, 25);
-        _edit->setFocus();
-        _edit->setText(text);
-        _edit->show();
-        return;
-    }
-
-    int key = event->key();
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
     bool shift_pressed = (modifiers & Qt::ShiftModifier);
@@ -213,36 +196,39 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
     bool ctrl_pressed = (modifiers & Qt::ControlModifier);
 
     if((key == Qt::Key_Up || key == Qt::Key_Down)){
-        if(_edit->isVisible()) reset_edit();
-
         if(ctrl_pressed)
             event->setModifiers(Qt::NoModifier);
     }
 
+    bool ms_visible = _mini_searcher->isVisible();
 
-    if(key != Qt::Key_Tab && key != Qt::Key_Backtab)
-        QTableView::keyPressEvent(event);
+
+   // if(key != Qt::Key_Tab && key != Qt::Key_Backtab)
+        SearchableTableView::keyPressEvent(event);
+
+    // _edit has changed
+    if(_mini_searcher->is_initiator(event)){
+        return;
+    }
+
 
     QList<int> selections = get_selections();
 
     switch(key){
 
         case Qt::Key_Escape:
-            if(_edit->isVisible()) reset_edit();
 
-            else {
+            if(!ms_visible) {
                 clearSelection();
                 this->selectionModel()->clearSelection();
             }
+
             break;
 
         case Qt::Key_Return:
         case Qt::Key_Enter:
 
-            if(_edit->isVisible()) {
-                reset_edit();
-                break;
-            }
+            if(ms_visible) break;
             if(selections.size() == 0) break;
             if(ctrl_pressed) break;
 
@@ -363,7 +349,7 @@ QList<int> LibraryView::get_selections(){
 void LibraryView::edit_changed(QString str){
 
     if(str.size() == 0) {
-        reset_edit();
+        _mini_searcher->reset();
         return;
     }
 
@@ -372,13 +358,6 @@ void LibraryView::edit_changed(QString str){
     this->selectRow(line);
 }
 
-void LibraryView::reset_edit(){
-    disconnect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
-    _edit->setText("");
-    connect(_edit, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
-    _edit->hide();
-    this->setFocus();
-}
 // edit end
 
 

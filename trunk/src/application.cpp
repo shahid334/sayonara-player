@@ -139,7 +139,7 @@ Application::Application(QApplication* qapp, int n_files, QTranslator* translato
 
     QString dir;
 
-#ifdef Q_OS_UNIX
+#ifndef Q_OS_WIN
     dir = Helper::getLibPath();
     qDebug() << "Lib path = " << dir;
 #else

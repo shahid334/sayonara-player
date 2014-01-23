@@ -15,6 +15,8 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
+    SearchableWidget.h
+    MiniSearcher.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
@@ -65,6 +67,8 @@ SET(HEADERS
 
 
 SET(SOURCES
+    SearchableWidget.cpp
+    MiniSearcher.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp

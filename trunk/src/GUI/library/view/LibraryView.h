@@ -32,6 +32,8 @@
 #include "GUI/MyColumnHeader.h"
 #include "GUI/ContextMenu.h"
 #include "GUI/library/model/LibraryItemModel.h"
+#include "GUI/MiniSearcher.h"
+#include "GUI/SearchableWidget.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/Helper.h"
@@ -46,7 +48,7 @@
 #include <QDropEvent>
 
 
-class LibraryView : public QTableView{
+class LibraryView : public SearchableTableView{
 
     Q_OBJECT
 
@@ -86,7 +88,6 @@ private slots:
 
 private:
     void rc_menu_init();
-    void reset_edit();
     void calc_corner_widget();
 
 
@@ -140,7 +141,7 @@ private:
     ContextMenu*        _rc_menu;
 
 
-    QLineEdit*			_edit;
+    MiniSearcher*       _mini_searcher;
 
     LibraryItemModel* 	_model;
     Sort::SortOrder		_sort_order;
