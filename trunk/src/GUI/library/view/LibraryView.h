@@ -84,7 +84,6 @@ private slots:
     void play_next_clicked();
     void append_clicked();
 
-    void edit_changed(QString);
 
 private:
     void rc_menu_init();
@@ -98,8 +97,6 @@ public:
     void rc_header_menu_init(QStringList& lst);
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
-    void setModel(QAbstractItemModel * model);
-
 
     void fill_metadata(const MetaDataList& v_md);
     void fill_albums(const AlbumList& v_albums);
@@ -111,7 +108,8 @@ public:
     void force_selections();
     void set_skin(bool dark);
 
-
+    using QTableView::setModel;
+    virtual void setModel(LibraryItemModel* model);
 
 protected:
     void mousePressEvent(QMouseEvent* event);
@@ -140,15 +138,13 @@ private:
 
     ContextMenu*        _rc_menu;
 
-
-    MiniSearcher*       _mini_searcher;
-
-    LibraryItemModel* 	_model;
     Sort::SortOrder		_sort_order;
     CustomMimeData*		_mimedata;
 
     bool                _dark;
     bool                _sel_changed;
+
+    LibraryItemModel*   _model;
 
     int get_min_selected();
 

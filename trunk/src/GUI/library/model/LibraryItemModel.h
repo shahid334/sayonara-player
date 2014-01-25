@@ -62,10 +62,10 @@
 #include <QVariant>
 
 #include "GUI/MyColumnHeader.h"
+#include "GUI/AbstractSearchModel.h"
 
 
-
-class LibraryItemModel : public QAbstractTableModel{
+class LibraryItemModel : public AbstractSearchTableModel{
 
 	Q_OBJECT
 
@@ -81,18 +81,18 @@ public:
     bool			is_col_shown(int col) const;
     bool 			is_selected(int row) const;
     QList<int>      get_selected() const;
-    virtual void 	set_selected(QList<int>& rows);
+    void            set_selected(QList<int>& rows);
 
 
 	/** Overloaded from QAbstractTableModel **/
-    virtual QVariant 	headerData ( int section, Qt::Orientation orientation, int role ) const;
-	virtual int 		columnCount(const QModelIndex& parent=QModelIndex()) const;
-	virtual bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
-	virtual bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
+    QVariant 	headerData ( int section, Qt::Orientation orientation, int role ) const;
+    int 		columnCount(const QModelIndex& parent=QModelIndex()) const;
+    bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
+    bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
 
-	virtual int			getFirstRowOf(QString substr)=0;
+    QModelIndex	getFirstRowIndexOf(QString substr);
 
-    void            set_new_header_names(QStringList& lst);
+    void set_new_header_names(QStringList& lst);
 
 
 
@@ -104,6 +104,7 @@ private:
 
 protected:
     QList<int>				_selected_rows;
+
 };
 
 #endif /* LIBRARYITEMMODEL_H_ */

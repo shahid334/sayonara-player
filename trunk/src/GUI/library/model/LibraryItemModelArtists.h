@@ -56,7 +56,7 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
-	virtual int			getFirstRowOf(QString substr);
+    virtual QModelIndex	getFirstRowIndexOf(QString substr);
     virtual void set_selected(QList<int>& rows);
 
 

@@ -182,19 +182,19 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 }
 
 
-int	LibraryItemModelTracks::getFirstRowOf(QString substr){
+QModelIndex	LibraryItemModelTracks::getFirstRowIndexOf(QString substr){
 
     int i = 0;
 
     foreach(MetaData md, _tracklist){
-        if(md.title.startsWith(substr, Qt::CaseInsensitive))
-            return i;
+        if(md.title.startsWith(substr, Qt::CaseInsensitive)){
+            return this->index(i, 0);
+        }
 
         i++;
     }
 
-    return -1;
-
+    return this->index(-1, 0);
 }
 
 

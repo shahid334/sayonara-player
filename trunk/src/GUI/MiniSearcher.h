@@ -3,10 +3,14 @@
 
 #include <QLineEdit>
 #include <QKeyEvent>
+#include <QFocusEvent>
 #include <QScrollArea>
-#include <GUI/SearchableWidget.h>
+#include "GUI/SearchableWidget.h"
+#include <QList>
 
 
+class SearchableTableView;
+class SearchableListView;
 class MiniSearcher : public QLineEdit
 {
     Q_OBJECT
@@ -14,25 +18,30 @@ class MiniSearcher : public QLineEdit
 signals:
     void sig_reset();
 
+private slots:
+    void reset();
 
 
 private:
-    SearchableTableView* _parent;
-    bool _initialized;
+    QAbstractScrollArea*    _parent;
+    QList<QChar> _triggers;
 
+    bool isInitiator(QKeyEvent* event);
     void init(QString text);
 
-private slots:
-    void key_pressed(QKeyEvent* event);
-
-public slots:
-    void reset();
+protected:
+    void focusOutEvent(QFocusEvent *);
+    void keyPressEvent(QKeyEvent *);
 
 public:
-    explicit MiniSearcher(SearchableTableView *parent);
+    MiniSearcher(SearchableListView* parent);
+    MiniSearcher(SearchableTableView *parent);
 
 
-    bool is_initiator(QKeyEvent* event);
+    bool isInitialized();
+    bool check_and_init(QKeyEvent* event);
+    void register_extra_keys(QList<QChar> keys);
+
 
 };
 

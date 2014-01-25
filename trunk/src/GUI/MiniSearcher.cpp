@@ -1,40 +1,63 @@
 #include "MiniSearcher.h"
 #include <QString>
 #include <QScrollBar>
+#include <QDebug>
 
 MiniSearcher::MiniSearcher(SearchableTableView *parent) :
     QLineEdit(parent)
 {
     _parent = parent;
-    _initialized = false;
     this->hide();
 
-    connect(_parent, SIGNAL(sig_mouse_pressed()), this, SLOT(reset()));
-    connect(_parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
-    connect(_parent, SIGNAL(sig_mouse_released()), this, SLOT(reset()));
-    connect(_parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
+    connect(parent, SIGNAL(sig_mouse_pressed()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_mouse_released()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_focus_out()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
+}
 
+MiniSearcher::MiniSearcher(SearchableListView *parent) : QLineEdit(parent)
+{
+    _parent = parent;
+    this->hide();
+
+    connect(parent, SIGNAL(sig_mouse_pressed()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_mouse_released()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_focus_out()), this, SLOT(reset()));
+    connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
 
 }
 
-bool MiniSearcher::is_initiator(QKeyEvent* event){
+bool MiniSearcher::isInitiator(QKeyEvent* event){
 
     QString text = event->text();
-    return (text.size() > 0 && text[0].isLetterOrNumber());
+
+    qDebug() << text << ", " << _triggers;
+
+   bool bla =  ( text.size() > 0 &&
+            ( text[0].isLetterOrNumber() || _triggers.contains(text[0]) )
+           );
+
+   qDebug() << "Bla = " << bla << ", " << _triggers.contains(text[0]);
+
+
+   return bla;
 }
 
-void MiniSearcher::key_pressed(QKeyEvent* event){
+bool MiniSearcher::isInitialized(){
+    return this->isVisible();
+}
+
+void MiniSearcher::focusOutEvent(QFocusEvent* event){
+
+    //reset();
+
+}
+
+void MiniSearcher::keyPressEvent(QKeyEvent* event){
 
     int key = event->key();
-    QString text = event->text();
-
-    if(!_initialized) {
-        if(is_initiator(event)){
-            init(text);
-        }
-    }
-
-    else{
 
         switch(key){
             case Qt::Key_Up:
@@ -45,14 +68,17 @@ void MiniSearcher::key_pressed(QKeyEvent* event){
             case Qt::Key_Tab:
             case Qt::Key_Backtab:
 
-                if(this->isVisible())
+                if(this->isVisible()){
                     reset();
+                }
+
                 break;
 
             default:
+                QLineEdit::keyPressEvent(event);
                 break;
         }
-    }
+
 }
 
 
@@ -74,16 +100,35 @@ void MiniSearcher::init(QString text){
     this->setFocus();
     this->setText(text);
     this->show();
-    _initialized = true;
-
 }
 
 
 void MiniSearcher::reset(){
 
     this->setText("");
-    this->hide();
     _parent->setFocus();
-    _initialized = false;
+
+    this->hide();
+}
+
+bool MiniSearcher::check_and_init(QKeyEvent *event){
+    if(!isInitiator(event)) return false;
+
+    if(!this->isVisible()){
+
+        init(event->text());
+        return true;
+    }
+
+    else return false;
 
 }
+
+ void MiniSearcher::register_extra_keys(QList<QChar> keys){
+
+
+     foreach(QChar key, keys){
+         if(!_triggers.contains(key)) _triggers << key;
+     }
+
+ }

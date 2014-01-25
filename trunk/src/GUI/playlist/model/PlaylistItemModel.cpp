@@ -35,7 +35,7 @@
 
 using namespace std;
 
-PlaylistItemModel::PlaylistItemModel(QObject* parent) : QAbstractListModel(parent) {
+PlaylistItemModel::PlaylistItemModel(QObject* parent) : AbstractSearchListModel(parent) {
 }
 
 PlaylistItemModel::~PlaylistItemModel() {
@@ -170,4 +170,65 @@ void PlaylistItemModel::get_metadata(const QList<int>& rows, MetaDataList& v_md)
     v_md.clear();
     foreach(int row, rows)
         v_md.push_back( this->_v_meta_data[row] );
+}
+
+#define ALBUM_SEARCH "$"
+#define ARTIST_SEARCH "%"
+#define JUMP ":"
+
+
+QModelIndex PlaylistItemModel::getFirstRowIndexOf(QString substr){
+
+    int i = 0;
+    // ALBUM
+    if(substr.startsWith(ALBUM_SEARCH)){
+        substr.remove(ALBUM_SEARCH);
+
+        foreach(MetaData md, _v_meta_data){
+            if(md.album.startsWith(substr, Qt::CaseInsensitive)){
+                return this->index(i, 0);
+            }
+
+            i++;
+        }
+    }
+
+    //ARTIST
+    else if(substr.startsWith(ARTIST_SEARCH)){
+        substr.remove(ARTIST_SEARCH);
+
+        foreach(MetaData md, _v_meta_data){
+            if(md.artist.startsWith(substr, Qt::CaseInsensitive)){
+                return this->index(i, 0);
+            }
+
+            i++;
+        }
+    }
+
+    // JUMP
+    else if(substr.startsWith(JUMP)){
+        substr.remove(JUMP).trimmed();
+        bool ok;
+        int line = substr.toInt(&ok);
+        if(ok && (int) (_v_meta_data.size()) < line){
+            return this->index(line, 0);
+        }
+
+        else return this->index(-1, -1);
+    }
+
+    // TITLE
+    else {
+
+        foreach(MetaData md, _v_meta_data){
+            if(md.title.startsWith(substr, Qt::CaseInsensitive)){
+                return this->index(i, 0);
+            }
+
+            i++;
+        }
+    }
+
+    return this->index(-1, -1);
 }

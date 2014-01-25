@@ -30,6 +30,7 @@
 #define PLAYLISTITEMMODEL_H_
 
 #include "HelperStructs/MetaData.h"
+#include "GUI/AbstractSearchModel.h"
 
 #include <QObject>
 #include <QList>
@@ -41,7 +42,7 @@ using namespace std;
 
 
 
-class PlaylistItemModel : public QAbstractListModel {
+class PlaylistItemModel : public AbstractSearchListModel {
 	Q_OBJECT
 public:
 	PlaylistItemModel(QObject* parent = 0);
@@ -62,6 +63,8 @@ public:
     bool is_selected(int row) const ;
 
     void get_metadata(const QList<int>& rows, MetaDataList& v_md);
+
+    virtual QModelIndex getFirstRowIndexOf(QString substr);
 
 protected:
     MetaDataList		_v_meta_data;

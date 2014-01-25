@@ -164,7 +164,7 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
 	Q_UNUSED(order);
 }
 
-int LibraryItemModelAlbums::getFirstRowOf(QString substr){
+QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr){
     int i = 0;
     foreach(Album album, _album_list){
         QString album_name = album.name;
@@ -173,13 +173,15 @@ int LibraryItemModelAlbums::getFirstRowOf(QString substr){
             album_name = album_name.right(album_name.size() -4);
         }
         if(album.name.startsWith(substr, Qt::CaseInsensitive) || album_name.startsWith(substr, Qt::CaseInsensitive))
-            return i;
+            return this->index(i, 0);
 
         i++;
     }
 
-    return -1;
+
+    return this->index(-1, 0);
 }
+
 
 void  LibraryItemModelAlbums::set_selected(QList<int>& rows){
     LibraryItemModel::set_selected(rows);

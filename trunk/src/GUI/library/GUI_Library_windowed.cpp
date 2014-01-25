@@ -253,6 +253,8 @@ void  GUI_Library_windowed::init_headers(){
 
 
     ui->lv_artist->setModel(_artist_model);
+    ui->lv_artist->setAbstractModel((AbstractSearchTableModel*) _artist_model);
+
     ui->lv_artist->setItemDelegate(_artist_delegate);
     ui->lv_artist->setAlternatingRowColors(true);
     ui->lv_artist->setDragEnabled(true);

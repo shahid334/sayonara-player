@@ -34,6 +34,7 @@
 #include "GUI/playlist/model/PlaylistItemModel.h"
 #include "GUI/playlist/delegate/PlaylistItemDelegate.h"
 #include "GUI/ContextMenu.h"
+#include "GUI/SearchableWidget.h"
 
 
 #include <QEvent>
@@ -47,7 +48,7 @@
 
 
 
-class PlaylistView :public QListView{
+class PlaylistView :public SearchableListView{
 
 	Q_OBJECT
 
@@ -101,6 +102,10 @@ class PlaylistView :public QListView{
         void resizeEvent(QResizeEvent *e);
         void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 
+        // SearchableListView
+        virtual void select_rows(QList<int> lst);
+        virtual void select_row(int row);
+
 
     private:
 
@@ -118,8 +123,8 @@ class PlaylistView :public QListView{
         void handle_drop(QDropEvent* event, bool from_outside=false);
 
         void remove_cur_selected_rows(bool select_next_row=true);
-        void select_row(int i);
-        void select_rows(QList<int> lst);
+
+
         void goto_row(int row);
         int get_min_selected();
 
@@ -145,7 +150,7 @@ class PlaylistView :public QListView{
 
         ContextMenu* 	_rc_menu;
 
-        PlaylistItemModel*              _model;
+        PlaylistItemModel*        _model;
         PlaylistItemDelegate* 	        _delegate;
         bool            _sel_changed;
 

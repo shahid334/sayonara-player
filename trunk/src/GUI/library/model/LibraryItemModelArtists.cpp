@@ -153,22 +153,26 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 	return QAbstractItemModel::flags(index);
 }
 
-int	LibraryItemModelArtists::getFirstRowOf(QString substr){
+QModelIndex	LibraryItemModelArtists::getFirstRowIndexOf(QString substr){
 
     int i = 0;
+    qDebug() << "Searching for " << substr;
     foreach(Artist artist, _artist_list){
         QString artist_name = artist.name;
         if( artist_name.startsWith("the ", Qt::CaseInsensitive) ||
             artist_name.startsWith("die ", Qt::CaseInsensitive) ){
             artist_name = artist_name.right(artist_name.size() -4);
         }
-        if(artist.name.startsWith(substr, Qt::CaseInsensitive) || artist_name.startsWith(substr, Qt::CaseInsensitive))
-            return i;
+        if(artist.name.startsWith(substr, Qt::CaseInsensitive) || artist_name.startsWith(substr, Qt::CaseInsensitive)){
+            qDebug() << "Found artist name = " << artist.name << ": " << i;
+            return this->index(i, 0);
+        }
 
         i++;
     }
 
-    return -1;
+    qDebug() << "No artist found";
+    return this->index(-1, 0);
 
 }
 

@@ -52,9 +52,6 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
     _dark = true;
 
     _mimedata = new CustomMimeData();
-    _mini_searcher = new MiniSearcher(this);
-
-    this->connect(_mini_searcher, SIGNAL(textChanged(QString)), this, SLOT(edit_changed(QString)));
 
     rc_menu_init();
 
@@ -71,15 +68,9 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 LibraryView::~LibraryView() {
     delete _rc_menu;
     delete _corner_widget;
-    delete _mini_searcher;
+
 }
 
-
-void LibraryView::setModel(QAbstractItemModel * model){
-    QTableView::setModel(model);
-
-    _model = (LibraryItemModel*) model;
-}
 
 
 
@@ -90,6 +81,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
     QPoint pos = QWidget::mapToGlobal(pos_org);
 
     switch(event->button()){
+
     case Qt::LeftButton:
 
         if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
@@ -187,7 +179,7 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
 void LibraryView::keyPressEvent(QKeyEvent* event){
 
 
-int key = event->key();
+    int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
@@ -200,17 +192,14 @@ int key = event->key();
             event->setModifiers(Qt::NoModifier);
     }
 
-    bool ms_visible = _mini_searcher->isVisible();
-
 
    // if(key != Qt::Key_Tab && key != Qt::Key_Backtab)
-        SearchableTableView::keyPressEvent(event);
+   SearchableTableView::keyPressEvent(event);
 
     // _edit has changed
-    if(_mini_searcher->is_initiator(event)){
+    if(!event->isAccepted()){
         return;
     }
-
 
     QList<int> selections = get_selections();
 
@@ -218,17 +207,14 @@ int key = event->key();
 
         case Qt::Key_Escape:
 
-            if(!ms_visible) {
-                clearSelection();
-                this->selectionModel()->clearSelection();
-            }
+            clearSelection();
+            this->selectionModel()->clearSelection();
 
             break;
 
         case Qt::Key_Return:
         case Qt::Key_Enter:
 
-            if(ms_visible) break;
             if(selections.size() == 0) break;
             if(ctrl_pressed) break;
 
@@ -270,11 +256,17 @@ int key = event->key();
 }
 // keyboard end
 
+void LibraryView::setModel(LibraryItemModel * model){
+    SearchableTableView::setModel( (AbstractSearchTableModel*) model );
 
+    _model = model;
+
+}
 
 
 // selections
 int LibraryView::get_min_selected(){
+
 
     QList<int> selections = _model->get_selected();
     if(selections.size() == 0) return 0;
@@ -287,6 +279,7 @@ int LibraryView::get_min_selected(){
 
 
 void LibraryView::goto_row(int row, bool select){
+
 
     if(_model->rowCount() == 0) return;
 
@@ -302,6 +295,7 @@ void LibraryView::goto_row(int row, bool select){
 
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
+
 
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
@@ -342,23 +336,6 @@ QList<int> LibraryView::get_selections(){
     return idx_list_int;
 }
 // selections end
-
-
-
-// edit
-void LibraryView::edit_changed(QString str){
-
-    if(str.size() == 0) {
-        _mini_searcher->reset();
-        return;
-    }
-
-    int line = _model->getFirstRowOf(str);
-    this->scrollTo(_model->index(line, 0));
-    this->selectRow(line);
-}
-
-// edit end
 
 
 
