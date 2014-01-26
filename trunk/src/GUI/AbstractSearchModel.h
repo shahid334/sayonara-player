@@ -4,6 +4,8 @@
 #include <QModelIndex>
 #include <QAbstractTableModel>
 #include <QAbstractListModel>
+#include <QMap>
+#include <QString>
 
 
 
@@ -14,18 +16,17 @@ class AbstractSearchModelInterface {
 
 public:
     virtual QModelIndex getFirstRowIndexOf(QString substr)=0;
+	virtual QModelIndex getNextRowIndexOf(QString substr, int cur_row)=0;
+	virtual QModelIndex getPrevRowIndexOf(QString substr, int cur_row)=0;
+	virtual QMap<QChar, QString> getExtraTriggers()=0;
 };
 
 
 // Searchable Model for tables
 class AbstractSearchTableModel : public QAbstractTableModel, public AbstractSearchModelInterface {
 
-
-
 public:
     AbstractSearchTableModel(QObject* parent=0) : QAbstractTableModel(parent){}
-    virtual QModelIndex getFirstRowIndexOf(QString substr)=0;
-
 };
 
 
@@ -34,8 +35,6 @@ class AbstractSearchListModel : public QAbstractListModel, public AbstractSearch
 
 public:
      AbstractSearchListModel(QObject* parent=0) : QAbstractListModel(parent){}
-     virtual QModelIndex getFirstRowIndexOf(QString substr)=0;
-
 };
 
 

@@ -65,6 +65,9 @@ public:
     void get_metadata(const QList<int>& rows, MetaDataList& v_md);
 
     virtual QModelIndex getFirstRowIndexOf(QString substr);
+	virtual QModelIndex getPrevRowIndexOf(QString substr, int row);
+	virtual QModelIndex getNextRowIndexOf(QString substr, int row);
+	virtual QMap<QChar, QString> getExtraTriggers();
 
 protected:
     MetaDataList		_v_meta_data;

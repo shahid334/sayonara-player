@@ -181,26 +181,46 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 
 }
 
-
 QModelIndex	LibraryItemModelTracks::getFirstRowIndexOf(QString substr){
+	if(_tracklist.isEmpty()) return this->index(-1, -1);
 
-    int i = 0;
+	if(_selected_rows.size() > 0)
+		return getNextRowIndexOf(substr, _selected_rows[0]);
+	else
+		return getNextRowIndexOf(substr, 0);
+}
 
-    foreach(MetaData md, _tracklist){
-        if(md.title.startsWith(substr, Qt::CaseInsensitive)){
-            return this->index(i, 0);
-        }
+QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row){
 
-        i++;
-    }
+	int len = (int) _tracklist.size();
+	if(len == 0) return this->index(-1, -1);
 
-    return this->index(-1, 0);
+	for(int i=0; i< len; i++){
+		int row_idx = (i + row) % len;
+		QString title = _tracklist[row_idx].title;
+		if(title.startsWith(substr, Qt::CaseInsensitive)){
+			return this->index(row_idx, 0);
+		}
+	}
+
+	return this->index(-1, -1);
+}
+
+QModelIndex LibraryItemModelTracks::getPrevRowIndexOf(QString substr, int row){
+
+	int len = (int) _tracklist.size();
+	if(len < row) row = len - 1;
+	for(int i=0; i< len; i++){
+		if(row - i < 0) row = len - 1;
+		int row_idx = (row - i) % len;
+		QString title = _tracklist[row_idx].title;
+		if(title.startsWith(substr, Qt::CaseInsensitive)){
+			return this->index(row_idx, 0);
+		}
+	}
+
+	return this->index(-1, -1);
 }
 
 
-void  LibraryItemModelTracks::set_selected(QList<int>& rows){
-    LibraryItemModel::set_selected(rows);
-    for(int i=0; i<_tracklist.size(); i++){
-        _tracklist[i].is_lib_selected = rows.contains(i);
-    }
-}
+

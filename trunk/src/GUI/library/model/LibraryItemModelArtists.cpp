@@ -153,33 +153,62 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 	return QAbstractItemModel::flags(index);
 }
 
-QModelIndex	LibraryItemModelArtists::getFirstRowIndexOf(QString substr){
+QModelIndex LibraryItemModelArtists::getFirstRowIndexOf(QString substr){
+	if(_artist_list.isEmpty()) return this->index(-1, -1);
+	if(_selected_rows.size() > 0)
+		return getNextRowIndexOf(substr, _selected_rows[0]);
+	else
+		return getNextRowIndexOf(substr, 0);
 
-    int i = 0;
-    qDebug() << "Searching for " << substr;
-    foreach(Artist artist, _artist_list){
-        QString artist_name = artist.name;
+}
+
+
+QModelIndex	LibraryItemModelArtists::getNextRowIndexOf(QString substr, int row){
+
+	int len = _artist_list.size();
+	if( len == 0 ) return this->index(-1, -1);
+
+	for(int i=0; i<len; i++){
+		int row_idx = (i + row) % len;
+
+		QString artist_name = _artist_list[row_idx].name;
         if( artist_name.startsWith("the ", Qt::CaseInsensitive) ||
             artist_name.startsWith("die ", Qt::CaseInsensitive) ){
             artist_name = artist_name.right(artist_name.size() -4);
         }
-        if(artist.name.startsWith(substr, Qt::CaseInsensitive) || artist_name.startsWith(substr, Qt::CaseInsensitive)){
-            qDebug() << "Found artist name = " << artist.name << ": " << i;
-            return this->index(i, 0);
+
+		if(artist_name.startsWith(substr, Qt::CaseInsensitive) || artist_name.startsWith(substr, Qt::CaseInsensitive)){
+			return this->index(row_idx, 0);
         }
-
-        i++;
     }
 
-    qDebug() << "No artist found";
-    return this->index(-1, 0);
-
+	return this->index(-1, -1);
 }
 
 
-void  LibraryItemModelArtists::set_selected(QList<int>& rows){
-    LibraryItemModel::set_selected(rows);
-    for(int i=0; i<_artist_list.size(); i++){
-        _artist_list[i].is_lib_selected = rows.contains(i);
-    }
+QModelIndex	LibraryItemModelArtists::getPrevRowIndexOf(QString substr, int row){
+
+	int len = _artist_list.size();
+	if( len < row) row = len - 1;
+
+	for(int i=0; i<len; i++){
+
+		if(row - i < 0) row = len - 1;
+		int row_idx = (row-i) % len;
+
+		QString artist_name = _artist_list[row_idx].name;
+		if( artist_name.startsWith("the ", Qt::CaseInsensitive) ||
+			artist_name.startsWith("die ", Qt::CaseInsensitive) ){
+			artist_name = artist_name.right(artist_name.size() -4);
+		}
+
+		if(artist_name.startsWith(substr, Qt::CaseInsensitive) || artist_name.startsWith(substr, Qt::CaseInsensitive)){
+			return this->index(row_idx, 0);
+		}
+	}
+
+	return this->index(-1, -1);
 }
+
+
+

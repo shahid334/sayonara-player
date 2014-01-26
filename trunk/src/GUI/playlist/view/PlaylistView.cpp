@@ -152,7 +152,6 @@ void PlaylistView::mouseReleaseEvent(QMouseEvent* event) {
 // get the min index of selected rows
 int PlaylistView::get_min_selected(){
 
-    //QModelIndexList lst = this->selectedIndexes();
     QModelIndexList lst = this->selectionModel()->selectedRows();
     int min_row = 5000000;
 
@@ -162,13 +161,11 @@ int PlaylistView::get_min_selected(){
 
     foreach(QModelIndex i, lst){
 
-        qDebug() << i.row();
         if(i.row() < min_row){
             min_row = i.row();
         }
     }
 
-    qDebug() << "Get Min Selected " << min_row;
     return min_row;
 }
 
@@ -186,13 +183,10 @@ void PlaylistView::goto_row(int row){
 
 void PlaylistView::keyPressEvent(QKeyEvent* event){
 
-
     int key = event->key();
-
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
     SearchableListView::keyPressEvent(event);
-    if(!event->isAccepted()) return;
 
     int new_row = -1;
     int min_row = get_min_selected();
@@ -380,7 +374,6 @@ void PlaylistView::row_pressed(const QModelIndex& idx){
     }
 
     set_mimedata(v_md, "tracks");
-
 }
 
 void PlaylistView::row_released(const QModelIndex& idx){
@@ -442,7 +435,6 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     SearchableListView::selectionChanged(selected, deselected);
-    qDebug() << "Cur selected (1): " << idx_list;
 
     QList<int> idx_list_int;
 
@@ -454,8 +446,7 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
 
    _model->set_selected(idx_list_int);
 
-   qDebug() << "Cur selected (2): " << idx_list_int;
-    if(selected.indexes().size() > 0)
+	if(selected.indexes().size() > 0)
         this->scrollTo(selected.indexes()[0]);
 
     MetaDataList v_md;
@@ -463,7 +454,6 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
     emit sig_sel_changed(v_md, idx_list_int);
 
     _cur_selected_rows = idx_list_int;
-    qDebug() << "Cur selected (3): " << _cur_selected_rows;
     _sel_changed = true;
 }
 

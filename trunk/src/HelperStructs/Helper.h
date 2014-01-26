@@ -38,6 +38,7 @@
 
 namespace Helper{
 
+
     QString cvtMsecs2TitleLengthString(long int msec, bool colon=true, bool show_days=true);
 	QString cvtQString2FirstUpper(QString str);
 	QString calc_filesize_str(qint64 filesize);

@@ -153,8 +153,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     connect(this->ui->tb_title, SIGNAL(sig_tab_pressed(bool)), this, SLOT(track_tab_pressed(bool)));
     connect(this->ui->tb_title, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
-    connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
-    connect(this->ui->lv_artist, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(artist_sel_changed(const QList<int>&)));
+	connect(this->ui->lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
+	connect(this->ui->lv_artist, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(artist_sel_changed(const QList<int>&)));
 	connect(this->ui->lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
     connect(this->ui->lv_artist, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_artist_changed(Sort::SortOrder)));
     connect(this->ui->lv_artist, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_artist_changed(QStringList&)));
@@ -245,6 +245,7 @@ void  GUI_Library_windowed::init_headers(){
 
 
     ui->tb_title->setModel(_track_model);
+    ui->tb_title->setAbstractModel((AbstractSearchTableModel*) _track_model);
     ui->tb_title->setItemDelegate(_track_delegate);
     ui->tb_title->setAlternatingRowColors(true);
     ui->tb_title->setDragEnabled(true);
@@ -254,7 +255,6 @@ void  GUI_Library_windowed::init_headers(){
 
     ui->lv_artist->setModel(_artist_model);
     ui->lv_artist->setAbstractModel((AbstractSearchTableModel*) _artist_model);
-
     ui->lv_artist->setItemDelegate(_artist_delegate);
     ui->lv_artist->setAlternatingRowColors(true);
     ui->lv_artist->setDragEnabled(true);
@@ -263,6 +263,7 @@ void  GUI_Library_windowed::init_headers(){
 
 
     ui->lv_album->setModel(this->_album_model);
+    ui->lv_album->setAbstractModel((AbstractSearchTableModel*) _album_model);
     ui->lv_album->setItemDelegate(this->_album_delegate);
     ui->lv_album->setAlternatingRowColors(true);
     ui->lv_album->setDragEnabled(true);

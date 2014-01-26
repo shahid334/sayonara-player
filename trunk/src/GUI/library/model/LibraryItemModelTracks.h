@@ -61,7 +61,9 @@ public:
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
     virtual QModelIndex	getFirstRowIndexOf(QString substr);
-    virtual void set_selected(QList<int>& rows);
+	virtual QModelIndex	getPrevRowIndexOf(QString substr, int row);
+	virtual QModelIndex	getNextRowIndexOf(QString substr, int row);
+
 
 
 private:

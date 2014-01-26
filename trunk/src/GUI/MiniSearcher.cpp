@@ -1,25 +1,28 @@
 #include "MiniSearcher.h"
+#include "HelperStructs/Helper.h"
 #include <QString>
 #include <QScrollBar>
 #include <QDebug>
 
-MiniSearcher::MiniSearcher(SearchableTableView *parent) :
-    QLineEdit(parent)
+MiniSearcher::MiniSearcher(SearchableTableView *parent, MiniSearcherButtons b) :
+	QFrame(parent)
 {
     _parent = parent;
-    this->hide();
+
 
     connect(parent, SIGNAL(sig_mouse_pressed()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_mouse_released()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_focus_out()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
+
+	initLayout(b);
 }
 
-MiniSearcher::MiniSearcher(SearchableListView *parent) : QLineEdit(parent)
+MiniSearcher::MiniSearcher(SearchableListView *parent, MiniSearcherButtons b) :
+	QFrame(parent)
 {
     _parent = parent;
-    this->hide();
 
     connect(parent, SIGNAL(sig_mouse_pressed()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
@@ -27,20 +30,70 @@ MiniSearcher::MiniSearcher(SearchableListView *parent) : QLineEdit(parent)
     connect(parent, SIGNAL(sig_focus_out()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
 
+	initLayout(b);
+
+}
+
+void MiniSearcher::initLayout(MiniSearcherButtons b){
+
+	bool left, right;
+	left=right=false;
+	_line_edit = new QLineEdit(this);
+	_line_edit->setMaximumWidth(100);
+	connect(_line_edit, SIGNAL(textChanged(QString)), this, SLOT(line_edit_text_changed(QString)));
+
+	_layout = new QBoxLayout(QBoxLayout::LeftToRight, this);
+	_layout->setContentsMargins(4, 4, 4, 4);
+	_layout->setSpacing(3);
+	_layout->addWidget(_line_edit);
+
+	switch(b){
+		case MiniSearcherBothButtons:
+			left = true; right = true;
+			break;
+
+		case MiniSearcherBwdButton:
+			left = true;
+			break;
+
+		case MiniSearcherFwdButton:
+			right = true;
+
+		case MiniSearcherNoButton:
+
+		default:
+		break;
+	}
+
+	if(left) {
+		_left_button = new QPushButton(this);
+		_left_button->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+		_left_button->setVisible(true);
+		_left_button->setFlat(true);
+		connect(_left_button, SIGNAL(clicked()), this, SLOT(left_clicked()));
+
+		_layout->addWidget(_left_button);
+	}
+
+	if(right) {
+		_right_button = new QPushButton(this);
+		_right_button->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
+		_right_button->setVisible(true);
+		_right_button->setFlat(true);
+		connect(_right_button, SIGNAL(clicked()), this, SLOT(right_clicked()));
+		_layout->addWidget(_right_button);
+	}
+
+	this->hide();
 }
 
 bool MiniSearcher::isInitiator(QKeyEvent* event){
 
     QString text = event->text();
 
-    qDebug() << text << ", " << _triggers;
-
-   bool bla =  ( text.size() > 0 &&
-            ( text[0].isLetterOrNumber() || _triggers.contains(text[0]) )
+	bool bla =  ( text.size() > 0 &&
+			( text[0].isLetterOrNumber() || _triggers.keys().contains(text[0]) )
            );
-
-   qDebug() << "Bla = " << bla << ", " << _triggers.contains(text[0]);
-
 
    return bla;
 }
@@ -50,35 +103,48 @@ bool MiniSearcher::isInitialized(){
 }
 
 void MiniSearcher::focusOutEvent(QFocusEvent* event){
-
-    //reset();
-
+	reset();
 }
 
 void MiniSearcher::keyPressEvent(QKeyEvent* event){
 
-    int key = event->key();
+	int key = event->key();
 
-        switch(key){
-            case Qt::Key_Up:
-            case Qt::Key_Down:
-            case Qt::Key_Escape:
-            case Qt::Key_Enter:
-            case Qt::Key_Return:
-            case Qt::Key_Tab:
-            case Qt::Key_Backtab:
+		switch(key){
+			case Qt::Key_Up:
+			case Qt::Key_Down:
+			case Qt::Key_Escape:
+			case Qt::Key_Enter:
+			case Qt::Key_Return:
+			case Qt::Key_Tab:
+			case Qt::Key_Backtab:
 
-                if(this->isVisible()){
-                    reset();
-                }
+				if(this->isVisible()){
+					reset();
+				}
 
-                break;
+				break;
 
-            default:
-                QLineEdit::keyPressEvent(event);
-                break;
-        }
+			default:
+				QWidget::keyPressEvent(event);
+				break;
+		}
 
+}
+
+void MiniSearcher::line_edit_text_changed(QString str){
+
+	emit sig_text_changed(str);
+}
+
+void MiniSearcher::left_clicked(){
+	this->_line_edit->setFocus();
+	emit sig_find_prev_row();
+}
+
+void MiniSearcher::right_clicked(){
+	this->_line_edit->setFocus();
+	emit sig_find_next_row();
 }
 
 
@@ -93,26 +159,29 @@ void MiniSearcher::init(QString text){
     if(!_parent->verticalScrollBar()->isVisible()) sb_width = 0;
     if(!_parent->horizontalScrollBar()->isVisible()) sb_height = 0;
 
-    new_width = par_width - (sb_width + 105);
-    new_height = par_height - (sb_height + 30);
+	new_width = par_width - (sb_width + 135);
+	new_height = par_height - (sb_height + 40);
 
-    this->setGeometry(new_width, new_height, 100, 25);
-    this->setFocus();
-    this->setText(text);
-    this->show();
+	this->setGeometry(new_width, new_height, 130, 35);
+
+
+	this->_line_edit->setFocus();
+	this->_line_edit->setText(text);
+	this->show();
 }
 
 
 void MiniSearcher::reset(){
 
-    this->setText("");
-    _parent->setFocus();
+	this->_line_edit->setText("");
+	_parent->setFocus();
 
-    this->hide();
+	this->hide();
 }
 
 bool MiniSearcher::check_and_init(QKeyEvent *event){
-    if(!isInitiator(event)) return false;
+
+	if(!isInitiator(event)) return false;
 
     if(!this->isVisible()){
 
@@ -120,15 +189,23 @@ bool MiniSearcher::check_and_init(QKeyEvent *event){
         return true;
     }
 
-    else return false;
+	else return false;
 
 }
 
- void MiniSearcher::register_extra_keys(QList<QChar> keys){
+void MiniSearcher::setExtraTriggers(QMap<QChar, QString> triggers){
+	_triggers = triggers;
+	QString tooltip;
 
+	foreach(QChar key, triggers.keys()){
+		tooltip += QString(key) + " = " + triggers.value(key) + "\n";
+	}
 
-     foreach(QChar key, keys){
-         if(!_triggers.contains(key)) _triggers << key;
-     }
+	tooltip.remove(tooltip.size() -1, 1);
 
- }
+	this->setToolTip(tooltip);
+}
+
+QString MiniSearcher::getCurrentText(){
+	return _line_edit->text();
+}

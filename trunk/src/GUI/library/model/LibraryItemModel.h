@@ -79,9 +79,9 @@ public:
     int 			get_n_cols() const;
     int 			calc_shown_col(int col) const;
     bool			is_col_shown(int col) const;
-    bool 			is_selected(int row) const;
-    QList<int>      get_selected() const;
-    void            set_selected(QList<int>& rows);
+	virtual bool 	is_selected(int row) const;
+	virtual QList<int>  get_selected() const;
+	virtual void    set_selected(QList<int>& rows);
 
 
 	/** Overloaded from QAbstractTableModel **/
@@ -90,7 +90,7 @@ public:
     bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
     bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
 
-    QModelIndex	getFirstRowIndexOf(QString substr);
+	virtual QMap<QChar, QString> getExtraTriggers();
 
     void set_new_header_names(QStringList& lst);
 

@@ -26,12 +26,15 @@ signals:
     void sig_key_pressed(QKeyEvent*);
 
 
-protected slots:
+private slots:
     void edit_changed(QString str);
+	void fwd_clicked();
+	void bwd_clicked();
 
 private:
-    MiniSearcher*                   _mini_searcher;
+	MiniSearcher*               _mini_searcher;
     AbstractSearchTableModel*   _abstr_model;
+	int							_cur_row;
 
 public:
     SearchableTableView(QWidget* parent=0);
@@ -43,7 +46,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *);
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
-    void keyPressEvent(QKeyEvent *);
+	void keyPressEvent(QKeyEvent *);
 
 };
 
@@ -58,13 +61,16 @@ signals:
     void sig_focus_out();
     void sig_key_pressed(QKeyEvent*);
 
-
-protected slots:
+private slots:
     void edit_changed(QString str);
+	void fwd_clicked();
+	void bwd_clicked();
 
 private:
 
-    AbstractSearchListModel*  _abstr_model;
+	MiniSearcher*               _mini_searcher;
+	AbstractSearchListModel*	_abstr_model;
+	int							_cur_row;
 
 public:
     SearchableListView(QWidget* parent=0);
@@ -81,8 +87,6 @@ protected:
 
     virtual void select_rows(QList<int> rows)=0;
     virtual void select_row(int row)=0;
-    MiniSearcher*             _mini_searcher;
-
 };
 
 

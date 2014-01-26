@@ -60,8 +60,9 @@ public:
 
   	void sort(int column, Qt::SortOrder order);
     virtual QModelIndex	getFirstRowIndexOf(QString substr);
+	virtual QModelIndex	getNextRowIndexOf(QString substr, int row);
+	virtual QModelIndex	getPrevRowIndexOf(QString substr, int row);
 
-    virtual void set_selected(QList<int>& rows);
     QList<int> get_discnumbers(const QModelIndex& idx);
 
 private:

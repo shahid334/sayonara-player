@@ -172,63 +172,145 @@ void PlaylistItemModel::get_metadata(const QList<int>& rows, MetaDataList& v_md)
         v_md.push_back( this->_v_meta_data[row] );
 }
 
-#define ALBUM_SEARCH "$"
-#define ARTIST_SEARCH "%"
-#define JUMP ":"
-
+#define ALBUM_SEARCH '%'
+#define ARTIST_SEARCH '$'
+#define JUMP ':'
 
 QModelIndex PlaylistItemModel::getFirstRowIndexOf(QString substr){
 
-    int i = 0;
-    // ALBUM
-    if(substr.startsWith(ALBUM_SEARCH)){
-        substr.remove(ALBUM_SEARCH);
+	if(_v_meta_data.empty()) return this->index(-1, -1);
 
-        foreach(MetaData md, _v_meta_data){
-            if(md.album.startsWith(substr, Qt::CaseInsensitive)){
-                return this->index(i, 0);
-            }
+	if(_selected_rows.size() > 0)
+		return getNextRowIndexOf(substr, _selected_rows[0]);
+	else
+		return getNextRowIndexOf(substr, 0);
 
-            i++;
-        }
-    }
+}
 
-    //ARTIST
-    else if(substr.startsWith(ARTIST_SEARCH)){
-        substr.remove(ARTIST_SEARCH);
+QModelIndex PlaylistItemModel::getPrevRowIndexOf(QString substr, int row){
 
-        foreach(MetaData md, _v_meta_data){
-            if(md.artist.startsWith(substr, Qt::CaseInsensitive)){
-                return this->index(i, 0);
-            }
+	int len = (int) _v_meta_data.size();
+	if(len < row) row = len - 1;
 
-            i++;
-        }
-    }
+	// ALBUM
+	if(substr.startsWith(ALBUM_SEARCH)){
+		substr.remove(ALBUM_SEARCH);
 
-    // JUMP
-    else if(substr.startsWith(JUMP)){
-        substr.remove(JUMP).trimmed();
-        bool ok;
-        int line = substr.toInt(&ok);
-        if(ok && (int) (_v_meta_data.size()) < line){
-            return this->index(line, 0);
-        }
+		for(int i=0; i<len; i++){
+			if(row - i < 0) row = len - 1;
+			int row_idx = (row - i) % len;
+			QString album = _v_meta_data[row_idx].album;
+			if(album.startsWith(substr, Qt::CaseInsensitive)){
+				return this->index(row_idx, 0);
+			}
+		}
+	}
 
-        else return this->index(-1, -1);
-    }
+	//ARTIST
+	else if(substr.startsWith(ARTIST_SEARCH)){
+		substr.remove(ARTIST_SEARCH);
 
-    // TITLE
-    else {
+		for(int i=0; i<len; i++){
+			if(row - i < 0) row = len - 1;
+			int row_idx = (row - i) % len;
+			QString artist = _v_meta_data[row_idx].artist;
+			if(artist.startsWith(substr, Qt::CaseInsensitive)){
+				return this->index(row_idx, 0);
+			}
+		}
+	}
 
-        foreach(MetaData md, _v_meta_data){
-            if(md.title.startsWith(substr, Qt::CaseInsensitive)){
-                return this->index(i, 0);
-            }
+	// JUMP
+	else if(substr.startsWith(JUMP)){
+		substr.remove(JUMP).trimmed();
+		bool ok;
+		int line = substr.toInt(&ok);
+		if(ok && len > line){
+			return this->index(line, 0);
+		}
 
-            i++;
-        }
-    }
+		else return this->index(-1, -1);
+	}
 
-    return this->index(-1, -1);
+	// TITLE
+	else {
+
+		for(int i=0; i<len; i++){
+			if(row - i < 0) row = len - 1;
+			int row_idx = (row - i) % len;
+			QString title = _v_meta_data[row_idx].title;
+			if(title.startsWith(substr, Qt::CaseInsensitive)){
+				return this->index(row_idx, 0);
+			}
+		}
+	}
+
+	return this->index(-1, -1);
+}
+
+QModelIndex PlaylistItemModel::getNextRowIndexOf(QString substr, int row){
+	int len = (int) _v_meta_data.size();
+	if(len < row) row = len - 1;
+	// ALBUM
+	if(substr.startsWith(ALBUM_SEARCH)){
+		substr.remove(ALBUM_SEARCH);
+
+		for(int i=0; i< len; i++){
+			int row_idx = (i + row) % len;
+			QString album = _v_meta_data[row_idx].album;
+			if(album.startsWith(substr, Qt::CaseInsensitive)){
+				return this->index(row_idx, 0);
+			}
+		}
+	}
+
+	//ARTIST
+	else if(substr.startsWith(ARTIST_SEARCH)){
+		substr.remove(ARTIST_SEARCH);
+
+
+		for(int i=0; i< len; i++){
+			int row_idx = (i + row) % len;
+			QString artist = _v_meta_data[row_idx].artist;
+			if(artist.startsWith(substr, Qt::CaseInsensitive)){
+				return this->index(row_idx, 0);
+			}
+		}
+	}
+
+	// JUMP
+	else if(substr.startsWith(JUMP)){
+		substr.remove(JUMP).trimmed();
+		bool ok;
+		int line = substr.toInt(&ok);
+		if(ok && (int) (_v_meta_data.size()) > line){
+			return this->index(line, 0);
+		}
+
+		else return this->index(-1, -1);
+	}
+
+	// TITLE
+	else {
+
+		for(int i=0; i< len; i++){
+			int row_idx = (i + row) % len;
+			QString title = _v_meta_data[row_idx].title;
+			if(title.startsWith(substr, Qt::CaseInsensitive)){
+				return this->index(row_idx, 0);
+			}
+		}
+	}
+
+	return this->index(-1, -1);
+}
+
+
+
+QMap<QChar, QString> PlaylistItemModel::getExtraTriggers(){
+	QMap<QChar, QString> map;
+	map.insert(ARTIST_SEARCH, tr("Artist"));
+	map.insert(ALBUM_SEARCH, tr("Album"));
+	map.insert(JUMP, tr("Goto row"));
+	return map;
 }

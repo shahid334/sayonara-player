@@ -147,10 +147,10 @@ bool LibraryItemModel::is_selected(int row) const {
     return _selected_rows.contains(row);
 }
 
-QModelIndex	LibraryItemModel::getFirstRowIndexOf(QString substr){
 
-    qDebug() << "mööööp";
-    return this->index(-1, -1);
+QMap<QChar, QString> LibraryItemModel::getExtraTriggers(){
+	QMap<QChar, QString> map;
+	return map;
 }
 
 

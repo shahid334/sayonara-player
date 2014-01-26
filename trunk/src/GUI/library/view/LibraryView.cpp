@@ -82,31 +82,31 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 
     switch(event->button()){
 
-    case Qt::LeftButton:
+	case Qt::LeftButton:
 
         if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
             event->ignore();
-            _drag = false;
-            QList<int> lst;
-            _model->set_selected(lst);
-            this->clearSelection();
-            this->selectionModel()->clearSelection();
+			_drag = false;
+			QList<int> lst;
+			_model->set_selected(lst);
+			this->clearSelection();
+			this->selectionModel()->clearSelection();
 
             break;
-        }
+		}
 
         else {
-            _sel_changed = false;
-            SearchableTableView::mousePressEvent(event);
-            if(!_sel_changed){
+			_sel_changed = false;
+			SearchableTableView::mousePressEvent(event);
+			if(!_sel_changed){
                 QItemSelection sel, desel;
                 selectionChanged(sel, desel);
-            }
-            _drag_pos = pos_org;
-            _drag = true;
-        }
+			}
+			_drag_pos = pos_org;
+			_drag = true;
+		}
 
-        break;
+		break;
 
     case Qt::RightButton:
         _drag = false;
@@ -134,7 +134,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 }
 
 void LibraryView::mouseMoveEvent(QMouseEvent* event){
-    SearchableTableView::mouseMoveEvent(event);
+	//SearchableTableView::mouseMoveEvent(event);
     QPoint pos = event->pos();
     int distance =  abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
@@ -147,7 +147,7 @@ void LibraryView::mouseMoveEvent(QMouseEvent* event){
 
 void LibraryView::mouseDoubleClickEvent(QMouseEvent *event){
 
-    event->setModifiers(Qt::NoModifier);
+	event->setModifiers(Qt::NoModifier);
     QTableView::mouseDoubleClickEvent(event);
 }
 
@@ -157,18 +157,18 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
 
     switch (event->button()) {
 
-    case Qt::LeftButton:
+	case Qt::LeftButton:
 
-        SearchableTableView::mouseReleaseEvent(event);
-        event->accept();
+		SearchableTableView::mouseReleaseEvent(event);
+		event->accept();
 
-        _drag = false;
-        emit sig_released();
+		_drag = false;
+		emit sig_released();
 
-        break;
+		break;
 
-    default:
-        break;
+	default:
+		break;
     }
 }
 // mouse events end
@@ -179,27 +179,20 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
 void LibraryView::keyPressEvent(QKeyEvent* event){
 
 
-    int key = event->key();
+	int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 
-    bool shift_pressed = (modifiers & Qt::ShiftModifier);
-    bool alt_pressed = (modifiers & Qt::AltModifier);
-    bool ctrl_pressed = (modifiers & Qt::ControlModifier);
+	bool shift_pressed = (modifiers & Qt::ShiftModifier);
+	bool alt_pressed = (modifiers & Qt::AltModifier);
+	bool ctrl_pressed = (modifiers & Qt::ControlModifier);
 
     if((key == Qt::Key_Up || key == Qt::Key_Down)){
         if(ctrl_pressed)
             event->setModifiers(Qt::NoModifier);
     }
 
-
-   // if(key != Qt::Key_Tab && key != Qt::Key_Backtab)
    SearchableTableView::keyPressEvent(event);
-
-    // _edit has changed
-    if(!event->isAccepted()){
-        return;
-    }
 
     QList<int> selections = get_selections();
 
@@ -287,40 +280,38 @@ void LibraryView::goto_row(int row, bool select){
     else if( row > _model->rowCount() - 1) row = _model->rowCount() - 1;
 
     QModelIndex idx = _model->index(row, 0);
-    if(select) this->selectRow(row);
+	if(select) this->selectRow(row);
     this->scrollTo(idx);
     emit clicked(idx);
 }
 
 
-
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
 
 
-    QModelIndexList idx_list = this->selectionModel()->selectedRows();
+	QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     if(_qDrag) {
         delete _qDrag;
         _qDrag = NULL;
     }
 
-    QTableView::selectionChanged(selected, deselected);
-
+	QTableView::selectionChanged(selected, deselected);
     QList<int> idx_list_int;
 
-    foreach(QModelIndex model_idx, idx_list){
+	foreach(QModelIndex model_idx, idx_list){
         if(idx_list_int.contains(model_idx.row())) continue;
 
-        idx_list_int.push_back(model_idx.row());
-    }
+		idx_list_int.push_back(model_idx.row());
+	}
 
-    _model->set_selected(idx_list_int);
+	_model->set_selected(idx_list_int);
 
-    if(selected.indexes().size() > 0)
+	if(selected.indexes().size() > 0)
         this->scrollTo(selected.indexes()[0]);
 
     emit sig_sel_changed(idx_list_int);
-    _sel_changed = true;
+	_sel_changed = true;
 }
 
 

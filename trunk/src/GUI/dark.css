@@ -50,6 +50,12 @@ QFrame#my_frame_3{
 	margin-top: 2px;
 }
 
+MiniSearcher {
+	background-color: rgba(50, 50, 50, 216);
+	border: 1px solid #1a1a1a;
+	border-radius: 3px;
+}
+
 QLabel, QScrollArea{
 	border: none;
 	background: transparent;

@@ -123,7 +123,7 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
 
 
-    void 	selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+	void 	selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 
 private:
     QWidget* 			_parent;
@@ -163,7 +163,7 @@ private:
     QItemSelection reset_and_get_selection(int size);
 
     // selects according to selctions
-    void select_and_scroll_to(int row);
+	void select_and_scroll_to(int row);
 
 
 };
