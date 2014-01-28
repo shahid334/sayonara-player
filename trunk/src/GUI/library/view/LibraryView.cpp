@@ -192,7 +192,8 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             event->setModifiers(Qt::NoModifier);
     }
 
-   SearchableTableView::keyPressEvent(event);
+	SearchableTableView::keyPressEvent(event);
+	if(!event->isAccepted()) return;
 
     QList<int> selections = get_selections();
 
@@ -273,7 +274,6 @@ int LibraryView::get_min_selected(){
 
 void LibraryView::goto_row(int row, bool select){
 
-
     if(_model->rowCount() == 0) return;
 
     if( row < 0 ) row = 0;
@@ -282,12 +282,11 @@ void LibraryView::goto_row(int row, bool select){
     QModelIndex idx = _model->index(row, 0);
 	if(select) this->selectRow(row);
     this->scrollTo(idx);
-    emit clicked(idx);
+	emit clicked(idx);
 }
 
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
-
 
 	QModelIndexList idx_list = this->selectionModel()->selectedRows();
 

@@ -186,7 +186,8 @@ void PlaylistView::keyPressEvent(QKeyEvent* event){
     int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
-    SearchableListView::keyPressEvent(event);
+	SearchableListView::keyPressEvent(event);
+	if(!event->isAccepted() ) return;
 
     int new_row = -1;
     int min_row = get_min_selected();

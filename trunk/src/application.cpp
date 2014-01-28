@@ -70,150 +70,154 @@ bool Application::is_initialized(){
 
 
 
-Application::Application(QApplication* qapp, int n_files, QTranslator* translator, QObject *parent) : QObject(parent)
+Application::Application(int & argc, char ** argv) : QApplication(argc, argv)
 {
 
-    app                = qapp;
-    _translator        = translator;
+}
 
-    set                = CSettingsStorage::getInstance();
-
+void Application::init(int n_files, QTranslator *translator){
 
 
+	_translator        = translator;
 
-    QString version    = getVersion();
-    set->setVersion( version );
+	set                = CSettingsStorage::getInstance();
 
-    player              = new GUI_Player(translator);
-    _setting_thread    = new SettingsThread(player);
-
-    playlist_handler    = new PlaylistHandler();
-    playlist_loader     = new PlaylistLoader(this);
-    library             = new CLibraryBase(this->getMainWindow());
-    library_importer    = new LibraryImporter(this->getMainWindow());
-    playlists           = new Playlists();
-
-    lastfm              = LastFM::getInstance();
-    ui_lastfm           = new GUI_LastFM(player->centralWidget());
-
-    ui_level            = new GUI_LevelPainter("Level", GUI_LevelPainter::getVisName(), player->getParentOfPlugin());
-    ui_spectrum         = new GUI_Spectrum("Spectrum", GUI_Spectrum::getVisName(), player->getParentOfPlugin());
-    ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
-    ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
-    ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
-    ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", GUI_LFMRadioWidget::getVisName(), player->getParentOfPlugin());
-    ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", GUI_PlaylistChooser::getVisName(), player->getParentOfPlugin());
-
-    ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
-    ui_id3_editor       = new GUI_TagEdit();
-
-    ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
-    ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
-
-    ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
-    ui_library->set_info_dialog(ui_info_dialog);
-    ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
-
-    ui_style_settings = new GUI_StyleSettings(player);
-
-    remote_socket       = new Socket();
-
-    _pph = new PlayerPluginHandler(NULL);
-
-    _pph->addPlugin(ui_level);
-    _pph->addPlugin(ui_spectrum);
-    _pph->addPlugin(ui_eq);
-    _pph->addPlugin(ui_lfm_radio);
-    _pph->addPlugin(ui_stream);
-    _pph->addPlugin(ui_podcasts);
-    _pph->addPlugin(ui_playlist_chooser);
-
-    qDebug() << "Plugin " << GUI_LevelPainter::getVisName();
-    qDebug() << "Plugin " << GUI_Stream::getVisName();
-    qDebug() << "Plugin " << GUI_Equalizer::getVisName();
-    qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
-    qDebug() << "Plugin " << GUI_Podcasts::getVisName();
-    qDebug() << "Plugin " << GUI_LFMRadioWidget::getVisName();
+	//connect(this, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(focus_changed(QWidget*,QWidget*)));
 
 
+	QString version    = getVersion();
+	set->setVersion( version );
 
-    QString dir;
+	player              = new GUI_Player(translator);
+	_setting_thread    = new SettingsThread(player);
+
+	playlist_handler    = new PlaylistHandler();
+	playlist_loader     = new PlaylistLoader(this);
+	library             = new CLibraryBase(this->getMainWindow());
+	library_importer    = new LibraryImporter(this->getMainWindow());
+	playlists           = new Playlists();
+
+	lastfm              = LastFM::getInstance();
+	ui_lastfm           = new GUI_LastFM(player->centralWidget());
+
+	ui_level            = new GUI_LevelPainter("Level", GUI_LevelPainter::getVisName(), player->getParentOfPlugin());
+	ui_spectrum         = new GUI_Spectrum("Spectrum", GUI_Spectrum::getVisName(), player->getParentOfPlugin());
+	ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
+	ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
+	ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
+	ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", GUI_LFMRadioWidget::getVisName(), player->getParentOfPlugin());
+	ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", GUI_PlaylistChooser::getVisName(), player->getParentOfPlugin());
+
+	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
+	ui_id3_editor       = new GUI_TagEdit();
+
+	ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
+	ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
+
+	ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
+	ui_library->set_info_dialog(ui_info_dialog);
+	ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
+
+	ui_style_settings = new GUI_StyleSettings(player);
+
+	remote_socket       = new Socket();
+
+	_pph = new PlayerPluginHandler(NULL);
+
+	_pph->addPlugin(ui_level);
+	_pph->addPlugin(ui_spectrum);
+	_pph->addPlugin(ui_eq);
+	_pph->addPlugin(ui_lfm_radio);
+	_pph->addPlugin(ui_stream);
+	_pph->addPlugin(ui_podcasts);
+	_pph->addPlugin(ui_playlist_chooser);
+
+	qDebug() << "Plugin " << GUI_LevelPainter::getVisName();
+	qDebug() << "Plugin " << GUI_Stream::getVisName();
+	qDebug() << "Plugin " << GUI_Equalizer::getVisName();
+	qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
+	qDebug() << "Plugin " << GUI_Podcasts::getVisName();
+	qDebug() << "Plugin " << GUI_LFMRadioWidget::getVisName();
+
+
+
+	QString dir;
 
 #ifndef Q_OS_WIN
-    dir = Helper::getLibPath();
-    qDebug() << "Lib path = " << dir;
+	dir = Helper::getLibPath();
+	qDebug() << "Lib path = " << dir;
 #else
-    dir = app->applicationDirPath();
+	dir = this->applicationDirPath();
 #endif
 
-    engine_plugin_loader = new SoundPluginLoader(dir);
-    listen = engine_plugin_loader->get_cur_engine();
-    if(!listen){
-        qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
+	engine_plugin_loader = new SoundPluginLoader(dir);
+	listen = engine_plugin_loader->get_cur_engine();
+	if(!listen){
+		qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
 	exit(1);
-    }
+	}
 
-    else{
-        listen->init();
-        listen->psl_sr_set_active(set->getStreamRipper());
-    }
+	else{
+		listen->init();
+		listen->psl_sr_set_active(set->getStreamRipper());
+	}
 
-    init_connections();
+	init_connections();
 
-    qDebug() << "setting up player";
-    bool is_maximized = set->getPlayerMaximized();
+	qDebug() << "setting up player";
+	bool is_maximized = set->getPlayerMaximized();
 
-    player->setWindowTitle("Sayonara " + version);
-    player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
+	player->setWindowTitle("Sayonara " + version);
+	player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
-    player->setPlaylist(ui_playlist);
-    player->setLibrary(ui_library);
-    player->setInfoDialog(ui_info_dialog);
+	player->setPlaylist(ui_playlist);
+	player->setLibrary(ui_library);
+	player->setInfoDialog(ui_info_dialog);
 
-    player->setPlayerPluginHandler(_pph);
+	player->setPlayerPluginHandler(_pph);
 
-    player->setStyle( set->getPlayerStyle() );
+	player->setStyle( set->getPlayerStyle() );
 
-    if(is_maximized) player->showMaximized();
-    else player->show();
+	if(is_maximized) player->showMaximized();
+	else player->show();
 
-    ui_library->resize(player->getParentOfLibrary()->size());
-    ui_playlist->resize(player->getParentOfPlaylist()->size());
+	ui_library->resize(player->getParentOfLibrary()->size());
+	ui_playlist->resize(player->getParentOfPlaylist()->size());
 
-    qDebug() << "Set up engine...";
-    vector<EQ_Setting> vec_eq_setting;
-    set->getEqualizerSettings(vec_eq_setting);
+	qDebug() << "Set up engine...";
+	vector<EQ_Setting> vec_eq_setting;
+	set->getEqualizerSettings(vec_eq_setting);
 
-    int vol = set->getVolume();
-    player->setVolume(vol);
-    listen->setVolume(vol);
-    listen->load_equalizer(vec_eq_setting);
+	int vol = set->getVolume();
+	player->setVolume(vol);
+	listen->setVolume(vol);
+	listen->load_equalizer(vec_eq_setting);
 
-    qDebug() << "Set up library...";
-    library->loadDataFromDb();
+	qDebug() << "Set up library...";
+	library->loadDataFromDb();
 
-    qDebug() << "Set up Last.fm...";
-    QString user, password;
-    if(set->getLastFMActive()){
-        set->getLastFMNameAndPW(user, password);
-        LastFM::getInstance()->lfm_login( user,password, true );
-    }
+	qDebug() << "Set up Last.fm...";
+	QString user, password;
+	if(set->getLastFMActive()){
+		set->getLastFMNameAndPW(user, password);
+		LastFM::getInstance()->lfm_login( user,password, true );
+	}
 
 
-    bool load_old_playlist = (n_files == 0);
-    if(load_old_playlist)
-        playlist_loader->load_old_playlist();
+	bool load_old_playlist = (n_files == 0);
+	if(load_old_playlist)
+		playlist_loader->load_old_playlist();
 
-    playlists->ui_loaded();
-    player->ui_loaded();
+	playlists->ui_loaded();
+	player->ui_loaded();
 
-    QString shown_plugin = set->getShownPlugin();
-    PlayerPlugin* p = _pph->find_plugin(shown_plugin);
-    player->showPlugin(p);
+	QString shown_plugin = set->getShownPlugin();
+	PlayerPlugin* p = _pph->find_plugin(shown_plugin);
+	player->showPlugin(p);
 
-    _initialized = true;
+	_initialized = true;
 
-    _setting_thread->start();
+	_setting_thread->start();
 }
 
 Application::~Application(){
@@ -252,6 +256,7 @@ Application::~Application(){
 
 
 void Application::init_connections(){
+
 
 
     CONNECT (player, search(int),							listen,			jump(int));
@@ -317,7 +322,7 @@ void Application::init_connections(){
     CONNECT (ui_playlist, sig_tracks_dropped(const MetaDataList&, int),      playlist_handler, 	psl_insert_tracks(const MetaDataList&, int));
     CONNECT (ui_playlist, sig_rows_removed(const QList<int>&, bool),     playlist_handler, 	psl_remove_rows(const QList<int>&, bool));
     CONNECT (ui_playlist, sig_rows_moved(const QList<int>&, int),     playlist_handler, 	psl_move_rows(const QList<int>&, int));
-    CONNECT (ui_playlist, sig_no_focus(),                                ui_library,   setFocus());
+	CONNECT (ui_playlist, sig_no_focus(),                                ui_library,		setFocus());
 
     CONNECT( playlist_loader, sig_stop(),                               playlist_handler,       psl_stop());
     CONNECT( playlist_loader, sig_create_playlist(MetaDataList&, bool), playlist_handler,       psl_createPlaylist(MetaDataList&, bool));
@@ -514,8 +519,25 @@ QMainWindow* Application::getMainWindow(){
 
 
 
+void Application::focus_changed(QWidget *src, QWidget *dst){
+	if(src)
+		src->setStyleSheet("background: red;");
+	if(dst)
+		dst->setStyleSheet("background: green;");
 
+}
+/*
+bool Application::notify(QObject *receiver, QEvent *event){
+	if (event && event->type() == QEvent::KeyPress)
+	{
+		QKeyEvent * keyEvent = dynamic_cast<QKeyEvent*>(event);
+		if (keyEvent && keyEvent->key() == Qt::Key_Tab)
+			return false;
+	}
 
+	return QApplication::notify(receiver, event);
+}
 
+*/
 
 

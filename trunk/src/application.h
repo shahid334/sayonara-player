@@ -70,12 +70,12 @@
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "Socket/Socket.h"
 
-class Application : public QObject
+class Application : public QApplication
 {
     Q_OBJECT
 
 public:
-    Application( QApplication* qapp, int n_files, QTranslator* translator, QObject *parent = 0);
+	Application(int & argc, char ** argv);
     virtual ~Application();
 
 signals:
@@ -83,7 +83,7 @@ signals:
 public slots:
 
 private:
-    GUI_Player* 		player;
+	GUI_Player*				player;
     GUI_PlaylistChooser*	ui_playlist_chooser;
     Playlists*              playlists;
     PlaylistHandler*        playlist_handler;
@@ -122,9 +122,6 @@ private:
     bool					_initialized;
     QTranslator*        _translator;
 
-
-
-
     void init_connections();
     void connect_languages();
 
@@ -132,10 +129,16 @@ public:
     void setFiles2Play(QStringList filelist);
     QMainWindow* getMainWindow();
     bool is_initialized();
+	void init(int n_files, QTranslator* translator);
+	//virtual bool notify(QObject *receiver, QEvent *event);
 
 
 private:
     QString getVersion();
+
+private slots:
+	void focus_changed(QWidget*, QWidget*);
+
 
 };
 

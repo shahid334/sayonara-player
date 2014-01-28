@@ -30,7 +30,6 @@
 
 #include "application.h"
 
-#include <QApplication>
 #include <QStringList>
 #include <QDebug>
 
@@ -92,7 +91,7 @@ void printHelp(){
 int main(int argc, char *argv[]){
 
 
-    QApplication app (argc, argv);
+	Application app (argc, argv);
     Helper::set_bin_path(app.applicationDirPath());
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
@@ -126,8 +125,6 @@ int main(int argc, char *argv[]){
 	}
 
 
-
-
             app.setApplicationName("Sayonara");
             app.setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
 
@@ -149,9 +146,9 @@ int main(int argc, char *argv[]){
 	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
     app.setFont(font);
 
-        Application application(&app, params.size(), &translator);
-		if(!application.is_initialized()) return 0;
-		application.setFiles2Play(params);
+		app.init(params.size(), &translator);
+		if(!app.is_initialized()) return 0;
+		app.setFiles2Play(params);
 
         app.installTranslator(&translator);
         app.exec();

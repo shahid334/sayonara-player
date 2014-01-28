@@ -337,7 +337,7 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list){
 
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list){
 
-    _selected_tracks.clear();
+					_selected_tracks.clear();
 
     MetaDataList v_md;
 

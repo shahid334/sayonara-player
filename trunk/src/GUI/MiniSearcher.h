@@ -18,6 +18,27 @@ enum MiniSearcherButtons{
   MiniSearcherBothButtons
 };
 
+class MiniSearcherLineEdit : public QLineEdit {
+
+	Q_OBJECT
+
+signals:
+	void sig_tab_pressed();
+	void sig_le_focus_lost();
+
+
+
+public slots:
+	void keyPressEvent(QKeyEvent *);
+
+
+public:
+	MiniSearcherLineEdit(QWidget* parent=0);
+	virtual ~MiniSearcherLineEdit();
+	bool event(QEvent *);
+
+};
+
 class SearchableTableView;
 class SearchableListView;
 class MiniSearcher : public QFrame
@@ -33,8 +54,10 @@ signals:
 private slots:
 
 	void line_edit_text_changed(QString);
+	void line_edit_focus_lost();
 	void left_clicked();
 	void right_clicked();
+
 
 
 private:
@@ -42,15 +65,13 @@ private:
 	QMap<QChar, QString>    _triggers;
 	QPushButton*            _left_button;
 	QPushButton*            _right_button;
-	QLineEdit*              _line_edit;
+	MiniSearcherLineEdit*   _line_edit;
 	QBoxLayout*             _layout;
 
     bool isInitiator(QKeyEvent* event);
     void init(QString text);
 	void initLayout(MiniSearcherButtons b);
 
-protected:
-    void focusOutEvent(QFocusEvent *);
 
 public:
 	MiniSearcher(SearchableListView* parent, MiniSearcherButtons b=MiniSearcherNoButton);
@@ -65,6 +86,7 @@ public:
 
 public slots:
 	void reset();
+
 
 
 };

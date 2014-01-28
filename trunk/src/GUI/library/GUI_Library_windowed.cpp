@@ -335,8 +335,8 @@ void  GUI_Library_windowed::columns_title_changed(QStringList & list){
 
 
 void GUI_Library_windowed::artist_tab_pressed(bool mod){
-    if(mod) this->ui->tb_title->setFocus();
-    else this->ui->lv_album->setFocus();
+	if(mod) this->ui->tb_title->setFocus();
+	else this->ui->lv_album->setFocus();
 }
 
 

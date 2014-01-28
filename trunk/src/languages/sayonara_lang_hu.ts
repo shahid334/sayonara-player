@@ -1613,6 +1613,21 @@ expression</source>
     </message>
 </context>
 <context>
+    <name>PlaylistItemModel</name>
+    <message>
+        <source>Artist</source>
+        <translation type="unfinished">Előadó</translation>
+    </message>
+    <message>
+        <source>Album</source>
+        <translation type="unfinished">Album</translation>
+    </message>
+    <message>
+        <source>Goto row</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Playlist_Window</name>
     <message>
         <source>Form</source>
@@ -1842,6 +1857,10 @@ expression</source>
     </message>
     <message>
         <source>Set Streamripper Path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
