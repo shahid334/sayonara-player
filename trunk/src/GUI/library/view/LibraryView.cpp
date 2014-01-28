@@ -77,7 +77,7 @@ LibraryView::~LibraryView() {
 // mouse events
 void LibraryView::mousePressEvent(QMouseEvent* event){
 
-    QPoint pos_org = event->pos();
+	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
 
     switch(event->button()){
@@ -284,6 +284,9 @@ void LibraryView::goto_row(int row, bool select){
     this->scrollTo(idx);
 	emit clicked(idx);
 }
+
+
+
 
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){

@@ -31,6 +31,7 @@ void MiniSearcherLineEdit::keyPressEvent(QKeyEvent *e){
 			return;
 
 		default:
+
 			QLineEdit::keyPressEvent(e);
 			break;
 	}
@@ -86,7 +87,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b){
 	left=right=false;
 	_line_edit = new MiniSearcherLineEdit(this);
 	_line_edit->setMaximumWidth(100);
-	this->setFocusProxy(_line_edit);
+	//this->setFocusProxy(_line_edit);
 	connect(_line_edit, SIGNAL(textChanged(QString)), this, SLOT(line_edit_text_changed(QString)));
 	connect(_line_edit, SIGNAL(sig_tab_pressed()), this, SLOT(right_clicked()));
 	connect(_line_edit, SIGNAL(sig_le_focus_lost()), this, SLOT(line_edit_focus_lost()));
@@ -119,7 +120,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b){
 		_left_button->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
 		_left_button->setVisible(true);
 		_left_button->setFlat(true);
-		_left_button->setFocusPolicy(Qt::NoFocus);
+		_left_button->setFocusPolicy(Qt::ClickFocus);
 		connect(_left_button, SIGNAL(clicked()), this, SLOT(left_clicked()));
 
 		_layout->addWidget(_left_button);
@@ -130,7 +131,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b){
 		_right_button->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
 		_right_button->setVisible(true);
 		_right_button->setFlat(true);
-		_right_button->setFocusPolicy(Qt::NoFocus);
+		_right_button->setFocusPolicy(Qt::ClickFocus);
 		connect(_right_button, SIGNAL(clicked()), this, SLOT(right_clicked()));
 		_layout->addWidget(_right_button);
 	}

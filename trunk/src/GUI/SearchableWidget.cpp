@@ -17,7 +17,6 @@ SearchableTableView::~SearchableTableView(){
     delete _mini_searcher;
 }
 
-
 void SearchableTableView::setAbstractModel(AbstractSearchTableModel* model){
      _abstr_model = model;
 	 _mini_searcher->setExtraTriggers(_abstr_model->getExtraTriggers());
@@ -33,7 +32,7 @@ void SearchableTableView::mouseMoveEvent(QMouseEvent *e){
 
 void SearchableTableView::mousePressEvent(QMouseEvent *e){
 
-    emit sig_mouse_pressed();
+	emit sig_mouse_pressed();
     QTableView::mousePressEvent(e);
 }
 
@@ -45,10 +44,13 @@ void SearchableTableView::mouseReleaseEvent(QMouseEvent *e){
 
 void SearchableTableView::keyPressEvent(QKeyEvent *e){
 
+	bool shift_pressed = e->modifiers() & Qt::ShiftModifier;
+	if(shift_pressed) return;
+
 	bool was_initialized = _mini_searcher->isInitialized();
 	bool initialized = _mini_searcher->check_and_init(e);
 
-	if(initialized || was_initialized) {
+	if(initialized || was_initialized || shift_pressed) {
 		_mini_searcher->keyPressEvent(e);
 		e->setAccepted(false);
 		return;

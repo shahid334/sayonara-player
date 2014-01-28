@@ -419,8 +419,8 @@ struct CustomPlaylist{
 };
 
 
-typedef struct vector<Album> AlbumList;
-typedef struct vector<Artist> ArtistList;
+typedef struct QList<Album> AlbumList;
+typedef struct QList<Artist> ArtistList;
 
 struct LastTrack{
     qint32 id;
