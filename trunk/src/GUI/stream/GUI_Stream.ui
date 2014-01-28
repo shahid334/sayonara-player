@@ -149,7 +149,7 @@
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="toolTip">
       <string>Type name you wanna save the stream as</string>
@@ -194,7 +194,7 @@
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="toolTip">
       <string>Enter stream url</string>
