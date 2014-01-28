@@ -128,7 +128,7 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 		 QStringList list = value.toStringList();
 
          Artist artist;
-         artist.fromVariant(value);
+		 Artist::fromVariant(value, artist);
 
          if(artist.is_lib_selected && !_selected_rows.contains(index.row()))
             _selected_rows << index.row();

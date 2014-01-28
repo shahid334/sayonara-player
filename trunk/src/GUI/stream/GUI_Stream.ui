@@ -57,6 +57,9 @@
        <family>DejaVu Sans</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string/>
      </property>
@@ -75,6 +78,9 @@
        <family>DejaVu Sans</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Name</string>
      </property>
@@ -91,6 +97,9 @@
          <weight>75</weight>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
         <string>Webstreams</string>
@@ -139,6 +148,9 @@
        <family>DejaVu Sans</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Type name you wanna save the stream as</string>
      </property>
@@ -153,6 +165,9 @@
       <font>
        <family>DejaVu Sans</family>
       </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="text">
       <string>Url</string>
@@ -179,7 +194,7 @@
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::ClickFocus</enum>
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Enter stream url</string>
@@ -276,6 +291,9 @@
          <family>DejaVu Sans</family>
         </font>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -331,6 +349,9 @@
       <font>
        <family>DejaVu Sans</family>
       </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

@@ -98,9 +98,10 @@ public:
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
-    void fill_metadata(const MetaDataList& v_md);
-    void fill_albums(const AlbumList& v_albums);
-    void fill_artists(const ArtistList& v_artists);
+	void fill(const MetaDataList& v_md);
+	void fill(const AlbumList& v_albums);
+	void fill(const ArtistList& v_artists);
+
 
     void set_col_sizes();
 
@@ -116,14 +117,14 @@ protected:
     void mouseReleaseEvent(QMouseEvent* event);
     void mouseMoveEvent(QMouseEvent* event);
     void mouseDoubleClickEvent(QMouseEvent *event);
-   void keyPressEvent(QKeyEvent* event);
+	void keyPressEvent(QKeyEvent* event);
     void resizeEvent(QResizeEvent* event);
-    void dropEvent(QDropEvent* event);
-    void dragEnterEvent(QDragEnterEvent *event);
+	void dropEvent(QDropEvent* event);
+	void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
 
 
-	void 	selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+	void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 
 
 private:

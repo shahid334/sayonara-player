@@ -355,7 +355,7 @@ void GUI_Library_windowed::track_tab_pressed(bool mod){
 
 void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
-    this->ui->tb_title->fill_metadata(v_metadata);
+	this->ui->tb_title->fill(v_metadata);
 
     if(_info_dialog)
 		_info_dialog->setMetaData(v_metadata);
@@ -367,13 +367,13 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata){
 
 void GUI_Library_windowed::fill_library_albums(AlbumList& albums){
 
-   this->ui->lv_album->fill_albums(albums);
+   this->ui->lv_album->fill(albums);
 }
 
 
 void GUI_Library_windowed::fill_library_artists(ArtistList& artists){
 
-    this->ui->lv_artist->fill_artists(artists);
+	this->ui->lv_artist->fill(artists);
 }
 
 void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst){

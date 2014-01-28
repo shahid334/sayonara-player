@@ -185,6 +185,13 @@ void PlaylistView::keyPressEvent(QKeyEvent* event){
 
     int key = event->key();
 
+	if((key == Qt::Key_Up || key == Qt::Key_Down)){
+		if(this->selectionModel()->selection().isEmpty()){
+			if(_model->rowCount() > 0) select_row(0);
+			return;
+		}
+	}
+
     Qt::KeyboardModifiers  modifiers = event->modifiers();
 	SearchableListView::keyPressEvent(event);
 	if(!event->isAccepted() ) return;

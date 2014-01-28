@@ -54,6 +54,9 @@
        <family>DejaVu Sans</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Type name you wanna save the stream as</string>
      </property>
@@ -87,6 +90,9 @@
        <family>DejaVu Sans</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="styleSheet">
       <string notr="true"/>
      </property>
@@ -102,6 +108,9 @@
        <family>DejaVu Sans</family>
       </font>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="text">
       <string>Name</string>
      </property>
@@ -113,6 +122,9 @@
       <font>
        <family>DejaVu Sans</family>
       </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="text">
       <string>Url</string>
@@ -139,7 +151,7 @@
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::ClickFocus</enum>
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Enter stream url</string>
@@ -152,6 +164,9 @@
       <font>
        <family>DejaVu Sans</family>
       </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -248,6 +263,9 @@
          <family>DejaVu Sans</family>
         </font>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -308,6 +326,9 @@
          <weight>75</weight>
          <bold>true</bold>
         </font>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="text">
         <string>Podcasts</string>

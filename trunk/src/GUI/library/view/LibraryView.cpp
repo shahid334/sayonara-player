@@ -62,6 +62,7 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
+	clearSelection();
 }
 
 
@@ -188,6 +189,11 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
 	bool ctrl_pressed = (modifiers & Qt::ControlModifier);
 
     if((key == Qt::Key_Up || key == Qt::Key_Down)){
+		if(this->selectionModel()->selection().isEmpty()){
+			if(_model->rowCount() > 0) selectRow(0);
+			return;
+		}
+
         if(ctrl_pressed)
             event->setModifiers(Qt::NoModifier);
     }
@@ -226,6 +232,8 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             }
 
             break;
+
+
 
         case Qt::Key_Tab:
             if(alt_pressed || ctrl_pressed) break;
@@ -332,8 +340,9 @@ QList<int> LibraryView::get_selections(){
 
 
 
+
 // fill
-void LibraryView::fill_metadata(const MetaDataList& v_md){
+void LibraryView::fill(const MetaDataList& v_md){
 
     QList<int> lst;
     _model->set_selected(lst);
@@ -365,7 +374,7 @@ void LibraryView::fill_metadata(const MetaDataList& v_md){
     calc_corner_widget();
 }
 
-void LibraryView::fill_albums(const AlbumList& albums){
+void LibraryView::fill(const AlbumList& albums){
 
     QList<int> lst;
     _model->set_selected(lst);
@@ -407,7 +416,7 @@ void LibraryView::fill_albums(const AlbumList& albums){
 }
 
 
-void LibraryView::fill_artists(const ArtistList& artists){
+void LibraryView::fill(const ArtistList& artists){
 
     QList<int> lst;
     _model->set_selected(lst);

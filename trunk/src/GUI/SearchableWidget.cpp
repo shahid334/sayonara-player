@@ -50,11 +50,15 @@ void SearchableTableView::keyPressEvent(QKeyEvent *e){
 	bool was_initialized = _mini_searcher->isInitialized();
 	bool initialized = _mini_searcher->check_and_init(e);
 
+	if(e->key() == Qt::Key_Tab && !was_initialized) return;
+
 	if(initialized || was_initialized || shift_pressed) {
 		_mini_searcher->keyPressEvent(e);
 		e->setAccepted(false);
 		return;
 	}
+
+
 
 	QTableView::keyPressEvent(e);
 	e->setAccepted(true);
@@ -157,12 +161,14 @@ void SearchableListView::keyPressEvent(QKeyEvent *e){
 
 	bool was_initialized = _mini_searcher->isInitialized();
 	bool initialized = _mini_searcher->check_and_init(e);
+	if(e->key() == Qt::Key_Tab && !was_initialized) return;
 
 	if(initialized || was_initialized) {
 		_mini_searcher->keyPressEvent(e);
 		e->setAccepted(false);
 		return;
 	}
+
 
     QListView::keyPressEvent(e);
 	e->setAccepted(true);

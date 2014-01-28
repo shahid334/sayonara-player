@@ -49,9 +49,19 @@
 
 using namespace std;
 
+class MusicItem {
+
+public:
+	bool is_lib_selected;
+	virtual QVariant toVariant() const{
+		return QVariant();
+	}
+
+	static bool fromVariant(QVariant v, MusicItem& md){ return true;}
+};
 
 
-struct MetaData {
+class MetaData : public MusicItem {
 
 private:
 
@@ -85,7 +95,6 @@ public:
     bool pl_playing;
     bool pl_dragged;
 
-    bool is_lib_selected;
     bool is_disabled;
 
 
@@ -126,7 +135,7 @@ public:
                  << " (" << length_ms << " m_sec) :: " << filepath;
     }
 
-    QVariant toVariant() const{
+	virtual QVariant toVariant() const{
 
         QStringList list;
 
@@ -166,7 +175,7 @@ public:
         return list;
     }
 
-    static bool fromVariant(QVariant v, MetaData& md){
+	static bool fromVariant(QVariant v, MetaData& md){
 
         QStringList list = v.toStringList();
 
@@ -200,6 +209,7 @@ public:
         return true;
     }
 };
+
 
 class MetaDataList : public vector<MetaData>{
 
@@ -271,12 +281,13 @@ public:
     }
 };
 
-struct Artist{
+class Artist : public MusicItem{
+public:
     QString name;
     qint32	id;
     qint32	num_songs;
     qint32  num_albums;
-    bool is_lib_selected;
+
 
 
     Artist(){
@@ -287,7 +298,7 @@ struct Artist{
         is_lib_selected = false;
     }
 
-    QVariant toVariant(){
+	QVariant toVariant() const{
         QStringList list;
         QString tmpName = name;
         if(name.trimmed().size() == 0) tmpName = QString("(Unknown artist)");
@@ -299,20 +310,25 @@ struct Artist{
         return list;
     }
 
-    void fromVariant(const QVariant& v){
+	static bool fromVariant(const QVariant& v, Artist& artist){
+
         QStringList list = v.toStringList();
-        if(list.size() < 4) return;
-        name = list[0];
-        id = list[1].toInt();
-        num_songs = list[2].toInt();
-        num_albums = list[3].toInt();
-        is_lib_selected = ((list[4] == "1") ? true : false);
+
+		if(list.size() < 4) return false;
+		artist.name = list[0];
+		artist.id = list[1].toInt();
+		artist.num_songs = list[2].toInt();
+		artist.num_albums = list[3].toInt();
+		artist.is_lib_selected = ((list[4] == "1") ? true : false);
+		return true;
     }
 
 };
 
 
-struct Album{
+class Album : public MusicItem {
+
+public:
     QString name;
     qint32	id;
     qint32 	num_songs;
@@ -323,7 +339,6 @@ struct Album{
     int n_discs;
     bool is_splitted;
     bool is_sampler;
-    bool is_lib_selected;
 
 
     Album(){
@@ -338,7 +353,7 @@ struct Album{
         is_lib_selected = false;
     }
 
-    QVariant toVariant(){
+	QVariant toVariant() const {
         QStringList list;
         QString tmpName = "(Unknown album)";
         if(name.trimmed().size() > 0) tmpName = name;
@@ -370,31 +385,32 @@ struct Album{
     }
 
 
-    void fromVariant(const QVariant& v){
+	static bool fromVariant(const QVariant& v, Album& album){
         QStringList list = v.toStringList();
-        if(list.size() < 11) return;
+		if(list.size() < 11) return false;
 
 
-        name =      list[0];
+		album.name =      list[0];
         QString tmp_artists = list[1];
         QStringList tmp_list = tmp_artists.split(',');
-        artists =       tmp_list;
-        id =            list[2].toInt();
-        num_songs =     list[3].toInt();
-        length_sec =    list[4].toLong();
-        year =          list[5].toInt();
+		album.artists =       tmp_list;
+		album.id =            list[2].toInt();
+		album.num_songs =     list[3].toInt();
+		album.length_sec =    list[4].toLong();
+		album.year =          list[5].toInt();
 
         QStringList strl_discnumbers = list[6].split(',');
-        discnumbers.clear();
+		album.discnumbers.clear();
         foreach(QString disc, strl_discnumbers){
-            discnumbers << disc.toInt();
+			album.discnumbers << disc.toInt();
         }
 
-        n_discs =       list[7].toInt();
-        is_splitted = (list[8] == "1");
+		album.n_discs =       list[7].toInt();
+		album.is_splitted = (list[8] == "1");
 
-        is_sampler =    (list[9] == "1");
-        is_lib_selected = (list[10] == "1");
+		album.is_sampler =    (list[9] == "1");
+		album.is_lib_selected = (list[10] == "1");
+		return true;
     }
 
 
