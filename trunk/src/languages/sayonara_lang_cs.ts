@@ -2338,12 +2338,12 @@ expression</source>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="312"/>
         <source>Artist</source>
-        <translation type="unfinished"></translation>
+        <translation>Umělec</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="313"/>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="314"/>
@@ -2465,7 +2465,7 @@ expression</source>
         <location filename="../GUI/player/GUI_Player.ui" line="575"/>
         <location filename="../GUI/ui_GUI_Player.h" line="877"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1093"/>
