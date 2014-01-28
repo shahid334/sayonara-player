@@ -186,7 +186,7 @@ void MiniSearcher::line_edit_text_changed(QString str){
 }
 
 void MiniSearcher::line_edit_focus_lost(){
-	if(_left_button->hasFocus() || _right_button->hasFocus()) return;
+	if(_left_button->hasFocus() || _right_button->hasFocus() || _parent->hasFocus()) return;
 
 	reset();
 
