@@ -24,6 +24,7 @@
 #include "GSTEngineHelper.h"
 #include "HelperStructs/globals.h"
 #include "gst/interfaces/streamvolume.h"
+
 #include "unistd.h"
 #include <QDebug>
 
@@ -338,15 +339,21 @@ void GSTPipeline::enable_level(bool b){
 
 }
 
+#define EXT_LINK
+
 void GSTPipeline::enable_spectrum(bool b){
+
     this->pause();
     if(!b){
         gst_element_unlink_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
         gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
     }
     else{
-        gst_element_unlink_many(_spectrum_queue, _spectrum_sink, NULL);
-        gst_element_link_many(_spectrum_queue,_spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+
+		bool success;
+		gst_element_unlink_many(_spectrum_queue, _spectrum_sink, NULL);
+		success = gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+		_test_and_error_bool(success, "Cannot link spectrum pipeline");
 
     }
 }
@@ -358,7 +365,8 @@ gint64 GSTPipeline::get_duration_ns(){
     gint64 duration=0;
     bool success = false;
     success = gst_element_query_duration(_pipeline, &format, &duration);
-    if(!success) return -1;
+
+	if(!success ) return -1;
     else return duration;
 }
 
@@ -370,12 +378,13 @@ guint GSTPipeline::get_bitrate(){
     guint rate=0;
 
     bool success = false;
-    g_signal_emit_by_name(_pipeline, "get-audio-tags", 0, &tags);
+	//g_signal_emit_by_name(_pipeline, "get-audio-tags", 0, &tags);
     if(tags){
 
         success = gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate);
-        qDebug() << "tags there, bitrate = " << rate;
+
         if(success){
+			qDebug() << "tags there, bitrate = " << rate;
             return rate;
         }
     }

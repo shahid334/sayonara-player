@@ -185,6 +185,8 @@ public:
 
     void        set_level(float right, float left);
     void        set_spectrum(QList<float>&);
+	void		update_bitrate(qint32 bitrate);
+	void		update_time(qint32 time);
 
 	virtual void 	load_equalizer(vector<EQ_Setting>&);
 	virtual int		getState();

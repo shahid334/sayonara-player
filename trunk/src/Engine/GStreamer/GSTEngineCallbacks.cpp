@@ -193,6 +193,40 @@ gboolean show_position(GstElement* pipeline) {
     return true;
 }
 
+static void
+print_one_tag (const GstTagList * list, const gchar * tag, gpointer user_data)
+{
+	int i, num;
+
+	num = gst_tag_list_get_tag_size (list, tag);
+	for (i = 0; i < num; ++i) {
+		const GValue *val;
+
+		/* Note: when looking for specific tags, use the gst_tag_list_get_xyz() API,
+	 * we only use the GValue approach here because it is more generic */
+		val = gst_tag_list_get_value_index (list, tag, i);
+		if (G_VALUE_HOLDS_STRING (val)) {
+			g_print ("String \t%20s : %s\n", tag, g_value_get_string (val));
+		} else if (G_VALUE_HOLDS_UINT (val)) {
+			g_print ("UINT \t%20s : %u\n", tag, g_value_get_uint (val));
+		} else if (G_VALUE_HOLDS_DOUBLE (val)) {
+			g_print ("DOUBLE \t%20s : %g\n", tag, g_value_get_double (val));
+		} else if (G_VALUE_HOLDS_BOOLEAN (val)) {
+			g_print ("BOOL \t%20s : %s\n", tag,
+					 (g_value_get_boolean (val)) ? "true" : "false");
+		} /*else if (GST_VALUE_HOLDS_BUFFER (val)) {
+			GstBuffer *buf = gst_value_get_buffer (val);
+			guint buffer_size = GST_BUFFER_SIZE(buf);
+
+
+			g_print ("\t%20s : buffer of size %u\n", tag, buffer_size);
+		}*/
+		else {
+			g_print ("\t%20s : tag of type '%s'\n", tag, G_VALUE_TYPE_NAME (val));
+		}
+	}
+}
+
 gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
     (void) bus;
@@ -200,9 +234,10 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
 
     GstState old_state, new_state, pending_state;
+	int msg_type = GST_MESSAGE_TYPE(msg);
 
 
-    switch (GST_MESSAGE_TYPE(msg)) {
+	switch (msg_type) {
 
     case GST_MESSAGE_EOS:
         if (gst_obj_ref) {
@@ -239,9 +274,23 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
     case GST_MESSAGE_ASYNC_DONE:
         if(!gst_obj_ref) break;
-
-
         break;
+
+	case GST_MESSAGE_TAG:
+		GstTagList* tags;
+		uint val;
+		bool success;
+
+		tags = NULL;
+		gst_message_parse_tag(msg, &tags);
+		success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &val);
+		if(val != 0 && success){
+
+			val = (uint) (round( val / 1000.0) * 1000.0);
+
+			gst_obj_ref->update_bitrate(val);
+		}
+		break;
 
 
     case GST_MESSAGE_ERROR:

@@ -351,6 +351,36 @@ void GUI_Player::fetch_cover(){
 }
 
 
+void GUI_Player::psl_bitrate_changed(qint32 bitrate){
+
+	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
+	if (bitrate <= 96000)
+		tmp += "*";
+	else if (bitrate <= 128000)
+		tmp += "**";
+	else if (bitrate <= 160000)
+		tmp += "***";
+	else if (bitrate <= 256000)
+		tmp += "****";
+	else
+		tmp += "*****";
+	tmp += "</font>";
+
+	//ui->lab_rating->setText(tmp);
+	ui->lab_rating->setToolTip(
+			QString("<font color=\"#000000\">") +
+			QString::number(bitrate / 1000) +
+			QString(" kBit/s") +
+			QString("</font>"));
+
+	ui->lab_rating->setText(
+			//QString("<font color=\"#000000\">") +
+			QString::number(bitrate / 1000) +
+			QString(" kBit/s"));
+		//	QString("</font>"));
+
+}
+
 
 void GUI_Player::psl_track_time_changed(MetaData& md){
     m_completeLength_ms = md.length_ms;

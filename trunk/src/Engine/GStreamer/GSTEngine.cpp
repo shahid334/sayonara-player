@@ -371,15 +371,22 @@ MyCaps* GST_Engine::get_caps(){
     return _caps;
 }
 
+void GST_Engine::update_bitrate(qint32 bitrate){
+
+	_meta_data.bitrate = bitrate;
+	emit sig_bitrate_changed(bitrate);
+}
+
+
 void GST_Engine::set_cur_position(quint32 pos_sec) {
 
     ENGINE_DEBUG << pos_sec;
 
-    if(_meta_data.length_ms == 0 || _meta_data.bitrate == 0){
+	if(_meta_data.length_ms == 0 || _meta_data.bitrate == 0){
 
         gint64 duration = _pipeline->get_duration_ns();
         guint bitrate = _pipeline->get_bitrate();
-        if(duration > 0)
+		if(duration > 0)
             _meta_data.length_ms = duration / 1000000;
 
         if(bitrate  > 0)
@@ -387,7 +394,7 @@ void GST_Engine::set_cur_position(quint32 pos_sec) {
 
         if(duration > 0 && bitrate > 0)
             emit track_time_changed(_meta_data);
-    }
+	}
 
 
     if ((quint32) _seconds_now == pos_sec)

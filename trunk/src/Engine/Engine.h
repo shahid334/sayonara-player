@@ -76,6 +76,7 @@ signals:
     void wanna_gapless_track();
     void sig_level(float, float);
     void sig_spectrum(QList<float>&);
+	void sig_bitrate_changed(qint32);
 
 public slots:
     virtual void play()=0;

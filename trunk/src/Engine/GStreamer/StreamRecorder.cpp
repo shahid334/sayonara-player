@@ -68,22 +68,44 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
         case GST_MESSAGE_EOS:
             if(obj_ref) obj_ref->endOfStream();
-
-        break;
+			break;
 
         case GST_MESSAGE_ERROR:
             GError *err;
 
             gst_message_parse_error(msg, &err, NULL);
 
-            qDebug() << "SR: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
+			SR_DEBUG << "SR: GST_MESSAGE_ERROR: " << err->message << ": " << GST_MESSAGE_SRC_NAME(msg);
 
             g_error_free(err);
 
             break;
 
+		case GST_MESSAGE_BUFFERING:
+			gint percent;
+			gst_message_parse_buffering(msg, &percent);
+			SR_DEBUG << "SR: Buffering... " << percent;
+			break;
+
+		case GST_MESSAGE_STREAM_STATUS:
+			GstStreamStatusType type;
+			gst_message_parse_stream_status(msg, &type, NULL);
+			SR_DEBUG << "Stream status = " << type;
+			break;
+
+		case GST_MESSAGE_DURATION:
+			GstFormat format;
+			gint64 duration;
+
+			format=GST_FORMAT_TIME;
+			duration = 0;
+
+			gst_message_parse_duration(msg, &format, &duration);
+			SR_DEBUG << "New duration: " << duration;
+			break;
+
         default:
-            obj_ref->endOfStream();
+			//obj_ref->endOfStream();
             break;
     }
 
@@ -285,6 +307,8 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 
     if(success){
         gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
+
+
         _sr_thread->start();
         _thread_is_running = true;
         return _sr_recording_dst;
@@ -303,6 +327,13 @@ bool StreamRecorder::stop(bool delete_track){
 
     _stream_ended = true;
     terminate_thread_if_running();
+
+	GstFormat format=GST_FORMAT_TIME;
+	gint64 duration=0;
+	bool success = false;
+	success = gst_element_query_duration(_rec_pipeline, &format, &duration);
+	qDebug() << "SR: Stream length: " << duration << ": " << success;
+
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_READY);
 

@@ -339,6 +339,7 @@ void Application::init_connections(){
     CONNECT (listen, eq_presets_loaded(const vector<EQ_Setting>&),       ui_eq,	fill_eq_presets(const vector<EQ_Setting>&));
     CONNECT (listen, eq_found(const QStringList&),                       ui_eq, 	fill_available_equalizers(const QStringList&));
     CONNECT (listen, timeChangedSignal(quint32),                         player,	setCurrentPosition(quint32) );
+	CONNECT (listen, sig_bitrate_changed(qint32),						 player,    psl_bitrate_changed(qint32));
     CONNECT (listen, track_time_changed(MetaData&),                      player,    psl_track_time_changed(MetaData&));
     CONNECT (listen, track_time_changed(MetaData&),                      playlist_handler,    psl_track_time_changed(MetaData&));
     CONNECT (listen, track_time_changed(MetaData&),                      library,    psl_track_time_changed(MetaData&));
