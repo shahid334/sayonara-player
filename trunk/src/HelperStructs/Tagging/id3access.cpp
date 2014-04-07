@@ -19,7 +19,6 @@
  */
 
 
-
 #include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Tagging/ID3_Fileheader.h"
 
@@ -37,6 +36,29 @@
 #include "taglib/mpegheader.h"
 #include "taglib/tmap.h"
 
+
+bool id3_extract_metadata(ID3_FileHeader& fh, MetaData& md){
+
+	if(!fh.is_valid()) return false;
+
+	md.artist = id3_extract_artist(fh);
+	md.album = id3_extract_album(fh);
+	md.comment = id3_extract_comment(fh);
+
+	md.title = id3_extract_title(fh);
+	md.track_num = id3_extract_tracknumber(fh);
+	md.year = id3_extract_year(fh);
+
+	QString genre = id3_extract_genres(fh);
+
+	md.genres = genre.split(QRegExp(",|/|;|\\."));
+	for(int i=0; i<md.genres.size(); i++){
+		md.genres[i] = md.genres[i].trimmed();
+	}
+
+	return true;
+
+}
 
 
 QString id3_extract_artist(ID3_FileHeader& fh){

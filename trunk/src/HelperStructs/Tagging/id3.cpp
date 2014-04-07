@@ -34,9 +34,9 @@
 #include <vector>
 
 #include <string>
-	#include <taglib/tag.h>
-	#include <taglib/taglib.h>
-	#include <taglib/fileref.h>
+#include <taglib/tag.h>
+#include <taglib/taglib.h>
+#include <taglib/fileref.h>
 
 
 
@@ -47,36 +47,36 @@ using namespace Helper;
 
 bool ID3::getMetaDataOfFile(MetaData& md){
 
-    md.filepath = QDir(md.filepath).absolutePath();
+
+	bool success;
+	md.filepath = QDir(md.filepath).absolutePath();
     QFile qf(md.filepath);
     md.filesize = qf.size();
     qf.close();
 
-    TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
+	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
 
-    int idx = md.filepath.lastIndexOf('/');
-    md.title = md.filepath.right(md.filepath.length() - idx -1);
-	md.title = md.title.left(md.title.length() - 4);
+	if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) {
+		qDebug() << md.filepath << ": Something's wrong with this file";
+		return false;
+	}
 
-    if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) return false;
-	string artist = f.tag()->artist().to8Bit(true);
-	string album = f.tag()->album().to8Bit(true);
-	string title = f.tag()->title().to8Bit(true);
-	string genre = f.tag()->genre().to8Bit(true);
-    string comment = f.tag()->comment().to8Bit(true);
-    f.tag();
+	TagLib::Tag* tag = f.tag();
+
+	string artist = tag->artist().to8Bit(true);
+	string album = tag->album().to8Bit(true);
+	string title = tag->title().to8Bit(true);
+	string genre = tag->genre().to8Bit(true);
+	string comment = tag->comment().to8Bit(true);
 
     int discnumber = 0;
     int n_discs = 0;
 
-    /*FileHeader fh(md.filepath);
-    id3_extract_discnumber(fh, &discnumber, &n_discs);*/
     taglib_id3_extract_discnumber(f, &discnumber);
 
-	uint year = f.tag()->year();
-	uint track = f.tag()->track();
+	uint year = tag->year();
+	uint track = tag->track();
 	int bitrate = f.audioProperties()->bitrate() * 1000;
-
 	int length = f.audioProperties()->length();
 
     QStringList genres;
@@ -99,11 +99,14 @@ bool ID3::getMetaDataOfFile(MetaData& md){
     md.comment = QString::fromLocal8Bit(comment.c_str());
 
 	if(md.title.length() == 0){
-        idx = md.filepath.lastIndexOf('/');
-        md.title = md.filepath.right(md.filepath.length() - idx -1);
+		int idx = md.filepath.lastIndexOf('/');
+		md.title = md.filepath.right(md.filepath.length() - idx -1);
 		md.title = md.title.left(md.title.length() - 4);
 	}
+
 	return true;
+
+
 }
 
 
@@ -152,4 +155,21 @@ void ID3::setMetaDataOfFile(MetaData& md){
         id3_write_discnumber(fh, md.discnumber, md.n_discs);
 
 	return;
+}
+
+
+
+void ID3::checkForBrokenFiles(MetaDataList v_md, MetaDataList& v_md_broken){
+	return;
+	int i=0;
+	foreach(MetaData md, v_md){
+		ID3_FileHeader header(md.filepath);
+		if(header.is_broken()){
+			qDebug() << md.title << "by (" << md.artist << ") on " << md.album << " is broken";
+			v_md_broken.push_back(md);
+			i++;
+		}
+	}
+
+	qDebug() << "Found " << i << " broken files";
 }

@@ -40,7 +40,7 @@ void new_buffer(GstElement* sink, void* data){
 
     Q_UNUSED(data);
 
-    ENGINE_DEBUG;
+	//ENGINE_DEBUG;
 
     GstBuffer* buffer;
     g_signal_emit_by_name(sink, "pull-buffer", &buffer);
@@ -63,7 +63,7 @@ void new_buffer(GstElement* sink, void* data){
 gboolean
 level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
-    ENGINE_DEBUG;
+   // ENGINE_DEBUG;
     if(!gst_obj_ref) return TRUE;
 
     Q_UNUSED(bus);
@@ -131,7 +131,7 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
 
     Q_UNUSED(data);
 
-    ENGINE_DEBUG;
+	//ENGINE_DEBUG;
 
     if(!gst_obj_ref) return TRUE;
 
@@ -244,6 +244,7 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
             qDebug() << "Engine: Track finished";
             gst_obj_ref->set_track_finished();
         }
+
         break;
 
 
@@ -262,13 +263,10 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
 
-
-        if ( new_state == GST_STATE_PLAYING) {
+/*        if ( new_state == GST_STATE_PLAYING) {
             gst_obj_ref->do_jump_play();
 
-        }
-
-
+		}*/
 
         break;
 

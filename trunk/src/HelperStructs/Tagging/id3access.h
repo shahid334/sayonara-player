@@ -25,6 +25,7 @@
 #define ID3_ACCESS_H_
 
 #include "HelperStructs/Tagging/ID3_Fileheader.h"
+#include "HelperStructs/MetaData.h"
 
 #include <QFile>
 
@@ -121,6 +122,7 @@ int id3_extract_tracknumber(ID3_FileHeader& fh);
 int id3_extract_year(ID3_FileHeader& fh);
 QString id3_extract_genres(ID3_FileHeader& fh);
 QString id3_extract_comment(ID3_FileHeader& fh);
+bool id3_extract_metadata(ID3_FileHeader& fh, MetaData& md);
 
 
 

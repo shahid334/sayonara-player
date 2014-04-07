@@ -50,13 +50,13 @@ private:
     bool    valid;
     qint64  header_size;
     qint64  org_size;
-    QFile*  f;
-
+	QString _filename;
 
     QByteArray raw_data;
     QList<QByteArray> things_to_write;
     QMap<QByteArray, QByteArray> all_frames;
-    QMap<QString, int>        all_frames_indexes;
+	QMap<QString, int> all_frames_indexes;
+	bool broken;
 
 
 private:
@@ -82,6 +82,7 @@ public:
     QByteArray  fh_calc_frame_content_size_int_to_byte(uint new_size);
 	int 		fh_calc_frame_content_size_byte_to_int(const QByteArray& ten);
 	void        fh_set_frame_content(const QByteArray& four, const QByteArray& data_wo_header);
+	bool		is_broken();
 	bool		commit();
 };
 

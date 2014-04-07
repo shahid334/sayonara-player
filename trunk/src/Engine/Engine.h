@@ -87,6 +87,7 @@ public slots:
 	virtual void jump(int where, bool percent=true)=0;
     virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true)=0;
     virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true )=0;
+	virtual void changeTrackGapless(const MetaData& md, int pos_sec=0, bool start_play=true )=0;
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;

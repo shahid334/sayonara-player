@@ -70,6 +70,7 @@ public:
 
 	signals:
         void sig_playlist_created(const MetaDataList&, int, PlaylistType);
+		void sig_auto_next_file(const MetaData&, int pos=0, bool play=true);
         void sig_selected_file_changed_md(const MetaData&, int pos=0, bool play=true);
 		void sig_selected_file_changed(int row);
 		void sig_no_track_to_play();
@@ -85,7 +86,6 @@ public:
 		void sig_library_changed();
 		void sig_import_files(const MetaDataList&);
 		void sig_need_more_radio();
-        void sig_gapless_track(const MetaData&);
         void sig_new_stream_session();
 
 

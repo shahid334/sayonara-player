@@ -133,7 +133,7 @@ public:
 
 private:
 	
-    GSTPipeline*    _pipeline;
+	GSTPipeline*    _pipeline;
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;
@@ -143,6 +143,7 @@ private:
     bool        _show_level;
     bool        _show_spectrum;
     int         _jump_play;
+	bool		_wait_for_gapless_track;
 
 
 private slots:
@@ -162,6 +163,7 @@ public slots:
 	virtual void jump(int where, bool percent=true);
     virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true);
     virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true );
+	virtual void changeTrackGapless(const MetaData& md, int pos_sec=0, bool start_play=true);
 
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
@@ -204,6 +206,7 @@ private:
 
 	void init_play_pipeline();
     bool set_uri(const MetaData& md, bool* start_play);
+
 
 };
 
