@@ -130,10 +130,8 @@ public:
 
 private:
 	
-	GSTPipelineExperimental**    _pipelines;
 	GSTPipelineExperimental*	 _pipeline;
 	GSTPipelineExperimental*	 _other_pipeline;
-	int _cur_pipeline;
 
 	StreamRecorder* _stream_recorder;
 
@@ -178,7 +176,7 @@ public slots:
     virtual void psl_calc_level(bool);
     virtual void psl_calc_spectrum(bool);
 
-
+	virtual void psl_set_gapless(bool);
 
 public:
 	// callback -> class

@@ -222,10 +222,14 @@ GSTPipelineExperimental::~GSTPipelineExperimental(){}
 
 bool GSTPipelineExperimental::set_uri(gchar* uri){
 
+	if(!uri) return false;
+
+
 	ENGINE_DEBUG << "Pipeline experimental: " << uri;
 	g_object_set(G_OBJECT(_audio_src), "uri", uri, NULL);
+	gst_element_set_state(_pipeline, GST_STATE_PAUSED);
 
-	return (uri != NULL);
+	return true;
 }
 
 

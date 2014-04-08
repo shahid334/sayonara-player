@@ -119,23 +119,14 @@ void GST_Engine::init() {
 
 	_stream_recorder->init();
 
-	_pipelines = new GSTPipelineExperimental*[2];
-
-	_pipelines[0] = new GSTPipelineExperimental();
-	_pipelines[1] = new GSTPipelineExperimental();
-
-	_pipelines[0]->set_gapless(true);
-	_pipelines[1]->set_gapless(true);
-
-	_pipeline = _pipelines[0];
-	_other_pipeline = _pipelines[1];
-	_cur_pipeline = 0;
-
+	_pipeline = new GSTPipelineExperimental();
+	_pipeline->set_gapless(false);
+	_other_pipeline = NULL;
 
 	_show_level = false;
 	_show_spectrum = false;
 
-
+	psl_set_gapless(true);
 }
 
 
@@ -282,7 +273,8 @@ bool GST_Engine::set_uri(const MetaData& md, bool* start_play) {
 	if(_wait_for_gapless_track) {
 
 		ENGINE_DEBUG << "Set Uri next pipeline: " << uri;
-		success = _other_pipeline->set_uri(uri);
+		if(_other_pipeline)
+			success = _other_pipeline->set_uri(uri);
 	}
 
 	if(!success) {
@@ -333,7 +325,9 @@ void GST_Engine::stop() {
 	}
 
 	_pipeline->stop();
-	_other_pipeline->stop();
+
+	if(_other_pipeline)
+		_other_pipeline->stop();
 
 	emit timeChangedSignal(0);
 }
@@ -350,7 +344,9 @@ void GST_Engine::setVolume(int vol) {
 	ENGINE_DEBUG;
 	_vol = vol;
 	_pipeline->set_volume(vol);
-	_other_pipeline->set_volume(vol);
+
+	if(_other_pipeline)
+		_other_pipeline->set_volume(vol);
 }
 
 void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings) {
@@ -373,7 +369,6 @@ ENGINE_DEBUG;
 		new_time_ns = _pipeline->seek_abs(where * MRD);
 	}
 
-
 	_seconds_started = new_time_ns / MRD;
 }
 
@@ -390,7 +385,9 @@ ENGINE_DEBUG;
 
 	QString band_name = QString("band") + QString::number(band);
 	_pipeline->set_eq_band(band_name, new_val);
-	_other_pipeline->set_eq_band(band_name, new_val);
+
+	if(_other_pipeline)
+		_other_pipeline->set_eq_band(band_name, new_val);
 }
 
 void GST_Engine::eq_enable(bool) {
@@ -404,7 +401,9 @@ void GST_Engine::psl_calc_level(bool b){
 	if(b) _show_spectrum = false;
 
 	_pipeline->enable_level(b);
-	_other_pipeline->enable_level(b);
+
+	if(_other_pipeline)
+		_other_pipeline->enable_level(b);
 
 	if(_state == STATE_PLAY)
 		_pipeline->play();
@@ -417,7 +416,9 @@ void GST_Engine::psl_calc_spectrum(bool b){
 	if(b) _show_level = false;
 
 	_pipeline->enable_spectrum(b);
-	_other_pipeline->enable_spectrum(b);
+
+	if(_other_pipeline)
+		_other_pipeline->enable_spectrum(b);
 
 	if(_state == STATE_PLAY)
 		_pipeline->play();
@@ -467,6 +468,8 @@ void GST_Engine::set_cur_position_ms(quint64 pos_ms) {
 
 	if(pos_ms >= (quint64)(_meta_data.length_ms - 500) && _may_start_timer){
 
+			// _other_pipeline should never be zero because _may_start_timer is
+			// only set to true if gapless mode is active
 			_other_pipeline->start_timer(_meta_data.length_ms - pos_ms);
 			set_about_to_finish();
 	}
@@ -517,7 +520,6 @@ void GST_Engine::set_track_finished() {
 		tmp = _pipeline;
 		_pipeline = _other_pipeline;
 		_other_pipeline = tmp;
-		_cur_pipeline = (_cur_pipeline + 1) % 2;
 
 		play();
 	}
@@ -596,7 +598,29 @@ void GST_Engine::sr_not_valid() {
 
 void GST_Engine::unmute(){
 	_pipeline->unmute();
-	_other_pipeline->unmute();
+
+	if(_other_pipeline)
+		_other_pipeline->unmute();
+}
+
+void GST_Engine::psl_set_gapless(bool b){
+
+	if(b){
+
+		if(!_other_pipeline){
+			_other_pipeline = new GSTPipelineExperimental();
+			_other_pipeline->set_gapless(true);
+			_pipeline->set_gapless(true);
+		}
+	}
+
+	else{
+
+		if(_other_pipeline){
+			_pipeline->set_gapless(false);
+			delete _other_pipeline;
+		}
+	}
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

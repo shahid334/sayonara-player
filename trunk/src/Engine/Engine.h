@@ -51,10 +51,9 @@ protected:
 	QString		_name;
 
 	bool 		_playing_stream;
-    bool        _gapless_track_available;
+	//bool        _gapless_track_available;
 
 	bool		_sr_active;
-
 	bool		_sr_wanna_record;
 
 
@@ -95,6 +94,7 @@ public slots:
     virtual void psl_sr_set_active(bool)=0;
     virtual void psl_new_stream_session()=0;
     virtual void psl_calc_level(bool)=0;
+	virtual void psl_set_gapless(bool)=0;
 
 private slots:
     virtual void sr_initialized(bool)=0;
