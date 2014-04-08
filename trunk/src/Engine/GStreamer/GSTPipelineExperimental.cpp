@@ -33,11 +33,6 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 				GstElement* tmp_pipeline = gst_pipeline_new("Pipeline");
 				_test_and_error(tmp_pipeline, "Engine: Pipeline sucks");
 
-#ifdef ENGINE_OLD_PIPELINE
-				_audio_src_file = gst_element_factory_make("giosrc", "filesrc");
-				_audio_src_http = gst_element_factory_make("souphttpsrc", "httpsrc");
-				_decoder = gst_element_factory_make("decodebin2", "decoder");
-#endif
 				_audio_src = gst_element_factory_make("uridecodebin", "src");
 
 				_bus = gst_pipeline_get_bus(GST_PIPELINE(tmp_pipeline));
@@ -212,7 +207,7 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 			} while (i);
 
 
-			if(success)gst_bus_add_watch(_bus, bus_state_changed, this);
+			if(success) gst_bus_add_watch(_bus, bus_state_changed, this);
 
 			qDebug() << "Experimental Engine: constructor finished: " << success;
 }

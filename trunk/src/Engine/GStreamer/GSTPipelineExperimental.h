@@ -23,13 +23,15 @@ public:
     GSTPipelineExperimental(QObject* parent=0);
     virtual ~GSTPipelineExperimental();
 
+	virtual bool set_uri(gchar* uri);
+	virtual bool set_next_uri(gchar* uri);
+
 private:
 	GstElement* _audio_src;
 	GstElement* _audio_src_tmp;
     GstElement* _audio_convert;
 
-    virtual bool set_uri(gchar* uri);
-	virtual bool set_next_uri(gchar* uri);
+
 
 #ifdef ENGINE_OLD_PIPELINE
 

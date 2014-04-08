@@ -26,6 +26,7 @@ SET(HEADERS
         StreamRipperBufferThread.h
         StreamRecorder.h
 	${CMAKE_SOURCE_DIR}/src/Engine/Engine.h
+	thirdparty/gstcrossfade.h
 )
 
 SET(SOURCES
@@ -37,6 +38,7 @@ SET(SOURCES
         GSTPipelineExperimental.cpp
 	${CMAKE_SOURCE_DIR}/src/HelperStructs/Helper.cpp
 	${CMAKE_SOURCE_DIR}/src/HelperStructs/Tagging/id3.cpp
+	thirdparty/gstcrossfade.c
 )
 	
 QT4_WRAP_CPP(HEADERS_MOC

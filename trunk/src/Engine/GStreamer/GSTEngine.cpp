@@ -118,8 +118,16 @@ void GST_Engine::init() {
 
 	_stream_recorder->init();
 
-	_pipeline = new GSTPipelineExperimental();
-	_pipeline->set_gapless(false);
+	_pipelines = new GSTPipelineExperimental*[2];
+
+	_pipelines[0] = new GSTPipelineExperimental();
+	_pipelines[1] = new GSTPipelineExperimental();
+
+	_pipelines[0]->set_gapless(true);
+	_pipelines[1]->set_gapless(true);
+
+	_pipeline = _pipelines[0];
+	_cur_pipeline = 0;
 
 	_show_level = false;
 	_show_spectrum = false;
@@ -163,18 +171,7 @@ void GST_Engine::changeTrackGapless(const MetaData& md, int pos_sec, bool start_
 	_scrobbled = false;
 	_jump_play = 0;
 
-	_pipeline->set_track_finished();
 
-
-	//if(_state == STATE_STOP && start_play) {
-		//play();
-	/*}
-
-	else if (!start_play)
-		pause();
-
-	emit total_time_changed_signal(_meta_data.length_ms);
-	emit timeChangedSignal(pos_sec);*/
 }
 
 
@@ -279,7 +276,8 @@ bool GST_Engine::set_uri(const MetaData& md, bool* start_play) {
 	bool success = false;
 
 	if(_wait_for_gapless_track) {
-		success = _pipeline->set_next_uri(uri);
+		qDebug() << "set uri pl " << (_cur_pipeline + 1) % 2;
+		success = _pipelines[(_cur_pipeline + 1) % 2]->set_uri(uri);
 	}
 
 	if(!success) {
@@ -489,10 +487,17 @@ void GST_Engine::set_track_finished() {
 		_stream_recorder->stop(!_sr_wanna_record);
 	}
 
-	_pipeline->set_track_finished();
 
 	if( ! _pipeline->get_gapless() ){
 		emit track_finished();
+	}
+
+	else{
+		//int old_pl = _cur_pipeline;
+		//_pipelines[old_pl]->stop();
+		_cur_pipeline = (_cur_pipeline + 1) % 2;
+		_pipeline = _pipelines[_cur_pipeline];
+		//_pipeline->play();
 	}
 }
 

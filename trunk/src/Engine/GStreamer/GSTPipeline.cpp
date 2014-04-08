@@ -270,7 +270,6 @@ void GSTPipeline::set_track_finished(){
 
 void GSTPipeline::stop(){
 
-	qDebug() << "Stop";
 	_next_uri = 0;
 	_uri = 0;
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);

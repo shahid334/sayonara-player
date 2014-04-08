@@ -32,7 +32,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
-#include "Engine/GStreamer/GSTPipeline.h"
+#include "Engine/GStreamer/GSTPipelineExperimental.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
 
@@ -133,7 +133,10 @@ public:
 
 private:
 	
-	GSTPipeline*    _pipeline;
+	GSTPipelineExperimental**    _pipelines;
+	GSTPipelineExperimental*	 _pipeline;
+	int _cur_pipeline;
+
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;
@@ -144,6 +147,7 @@ private:
     bool        _show_spectrum;
     int         _jump_play;
 	bool		_wait_for_gapless_track;
+
 
 
 private slots:
