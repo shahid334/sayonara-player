@@ -35,6 +35,7 @@ bool _test_and_error_bool(bool b, QString errorstr);
 class GSTPipeline : public QObject
 {
 	Q_OBJECT
+
 public:
 	GSTPipeline(QObject *parent = 0);
 	~GSTPipeline();

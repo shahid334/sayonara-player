@@ -115,13 +115,10 @@ public:
 
 
 
-
-
 class GST_Engine : public Engine {
 
 	Q_OBJECT
 	Q_INTERFACES(Engine)
-
 
 public:
 
@@ -135,6 +132,7 @@ private:
 	
 	GSTPipelineExperimental**    _pipelines;
 	GSTPipelineExperimental*	 _pipeline;
+	GSTPipelineExperimental*	 _other_pipeline;
 	int _cur_pipeline;
 
 	StreamRecorder* _stream_recorder;
@@ -147,6 +145,7 @@ private:
     bool        _show_spectrum;
     int         _jump_play;
 	bool		_wait_for_gapless_track;
+	bool		_may_start_timer;
 
 
 
@@ -184,7 +183,7 @@ public slots:
 public:
 	// callback -> class
 	void		state_changed();
-	void		set_cur_position(quint32);
+	void		set_cur_position_ms(quint64);
 	void		set_track_finished();
     void        set_about_to_finish();
     void        emit_buffer(float inv_array_elements, float scale);

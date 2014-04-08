@@ -88,6 +88,7 @@ GST_Engine::GST_Engine() {
 	_last_track = _settings->getLastTrack();
 
 	_wait_for_gapless_track = false;
+	_may_start_timer = false;
 
 	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
 	connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
@@ -127,12 +128,14 @@ void GST_Engine::init() {
 	_pipelines[1]->set_gapless(true);
 
 	_pipeline = _pipelines[0];
+	_other_pipeline = _pipelines[1];
 	_cur_pipeline = 0;
+
 
 	_show_level = false;
 	_show_spectrum = false;
 
-	g_timeout_add( 700, (GSourceFunc) show_position, _pipeline->get_pipeline() );
+
 }
 
 
@@ -181,6 +184,7 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
 
 	if(_wait_for_gapless_track) {
 
+		ENGINE_DEBUG << "change track gapless";
 		changeTrackGapless(md, pos_sec, start_play);
 		_wait_for_gapless_track = false;
 		return;
@@ -276,11 +280,13 @@ bool GST_Engine::set_uri(const MetaData& md, bool* start_play) {
 	bool success = false;
 
 	if(_wait_for_gapless_track) {
-		qDebug() << "set uri pl " << (_cur_pipeline + 1) % 2;
-		success = _pipelines[(_cur_pipeline + 1) % 2]->set_uri(uri);
+
+		ENGINE_DEBUG << "Set Uri next pipeline: " << uri;
+		success = _other_pipeline->set_uri(uri);
 	}
 
 	if(!success) {
+		ENGINE_DEBUG << "Set Uri current pipeline: " << uri;
 		success = _pipeline->set_uri(uri);
 	}
 
@@ -295,6 +301,9 @@ void GST_Engine::play() {
 
 	_state = STATE_PLAY;
 	_pipeline->play();
+	_may_start_timer = _pipeline->get_gapless();
+
+	g_timeout_add( 100, (GSourceFunc) show_position, _pipeline->get_pipeline() );
 }
 
 void GST_Engine::do_jump_play(){
@@ -324,6 +333,7 @@ void GST_Engine::stop() {
 	}
 
 	_pipeline->stop();
+	_other_pipeline->stop();
 
 	emit timeChangedSignal(0);
 }
@@ -340,6 +350,7 @@ void GST_Engine::setVolume(int vol) {
 	ENGINE_DEBUG;
 	_vol = vol;
 	_pipeline->set_volume(vol);
+	_other_pipeline->set_volume(vol);
 }
 
 void GST_Engine::load_equalizer(vector<EQ_Setting>& vec_eq_settings) {
@@ -379,6 +390,7 @@ ENGINE_DEBUG;
 
 	QString band_name = QString("band") + QString::number(band);
 	_pipeline->set_eq_band(band_name, new_val);
+	_other_pipeline->set_eq_band(band_name, new_val);
 }
 
 void GST_Engine::eq_enable(bool) {
@@ -392,6 +404,7 @@ void GST_Engine::psl_calc_level(bool b){
 	if(b) _show_spectrum = false;
 
 	_pipeline->enable_level(b);
+	_other_pipeline->enable_level(b);
 
 	if(_state == STATE_PLAY)
 		_pipeline->play();
@@ -404,6 +417,7 @@ void GST_Engine::psl_calc_spectrum(bool b){
 	if(b) _show_level = false;
 
 	_pipeline->enable_spectrum(b);
+	_other_pipeline->enable_spectrum(b);
 
 	if(_state == STATE_PLAY)
 		_pipeline->play();
@@ -431,9 +445,10 @@ void GST_Engine::update_bitrate(qint32 bitrate){
 }
 
 
-void GST_Engine::set_cur_position(quint32 pos_sec) {
+void GST_Engine::set_cur_position_ms(quint64 pos_ms) {
 
-	ENGINE_DEBUG << pos_sec;
+	ENGINE_DEBUG << pos_ms;
+	quint32 pos_sec = pos_ms / 1000;
 
 	if(_meta_data.length_ms == 0 || _meta_data.bitrate == 0){
 
@@ -450,7 +465,11 @@ void GST_Engine::set_cur_position(quint32 pos_sec) {
 	}
 
 
-	if(pos_sec == (_meta_data.length_ms / 1000) - 3) set_about_to_finish();
+	if(pos_ms >= (quint64)(_meta_data.length_ms - 500) && _may_start_timer){
+
+			_other_pipeline->start_timer(_meta_data.length_ms - pos_ms);
+			set_about_to_finish();
+	}
 
 	if ((quint32) _seconds_now == pos_sec)
 		return;
@@ -487,28 +506,33 @@ void GST_Engine::set_track_finished() {
 		_stream_recorder->stop(!_sr_wanna_record);
 	}
 
-
 	if( ! _pipeline->get_gapless() ){
 		emit track_finished();
 	}
 
 	else{
-		//int old_pl = _cur_pipeline;
-		//_pipelines[old_pl]->stop();
+		_pipeline->stop();
+
+		GSTPipelineExperimental* tmp;
+		tmp = _pipeline;
+		_pipeline = _other_pipeline;
+		_other_pipeline = tmp;
 		_cur_pipeline = (_cur_pipeline + 1) % 2;
-		_pipeline = _pipelines[_cur_pipeline];
-		//_pipeline->play();
+
+		play();
 	}
 }
 
 
 void GST_Engine::set_about_to_finish() {
 
+	_may_start_timer = false;
 	bool gapless = _pipeline->get_gapless();
 
 	if(!gapless) return;
 
 	_wait_for_gapless_track = true;
+
 	emit track_finished();
 }
 
@@ -566,11 +590,13 @@ void GST_Engine::sr_ended() {
 void GST_Engine::sr_not_valid() {
 	ENGINE_DEBUG;
 	qDebug() << "Engine: Stream not valid.. Next file";
+	qDebug() << "Send track finished (3)";
 	emit track_finished();
 }
 
 void GST_Engine::unmute(){
 	_pipeline->unmute();
+	_other_pipeline->unmute();
 }
 
 Q_EXPORT_PLUGIN2(sayonara_gstreamer, GST_Engine)

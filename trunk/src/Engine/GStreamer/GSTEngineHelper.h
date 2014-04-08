@@ -19,7 +19,6 @@
  */
 
 
-
 #ifndef GSTENGINEHELPER_H
 #define GSTENGINEHELPER_H
 
@@ -37,6 +36,7 @@
 #define LOOKUP_LOG(x) log_10[(int) (20000 * x)]
 
 const qint64 MRD = 1000000000;
+const qint64 MIO = 1000000;
 
 extern bool _debug;
 

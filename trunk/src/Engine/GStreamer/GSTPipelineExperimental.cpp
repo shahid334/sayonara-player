@@ -26,6 +26,9 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 			bool success = false;
 			int i = 0;
 			_pipeline = 0;
+			_timer = new QTimer();
+			_timer->setInterval(5);
+			connect(_timer, SIGNAL(timeout()), this, SLOT(start_play()));
 
 			// eq -> autoaudiosink is packaged into a bin
 			do {
@@ -209,7 +212,7 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 
 			if(success) gst_bus_add_watch(_bus, bus_state_changed, this);
 
-			qDebug() << "Experimental Engine: constructor finished: " << success;
+			ENGINE_DEBUG << "Experimental Engine: constructor finished: " << success;
 }
 
 
@@ -219,7 +222,7 @@ GSTPipelineExperimental::~GSTPipelineExperimental(){}
 
 bool GSTPipelineExperimental::set_uri(gchar* uri){
 
-	qDebug() << "Pipeline experimental: " << uri;
+	ENGINE_DEBUG << "Pipeline experimental: " << uri;
 	g_object_set(G_OBJECT(_audio_src), "uri", uri, NULL);
 
 	return (uri != NULL);
@@ -229,5 +232,15 @@ bool GSTPipelineExperimental::set_uri(gchar* uri){
 bool GSTPipelineExperimental::set_next_uri(gchar* uri){
 
 	return GSTPipeline::set_next_uri(uri);
+}
+
+void GSTPipelineExperimental::start_timer(qint64 play_ms){
+
+	if(play_ms > 0) _timer->start(play_ms);
+}
+
+void GSTPipelineExperimental::start_play(){
+	_timer->stop();
+	play();
 
 }

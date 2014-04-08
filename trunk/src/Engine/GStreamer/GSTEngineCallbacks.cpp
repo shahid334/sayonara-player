@@ -177,6 +177,7 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
 
 }
 
+
 gboolean show_position(GstElement* pipeline) {
 
     ENGINE_DEBUG;
@@ -186,12 +187,15 @@ gboolean show_position(GstElement* pipeline) {
     GstFormat fmt = GST_FORMAT_TIME;
     gst_element_query_position(pipeline, &fmt, &pos);
 
+	if(pos <= 1) return false;
+
     if (gst_obj_ref && gst_obj_ref->getState() == STATE_PLAY) {
-        gst_obj_ref->set_cur_position((quint32)(pos / MRD));
+		gst_obj_ref->set_cur_position_ms((quint64)(pos / MIO));
     }
 
     return true;
 }
+
 
 static void
 print_one_tag (const GstTagList * list, const gchar * tag, gpointer user_data)

@@ -272,6 +272,7 @@ void GSTPipeline::stop(){
 
 	_next_uri = 0;
 	_uri = 0;
+
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 
 }
@@ -281,6 +282,7 @@ void GSTPipeline::set_gapless(bool gapless){
 }
 
 bool GSTPipeline::get_gapless(){
+	ENGINE_DEBUG << "Gapless?? " << _gapless;
 	return _gapless;
 }
 
@@ -290,7 +292,6 @@ void GSTPipeline::set_volume(int vol){
 
 	float vol_val = (float) (vol * 1.0f / 100.0f);
    g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
-
 }
 
 void GSTPipeline::unmute(){

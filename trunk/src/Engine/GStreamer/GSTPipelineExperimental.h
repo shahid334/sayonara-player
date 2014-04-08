@@ -3,6 +3,7 @@
 
 
 #include <QObject>
+#include <QTimer>
 #include "GSTPipeline.h"
 
 //#define ENGINE_OLD_PIPELINE
@@ -25,11 +26,18 @@ public:
 
 	virtual bool set_uri(gchar* uri);
 	virtual bool set_next_uri(gchar* uri);
+	void start_timer(qint64 play_ms);
+	void is_timer_running();
 
 private:
 	GstElement* _audio_src;
 	GstElement* _audio_src_tmp;
     GstElement* _audio_convert;
+
+	QTimer* _timer;
+
+private slots:
+	void start_play();
 
 
 
