@@ -126,7 +126,7 @@ void GST_Engine::init() {
 	_show_level = false;
 	_show_spectrum = false;
 
-	psl_set_gapless(true);
+	psl_set_gapless(false);
 }
 
 
@@ -450,23 +450,24 @@ void GST_Engine::set_cur_position_ms(quint64 pos_ms) {
 
 	ENGINE_DEBUG << pos_ms;
 	quint32 pos_sec = pos_ms / 1000;
+	gint64 duration_ns = _pipeline->get_duration_ns();
 
 	if(_meta_data.length_ms == 0 || _meta_data.bitrate == 0){
 
-		gint64 duration = _pipeline->get_duration_ns();
 		guint bitrate = _pipeline->get_bitrate();
-		if(duration > 0)
-			_meta_data.length_ms = duration / 1000000;
+
+		if(duration_ns > 0)
+			_meta_data.length_ms = duration_ns / MIO;
 
 		if(bitrate  > 0)
 			_meta_data.bitrate = bitrate;
 
-		if(duration > 0 && bitrate > 0)
+		if(duration_ns > 0 && bitrate > 0)
 			emit track_time_changed(_meta_data);
 	}
 
 
-	if(pos_ms >= (quint64)(_meta_data.length_ms - 500) && _may_start_timer){
+	if( (pos_ms >= (duration_ns / MIO ) - 500) && _may_start_timer){
 
 			// _other_pipeline should never be zero because _may_start_timer is
 			// only set to true if gapless mode is active

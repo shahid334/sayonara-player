@@ -2348,7 +2348,7 @@ expression</source>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="314"/>
         <source>Goto row</source>
-        <translation type="unfinished"></translation>
+        <translation>Jít na řádek</translation>
     </message>
 </context>
 <context>

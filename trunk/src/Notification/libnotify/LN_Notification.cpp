@@ -21,7 +21,7 @@
 
 
 #include <libnotify/notify.h>
-#include <libnotify/notify-features.h>
+//#include <libnotify/notify-features.h>
 #include <QString>
 #include <QtPlugin>
 #include <QDebug>
