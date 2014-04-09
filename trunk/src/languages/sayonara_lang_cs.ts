@@ -118,22 +118,22 @@
         <translation>Řekl jsem &quot;Nejprve, prosím, vyberte svou hudební sbírku - Nejprve zadejte cestu ke své hudební sbírce&quot;!</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="176"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="179"/>
         <source>files</source>
         <translation>souborů</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="188"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="191"/>
         <source>entries</source>
         <translation>záznamů</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="199"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="202"/>
         <source>All %1 could be removed</source>
         <translation>Všech %1 se podařilo smazat</translation>
     </message>
     <message>
-        <location filename="../library/CLibraryAdmin.cpp" line="203"/>
+        <location filename="../library/CLibraryAdmin.cpp" line="206"/>
         <source>%1 of %2 %3 could not be removed</source>
         <translation>%1 z %2 %3n se nepodařilo smazat</translation>
     </message>
@@ -243,19 +243,19 @@
     <name>GUI_Equalizer</name>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="20"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="520"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="552"/>
         <source>Form</source>
         <translation>Formulář</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="87"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="522"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="554"/>
         <source>Save as custom</source>
         <translation>Uložit jako vlastní</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="135"/>
-        <location filename="../GUI/ui_GUI_Equalizer.h" line="524"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="141"/>
+        <location filename="../GUI/ui_GUI_Equalizer.h" line="556"/>
         <source>x</source>
         <translation>x</translation>
     </message>
@@ -522,43 +522,43 @@
     <name>GUI_LFMRadioWidget</name>
     <message>
         <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="170"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="174"/>
         <source>Form</source>
         <translation>Formulář</translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="81"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="172"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="87"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="176"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="102"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="173"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="108"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="177"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="141"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="176"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="150"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="180"/>
         <source>Artist</source>
         <translation>Umělec</translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="146"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="177"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="155"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="181"/>
         <source>User</source>
         <translation>Uživatel</translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="151"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="178"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="160"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="182"/>
         <source>Tag</source>
         <translation>Značka</translation>
     </message>
     <message>
-        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="156"/>
-        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="179"/>
+        <location filename="../GUI/LastFM/GUI_LFMRadioWidget.ui" line="165"/>
+        <location filename="../GUI/ui_GUI_LFMRadioWidget.h" line="183"/>
         <source>Recommended</source>
         <translation>Doporučeno</translation>
     </message>
@@ -704,24 +704,24 @@
 <context>
     <name>GUI_Library_windowed</name>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
         <source>Title</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="285"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="215"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="297"/>
         <source>Artist</source>
         <translation>Umělec</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="284"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
         <source>Album</source>
         <translation>Album</translation>
     </message>
@@ -745,77 +745,83 @@
         <translation>Ctrl+?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="284"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
         <source>Year</source>
         <translation>Rok</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
         <source>Dur.</source>
         <translation>Doba</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
         <source>Bitrate</source>
         <translation>Datový tok</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="283"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
         <source>Filesize</source>
         <translation>Velikost</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="284"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <source>Rating</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
         <source>Duration</source>
         <translation>Doba trvání</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="284"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="285"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="215"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="297"/>
         <source>#Tracks</source>
         <translation>#Skladby</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="630"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="644"/>
         <source>Info</source>
         <translation>Informace</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="684"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="698"/>
         <source>Warning</source>
         <translation>Varování</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="686"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="700"/>
         <source>Only from library</source>
         <translation>Jen ze sbírky</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="688"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="702"/>
         <source>You are about to delete %1 files</source>
         <translation>Chystáte se smazat %1 soubor(ů)</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="692"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="706"/>
         <source>Continue?</source>
         <translation>Pokračovat?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="735"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="764"/>
         <source>Importing was successful</source>
         <translation>Zavedení bylo úspěšné</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="738"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="767"/>
         <source>Importing failed</source>
         <translation>Zavedení se nezdařilo</translation>
     </message>
@@ -896,32 +902,32 @@
         <translation>&amp;Sbírka</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="425"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="455"/>
         <source>Warning</source>
         <translation>Varování</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="425"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="455"/>
         <source>Cannot login to Last.fm</source>
         <translation>Příhlášení se k Last.fm se nezdařilo</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="600"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="630"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="611"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="641"/>
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="847"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="877"/>
         <source>Info</source>
         <translation>Informace</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="848"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="878"/>
         <source>A new version is available!</source>
         <translation>Je dostupná nová verze!</translation>
     </message>
@@ -1016,32 +1022,32 @@
         <translation>Ctrl+.</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="184"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="188"/>
         <source>Please set library path first</source>
         <translation>Nejprve, prosím, zadejte cestu k hudební sbírce</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="188"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="192"/>
         <source>Dynamic playing</source>
         <translation>Dynamické seznamy skladeb</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="216"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="220"/>
         <source>Playlist empty</source>
         <translation>Seznam skladeb je prázdný</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="308"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="318"/>
         <source>Radio</source>
         <translation>Rádio</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="317"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="327"/>
         <source> Track - </source>
         <translation> Skladba - </translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="318"/>
+        <location filename="../GUI/playlist/GUI_Playlist.cpp" line="328"/>
         <source> Tracks - </source>
         <translation> Skladb - </translation>
     </message>
@@ -1050,13 +1056,13 @@
     <name>GUI_PlaylistChooser</name>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="194"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="202"/>
         <source>Form</source>
         <translation>Formulář</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="136"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="200"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="142"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="208"/>
         <source>...</source>
         <translation>...</translation>
     </message>
@@ -1065,44 +1071,44 @@
         <translation type="obsolete">Strg+S</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="293"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="209"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="308"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Soubor&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="306"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="210"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="324"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="218"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Uložené&lt;br/&gt;seznamy skladeb&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="323"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="211"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="219"/>
         <source>Playlists</source>
         <translation>Seznamy skladeb</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="341"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="212"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="365"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="220"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="205"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="206"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="211"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="214"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="85"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="197"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="88"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="205"/>
         <source>Save as</source>
         <translation>Uložit jako</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="166"/>
-        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="202"/>
+        <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="172"/>
+        <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="210"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
@@ -1140,67 +1146,67 @@
     <name>GUI_Podcasts</name>
     <message>
         <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="189"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="195"/>
         <source>Form</source>
         <translation>Formulář</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="58"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="191"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="61"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="197"/>
         <source>Type name you wanna save the stream as</source>
         <translation>Uložit jako</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="106"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="194"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="115"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="200"/>
         <source>Name</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="118"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="195"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="130"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="201"/>
         <source>Url</source>
         <translation>Adresa (URL)</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="145"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="197"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="157"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="203"/>
         <source>Enter stream url</source>
         <translation>Zadejte, prosím, adresu proudu (URL)</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="186"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="200"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="201"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="206"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="225"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="204"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="240"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="210"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="285"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="208"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="303"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="214"/>
         <source>Start stream</source>
         <translation>Spustit proud</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="288"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="210"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="306"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="216"/>
         <source> Start</source>
         <translation>Spustit</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="313"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="211"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="217"/>
         <source>Podcasts</source>
         <translation>Zvukové záznamy</translation>
     </message>
     <message>
-        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="334"/>
-        <location filename="../GUI/ui_GUI_Podcasts.h" line="212"/>
+        <location filename="../GUI/Podcasts/GUI_Podcasts.ui" line="355"/>
+        <location filename="../GUI/ui_GUI_Podcasts.h" line="218"/>
         <source>x</source>
         <translation>x</translation>
     </message>
@@ -1300,67 +1306,67 @@
     <name>GUI_Stream</name>
     <message>
         <location filename="../GUI/stream/GUI_Stream.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="188"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="194"/>
         <source>Form</source>
         <translation>Formulář</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="79"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="190"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="85"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="196"/>
         <source>Name</source>
         <translation>Název</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="96"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="191"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="105"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="197"/>
         <source>Webstreams</source>
         <translation>Internetové proudy</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="117"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="192"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="126"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="198"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="143"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="194"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="155"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="200"/>
         <source>Type name you wanna save the stream as</source>
         <translation>Uložit jako</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="158"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="196"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="173"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="202"/>
         <source>Url</source>
         <translation>Adresa (URL)</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="185"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="198"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="200"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="204"/>
         <source>Enter stream url</source>
         <translation>Zadejte, prosím, adresu proudu (URL)</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="214"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="201"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="229"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="207"/>
         <source>Delete</source>
         <translation>Smazat</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="253"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="205"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="268"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="211"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="313"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="209"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="331"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="215"/>
         <source>Start stream</source>
         <translation>Spustit proud</translation>
     </message>
     <message>
-        <location filename="../GUI/stream/GUI_Stream.ui" line="316"/>
-        <location filename="../GUI/ui_GUI_Stream.h" line="211"/>
+        <location filename="../GUI/stream/GUI_Stream.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Stream.h" line="217"/>
         <source> Start</source>
         <translation>Spustit</translation>
     </message>
@@ -1737,82 +1743,82 @@ expression</source>
         <translation>Číslo disku</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="326"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="320"/>
         <source>Track </source>
         <translation>Skladba </translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="510"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="509"/>
         <source>You are about to insert&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; new album(s) and &lt;b&gt;%2&lt;/b&gt; new artist(s)</source>
         <translation>Chystáte se vložit&lt;br /&gt;&lt;b&gt;%1&lt;/b&gt; nové(á) album/alba a &lt;b&gt;%2&lt;/b&gt; nového(nové) umělce&lt;br /&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="515"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="514"/>
         <source>Proceed?</source>
         <translation>Pokračovat?</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="754"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="753"/>
         <source>Here you can setup an expression for fast tagging</source>
         <translation>Na tomto místě lze zadat výraz pro dávkové značkování</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="755"/>
         <source>Valid macros are:</source>
         <translation>Platnými zástupnými symboly jsou:</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="756"/>
         <source>for artist</source>
         <translation>pro umělce</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="757"/>
         <source>for album</source>
         <translation>pro album</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="758"/>
         <source>for title</source>
         <translation>pro název</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="759"/>
         <source>for track number</source>
         <translation>pro číslo skladby</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="760"/>
         <source>for year</source>
         <translation>pro rok</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="762"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="761"/>
         <source>for discnumber</source>
         <translation>pro číslo disku</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="763"/>
         <source>Example: </source>
         <translation>Příklad:</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="765"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="764"/>
         <source>Your mp3 files have no or incomplete metadata, but all MP3 files in this folder look like this:</source>
         <translation>Popisná data nejsou buď úplná nebo dostupná, ale všechny souborové cesty vypadají takto:</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="767"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="766"/>
         <source>Then your expression should look like this:</source>
         <translation>Potom má výraz vypadat, jak následuje:</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="769"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="768"/>
         <source>Note that no tag may appear twice. If you want to ignore something you have to write it like</source>
         <translation>Poznámka: Žádné značky se nesmí objevit vícekrát. Pokud se má něco přehlížet, potom se to musí zadat takto</translation>
     </message>
     <message>
-        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="773"/>
+        <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="772"/>
         <source>How to use</source>
         <translation>Poučení</translation>
     </message>
@@ -2170,55 +2176,55 @@ expression</source>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="267"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="264"/>
         <source>Library</source>
         <translation>Sbírka</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="360"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="275"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="351"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Zkratky: &lt;br /&gt;Hledat &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Žánr &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Cesta &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="270"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="364"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="267"/>
         <source>Search</source>
         <translation>Hledat</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="378"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="271"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="369"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="268"/>
         <source>Genre</source>
         <translation>Žánr</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="383"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="374"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
         <source>Path</source>
         <translation>Cesta</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="412"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="278"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="403"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="275"/>
         <source>Search for title, interprets and albums</source>
         <translation>Hledat názvy, umělce a alba</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="439"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="281"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="430"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="278"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Ukázat všechny umělce, alba, skladby</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="470"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="284"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="461"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="281"/>
         <source>Music Library  </source>
         <translation>Hudební sbírka</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="512"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="287"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="503"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="284"/>
         <source>Information</source>
         <translation>Informace</translation>
     </message>
@@ -2355,13 +2361,19 @@ expression</source>
     <name>Playlist_Window</name>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="35"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="241"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="254"/>
         <source>Form</source>
         <translation>Formulář</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="444"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="275"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="424"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="288"/>
+        <source>Gapless playback</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="489"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="293"/>
         <source>Import new (orange) tracks to library w/o copying</source>
         <translation>Zavést nové (oranžové) skladby do sbírky bez kopírování</translation>
     </message>
@@ -2370,20 +2382,20 @@ expression</source>
         <translation type="obsolete">Gesamtzeit: 0m 0s</translation>
     </message>
     <message>
-        <location filename="../GUI/playlist/GUI_Playlist.ui" line="483"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="279"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="528"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="297"/>
         <source>Show numbers in playlist</source>
         <translation>Ukázat čísla v seznamu skladeb</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="82"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="246"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="259"/>
         <source>Clear Playlist</source>
         <translation>Vyprázdnit seznam skladeb</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="179"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="250"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
         <source>Repeat 1</source>
         <translation>Opakovat 1</translation>
     </message>
@@ -2393,35 +2405,37 @@ expression</source>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="293"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="342"/>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="391"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="253"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="258"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="263"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="273"/>
+        <location filename="../GUI/playlist/GUI_Playlist.ui" line="436"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="266"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="271"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="276"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="281"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="286"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="291"/>
         <source>Enter</source>
         <translation>Enter</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="228"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="255"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="268"/>
         <source>Repeat All</source>
         <translation>Opakovat vše</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="277"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="260"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="273"/>
         <source>Shuffle</source>
         <translation>Zamíchat</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="326"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="265"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="278"/>
         <source>Append when adding new tracks</source>
         <translation>Připojit nové skladby dole</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="375"/>
-        <location filename="../GUI/ui_GUI_Playlist.h" line="270"/>
+        <location filename="../GUI/ui_GUI_Playlist.h" line="283"/>
         <source>Dynamic playing</source>
         <translation>Dynamické seznamy skladeb</translation>
     </message>

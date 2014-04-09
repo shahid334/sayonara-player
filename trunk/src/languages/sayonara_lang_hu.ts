@@ -551,6 +551,10 @@
         <source>Dur.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Rating</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GUI_Notification</name>
@@ -1667,6 +1671,10 @@ expression</source>
     </message>
     <message>
         <source>Import new (orange) tracks to library w/o copying</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Gapless playback</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
