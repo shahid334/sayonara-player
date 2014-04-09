@@ -127,6 +127,7 @@ void GST_Engine::init() {
 	_pipeline->set_gapless(false);
 	_other_pipeline = NULL;
 
+
 	_show_level = false;
 	_show_spectrum = false;
 

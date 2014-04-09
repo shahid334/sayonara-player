@@ -49,6 +49,7 @@
 #include <QLineEdit>
 #include <QDropEvent>
 
+//typedef QList<class T> MyList;
 
 class LibraryView : public SearchableTableView{
 
@@ -102,9 +103,8 @@ public:
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
-	void fill(const MetaDataList& v_md);
-	void fill(const AlbumList& v_albums);
-	void fill(const ArtistList& v_artists);
+	template < class TList >
+	void fill(const TList& input_data);
 
     void set_editor(RatingLabel* editor);
 

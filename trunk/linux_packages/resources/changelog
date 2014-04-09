@@ -7,6 +7,9 @@ sayonara (0.4.1) unstable; urgency=low
   * ID3 tagging improved (tags from path)
   * Case insensitive search for non-latin languages
   * Enhanced selection in library
+  * Rating
+  * Gapless playback
+  * Search in playlist
   
 
  -- Lucio Carreras <luciocarreras@gmail.com>  Fri, 07 Jul 2013 02:28:00 +0100

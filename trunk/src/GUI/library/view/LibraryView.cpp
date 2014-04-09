@@ -377,128 +377,55 @@ QList<int> LibraryView::get_selections(){
 
 
 
+template void LibraryView::fill<MetaDataList>(const MetaDataList&);
+template void LibraryView::fill<AlbumList>(const AlbumList&);
+template void LibraryView::fill<ArtistList>(const ArtistList&);
 
-// fill
-void LibraryView::fill(const MetaDataList& v_md){
 
-    _cur_filling = true;
-    QList<int> lst;
-    _model->set_selected(lst);
+template < class TList >
+void LibraryView::fill(const TList& input_data){
 
-    uint metadata_size = v_md.size();
 
-    _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, metadata_size);
+	_cur_filling = true;
+	QList<int> lst;
+	_model->set_selected(lst);
+	uint size = input_data.size();
 
-    QItemSelectionModel* sm = this->selectionModel();
-    QItemSelection sel = sm->selection();
+	_model->removeRows(0, _model->rowCount());
+	_model->insertRows(0, size); // fake "all albums row"
 
-    for(uint row=0; row<metadata_size; row++){
-        MetaData md = v_md[row];
+	QModelIndex idx;
+	int first_selected_row = -1;
 
-        if(md.is_lib_selected){
-            this->selectRow(row);
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
+	QItemSelectionModel* sm = this->selectionModel();
+	QItemSelection sel = sm->selection();
 
-        QModelIndex idx = _model->index(row, 0);
+	for(uint row=0; row < size; row++){
 
-        _model->setData(idx, md.toVariant(), Qt::EditRole);
-    }
+		idx = _model->index(row, 1);
 
-    sm->clearSelection();
-    sm->select(sel,QItemSelectionModel::Select);
+		if(input_data[row].is_lib_selected){
+			if(first_selected_row == -1)
+				first_selected_row = row;
 
-    calc_corner_widget();
-    _cur_filling = false;
+			this->selectRow(row);
+			sel.merge(sm->selection(), QItemSelectionModel::Select);
+		}
+
+		QVariant data = input_data[row].toVariant();
+		_model->setData(idx, data, Qt::EditRole );
+	}
+
+	sm->clearSelection();
+	sm->select(sel,QItemSelectionModel::Select);
+
+	if(first_selected_row >= 0)
+		this->scrollTo(_model->index(first_selected_row, 0), QTableView::PositionAtCenter);
+
+	calc_corner_widget();
+	_cur_filling = false;
 }
 
-void LibraryView::fill(const AlbumList& albums){
-
-    _cur_filling = true;
-    QList<int> lst;
-    _model->set_selected(lst);
-    uint albums_size = albums.size();
-
-    _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, albums_size); // fake "all albums row"
-
-    QModelIndex idx;
-    int first_selected_album_row = -1;
-
-    QItemSelectionModel* sm = this->selectionModel();
-    QItemSelection sel = sm->selection();
-
-    for(uint row=0; row < albums_size; row++){
-        Album album = albums[row];
-
-        idx = _model->index(row, 1);
-
-        if(album.is_lib_selected){
-            if(first_selected_album_row == -1)
-                first_selected_album_row = row;
-
-            this->selectRow(row);
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
-
-        QVariant data = album.toVariant();
-        _model->setData(idx, data, Qt::EditRole );
-    }
-
-    sm->clearSelection();
-    sm->select(sel,QItemSelectionModel::Select);
-
-    if(first_selected_album_row >= 0)
-        this->scrollTo(_model->index(first_selected_album_row, 0), QTableView::PositionAtCenter);
-
-    calc_corner_widget();
-    _cur_filling = false;
-}
-
-
-void LibraryView::fill(const ArtistList& artists){
-
-    _cur_filling = true;
-    QList<int> lst;
-    _model->set_selected(lst);
-    uint artist_size = artists.size();
-
-    _model->removeRows(0, _model->rowCount());
-    _model->insertRows(0, artist_size); // fake "all albums row"
-
-    QModelIndex idx;
-    int first_selected_artist_row = -1;
-
-    QItemSelectionModel* sm = this->selectionModel();
-    QItemSelection sel = sm->selection();
-
-    for(uint row=0; row < artist_size; row++){
-        Artist artist = artists[row];
-
-        idx = _model->index(row, 1);
-
-        if(artist.is_lib_selected){
-            if(first_selected_artist_row == -1)
-                first_selected_artist_row = row;
-
-            this->selectRow(row);
-            sel.merge(sm->selection(), QItemSelectionModel::Select);
-        }
-
-        QVariant data = artist.toVariant();
-        _model->setData(idx, data, Qt::EditRole );
-    }
-
-    sm->clearSelection();
-    sm->select(sel,QItemSelectionModel::Select);
-
-    if(first_selected_artist_row >= 0)
-        this->scrollTo(_model->index(first_selected_artist_row, 0), QTableView::PositionAtCenter);
-
-    calc_corner_widget();
-    _cur_filling = false;
-}
 
 void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder){
 
