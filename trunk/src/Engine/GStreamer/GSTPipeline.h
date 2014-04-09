@@ -48,20 +48,20 @@ public:
 	gint64 seek_rel(float percent, gint64 ref_ns);
 	gint64 seek_abs(gint64 ns );
 	void set_volume(int vol);
+	int get_volume();
 
 	void enable_level(bool b);
 	void enable_spectrum(bool b);
 
 	gint64 get_duration_ns();
 	guint get_bitrate();
+
 	virtual bool set_uri(gchar* uri);
-	virtual bool set_next_uri(gchar* uri);
-	virtual gchar* get_next_uri();
 	virtual gchar* get_uri();
+
 	void set_eq_band(QString band_name, double val);
 	void unmute();
 
-	void set_track_finished();
 	void set_gapless(bool gapless);
 	bool get_gapless();
 
@@ -95,10 +95,10 @@ protected:
 	GstElement* _tee;
 
 	gchar* _uri;
-	gchar* _next_uri;
 	bool  _gapless;
 
 	int _vol;
+	qint64 _duration;
 
 
 };

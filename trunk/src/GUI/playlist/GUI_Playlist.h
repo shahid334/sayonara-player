@@ -71,6 +71,7 @@
             void sig_tracks_dropped(const MetaDataList&, int);
             void sig_rows_removed(const QList<int>&, bool);
             void sig_cleared();
+			void sig_gapless(bool);
 
 			void search_similar_artists(const QString&);
             void sig_no_focus();
@@ -105,6 +106,7 @@
             void metadata_dropped(const MetaDataList&, int);
             void rows_removed(const QList<int>&, bool select_next_row);
             void no_focus();
+			void gapless_changed(bool);
 
 
 		private:

@@ -26,9 +26,11 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 			bool success = false;
 			int i = 0;
 			_pipeline = 0;
+			_duration = 0;
+
 			_timer = new QTimer();
 			_timer->setInterval(5);
-			connect(_timer, SIGNAL(timeout()), this, SLOT(start_play()));
+			connect(_timer, SIGNAL(timeout()), this, SLOT(play()));
 
 			// eq -> autoaudiosink is packaged into a bin
 			do {
@@ -56,7 +58,7 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 				_eq_queue = gst_element_factory_make("queue", "eq_queue");
 				_tee = gst_element_factory_make("tee", "tee");
 				_level_queue = gst_element_factory_make("queue", "level_queue");
-				_spectrum_queue = gst_element_factory_make("queue2", "spectrum_queue");
+				_spectrum_queue = gst_element_factory_make("queue", "spectrum_queue");
 
 				_level_sink = gst_element_factory_make("appsink", "level_sink");
 				_spectrum_sink = gst_element_factory_make("fakesink", "spectrum_sink");
@@ -209,7 +211,6 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 				break;
 			} while (i);
 
-
 			if(success) gst_bus_add_watch(_bus, bus_state_changed, this);
 
 			ENGINE_DEBUG << "Experimental Engine: constructor finished: " << success;
@@ -217,15 +218,18 @@ GSTPipelineExperimental::GSTPipelineExperimental(QObject* parent)
 
 
 
-GSTPipelineExperimental::~GSTPipelineExperimental(){}
+GSTPipelineExperimental::~GSTPipelineExperimental(){
+
+	delete _timer;
+}
 
 
 bool GSTPipelineExperimental::set_uri(gchar* uri){
 
 	if(!uri) return false;
 
-
 	ENGINE_DEBUG << "Pipeline experimental: " << uri;
+
 	g_object_set(G_OBJECT(_audio_src), "uri", uri, NULL);
 	gst_element_set_state(_pipeline, GST_STATE_PAUSED);
 
@@ -233,18 +237,34 @@ bool GSTPipelineExperimental::set_uri(gchar* uri){
 }
 
 
-bool GSTPipelineExperimental::set_next_uri(gchar* uri){
 
-	return GSTPipeline::set_next_uri(uri);
-}
 
 void GSTPipelineExperimental::start_timer(qint64 play_ms){
 
+
+	ENGINE_DEBUG << "Start in " << play_ms << "ms";
+
+
 	if(play_ms > 0) _timer->start(play_ms);
+	else play();
 }
 
-void GSTPipelineExperimental::start_play(){
+
+void GSTPipelineExperimental::stop(){
+
 	_timer->stop();
-	play();
+	gst_element_set_name(_pipeline, "0");
+	GSTPipeline::stop();
+
 
 }
+
+
+void GSTPipelineExperimental::play(){
+
+	_timer->stop();
+	qDebug() << "Play";
+	gst_element_set_name(_pipeline, "1");
+	GSTPipeline::play();
+}
+

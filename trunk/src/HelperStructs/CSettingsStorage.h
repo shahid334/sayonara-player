@@ -77,6 +77,7 @@
 
 #define SET_ENGINE "sound_engine"
 #define SET_ENGINE_VOL "volume"
+#define SET_ENGINE_GAPLESS "gapless"
 
 #define SET_SR_ACTIVE "streamripper"
 #define SET_SR_WARNING "streamripper_warning"
@@ -183,6 +184,7 @@ private:
     // listen
     int	m_volume;
     int m_last_eq;
+	bool m_gapless;
     vector<EQ_Setting> m_vec_eqSettings;
     
     // player size
@@ -278,6 +280,9 @@ public:
 
     int getVolume();
     void setVolume(int vol);
+
+	bool getGapless();
+	void setGapless(bool gapless);
 
 	void setLastEqualizer(int);
 	int getLastEqualizer();

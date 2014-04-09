@@ -25,9 +25,9 @@ public:
     virtual ~GSTPipelineExperimental();
 
 	virtual bool set_uri(gchar* uri);
-	virtual bool set_next_uri(gchar* uri);
 	void start_timer(qint64 play_ms);
 	void is_timer_running();
+
 
 private:
 	GstElement* _audio_src;
@@ -36,8 +36,10 @@ private:
 
 	QTimer* _timer;
 
-private slots:
-	void start_play();
+
+public slots:
+	void stop();
+	void play();
 
 
 

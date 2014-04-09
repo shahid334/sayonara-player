@@ -9,6 +9,7 @@ SET(ICONS
         close.png
         fwd.png
         fwd_orange.png
+        gapless.png
         pause.png
         play.png
         rec.png

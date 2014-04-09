@@ -185,6 +185,14 @@ void CSettingsStorage::setVolume(int vol){
     _sth_changed = true;
 }
 
+
+bool CSettingsStorage::getGapless(){ return m_gapless; }
+void CSettingsStorage::setGapless(bool gapless){
+	m_gapless = gapless;
+	_sth_changed = true;
+}
+
+
 void CSettingsStorage::setLastEqualizer(int eq_idx){ 
 	m_last_eq = eq_idx;     
     _sth_changed = true;

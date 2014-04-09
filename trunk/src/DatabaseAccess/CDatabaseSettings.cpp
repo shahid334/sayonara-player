@@ -148,6 +148,10 @@ bool CDatabaseConnector::load_settings(){
     int volume = load_setting_int(SET_ENGINE_VOL, 50);
 	settings->setVolume(volume);
 
+	/* Gapless */
+	bool gapless = load_setting_bool(SET_ENGINE_GAPLESS, false);
+	settings->setGapless(gapless);
+
 
 	/* Library path */
 	QString lib_path = load_setting_string(SET_LIB_PATH);
@@ -200,6 +204,7 @@ bool CDatabaseConnector::load_settings(){
 
     bool player_maximized = load_setting_bool(SET_PLAYER_MAXIMIZED, false);
     settings->setPlayerMaximized(player_maximized);
+
 
 	
 	// playlist
@@ -300,7 +305,7 @@ bool CDatabaseConnector::load_settings(){
 	bool allow_only_one_instance = load_setting_bool(SET_PLAYER_ONE_INSTANCE, true);
 	settings->setAllowOnlyOneInstance(allow_only_one_instance);
 
-        bool notify_new_version = load_setting_bool(SET_PLAYER_NOTIFY_NEW_VERSION, true);
+	bool notify_new_version = load_setting_bool(SET_PLAYER_NOTIFY_NEW_VERSION, true);
 	settings->setNotifyNewVersion(notify_new_version);
 
     int spectrum_style = load_setting_int(SET_SPECTRUM_STYLE, 0);
@@ -346,6 +351,9 @@ bool CDatabaseConnector::store_settings(){
 
 	int volume = storage->getVolume();
 	store_setting(SET_ENGINE_VOL, volume);
+
+	bool gapless = storage->getGapless();
+	store_setting(SET_ENGINE_GAPLESS, gapless);
 
 	QString library_path = storage->getLibraryPath();
 	store_setting(SET_LIB_PATH, library_path);

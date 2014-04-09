@@ -38,8 +38,8 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		int i = 0;
 		_pipeline = 0;
 		_uri = 0;
-		_next_uri = 0;
 		_gapless = true;
+		_duration = 0;
 
 
 		// eq -> autoaudiosink is packaged into a bin
@@ -156,20 +156,6 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 			g_object_set(G_OBJECT(tmp_pipeline), "audio-sink", _audio_bin, NULL);
 
 
-			g_object_set (_eq_queue,
-						  "silent", TRUE,
-						  NULL);
-
-			g_object_set (_level_queue,
-						  "silent", TRUE,
-						  NULL);
-
-			g_object_set(_spectrum_queue,
-						 "silent", TRUE,
-						 NULL);
-
-
-
 			guint64 interval = 30000000;
 			gint threshold = - crop_spectrum_at;
 
@@ -255,22 +241,9 @@ void GSTPipeline::pause(){
 }
 
 
-
-
-void GSTPipeline::set_track_finished(){
-
-	if(!_gapless) return;
-
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-
-	set_uri(_next_uri);
-
-	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-}
-
 void GSTPipeline::stop(){
 
-	_next_uri = 0;
+	_duration = 0;
 	_uri = 0;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
@@ -292,6 +265,10 @@ void GSTPipeline::set_volume(int vol){
 
 	float vol_val = (float) (vol * 1.0f / 100.0f);
    g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
+}
+
+int GSTPipeline::get_volume(){
+	return _vol;
 }
 
 void GSTPipeline::unmute(){
@@ -390,13 +367,18 @@ void GSTPipeline::enable_spectrum(bool b){
 
 gint64 GSTPipeline::get_duration_ns(){
 
+	if(_duration != 0) return _duration;
+
 	GstFormat format=GST_FORMAT_TIME;
 	gint64 duration=0;
 	bool success = false;
 	success = gst_element_query_duration(_pipeline, &format, &duration);
 
 	if(!success ) return -1;
-	else return duration;
+
+	_duration = duration;
+
+	return _duration;
 }
 
 
@@ -424,29 +406,25 @@ guint GSTPipeline::get_bitrate(){
 bool GSTPipeline::set_uri(gchar* uri){
 
 	_uri = uri;
-	_next_uri = 0;
 
-	if(!uri) return false;
+	if(!uri) {
+		stop();
+		return false;
+	}
+
+	_duration = 0;
 
 	g_object_set(G_OBJECT(_pipeline), "uri", uri, NULL);
 
 	return true;
 }
 
-bool GSTPipeline::set_next_uri(gchar* uri){
 
-	_next_uri = uri;
-
-	return (uri != NULL);
-}
 
 gchar* GSTPipeline::get_uri(){
 	return _uri;
 }
 
-gchar* GSTPipeline::get_next_uri(){
-	return _next_uri;
-}
 
 
 void GSTPipeline::set_eq_band(QString band_name, double val){

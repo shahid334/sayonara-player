@@ -89,6 +89,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
     ui->btn_dynamic->setChecked(_playlist_mode.dynamic);
     ui->btn_shuffle->setChecked(_playlist_mode.shuffle);
     ui->btn_numbers->setChecked(settings->getPlaylistNumbers());
+	ui->btn_gapless->setChecked(settings->getGapless());
     ui->btn_import->setVisible(false);
 
     check_dynamic_play_button();
@@ -113,6 +114,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
             this, SLOT(sel_changed(const MetaDataList&, const QList<int>&)));
     connect(ui->listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
     connect(ui->listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
+
+	connect(ui->btn_gapless, SIGNAL(toggled(bool)), this, SLOT(gapless_changed(bool)));
 
     //connect(ui->btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
     connect(ui->btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
@@ -167,6 +170,7 @@ void GUI_Playlist::initGUI(){
     ui->btn_clear->setIcon(QIcon(icon_path + "broom.png"));
     ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
     ui->btn_numbers->setIcon(QIcon(icon_path + "numbers.png"));
+	ui->btn_gapless->setIcon(QIcon(icon_path + "gapless.png"));
 }
 
 
@@ -241,6 +245,12 @@ void GUI_Playlist::double_clicked(int row){
 
 void GUI_Playlist::track_changed(int row){
     ui->listView->set_current_track(row);
+}
+
+
+void GUI_Playlist::gapless_changed(bool checked){
+	 CSettingsStorage::getInstance()->setGapless(checked);
+	emit sig_gapless(checked);
 }
 
 

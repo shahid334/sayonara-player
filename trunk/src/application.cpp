@@ -154,12 +154,13 @@ void Application::init(int n_files, QTranslator *translator){
 	listen = engine_plugin_loader->get_cur_engine();
 	if(!listen){
 		qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
-	exit(1);
+		exit(1);
 	}
 
 	else{
 		listen->init();
 		listen->psl_sr_set_active(set->getStreamRipper());
+		listen->psl_set_gapless(set->getGapless());
 	}
 
 	init_connections();
@@ -323,6 +324,7 @@ void Application::init_connections(){
     CONNECT (ui_playlist, sig_rows_removed(const QList<int>&, bool),     playlist_handler, 	psl_remove_rows(const QList<int>&, bool));
     CONNECT (ui_playlist, sig_rows_moved(const QList<int>&, int),     playlist_handler, 	psl_move_rows(const QList<int>&, int));
 	CONNECT (ui_playlist, sig_no_focus(),                                ui_library,		setFocus());
+	CONNECT (ui_playlist, sig_gapless(bool),                             listen,            psl_set_gapless(bool));
 
     CONNECT( playlist_loader, sig_stop(),                               playlist_handler,       psl_stop());
     CONNECT( playlist_loader, sig_create_playlist(MetaDataList&, bool), playlist_handler,       psl_createPlaylist(MetaDataList&, bool));
