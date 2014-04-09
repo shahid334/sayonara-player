@@ -72,6 +72,8 @@ void CLibraryBase::emit_stuff(){
 
 void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
 
+    qDebug() << "Library: Sortorder changed";
+
     QList<int> lst;
     lst << artist_so << album_so << track_so;
     CSettingsStorage::getInstance()->setLibSorting(lst);
@@ -167,6 +169,8 @@ void CLibraryBase::refresh(bool b){
 
 void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
+    qDebug() << "Library: Filter changed";
+
     if(     _filter.cleared &&
             filter.cleared &&
             filter.filtertext.size() < 5 &&
@@ -206,6 +210,8 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
 
 void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
+
+    qDebug() << "Library: Selected artists changed";
 
     QList<int> selected_artists;
 
@@ -439,3 +445,42 @@ void CLibraryBase::psl_append_tracks(const QList<int>& lst){
     emit sig_append_tracks_to_playlist(v_md);
 }
 
+void CLibraryBase::psl_track_rating_changed(int idx, int rating){
+
+    bool success;
+    Album album;
+
+    _vec_md[idx].rating = rating;
+    _db->updateTrack(_vec_md[idx]);
+
+    success = _db->getAlbumByID(_vec_md[idx].album_id, album);
+    if(!success) return;
+
+    for(int i=0; i<(int)_vec_albums.size(); i++){
+        if(_vec_albums[i].id == album.id){
+            _vec_albums[i].rating = album.rating;
+            break;
+        }
+    }
+}
+
+void CLibraryBase::psl_album_rating_changed(int idx, int rating){
+
+    QList<int> album_ids;
+    QList<int> album_idxs;
+    MetaDataList v_md;
+
+    album_idxs << idx;
+    album_ids << _vec_albums[idx].id;
+
+    _db->getAllTracksByAlbum(album_ids, v_md);
+
+    for(int i=0; i<(int) v_md.size(); i++){
+        v_md[i].rating = rating;
+    }
+
+    _db->updateTracks(v_md);
+
+
+    psl_selected_albums_changed(album_idxs);
+}

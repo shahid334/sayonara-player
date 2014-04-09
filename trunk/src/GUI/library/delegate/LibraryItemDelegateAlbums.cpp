@@ -26,6 +26,7 @@
  *      Author: luke
  */
 
+#include "GUI/RatingLabel.h"
 #include "GUI/library/delegate/LibraryItemDelegateAlbums.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -41,8 +42,8 @@
 
 
 
-LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent) {
-    this->_parent = parent;
+LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent) :
+    LibraryRatingDelegate(model, parent){
 
     QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
     QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
@@ -50,8 +51,6 @@ LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, QT
     _icon_multi_album = QPixmap(icon_path_sampler);
 
     _model = model;
-
-    QPalette palette = _parent->palette();
 
     _selected_background = QColor(66,78,114);
 
@@ -81,7 +80,8 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         int row_height = _parent->rowHeight(0)-4;
         rect.translate(2, 2);
 
-        int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
+        //int num_albums = _model->data(index).toInt();
+        int num_albums = index.data().toInt();
 
 
         if(num_albums <= 1)
@@ -95,7 +95,8 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_NAME){
 
         rect.translate(2, 0);
-        QString name = _model->data(index, Qt::WhatsThisRole).toString();
+        //QString name = _model->data(index).toString();
+        QString name = index.data().toString();
         painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
     }
 
@@ -103,7 +104,8 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_YEAR){
 
         rect.translate(-2, 0);
-        int year = _model->data(index, Qt::WhatsThisRole).toInt();
+        //int year = _model->data(index).toInt();
+        int year = index.data().toInt();
 
         QString year_str = QString::number(year);
         if(year == 0) year_str = "None";
@@ -114,15 +116,24 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_N_SONGS){
 
         rect.translate(-2, 0);
-        QString n_songs = _model->data(index, Qt::WhatsThisRole).toString() + " tracks";
+        //QString n_songs = _model->data(index).toString() + " tracks";
+        QString n_songs = index.data().toString() + " tracks";
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, n_songs);
     }
 
     else if(idx_col == COL_ALBUM_DURATION){
 
         rect.translate(-2, 0);
-        QString duration = _model->data(index, Qt::WhatsThisRole).toString();
+        //QString duration = _model->data(index).toString();
+        QString duration = index.data().toString();
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, duration);
+    }
+
+    else if(idx_col == COL_ALBUM_RATING){
+
+        int r = index.data().toInt();
+        Rating rating(r);
+        rating.paint(painter, rect, option.palette);
     }
 
     painter->restore();
@@ -138,27 +149,6 @@ QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, c
 }
 
 
-void LibraryItemDelegateAlbums::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex & index) const
-{
-    Q_UNUSED(editor);
-    Q_UNUSED(model);
-    Q_UNUSED(index);
-}
-
-QWidget *LibraryItemDelegateAlbums::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
-{
-    Q_UNUSED(parent);
-    Q_UNUSED(option);
-    Q_UNUSED(index);
-    return 0;
-}
-
-
-void LibraryItemDelegateAlbums::setEditorData(QWidget *editor, const QModelIndex & index) const
-{
-    Q_UNUSED(editor);
-    Q_UNUSED(index);
-}
 
 void LibraryItemDelegateAlbums::set_skin(bool dark){
     if(dark){

@@ -28,6 +28,7 @@
 
 #include "GUI/library/delegate/LibraryItemDelegateTracks.h"
 #include "GUI/library/model/LibraryItemModelTracks.h"
+#include "GUI/RatingLabel.h"
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
@@ -39,7 +40,7 @@
 #include <QItemDelegate>
 #include <QPainter>
 
-LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, QTableView* parent) {
+LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent) : LibraryRatingDelegate(model, parent){
 	this->_parent = parent;
 	_model = model;
 	_selected_background = QColor(66,78,114);
@@ -57,43 +58,52 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 	if(!index.isValid()) return;
 
     int col = index.column();
-    LibraryItemModelTracks* model = (LibraryItemModelTracks*) _parent->model();
+
+    LibraryItemModelTracks* model = (LibraryItemModelTracks*) index.model();
     int idx_col = model->calc_shown_col(col);
     painter->save();
 
     QRect 	rect(option.rect);
-    QString	text = index.model()->data(index, Qt::DisplayRole).toString();
+    QString	text = index.data().toString();
 
     if(_model->is_selected(index.row())){
         painter->fillRect(rect, _selected_background);
     }
 
-
-    switch(idx_col){
-
-        case COL_FILESIZE:
-            text = Helper::calc_filesize_str(text.toInt());
-            rect.translate(-2, 0);
-            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
-            break;
-
-        case COL_BITRATE:
-            text = QString::number(text.toInt() / 1000) + " kbit/s";
-            rect.translate(-2, 0);
-            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
-            break;
-        case COL_YEAR:
-                if(text == "0") text = "";
-        case COL_TRACK_NUM:
-        case COL_LENGTH:
-            rect.translate(-2, 0);
-            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
-            break;
-        default:
-            rect.translate(2, 0);
-            painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, text);
-            break;
+    if(idx_col == COL_FILESIZE){
+        text = Helper::calc_filesize_str(text.toInt());
+        rect.translate(-2, 0);
+        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
     }
+
+    else if(idx_col == COL_BITRATE){
+        text = QString::number(text.toInt() / 1000) + " kbit/s";
+        rect.translate(-2, 0);
+        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+    }
+    else if(idx_col == COL_YEAR){
+            if(text == "0") text = "";
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+    }
+    else if(idx_col == COL_TRACK_NUM){
+            painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+    }
+    else if(idx_col == COL_LENGTH){
+        rect.translate(-2, 0);
+        painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
+    }
+
+    else if(idx_col == COL_TRACK_RATING){
+        int r = index.data().toInt();
+        Rating rating(r);
+        rating.paint(painter, rect, option.palette);
+    }
+
+    else{
+        rect.translate(2, 0);
+        painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, text);
+    }
+
 
     painter->restore();
 }
@@ -113,31 +123,6 @@ QSize LibraryItemDelegateTracks::sizeHint(const QStyleOptionViewItem & option, c
 }
 
 
-
-
-void LibraryItemDelegateTracks::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex & index) const
-{
-	Q_UNUSED(editor);
-	Q_UNUSED(model);
-	Q_UNUSED(index);
-}
-
-QWidget *LibraryItemDelegateTracks::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
-{
-	Q_UNUSED(parent);
-	Q_UNUSED(option);
-	Q_UNUSED(index);
-	return 0;
-}
-
-
-
-
-void LibraryItemDelegateTracks::setEditorData(QWidget *editor, const QModelIndex & index) const
-{
-	Q_UNUSED(editor);
-	Q_UNUSED(index);
-}
 
 
 void LibraryItemDelegateTracks::set_skin(bool dark){

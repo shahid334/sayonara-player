@@ -60,6 +60,7 @@ CoverFetchThread::CoverFetchThread(QObject* parent, int id, QString url, int n_i
 
 CoverFetchThread::~CoverFetchThread() {
 
+
     foreach(AsyncWebAccess* awa, _map.values()){
         awa->terminate();
     }
@@ -112,7 +113,7 @@ void CoverFetchThread::search_multi(){
       foreach(QString adress, adresses){
 
           AsyncWebAccess* awa = new AsyncWebAccess(0, _awa_id, AwaDataTypeImage);
-          awa->deleteLater();
+
           awa->set_url(adress);
 
           _map.insert(_awa_id, awa);
@@ -191,7 +192,9 @@ void CoverFetchThread::set_run(bool run){
     _n_running = 0;
     _run = run;
     foreach(AsyncWebAccess* awa, _map.values()){
-        awa->terminate();
+        awa->stop();
+
+        //awa->terminate();
     }
     
 }

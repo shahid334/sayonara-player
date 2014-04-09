@@ -31,34 +31,26 @@
 #include <QObject>
 #include <QLabel>
 #include <QTableView>
-#include <QItemDelegate>
 #include <QPen>
 
+#include "GUI/library/delegate/LibraryRatingDelegate.h"
 #include "GUI/library/model/LibraryItemModelAlbums.h"
+#include "GUI/library/view/LibraryView.h"
 
-class LibraryItemDelegateAlbums : public QItemDelegate {
+class LibraryItemDelegateAlbums : public LibraryRatingDelegate {
 	Q_OBJECT
+
 public:
-    LibraryItemDelegateAlbums(LibraryItemModel* model, QTableView* parent=0);
+    LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent=0);
 	virtual ~LibraryItemDelegateAlbums();
 
-public:
+    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-
-	    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-
-		QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-		void setEditorData(QWidget *editor, const QModelIndex &index) const;
-		void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
-
-        void set_skin(bool dark);
+    void set_skin(bool dark);
 
 
 private:
-		QTableView* _parent;
 
         QPixmap _icon_single_album;
         QPixmap _icon_multi_album;

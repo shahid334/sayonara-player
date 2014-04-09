@@ -34,10 +34,85 @@
 
 using namespace Sort;
 
+
+
+struct AlbumCache {
+
+    Album* _cache;
+    bool*  _valid_at;
+    int _size;
+    bool _needs_update;
+    bool _is_init;
+
+    AlbumCache(){
+        _cache = 0;
+        _valid_at = 0;
+        _size = 0;
+        _needs_update = true;
+        _is_init = false;
+    }
+
+    ~AlbumCache(){
+        if(_cache)
+            delete[] _cache;
+        if(_valid_at)
+            delete[] _valid_at;
+    }
+
+    void init(const AlbumList& list){
+
+        if(_cache) delete[] _cache;
+        if(_valid_at) delete[] _valid_at;
+        _size = 0;
+
+        for(uint i=0; i<list.size(); i++){
+            if(_size < list[i].id) _size = list[i].id;
+        }
+
+        _size++;
+        _cache = new Album[_size];
+        _valid_at = new bool[_size];
+        memset(_valid_at, 0, sizeof(bool) * (_size));
+
+        for(uint i=0;i<list.size(); i++){
+
+            _cache[list[i].id] = list[i];
+            _valid_at[list[i].id] = true;
+        }
+
+        _needs_update = false;
+        _is_init = true;
+    }
+
+    bool isInitialized(){
+        return _is_init;
+    }
+
+    bool needsUpdate(){
+        return _needs_update;
+    }
+
+    void setNeedsUpdate(bool b){
+        _needs_update = b;
+    }
+
+    bool getAlbumByID(int id, Album& album){
+        if(!_is_init) return false;
+        if(id < 0) return false;
+        if(id >= _size) return false;
+        album = _cache[id];
+        return true;
+    }
+
+};
+
+AlbumCache cache;
+
 #define ALBUM_ARTIST_TRACK_SELECTOR QString("SELECT ") + \
 			"albums.albumID AS albumID, " + \
 			"albums.name AS albumName, " + \
 			"SUM(tracks.length) / 1000 AS albumLength, " + \
+            "AVG(tracks.rating) AS albumRating, " + \
 			"COUNT(tracks.trackid) AS albumNTracks, " + \
 			"MAX(tracks.year) AS albumYear, " + \
 			"group_concat(artists.name) AS albumArtists, " + \
@@ -45,8 +120,11 @@ using namespace Sort;
 			"FROM albums, artists, tracks "
 
 bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
-
-	result.clear();
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+    if(result.size())
+        result.clear();
 
 		try{
 			if (!q.exec()) {
@@ -61,13 +139,14 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 				album.id = q.value(0).toInt();
 				album.name = q.value(1).toString().trimmed();
 				album.length_sec = q.value(2).toInt();
-				album.num_songs = q.value(3).toInt();
-				album.year = q.value(4).toInt();
-				QStringList artistList = q.value(5).toString().split(',');
+                album.rating = q.value(3).toInt();
+                album.num_songs = q.value(4).toInt();
+                album.year = q.value(5).toInt();
+                QStringList artistList = q.value(6).toString().split(',');
 				artistList.removeDuplicates();
 				album.artists = artistList;
 
-				QStringList discnumberList = q.value(6).toString().split(',');
+                QStringList discnumberList = q.value(7).toString().split(',');
 				album.discnumbers.clear();
 				foreach(QString disc, discnumberList){
 					int d = disc.toInt();
@@ -81,6 +160,8 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 				album.n_discs = album.discnumbers.size();
 
 				album.is_sampler = (artistList.size() > 1);
+
+                //album.rating = rand() % 6;
 
 				result.push_back(album);
 			}
@@ -125,13 +206,21 @@ static QString _create_order_string(SortOrder sortorder){
         case AlbumDurationDesc:
             return QString (" ORDER BY albumLength DESC, albumName ASC ");
 
+        case AlbumRatingAsc:
+            return QString (" ORDER BY albumRating ASC, albumName ASC ");
+
+        case AlbumRatingDesc:
+            return QString (" ORDER BY albumRating DESC, albumName ASC ");
+
 		default:
 			return "";
 	}
 }
 
 int CDatabaseConnector::getAlbumID (const QString & album)  {
-
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -150,6 +239,9 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 }
 
 int CDatabaseConnector::getMaxAlbumID(){
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 	DB_TRY_OPEN(_database);
 
 	int max_id = -1;
@@ -180,9 +272,16 @@ int CDatabaseConnector::getMaxAlbumID(){
 
 bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
 
+
 	DB_TRY_OPEN(_database);
 
 	AlbumList albums;
+
+    if(cache.getAlbumByID(id, album)) return true;
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 
 	QSqlQuery q (*_database);
 	QString querytext =
@@ -203,6 +302,10 @@ bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
 }
 
 void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 
 	DB_TRY_OPEN(_database);
 
@@ -218,11 +321,19 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
 	q.prepare(querytext);
 
 	_db_fetch_albums(q, result);
+
+    if(!cache.isInitialized() || cache.needsUpdate()) cache.init(result);
+
+
 }
 
 
 void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder){
-	DB_TRY_OPEN(_database);
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+    DB_TRY_OPEN(_database);
 
     QStringList lst_artist_names;
 
@@ -312,14 +423,18 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 }
 
 void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, SortOrder sortorder){
-
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 	QList<int> list;
 	list << artist;
 	getAllAlbumsByArtist(list, result, filter, sortorder);
 }
 
 void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder){
-
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -376,6 +491,9 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 
 	DB_TRY_OPEN(_database);
 
@@ -386,11 +504,16 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
     if (!q.exec()) {
         throw QString ("SQL - Error: insertAlbumIntoDatabase " + album);
     }
+
+    cache.setNeedsUpdate(true);
     return this -> getAlbumID (album);
 }
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -403,6 +526,8 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
         if (!q.exec()) {
             throw QString ("SQL - Error: insertAlbumIntoDatabase " + album.name);
         }
+
+        cache.setNeedsUpdate(true);
         return this -> getAlbumID (album.name);
     }
 

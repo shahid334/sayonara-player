@@ -110,12 +110,6 @@ void GUI_TagEdit::language_changed(){
 
 void GUI_TagEdit::init(){
 
-    _vec_albums.clear();
-    _vec_artists.clear();
-
-    _db->getAllAlbums(_vec_albums);
-    _db->getAllArtists(_vec_artists);
-
     _max_album_id = -1;
     _max_artist_id = -1;
 
@@ -420,6 +414,11 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
             }
     }
 
+    AlbumList vec_albums;
+    ArtistList vec_artists;
+
+    _db->getAllAlbums(vec_albums);
+    _db->getAllArtists(vec_artists);
 
     for(uint track = 0; track<_vec_org_metadata.size(); track++){
 
@@ -430,7 +429,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
         int album_id = -1;
 
         /* check the track, if it has a NEW album */
-        foreach(Album album, _vec_albums){
+        foreach(Album album, vec_albums){
 
             // album is already in db
             if(new_album_name == album.name){
@@ -464,10 +463,10 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
         bool artist_found = false;
         int artist_id = -1;
-        for(uint i=0; i<_vec_artists.size(); i++){
-            if(new_artist_name == _vec_artists[i].name){
+        for(uint i=0; i<vec_artists.size(); i++){
+            if(new_artist_name == vec_artists[i].name){
                 artist_found = true;
-                artist_id = _vec_artists[i].id;
+                artist_id = vec_artists[i].id;
 
 
                 for(int j=0; j<v_artist.size(); j++){

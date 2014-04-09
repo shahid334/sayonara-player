@@ -99,6 +99,8 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
              case COL_FILESIZE:
                 return QVariant(md.filesize);
+             case COL_TRACK_RATING:
+                 return QVariant(md.rating);
 			 default:
 				return QVariant();
 		 }
@@ -124,21 +126,36 @@ Qt::ItemFlags LibraryItemModelTracks::flags(const QModelIndex &index = QModelInd
 	if (!index.isValid())
 		return Qt::ItemIsEnabled;
 
-	return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    int idx_column = index.column();
+    int shown_col = calc_shown_col(idx_column);
+    if(shown_col == COL_TRACK_RATING){
+
+        return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    }
+
+    return QAbstractItemModel::flags(index);
 }
 
 bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole){
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 MetaData md;
-		 if(!MetaData::fromVariant(value, md)) return false;
+         int col_idx = calc_shown_col(index.column());
+         if(col_idx == COL_TRACK_RATING){
+             _tracklist[index.row()].rating = value.toInt();
+         }
 
-         if(md.is_lib_selected)
-             _selected_rows << index.row();
-		 _tracklist.replace(index.row(), md);
+         else{
+             MetaData md;
+             if(!MetaData::fromVariant(value, md)) return false;
 
-	     emit dataChanged(index, index);
+             if(md.is_lib_selected)
+                 _selected_rows << index.row();
+             _tracklist.replace(index.row(), md);
+
+             emit dataChanged(index, index);
+         }
+
 	     return true;
 	 }
 

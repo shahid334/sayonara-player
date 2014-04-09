@@ -250,6 +250,10 @@ bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_c
 
 bool CDatabaseConnector::updateAlbumCissearch(){
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
     AlbumList albums;
     getAllAlbums(albums);
     foreach(Album album, albums){
@@ -300,7 +304,7 @@ bool CDatabaseConnector::apply_fixes(){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int version = load_setting_int("version", 0);
-    if(version == 4) return true;
+    if(version == 5) return true;
 
     qDebug() << "Apply fixes";
 
@@ -371,6 +375,11 @@ bool CDatabaseConnector::apply_fixes(){
 
         bool success = check_and_create_table("VisualStyles", create_vis_styles);
         if(success) store_setting("version", 4);
+    }
+
+    if(version < 5){
+        bool success = check_and_insert_column("tracks", "rating", "integer");
+        if(success) store_setting("version", 5);
     }
 
 

@@ -106,6 +106,8 @@ namespace Sort{
 		AlbumTracksDesc,
 		AlbumDurationAsc,
 		AlbumDurationDesc,
+        AlbumRatingAsc,
+        AlbumRatingDesc,
 		TrackNumAsc,
 		TrackNumDesc,
 		TrackTitleAsc,
@@ -123,7 +125,9 @@ namespace Sort{
 		TrackSizeAsc,
 	        TrackSizeDesc,
         	TrackDiscnumberAsc,
-	        TrackDiscnumberDesc
+            TrackDiscnumberDesc,
+        TrackRatingAsc,
+        TrackRatingDesc
 	};
 
 };

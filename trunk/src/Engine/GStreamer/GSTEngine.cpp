@@ -515,7 +515,6 @@ void GST_Engine::set_track_finished() {
 	}
 
 	else{
-		_pipeline->stop();
 
 		GSTPipelineExperimental* tmp;
 		tmp = _pipeline;
@@ -523,6 +522,8 @@ void GST_Engine::set_track_finished() {
 		_other_pipeline = tmp;
 
 		play();
+		_other_pipeline->stop();
+
 	}
 }
 

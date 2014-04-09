@@ -38,6 +38,7 @@
 #define COL_ALBUM_DURATION 2
 #define COL_ALBUM_N_SONGS 3
 #define COL_ALBUM_YEAR 4
+#define COL_ALBUM_RATING 5
 
 #define COL_ARTIST_MACROS
 #define COL_ARTIST_N_ALBUMS 0
@@ -53,6 +54,7 @@
 #define COL_LENGTH 5
 #define COL_BITRATE 6
 #define COL_FILESIZE 7
+#define COL_TRACK_RATING 8
 
 #include <QAbstractTableModel>
 #include <QModelIndex>

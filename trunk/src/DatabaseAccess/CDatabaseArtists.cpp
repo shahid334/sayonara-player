@@ -43,6 +43,10 @@ using namespace Sort;
 
 bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	result.clear();
 
 	try{
@@ -95,6 +99,11 @@ static QString _create_order_string(SortOrder sort){
 }
 
 int CDatabaseConnector::getMaxArtistID(){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	DB_TRY_OPEN(_database);
 
 	int max_id = -1;
@@ -123,6 +132,11 @@ int CDatabaseConnector::getMaxArtistID(){
 }
 
 bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 
 	DB_TRY_OPEN(_database);
 
@@ -156,6 +170,11 @@ bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist){
 
 int CDatabaseConnector::getArtistID (const QString & artist)  {
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -172,6 +191,11 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
 }
 
 void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 
 	DB_TRY_OPEN(_database);
 
@@ -190,6 +214,11 @@ void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
 
 void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder){
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -204,6 +233,10 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, Sor
 }
 
 void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 
 	DB_TRY_OPEN(_database);
 

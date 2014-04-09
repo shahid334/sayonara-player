@@ -117,6 +117,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
 
     QAction* search_action = new QAction("Search", this);
     QKeySequence sequence_search(tr("Ctrl+?"));
+
     search_action->setShortcut(sequence_search);
     search_action->setShortcutContext(Qt::WindowShortcut);
     connect(search_action, SIGNAL(triggered()), this->ui->le_search, SLOT(setFocus()));
@@ -179,6 +180,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->ui->lv_artist->setVisible(!show_only_tracks);
     this->ui->lv_album->setVisible(!show_only_tracks);
 
+
     hide();
 }
 
@@ -208,8 +210,8 @@ void  GUI_Library_windowed::init_headers(){
     QList<ColumnHeader> album_columns;
     QList<ColumnHeader> artist_columns;
 
-    _header_names_tracks << "#" << tr("Title") << tr("Artist") << tr("Album") << tr("Year") << tr("Dur.") << tr("Bitrate") << tr("Filesize");
-    _header_names_albums << "#" << tr("Album") << tr("Duration") << tr("#Tracks") << tr("Year");
+    _header_names_tracks << "#" << tr("Title") << tr("Artist") << tr("Album") << tr("Year") << tr("Dur.") << tr("Bitrate") << tr("Filesize") << tr("Rating");
+    _header_names_albums << "#" << tr("Album") << tr("Duration") << tr("#Tracks") << tr("Year") << tr("Rating");
     _header_names_artists << "#" << tr("Artist") << tr("#Tracks");
 
     ColumnHeader t_h0(_header_names_tracks[0], true, Sort::TrackNumAsc, Sort::TrackNumDesc, 25);
@@ -220,19 +222,21 @@ void  GUI_Library_windowed::init_headers(){
     ColumnHeader t_h5(_header_names_tracks[5], true, Sort::TrackLenghtAsc, Sort::TrackLengthDesc, 50);
     ColumnHeader t_h6(_header_names_tracks[6], true, Sort::TrackBitrateAsc, Sort::TrackBitrateDesc, 75);
     ColumnHeader t_h7(_header_names_tracks[7], true, Sort::TrackSizeAsc, Sort::TrackSizeDesc, 75);
+    ColumnHeader t_h8(_header_names_tracks[8], true, Sort::TrackRatingAsc, Sort::TrackRatingDesc, 50);
 
     ColumnHeader al_h0(_header_names_albums[0], true, Sort::NoSorting, Sort::NoSorting, 20);
     ColumnHeader al_h1(_header_names_albums[1], false, Sort::AlbumNameAsc, Sort::AlbumNameDesc, 1.0, 160);
     ColumnHeader al_h2(_header_names_albums[2], true, Sort::AlbumDurationAsc, Sort::AlbumDurationDesc, 90);
     ColumnHeader al_h3(_header_names_albums[3], true, Sort::AlbumTracksAsc, Sort::AlbumTracksDesc, 80);
     ColumnHeader al_h4(_header_names_albums[4], true, Sort::AlbumYearAsc, Sort::AlbumYearDesc, 50);
+    ColumnHeader al_h5(_header_names_albums[5], true, Sort::AlbumRatingAsc, Sort::AlbumRatingDesc, 50);
 
     ColumnHeader ar_h0(_header_names_artists[0], true, Sort::NoSorting, Sort::NoSorting, 20);
     ColumnHeader ar_h1(_header_names_artists[1], false, Sort::ArtistNameAsc, Sort::ArtistNameDesc, 1.0, 160 );
     ColumnHeader ar_h2(_header_names_artists[2], true, Sort::ArtistTrackcountAsc, Sort::ArtistTrackcountDesc, 80);
 
-    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  <<t_h4  << t_h5  << t_h6 << t_h7;
-    album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4;
+    track_columns  << t_h0  << t_h1  << t_h2  << t_h3  <<t_h4  << t_h5  << t_h6 << t_h7 << t_h8;
+    album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4 << al_h5;
     artist_columns << ar_h0 << ar_h1 << ar_h2;
 
 
@@ -242,6 +246,11 @@ void  GUI_Library_windowed::init_headers(){
     _artist_delegate = new LibraryItemDelegateArtists(_artist_model, ui->lv_artist);
     _track_model = new LibraryItemModelTracks(track_columns);
     _track_delegate = new LibraryItemDelegateTracks(_track_model, ui->tb_title);
+
+    connect(_album_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(album_rating_changed(int)));
+    connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));
+
+
 
 
     ui->tb_title->setModel(_track_model);
@@ -264,11 +273,14 @@ void  GUI_Library_windowed::init_headers(){
 
     ui->lv_album->setModel(this->_album_model);
     ui->lv_album->setAbstractModel((AbstractSearchTableModel*) _album_model);
-    ui->lv_album->setItemDelegate(this->_album_delegate);
+    ui->lv_album->setItemDelegate(_album_delegate);
     ui->lv_album->setAlternatingRowColors(true);
     ui->lv_album->setDragEnabled(true);
     ui->lv_album->set_table_headers(album_columns, _sort_albums);
     ui->lv_album->rc_header_menu_init(_shown_cols_albums);
+
+    ui->tb_title->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::SelectedClicked);
+    ui->lv_album->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::SelectedClicked);
 }
 
 void GUI_Library_windowed::language_changed(){
@@ -313,7 +325,7 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e){
 void GUI_Library_windowed::focusInEvent(QFocusEvent *e){
 
     QWidget::focusInEvent(e);
-    this->ui->lv_artist->setFocus();
+    this->ui->lv_album->setFocus();
 }
 
 void  GUI_Library_windowed::columns_album_changed(QStringList& list){
@@ -462,6 +474,8 @@ void GUI_Library_windowed::sortorder_title_changed(Sort::SortOrder s){
 
 void GUI_Library_windowed::clear_button_pressed(){
 
+//connect(this->ui->le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
+    //disconnect(ui->le_search, SIGNAL(text))
 	this->ui->le_search->setText("");
 	text_line_edited("", true);
 }
@@ -725,6 +739,21 @@ void GUI_Library_windowed::tracks_middle_clicked(const QPoint& pt){
 
 void GUI_Library_windowed::library_changed(){
 	refresh();
+}
+
+void GUI_Library_windowed::title_rating_changed(int rating){
+
+    QList<int> idxs = _track_model->get_selected();
+    if(idxs.size() == 0) return;
+
+    emit sig_track_rating_changed(idxs[0], rating);
+}
+
+void GUI_Library_windowed::album_rating_changed(int rating){
+    QList<int> idxs = _album_model->get_selected();
+    if(idxs.size() == 0) return;
+
+    emit sig_album_rating_changed(idxs[0], rating);
 }
 
 

@@ -52,6 +52,13 @@ using namespace std;
 class MusicItem {
 
 public:
+
+    MusicItem(){}
+    virtual ~MusicItem(){
+
+
+    }
+
 	bool is_lib_selected;
 	virtual QVariant toVariant() const{
 		return QVariant();
@@ -339,6 +346,7 @@ public:
     int n_discs;
     bool is_splitted;
     bool is_sampler;
+    int rating;
 
 
     Album(){
@@ -351,6 +359,11 @@ public:
         is_splitted = false;
         is_sampler = false;
         is_lib_selected = false;
+        rating = 0;
+    }
+
+    ~Album(){
+
     }
 
 	QVariant toVariant() const {
@@ -380,6 +393,7 @@ public:
         list.push_back( (is_splitted == true) ? "1" : "0" );
         list.push_back( (is_sampler == true) ? "1" : "0" );
         list.push_back( (is_lib_selected == true) ? "1" : "0" ) ;
+        list.push_back( QString::number(rating));
         
         return list;
     }
@@ -410,6 +424,7 @@ public:
 
 		album.is_sampler =    (list[9] == "1");
 		album.is_lib_selected = (list[10] == "1");
+        album.rating = list[11].toInt();
 		return true;
     }
 

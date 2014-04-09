@@ -126,6 +126,9 @@ signals:
     void sig_no_focus();
     void sig_import_files(const QStringList&);
 
+    void sig_album_rating_changed(int, int);
+    void sig_track_rating_changed(int, int);
+
 public slots:
 	void fill_library_tracks(MetaDataList&);
 	void fill_library_albums(AlbumList&);
@@ -154,6 +157,9 @@ private slots:
     void artist_tab_pressed(bool);
     void album_tab_pressed(bool);
     void track_tab_pressed(bool);
+
+    void album_rating_changed(int);
+    void title_rating_changed(int);
 
 
 	void clear_button_pressed();
@@ -223,7 +229,7 @@ private:
 	GUI_Library_Info_Box* _lib_info_dialog;
 
 	MetaDataList _v_md_tmp;
-	QTimer* _timer;
+    QTimer*      _timer;
 	DiscPopupMenu* _discmenu;
 
 

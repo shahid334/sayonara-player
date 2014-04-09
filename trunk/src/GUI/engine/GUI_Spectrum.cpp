@@ -234,7 +234,7 @@ void GUI_Spectrum::resize_steps(int bins, int rects){
         _steps[b] = 0;
     }
 
-    delete _steps;
+    delete[] _steps;
 
     _steps = new int*[N_BINS];
     for(int i=0; i<N_BINS; i++){

@@ -48,7 +48,7 @@ LibraryItemModel::LibraryItemModel(QList<ColumnHeader>& headers){
 }
 
 LibraryItemModel::~LibraryItemModel(){
-	delete _cols_active;
+    delete[] _cols_active;
 }
 
 void LibraryItemModel::set_new_header_names(QStringList& lst){

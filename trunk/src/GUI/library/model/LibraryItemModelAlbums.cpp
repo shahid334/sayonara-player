@@ -94,7 +94,8 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 		 if (index.row() >= _album_list.size())
 			 return QVariant();
 
-         if(role == Qt::WhatsThisRole){
+        // qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
+         if(role == Qt::DisplayRole || role==Qt::EditRole){
 
             int row = index.row();
             int col = index.column();
@@ -113,6 +114,9 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
                      return album.name;
                  case COL_ALBUM_DURATION:
                     return Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000, true, false);
+                 case COL_ALBUM_RATING:
+                    return album.rating;
+
 
                 default: return "";
              }
@@ -128,7 +132,13 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-		 if(index.column() == 1) {
+         int col_idx = calc_shown_col(index.column());
+         if(col_idx == COL_ALBUM_RATING){
+             _album_list[index.row()].rating = value.toInt();
+
+         }
+
+         else if(index.column() == 1) {
 
 
              Album album;
@@ -138,9 +148,10 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
                 _selected_rows << index.row();
 
 			 _album_list.replace(index.row(), album);
+              emit dataChanged(index, index);
 		 }
 
-	     emit dataChanged(index, index);
+
 	     return true;
 	 }
 
@@ -154,7 +165,13 @@ Qt::ItemFlags LibraryItemModelAlbums::flags(const QModelIndex & index) const
 	if (!index.isValid())
 		return Qt::ItemIsEnabled;
 
-	return QAbstractItemModel::flags(index);
+    int col = index.column();
+    int idx_col = calc_shown_col(col);
+
+    if(idx_col == COL_ALBUM_RATING)
+        return (QAbstractItemModel::flags(index) | Qt::ItemIsEditable);
+
+    return QAbstractItemModel::flags(index);
 }
 
 

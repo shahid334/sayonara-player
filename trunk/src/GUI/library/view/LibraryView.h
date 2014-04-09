@@ -33,10 +33,12 @@
 #include "GUI/ContextMenu.h"
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/MiniSearcher.h"
+#include "GUI/RatingLabel.h"
 #include "GUI/SearchableWidget.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/Helper.h"
+
 
 #include <QTableView>
 #include <QPoint>
@@ -84,6 +86,8 @@ private slots:
     void play_next_clicked();
     void append_clicked();
 
+    void editorDestroyed(QObject* editor=0);
+
 
 private:
     void rc_menu_init();
@@ -101,6 +105,8 @@ public:
 	void fill(const MetaDataList& v_md);
 	void fill(const AlbumList& v_albums);
 	void fill(const ArtistList& v_artists);
+
+    void set_editor(RatingLabel* editor);
 
 
     void set_col_sizes();
@@ -122,7 +128,6 @@ protected:
 	void dropEvent(QDropEvent* event);
 	void dragEnterEvent(QDragEnterEvent *event);
     void dragMoveEvent(QDragMoveEvent *event);
-
 
 	void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 
@@ -147,6 +152,8 @@ private:
     bool                _sel_changed;
 
     LibraryItemModel*   _model;
+    RatingLabel*        _editor;
+    bool                _cur_filling;
 
     int get_min_selected();
 

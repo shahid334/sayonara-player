@@ -47,7 +47,8 @@ using namespace Sort;
     "artists.name AS artistName, " \
     "tracks.genre AS genrename, "\
     "tracks.filesize AS filesize, " \
-    "tracks.discnumber AS discnumber " \
+    "tracks.discnumber AS discnumber, " \
+    "tracks.rating AS rating " \
     "FROM tracks " \
     "INNER JOIN albums ON tracks.albumID = albums.albumID " \
     "INNER JOIN artists ON tracks.artistID = artists.artistID "
@@ -55,6 +56,11 @@ using namespace Sort;
 
 
 bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
+
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 
 	result.clear();
 
@@ -81,6 +87,7 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
             data.genres =	 q.value(11).toString().split(",");
             data.filesize =  q.value(12).toInt();
             data.discnumber = q.value(13).toInt();
+            data.rating = q.value(14).toInt();
 
 			result.push_back(data);
 		}
@@ -117,6 +124,9 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrde
 	else if(sort == TrackBitrateDesc) querytext += QString(" ORDER BY trackBitrate DESC;");
     else if(sort == TrackSizeAsc) querytext += QString(" ORDER BY filesize ASC;");
     else if(sort == TrackSizeDesc) querytext += QString(" ORDER BY filesize DESC;");
+    else if(sort == TrackRatingAsc) querytext += QString(" ORDER BY rating ASC;");
+    else if(sort == TrackRatingDesc) querytext += QString(" ORDER BY rating DESC;");
+
 
 	else querytext += ";";
 
@@ -125,6 +135,11 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrde
 
 
 void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 
     DB_TRY_OPEN(_database);
      DB_RETURN_NOT_OPEN_VOID(_database);
@@ -142,6 +157,11 @@ void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 
 
 MetaData CDatabaseConnector::getTrackByPath(QString path){
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+
 	DB_TRY_OPEN(_database);
 
 	MetaDataList vec_data;
@@ -170,6 +190,11 @@ MetaData CDatabaseConnector::getTrackByPath(QString path){
 }
 
 MetaData CDatabaseConnector::getTrackById(int id){
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+
 	DB_TRY_OPEN(_database);
 
 	MetaDataList vec_data;
@@ -194,6 +219,12 @@ MetaData CDatabaseConnector::getTrackById(int id){
 
 
 int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOrder sort) {
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -207,6 +238,11 @@ int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOr
 }
 
 void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort, int discnumber){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	QList<int> list;
 	MetaDataList mdlist;
 	list << album;
@@ -223,6 +259,11 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata
 }
 
 void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -312,12 +353,22 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 }
 
 void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, SortOrder sort){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	QList<int> list;
 	list << artist;
 	getAllTracksByArtist(list, returndata, filter, sort);
 }
 
 void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, SortOrder sort){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	DB_TRY_OPEN(_database);
 
 	MetaData data;
@@ -403,6 +454,11 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 
 void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sort){
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+
 	DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_VOID(_database);
 
@@ -471,6 +527,11 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 
 
 int CDatabaseConnector::deleteTrack(MetaData& md){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_INT(_database);
 
@@ -506,6 +567,10 @@ int CDatabaseConnector::deleteTrack(MetaData& md){
 
 int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	DB_TRY_OPEN(_database);
      DB_RETURN_NOT_OPEN_INT(_database);
 
@@ -527,6 +592,10 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 
 int CDatabaseConnector::updateTrack(MetaData& data){
 
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
 	DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_INT(_database);
 
@@ -543,7 +612,8 @@ int CDatabaseConnector::updateTrack(MetaData& data){
                        "genre=:genre, "
                        "filesize=:filesize, "
                        "discnumber=:discnumber, "
-                       "cissearch=:cissearch "
+                       "cissearch=:cissearch, "
+                       "rating=:rating "
                     "WHERE TrackID = :trackID;");
 
 		q.bindValue(":albumID",QVariant(data.album_id));
@@ -557,6 +627,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
         q.bindValue(":genre", QVariant(data.genres.join(",")));
         q.bindValue(":filesize", QVariant(data.filesize));
         q.bindValue(":discnumber", QVariant(data.discnumber));
+        q.bindValue(":rating", QVariant(data.rating));
         q.bindValue(":cissearch", QVariant(data.title.toLower()));
 
         if (!q.exec()) {
@@ -566,8 +637,26 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 	return 0;
 }
 
+int CDatabaseConnector::updateTracks(MetaDataList lst){
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
+
+    int success = 1;
+    _database->transaction();
+    foreach(MetaData md, lst)
+        success *= updateTrack(md);
+    _database->commit();
+    return success;
+
+}
 
 int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID) {
+
+#ifdef DEBUG_DB
+    qDebug() << Q_FUNC_INFO;
+#endif
 
 	DB_TRY_OPEN(_database);
 

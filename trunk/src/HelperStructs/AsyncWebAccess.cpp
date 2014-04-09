@@ -28,6 +28,7 @@ AsyncWebAccess::AsyncWebAccess(QObject* parent, int id, AwaDataType type) : QThr
     _data = new QString();
     _img = new QImage();
     _type = type;
+    setTerminationEnabled(true);
 }
 
 AsyncWebAccess::~AsyncWebAccess(){

@@ -104,9 +104,6 @@ public:
 		MetaDataList _vec_org_metadata;
 		MetaDataList _vec_tmp_metadata;
 
-		AlbumList _vec_albums;
-		ArtistList _vec_artists;
-
 		QStringList _lst_new_albums;
 		QStringList _lst_new_artists;
 

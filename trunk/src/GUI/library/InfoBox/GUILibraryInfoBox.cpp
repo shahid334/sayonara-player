@@ -75,8 +75,6 @@ void GUI_Library_Info_Box::psl_refresh(){
 
         QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "info.png")).scaled(80,80, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
         this->ui->lab_icon->setPixmap(pix);
-
-
     }
 
     MetaDataList v_md;

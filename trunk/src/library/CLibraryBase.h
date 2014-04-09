@@ -99,6 +99,9 @@ public slots:
     void psl_append_all_tracks();
     void psl_append_tracks(const QList<int>&);
 
+    void psl_track_rating_changed(int idx, int rating);
+    void psl_album_rating_changed(int idx, int rating);
+
 
 private slots:
 

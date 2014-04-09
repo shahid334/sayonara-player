@@ -29,29 +29,22 @@
 #ifndef IBRARYITEMDELEGATETRACKS_H_
 #define IBRARYITEMDELEGATETRACKS_H_
 
-#include <QItemDelegate>
+#include "GUI/library/delegate/LibraryRatingDelegate.h"
 #include <QTableView>
 #include <QLabel>
 #include <QPen>
 #include <QColor>
 #include "GUI/library/model/LibraryItemModelTracks.h"
+#include "GUI/library/view/LibraryView.h"
 
-class LibraryItemDelegateTracks : public QItemDelegate {
+class LibraryItemDelegateTracks : public LibraryRatingDelegate {
 public:
-    LibraryItemDelegateTracks(LibraryItemModel* model, QTableView* parent=0);
+    LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent=0);
 	virtual ~LibraryItemDelegateTracks();
 
 public:
-
-
 	    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 	    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-
-		QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-		void setEditorData(QWidget *editor, const QModelIndex &index) const;
-		void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
         void set_skin(bool dark);
 

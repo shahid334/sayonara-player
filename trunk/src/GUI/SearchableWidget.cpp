@@ -32,7 +32,7 @@ void SearchableTableView::mouseMoveEvent(QMouseEvent *e){
 
 void SearchableTableView::mousePressEvent(QMouseEvent *e){
 
-	emit sig_mouse_pressed();
+    emit sig_mouse_pressed();
     QTableView::mousePressEvent(e);
 }
 

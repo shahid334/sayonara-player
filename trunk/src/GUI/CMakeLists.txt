@@ -17,6 +17,7 @@ ADD_SUBDIRECTORY(icons)
 SET(HEADERS
     SearchableWidget.h
     MiniSearcher.h
+    RatingLabel.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
@@ -41,6 +42,7 @@ SET(HEADERS
     library/model/LibraryItemModelTracks.h
     library/model/LibraryItemModelAlbums.h
     library/model/LibraryItemModelArtists.h
+    library/delegate/LibraryRatingDelegate.h
     library/delegate/LibraryItemDelegateAlbums.h
     library/delegate/LibraryItemDelegateArtists.h
     library/InfoBox/GUILibraryInfoBox.h
@@ -69,6 +71,7 @@ SET(HEADERS
 SET(SOURCES
     SearchableWidget.cpp
     MiniSearcher.cpp
+    RatingLabel.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp
@@ -98,6 +101,7 @@ SET(SOURCES
     library/model/LibraryItemModelTracks.cpp
     library/model/LibraryItemModelAlbums.cpp
     library/model/LibraryItemModelArtists.cpp
+    library/delegate/LibraryRatingDelegate.cpp
     library/delegate/LibraryItemDelegateAlbums.cpp
     library/delegate/LibraryItemDelegateArtists.cpp
     library/delegate/LibraryItemDelegateTracks.cpp

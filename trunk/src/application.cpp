@@ -360,6 +360,7 @@ void Application::init_connections(){
     CONNECT(library, sig_change_id3_tags(const MetaDataList&),	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
     CONNECT(library, sig_reload_library_finished(),                  ui_library, 	reloading_library_finished());
 
+
     CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));
     CONNECT(ui_library, sig_artist_dbl_clicked(int), 					library, 		psl_prepare_artist_for_playlist(int));
     CONNECT(ui_library, sig_tracks_dbl_clicked(QList<int>),             library, 		psl_prepare_tracks_for_playlist(QList<int>));
@@ -367,6 +368,8 @@ void Application::init_connections(){
     CONNECT(ui_library, sig_album_sel_changed(const QList<int>&),       library, 		psl_selected_albums_changed(const QList<int>&));
     CONNECT(ui_library, sig_track_sel_changed(const QList<int>&),       library, 		psl_selected_tracks_changed(const QList<int>&));
     CONNECT(ui_library, sig_disc_pressed(int),                          library,		psl_disc_pressed(int));
+    CONNECT(ui_library, sig_album_rating_changed(int, int),             library,        psl_album_rating_changed(int, int));
+    CONNECT(ui_library, sig_track_rating_changed(int, int),             library,        psl_track_rating_changed(int, int));
 
     CONNECT(library_importer, sig_lib_changes_allowed(bool),			player,         psl_reload_library_allowed(bool));
     CONNECT(library_importer, sig_import_result(bool),					library,		refresh(bool));
@@ -380,6 +383,7 @@ void Application::init_connections(){
     CONNECT(ui_library, sig_append_all_tracks(),                             library,		psl_append_all_tracks());
 
     CONNECT(ui_library, sig_filter_changed(const Filter&),                   library, 		psl_filter_changed(const Filter&));
+
     CONNECT(ui_library, sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder),
             library, 	psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder));
 

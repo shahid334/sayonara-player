@@ -118,7 +118,7 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
         gst_obj_ref->set_level(arr[0], arr[0]);
     }
 
-    delete arr;
+    delete[] arr;
 
     return TRUE;
 

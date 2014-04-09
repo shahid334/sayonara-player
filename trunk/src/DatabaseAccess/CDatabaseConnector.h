@@ -23,6 +23,7 @@
 #ifndef CDATABASECONNECTOR_H
 #define CDATABASECONNECTOR_H
 
+
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
@@ -37,7 +38,12 @@
 
 
 
+
+
 using namespace Sort;
+
+
+//#define DEBUG_DB
 
 #define INDEX_SIZE 3
 
@@ -110,7 +116,7 @@ public:
 			void getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder = AlbumNameAsc);
 
 			int insertAlbumIntoDatabase (const QString & album);
-			int insertAlbumIntoDatabase (const Album& album);
+            int insertAlbumIntoDatabase (const Album& album);
 
 
 
@@ -128,6 +134,7 @@ public:
 
             int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
             int updateTrack(MetaData& data);
+            int updateTracks(MetaDataList lst);
 
 			int getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
