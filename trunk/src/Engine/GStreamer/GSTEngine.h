@@ -130,8 +130,8 @@ public:
 
 private:
 	
-	GSTPipelineExperimental*	 _pipeline;
-	GSTPipelineExperimental*	 _other_pipeline;
+	GSTPipeline*	 _pipeline;
+	GSTPipeline*	 _other_pipeline;
 
 	StreamRecorder* _stream_recorder;
 

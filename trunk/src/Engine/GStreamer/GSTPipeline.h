@@ -25,11 +25,19 @@
 
 #include <QObject>
 #include <QString>
+#include <QTimer>
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
 
 bool _test_and_error(void* element, QString errorstr);
 bool _test_and_error_bool(bool b, QString errorstr);
+
+
+enum GSTFileMode{
+	GSTFileModeFile,
+	GSTFileModeHttp
+
+};
 
 
 class GSTPipeline : public QObject
@@ -65,17 +73,26 @@ public:
 	void set_gapless(bool gapless);
 	bool get_gapless();
 
+	void start_timer(qint64 ms);
+
 
 protected:
 
 	GstBus*		_bus;
 	GstElement* _pipeline;
-	GstElement* _equalizer;
+
+	GstElement* _audio_src;
+	GstElement* _audio_convert;
+
+
 	GstElement* _eq_queue;
+	GstElement* _equalizer;
+
 	GstElement* _volume;
 
-	GstPad* _tee_app_pad;
+
 	GstPad* _app_pad;
+	GstPad* _tee_app_pad;
 
 	GstElement* _audio_sink;
 	GstElement* _audio_bin;
@@ -93,6 +110,8 @@ protected:
 
 
 	GstElement* _tee;
+
+	QTimer* _timer;
 
 	gchar* _uri;
 	bool  _gapless;

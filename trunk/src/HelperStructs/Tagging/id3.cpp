@@ -47,8 +47,6 @@ using namespace Helper;
 
 bool ID3::getMetaDataOfFile(MetaData& md){
 
-
-	bool success;
 	md.filepath = QDir(md.filepath).absolutePath();
     QFile qf(md.filepath);
     md.filesize = qf.size();

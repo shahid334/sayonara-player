@@ -293,7 +293,7 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 	this->broken = false;
 
 
-#ifdef Q_OS_LINUX
+#if 0
 	int fd;
 	fd = open(filename.toUtf8(), O_RDONLY);
 	if(fd < 0){
@@ -336,14 +336,12 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 
 #else
 
-    //qDebug() << "Read file";
-    if(!f->open(QIODevice::ReadOnly)){
-        valid = false;
-        return false;
-    }
+	QFile* f = new QFile(filename);
+	if(!f->open(QIODevice::ReadOnly)){
+		valid = false;
+		return false;
+	}
 
-
-	f = new QFile(filename);
     f->seek(0);
     QByteArray header_header = f->read(10);
     valid = header_header.startsWith("ID3");
@@ -359,7 +357,11 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
     f->seek(0);
     raw_data = f->read(10 + header_size);
 	f->close();
+
+	delete f;
 #endif
+
+
 	org_size = header_size;
 
 	// this O(n²) looks slower as it is

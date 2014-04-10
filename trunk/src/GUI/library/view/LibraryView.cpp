@@ -392,7 +392,7 @@ void LibraryView::fill(const TList& input_data){
 	uint size = input_data.size();
 
 	_model->removeRows(0, _model->rowCount());
-	_model->insertRows(0, size); // fake "all albums row"
+	_model->insertRows(0, size);
 
 	QModelIndex idx;
 	int first_selected_row = -1;

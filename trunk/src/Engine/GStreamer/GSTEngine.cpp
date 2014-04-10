@@ -26,7 +26,7 @@
 #include "Engine/Engine.h"
 #include "Engine/GStreamer/GSTEngine.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
-#include "Engine/GStreamer/GSTPipelineExperimental.h"
+#include "Engine/GStreamer/GSTPipeline.h"
 
 #include <gst/gst.h>
 #include <gst/gsturi.h>
@@ -123,7 +123,7 @@ void GST_Engine::init() {
 
 	_stream_recorder->init();
 
-	_pipeline = new GSTPipelineExperimental();
+	_pipeline = new GSTPipeline();
 	_pipeline->set_gapless(false);
 	_other_pipeline = NULL;
 
@@ -525,7 +525,7 @@ void GST_Engine::set_track_finished() {
 
 	else{
 
-		GSTPipelineExperimental* tmp;
+		GSTPipeline* tmp;
 		tmp = _pipeline;
 		_pipeline = _other_pipeline;
 		_other_pipeline = tmp;
@@ -618,7 +618,7 @@ void GST_Engine::psl_set_gapless(bool b){
 	if(b){
 
 		if(!_other_pipeline){
-			_other_pipeline = new GSTPipelineExperimental();
+			_other_pipeline = new GSTPipeline();
 		}
 
 		_other_pipeline->set_volume(_pipeline->get_volume());

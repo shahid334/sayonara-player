@@ -44,7 +44,8 @@ PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent){
 }
 
 PlaylistHandler::~PlaylistHandler() {
-
+	if(_playlist)
+		delete _playlist;
 }
 
 void PlaylistHandler::playlist_changed(const MetaDataList& v_md, int cur_idx){
