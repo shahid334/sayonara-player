@@ -476,7 +476,7 @@ void GST_Engine::set_cur_position_ms(quint64 pos_ms) {
 
 	gst_element_query_position(_pipeline->get_pipeline(), &format, &new_time_ns);
 	//qDebug() << "Actual position = " << new_time_ns / MIO;
-	if( ((qint64) pos_ms >= duration_ms - 500) && _may_start_timer){
+	if( ((qint64) pos_ms >= duration_ms - 500) && _may_start_timer && duration_ms > 0){
 		qDebug() << "Pos ms: " << pos_ms << ", Duration: " << duration_ms;
 			// _other_pipeline should never be zero because _may_start_timer is
 			// only set to true if gapless mode is active
