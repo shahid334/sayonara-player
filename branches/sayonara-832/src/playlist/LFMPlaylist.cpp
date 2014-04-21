@@ -86,7 +86,7 @@ void LFMPlaylist::fwd(){
         _v_md.setCurPlayTrack(_cur_play_idx);
     }
     else{
-        stop();
+		//stop();
         return;
     }
 

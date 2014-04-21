@@ -48,9 +48,10 @@ bool colFromString(QString str, QColor& c){
     QStringList colors = str.split(",");
 
     if(colors.size() < 3){
-        c.setRed(-1);
+		/*c.setRed(-1);
         c.setGreen(-1);
-        c.setBlue(-1);
+		c.setBlue(-1);*/
+
 
         return false;
     }

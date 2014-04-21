@@ -44,12 +44,17 @@ class GSTPipeline : public QObject
 {
 	Q_OBJECT
 
+signals:
+	void sig_about_to_finish(qint64);
+	void sig_cur_pos_changed(qint64);
+
 public:
 	GSTPipeline(QObject *parent = 0);
 	~GSTPipeline();
 	GstElement* get_pipeline();
 	GstBus* get_bus();
 
+public slots:
 	void play();
 	void pause();
 	void stop();
@@ -61,7 +66,8 @@ public:
 	void enable_level(bool b);
 	void enable_spectrum(bool b);
 
-	gint64 get_duration_ns();
+	qint64 get_duration_ms();
+	qint64 get_position_ms();
 	guint get_bitrate();
 
 	virtual bool set_uri(gchar* uri);
@@ -74,6 +80,12 @@ public:
 	bool get_gapless();
 
 	void start_timer(qint64 ms);
+	void about_to_finish();
+
+	void refresh_cur_position(gint64 cur_pos_ms);
+
+	GstState get_state();
+
 
 
 protected:
@@ -118,7 +130,7 @@ protected:
 
 	int _vol;
 	qint64 _duration;
-
+	qint64 _position;
 
 };
 

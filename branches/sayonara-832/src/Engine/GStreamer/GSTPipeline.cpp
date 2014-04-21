@@ -23,7 +23,7 @@
 #include "GSTPipeline.h"
 #include "GSTEngineHelper.h"
 #include "HelperStructs/globals.h"
-#include "gst/interfaces/streamvolume.h"
+//#include "gst/interfaces/streamvolume.h"
 
 #include "unistd.h"
 #include <QDebug>
@@ -44,6 +44,39 @@ static void pad_added_handler (GstElement *src, GstPad *new_pad, gpointer data){
 }
 
 
+static void drained(GstElement* e, gpointer data){
+
+	/*Q_UNUSED(e);
+
+	qDebug() << "Drained...";
+	GSTPipeline* pipeline = (GSTPipeline*) data;
+	pipeline->about_to_finish();*/
+
+}
+
+static gboolean
+show_position(gpointer data){
+
+	gint64 pos;
+	GstState state;
+	GSTPipeline* pipeline = (GSTPipeline*) data;
+	GstElement* p = pipeline->get_pipeline();
+
+	if(!p) return false;
+	state = pipeline->get_state();
+	if(state != GST_STATE_PLAYING && state != GST_STATE_PAUSED) return false;
+
+	ENGINE_DEBUG;
+
+	gst_element_query_position(p, GST_FORMAT_TIME, &pos);
+
+
+	pipeline->refresh_cur_position(pos / MIO);
+
+	return true;
+}
+
+
 //########################################################################################
 //########################################################################################
 
@@ -52,7 +85,8 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 	QObject(parent)
 {
 
-	bool success = false;
+
+	bool status = false;
 	int i = 0;
 	_pipeline = 0;
 	_duration = 0;
@@ -65,6 +99,7 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 
 	// eq -> autoaudiosink is packaged into a bin
 	do {
+		bool success = false;
 		// create equalizer element
 		GstElement* tmp_pipeline = gst_pipeline_new("Pipeline");
 		_test_and_error(tmp_pipeline, "Engine: Pipeline sucks");
@@ -91,7 +126,7 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		_level_queue = gst_element_factory_make("queue", "level_queue");
 		_spectrum_queue = gst_element_factory_make("queue", "spectrum_queue");
 
-		_level_sink = gst_element_factory_make("appsink", "level_sink");
+		_level_sink = gst_element_factory_make("fakesink", "level_sink");
 		_spectrum_sink = gst_element_factory_make("fakesink", "spectrum_sink");
 
 
@@ -123,9 +158,6 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		_test_and_error_bool(success, "Engine: Cannot link Level pipeline");
 
 
-
-
-
 		success = gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
 		_test_and_error_bool(success, "Engine: Cannot link Spectrum pipeline");
 
@@ -135,12 +167,8 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		success = gst_element_link_many(_audio_convert, _tee, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link audio convert with tee")) break;
 
-#ifdef ENGINE_OLD_PIPELINE
-		_filemode = GSTFileModeFile;
-		g_signal_connect (_decoder, "pad-added", G_CALLBACK (pad_added_handler), _audio_convert);
-#else
+
 		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (pad_added_handler), _audio_convert);
-#endif
 
 		// Connect tee
 
@@ -149,11 +177,12 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		GstPadLinkReturn s;
 
 		// create tee pads
-		_tee_src_pad_template = gst_element_class_get_pad_template(GST_ELEMENT_GET_CLASS(_tee), "src%d");
+		_tee_src_pad_template = gst_element_class_get_pad_template (GST_ELEMENT_GET_CLASS (_tee), "src_%u");
+		if(!_test_and_error(_tee_src_pad_template, "Engine: _tee_src_pad_template is NULL")) break;
 
 		// "outputs" of tee to eq and queue
 		tee_eq_pad = gst_element_request_pad(_tee, _tee_src_pad_template, NULL, NULL);
-			if(!_test_and_error(tee_eq_pad, "Engis == GST_PAD_LINK_OK)ne: tee_eq_pad is NULL")) break;
+			if(!_test_and_error(tee_eq_pad, "Engine: tee_eq_pad is NULL")) break;
 		eq_pad = gst_element_get_static_pad(_eq_queue, "sink");
 			if(!_test_and_error(eq_pad, "Engine: eq pad is NULL")) break;
 
@@ -182,29 +211,28 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		gint threshold = - crop_spectrum_at;
 
 /*****/
-		GstCaps* audio_caps = gst_caps_from_string (AUDIO_CAPS);
-		g_object_set (_level_sink,
+		/*g_object_set (_level_sink,
 					  "drop", TRUE,
 					  "max-buffers", 1,
-					  "caps", audio_caps,
+					  //"caps", audio_caps,
 					  "emit-signals", FALSE,
-					  NULL);
+					  NULL);*/
 
-	   g_signal_connect (_level_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+	   //g_signal_connect (_level_sink, "new-buffer", G_CALLBACK (new_buffer), NULL);
+	   g_signal_connect (_audio_src, "drained", G_CALLBACK(drained), this);
 /*****/
 
 
 
 		g_object_set (G_OBJECT (_level),
 					  "message", TRUE,
-					  "interval", interval / 10,
+					  "interval", interval,
 					  NULL);
 
 		g_object_set (G_OBJECT (_spectrum),
 					  "interval", interval,
 					  "bands", N_BINS,
 					  "threshold", threshold,
-					  "message", TRUE,
 					  "message-phase", FALSE,
 					  "message-magnitude", TRUE,
 					  "multi-channel", FALSE,
@@ -226,14 +254,20 @@ GSTPipeline::GSTPipeline(QObject *parent) :
 		gst_element_set_state(tmp_pipeline, GST_STATE_READY);
 
 		success = true;
+		status = true;
 		_pipeline = tmp_pipeline;
 
 		break;
 	} while (i);
 
-	if(success) gst_bus_add_watch(_bus, bus_state_changed, this);
+	if(status) gst_bus_add_watch(_bus, bus_state_changed, this);
+	else {
+		_pipeline=0;
+		qDebug() << "****Pipeline: constructor finished: " << status;
+		return;
+	}
 
-	ENGINE_DEBUG << "Pipeline: constructor finished: " << success;
+	qDebug() << "****Pipeline: constructor finished: " << status;
 }
 
 
@@ -253,6 +287,12 @@ GstBus* GSTPipeline::get_bus(){
 	return _bus;
 }
 
+GstState GSTPipeline::get_state(){
+	GstState state;
+	gst_element_get_state(_pipeline, &state, NULL, GST_CLOCK_TIME_NONE);
+	return state;
+}
+
 GstElement* GSTPipeline::get_pipeline(){
 	return _pipeline;
 }
@@ -260,8 +300,10 @@ GstElement* GSTPipeline::get_pipeline(){
 
 void GSTPipeline::play(){
 	_timer->stop();
-	gst_element_set_name(_pipeline, "1");
+
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+	g_timeout_add(200, (GSourceFunc) show_position, this);
+
 }
 
 void GSTPipeline::pause(){
@@ -272,7 +314,6 @@ void GSTPipeline::pause(){
 void GSTPipeline::stop(){
 
 	_timer->stop();
-	gst_element_set_name(_pipeline, "0");
 
 	_duration = 0;
 	_uri = 0;
@@ -377,7 +418,6 @@ void GSTPipeline::enable_level(bool b){
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
 }
 
-#define EXT_LINK
 
 void GSTPipeline::enable_spectrum(bool b){
 
@@ -403,18 +443,43 @@ void GSTPipeline::enable_spectrum(bool b){
 }
 
 
-gint64 GSTPipeline::get_duration_ns(){
+qint64 GSTPipeline::get_position_ms(){
+
+	gint64 position=0;
+	bool success = false;
+	GstState state = get_state();
+
+
+	success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
+
+	if(!success ) {
+		_position = 0;
+		return -1;
+	}
+
+	_position = (qint64) (position / MIO);
+
+	return _position;
+}
+
+
+qint64 GSTPipeline::get_duration_ms(){
 
 	if(_duration != 0) return _duration;
 
-	GstFormat format=GST_FORMAT_TIME;
 	gint64 duration=0;
 	bool success = false;
-	success = gst_element_query_duration(_pipeline, &format, &duration);
+	GstState state = get_state();
 
-	if(!success ) return -1;
+	if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING)
+		success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
 
-	_duration = duration;
+	if(!success ) {
+		_duration = 0;
+		return -1;
+	}
+
+	_duration = (qint64) (duration / MIO);
 
 	return _duration;
 }
@@ -440,6 +505,24 @@ guint GSTPipeline::get_bitrate(){
 
 	return 0;
 }
+
+
+void GSTPipeline::refresh_cur_position(gint64 cur_pos_ms){
+	_position = cur_pos_ms;
+
+	gint64 difference = get_duration_ms() - _position;
+
+	if(_duration >= 0)
+		emit sig_cur_pos_changed((qint64) (cur_pos_ms));
+
+	if(difference < 500 && difference > 0) {
+		emit sig_about_to_finish(difference - 50);
+		_duration = -1;
+	}
+
+
+}
+
 
 bool GSTPipeline::set_uri(gchar* uri){
 
@@ -495,3 +578,17 @@ bool _test_and_error_bool(bool b, QString errorstr){
 	return true;
 }
 
+
+void GSTPipeline::about_to_finish(){
+	gint64 position;
+	gint64 duration;
+	qint64 time2go;
+
+	gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+	gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &position);
+
+	time2go = (duration - position) / MIO;
+
+	// ms
+	emit sig_about_to_finish(time2go);
+}

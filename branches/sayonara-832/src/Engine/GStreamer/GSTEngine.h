@@ -152,6 +152,8 @@ private slots:
     virtual void sr_ended();
     virtual void sr_not_valid();
     void timeout();
+	void set_about_to_finish(qint64);
+	void set_cur_position_ms(qint64);
     
 
 
@@ -181,9 +183,9 @@ public slots:
 public:
 	// callback -> class
 	void		state_changed();
-	void		set_cur_position_ms(quint64);
+
 	void		set_track_finished();
-    void        set_about_to_finish();
+
     void        emit_buffer(float inv_array_elements, float scale);
 
     void        set_level(float right, float left);

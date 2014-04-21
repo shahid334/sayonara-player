@@ -109,7 +109,7 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
     int num_zero = 0;
     for(int c=0; c<2; c++){
 
-        float level = (_level[c] + 45.0f) / 50.0f; // scaled from 0 - 1
+		float level = (_level[c] + 50.0f) / 50.0f; // scaled from 0 - 1
         if(level < 0) level = 0;
 
         int n_colored_rects = n_rects * level;

@@ -176,8 +176,8 @@ void StdPlaylist::next(){
 
             if(_playlist_mode.repAll)
                 track_num = 0;
-            else
-                track_num = -1;
+			else return;
+
         }
 
         else{
@@ -190,7 +190,7 @@ void StdPlaylist::next(){
     }
 
 
-        change_track(track_num);
+	change_track(track_num);
 }
 
 

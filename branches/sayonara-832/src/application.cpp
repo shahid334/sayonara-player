@@ -331,9 +331,8 @@ void Application::init_connections(){
     CONNECT( playlist_loader, sig_change_track(int, qint32, bool),      playlist_handler,       psl_change_track(int, qint32, bool));
 
     CONNECT (listen, track_finished(),                                   playlist_handler,	psl_next() );
-    CONNECT (listen, sig_valid_strrec_track(const MetaData&),            playlist_handler,  psl_valid_strrec_track(const MetaData&));
+	//CONNECT (listen, sig_valid_strrec_track(const MetaData&),            playlist_handler,  psl_valid_strrec_track(const MetaData&));
     CONNECT (listen, scrobble_track(const MetaData&),                    lastfm, 	psl_scrobble(const MetaData&));
-    CONNECT (listen, wanna_gapless_track(),                              playlist_handler,   psl_gapless_track() );
     CONNECT (listen, sig_level(float, float),                            ui_level,  set_level(float,float));
     CONNECT (listen, sig_spectrum(QList<float>&),                        ui_spectrum, set_spectrum(QList<float>&));
 
@@ -351,16 +350,16 @@ void Application::init_connections(){
     CONNECT(library, sig_playlist_created(QStringList&),            playlist_handler, 		psl_createPlaylist(QStringList&));
     CONNECT(library, sig_reloading_library(QString&),				ui_library, 	reloading_library(QString&));
     CONNECT(library, sig_all_tracks_loaded(MetaDataList&), 			ui_library, 	fill_library_tracks(MetaDataList&));
-    CONNECT(library, sig_all_albums_loaded(AlbumList&),          ui_library, 	fill_library_albums(AlbumList&));
-    CONNECT(library, sig_all_artists_loaded(ArtistList&), 		ui_library, 	fill_library_artists(ArtistList&));
+	CONNECT(library, sig_all_albums_loaded(AlbumList&),				ui_library, 	fill_library_albums(AlbumList&));
+	CONNECT(library, sig_all_artists_loaded(ArtistList&),			ui_library, 	fill_library_artists(ArtistList&));
     CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			ui_library, 	track_info_available(const MetaDataList&));
     CONNECT(library, sig_tracks_for_playlist_available(MetaDataList&),           	playlist_handler, psl_createPlaylist(MetaDataList&));
     CONNECT(library, sig_append_tracks_to_playlist(MetaDataList&),                  playlist_handler, psl_append_tracks(MetaDataList&));
     CONNECT(library, sig_delete_answer(QString), 					ui_library, 	psl_delete_answer(QString));
-    CONNECT(library, sig_play_next_tracks(const MetaDataList&),  playlist_handler,          psl_play_next(const MetaDataList&));
-    CONNECT(library, sig_libpath_set(QString&),                player,         psl_libpath_changed(QString&));
-    CONNECT(library, sig_change_id3_tags(const MetaDataList&),	ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
-    CONNECT(library, sig_reload_library_finished(),                  ui_library, 	reloading_library_finished());
+	CONNECT(library, sig_play_next_tracks(const MetaDataList&),		playlist_handler,          psl_play_next(const MetaDataList&));
+	CONNECT(library, sig_libpath_set(QString&),						player,         psl_libpath_changed(QString&));
+	CONNECT(library, sig_change_id3_tags(const MetaDataList&),		ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
+	CONNECT(library, sig_reload_library_finished(),                 ui_library, 	reloading_library_finished());
 
 
     CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));

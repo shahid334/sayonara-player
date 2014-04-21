@@ -386,28 +386,8 @@ void GUI_Player::psl_track_time_changed(MetaData& md){
     m_completeLength_ms = md.length_ms;
     QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
     ui->maxTime->setText(lengthString);
-
-    QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-    if (md.bitrate < 96000)
-        tmp += "*";
-    else if (md.bitrate < 128000)
-        tmp += "**";
-    else if (md.bitrate < 160000)
-        tmp += "***";
-    else if (md.bitrate < 256000)
-        tmp += "****";
-    else
-        tmp += "*****";
-    tmp += "</font>";
-
-    ui->lab_rating->setText(tmp);
-    ui->lab_rating->setToolTip(
-            QString("<font color=\"#000000\">") +
-            QString::number(md.bitrate / 1000) +
-            QString(" kBit/s") +
-            QString("</font>"));
-
 }
+
 
 // public slot:
 // id3 tags have changed
@@ -688,8 +668,8 @@ void GUI_Player::psl_reload_library_allowed(bool b){
 void GUI_Player::setRadioMode(int radio){
 
     bool stream_ripper = m_settings->getStreamRipper();
-	ui->btn_bw->setEnabled(radio == RADIO_OFF);
-	ui->btn_fw->setEnabled(radio != RADIO_STATION);
+	ui->btn_bw->setEnabled(radio != RADIO_LFM);
+	ui->btn_fw->setEnabled(true);
 
 	if(stream_ripper){
 
@@ -712,14 +692,14 @@ void GUI_Player::setRadioMode(int radio){
 
 		ui->btn_rec->setVisible(false);
         ui->btn_play->setVisible(true);
-		ui->btn_play->setEnabled(radio == RADIO_OFF);
+		ui->btn_play->setEnabled(radio != RADIO_LFM);
 	}
 
-    m_trayIcon->set_enable_play(radio == RADIO_OFF);
-    m_trayIcon->set_enable_fwd(radio != RADIO_STATION);
-    m_trayIcon->set_enable_bwd(radio == RADIO_OFF);
+	m_trayIcon->set_enable_play(radio != RADIO_LFM);
+	m_trayIcon->set_enable_fwd(true);
+	m_trayIcon->set_enable_bwd(radio != RADIO_LFM);
 
-    ui->songProgress->setEnabled(radio == RADIO_OFF);
+	ui->songProgress->setEnabled( (radio != RADIO_LFM) && (m_metadata.length_ms / 1000) > 0);
 
     emit sig_rec_button_toggled(ui->btn_rec->isChecked() && ui->btn_rec->isVisible());
 }

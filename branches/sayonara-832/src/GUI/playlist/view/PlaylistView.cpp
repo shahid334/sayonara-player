@@ -424,7 +424,6 @@ void PlaylistView::select_rows(QList<int> lst){
 
         sm->select(idx, QItemSelectionModel::Select);
         sel.merge(sm->selection(), QItemSelectionModel::Select);
-        qDebug() << "Select " << row;
     }
 
     sm->select(sel,QItemSelectionModel::Select);

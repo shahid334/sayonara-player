@@ -69,8 +69,8 @@ void GUI_Player::stopClicked(bool b) {
 
 	this->setWindowTitle("Sayonara");
     ui->songProgress->setValue(0);
-    ui->curTime->setText("0:00");
-	ui->maxTime->setText("0:00");
+	ui->curTime->setText("00:00");
+	ui->maxTime->setText("00:00");
 
     ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
 

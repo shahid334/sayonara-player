@@ -52,14 +52,11 @@ MiniSearcher::MiniSearcher(SearchableTableView *parent, MiniSearcherButtons b) :
 {
     _parent = parent;
 
-
     connect(parent, SIGNAL(sig_mouse_pressed()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_mouse_released()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_focus_out()), this, SLOT(reset()));
-    connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
-
-
+	//connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
 
 	initLayout(b);
 
@@ -74,7 +71,7 @@ MiniSearcher::MiniSearcher(SearchableListView *parent, MiniSearcherButtons b) :
     connect(parent, SIGNAL(sig_mouse_moved()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_mouse_released()), this, SLOT(reset()));
     connect(parent, SIGNAL(sig_focus_out()), this, SLOT(reset()));
-    connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
+	//connect(parent, SIGNAL(sig_key_pressed(QKeyEvent*)), this, SLOT(key_pressed(QKeyEvent*)));
 
 	initLayout(b);
 

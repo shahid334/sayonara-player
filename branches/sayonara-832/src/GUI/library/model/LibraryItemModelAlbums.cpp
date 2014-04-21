@@ -88,10 +88,10 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 
 QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 {
-	 if (!index.isValid())
+		if (!index.isValid())
 			 return QVariant();
 
-		 if (index.row() >= _album_list.size())
+		if (index.row() >= _album_list.size())
 			 return QVariant();
 
         // qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
@@ -187,6 +187,7 @@ QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr){
 		qDebug() << _selected_rows;
 		return getNextRowIndexOf(substr, _selected_rows[0]);
 	}
+
 	else
 		return getNextRowIndexOf(substr, 0);
 }

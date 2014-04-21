@@ -72,7 +72,7 @@ void CLibraryBase::emit_stuff(){
 
 void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so){
 
-    qDebug() << "Library: Sortorder changed";
+	//qDebug() << "Library: Sortorder changed";
 
     QList<int> lst;
     lst << artist_so << album_so << track_so;
@@ -169,7 +169,7 @@ void CLibraryBase::refresh(bool b){
 
 void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
-    qDebug() << "Library: Filter changed";
+	//qDebug() << "Library: Filter changed";
 
     if(     _filter.cleared &&
             filter.cleared &&
@@ -211,7 +211,7 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force){
 
 void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list){
 
-    qDebug() << "Library: Selected artists changed";
+	//qDebug() << "Library: Selected artists changed";
 
     QList<int> selected_artists;
 

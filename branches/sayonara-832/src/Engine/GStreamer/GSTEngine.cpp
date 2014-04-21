@@ -99,6 +99,7 @@ GST_Engine::GST_Engine() {
 			SLOT(sr_not_valid()));
 
 
+
 }
 
 
@@ -127,6 +128,8 @@ void GST_Engine::init() {
 	_pipeline->set_gapless(false);
 	_other_pipeline = NULL;
 
+	connect(_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
+	connect(_pipeline, SIGNAL(sig_cur_pos_changed(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 
 	_show_level = false;
 	_show_spectrum = false;
@@ -300,7 +303,7 @@ void GST_Engine::play() {
 
 	_may_start_timer = _pipeline->get_gapless();
 
-	g_timeout_add( WATCH_INTERVAL, (GSourceFunc) show_position, _pipeline->get_pipeline() );
+
 }
 
 void GST_Engine::do_jump_play(){
@@ -451,40 +454,12 @@ void GST_Engine::update_bitrate(qint32 bitrate){
 }
 
 
-void GST_Engine::set_cur_position_ms(quint64 pos_ms) {
+void GST_Engine::set_cur_position_ms(qint64 pos_ms) {
 
 	ENGINE_DEBUG << pos_ms;
-	quint32 pos_sec = pos_ms / 1000;
-	gint64 duration_ms = _pipeline->get_duration_ns() / MIO;
+	qint32 pos_sec = (qint32) (pos_ms / 1000);
 
-	if(_meta_data.length_ms == 0 || _meta_data.bitrate == 0){
-
-		guint bitrate = _pipeline->get_bitrate();
-
-		if(duration_ms > 0)
-			_meta_data.length_ms = duration_ms;
-
-		if(bitrate  > 0)
-			_meta_data.bitrate = bitrate;
-
-		if(duration_ms > 0 && bitrate > 0)
-			emit track_time_changed(_meta_data);
-	}
-
-	GstFormat format = GST_FORMAT_TIME;
-	gint64 new_time_ns;
-
-	gst_element_query_position(_pipeline->get_pipeline(), &format, &new_time_ns);
-	//qDebug() << "Actual position = " << new_time_ns / MIO;
-	if( ((qint64) pos_ms >= duration_ms - 500) && _may_start_timer && duration_ms > 0){
-		qDebug() << "Pos ms: " << pos_ms << ", Duration: " << duration_ms;
-			// _other_pipeline should never be zero because _may_start_timer is
-			// only set to true if gapless mode is active
-			_other_pipeline->start_timer(duration_ms - pos_ms - WATCH_INTERVAL / 2);
-			set_about_to_finish();
-	}
-
-	if ((quint32) _seconds_now == pos_sec)
+	if (_seconds_now == pos_sec)
 		return;
 
 	_seconds_now = pos_sec;
@@ -536,14 +511,20 @@ void GST_Engine::set_track_finished() {
 }
 
 
-void GST_Engine::set_about_to_finish() {
+void GST_Engine::set_about_to_finish(qint64 time2go) {
 
-	qDebug() << "About to finish";
+	qDebug() << "About to finish in " << time2go << "ms";
+
+	bool gapless = _pipeline->get_gapless();
+	if(!gapless) return;
+
+	if(_may_start_timer){
+
+		_other_pipeline->start_timer(time2go);
+
+	}
 
 	_may_start_timer = false;
-	bool gapless = _pipeline->get_gapless();
-
-	if(!gapless) return;
 
 	_wait_for_gapless_track = true;
 
@@ -619,12 +600,15 @@ void GST_Engine::psl_set_gapless(bool b){
 
 		if(!_other_pipeline){
 			_other_pipeline = new GSTPipeline();
+			connect(_other_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
+			connect(_other_pipeline, SIGNAL(sig_cur_pos_changed(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 		}
 
 		_other_pipeline->set_volume(_pipeline->get_volume());
 		_other_pipeline->set_gapless(true);
 		_pipeline->set_gapless(true);
 		_may_start_timer = true;
+
 	}
 
 	else {

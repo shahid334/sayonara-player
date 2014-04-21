@@ -40,8 +40,8 @@ protected:
 	MetaData	_meta_data;
     MetaData    _md_gapless;
 	int			_seconds_started;
-	int			_seconds_now;
-    int         _vol;
+	qint32		_seconds_now;
+	qint32      _vol;
 	qint64		_mseconds_now;
 
 	bool		_scrobbled;

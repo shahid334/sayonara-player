@@ -52,12 +52,12 @@ public:
 
 private:
 
-        QPixmap _icon_single_album;
-        QPixmap _icon_multi_album;
+	QPixmap _icon_single_album;
+	QPixmap _icon_multi_album;
 
-        QPen _pen;
-        LibraryItemModel* _model;
-        QColor _selected_background;
+	QPen _pen;
+	LibraryItemModel* _model;
+	QColor _selected_background;
 
 
 };
