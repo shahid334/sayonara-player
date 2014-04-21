@@ -262,15 +262,14 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
 
-/*        if ( new_state == GST_STATE_PLAYING) {
+		if ( new_state == GST_STATE_PLAYING) {
             gst_obj_ref->do_jump_play();
-
-		}*/
+		}
 
         break;
 
     case GST_MESSAGE_ASYNC_DONE:
-        if(!gst_obj_ref) break;
+
         break;
 
 	case GST_MESSAGE_TAG:
@@ -304,7 +303,6 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
         break;
 
     default:
-
 
         if(gst_obj_ref){
             gst_obj_ref->unmute();

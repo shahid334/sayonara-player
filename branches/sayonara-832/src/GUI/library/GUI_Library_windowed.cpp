@@ -278,9 +278,6 @@ void  GUI_Library_windowed::init_headers(){
     ui->lv_album->setDragEnabled(true);
     ui->lv_album->set_table_headers(album_columns, _sort_albums);
     ui->lv_album->rc_header_menu_init(_shown_cols_albums);
-
-    ui->tb_title->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::SelectedClicked);
-    ui->lv_album->setEditTriggers(QAbstractItemView::CurrentChanged | QAbstractItemView::SelectedClicked);
 }
 
 void GUI_Library_windowed::language_changed(){

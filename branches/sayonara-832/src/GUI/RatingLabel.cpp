@@ -5,7 +5,7 @@
 #include <QColor>
 #include <QDebug>
 
-const int SRect = 3;
+
 const int Offset = 3;
 
 
@@ -34,14 +34,14 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
     QRect rating_rect;
     QColor col;
-    int wrect = ((rect.width() - Offset) - SRect * SRect) / 5 - SRect;
+	int wrect = (rect.width() / 5);
 
     for(int rating = 0; rating < _rating; rating++){
 
-        rating_rect.setRect(Offset + rect.x() + (wrect + SRect) * rating,
-                            rect.y() + SRect * 2,
-                            wrect,
-                            rect.height() - SRect * 4);
+		rating_rect.setRect(5 + rect.x() + (wrect) * (rating),
+							rect.y() + Offset * 2,
+							wrect - Offset,
+							rect.height() - Offset * 4);
 
         col = SAYONARA_ORANGE_COL;
 
@@ -53,10 +53,10 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
     for(int rating= _rating; rating < 5; rating ++){
 
-        rating_rect.setRect(Offset + rect.x() + (wrect + SRect) * rating,
-                            rect.y() + SRect * 2,
-                            wrect,
-                            rect.height() - SRect * 4);
+		rating_rect.setRect(5 + rect.x() + (wrect ) * (rating),
+							rect.y() + Offset * 2,
+							wrect - Offset,
+							rect.height() - Offset * 4);
 
         col = QColor(50, 50, 50);
 
@@ -70,16 +70,16 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 RatingLabel::RatingLabel(QWidget *parent) :
     QLabel(parent)
 {
+	_parent = parent;
     _rating = Rating(0);
     _id = rand();
-    qDebug() << "Create editor " << _id;
-
-    this->setFocusPolicy(Qt::StrongFocus);
-    this->setFocusProxy(parent);
 
     QSizePolicy p(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+	this->setFocus();
     this->setSizePolicy(p);
-    this->setMouseTracking(true);
+	this->setMouseTracking(true);
+
 }
 
 RatingLabel::~RatingLabel(){
@@ -95,13 +95,12 @@ int RatingLabel::get_id(){
 
 int RatingLabel::calc_rating(QPoint pos){
 
-    int pos_x = pos.x();
-    int wrect = (width() - Offset) / 5;
-    int rating = 0;
-    if(pos_x + Offset > wrect / 2 - 2)
-        rating = (pos_x + Offset) / wrect + 1;
+	int rating = (pos.x() + Offset) / ((width() - 5) / 5);
+
+	qDebug() << "Width = " << width() << ", x = " << pos.x();
 
     if(rating > 5) rating = 5;
+
     return rating;
 
 }
@@ -117,13 +116,15 @@ void RatingLabel::paintEvent(QPaintEvent *e){
 
 void RatingLabel::mouseMoveEvent(QMouseEvent *e){
 
-    int rating = calc_rating(e->pos());
-    this->update_rating(rating);
+
+	int rating = calc_rating(e->pos());
+	this->update_rating(rating);
 }
 
 
 void RatingLabel::mousePressEvent(QMouseEvent *e){
 
+	this->setMouseTracking(false);
     int rating = calc_rating(e->pos());
     this->update_rating(rating);
 }
@@ -134,9 +135,11 @@ void RatingLabel::mouseReleaseEvent(QMouseEvent *e){
     emit sig_finished(true);
 }
 
+
 void RatingLabel::focusOutEvent(QFocusEvent* e){
 
-    emit sig_finished(false);
+	_parent->setFocus();
+	emit sig_finished(false);
 
 }
 
@@ -169,11 +172,6 @@ Rating RatingLabel::get_rating(){
 }
 
 void RatingLabel::kill_yourself(){
-
-    if(_id == 0) return;
     emit sig_finished(false);
 }
-
-
-
 

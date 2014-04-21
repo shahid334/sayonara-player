@@ -203,10 +203,12 @@ void GST_Engine::changeTrack(const MetaData& md, int pos_sec, bool start_play) {
 	_seconds_started = 0;
 	_seconds_now = 0;
 	_scrobbled = false;
+
 	_jump_play = pos_sec;
 
 	emit total_time_changed_signal(_meta_data.length_ms);
 	emit timeChangedSignal(pos_sec);
+
 
 	if (start_play){
 		play();
@@ -315,7 +317,8 @@ void GST_Engine::do_jump_play(){
 	if(_jump_play < 0) return;
 	ENGINE_DEBUG;
 
-	this->jump(_jump_play, false);
+	_pipeline->seek_abs(_jump_play * GST_SECOND);
+
 	_jump_play = -1;
 }
 

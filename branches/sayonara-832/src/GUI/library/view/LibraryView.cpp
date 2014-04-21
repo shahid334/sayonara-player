@@ -59,12 +59,15 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
-    this->setEditTriggers(QAbstractItemView::AllEditTriggers);
+
+
+
 
     Helper::set_deja_vu_font(horizontalHeader(), 12);
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
+
 	clearSelection();
 
 }
@@ -77,12 +80,8 @@ LibraryView::~LibraryView() {
 }
 
 
-
-
 // mouse events
 void LibraryView::mousePressEvent(QMouseEvent* event){
-
-    qDebug() << "View: Mouse press event";
 
 	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
@@ -91,34 +90,10 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 
 	case Qt::LeftButton:
 
+		SearchableTableView::mousePressEvent(event);
 
-        SearchableTableView::mousePressEvent(event);
         _drag_pos = pos_org;
         _drag = true;
-
-        break;
-        if(event->pos().y() > _model->rowCount() * rowHeight(0)) {
-            event->ignore();
-			_drag = false;
-			QList<int> lst;
-			_model->set_selected(lst);
-			this->clearSelection();
-			this->selectionModel()->clearSelection();
-
-            break;
-		}
-
-        else {
-			_sel_changed = false;
-            SearchableTableView::mousePressEvent(event);
-			if(!_sel_changed){
-                QItemSelection sel, desel;
-                selectionChanged(sel, desel);
-			}
-
-            _drag_pos = pos_org;
-			_drag = true;
-		}
 
 		break;
 
@@ -189,7 +164,6 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
 // keyboard events
 void LibraryView::keyPressEvent(QKeyEvent* event){
 
-
 	int key = event->key();
 
     Qt::KeyboardModifiers  modifiers = event->modifiers();
@@ -208,20 +182,23 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             event->setModifiers(Qt::NoModifier);
     }
 
+
+
 	SearchableTableView::keyPressEvent(event);
 	if(!event->isAccepted()) return;
+
 
     QList<int> selections = get_selections();
 
     switch(key){
 
-        case Qt::Key_Right:
+		case Qt::Key_Right:
         case Qt::Key_Plus:
             if(_editor){
                 qDebug() << "Try to access editor " << _editor->get_id();
                 _editor->increase();
             }
-        break;
+			break;
 
         case Qt::Key_Left:
         case Qt::Key_Minus:
@@ -229,7 +206,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
                 qDebug() << "Try to access editor " << _editor->get_id();
                 _editor->decrease();
             }
-        break;
+			break;
 
         case Qt::Key_Escape:
 
@@ -259,9 +236,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
 
             break;
 
-
-
-        case Qt::Key_Tab:
+		case Qt::Key_Tab:
             if(alt_pressed || ctrl_pressed) break;
             emit sig_tab_pressed(false);
             break;
@@ -269,17 +244,18 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
         case Qt::Key_Backtab:
             if(alt_pressed || ctrl_pressed) break;
             emit sig_tab_pressed(true);
-            break;
+			break;
 
         case Qt::Key_End:
-            this->selectRow(_model->rowCount() - 1);
+			this->selectRow(_model->rowCount() - 1);
             break;
 
         case Qt::Key_Home:
             this->selectRow(0);
             break;
 
-        default: break;
+		default:
+			break;
     }
 }
 // keyboard end
@@ -328,7 +304,9 @@ void LibraryView::selectionChanged ( const QItemSelection & selected, const QIte
         _qDrag = NULL;
     }
 
+
     if(_cur_filling) return;
+
 
 	QTableView::selectionChanged(selected, deselected);
 
@@ -338,24 +316,17 @@ void LibraryView::selectionChanged ( const QItemSelection & selected, const QIte
 
 	foreach(QModelIndex model_idx, idx_list){
 
-        if(_model->flags(model_idx) & Qt::ItemIsEditable) {
+		int row = model_idx.row();
 
-            if(_editor) {
-                qDebug() << "Try to access editor " << _editor->get_id();
-                _editor->kill_yourself();
-            }
-            this->edit(model_idx);
-        }
-
-        if(idx_list_int.contains(model_idx.row())) continue;
-		idx_list_int.push_back(model_idx.row());
+		if( idx_list_int.contains(row) ) continue;
+		idx_list_int.push_back( row );
 	}
 
 	_model->set_selected(idx_list_int);
 
-    if(selected.indexes().size() > 0){
+	if(selected.indexes().size() > 0){
         this->scrollTo(selected.indexes()[0]);
-    }
+	}
 
     emit sig_sel_changed(idx_list_int);
 	_sel_changed = true;
@@ -384,7 +355,6 @@ template void LibraryView::fill<ArtistList>(const ArtistList&);
 
 template < class TList >
 void LibraryView::fill(const TList& input_data){
-
 
 	_cur_filling = true;
 	QList<int> lst;
@@ -516,11 +486,10 @@ void LibraryView::resizeEvent(QResizeEvent* event){
 
 void LibraryView::set_editor(RatingLabel *editor){
 
-    //if(_editor) _editor->kill_yourself();
-    _editor = editor;
+	_editor = editor;
     if(_editor){
         qDebug() << "New Editor: " << _editor->get_id();
-        connect(_editor, SIGNAL(destroyed()), this, SLOT(editorDestroyed()));
+		//connect(_editor, SIGNAL(destroyed()), this, SLOT(editorDestroyed()));
     }
 
 }

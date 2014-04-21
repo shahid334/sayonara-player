@@ -25,35 +25,28 @@ QWidget *LibraryRatingDelegate::createEditor(QWidget *parent, const QStyleOption
 }
 
 
-void LibraryRatingDelegate::setEditorData(QWidget *editor, const QModelIndex & index) const
-{
-    int rating = index.data().toInt();
-
-    RatingLabel* label = qobject_cast<RatingLabel *>(editor);
-    if(!label) return;
-
-    label->set_rating(rating);
-}
-
-
 void LibraryRatingDelegate::destroy_editor(bool save){
 
-    qDebug() << "Destroy editor";
-
-
-    _parent->set_editor(NULL);
+	_parent->set_editor(NULL);
     RatingLabel *label = qobject_cast<RatingLabel *>(sender());
     if(!label) return;
 
     disconnect(label, SIGNAL(sig_finished(bool)), this, SLOT(destroy_editor(bool)));
 
-    if(save){
-        emit commitData(label);
-        emit sig_rating_changed(label->get_rating().get_rating());
-    }
-
+	emit commitData(label);
+	emit sig_rating_changed(label->get_rating().get_rating());
     emit closeEditor(label);
+}
 
+
+void LibraryRatingDelegate::setEditorData(QWidget *editor, const QModelIndex & index) const
+{
+	int rating = index.data().toInt();
+
+	RatingLabel* label = qobject_cast<RatingLabel *>(editor);
+	if(!label) return;
+
+	label->set_rating(rating);
 }
 
 

@@ -67,6 +67,7 @@ private:
    Rating _rating;
    void update_rating(int rating);
    int calc_rating(QPoint pos);
+   QWidget* _parent;
 };
 
 

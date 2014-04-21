@@ -369,9 +369,12 @@ gint64 GSTPipeline::seek_rel(float percent, gint64 ref_ns){
 		(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
 		new_time_ns)){
 
+		qDebug() << "r Seek to " << new_time_ns / 1000000;
+
 		return new_time_ns;
 	}
 
+	else qDebug() << "r Cannot seek to " << new_time_ns / 1000000;
 
 	return 0;
 }
@@ -379,15 +382,21 @@ gint64 GSTPipeline::seek_rel(float percent, gint64 ref_ns){
 
 gint64 GSTPipeline::seek_abs(gint64 ns){
 
+
+	if(ns == 0) return 0;
+
 	g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 
-	if(gst_element_seek_simple(_pipeline,
-		GST_FORMAT_TIME,
-		(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
+	if(gst_element_seek_simple(_audio_src,
+		GST_FORMAT_TIME,(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
 		ns)){
+
+		qDebug() << "Seek to " << ns / 1000000;
 
 		return ns;
 	}
+
+	else qDebug() << "Cannot seek to " << ns / 1000000;
 
 
 

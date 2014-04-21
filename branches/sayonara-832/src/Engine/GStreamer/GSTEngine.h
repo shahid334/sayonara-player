@@ -164,8 +164,8 @@ public slots:
 	virtual void setVolume(int vol);
 
 	virtual void jump(int where, bool percent=true);
-    virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true);
-    virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true );
+	virtual void changeTrack(const MetaData&, int pos_sec=-1, bool start_play=true);
+	virtual void changeTrack(const QString&, int pos_sec=-1, bool start_play=true );
 	virtual void changeTrackGapless(const MetaData& md, int pos_sec=0, bool start_play=true);
 
 	virtual void eq_changed(int, int);
