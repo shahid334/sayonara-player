@@ -19,26 +19,31 @@ PKG_CHECK_MODULES(GSTREAMER_BASE REQUIRED gstapp-1.0)
 
 
 SET(HEADERS
-        GSTEngine.h
-        GSTEngineHelper.h
+
+        GSTPlaybackEngine.h
         GSTPipeline.h
-       # GSTPipelineExperimental.h
+        GSTPlaybackPipeline.h
+        GSTPlaybackEngine.h
+        GSTEngineHelper.h
+
         StreamRipperBufferThread.h
         StreamRecorder.h
-	${CMAKE_SOURCE_DIR}/src/Engine/Engine.h
-       # thirdparty/gstcrossfade.h
+
+        ../Engine.h
+
 )
 
 SET(SOURCES
-	GSTEngine.cpp
+        GSTPipeline.cpp
+        GSTPlaybackPipeline.cpp
+        GSTPlaybackEngine.cpp
         GSTEngineCallbacks.cpp
+
         StreamRipperBufferThread.cpp
         StreamRecorder.cpp
-        GSTPipeline.cpp
-     #   GSTPipelineExperimental.cpp
-	${CMAKE_SOURCE_DIR}/src/HelperStructs/Helper.cpp
-	${CMAKE_SOURCE_DIR}/src/HelperStructs/Tagging/id3.cpp
-     # thirdparty/gstcrossfade.c
+
+        ../../HelperStructs/Helper.cpp
+        ../../HelperStructs/Tagging/id3.cpp
 )
 	
 QT4_WRAP_CPP(HEADERS_MOC

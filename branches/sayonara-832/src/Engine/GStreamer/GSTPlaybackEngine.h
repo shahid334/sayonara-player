@@ -1,6 +1,6 @@
-/* GSTEngine.h */
+/* GSTPlaybackEngine.h */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -18,24 +18,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define STATE_STOP 0
-#define STATE_PLAY 1
-#define STATE_PAUSE 2
+
+#ifndef GSTPLAYBACKENGINE_H_
+#define GSTPLAYBACKENGINE_H_
+
 
 #define EQ_TYPE_NONE -1
 #define EQ_TYPE_KEQ 0
 #define EQ_TYPE_10B 1
 
-#ifndef GSTENGINE_H_
-#define GSTENGINE_H_
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
-#include "Engine/GStreamer/GSTPipelineExperimental.h"
+#include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
 
+#include <glib.h>
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
 
@@ -57,7 +57,7 @@ enum CapsType {
 class MyCaps {
 
 private:
-    CapsType     _type;
+	CapsType _type;
     bool    _sig;
     int     _width;
     int     _channels;
@@ -115,28 +115,49 @@ public:
 
 
 
-class GST_Engine : public Engine {
+class GSTPlaybackEngine : public Engine {
 
 	Q_OBJECT
 	Q_INTERFACES(Engine)
 
 public:
 
-	GST_Engine();
-	virtual ~GST_Engine();
+	GSTPlaybackEngine();
+	virtual ~GSTPlaybackEngine();
+
+
+
+// public from Gstreamer Callbacks
+	void        emit_buffer(float inv_array_elements, float scale);
+
+	void		state_changed();
+	void		set_track_finished();
+
+	void        set_level(float right, float left);
+	void        set_spectrum(QList<float>&);
+	void		update_bitrate(qint32 bitrate);
+	void		update_time(qint32 time);
+
+	bool get_show_level();
+	bool get_show_spectrum();
+
+	MyCaps* get_caps();
+	void do_jump_play();
+	void unmute();
 
 	virtual void init();
 
 
 private:
 	
-	GSTPipeline*	 _pipeline;
-	GSTPipeline*	 _other_pipeline;
+	GSTPlaybackPipeline*	 _pipeline;
+	GSTPlaybackPipeline*	 _other_pipeline;
 
+	CSettingsStorage* _settings;
 	StreamRecorder* _stream_recorder;
 
 	LastTrack*  _last_track;
-    MyCaps*      _caps;
+	MyCaps*     _caps;
 
 
     bool        _show_level;
@@ -144,6 +165,13 @@ private:
     int         _jump_play;
 	bool		_wait_for_gapless_track;
 	bool		_may_start_timer;
+	bool		_gapless;
+
+
+	// methods
+	void init_play_pipeline();
+	bool set_uri(const MetaData& md, bool* start_play);
+	void change_track_gapless(const MetaData& md, int pos_sec=0, bool start_play=true);
 
 
 
@@ -151,7 +179,8 @@ private slots:
     virtual void sr_initialized(bool);
     virtual void sr_ended();
     virtual void sr_not_valid();
-    void timeout();
+
+	void timeout();
 	void set_about_to_finish(qint64);
 	void set_cur_position_ms(qint64);
     
@@ -161,59 +190,30 @@ public slots:
     virtual void play();
 	virtual void stop();
 	virtual void pause();
-	virtual void setVolume(int vol);
+	virtual void set_volume(int vol);
 
-	virtual void jump(int where, bool percent=true);
-	virtual void changeTrack(const MetaData&, int pos_sec=-1, bool start_play=true);
-	virtual void changeTrack(const QString&, int pos_sec=-1, bool start_play=true );
-	virtual void changeTrackGapless(const MetaData& md, int pos_sec=0, bool start_play=true);
+	virtual void jump_abs_s(quint32);
+	virtual void jump_abs_ms(quint64);
+	virtual void jump_rel(quint32);
+
+	virtual void change_track(const MetaData&, int pos_sec=-1, bool start_play=true);
+	virtual void change_track(const QString&, int pos_sec=-1, bool start_play=true );
 
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
-    virtual void psl_new_stream_session();
+	virtual void record_button_toggled(bool);
 
- 	virtual void record_button_toggled(bool);
+	virtual void psl_new_stream_session();
 
     virtual void psl_sr_set_active(bool);
     virtual void psl_calc_level(bool);
     virtual void psl_calc_spectrum(bool);
-
 	virtual void psl_set_gapless(bool);
-
-public:
-	// callback -> class
-	void		state_changed();
-
-	void		set_track_finished();
-
-    void        emit_buffer(float inv_array_elements, float scale);
-
-    void        set_level(float right, float left);
-    void        set_spectrum(QList<float>&);
-	void		update_bitrate(qint32 bitrate);
-	void		update_time(qint32 time);
-
-	virtual void 	load_equalizer(vector<EQ_Setting>&);
-	virtual int		getState();
-	virtual QString	getName();
-
-    bool get_show_level();
-    bool get_show_spectrum();
-    MyCaps* get_caps();
-    void do_jump_play();
-    void unmute();
-
-
-private:
-	CSettingsStorage* _settings;
-
-	void init_play_pipeline();
-    bool set_uri(const MetaData& md, bool* start_play);
 
 
 };
 
-extern GST_Engine* gst_obj_ref;
+extern GSTPlaybackEngine* gst_obj_ref;
 
 
 

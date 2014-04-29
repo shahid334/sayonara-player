@@ -1,6 +1,6 @@
 /* LibraryItemModel.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -18,14 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-/*
- * LibraryItemModel.h
- *
- *  Created on: 19.12.2012
- *      Author: lugmair
- */
 
 #ifndef LIBRARYITEMMODEL_H_
 #define LIBRARYITEMMODEL_H_

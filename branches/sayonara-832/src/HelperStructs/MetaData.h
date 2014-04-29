@@ -134,6 +134,8 @@ public:
         is_disabled = false;
     }
 
+
+
     void print(){
 
         qDebug() << title
@@ -144,7 +146,7 @@ public:
 
 	virtual QVariant toVariant() const{
 
-        QStringList list;
+		QStringList list;
 
         QString tmpTitle = title;
         QString tmpArtist = artist;
@@ -179,12 +181,14 @@ public:
         list.push_back( (is_lib_selected) ? "1" : "0" );
         list.push_back( (is_disabled) ? "1" : "0");
 
-        return list;
+		return list;
+
+
     }
 
 	static bool fromVariant(QVariant v, MetaData& md){
 
-        QStringList list = v.toStringList();
+	   QStringList list = v.toStringList();
 
         if(list.size() < 24) return false;
 
@@ -213,7 +217,7 @@ public:
         md.is_lib_selected = (list[22] == "1");
         md.is_disabled = (list[23] == "1");
 
-        return true;
+		return true;
     }
 };
 
@@ -222,7 +226,10 @@ class MetaDataList : public vector<MetaData>{
 
 public:
 
-    MetaDataList(){}
+	MetaDataList(){}
+	MetaDataList(int n_elems) : vector<MetaData>(n_elems){
+	}
+
     ~MetaDataList(){
         clear();
     }
@@ -441,7 +448,7 @@ struct CustomPlaylist{
     qint32 length;
     qint32 num_tracks;
     bool is_valid;
-    CustomPlaylist(){
+	CustomPlaylist() : tracks(0){
         is_valid = false;
         id = -1;
         name = "";

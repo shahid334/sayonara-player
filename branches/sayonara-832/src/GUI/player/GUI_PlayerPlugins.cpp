@@ -1,6 +1,6 @@
 /* GUI_PlayerPlugins.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -19,13 +19,6 @@
  */
 
 
-
-/*
- * GUI_PlayerPlugins.cpp
- *
- *  Created on: 10.10.2012
- *      Author: lugmair
- */
 
 #include "GUI/player/GUI_Player.h"
 

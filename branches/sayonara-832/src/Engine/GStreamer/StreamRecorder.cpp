@@ -1,6 +1,6 @@
 /* StreamRecorder.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -114,7 +114,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 
 StreamRecorder::StreamRecorder(QObject *parent) :
-    QObject(parent)
+	QObject(parent), _session_collector(0)
 {
     _buffer_size = 32767;
     _stream_ended = true;

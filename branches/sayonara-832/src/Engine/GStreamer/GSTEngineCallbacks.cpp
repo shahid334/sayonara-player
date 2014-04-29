@@ -1,6 +1,6 @@
 /* GSTEngineCallbacks.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -26,7 +26,7 @@
 #include <gst/gstbuffer.h>
 #include <gst/gstelement.h>
 #include "HelperStructs/globals.h"
-#include "Engine/GStreamer/GSTEngine.h"
+#include "Engine/GStreamer/GSTPlaybackEngine.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
 
 

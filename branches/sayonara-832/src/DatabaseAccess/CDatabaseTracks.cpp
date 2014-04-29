@@ -27,9 +27,11 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
+#include <QSqlResult>
 #include <QDir>
 
 #include <cstdlib>
+#include <QElapsedTimer>
 
 using namespace Sort;
 
@@ -70,7 +72,7 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 			qDebug() << q.executedQuery();
 		}
 
-		while (q.next()) {
+		while(q.next()){
 
 			MetaData data;
 			data.id = 		 q.value(0).toInt();
@@ -223,7 +225,6 @@ int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOr
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
-
 
 	DB_TRY_OPEN(_database);
 

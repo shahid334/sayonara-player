@@ -1,6 +1,6 @@
 /* GUI_Player.cpp */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -493,8 +493,8 @@ void GUI_Player::correct_btn_clicked(bool b){
         m_metadata_corrected.title = md.title;
     }
 
-    MetaDataList lst;
-    lst.push_back(m_metadata_corrected);
+	MetaDataList lst;
+	lst.push_back(m_metadata_corrected);
     ui_info_dialog->setMetaData(lst);
     ui_info_dialog->setMode(INFO_MODE_TRACKS);
 

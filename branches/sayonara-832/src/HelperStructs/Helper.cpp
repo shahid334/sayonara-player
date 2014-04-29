@@ -700,7 +700,7 @@ QString Helper::get_album_major_artist(int albumid){
 
     if(albumid == -1) return "";
 
-    MetaDataList v_md;
+	MetaDataList v_md(0);
     QList<int> idlist;
     idlist << albumid;
     CDatabaseConnector::getInstance()->getAllTracksByAlbum(idlist, v_md);

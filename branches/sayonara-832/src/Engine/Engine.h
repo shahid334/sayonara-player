@@ -32,61 +32,73 @@
 
 using namespace std;
 
+
+enum EngineState {
+	StatePlay=0,
+	StatePause=1,
+	StateStop=2
+};
+
+
 class Engine : public QObject{
 
 	Q_OBJECT
 
 protected:
-	MetaData	_meta_data;
-    MetaData    _md_gapless;
-	int			_seconds_started;
-	qint32		_seconds_now;
+	MetaData	_md;
+	qint64		_cur_pos_ms;
 	qint32      _vol;
-	qint64		_mseconds_now;
 
 	bool		_scrobbled;
+	qint64		_scrobble_begin_ms;
 	bool		_is_eq_enabled;
 	int			_eq_type;
-	int			_state;
+	EngineState	_state;
 	QString		_name;
 
 	bool 		_playing_stream;
-	//bool        _gapless_track_available;
 
 	bool		_sr_active;
 	bool		_sr_wanna_record;
 
-
 public:
-	virtual void 	load_equalizer(vector<EQ_Setting>&)=0;
-	virtual int		getState()=0;
-	virtual QString	getName()=0;
+	virtual EngineState	getState() { return _state; }
+	virtual QString	getName(){ return _name; }
 	virtual void	init()=0;
 
+
 signals:
-	void total_time_changed_signal(qint64);
-    void track_time_changed(MetaData&);
-	void timeChangedSignal(quint32);
-	void track_finished();
-	void scrobble_track(const MetaData&);
-	void eq_presets_loaded(const vector<EQ_Setting>&);
-	void eq_found(const QStringList&);
-	void sig_valid_strrec_track(const MetaData&);
-    void wanna_gapless_track();
-    void sig_level(float, float);
+	void sig_dur_changed_ms(quint64);
+	void sig_dur_changed_s(quint32);
+	void sig_dur_changed(MetaData&);
+	void sig_pos_changed_ms(quint64);
+	void sig_pos_changed_s(quint32);
+
+	void sig_track_finished();
+	void sig_scrobble(const MetaData&);
+	void sig_level(float, float);
     void sig_spectrum(QList<float>&);
 	void sig_bitrate_changed(qint32);
 
+private slots:
+	virtual void sr_initialized(bool)=0;
+	virtual void sr_ended()=0;
+	virtual void sr_not_valid()=0;
+
+
 public slots:
-    virtual void play()=0;
+	virtual void play()=0;
 	virtual void stop()=0;
 	virtual void pause()=0;
-	virtual void setVolume(int vol)=0;
+	virtual void set_volume(int vol)=0;
 
-	virtual void jump(int where, bool percent=true)=0;
-    virtual void changeTrack(const MetaData&, int pos_sec=0, bool start_play=true)=0;
-    virtual void changeTrack(const QString&, int pos_sec=0, bool start_play=true )=0;
-	virtual void changeTrackGapless(const MetaData& md, int pos_sec=0, bool start_play=true )=0;
+	virtual void jump_abs_s(quint32 where)=0;
+	virtual void jump_abs_ms(quint64 where)=0;
+	virtual void jump_rel(quint32 where)=0;
+
+	virtual void change_track(const MetaData&, int pos_sec=0, bool start_play=true)=0;
+	virtual void change_track(const QString&, int pos_sec=0, bool start_play=true )=0;
+
 	virtual void eq_changed(int, int)=0;
 	virtual void eq_enable(bool)=0;
 	virtual void record_button_toggled(bool)=0;
@@ -96,18 +108,10 @@ public slots:
     virtual void psl_calc_level(bool)=0;
 	virtual void psl_set_gapless(bool)=0;
 
-private slots:
-    virtual void sr_initialized(bool)=0;
-    virtual void sr_ended()=0;
-    virtual void sr_not_valid()=0;
-
-
-
 
 };
 
-Q_DECLARE_INTERFACE(Engine, "sayonara.engine/1.0");
-
-
+Q_DECLARE_INTERFACE(Engine, "sayonara.engine/1.0")
 
 #endif
+

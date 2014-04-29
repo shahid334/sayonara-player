@@ -140,18 +140,23 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-         int col_idx = calc_shown_col(index.column());
+		 int row = index.row();
+		 int col = index.column();
+		 int col_idx = calc_shown_col(col);
+
          if(col_idx == COL_TRACK_RATING){
              _tracklist[index.row()].rating = value.toInt();
          }
 
          else{
+
              MetaData md;
              if(!MetaData::fromVariant(value, md)) return false;
 
              if(md.is_lib_selected)
-                 _selected_rows << index.row();
-             _tracklist.replace(index.row(), md);
+				 _selected_rows << row;
+
+			 _tracklist[row] = md;
 
              emit dataChanged(index, index);
          }

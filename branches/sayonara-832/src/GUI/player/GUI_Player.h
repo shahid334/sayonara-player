@@ -110,7 +110,7 @@ signals:
     void mute();
     void sig_rec_button_toggled(bool);
     void sig_volume_changed (int);
-    void search(int pos_percent);
+	void sig_seek_rel(quint32 pos_percent);
     void sig_correct_id3(const MetaData&);
 
 

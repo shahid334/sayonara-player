@@ -37,7 +37,7 @@ private:
 
 
 public:
-    CustomMimeData() : QMimeData(){
+	CustomMimeData() : QMimeData(), _v_md(0){
 
         _has_meta_data = false;
     }

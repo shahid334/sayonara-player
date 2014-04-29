@@ -1,6 +1,6 @@
 // GUI_PlayerButtons.cpp
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -141,11 +141,12 @@ void GUI_Player::setProgressJump(int percent){
     if(percent > 100 || percent < 0) {
         percent = 0;
     }
+
     long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
     QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
     ui->curTime->setText(curPosString);
 
-    emit search(percent);
+	emit sig_seek_rel(percent);
 }
 
 void GUI_Player::setCurrentPosition(quint32 pos_sec) {

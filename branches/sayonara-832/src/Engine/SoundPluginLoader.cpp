@@ -1,6 +1,6 @@
 /* SoundPluginLoader.cpp */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -21,6 +21,7 @@
 
 #include "Engine/SoundPluginLoader.h"
 #include "Engine/Engine.h"
+#include "Engine/GStreamer/GSTPlaybackEngine.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 #include <QObject>
@@ -55,6 +56,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 	QString target_engine = CSettingsStorage::getInstance()->getSoundEngine().toLower();
 
 	QDir plugin_dir = QDir(app_dir);
+	QStringList entry_list = plugin_dir.entryList(QDir::Files);
 
 	int i=0;
 
@@ -64,7 +66,6 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 			if(plugin_eng){
 				QString name = plugin_eng->getName().toLower();
-                qDebug() << "Found plugin " << plugin_eng->getName();
 				_lst_engines.push_back(plugin_eng);
 				if(name == target_engine){
 					_cur_engine = i;
@@ -78,24 +79,39 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 
 
 	// dynamic plugins
-	foreach(QString filename, plugin_dir.entryList(QDir::Files)){
-        qDebug() << "possible plugin: " << filename;
+	foreach(QString filename, entry_list){
+		qDebug() << "possible plugin: " << plugin_dir.absoluteFilePath(filename);
 		QPluginLoader loader(plugin_dir.absoluteFilePath(filename));
-		QObject* plugin = loader.instance();
-		if(plugin){
-			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
-			if(plugin_eng){
-				QString name = plugin_eng->getName().toLower();
-				qDebug() << "Found plugin " << plugin_eng->getName();
-				_lst_engines.push_back(plugin_eng);
-				if(name == target_engine){
-					_cur_engine = i;
-					_cur_engine_name = name;
-				}
 
-				i++;
-			}
+		QObject* plugin = loader.instance();
+		if(!plugin){
+			qDebug() << loader.errorString();
+			continue;
 		}
+
+
+		qDebug() << "Plugin looks useful... ";
+
+		Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
+
+
+		if(plugin_eng){
+			QString name = plugin_eng->getName().toLower();
+			qDebug() << "Found plugin " << plugin_eng->getName();
+			_lst_engines.push_back(plugin_eng);
+
+			if(name == target_engine){
+				_cur_engine = i;
+				_cur_engine_name = name;
+			}
+
+			i++;
+		}
+
+		else {
+			qDebug() << "Cannot convert object to Engine ";
+		}
+
 	}
 
 	qDebug() << "Num plugins found: " << _lst_engines.size();
