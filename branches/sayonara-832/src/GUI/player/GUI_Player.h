@@ -99,6 +99,7 @@ public slots:
 
     void psl_libpath_changed(QString &);
 
+
 signals:
 
     /* Player*/
@@ -112,7 +113,6 @@ signals:
     void sig_volume_changed (int);
 	void sig_seek_rel(quint32 pos_percent);
     void sig_correct_id3(const MetaData&);
-
 
     /* File */
     void fileSelected (QStringList & filelist);
@@ -266,6 +266,8 @@ private:
     CSettingsStorage*   m_settings;
     QTranslator*        m_translator;
     QStringList         m_translators;
+
+	bool				m_converter_active;
 
 
 

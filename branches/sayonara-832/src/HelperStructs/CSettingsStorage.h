@@ -78,6 +78,8 @@
 #define SET_ENGINE "sound_engine"
 #define SET_ENGINE_VOL "volume"
 #define SET_ENGINE_GAPLESS "gapless"
+#define SET_ENGINE_CVT "convert_quality"
+#define SET_ENGINE_CVT_TGT_PATH "convert_target_path"
 
 #define SET_SR_ACTIVE "streamripper"
 #define SET_SR_WARNING "streamripper_warning"
@@ -237,6 +239,8 @@ private:
 
     /* sound engine */
     QString m_sound_engine;
+	LameBitrate m_cvt_quality;
+	QString m_cvt_tgt_path;
 
     /* notifications */
     bool    m_show_notifications;
@@ -394,6 +398,12 @@ public:
 
     bool getStreamRipperSessionPath();
     void setStreamRipperSessionPath(bool b);
+
+	LameBitrate getConvertQuality();
+	void setConvertQuality(LameBitrate b);
+
+	QString getConvertTgtPath();
+	void setConvertTgtPath(QString str);
 
 	bool getSocketActivated();
 	void setSocketActivated(bool b);

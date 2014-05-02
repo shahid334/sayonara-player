@@ -97,6 +97,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	m_skinSuffix = "";
 	m_class_name = "Player";
+	m_converter_active = false;
 
     m_cov_lookup = new CoverLookup();
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
@@ -502,6 +503,8 @@ void GUI_Player::correct_btn_clicked(bool b){
 
 }
 /** LAST FM **/
+
+
 
 
 void GUI_Player::setStyle(int style){

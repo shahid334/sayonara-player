@@ -51,6 +51,7 @@
 #include "GUI/engine/GUI_LevelPainter.h"
 #include "GUI/engine/GUI_Spectrum.h"
 #include "GUI/engine/GUI_StyleSettings.h"
+#include "GUI/AudioConverter/GUI_AudioConverter.h"
 
 #include "playlist/PlaylistHandler.h"
 #include "playlist/PlaylistLoader.h"
@@ -89,6 +90,7 @@ public slots:
 private:
 	GUI_Player*             player;
 	GUI_PlaylistChooser*    ui_playlist_chooser;
+	GUI_AudioConverter*     ui_audioconverter;
 	Playlists*              playlists;
 	PlaylistHandler*        playlist_handler;
 	PlaylistLoader*         playlist_loader;

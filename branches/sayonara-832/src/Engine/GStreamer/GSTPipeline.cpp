@@ -46,10 +46,40 @@ _test_and_error_bool(bool b, QString errorstr){
 }
 
 
+void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data){
+	GstElement* ac = (GstElement*) data;
+	GstPad* ac_pad = gst_element_get_static_pad(ac, "sink");
+
+	if(ac_pad && gst_pad_is_linked(ac_pad)) {
+		ENGINE_DEBUG << " Decoder and tee are already linked";
+		return;
+	}
+
+	GstPadLinkReturn s = gst_pad_link(new_pad, ac_pad);
+	if(s != GST_PAD_LINK_OK) ENGINE_DEBUG << " Could not link decoder with tee";
+}
+
+gboolean PipelineCallbacks::show_position(gpointer data){
+
+	gint64 pos;
+	GstState state;
+	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) data;
+	GstElement* p = pipeline->get_pipeline();
 
 
+	if(!p) return false;
+	state = pipeline->get_state();
 
+	if(state != GST_STATE_PLAYING && state != GST_STATE_PAUSED) return false;
 
+	ENGINE_DEBUG;
+
+	gst_element_query_position(p, GST_FORMAT_TIME, &pos);
+
+	pipeline->refresh_cur_position(pos / MIO);
+
+	return true;
+}
 
 
 void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms){
@@ -58,7 +88,7 @@ void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms){
 	gint64 difference = get_duration_ms() - _position;
 
 	if(_duration >= 0)
-		emit sig_cur_pos_changed((qint64) (cur_pos_ms));
+		emit sig_pos_changed_ms((qint64) (cur_pos_ms));
 
 	if(difference < 500 && difference > 0) {
 		emit sig_about_to_finish(difference - 50);
@@ -79,6 +109,10 @@ void GSTAbstractPipeline::about_to_finish(){
 
 	// ms
 	emit sig_about_to_finish(time2go);
+}
+
+void GSTAbstractPipeline::finished(){
+	emit sig_finished();
 }
 
 

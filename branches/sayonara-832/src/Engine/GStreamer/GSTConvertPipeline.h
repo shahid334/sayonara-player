@@ -23,36 +23,18 @@
 #ifndef GSTCONVERTPIPELINE_H
 #define GSTCONVERTPIPELINE_H
 
-
+#include "HelperStructs/globals.h"
+#include "HelperStructs/CSettingsStorage.h"
 #include "Engine/GStreamer/GSTPipeline.h"
+#include "Engine/Engine.h"
 
-
-enum LameBitrate {
-
-	LameBitrate_64=64,
-	LameBitrate_128=128,
-	LameBitrate_192=192,
-	LameBitrate_256=256,
-	LameBitrate_320=320,
-
-	LameBitrate_var_0=0,
-	LameBitrate_var_1=1,
-	LameBitrate_var_2=2,
-	LameBitrate_var_3=3,
-	LameBitrate_var_4=4,
-	LameBitrate_var_5=5,
-	LameBitrate_var_6=6,
-	LameBitrate_var_7=7,
-	LameBitrate_var_8=8,
-	LameBitrate_var_9=9
-};
 
 
 class GSTConvertPipeline : public GSTAbstractPipeline
 {
 	Q_OBJECT
 public:
-	explicit GSTConvertPipeline(QObject *parent = 0);
+	explicit GSTConvertPipeline(Engine* engine, QObject *parent = 0);
 	virtual ~GSTConvertPipeline();
 	bool set_uri(gchar* uri);
 	bool set_target_uri(gchar* uri);
@@ -75,6 +57,8 @@ private:
 	GstElement* _decoder;
 	GstElement* _audio_convert;
 	GstElement* _audio_sink;
+	GstElement* _id3mux;
+	GstElement* _xingheader;
 };
 
 #endif // GSTCONVERTPIPELINE_H

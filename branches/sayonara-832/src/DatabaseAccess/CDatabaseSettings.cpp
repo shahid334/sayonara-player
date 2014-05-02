@@ -273,6 +273,12 @@ bool CDatabaseConnector::load_settings(){
 	QString sound_engine = load_setting_string(SET_ENGINE);
 	settings->setSoundEngine(sound_engine);
 
+	LameBitrate bitrate = (LameBitrate) load_setting_int(SET_ENGINE_CVT);
+	settings->setConvertQuality(bitrate);
+
+	QString cvt_tgt_path = load_setting_string(SET_ENGINE_CVT_TGT_PATH, QDir::homePath());
+	settings->setConvertTgtPath(cvt_tgt_path);
+
 	/* Stream ripper */
 	bool streamripper = load_setting_bool(SET_SR_ACTIVE, false);
 	settings->setStreamRipper(streamripper);
@@ -447,6 +453,12 @@ bool CDatabaseConnector::store_settings(){
 
 	QString sound_engine = storage->getSoundEngine();
 	store_setting(SET_ENGINE, sound_engine);
+
+	LameBitrate bitrate = storage->getConvertQuality();
+	store_setting(SET_ENGINE_CVT, (int) bitrate);
+
+	QString cvt_tgt_path = storage->getConvertTgtPath();
+	store_setting(SET_ENGINE_CVT_TGT_PATH, cvt_tgt_path);
 
 	bool streamripper_active = storage->getStreamRipper();
 	store_setting(SET_SR_ACTIVE, streamripper_active);

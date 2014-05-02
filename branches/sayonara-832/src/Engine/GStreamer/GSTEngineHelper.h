@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QString>
 #include <gst/gst.h>
+#include "Engine/Engine.h"
 
 #define ENGINE_DEBUG if(_debug) qDebug() << Q_FUNC_INFO << "; "
 
@@ -48,26 +49,26 @@ extern bool __start_at_beginning;
 extern int __start_pos_beginning;
 
 
+namespace EngineCallbacks {
 
-gboolean
-bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data);
-
-
-gboolean player_change_file(GstBin* pipeline, void* data);
-
-void
-new_buffer(GstElement* sink, gpointer data);
-
-gboolean
-level_handler (GstBus * bus, GstMessage * message, gpointer data);
-
-gboolean
-spectrum_handler (GstBus * bus, GstMessage * message, gpointer data);
-
-gboolean
-show_position(GstElement* pipeline);
+	gboolean
+	bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data);
 
 
+	void
+	new_buffer(GstElement* sink, gpointer data);
+
+	gboolean
+	level_handler (GstBus * bus, GstMessage * message, gpointer data);
+
+	gboolean
+	spectrum_handler (GstBus * bus, GstMessage * message, gpointer data);
+
+	gboolean
+	show_position(GstElement* pipeline);
+
+	void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r);
+};
 
 
 #endif // GSTENGINECALLBACKS_H

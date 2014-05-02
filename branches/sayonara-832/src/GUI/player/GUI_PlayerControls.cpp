@@ -21,6 +21,7 @@
 
 #include "GUI/player/GUI_Player.h"
 #include "GUI/player/GUI_TrayIcon.h"
+#include <QFileDialog>
 
 /** PLAYER BUTTONS **/
 void GUI_Player::playClicked(bool) {
@@ -36,12 +37,13 @@ void GUI_Player::playClicked(bool) {
 	}
 
     else {
+
 		ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
 		emit play();
 	}
 
 	m_playing = !m_playing;
-        m_trayIcon->setPlaying(m_playing);
+	m_trayIcon->setPlaying(m_playing);
 }
 
 void GUI_Player::stopClicked(bool b) {

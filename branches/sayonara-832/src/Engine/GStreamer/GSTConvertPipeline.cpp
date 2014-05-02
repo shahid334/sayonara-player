@@ -24,27 +24,7 @@
 
 
 
-
-
-static void pad_added_handler (GstElement *src, GstPad *new_pad, gpointer data){
-
-	GstElement* ac = (GstElement*) data;
-	GstPad* ac_pad = gst_element_get_static_pad(ac, "sink");
-
-	if(ac_pad && gst_pad_is_linked(ac_pad)) {
-		ENGINE_DEBUG << " Decoder and audioconvert are already linked";
-		return;
-
-	}
-
-	GstPadLinkReturn s = gst_pad_link(new_pad, ac_pad);
-	if(s != GST_PAD_LINK_OK) ENGINE_DEBUG << " Could not link decoder with audioconvert";
-}
-
-
-
-
-GSTConvertPipeline::GSTConvertPipeline(QObject *parent)
+GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
 {
 
 	GstElement* tmp_pipeline;
@@ -62,27 +42,40 @@ GSTConvertPipeline::GSTConvertPipeline(QObject *parent)
 
 		_audio_src = gst_element_factory_make("uridecodebin", "src");
 		_audio_convert = gst_element_factory_make("audioconvert", "audio_convert");
+		_lame = gst_element_factory_make("lamemp3enc", "lame");
+		_xingheader = gst_element_factory_make("xingmux", "xingmux");
+		_id3mux = gst_element_factory_make("id3v2mux", "id3muxer");
 		_audio_sink = gst_element_factory_make("filesink", "filesink");
-		_lame = gst_element_factory_make("lame", "lame");
 
 		if(!_test_and_error(_bus, "CvtEngine: Somethink went wrong with the bus")) break;
 		if(!_test_and_error(_audio_src, "CvtEngine: Source creation fail")) break;
-		if(!_test_and_error(_lame, "CvtEngine: Lame  failed")) break;
-		if(!_test_and_error(_audio_sink, "CvtEngine: Cannot create audio sink")) break;
 		if(!_test_and_error(_audio_convert, "CvtEngine: Cannot create audio convert")) break;
+		if(!_test_and_error(_lame, "CvtEngine: Lame  failed")) break;
+		if(!_test_and_error(_id3mux, "CvtEngine: Cannot create id3muxer")) break;
+		if(!_test_and_error(_xingheader, "CvtEngine: Cannot create xingmuxer")) break;
+		if(!_test_and_error(_audio_sink, "CvtEngine: Cannot create audio sink")) break;
 
-		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _audio_sink);
+		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _lame, _xingheader, _id3mux, _audio_sink, NULL);
+		gst_element_link_many(_audio_convert, _lame, _xingheader, _id3mux, _audio_sink, NULL);
 
-		gst_bin_link_many(_audio_convert, _audio_sink, NULL);
-		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (pad_added_handler), _audio_convert);
+		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
+
 		status = true;
 
 	} while(0);
 
-	set_quality(LameBitrate_192);
-
-	if(status)
+	if(status){
 		_pipeline = tmp_pipeline;
+		gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, engine);
+	}
+
+	else {
+		_pipeline=0;
+		qDebug() << "****Pipeline: constructor finished: " << status;
+		return;
+	}
+
+	qDebug() << "****Pipeline: constructor finished: " << status;
 }
 
 
@@ -95,24 +88,31 @@ GSTConvertPipeline::~GSTConvertPipeline(){
 bool GSTConvertPipeline::set_uri(gchar* uri){
 
 	if(!uri) return false;
-
-	ENGINE_DEBUG << "Pipeline: " << uri;
+	stop();
+	qDebug() << "Pipeline: " << uri;
 
 	g_object_set(G_OBJECT(_audio_src), "uri", uri, NULL);
-	gst_element_set_state(_pipeline, GST_STATE_PAUSED);
 
 	return true;
 }
 
 bool GSTConvertPipeline::set_target_uri(gchar* uri){
+	stop();
+	qDebug() << "Set target uri = " << uri;
 	g_object_set(G_OBJECT(_audio_sink), "location", uri, NULL);
+	return true;
 }
 
 
 
 void GSTConvertPipeline::play(){
+
+
+	LameBitrate q = CSettingsStorage::getInstance()->getConvertQuality();
+	set_quality(q);
+	qDebug() << "Convert pipeline: play";
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-	g_timeout_add(200, (GSourceFunc) show_position, this);
+	g_timeout_add(200, (GSourceFunc) PipelineCallbacks::show_position, this);
 }
 
 
@@ -157,7 +157,6 @@ qint64 GSTConvertPipeline::get_position_ms(){
 
 	gint64 position=0;
 	bool success = false;
-	GstState state = get_state();
 
 	success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
 
@@ -201,7 +200,6 @@ void GSTConvertPipeline::set_quality(LameBitrate quality){
 
 	switch(quality){
 
-		case
 		case LameBitrate_64:
 		case LameBitrate_128:
 		case LameBitrate_192:
@@ -230,17 +228,22 @@ void GSTConvertPipeline::set_quality(LameBitrate quality){
 
 
 	if(cbr > 0){
-
+		qDebug() << "Set Constant bitrate: " << cbr;
 		g_object_set(_lame,
 					 "cbr", true,
 					 "bitrate", cbr,
+					 "target", 1,
+					 "encoding-engine-quality", 2,
 					 NULL);
 	}
 
 	else {
+		qDebug() << "Set variable bitrate: " << vbr;
 		g_object_set(_lame,
 					 "cbr", false,
-					 "quality", cbr,
+					 "quality", vbr,
+					 "target", 0,
+					 "encoding-engine-quality", 2,
 					 NULL);
 	}
 }

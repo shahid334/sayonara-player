@@ -429,6 +429,23 @@ void CSettingsStorage::setStreamRipperSessionPath(bool b){
     _sth_changed = true;
 }
 
+LameBitrate CSettingsStorage::getConvertQuality(){
+	return m_cvt_quality;
+}
+
+void CSettingsStorage::setConvertQuality(LameBitrate b){
+	m_cvt_quality = b;
+	_sth_changed = true;
+}
+
+QString CSettingsStorage::getConvertTgtPath(){
+	return m_cvt_tgt_path;
+}
+
+void CSettingsStorage::setConvertTgtPath(QString str){
+	m_cvt_tgt_path = str;
+}
+
 bool CSettingsStorage::getSocketActivated(){
 	return m_socket_activated;
 }

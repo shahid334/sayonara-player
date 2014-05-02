@@ -76,6 +76,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 		QPluginLoader loader(plugin_dir.absoluteFilePath(filename));
 
 		QObject* plugin = loader.instance();
+
 		if(!plugin){
 			qDebug() << loader.errorString();
 			continue;
@@ -109,5 +110,12 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 
 vector<Engine*> SoundPluginLoader::get_engines(){
 	return _vec_engines;
+}
+
+Engine* SoundPluginLoader::get_first_engine(){
+	if(_vec_engines.size() == 0) return NULL;
+
+	return _vec_engines[0];
+
 }
 

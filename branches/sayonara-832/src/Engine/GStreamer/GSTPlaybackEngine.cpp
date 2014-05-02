@@ -34,6 +34,7 @@
 
 #define WATCH_INTERVAL 200
 
+
 bool _debug = false;
 
 float log_10[20001];
@@ -86,6 +87,8 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 			SLOT(sr_ended()));
 	connect(_stream_recorder, SIGNAL(sig_stream_not_valid()), this,
 			SLOT(sr_not_valid()));
+
+	init();
 }
 
 
@@ -108,11 +111,11 @@ void GSTPlaybackEngine::init() {
 
 	_stream_recorder->init();
 
-	_pipeline = new GSTPlaybackPipeline();
+	_pipeline = new GSTPlaybackPipeline(this);
 	_other_pipeline = NULL;
 
 	connect(_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
-	connect(_pipeline, SIGNAL(sig_cur_pos_changed(qint64)), this, SLOT(set_cur_position_ms(qint64)));
+	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 
 	_show_level = false;
 	_show_spectrum = false;
@@ -156,8 +159,6 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bo
 
 
 void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
-
-	gst_obj_ref = this;
 
 	ENGINE_DEBUG << md.filepath << ", " << pos_sec << ",  " << start_play;
 
@@ -542,7 +543,7 @@ void GSTPlaybackEngine::psl_set_gapless(bool b){
 	if(b){
 
 		if(!_other_pipeline){
-			_other_pipeline = new GSTPlaybackPipeline();
+			_other_pipeline = new GSTPlaybackPipeline(this);
 			connect(_other_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 			connect(_other_pipeline, SIGNAL(sig_cur_pos_changed(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 		}
@@ -561,4 +562,4 @@ void GSTPlaybackEngine::psl_set_gapless(bool b){
 }
 
 
-Q_EXPORT_PLUGIN2(sayonara_gstreamer, GSTPlaybackEngine);
+

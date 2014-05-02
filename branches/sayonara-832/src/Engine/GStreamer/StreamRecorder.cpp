@@ -105,7 +105,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			break;
 
         default:
-			//obj_ref->endOfStream();
             break;
     }
 

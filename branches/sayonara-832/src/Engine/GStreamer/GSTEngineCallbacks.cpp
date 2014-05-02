@@ -35,9 +35,8 @@
 #include <unistd.h>
 #endif
 
-void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r);
 
-void new_buffer(GstElement* sink, void* data){
+void EngineCallbacks::new_buffer(GstElement* sink, void* data){
 
 	/*Q_UNUSED(data);
 
@@ -63,13 +62,12 @@ void new_buffer(GstElement* sink, void* data){
 
 double arr[2];
 gboolean
-level_handler (GstBus * bus, GstMessage * message, gpointer data){
-
+EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
 	GValueArray* rms_arr;
-
+	Engine* engine = (Engine*) data;
    // ENGINE_DEBUG;
-	if(!gst_obj_ref) return TRUE;
+	if(!engine) return TRUE;
 
 	Q_UNUSED(bus);
 
@@ -126,12 +124,12 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
 	guint64 dur;
 	gst_structure_get_clock_time(s, "timestamp", &dur);
 
-	if(n_elements >= 2 && gst_obj_ref){
-		gst_obj_ref->set_level(arr[0], arr[1]);
+	if(n_elements >= 2){
+		engine->set_level(arr[0], arr[1]);
 	}
 
-	else if(n_elements == 1 && gst_obj_ref){
-		gst_obj_ref->set_level(arr[0], arr[0]);
+	else if(n_elements == 1){
+		engine->set_level(arr[0], arr[0]);
 	}
 
 	return TRUE;
@@ -141,13 +139,13 @@ level_handler (GstBus * bus, GstMessage * message, gpointer data){
 
 
 gboolean
-spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
+EngineCallbacks::spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
 
     Q_UNUSED(data);
 
 	//ENGINE_DEBUG;
-
-    if(!gst_obj_ref) return TRUE;
+	Engine* engine = (Engine*) data;
+	if(!engine) return TRUE;
 
     const GstStructure *s = gst_message_get_structure (message);
     const gchar *name = gst_structure_get_name (s);
@@ -185,51 +183,18 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
     }
 
 
-        gst_obj_ref->set_spectrum(lst);
+	engine->set_spectrum(lst);
 
     return TRUE;
 
 }
 
 
-static void
-print_one_tag (const GstTagList * list, const gchar * tag, gpointer user_data)
-{
-	int i, num;
-
-	num = gst_tag_list_get_tag_size (list, tag);
-	for (i = 0; i < num; ++i) {
-		const GValue *val;
-
-		/* Note: when looking for specific tags, use the gst_tag_list_get_xyz() API,
-	 * we only use the GValue approach here because it is more generic */
-		val = gst_tag_list_get_value_index (list, tag, i);
-		if (G_VALUE_HOLDS_STRING (val)) {
-			g_print ("String \t%20s : %s\n", tag, g_value_get_string (val));
-		} else if (G_VALUE_HOLDS_UINT (val)) {
-			g_print ("UINT \t%20s : %u\n", tag, g_value_get_uint (val));
-		} else if (G_VALUE_HOLDS_DOUBLE (val)) {
-			g_print ("DOUBLE \t%20s : %g\n", tag, g_value_get_double (val));
-		} else if (G_VALUE_HOLDS_BOOLEAN (val)) {
-			g_print ("BOOL \t%20s : %s\n", tag,
-					 (g_value_get_boolean (val)) ? "true" : "false");
-		} /*else if (GST_VALUE_HOLDS_BUFFER (val)) {
-			GstBuffer *buf = gst_value_get_buffer (val);
-			guint buffer_size = GST_BUFFER_SIZE(buf);
-
-
-			g_print ("\t%20s : buffer of size %u\n", tag, buffer_size);
-		}*/
-		else {
-			g_print ("\t%20s : tag of type '%s'\n", tag, G_VALUE_TYPE_NAME (val));
-		}
-	}
-}
-
-gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
+gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data) {
 
     (void) bus;
-    (void) user_data;
+
+	Engine* engine = (Engine*) data;
 
 
     GstState old_state, new_state, pending_state;
@@ -239,31 +204,31 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 	switch (msg_type) {
 
     case GST_MESSAGE_EOS:
-        if (gst_obj_ref) {
+		if (engine) {
             qDebug() << "Engine: Track finished";
-            gst_obj_ref->set_track_finished();
+			engine->set_track_finished();
         }
 
         break;
 
 
     case GST_MESSAGE_ELEMENT:
-        if(!gst_obj_ref) break;
+		if(!engine) break;
 
-        if(gst_obj_ref->get_show_spectrum())
-            return spectrum_handler(bus, msg, user_data);
-        if(gst_obj_ref->get_show_level())
-            return level_handler(bus, msg, user_data);
+		if(engine->get_show_spectrum())
+			return spectrum_handler(bus, msg, engine);
+		if(engine->get_show_level())
+			return level_handler(bus, msg, engine);
 
         break;
 
     case GST_MESSAGE_STATE_CHANGED:
-        if(!gst_obj_ref) break;
+		if(!engine) break;
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
 
 		if ( new_state == GST_STATE_PLAYING) {
-            gst_obj_ref->do_jump_play();
+			engine->do_jump_play();
 		}
 
         break;
@@ -284,7 +249,7 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
 			val = (uint) (round( val / 1000.0) * 1000.0);
 
-			gst_obj_ref->update_bitrate(val);
+			engine->update_bitrate(val);
 		}
 		break;
 
@@ -296,17 +261,16 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
         qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
                  << GST_MESSAGE_SRC_NAME(msg);
-        if(gst_obj_ref)
-            gst_obj_ref->set_track_finished();
+		if(engine)
+			engine->set_track_finished();
         g_error_free(err);
 
         break;
 
     default:
 
-        if(gst_obj_ref){
-            gst_obj_ref->unmute();
- //           gst_obj_ref->state_changed();
+		if(engine){
+			engine->unmute();
         }
         break;
     }
@@ -320,7 +284,7 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 #define SCALE_SHORT 0.000000004f
 #define BUFFER_SIZE 4096
 
-void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
+void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
 
 	/*if(!buffer) return;
 	if(!caps) return;

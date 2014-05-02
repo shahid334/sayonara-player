@@ -52,7 +52,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
     md.filesize = qf.size();
     qf.close();
 
-	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
+	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()), true, TagLib::AudioProperties::Accurate);
 
 	if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) {
 		qDebug() << md.filepath << ": Something's wrong with this file";
@@ -74,6 +74,7 @@ bool ID3::getMetaDataOfFile(MetaData& md){
 
 	uint year = tag->year();
 	uint track = tag->track();
+
 	int bitrate = f.audioProperties()->bitrate() * 1000;
 	int length = f.audioProperties()->length();
 

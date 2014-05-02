@@ -23,12 +23,14 @@
 #ifndef SOUNDPLUGINLOADER_H_
 #define SOUNDPLUGINLOADER_H_
 
-#include "Engine/Engine.h"
+
 
 #include <QObject>
 #include <QList>
 #include <QString>
 #include <vector>
+
+#include "Engine/Engine.h"
 
 using namespace std;
 
@@ -47,6 +49,7 @@ public:
 	virtual ~SoundPluginLoader();
 
 	vector<Engine*> get_engines();
+	Engine* get_first_engine();
 };
 
 #endif /* SOUNDPLUGINLOADER_H_ */

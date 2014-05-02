@@ -39,8 +39,7 @@
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 
-#include "Engine/Engine.h"
-#include "Engine/SoundPluginLoader.h"
+#include "Engine/GStreamer/GSTEngineHandler.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
@@ -108,6 +107,7 @@ void Application::init(int n_files, QTranslator *translator){
 	ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
 	ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", GUI_LFMRadioWidget::getVisName(), player->getParentOfPlugin());
 	ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", GUI_PlaylistChooser::getVisName(), player->getParentOfPlugin());
+	ui_audioconverter  = new GUI_AudioConverter("MP3 Converter", GUI_AudioConverter::getVisName(), player->getParentOfPlugin());
 
 	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
 	ui_id3_editor       = new GUI_TagEdit();
@@ -132,6 +132,7 @@ void Application::init(int n_files, QTranslator *translator){
 	_pph->addPlugin(ui_stream);
 	_pph->addPlugin(ui_podcasts);
 	_pph->addPlugin(ui_playlist_chooser);
+	_pph->addPlugin(ui_audioconverter);
 
 	qDebug() << "Plugin " << GUI_LevelPainter::getVisName();
 	qDebug() << "Plugin " << GUI_Stream::getVisName();
@@ -139,8 +140,28 @@ void Application::init(int n_files, QTranslator *translator){
 	qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
 	qDebug() << "Plugin " << GUI_Podcasts::getVisName();
 	qDebug() << "Plugin " << GUI_LFMRadioWidget::getVisName();
+	qDebug() << "Plugin " << GUI_AudioConverter::getVisName();
 
-	listen = new GSTEngineHandler();
+	QString dir;
+
+#ifndef Q_OS_WIN
+	  dir = Helper::getLibPath();
+	  qDebug() << "Lib path = " << dir;
+#else
+	  dir = this->applicationDirPath();
+#endif
+
+	SoundPluginLoader loader(dir);
+	listen = loader.get_first_engine();
+	if(!listen){
+		qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
+		exit(1);
+	}
+
+   else{
+		listen->psl_sr_set_active(set->getStreamRipper());
+		listen->psl_set_gapless(set->getGapless());
+   }
 
 	init_connections();
 
@@ -271,6 +292,7 @@ void Application::init_connections(){
     CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
 
 
+
     CONNECT (player, sig_skin_changed(bool),                      ui_eq,              changeSkin(bool));
     CONNECT (player, sig_skin_changed(bool),                      ui_info_dialog,     changeSkin(bool));
     CONNECT (player, sig_skin_changed(bool),                      ui_library,     change_skin(bool));
@@ -372,9 +394,14 @@ void Application::init_connections(){
     CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			playlist_handler, 		psl_id3_tags_changed(MetaDataList&));
     CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
 
+	CONNECT(ui_audioconverter, sig_active(),                          player, stopped());
+	CONNECT(ui_audioconverter, sig_inactive(),                        player, stopped());
+	CONNECT(ui_audioconverter, sig_active(),						  listen, start_convert());
+	CONNECT(ui_audioconverter, sig_inactive(),						  listen, end_convert());
 
-    CONNECT(ui_eq, eq_changed_signal(int, int),                          listen, 	eq_changed(int, int));
-    CONNECT(ui_eq, eq_enabled_signal(bool),                              listen, 	eq_enable(bool));
+
+	CONNECT(ui_eq, eq_changed_signal(int, int),                         listen, 	eq_changed(int, int));
+	CONNECT(ui_eq, eq_enabled_signal(bool),                             listen, 	eq_enable(bool));
 
     CONNECT(ui_level, sig_show(bool), listen, psl_calc_level(bool));
     CONNECT(ui_spectrum, sig_show(bool), listen, psl_calc_spectrum(bool));

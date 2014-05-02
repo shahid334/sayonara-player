@@ -56,7 +56,10 @@ class EqSlider : public QObject{
 
 		EqSlider(QObject* parent) : QObject(parent){}
 		EqSlider(QSlider* slider, QLabel* label, int idx) :
-			_slider(slider), _label(label), _idx(idx){}
+			_slider(slider), _label(label), _idx(idx){
+
+			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(sl_slider_changed(int)));
+		}
 		QSlider* getSlider(){ return _slider; }
 		QLabel* getLabel(){ return _label;}
 		void setValue(int val){this->_slider->setValue(val);}

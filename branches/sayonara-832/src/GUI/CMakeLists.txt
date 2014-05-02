@@ -15,9 +15,11 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
+
     SearchableWidget.h
     MiniSearcher.h
     RatingLabel.h
+    AudioConverter/GUI_AudioConverter.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
@@ -69,9 +71,11 @@ SET(HEADERS
 
 
 SET(SOURCES
+
     SearchableWidget.cpp
     MiniSearcher.cpp
     RatingLabel.cpp
+    AudioConverter/GUI_AudioConverter.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp
@@ -126,6 +130,7 @@ SET(SOURCES
 
 
 SET(FORMS
+    AudioConverter/GUI_AudioConvert.ui
     engine/GUI_LevelPainter.ui
     engine/GUI_Spectrum.ui
     engine/GUI_Style.ui

@@ -24,16 +24,18 @@
 #define ENGINE_H_
 
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/Equalizer_presets.h"
 #include <QObject>
 #include <QStringList>
 
 #include <vector>
+#include <gst/gst.h>
+#include <gst/gstcaps.h>
 
 using namespace std;
 
 #define PLAYBACK_ENGINE "playback_engine"
 #define CONVERT_ENGINE "convert_engine"
+
 
 enum EngineState {
 	StatePlay=0,
@@ -42,7 +44,75 @@ enum EngineState {
 };
 
 
-class Engine : public QObject{
+enum CapsType {
+	CapsTypeUnknown=0,
+	CapsTypeInt=1,
+	CapsTypeFloat=2
+};
+
+class MyCaps {
+
+private:
+	CapsType _type;
+	bool    _sig;
+	int     _width;
+	int     _channels;
+	bool    _parsed;
+
+public:
+
+	MyCaps(){
+		_type = CapsTypeUnknown;
+		_sig = false;
+		_width = -1;
+		_channels = -1;
+		_parsed = false;
+	}
+
+	bool is_parsed(){ return _parsed; }
+	void set_parsed(bool b){ _parsed = b; }
+
+	CapsType get_type(){ return _type; }
+	bool get_signed() {return _sig; }
+	int get_width() { return _width; }
+	int get_channels() { return _channels; }
+
+	void parse(GstCaps* caps){
+		QString info = gst_caps_to_string(caps);
+		//qDebug() << info;
+
+		QStringList lst = info.split(",");
+		foreach(QString s, lst){
+
+			s = s.trimmed();
+			if(s.startsWith("audio", Qt::CaseInsensitive)){
+				if(s.contains("int", Qt::CaseInsensitive)) _type = CapsTypeInt;
+				else if(s.contains("float", Qt::CaseInsensitive)) _type = CapsTypeFloat;
+				else _type = CapsTypeUnknown;
+			}
+
+			else if(s.startsWith("signed", Qt::CaseInsensitive)){
+				if(s.contains("true", Qt::CaseInsensitive)) _sig = true;
+				else _sig = false;
+			}
+
+			else if(s.startsWith("width", Qt::CaseInsensitive)){
+				_width = s.right(2).toInt();
+			}
+
+			else if(s.startsWith("channels", Qt::CaseInsensitive)){
+				_channels = s.right(1).toInt();
+				if(_channels > 2) _channels = 2;
+			}
+		}
+		_parsed = true;
+	}
+};
+
+
+
+
+class Engine : public QObject {
 
 	Q_OBJECT
 
@@ -72,7 +142,7 @@ public:
 
 	virtual void		set_track_finished(){}
 	virtual void        set_level(float right, float left){ emit sig_level(right, left); }
-	virtual void        set_spectrum(QList<float>&){ emit sig_spectrum(lst); }
+	virtual void        set_spectrum(QList<float>& lst ){ emit sig_spectrum(lst); }
 	virtual void		update_bitrate(qint32 bitrate){}
 	virtual void		update_time(qint32 time){}
 	virtual bool		get_show_level(){ return false; }
@@ -81,7 +151,6 @@ public:
 
 	virtual void		do_jump_play(){}
 	virtual void		unmute(){}
-
 
 
 signals:
@@ -98,9 +167,12 @@ signals:
 	void sig_bitrate_changed(qint32);
 
 private slots:
-	virtual void sr_initialized(bool b){ if(b) play; };
-	virtual void sr_ended(){};
-	virtual void sr_not_valid(){ emit sig_track_finished(); };
+	virtual void sr_initialized(bool b){ if(b) play(); }
+	virtual void sr_ended(){}
+	virtual void sr_not_valid(){ emit sig_track_finished(); }
+	virtual void set_about_to_finish(qint64 ms){}
+	virtual void set_cur_position_ms(qint64 ms){emit sig_pos_changed_ms(ms);}
+
 
 
 public slots:
@@ -122,11 +194,12 @@ public slots:
 
 	virtual void psl_sr_set_active(bool b ){ _sr_active = b; }
 	virtual void psl_new_stream_session(){}
-	virtual void psl_calc_level(bool){}
-	virtual void psl_calc_spectrum(bool){}
+	virtual void psl_calc_level(bool b){}
+	virtual void psl_calc_spectrum(bool b){}
 	virtual void psl_set_gapless(bool b){ _gapless = b; }
-	virtual void psl_change_engine(){};
 
+	virtual void start_convert(){}
+	virtual void end_convert(){}
 
 };
 

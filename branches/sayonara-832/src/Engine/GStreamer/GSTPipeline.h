@@ -38,13 +38,11 @@ enum GSTFileMode{
 
 };
 
-
 bool
 _test_and_error(void* element, QString errorstr);
 
 bool
 _test_and_error_bool(bool b, QString errorstr);
-
 
 class GSTAbstractPipeline : public QObject {
 
@@ -60,8 +58,9 @@ class GSTAbstractPipeline : public QObject {
 		qint64		_position;
 
 	signals:
+		void sig_finished();
 		void sig_about_to_finish(qint64);
-		void sig_cur_pos_changed(qint64);
+		void sig_pos_changed_ms(qint64);
 
 
 	public slots:
@@ -74,15 +73,23 @@ class GSTAbstractPipeline : public QObject {
 		virtual guint get_bitrate()=0;
 
 	public:
-		GstElement* get_pipeline();
-		GstBus* get_bus();
-		GstState get_state();
-		void refresh_cur_position(gint64 cur_pos_ms);
-		void about_to_finish();
+		virtual GstElement* get_pipeline();
+		virtual GstBus*		get_bus();
+		virtual GstState	get_state();
+		virtual void		refresh_cur_position(gint64 cur_pos_ms);
+		virtual void		about_to_finish();
+		virtual void		finished();
 
 		virtual bool set_uri(gchar* uri);
 		virtual gchar* get_uri();
 };
 
+
+namespace PipelineCallbacks {
+
+	void pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data);
+	gboolean show_position(gpointer data);
+
+};
 
 #endif // GSTPIPELINE_H

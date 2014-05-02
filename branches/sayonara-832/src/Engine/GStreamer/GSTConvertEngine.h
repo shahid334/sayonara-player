@@ -9,6 +9,7 @@
 class GSTConvertEngine : public Engine
 {
 	Q_OBJECT
+
 public:
 	explicit GSTConvertEngine(QObject *parent = 0);
 	
@@ -29,12 +30,7 @@ public:
 
 
 	private slots:
-		virtual void sr_initialized(bool);
-		virtual void sr_ended();
-		virtual void sr_not_valid();
 
-		void timeout();
-		void set_about_to_finish(qint64);
 		void set_cur_position_ms(qint64);
 
 
@@ -53,3 +49,5 @@ public:
 };
 
 #endif // GSTCONVERTENGINE_H
+
+

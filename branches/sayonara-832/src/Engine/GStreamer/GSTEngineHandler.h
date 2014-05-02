@@ -27,15 +27,18 @@
 
 using namespace std;
 
-class GSTEngineHandler : public Engine {
+class GSTEngineHandler : public Engine
+{
 
 	Q_OBJECT
+	Q_INTERFACES(Engine)
 
 public:
-	explicit GSTEngineHandler(Object* parent=0);
-	~GSTEngineHandler();
+	explicit GSTEngineHandler(QObject* parent=0);
+	virtual ~GSTEngineHandler();
 
 	void fill_engines(const vector<Engine*>& engines);
+	void init();
 
 public slots:
 
@@ -63,6 +66,9 @@ public slots:
 
 	void psl_change_engine(QString name);
 
+	void start_convert();
+	void end_convert();
+
 
 private slots:
 
@@ -84,7 +90,7 @@ private:
 	Engine*           _cur_engine;
 	vector<Engine*>   _engines;
 
-	bool configure_connections(Engine* old_engine, Engine* new_engine){
+	bool configure_connections(Engine* old_engine, Engine* new_engine);
 
 
 };
