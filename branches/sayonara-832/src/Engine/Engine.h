@@ -60,11 +60,27 @@ protected:
 
 	bool		_sr_active;
 	bool		_sr_wanna_record;
+	bool		_gapless;
+
 
 public:
 	virtual EngineState	getState() { return _state; }
 	virtual QString	getName(){ return _name; }
 	virtual void	init()=0;
+
+	virtual void		set_track_finished(){}
+
+	virtual void        set_level(float right, float left){}
+	virtual void        set_spectrum(QList<float>&){}
+	virtual void		update_bitrate(qint32 bitrate){}
+	virtual void		update_time(qint32 time){}
+	virtual bool		get_show_level(){ return false; }
+	virtual bool		get_show_spectrum(){ return false; }
+
+
+	virtual void		do_jump_play(){}
+	virtual void		unmute(){}
+
 
 
 signals:
@@ -99,17 +115,19 @@ public slots:
 	virtual void change_track(const MetaData&, int pos_sec=0, bool start_play=true)=0;
 	virtual void change_track(const QString&, int pos_sec=0, bool start_play=true )=0;
 
-	virtual void eq_changed(int, int)=0;
-	virtual void eq_enable(bool)=0;
-	virtual void record_button_toggled(bool)=0;
+	virtual void eq_changed(int band, int value){ Q_UNUSED(band); Q_UNUSED(value); }
+	virtual void eq_enable(bool b){ Q_UNUSED(b); }
+	virtual void record_button_toggled(bool){}
 
-    virtual void psl_sr_set_active(bool)=0;
-    virtual void psl_new_stream_session()=0;
-    virtual void psl_calc_level(bool)=0;
-	virtual void psl_set_gapless(bool)=0;
+	virtual void psl_sr_set_active(bool){}
+	virtual void psl_new_stream_session(){}
+	virtual void psl_calc_level(bool){}
+	virtual void psl_set_gapless(bool b){ _gapless = b; }
 
 
 };
+
+extern Engine* gst_obj_ref;
 
 Q_DECLARE_INTERFACE(Engine, "sayonara.engine/1.0")
 

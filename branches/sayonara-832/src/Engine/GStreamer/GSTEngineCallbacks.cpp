@@ -306,7 +306,7 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
         if(gst_obj_ref){
             gst_obj_ref->unmute();
-            gst_obj_ref->state_changed();
+ //           gst_obj_ref->state_changed();
         }
         break;
     }

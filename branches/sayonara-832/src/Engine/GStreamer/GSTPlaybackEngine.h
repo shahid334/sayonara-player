@@ -130,7 +130,6 @@ public:
 // public from Gstreamer Callbacks
 	void        emit_buffer(float inv_array_elements, float scale);
 
-	void		state_changed();
 	void		set_track_finished();
 
 	void        set_level(float right, float left);
@@ -165,11 +164,8 @@ private:
     int         _jump_play;
 	bool		_wait_for_gapless_track;
 	bool		_may_start_timer;
-	bool		_gapless;
-
 
 	// methods
-	void init_play_pipeline();
 	bool set_uri(const MetaData& md, bool* start_play);
 	void change_track_gapless(const MetaData& md, int pos_sec=0, bool start_play=true);
 
@@ -180,7 +176,7 @@ private slots:
     virtual void sr_ended();
     virtual void sr_not_valid();
 
-	void timeout();
+
 	void set_about_to_finish(qint64);
 	void set_cur_position_ms(qint64);
     
@@ -213,7 +209,7 @@ public slots:
 
 };
 
-extern GSTPlaybackEngine* gst_obj_ref;
+
 
 
 

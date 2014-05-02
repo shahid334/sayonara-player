@@ -39,8 +39,6 @@ bool _debug = false;
 float log_10[20001];
 float lo_128[128];
 
-GSTPlaybackEngine* gst_obj_ref = 0;
-
 
 /*****************************************************************************************/
 /* Engine */
@@ -99,8 +97,6 @@ GSTPlaybackEngine::~GSTPlaybackEngine() {
 
 	_settings->updateLastTrack();
 	delete _pipeline;
-
-	gst_obj_ref = 0;
 }
 
 
@@ -148,8 +144,6 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bo
 	if (!success)
 		return;
 
-	gst_obj_ref = this;
-
 	_md = md;
 
 	_caps->set_parsed(false);
@@ -162,6 +156,8 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bo
 
 
 void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
+
+	gst_obj_ref = this;
 
 	ENGINE_DEBUG << md.filepath << ", " << pos_sec << ",  " << start_play;
 
@@ -178,8 +174,6 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	bool success = set_uri(md, &start_play);
 	if (!success)
 		return;
-
-	gst_obj_ref = this;
 
 	_md = md;
 
@@ -281,8 +275,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 void GSTPlaybackEngine::play() {
 
 	ENGINE_DEBUG;
-
-	gst_obj_ref = this;
 
 	_state = StatePlay;
 	_pipeline->play();
@@ -446,8 +438,6 @@ bool GSTPlaybackEngine::get_show_spectrum(){
 	return _show_spectrum;
 }
 
-
-void GSTPlaybackEngine::state_changed() {}
 
 MyCaps* GSTPlaybackEngine::get_caps(){
 	return _caps;
@@ -619,7 +609,7 @@ void GSTPlaybackEngine::psl_set_gapless(bool b){
 
 	else {
 		_may_start_timer = false;
-		_gapless = true;
+		_gapless = false;
 
 	}
 }
