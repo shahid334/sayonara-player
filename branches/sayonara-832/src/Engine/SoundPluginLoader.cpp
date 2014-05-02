@@ -39,8 +39,6 @@ using namespace std;
 //Q_IMPORT_PLUGIN(sayonara_gstreamer)
 
 SoundPluginLoader::SoundPluginLoader(QString app_dir){
-	_cur_engine = -1;
-	_cur_engine_name = "";
 	bool success = load_plugins(app_dir);
 	if(!success){
 		qDebug() << "No sound engine available";
@@ -58,7 +56,6 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 	QDir plugin_dir = QDir(app_dir);
 	QStringList entry_list = plugin_dir.entryList(QDir::Files);
 
-	int i=0;
 
 	foreach(QObject* plugin, QPluginLoader::staticInstances() ){
 
@@ -66,13 +63,8 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 			if(plugin_eng){
 				QString name = plugin_eng->getName().toLower();
-				_lst_engines.push_back(plugin_eng);
-				if(name == target_engine){
-					_cur_engine = i;
-					_cur_engine_name = name;
-				}
+				_vec_engines.push_back(plugin_eng);
 
-				i++;
 			}
 		}
 	}
@@ -89,7 +81,6 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 			continue;
 		}
 
-
 		qDebug() << "Plugin looks useful... ";
 
 		Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
@@ -97,15 +88,8 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 
 		if(plugin_eng){
 			QString name = plugin_eng->getName().toLower();
-			qDebug() << "Found plugin " << plugin_eng->getName();
-			_lst_engines.push_back(plugin_eng);
-
-			if(name == target_engine){
-				_cur_engine = i;
-				_cur_engine_name = name;
-			}
-
-			i++;
+			qDebug() << "Found engine " << plugin_eng->getName();
+			_vec_engines.push_back(plugin_eng);
 		}
 
 		else {
@@ -114,49 +98,16 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 
 	}
 
-	qDebug() << "Num plugins found: " << _lst_engines.size();
+	qDebug() << "Num engines found: " << _vec_engines.size();
 
-	if(_lst_engines.size() == 0) {
-		_cur_engine_name = "";
+	if(_vec_engines.size() == 0) {
 		return false;
-	}
-
-	if(_cur_engine < 0){
-		_cur_engine = 0;
-		_cur_engine_name = _lst_engines.at(0)->getName().toLower();
 	}
 
 	return true;
 }
 
-
-Engine* SoundPluginLoader::get_cur_engine(){
-	if(_cur_engine < 0) return NULL;
-	return _lst_engines.at(_cur_engine);
+vector<Engine*> SoundPluginLoader::get_engines(){
+	return _vec_engines;
 }
 
-
-void SoundPluginLoader::psl_switch_engine(QString& new_engine){
-
-	if(new_engine.toLower() == _cur_engine_name.toLower()) return;
-
-	qDebug() << "Change Engine to " << new_engine;
-
-	bool engine_found = false;
-	for(int i=0; i<_lst_engines.size(); i++){
-		Engine* engine = _lst_engines.at(i);
-
-		if(new_engine == engine->getName()){
-			_cur_engine_name = engine->getName();
-			_cur_engine = i;
-			engine_found = true;
-			break;
-		}
-	}
-
-	if(engine_found){
-        QMessageBox::information(NULL, tr("Info"), tr("Please restart in order to change engine to ") + new_engine);
-		CSettingsStorage::getInstance()->setSoundEngine(_cur_engine_name);
-	}
-
-}

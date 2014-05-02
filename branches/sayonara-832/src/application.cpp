@@ -140,30 +140,7 @@ void Application::init(int n_files, QTranslator *translator){
 	qDebug() << "Plugin " << GUI_Podcasts::getVisName();
 	qDebug() << "Plugin " << GUI_LFMRadioWidget::getVisName();
 
-
-
-	QString dir;
-
-#ifndef Q_OS_WIN
-	dir = Helper::getLibPath();
-	qDebug() << "Lib path = " << dir;
-#else
-	dir = this->applicationDirPath();
-#endif
-
-	engine_plugin_loader = new SoundPluginLoader(dir);
-	listen = engine_plugin_loader->get_cur_engine();
-
-	if(!listen){
-		qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
-		exit(1);
-	}
-
-	else{
-		listen->init();
-		listen->psl_sr_set_active(set->getStreamRipper());
-		listen->psl_set_gapless(set->getGapless());
-	}
+	listen = new GSTEngineHandler();
 
 	init_connections();
 

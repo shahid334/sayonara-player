@@ -28,15 +28,16 @@
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <vector>
+
+using namespace std;
 
 class SoundPluginLoader : public QObject {
 
 	Q_OBJECT
 
 private:
-	int 			_cur_engine;
-	QString			_cur_engine_name;
-	QList<Engine*> 	_lst_engines;
+	vector<Engine*> 	_vec_engines;
 
 	bool load_plugins(QString app_dir);
 
@@ -45,17 +46,7 @@ public:
 	SoundPluginLoader(QString);
 	virtual ~SoundPluginLoader();
 
-
-	Engine* get_cur_engine();
-
-
-signals:
-	void sig_new_engine_set();
-
-public slots:
-	void psl_switch_engine(QString&);
-
-
+	vector<Engine*> get_engines();
 };
 
 #endif /* SOUNDPLUGINLOADER_H_ */

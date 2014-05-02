@@ -5,6 +5,7 @@ GSTConvertEngine::GSTConvertEngine(QObject *parent) :
 {
 	_settings = CSettingsStorage::getInstance();
 	_pipeline = new GSTConvertPipeline(this);
+	_name = CONVERT_ENGINE;
 }
 
 void GSTConvertEngine::init(){}

@@ -64,7 +64,7 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 	_caps->set_parsed(false);
 
 	_settings = CSettingsStorage::getInstance();
-	_name = "GStreamer backend";
+	_name = PLAYBACK_ENGINE;
 	_state = StateStop;
 
 	_scrobble_begin_ms = 0;
@@ -519,66 +519,12 @@ void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 	if(_may_start_timer){
 
 		_other_pipeline->start_timer(time2go);
-
 	}
 
 	_may_start_timer = false;
 
 	_wait_for_gapless_track = true;
 
-	emit sig_track_finished();
-}
-
-
-void GSTPlaybackEngine::set_level(float right, float left){
-
-	ENGINE_DEBUG << "l: " << left << ", r: " << right;
-
-	emit sig_level(right, left);
-}
-
-
-void GSTPlaybackEngine::set_spectrum(QList<float> & lst){
-
-	ENGINE_DEBUG << lst.size();
-	emit sig_spectrum(lst);
-}
-
-
-void GSTPlaybackEngine::record_button_toggled(bool b) {
-	ENGINE_DEBUG << b;
-	_sr_wanna_record = b;
-}
-
-
-void GSTPlaybackEngine::psl_sr_set_active(bool b) {
-	ENGINE_DEBUG << b;
-	_sr_active = b;
-}
-
-
-void GSTPlaybackEngine::psl_new_stream_session() {
-	ENGINE_DEBUG;
-	_stream_recorder->set_new_stream_session();
-}
-
-
-void GSTPlaybackEngine::sr_initialized(bool b) {
-
-	ENGINE_DEBUG << b;
-
-	if (b)
-		play();
-}
-
-
-void GSTPlaybackEngine::sr_ended() {
-	ENGINE_DEBUG;
-}
-
-
-void GSTPlaybackEngine::sr_not_valid() {
-	ENGINE_DEBUG;
 	emit sig_track_finished();
 }
 

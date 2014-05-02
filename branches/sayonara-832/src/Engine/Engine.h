@@ -32,6 +32,8 @@
 
 using namespace std;
 
+#define PLAYBACK_ENGINE "playback_engine"
+#define CONVERT_ENGINE "convert_engine"
 
 enum EngineState {
 	StatePlay=0,
@@ -69,9 +71,8 @@ public:
 	virtual void	init()=0;
 
 	virtual void		set_track_finished(){}
-
-	virtual void        set_level(float right, float left){}
-	virtual void        set_spectrum(QList<float>&){}
+	virtual void        set_level(float right, float left){ emit sig_level(right, left); }
+	virtual void        set_spectrum(QList<float>&){ emit sig_spectrum(lst); }
 	virtual void		update_bitrate(qint32 bitrate){}
 	virtual void		update_time(qint32 time){}
 	virtual bool		get_show_level(){ return false; }
@@ -97,9 +98,9 @@ signals:
 	void sig_bitrate_changed(qint32);
 
 private slots:
-	virtual void sr_initialized(bool)=0;
-	virtual void sr_ended()=0;
-	virtual void sr_not_valid()=0;
+	virtual void sr_initialized(bool b){ if(b) play; };
+	virtual void sr_ended(){};
+	virtual void sr_not_valid(){ emit sig_track_finished(); };
 
 
 public slots:
@@ -117,12 +118,14 @@ public slots:
 
 	virtual void eq_changed(int band, int value){ Q_UNUSED(band); Q_UNUSED(value); }
 	virtual void eq_enable(bool b){ Q_UNUSED(b); }
-	virtual void record_button_toggled(bool){}
+	virtual void record_button_toggled(bool b){ _sr_wanna_record = b; }
 
-	virtual void psl_sr_set_active(bool){}
+	virtual void psl_sr_set_active(bool b ){ _sr_active = b; }
 	virtual void psl_new_stream_session(){}
 	virtual void psl_calc_level(bool){}
+	virtual void psl_calc_spectrum(bool){}
 	virtual void psl_set_gapless(bool b){ _gapless = b; }
+	virtual void psl_change_engine(){};
 
 
 };
