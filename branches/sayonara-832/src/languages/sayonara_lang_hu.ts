@@ -186,6 +186,52 @@
     </message>
 </context>
 <context>
+    <name>GUI_AudioConvert</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <source>Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Variable Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>mp3 Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x</source>
+        <translation type="unfinished">x</translation>
+    </message>
+    <message>
+        <source>Activate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GUI_AudioConverter</name>
+    <message>
+        <source>0 (Best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>9 (Worst)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;mp3 Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_Equalizer</name>
     <message>
         <source>x</source>
@@ -455,11 +501,11 @@
     <name>GUI_Level</name>
     <message>
         <source>x</source>
-        <translation>x</translation>
+        <translation type="obsolete">x</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation>Szint</translation>
+        <translation type="obsolete">Szint</translation>
     </message>
     <message>
         <source>Le&amp;vel</source>
@@ -1899,11 +1945,11 @@ expression</source>
     <name>SoundPluginLoader</name>
     <message>
         <source>Info</source>
-        <translation>Információ</translation>
+        <translation type="obsolete">Információ</translation>
     </message>
     <message>
         <source>Please restart in order to change engine to </source>
-        <translation>Motor váltáshoz indítsa újra </translation>
+        <translation type="obsolete">Motor váltáshoz indítsa újra </translation>
     </message>
 </context>
 </TS>

@@ -237,6 +237,69 @@
     </message>
 </context>
 <context>
+    <name>GUI_AudioConvert</name>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="26"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="168"/>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="103"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="169"/>
+        <source>Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="121"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="170"/>
+        <source>Constant Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="139"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="171"/>
+        <source>Variable Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="195"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="173"/>
+        <source>mp3 Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="222"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="174"/>
+        <source>x</source>
+        <translation type="unfinished">x</translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="242"/>
+        <location filename="../GUI/ui_GUI_AudioConvert.h" line="175"/>
+        <source>Activate</source>
+        <translation type="unfinished">Активировать</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_AudioConverter</name>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConverter.cpp" line="68"/>
+        <source>0 (Best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConverter.cpp" line="77"/>
+        <source>9 (Worst)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../GUI/AudioConverter/GUI_AudioConverter.h" line="22"/>
+        <source>&amp;mp3 Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>GUI_Equalizer</name>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="20"/>
@@ -257,17 +320,17 @@
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="271"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="198"/>
         <source>This will overwrite your custom preset</source>
         <translation>Это перезапишет ваши настройки</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="272"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.cpp" line="199"/>
         <source>Continue?</source>
         <translation>Продолжить?</translation>
     </message>
     <message>
-        <location filename="../GUI/equalizer/GUI_Equalizer.h" line="47"/>
+        <location filename="../GUI/equalizer/GUI_Equalizer.h" line="85"/>
         <source>&amp;Equalizer</source>
         <translation>&amp;Эквалайзер</translation>
     </message>
@@ -610,14 +673,12 @@
 <context>
     <name>GUI_Level</name>
     <message>
-        <location filename="../GUI/ui_GUI_Level.h" line="462"/>
         <source>Level</source>
-        <translation>Уровень</translation>
+        <translation type="obsolete">Уровень</translation>
     </message>
     <message>
-        <location filename="../GUI/ui_GUI_Level.h" line="463"/>
         <source>x</source>
-        <translation>x</translation>
+        <translation type="obsolete">x</translation>
     </message>
     <message>
         <source>Le&amp;vel</source>
@@ -656,49 +717,49 @@
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
         <source>Title</source>
         <translation>Название</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="215"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="297"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="294"/>
         <source>Artist</source>
         <translation>Исполнитель</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="293"/>
         <source>Album</source>
         <translation>Альбом</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="293"/>
         <source>Year</source>
         <translation>Год</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
         <source>Dur.</source>
         <translation>Длит.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
         <source>Bitrate</source>
         <translation>Битрейт</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="213"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="295"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="292"/>
         <source>Filesize</source>
         <translation>Размер файла</translation>
     </message>
@@ -710,50 +771,50 @@
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="293"/>
         <source>Duration</source>
         <translation>Длительность</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="214"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="215"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="296"/>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="297"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="293"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="294"/>
         <source>#Tracks</source>
         <translation>Треков</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="644"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="641"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="698"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="695"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="700"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="697"/>
         <source>Only from library</source>
         <translation>Только из библиотеки</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="702"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="699"/>
         <source>You are about to delete %1 files</source>
         <translation>Вы действительно хотите удалить %1 файлов</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="706"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="703"/>
         <source>Continue?</source>
         <translation>Продолжить?</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="764"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="761"/>
         <source>Importing was successful</source>
         <translation>Импорт завершен успешно</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="767"/>
+        <location filename="../GUI/library/GUI_Library_windowed.cpp" line="764"/>
         <source>Importing failed</source>
         <translation>Ошибка при импорте</translation>
     </message>
@@ -829,37 +890,37 @@
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="242"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="243"/>
         <source>&amp;Library</source>
         <translation>&amp;Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="455"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="436"/>
         <source>Warning</source>
         <translation>Предупреждение</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="455"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="436"/>
         <source>Cannot login to Last.fm</source>
         <translation>Не удалось войти в Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="630"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="613"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="641"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="624"/>
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="877"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="860"/>
         <source>Info</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="878"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="861"/>
         <source>A new version is available!</source>
         <translation>Доступна новая версия!</translation>
     </message>
@@ -2100,55 +2161,55 @@ expression</source>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="264"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="254"/>
         <source>Library</source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="351"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="272"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="321"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="262"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Комбинация клавиш:&lt;br /&gt;Поиск &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Жанр &lt;span style=&quot; font-weight:600;&quot;&gt;g:&lt;br /&gt;&lt;/span&gt;Путь &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="364"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="267"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="334"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="369"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="268"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="339"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="258"/>
         <source>Genre</source>
         <translation>Жанр</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="374"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="269"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="344"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="259"/>
         <source>Path</source>
         <translation>Путь</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="403"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="275"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="265"/>
         <source>Search for title, interprets and albums</source>
         <translation>Искать по названию, исполнителю и альбому</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="430"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="278"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="400"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="268"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Показать все альбомы, треки и исполнителей</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="461"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="281"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="431"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="271"/>
         <source>Music Library  </source>
         <translation>Библиотека</translation>
     </message>
     <message>
-        <location filename="../GUI/library/GUI_Library_windowed.ui" line="503"/>
-        <location filename="../GUI/ui_GUI_Library_windowed.h" line="284"/>
+        <location filename="../GUI/library/GUI_Library_windowed.ui" line="473"/>
+        <location filename="../GUI/ui_GUI_Library_windowed.h" line="274"/>
         <source>Information</source>
         <translation>Информация</translation>
     </message>
@@ -2696,14 +2757,12 @@ expression</source>
 <context>
     <name>SoundPluginLoader</name>
     <message>
-        <location filename="../Engine/SoundPluginLoader.cpp" line="142"/>
         <source>Info</source>
-        <translation>Информация</translation>
+        <translation type="obsolete">Информация</translation>
     </message>
     <message>
-        <location filename="../Engine/SoundPluginLoader.cpp" line="142"/>
         <source>Please restart in order to change engine to </source>
-        <translation>Пожалуйста, перезапустите для смены движка на </translation>
+        <translation type="obsolete">Пожалуйста, перезапустите для смены движка на </translation>
     </message>
 </context>
 </TS>
