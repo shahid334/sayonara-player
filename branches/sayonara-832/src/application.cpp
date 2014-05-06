@@ -107,7 +107,7 @@ void Application::init(int n_files, QTranslator *translator){
 	ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
 	ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", GUI_LFMRadioWidget::getVisName(), player->getParentOfPlugin());
 	ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", GUI_PlaylistChooser::getVisName(), player->getParentOfPlugin());
-	ui_audioconverter  = new GUI_AudioConverter("MP3 Converter", GUI_AudioConverter::getVisName(), player->getParentOfPlugin());
+	ui_audioconverter  = new GUI_AudioConverter("mp3 Converter", GUI_AudioConverter::getVisName(), player->getParentOfPlugin());
 
 	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
 	ui_id3_editor       = new GUI_TagEdit();
@@ -333,14 +333,14 @@ void Application::init_connections(){
 	CONNECT (listen, sig_level(float, float),                            ui_level,  set_level(float,float));
 	CONNECT (listen, sig_spectrum(QList<float>&),                        ui_spectrum, set_spectrum(QList<float>&));
 
+
     // should be sent to player
 
-	CONNECT (listen, sig_pos_changed_s(quint32),                         player,              setCurrentPosition(quint32) );
-	CONNECT (listen, sig_bitrate_changed(qint32),						 player,              psl_bitrate_changed(qint32));
+	CONNECT (listen, sig_pos_changed_s(quint32),                      player,              setCurrentPosition(quint32) );
+	CONNECT (listen, sig_bitrate_changed(qint32),					  player,              psl_bitrate_changed(qint32));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      player,              psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      playlist_handler,    psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      library,             psl_track_time_changed(MetaData&));
-
 
 
     CONNECT(library, sig_playlist_created(QStringList&),            playlist_handler, 		psl_createPlaylist(QStringList&));
@@ -390,12 +390,12 @@ void Application::init_connections(){
     CONNECT(ui_lastfm, sig_activated(bool),                                  player,         psl_lfm_activated(bool));
     CONNECT(ui_lastfm, new_lfm_credentials(QString, QString),                lastfm, 		psl_login(QString, QString));
 
-    CONNECT(ui_id3_editor, id3_tags_changed(), 						library,        refresh());
-    CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			playlist_handler, 		psl_id3_tags_changed(MetaDataList&));
-    CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 			player, 		psl_id3_tags_changed(MetaDataList&));
+	CONNECT(ui_id3_editor, id3_tags_changed(), 						  library,          refresh());
+	CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 	      playlist_handler, psl_id3_tags_changed(MetaDataList&));
+	CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 		  player, 		    psl_id3_tags_changed(MetaDataList&));
 
-	CONNECT(ui_audioconverter, sig_active(),                          player, stopped());
-	CONNECT(ui_audioconverter, sig_inactive(),                        player, stopped());
+	CONNECT(ui_audioconverter, sig_active(),                          playlist_handler, psl_stop());
+	CONNECT(ui_audioconverter, sig_inactive(),                        playlist_handler, psl_stop());
 	CONNECT(ui_audioconverter, sig_active(),						  listen, start_convert());
 	CONNECT(ui_audioconverter, sig_inactive(),						  listen, end_convert());
 

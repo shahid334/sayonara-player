@@ -55,8 +55,8 @@ GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
 		if(!_test_and_error(_xingheader, "CvtEngine: Cannot create xingmuxer")) break;
 		if(!_test_and_error(_audio_sink, "CvtEngine: Cannot create audio sink")) break;
 
-		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _lame, _xingheader, _id3mux, _audio_sink, NULL);
-		gst_element_link_many(_audio_convert, _lame, _xingheader, _id3mux, _audio_sink, NULL);
+		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
+		gst_element_link_many(_audio_convert, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
 
 		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
 
@@ -90,7 +90,6 @@ bool GSTConvertPipeline::set_uri(gchar* uri){
 	if(!uri) return false;
 	stop();
 	qDebug() << "Pipeline: " << uri;
-
 	g_object_set(G_OBJECT(_audio_src), "uri", uri, NULL);
 
 	return true;
@@ -106,7 +105,6 @@ bool GSTConvertPipeline::set_target_uri(gchar* uri){
 
 
 void GSTConvertPipeline::play(){
-
 
 	LameBitrate q = CSettingsStorage::getInstance()->getConvertQuality();
 	set_quality(q);
@@ -127,6 +125,7 @@ void GSTConvertPipeline::stop(){
 	_uri = 0;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+
 }
 
 

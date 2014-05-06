@@ -656,7 +656,7 @@ void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph){
 
 void GUI_Player::stopped(){
     m_metadata_available = false;
-    stopClicked(false);
+	stopClicked(false);
 }
 
 void GUI_Player::psl_reload_library_allowed(bool b){

@@ -62,6 +62,7 @@ public slots:
 	void psl_sr_set_active(bool);
 	void psl_new_stream_session();
 	void psl_calc_level(bool);
+	void psl_calc_spectrum(bool);
 	void psl_set_gapless(bool b);
 
 	void psl_change_engine(QString name);

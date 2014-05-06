@@ -3,6 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 SET(ICONS 
         append.png
         append_small.png
+        audio_convert.png
         broom.png
         bwd.png
         bwd_orange.png

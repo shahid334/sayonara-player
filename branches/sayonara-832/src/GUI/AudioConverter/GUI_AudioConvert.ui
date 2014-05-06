@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>334</width>
-    <height>140</height>
+    <width>357</width>
+    <height>170</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>0</width>
-    <height>140</height>
+    <height>170</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>140</height>
+    <height>170</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -32,7 +32,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="8" column="2" colspan="2">
+   <item row="9" column="2" colspan="2">
     <widget class="QComboBox" name="cb_quality">
      <property name="maximumSize">
       <size>
@@ -42,6 +42,7 @@
      </property>
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -66,6 +67,11 @@
    </item>
    <item row="6" column="0" colspan="4">
     <widget class="Line" name="line">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -74,7 +80,7 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="2" colspan="2">
+   <item row="8" column="2" colspan="2">
     <widget class="QLabel" name="label">
      <property name="maximumSize">
       <size>
@@ -84,6 +90,7 @@
      </property>
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -97,10 +104,11 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="0" colspan="2">
+   <item row="8" column="0" colspan="2">
     <widget class="QRadioButton" name="rb_cbr">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -114,10 +122,11 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0" colspan="2">
+   <item row="9" column="0" colspan="2">
     <widget class="QRadioButton" name="rb_vbr">
      <property name="font">
       <font>
+       <family>DejaVu Sans</family>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
@@ -131,8 +140,13 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0" colspan="4">
+   <item row="10" column="0" colspan="4">
     <widget class="Line" name="line_2">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+      </font>
+     </property>
      <property name="focusPolicy">
       <enum>Qt::NoFocus</enum>
      </property>
@@ -144,7 +158,31 @@
    <item row="5" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QCheckBox" name="cb_active">
+      <widget class="QLabel" name="lab_logo">
+       <property name="minimumSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>50</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
        <property name="font">
         <font>
          <family>DejaVu Sans</family>
@@ -154,7 +192,7 @@
         </font>
        </property>
        <property name="text">
-        <string>MP3 Converter</string>
+        <string>mp3 Converter</string>
        </property>
       </widget>
      </item>
@@ -186,6 +224,24 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item row="7" column="0">
+    <widget class="QCheckBox" name="cb_active">
+     <property name="font">
+      <font>
+       <family>DejaVu Sans</family>
+       <pointsize>9</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="text">
+      <string>Activate</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

@@ -417,6 +417,7 @@ void GSTPlaybackEngine::psl_calc_level(bool b){
 
 void GSTPlaybackEngine::psl_calc_spectrum(bool b){
 	ENGINE_DEBUG;
+
 	_show_spectrum = b;
 	if(b) _show_level = false;
 
@@ -545,7 +546,7 @@ void GSTPlaybackEngine::psl_set_gapless(bool b){
 		if(!_other_pipeline){
 			_other_pipeline = new GSTPlaybackPipeline(this);
 			connect(_other_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
-			connect(_other_pipeline, SIGNAL(sig_cur_pos_changed(qint64)), this, SLOT(set_cur_position_ms(qint64)));
+			connect(_other_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 		}
 
 		_other_pipeline->set_volume(_pipeline->get_volume());

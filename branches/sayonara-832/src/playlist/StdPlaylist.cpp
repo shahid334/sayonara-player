@@ -158,8 +158,7 @@ void StdPlaylist::next(){
     _last_track = _cur_play_idx;
     int track_num = -1;
     if(_v_md.size() == 0){
-        change_track(-1);
-        stop();
+		stop();
         return;
     }
 
@@ -176,7 +175,10 @@ void StdPlaylist::next(){
 
             if(_playlist_mode.repAll)
                 track_num = 0;
-			else return;
+			else {
+				stop();
+				return;
+			}
 
         }
 

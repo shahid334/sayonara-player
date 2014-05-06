@@ -67,7 +67,6 @@ void GSTEngineHandler::end_convert(){
 	if( QString::compare(_cur_engine->getName(), PLAYBACK_ENGINE ) != 0){
 		qDebug() << "Change to playback engine";
 		psl_change_engine(PLAYBACK_ENGINE);
-
 	}
 
 }
@@ -158,6 +157,11 @@ void GSTEngineHandler::psl_calc_level(bool b){
 	_cur_engine->psl_calc_level(b);
 }
 
+void GSTEngineHandler::psl_calc_spectrum(bool b){
+	if(!_cur_engine) return;
+	_cur_engine->psl_calc_spectrum(b);
+}
+
 void GSTEngineHandler::psl_set_gapless(bool b){
 	if(!_cur_engine) return;
 	_cur_engine->psl_set_gapless(b);
@@ -224,7 +228,7 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 	}
 
 	if(new_engine){
-		connect(new_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms()));
+		connect(new_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
 
 		connect(new_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
 		connect(new_engine, SIGNAL(sig_dur_changed(MetaData&)), this, SLOT(sl_dur_changed(MetaData&)));

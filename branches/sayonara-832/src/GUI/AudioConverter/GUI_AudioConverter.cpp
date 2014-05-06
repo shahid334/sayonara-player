@@ -9,18 +9,46 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QString action_text, QWidge
 	ui->setupUi(this);
 
 	_settings = CSettingsStorage::getInstance();
+	LameBitrate br = _settings->getConvertQuality();
+
+	ui->lab_logo->setPixmap(QPixmap(Helper::getIconPath() + "audio_convert.png").scaled(ui->lab_logo->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+
+	ui->rb_cbr->setChecked(false);
+	ui->rb_vbr->setChecked(false);
+
 
 	connect(ui->rb_cbr, SIGNAL(toggled(bool)), this, SLOT(rb_cbr_toggled(bool)));
 	connect(ui->rb_vbr, SIGNAL(toggled(bool)), this, SLOT(rb_vbr_toggled(bool)));
 	connect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 	connect(ui->cb_active, SIGNAL(toggled(bool)), this, SLOT(cb_active_toggled(bool)));
 
-	ui->rb_cbr->setChecked(true);
+	int idx = -1;
+
+	switch(br){
+		case LameBitrate_64:
+		case LameBitrate_128:
+		case LameBitrate_192:
+		case LameBitrate_256:
+		case LameBitrate_320:
+			ui->rb_cbr->setChecked(true);
+			idx = ui->cb_quality->findData((int) br);
+			if(idx < 0 || idx >= ui->cb_quality->count()) break;
+			else ui->cb_quality->setCurrentIndex(idx);
+			break;
+
+		default:
+			ui->rb_vbr->setChecked(true);
+			idx = ui->cb_quality->findData((int) br);
+			if(idx < 0 || idx >= ui->cb_quality->count()) break;
+			else ui->cb_quality->setCurrentIndex(idx);
+			break;
+	}
 }
 
 
 void GUI_AudioConverter::fill_cbr(){
 
+	disconnect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 	ui->cb_quality->clear();
 
 	ui->cb_quality->addItem("64", LameBitrate_64);
@@ -28,11 +56,13 @@ void GUI_AudioConverter::fill_cbr(){
 	ui->cb_quality->addItem("192", LameBitrate_192);
 	ui->cb_quality->addItem("256", LameBitrate_256);
 	ui->cb_quality->addItem("320", LameBitrate_320);
+	connect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 
 	ui->cb_quality->setCurrentIndex(2);
 }
 
 void GUI_AudioConverter::fill_vbr(){
+	disconnect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 	ui->cb_quality->clear();
 
 	ui->cb_quality->addItem(tr("0 (Best)"), LameBitrate_var_0);
@@ -45,6 +75,7 @@ void GUI_AudioConverter::fill_vbr(){
 	ui->cb_quality->addItem("7", LameBitrate_var_7);
 	ui->cb_quality->addItem("8", LameBitrate_var_8);
 	ui->cb_quality->addItem(tr("9 (Worst)"), LameBitrate_var_9);
+	connect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 
 	ui->cb_quality->setCurrentIndex(2);
 }
@@ -69,7 +100,9 @@ void GUI_AudioConverter::cb_active_toggled(bool b){
 		}
 
 		else {
+			disconnect(ui->cb_active, SIGNAL(toggled(bool)), this, SLOT(cb_active_toggled(bool)));
 			ui->cb_active->setChecked(false);
+			connect(ui->cb_active, SIGNAL(toggled(bool)), this, SLOT(cb_active_toggled(bool)));
 		}
 
 	}

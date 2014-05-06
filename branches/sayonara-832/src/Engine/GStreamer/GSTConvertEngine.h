@@ -24,6 +24,7 @@ public:
 
 		CSettingsStorage* _settings;
 		GSTConvertPipeline*	 _pipeline;
+		MetaData _md_target;
 
 		// methods
 		bool set_uri(const MetaData& md, bool* start_play);

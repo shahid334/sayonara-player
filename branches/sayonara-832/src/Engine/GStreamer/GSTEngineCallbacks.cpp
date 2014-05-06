@@ -204,12 +204,12 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 	switch (msg_type) {
 
     case GST_MESSAGE_EOS:
-		if (engine) {
-            qDebug() << "Engine: Track finished";
-			engine->set_track_finished();
-        }
+		if (!engine) break;
 
-        break;
+		qDebug() << "Engine: Track finished";
+		engine->set_track_finished();
+
+		break;
 
 
     case GST_MESSAGE_ELEMENT:
@@ -217,6 +217,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 		if(engine->get_show_spectrum())
 			return spectrum_handler(bus, msg, engine);
+
 		if(engine->get_show_level())
 			return level_handler(bus, msg, engine);
 

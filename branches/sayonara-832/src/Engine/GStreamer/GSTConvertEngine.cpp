@@ -1,4 +1,5 @@
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Tagging/id3.h"
 #include "Engine/GStreamer/GSTConvertEngine.h"
 
 #include <qplugin.h>
@@ -52,12 +53,17 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play){
 	}
 
 	filename = _settings->getConvertTgtPath() + "/" + filename + ".mp3";
+
+
 	target_uri = g_filename_from_utf8(filename.toUtf8(),
 							   filename.toUtf8().size(), NULL, NULL, NULL);
 
 	ENGINE_DEBUG << "Set Uri current pipeline: " << uri;
 	success = _pipeline->set_uri(uri);
 	_pipeline->set_target_uri(target_uri);
+
+	_md_target = md;
+	_md_target.filepath = filename;
 
 	return success;
 }
@@ -93,7 +99,9 @@ void GSTConvertEngine::pause(){
 void GSTConvertEngine::stop(){
 
 	_pipeline->stop();
+
 	_state = StateStop;
+	ID3::setMetaDataOfFile(_md_target);
 }
 
 // public from Gstreamer Callbacks

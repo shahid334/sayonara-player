@@ -19,7 +19,7 @@ signals:
 public:
 	explicit GUI_AudioConverter(QString name, QString action_text, QWidget *parent=0);
 	virtual QAction* getAction();
-	static QString getVisName(){ return tr("&MP3 Converter");}
+	static QString getVisName(){ return tr("&mp3 Converter");}
 	
 public slots:
 

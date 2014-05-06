@@ -95,11 +95,11 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		gst_object_ref(_audio_src);
 
 		gst_bin_add_many(GST_BIN(tmp_pipeline),
-		_audio_src,	_audio_convert, _tee,
+			_audio_src,	_audio_convert, _equalizer, _tee,
 
-		_eq_queue, _equalizer, _volume, _audio_sink,
-		_level_queue, _level_audio_convert, _level, _level_sink,
-		_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+			_eq_queue, _volume, _audio_sink,
+			_level_queue, _level_audio_convert, _level, _level_sink,
+			_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 
 
 		success = gst_element_link_many(_level_queue, _level_sink, NULL);
@@ -109,10 +109,10 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		success = gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
 		_test_and_error_bool(success, "Engine: Cannot link Spectrum pipeline");
 
-		success = gst_element_link_many(_eq_queue, _volume, _equalizer, _audio_sink, NULL);
+		success = gst_element_link_many(_eq_queue, _volume, _audio_sink, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
 
-		success = gst_element_link_many(_audio_convert, _tee, NULL);
+		success = gst_element_link_many(_audio_convert, _equalizer, _tee, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link audio convert with tee")) break;
 
 
