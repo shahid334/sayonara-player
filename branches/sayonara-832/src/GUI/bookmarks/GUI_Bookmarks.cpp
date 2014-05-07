@@ -195,6 +195,8 @@ void GUI_Bookmarks::track_changed(const MetaData& md){
 
 void GUI_Bookmarks::pos_changed_s(quint32 new_time){
 
+	if(!isVisible()) return;
+
 	_cur_time = new_time;
 
 	if(ui->cb_loop->isChecked()){

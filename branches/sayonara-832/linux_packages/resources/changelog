@@ -2,15 +2,16 @@ sayonara (0.4.1) unstable; urgency=low
 
   * Spectrum analyzer
   * Maximize state is restored properly
-  * Navigation in with arrow keys
+  * Navigation in library and playlist with arrow keys
   * Drag and drop into library
   * ID3 tagging improved (tags from path)
   * Case insensitive search for non-latin languages
-  * Enhanced selection in library
   * Rating
   * Gapless playback
+  * MP3 converter
+  * Bookmarks with looper
   * Search in playlist
-  
+  * Enhanced selection in library
 
  -- Lucio Carreras <luciocarreras@gmail.com>  Fri, 07 Jul 2013 02:28:00 +0100
 
