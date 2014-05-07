@@ -100,14 +100,15 @@ void Application::init(int n_files, QTranslator *translator){
 	lastfm              = LastFM::getInstance();
 	ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
-	ui_level            = new GUI_LevelPainter("Level", GUI_LevelPainter::getVisName(), player->getParentOfPlugin());
-	ui_spectrum         = new GUI_Spectrum("Spectrum", GUI_Spectrum::getVisName(), player->getParentOfPlugin());
-	ui_stream           = new GUI_Stream("Stream", GUI_Stream::getVisName(), player->getParentOfPlugin());
-	ui_podcasts         = new GUI_Podcasts("Podcasts", GUI_Podcasts::getVisName(),  player->getParentOfPlugin());
-	ui_eq               = new GUI_Equalizer("Equalizer", GUI_Equalizer::getVisName(),  player->getParentOfPlugin());
-	ui_lfm_radio        = new GUI_LFMRadioWidget("LastFM", GUI_LFMRadioWidget::getVisName(), player->getParentOfPlugin());
-	ui_playlist_chooser = new GUI_PlaylistChooser("Playlists", GUI_PlaylistChooser::getVisName(), player->getParentOfPlugin());
-	ui_audioconverter  = new GUI_AudioConverter("mp3 Converter", GUI_AudioConverter::getVisName(), player->getParentOfPlugin());
+	ui_level            = new GUI_LevelPainter(tr("Le&vel"), player->getParentOfPlugin());
+	ui_spectrum         = new GUI_Spectrum(tr("&Spectrum"), player->getParentOfPlugin());
+	ui_stream           = new GUI_Stream(tr("&Webstreams"), player->getParentOfPlugin());
+	ui_podcasts         = new GUI_Podcasts(tr("P&odcasts"), player->getParentOfPlugin());
+	ui_eq               = new GUI_Equalizer(tr("&Equalizer"), player->getParentOfPlugin());
+	ui_lfm_radio        = new GUI_LFMRadioWidget(tr("Last.&fm"), player->getParentOfPlugin());
+	ui_playlist_chooser = new GUI_PlaylistChooser(tr("Pla&ylists"), player->getParentOfPlugin());
+	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
+	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
 
 	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
 	ui_id3_editor       = new GUI_TagEdit();
@@ -133,14 +134,16 @@ void Application::init(int n_files, QTranslator *translator){
 	_pph->addPlugin(ui_podcasts);
 	_pph->addPlugin(ui_playlist_chooser);
 	_pph->addPlugin(ui_audioconverter);
+	_pph->addPlugin(ui_bookmarks);
 
-	qDebug() << "Plugin " << GUI_LevelPainter::getVisName();
-	qDebug() << "Plugin " << GUI_Stream::getVisName();
-	qDebug() << "Plugin " << GUI_Equalizer::getVisName();
-	qDebug() << "Plugin " << GUI_PlaylistChooser::getVisName();
-	qDebug() << "Plugin " << GUI_Podcasts::getVisName();
-	qDebug() << "Plugin " << GUI_LFMRadioWidget::getVisName();
-	qDebug() << "Plugin " << GUI_AudioConverter::getVisName();
+	qDebug() << "Plugin " << ui_level->getVisName();
+	qDebug() << "Plugin " << ui_stream->getVisName();
+	qDebug() << "Plugin " << ui_eq->getVisName();
+	qDebug() << "Plugin " << ui_playlist_chooser->getVisName();
+	qDebug() << "Plugin " << ui_podcasts->getVisName();
+	qDebug() << "Plugin " << ui_lfm_radio->getVisName();
+	qDebug() << "Plugin " << ui_audioconverter->getVisName();
+	qDebug() << "Plugin " << ui_bookmarks->getVisName();
 
 	QString dir;
 
@@ -303,6 +306,7 @@ void Application::init_connections(){
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		update_track(const MetaData&, int, bool));
 	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	listen, 	change_track(const MetaData &, int, bool ));
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               lastfm,		psl_track_changed(const MetaData&));
+	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               ui_bookmarks,	track_changed(const MetaData&));
     CONNECT (playlist_handler, sig_selected_file_changed(int),                              ui_playlist, 	track_changed(int));
 
     CONNECT (playlist_handler, sig_no_track_to_play(),								listen,			stop());
@@ -337,6 +341,7 @@ void Application::init_connections(){
     // should be sent to player
 
 	CONNECT (listen, sig_pos_changed_s(quint32),                      player,              setCurrentPosition(quint32) );
+	CONNECT (listen, sig_pos_changed_s(quint32),                      ui_bookmarks,        pos_changed_s(quint32) );
 	CONNECT (listen, sig_bitrate_changed(qint32),					  player,              psl_bitrate_changed(qint32));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      player,              psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      playlist_handler,    psl_track_time_changed(MetaData&));
@@ -398,6 +403,7 @@ void Application::init_connections(){
 	CONNECT(ui_audioconverter, sig_inactive(),                        playlist_handler, psl_stop());
 	CONNECT(ui_audioconverter, sig_active(),						  listen, start_convert());
 	CONNECT(ui_audioconverter, sig_inactive(),						  listen, end_convert());
+	CONNECT(ui_bookmarks, sig_bookmark(quint32),                      listen, jump_abs_s(quint32) );
 
 
 	CONNECT(ui_eq, eq_changed_signal(int, int),                         listen, 	eq_changed(int, int));
@@ -407,6 +413,7 @@ void Application::init_connections(){
     CONNECT(ui_spectrum, sig_show(bool), listen, psl_calc_spectrum(bool));
     CONNECT(ui_level, sig_right_clicked(int), ui_style_settings, show(int));
     CONNECT(ui_spectrum, sig_right_clicked(int), ui_style_settings, show(int));
+
 
 
     CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist_handler,	psl_similar_artists_available(const QList<int>&));
@@ -425,7 +432,9 @@ void Application::init_connections(){
     CONNECT(ui_playlist_chooser, sig_files_selected(QStringList &), playlist_handler, psl_createPlaylist(QStringList&));
 
     CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist_handler, 				psl_createPlaylist(CustomPlaylist&));
-    CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
+	CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	 ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
+
+
 
 
 

@@ -60,7 +60,7 @@ QString calc_lab(int val){
 
 }
 
-GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent) {
+GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) : PlayerPlugin(name, parent) {
 
 	_settings = CSettingsStorage::getInstance();
 	_ui = new Ui::GUI_Equalizer( );
@@ -104,10 +104,6 @@ GUI_Equalizer::~GUI_Equalizer() {
 }
 
 
-QAction* GUI_Equalizer::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
-}
 
 void GUI_Equalizer::language_changed(){
     _ui->retranslateUi(this);

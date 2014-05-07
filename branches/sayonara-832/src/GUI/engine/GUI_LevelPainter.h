@@ -38,10 +38,7 @@ class GUI_LevelPainter : public PlayerPlugin, private Ui::GUI_LevelPainter
 {
     Q_OBJECT
 public:
-    explicit GUI_LevelPainter(QString name, QString action_text, QWidget *parent=0);
-
-    static QString getVisName(){ return tr("Le&vel"); }
-    virtual QAction* getAction();
+	explicit GUI_LevelPainter(QString name, QWidget *parent=0);
 
 signals:
     void sig_show(bool);

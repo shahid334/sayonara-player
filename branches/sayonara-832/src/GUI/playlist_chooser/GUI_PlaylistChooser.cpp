@@ -39,7 +39,7 @@
 #include "GUI/ui_GUI_PlaylistChooser.h"
 
 
-GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent) {
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) : PlayerPlugin(name, parent) {
 
 	_cur_idx = -1;
     _dark = false;
@@ -90,11 +90,6 @@ void GUI_PlaylistChooser::changeSkin(bool dark){
     _dark = dark;
 }
 
-QAction* GUI_PlaylistChooser::getAction(){
-
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
-}
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
     int tmp_cur_idx = _cur_idx;

@@ -24,8 +24,8 @@
 #include "HelperStructs/Helper.h"
 #include <QFileDialog>
 
-GUI_AudioConverter::GUI_AudioConverter(QString name, QString action_text, QWidget *parent) :
-	PlayerPlugin(name, action_text, parent)
+GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent)
 {
 	ui = new Ui::GUI_AudioConvert();
 	ui->setupUi(this);
@@ -138,7 +138,3 @@ void GUI_AudioConverter::quality_changed(int index){
 	_settings->setConvertQuality(q);
 }
 
-QAction* GUI_AudioConverter::getAction(){
-	PlayerPlugin::calc_action(this->getVisName());
-	return _pp_action;
-}

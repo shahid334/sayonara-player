@@ -27,8 +27,8 @@
 
 
 
-GUI_LevelPainter::GUI_LevelPainter(QString name, QString action_text, QWidget *parent) :
-    PlayerPlugin(name, action_text, parent)
+GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent)
 {
     ui = new Ui::GUI_LevelPainter();
     ui->setupUi(this);
@@ -136,11 +136,6 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
 
         y+= h_rect + border_y;
     }
-}
-
-QAction* GUI_LevelPainter::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
 }
 
 

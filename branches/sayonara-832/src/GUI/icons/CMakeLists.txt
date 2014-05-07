@@ -4,6 +4,7 @@ SET(ICONS
         append.png
         append_small.png
         audio_convert.png
+        bookmarks.png
         broom.png
         bwd.png
         bwd_orange.png

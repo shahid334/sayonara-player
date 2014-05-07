@@ -304,7 +304,7 @@ bool CDatabaseConnector::apply_fixes(){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int version = load_setting_int("version", 0);
-    if(version == 5) return true;
+	if(version == 6) return true;
 
     qDebug() << "Apply fixes";
 
@@ -381,6 +381,20 @@ bool CDatabaseConnector::apply_fixes(){
         bool success = check_and_insert_column("tracks", "rating", "integer");
         if(success) store_setting("version", 5);
     }
+
+	if(version < 6){
+		QString create_savedbookmarks = QString("CREATE TABLE savedbookmarks ") +
+					"( " +
+					"	trackid INTEGER, " +
+					"	name VARCHAR(255), " +
+					"	timeidx INTEGER, " +
+					"   PRIMARY KEY (trackid, timeidx), " +
+					"   FOREIGN KEY (trackid) REFERENCES tracks(trackid) " +
+					");";
+
+		bool success = check_and_create_table("savedbookmarks", create_savedbookmarks);
+		if(success) store_setting("version", 6);
+	}
 
 
 	return true;

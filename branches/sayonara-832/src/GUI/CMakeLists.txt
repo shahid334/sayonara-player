@@ -20,6 +20,7 @@ SET(HEADERS
     MiniSearcher.h
     RatingLabel.h
     AudioConverter/GUI_AudioConverter.h
+    bookmarks/GUI_Bookmarks.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
@@ -76,6 +77,7 @@ SET(SOURCES
     MiniSearcher.cpp
     RatingLabel.cpp
     AudioConverter/GUI_AudioConverter.cpp
+    bookmarks/GUI_Bookmarks.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp
@@ -131,6 +133,7 @@ SET(SOURCES
 
 SET(FORMS
     AudioConverter/GUI_AudioConvert.ui
+    bookmarks/GUI_Bookmarks.ui
     engine/GUI_LevelPainter.ui
     engine/GUI_Spectrum.ui
     engine/GUI_Style.ui

@@ -174,6 +174,15 @@ public:
             bool deletePodcast(QString name);
             bool addPodcast(QString name, QString url);
 
+			/*
+			 * Bookmarks
+			 * */
+
+			bool searchBookmarks(int track_id, QMap<quint32, QString>& bookmarks);
+			bool insertBookmark(int track_id, quint32 time, QString text);
+			bool removeBookmark(int track_id, quint32 time);
+			bool removeAllBookmarks(int track_id);
+
     void deleteTracksAlbumsArtists();
 
 

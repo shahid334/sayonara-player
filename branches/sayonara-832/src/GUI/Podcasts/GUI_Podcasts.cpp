@@ -36,7 +36,7 @@
 #include <QMessageBox>
 
 
-GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent)
+GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) : PlayerPlugin(name, parent)
 {
 
     this->ui = new Ui::GUI_Podcasts();
@@ -68,12 +68,6 @@ GUI_Podcasts::GUI_Podcasts(QString name, QString action_text, QWidget *parent) :
 GUI_Podcasts::~GUI_Podcasts() {
 
 }
-
-QAction* GUI_Podcasts::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
-}
-
 
 void GUI_Podcasts::language_changed(){
     this->ui->retranslateUi(this);

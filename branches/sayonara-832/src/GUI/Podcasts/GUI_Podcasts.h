@@ -53,12 +53,8 @@ private slots:
 public slots:
     void language_changed();
 public:
-    GUI_Podcasts(QString name, QString action_text, QWidget *parent = 0);
+	GUI_Podcasts(QString name, QWidget *parent = 0);
     virtual ~GUI_Podcasts();
-
-    static QString getVisName(){ return tr("P&odcasts"); }
-    virtual QAction* getAction();
-
 
 
 private:

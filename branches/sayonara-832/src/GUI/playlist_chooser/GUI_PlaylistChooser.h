@@ -68,10 +68,8 @@ public slots:
     void language_changed();
 
 public:
-    GUI_PlaylistChooser(QString name, QString action_text, QWidget *parent = 0);
+	GUI_PlaylistChooser(QString name, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
-    static QString getVisName(){ return tr("Pla&ylists"); }
-    virtual QAction* getAction();
 
 private:
     Ui::GUI_PlaylistChooser* ui;

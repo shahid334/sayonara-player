@@ -40,10 +40,8 @@ class GUI_Spectrum : public PlayerPlugin, private Ui::GUI_Spectrum
 {
     Q_OBJECT
 public:
-    explicit GUI_Spectrum(QString name, QString action_text, QWidget *parent=0);
+	explicit GUI_Spectrum(QString name, QWidget *parent=0);
 
-    static QString getVisName(){ return tr("&Spectrum"); }
-    virtual QAction* getAction();
 
 signals:
     void sig_show(bool);

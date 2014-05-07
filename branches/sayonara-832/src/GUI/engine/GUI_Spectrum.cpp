@@ -35,8 +35,8 @@ float log_lu[1100];
 
 
 
-GUI_Spectrum::GUI_Spectrum(QString name, QString action_text, QWidget *parent) :
-    PlayerPlugin(name, action_text, parent)
+GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent)
 {
 
     _cur_style_idx = CSettingsStorage::getInstance()->getSpectrumStyle();
@@ -189,10 +189,6 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
 }
 
 
-QAction* GUI_Spectrum::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
-}
 
 
 void GUI_Spectrum::showEvent(QShowEvent * e){

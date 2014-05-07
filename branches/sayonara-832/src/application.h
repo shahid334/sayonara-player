@@ -52,6 +52,7 @@
 #include "GUI/engine/GUI_Spectrum.h"
 #include "GUI/engine/GUI_StyleSettings.h"
 #include "GUI/AudioConverter/GUI_AudioConverter.h"
+#include "GUI/bookmarks/GUI_Bookmarks.h"
 
 #include "playlist/PlaylistHandler.h"
 #include "playlist/PlaylistLoader.h"
@@ -105,6 +106,7 @@ private:
 	GUI_Podcasts*           ui_podcasts;
 	GUI_Equalizer*          ui_eq;
 	GUI_LFMRadioWidget*     ui_lfm_radio;
+	GUI_Bookmarks*          ui_bookmarks;
 	PlayerPluginHandler*    _pph;
 
 	GUI_StyleSettings*      ui_style_settings;

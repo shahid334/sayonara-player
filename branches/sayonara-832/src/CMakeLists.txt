@@ -123,6 +123,7 @@ SET(SOURCES
     DatabaseAccess/CDatabaseStreams.cpp
     DatabaseAccess/CDatabasePodcasts.cpp
     DatabaseAccess/CDatabaseVisStyles.cpp
+    DatabaseAccess/CDatabaseBookmarks.cpp
     playlist/Playlist.cpp
     playlist/LFMPlaylist.cpp
     playlist/StdPlaylist.cpp

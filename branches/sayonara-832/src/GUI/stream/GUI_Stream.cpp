@@ -36,7 +36,7 @@
 #include <QPixmap>
 
 
-GUI_Stream::GUI_Stream(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent)  {
+GUI_Stream::GUI_Stream(QString name, QWidget *parent) : PlayerPlugin(name, parent)  {
 	this->ui = new Ui::GUI_Stream();
 	this->ui->setupUi(this);
 
@@ -64,11 +64,6 @@ GUI_Stream::GUI_Stream(QString name, QString action_text, QWidget *parent) : Pla
 
 GUI_Stream::~GUI_Stream() {
 
-}
-
-QAction* GUI_Stream::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
 }
 
 
