@@ -57,7 +57,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		_bus = gst_pipeline_get_bus(GST_PIPELINE(tmp_pipeline));
 
 		_audio_convert = gst_element_factory_make("audioconvert", "audio_convert");
-
+		//_speed = gst_element_factory_make("scaletempo", "speed");
 		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
 		_volume = gst_element_factory_make("volume", "volume");
 
@@ -100,6 +100,12 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 			_eq_queue, _volume, _audio_sink,
 			_level_queue, _level_audio_convert, _level, _level_sink,
 			_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+
+
+		_speed_active = false;
+		/*if(_speed){
+			gst_bin_add(GST_BIN(tmp_pipeline), _speed);
+		}*/
 
 
 		success = gst_element_link_many(_level_queue, _level_sink, NULL);
@@ -157,6 +163,16 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 
 		guint64 interval = 30000000;
 		gint threshold = - crop_spectrum_at;
+
+		/*if(_speed){
+			g_object_set(G_OBJECT(_speed),
+						 "search", "0",   // 14  [0, 500]
+						 "stride", 30,  // 30  [1, 5000]
+						 "overlap", 0.2,   // 0.2 [0, 1]
+					NULL);
+
+
+		}*/
 
 		g_object_set (G_OBJECT (_level),
 					  "message", TRUE,
@@ -303,6 +319,8 @@ gint64 GSTPlaybackPipeline::seek_abs(gint64 ns){
 		GST_FORMAT_TIME,(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
 		ns)){
 
+
+
 		qDebug() << "Seek to " << ns / 1000000;
 
 		return ns;
@@ -313,6 +331,60 @@ gint64 GSTPlaybackPipeline::seek_abs(gint64 ns){
 
 
 	return 0;
+}
+
+void GSTPlaybackPipeline::set_speed(float f){
+
+	//if(!_speed) return;
+
+
+	if(f < 0 && _speed_active){
+
+		_speed_active = false;
+
+		/*gst_element_unlink_many(_audio_convert, _speed, _equalizer, NULL);
+		gst_element_link( _audio_convert, _equalizer );*/
+	}
+
+	else if(f > 0 && !_speed_active){
+
+		gint64 pos, dur;
+
+		_speed_active = true;
+		/*gst_element_unlink_many(_audio_convert, _equalizer, NULL);
+		gst_element_link_many(_audio_convert, _speed, _equalizer, NULL);*/
+
+		gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
+		gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
+
+
+		qDebug() << "Seek";
+		gst_element_seek(_audio_src,
+						 f,
+						 GST_FORMAT_TIME,
+						 (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
+						 GST_SEEK_TYPE_SET, pos,
+						 GST_SEEK_TYPE_SET, dur);
+
+
+	}
+
+	else if(f > 0 && _speed_active ){
+
+		gint64 pos, dur;
+		qDebug() << "Seek";
+
+		gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
+		gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
+
+		gst_element_seek(_audio_src,
+						 f,
+						 GST_FORMAT_TIME,
+						 (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
+						 GST_SEEK_TYPE_SET, pos,
+						 GST_SEEK_TYPE_SET, dur);
+
+	}
 }
 
 void GSTPlaybackPipeline::enable_level(bool b){

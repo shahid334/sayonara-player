@@ -68,7 +68,11 @@ void GSTEngineHandler::end_convert(){
 		qDebug() << "Change to playback engine";
 		psl_change_engine(PLAYBACK_ENGINE);
 	}
+}
 
+void GSTEngineHandler::psl_set_speed(float f){
+	if(!_cur_engine) return;
+	_cur_engine->psl_set_speed(f);
 }
 
 void GSTEngineHandler::fill_engines(const vector<Engine*>& engines){

@@ -200,6 +200,7 @@ public slots:
 
 	virtual void start_convert(){}
 	virtual void end_convert(){}
+	virtual void psl_set_speed(float f){ Q_UNUSED(f); }
 
 };
 

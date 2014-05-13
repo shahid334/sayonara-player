@@ -123,6 +123,8 @@ public slots:
     virtual void psl_calc_spectrum(bool);
 	virtual void psl_set_gapless(bool);
 
+	virtual void psl_set_speed(float f);
+
 
 };
 

@@ -181,6 +181,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) : QWidget(parent) {
     this->ui->lv_album->setVisible(!show_only_tracks);
 
 
+
+
     hide();
 }
 
@@ -251,8 +253,6 @@ void  GUI_Library_windowed::init_headers(){
     connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));
 
 
-
-
     ui->tb_title->setModel(_track_model);
     ui->tb_title->setAbstractModel((AbstractSearchTableModel*) _track_model);
     ui->tb_title->setItemDelegate(_track_delegate);
@@ -278,6 +278,7 @@ void  GUI_Library_windowed::init_headers(){
     ui->lv_album->setDragEnabled(true);
     ui->lv_album->set_table_headers(album_columns, _sort_albums);
     ui->lv_album->rc_header_menu_init(_shown_cols_albums);
+
 }
 
 void GUI_Library_windowed::language_changed(){

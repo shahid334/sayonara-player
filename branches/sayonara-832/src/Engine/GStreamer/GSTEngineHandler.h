@@ -70,6 +70,8 @@ public slots:
 	void start_convert();
 	void end_convert();
 
+	void psl_set_speed(float f);
+
 
 private slots:
 

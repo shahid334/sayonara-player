@@ -109,6 +109,7 @@ void Application::init(int n_files, QTranslator *translator){
 	ui_playlist_chooser = new GUI_PlaylistChooser(tr("Pla&ylists"), player->getParentOfPlugin());
 	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
 	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
+	ui_speed			= new GUI_Speed(tr("Spee&d"), player->getParentOfPlugin());
 
 	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
 	ui_id3_editor       = new GUI_TagEdit();
@@ -135,6 +136,7 @@ void Application::init(int n_files, QTranslator *translator){
 	_pph->addPlugin(ui_playlist_chooser);
 	_pph->addPlugin(ui_audioconverter);
 	_pph->addPlugin(ui_bookmarks);
+	_pph->addPlugin(ui_speed);
 
 	qDebug() << "Plugin " << ui_level->getVisName();
 	qDebug() << "Plugin " << ui_stream->getVisName();
@@ -144,6 +146,7 @@ void Application::init(int n_files, QTranslator *translator){
 	qDebug() << "Plugin " << ui_lfm_radio->getVisName();
 	qDebug() << "Plugin " << ui_audioconverter->getVisName();
 	qDebug() << "Plugin " << ui_bookmarks->getVisName();
+	qDebug() << "Plugin " << ui_speed->getVisName();
 
 	QString dir;
 
@@ -346,6 +349,8 @@ void Application::init_connections(){
 	CONNECT (listen, sig_dur_changed(MetaData&),                      player,              psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      playlist_handler,    psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      library,             psl_track_time_changed(MetaData&));
+
+	CONNECT (ui_speed, sig_speed_changed(float),                      listen,              psl_set_speed(float) );
 
 
     CONNECT(library, sig_playlist_created(QStringList&),            playlist_handler, 		psl_createPlaylist(QStringList&));

@@ -53,6 +53,7 @@
 #include "GUI/engine/GUI_StyleSettings.h"
 #include "GUI/AudioConverter/GUI_AudioConverter.h"
 #include "GUI/bookmarks/GUI_Bookmarks.h"
+#include "GUI/speed/GUI_Speed.h"
 
 #include "playlist/PlaylistHandler.h"
 #include "playlist/PlaylistLoader.h"
@@ -107,6 +108,7 @@ private:
 	GUI_Equalizer*          ui_eq;
 	GUI_LFMRadioWidget*     ui_lfm_radio;
 	GUI_Bookmarks*          ui_bookmarks;
+	GUI_Speed*				ui_speed;
 	PlayerPluginHandler*    _pph;
 
 	GUI_StyleSettings*      ui_style_settings;

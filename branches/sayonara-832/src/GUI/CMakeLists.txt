@@ -67,6 +67,7 @@ SET(HEADERS
     Notifications/GUI_Notifications.h
     startup_dialog/GUI_Startup_Dialog.h
     LanguageChooser/GUI_LanguageChooser.h
+    speed/GUI_Speed.h
 
 )
 
@@ -128,40 +129,40 @@ SET(SOURCES
     InfoDialog/GUI_InfoDialog.cpp
     SocketConfiguration/GUISocketSetup.cpp
     LanguageChooser/GUI_LanguageChooser.cpp
+    speed/GUI_Speed.cpp
 )
 
 
 SET(FORMS
+    alternate_covers/GUI_Alternate_Covers.ui
     AudioConverter/GUI_AudioConvert.ui
     bookmarks/GUI_Bookmarks.ui
     engine/GUI_LevelPainter.ui
     engine/GUI_Spectrum.ui
     engine/GUI_Style.ui
-    player/GUI_Player.ui
-    playlist/GUI_Playlist.ui
-    playlist/entry/GUI_PlaylistEntryBig.ui
-    playlist/entry/GUI_PlaylistEntrySmall.ui
+    equalizer/GUI_Equalizer.ui
+    InfoDialog/GUI_InfoDialog.ui
+    LanguageChooser/GUI_LanguageChooser.ui
     LastFM/GUI_LastFM_Dialog.ui
     LastFM/GUI_LFMRadioWidget.ui
     library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
     library/GUI_LibraryPath.ui
-    equalizer/GUI_Equalizer.ui
-    tagedit/GUI_TagEdit.ui
-    alternate_covers/GUI_Alternate_Covers.ui
+    Notifications/GUI_Notifications.ui
+    player/GUI_Player.ui
+    playlist/GUI_Playlist.ui
+    playlist/entry/GUI_PlaylistEntryBig.ui
+    playlist/entry/GUI_PlaylistEntrySmall.ui
     playlist_chooser/GUI_PlaylistChooser.ui
     Podcasts/GUI_Podcasts.ui
+    SocketConfiguration/GUI_SocketSetup.ui
+    speed/GUI_Speed.ui
+    startup_dialog/GUI_Startup_Dialog.ui
     stream/GUI_Stream.ui
     StreamRecorder/GUI_StreamRecorder.ui
-    InfoDialog/GUI_InfoDialog.ui
-    startup_dialog/GUI_Startup_Dialog.ui
-    SocketConfiguration/GUI_SocketSetup.ui
-    alternate_covers/GUI_Alternate_Covers.ui
+    tagedit/GUI_TagEdit.ui
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
-    Notifications/GUI_Notifications.ui
-    LanguageChooser/GUI_LanguageChooser.ui
-
 )
 
 

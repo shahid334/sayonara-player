@@ -562,5 +562,12 @@ void GSTPlaybackEngine::psl_set_gapless(bool b){
 	}
 }
 
+void  GSTPlaybackEngine::psl_set_speed(float f){
+	_pipeline->set_speed(f);
+
+	if(_other_pipeline)
+		_other_pipeline->set_speed(f);
+}
+
 
 

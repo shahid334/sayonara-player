@@ -111,6 +111,10 @@ void GSTAbstractPipeline::about_to_finish(){
 	emit sig_about_to_finish(time2go);
 }
 
+void GSTAbstractPipeline::set_speed(float f){
+	Q_UNUSED(f);
+}
+
 void GSTAbstractPipeline::finished(){
 	emit sig_finished();
 }

@@ -60,11 +60,13 @@ public slots:
 	void unmute();
 
 	void start_timer(qint64 ms);
+	void set_speed(float f);
 
 
 private:
 
 	int			_vol;
+	bool		_speed_active;
 
 	GstElement* _audio_src;
 	GstElement* _audio_convert;
@@ -73,6 +75,7 @@ private:
 	GstElement* _equalizer;
 
 	GstElement* _volume;
+	GstElement* _speed;
 
 
 	GstPad* _app_pad;
