@@ -44,6 +44,7 @@
 #define RADIO_OFF 0
 #define RADIO_LFM 1
 #define RADIO_STATION 2
+#define RADIO_SOUNDCLOUD 3
 
 #define PLUGIN_NUM 5
 #define PLUGIN_NONE 0

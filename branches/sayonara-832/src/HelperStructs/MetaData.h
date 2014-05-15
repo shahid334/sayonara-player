@@ -74,9 +74,9 @@ private:
 
 
 public:
-    qint32 id;
-    qint32 album_id;
-    qint32 artist_id;
+	qint64 id;
+	qint64 album_id;
+	qint64 artist_id;
     QString title;
     QString artist;
     QString album;
@@ -184,7 +184,7 @@ public:
 		return list;
 
 
-    }
+	}
 
 	static bool fromVariant(QVariant v, MetaData& md){
 
@@ -298,7 +298,7 @@ public:
 class Artist : public MusicItem{
 public:
     QString name;
-    qint32	id;
+	qint64	id;
     qint32	num_songs;
     qint32  num_albums;
 
@@ -344,7 +344,7 @@ class Album : public MusicItem {
 
 public:
     QString name;
-    qint32	id;
+	qint64	id;
     qint32 	num_songs;
     qint32 	length_sec;
     qint32	year;

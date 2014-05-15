@@ -1,6 +1,6 @@
-/* CLibraryBase.h */
+/* ShoutcastLibrary.h */
 
-/* Copyright (C) 2011  Lucio Carreras
+/* Copyright (C) 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -19,27 +19,27 @@
  */
 
 
-#ifndef CLIBRARYBASE_H
-#define CLIBRARYBASE_H
+#ifndef SHOUTCASTLIBRARY_H
+#define SHOUTCASTLIBRARY_H
 
-#include "library/threads/ReloadThread.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QThread>
 #include <QStringList>
-#include <QFileSystemWatcher>
+#include <QtXml>
 
 
-class CLibraryBase : public QObject
+class ShoutcastLibrary : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    CLibraryBase(QWidget* main_window, QObject *parent = 0);
+	ShoutcastLibrary(QWidget* main_window, QObject *parent = 0);
 
-	virtual void loadDataFromDb ();
+	void loadData();
 
 
 signals:
@@ -51,33 +51,17 @@ signals:
 	void sig_tracks_for_playlist_available(MetaDataList&);
 	void sig_append_tracks_to_playlist(MetaDataList&);
 
-	void sig_should_reload_library();
-	void sig_reload_library_finished();
-	void sig_reload_library_allowed(bool);
-	void sig_reloading_library(QString &);
-	void sig_libpath_set(QString&);
-
-	void sig_change_id3_tags(const MetaDataList&);
-
-    void sig_delete_answer(QString);
 	void sig_play_next_tracks(const MetaDataList&);
 
 
 public slots:
-	virtual void baseDirSelected (const QString & baseDir);
-	virtual void insertMetaDataIntoDB(MetaDataList& in);
 
 	virtual void reloadLibrary(bool);
 	virtual void clearLibrary();
 	virtual void refresh(bool b=true);
 
-	virtual void setLibraryPath(QString);
-
-
-/* New way */
 	virtual void psl_selected_artists_changed(const QList<int>&);
 	virtual void psl_selected_albums_changed(const QList<int>&);
-	virtual void psl_disc_pressed(int);
 	virtual void psl_selected_tracks_changed(const QList<int>&);
 
 	virtual void psl_prepare_album_for_playlist(int idx=0);
@@ -85,10 +69,7 @@ public slots:
 	virtual void psl_prepare_track_for_playlist(int idx);
 	virtual void psl_prepare_tracks_for_playlist(QList<int> lst);
 
-	virtual void psl_filter_changed(const Filter&, bool force=false);
 	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
-	virtual void psl_change_id3_tags(const QList<int>& lst);
-	virtual void psl_track_time_changed(MetaData&);
 
 	virtual void psl_delete_tracks(int);
 	virtual void psl_delete_certain_tracks(const QList<int>&,int);
@@ -110,34 +91,33 @@ protected slots:
    virtual void reload_thread_finished();
 
 
-
 protected:
-    QWidget*            _main_window;
-    CDatabaseConnector*	_db;
+	QWidget*            _main_window;
+	CDatabaseConnector*	_db;
+	CSettingsStorage*   _settings;
 
-    CDirectoryReader    _reader;
+	MetaDataList        _vec_md;
+	AlbumList			_vec_albums;
+	ArtistList			_vec_artists;
 
-    QString				m_library_path;
+	Sort::SortOrder		_track_sortorder;
+	Sort::SortOrder		_album_sortorder;
+	Sort::SortOrder		_artist_sortorder;
 
-    ReloadThread* 		_reload_thread;
-	int					_reload_progress;
+	QList<int>			_selected_artists;
+	QList<int>			_selected_albums;
+	QList<int>          _selected_tracks;
 
-    MetaDataList        _vec_md;
-    AlbumList			_vec_albums;
-    ArtistList			_vec_artists;
+	void 				emit_stuff();
 
-    Sort::SortOrder		_track_sortorder;
-    Sort::SortOrder		_album_sortorder;
-    Sort::SortOrder		_artist_sortorder;
+	bool				dl_all_playlists_by_artist(qint64 id, QString& content);
+	bool				dl_all_tracks_by_artist(qint64 id, QString& content);
+	bool				dl_all_artist_info(QString name, Artist& artist);
 
-    QList<int>			_selected_artists;
-    QList<int>			_selected_albums;
-    QList<int>          _selected_tracks;
 
-    Filter				_filter;
 
-    void 				emit_stuff();
-    void				delete_tracks(MetaDataList& v_md, int answer);
+
+
 
 };
 

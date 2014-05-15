@@ -94,6 +94,7 @@ void Application::init(int n_files, QTranslator *translator){
 	playlist_handler    = new PlaylistHandler();
 	playlist_loader     = new PlaylistLoader(this);
 	library             = new CLibraryBase(this->getMainWindow());
+	shoutcast_library   = new ShoutcastLibrary(this->getMainWindow());
 	library_importer    = new LibraryImporter(this->getMainWindow());
 	playlists           = new Playlists();
 
@@ -223,9 +224,13 @@ void Application::init(int n_files, QTranslator *translator){
 	PlayerPlugin* p = _pph->find_plugin(shown_plugin);
 	player->showPlugin(p);
 
+	shoutcast_library->loadData();
+
 	_initialized = true;
 
 	_setting_thread->start();
+
+
 }
 
 Application::~Application(){

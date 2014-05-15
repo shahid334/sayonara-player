@@ -63,6 +63,7 @@
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "library/LibraryImporter.h"
+#include "Shoutcast/ShoutcastLibrary.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -99,6 +100,7 @@ private:
 	CLibraryBase*           library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
+	ShoutcastLibrary*		shoutcast_library;
 
 	GUI_LevelPainter*       ui_level;
 	GUI_Spectrum*           ui_spectrum;
