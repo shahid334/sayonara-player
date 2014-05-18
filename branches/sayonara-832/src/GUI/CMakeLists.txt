@@ -68,6 +68,7 @@ SET(HEADERS
     startup_dialog/GUI_Startup_Dialog.h
     LanguageChooser/GUI_LanguageChooser.h
     speed/GUI_Speed.h
+    soundcloud/GUI_SoundCloudLibrary.h
 
 )
 
@@ -130,6 +131,7 @@ SET(SOURCES
     SocketConfiguration/GUISocketSetup.cpp
     LanguageChooser/GUI_LanguageChooser.cpp
     speed/GUI_Speed.cpp
+    soundcloud/GUI_SoundCloudLibrary.cpp
 )
 
 

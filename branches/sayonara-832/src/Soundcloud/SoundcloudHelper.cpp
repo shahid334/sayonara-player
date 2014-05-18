@@ -1,11 +1,11 @@
-#include "Shoutcast/ShoutcastHelper.h"
+#include "Soundcloud/SoundcloudHelper.h"
 #include "HelperStructs/MetaData.h"
 #include <QtXml>
 
 #define CLIENT_ID QString("ab7d663fc58d0257c64443358292f6ce")
 #define CLIENT_ID_STR QString("client_id=") + CLIENT_ID
 
-QString	ShoutcastHelper::create_dl_get_artist(QString name){
+QString	SoundcloudHelper::create_dl_get_artist(QString name){
 	QString ret = "";
 	if(name.size() == 0) return ret;
 
@@ -20,7 +20,7 @@ QString	ShoutcastHelper::create_dl_get_artist(QString name){
 }
 
 
-QString	ShoutcastHelper::create_dl_get_playlists(qint64 artist_id){
+QString	SoundcloudHelper::create_dl_get_playlists(qint64 artist_id){
 	QString ret = "";
 
 	ret = QString("http://api.soundcloud.com/users/") +
@@ -34,7 +34,7 @@ QString	ShoutcastHelper::create_dl_get_playlists(qint64 artist_id){
 }
 
 
-QString	ShoutcastHelper::create_dl_get_tracks(qint64 artist_id){
+QString	SoundcloudHelper::create_dl_get_tracks(qint64 artist_id){
 	QString ret = "";
 
 	ret = QString("http://api.soundcloud.com/users/") +
@@ -48,7 +48,7 @@ QString	ShoutcastHelper::create_dl_get_tracks(qint64 artist_id){
 }
 
 
-bool ShoutcastHelper::parse_artist_xml(const QString& content, Artist& artist){
+bool SoundcloudHelper::parse_artist_xml(const QString& content, Artist& artist){
 
 	artist.id = -1;
 
@@ -86,7 +86,7 @@ bool ShoutcastHelper::parse_artist_xml(const QString& content, Artist& artist){
 	return (artist.id > 0);
 }
 
-bool ShoutcastHelper::parse_playlist_xml(
+bool SoundcloudHelper::parse_playlist_xml(
 		const QString& content,
 		MetaDataList& v_md,
 		ArtistList& v_artists,
@@ -208,7 +208,7 @@ bool ShoutcastHelper::parse_playlist_xml(
 }
 
 
-bool ShoutcastHelper::parse_tracks_xml(const QString& content,
+bool SoundcloudHelper::parse_tracks_xml(const QString& content,
 					 MetaDataList& v_md){
 
 	bool success;
@@ -243,7 +243,7 @@ bool ShoutcastHelper::parse_tracks_xml(const QString& content,
 
 
 
-bool ShoutcastHelper::parse_artist_dom(QDomNode node, Artist& artist){
+bool SoundcloudHelper::parse_artist_dom(QDomNode node, Artist& artist){
 
 	artist.id = -1;
 
@@ -280,7 +280,7 @@ bool ShoutcastHelper::parse_artist_dom(QDomNode node, Artist& artist){
 
 
 
-bool ShoutcastHelper::parse_track_dom(QDomNode node, MetaData& md, Artist& artist){
+bool SoundcloudHelper::parse_track_dom(QDomNode node, MetaData& md, Artist& artist){
 
 	if(!node.hasChildNodes()) return false;
 

@@ -1,9 +1,9 @@
-#include "Shoutcast/ShoutcastLibrary.h"
-#include "Shoutcast/ShoutcastHelper.h"
+#include "Soundcloud/SoundcloudLibrary.h"
+#include "Soundcloud/SoundcloudHelper.h"
 #include "HelperStructs/WebAccess.h"
 
 
-ShoutcastLibrary::ShoutcastLibrary(QWidget* main_window, QObject *parent) :
+SoundcloudLibrary::SoundcloudLibrary(QWidget* main_window, QObject *parent) :
 	QObject(parent)
 {
 
@@ -22,26 +22,26 @@ ShoutcastLibrary::ShoutcastLibrary(QWidget* main_window, QObject *parent) :
 
 
 
-bool ShoutcastLibrary::dl_all_artist_info(QString name, Artist& artist){
+bool SoundcloudLibrary::dl_all_artist_info(QString name, Artist& artist){
 	bool success;
 	QString content;
 
-	QString dl = ShoutcastHelper::create_dl_get_artist(name);
+	QString dl = SoundcloudHelper::create_dl_get_artist(name);
 	if(dl.size() == 0) return false;
 
 	success = WebAccess::read_http_into_str(dl, &content);
 	if(!success || content.size() == 0) return false;
 
-	success = ShoutcastHelper::parse_artist_xml(content, artist);
+	success = SoundcloudHelper::parse_artist_xml(content, artist);
 	return success;
 }
 
 
-bool ShoutcastLibrary::dl_all_playlists_by_artist(qint64 artist_id, QString& content){
+bool SoundcloudLibrary::dl_all_playlists_by_artist(qint64 artist_id, QString& content){
 
 	bool success;
 
-	QString dl = ShoutcastHelper::create_dl_get_playlists(artist_id);
+	QString dl = SoundcloudHelper::create_dl_get_playlists(artist_id);
 	if(dl.size() == 0) return false;
 
 	success = WebAccess::read_http_into_str(dl, &content);
@@ -54,11 +54,11 @@ bool ShoutcastLibrary::dl_all_playlists_by_artist(qint64 artist_id, QString& con
 }
 
 
-bool ShoutcastLibrary::dl_all_tracks_by_artist(qint64 artist_id, QString& content){
+bool SoundcloudLibrary::dl_all_tracks_by_artist(qint64 artist_id, QString& content){
 
 	bool success;
 
-	QString dl = ShoutcastHelper::create_dl_get_tracks(artist_id);
+	QString dl = SoundcloudHelper::create_dl_get_tracks(artist_id);
 	if(dl.size() == 0) return false;
 
 	success = WebAccess::read_http_into_str(dl, &content);
@@ -71,7 +71,9 @@ bool ShoutcastLibrary::dl_all_tracks_by_artist(qint64 artist_id, QString& conten
 }
 
 
-void ShoutcastLibrary::loadData(){
+void SoundcloudLibrary::loadData(){
+
+	return;
 
 	bool success;
 	Artist artist;
@@ -88,7 +90,7 @@ void ShoutcastLibrary::loadData(){
 		return;
 	}
 
-	success = ShoutcastHelper::parse_playlist_xml(content, _vec_md, _vec_artists, _vec_albums);
+	success = SoundcloudHelper::parse_playlist_xml(content, _vec_md, _vec_artists, _vec_albums);
 	if(!success){
 		qDebug() << "Could not parse Playlists xml file";
 		return;
@@ -106,7 +108,7 @@ void ShoutcastLibrary::loadData(){
 		return;
 	}
 
-	success = ShoutcastHelper::parse_tracks_xml(content, v_md);
+	success = SoundcloudHelper::parse_tracks_xml(content, v_md);
 	qDebug() << "Got " << v_md.size() << " tracks ";
 
 	if( v_md.size() == _vec_md.size() ) return;
@@ -132,92 +134,92 @@ void ShoutcastLibrary::loadData(){
 }
 
 
-void ShoutcastLibrary::reloadLibrary(bool clear){
+void SoundcloudLibrary::reloadLibrary(bool clear){
 
 }
 
-void ShoutcastLibrary::clearLibrary(){
+void SoundcloudLibrary::clearLibrary(){
 
 }
 
-void ShoutcastLibrary::refresh(bool emit_changed){
+void SoundcloudLibrary::refresh(bool emit_changed){
 
 }
 
-void ShoutcastLibrary::psl_selected_artists_changed(const QList<int>& lst){
+void SoundcloudLibrary::psl_selected_artists_changed(const QList<int>& lst){
 
 }
 
-void ShoutcastLibrary::psl_selected_albums_changed(const QList<int>& lst){
+void SoundcloudLibrary::psl_selected_albums_changed(const QList<int>& lst){
 
 }
 
-void ShoutcastLibrary::psl_selected_tracks_changed(const QList<int>& lst){
+void SoundcloudLibrary::psl_selected_tracks_changed(const QList<int>& lst){
 
 }
 
-void ShoutcastLibrary::psl_prepare_album_for_playlist(int idx){
+void SoundcloudLibrary::psl_prepare_album_for_playlist(int idx){
 
 }
 
-void ShoutcastLibrary::psl_prepare_artist_for_playlist(int idx){
+void SoundcloudLibrary::psl_prepare_artist_for_playlist(int idx){
 
 }
 
-void ShoutcastLibrary::psl_prepare_track_for_playlist(int idx){
+void SoundcloudLibrary::psl_prepare_track_for_playlist(int idx){
 
 }
 
-void ShoutcastLibrary::psl_prepare_tracks_for_playlist(QList<int> lst){
+void SoundcloudLibrary::psl_prepare_tracks_for_playlist(QList<int> lst){
 
 }
 
 
-void ShoutcastLibrary::
+void SoundcloudLibrary::
 psl_sortorder_changed(Sort::SortOrder artist_sort, Sort::SortOrder album_sort, Sort::SortOrder track_sort){
 
 }
 
-void ShoutcastLibrary::psl_delete_tracks(int idx){
+void SoundcloudLibrary::psl_delete_tracks(int idx){
 
 }
 
-void ShoutcastLibrary::psl_delete_certain_tracks(const QList<int>&,int lst){
+void SoundcloudLibrary::psl_delete_certain_tracks(const QList<int>&,int lst){
 
 }
 
-void ShoutcastLibrary::psl_play_next_all_tracks(){
+void SoundcloudLibrary::psl_play_next_all_tracks(){
 
 }
 
-void ShoutcastLibrary::psl_play_next_tracks(const QList<int>& lst){
+void SoundcloudLibrary::psl_play_next_tracks(const QList<int>& lst){
 
 }
 
-void ShoutcastLibrary::psl_append_all_tracks(){
+void SoundcloudLibrary::psl_append_all_tracks(){
 
 }
 
-void ShoutcastLibrary::psl_append_tracks(const QList<int>& lst){
+void SoundcloudLibrary::psl_append_tracks(const QList<int>& lst){
 
 }
 
-void ShoutcastLibrary::psl_track_rating_changed(int idx, int rating){
+void SoundcloudLibrary::psl_track_rating_changed(int idx, int rating){
 
 }
 
-void ShoutcastLibrary::psl_album_rating_changed(int idx, int rating){
+void SoundcloudLibrary::psl_album_rating_changed(int idx, int rating){
 
 }
 
-void ShoutcastLibrary::library_reloading_state_slot(QString str){
+void SoundcloudLibrary::library_reloading_state_slot(QString str){
 
 }
 
-void ShoutcastLibrary::library_reloading_state_new_block(){
+void SoundcloudLibrary::library_reloading_state_new_block(){
 
 }
 
-void ShoutcastLibrary::reload_thread_finished(){
+void SoundcloudLibrary::reload_thread_finished(){
 
 }

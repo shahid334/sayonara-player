@@ -68,6 +68,7 @@ class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
 Q_OBJECT
 
 public:
+
     GUI_Library_windowed(QWidget* parent);
 	virtual ~GUI_Library_windowed();
 
@@ -75,7 +76,7 @@ public:
 
 
 
-private:
+protected:
 	Ui::Library_windowed* 			ui;
 
 	LibraryItemModelTracks* 		_track_model;
@@ -85,8 +86,6 @@ private:
 	LibraryItemModelArtists* 		_artist_model;
 	LibraryItemDelegateArtists* 	_artist_delegate;
 	
-
-
     QMenu*      _header_rc_menu_title;
     QMenu*      _header_rc_menu_album;
     QMenu*      _header_rc_menu_artist;
@@ -144,7 +143,7 @@ public slots:
     void language_changed();
 
 
-private slots:
+protected slots:
 
     void artist_sel_changed(const QList<int>&);
     void album_sel_changed(const QList<int>&);
@@ -152,7 +151,7 @@ private slots:
     void track_sel_changed(const QList<int>&);
 	void track_info_available(const MetaDataList& v_md);
 
-     void disc_pressed(int);
+	void disc_pressed(int);
 
     void artist_tab_pressed(bool);
     void album_tab_pressed(bool);
@@ -209,9 +208,6 @@ private slots:
 protected:
 	void resizeEvent(QResizeEvent* e);
     void focusInEvent(QFocusEvent *e);
-
-
-private:
 
     SortOrder _sort_albums;  /* [name | year] [asc | desc] */
     SortOrder _sort_artists; /* [name | tracks] [asc | desc] */

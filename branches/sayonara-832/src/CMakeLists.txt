@@ -80,8 +80,8 @@ SET(HEADERS
     HelperStructs/CSettingsStorage.h
     HelperStructs/Tagging/ID3_Fileheader.h
     HelperStructs/AsyncWebAccess.h
-    Shoutcast/ShoutcastLibrary.h
-    Shoutcast/ShoutcastHelper.h
+    Soundcloud/SoundcloudLibrary.h
+    Soundcloud/SoundcloudHelper.h
 )
 
 SET(SOURCES
@@ -138,8 +138,8 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
     Socket/Socket.cpp
-    Shoutcast/ShoutcastLibrary.cpp
-    Shoutcast/ShoutcastHelper.cpp
+    Soundcloud/SoundcloudLibrary.cpp
+    Soundcloud/SoundcloudHelper.cpp
 )
 
 

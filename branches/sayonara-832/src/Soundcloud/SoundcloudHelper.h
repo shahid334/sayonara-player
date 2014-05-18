@@ -4,7 +4,7 @@
 #include "HelperStructs/Helper.h"
 #include <QtXml>
 
-namespace ShoutcastHelper
+namespace SoundcloudHelper
 {
 
 	QString				create_dl_get_artist(QString name);

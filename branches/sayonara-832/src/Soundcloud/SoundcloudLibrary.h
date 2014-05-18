@@ -1,4 +1,4 @@
-/* ShoutcastLibrary.h */
+/* SoundcloudLibrary.h */
 
 /* Copyright (C) 2014  Lucio Carreras
  *
@@ -19,8 +19,8 @@
  */
 
 
-#ifndef SHOUTCASTLIBRARY_H
-#define SHOUTCASTLIBRARY_H
+#ifndef SOUNDCLOUD_H
+#define SOUNDCLOUD_H
 
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
@@ -33,11 +33,11 @@
 #include <QtXml>
 
 
-class ShoutcastLibrary : public QObject
+class SoundcloudLibrary : public QObject
 {
 	Q_OBJECT
 public:
-	ShoutcastLibrary(QWidget* main_window, QObject *parent = 0);
+	SoundcloudLibrary(QWidget* main_window, QObject *parent = 0);
 
 	void loadData();
 

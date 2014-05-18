@@ -9,8 +9,8 @@ Installed-Size: 2300
 Maintainer: Lucio Carreras <LucioCarreras@gmail.com>
 Conflicts:
 Replaces:
-Description: A small and lightweight music player. 
-  Its main focus is on managing libraries and playing sound out of it. 
-  It contains a music library, custom playlists, dynamic playlists, 
-  ID3 Tag Editor, LastFM scrobbling, LastFM radio, web streaming, equalizer, 
-  lyrics, stream recorder and podcasts
+Description:Small and lightweight music player. 
+ Its main focus is on managing libraries and playing sound out of it. 
+ It contains a music library, custom playlists, dynamic playlists, 
+ ID3 Tag Editor, LastFM scrobbling, LastFM radio, web streaming, equalizer, 
+ lyrics, stream recorder and podcasts

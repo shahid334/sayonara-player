@@ -59,7 +59,7 @@ mkdir -p $DEBIAN_DIR/usr/share/icons/hicolor
 mkdir -p $DEBIAN_DIR/usr/share/sayonara/translations
 mkdir -p $DEBIAN_DIR/usr/share/sayonara/translations/icons
 cd ..
-make all
+make -j8 
 
 if [ $? -ne 0 ] ; then
 	echo "BUILD WAS NOT SUCCESSFUL!"

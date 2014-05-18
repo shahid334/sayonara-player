@@ -53,7 +53,8 @@ using namespace Sort;
     "tracks.rating AS rating " \
     "FROM tracks " \
     "INNER JOIN albums ON tracks.albumID = albums.albumID " \
-    "INNER JOIN artists ON tracks.artistID = artists.artistID "
+	"INNER JOIN artists ON tracks.artistID = artists.artistID " \
+	"WHERE filetype is null "
 
 
 
