@@ -80,7 +80,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     _lyric_server = 0;
     _lyrics_visible = true;
 
-    _cover_lookup = new CoverLookup();
+	_cover_lookup = new CoverLookup(this);
     _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
 
     _tag_edit_visible = true;
@@ -106,8 +106,16 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
              this, SLOT(psl_artist_info_available(const QString&)));
 
 
-    connect(_cover_lookup, SIGNAL(sig_covers_found(const QStringList&, QString)),
-            this, 			SLOT(psl_cover_available(const QStringList&, QString)));
+	connect(_cover_lookup, SIGNAL(sig_cover_found(QString)),
+			this, 			SLOT(psl_cover_available(QString)));
+
+	connect(_cover_lookup, SIGNAL(sig_finished(bool)),
+			this, 			SLOT(psl_cover_lookup_finished(bool)));
+
+	connect(_alternate_covers, SIGNAL(sig_cover_changed(bool)),
+			this,		SLOT(psl_cover_lookup_finished(bool)));
+
+
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
     connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
@@ -633,45 +641,44 @@ void GUI_InfoDialog::prepare_tracks(){
 }
 
 
-void GUI_InfoDialog::psl_cover_available(const QStringList& cover_paths, QString call_id){
+void GUI_InfoDialog::psl_cover_available(QString cover_path){
 
-    if(cover_paths.size() == 0) return;
-    if(call_id != _call_id) return;
-    this->ui->btn_image->setIcon(QIcon(cover_paths[0]));
+	qDebug() << "Psl cover available";
+	this->ui->btn_image->setIcon(QIcon(cover_path));
+	this->ui->btn_image->repaint();
+}
+
+void GUI_InfoDialog::psl_cover_lookup_finished(bool b){
+	if(!b){
+		QString sayonara_logo = Helper::getIconPath() + "logo.png";
+		this->ui->btn_image->setIcon(QIcon(sayonara_logo));
+	}
+
+	else{
+		prepare_cover();
+	}
 }
 
 void GUI_InfoDialog::prepare_cover(){
 
-    QStringList cover_paths;
-    cover_paths << Helper::getIconPath() + "logo.png";
+	QString sayonara_logo = Helper::getIconPath() + "logo.png";
 
-    _call_id = QString("InfoDialog") + QDateTime::currentDateTimeUtc().toString();
-    psl_cover_available(cover_paths, _call_id);
+	psl_cover_available(sayonara_logo);
 
 	switch(_diff_mode){
 
 		case INFO_MODE_SINGLE:
 
 			if(_mode == INFO_MODE_ARTISTS){
-
-                int artist_id = _db->getArtistID(_artist_name);
-                if(artist_id >= 0)
-                    _cover_lookup->fetch_cover_artist(artist_id, _call_id);
-
-                else{
-                    Artist artist;
-                    artist.name = _artist_name;
-                    _cover_lookup->fetch_cover_artist(artist, _call_id);
-                }
+				CoverLocation cl;
+				qDebug() << "look for " << cl.get_cover_location(_artist_name).cover_path;
+				_cover_lookup->fetch_artist_cover_standard(_artist_name);
 			}
 
 			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
-                Album album;
-                album.name = _album_name;
-                album.artists << _artist_name;
-
-                if(_album_name.isEmpty() && _artist_name.isEmpty()) return;
-                _cover_lookup->fetch_cover_album(album, _call_id);
+				CoverLocation cl;
+				qDebug() << "look for " << cl.get_cover_location(_album_name, _artist_name).cover_path;
+				_cover_lookup->fetch_album_cover_standard(_artist_name, _album_name);
 			}
 
 			break;
@@ -679,17 +686,16 @@ void GUI_InfoDialog::prepare_cover(){
 
 		case INFO_MODE_MULTI:
             if(_mode == INFO_MODE_TRACKS){
-                Album album;
-                album.name = _album_name;
-                album.artists << _artist_name;
+				_cover_lookup->fetch_album_cover_standard(_artist_name, _album_name);
+				CoverLocation cl;
+				qDebug() << "look for " << cl.get_cover_location(_album_name, _artist_name).cover_path;
 
-                if(_album_name.isEmpty() && _artist_name.isEmpty()) return;
-                _cover_lookup->fetch_cover_album(album, _call_id);
-            }
+			}
 
             break;
 
         default:
+			qDebug() << "möööp";
 			return;
 	}
 }
@@ -823,7 +829,6 @@ void GUI_InfoDialog::cover_clicked(){
 
 
 void GUI_InfoDialog::no_cover_available(){
-    //prepare_cover();
     this->ui->btn_image->setIcon(QIcon(Helper::getIconPath() + "/logo.png"));
 }
 
@@ -832,43 +837,6 @@ void GUI_InfoDialog::no_cover_available(){
 void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString cover_path){
 
     if(caller_class != _class_name) return;
-
-    bool is_mode_single = (_diff_mode == INFO_MODE_SINGLE);
-    bool is_mode_tracks_or_albums = ( _mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS);
-
-    if( is_mode_single &&
-        is_mode_tracks_or_albums){
-
-        MetaData md;
-        md.album = _album_name;
-        md.artist = _artist_name;
-        Album album = Helper::get_album_from_metadata(md);
-        QStringList lst;
-
-        // calc all cover paths for album
-        foreach(QString artist, album.artists){
-            lst << Helper::get_cover_path(artist, album.name);
-        }
-
-        // copy cover
-        QString major_artist_cover_path = Helper::get_cover_path(Helper::get_album_major_artist(album.id), album.name);
-        lst << major_artist_cover_path;
-
-
-        if(lst.contains(cover_path)){
-
-            QFile cover_file(cover_path);
-            // copy to all cover paths
-            foreach(QString path, lst){
-
-                // no need for the cover path
-                if(!path.compare(cover_path)) continue;
-
-                if(QFile::exists(path)) QFile::remove(path);
-                cover_file.copy(path);
-            }
-        }
-    }
 
     prepare_cover();
 }

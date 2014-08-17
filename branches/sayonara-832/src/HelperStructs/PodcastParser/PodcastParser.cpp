@@ -40,6 +40,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/WebAccess.h"
 #include "HelperStructs/PodcastParser/PodcastParser.h"
+#include "CoverLookup/CoverLocation.h"
 
 
 #include <QDebug>
@@ -104,11 +105,13 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
                 QString ic_nodename = item_child.nodeName();
                 QDomElement ic_e = item_child.toElement();
                 if(!ic_nodename.compare("url", Qt::CaseInsensitive)){
+					QString cover_path = CoverLocation::get_cover_location(album, author).cover_path;
                     QString img_url = ic_e.text();
                     QImage img;
+
                     bool success = WebAccess::read_http_into_img(img_url, &img);
                     if(!success && !img.isNull()) continue;
-                    img.save(Helper::get_cover_path(author, album));
+					img.save( cover_path );
                 }
             }
         }
@@ -116,9 +119,11 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
         else if(!nodename.compare("itunes:image", Qt::CaseInsensitive)){
             QString img_url = e.attribute("href");
             QImage img;
+			QString cover_path = CoverLocation::get_cover_location(album, author).cover_path;
             bool success = WebAccess::read_http_into_img(img_url, &img);
             if(!success && !img.isNull()) continue;
-            img.save(Helper::get_cover_path(author, album));
+
+			img.save( cover_path );
             image_found = true;
         }
 

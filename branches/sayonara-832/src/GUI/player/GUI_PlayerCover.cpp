@@ -27,11 +27,44 @@
 #include "GUI/player/GUI_Player.h"
 
 /** COVERS **/
+
+void GUI_Player::set_std_cover(bool radio){
+
+	QString std_cover_path;
+	if(radio){
+		std_cover_path = Helper::getIconPath() + "radio.png";
+	}
+
+	else {
+		std_cover_path = Helper::getIconPath() + "logo.png";
+	}
+
+	ui->albumCover->setIcon(QIcon(std_cover_path));
+	ui->albumCover->repaint();
+
+}
+
+
+void GUI_Player::fetch_cover(){
+
+	set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
+
+	if(m_metadata.album_id > -1){
+		m_cov_lookup->fetch_album_cover_by_id(m_metadata.album_id);
+	}
+
+
+	else{
+		m_cov_lookup->fetch_album_cover_standard(m_metadata.artist, m_metadata.album);
+	}
+}
+
+
 void GUI_Player::coverClicked() {
 
    if(m_metadata.radio_mode == RADIO_STATION){
 
-        m_alternate_covers->start( m_metadata.album_name, m_metadata.title );
+		m_alternate_covers->start( m_metadata.album, m_metadata.title );
     }
 
     else if(m_metadata.album_id >= 0){
@@ -46,34 +79,31 @@ void GUI_Player::coverClicked() {
     this->setFocus();
 }
 
-void GUI_Player::sl_alternate_cover_available(QString target_class, QString coverpath){
 
-    QString own_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-    if(coverpath != own_coverpath) return;
+void GUI_Player::sl_alternate_cover_available(bool b){
 
-    ui->albumCover->setIcon(QIcon(coverpath));
+	if(!b){
+		set_std_cover(m_metadata.radio_mode != RADIO_OFF);
+		return;
+	}
+
+	fetch_cover();
 }
+
 
 void GUI_Player::sl_no_cover_available(){
 
-
-    QString coverpath = Helper::getIconPath() + "logo.png";
-    ui->albumCover->setIcon(QIcon(coverpath));
+   set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
 }
 
 
 // public slot
 // cover was found by CoverLookup
-void GUI_Player::covers_found(const QStringList& cover_paths, QString call_id) {
+void GUI_Player::cover_found(QString cover_path) {
 
-    Q_UNUSED(cover_paths);
-    Q_UNUSED(call_id);
-    QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	QIcon icon(cover_path);
 
-    /*if(!cover_paths.contains(cover_path)) return;*/
-    if(!QFile::exists(cover_path)) return;
-
-    ui->albumCover->setIcon(QIcon(cover_path));
+	ui->albumCover->setIcon(icon);
 	ui->albumCover->repaint();
 }
 

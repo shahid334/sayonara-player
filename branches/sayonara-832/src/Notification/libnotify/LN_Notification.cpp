@@ -27,7 +27,9 @@
 #include <QDebug>
 #include <QFile>
 #include <QPixmap>
+#include <CoverLookup/CoverLocation.h>
 
+#include "CoverLookup/CoverLocation.h"
 #include "Notification/Notification.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "Notification/libnotify/LN_Notification.h"
@@ -45,30 +47,35 @@ LN_Notification::~LN_Notification(){
 
 void LN_Notification::notification_show(const MetaData& md){
 
-
-
     if(!_initialized) return;
 
+	CoverLocation cl = CoverLocation::get_cover_location(md);
     CSettingsStorage* settings = CSettingsStorage::getInstance();
+	QString pixmap_path;
 
     not_close();
 
     QString text = md.artist + "\n" + md.album;
     text.replace("&", "&amp;");
 
-    QString pixmap_path = Helper::get_cover_path(md.artist, md.album);
-    if(!QFile::exists(pixmap_path)) pixmap_path = Helper::getIconPath() + "logo_small.png";
+	if( !QFile::exists(cl.cover_path) ){
+		pixmap_path = Helper::getIconPath() + "logo_small.png";
+	}
+
     else{
 
         QPixmap p(pixmap_path);
 
-	int scale = settings->getNotificationScale();
-	if(scale > 0) 
-        	p = p.scaled(scale, scale, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		int scale = settings->getNotificationScale();
+		if(scale > 0) {
+			p = p.scaled(scale, scale, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+		}
 
         bool success = p.save(Helper::getSayonaraPath() + "not.jpg");
-        if(success)
+
+		if(success){
             pixmap_path = Helper::getSayonaraPath() + "not.jpg";
+		}
     }
 
 
@@ -97,9 +104,10 @@ void LN_Notification::notification_update(const MetaData& md){
 
    if(!_not) return;
 
+   QString pixmap_path = CoverLocation::get_cover_location(md).cover_path;
+
    QString text = md.artist + "\n" + md.album;
    text.replace("&", "&amp;");
-   QString pixmap_path = Helper::get_cover_path(md.artist, md.album);
 
    notify_notification_update( (NotifyNotification*) _not, 
 				md.title.toLocal8Bit().data(),

@@ -69,7 +69,8 @@ private slots:
     void alternate_covers_available(QString, QString);
     void no_cover_available();
 	void cover_clicked();
-    void psl_cover_available(const QStringList&, QString);
+	void psl_cover_available(QString);
+	void psl_cover_lookup_finished(bool);
 
 
 protected:

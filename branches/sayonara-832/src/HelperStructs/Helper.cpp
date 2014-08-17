@@ -199,39 +199,6 @@ QString Helper::get_artist_image_path(QString artist, QString extension){
 	return image_path;
 }
 
-QString Helper::get_cover_path(QString artist, QString album, QString extension){
-	QString cover_token = calc_cover_token(artist, album);
-    QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + "." + extension;
-
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
-		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
-	}
-
-	return cover_path;
-}
-
-QString Helper::get_cover_path(int album_id){
-
-    if(album_id == -1) return "";
-
-    Album album;
-    bool success = CDatabaseConnector::getInstance()->getAlbumByID(album_id, album);
-    if(!success) return "";
-
-    if(album.artists.size() == 0){
-        return get_cover_path("", album.name);
-    }
-
-    else if(album.artists.size() == 1){
-        return get_cover_path(album.artists[0], album.name);
-    }
-
-    else if(album.artists.size() == 2){
-        return get_cover_path("Various", album.name);
-    }
-
-    else return "";
-}
 
 QString Helper::createLink(QString name, QString target, bool underline){
 	
@@ -729,7 +696,7 @@ QString Helper::get_major_artist(QStringList artists){
 
 QString Helper::get_album_major_artist(int album_id){
 
-    if(albumid == -1) return "";
+	if(album_id == -1) return "";
 
     QStringList artists;
     MetaDataList v_md(0);

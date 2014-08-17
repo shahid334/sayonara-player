@@ -36,14 +36,14 @@
 
 
 
-CoverFetchThread::CoverFetchThread(QObject* parent, const QString& url, const QString& target_file, int n_covers) :
+CoverFetchThread::CoverFetchThread(QObject* parent, const CoverLocation& cl, const int n_covers) :
     QThread(parent),
-    _url(url),
-    _target_file(target_file),
     _n_covers(n_covers),
     _run(true)
 {
 
+	_url = cl.google_url;
+	_target_file = cl.cover_path;
 }
 
 
@@ -66,8 +66,9 @@ int CoverFetchThread::run_single(){
 
         if(success){
 
+			qDebug() << "Save cover to " << _target_file << " (" << adress << ")";
             img.save(_target_file);
-            emit sig_cover_found(_target_file);
+			emit sig_cover_found(_target_file);
             return 1;
         }
     }
@@ -78,7 +79,7 @@ int CoverFetchThread::run_single(){
 
 int CoverFetchThread::run_multi(){
 
-    int idx=1;
+	int idx=0;
     QStringList adresses = CoverDownloader::cov_call_and_parse(_url, _n_covers * 2);
 
     foreach(QString adress, adresses){
@@ -91,16 +92,17 @@ int CoverFetchThread::run_multi(){
 
         if(success){
 
+			QString filename, dir;
             QString cover_path;
-            cover_path = QString("_") +
-                    QString::number(idx) +
-                    _target_file;
+
+			Helper::split_filename(_target_file, dir, filename);
+			cover_path = dir + "/" + QString::number(idx) + "_" + filename;
 
             img.save( cover_path );
 
-            emit sig_cover_found(cover_path);
+			emit sig_cover_found(cover_path);
 
-            if( idx == n_covers ) break;
+			if( idx == _n_covers -1 ) break;
 
             idx++;
         }

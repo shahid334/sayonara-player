@@ -67,7 +67,7 @@ public:
 
 public slots:
 
-    void covers_found(const QStringList& lst, QString call_id);
+	void cover_found(QString cover_path);
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
@@ -198,7 +198,7 @@ private slots:
     void help(bool b=false);
 
 
-    void sl_alternate_cover_available(QString, QString);
+	void sl_alternate_cover_available(bool b);
     void sl_no_cover_available();
 
     void awa_version_finished();
@@ -280,6 +280,8 @@ private:
     void setupConnections();
     void setRadioMode(int);
     void total_time_changed(qint64);
+	void set_std_cover(bool radio);
+
     void fetch_cover();
     QAction* createAction(QKeySequence key_sequence);
     QAction* createAction(QList<QKeySequence>& key_sequences);

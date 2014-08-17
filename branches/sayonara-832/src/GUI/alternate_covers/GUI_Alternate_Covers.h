@@ -57,12 +57,13 @@ public:
 	signals:
 
 		void sig_search_images(const QString&);
-        void sig_covers_changed(QString, QString);
+		void sig_cover_changed(bool);
         void sig_no_cover();
 
 
 	public slots:
         void start(Album album);
+		void start(int album_id);
         void start(QString album_name, QString artist_name);
         void start(Artist artist);
         void start(QString artist_name);
@@ -77,7 +78,7 @@ public:
 		void cover_pressed(const QModelIndex& idx);
         void open_file_dialog();
         void cl_new_cover(QString);
-        void cl_finished();
+		void cl_finished(bool);
 
 	private:
 		Ui::AlternateCovers* ui;
@@ -85,9 +86,12 @@ public:
 		int 				_cur_idx;
 		QString				_class_name;
 		QString				_calling_class;
+		QString				_last_path;
 		Album				_album;
 		Artist				_artist;
 		bool				_search_for_album;
+		CoverLocation		_target_filename;
+		QStringList			_filelist;
 
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
@@ -96,14 +100,11 @@ public:
         CoverLookupAlternative*        _cl_alternative;
 
         void update_model();
+		void connect_and_start();
+		void delete_all_files();
 
-
-private slots:
-        void cft_destroyed();
-
-
-
-
+protected:
+		void closeEvent(QCloseEvent* e);
 };
 
 #endif /* GUI_ALTERNATE_COVERS_H_ */

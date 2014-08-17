@@ -132,7 +132,7 @@ void GUI_Player::clearLibraryClicked(bool b){
 // prvt slot
 void GUI_Player::fetch_all_covers_clicked(bool b) {
 	Q_UNUSED(b);
-    m_cov_lookup->fetch_all_album_covers();
+	//m_cov_lookup->fetch_all_album_covers();
     qDebug() << "Fetch all covers triggered";
 }
 /** FILE END **/

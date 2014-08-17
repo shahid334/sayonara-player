@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>686</width>
-    <height>437</height>
+    <width>951</width>
+    <height>702</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,7 +24,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>2000</width>
+    <width>4000</width>
     <height>2000</height>
    </size>
   </property>
@@ -41,7 +41,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../../.designer/backup/icons/play.png</normaloff>../../../../../.designer/backup/icons/play.png</iconset>
+    <normaloff>../../../../../../.designer/backup/icons/play.png</normaloff>../../../../../../.designer/backup/icons/play.png</iconset>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -81,6 +81,34 @@
     <property name="verticalSpacing">
      <number>0</number>
     </property>
+    <item row="0" column="4" rowspan="10" colspan="4">
+     <widget class="QWidget" name="library_widget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+        <horstretch>5</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>430</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+     </widget>
+    </item>
     <item row="7" column="0" colspan="4">
      <widget class="Line" name="line">
       <property name="sizePolicy">
@@ -1144,45 +1172,6 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="7" rowspan="10">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QWidget" name="library_widget" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
-          <horstretch>5</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>430</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="lab_status">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -1190,8 +1179,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>686</width>
-     <height>25</height>
+     <width>951</width>
+     <height>28</height>
     </rect>
    </property>
    <property name="font">
@@ -1345,7 +1334,7 @@
   <action name="action_lastFM">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../Desktop/lastfm-icon.png</normaloff>../../../../../Desktop/lastfm-icon.png</iconset>
+     <normaloff>../../../../../../Desktop/lastfm-icon.png</normaloff>../../../../../../Desktop/lastfm-icon.png</iconset>
    </property>
    <property name="text">
     <string>Last.fm</string>

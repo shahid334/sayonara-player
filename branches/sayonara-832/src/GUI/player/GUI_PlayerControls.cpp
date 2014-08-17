@@ -74,7 +74,7 @@ void GUI_Player::stopClicked(bool b) {
 	ui->curTime->setText("00:00");
 	ui->maxTime->setText("00:00");
 
-    ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
+	set_std_cover( false );
 
 	if(ui->btn_rec->isVisible() && ui->btn_rec->isChecked()){
 		ui->btn_rec->setChecked(false);

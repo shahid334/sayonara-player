@@ -69,7 +69,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	initGUI();
     m_translator = translator;
     m_settings = CSettingsStorage::getInstance();
-        ui->albumCover->setIcon(QIcon(Helper::getIconPath() + "logo.png"));
+
 
 
     m_awa_version = new AsyncWebAccess(this);
@@ -99,7 +99,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	m_class_name = "Player";
 	m_converter_active = false;
 
-    m_cov_lookup = new CoverLookup();
+	m_cov_lookup = new CoverLookup(this);
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
 
     ui->action_ViewLFMRadio->setVisible(m_settings->getLastFMActive());
@@ -165,6 +165,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     ui_info_dialog = 0;
 
     changeSkin(m_settings->getPlayerStyle() == 1);
+	set_std_cover( false );
 }
 
 
@@ -317,39 +318,6 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
     this->repaint();
 }
 
-
-void GUI_Player::fetch_cover(){
-
-    QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-
-    if(! QFile::exists(cover_path) ){
-        if(m_metadata.radio_mode != RADIO_STATION){
-
-            if(m_metadata.album.trimmed().size() == 0 && m_metadata.artist.size() == 0)
-                cover_path = Helper::getIconPath() + "logo.png";
-
-            else if(m_metadata.album_id > -1)
-                m_cov_lookup->fetch_cover_album(m_metadata.album_id);
-
-            else{
-                Album album;
-                album.name = m_metadata.album;
-                album.artists << m_metadata.artist;
-
-
-                m_cov_lookup->fetch_cover_album(album);
-            }
-
-            cover_path = Helper::getIconPath() + "logo.png";
-        }
-
-        else
-            cover_path = Helper::getIconPath() + "radio.png";
-    }
-
-    ui->albumCover->setIcon(QIcon(cover_path));
-    ui->albumCover->repaint();
-}
 
 
 void GUI_Player::psl_bitrate_changed(qint32 bitrate){
@@ -882,6 +850,6 @@ void GUI_Player::sl_notify_new_version(bool b){
 
 
 void GUI_Player::psl_set_status_bar_text(QString str, bool show){
-    this->ui->lab_status->setVisible(show);
-    this->ui->lab_status->setText(str);
+	Q_UNUSED(str);
+	Q_UNUSED(show);
 }

@@ -105,7 +105,7 @@ public:
     bool is_disabled;
 
 
-    inline MetaData () {
+	MetaData () {
         id = -1;
         artist_id = -1;
         album_id = -1;

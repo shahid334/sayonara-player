@@ -50,8 +50,6 @@ namespace Helper{
     QString createLink(QString name, QString target="", bool underline=true);
 
     QString get_artist_image_path(QString artist, QString extension="jpg");
-    QString get_cover_path(QString artist, QString album, QString extension="jpg");
-    QString get_cover_path(int album_id);
     QString calc_cover_token(QString artist, QString album);
 
     QString calc_google_image_search_adress(QString searchstring);

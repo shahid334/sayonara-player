@@ -31,6 +31,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
+#include "CoverLookup/CoverLocation.h"
 
 #include <QThread>
 #include <QString>
@@ -44,11 +45,11 @@ Q_OBJECT
 
 signals:
     void sig_finished(bool);
-    void sig_cover_found(bool);
+	void sig_cover_found(QString);
 
 public:
 
-    CoverFetchThread(QObject* parent, QString& url, const QString& target_file, int n_covers);
+	CoverFetchThread(QObject* parent, const CoverLocation& cl, const int n_covers);
     virtual ~CoverFetchThread();
 
     void stop();
@@ -57,12 +58,16 @@ protected:
     void run();
 
 
+
 private:
 
     QString     _url;
     QString     _target_file;
     int         _n_covers;
     bool        _run;
+
+	int run_single();
+	int run_multi();
 
 };
 

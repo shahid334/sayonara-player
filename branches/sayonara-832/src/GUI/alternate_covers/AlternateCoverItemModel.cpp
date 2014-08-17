@@ -35,6 +35,7 @@
 
 AlternateCoverItemModel::AlternateCoverItemModel(QObject* parent) : QAbstractTableModel(parent) {
 
+	_pathlist.reserve(10);
 }
 
 AlternateCoverItemModel::~AlternateCoverItemModel() {
@@ -47,9 +48,7 @@ AlternateCoverItemModel::~AlternateCoverItemModel() {
 
 int AlternateCoverItemModel::rowCount(const QModelIndex &parent) const
 {
-	Q_UNUSED(parent);
-	if(_pathlist.size() == 0) return 0;
-	return _pathlist.size() / 5;
+	return 2;
 
 }
 int AlternateCoverItemModel::columnCount(const QModelIndex &parent) const
@@ -60,15 +59,17 @@ int AlternateCoverItemModel::columnCount(const QModelIndex &parent) const
 QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 {
 
-    int lin_idx = index.row() * index.column() + index.column();
+	int lin_idx = index.row() * columnCount() + index.column();
+
 
      if (!index.isValid() || _pathlist.size() <= lin_idx){
          return QVariant();
      }
 
 
-     if(role == Qt::DisplayRole){
-         return _pathlist[lin_idx];
+	 if(role == Qt::WhatsThisRole){
+
+		 return _pathlist[lin_idx];
 	 }
 
 	 else
@@ -94,7 +95,8 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
         return false;
 
 	 if(role == Qt::EditRole){
-         _pathlist[lin_dx] = value.toString();
+		 _pathlist[lin_idx] = value.toString();
+		 emit dataChanged(index, index);
 		 return true;
 	 }
 
