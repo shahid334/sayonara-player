@@ -69,8 +69,6 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
 
 QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses){
 
-    qDebug() << "Url = " << url;
-
     QString content;
     bool success = WebAccess::read_http_into_str(url, &content);
 
@@ -87,8 +85,6 @@ QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses){
 
 
 bool CoverDownloader::cov_download_cover(QString adress, QImage* img) {
-
-    qDebug() << "Cover adress = " << adress;
 
     return WebAccess::read_http_into_img(adress, img);
 

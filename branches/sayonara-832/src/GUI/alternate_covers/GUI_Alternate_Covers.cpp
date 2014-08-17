@@ -203,6 +203,8 @@ void GUI_Alternate_Covers::save_button_pressed(){
 	QFile f(_target_filename.cover_path);
 	f.remove();
 
+	QFile::copy(src_filename, _target_filename.cover_path);
+
 	emit sig_cover_changed(true);
 }
 

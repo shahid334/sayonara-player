@@ -626,7 +626,7 @@ void GUI_InfoDialog::prepare_tracks(){
     foreach(QString path, pathlist){
 
         QString tmppath = QString("file://") + path;
-        //path.replace(library_path, BOLD("${ML}"));
+
         if(library_path.size() > 0)
             path.replace(library_path, ".");
         path = Helper::createLink(path, tmppath, false);
@@ -643,7 +643,6 @@ void GUI_InfoDialog::prepare_tracks(){
 
 void GUI_InfoDialog::psl_cover_available(QString cover_path){
 
-	qDebug() << "Psl cover available";
 	this->ui->btn_image->setIcon(QIcon(cover_path));
 	this->ui->btn_image->repaint();
 }
@@ -670,14 +669,10 @@ void GUI_InfoDialog::prepare_cover(){
 		case INFO_MODE_SINGLE:
 
 			if(_mode == INFO_MODE_ARTISTS){
-				CoverLocation cl;
-				qDebug() << "look for " << cl.get_cover_location(_artist_name).cover_path;
 				_cover_lookup->fetch_artist_cover_standard(_artist_name);
 			}
 
 			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
-				CoverLocation cl;
-				qDebug() << "look for " << cl.get_cover_location(_album_name, _artist_name).cover_path;
 				_cover_lookup->fetch_album_cover_standard(_artist_name, _album_name);
 			}
 
@@ -687,15 +682,11 @@ void GUI_InfoDialog::prepare_cover(){
 		case INFO_MODE_MULTI:
             if(_mode == INFO_MODE_TRACKS){
 				_cover_lookup->fetch_album_cover_standard(_artist_name, _album_name);
-				CoverLocation cl;
-				qDebug() << "look for " << cl.get_cover_location(_album_name, _artist_name).cover_path;
-
 			}
 
             break;
 
         default:
-			qDebug() << "möööp";
 			return;
 	}
 }

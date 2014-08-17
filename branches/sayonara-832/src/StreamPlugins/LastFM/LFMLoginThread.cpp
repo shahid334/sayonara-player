@@ -104,8 +104,6 @@ void LFMLoginThread::run(){
     QString url = lfm_wa_create_sig_url_post("https://ws.audioscrobbler.com/2.0/", signature_data, post_data);
     QString response;
 
-    qDebug() << "url = " << url;
-
     bool success = lfm_wa_call_post_url_https(url, post_data, response);
     if(!success){
         qDebug() << "get session: no success!";
