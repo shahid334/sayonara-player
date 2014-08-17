@@ -39,93 +39,148 @@
 #include <QObject>
 #include <QThread>
 #include <QPixmap>
-#include <QCryptographicHash>
 #include <QDir>
 #include <QMap>
-
-#define EMIT_NONE 0
-#define EMIT_ONE 1
-#define EMIT_ALL 2
-
-
-using namespace std;
-
-typedef QString WWWAdress;
-typedef QString TargetFileName;
-
-
-
-class CoverLookup;
-
-class CoverLookupAllCoverThread : public QThread
-{
-
-    AlbumList _albumlist;
-    CoverLookup* _cover_lookup;
-    bool _run;
-
-public:
-
-
-    CoverLookupAllCoverThread(QObject* parent, const AlbumList& albumlist);
-    ~CoverLookupAllCoverThread();
-
-
-    void stop();
-    CoverLookup* getCoverLookup();
-
-protected:
-    void run();
-};
 
 
 class CoverLookup : public QObject{
 
 	Q_OBJECT
 
-	signals:
-    void sig_covers_found(const QStringList&, QString call_id);
-    void sig_alt_cover_found(const QString&, QString call_id);
-
-	public slots:
-
-    void fetch_cover_album(const int album_id, QString call_id="", bool for_all_tracks=true);
-    void fetch_cover_album(const Album& album, QString call_id="", bool for_all_tracks=true);
-
-    void fetch_cover_artist(const int artist_id, QString call_id="");
-    void fetch_cover_artist(const Artist& artist, QString call_id="");
-
-    void fetch_all_album_covers();
-    void fetch_all_album_covers_stop();
-
+signals:
+    void sig_cover_found(const QString&);
+    void sig_finished(bool);
 
 
 private slots:
-   void thread_finished(int id);
-   void fetch_all_album_covers_destroyed();
+   void thread_finished(bool);
+   void cover_found(QString);
 
 
 public:
 
-    CoverLookup();
+   static void get_target_path(QString& album_name, const QString& artist_name);
+   static void get_target_path(QString& album_name, const QStrinLiss& artists_name);
+   static void get_target_path(int album_id);
+   static void get_target_path(Album album);
+   static void get_target_path(const Artist& artist);
+   static void get_target_path(const QString& artist);
+
+
+    void fetch_album_cover_standard(const QString& artist, const QString& album_name);
+    void fetch_album_cover_sampler(const QStringList& artists, const QString& album_name);
+    void fetch_album_cover_by_id(const int album_id);
+    void fetch_album_cover(const Album& album);
+
+    void fetch_artist_cover_standard(const QString& artist);
+    void fetch_artist_cover_by_id(const int artist_id);
+    void fetch_artist_cover(const Artist& artist);
+
+    void fetch_cover_by_searchstring(const QString& searchstring, const QString& target_name);
+
+    CoverLookup(QObject* parent, int n_covers=1);
 	virtual ~CoverLookup();
-
-
 
 
 private:
 
+    CoverFetchThread* _cft;
     CDatabaseConnector* _db;
-    CoverLookupAllCoverThread* _all_covers_thread;
-    QList<CoverFetchThread*> _threads;
-    QList<int> _finished_queue;
-    bool _finish_locked;
-    int _cur_thread_id;
+    int _n_covers;
+
+    void start_new_thread(const QString& url, const QString& target_name);
+};
 
 
-    void start_new_thread(QString url, const QStringList& target_names, QString call_id );
+class CoverLookupAlternative : public QObject
+{
+
+
+    enum SearchType {
+
+        ST_Standard=0,
+        ST_Sampler=1,
+        ST_ByID=2,
+        ST_ByAlbum=3,
+        ST_ByArtistName = 4,
+        ST_ByArtist = 5
+    } _search_type;
+
+
+    Q_OBJECT
+
+signals:
+    void sig_new_cover(QString);
+    void sig_finished();
+
+private:
+
+    CoverLookup*        _cl;
+    QString             _album_name;
+    QString             _artist_name;
+    QStringList         _artists_name;
+    int                 _album_id;
+    Album               _album;
+    Artist              _artist;
+
+    int _n_covers;
+    bool _run;
+
+
+public:
+
+    CoverLookupAlternative(QObject* parent, const QString& album_name, const QString& artist_name, int n_covers);
+    CoverLookupAlternative(QObject* parent, const QString& album_name, const QStringList& artists_name, int n_covers);
+    CoverLookupAlternative(QObject* parent, const Album& album, int n_covers);
+    CoverLookupAlternative(QObject* parent, int album_id, int n_covers);
+    CoverLookupAlternative(QObject* parent, const QString& artist, int n_covers);
+    CoverLookupAlternative(QObject* parent, const Artist& artist, int n_covers);
+
+    ~CoverLookupAlternative();
+
+    void stop();
+    void start();
+
+
+
+private slots:
+    void cover_found(QString);
+    void finished(bool);
 
 
 };
+
+
+class CoverLookupAll : public QObject
+{
+
+    Q_OBJECT
+
+signals:
+    void sig_new_cover(QString);
+
+
+private:
+    CoverLookup* _cl;
+    AlbumList _album_list;
+    bool _run;
+
+
+private slots:
+    void cover_found(QString);
+    void finished(bool);
+
+
+public:
+    CoverLookupAll(QObject* parent, const AlbumList& albumlist);
+    ~CoverLookupAll();
+
+    void stop();
+    void start();
+
+protected:
+    void run();
+};
+
 
 #endif /* COVERLOOKUP_H_ */

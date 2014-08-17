@@ -36,166 +36,106 @@
 
 
 
-CoverFetchThread::CoverFetchThread(QObject* parent, int id, QString url, const QStringList& target_names, QString call_id): QThread(parent) {
-    _id = id;
-    _url = url;
-    _target_names = target_names;
-    _call_id = call_id;
-    _mode = CFT_SINGLE;
-
-
+CoverFetchThread::CoverFetchThread(QObject* parent, const QString& url, const QString& target_file, int n_covers) :
+    QThread(parent),
+    _url(url),
+    _target_file(target_file),
+    _n_covers(n_covers),
+    _run(true)
+{
 
 }
 
-CoverFetchThread::CoverFetchThread(QObject* parent, int id, QString url, int n_images) : QThread(parent){
-
-    _id = id;
-    _url = url;
-    _n_images = n_images;
-    _mode = CFT_MULTI;
-    _cur_awa_idx = 1;
-    _run = true;
-    _awa_id = 100;
-}
 
 CoverFetchThread::~CoverFetchThread() {
 
-
-    foreach(AsyncWebAccess* awa, _map.values()){
-        awa->terminate();
-    }
 }
 
-void CoverFetchThread::run(){
 
-    if(_mode == CFT_SINGLE)
-        search_single();
-    else
-        search_multi();
-
-}
-
-void CoverFetchThread::search_single(){
+int CoverFetchThread::run_single(){
 
     QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
 
-    _found_cover_paths.clear();
     foreach(QString adress, adresses){
+
+        if(!_run) return 0;
+
         QImage img;
+
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
         if(success){
 
-            for(int i=0; i<_target_names.size(); i++){
-                QString target_name = _target_names[i];
-                img.save(target_name);
-                _found_cover_paths << target_name;
-            }
-        }
-
-        if(_found_cover_paths.size() > 0) break;
-    }
-
-    emit sig_finished(_id);
-}
-
-
-QString path;
-void CoverFetchThread::search_multi(){
-
-      //QStringList adresses = cov_call_and_parse(_url, _n_images);
-    QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 50);
-
-      _cur_awa_idx = 1;
-      _n_running = 0;
-
-
-      foreach(QString adress, adresses){
-
-          AsyncWebAccess* awa = new AsyncWebAccess(0, _awa_id, AwaDataTypeImage);
-
-          awa->set_url(adress);
-
-          _map.insert(_awa_id, awa);
-          connect(awa, SIGNAL(finished(int)), this, SLOT(awa_finished(int)));
-          connect(awa, SIGNAL(terminated(int)), this, SLOT(awa_terminated(int)));
-
-          //qDebug() << "Thread " << _awa_id << " started";
-          _n_running ++;
-          _awa_id++;
-	
-	  if(_n_running <= 8)          awa->start();
-      }
-
-      path = Helper::getSayonaraPath() + "tmp/";
-      QDir dir(Helper::getSayonaraPath());
-      dir.mkpath("tmp");
-
-      while(_run){
-          usleep(1000000);
-      }
-}
-
-
-
-QStringList CoverFetchThread::get_found_covers(){
-
-    return _found_cover_paths;
-}
-
-int CoverFetchThread::get_id(){
-    return _id;
-}
-
-QString CoverFetchThread::get_call_id(){
-    return _call_id;
-}
-
-void CoverFetchThread::awa_finished(int id){
-
-    if(!_map.contains(id)) return;
-
-    //qDebug() << "Awa " << id << " finished";
-
-    AsyncWebAccess* awa = _map.value(id);
-    QImage* img = awa->get_image();
-
-    _map.remove(id);
-
-    if(img->isNull()){
-        qDebug() << "Cannot get image from Data (2)";
-    }
-
-    foreach(AsyncWebAccess* a, _map){
-        if(!a->isRunning() && _run) {
-            a->start();
-            _n_running ++;
-            break;
+            img.save(_target_file);
+            emit sig_cover_found(_target_file);
+            return 1;
         }
     }
 
-    bool success = img->save(path + "img_" + QString::number(_cur_awa_idx++) + ".jpg");
-    Q_UNUSED(success);
-
-    _n_running --;
-}
-
-void CoverFetchThread::awa_terminated(int id){
-
-    qDebug() << "Awa " << id << " terminated";
-    _map.remove(id);
-    _n_running --;
+    return 0;
 }
 
 
-void CoverFetchThread::set_run(bool run){
-    _n_running = 0;
-    _run = run;
-    foreach(AsyncWebAccess* awa, _map.values()){
-        awa->stop();
+int CoverFetchThread::run_multi(){
 
-        //awa->terminate();
+    int idx=1;
+    QStringList adresses = CoverDownloader::cov_call_and_parse(_url, _n_covers * 2);
+
+    foreach(QString adress, adresses){
+
+        if(!_run) return idx;
+
+        QImage img;
+
+        bool success = CoverDownloader::cov_download_cover(adress, &img);
+
+        if(success){
+
+            QString cover_path;
+            cover_path = QString("_") +
+                    QString::number(idx) +
+                    _target_file;
+
+            img.save( cover_path );
+
+            emit sig_cover_found(cover_path);
+
+            if( idx == n_covers ) break;
+
+            idx++;
+        }
     }
-    
+
+   return idx;
 }
+
+void CoverFetchThread::stop(){
+
+    _run = false;
+}
+
+void CoverFetchThread::run(){
+
+    int n_covers_found;
+
+    if( _n_covers == 1 ){
+        n_covers_found = run_single();
+    }
+
+    else {
+        n_covers_found = run_multi();
+    }
+
+
+
+    if( n_covers_found >= _n_covers ){
+        emit sig_finished(true);
+    }
+
+    else {
+        emit sig_finished(false);
+    }
+
+}
+
 

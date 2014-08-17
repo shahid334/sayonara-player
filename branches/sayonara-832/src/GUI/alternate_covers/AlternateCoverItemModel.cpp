@@ -60,11 +60,15 @@ int AlternateCoverItemModel::columnCount(const QModelIndex &parent) const
 QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 {
 
-	 if (!index.isValid() || _pathlist.size() == 0)
-		 return QVariant();
+    int lin_idx = index.row() * index.column() + index.column();
 
-	 if(role == Qt::WhatsThisRole){
-		 return _pathlist[index.row() * columnCount() + index.column()];
+     if (!index.isValid() || _pathlist.size() <= lin_idx){
+         return QVariant();
+     }
+
+
+     if(role == Qt::DisplayRole){
+         return _pathlist[lin_idx];
 	 }
 
 	 else
@@ -80,11 +84,17 @@ Qt::ItemFlags AlternateCoverItemModel::flags(const QModelIndex &index) const{
 }
 
 bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &value, int role){
-	 if (!index.isValid())
+
+    if (!index.isValid())
 		 return false;
 
+    int lin_idx = index.row() * columnCount() + index.column();
+
+    if(lin_idx >= _pathlist.size())
+        return false;
+
 	 if(role == Qt::EditRole){
-		 _pathlist[index.row() * columnCount() + index.column()] = value.toString();
+         _pathlist[lin_dx] = value.toString();
 		 return true;
 	 }
 

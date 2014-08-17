@@ -74,6 +74,7 @@ public slots:
     void psl_track_time_changed(MetaData&);
 	void psl_bitrate_changed(qint32);
     void psl_reload_library_allowed(bool);
+    void psl_set_status_bar_text(QString, bool show);
 
     void really_close(bool=false);
 

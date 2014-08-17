@@ -62,7 +62,11 @@ public:
 
 
 	public slots:
-        void start(QString, QString, QString dir="");
+        void start(Album album);
+        void start(QString album_name, QString artist_name);
+        void start(Artist artist);
+        void start(QString artist_name);
+
         void changeSkin(bool dark);
         void language_changed();
 
@@ -71,32 +75,25 @@ public:
 		void cancel_button_pressed();
 		void search_button_pressed();
 		void cover_pressed(const QModelIndex& idx);
-		void covers_there(QString classname, int n_covers);
-		void tmp_folder_changed(const QString&);
         void open_file_dialog();
+        void cl_new_cover(QString);
+        void cl_finished();
 
 	private:
 		Ui::AlternateCovers* ui;
 
 		int 				_cur_idx;
-		QString				_tmp_dir;
 		QString				_class_name;
 		QString				_calling_class;
 		Album				_album;
 		Artist				_artist;
-		QStringList			_filelist;
 		bool				_search_for_album;
 
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
-        CoverFetchThread*           _cov_fetch_thread;
-        QFileSystemWatcher*			_watcher;
 
         bool                _no_album;
-        QString             _target_filename;
-        bool                _blocked;
-        QString             _last_path;
-
+        CoverLookupAlternative*        _cl_alternative;
 
         void update_model();
 

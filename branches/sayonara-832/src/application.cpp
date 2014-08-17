@@ -94,7 +94,7 @@ void Application::init(int n_files, QTranslator *translator){
 	playlist_handler    = new PlaylistHandler();
 	playlist_loader     = new PlaylistLoader(this);
 	library             = new CLibraryBase(this->getMainWindow());
-	sc_library          = new SoundcloudLibrary(this->getMainWindow());
+    //sc_library          = new SoundcloudLibrary(this->getMainWindow());
 	library_importer    = new LibraryImporter(this->getMainWindow());
 	playlists           = new Playlists();
 
@@ -228,7 +228,7 @@ void Application::init(int n_files, QTranslator *translator){
 	PlayerPlugin* p = _pph->find_plugin(shown_plugin);
 	player->showPlugin(p);
 
-	sc_library->loadData();
+    //sc_library->loadData();
 
 	_initialized = true;
 

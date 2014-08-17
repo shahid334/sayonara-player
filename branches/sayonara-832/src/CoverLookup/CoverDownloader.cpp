@@ -26,22 +26,11 @@
  */
 
 
-
-/*
- * DON'T TOUCH IT! DON'T COMMENT IT!
- * I WAS YOUNG AND NEEDED THE FUNCTIONALITY
- * */
-
-
-
 #include "HelperStructs/WebAccess.h"
 #include "CoverLookup/CoverDownloader.h"
 
 #include <curl/curl.h>
 
-#include <QString>
-#include <QStringList>
-#include <QImage>
 #include <QUrl>
 #include <QDebug>
 #include <QRegExp>

@@ -21,6 +21,7 @@
 
 #ifndef WEBACCESS_H_
 #define WEBACCESS_H_
+
 #include <QString>
 #include <QImage>
 

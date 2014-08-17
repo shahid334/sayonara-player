@@ -881,3 +881,7 @@ void GUI_Player::sl_notify_new_version(bool b){
 }
 
 
+void GUI_Player::psl_set_status_bar_text(QString str, bool show){
+    this->ui->lab_status->setVisible(show);
+    this->ui->lab_status->setText(str);
+}

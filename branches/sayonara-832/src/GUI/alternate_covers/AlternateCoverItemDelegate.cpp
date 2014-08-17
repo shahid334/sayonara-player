@@ -61,7 +61,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
     painter->save();
     painter->translate(2, 0);
 
-    QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
+    QStringList data_lst =  index.model()->data(index, Qt::DisplayRole).toString().split(',');
 
     bool is_selected = false;
 

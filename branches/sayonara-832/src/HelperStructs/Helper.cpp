@@ -696,37 +696,58 @@ QString Helper::get_album_w_disc(const MetaData& md){
 }
 
 
-QString Helper::get_album_major_artist(int albumid){
+QString Helper::get_major_artist(QStringList artists){
+
+    QMap<QString, int> map;
+    if(artists.size() == 0) return "";
+
+    int n_artists = artists.size();
+
+    foreach(QString artist, artists){
+
+        QString alower = artist.toLower().trimmed();
+
+        // count appearance of artist
+        if( !map.keys().contains(alower) ) {
+            map.insert(alower, 1);
+        }
+        else {
+            map[alower] = map.value(alower) + 1;
+        };
+    }
+
+    // n_appearances have to be at least 2/3 of all apperances
+    foreach(QString artist, map.keys()){
+
+        int n_appearances = map.value(artist);
+        if(n_appearances * 3 > n_artists * 2) return artist;
+
+    }
+
+    return QString("Various");
+}
+
+QString Helper::get_album_major_artist(int album_id){
 
     if(albumid == -1) return "";
 
-	MetaDataList v_md(0);
-    QList<int> idlist;
-    idlist << albumid;
-    CDatabaseConnector::getInstance()->getAllTracksByAlbum(idlist, v_md);
+    QStringList artists;
+    MetaDataList v_md(0);
+    QList<int> ids;
+
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+    ids << album_id;
+    db->getAllTracksByAlbum(ids, v_md);
 
     if(v_md.size() == 0) return "";
     if(v_md.size() == 1) return v_md[0].artist;
 
-    QMap<QString, int> map;
-
-
     foreach(MetaData md, v_md){
-
-        QString alower = md.artist.toLower().trimmed();
-        if(!map.keys().contains(alower)) map.insert(alower, 1);
-        else map[alower] = map.value(alower) + 1;
-
+        artists << md.artist;
     }
 
-    if(map.keys().size() == 0) return "";
-
-    foreach(QString artist, map.keys()){
-        if( (map.value(artist) * 100) >= (((int)v_md.size() * 200) / 3)) return artist;
-    }
-
-    return QString("Various");
-
+    return get_major_artist(artists);
 }
 
 

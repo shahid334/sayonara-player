@@ -121,10 +121,11 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
             this, 					SLOT(psl_lyrics_server_changed(int)));
 
     connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
-    connect(_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)), this, SLOT(alternate_covers_available(QString, QString)));
 
-    connect(_alternate_covers, SIGNAL(sig_no_cover()),
-            this,				SLOT(no_cover_available()));
+    /***
+     *TODO: Add functionality for failure case for alternative covers
+     *****/
+
 
     this->ui->btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
@@ -802,12 +803,11 @@ void GUI_InfoDialog::cover_clicked(){
         case INFO_MODE_SINGLE:
             if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
                 qDebug() << "album name = " << _album_name << ", " << _artist_name;
-                _alternate_covers->start(_artist_name + " " + _album_name, Helper::get_cover_path(_artist_name, _album_name));
+                _alternate_covers->start(_album_name, _artist_name);
             }
 
             else if(_mode == INFO_MODE_ARTISTS){
-
-                _alternate_covers->start(_artist_name, Helper::get_artist_image_path(_artist_name));
+                _alternate_covers->start(_artist_name);
             }
 
             break;

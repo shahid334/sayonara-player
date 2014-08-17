@@ -30,31 +30,18 @@
 void GUI_Player::coverClicked() {
 
    if(m_metadata.radio_mode == RADIO_STATION){
-        QString searchstring = QString("Radio ") + m_metadata.title;
-        QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
 
-        m_alternate_covers->start(searchstring, targetpath);
+        m_alternate_covers->start( m_metadata.album_name, m_metadata.title );
+    }
+
+    else if(m_metadata.album_id >= 0){
+       m_alternate_covers->start(m_metadata.album_id);
     }
 
     else {
 
-        QString searchstring;
-        if(m_metadata.album.size() != 0 || m_metadata.artist != 0){
-            searchstring = m_metadata.album + " " + m_metadata.artist;
-        }
-
-        else {
-            searchstring = m_metadata.title + " " + m_metadata.artist;
-        }
-
-        searchstring = searchstring.trimmed();
-
-        QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-
-        m_alternate_covers->start(searchstring, targetpath);
+        m_alternate_covers->start( m_metadata.album, m_metadata.artist);
     }
-
-
 
     this->setFocus();
 }
