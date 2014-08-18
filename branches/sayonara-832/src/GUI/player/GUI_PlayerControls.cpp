@@ -67,12 +67,14 @@ void GUI_Player::stopClicked(bool b) {
     ui->lab_rating->hide();
     ui->lab_copyright->show();
 
+    ui->songProgress->setValue(0);
+	ui->songProgress->setEnabled(false);
+
+	ui->curTime->setText("00:00");
+	ui->maxTime->setText("00:00");
 
 
 	this->setWindowTitle("Sayonara");
-    ui->songProgress->setValue(0);
-	ui->curTime->setText("00:00");
-	ui->maxTime->setText("00:00");
 
 	set_std_cover( false );
 
@@ -81,9 +83,18 @@ void GUI_Player::stopClicked(bool b) {
         emit sig_rec_button_toggled(false);
     }
 
+
+
     if(b){
+
+		LastTrack lt;
+		lt.filepath = "";
+		lt.id = -1;
+		lt.pos_sec = 0;
+		lt.valid = false;
+		m_settings->setLastTrack(lt);
+
         emit stop();
-	
     }
 }
 
@@ -123,19 +134,19 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 
 void GUI_Player::jump_forward(){
 
-    int percent = this->ui->songProgress->value();
+	int percent = ui->songProgress->value();
     percent += 2;
     setProgressJump(percent);
-    this->ui->songProgress->setValue(percent);
+	ui->songProgress->setValue(percent);
 
 }
 
 void GUI_Player::jump_backward(){
-    int percent = this->ui->songProgress->value();
+	int percent = ui->songProgress->value();
     percent -= 2;
 
     setProgressJump(percent);
-    this->ui->songProgress->setValue(percent);
+	ui->songProgress->setValue(percent);
 }
 
 void GUI_Player::setProgressJump(int percent){

@@ -70,20 +70,13 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     m_translator = translator;
     m_settings = CSettingsStorage::getInstance();
 
-
-
     m_awa_version = new AsyncWebAccess(this);
     m_awa_translators = new AsyncWebAccess(this);
-
-    ui->lab_artist->hide();
-    ui->lab_title->hide();
-    ui->lab_rating->hide();
-    ui->lab_album->hide();
 
     ui->lab_sayonara->setText(tr("Sayonara Player"));
     ui->lab_version->setText(m_settings->getVersion());
     ui->lab_writtenby->setText(tr("Written by") + " Lucio Carreras");
-    ui->lab_copyright->setText(tr("Copyright") + " 2011-2013");
+	ui->lab_copyright->setText(tr("Copyright") + " 2011-2014");
 
     m_metadata_available = false;
 	m_playing = false;
@@ -122,10 +115,10 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     this->showLibrary(show_library);
 
     bool live_search = m_settings->getLibLiveSheach();
-    this->ui->action_livesearch->setChecked(live_search);
+	ui->action_livesearch->setChecked(live_search);
 
     bool notify_new_version = m_settings->getNotifyNewVersion();
-    this->ui->action_notifyNewVersion->setChecked(notify_new_version);
+	ui->action_notifyNewVersion->setChecked(notify_new_version);
 
 
     bool is_fullscreen = m_settings->getPlayerFullscreen();
@@ -147,7 +140,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     QString lib_path = m_settings->getLibraryPath();
     ui_libpath = 0;
     if(lib_path.size() == 0){
-        ui_libpath = new GUI_LibraryPath(this->ui->library_widget);
+		ui_libpath = new GUI_LibraryPath( ui->library_widget );
     }
 
 
@@ -165,7 +158,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     ui_info_dialog = 0;
 
     changeSkin(m_settings->getPlayerStyle() == 1);
-	set_std_cover( false );
+
+	stopClicked(false);
 }
 
 
@@ -179,7 +173,7 @@ void GUI_Player::language_changed(QString language){
 
     m_translator->load(language, Helper::getSharePath() + "translations/");
 
-    this->ui->retranslateUi(this);
+	ui->retranslateUi(this);
 
     ui_notifications->language_changed();
     ui_startup_dialog->language_changed();
@@ -206,8 +200,8 @@ void GUI_Player::language_changed(QString language){
         actions << action;
     }
 
-    this->ui->menuView->insertActions(this->ui->action_Dark, actions);
-    this->ui->menuView->insertSeparator(this->ui->action_Dark);
+	ui->menuView->insertActions(ui->action_Dark, actions);
+	ui->menuView->insertSeparator(ui->action_Dark);
 
     emit sig_language_changed();
 }
@@ -255,6 +249,9 @@ void GUI_Player::initGUI() {
 // new track
 void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
+	QString rating_text;
+	QString length_text;
+
     m_metadata = md;
 
     m_completeLength_ms = md.length_ms;
@@ -288,22 +285,23 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
     m_trayIcon->songChangedMessage(md);
 
-    QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
-    ui->maxTime->setText(lengthString);
+	length_text = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
+	ui->maxTime->setText(length_text);
+	ui->songProgress->setEnabled( md.length_ms > 0 );
+
 
     if(m_playing)
         ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
     else
         ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-    QString tmp;
 
 
-    tmp += QString::number(md.bitrate / 1000) + " kBit/s";
-    tmp += ", " + QString::number( (double) (md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+	rating_text += QString::number(md.bitrate / 1000) + " kBit/s";
+	rating_text += ", " + QString::number( (double) (md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
 
-    ui->lab_rating->setText(tmp);
-    ui->lab_rating->setToolTip(tmp);
+	ui->lab_rating->setText(rating_text);
+	ui->lab_rating->setToolTip(rating_text);
 
     this->setWindowTitle(QString("Sayonara - ") + md.title);
 
@@ -313,6 +311,7 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
     fetch_cover();
 
 	setRadioMode(md.radio_mode);
+
     m_metadata_available = true;
 
     this->repaint();
@@ -614,8 +613,8 @@ void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph){
 	}
 
 
-    this->ui->menuView->insertActions(this->ui->action_Dark, actions);
-    this->ui->menuView->insertSeparator(this->ui->action_Dark);
+	ui->menuView->insertActions(ui->action_Dark, actions);
+	ui->menuView->insertSeparator(ui->action_Dark);
 
 	connect(_pph, SIGNAL(sig_show_plugin(PlayerPlugin*)), this, SLOT(showPlugin(PlayerPlugin*)));
     connect(_pph, SIGNAL(sig_hide_all_plugins()), this, SLOT(hideAllPlugins()));
@@ -628,7 +627,7 @@ void GUI_Player::stopped(){
 }
 
 void GUI_Player::psl_reload_library_allowed(bool b){
-	this->ui->action_reloadLibrary->setEnabled(b);	
+	ui->action_reloadLibrary->setEnabled(b);
 }
 
 
@@ -702,14 +701,14 @@ void GUI_Player::ui_loaded(){
         signal(SIGWINCH, signal_handler);
 	#endif
     if(ui_libpath)
-        ui_libpath->resize(this->ui->library_widget->size());
+		ui_libpath->resize(ui->library_widget->size());
 
     changeSkin(m_settings->getPlayerStyle() == 1);
 
     bool fullscreen = m_settings->getPlayerFullscreen();
-    this->ui->action_Fullscreen->setChecked(fullscreen);
+	ui->action_Fullscreen->setChecked(fullscreen);
 
-    this->ui_playlist->resize(this->ui->playlist_widget->size());
+	ui_playlist->resize(ui->playlist_widget->size());
 }
 
 

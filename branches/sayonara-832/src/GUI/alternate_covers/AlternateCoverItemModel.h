@@ -31,10 +31,15 @@
 
 #include <QObject>
 #include <QList>
+#include <QPair>
 #include <QModelIndex>
 #include <QAbstractTableModel>
 #include <QStringList>
 
+struct RowColumn {
+	int row;
+	int col;
+};
 
 class AlternateCoverItemModel : public QAbstractTableModel {
 
@@ -54,6 +59,10 @@ public:
 
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
+
+
+	RowColumn cvt_2_row_col(int idx) const ;
+	int cvt_2_idx(int row, int col) const ;
 
 
 private:

@@ -50,8 +50,8 @@
 
 GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) : QDialog(parent){
 
-	this->ui = new Ui::AlternateCovers();
-	this->ui->setupUi(this);
+	ui = new Ui::AlternateCovers();
+	ui->setupUi(this);
 
 	_cl_alternative = 0;
 
@@ -67,14 +67,14 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
     _model = new AlternateCoverItemModel(this);
     _delegate = new AlternateCoverItemDelegate(this);
 
-    this->ui->tv_images->setModel(_model);
-    this->ui->tv_images->setItemDelegate(_delegate);
+	ui->tv_images->setModel(_model);
+	ui->tv_images->setItemDelegate(_delegate);
 
-	connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
-	connect(this->ui->btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
-	connect(this->ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
-	connect(this->ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
-    connect(this->ui->btn_file, SIGNAL(clicked()), this, SLOT(open_file_dialog()));
+	connect(ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+	connect(ui->btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
+	connect(ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
+	connect(ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
+	connect(ui->btn_file, SIGNAL(clicked()), this, SLOT(open_file_dialog()));
 }
 
 
@@ -96,83 +96,69 @@ void GUI_Alternate_Covers::changeSkin(bool dark){
 }
 
 void GUI_Alternate_Covers::language_changed(){
-    this->ui->retranslateUi(this);
+	ui->retranslateUi(this);
 }
 
 void GUI_Alternate_Covers::connect_and_start(){
 
+	update_model();
 	delete_all_files();
 
 	connect(_cl_alternative, SIGNAL(sig_cover_found(QString)), this, SLOT(cl_new_cover(QString)));
 	connect(_cl_alternative, SIGNAL(sig_finished(bool)), this, SLOT(cl_finished(bool)));
 
 	_cl_alternative->start();
+
+	this->show();
 }
 
 void GUI_Alternate_Covers::start(int album_id){
 
 	_target_filename = CoverLocation::get_cover_location(album_id);
-    update_model();
-
     _cl_alternative = new CoverLookupAlternative(this, album_id, 10);
 
 	connect_and_start();
-	this->show();
 }
 
 void GUI_Alternate_Covers::start(Album album){
 
 	_target_filename = CoverLocation::get_cover_location(album);
-    update_model();
-
     _cl_alternative = new CoverLookupAlternative(this, album, 10);
 
 	connect_and_start();
-    this->show();
 }
 
 
 void GUI_Alternate_Covers::start(QString album_name, QString artist_name){
 
 	_target_filename = CoverLocation::get_cover_location(album_name, artist_name);
-    update_model();
-
     _cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
 
 	connect_and_start();
-
-    this->show();
 }
 
 void GUI_Alternate_Covers::start(Artist artist){
 
 	_target_filename = CoverLocation::get_cover_location(artist);
-	update_model();
-
     _cl_alternative = new CoverLookupAlternative(this, artist, 10);
 
 	connect_and_start();
-    this->show();
+
 }
 
 
 void GUI_Alternate_Covers::start(QString artist_name){
 
 	_target_filename = CoverLocation::get_cover_location(artist_name);
-    update_model();
-
-    _cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
+	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
 
 	connect_and_start();
-    this->show();
 }
 
 
 void GUI_Alternate_Covers::search_button_pressed(){
 
-	update_model();
-
-	_cl_alternative = new CoverLookupAlternative(this, this->ui->le_search->text(), 10);
+	_cl_alternative = new CoverLookupAlternative(this, ui->le_search->text(), 10);
 	connect_and_start();
 
 }
@@ -182,10 +168,9 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 	if(_cur_idx == -1) return;
 
-	int row = _cur_idx / _model->columnCount();
-	int col = _cur_idx % _model->columnCount();
+	RowColumn rc = _model->cvt_2_row_col(_cur_idx);
 
-	QModelIndex idx = _model->index(row, col);
+	QModelIndex idx = _model->index(rc.row, rc.col);
 
 	if(!idx.isValid()){
 		qDebug() << "index not valid";
@@ -200,23 +185,14 @@ void GUI_Alternate_Covers::save_button_pressed(){
 		return;
 	}
 
-	QFile f(_target_filename.cover_path);
-	f.remove();
-
-	QFile::copy(src_filename, _target_filename.cover_path);
+	QImage img(src_filename);
+	img.save(_target_filename.cover_path);
 
 	emit sig_cover_changed(true);
 }
 
 
 void GUI_Alternate_Covers::cancel_button_pressed(){
-
-	for(int r=0; r<_model->rowCount(); r++){
-		for(int c=0; c<_model->columnCount(); c++){
-            QModelIndex idx = _model->index(r, c);
-			_model->setData(idx, "", Qt::EditRole);
-        }
-    }
 
     hide();
     close();
@@ -233,6 +209,8 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 void GUI_Alternate_Covers::cl_new_cover(QString str){
 
     int idx = 0;
+	QModelIndex model_idx;
+
 
 	_filelist << str;
 
@@ -244,9 +222,9 @@ void GUI_Alternate_Covers::cl_new_cover(QString str){
 		idx = filename.left(1).toInt();
     }
 
-	int row = idx / _model->columnCount();
-	int col = idx % _model->columnCount();
-    QModelIndex model_idx = _model->index(row, col);
+	RowColumn rc = _model->cvt_2_row_col(idx);
+
+	model_idx = _model->index(rc.row, rc.col);
 
 	_model->setData(model_idx, str);
 
@@ -254,7 +232,7 @@ void GUI_Alternate_Covers::cl_new_cover(QString str){
 
 
 void GUI_Alternate_Covers::cl_finished(bool b){
-    this->ui->btn_search->setText(tr("Search"));
+	ui->btn_search->setText(tr("Search"));
 }
 
 
@@ -268,10 +246,14 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
 void GUI_Alternate_Covers::update_model(){
     _model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, _model->rowCount());
+
 	for(int y=0; y<_model->rowCount(); y++){
 		for(int x=0; x<_model->columnCount(); x++){
+
             QModelIndex idx = _model->index(y,x);
-			_model->setData(idx, "", Qt::EditRole);
+			QString sayonara_logo = Helper::getIconPath() + "logo.png";
+			_model->setData(idx, sayonara_logo, Qt::EditRole);
+
         }
     }
 }
@@ -281,38 +263,36 @@ void GUI_Alternate_Covers::update_model(){
 
 void GUI_Alternate_Covers::open_file_dialog(){
 
-    QDir dir(Helper::getSayonaraPath() + "tmp");
-    QStringList entrylist;
+	QDir dir( CSettingsStorage::getInstance()->getLibraryPath() );
+
     QStringList filters;
         filters << "*.jpg";
         filters << "*.png";
         filters << "*.gif";
 
-    dir.setFilter(QDir::Files);
-    dir.setNameFilters(filters);
+	dir.setFilter(QDir::Files);
+	dir.setNameFilters(filters);
 
-    entrylist = dir.entryList();
 
-    foreach (QString f, entrylist)
-        QFile::remove(dir.absoluteFilePath(f));
-
+	foreach (QString f, dir.entryList()){
+		QFile::remove(dir.absoluteFilePath(f));
+	}
 
     QStringList lst = QFileDialog::getOpenFileNames(this,
                                   tr("Open image files"),
                                   _last_path,
                                   filters.join(" "));
 
+	if(lst.size() == 0) return;
+
     update_model();
 
-
+	int idx = 0;
     foreach(QString path, lst){
 
-        int idx = 0;
+		RowColumn rc = _model->cvt_2_row_col( idx );
 
-        int row = idx / _model->columnCount();
-        int col = idx % _model->columnCount();
-
-        QModelIndex model_idx = _model->index(row, col);
+		QModelIndex model_idx = _model->index(rc.row, rc.col);
 
 		_model->setData(model_idx, path);
 
@@ -330,12 +310,10 @@ void GUI_Alternate_Covers::delete_all_files(){
 	}
 
 	_filelist.clear();
-
 }
 
 
 void GUI_Alternate_Covers::closeEvent(QCloseEvent *e){
-
 
 	delete_all_files();
 	QDialog::closeEvent(e);

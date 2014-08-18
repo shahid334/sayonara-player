@@ -43,11 +43,10 @@
 #include <QFileSystemWatcher>
 
 
-using namespace std;
-
-
 
 class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
+
+
 
 	Q_OBJECT
 public:
@@ -81,6 +80,8 @@ public:
 		void cl_finished(bool);
 
 	private:
+
+
 		Ui::AlternateCovers* ui;
 
 		int 				_cur_idx;

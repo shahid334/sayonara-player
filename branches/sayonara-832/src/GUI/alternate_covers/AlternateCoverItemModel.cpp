@@ -42,8 +42,17 @@ AlternateCoverItemModel::~AlternateCoverItemModel() {
 
 }
 
+RowColumn AlternateCoverItemModel::cvt_2_row_col(int idx) const {
 
+	RowColumn p;
+	p.row = idx / columnCount();
+	p.col = idx % columnCount();
+	return p;
+}
 
+int AlternateCoverItemModel::cvt_2_idx(int row, int col) const {
+	return row * columnCount() + col;
+}
 
 
 int AlternateCoverItemModel::rowCount(const QModelIndex &parent) const
@@ -59,8 +68,7 @@ int AlternateCoverItemModel::columnCount(const QModelIndex &parent) const
 QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 {
 
-	int lin_idx = index.row() * columnCount() + index.column();
-
+	int lin_idx = this->cvt_2_idx(index.row(), index.column());
 
      if (!index.isValid() || _pathlist.size() <= lin_idx){
          return QVariant();
@@ -89,7 +97,7 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
     if (!index.isValid())
 		 return false;
 
-    int lin_idx = index.row() * columnCount() + index.column();
+	int lin_idx = cvt_2_idx(index.row(), index.column());
 
     if(lin_idx >= _pathlist.size())
         return false;
@@ -111,9 +119,9 @@ bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelInd
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	_pathlist.clear();
-	int z=0;
+
 	for(int i=0; i<rows; i++){
-		for(int j=0; j<columnCount(); j++, z++){
+		for(int j=0; j<columnCount(); j++){
 			_pathlist << "";
 		}
 	}
