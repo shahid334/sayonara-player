@@ -48,7 +48,7 @@ CoverFetchThread::CoverFetchThread(QObject* parent, const CoverLocation& cl, con
 
 
 CoverFetchThread::~CoverFetchThread() {
-
+    qDebug() << "Delete cft";
 }
 
 

@@ -56,6 +56,8 @@ SET(HEADERS
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
     CoverLookup/CoverLookup.h
+    CoverLookup/CoverLookupAlternative.h
+    CoverLookup/CoverLookupAll.h
     CoverLookup/CoverFetchThread.h
     DatabaseAccess/CDatabaseConnector.h
     PlayerPlugin/PlayerPlugin.h
@@ -104,6 +106,8 @@ SET(SOURCES
     HelperStructs/CSettingsStorage.cpp
     CoverLookup/CoverDownloader.cpp
     CoverLookup/CoverLookup.cpp
+    CoverLookup/CoverLookupAlternative.cpp
+    CoverLookup/CoverLookupAll.cpp
     CoverLookup/CoverFetchThread.cpp
     CoverLookup/CoverLocation.cpp
     LyricLookup/LyricLookup.cpp

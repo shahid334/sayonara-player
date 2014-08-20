@@ -114,14 +114,19 @@ void GUI_Alternate_Covers::connect_and_start(){
 
 void GUI_Alternate_Covers::start(int album_id){
 
-	_target_filename = CoverLocation::get_cover_location(album_id);
-    _cl_alternative = new CoverLookupAlternative(this, album_id, 10);
+    if(album_id < 0) return;
 
-	connect_and_start();
+    Album album;
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
+    if( !db->getAlbumByID(album_id, album) ) return;
+
+    this->start(album);
 }
 
 void GUI_Alternate_Covers::start(Album album){
 
+    ui->le_search->setText(album.name + " " + Helper::get_major_artist(album.artists));
 	_target_filename = CoverLocation::get_cover_location(album);
     _cl_alternative = new CoverLookupAlternative(this, album, 10);
 
@@ -131,6 +136,7 @@ void GUI_Alternate_Covers::start(Album album){
 
 void GUI_Alternate_Covers::start(QString album_name, QString artist_name){
 
+    ui->le_search->setText(album_name + " " + artist_name);
 	_target_filename = CoverLocation::get_cover_location(album_name, artist_name);
     _cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
 
@@ -139,6 +145,7 @@ void GUI_Alternate_Covers::start(QString album_name, QString artist_name){
 
 void GUI_Alternate_Covers::start(Artist artist){
 
+    ui->le_search->setText(artist.name);
 	_target_filename = CoverLocation::get_cover_location(artist);
     _cl_alternative = new CoverLookupAlternative(this, artist, 10);
 
@@ -149,6 +156,7 @@ void GUI_Alternate_Covers::start(Artist artist){
 
 void GUI_Alternate_Covers::start(QString artist_name){
 
+    ui->le_search->setText(artist_name);
 	_target_filename = CoverLocation::get_cover_location(artist_name);
 	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
 

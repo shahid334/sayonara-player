@@ -116,6 +116,7 @@ namespace Helper{
 	QString get_newest_version();
     QString get_album_major_artist(int album_id);
     QString get_major_artist(QStringList artists);
+    QString get_major_artist(ArtistList artists);
     Album get_album_from_metadata(const MetaData& md);
 
 

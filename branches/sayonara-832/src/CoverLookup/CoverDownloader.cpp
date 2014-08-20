@@ -67,6 +67,7 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
     return adresses;
 }
 
+
 QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses){
 
     QString content;

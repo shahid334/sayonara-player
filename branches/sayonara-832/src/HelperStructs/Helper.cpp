@@ -662,6 +662,16 @@ QString Helper::get_album_w_disc(const MetaData& md){
 
 }
 
+QString Helper::get_major_artist(ArtistList artists){
+
+    QStringList lst;
+
+    foreach(Artist artist, artists){
+        lst << artist.name;
+    }
+
+    return get_major_artist(lst);
+}
 
 QString Helper::get_major_artist(QStringList artists){
 

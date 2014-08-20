@@ -32,7 +32,7 @@
 #include "GUI/ui_GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
-#include "CoverLookup/CoverLookup.h"
+#include "CoverLookup/CoverLookupAlternative.h"
 #include "HelperStructs/MetaData.h"
 
 #include <QDialog>
@@ -40,13 +40,9 @@
 #include <QPixmap>
 #include <QList>
 #include <QModelIndex>
-#include <QFileSystemWatcher>
-
 
 
 class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
-
-
 
 	Q_OBJECT
 public:
