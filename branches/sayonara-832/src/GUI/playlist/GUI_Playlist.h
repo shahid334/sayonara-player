@@ -65,7 +65,7 @@
 
 
 			void save_playlist(const QString&);
-			void playlist_mode_changed(const Playlist_Mode&);
+			void playlist_mode_changed(const PlaylistMode&);
 
             void sig_rows_moved(const QList<int>&, int);
             void sig_tracks_dropped(const MetaDataList&, int);
@@ -115,7 +115,7 @@
 			QWidget*						_parent;
 			GUI_InfoDialog*					_info_dialog;
 
-			Playlist_Mode					_playlist_mode;
+			PlaylistMode					_playlist_mode;
 
             PlaylistType _playlist_type;
             qint64      _total_msecs;

@@ -273,12 +273,12 @@ bool CSettingsStorage::getStartPlaying(){ return m_startPlaying; }
 void CSettingsStorage::setStartPlaying(bool b){ m_startPlaying = b;     _sth_changed = true;}
 
 
-void CSettingsStorage::setPlaylistMode(const Playlist_Mode& plmode){
+void CSettingsStorage::setPlaylistMode(const PlaylistMode& plmode){
 	m_playlistmode = plmode;
     _sth_changed = true;
 }
 
-Playlist_Mode CSettingsStorage::getPlaylistMode(){
+PlaylistMode CSettingsStorage::getPlaylistMode(){
 	return m_playlistmode;
 }
 

@@ -106,7 +106,7 @@ public:
         void psl_next();
 
         void psl_selection_changed(const QList<int>&);
-        void psl_playlist_mode_changed(const Playlist_Mode&);
+        void psl_playlist_mode_changed(const PlaylistMode&);
 
         void psl_clear_playlist();
         void psl_insert_tracks(const MetaDataList&, int idx);

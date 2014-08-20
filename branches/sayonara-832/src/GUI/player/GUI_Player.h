@@ -104,32 +104,32 @@ public slots:
 signals:
 
     /* Player*/
-    void play();
-    void pause();
-    void stop();
-    void backward();
-    void forward();
-    void mute();
+    void sig_play();
+    void sig_pause();
+    void sig_stop();
+    void sig_backward();
+    void sig_forward();
+    void sig_mute();
     void sig_rec_button_toggled(bool);
     void sig_volume_changed (int);
 	void sig_seek_rel(quint32 pos_percent);
     void sig_correct_id3(const MetaData&);
 
     /* File */
-    void fileSelected (QStringList & filelist);
-    void baseDirSelected (const QString & baseDir);
+    void sig_file_selected (QStringList & filelist);
+    void sig_basedir_selected (const QString & baseDir);
     void sig_import_dir(const QString&);
     void sig_import_files(const QStringList&);
-    void reloadLibrary(bool clear);
-    void clearLibrary();
+    void sig_reload_library(bool clear);
+    void sig_clear_library();
 
     /* Preferences / View */
-    void show_playlists();
-    void show_small_playlist_items(bool);
+    void sig_show_playlists();
+    void sig_show_small_playlist_items(bool);
     void sig_show_socket();
     void sig_show_stream_rec();
-    void libpath_changed(QString);
-    void setupLastFM();
+    void sig_libpath_changed(QString);
+    void sig_setup_LastFM();
     void sig_skin_changed(bool);
     void sig_show_only_tracks(bool);
     void sig_language_changed();

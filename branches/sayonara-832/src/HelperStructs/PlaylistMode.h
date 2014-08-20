@@ -30,7 +30,7 @@
 
 using namespace std;
 
-struct Playlist_Mode{
+struct PlaylistMode {
 
 	bool				rep1;
 	bool				repAll;
@@ -38,14 +38,15 @@ struct Playlist_Mode{
 	bool				append;
 	bool				shuffle;
 	bool				dynamic;
+	bool				gapless;
 
-	Playlist_Mode(){
+	PlaylistMode(){
 		rep1 = false;
 		repAll = false;
 		repNone = true;
 		append = false;
 		shuffle = false;
-
+		gapless = false;
 	}
 
 	void print(){
@@ -54,7 +55,8 @@ struct Playlist_Mode{
 			<< "repNone = " << repNone << ", "
 			<< "append = " << append <<", "
 			<< "dynamic = " << dynamic << ","
-			<< endl;
+			<< "gapless = " << gapless << endl;
+			
 	}
 
 	QString toString(){
@@ -64,13 +66,16 @@ struct Playlist_Mode{
 		str += (rep1 ? "1" : "0")  + QString(",");
 		str += (repNone ? "1" : "0")  + QString(",");
 		str += (shuffle ? "1" : "0")  + QString(",");
-		str += (dynamic ? "1" : "0");
+		str += (dynamic ? "1" : "0") + QString(",");
+		str += (gapless ? "1" : "0");
 
 		return str;
 	}
 
 	void fromString(QString str){
+
 		QStringList list = str.split(',');
+
 		if(list.size() != 6) return;
 
 		append = list[0].toInt() == 1;
@@ -79,7 +84,17 @@ struct Playlist_Mode{
 		repNone = list[3].toInt() == 1;
 		shuffle = list[4].toInt() == 1;
 		dynamic = list[5].toInt() == 1;
+		gapless = list[6].toInt() == 1;
+	}
 
+	bool operator==(const PlaylistMode& pm){
+		if(pm.append != append) return false;
+		if(pm.repAll != repAll) return false;
+		if(pm.shuffle != shuffle) return false;
+		if(pm.dynamic != dynamic) return false;
+		if(pm.gapless != gapless) return false;
+
+		return true;
 	}
 
 };

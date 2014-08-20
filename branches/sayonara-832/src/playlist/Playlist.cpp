@@ -266,7 +266,7 @@ PlaylistType Playlist::get_type(){
     return _playlist_type;
 }
 
-void Playlist::set_playlist_mode(Playlist_Mode mode){
+void Playlist::set_playlist_mode(PlaylistMode mode){
     _playlist_mode = mode;
 }
 

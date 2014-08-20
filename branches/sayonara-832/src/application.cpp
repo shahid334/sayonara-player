@@ -336,7 +336,7 @@ void Application::init_connections(){
 	CONNECT (ui_playlist, sig_cur_idx_changed(int),                      playlist_handler, 	psl_change_track(int));
 	CONNECT (ui_playlist, sig_selection_changed(const QList<int>&),      playlist_handler, 	psl_selection_changed(const QList<int>&));
 	CONNECT (ui_playlist, sig_cleared(),                                 playlist_handler, 	psl_clear_playlist());
-	CONNECT (ui_playlist, playlist_mode_changed(const Playlist_Mode&),   playlist_handler, 	psl_playlist_mode_changed(const Playlist_Mode&));
+	CONNECT (ui_playlist, playlist_mode_changed(const PlaylistMode&),   playlist_handler, 	psl_playlist_mode_changed(const Playlist_Mode&));
 	CONNECT (ui_playlist, sig_tracks_dropped(const MetaDataList&, int),  playlist_handler, 	psl_insert_tracks(const MetaDataList&, int));
 	CONNECT (ui_playlist, sig_rows_removed(const QList<int>&, bool),     playlist_handler, 	psl_remove_rows(const QList<int>&, bool));
 	CONNECT (ui_playlist, sig_rows_moved(const QList<int>&, int),        playlist_handler, 	psl_move_rows(const QList<int>&, int));

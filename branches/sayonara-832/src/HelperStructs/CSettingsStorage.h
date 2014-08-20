@@ -213,7 +213,7 @@ private:
     LastTrack m_lastTrack;
     bool m_rememerTime;
     bool m_startPlaying;
-    Playlist_Mode m_playlistmode;
+    PlaylistMode m_playlistmode;
 
     /* style */
     int	m_style;
@@ -330,8 +330,8 @@ public:
     bool getStartPlaying();
     void setStartPlaying(bool);
 
-	void setPlaylistMode(const Playlist_Mode& plmode);
-	Playlist_Mode getPlaylistMode();
+	void setPlaylistMode(const PlaylistMode& plmode);
+	PlaylistMode getPlaylistMode();
 
 	void setPlayerStyle(int);
 	int getPlayerStyle();

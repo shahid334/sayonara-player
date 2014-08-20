@@ -48,7 +48,7 @@ protected:
     bool            _playlist_changed;
     int             _cur_play_idx;
     MetaDataList    _v_md;
-    Playlist_Mode	_playlist_mode;
+    PlaylistMode	_playlist_mode;
     PlaylistType    _playlist_type;
     bool            _reports_disabled;
     bool            _start_playing;
@@ -101,7 +101,7 @@ public:
     int get_cur_track();
     QStringList toStringList();
 
-    void set_playlist_mode(Playlist_Mode mode);
+    void set_playlist_mode(PlaylistMode mode);
 };
 
 

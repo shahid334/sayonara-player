@@ -27,19 +27,19 @@
 void GUI_Player::playClicked(bool) {
 
     if(!m_metadata_available) {
-        emit play();
+        emit sig_play();
         return;
     }
 
     if (m_playing) {
 		ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-		emit pause();
+		emit sig_pause();
 	}
 
     else {
 
 		ui->btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-		emit play();
+		emit sig_play();
 	}
 
 	m_playing = !m_playing;
@@ -94,7 +94,7 @@ void GUI_Player::stopClicked(bool b) {
 		lt.valid = false;
 		m_settings->setLastTrack(lt);
 
-        emit stop();
+        emit sig_stop();
     }
 }
 
@@ -107,13 +107,13 @@ void GUI_Player::backwardClicked(bool) {
     }
 
     else{
-        emit backward();
+        emit sig_backward();
     }
 }
 
 void GUI_Player::forwardClicked(bool) {
     //ui->albumCover->setFocus();
-	emit forward();
+	emit sig_forward();
 }
 
 

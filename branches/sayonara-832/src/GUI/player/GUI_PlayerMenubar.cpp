@@ -55,7 +55,7 @@ void GUI_Player::fileSelectedClicked(bool) {
 					filetypes_str);
 
 	if (list.size() > 0)
-		emit fileSelected(list);
+		emit sig_file_selected(list);
 }
 
 void GUI_Player::folderSelectedClicked(bool) {
@@ -63,7 +63,7 @@ void GUI_Player::folderSelectedClicked(bool) {
 			getenv("$HOME"),
 			QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 	if (dir != "")
-		emit baseDirSelected(dir);
+		emit sig_basedir_selected(dir);
 }
 
 
@@ -120,12 +120,12 @@ void GUI_Player::importFilesClicked( bool b ){
 
 void GUI_Player::reloadLibraryClicked(bool b) {
 	Q_UNUSED(b);
-    emit reloadLibrary(false);
+    emit sig_reload_library(false);
 }
 
 void GUI_Player::clearLibraryClicked(bool b){
 	Q_UNUSED(b);
-	emit clearLibrary();
+	emit sig_clear_library();
 }
 
 
@@ -219,7 +219,7 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 			old_dir, QFileDialog::ShowDirsOnly);
     if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
-		emit libpath_changed(dir);
+		emit sig_libpath_changed(dir);
         m_settings->setLibraryPath(dir);
         if(this->ui_libpath && ui_libpath->isVisible()){
             ui_libpath->hide();
@@ -241,7 +241,7 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 
 		int answer = dialog.exec();
 		if(answer == QMessageBox::Yes)
-            emit reloadLibrary(true);
+            emit sig_reload_library(true);
 
 		dialog.close();
 	}
@@ -293,7 +293,7 @@ void GUI_Player::only_one_instance_toggled(bool b){
 // prvt slot
 void GUI_Player::small_playlist_items_toggled(bool b){
     m_settings->setShowSmallPlaylist(b);
-	emit show_small_playlist_items(b);
+	emit sig_show_small_playlist_items(b);
 }
 
 // private slot
@@ -309,7 +309,7 @@ void GUI_Player::sl_action_streamripper_toggled(bool b){
 void GUI_Player::lastFMClicked(bool b) {
 
 	Q_UNUSED(b);
-	emit setupLastFM();
+	emit sig_setup_LastFM();
 
 }
 
