@@ -28,14 +28,12 @@
 
 #include "LyricLookup/LyricLookup.h"
 #include "HelperStructs/Helper.h"
-#include <QString>
-#include <QDebug>
+
 #include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <QRegExp>
-#include <QStringList>
 #include <QThread>
 
 using namespace std;
@@ -45,11 +43,11 @@ size_t last_appearance = -1;
 QStringList lst;
 static QString webpage;
 
-size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata){
+size_t get_content_ll( void *ptr, size_t size, size_t nmemb, FILE *userdata) {
 
 	(void) userdata;
 	char* cptr = (char*) ptr;
-	for(uint i=0; i<size * nmemb; i++){
+	for(uint i=0; i<size * nmemb; i++) {
 
 		webpage.append(cptr[i]);
 	}
@@ -71,7 +69,7 @@ LyricLookupThread::LyricLookupThread() {
 LyricLookupThread::~LyricLookupThread() {
 }
 
-QString get_artist_wo_the(QString artist){
+QString get_artist_wo_the(QString artist) {
 	QString tmp_artist = artist.toLower();
 	tmp_artist.replace("the ", "");
 	return artist.right(tmp_artist.size());
@@ -79,7 +77,7 @@ QString get_artist_wo_the(QString artist){
 
 }
 
-QString LyricLookupThread::calc_url(QString artist, QString song, bool without_the){
+QString LyricLookupThread::calc_url(QString artist, QString song, bool without_the) {
 
 	QString tmp_artist;
 
@@ -90,9 +88,9 @@ QString LyricLookupThread::calc_url(QString artist, QString song, bool without_t
 	QString tmp_song = song;
 
 	// apply replacements
-	for(int i=0; i<3; i++){
+	for(int i=0; i<3; i++) {
 		QMap<QString, QString> replacements = _server_list[_cur_server].replacements;
-		for(QMap<QString, QString>::iterator it = replacements.begin(); it != replacements.end(); it++){
+		for(QMap<QString, QString>::iterator it = replacements.begin(); it != replacements.end(); it++) {
 			tmp_artist.replace(it.key(), it.value());
 			tmp_song.replace(it.key(), it.value());
 		}
@@ -110,19 +108,19 @@ QString LyricLookupThread::calc_url(QString artist, QString song, bool without_t
 	else return url;
 }
 
-bool LyricLookupThread::parse_webpage(QString& dst){
+bool LyricLookupThread::parse_webpage(QString& dst) {
 
 	dst = webpage;
 
 	ServerTemplate t = _server_list[_cur_server];
 
 	int start_idx = dst.indexOf(t.start_tag, 0);
-	if(start_idx == -1){
+	if(start_idx == -1) {
 		return false;
 	}
 
 	int end_idx = dst.indexOf(t.end_tag, start_idx);
-	if(end_idx == -1){
+	if(end_idx == -1) {
 		return false;
 	}
 
@@ -134,12 +132,12 @@ bool LyricLookupThread::parse_webpage(QString& dst){
 
 	dst = dst.left(num_chars);
 
-	if(dst.contains(t.error, Qt::CaseInsensitive)){
+	if(dst.contains(t.error, Qt::CaseInsensitive)) {
 		return false;
 	}
 
 	QString word;
-	if(t.is_numeric){
+	if(t.is_numeric) {
 		QRegExp rx("&#(\\d+);|<br />|</span>|</p>");
 
 		QStringList tmplist;;
@@ -148,7 +146,7 @@ bool LyricLookupThread::parse_webpage(QString& dst){
 		    QString str = rx.cap(1);
 
 		    pos += rx.matchedLength();
-		    if(str.size() == 0){
+		    if(str.size() == 0) {
 		    	tmplist.push_back(word);
 		    	word = "";
 		    	tmplist.push_back("<br />");
@@ -161,7 +159,7 @@ bool LyricLookupThread::parse_webpage(QString& dst){
 
 		dst = "";
 
-		foreach(QString str, tmplist){
+		foreach(QString str, tmplist) {
 			dst.append(str);
 		}
 	}
@@ -171,7 +169,7 @@ bool LyricLookupThread::parse_webpage(QString& dst){
 	return true;
 }
 
-void LyricLookupThread::run(){
+void LyricLookupThread::run() {
 
 	if(_artist.size() == 0 && _title.size() == 0) {
 		_final_wp = "No track selected";
@@ -181,7 +179,7 @@ void LyricLookupThread::run(){
 	int max_tries = 1;
 	if(_artist.toLower().contains("the ")) max_tries = 2;
 	int tries = 0;
-	while(tries < max_tries){
+	while(tries < max_tries) {
 
 		QString url = this->calc_url(_artist, _title, (bool) tries);
 
@@ -189,7 +187,7 @@ void LyricLookupThread::run(){
 		CURL *curl;
 		curl = curl_easy_init();
 
-		if(curl){
+		if(curl) {
 			curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
 			curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, get_content_ll);
 			curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
@@ -200,7 +198,7 @@ void LyricLookupThread::run(){
 
 		_final_wp.clear();
 
-		if ( !parse_webpage(_final_wp) ){
+		if ( !parse_webpage(_final_wp) ) {
             _final_wp = tr("Sorry, no lyrics found<br />") + url;
 			tries++;
 		}
@@ -216,14 +214,14 @@ void LyricLookupThread::run(){
 }
 
 
-void LyricLookupThread::prepare_thread(QString artist, QString song, int srv){
+void LyricLookupThread::prepare_thread(QString artist, QString song, int srv) {
 
 		_artist = artist;
 		_title = song;
 		_cur_server = srv;
 }
 
-void LyricLookupThread::init_server_list(){
+void LyricLookupThread::init_server_list() {
 
 	ServerTemplate wikia;
 	wikia.display_str = "Wikia.com";
@@ -337,16 +335,16 @@ void LyricLookupThread::init_server_list(){
 
 }
 
-QStringList LyricLookupThread::getServers(){
+QStringList LyricLookupThread::getServers() {
 	QStringList lst;
-	foreach(ServerTemplate t, _server_list){
+	foreach(ServerTemplate t, _server_list) {
 		lst.push_back(t.display_str);
 	}
 
 	return lst;
 }
 
-QString LyricLookupThread::getFinalLyrics(){
+QString LyricLookupThread::getFinalLyrics() {
 	return _final_wp;
 }
 

@@ -30,12 +30,9 @@
 #define COVERFETCHTHREAD_H_
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
 #include "CoverLookup/CoverLocation.h"
 
 #include <QThread>
-#include <QString>
-#include <QStringList>
 #include <QMap>
 #include <QImage>
 

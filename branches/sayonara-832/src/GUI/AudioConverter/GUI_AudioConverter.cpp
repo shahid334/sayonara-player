@@ -46,7 +46,7 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 
 	int idx = -1;
 
-	switch(br){
+	switch(br) {
 		case LameBitrate_64:
 		case LameBitrate_128:
 		case LameBitrate_192:
@@ -68,7 +68,7 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 }
 
 
-void GUI_AudioConverter::fill_cbr(){
+void GUI_AudioConverter::fill_cbr() {
 
 	disconnect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 	ui->cb_quality->clear();
@@ -83,7 +83,7 @@ void GUI_AudioConverter::fill_cbr(){
 	ui->cb_quality->setCurrentIndex(2);
 }
 
-void GUI_AudioConverter::fill_vbr(){
+void GUI_AudioConverter::fill_vbr() {
 	disconnect(ui->cb_quality, SIGNAL(currentIndexChanged(int)), this, SLOT(quality_changed(int)));
 	ui->cb_quality->clear();
 
@@ -102,21 +102,21 @@ void GUI_AudioConverter::fill_vbr(){
 	ui->cb_quality->setCurrentIndex(2);
 }
 
-void GUI_AudioConverter::rb_cbr_toggled(bool b){
+void GUI_AudioConverter::rb_cbr_toggled(bool b) {
 	if(!b) return;
 	fill_cbr();
 }
 
-void GUI_AudioConverter::rb_vbr_toggled(bool b){
+void GUI_AudioConverter::rb_vbr_toggled(bool b) {
 	if(!b) return;
 	fill_vbr();
 }
 
-void GUI_AudioConverter::cb_active_toggled(bool b){
+void GUI_AudioConverter::cb_active_toggled(bool b) {
 
 	if(b) {
 		QString dir = QFileDialog::getExistingDirectory(this, "Choose target directory", _settings->getConvertTgtPath());
-		if(dir.size() > 0){
+		if(dir.size() > 0) {
 			_settings->setConvertTgtPath(dir);
 			emit sig_active();
 		}
@@ -132,7 +132,7 @@ void GUI_AudioConverter::cb_active_toggled(bool b){
 	else emit sig_inactive();
 }
 
-void GUI_AudioConverter::quality_changed(int index){
+void GUI_AudioConverter::quality_changed(int index) {
 	LameBitrate q = (LameBitrate) ui->cb_quality->itemData(index).toInt();
 	qDebug() << "Quality: " << q;
 	_settings->setConvertQuality(q);

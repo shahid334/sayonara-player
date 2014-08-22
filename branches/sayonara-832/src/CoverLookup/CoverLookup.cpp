@@ -29,20 +29,16 @@
 #include "CoverLookup/CoverLookup.h"
 #include "CoverLookup/CoverFetchThread.h"
 
-
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
-
 
 #include <QFile>
-#include <QDebug>
 #include <QImage>
 
 #include <unistd.h>
 
 
 CoverLookupInterface::CoverLookupInterface(QObject* parent):
-	QObject(parent){
+	QObject(parent) {
 
 }
 
@@ -57,7 +53,7 @@ CoverLookup::CoverLookup(QObject* parent, int n_covers) :
 
 CoverLookup::~CoverLookup() {
 
-    if(_cft){
+    if(_cft) {
         _cft->stop();
     }
 
@@ -69,9 +65,9 @@ CoverLookup::~CoverLookup() {
 }
 
 
-void CoverLookup::start_new_thread(const CoverLocation& cl ){
+void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 
-	if(_cft){
+	if(_cft) {
 		_cft->stop();
 		delete _cft;
 		_cft = 0;
@@ -86,14 +82,14 @@ void CoverLookup::start_new_thread(const CoverLocation& cl ){
     _cft->start();
 }
 
-void CoverLookup::stop(){
+void CoverLookup::stop() {
 
     if(!_cft) return;
 
     _cft->stop();
 }
 
-bool CoverLookup::fetch_cover(const CoverLocation& cl){
+bool CoverLookup::fetch_cover(const CoverLocation& cl) {
 
 	if( QFile::exists(cl.cover_path) && _n_covers == 1 ) {
 		emit sig_cover_found(cl.cover_path);
@@ -106,35 +102,35 @@ bool CoverLookup::fetch_cover(const CoverLocation& cl){
 }
 
 
-bool CoverLookup::fetch_album_cover_standard(const QString& artist_name, const QString& album_name){
+bool CoverLookup::fetch_album_cover_standard(const QString& artist_name, const QString& album_name) {
 
 	CoverLocation cl = CoverLocation::get_cover_location(album_name, artist_name);
 	return fetch_cover(cl);
 }
 
 
-bool CoverLookup::fetch_album_cover_sampler(const QStringList& artists, const QString& album_name){
+bool CoverLookup::fetch_album_cover_sampler(const QStringList& artists, const QString& album_name) {
 
 	CoverLocation cl = CoverLocation::get_cover_location(album_name, artists);
 	return fetch_cover(cl);
 }
 
 
-bool CoverLookup::fetch_album_cover_by_id(const int album_id){
+bool CoverLookup::fetch_album_cover_by_id(const int album_id) {
 
 	CoverLocation cl = CoverLocation::get_cover_location(album_id);
 	return fetch_cover(cl);
 }
 
 
-bool CoverLookup::fetch_album_cover(const Album& album){
+bool CoverLookup::fetch_album_cover(const Album& album) {
 
 	CoverLocation cl = CoverLocation::get_cover_location(album);
 	return fetch_cover(cl);
 }
 
 
-bool CoverLookup::fetch_artist_cover_standard(const QString& artist){
+bool CoverLookup::fetch_artist_cover_standard(const QString& artist) {
 
 	CoverLocation cl = CoverLocation::get_cover_location(artist);
 	return fetch_cover(cl);
@@ -142,13 +138,13 @@ bool CoverLookup::fetch_artist_cover_standard(const QString& artist){
 
 
 
-bool CoverLookup::fetch_artist_cover(const Artist& artist){
+bool CoverLookup::fetch_artist_cover(const Artist& artist) {
 
     return fetch_artist_cover_standard(artist.name);
 }
 
 
-bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const QString& target_name){
+bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const QString& target_name) {
 
 	CoverLocation cl;
 	cl.cover_path = target_name;
@@ -159,21 +155,21 @@ bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const
 }
 
 
-void CoverLookup::finished(bool success){
+void CoverLookup::finished(bool success) {
 
-	if(_cft){
+	if(_cft) {
 		delete _cft; _cft = 0;
 	}
 
     emit sig_finished(success);
 }
 
-void CoverLookup::cover_found(QString file_path){
+void CoverLookup::cover_found(QString file_path) {
 
     emit sig_cover_found(file_path);
 }
 
-void CoverLookup::emit_standard_cover(){
+void CoverLookup::emit_standard_cover() {
 	QString sayonara_logo = Helper::getIconPath() + "logo.png";
 	emit sig_cover_found(sayonara_logo);
 }

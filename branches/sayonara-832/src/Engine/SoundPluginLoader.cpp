@@ -38,18 +38,18 @@ using namespace std;
 
 //Q_IMPORT_PLUGIN(sayonara_gstreamer)
 
-SoundPluginLoader::SoundPluginLoader(QString app_dir){
+SoundPluginLoader::SoundPluginLoader(QString app_dir) {
 	bool success = load_plugins(app_dir);
-	if(!success){
+	if(!success) {
 		qDebug() << "No sound engine available";
 	}
 }
 
-SoundPluginLoader::~SoundPluginLoader(){
+SoundPluginLoader::~SoundPluginLoader() {
 
 }
 
-bool SoundPluginLoader::load_plugins(QString app_dir){
+bool SoundPluginLoader::load_plugins(QString app_dir) {
 
 	QString target_engine = CSettingsStorage::getInstance()->getSoundEngine().toLower();
 
@@ -57,11 +57,11 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 	QStringList entry_list = plugin_dir.entryList(QDir::Files);
 
 
-	foreach(QObject* plugin, QPluginLoader::staticInstances() ){
+	foreach(QObject* plugin, QPluginLoader::staticInstances() ) {
 
-		if(plugin){
+		if(plugin) {
 			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
-			if(plugin_eng){
+			if(plugin_eng) {
 				QString name = plugin_eng->getName().toLower();
 				_vec_engines.push_back(plugin_eng);
 
@@ -71,13 +71,13 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 
 
 	// dynamic plugins
-	foreach(QString filename, entry_list){
+	foreach(QString filename, entry_list) {
 		qDebug() << "possible plugin: " << plugin_dir.absoluteFilePath(filename);
 		QPluginLoader loader(plugin_dir.absoluteFilePath(filename));
 
 		QObject* plugin = loader.instance();
 
-		if(!plugin){
+		if(!plugin) {
 			qDebug() << loader.errorString();
 			continue;
 		}
@@ -87,7 +87,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 		Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 
 
-		if(plugin_eng){
+		if(plugin_eng) {
 			QString name = plugin_eng->getName().toLower();
 			qDebug() << "Found engine " << plugin_eng->getName();
 			_vec_engines.push_back(plugin_eng);
@@ -108,11 +108,11 @@ bool SoundPluginLoader::load_plugins(QString app_dir){
 	return true;
 }
 
-vector<Engine*> SoundPluginLoader::get_engines(){
+vector<Engine*> SoundPluginLoader::get_engines() {
 	return _vec_engines;
 }
 
-Engine* SoundPluginLoader::get_first_engine(){
+Engine* SoundPluginLoader::get_first_engine() {
 	if(_vec_engines.size() == 0) return NULL;
 
 	return _vec_engines[0];

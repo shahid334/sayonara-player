@@ -23,6 +23,8 @@
 #ifndef _LIBRARY_ITEM_H_
 #define _LIBRARY_ITEM_H_
 
+#include <QDebug>
+
 class LibraryItem {
 
 public:
@@ -39,6 +41,8 @@ public:
 
 
 	~LibraryItem() {}
+
+	virtual void print() const {}
 
 };
 

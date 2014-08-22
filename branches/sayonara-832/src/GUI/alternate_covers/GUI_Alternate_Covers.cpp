@@ -48,7 +48,7 @@
 
 
 
-GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) : QDialog(parent){
+GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) : QDialog(parent) {
 
 	ui = new Ui::AlternateCovers();
 	ui->setupUi(this);
@@ -82,7 +82,7 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	delete _model;
 	delete _delegate;
 
-	if(_cl_alternative){
+	if(_cl_alternative) {
 		_cl_alternative->stop();
 	}
 
@@ -91,15 +91,15 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	delete ui;
 }
 
-void GUI_Alternate_Covers::changeSkin(bool dark){
+void GUI_Alternate_Covers::changeSkin(bool dark) {
 
 }
 
-void GUI_Alternate_Covers::language_changed(){
+void GUI_Alternate_Covers::language_changed() {
 	ui->retranslateUi(this);
 }
 
-void GUI_Alternate_Covers::connect_and_start(){
+void GUI_Alternate_Covers::connect_and_start() {
 
 	update_model();
 	delete_all_files();
@@ -112,7 +112,7 @@ void GUI_Alternate_Covers::connect_and_start(){
 	this->show();
 }
 
-void GUI_Alternate_Covers::start(int album_id){
+void GUI_Alternate_Covers::start(int album_id) {
 
     if(album_id < 0) return;
 
@@ -124,7 +124,7 @@ void GUI_Alternate_Covers::start(int album_id){
     this->start(album);
 }
 
-void GUI_Alternate_Covers::start(Album album){
+void GUI_Alternate_Covers::start(Album album) {
 
     ui->le_search->setText(album.name + " " + Helper::get_major_artist(album.artists));
 	_target_filename = CoverLocation::get_cover_location(album);
@@ -134,7 +134,7 @@ void GUI_Alternate_Covers::start(Album album){
 }
 
 
-void GUI_Alternate_Covers::start(QString album_name, QString artist_name){
+void GUI_Alternate_Covers::start(QString album_name, QString artist_name) {
 
     ui->le_search->setText(album_name + " " + artist_name);
 	_target_filename = CoverLocation::get_cover_location(album_name, artist_name);
@@ -143,7 +143,7 @@ void GUI_Alternate_Covers::start(QString album_name, QString artist_name){
 	connect_and_start();
 }
 
-void GUI_Alternate_Covers::start(Artist artist){
+void GUI_Alternate_Covers::start(Artist artist) {
 
     ui->le_search->setText(artist.name);
 	_target_filename = CoverLocation::get_cover_location(artist);
@@ -154,7 +154,7 @@ void GUI_Alternate_Covers::start(Artist artist){
 }
 
 
-void GUI_Alternate_Covers::start(QString artist_name){
+void GUI_Alternate_Covers::start(QString artist_name) {
 
     ui->le_search->setText(artist_name);
 	_target_filename = CoverLocation::get_cover_location(artist_name);
@@ -164,7 +164,7 @@ void GUI_Alternate_Covers::start(QString artist_name){
 }
 
 
-void GUI_Alternate_Covers::search_button_pressed(){
+void GUI_Alternate_Covers::search_button_pressed() {
 
 	_cl_alternative = new CoverLookupAlternative(this, ui->le_search->text(), 10);
 	connect_and_start();
@@ -172,7 +172,7 @@ void GUI_Alternate_Covers::search_button_pressed(){
 }
 
 
-void GUI_Alternate_Covers::save_button_pressed(){
+void GUI_Alternate_Covers::save_button_pressed() {
 
 	if(_cur_idx == -1) return;
 
@@ -180,7 +180,7 @@ void GUI_Alternate_Covers::save_button_pressed(){
 
 	QModelIndex idx = _model->index(rc.row, rc.col);
 
-	if(!idx.isValid()){
+	if(!idx.isValid()) {
 		qDebug() << "index not valid";
 		return;
 	}
@@ -200,12 +200,12 @@ void GUI_Alternate_Covers::save_button_pressed(){
 }
 
 
-void GUI_Alternate_Covers::cancel_button_pressed(){
+void GUI_Alternate_Covers::cancel_button_pressed() {
 
     hide();
     close();
 
-	if(_cl_alternative){
+	if(_cl_alternative) {
 		_cl_alternative->stop();
 	}
 
@@ -214,7 +214,7 @@ void GUI_Alternate_Covers::cancel_button_pressed(){
 
 
 
-void GUI_Alternate_Covers::cl_new_cover(QString str){
+void GUI_Alternate_Covers::cl_new_cover(QString str) {
 
     int idx = 0;
 	QModelIndex model_idx;
@@ -226,7 +226,7 @@ void GUI_Alternate_Covers::cl_new_cover(QString str){
 	Helper::split_filename(str, dir, filename);
 
 	QString substr = filename.left(2);
-    if(substr.endsWith("_")){
+    if(substr.endsWith("_")) {
 		idx = filename.left(1).toInt();
     }
 
@@ -239,24 +239,24 @@ void GUI_Alternate_Covers::cl_new_cover(QString str){
 }
 
 
-void GUI_Alternate_Covers::cl_finished(bool b){
+void GUI_Alternate_Covers::cl_finished(bool b) {
 	ui->btn_search->setText(tr("Search"));
 }
 
 
 
-void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx){
+void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx) {
 
 	_cur_idx = idx.row() * _model->columnCount() + idx.column();
 }
 
 
-void GUI_Alternate_Covers::update_model(){
+void GUI_Alternate_Covers::update_model() {
     _model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, _model->rowCount());
 
-	for(int y=0; y<_model->rowCount(); y++){
-		for(int x=0; x<_model->columnCount(); x++){
+	for(int y=0; y<_model->rowCount(); y++) {
+		for(int x=0; x<_model->columnCount(); x++) {
 
             QModelIndex idx = _model->index(y,x);
 			QString sayonara_logo = Helper::getIconPath() + "logo.png";
@@ -269,7 +269,7 @@ void GUI_Alternate_Covers::update_model(){
 
 
 
-void GUI_Alternate_Covers::open_file_dialog(){
+void GUI_Alternate_Covers::open_file_dialog() {
 
 	QDir dir( CSettingsStorage::getInstance()->getLibraryPath() );
 
@@ -282,7 +282,7 @@ void GUI_Alternate_Covers::open_file_dialog(){
 	dir.setNameFilters(filters);
 
 
-	foreach (QString f, dir.entryList()){
+	foreach (QString f, dir.entryList()) {
 		QFile::remove(dir.absoluteFilePath(f));
 	}
 
@@ -296,7 +296,7 @@ void GUI_Alternate_Covers::open_file_dialog(){
     update_model();
 
 	int idx = 0;
-    foreach(QString path, lst){
+    foreach(QString path, lst) {
 
 		RowColumn rc = _model->cvt_2_row_col( idx );
 
@@ -310,9 +310,9 @@ void GUI_Alternate_Covers::open_file_dialog(){
 }
 
 
-void GUI_Alternate_Covers::delete_all_files(){
+void GUI_Alternate_Covers::delete_all_files() {
 
-	foreach(QString filename, _filelist){
+	foreach(QString filename, _filelist) {
 		QFile f(filename);
 		f.remove();
 	}
@@ -321,7 +321,7 @@ void GUI_Alternate_Covers::delete_all_files(){
 }
 
 
-void GUI_Alternate_Covers::closeEvent(QCloseEvent *e){
+void GUI_Alternate_Covers::closeEvent(QCloseEvent *e) {
 
 	delete_all_files();
 	QDialog::closeEvent(e);

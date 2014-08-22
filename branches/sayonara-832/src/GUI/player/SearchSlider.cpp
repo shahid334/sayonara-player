@@ -40,12 +40,12 @@ SearchSlider::~SearchSlider() {
 
 }
 
-bool SearchSlider::isSearching(){
+bool SearchSlider::isSearching() {
 	return _searching;
 }
 
 
-bool SearchSlider::event(QEvent* e){
+bool SearchSlider::event(QEvent* e) {
 
 
 
@@ -55,14 +55,14 @@ bool SearchSlider::event(QEvent* e){
     QWheelEvent* wheelEvent;
 
     mouseEvent = dynamic_cast<QMouseEvent*>( e );
-    if(mouseEvent && mouseEvent->button() == Qt::MiddleButton){
+    if(mouseEvent && mouseEvent->button() == Qt::MiddleButton) {
         e->ignore();
         return true;
     }
 
 
 
-    switch(e->type()){
+    switch(e->type()) {
 
         case QEvent::MouseButtonDblClick:
         e->accept();

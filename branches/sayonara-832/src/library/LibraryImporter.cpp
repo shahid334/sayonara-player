@@ -59,13 +59,13 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
 }
 
 
-void LibraryImporter::psl_import_dir(const QString& str){
+void LibraryImporter::psl_import_dir(const QString& str) {
     QStringList lst;
     lst << str;
     psl_import_files(lst);
 }
 
-void LibraryImporter::psl_import_files(const QStringList& list){
+void LibraryImporter::psl_import_files(const QStringList& list) {
 
     _lib_path = _settings->getLibraryPath();
 
@@ -89,11 +89,11 @@ void LibraryImporter::psl_import_files(const QStringList& list){
 
 
 // preload thread has cached everything, but maybe ok button has not been clicked yet
-void LibraryImporter::caching_thread_done(){
+void LibraryImporter::caching_thread_done() {
 
     int n_tracks = _caching_thread->get_n_tracks();
 
-    if(n_tracks > 0){
+    if(n_tracks > 0) {
         QString status = tr("%1 tracks ready").arg(n_tracks);
         _import_dialog->set_status(status);
     }
@@ -105,7 +105,7 @@ void LibraryImporter::caching_thread_done(){
 
 
 // Caching is done, ok has been clicked
-void LibraryImporter::caching_thread_finished(){
+void LibraryImporter::caching_thread_finished() {
 
     _import_dialog->set_progress(0);
     _import_dialog->set_thread_active(false);
@@ -118,14 +118,14 @@ void LibraryImporter::caching_thread_finished(){
     _caching_thread->get_md_map(md_map);
     _caching_thread->get_pd_map(pd_map);
 
-    if(md_map.keys().size() == 0){
+    if(md_map.keys().size() == 0) {
         _import_dialog->set_status(tr("No tracks"));
         return;
     }
 
-    if(!_copy_to_lib){
+    if(!_copy_to_lib) {
         MetaDataList v_md;
-        foreach(QString filename, files){
+        foreach(QString filename, files) {
             bool has_key = md_map.keys().contains(filename);
             if(!has_key) continue;
 
@@ -152,7 +152,7 @@ void LibraryImporter::caching_thread_finished(){
 
 
 
-void LibraryImporter::copy_thread_finished(){
+void LibraryImporter::copy_thread_finished() {
 
     MetaDataList v_md;
     _copy_thread->get_metadata(v_md);
@@ -167,7 +167,7 @@ void LibraryImporter::copy_thread_finished(){
 
     // copy was cancelled
     qDebug() << "Copy folder thread finished " << _copy_thread->get_cancelled();
-    if(_copy_thread->get_cancelled()){
+    if(_copy_thread->get_cancelled()) {
         _copy_thread->set_mode(IMPORT_COPY_THREAD_ROLLBACK);
         _copy_thread->start();
         _import_dialog->set_status(tr("Rollback..."));
@@ -182,7 +182,7 @@ void LibraryImporter::copy_thread_finished(){
 
     // error and success messages
     if(v_md.size() == 0) success = false;
-    if(success){
+    if(success) {
         QString str = "";
         if(n_snd_files == n_files_copied)
             str =   tr("All files could be imported");
@@ -206,22 +206,22 @@ void LibraryImporter::copy_thread_finished(){
 
 
 
-void  LibraryImporter::import_dialog_opened(){
+void  LibraryImporter::import_dialog_opened() {
     emit sig_lib_changes_allowed(false);
 }
 
 
-void  LibraryImporter::import_dialog_closed(){
+void  LibraryImporter::import_dialog_closed() {
     emit sig_lib_changes_allowed(true);
 }
 
 
-void  LibraryImporter::import_progress(int i){
+void  LibraryImporter::import_progress(int i) {
     _import_dialog->set_progress(i);
 }
 
 // fired if ok was clicked in dialog
-void  LibraryImporter::accept_import(const QString& chosen_item, bool copy){
+void  LibraryImporter::accept_import(const QString& chosen_item, bool copy) {
 
     // the preload thread may terminate now
     _caching_thread->set_may_terminate(true);
@@ -231,10 +231,10 @@ void  LibraryImporter::accept_import(const QString& chosen_item, bool copy){
 
 
 // fired if cancel button was clicked in dialog
-void LibraryImporter::cancel_import(){
+void LibraryImporter::cancel_import() {
 
     // preload thread
-    if(_caching_thread->isRunning()){
+    if(_caching_thread->isRunning()) {
 
         _caching_thread->set_cancelled();
         _import_dialog->set_status("Cancelled");
@@ -243,10 +243,10 @@ void LibraryImporter::cancel_import(){
     }
 
     // copy folder thread
-    else if(_copy_thread->isRunning()){
+    else if(_copy_thread->isRunning()) {
 
         // useless during rollback
-        if(_copy_thread->get_mode() == IMPORT_COPY_THREAD_ROLLBACK){
+        if(_copy_thread->get_mode() == IMPORT_COPY_THREAD_ROLLBACK) {
             return;
         }
 

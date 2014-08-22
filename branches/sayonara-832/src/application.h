@@ -18,13 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #ifndef APPLICATION_H
 #define APPLICATION_H
-
-#include <QObject>
-
 
 #define CONNECT(a,b,c,d) app->connect(a, SIGNAL(b), c, SLOT(d))
 
@@ -169,7 +164,7 @@ class ApplicationClient : public QObject {
 			connect(app, SIGNAL(connectionsDone()), this, SIGNAL(initRemainder()));
 		}
 
-		virtual ~ApplicationClient(){}
+		virtual ~ApplicationClient() {}
 
 	private slots:
 

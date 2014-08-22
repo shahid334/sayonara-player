@@ -28,15 +28,11 @@
 
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/library/model/LibraryItemModelAlbums.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
-#include <QStringList>
-#include <QList>
-#include <QDebug>
 
-
-LibraryItemModelAlbums::LibraryItemModelAlbums(QList<ColumnHeader>& headers) : LibraryItemModel(headers) {
+LibraryItemModelAlbums::LibraryItemModelAlbums(QList<ColumnHeader>& headers) :
+	LibraryItemModel(headers) {
 
 }
 
@@ -55,6 +51,7 @@ int LibraryItemModelAlbums::rowCount(const QModelIndex & parent) const
 bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelIndex & index)
 {
 	Q_UNUSED(index);
+	_selected_rows.clear();
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
@@ -71,6 +68,8 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelIndex & index)
 {
 	Q_UNUSED(index);
+
+	_selected_rows.clear();
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
@@ -95,7 +94,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 			 return QVariant();
 
         // qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
-         if(role == Qt::DisplayRole || role==Qt::EditRole){
+		 if(role == Qt::DisplayRole || role==Qt::EditRole) {
 
             int row = index.row();
             int col = index.column();
@@ -103,7 +102,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
             Album album = _album_list[row];
             int idx_col = calc_shown_col(col);
 
-             switch(idx_col){
+			 switch(idx_col) {
                  case COL_ALBUM_SAMPLER:
                     return album.is_sampler;
                  case COL_ALBUM_N_SONGS:
@@ -133,7 +132,7 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 	 if (index.isValid() && role == Qt::EditRole) {
 
          int col_idx = calc_shown_col(index.column());
-         if(col_idx == COL_ALBUM_RATING){
+		 if(col_idx == COL_ALBUM_RATING) {
              _album_list[index.row()].rating = value.toInt();
 
          }
@@ -175,15 +174,15 @@ Qt::ItemFlags LibraryItemModelAlbums::flags(const QModelIndex & index) const
 }
 
 
-void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order){
+void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order) {
 
 	Q_UNUSED(column);
 	Q_UNUSED(order);
 }
 
-QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr){
+QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr) {
 	if(_album_list.isEmpty()) return this->index(-1, -1);
-	if(_selected_rows.size() > 0){
+	if(_selected_rows.size() > 0) {
 		qDebug() << _selected_rows;
 		return getNextRowIndexOf(substr, _selected_rows[0]);
 	}
@@ -192,17 +191,17 @@ QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr){
 		return getNextRowIndexOf(substr, 0);
 }
 
-QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row){
+QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 
 	int len = _album_list.size();
 	if(len == 0) return this->index(-1, -1);
 
-	for(int i=0; i<len; i++){
+	for(int i=0; i<len; i++) {
 	int row_idx = (i + row) % len;
 
 		QString album_name = _album_list[row_idx].name;
 		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
-			album_name.startsWith("die ", Qt::CaseInsensitive) ){
+			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
 		}
 		if(album_name.startsWith(substr, Qt::CaseInsensitive) || album_name.startsWith(substr, Qt::CaseInsensitive))
@@ -212,17 +211,17 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row){
 	return this->index(-1, -1);
 }
 
-QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row){
+QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
 
 	int len = _album_list.size();
 	if(len < row) row = len - 1;
 
-	for(int i=0; i<len; i++){
+	for(int i=0; i<len; i++) {
 		if(row - i < 0) row = len - 1;
 		int row_idx = (row-i) % len;
 		QString album_name = _album_list[row_idx].name;
 		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
-			album_name.startsWith("die ", Qt::CaseInsensitive) ){
+			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
 		}
 		if(album_name.startsWith(substr, Qt::CaseInsensitive) || album_name.startsWith(substr, Qt::CaseInsensitive))
@@ -235,7 +234,7 @@ QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row){
 
 
 
-QList<quint8> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx){
+QList<quint8> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx) {
     if(!idx.isValid()) return QList<quint8>();
     if(idx.row() < 0 || idx.row() >= _album_list.size()) return QList<quint8>();
 	return _album_list[idx.row()].discnumbers;

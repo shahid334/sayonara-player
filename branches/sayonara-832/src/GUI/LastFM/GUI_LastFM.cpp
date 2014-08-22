@@ -31,11 +31,8 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
+
 #include <QMessageBox>
-
-#include <QString>
-#include <QCryptographicHash>
-
 
 #include <iostream>
 
@@ -48,7 +45,7 @@ GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
 }
 
 
-GUI_LastFM::GUI_LastFM(QString username, QString password){
+GUI_LastFM::GUI_LastFM(QString username, QString password) {
 
 	this->ui = new Ui_GUI_LastFM_Dialog();
 	this->ui->setupUi(this);
@@ -64,22 +61,22 @@ GUI_LastFM::~GUI_LastFM() {
 
 }
 
-void GUI_LastFM::changeSkin(bool dark){
+void GUI_LastFM::changeSkin(bool dark) {
 
     _skin = dark;
 }
 
-void GUI_LastFM::language_changed(){
+void GUI_LastFM::language_changed() {
     if(!ui) return;
     this->ui->retranslateUi(this);
 }
 
-void GUI_LastFM::clear_session_pressed(){
+void GUI_LastFM::clear_session_pressed() {
 
 }
 
 
-void GUI_LastFM::save_button_pressed(){
+void GUI_LastFM::save_button_pressed() {
 
 	if(this->ui->tf_username->text().length() < 3) return;
 	if(this->ui->tf_password->text().length() < 3) return;
@@ -88,7 +85,7 @@ void GUI_LastFM::save_button_pressed(){
     QString user, password;
     settings-> getLastFMNameAndPW(user, password);
 
-    if (this->ui->tf_password->text() != password){
+    if (this->ui->tf_password->text() != password) {
 
         emit new_lfm_credentials(this->ui->tf_username->text(), this->ui->tf_password->text());
         settings->setLastFMNameAndPW(this->ui->tf_username->text(), this->ui->tf_password->text());
@@ -101,10 +98,10 @@ void GUI_LastFM::save_button_pressed(){
 }
 
 
-void GUI_LastFM::show_win(){
+void GUI_LastFM::show_win() {
 
      CSettingsStorage* settings = CSettingsStorage::getInstance();
-     if(!ui){
+     if(!ui) {
         this->ui = new Ui_GUI_LastFM_Dialog();
         this->ui->setupUi(this);
 
@@ -145,18 +142,18 @@ void GUI_LastFM::show_win(){
 }
 
 
-void GUI_LastFM::cb_correct_id3_toggled(bool checked){
+void GUI_LastFM::cb_correct_id3_toggled(bool checked) {
 
 	CSettingsStorage::getInstance()->setLastFMCorrections(checked);
 }
 
-void GUI_LastFM::setLFMActive(bool enabled){
+void GUI_LastFM::setLFMActive(bool enabled) {
 	this->ui->tf_username->setEnabled(enabled);
 	this->ui->tf_password->setEnabled(enabled);
 	this->ui->cb_correct_id3->setEnabled(enabled);
 }
 
-void GUI_LastFM::cb_activate_toggled(bool b){
+void GUI_LastFM::cb_activate_toggled(bool b) {
 	setLFMActive(b);
 	CSettingsStorage::getInstance()->setLastFMActive(b);
 	emit sig_activated(b);

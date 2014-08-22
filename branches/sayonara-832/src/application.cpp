@@ -63,7 +63,7 @@
 
 using namespace std;
 
-bool Application::is_initialized(){
+bool Application::is_initialized() {
     return _initialized;
 
 }
@@ -75,7 +75,7 @@ Application::Application(int & argc, char ** argv) : QApplication(argc, argv)
 
 }
 
-void Application::init(int n_files, QTranslator *translator){
+void Application::init(int n_files, QTranslator *translator) {
 
 
 	_translator        = translator;
@@ -164,7 +164,7 @@ void Application::init(int n_files, QTranslator *translator){
 
 	SoundPluginLoader loader(dir);
 	listen = loader.get_first_engine();
-	if(!listen){
+	if(!listen) {
 		qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
 		exit(1);
 	}
@@ -210,7 +210,7 @@ void Application::init(int n_files, QTranslator *translator){
 
 	/* Into LastFM */
 	QString user, password;
-	if(set->getLastFMActive()){
+	if(set->getLastFMActive()) {
 		set->getLastFMNameAndPW(user, password);
 		LastFM::getInstance()->lfm_login( user,password, true );
 	}
@@ -237,12 +237,12 @@ void Application::init(int n_files, QTranslator *translator){
 
 }
 
-Application::~Application(){
+Application::~Application() {
 
     CDatabaseConnector::getInstance()->store_settings();
 
-    if( set->getSocketActivated() ){
-        if(remote_socket->isRunning()){
+    if( set->getSocketActivated() ) {
+        if(remote_socket->isRunning()) {
             remote_socket->quit();
         }
     }
@@ -274,7 +274,7 @@ Application::~Application(){
 
 
 
-void Application::init_connections(){
+void Application::init_connections() {
 
 
 
@@ -485,7 +485,7 @@ void Application::init_connections(){
 
 
     bool is_socket_active = set->getSocketActivated();
-    if(is_socket_active){
+    if(is_socket_active) {
         CONNECT (remote_socket, sig_play(),		playlist_handler,			psl_play());
         CONNECT (remote_socket, sig_next(),		playlist_handler,			psl_forward());
         CONNECT (remote_socket, sig_prev(),		playlist_handler,			psl_backward());
@@ -502,7 +502,7 @@ void Application::init_connections(){
 }
 
 
-void Application::connect_languages(){
+void Application::connect_languages() {
      CONNECT (player, sig_language_changed(),	ui_playlist_chooser, 	language_changed());
      CONNECT (player, sig_language_changed(),	ui_lastfm,              language_changed());
      CONNECT (player, sig_language_changed(),	ui_stream,              language_changed());
@@ -520,16 +520,16 @@ void Application::connect_languages(){
      CONNECT (player, sig_language_changed(),	ui_style_settings,      language_changed());
 }
 
-void Application::setFiles2Play(QStringList filelist){
+void Application::setFiles2Play(QStringList filelist) {
 
-    if(filelist.size() > 0){
+    if(filelist.size() > 0) {
         playlist_handler->psl_createPlaylist(filelist);
     }
 }
 
 
 
-QString Application::getVersion(){
+QString Application::getVersion() {
 
     ifstream istr;
     QString version_file = Helper::getSharePath() + "VERSION";
@@ -539,7 +539,7 @@ QString Application::getVersion(){
 
     QMap<QString, int> map;
 
-    while(istr.good()){
+    while(istr.good()) {
         string type;
         int version;
         istr >> type >> version;
@@ -557,13 +557,13 @@ QString Application::getVersion(){
     return version_str;
 }
 
-QMainWindow* Application::getMainWindow(){
+QMainWindow* Application::getMainWindow() {
     return this->player;
 }
 
 
 
-void Application::focus_changed(QWidget *src, QWidget *dst){
+void Application::focus_changed(QWidget *src, QWidget *dst) {
 	if(src)
 		src->setStyleSheet("background: red;");
 	if(dst)
@@ -571,7 +571,7 @@ void Application::focus_changed(QWidget *src, QWidget *dst){
 
 }
 /*
-bool Application::notify(QObject *receiver, QEvent *event){
+bool Application::notify(QObject *receiver, QEvent *event) {
 	if (event && event->type() == QEvent::KeyPress)
 	{
 		QKeyEvent * keyEvent = dynamic_cast<QKeyEvent*>(event);

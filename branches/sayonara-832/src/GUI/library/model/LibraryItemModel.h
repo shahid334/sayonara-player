@@ -84,6 +84,7 @@ public:
     bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
     bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
 
+
 	virtual QMap<QChar, QString> getExtraTriggers();
 
     void set_new_header_names(QStringList& lst);

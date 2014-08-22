@@ -57,19 +57,19 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 }
 
 
-void GUI_Bookmarks::disable_prev(){
+void GUI_Bookmarks::disable_prev() {
 	_last_idx = -1;
 	ui->btn_last->setEnabled( false );
 	ui->lab_last->setText( TXT_NO_BOOKMARK );
 }
 
-void GUI_Bookmarks::disable_next(){
+void GUI_Bookmarks::disable_next() {
 	_next_idx = -1;
 	ui->btn_next->setEnabled(false);
 	ui->lab_next->setText( TXT_NO_BOOKMARK );
 }
 
-void GUI_Bookmarks::enable_prev(int idx){
+void GUI_Bookmarks::enable_prev(int idx) {
 
 	quint32 key;
 	QString val, str;
@@ -87,7 +87,7 @@ void GUI_Bookmarks::enable_prev(int idx){
 	ui->btn_last->setEnabled( true);
 }
 
-void GUI_Bookmarks::enable_next(int idx){
+void GUI_Bookmarks::enable_next(int idx) {
 
 	quint32 key;
 	QString val, str;
@@ -106,7 +106,7 @@ void GUI_Bookmarks::enable_next(int idx){
 
 }
 
-void GUI_Bookmarks::calc_prev(quint32 time_s){
+void GUI_Bookmarks::calc_prev(quint32 time_s) {
 
 	int i = -1;
 
@@ -115,7 +115,7 @@ void GUI_Bookmarks::calc_prev(quint32 time_s){
 
 
 
-	for(i=_bookmarks.keys().size()-1; i>=0; i--){
+	for(i=_bookmarks.keys().size()-1; i>=0; i--) {
 		key = _bookmarks.keys()[i];
 		val = _bookmarks.value(key);
 
@@ -124,18 +124,18 @@ void GUI_Bookmarks::calc_prev(quint32 time_s){
 
 
 		// possible to go to last index
-		if(difference > 0){
+		if(difference > 0) {
 			enable_prev(i);
 			return;
 		}
 
 		// more than last
-		else if(i > 0){
+		else if(i > 0) {
 			enable_prev(i-1);
 			return;
 		}
 
-		else if(i==0){
+		else if(i==0) {
 			enable_prev(i);
 			return;
 		}
@@ -146,7 +146,7 @@ void GUI_Bookmarks::calc_prev(quint32 time_s){
 }
 
 
-void GUI_Bookmarks::calc_next(quint32 time_s){
+void GUI_Bookmarks::calc_next(quint32 time_s) {
 
 	int i = -1;
 
@@ -155,7 +155,7 @@ void GUI_Bookmarks::calc_next(quint32 time_s){
 
 
 
-	for(i=0; i<_bookmarks.keys().size(); i++){
+	for(i=0; i<_bookmarks.keys().size(); i++) {
 		key = _bookmarks.keys()[i];
 		val = _bookmarks.value(key);
 
@@ -171,7 +171,7 @@ void GUI_Bookmarks::calc_next(quint32 time_s){
 }
 
 
-void GUI_Bookmarks::track_changed(const MetaData& md){
+void GUI_Bookmarks::track_changed(const MetaData& md) {
 
 	bool success;
 
@@ -195,7 +195,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md){
 		return;
 	}
 
-	foreach( quint32 bm, _bookmarks.keys() ){
+	foreach( quint32 bm, _bookmarks.keys() ) {
 
 		long ms = (long) (bm * 1000);
 		QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
@@ -215,16 +215,16 @@ void GUI_Bookmarks::track_changed(const MetaData& md){
 }
 
 
-void GUI_Bookmarks::pos_changed_s(quint32 new_time){
+void GUI_Bookmarks::pos_changed_s(quint32 new_time) {
 
 	if(!isVisible()) return;
 
 	_cur_time = new_time;
 
-	if(ui->cb_loop->isChecked()){
-		if(_last_idx >= 0 && _next_idx >= 0){
+	if(ui->cb_loop->isChecked()) {
+		if(_last_idx >= 0 && _next_idx >= 0) {
 
-			if(new_time == _bookmarks.keys()[_next_idx]){
+			if(new_time == _bookmarks.keys()[_next_idx]) {
 				prev_clicked();
 				return;
 			}
@@ -236,7 +236,7 @@ void GUI_Bookmarks::pos_changed_s(quint32 new_time){
 }
 
 
-void GUI_Bookmarks::combo_changed(int cur_idx){
+void GUI_Bookmarks::combo_changed(int cur_idx) {
 
 	quint32 bm = _bookmarks.keys()[cur_idx];
 
@@ -250,9 +250,9 @@ void GUI_Bookmarks::combo_changed(int cur_idx){
 }
 
 
-void GUI_Bookmarks::next_clicked(){
+void GUI_Bookmarks::next_clicked() {
 
-	if(_next_idx >= 0){
+	if(_next_idx >= 0) {
 		int cur_idx = ui->cb_bookmarks->currentIndex();
 		ui->cb_bookmarks->setCurrentIndex(_next_idx);
 
@@ -261,9 +261,9 @@ void GUI_Bookmarks::next_clicked(){
 	}
 }
 
-void GUI_Bookmarks::prev_clicked(){
+void GUI_Bookmarks::prev_clicked() {
 
-	if(_last_idx >= 0){
+	if(_last_idx >= 0) {
 		int cur_idx = ui->cb_bookmarks->currentIndex();
 		ui->cb_bookmarks->setCurrentIndex(_last_idx);
 
@@ -272,7 +272,7 @@ void GUI_Bookmarks::prev_clicked(){
 	}
 }
 
-void GUI_Bookmarks::new_clicked(){
+void GUI_Bookmarks::new_clicked() {
 	bool success;
 	QString cur_text;
 	int cur_idx;
@@ -281,14 +281,14 @@ void GUI_Bookmarks::new_clicked(){
 	cur_text = ui->cb_bookmarks->currentText();
 	success = _db->insertBookmark(_md.id, _cur_time, cur_text);
 
-	if(success){
+	if(success) {
 		_bookmarks.insert(_cur_time, cur_text);
 		disconnect(ui->cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 		ui->cb_bookmarks->clear();
 
 		cur_idx = -1;
 		i = 0;
-		foreach( quint32 bm, _bookmarks.keys() ){
+		foreach( quint32 bm, _bookmarks.keys() ) {
 
 			long ms = (long) (bm * 1000);
 			QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
@@ -316,28 +316,28 @@ void GUI_Bookmarks::new_clicked(){
 }
 
 
-void GUI_Bookmarks::del_clicked(){
+void GUI_Bookmarks::del_clicked() {
 
 	disconnect(ui->cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 
-	quint32 bm;
+	quint64 bm;
 	int cur_idx;
 	bool success;
 
 	cur_idx = ui->cb_bookmarks->currentIndex();
-	bm = ui->cb_bookmarks->itemData(cur_idx).toLongLong();
+	bm = ui->cb_bookmarks->itemData(cur_idx).toULongLong();
 
 	success = _db->removeBookmark(_md.id, bm);
 
-	if(success){
+	if(success) {
 		ui->cb_bookmarks->removeItem(cur_idx);
-		if(cur_idx > ui->cb_bookmarks->count() - 1){
+		if(cur_idx > ui->cb_bookmarks->count() - 1) {
 			cur_idx --;
 		}
 
 		ui->cb_bookmarks->setCurrentIndex(cur_idx);
 		_bookmarks.remove(bm);
-		if(_bookmarks.size() == 0){
+		if(_bookmarks.size() == 0) {
 			ui->btn_delete->setEnabled(false);
 			ui->btn_delete_all->setEnabled(false);
 		}
@@ -356,7 +356,7 @@ void GUI_Bookmarks::del_clicked(){
 
 }
 
-void GUI_Bookmarks::del_all_clicked(){
+void GUI_Bookmarks::del_all_clicked() {
 
 	bool success;
 
@@ -364,7 +364,7 @@ void GUI_Bookmarks::del_all_clicked(){
 
 	success = _db->removeAllBookmarks(_md.id);
 
-	if(success){
+	if(success) {
 
 		ui->cb_bookmarks->clear();
 		_bookmarks.clear();

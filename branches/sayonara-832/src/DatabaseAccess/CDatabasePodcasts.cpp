@@ -39,7 +39,7 @@
 using namespace std;
 
 
-bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts){
+bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts) {
 
     podcasts.clear();
 
@@ -53,7 +53,7 @@ bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts){
         return false;
 
     else{
-        while(q.next()){
+        while(q.next()) {
             QString name = q.value(0).toString();
             QString url = q.value(1).toString();
 
@@ -66,7 +66,7 @@ bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts){
 
 
 
-bool CDatabaseConnector::deletePodcast(QString name){
+bool CDatabaseConnector::deletePodcast(QString name) {
     if (!this -> _database->isOpen())
              this -> _database->open();
 
@@ -86,7 +86,7 @@ bool CDatabaseConnector::deletePodcast(QString name){
 
 
 
-bool CDatabaseConnector::addPodcast(QString name, QString url){
+bool CDatabaseConnector::addPodcast(QString name, QString url) {
     if (!this -> _database->isOpen())
              this -> _database->open();
 

@@ -29,11 +29,8 @@
 #ifndef STYLE_H_
 #define STYLE_H_
 
-
 #include <QString>
 #include <QPalette>
-
-
 
 namespace Style{
 
@@ -42,9 +39,7 @@ namespace Style{
     QString get_tv_style(bool dark, QPalette* p=0);
 
     QString get_v_slider_style(bool dark, int percent = -1);
-
-
-};
+}
 
 
 #endif /* STYLE_H_ */

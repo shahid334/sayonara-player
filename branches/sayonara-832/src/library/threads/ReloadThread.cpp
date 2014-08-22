@@ -32,16 +32,13 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
 
 #include <qmetatype.h>
-#include <QStringList>
-#include <QDebug>
 
 
-int ReloadThread::get_and_save_all_files(){
+int ReloadThread::get_and_save_all_files() {
 
 	if(_library_path.size() == 0 || !QFile::exists(_library_path)) return 0;
 
@@ -53,7 +50,7 @@ int ReloadThread::get_and_save_all_files(){
 
 	n_files += v_md.size();
 
-	if(v_md.size() >  0){
+	if(v_md.size() >  0) {
 		CDatabaseConnector::getInstance()->storeMetadata(v_md);
 		v_md.clear();
 	}
@@ -63,7 +60,7 @@ int ReloadThread::get_and_save_all_files(){
 }
 
 
-void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n_files){
+void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n_files) {
 	QDir baseDirDirs(baseDir);
 	QDir baseDirFiles(baseDir);
     QStringList dirs;
@@ -91,12 +88,12 @@ void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n
     	MetaData md;
         md.filepath = baseDirFiles.absoluteFilePath(f);
 
-        if(ID3::getMetaDataOfFile(md)){
+        if(ID3::getMetaDataOfFile(md)) {
 			v_md.push_back(md);
 			num_files ++;
 
 
-			if(num_files % 20 == 0){
+			if(num_files % 20 == 0) {
 
                 reload_status_str = tr("Reloading %1 tracks").arg(num_files);
 
@@ -106,9 +103,9 @@ void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n
 			}
 		}
 
-		if(v_md.size() >= N_FILES_TO_STORE ){
+		if(v_md.size() >= N_FILES_TO_STORE ) {
 			CDatabaseConnector::getInstance()->storeMetadata(v_md);
-            while(_paused){
+            while(_paused) {
                 usleep(10000);
             }
 
@@ -133,19 +130,19 @@ ReloadThread::~ReloadThread() {
 
 }
 
-int ReloadThread::getState(){
+int ReloadThread::getState() {
 	return _state;
 }
 
-void ReloadThread::pause(){
+void ReloadThread::pause() {
     _paused = true;
 }
 
-void ReloadThread::goon(){
+void ReloadThread::goon() {
     _paused = false;
 }
 
-void ReloadThread::run(){
+void ReloadThread::run() {
 
     _paused = false;
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
@@ -158,9 +155,9 @@ void ReloadThread::run(){
 	db->getTracksFromDatabase(v_metadata);
 
 	// find orphaned tracks in library && delete them
-	for(uint i=0; i<v_metadata.size(); i++){
+	for(uint i=0; i<v_metadata.size(); i++) {
 		MetaData md = v_metadata[i];
-		if(!Helper::checkTrack(md)){
+		if(!Helper::checkTrack(md)) {
 			v_to_delete.push_back(md);
 		}
 	}
@@ -175,11 +172,11 @@ void ReloadThread::run(){
     _paused = false;
 }
 
-void ReloadThread::set_lib_path(QString library_path){
+void ReloadThread::set_lib_path(QString library_path) {
 	_library_path = library_path;
 }
 
-void ReloadThread::get_metadata(MetaDataList& md){
+void ReloadThread::get_metadata(MetaDataList& md) {
 	md = _v_metadata;
 }
 

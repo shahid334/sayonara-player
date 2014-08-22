@@ -39,184 +39,184 @@ GSTEngineHandler::GSTEngineHandler(QObject* parent) {
 }
 
 
-GSTEngineHandler::~GSTEngineHandler(){
+GSTEngineHandler::~GSTEngineHandler() {
 	
 }
 
-void GSTEngineHandler::init(){
+void GSTEngineHandler::init() {
 
 }
 
 
-void GSTEngineHandler::start_convert(){
+void GSTEngineHandler::start_convert() {
 
 	stop();
 
 	qDebug() << "Engine start convert";
-	if( QString::compare(_cur_engine->getName(), CONVERT_ENGINE ) != 0){
+	if( QString::compare(_cur_engine->getName(), CONVERT_ENGINE ) != 0) {
 		psl_change_engine(CONVERT_ENGINE);
 		qDebug() << "Change to convert engine";
 	}
 }
 
-void GSTEngineHandler::end_convert(){
+void GSTEngineHandler::end_convert() {
 
 	stop();
 
 	qDebug() << "Engine end convert";
-	if( QString::compare(_cur_engine->getName(), PLAYBACK_ENGINE ) != 0){
+	if( QString::compare(_cur_engine->getName(), PLAYBACK_ENGINE ) != 0) {
 		qDebug() << "Change to playback engine";
 		psl_change_engine(PLAYBACK_ENGINE);
 	}
 }
 
-void GSTEngineHandler::psl_set_speed(float f){
+void GSTEngineHandler::psl_set_speed(float f) {
 	if(!_cur_engine) return;
 	_cur_engine->psl_set_speed(f);
 }
 
-void GSTEngineHandler::fill_engines(const vector<Engine*>& engines){
+void GSTEngineHandler::fill_engines(const vector<Engine*>& engines) {
 	_engines = engines;
 
 	psl_change_engine(PLAYBACK_ENGINE);
 }
 
 
-void GSTEngineHandler::play(){
+void GSTEngineHandler::play() {
 	if(!_cur_engine) return;
 	_cur_engine->play();
 }
 
 
-void GSTEngineHandler::stop(){
+void GSTEngineHandler::stop() {
 
 	if(!_cur_engine) return;
 	_cur_engine->stop();
 }
 
-void GSTEngineHandler::pause(){
+void GSTEngineHandler::pause() {
 	if(!_cur_engine) return;
 	_cur_engine->pause();
 }
 
-void GSTEngineHandler::set_volume(int vol){
+void GSTEngineHandler::set_volume(int vol) {
 	if(!_cur_engine) return;
 	_cur_engine->set_volume(vol);
 }
 
 
-void GSTEngineHandler::jump_abs_s(quint32 where){
+void GSTEngineHandler::jump_abs_s(quint32 where) {
 	if(!_cur_engine) return;
 	_cur_engine->jump_abs_s(where);
 }
 
-void GSTEngineHandler::jump_abs_ms(quint64 where){
+void GSTEngineHandler::jump_abs_ms(quint64 where) {
 	if(!_cur_engine) return;
 	_cur_engine->jump_abs_ms(where);
 }
 
-void GSTEngineHandler::jump_rel(quint32 where){
+void GSTEngineHandler::jump_rel(quint32 where) {
 	if(!_cur_engine) return;
 	_cur_engine->jump_rel(where);
 }
 
-void GSTEngineHandler::change_track(const MetaData& md, int pos_sec, bool start_play){
+void GSTEngineHandler::change_track(const MetaData& md, int pos_sec, bool start_play) {
 	if(!_cur_engine) return;
 	_cur_engine->change_track(md, pos_sec, start_play);
 }
 
-void GSTEngineHandler::change_track(const QString& str, int pos_sec, bool start_play){
+void GSTEngineHandler::change_track(const QString& str, int pos_sec, bool start_play) {
 	if(!_cur_engine) return;
 	_cur_engine->change_track(str, pos_sec, start_play);
 }
 
-void GSTEngineHandler::eq_changed(int band, int value){
+void GSTEngineHandler::eq_changed(int band, int value) {
 	if(!_cur_engine) return;
 	_cur_engine->eq_changed(band, value);
 }
 
-void GSTEngineHandler::eq_enable(bool b){
+void GSTEngineHandler::eq_enable(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->eq_enable(b);
 
 }
 
-void GSTEngineHandler::record_button_toggled(bool b){
+void GSTEngineHandler::record_button_toggled(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->record_button_toggled(b);
 }
 
-void GSTEngineHandler::psl_sr_set_active(bool b){
+void GSTEngineHandler::psl_sr_set_active(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->psl_sr_set_active(b);
 }
 
-void GSTEngineHandler::psl_new_stream_session(){
+void GSTEngineHandler::psl_new_stream_session() {
 	if(!_cur_engine) return;
 	_cur_engine->psl_new_stream_session();
 }
 
-void GSTEngineHandler::psl_calc_level(bool b){
+void GSTEngineHandler::psl_calc_level(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->psl_calc_level(b);
 }
 
-void GSTEngineHandler::psl_calc_spectrum(bool b){
+void GSTEngineHandler::psl_calc_spectrum(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->psl_calc_spectrum(b);
 }
 
-void GSTEngineHandler::psl_set_gapless(bool b){
+void GSTEngineHandler::psl_set_gapless(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->psl_set_gapless(b);
 }
 
 
-void GSTEngineHandler::sl_dur_changed_ms(quint64 v){
+void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
 	emit sig_dur_changed_ms(v);
 }
 
-void GSTEngineHandler::sl_dur_changed_s(quint32 v){
+void GSTEngineHandler::sl_dur_changed_s(quint32 v) {
 	emit sig_dur_changed_s(v);
 }
-void GSTEngineHandler::sl_dur_changed(MetaData& v){
+void GSTEngineHandler::sl_dur_changed(MetaData& v) {
 	emit sig_dur_changed(v);
 }
 
-void GSTEngineHandler::sl_pos_changed_ms(quint64 v){
+void GSTEngineHandler::sl_pos_changed_ms(quint64 v) {
 	emit sig_pos_changed_ms(v);
 }
 
-void GSTEngineHandler::sl_pos_changed_s(quint32 v){
+void GSTEngineHandler::sl_pos_changed_s(quint32 v) {
 	emit sig_pos_changed_s(v);
 }
 
-void GSTEngineHandler::sl_track_finished(){
+void GSTEngineHandler::sl_track_finished() {
 	emit sig_track_finished();
 }
 
-void GSTEngineHandler::sl_scrobble(const MetaData& md){
+void GSTEngineHandler::sl_scrobble(const MetaData& md) {
 	emit sig_scrobble(md);
 }
 
-void GSTEngineHandler::sl_level(float l, float r){
+void GSTEngineHandler::sl_level(float l, float r) {
 	emit sig_level(l, r);
 }
 
-void GSTEngineHandler::sl_spectrum(QList<float>& lst){
+void GSTEngineHandler::sl_spectrum(QList<float>& lst) {
 	emit sig_spectrum(lst);
 }
 
-void GSTEngineHandler::sl_bitrate_changed(qint32 v){
+void GSTEngineHandler::sl_bitrate_changed(qint32 v) {
 	emit sig_bitrate_changed(v);
 }
 
-bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_engine){
+bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_engine) {
 
 	if(!old_engine && !new_engine) return false;
 	if(old_engine == new_engine) return false;
 
-	if(old_engine){
+	if(old_engine) {
 		disconnect(old_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
 
 		disconnect(old_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
@@ -231,7 +231,7 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 		disconnect(old_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
 	}
 
-	if(new_engine){
+	if(new_engine) {
 		connect(new_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
 
 		connect(new_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
@@ -250,11 +250,11 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 }
 
 
-void GSTEngineHandler::psl_change_engine(QString name){
+void GSTEngineHandler::psl_change_engine(QString name) {
 	Engine* new_engine=NULL;
 
-	foreach(Engine* engine, _engines){
-		if(engine && name.compare(engine->getName(), Qt::CaseInsensitive) == 0){
+	foreach(Engine* engine, _engines) {
+		if(engine && name.compare(engine->getName(), Qt::CaseInsensitive) == 0) {
 			new_engine = engine;
 			break;
 		}		
@@ -265,4 +265,4 @@ void GSTEngineHandler::psl_change_engine(QString name){
 
 }
 
-Q_EXPORT_PLUGIN2(sayonara_gstreamer, GSTEngineHandler);
+Q_EXPORT_PLUGIN2(sayonara_gstreamer, GSTEngineHandler)

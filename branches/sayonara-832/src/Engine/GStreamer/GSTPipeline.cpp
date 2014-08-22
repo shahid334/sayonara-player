@@ -25,9 +25,9 @@
 
 
 bool
-_test_and_error(void* element, QString errorstr){
+_test_and_error(void* element, QString errorstr) {
 
-	if(!element){
+	if(!element) {
 		qDebug() << errorstr;
 		return false;
 	}
@@ -36,8 +36,8 @@ _test_and_error(void* element, QString errorstr){
 }
 
 bool
-_test_and_error_bool(bool b, QString errorstr){
-	if(!b){
+_test_and_error_bool(bool b, QString errorstr) {
+	if(!b) {
 		qDebug() << errorstr;
 		return false;
 	}
@@ -46,7 +46,7 @@ _test_and_error_bool(bool b, QString errorstr){
 }
 
 
-void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data){
+void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data) {
 	GstElement* ac = (GstElement*) data;
 	GstPad* ac_pad = gst_element_get_static_pad(ac, "sink");
 
@@ -59,7 +59,7 @@ void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpoi
 	if(s != GST_PAD_LINK_OK) ENGINE_DEBUG << " Could not link decoder with tee";
 }
 
-gboolean PipelineCallbacks::show_position(gpointer data){
+gboolean PipelineCallbacks::show_position(gpointer data) {
 
 	gint64 pos;
 	GstState state;
@@ -82,7 +82,7 @@ gboolean PipelineCallbacks::show_position(gpointer data){
 }
 
 
-void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms){
+void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms) {
 	_position = cur_pos_ms;
 
 	gint64 difference = get_duration_ms() - _position;
@@ -97,7 +97,7 @@ void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms){
 }
 
 
-void GSTAbstractPipeline::about_to_finish(){
+void GSTAbstractPipeline::about_to_finish() {
 	gint64 position;
 	gint64 duration;
 	qint64 time2go;
@@ -111,37 +111,37 @@ void GSTAbstractPipeline::about_to_finish(){
 	emit sig_about_to_finish(time2go);
 }
 
-void GSTAbstractPipeline::set_speed(float f){
+void GSTAbstractPipeline::set_speed(float f) {
 	Q_UNUSED(f);
 }
 
-void GSTAbstractPipeline::finished(){
+void GSTAbstractPipeline::finished() {
 	emit sig_finished();
 }
 
 
-GstBus* GSTAbstractPipeline::get_bus(){
+GstBus* GSTAbstractPipeline::get_bus() {
 	return _bus;
 }
 
 
-GstState GSTAbstractPipeline::get_state(){
+GstState GSTAbstractPipeline::get_state() {
 	GstState state;
 	gst_element_get_state(_pipeline, &state, NULL, GST_CLOCK_TIME_NONE);
 	return state;
 }
 
 
-GstElement* GSTAbstractPipeline::get_pipeline(){
+GstElement* GSTAbstractPipeline::get_pipeline() {
 	return _pipeline;
 }
 
-bool GSTAbstractPipeline::set_uri(gchar* uri){
+bool GSTAbstractPipeline::set_uri(gchar* uri) {
 	_uri = uri;
 	return (_uri != NULL);
 }
 
-gchar* GSTAbstractPipeline::get_uri(){
+gchar* GSTAbstractPipeline::get_uri() {
 	return _uri;
 }
 

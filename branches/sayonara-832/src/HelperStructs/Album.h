@@ -53,14 +53,13 @@ public:
 
     bool is_splitted;
     bool is_sampler;
-	bool is_lib_selected;
 
     Album();
-	Album(const Album&);
     ~Album();
 
 	static QVariant toVariant(const Album& album);
 	static bool fromVariant(const QVariant& v, Album& album);
+	void print() const;
 };
 
 

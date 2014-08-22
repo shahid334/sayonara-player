@@ -37,22 +37,22 @@ GUI_Target_Playlist_Dialog::GUI_Target_Playlist_Dialog(QWidget *parent) :
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
 }
 
-GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog(){
+GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog() {
 
 }
 
 
-void GUI_Target_Playlist_Dialog::change_skin(bool dark){
+void GUI_Target_Playlist_Dialog::change_skin(bool dark) {
 
 }
 
-void GUI_Target_Playlist_Dialog::language_changed(){
+void GUI_Target_Playlist_Dialog::language_changed() {
     this->ui->retranslateUi(this);
 }
 
 
 
-void GUI_Target_Playlist_Dialog::search_button_clicked(){
+void GUI_Target_Playlist_Dialog::search_button_clicked() {
     QString target_filename = QFileDialog::getSaveFileName(this,
                                                            tr("Choose target file"),
                                                            CSettingsStorage::getInstance()->getLibraryPath(),
@@ -63,11 +63,11 @@ void GUI_Target_Playlist_Dialog::search_button_clicked(){
 }
 
 
-void GUI_Target_Playlist_Dialog::ok_button_clicked(){
+void GUI_Target_Playlist_Dialog::ok_button_clicked() {
     QString target_filename = ui->le_path->text();
     bool checked = ui->cb_relative->isChecked();
 
-    if(target_filename.size() > 0){
+    if(target_filename.size() > 0) {
         emit sig_target_chosen(target_filename, checked);
         close();
     }

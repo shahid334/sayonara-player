@@ -28,22 +28,17 @@
 
 #include "GUI/RatingLabel.h"
 #include "GUI/library/delegate/LibraryItemDelegateAlbums.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
-#include <QObject>
 #include <QLabel>
-#include <QDebug>
-#include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
 #include <QTableView>
 #include <QStyleOptionViewItem>
 
 
-
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent) :
-    LibraryRatingDelegate(model, parent){
+    LibraryRatingDelegate(model, parent) {
 
     QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
     QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
@@ -71,11 +66,11 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
     int idx_col = _model->calc_shown_col(index.column());
 
-    if(_model->is_selected(index.row())){
+    if(_model->is_selected(index.row())) {
         painter->fillRect(rect, _selected_background);
     }
 
-    if(idx_col == COL_ALBUM_SAMPLER){
+    if(idx_col == COL_ALBUM_SAMPLER) {
         int col_width = _parent->columnWidth(0)-4;
         int row_height = _parent->rowHeight(0)-4;
         rect.translate(2, 2);
@@ -92,7 +87,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     }
 
 
-    else if(idx_col == COL_ALBUM_NAME){
+    else if(idx_col == COL_ALBUM_NAME) {
 
         rect.translate(2, 0);
         //QString name = _model->data(index).toString();
@@ -101,7 +96,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     }
 
 
-    else if(idx_col == COL_ALBUM_YEAR){
+    else if(idx_col == COL_ALBUM_YEAR) {
 
         rect.translate(-2, 0);
         //int year = _model->data(index).toInt();
@@ -113,7 +108,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
     }
 
-    else if(idx_col == COL_ALBUM_N_SONGS){
+    else if(idx_col == COL_ALBUM_N_SONGS) {
 
         rect.translate(-2, 0);
         //QString n_songs = _model->data(index).toString() + " tracks";
@@ -121,7 +116,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, n_songs);
     }
 
-    else if(idx_col == COL_ALBUM_DURATION){
+    else if(idx_col == COL_ALBUM_DURATION) {
 
         rect.translate(-2, 0);
         //QString duration = _model->data(index).toString();
@@ -129,7 +124,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, duration);
     }
 
-    else if(idx_col == COL_ALBUM_RATING){
+    else if(idx_col == COL_ALBUM_RATING) {
 
         int r = index.data().toInt();
         Rating rating(r);
@@ -150,8 +145,8 @@ QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, c
 
 
 
-void LibraryItemDelegateAlbums::set_skin(bool dark){
-    if(dark){
+void LibraryItemDelegateAlbums::set_skin(bool dark) {
+    if(dark) {
         _selected_background = QColor(66,78,114);
     }
 

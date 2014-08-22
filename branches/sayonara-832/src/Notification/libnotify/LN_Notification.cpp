@@ -18,34 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include <libnotify/notify.h>
-//#include <libnotify/notify-features.h>
-#include <QString>
+
 #include <QtPlugin>
-#include <QDebug>
 #include <QFile>
 #include <QPixmap>
-#include <CoverLookup/CoverLocation.h>
 
 #include "CoverLookup/CoverLocation.h"
 #include "Notification/Notification.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "Notification/libnotify/LN_Notification.h"
-#include "HelperStructs/Helper.h"
 
 
-LN_Notification::LN_Notification(){
+LN_Notification::LN_Notification() {
 	_initialized = notify_init("Sayonara"); 
     _not = 0;
 }
 
-LN_Notification::~LN_Notification(){
+LN_Notification::~LN_Notification() {
 
 }
 
-void LN_Notification::notification_show(const MetaData& md){
+void LN_Notification::notification_show(const MetaData& md) {
 
     if(!_initialized) return;
 
@@ -58,7 +52,7 @@ void LN_Notification::notification_show(const MetaData& md){
     QString text = md.artist + "\n" + md.album;
     text.replace("&", "&amp;");
 
-	if( !QFile::exists(cl.cover_path) ){
+	if( !QFile::exists(cl.cover_path) ) {
 		pixmap_path = Helper::getIconPath() + "logo_small.png";
 	}
 
@@ -73,7 +67,7 @@ void LN_Notification::notification_show(const MetaData& md){
 
         bool success = p.save(Helper::getSayonaraPath() + "not.jpg");
 
-		if(success){
+		if(success) {
             pixmap_path = Helper::getSayonaraPath() + "not.jpg";
 		}
     }
@@ -100,7 +94,7 @@ void LN_Notification::notification_show(const MetaData& md){
 
 }
 
-void LN_Notification::notification_update(const MetaData& md){
+void LN_Notification::notification_update(const MetaData& md) {
 
    if(!_not) return;
 
@@ -118,7 +112,7 @@ void LN_Notification::notification_update(const MetaData& md){
 
 }
 
-void LN_Notification::not_close(){
+void LN_Notification::not_close() {
 
     if(!_not) return;
 
@@ -130,7 +124,7 @@ void LN_Notification::not_close(){
 }
 
 
-QString LN_Notification::get_name(){
+QString LN_Notification::get_name() {
 	return "libnotify";
 }
 

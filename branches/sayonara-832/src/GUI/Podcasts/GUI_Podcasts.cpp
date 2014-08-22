@@ -31,7 +31,6 @@
 #include <QIcon>
 #include <QPixmap>
 #include <QMap>
-#include <QDebug>
 #include <QInputDialog>
 #include <QMessageBox>
 
@@ -69,17 +68,17 @@ GUI_Podcasts::~GUI_Podcasts() {
 
 }
 
-void GUI_Podcasts::language_changed(){
+void GUI_Podcasts::language_changed() {
     this->ui->retranslateUi(this);
 }
 
 
-void GUI_Podcasts::listen_clicked(){
+void GUI_Podcasts::listen_clicked() {
 
     QString url;
     QString name;
 
-    if(_cur_podcast == -1){
+    if(_cur_podcast == -1) {
         url = this->ui->le_url->text();
         name = "Podcast";
     }
@@ -90,17 +89,17 @@ void GUI_Podcasts::listen_clicked(){
         name = _cur_podcast_name;
     }
 
-    if(url.size() > 5){
+    if(url.size() > 5) {
 
        play_podcasts(url, name);
     }
 }
 
 
-void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts){
+void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts) {
 
     _podcasts = podcasts;
-    if(podcasts.size() > 0){
+    if(podcasts.size() > 0) {
         _cur_podcast = -1;
     }
 
@@ -112,7 +111,7 @@ void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts){
 
     _podcasts[""] = "";
 
-    for(QMap<QString, QString>::iterator it = _podcasts.begin(); it != _podcasts.end(); it++){
+    for(QMap<QString, QString>::iterator it = _podcasts.begin(); it != _podcasts.end(); it++) {
         this->ui->combo_podcasts->addItem(it.key(), it.value());
     }
 
@@ -122,7 +121,7 @@ void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts){
 }
 
 
-void GUI_Podcasts::init_gui(){
+void GUI_Podcasts::init_gui() {
     this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
     this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
 
@@ -130,18 +129,18 @@ void GUI_Podcasts::init_gui(){
 }
 
 
-void GUI_Podcasts::combo_index_changed(int idx){
+void GUI_Podcasts::combo_index_changed(int idx) {
 
     _cur_podcast = idx;
     _cur_podcast_name = this->ui->combo_podcasts->itemText(_cur_podcast);
 
     QString adress = _podcasts[_cur_podcast_name];
-    if(adress.size() > 0){
+    if(adress.size() > 0) {
         _cur_podcast_adress = adress;
         this->ui->le_url->setText(_cur_podcast_adress);
     }
 
-    if(idx == 0){
+    if(idx == 0) {
         this->ui->le_url->setText("");
     }
 
@@ -153,14 +152,14 @@ void GUI_Podcasts::combo_index_changed(int idx){
 }
 
 
-void GUI_Podcasts::combo_text_changed(const QString& text){
+void GUI_Podcasts::combo_text_changed(const QString& text) {
     _cur_podcast = -1;
 
 
     bool name_there = false;
-    for(int i=0; i<this->ui->combo_podcasts->count(); i++){
+    for(int i=0; i<this->ui->combo_podcasts->count(); i++) {
         QString str = this->ui->combo_podcasts->itemText(i);
-        if(!str.compare(text, Qt::CaseSensitive)){
+        if(!str.compare(text, Qt::CaseSensitive)) {
             name_there = true;
             break;
         }
@@ -173,14 +172,14 @@ void GUI_Podcasts::combo_text_changed(const QString& text){
     this->ui->combo_podcasts->setToolTip("");
 }
 
-void GUI_Podcasts::url_text_changed(const QString& text){
+void GUI_Podcasts::url_text_changed(const QString& text) {
 
     QString key = _podcasts.key(text);
 
-    if(! key.isEmpty() ){
+    if(! key.isEmpty() ) {
 
         int idx = this->ui->combo_podcasts->findText(key, Qt::MatchCaseSensitive);
-        if(idx != -1){
+        if(idx != -1) {
             this->ui->combo_podcasts->setCurrentIndex(idx);
             _cur_podcast = idx;
             this->ui->btn_save->setEnabled(false);
@@ -200,7 +199,7 @@ void GUI_Podcasts::url_text_changed(const QString& text){
 
         this->ui->btn_save->setEnabled(save_enabled);
         this->ui->btn_listen->setEnabled(text.size() > 5);
-        if(_cur_podcast != -1){
+        if(_cur_podcast != -1) {
             _cur_podcast = -1;
             this->ui->combo_podcasts->setEditText(tr("new"));
             _cur_podcast = -1;
@@ -210,7 +209,7 @@ void GUI_Podcasts::url_text_changed(const QString& text){
 }
 
 
-void GUI_Podcasts::delete_clicked(){
+void GUI_Podcasts::delete_clicked() {
     if(_cur_podcast == -1) return;
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
@@ -223,11 +222,11 @@ void GUI_Podcasts::delete_clicked(){
     Helper::set_deja_vu_font(&msgBox);
 
     int ret = msgBox.exec();
-    if(ret == QMessageBox::Yes){
-        if(db->deletePodcast(_cur_podcast_name)){
+    if(ret == QMessageBox::Yes) {
+        if(db->deletePodcast(_cur_podcast_name)) {
             qDebug() << _cur_podcast_name << "successfully deleted";
             QMap<QString, QString> map;
-            if(db->getAllPodcasts(map)){
+            if(db->getAllPodcasts(map)) {
                 setup_podcasts(map);
             }
         }
@@ -237,19 +236,19 @@ void GUI_Podcasts::delete_clicked(){
 }
 
 
-void GUI_Podcasts::save_clicked(){
+void GUI_Podcasts::save_clicked() {
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
     QString name = this->ui->combo_podcasts->currentText();
     QString url = this->ui->le_url->text();
 
     bool success = false;
-    if(name.size() > 0 && url.size() > 0){
+    if(name.size() > 0 && url.size() > 0) {
         success = db->addPodcast(name, url);
     }
 
-    if(success){
+    if(success) {
         QMap<QString, QString> map;
-        if(db->getAllPodcasts(map)){
+        if(db->getAllPodcasts(map)) {
             setup_podcasts(map);
         }
     }
@@ -262,23 +261,23 @@ void GUI_Podcasts::save_clicked(){
 
 
 
-void  GUI_Podcasts::play_podcasts(QString url, QString name){
+void  GUI_Podcasts::play_podcasts(QString url, QString name) {
 
     MetaDataList v_md;
 
     // playlist radio
     qDebug() << "is podcast file? ";
     QString content;
-    if(Helper::is_podcastfile(url, &content)){
+    if(Helper::is_podcastfile(url, &content)) {
         qDebug() << "true";
 
         MetaDataList v_md_tmp;
-        if(Podcast::parse_podcast_xml_file_content(content, v_md_tmp) > 0){
+        if(Podcast::parse_podcast_xml_file_content(content, v_md_tmp) > 0) {
 
-            foreach(MetaData md, v_md_tmp){
+            foreach(MetaData md, v_md_tmp) {
 
                 md.radio_mode = RadioModeStation;
-                if(md.title.size() == 0){
+                if(md.title.size() == 0) {
                     if(name.size() > 0)
                         md.title = name;
                     else md.title = "Podcast";

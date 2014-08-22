@@ -28,7 +28,7 @@
 #include "GUI/playlist/entry/GUI_PlaylistEntryBig.h"
 #include "GUI/playlist/entry/GUI_PlaylistEntrySmall.h"
 
-static QString get_fg_color(int val_bg){
+static QString get_fg_color(int val_bg) {
 
 	if(val_bg > 160)
 		return  QString(" color: #202020; ");
@@ -37,9 +37,9 @@ static QString get_fg_color(int val_bg){
 		return QString(" color: #D8D8D8 ");
 }
 
-PlaylistItemDelegate::PlaylistItemDelegate(QListView* parent, bool small){
+PlaylistItemDelegate::PlaylistItemDelegate(QListView* parent, bool small) {
 
-	if(small){ 	
+	if(small) { 	
 		_row_height = 20;
 		_pl_entry = new GUI_PlaylistEntrySmall();
 	}
@@ -52,7 +52,7 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView* parent, bool small){
 	_rendered_items = 0;
 }
 
-PlaylistItemDelegate::~PlaylistItemDelegate(){
+PlaylistItemDelegate::~PlaylistItemDelegate() {
 	delete _pl_entry;
 	_row_height = 0;
 }
@@ -84,17 +84,17 @@ void PlaylistItemDelegate::paint( QPainter *painter, const QStyleOptionViewItem 
 	int playing_val = col_highlight_lighter.lightness();
 	int background_val = col_background.lightness();
 
-	if(md.pl_playing){
+	if(md.pl_playing) {
 		style = QString("background-color: ") +
 			col_highlight_lighter.name() + "; " + 
 			get_fg_color(playing_val);
 	}
 
-	else if(md.is_disabled){
+	else if(md.is_disabled) {
 		style = QString("color: #A0A0A0; background-color: transparent;");
 	}
 
-	else if(!md.pl_selected){
+	else if(!md.pl_selected) {
 		style = QString("background-color: transparent; ") +
 			get_fg_color(background_val);
 	}
@@ -154,11 +154,11 @@ QWidget* PlaylistItemDelegate::createEditor(QWidget *parent, const QStyleOptionV
 	return 0;
 }
 
-void PlaylistItemDelegate::setMaxWidth(int w){
+void PlaylistItemDelegate::setMaxWidth(int w) {
 	_max_width = w;
 }
 
-int PlaylistItemDelegate::rowHeight(){
+int PlaylistItemDelegate::rowHeight() {
 	return _row_height;
 }
 

@@ -68,7 +68,7 @@ namespace EngineCallbacks {
 	show_position(GstElement* pipeline);
 
 	void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r);
-};
+}
 
 
 #endif // GSTENGINECALLBACKS_H

@@ -22,14 +22,14 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include <QString>
+
 #include <QPixmap>
 #include <QScrollBar>
 #include <QFileDialog>
 #include <QMessageBox>
 
 
-GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) : QDialog(parent){
+GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) : QDialog(parent) {
 
     Q_UNUSED(parent);
 
@@ -74,25 +74,25 @@ GUI_ImportFolder::~GUI_ImportFolder() {
 
 }
 
-void GUI_ImportFolder::changeSkin(bool dark){
+void GUI_ImportFolder::changeSkin(bool dark) {
 
 }
 
 
-void GUI_ImportFolder::set_folderlist(const QStringList& lst){
+void GUI_ImportFolder::set_folderlist(const QStringList& lst) {
     ui->combo_folders->clear();
     ui->combo_folders->addItems(lst);
 }
 
-void GUI_ImportFolder::set_status(QString str){
+void GUI_ImportFolder::set_status(QString str) {
     this->ui->pb_progress->hide();
     this->ui->lab_status->show();
     this->ui->lab_status->setText(str);
 }
 
-void GUI_ImportFolder::set_progress(int val){
+void GUI_ImportFolder::set_progress(int val) {
 
-    if(val){
+    if(val) {
         ui->pb_progress->show();
         ui->lab_status->hide();
     }
@@ -104,17 +104,17 @@ void GUI_ImportFolder::set_progress(int val){
     if(val == 100) val = 0;
 }
 
-void GUI_ImportFolder::bb_accepted(){
+void GUI_ImportFolder::bb_accepted() {
 
     emit sig_accepted(ui->combo_folders->currentText().trimmed(), ui->cb_copy2lib->isChecked());
 }
 
-void GUI_ImportFolder::bb_rejected(){
+void GUI_ImportFolder::bb_rejected() {
     emit sig_cancelled();
 }
 
 
-void GUI_ImportFolder::choose_dir(){
+void GUI_ImportFolder::choose_dir() {
 
 
     QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
@@ -122,7 +122,7 @@ void GUI_ImportFolder::choose_dir(){
 		tr("Choose target directory"),
                 lib_path, QFileDialog::ShowDirsOnly);
 
-    if(!dir.contains(lib_path)){
+    if(!dir.contains(lib_path)) {
         QMessageBox::warning(this, tr("Warning"), tr("%1<br />is no library directory").arg(dir));
         return;
     }
@@ -137,13 +137,13 @@ void GUI_ImportFolder::choose_dir(){
 }
 
 
-void GUI_ImportFolder::combo_box_changed(const QString& text){
+void GUI_ImportFolder::combo_box_changed(const QString& text) {
 
     QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
     ui->lab_target_path->setText( libpath + QDir::separator() + text );
 }
 
-void GUI_ImportFolder::set_thread_active(bool b){
+void GUI_ImportFolder::set_thread_active(bool b) {
     _thread_active = b;
 
     if(b)
@@ -153,9 +153,9 @@ void GUI_ImportFolder::set_thread_active(bool b){
 
 }
 
-void GUI_ImportFolder::closeEvent(QCloseEvent* e){
+void GUI_ImportFolder::closeEvent(QCloseEvent* e) {
 
-    if(!_thread_active){
+    if(!_thread_active) {
         e->accept();
         emit sig_closed();
         return;
@@ -165,7 +165,7 @@ void GUI_ImportFolder::closeEvent(QCloseEvent* e){
     emit sig_cancelled();
 }
 
-void GUI_ImportFolder::showEvent(QShowEvent* e){
+void GUI_ImportFolder::showEvent(QShowEvent* e) {
     emit sig_opened();
     e->accept();
 }

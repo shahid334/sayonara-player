@@ -51,7 +51,7 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
         n_preferred_name = n_preferred->get_name();
 
     int idx = 0;
-    for(int i=0; i<l_notifications.size(); i++){
+    for(int i=0; i<l_notifications.size(); i++) {
 
         Notification* n = l_notifications[i];
         ui->combo_notification->addItem(n->get_name());
@@ -75,12 +75,12 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
 
 }
 
-GUI_Notifications::~GUI_Notifications(){
+GUI_Notifications::~GUI_Notifications() {
 
 }
 
 
-void GUI_Notifications::ok_clicked(){
+void GUI_Notifications::ok_clicked() {
 
     bool active =       ui->cb_activate->isChecked();
     int timeout =       ui->sb_timeout->value();
@@ -102,11 +102,11 @@ void GUI_Notifications::ok_clicked(){
 }
 
 
-void GUI_Notifications::change_skin(bool dark){
+void GUI_Notifications::change_skin(bool dark) {
 
 }
 
-void GUI_Notifications::language_changed(){
+void GUI_Notifications::language_changed() {
     this->ui->retranslateUi(this);
 }
 

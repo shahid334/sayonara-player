@@ -30,17 +30,14 @@
 #include "GUI/library/model/LibraryItemModelTracks.h"
 #include "GUI/RatingLabel.h"
 
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
-#include <QObject>
 #include <QLabel>
-#include <QDebug>
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
 
-LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent) : LibraryRatingDelegate(model, parent){
+LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent) : LibraryRatingDelegate(model, parent) {
 	this->_parent = parent;
 	_model = model;
 	_selected_background = QColor(66,78,114);
@@ -66,34 +63,34 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
     QRect 	rect(option.rect);
     QString	text = index.data().toString();
 
-    if(_model->is_selected(index.row())){
+    if(_model->is_selected(index.row())) {
         painter->fillRect(rect, _selected_background);
     }
 
-    if(idx_col == COL_FILESIZE){
+    if(idx_col == COL_FILESIZE) {
         text = Helper::calc_filesize_str(text.toInt());
         rect.translate(-2, 0);
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
     }
 
-    else if(idx_col == COL_BITRATE){
+    else if(idx_col == COL_BITRATE) {
         text = QString::number(text.toInt() / 1000) + " kbit/s";
         rect.translate(-2, 0);
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
     }
-    else if(idx_col == COL_YEAR){
+    else if(idx_col == COL_YEAR) {
             if(text == "0") text = "";
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
     }
-    else if(idx_col == COL_TRACK_NUM){
+    else if(idx_col == COL_TRACK_NUM) {
             painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
     }
-    else if(idx_col == COL_LENGTH){
+    else if(idx_col == COL_LENGTH) {
         rect.translate(-2, 0);
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, text);
     }
 
-    else if(idx_col == COL_TRACK_RATING){
+    else if(idx_col == COL_TRACK_RATING) {
         int r = index.data().toInt();
         Rating rating(r);
         rating.paint(painter, rect, option.palette);
@@ -125,8 +122,8 @@ QSize LibraryItemDelegateTracks::sizeHint(const QStyleOptionViewItem & option, c
 
 
 
-void LibraryItemDelegateTracks::set_skin(bool dark){
-    if(dark){
+void LibraryItemDelegateTracks::set_skin(bool dark) {
+    if(dark) {
 		_selected_background = QColor(66,78,114);
 	}
 

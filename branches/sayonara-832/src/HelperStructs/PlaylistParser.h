@@ -23,9 +23,6 @@
 #define PLAYLISTPARSER_H_
 
 #include "HelperStructs/Helper.h"
-#include <HelperStructs/MetaData.h>
-#include <QStringList>
-#include <QString>
 
 
 namespace PlaylistParser {
@@ -33,6 +30,6 @@ namespace PlaylistParser {
 	int parse_playlist(QString playlist_file, MetaDataList& md);
     void save_playlist(QString filename, const MetaDataList& md, bool relative);
 
-};
+}
 
 #endif /* PLAYLISTPARSER_H_ */

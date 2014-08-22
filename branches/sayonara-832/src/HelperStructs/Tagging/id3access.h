@@ -51,7 +51,7 @@ typedef unsigned int uint;
 
 #define DISCNUMBER "TPOS"
 /*
-if(!valid){
+if(!valid) {
 
     char c[] = {'I', 'D', '3', 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     raw_data = QByteArray(c, 10);

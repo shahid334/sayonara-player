@@ -18,16 +18,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistParser.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include <QDebug>
+
 #include <QDir>
 #include <QFileInfo>
-#include <QStringList>
 
 
 
@@ -86,7 +84,7 @@ void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & file
     }
 }
 
-void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_md){
+void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_md) {
 
     qDebug() << "get metadata of filelist";
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
@@ -100,11 +98,11 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
     setFilter(filter);
 
-    foreach(QString str, lst){
+    foreach(QString str, lst) {
 
         if(!QFile::exists(str)) continue;
 
-        if(Helper::is_dir(str)){
+        if(Helper::is_dir(str)) {
 
             int n_files;
 
@@ -114,7 +112,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             getFilesInsiderDirRecursive(dir, files, n_files);
         }
 
-        else if(Helper::is_file(str)){
+        else if(Helper::is_file(str)) {
             files.push_back(str);
         }
     }
@@ -126,21 +124,21 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
     db->getMultipleTracksByPath(files, v_possible_md);
 
-    foreach(MetaData md, v_possible_md){
+    foreach(MetaData md, v_possible_md) {
         QString filepath = QDir(md.filepath).absolutePath();
 
-        if(Helper::is_playlistfile(filepath)){
+        if(Helper::is_playlistfile(filepath)) {
             playlist_paths.push_back(filepath);
             continue;
         }
 
 
 
-        if(Helper::is_soundfile(filepath)){
+        if(Helper::is_soundfile(filepath)) {
 
             qDebug() << md.filepath << " is soundfile " << md.id;
-            if(md.id < 0){
-                if(!ID3::getMetaDataOfFile(md)){
+            if(md.id < 0) {
+                if(!ID3::getMetaDataOfFile(md)) {
                     continue;
                 }
                 md.is_extern = true;
@@ -153,7 +151,7 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
     // TODO: look for playlists if paths could be read from database
 	//extract media files out of playlist files
-    foreach(QString path, playlist_paths){
+    foreach(QString path, playlist_paths) {
 
         qDebug() << "parse playlist file " << path;
 
@@ -161,9 +159,9 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         PlaylistParser::parse_playlist(path, v_md_pl);
 
         // check, that metadata is not already available
-        foreach(MetaData md_pl, v_md_pl){
+        foreach(MetaData md_pl, v_md_pl) {
 
-            if(!v_md.contains(md_pl)){
+            if(!v_md.contains(md_pl)) {
                 //qDebug() << md_pl.filepath << " not in vector";
                 v_md.push_back(md_pl);
             }

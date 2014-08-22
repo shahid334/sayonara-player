@@ -47,7 +47,7 @@ QWidget *LibraryRatingDelegate::createEditor(QWidget *parent, const QStyleOption
 }
 
 
-void LibraryRatingDelegate::destroy_editor(bool save){
+void LibraryRatingDelegate::destroy_editor(bool save) {
 
 	_parent->set_editor(NULL);
     RatingLabel *label = qobject_cast<RatingLabel *>(sender());

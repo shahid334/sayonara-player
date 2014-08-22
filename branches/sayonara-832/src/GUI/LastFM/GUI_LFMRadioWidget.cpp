@@ -73,20 +73,20 @@ GUI_LFMRadioWidget::~GUI_LFMRadioWidget() {
 
 
 
-void GUI_LFMRadioWidget::changeSkin(bool dark){
+void GUI_LFMRadioWidget::changeSkin(bool dark) {
 
 }
 
-void GUI_LFMRadioWidget::language_changed(){
+void GUI_LFMRadioWidget::language_changed() {
     this->_ui->retranslateUi(this);
 }
 
-void GUI_LFMRadioWidget::start_listen(){
+void GUI_LFMRadioWidget::start_listen() {
 
 	bool text_input = false;
 	int lfm_listen_mode = LFM_RADIO_MODE_TAG;
 
-    switch(_ui->combo_mode->currentIndex()){
+    switch(_ui->combo_mode->currentIndex()) {
 
     case IDX_ARTIST:
         lfm_listen_mode = LFM_RADIO_MODE_ARTIST;
@@ -119,20 +119,20 @@ void GUI_LFMRadioWidget::start_listen(){
 	else
 		text = _ui->cb_friends->currentText();
 
-    if(text.size() >= 3){
+    if(text.size() >= 3) {
         qDebug() << "Listen to " << lfm_listen_mode;
         emit listen_clicked(text, lfm_listen_mode);
 
     }
 }
 
-void GUI_LFMRadioWidget:: mode_index_changed(int i){
-    if(_friends.size() == 0){
+void GUI_LFMRadioWidget:: mode_index_changed(int i) {
+    if(_friends.size() == 0) {
         LastFM::getInstance()->lfm_get_friends(_friends);
         _ui->cb_friends->addItems(_friends);
     }
 
-    switch(i){
+    switch(i) {
         case IDX_ARTIST:
             _ui->cb_friends->setVisible(false);
             _ui->le_text->setVisible(true);
@@ -157,7 +157,7 @@ void GUI_LFMRadioWidget:: mode_index_changed(int i){
     }
 }
 
-void GUI_LFMRadioWidget::psl_radio_initialized(bool b){
+void GUI_LFMRadioWidget::psl_radio_initialized(bool b) {
     if(b)
         _lastfm->psl_radio_playlist_request();
 

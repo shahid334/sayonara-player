@@ -20,11 +20,10 @@
 
 #include "GUI/playlist/entry/GUI_PlaylistEntrySmall.h"
 #include "HelperStructs/CSettingsStorage.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
 
-GUI_PlaylistEntrySmall::GUI_PlaylistEntrySmall(QWidget* parent) : GUI_PlaylistEntry(parent){
+GUI_PlaylistEntrySmall::GUI_PlaylistEntrySmall(QWidget* parent) : GUI_PlaylistEntry(parent) {
     this->ui = new Ui::PlaylistEntrySmall();
 	this->ui->setupUi(this);
 }
@@ -33,7 +32,7 @@ GUI_PlaylistEntrySmall::~GUI_PlaylistEntrySmall() {
 	delete this->ui;
 }
 
-void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx){
+void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx) {
 
 	QString titlestr;
 

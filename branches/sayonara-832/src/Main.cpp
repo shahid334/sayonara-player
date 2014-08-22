@@ -30,20 +30,16 @@
 
 #include "application.h"
 
-#include <QStringList>
-#include <QDebug>
-
-#include <QDir>
-#include <QFile>
-#include <QString>
-#include <QStringList>
-#include <QTranslator>
-#include <QFontDatabase>
-
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 
-int check_for_another_instance_unix(){
+#include <QDir>
+#include <QFile>
+#include <QTranslator>
+#include <QFontDatabase>
+
+
+int check_for_another_instance_unix() {
 
 	int pid = -1;
 
@@ -52,7 +48,7 @@ int check_for_another_instance_unix(){
 	QStringList lst = dir.entryList(QDir::Dirs);
 	int n_instances = 0;
 
-	foreach(QString dirname, lst){
+	foreach(QString dirname, lst) {
 		bool ok;
 		int tmp_pid = dirname.toInt(&ok);
 		if(!ok) continue;
@@ -69,7 +65,7 @@ int check_for_another_instance_unix(){
 		QString str = f.readLine();
 		f.close();
 
-		if(str.contains("sayonara", Qt::CaseInsensitive)){
+		if(str.contains("sayonara", Qt::CaseInsensitive)) {
 			if(pid == -1 || tmp_pid < pid) pid = tmp_pid;
 			n_instances ++;
 			if(n_instances > 1) return pid;
@@ -81,14 +77,14 @@ int check_for_another_instance_unix(){
 }
 
 
-void printHelp(){
+void printHelp() {
 	qDebug() << "sayonara <list>";
 	qDebug() << "<list> can consist of either files or directories or both";
 
 }
 
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[]) {
 
 
 	Application app (argc, argv);
@@ -106,7 +102,7 @@ int main(int argc, char *argv[]){
 
 
 #ifdef Q_OS_UNIX
-	if(settings->getAllowOnlyOneInstance()){
+	if(settings->getAllowOnlyOneInstance()) {
 		int pid = check_for_another_instance_unix();
 		if(pid > 0) {
 			qDebug() << "another instance is already running";
@@ -120,7 +116,7 @@ int main(int argc, char *argv[]){
 #endif
 
 
-   	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
+   	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")) {
         QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 	}
 
@@ -130,7 +126,7 @@ int main(int argc, char *argv[]){
 
 
 		QStringList params;
-		for(int i=1; i<argc; i++){
+		for(int i=1; i<argc; i++) {
 			QString param(argv[i]);
 			params.push_back(param);
 		}

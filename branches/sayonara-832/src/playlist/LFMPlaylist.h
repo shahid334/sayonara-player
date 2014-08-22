@@ -37,20 +37,20 @@ signals:
     void sig_finished(const MetaDataList&);
 
 private slots:
-    void playlist_fetched(const MetaDataList& v_md){
+    void playlist_fetched(const MetaDataList& v_md) {
         emit sig_finished(v_md);
     }
 
 public:
-    NewLFMPlaylistThread(LastFM* lfm, QObject* parent=0 ) : QThread(parent){
+    NewLFMPlaylistThread(LastFM* lfm, QObject* parent=0 ) : QThread(parent) {
         _lfm = lfm;
     }
 
-    ~NewLFMPlaylistThread(){ this->terminate();}
+    ~NewLFMPlaylistThread() { this->terminate();}
 
 
 protected:
-    void run(){
+    void run() {
 
         _lfm->psl_radio_playlist_request();
 

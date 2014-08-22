@@ -28,7 +28,6 @@
 #include <QEvent>
 #include <QWheelEvent>
 #include <QHoverEvent>
-#include <QDebug>
 #include <QIcon>
 #include <QPixmap>
 #include <QTimer>
@@ -117,7 +116,7 @@ GUI_TrayIcon::~GUI_TrayIcon() {
 }
 
 
-void GUI_TrayIcon::language_changed(){
+void GUI_TrayIcon::language_changed() {
   
 	m_playAction->setText(tr("Play"));
 	m_fwdAction->setText(tr("Next"));
@@ -129,7 +128,7 @@ void GUI_TrayIcon::language_changed(){
 }
         
 
-void GUI_TrayIcon::change_skin(QString stylesheet){
+void GUI_TrayIcon::change_skin(QString stylesheet) {
     this->m_trayContextMenu->setStyleSheet(stylesheet);
     this->setMute(_mute);
 }
@@ -156,10 +155,10 @@ void GUI_TrayIcon::timer_timed_out()
 void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
     _md = md;
     _md_set = true;
-    if(m_notification_active){
+    if(m_notification_active) {
         Notification* n = m_plugin_loader->get_cur_plugin();
 
-        if(n){
+        if(n) {
 
             n->notification_show(md);
         }
@@ -174,92 +173,92 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
 
 
 
-void GUI_TrayIcon::trackChanged(const MetaData& md){
+void GUI_TrayIcon::trackChanged(const MetaData& md) {
     songChangedMessage(md);
 }
 
-void  GUI_TrayIcon::set_timeout(int timeout_ms){
+void  GUI_TrayIcon::set_timeout(int timeout_ms) {
     m_timeout = timeout_ms;
 }
 
-void  GUI_TrayIcon::set_notification_active(bool active){
+void  GUI_TrayIcon::set_notification_active(bool active) {
     m_notification_active = active;
 }
 
-void GUI_TrayIcon::set_enable_play(bool b){
+void GUI_TrayIcon::set_enable_play(bool b) {
 	m_playAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_stop(bool b){
+void GUI_TrayIcon::set_enable_stop(bool b) {
 	m_stopAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_mute(bool b){
+void GUI_TrayIcon::set_enable_mute(bool b) {
 
 }
 
-void GUI_TrayIcon::set_enable_fwd(bool b){
+void GUI_TrayIcon::set_enable_fwd(bool b) {
 	m_fwdAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_bwd(bool b){
+void GUI_TrayIcon::set_enable_bwd(bool b) {
 	m_bwdAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_show(bool b){
+void GUI_TrayIcon::set_enable_show(bool b) {
 	m_showAction->setEnabled(b);
 }
 
 
-void GUI_TrayIcon::play_clicked(){
+void GUI_TrayIcon::play_clicked() {
     qDebug() << "tray: play clicked";
-    if(!m_playing){
+    if(!m_playing) {
 		emit sig_play_clicked();
 	}
 
 	else emit sig_pause_clicked();
 }
 
-void GUI_TrayIcon::stop_clicked(){
+void GUI_TrayIcon::stop_clicked() {
 	emit sig_stop_clicked();
 }
 
-void GUI_TrayIcon::stop(){
+void GUI_TrayIcon::stop() {
 	_md_set = false;
 }
 
-void GUI_TrayIcon::fwd_clicked(){
+void GUI_TrayIcon::fwd_clicked() {
 	emit sig_fwd_clicked();
 }
 
-void GUI_TrayIcon::bwd_clicked(){
+void GUI_TrayIcon::bwd_clicked() {
 	emit sig_bwd_clicked();
 }
 
-void GUI_TrayIcon::show_clicked(){
+void GUI_TrayIcon::show_clicked() {
 	emit sig_show_clicked();
 }
 
-void GUI_TrayIcon::close_clicked(){
+void GUI_TrayIcon::close_clicked() {
 	emit sig_close_clicked();
 }
 
-void GUI_TrayIcon::mute_clicked(){
+void GUI_TrayIcon::mute_clicked() {
 	emit sig_mute_clicked();
 }
 
-void GUI_TrayIcon::setMute(bool mute){
+void GUI_TrayIcon::setMute(bool mute) {
 
     _mute = mute;
 
     QString suffix = "";
     int style = CSettingsStorage::getInstance()->getPlayerStyle();
 
-    if(style == 1){
+    if(style == 1) {
         suffix = "_dark";
     }
 
-	if(!mute){
+	if(!mute) {
         m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute" + suffix + ".png"));
         m_muteAction->setText(tr("Mute"));
 	}
@@ -270,11 +269,11 @@ void GUI_TrayIcon::setMute(bool mute){
 	}
 }
 
-void GUI_TrayIcon::setPlaying(bool play){
+void GUI_TrayIcon::setPlaying(bool play) {
 
     m_playing = play;
 
-	if(play){
+	if(play) {
 		setIcon(m_playIcon);
 		m_playAction->setIcon(m_pauseIcon);
 		m_playAction->setText(tr("Pause"));
@@ -286,7 +285,7 @@ void GUI_TrayIcon::setPlaying(bool play){
 	}
 }
 
-int GUI_TrayIcon::get_vol_step(){
+int GUI_TrayIcon::get_vol_step() {
 	return m_vol_step;
 
 }

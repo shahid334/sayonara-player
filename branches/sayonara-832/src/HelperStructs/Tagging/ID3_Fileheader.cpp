@@ -44,7 +44,7 @@ void stretch_file(QFile* f, long offset, int n_bytes);
 const int N_Tags = 75;
 
 static QHash<QByteArray, QString> taglist;
-static void create_taglist(){
+static void create_taglist() {
 	taglist.insert("TPE1", "Artist");
 	taglist.insert("TPE2", "Band");
 	taglist.insert("TIT2", "Title");
@@ -86,7 +86,7 @@ static void create_taglist(){
 
 
 
-ID3_FileHeader::ID3_FileHeader(QString filename){
+ID3_FileHeader::ID3_FileHeader(QString filename) {
 
 	_filename = filename;
     header_size = 0;
@@ -97,11 +97,11 @@ ID3_FileHeader::ID3_FileHeader(QString filename){
     valid = fh_open_and_read_file(filename);
 }
 
-bool ID3_FileHeader::is_valid(){
+bool ID3_FileHeader::is_valid() {
     return valid;
 }
 
-bool ID3_FileHeader::fh_is_unicode_frame(const QByteArray& data_wo_header, bool* little_endian){
+bool ID3_FileHeader::fh_is_unicode_frame(const QByteArray& data_wo_header, bool* little_endian) {
 
 
 	QByteArray be;
@@ -115,12 +115,12 @@ bool ID3_FileHeader::fh_is_unicode_frame(const QByteArray& data_wo_header, bool*
 	int idx_be = data_wo_header.left(4).indexOf(be);
 	int idx_le = data_wo_header.left(4).indexOf(le);
 
-	if(idx_be >= 0){
+	if(idx_be >= 0) {
 		*little_endian = false;
 		return true;
 	}
 
-	else if(idx_le >= 0){
+	else if(idx_le >= 0) {
 		*little_endian = true;
 		return true;
 	}
@@ -134,7 +134,7 @@ bool ID3_FileHeader::fh_is_unicode_frame(const QByteArray& data_wo_header, bool*
 
 
 
-void ID3_FileHeader::fh_update_size(){
+void ID3_FileHeader::fh_update_size() {
 
     // header size $(-X XX XX XX ) * 4
 
@@ -159,12 +159,12 @@ void ID3_FileHeader::fh_update_size(){
 }
 
 
-qint64 ID3_FileHeader::fh_read_header_size(const QByteArray& ten){
+qint64 ID3_FileHeader::fh_read_header_size(const QByteArray& ten) {
 
     qint64 headersize = 0;
     int multiplier = 1;
 
-    for(int i=9; i>=6; i--){
+    for(int i=9; i>=6; i--) {
             headersize += (ten[i] * multiplier);
             multiplier *= 128;
     }
@@ -175,7 +175,7 @@ qint64 ID3_FileHeader::fh_read_header_size(const QByteArray& ten){
 
 // input: entire vector, with header, size, flags, content
 // ountput: only size str
-QByteArray ID3_FileHeader::fh_calc_frame_content_size_int_to_byte(uint new_size){
+QByteArray ID3_FileHeader::fh_calc_frame_content_size_int_to_byte(uint new_size) {
 
     char c_new_size[4];
 
@@ -190,13 +190,13 @@ QByteArray ID3_FileHeader::fh_calc_frame_content_size_int_to_byte(uint new_size)
 
 // input: entire vector, with header, size, flags, content
 // output: of size of content
-int ID3_FileHeader::fh_calc_frame_content_size_byte_to_int(const QByteArray& ten){
+int ID3_FileHeader::fh_calc_frame_content_size_byte_to_int(const QByteArray& ten) {
 
     if(ten.size() < 10) return 0;
 
 	int size = 0;
     int multiplier = 1;
-    for(int i=7; i>=4; i--){
+    for(int i=7; i>=4; i--) {
 
 			size += ((unsigned char) ten[i] * multiplier);
             multiplier *= 128;
@@ -208,7 +208,7 @@ int ID3_FileHeader::fh_calc_frame_content_size_byte_to_int(const QByteArray& ten
 
 // input: entire vector, with header, size, flags, content
 // output: same, but modified
-void ID3_FileHeader::fh_set_frame_content(const QByteArray& four, const QByteArray& data_wo_header){
+void ID3_FileHeader::fh_set_frame_content(const QByteArray& four, const QByteArray& data_wo_header) {
 
     QByteArray result = four;
     QByteArray sz = fh_calc_frame_content_size_int_to_byte(data_wo_header.size());
@@ -223,7 +223,7 @@ void ID3_FileHeader::fh_set_frame_content(const QByteArray& four, const QByteArr
 
 // input: entire vector, with header, size, flags, content
 // output: only content
-QByteArray ID3_FileHeader::fh_extract_frame_content(const QByteArray& data_w_header){
+QByteArray ID3_FileHeader::fh_extract_frame_content(const QByteArray& data_w_header) {
 
 	QByteArray result;
     int len_frame = fh_calc_frame_content_size_byte_to_int(data_w_header.left(10)) + 10;
@@ -232,7 +232,7 @@ QByteArray ID3_FileHeader::fh_extract_frame_content(const QByteArray& data_w_hea
 
 	char arr[128];
 	memset(arr, 0, 128);
-	for(int i=10; i<len_frame; i++){
+	for(int i=10; i<len_frame; i++) {
 		result.push_back(data_w_header.at(i));
 		arr[i-10] = data_w_header.at(i);
 
@@ -242,7 +242,7 @@ QByteArray ID3_FileHeader::fh_extract_frame_content(const QByteArray& data_w_hea
 }
 
 
-QString ID3_FileHeader::fh_convert_frame_content_to_text(const QByteArray& data_wo_header){
+QString ID3_FileHeader::fh_convert_frame_content_to_text(const QByteArray& data_wo_header) {
 
 	QString ret;
 	bool little_endian;
@@ -257,20 +257,20 @@ QString ID3_FileHeader::fh_convert_frame_content_to_text(const QByteArray& data_
 		be.push_back((char) 0xFE);
 
 
-	if(is_unicode){
+	if(is_unicode) {
 		
-		if(little_endian){ // FE FF
+		if(little_endian) { // FE FF
 			int idx = data_wo_header.indexOf(le) + 2;
-			for(int i=idx; i<data_wo_header.size(); i+=2){
+			for(int i=idx; i<data_wo_header.size(); i+=2) {
 				uchar num = (uchar)(data_wo_header[i] * 256) + (uchar)(data_wo_header[i+1]);
 				QChar c(num);
 				ret.push_back(c);
 			}
 		}
 
-		else if(!little_endian){ // FF FE
+		else if(!little_endian) { // FF FE
 			int idx = data_wo_header.indexOf(be) + 2;
-			for(int i=idx; i<data_wo_header.size(); i+=2){
+			for(int i=idx; i<data_wo_header.size(); i+=2) {
 				uchar num = (uchar)(data_wo_header[i]) + (uchar)(data_wo_header[i+1] * 256);
 				QChar c(num);
 				ret.push_back(c);
@@ -279,7 +279,7 @@ QString ID3_FileHeader::fh_convert_frame_content_to_text(const QByteArray& data_
 	}
 
 	else{
-		for(int i=0; i<data_wo_header.size(); i+=2){
+		for(int i=0; i<data_wo_header.size(); i+=2) {
 			char c = data_wo_header[i];
 			ret.push_back(c);
 		}
@@ -289,14 +289,14 @@ QString ID3_FileHeader::fh_convert_frame_content_to_text(const QByteArray& data_
 }
 
 
-bool ID3_FileHeader::fh_open_and_read_file(QString filename){
+bool ID3_FileHeader::fh_open_and_read_file(QString filename) {
 	this->broken = false;
 
 
 #if 0
 	int fd;
 	fd = open(filename.toUtf8(), O_RDONLY);
-	if(fd < 0){
+	if(fd < 0) {
 		valid = false;
 		return false;
 	}
@@ -305,7 +305,7 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 	struct stat sb;
 	char* addr;
 
-	if(fstat(fd, &sb) == -1){
+	if(fstat(fd, &sb) == -1) {
 		valid = false;
 		return false;
 	}
@@ -313,7 +313,7 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 	length = 4194304;
 	if(length > sb.st_size) length = sb.st_size;
 	addr = (char*) mmap(NULL, length, PROT_READ, MAP_PRIVATE, fd, 0);
-	if(addr == MAP_FAILED){
+	if(addr == MAP_FAILED) {
 		qDebug() << "MMAP sucks";
 		valid = false;
 		return false;
@@ -337,7 +337,7 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 #else
 
 	QFile* f = new QFile(filename);
-	if(!f->open(QIODevice::ReadOnly)){
+	if(!f->open(QIODevice::ReadOnly)) {
 		valid = false;
 		return false;
 	}
@@ -366,18 +366,18 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 
 	// this O(n²) looks slower as it is
 	int size = raw_data.size();
-	for(qint64 i=10; i<size; i++){
+	for(qint64 i=10; i<size; i++) {
 
         QByteArray four = raw_data.mid(i, 4);
 
 		// tag found
 		QString tag_name = taglist[four];
-		if( tag_name.size() > 0 ){
+		if( tag_name.size() > 0 ) {
 
 			QByteArray arr(raw_data.mid(i, 10));
 			int framesize = fh_calc_frame_content_size_byte_to_int(arr);
 			//qDebug() << "Found tag = " << four << ", " << framesize;
-			/*for(int i=0; i<arr.size(); i++){
+			/*for(int i=0; i<arr.size(); i++) {
 				qDebug() << (uint) arr.at(i);
 			}*/
 
@@ -393,8 +393,8 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
 
 
 
-	for(int i=6; i<10; i++){
-		if(raw_data[size - i - 1]){
+	for(int i=6; i<10; i++) {
+		if(raw_data[size - i - 1]) {
 			qDebug() << "Size = " << size << ", " << i;
 			this->broken = true;
 			break;
@@ -406,7 +406,7 @@ bool ID3_FileHeader::fh_open_and_read_file(QString filename){
     return true;
 }
 
-bool ID3_FileHeader::is_broken(){
+bool ID3_FileHeader::is_broken() {
 
 	return this->broken;
 }
@@ -414,7 +414,7 @@ bool ID3_FileHeader::is_broken(){
 
 
 
-QString ID3_FileHeader::read(QByteArray& four, QByteArray& dst_arr){
+QString ID3_FileHeader::read(QByteArray& four, QByteArray& dst_arr) {
 
     dst_arr = all_frames.value(four);
 	QString str(dst_arr);
@@ -426,12 +426,12 @@ QString ID3_FileHeader::read(QByteArray& four, QByteArray& dst_arr){
 }
 
 
-QByteArray ID3_FileHeader::read(QByteArray& four){
+QByteArray ID3_FileHeader::read(QByteArray& four) {
 	return all_frames.value(four);
 }
 
 
-bool ID3_FileHeader::commit(){
+bool ID3_FileHeader::commit() {
 
     int increase_size = 0;
     int raw_data_size = raw_data.size();
@@ -442,7 +442,7 @@ bool ID3_FileHeader::commit(){
     raw_data = QByteArray(c, 10);
 
     QList<QByteArray> keys = all_frames.keys();
-    foreach(QByteArray key, keys){
+    foreach(QByteArray key, keys) {
         //qDebug() << "write " << key;
         raw_data.push_back(all_frames.value(key));
     }
@@ -452,14 +452,14 @@ bool ID3_FileHeader::commit(){
     int arr_difference = raw_data_size - raw_data.size();
 
     //old array was bigger
-    if(arr_difference >= 0){
-        for(int i=0; i<arr_difference; i++){
+    if(arr_difference >= 0) {
+        for(int i=0; i<arr_difference; i++) {
             raw_data.push_back((char) 0x00);
         }
     }
 
     else {
-	for(int i=0; i<1024; i++){
+	for(int i=0; i<1024; i++) {
             raw_data.push_back((char) 0x00);
 	}
 
@@ -484,7 +484,7 @@ bool ID3_FileHeader::commit(){
 
 
 
-void stretch_file(QFile* f, long offset, int n_bytes){
+void stretch_file(QFile* f, long offset, int n_bytes) {
     if(n_bytes <= 0 ) return;
 
     const int buffersize = 16384;
@@ -496,7 +496,7 @@ void stretch_file(QFile* f, long offset, int n_bytes){
 
     qint64 i=filesize - buffersize;
 
-    while(i>offset){
+    while(i>offset) {
            QByteArray arr = f->read(buffersize);
 
            f->seek( f->pos() - buffersize + n_bytes);

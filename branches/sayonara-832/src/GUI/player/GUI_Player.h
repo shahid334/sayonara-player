@@ -34,6 +34,7 @@
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
+#include "GUI/player/GUI_TrayIcon.h"
 
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
@@ -47,15 +48,10 @@
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QTranslator>
-#include "GUI/player/GUI_TrayIcon.h"
-
-#include <QList>
 #include <QCloseEvent>
 #include <QKeySequence>
 #include <QTranslator>
-#include <QWidget>
 #include <QAction>
-#include <QDebug>
 
 
 class GUI_Player : public QMainWindow, private Ui::Sayonara
@@ -250,7 +246,7 @@ private:
     AsyncWebAccess*         m_awa_translators;
 
     QString                 m_class_name;
-    quint32                 m_completeLength_ms;
+	qint64                 m_completeLength_ms;
     bool                    m_playing;
     bool                    m_mute;
     GUI_TrayIcon *          m_trayIcon;

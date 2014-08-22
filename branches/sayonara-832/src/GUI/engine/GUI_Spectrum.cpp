@@ -52,19 +52,19 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
 
     _update_running = false;
 
-    for(int i=0; i<N_BINS; i++){
+    for(int i=0; i<N_BINS; i++) {
 
         _spec << 0.0f;
     }
 
-    for(int i=0; i<1100; i++){
+    for(int i=0; i<1100; i++) {
         log_lu[i] = log( (i * 1.0f) / 10.0f );
     }
 
     _steps = new int*[N_BINS];
-    for(int i=0; i<N_BINS; i++){
+    for(int i=0; i<N_BINS; i++) {
         _steps[i] = new int[_cur_style.n_rects];
-        for(int j=0; j<_cur_style.n_rects; j++){
+        for(int j=0; j<_cur_style.n_rects; j++) {
             _steps[i][j] = 0;
         }
     }
@@ -76,19 +76,19 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
 
 
 void
-GUI_Spectrum::mousePressEvent(QMouseEvent *e){
+GUI_Spectrum::mousePressEvent(QMouseEvent *e) {
 
     int n_styles = _ecsc->get_num_color_schemes();
 
 
-    if(e->button() == Qt::LeftButton){
+    if(e->button() == Qt::LeftButton) {
         _cur_style_idx = (_cur_style_idx +  1) % n_styles;
     }
 
     else if (e->button() == Qt::RightButton)
         emit sig_right_clicked(_cur_style_idx);
 
-    else if (e->button() == Qt::MidButton){
+    else if (e->button() == Qt::MidButton) {
         close();
         return;
     }
@@ -101,7 +101,7 @@ GUI_Spectrum::mousePressEvent(QMouseEvent *e){
 }
 
 void
-GUI_Spectrum::set_spectrum(QList<float>& lst){
+GUI_Spectrum::set_spectrum(QList<float>& lst) {
     if(!_timer_stopped) _timer->stop();
 
     _spec = lst;
@@ -110,7 +110,7 @@ GUI_Spectrum::set_spectrum(QList<float>& lst){
 
 
 void
-GUI_Spectrum::paintEvent(QPaintEvent *e){
+GUI_Spectrum::paintEvent(QPaintEvent *e) {
 
     if(_update_running) return;
      QPainter painter(this);
@@ -138,7 +138,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
 
 
     // run through all bins
-    for(int i=offset; i<ninety + 1; i++){
+    for(int i=offset; i<ninety + 1; i++) {
 
 
         float f = _spec[i] * log_lu[ i*10 + 54] * 0.60f;
@@ -154,12 +154,12 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
         int y = widget_height - h_rect;
 
         // run vertical
-        for(int r=0; r<n_rects; r++){
+        for(int r=0; r<n_rects; r++) {
 
             QColor col;
 
             // 100%
-            if( r < colored_rects){
+            if( r < colored_rects) {
                 col = _cur_style.style[r].value(-1);
                 _steps[i][r] = n_fading_steps;
             }
@@ -182,7 +182,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
         x += w_bin + border_x;
     }
 
-    if(n_zero == (ninety - offset) * n_rects && _timer->isActive()){
+    if(n_zero == (ninety - offset) * n_rects && _timer->isActive()) {
         _timer->stop();
         _timer_stopped = true;
     }
@@ -191,28 +191,28 @@ GUI_Spectrum::paintEvent(QPaintEvent *e){
 
 
 
-void GUI_Spectrum::showEvent(QShowEvent * e){
+void GUI_Spectrum::showEvent(QShowEvent * e) {
     Q_UNUSED(e);
     this->update();
     emit sig_show(true);
 }
 
-void GUI_Spectrum::closeEvent(QCloseEvent *e){
+void GUI_Spectrum::closeEvent(QCloseEvent *e) {
     PlayerPlugin::closeEvent(e);
     this->update();
     emit sig_show(false);
 }
 
-void GUI_Spectrum::psl_stop(){
+void GUI_Spectrum::psl_stop() {
 
     _timer->start();
     _timer_stopped = false;
 }
 
-void GUI_Spectrum::timed_out(){
+void GUI_Spectrum::timed_out() {
 
 
-    for(int i=0; i<N_BINS; i++){
+    for(int i=0; i<N_BINS; i++) {
 
 
             _spec[i] -= 0.024f;
@@ -223,9 +223,9 @@ void GUI_Spectrum::timed_out(){
 }
 
 
-void GUI_Spectrum::resize_steps(int bins, int rects){
+void GUI_Spectrum::resize_steps(int bins, int rects) {
 
-    for(int b=0; b<N_BINS; b++){
+    for(int b=0; b<N_BINS; b++) {
         delete _steps[b];
         _steps[b] = 0;
     }
@@ -233,16 +233,16 @@ void GUI_Spectrum::resize_steps(int bins, int rects){
     delete[] _steps;
 
     _steps = new int*[N_BINS];
-    for(int i=0; i<N_BINS; i++){
+    for(int i=0; i<N_BINS; i++) {
         _steps[i] = new int[rects];
-        for(int r=0; r<rects; r++){
+        for(int r=0; r<rects; r++) {
             _steps[i][r] = 0;
         }
     }
 }
 
 
-void GUI_Spectrum::psl_style_update(){
+void GUI_Spectrum::psl_style_update() {
 
    _ecsc->reload(this->width(), this->height());
 

@@ -29,14 +29,9 @@ Artist::Artist() : LibraryItem() {
     num_albums = 0;
 }
 
-Artist::Artist( const Artist& artist ) : LibraryItem(artist){
-	id = artist.id;
-	name = artist.name;
-	num_songs = artist.num_songs;
-	num_albums = artist.num_albums;
-}
 
-Artist::~Artist(){
+
+Artist::~Artist() {
 
 }
 
@@ -49,12 +44,18 @@ QVariant Artist::toVariant(const Artist& artist) {
 }
 
 
-bool Artist::fromVariant(const QVariant& v, Artist& artist){
+bool Artist::fromVariant(const QVariant& v, Artist& artist) {
 
 	if( !v.canConvert<Artist>() ) return false;
 	
 	artist = v.value<Artist>();
 	return true;
+}
+
+void Artist::print() const {
+
+	qDebug() << id << ": " << name << ": " << num_songs << " Songs, " << num_albums << " Albums";
+
 }
 
 

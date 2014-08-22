@@ -44,7 +44,7 @@ struct AlbumCache {
     bool _needs_update;
     bool _is_init;
 
-    AlbumCache(){
+    AlbumCache() {
         _cache = 0;
         _valid_at = 0;
         _size = 0;
@@ -52,20 +52,20 @@ struct AlbumCache {
         _is_init = false;
     }
 
-    ~AlbumCache(){
+    ~AlbumCache() {
         if(_cache)
             delete[] _cache;
         if(_valid_at)
             delete[] _valid_at;
     }
 
-    void init(const AlbumList& list){
+    void init(const AlbumList& list) {
 
         if(_cache) delete[] _cache;
         if(_valid_at) delete[] _valid_at;
         _size = 0;
 
-        for(uint i=0; i<list.size(); i++){
+        for(uint i=0; i<list.size(); i++) {
             if(_size < list[i].id) _size = list[i].id;
         }
 
@@ -74,7 +74,7 @@ struct AlbumCache {
         _valid_at = new bool[_size];
         memset(_valid_at, 0, sizeof(bool) * (_size));
 
-        for(uint i=0;i<list.size(); i++){
+        for(uint i=0;i<list.size(); i++) {
 
             _cache[list[i].id] = list[i];
             _valid_at[list[i].id] = true;
@@ -84,19 +84,19 @@ struct AlbumCache {
         _is_init = true;
     }
 
-    bool isInitialized(){
+    bool isInitialized() {
         return _is_init;
     }
 
-    bool needsUpdate(){
+    bool needsUpdate() {
         return _needs_update;
     }
 
-    void setNeedsUpdate(bool b){
+    void setNeedsUpdate(bool b) {
         _needs_update = b;
     }
 
-    bool getAlbumByID(int id, Album& album){
+    bool getAlbumByID(int id, Album& album) {
         if(!_is_init) return false;
         if(id < 0) return false;
         if(id >= _size) return false;
@@ -148,20 +148,22 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
                 QStringList discnumberList = q.value(7).toString().split(',');
 				album.discnumbers.clear();
-				foreach(QString disc, discnumberList){
+
+				foreach(QString disc, discnumberList) {
 					int d = disc.toInt();
 					if(album.discnumbers.contains(d)) continue;
 					
 					album.discnumbers << d;
 				}
 
-				if(album.discnumbers.size() == 0)
+
+
+				if(album.discnumbers.size() == 0) {
 					album.discnumbers << 1;
+				}
+
 				album.n_discs = album.discnumbers.size();
-
 				album.is_sampler = (artistList.size() > 1);
-
-                //album.rating = rand() % 6;
 
 				result.push_back(album);
 			}
@@ -178,9 +180,9 @@ bool _db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 		return true;
 }
 
-static QString _create_order_string(SortOrder sortorder){
+static QString _create_order_string(SortOrder sortorder) {
 
-	switch(sortorder){
+	switch(sortorder) {
 
 		case AlbumNameAsc:
 			return QString (" ORDER BY albumName ASC ");
@@ -238,7 +240,7 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 	return albumID;
 }
 
-int CDatabaseConnector::getMaxAlbumID(){
+int CDatabaseConnector::getMaxAlbumID() {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
@@ -270,7 +272,7 @@ int CDatabaseConnector::getMaxAlbumID(){
 	return max_id;
 }
 
-bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
+bool CDatabaseConnector::getAlbumByID(const int& id, Album& album) {
 
 
 	DB_TRY_OPEN(_database);
@@ -293,7 +295,7 @@ bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
 	q.bindValue(":id", QVariant(id));
 
 	_db_fetch_albums(q, albums);
-    if(albums.size() > 0){
+    if(albums.size() > 0) {
         album = albums[0];
         return true;
     }
@@ -301,7 +303,7 @@ bool CDatabaseConnector::getAlbumByID(const int& id, Album& album){
     return false;
 }
 
-void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
+void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
@@ -328,7 +330,7 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder){
 }
 
 
-void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder){
+void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
@@ -348,9 +350,9 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 
 	if(artists.size() == 0) return;
 
-	else if(artists.size() > 1){
+	else if(artists.size() > 1) {
 		querytext += "(artists.artistid = :artist_id ";
-		for(int i=1; i<artists.size(); i++){
+		for(int i=1; i<artists.size(); i++) {
 			querytext += QString("OR artists.artistid = :artist_id_" + QString::number(i) + " ");
 		}
 
@@ -362,8 +364,8 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 	}
 
 
-	if(filter.filtertext.length() > 0){
-		switch(filter.by_searchstring){
+	if(filter.filtertext.length() > 0) {
+		switch(filter.by_searchstring) {
             case BY_GENRE:
                 querytext += QString("AND tracks.genre LIKE :filter1 ");			// track title is like filter
                 break;
@@ -398,14 +400,14 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 	q.prepare(querytext);
 
 	q.bindValue(":artist_id", QVariant(artists[0]));
-	for(int i=1; i<artists.size(); i++){
+	for(int i=1; i<artists.size(); i++) {
 		q.bindValue(QString(":artist_id_") + QString::number(i), artists[i]);
 	}
 
-	if(filter.filtertext.length() > 0){
+	if(filter.filtertext.length() > 0) {
 		q.bindValue(":filter1", QVariant(filter.filtertext));
 
-		switch(filter.by_searchstring){
+		switch(filter.by_searchstring) {
             case BY_GENRE:
                 break;
             case BY_FILENAME:
@@ -422,7 +424,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, SortOrder sortorder){
+void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, SortOrder sortorder) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
@@ -431,7 +433,7 @@ void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Fil
 	getAllAlbumsByArtist(list, result, filter, sortorder);
 }
 
-void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder){
+void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
@@ -439,7 +441,7 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 
 	QSqlQuery q (*_database);
 	QString query;
-	if(filter.by_searchstring == BY_FULLTEXT){
+	if(filter.by_searchstring == BY_FULLTEXT) {
 			query = QString("SELECT * FROM ( ") +
 					ALBUM_ARTIST_TRACK_SELECTOR +
                         "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND albums.cissearch LIKE :search_in_album " +
@@ -455,13 +457,13 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 				") " +
                 "GROUP BY albumID, albumName";
 	}
-	else if(filter.by_searchstring == BY_FILENAME){
+	else if(filter.by_searchstring == BY_FILENAME) {
 		query = ALBUM_ARTIST_TRACK_SELECTOR +
 					"WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.filename LIKE :search_in_filename " +
                     "GROUP BY albums.albumID, albumName";
 	}
 
-    else if(filter.by_searchstring == BY_GENRE){
+    else if(filter.by_searchstring == BY_GENRE) {
        query = ALBUM_ARTIST_TRACK_SELECTOR +
                     "WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.genre LIKE :search_in_genre " +
                     "GROUP BY albums.albumID, albumName";
@@ -472,17 +474,17 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 	q.prepare(query);
 
 
-	if(filter.by_searchstring == BY_FULLTEXT){
+	if(filter.by_searchstring == BY_FULLTEXT) {
 		q.bindValue(":search_in_title",QVariant(filter.filtertext));
 		q.bindValue(":search_in_album",QVariant(filter.filtertext));
 		q.bindValue(":search_in_artist",QVariant(filter.filtertext));
 	}
 
-	else if(filter.by_searchstring == BY_FILENAME){
+	else if(filter.by_searchstring == BY_FILENAME) {
 		q.bindValue(":search_in_filename", QVariant(filter.filtertext));
 	}
 
-    else if(filter.by_searchstring == BY_GENRE){
+    else if(filter.by_searchstring == BY_GENRE) {
         q.bindValue(":search_in_genre", QVariant(filter.filtertext));
     }
 

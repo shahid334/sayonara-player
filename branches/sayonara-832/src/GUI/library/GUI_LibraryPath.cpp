@@ -23,7 +23,6 @@
 #include "GUI/library/GUI_LibraryPath.h"
 #include "HelperStructs/Helper.h"
 #include <QIcon>
-#include <QDebug>
 
 
 GUI_LibraryPath::GUI_LibraryPath(QWidget *parent) :
@@ -44,13 +43,13 @@ void GUI_LibraryPath::language_changed() {
 }
 
 
-void GUI_LibraryPath::btn_clicked(){
+void GUI_LibraryPath::btn_clicked() {
 
     emit sig_library_path_set();
 
 }
 
-void GUI_LibraryPath::resizeEvent(QResizeEvent* e){
+void GUI_LibraryPath::resizeEvent(QResizeEvent* e) {
 
 
     e->accept();

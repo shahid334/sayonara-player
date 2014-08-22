@@ -33,7 +33,7 @@
 #include <QSqlError>
 #include <QColor>
 
-QString col2String(QColor col){
+QString col2String(QColor col) {
     QString str;
     str = QString::number(col.red()) + "," +
     QString::number(col.green()) + "," +
@@ -44,10 +44,10 @@ QString col2String(QColor col){
 }
 
 
-bool colFromString(QString str, QColor& c){
+bool colFromString(QString str, QColor& c) {
     QStringList colors = str.split(",");
 
-    if(colors.size() < 3){
+    if(colors.size() < 3) {
 		/*c.setRed(-1);
         c.setGreen(-1);
 		c.setBlue(-1);*/
@@ -68,7 +68,7 @@ bool colFromString(QString str, QColor& c){
 
 }
 
-QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles(){
+QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles() {
 
     DB_TRY_OPEN(_database);
 
@@ -83,7 +83,7 @@ QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles(){
         return ret_val;
     }
 
-    while(q.next()){
+    while(q.next()) {
         RawColorStyle rcs;
 
         rcs.col_list.name = q.value(0).toString();
@@ -117,7 +117,7 @@ QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles(){
 }
 
 
-bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs){
+bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs) {
 
     if(raw_color_style_exists(rcs.col_list.name))
         return update_raw_color_style(rcs);
@@ -126,7 +126,7 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QString col_str;
-    for(int i=0; i<4; i++){
+    for(int i=0; i<4; i++) {
         col_str += ":col" + QString::number(i + 1) + ", ";
     }
 
@@ -180,7 +180,7 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs){
 
 
 
-bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs){
+bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs) {
 
     if(!raw_color_style_exists(rcs.col_list.name))
         return insert_raw_color_style_to_db(rcs);
@@ -189,7 +189,7 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs){
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QString col_str;
-    for(int i=0; i < 4; i++){
+    for(int i=0; i < 4; i++) {
         col_str += "col" + QString::number(i + 1) + "=:col" + QString::number(i + 1) + ", ";
     }
 
@@ -243,7 +243,7 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs){
 
 
 
-bool CDatabaseConnector::delete_raw_color_style(QString name){
+bool CDatabaseConnector::delete_raw_color_style(QString name) {
 
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
@@ -261,7 +261,7 @@ bool CDatabaseConnector::delete_raw_color_style(QString name){
 }
 
 
-bool CDatabaseConnector::raw_color_style_exists(QString name){
+bool CDatabaseConnector::raw_color_style_exists(QString name) {
 
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);

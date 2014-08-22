@@ -42,9 +42,9 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
     int n_rects = _cur_style.n_rects;
 
     _steps = new int*[2];
-    for(int b=0; b<2; b++){
+    for(int b=0; b<2; b++) {
         _steps[b] = new int[n_rects];
-        for(int r=0; r<n_rects; r++){
+        for(int r=0; r<n_rects; r++) {
             _steps[b][r] = 0;
         }
     }
@@ -56,7 +56,7 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
 }
 
 
-void GUI_LevelPainter::set_level(float level_l, float level_r){
+void GUI_LevelPainter::set_level(float level_l, float level_r) {
 
     if(!_timer_stopped) {
         _timer->stop();
@@ -70,12 +70,12 @@ void GUI_LevelPainter::set_level(float level_l, float level_r){
 }
 
 void
-GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
+GUI_LevelPainter::mousePressEvent(QMouseEvent *e) {
 
     int n_styles = _ecsc->get_num_color_schemes();
 
 
-    if(e->button() == Qt::LeftButton){
+    if(e->button() == Qt::LeftButton) {
         _cur_style_idx = (_cur_style_idx +  1) % n_styles;
 
     }
@@ -83,7 +83,7 @@ GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
     else if (e->button() == Qt::RightButton)
        emit sig_right_clicked(_cur_style_idx);
 
-    else if (e->button() == Qt::MidButton){
+    else if (e->button() == Qt::MidButton) {
         close();
         return;
     }
@@ -94,7 +94,7 @@ GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
     resize_steps(_cur_style.n_rects);
 }
 
-void GUI_LevelPainter::paintEvent(QPaintEvent* e){
+void GUI_LevelPainter::paintEvent(QPaintEvent* e) {
 
     QPainter painter(this);
 
@@ -107,17 +107,17 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
 
     int y = 10;
     int num_zero = 0;
-    for(int c=0; c<2; c++){
+    for(int c=0; c<2; c++) {
 
 		float level = (_level[c] + 50.0f) / 50.0f; // scaled from 0 - 1
         if(level < 0) level = 0;
 
         int n_colored_rects = n_rects * level;
 
-        for(int r=0; r<n_rects; r++){
+        for(int r=0; r<n_rects; r++) {
             int x = r * (w_rect + border_x);
             QRect rect(x, y, w_rect, h_rect);
-            if(r < n_colored_rects){
+            if(r < n_colored_rects) {
                 painter.fillRect(rect, _cur_style.style[r].value(-1) );
                 _steps[c][r] = n_fading_steps - 1;
             }
@@ -129,7 +129,7 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
             }
         }
 
-        if(num_zero == 2 * n_rects){
+        if(num_zero == 2 * n_rects) {
             _timer->stop();
             _timer_stopped = true;
         }
@@ -139,7 +139,7 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
 }
 
 
-void GUI_LevelPainter::showEvent(QShowEvent * e){
+void GUI_LevelPainter::showEvent(QShowEvent * e) {
 
     e->accept();
 
@@ -152,24 +152,24 @@ void GUI_LevelPainter::showEvent(QShowEvent * e){
     emit sig_show(true);
 }
 
-void GUI_LevelPainter::closeEvent(QCloseEvent *e){
+void GUI_LevelPainter::closeEvent(QCloseEvent *e) {
     PlayerPlugin::closeEvent(e);
     emit sig_show(false);
 }
 
-void GUI_LevelPainter::resizeEvent(QResizeEvent *e){
+void GUI_LevelPainter::resizeEvent(QResizeEvent *e) {
     psl_style_update(true);
 }
 
 
-void GUI_LevelPainter::psl_stop(){
+void GUI_LevelPainter::psl_stop() {
 
     _timer->start();
     _timer_stopped = false;
 
 }
 
-void GUI_LevelPainter::timed_out(){
+void GUI_LevelPainter::timed_out() {
 
     for(int i=0; i<2; i++)
         _level[i] -= 2.0f;
@@ -178,7 +178,7 @@ void GUI_LevelPainter::timed_out(){
 }
 
 
-void GUI_LevelPainter::psl_style_update(bool inner){
+void GUI_LevelPainter::psl_style_update(bool inner) {
     _ecsc->reload(this->width(), this->height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
 
@@ -188,19 +188,19 @@ void GUI_LevelPainter::psl_style_update(bool inner){
 
 }
 
-void GUI_LevelPainter::resize_steps(int n_rects){
+void GUI_LevelPainter::resize_steps(int n_rects) {
 
-    for(int i=0; i<2; i++){
+    for(int i=0; i<2; i++) {
         delete[] _steps[i];
         _steps[i] = new int[n_rects];
-        for(int j=0; j<n_rects; j++){
+        for(int j=0; j<n_rects; j++) {
             _steps[i][j] = 0;
         }
     }
 }
 
 
-void GUI_LevelPainter::reload(){
+void GUI_LevelPainter::reload() {
     int new_height = _cur_style.rect_height * 2 + _cur_style.ver_spacing + 12;
 
     this->setMinimumHeight(0);

@@ -36,7 +36,7 @@
 #endif
 
 
-void EngineCallbacks::new_buffer(GstElement* sink, void* data){
+void EngineCallbacks::new_buffer(GstElement* sink, void* data) {
 
 	/*Q_UNUSED(data);
 
@@ -62,7 +62,7 @@ void EngineCallbacks::new_buffer(GstElement* sink, void* data){
 
 double arr[2];
 gboolean
-EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer data){
+EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer data) {
 
 	GValueArray* rms_arr;
 	Engine* engine = (Engine*) data;
@@ -91,7 +91,7 @@ EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer dat
 		  * lists */
 	array_val = gst_structure_get_value (s, "peak");
 
-	if(!array_val){
+	if(!array_val) {
 		qDebug() << "Cannot get array-val";
 		return TRUE;
 	}
@@ -104,7 +104,7 @@ EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer dat
 	if(n_elements == 0) return TRUE;
 
 	guint max = (n_elements < 2) ? n_elements : 2;
-	for(guint i=0; i<max; i++){
+	for(guint i=0; i<max; i++) {
 
 		const GValue* val = rms_arr->values + i;
 		double d;
@@ -124,11 +124,11 @@ EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer dat
 	guint64 dur;
 	gst_structure_get_clock_time(s, "timestamp", &dur);
 
-	if(n_elements >= 2){
+	if(n_elements >= 2) {
 		engine->set_level(arr[0], arr[1]);
 	}
 
-	else if(n_elements == 1){
+	else if(n_elements == 1) {
 		engine->set_level(arr[0], arr[0]);
 	}
 
@@ -139,7 +139,7 @@ EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer dat
 
 
 gboolean
-EngineCallbacks::spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
+EngineCallbacks::spectrum_handler (GstBus * bus, GstMessage * message, gpointer data) {
 
     Q_UNUSED(data);
 
@@ -246,7 +246,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 		tags = NULL;
 		gst_message_parse_tag(msg, &tags);
 		success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &val);
-		if(val != 0 && success){
+		if(val != 0 && success) {
 
 			val = (uint) (round( val / 1000.0) * 1000.0);
 
@@ -270,7 +270,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
     default:
 
-		if(engine){
+		if(engine) {
 			engine->unmute();
         }
         break;
@@ -285,7 +285,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 #define SCALE_SHORT 0.000000004f
 #define BUFFER_SIZE 4096
 
-void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
+void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r) {
 
 	/*if(!buffer) return;
 	if(!caps) return;
@@ -319,11 +319,11 @@ void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, floa
      short* v_s;
      float v;
 
-     switch(caps->get_type()){
+     switch(caps->get_type()) {
 
          case CapsTypeFloat:
 
-             for(gsize i=start; i<end; i+=item_size){
+             for(gsize i=start; i<end; i+=item_size) {
 				  v_f = (float*) (map_info.data + i);
 
                   f_channel[channel] += ( (*v_f) * (*v_f));
@@ -335,7 +335,7 @@ void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, floa
 
              scale = SCALE_SHORT;
 
-             for(gsize i=start; i<end; i+=item_size){
+             for(gsize i=start; i<end; i+=item_size) {
 				 v_s = (short*) (map_info.data + i + i);
                  v = (float) (*v_s);
                  f_channel[channel] += (v * v);
@@ -348,19 +348,19 @@ void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, floa
      }
 
 
-     for(int i=0; i<n_channels && i < 2; i++){
+     for(int i=0; i<n_channels && i < 2; i++) {
 
          float val = f_channel[i] * inv_arr_channel_elements * scale;
          if(val > 1.0f) val = 1.0f;
          f_channel[i] = 10.0f * LOOKUP_LOG(val);
      }
 
-     if(n_channels >= 2){
+     if(n_channels >= 2) {
          *l = f_channel[0];
          *r = f_channel[1];
      }
 
-     else if(n_channels == 1){
+     else if(n_channels == 1) {
          *l = f_channel[0];
          *r = f_channel[0];
 	 }*/

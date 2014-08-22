@@ -37,7 +37,7 @@
 #include "taglib/tmap.h"
 
 
-bool id3_extract_metadata(ID3_FileHeader& fh, MetaData& md){
+bool id3_extract_metadata(ID3_FileHeader& fh, MetaData& md) {
 
 	if(!fh.is_valid()) return false;
 
@@ -52,7 +52,7 @@ bool id3_extract_metadata(ID3_FileHeader& fh, MetaData& md){
 	QString genre = id3_extract_genres(fh);
 
 	md.genres = genre.split(QRegExp(",|/|;|\\."));
-	for(int i=0; i<md.genres.size(); i++){
+	for(int i=0; i<md.genres.size(); i++) {
 		md.genres[i] = md.genres[i].trimmed();
 	}
 
@@ -61,7 +61,7 @@ bool id3_extract_metadata(ID3_FileHeader& fh, MetaData& md){
 }
 
 
-QString id3_extract_artist(ID3_FileHeader& fh){
+QString id3_extract_artist(ID3_FileHeader& fh) {
  QByteArray raw_data;
  QByteArray four("TPE1", 4);
  QString str = fh.read(four, raw_data);
@@ -72,21 +72,21 @@ QString id3_extract_artist(ID3_FileHeader& fh){
 
 }
 
-QString id3_extract_album(ID3_FileHeader& fh){
+QString id3_extract_album(ID3_FileHeader& fh) {
  QByteArray raw_data;
  QByteArray four("TALB", 4);
  return fh.read(four, raw_data);
 
 }
 
-QString id3_extract_title(ID3_FileHeader& fh){
+QString id3_extract_title(ID3_FileHeader& fh) {
  QByteArray raw_data;
  QByteArray four("TIT2", 4);
  return fh.read(four, raw_data);
 
 }
 
-int id3_extract_tracknumber(ID3_FileHeader& fh){
+int id3_extract_tracknumber(ID3_FileHeader& fh) {
   QByteArray raw_data;
   QByteArray four("TRCK", 4);
   bool b = false;
@@ -95,7 +95,7 @@ int id3_extract_tracknumber(ID3_FileHeader& fh){
   return i;
 }
 
-int id3_extract_year(ID3_FileHeader& fh){
+int id3_extract_year(ID3_FileHeader& fh) {
   QByteArray raw_data;
   QByteArray four("TDRC", 4);
   bool b = false;
@@ -113,20 +113,20 @@ int id3_extract_year(ID3_FileHeader& fh){
   return i;
 }
 
-QString id3_extract_genres(ID3_FileHeader& fh){
+QString id3_extract_genres(ID3_FileHeader& fh) {
  QByteArray raw_data;
  QByteArray four("TCON", 4);
  return fh.read(four, raw_data);
 }
 
-QString id3_extract_comment(ID3_FileHeader& fh){
+QString id3_extract_comment(ID3_FileHeader& fh) {
  QByteArray raw_data;
  QByteArray four("COMM", 4);
  return fh.read(four, raw_data);
 }
 
 
-bool id3_extract_discnumber(ID3_FileHeader& fh, int* discnumber, int* n_discs){
+bool id3_extract_discnumber(ID3_FileHeader& fh, int* discnumber, int* n_discs) {
 
     *discnumber = 0;
     *n_discs = 0;
@@ -144,7 +144,7 @@ bool id3_extract_discnumber(ID3_FileHeader& fh, int* discnumber, int* n_discs){
 }
 
 
-bool id3_write_discnumber(ID3_FileHeader& fh, int discnumber, int n_discs){
+bool id3_write_discnumber(ID3_FileHeader& fh, int discnumber, int n_discs) {
    
    if(discnumber <= 0) return false;
    if(n_discs == -1) n_discs = 1;
@@ -167,7 +167,7 @@ bool id3_write_discnumber(ID3_FileHeader& fh, int discnumber, int n_discs){
 
 
 
-bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
+bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber) {
 
     TagLib::File* f = fh.file();
     TagLib::MPEG::File* f_mp3;
@@ -180,7 +180,7 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     }
 
     TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
-    if(!id3_tag){
+    if(!id3_tag) {
         //qDebug() << "Tagging: no valid id3 tag";
         return false;
     }
@@ -188,13 +188,13 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
     QByteArray vec;
     TagLib::ID3v2::FrameListMap map = id3_tag->frameListMap();
      TagLib::ID3v2::FrameList l = map["TPOS"];
-     if(!l.isEmpty()){
+     if(!l.isEmpty()) {
          //qDebug() << "Tagging: list is not empty";
          vec = QByteArray(l.front()->toString().toCString(false));
      }
 
      else {
-        /* for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++){
+        /* for(TagLib::ID3v2::FrameListMap::ConstIterator it=map.begin(); it!=map.end(); it++) {
              qDebug() << QString(it->first.data());
          }*/
          //qDebug() << "Tagging: list is empty";
@@ -203,7 +203,7 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
 
     bool slash_found = false;
 
-    for(int i=0; i<vec.size(); i++){
+    for(int i=0; i<vec.size(); i++) {
 
         char c = vec[i];
        // qDebug() << (unsigned int) c;
@@ -214,7 +214,7 @@ bool taglib_id3_extract_discnumber(TagLib::FileRef& fh, int* discnumber){
         }
 
         // Ascii: '/'=47, '0'=48, '1'... '9'=57
-        if(c >= '0' && c <= '9'){
+        if(c >= '0' && c <= '9') {
 
             if(!slash_found)
                 *discnumber = 10*(*discnumber) + (c - '0');

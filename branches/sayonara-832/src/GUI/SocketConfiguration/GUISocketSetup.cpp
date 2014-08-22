@@ -29,7 +29,7 @@
 #include <QDialog>
 
 
-GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) : QDialog(parent){
+GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) : QDialog(parent) {
 
     this->ui = NULL;
     hide();
@@ -41,7 +41,7 @@ GUI_SocketSetup::~GUI_SocketSetup() {
 }
 
 
-void GUI_SocketSetup::_sl_start_changed(int val){
+void GUI_SocketSetup::_sl_start_changed(int val) {
 
 	if(val < 65525)
 		this->ui->sb_increment->setValue(val + 10);
@@ -51,7 +51,7 @@ void GUI_SocketSetup::_sl_start_changed(int val){
 }
 
 
-void GUI_SocketSetup::_sl_ok_pressed(){
+void GUI_SocketSetup::_sl_ok_pressed() {
 	_db->setSocketActivated(this->ui->cb_activate->isChecked());
 	_db->setSocketFrom(this->ui->sb_start->value());
 	_db->setSocketTo(this->ui->sb_increment->value());
@@ -60,9 +60,9 @@ void GUI_SocketSetup::_sl_ok_pressed(){
     close();
 }
 
-void GUI_SocketSetup::show_win(){
+void GUI_SocketSetup::show_win() {
 
-    if(this->ui == NULL){
+    if(this->ui == NULL) {
         ui = new Ui::SocketSetupDialog();
         ui->setupUi(this);
 
@@ -84,7 +84,7 @@ void GUI_SocketSetup::show_win(){
     this->show();
 }
 
-void GUI_SocketSetup::language_changed(){
+void GUI_SocketSetup::language_changed() {
     if(!ui) return;
     this->ui->retranslateUi(this);
 }

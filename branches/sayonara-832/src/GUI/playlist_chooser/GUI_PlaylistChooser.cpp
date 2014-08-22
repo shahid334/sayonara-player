@@ -24,7 +24,6 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
@@ -33,7 +32,6 @@
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QDebug>
 #include <QPixmap>
 
 #include "GUI/ui_GUI_PlaylistChooser.h"
@@ -82,22 +80,22 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 
 
-void GUI_PlaylistChooser::language_changed(){
+void GUI_PlaylistChooser::language_changed() {
     this->ui->retranslateUi(this);
 }
 
-void GUI_PlaylistChooser::changeSkin(bool dark){
+void GUI_PlaylistChooser::changeSkin(bool dark) {
     _dark = dark;
 }
 
 
-void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
+void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping) {
     int tmp_cur_idx = _cur_idx;
 	this->ui->combo_playlistchooser->clear();
     this->ui->combo_playlistchooser->addItem("", -1);
 
 	QList<int> keys = mapping.keys();
-	foreach(int key, keys){
+	foreach(int key, keys) {
 		QString name = mapping.value(key);
 		this->ui->combo_playlistchooser->addItem(name, key);
 	}
@@ -107,9 +105,9 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
     if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx >= 0)
         this->ui->combo_playlistchooser->setCurrentIndex(_cur_idx);
 
-    if(_text_before_save.size() > 0){
+    if(_text_before_save.size() > 0) {
         int idx = this->ui->combo_playlistchooser->findText(_text_before_save);
-        if(idx > 0 && idx < this->ui->combo_playlistchooser->count()){
+        if(idx > 0 && idx < this->ui->combo_playlistchooser->count()) {
             this->ui->combo_playlistchooser->setCurrentIndex(idx);
             _cur_idx = idx;
         }
@@ -119,7 +117,7 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping){
 }
 
 // Playlist -> this
-void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, PlaylistType playlist_type){
+void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, PlaylistType playlist_type) {
 
     Q_UNUSED(i);
     bool empty = (v_md.size() == 0);
@@ -135,7 +133,7 @@ void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, Play
 
 
 
-void GUI_PlaylistChooser::save_button_pressed(){
+void GUI_PlaylistChooser::save_button_pressed() {
 
     if(_cur_idx >= this->ui->combo_playlistchooser->count()) return;
 
@@ -143,13 +141,13 @@ void GUI_PlaylistChooser::save_button_pressed(){
     _text_before_save = cur_text;
 
     QStringList lst;
-    for(int i=0; i<this->ui->combo_playlistchooser->count(); i++){
+    for(int i=0; i<this->ui->combo_playlistchooser->count(); i++) {
         QString txt = this->ui->combo_playlistchooser->itemText(i);
         if(txt.size() > 0)
             lst << txt.toLower();
     }
 
-    if( lst.contains(cur_text.toLower()) ){
+    if( lst.contains(cur_text.toLower()) ) {
 
         int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
         int answer = show_warning(tr("Overwrite?"));
@@ -158,30 +156,30 @@ void GUI_PlaylistChooser::save_button_pressed(){
             emit sig_save_playlist(val);
 	}
 
-    else if(cur_text.size() > 0 ){
+    else if(cur_text.size() > 0 ) {
         emit sig_save_playlist(cur_text);
     }
 
 	else return;
 }
 
-void GUI_PlaylistChooser::got_save_params(const QString& filename, bool relative){
+void GUI_PlaylistChooser::got_save_params(const QString& filename, bool relative) {
     emit sig_save_playlist_file(filename, relative);
 
 }
 
-void GUI_PlaylistChooser::save_as_button_pressed(){
+void GUI_PlaylistChooser::save_as_button_pressed() {
     _target_playlist_dialog->change_skin(_dark);
     _target_playlist_dialog->show();
 }
 
 
-void GUI_PlaylistChooser::delete_button_pressed(){
+void GUI_PlaylistChooser::delete_button_pressed() {
 
     _text_before_save = "";
     int answer = show_warning(tr("Delete?"));
 
-	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1){
+	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1) {
 		int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
 		if(val >= 0 && answer == QMessageBox::Yes)
 			emit sig_delete_playlist(val);
@@ -189,7 +187,7 @@ void GUI_PlaylistChooser::delete_button_pressed(){
 }
 
 
-void GUI_PlaylistChooser::playlist_selected(int idx){
+void GUI_PlaylistChooser::playlist_selected(int idx) {
 
 	_cur_idx = idx;
     if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx < 0) return;
@@ -206,7 +204,7 @@ void GUI_PlaylistChooser::playlist_selected(int idx){
 }
 
 
-void GUI_PlaylistChooser::load_button_pressed(){
+void GUI_PlaylistChooser::load_button_pressed() {
 
     QStringList filelist = QFileDialog::getOpenFileNames(
                     this,
@@ -215,7 +213,7 @@ void GUI_PlaylistChooser::load_button_pressed(){
                     Helper::get_playlistfile_extensions().join(" "));
 
     QString lab_text = "";
-    foreach(QString filename, filelist){
+    foreach(QString filename, filelist) {
         int last_index_of_sep = filename.lastIndexOf(QDir::separator());
         _last_dir = filename.left(last_index_of_sep);
 
@@ -229,18 +227,18 @@ void GUI_PlaylistChooser::load_button_pressed(){
 
     this->ui->le_playlist_file->setText(lab_text);
 
-    if(filelist.size() > 0){
+    if(filelist.size() > 0) {
         emit sig_files_selected(filelist);
     }
 }
 
 
-void GUI_PlaylistChooser::text_changed(const QString & text){
+void GUI_PlaylistChooser::text_changed(const QString & text) {
 
     this->ui->btn_save->setEnabled(text.size() > 0);
 
     QStringList lst;
-    for(int i=0; i<this->ui->combo_playlistchooser->count(); i++){
+    for(int i=0; i<this->ui->combo_playlistchooser->count(); i++) {
         QString txt = this->ui->combo_playlistchooser->itemText(i);
         if(txt.size() > 0)
             lst << txt.toLower();
@@ -250,7 +248,7 @@ void GUI_PlaylistChooser::text_changed(const QString & text){
 }
 
 
-int GUI_PlaylistChooser::show_warning(QString title_text){
+int GUI_PlaylistChooser::show_warning(QString title_text) {
 
     QMessageBox warning_box(this);
         warning_box.setParent(this);

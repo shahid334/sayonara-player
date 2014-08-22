@@ -35,25 +35,13 @@ Album::Album() : LibraryItem() {
     rating = 0;
 }
 
-Album::Album( const Album& album ) : LibraryItem(album) {
-	name = album.name;
-	id = album.id;
-	num_songs = album.num_songs;
-	length_sec = album.length_sec;
-	year = album.year;
-	n_discs = album.n_discs;
-	is_splitted = album.is_splitted;
-	is_sampler = album.is_sampler;
-	rating = album.rating;
 
-}
-
-Album::~Album(){
+Album::~Album() {
 	
 }
 
 
-QVariant Album::toVariant(const Album& album){
+QVariant Album::toVariant(const Album& album) {
 
 	QVariant var; 
 	var.setValue(album);
@@ -62,11 +50,20 @@ QVariant Album::toVariant(const Album& album){
 }
 
 
-bool Album::fromVariant(const QVariant& v, Album& album){
+bool Album::fromVariant(const QVariant& v, Album& album) {
 
 	if( !v.canConvert<Album>() ) return false;
 	album =	v.value<Album>();
 	return true;
+}
+
+void Album::print() const{
+
+	qDebug() << id << ": "
+			 << name << " by "
+			 << artists.size() << " Artists ("
+			 << length_sec << "), "
+			 << year;
 }
 
 

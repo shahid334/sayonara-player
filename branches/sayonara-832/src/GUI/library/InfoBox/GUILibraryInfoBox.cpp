@@ -28,18 +28,16 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 
-#include <QWidget>
+
 #include <QDialog>
-#include <QString>
 #include <QMap>
 #include <QPixmap>
 
 
-GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) : QDialog(parent){
+GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) : QDialog(parent) {
 
     hide();
 
@@ -53,20 +51,20 @@ GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 }
 
 
-void GUI_Library_Info_Box::change_skin(bool dark){
+void GUI_Library_Info_Box::change_skin(bool dark) {
     _skin = dark;
 
 }
 
-void GUI_Library_Info_Box::language_changed(){
+void GUI_Library_Info_Box::language_changed() {
     if(!ui) return;
     this->ui->retranslateUi(this);
 }
 
 
-void GUI_Library_Info_Box::psl_refresh(){
+void GUI_Library_Info_Box::psl_refresh() {
 
-    if(this->ui == NULL){
+    if(this->ui == NULL) {
         this->ui = new Ui::Library_Info_Box();
         this->ui->setupUi(this);
 
@@ -91,7 +89,7 @@ void GUI_Library_Info_Box::psl_refresh(){
 	_duration_ms = 0;
     _filesize = 0;
 
-	foreach(MetaData md, v_md){
+	foreach(MetaData md, v_md) {
 		_duration_ms += md.length_ms;
         _filesize += md.filesize;
 	}
@@ -107,7 +105,7 @@ void GUI_Library_Info_Box::psl_refresh(){
 
 	else {
 		QMap<QString, QString> map;
-		if(_lfm->lfm_get_user_info(map)){
+		if(_lfm->lfm_get_user_info(map)) {
 			_n_lfm_playcount = map["playcount"].toInt();
 			QString reg_date = map["register_date"];
 			int y, m, d;
@@ -135,7 +133,7 @@ void GUI_Library_Info_Box::psl_refresh(){
 }
 
 
-void GUI_Library_Info_Box::lfm_data_available(){
+void GUI_Library_Info_Box::lfm_data_available() {
 
 }
 

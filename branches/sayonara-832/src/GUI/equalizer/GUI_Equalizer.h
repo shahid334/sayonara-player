@@ -54,21 +54,21 @@ class EqSlider : public QObject{
 		QLabel* _label;
 		int _idx;
 
-		EqSlider(QObject* parent) : QObject(parent){}
+		EqSlider(QObject* parent) : QObject(parent) {}
 		EqSlider(QSlider* slider, QLabel* label, int idx) :
-			_slider(slider), _label(label), _idx(idx){
+			_slider(slider), _label(label), _idx(idx) {
 
 			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(sl_slider_changed(int)));
 		}
-		QSlider* getSlider(){ return _slider; }
-		QLabel* getLabel(){ return _label;}
-		void setValue(int val){this->_slider->setValue(val);}
+		QSlider* getSlider() { return _slider; }
+		QLabel* getLabel() { return _label;}
+		void setValue(int val) {this->_slider->setValue(val);}
 
-	virtual ~EqSlider(){}
+	virtual ~EqSlider() {}
 
 
 	private slots:
-		void sl_slider_changed(int val){
+		void sl_slider_changed(int val) {
 			emit valueChanged(_idx, val);
 		}
 };

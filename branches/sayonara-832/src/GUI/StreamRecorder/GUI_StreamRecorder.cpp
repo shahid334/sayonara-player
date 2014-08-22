@@ -28,8 +28,6 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <QWidget>
-#include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QDir>
@@ -49,50 +47,50 @@ GUI_StreamRecorder::~GUI_StreamRecorder() {
 }
 
 
-void GUI_StreamRecorder::changeSkin(bool dark){
+void GUI_StreamRecorder::changeSkin(bool dark) {
     _skin = dark;
 
 }
 
-void GUI_StreamRecorder::language_changed(){
+void GUI_StreamRecorder::language_changed() {
     if(!ui) return;
     this->ui->retranslateUi(this);
 }
 
 
-void GUI_StreamRecorder::sl_cb_activate_toggled(bool b){
+void GUI_StreamRecorder::sl_cb_activate_toggled(bool b) {
 	_is_active = b;
 	_settings->setStreamRipper(b);
 	emit sig_stream_recorder_active(b);
 }
 
-void GUI_StreamRecorder::sl_cb_complete_tracks_toggled(bool b){
+void GUI_StreamRecorder::sl_cb_complete_tracks_toggled(bool b) {
 	_is_complete_tracks = b;
 	_settings->setStreamRipperCompleteTracks(b);
 }
 
-void GUI_StreamRecorder::sl_cb_create_session_path_toggled(bool b){
+void GUI_StreamRecorder::sl_cb_create_session_path_toggled(bool b) {
     _is_create_session_path = b;
     _settings->setStreamRipperSessionPath(b);
 }
 
-void GUI_StreamRecorder::sl_btn_path_clicked(){
+void GUI_StreamRecorder::sl_btn_path_clicked() {
 
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose target directory"), _path, QFileDialog::ShowDirsOnly);
-	if(dir.size() > 0){
+	if(dir.size() > 0) {
 		_path = dir;
 		_settings->setStreamRipperPath(_path);
 		this->ui->le_path->setText(_path);
 	}
 }
 
-void GUI_StreamRecorder::sl_le_text_changed(QString & str){
+void GUI_StreamRecorder::sl_le_text_changed(QString & str) {
 
 }
 
-void GUI_StreamRecorder::show_win(){
+void GUI_StreamRecorder::show_win() {
 
-    if(ui == NULL){
+    if(ui == NULL) {
         ui = new Ui::GUI_StreamRecorder();
         ui->setupUi(this);
 
@@ -130,12 +128,12 @@ void GUI_StreamRecorder::show_win(){
     show();
 }
 
-void GUI_StreamRecorder::sl_ok(){
+void GUI_StreamRecorder::sl_ok() {
 
     QString str = ui->le_path->text();
-    if(!QFile::exists(str)){
+    if(!QFile::exists(str)) {
         bool create_success = QDir::root().mkpath(str);
-        if(!create_success){
+        if(!create_success) {
             QMessageBox::warning(this, tr("Could not create directory"), str + tr(" could not be created\nPlease choose another folder"));
             this->ui->le_path->setText(_settings->getStreamRipperPath());
             return;
@@ -151,7 +149,7 @@ void GUI_StreamRecorder::sl_ok(){
 }
 
 
-void GUI_StreamRecorder::record_button_toggled(bool b){
+void GUI_StreamRecorder::record_button_toggled(bool b) {
     if(!ui) return;
     ui->btn_path->setEnabled(!b);
     ui->cb_activate->setEnabled(!b);

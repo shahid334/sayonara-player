@@ -103,7 +103,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 
 
 		_speed_active = false;
-		/*if(_speed){
+		/*if(_speed) {
 			gst_bin_add(GST_BIN(tmp_pipeline), _speed);
 		}*/
 
@@ -164,7 +164,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		guint64 interval = 30000000;
 		gint threshold = - crop_spectrum_at;
 
-		/*if(_speed){
+		/*if(_speed) {
 			g_object_set(G_OBJECT(_speed),
 						 "search", "0",   // 14  [0, 500]
 						 "stride", 30,  // 30  [1, 5000]
@@ -221,7 +221,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 }
 
 
-GSTPlaybackPipeline::~GSTPlaybackPipeline(){
+GSTPlaybackPipeline::~GSTPlaybackPipeline() {
 	if (_bus)
 		gst_object_unref (_bus);
 
@@ -235,7 +235,7 @@ GSTPlaybackPipeline::~GSTPlaybackPipeline(){
 
 
 
-void GSTPlaybackPipeline::play(){
+void GSTPlaybackPipeline::play() {
 	_timer->stop();
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
@@ -243,12 +243,12 @@ void GSTPlaybackPipeline::play(){
 
 }
 
-void GSTPlaybackPipeline::pause(){
+void GSTPlaybackPipeline::pause() {
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 }
 
 
-void GSTPlaybackPipeline::stop(){
+void GSTPlaybackPipeline::stop() {
 
 	_timer->stop();
 
@@ -259,24 +259,24 @@ void GSTPlaybackPipeline::stop(){
 
 }
 
-void GSTPlaybackPipeline::set_volume(int vol){
+void GSTPlaybackPipeline::set_volume(int vol) {
 
 	_vol = vol;
 
 	float vol_val = (float) (vol * 1.0f / 100.0f);
-   g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
+	g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
 }
 
-int GSTPlaybackPipeline::get_volume(){
+int GSTPlaybackPipeline::get_volume() {
 	return _vol;
 }
 
-void GSTPlaybackPipeline::unmute(){
+void GSTPlaybackPipeline::unmute() {
 
 	g_object_set(G_OBJECT(_volume), "mute", FALSE, NULL);
 }
 
-gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns){
+gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {
 
 	gint64 new_time_ns;
 
@@ -295,7 +295,7 @@ gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns){
 	if(gst_element_seek_simple(_pipeline,
 		GST_FORMAT_TIME,
 		(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-		new_time_ns)){
+		new_time_ns)) {
 
 		qDebug() << "r Seek to " << new_time_ns / 1000000;
 
@@ -308,7 +308,7 @@ gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns){
 }
 
 
-gint64 GSTPlaybackPipeline::seek_abs(gint64 ns){
+gint64 GSTPlaybackPipeline::seek_abs(gint64 ns) {
 
 
 	if(ns == 0) return 0;
@@ -317,7 +317,7 @@ gint64 GSTPlaybackPipeline::seek_abs(gint64 ns){
 
 	if(gst_element_seek_simple(_audio_src,
 		GST_FORMAT_TIME,(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-		ns)){
+		ns)) {
 
 
 
@@ -333,12 +333,12 @@ gint64 GSTPlaybackPipeline::seek_abs(gint64 ns){
 	return 0;
 }
 
-void GSTPlaybackPipeline::set_speed(float f){
+void GSTPlaybackPipeline::set_speed(float f) {
 
 	//if(!_speed) return;
 
 
-	if(f < 0 && _speed_active){
+	if(f < 0 && _speed_active) {
 
 		_speed_active = false;
 
@@ -346,7 +346,7 @@ void GSTPlaybackPipeline::set_speed(float f){
 		gst_element_link( _audio_convert, _equalizer );*/
 	}
 
-	else if(f > 0 && !_speed_active){
+	else if(f > 0 && !_speed_active) {
 
 		gint64 pos, dur;
 
@@ -369,7 +369,7 @@ void GSTPlaybackPipeline::set_speed(float f){
 
 	}
 
-	else if(f > 0 && _speed_active ){
+	else if(f > 0 && _speed_active ) {
 
 		gint64 pos, dur;
 		qDebug() << "Seek";
@@ -387,7 +387,7 @@ void GSTPlaybackPipeline::set_speed(float f){
 	}
 }
 
-void GSTPlaybackPipeline::enable_level(bool b){
+void GSTPlaybackPipeline::enable_level(bool b) {
 
 	GstState state;
 	gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
@@ -397,7 +397,7 @@ void GSTPlaybackPipeline::enable_level(bool b){
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 
 
-	if(!b){
+	if(!b) {
 		gst_element_unlink_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
 		gst_element_link_many(_level_queue, _level_sink, NULL);
 	}
@@ -412,7 +412,7 @@ void GSTPlaybackPipeline::enable_level(bool b){
 }
 
 
-void GSTPlaybackPipeline::enable_spectrum(bool b){
+void GSTPlaybackPipeline::enable_spectrum(bool b) {
 
 	GstState state;
 	gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
@@ -421,7 +421,7 @@ void GSTPlaybackPipeline::enable_spectrum(bool b){
 	if(state == GST_STATE_PLAYING)
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 
-	if(!b){
+	if(!b) {
 		gst_element_unlink_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 		gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
 	}
@@ -436,7 +436,7 @@ void GSTPlaybackPipeline::enable_spectrum(bool b){
 }
 
 
-qint64 GSTPlaybackPipeline::get_position_ms(){
+qint64 GSTPlaybackPipeline::get_position_ms() {
 
 	gint64 position=0;
 	bool success = false;
@@ -454,7 +454,7 @@ qint64 GSTPlaybackPipeline::get_position_ms(){
 }
 
 
-qint64 GSTPlaybackPipeline::get_duration_ms(){
+qint64 GSTPlaybackPipeline::get_duration_ms() {
 
 	if(_duration != 0) return _duration;
 
@@ -476,7 +476,7 @@ qint64 GSTPlaybackPipeline::get_duration_ms(){
 }
 
 
-guint GSTPlaybackPipeline::get_bitrate(){
+guint GSTPlaybackPipeline::get_bitrate() {
 
 
 	GstTagList *tags=NULL;
@@ -484,11 +484,11 @@ guint GSTPlaybackPipeline::get_bitrate(){
 
 	bool success = false;
 
-	if(tags){
+	if(tags) {
 
 		success = gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate);
 
-		if(success){
+		if(success) {
 			qDebug() << "tags there, bitrate = " << rate;
 			return rate;
 		}
@@ -498,7 +498,7 @@ guint GSTPlaybackPipeline::get_bitrate(){
 }
 
 
-bool GSTPlaybackPipeline::set_uri(gchar* uri){
+bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 
 	if(!uri) return false;
 
@@ -513,7 +513,7 @@ bool GSTPlaybackPipeline::set_uri(gchar* uri){
 
 
 
-void GSTPlaybackPipeline::start_timer(qint64 play_ms){
+void GSTPlaybackPipeline::start_timer(qint64 play_ms) {
 
 	ENGINE_DEBUG << "Start in " << play_ms << "ms";
 
@@ -522,7 +522,7 @@ void GSTPlaybackPipeline::start_timer(qint64 play_ms){
 }
 
 
-void GSTPlaybackPipeline::set_eq_band(QString band_name, double val){
+void GSTPlaybackPipeline::set_eq_band(QString band_name, double val) {
 
 	g_object_set(G_OBJECT(_equalizer), band_name.toLocal8Bit(), val, NULL);
 }

@@ -52,7 +52,6 @@ namespace CoverDownloader {
     QStringList cov_call_and_parse(QString url, int num_adresses);
     bool cov_download_cover(QString adress, QImage* img);
 
-};
-
+}
 
 #endif /* COVERDOWNLOADER_H_ */

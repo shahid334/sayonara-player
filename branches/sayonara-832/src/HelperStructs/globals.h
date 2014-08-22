@@ -107,8 +107,8 @@ namespace Sort{
 		AlbumTracksDesc,
 		AlbumDurationAsc,
 		AlbumDurationDesc,
-        AlbumRatingAsc,
-        AlbumRatingDesc,
+		AlbumRatingAsc,
+		AlbumRatingDesc,
 		TrackNumAsc,
 		TrackNumDesc,
 		TrackTitleAsc,
@@ -124,14 +124,14 @@ namespace Sort{
 		TrackBitrateAsc,
 		TrackBitrateDesc,
 		TrackSizeAsc,
-	        TrackSizeDesc,
-        	TrackDiscnumberAsc,
-            TrackDiscnumberDesc,
-        TrackRatingAsc,
-        TrackRatingDesc
+		TrackSizeDesc,
+		TrackDiscnumberAsc,
+		TrackDiscnumberDesc,
+		TrackRatingAsc,
+		TrackRatingDesc
 	};
 
-};
+}
 
 
 enum PlaylistType{

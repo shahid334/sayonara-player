@@ -28,10 +28,10 @@
 
 /** COVERS **/
 
-void GUI_Player::set_std_cover(bool radio){
+void GUI_Player::set_std_cover(bool radio) {
 
 	QString std_cover_path;
-	if(radio){
+	if(radio) {
 		std_cover_path = Helper::getIconPath() + "radio.png";
 	}
 
@@ -45,11 +45,11 @@ void GUI_Player::set_std_cover(bool radio){
 }
 
 
-void GUI_Player::fetch_cover(){
+void GUI_Player::fetch_cover() {
 
 	set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
 
-	if(m_metadata.album_id > -1){
+	if(m_metadata.album_id > -1) {
 		m_cov_lookup->fetch_album_cover_by_id(m_metadata.album_id);
 	}
 
@@ -62,12 +62,12 @@ void GUI_Player::fetch_cover(){
 
 void GUI_Player::coverClicked() {
 
-   if(m_metadata.radio_mode == RADIO_STATION){
+   if(m_metadata.radio_mode == RADIO_STATION) {
 
 		m_alternate_covers->start( m_metadata.album, m_metadata.title );
     }
 
-    else if(m_metadata.album_id >= 0){
+    else if(m_metadata.album_id >= 0) {
        m_alternate_covers->start(m_metadata.album_id);
     }
 
@@ -80,9 +80,9 @@ void GUI_Player::coverClicked() {
 }
 
 
-void GUI_Player::sl_alternate_cover_available(bool b){
+void GUI_Player::sl_alternate_cover_available(bool b) {
 
-	if(!b){
+	if(!b) {
 		set_std_cover(m_metadata.radio_mode != RADIO_OFF);
 		return;
 	}
@@ -91,7 +91,7 @@ void GUI_Player::sl_alternate_cover_available(bool b){
 }
 
 
-void GUI_Player::sl_no_cover_available(){
+void GUI_Player::sl_no_cover_available() {
 
    set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
 }

@@ -27,10 +27,8 @@
  */
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMWebAccess.h"
+#include "HelperStructs/Helper.h"
 
-
-#include <QString>
-#include <QDebug>
 #include <QCryptographicHash>
 #include <qdom.h>
 
@@ -51,9 +49,9 @@ static size_t lfm_webpage_bytes;
 static char* lfm_webpage;
 
 
-static void lfm_wa_free_webpage(){
+static void lfm_wa_free_webpage() {
 
-	if(lfm_webpage != 0){
+	if(lfm_webpage != 0) {
 		free(lfm_webpage);
 		lfm_webpage = 0;
 	}
@@ -63,13 +61,13 @@ static void lfm_wa_free_webpage(){
 
 
 
-void lfm_wa_init(){
+void lfm_wa_init() {
 	lfm_webpage = 0;
 	lfm_webpage_bytes = 0;
 }
 
 /*
-const char* lfm_wa_get_url_enc(QString str){
+const char* lfm_wa_get_url_enc(QString str) {
 
 	const char* c_s = str.toLocal8Bit().data();
 
@@ -79,11 +77,11 @@ const char* lfm_wa_get_url_enc(QString str){
 */
 
 
-size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
+size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata) {
 
 	(void) userdata;
 
-	if(lfm_webpage_bytes == 0){
+	if(lfm_webpage_bytes == 0) {
 		lfm_webpage_bytes = size * nmemb;
 		lfm_webpage = (char*) (malloc(lfm_webpage_bytes));
 		memcpy ( lfm_webpage, ptr, lfm_webpage_bytes );
@@ -98,7 +96,7 @@ size_t lfm_wa_get_answer( void *ptr, size_t size, size_t nmemb, FILE *userdata){
 	return size * nmemb;
 }
 
-bool lfm_wa_call_url(const QString& url, QString& response){
+bool lfm_wa_call_url(const QString& url, QString& response) {
 
 	lfm_wa_free_webpage();
 
@@ -118,7 +116,7 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
-	if(lfm_webpage_bytes > 0){
+	if(lfm_webpage_bytes > 0) {
 
 		response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
 
@@ -133,20 +131,20 @@ bool lfm_wa_call_url(const QString& url, QString& response){
 	}
 }
 
-bool lfm_wa_call_post_url(const QString& url, const string& post_data){
+bool lfm_wa_call_post_url(const QString& url, const string& post_data) {
     QString response;
     return lfm_wa_call_post_url(url, post_data, response);
 
 }
 
-bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& response){
+bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& response) {
 
 	response.clear();
 
 	lfm_wa_free_webpage();
 
 	CURL* curl = curl_easy_init();
-	if(curl){
+	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());
 		curl_easy_setopt(curl, CURLOPT_POST, 1) ;
@@ -161,7 +159,7 @@ bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& 
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
-	if(lfm_webpage_bytes > 0){
+	if(lfm_webpage_bytes > 0) {
 		response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
 		lfm_wa_free_webpage();
 		return true;
@@ -175,13 +173,13 @@ bool lfm_wa_call_post_url(const QString& url, const string& post_data, QString& 
 }
 
 
-bool lfm_wa_call_post_url_https(const QString& url, const string& post_data, QString& response){
+bool lfm_wa_call_post_url_https(const QString& url, const string& post_data, QString& response) {
     response.clear();
 
     lfm_wa_free_webpage();
 
     CURL* curl = curl_easy_init();
-    if(curl){
+    if(curl) {
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
@@ -198,7 +196,7 @@ bool lfm_wa_call_post_url_https(const QString& url, const string& post_data, QSt
     lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
     lfm_webpage[lfm_webpage_bytes] = '\0';
 
-    if(lfm_webpage_bytes > 0){
+    if(lfm_webpage_bytes > 0) {
         response = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
         lfm_wa_free_webpage();
         return true;
@@ -212,7 +210,7 @@ bool lfm_wa_call_post_url_https(const QString& url, const string& post_data, QSt
 }
 
 
-bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
+bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc) {
 
 	lfm_wa_free_webpage();
 
@@ -230,7 +228,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 	}
 
     long int t = 10000000;
-	while(lfm_webpage_bytes == 0){
+	while(lfm_webpage_bytes == 0) {
 
 		#ifdef Q_OS_WIN
 			Sleep(100000);
@@ -245,7 +243,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 	lfm_webpage = (char*) (realloc(lfm_webpage, lfm_webpage_bytes + 1));
 	lfm_webpage[lfm_webpage_bytes] = '\0';
 
-	if(lfm_webpage_bytes > 0){
+	if(lfm_webpage_bytes > 0) {
 
 		QString xmlString = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
 		doc.setContent(xmlString, false);
@@ -262,7 +260,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc){
 }
 
 
-QString lfm_wa_parse_session_answer(const QString& content){
+QString lfm_wa_parse_session_answer(const QString& content) {
 
 	QString str_key = "";
 	QDomDocument doc("answer");
@@ -270,13 +268,13 @@ QString lfm_wa_parse_session_answer(const QString& content){
 
 	QDomNodeList nodeList =  doc.documentElement().elementsByTagName("session");
 
-	for(int i=0; i<nodeList.size(); i++){
+	for(int i=0; i<nodeList.size(); i++) {
 		QDomNodeList nl_session = nodeList.at(i).toElement().elementsByTagName("key");
 		bool found = false;
 
-		for(int j=0; j<nl_session.size(); j++){
+		for(int j=0; j<nl_session.size(); j++) {
 			str_key = nl_session.at(j).toElement().text();
-			if(str_key.size() != 0){
+			if(str_key.size() != 0) {
 				found = true;
 				break;
 			}
@@ -291,7 +289,7 @@ QString lfm_wa_parse_session_answer(const QString& content){
 
 
 
-QString lfm_wa_parse_token_answer(){
+QString lfm_wa_parse_token_answer() {
 
 	QString str_key = "";
 	QDomDocument doc("answer");
@@ -300,7 +298,7 @@ QString lfm_wa_parse_token_answer(){
 
 	QDomNodeList nodeList =  doc.documentElement().elementsByTagName("token");
 
-	for(int i=0; i<nodeList.size(); i++){
+	for(int i=0; i<nodeList.size(); i++) {
 		str_key = nodeList.at(i).toElement().text();
 	}
 
@@ -311,34 +309,34 @@ QString lfm_wa_parse_token_answer(){
 
 
 
-QString lfm_wa_create_signature(const UrlParams& data){
+QString lfm_wa_create_signature(const UrlParams& data) {
 
 	QString signature;
 
-	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
+	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++) {
 		signature += it.key();
 		signature += it.value();
 	}
 
 	signature += LFM_API_SECRET;
-	return QCryptographicHash::hash(signature.toUtf8(), QCryptographicHash::Md5).toHex();
+	return Helper::calc_hash(signature);
 }
 
 
-QString lfm_wa_create_std_url(const QString& base_url, const UrlParams& data){
+QString lfm_wa_create_std_url(const QString& base_url, const UrlParams& data) {
 	string post_data;
 	QString url = lfm_wa_create_std_url_post(base_url, data, post_data);
 	return QString(url + QString("?") + post_data.c_str());
 }
 
-QString lfm_wa_create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data){
+QString lfm_wa_create_std_url_post(const QString& base_url, const UrlParams& data, string& post_data) {
 	post_data = "";
 	QString url = base_url;
 
 
 	post_data.clear();
 
-	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++){
+	for(UrlParams::const_iterator it=data.begin(); it != data.end(); it++) {
 
 		post_data += string(it.key().toLocal8Bit().data()) + string("=");
 		post_data += string(it.value().toLocal8Bit().replace("&", "%26").data()) + string("&");
@@ -351,14 +349,14 @@ QString lfm_wa_create_std_url_post(const QString& base_url, const UrlParams& dat
 }
 
 
-QString lfm_wa_create_sig_url(const QString& base_url, const UrlParams& sig_data){
+QString lfm_wa_create_sig_url(const QString& base_url, const UrlParams& sig_data) {
 	string post_data;
 	QString url = lfm_wa_create_sig_url_post(base_url, sig_data, post_data);
 	return QString(url + QString("?") + post_data.c_str());
 }
 
 
-QString lfm_wa_create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data){
+QString lfm_wa_create_sig_url_post(const QString& base_url, const UrlParams& sig_data, string& post_data) {
 
 	post_data.clear();
 
@@ -371,7 +369,7 @@ QString lfm_wa_create_sig_url_post(const QString& base_url, const UrlParams& sig
 	data_copy["api_sig"] = signature;
 	QString session_key;
 
-	for(UrlParams::iterator it=data_copy.begin(); it != data_copy.end(); it++){
+	for(UrlParams::iterator it=data_copy.begin(); it != data_copy.end(); it++) {
 
 		post_data += string(it.key().toLocal8Bit().data()) + string("=");
         post_data += string(it.value().replace("&", "%26").toLocal8Bit().data()) + string("&");

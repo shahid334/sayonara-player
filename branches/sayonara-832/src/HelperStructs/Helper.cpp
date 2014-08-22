@@ -27,7 +27,6 @@
  */
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/WebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -44,15 +43,12 @@
 
 #include <QDir>
 #include <QUrl>
-#include <QString>
 #include <QCryptographicHash>
 #include <QDebug>
-#include <QList>
 #include <QFile>
 #include <QFontMetrics>
 #include <QFileInfo>
 #include <QMap>
-#include <QString>
 
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 
@@ -60,12 +56,12 @@ using namespace std;
 
 static QString _install_path = "";
 
-QString Helper::cvtQString2FirstUpper(QString str){
+QString Helper::cvtQString2FirstUpper(const QString& str) {
 
 	QString ret_str = "";
 	QStringList lst = str.split(" ");
 
-    foreach(QString word, lst){
+    foreach(QString word, lst) {
         QString first = word.left(1);
 		word.remove(0,1);
         word = first.toUpper() + word + " ";
@@ -76,16 +72,16 @@ QString Helper::cvtQString2FirstUpper(QString str){
     return ret_str.left(ret_str.size() - 1);
 }
 
-QString cvtNum2String(int num, int digits){
+QString cvtNum2String(int num, int digits) {
 	QString str = QString::number(num);
-	while(str.size() < digits){
+	while(str.size() < digits) {
 		str.prepend("0");
 	}
 
 	return str;
 }
 
-QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon, bool show_days){
+QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon, bool show_days) {
 
 		bool show_hrs = false;
 
@@ -98,17 +94,17 @@ QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon, bool show_
 
 		QString final_str;
 
-        if(days > 0 && show_days){
+        if(days > 0 && show_days) {
 			final_str += QString::number(days) + "d ";
 			hrs = hrs % 24;
 			show_hrs = true;
 		}
 
-        if(!show_days){
+        if(!show_days) {
             hrs += (days * 24);
         }
 
-		if(hrs > 0 || show_hrs){
+		if(hrs > 0 || show_hrs) {
 			final_str += QString::number(hrs) + "h ";
 			min = min % 60;
 		}
@@ -124,7 +120,7 @@ QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon, bool show_
 
 
 
-QString Helper::getSharePath(){
+QString Helper::getSharePath() {
 
     QString path;
 #ifndef Q_OS_WIN
@@ -133,7 +129,7 @@ QString Helper::getSharePath(){
     else path = "";
 #else
     path = QDir::homePath() + QString("\\.Sayonara\\images\\");
-    if(QFile::exists(path)){
+    if(QFile::exists(path)) {
         return path;
     }
     else path = "";
@@ -143,7 +139,7 @@ QString Helper::getSharePath(){
 
 }
 
-QString Helper::getLibPath(){
+QString Helper::getLibPath() {
     QString path;
 #ifndef Q_OS_WIN
     qDebug() << "Check for " << _install_path + "/lib/sayonara";
@@ -152,7 +148,7 @@ QString Helper::getLibPath(){
     else path = "";
 #else
     path = QDir::homePath() + QString("\\.Sayonara\\images\\");
-    if(QFile::exists(path)){
+    if(QFile::exists(path)) {
         return path;
     }
     else path = "";
@@ -164,7 +160,7 @@ QString Helper::getLibPath(){
 }
 
 
-QString Helper::getIconPath(){
+QString Helper::getIconPath() {
 
 	QString path;
 
@@ -174,7 +170,7 @@ QString Helper::getIconPath(){
     else path = "./GUI/icons/";
 #else
 	path = QDir::homePath() + QString("\\.Sayonara\\images\\");
-	if(QFile::exists(path)){
+	if(QFile::exists(path)) {
 		return path;
 	}
 	else return QString("");
@@ -183,16 +179,16 @@ QString Helper::getIconPath(){
 	return path;
 }
 
-QString Helper::getSayonaraPath(){
+QString Helper::getSayonaraPath() {
 	return QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator();
 }
 
-QString Helper::get_artist_image_path(QString artist, QString extension){
+QString Helper::get_artist_image_path(const QString& artist) {
 	QString token = QString("artist_") + calc_cover_token(artist, "");
-    QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + "." + extension;
+	QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
 
 
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
+	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
 		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
 	}
 
@@ -200,37 +196,48 @@ QString Helper::get_artist_image_path(QString artist, QString extension){
 }
 
 
-QString Helper::createLink(QString name, QString target, bool underline){
+QString Helper::createLink(const QString& name, const QString& target, bool underline) {
 	
 	int dark = CSettingsStorage::getInstance()->getPlayerStyle();
-	if(target.size() == 0) target = name;
+
+	QString new_target;
+
+	if(target.size() == 0){
+		new_target = name;
+	}
+
+	else {
+		new_target = target;
+	}
 
 	QString content;
 	QString style = "";
 	
 	if(!underline) style = " style: \"text-decoration=none;\" ";
 
-	if(dark){
+	if(dark) {
 		content = LIGHT_BLUE(name);
 	}
-	else content = DARK_BLUE(name);
+	else {
+		content = DARK_BLUE(name);
+	}
 	
 
 	return QString("<a href=\"") + target + "\"" + style + ">" + content + "</a>";
 }
 
-QString Helper::calc_filesize_str(qint64 filesize){
+QString Helper::calc_filesize_str(qint64 filesize) {
     qint64 kb = 1024;
     qint64 mb = kb * 1024;
     qint64 gb = mb * 1024;
 
     QString size;
-    if(filesize > gb){
+    if(filesize > gb) {
 
         size = QString::number(filesize / gb) + "." + QString::number((filesize / mb) % gb).left(2)  + " GB";
     }
 
-    else if (filesize > mb){
+    else if (filesize > mb) {
         size = QString::number(filesize / mb) + "." + QString::number((filesize / kb) % mb).left(2)  + " MB";
     }
 
@@ -241,7 +248,7 @@ QString Helper::calc_filesize_str(qint64 filesize){
     return size;
 }
 
-QString Helper::calc_lfm_artist_adress(QString artist){
+QString Helper::calc_lfm_artist_adress(const QString& artist) {
 	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=");
 	QString api_key = LFM_API_KEY;
 	url += api_key + "&";
@@ -250,7 +257,7 @@ QString Helper::calc_lfm_artist_adress(QString artist){
 }
 
 
-QString Helper::calc_lfm_album_adress(QString artist, QString album){
+QString Helper::calc_lfm_album_adress(const QString& artist, const QString& album) {
 
 	QString url = QString ("http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=");
 	QString api_key = LFM_API_KEY;
@@ -266,8 +273,9 @@ QString Helper::calc_lfm_album_adress(QString artist, QString album){
 }
 
 
-QString Helper::calc_google_image_search_adress(QString searchstring){
+QString Helper::calc_google_image_search_adress(const QString& str) {
 
+	QString searchstring = str;
 	searchstring.replace(" ", "%20");
 	searchstring.replace("/", "%2F");
 	searchstring.replace("&", "%26");
@@ -281,41 +289,47 @@ QString Helper::calc_google_image_search_adress(QString searchstring){
 }
 
 
-QString Helper::calc_google_artist_adress(QString artist){
+QString Helper::calc_google_artist_adress(const QString& artist) {
 
     return calc_google_image_search_adress(QUrl::toPercentEncoding(artist));
 }
 
 
-QString Helper::calc_google_album_adress(QString artist, QString album){
+QString Helper::calc_google_album_adress(const QString& artist, const QString& album) {
 
-	artist = QUrl::toPercentEncoding(artist);
+	QString new_album, searchstring;
+	QRegExp regex;
 
-	album = album.toLower();
+	searchstring = QUrl::toPercentEncoding(artist);
+	new_album = album;
 
-	album = album.remove(QRegExp(QString("(\\s)?-?(\\s)?((cd)|(CD)|((d|D)((is)|(IS))(c|C|k|K)))(\\d|(\\s\\d))")));
-	album = album.replace("()", "");
-	album = album.replace("( )", "");
-	album = album.trimmed();
-	album = QUrl::toPercentEncoding(album);
+	regex = QRegExp(QString("(\\s)?-?(\\s)?((cd)|(CD)|((d|D)((is)|(IS))(c|C|k|K)))(\\d|(\\s\\d))"));
 
-	QString searchstring = artist;
-	if(searchstring.size() > 0) searchstring += "+";
-	searchstring += album;
+	new_album = new_album.toLower();
+	new_album = new_album.remove(regex);
+	new_album = new_album.replace("()", "");
+	new_album = new_album.replace("( )", "");
+	new_album = new_album.trimmed();
+	new_album = QUrl::toPercentEncoding(album);
+
+	if(searchstring.size() > 0) {
+		searchstring += "+";
+	}
+
+	searchstring += new_album;
 
     return calc_google_image_search_adress(searchstring);
 }
 
 
 
-QString Helper::calc_cover_token(QString artist, QString album){
-    QString ret = QCryptographicHash::hash(artist.trimmed().toLower().toUtf8() + album.trimmed().toLower().toUtf8(), QCryptographicHash::Md5).toHex();
-	return ret;
+QString Helper::calc_cover_token(const QString& artist, const QString& album) {
+
+	QByteArray str = QString(artist.trimmed() + album.trimmed()).toLower().toUtf8();
+	return calc_hash(str);
 }
 
-
-
-QStringList Helper::get_soundfile_extensions(){
+QStringList Helper::get_soundfile_extensions() {
 
 	QStringList filters;
 	filters << "*.mp3"
@@ -327,29 +341,18 @@ QStringList Helper::get_soundfile_extensions(){
 			<< "*.aac"
 			<< "*.wma";
 
-	QString bla;
-
-	foreach(QString filter, filters){
+	foreach(QString filter, filters) {
 		filters.push_back(filter.toUpper());
 	}
-
-
-	/*
-	filters << "*.avi"
-			<< "*.flv"
-			<< "*.mpg"
-			<< "*.mpeg"
-			<< "*.mkv"
-			<< "*.wmv"
-			<< "*.vob";*/
 
 	return filters;
 }
 
-bool Helper::is_soundfile(QString filename){
+bool Helper::is_soundfile(const QString& filename) {
+
 	QStringList extensions = get_soundfile_extensions();
-	foreach(QString extension, extensions){
-		if(filename.toLower().endsWith(extension.right(4).toLower())){
+	foreach(QString extension, extensions) {
+		if(filename.toLower().endsWith(extension.right(4))) {
 			return true;
 		}
 	}
@@ -358,7 +361,8 @@ bool Helper::is_soundfile(QString filename){
 }
 
 
-QStringList Helper::get_playlistfile_extensions(){
+QStringList Helper::get_playlistfile_extensions() {
+
 	QStringList filters;
 
 	filters << "*.pls"
@@ -367,7 +371,7 @@ QStringList Helper::get_playlistfile_extensions(){
 			<< "*.asx";
 
 
-	foreach(QString filter, filters){
+	foreach(QString filter, filters) {
 		filters.push_back(filter.toUpper());
 	}
 
@@ -376,10 +380,10 @@ QStringList Helper::get_playlistfile_extensions(){
 
 
 
-bool Helper::is_playlistfile(QString filename){
+bool Helper::is_playlistfile(const QString& filename) {
 	QStringList extensions = get_playlistfile_extensions();
-	foreach(QString extension, extensions){
-		if(filename.toLower().endsWith(extension.right(4).toLower())){
+	foreach(QString extension, extensions) {
+		if(filename.toLower().endsWith(extension.right(4).toLower())) {
 			return true;
 		}
 	}
@@ -389,14 +393,14 @@ bool Helper::is_playlistfile(QString filename){
 
 
 
-QStringList Helper::get_podcast_extensions(){
+QStringList Helper::get_podcast_extensions() {
 
     QStringList filters;
 
     filters << "*.xml"
             << "*.rss";
 
-    foreach(QString filter, filters){
+    foreach(QString filter, filters) {
         filters.push_back(filter.toUpper());
     }
 
@@ -404,13 +408,13 @@ QStringList Helper::get_podcast_extensions(){
 }
 
 
-bool Helper::is_podcastfile(QString filename, QString* content){
+bool Helper::is_podcastfile(const QString& filename, QString* content) {
     QStringList extensions = get_podcast_extensions();
 
     bool extension_ok = false;
-    foreach(QString extension, extensions){
+    foreach(QString extension, extensions) {
 
-        if(filename.toLower().endsWith(extension.right(4).toLower())){
+        if(filename.toLower().endsWith(extension.right(4).toLower())) {
             extension_ok = true;
             break;
 
@@ -420,7 +424,7 @@ bool Helper::is_podcastfile(QString filename, QString* content){
     qDebug() << "extension ok? " << extension_ok;
     if(!extension_ok) return false;
 
-    if( Helper::is_www(filename) ){
+    if( Helper::is_www(filename) ) {
         qDebug() << "read http into str";
         read_http_into_str(filename, content);
     }
@@ -437,47 +441,69 @@ bool Helper::is_podcastfile(QString filename, QString* content){
     return false;
 }
 
-QString Helper::calc_file_extension(QString filename){
+QString Helper::calc_file_extension(const QString& filename) {
 
     int last_point = filename.lastIndexOf(".") + 1;
     return filename.right(filename.size() - last_point);
 
 }
 
-void Helper::remove_files_in_directory(QString dir_name, QStringList filters){
-	if(filters.size() == 0) filters << "*";
+void Helper::remove_files_in_directory(const QString& dir_name, const QStringList& filters) {
 
+	QStringList file_list;
 	QDir dir(dir_name);
 	dir.setFilter(QDir::Files);
-	dir.setNameFilters(filters);
-	QStringList file_list = dir.entryList();
 
-	foreach(QString filename, file_list){
+	if(filters.size() == 0) {
+		QStringList tmp_list;
+		tmp_list << "*";
+		dir.setNameFilters(tmp_list);
+	}
+
+	else {
+		dir.setNameFilters(filters);
+	}
+
+	file_list = dir.entryList();
+
+	foreach(QString filename, file_list) {
 
 		QFile file(dir.absoluteFilePath(filename));
 		file.remove();
 	}
 }
 
-QString Helper::get_parent_folder(QString filename){
+QString Helper::get_parent_folder(const QString& filename) {
     
-    QString ret= filename.left(filename.lastIndexOf(QDir::separator()) + 1);
-    int last_idx = ret.lastIndexOf(QDir::separator());
-    while(last_idx == ret.size() - 1){
-	ret = ret.left(ret.size() - 1);
+	QString ret;
+	int last_idx;
+
+	ret = filename.left(filename.lastIndexOf(QDir::separator()) + 1);
+	last_idx = ret.lastIndexOf(QDir::separator());
+
+	while(last_idx == ret.size() - 1) {
+		ret = ret.left(ret.size() - 1);
     	last_idx = ret.lastIndexOf(QDir::separator());
     }
-    return ret;
+
+	return ret;
 }
 
-QString Helper::get_filename_of_path(QString path){
-    while(path.endsWith(QDir::separator())) path.remove(path.size() - 1, 1);
-    path.remove(Helper::get_parent_folder(path));
-    path.remove(QDir::separator());
-    return path;
+QString Helper::get_filename_of_path(const QString& path) {
+
+	QString ret = path;
+
+	while(ret.endsWith(QDir::separator())){
+		ret.remove(path.size() - 1, 1);
+	}
+
+	ret.remove(Helper::get_parent_folder(path));
+	ret.remove(QDir::separator());
+
+	return ret;
 }
 
-void Helper::split_filename(QString src, QString& path, QString& filename){
+void Helper::split_filename(const QString& src, QString& path, QString& filename) {
 
 	path = Helper::get_parent_folder(src);
 	filename = Helper::get_filename_of_path(src);	
@@ -485,9 +511,9 @@ void Helper::split_filename(QString src, QString& path, QString& filename){
 
 
 
-QStringList Helper::extract_folders_of_files(QStringList files){
+QStringList Helper::extract_folders_of_files(const QStringList& files) {
     QStringList folders;
-    foreach(QString file, files){
+    foreach(QString file, files) {
         QString folder = get_parent_folder(file);
         if(!folders.contains(folder))
             folders << folder;
@@ -497,12 +523,12 @@ QStringList Helper::extract_folders_of_files(QStringList files){
 
 }
 
-bool Helper::checkTrack(const MetaData& md){
+bool Helper::checkTrack(const MetaData& md) {
 
 
     if( is_www(md.filepath)) return true;
 
-	if( !QFile::exists(md.filepath) && md.id >= 0 ){
+	if( !QFile::exists(md.filepath) && md.id >= 0 ) {
 		return false;
 	}
 
@@ -510,11 +536,11 @@ bool Helper::checkTrack(const MetaData& md){
 }
 
 
-bool Helper::read_file_into_str(QString filename, QString* content){
+bool Helper::read_file_into_str(const QString& filename, QString* content) {
 
 	QFile file(filename);
     content->clear();
-    if(!file.open(QIODevice::ReadOnly)){
+    if(!file.open(QIODevice::ReadOnly)) {
 		return false;
 	}
 
@@ -527,7 +553,7 @@ bool Helper::read_file_into_str(QString filename, QString* content){
 
 	file.close();
 
-    if(content->size() > 0 ){
+    if(content->size() > 0 ) {
 		return true;
 	}
 
@@ -535,36 +561,37 @@ bool Helper::read_file_into_str(QString filename, QString* content){
 
 }
 
-bool Helper::read_http_into_str(QString url, QString* content){
+bool Helper::read_http_into_str(const QString& url, QString* content) {
     return WebAccess::read_http_into_str(url, content);
 }
 
-bool Helper::read_http_into_img(QString url, QImage* image){
+bool Helper::read_http_into_img(const QString& url, QImage* image) {
     return WebAccess::read_http_into_img(url, image);
 }
 
 
-QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
+QString Helper::easy_tag_finder(const QString& tag, const QString& xml_doc) {
 
 	int p = tag.indexOf('.');
-	QString t = tag;
+	QString ret = tag;
+	QString new_tag = tag;
 	QString t_rev;
 	QString new_xml_doc = xml_doc;
 
-	while(p > 0){
+	while(p > 0) {
 
-		t = tag.left(p);
-		t_rev = tag.right(tag.length() - p -1);
+		ret = new_tag.left(p);
+		t_rev = tag.right(new_tag.length() - p -1);
 
-		new_xml_doc = easy_tag_finder(t, new_xml_doc);
+		new_xml_doc = easy_tag_finder(ret, new_xml_doc);
 		p = t_rev.indexOf('.');
-		tag = t_rev;
+		new_tag = t_rev;
 	}
 
-	t = tag;
+	ret = new_tag;
 
-	QString str2search_start = QString("<") + t + QString(".*>");
-	QString str2search_end = QString("</") + t + QString(">");
+	QString str2search_start = QString("<") + ret + QString(".*>");
+	QString str2search_end = QString("</") + ret + QString(">");
 	QString str2search = str2search_start + "(.+)" + str2search_end;
 	QRegExp rx(str2search);
 	rx.setMinimal(true);
@@ -578,12 +605,12 @@ QString Helper::easy_tag_finder(QString tag, QString& xml_doc){
 	return "";
 }
 
-QString Helper::calc_hash(QString data){
+QString Helper::calc_hash(const QString& data) {
 	return QCryptographicHash::hash(data.toUtf8(), QCryptographicHash::Md5).toHex();
 }
 
 
-QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep){
+QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep) {
 
     QFontMetrics fm(w->font());
 
@@ -593,17 +620,17 @@ QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep){
     QString subtext = str;
     QStringList lst;
 
-    while(fm.width(subtext) > width){
+    while(fm.width(subtext) > width) {
         int textsize = fm.width(subtext);
         double scale = (width * 1.0) / textsize;
         int idx = subtext.size() * scale - 2;
         if(idx < 0) idx = 0;
 
-        while(idx < subtext.size() && idx >= 0 && subtext.at(idx) != sep){
+        while(idx < subtext.size() && idx >= 0 && subtext.at(idx) != sep) {
             idx --;
         }
 
-        if(idx >= 0){
+        if(idx >= 0) {
 
             lst << subtext.left(idx+1);
             subtext = subtext.right(subtext.size() - idx);
@@ -618,33 +645,32 @@ QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep){
     return lst.join("<br />");
 }
 
-bool Helper::is_url(QString str){
+bool Helper::is_url(const QString& str) {
     if(is_www(str)) return true;
     if(str.startsWith("file"), Qt::CaseInsensitive) return true;
     return false;
 }
 
-bool Helper::is_www(QString str){
-
+bool Helper::is_www(const QString& str) {
 
     if(str.startsWith("http")) return true;
     else if(str.startsWith("ftp")) return true;
     return false;
 }
 
-bool Helper::is_dir(QString filename){
-        if(!QFile::exists(filename)) return false;
+bool Helper::is_dir(const QString& filename) {
+	if(!QFile::exists(filename)) return false;
 	QFileInfo fileinfo(filename);
 	return fileinfo.isDir();
 }
 
-bool Helper::is_file(QString filename){
-        if(!QFile::exists(filename)) return false;
+bool Helper::is_file(const QString& filename) {
+	if(!QFile::exists(filename)) return false;
 	QFileInfo fileinfo(filename);
 	return fileinfo.isFile();
 }
 
-QString Helper::get_album_w_disc(const MetaData& md){
+QString Helper::get_album_w_disc(const MetaData& md) {
 
     if(md.album_id <= 0) return md.album.trimmed();
 
@@ -662,25 +688,25 @@ QString Helper::get_album_w_disc(const MetaData& md){
 
 }
 
-QString Helper::get_major_artist(ArtistList artists){
+QString Helper::get_major_artist(const ArtistList& artists) {
 
     QStringList lst;
 
-    foreach(Artist artist, artists){
+    foreach(Artist artist, artists) {
         lst << artist.name;
     }
 
     return get_major_artist(lst);
 }
 
-QString Helper::get_major_artist(QStringList artists){
+QString Helper::get_major_artist(const QStringList& artists) {
 
     QMap<QString, int> map;
     if(artists.size() == 0) return "";
 
     int n_artists = artists.size();
 
-    foreach(QString artist, artists){
+    foreach(QString artist, artists) {
 
         QString alower = artist.toLower().trimmed();
 
@@ -694,7 +720,7 @@ QString Helper::get_major_artist(QStringList artists){
     }
 
     // n_appearances have to be at least 2/3 of all apperances
-    foreach(QString artist, map.keys()){
+    foreach(QString artist, map.keys()) {
 
         int n_appearances = map.value(artist);
         if(n_appearances * 3 > n_artists * 2) return artist;
@@ -704,7 +730,7 @@ QString Helper::get_major_artist(QStringList artists){
     return QString("Various");
 }
 
-QString Helper::get_album_major_artist(int album_id){
+QString Helper::get_album_major_artist(int album_id) {
 
 	if(album_id == -1) return "";
 
@@ -720,7 +746,7 @@ QString Helper::get_album_major_artist(int album_id){
     if(v_md.size() == 0) return "";
     if(v_md.size() == 1) return v_md[0].artist;
 
-    foreach(MetaData md, v_md){
+    foreach(MetaData md, v_md) {
         artists << md.artist;
     }
 
@@ -736,7 +762,7 @@ Album Helper::get_album_from_metadata(const MetaData& md) {
     bool success = false;
 
     // perfect metadata
-    if (md.album_id >= 0){
+    if (md.album_id >= 0) {
 
         success = db->getAlbumByID(md.album_id, album);
     }
@@ -759,7 +785,7 @@ Album Helper::get_album_from_metadata(const MetaData& md) {
 
 
 
-QString Helper::get_newest_version(){
+QString Helper::get_newest_version() {
 
     QString str;
     WebAccess::read_http_into_str("http://sayonara.luciocarreras.de/newest", &str);
@@ -768,10 +794,10 @@ QString Helper::get_newest_version(){
 }
 
 
-void Helper::set_deja_vu_font(QWidget* w, int font_size){
+void Helper::set_deja_vu_font(QWidget* w, int font_size) {
     QFont f = w->font();
     f.setFamily("DejaVu Sans");
-    if(font_size > 0){
+    if(font_size > 0) {
         f.setPixelSize(font_size);
     }
     f.setStyleStrategy(QFont::PreferAntialias);
@@ -779,7 +805,7 @@ void Helper::set_deja_vu_font(QWidget* w, int font_size){
     w->setFont(f);
 }
 
-void Helper::set_bin_path(QString str){
+void Helper::set_bin_path(const QString& str) {
 
     QDir d(str);
     d.cdUp();

@@ -28,10 +28,10 @@
 #include <QDir>
 
 
-CoverLocation::CoverLocation(){
+CoverLocation::CoverLocation() {
 }
 
-CoverLocation CoverLocation::getInvalidLocation(){
+CoverLocation CoverLocation::getInvalidLocation() {
 
 	CoverLocation cl;
 	cl.cover_path = Helper::getIconPath() + "logo.png";
@@ -39,13 +39,13 @@ CoverLocation CoverLocation::getInvalidLocation(){
 	return cl;
 }
 
-CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QString& artist_name){
+CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QString& artist_name) {
 
 	CoverLocation ret;
 	QString cover_token = Helper::calc_cover_token(artist_name, album_name);
 	QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + ".jpg";
 
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
+	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
 		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
 	}
 
@@ -55,13 +55,13 @@ CoverLocation CoverLocation::get_cover_location(const QString& album_name, const
 	return ret;
 }
 
-CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QStringList& artists){
+CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QStringList& artists) {
 
 	QString major_artist = Helper::get_major_artist(artists);
 	return get_cover_location(album_name, major_artist);
 }
 
-CoverLocation CoverLocation::get_cover_location(int album_id){
+CoverLocation CoverLocation::get_cover_location(int album_id) {
 
 	if(album_id < 0) return CoverLocation::getInvalidLocation();
 
@@ -76,15 +76,15 @@ CoverLocation CoverLocation::get_cover_location(int album_id){
 }
 
 
-CoverLocation CoverLocation::get_cover_location(const Album& album){
+CoverLocation CoverLocation::get_cover_location(const Album& album) {
 	int n_artists;
 
 	n_artists = album.artists.size();
-	if( n_artists > 1 ){
+	if( n_artists > 1 ) {
 		return CoverLocation::get_cover_location(album.name, album.artists);
 	}
 
-	else if( n_artists == 1 ){
+	else if( n_artists == 1 ) {
 		return CoverLocation::get_cover_location(album.name, album.artists[0]);
 	}
 
@@ -93,18 +93,18 @@ CoverLocation CoverLocation::get_cover_location(const Album& album){
 	}
 }
 
-CoverLocation CoverLocation::get_cover_location(const Artist& artist){
+CoverLocation CoverLocation::get_cover_location(const Artist& artist) {
 	return CoverLocation::get_cover_location(artist.name);
 }
 
 
-CoverLocation CoverLocation::get_cover_location(const QString& artist){
+CoverLocation CoverLocation::get_cover_location(const QString& artist) {
 	CoverLocation ret;
 
 	QString token = QString("artist_") + Helper::calc_cover_token(artist, "");
 	QString target_file = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
 
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")){
+	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
 		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
 	}
 
@@ -115,7 +115,7 @@ CoverLocation CoverLocation::get_cover_location(const QString& artist){
 }
 
 
-CoverLocation CoverLocation::get_cover_location(const MetaData& md){
+CoverLocation CoverLocation::get_cover_location(const MetaData& md) {
 
 	return get_cover_location(md.album, md.artist);
 }

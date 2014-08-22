@@ -35,7 +35,7 @@ PlaylistLoader::PlaylistLoader(QObject *parent) :
 }
 
 
-void PlaylistLoader::load_old_playlist(){
+void PlaylistLoader::load_old_playlist() {
 
         bool loadPlaylist = _settings->getLoadPlaylist();
         if( !loadPlaylist ) return;
@@ -58,7 +58,7 @@ void PlaylistLoader::load_old_playlist(){
         MetaDataList v_md;
 
         // run over all tracks
-        for(int i=0; i<saved_playlist.size(); i++){
+        for(int i=0; i<saved_playlist.size(); i++) {
 
             // convert item into MetaData
             QString item = saved_playlist[i];
@@ -77,11 +77,11 @@ void PlaylistLoader::load_old_playlist(){
             CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
             // we have a track id
-            if(track_id >= 0 && ok){
+            if(track_id >= 0 && ok) {
                 track = db->getTrackById(track_id);
 
                 // this track id cannot be found in db
-                if(track.id < 0){
+                if(track.id < 0) {
                     if(!ID3::getMetaDataOfFile(track)) continue;
                     track.is_extern = true;
                 }
@@ -100,13 +100,13 @@ void PlaylistLoader::load_old_playlist(){
                 // maybe it's in the library neverthe less
                 track = db->getTrackByPath(path_in_list);
                 // we expected that.. try to get metadata
-                if(track.id < 0){
+                if(track.id < 0) {
                     if(!ID3::getMetaDataOfFile(track)) continue;
                 }
 
                 track.is_extern = true;
 
-                if(!path_in_list.compare(last_track_path, Qt::CaseInsensitive)){
+                if(!path_in_list.compare(last_track_path, Qt::CaseInsensitive)) {
                     last_track_idx = i;
                 }
             }
@@ -129,7 +129,7 @@ void PlaylistLoader::load_old_playlist(){
 
 
         int last_pos = 0;
-        if(load_last_track && last_track_idx >= 0){
+        if(load_last_track && last_track_idx >= 0) {
             if(load_last_position)
                 last_pos = last_track->pos_sec;
 

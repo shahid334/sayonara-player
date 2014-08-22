@@ -72,8 +72,8 @@ struct PlaylistMode {
 		str += (rep1 ? "1" : "0")  + QString(",");
 		str += (repNone ? "1" : "0")  + QString(",");
 		str += (shuffle ? "1" : "0")  + QString(",");
-		str += (dynamic ? "1" : "0") + QString(",");
-		str += (gapless ? "1" : "0");
+		str += (dynamic ? "1" : "0")/* + QString(",");
+		str += (gapless ? "1" : "0")*/;
 
 		return str;
 	}
@@ -90,7 +90,7 @@ struct PlaylistMode {
 		repNone = list[3].toInt() == 1;
 		shuffle = list[4].toInt() == 1;
 		dynamic = list[5].toInt() == 1;
-		gapless = list[6].toInt() == 1;
+		//gapless = list[6].toInt() == 1;
 	}
 
 	bool operator==(const PlaylistMode& pm){
@@ -98,7 +98,7 @@ struct PlaylistMode {
 		if(pm.repAll != repAll) return false;
 		if(pm.shuffle != shuffle) return false;
 		if(pm.dynamic != dynamic) return false;
-		if(pm.gapless != gapless) return false;
+		//if(pm.gapless != gapless) return false;
 
 		return true;
 	}

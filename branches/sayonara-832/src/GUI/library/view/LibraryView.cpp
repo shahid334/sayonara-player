@@ -61,33 +61,28 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
 
-
-
-
     Helper::set_deja_vu_font(horizontalHeader(), 12);
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
 
 	clearSelection();
-
 }
 
 
 LibraryView::~LibraryView() {
     delete _rc_menu;
     delete _corner_widget;
-
 }
 
 
 // mouse events
-void LibraryView::mousePressEvent(QMouseEvent* event){
+void LibraryView::mousePressEvent(QMouseEvent* event) {
 
 	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
 
-    switch(event->button()){
+	switch(event->button()) {
 
 	case Qt::LeftButton:
 
@@ -123,7 +118,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event){
 
 }
 
-void LibraryView::mouseMoveEvent(QMouseEvent* event){
+void LibraryView::mouseMoveEvent(QMouseEvent* event) {
 
     QPoint pos = event->pos();
     int distance = abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
@@ -134,13 +129,13 @@ void LibraryView::mouseMoveEvent(QMouseEvent* event){
     }
 }
 
-void LibraryView::mouseDoubleClickEvent(QMouseEvent *event){
+void LibraryView::mouseDoubleClickEvent(QMouseEvent *event) {
 
 	event->setModifiers(Qt::NoModifier);
     QTableView::mouseDoubleClickEvent(event);
 }
 
-void LibraryView::mouseReleaseEvent(QMouseEvent* event){
+void LibraryView::mouseReleaseEvent(QMouseEvent* event) {
 
     switch (event->button()) {
 
@@ -163,7 +158,7 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event){
 
 
 // keyboard events
-void LibraryView::keyPressEvent(QKeyEvent* event){
+void LibraryView::keyPressEvent(QKeyEvent* event) {
 
 	int key = event->key();
 
@@ -173,8 +168,8 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
 	bool alt_pressed = (modifiers & Qt::AltModifier);
 	bool ctrl_pressed = (modifiers & Qt::ControlModifier);
 
-    if((key == Qt::Key_Up || key == Qt::Key_Down)){
-		if(this->selectionModel()->selection().isEmpty()){
+	if((key == Qt::Key_Up || key == Qt::Key_Down)) {
+		if(this->selectionModel()->selection().isEmpty()) {
 			if(_model->rowCount() > 0) selectRow(0);
 			return;
 		}
@@ -183,19 +178,16 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             event->setModifiers(Qt::NoModifier);
     }
 
-
-
 	SearchableTableView::keyPressEvent(event);
 	if(!event->isAccepted()) return;
 
-
     QList<int> selections = get_selections();
 
-    switch(key){
+	switch(key) {
 
 		case Qt::Key_Right:
         case Qt::Key_Plus:
-            if(_editor){
+			if(_editor) {
                 qDebug() << "Try to access editor " << _editor->get_id();
                 _editor->increase();
             }
@@ -223,15 +215,16 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
             if(ctrl_pressed) break;
 
             // standard enter
-            if(!shift_pressed && !alt_pressed)
-                emit doubleClicked( _model->index(selections[0], 0));
+			if(!shift_pressed && !alt_pressed){
+				emit doubleClicked( _model->index(selections[0], 0));
+			}
 
             // enter with shift
-            else if(shift_pressed && !alt_pressed){
+			else if(shift_pressed && !alt_pressed) {
                 append_clicked();
             }
 
-            else if(alt_pressed){
+			else if(alt_pressed) {
                 play_next_clicked();
             }
 
@@ -261,85 +254,65 @@ void LibraryView::keyPressEvent(QKeyEvent* event){
 }
 // keyboard end
 
-void LibraryView::setModel(LibraryItemModel * model){
-    SearchableTableView::setModel( (AbstractSearchTableModel*) model );
+void LibraryView::setModel(LibraryItemModel * model) {
 
+	SearchableTableView::setModel( (AbstractSearchTableModel*) model );
     _model = model;
-
 }
 
 
 // selections
-int LibraryView::get_min_selected(){
+int LibraryView::get_min_selected() {
 
 
     QList<int> selections = _model->get_selected();
     if(selections.size() == 0) return 0;
     int min = 10000;
-    foreach(int i, selections){
+	foreach(int i, selections) {
         if(i < min) min = i;
     }
     return min;
 }
 
-
-void LibraryView::goto_row(int row, bool select){
-
-    if(_model->rowCount() == 0) return;
-
-    if( row < 0 ) row = 0;
-    else if( row > _model->rowCount() - 1) row = _model->rowCount() - 1;
-
-    QModelIndex idx = _model->index(row, 0);
-	if(select) this->selectRow(row);
-    this->scrollTo(idx);
-	emit clicked(idx);
-}
-
-
-
-void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
+void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ) {
 
     if(_qDrag) {
         delete _qDrag;
         _qDrag = NULL;
     }
 
-
     if(_cur_filling) return;
-
 
 	QTableView::selectionChanged(selected, deselected);
 
     QModelIndexList idx_list = this->selectionModel()->selectedIndexes();
-    QList<int> idx_list_int;
 
-
-	foreach(QModelIndex model_idx, idx_list){
+	QList<int> idx_list_int;
+	foreach(QModelIndex model_idx, idx_list) {
 
 		int row = model_idx.row();
 
 		if( idx_list_int.contains(row) ) continue;
+
 		idx_list_int.push_back( row );
 	}
 
 	_model->set_selected(idx_list_int);
 
-	if(selected.indexes().size() > 0){
+	if(selected.indexes().size() > 0) {
         this->scrollTo(selected.indexes()[0]);
 	}
 
     emit sig_sel_changed(idx_list_int);
-	_sel_changed = true;
 }
 
 
-QList<int> LibraryView::get_selections(){
+QList<int> LibraryView::get_selections() {
 
     QList<int> idx_list_int;
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
-    foreach(QModelIndex model_idx, idx_list){
+	foreach(QModelIndex model_idx, idx_list) {
         idx_list_int.push_back(model_idx.row());
     }
 
@@ -349,78 +322,85 @@ QList<int> LibraryView::get_selections(){
 
 
 
-template void LibraryView::fill<MetaData>(const vector<MetaData>&);
-template void LibraryView::fill<Album>(const vector<Album>&);
-template void LibraryView::fill<Artist>(const vector<Artist>&);
+template void LibraryView::fill<MetaDataList, MetaData>(const MetaDataList&);
+template void LibraryView::fill<AlbumList, Album>(const AlbumList&);
+template void LibraryView::fill<ArtistList, Artist>(const ArtistList&);
 
 
-template < class T >
-void LibraryView::fill(const vector<T>& input_data){
+template < class TList, class T >
+void LibraryView::fill(const TList& input_data) {
+
+	QModelIndex idx;
+	QItemSelectionModel* sm;
+	QItemSelection sel;
+	int size = (int) input_data.size();
+	int first_selected_row = -1;
 
 	_cur_filling = true;
-	QList<int> lst;
-	_model->set_selected(lst);
-	uint size = input_data.size();
 
 	_model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, size);
 
-	QModelIndex idx;
-	int first_selected_row = -1;
+	sm = this->selectionModel();
+	sel = sm->selection();
 
-	QItemSelectionModel* sm = this->selectionModel();
-	QItemSelection sel = sm->selection();
-
-	for(uint row=0; row < size; row++){
+	for(int row=0; row < size; row++) {
 
 		idx = _model->index(row, 1);
 
-		if( input_data[row].is_lib_selected ){
-			if(first_selected_row == -1)
+		if( input_data[row].is_lib_selected ) {
+
+			if(first_selected_row == -1) {
 				first_selected_row = row;
+			}
 
 			this->selectRow(row);
 			sel.merge(sm->selection(), QItemSelectionModel::Select);
 		}
 
-		QVariant data = T::toVariant(input_data[row]);
-		_model->setData(idx, data, Qt::EditRole );
+		QVariant var_data = T::toVariant( input_data[row] );
+		_model->setData(idx, var_data, Qt::EditRole );
 	}
 
 	sm->clearSelection();
 	sm->select(sel,QItemSelectionModel::Select);
 
-	if(first_selected_row >= 0)
+	if(first_selected_row >= 0) {
 		this->scrollTo(_model->index(first_selected_row, 0), QTableView::PositionAtCenter);
+	}
 
 	calc_corner_widget();
 	_cur_filling = false;
 }
 
 
-void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder){
+void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder) {
 
-    if(_qDrag){
+	if(_qDrag) {
         delete _qDrag;
+		_qDrag = NULL;
     }
 
     _mimedata = new CustomMimeData();
 
     QList<QUrl> urls;
-    if(!drop_entire_folder){
-        foreach(MetaData md, v_md){
+	if(!drop_entire_folder) {
+		foreach(MetaData md, v_md) {
             QUrl url(QString("file://") + md.filepath);
             urls << url;
         }
     }
 
-    else{
+	else {
         QStringList filenames;
-        foreach(MetaData md, v_md)
-            filenames << md.filepath;
+		QStringList folders;
 
-        QStringList folders = Helper::extract_folders_of_files(filenames);
-        foreach(QString folder, folders){
+		foreach(MetaData md, v_md){
+            filenames << md.filepath;
+		}
+
+		folders = Helper::extract_folders_of_files(filenames);
+		foreach(QString folder, folders) {
             QUrl url(QString("file://") + folder);
             urls << url;
         }
@@ -439,35 +419,32 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
     _drag = true;
 }
 
-void LibraryView::forbid_mimedata_destroyable(){
+void LibraryView::forbid_mimedata_destroyable() {
 
     _qDrag = NULL;
 }
-// fill end
-
-
 
 // appearance
-void LibraryView::set_skin(bool dark){
+void LibraryView::set_skin(bool dark) {
     _dark = dark;
     calc_corner_widget();
 }
 
-void LibraryView::calc_corner_widget(){
+void LibraryView::calc_corner_widget() {
 
-    if(!this->verticalScrollBar() || !this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()){
+	if(!this->verticalScrollBar() || !this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()) {
         this->setCornerWidget(NULL);
         _corner_widget->hide();
         return;
     }
 
-    if(!this->cornerWidget()){
+	if(!this->cornerWidget()) {
         this->setCornerWidget(_corner_widget);
         _corner_widget->show();
-
+		return;
     }
 
-    if(this->cornerWidget()){
+	if(this->cornerWidget()) {
         if(_dark)
             this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
         else{
@@ -478,54 +455,56 @@ void LibraryView::calc_corner_widget(){
     }
 }
 
-void LibraryView::resizeEvent(QResizeEvent* event){
+void LibraryView::resizeEvent(QResizeEvent* event) {
     event->ignore();
-    QTableView::resizeEvent(event);
+	SearchableTableView::resizeEvent(event);
     calc_corner_widget();
 }
 // appearance end
 
-void LibraryView::set_editor(RatingLabel *editor){
+void LibraryView::set_editor(RatingLabel *editor) {
 
 	_editor = editor;
-    if(_editor){
+	if(_editor) {
         qDebug() << "New Editor: " << _editor->get_id();
-		//connect(_editor, SIGNAL(destroyed()), this, SLOT(editorDestroyed()));
     }
 
 }
 
-void LibraryView::editorDestroyed(QObject* object){
+void LibraryView::editorDestroyed(QObject* object) {
 
     _editor = 0;
 }
 
 
 // drag drop
-void LibraryView::dropEvent(QDropEvent *event){
+void LibraryView::dropEvent(QDropEvent *event) {
 
     event->accept();
     const QMimeData* mime_data = event->mimeData();
 
     if(!mime_data) return;
 
-    QString text = "";
-    if(mime_data->hasText()) text = mime_data->text();
+	QString text = "";
+
+
+	if(mime_data->hasText()){
+		text = mime_data->text();
+	}
 
     // extern drops
     if( !mime_data->hasUrls() || text.compare("tracks", Qt::CaseInsensitive) == 0) {
         return;
     }
 
-
-    QStringList filelist;
-    foreach(QUrl url, mime_data->urls()){
+	QStringList filelist;
+	foreach(QUrl url, mime_data->urls()) {
         QString path;
         QString url_str = url.toString();
         path =  url_str.right(url_str.length() - 7).trimmed();
         path = path.replace("%20", " ");
 
-        if(QFile::exists(path)){
+		if(QFile::exists(path)) {
             filelist << path;
         }
     } // end foreach
@@ -534,11 +513,11 @@ void LibraryView::dropEvent(QDropEvent *event){
 
 }
 
-void LibraryView::dragEnterEvent(QDragEnterEvent *event){
+void LibraryView::dragEnterEvent(QDragEnterEvent *event) {
     event->accept();
 }
 
-void  LibraryView::dragMoveEvent(QDragMoveEvent *event){
+void  LibraryView::dragMoveEvent(QDragMoveEvent *event) {
     event->accept();
 }
 // drag drop end
@@ -546,12 +525,12 @@ void  LibraryView::dragMoveEvent(QDragMoveEvent *event){
 
 
 // Right click stuff
-void LibraryView::rc_menu_init(){
+void LibraryView::rc_menu_init() {
     _rc_menu = new ContextMenu(this);
     _rc_menu->setup_entries(ENTRY_PLAY_NEXT | ENTRY_INFO | ENTRY_DELETE | ENTRY_EDIT | ENTRY_APPEND);
 }
 
-void LibraryView::rc_menu_show(const QPoint& p){
+void LibraryView::rc_menu_show(const QPoint& p) {
 
     emit sig_no_disc_menu();
 
@@ -571,20 +550,20 @@ void LibraryView::rc_menu_show(const QPoint& p){
 }
 
 
-void LibraryView::edit_clicked(){
+void LibraryView::edit_clicked() {
     emit sig_edit_clicked();
 }
-void LibraryView::info_clicked(){
+void LibraryView::info_clicked() {
     emit sig_info_clicked();
 }
-void LibraryView::delete_clicked(){
+void LibraryView::delete_clicked() {
     emit sig_delete_clicked();
 }
-void LibraryView::play_next_clicked(){
+void LibraryView::play_next_clicked() {
     emit sig_play_next_clicked();
 }
 
-void LibraryView::append_clicked(){
+void LibraryView::append_clicked() {
     emit sig_append_clicked();
 }
 

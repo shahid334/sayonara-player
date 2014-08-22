@@ -26,10 +26,7 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/Helper.h"
 
-#include <QWidget>
 #include <QMap>
-
-
 
 class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 

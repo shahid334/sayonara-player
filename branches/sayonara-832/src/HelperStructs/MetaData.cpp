@@ -51,40 +51,12 @@ MetaData::MetaData() : LibraryItem() {
         is_disabled = false;
 }
 
-MetaData::MetaData(const MetaData& md) : LibraryItem(md){
 
-        id = md.id;
-        artist_id = md.artist_id;
-        album_id = md.album_id;
-        title = md.title;
-        artist = md.artist;
-        album = md.album;
-        rating = md.rating;
-		pos_sec = md.pos_sec;	
-        length_ms = md.length_ms;
-        year = md.year;
-        filepath = md.filepath;
-        track_num = md.track_num;
-        bitrate = md.bitrate;
-        is_extern = md.is_extern;
-        radio_mode = md.radio_mode;
-        filesize = md.filesize;
-        comment = md.comment;
-        discnumber = md.discnumber;
-        n_discs = md.n_discs;
-
-        pl_selected = md.pl_selected;
-        pl_playing = md.pl_playing;
-        pl_dragged = md.pl_dragged;
-
-        is_disabled = md.is_disabled;
-}
-
-MetaData::~MetaData(){
+MetaData::~MetaData() {
 
 }
 
-void MetaData::print(){
+void MetaData::print() const {
 	qDebug() << title
              << " by " << artist
              << " from " << album
@@ -100,9 +72,9 @@ QVariant MetaData::toVariant(const MetaData& md) {
 	return v;
 }
 
-bool MetaData::fromVariant(const QVariant& v, MetaData& md){
+bool MetaData::fromVariant(const QVariant& v, MetaData& md) {
 
-	if(! v.canConvert<MetaData>() ){
+	if(! v.canConvert<MetaData>() ) {
 		return false;
 	}
 
@@ -110,12 +82,12 @@ bool MetaData::fromVariant(const QVariant& v, MetaData& md){
 	return true;
 }
 
-bool MetaData::operator==(const MetaData& md){
+bool MetaData::operator==(const MetaData& md) {
 	return this->is_equal(md, true);
 }
 
 
-bool MetaData::is_equal(const MetaData& md, bool case_sensitive){
+bool MetaData::is_equal(const MetaData& md, bool case_sensitive) {
 	QString my_filepath = this->filepath.trimmed();
 	QString their_filepath = md.filepath.trimmed();
 
@@ -138,26 +110,26 @@ MetaDataList::MetaDataList(int n_elems) :
 	vector<MetaData>(n_elems)
 	{ }
 
-MetaDataList::~MetaDataList(){
+MetaDataList::~MetaDataList() {
 
 }
 
-void MetaDataList::setCurPlayTrack(uint idx){
+void MetaDataList::setCurPlayTrack(uint idx) {
 
-   for(uint i=0; i<size(); i++){
+   for(uint i=0; i<size(); i++) {
        this->at(i).pl_playing = (i == idx);
    }
 }
 
-bool MetaDataList::contains(const MetaData& md, bool cs){
+bool MetaDataList::contains(const MetaData& md, bool cs) {
     QString filepath;
 
-    if(cs){
+    if(cs) {
         filepath = md.filepath.trimmed();
 
-        for(uint i=0; i<size(); i++){
+        for(uint i=0; i<size(); i++) {
 
-			if( this->at(i).is_equal(md, cs) ){
+			if( this->at(i).is_equal(md, cs) ) {
 				return true;
 			}
 
@@ -168,9 +140,9 @@ bool MetaDataList::contains(const MetaData& md, bool cs){
 }
 
 
-void MetaDataList::insert(const MetaData& md, uint pos){
+void MetaDataList::insert(const MetaData& md, uint pos) {
 
-    if(pos >= size()){
+    if(pos >= size()) {
         push_back(md);
         return;
     }
@@ -182,7 +154,7 @@ void MetaDataList::insert(const MetaData& md, uint pos){
     sz++;
 
     // s
-    for(uint j= sz-2; j>pos; j--){
+    for(uint j= sz-2; j>pos; j--) {
         at(j) = at(j-1);
     }
 

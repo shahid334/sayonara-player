@@ -37,18 +37,12 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/ui_GUI_Equalizer.h"
 
-#include <QObject>
 #include <QDockWidget>
-#include <QDebug>
 #include <QMessageBox>
 
 
-#include <vector>
-
-using namespace std;
-
-QString calc_lab(int val){
-    if(val > 0){
+QString calc_lab(int val) {
+    if(val > 0) {
         double v = val / 2.0;
         if(val % 2 == 0)
             return QString("+") + QString::number(v) + ".0";
@@ -80,7 +74,7 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) : PlayerPlugin(name,
 	_sliders.push_back(new EqSlider(_ui->sli_8, _ui->label_9, 8));
 	_sliders.push_back(new EqSlider(_ui->sli_9, _ui->label_10, 9));
 
-	foreach(EqSlider* s, _sliders){
+	foreach(EqSlider* s, _sliders) {
 		connect(s, SIGNAL(valueChanged(int,int)), this, SLOT(sli_changed(int, int)));
 	}
 
@@ -96,7 +90,7 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) : PlayerPlugin(name,
 
 GUI_Equalizer::~GUI_Equalizer() {
 
-	foreach(EqSlider* s, _sliders){
+	foreach(EqSlider* s, _sliders) {
 		delete s;
 	}
 
@@ -105,41 +99,41 @@ GUI_Equalizer::~GUI_Equalizer() {
 
 
 
-void GUI_Equalizer::language_changed(){
+void GUI_Equalizer::language_changed() {
     _ui->retranslateUi(this);
 }
 
-void GUI_Equalizer::changeSkin(bool dark){
+void GUI_Equalizer::changeSkin(bool dark) {
 
     _dark = dark;
 }
 
 
 
-void GUI_Equalizer::sli_changed(int idx, int new_val){
+void GUI_Equalizer::sli_changed(int idx, int new_val) {
 	_sliders[idx]->getLabel()->setText(calc_lab(new_val));
 	emit eq_changed_signal(idx, new_val);
 }
 
 
-void GUI_Equalizer::but_enabled_changed(bool enabled){
+void GUI_Equalizer::but_enabled_changed(bool enabled) {
 
 }
 
 
-void GUI_Equalizer::fill_eq_presets(){
+void GUI_Equalizer::fill_eq_presets() {
 
 	QStringList items;
 	_settings->getEqualizerSettings(_presets);
 
-	foreach(EQ_Setting s, _presets){
+	foreach(EQ_Setting s, _presets) {
 		items << s.name;
 	}
 
 	_ui->combo_presets->insertItems(0, items);
 
 	int last_idx = _settings->getLastEqualizer();
-	if(last_idx < (int) _presets.size() ){
+	if(last_idx < (int) _presets.size() ) {
 		_ui->combo_presets->setCurrentIndex(last_idx);
 		preset_changed(last_idx);
 	}
@@ -148,16 +142,16 @@ void GUI_Equalizer::fill_eq_presets(){
 }
 
 
-void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs){
+void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs) {
 	Q_UNUSED(eqs);
 }
 
 
-void GUI_Equalizer::preset_changed(int index){
+void GUI_Equalizer::preset_changed(int index) {
 
 	QList<double> setting = this->_presets[index].settings;
 
-	for(int i=0; i<setting.size(); i++){
+	for(int i=0; i<setting.size(); i++) {
 		if(i > (int) _sliders.size()) break;
 
 		_sliders[i]->setValue( setting[i] );
@@ -168,17 +162,17 @@ void GUI_Equalizer::preset_changed(int index){
 }
 
 
-void GUI_Equalizer::btn_preset_clicked(){
+void GUI_Equalizer::btn_preset_clicked() {
 
 	QString str = "Custom";
-	foreach(EqSlider* s, _sliders){
+	foreach(EqSlider* s, _sliders) {
 		str += "," + s->getLabel()->text();
 	}
 
 	int custom_idx = -1;
-	for(uint i=0; i<_presets.size(); i++){
+	for(uint i=0; i<_presets.size(); i++) {
 
-		if(_presets[i].name == "Custom"){
+		if(_presets[i].name == "Custom") {
 			_presets[i].parseFromString(str);
 			custom_idx = i;
 			break;
@@ -188,7 +182,7 @@ void GUI_Equalizer::btn_preset_clicked(){
 	bool b_save = true;
 	int current_idx = _ui->combo_presets->currentIndex();
 
-	if( custom_idx != -1 && custom_idx != current_idx ){
+	if( custom_idx != -1 && custom_idx != current_idx ) {
 
         QMessageBox msgBox(this);
          msgBox.setText(tr("This will overwrite your custom preset"));
@@ -201,7 +195,7 @@ void GUI_Equalizer::btn_preset_clicked(){
 		 if(ret != QMessageBox::Yes) b_save = false;
 	}
 
-	if(b_save){
+	if(b_save) {
 		CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
 		if(custom_idx != -1) _ui->combo_presets->setCurrentIndex(custom_idx);
 	}

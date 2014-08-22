@@ -51,7 +51,7 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
 
     //qDebug() << webpage;
 
-    while(n_covers < num){
+    while(n_covers < num) {
         QString re_str("(https://encrypted-tbn)(\\S)+(\")");
         QRegExp re(re_str);
         idx = re.indexIn(webpage, idx);
@@ -68,13 +68,13 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
 }
 
 
-QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses){
+QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses) {
 
     QString content;
     bool success = WebAccess::read_http_into_str(url, &content);
 
     QStringList cover_adresses;
-    if(success){
+    if(success) {
         cover_adresses = cov_calc_adresses_from_webpage(num_adresses, content);
     }
     else{

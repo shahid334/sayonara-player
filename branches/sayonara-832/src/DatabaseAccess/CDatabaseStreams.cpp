@@ -38,7 +38,7 @@
 using namespace std;
 
 
-bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
+bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams) {
 
 	streams.clear();
 
@@ -52,7 +52,7 @@ bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
 		return false;
 
 	else{
-		while(q.next()){
+		while(q.next()) {
 			QString name = q.value(0).toString();
 			QString url = q.value(1).toString();
 
@@ -65,7 +65,7 @@ bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams){
 
 
 
-bool CDatabaseConnector::deleteStream(QString name){
+bool CDatabaseConnector::deleteStream(QString name) {
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
@@ -85,7 +85,7 @@ bool CDatabaseConnector::deleteStream(QString name){
 
 
 
-bool CDatabaseConnector::addStream(QString name, QString url){
+bool CDatabaseConnector::addStream(QString name, QString url) {
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 

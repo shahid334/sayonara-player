@@ -75,7 +75,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
 	QPixmap pixmap(filename);
 
-	if(!pixmap.isNull()){
+	if(!pixmap.isNull()) {
 
 		label->setPixmap(pixmap);
 	}

@@ -55,7 +55,7 @@ class MetaData;
 
 Q_DECLARE_METATYPE(MetaData)
 
-class MetaData : LibraryItem {
+class MetaData : public LibraryItem {
 
 public:
 	qint32 id;
@@ -86,16 +86,14 @@ public:
     bool pl_dragged;
 
     bool is_disabled;
-	bool is_lib_selected;
 
 	MetaData ();
-	MetaData (const MetaData& md);
 	virtual ~MetaData();
 
 	bool operator==(const MetaData& md);
 	bool is_equal(const MetaData& md, bool case_sensitive=true);
     
-	void print();
+	void print() const;
 
 	static QVariant toVariant(const MetaData& md);
 	static bool fromVariant(const QVariant& v, MetaData& md);

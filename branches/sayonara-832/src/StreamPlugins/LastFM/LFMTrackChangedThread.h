@@ -58,18 +58,18 @@ struct ArtistMatch{
 
     QString artist;
 
-    bool operator ==(ArtistMatch am){
+    bool operator ==(ArtistMatch am) {
         return (artist == am.artist);
     }
 
-    void add(QString artist, double match){
+    void add(QString artist, double match) {
         if(match > 0.15) very_good[artist] = match;
         else if(match > 0.05) well[artist] = match;
         else poor[artist] = match;
     }
 
-    QMap<QString, double> get(Quality q){
-        switch(q){
+    QMap<QString, double> get(Quality q) {
+        switch(q) {
             case Quality_Poor:
                     return poor;
             case Quality_Well:

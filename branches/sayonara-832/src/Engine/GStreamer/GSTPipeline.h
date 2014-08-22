@@ -92,6 +92,6 @@ namespace PipelineCallbacks {
 	void pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data);
 	gboolean show_position(gpointer data);
 
-};
+}
 
 #endif // GSTPIPELINE_H

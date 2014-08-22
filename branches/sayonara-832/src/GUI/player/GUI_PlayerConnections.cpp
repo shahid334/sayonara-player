@@ -20,7 +20,7 @@
 
 #include "GUI/player/GUI_Player.h"
 
-void GUI_Player::setupConnections(){
+void GUI_Player::setupConnections() {
 
 	connect(ui->btn_play, SIGNAL(clicked(bool)), this,
 			SLOT(playClicked(bool)));

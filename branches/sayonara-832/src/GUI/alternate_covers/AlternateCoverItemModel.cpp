@@ -70,12 +70,12 @@ QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 
 	int lin_idx = this->cvt_2_idx(index.row(), index.column());
 
-     if (!index.isValid() || _pathlist.size() <= lin_idx){
+     if (!index.isValid() || _pathlist.size() <= lin_idx) {
          return QVariant();
      }
 
 
-	 if(role == Qt::WhatsThisRole){
+	 if(role == Qt::WhatsThisRole) {
 
 		 return _pathlist[lin_idx];
 	 }
@@ -92,7 +92,7 @@ Qt::ItemFlags AlternateCoverItemModel::flags(const QModelIndex &index) const{
 
 }
 
-bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &value, int role){
+bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &value, int role) {
 
     if (!index.isValid())
 		 return false;
@@ -102,7 +102,7 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
     if(lin_idx >= _pathlist.size())
         return false;
 
-	 if(role == Qt::EditRole){
+	 if(role == Qt::EditRole) {
 		 _pathlist[lin_idx] = value.toString();
 		 emit dataChanged(index, index);
 		 return true;
@@ -113,15 +113,15 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
 
 }
 
-bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelIndex &index){
+bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelIndex &index) {
 	Q_UNUSED(index);
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	_pathlist.clear();
 
-	for(int i=0; i<rows; i++){
-		for(int j=0; j<columnCount(); j++){
+	for(int i=0; i<rows; i++) {
+		for(int j=0; j<columnCount(); j++) {
 			_pathlist << "";
 		}
 	}
@@ -130,7 +130,7 @@ bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelInd
 	return true;
 
 }
-bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelIndex &index){
+bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelIndex &index) {
 	Q_UNUSED(index);
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);

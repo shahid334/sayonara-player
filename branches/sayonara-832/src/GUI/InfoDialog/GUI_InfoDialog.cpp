@@ -33,25 +33,21 @@
 #include "HelperStructs/Style.h"
 
 #include <QWidget>
-#include <QString>
 #include <QPixmap>
 #include <QImage>
 #include <QFile>
 #include <QDir>
-#include <QDebug>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QCloseEvent>
 #include <QPainter>
 #include <QDateTime>
 
-
-
 #define INFO_MODE_SINGLE 0
 #define INFO_MODE_MULTI 1
 
 
-GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog(parent){
+GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog(parent) {
 
     this->ui = new Ui::InfoDialog();
     this->ui->setupUi(this);
@@ -86,7 +82,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     _tag_edit_visible = true;
 
     QStringList server_list = _lyric_thread->getServers();
-    foreach(QString server, server_list){
+    foreach(QString server, server_list) {
 
         ui->combo_servers->addItem(server);
     }
@@ -120,7 +116,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
     connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
 
-    if(ui_tag_edit){
+    if(ui_tag_edit) {
         connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
         connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
     }
@@ -146,12 +142,12 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 
 }
 
-void GUI_InfoDialog::changeSkin(bool dark){
+void GUI_InfoDialog::changeSkin(bool dark) {
 
     _dark = dark;
 }
 
-void GUI_InfoDialog::language_changed(){
+void GUI_InfoDialog::language_changed() {
 
     MetaDataList v_md = _v_md;
     ui->tab_widget->removeTab(2);
@@ -167,13 +163,13 @@ void GUI_InfoDialog::language_changed(){
 
 
 
-void GUI_InfoDialog::psl_lyrics_server_changed(int idx){
+void GUI_InfoDialog::psl_lyrics_server_changed(int idx) {
 	_lyric_server = idx;
 	prepare_lyrics();
 }
 
 
-void GUI_InfoDialog::prepare_lyrics(){
+void GUI_InfoDialog::prepare_lyrics() {
 
 	_lyric_thread->prepare_thread(_artist_name, _title, _lyric_server);
 	_lyric_thread->start();
@@ -181,7 +177,7 @@ void GUI_InfoDialog::prepare_lyrics(){
 
 
 
-void GUI_InfoDialog::psl_lyrics_available(){
+void GUI_InfoDialog::psl_lyrics_available() {
 
 
 	QString lyrics = _lyric_thread->getFinalLyrics();
@@ -205,7 +201,7 @@ void GUI_InfoDialog::psl_lyrics_available(){
 }
 
 
-void GUI_InfoDialog::psl_corrected_data_available(const QString& target_class){
+void GUI_InfoDialog::psl_corrected_data_available(const QString& target_class) {
 
 	MetaData md;
 	bool loved;
@@ -217,7 +213,7 @@ void GUI_InfoDialog::psl_corrected_data_available(const QString& target_class){
 	this->ui->lab_playcount->setText(text);
 }
 
-void GUI_InfoDialog::psl_album_info_available(const QString& target_class){
+void GUI_InfoDialog::psl_album_info_available(const QString& target_class) {
 
 	if(target_class != _class_name) return;
 
@@ -225,7 +221,7 @@ void GUI_InfoDialog::psl_album_info_available(const QString& target_class){
 	_lfm_thread->fetch_album_info(map);
 
 	QString text;
-	foreach(QString key, map.keys()){
+	foreach(QString key, map.keys()) {
 		QString val = map[key];
 		if(val.trimmed().size() == 0) continue;
 		text += BOLD(key) + ": " + val + CAR_RET;
@@ -234,7 +230,7 @@ void GUI_InfoDialog::psl_album_info_available(const QString& target_class){
 	this->ui->lab_playcount->setText(text);
 }
 
-void GUI_InfoDialog::psl_artist_info_available(const QString& target_class){
+void GUI_InfoDialog::psl_artist_info_available(const QString& target_class) {
 
 	if(target_class != _class_name) return;
 
@@ -242,7 +238,7 @@ void GUI_InfoDialog::psl_artist_info_available(const QString& target_class){
 	_lfm_thread->fetch_artist_info(map);
 
 	QString text;
-	foreach(QString key, map.keys()){
+	foreach(QString key, map.keys()) {
 		QString val = map[key];
 		if(val.trimmed().size() == 0) continue;
 		text += BOLD(key) + ": " + val + CAR_RET;
@@ -252,7 +248,7 @@ void GUI_InfoDialog::psl_artist_info_available(const QString& target_class){
 }
 
 
-void GUI_InfoDialog::prepare_artists(){
+void GUI_InfoDialog::prepare_artists() {
 	int n_artists = 0;
 	int n_albums = 0;
 	int n_songs = 0;
@@ -270,11 +266,11 @@ void GUI_InfoDialog::prepare_artists(){
 	QStringList pathlist;
     qint64 filesize = 0;
 
-	foreach(MetaData md, _v_md){
+	foreach(MetaData md, _v_md) {
 		int artist_id = md.artist_id;
 		QString filepath = "";
 
-		if(!map_artists.keys().contains(artist_id)){
+		if(!map_artists.keys().contains(artist_id)) {
 			map_artists[artist_id] = 0;
 		}
 
@@ -296,7 +292,7 @@ void GUI_InfoDialog::prepare_artists(){
 	}
 
 	n_artists = map_artists.keys().size();
-	if(n_artists == 1){
+	if(n_artists == 1) {
 
 
 		tooltip = "";
@@ -313,11 +309,11 @@ void GUI_InfoDialog::prepare_artists(){
 
 	}
 
-	else if(n_artists > 1){
+	else if(n_artists > 1) {
 		tooltip = "";
 		_diff_mode = INFO_MODE_MULTI;
 		int header_entries = 0;
-		foreach(int artist_id, map_artists.keys()){
+		foreach(int artist_id, map_artists.keys()) {
             Artist artist;
             _db->getArtistByID(artist_id, artist);
 
@@ -344,7 +340,7 @@ void GUI_InfoDialog::prepare_artists(){
 
 	paths = BOLD(tr("LIBRARY") + " = ") + Helper::createLink(library_path, library_path, false) + CAR_RET + CAR_RET;
 
-	foreach(QString path, pathlist){
+	foreach(QString path, pathlist) {
 
         QString tmppath = QString("file://" + path);
 		//path.replace(library_path, BOLD("${ML}"));
@@ -363,7 +359,7 @@ void GUI_InfoDialog::prepare_artists(){
 	this->ui->lab_playcount->setText("");
 }
 
-void GUI_InfoDialog::prepare_albums(){
+void GUI_InfoDialog::prepare_albums() {
 
 	int n_albums = 0;
 	int n_songs = 0;
@@ -381,11 +377,11 @@ void GUI_InfoDialog::prepare_albums(){
 	QStringList pathlist;
     qint64 filesize = 0;
 
-	foreach(MetaData md, _v_md){
+	foreach(MetaData md, _v_md) {
 		int album_id = md.album_id;
 		QString filepath = "";
 
-		if(!map_albums.keys().contains(album_id)){
+		if(!map_albums.keys().contains(album_id)) {
 			map_albums[album_id] = 0;
 		}
 
@@ -409,7 +405,7 @@ void GUI_InfoDialog::prepare_albums(){
 	n_albums = map_albums.keys().size();
 	if(n_albums == 0) return;
 
-	if(n_albums == 1){
+	if(n_albums == 1) {
 
 		tooltip = "";
 		_diff_mode = INFO_MODE_SINGLE;
@@ -421,7 +417,7 @@ void GUI_InfoDialog::prepare_albums(){
 		_album_name = album.name;
 
         QString artist_name;
-        if(album.is_sampler){
+        if(album.is_sampler) {
                 _artist_name = Helper::get_album_major_artist(album.id);
                 artist_name = tr("Various artists");
         }
@@ -443,13 +439,13 @@ void GUI_InfoDialog::prepare_albums(){
 	}
 
 
-	else if(n_albums > 1){
+	else if(n_albums > 1) {
 		tooltip = "";
 		_diff_mode = INFO_MODE_MULTI;
 		int header_entries = 0;
          _artist_name = "";
 
-		foreach(int album_id, map_albums.keys()){
+		foreach(int album_id, map_albums.keys()) {
             Album album;
             _db->getAlbumByID(album_id, album);
             QString artist_name = ((album.artists.size() > 1) ? tr("Various artists") : album.artists[0]);
@@ -471,7 +467,7 @@ void GUI_InfoDialog::prepare_albums(){
 
 	paths = BOLD(tr("LIBRARY") + " = ") + Helper::createLink(library_path, library_path, false) + CAR_RET + CAR_RET;
 
-	foreach(QString path, pathlist){
+	foreach(QString path, pathlist) {
         QString tmppath = QString("file://" + path);
 		//path.replace(library_path, BOLD("${ML}"));
         if(library_path.size() > 0)
@@ -489,7 +485,7 @@ void GUI_InfoDialog::prepare_albums(){
 	this->ui->lab_playcount->setText("");
 }
 
-void GUI_InfoDialog::prepare_tracks(){
+void GUI_InfoDialog::prepare_tracks() {
 
 	int n_tracks = 0;
 	int n_albums = 0;
@@ -506,14 +502,14 @@ void GUI_InfoDialog::prepare_tracks(){
 
     qint64 filesize = 0;
 
-	foreach(MetaData md, _v_md){
+	foreach(MetaData md, _v_md) {
 		int album_id = md.album_id;
 		int artist_id = md.artist_id;
 		QString filepath = "";
 
 		header += md.title + CAR_RET;
 
-		if(!map_albums.keys().contains(album_id)){
+		if(!map_albums.keys().contains(album_id)) {
 			map_albums[album_id] = 0;
 		}
 
@@ -521,7 +517,7 @@ void GUI_InfoDialog::prepare_tracks(){
 			map_albums[album_id] = map_albums[album_id] + 1;
 		}
 
-		if(!map_albums.keys().contains(artist_id)){
+		if(!map_albums.keys().contains(artist_id)) {
 			map_artists[artist_id] = 0;
 		}
 
@@ -535,7 +531,7 @@ void GUI_InfoDialog::prepare_tracks(){
 		if(last_sep == -1) last_sep = md.filepath.lastIndexOf("\\");
 		if(last_sep == -1 || last_sep >= md.filepath.size()) continue;
 
-        if(Helper::is_www(md.filepath)){
+        if(Helper::is_www(md.filepath)) {
             filepath = md.filepath;
         }
         else
@@ -552,7 +548,7 @@ void GUI_InfoDialog::prepare_tracks(){
 	n_artists = map_artists.keys().size();
 	n_tracks = _v_md.size();
 
-	if(n_tracks == 1){
+	if(n_tracks == 1) {
 		_diff_mode = INFO_MODE_SINGLE;
 		MetaData md = _v_md.at(0);
 		header = md.title;
@@ -566,7 +562,7 @@ void GUI_InfoDialog::prepare_tracks(){
 
 		int tracknum = md.track_num;
 		QString count;
-		switch(tracknum){
+		switch(tracknum) {
 			case 1:
 				count = tr("1st");
 				break;
@@ -589,7 +585,7 @@ void GUI_InfoDialog::prepare_tracks(){
         info+= BOLD(tr("Filesize") + ":&nbsp;") + Helper::calc_filesize_str(filesize) + CAR_RET;
 	}
 
-	else if(n_tracks > 1){
+	else if(n_tracks > 1) {
 
 		_diff_mode = INFO_MODE_MULTI;
 
@@ -597,7 +593,7 @@ void GUI_InfoDialog::prepare_tracks(){
 
 		info+= BOLD(tr("#Tracks") + ":&nbsp;") + QString::number(_v_md.size()) + CAR_RET;
 
-        if(n_albums > 1){
+        if(n_albums > 1) {
             info+= BOLD(tr("#Albums") + ":&nbsp;") + QString::number(n_albums) + CAR_RET;
             _album_name = "Various";
         }
@@ -607,7 +603,7 @@ void GUI_InfoDialog::prepare_tracks(){
             _album_name = _v_md[0].album;
         }
 
-        if(n_artists > 1){
+        if(n_artists > 1) {
             info+= BOLD(tr("#Artists") + ":&nbsp;") + QString::number(n_artists) + CAR_RET;
             _artist_name = "Various";
         }
@@ -623,7 +619,7 @@ void GUI_InfoDialog::prepare_tracks(){
 
     paths = BOLD(tr("LIBRARY") + "= ") + Helper::createLink(library_path, library_path, false) + CAR_RET + CAR_RET;
 
-    foreach(QString path, pathlist){
+    foreach(QString path, pathlist) {
 
         QString tmppath = QString("file://") + path;
 
@@ -641,14 +637,14 @@ void GUI_InfoDialog::prepare_tracks(){
 }
 
 
-void GUI_InfoDialog::psl_cover_available(QString cover_path){
+void GUI_InfoDialog::psl_cover_available(QString cover_path) {
 
 	this->ui->btn_image->setIcon(QIcon(cover_path));
 	this->ui->btn_image->repaint();
 }
 
-void GUI_InfoDialog::psl_cover_lookup_finished(bool b){
-	if(!b){
+void GUI_InfoDialog::psl_cover_lookup_finished(bool b) {
+	if(!b) {
 		QString sayonara_logo = Helper::getIconPath() + "logo.png";
 		this->ui->btn_image->setIcon(QIcon(sayonara_logo));
 	}
@@ -658,21 +654,21 @@ void GUI_InfoDialog::psl_cover_lookup_finished(bool b){
 	}
 }
 
-void GUI_InfoDialog::prepare_cover(){
+void GUI_InfoDialog::prepare_cover() {
 
 	QString sayonara_logo = Helper::getIconPath() + "logo.png";
 
 	psl_cover_available(sayonara_logo);
 
-	switch(_diff_mode){
+	switch(_diff_mode) {
 
 		case INFO_MODE_SINGLE:
 
-			if(_mode == INFO_MODE_ARTISTS){
+			if(_mode == INFO_MODE_ARTISTS) {
 				_cover_lookup->fetch_artist_cover_standard(_artist_name);
 			}
 
-			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
+			else if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS) {
 				_cover_lookup->fetch_album_cover_standard(_artist_name, _album_name);
 			}
 
@@ -680,7 +676,7 @@ void GUI_InfoDialog::prepare_cover(){
 
 
 		case INFO_MODE_MULTI:
-            if(_mode == INFO_MODE_TRACKS){
+            if(_mode == INFO_MODE_TRACKS) {
 				_cover_lookup->fetch_album_cover_standard(_artist_name, _album_name);
 			}
 
@@ -691,9 +687,9 @@ void GUI_InfoDialog::prepare_cover(){
 	}
 }
 
-void GUI_InfoDialog::prepare_lfm_info(){
+void GUI_InfoDialog::prepare_lfm_info() {
 
-	if(!CSettingsStorage::getInstance()->getLastFMActive()){
+	if(!CSettingsStorage::getInstance()->getLastFMActive()) {
         this->ui->lab_playcount->setText(tr("Last.fm not active"));
 		return;
 	}
@@ -702,7 +698,7 @@ void GUI_InfoDialog::prepare_lfm_info(){
 	    this->ui->lab_playcount->setText("");
 	}
 
-	switch(_mode){
+	switch(_mode) {
 		case INFO_MODE_ALBUMS:
 
 			_lfm_thread->setArtistName(_artist_name);
@@ -728,14 +724,14 @@ void GUI_InfoDialog::prepare_lfm_info(){
 
 }
 
-void GUI_InfoDialog::setMetaData(const MetaDataList& v_md){
+void GUI_InfoDialog::setMetaData(const MetaDataList& v_md) {
 	if(ui_tag_edit)
 		ui_tag_edit->change_meta_data(v_md);
 
 	_v_md = v_md;
 }
 
-void GUI_InfoDialog::setMode(int mode){
+void GUI_InfoDialog::setMode(int mode) {
 	_mode = mode;
 
 	ui->tab_widget->setCurrentIndex(TAB_INFO);
@@ -747,7 +743,7 @@ void GUI_InfoDialog::setMode(int mode){
 	if(ui_tag_edit)
 		ui_tag_edit->hide();
 
-	switch(_mode){
+	switch(_mode) {
 		case INFO_MODE_TRACKS:
 			prepare_tracks();
 			break;
@@ -767,20 +763,20 @@ void GUI_InfoDialog::setMode(int mode){
 	prepare_lfm_info();
 }
 
-void GUI_InfoDialog::show(int tab){
+void GUI_InfoDialog::show(int tab) {
 
 	QWidget::show();
 	if(tab > 2 || tab < 0) tab = TAB_INFO;
 
     ui->tab_widget->setTabEnabled(2, _tag_edit_visible);
-    if(!_tag_edit_visible && tab == TAB_EDIT){
+    if(!_tag_edit_visible && tab == TAB_EDIT) {
         tab = TAB_INFO;
     }
 
     ui->tab_widget->setCurrentIndex(tab);
 }
 
-void GUI_InfoDialog::psl_id3_success(bool b){
+void GUI_InfoDialog::psl_id3_success(bool b) {
     if(b) {
         hide();
         close();
@@ -793,17 +789,17 @@ void GUI_InfoDialog::psl_id3_success(bool b){
 }
 
 
-void GUI_InfoDialog::cover_clicked(){
+void GUI_InfoDialog::cover_clicked() {
 
-    switch(_diff_mode){
+    switch(_diff_mode) {
 
         case INFO_MODE_SINGLE:
-            if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS){
+            if(_mode == INFO_MODE_ALBUMS || _mode == INFO_MODE_TRACKS) {
                 qDebug() << "album name = " << _album_name << ", " << _artist_name;
                 _alternate_covers->start(_album_name, _artist_name);
             }
 
-            else if(_mode == INFO_MODE_ARTISTS){
+            else if(_mode == INFO_MODE_ARTISTS) {
                 _alternate_covers->start(_artist_name);
             }
 
@@ -819,13 +815,13 @@ void GUI_InfoDialog::cover_clicked(){
 
 
 
-void GUI_InfoDialog::no_cover_available(){
+void GUI_InfoDialog::no_cover_available() {
     this->ui->btn_image->setIcon(QIcon(Helper::getIconPath() + "/logo.png"));
 }
 
 
 
-void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString cover_path){
+void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString cover_path) {
 
     if(caller_class != _class_name) return;
 
@@ -833,15 +829,15 @@ void GUI_InfoDialog::alternate_covers_available(QString caller_class, QString co
 }
 
 
-void GUI_InfoDialog::init(){
+void GUI_InfoDialog::init() {
 }
 
 
-void GUI_InfoDialog::set_tag_edit_visible(bool b){
+void GUI_InfoDialog::set_tag_edit_visible(bool b) {
     _tag_edit_visible = b;
 }
 
-void GUI_InfoDialog::closeEvent(QCloseEvent* e){
+void GUI_InfoDialog::closeEvent(QCloseEvent* e) {
     _tag_edit_visible = true;
     e->accept();
 

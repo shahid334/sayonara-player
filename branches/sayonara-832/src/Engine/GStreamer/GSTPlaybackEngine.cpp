@@ -45,12 +45,12 @@ float lo_128[128];
 /* Engine */
 /*****************************************************************************************/
 
-void _calc_log10_lut(){
-	for(int i=0; i<=20000; i++){
+void _calc_log10_lut() {
+	for(int i=0; i<=20000; i++) {
 		log_10[i] = log10(i / 20000.0f);
 	}
 
-	for(int i=0; i<128; i++){
+	for(int i=0; i<128; i++) {
 		lo_128[i] = i*128.0f;
 	}
 }
@@ -137,7 +137,7 @@ void GSTPlaybackEngine::change_track(const QString& filepath, int pos_sec, bool 
 }
 
 
-void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bool start_play){
+void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bool start_play) {
 
 
 	start_play = true;
@@ -189,7 +189,7 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	emit sig_dur_changed_ms(_md.length_ms);
 	emit sig_pos_changed_s(pos_sec);
 
-	if (start_play){
+	if (start_play) {
 		play();
 	}
 
@@ -284,7 +284,7 @@ void GSTPlaybackEngine::play() {
 }
 
 
-void GSTPlaybackEngine::do_jump_play(){
+void GSTPlaybackEngine::do_jump_play() {
 
 	if(_playing_stream) {
 		_jump_play = -1;
@@ -399,7 +399,7 @@ void GSTPlaybackEngine::eq_enable(bool) {
 }
 
 
-void GSTPlaybackEngine::psl_calc_level(bool b){
+void GSTPlaybackEngine::psl_calc_level(bool b) {
 	ENGINE_DEBUG;
 
 	_show_level = b;
@@ -415,7 +415,7 @@ void GSTPlaybackEngine::psl_calc_level(bool b){
 }
 
 
-void GSTPlaybackEngine::psl_calc_spectrum(bool b){
+void GSTPlaybackEngine::psl_calc_spectrum(bool b) {
 	ENGINE_DEBUG;
 
 	_show_spectrum = b;
@@ -431,22 +431,22 @@ void GSTPlaybackEngine::psl_calc_spectrum(bool b){
 }
 
 
-bool GSTPlaybackEngine::get_show_level(){
+bool GSTPlaybackEngine::get_show_level() {
 	return _show_level;
 }
 
 
-bool GSTPlaybackEngine::get_show_spectrum(){
+bool GSTPlaybackEngine::get_show_spectrum() {
 	return _show_spectrum;
 }
 
 
-MyCaps* GSTPlaybackEngine::get_caps(){
+MyCaps* GSTPlaybackEngine::get_caps() {
 	return _caps;
 }
 
 
-void GSTPlaybackEngine::update_bitrate(qint32 bitrate){
+void GSTPlaybackEngine::update_bitrate(qint32 bitrate) {
 
 	_md.bitrate = bitrate;
 	emit sig_bitrate_changed(bitrate);
@@ -495,7 +495,7 @@ void GSTPlaybackEngine::set_track_finished() {
 		_stream_recorder->stop(!_sr_wanna_record);
 	}
 
-	if( ! _gapless ){
+	if( ! _gapless ) {
 		emit sig_track_finished();
 	}
 
@@ -518,7 +518,7 @@ void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 
 	if(!_gapless) return;
 
-	if(_may_start_timer){
+	if(_may_start_timer) {
 
 		_other_pipeline->start_timer(time2go);
 	}
@@ -531,7 +531,7 @@ void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 }
 
 
-void GSTPlaybackEngine::unmute(){
+void GSTPlaybackEngine::unmute() {
 	_pipeline->unmute();
 
 	if(_other_pipeline)
@@ -539,11 +539,11 @@ void GSTPlaybackEngine::unmute(){
 }
 
 
-void GSTPlaybackEngine::psl_set_gapless(bool b){
+void GSTPlaybackEngine::psl_set_gapless(bool b) {
 
-	if(b){
+	if(b) {
 
-		if(!_other_pipeline){
+		if(!_other_pipeline) {
 			_other_pipeline = new GSTPlaybackPipeline(this);
 			connect(_other_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 			connect(_other_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
@@ -562,7 +562,7 @@ void GSTPlaybackEngine::psl_set_gapless(bool b){
 	}
 }
 
-void  GSTPlaybackEngine::psl_set_speed(float f){
+void  GSTPlaybackEngine::psl_set_speed(float f) {
 	_pipeline->set_speed(f);
 
 	if(_other_pipeline)

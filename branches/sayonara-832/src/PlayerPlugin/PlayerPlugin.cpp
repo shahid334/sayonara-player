@@ -36,45 +36,45 @@ PlayerPlugin::PlayerPlugin(QString name, QWidget *parent) :
 }
 
 
-PlayerPlugin::~PlayerPlugin(){
+PlayerPlugin::~PlayerPlugin() {
     if(_pp_action) delete _pp_action;
 }
 
-void PlayerPlugin::calc_action(){
+void PlayerPlugin::calc_action() {
 
 	QString action_text = _pp_action->text();
 	int first_app_of_shortcut = action_text.indexOf("&") + 1;
-    if(first_app_of_shortcut != -1 && first_app_of_shortcut < action_text.size()){
+    if(first_app_of_shortcut != -1 && first_app_of_shortcut < action_text.size()) {
 
 	   _pp_action->setShortcut( QKeySequence(tr("Ctrl+") + action_text.at(first_app_of_shortcut) ) );
     }
 }
 
-QString PlayerPlugin::getName(){
+QString PlayerPlugin::getName() {
     return _pp_name;
 }
 
-QAction* PlayerPlugin::getAction(){
+QAction* PlayerPlugin::getAction() {
 	calc_action();
 	return _pp_action;
 }
 
-QString PlayerPlugin::getVisName(){
+QString PlayerPlugin::getVisName() {
 	return _pp_name;
 }
 
 
-QSize PlayerPlugin::getSize(){
+QSize PlayerPlugin::getSize() {
     return this->minimumSize();
 }
 
 
-void PlayerPlugin::setSize(QSize size){
+void PlayerPlugin::setSize(QSize size) {
     this->setMinimumSize(size);
 }
 
 
-void PlayerPlugin::closeEvent(QCloseEvent* e){
+void PlayerPlugin::closeEvent(QCloseEvent* e) {
     QWidget::close();
 
     _pp_action->setChecked(false);
@@ -82,14 +82,14 @@ void PlayerPlugin::closeEvent(QCloseEvent* e){
 }
 
 
-void PlayerPlugin::action_triggered(bool b){
+void PlayerPlugin::action_triggered(bool b) {
 
     _pp_action->setChecked(b);
     _pp_is_closed = !b;
     emit sig_action_triggered(this, b);
 }
 
-bool PlayerPlugin::isClosed(){
+bool PlayerPlugin::isClosed() {
     return _pp_is_closed;
 }
 

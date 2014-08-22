@@ -36,9 +36,9 @@ void GUI_Player::fileSelectedClicked(bool) {
 	QStringList filetypes = Helper::get_soundfile_extensions();
     filetypes.append(Helper::get_playlistfile_extensions());
 	QString filetypes_str = QString(tr("Media files") + " (");
-	foreach(QString filetype, filetypes){
+	foreach(QString filetype, filetypes) {
 		filetypes_str += filetype;
-		if(filetype != filetypes.last()){
+		if(filetype != filetypes.last()) {
 			filetypes_str += " ";
 		}
 	}
@@ -69,12 +69,12 @@ void GUI_Player::folderSelectedClicked(bool) {
 
 // TODO: not ok
 // -> base
-void GUI_Player::importFolderClicked(bool b){
+void GUI_Player::importFolderClicked(bool b) {
 	Q_UNUSED(b);
 
     QString lib_path = m_settings->getLibraryPath();
 
-    if(lib_path.size() == 0 || !QFile::exists(lib_path)){
+	if(lib_path.size() == 0 || !QFile::exists(lib_path)) {
 
         int ret = QMessageBox::warning(this, tr("No library path"), tr("Please select library path first"), QMessageBox::Ok, QMessageBox::Cancel);
         if(ret == QMessageBox::Cancel) return;
@@ -86,17 +86,17 @@ void GUI_Player::importFolderClicked(bool b){
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 				QDir::homePath(), QFileDialog::ShowDirsOnly);
 
-	if(dir.size() > 0){
+	if(dir.size() > 0) {
 		emit sig_import_dir(dir);
 	}
 }
 
-void GUI_Player::importFilesClicked( bool b ){
+void GUI_Player::importFilesClicked( bool b ) {
    Q_UNUSED(b);
 
     QString lib_path = m_settings->getLibraryPath();
 
-    if(lib_path.size() == 0 || !QFile::exists(lib_path)){
+	if(lib_path.size() == 0 || !QFile::exists(lib_path)) {
 
         int ret = QMessageBox::warning(this, 
                                        tr("No library path"), 
@@ -123,7 +123,7 @@ void GUI_Player::reloadLibraryClicked(bool b) {
     emit sig_reload_library(false);
 }
 
-void GUI_Player::clearLibraryClicked(bool b){
+void GUI_Player::clearLibraryClicked(bool b) {
 	Q_UNUSED(b);
 	emit sig_clear_library();
 }
@@ -140,7 +140,7 @@ void GUI_Player::fetch_all_covers_clicked(bool b) {
 
 /** VIEW **/
 
-void GUI_Player::showLibrary(bool b, bool resize){
+void GUI_Player::showLibrary(bool b, bool resize) {
 
     m_settings->setShowLibrary(b);
     int old_width = this->width();
@@ -149,7 +149,7 @@ void GUI_Player::showLibrary(bool b, bool resize){
     this->ui->library_widget->setVisible(b);
 
     // invisble
-    if(!b){
+	if(!b) {
 
         QSizePolicy p = this->ui->library_widget->sizePolicy();
         m_library_stretch_factor = p.horizontalStretch();
@@ -171,7 +171,7 @@ void GUI_Player::showLibrary(bool b, bool resize){
         this->setMinimumSize(850, 500);
     }
 
-    if(resize){
+	if(resize) {
         QRect rect = this->geometry();
         rect.setWidth(new_width);
         rect.setHeight(this->height());
@@ -179,7 +179,7 @@ void GUI_Player::showLibrary(bool b, bool resize){
     }
 }
 
-void GUI_Player::show_fullscreen_toggled(bool b){
+void GUI_Player::show_fullscreen_toggled(bool b) {
 	// may happend because of F11 too
 	ui->action_Fullscreen->setChecked(b);
 	if(b)
@@ -190,7 +190,7 @@ void GUI_Player::show_fullscreen_toggled(bool b){
 
 }
 
-void GUI_Player::sl_show_only_tracks(bool b){
+void GUI_Player::sl_show_only_tracks(bool b) {
 
     m_settings->setLibShowOnlyTracks(b);
 
@@ -212,7 +212,7 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 	QString start_dir = QDir::homePath();
     QString old_dir = m_settings->getLibraryPath();
 
-    if (old_dir.size() > 0 && QFile::exists(old_dir)){
+	if (old_dir.size() > 0 && QFile::exists(old_dir)) {
 		start_dir = old_dir;
     }
 
@@ -221,10 +221,10 @@ void GUI_Player::setLibraryPathClicked(bool b) {
     if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
 		emit sig_libpath_changed(dir);
         m_settings->setLibraryPath(dir);
-        if(this->ui_libpath && ui_libpath->isVisible()){
+		if(this->ui_libpath && ui_libpath->isVisible()) {
             ui_libpath->hide();
             ui_libpath = 0;
-            if(m_settings->getShowLibrary()){
+			if(m_settings->getShowLibrary()) {
                 ui_library->show();
                 ui_library->resize(this->ui->library_widget->size());
             }
@@ -247,11 +247,11 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 	}
 }
 
-void GUI_Player::psl_libpath_changed(QString & dir){
+void GUI_Player::psl_libpath_changed(QString & dir) {
 
     if (dir.size() > 0 && ui_libpath) {
 
-        if(ui_libpath->isVisible() && this->ui->library_widget->isVisible()){
+		if(ui_libpath->isVisible() && this->ui->library_widget->isVisible()) {
             ui_libpath->hide();
 
             ui_library->show();
@@ -264,40 +264,40 @@ void GUI_Player::psl_libpath_changed(QString & dir){
 
 
 // prvt slot
-void GUI_Player::sl_action_socket_connection_triggered(bool b){
+void GUI_Player::sl_action_socket_connection_triggered(bool b) {
 	emit sig_show_socket();
 }
 
 // prvt slot
-void GUI_Player::load_pl_on_startup_toggled(bool b){
+void GUI_Player::load_pl_on_startup_toggled(bool b) {
 
     m_settings->setLoadPlaylist(b);
 }
 
 // prvt slot
-void GUI_Player::show_notification_toggled(bool active){
+void GUI_Player::show_notification_toggled(bool active) {
 
     m_settings->setShowNotifications(active);
 }
 
 // prvt slot
-void GUI_Player::min2tray_toggled(bool b){
+void GUI_Player::min2tray_toggled(bool b) {
     m_settings->setMinimizeToTray(b);
 	m_min2tray = b;
 }
 
-void GUI_Player::only_one_instance_toggled(bool b){
+void GUI_Player::only_one_instance_toggled(bool b) {
     m_settings->setAllowOnlyOneInstance(b);
 }
 
 // prvt slot
-void GUI_Player::small_playlist_items_toggled(bool b){
+void GUI_Player::small_playlist_items_toggled(bool b) {
     m_settings->setShowSmallPlaylist(b);
 	emit sig_show_small_playlist_items(b);
 }
 
 // private slot
-void GUI_Player::sl_action_streamripper_toggled(bool b){
+void GUI_Player::sl_action_streamripper_toggled(bool b) {
 
     emit sig_show_stream_rec();
 }
@@ -313,18 +313,18 @@ void GUI_Player::lastFMClicked(bool b) {
 
 }
 
-void GUI_Player::sl_live_search(bool b){
+void GUI_Player::sl_live_search(bool b) {
    m_settings->setLibLiveSearch(b);
 }
 
-void GUI_Player::sl_action_language_toggled(bool b){
+void GUI_Player::sl_action_language_toggled(bool b) {
     Q_UNUSED(b);
     ui_language_chooser->show();
 }
 
 /** PREFERENCES END **/
 
-void GUI_Player::help(bool b){
+void GUI_Player::help(bool b) {
 	Q_UNUSED(b);
 	QString link = Helper::createLink("http://sayonara.luciocarreras.de/Forum/xmb");
 	
@@ -333,7 +333,7 @@ void GUI_Player::help(bool b){
 }
 
 // private slot
-void GUI_Player::about(bool b){
+void GUI_Player::about(bool b) {
 	Q_UNUSED(b);
 
     QString version = m_settings->getVersion();
@@ -350,9 +350,9 @@ void GUI_Player::about(bool b){
     QString last_translator;
     QString translator_str = "";
 
-    if(m_translators.size() > 2){
+	if(m_translators.size() > 2) {
 
-        for (int i=0; i<m_translators.size() - 1; i++){
+		for (int i=0; i<m_translators.size() - 1; i++) {
 
             first_translators += "<b>" + m_translators[i] + "</b>";
             if(i < m_translators.size() - 2) first_translators += ", ";

@@ -44,15 +44,15 @@ public:
     quint16 num_albums;                                                                                           
 
 	Artist();
-	Artist(const Artist& );
 	virtual	~Artist();
 
 	static bool fromVariant(const QVariant& v, Artist& a);
 	static QVariant toVariant(const Artist& a);
+	void print() const ;
 };
 
 
-Q_DECLARE_METATYPE(Artist);
+Q_DECLARE_METATYPE(Artist)
 
 typedef struct vector<Artist> ArtistList;
 

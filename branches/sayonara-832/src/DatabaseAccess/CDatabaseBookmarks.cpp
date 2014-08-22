@@ -34,7 +34,7 @@
 using namespace std;
 
 
-bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& bookmarks){
+bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& bookmarks) {
 	if (!this -> _database->isOpen())
 			 this -> _database->open();
 
@@ -48,7 +48,7 @@ bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& b
 		return false;
 
 	else{
-		while(q.next()){
+		while(q.next()) {
 			QString name = q.value(0).toString();
 			quint32 bm = q.value(1).toUInt();
 
@@ -60,7 +60,7 @@ bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& b
 }
 
 
-bool CDatabaseConnector::insertBookmark(int track_id, quint32 time, QString name){
+bool CDatabaseConnector::insertBookmark(int track_id, quint32 time, QString name) {
 	if (!this -> _database->isOpen())
 			 this -> _database->open();
 
@@ -78,7 +78,7 @@ bool CDatabaseConnector::insertBookmark(int track_id, quint32 time, QString name
 }
 
 
-bool CDatabaseConnector::removeBookmark(int track_id, quint32 time){
+bool CDatabaseConnector::removeBookmark(int track_id, quint32 time) {
 	if (!this -> _database->isOpen())
 			 this -> _database->open();
 
@@ -95,7 +95,7 @@ bool CDatabaseConnector::removeBookmark(int track_id, quint32 time){
 }
 
 
-bool CDatabaseConnector::removeAllBookmarks(int track_id){
+bool CDatabaseConnector::removeAllBookmarks(int track_id) {
 	if (!this -> _database->isOpen())
 			 this -> _database->open();
 

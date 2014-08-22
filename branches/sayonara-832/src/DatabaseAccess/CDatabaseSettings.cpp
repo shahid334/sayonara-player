@@ -34,7 +34,7 @@
 #include <QObject>
 #include <QSqlError>
 
-bool CDatabaseConnector::load_setting_bool(QString key, bool def){
+bool CDatabaseConnector::load_setting_bool(QString key, bool def) {
 	bool ret;
 	QVariant v;
     load_setting(key, v, def);
@@ -44,7 +44,7 @@ bool CDatabaseConnector::load_setting_bool(QString key, bool def){
 	else return ret;
 }
 
-QString CDatabaseConnector::load_setting_string(QString key, QString def){
+QString CDatabaseConnector::load_setting_string(QString key, QString def) {
 	QString ret;
 	QVariant v;
     load_setting(key, v, def);
@@ -53,7 +53,7 @@ QString CDatabaseConnector::load_setting_string(QString key, QString def){
 	else return ret;
 }
 
-int CDatabaseConnector::load_setting_int(QString key, int def){
+int CDatabaseConnector::load_setting_int(QString key, int def) {
 	bool ok;
 	int ret;
 	QVariant v;
@@ -64,7 +64,7 @@ int CDatabaseConnector::load_setting_int(QString key, int def){
 
 }
 
-QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
+QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep) {
 
     DB_TRY_OPEN(_database);
 
@@ -72,7 +72,7 @@ QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
 }
 
 
-bool CDatabaseConnector::load_settings(){
+bool CDatabaseConnector::load_settings() {
 
 
     disconnect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
@@ -89,7 +89,7 @@ bool CDatabaseConnector::load_settings(){
 
 	QString last_fm_username, last_fm_password;
 	QStringList list = load_setting_strlist(SET_LFM_LOGIN);
-	if(list.size() >= 2){
+	if(list.size() >= 2) {
 		last_fm_username = list[0];
 		last_fm_password = list[1];
 	}
@@ -114,17 +114,17 @@ bool CDatabaseConnector::load_settings(){
 	QVariant v_eq_last;
 	int eq_last = 0;
 	load_setting(SET_EQ_LAST, v_eq_last);
-	if(v_eq_last != 0){
+	if(v_eq_last != 0) {
 		eq_last = v_eq_last.toInt();
 	}
 
 	settings->setLastEqualizer(eq_last);
 
 	vector<EQ_Setting> vec_eq_settings;
-	for(int i=0; i<7; i++){
+	for(int i=0; i<7; i++) {
 		QVariant v_eq_preset;
 		QString eq_preset = 0;
-		switch(i){
+		switch(i) {
 			case 0: load_setting(SET_EQ_FLAT, v_eq_preset); break;
 			case 1: load_setting(SET_EQ_ROCK, v_eq_preset); break;
 			case 2: load_setting(SET_EQ_TREBLE, v_eq_preset); break;
@@ -135,7 +135,7 @@ bool CDatabaseConnector::load_settings(){
 			default: load_setting(SET_EQ_FLAT, v_eq_preset); break;
 		}
 
-		if(v_eq_preset != 0){
+		if(v_eq_preset != 0) {
 			EQ_Setting eq_setting;
 			eq_setting.parseFromString(v_eq_preset.toString());
 			vec_eq_settings.push_back(eq_setting);
@@ -184,7 +184,7 @@ bool CDatabaseConnector::load_settings(){
 	/* Player size */
 	QSize player_size(800, 600);
 	QStringList l_player_size = load_setting_strlist(SET_PLAYER_SIZE);
-	if(l_player_size.size() >= 2){
+	if(l_player_size.size() >= 2) {
 		player_size.setWidth(l_player_size[0].toInt());
 		player_size.setHeight(l_player_size[1].toInt());
 	}
@@ -192,7 +192,7 @@ bool CDatabaseConnector::load_settings(){
 
     QPoint player_pos(50, 50);
     QStringList l_player_pos = load_setting_strlist(SET_PLAYER_POS);
-    if(l_player_pos.size() >= 2){
+    if(l_player_pos.size() >= 2) {
         player_pos.setX(l_player_pos[0].toInt());
         player_pos.setY(l_player_pos[1].toInt());
     }
@@ -324,7 +324,7 @@ bool CDatabaseConnector::load_settings(){
     return true;
 }
 
-bool CDatabaseConnector::store_settings(){
+bool CDatabaseConnector::store_settings() {
 
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
@@ -504,7 +504,7 @@ bool CDatabaseConnector::store_settings(){
 
 
 
-void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant def){
+void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant def) {
 
 
 	tgt_value = 0;
@@ -517,7 +517,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant
 			throw QString ("SQL - Error: loading " + key);
 		}
 
-		if(q.next()){
+		if(q.next()) {
 			tgt_value = q.value(0);
 		}
 
@@ -533,7 +533,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant
 }
 
 
-void CDatabaseConnector::store_setting(QString key, QVariant value){
+void CDatabaseConnector::store_setting(QString key, QVariant value) {
 	 try {
 
 		QSqlQuery q (*_database);

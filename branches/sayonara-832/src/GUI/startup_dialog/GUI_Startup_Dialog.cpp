@@ -47,15 +47,15 @@ GUI_Startup_Dialog::GUI_Startup_Dialog(QWidget *parent) :
 
 }
 
-GUI_Startup_Dialog::~GUI_Startup_Dialog(){
+GUI_Startup_Dialog::~GUI_Startup_Dialog() {
 
 }
 
-void GUI_Startup_Dialog::language_changed(){
+void GUI_Startup_Dialog::language_changed() {
     this->ui->retranslateUi(this);
 }
 
-void GUI_Startup_Dialog::cb_toggled(bool b){
+void GUI_Startup_Dialog::cb_toggled(bool b) {
     Q_UNUSED(b);
 
     bool cb_load_pl_checked = ui->cb_load_pl_on_startup->isChecked();
@@ -70,7 +70,7 @@ void GUI_Startup_Dialog::cb_toggled(bool b){
 
 }
 
-void GUI_Startup_Dialog::ok_clicked(){
+void GUI_Startup_Dialog::ok_clicked() {
 
     CSettingsStorage* set = CSettingsStorage::getInstance();
     set->setLoadPlaylist(ui->cb_load_pl_on_startup->isChecked());

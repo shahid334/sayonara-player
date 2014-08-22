@@ -52,11 +52,11 @@ CoverFetchThread::~CoverFetchThread() {
 }
 
 
-int CoverFetchThread::run_single(){
+int CoverFetchThread::run_single() {
 
     QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
 
-    foreach(QString adress, adresses){
+    foreach(QString adress, adresses) {
 
         if(!_run) return 0;
 
@@ -64,7 +64,7 @@ int CoverFetchThread::run_single(){
 
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
-        if(success){
+        if(success) {
 
 			qDebug() << "Save cover to " << _target_file << " (" << adress << ")";
             img.save(_target_file);
@@ -77,12 +77,12 @@ int CoverFetchThread::run_single(){
 }
 
 
-int CoverFetchThread::run_multi(){
+int CoverFetchThread::run_multi() {
 
 	int idx=0;
     QStringList adresses = CoverDownloader::cov_call_and_parse(_url, _n_covers * 2);
 
-    foreach(QString adress, adresses){
+    foreach(QString adress, adresses) {
 
         if(!_run) return idx;
 
@@ -90,7 +90,7 @@ int CoverFetchThread::run_multi(){
 
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
-        if(success){
+        if(success) {
 
 			QString filename, dir;
             QString cover_path;
@@ -111,16 +111,16 @@ int CoverFetchThread::run_multi(){
    return idx;
 }
 
-void CoverFetchThread::stop(){
+void CoverFetchThread::stop() {
 
     _run = false;
 }
 
-void CoverFetchThread::run(){
+void CoverFetchThread::run() {
 
     int n_covers_found;
 
-    if( _n_covers == 1 ){
+    if( _n_covers == 1 ) {
         n_covers_found = run_single();
     }
 
@@ -130,7 +130,7 @@ void CoverFetchThread::run(){
 
 
 
-    if( n_covers_found >= _n_covers ){
+    if( n_covers_found >= _n_covers ) {
         emit sig_finished(true);
     }
 

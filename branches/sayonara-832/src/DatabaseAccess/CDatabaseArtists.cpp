@@ -41,7 +41,7 @@ using namespace Sort;
                 "GROUP_CONCAT(albums.albumid) AS artistAlbums " + \
 				"FROM artists, albums, tracks "
 
-bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
+bool _db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -82,9 +82,9 @@ bool _db_fetch_artists(QSqlQuery& q, ArtistList& result){
 	return true;
 }
 
-static QString _create_order_string(SortOrder sort){
+static QString _create_order_string(SortOrder sort) {
 
-	switch(sort){
+	switch(sort) {
 		case ArtistNameAsc:
 			return QString(" ORDER BY artistName ASC ");
 		case ArtistNameDesc:
@@ -98,7 +98,7 @@ static QString _create_order_string(SortOrder sort){
 	}
 }
 
-int CDatabaseConnector::getMaxArtistID(){
+int CDatabaseConnector::getMaxArtistID() {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -131,7 +131,7 @@ int CDatabaseConnector::getMaxArtistID(){
 	return max_id;
 }
 
-bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist){
+bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -157,7 +157,7 @@ bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist){
 
     bool success = _db_fetch_artists(q, artists);
 
-    if(artists.size() > 0){
+    if(artists.size() > 0) {
         success = true;
         artist = artists[0];
     }
@@ -190,7 +190,7 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
     return artistID;
 }
 
-void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
+void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -212,7 +212,7 @@ void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder){
 
 }
 
-void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder){
+void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -232,7 +232,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, Sor
 	_db_fetch_artists(q, result);
 }
 
-void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder){
+void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -243,7 +243,7 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 	QSqlQuery q (*_database);
 	QString query;
 
-	switch(filter.by_searchstring){
+	switch(filter.by_searchstring) {
 
         case BY_GENRE:
             query = ARTIST_ALBUM_TRACK_SELECTOR +
@@ -280,7 +280,7 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 	query += _create_order_string(sortorder) + ";";
 
 	q.prepare(query);
-	switch(filter.by_searchstring){
+	switch(filter.by_searchstring) {
 
         case BY_GENRE:
             q.bindValue(":search_in_genre", QVariant(filter.filtertext));

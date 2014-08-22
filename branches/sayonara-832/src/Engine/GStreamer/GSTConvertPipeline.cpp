@@ -64,7 +64,7 @@ GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
 
 	} while(0);
 
-	if(status){
+	if(status) {
 		_pipeline = tmp_pipeline;
 		gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, engine);
 	}
@@ -79,13 +79,13 @@ GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
 }
 
 
-GSTConvertPipeline::~GSTConvertPipeline(){
+GSTConvertPipeline::~GSTConvertPipeline() {
 
 }
 
 
 
-bool GSTConvertPipeline::set_uri(gchar* uri){
+bool GSTConvertPipeline::set_uri(gchar* uri) {
 
 	if(!uri) return false;
 	stop();
@@ -95,7 +95,7 @@ bool GSTConvertPipeline::set_uri(gchar* uri){
 	return true;
 }
 
-bool GSTConvertPipeline::set_target_uri(gchar* uri){
+bool GSTConvertPipeline::set_target_uri(gchar* uri) {
 	stop();
 	qDebug() << "Set target uri = " << uri;
 	g_object_set(G_OBJECT(_audio_sink), "location", uri, NULL);
@@ -104,7 +104,7 @@ bool GSTConvertPipeline::set_target_uri(gchar* uri){
 
 
 
-void GSTConvertPipeline::play(){
+void GSTConvertPipeline::play() {
 
 	LameBitrate q = CSettingsStorage::getInstance()->getConvertQuality();
 	set_quality(q);
@@ -115,12 +115,12 @@ void GSTConvertPipeline::play(){
 
 
 
-void GSTConvertPipeline::pause(){
+void GSTConvertPipeline::pause() {
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 }
 
 
-void GSTConvertPipeline::stop(){
+void GSTConvertPipeline::stop() {
 	_duration = 0;
 	_uri = 0;
 
@@ -129,7 +129,7 @@ void GSTConvertPipeline::stop(){
 }
 
 
-qint64 GSTConvertPipeline::get_duration_ms(){
+qint64 GSTConvertPipeline::get_duration_ms() {
 
 	if(_duration != 0) return _duration;
 
@@ -152,7 +152,7 @@ qint64 GSTConvertPipeline::get_duration_ms(){
 
 
 
-qint64 GSTConvertPipeline::get_position_ms(){
+qint64 GSTConvertPipeline::get_position_ms() {
 
 	gint64 position=0;
 	bool success = false;
@@ -171,18 +171,18 @@ qint64 GSTConvertPipeline::get_position_ms(){
 
 
 
-guint GSTConvertPipeline::get_bitrate(){
+guint GSTConvertPipeline::get_bitrate() {
 
 	GstTagList *tags=NULL;
 	guint rate=0;
 
 	bool success = false;
 
-	if(tags){
+	if(tags) {
 
 		success = gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate);
 
-		if(success){
+		if(success) {
 			qDebug() << "tags there, bitrate = " << rate;
 			return rate;
 		}
@@ -192,12 +192,12 @@ guint GSTConvertPipeline::get_bitrate(){
 }
 
 
-void GSTConvertPipeline::set_quality(LameBitrate quality){
+void GSTConvertPipeline::set_quality(LameBitrate quality) {
 
 	int cbr=-1;
 	double vbr=-1.0;
 
-	switch(quality){
+	switch(quality) {
 
 		case LameBitrate_64:
 		case LameBitrate_128:
@@ -226,7 +226,7 @@ void GSTConvertPipeline::set_quality(LameBitrate quality){
 	}
 
 
-	if(cbr > 0){
+	if(cbr > 0) {
 		qDebug() << "Set Constant bitrate: " << cbr;
 		g_object_set(_lame,
 					 "cbr", true,

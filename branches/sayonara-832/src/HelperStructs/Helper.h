@@ -32,61 +32,64 @@
 #include "HelperStructs/MetaData.h"
 
 #include <QString>
-#include <QList>
+#include <QStringList>
 #include <QWidget>
 #include <QImage>
+#include <QDebug>
 
 namespace Helper{
 
 
     QString cvtMsecs2TitleLengthString(long int msec, bool colon=true, bool show_days=true);
-	QString cvtQString2FirstUpper(QString str);
+	QString cvtQString2FirstUpper(const QString& str);
 	QString calc_filesize_str(qint64 filesize);
 
 	QString getIconPath();
 	QString getSayonaraPath();
     QString getSharePath();
     QString getLibPath();
-    QString createLink(QString name, QString target="", bool underline=true);
+	QString createLink(const QString& name,
+					   const QString& target="",
+					   bool underline=true);
 
-    QString get_artist_image_path(QString artist, QString extension="jpg");
-    QString calc_cover_token(QString artist, QString album);
+	QString get_artist_image_path(const QString& artist);
+	QString calc_cover_token(const QString& artist, const QString& album);
 
-    QString calc_google_image_search_adress(QString searchstring);
-	QString calc_google_artist_adress(QString artist);
-	QString calc_google_album_adress(QString artist, QString album);
+	QString calc_google_image_search_adress(const QString& searchstring);
+	QString calc_google_artist_adress(const QString& artist);
+	QString calc_google_album_adress(const QString& artist, const QString& album);
 
-	QString calc_lfm_artist_adress(QString artist);
-	QString calc_lfm_album_adress(QString artist, QString album);
+	QString calc_lfm_artist_adress(const QString& artist);
+	QString calc_lfm_album_adress(const QString& artist, const QString& album);
 
 	QStringList get_soundfile_extensions();
 	QStringList get_playlistfile_extensions();
     QStringList get_podcast_extensions();
 
-    QString calc_file_extension(QString filename);
-    void remove_files_in_directory(QString dir_name, QStringList filters);
-    QString get_parent_folder(QString path);
-    QString get_filename_of_path(QString path);
-    void split_filename(QString src, QString& path, QString& filename);
-    QStringList extract_folders_of_files(QStringList list);
+	QString calc_file_extension(const QString& filename);
+	void remove_files_in_directory(const QString& dir_name, const QStringList& filters);
+	QString get_parent_folder(const QString& path);
+	QString get_filename_of_path(const QString& path);
+	void split_filename(const QString& src, QString& path, QString& filename);
+	QStringList extract_folders_of_files(const QStringList& list);
 
     QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');
-    bool is_url(QString str);
-    bool is_www(QString str);
-    bool is_file(QString filename);
-    bool is_dir(QString filename);
-	bool is_soundfile(QString filename);
-	bool is_playlistfile(QString filename);
-    bool is_podcastfile(QString filename, QString* content);
+	bool is_url(const QString& str);
+	bool is_www(const QString& str);
+	bool is_file(const QString& filename);
+	bool is_dir(const QString& filename);
+	bool is_soundfile(const QString& filename);
+	bool is_playlistfile(const QString& filename);
+	bool is_podcastfile(const QString& filename, QString* content);
 
 
     QString get_album_w_disc(const MetaData& md);
 
-	template <typename T> QList<T> randomize_list(const QList<T>& list){
+	template <typename T> QList<T> randomize_list(const QList<T>& list) {
 		srand ( time(NULL) );
 
 		QList<T> list_copy = list;
-		for(int i=0; i<list.size(); i++){
+		for(int i=0; i<list.size(); i++) {
 
 			list_copy.swap(i, rand() % list.size());
 		}
@@ -106,25 +109,23 @@ namespace Helper{
 	bool checkTrack(const MetaData& md);
 
 
-    bool read_file_into_str(QString filename, QString* content);
-    bool read_http_into_str(QString url, QString* content);
-    bool read_http_into_img(QString url, QImage* image);
+	bool read_file_into_str(const QString& filename, QString* content);
+	bool read_http_into_str(const QString& url, QString* content);
+	bool read_http_into_img(const QString& url, QImage* image);
 
 
-	QString easy_tag_finder(QString tag, QString& xml_doc);
-	QString calc_hash(QString data);
+	QString easy_tag_finder(const QString&  tag, const QString& xml_doc);
+	QString calc_hash(const QString&  data);
 	QString get_newest_version();
     QString get_album_major_artist(int album_id);
-    QString get_major_artist(QStringList artists);
-    QString get_major_artist(ArtistList artists);
+	QString get_major_artist(const QStringList& artists);
+	QString get_major_artist(const ArtistList& artists);
     Album get_album_from_metadata(const MetaData& md);
 
 
     void set_deja_vu_font(QWidget* w, int font_size=-1);
-    void set_bin_path(QString str);
-
-
-};
+	void set_bin_path(const QString& str);
+}
 
 
 #endif

@@ -75,7 +75,7 @@ CoverLookupAlternative::CoverLookupAlternative(QObject* parent, const Artist& ar
 }
 
 
-CoverLookupAlternative::~CoverLookupAlternative(){
+CoverLookupAlternative::~CoverLookupAlternative() {
 
     if(!_cl) return;
 
@@ -85,7 +85,7 @@ CoverLookupAlternative::~CoverLookupAlternative(){
 
 
 
-void CoverLookupAlternative::stop(){
+void CoverLookupAlternative::stop() {
 
     if(!_cl) return;
 
@@ -93,7 +93,7 @@ void CoverLookupAlternative::stop(){
 }
 
 
-void CoverLookupAlternative::start(){
+void CoverLookupAlternative::start() {
 
     _run = true;
     _cl = new CoverLookup(this, _n_covers);
@@ -101,7 +101,7 @@ void CoverLookupAlternative::start(){
     connect(_cl, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
 
 
-    switch(_search_type){
+    switch(_search_type) {
 
         case ST_Standard:
             _cl->fetch_album_cover_standard(_artist_name, _album_name);
@@ -134,11 +134,11 @@ void CoverLookupAlternative::start(){
 }
 
 
-void CoverLookupAlternative::cover_found(QString cover_path){
+void CoverLookupAlternative::cover_found(QString cover_path) {
     emit sig_cover_found(cover_path);
 }
 
-void CoverLookupAlternative::finished(bool success){
+void CoverLookupAlternative::finished(bool success) {
 
     emit sig_finished(success);
 

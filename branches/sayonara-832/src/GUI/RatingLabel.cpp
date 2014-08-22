@@ -31,21 +31,21 @@
 const int Offset = 3;
 
 
-Rating::Rating(){
+Rating::Rating() {
     _rating = 0;
 
 }
-Rating::Rating(int rating){
+Rating::Rating(int rating) {
     _rating = rating;
 
 }
 
-int Rating::get_rating(){
+int Rating::get_rating() {
 
     return _rating;
 }
 
-void Rating::set_rating(int rating){
+void Rating::set_rating(int rating) {
     _rating = rating;
 }
 
@@ -58,7 +58,7 @@ void Rating::paint(QPainter *painter, const QRect &rect,
     QColor col;
 	int wrect = (rect.width() / 5);
 
-    for(int rating = 0; rating < _rating; rating++){
+    for(int rating = 0; rating < _rating; rating++) {
 
 		rating_rect.setRect(5 + rect.x() + (wrect) * (rating),
 							rect.y() + Offset * 2,
@@ -73,7 +73,7 @@ void Rating::paint(QPainter *painter, const QRect &rect,
         painter->fillRect(rating_rect, col);
     }
 
-    for(int rating= _rating; rating < 5; rating ++){
+    for(int rating= _rating; rating < 5; rating ++) {
 
 		rating_rect.setRect(5 + rect.x() + (wrect ) * (rating),
 							rect.y() + Offset * 2,
@@ -104,18 +104,18 @@ RatingLabel::RatingLabel(QWidget *parent) :
 
 }
 
-RatingLabel::~RatingLabel(){
+RatingLabel::~RatingLabel() {
     qDebug() << "Destroy editor " << _id;
     _id = 0;
 }
 
-int RatingLabel::get_id(){
+int RatingLabel::get_id() {
 
     return _id;
 }
 
 
-int RatingLabel::calc_rating(QPoint pos){
+int RatingLabel::calc_rating(QPoint pos) {
 
 	int rating = (pos.x() + Offset) / ((width() - 5) / 5);
 
@@ -128,7 +128,7 @@ int RatingLabel::calc_rating(QPoint pos){
 }
 
 
-void RatingLabel::paintEvent(QPaintEvent *e){
+void RatingLabel::paintEvent(QPaintEvent *e) {
 
     QPainter painter(this);
     _rating.paint(&painter, rect(), palette());
@@ -136,7 +136,7 @@ void RatingLabel::paintEvent(QPaintEvent *e){
 }
 
 
-void RatingLabel::mouseMoveEvent(QMouseEvent *e){
+void RatingLabel::mouseMoveEvent(QMouseEvent *e) {
 
 
 	int rating = calc_rating(e->pos());
@@ -144,7 +144,7 @@ void RatingLabel::mouseMoveEvent(QMouseEvent *e){
 }
 
 
-void RatingLabel::mousePressEvent(QMouseEvent *e){
+void RatingLabel::mousePressEvent(QMouseEvent *e) {
 
 	this->setMouseTracking(false);
     int rating = calc_rating(e->pos());
@@ -152,48 +152,48 @@ void RatingLabel::mousePressEvent(QMouseEvent *e){
 }
 
 
-void RatingLabel::mouseReleaseEvent(QMouseEvent *e){
+void RatingLabel::mouseReleaseEvent(QMouseEvent *e) {
 
     emit sig_finished(true);
 }
 
 
-void RatingLabel::focusOutEvent(QFocusEvent* e){
+void RatingLabel::focusOutEvent(QFocusEvent* e) {
 
 	_parent->setFocus();
 	emit sig_finished(false);
 
 }
 
-void RatingLabel::update_rating(int rating){
+void RatingLabel::update_rating(int rating) {
     _rating.set_rating(rating);
     update();
 }
 
-void RatingLabel::increase(){
+void RatingLabel::increase() {
     int rating = _rating.get_rating();
     if(rating < 5) rating++;
     update_rating(rating);
 }
 
-void RatingLabel::decrease(){
+void RatingLabel::decrease() {
     int rating = _rating.get_rating();
     if(rating > 0) rating--;
     update_rating(rating);
 }
 
-void RatingLabel::set_rating(Rating rating){
+void RatingLabel::set_rating(Rating rating) {
 
     _rating = rating;
     update();
 }
 
-Rating RatingLabel::get_rating(){
+Rating RatingLabel::get_rating() {
 
     return _rating;
 }
 
-void RatingLabel::kill_yourself(){
+void RatingLabel::kill_yourself() {
     emit sig_finished(false);
 }
 

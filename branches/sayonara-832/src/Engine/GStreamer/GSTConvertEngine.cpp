@@ -36,11 +36,11 @@ GSTConvertEngine::GSTConvertEngine(QObject *parent)
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 }
 
-void GSTConvertEngine::init(){}
+void GSTConvertEngine::init() {}
 
 
 // methods
-bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play){
+bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
 
 	// Gstreamer needs an URI
 	gchar* uri = NULL;
@@ -70,7 +70,7 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play){
 
 	QString filename = Helper::get_filename_of_path(md.filepath);
 	int idx = filename.lastIndexOf(".");
-	if(idx > 0){
+	if(idx > 0) {
 		filename = filename.left(idx);
 	}
 
@@ -90,7 +90,7 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play){
 	return success;
 }
 
-void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_play){
+void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
 
 	stop();
 	_md = md;
@@ -103,22 +103,22 @@ void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_
 
 }
 
-void GSTConvertEngine::change_track(const QString& str, int pos_sec, bool start_play){
+void GSTConvertEngine::change_track(const QString& str, int pos_sec, bool start_play) {
 
 }
 
-void GSTConvertEngine::play(){
+void GSTConvertEngine::play() {
 
 	_pipeline->play();
 	_state = StatePlay;
 	g_timeout_add(200, (GSourceFunc) PipelineCallbacks::show_position, this);
 }
 
-void GSTConvertEngine::pause(){
+void GSTConvertEngine::pause() {
 	return;
 }
 
-void GSTConvertEngine::stop(){
+void GSTConvertEngine::stop() {
 
 	_pipeline->stop();
 
@@ -127,28 +127,28 @@ void GSTConvertEngine::stop(){
 }
 
 // public from Gstreamer Callbacks
-void GSTConvertEngine::set_track_finished(){
+void GSTConvertEngine::set_track_finished() {
 	emit sig_track_finished();
 }
 
-void GSTConvertEngine::set_cur_position_ms(qint64 v){
+void GSTConvertEngine::set_cur_position_ms(qint64 v) {
 	emit sig_pos_changed_s((quint32) v / 1000);
 }
 
 
-void GSTConvertEngine::set_volume(int vol){
+void GSTConvertEngine::set_volume(int vol) {
 	Q_UNUSED(vol);
 }
 
-void GSTConvertEngine::jump_abs_s(quint32 v){
+void GSTConvertEngine::jump_abs_s(quint32 v) {
 	Q_UNUSED(v);
 }
 
-void GSTConvertEngine::jump_abs_ms(quint64 v){
+void GSTConvertEngine::jump_abs_ms(quint64 v) {
 	Q_UNUSED(v);
 }
 
-void GSTConvertEngine::jump_rel(quint32 v){
+void GSTConvertEngine::jump_rel(quint32 v) {
 	Q_UNUSED(v);
 }
 

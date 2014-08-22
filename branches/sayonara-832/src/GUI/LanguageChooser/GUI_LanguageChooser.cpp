@@ -24,8 +24,6 @@
 #include "HelperStructs/CSettingsStorage.h"
 #include <QFile>
 #include <QDir>
-#include <QDebug>
-
 
 GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     QDialog(parent)
@@ -56,12 +54,12 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
 }
 
-GUI_LanguageChooser::~GUI_LanguageChooser(){
+GUI_LanguageChooser::~GUI_LanguageChooser() {
     delete ui;
 }
 
 
-void GUI_LanguageChooser::language_changed(bool b){
+void GUI_LanguageChooser::language_changed(bool b) {
 
     disconnect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
     ui->retranslateUi(this);
@@ -70,7 +68,7 @@ void GUI_LanguageChooser::language_changed(bool b){
 
 }
 
-void GUI_LanguageChooser::combo_changed(int idx){
+void GUI_LanguageChooser::combo_changed(int idx) {
     int cur_idx = ui->combo_lang->currentIndex();
     _last_idx = cur_idx;
     emit sig_language_changed(ui->combo_lang->itemData(cur_idx).toString());
@@ -79,7 +77,7 @@ void GUI_LanguageChooser::combo_changed(int idx){
 }
 
 
-void GUI_LanguageChooser::ok_clicked(){
+void GUI_LanguageChooser::ok_clicked() {
 
     int cur_idx = ui->combo_lang->currentIndex();
     CSettingsStorage::getInstance()->setLanguage(ui->combo_lang->itemData(cur_idx).toString());
@@ -88,7 +86,7 @@ void GUI_LanguageChooser::ok_clicked(){
 }
 
 
-void GUI_LanguageChooser::renew_combo(){
+void GUI_LanguageChooser::renew_combo() {
 
     disconnect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
     QDir dir(Helper::getSharePath() + "translations/");
@@ -102,7 +100,7 @@ void GUI_LanguageChooser::renew_combo(){
 
     int tgt_idx = 0;
     int i=0;
-    foreach(QString file, files){
+    foreach(QString file, files) {
         int idx = file.lastIndexOf(QDir::separator());
         QString name = file.right(file.size() - idx);
 
@@ -129,7 +127,7 @@ void GUI_LanguageChooser::renew_combo(){
     connect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 }
 
-void GUI_LanguageChooser::showEvent(QShowEvent * event){
+void GUI_LanguageChooser::showEvent(QShowEvent * event) {
 
 
     renew_combo();

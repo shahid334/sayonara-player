@@ -78,14 +78,14 @@ void GUI_Player::stopClicked(bool b) {
 
 	set_std_cover( false );
 
-	if(ui->btn_rec->isVisible() && ui->btn_rec->isChecked()){
+	if(ui->btn_rec->isVisible() && ui->btn_rec->isChecked()) {
 		ui->btn_rec->setChecked(false);
         emit sig_rec_button_toggled(false);
     }
 
 
 
-    if(b){
+	if(b) {
 		MetaData md;
 		m_settings->setLastTrack(md);
 
@@ -97,7 +97,7 @@ void GUI_Player::backwardClicked(bool) {
 
    // ui->albumCover->setFocus();
     int cur_pos_sec =  (m_completeLength_ms * ui->songProgress->value()) / 100000;
-    if(cur_pos_sec > 3){
+	if(cur_pos_sec > 3) {
         setProgressJump(0);
     }
 
@@ -112,7 +112,7 @@ void GUI_Player::forwardClicked(bool) {
 }
 
 
-void GUI_Player::sl_rec_button_toggled(bool b){
+void GUI_Player::sl_rec_button_toggled(bool b) {
 
     emit sig_rec_button_toggled(b);
 }
@@ -127,7 +127,7 @@ void GUI_Player::total_time_changed(qint64 total_time) {
     ui->maxTime->setText(length_str);
 }
 
-void GUI_Player::jump_forward(){
+void GUI_Player::jump_forward() {
 
 	int percent = ui->songProgress->value();
     percent += 2;
@@ -136,7 +136,7 @@ void GUI_Player::jump_forward(){
 
 }
 
-void GUI_Player::jump_backward(){
+void GUI_Player::jump_backward() {
 	int percent = ui->songProgress->value();
     percent -= 2;
 
@@ -144,7 +144,7 @@ void GUI_Player::jump_backward(){
 	ui->songProgress->setValue(percent);
 }
 
-void GUI_Player::setProgressJump(int percent){
+void GUI_Player::setProgressJump(int percent) {
 
     if(percent > 100 || percent < 0) {
         percent = 0;
@@ -163,18 +163,18 @@ void GUI_Player::setCurrentPosition(quint32 pos_sec) {
 
 		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
 
-        if (!ui->songProgress->isSearching() && newSliderVal < ui->songProgress->maximum()){
+		if (!ui->songProgress->isSearching() && newSliderVal < ui->songProgress->maximum()) {
 
             ui->songProgress->setValue(newSliderVal);
 		}
 	}
 
-    else if(pos_sec > m_completeLength_ms / 1000){
+	else if(pos_sec > m_completeLength_ms / 1000) {
     	ui->songProgress->setValue(0);
     }
 
 
-    if(!ui->songProgress->isSearching()){
+	if(!ui->songProgress->isSearching()) {
 
         if(m_completeLength_ms != 0 && pos_sec > m_completeLength_ms) pos_sec = 0;
 
@@ -239,11 +239,11 @@ void GUI_Player::volumeChangedByTick(int val) {
 }
 
 
-void GUI_Player::volumeHigher(){
+void GUI_Player::volumeHigher() {
     volumeChangedByTick(5);
 }
 
-void GUI_Player::volumeLower(){
+void GUI_Player::volumeLower() {
     volumeChangedByTick(-5);
 }
 

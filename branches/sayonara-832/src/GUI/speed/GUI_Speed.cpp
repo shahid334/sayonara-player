@@ -33,16 +33,16 @@ GUI_Speed::GUI_Speed(QString name, QWidget *parent) :
 }
 
 
-void GUI_Speed::slider_changed(int val){
+void GUI_Speed::slider_changed(int val) {
 	float val_f = val / 100.0f;
 	ui->lab_speed->setText(QString::number(val_f, 'f', 2));
 	emit sig_speed_changed(val_f);
 }
 
 
-void GUI_Speed::active_changed(bool b){
+void GUI_Speed::active_changed(bool b) {
 
-	if(!b){
+	if(!b) {
 		emit sig_speed_changed(-1.0f);
 	}
 

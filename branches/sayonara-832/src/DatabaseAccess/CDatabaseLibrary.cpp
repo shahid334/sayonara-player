@@ -33,14 +33,14 @@
 
 
 
-void CDatabaseConnector::deleteTracksAlbumsArtists(){
+void CDatabaseConnector::deleteTracksAlbumsArtists() {
 
 		QSqlQuery q (*_database);
 
 		_database->transaction();
 
 		bool err = false;
-		for(int i=0; i<3; i++){
+		for(int i=0; i<3; i++) {
 			if(i==0) q.prepare("delete from tracks;");
 			else if(i==1) q.prepare("delete from artists;");
 			else if(i==2) q.prepare("delete from albums;");
@@ -49,7 +49,7 @@ void CDatabaseConnector::deleteTracksAlbumsArtists(){
 				q.exec();
 			}
 
-			catch(QString ex){
+			catch(QString ex) {
 				err = true;
 				qDebug() << q.lastQuery();
 				qDebug() << ex;

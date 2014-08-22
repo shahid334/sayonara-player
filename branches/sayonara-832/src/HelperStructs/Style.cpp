@@ -28,14 +28,11 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include <QString>
-#include <QDebug>
-
 
 
 #define NEWLINE "\n";
 
-QString Style::get_style(bool dark){
+QString Style::get_style(bool dark) {
 
     QString style;
     QString share_path = Helper::getSharePath();
@@ -52,7 +49,7 @@ QString Style::get_style(bool dark){
 }
 
 
-QString Style::get_tv_style(bool dark, QPalette* p){
+QString Style::get_tv_style(bool dark, QPalette* p) {
 
 
     return  "";
@@ -60,7 +57,7 @@ QString Style::get_tv_style(bool dark, QPalette* p){
 }
 
 
-QString Style::get_v_slider_style(bool dark, int percent){
+QString Style::get_v_slider_style(bool dark, int percent) {
     if(!dark) return "";
 
     percent = 0;

@@ -29,14 +29,10 @@
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/ui_GUI_TagEdit.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 
-#include <QString>
-#include <QStringList>
-#include <QDebug>
 #include <QMessageBox>
 #include <QWidget>
 #include <QCompleter>
@@ -48,7 +44,7 @@
 
 
 
-GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent){
+GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent) {
     _parent = parent;
 
     ui = new Ui::GUI_TagEdit();
@@ -99,16 +95,16 @@ GUI_TagEdit::~GUI_TagEdit() {
     delete ui;
 }
 
-void GUI_TagEdit::changeSkin(bool dark){
+void GUI_TagEdit::changeSkin(bool dark) {
 
 }
 
-void GUI_TagEdit::language_changed(){
+void GUI_TagEdit::language_changed() {
     this->ui->retranslateUi(this);
 }
 
 
-void GUI_TagEdit::init(){
+void GUI_TagEdit::init() {
 
     _max_album_id = -1;
     _max_artist_id = -1;
@@ -116,19 +112,19 @@ void GUI_TagEdit::init(){
     _max_album_id = _db->getMaxAlbumID() + 1;
     _max_artist_id = _db->getMaxArtistID() + 1;
 
-    if(_parent){
+    if(_parent) {
         this->resize(_parent->size());
     }
 
 }
-void GUI_TagEdit::change_meta_data(const MetaData& md){
+void GUI_TagEdit::change_meta_data(const MetaData& md) {
     MetaDataList v_md;
     v_md.push_back(md);
     change_meta_data(v_md);
 }
 
 
-void GUI_TagEdit::change_meta_data(const MetaDataList& vec){
+void GUI_TagEdit::change_meta_data(const MetaDataList& vec) {
 
     this->init();
 
@@ -142,7 +138,7 @@ void GUI_TagEdit::change_meta_data(const MetaDataList& vec){
     if(vec.size() <= 0) return;
 
     _vec_org_metadata = vec;
-    foreach(MetaData md, _vec_org_metadata){
+    foreach(MetaData md, _vec_org_metadata) {
         _vec_tmp_metadata.push_back(md);
         _lst_new_albums.push_back(md.album);
         _lst_new_artists.push_back(md.artist);
@@ -165,13 +161,13 @@ void GUI_TagEdit::change_meta_data(const MetaDataList& vec){
 }
 
 
-void GUI_TagEdit::prev_button_clicked(){
+void GUI_TagEdit::prev_button_clicked() {
 
     save_metadata();
 
-    if(_cur_idx > 0){
+    if(_cur_idx > 0) {
         _cur_idx --;
-        if(_cur_idx == 0){
+        if(_cur_idx == 0) {
             this->ui->pb_prev->setEnabled(false);
         }
 
@@ -182,15 +178,15 @@ void GUI_TagEdit::prev_button_clicked(){
 }
 
 
-void GUI_TagEdit::next_button_clicked(){
+void GUI_TagEdit::next_button_clicked() {
 
     save_metadata();
     int tmp_md_size = (int) _vec_tmp_metadata.size();
 
-    if(_cur_idx < tmp_md_size -1 ){
+    if(_cur_idx < tmp_md_size -1 ) {
         _cur_idx ++;
 
-        if(_cur_idx == tmp_md_size -1){
+        if(_cur_idx == tmp_md_size -1) {
             ui->pb_next_track->setEnabled(false);
         }
     }
@@ -200,7 +196,7 @@ void GUI_TagEdit::next_button_clicked(){
     show_metadata();
 }
 
-void GUI_TagEdit::clear_checkboxes(){
+void GUI_TagEdit::clear_checkboxes() {
 
     this->ui->cb_album_all->setChecked(false);
     this->ui->cb_artist_all-> setChecked(false);
@@ -210,7 +206,7 @@ void GUI_TagEdit::clear_checkboxes(){
 }
 
 
-void GUI_TagEdit::ok_button_clicked(){
+void GUI_TagEdit::ok_button_clicked() {
     if(_cur_idx == -1) _cur_idx = 0;
     save_metadata();
 
@@ -240,7 +236,7 @@ void GUI_TagEdit::ok_button_clicked(){
 }
 
 
-void GUI_TagEdit::cancel_button_clicked(){
+void GUI_TagEdit::cancel_button_clicked() {
 
     clear_checkboxes();
     emit sig_cancelled();
@@ -252,23 +248,23 @@ void GUI_TagEdit::cancel_button_clicked(){
 }
 
 
-void GUI_TagEdit::all_albums_clicked(){
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++){
+void GUI_TagEdit::all_albums_clicked() {
+    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
         _vec_tmp_metadata[i].album = ui->le_album->text();
         _lst_new_albums[i] = _vec_tmp_metadata[i].album;
     }
 }
 
-void GUI_TagEdit::all_artists_clicked(){
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++){
+void GUI_TagEdit::all_artists_clicked() {
+    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
         _vec_tmp_metadata[i].artist = ui->le_artist->text();
         _lst_new_artists[i] = _vec_tmp_metadata[i].artist;
     }
 }
 
-void GUI_TagEdit::all_genre_clicked(){
+void GUI_TagEdit::all_genre_clicked() {
 
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++){
+    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
         _vec_tmp_metadata[i].genres.clear();
 
         QStringList genres;
@@ -277,33 +273,33 @@ void GUI_TagEdit::all_genre_clicked(){
         _vec_tmp_metadata[i].genres = genres;
     }
 }
-void GUI_TagEdit::all_year_clicked(){
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++){
+void GUI_TagEdit::all_year_clicked() {
+    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
         _vec_tmp_metadata[i].year = ui->sb_year->value();
     }
 }
 
-void GUI_TagEdit::all_discnumber_clicked(){
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++){
+void GUI_TagEdit::all_discnumber_clicked() {
+    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
 	_vec_tmp_metadata[i].discnumber = ui->sb_discnumber->value();
     }
 }
 
-void GUI_TagEdit::all_tag_clicked(){
+void GUI_TagEdit::all_tag_clicked() {
 
 }
 
-void GUI_TagEdit::album_changed(QString text){
+void GUI_TagEdit::album_changed(QString text) {
     Q_UNUSED(text);
 }
 
-void GUI_TagEdit::artist_changed(QString text){
+void GUI_TagEdit::artist_changed(QString text) {
     Q_UNUSED(text);
 
 }
 
 
-void GUI_TagEdit::show_metadata(){
+void GUI_TagEdit::show_metadata() {
 
     MetaData md = _vec_tmp_metadata[_cur_idx];
 
@@ -324,7 +320,7 @@ void GUI_TagEdit::show_metadata(){
 }
 
 
-void GUI_TagEdit::save_metadata(){
+void GUI_TagEdit::save_metadata() {
     if ( ui ->cb_album_all->isChecked() ) 
         all_albums_clicked();
     
@@ -362,15 +358,15 @@ void GUI_TagEdit::save_metadata(){
 
 
 
-void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist){
+void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist) {
 
 
     /* create lists with all albums and artists for the tracks
      * If a track has a new album/artist create new IDs for it */
-    for(uint track = 0; track<_vec_org_metadata.size(); track++){
+    for(uint track = 0; track<_vec_org_metadata.size(); track++) {
 
             MetaData md = _db->getTrackByPath(_vec_org_metadata[track].filepath);
-            if( md.id < 0){
+            if( md.id < 0) {
                 continue;
             }
 
@@ -379,7 +375,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
             bool insert = true;
             // search if new album is already in list
-            for(int i=0; i<v_album.size(); i++){
+            for(int i=0; i<v_album.size(); i++) {
                 if(v_album[i].name == new_album_name) {
                     insert = false;
                     break;
@@ -387,7 +383,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
             }
 
 	    // insert new album
-            if(insert){
+            if(insert) {
                 Album album;
                 album.name = new_album_name;
                 album.id = _max_album_id;
@@ -397,7 +393,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
             // search if new artist is already in list
             insert = true;
-            for(int i=0; i<v_artist.size(); i++){
+            for(int i=0; i<v_artist.size(); i++) {
                 if(v_artist[i].name == new_artist_name) {
                     insert = false;
                     break;
@@ -405,7 +401,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
             }
 
 	    // insert new artist
-            if(insert){
+            if(insert) {
                 Artist artist;
                 artist.name = new_artist_name;
                 artist.id = _max_artist_id;
@@ -420,7 +416,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
     _db->getAllAlbums(vec_albums);
     _db->getAllArtists(vec_artists);
 
-    for(uint track = 0; track<_vec_org_metadata.size(); track++){
+    for(uint track = 0; track<_vec_org_metadata.size(); track++) {
 
         QString new_album_name =  _lst_new_albums[track];
         QString new_artist_name = _lst_new_artists[track];
@@ -429,16 +425,16 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
         int album_id = -1;
 
         /* check the track, if it has a NEW album */
-        foreach(Album album, vec_albums){
+        foreach(Album album, vec_albums) {
 
             // album is already in db
-            if(new_album_name == album.name){
+            if(new_album_name == album.name) {
                 album_found = true;
                 album_id = album.id;
 
                 // delete the album out of the list, we do not have to insert it
-                for(int j=0; j<v_album.size(); j++){
-                    if(v_album[j].name == new_album_name){
+                for(int j=0; j<v_album.size(); j++) {
+                    if(v_album[j].name == new_album_name) {
                         v_album.removeAt(j);
                         break;
                     }
@@ -448,10 +444,10 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
             }
         }
 
-        if(!album_found){
+        if(!album_found) {
 
-            foreach(Album album, v_album){
-                if(album.name == new_album_name){
+            foreach(Album album, v_album) {
+                if(album.name == new_album_name) {
                     album_id = album.id;
                     break;
                 }
@@ -463,14 +459,14 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
         bool artist_found = false;
         int artist_id = -1;
-        for(uint i=0; i<vec_artists.size(); i++){
-            if(new_artist_name == vec_artists[i].name){
+        for(uint i=0; i<vec_artists.size(); i++) {
+            if(new_artist_name == vec_artists[i].name) {
                 artist_found = true;
                 artist_id = vec_artists[i].id;
 
 
-                for(int j=0; j<v_artist.size(); j++){
-                    if(v_artist[j].name == new_artist_name){
+                for(int j=0; j<v_artist.size(); j++) {
+                    if(v_artist[j].name == new_artist_name) {
                         v_artist.removeAt(j);
                         break;
                     }
@@ -481,9 +477,9 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
             }
         }
 
-        if(!artist_found){
-            for(int i=0; i<v_artist.size(); i++){
-                if(v_artist[i].name == new_artist_name){
+        if(!artist_found) {
+            for(int i=0; i<v_artist.size(); i++) {
+                if(v_artist[i].name == new_artist_name) {
                     artist_id = v_artist[i].id;
                     break;
                 }
@@ -495,16 +491,16 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 }
 
 
-void GUI_TagEdit::change_mp3_file(MetaData& md){
+void GUI_TagEdit::change_mp3_file(MetaData& md) {
 
     ID3::setMetaDataOfFile(md);
 }
 
 
-bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists){
+bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists) {
 
 
-    if(new_albums.size() > 0 || new_artists.size() > 0){
+    if(new_albums.size() > 0 || new_artists.size() > 0) {
          QMessageBox msgBox(this);
 	 QString text = tr("You are about to insert<br /><b>%1</b> new album(s) and <b>%2</b> new artist(s)")
 			.arg(new_albums.size())
@@ -519,12 +515,12 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
          if(ret != QMessageBox::Yes) return false;
     }
 
-    foreach(Album album, new_albums){
+    foreach(Album album, new_albums) {
         _db->insertAlbumIntoDatabase(album);
     }
 
 
-    foreach(Artist artist, new_artists){
+    foreach(Artist artist, new_artists) {
         _db->insertArtistIntoDatabase(artist);
     }
 
@@ -533,7 +529,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
     MetaDataList v_md_tmp;
     int v_md_size = (int) _vec_tmp_metadata.size();
 
-    for(int i=0; i<v_md_size; i++){
+    for(int i=0; i<v_md_size; i++) {
 
         MetaData md = _vec_tmp_metadata[i];
         this->ui->pb_progress->setValue( (int)(i * 100.0 / v_md_size) );
@@ -549,11 +545,11 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 }
 
 
- bool  GUI_TagEdit::is_valid_tag_str(QString str){
+ bool  GUI_TagEdit::is_valid_tag_str(QString str) {
      return (has_tag(str) && (!has_open_tag(str)));
  }
 
- bool GUI_TagEdit::has_open_tag(QString str){
+ bool GUI_TagEdit::has_open_tag(QString str) {
 
      int open = str.count('<');
      int close = str.count('>');
@@ -562,7 +558,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
  }
 
- bool GUI_TagEdit::has_tag(QString str){
+ bool GUI_TagEdit::has_tag(QString str) {
 
      return str.contains(TAG_TITLE) ||
              str.contains(TAG_ALBUM) ||
@@ -573,19 +569,19 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
  }
 
 
-bool GUI_TagEdit::remove_aftertag_str(QString& str, QString aftertag, bool looking_for_num){
+bool GUI_TagEdit::remove_aftertag_str(QString& str, QString aftertag, bool looking_for_num) {
 
     if(aftertag.size() == 0 && !looking_for_num ) return true;
 
 
-    for(int i=str.size()-1; i>=0; i--){
+    for(int i=str.size()-1; i>=0; i--) {
 
         bool cond = true;
         if(looking_for_num)
             cond = ((i > aftertag.size()) && (str[i - aftertag.size()].isDigit()));
 
 
-        if(str.endsWith(aftertag) && cond){
+        if(str.endsWith(aftertag) && cond) {
             str = str.left(str.size() - aftertag.size());
             return true;
         }
@@ -599,7 +595,7 @@ bool GUI_TagEdit::remove_aftertag_str(QString& str, QString aftertag, bool looki
 }
 
 
-bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
+bool GUI_TagEdit::calc_tag(int idx, MetaData& md) {
 
     QString str = this->ui->le_tag_from_path->text();
     QString tag_str = str;
@@ -615,7 +611,7 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
 
     // get && remove extensions
     int cur_pos=0;
-    for(int i=path.length() - 1; i>=0; i--){
+    for(int i=path.length() - 1; i>=0; i--) {
         if(path.at(i) == '.') {
             cur_pos = i;
             break;
@@ -646,7 +642,7 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
     QString last_tag;
 
 
-    for(int i=tag_str.size(); i>=0; i--){
+    for(int i=tag_str.size(); i>=0; i--) {
 
         // we are only interested in an i where the tag is
         if(!tag_positions.contains(i)) continue;
@@ -686,7 +682,7 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
         // tag does not interest anymore. Remove
         tag_str = tag_str.left(i);
 
-        if(tag_key == min_of_idx){
+        if(tag_key == min_of_idx) {
             start_positions_path[tag_value] = path.lastIndexOf(tag_str) + tag_str.length();
             break;
         }
@@ -699,33 +695,33 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
     }
 
 
-    for(int i=0; i<path_copy.size(); i++){
+    for(int i=0; i<path_copy.size(); i++) {
         if(!end_positions_path.values().contains(i)) continue;
 
         QString final_key = end_positions_path.key(i);
         QString final_value = path_copy.mid(start_positions_path[final_key], end_positions_path[final_key] - start_positions_path[final_key] + 1);
 
-        if(final_key == TAG_TITLE){
+        if(final_key == TAG_TITLE) {
            md.title = final_value;
         }
 
-        else if(final_key == TAG_ALBUM){
+        else if(final_key == TAG_ALBUM) {
             md.album = final_value;
         }
 
-        else if(final_key == TAG_ARTIST){
+        else if(final_key == TAG_ARTIST) {
             md.artist = final_value;
         }
 
-        else if(final_key == TAG_YEAR){
+        else if(final_key == TAG_YEAR) {
             md.year = final_value.toInt();
         }
 
-        else if(final_key == TAG_TRACK_NUM){
+        else if(final_key == TAG_TRACK_NUM) {
             md.track_num = final_value.toInt();
         }
 
-        else if(final_key == TAG_DISC){
+        else if(final_key == TAG_DISC) {
             md.discnumber = final_value.toInt();
         }
     }
@@ -733,7 +729,7 @@ bool GUI_TagEdit::calc_tag(int idx, MetaData& md){
     return true;
 }
 
-void GUI_TagEdit::tag_from_path_text_changed(const QString& str){
+void GUI_TagEdit::tag_from_path_text_changed(const QString& str) {
 
     MetaData md;
 
@@ -748,7 +744,7 @@ void GUI_TagEdit::tag_from_path_text_changed(const QString& str){
     }
 }
 
-void GUI_TagEdit::help_tag_clicked(){
+void GUI_TagEdit::help_tag_clicked() {
 
     QString info_str = tr("Here you can setup an expression for fast tagging") + "<br />" +
             "<br />" +
@@ -774,9 +770,9 @@ void GUI_TagEdit::help_tag_clicked(){
 
 }
 
-void GUI_TagEdit::undo_tag_clicked(){
+void GUI_TagEdit::undo_tag_clicked() {
 
-    if(!ui->cb_tag_all->isChecked()){
+    if(!ui->cb_tag_all->isChecked()) {
         _vec_tmp_metadata[_cur_idx] = _vec_org_metadata[_cur_idx];
         _idx_affected_by_tag[_cur_idx] = false;
         _lst_new_albums[_cur_idx] = _vec_tmp_metadata[_cur_idx].album;
@@ -784,8 +780,8 @@ void GUI_TagEdit::undo_tag_clicked(){
     }
 
     else{
-        for(uint i=0; i<_vec_org_metadata.size(); i++){
-            if(_idx_affected_by_tag[i] == true){
+        for(uint i=0; i<_vec_org_metadata.size(); i++) {
+            if(_idx_affected_by_tag[i] == true) {
                 _vec_tmp_metadata[i] = _vec_org_metadata[i];
                 _idx_affected_by_tag[i] = false;
                 _lst_new_albums[i] = _vec_tmp_metadata[i].album;
@@ -797,9 +793,9 @@ void GUI_TagEdit::undo_tag_clicked(){
     show_metadata();
 }
 
-void GUI_TagEdit::apply_tag_clicked(){
+void GUI_TagEdit::apply_tag_clicked() {
 
-    if(!ui->cb_tag_all->isChecked()){
+    if(!ui->cb_tag_all->isChecked()) {
         MetaData md;
         _idx_affected_by_tag[_cur_idx] = calc_tag(_cur_idx, md);
         _vec_tmp_metadata[_cur_idx] = md;
@@ -808,9 +804,9 @@ void GUI_TagEdit::apply_tag_clicked(){
     }
 
     else{
-        for(uint i=0; i<_vec_org_metadata.size(); i++){
+        for(uint i=0; i<_vec_org_metadata.size(); i++) {
             MetaData md;
-            if(calc_tag(i, md)){
+            if(calc_tag(i, md)) {
                 _vec_tmp_metadata[i] = md;
                 _idx_affected_by_tag[i] = true;
                 _lst_new_albums[i] = _vec_tmp_metadata[i].album;
@@ -828,7 +824,7 @@ void GUI_TagEdit::apply_tag_clicked(){
 }
 
 
-void  GUI_TagEdit::show_win(){
+void  GUI_TagEdit::show_win() {
 
     show();
 }

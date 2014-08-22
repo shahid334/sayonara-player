@@ -27,9 +27,6 @@
  */
 
 
-
-
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
@@ -39,29 +36,21 @@
 #include "StreamPlugins/LastFM/LFMWebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-
-
 #include <iostream>
 #include <curl/curl.h>
 
 #include <string>
 #include <time.h>
 
-#include <QObject>
-#include <QDebug>
 #include <QDomDocument>
 #include <QMessageBox>
-#include <QCryptographicHash>
 #include <QUrl>
 #include <QtXml>
-#include <QList>
 #include <QMap>
-#include <QString>
-
 
 using namespace std;
 
-LastFM* LastFM::getInstance(){
+LastFM* LastFM::getInstance() {
 	static LastFM instance;
 	return &instance;
 
@@ -87,11 +76,11 @@ LastFM::~LastFM() {
 
 
 
-bool LastFM::_lfm_init_track_changed_thread(){
+bool LastFM::_lfm_init_track_changed_thread() {
 
     _track_changed_thread = new LFMTrackChangedThread(_class_name);
 
-	if(_track_changed_thread){
+	if(_track_changed_thread) {
 			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available(const QString&)),
 					 this, 					SLOT(_sl_corrected_data_available(const QString&)));
 
@@ -105,8 +94,8 @@ bool LastFM::_lfm_init_track_changed_thread(){
 }
 
 
-bool LastFM::_lfm_check_login(){
-	if(!_logged_in || _session_key.size() != 32){
+bool LastFM::_lfm_check_login() {
+	if(!_logged_in || _session_key.size() != 32) {
 
 		QString username, password;
 		CSettingsStorage::getInstance()->getLastFMNameAndPW(username, password);
@@ -114,7 +103,7 @@ bool LastFM::_lfm_check_login(){
 		if(!username.isEmpty() && !password.isEmpty())
 			lfm_login(username, password);
 
-		if(!_logged_in || _session_key.size() != 32){
+		if(!_logged_in || _session_key.size() != 32) {
 			return false;
 		}
 
@@ -124,16 +113,16 @@ bool LastFM::_lfm_check_login(){
 	else return true;
 }
 
-bool LastFM::lfm_is_logged_in(){
+bool LastFM::lfm_is_logged_in() {
 	return _logged_in;
 }
 
 
-void LastFM::psl_login(QString username, QString password){
+void LastFM::psl_login(QString username, QString password) {
     lfm_login(username, password, false);
 }
 
-void LastFM::lfm_login(QString username, QString password, bool should_emit){
+void LastFM::lfm_login(QString username, QString password, bool should_emit) {
 
     _logged_in = false;
     _username = username;
@@ -151,11 +140,11 @@ void LastFM::lfm_login(QString username, QString password, bool should_emit){
 }
 
 
-void LastFM::_login_thread_finished(){
+void LastFM::_login_thread_finished() {
 
     LFMLoginStuff login_info = _login_thread->getLoginStuff();
 
-    if(login_info.logged_in){
+    if(login_info.logged_in) {
         login_info.logged_in = _parse_error_message(login_info.error, true);
     }
 
@@ -171,7 +160,7 @@ void LastFM::_login_thread_finished(){
 
 
 
-void LastFM::psl_track_changed(const MetaData& md){
+void LastFM::psl_track_changed(const MetaData& md) {
 
 
 
@@ -209,7 +198,7 @@ void LastFM::psl_track_changed(const MetaData& md){
 }
 
 
-void LastFM::psl_scrobble(const MetaData& metadata){
+void LastFM::psl_scrobble(const MetaData& metadata) {
 
 	if(!_settings->getLastFMActive() || !_logged_in) return;
 
@@ -243,9 +232,9 @@ void LastFM::psl_scrobble(const MetaData& metadata){
 
 
 
-void LastFM::psl_radio_init(const QString& str, int radio_mode){
+void LastFM::psl_radio_init(const QString& str, int radio_mode) {
 
-	if(!_logged_in){
+	if(!_logged_in) {
 
 		return;
 	}
@@ -255,7 +244,7 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 
 	tag_string.replace("&", "and");
 
-	switch(radio_mode){
+	switch(radio_mode) {
 
 		case LFM_RADIO_MODE_ARTIST:
 			lfm_radio_station += QString("artist/") + str + QString("/similarartists");
@@ -309,7 +298,7 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 }
 
 
-void LastFM::psl_radio_playlist_request(){
+void LastFM::psl_radio_playlist_request() {
 
 	QDomDocument xml_response;
 	MetaDataList v_md;
@@ -325,7 +314,7 @@ void LastFM::psl_radio_playlist_request(){
 
 
 	bool success = lfm_wa_call_url_xml(url, xml_response);
-	if( !success ){
+	if( !success ) {
 		qDebug() << "LFM: Cannot get playlist";
 		qDebug() << "LFM: Url = " << url;
         qDebug() << xml_response.toString();
@@ -335,7 +324,7 @@ void LastFM::psl_radio_playlist_request(){
 	_lfm_parse_playlist_answer(v_md, xml_response);
 	xml_response.clear();
 
-	if(v_md.size() > 0){
+	if(v_md.size() > 0) {
 
 		emit sig_new_radio_playlist(v_md);
 		return;
@@ -345,14 +334,14 @@ void LastFM::psl_radio_playlist_request(){
 
 
 // private slot
-void LastFM::_sl_similar_artists_available(const QString& target_class, const QList<int>& ids){
+void LastFM::_sl_similar_artists_available(const QString& target_class, const QList<int>& ids) {
 	if(target_class.compare(_class_name) != 0) return;
 
 	emit sig_similar_artists_available(ids);
 }
 
 // private slot
-void LastFM::_sl_corrected_data_available(const QString& target_class){
+void LastFM::_sl_corrected_data_available(const QString& target_class) {
 
 	if(target_class.compare(_class_name) != 0) return;
 
@@ -368,7 +357,7 @@ void LastFM::_sl_corrected_data_available(const QString& target_class){
 
 
 
-bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& doc){
+bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& doc) {
 
 	v_md.clear();
 
@@ -389,7 +378,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
     }
 
 
-	for(int idx_track=0; idx_track < tracklist.childNodes().size(); idx_track++){
+	for(int idx_track=0; idx_track < tracklist.childNodes().size(); idx_track++) {
 
 		QDomNode track = tracklist.childNodes().item(idx_track);
         if(!track.hasChildNodes()) {
@@ -399,7 +388,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 
 		MetaData md;
 
-		for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++){
+		for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++) {
 
             md.is_extern = false;
 			md.bitrate = 128000;
@@ -408,23 +397,23 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 			QString nodename = content.nodeName().toLower();
 
 			QDomElement e = content.toElement();
-			if(!nodename.compare("location")){
+			if(!nodename.compare("location")) {
 				md.filepath = e.text();
 			}
 
-			else if(!nodename.compare("title")){
+			else if(!nodename.compare("title")) {
 				md.title = e.text();
 			}
 
-			else if(!nodename.compare("album")){
+			else if(!nodename.compare("album")) {
 				md.album = e.text();
 			}
 
-			else if(!nodename.compare("creator")){
+			else if(!nodename.compare("creator")) {
 				md.artist = e.text();
 			}
 
-			else if(!nodename.compare("duration")){
+			else if(!nodename.compare("duration")) {
 				md.length_ms = e.text().toLong();
 			}
 		}
@@ -438,7 +427,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 }
 
 
-void LastFM::lfm_get_friends(QStringList& friends){
+void LastFM::lfm_get_friends(QStringList& friends) {
 
 	if(!_logged_in)
 		return;
@@ -466,7 +455,7 @@ void LastFM::lfm_get_friends(QStringList& friends){
 	if(username.size() > 0)
 		friends << username;
 	int idx = 0;
-	while(idx >= 0){
+	while(idx >= 0) {
 		idx = retval.indexOf("<user>");
 		retval = retval.right(retval.size() - idx - 2);
 		username = Helper::easy_tag_finder("user.name", retval);
@@ -478,7 +467,7 @@ void LastFM::lfm_get_friends(QStringList& friends){
 }
 
 
-bool LastFM::lfm_get_user_info(QMap<QString, QString>& userinfo){
+bool LastFM::lfm_get_user_info(QMap<QString, QString>& userinfo) {
 
 	if(!_logged_in) {
 		qDebug() << "Not logged in " << _username;
@@ -509,9 +498,9 @@ bool LastFM::lfm_get_user_info(QMap<QString, QString>& userinfo){
 }
 
 
-bool LastFM::_parse_error_message(QString& response, bool force){
+bool LastFM::_parse_error_message(QString& response, bool force) {
 
-    if(response.left(100).contains("failed")){
+    if(response.left(100).contains("failed")) {
         QString error_msg = Helper::easy_tag_finder("lfm.error", response);
         if(_settings->getLastFMShowErrors() || force) _show_error_message(error_msg);
 
@@ -521,7 +510,7 @@ bool LastFM::_parse_error_message(QString& response, bool force){
     return true;
 }
 
-void LastFM::_show_error_message(QString err_msg){
+void LastFM::_show_error_message(QString err_msg) {
 
     QMessageBox::warning(NULL, "Last.fm Error", err_msg);
 }
