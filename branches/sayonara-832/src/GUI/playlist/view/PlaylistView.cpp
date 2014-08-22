@@ -297,10 +297,11 @@ void PlaylistView::set_current_track(int row){
         QModelIndex idx = _model->index(i);
         MetaData md;
         QVariant v = _model->data(idx, Qt::WhatsThisRole);
-        if(!MetaData::fromVariant(v, md)) continue;
+
+        if( !MetaData::fromVariant(v, md) ) continue;
         md.pl_playing = (row == i);
 
-        _model->setData(idx, md.toVariant(), Qt::EditRole);
+	    _model->setData(idx, MetaData::toVariant(md), Qt::EditRole);
     }
 
     QModelIndex new_idx = _model->index(row);
@@ -348,17 +349,23 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx){
 
     QModelIndex idx_cur_playing = _model->index(0);
     for(uint i=0; i<v_md.size(); i++){
+		
+		QVariant v;
         MetaData md = v_md[i];
 
         QModelIndex model_idx = _model->index(i, 0);
 
         md.pl_playing = (cur_play_idx == (int) i);
-        if(md.pl_playing) idx_cur_playing = model_idx;
+        
+		if(md.pl_playing) {
+			idx_cur_playing = model_idx;
+		}
 
-        if(md.pl_selected)
+        if(md.pl_selected){
             selected_rows << i;
+		}
 
-        _model->setData(model_idx, md.toVariant(), Qt::EditRole);
+	    _model->setData(model_idx, MetaData::toVariant(md), Qt::EditRole);
     }
 
     this->select_rows(selected_rows);
@@ -487,12 +494,14 @@ void  PlaylistView::clear_drag_lines(int row){
         if(!idx.isValid() || idx.row() < 0 || idx.row() >= _model->rowCount())
             continue;
 
-        QVariant mdVariant =_model->data(idx, Qt::WhatsThisRole);
+        QVariant v =_model->data(idx, Qt::WhatsThisRole);
         MetaData md;
-        if(MetaData::fromVariant(mdVariant, md)){
-
+ 
+       if( MetaData::fromVariant(v, md) ){
+	
             md.pl_dragged = false;
-            _model->setData(idx, md.toVariant(), Qt::EditRole);
+
+	        _model->setData(idx, MetaData::toVariant(md), Qt::EditRole);
         }
     }
 }
@@ -526,13 +535,15 @@ void PlaylistView::dragMoveEvent(QDragMoveEvent* event){
     clear_drag_lines(row);
 
     // paint line
-    QModelIndex cur_idx = _model->index(row, 0);
-    QVariant mdVariant = _model->data(cur_idx, Qt::WhatsThisRole);
     MetaData md;
-    if(!MetaData::fromVariant(mdVariant, md)) return;
+    QModelIndex cur_idx = _model->index(row, 0);
+    QVariant v = _model->data(cur_idx, Qt::WhatsThisRole);
+
+    if( !MetaData::fromVariant(v, md) ) return;
 
     md.pl_dragged = true;
-    _model->setData(cur_idx, md.toVariant(), Qt::EditRole);
+
+    _model->setData(cur_idx, MetaData::toVariant(md), Qt::EditRole); 
 }
 
 

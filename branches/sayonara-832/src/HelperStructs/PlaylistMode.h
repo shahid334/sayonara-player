@@ -40,6 +40,12 @@ struct PlaylistMode {
 	bool				dynamic;
 	bool				gapless;
 
+	bool				ui_repAll;
+	bool				ui_append;
+	bool				ui_shuffle;
+	bool				ui_dynamic;
+	bool				ui_gapless;
+
 	PlaylistMode(){
 		rep1 = false;
 		repAll = false;

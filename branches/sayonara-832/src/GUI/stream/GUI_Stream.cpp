@@ -280,7 +280,7 @@ void GUI_Stream::play_stream(QString url, QString name){
                 if(md.album.size() == 0)
                     md.album = md.title;
 
-                md.radio_mode = RADIO_STATION;
+                md.radio_mode = RadioModeStation;
                 v_md.push_back(md);
             }
         }
@@ -297,7 +297,7 @@ void GUI_Stream::play_stream(QString url, QString name){
         md.artist = url;
         md.album = md.title;
         md.filepath = url;
-        md.radio_mode = RADIO_STATION;
+        md.radio_mode = RadioModeStation;
 
         v_md.push_back(md);
     }

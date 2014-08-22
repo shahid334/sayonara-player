@@ -404,7 +404,7 @@ void GUI_Library_windowed::album_sel_changed(const QList<int>& lst){
     _timer->stop();
     if(lst.size() == 1){
         QModelIndex idx = _album_model->index(lst[0], 0);
-        QList<int> discnumbers = _album_model->get_discnumbers(idx);
+        QList<quint8> discnumbers = _album_model->get_discnumbers(idx);
 
         if(discnumbers.size() > 1 && lst.size() == 1 ){
             delete_menu();

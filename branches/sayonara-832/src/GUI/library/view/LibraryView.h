@@ -103,8 +103,8 @@ public:
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
-	template < class TList >
-	void fill(const TList& input_data);
+	template < class T >
+	void fill(const vector<T>& input_data);
 
     void set_editor(RatingLabel* editor);
 

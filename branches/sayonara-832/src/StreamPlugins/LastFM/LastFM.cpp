@@ -297,7 +297,7 @@ void LastFM::psl_radio_init(const QString& str, int radio_mode){
 
         MetaDataList v_md;
         MetaData md;
-        md.radio_mode = RADIO_LFM;
+        md.radio_mode = RadioModeLastFM;
         md.id = -2;
         v_md.push_back(md);
         emit sig_create_playlist(v_md, true);
@@ -429,7 +429,7 @@ bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& 
 			}
 		}
 
-        md.radio_mode = RADIO_LFM;
+        md.radio_mode = RadioModeLastFM;
 
 		v_md.push_back(md);
 	}

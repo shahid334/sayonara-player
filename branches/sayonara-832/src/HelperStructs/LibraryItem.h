@@ -1,4 +1,4 @@
-/* Library.h */
+/* LibraryItem.h */
 
 /* Copyright (C) 2011-2014  Lucio Carreras
  *
@@ -20,21 +20,26 @@
 
 
 
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#ifndef _LIBRARY_ITEM_H_
+#define _LIBRARY_ITEM_H_
 
-#include <QObject>
+class LibraryItem {
 
-class Library : public QObject
-{
-	Q_OBJECT
 public:
-	explicit Library(QObject *parent = 0);
-	
-signals:
-	
-public slots:
-	
+
+	bool is_lib_selected;
+
+	LibraryItem() : is_lib_selected(false) {
+
+	}
+
+	LibraryItem(const LibraryItem& li){
+		is_lib_selected = li.is_lib_selected;
+	}
+
+
+	~LibraryItem() {}
+
 };
 
-#endif // LIBRARY_H
+#endif

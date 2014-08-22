@@ -254,12 +254,11 @@ bool CSettingsStorage::getLoadPlaylist(){ return m_loadPlaylist; }
 void CSettingsStorage::setLoadPlaylist(bool b){	m_loadPlaylist = b;     _sth_changed = true;}
 
 
-LastTrack* CSettingsStorage::getLastTrack(){ return &m_lastTrack; }
+MetaData* CSettingsStorage::getLastTrack(){ return &m_lastTrack; }
 
-void CSettingsStorage::setLastTrack(LastTrack& t){ m_lastTrack = t;     _sth_changed = true;}
+void CSettingsStorage::setLastTrack(const MetaData& md){ m_lastTrack = md;     _sth_changed = true;}
 
 void CSettingsStorage::updateLastTrack(){
-    QString str = m_lastTrack.toString();
        _sth_changed = true;
 }
 

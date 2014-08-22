@@ -223,11 +223,12 @@ bool CDatabaseConnector::load_settings(){
     bool start_playing = load_setting_bool(SET_PL_START_PLAYING, false);
     settings->setStartPlaying(start_playing);
 
-	LastTrack track = LastTrack::fromString(load_setting_string(SET_PL_LAST_TRACK, ""));
-        settings->setLastTrack(track);
+	int md_id = load_setting_int(SET_PL_LAST_TRACK, -1);
+    MetaData track = getTrackById(md_id); 	
+    settings->setLastTrack(track);
 
 	QString playlist_mode_str = load_setting_string(SET_PL_MODE);
-	Playlist_Mode playlist_mode_typed;
+	PlaylistMode playlist_mode_typed;
 	playlist_mode_typed.fromString(playlist_mode_str);
 	settings->setPlaylistMode(playlist_mode_typed);
 
@@ -405,7 +406,7 @@ bool CDatabaseConnector::store_settings(){
 	bool load_last_track = storage->getLoadLastTrack();
 	store_setting(SET_PL_LOAD_LAST_TRACK, load_last_track);
 
-	QString last_track = storage->getLastTrack()->toString();
+	int last_track = storage->getLastTrack()->id;
 	store_setting(SET_PL_LAST_TRACK, last_track);	
 
     bool remember_time = storage->getRememberTime();

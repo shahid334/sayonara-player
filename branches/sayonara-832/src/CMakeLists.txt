@@ -78,11 +78,14 @@ SET(HEADERS
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
     Socket/Socket.h
+	HelperStructs/MetaData.h
+	HelperStructs/Artist.h
+	HelperStructs/Album.h
     HelperStructs/CSettingsStorage.h
     HelperStructs/Tagging/ID3_Fileheader.h
     HelperStructs/AsyncWebAccess.h
-    Soundcloud/SoundcloudLibrary.h
-    Soundcloud/SoundcloudHelper.h
+    #Soundcloud/SoundcloudLibrary.h
+#    Soundcloud/SoundcloudHelper.h
 )
 
 SET(SOURCES
@@ -92,6 +95,9 @@ SET(SOURCES
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
+	HelperStructs/MetaData.cpp
+	HelperStructs/Artist.cpp
+	HelperStructs/Album.cpp
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
     HelperStructs/Style.cpp
@@ -142,8 +148,8 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
     Socket/Socket.cpp
-    Soundcloud/SoundcloudLibrary.cpp
-    Soundcloud/SoundcloudHelper.cpp
+#    Soundcloud/SoundcloudLibrary.cpp
+#    Soundcloud/SoundcloudHelper.cpp
 )
 
 

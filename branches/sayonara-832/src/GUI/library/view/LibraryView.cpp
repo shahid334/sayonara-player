@@ -29,6 +29,7 @@
 #include "GUI/library/view/LibraryView.h"
 #include "GUI/ContextMenu.h"
 #include "HelperStructs/CustomMimeData.h"
+#include "HelperStructs/MetaData.h"
 
 
 #include <QTableView>
@@ -348,13 +349,13 @@ QList<int> LibraryView::get_selections(){
 
 
 
-template void LibraryView::fill<MetaDataList>(const MetaDataList&);
-template void LibraryView::fill<AlbumList>(const AlbumList&);
-template void LibraryView::fill<ArtistList>(const ArtistList&);
+template void LibraryView::fill<MetaData>(const vector<MetaData>&);
+template void LibraryView::fill<Album>(const vector<Album>&);
+template void LibraryView::fill<Artist>(const vector<Artist>&);
 
 
-template < class TList >
-void LibraryView::fill(const TList& input_data){
+template < class T >
+void LibraryView::fill(const vector<T>& input_data){
 
 	_cur_filling = true;
 	QList<int> lst;
@@ -374,7 +375,7 @@ void LibraryView::fill(const TList& input_data){
 
 		idx = _model->index(row, 1);
 
-		if(input_data[row].is_lib_selected){
+		if( input_data[row].is_lib_selected ){
 			if(first_selected_row == -1)
 				first_selected_row = row;
 
@@ -382,7 +383,7 @@ void LibraryView::fill(const TList& input_data){
 			sel.merge(sm->selection(), QItemSelectionModel::Select);
 		}
 
-		QVariant data = input_data[row].toVariant();
+		QVariant data = T::toVariant(input_data[row]);
 		_model->setData(idx, data, Qt::EditRole );
 	}
 

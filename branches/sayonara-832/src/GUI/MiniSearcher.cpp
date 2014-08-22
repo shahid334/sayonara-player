@@ -19,15 +19,11 @@
  */
 
 
-
 #include "MiniSearcher.h"
 #include "HelperStructs/Helper.h"
 #include <QString>
 #include <QScrollBar>
 #include <QDebug>
-
-
-
 
 
 MiniSearcherLineEdit::MiniSearcherLineEdit(QWidget* parent) : QLineEdit(parent){

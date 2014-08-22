@@ -171,6 +171,8 @@ void GUI_Playlist::initGUI(){
     ui->btn_import->setIcon(QIcon(icon_path + "import.png"));
     ui->btn_numbers->setIcon(QIcon(icon_path + "numbers.png"));
 	ui->btn_gapless->setIcon(QIcon(icon_path + "gapless.png"));
+
+	set_total_time_label();
 }
 
 

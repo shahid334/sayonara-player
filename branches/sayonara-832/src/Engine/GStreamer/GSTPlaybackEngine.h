@@ -89,7 +89,7 @@ private:
 	CSettingsStorage* _settings;
 	StreamRecorder* _stream_recorder;
 
-	LastTrack*  _last_track;
+	MetaData*  _last_track;
 	MyCaps*     _caps;
 
 

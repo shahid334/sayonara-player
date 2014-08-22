@@ -51,22 +51,25 @@ int PlaylistItemModel::rowCount(const QModelIndex &parent) const{
 
 QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
 
-	if (!index.isValid())
-		 return QVariant();
-
-    if (index.row() >= (int) _v_meta_data.size() || index.row() < 0)
-		 return QVariant();
-
-	 if (role == Qt::DisplayRole){
+	if (!index.isValid()){
 		return QVariant();
-	 }
+	}
 
-	 if (role == Qt::WhatsThisRole){
-         return _v_meta_data[index.row()].toVariant();
-	 }
+	if (index.row() >= (int) _v_meta_data.size() || index.row() < 0){
+		return QVariant();
+	}
 
-	 else
-		 return QVariant();
+	if (role == Qt::DisplayRole){
+		return QVariant();
+	}
+
+	if (role == Qt::WhatsThisRole){
+		return MetaData::toVariant( _v_meta_data[index.row()] );
+	}
+
+	else{
+		return QVariant();
+	}
 }
 
 

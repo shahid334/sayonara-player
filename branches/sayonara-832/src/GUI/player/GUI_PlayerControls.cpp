@@ -86,13 +86,8 @@ void GUI_Player::stopClicked(bool b) {
 
 
     if(b){
-
-		LastTrack lt;
-		lt.filepath = "";
-		lt.id = -1;
-		lt.pos_sec = 0;
-		lt.valid = false;
-		m_settings->setLastTrack(lt);
+		MetaData md;
+		m_settings->setLastTrack(md);
 
         emit sig_stop();
     }

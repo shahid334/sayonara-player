@@ -1,4 +1,4 @@
-/* Library.h */
+/* Artist.cpp */
 
 /* Copyright (C) 2011-2014  Lucio Carreras
  *
@@ -20,21 +20,41 @@
 
 
 
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#include "HelperStructs/Artist.h"
 
-#include <QObject>
+Artist::Artist() : LibraryItem() {
+    id = -1;
+    name = "";
+    num_songs = 0;
+    num_albums = 0;
+}
 
-class Library : public QObject
-{
-	Q_OBJECT
-public:
-	explicit Library(QObject *parent = 0);
-	
-signals:
-	
-public slots:
-	
-};
+Artist::Artist( const Artist& artist ) : LibraryItem(artist){
+	id = artist.id;
+	name = artist.name;
+	num_songs = artist.num_songs;
+	num_albums = artist.num_albums;
+}
 
-#endif // LIBRARY_H
+Artist::~Artist(){
+
+}
+
+
+QVariant Artist::toVariant(const Artist& artist) {
+
+	QVariant var;
+	var.setValue(artist);
+	return var;
+}
+
+
+bool Artist::fromVariant(const QVariant& v, Artist& artist){
+
+	if( !v.canConvert<Artist>() ) return false;
+	
+	artist = v.value<Artist>();
+	return true;
+}
+
+

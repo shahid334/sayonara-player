@@ -210,7 +210,7 @@ private:
     QStringList m_playlist;
     bool m_loadPlaylist;
     bool m_loadLastTrack;
-    LastTrack m_lastTrack;
+	MetaData m_lastTrack;
     bool m_rememerTime;
     bool m_startPlaying;
     PlaylistMode m_playlistmode;
@@ -320,8 +320,8 @@ public:
 	bool getLoadLastTrack();
 	void setLoadLastTrack(bool b);
 
-	LastTrack* getLastTrack();
-	void setLastTrack(LastTrack& t);
+	MetaData* getLastTrack();
+	void setLastTrack(const MetaData& t);
 	void updateLastTrack();
 
     bool getRememberTime();

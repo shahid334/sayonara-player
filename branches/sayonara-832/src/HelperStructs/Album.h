@@ -1,4 +1,4 @@
-/* Library.h */
+/* Album.h */
 
 /* Copyright (C) 2011-2014  Lucio Carreras
  *
@@ -20,21 +20,52 @@
 
 
 
-#ifndef LIBRARY_H
-#define LIBRARY_H
+#ifndef _ALBUM_H_
+#define _ALBUM_H_
 
-#include <QObject>
+#include "HelperStructs/LibraryItem.h"
 
-class Library : public QObject
-{
-	Q_OBJECT
+#include <QStringList>
+#include <QVariant>
+#include <QMetaType>
+
+#include <vector>
+
+
+using namespace std;
+
+class Album;
+
+Q_DECLARE_METATYPE(Album)
+
+class Album : public LibraryItem {
+
 public:
-	explicit Library(QObject *parent = 0);
-	
-signals:
-	
-public slots:
-	
+    QString name;
+	qint32	id;
+    quint16 num_songs;
+    quint32 length_sec;
+    quint16	year;
+    QStringList artists;
+    QList<quint8> discnumbers;
+    quint8 n_discs;
+    quint8 rating;
+
+    bool is_splitted;
+    bool is_sampler;
+	bool is_lib_selected;
+
+    Album();
+	Album(const Album&);
+    ~Album();
+
+	static QVariant toVariant(const Album& album);
+	static bool fromVariant(const QVariant& v, Album& album);
 };
 
-#endif // LIBRARY_H
+
+typedef vector<Album> AlbumList;
+
+#endif
+
+
