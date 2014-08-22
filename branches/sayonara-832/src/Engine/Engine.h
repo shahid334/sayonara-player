@@ -50,67 +50,6 @@ enum CapsType {
 	CapsTypeFloat=2
 };
 
-class MyCaps {
-
-private:
-	CapsType _type;
-	bool    _sig;
-	int     _width;
-	int     _channels;
-	bool    _parsed;
-
-public:
-
-	MyCaps(){
-		_type = CapsTypeUnknown;
-		_sig = false;
-		_width = -1;
-		_channels = -1;
-		_parsed = false;
-	}
-
-	bool is_parsed(){ return _parsed; }
-	void set_parsed(bool b){ _parsed = b; }
-
-	CapsType get_type(){ return _type; }
-	bool get_signed() {return _sig; }
-	int get_width() { return _width; }
-	int get_channels() { return _channels; }
-
-	void parse(GstCaps* caps){
-		QString info = gst_caps_to_string(caps);
-		//qDebug() << info;
-
-		QStringList lst = info.split(",");
-		foreach(QString s, lst){
-
-			s = s.trimmed();
-			if(s.startsWith("audio", Qt::CaseInsensitive)){
-				if(s.contains("int", Qt::CaseInsensitive)) _type = CapsTypeInt;
-				else if(s.contains("float", Qt::CaseInsensitive)) _type = CapsTypeFloat;
-				else _type = CapsTypeUnknown;
-			}
-
-			else if(s.startsWith("signed", Qt::CaseInsensitive)){
-				if(s.contains("true", Qt::CaseInsensitive)) _sig = true;
-				else _sig = false;
-			}
-
-			else if(s.startsWith("width", Qt::CaseInsensitive)){
-				_width = s.right(2).toInt();
-			}
-
-			else if(s.startsWith("channels", Qt::CaseInsensitive)){
-				_channels = s.right(1).toInt();
-				if(_channels > 2) _channels = 2;
-			}
-		}
-		_parsed = true;
-	}
-};
-
-
-
 
 class Engine : public QObject {
 
