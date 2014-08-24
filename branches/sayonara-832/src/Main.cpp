@@ -31,6 +31,7 @@
 #include "application.h"
 
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/SmartComparison.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 #include <QDir>
@@ -84,6 +85,30 @@ void printHelp() {
 }
 
 
+int main(int argc, char* argv[]){
+
+	SmartComparison sc;
+
+	sc.print_similar("velvt undergrond");
+	sc.print_similar("etalliccca");
+	sc.print_similar("punk floid");
+	sc.print_similar("ponk floyd");
+	sc.print_similar("floyd pink");
+	sc.print_similar("fanta vier");
+	sc.print_similar("floyd");
+	sc.print_similar("tdoooors");
+	sc.print_similar("gnsrses");
+	sc.print_similar("joint");
+	sc.print_similar("venture joint");
+	sc.print_similar("sniff tears");
+	sc.print_similar("michael jackson with fergie");
+	sc.print_similar("michael jackson fergie");
+	sc.print_similar("michael jackson");
+	sc.print_similar("guns and roses with axl rose");
+}
+
+
+/*
 int main(int argc, char *argv[]) {
 
 
@@ -152,5 +177,5 @@ int main(int argc, char *argv[]) {
 
         return 0;
 }
-
+*/
 

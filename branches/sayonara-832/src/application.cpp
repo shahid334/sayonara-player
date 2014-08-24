@@ -121,8 +121,8 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
 	ui_library->set_info_dialog(ui_info_dialog);
 
-	ui_sc		        = new GUI_SoundCloudLibrary(player->getParentOfLibrary());
-	ui_sc->set_info_dialog(ui_info_dialog);
+	/*ui_sc		        = new GUI_SoundCloudLibrary(player->getParentOfLibrary());
+	ui_sc->set_info_dialog(ui_info_dialog);*/
 
 	ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
@@ -261,7 +261,7 @@ Application::~Application() {
     delete ui_podcasts;
     delete ui_lastfm;
     delete library_importer;
-	delete ui_sc;
+	//delete ui_sc;
     delete library;
     delete playlist_handler;
     delete playlists;
@@ -313,7 +313,7 @@ void Application::init_connections() {
     CONNECT (player, sig_skin_changed(bool),                      ui_eq,              changeSkin(bool));
     CONNECT (player, sig_skin_changed(bool),                      ui_info_dialog,     changeSkin(bool));
 	CONNECT (player, sig_skin_changed(bool),                      ui_library,         change_skin(bool));
-	CONNECT (player, sig_skin_changed(bool),                      ui_sc,              change_skin(bool));
+//	CONNECT (player, sig_skin_changed(bool),                      ui_sc,              change_skin(bool));
 
     CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 

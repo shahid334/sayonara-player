@@ -127,6 +127,7 @@ void GUI_Player::total_time_changed(qint64 total_time) {
     ui->maxTime->setText(length_str);
 }
 
+
 void GUI_Player::jump_forward() {
 
 	int percent = ui->songProgress->value();

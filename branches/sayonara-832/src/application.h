@@ -49,7 +49,7 @@
 #include "GUI/AudioConverter/GUI_AudioConverter.h"
 #include "GUI/bookmarks/GUI_Bookmarks.h"
 #include "GUI/speed/GUI_Speed.h"
-#include "GUI/soundcloud/GUI_SoundCloudLibrary.h"
+//#include "GUI/soundcloud/GUI_SoundCloudLibrary.h"
 
 #include "playlist/PlaylistHandler.h"
 #include "playlist/PlaylistLoader.h"
@@ -59,7 +59,7 @@
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "library/LibraryImporter.h"
-#include "Soundcloud/SoundcloudLibrary.h"
+//#include "Soundcloud/SoundcloudLibrary.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/CSettingsStorage.h"
@@ -96,7 +96,7 @@ private:
 	CLibraryBase*           library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
-	SoundcloudLibrary*		sc_library;
+//	SoundcloudLibrary*		sc_library;
 
 	GUI_LevelPainter*       ui_level;
 	GUI_Spectrum*           ui_spectrum;
@@ -114,7 +114,7 @@ private:
 	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
-	GUI_SoundCloudLibrary*  ui_sc;
+	//GUI_SoundCloudLibrary*  ui_sc;
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
 	Socket*                 remote_socket;
