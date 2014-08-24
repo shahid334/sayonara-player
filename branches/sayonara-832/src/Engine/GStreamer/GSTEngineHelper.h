@@ -26,6 +26,7 @@
 #include <QDebug>
 #include <QString>
 #include <gst/gst.h>
+#include <gst/gstcaps.h>
 #include "Engine/Engine.h"
 
 #define ENGINE_DEBUG if(_debug) qDebug() << Q_FUNC_INFO << "; "

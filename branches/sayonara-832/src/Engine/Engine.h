@@ -28,8 +28,6 @@
 #include <QStringList>
 
 #include <vector>
-#include <gst/gst.h>
-#include <gst/gstcaps.h>
 
 using namespace std;
 
