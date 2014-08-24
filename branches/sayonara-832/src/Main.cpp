@@ -84,7 +84,7 @@ void printHelp() {
 
 }
 
-
+/*
 int main(int argc, char* argv[]){
 
 	SmartComparison sc;
@@ -106,9 +106,9 @@ int main(int argc, char* argv[]){
 	sc.print_similar("michael jackson");
 	sc.print_similar("guns and roses with axl rose");
 }
+*/
 
 
-/*
 int main(int argc, char *argv[]) {
 
 
@@ -177,5 +177,3 @@ int main(int argc, char *argv[]) {
 
         return 0;
 }
-*/
-
