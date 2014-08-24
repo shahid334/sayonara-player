@@ -89,10 +89,13 @@ public:
 	void emit_standard_cover();
 	virtual void stop();
 
+	void set_big(bool big);
+
 
 private:
 
 	int _n_covers;
+	bool _big;
     CoverFetchThread* _cft;
     CDatabaseConnector* _db;
 

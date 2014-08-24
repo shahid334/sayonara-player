@@ -229,6 +229,7 @@ void GUI_Playlist::clear_playlist_slot() {
 // private SLOT: playlist item pressed (init drag & drop)
 void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_rows) {
 
+	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
     _info_dialog->setMetaData(v_md);
 
     this->_info_dialog->set_tag_edit_visible(_playlist_type == PlaylistTypeStd);
@@ -275,13 +276,11 @@ void GUI_Playlist::playlist_mode_changed_slot() {
 
 void GUI_Playlist::psl_edit_tracks() {
     if(!_info_dialog) return;
-    _info_dialog->setMode(INFO_MODE_TRACKS);
     _info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Playlist::psl_info_tracks() {
     if(!_info_dialog) return;
-    _info_dialog->setMode(INFO_MODE_TRACKS);
     _info_dialog->show(TAB_INFO);
 }
 

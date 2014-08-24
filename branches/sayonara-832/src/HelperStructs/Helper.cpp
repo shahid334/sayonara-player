@@ -71,8 +71,8 @@ QString Helper::cvtQString2FirstUpper(const QString& str) {
 
     return ret_str.left(ret_str.size() - 1);
 }
-
-QString cvtNum2String(int num, int digits) {
+template<typename T>
+QString cvtNum2String(T num, int digits) {
 	QString str = QString::number(num);
 	while(str.size() < digits) {
 		str.prepend("0");
@@ -81,7 +81,7 @@ QString cvtNum2String(int num, int digits) {
 	return str;
 }
 
-QString Helper::cvtMsecs2TitleLengthString(long int msec, bool colon, bool show_days) {
+QString Helper::cvtMsecs2TitleLengthString(quint64 msec, bool colon, bool show_days) {
 
 		bool show_hrs = false;
 
@@ -183,8 +183,8 @@ QString Helper::getSayonaraPath() {
 	return QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator();
 }
 
-QString Helper::get_artist_image_path(const QString& artist) {
-	QString token = QString("artist_") + calc_cover_token(artist, "");
+QString Helper::get_artist_image_path(const QString& artist, bool big) {
+	QString token = QString("artist_") + calc_cover_token(artist, "", big);
 	QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
 
 
@@ -223,17 +223,16 @@ QString Helper::createLink(const QString& name, const QString& target, bool unde
 	}
 	
 
-	return QString("<a href=\"") + target + "\"" + style + ">" + content + "</a>";
+	return QString("<a href=\"file://") + target + "\"" + style + ">" + content + "</a>";
 }
 
-QString Helper::calc_filesize_str(qint64 filesize) {
-    qint64 kb = 1024;
-    qint64 mb = kb * 1024;
-    qint64 gb = mb * 1024;
+QString Helper::calc_filesize_str(quint64 filesize) {
+	quint64 kb = 1024;
+	quint64 mb = kb * 1024;
+	quint64 gb = mb * 1024;
 
     QString size;
     if(filesize > gb) {
-
         size = QString::number(filesize / gb) + "." + QString::number((filesize / mb) % gb).left(2)  + " GB";
     }
 
@@ -273,7 +272,7 @@ QString Helper::calc_lfm_album_adress(const QString& artist, const QString& albu
 }
 
 
-QString Helper::calc_google_image_search_adress(const QString& str) {
+QString Helper::calc_google_image_search_adress(const QString& str, bool big) {
 
 	QString searchstring = str;
 	searchstring.replace(" ", "%20");
@@ -281,21 +280,28 @@ QString Helper::calc_google_image_search_adress(const QString& str) {
 	searchstring.replace("&", "%26");
 	searchstring.replace("$", "%24");
 
-    QString url = QString("https://www.google.de/search?num=20&hl=de&site=imghp&tbm=isch&source=hp");
+	QString url = QString("https://www.google.de/search?num=20&hl=de&site=imghp&tbm=isch&source=hp");
+
     url += QString("&q=") + searchstring;
     url += QString("&oq=") + searchstring;
 
+	if(big){
+
+		url += "tbs=isz:lt,islt:qsvga";
+	}
+
+	qDebug() << "Google URL = " << url;
 	return url;
 }
 
 
-QString Helper::calc_google_artist_adress(const QString& artist) {
+QString Helper::calc_google_artist_adress(const QString& artist, bool big) {
 
-    return calc_google_image_search_adress(QUrl::toPercentEncoding(artist));
+	return calc_google_image_search_adress(QUrl::toPercentEncoding(artist), big);
 }
 
 
-QString Helper::calc_google_album_adress(const QString& artist, const QString& album) {
+QString Helper::calc_google_album_adress(const QString& artist, const QString& album, bool big) {
 
 	QString new_album, searchstring;
 	QRegExp regex;
@@ -318,14 +324,17 @@ QString Helper::calc_google_album_adress(const QString& artist, const QString& a
 
 	searchstring += new_album;
 
-    return calc_google_image_search_adress(searchstring);
+	return calc_google_image_search_adress(searchstring, big);
 }
 
 
 
-QString Helper::calc_cover_token(const QString& artist, const QString& album) {
+QString Helper::calc_cover_token(const QString& artist, const QString& album, bool big) {
 
 	QByteArray str = QString(artist.trimmed() + album.trimmed()).toLower().toUtf8();
+	if(big){
+		str += "big";
+	}
 	return calc_hash(str);
 }
 
@@ -515,8 +524,9 @@ QStringList Helper::extract_folders_of_files(const QStringList& files) {
     QStringList folders;
     foreach(QString file, files) {
         QString folder = get_parent_folder(file);
-        if(!folders.contains(folder))
-            folders << folder;
+		if(!folders.contains(folder)){
+			folders << folder;
+		}
     }
 
     return folders;
@@ -703,6 +713,7 @@ QString Helper::get_major_artist(const QStringList& artists) {
 
     QMap<QString, int> map;
     if(artists.size() == 0) return "";
+	if(artists.size() == 1) return artists[0].toLower().trimmed();
 
     int n_artists = artists.size();
 

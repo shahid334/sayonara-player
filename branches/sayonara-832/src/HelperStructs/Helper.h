@@ -40,9 +40,9 @@
 namespace Helper{
 
 
-    QString cvtMsecs2TitleLengthString(long int msec, bool colon=true, bool show_days=true);
+	QString cvtMsecs2TitleLengthString(quint64 msec, bool colon=true, bool show_days=true);
 	QString cvtQString2FirstUpper(const QString& str);
-	QString calc_filesize_str(qint64 filesize);
+	QString calc_filesize_str(quint64 filesize);
 
 	QString getIconPath();
 	QString getSayonaraPath();
@@ -52,12 +52,12 @@ namespace Helper{
 					   const QString& target="",
 					   bool underline=true);
 
-	QString get_artist_image_path(const QString& artist);
-	QString calc_cover_token(const QString& artist, const QString& album);
+	QString get_artist_image_path(const QString& artist, bool big);
+	QString calc_cover_token(const QString& artist, const QString& album, bool big);
 
-	QString calc_google_image_search_adress(const QString& searchstring);
-	QString calc_google_artist_adress(const QString& artist);
-	QString calc_google_album_adress(const QString& artist, const QString& album);
+	QString calc_google_image_search_adress(const QString& searchstring, bool big);
+	QString calc_google_artist_adress(const QString& artist, bool big);
+	QString calc_google_album_adress(const QString& artist, const QString& album, bool big);
 
 	QString calc_lfm_artist_adress(const QString& artist);
 	QString calc_lfm_album_adress(const QString& artist, const QString& album);

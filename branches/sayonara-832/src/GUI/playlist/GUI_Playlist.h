@@ -125,6 +125,7 @@
 
             void set_total_time_label();
 			void check_dynamic_play_button();
+			void prepare_info();
 
     protected:
             void changeEvent(QEvent* e);

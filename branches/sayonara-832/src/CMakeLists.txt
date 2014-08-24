@@ -82,6 +82,7 @@ SET(HEADERS
     HelperStructs/CSettingsStorage.h
     HelperStructs/Tagging/ID3_Fileheader.h
     HelperStructs/AsyncWebAccess.h
+    HelperStructs/MetaDataInfo.h
     #Soundcloud/SoundcloudLibrary.h
 #    Soundcloud/SoundcloudHelper.h
 )
@@ -93,9 +94,12 @@ SET(SOURCES
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
-	HelperStructs/MetaData.cpp
-	HelperStructs/Artist.cpp
-	HelperStructs/Album.cpp
+    HelperStructs/MetaDataInfo.cpp
+    HelperStructs/ArtistInfo.cpp
+    HelperStructs/AlbumInfo.cpp
+    HelperStructs/MetaData.cpp
+    HelperStructs/Artist.cpp
+    HelperStructs/Album.cpp
     HelperStructs/Helper.cpp
     HelperStructs/CSettingsStorage.cpp
     HelperStructs/Style.cpp

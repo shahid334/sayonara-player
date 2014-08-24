@@ -50,8 +50,6 @@ public:
 	virtual ~GUI_Alternate_Covers();
 
 	signals:
-
-		void sig_search_images(const QString&);
 		void sig_cover_changed(bool);
         void sig_no_cover();
 
@@ -74,6 +72,9 @@ public:
         void open_file_dialog();
         void cl_new_cover(QString);
 		void cl_finished(bool);
+
+	public:
+		CoverLocation get_target_filename();
 
 	private:
 

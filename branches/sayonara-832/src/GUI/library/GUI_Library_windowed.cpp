@@ -365,8 +365,9 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata) {
 
 	this->ui->tb_title->fill<MetaDataList, MetaData>(v_metadata);
 
-    if(_info_dialog)
+	if(_info_dialog){
 		_info_dialog->setMetaData(v_metadata);
+	}
 
     this->ui->lv_artist->set_mimedata(v_metadata, "tracks", true);
     this->ui->lv_album->set_mimedata(v_metadata, "tracks", true);
@@ -386,6 +387,7 @@ void GUI_Library_windowed::fill_library_artists(ArtistList& artists) {
 
 void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst) {
 
+	_info_dialog->setInfoMode(InfoDialogMode_Artists);
     sig_artist_sel_changed(lst);
 }
 
@@ -398,7 +400,8 @@ void GUI_Library_windowed::album_released() {
 
 void GUI_Library_windowed::album_sel_changed(const QList<int>& lst) {
 
-    _info_dialog->set_tag_edit_visible(true);
+	_info_dialog->setInfoMode(InfoDialogMode_Albums);
+	//_info_dialog->set_tag_edit_visible(true);
     _timer->stop();
     if(lst.size() == 1) {
         QModelIndex idx = _album_model->index(lst[0], 0);
@@ -417,6 +420,7 @@ void GUI_Library_windowed::album_sel_changed(const QList<int>& lst) {
 }
 
 void GUI_Library_windowed::track_sel_changed(const QList<int>& lst) {
+	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
     sig_track_sel_changed(lst);
 }
 
@@ -564,40 +568,37 @@ void GUI_Library_windowed::reloading_library_finished() {
 void GUI_Library_windowed::edit_album() {
 	if(!_info_dialog) return;
 
-	_info_dialog->setMode(INFO_MODE_ALBUMS);
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Library_windowed::edit_artist() {
 	if(!_info_dialog) return;
 
-	_info_dialog->setMode(INFO_MODE_ARTISTS);
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_Library_windowed::edit_tracks() {
 	if(!_info_dialog) return;
 
-	_info_dialog->setMode(INFO_MODE_TRACKS);
 	_info_dialog->show(TAB_EDIT);
 }
 
 
 void GUI_Library_windowed::info_album() {
 	if(!_info_dialog) return;
-	_info_dialog->setMode(INFO_MODE_ALBUMS);
+
 	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_Library_windowed::info_artist() {
 	if(!_info_dialog) return;
-	_info_dialog->setMode(INFO_MODE_ARTISTS);
+
 	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_Library_windowed::info_tracks() {
 	if(!_info_dialog) return;
-	_info_dialog->setMode(INFO_MODE_TRACKS);
+
 	_info_dialog->show(TAB_INFO);
 }
 

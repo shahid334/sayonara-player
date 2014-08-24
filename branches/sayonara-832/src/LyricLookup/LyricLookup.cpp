@@ -213,12 +213,14 @@ void LyricLookupThread::run() {
 			"</b></font><br /><br />");
 }
 
+void LyricLookupThread::set_artist_and_title(const QString& artist, const QString& title){
+	_artist = artist;
+	_title = title;
+}
 
-void LyricLookupThread::prepare_thread(QString artist, QString song, int srv) {
 
-		_artist = artist;
-		_title = song;
-		_cur_server = srv;
+void LyricLookupThread::prepare_thread(int srv) {
+	_cur_server = srv;
 }
 
 void LyricLookupThread::init_server_list() {

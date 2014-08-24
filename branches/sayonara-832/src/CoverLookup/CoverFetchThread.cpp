@@ -54,7 +54,7 @@ CoverFetchThread::~CoverFetchThread() {
 
 int CoverFetchThread::run_single() {
 
-    QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
+	QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
 
     foreach(QString adress, adresses) {
 
@@ -65,15 +65,17 @@ int CoverFetchThread::run_single() {
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
         if(success) {
-
+			qDebug() << "Cover has dimensions: " << img.width() << "x" << img.height();
 			qDebug() << "Save cover to " << _target_file << " (" << adress << ")";
-            img.save(_target_file);
+
+			img.save(_target_file);
 			emit sig_cover_found(_target_file);
-            return 1;
+
+			return 1;
         }
     }
 
-    return 0;
+	return 0;
 }
 
 

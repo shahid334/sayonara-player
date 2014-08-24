@@ -71,7 +71,6 @@ bool wa_call_url(const QString& url, QString* response) {
     short download_status = DOWNLOAD_INCOMPLETE;
 	CURL *curl = curl_easy_init();
 
-
 	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
 		curl_easy_setopt(curl, CURLOPT_URL, url.toLocal8Bit().data());

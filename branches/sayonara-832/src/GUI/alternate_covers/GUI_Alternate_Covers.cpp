@@ -112,6 +112,7 @@ void GUI_Alternate_Covers::connect_and_start() {
 	this->show();
 }
 
+
 void GUI_Alternate_Covers::start(int album_id) {
 
     if(album_id < 0) return;
@@ -161,6 +162,11 @@ void GUI_Alternate_Covers::start(QString artist_name) {
 	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
 
 	connect_and_start();
+}
+
+
+CoverLocation GUI_Alternate_Covers::get_target_filename(){
+	return _target_filename;
 }
 
 

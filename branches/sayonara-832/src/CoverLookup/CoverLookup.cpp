@@ -48,6 +48,7 @@ CoverLookup::CoverLookup(QObject* parent, int n_covers) :
     _n_covers(n_covers),
 	_cft(NULL)
 {
+	_big = false;
     _db = CDatabaseConnector::getInstance();
 }
 
@@ -64,6 +65,10 @@ CoverLookup::~CoverLookup() {
     qDebug() << "Deleted cover lookup";
 }
 
+
+void CoverLookup::set_big(bool big){
+	_big = big;
+}
 
 void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 
@@ -104,35 +109,35 @@ bool CoverLookup::fetch_cover(const CoverLocation& cl) {
 
 bool CoverLookup::fetch_album_cover_standard(const QString& artist_name, const QString& album_name) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album_name, artist_name);
+	CoverLocation cl = CoverLocation::get_cover_location(album_name, artist_name, _big);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_album_cover_sampler(const QStringList& artists, const QString& album_name) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album_name, artists);
+	CoverLocation cl = CoverLocation::get_cover_location(album_name, artists, _big);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_album_cover_by_id(const int album_id) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album_id);
+	CoverLocation cl = CoverLocation::get_cover_location(album_id, _big);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_album_cover(const Album& album) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album);
+	CoverLocation cl = CoverLocation::get_cover_location(album, _big);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_artist_cover_standard(const QString& artist) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(artist);
+	CoverLocation cl = CoverLocation::get_cover_location(artist, _big);
 	return fetch_cover(cl);
 }
 
@@ -140,7 +145,7 @@ bool CoverLookup::fetch_artist_cover_standard(const QString& artist) {
 
 bool CoverLookup::fetch_artist_cover(const Artist& artist) {
 
-    return fetch_artist_cover_standard(artist.name);
+	return fetch_artist_cover_standard(artist.name);
 }
 
 
@@ -148,7 +153,7 @@ bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const
 
 	CoverLocation cl;
 	cl.cover_path = target_name;
-	cl.google_url = Helper::calc_google_image_search_adress(searchstring);
+	cl.google_url = Helper::calc_google_image_search_adress(searchstring, _big);
 
 	start_new_thread( cl );
 	return true;

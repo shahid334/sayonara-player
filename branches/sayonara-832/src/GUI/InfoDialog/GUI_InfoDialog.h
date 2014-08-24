@@ -50,15 +50,18 @@
 #define TAB_LYRICS 1
 #define TAB_EDIT 2
 
+enum InfoDialogMode {
+	InfoDialogMode_Tracks,
+	InfoDialogMode_Albums,
+	InfoDialogMode_Artists
+};
+
 class GUI_InfoDialog : public QDialog, private Ui::InfoDialog{
 Q_OBJECT
 
 
 public slots:
 
-	void psl_album_info_available(const QString& target_class);
-	void psl_artist_info_available(const QString& target_class);
-	void psl_corrected_data_available(const QString& target_class);
     void changeSkin(bool dark);
     void language_changed();
 
@@ -66,10 +69,11 @@ private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
 	void psl_id3_success(bool);
-    void alternate_covers_available(QString, QString);
+	void psl_tab_index_changed(int);
     void no_cover_available();
 	void cover_clicked();
-	void psl_cover_available(QString);
+	void psl_cover_available(const QString&);
+	void psl_alternate_cover_available(bool);
 	void psl_cover_lookup_finished(bool);
 
 
@@ -80,7 +84,7 @@ public:
 	GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit=0);
 	virtual ~GUI_InfoDialog();
 
-	void setMode(int mode);
+	void setInfoMode(InfoDialogMode mode);
 	void setMetaData(const MetaDataList& vd);
     void set_tag_edit_visible(bool b);
 
@@ -103,23 +107,17 @@ private:
     bool                    _tag_edit_visible;
     bool                    _dark;
     QString                 _call_id;
+	InfoDialogMode			_mode;
+
+	QString					_cover_artist;
+	QString					_cover_album;
+	CoverLocation			_cl;
 
 	MetaDataList _v_md;
 
-	int _mode;
-	int _diff_mode;
-
-	QString _album_name;
-	QString _artist_name;
-	QString	_title;
-
-	void prepare_artists();
-	void prepare_albums();
-	void prepare_tracks();
-
-	void prepare_cover();
-	void prepare_lfm_info();
+	void prepare_cover(const CoverLocation& cover_path);
 	void prepare_lyrics();
+	void prepare_info();
 
     void init();
 

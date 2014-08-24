@@ -30,7 +30,6 @@ QWidget* GUI_Player::getParentOfPlugin() {
 
 void GUI_Player::setInfoDialog(GUI_InfoDialog* dialog) {
     ui_info_dialog = dialog;
-    ui_info_dialog->setMode(INFO_MODE_TRACKS);
 }
 
 
