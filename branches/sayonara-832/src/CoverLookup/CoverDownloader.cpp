@@ -76,6 +76,7 @@ QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses) {
     QStringList cover_adresses;
     if(success) {
         cover_adresses = cov_calc_adresses_from_webpage(num_adresses, content);
+		content.clear();
     }
     else{
         qDebug() << "could not get cover adresses from " << url;

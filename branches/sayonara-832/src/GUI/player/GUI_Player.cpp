@@ -698,6 +698,7 @@ void GUI_Player::ui_loaded() {
 		obj_ref = this;
 
         signal(SIGWINCH, signal_handler);
+
 	#endif
     if(ui_libpath)
 		ui_libpath->resize(ui->library_widget->size());

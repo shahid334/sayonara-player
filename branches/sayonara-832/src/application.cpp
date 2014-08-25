@@ -75,9 +75,52 @@ Application::Application(int & argc, char ** argv) : QApplication(argc, argv)
 
 }
 
+void Application::check_for_crash(){
+	QString error_file = Helper::getErrorFile();
+	if(!QFile::exists(error_file)) return;
+
+
+	QString info_text;
+	QString mail;
+	if(!Helper::read_file_into_str(error_file, &mail)){
+		mail = "";
+		mail.prepend("mailto:luciocarreras@gmail.com?subject=Sayonara Crash&amp;body=Hi Lucio,\n\nhere is the trace for a Sayonara crash\n\n");
+
+	}
+
+	else{
+		mail.prepend("mailto:luciocarreras@gmail.com?subject=Sayonara Crash&amp;body=Hi Lucio,\n\nhere is the trace for a Sayonara crash\n\n");
+		mail.append("\n\nI hope this will not happen again...");
+	}
+
+
+
+	info_text = QString("Sayonara seems to have crashed the last time<br />") +
+				"Please send " +
+			Helper::createLink(error_file, error_file) +
+			" in " + Helper::createLink(Helper::getSayonaraPath(), Helper::getSayonaraPath()) +
+			" to " + Helper::createLink("luciocarreras@gmail.com", mail);
+
+	QMessageBox::information(0, "Error detected", info_text);
+
+	QFile f(error_file);
+	f.open(QIODevice::ReadOnly);
+	if(!f.isOpen()){
+		qDebug() << "Cannot oopen " << error_file;
+		return;
+	}
+
+	f.remove();
+	f.close();
+
+	return;
+
+}
+
 void Application::init(int n_files, QTranslator *translator) {
 
 
+	check_for_crash();
 	_translator        = translator;
 
 	set                = CSettingsStorage::getInstance();

@@ -179,6 +179,10 @@ QString Helper::getIconPath() {
 	return path;
 }
 
+QString Helper::getErrorFile(){
+	return getSayonaraPath() + "error_log";
+}
+
 QString Helper::getSayonaraPath() {
 	return QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator();
 }
@@ -201,6 +205,10 @@ QString Helper::createLink(const QString& name, const QString& target, bool unde
 	int dark = CSettingsStorage::getInstance()->getPlayerStyle();
 
 	QString new_target;
+	QString content;
+	QString style = "";
+	QString ret;
+
 
 	if(target.size() == 0){
 		new_target = name;
@@ -210,9 +218,6 @@ QString Helper::createLink(const QString& name, const QString& target, bool unde
 		new_target = target;
 	}
 
-	QString content;
-	QString style = "";
-	
 	if(!underline) style = " style: \"text-decoration=none;\" ";
 
 	if(dark) {
@@ -222,8 +227,15 @@ QString Helper::createLink(const QString& name, const QString& target, bool unde
 		content = DARK_BLUE(name);
 	}
 	
+	if(new_target.contains("://") || new_target.contains("mailto:")){
+		ret = QString("<a href=\"") + new_target + "\"" + style + ">" + content + "</a>";
+	}
 
-	return QString("<a href=\"file://") + target + "\"" + style + ">" + content + "</a>";
+	else {
+		ret = QString("<a href=\"file://") + new_target + "\"" + style + ">" + content + "</a>";
+	}
+
+	return ret;
 }
 
 QString Helper::calc_filesize_str(quint64 filesize) {
@@ -290,7 +302,6 @@ QString Helper::calc_google_image_search_adress(const QString& str, bool big) {
 		url += "tbs=isz:lt,islt:qsvga";
 	}
 
-	qDebug() << "Google URL = " << url;
 	return url;
 }
 

@@ -45,6 +45,7 @@ namespace Helper{
 	QString calc_filesize_str(quint64 filesize);
 
 	QString getIconPath();
+	QString getErrorFile();
 	QString getSayonaraPath();
     QString getSharePath();
     QString getLibPath();

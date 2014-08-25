@@ -73,13 +73,14 @@ void CoverLookup::set_big(bool big){
 void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 
 	if(_cft) {
+		//disconnect(_cft, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
+		//disconnect(_cft, SIGNAL(sig_cover_found(QString)), this, SLOT(cover_found(QString)));
 		_cft->stop();
-		delete _cft;
-		_cft = 0;
 	}
 
-    qDebug() << "Create _cft";
+
 	_cft = new CoverFetchThread(this, cl, _n_covers);
+	_cfts << _cft;
 
 	connect(_cft, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
     connect(_cft, SIGNAL(sig_cover_found(QString)), this, SLOT(cover_found(QString)));
@@ -162,9 +163,19 @@ bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const
 
 void CoverLookup::finished(bool success) {
 
-	if(_cft) {
-		delete _cft; _cft = 0;
+
+
+	QObject* sender = QObject::sender();
+	QObject** psender = &sender;
+
+	foreach(CoverFetchThread* t, _cfts){
+		if(t == (CoverFetchThread*) sender){
+			_cfts.removeOne(t);
+		}
 	}
+
+	delete sender;
+	*psender = 0;
 
     emit sig_finished(success);
 }

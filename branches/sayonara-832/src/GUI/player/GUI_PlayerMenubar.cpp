@@ -337,7 +337,7 @@ void GUI_Player::about(bool b) {
 	Q_UNUSED(b);
 
     QString version = m_settings->getVersion();
-    QString link = Helper::createLink("http://sayonara.luciocarreras.de");
+	QString link = Helper::createLink("http://sayonara.luciocarreras.de");
 
     QMessageBox infobox(this);
     infobox.setParent(this);

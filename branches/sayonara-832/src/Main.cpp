@@ -26,7 +26,12 @@
  *      Author: luke
  */
 
-
+#include <stdlib.h>
+#include <unistd.h>
+#include <execinfo.h>
+#include <signal.h>
+#include <stdio.h>
+#include <fcntl.h>
 
 #include "application.h"
 
@@ -84,6 +89,8 @@ void printHelp() {
 
 }
 
+
+
 /*
 int main(int argc, char* argv[]){
 
@@ -109,8 +116,45 @@ int main(int argc, char* argv[]){
 */
 
 
+void segfault_handler(int sig){
+	void *array[10];
+	size_t size;
+
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 20);
+
+	// print out all the frames to stderr
+
+	qDebug() << "";
+	qDebug() << "Segfault received.";
+	qDebug() << "Sorry, Sayonara has crashed. :(";
+
+
+	int fd;
+	FILE* f;
+	QString target_file = Helper::getErrorFile();
+	f = fopen(target_file.toStdString().c_str(), "w");
+	if(!f) exit(1);
+	fd = fileno(f);
+
+	//backtrace_symbols_fd(array, size, STDERR_FILENO);
+	backtrace_symbols_fd(array, size, fd);
+	fclose(f);
+
+	qDebug() << "Please send the error file " << target_file << " to luciocarreras@gmail.com";
+
+	exit(1);
+}
+
 int main(int argc, char *argv[]) {
 
+
+#ifdef Q_OS_UNIX
+
+
+	signal(SIGSEGV, segfault_handler);
+
+#endif
 
 	Application app (argc, argv);
     Helper::set_bin_path(app.applicationDirPath());

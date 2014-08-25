@@ -188,10 +188,8 @@ void CDatabaseConnector::closeDatabase() {
 
 CDatabaseConnector::~CDatabaseConnector() {
     if(_database) {
-
- 	closeDatabase();
+		closeDatabase();
     }
- 
 }
 
 bool CDatabaseConnector::check_and_drop_table(QString tablename) {

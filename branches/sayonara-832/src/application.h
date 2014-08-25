@@ -141,6 +141,7 @@ public:
 
 private:
     QString getVersion();
+	void check_for_crash();
 
 private slots:
 	void focus_changed(QWidget*, QWidget*);

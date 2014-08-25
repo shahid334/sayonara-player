@@ -25,7 +25,6 @@
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
-#include "CoverLookup/CoverFetchThread.h"
 #include "LyricLookup/LyricLookup.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
@@ -230,8 +229,6 @@ void GUI_InfoDialog::psl_cover_available(const QString& cover_path) {
 
 	this->ui->btn_image->setIcon(QIcon(cover_path));
 	this->ui->btn_image->update();
-
-	qDebug() << "Cover available: " << !this->isHidden();
 }
 
 void GUI_InfoDialog::psl_alternate_cover_available(bool b){

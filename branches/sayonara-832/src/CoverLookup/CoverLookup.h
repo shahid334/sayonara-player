@@ -99,6 +99,8 @@ private:
     CoverFetchThread* _cft;
     CDatabaseConnector* _db;
 
+	QList<CoverFetchThread*> _cfts;
+
 
 	void start_new_thread(const CoverLocation& cl);
 };

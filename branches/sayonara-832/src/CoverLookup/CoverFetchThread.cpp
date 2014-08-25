@@ -48,7 +48,7 @@ CoverFetchThread::CoverFetchThread(QObject* parent, const CoverLocation& cl, con
 
 
 CoverFetchThread::~CoverFetchThread() {
-    qDebug() << "Delete cft";
+	//qDebug() << "cft deleted";
 }
 
 
@@ -65,8 +65,8 @@ int CoverFetchThread::run_single() {
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
         if(success) {
-			qDebug() << "Cover has dimensions: " << img.width() << "x" << img.height();
-			qDebug() << "Save cover to " << _target_file << " (" << adress << ")";
+			/*qDebug() << "Cover has dimensions: " << img.width() << "x" << img.height();
+			qDebug() << "Save cover to " << _target_file << " (" << adress << ")";*/
 
 			img.save(_target_file);
 			emit sig_cover_found(_target_file);

@@ -64,12 +64,10 @@ void AlbumInfo::set_cover_location(){
 
 	if( _albums.size() == 1){
 		_cover_location = CoverLocation::get_cover_location(_albums[0], _artists, _big);
-		qDebug() << "Found fine cover location: " << _cover_location.cover_path;
 	}
 
 	else{
 		_cover_location = CoverLocation::getInvalidLocation();
-		qDebug() << "Found invalid cover location: " << _cover_location.cover_path;
 	}
 }
 
