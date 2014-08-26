@@ -9,7 +9,7 @@ FIND_PACKAGE(Qt4 REQUIRED)
 
 PKG_CHECK_MODULES(GSTREAMER REQUIRED gstreamer-1.0)
 PKG_CHECK_MODULES(GSTREAMER_BASE REQUIRED gstreamer-base-1.0)
-PKG_CHECK_MODULES(GSTREAMER_BASE REQUIRED gstreamer-app-1.0)
+PKG_CHECK_MODULES(GSTREAMER_BASE_APP REQUIRED gstreamer-app-1.0)
 
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
@@ -20,8 +20,6 @@ INCLUDE_DIRECTORIES(${GSTREAMER_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${GSTREAMER_BASE_INCLUDE_DIRS})
 
 SET(HEADERS
-
-
         GSTPipeline.h
         GSTConvertPipeline.h
         GSTConvertEngine.h
@@ -35,9 +33,6 @@ SET(HEADERS
 
         StreamRipperBufferThread.h
         StreamRecorder.h
-
-        ../Engine.h
-
 )
 
 SET(SOURCES
@@ -54,9 +49,6 @@ SET(SOURCES
 
         StreamRipperBufferThread.cpp
         StreamRecorder.cpp
-
-        ../../HelperStructs/Helper.cpp
-        ../../HelperStructs/Tagging/id3.cpp
 )
 
 	
@@ -70,6 +62,11 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_LIBRARY(sayonara_gstreamer SHARED ${SOURCES} ${HEADERS_MOC})
 #TARGET_LINK_LIBRARIES(sayonara_gstreamer ${QT_LIBRARIES} gstreamer-1.0 gstbase-1.0 gstapp-1.0)
 
-TARGET_LINK_LIBRARIES(sayonara_gstreamer ${QT_LIBRARIES} gstreamer-1.0 gstbase-1.0)
+TARGET_LINK_LIBRARIES(sayonara_gstreamer 
+	gstreamer-1.0 
+	gstbase-1.0
+	sayonara_helper
+	sayonara_db
+)
 
 INSTALL(TARGETS sayonara_gstreamer DESTINATION lib/sayonara)

@@ -21,11 +21,30 @@
 
 
 #include "SmartComparison.h"
+#include <QFile>
 
 SmartComparison::SmartComparison()
 {
 
-	CDatabaseConnector::getInstance()->getAllArtists(_artists);
+//	CDatabaseConnector::getInstance()->getAllArtists(_artists);
+
+QFile file("/home/IGEL/lugmair/Desktop/artists.list");
+if(!file.open(QIODevice::ReadOnly)) {
+	qDebug() << "Cannot read file";
+}
+
+QTextStream in(&file);
+
+while(!in.atEnd()) {
+    QString line = in.readLine();  
+	Artist artist;
+	artist.name = line;  
+	_artists.push_back(artist);
+}
+
+file.close();
+
+
 	_vocals << 'a' << 'e' << 'i' << 'o' << 'u';
 	_consonants << 'b' << 'c' << 'd' << 'f' <<
 				   'g' << 'h' << 'j' << 'k' <<

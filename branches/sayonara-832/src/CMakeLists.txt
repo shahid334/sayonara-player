@@ -1,7 +1,6 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
-
 INCLUDE(FindPkgConfig)
 
 PKG_CHECK_MODULES(GLIB glib-2.0)
@@ -21,7 +20,7 @@ SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++11")
 
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
-#SET(QT_USE_QTNETWORK TRUE)
+SET(QT_USE_QTNETWORK TRUE)
 
 SET(LANG ${CMAKE_CURRENT_SOURCE_DIR}/languages/sayonara_lang_de.ts)
 
@@ -45,7 +44,12 @@ LINK_DIRECTORIES(${QJSON_LIBRARY_DIRS})
 LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 
 
+ADD_SUBDIRECTORY(HelperStructs)
+ADD_SUBDIRECTORY(DatabaseAccess)
 ADD_SUBDIRECTORY(GUI)
+ADD_SUBDIRECTORY(playlist)
+ADD_SUBDIRECTORY(library)
+ADD_SUBDIRECTORY(CoverLookup)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
 ADD_SUBDIRECTORY(languages)
@@ -56,33 +60,13 @@ SET(HEADERS
     Engine/SoundPluginLoader.h
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
-    CoverLookup/CoverLookup.h
-    CoverLookup/CoverLookupAlternative.h
-    CoverLookup/CoverLookupAll.h
-    CoverLookup/CoverFetchThread.h
-    DatabaseAccess/CDatabaseConnector.h
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
-    library/CLibraryBase.h
-    library/LibraryImporter.h
-    library/threads/ReloadThread.h
-    library/threads/ImportCachingThread.h
-    library/threads/ImportCopyThread.h
-    playlist/Playlist.h
-    playlist/LFMPlaylist.h
-    playlist/StdPlaylist.h
-    playlist/StreamPlaylist.h
-    playlist/PlaylistHandler.h
-    playlist/PlaylistLoader.h
     playlists/Playlists.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
     Socket/Socket.h
-    HelperStructs/CSettingsStorage.h
-    HelperStructs/Tagging/ID3_Fileheader.h
-    HelperStructs/AsyncWebAccess.h
-    HelperStructs/MetaDataInfo.h
     #Soundcloud/SoundcloudLibrary.h
 #    Soundcloud/SoundcloudHelper.h
 )
@@ -94,56 +78,7 @@ SET(SOURCES
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
-    HelperStructs/MetaDataInfo.cpp
-    HelperStructs/ArtistInfo.cpp
-    HelperStructs/AlbumInfo.cpp
-    HelperStructs/MetaData.cpp
-    HelperStructs/Artist.cpp
-    HelperStructs/Album.cpp
-    HelperStructs/Helper.cpp
-    HelperStructs/CSettingsStorage.cpp
-    HelperStructs/Style.cpp
-    HelperStructs/CDirectoryReader.cpp
-    HelperStructs/PlaylistParser.cpp
-    HelperStructs/WebAccess.cpp
-    HelperStructs/AsyncWebAccess.cpp
-    HelperStructs/PodcastParser/PodcastParser.cpp
-    HelperStructs/Tagging/id3.cpp
-    HelperStructs/Tagging/id3access.cpp
-    HelperStructs/Tagging/ID3_Fileheader.cpp
-    HelperStructs/CSettingsStorage.cpp
-    CoverLookup/CoverDownloader.cpp
-    CoverLookup/CoverLookup.cpp
-    CoverLookup/CoverLookupAlternative.cpp
-    CoverLookup/CoverLookupAll.cpp
-    CoverLookup/CoverFetchThread.cpp
-    CoverLookup/CoverLocation.cpp
     LyricLookup/LyricLookup.cpp
-    library/CLibraryAdmin.cpp
-    library/CLibraryBase.cpp
-    library/LibraryImporter.cpp
-    library/threads/ReloadThread.cpp
-
-    library/threads/ImportCachingThread.cpp
-    library/threads/ImportCopyThread.cpp
-
-    DatabaseAccess/CDatabaseConnector.cpp
-    DatabaseAccess/CDatabaseLibrary.cpp
-    DatabaseAccess/CDatabaseSettings.cpp
-    DatabaseAccess/CDatabaseAlbums.cpp
-    DatabaseAccess/CDatabaseArtists.cpp
-    DatabaseAccess/CDatabaseTracks.cpp
-    DatabaseAccess/CDatabasePlaylist.cpp
-    DatabaseAccess/CDatabaseStreams.cpp
-    DatabaseAccess/CDatabasePodcasts.cpp
-    DatabaseAccess/CDatabaseVisStyles.cpp
-    DatabaseAccess/CDatabaseBookmarks.cpp
-    playlist/Playlist.cpp
-    playlist/LFMPlaylist.cpp
-    playlist/StdPlaylist.cpp
-    playlist/StreamPlaylist.cpp
-    playlist/PlaylistHandler.cpp
-    playlist/PlaylistLoader.cpp
     playlists/Playlists.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
@@ -163,7 +98,20 @@ ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${QM_FILES})
-TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} tag curl sayonara_gui sayonara_gstreamer)
+
+TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} 
+#	tag 
+	curl 
+	sayonara_helper 
+	sayonara_db 
+	sayonara_gui 
+	sayonara_playlist 
+	sayonara_library 
+	sayonara_covers 
+#	sayonara_gstreamer
+)
+
+
 
 INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES ${QM_FILES} DESTINATION share/sayonara/translations)

@@ -21,16 +21,12 @@
 
 #include "Engine/SoundPluginLoader.h"
 #include "Engine/Engine.h"
-#include "Engine/GStreamer/GSTPlaybackEngine.h"
 #include "HelperStructs/CSettingsStorage.h"
 
-#include <QObject>
 #include <QDir>
 #include <QString>
-#include <QDebug>
 #include <QPluginLoader>
 #include <QMessageBox>
-#include <QList>
 #include <qplugin.h>
 
 

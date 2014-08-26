@@ -1,9 +1,9 @@
 PROJECT(sayonara_gui)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
-SET(QT_USE_QTSQL TRUE)
-SET(QT_USE_QTXML TRUE)
-SET(QT_USE_QTNETWORK TRUE)
+#SET(QT_USE_QTSQL TRUE)
+#SET(QT_USE_QTXML TRUE)
+#SET(QT_USE_QTNETWORK TRUE)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src) 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/GUI) 
@@ -38,7 +38,7 @@ SET(HEADERS
     playlist_chooser/GUI_PlaylistChooser.h
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
     LastFM/GUI_LastFM.h
-    LastFM/GUI_LFMRadioWidget.h
+#    LastFM/GUI_LFMRadioWidget.h
     library/GUI_Library_windowed.h
     library/view/LibraryView.h    
     library/model/LibraryItemModel.h
@@ -101,7 +101,7 @@ SET(SOURCES
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
-    LastFM/GUI_LFMRadioWidget.cpp
+    #LastFM/GUI_LFMRadioWidget.cpp
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
     library/view/LibraryViewHeader.cpp
@@ -147,7 +147,7 @@ SET(FORMS
     InfoDialog/GUI_InfoDialog.ui
     LanguageChooser/GUI_LanguageChooser.ui
     LastFM/GUI_LastFM_Dialog.ui
-    LastFM/GUI_LFMRadioWidget.ui
+#    LastFM/GUI_LFMRadioWidget.ui
     library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
@@ -175,6 +175,11 @@ QT4_WRAP_UI(FORMS_HEADERS ${FORMS})
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 ADD_LIBRARY(sayonara_gui ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
+TARGET_LINK_LIBRARIES(sayonara_gui
+	sayonara_helper
+	sayonara_db
+	sayonara_covers
+)
 #SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 INSTALL(FILES "standard.css" DESTINATION share/sayonara)
 INSTALL(FILES "dark.css" DESTINATION share/sayonara)

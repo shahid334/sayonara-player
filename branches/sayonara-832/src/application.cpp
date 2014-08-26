@@ -27,7 +27,6 @@
 #include "GUI/player/GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
@@ -149,7 +148,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_stream           = new GUI_Stream(tr("&Webstreams"), player->getParentOfPlugin());
 	ui_podcasts         = new GUI_Podcasts(tr("P&odcasts"), player->getParentOfPlugin());
 	ui_eq               = new GUI_Equalizer(tr("&Equalizer"), player->getParentOfPlugin());
-	ui_lfm_radio        = new GUI_LFMRadioWidget(tr("Last.&fm"), player->getParentOfPlugin());
+//	ui_lfm_radio        = new GUI_LFMRadioWidget(tr("Last.&fm"), player->getParentOfPlugin());
 	ui_playlist_chooser = new GUI_PlaylistChooser(tr("Pla&ylists"), player->getParentOfPlugin());
 	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
 	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
@@ -178,7 +177,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	_pph->addPlugin(ui_level);
 	_pph->addPlugin(ui_spectrum);
 	_pph->addPlugin(ui_eq);
-	_pph->addPlugin(ui_lfm_radio);
+//	_pph->addPlugin(ui_lfm_radio);
 	_pph->addPlugin(ui_stream);
 	_pph->addPlugin(ui_podcasts);
 	_pph->addPlugin(ui_playlist_chooser);
@@ -191,7 +190,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	qDebug() << "Plugin " << ui_eq->getVisName();
 	qDebug() << "Plugin " << ui_playlist_chooser->getVisName();
 	qDebug() << "Plugin " << ui_podcasts->getVisName();
-	qDebug() << "Plugin " << ui_lfm_radio->getVisName();
+//	qDebug() << "Plugin " << ui_lfm_radio->getVisName();
 	qDebug() << "Plugin " << ui_audioconverter->getVisName();
 	qDebug() << "Plugin " << ui_bookmarks->getVisName();
 	qDebug() << "Plugin " << ui_speed->getVisName();
@@ -298,7 +297,7 @@ Application::~Application() {
     delete ui_library;
     delete ui_id3_editor;
     delete ui_stream_rec;
-    delete ui_lfm_radio;
+//    delete ui_lfm_radio;
     delete ui_eq;
     delete ui_stream;
     delete ui_podcasts;
@@ -489,9 +488,9 @@ void Application::init_connections() {
 
     CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist_handler,	psl_similar_artists_available(const QList<int>&));
     CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
-    CONNECT(lastfm,  sig_track_info_fetched(const MetaData&, bool, bool),   player,		lfm_info_fetched(const MetaData&, bool, bool));
-    CONNECT(lastfm, sig_create_playlist(MetaDataList&, bool),               playlist_handler,   psl_createPlaylist(MetaDataList&, bool));
-    CONNECT(lastfm, sig_new_radio_playlist(MetaDataList&),                  playlist_handler,   psl_append_tracks(MetaDataList&));
+    CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),   player,		lfm_info_fetched(const MetaData&, bool, bool));
+//    CONNECT(lastfm, sig_create_playlist(MetaDataList&, bool),               playlist_handler,   psl_createPlaylist(MetaDataList&, bool));
+//    CONNECT(lastfm, sig_new_radio_playlist(MetaDataList&),                  playlist_handler,   psl_append_tracks(MetaDataList&));
 
 
     CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
@@ -505,27 +504,17 @@ void Application::init_connections() {
     CONNECT(playlists, sig_single_playlist_loaded(CustomPlaylist&),      playlist_handler, 				psl_createPlaylist(CustomPlaylist&));
 	CONNECT(playlists, sig_all_playlists_loaded(QMap<int, QString>&), 	 ui_playlist_chooser, 	all_playlists_fetched(QMap<int, QString>&));
 
-
-
-
-
-    qDebug() << "stream";
     CONNECT(ui_stream, sig_create_playlist(MetaDataList&, bool), 	playlist_handler, 	psl_createPlaylist(MetaDataList&, bool));
     CONNECT(ui_stream, sig_play_track(int, qint32, bool),           playlist_handler,   psl_change_track(int, qint32, bool));
 
-    qDebug() << "podcasts";
     CONNECT(ui_podcasts, sig_create_playlist(MetaDataList&, bool), 	  playlist_handler, 	psl_createPlaylist(MetaDataList&, bool));
     CONNECT(ui_podcasts, sig_play_track(int, qint32, bool),           playlist_handler,   psl_change_track(int, qint32, bool));
-
 
     CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	listen,		psl_sr_set_active(bool));
     CONNECT (ui_stream_rec, sig_stream_recorder_active(bool),	player,     psl_strrip_set_active(bool));
 
     CONNECT (ui_style_settings, sig_style_update(),             ui_spectrum, psl_style_update());
     CONNECT (ui_style_settings, sig_style_update(),             ui_level, psl_style_update());
-
-
-
 
     bool is_socket_active = set->getSocketActivated();
     if(is_socket_active) {
@@ -552,7 +541,7 @@ void Application::connect_languages() {
      CONNECT (player, sig_language_changed(),	ui_podcasts,            language_changed());
      CONNECT (player, sig_language_changed(),	ui_eq,                  language_changed());
 
-     CONNECT (player, sig_language_changed(),	ui_lfm_radio,           language_changed());
+//     CONNECT (player, sig_language_changed(),	ui_lfm_radio,           language_changed());
      CONNECT (player, sig_language_changed(),	ui_stream_rec,          language_changed());
      CONNECT (player, sig_language_changed(),	ui_id3_editor,          language_changed());
 

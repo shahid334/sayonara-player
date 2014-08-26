@@ -27,7 +27,6 @@
 #include "GUI/library/GUI_LibraryPath.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
@@ -41,8 +40,6 @@
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
-
-#include "HelperStructs/Helper.h"
 #include "HelperStructs/AsyncWebAccess.h"
 
 #include <QMainWindow>

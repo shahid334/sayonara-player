@@ -32,7 +32,7 @@
 #include "GUI/playlist/GUI_Playlist.h"
 
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "GUI/LastFM/GUI_LFMRadioWidget.h"
+// #include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
@@ -104,7 +104,7 @@ private:
 	GUI_Stream	*           ui_stream;
 	GUI_Podcasts*           ui_podcasts;
 	GUI_Equalizer*          ui_eq;
-	GUI_LFMRadioWidget*     ui_lfm_radio;
+//	GUI_LFMRadioWidget*     ui_lfm_radio;
 	GUI_Bookmarks*          ui_bookmarks;
 	GUI_Speed*				ui_speed;
 	PlayerPluginHandler*    _pph;

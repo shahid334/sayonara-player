@@ -170,6 +170,9 @@ bool MiniSearcher::isInitialized() {
 
 void MiniSearcher::keyPressEvent(QKeyEvent* event) {
 
+	int* i = 0;
+	qDebug() << i[0];
+
 	int key = event->key();
 
 	switch(key) {
