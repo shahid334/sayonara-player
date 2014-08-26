@@ -45,10 +45,6 @@ public:
 public:
     virtual void setContent(const MetaData& md, int idx);
 
-private:
-    Ui::PlaylistEntryBig* ui;
-
-
 };
 
 #endif /* GUI_PLAYLISTENTRY_H_ */

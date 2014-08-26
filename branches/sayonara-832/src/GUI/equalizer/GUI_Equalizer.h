@@ -105,7 +105,6 @@ public:
 
 	private:
 
-        Ui::GUI_Equalizer* _ui;
 		vector<EQ_Setting> _presets;
 		CSettingsStorage* _settings;
 		vector<EqSlider*> _sliders;

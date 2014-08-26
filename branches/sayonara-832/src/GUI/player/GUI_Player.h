@@ -226,8 +226,6 @@ protected:
 
 private:
 
-    Ui::Sayonara*       ui;
-
     GUI_Playlist*           ui_playlist;
     GUI_Library_windowed*   ui_library;
     GUI_LibraryPath*        ui_libpath;

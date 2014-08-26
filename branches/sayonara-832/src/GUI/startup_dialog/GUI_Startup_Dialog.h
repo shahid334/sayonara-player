@@ -42,9 +42,6 @@ private slots:
     void cb_toggled(bool);
     void ok_clicked();
 
-private:
-    Ui::GUI_StartupDialog* ui;
-    
 };
 
 #endif // GUI_STARTUP_DIALOG_H

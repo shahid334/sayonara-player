@@ -1,9 +1,6 @@
 PROJECT(sayonara_gui)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
-#SET(QT_USE_QTSQL TRUE)
-#SET(QT_USE_QTXML TRUE)
-#SET(QT_USE_QTNETWORK TRUE)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src) 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/GUI) 
@@ -15,12 +12,12 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
-
     SearchableWidget.h
     MiniSearcher.h
     RatingLabel.h
     AudioConverter/GUI_AudioConverter.h
     bookmarks/GUI_Bookmarks.h
+    engine/EnginePlugin.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
@@ -38,7 +35,6 @@ SET(HEADERS
     playlist_chooser/GUI_PlaylistChooser.h
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
     LastFM/GUI_LastFM.h
-#    LastFM/GUI_LFMRadioWidget.h
     library/GUI_Library_windowed.h
     library/view/LibraryView.h    
     library/model/LibraryItemModel.h
@@ -68,10 +64,7 @@ SET(HEADERS
     startup_dialog/GUI_Startup_Dialog.h
     LanguageChooser/GUI_LanguageChooser.h
     speed/GUI_Speed.h
-#   soundcloud/GUI_SoundCloudLibrary.h
-
 )
-
 
 SET(SOURCES
 
@@ -101,7 +94,6 @@ SET(SOURCES
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
-    #LastFM/GUI_LFMRadioWidget.cpp
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
     library/view/LibraryViewHeader.cpp
@@ -131,8 +123,6 @@ SET(SOURCES
     SocketConfiguration/GUISocketSetup.cpp
     LanguageChooser/GUI_LanguageChooser.cpp
     speed/GUI_Speed.cpp
-#    soundcloud/GUI_SoundCloudLibrary.cpp
-
 )
 
 

@@ -52,7 +52,6 @@ private slots:
 	
 private:
 	CSettingsStorage* _settings;
-	Ui::GUI_AudioConvert* ui;
 	LameBitrate _bitrate;
 
 	void fill_cbr();

@@ -37,37 +37,38 @@
 #include "GUI/ui_GUI_PlaylistChooser.h"
 
 
-GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) : PlayerPlugin(name, parent) {
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent),
+	Ui::GUI_PlaylistChooser()
+{
+
+	setupUi(this);
 
 	_cur_idx = -1;
     _dark = false;
     _text_before_save = "";
 
-
-    this->ui = new Ui::GUI_PlaylistChooser();
-	this->ui->setupUi(this);
-
     QPixmap p = QPixmap(Helper::getIconPath() + "lyrics.png").scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    this->ui->lab_icon->setPixmap(p);
+	lab_icon->setPixmap(p);
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
     _last_dir = CSettingsStorage::getInstance()->getLibraryPath();
 
-	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->ui->btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
-	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
+	btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
+	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
 
 
-    this->ui->btn_delete->setEnabled(false);
-    this->ui->btn_save->setEnabled(false);
-    this->ui->btn_save_as->setEnabled(false);
+	btn_delete->setEnabled(false);
+	btn_save->setEnabled(false);
+	btn_save_as->setEnabled(false);
 
-    connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
-    connect(this->ui->btn_save_as, SIGNAL(clicked()), this, SLOT(save_as_button_pressed()));
-    connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_button_pressed()));
-    connect(this->ui->btn_load, SIGNAL(clicked()), this, SLOT(load_button_pressed()));
-    connect(this->ui->combo_playlistchooser, SIGNAL(activated(int)), this, SLOT(playlist_selected(int)));
-    connect(this->ui->combo_playlistchooser, SIGNAL(editTextChanged( const QString & )), this, SLOT(text_changed ( const QString & )));
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+	connect(btn_save_as, SIGNAL(clicked()), this, SLOT(save_as_button_pressed()));
+	connect(btn_delete, SIGNAL(clicked()), this, SLOT(delete_button_pressed()));
+	connect(btn_load, SIGNAL(clicked()), this, SLOT(load_button_pressed()));
+	connect(combo_playlistchooser, SIGNAL(activated(int)), this, SLOT(playlist_selected(int)));
+	connect(combo_playlistchooser, SIGNAL(editTextChanged( const QString & )), this, SLOT(text_changed ( const QString & )));
     connect(_target_playlist_dialog, SIGNAL(sig_target_chosen(QString,bool)), this, SLOT(got_save_params(QString,bool)));
 
     hide();
@@ -81,7 +82,7 @@ GUI_PlaylistChooser::~GUI_PlaylistChooser() {
 
 
 void GUI_PlaylistChooser::language_changed() {
-    this->ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 void GUI_PlaylistChooser::changeSkin(bool dark) {
@@ -91,29 +92,29 @@ void GUI_PlaylistChooser::changeSkin(bool dark) {
 
 void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping) {
     int tmp_cur_idx = _cur_idx;
-	this->ui->combo_playlistchooser->clear();
-    this->ui->combo_playlistchooser->addItem("", -1);
+	combo_playlistchooser->clear();
+	combo_playlistchooser->addItem("", -1);
 
 	QList<int> keys = mapping.keys();
 	foreach(int key, keys) {
 		QString name = mapping.value(key);
-		this->ui->combo_playlistchooser->addItem(name, key);
+		combo_playlistchooser->addItem(name, key);
 	}
 
     _cur_idx = tmp_cur_idx;
 
-    if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx >= 0)
-        this->ui->combo_playlistchooser->setCurrentIndex(_cur_idx);
+	if(_cur_idx < combo_playlistchooser->count() && _cur_idx >= 0)
+		combo_playlistchooser->setCurrentIndex(_cur_idx);
 
     if(_text_before_save.size() > 0) {
-        int idx = this->ui->combo_playlistchooser->findText(_text_before_save);
-        if(idx > 0 && idx < this->ui->combo_playlistchooser->count()) {
-            this->ui->combo_playlistchooser->setCurrentIndex(idx);
+		int idx = combo_playlistchooser->findText(_text_before_save);
+		if(idx > 0 && idx < combo_playlistchooser->count()) {
+			combo_playlistchooser->setCurrentIndex(idx);
             _cur_idx = idx;
         }
     }
 
-    text_changed(this->ui->combo_playlistchooser->currentText());
+	text_changed(combo_playlistchooser->currentText());
 }
 
 // Playlist -> this
@@ -122,34 +123,34 @@ void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, Play
     Q_UNUSED(i);
     bool empty = (v_md.size() == 0);
 
-    this->ui->btn_save->setEnabled(!empty && playlist_type == PlaylistTypeStd);
-    this->ui->btn_save_as->setEnabled(!empty && playlist_type == PlaylistTypeStd);
+	btn_save->setEnabled(!empty && playlist_type == PlaylistTypeStd);
+	btn_save_as->setEnabled(!empty && playlist_type == PlaylistTypeStd);
 
     if(empty)
-        this->ui->le_playlist_file->clear();
+		le_playlist_file->clear();
 
-    text_changed(this->ui->combo_playlistchooser->currentText());
+	text_changed(combo_playlistchooser->currentText());
 }
 
 
 
 void GUI_PlaylistChooser::save_button_pressed() {
 
-    if(_cur_idx >= this->ui->combo_playlistchooser->count()) return;
+	if(_cur_idx >= combo_playlistchooser->count()) return;
 
-    QString cur_text = this->ui->combo_playlistchooser->currentText();
+	QString cur_text = combo_playlistchooser->currentText();
     _text_before_save = cur_text;
 
     QStringList lst;
-    for(int i=0; i<this->ui->combo_playlistchooser->count(); i++) {
-        QString txt = this->ui->combo_playlistchooser->itemText(i);
+	for(int i=0; i<combo_playlistchooser->count(); i++) {
+		QString txt = combo_playlistchooser->itemText(i);
         if(txt.size() > 0)
             lst << txt.toLower();
     }
 
     if( lst.contains(cur_text.toLower()) ) {
 
-        int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
+		int val = combo_playlistchooser->itemData(_cur_idx).toInt();
         int answer = show_warning(tr("Overwrite?"));
 
 		if(answer == QMessageBox::Yes)
@@ -179,8 +180,8 @@ void GUI_PlaylistChooser::delete_button_pressed() {
     _text_before_save = "";
     int answer = show_warning(tr("Delete?"));
 
-	if(_cur_idx < this->ui->combo_playlistchooser->count() && _cur_idx != -1) {
-		int val = this->ui->combo_playlistchooser->itemData(_cur_idx).toInt();
+	if(_cur_idx < combo_playlistchooser->count() && _cur_idx != -1) {
+		int val = combo_playlistchooser->itemData(_cur_idx).toInt();
 		if(val >= 0 && answer == QMessageBox::Yes)
 			emit sig_delete_playlist(val);
 	}
@@ -190,17 +191,17 @@ void GUI_PlaylistChooser::delete_button_pressed() {
 void GUI_PlaylistChooser::playlist_selected(int idx) {
 
 	_cur_idx = idx;
-    if(_cur_idx >= this->ui->combo_playlistchooser->count() || _cur_idx < 0) return;
+	if(_cur_idx >= combo_playlistchooser->count() || _cur_idx < 0) return;
 
-	int val = this->ui->combo_playlistchooser->itemData(idx).toInt();
+	int val = combo_playlistchooser->itemData(idx).toInt();
     bool val_bigger_zero = (val > 0);
-	this->ui->btn_delete->setEnabled(val_bigger_zero);
-    text_changed(this->ui->combo_playlistchooser->currentText());
+	btn_delete->setEnabled(val_bigger_zero);
+	text_changed(combo_playlistchooser->currentText());
 
 
     emit sig_playlist_chosen(val);
 
-    this->ui->le_playlist_file->clear();
+	le_playlist_file->clear();
 }
 
 
@@ -225,7 +226,7 @@ void GUI_PlaylistChooser::load_button_pressed() {
     if(lab_text.size() > 2)
         lab_text = lab_text.left(lab_text.size() - 2);
 
-    this->ui->le_playlist_file->setText(lab_text);
+	le_playlist_file->setText(lab_text);
 
     if(filelist.size() > 0) {
         emit sig_files_selected(filelist);
@@ -235,16 +236,16 @@ void GUI_PlaylistChooser::load_button_pressed() {
 
 void GUI_PlaylistChooser::text_changed(const QString & text) {
 
-    this->ui->btn_save->setEnabled(text.size() > 0);
+	btn_save->setEnabled(text.size() > 0);
 
     QStringList lst;
-    for(int i=0; i<this->ui->combo_playlistchooser->count(); i++) {
-        QString txt = this->ui->combo_playlistchooser->itemText(i);
+	for(int i=0; i<combo_playlistchooser->count(); i++) {
+		QString txt = combo_playlistchooser->itemText(i);
         if(txt.size() > 0)
             lst << txt.toLower();
     }
 
-    this->ui->btn_delete->setEnabled(lst.contains(text.toLower()));
+	btn_delete->setEnabled(lst.contains(text.toLower()));
 }
 
 

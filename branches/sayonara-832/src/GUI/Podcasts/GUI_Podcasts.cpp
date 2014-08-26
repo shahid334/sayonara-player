@@ -35,11 +35,12 @@
 #include <QMessageBox>
 
 
-GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) : PlayerPlugin(name, parent)
+GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent),
+	Ui::GUI_Podcasts()
 {
 
-    this->ui = new Ui::GUI_Podcasts();
-    this->ui->setupUi(this);
+	setupUi(this);
 
     init_gui();
 
@@ -47,18 +48,19 @@ GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) : PlayerPlugin(name, p
 
     QMap<QString, QString> data;
     CDatabaseConnector::getInstance()->getAllPodcasts(data);
-    if(data.size() > 0)
-        setup_podcasts(data);
+	if(data.size() > 0){
+		setup_podcasts(data);
+	}
 
-    this->ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-    this->connect(this->ui->btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
-    this->connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
-    this->connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_clicked()));
-    this->connect(this->ui->combo_podcasts, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_index_changed(int)));
-    this->connect(this->ui->combo_podcasts, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
+	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
+	connect(btn_delete, SIGNAL(clicked()), this, SLOT(delete_clicked()));
+	connect(combo_podcasts, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_index_changed(int)));
+	connect(combo_podcasts, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
 
-    this->connect(this->ui->le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
+	connect(le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
 
     hide();
 }
@@ -69,7 +71,7 @@ GUI_Podcasts::~GUI_Podcasts() {
 }
 
 void GUI_Podcasts::language_changed() {
-    this->ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 
@@ -79,7 +81,7 @@ void GUI_Podcasts::listen_clicked() {
     QString name;
 
     if(_cur_podcast == -1) {
-        url = this->ui->le_url->text();
+		url = le_url->text();
         name = "Podcast";
     }
 
@@ -103,7 +105,7 @@ void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts) {
         _cur_podcast = -1;
     }
 
-    this->ui->combo_podcasts->clear();
+	combo_podcasts->clear();
 
     _cur_podcast_adress = "";
     _cur_podcast_name = "";
@@ -112,43 +114,43 @@ void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts) {
     _podcasts[""] = "";
 
     for(QMap<QString, QString>::iterator it = _podcasts.begin(); it != _podcasts.end(); it++) {
-        this->ui->combo_podcasts->addItem(it.key(), it.value());
+		combo_podcasts->addItem(it.key(), it.value());
     }
 
-    this->ui->btn_listen->setEnabled(false);
-    this->ui->btn_save->setEnabled(false);
-    this->ui->btn_delete->setEnabled(false);
+	btn_listen->setEnabled(false);
+	btn_save->setEnabled(false);
+	btn_delete->setEnabled(false);
 }
 
 
 void GUI_Podcasts::init_gui() {
-    this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
-    this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
+	btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
 
-    this->ui->lab_icon->setPixmap(QPixmap(Helper::getIconPath() + "podcast.png"));
+	lab_icon->setPixmap(QPixmap(Helper::getIconPath() + "podcast.png"));
 }
 
 
 void GUI_Podcasts::combo_index_changed(int idx) {
 
     _cur_podcast = idx;
-    _cur_podcast_name = this->ui->combo_podcasts->itemText(_cur_podcast);
+	_cur_podcast_name = combo_podcasts->itemText(_cur_podcast);
 
     QString adress = _podcasts[_cur_podcast_name];
     if(adress.size() > 0) {
         _cur_podcast_adress = adress;
-        this->ui->le_url->setText(_cur_podcast_adress);
+		le_url->setText(_cur_podcast_adress);
     }
 
     if(idx == 0) {
-        this->ui->le_url->setText("");
+		le_url->setText("");
     }
 
 
-    this->ui->btn_delete->setEnabled(idx > 0);
-    this->ui->btn_save->setEnabled(false);
-    this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
-    this->ui->combo_podcasts->setToolTip(_cur_podcast_adress);
+	btn_delete->setEnabled(idx > 0);
+	btn_save->setEnabled(false);
+	btn_listen->setEnabled(le_url->text().size() > 5);
+	combo_podcasts->setToolTip(_cur_podcast_adress);
 }
 
 
@@ -157,8 +159,8 @@ void GUI_Podcasts::combo_text_changed(const QString& text) {
 
 
     bool name_there = false;
-    for(int i=0; i<this->ui->combo_podcasts->count(); i++) {
-        QString str = this->ui->combo_podcasts->itemText(i);
+	for(int i=0; i<combo_podcasts->count(); i++) {
+		QString str = combo_podcasts->itemText(i);
         if(!str.compare(text, Qt::CaseSensitive)) {
             name_there = true;
             break;
@@ -166,10 +168,10 @@ void GUI_Podcasts::combo_text_changed(const QString& text) {
     }
 
 
-    this->ui->btn_delete->setEnabled(name_there);
-    this->ui->btn_save->setEnabled(!name_there && (text.size() > 0));
-    this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
-    this->ui->combo_podcasts->setToolTip("");
+	btn_delete->setEnabled(name_there);
+	btn_save->setEnabled(!name_there && (text.size() > 0));
+	btn_listen->setEnabled(le_url->text().size() > 5);
+	combo_podcasts->setToolTip("");
 }
 
 void GUI_Podcasts::url_text_changed(const QString& text) {
@@ -178,30 +180,30 @@ void GUI_Podcasts::url_text_changed(const QString& text) {
 
     if(! key.isEmpty() ) {
 
-        int idx = this->ui->combo_podcasts->findText(key, Qt::MatchCaseSensitive);
+		int idx = combo_podcasts->findText(key, Qt::MatchCaseSensitive);
         if(idx != -1) {
-            this->ui->combo_podcasts->setCurrentIndex(idx);
+			combo_podcasts->setCurrentIndex(idx);
             _cur_podcast = idx;
-            this->ui->btn_save->setEnabled(false);
-            this->ui->btn_delete->setEnabled(true);
+			btn_save->setEnabled(false);
+			btn_delete->setEnabled(true);
         }
     }
 
     // new adress
     else{
 
-        this->ui->btn_delete->setEnabled(false);
+		btn_delete->setEnabled(false);
 
         bool save_enabled =
-                this->ui->combo_podcasts->currentText().size() > 0 &&
-                this->ui->le_url->text().size() > 5 &&
+				combo_podcasts->currentText().size() > 0 &&
+				le_url->text().size() > 5 &&
                 _cur_podcast == -1;
 
-        this->ui->btn_save->setEnabled(save_enabled);
-        this->ui->btn_listen->setEnabled(text.size() > 5);
+		btn_save->setEnabled(save_enabled);
+		btn_listen->setEnabled(text.size() > 5);
         if(_cur_podcast != -1) {
             _cur_podcast = -1;
-            this->ui->combo_podcasts->setEditText(tr("new"));
+			combo_podcasts->setEditText(tr("new"));
             _cur_podcast = -1;
         }
     }
@@ -238,8 +240,8 @@ void GUI_Podcasts::delete_clicked() {
 
 void GUI_Podcasts::save_clicked() {
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    QString name = this->ui->combo_podcasts->currentText();
-    QString url = this->ui->le_url->text();
+	QString name = combo_podcasts->currentText();
+	QString url = le_url->text();
 
     bool success = false;
     if(name.size() > 0 && url.size() > 0) {
@@ -255,7 +257,7 @@ void GUI_Podcasts::save_clicked() {
 
 
     _cur_podcast = -1;
-    this->ui->le_url->setText(url);
+	le_url->setText(url);
     url_text_changed(url);
 }
 

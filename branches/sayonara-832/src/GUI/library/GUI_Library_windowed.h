@@ -77,7 +77,6 @@ public:
 
 
 protected:
-	Ui::Library_windowed* 			ui;
 
 	LibraryItemModelTracks* 		_track_model;
 	LibraryItemDelegateTracks* 		_track_delegate;

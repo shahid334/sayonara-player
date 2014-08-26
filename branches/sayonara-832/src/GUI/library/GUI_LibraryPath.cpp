@@ -26,20 +26,19 @@
 
 
 GUI_LibraryPath::GUI_LibraryPath(QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent),
+	Ui::GUI_SetLibrary()
 {
-    ui = new Ui::GUI_SetLibrary();
-    ui->setupUi(this);
-
+	setupUi(this);
 
     QIcon import(Helper::getIconPath() + "/import.png" );
-    this->ui->btn_setLibrary->setIcon(import);
+	btn_setLibrary->setIcon(import);
 
-    connect(ui->btn_setLibrary, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+	connect(btn_setLibrary, SIGNAL(clicked()), this, SLOT(btn_clicked()));
 }
 
 void GUI_LibraryPath::language_changed() {
-    ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 

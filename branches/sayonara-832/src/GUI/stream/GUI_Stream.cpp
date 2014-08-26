@@ -35,9 +35,11 @@
 #include <QPixmap>
 
 
-GUI_Stream::GUI_Stream(QString name, QWidget *parent) : PlayerPlugin(name, parent)  {
-	this->ui = new Ui::GUI_Stream();
-	this->ui->setupUi(this);
+GUI_Stream::GUI_Stream(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent),
+	Ui::GUI_Stream() {
+
+	setupUi(this);
 
 	init_gui();
 	_cur_station = -1;
@@ -47,15 +49,15 @@ GUI_Stream::GUI_Stream(QString name, QWidget *parent) : PlayerPlugin(name, paren
 	if(data.size() > 0)
 		setup_stations(data);
 
-	this->ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+	btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
 
-	this->connect(this->ui->btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
-	this->connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
-	this->connect(this->ui->btn_delete, SIGNAL(clicked()), this, SLOT(delete_clicked()));
-	this->connect(this->ui->combo_stream, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_index_changed(int)));
-	this->connect(this->ui->combo_stream, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
+	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
+	connect(btn_delete, SIGNAL(clicked()), this, SLOT(delete_clicked()));
+	connect(combo_stream, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_index_changed(int)));
+	connect(combo_stream, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));
 
-	this->connect(this->ui->le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
+	connect(le_url, SIGNAL(textEdited(const QString&)), this, SLOT(url_text_changed(const QString&)));
 
     hide();
 }
@@ -71,7 +73,7 @@ void GUI_Stream::changeSkin(bool dark) {
 }
 
 void GUI_Stream::language_changed() {
-    this->ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 
@@ -81,7 +83,7 @@ void GUI_Stream::listen_clicked() {
 	QString name;
 
 	if(_cur_station == -1) {
-        url = this->ui->le_url->text();
+		url = le_url->text();
         name = tr("Radio");
 	}
 
@@ -105,7 +107,7 @@ void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations) {
 		_cur_station = -1;
 	}
 
-	this->ui->combo_stream->clear();
+	combo_stream->clear();
 
 	_cur_station_adress = "";
 	_cur_station_name = "";
@@ -114,43 +116,43 @@ void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations) {
 	_stations[""] = "";
 
 	for(QMap<QString, QString>::iterator it = _stations.begin(); it != _stations.end(); it++) {
-		this->ui->combo_stream->addItem(it.key(), it.value());
+		combo_stream->addItem(it.key(), it.value());
 	}
 
-	this->ui->btn_listen->setEnabled(false);
-	this->ui->btn_save->setEnabled(false);
-	this->ui->btn_delete->setEnabled(false);
+	btn_listen->setEnabled(false);
+	btn_save->setEnabled(false);
+	btn_delete->setEnabled(false);
 }
 
 
 void GUI_Stream::init_gui() {
-	this->ui->btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
-	this->ui->btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
+	btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
     QPixmap pixmap = QPixmap(Helper::getIconPath() + "radio.png").scaled(QSize(50, 50), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    this->ui->lab_icon->setPixmap(pixmap);
+	lab_icon->setPixmap(pixmap);
 }
 
 
 void GUI_Stream::combo_index_changed(int idx) {
 
 	_cur_station = idx;
-	_cur_station_name = this->ui->combo_stream->itemText(_cur_station);
+	_cur_station_name = combo_stream->itemText(_cur_station);
 
 	QString adress = _stations[_cur_station_name];
 	if(adress.size() > 0) {
 		_cur_station_adress = adress;
-		this->ui->le_url->setText(_cur_station_adress);
+		le_url->setText(_cur_station_adress);
 	}
 
 	if(idx == 0) {
-		this->ui->le_url->setText("");
+		le_url->setText("");
 	}
 
 
-	this->ui->btn_delete->setEnabled(idx > 0);
-	this->ui->btn_save->setEnabled(false);
-	this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
-	this->ui->combo_stream->setToolTip(_cur_station_adress);
+	btn_delete->setEnabled(idx > 0);
+	btn_save->setEnabled(false);
+	btn_listen->setEnabled(le_url->text().size() > 5);
+	combo_stream->setToolTip(_cur_station_adress);
 }
 
 
@@ -158,18 +160,18 @@ void GUI_Stream::combo_text_changed(const QString& text) {
 	_cur_station = -1;
 
     bool name_there = false;
-    for(int i=0; i<this->ui->combo_stream->count(); i++) {
-        QString str = this->ui->combo_stream->itemText(i);
+	for(int i=0; i<combo_stream->count(); i++) {
+		QString str = combo_stream->itemText(i);
         if(!str.compare(text, Qt::CaseSensitive)) {
             name_there = true;
             break;
         }
     }
 
-    this->ui->btn_delete->setEnabled(name_there);
-    this->ui->btn_save->setEnabled((!name_there) && (text.size() > 0));
-	this->ui->btn_listen->setEnabled(this->ui->le_url->text().size() > 5);
-	this->ui->combo_stream->setToolTip("");
+	btn_delete->setEnabled(name_there);
+	btn_save->setEnabled((!name_there) && (text.size() > 0));
+	btn_listen->setEnabled(le_url->text().size() > 5);
+	combo_stream->setToolTip("");
 }
 
 void GUI_Stream::url_text_changed(const QString& text) {
@@ -178,30 +180,30 @@ void GUI_Stream::url_text_changed(const QString& text) {
 
 	if(! key.isEmpty() ) {
 
-		int idx = this->ui->combo_stream->findText(key, Qt::MatchCaseSensitive);
+		int idx = combo_stream->findText(key, Qt::MatchCaseSensitive);
 		if(idx != -1) {
-			this->ui->combo_stream->setCurrentIndex(idx);
+			combo_stream->setCurrentIndex(idx);
 			_cur_station = idx;
-			this->ui->btn_save->setEnabled(false);
-			this->ui->btn_delete->setEnabled(true);
+			btn_save->setEnabled(false);
+			btn_delete->setEnabled(true);
 		}
 	}
 
 	// new adress
 	else{
 
-		this->ui->btn_delete->setEnabled(false);
+		btn_delete->setEnabled(false);
 
 		bool save_enabled =
-				this->ui->combo_stream->currentText().size() > 0 &&
-				this->ui->le_url->text().size() > 5 &&
+				combo_stream->currentText().size() > 0 &&
+				le_url->text().size() > 5 &&
 				_cur_station == -1;
 
-		this->ui->btn_save->setEnabled(save_enabled);
-		this->ui->btn_listen->setEnabled(text.size() > 5);
+		btn_save->setEnabled(save_enabled);
+		btn_listen->setEnabled(text.size() > 5);
 		if(_cur_station != -1) {
 			_cur_station = -1;
-            this->ui->combo_stream->setEditText(tr("new"));
+			combo_stream->setEditText(tr("new"));
 			_cur_station = -1;
 		}
 	}
@@ -236,8 +238,8 @@ void GUI_Stream::delete_clicked() {
 
 void GUI_Stream::save_clicked() {
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-	QString name = this->ui->combo_stream->currentText();
-	QString url = this->ui->le_url->text();
+	QString name = combo_stream->currentText();
+	QString url = le_url->text();
 
 	bool success = false;
 	if(name.size() > 0 && url.size() > 0) {
@@ -253,7 +255,7 @@ void GUI_Stream::save_clicked() {
 
 
 	_cur_station = -1;
-    this->ui->le_url->setText(url);
+	le_url->setText(url);
     url_text_changed(url);
 }
 

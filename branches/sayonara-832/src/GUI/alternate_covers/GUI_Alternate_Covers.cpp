@@ -48,10 +48,12 @@
 
 
 
-GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) : QDialog(parent) {
+GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) :
+	QDialog(parent),
+	Ui::AlternateCovers()
+{
 
-	ui = new Ui::AlternateCovers();
-	ui->setupUi(this);
+	setupUi(this);
 
 	_cl_alternative = 0;
 
@@ -67,14 +69,14 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
     _model = new AlternateCoverItemModel(this);
     _delegate = new AlternateCoverItemDelegate(this);
 
-	ui->tv_images->setModel(_model);
-	ui->tv_images->setItemDelegate(_delegate);
+	tv_images->setModel(_model);
+	tv_images->setItemDelegate(_delegate);
 
-	connect(ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
-	connect(ui->btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
-	connect(ui->btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
-	connect(ui->tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
-	connect(ui->btn_file, SIGNAL(clicked()), this, SLOT(open_file_dialog()));
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+	connect(btn_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_pressed()));
+	connect(btn_search, SIGNAL(clicked()), this, SLOT(search_button_pressed()));
+	connect(tv_images, SIGNAL(pressed(const QModelIndex& )), this, SLOT(cover_pressed(const QModelIndex& )));
+	connect(btn_file, SIGNAL(clicked()), this, SLOT(open_file_dialog()));
 }
 
 
@@ -88,7 +90,6 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 
 	delete_all_files();
 
-	delete ui;
 }
 
 void GUI_Alternate_Covers::changeSkin(bool dark) {
@@ -96,7 +97,7 @@ void GUI_Alternate_Covers::changeSkin(bool dark) {
 }
 
 void GUI_Alternate_Covers::language_changed() {
-	ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 void GUI_Alternate_Covers::connect_and_start() {
@@ -109,7 +110,7 @@ void GUI_Alternate_Covers::connect_and_start() {
 
 	_cl_alternative->start();
 
-	this->show();
+	show();
 }
 
 
@@ -122,12 +123,12 @@ void GUI_Alternate_Covers::start(int album_id) {
 
     if( !db->getAlbumByID(album_id, album) ) return;
 
-    this->start(album);
+	start(album);
 }
 
 void GUI_Alternate_Covers::start(Album album) {
 
-    ui->le_search->setText(album.name + " " + Helper::get_major_artist(album.artists));
+	le_search->setText(album.name + " " + Helper::get_major_artist(album.artists));
 	_target_filename = CoverLocation::get_cover_location(album);
     _cl_alternative = new CoverLookupAlternative(this, album, 10);
 
@@ -137,7 +138,7 @@ void GUI_Alternate_Covers::start(Album album) {
 
 void GUI_Alternate_Covers::start(QString album_name, QString artist_name) {
 
-    ui->le_search->setText(album_name + " " + artist_name);
+	le_search->setText(album_name + " " + artist_name);
 	_target_filename = CoverLocation::get_cover_location(album_name, artist_name);
     _cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
 
@@ -146,7 +147,7 @@ void GUI_Alternate_Covers::start(QString album_name, QString artist_name) {
 
 void GUI_Alternate_Covers::start(Artist artist) {
 
-    ui->le_search->setText(artist.name);
+	le_search->setText(artist.name);
 	_target_filename = CoverLocation::get_cover_location(artist);
     _cl_alternative = new CoverLookupAlternative(this, artist, 10);
 
@@ -157,7 +158,7 @@ void GUI_Alternate_Covers::start(Artist artist) {
 
 void GUI_Alternate_Covers::start(QString artist_name) {
 
-    ui->le_search->setText(artist_name);
+	le_search->setText(artist_name);
 	_target_filename = CoverLocation::get_cover_location(artist_name);
 	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
 
@@ -172,7 +173,7 @@ CoverLocation GUI_Alternate_Covers::get_target_filename(){
 
 void GUI_Alternate_Covers::search_button_pressed() {
 
-	_cl_alternative = new CoverLookupAlternative(this, ui->le_search->text(), 10);
+	_cl_alternative = new CoverLookupAlternative(this, le_search->text(), 10);
 	connect_and_start();
 
 }
@@ -246,7 +247,7 @@ void GUI_Alternate_Covers::cl_new_cover(QString str) {
 
 
 void GUI_Alternate_Covers::cl_finished(bool b) {
-	ui->btn_search->setText(tr("Search"));
+	btn_search->setText(tr("Search"));
 }
 
 

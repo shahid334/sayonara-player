@@ -36,18 +36,21 @@ float log_lu[1100];
 
 
 GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
-	PlayerPlugin(name, parent)
+	EnginePlugin(name, parent, this),
+	Ui::GUI_Spectrum()
 {
 
+	setupUi(this);
+
     _cur_style_idx = CSettingsStorage::getInstance()->getSpectrumStyle();
-    ui = new Ui::GUI_Spectrum();
-    ui->setupUi(this);
+
     _timer = new QTimer();
     _timer->setInterval(30);
     _timer_stopped = true;
-    connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
 
-    _ecsc = new EngineColorStyleChooser(this->minimumWidth(), this->minimumHeight());
+	connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
+
+	_ecsc = new EngineColorStyleChooser(minimumWidth(), minimumHeight());
     _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
 
     _update_running = false;
@@ -69,8 +72,30 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
         }
     }
 
+	_btn_config = new QPushButton("...", this);
+	_btn_config->setGeometry(10, 10, 20, 20);
 
-    this->update();
+	_btn_prev = new QPushButton("<", this);
+	_btn_prev->setGeometry(35, 10, 20, 20);
+
+	_btn_next = new QPushButton(">", this);
+	_btn_next->setGeometry(60, 10, 20, 20);
+
+	_btn_close = new QPushButton("x", this);
+	_btn_close->setGeometry(85, 10, 20, 20);
+
+	connect(_btn_config, SIGNAL(clicked()), this, SLOT(config_clicked()));
+	connect(_btn_prev, SIGNAL(clicked()), this, SLOT(prev_clicked()));
+	connect(_btn_next, SIGNAL(clicked()), this, SLOT(next_clicked()));
+	connect(_btn_close, SIGNAL(clicked()), this, SLOT(close()));
+
+	_btn_config->hide();
+	_btn_prev->hide();
+	_btn_next->hide();
+	_btn_close->hide();
+
+
+	update();
 
 }
 
@@ -105,7 +130,7 @@ GUI_Spectrum::set_spectrum(QList<float>& lst) {
     if(!_timer_stopped) _timer->stop();
 
     _spec = lst;
-    this->update();
+	update();
 }
 
 
@@ -115,7 +140,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e) {
     if(_update_running) return;
      QPainter painter(this);
 
-    float widget_height = (float) this->height();
+	float widget_height = (float) height();
 
      int n_rects = _cur_style.n_rects;
      int n_fading_steps = _cur_style.n_fading_steps;
@@ -129,7 +154,7 @@ GUI_Spectrum::paintEvent(QPaintEvent *e) {
     int offset = 0;
     if(ninety == 0) return;
 
-    int w_bin = ((this->width() + 10) / (ninety - offset)) - border_x;
+	int w_bin = ((width() + 10) / (ninety - offset)) - border_x;
 
 
 
@@ -193,13 +218,13 @@ GUI_Spectrum::paintEvent(QPaintEvent *e) {
 
 void GUI_Spectrum::showEvent(QShowEvent * e) {
     Q_UNUSED(e);
-    this->update();
+	update();
     emit sig_show(true);
 }
 
 void GUI_Spectrum::closeEvent(QCloseEvent *e) {
     PlayerPlugin::closeEvent(e);
-    this->update();
+	update();
     emit sig_show(false);
 }
 
@@ -244,12 +269,17 @@ void GUI_Spectrum::resize_steps(int bins, int rects) {
 
 void GUI_Spectrum::psl_style_update() {
 
-   _ecsc->reload(this->width(), this->height());
+   _ecsc->reload(width(), height());
 
    _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
    resize_steps(N_BINS, _cur_style.n_rects);
 
 
    _update_running = false;
-   this->update();
+   update();
 }
+
+void GUI_Spectrum::config_clicked(){}
+void GUI_Spectrum::next_clicked(){}
+void GUI_Spectrum::prev_clicked(){}
+

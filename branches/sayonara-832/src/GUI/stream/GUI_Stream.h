@@ -57,10 +57,6 @@ public:
 	GUI_Stream(QString name, QWidget *parent = 0);
 	virtual ~GUI_Stream();
 
-
-private:
-	Ui::GUI_Stream* ui;
-
 	void init_gui();
 	QMap<QString, QString> _stations;
 	int _cur_station;

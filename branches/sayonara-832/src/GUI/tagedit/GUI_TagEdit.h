@@ -96,7 +96,7 @@ public:
 
 
 	private:
-		Ui::GUI_TagEdit* ui;
+
 		QWidget*	_parent;
         QMap<int, bool>  _idx_affected_by_tag;
 

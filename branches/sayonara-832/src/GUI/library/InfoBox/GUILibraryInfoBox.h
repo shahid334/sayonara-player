@@ -52,7 +52,7 @@ public slots:
     void language_changed();
 
 private:
-	Ui::Library_Info_Box* 	ui;
+
 	CDatabaseConnector*   	_db;
 	LastFM*					_lfm;
     bool                    _skin;

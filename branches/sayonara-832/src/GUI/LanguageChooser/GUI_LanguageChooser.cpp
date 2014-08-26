@@ -26,10 +26,10 @@
 #include <QDir>
 
 GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
-    QDialog(parent)
+	QDialog(parent),
+	Ui::GUI_LanguageChooser()
 {
-    ui = new Ui::GUI_LanguageChooser();
-    ui->setupUi(this);
+	setupUi(this);
 
     _map["br"] = QString::fromUtf8("Português (Brasil)");
     _map["cs"] = QString::fromUtf8("Český");
@@ -48,30 +48,29 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
 
     _last_idx = -1;
 
-    this->setModal(true);
+	setModal(true);
 
-
-    connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
+	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
 }
 
 GUI_LanguageChooser::~GUI_LanguageChooser() {
-    delete ui;
+
 }
 
 
 void GUI_LanguageChooser::language_changed(bool b) {
 
-    disconnect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
-    ui->retranslateUi(this);
-    connect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+	disconnect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+	retranslateUi(this);
+	connect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
     renew_combo();
 
 }
 
 void GUI_LanguageChooser::combo_changed(int idx) {
-    int cur_idx = ui->combo_lang->currentIndex();
+	int cur_idx = combo_lang->currentIndex();
     _last_idx = cur_idx;
-    emit sig_language_changed(ui->combo_lang->itemData(cur_idx).toString());
+	emit sig_language_changed(combo_lang->itemData(cur_idx).toString());
 
 
 }
@@ -79,22 +78,22 @@ void GUI_LanguageChooser::combo_changed(int idx) {
 
 void GUI_LanguageChooser::ok_clicked() {
 
-    int cur_idx = ui->combo_lang->currentIndex();
-    CSettingsStorage::getInstance()->setLanguage(ui->combo_lang->itemData(cur_idx).toString());
+	int cur_idx = combo_lang->currentIndex();
+	CSettingsStorage::getInstance()->setLanguage(combo_lang->itemData(cur_idx).toString());
 
-    this->close();
+	close();
 }
 
 
 void GUI_LanguageChooser::renew_combo() {
 
-    disconnect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+	disconnect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
     QDir dir(Helper::getSharePath() + "translations/");
     QStringList filters;
     filters << "*.qm";
     QStringList files = dir.entryList(filters);
 
-    ui->combo_lang->clear();
+	combo_lang->clear();
 
     QString lang_setting = CSettingsStorage::getInstance()->getLanguage();
 
@@ -111,9 +110,9 @@ void GUI_LanguageChooser::renew_combo() {
         QString flag = Helper::getSharePath() + "translations/icons/" + two + ".png";
 
         if(title.size() > 0)
-            ui->combo_lang->addItem(QIcon(flag), title, name);
+			combo_lang->addItem(QIcon(flag), title, name);
         else
-            ui->combo_lang->addItem(name, name);
+			combo_lang->addItem(name, name);
 
 
         if(name.compare(lang_setting, Qt::CaseInsensitive) == 0) tgt_idx = i;
@@ -123,8 +122,8 @@ void GUI_LanguageChooser::renew_combo() {
     if(_last_idx == -1) _last_idx = tgt_idx;
     else tgt_idx = _last_idx;
 
-    ui->combo_lang->setCurrentIndex(tgt_idx);
-    connect(ui->combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+	combo_lang->setCurrentIndex(tgt_idx);
+	connect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 }
 
 void GUI_LanguageChooser::showEvent(QShowEvent * event) {

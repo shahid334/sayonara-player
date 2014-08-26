@@ -72,7 +72,7 @@ public:
 	virtual ~GUI_PlaylistChooser();
 
 private:
-    Ui::GUI_PlaylistChooser* ui;
+
     GUI_Target_Playlist_Dialog* _target_playlist_dialog;
 
 	QMap<int, QString> _playlists;

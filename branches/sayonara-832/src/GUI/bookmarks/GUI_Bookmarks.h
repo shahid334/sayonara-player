@@ -54,7 +54,7 @@ private slots:
 
 
 private:
-	Ui::GUI_Bookmarks* ui;
+
 	CDatabaseConnector* _db;
 	QMap<quint32, QString> _bookmarks;
 

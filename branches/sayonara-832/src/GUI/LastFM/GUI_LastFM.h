@@ -40,7 +40,7 @@ class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Dialog{
 
 public:
 	GUI_LastFM(QWidget* parent=0);
-	GUI_LastFM(QString username, QString password);
+	GUI_LastFM(QWidget* parent, QString username, QString password);
 
 	virtual ~GUI_LastFM();
 
@@ -61,7 +61,8 @@ public:
         void language_changed();
 
 	private:
-		Ui_GUI_LastFM_Dialog* ui;
+
+		void init();
 		void setLFMActive(bool b);
         bool _skin;
 

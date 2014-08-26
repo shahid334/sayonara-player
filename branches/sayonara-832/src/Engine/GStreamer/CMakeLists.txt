@@ -65,8 +65,6 @@ ADD_LIBRARY(sayonara_gstreamer SHARED ${SOURCES} ${HEADERS_MOC})
 TARGET_LINK_LIBRARIES(sayonara_gstreamer 
 	gstreamer-1.0 
 	gstbase-1.0
-	sayonara_helper
-	sayonara_db
 )
 
 INSTALL(TARGETS sayonara_gstreamer DESTINATION lib/sayonara)

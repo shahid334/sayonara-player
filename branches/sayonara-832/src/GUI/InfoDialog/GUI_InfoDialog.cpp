@@ -42,10 +42,11 @@
 
 
 
-GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog(parent) {
+GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
+	QDialog(parent),
+	Ui::InfoDialog() {
 
-    this->ui = new Ui::InfoDialog();
-    this->ui->setupUi(this);
+	setupUi(this);
 
     _db = CDatabaseConnector::getInstance();
 
@@ -56,7 +57,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     ui_tag_edit = tag_edit;
 
 	if(ui_tag_edit){
-		ui->tab_widget->addTab(ui_tag_edit, tr("Edit"));
+		tab_widget->addTab(ui_tag_edit, tr("Edit"));
 	}
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
@@ -76,10 +77,11 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
     QStringList server_list = _lyric_thread->getServers();
     foreach(QString server, server_list) {
 
-        ui->combo_servers->addItem(server);
+		//combo_servers->addItem(server);
+		combo_servers->addItem(server);
     }
 
-    ui->combo_servers->setCurrentIndex(0);
+	combo_servers->setCurrentIndex(0);
 
 	connect( _lfm_thread,	SIGNAL(sig_corrected_data_available(const QString&)),
 			 this,			SLOT(psl_corrected_data_available(const QString&)));
@@ -96,21 +98,21 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) : QDialog
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
     connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
-	connect(ui->tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
+	connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
 
     if(ui_tag_edit) {
         connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
         connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
     }
 
-    connect(ui->combo_servers, 	SIGNAL(currentIndexChanged(int)),
+	connect(combo_servers, 	SIGNAL(currentIndexChanged(int)),
             this, 					SLOT(psl_lyrics_server_changed(int)));
 
-    connect(ui->btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
+	connect(btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
 
-    this->ui->btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
+	btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
-    ui->tab_widget->removeTab(2);
+	tab_widget->removeTab(2);
     hide();
 
 }
@@ -127,9 +129,9 @@ void GUI_InfoDialog::changeSkin(bool dark) {
 void GUI_InfoDialog::language_changed() {
 
     MetaDataList v_md = _v_md;
-    ui->tab_widget->removeTab(2);
-    this->ui->retranslateUi(this);
-    ui->tab_widget->addTab(ui_tag_edit, tr("Edit"));
+	tab_widget->removeTab(2);
+	retranslateUi(this);
+	tab_widget->addTab(ui_tag_edit, tr("Edit"));
     setMetaData(v_md);
 
     _alternate_covers->language_changed();
@@ -148,12 +150,12 @@ void GUI_InfoDialog::prepare_lyrics() {
 
 	if(_v_md.size() == 1){
 		_lyric_thread->set_artist_and_title(_v_md[0].artist, _v_md[0].title);
-		ui->tab_widget->setTabEnabled(1, true);
+		tab_widget->setTabEnabled(1, true);
 	}
 
 	else {
 		_lyric_thread->set_artist_and_title(0, 0);
-		ui->tab_widget->setTabEnabled(1, false);
+		tab_widget->setTabEnabled(1, false);
 	}
 
 	_lyric_thread->prepare_thread(_lyric_server);
@@ -167,18 +169,18 @@ void GUI_InfoDialog::psl_lyrics_available() {
 	lyrics = lyrics.trimmed();
 
 	int height, width;
-	height = ui->te_lyrics->height();
-	width = this->ui->tab_2->size().width();
-	ui->te_lyrics->resize(width, height);
-	ui->te_lyrics->setAcceptRichText(true);
-	ui->te_lyrics->setText(lyrics);
-	ui->te_lyrics->setLineWrapColumnOrWidth(this->ui->te_lyrics->width());
-	ui->te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
-	ui->te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	ui->te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	height = te_lyrics->height();
+	width = tab_2->size().width();
+	te_lyrics->resize(width, height);
+	te_lyrics->setAcceptRichText(true);
+	te_lyrics->setText(lyrics);
+	te_lyrics->setLineWrapColumnOrWidth(te_lyrics->width());
+	te_lyrics->setLineWrapMode(QTextEdit::FixedPixelWidth);
+	te_lyrics->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	te_lyrics->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
 	if(!_lyrics_visible){
-		this->ui->tab_widget->setTabEnabled(TAB_LYRICS, true);
+		tab_widget->setTabEnabled(TAB_LYRICS, true);
 	}
 
 	_lyrics_visible = true;
@@ -202,11 +204,11 @@ void GUI_InfoDialog::prepare_info() {
 			break;
 	}
 
-	this->ui->lab_heading->setText(info->get_header());
-	this->ui->lab_info->setText(info->get_info_as_string());
-	this->ui->lab_subheader->setText(info->get_subheader());
-	this->ui->lab_paths->setOpenExternalLinks(true);
-	this->ui->lab_paths->setText(info->get_paths_as_string());
+	lab_heading->setText(info->get_header());
+	lab_info->setText(info->get_info_as_string());
+	lab_subheader->setText(info->get_subheader());
+	lab_paths->setOpenExternalLinks(true);
+	lab_paths->setText(info->get_paths_as_string());
 
 	_cl = info->get_cover_location();
 	prepare_cover(_cl);
@@ -227,15 +229,15 @@ void GUI_InfoDialog::prepare_info() {
 
 void GUI_InfoDialog::psl_cover_available(const QString& cover_path) {
 
-	this->ui->btn_image->setIcon(QIcon(cover_path));
-	this->ui->btn_image->update();
+	btn_image->setIcon(QIcon(cover_path));
+	btn_image->update();
 }
 
 void GUI_InfoDialog::psl_alternate_cover_available(bool b){
 
 	if(!b) {
 		QString sayonara_logo = Helper::getIconPath() + "logo.png";
-		this->ui->btn_image->setIcon(QIcon(sayonara_logo));
+		btn_image->setIcon(QIcon(sayonara_logo));
 	}
 
 	else{
@@ -248,7 +250,7 @@ void GUI_InfoDialog::psl_cover_lookup_finished(bool b) {
 
 	if(!b) {
 		QString sayonara_logo = Helper::getIconPath() + "logo.png";
-		this->ui->btn_image->setIcon(QIcon(sayonara_logo));
+		btn_image->setIcon(QIcon(sayonara_logo));
 	}
 
 	// if successful we already got a cover
@@ -277,8 +279,8 @@ void GUI_InfoDialog::setMetaData(const MetaDataList& v_md) {
 
 void GUI_InfoDialog::psl_tab_index_changed(int tab){
 
-	ui->ui_info_widget->hide();
-	ui->ui_lyric_widget->hide();
+	ui_info_widget->hide();
+	ui_lyric_widget->hide();
 	if(ui_tag_edit){
 		ui_tag_edit->hide();
 	}
@@ -286,16 +288,16 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 	switch(tab){
 
 		case TAB_EDIT:
-			ui->tab_widget->setCurrentWidget(ui_tag_edit);
+			tab_widget->setCurrentWidget(ui_tag_edit);
 			ui_tag_edit->show();
 			break;
 		case TAB_LYRICS:
-			ui->tab_widget->setCurrentWidget(ui->ui_lyric_widget);
-			ui->ui_lyric_widget->show();
+			tab_widget->setCurrentWidget(ui_lyric_widget);
+			ui_lyric_widget->show();
 			break;
 		default:
-			ui->tab_widget->setCurrentWidget(ui->ui_info_widget);
-			ui->ui_info_widget->show();
+			tab_widget->setCurrentWidget(ui_info_widget);
+			ui_info_widget->show();
 
 			break;
 	}
@@ -311,7 +313,7 @@ void GUI_InfoDialog::show(int tab) {
 
 	if(tab > 2 || tab < 0) tab = TAB_INFO;
 
-    ui->tab_widget->setTabEnabled(2, _tag_edit_visible);
+	tab_widget->setTabEnabled(2, _tag_edit_visible);
 
 	if(!_tag_edit_visible && tab == TAB_EDIT) {
         tab = TAB_INFO;
@@ -322,7 +324,7 @@ void GUI_InfoDialog::show(int tab) {
 	}
 
 	if(!_lyrics_visible){
-		ui->tab_widget->setTabEnabled(TAB_LYRICS, false);
+		tab_widget->setTabEnabled(TAB_LYRICS, false);
 	}
 
 	psl_tab_index_changed(tab);
@@ -343,7 +345,7 @@ void GUI_InfoDialog::psl_id3_success(bool b) {
 
 void GUI_InfoDialog::cover_clicked() {
 
-	this->setFocus();
+	setFocus();
 
 	if(_cover_artist.size() > 0 && _cover_album.size() > 0){
 		_alternate_covers->start(_cover_album, _cover_artist);
@@ -359,7 +361,7 @@ void GUI_InfoDialog::cover_clicked() {
 }
 
 void GUI_InfoDialog::no_cover_available() {
-    this->ui->btn_image->setIcon(QIcon(Helper::getIconPath() + "/logo.png"));
+	btn_image->setIcon(QIcon(Helper::getIconPath() + "/logo.png"));
 }
 
 void GUI_InfoDialog::init() {

@@ -39,8 +39,8 @@ void GUI_Player::set_std_cover(bool radio) {
 		std_cover_path = Helper::getIconPath() + "logo.png";
 	}
 
-	ui->albumCover->setIcon(QIcon(std_cover_path));
-	ui->albumCover->repaint();
+	albumCover->setIcon(QIcon(std_cover_path));
+	albumCover->repaint();
 
 }
 
@@ -103,8 +103,8 @@ void GUI_Player::cover_found(QString cover_path) {
 
 	QIcon icon(cover_path);
 
-	ui->albumCover->setIcon(icon);
-	ui->albumCover->repaint();
+	albumCover->setIcon(icon);
+	albumCover->repaint();
 }
 
 /** COVER END **/

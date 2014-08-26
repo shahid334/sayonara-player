@@ -37,13 +37,19 @@
 #include <QPixmap>
 
 
-GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) : QDialog(parent) {
+GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) :
+	QDialog(parent),
+	Library_Info_Box()
+{
+	setupUi(this);
+
+	_db = CDatabaseConnector::getInstance();
+	_lfm = LastFM::getInstance();
+
+	QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "info.png")).scaled(80,80, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	lab_icon->setPixmap(pix);
 
     hide();
-
-    this->ui = NULL;
-
-
 }
 
 GUI_Library_Info_Box::~GUI_Library_Info_Box() {
@@ -57,23 +63,12 @@ void GUI_Library_Info_Box::change_skin(bool dark) {
 }
 
 void GUI_Library_Info_Box::language_changed() {
-    if(!ui) return;
-    this->ui->retranslateUi(this);
+
+	retranslateUi(this);
 }
 
 
 void GUI_Library_Info_Box::psl_refresh() {
-
-    if(this->ui == NULL) {
-        this->ui = new Ui::Library_Info_Box();
-        this->ui->setupUi(this);
-
-        _db = CDatabaseConnector::getInstance();
-        _lfm = LastFM::getInstance();
-
-        QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "info.png")).scaled(80,80, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        this->ui->lab_icon->setPixmap(pix);
-    }
 
     MetaDataList v_md;
 	AlbumList v_albums;
@@ -100,7 +95,7 @@ void GUI_Library_Info_Box::psl_refresh() {
 	if( !CSettingsStorage::getInstance()->getLastFMActive() ) {
 		_n_lfm_playcount = -1;
 		_n_lfm_days_registered = -1;
-        this->ui->lab_lfm_playcount->setText("Last.fm not active");
+		lab_lfm_playcount->setText("Last.fm not active");
 	}
 
 	else {
@@ -114,22 +109,22 @@ void GUI_Library_Info_Box::psl_refresh() {
 			d = reg_date.mid(8, 2).toInt();
 			QDate date(y, m, d);
 			_n_lfm_days_registered = date.daysTo(QDate::currentDate());
-			this->ui->lab_lfm_playcount->setText(QString::number(_n_lfm_playcount) + " -> " + QString::number((_n_lfm_playcount * 1.0) / _n_lfm_days_registered, ' ', 2) );
+			lab_lfm_playcount->setText(QString::number(_n_lfm_playcount) + " -> " + QString::number((_n_lfm_playcount * 1.0) / _n_lfm_days_registered, ' ', 2) );
 		}
 
 		else{
 			_n_lfm_playcount = -1;
 			_n_lfm_days_registered = -1;
-			this->ui->lab_lfm_playcount->setText("-");
+			lab_lfm_playcount->setText("-");
 		}
 	}
-	this->ui->lab_album_count->setText(QString::number(_n_albums));
-	this->ui->lab_track_count->setText(QString::number(_n_tracks));
-	this->ui->lab_artist_count->setText(QString::number(_n_artists));
-	this->ui->lab_duration_value->setText(_duration_string + "s");
-    this->ui->lab_filesize->setText(_filesize_str);
+	lab_album_count->setText(QString::number(_n_albums));
+	lab_track_count->setText(QString::number(_n_tracks));
+	lab_artist_count->setText(QString::number(_n_artists));
+	lab_duration_value->setText(_duration_string + "s");
+	lab_filesize->setText(_filesize_str);
 
-	this->show();
+	show();
 }
 
 

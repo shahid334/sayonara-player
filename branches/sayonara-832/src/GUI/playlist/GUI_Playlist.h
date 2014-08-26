@@ -111,7 +111,6 @@
 
 		private:
 
-			Ui::Playlist_Window* 			ui;
 			QWidget*						_parent;
 			GUI_InfoDialog*					_info_dialog;
 

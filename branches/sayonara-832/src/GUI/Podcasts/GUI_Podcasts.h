@@ -58,7 +58,6 @@ public:
 
 
 private:
-    Ui::GUI_Podcasts* ui;
 
     void init_gui();
     QMap<QString, QString> _podcasts;

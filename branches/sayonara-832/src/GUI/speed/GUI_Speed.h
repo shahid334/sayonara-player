@@ -39,10 +39,6 @@ signals:
 private slots:
 	void slider_changed(int);
 	void active_changed(bool);
-
-private:
-	Ui::GUI_Speed* ui;
-
 	
 };
 

@@ -28,13 +28,12 @@
 
 
 GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
-	PlayerPlugin(name, parent)
+	EnginePlugin(name, parent, this),
+	Ui::GUI_LevelPainter()
 {
-    ui = new Ui::GUI_LevelPainter();
-    ui->setupUi(this);
+	setupUi(this);
 
-
-    _ecsc = new EngineColorStyleChooser(this->minimumWidth(), this->minimumHeight());
+	_ecsc = new EngineColorStyleChooser(minimumWidth(), minimumHeight());
     _cur_style_idx = 0;
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
     reload();
@@ -53,6 +52,30 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
     _timer->setInterval(30);
     _timer_stopped = true;
     connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
+
+	_btn_config = new QPushButton("...", this);
+	_btn_config->setGeometry(10, 10, 20, 20);
+
+	_btn_prev = new QPushButton("<", this);
+	_btn_prev->setGeometry(35, 10, 20, 20);
+
+	_btn_next = new QPushButton(">", this);
+	_btn_next->setGeometry(60, 10, 20, 20);
+
+	_btn_close = new QPushButton("x", this);
+	_btn_close->setGeometry(85, 10, 20, 20);
+
+
+	connect(_btn_config, SIGNAL(clicked()), this, SLOT(config_clicked()));
+	connect(_btn_prev, SIGNAL(clicked()), this, SLOT(prev_clicked()));
+	connect(_btn_next, SIGNAL(clicked()), this, SLOT(next_clicked()));
+	connect(_btn_close, SIGNAL(clicked()), this, SLOT(close()));
+
+	_btn_config->hide();
+	_btn_prev->hide();
+	_btn_next->hide();
+	_btn_close->hide();
+
 }
 
 
@@ -66,7 +89,7 @@ void GUI_LevelPainter::set_level(float level_l, float level_r) {
     _level[0] = level_l;
     _level[1] = level_r;
 
-    this->update();
+	update();
 }
 
 void
@@ -143,7 +166,7 @@ void GUI_LevelPainter::showEvent(QShowEvent * e) {
 
     e->accept();
 
-    _ecsc->reload(this->width(), this->height());
+	_ecsc->reload(width(), height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
     resize_steps(_cur_style.n_rects);
 
@@ -179,7 +202,7 @@ void GUI_LevelPainter::timed_out() {
 
 
 void GUI_LevelPainter::psl_style_update(bool inner) {
-    _ecsc->reload(this->width(), this->height());
+	_ecsc->reload(width(), height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
 
     if(!inner) reload();
@@ -203,12 +226,18 @@ void GUI_LevelPainter::resize_steps(int n_rects) {
 void GUI_LevelPainter::reload() {
     int new_height = _cur_style.rect_height * 2 + _cur_style.ver_spacing + 12;
 
-    this->setMinimumHeight(0);
-    this->setMaximumHeight(100);
+	setMinimumHeight(0);
+	setMaximumHeight(100);
 
-    this->setMinimumHeight(new_height);
-    this->setMaximumHeight(new_height);
+	setMinimumHeight(new_height);
+	setMaximumHeight(new_height);
 
-    if(this->isVisible())
+	if(isVisible())
         emit sig_reload(this);
 }
+
+
+void GUI_LevelPainter::config_clicked(){}
+void GUI_LevelPainter::next_clicked(){}
+void GUI_LevelPainter::prev_clicked(){}
+

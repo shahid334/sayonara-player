@@ -44,17 +44,19 @@
 
 
 
-GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent) {
-    _parent = parent;
+GUI_TagEdit::GUI_TagEdit(QWidget* parent) :
+	QWidget(parent),
+	Ui::GUI_TagEdit()
+{
+	setupUi(this);
 
-    ui = new Ui::GUI_TagEdit();
-    ui->setupUi(this);
+    _parent = parent;
 
     _cur_idx = -1;
     _db = CDatabaseConnector::getInstance();
 
     QPixmap pix = QPixmap(Helper::getIconPath() + "id3.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    ui->lab_icon->setPixmap(pix);
+	lab_icon->setPixmap(pix);
 
     QStringList complete_list;
     complete_list << TAG_TITLE;
@@ -64,26 +66,26 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent) {
     complete_list << TAG_YEAR;
     complete_list << TAG_DISC;
     QCompleter* completer = new QCompleter(complete_list);
-    ui->le_tag_from_path->setCompleter(completer);
+	le_tag_from_path->setCompleter(completer);
 
-    ui->le_tag_from_path->setVisible(false);
-    ui->cb_tag_all->setVisible(false);
-    ui->btn_tag_apply->setVisible(false);
-    ui->btn_tag_help->setVisible(false);
-    ui->btn_tag_undo->setVisible(false);
-    ui->label_8->setVisible(false);
-    ui->label_10->setVisible(false);
-    ui->line->setVisible(false);
+	le_tag_from_path->setVisible(false);
+	cb_tag_all->setVisible(false);
+	btn_tag_apply->setVisible(false);
+	btn_tag_help->setVisible(false);
+	btn_tag_undo->setVisible(false);
+	label_8->setVisible(false);
+	label_10->setVisible(false);
+	line->setVisible(false);
 
-    connect(ui->pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
-    connect(ui->pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
-    connect(ui->pb_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
-    connect(ui->pb_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_clicked()));
-    connect(ui->le_tag_from_path, SIGNAL(textChanged ( const QString &)), this, SLOT(tag_from_path_text_changed(const QString&)));
+	connect(pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
+	connect(pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));
+	connect(pb_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
+	connect(pb_cancel, SIGNAL(clicked()), this, SLOT(cancel_button_clicked()));
+	connect(le_tag_from_path, SIGNAL(textChanged ( const QString &)), this, SLOT(tag_from_path_text_changed(const QString&)));
 
-    connect(ui->btn_tag_help, SIGNAL(clicked()), this, SLOT(help_tag_clicked()));
-    connect(ui->btn_tag_undo, SIGNAL(clicked()), this, SLOT(undo_tag_clicked()));
-    connect(ui->btn_tag_apply, SIGNAL(clicked()), this, SLOT(apply_tag_clicked()));
+	connect(btn_tag_help, SIGNAL(clicked()), this, SLOT(help_tag_clicked()));
+	connect(btn_tag_undo, SIGNAL(clicked()), this, SLOT(undo_tag_clicked()));
+	connect(btn_tag_apply, SIGNAL(clicked()), this, SLOT(apply_tag_clicked()));
 
     init();
     hide();
@@ -92,7 +94,7 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) : QWidget(parent) {
 
 
 GUI_TagEdit::~GUI_TagEdit() {
-    delete ui;
+
 }
 
 void GUI_TagEdit::changeSkin(bool dark) {
@@ -100,7 +102,7 @@ void GUI_TagEdit::changeSkin(bool dark) {
 }
 
 void GUI_TagEdit::language_changed() {
-    this->ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 
@@ -113,7 +115,7 @@ void GUI_TagEdit::init() {
     _max_artist_id = _db->getMaxArtistID() + 1;
 
     if(_parent) {
-        this->resize(_parent->size());
+		resize(_parent->size());
     }
 
 }
@@ -126,7 +128,7 @@ void GUI_TagEdit::change_meta_data(const MetaData& md) {
 
 void GUI_TagEdit::change_meta_data(const MetaDataList& vec) {
 
-    this->init();
+	init();
 
     _cur_idx = -1;
     _lst_new_albums.clear();
@@ -148,14 +150,14 @@ void GUI_TagEdit::change_meta_data(const MetaDataList& vec) {
 
     show_win();
 
-    ui->pb_progress->hide();
+	pb_progress->hide();
 
-    ui->le_tag_from_path->setText("");
-    ui->btn_tag_undo->setEnabled(false);
-    ui->btn_tag_apply->setEnabled(false);
+	le_tag_from_path->setText("");
+	btn_tag_undo->setEnabled(false);
+	btn_tag_apply->setEnabled(false);
 
-    ui->pb_next_track->setEnabled( (vec.size() > 1) );
-    ui->pb_prev->setEnabled(false);
+	pb_next_track->setEnabled( (vec.size() > 1) );
+	pb_prev->setEnabled(false);
 
     show_metadata();
 }
@@ -168,12 +170,12 @@ void GUI_TagEdit::prev_button_clicked() {
     if(_cur_idx > 0) {
         _cur_idx --;
         if(_cur_idx == 0) {
-            this->ui->pb_prev->setEnabled(false);
+			pb_prev->setEnabled(false);
         }
 
     }
 
-    this->ui->pb_next_track->setEnabled(true);
+	pb_next_track->setEnabled(true);
     show_metadata();
 }
 
@@ -187,22 +189,22 @@ void GUI_TagEdit::next_button_clicked() {
         _cur_idx ++;
 
         if(_cur_idx == tmp_md_size -1) {
-            ui->pb_next_track->setEnabled(false);
+			pb_next_track->setEnabled(false);
         }
     }
 
-    ui->pb_prev->setEnabled(true);
+	pb_prev->setEnabled(true);
 
     show_metadata();
 }
 
 void GUI_TagEdit::clear_checkboxes() {
 
-    this->ui->cb_album_all->setChecked(false);
-    this->ui->cb_artist_all-> setChecked(false);
-    this->ui->cb_genre_all->setChecked(false);
-    this->ui->cb_year_all->setChecked(false);
-    this->ui->cb_discnumber_all->setChecked(false);
+	cb_album_all->setChecked(false);
+	cb_artist_all-> setChecked(false);
+	cb_genre_all->setChecked(false);
+	cb_year_all->setChecked(false);
+	cb_discnumber_all->setChecked(false);
 }
 
 
@@ -218,7 +220,7 @@ void GUI_TagEdit::ok_button_clicked() {
 
     bool b = store_to_database(v_album, v_artist);
 
-    ui->pb_progress->hide();
+	pb_progress->hide();
     clear_checkboxes();
     
     MetaDataList v_md2send = _vec_tmp_metadata;
@@ -250,14 +252,14 @@ void GUI_TagEdit::cancel_button_clicked() {
 
 void GUI_TagEdit::all_albums_clicked() {
     for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
-        _vec_tmp_metadata[i].album = ui->le_album->text();
+		_vec_tmp_metadata[i].album = le_album->text();
         _lst_new_albums[i] = _vec_tmp_metadata[i].album;
     }
 }
 
 void GUI_TagEdit::all_artists_clicked() {
     for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
-        _vec_tmp_metadata[i].artist = ui->le_artist->text();
+		_vec_tmp_metadata[i].artist = le_artist->text();
         _lst_new_artists[i] = _vec_tmp_metadata[i].artist;
     }
 }
@@ -268,20 +270,20 @@ void GUI_TagEdit::all_genre_clicked() {
         _vec_tmp_metadata[i].genres.clear();
 
         QStringList genres;
-        genres = ui->le_genres->text().split(QRegExp(",|\\|/|;|-"));
+		genres = le_genres->text().split(QRegExp(",|\\|/|;|-"));
 
         _vec_tmp_metadata[i].genres = genres;
     }
 }
 void GUI_TagEdit::all_year_clicked() {
     for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
-        _vec_tmp_metadata[i].year = ui->sb_year->value();
+		_vec_tmp_metadata[i].year = sb_year->value();
     }
 }
 
 void GUI_TagEdit::all_discnumber_clicked() {
     for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
-	_vec_tmp_metadata[i].discnumber = ui->sb_discnumber->value();
+	_vec_tmp_metadata[i].discnumber = sb_discnumber->value();
     }
 }
 
@@ -303,54 +305,54 @@ void GUI_TagEdit::show_metadata() {
 
     MetaData md = _vec_tmp_metadata[_cur_idx];
 
-    this->ui->le_album->setText(md.album);
-    this->ui->le_artist->setText(md.artist);
-    this->ui->le_title->setText(md.title);
-    this->ui->sb_track_num->setValue(md.track_num);
-    this->ui->sb_year->setValue(md.year);
-    this->ui->le_genres->setText(md.genres.join(","));
-    this->ui->sb_discnumber->setValue(md.discnumber);
+	le_album->setText(md.album);
+	le_artist->setText(md.artist);
+	le_title->setText(md.title);
+	sb_track_num->setValue(md.track_num);
+	sb_year->setValue(md.year);
+	le_genres->setText(md.genres.join(","));
+	sb_discnumber->setValue(md.discnumber);
 
-    this->ui->lab_filepath->clear();
-    this->ui->lab_filepath->insertPlainText(QDir(md.filepath).absolutePath());
-    this->ui->lab_track_num->setText(tr("Track ") + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
+	lab_filepath->clear();
+	lab_filepath->insertPlainText(QDir(md.filepath).absolutePath());
+	lab_track_num->setText(tr("Track ") + QString::number(_cur_idx+1) + "/" + QString::number(_vec_org_metadata.size()));
 
-    tag_from_path_text_changed(this->ui->le_tag_from_path->text());
-    this->ui->btn_tag_undo->setEnabled(_idx_affected_by_tag[_cur_idx]);
+	tag_from_path_text_changed(le_tag_from_path->text());
+	btn_tag_undo->setEnabled(_idx_affected_by_tag[_cur_idx]);
 }
 
 
 void GUI_TagEdit::save_metadata() {
-    if ( ui ->cb_album_all->isChecked() ) 
+	if ( cb_album_all->isChecked() )
         all_albums_clicked();
     
 
-    if (ui ->cb_artist_all->isChecked()) 
+	if (cb_artist_all->isChecked())
         all_artists_clicked();
     
-    if (ui ->cb_year_all->isChecked()) 
+	if (cb_year_all->isChecked())
         all_year_clicked();
     
-    if (ui ->cb_genre_all->isChecked()) 
+	if (cb_genre_all->isChecked())
         all_genre_clicked();
     
-    if(ui->cb_discnumber_all->isChecked())
+	if(cb_discnumber_all->isChecked())
 	all_discnumber_clicked();
     
-    if(ui->cb_tag_all->isChecked())
+	if(cb_tag_all->isChecked())
         all_tag_clicked();
     
 
-    _lst_new_albums[_cur_idx] = this->ui->le_album->text();
-    _lst_new_artists[_cur_idx] = this->ui->le_artist->text();
+	_lst_new_albums[_cur_idx] = le_album->text();
+	_lst_new_artists[_cur_idx] = le_artist->text();
 
-    _vec_tmp_metadata[_cur_idx].album = this->ui->le_album->text();
-    _vec_tmp_metadata[_cur_idx].artist = this->ui->le_artist->text();
-    _vec_tmp_metadata[_cur_idx].title = this->ui->le_title->text();
-    _vec_tmp_metadata[_cur_idx].track_num = this->ui->sb_track_num->value();
-    _vec_tmp_metadata[_cur_idx].year = this->ui->sb_year->value();
-    _vec_tmp_metadata[_cur_idx].genres = this->ui->le_genres->text().split(QRegExp(",|\\|/|;|-"));
-    _vec_tmp_metadata[_cur_idx].discnumber = this->ui->sb_discnumber->value();
+	_vec_tmp_metadata[_cur_idx].album = le_album->text();
+	_vec_tmp_metadata[_cur_idx].artist = le_artist->text();
+	_vec_tmp_metadata[_cur_idx].title = le_title->text();
+	_vec_tmp_metadata[_cur_idx].track_num = sb_track_num->value();
+	_vec_tmp_metadata[_cur_idx].year = sb_year->value();
+	_vec_tmp_metadata[_cur_idx].genres = le_genres->text().split(QRegExp(",|\\|/|;|-"));
+	_vec_tmp_metadata[_cur_idx].discnumber = sb_discnumber->value();
 
 }
 
@@ -524,7 +526,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
         _db->insertArtistIntoDatabase(artist);
     }
 
-    this->ui->pb_progress->setVisible(true);
+	pb_progress->setVisible(true);
 
     MetaDataList v_md_tmp;
     int v_md_size = (int) _vec_tmp_metadata.size();
@@ -532,7 +534,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
     for(int i=0; i<v_md_size; i++) {
 
         MetaData md = _vec_tmp_metadata[i];
-        this->ui->pb_progress->setValue( (int)(i * 100.0 / v_md_size) );
+		pb_progress->setValue( (int)(i * 100.0 / v_md_size) );
 
         change_mp3_file(md);
         if(!md.is_extern)
@@ -597,7 +599,7 @@ bool GUI_TagEdit::remove_aftertag_str(QString& str, QString aftertag, bool looki
 
 bool GUI_TagEdit::calc_tag(int idx, MetaData& md) {
 
-    QString str = this->ui->le_tag_from_path->text();
+	QString str = le_tag_from_path->text();
     QString tag_str = str;
 
     md = _vec_org_metadata[idx];
@@ -734,13 +736,13 @@ void GUI_TagEdit::tag_from_path_text_changed(const QString& str) {
     MetaData md;
 
     if(calc_tag(_cur_idx, md)) {
-        this->ui->le_tag_from_path->setStyleSheet("");
-        this->ui->btn_tag_apply->setEnabled(true);
+		le_tag_from_path->setStyleSheet("");
+		btn_tag_apply->setEnabled(true);
     }
 
     else {
-        this->ui->le_tag_from_path->setStyleSheet("color: red;");
-        this->ui->btn_tag_apply->setEnabled(false);
+		le_tag_from_path->setStyleSheet("color: red;");
+		btn_tag_apply->setEnabled(false);
     }
 }
 
@@ -772,7 +774,7 @@ void GUI_TagEdit::help_tag_clicked() {
 
 void GUI_TagEdit::undo_tag_clicked() {
 
-    if(!ui->cb_tag_all->isChecked()) {
+	if(!cb_tag_all->isChecked()) {
         _vec_tmp_metadata[_cur_idx] = _vec_org_metadata[_cur_idx];
         _idx_affected_by_tag[_cur_idx] = false;
         _lst_new_albums[_cur_idx] = _vec_tmp_metadata[_cur_idx].album;
@@ -795,7 +797,7 @@ void GUI_TagEdit::undo_tag_clicked() {
 
 void GUI_TagEdit::apply_tag_clicked() {
 
-    if(!ui->cb_tag_all->isChecked()) {
+	if(!cb_tag_all->isChecked()) {
         MetaData md;
         _idx_affected_by_tag[_cur_idx] = calc_tag(_cur_idx, md);
         _vec_tmp_metadata[_cur_idx] = md;

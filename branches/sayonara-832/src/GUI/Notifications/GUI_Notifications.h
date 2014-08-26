@@ -47,7 +47,7 @@ public slots:
 private slots:
     void ok_clicked();
 private:
-    Ui_GUI_Notification* ui;
+
     NotificationPluginLoader* _plugin_loader;
 
     CSettingsStorage* _settings;

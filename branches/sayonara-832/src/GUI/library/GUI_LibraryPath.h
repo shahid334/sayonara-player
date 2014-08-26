@@ -43,9 +43,6 @@ public slots:
 private slots:
     void btn_clicked();
 
-private:
-    Ui::GUI_SetLibrary* ui;
-
 protected:
     void resizeEvent(QResizeEvent* e);
     

@@ -23,7 +23,7 @@
 #ifndef GUI_SPECTRUM_H
 #define GUI_SPECTRUM_H
 
-#include "PlayerPlugin/PlayerPlugin.h"
+#include "GUI/engine/EnginePlugin.h"
 #include "GUI/engine/EngineColorStyleChooser.h"
 #include "GUI/ui_GUI_Spectrum.h"
 #include <QCloseEvent>
@@ -36,7 +36,7 @@
 #include <QMap>
 #include <QTimer>
 
-class GUI_Spectrum : public PlayerPlugin, private Ui::GUI_Spectrum
+class GUI_Spectrum : public EnginePlugin, private Ui::GUI_Spectrum
 {
     Q_OBJECT
 public:
@@ -60,11 +60,16 @@ public slots:
     void psl_stop();
     void psl_style_update();
 
+protected slots:
+	virtual void config_clicked();
+	virtual void next_clicked();
+	virtual void prev_clicked();
+
+
 private slots:
     void timed_out();
 
 private:
-    Ui::GUI_Spectrum* ui;
 
     QList<float> _spec;
 

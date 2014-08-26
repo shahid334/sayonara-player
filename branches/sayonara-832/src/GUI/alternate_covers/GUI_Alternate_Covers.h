@@ -78,9 +78,6 @@ public:
 
 	private:
 
-
-		Ui::AlternateCovers* ui;
-
 		int 				_cur_idx;
 		QString				_class_name;
 		QString				_calling_class;

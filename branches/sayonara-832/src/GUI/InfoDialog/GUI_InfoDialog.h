@@ -92,7 +92,7 @@ public:
 
 
 private:
-	Ui::InfoDialog* 		ui;
+
 	GUI_TagEdit*			ui_tag_edit;
 
 	GUI_Alternate_Covers*	_alternate_covers;

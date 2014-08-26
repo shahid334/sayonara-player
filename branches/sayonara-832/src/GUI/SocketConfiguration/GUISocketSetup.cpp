@@ -29,9 +29,26 @@
 #include <QDialog>
 
 
-GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) : QDialog(parent) {
+GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) :
+	QDialog(parent) ,
+	Ui::SocketSetupDialog(){
 
-    this->ui = NULL;
+	setupUi(this);
+
+	_db = CSettingsStorage::getInstance();
+	_socket_from = _db->getSocketFrom();
+	_socket_to = _db->getSocketTo();
+
+	if(_socket_from == 0 ||  _socket_from > 65535) _socket_from = 1024;
+	if(_socket_to == 0 ||  _socket_to > 65535) _socket_to = 1034;
+
+	cb_activate->setChecked(_db->getSocketActivated());
+	sb_start->setValue(_socket_from);
+	sb_increment->setValue(_socket_to);
+
+	connect(sb_start, SIGNAL(valueChanged(int)), this, SLOT(_sl_start_changed(int)));
+	connect(buttonBox, SIGNAL(accepted()), this, SLOT(_sl_ok_pressed()));
+
     hide();
 
 }
@@ -44,17 +61,17 @@ GUI_SocketSetup::~GUI_SocketSetup() {
 void GUI_SocketSetup::_sl_start_changed(int val) {
 
 	if(val < 65525)
-		this->ui->sb_increment->setValue(val + 10);
+		sb_increment->setValue(val + 10);
 
 	else
-		this->ui->sb_increment->setValue(65535);
+		sb_increment->setValue(65535);
 }
 
 
 void GUI_SocketSetup::_sl_ok_pressed() {
-	_db->setSocketActivated(this->ui->cb_activate->isChecked());
-	_db->setSocketFrom(this->ui->sb_start->value());
-	_db->setSocketTo(this->ui->sb_increment->value());
+	_db->setSocketActivated(cb_activate->isChecked());
+	_db->setSocketFrom(sb_start->value());
+	_db->setSocketTo(sb_increment->value());
 
     hide();
     close();
@@ -62,30 +79,11 @@ void GUI_SocketSetup::_sl_ok_pressed() {
 
 void GUI_SocketSetup::show_win() {
 
-    if(this->ui == NULL) {
-        ui = new Ui::SocketSetupDialog();
-        ui->setupUi(this);
-
-        _db = CSettingsStorage::getInstance();
-        _socket_from = _db->getSocketFrom();
-        _socket_to = _db->getSocketTo();
-
-        if(_socket_from == 0 ||  _socket_from > 65535) _socket_from = 1024;
-        if(_socket_to == 0 ||  _socket_to > 65535) _socket_to = 1034;
-
-        this->ui->cb_activate->setChecked(_db->getSocketActivated());
-        this->ui->sb_start->setValue(_socket_from);
-        this->ui->sb_increment->setValue(_socket_to);
-
-        connect(this->ui->sb_start, SIGNAL(valueChanged(int)), this, SLOT(_sl_start_changed(int)));
-        connect(this->ui->buttonBox, SIGNAL(accepted()), this, SLOT(_sl_ok_pressed()));
-    }
-
-    this->show();
+	show();
 }
 
 void GUI_SocketSetup::language_changed() {
-    if(!ui) return;
-    this->ui->retranslateUi(this);
+
+	retranslateUi(this);
 }
 

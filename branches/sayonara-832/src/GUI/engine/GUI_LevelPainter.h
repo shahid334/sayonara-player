@@ -23,7 +23,7 @@
 #ifndef GUI_LEVELPAINTER_H
 #define GUI_LEVELPAINTER_H
 
-#include "PlayerPlugin/PlayerPlugin.h"
+#include "GUI/engine/EnginePlugin.h"
 #include "GUI/ui_GUI_LevelPainter.h"
 #include "GUI/engine/EngineColorStyleChooser.h"
 #include <QCloseEvent>
@@ -34,7 +34,7 @@
 #include <QColor>
 #include <QTimer>
 
-class GUI_LevelPainter : public PlayerPlugin, private Ui::GUI_LevelPainter
+class GUI_LevelPainter : public EnginePlugin, private Ui::GUI_LevelPainter
 {
     Q_OBJECT
 public:
@@ -53,6 +53,12 @@ protected:
     void mousePressEvent(QMouseEvent *e);
     void resizeEvent(QResizeEvent *e);
 
+protected slots:
+	virtual void config_clicked();
+	virtual void next_clicked();
+	virtual void prev_clicked();
+
+
 public slots:
     void set_level(float, float);
     void psl_stop();
@@ -63,7 +69,6 @@ private slots:
     void timed_out();
 
 private:
-    Ui::GUI_LevelPainter* ui;
 
     float _level[2];
 

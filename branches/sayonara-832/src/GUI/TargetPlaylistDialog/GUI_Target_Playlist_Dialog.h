@@ -42,8 +42,7 @@ private slots:
     void search_button_clicked();
     void ok_button_clicked();
 
-private:
-    Ui_GUI_Target_Playlist_Dialog* ui;
+
     
 };
 

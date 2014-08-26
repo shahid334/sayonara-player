@@ -143,48 +143,48 @@ void GUI_Player::fetch_all_covers_clicked(bool b) {
 void GUI_Player::showLibrary(bool b, bool resize) {
 
     m_settings->setShowLibrary(b);
-    int old_width = this->width();
-    int lib_width = this->ui->library_widget->width();
+	int old_width = width();
+	int lib_width = library_widget->width();
     int new_width = old_width;
-    this->ui->library_widget->setVisible(b);
+	library_widget->setVisible(b);
 
     // invisble
 	if(!b) {
 
-        QSizePolicy p = this->ui->library_widget->sizePolicy();
+		QSizePolicy p = library_widget->sizePolicy();
         m_library_stretch_factor = p.horizontalStretch();
 
         p.setHorizontalStretch(0);
-        this->ui->library_widget->setSizePolicy(p);
+		library_widget->setSizePolicy(p);
 
         m_library_width = lib_width;
         new_width = old_width - lib_width;
-        this->setMinimumSize(300, 500);
+		setMinimumSize(300, 500);
 	}
 
     // visible
 	else{
-        QSizePolicy p = this->ui->library_widget->sizePolicy();
+		QSizePolicy p = library_widget->sizePolicy();
 		p.setHorizontalStretch(m_library_stretch_factor);
-        this->ui->library_widget->setSizePolicy(p);
+		library_widget->setSizePolicy(p);
         new_width = old_width + m_library_width;
-        this->setMinimumSize(850, 500);
+		setMinimumSize(850, 500);
     }
 
 	if(resize) {
-        QRect rect = this->geometry();
+		QRect rect = geometry();
         rect.setWidth(new_width);
-        rect.setHeight(this->height());
-        this->setGeometry(rect);
+		rect.setHeight(height());
+		setGeometry(rect);
     }
 }
 
 void GUI_Player::show_fullscreen_toggled(bool b) {
 	// may happend because of F11 too
-	ui->action_Fullscreen->setChecked(b);
+	action_Fullscreen->setChecked(b);
 	if(b)
-		this->showFullScreen();
-	else this->showNormal();
+		showFullScreen();
+	else showNormal();
 
     m_settings->setPlayerFullscreen(b);
 
@@ -221,12 +221,12 @@ void GUI_Player::setLibraryPathClicked(bool b) {
     if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
 		emit sig_libpath_changed(dir);
         m_settings->setLibraryPath(dir);
-		if(this->ui_libpath && ui_libpath->isVisible()) {
+		if(ui_libpath && ui_libpath->isVisible()) {
             ui_libpath->hide();
             ui_libpath = 0;
 			if(m_settings->getShowLibrary()) {
                 ui_library->show();
-                ui_library->resize(this->ui->library_widget->size());
+				ui_library->resize(library_widget->size());
             }
         }
 
@@ -251,11 +251,11 @@ void GUI_Player::psl_libpath_changed(QString & dir) {
 
     if (dir.size() > 0 && ui_libpath) {
 
-		if(ui_libpath->isVisible() && this->ui->library_widget->isVisible()) {
+		if(ui_libpath->isVisible() && library_widget->isVisible()) {
             ui_libpath->hide();
 
             ui_library->show();
-            ui_library->resize(this->ui->library_widget->size());
+			ui_library->resize(library_widget->size());
         }
 
         ui_libpath = 0;

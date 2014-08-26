@@ -62,7 +62,7 @@ protected:
 
 
 private:
-	Ui::ImportFolder* ui;
+
 	bool	_thread_active;
 
 };

@@ -50,7 +50,7 @@ private slots:
 
 
 private:
-    Ui::GUI_LanguageChooser* ui;
+
     QMap<QString, QString> _map;
     int _last_idx;
     void renew_combo();

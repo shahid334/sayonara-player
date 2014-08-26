@@ -50,7 +50,7 @@ public:
 
 
 private:
-	Ui::SocketSetupDialog* 	ui;
+
 	CSettingsStorage* 		_db;
 
 	int 					_socket_from;

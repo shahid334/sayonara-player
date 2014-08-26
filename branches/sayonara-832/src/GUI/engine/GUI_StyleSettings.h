@@ -59,7 +59,6 @@ private slots:
 
 
 private:
-    Ui::GUI_Style* ui;
 
     CDatabaseConnector* _db;
     QList<RawColorStyle> _styles;
