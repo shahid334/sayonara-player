@@ -55,19 +55,22 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 
 	setupUi(this);
 
-	_cl_alternative = 0;
+
 
     QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
     if(QFile::exists(lib_path))
         _last_path = lib_path;
     else _last_path = QDir::homePath();
 
-	_calling_class = calling_class;
-	_class_name = "Alternate Covers";
+	_cl_alternative = 0;
+
+
 	_cur_idx = -1;
 
     _model = new AlternateCoverItemModel(this);
     _delegate = new AlternateCoverItemDelegate(this);
+
+	_is_searching = false;
 
 	tv_images->setModel(_model);
 	tv_images->setItemDelegate(_delegate);
@@ -105,8 +108,11 @@ void GUI_Alternate_Covers::connect_and_start() {
 	update_model();
 	delete_all_files();
 
-	connect(_cl_alternative, SIGNAL(sig_cover_found(QString)), this, SLOT(cl_new_cover(QString)));
+	connect(_cl_alternative, SIGNAL(sig_cover_found(const CoverLocation&)), this, SLOT(cl_new_cover(const CoverLocation&)));
 	connect(_cl_alternative, SIGNAL(sig_finished(bool)), this, SLOT(cl_finished(bool)));
+
+	_is_searching = true;
+	btn_search->setText(tr("Stop"));
 
 	_cl_alternative->start();
 
@@ -173,6 +179,11 @@ CoverLocation GUI_Alternate_Covers::get_target_filename(){
 
 void GUI_Alternate_Covers::search_button_pressed() {
 
+	if(_is_searching && _cl_alternative){
+		_cl_alternative->stop();
+		return;
+	}
+
 	_cl_alternative = new CoverLookupAlternative(this, le_search->text(), 10);
 	connect_and_start();
 
@@ -221,16 +232,17 @@ void GUI_Alternate_Covers::cancel_button_pressed() {
 
 
 
-void GUI_Alternate_Covers::cl_new_cover(QString str) {
+void GUI_Alternate_Covers::cl_new_cover(const CoverLocation& cl) {
 
     int idx = 0;
 	QModelIndex model_idx;
+	QVariant var;
 
 
-	_filelist << str;
+	_filelist << cl;
 
 	QString dir, filename;
-	Helper::split_filename(str, dir, filename);
+	Helper::split_filename(cl.cover_path, dir, filename);
 
 	QString substr = filename.left(2);
     if(substr.endsWith("_")) {
@@ -238,15 +250,23 @@ void GUI_Alternate_Covers::cl_new_cover(QString str) {
     }
 
 	RowColumn rc = _model->cvt_2_row_col(idx);
+	bool valid = _model->is_valid(rc.row, rc.col);
+	btn_save->setEnabled(valid);
+
 
 	model_idx = _model->index(rc.row, rc.col);
+	var.setValue(cl);
 
-	_model->setData(model_idx, str);
+
+	_model->setData(model_idx, var);
 
 }
 
 
 void GUI_Alternate_Covers::cl_finished(bool b) {
+
+	_is_searching = false;
+
 	btn_search->setText(tr("Search"));
 }
 
@@ -254,7 +274,12 @@ void GUI_Alternate_Covers::cl_finished(bool b) {
 
 void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx) {
 
-	_cur_idx = idx.row() * _model->columnCount() + idx.column();
+	_cur_idx = _model->cvt_2_idx(idx.row(), idx.column());
+
+	bool valid = _model->is_valid(idx.row(), idx.column());
+
+	btn_save->setEnabled(valid);
+
 }
 
 
@@ -312,15 +337,15 @@ void GUI_Alternate_Covers::open_file_dialog() {
 		_model->setData(model_idx, path);
 
         idx ++;
-
     }
 }
 
 
 void GUI_Alternate_Covers::delete_all_files() {
 
-	foreach(QString filename, _filelist) {
-		QFile f(filename);
+	foreach(CoverLocation cl, _filelist) {
+		if(!cl.valid) continue;
+		QFile f(cl.cover_path);
 		f.remove();
 	}
 

@@ -65,15 +65,21 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 	painter->save();
 	painter->translate(2, 0);
 
-	QString filename =  index.model()->data(index, Qt::WhatsThisRole).toString();
+	QVariant var = index.model()->data(index, Qt::WhatsThisRole);
+	CoverLocation cl = CoverLocation::getInvalidLocation();
 
+	if( var.canConvert<CoverLocation>()){
+		cl = var.value<CoverLocation>();
+	}
+
+	label->setEnabled(cl.valid);
 	label->setMinimumHeight(100);
 	label->setMinimumWidth(100);
     label->resize(100, 100);
 
 	label->setContentsMargins(10, 10, 10, 10);
 
-	QPixmap pixmap(filename);
+	QPixmap pixmap( cl.cover_path );
 
 	if(!pixmap.isNull()) {
 

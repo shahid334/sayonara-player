@@ -29,12 +29,12 @@
 #ifndef ALTERNATECOVERITEMMODEL_H_
 #define ALTERNATECOVERITEMMODEL_H_
 
-#include <QObject>
+#include "CoverLookup/CoverLocation.h"
 #include <QList>
 #include <QPair>
 #include <QModelIndex>
 #include <QAbstractTableModel>
-#include <QStringList>
+
 
 struct RowColumn {
 	int row;
@@ -60,14 +60,16 @@ public:
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
+	bool is_valid(int row, int col);
+
 
 	RowColumn cvt_2_row_col(int idx) const ;
 	int cvt_2_idx(int row, int col) const ;
 
 
 private:
-	QStringList _pathlist;
-
-
+	QList<CoverLocation> _pathlist;
 };
+
+
 #endif

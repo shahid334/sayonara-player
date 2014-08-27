@@ -57,12 +57,6 @@ CoverLookup::~CoverLookup() {
     if(_cft) {
         _cft->stop();
     }
-
-	CoverLookup* cl = this;
-	CoverLookup** pcl = &cl;
-	*pcl = 0;
-
-    qDebug() << "Deleted cover lookup";
 }
 
 
@@ -73,8 +67,6 @@ void CoverLookup::set_big(bool big){
 void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 
 	if(_cft) {
-		//disconnect(_cft, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
-		//disconnect(_cft, SIGNAL(sig_cover_found(QString)), this, SLOT(cover_found(QString)));
 		_cft->stop();
 	}
 
@@ -83,7 +75,8 @@ void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 	_cfts << _cft;
 
 	connect(_cft, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
-    connect(_cft, SIGNAL(sig_cover_found(QString)), this, SLOT(cover_found(QString)));
+	connect(_cft, SIGNAL(sig_cover_found(const CoverLocation&)),
+			this, SLOT(cover_found(const CoverLocation&)));
 
     _cft->start();
 }
@@ -98,7 +91,7 @@ void CoverLookup::stop() {
 bool CoverLookup::fetch_cover(const CoverLocation& cl) {
 
 	if( QFile::exists(cl.cover_path) && _n_covers == 1 ) {
-		emit sig_cover_found(cl.cover_path);
+		emit sig_cover_found(cl);
 		return true;
 	}
 
@@ -163,8 +156,6 @@ bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const
 
 void CoverLookup::finished(bool success) {
 
-
-
 	QObject* sender = QObject::sender();
 	QObject** psender = &sender;
 
@@ -180,14 +171,15 @@ void CoverLookup::finished(bool success) {
     emit sig_finished(success);
 }
 
-void CoverLookup::cover_found(QString file_path) {
+void CoverLookup::cover_found(const CoverLocation& file_path) {
 
     emit sig_cover_found(file_path);
 }
 
 void CoverLookup::emit_standard_cover() {
-	QString sayonara_logo = Helper::getIconPath() + "logo.png";
-	emit sig_cover_found(sayonara_logo);
+
+	CoverLocation cl = CoverLocation::getInvalidLocation();
+	emit sig_cover_found(cl);
 }
 
 

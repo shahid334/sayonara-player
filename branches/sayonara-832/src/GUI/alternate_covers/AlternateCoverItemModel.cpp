@@ -27,6 +27,7 @@
  */
 
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
+#include "CoverLookup/CoverLocation.h"
 #include <QModelIndex>
 #include <QVariant>
 #include <QStringList>
@@ -77,7 +78,9 @@ QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 
 	 if(role == Qt::WhatsThisRole) {
 
-		 return _pathlist[lin_idx];
+		 QVariant var;
+		 var.setValue<CoverLocation>(_pathlist[lin_idx]);
+		 return var;
 	 }
 
 	 else
@@ -103,7 +106,11 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
         return false;
 
 	 if(role == Qt::EditRole) {
-		 _pathlist[lin_idx] = value.toString();
+
+		 if(value.canConvert<CoverLocation>()){
+			_pathlist[lin_idx] = value.value<CoverLocation>();
+		 }
+
 		 emit dataChanged(index, index);
 		 return true;
 	 }
@@ -119,10 +126,11 @@ bool AlternateCoverItemModel::insertRows(int position, int rows, const QModelInd
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
 	_pathlist.clear();
+	CoverLocation cl = CoverLocation::getInvalidLocation();
 
 	for(int i=0; i<rows; i++) {
 		for(int j=0; j<columnCount(); j++) {
-			_pathlist << "";
+			_pathlist << cl;
 		}
 	}
 
@@ -140,4 +148,13 @@ bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelInd
 	 endRemoveRows();
 	 return true;
 
+}
+
+bool AlternateCoverItemModel::is_valid(int row, int col){
+
+	if( ! _pathlist[ cvt_2_idx(row, col) ].valid ){
+		return false;
+	}
+
+	return true;
 }

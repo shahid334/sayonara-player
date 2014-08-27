@@ -48,7 +48,7 @@ class CoverLookupInterface : public QObject{
 	Q_OBJECT
 
 	signals:
-		void sig_cover_found(const QString&);
+		void sig_cover_found(const CoverLocation&);
 		void sig_finished(bool);
 
 	public slots:
@@ -66,7 +66,7 @@ class CoverLookup : public CoverLookupInterface {
 
 
 private slots:
-	void cover_found(QString);
+	void cover_found(const CoverLocation& );
 	void finished(bool);
 
 
@@ -100,7 +100,6 @@ private:
     CDatabaseConnector* _db;
 
 	QList<CoverFetchThread*> _cfts;
-
 
 	void start_new_thread(const CoverLocation& cl);
 };

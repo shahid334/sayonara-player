@@ -72,7 +72,7 @@ private slots:
 	void psl_tab_index_changed(int);
     void no_cover_available();
 	void cover_clicked();
-	void psl_cover_available(const QString&);
+	void psl_cover_available(const CoverLocation&);
 	void psl_alternate_cover_available(bool);
 	void psl_cover_lookup_finished(bool);
 

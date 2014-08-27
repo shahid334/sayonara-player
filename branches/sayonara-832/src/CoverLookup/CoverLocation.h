@@ -54,4 +54,6 @@ public:
 
 };
 
+Q_DECLARE_METATYPE(CoverLocation)
+
 #endif // COVERLOCATION_H

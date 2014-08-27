@@ -87,8 +87,8 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 			 this,			SLOT(psl_corrected_data_available(const QString&)));
 
 
-	connect(_cover_lookup,	SIGNAL(sig_cover_found(const QString&)),
-			this, 			SLOT(psl_cover_available(const QString&)));
+	connect(_cover_lookup,	SIGNAL(sig_cover_found(const CoverLocation&)),
+			this, 			SLOT(psl_cover_available(const CoverLocation&)));
 
 	connect(_cover_lookup,	SIGNAL(sig_finished(bool)),
 			this, 			SLOT(psl_cover_lookup_finished(bool)));
@@ -227,9 +227,9 @@ void GUI_InfoDialog::prepare_info() {
 	delete info;
 }
 
-void GUI_InfoDialog::psl_cover_available(const QString& cover_path) {
+void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 
-	btn_image->setIcon(QIcon(cover_path));
+	btn_image->setIcon(QIcon(cl.cover_path));
 	btn_image->update();
 }
 
@@ -242,7 +242,7 @@ void GUI_InfoDialog::psl_alternate_cover_available(bool b){
 
 	else{
 		CoverLocation cl = _alternate_covers->get_target_filename();
-		psl_cover_available(cl.cover_path);
+		psl_cover_available(cl);
 	}
 }
 
@@ -302,7 +302,7 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 			break;
 	}
 
-	psl_cover_available(_cl.cover_path);
+	psl_cover_available(_cl);
 
 
 }

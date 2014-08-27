@@ -60,7 +60,7 @@ public:
 
 public slots:
 
-	void cover_found(QString cover_path);
+	void cover_found(const CoverLocation&);
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);

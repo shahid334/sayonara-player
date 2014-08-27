@@ -32,6 +32,7 @@ CoverLocation::CoverLocation() {
 	valid = true;
 }
 
+
 CoverLocation CoverLocation::getInvalidLocation() {
 
 	CoverLocation cl;

@@ -297,8 +297,6 @@ gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {
 		(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
 		new_time_ns)) {
 
-		qDebug() << "r Seek to " << new_time_ns / 1000000;
-
 		return new_time_ns;
 	}
 
@@ -318,10 +316,6 @@ gint64 GSTPlaybackPipeline::seek_abs(gint64 ns) {
 	if(gst_element_seek_simple(_audio_src,
 		GST_FORMAT_TIME,(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
 		ns)) {
-
-
-
-		qDebug() << "Seek to " << ns / 1000000;
 
 		return ns;
 	}

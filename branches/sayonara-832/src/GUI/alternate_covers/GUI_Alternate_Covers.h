@@ -70,7 +70,7 @@ public:
 		void search_button_pressed();
 		void cover_pressed(const QModelIndex& idx);
         void open_file_dialog();
-        void cl_new_cover(QString);
+		void cl_new_cover(const CoverLocation& path);
 		void cl_finished(bool);
 
 	public:
@@ -79,19 +79,15 @@ public:
 	private:
 
 		int 				_cur_idx;
-		QString				_class_name;
-		QString				_calling_class;
 		QString				_last_path;
-		Album				_album;
-		Artist				_artist;
-		bool				_search_for_album;
 		CoverLocation		_target_filename;
-		QStringList			_filelist;
+		QList<CoverLocation> _filelist;
+		bool				_is_searching;
 
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
 
-        bool                _no_album;
+
         CoverLookupAlternative*        _cl_alternative;
 
         void update_model();

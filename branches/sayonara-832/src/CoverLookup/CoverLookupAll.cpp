@@ -29,7 +29,8 @@ CoverLookupAll::CoverLookupAll(QObject* parent, const AlbumList& album_list) :
     _run(true)
 {
     _cl = new CoverLookup(this);
-    connect(_cl, SIGNAL(sig_cover_found(QString)), this, SLOT(cover_found(QString)));
+	connect(_cl, SIGNAL(sig_cover_found(const CoverLocation&)),
+			this, SLOT(cover_found(const CoverLocation&)));
     connect(_cl, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
 }
 
@@ -53,10 +54,10 @@ void CoverLookupAll::stop() {
 }
 
 
-void CoverLookupAll::cover_found(QString file_path) {
+void CoverLookupAll::cover_found(const CoverLocation& cl) {
 
     _album_list.pop_back();
-    emit sig_cover_found(file_path);
+	emit sig_cover_found(cl);
 
     if(!_run) return;
 

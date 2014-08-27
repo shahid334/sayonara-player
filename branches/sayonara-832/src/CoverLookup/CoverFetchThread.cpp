@@ -65,11 +65,15 @@ int CoverFetchThread::run_single() {
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
         if(success) {
-			/*qDebug() << "Cover has dimensions: " << img.width() << "x" << img.height();
-			qDebug() << "Save cover to " << _target_file << " (" << adress << ")";*/
+			CoverLocation cl;
 
 			img.save(_target_file);
-			emit sig_cover_found(_target_file);
+
+			cl.cover_path = _target_file;
+			cl.google_url = adress;
+			cl.valid = true;
+
+			emit sig_cover_found(cl);
 
 			return 1;
         }
@@ -96,13 +100,19 @@ int CoverFetchThread::run_multi() {
 
 			QString filename, dir;
             QString cover_path;
+			CoverLocation cl;
 
 			Helper::split_filename(_target_file, dir, filename);
 			cover_path = dir + "/" + QString::number(idx) + "_" + filename;
 
             img.save( cover_path );
 
-			emit sig_cover_found(cover_path);
+			cl.cover_path = cover_path;
+			cl.google_url = adress;
+			cl.valid = true;
+
+
+			emit sig_cover_found(cl);
 
 			if( idx == _n_covers -1 ) break;
 

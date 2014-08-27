@@ -42,7 +42,7 @@ Q_OBJECT
 
 signals:
     void sig_finished(bool);
-	void sig_cover_found(QString);
+	void sig_cover_found(const CoverLocation&);
 
 public:
 

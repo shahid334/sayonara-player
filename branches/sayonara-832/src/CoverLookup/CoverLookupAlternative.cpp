@@ -97,7 +97,7 @@ void CoverLookupAlternative::start() {
 
     _run = true;
     _cl = new CoverLookup(this, _n_covers);
-    connect(_cl, SIGNAL(sig_cover_found(QString)), this, SLOT(cover_found(QString)));
+	connect(_cl, SIGNAL(sig_cover_found(const CoverLocation&)), this, SLOT(cover_found(const CoverLocation&)));
     connect(_cl, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
 
 
@@ -134,7 +134,7 @@ void CoverLookupAlternative::start() {
 }
 
 
-void CoverLookupAlternative::cover_found(QString cover_path) {
+void CoverLookupAlternative::cover_found(const CoverLocation& cover_path) {
     emit sig_cover_found(cover_path);
 }
 

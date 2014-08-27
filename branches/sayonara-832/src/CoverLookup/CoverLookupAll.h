@@ -35,7 +35,7 @@ private:
     bool _run;
 
 private slots:
-    void cover_found(QString);
+	void cover_found(const CoverLocation&);
     void finished(bool);
 
 public:

@@ -99,9 +99,9 @@ void GUI_Player::sl_no_cover_available() {
 
 // public slot
 // cover was found by CoverLookup
-void GUI_Player::cover_found(QString cover_path) {
+void GUI_Player::cover_found(const CoverLocation& cl) {
 
-	QIcon icon(cover_path);
+	QIcon icon(cl.cover_path);
 
 	albumCover->setIcon(icon);
 	albumCover->repaint();
