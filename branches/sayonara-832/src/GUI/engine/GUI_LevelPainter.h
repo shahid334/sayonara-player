@@ -26,13 +26,8 @@
 #include "GUI/engine/EnginePlugin.h"
 #include "GUI/ui_GUI_LevelPainter.h"
 #include "GUI/engine/EngineColorStyleChooser.h"
-#include <QCloseEvent>
-#include <QShowEvent>
-#include <QPaintEvent>
-#include <QMouseEvent>
-#include <QAction>
-#include <QColor>
-#include <QTimer>
+
+#include <QString>
 
 class GUI_LevelPainter : public EnginePlugin, private Ui::GUI_LevelPainter
 {
@@ -40,51 +35,24 @@ class GUI_LevelPainter : public EnginePlugin, private Ui::GUI_LevelPainter
 public:
 	explicit GUI_LevelPainter(QString name, QWidget *parent=0);
 
-signals:
-    void sig_show(bool);
-    void sig_right_clicked(int);
-    void closeEvent();
-
 protected:
-
-    void showEvent(QShowEvent *);
-    void closeEvent(QCloseEvent *);
-    void paintEvent(QPaintEvent* e);
-    void mousePressEvent(QMouseEvent *e);
-    void resizeEvent(QResizeEvent *e);
+   void paintEvent(QPaintEvent* e);
 
 protected slots:
-	virtual void config_clicked();
-	virtual void next_clicked();
-	virtual void prev_clicked();
-
+	virtual void timed_out();
 
 public slots:
     void set_level(float, float);
-    void psl_stop();
-    void psl_style_update(bool inner=false);
-
-
-private slots:
-    void timed_out();
+    virtual void psl_style_update();
 
 private:
 
     float _level[2];
 
-    EngineColorStyleChooser* _ecsc;
-    ColorStyle _cur_style;
-    int _cur_style_idx;
-
     int** _steps;
-    QTimer* _timer;
-    bool    _timer_stopped;
 
     void resize_steps(int n_rects);
     void reload();
-
-
-    
 };
 
 #endif // GUI_LEVELPAINTER_H

@@ -18,22 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-#include "GUI_LevelPainter.h"
+#include "GUI/engine/GUI_LevelPainter.h"
 #include <QPainter>
 #include <QBrush>
-#include <QDebug>
-
-
 
 GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
-	EnginePlugin(name, parent, this),
+    EnginePlugin(name, parent),
 	Ui::GUI_LevelPainter()
 {
 	setupUi(this);
 
-	_ecsc = new EngineColorStyleChooser(minimumWidth(), minimumHeight());
     _cur_style_idx = 0;
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
     reload();
@@ -48,34 +42,12 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
         }
     }
 
-    _timer = new QTimer();
-    _timer->setInterval(30);
-    _timer_stopped = true;
-    connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
-
-	_btn_config = new QPushButton("...", this);
-	_btn_config->setGeometry(10, 10, 20, 20);
-
+   	_btn_config = new QPushButton("...", this);
 	_btn_prev = new QPushButton("<", this);
-	_btn_prev->setGeometry(35, 10, 20, 20);
-
 	_btn_next = new QPushButton(">", this);
-	_btn_next->setGeometry(60, 10, 20, 20);
-
 	_btn_close = new QPushButton("x", this);
-	_btn_close->setGeometry(85, 10, 20, 20);
 
-
-	connect(_btn_config, SIGNAL(clicked()), this, SLOT(config_clicked()));
-	connect(_btn_prev, SIGNAL(clicked()), this, SLOT(prev_clicked()));
-	connect(_btn_next, SIGNAL(clicked()), this, SLOT(next_clicked()));
-	connect(_btn_close, SIGNAL(clicked()), this, SLOT(close()));
-
-	_btn_config->hide();
-	_btn_prev->hide();
-	_btn_next->hide();
-	_btn_close->hide();
-
+	init_buttons();
 }
 
 
@@ -90,31 +62,6 @@ void GUI_LevelPainter::set_level(float level_l, float level_r) {
     _level[1] = level_r;
 
 	update();
-}
-
-void
-GUI_LevelPainter::mousePressEvent(QMouseEvent *e) {
-
-    int n_styles = _ecsc->get_num_color_schemes();
-
-
-    if(e->button() == Qt::LeftButton) {
-        _cur_style_idx = (_cur_style_idx +  1) % n_styles;
-
-    }
-
-    else if (e->button() == Qt::RightButton)
-       emit sig_right_clicked(_cur_style_idx);
-
-    else if (e->button() == Qt::MidButton) {
-        close();
-        return;
-    }
-
-    _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
-
-    reload();
-    resize_steps(_cur_style.n_rects);
 }
 
 void GUI_LevelPainter::paintEvent(QPaintEvent* e) {
@@ -162,52 +109,23 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e) {
 }
 
 
-void GUI_LevelPainter::showEvent(QShowEvent * e) {
-
-    e->accept();
-
-	_ecsc->reload(width(), height());
-    _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
-    resize_steps(_cur_style.n_rects);
-
-    psl_style_update(true);
-
-    emit sig_show(true);
-}
-
-void GUI_LevelPainter::closeEvent(QCloseEvent *e) {
-    PlayerPlugin::closeEvent(e);
-    emit sig_show(false);
-}
-
-void GUI_LevelPainter::resizeEvent(QResizeEvent *e) {
-    psl_style_update(true);
-}
-
-
-void GUI_LevelPainter::psl_stop() {
-
-    _timer->start();
-    _timer_stopped = false;
-
-}
-
 void GUI_LevelPainter::timed_out() {
 
-    for(int i=0; i<2; i++)
+    for(int i=0; i<2; i++){
         _level[i] -= 2.0f;
+	}
 
     update();
 }
 
+void GUI_LevelPainter::psl_style_update() {
 
-void GUI_LevelPainter::psl_style_update(bool inner) {
 	_ecsc->reload(width(), height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
 
-    if(!inner) reload();
-
     resize_steps(_cur_style.n_rects);
+
+	update();
 
 }
 
@@ -232,12 +150,8 @@ void GUI_LevelPainter::reload() {
 	setMinimumHeight(new_height);
 	setMaximumHeight(new_height);
 
-	if(isVisible())
+	if(isVisible()){
         emit sig_reload(this);
+	}
 }
-
-
-void GUI_LevelPainter::config_clicked(){}
-void GUI_LevelPainter::next_clicked(){}
-void GUI_LevelPainter::prev_clicked(){}
 

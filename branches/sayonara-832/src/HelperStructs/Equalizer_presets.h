@@ -24,6 +24,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QMetaType>
 
 struct EQ_Setting{
 	
@@ -39,21 +40,24 @@ struct EQ_Setting{
 		}
 	}
 	
-	void parseFromString(QString str){
+    static EQ_Setting fromString(const QString& str){
 
+        EQ_Setting eq;
 		QStringList list = str.split(',');
 		if(list.size() == 0) {
-			return;
+            return eq;
 		}
 
-		name = list.at(0);
+        eq.name = list.at(0);
 		list.pop_front();
 
 		for(int i=0; i<list.size(); i++){
 
-			if( i == settings.size() ) break;
-			settings[i] = list.at(i).toDouble();
+            if( i == eq.settings.size() ) break;
+            eq.settings[i] = list.at(i).toDouble();
 		}
+
+        return eq;
 	}
 
 
@@ -67,5 +71,6 @@ struct EQ_Setting{
 		return str;
 	}
 };
+
 
 #endif

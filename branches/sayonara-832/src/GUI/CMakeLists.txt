@@ -73,6 +73,7 @@ SET(SOURCES
     RatingLabel.cpp
     AudioConverter/GUI_AudioConverter.cpp
     bookmarks/GUI_Bookmarks.cpp
+    engine/EnginePlugin.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp

@@ -26,15 +26,9 @@
 #include "GUI/engine/EnginePlugin.h"
 #include "GUI/engine/EngineColorStyleChooser.h"
 #include "GUI/ui_GUI_Spectrum.h"
-#include <QCloseEvent>
-#include <QShowEvent>
-#include <QPaintEvent>
-#include <QMouseEvent>
-#include <QAction>
-#include <QColor>
+
 #include <QList>
-#include <QMap>
-#include <QTimer>
+#include <QString>
 
 class GUI_Spectrum : public EnginePlugin, private Ui::GUI_Spectrum
 {
@@ -42,46 +36,21 @@ class GUI_Spectrum : public EnginePlugin, private Ui::GUI_Spectrum
 public:
 	explicit GUI_Spectrum(QString name, QWidget *parent=0);
 
-
-signals:
-    void sig_show(bool);
-    void closeEvent();
-    void sig_right_clicked(int);
-
 protected:
-
-    void showEvent(QShowEvent *);
-    void closeEvent(QCloseEvent *);
     void paintEvent(QPaintEvent* e);
-    void mousePressEvent(QMouseEvent *e);
+
+protected slots:
+    virtual void timed_out();
+
 
 public slots:
     void set_spectrum(QList<float>&);
-    void psl_stop();
-    void psl_style_update();
-
-protected slots:
-	virtual void config_clicked();
-	virtual void next_clicked();
-	virtual void prev_clicked();
-
-
-private slots:
-    void timed_out();
+    virtual void psl_style_update();
 
 private:
 
     QList<float> _spec;
-
     int** _steps;
-    int   _cur_style_idx;
-    ColorStyle _cur_style;
-
-
-    QTimer* _timer;
-    bool    _timer_stopped;
-    EngineColorStyleChooser* _ecsc;
-    bool _update_running;
 
     void resize_steps(int bins, int rects);
 

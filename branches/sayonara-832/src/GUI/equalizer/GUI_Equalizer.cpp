@@ -163,7 +163,11 @@ void GUI_Equalizer::preset_changed(int index) {
 
 void GUI_Equalizer::btn_preset_clicked() {
 
+    bool b_save = true;
+    int current_idx = combo_presets->currentIndex();
+
 	QString str = "Custom";
+
 	foreach(EqSlider* s, _sliders) {
 		str += "," + s->getLabel()->text();
 	}
@@ -172,14 +176,11 @@ void GUI_Equalizer::btn_preset_clicked() {
 	for(uint i=0; i<_presets.size(); i++) {
 
 		if(_presets[i].name == "Custom") {
-			_presets[i].parseFromString(str);
+            _presets[i] = EQ_Setting::fromString(str);
 			custom_idx = i;
 			break;
 		}
 	}
-
-	bool b_save = true;
-	int current_idx = combo_presets->currentIndex();
 
 	if( custom_idx != -1 && custom_idx != current_idx ) {
 
@@ -196,7 +197,9 @@ void GUI_Equalizer::btn_preset_clicked() {
 
 	if(b_save) {
 		CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
-		if(custom_idx != -1) combo_presets->setCurrentIndex(custom_idx);
+        if(custom_idx != -1){
+            combo_presets->setCurrentIndex(custom_idx);
+        }
 	}
 }
 

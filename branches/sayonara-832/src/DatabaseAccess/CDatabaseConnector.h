@@ -192,11 +192,19 @@ public:
 	 *******************************************/
         void load_setting(QString key, QVariant& val, QVariant def=0);
 
+        template<class T>
+        T load_setting_type(QString key, T def){
+
+            load_setting_string(key, "");
+
+            return T::fromString(key);
+        }
+
 
 		bool load_setting_bool(QString key, bool def=false);
 		QString load_setting_string(QString key, QString def="");
 		int load_setting_int(QString key, int def=0);
-		QStringList load_setting_strlist(QString key, QChar sep=',');
+        QStringList load_setting_strlist(QString key, QString def, int expected_len=-1, QChar sep=',');
 
 
    /************************************
