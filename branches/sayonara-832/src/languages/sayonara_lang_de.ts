@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE" sourcelanguage="en_US">
+<TS version="2.1" language="de_DE" sourcelanguage="en_US">
 <context>
     <name>AlbumInfo</name>
     <message>
         <location filename="../HelperStructs/AlbumInfo.cpp" line="39"/>
         <source>yes</source>
-        <translation type="unfinished">ja</translation>
+        <translation>ja</translation>
     </message>
     <message>
         <location filename="../HelperStructs/AlbumInfo.cpp" line="44"/>
         <source>no</source>
-        <translation type="unfinished">nein</translation>
+        <translation>nein</translation>
     </message>
     <message>
         <location filename="../HelperStructs/AlbumInfo.cpp" line="60"/>
         <source>by</source>
-        <translation type="unfinished">von</translation>
+        <translation>von</translation>
     </message>
 </context>
 <context>
@@ -67,47 +67,47 @@
     <message>
         <location filename="../application.cpp" line="145"/>
         <source>Le&amp;vel</source>
-        <translation type="unfinished">Pe&amp;gel</translation>
+        <translation>Pe&amp;gel</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="146"/>
         <source>&amp;Spectrum</source>
-        <translation type="unfinished">&amp;Spektrum</translation>
+        <translation>&amp;Spektrum</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="147"/>
         <source>&amp;Webstreams</source>
-        <translation type="unfinished">&amp;Online Streams</translation>
+        <translation>&amp;Online Streams</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="148"/>
         <source>P&amp;odcasts</source>
-        <translation type="unfinished">Po&amp;dcasts</translation>
+        <translation>Po&amp;dcasts</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="149"/>
         <source>&amp;Equalizer</source>
-        <translation type="unfinished">&amp;Equalizer</translation>
+        <translation>&amp;Equalizer</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="150"/>
         <source>Pla&amp;ylists</source>
-        <translation type="unfinished">Wiedergabe&amp;listen</translation>
+        <translation>Wiedergabe&amp;listen</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="151"/>
         <source>&amp;mp3 Converter</source>
-        <translation type="unfinished">&amp;mp3 Konverter</translation>
+        <translation>&amp;mp3 Konverter</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="152"/>
         <source>&amp;Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Lese&amp;zeichen</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="153"/>
         <source>Spee&amp;d</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Geschwindigkeit</translation>
     </message>
 </context>
 <context>
@@ -352,27 +352,27 @@
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="70"/>
         <source>Bookmarks</source>
-        <translation type="unfinished"></translation>
+        <translation>Lesezeichen</translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="92"/>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="155"/>
         <source>Delete all</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle löschen</translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="209"/>
         <source>Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>Wiederholung</translation>
     </message>
 </context>
 <context>
@@ -1284,27 +1284,27 @@
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="26"/>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="53"/>
         <source>1.0</source>
-        <translation type="unfinished">15k {1.0?}</translation>
+        <translation>1.0</translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="106"/>
         <source>Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschwindigkeit</translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="128"/>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="137"/>
         <source>Active</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktivieren</translation>
     </message>
 </context>
 <context>
@@ -1982,12 +1982,12 @@ expression</source>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="126"/>
         <source>Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>Pfade</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="158"/>
         <source>Sublable</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="179"/>
@@ -2200,97 +2200,97 @@ expression</source>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="126"/>
         <source>Various tracks</source>
-        <translation type="unfinished">Verschiedene Titel</translation>
+        <translation>Verschiedene Titel</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="134"/>
         <source>by </source>
-        <translation type="unfinished">von </translation>
+        <translation>von </translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="137"/>
         <source>track on</source>
-        <translation type="unfinished"></translation>
+        <translation>Titel auf</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="141"/>
         <source>on</source>
-        <translation type="unfinished"></translation>
+        <translation>auf</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="182"/>
         <source>Various artists</source>
-        <translation type="unfinished">Verschiedene Künstler</translation>
+        <translation>Verschiedene Künstler</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="198"/>
         <source>Various albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Verschienden Alben</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="209"/>
         <source>1st</source>
-        <translation type="unfinished">1.</translation>
+        <translation>1.</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="213"/>
         <source>2nd</source>
-        <translation type="unfinished">2.</translation>
+        <translation>2.</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="216"/>
         <source>3rd</source>
-        <translation type="unfinished">3.</translation>
+        <translation>3.</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="219"/>
         <source>th</source>
-        <translation type="unfinished">.</translation>
+        <translation>.</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="255"/>
         <source>#Tracks</source>
-        <translation type="unfinished">#Titel</translation>
+        <translation>#Titel</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="257"/>
         <source>#Albums</source>
-        <translation type="unfinished">#Alben</translation>
+        <translation>#Alben</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="259"/>
         <source>#Artists</source>
-        <translation type="unfinished">#Künstler</translation>
+        <translation>#Künstler</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="261"/>
         <source>Filesize</source>
-        <translation type="unfinished">Dateigröße</translation>
+        <translation>Dateigröße</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="263"/>
         <source>Playing time</source>
-        <translation type="unfinished">Spielzeit</translation>
+        <translation>Spielzeit</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="265"/>
         <source>Year</source>
-        <translation type="unfinished">Jahr</translation>
+        <translation>Jahr</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="267"/>
         <source>Sampler? </source>
-        <translation type="unfinished"></translation>
+        <translation>Sampler?</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="269"/>
         <source>Bitrate</source>
-        <translation type="unfinished">Bitrate</translation>
+        <translation>Bitrate</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="271"/>
         <source>Genre</source>
-        <translation type="unfinished">Genre</translation>
+        <translation>Genre</translation>
     </message>
 </context>
 <context>
@@ -2763,7 +2763,7 @@ expression</source>
     <message>
         <location filename="../Soundcloud/SoundcloudLibrary.cpp" line="152"/>
         <source>Misc</source>
-        <translation type="unfinished"></translation>
+        <translation>Verschiedene</translation>
     </message>
 </context>
 <context>
@@ -2771,33 +2771,33 @@ expression</source>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="59"/>
         <source>Edit</source>
-        <translation type="unfinished">Bearbeiten</translation>
+        <translation>Bearbeiten</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="109"/>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="70"/>
         <source>Ctrl+.</source>
-        <translation type="unfinished">Ctrl+.</translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="118"/>
         <source>Ctrl+?</source>
-        <translation type="unfinished">Ctrl+?</translation>
+        <translation>Ctrl+?</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="80"/>
         <source>Sayonara Player</source>
-        <translation type="unfinished">Sayonara Player</translation>
+        <translation>Sayonara Player</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="82"/>
         <source>Written by</source>
-        <translation type="unfinished">Von</translation>
+        <translation>Von</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="83"/>
         <source>Copyright</source>
-        <translation type="unfinished">Copyright</translation>
+        <translation>Copyright</translation>
     </message>
 </context>
 </TS>
