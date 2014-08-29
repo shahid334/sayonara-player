@@ -38,7 +38,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -399,12 +399,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tab_3">
-      <attribute name="title">
-       <string>Edit</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_4"/>
      </widget>
     </widget>
    </item>

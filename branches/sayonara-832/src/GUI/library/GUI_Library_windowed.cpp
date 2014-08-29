@@ -166,8 +166,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(lv_artist, SIGNAL(sig_tab_pressed(bool)), this, SLOT(artist_tab_pressed(bool)));
 	connect(lv_artist, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
-	btn_clear->setIcon(QIcon(Helper::getIconPath() + "broom.png"));
-	btn_info->setIcon(QIcon(Helper::getIconPath() + "info.png"));
+    btn_clear->setIcon(Helper::getIcon("broom.png"));
+    btn_info->setIcon(Helper::getIcon("info.png"));
 
 	connect(btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
@@ -178,9 +178,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
     bool show_only_tracks = _settings->getLibShowOnlyTracks();
 	lv_artist->setVisible(!show_only_tracks);
 	lv_album->setVisible(!show_only_tracks);
-
-
-
 
     hide();
 }
@@ -434,8 +431,10 @@ void GUI_Library_windowed::disc_pressed(int disc) {
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md) {
 
 	tb_title->set_mimedata(v_md, "tracks", false);
-	if(_info_dialog)
+
+    if(_info_dialog){
 		_info_dialog->setMetaData(v_md);
+    }
 }
 
 
@@ -450,7 +449,11 @@ void GUI_Library_windowed::artist_dbl_clicked(const QModelIndex & idx) {
 void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx) {
 
     QList<int> lst = _track_model->get_selected();
-    if(lst.size() ==0 ) lst << idx.row();
+
+    if(lst.size() ==0 ) {
+        lst << idx.row();
+    }
+
     emit sig_tracks_dbl_clicked(lst);
 }
 
@@ -475,8 +478,6 @@ void GUI_Library_windowed::sortorder_title_changed(Sort::SortOrder s) {
 
 void GUI_Library_windowed::clear_button_pressed() {
 
-//connect(le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
-	//disconnect(le_search, SIGNAL(text))
 	le_search->setText("");
 	text_line_edited("", true);
 }
@@ -679,8 +680,9 @@ void GUI_Library_windowed::delete_tracks() {
 
 	int answer = show_delete_dialog(lst.size());
 
-	if(answer)
+    if(answer){
 		emit sig_delete_certain_tracks(lst, answer);
+    }
 }
 
 

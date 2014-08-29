@@ -252,9 +252,9 @@ bool CSettingsStorage::getLoadPlaylist() { return m_loadPlaylist; }
 void CSettingsStorage::setLoadPlaylist(bool b) {	m_loadPlaylist = b;     _sth_changed = true;}
 
 
-MetaData* CSettingsStorage::getLastTrack() { return &m_lastTrack; }
+LastTrack* CSettingsStorage::getLastTrack() { return &m_lastTrack; }
 
-void CSettingsStorage::setLastTrack(const MetaData& md) { m_lastTrack = md;     _sth_changed = true;}
+void CSettingsStorage::setLastTrack(const LastTrack& md) { m_lastTrack = md;     _sth_changed = true;}
 
 void CSettingsStorage::updateLastTrack() {
        _sth_changed = true;

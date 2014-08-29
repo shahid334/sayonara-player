@@ -74,7 +74,12 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 
 	ENGINE_DEBUG;
 
-	gst_element_query_position(p, GST_FORMAT_TIME, &pos);
+#if GST_CHECK_VERSION(1, 0, 0)
+    gst_element_query_position(p, GST_FORMAT_TIME, &pos);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    gst_element_query_position(p, &format, &pos);
+#endif
 
 	pipeline->refresh_cur_position(pos / MIO);
 
@@ -102,8 +107,21 @@ void GSTAbstractPipeline::about_to_finish() {
 	gint64 duration;
 	qint64 time2go;
 
-	gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
-	gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &position);
+
+
+
+#if GST_CHECK_VERSION(1, 0, 0)
+    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &position);
+
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    gst_element_query_duration(_pipeline, &format, &duration);
+    gst_element_query_duration(_pipeline, &format, &position);
+
+#endif
+
+
 
 	time2go = (duration - position) / MIO;
 

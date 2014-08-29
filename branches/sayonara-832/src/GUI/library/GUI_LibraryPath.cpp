@@ -31,8 +31,7 @@ GUI_LibraryPath::GUI_LibraryPath(QWidget *parent) :
 {
 	setupUi(this);
 
-    QIcon import(Helper::getIconPath() + "/import.png" );
-	btn_setLibrary->setIcon(import);
+    btn_setLibrary->setIcon(Helper::getIcon("import.png"));
 
 	connect(btn_setLibrary, SIGNAL(clicked()), this, SLOT(btn_clicked()));
 }

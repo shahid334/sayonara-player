@@ -25,7 +25,6 @@
 #include <QDebug>
 
 LibraryRatingDelegate::LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent)
-
 {
     _parent = parent;
 }

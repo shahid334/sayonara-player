@@ -160,7 +160,6 @@ private slots:
     void fileSelectedClicked(bool);
     void folderSelectedClicked(bool);
     void reloadLibraryClicked(bool b = true);
-    void clearLibraryClicked(bool b = true);
     void importFolderClicked(bool b = true);
     void importFilesClicked(bool b = true);
 

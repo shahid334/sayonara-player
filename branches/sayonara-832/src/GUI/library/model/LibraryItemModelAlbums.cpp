@@ -132,24 +132,26 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 	 if (index.isValid() && role == Qt::EditRole) {
 
          int col_idx = calc_shown_col(index.column());
+
 		 if(col_idx == COL_ALBUM_RATING) {
              _album_list[index.row()].rating = value.toInt();
 
          }
 
-         else if(index.column() == 1) {
-
+         else {
 
              Album album;
-			 Album::fromVariant(value, album);
+             bool success = Album::fromVariant(value, album);
 
-             if(album.is_lib_selected && !_selected_rows.contains(index.row()))
+             if(!success) return false;
+
+             if(album.is_lib_selected && !_selected_rows.contains(index.row())){
                 _selected_rows << index.row();
+             }
 
 			 _album_list.replace(index.row(), album);
               emit dataChanged(index, index);
 		 }
-
 
 	     return true;
 	 }
@@ -161,14 +163,16 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 
 Qt::ItemFlags LibraryItemModelAlbums::flags(const QModelIndex & index) const
 {
-	if (!index.isValid())
+    if (!index.isValid()) {
 		return Qt::ItemIsEnabled;
+    }
 
     int col = index.column();
     int idx_col = calc_shown_col(col);
 
-    if(idx_col == COL_ALBUM_RATING)
+    if(idx_col == COL_ALBUM_RATING){
         return (QAbstractItemModel::flags(index) | Qt::ItemIsEditable);
+    }
 
     return QAbstractItemModel::flags(index);
 }
@@ -181,31 +185,38 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order) {
 }
 
 QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr) {
-	if(_album_list.isEmpty()) return this->index(-1, -1);
+    if(_album_list.isEmpty()) {
+        return this->index(-1, -1);
+    }
+
 	if(_selected_rows.size() > 0) {
-		qDebug() << _selected_rows;
 		return getNextRowIndexOf(substr, _selected_rows[0]);
 	}
 
-	else
-		return getNextRowIndexOf(substr, 0);
+    else{
+        return getNextRowIndexOf(substr, 0);
+    }
 }
 
 QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 
 	int len = _album_list.size();
-	if(len == 0) return this->index(-1, -1);
+    if(len == 0)  {
+        return this->index(-1, -1);
+    }
 
 	for(int i=0; i<len; i++) {
-	int row_idx = (i + row) % len;
+        int row_idx = (i + row) % len;
 
 		QString album_name = _album_list[row_idx].name;
 		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
 		}
-		if(album_name.startsWith(substr, Qt::CaseInsensitive) || album_name.startsWith(substr, Qt::CaseInsensitive))
-			return this->index(row_idx, 0);
+        if( album_name.startsWith(substr, Qt::CaseInsensitive ) ||
+            album_name.startsWith(substr, Qt::CaseInsensitive )){
+                return this->index(row_idx, 0);
+        }
 	}
 
 	return this->index(-1, -1);
@@ -214,28 +225,47 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
 
 	int len = _album_list.size();
-	if(len < row) row = len - 1;
+    if(len < row){
+        row = len - 1;
+    }
 
 	for(int i=0; i<len; i++) {
-		if(row - i < 0) row = len - 1;
-		int row_idx = (row-i) % len;
-		QString album_name = _album_list[row_idx].name;
-		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
+        int row_idx;
+        QString album_name;
+
+        if(row - i < 0){
+            row = len - 1;
+        }
+
+        row_idx = (row-i) % len;
+        album_name = _album_list[row_idx].name;
+
+        if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
 		}
-		if(album_name.startsWith(substr, Qt::CaseInsensitive) || album_name.startsWith(substr, Qt::CaseInsensitive))
-			return this->index(row_idx, 0);
+
+        if( album_name.startsWith(substr, Qt::CaseInsensitive) ||
+            album_name.startsWith(substr, Qt::CaseInsensitive)){
+            return this->index(row_idx, 0);
+        }
 	}
 
 	return this->index(-1, -1);
 }
 
 
-
-
 QList<quint8> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx) {
-    if(!idx.isValid()) return QList<quint8>();
-    if(idx.row() < 0 || idx.row() >= _album_list.size()) return QList<quint8>();
-	return _album_list[idx.row()].discnumbers;
+
+    if(!idx.isValid()) {
+        return QList<quint8>();
+    }
+
+    if( idx.row() < 0 ||
+        idx.row() >= _album_list.size())
+    {
+        return QList<quint8>();
+    }
+
+    return _album_list[idx.row()].discnumbers;
 }

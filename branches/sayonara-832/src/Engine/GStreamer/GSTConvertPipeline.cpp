@@ -137,8 +137,16 @@ qint64 GSTConvertPipeline::get_duration_ms() {
 	bool success = false;
 	GstState state = get_state();
 
-	if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING)
-		success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+    if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING){
+
+#if GST_CHECK_VERSION(1, 0, 0)
+    success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    success = gst_element_query_duration(_pipeline, &format, &duration);
+#endif
+
+    }
 
 	if(!success ) {
 		_duration = 0;
@@ -154,17 +162,22 @@ qint64 GSTConvertPipeline::get_duration_ms() {
 
 qint64 GSTConvertPipeline::get_position_ms() {
 
-	gint64 position=0;
+    gint64 pos=0;
 	bool success = false;
 
-	success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
+#if GST_CHECK_VERSION(1, 0, 0)
+    success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    success = gst_element_query_position(_pipeline, &format, &pos);
+#endif
 
 	if(!success ) {
 		_position = 0;
 		return -1;
 	}
 
-	_position = (qint64) (position / MIO);
+    _position = (qint64) (pos / MIO);
 
 	return _position;
 }

@@ -50,24 +50,24 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) :
 {
 	setupUi(this);
 
+    QCompleter* completer;
+    QStringList complete_list;
+
     _parent = parent;
 
     _cur_idx = -1;
     _db = CDatabaseConnector::getInstance();
 
-    QPixmap pix = QPixmap(Helper::getIconPath() + "id3.png").scaled(50,50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	lab_icon->setPixmap(pix);
-
-    QStringList complete_list;
     complete_list << TAG_TITLE;
     complete_list << TAG_ARTIST;
     complete_list << TAG_ALBUM;
     complete_list << TAG_TRACK_NUM;
     complete_list << TAG_YEAR;
     complete_list << TAG_DISC;
-    QCompleter* completer = new QCompleter(complete_list);
-	le_tag_from_path->setCompleter(completer);
+    completer = new QCompleter(complete_list);
 
+
+	le_tag_from_path->setCompleter(completer);
 	le_tag_from_path->setVisible(false);
 	cb_tag_all->setVisible(false);
 	btn_tag_apply->setVisible(false);
@@ -76,6 +76,7 @@ GUI_TagEdit::GUI_TagEdit(QWidget* parent) :
 	label_8->setVisible(false);
 	label_10->setVisible(false);
 	line->setVisible(false);
+    lab_icon->setPixmap(Helper::getPixmap("id3.png", QSize(50, 50), false));
 
 	connect(pb_next_track, SIGNAL(released()), this, SLOT(next_button_clicked()));
 	connect(pb_prev, SIGNAL(released()), this, SLOT(prev_button_clicked()));

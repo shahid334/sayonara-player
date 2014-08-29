@@ -100,8 +100,6 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
 	}
 
 	return true;
-
-
 }
 
 
@@ -126,7 +124,6 @@ void ID3::setMetaDataOfFile(MetaData& md) {
 	f.tag()->setYear(md.year);
 	f.tag()->setTrack(md.track_num);
     f.save();
-
 
     TagLib::File* file = f.file();
     TagLib::MPEG::File* f_mp3;

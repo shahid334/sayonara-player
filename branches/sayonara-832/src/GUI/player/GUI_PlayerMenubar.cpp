@@ -123,17 +123,8 @@ void GUI_Player::reloadLibraryClicked(bool b) {
     emit sig_reload_library(false);
 }
 
-void GUI_Player::clearLibraryClicked(bool b) {
-	Q_UNUSED(b);
-	emit sig_clear_library();
-}
-
-
 // prvt slot
 void GUI_Player::fetch_all_covers_clicked(bool b) {
-	Q_UNUSED(b);
-	//m_cov_lookup->fetch_all_album_covers();
-    qDebug() << "Fetch all covers triggered";
 }
 /** FILE END **/
 
@@ -341,8 +332,7 @@ void GUI_Player::about(bool b) {
 
     QMessageBox infobox(this);
     infobox.setParent(this);
-    QPixmap p = QPixmap(Helper::getIconPath() + "logo.png").scaled(150, 150, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    infobox.setIconPixmap(p);
+    infobox.setIconPixmap(Helper::getPixmap("logo.png", QSize(150, 150), true));
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 

@@ -46,8 +46,7 @@ GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) :
 	_db = CDatabaseConnector::getInstance();
 	_lfm = LastFM::getInstance();
 
-	QPixmap pix = QPixmap::fromImage(QImage(Helper::getIconPath() + "info.png")).scaled(80,80, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	lab_icon->setPixmap(pix);
+    lab_icon->setPixmap(Helper::getPixmap("info.png", QSize(80,80), false));
 
     hide();
 }

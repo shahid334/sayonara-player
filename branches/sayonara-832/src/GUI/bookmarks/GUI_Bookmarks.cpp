@@ -38,12 +38,12 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 
 	_cur_time = -1;
 
-	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
-	btn_delete_all->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
-	btn_new->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	btn_last->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
-	btn_next->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
-	lab_logo->setPixmap(QPixmap(Helper::getIconPath() + "bookmarks.png"));
+    btn_delete->setIcon(Helper::getIcon("delete.png"));
+    btn_delete_all->setIcon(Helper::getIcon("delete.png"));
+    btn_new->setIcon(Helper::getIcon("save.png"));
+    btn_last->setIcon(Helper::getIcon("bwd.png"));
+    btn_next->setIcon(Helper::getIcon("fwd.png"));
+    lab_logo->setPixmap(Helper::getPixmap("bookmarks.png", lab_logo->size(), false));
 
 	connect(btn_new, SIGNAL(clicked()), this, SLOT(new_clicked()));
 	connect(btn_delete, SIGNAL(clicked()), this, SLOT(del_clicked()));

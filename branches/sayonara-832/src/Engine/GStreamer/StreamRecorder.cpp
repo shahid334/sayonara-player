@@ -328,10 +328,13 @@ bool StreamRecorder::stop(bool delete_track) {
     terminate_thread_if_running();
 
 	gint64 duration=0;
-	bool success = false;
-	success = gst_element_query_duration(_rec_pipeline, GST_FORMAT_TIME, &duration);
-	qDebug() << "SR: Stream length: " << duration << ": " << success;
 
+#if GST_CHECK_VERSION(1, 0, 0)
+    gst_element_query_duration(_rec_pipeline, GST_FORMAT_TIME, &duration);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    gst_element_query_duration(_rec_pipeline, &format, &duration);
+#endif
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_READY);
 

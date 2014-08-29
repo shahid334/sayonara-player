@@ -39,13 +39,20 @@ LN_Notification::~LN_Notification() {
 
 }
 
+static void notification_closed(gpointer notification, void* data){
+
+    gpointer* pnot = &notification;
+    *pnot = 0;
+
+}
+
 void LN_Notification::notification_show(const MetaData& md) {
 
     if(!_initialized) return;
 
 	CoverLocation cl = CoverLocation::get_cover_location(md);
     CSettingsStorage* settings = CSettingsStorage::getInstance();
-	QString pixmap_path;
+    QString pixmap_path;
 
     not_close();
 
@@ -53,7 +60,7 @@ void LN_Notification::notification_show(const MetaData& md) {
     text.replace("&", "&amp;");
 
 	if( !QFile::exists(cl.cover_path) ) {
-		pixmap_path = Helper::getIconPath() + "logo_small.png";
+        pixmap_path = Helper::getIconPath() + "logo_small.png";
 	}
 
     else{
@@ -83,10 +90,10 @@ void LN_Notification::notification_show(const MetaData& md) {
                                                 pixmap_path.toLocal8Bit().data(), NULL);
 #endif
 
+     g_signal_connect(n, "closed", G_CALLBACK(notification_closed), NULL);
+
 
    _not = n;
-
-
 
     int timeout = settings->getNotificationTimeout();
     notify_notification_set_timeout     (n, timeout);
@@ -117,10 +124,11 @@ void LN_Notification::not_close() {
     if(!_not) return;
 
     NotifyNotification* n = (NotifyNotification*) _not;
-    if(n)
+    if(n){
        notify_notification_close(n,NULL);
-    _not = NULL;
+    }
 
+    _not = NULL;
 }
 
 

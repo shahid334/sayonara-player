@@ -75,13 +75,14 @@ private slots:
 	void psl_cover_available(const CoverLocation&);
 	void psl_alternate_cover_available(bool);
 	void psl_cover_lookup_finished(bool);
+    void psl_tag_edit_deleted();
 
 
 protected:
     void closeEvent(QCloseEvent *e);
 
 public:
-	GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit=0);
+    GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit);
 	virtual ~GUI_InfoDialog();
 
 	void setInfoMode(InfoDialogMode mode);

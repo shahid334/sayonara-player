@@ -348,11 +348,17 @@ void GSTPlaybackPipeline::set_speed(float f) {
 		/*gst_element_unlink_many(_audio_convert, _equalizer, NULL);
 		gst_element_link_many(_audio_convert, _speed, _equalizer, NULL);*/
 
-		gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
-		gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
 
 
-		qDebug() << "Seek";
+#if GST_CHECK_VERSION(1, 0, 0)
+    gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
+    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    gst_element_query_position(_pipeline, &format, &pos);
+    gst_element_query_duration(_pipeline, &format, &dur);
+#endif
+
 		gst_element_seek(_audio_src,
 						 f,
 						 GST_FORMAT_TIME,
@@ -368,8 +374,16 @@ void GSTPlaybackPipeline::set_speed(float f) {
 		gint64 pos, dur;
 		qDebug() << "Seek";
 
-		gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
-		gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
+
+#if GST_CHECK_VERSION(1, 0, 0)
+    gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
+    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    gst_element_query_position(_pipeline, &format, &pos);
+    gst_element_query_duration(_pipeline, &format, &dur);
+#endif
+
 
 		gst_element_seek(_audio_src,
 						 f,
@@ -435,7 +449,12 @@ qint64 GSTPlaybackPipeline::get_position_ms() {
 	gint64 position=0;
 	bool success = false;
 
-	success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
+#if GST_CHECK_VERSION(1, 0, 0)
+    success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
+#else
+        GstFormat format = GST_FORMAT_TIME;
+    success = gst_element_query_position(_pipeline, &format, &position);
+#endif
 
 	if(!success ) {
 		_position = 0;
@@ -456,8 +475,18 @@ qint64 GSTPlaybackPipeline::get_duration_ms() {
 	bool success = false;
 	GstState state = get_state();
 
-	if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING)
-		success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+    if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING){
+
+#if GST_CHECK_VERSION(1, 0, 0)
+        gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+#else
+        GstFormat format = GST_FORMAT_TIME;
+        gst_element_query_duration(_pipeline, &format, &duration);
+#endif
+
+
+    }
+
 
 	if(!success ) {
 		_duration = 0;

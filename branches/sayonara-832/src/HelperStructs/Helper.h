@@ -36,15 +36,19 @@
 #include <QWidget>
 #include <QImage>
 #include <QDebug>
+#include <QPixmap>
+#include <QIcon>
 
 namespace Helper{
-
 
 	QString cvtMsecs2TitleLengthString(quint64 msec, bool colon=true, bool show_days=true);
 	QString cvtQString2FirstUpper(const QString& str);
 	QString calc_filesize_str(quint64 filesize);
 
+    QIcon getIcon(const QString& icon_name);
+    QPixmap getPixmap(const QString& icon_name, QSize sz=QSize(0, 0), bool keep_aspect=true);
 	QString getIconPath();
+    QString getIconPath(const QString& icon_name);
 	QString getErrorFile();
 	QString getSayonaraPath();
     QString getSharePath();
@@ -53,7 +57,6 @@ namespace Helper{
 					   const QString& target="",
 					   bool underline=true);
 
-	QString get_artist_image_path(const QString& artist, bool big);
 	QString calc_cover_token(const QString& artist, const QString& album, bool big);
 
 	QString calc_google_image_search_adress(const QString& searchstring, bool big);
@@ -75,6 +78,9 @@ namespace Helper{
 	QStringList extract_folders_of_files(const QStringList& list);
 
     QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');
+
+
+    // Everything clear
 	bool is_url(const QString& str);
 	bool is_www(const QString& str);
 	bool is_file(const QString& filename);
@@ -84,6 +90,7 @@ namespace Helper{
 	bool is_podcastfile(const QString& filename, QString* content);
 
 
+    // get album name with discnumber (calls database)
     QString get_album_w_disc(const MetaData& md);
 
 	template <typename T> QList<T> randomize_list(const QList<T>& list) {
@@ -109,11 +116,9 @@ namespace Helper{
 	 */
 	bool checkTrack(const MetaData& md);
 
-
 	bool read_file_into_str(const QString& filename, QString* content);
 	bool read_http_into_str(const QString& url, QString* content);
 	bool read_http_into_img(const QString& url, QImage* image);
-
 
 	QString easy_tag_finder(const QString&  tag, const QString& xml_doc);
 	QString calc_hash(const QString&  data);
@@ -121,8 +126,6 @@ namespace Helper{
     QString get_album_major_artist(int album_id);
 	QString get_major_artist(const QStringList& artists);
 	QString get_major_artist(const ArtistList& artists);
-    Album get_album_from_metadata(const MetaData& md);
-
 
     void set_deja_vu_font(QWidget* w, int font_size=-1);
 	void set_bin_path(const QString& str);

@@ -190,20 +190,20 @@ int main(int argc, char *argv[]) {
 	}
 
 
-            app.setApplicationName("Sayonara");
-            app.setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
+    app.setApplicationName("Sayonara");
+    app.setWindowIcon(Helper::getIcon("logo.png"));
 
 
-		QStringList params;
-		for(int i=1; i<argc; i++) {
-			QString param(argv[i]);
-			params.push_back(param);
-		}
+    QStringList params;
+    for(int i=1; i<argc; i++) {
+        QString param(argv[i]);
+        params.push_back(param);
+    }
 
-        QString language = CSettingsStorage::getInstance()->getLanguage();
-        QTranslator translator;
-        translator.load(language, Helper::getSharePath() + "translations");
-        app.installTranslator(&translator);
+    QString language = CSettingsStorage::getInstance()->getLanguage();
+    QTranslator translator;
+    translator.load(language, Helper::getSharePath() + "translations");
+    app.installTranslator(&translator);
 
     QFont font("DejaVu Sans", 9, 55,  false);
 	font.setHintingPreference(QFont::PreferNoHinting);
@@ -211,13 +211,12 @@ int main(int argc, char *argv[]) {
 	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
     app.setFont(font);
 
-		app.init(params.size(), &translator);
-		if(!app.is_initialized()) return 0;
-		app.setFiles2Play(params);
+    app.init(params.size(), &translator);
+    if(!app.is_initialized()) return 0;
 
-        app.installTranslator(&translator);
-        app.exec();
+    app.setFiles2Play(params);
+    app.installTranslator(&translator);
+    app.exec();
 
-
-        return 0;
+    return 0;
 }

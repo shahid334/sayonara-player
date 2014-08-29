@@ -38,9 +38,9 @@
 LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent) {
     this->_parent = parent;
 
+    _icon_single_album = Helper::getPixmap("play_small.png");
+    _icon_multi_album = Helper::getPixmap("fwd_orange.png");
 
-    _icon_single_album = QPixmap(Helper::getIconPath() + "play_small.png");
-    _icon_multi_album = QPixmap(Helper::getIconPath() + "fwd_orange.png");
     _model = model;
     _selected_background = QColor(66,78,114);
 }

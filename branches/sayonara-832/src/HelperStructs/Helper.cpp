@@ -156,9 +156,40 @@ QString Helper::getLibPath() {
 
     qDebug() << "libpath = " << path;
     return path;
-
 }
 
+QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
+
+    QString path = getIconPath(icon_name);
+    QPixmap pixmap(path);
+
+    if(sz.width() == 0){
+        return pixmap;
+    }
+
+    else{
+        if(keep_aspect){
+            return pixmap.scaled(sz, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        }
+
+        else{
+            return pixmap.scaled(sz, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        }
+    }
+
+    return pixmap;
+}
+
+
+QIcon Helper::getIcon(const QString& icon_name){
+    QString path = Helper::getIconPath() + icon_name;
+	return QIcon(path);
+}
+
+
+QString Helper::getIconPath(const QString& icon_name){
+    return getIconPath() + icon_name;
+}
 
 QString Helper::getIconPath() {
 
@@ -185,18 +216,6 @@ QString Helper::getErrorFile(){
 
 QString Helper::getSayonaraPath() {
 	return QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator();
-}
-
-QString Helper::get_artist_image_path(const QString& artist, bool big) {
-	QString token = QString("artist_") + calc_cover_token(artist, "", big);
-	QString image_path = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
-
-
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
-		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
-	}
-
-	return image_path;
 }
 
 
@@ -546,7 +565,6 @@ QStringList Helper::extract_folders_of_files(const QStringList& files) {
 
 bool Helper::checkTrack(const MetaData& md) {
 
-
     if( is_www(md.filepath)) return true;
 
 	if( !QFile::exists(md.filepath) && md.id >= 0 ) {
@@ -693,21 +711,34 @@ bool Helper::is_file(const QString& filename) {
 
 QString Helper::get_album_w_disc(const MetaData& md) {
 
-    if(md.album_id <= 0) return md.album.trimmed();
+    if(md.album_id <= 0){
+        return md.album.trimmed();
+    }
+
+    QString ret;
+    Album album;
+    bool success;
+    CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
     QRegExp re(QString("(\\s)?-?(\\s)?((cd)|(CD)|((d|D)((is)|(IS))(c|C|k|K)))(\\d|(\\s\\d))"));
-    CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    Album album;
-    bool success = db->getAlbumByID(md.album_id, album);
 
-    if(!success) return md.album.trimmed();
+    success = db->getAlbumByID(md.album_id, album);
 
-    if(album.discnumbers.size() > 1 && !album.name.contains(re))
-        return album.name.trimmed() + " (Disc " + QString::number(md.discnumber) + ")";
+    if(!success){
+        ret =  md.album.trimmed();
+    }
 
-    else return album.name.trimmed();
+    else if(album.discnumbers.size() > 1 && !album.name.contains(re)){
+        ret = album.name.trimmed() + " (Disc " + QString::number(md.discnumber) + ")";
+    }
 
+    else {
+        ret = album.name.trimmed();
+    }
+
+    return ret;
 }
+
 
 QString Helper::get_major_artist(const ArtistList& artists) {
 
@@ -774,37 +805,6 @@ QString Helper::get_album_major_artist(int album_id) {
 
     return get_major_artist(artists);
 }
-
-
-
-Album Helper::get_album_from_metadata(const MetaData& md) {
-
-    Album album;
-    CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    bool success = false;
-
-    // perfect metadata
-    if (md.album_id >= 0) {
-
-        success = db->getAlbumByID(md.album_id, album);
-    }
-
-    if(success) return album;
-
-    // guess
-    int albumID = db->getAlbumID(md.album);
-    if(albumID >= 0) success = db->getAlbumByID(albumID, album);
-
-    if(success) return album;
-
-    // assemble album
-    album.name = md.album;
-    album.artists.clear();
-    album.artists.push_back(md.artist);
-
-    return album;
-}
-
 
 
 QString Helper::get_newest_version() {

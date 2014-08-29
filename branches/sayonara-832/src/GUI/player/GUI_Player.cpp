@@ -231,13 +231,14 @@ QAction* GUI_Player::createAction(QKeySequence seq) {
 
 void GUI_Player::initGUI() {
 
-	btn_mute->setIcon(QIcon(Helper::getIconPath() + "vol_1.png"));
-	btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-	btn_rec->setIcon(QIcon(Helper::getIconPath() + "rec.png"));
-	btn_stop->setIcon(QIcon(Helper::getIconPath() + "stop.png"));
-	btn_fw->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
-	btn_bw->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
-	btn_correct->setIcon(QIcon(Helper::getIconPath() + "edit.png"));
+
+    btn_mute->setIcon(Helper::getIcon("vol_1.png"));
+    btn_play->setIcon(Helper::getIcon("play.png"));
+    btn_rec->setIcon(Helper::getIcon("rec.png"));
+    btn_stop->setIcon(Helper::getIcon("stop.png"));
+    btn_fw->setIcon(Helper::getIcon("fwd.png"));
+    btn_bw->setIcon(Helper::getIcon("bwd.png"));
+    btn_correct->setIcon(Helper::getIcon("edit.png"));
 
 	action_viewLibrary->setText(tr("&Library"));
 	btn_rec->setVisible(false);
@@ -277,12 +278,14 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 	lab_rating->show();
 
 
-    if (md.year < 1000 || md.album.contains(QString::number(md.year)))
+    if (md.year < 1000 || md.album.contains(QString::number(md.year))){
 		 lab_album->setText(Helper::get_album_w_disc(md));
+	}
 
-     else
-		 lab_album->setText(
-                 Helper::get_album_w_disc(md) + " (" + QString::number(md.year) + ")");
+     else{
+		QString disc = Helper::get_album_w_disc(md);
+        lab_album->setText(disc + " (" + QString::number(md.year) + ")");
+	}
 
 	lab_artist->setText(md.artist);
 	lab_title->setText(md.title);
@@ -294,10 +297,13 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 	songProgress->setEnabled( md.length_ms > 0 );
 
 
-    if(m_playing)
-		btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
-    else
-		btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    if(m_playing){
+        btn_play->setIcon(Helper::getIcon("pause.png"));
+	}
+    
+	else{
+        btn_play->setIcon(Helper::getIcon("play.png"));
+	}
 
 
 

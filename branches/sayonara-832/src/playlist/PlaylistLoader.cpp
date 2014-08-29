@@ -37,11 +37,14 @@ PlaylistLoader::PlaylistLoader(QObject *parent) :
 
 void PlaylistLoader::load_old_playlist() {
 
+        CDatabaseConnector* db = CDatabaseConnector::getInstance();
+
         bool loadPlaylist = _settings->getLoadPlaylist();
         if( !loadPlaylist ) return;
 
         bool load_last_track = _settings->getLoadLastTrack();
-        MetaData* last_track = _settings->getLastTrack();
+        LastTrack* last_track = _settings->getLastTrack();
+
         bool load_last_position = _settings->getRememberTime();
         bool start_immediatly = _settings->getStartPlaying();
 
@@ -64,6 +67,8 @@ void PlaylistLoader::load_old_playlist() {
             QString item = saved_playlist[i];
             if(item.size() == 0) continue;
 
+            MetaData track;
+
             // maybe we can get a track id
             bool ok;
             int track_id = item.toInt(&ok);
@@ -73,8 +78,6 @@ void PlaylistLoader::load_old_playlist() {
             QDir d(path_in_list);
             path_in_list = d.absolutePath();
 
-            MetaData track;
-            CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
             // we have a track id
             if(track_id >= 0 && ok) {
@@ -86,11 +89,13 @@ void PlaylistLoader::load_old_playlist() {
                     track.is_extern = true;
                 }
 
-                else
+                else{
                     track.is_extern = false;
+                }
 
-                if(track_id == last_track->id)
+                if(track_id == last_track->id){
                     last_track_idx = i;
+                }
             }
 
             // we have an filepath
@@ -130,8 +135,9 @@ void PlaylistLoader::load_old_playlist() {
 
         int last_pos = 0;
         if(load_last_track && last_track_idx >= 0) {
-            if(load_last_position)
+            if(load_last_position){
                 last_pos = last_track->pos_sec;
+            }
 
             emit sig_change_track(last_track_idx, last_pos, start_immediatly);
         }

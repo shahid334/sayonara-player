@@ -96,8 +96,9 @@ MiniSearcher::MiniSearcher(SearchableListView *parent, MiniSearcherButtons b) :
 
 void MiniSearcher::initLayout(MiniSearcherButtons b) {
 
-	bool left, right;
-	left=right=false;
+    bool left=false;
+    bool right=false;
+
 	_line_edit = new MiniSearcherLineEdit(this);
 	_line_edit->setMaximumWidth(100);
 	//this->setFocusProxy(_line_edit);
@@ -130,7 +131,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b) {
 
 	if(left) {
 		_left_button = new QPushButton(this);
-		_left_button->setIcon(QIcon(Helper::getIconPath() + "bwd.png"));
+        _left_button->setIcon(Helper::getIcon("bwd.png"));
 		_left_button->setVisible(true);
 		_left_button->setFlat(true);
 		_left_button->setFocusPolicy(Qt::ClickFocus);
@@ -141,7 +142,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b) {
 
 	if(right) {
 		_right_button = new QPushButton(this);
-		_right_button->setIcon(QIcon(Helper::getIconPath() + "fwd.png"));
+        _right_button->setIcon(Helper::getIcon("fwd.png"));
 		_right_button->setVisible(true);
 		_right_button->setFlat(true);
 		_right_button->setFocusPolicy(Qt::ClickFocus);
@@ -169,9 +170,6 @@ bool MiniSearcher::isInitialized() {
 
 
 void MiniSearcher::keyPressEvent(QKeyEvent* event) {
-
-	int* i = 0;
-	qDebug() << i[0];
 
 	int key = event->key();
 

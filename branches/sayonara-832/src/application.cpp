@@ -136,19 +136,17 @@ void Application::init(int n_files, QTranslator *translator) {
 	playlist_handler    = new PlaylistHandler();
 	playlist_loader     = new PlaylistLoader(this);
 	library             = new CLibraryBase(this->getMainWindow());
-    //sc_library          = new SoundcloudLibrary(this->getMainWindow());
 	library_importer    = new LibraryImporter(this->getMainWindow());
 	playlists           = new Playlists();
 
 	lastfm              = LastFM::getInstance();
-	ui_lastfm           = new GUI_LastFM(player->centralWidget());
 
+    ui_lastfm           = new GUI_LastFM(player->centralWidget());
 	ui_level            = new GUI_LevelPainter(tr("Le&vel"), player->getParentOfPlugin());
 	ui_spectrum         = new GUI_Spectrum(tr("&Spectrum"), player->getParentOfPlugin());
 	ui_stream           = new GUI_Stream(tr("&Webstreams"), player->getParentOfPlugin());
 	ui_podcasts         = new GUI_Podcasts(tr("P&odcasts"), player->getParentOfPlugin());
 	ui_eq               = new GUI_Equalizer(tr("&Equalizer"), player->getParentOfPlugin());
-//	ui_lfm_radio        = new GUI_LFMRadioWidget(tr("Last.&fm"), player->getParentOfPlugin());
 	ui_playlist_chooser = new GUI_PlaylistChooser(tr("Pla&ylists"), player->getParentOfPlugin());
 	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
 	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
@@ -162,10 +160,6 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
 	ui_library->set_info_dialog(ui_info_dialog);
-
-	/*ui_sc		        = new GUI_SoundCloudLibrary(player->getParentOfLibrary());
-	ui_sc->set_info_dialog(ui_info_dialog);*/
-
 	ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
 
 	ui_style_settings = new GUI_StyleSettings(player);
@@ -177,7 +171,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	_pph->addPlugin(ui_level);
 	_pph->addPlugin(ui_spectrum);
 	_pph->addPlugin(ui_eq);
-//	_pph->addPlugin(ui_lfm_radio);
 	_pph->addPlugin(ui_stream);
 	_pph->addPlugin(ui_podcasts);
 	_pph->addPlugin(ui_playlist_chooser);
@@ -190,7 +183,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	qDebug() << "Plugin " << ui_eq->getVisName();
 	qDebug() << "Plugin " << ui_playlist_chooser->getVisName();
 	qDebug() << "Plugin " << ui_podcasts->getVisName();
-//	qDebug() << "Plugin " << ui_lfm_radio->getVisName();
 	qDebug() << "Plugin " << ui_audioconverter->getVisName();
 	qDebug() << "Plugin " << ui_bookmarks->getVisName();
 	qDebug() << "Plugin " << ui_speed->getVisName();
@@ -225,7 +217,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	bool is_maximized = set->getPlayerMaximized();
 
 	player->setWindowTitle("Sayonara " + version);
-	player->setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
+    player->setWindowIcon(Helper::getIcon("logo.png"));
 
 	/* Into Player */
 	player->setPlaylist(ui_playlist);
@@ -295,21 +287,17 @@ Application::~Application() {
     delete ui_socket_setup;
     delete ui_playlist;
     delete ui_library;
-    delete ui_id3_editor;
     delete ui_stream_rec;
-//    delete ui_lfm_radio;
     delete ui_eq;
     delete ui_stream;
     delete ui_podcasts;
     delete ui_lastfm;
     delete library_importer;
-	//delete ui_sc;
     delete library;
     delete playlist_handler;
     delete playlists;
     delete ui_playlist_chooser;
     delete player;
-
     
     CDatabaseConnector::getInstance()->closeDatabase();
 }
@@ -318,8 +306,6 @@ Application::~Application() {
 
 void Application::init_connections() {
 
-
-
 	CONNECT (player, sig_seek_rel(quint32),					listen,			jump_rel(quint32));
 	CONNECT (player, sig_volume_changed(int),				listen,			set_volume(int));
     CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
@@ -327,7 +313,6 @@ void Application::init_connections() {
 
 	CONNECT (player, sig_basedir_selected(const QString &),      library,            baseDirSelected(const QString & ));
 	CONNECT (player, sig_reload_library(bool),                   library,            reloadLibrary(bool));
-	CONNECT (player, sig_clear_library(),                        library,	clearLibrary());
 	CONNECT (player, sig_import_dir(const QString&),        library_importer,        psl_import_dir(const QString&));
 	CONNECT (player, sig_import_files(const QStringList&),  library_importer,        psl_import_files(const QStringList&));
 	CONNECT (player, sig_libpath_changed(QString),              library, 			setLibraryPath(QString));
@@ -349,8 +334,6 @@ void Application::init_connections() {
     CONNECT (player, sig_setup_LastFM(),                          ui_lastfm,              show_win()); // IND
     CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
     CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
-
-
 
     CONNECT (player, sig_skin_changed(bool),                      ui_eq,              changeSkin(bool));
     CONNECT (player, sig_skin_changed(bool),                      ui_info_dialog,     changeSkin(bool));

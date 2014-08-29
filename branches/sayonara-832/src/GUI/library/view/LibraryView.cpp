@@ -359,6 +359,7 @@ void LibraryView::fill(const TList& input_data) {
 		}
 
 		QVariant var_data = T::toVariant( input_data[row] );
+
 		_model->setData(idx, var_data, Qt::EditRole );
 	}
 

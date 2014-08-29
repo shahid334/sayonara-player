@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "GUI/library/view/LibraryView.h"
 #include <QHeaderView>
 #include <QTableView>
@@ -104,11 +102,11 @@ void LibraryView::rc_header_menu_init(QStringList& shown_cols) {
                 if(i<col_idx && !action->isChecked()) col_idx --;
                 else if(i == col_idx && !action->isChecked()) show_sorter = false;
             }
+
             else{
                 action->setChecked(false);
             }
         }
-
 
         connect(action, SIGNAL(toggled(bool)), this, SLOT(rc_header_menu_changed(bool)));
 

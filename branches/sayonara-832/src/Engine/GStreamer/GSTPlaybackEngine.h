@@ -89,7 +89,7 @@ private:
 	CSettingsStorage* _settings;
 	StreamRecorder* _stream_recorder;
 
-	MetaData*  _last_track;
+    LastTrack*  _last_track;
 	MyCaps*     _caps;
 
 
@@ -124,8 +124,6 @@ public slots:
 	virtual void psl_set_gapless(bool);
 
 	virtual void psl_set_speed(float f);
-
-
 };
 
 #endif /* GSTENGINE_H_ */

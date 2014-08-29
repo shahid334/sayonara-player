@@ -61,7 +61,7 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	_settings = CSettingsStorage::getInstance();
 	setupUi(this);
 
-	btn_preset->setIcon(QIcon(Helper::getIconPath() + "save.png"));
+    btn_preset->setIcon(Helper::getIcon("save.png"));
 	btn_preset->setText("");
 
 	_sliders.push_back(new EqSlider(sli_0, label, 0));

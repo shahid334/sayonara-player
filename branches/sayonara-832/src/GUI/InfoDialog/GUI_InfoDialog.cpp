@@ -56,9 +56,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
     ui_tag_edit = tag_edit;
 
-	if(ui_tag_edit){
-		tab_widget->addTab(ui_tag_edit, tr("Edit"));
-	}
+    tab_widget->addTab(ui_tag_edit, tr("Edit"));
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
     _lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
@@ -77,7 +75,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     QStringList server_list = _lyric_thread->getServers();
     foreach(QString server, server_list) {
 
-		//combo_servers->addItem(server);
 		combo_servers->addItem(server);
     }
 
@@ -98,27 +95,31 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
     connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
-	connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
+    connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
 
-    if(ui_tag_edit) {
-        connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
-        connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
-    }
+    connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
+    connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
 
 	connect(combo_servers, 	SIGNAL(currentIndexChanged(int)),
             this, 					SLOT(psl_lyrics_server_changed(int)));
 
 	connect(btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
+    connect(ui_tag_edit, SIGNAL(destroyed()), this, SLOT(psl_tag_edit_deleted()));
 
 	btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
-	tab_widget->removeTab(2);
-    hide();
+    tab_widget->setCurrentIndex(TAB_INFO);
 
+    hide();
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {
 
+}
+
+
+void GUI_InfoDialog::psl_tag_edit_deleted(){
+    qDebug() << "Tag edit deleted";
 }
 
 void GUI_InfoDialog::changeSkin(bool dark) {
@@ -129,13 +130,11 @@ void GUI_InfoDialog::changeSkin(bool dark) {
 void GUI_InfoDialog::language_changed() {
 
     MetaDataList v_md = _v_md;
-	tab_widget->removeTab(2);
+
 	retranslateUi(this);
-	tab_widget->addTab(ui_tag_edit, tr("Edit"));
+
     setMetaData(v_md);
-
     _alternate_covers->language_changed();
-
 }
 
 
@@ -236,8 +235,7 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 void GUI_InfoDialog::psl_alternate_cover_available(bool b){
 
 	if(!b) {
-		QString sayonara_logo = Helper::getIconPath() + "logo.png";
-		btn_image->setIcon(QIcon(sayonara_logo));
+        btn_image->setIcon(Helper::getIcon("logo.png"));
 	}
 
 	else{
@@ -249,11 +247,8 @@ void GUI_InfoDialog::psl_alternate_cover_available(bool b){
 void GUI_InfoDialog::psl_cover_lookup_finished(bool b) {
 
 	if(!b) {
-		QString sayonara_logo = Helper::getIconPath() + "logo.png";
-		btn_image->setIcon(QIcon(sayonara_logo));
+        btn_image->setIcon(Helper::getIcon("logo.png"));
 	}
-
-	// if successful we already got a cover
 }
 
 void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
@@ -268,9 +263,8 @@ void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
 }
 
 void GUI_InfoDialog::setMetaData(const MetaDataList& v_md) {
-	if(ui_tag_edit){
-		ui_tag_edit->change_meta_data(v_md);
-	}
+
+    ui_tag_edit->change_meta_data(v_md);
 
 	_v_md = v_md;
 	prepare_info();
@@ -281,9 +275,7 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 
 	ui_info_widget->hide();
 	ui_lyric_widget->hide();
-	if(ui_tag_edit){
-		ui_tag_edit->hide();
-	}
+    ui_tag_edit->hide();
 
 	switch(tab){
 
@@ -291,11 +283,13 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 			tab_widget->setCurrentWidget(ui_tag_edit);
 			ui_tag_edit->show();
 			break;
-		case TAB_LYRICS:
+
+        case TAB_LYRICS:
 			tab_widget->setCurrentWidget(ui_lyric_widget);
 			ui_lyric_widget->show();
 			break;
-		default:
+
+        default:
 			tab_widget->setCurrentWidget(ui_info_widget);
 			ui_info_widget->show();
 
@@ -303,8 +297,6 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 	}
 
 	psl_cover_available(_cl);
-
-
 }
 
 void GUI_InfoDialog::show(int tab) {
@@ -319,22 +311,23 @@ void GUI_InfoDialog::show(int tab) {
         tab = TAB_INFO;
     }
 
-	if(!ui_tag_edit && tab == TAB_EDIT){
-		tab = TAB_INFO;
-	}
-
 	if(!_lyrics_visible){
 		tab_widget->setTabEnabled(TAB_LYRICS, false);
 	}
 
-	psl_tab_index_changed(tab);
+    qDebug() << "Show tab " << tab;
+
+    tab_widget->setCurrentIndex(tab);
+    psl_tab_index_changed(tab);
 }
 
 void GUI_InfoDialog::psl_id3_success(bool b) {
+
     if(b) {
         hide();
         close();
     }
+
 	else{
 		QMessageBox::warning ( this,
 				tr("Error"),
@@ -361,7 +354,7 @@ void GUI_InfoDialog::cover_clicked() {
 }
 
 void GUI_InfoDialog::no_cover_available() {
-	btn_image->setIcon(QIcon(Helper::getIconPath() + "/logo.png"));
+    btn_image->setIcon(Helper::getIcon("logo.png"));
 }
 
 void GUI_InfoDialog::init() {

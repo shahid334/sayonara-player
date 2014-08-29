@@ -40,10 +40,8 @@
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent) :
     LibraryRatingDelegate(model, parent) {
 
-    QString icon_path_no_sampler = Helper::getIconPath() + "play_small.png";
-    QString icon_path_sampler = Helper::getIconPath() + "fwd_orange.png";
-    _icon_single_album = QPixmap(icon_path_no_sampler);
-    _icon_multi_album = QPixmap(icon_path_sampler);
+    _icon_single_album = Helper::getPixmap("play_small.png");
+    _icon_multi_album = Helper::getPixmap("fwd_orange.png");
 
     _model = model;
 

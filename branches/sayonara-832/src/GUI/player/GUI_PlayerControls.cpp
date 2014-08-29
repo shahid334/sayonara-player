@@ -32,13 +32,13 @@ void GUI_Player::playClicked(bool) {
     }
 
     if (m_playing) {
-		btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+        btn_play->setIcon(Helper::getIcon("play.png"));
 		emit sig_pause();
 	}
 
     else {
 
-		btn_play->setIcon(QIcon(Helper::getIconPath() + "pause.png"));
+        btn_play->setIcon(Helper::getIcon("pause.png"));
 		emit sig_play();
 	}
 
@@ -49,7 +49,7 @@ void GUI_Player::playClicked(bool) {
 void GUI_Player::stopClicked(bool b) {
 
 
-	btn_play->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    btn_play->setIcon(Helper::getIcon("play.png"));
     m_trayIcon->setPlaying(false);
 	m_trayIcon->stop();
 	m_playing = false;
@@ -250,7 +250,7 @@ void GUI_Player::volumeLower() {
 
 void GUI_Player::setupVolButton(int percent) {
 
-	QString butFilename = Helper::getIconPath() + "vol_";
+    QString butFilename = Helper::getIconPath("vol_");
 
     if (percent <= 1) {
         butFilename += QString("mute") + m_skinSuffix + ".png";

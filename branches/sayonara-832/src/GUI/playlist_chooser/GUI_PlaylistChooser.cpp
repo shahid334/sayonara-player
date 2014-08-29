@@ -48,15 +48,14 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
     _dark = false;
     _text_before_save = "";
 
-    QPixmap p = QPixmap(Helper::getIconPath() + "lyrics.png").scaled(50, 50, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	lab_icon->setPixmap(p);
-
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
     _last_dir = CSettingsStorage::getInstance()->getLibraryPath();
 
-	btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	btn_save_as->setIcon(QIcon(Helper::getIconPath() + "save_as.png"));
-	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
+    lab_icon->setPixmap(Helper::getPixmap("lyrics.png", QSize(50, 50), false));
+
+    btn_save->setIcon(Helper::getIcon("save.png"));
+    btn_save_as->setIcon(Helper::getIcon("save_as.png"));
+    btn_delete->setIcon(Helper::getIcon("delete.png"));
 
 
 	btn_delete->setEnabled(false);

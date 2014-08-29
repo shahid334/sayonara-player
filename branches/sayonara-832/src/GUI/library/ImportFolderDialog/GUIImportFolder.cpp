@@ -45,9 +45,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
 	combo_folders->setVisible(copy_enabled);
 	lab_target_path->setVisible(copy_enabled);
 	lab_target_info->setVisible(copy_enabled);
-
-    QPixmap pixmap(Helper::getIconPath() + "/import.png");
-	lab_img->setPixmap(pixmap.scaled(100, 100, Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+    lab_img->setPixmap(Helper::getPixmap("import.png", QSize(100, 100), false));
 
     QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
 	lab_target_path->setText( libpath );

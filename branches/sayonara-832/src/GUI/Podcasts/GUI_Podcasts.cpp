@@ -52,7 +52,7 @@ GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
 		setup_podcasts(data);
 	}
 
-	btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
+    btn_listen->setIcon(Helper::getIcon("play.png"));
 
 	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
@@ -124,10 +124,9 @@ void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts) {
 
 
 void GUI_Podcasts::init_gui() {
-	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
-	btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-
-	lab_icon->setPixmap(QPixmap(Helper::getIconPath() + "podcast.png"));
+    btn_delete->setIcon(Helper::getIcon("delete.png"));
+    btn_save->setIcon(Helper::getIcon("save.png"));
+    lab_icon->setPixmap(Helper::getPixmap("podcast.png", lab_icon->size(), false));
 }
 
 

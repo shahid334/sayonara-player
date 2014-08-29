@@ -36,9 +36,9 @@ GUI_StyleSettings::GUI_StyleSettings(QWidget *parent) :
     _db = CDatabaseConnector::getInstance();
 
 
-	btn_delete->setIcon(QIcon(Helper::getIconPath() + "delete.png"));
-	btn_save->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	btn_undo->setIcon(QIcon(Helper::getIconPath() + "undo.png"));
+    btn_delete->setIcon(Helper::getIcon("delete.png"));
+    btn_save->setIcon(Helper::getIcon("save.png"));
+    btn_undo->setIcon(Helper::getIcon("undo.png"));
 
 	connect(combo_styles, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_styles_changed(int)));
 	connect(combo_styles, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));

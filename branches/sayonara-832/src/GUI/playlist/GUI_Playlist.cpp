@@ -157,19 +157,17 @@ void GUI_Playlist::language_changed() {
 // maybe the button state (pressed/unpressed) should be loaded from db here
 void GUI_Playlist::initGUI() {
 
-    QString icon_path = Helper::getIconPath();
+    btn_append->setIcon(Helper::getIcon("append.png"));
+    btn_rep1->setIcon(Helper::getIcon("rep1.png"));
+    btn_repAll->setIcon(Helper::getIcon("repAll.png"));
+    btn_dynamic->setIcon(Helper::getIcon("dynamic.png"));
+    btn_shuffle->setIcon(Helper::getIcon("shuffle.png"));
+    btn_clear->setIcon(Helper::getIcon("broom.png"));
+    btn_import->setIcon(Helper::getIcon("import.png"));
+    btn_numbers->setIcon(Helper::getIcon("numbers.png"));
+    btn_gapless->setIcon(Helper::getIcon("gapless.png"));
 
-	btn_append->setIcon(QIcon(icon_path + "append.png"));
-	btn_rep1->setIcon(QIcon(icon_path + "rep1.png"));
-	btn_rep1->setVisible(false);
-	btn_repAll->setIcon(QIcon(icon_path + "repAll.png"));
-	btn_dynamic->setIcon(QIcon(icon_path + "dynamic.png"));
-	btn_shuffle->setIcon(QIcon(icon_path + "shuffle.png"));
-	btn_clear->setIcon(QIcon(icon_path + "broom.png"));
-	btn_import->setIcon(QIcon(icon_path + "import.png"));
-	btn_numbers->setIcon(QIcon(icon_path + "numbers.png"));
-	btn_gapless->setIcon(QIcon(icon_path + "gapless.png"));
-
+    btn_rep1->setVisible(false);
 	set_total_time_label();
 }
 

@@ -52,8 +52,6 @@ void GUI_Player::setupConnections() {
                         SLOT(importFilesClicked()));
 	connect(action_reloadLibrary, SIGNAL(triggered(bool)), this,
 				SLOT(reloadLibraryClicked(bool)));
-		connect(action_clearLibrary, SIGNAL(triggered(bool)), this,
-				SLOT(clearLibraryClicked(bool)));
 
 	connect(action_Close, SIGNAL(triggered(bool)), this,
 				SLOT(really_close(bool)));

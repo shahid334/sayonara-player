@@ -91,7 +91,7 @@
 					}\
 
 
-namespace Sort{
+namespace Sort {
 
 	enum SortOrder{
 		NoSorting=0,

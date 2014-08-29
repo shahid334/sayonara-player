@@ -55,9 +55,7 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
 	btn_path->setEnabled(_is_active);
 	le_path->setEnabled(_is_active);
 
-	QPixmap pm(QPixmap(Helper::getIconPath() + "rec.png"));
-
-	lab_icon->setPixmap( pm.scaledToWidth(lab_icon->maximumWidth()) );
+    lab_icon->setPixmap( Helper::getPixmap("rec.png", lab_icon->maximumSize(), true));
 	setModal(true);
 
 	connect(cb_activate, SIGNAL(toggled(bool)), this, SLOT(sl_cb_activate_toggled(bool)));
@@ -66,7 +64,6 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
 	//connect(le_path, SIGNAL(textEdited(QString&)), this, SLOT(sl_le_text_changed(QString&)));
 	connect(btn_path, SIGNAL(clicked()), this, SLOT(sl_btn_path_clicked()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
-
 
     hide();
 }

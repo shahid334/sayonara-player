@@ -189,14 +189,12 @@ MetaData CDatabaseConnector::getTrackByPath(QString path) {
     }
 
     return vec_data[0];
-
 }
 
 MetaData CDatabaseConnector::getTrackById(int id) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
-
 
 	DB_TRY_OPEN(_database);
 

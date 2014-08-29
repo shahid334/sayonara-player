@@ -31,7 +31,6 @@ MetaData::MetaData() : LibraryItem() {
         artist = "";
         album = "";
         rating = 0;
-		pos_sec = 0;	
         length_ms = 0;
         year = 0;
         filepath = "";
@@ -49,6 +48,33 @@ MetaData::MetaData() : LibraryItem() {
         pl_dragged = false;
 
         is_disabled = false;
+}
+
+MetaData::MetaData(const MetaData & md){
+    id = md.id;
+    artist_id = md.artist_id;
+    album_id = md.album_id;
+    title = md.title;
+    artist = md.artist;
+    album = md.album;
+    rating = md.rating;
+    length_ms = md.length_ms;
+    year = md.year;
+    filepath = md.filepath;
+    track_num = md.track_num;
+    bitrate = md.bitrate;
+    is_extern = md.is_extern;
+    radio_mode = md.radio_mode;
+    filesize = md.filesize;
+    comment = md.comment;
+    discnumber = md.discnumber;
+    n_discs = md.n_discs;
+
+    pl_selected = md.pl_selected;
+    pl_playing = md.pl_playing;
+    pl_dragged = md.pl_dragged;
+
+    is_disabled = md.is_disabled;
 }
 
 
@@ -160,4 +186,44 @@ void MetaDataList::insert(const MetaData& md, uint pos) {
 
     // replace
     at(pos) = md;
+}
+
+
+
+LastTrack::LastTrack() : MetaData(){
+
+}
+
+LastTrack::LastTrack(const MetaData& md) :
+    MetaData(md){
+
+    pos_sec = 0;
+}
+
+LastTrack::LastTrack(const LastTrack& lt) :
+    MetaData(lt){
+
+    pos_sec = 0;
+}
+
+LastTrack::~LastTrack(){
+
+}
+
+QVariant LastTrack::toVariant(const LastTrack& md) {
+
+    QVariant v;
+    v.setValue<LastTrack>(md);
+
+    return v;
+}
+
+bool LastTrack::fromVariant(const QVariant& v, LastTrack& md) {
+
+    if(! v.canConvert<LastTrack>() ) {
+        return false;
+    }
+
+    md = v.value<LastTrack>() ;
+    return true;
 }

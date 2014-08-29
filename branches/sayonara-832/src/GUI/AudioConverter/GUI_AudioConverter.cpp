@@ -34,7 +34,9 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 	_settings = CSettingsStorage::getInstance();
 	LameBitrate br = _settings->getConvertQuality();
 
-	lab_logo->setPixmap(QPixmap(Helper::getIconPath() + "audio_convert.png").scaled(lab_logo->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QString logo_name = "audio_convert.png";
+    QPixmap pm = Helper::getPixmap(logo_name, lab_logo->size(), true );
+    lab_logo->setPixmap(pm);
 
 	rb_cbr->setChecked(false);
 	rb_vbr->setChecked(false);

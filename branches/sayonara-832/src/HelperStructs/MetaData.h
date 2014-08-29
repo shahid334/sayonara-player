@@ -52,8 +52,10 @@ enum RadioMode {
 };
 
 class MetaData;
+class LastTrack;
 
 Q_DECLARE_METATYPE(MetaData)
+Q_DECLARE_METATYPE(LastTrack)
 
 class MetaData : public LibraryItem {
 
@@ -66,7 +68,6 @@ public:
     QString album;
     QStringList genres;
     quint8 rating;
-	quint32 pos_sec;
     quint64 length_ms;
     quint16 year;
     QString filepath;
@@ -88,6 +89,7 @@ public:
     bool is_disabled;
 
 	MetaData ();
+    MetaData (const MetaData& );
 	virtual ~MetaData();
 
 	bool operator==(const MetaData& md);
@@ -130,6 +132,21 @@ struct CustomPlaylist{
         length = 0;
         num_tracks = 0;
     }
+};
+
+class LastTrack : public MetaData {
+
+public:
+
+    quint32 pos_sec;
+
+    LastTrack();
+    LastTrack(const MetaData& md);
+    LastTrack(const LastTrack& lt);
+    virtual ~LastTrack();
+
+    static QVariant toVariant(const LastTrack& md);
+    static bool fromVariant(const QVariant& v, LastTrack& md);
 };
 
 #endif /* METADATA_H_ */

@@ -66,6 +66,7 @@
 #define SET_PL_REMEMBER_TIME "remember_time"
 #define SET_PL_START_PLAYING "start_playing"
 #define SET_PL_LAST_TRACK "last_track"
+#define SET_PL_LAST_TRACK_POS "last_track_pos"
 #define SET_PL_MODE "playlist_mode"
 #define SET_PL_SHOW_NUMBERS "show_playlist_numbers"
 #define SET_PL_SMALL_ITEMS "small_playlist_items"
@@ -210,7 +211,7 @@ private:
     QStringList m_playlist;
     bool m_loadPlaylist;
     bool m_loadLastTrack;
-	MetaData m_lastTrack;
+    LastTrack m_lastTrack;
     bool m_rememerTime;
     bool m_startPlaying;
     PlaylistMode m_playlistmode;
@@ -320,8 +321,8 @@ public:
 	bool getLoadLastTrack();
 	void setLoadLastTrack(bool b);
 
-	MetaData* getLastTrack();
-	void setLastTrack(const MetaData& t);
+    LastTrack* getLastTrack();
+    void setLastTrack(const LastTrack& t);
 	void updateLastTrack();
 
     bool getRememberTime();

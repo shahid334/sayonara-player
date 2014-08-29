@@ -140,13 +140,12 @@ bool CDatabaseConnector::load_settings() {
 
     QStringList lib_shown_cols_title, lib_shown_cols_artist, lib_shown_cols_album;
     lib_shown_cols_title = load_setting_string(SET_LIB_SHOWN_COLS_TITLE, "1,1,1,1,1,1,1,1,1,1").split(",");
-    settings->setLibShownColsTitle(lib_shown_cols_title);
-
     lib_shown_cols_artist = load_setting_string(SET_LIB_SHOWN_COLS_ARTIST, "1,1,1,1,1,1,1,1,1,1").split(",");
-    settings->setLibShownColsAlbum(lib_shown_cols_album);
-
     lib_shown_cols_album = load_setting_string(SET_LIB_SHOWN_COLS_ALBUM, "1,1,1,1,1,1,1,1,1,1").split(",");
+
     settings->setLibShownColsArtist(lib_shown_cols_artist);
+    settings->setLibShownColsAlbum(lib_shown_cols_album);
+    settings->setLibShownColsTitle(lib_shown_cols_title);
 
     QList<int> lib_sorting;
     QStringList lib_sorting_str = load_setting_strlist(SET_LIB_SORTING, "1,5,21", 3);
@@ -196,8 +195,11 @@ bool CDatabaseConnector::load_settings() {
     settings->setStartPlaying(start_playing);
 
 	int md_id = load_setting_int(SET_PL_LAST_TRACK, -1);
-    MetaData track = getTrackById(md_id); 	
-    settings->setLastTrack(track);
+    MetaData md = getTrackById(md_id);
+    LastTrack lt(md);
+    lt.pos_sec = (quint32) load_setting_int(SET_PL_LAST_TRACK_POS, 0);
+    settings->setLastTrack(lt);
+
 
     PlaylistMode playlist_mode = load_setting_type<PlaylistMode>(SET_PL_MODE, PlaylistMode());
     settings->setPlaylistMode(playlist_mode);
@@ -373,8 +375,9 @@ bool CDatabaseConnector::store_settings() {
 	bool load_last_track = storage->getLoadLastTrack();
 	store_setting(SET_PL_LOAD_LAST_TRACK, load_last_track);
 
-	int last_track = storage->getLastTrack()->id;
-	store_setting(SET_PL_LAST_TRACK, last_track);	
+    LastTrack* last_track = storage->getLastTrack();
+    store_setting(SET_PL_LAST_TRACK, last_track->id);
+    store_setting(SET_PL_LAST_TRACK_POS, last_track->pos_sec);
 
     bool remember_time = storage->getRememberTime();
     store_setting(SET_PL_REMEMBER_TIME, remember_time);

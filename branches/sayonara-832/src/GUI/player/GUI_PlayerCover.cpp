@@ -30,16 +30,16 @@
 
 void GUI_Player::set_std_cover(bool radio) {
 
-	QString std_cover_path;
+    QIcon icon;
 	if(radio) {
-		std_cover_path = Helper::getIconPath() + "radio.png";
+        icon = Helper::getIcon("radio.png");
 	}
 
 	else {
-		std_cover_path = Helper::getIconPath() + "logo.png";
+        icon = Helper::getIcon("logo.png");
 	}
 
-	albumCover->setIcon(QIcon(std_cover_path));
+    albumCover->setIcon(icon);
 	albumCover->repaint();
 
 }

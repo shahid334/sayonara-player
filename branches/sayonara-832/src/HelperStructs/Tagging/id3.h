@@ -32,12 +32,11 @@
 
 namespace ID3{
 
+    bool getMetaDataOfFile(MetaData& md);
 
-bool getMetaDataOfFile(MetaData& md);
+    void setMetaDataOfFile(MetaData& md);
 
-void setMetaDataOfFile(MetaData& md);
-
-void checkForBrokenFiles(MetaDataList v_md, MetaDataList& v_md_broken);
+    void checkForBrokenFiles(MetaDataList v_md, MetaDataList& v_md_broken);
 
 }
 

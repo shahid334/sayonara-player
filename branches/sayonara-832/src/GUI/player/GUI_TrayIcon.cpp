@@ -259,12 +259,12 @@ void GUI_TrayIcon::setMute(bool mute) {
     }
 
 	if(!mute) {
-        m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute" + suffix + ".png"));
+        m_muteAction->setIcon(Helper::getIcon("vol_mute" + suffix + ".png"));
         m_muteAction->setText(tr("Mute"));
 	}
 
 	else {
-        m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3" + suffix + ".png"));
+        m_muteAction->setIcon(Helper::getIcon("vol_3" + suffix + ".png"));
         m_muteAction->setText(tr("Unmute"));
 	}
 }
