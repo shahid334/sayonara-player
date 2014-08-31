@@ -303,7 +303,7 @@ QString Helper::calc_lfm_album_adress(const QString& artist, const QString& albu
 }
 
 
-QString Helper::calc_google_image_search_adress(const QString& str, bool big) {
+QString Helper::calc_google_image_search_adress(const QString& str) {
 
 	QString searchstring = str;
 	searchstring.replace(" ", "%20");
@@ -316,22 +316,17 @@ QString Helper::calc_google_image_search_adress(const QString& str, bool big) {
     url += QString("&q=") + searchstring;
     url += QString("&oq=") + searchstring;
 
-	if(big){
-
-		url += "tbs=isz:lt,islt:qsvga";
-	}
-
 	return url;
 }
 
 
-QString Helper::calc_google_artist_adress(const QString& artist, bool big) {
+QString Helper::calc_google_artist_adress(const QString& artist) {
 
-	return calc_google_image_search_adress(QUrl::toPercentEncoding(artist), big);
+	return calc_google_image_search_adress(QUrl::toPercentEncoding(artist));
 }
 
 
-QString Helper::calc_google_album_adress(const QString& artist, const QString& album, bool big) {
+QString Helper::calc_google_album_adress(const QString& artist, const QString& album) {
 
 	QString new_album, searchstring;
 	QRegExp regex;
@@ -354,17 +349,15 @@ QString Helper::calc_google_album_adress(const QString& artist, const QString& a
 
 	searchstring += new_album;
 
-	return calc_google_image_search_adress(searchstring, big);
+	return calc_google_image_search_adress(searchstring);
 }
 
 
 
-QString Helper::calc_cover_token(const QString& artist, const QString& album, bool big) {
+QString Helper::calc_cover_token(const QString& artist, const QString& album) {
 
 	QByteArray str = QString(artist.trimmed() + album.trimmed()).toLower().toUtf8();
-	if(big){
-		str += "big";
-	}
+
 	return calc_hash(str);
 }
 

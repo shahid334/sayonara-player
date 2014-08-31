@@ -65,7 +65,7 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 	painter->save();
 	painter->translate(2, 0);
 
-	QVariant var = index.model()->data(index, Qt::WhatsThisRole);
+	QVariant var = index.model()->data(index);
 	CoverLocation cl = CoverLocation::getInvalidLocation();
 
 	if( var.canConvert<CoverLocation>()){

@@ -80,12 +80,9 @@ void GUI_Player::coverClicked() {
 }
 
 
-void GUI_Player::sl_alternate_cover_available(bool b) {
+void GUI_Player::sl_alternate_cover_available(const CoverLocation& lc) {
 
-	if(!b) {
-		set_std_cover(m_metadata.radio_mode != RADIO_OFF);
-		return;
-	}
+	Q_UNUSED(lc);
 
 	fetch_cover();
 }

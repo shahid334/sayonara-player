@@ -39,15 +39,13 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 	_cur_time = -1;
 
     btn_delete->setIcon(Helper::getIcon("delete.png"));
-    btn_delete_all->setIcon(Helper::getIcon("delete.png"));
     btn_new->setIcon(Helper::getIcon("save.png"));
     btn_last->setIcon(Helper::getIcon("bwd.png"));
     btn_next->setIcon(Helper::getIcon("fwd.png"));
-    lab_logo->setPixmap(Helper::getPixmap("bookmarks.png", lab_logo->size(), false));
+	lab_logo->setPixmap(Helper::getPixmap("bookmarks.png", lab_logo->size(), true));
 
 	connect(btn_new, SIGNAL(clicked()), this, SLOT(new_clicked()));
 	connect(btn_delete, SIGNAL(clicked()), this, SLOT(del_clicked()));
-	connect(btn_delete_all, SIGNAL(clicked()), this, SLOT(del_all_clicked()));
 	connect(btn_last, SIGNAL(clicked()), this, SLOT(prev_clicked()));
 	connect(btn_next, SIGNAL(clicked()), this, SLOT(next_clicked()));
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
@@ -178,7 +176,6 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 	disconnect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 
 	btn_delete->setEnabled(false);
-	btn_delete_all->setEnabled(false);
 
 	cb_bookmarks->clear();
 	_bookmarks.clear();
@@ -201,7 +198,6 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 		QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
 
 		cb_bookmarks->addItem(str, bm);
-
 	}
 
 	calc_next(0);
@@ -209,7 +205,6 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 
 	cb_bookmarks->setCurrentIndex(0);
 	btn_delete->setEnabled(true);
-	btn_delete_all->setEnabled(true);
 
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 }
@@ -241,7 +236,6 @@ void GUI_Bookmarks::combo_changed(int cur_idx) {
 	quint32 bm = _bookmarks.keys()[cur_idx];
 
 	btn_delete->setEnabled(true);
-	btn_delete_all->setEnabled(true);
 
 	calc_prev(bm);
 	calc_next(bm);
@@ -307,7 +301,6 @@ void GUI_Bookmarks::new_clicked() {
 		if( cur_idx != -1 ) cb_bookmarks->setCurrentIndex(cur_idx);
 
 		btn_delete->setEnabled(true);
-		btn_delete_all->setEnabled(true);
 
 		connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 
@@ -339,7 +332,6 @@ void GUI_Bookmarks::del_clicked() {
 		_bookmarks.remove(bm);
 		if(_bookmarks.size() == 0) {
 			btn_delete->setEnabled(false);
-			btn_delete_all->setEnabled(false);
 		}
 
 		calc_next(_cur_time);
@@ -373,7 +365,6 @@ void GUI_Bookmarks::del_all_clicked() {
 		disable_next();
 
 		btn_delete->setEnabled(false);
-		btn_delete_all->setEnabled(false);
 
 		calc_next(_cur_time);
 		calc_prev(_cur_time);

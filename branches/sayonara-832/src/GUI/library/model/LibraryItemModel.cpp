@@ -54,8 +54,13 @@ QVariant LibraryItemModel::headerData ( int section, Qt::Orientation orientation
 			 return QVariant();
 
 	 int idx_col = calc_shown_col(section);
-	 if (orientation == Qt::Horizontal)
+	 if(idx_col >= _header_names.size()){
+		 return QVariant();
+	 }
+
+	 if (orientation == Qt::Horizontal){
 		 return _header_names[idx_col];
+	 }
 	 return QVariant();
 
 }

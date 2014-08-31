@@ -248,13 +248,13 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
         case BY_GENRE:
             query = ARTIST_ALBUM_TRACK_SELECTOR +
                             "	WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.genre LIKE :search_in_genre " +
-                            "	GROUP BY artistID, artistName ";
+							"	GROUP BY artists.artistid, artists.name ";
             break;
 
 		case BY_FILENAME:
 			query = ARTIST_ALBUM_TRACK_SELECTOR +
 							"	WHERE albums.albumid = tracks.albumid AND artists.artistID = tracks.artistid AND tracks.filename LIKE :search_in_title " +
-							"	GROUP BY artistID, artistName ";
+							"	GROUP BY artists.artistid, artists.name ";
 			break;
 
 		case BY_FULLTEXT:

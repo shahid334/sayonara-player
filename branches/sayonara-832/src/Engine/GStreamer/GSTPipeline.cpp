@@ -112,12 +112,12 @@ void GSTAbstractPipeline::about_to_finish() {
 
 #if GST_CHECK_VERSION(1, 0, 0)
     gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
-    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &position);
+	gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
 
 #else
     GstFormat format = GST_FORMAT_TIME;
     gst_element_query_duration(_pipeline, &format, &duration);
-    gst_element_query_duration(_pipeline, &format, &position);
+	gst_element_query_position(_pipeline, &format, &position);
 
 #endif
 

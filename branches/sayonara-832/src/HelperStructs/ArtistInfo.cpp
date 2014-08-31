@@ -51,7 +51,7 @@ void ArtistInfo::set_cover_location(){
 
 	if( _artists.size() == 1){
 		QString artist = _artists[0];
-		_cover_location = CoverLocation::get_cover_location(artist, _big);
+		_cover_location = CoverLocation::get_cover_location(artist);
 	}
 
 	else{

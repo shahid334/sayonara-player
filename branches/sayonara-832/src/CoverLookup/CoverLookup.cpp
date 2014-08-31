@@ -48,7 +48,7 @@ CoverLookup::CoverLookup(QObject* parent, int n_covers) :
     _n_covers(n_covers),
 	_cft(NULL)
 {
-	_big = false;
+
     _db = CDatabaseConnector::getInstance();
 }
 
@@ -60,9 +60,6 @@ CoverLookup::~CoverLookup() {
 }
 
 
-void CoverLookup::set_big(bool big){
-	_big = big;
-}
 
 void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 
@@ -103,35 +100,35 @@ bool CoverLookup::fetch_cover(const CoverLocation& cl) {
 
 bool CoverLookup::fetch_album_cover_standard(const QString& artist_name, const QString& album_name) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album_name, artist_name, _big);
+	CoverLocation cl = CoverLocation::get_cover_location(album_name, artist_name);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_album_cover_sampler(const QStringList& artists, const QString& album_name) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album_name, artists, _big);
+	CoverLocation cl = CoverLocation::get_cover_location(album_name, artists);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_album_cover_by_id(const int album_id) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album_id, _big);
+	CoverLocation cl = CoverLocation::get_cover_location(album_id);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_album_cover(const Album& album) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(album, _big);
+	CoverLocation cl = CoverLocation::get_cover_location(album);
 	return fetch_cover(cl);
 }
 
 
 bool CoverLookup::fetch_artist_cover_standard(const QString& artist) {
 
-	CoverLocation cl = CoverLocation::get_cover_location(artist, _big);
+	CoverLocation cl = CoverLocation::get_cover_location(artist);
 	return fetch_cover(cl);
 }
 
@@ -147,7 +144,7 @@ bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const
 
 	CoverLocation cl;
 	cl.cover_path = target_name;
-	cl.google_url = Helper::calc_google_image_search_adress(searchstring, _big);
+	cl.google_url = Helper::calc_google_image_search_adress(searchstring);
 
 	start_new_thread( cl );
 	return true;

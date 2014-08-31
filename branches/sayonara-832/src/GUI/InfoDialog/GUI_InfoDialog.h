@@ -73,8 +73,7 @@ private slots:
     void no_cover_available();
 	void cover_clicked();
 	void psl_cover_available(const CoverLocation&);
-	void psl_alternate_cover_available(bool);
-	void psl_cover_lookup_finished(bool);
+
     void psl_tag_edit_deleted();
 
 

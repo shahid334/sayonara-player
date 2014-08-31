@@ -292,10 +292,6 @@
         <translation type="unfinished">x</translation>
     </message>
     <message>
-        <source>Delete all</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Loop</source>
         <translation type="unfinished"></translation>
     </message>

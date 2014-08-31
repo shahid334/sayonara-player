@@ -57,11 +57,11 @@ namespace Helper{
 					   const QString& target="",
 					   bool underline=true);
 
-	QString calc_cover_token(const QString& artist, const QString& album, bool big);
+	QString calc_cover_token(const QString& artist, const QString& album);
 
-	QString calc_google_image_search_adress(const QString& searchstring, bool big);
-	QString calc_google_artist_adress(const QString& artist, bool big);
-	QString calc_google_album_adress(const QString& artist, const QString& album, bool big);
+	QString calc_google_image_search_adress(const QString& searchstring);
+	QString calc_google_artist_adress(const QString& artist);
+	QString calc_google_album_adress(const QString& artist, const QString& album);
 
 	QString calc_lfm_artist_adress(const QString& artist);
 	QString calc_lfm_album_adress(const QString& artist, const QString& album);

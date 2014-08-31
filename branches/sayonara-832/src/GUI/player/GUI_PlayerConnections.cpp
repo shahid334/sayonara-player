@@ -127,8 +127,8 @@ void GUI_Player::setupConnections() {
 	connect(m_cov_lookup, SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, SLOT(cover_found(const CoverLocation&)));
 
-	connect(m_alternate_covers, SIGNAL(sig_cover_changed(bool)),
-			this,				SLOT(sl_alternate_cover_available(bool)));
+	connect(m_alternate_covers, SIGNAL(sig_cover_changed(const CoverLocation&)),
+			this,				SLOT(sl_alternate_cover_available(const CoverLocation&)));
 
     connect(m_alternate_covers, SIGNAL(sig_no_cover()),
             this,				SLOT(sl_no_cover_available()));

@@ -43,13 +43,13 @@ public:
 
 	void print() const;
 
-	static CoverLocation get_cover_location(const QString& album_name, const QString& artist_name, bool big=false);
-	static CoverLocation get_cover_location(const QString& album_name, const QStringList& artists, bool big=false);
-	static CoverLocation get_cover_location(int album_id, bool big=false);
-	static CoverLocation get_cover_location(const Album& album, bool big=false);
-	static CoverLocation get_cover_location(const Artist& artist, bool big=false);
-	static CoverLocation get_cover_location(const QString& artist, bool big=false);
-	static CoverLocation get_cover_location(const MetaData& md, bool big=false);
+	static CoverLocation get_cover_location(const QString& album_name, const QString& artist_name);
+	static CoverLocation get_cover_location(const QString& album_name, const QStringList& artists);
+	static CoverLocation get_cover_location(int album_id);
+	static CoverLocation get_cover_location(const Album& album);
+	static CoverLocation get_cover_location(const Artist& artist);
+	static CoverLocation get_cover_location(const QString& artist);
+	static CoverLocation get_cover_location(const MetaData& md);
 	static CoverLocation getInvalidLocation();
 
 };

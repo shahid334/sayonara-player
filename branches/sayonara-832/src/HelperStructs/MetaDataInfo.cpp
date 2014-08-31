@@ -28,8 +28,6 @@ MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) : QObject(p
 
 	if(lst.size() == 0 ) return;
 
-	_big = true;
-
 	quint64 length = 0;
 	quint64 filesize = 0;
 	quint16 year_min = 0xFFFF;
@@ -149,18 +147,18 @@ void MetaDataInfo::set_cover_location(const MetaDataList& lst){
 
 	if(lst.size() == 1){
 		MetaData md = lst[0];
-		_cover_location = CoverLocation::get_cover_location(md, _big);
+		_cover_location = CoverLocation::get_cover_location(md);
 	}
 
 	else if(_albums.size() == 1 && _artists.size() == 1){
 		QString album = _albums[0];
 		QString artist = _artists[0];
-		_cover_location = CoverLocation::get_cover_location(album, artist, _big);
+		_cover_location = CoverLocation::get_cover_location(album, artist);
 	}
 
 	else if(_albums.size() == 1){
 		QString album = _albums[0];
-		_cover_location = CoverLocation::get_cover_location(album, _artists, _big);
+		_cover_location = CoverLocation::get_cover_location(album, _artists);
 	}
 
 	else {

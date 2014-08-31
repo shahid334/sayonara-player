@@ -87,11 +87,8 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 	connect(_cover_lookup,	SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, 			SLOT(psl_cover_available(const CoverLocation&)));
 
-	connect(_cover_lookup,	SIGNAL(sig_finished(bool)),
-			this, 			SLOT(psl_cover_lookup_finished(bool)));
-
-	connect(_alternate_covers,	SIGNAL(sig_cover_changed(bool)),
-			this,				SLOT(psl_alternate_cover_available(bool)));
+	connect(_alternate_covers,	SIGNAL(sig_cover_changed(const CoverLocation&)),
+			this,				SLOT(psl_cover_available(const CoverLocation&)));
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
     connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
@@ -210,6 +207,7 @@ void GUI_InfoDialog::prepare_info() {
 	lab_paths->setText(info->get_paths_as_string());
 
 	_cl = info->get_cover_location();
+
 	prepare_cover(_cl);
 	prepare_lyrics();
 
@@ -232,28 +230,9 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 	btn_image->update();
 }
 
-void GUI_InfoDialog::psl_alternate_cover_available(bool b){
-
-	if(!b) {
-        btn_image->setIcon(Helper::getIcon("logo.png"));
-	}
-
-	else{
-		CoverLocation cl = _alternate_covers->get_target_filename();
-		psl_cover_available(cl);
-	}
-}
-
-void GUI_InfoDialog::psl_cover_lookup_finished(bool b) {
-
-	if(!b) {
-        btn_image->setIcon(Helper::getIcon("logo.png"));
-	}
-}
 
 void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
 
-	_cover_lookup->set_big(true);
 	_cover_lookup->fetch_cover(cover_location);
 }
 
@@ -341,15 +320,15 @@ void GUI_InfoDialog::cover_clicked() {
 	setFocus();
 
 	if(_cover_artist.size() > 0 && _cover_album.size() > 0){
-		_alternate_covers->start(_cover_album, _cover_artist);
+		_alternate_covers->start(_cover_album, _cover_artist, _cl);
 	}
 
 	else if(_cover_artist.size() > 0){
-		_alternate_covers->start(_cover_artist);
+		_alternate_covers->start(_cover_artist, _cl);
 	}
 
 	else if(_cover_album.size() > 0){
-		_alternate_covers->start(_cover_album, "Various artists");
+		_alternate_covers->start(_cover_album, "Various artists", _cl);
 	}
 }
 

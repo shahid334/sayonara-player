@@ -478,10 +478,10 @@ qint64 GSTPlaybackPipeline::get_duration_ms() {
     if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING){
 
 #if GST_CHECK_VERSION(1, 0, 0)
-        gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
+	   success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
 #else
         GstFormat format = GST_FORMAT_TIME;
-        gst_element_query_duration(_pipeline, &format, &duration);
+	   success = gst_element_query_duration(_pipeline, &format, &duration);
 #endif
 
 

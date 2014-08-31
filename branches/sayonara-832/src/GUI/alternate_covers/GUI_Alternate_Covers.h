@@ -50,16 +50,16 @@ public:
 	virtual ~GUI_Alternate_Covers();
 
 	signals:
-		void sig_cover_changed(bool);
+		void sig_cover_changed(const CoverLocation&);
         void sig_no_cover();
 
 
 	public slots:
-        void start(Album album);
-		void start(int album_id);
-        void start(QString album_name, QString artist_name);
-        void start(Artist artist);
-        void start(QString artist_name);
+		void start(Album album, const CoverLocation& cl = CoverLocation());
+		void start(int album_id, const CoverLocation& cl = CoverLocation());
+		void start(QString album_name, QString artist_name, const CoverLocation& cl = CoverLocation());
+		void start(Artist artist, const CoverLocation& cl = CoverLocation());
+		void start(QString artist_name, const CoverLocation& cl = CoverLocation());
 
         void changeSkin(bool dark);
         void language_changed();
@@ -73,20 +73,15 @@ public:
 		void cl_new_cover(const CoverLocation& path);
 		void cl_finished(bool);
 
-	public:
-		CoverLocation get_target_filename();
-
 	private:
-
 		int 				_cur_idx;
 		QString				_last_path;
-		CoverLocation		_target_filename;
+		CoverLocation		_cover_location;
 		QList<CoverLocation> _filelist;
 		bool				_is_searching;
 
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
-
 
         CoverLookupAlternative*        _cl_alternative;
 

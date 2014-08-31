@@ -190,7 +190,7 @@ private slots:
     void help(bool b=false);
 
 
-	void sl_alternate_cover_available(bool b);
+	void sl_alternate_cover_available(const CoverLocation&);
     void sl_no_cover_available();
 
     void awa_version_finished();

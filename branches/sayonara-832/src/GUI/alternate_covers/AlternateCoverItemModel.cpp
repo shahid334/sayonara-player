@@ -71,15 +71,21 @@ QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 
 	int lin_idx = this->cvt_2_idx(index.row(), index.column());
 
+	/*qDebug() << "I want to have a cover: " << index <<
+				" valid? " << index.isValid() <<
+				" pathlist size=" << _pathlist.size() <<
+				"Lin idx: " << lin_idx;*/
+
      if (!index.isValid() || _pathlist.size() <= lin_idx) {
          return QVariant();
      }
 
 
-	 if(role == Qt::WhatsThisRole) {
+	 if(role == Qt::DisplayRole) {
 
 		 QVariant var;
 		 var.setValue<CoverLocation>(_pathlist[lin_idx]);
+		 //qDebug() << "Try to conver Cover location to " << _pathlist[lin_idx].cover_path;
 		 return var;
 	 }
 

@@ -63,7 +63,7 @@ void AlbumInfo::set_subheader(){
 void AlbumInfo::set_cover_location(){
 
 	if( _albums.size() == 1){
-		_cover_location = CoverLocation::get_cover_location(_albums[0], _artists, _big);
+		_cover_location = CoverLocation::get_cover_location(_albums[0], _artists);
 	}
 
 	else{

@@ -112,6 +112,7 @@ void GUI_Alternate_Covers::connect_and_start() {
 	connect(_cl_alternative, SIGNAL(sig_finished(bool)), this, SLOT(cl_finished(bool)));
 
 	_is_searching = true;
+
 	btn_search->setText(tr("Stop"));
 
 	_cl_alternative->start();
@@ -120,7 +121,7 @@ void GUI_Alternate_Covers::connect_and_start() {
 }
 
 
-void GUI_Alternate_Covers::start(int album_id) {
+void GUI_Alternate_Covers::start(int album_id, const CoverLocation& cl) {
 
     if(album_id < 0) return;
 
@@ -129,32 +130,55 @@ void GUI_Alternate_Covers::start(int album_id) {
 
     if( !db->getAlbumByID(album_id, album) ) return;
 
-	start(album);
+	start(album, cl);
 }
 
-void GUI_Alternate_Covers::start(Album album) {
+void GUI_Alternate_Covers::start(Album album, const CoverLocation& cl) {
 
 	le_search->setText(album.name + " " + Helper::get_major_artist(album.artists));
-	_target_filename = CoverLocation::get_cover_location(album);
+
+	if(!cl.valid){
+		_cover_location = CoverLocation::get_cover_location(album);
+	}
+	else {
+		_cover_location = cl;
+	}
+
     _cl_alternative = new CoverLookupAlternative(this, album, 10);
 
 	connect_and_start();
 }
 
 
-void GUI_Alternate_Covers::start(QString album_name, QString artist_name) {
+void GUI_Alternate_Covers::start(QString album_name, QString artist_name, const CoverLocation& cl) {
 
 	le_search->setText(album_name + " " + artist_name);
-	_target_filename = CoverLocation::get_cover_location(album_name, artist_name);
-    _cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
+
+	if(!cl.valid){
+		_cover_location = CoverLocation::get_cover_location(album_name, artist_name);
+	}
+
+	else {
+		_cover_location = cl;
+	}
+
+	_cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
 
 	connect_and_start();
 }
 
-void GUI_Alternate_Covers::start(Artist artist) {
+void GUI_Alternate_Covers::start(Artist artist, const CoverLocation& cl) {
 
 	le_search->setText(artist.name);
-	_target_filename = CoverLocation::get_cover_location(artist);
+
+	if(!cl.valid){
+		_cover_location = CoverLocation::get_cover_location(artist);
+	}
+
+	else {
+		_cover_location = cl;
+	}
+
     _cl_alternative = new CoverLookupAlternative(this, artist, 10);
 
 	connect_and_start();
@@ -162,18 +186,19 @@ void GUI_Alternate_Covers::start(Artist artist) {
 }
 
 
-void GUI_Alternate_Covers::start(QString artist_name) {
+void GUI_Alternate_Covers::start(QString artist_name, const CoverLocation& cl) {
 
 	le_search->setText(artist_name);
-	_target_filename = CoverLocation::get_cover_location(artist_name);
+	if(!cl.valid){
+		_cover_location = CoverLocation::get_cover_location(artist_name);
+	}
+	else {
+		_cover_location = cl;
+	}
+
 	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
 
 	connect_and_start();
-}
-
-
-CoverLocation GUI_Alternate_Covers::get_target_filename(){
-	return _target_filename;
 }
 
 
@@ -185,6 +210,7 @@ void GUI_Alternate_Covers::search_button_pressed() {
 	}
 
 	_cl_alternative = new CoverLookupAlternative(this, le_search->text(), 10);
+
 	connect_and_start();
 
 }
@@ -199,22 +225,26 @@ void GUI_Alternate_Covers::save_button_pressed() {
 	QModelIndex idx = _model->index(rc.row, rc.col);
 
 	if(!idx.isValid()) {
-		qDebug() << "index not valid";
 		return;
 	}
 
-	QString src_filename = _model->data(idx, Qt::WhatsThisRole).toString().split(',')[0];
-	QFile file(src_filename);
+	QVariant var = _model->data(idx);
+	CoverLocation cl = var.value<CoverLocation>();
+	QFile file(cl.cover_path);
 
 	if(!file.exists()) {
 		QMessageBox::warning(this, tr("Information"), tr("This cover does not exist") );
 		return;
 	}
 
-	QImage img(src_filename);
-	img.save(_target_filename.cover_path);
+	QImage img(cl.cover_path);
+	if(img.isNull()){
+		return;
+	}
 
-	emit sig_cover_changed(true);
+	img.save(_cover_location.cover_path);
+
+	emit sig_cover_changed(_cover_location);
 }
 
 

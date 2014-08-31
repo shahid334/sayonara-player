@@ -54,7 +54,6 @@ Q_OBJECT
 
 	protected:
 
-		bool _big;
 		QString _header;
 		QString _subheader;
 		QMap<InfoStrings, QString> _info;

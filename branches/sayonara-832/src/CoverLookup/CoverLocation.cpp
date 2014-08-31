@@ -29,7 +29,7 @@
 
 
 CoverLocation::CoverLocation() {
-	valid = true;
+	valid = false;
 }
 
 
@@ -48,10 +48,10 @@ void CoverLocation::print() const{
 	qDebug() << "CoverLocation: " << google_url;
 }
 
-CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QString& artist_name, bool big) {
+CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QString& artist_name) {
 
 	CoverLocation ret;
-	QString cover_token = Helper::calc_cover_token(artist_name, album_name, big);
+	QString cover_token = Helper::calc_cover_token(artist_name, album_name);
 	QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + ".jpg";
 
 	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
@@ -59,18 +59,18 @@ CoverLocation CoverLocation::get_cover_location(const QString& album_name, const
 	}
 
 	ret.cover_path = cover_path;
-	ret.google_url = Helper::calc_google_album_adress(artist_name, album_name, big);
+	ret.google_url = Helper::calc_google_album_adress(artist_name, album_name);
 
 	return ret;
 }
 
-CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QStringList& artists, bool big) {
+CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QStringList& artists) {
 
 	QString major_artist = Helper::get_major_artist(artists);
-	return get_cover_location(album_name, major_artist, big);
+	return get_cover_location(album_name, major_artist);
 }
 
-CoverLocation CoverLocation::get_cover_location(int album_id, bool big) {
+CoverLocation CoverLocation::get_cover_location(int album_id) {
 
 	if(album_id < 0) return CoverLocation::getInvalidLocation();
 
@@ -82,36 +82,36 @@ CoverLocation CoverLocation::get_cover_location(int album_id, bool big) {
 		return getInvalidLocation();
 	}
 
-	return get_cover_location(album, big);
+	return get_cover_location(album);
 }
 
 
-CoverLocation CoverLocation::get_cover_location(const Album& album, bool big) {
+CoverLocation CoverLocation::get_cover_location(const Album& album) {
 	int n_artists;
 
 	n_artists = album.artists.size();
 	if( n_artists > 1 ) {
-		return CoverLocation::get_cover_location(album.name, album.artists, big);
+		return CoverLocation::get_cover_location(album.name, album.artists);
 	}
 
 	else if( n_artists == 1 ) {
-		return CoverLocation::get_cover_location(album.name, album.artists[0], big);
+		return CoverLocation::get_cover_location(album.name, album.artists[0]);
 	}
 
 	else {
-		return CoverLocation::get_cover_location(album.name, "", big);
+		return CoverLocation::get_cover_location(album.name, "");
 	}
 }
 
-CoverLocation CoverLocation::get_cover_location(const Artist& artist, bool big) {
-	return CoverLocation::get_cover_location(artist.name, big);
+CoverLocation CoverLocation::get_cover_location(const Artist& artist) {
+	return CoverLocation::get_cover_location(artist.name);
 }
 
 
-CoverLocation CoverLocation::get_cover_location(const QString& artist, bool big) {
+CoverLocation CoverLocation::get_cover_location(const QString& artist) {
 	CoverLocation ret;
 
-	QString token = QString("artist_") + Helper::calc_cover_token(artist, "", big);
+	QString token = QString("artist_") + Helper::calc_cover_token(artist, "");
 	QString target_file = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
 
 	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
@@ -119,14 +119,14 @@ CoverLocation CoverLocation::get_cover_location(const QString& artist, bool big)
 	}
 
 	ret.cover_path = target_file;
-	ret.google_url = Helper::calc_google_artist_adress(artist, big);
+	ret.google_url = Helper::calc_google_artist_adress(artist);
 
 	return ret;
 }
 
 
-CoverLocation CoverLocation::get_cover_location(const MetaData& md, bool big) {
+CoverLocation CoverLocation::get_cover_location(const MetaData& md) {
 
-	return get_cover_location(md.album, md.artist, big);
+	return get_cover_location(md.album, md.artist);
 }
 
