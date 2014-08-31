@@ -237,13 +237,12 @@ void  GUI_Library_windowed::init_headers() {
     album_columns  << al_h0 << al_h1 << al_h2 << al_h3 << al_h4 << al_h5;
     artist_columns << ar_h0 << ar_h1 << ar_h2;
 
-
     _album_model = new LibraryItemModelAlbums(album_columns);
-	_album_delegate = new LibraryItemDelegateAlbums(_album_model, lv_album);
+	_album_delegate = new LibraryItemDelegateAlbums(_album_model, lv_album, true);
     _artist_model = new LibraryItemModelArtists(artist_columns);
 	_artist_delegate = new LibraryItemDelegateArtists(_artist_model, lv_artist);
     _track_model = new LibraryItemModelTracks(track_columns);
-	_track_delegate = new LibraryItemDelegateTracks(_track_model, tb_title);
+	_track_delegate = new LibraryItemDelegateTracks(_track_model, tb_title, true);
 
     connect(_album_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(album_rating_changed(int)));
     connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));

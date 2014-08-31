@@ -590,6 +590,7 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
 	return success;
 }
 
+
 int CDatabaseConnector::updateTrack(MetaData& data) {
 
 #ifdef DEBUG_DB

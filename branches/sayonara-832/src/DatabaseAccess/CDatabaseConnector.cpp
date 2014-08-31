@@ -36,8 +36,6 @@
 #include <cstdlib>
 
 
-
-
 CDatabaseConnector* CDatabaseConnector::getInstance() {
 	static CDatabaseConnector instance;
 	return &instance;
@@ -302,7 +300,7 @@ bool CDatabaseConnector::apply_fixes() {
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int version = load_setting_int("version", 0);
-	if(version == 6) return true;
+	if(version == 7) return true;
 
     qDebug() << "Apply fixes";
 
@@ -392,6 +390,11 @@ bool CDatabaseConnector::apply_fixes() {
 
 		bool success = check_and_create_table("savedbookmarks", create_savedbookmarks);
 		if(success) store_setting("version", 6);
+	}
+
+	if(version < 7) {
+		bool success = check_and_insert_column("albums", "rating", "integer");
+		if(success) store_setting("version", 7);
 	}
 
 

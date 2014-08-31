@@ -64,8 +64,8 @@
             void sig_selection_changed(const QList<int>&);
 
 
-			void save_playlist(const QString&);
-			void playlist_mode_changed(const PlaylistMode&);
+			void sig_save_playlist(const QString&);
+			void sig_playlist_mode_changed(const PlaylistMode&);
 
             void sig_rows_moved(const QList<int>&, int);
             void sig_tracks_dropped(const MetaDataList&, int);
@@ -85,18 +85,17 @@
 
             void library_path_changed(QString);
             void set_playlist_type(PlaylistType playlist_type);
+			void change_playlist_mode(const PlaylistMode& mode);
 			void psl_show_small_playlist_items(bool small_items);
             void language_changed();
 
 
-
-
-		private slots:
+	private slots:
 
             void sel_changed(const MetaDataList&, const QList<int>&);
             void double_clicked(int);
             void clear_playlist_slot();
-			void playlist_mode_changed_slot();
+			void playlist_mode_changed();
             void rows_moved(const QList<int>&, int);
 
             void psl_info_tracks();
@@ -106,8 +105,6 @@
             void metadata_dropped(const MetaDataList&, int);
             void rows_removed(const QList<int>&, bool select_next_row);
             void no_focus();
-			void gapless_changed(bool);
-
 
 		private:
 

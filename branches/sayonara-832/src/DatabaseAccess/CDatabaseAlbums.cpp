@@ -103,7 +103,6 @@ struct AlbumCache {
         album = _cache[id];
         return true;
     }
-
 };
 
 AlbumCache cache;
@@ -112,7 +111,7 @@ AlbumCache cache;
 			"albums.albumID AS albumID, " + \
 			"albums.name AS albumName, " + \
 			"SUM(tracks.length) / 1000 AS albumLength, " + \
-            "AVG(tracks.rating) AS albumRating, " + \
+			"albums.rating AS albumRating, " + \
 			"COUNT(tracks.trackid) AS albumNTracks, " + \
 			"MAX(tracks.year) AS albumYear, " + \
 			"group_concat(artists.name) AS albumArtists, " + \
@@ -492,6 +491,37 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 }
 
 
+int CDatabaseConnector::updateAlbum (const Album & album) {
+	QSqlQuery q (*_database);
+
+	q.prepare("UPDATE albums "
+			  "SET name=:name, "
+			  "    cissearch=:cissearch, "
+			  "    rating=:rating "
+			  "WHERE albumID = :id;");
+
+	q.bindValue(":id", QVariant(album.id));
+	q.bindValue(":name", QVariant(album.name));
+	q.bindValue(":cissearch", QVariant(album.name.toLower()));
+	q.bindValue(":rating", QVariant(album.rating));
+
+
+	if (!q.exec()) {
+		QSqlError er = this -> _database->lastError();
+		qDebug() << er.driverText();
+		qDebug() << er.databaseText();
+		qDebug() << er.databaseText();
+		return -1;
+	}
+
+	cache.setNeedsUpdate(true);
+	return this -> getAlbumID (album.name);
+
+
+
+	return -1;
+}
+
 int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -519,28 +549,25 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
-    try{
-        q.prepare("INSERT INTO albums (albumid, name, cissearch) values (:id, :name, :cissearch);");
-    	q.bindValue(":id", QVariant(album.id));
-        q.bindValue(":name", QVariant(album.name));
-        q.bindValue(":cissearch", QVariant(album.name.toLower()));
 
-        if (!q.exec()) {
-            throw QString ("SQL - Error: insertAlbumIntoDatabase " + album.name);
-        }
+	q.prepare("INSERT INTO albums (albumid, name, cissearch, rating) values (:id, :name, :cissearch, :rating);");
+	q.bindValue(":id", QVariant(album.id));
+	q.bindValue(":name", QVariant(album.name));
+	q.bindValue(":cissearch", QVariant(album.name.toLower()));
+	q.bindValue(":rating", QVariant(album.rating));
 
-        cache.setNeedsUpdate(true);
-        return this -> getAlbumID (album.name);
-    }
+	if (!q.exec()) {
+		QSqlError er = this -> _database->lastError();
+		qDebug() << er.driverText();
+		qDebug() << er.databaseText();
+		qDebug() << er.databaseText();
+		return -1;
+	}
 
-    catch (QString& ex) {
-    		qDebug() << ex;
-    		QSqlError er = this -> _database->lastError();
-    		qDebug() << er.driverText();
-    		qDebug() << er.databaseText();
-    		qDebug() << er.databaseText();
-    		return -1;
-    	}
+	cache.setNeedsUpdate(true);
+	return this -> getAlbumID (album.name);
+
+
 
     return -1;
 }

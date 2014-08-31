@@ -83,12 +83,14 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     _playlist_mode = settings->getPlaylistMode();
 
+
 	btn_append->setChecked(_playlist_mode.append);
 	btn_repAll->setChecked(_playlist_mode.repAll);
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
 	btn_shuffle->setChecked(_playlist_mode.shuffle);
-	btn_numbers->setChecked(settings->getPlaylistNumbers());
-	btn_gapless->setChecked(settings->getGapless());
+	btn_gapless->setChecked(_playlist_mode.gapless);
+
+
 	btn_import->setVisible(false);
 
     check_dynamic_play_button();
@@ -96,11 +98,13 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	connect(btn_clear, SIGNAL(clicked()), this, SLOT(clear_playlist_slot()));
 
-	connect(btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
-	connect(btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed_slot()));
+	connect(btn_rep1, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+	connect(btn_repAll, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+	connect(btn_shuffle, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+	connect(btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+	connect(btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+	connect(btn_gapless, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+
 
 	connect(listView, SIGNAL(sig_metadata_dropped(const MetaDataList&,int)), this, SLOT(metadata_dropped(const MetaDataList&,int)));
 	connect(listView, SIGNAL(sig_rows_removed(const QList<int>&, bool)), this, SLOT(rows_removed(const QList<int>&, bool)));
@@ -113,8 +117,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
             this, SLOT(sel_changed(const MetaDataList&, const QList<int>&)));
 	connect(listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
 	connect(listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
-
-	connect(btn_gapless, SIGNAL(toggled(bool)), this, SLOT(gapless_changed(bool)));
 
 	//connect(btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	connect(btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
@@ -191,6 +193,7 @@ void GUI_Playlist::check_dynamic_play_button() {
     }
 }
 
+
 // Slot: comes from listview
 void GUI_Playlist::metadata_dropped(const MetaDataList& v_md, int row) {
     emit sig_tracks_dropped(v_md, row);
@@ -247,27 +250,46 @@ void GUI_Playlist::track_changed(int row) {
 }
 
 
-void GUI_Playlist::gapless_changed(bool checked) {
-	 CSettingsStorage::getInstance()->setGapless(checked);
-	emit sig_gapless(checked);
-}
 
-
-// private SLOT: rep1, repAll, shuffle or append has changed
-void GUI_Playlist::playlist_mode_changed_slot() {
+// GUI -> data
+void GUI_Playlist::playlist_mode_changed() {
 
 	parentWidget()->setFocus();
 
+	_playlist_mode.append = btn_append->isChecked();
 	_playlist_mode.rep1 = btn_rep1->isChecked();
 	_playlist_mode.repAll = btn_repAll->isChecked();
 	_playlist_mode.shuffle = btn_shuffle->isChecked();
-	_playlist_mode.append = btn_append->isChecked();
 	_playlist_mode.dynamic = btn_dynamic->isChecked();
+	_playlist_mode.gapless = btn_gapless->isChecked();
 
     CSettingsStorage::getInstance()->setPlaylistMode(_playlist_mode);
 
-    emit playlist_mode_changed(_playlist_mode);
-    emit save_playlist("bla");
+	emit sig_playlist_mode_changed(_playlist_mode);
+	emit sig_save_playlist("bla");
+}
+
+// data -> GUI
+void GUI_Playlist::change_playlist_mode(const PlaylistMode& mode){
+
+	if(mode == _playlist_mode) return;
+
+	_playlist_mode = mode;
+
+	btn_append->setChecked(_playlist_mode.append);
+	btn_rep1->setChecked(_playlist_mode.rep1);
+	btn_repAll->setChecked(_playlist_mode.repAll);
+	btn_shuffle->setChecked(_playlist_mode.shuffle);
+	btn_dynamic->setChecked(_playlist_mode.dynamic);
+	btn_gapless->setChecked(_playlist_mode.gapless);
+
+	btn_append->setVisible(_playlist_mode.ui_append);
+	btn_repAll->setVisible(_playlist_mode.ui_repAll);
+	btn_dynamic->setVisible(_playlist_mode.ui_dynamic);
+	btn_shuffle->setVisible(_playlist_mode.ui_shuffle);
+	btn_gapless->setVisible(_playlist_mode.ui_gapless);
+
+	//emit sig_playlist_mode_changed(_playlist_mode);
 }
 
 
@@ -370,3 +392,5 @@ void GUI_Playlist::btn_numbers_changed(bool b) {
 void GUI_Playlist::rows_removed(const QList<int>& lst, bool select_next_row) {
     emit sig_rows_removed(lst, select_next_row);
 }
+
+

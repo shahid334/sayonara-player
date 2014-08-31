@@ -38,8 +38,9 @@
 #include "GUI/library/view/LibraryView.h"
 
 class LibraryItemDelegateTracks : public LibraryRatingDelegate {
+
 public:
-    LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent=0);
+	LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent, bool enabled);
 	virtual ~LibraryItemDelegateTracks();
 
 public:

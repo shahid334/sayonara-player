@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 project("Sayonara Player")
 ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(linux_packages/resources)
+#ADD_SUBDIRECTORY(linux_packages/resources)
 
 IF(${UNIX})
         execute_process(COMMAND sh ./scripts/setversion.sh)

@@ -243,6 +243,7 @@ void GSTPlaybackPipeline::play() {
 
 }
 
+
 void GSTPlaybackPipeline::pause() {
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 }
@@ -262,6 +263,8 @@ void GSTPlaybackPipeline::stop() {
 void GSTPlaybackPipeline::set_volume(int vol) {
 
 	_vol = vol;
+	if(vol < 0) vol = 0;
+	if(vol > 100) vol = 100;
 
 	float vol_val = (float) (vol * 1.0f / 100.0f);
 	g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);

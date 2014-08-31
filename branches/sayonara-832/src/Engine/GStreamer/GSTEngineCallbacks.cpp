@@ -186,7 +186,6 @@ EngineCallbacks::spectrum_handler (GstBus * bus, GstMessage * message, gpointer 
 	engine->set_spectrum(lst);
 
     return TRUE;
-
 }
 
 
@@ -206,7 +205,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
     case GST_MESSAGE_EOS:
 		if (!engine) break;
 
-		qDebug() << "Engine: Track finished";
+		//qDebug() << "Engine: Track finished";
 		engine->set_track_finished();
 
 		break;

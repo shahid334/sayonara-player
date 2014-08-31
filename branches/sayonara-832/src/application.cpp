@@ -141,16 +141,6 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	lastfm              = LastFM::getInstance();
 
-    ui_lastfm           = new GUI_LastFM(player->centralWidget());
-	ui_level            = new GUI_LevelPainter(tr("Le&vel"), player->getParentOfPlugin());
-	ui_spectrum         = new GUI_Spectrum(tr("&Spectrum"), player->getParentOfPlugin());
-	ui_stream           = new GUI_Stream(tr("&Webstreams"), player->getParentOfPlugin());
-	ui_podcasts         = new GUI_Podcasts(tr("P&odcasts"), player->getParentOfPlugin());
-	ui_eq               = new GUI_Equalizer(tr("&Equalizer"), player->getParentOfPlugin());
-	ui_playlist_chooser = new GUI_PlaylistChooser(tr("Pla&ylists"), player->getParentOfPlugin());
-	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
-	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
-	ui_speed			= new GUI_Speed(tr("Spee&d"), player->getParentOfPlugin());
 
 	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
 	ui_id3_editor       = new GUI_TagEdit();
@@ -161,6 +151,18 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_library          = new GUI_Library_windowed(player->getParentOfLibrary());
 	ui_library->set_info_dialog(ui_info_dialog);
 	ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist(), ui_info_dialog);
+
+	ui_lastfm           = new GUI_LastFM(player->centralWidget());
+	ui_level            = new GUI_LevelPainter(tr("Le&vel"), player->getParentOfPlugin());
+	ui_spectrum         = new GUI_Spectrum(tr("&Spectrum"), player->getParentOfPlugin());
+	ui_stream           = new GUI_Stream(tr("&Webstreams"), player->getParentOfPlugin());
+	ui_podcasts         = new GUI_Podcasts(tr("P&odcasts"), player->getParentOfPlugin());
+	ui_eq               = new GUI_Equalizer(tr("&Equalizer"), player->getParentOfPlugin());
+	ui_playlist_chooser = new GUI_PlaylistChooser(tr("Pla&ylists"), player->getParentOfPlugin());
+	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
+	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
+	ui_speed			= new GUI_Speed(tr("Spee&d"), player->getParentOfPlugin());
+
 
 	ui_style_settings = new GUI_StyleSettings(player);
 
@@ -204,8 +206,9 @@ void Application::init(int n_files, QTranslator *translator) {
 	}
 
    else{
+		PlaylistMode plm = set->getPlaylistMode();
 		listen->psl_sr_set_active(set->getStreamRipper());
-		listen->psl_set_gapless(set->getGapless());
+		listen->psl_set_gapless(plm.gapless);
    }
 
 	init_connections();
@@ -325,6 +328,7 @@ void Application::init_connections() {
     CONNECT (player, sig_stop(),                                 playlist_handler,			psl_stop());
     CONNECT (player, sig_stop(),                                 ui_spectrum,		psl_stop());
     CONNECT (player, sig_stop(),                                 ui_level,          psl_stop());
+	CONNECT (player, sig_stop(),								 ui_audioconverter,	stopped());
 	CONNECT (player, sig_pause(),                                ui_spectrum,		psl_stop());
 	CONNECT (player, sig_pause(),                                ui_level,         psl_stop());
     CONNECT (player, sig_forward(),                              playlist_handler,			psl_forward());
@@ -349,6 +353,7 @@ void Application::init_connections() {
 	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               ui_bookmarks,	track_changed(const MetaData&));
     CONNECT (playlist_handler, sig_selected_file_changed(int),                              ui_playlist, 	track_changed(int));
 
+
     CONNECT (playlist_handler, sig_no_track_to_play(),								listen,			stop());
     CONNECT (playlist_handler, sig_no_track_to_play(),								player,			stopped());
     CONNECT (playlist_handler, sig_goon_playing(),                                  listen,			play());
@@ -357,11 +362,12 @@ void Application::init_connections() {
     CONNECT (playlist_handler, sig_playlist_created(const MetaDataList&, int, PlaylistType), 		ui_playlist_chooser, 	playlist_changed(const MetaDataList&, int, PlaylistType));
     CONNECT (playlist_handler, sig_playlist_prepared(int, MetaDataList&),            playlists,     save_playlist_as_custom(int, MetaDataList&));
     CONNECT (playlist_handler, sig_playlist_prepared(QString, MetaDataList&),        playlists,     save_playlist_as_custom(QString, MetaDataList&));
+	CONNECT (playlist_handler, sig_playlist_mode_changed(const PlaylistMode&),		ui_playlist,	change_playlist_mode(const PlaylistMode&));
 
 	CONNECT (ui_playlist, sig_cur_idx_changed(int),                      playlist_handler, 	psl_change_track(int));
 	CONNECT (ui_playlist, sig_selection_changed(const QList<int>&),      playlist_handler, 	psl_selection_changed(const QList<int>&));
 	CONNECT (ui_playlist, sig_cleared(),                                 playlist_handler, 	psl_clear_playlist());
-	CONNECT (ui_playlist, playlist_mode_changed(const PlaylistMode&),   playlist_handler, 	psl_playlist_mode_changed(const PlaylistMode&));
+	CONNECT (ui_playlist, sig_playlist_mode_changed(const PlaylistMode&),   playlist_handler, 	psl_playlist_mode_changed(const PlaylistMode&));
 	CONNECT (ui_playlist, sig_tracks_dropped(const MetaDataList&, int),  playlist_handler, 	psl_insert_tracks(const MetaDataList&, int));
 	CONNECT (ui_playlist, sig_rows_removed(const QList<int>&, bool),     playlist_handler, 	psl_remove_rows(const QList<int>&, bool));
 	CONNECT (ui_playlist, sig_rows_moved(const QList<int>&, int),        playlist_handler, 	psl_move_rows(const QList<int>&, int));
@@ -404,18 +410,6 @@ void Application::init_connections() {
 	CONNECT(library, sig_change_id3_tags(const MetaDataList&),		ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
 	CONNECT(library, sig_reload_library_finished(),                 ui_library, 	reloading_library_finished());
 
-	/**/
-
-	/*CONNECT(sc_library, sig_track_mime_data_available(const MetaDataList&),  ui_sc, 	track_info_available(const MetaDataList&));
-	CONNECT(sc_library, sig_delete_answer(QString), 					     ui_sc, 	psl_delete_answer(QString));
-	CONNECT(sc_library, sig_playlist_created(QStringList&),                  playlist_handler, psl_createPlaylist(QStringList&));
-	CONNECT(sc_library, sig_tracks_for_playlist_available(MetaDataList&),    playlist_handler, psl_createPlaylist(MetaDataList&));
-	CONNECT(sc_library, sig_append_tracks_to_playlist(MetaDataList&),        playlist_handler, psl_append_tracks(MetaDataList&));
-	CONNECT(sc_library, sig_play_next_tracks(const MetaDataList&),		         playlist_handler,          psl_play_next(const MetaDataList&));*/
-
-	/**/
-
-
     CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));
     CONNECT(ui_library, sig_artist_dbl_clicked(int), 					library, 		psl_prepare_artist_for_playlist(int));
     CONNECT(ui_library, sig_tracks_dbl_clicked(QList<int>),             library, 		psl_prepare_tracks_for_playlist(QList<int>));
@@ -452,8 +446,8 @@ void Application::init_connections() {
 	CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 	      playlist_handler, psl_id3_tags_changed(MetaDataList&));
 	CONNECT(ui_id3_editor, id3_tags_changed(MetaDataList&), 		  player, 		    psl_id3_tags_changed(MetaDataList&));
 
-	CONNECT(ui_audioconverter, sig_active(),                          playlist_handler, psl_stop());
-	CONNECT(ui_audioconverter, sig_inactive(),                        playlist_handler, psl_stop());
+	CONNECT(ui_audioconverter, sig_active(),                          playlist_handler, psl_audioconvert_on());
+	CONNECT(ui_audioconverter, sig_inactive(),                        playlist_handler, psl_audioconvert_off());
 	CONNECT(ui_audioconverter, sig_active(),						  listen, start_convert());
 	CONNECT(ui_audioconverter, sig_inactive(),						  listen, end_convert());
 	CONNECT(ui_bookmarks, sig_bookmark(quint32),                      listen, jump_abs_s(quint32) );

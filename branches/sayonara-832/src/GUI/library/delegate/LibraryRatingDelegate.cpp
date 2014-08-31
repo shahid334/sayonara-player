@@ -24,17 +24,17 @@
 #include "GUI/RatingLabel.h"
 #include <QDebug>
 
-LibraryRatingDelegate::LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent)
+LibraryRatingDelegate::LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent, bool enabled)
 {
     _parent = parent;
+	_enabled = enabled;
 }
-
 
 
 QWidget *LibraryRatingDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
-    RatingLabel *label = new RatingLabel(parent);
+	RatingLabel *label = new RatingLabel(parent, _enabled);
 
     connect(label, SIGNAL(sig_finished(bool)), this, SLOT(destroy_editor(bool)));
 

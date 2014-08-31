@@ -38,6 +38,7 @@ class Playlist : public QObject
     Q_OBJECT
 
 signals:
+	void sig_playlist_mode_changed(const PlaylistMode&);
     void sig_playlist_changed(const MetaDataList&, int);
     void sig_track_changed(const MetaData&, int);
     void sig_stopped();
@@ -49,6 +50,7 @@ protected:
     int             _cur_play_idx;
     MetaDataList    _v_md;
     PlaylistMode	_playlist_mode;
+	PlaylistMode	_playlist_mode_backup;
     PlaylistType    _playlist_type;
     bool            _reports_disabled;
     bool            _start_playing;
@@ -58,6 +60,7 @@ protected:
     void disable_reports();
 
 public:
+
     Playlist(QObject* parent);
 
     virtual void play()=0;
@@ -93,6 +96,9 @@ public:
 
     virtual void selection_changed(const QList<int>&);
 
+	virtual PlaylistMode playlist_mode_backup();
+	virtual PlaylistMode playlist_mode_restore();
+
     int find_track_by_id(int id);
     int find_track_by_path(QString path);
 
@@ -101,7 +107,7 @@ public:
     int get_cur_track();
     QStringList toStringList();
 
-    void set_playlist_mode(PlaylistMode mode);
+	void set_playlist_mode(const PlaylistMode& mode);
 };
 
 

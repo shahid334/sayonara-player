@@ -171,13 +171,14 @@ void StdPlaylist::next() {
     else {
         if(_cur_play_idx >= (int) _v_md.size() -1) {
 
-            if(_playlist_mode.repAll)
-                track_num = 0;
+			if(_playlist_mode.repAll){
+				track_num = 0;
+			}
+
 			else {
 				stop();
 				return;
 			}
-
         }
 
         else{

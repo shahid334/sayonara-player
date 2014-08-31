@@ -37,12 +37,10 @@
 #include <QItemDelegate>
 #include <QPainter>
 
-LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent) : LibraryRatingDelegate(model, parent) {
+LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent, bool enabled) : LibraryRatingDelegate(model, parent, enabled) {
 	this->_parent = parent;
 	_model = model;
 	_selected_background = QColor(66,78,114);
-
-
 }
 
 LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {

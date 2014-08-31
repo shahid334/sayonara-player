@@ -44,11 +44,15 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     QIcon play_icon = QIcon(icon_path + "/play.png");
 	QIcon pause_icon = QIcon(icon_path + "/pause.png");
 
-    QPixmap play_pixmap = play_icon.pixmap(24, 24);
-    QPixmap pause_pixmap = pause_icon.pixmap(24, 24);
 
-    m_playIcon = QIcon(play_pixmap);
-    m_pauseIcon = QIcon(pause_pixmap);
+	m_playIcon = QIcon();
+	m_pauseIcon = QIcon();
+
+	m_playIcon.addPixmap( Helper::getPixmap("play.png", QSize(24, 24), true) );
+	m_pauseIcon.addPixmap( Helper::getPixmap("pause.png", QSize(24, 24), true) );
+
+	m_playIcon.addPixmap( Helper::getPixmap("play.png", QSize(32, 32), true) );
+	m_pauseIcon.addPixmap( Helper::getPixmap("pause.png", QSize(32, 32), true) );
 
     m_vol_step = 5;
 
@@ -75,25 +79,22 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 	m_showAction = new QAction(tr("Show"), this);
 
     m_trayContextMenu = new QMenu();
-        m_trayContextMenu->addAction(m_playAction);
-        m_trayContextMenu->addAction(m_stopAction);
-        m_trayContextMenu->addSeparator();
-        m_trayContextMenu->addAction(m_fwdAction);
-        m_trayContextMenu->addAction(m_bwdAction);
-        m_trayContextMenu->addSeparator();
-        m_trayContextMenu->addAction(m_muteAction);
-        m_trayContextMenu->addSeparator();
-        m_trayContextMenu->addAction(m_showAction);
-        m_trayContextMenu->addAction(m_closeAction);
-        QFont f = m_trayContextMenu->font();
-        f.setFamily("DejaVu Sans");
-        m_trayContextMenu->setFont(f);
-    this->setContextMenu(m_trayContextMenu);
+	m_trayContextMenu->addAction(m_playAction);
+	m_trayContextMenu->addAction(m_stopAction);
+	m_trayContextMenu->addSeparator();
+	m_trayContextMenu->addAction(m_fwdAction);
+	m_trayContextMenu->addAction(m_bwdAction);
+	m_trayContextMenu->addSeparator();
+	m_trayContextMenu->addAction(m_muteAction);
+	m_trayContextMenu->addSeparator();
+	m_trayContextMenu->addAction(m_showAction);
+	m_trayContextMenu->addAction(m_closeAction);
+	QFont f = m_trayContextMenu->font();
+	f.setFamily("DejaVu Sans");
+	m_trayContextMenu->setFont(f);
 
-
-
-//    this->setToolTip("Sayonara Player");*/
-    this->setIcon(m_playIcon);
+	this->setContextMenu(m_trayContextMenu);
+	this->setIcon(m_playIcon);
 
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(play_clicked()));
     connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(fwd_clicked()));
@@ -145,7 +146,6 @@ bool GUI_TrayIcon::event ( QEvent * e ) {
 
 void GUI_TrayIcon::timer_timed_out()
 {
-	qDebug() << "Timed out";
 	_timer->stop();
 	if(_md_set)
 		trackChanged(_md);

@@ -39,6 +39,7 @@ PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent) {
     new_playlist(PlaylistTypeStd);
 }
 
+
 PlaylistHandler::~PlaylistHandler() {
 	if(_playlist)
 		delete _playlist;
@@ -371,3 +372,32 @@ void PlaylistHandler::psl_playlist_mode_changed(const PlaylistMode& playlist_mod
 }
 
 
+void PlaylistHandler::psl_audioconvert_on(){
+
+	psl_stop();
+
+	PlaylistMode pl_mode = _playlist->playlist_mode_backup();
+
+	pl_mode.repAll = false;
+	pl_mode.shuffle = false;
+	pl_mode.dynamic = false;
+	pl_mode.gapless = false;
+
+	_playlist->set_playlist_mode(pl_mode);
+
+	_settings->setPlaylistMode(pl_mode);
+
+	emit sig_playlist_mode_changed(pl_mode);
+}
+
+void PlaylistHandler::psl_audioconvert_off(){
+
+	psl_stop();
+
+	PlaylistMode pl_mode = _playlist->playlist_mode_restore();
+
+	_settings->setPlaylistMode(pl_mode);
+	_playlist->set_playlist_mode(pl_mode);
+
+	emit sig_playlist_mode_changed(pl_mode);
+}

@@ -107,6 +107,7 @@ void GSTConvertEngine::change_track(const QString& str, int pos_sec, bool start_
 
 }
 
+
 void GSTConvertEngine::play() {
 
 	_pipeline->play();

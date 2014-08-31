@@ -105,6 +105,29 @@ void GUI_AudioConverter::fill_vbr() {
 	cb_quality->setCurrentIndex(2);
 }
 
+
+void GUI_AudioConverter::stopped(){
+
+	if(!isVisible()) return;
+	if(!cb_active->isChecked()) return;
+
+	cb_active->setChecked( false );
+}
+
+void GUI_AudioConverter::closeEvent(QCloseEvent* e){
+	stopped();
+
+	PlayerPlugin::closeEvent(e);
+}
+
+void GUI_AudioConverter::track_changed(int cur_idx){
+	if(cur_idx == -1){
+
+		stopped();
+	}
+}
+
+
 void GUI_AudioConverter::rb_cbr_toggled(bool b) {
 	if(!b) return;
 	fill_cbr();

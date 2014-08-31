@@ -38,10 +38,11 @@
 #include "GUI/library/view/LibraryView.h"
 
 class LibraryItemDelegateAlbums : public LibraryRatingDelegate {
+
 	Q_OBJECT
 
 public:
-    LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent=0);
+	LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent, bool enabled);
 	virtual ~LibraryItemDelegateAlbums();
 
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;

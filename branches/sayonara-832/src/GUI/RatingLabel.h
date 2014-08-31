@@ -51,6 +51,7 @@ private:
 
 };
 
+
 Q_DECLARE_METATYPE(Rating)
 
 class RatingLabel : public QLabel
@@ -62,7 +63,7 @@ signals:
 
 
 public:
-    RatingLabel(QWidget *parent = 0);
+	RatingLabel(QWidget *parent, bool enabled);
     virtual ~RatingLabel();
     
 
@@ -84,6 +85,7 @@ public:
 
 private:
 
+	bool _enabled;
    int _id;
    int _row;
    Rating _rating;

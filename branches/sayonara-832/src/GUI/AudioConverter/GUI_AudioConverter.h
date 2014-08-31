@@ -28,6 +28,7 @@
 #include "GUI/ui_GUI_AudioConvert.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include <QAction>
+#include <QCloseEvent>
 
 
 class GUI_AudioConverter : public PlayerPlugin, private Ui::GUI_AudioConvert
@@ -38,16 +39,22 @@ signals:
 	void sig_active();
 	void sig_inactive();
 
+
 public:
 	explicit GUI_AudioConverter(QString name, QWidget *parent=0);
 	
 public slots:
+	void stopped();
+	void track_changed(int);
 
 private slots:
 	void rb_cbr_toggled(bool b);
 	void rb_vbr_toggled(bool b);
 	void quality_changed(int index);
 	void cb_active_toggled(bool b);
+
+protected:
+	void closeEvent(QCloseEvent* e);
 
 	
 private:

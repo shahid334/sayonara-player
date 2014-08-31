@@ -434,6 +434,7 @@ void CLibraryBase::psl_append_all_tracks() {
     emit sig_append_tracks_to_playlist(_vec_md);
 }
 
+
 void CLibraryBase::psl_append_tracks(const QList<int>& lst) {
     MetaDataList v_md;
     foreach(int i, lst) {
@@ -444,40 +445,13 @@ void CLibraryBase::psl_append_tracks(const QList<int>& lst) {
 
 void CLibraryBase::psl_track_rating_changed(int idx, int rating) {
 
-    bool success;
-    Album album;
-
-    _vec_md[idx].rating = rating;
+	_vec_md[idx].rating = rating;
     _db->updateTrack(_vec_md[idx]);
-
-    success = _db->getAlbumByID(_vec_md[idx].album_id, album);
-    if(!success) return;
-
-    for(int i=0; i<(int)_vec_albums.size(); i++) {
-        if(_vec_albums[i].id == album.id) {
-            _vec_albums[i].rating = album.rating;
-            break;
-        }
-    }
 }
 
 void CLibraryBase::psl_album_rating_changed(int idx, int rating) {
 
-    QList<int> album_ids;
-    QList<int> album_idxs;
-    MetaDataList v_md;
+	_vec_albums[idx].rating = rating;
+	_db->updateAlbum(_vec_albums[idx]);
 
-    album_idxs << idx;
-    album_ids << _vec_albums[idx].id;
-
-    _db->getAllTracksByAlbum(album_ids, v_md);
-
-    for(int i=0; i<(int) v_md.size(); i++) {
-        v_md[i].rating = rating;
-    }
-
-    _db->updateTracks(v_md);
-
-
-    psl_selected_albums_changed(album_idxs);
 }

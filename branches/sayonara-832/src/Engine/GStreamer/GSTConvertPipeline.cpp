@@ -103,7 +103,6 @@ bool GSTConvertPipeline::set_target_uri(gchar* uri) {
 }
 
 
-
 void GSTConvertPipeline::play() {
 
 	LameBitrate q = CSettingsStorage::getInstance()->getConvertQuality();
@@ -125,7 +124,6 @@ void GSTConvertPipeline::stop() {
 	_uri = 0;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-
 }
 
 

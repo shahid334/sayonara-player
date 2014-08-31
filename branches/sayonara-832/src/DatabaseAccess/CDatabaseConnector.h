@@ -102,7 +102,6 @@ public:
 		 *  ALBUMS
 		 *****************/
 
-
             int getAlbumID (const QString& album);
 			int getMaxAlbumID();
 
@@ -117,6 +116,8 @@ public:
 
 			int insertAlbumIntoDatabase (const QString & album);
             int insertAlbumIntoDatabase (const Album& album);
+
+			int updateAlbum(const Album& album);
 
 
 
@@ -195,9 +196,9 @@ public:
         template<class T>
         T load_setting_type(QString key, T def){
 
-            load_setting_string(key, "");
+			QString str = load_setting_string(key, "");
 
-            return T::fromString(key);
+			return T::fromString(str);
         }
 
 

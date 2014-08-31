@@ -171,7 +171,6 @@ void GSTEngineHandler::psl_set_gapless(bool b) {
 	_cur_engine->psl_set_gapless(b);
 }
 
-
 void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
 	emit sig_dur_changed_ms(v);
 }

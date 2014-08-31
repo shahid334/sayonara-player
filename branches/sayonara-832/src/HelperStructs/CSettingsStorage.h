@@ -78,7 +78,6 @@
 
 #define SET_ENGINE "sound_engine"
 #define SET_ENGINE_VOL "volume"
-#define SET_ENGINE_GAPLESS "gapless"
 #define SET_ENGINE_CVT "convert_quality"
 #define SET_ENGINE_CVT_TGT_PATH "convert_target_path"
 
@@ -187,7 +186,7 @@ private:
     // listen
     int	m_volume;
     int m_last_eq;
-	bool m_gapless;
+
     vector<EQ_Setting> m_vec_eqSettings;
     
     // player size
@@ -260,11 +259,13 @@ private:
 
     int     m_spectrum_style;
 
+
 protected:
-    void save_all();
+
+	void save_all();
+
 
 public:
-
 
 	void set_sth_changed(bool);
 
@@ -285,9 +286,6 @@ public:
 
     int getVolume();
     void setVolume(int vol);
-
-	bool getGapless();
-	void setGapless(bool gapless);
 
 	void setLastEqualizer(int);
 	int getLastEqualizer();

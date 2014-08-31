@@ -19,12 +19,12 @@
  */
 
 
-
 #include "playlist/Playlist.h"
 #include <QDir>
 
 Playlist::Playlist(QObject* parent) : QObject(parent) {
 
+	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
     _reports_disabled = false;
     _cur_play_idx = -1;
 }
@@ -32,14 +32,21 @@ Playlist::Playlist(QObject* parent) : QObject(parent) {
 void Playlist::report_changes(bool pl_changed, bool track_changed) {
     if(_reports_disabled) return;
 
-    if(pl_changed)
-        emit sig_playlist_changed(_v_md, _cur_play_idx);
+	if(pl_changed){
+		emit sig_playlist_changed(_v_md, _cur_play_idx);
+	}
 
-    if(track_changed) {
-        if(_cur_play_idx < 0 || _cur_play_idx >= (int) _v_md.size() )
-            emit sig_stopped();
-        else
-            emit sig_track_changed(_v_md[_cur_play_idx], _cur_play_idx);
+
+	if(track_changed) {
+
+		if(_cur_play_idx < 0 || _cur_play_idx >= (int) _v_md.size() ){
+
+			emit sig_stopped();
+		}
+
+		else{
+			emit sig_track_changed(_v_md[_cur_play_idx], _cur_play_idx);
+		}
     }
 }
 
@@ -266,7 +273,7 @@ PlaylistType Playlist::get_type() {
     return _playlist_type;
 }
 
-void Playlist::set_playlist_mode(PlaylistMode mode) {
+void Playlist::set_playlist_mode(const PlaylistMode& mode) {
     _playlist_mode = mode;
 }
 
@@ -287,4 +294,17 @@ QStringList Playlist::toStringList() {
 bool Playlist::is_empty() {
 
     return (_v_md.size() == 0);
+}
+
+
+PlaylistMode Playlist::playlist_mode_backup(){
+	_playlist_mode_backup = _playlist_mode;
+
+	return _playlist_mode;
+}
+
+PlaylistMode Playlist::playlist_mode_restore(){
+	_playlist_mode = _playlist_mode_backup;
+
+	return _playlist_mode;
 }

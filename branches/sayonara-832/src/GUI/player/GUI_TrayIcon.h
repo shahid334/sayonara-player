@@ -33,8 +33,6 @@
 #include <QTimer>
 
 
-
-
 /**
   * Small class to be used as tray icon
   */

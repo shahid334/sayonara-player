@@ -37,8 +37,8 @@
 #include <QStyleOptionViewItem>
 
 
-LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent) :
-    LibraryRatingDelegate(model, parent) {
+LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent, bool enabled) :
+	LibraryRatingDelegate(model, parent, enabled) {
 
     _icon_single_album = Helper::getPixmap("play_small.png");
     _icon_multi_album = Helper::getPixmap("fwd_orange.png");
@@ -48,6 +48,7 @@ LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, Li
     _selected_background = QColor(66,78,114);
 
 }
+
 
 LibraryItemDelegateAlbums::~LibraryItemDelegateAlbums() {
 

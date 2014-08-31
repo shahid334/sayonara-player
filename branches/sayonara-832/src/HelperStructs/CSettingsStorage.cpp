@@ -184,19 +184,13 @@ void CSettingsStorage::setVolume(int vol) {
 }
 
 
-bool CSettingsStorage::getGapless() { return m_gapless; }
-void CSettingsStorage::setGapless(bool gapless) {
-	m_gapless = gapless;
-	_sth_changed = true;
-}
-
-
 void CSettingsStorage::setLastEqualizer(int eq_idx) { 
 	m_last_eq = eq_idx;     
     _sth_changed = true;
 }
 
 int CSettingsStorage::getLastEqualizer() { return m_last_eq;}
+
 
 QString CSettingsStorage::getLibraryPath() {return m_library_path;}
 void CSettingsStorage::setLibraryPath(QString path) {

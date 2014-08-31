@@ -89,9 +89,10 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
 
 
-RatingLabel::RatingLabel(QWidget *parent) :
+RatingLabel::RatingLabel(QWidget *parent, bool enabled) :
     QLabel(parent)
 {
+	_enabled = enabled;
 	_parent = parent;
     _rating = Rating(0);
     _id = rand();
@@ -105,7 +106,6 @@ RatingLabel::RatingLabel(QWidget *parent) :
 }
 
 RatingLabel::~RatingLabel() {
-    qDebug() << "Destroy editor " << _id;
     _id = 0;
 }
 
@@ -119,12 +119,9 @@ int RatingLabel::calc_rating(QPoint pos) {
 
 	int rating = (pos.x() + Offset) / ((width() - 5) / 5);
 
-	qDebug() << "Width = " << width() << ", x = " << pos.x();
-
     if(rating > 5) rating = 5;
 
     return rating;
-
 }
 
 
@@ -138,7 +135,7 @@ void RatingLabel::paintEvent(QPaintEvent *e) {
 
 void RatingLabel::mouseMoveEvent(QMouseEvent *e) {
 
-
+	if(!_enabled) return;
 	int rating = calc_rating(e->pos());
 	this->update_rating(rating);
 }
@@ -146,6 +143,7 @@ void RatingLabel::mouseMoveEvent(QMouseEvent *e) {
 
 void RatingLabel::mousePressEvent(QMouseEvent *e) {
 
+	if(!_enabled) return;
 	this->setMouseTracking(false);
     int rating = calc_rating(e->pos());
     this->update_rating(rating);
@@ -154,6 +152,7 @@ void RatingLabel::mousePressEvent(QMouseEvent *e) {
 
 void RatingLabel::mouseReleaseEvent(QMouseEvent *e) {
 
+	if(!_enabled) return;
     emit sig_finished(true);
 }
 
@@ -161,6 +160,7 @@ void RatingLabel::mouseReleaseEvent(QMouseEvent *e) {
 void RatingLabel::focusOutEvent(QFocusEvent* e) {
 
 	_parent->setFocus();
+	if(!_enabled) return;
 	emit sig_finished(false);
 
 }

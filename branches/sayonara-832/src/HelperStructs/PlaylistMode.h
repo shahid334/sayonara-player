@@ -27,6 +27,7 @@
 #include <QList>
 #include <QVariant>
 #include <QStringList>
+#include <QDebug>
 
 using namespace std;
 
@@ -53,7 +54,14 @@ struct PlaylistMode {
 		append = false;
 		shuffle = false;
 		gapless = false;
+
+		ui_repAll = true;
+		ui_append = true;
+		ui_shuffle = true;
+		ui_dynamic = true;
+		ui_gapless = true;
 	}
+
 
 	void print(){
 		cout << "rep1 = " << rep1 << ", "
@@ -72,8 +80,8 @@ struct PlaylistMode {
 		str += (rep1 ? "1" : "0")  + QString(",");
 		str += (repNone ? "1" : "0")  + QString(",");
 		str += (shuffle ? "1" : "0")  + QString(",");
-		str += (dynamic ? "1" : "0")/* + QString(",");
-		str += (gapless ? "1" : "0")*/;
+		str += (dynamic ? "1" : "0") + QString(",");
+		str += (gapless ? "1" : "0");
 
 		return str;
 	}
@@ -82,6 +90,8 @@ struct PlaylistMode {
 
         PlaylistMode plm;
 		QStringList list = str.split(',');
+		qDebug() << "str = " << str;
+		qDebug() << "plm = " << list;
 
         if(list.size() < 6) return plm;
 
@@ -92,20 +102,25 @@ struct PlaylistMode {
         plm.shuffle = list[4].toInt() == 1;
         plm.dynamic = list[5].toInt() == 1;
 
+		if(list.size() > 6){
+			plm.gapless = list[6].toInt() == 1;
+		}
+
         return plm;
 		//gapless = list[6].toInt() == 1;
 	}
 
-	bool operator==(const PlaylistMode& pm){
+	bool operator==(const PlaylistMode& pm) const {
+
 		if(pm.append != append) return false;
 		if(pm.repAll != repAll) return false;
+		if(pm.rep1 != rep1) return false;
 		if(pm.shuffle != shuffle) return false;
 		if(pm.dynamic != dynamic) return false;
-		//if(pm.gapless != gapless) return false;
+		if(pm.gapless != gapless) return false;
 
 		return true;
 	}
-
 };
 
 #endif
