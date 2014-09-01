@@ -53,6 +53,7 @@ INCLUDE(CPack)
 
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
+INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/sayonara)
 
 IF(${UNIX})
 	execute_process(COMMAND update-menus)

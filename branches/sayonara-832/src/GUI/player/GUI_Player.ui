@@ -1729,7 +1729,7 @@
   <customwidget>
    <class>SearchSlider</class>
    <extends>QSlider</extends>
-   <header location="global">GUI/player/SearchSlider.h</header>
+   <header location="global">src/GUI/player/SearchSlider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
