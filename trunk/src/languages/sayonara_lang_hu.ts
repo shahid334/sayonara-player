@@ -2,6 +2,21 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="hu_HU">
 <context>
+    <name>AlbumInfo</name>
+    <message>
+        <source>yes</source>
+        <translation type="unfinished">igen</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation type="unfinished">nem</translation>
+    </message>
+    <message>
+        <source>by</source>
+        <translation type="unfinished">által</translation>
+    </message>
+</context>
+<context>
     <name>AlternateCovers</name>
     <message>
         <source>...</source>
@@ -34,6 +49,45 @@
     <message>
         <source>Search alternative image</source>
         <translation>Alternatív kép keresése</translation>
+    </message>
+</context>
+<context>
+    <name>Application</name>
+    <message>
+        <source>Le&amp;vel</source>
+        <translation type="unfinished">Szi&amp;nt</translation>
+    </message>
+    <message>
+        <source>&amp;Spectrum</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Webstreams</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>P&amp;odcasts</source>
+        <translation type="unfinished">P&amp;odcasts</translation>
+    </message>
+    <message>
+        <source>&amp;Equalizer</source>
+        <translation type="unfinished">&amp;Equalizer</translation>
+    </message>
+    <message>
+        <source>Pla&amp;ylists</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;mp3 Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&amp;Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Spee&amp;d</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -180,8 +234,65 @@
         <source>This cover does not exist</source>
         <translation>Ez a cover nem létezik</translation>
     </message>
+</context>
+<context>
+    <name>GUI_AudioConvert</name>
     <message>
-        <source>Some error appeared when updating cover</source>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <source>Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Constant Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Variable Bitrate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>mp3 Converter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x</source>
+        <translation type="unfinished">x</translation>
+    </message>
+    <message>
+        <source>Activate</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GUI_AudioConverter</name>
+    <message>
+        <source>0 (Best)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>9 (Worst)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>GUI_Bookmarks</name>
+    <message>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <source>Bookmarks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x</source>
+        <translation type="unfinished">x</translation>
+    </message>
+    <message>
+        <source>Loop</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -205,7 +316,7 @@
     </message>
     <message>
         <source>&amp;Equalizer</source>
-        <translation>&amp;Equalizer</translation>
+        <translation type="obsolete">&amp;Equalizer</translation>
     </message>
     <message>
         <source>Save as custom</source>
@@ -239,51 +350,51 @@
     <name>GUI_InfoDialog</name>
     <message>
         <source>by</source>
-        <translation>által</translation>
+        <translation type="obsolete">által</translation>
     </message>
     <message>
         <source>no</source>
-        <translation>nem</translation>
+        <translation type="obsolete">nem</translation>
     </message>
     <message>
         <source>th</source>
-        <translation>.</translation>
+        <translation type="obsolete">.</translation>
     </message>
     <message>
         <source>1st</source>
-        <translation>1.</translation>
+        <translation type="obsolete">1.</translation>
     </message>
     <message>
         <source>2nd</source>
-        <translation>2.</translation>
+        <translation type="obsolete">2.</translation>
     </message>
     <message>
         <source>3rd</source>
-        <translation>3.</translation>
+        <translation type="obsolete">3.</translation>
     </message>
     <message>
         <source>by </source>
-        <translation>által </translation>
+        <translation type="obsolete">által </translation>
     </message>
     <message>
         <source>on </source>
-        <translation>be</translation>
+        <translation type="obsolete">be</translation>
     </message>
     <message>
         <source>yes</source>
-        <translation>igen</translation>
+        <translation type="obsolete">igen</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Szerkesztés</translation>
+        <translation type="obsolete">Szerkesztés</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation>év</translation>
+        <translation type="obsolete">év</translation>
     </message>
     <message>
         <source>Filesize</source>
-        <translation>méret</translation>
+        <translation type="obsolete">méret</translation>
     </message>
     <message>
         <source>Error</source>
@@ -291,19 +402,19 @@
     </message>
     <message>
         <source>Genre</source>
-        <translation>Műfaj</translation>
+        <translation type="obsolete">Műfaj</translation>
     </message>
     <message>
         <source>LIBRARY</source>
-        <translation>Könyvtár</translation>
+        <translation type="obsolete">Könyvtár</translation>
     </message>
     <message>
         <source>Various artists</source>
-        <translation>különböző előadók</translation>
+        <translation type="obsolete">különböző előadók</translation>
     </message>
     <message>
         <source>Playing time</source>
-        <translation>lejátszási idő</translation>
+        <translation type="obsolete">lejátszási idő</translation>
     </message>
     <message>
         <source>ID3 tags could not be changed</source>
@@ -311,47 +422,43 @@
     </message>
     <message>
         <source>Loved: </source>
-        <translation>Értékelés: </translation>
+        <translation type="obsolete">Értékelés: </translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation>Előadó</translation>
+        <translation type="obsolete">Előadó</translation>
     </message>
     <message>
         <source>Length</source>
-        <translation>hossz</translation>
+        <translation type="obsolete">hossz</translation>
     </message>
     <message>
         <source>#Albums</source>
-        <translation>#Album</translation>
+        <translation type="obsolete">#Album</translation>
     </message>
     <message>
         <source>Sampler?</source>
-        <translation>Sampler?</translation>
+        <translation type="obsolete">Sampler?</translation>
     </message>
     <message>
         <source>#Artists</source>
-        <translation>#Előadó</translation>
+        <translation type="obsolete">#Előadó</translation>
     </message>
     <message>
         <source>#Tracks</source>
-        <translation>#Szám</translation>
+        <translation type="obsolete">#Szám</translation>
     </message>
     <message>
         <source>Various tracks</source>
-        <translation>különböző számok</translation>
+        <translation type="obsolete">különböző számok</translation>
     </message>
     <message>
         <source>Last.fm not active</source>
-        <translation>Last.fm nem elérhető</translation>
-    </message>
-    <message>
-        <source> track on </source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Last.fm nem elérhető</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation>Bitrate</translation>
+        <translation type="obsolete">Bitrate</translation>
     </message>
 </context>
 <context>
@@ -386,7 +493,7 @@
     </message>
     <message>
         <source>Last.&amp;fm</source>
-        <translation>&amp;Last.fm</translation>
+        <translation type="obsolete">&amp;Last.fm</translation>
     </message>
 </context>
 <context>
@@ -455,11 +562,11 @@
     <name>GUI_Level</name>
     <message>
         <source>x</source>
-        <translation>x</translation>
+        <translation type="obsolete">x</translation>
     </message>
     <message>
         <source>Level</source>
-        <translation>Szint</translation>
+        <translation type="obsolete">Szint</translation>
     </message>
     <message>
         <source>Le&amp;vel</source>
@@ -474,7 +581,7 @@
     </message>
     <message>
         <source>Le&amp;vel</source>
-        <translation>Szi&amp;nt</translation>
+        <translation type="obsolete">Szi&amp;nt</translation>
     </message>
 </context>
 <context>
@@ -541,11 +648,11 @@
     </message>
     <message>
         <source>Ctrl+.</source>
-        <translation>Ctrl+.</translation>
+        <translation type="obsolete">Ctrl+.</translation>
     </message>
     <message>
         <source>Ctrl+?</source>
-        <translation>Ctrl+?</translation>
+        <translation type="obsolete">Ctrl+?</translation>
     </message>
     <message>
         <source>Dur.</source>
@@ -639,7 +746,7 @@
     </message>
     <message>
         <source>Sayonara Player</source>
-        <translation>Sayonara Player</translation>
+        <translation type="obsolete">Sayonara Player</translation>
     </message>
     <message>
         <source>Do you want to reload the Library?</source>
@@ -655,7 +762,7 @@
     </message>
     <message>
         <source>Written by</source>
-        <translation>Írta</translation>
+        <translation type="obsolete">Írta</translation>
     </message>
     <message>
         <source>Warning</source>
@@ -679,7 +786,7 @@
     </message>
     <message>
         <source>Copyright</source>
-        <translation>Copyright</translation>
+        <translation type="obsolete">Copyright</translation>
     </message>
     <message>
         <source>&amp;Library</source>
@@ -722,7 +829,7 @@
     </message>
     <message>
         <source>Ctrl+.</source>
-        <translation>Ctrl+.</translation>
+        <translation type="obsolete">Ctrl+.</translation>
     </message>
     <message>
         <source>Please set library path first</source>
@@ -787,10 +894,6 @@
         <source>Are you sure?</source>
         <translation>Bist du sicher?</translation>
     </message>
-    <message>
-        <source>Pla&amp;ylists</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>GUI_Podcasts</name>
@@ -836,7 +939,7 @@
     </message>
     <message>
         <source>P&amp;odcasts</source>
-        <translation>P&amp;odcasts</translation>
+        <translation type="obsolete">P&amp;odcasts</translation>
     </message>
     <message>
         <source>Enter stream url</source>
@@ -868,8 +971,27 @@
         <source>Form</source>
         <translation>Form</translation>
     </message>
+</context>
+<context>
+    <name>GUI_Speed</name>
     <message>
-        <source>&amp;Spectrum</source>
+        <source>Form</source>
+        <translation type="unfinished">Form</translation>
+    </message>
+    <message>
+        <source>1.0</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>x</source>
+        <translation type="unfinished">x</translation>
+    </message>
+    <message>
+        <source>Active</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -964,10 +1086,6 @@
     </message>
     <message>
         <source>Type name you wanna save the stream as</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>&amp;Webstreams</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1375,11 +1493,11 @@ expression</source>
     <name>InfoDialog</name>
     <message>
         <source>LFM</source>
-        <translation>LFM</translation>
+        <translation type="obsolete">LFM</translation>
     </message>
     <message>
         <source>Edit</source>
-        <translation>Szerkesztés</translation>
+        <translation type="obsolete">Szerkesztés</translation>
     </message>
     <message>
         <source>Info</source>
@@ -1400,6 +1518,14 @@ expression</source>
     <message>
         <source>Lyrics</source>
         <translation>dalszöveg</translation>
+    </message>
+    <message>
+        <source>Paths</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sublable</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1554,6 +1680,85 @@ expression</source>
     <message>
         <source>Sorry, no lyrics found&lt;br /&gt;</source>
         <translation>Sajnáljuk, nincs elérhető dalszöveg&lt;br /&gt;</translation>
+    </message>
+</context>
+<context>
+    <name>MetaDataInfo</name>
+    <message>
+        <source>Various tracks</source>
+        <translation type="unfinished">különböző számok</translation>
+    </message>
+    <message>
+        <source>by </source>
+        <translation type="unfinished">által </translation>
+    </message>
+    <message>
+        <source>track on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>on</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Various artists</source>
+        <translation type="unfinished">különböző előadók</translation>
+    </message>
+    <message>
+        <source>Various albums</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1st</source>
+        <translation type="unfinished">1.</translation>
+    </message>
+    <message>
+        <source>2nd</source>
+        <translation type="unfinished">2.</translation>
+    </message>
+    <message>
+        <source>3rd</source>
+        <translation type="unfinished">3.</translation>
+    </message>
+    <message>
+        <source>th</source>
+        <translation type="unfinished">.</translation>
+    </message>
+    <message>
+        <source>#Tracks</source>
+        <translation type="unfinished">#Szám</translation>
+    </message>
+    <message>
+        <source>#Albums</source>
+        <translation type="unfinished">#Album</translation>
+    </message>
+    <message>
+        <source>#Artists</source>
+        <translation type="unfinished">#Előadó</translation>
+    </message>
+    <message>
+        <source>Filesize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Playing time</source>
+        <translation type="unfinished">lejátszási idő</translation>
+    </message>
+    <message>
+        <source>Year</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Sampler? </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bitrate</source>
+        <translation type="unfinished">Bitrate</translation>
+    </message>
+    <message>
+        <source>Genre</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1899,11 +2104,45 @@ expression</source>
     <name>SoundPluginLoader</name>
     <message>
         <source>Info</source>
-        <translation>Információ</translation>
+        <translation type="obsolete">Információ</translation>
     </message>
     <message>
         <source>Please restart in order to change engine to </source>
-        <translation>Motor váltáshoz indítsa újra </translation>
+        <translation type="obsolete">Motor váltáshoz indítsa újra </translation>
+    </message>
+</context>
+<context>
+    <name>SoundcloudLibrary</name>
+    <message>
+        <source>Misc</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Ui</name>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished">Szerkesztés</translation>
+    </message>
+    <message>
+        <source>Ctrl+.</source>
+        <translation type="unfinished">Ctrl+.</translation>
+    </message>
+    <message>
+        <source>Ctrl+?</source>
+        <translation type="unfinished">Ctrl+?</translation>
+    </message>
+    <message>
+        <source>Sayonara Player</source>
+        <translation type="unfinished">Sayonara Player</translation>
+    </message>
+    <message>
+        <source>Written by</source>
+        <translation type="unfinished">Írta</translation>
+    </message>
+    <message>
+        <source>Copyright</source>
+        <translation type="unfinished">Copyright</translation>
     </message>
 </context>
 </TS>

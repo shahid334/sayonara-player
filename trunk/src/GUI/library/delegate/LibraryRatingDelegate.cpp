@@ -1,19 +1,40 @@
+/* LibraryRatingDelegate.cpp */
+
+/* Copyright (C) 2011-2014  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 #include "LibraryRatingDelegate.h"
 #include "GUI/RatingLabel.h"
 #include <QDebug>
 
-LibraryRatingDelegate::LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent)
-
+LibraryRatingDelegate::LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent, bool enabled)
 {
     _parent = parent;
+	_enabled = enabled;
 }
-
 
 
 QWidget *LibraryRatingDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
 
-    RatingLabel *label = new RatingLabel(parent);
+	RatingLabel *label = new RatingLabel(parent, _enabled);
 
     connect(label, SIGNAL(sig_finished(bool)), this, SLOT(destroy_editor(bool)));
 
@@ -25,35 +46,28 @@ QWidget *LibraryRatingDelegate::createEditor(QWidget *parent, const QStyleOption
 }
 
 
-void LibraryRatingDelegate::setEditorData(QWidget *editor, const QModelIndex & index) const
-{
-    int rating = index.data().toInt();
+void LibraryRatingDelegate::destroy_editor(bool save) {
 
-    RatingLabel* label = qobject_cast<RatingLabel *>(editor);
-    if(!label) return;
-
-    label->set_rating(rating);
-}
-
-
-void LibraryRatingDelegate::destroy_editor(bool save){
-
-    qDebug() << "Destroy editor";
-
-
-    _parent->set_editor(NULL);
+	_parent->set_editor(NULL);
     RatingLabel *label = qobject_cast<RatingLabel *>(sender());
     if(!label) return;
 
     disconnect(label, SIGNAL(sig_finished(bool)), this, SLOT(destroy_editor(bool)));
 
-    if(save){
-        emit commitData(label);
-        emit sig_rating_changed(label->get_rating().get_rating());
-    }
-
+	emit commitData(label);
+	emit sig_rating_changed(label->get_rating().get_rating());
     emit closeEditor(label);
+}
 
+
+void LibraryRatingDelegate::setEditorData(QWidget *editor, const QModelIndex & index) const
+{
+	int rating = index.data().toInt();
+
+	RatingLabel* label = qobject_cast<RatingLabel *>(editor);
+	if(!label) return;
+
+	label->set_rating(rating);
 }
 
 

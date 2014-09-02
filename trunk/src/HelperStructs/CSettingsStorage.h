@@ -66,6 +66,7 @@
 #define SET_PL_REMEMBER_TIME "remember_time"
 #define SET_PL_START_PLAYING "start_playing"
 #define SET_PL_LAST_TRACK "last_track"
+#define SET_PL_LAST_TRACK_POS "last_track_pos"
 #define SET_PL_MODE "playlist_mode"
 #define SET_PL_SHOW_NUMBERS "show_playlist_numbers"
 #define SET_PL_SMALL_ITEMS "small_playlist_items"
@@ -77,7 +78,8 @@
 
 #define SET_ENGINE "sound_engine"
 #define SET_ENGINE_VOL "volume"
-#define SET_ENGINE_GAPLESS "gapless"
+#define SET_ENGINE_CVT "convert_quality"
+#define SET_ENGINE_CVT_TGT_PATH "convert_target_path"
 
 #define SET_SR_ACTIVE "streamripper"
 #define SET_SR_WARNING "streamripper_warning"
@@ -184,7 +186,7 @@ private:
     // listen
     int	m_volume;
     int m_last_eq;
-	bool m_gapless;
+
     vector<EQ_Setting> m_vec_eqSettings;
     
     // player size
@@ -211,7 +213,7 @@ private:
     LastTrack m_lastTrack;
     bool m_rememerTime;
     bool m_startPlaying;
-    Playlist_Mode m_playlistmode;
+    PlaylistMode m_playlistmode;
 
     /* style */
     int	m_style;
@@ -237,6 +239,8 @@ private:
 
     /* sound engine */
     QString m_sound_engine;
+	LameBitrate m_cvt_quality;
+	QString m_cvt_tgt_path;
 
     /* notifications */
     bool    m_show_notifications;
@@ -255,11 +259,13 @@ private:
 
     int     m_spectrum_style;
 
+
 protected:
-    void save_all();
+
+	void save_all();
+
 
 public:
-
 
 	void set_sth_changed(bool);
 
@@ -280,9 +286,6 @@ public:
 
     int getVolume();
     void setVolume(int vol);
-
-	bool getGapless();
-	void setGapless(bool gapless);
 
 	void setLastEqualizer(int);
 	int getLastEqualizer();
@@ -316,8 +319,8 @@ public:
 	bool getLoadLastTrack();
 	void setLoadLastTrack(bool b);
 
-	LastTrack* getLastTrack();
-	void setLastTrack(LastTrack& t);
+    LastTrack* getLastTrack();
+    void setLastTrack(const LastTrack& t);
 	void updateLastTrack();
 
     bool getRememberTime();
@@ -326,8 +329,8 @@ public:
     bool getStartPlaying();
     void setStartPlaying(bool);
 
-	void setPlaylistMode(const Playlist_Mode& plmode);
-	Playlist_Mode getPlaylistMode();
+	void setPlaylistMode(const PlaylistMode& plmode);
+	PlaylistMode getPlaylistMode();
 
 	void setPlayerStyle(int);
 	int getPlayerStyle();
@@ -394,6 +397,12 @@ public:
 
     bool getStreamRipperSessionPath();
     void setStreamRipperSessionPath(bool b);
+
+	LameBitrate getConvertQuality();
+	void setConvertQuality(LameBitrate b);
+
+	QString getConvertTgtPath();
+	void setConvertTgtPath(QString str);
 
 	bool getSocketActivated();
 	void setSocketActivated(bool b);

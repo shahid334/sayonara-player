@@ -34,7 +34,10 @@
 #include <QObject>
 #include <QSqlError>
 
-bool CDatabaseConnector::load_setting_bool(QString key, bool def){
+
+
+
+bool CDatabaseConnector::load_setting_bool(QString key, bool def) {
 	bool ret;
 	QVariant v;
     load_setting(key, v, def);
@@ -44,7 +47,7 @@ bool CDatabaseConnector::load_setting_bool(QString key, bool def){
 	else return ret;
 }
 
-QString CDatabaseConnector::load_setting_string(QString key, QString def){
+QString CDatabaseConnector::load_setting_string(QString key, QString def) {
 	QString ret;
 	QVariant v;
     load_setting(key, v, def);
@@ -53,7 +56,7 @@ QString CDatabaseConnector::load_setting_string(QString key, QString def){
 	else return ret;
 }
 
-int CDatabaseConnector::load_setting_int(QString key, int def){
+int CDatabaseConnector::load_setting_int(QString key, int def) {
 	bool ok;
 	int ret;
 	QVariant v;
@@ -64,16 +67,23 @@ int CDatabaseConnector::load_setting_int(QString key, int def){
 
 }
 
-QStringList CDatabaseConnector::load_setting_strlist(QString key, QChar sep){
+QStringList CDatabaseConnector::load_setting_strlist(QString key, QString def, int exspected_len, QChar sep) {
 
     DB_TRY_OPEN(_database);
+    QStringList lst = load_setting_string(key).split(sep);
+    if(exspected_len == -1){
+        return lst;
+    }
 
-	return load_setting_string(key).split(sep);
+    if(exspected_len == lst.size()){
+        return lst;
+    }
+
+    return def.split(sep);
 }
 
 
-bool CDatabaseConnector::load_settings(){
-
+bool CDatabaseConnector::load_settings() {
 
     disconnect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
     disconnect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
@@ -87,15 +97,8 @@ bool CDatabaseConnector::load_settings(){
 	bool lfm_active = load_setting_bool(SET_LFM_ACTIVE, false);
 	settings->setLastFMActive(lfm_active);
 
-	QString last_fm_username, last_fm_password;
-	QStringList list = load_setting_strlist(SET_LFM_LOGIN);
-	if(list.size() >= 2){
-		last_fm_username = list[0];
-		last_fm_password = list[1];
-	}
-
-	settings->setLastFMNameAndPW(last_fm_username, last_fm_password);
-
+    QStringList list = load_setting_strlist(SET_LFM_LOGIN, "none,none", 2);
+    settings->setLastFMNameAndPW(list[0], list[1]);
 
 	bool lfm_corrections =	load_setting_bool(SET_LFM_CORRECTIONS);
 	settings->setLastFMCorrections(lfm_corrections);
@@ -104,54 +107,28 @@ bool CDatabaseConnector::load_settings(){
     settings->setLastFMShowErrors(lfm_show_errors);
 
 
-	QString lfm_session_key = load_setting_string(SET_LFM_SESSION_KEY);
-	if(lfm_session_key.size() != 32) lfm_session_key = "";
+    QString lfm_session_key = load_setting_string(SET_LFM_SESSION_KEY, "");
 	settings->setLastFMSessionKey(lfm_session_key);
 
 
-
 	/* Equalizer */
-	QVariant v_eq_last;
-	int eq_last = 0;
-	load_setting(SET_EQ_LAST, v_eq_last);
-	if(v_eq_last != 0){
-		eq_last = v_eq_last.toInt();
-	}
-
+    int eq_last = load_setting_int(SET_EQ_LAST, 0);
 	settings->setLastEqualizer(eq_last);
 
 	vector<EQ_Setting> vec_eq_settings;
-	for(int i=0; i<7; i++){
-		QVariant v_eq_preset;
-		QString eq_preset = 0;
-		switch(i){
-			case 0: load_setting(SET_EQ_FLAT, v_eq_preset); break;
-			case 1: load_setting(SET_EQ_ROCK, v_eq_preset); break;
-			case 2: load_setting(SET_EQ_TREBLE, v_eq_preset); break;
-			case 3: load_setting(SET_EQ_BASS, v_eq_preset); break;
-			case 4: load_setting(SET_EQ_MID, v_eq_preset); break;
-			case 5: load_setting(SET_EQ_LIGHT_ROCK, v_eq_preset); break;
-			case 6: load_setting(SET_EQ_CUSTOM, v_eq_preset); break;
-			default: load_setting(SET_EQ_FLAT, v_eq_preset); break;
-		}
-
-		if(v_eq_preset != 0){
-			EQ_Setting eq_setting;
-			eq_setting.parseFromString(v_eq_preset.toString());
-			vec_eq_settings.push_back(eq_setting);
-		}
-	}
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_FLAT, EQ_Setting()));
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_ROCK, EQ_Setting()));
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_TREBLE, EQ_Setting()));
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_BASS, EQ_Setting()));
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_MID, EQ_Setting()));
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_LIGHT_ROCK, EQ_Setting()));
+    vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_CUSTOM, EQ_Setting()));
 
 	settings->setEqualizerSettings(vec_eq_settings);
 
 	/* Volume */
     int volume = load_setting_int(SET_ENGINE_VOL, 50);
 	settings->setVolume(volume);
-
-	/* Gapless */
-	bool gapless = load_setting_bool(SET_ENGINE_GAPLESS, false);
-	settings->setGapless(gapless);
-
 
 	/* Library path */
 	QString lib_path = load_setting_string(SET_LIB_PATH);
@@ -161,18 +138,15 @@ bool CDatabaseConnector::load_settings(){
     lib_shown_cols_title = load_setting_string(SET_LIB_SHOWN_COLS_TITLE, "1,1,1,1,1,1,1,1,1,1").split(",");
     lib_shown_cols_artist = load_setting_string(SET_LIB_SHOWN_COLS_ARTIST, "1,1,1,1,1,1,1,1,1,1").split(",");
     lib_shown_cols_album = load_setting_string(SET_LIB_SHOWN_COLS_ALBUM, "1,1,1,1,1,1,1,1,1,1").split(",");
-    settings->setLibShownColsTitle(lib_shown_cols_title);
-    settings->setLibShownColsAlbum(lib_shown_cols_album);
+
     settings->setLibShownColsArtist(lib_shown_cols_artist);
+    settings->setLibShownColsAlbum(lib_shown_cols_album);
+    settings->setLibShownColsTitle(lib_shown_cols_title);
 
     QList<int> lib_sorting;
-    QString str_sorting = load_setting_string(SET_LIB_SORTING, "");
-    QStringList lst_sorting = str_sorting.split(",");
-    if(lst_sorting.size() < 3) lib_sorting << ArtistNameAsc << AlbumNameAsc << TrackArtistAsc;
-    else lib_sorting << lst_sorting[0].toInt() << lst_sorting[1].toInt() << lst_sorting[2].toInt();
-
+    QStringList lib_sorting_str = load_setting_strlist(SET_LIB_SORTING, "1,5,21", 3);
+    lib_sorting << lib_sorting_str[0].toInt() << lib_sorting_str[1].toInt() << lib_sorting_str[2].toInt();
     settings->setLibSorting(lib_sorting);
-
 
     bool show_only_tracks = load_setting_bool(SET_LIB_SHOWN_ONLY_TRACKS, false);
     settings->setLibShowOnlyTracks(show_only_tracks);
@@ -183,20 +157,15 @@ bool CDatabaseConnector::load_settings(){
 
 	/* Player size */
 	QSize player_size(800, 600);
-	QStringList l_player_size = load_setting_strlist(SET_PLAYER_SIZE);
-	if(l_player_size.size() >= 2){
-		player_size.setWidth(l_player_size[0].toInt());
-		player_size.setHeight(l_player_size[1].toInt());
-	}
-	settings->setPlayerSize(player_size);
+    QStringList l_player_size = load_setting_strlist(SET_PLAYER_SIZE, "800,600", 2);
+    player_size.setWidth( l_player_size[0].toInt() );
+    player_size.setHeight( l_player_size[1].toInt() );
+    settings->setPlayerSize( QSize() );
 
     QPoint player_pos(50, 50);
-    QStringList l_player_pos = load_setting_strlist(SET_PLAYER_POS);
-    if(l_player_pos.size() >= 2){
-        player_pos.setX(l_player_pos[0].toInt());
-        player_pos.setY(l_player_pos[1].toInt());
-    }
-
+    QStringList l_player_pos = load_setting_strlist(SET_PLAYER_POS, "50,50", 2);
+    player_pos.setX(l_player_pos[0].toInt());
+    player_pos.setY(l_player_pos[1].toInt());
     settings->setPlayerPos(player_pos);
 
     bool player_fullscreen = load_setting_bool(SET_PLAYER_FULLSCREEN, false);
@@ -205,10 +174,8 @@ bool CDatabaseConnector::load_settings(){
     bool player_maximized = load_setting_bool(SET_PLAYER_MAXIMIZED, false);
     settings->setPlayerMaximized(player_maximized);
 
-
-	
 	// playlist
-    QStringList playlist = load_setting_strlist(SET_PL);
+    QStringList playlist = load_setting_strlist(SET_PL, "");
 	settings->setPlaylist(playlist);
 
     bool load_playlist = load_setting_bool(SET_PL_LOAD, false);
@@ -223,13 +190,15 @@ bool CDatabaseConnector::load_settings(){
     bool start_playing = load_setting_bool(SET_PL_START_PLAYING, false);
     settings->setStartPlaying(start_playing);
 
-	LastTrack track = LastTrack::fromString(load_setting_string(SET_PL_LAST_TRACK, ""));
-        settings->setLastTrack(track);
+	int md_id = load_setting_int(SET_PL_LAST_TRACK, -1);
+    MetaData md = getTrackById(md_id);
+    LastTrack lt(md);
+    lt.pos_sec = (quint32) load_setting_int(SET_PL_LAST_TRACK_POS, 0);
+    settings->setLastTrack(lt);
 
-	QString playlist_mode_str = load_setting_string(SET_PL_MODE);
-	Playlist_Mode playlist_mode_typed;
-	playlist_mode_typed.fromString(playlist_mode_str);
-	settings->setPlaylistMode(playlist_mode_typed);
+
+    PlaylistMode playlist_mode = load_setting_type<PlaylistMode>(SET_PL_MODE, PlaylistMode());
+    settings->setPlaylistMode(playlist_mode);
 
 	// style
 	int style = load_setting_int(SET_PLAYER_STYLE);
@@ -255,11 +224,9 @@ bool CDatabaseConnector::load_settings(){
 	bool show_library = load_setting_bool(SET_LIB_SHOW, true);
 	settings->setShowLibrary(show_library);
 
-
 	/* shown plugin */
     QString shown_plugin = load_setting_string(SET_PLAYER_SHOWN_PLUGIN, "");
 	settings->setShownPlugin(shown_plugin);
-
 
 	/* Minimize to tray */
 	bool min2tray = load_setting_bool(SET_PLAYER_MIN_2_TRAY, false);
@@ -273,6 +240,12 @@ bool CDatabaseConnector::load_settings(){
 	QString sound_engine = load_setting_string(SET_ENGINE);
 	settings->setSoundEngine(sound_engine);
 
+	LameBitrate bitrate = (LameBitrate) load_setting_int(SET_ENGINE_CVT);
+	settings->setConvertQuality(bitrate);
+
+	QString cvt_tgt_path = load_setting_string(SET_ENGINE_CVT_TGT_PATH, QDir::homePath());
+	settings->setConvertTgtPath(cvt_tgt_path);
+
 	/* Stream ripper */
 	bool streamripper = load_setting_bool(SET_SR_ACTIVE, false);
 	settings->setStreamRipper(streamripper);
@@ -281,7 +254,6 @@ bool CDatabaseConnector::load_settings(){
 	settings->setStreamRipperWarning(streamripper_warning);
 
 	QString streamripper_path = load_setting_string(SET_SR_PATH, QDir::homePath());
-	if(streamripper_path.trimmed().size() == 0 || !QFile::exists(streamripper_path)) streamripper_path = QDir::homePath();
 	settings->setStreamRipperPath(streamripper_path);
 
 	bool streamripper_complete_tracks = load_setting_bool(SET_SR_COMPLETE_TRACKS, true);
@@ -317,7 +289,7 @@ bool CDatabaseConnector::load_settings(){
     return true;
 }
 
-bool CDatabaseConnector::store_settings(){
+bool CDatabaseConnector::store_settings() {
 
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
@@ -351,9 +323,6 @@ bool CDatabaseConnector::store_settings(){
 
 	int volume = storage->getVolume();
 	store_setting(SET_ENGINE_VOL, volume);
-
-	bool gapless = storage->getGapless();
-	store_setting(SET_ENGINE_GAPLESS, gapless);
 
 	QString library_path = storage->getLibraryPath();
 	store_setting(SET_LIB_PATH, library_path);
@@ -399,8 +368,9 @@ bool CDatabaseConnector::store_settings(){
 	bool load_last_track = storage->getLoadLastTrack();
 	store_setting(SET_PL_LOAD_LAST_TRACK, load_last_track);
 
-	QString last_track = storage->getLastTrack()->toString();
-	store_setting(SET_PL_LAST_TRACK, last_track);	
+    LastTrack* last_track = storage->getLastTrack();
+    store_setting(SET_PL_LAST_TRACK, last_track->id);
+    store_setting(SET_PL_LAST_TRACK_POS, last_track->pos_sec);
 
     bool remember_time = storage->getRememberTime();
     store_setting(SET_PL_REMEMBER_TIME, remember_time);
@@ -448,6 +418,12 @@ bool CDatabaseConnector::store_settings(){
 	QString sound_engine = storage->getSoundEngine();
 	store_setting(SET_ENGINE, sound_engine);
 
+	LameBitrate bitrate = storage->getConvertQuality();
+	store_setting(SET_ENGINE_CVT, (int) bitrate);
+
+	QString cvt_tgt_path = storage->getConvertTgtPath();
+	store_setting(SET_ENGINE_CVT_TGT_PATH, cvt_tgt_path);
+
 	bool streamripper_active = storage->getStreamRipper();
 	store_setting(SET_SR_ACTIVE, streamripper_active);
 	
@@ -491,7 +467,7 @@ bool CDatabaseConnector::store_settings(){
 
 
 
-void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant def){
+void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant def) {
 
 
 	tgt_value = 0;
@@ -504,7 +480,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant
 			throw QString ("SQL - Error: loading " + key);
 		}
 
-		if(q.next()){
+		if(q.next()) {
 			tgt_value = q.value(0);
 		}
 
@@ -520,7 +496,7 @@ void CDatabaseConnector::load_setting(QString key, QVariant& tgt_value, QVariant
 }
 
 
-void CDatabaseConnector::store_setting(QString key, QVariant value){
+void CDatabaseConnector::store_setting(QString key, QVariant value) {
 	 try {
 
 		QSqlQuery q (*_database);

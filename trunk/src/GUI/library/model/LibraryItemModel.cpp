@@ -1,6 +1,6 @@
 /* LibraryItemModel.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -19,14 +19,6 @@
  */
 
 
-
-/*
- * LibraryItemModel.cpp
- *
- *  Created on: 19.12.2012
- *      Author: lugmair
- */
-
 #include "GUI/library/model/LibraryItemModel.h"
 
 #include <QList>
@@ -35,23 +27,23 @@
 #include <QModelIndex>
 
 
-LibraryItemModel::LibraryItemModel(QList<ColumnHeader>& headers){
+LibraryItemModel::LibraryItemModel(QList<ColumnHeader>& headers) {
 
 		_n_all_cols = headers.size();
 		_cols_active = new bool[_n_all_cols];
 
 		int i=0;
-		foreach(ColumnHeader h, headers){
+		foreach(ColumnHeader h, headers) {
 			_header_names.push_back(h.getTitle());
 			_cols_active[i] = true;
 		}
 }
 
-LibraryItemModel::~LibraryItemModel(){
+LibraryItemModel::~LibraryItemModel() {
     delete[] _cols_active;
 }
 
-void LibraryItemModel::set_new_header_names(QStringList& lst){
+void LibraryItemModel::set_new_header_names(QStringList& lst) {
     _header_names = lst;
 }
 
@@ -62,8 +54,13 @@ QVariant LibraryItemModel::headerData ( int section, Qt::Orientation orientation
 			 return QVariant();
 
 	 int idx_col = calc_shown_col(section);
-	 if (orientation == Qt::Horizontal)
+	 if(idx_col >= _header_names.size()){
+		 return QVariant();
+	 }
+
+	 if (orientation == Qt::Horizontal){
 		 return _header_names[idx_col];
+	 }
 	 return QVariant();
 
 }
@@ -83,7 +80,7 @@ int LibraryItemModel::get_n_cols() const {
 int LibraryItemModel::calc_shown_col(int col) const {
 	int idx_col = 0;
 	int n_true = -1;
-	for(idx_col=0; idx_col<_n_all_cols; idx_col++){
+	for(idx_col=0; idx_col<_n_all_cols; idx_col++) {
 		if(_cols_active[idx_col]) n_true++;
 		if(n_true == col) break;
 	}
@@ -101,7 +98,7 @@ int LibraryItemModel::columnCount(const QModelIndex& parent) const{
 	Q_UNUSED(parent);
 
 	int n_active = 0;
-	for(int i=0; i<_n_all_cols; i++){
+	for(int i=0; i<_n_all_cols; i++) {
 		if(_cols_active[i]) n_active++;
 	}
 
@@ -109,11 +106,11 @@ int LibraryItemModel::columnCount(const QModelIndex& parent) const{
 }
 
 
-bool LibraryItemModel::insertColumns(int position, int cols, const QModelIndex &index){
+bool LibraryItemModel::insertColumns(int position, int cols, const QModelIndex &index) {
 
     beginInsertColumns(QModelIndex(), position, position+cols-1);
 
-	for(int i=position; i<position+cols; i++){
+	for(int i=position; i<position+cols; i++) {
 
 		_cols_active[i] = true;
 	}
@@ -123,10 +120,10 @@ bool LibraryItemModel::insertColumns(int position, int cols, const QModelIndex &
 }
 
 
-bool LibraryItemModel::removeColumns(int position, int cols, const QModelIndex &index){
+bool LibraryItemModel::removeColumns(int position, int cols, const QModelIndex &index) {
 
     beginRemoveColumns(QModelIndex(), position, position+cols-1);
-    for(int i=0; i<_n_all_cols; i++){
+	for(int i=0; i<_n_all_cols; i++) {
         _cols_active[i] = false;
     }
 
@@ -135,7 +132,7 @@ bool LibraryItemModel::removeColumns(int position, int cols, const QModelIndex &
 }
 
 
-void LibraryItemModel::set_selected(QList<int>& rows){
+void LibraryItemModel::set_selected(QList<int>& rows) {
     _selected_rows = rows;
 }
 
@@ -148,7 +145,7 @@ bool LibraryItemModel::is_selected(int row) const {
 }
 
 
-QMap<QChar, QString> LibraryItemModel::getExtraTriggers(){
+QMap<QChar, QString> LibraryItemModel::getExtraTriggers() {
 	QMap<QChar, QString> map;
 	return map;
 }

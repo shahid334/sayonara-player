@@ -22,10 +22,8 @@
 
 #ifndef NOTIFICATION_H_
 #define NOTIFICATION_H_
-#include <QObject>
-#include <QString>
-#include "HelperStructs/MetaData.h"
 
+#include "HelperStructs/Helper.h"
 
 class Notification : public QObject {
 
@@ -45,7 +43,7 @@ public:
 
 };
 	
-Q_DECLARE_INTERFACE(Notification, "sayonara.notification/1.0");
+Q_DECLARE_INTERFACE(Notification, "sayonara.notification/1.0")
 
 
 #endif

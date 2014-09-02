@@ -56,12 +56,12 @@ Socket::~Socket() {
 }
 
 
-void Socket::run(){
+void Socket::run() {
 	char msg[1024];
 
 	qDebug() << "Starting socket on port "<<_port;
 
-	while(1){
+	while(1) {
 
 		if(!sock_connect()) {
 			qDebug() << "Cannot establish socket";
@@ -70,16 +70,16 @@ void Socket::run(){
 
 		int err = -1;
 
-		while( err != 0 ){
+		while( err != 0 ) {
 			err = recv(_client_socket, msg, 1024, 0);
 			qDebug() << "error on port " << _client_socket << " Port = " << _port;
-			if(err != -1){
+			if(err != -1) {
 
 				QString msg_string(msg);
 				if(msg_string.startsWith("next")) {
 					emit sig_next();
 				}
-				else if(msg_string.startsWith("prev")){
+				else if(msg_string.startsWith("prev")) {
 					emit sig_prev();
 				}
 				else if(msg_string.startsWith("play")) {
@@ -116,7 +116,7 @@ void Socket::run(){
 	}
 }
 
-bool Socket::sock_connect(){
+bool Socket::sock_connect() {
 
 	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
 	_srv_info.sin_family = AF_INET;
@@ -125,7 +125,7 @@ bool Socket::sock_connect(){
 
 	_connected = false;
 
-	while(bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info)) == -1){
+	while(bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info)) == -1) {
 		_port++;
 
 		if(_port > _port_to) return false;
@@ -146,7 +146,7 @@ bool Socket::sock_connect(){
 	return true;
 }
 
-void Socket::sock_disconnect(){
+void Socket::sock_disconnect() {
 
 	qDebug() << "disconnect";
 	close(_srv_socket);

@@ -43,13 +43,10 @@
 #include <QTableView>
 #include <QPoint>
 #include <QKeyEvent>
-#include <QList>
 #include <QMenu>
 #include <QAction>
 #include <QLineEdit>
 #include <QDropEvent>
-
-//typedef QList<class T> MyList;
 
 class LibraryView : public SearchableTableView{
 
@@ -103,7 +100,7 @@ public:
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
-	template < class TList >
+	template < class TList, class T>
 	void fill(const TList& input_data);
 
     void set_editor(RatingLabel* editor);
@@ -149,24 +146,12 @@ private:
     CustomMimeData*		_mimedata;
 
     bool                _dark;
-    bool                _sel_changed;
 
     LibraryItemModel*   _model;
     RatingLabel*        _editor;
     bool                _cur_filling;
 
     int get_min_selected();
-
-    void goto_row(int row, bool select=false);
-
-    /*// calc selections and insert into db
-    // row = row of item in list
-    // is selected
-    // variant = converted to variant
-    // selection in list
-    // current first selected row
-    // returns updated selected row
-    int run_loop(int row, QVariant& variant, bool is_selected, QItemSelection& sel, int first_selected_row);*/
 
     // prepares model and returns the QItemSelection for the table
     QItemSelection reset_and_get_selection(int size);

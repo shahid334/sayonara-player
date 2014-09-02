@@ -1,6 +1,6 @@
 /* WebAccess.cpp */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -52,7 +52,7 @@ static int wa_progress(void *p,
 
 
 
-size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata){
+size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata) {
 
     QString* webpage = (QString*) userdata;
     char* cptr = (char*) ptr;
@@ -66,11 +66,10 @@ size_t wa_get_answer( void *ptr, size_t size, size_t nmemb, void *userdata){
 
 
 static
-bool wa_call_url(const QString& url, QString* response){
+bool wa_call_url(const QString& url, QString* response) {
 
     short download_status = DOWNLOAD_INCOMPLETE;
 	CURL *curl = curl_easy_init();
-
 
 	if(curl) {
 		curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
@@ -88,7 +87,7 @@ bool wa_call_url(const QString& url, QString* response){
 	}
 
 
-    if(response->size() > 0){
+    if(response->size() > 0) {
 
         if(download_status == DOWNLOAD_COMPLETE)
 			return true;
@@ -103,7 +102,7 @@ bool wa_call_url(const QString& url, QString* response){
 }
 
 
-bool WebAccess::read_http_into_str(QString url, QString* content){
+bool WebAccess::read_http_into_str(const QString& url, QString* content) {
 
     content->clear();
     wa_call_url(url, content);
@@ -117,7 +116,7 @@ bool WebAccess::read_http_into_str(QString url, QString* content){
     return false;
 }
 
-bool WebAccess::read_http_into_img(QString url, QImage* img){
+bool WebAccess::read_http_into_img(const QString& url, QImage* img) {
 
     QString content;
 

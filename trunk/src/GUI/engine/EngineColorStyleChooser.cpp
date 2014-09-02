@@ -1,6 +1,6 @@
 /* EngineColorStyleChooser.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -30,9 +30,9 @@ QList<float> borders_4, borders_3, borders_2;
 EngineColorStyleChooser::EngineColorStyleChooser(int widget_width, int widget_height)
 {
 
-    borders_4 << 0  << 0.33  << 0.66 << 1.0;
-    borders_3 << 0  << 0.50  << 1.0;
-    borders_2 << 0  << 1.0;
+	borders_4 << 0 << 0.33f  << 0.66f << 1.0f;
+	borders_3 << 0 << 0.50f  << 1.0f;
+	borders_2 << 0 << 1.0f;
 
 
     reload(widget_width, widget_height);
@@ -42,14 +42,14 @@ EngineColorStyleChooser::EngineColorStyleChooser(int widget_width, int widget_he
 
 
 void EngineColorStyleChooser::
-create_colorstyle(ColorStyle &style, const ColorList &clist_active, int n_rects, int n_fading_steps){
+create_colorstyle(ColorStyle &style, const ColorList &clist_active, int n_rects, int n_fading_steps) {
 
     style.style.clear();
 
         QMap<int, QColor> map_col_active;
 
         // compute color of each rect
-        for(int i=0; i<n_rects; i++){
+        for(int i=0; i<n_rects; i++) {
             insertColorOfRect(i, n_rects, clist_active, map_col_active);
         }
 
@@ -58,7 +58,7 @@ create_colorstyle(ColorStyle &style, const ColorList &clist_active, int n_rects,
         borders << 0.0 << 1.0;
 
         // run through rect
-        for(int idx_rect=0; idx_rect < n_rects; idx_rect++){
+        for(int idx_rect=0; idx_rect < n_rects; idx_rect++) {
 
             QColor col_active = map_col_active.value(idx_rect);
 
@@ -81,7 +81,7 @@ create_colorstyle(ColorStyle &style, const ColorList &clist_active, int n_rects,
 }
 
 
-void EngineColorStyleChooser::insertColorOfRect(int bin, int n_bins, const ColorList& colorlist, QMap<int, QColor>& map){
+void EngineColorStyleChooser::insertColorOfRect(int bin, int n_bins, const ColorList& colorlist, QMap<int, QColor>& map) {
 
     QList<float> borders;
     if(colorlist.colors.size() == 4) borders = borders_4;
@@ -95,12 +95,12 @@ void EngineColorStyleChooser::insertColorOfRect(int bin, int n_bins, const Color
     int i=0;
     int r, g, b, a;
 
-    if(bin == 0){
+    if(bin == 0) {
         map[bin] = colorlist.colors[0];
         return;
     }
 
-    while(x > borders[i]){
+    while(x > borders[i]) {
         i++;
     }
 
@@ -126,22 +126,22 @@ void EngineColorStyleChooser::insertColorOfRect(int bin, int n_bins, const Color
     map[bin] = col;
 }
 
-void EngineColorStyleChooser::change_preset(const ColorList& lst, int n_rects, int n_fading_steps ){
+void EngineColorStyleChooser::change_preset(const ColorList& lst, int n_rects, int n_fading_steps ) {
 
 }
 
 
-void EngineColorStyleChooser::preview_preset(const ColorList& lst, int n_rects, int n_fading_steps ){
+void EngineColorStyleChooser::preview_preset(const ColorList& lst, int n_rects, int n_fading_steps ) {
 
 
 }
 
 
-void EngineColorStyleChooser::delete_preset(QString name){
+void EngineColorStyleChooser::delete_preset(QString name) {
 
 }
 
-void EngineColorStyleChooser::add_rectangles(ColorStyle& style, int n){
+void EngineColorStyleChooser::add_rectangles(ColorStyle& style, int n) {
 
     style.n_rects = style.n_rects + n;
     create_colorstyle(style, style.col_list, style.n_rects + n, style.n_fading_steps);
@@ -152,33 +152,32 @@ void EngineColorStyleChooser::add_rectangles(ColorStyle& style, int n){
 
 // scheme_fading_rect_color[r]: get access to the rect j in fading scheme i
 // scheme_fading_rect_color[r][c]: get access to the c-th color of rect j in fading scheme i
-ColorStyle EngineColorStyleChooser::get_color_scheme_spectrum(int i){
+ColorStyle EngineColorStyleChooser::get_color_scheme_spectrum(int i) {
     if(i >= _styles_spectrum.size()) i = _styles_spectrum.size() -1;
     if(i < 0) i = 0;
     return _styles_spectrum[i];
 }
 
-ColorStyle EngineColorStyleChooser::get_color_scheme_level(int i){
+ColorStyle EngineColorStyleChooser::get_color_scheme_level(int i) {
     if(i > _styles_level.size()) i = _styles_level.size() -1;
     return _styles_level[i];
 }
 
 
 
-int EngineColorStyleChooser::get_num_color_schemes(){
+int EngineColorStyleChooser::get_num_color_schemes() {
     return _styles_spectrum.size();
 }
 
 
-void EngineColorStyleChooser::reload(int widget_width, int widget_height){
-    QList< RawColorStyle > colors_active = CDatabaseConnector::getInstance()->get_raw_color_styles();
-    qDebug() << "Fetched " << colors_active.size() << " styles from db";
+void EngineColorStyleChooser::reload(int widget_width, int widget_height) {
+
+	QList< RawColorStyle > colors_active = CDatabaseConnector::getInstance()->get_raw_color_styles();
 
     _styles_spectrum.clear();
     _styles_level.clear();
 
-    if(colors_active.size() == 0){
-
+    if(colors_active.size() == 0) {
 
         RawColorStyle fallback1, fallback2;
 
@@ -194,6 +193,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height){
         fallback1.rect_height_spectrum = 2;
         fallback1.rect_width_level = 5;
         fallback1.rect_height_level = 6;
+
 
 
         fallback2.col_list.colors << QColor(27, 32, 47)  << QColor(134, 134, 134) << QColor(216, 216, 216) << QColor(255, 255, 255);
@@ -216,7 +216,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height){
     }
 
 
-    foreach(RawColorStyle rcs, colors_active){
+    foreach(RawColorStyle rcs, colors_active) {
         ColorStyle style_spectrum;
         ColorStyle style_level;
 

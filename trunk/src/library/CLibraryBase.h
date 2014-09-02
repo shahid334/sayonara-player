@@ -39,79 +39,79 @@ class CLibraryBase : public QObject
 public:
     CLibraryBase(QWidget* main_window, QObject *parent = 0);
 
-    void loadDataFromDb ();
+	virtual void loadDataFromDb ();
 
 
 signals:
-    void sig_playlist_created(QStringList&);
+	void sig_playlist_created(QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
-    void sig_all_tracks_loaded (MetaDataList&);
-    void sig_all_albums_loaded(AlbumList&);
-    void sig_all_artists_loaded(ArtistList&);
-    void sig_tracks_for_playlist_available(MetaDataList&);
-    void sig_append_tracks_to_playlist(MetaDataList&);
+	void sig_all_tracks_loaded (MetaDataList&);
+	void sig_all_albums_loaded(AlbumList&);
+	void sig_all_artists_loaded(ArtistList&);
+	void sig_tracks_for_playlist_available(MetaDataList&);
+	void sig_append_tracks_to_playlist(MetaDataList&);
 
-    void sig_should_reload_library();
-    void sig_reload_library_finished();
-    void sig_reload_library_allowed(bool);
-    void sig_reloading_library(QString &);
-    void sig_libpath_set(QString&);
+	void sig_should_reload_library();
+	void sig_reload_library_finished();
+	void sig_reload_library_allowed(bool);
+	void sig_reloading_library(QString &);
+	void sig_libpath_set(QString&);
 
-    void sig_change_id3_tags(const MetaDataList&);
+	void sig_change_id3_tags(const MetaDataList&);
 
     void sig_delete_answer(QString);
-    void sig_play_next_tracks(const MetaDataList&);
+	void sig_play_next_tracks(const MetaDataList&);
 
 
 public slots:
-    void baseDirSelected (const QString & baseDir);
-    void insertMetaDataIntoDB(MetaDataList& in);
+	virtual void baseDirSelected (const QString & baseDir);
+	virtual void insertMetaDataIntoDB(MetaDataList& in);
 
-    void reloadLibrary(bool);
-    void clearLibrary();
-    void refresh(bool b=true);
+	virtual void reloadLibrary(bool);
+	virtual void clearLibrary();
+	virtual void refresh(bool b=true);
 
-    void setLibraryPath(QString);
+	virtual void setLibraryPath(QString);
 
 
 /* New way */
-    void psl_selected_artists_changed(const QList<int>&);
-    void psl_selected_albums_changed(const QList<int>&);
-    void psl_disc_pressed(int);
-    void psl_selected_tracks_changed(const QList<int>&);
+	virtual void psl_selected_artists_changed(const QList<int>&);
+	virtual void psl_selected_albums_changed(const QList<int>&);
+	virtual void psl_disc_pressed(int);
+	virtual void psl_selected_tracks_changed(const QList<int>&);
 
-    void psl_prepare_album_for_playlist(int idx=0);
-    void psl_prepare_artist_for_playlist(int idx=0);
-    void psl_prepare_track_for_playlist(int idx);
-    void psl_prepare_tracks_for_playlist(QList<int> lst);
+	virtual void psl_prepare_album_for_playlist(int idx=0);
+	virtual void psl_prepare_artist_for_playlist(int idx=0);
+	virtual void psl_prepare_track_for_playlist(int idx);
+	virtual void psl_prepare_tracks_for_playlist(QList<int> lst);
 
-    void psl_filter_changed(const Filter&, bool force=false);
-    void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
-    void psl_change_id3_tags(const QList<int>& lst);
-    void psl_track_time_changed(MetaData&);
+	virtual void psl_filter_changed(const Filter&, bool force=false);
+	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
+	virtual void psl_change_id3_tags(const QList<int>& lst);
+	virtual void psl_track_time_changed(MetaData&);
 
-    void psl_delete_tracks(int);
-    void psl_delete_certain_tracks(const QList<int>&,int);
+	virtual void psl_delete_tracks(int);
+	virtual void psl_delete_certain_tracks(const QList<int>&,int);
 
-    void psl_play_next_all_tracks();
-    void psl_play_next_tracks(const QList<int>&);
+	virtual void psl_play_next_all_tracks();
+	virtual void psl_play_next_tracks(const QList<int>&);
 
-    void psl_append_all_tracks();
-    void psl_append_tracks(const QList<int>&);
+	virtual void psl_append_all_tracks();
+	virtual void psl_append_tracks(const QList<int>&);
 
-    void psl_track_rating_changed(int idx, int rating);
-    void psl_album_rating_changed(int idx, int rating);
-
-
-private slots:
-
-   void library_reloading_state_slot(QString);
-   void library_reloading_state_new_block();
-   void reload_thread_finished();
+	virtual void psl_track_rating_changed(int idx, int rating);
+	virtual void psl_album_rating_changed(int idx, int rating);
 
 
+protected slots:
 
-private:
+   virtual void library_reloading_state_slot(QString);
+   virtual void library_reloading_state_new_block();
+   virtual void reload_thread_finished();
+
+
+
+protected:
     QWidget*            _main_window;
     CDatabaseConnector*	_db;
 

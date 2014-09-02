@@ -1,6 +1,6 @@
 /* Playlist.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -19,58 +19,65 @@
  */
 
 
-
 #include "playlist/Playlist.h"
 #include <QDir>
 
-Playlist::Playlist(QObject* parent) : QObject(parent){
+Playlist::Playlist(QObject* parent) : QObject(parent) {
 
+	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
     _reports_disabled = false;
     _cur_play_idx = -1;
 }
 
-void Playlist::report_changes(bool pl_changed, bool track_changed){
+void Playlist::report_changes(bool pl_changed, bool track_changed) {
     if(_reports_disabled) return;
 
-    if(pl_changed)
-        emit sig_playlist_changed(_v_md, _cur_play_idx);
+	if(pl_changed){
+		emit sig_playlist_changed(_v_md, _cur_play_idx);
+	}
 
-    if(track_changed){
-        if(_cur_play_idx < 0 || _cur_play_idx >= (int) _v_md.size() )
-            emit sig_stopped();
-        else
-            emit sig_track_changed(_v_md[_cur_play_idx], _cur_play_idx);
+
+	if(track_changed) {
+
+		if(_cur_play_idx < 0 || _cur_play_idx >= (int) _v_md.size() ){
+
+			emit sig_stopped();
+		}
+
+		else{
+			emit sig_track_changed(_v_md[_cur_play_idx], _cur_play_idx);
+		}
     }
 }
 
-void Playlist::enable_reports(){
+void Playlist::enable_reports() {
     _reports_disabled = false;
 }
 
-void Playlist::disable_reports(){
+void Playlist::disable_reports() {
     _reports_disabled = true;
 }
 
-void Playlist::clear(){
+void Playlist::clear() {
 
     _v_md.clear();
     _cur_play_idx = -1;
     report_changes(true, false);
 }
 
-void Playlist::move_track(const int idx, int tgt){
+void Playlist::move_track(const int idx, int tgt) {
     QList<int> lst;
     lst << idx;
     move_tracks(lst, tgt);
 }
 
-void Playlist::move_tracks(const QList<int>& lst, int tgt){
+void Playlist::move_tracks(const QList<int>& lst, int tgt) {
 
     MetaDataList v_md_to_move;
     MetaDataList v_md_before_tgt;
     MetaDataList v_md_after_tgt;
 
-    for(int i=0; i< (int) _v_md.size(); i++){
+    for(int i=0; i< (int) _v_md.size(); i++) {
 
         if(!lst.contains(i) && i < tgt)
             v_md_before_tgt.push_back(_v_md[i]);
@@ -85,19 +92,19 @@ void Playlist::move_tracks(const QList<int>& lst, int tgt){
     _v_md.clear();
     _cur_play_idx = -1;
 
-    foreach(MetaData md, v_md_before_tgt){
+    foreach(MetaData md, v_md_before_tgt) {
         md.pl_selected = false;
         _v_md.push_back(md);
         if(md.pl_playing) _cur_play_idx = _v_md.size() - 1;
     }
 
-    foreach(MetaData md, v_md_to_move){
+    foreach(MetaData md, v_md_to_move) {
         md.pl_selected = true;
         _v_md.push_back(md);
         if(md.pl_playing) _cur_play_idx = _v_md.size() - 1;
     }
 
-    foreach(MetaData md, v_md_after_tgt){
+    foreach(MetaData md, v_md_after_tgt) {
         md.pl_selected = false;
         _v_md.push_back(md);
         if(md.pl_playing) _cur_play_idx = _v_md.size() - 1;
@@ -107,13 +114,13 @@ void Playlist::move_tracks(const QList<int>& lst, int tgt){
 }
 
 
-void Playlist::delete_track(const int idx){
+void Playlist::delete_track(const int idx) {
     QList<int> to_remove;
     to_remove << idx;
     delete_tracks(to_remove);
 }
 
-void Playlist::delete_tracks(const QList<int>& lst){
+void Playlist::delete_tracks(const QList<int>& lst) {
 
     if(lst.size() == 0) return;
 
@@ -122,27 +129,27 @@ void Playlist::delete_tracks(const QList<int>& lst){
 
     _cur_play_idx = -1;
 
-    for(int i=0; i< (int) _v_md.size(); i++){
+    for(int i=0; i< (int) _v_md.size(); i++) {
 
         MetaData md = _v_md[i];
         // do not delete
-        if( !lst.contains(i) ){
+        if( !lst.contains(i) ) {
 
             if(md.pl_selected && first_selected == -1) first_selected = i;
 
             md.pl_selected = false;
             v_md.push_back(md);
-            if(md.pl_playing){
+            if(md.pl_playing) {
                 _cur_play_idx = (int) (v_md.size() -1);
             }
         }
     }
 
-    if(first_selected == -1 && ((int) v_md.size()) > lst[0]){
+    if(first_selected == -1 && ((int) v_md.size()) > lst[0]) {
         v_md[lst[0]].pl_selected = true;
     }
 
-    else if(first_selected == -1 && ((int) v_md.size() <= lst[0]) && v_md.size() > 0){
+    else if(first_selected == -1 && ((int) v_md.size() <= lst[0]) && v_md.size() > 0) {
         v_md[v_md.size() - 1].pl_selected = true;
     }
 
@@ -157,35 +164,35 @@ void Playlist::delete_tracks(const QList<int>& lst){
 }
 
 
-void Playlist::insert_track(const MetaData& md, int tgt){
+void Playlist::insert_track(const MetaData& md, int tgt) {
     MetaDataList v_md;
     v_md.push_back(md);
     insert_tracks(v_md, tgt);
 }
 
 
-void Playlist::insert_tracks(const MetaDataList& lst, int tgt){
+void Playlist::insert_tracks(const MetaDataList& lst, int tgt) {
 
     if(lst.size() == 0) return;
     if(tgt < 0) tgt = 0;
 
-    if(tgt > (int) _v_md.size()){
+    if(tgt > (int) _v_md.size()) {
         tgt = (int) _v_md.size();
     }
 
    MetaDataList v_md;
-   for(int i=0; i<tgt; i++){
+   for(int i=0; i<tgt; i++) {
        MetaData md = _v_md[i];
        v_md.push_back(md);
    }
 
-   for(uint i=0; i<lst.size(); i++){
+   for(uint i=0; i<lst.size(); i++) {
        MetaData md = lst[i];
        md.pl_selected = false;
        v_md.push_back(md);
    }
 
-   for(int i=tgt; i<(int) _v_md.size(); i++){
+   for(int i=tgt; i<(int) _v_md.size(); i++) {
        MetaData md = _v_md[i];
        v_md.push_back(md);
    }
@@ -196,22 +203,22 @@ void Playlist::insert_tracks(const MetaDataList& lst, int tgt){
    report_changes(true, false);
 }
 
-void Playlist::selection_changed(const QList<int> & lst){
-    for(int i=0; i<(int) _v_md.size(); i++){
+void Playlist::selection_changed(const QList<int> & lst) {
+    for(int i=0; i<(int) _v_md.size(); i++) {
         _v_md[i].pl_selected = lst.contains(i);
     }
 }
 
 
-void Playlist::append_track(const MetaData& md){
+void Playlist::append_track(const MetaData& md) {
     MetaDataList v_md;
     v_md.push_back(md);
     append_tracks(v_md);
 }
 
-void Playlist::append_tracks(const MetaDataList& lst){
+void Playlist::append_tracks(const MetaDataList& lst) {
 
-    for(uint i=0; i<lst.size(); i++){
+    for(uint i=0; i<lst.size(); i++) {
          _v_md.push_back(lst[i]);
     }
 
@@ -219,11 +226,11 @@ void Playlist::append_tracks(const MetaDataList& lst){
     report_changes(true, false);
 }
 
-int Playlist::find_track_by_id(int id){
+int Playlist::find_track_by_id(int id) {
     if(id == -1) return -1;
 
     int idx = 0;
-    foreach(MetaData md, _v_md){
+    foreach(MetaData md, _v_md) {
         if(md.id == id) return idx;
         idx++;
     }
@@ -231,14 +238,14 @@ int Playlist::find_track_by_id(int id){
     return -1;
 }
 
-int Playlist::find_track_by_path(QString path){
+int Playlist::find_track_by_path(QString path) {
     if(path.size() == 0) return -1;
 
     int idx = 0;
 
     QString new_path = QDir(path).absolutePath();
 
-    foreach(MetaData md, _v_md){
+    foreach(MetaData md, _v_md) {
         QString old_path = QDir(md.filepath).absolutePath();
         if(old_path.compare(new_path, Qt::CaseSensitive) == 0) return idx;
         idx++;
@@ -249,7 +256,7 @@ int Playlist::find_track_by_path(QString path){
 
 
 
-void Playlist::replace_track(int idx, const MetaData& md){
+void Playlist::replace_track(int idx, const MetaData& md) {
     if(idx < 0 || idx >= (int) _v_md.size()) return;
 
     _v_md[idx] = md;
@@ -258,22 +265,22 @@ void Playlist::replace_track(int idx, const MetaData& md){
 
 
 
-int Playlist::get_cur_track(){
+int Playlist::get_cur_track() {
     return _cur_play_idx;
 }
 
-PlaylistType Playlist::get_type(){
+PlaylistType Playlist::get_type() {
     return _playlist_type;
 }
 
-void Playlist::set_playlist_mode(Playlist_Mode mode){
+void Playlist::set_playlist_mode(const PlaylistMode& mode) {
     _playlist_mode = mode;
 }
 
-QStringList Playlist::toStringList(){
+QStringList Playlist::toStringList() {
 
     QStringList playlist_lst;
-    foreach(MetaData md, _v_md){
+    foreach(MetaData md, _v_md) {
 
         if(md.id >= 0) playlist_lst << QString::number(md.id);
         else
@@ -284,7 +291,20 @@ QStringList Playlist::toStringList(){
 }
 
 
-bool Playlist::is_empty(){
+bool Playlist::is_empty() {
 
     return (_v_md.size() == 0);
+}
+
+
+PlaylistMode Playlist::playlist_mode_backup(){
+	_playlist_mode_backup = _playlist_mode;
+
+	return _playlist_mode;
+}
+
+PlaylistMode Playlist::playlist_mode_restore(){
+	_playlist_mode = _playlist_mode_backup;
+
+	return _playlist_mode;
 }

@@ -1,6 +1,6 @@
 /* WebAccess.cpp */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -21,6 +21,7 @@
 
 #ifndef WEBACCESS_H_
 #define WEBACCESS_H_
+
 #include <QString>
 #include <QImage>
 
@@ -28,8 +29,8 @@
 
 namespace WebAccess {
 
-    bool read_http_into_str(QString url, QString* content);
-    bool read_http_into_img(QString url, QImage* image);
+	bool read_http_into_str(const QString& url, QString* content);
+	bool read_http_into_img(const QString& url, QImage* image);
 }
 
 

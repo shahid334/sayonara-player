@@ -58,7 +58,7 @@ public:
 		virtual ~GUI_StreamRecorder();
 
 	private:
-		Ui_GUI_StreamRecorder* ui;
+
 		CSettingsStorage* _settings;
 
 		QString _path;

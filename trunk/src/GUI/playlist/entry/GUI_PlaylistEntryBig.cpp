@@ -29,20 +29,22 @@
 #include "GUI/playlist/entry/GUI_PlaylistEntryBig.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
 
 
-GUI_PlaylistEntryBig::GUI_PlaylistEntryBig(QWidget* parent) : GUI_PlaylistEntry(parent){
-    this->ui = new Ui::PlaylistEntryBig();
-	this->ui->setupUi(this);
+
+GUI_PlaylistEntryBig::GUI_PlaylistEntryBig(QWidget* parent) :
+	GUI_PlaylistEntry(parent),
+	Ui::PlaylistEntryBig(){
+
+	setupUi(this);
 }
 
 GUI_PlaylistEntryBig::~GUI_PlaylistEntryBig() {
-	delete this->ui;
+
 }
 
 
-void GUI_PlaylistEntryBig::setContent(const MetaData& md, int idx){
+void GUI_PlaylistEntryBig::setContent(const MetaData& md, int idx) {
 
     QString titlestr;
 
@@ -52,15 +54,15 @@ void GUI_PlaylistEntryBig::setContent(const MetaData& md, int idx){
     else
         titlestr = md.title.trimmed();
 
-    this->ui->lab_title->setText(titlestr);
-    this->ui->lab_artist->setText(md.artist.trimmed());
-    this->ui->lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
-    if(md.album == ""){
-        this->ui->lab_album->setText("");
+	lab_title->setText(titlestr);
+	lab_artist->setText(md.artist.trimmed());
+	lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+    if(md.album == "") {
+		lab_album->setText("");
         return;
     }
 
-    this->ui->lab_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
+	lab_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
 
 }
 

@@ -1,6 +1,6 @@
 /* GUI_PlayerConnections.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -20,115 +20,115 @@
 
 #include "GUI/player/GUI_Player.h"
 
-void GUI_Player::setupConnections(){
+void GUI_Player::setupConnections() {
 
-	connect(ui->btn_play, SIGNAL(clicked(bool)), this,
+	qRegisterMetaType<CoverLocation>("CoverLocation");
+
+	connect(btn_play, SIGNAL(clicked(bool)), this,
 			SLOT(playClicked(bool)));
-	connect(ui->btn_fw, SIGNAL(clicked(bool)), this,
+	connect(btn_fw, SIGNAL(clicked(bool)), this,
 			SLOT(forwardClicked(bool)));
-	connect(ui->btn_bw, SIGNAL(clicked(bool)), this,
+	connect(btn_bw, SIGNAL(clicked(bool)), this,
 			SLOT(backwardClicked(bool)));
-    connect(ui->btn_stop, SIGNAL(clicked()), this,
+	connect(btn_stop, SIGNAL(clicked()), this,
             SLOT(stopClicked()));
-	connect(ui->btn_mute, SIGNAL(released()), this,
+	connect(btn_mute, SIGNAL(released()), this,
 			SLOT(muteButtonPressed()));
-	connect(ui->btn_rec, SIGNAL(toggled(bool)), this,
+	connect(btn_rec, SIGNAL(toggled(bool)), this,
 				SLOT(sl_rec_button_toggled(bool)));
-	connect(ui->btn_correct, SIGNAL(clicked(bool)), this,
+	connect(btn_correct, SIGNAL(clicked(bool)), this,
 			SLOT(correct_btn_clicked(bool)));
-	connect(ui->albumCover, SIGNAL(clicked()), this, SLOT(coverClicked()));
+	connect(albumCover, SIGNAL(clicked()), this, SLOT(coverClicked()));
 
 	// file
-	connect(ui->action_OpenFile, SIGNAL(triggered(bool)), this,
+	connect(action_OpenFile, SIGNAL(triggered(bool)), this,
 			SLOT(fileSelectedClicked(bool)));
 
-	connect(ui->action_OpenFolder, SIGNAL(triggered(bool)), this,
+	connect(action_OpenFolder, SIGNAL(triggered(bool)), this,
 			SLOT(folderSelectedClicked(bool)));
-	connect(ui->action_ImportFolder, SIGNAL(triggered(bool)), this,
+	connect(action_ImportFolder, SIGNAL(triggered(bool)), this,
 				SLOT(importFolderClicked()));
-        connect(ui->action_ImportFiles, SIGNAL(triggered(bool)), this,
+		connect(action_ImportFiles, SIGNAL(triggered(bool)), this,
                         SLOT(importFilesClicked()));
-	connect(ui->action_reloadLibrary, SIGNAL(triggered(bool)), this,
+	connect(action_reloadLibrary, SIGNAL(triggered(bool)), this,
 				SLOT(reloadLibraryClicked(bool)));
-        connect(ui->action_clearLibrary, SIGNAL(triggered(bool)), this,
-				SLOT(clearLibraryClicked(bool)));
 
-	connect(ui->action_Close, SIGNAL(triggered(bool)), this,
+	connect(action_Close, SIGNAL(triggered(bool)), this,
 				SLOT(really_close(bool)));
 
 
 	// view
-	connect(ui->action_viewLibrary, SIGNAL(toggled(bool)), this,
+	connect(action_viewLibrary, SIGNAL(toggled(bool)), this,
 			SLOT(showLibrary(bool)));
-	connect(ui->action_Dark, SIGNAL(toggled(bool)), this,
+	connect(action_Dark, SIGNAL(toggled(bool)), this,
 			SLOT(changeSkin(bool)));
 
-	connect(ui->action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
+	connect(action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
 			SLOT(small_playlist_items_toggled(bool)));
-	connect(ui->action_showOnlyTracks, SIGNAL(toggled(bool)), this,
+	connect(action_showOnlyTracks, SIGNAL(toggled(bool)), this,
 			SLOT(sl_show_only_tracks(bool)));
-	connect(ui->action_Fullscreen, SIGNAL(toggled(bool)), this,
+	connect(action_Fullscreen, SIGNAL(toggled(bool)), this,
 			SLOT(show_fullscreen_toggled(bool)));
 
 
 	// preferencesF
-    connect(ui->action_Language, SIGNAL(triggered(bool)), this,
+	connect(action_Language, SIGNAL(triggered(bool)), this,
             SLOT(sl_action_language_toggled(bool)));
-	connect(ui->action_lastFM, SIGNAL(triggered(bool)), this,
+	connect(action_lastFM, SIGNAL(triggered(bool)), this,
 			SLOT(lastFMClicked(bool)));
-	connect(ui->action_setLibPath, SIGNAL(triggered(bool)), this,
+	connect(action_setLibPath, SIGNAL(triggered(bool)), this,
 			SLOT(setLibraryPathClicked(bool)));
-	connect(ui->action_fetch_all_covers, SIGNAL(triggered(bool)), this,
+	connect(action_fetch_all_covers, SIGNAL(triggered(bool)), this,
 			SLOT(fetch_all_covers_clicked(bool)));
-    connect(ui->action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
+	connect(action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
             SLOT(show()));
-	connect(ui->action_min2tray, SIGNAL(toggled(bool)), this,
+	connect(action_min2tray, SIGNAL(toggled(bool)), this,
 			SLOT(min2tray_toggled(bool)));
-	connect(ui->action_only_one_instance, SIGNAL(toggled(bool)), this,
+	connect(action_only_one_instance, SIGNAL(toggled(bool)), this,
 				SLOT(only_one_instance_toggled(bool)));
 
-	connect(ui->action_streamrecorder, SIGNAL(triggered(bool)), this,
+	connect(action_streamrecorder, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_streamripper_toggled(bool)));
-    connect(ui->action_notifications, SIGNAL(triggered(bool)), ui_notifications,
+	connect(action_notifications, SIGNAL(triggered(bool)), ui_notifications,
             SLOT(show()));
-	connect(ui->action_SocketConnection, SIGNAL(triggered(bool)), this,
+	connect(action_SocketConnection, SIGNAL(triggered(bool)), this,
 			SLOT(sl_action_socket_connection_triggered(bool)));
 
-    connect(ui->action_livesearch, SIGNAL(triggered(bool)), this,
+	connect(action_livesearch, SIGNAL(triggered(bool)), this,
             SLOT(sl_live_search(bool)));
-    connect(ui->action_notifyNewVersion, SIGNAL(triggered(bool)), this,
+	connect(action_notifyNewVersion, SIGNAL(triggered(bool)), this,
             SLOT(sl_notify_new_version(bool)));
 
 
 	// about
-	connect(ui->action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
+	connect(action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
-	connect(ui->action_help, SIGNAL(triggered(bool)), this, SLOT(help(bool)));
+	connect(action_help, SIGNAL(triggered(bool)), this, SLOT(help(bool)));
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
 
 
-    connect(ui->volumeSlider, SIGNAL(searchSliderMoved(int)), this,
+	connect(volumeSlider, SIGNAL(searchSliderMoved(int)), this,
 			SLOT(volumeChanged(int)));
-    connect(ui->volumeSlider, SIGNAL(searchSliderReleased(int)), this,
+	connect(volumeSlider, SIGNAL(searchSliderReleased(int)), this,
     		SLOT(volumeChanged(int)));
-    connect(ui->volumeSlider, SIGNAL(searchSliderPressed(int)), this,
+	connect(volumeSlider, SIGNAL(searchSliderPressed(int)), this,
     		SLOT(volumeChanged(int)));
 
-    connect(ui->songProgress, SIGNAL(searchSliderReleased(int)), this,
+	connect(songProgress, SIGNAL(searchSliderReleased(int)), this,
     		SLOT(setProgressJump(int)));
-	connect(ui->songProgress, SIGNAL(searchSliderPressed(int)), this,
+	connect(songProgress, SIGNAL(searchSliderPressed(int)), this,
 			SLOT(setProgressJump(int)));
-	connect(ui->songProgress, SIGNAL(searchSliderMoved(int)), this,
+	connect(songProgress, SIGNAL(searchSliderMoved(int)), this,
 			SLOT(setProgressJump(int)));
 
 
 
 	// cover lookup
-    connect(m_cov_lookup, SIGNAL(sig_covers_found(const QStringList&, QString)),
-            this, SLOT(covers_found(const QStringList&, QString)));
+	connect(m_cov_lookup, SIGNAL(sig_cover_found(const CoverLocation&)),
+			this, SLOT(cover_found(const CoverLocation&)));
 
-    connect(m_alternate_covers, SIGNAL(sig_covers_changed(QString, QString)),
-            this,				SLOT(sl_alternate_cover_available(QString, QString)));
+	connect(m_alternate_covers, SIGNAL(sig_cover_changed(const CoverLocation&)),
+			this,				SLOT(sl_alternate_cover_available(const CoverLocation&)));
 
     connect(m_alternate_covers, SIGNAL(sig_no_cover()),
             this,				SLOT(sl_no_cover_available()));
@@ -154,20 +154,20 @@ void GUI_Player::setupConnections(){
     QList<QKeySequence> lst;
     lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);
     QAction* play_pause_action = createAction(lst);
-    connect(play_pause_action, SIGNAL(triggered()), ui->btn_play, SLOT(click()));
+	connect(play_pause_action, SIGNAL(triggered()), btn_play, SLOT(click()));
 
     QList<QKeySequence> lst_fwd;
     lst_fwd << QKeySequence(Qt::Key_MediaNext) << QKeySequence(Qt::ControlModifier | Qt::Key_Right);
     QAction* fwd_action = createAction(lst_fwd);
-    connect(fwd_action, SIGNAL(triggered()), ui->btn_fw, SLOT(click()));
+	connect(fwd_action, SIGNAL(triggered()), btn_fw, SLOT(click()));
 
     QList<QKeySequence> lst_bwd;
     lst_bwd << QKeySequence(Qt::Key_MediaPrevious) << QKeySequence(Qt::ControlModifier | Qt::Key_Left);
     QAction* bwd_action = createAction(lst_bwd);
-    connect(bwd_action, SIGNAL(triggered()), ui->btn_bw, SLOT(click()));
+	connect(bwd_action, SIGNAL(triggered()), btn_bw, SLOT(click()));
 
     QAction* stop_action = createAction(QKeySequence(Qt::ControlModifier | Qt::Key_Space));
-    connect(stop_action, SIGNAL(triggered()), ui->btn_stop, SLOT(click()));
+	connect(stop_action, SIGNAL(triggered()), btn_stop, SLOT(click()));
 
     QAction* louder_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Up));
     connect(louder_action, SIGNAL(triggered()), this, SLOT(volumeHigher()));

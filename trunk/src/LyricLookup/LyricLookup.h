@@ -48,7 +48,8 @@ public:
 	LyricLookupThread();
 	virtual ~LyricLookupThread();
 
-	void prepare_thread(QString artist, QString song, int srv=0);
+	void set_artist_and_title(const QString& artist, const QString& title);
+	void prepare_thread(int srv=0);
 	QStringList getServers();
 	QString getFinalLyrics();
 

@@ -1,6 +1,6 @@
 /* GUI_Stream.h */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -26,10 +26,7 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/Helper.h"
 
-#include <QWidget>
 #include <QMap>
-
-
 
 class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 
@@ -57,16 +54,8 @@ public slots:
 
 
 public:
-    GUI_Stream(QString name, QString action_text, QWidget *parent = 0);
+	GUI_Stream(QString name, QWidget *parent = 0);
 	virtual ~GUI_Stream();
-
-    static QString getVisName(){return tr("&Webstreams");}
-    virtual QAction* getAction();
-
-
-
-private:
-	Ui::GUI_Stream* ui;
 
 	void init_gui();
 	QMap<QString, QString> _stations;

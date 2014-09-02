@@ -1,6 +1,6 @@
 /* GSTPipeline.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -29,8 +29,7 @@
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
 
-bool _test_and_error(void* element, QString errorstr);
-bool _test_and_error_bool(bool b, QString errorstr);
+#include "Engine/GStreamer/GSTEngineHelper.h"
 
 
 enum GSTFileMode{
@@ -39,87 +38,60 @@ enum GSTFileMode{
 
 };
 
+bool
+_test_and_error(void* element, QString errorstr);
 
-class GSTPipeline : public QObject
-{
+bool
+_test_and_error_bool(bool b, QString errorstr);
+
+class GSTAbstractPipeline : public QObject {
+
 	Q_OBJECT
 
-public:
-	GSTPipeline(QObject *parent = 0);
-	~GSTPipeline();
-	GstElement* get_pipeline();
-	GstBus* get_bus();
+	protected:
 
-	void play();
-	void pause();
-	void stop();
-	gint64 seek_rel(float percent, gint64 ref_ns);
-	gint64 seek_abs(gint64 ns );
-	void set_volume(int vol);
-	int get_volume();
+		GstBus*		_bus;
+		GstElement* _pipeline;
+		gchar*		_uri;
 
-	void enable_level(bool b);
-	void enable_spectrum(bool b);
+		qint64		_duration;
+		qint64		_position;
 
-	gint64 get_duration_ns();
-	guint get_bitrate();
-
-	virtual bool set_uri(gchar* uri);
-	virtual gchar* get_uri();
-
-	void set_eq_band(QString band_name, double val);
-	void unmute();
-
-	void set_gapless(bool gapless);
-	bool get_gapless();
-
-	void start_timer(qint64 ms);
+	signals:
+		void sig_finished();
+		void sig_about_to_finish(qint64);
+		void sig_pos_changed_ms(qint64);
 
 
-protected:
+	public slots:
+		virtual void play()=0;
+		virtual void pause()=0;
+		virtual void stop()=0;
 
-	GstBus*		_bus;
-	GstElement* _pipeline;
+		virtual qint64 get_duration_ms()=0;
+		virtual qint64 get_position_ms()=0;
+		virtual guint get_bitrate()=0;
+		virtual void set_speed(float f);
 
-	GstElement* _audio_src;
-	GstElement* _audio_convert;
-
-
-	GstElement* _eq_queue;
-	GstElement* _equalizer;
-
-	GstElement* _volume;
-
-
-	GstPad* _app_pad;
-	GstPad* _tee_app_pad;
-
-	GstElement* _audio_sink;
-	GstElement* _audio_bin;
-
-	GstPadTemplate* _tee_src_pad_template;
-
-	GstElement* _level_audio_convert, *_spectrum_audio_convert;
-	GstElement* _level, *_spectrum;
-
-	GstPad*     _level_pad, *_spectrum_pad;
-	GstPad*     _tee_level_pad, *_tee_spectrum_pad;
-
-	GstElement* _level_sink, *_spectrum_sink;
-	GstElement* _level_queue, *_spectrum_queue;
+	public:
+		virtual GstElement* get_pipeline();
+		virtual GstBus*		get_bus();
+		virtual GstState	get_state();
+		virtual void		refresh_cur_position(gint64 cur_pos_ms);
+		virtual void		about_to_finish();
+		virtual void		finished();
 
 
-	GstElement* _tee;
-
-	QTimer* _timer;
-
-	gchar* _uri;
-	bool  _gapless;
-
-	int _vol;
-	qint64 _duration;
-
-
+		virtual bool set_uri(gchar* uri);
+		virtual gchar* get_uri();
 };
+
+
+namespace PipelineCallbacks {
+
+	void pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data);
+	gboolean show_position(gpointer data);
+
+}
 
 #endif // GSTPIPELINE_H

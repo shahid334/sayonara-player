@@ -30,102 +30,78 @@
 #define COVERLOOKUP_H_
 
 #include "HelperStructs/MetaData.h"
+#include "CoverLookup/CoverLocation.h"
 #include "CoverLookup/CoverFetchThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-
-#include <string>
-#include <vector>
 
 #include <QObject>
 #include <QThread>
 #include <QPixmap>
-#include <QCryptographicHash>
 #include <QDir>
 #include <QMap>
 
-#define EMIT_NONE 0
-#define EMIT_ONE 1
-#define EMIT_ALL 2
-
-
-using namespace std;
-
-typedef QString WWWAdress;
-typedef QString TargetFileName;
 
 
 
-class CoverLookup;
-
-class CoverLookupAllCoverThread : public QThread
-{
-
-    AlbumList _albumlist;
-    CoverLookup* _cover_lookup;
-    bool _run;
-
-public:
-
-
-    CoverLookupAllCoverThread(QObject* parent, const AlbumList& albumlist);
-    ~CoverLookupAllCoverThread();
-
-
-    void stop();
-    CoverLookup* getCoverLookup();
-
-protected:
-    void run();
-};
-
-
-class CoverLookup : public QObject{
+class CoverLookupInterface : public QObject{
 
 	Q_OBJECT
 
 	signals:
-    void sig_covers_found(const QStringList&, QString call_id);
-    void sig_alt_cover_found(const QString&, QString call_id);
+		void sig_cover_found(const CoverLocation&);
+		void sig_finished(bool);
 
 	public slots:
+		virtual void stop()=0;
 
-    void fetch_cover_album(const int album_id, QString call_id="", bool for_all_tracks=true);
-    void fetch_cover_album(const Album& album, QString call_id="", bool for_all_tracks=true);
+	public:
+		CoverLookupInterface(QObject* parent=0);
 
-    void fetch_cover_artist(const int artist_id, QString call_id="");
-    void fetch_cover_artist(const Artist& artist, QString call_id="");
+};
 
-    void fetch_all_album_covers();
-    void fetch_all_album_covers_stop();
 
+class CoverLookup : public CoverLookupInterface {
+
+	Q_OBJECT
 
 
 private slots:
-   void thread_finished(int id);
-   void fetch_all_album_covers_destroyed();
+	void cover_found(const CoverLocation& );
+	void finished(bool);
 
 
 public:
 
-    CoverLookup();
-	virtual ~CoverLookup();
+   CoverLookup(QObject* parent, int n_covers=1);
+   virtual ~CoverLookup();
 
+	bool fetch_cover(const CoverLocation& cl);
+	bool fetch_album_cover_standard(const QString& artist, const QString& album_name);
+	bool fetch_album_cover_sampler(const QStringList& artists, const QString& album_name);
+	bool fetch_album_cover(const Album& album);
+	bool fetch_album_cover_by_id(const int album_id);
 
+	bool fetch_artist_cover_standard(const QString& artist);
+	bool fetch_artist_cover(const Artist& artist);
+
+	bool fetch_cover_by_searchstring(const QString& searchstring, const QString& target_name);
+
+	void emit_standard_cover();
+	virtual void stop();
 
 
 private:
 
+	int _n_covers;
+
+    CoverFetchThread* _cft;
     CDatabaseConnector* _db;
-    CoverLookupAllCoverThread* _all_covers_thread;
-    QList<CoverFetchThread*> _threads;
-    QList<int> _finished_queue;
-    bool _finish_locked;
-    int _cur_thread_id;
 
+	QList<CoverFetchThread*> _cfts;
 
-    void start_new_thread(QString url, const QStringList& target_names, QString call_id );
-
-
+	void start_new_thread(const CoverLocation& cl);
 };
+
+
 
 #endif /* COVERLOOKUP_H_ */

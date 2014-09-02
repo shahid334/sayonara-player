@@ -1,6 +1,6 @@
 /* CLibraryAdmin.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -26,7 +26,6 @@
 #include "HelperStructs/Filter.h"
 #include "application.h"
 
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QProgressBar>
@@ -48,15 +47,15 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 
 
-void CLibraryBase::clearLibrary(){
+void CLibraryBase::clearLibrary() {
     MetaDataList lst;
-    _db->getTracksFromDatabase(lst);
+	_db->getTracksFromDatabase(lst, _track_sortorder);
     _db->deleteTracks(lst);
     refresh();
 }
 
 
-void CLibraryBase::reloadLibrary(bool clear){
+void CLibraryBase::reloadLibrary(bool clear) {
 
     m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
 
@@ -83,11 +82,11 @@ void CLibraryBase::reloadLibrary(bool clear){
     }
 
 
-    if(clear){
+    if(clear) {
         clearLibrary();
     }
 
-    if(_reload_thread->isRunning()){
+    if(_reload_thread->isRunning()) {
         _reload_thread->terminate();
     }
 
@@ -97,11 +96,11 @@ void CLibraryBase::reloadLibrary(bool clear){
 
 
 // TODO:
-void CLibraryBase::reload_thread_finished(){
+void CLibraryBase::reload_thread_finished() {
 
     _db->getAllAlbums(_vec_albums);
     _db->getAllArtists(_vec_artists);
-    _db->getTracksFromDatabase(_vec_md);
+	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
 
     emit_stuff();
 
@@ -111,13 +110,13 @@ void CLibraryBase::reload_thread_finished(){
     emit sig_reload_library_finished();
 }
 
-void CLibraryBase::library_reloading_state_new_block(){
+void CLibraryBase::library_reloading_state_new_block() {
 
     _reload_thread->pause();
 
-    _db->getAllAlbums(_vec_albums);
-    _db->getAllArtists(_vec_artists);
-    _db->getTracksFromDatabase(_vec_md);
+	_db->getAllAlbums(_vec_albums, _album_sortorder);
+	_db->getAllArtists(_vec_artists, _artist_sortorder);
+	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
 
     emit_stuff();
 
@@ -125,7 +124,7 @@ void CLibraryBase::library_reloading_state_new_block(){
 
 }
 
-void CLibraryBase::library_reloading_state_slot(QString str){
+void CLibraryBase::library_reloading_state_slot(QString str) {
 
     emit sig_reloading_library(str);
 }
@@ -136,7 +135,7 @@ void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
     _db->storeMetadata(v_md);
 
     MetaDataList data;
-    _db->getTracksFromDatabase(data);
+	_db->getTracksFromDatabase(data, _track_sortorder);
     emit sig_all_tracks_loaded(data);
 }
 
@@ -147,24 +146,24 @@ void CLibraryBase::loadDataFromDb () {
     _filter.cleared = true;
     _filter.filtertext = "";
 
-    _db->getAllArtists(_vec_artists);
-    _db->getAllAlbums(_vec_albums);
-    _db->getTracksFromDatabase(_vec_md);
+	_db->getAllArtists(_vec_artists, _artist_sortorder);
+	_db->getAllAlbums(_vec_albums, _album_sortorder);
+	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
 
     emit_stuff();
 }
 
 
 
-void CLibraryBase::psl_delete_tracks(int answer){
+void CLibraryBase::psl_delete_tracks(int answer) {
     delete_tracks(_vec_md, answer);
 }
 
 
-void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
+void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer) {
 
     MetaDataList vec_md;
-    foreach(int idx, lst){
+    foreach(int idx, lst) {
         vec_md.push_back(_vec_md[idx]);
     }
 
@@ -173,23 +172,23 @@ void CLibraryBase::psl_delete_certain_tracks(const QList<int>& lst, int answer){
 
 
 
-void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
+void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer) {
 
     QStringList file_list;
     QString file_entry = tr("files");
     int n_files = vec_md.size();
     int n_fails = 0;
 
-    foreach(MetaData md, vec_md){
+    foreach(MetaData md, vec_md) {
         file_list.push_back(md.filepath);
     }
 
     _db->deleteTracks(vec_md);
     vec_md.clear();
 
-    if(answer == 1){
+    if(answer == 1) {
         file_entry = tr("entries");
-        foreach(QString filename, file_list){
+        foreach(QString filename, file_list) {
             QFile file(filename);
             if( !file.remove() )
                 n_fails ++;
@@ -198,7 +197,7 @@ void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer){
 
     QString answer_str;
 
-    if(n_fails == 0){
+    if(n_fails == 0) {
         answer_str = tr("All %1 could be removed").arg(file_entry);
     }
 

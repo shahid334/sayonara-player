@@ -1,6 +1,6 @@
 /* GUI_Notifications.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -47,7 +47,7 @@ public slots:
 private slots:
     void ok_clicked();
 private:
-    Ui_GUI_Notification* ui;
+
     NotificationPluginLoader* _plugin_loader;
 
     CSettingsStorage* _settings;

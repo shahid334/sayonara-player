@@ -27,35 +27,28 @@
 #include "GUI/library/GUI_LibraryPath.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-#include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
+#include "GUI/player/GUI_TrayIcon.h"
 
 #include "CoverLookup/CoverLookup.h"
 #include "Notification/Notification.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
-
-#include "HelperStructs/Helper.h"
 #include "HelperStructs/AsyncWebAccess.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
 #include <QTranslator>
-#include "GUI/player/GUI_TrayIcon.h"
-
-#include <QList>
 #include <QCloseEvent>
 #include <QKeySequence>
 #include <QTranslator>
-#include <QWidget>
 #include <QAction>
-#include <QDebug>
 
 
 class GUI_Player : public QMainWindow, private Ui::Sayonara
@@ -67,13 +60,14 @@ public:
 
 public slots:
 
-    void covers_found(const QStringList& lst, QString call_id);
+	void cover_found(const CoverLocation&);
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
     void psl_track_time_changed(MetaData&);
 	void psl_bitrate_changed(qint32);
     void psl_reload_library_allowed(bool);
+    void psl_set_status_bar_text(QString, bool show);
 
     void really_close(bool=false);
 
@@ -99,36 +93,36 @@ public slots:
 
     void psl_libpath_changed(QString &);
 
+
 signals:
 
     /* Player*/
-    void play();
-    void pause();
-    void stop();
-    void backward();
-    void forward();
-    void mute();
+    void sig_play();
+    void sig_pause();
+    void sig_stop();
+    void sig_backward();
+    void sig_forward();
+    void sig_mute();
     void sig_rec_button_toggled(bool);
     void sig_volume_changed (int);
-    void search(int pos_percent);
+	void sig_seek_rel(quint32 pos_percent);
     void sig_correct_id3(const MetaData&);
 
-
     /* File */
-    void fileSelected (QStringList & filelist);
-    void baseDirSelected (const QString & baseDir);
+    void sig_file_selected (QStringList & filelist);
+    void sig_basedir_selected (const QString & baseDir);
     void sig_import_dir(const QString&);
     void sig_import_files(const QStringList&);
-    void reloadLibrary(bool clear);
-    void clearLibrary();
+    void sig_reload_library(bool clear);
+    void sig_clear_library();
 
     /* Preferences / View */
-    void show_playlists();
-    void show_small_playlist_items(bool);
+    void sig_show_playlists();
+    void sig_show_small_playlist_items(bool);
     void sig_show_socket();
     void sig_show_stream_rec();
-    void libpath_changed(QString);
-    void setupLastFM();
+    void sig_libpath_changed(QString);
+    void sig_setup_LastFM();
     void sig_skin_changed(bool);
     void sig_show_only_tracks(bool);
     void sig_language_changed();
@@ -166,7 +160,6 @@ private slots:
     void fileSelectedClicked(bool);
     void folderSelectedClicked(bool);
     void reloadLibraryClicked(bool b = true);
-    void clearLibraryClicked(bool b = true);
     void importFolderClicked(bool b = true);
     void importFilesClicked(bool b = true);
 
@@ -197,7 +190,7 @@ private slots:
     void help(bool b=false);
 
 
-    void sl_alternate_cover_available(QString, QString);
+	void sl_alternate_cover_available(const CoverLocation&);
     void sl_no_cover_available();
 
     void awa_version_finished();
@@ -232,8 +225,6 @@ protected:
 
 private:
 
-    Ui::Sayonara*       ui;
-
     GUI_Playlist*           ui_playlist;
     GUI_Library_windowed*   ui_library;
     GUI_LibraryPath*        ui_libpath;
@@ -249,7 +240,7 @@ private:
     AsyncWebAccess*         m_awa_translators;
 
     QString                 m_class_name;
-    quint32                 m_completeLength_ms;
+	qint64                 m_completeLength_ms;
     bool                    m_playing;
     bool                    m_mute;
     GUI_TrayIcon *          m_trayIcon;
@@ -267,6 +258,8 @@ private:
     QTranslator*        m_translator;
     QStringList         m_translators;
 
+	bool				m_converter_active;
+
 
 
 
@@ -277,6 +270,8 @@ private:
     void setupConnections();
     void setRadioMode(int);
     void total_time_changed(qint64);
+	void set_std_cover(bool radio);
+
     void fetch_cover();
     QAction* createAction(QKeySequence key_sequence);
     QAction* createAction(QList<QKeySequence>& key_sequences);

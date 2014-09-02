@@ -1,6 +1,6 @@
 /* GSTEngineCallbacks.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -26,19 +26,19 @@
 #include <gst/gstbuffer.h>
 #include <gst/gstelement.h>
 #include "HelperStructs/globals.h"
-#include "Engine/GStreamer/GSTEngine.h"
+#include "Engine/GStreamer/GSTPlaybackEngine.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
+
 
 #include <cmath>
 #ifdef Q_OS_LINUX
 #include <unistd.h>
 #endif
 
-void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r);
 
-void new_buffer(GstElement* sink, void* data){
+void EngineCallbacks::new_buffer(GstElement* sink, void* data) {
 
-    Q_UNUSED(data);
+	/*Q_UNUSED(data);
 
 	//ENGINE_DEBUG;
 
@@ -51,89 +51,101 @@ void new_buffer(GstElement* sink, void* data){
     MyCaps* my_caps = gst_obj_ref->get_caps();
 
     if(!my_caps->is_parsed() ) {
-        my_caps->parse(gst_buffer_get_caps(buffer));
+		my_caps->parse(gst_buffer_get_caps(buffer));
+
     }
 
     float l, r;
     calc_level(buffer, my_caps, &l, &r);
-    gst_obj_ref->set_level(l, r);
+	gst_obj_ref->set_level(l, r);*/
 }
 
-
+double arr[2];
 gboolean
-level_handler (GstBus * bus, GstMessage * message, gpointer data){
+EngineCallbacks::level_handler (GstBus * bus, GstMessage * message, gpointer data) {
 
+	GValueArray* rms_arr;
+	Engine* engine = (Engine*) data;
    // ENGINE_DEBUG;
-    if(!gst_obj_ref) return TRUE;
+	if(!engine) return TRUE;
 
-    Q_UNUSED(bus);
+	Q_UNUSED(bus);
 
-    const GstStructure *s = gst_message_get_structure (message);
-    const gchar *name = gst_structure_get_name (s);
+	const GstStructure *s = gst_message_get_structure (message);
+	const gchar *name = gst_structure_get_name (s);
 
-    if(!s) {
-        qDebug() << "structure is null";
-        return TRUE;
-    }
+	if(!s) {
+		qDebug() << "structure is null";
+		return TRUE;
+	}
 
-    if (strcmp (name, "level")) return TRUE;
+	if (strcmp (name, "level")) return TRUE;
 
-    GstClockTime endtime;
-    const GValue *array_val;
+	GstClockTime endtime;
+	const GValue *array_val;
 
-    if (!gst_structure_get_clock_time (s, "endtime", &endtime))
-        qDebug() << "Could not parse endtime";
-    /* we can get the number of channels as the length of any of the value
-          * lists */
-    array_val = gst_structure_get_value (s, "rms");
 
-    if(!array_val){
-        qDebug() << "Cannot get array-val";
-        return TRUE;
-    }
+	if (!gst_structure_get_clock_time (s, "endtime", &endtime))
+		qDebug() << "Could not parse endtime";
+	/* we can get the number of channels as the length of any of the value
+		  * lists */
+	array_val = gst_structure_get_value (s, "peak");
 
-    guint n_elements = gst_value_list_get_size(array_val);
+	if(!array_val) {
+		qDebug() << "Cannot get array-val";
+		return TRUE;
+	}
 
-    if(n_elements == 0) return TRUE;
+	rms_arr = (GValueArray*) g_value_get_boxed(array_val);
 
-    double* arr = new double[n_elements];
-    for(guint i=0; i<n_elements; i++){
-        const GValue* val = gst_value_list_get_value(array_val, i);
-        if(!G_VALUE_HOLDS_DOUBLE(val)) {
-            qDebug() << "Could not find a double";
-            break;
-        }
+	guint n_elements = rms_arr->n_values;
 
-        arr[i] = g_value_get_double(val);
-    }
 
-    guint64 dur;
-    gst_structure_get_clock_time(s, "timestamp", &dur);
+	if(n_elements == 0) return TRUE;
 
-    if(n_elements >= 2 && gst_obj_ref){
-        gst_obj_ref->set_level(arr[0], arr[1]);
-    }
+	guint max = (n_elements < 2) ? n_elements : 2;
+	for(guint i=0; i<max; i++) {
 
-    else if(n_elements == 1 && gst_obj_ref){
-        gst_obj_ref->set_level(arr[0], arr[0]);
-    }
+		const GValue* val = rms_arr->values + i;
+		double d;
 
-    delete[] arr;
+		if(!G_VALUE_HOLDS_DOUBLE(val)) {
+			qDebug() << "Could not find a double";
+			break;
+		}
 
-    return TRUE;
+
+		d = g_value_get_double(val);
+		if(d < 0)
+			arr[i] = d;
+
+	}
+
+	guint64 dur;
+	gst_structure_get_clock_time(s, "timestamp", &dur);
+
+	if(n_elements >= 2) {
+		engine->set_level(arr[0], arr[1]);
+	}
+
+	else if(n_elements == 1) {
+		engine->set_level(arr[0], arr[0]);
+	}
+
+	return TRUE;
 
 }
 
 
 
 gboolean
-spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
+EngineCallbacks::spectrum_handler (GstBus * bus, GstMessage * message, gpointer data) {
 
     Q_UNUSED(data);
 
 	//ENGINE_DEBUG;
-
-    if(!gst_obj_ref) return TRUE;
+	Engine* engine = (Engine*) data;
+	if(!engine) return TRUE;
 
     const GstStructure *s = gst_message_get_structure (message);
     const gchar *name = gst_structure_get_name (s);
@@ -171,79 +183,17 @@ spectrum_handler (GstBus * bus, GstMessage * message, gpointer data){
     }
 
 
-        gst_obj_ref->set_spectrum(lst);
+	engine->set_spectrum(lst);
 
     return TRUE;
-
 }
 
 
-gboolean show_position(GstElement* pipeline) {
-
-    ENGINE_DEBUG;
-
-    gint64 pos;
-	gchar* name;
-	bool is_allowed;
-	bool success;
-
-	name = gst_element_get_name(pipeline);
-	is_allowed = (name[0] == '1');
-
-	g_free(name);
-
-	if(!is_allowed) return false;
-
-    GstFormat fmt = GST_FORMAT_TIME;
-	success = gst_element_query_position(pipeline, &fmt, &pos);
-	if(!success) pos = 0;
-
-    if (gst_obj_ref && gst_obj_ref->getState() == STATE_PLAY) {
-		gst_obj_ref->set_cur_position_ms((quint64)(pos / MIO));
-    }
-
-	return true;
-}
-
-
-static void
-print_one_tag (const GstTagList * list, const gchar * tag, gpointer user_data)
-{
-	int i, num;
-
-	num = gst_tag_list_get_tag_size (list, tag);
-	for (i = 0; i < num; ++i) {
-		const GValue *val;
-
-		/* Note: when looking for specific tags, use the gst_tag_list_get_xyz() API,
-	 * we only use the GValue approach here because it is more generic */
-		val = gst_tag_list_get_value_index (list, tag, i);
-		if (G_VALUE_HOLDS_STRING (val)) {
-			g_print ("String \t%20s : %s\n", tag, g_value_get_string (val));
-		} else if (G_VALUE_HOLDS_UINT (val)) {
-			g_print ("UINT \t%20s : %u\n", tag, g_value_get_uint (val));
-		} else if (G_VALUE_HOLDS_DOUBLE (val)) {
-			g_print ("DOUBLE \t%20s : %g\n", tag, g_value_get_double (val));
-		} else if (G_VALUE_HOLDS_BOOLEAN (val)) {
-			g_print ("BOOL \t%20s : %s\n", tag,
-					 (g_value_get_boolean (val)) ? "true" : "false");
-		} /*else if (GST_VALUE_HOLDS_BUFFER (val)) {
-			GstBuffer *buf = gst_value_get_buffer (val);
-			guint buffer_size = GST_BUFFER_SIZE(buf);
-
-
-			g_print ("\t%20s : buffer of size %u\n", tag, buffer_size);
-		}*/
-		else {
-			g_print ("\t%20s : tag of type '%s'\n", tag, G_VALUE_TYPE_NAME (val));
-		}
-	}
-}
-
-gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
+gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data) {
 
     (void) bus;
-    (void) user_data;
+
+	Engine* engine = (Engine*) data;
 
 
     GstState old_state, new_state, pending_state;
@@ -253,38 +203,38 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 	switch (msg_type) {
 
     case GST_MESSAGE_EOS:
-        if (gst_obj_ref) {
-            qDebug() << "Engine: Track finished";
-            gst_obj_ref->set_track_finished();
-        }
+		if (!engine) break;
 
-        break;
+		//qDebug() << "Engine: Track finished";
+		engine->set_track_finished();
+
+		break;
 
 
     case GST_MESSAGE_ELEMENT:
-        if(!gst_obj_ref) break;
+		if(!engine) break;
 
-        if(gst_obj_ref->get_show_spectrum())
-            return spectrum_handler(bus, msg, user_data);
-        if(gst_obj_ref->get_show_level())
-            return level_handler(bus, msg, user_data);
+		if(engine->get_show_spectrum())
+			return spectrum_handler(bus, msg, engine);
+
+		if(engine->get_show_level())
+			return level_handler(bus, msg, engine);
 
         break;
 
     case GST_MESSAGE_STATE_CHANGED:
-        if(!gst_obj_ref) break;
+		if(!engine) break;
 
         gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
 
-/*        if ( new_state == GST_STATE_PLAYING) {
-            gst_obj_ref->do_jump_play();
-
-		}*/
+		if ( new_state == GST_STATE_PLAYING) {
+			engine->do_jump_play();
+		}
 
         break;
 
     case GST_MESSAGE_ASYNC_DONE:
-        if(!gst_obj_ref) break;
+
         break;
 
 	case GST_MESSAGE_TAG:
@@ -295,11 +245,11 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 		tags = NULL;
 		gst_message_parse_tag(msg, &tags);
 		success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &val);
-		if(val != 0 && success){
+		if(val != 0 && success) {
 
 			val = (uint) (round( val / 1000.0) * 1000.0);
 
-			gst_obj_ref->update_bitrate(val);
+			engine->update_bitrate(val);
 		}
 		break;
 
@@ -311,18 +261,16 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
         qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
                  << GST_MESSAGE_SRC_NAME(msg);
-        if(gst_obj_ref)
-            gst_obj_ref->set_track_finished();
+		if(engine)
+			engine->set_track_finished();
         g_error_free(err);
 
         break;
 
     default:
 
-
-        if(gst_obj_ref){
-            gst_obj_ref->unmute();
-            gst_obj_ref->state_changed();
+		if(engine) {
+			engine->unmute();
         }
         break;
     }
@@ -336,16 +284,21 @@ gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 #define SCALE_SHORT 0.000000004f
 #define BUFFER_SIZE 4096
 
-void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
+void EngineCallbacks::calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r) {
+
+	/*if(!buffer) return;
+	if(!caps) return;
+
+	GstMapInfo map_info;
 
     float f_channel[2];
         f_channel[0] = 0;
         f_channel[1] = 0;
 
-     //guint64 dur = GST_BUFFER_DURATION(buffer);
-     gsize sz = GST_BUFFER_SIZE(buffer);
-     guint8* c_buf = GST_BUFFER_DATA(buffer);
+
      float scale = 1.0f;
+
+	 gst_buffer_map(buffer, &map_info, GST_MAP_READ);
 
      // size of one element in bytes
      int item_size = caps->get_width() / 8;
@@ -353,24 +306,24 @@ void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
 
      // array has sz bytes, but only sz / el_size elements
      // and every channel has it
-     gsize end = sz - item_size;
+	 gsize end = map_info.size - item_size;
      gsize start = 0;
      gsize thousand_samples = item_size * n_channels * 512;
 
-     if(sz > thousand_samples) start = sz - thousand_samples;
-     float inv_arr_channel_elements = (item_size * n_channels * 1.0) / (sz -start);
+	 if(map_info.size > thousand_samples) start = map_info.size - thousand_samples;
+	 float inv_arr_channel_elements = (item_size * n_channels * 1.0) / (map_info.size -start);
 
      int channel=0;
      float *v_f=0;
      short* v_s;
      float v;
 
-     switch(caps->get_type()){
+     switch(caps->get_type()) {
 
          case CapsTypeFloat:
 
-             for(gsize i=start; i<end; i+=item_size){
-                  v_f = (float*) (c_buf+i);
+             for(gsize i=start; i<end; i+=item_size) {
+				  v_f = (float*) (map_info.data + i);
 
                   f_channel[channel] += ( (*v_f) * (*v_f));
                   channel = (channel + 1) % n_channels;
@@ -381,8 +334,8 @@ void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
 
              scale = SCALE_SHORT;
 
-             for(gsize i=start; i<end; i+=item_size){
-                 v_s = (short*) (c_buf + i);
+             for(gsize i=start; i<end; i+=item_size) {
+				 v_s = (short*) (map_info.data + i + i);
                  v = (float) (*v_s);
                  f_channel[channel] += (v * v);
                  channel = (channel + 1) % n_channels;
@@ -394,24 +347,24 @@ void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r){
      }
 
 
-     for(int i=0; i<n_channels && i < 2; i++){
+     for(int i=0; i<n_channels && i < 2; i++) {
 
          float val = f_channel[i] * inv_arr_channel_elements * scale;
          if(val > 1.0f) val = 1.0f;
          f_channel[i] = 10.0f * LOOKUP_LOG(val);
      }
 
-     if(n_channels >= 2){
+     if(n_channels >= 2) {
          *l = f_channel[0];
          *r = f_channel[1];
      }
 
-     else if(n_channels == 1){
+     else if(n_channels == 1) {
          *l = f_channel[0];
          *r = f_channel[0];
-     }
+	 }*/
 
-     gst_buffer_unref(buffer);
+	 gst_buffer_unref(buffer);
 }
 
 

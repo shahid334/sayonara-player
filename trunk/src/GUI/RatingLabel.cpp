@@ -1,3 +1,25 @@
+/* RatingLabel.cpp */
+
+/* Copyright (C) 2011-2014  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 #include "GUI/RatingLabel.h"
 #include "HelperStructs/globals.h"
 #include <QPainter>
@@ -5,25 +27,25 @@
 #include <QColor>
 #include <QDebug>
 
-const int SRect = 3;
+
 const int Offset = 3;
 
 
-Rating::Rating(){
+Rating::Rating() {
     _rating = 0;
 
 }
-Rating::Rating(int rating){
+Rating::Rating(int rating) {
     _rating = rating;
 
 }
 
-int Rating::get_rating(){
+int Rating::get_rating() {
 
     return _rating;
 }
 
-void Rating::set_rating(int rating){
+void Rating::set_rating(int rating) {
     _rating = rating;
 }
 
@@ -34,14 +56,14 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
     QRect rating_rect;
     QColor col;
-    int wrect = ((rect.width() - Offset) - SRect * SRect) / 5 - SRect;
+	int wrect = (rect.width() / 5);
 
-    for(int rating = 0; rating < _rating; rating++){
+    for(int rating = 0; rating < _rating; rating++) {
 
-        rating_rect.setRect(Offset + rect.x() + (wrect + SRect) * rating,
-                            rect.y() + SRect * 2,
-                            wrect,
-                            rect.height() - SRect * 4);
+		rating_rect.setRect(5 + rect.x() + (wrect) * (rating),
+							rect.y() + Offset * 2,
+							wrect - Offset,
+							rect.height() - Offset * 4);
 
         col = SAYONARA_ORANGE_COL;
 
@@ -51,12 +73,12 @@ void Rating::paint(QPainter *painter, const QRect &rect,
         painter->fillRect(rating_rect, col);
     }
 
-    for(int rating= _rating; rating < 5; rating ++){
+    for(int rating= _rating; rating < 5; rating ++) {
 
-        rating_rect.setRect(Offset + rect.x() + (wrect + SRect) * rating,
-                            rect.y() + SRect * 2,
-                            wrect,
-                            rect.height() - SRect * 4);
+		rating_rect.setRect(5 + rect.x() + (wrect ) * (rating),
+							rect.y() + Offset * 2,
+							wrect - Offset,
+							rect.height() - Offset * 4);
 
         col = QColor(50, 50, 50);
 
@@ -67,47 +89,43 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
 
 
-RatingLabel::RatingLabel(QWidget *parent) :
+RatingLabel::RatingLabel(QWidget *parent, bool enabled) :
     QLabel(parent)
 {
+	_enabled = enabled;
+	_parent = parent;
     _rating = Rating(0);
     _id = rand();
-    qDebug() << "Create editor " << _id;
-
-    this->setFocusPolicy(Qt::StrongFocus);
-    this->setFocusProxy(parent);
 
     QSizePolicy p(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+	this->setFocus();
     this->setSizePolicy(p);
-    this->setMouseTracking(true);
+	this->setMouseTracking(true);
+
 }
 
-RatingLabel::~RatingLabel(){
-    qDebug() << "Destroy editor " << _id;
+RatingLabel::~RatingLabel() {
     _id = 0;
 }
 
-int RatingLabel::get_id(){
+int RatingLabel::get_id() {
 
     return _id;
 }
 
 
-int RatingLabel::calc_rating(QPoint pos){
+int RatingLabel::calc_rating(QPoint pos) {
 
-    int pos_x = pos.x();
-    int wrect = (width() - Offset) / 5;
-    int rating = 0;
-    if(pos_x + Offset > wrect / 2 - 2)
-        rating = (pos_x + Offset) / wrect + 1;
+	int rating = (pos.x() + Offset) / ((width() - 5) / 5);
 
     if(rating > 5) rating = 5;
-    return rating;
 
+    return rating;
 }
 
 
-void RatingLabel::paintEvent(QPaintEvent *e){
+void RatingLabel::paintEvent(QPaintEvent *e) {
 
     QPainter painter(this);
     _rating.paint(&painter, rect(), palette());
@@ -115,65 +133,67 @@ void RatingLabel::paintEvent(QPaintEvent *e){
 }
 
 
-void RatingLabel::mouseMoveEvent(QMouseEvent *e){
+void RatingLabel::mouseMoveEvent(QMouseEvent *e) {
 
+	if(!_enabled) return;
+	int rating = calc_rating(e->pos());
+	this->update_rating(rating);
+}
+
+
+void RatingLabel::mousePressEvent(QMouseEvent *e) {
+
+	if(!_enabled) return;
+	this->setMouseTracking(false);
     int rating = calc_rating(e->pos());
     this->update_rating(rating);
 }
 
 
-void RatingLabel::mousePressEvent(QMouseEvent *e){
+void RatingLabel::mouseReleaseEvent(QMouseEvent *e) {
 
-    int rating = calc_rating(e->pos());
-    this->update_rating(rating);
-}
-
-
-void RatingLabel::mouseReleaseEvent(QMouseEvent *e){
-
+	if(!_enabled) return;
     emit sig_finished(true);
 }
 
-void RatingLabel::focusOutEvent(QFocusEvent* e){
 
-    emit sig_finished(false);
+void RatingLabel::focusOutEvent(QFocusEvent* e) {
+
+	_parent->setFocus();
+	if(!_enabled) return;
+	emit sig_finished(false);
 
 }
 
-void RatingLabel::update_rating(int rating){
+void RatingLabel::update_rating(int rating) {
     _rating.set_rating(rating);
     update();
 }
 
-void RatingLabel::increase(){
+void RatingLabel::increase() {
     int rating = _rating.get_rating();
     if(rating < 5) rating++;
     update_rating(rating);
 }
 
-void RatingLabel::decrease(){
+void RatingLabel::decrease() {
     int rating = _rating.get_rating();
     if(rating > 0) rating--;
     update_rating(rating);
 }
 
-void RatingLabel::set_rating(Rating rating){
+void RatingLabel::set_rating(Rating rating) {
 
     _rating = rating;
     update();
 }
 
-Rating RatingLabel::get_rating(){
+Rating RatingLabel::get_rating() {
 
     return _rating;
 }
 
-void RatingLabel::kill_yourself(){
-
-    if(_id == 0) return;
+void RatingLabel::kill_yourself() {
     emit sig_finished(false);
 }
-
-
-
 

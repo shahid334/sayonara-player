@@ -64,8 +64,6 @@ public:
     PlaylistHandler(QObject * parent=0);
     virtual ~PlaylistHandler();
 
-
-
 	uint get_num_tracks();
 
 	signals:
@@ -87,10 +85,10 @@ public:
 		void sig_import_files(const MetaDataList&);
 		void sig_need_more_radio();
         void sig_new_stream_session();
+		void sig_playlist_mode_changed(const PlaylistMode&);
 
 
 	public slots:
-
 
         void psl_createPlaylist(QStringList&, bool start_playing=true);
         void psl_createPlaylist(MetaDataList&, bool start_playing=true);
@@ -106,7 +104,7 @@ public:
         void psl_next();
 
         void psl_selection_changed(const QList<int>&);
-        void psl_playlist_mode_changed(const Playlist_Mode&);
+        void psl_playlist_mode_changed(const PlaylistMode&);
 
         void psl_clear_playlist();
         void psl_insert_tracks(const MetaDataList&, int idx);
@@ -127,6 +125,9 @@ public:
         void psl_save_playlist(QString filename, bool relative);
         void psl_prepare_playlist_for_save(int id);
         void psl_prepare_playlist_for_save(QString name);
+
+		void psl_audioconvert_on();
+		void psl_audioconvert_off();
 
 
 	private:

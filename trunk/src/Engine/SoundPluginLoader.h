@@ -1,6 +1,6 @@
 /* SoundPluginLoader.h */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -23,20 +23,23 @@
 #ifndef SOUNDPLUGINLOADER_H_
 #define SOUNDPLUGINLOADER_H_
 
-#include "Engine/Engine.h"
+
 
 #include <QObject>
 #include <QList>
 #include <QString>
+#include <vector>
+
+#include "Engine/Engine.h"
+
+using namespace std;
 
 class SoundPluginLoader : public QObject {
 
 	Q_OBJECT
 
 private:
-	int 			_cur_engine;
-	QString			_cur_engine_name;
-	QList<Engine*> 	_lst_engines;
+	vector<Engine*> 	_vec_engines;
 
 	bool load_plugins(QString app_dir);
 
@@ -45,17 +48,8 @@ public:
 	SoundPluginLoader(QString);
 	virtual ~SoundPluginLoader();
 
-
-	Engine* get_cur_engine();
-
-
-signals:
-	void sig_new_engine_set();
-
-public slots:
-	void psl_switch_engine(QString&);
-
-
+	vector<Engine*> get_engines();
+	Engine* get_first_engine();
 };
 
 #endif /* SOUNDPLUGINLOADER_H_ */

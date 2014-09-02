@@ -69,7 +69,7 @@ class DiscPopupMenu : public QMenu {
 
 
 	public: 
-		DiscPopupMenu(QWidget* parent, QList<int> discs): QMenu(parent){
+		DiscPopupMenu(QWidget* parent, QList<quint8> discs): QMenu(parent){
 
 			for(int i= -1; i<discs.size(); i++){
 				QString text;
@@ -81,7 +81,7 @@ class DiscPopupMenu : public QMenu {
 				}
 
 				else{
-					int disc = discs[i];
+					quint8 disc = discs[i];
 					text = QString("Disc ") + QString::number(disc);
 					data = disc;
 				}

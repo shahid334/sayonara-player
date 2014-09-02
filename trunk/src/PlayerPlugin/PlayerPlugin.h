@@ -1,6 +1,6 @@
 /* PlayerPlugin.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -32,7 +32,7 @@ class PlayerPlugin : public QWidget
     Q_OBJECT
 
 public:
-    PlayerPlugin(QString name, QString action_text, QWidget *parent = 0);
+	PlayerPlugin(QString name, QWidget *parent = 0);
     virtual ~PlayerPlugin();
 
     
@@ -57,8 +57,7 @@ protected:
     QAction*    _pp_action;
     void setSize(QSize size);
     void closeEvent(QCloseEvent *);
-    void calc_action(QString text);
-
+	void calc_action();
 
 
 public:
@@ -68,10 +67,9 @@ public:
 
     //void setShown(bool b);
     bool isClosed();
-    virtual QAction* getAction()=0;
 
-
-    static QString getVisName(){ return ""; }
+	QAction* getAction();
+	QString getVisName();
 
 
     

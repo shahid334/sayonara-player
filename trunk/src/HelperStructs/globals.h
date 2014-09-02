@@ -44,6 +44,7 @@
 #define RADIO_OFF 0
 #define RADIO_LFM 1
 #define RADIO_STATION 2
+#define RADIO_SOUNDCLOUD 3
 
 #define PLUGIN_NUM 5
 #define PLUGIN_NONE 0
@@ -90,7 +91,7 @@
 					}\
 
 
-namespace Sort{
+namespace Sort {
 
 	enum SortOrder{
 		NoSorting=0,
@@ -106,8 +107,8 @@ namespace Sort{
 		AlbumTracksDesc,
 		AlbumDurationAsc,
 		AlbumDurationDesc,
-        AlbumRatingAsc,
-        AlbumRatingDesc,
+		AlbumRatingAsc,
+		AlbumRatingDesc,
 		TrackNumAsc,
 		TrackNumDesc,
 		TrackTitleAsc,
@@ -123,14 +124,14 @@ namespace Sort{
 		TrackBitrateAsc,
 		TrackBitrateDesc,
 		TrackSizeAsc,
-	        TrackSizeDesc,
-        	TrackDiscnumberAsc,
-            TrackDiscnumberDesc,
-        TrackRatingAsc,
-        TrackRatingDesc
+		TrackSizeDesc,
+		TrackDiscnumberAsc,
+		TrackDiscnumberDesc,
+		TrackRatingAsc,
+		TrackRatingDesc
 	};
 
-};
+}
 
 
 enum PlaylistType{
@@ -147,6 +148,28 @@ enum PlaylistState{
     PlaylistPause=2,
     PlaylistStop=3
 };
+
+
+enum LameBitrate {
+
+	LameBitrate_64=64,
+	LameBitrate_128=128,
+	LameBitrate_192=192,
+	LameBitrate_256=256,
+	LameBitrate_320=320,
+
+	LameBitrate_var_0=0,
+	LameBitrate_var_1=1,
+	LameBitrate_var_2=2,
+	LameBitrate_var_3=3,
+	LameBitrate_var_4=4,
+	LameBitrate_var_5=5,
+	LameBitrate_var_6=6,
+	LameBitrate_var_7=7,
+	LameBitrate_var_8=8,
+	LameBitrate_var_9=9
+};
+
 
 
 #define N_BINS 70

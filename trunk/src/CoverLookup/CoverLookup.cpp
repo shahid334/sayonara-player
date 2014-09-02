@@ -30,292 +30,153 @@
 #include "CoverLookup/CoverFetchThread.h"
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
 
-#include <QString>
-#include <QStringList>
 #include <QFile>
-#include <QDir>
-#include <QDebug>
 #include <QImage>
+
 #include <unistd.h>
 
 
+CoverLookupInterface::CoverLookupInterface(QObject* parent):
+	QObject(parent) {
+
+}
 
 
-CoverLookup::CoverLookup() {
+CoverLookup::CoverLookup(QObject* parent, int n_covers) :
+	CoverLookupInterface(parent),
+    _n_covers(n_covers),
+	_cft(NULL)
+{
+
     _db = CDatabaseConnector::getInstance();
-    _cur_thread_id = 0;
-    _finish_locked = false;
-    _all_covers_thread = 0;
 }
 
 CoverLookup::~CoverLookup() {
 
-}
-
-
-void CoverLookup::start_new_thread(QString url, const QStringList& target_names, QString call_id ){
-
-    CoverFetchThread* thread = new CoverFetchThread(0, _cur_thread_id, url, target_names, call_id);
-
-    connect(thread, SIGNAL(sig_finished(int)), this, SLOT(thread_finished(int)));
-    //connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
-    _cur_thread_id ++;
-    _threads.push_back(thread);
-
-    thread->start();
-}
-
-
-void CoverLookup::fetch_cover_album(const int album_id, QString call_id, bool for_all_tracks){
-
-    if(album_id == -1) return;
-
-    Album album;
-    bool success = _db->getAlbumByID(album_id, album);
-    if(!success) return;
-
-    fetch_cover_album(album, call_id, for_all_tracks);
-}
-
-
-void CoverLookup::fetch_cover_album(const Album& album, QString call_id, bool for_all_tracks){
-
-    Album tmp_album = album;
-    if(tmp_album.artists.size() == 0) tmp_album.artists.push_back("");
-
-    QStringList target_names;
-    QStringList existing_names;
-
-    // one google adress for various artist/album combinations
-    if(for_all_tracks){
-
-        QString url_artist_name = "";
-
-        if (tmp_album.artists.size() == 1) url_artist_name = tmp_album.artists[0];
-        else url_artist_name = "Various";
-
-        if(tmp_album.artists.size() > 1) tmp_album.artists << "Various";
-
-        QString url = Helper::calc_google_album_adress(url_artist_name, tmp_album.name);
-
-        QString major_artist = Helper::get_album_major_artist(tmp_album.id);
-        if(tmp_album.artists.contains(major_artist)) tmp_album.artists << major_artist;
-
-        foreach(QString artist, tmp_album.artists){
-
-            QString target_name = Helper::get_cover_path(artist, tmp_album.name);
-
-            if(QFile::exists(target_name)){
-                existing_names << target_name;
-            }
-
-            else{
-
-                target_names << target_name;
-            }
-        }
-
-        if(target_names.size() > 0)
-            start_new_thread(url, target_names, call_id);
-    }
-
-    else {
-
-        foreach(QString artist, tmp_album.artists){
-            QString target_name = Helper::get_cover_path(artist, tmp_album.name);
-
-            QString url = Helper::calc_google_album_adress(artist, tmp_album.name);
-
-            if(QFile::exists(target_name)){
-                existing_names << target_name;
-            }
-
-            else{
-                target_names << target_name;
-                start_new_thread(url, target_names, call_id);
-            }
-        }
-    }
-
-    if(existing_names.size() > 0){
-        emit sig_covers_found(existing_names, call_id);
-    }
-}
-
-
-void CoverLookup::fetch_cover_artist(const int artist_id, QString call_id){
-    if(artist_id == -1) return;
-
-    Artist artist;
-    bool success = _db->getArtistByID(artist_id, artist);
-    if(!success) return;
-
-    fetch_cover_artist(artist, call_id);
-}
-
-
-void CoverLookup::fetch_cover_artist(const Artist& artist, QString call_id){
-
-    QStringList target_names;
-    QStringList existing_names;
-
-    QString target_name = Helper::get_artist_image_path(artist.name);
-    QString url = Helper::calc_google_artist_adress(artist.name);
-
-    if(QFile::exists(target_name)){
-        existing_names << target_name;
-        emit sig_covers_found(existing_names, call_id);
-    }
-
-    else{
-        target_names << target_name;
-        start_new_thread(url, target_names, call_id);
+    if(_cft) {
+        _cft->stop();
     }
 }
 
 
 
+void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 
-void CoverLookup::thread_finished(int id){
-
-    if(_finish_locked && !_finished_queue.contains(id)) {
-        _finished_queue.push_back(id);
-        return;
-    }
-
-    _finish_locked = true;
-    int finished_idx = _finished_queue.indexOf(id);
-    if(finished_idx >= 0 && finished_idx < _finished_queue.size()) _finished_queue.removeAt(finished_idx);
-    _finished_queue.removeAt(_finished_queue.indexOf(id));
-
-    int idx = 0;
-
-    // search this thread
-    bool found = false;
-    CoverFetchThread* the_thread = NULL;
-    foreach(CoverFetchThread* thread, _threads){
-        int tid = thread->get_id();
-        if(tid == id){
-            the_thread = thread;
-            found = true;
-            break;
-        }
-
-        idx++;
-    }
-
-    if(found) _threads.removeAt(idx);
-    if(!the_thread) {
-        _finish_locked = false;
-        return;
-    }
-
-    QString call_id = the_thread->get_call_id();
-    QStringList found_cover_paths = the_thread->get_found_covers();
+	if(_cft) {
+		_cft->stop();
+	}
 
 
-    if(found_cover_paths.size() > 0)
-        emit sig_covers_found(found_cover_paths, call_id);
+	_cft = new CoverFetchThread(this, cl, _n_covers);
+	_cfts << _cft;
 
+	connect(_cft, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
+	connect(_cft, SIGNAL(sig_cover_found(const CoverLocation&)),
+			this, SLOT(cover_found(const CoverLocation&)));
 
-    // vlt probleme
-    int max = 10;
-    while(the_thread->isRunning() && max) {
-        the_thread->quit();
-        usleep(50000);
-        max --;
-    }
-    if(the_thread->isRunning()) the_thread->terminate();
-    else delete the_thread;
-
-    if(_finished_queue.size() > 0)
-        thread_finished(_finished_queue[0]);
-
-    _finish_locked = false;
+    _cft->start();
 }
 
-void CoverLookup::fetch_all_album_covers(){
+void CoverLookup::stop() {
 
-    if(_all_covers_thread && _all_covers_thread->isRunning()){
-        _all_covers_thread->stop();
-        return;
-    }
+    if(!_cft) return;
 
+    _cft->stop();
+}
 
-    AlbumList album_list;
-    _db->getAllAlbums(album_list);
-    if(album_list.size() == 0) return;
+bool CoverLookup::fetch_cover(const CoverLocation& cl) {
 
-    _all_covers_thread = new CoverLookupAllCoverThread(this, album_list);
+	if( QFile::exists(cl.cover_path) && _n_covers == 1 ) {
+		emit sig_cover_found(cl);
+		return true;
+	}
 
-    connect(_all_covers_thread, SIGNAL(finished()), _all_covers_thread, SLOT(deleteLater()));
-    connect(_all_covers_thread, SIGNAL(destroyed()), this, SLOT(fetch_all_album_covers_destroyed()));
+	start_new_thread( cl );
 
-    _all_covers_thread->start();
+	return true;
 }
 
 
-void CoverLookup::fetch_all_album_covers_stop(){
-    _all_covers_thread->stop();
+bool CoverLookup::fetch_album_cover_standard(const QString& artist_name, const QString& album_name) {
+
+	CoverLocation cl = CoverLocation::get_cover_location(album_name, artist_name);
+	return fetch_cover(cl);
 }
 
-void CoverLookup::fetch_all_album_covers_destroyed(){
-    _all_covers_thread = 0;
-    qDebug() << "Fetch all albums covers thread destroyed";
+
+bool CoverLookup::fetch_album_cover_sampler(const QStringList& artists, const QString& album_name) {
+
+	CoverLocation cl = CoverLocation::get_cover_location(album_name, artists);
+	return fetch_cover(cl);
+}
+
+
+bool CoverLookup::fetch_album_cover_by_id(const int album_id) {
+
+	CoverLocation cl = CoverLocation::get_cover_location(album_id);
+	return fetch_cover(cl);
+}
+
+
+bool CoverLookup::fetch_album_cover(const Album& album) {
+
+	CoverLocation cl = CoverLocation::get_cover_location(album);
+	return fetch_cover(cl);
+}
+
+
+bool CoverLookup::fetch_artist_cover_standard(const QString& artist) {
+
+	CoverLocation cl = CoverLocation::get_cover_location(artist);
+	return fetch_cover(cl);
 }
 
 
 
-/**************************************
- ALL COVER LOOKUP THREAD
-***************************************/
+bool CoverLookup::fetch_artist_cover(const Artist& artist) {
 
-
-CoverLookupAllCoverThread::CoverLookupAllCoverThread(QObject* parent, const AlbumList& albumlist) : QThread(parent){
-    _run = true;
-    _albumlist = albumlist;
-    _cover_lookup = new CoverLookup();
-}
-
-CoverLookupAllCoverThread::~CoverLookupAllCoverThread(){
-    delete _cover_lookup;
-}
-
-void CoverLookupAllCoverThread::stop(){
-    _run = false;
-}
-
-CoverLookup* CoverLookupAllCoverThread::getCoverLookup(){
-    return _cover_lookup;
+	return fetch_artist_cover_standard(artist.name);
 }
 
 
-void CoverLookupAllCoverThread::run(){
-    _run = true;
+bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const QString& target_name) {
 
-    foreach(Album album, _albumlist){
+	CoverLocation cl;
+	cl.cover_path = target_name;
+	cl.google_url = Helper::calc_google_image_search_adress(searchstring);
 
-        bool found = true;
-        foreach(QString artist, album.artists){
-
-            QString target_name = Helper::get_cover_path(artist, album.name);
-            if(!QFile::exists(target_name)) found = false;
-
-        }
-
-        //qDebug() << "fetch cov for " << album.name;
-
-        if(!found){
-            _cover_lookup->fetch_cover_album(album, "coverlookupthread");
-            // wait 1 sec
-            // because of google we have to wait otherwise sayonara is recognized as a bot
-            usleep(1000000);
-        }
-
-        if(!_run) return;
-    }
+	start_new_thread( cl );
+	return true;
 }
+
+
+void CoverLookup::finished(bool success) {
+
+	QObject* sender = QObject::sender();
+	QObject** psender = &sender;
+
+	foreach(CoverFetchThread* t, _cfts){
+		if(t == (CoverFetchThread*) sender){
+			_cfts.removeOne(t);
+		}
+	}
+
+	delete sender;
+	*psender = 0;
+
+    emit sig_finished(success);
+}
+
+void CoverLookup::cover_found(const CoverLocation& file_path) {
+
+    emit sig_cover_found(file_path);
+}
+
+void CoverLookup::emit_standard_cover() {
+
+	CoverLocation cl = CoverLocation::getInvalidLocation();
+	emit sig_cover_found(cl);
+}
+
 

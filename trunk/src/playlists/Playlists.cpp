@@ -1,6 +1,6 @@
 /* Playlists.cpp */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -43,17 +43,17 @@ Playlists::~Playlists() {
 
 }
 
-void Playlists::load_all_playlists(){
+void Playlists::load_all_playlists() {
 
 	_mapping.clear();
 	bool success = CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
 
-	if(success){
+	if(success) {
 		emit sig_all_playlists_loaded(_mapping);
 	}
 }
 
-void Playlists::load_single_playlist(int id){
+void Playlists::load_single_playlist(int id) {
 
 	CustomPlaylist pl;
 
@@ -70,9 +70,9 @@ void Playlists::load_single_playlist(int id){
     MetaDataList v_md;
     pl.length = 0;
     pl.num_tracks = 0;
-    foreach(MetaData md, pl.tracks){
-        if(md.is_extern){
-            if(!ID3::getMetaDataOfFile(md)){
+    foreach(MetaData md, pl.tracks) {
+        if(md.is_extern) {
+            if(!ID3::getMetaDataOfFile(md)) {
                 continue;
             }
         }
@@ -86,20 +86,20 @@ void Playlists::load_single_playlist(int id){
 
     pl.tracks = v_md;
     pl.is_valid = success;
-	if(success){
+	if(success) {
 		emit sig_single_playlist_loaded(pl);
 	}
 }
 
 
 
-void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md){
+void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
     qDebug() << "save " << vec_md.size() << " files to " << id;
 
     bool success = db->storePlaylist(vec_md, id);
-	if(success){
+	if(success) {
 		qDebug() << "Saved playlist as " << id;
 		_mapping.clear();
 		CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
@@ -113,13 +113,13 @@ void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md){
 
 
 
-void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md){
+void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
     qDebug() << "save " << vec_md.size() << " files to " << name;
     bool success = db->storePlaylist(vec_md, name);
-	if(success){
+	if(success) {
 		_mapping.clear();
 		CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
 		emit sig_all_playlists_loaded(_mapping);
@@ -130,12 +130,12 @@ void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md){
 	}
 }
 
-void Playlists::delete_playlist(int id){
+void Playlists::delete_playlist(int id) {
 
 	QString playlist_name = CDatabaseConnector::getInstance()->getPlaylistNameById(id);
 	bool success = CDatabaseConnector::getInstance()->deletePlaylist(id);
 
-	if(success){
+	if(success) {
 		qDebug() << "playlist " << playlist_name << " deleted";
 	}
 
@@ -148,9 +148,9 @@ void Playlists::delete_playlist(int id){
 	emit sig_all_playlists_loaded(_mapping);
 }
 
-void Playlists::ui_loaded(){
+void Playlists::ui_loaded() {
 	bool success = CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
-	if(success){
+	if(success) {
 		sig_all_playlists_loaded(_mapping);
 	}
 }

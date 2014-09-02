@@ -1,6 +1,6 @@
 /* GUI_Target_Playlist_Dialog.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -42,8 +42,7 @@ private slots:
     void search_button_clicked();
     void ok_button_clicked();
 
-private:
-    Ui_GUI_Target_Playlist_Dialog* ui;
+
     
 };
 

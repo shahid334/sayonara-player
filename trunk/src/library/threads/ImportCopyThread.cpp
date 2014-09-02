@@ -1,6 +1,6 @@
 /* CopyFolderThread.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -24,8 +24,6 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/CSettingsStorage.h"
 
-#include <QString>
-
 #include <QDir>
 #include <QFile>
 
@@ -36,7 +34,7 @@ ImportCopyThread::ImportCopyThread(QObject *parent) :
 
 
 
-void ImportCopyThread::emit_percent(int i, int n){
+void ImportCopyThread::emit_percent(int i, int n) {
 	int percent = (i * 100000) / n;
 	_percent = percent / 1000;
         emit sig_progress(_percent);
@@ -44,10 +42,10 @@ void ImportCopyThread::emit_percent(int i, int n){
 }
 
 
-QString _calc_target_path(QString src_dir, QString lib_dir, QString chosen_dir){
+QString _calc_target_path(QString src_dir, QString lib_dir, QString chosen_dir) {
 
 	QString src_folder_name, dir;
-	if(src_dir.size() > 0){
+	if(src_dir.size() > 0) {
 
 		// /home/user/dir/ -> /home/user, dir
 	        Helper::split_filename(src_dir, dir, src_folder_name);
@@ -69,7 +67,7 @@ QString _calc_target_path(QString src_dir, QString lib_dir, QString chosen_dir){
 }
 
 
-void ImportCopyThread::copy(){
+void ImportCopyThread::copy() {
     _v_md.clear();
     _n_files = _files.size();
     _copied_files = 0;
@@ -78,7 +76,7 @@ void ImportCopyThread::copy(){
     _percent = 0;
     int i=0;
 
-    foreach(QString filename, _files){
+    foreach(QString filename, _files) {
         if(_cancelled) return;
 
 	// src_dir = closest dir to root where to export
@@ -88,7 +86,7 @@ void ImportCopyThread::copy(){
 
 	
 	// here we handle files in a folder
-        if(src_dir.size() > 0){
+        if(src_dir.size() > 0) {
                 
                 // target path = /home/user/Music/chosen_dir/dir
                 QString target_path = _calc_target_path(src_dir, _lib_dir, _chosen_dir);
@@ -107,7 +105,7 @@ void ImportCopyThread::copy(){
 	}
 
 	// create that folder
-       	if(!QFile::exists(new_target_path)){
+       	if(!QFile::exists(new_target_path)) {
 		 _created_dirs << new_target_path;
             	QDir::root().mkpath(new_target_path);
         }
@@ -131,14 +129,14 @@ void ImportCopyThread::copy(){
 	emit_percent(i++, _files.size());
 
         if(!Helper::is_soundfile(filename)) continue;
-        else if(Helper::is_soundfile(filename)){
+        else if(Helper::is_soundfile(filename)) {
             if(!copied) continue;
         }
 
         MetaData md;
         bool got_md = _md_map.keys().contains(filename);
 
-        if( got_md ){
+        if( got_md ) {
             md = _md_map.value(filename);
             md.filepath = new_filename;
             _v_md.push_back( md );
@@ -152,7 +150,7 @@ void ImportCopyThread::copy(){
     }
 }
 
-void ImportCopyThread::rollback(){
+void ImportCopyThread::rollback() {
 
 
     int n_operations = _lst_copied_files.size() + _created_dirs.size();
@@ -160,7 +158,7 @@ void ImportCopyThread::rollback(){
     int percent;
 
     _v_md.clear();
-    foreach(QString f, _lst_copied_files){
+    foreach(QString f, _lst_copied_files) {
         QFile file(f);
         file.remove();
         percent = ((n_ops_todo--) * (_percent * 1000)) / (n_operations);
@@ -169,7 +167,7 @@ void ImportCopyThread::rollback(){
     }
 
     QDir dir(_lib_dir);
-    foreach(QString d, _created_dirs){
+    foreach(QString d, _created_dirs) {
         d.remove(_lib_dir);
         while(d.startsWith(QDir::separator())) d.remove(0,1);
 
@@ -194,7 +192,7 @@ void ImportCopyThread::rollback(){
 
 
 
-void ImportCopyThread::run(){
+void ImportCopyThread::run() {
 
     _cancelled = false;
     if(_mode == IMPORT_COPY_THREAD_COPY) copy();
@@ -203,7 +201,7 @@ void ImportCopyThread::run(){
 }
 
 
-void ImportCopyThread::set_vars(QString chosen_dir, QStringList &files, QMap<QString, MetaData>& md_map, QMap<QString, QString>& pd_map){
+void ImportCopyThread::set_vars(QString chosen_dir, QStringList &files, QMap<QString, MetaData>& md_map, QMap<QString, QString>& pd_map) {
 
     _chosen_dir = chosen_dir;
     _lib_dir = CSettingsStorage::getInstance()->getLibraryPath();
@@ -212,31 +210,31 @@ void ImportCopyThread::set_vars(QString chosen_dir, QStringList &files, QMap<QSt
     _pd_map = pd_map;
 }
 
-void ImportCopyThread::set_cancelled(){
+void ImportCopyThread::set_cancelled() {
     _cancelled = true;
 }
 
-bool ImportCopyThread::get_cancelled(){
+bool ImportCopyThread::get_cancelled() {
     return _cancelled;
 }
 
-int ImportCopyThread::get_n_files(){
+int ImportCopyThread::get_n_files() {
     return _n_files;
 }
 
-int ImportCopyThread::get_copied_files(){
+int ImportCopyThread::get_copied_files() {
     return _copied_files;
 }
 
-void ImportCopyThread::get_metadata(MetaDataList& v_md){
+void ImportCopyThread::get_metadata(MetaDataList& v_md) {
     v_md = _v_md;
 }
 
-void ImportCopyThread::set_mode(int mode){
+void ImportCopyThread::set_mode(int mode) {
     _mode = mode;
 }
 
-int ImportCopyThread::get_mode(){
+int ImportCopyThread::get_mode() {
 	return _mode;
 }
 

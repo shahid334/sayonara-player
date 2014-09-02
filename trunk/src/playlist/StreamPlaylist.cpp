@@ -1,6 +1,6 @@
 /* StreamPlaylist.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -31,57 +31,57 @@ StreamPlaylist::StreamPlaylist(QObject *parent) :
 
 /*
 
-void StreamPlaylist:: play(){
+void StreamPlaylist:: play() {
 
 }
 
-void StreamPlaylist::pause(){
+void StreamPlaylist::pause() {
 
 }
 
-void StreamPlaylist::stop(){
+void StreamPlaylist::stop() {
 
 }
 
-void StreamPlaylist::fwd(){
+void StreamPlaylist::fwd() {
 
 }
 
-void StreamPlaylist::bwd(){
+void StreamPlaylist::bwd() {
 
 }
 
-void StreamPlaylist::next(){
+void StreamPlaylist::next() {
 
 }
 
-void StreamPlaylist::change_track(int idx){
+void StreamPlaylist::change_track(int idx) {
 
 }
 
-void StreamPlaylist::create_playlist(const MetaDataList& lst, bool start_playing){
+void StreamPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
 
 }
 
-void StreamPlaylist::create_playlist(const QStringList& lst, bool start_playing){
+void StreamPlaylist::create_playlist(const QStringList& lst, bool start_playing) {
 
 }
 
-void StreamPlaylist::clear(){
+void StreamPlaylist::clear() {
 
 }
 
-void StreamPlaylist::metadata_changed(const MetaDataList& md_list){
+void StreamPlaylist::metadata_changed(const MetaDataList& md_list) {
 
 }
-void StreamPlaylist::save_for_reload(){
+void StreamPlaylist::save_for_reload() {
 
 }
-void StreamPlaylist::save_to_m3u_file(QString filepath, bool relative){
+void StreamPlaylist::save_to_m3u_file(QString filepath, bool relative) {
 
 }
 
-bool StreamPlaylist::request_playlist_for_collection(MetaDataList& lst){
+bool StreamPlaylist::request_playlist_for_collection(MetaDataList& lst) {
     return true;
 }
 */

@@ -1,6 +1,6 @@
 /* GUI_Target_Playlist_Dialog.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -28,46 +28,46 @@
 #include <QFileDialog>
 
 GUI_Target_Playlist_Dialog::GUI_Target_Playlist_Dialog(QWidget *parent) :
-    QDialog(parent)
+	QDialog(parent),
+	Ui_GUI_Target_Playlist_Dialog()
 {
-    ui = new Ui_GUI_Target_Playlist_Dialog();
-    ui->setupUi(this);
+	setupUi(this);
 
-    connect(ui->btn_choose, SIGNAL(clicked()), this, SLOT(search_button_clicked()));
-    connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
+	connect(btn_choose, SIGNAL(clicked()), this, SLOT(search_button_clicked()));
+	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
 }
 
-GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog(){
-
-}
-
-
-void GUI_Target_Playlist_Dialog::change_skin(bool dark){
+GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog() {
 
 }
 
-void GUI_Target_Playlist_Dialog::language_changed(){
-    this->ui->retranslateUi(this);
+
+void GUI_Target_Playlist_Dialog::change_skin(bool dark) {
+
+}
+
+void GUI_Target_Playlist_Dialog::language_changed() {
+	retranslateUi(this);
 }
 
 
 
-void GUI_Target_Playlist_Dialog::search_button_clicked(){
+void GUI_Target_Playlist_Dialog::search_button_clicked() {
     QString target_filename = QFileDialog::getSaveFileName(this,
                                                            tr("Choose target file"),
                                                            CSettingsStorage::getInstance()->getLibraryPath(),
                                                            "*.m3u");
 
     if(!target_filename.endsWith("m3u", Qt::CaseInsensitive)) target_filename.append(".m3u");
-    this->ui->le_path->setText(target_filename);
+	le_path->setText(target_filename);
 }
 
 
-void GUI_Target_Playlist_Dialog::ok_button_clicked(){
-    QString target_filename = ui->le_path->text();
-    bool checked = ui->cb_relative->isChecked();
+void GUI_Target_Playlist_Dialog::ok_button_clicked() {
+	QString target_filename = le_path->text();
+	bool checked = cb_relative->isChecked();
 
-    if(target_filename.size() > 0){
+    if(target_filename.size() > 0) {
         emit sig_target_chosen(target_filename, checked);
         close();
     }

@@ -1,6 +1,6 @@
 /* GUI_LibraryPath.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -23,34 +23,31 @@
 #include "GUI/library/GUI_LibraryPath.h"
 #include "HelperStructs/Helper.h"
 #include <QIcon>
-#include <QDebug>
 
 
 GUI_LibraryPath::GUI_LibraryPath(QWidget *parent) :
-    QWidget(parent)
+	QWidget(parent),
+	Ui::GUI_SetLibrary()
 {
-    ui = new Ui::GUI_SetLibrary();
-    ui->setupUi(this);
+	setupUi(this);
 
+    btn_setLibrary->setIcon(Helper::getIcon("import.png"));
 
-    QIcon import(Helper::getIconPath() + "/import.png" );
-    this->ui->btn_setLibrary->setIcon(import);
-
-    connect(ui->btn_setLibrary, SIGNAL(clicked()), this, SLOT(btn_clicked()));
+	connect(btn_setLibrary, SIGNAL(clicked()), this, SLOT(btn_clicked()));
 }
 
 void GUI_LibraryPath::language_changed() {
-    ui->retranslateUi(this);
+	retranslateUi(this);
 }
 
 
-void GUI_LibraryPath::btn_clicked(){
+void GUI_LibraryPath::btn_clicked() {
 
     emit sig_library_path_set();
 
 }
 
-void GUI_LibraryPath::resizeEvent(QResizeEvent* e){
+void GUI_LibraryPath::resizeEvent(QResizeEvent* e) {
 
 
     e->accept();

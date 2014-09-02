@@ -26,24 +26,26 @@
  *      Author: luke
  */
 
-
+#include <stdlib.h>
+#include <unistd.h>
+#include <execinfo.h>
+#include <signal.h>
+#include <stdio.h>
+#include <fcntl.h>
 
 #include "application.h"
 
-#include <QStringList>
-#include <QDebug>
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/SmartComparison.h"
+#include "HelperStructs/CSettingsStorage.h"
 
 #include <QDir>
 #include <QFile>
-#include <QString>
-#include <QStringList>
 #include <QTranslator>
 #include <QFontDatabase>
 
-#include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
 
-int check_for_another_instance_unix(){
+int check_for_another_instance_unix() {
 
 	int pid = -1;
 
@@ -52,7 +54,7 @@ int check_for_another_instance_unix(){
 	QStringList lst = dir.entryList(QDir::Dirs);
 	int n_instances = 0;
 
-	foreach(QString dirname, lst){
+	foreach(QString dirname, lst) {
 		bool ok;
 		int tmp_pid = dirname.toInt(&ok);
 		if(!ok) continue;
@@ -69,7 +71,7 @@ int check_for_another_instance_unix(){
 		QString str = f.readLine();
 		f.close();
 
-		if(str.contains("sayonara", Qt::CaseInsensitive)){
+		if(str.contains("sayonara", Qt::CaseInsensitive)) {
 			if(pid == -1 || tmp_pid < pid) pid = tmp_pid;
 			n_instances ++;
 			if(n_instances > 1) return pid;
@@ -81,15 +83,78 @@ int check_for_another_instance_unix(){
 }
 
 
-void printHelp(){
+void printHelp() {
 	qDebug() << "sayonara <list>";
 	qDebug() << "<list> can consist of either files or directories or both";
 
 }
 
 
-int main(int argc, char *argv[]){
 
+/*
+int main(int argc, char* argv[]){
+
+	SmartComparison sc;
+
+	sc.print_similar("velvt undergrond");
+	sc.print_similar("etalliccca");
+	sc.print_similar("punk floid");
+	sc.print_similar("ponk floyd");
+	sc.print_similar("floyd pink");
+	sc.print_similar("fanta vier");
+	sc.print_similar("floyd");
+	sc.print_similar("tdoooors");
+	sc.print_similar("gnsrses");
+	sc.print_similar("joint");
+	sc.print_similar("venture joint");
+	sc.print_similar("sniff tears");
+	sc.print_similar("michael jackson with fergie");
+	sc.print_similar("michael jackson fergie");
+	sc.print_similar("michael jackson");
+	sc.print_similar("guns and roses with axl rose");
+}
+*/
+
+
+void segfault_handler(int sig){
+	void *array[10];
+	size_t size;
+
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 20);
+
+	// print out all the frames to stderr
+
+	qDebug() << "";
+	qDebug() << "Segfault received.";
+	qDebug() << "Sorry, Sayonara has crashed. :(";
+
+
+	int fd;
+	FILE* f;
+	QString target_file = Helper::getErrorFile();
+	f = fopen(target_file.toStdString().c_str(), "w");
+	if(!f) exit(1);
+	fd = fileno(f);
+
+	//backtrace_symbols_fd(array, size, STDERR_FILENO);
+	backtrace_symbols_fd(array, size, fd);
+	fclose(f);
+
+	qDebug() << "Please send the error file " << target_file << " to luciocarreras@gmail.com";
+
+	exit(1);
+}
+
+int main(int argc, char *argv[]) {
+
+
+#ifdef Q_OS_UNIX
+
+
+	signal(SIGSEGV, segfault_handler);
+
+#endif
 
 	Application app (argc, argv);
     Helper::set_bin_path(app.applicationDirPath());
@@ -106,7 +171,7 @@ int main(int argc, char *argv[]){
 
 
 #ifdef Q_OS_UNIX
-	if(settings->getAllowOnlyOneInstance()){
+	if(settings->getAllowOnlyOneInstance()) {
 		int pid = check_for_another_instance_unix();
 		if(pid > 0) {
 			qDebug() << "another instance is already running";
@@ -120,25 +185,25 @@ int main(int argc, char *argv[]){
 #endif
 
 
-   	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")){
+   	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")) {
         QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 	}
 
 
-            app.setApplicationName("Sayonara");
-            app.setWindowIcon(QIcon(Helper::getIconPath() + "logo.png"));
+    app.setApplicationName("Sayonara");
+    app.setWindowIcon(Helper::getIcon("logo.png"));
 
 
-		QStringList params;
-		for(int i=1; i<argc; i++){
-			QString param(argv[i]);
-			params.push_back(param);
-		}
+    QStringList params;
+    for(int i=1; i<argc; i++) {
+        QString param(argv[i]);
+        params.push_back(param);
+    }
 
-        QString language = CSettingsStorage::getInstance()->getLanguage();
-        QTranslator translator;
-        translator.load(language, Helper::getSharePath() + "translations");
-        app.installTranslator(&translator);
+    QString language = CSettingsStorage::getInstance()->getLanguage();
+    QTranslator translator;
+    translator.load(language, Helper::getSharePath() + "translations");
+    app.installTranslator(&translator);
 
     QFont font("DejaVu Sans", 9, 55,  false);
 	font.setHintingPreference(QFont::PreferNoHinting);
@@ -146,15 +211,12 @@ int main(int argc, char *argv[]){
 	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
     app.setFont(font);
 
-		app.init(params.size(), &translator);
-		if(!app.is_initialized()) return 0;
-		app.setFiles2Play(params);
+    app.init(params.size(), &translator);
+    if(!app.is_initialized()) return 0;
 
-        app.installTranslator(&translator);
-        app.exec();
+    app.setFiles2Play(params);
+    app.installTranslator(&translator);
+    app.exec();
 
-
-        return 0;
+    return 0;
 }
-
-

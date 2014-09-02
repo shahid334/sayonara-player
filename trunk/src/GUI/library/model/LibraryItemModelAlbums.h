@@ -63,7 +63,7 @@ public:
 	virtual QModelIndex	getNextRowIndexOf(QString substr, int row);
 	virtual QModelIndex	getPrevRowIndexOf(QString substr, int row);
 
-    QList<int> get_discnumbers(const QModelIndex& idx);
+    QList<quint8> get_discnumbers(const QModelIndex& idx);
 
 private:
 	QList<Album> 			_album_list;

@@ -1,6 +1,6 @@
 /* StreamRecorder.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -42,7 +42,7 @@ static bool _sr_debug = true;
 
 StreamRecorder* obj_ref = 0;
 
-static QString get_time_str(){
+static QString get_time_str() {
 
 
     QString time_str;
@@ -59,7 +59,7 @@ static QString get_time_str(){
     return time_str;
 }
 
-static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data){
+static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data) {
 
     (void) bus;
     (void) user_data;
@@ -105,7 +105,6 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 			break;
 
         default:
-			//obj_ref->endOfStream();
             break;
     }
 
@@ -114,7 +113,7 @@ static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data)
 
 
 StreamRecorder::StreamRecorder(QObject *parent) :
-    QObject(parent)
+	QObject(parent), _session_collector(0)
 {
     _buffer_size = 32767;
     _stream_ended = true;
@@ -130,7 +129,7 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 
     // delete old stream ripper files
     QStringList lst = d.entryList(Helper::get_soundfile_extensions());
-    foreach(QString str, lst){
+    foreach(QString str, lst) {
         qDebug() << "Remove " << d.absolutePath() + QDir::separator() + str;
         QFile f(d.absolutePath() + QDir::separator() + str);
         f.remove();
@@ -140,15 +139,15 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 }
 
 
-StreamRecorder::~StreamRecorder(){
-    if(_sr_thread){
+StreamRecorder::~StreamRecorder() {
+    if(_sr_thread) {
         delete _sr_thread;
         _sr_thread = NULL;
     }
 }
 
 
-void StreamRecorder::init(){
+void StreamRecorder::init() {
 
         /*
      * _rec_pipeline:
@@ -213,7 +212,7 @@ void StreamRecorder::init(){
 
 
 
-bool StreamRecorder::init_thread(QString filename){
+bool StreamRecorder::init_thread(QString filename) {
 SR_DEBUG;
 
     if(_sr_thread) {
@@ -239,10 +238,10 @@ SR_DEBUG;
 
 }
 
-bool StreamRecorder::terminate_thread_if_running(){
+bool StreamRecorder::terminate_thread_if_running() {
     SR_DEBUG;
-    if(_sr_thread){
-        if(_sr_thread->isRunning()){
+    if(_sr_thread) {
+        if(_sr_thread->isRunning()) {
             _sr_thread->terminate();
         }
     }
@@ -254,7 +253,7 @@ bool StreamRecorder::terminate_thread_if_running(){
 
 
 
-void StreamRecorder::set_new_stream_session(){
+void StreamRecorder::set_new_stream_session() {
 
     SR_DEBUG;
     _session_path = get_time_str();
@@ -269,7 +268,7 @@ void StreamRecorder::set_new_stream_session(){
 }
 
 
-QString StreamRecorder::changeTrack(const MetaData& md, int trys){
+QString StreamRecorder::changeTrack(const MetaData& md, int trys) {
 
     SR_DEBUG;
 
@@ -305,7 +304,7 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
     _stream_ended = false;
     bool success = init_thread(_sr_recording_dst);
 
-    if(success){
+    if(success) {
         gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_PLAYING);
 
 
@@ -318,7 +317,7 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys){
 }
 
 
-bool StreamRecorder::stop(bool delete_track){
+bool StreamRecorder::stop(bool delete_track) {
 
     SR_DEBUG;
 
@@ -328,17 +327,19 @@ bool StreamRecorder::stop(bool delete_track){
     _stream_ended = true;
     terminate_thread_if_running();
 
-	GstFormat format=GST_FORMAT_TIME;
 	gint64 duration=0;
-	bool success = false;
-	success = gst_element_query_duration(_rec_pipeline, &format, &duration);
-	qDebug() << "SR: Stream length: " << duration << ": " << success;
 
+#if GST_CHECK_VERSION(1, 0, 0)
+    gst_element_query_duration(_rec_pipeline, GST_FORMAT_TIME, &duration);
+#else
+    GstFormat format = GST_FORMAT_TIME;
+    gst_element_query_duration(_rec_pipeline, &format, &duration);
+#endif
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_READY);
 
 
-    if( (!_stream_ended && complete_tracks) || delete_track){
+    if( (!_stream_ended && complete_tracks) || delete_track) {
         qDebug() << "Remove w/o saving";
         QFile::remove(_sr_recording_dst);
         return false;
@@ -354,7 +355,7 @@ bool StreamRecorder::stop(bool delete_track){
 }
 
 
-bool StreamRecorder::save_file(){
+bool StreamRecorder::save_file() {
 
     SR_DEBUG;
 
@@ -366,7 +367,7 @@ bool StreamRecorder::save_file(){
         dir.cd(_md.artist);
 
 
-    if(!QFile::exists(_sr_recording_dst)){
+    if(!QFile::exists(_sr_recording_dst)) {
         qDebug() << "SR: " << _sr_recording_dst << " does not exist";
         return false;
     }
@@ -380,7 +381,7 @@ bool StreamRecorder::save_file(){
 
     bool success = 	f.copy(dst_name);
 
-    if(!success){
+    if(!success) {
         qDebug() << "SR: unable to copy " <<  _sr_recording_dst << " to " << dir.path() + QDir::separator() + fname_wo_path;
         return false;
     }
@@ -400,7 +401,7 @@ bool StreamRecorder::save_file(){
 
 
 
-void StreamRecorder::thread_finished(){
+void StreamRecorder::thread_finished() {
 
     SR_DEBUG;
 
@@ -408,7 +409,7 @@ void StreamRecorder::thread_finished(){
     qint64 size = _sr_thread->getSize();
     qDebug() << "Thread finished " << size;
 
-    if(!QFile::exists(_sr_recording_dst)){
+    if(!QFile::exists(_sr_recording_dst)) {
         qDebug() << "SR: Stream not valid (File not existent)";
 
         _stream_ended = true;
@@ -417,7 +418,7 @@ void StreamRecorder::thread_finished(){
     }
 
 
-    else if( size < _buffer_size ){
+    else if( size < _buffer_size ) {
 
         _stream_ended = true;
         _try++;
@@ -439,7 +440,7 @@ void StreamRecorder::thread_finished(){
 }
 
 
-void StreamRecorder::endOfStream(){
+void StreamRecorder::endOfStream() {
 
     SR_DEBUG;
 
@@ -450,14 +451,14 @@ void StreamRecorder::endOfStream(){
 }
 
 
-QString StreamRecorder::check_session_path(QString sr_path){
+QString StreamRecorder::check_session_path(QString sr_path) {
 
     SR_DEBUG;
 
     bool create_session_path = _settings->getStreamRipperSessionPath();
     if(!create_session_path) return sr_path;
 
-    if(!QFile::exists(sr_path + QDir::separator() + _session_path)){
+    if(!QFile::exists(sr_path + QDir::separator() + _session_path)) {
 
         QDir dir(sr_path);
         dir.mkdir(_session_path);
@@ -467,7 +468,7 @@ QString StreamRecorder::check_session_path(QString sr_path){
 }
 
 
-bool StreamRecorder::getFinished(){
+bool StreamRecorder::getFinished() {
 
     return _stream_ended;
 }

@@ -1,6 +1,6 @@
 /* ContextMenu.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -24,25 +24,23 @@
 #include "HelperStructs/Helper.h"
 
 #include <QAction>
-#include <QList>
-#include <QDebug>
 
 ContextMenu::ContextMenu(QWidget* parent) :
     QMenu(parent)
 {
 
-    _info_action = new QAction(QIcon(Helper::getIconPath() + "info_small.png"), tr("Info"), this);
-    _edit_action = new QAction(QIcon(Helper::getIconPath() + "edit.png"), tr("Edit"), this);
-    _remove_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Remove"), this);
-    _delete_action = new QAction(QIcon(Helper::getIconPath() + "delete.png"), tr("Delete"), this);
-    _play_next_action = new QAction(QIcon(Helper::getIconPath() + "fwd_orange.png"), tr("Play next"), this);
-    _append_action = new QAction(QIcon(Helper::getIconPath() + "append.png"), tr("Append"), this);
+    _info_action = new QAction(Helper::getIcon("info_small.png"), tr("Info"), this);
+    _edit_action = new QAction(Helper::getIcon("edit.png"), tr("Edit"), this);
+    _remove_action = new QAction(Helper::getIcon("delete.png"), tr("Remove"), this);
+    _delete_action = new QAction(Helper::getIcon("delete.png"), tr("Delete"), this);
+    _play_next_action = new QAction(Helper::getIcon("fwd_orange.png"), tr("Play next"), this);
+    _append_action = new QAction(Helper::getIcon("append.png"), tr("Append"), this);
 
     Helper::set_deja_vu_font(this);
 }
 
 
-ContextMenu::~ContextMenu(){
+ContextMenu::~ContextMenu() {
 
     clear_actions();
 
@@ -53,7 +51,7 @@ ContextMenu::~ContextMenu(){
     delete _play_next_action;
 }
 
-void ContextMenu::changeEvent(QEvent* e){
+void ContextMenu::changeEvent(QEvent* e) {
     if (e->type() == QEvent::LanguageChange) {
         _info_action->setText(tr("Info"));
         _edit_action->setText(tr("Edit"));
@@ -71,10 +69,10 @@ void ContextMenu::changeEvent(QEvent* e){
 }
 
 
-void ContextMenu::clear_actions(){
+void ContextMenu::clear_actions() {
 
     QList<QAction*> actions = this->actions();
-    if(actions.size() > 0){
+    if(actions.size() > 0) {
         foreach(QAction* a, actions)
             this->removeAction(a);
     }
@@ -87,20 +85,20 @@ void ContextMenu::clear_actions(){
 
 }
 
-void ContextMenu::setup_entries(int entries){
+void ContextMenu::setup_entries(int entries) {
 
     clear_actions();
 
-    if(entries & ENTRY_INFO){
+    if(entries & ENTRY_INFO) {
         this->addAction(_info_action);
         connect(_info_action, SIGNAL(triggered()), this, SLOT(info_clicked()));
     }
-    if(entries & ENTRY_EDIT){
+    if(entries & ENTRY_EDIT) {
         this->addAction(_edit_action);
         connect(_edit_action, SIGNAL(triggered()), this, SLOT(edit_clicked()));
     }
 
-    if(entries & ENTRY_REMOVE){
+    if(entries & ENTRY_REMOVE) {
 
         this->addAction(_remove_action);
         connect(_remove_action, SIGNAL(triggered()), this, SLOT(remove_clicked()));
@@ -108,44 +106,44 @@ void ContextMenu::setup_entries(int entries){
 
     }
 
-    if(entries & ENTRY_DELETE){
+    if(entries & ENTRY_DELETE) {
 
         this->addAction(_delete_action);
         connect(_delete_action, SIGNAL(triggered()), this, SLOT(delete_clicked()));
     }
 
-    if(entries & ENTRY_PLAY_NEXT){
+    if(entries & ENTRY_PLAY_NEXT) {
         this->addAction(_play_next_action);
         connect(_play_next_action, SIGNAL(triggered()), this, SLOT(play_next_clicked()));
     }
 
-    if(entries & ENTRY_APPEND){
+    if(entries & ENTRY_APPEND) {
         this->addAction(_append_action);
         connect(_append_action, SIGNAL(triggered()), this, SLOT(append_clicked()));
     }
 }
 
 
-void ContextMenu::info_clicked(){
+void ContextMenu::info_clicked() {
     emit sig_info_clicked();
 }
 
-void ContextMenu::edit_clicked(){
+void ContextMenu::edit_clicked() {
     emit sig_edit_clicked();
 }
 
-void ContextMenu::remove_clicked(){
+void ContextMenu::remove_clicked() {
     emit sig_remove_clicked();
 }
 
-void ContextMenu::delete_clicked(){
+void ContextMenu::delete_clicked() {
     emit sig_delete_clicked();
 }
 
-void ContextMenu::play_next_clicked(){
+void ContextMenu::play_next_clicked() {
     emit sig_play_next_clicked();
 }
 
-void ContextMenu::append_clicked(){
+void ContextMenu::append_clicked() {
     emit sig_append_clicked();
 }

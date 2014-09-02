@@ -1,6 +1,6 @@
 /* GUI_Notifications.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -31,10 +31,11 @@
 #include <QString>
 
 GUI_Notifications::GUI_Notifications(QWidget *parent) :
-    QDialog(parent)
+	QDialog(parent),
+	Ui_GUI_Notification()
 {
-    ui = new Ui_GUI_Notification();
-    ui->setupUi(this);
+
+	setupUi(this);
 
     _plugin_loader = NotificationPluginLoader::getInstance();
 
@@ -51,43 +52,43 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
         n_preferred_name = n_preferred->get_name();
 
     int idx = 0;
-    for(int i=0; i<l_notifications.size(); i++){
+    for(int i=0; i<l_notifications.size(); i++) {
 
         Notification* n = l_notifications[i];
-        ui->combo_notification->addItem(n->get_name());
+		combo_notification->addItem(n->get_name());
         if(!n_preferred_name.compare(n->get_name(), Qt::CaseInsensitive))
-            idx = ui->combo_notification->count()-1;
+			idx = combo_notification->count()-1;
     }
 
-    ui->combo_notification->setCurrentIndex(idx);
-    ui->sb_timeout->setValue(timeout);
-    ui->cb_activate->setChecked(active);
+	combo_notification->setCurrentIndex(idx);
+	sb_timeout->setValue(timeout);
+	cb_activate->setChecked(active);
 
     if(scale > 0)
-	    ui->sb_scale->setValue(scale);
+		sb_scale->setValue(scale);
     else
-	    ui->sb_scale->setValue(80);
+		sb_scale->setValue(80);
 
-    ui->sb_scale->setEnabled(scale > 0);
-    ui->cb_scale->setChecked(scale > 0);
+	sb_scale->setEnabled(scale > 0);
+	cb_scale->setChecked(scale > 0);
 
-    connect(ui->btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
-
-}
-
-GUI_Notifications::~GUI_Notifications(){
+	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
 
 }
 
+GUI_Notifications::~GUI_Notifications() {
 
-void GUI_Notifications::ok_clicked(){
+}
 
-    bool active =       ui->cb_activate->isChecked();
-    int timeout =       ui->sb_timeout->value();
-    QString cur_text =  ui->combo_notification->currentText();
+
+void GUI_Notifications::ok_clicked() {
+
+	bool active =       cb_activate->isChecked();
+	int timeout =       sb_timeout->value();
+	QString cur_text =  combo_notification->currentText();
     
-    int scale = 	ui->sb_scale->value();
-    if(!ui->cb_scale->isChecked()) scale = 0;
+	int scale = 	sb_scale->value();
+	if(!cb_scale->isChecked()) scale = 0;
 
     _plugin_loader->set_cur_plugin(cur_text);
 
@@ -102,11 +103,11 @@ void GUI_Notifications::ok_clicked(){
 }
 
 
-void GUI_Notifications::change_skin(bool dark){
+void GUI_Notifications::change_skin(bool dark) {
 
 }
 
-void GUI_Notifications::language_changed(){
-    this->ui->retranslateUi(this);
+void GUI_Notifications::language_changed() {
+	retranslateUi(this);
 }
 

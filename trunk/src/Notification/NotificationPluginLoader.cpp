@@ -1,6 +1,6 @@
 /* NotificationPluginLoader.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -25,22 +25,17 @@
 #include "Notification/Notification.h"
 #include "HelperStructs/Helper.h"
 
-#include <QString>
-#include <QStringList>
-#include <QObject>
 #include <QDir>
-#include <QList>
 #include <QPluginLoader>
-#include <QDebug>
 
 
-NotificationPluginLoader* NotificationPluginLoader::getInstance(){
+NotificationPluginLoader* NotificationPluginLoader::getInstance() {
     static NotificationPluginLoader instance;
     return &instance;
 }
 
 
-NotificationPluginLoader::NotificationPluginLoader(){
+NotificationPluginLoader::NotificationPluginLoader() {
 
     QString app_dir;
     #ifdef Q_OS_UNIX
@@ -55,7 +50,7 @@ NotificationPluginLoader::NotificationPluginLoader(){
     QDir plugin_dir = QDir(app_dir);
     QStringList entry_list = plugin_dir.entryList(QDir::Files);
 
-    for(int i=0; i<entry_list.size(); i++){
+    for(int i=0; i<entry_list.size(); i++) {
 
         QString filename = entry_list[i];
         QPluginLoader loader(plugin_dir.absoluteFilePath(filename));
@@ -76,19 +71,19 @@ NotificationPluginLoader::NotificationPluginLoader(){
 
 
 
-QList<Notification*> NotificationPluginLoader::get_plugins(){
+QList<Notification*> NotificationPluginLoader::get_plugins() {
 	return _notification_plugins;
 }
 
 
 
-void NotificationPluginLoader::set_cur_plugin(QString name){
+void NotificationPluginLoader::set_cur_plugin(QString name) {
 
     _cur_idx = 0;
 
-    for(int i=0; i<_notification_plugins.size(); i++){
+    for(int i=0; i<_notification_plugins.size(); i++) {
         QString name_tmp = _notification_plugins[i]->get_name();
-        if(!name_tmp.compare(name, Qt::CaseInsensitive)){
+        if(!name_tmp.compare(name, Qt::CaseInsensitive)) {
             _cur_idx = i;
         }
     }
@@ -96,7 +91,7 @@ void NotificationPluginLoader::set_cur_plugin(QString name){
 
 
 
-void NotificationPluginLoader::set_cur_plugin(Notification* n){
+void NotificationPluginLoader::set_cur_plugin(Notification* n) {
 
     _cur_idx = -1;
     if(!n) return;
@@ -104,7 +99,7 @@ void NotificationPluginLoader::set_cur_plugin(Notification* n){
     set_cur_plugin(n->get_name());
 }
 
-Notification* NotificationPluginLoader::get_cur_plugin(){
+Notification* NotificationPluginLoader::get_cur_plugin() {
     if(_notification_plugins.size() == 0) return NULL;
     if(_cur_idx < 0 || _cur_idx > _notification_plugins.size()) return NULL;
 

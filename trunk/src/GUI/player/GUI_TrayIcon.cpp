@@ -28,7 +28,6 @@
 #include <QEvent>
 #include <QWheelEvent>
 #include <QHoverEvent>
-#include <QDebug>
 #include <QIcon>
 #include <QPixmap>
 #include <QTimer>
@@ -45,11 +44,15 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     QIcon play_icon = QIcon(icon_path + "/play.png");
 	QIcon pause_icon = QIcon(icon_path + "/pause.png");
 
-    QPixmap play_pixmap = play_icon.pixmap(24, 24);
-    QPixmap pause_pixmap = pause_icon.pixmap(24, 24);
 
-    m_playIcon = QIcon(play_pixmap);
-    m_pauseIcon = QIcon(pause_pixmap);
+	m_playIcon = QIcon();
+	m_pauseIcon = QIcon();
+
+	m_playIcon.addPixmap( Helper::getPixmap("play.png", QSize(24, 24), true) );
+	m_pauseIcon.addPixmap( Helper::getPixmap("pause.png", QSize(24, 24), true) );
+
+	m_playIcon.addPixmap( Helper::getPixmap("play.png", QSize(32, 32), true) );
+	m_pauseIcon.addPixmap( Helper::getPixmap("pause.png", QSize(32, 32), true) );
 
     m_vol_step = 5;
 
@@ -76,25 +79,22 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 	m_showAction = new QAction(tr("Show"), this);
 
     m_trayContextMenu = new QMenu();
-        m_trayContextMenu->addAction(m_playAction);
-        m_trayContextMenu->addAction(m_stopAction);
-        m_trayContextMenu->addSeparator();
-        m_trayContextMenu->addAction(m_fwdAction);
-        m_trayContextMenu->addAction(m_bwdAction);
-        m_trayContextMenu->addSeparator();
-        m_trayContextMenu->addAction(m_muteAction);
-        m_trayContextMenu->addSeparator();
-        m_trayContextMenu->addAction(m_showAction);
-        m_trayContextMenu->addAction(m_closeAction);
-        QFont f = m_trayContextMenu->font();
-        f.setFamily("DejaVu Sans");
-        m_trayContextMenu->setFont(f);
-    this->setContextMenu(m_trayContextMenu);
+	m_trayContextMenu->addAction(m_playAction);
+	m_trayContextMenu->addAction(m_stopAction);
+	m_trayContextMenu->addSeparator();
+	m_trayContextMenu->addAction(m_fwdAction);
+	m_trayContextMenu->addAction(m_bwdAction);
+	m_trayContextMenu->addSeparator();
+	m_trayContextMenu->addAction(m_muteAction);
+	m_trayContextMenu->addSeparator();
+	m_trayContextMenu->addAction(m_showAction);
+	m_trayContextMenu->addAction(m_closeAction);
+	QFont f = m_trayContextMenu->font();
+	f.setFamily("DejaVu Sans");
+	m_trayContextMenu->setFont(f);
 
-
-
-//    this->setToolTip("Sayonara Player");*/
-    this->setIcon(m_playIcon);
+	this->setContextMenu(m_trayContextMenu);
+	this->setIcon(m_playIcon);
 
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(play_clicked()));
     connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(fwd_clicked()));
@@ -117,7 +117,7 @@ GUI_TrayIcon::~GUI_TrayIcon() {
 }
 
 
-void GUI_TrayIcon::language_changed(){
+void GUI_TrayIcon::language_changed() {
   
 	m_playAction->setText(tr("Play"));
 	m_fwdAction->setText(tr("Next"));
@@ -129,7 +129,7 @@ void GUI_TrayIcon::language_changed(){
 }
         
 
-void GUI_TrayIcon::change_skin(QString stylesheet){
+void GUI_TrayIcon::change_skin(QString stylesheet) {
     this->m_trayContextMenu->setStyleSheet(stylesheet);
     this->setMute(_mute);
 }
@@ -146,7 +146,6 @@ bool GUI_TrayIcon::event ( QEvent * e ) {
 
 void GUI_TrayIcon::timer_timed_out()
 {
-	qDebug() << "Timed out";
 	_timer->stop();
 	if(_md_set)
 		trackChanged(_md);
@@ -156,10 +155,10 @@ void GUI_TrayIcon::timer_timed_out()
 void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
     _md = md;
     _md_set = true;
-    if(m_notification_active){
+    if(m_notification_active) {
         Notification* n = m_plugin_loader->get_cur_plugin();
 
-        if(n){
+        if(n) {
 
             n->notification_show(md);
         }
@@ -174,107 +173,107 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
 
 
 
-void GUI_TrayIcon::trackChanged(const MetaData& md){
+void GUI_TrayIcon::trackChanged(const MetaData& md) {
     songChangedMessage(md);
 }
 
-void  GUI_TrayIcon::set_timeout(int timeout_ms){
+void  GUI_TrayIcon::set_timeout(int timeout_ms) {
     m_timeout = timeout_ms;
 }
 
-void  GUI_TrayIcon::set_notification_active(bool active){
+void  GUI_TrayIcon::set_notification_active(bool active) {
     m_notification_active = active;
 }
 
-void GUI_TrayIcon::set_enable_play(bool b){
+void GUI_TrayIcon::set_enable_play(bool b) {
 	m_playAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_stop(bool b){
+void GUI_TrayIcon::set_enable_stop(bool b) {
 	m_stopAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_mute(bool b){
+void GUI_TrayIcon::set_enable_mute(bool b) {
 
 }
 
-void GUI_TrayIcon::set_enable_fwd(bool b){
+void GUI_TrayIcon::set_enable_fwd(bool b) {
 	m_fwdAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_bwd(bool b){
+void GUI_TrayIcon::set_enable_bwd(bool b) {
 	m_bwdAction->setEnabled(b);
 }
 
-void GUI_TrayIcon::set_enable_show(bool b){
+void GUI_TrayIcon::set_enable_show(bool b) {
 	m_showAction->setEnabled(b);
 }
 
 
-void GUI_TrayIcon::play_clicked(){
+void GUI_TrayIcon::play_clicked() {
     qDebug() << "tray: play clicked";
-    if(!m_playing){
+    if(!m_playing) {
 		emit sig_play_clicked();
 	}
 
 	else emit sig_pause_clicked();
 }
 
-void GUI_TrayIcon::stop_clicked(){
+void GUI_TrayIcon::stop_clicked() {
 	emit sig_stop_clicked();
 }
 
-void GUI_TrayIcon::stop(){
+void GUI_TrayIcon::stop() {
 	_md_set = false;
 }
 
-void GUI_TrayIcon::fwd_clicked(){
+void GUI_TrayIcon::fwd_clicked() {
 	emit sig_fwd_clicked();
 }
 
-void GUI_TrayIcon::bwd_clicked(){
+void GUI_TrayIcon::bwd_clicked() {
 	emit sig_bwd_clicked();
 }
 
-void GUI_TrayIcon::show_clicked(){
+void GUI_TrayIcon::show_clicked() {
 	emit sig_show_clicked();
 }
 
-void GUI_TrayIcon::close_clicked(){
+void GUI_TrayIcon::close_clicked() {
 	emit sig_close_clicked();
 }
 
-void GUI_TrayIcon::mute_clicked(){
+void GUI_TrayIcon::mute_clicked() {
 	emit sig_mute_clicked();
 }
 
-void GUI_TrayIcon::setMute(bool mute){
+void GUI_TrayIcon::setMute(bool mute) {
 
     _mute = mute;
 
     QString suffix = "";
     int style = CSettingsStorage::getInstance()->getPlayerStyle();
 
-    if(style == 1){
+    if(style == 1) {
         suffix = "_dark";
     }
 
-	if(!mute){
-        m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_mute" + suffix + ".png"));
+	if(!mute) {
+        m_muteAction->setIcon(Helper::getIcon("vol_mute" + suffix + ".png"));
         m_muteAction->setText(tr("Mute"));
 	}
 
 	else {
-        m_muteAction->setIcon(QIcon(Helper::getIconPath() + "vol_3" + suffix + ".png"));
+        m_muteAction->setIcon(Helper::getIcon("vol_3" + suffix + ".png"));
         m_muteAction->setText(tr("Unmute"));
 	}
 }
 
-void GUI_TrayIcon::setPlaying(bool play){
+void GUI_TrayIcon::setPlaying(bool play) {
 
     m_playing = play;
 
-	if(play){
+	if(play) {
 		setIcon(m_playIcon);
 		m_playAction->setIcon(m_pauseIcon);
 		m_playAction->setText(tr("Pause"));
@@ -286,7 +285,7 @@ void GUI_TrayIcon::setPlaying(bool play){
 	}
 }
 
-int GUI_TrayIcon::get_vol_step(){
+int GUI_TrayIcon::get_vol_step() {
 	return m_vol_step;
 
 }

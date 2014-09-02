@@ -28,76 +28,78 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/CSettingsStorage.h"
 
 #include <QMap>
-#include <QString>
 #include <QStringList>
 #include <qdom.h>
 #include <QUrl>
-#include <QList>
 
 #define UrlParams QMap<QString, QString>
 
 LFMTrackChangedThread::LFMTrackChangedThread(QString target_class) {
 	_target_class = target_class;
+
+	ArtistList artists;
+	CDatabaseConnector::getInstance()->getAllArtists(artists);
+
+	_smart_comparison = new SmartComparison(artists);
 }
 
 
 LFMTrackChangedThread::~LFMTrackChangedThread() {
-
+	delete _smart_comparison;
 }
 
-void LFMTrackChangedThread::setSessionKey(QString session_key){
+void LFMTrackChangedThread::setSessionKey(QString session_key) {
 	_session_key = session_key;
 }
 
-void LFMTrackChangedThread::setUsername(QString username){
+void LFMTrackChangedThread::setUsername(QString username) {
 	_username = username;
 }
 
-void LFMTrackChangedThread::setTrackInfo(const MetaData& md){
+void LFMTrackChangedThread::setTrackInfo(const MetaData& md) {
 	_md = md;
 }
 
-void LFMTrackChangedThread::setAlbumName(QString album_name){
+void LFMTrackChangedThread::setAlbumName(QString album_name) {
 	_album_name = album_name;
 }
 
-void LFMTrackChangedThread::setArtistName(QString artist_name){
+void LFMTrackChangedThread::setArtistName(QString artist_name) {
 	_artist_name = artist_name;
 }
 
-void LFMTrackChangedThread::setThreadTask(int task){
+void LFMTrackChangedThread::setThreadTask(int task) {
 	_thread_tasks = task;
 }
 
-void LFMTrackChangedThread::setTargetClass(QString name){
+void LFMTrackChangedThread::setTargetClass(QString name) {
 	_target_class = name;
 }
 
 
-void LFMTrackChangedThread::run(){
+void LFMTrackChangedThread::run() {
 
 	bool success = false;
 
 	_album_data.clear();
 	_artist_data.clear();
 
-	if(_thread_tasks & LFM_THREAD_TASK_UPDATE_TRACK){
+	if(_thread_tasks & LFM_THREAD_TASK_UPDATE_TRACK) {
 		success = update_now_playing();
 	}
 
     bool dynamic = CSettingsStorage::getInstance()->getPlaylistMode().dynamic;
-    if(dynamic && (_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS)){
+    if(dynamic && (_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS)) {
 		success = search_similar_artists();
 		if(success)
 			emit sig_similar_artists_available(_target_class, _chosen_ids);
 	}
 
 
-	if(_thread_tasks & LFM_THREAD_TASK_FETCH_TRACK_INFO){
+	if(_thread_tasks & LFM_THREAD_TASK_FETCH_TRACK_INFO) {
 		MetaData md = _md;
 		bool loved;
 		bool corrected;
@@ -108,18 +110,18 @@ void LFMTrackChangedThread::run(){
 		_corrected = corrected;
 		_md_corrected = md;
 
-		if(success){
+		if(success) {
 			emit sig_corrected_data_available(_target_class);
 		}
 	}
 
-	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ALBUM_INFO){
+	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ALBUM_INFO) {
 		success = get_album_info(_artist_name, _album_name);
 		if(success)
 			emit sig_album_info_available(_target_class);
 	}
 
-	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ARTIST_INFO){
+	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ARTIST_INFO) {
 		success = get_artist_info(_artist_name);
 		if(success)
 			emit sig_artist_info_available(_target_class);
@@ -129,7 +131,7 @@ void LFMTrackChangedThread::run(){
 }
 
 
-bool LFMTrackChangedThread::update_now_playing(){
+bool LFMTrackChangedThread::update_now_playing() {
 
 	QString artist = _md.artist;
 	QString title = _md.title;
@@ -151,7 +153,7 @@ bool LFMTrackChangedThread::update_now_playing(){
 	QString response;
 
 	bool success = lfm_wa_call_post_url(url, post_data, response);
-	if(!success || response.contains("failed") ){
+	if(!success || response.contains("failed") ) {
 
 		return false;
 	}
@@ -160,7 +162,7 @@ bool LFMTrackChangedThread::update_now_playing(){
 }
 
 
-bool LFMTrackChangedThread::search_similar_artists(){
+bool LFMTrackChangedThread::search_similar_artists() {
 
     bool success;
     QString artist_name = _md.artist;
@@ -178,14 +180,14 @@ bool LFMTrackChangedThread::search_similar_artists(){
 
 
     // check if already in cache
-    if(_sim_artists_cache.keys().contains(artist_name)){
+    if(_sim_artists_cache.keys().contains(artist_name)) {
         artist_match = _sim_artists_cache.value(artist_name);
         callLFM = false;
     }
 
     srand ( time(NULL) );
 
-    if(callLFM){
+    if(callLFM) {
 
         QString url = 	QString("http://ws.audioscrobbler.com/2.0/?");
         QString encoded = QUrl::toPercentEncoding( artist_name );
@@ -204,30 +206,30 @@ bool LFMTrackChangedThread::search_similar_artists(){
         QDomElement docElement = doc.documentElement();
         QDomNode similarartists = docElement.firstChild();			// similarartists
 
-        if(similarartists.hasChildNodes()){
+        if(similarartists.hasChildNodes()) {
 
             QString artist_name = "";
             double match = -1.0;
 
-            for(int idx_artist=0; idx_artist < similarartists.childNodes().size(); idx_artist++){
+            for(int idx_artist=0; idx_artist < similarartists.childNodes().size(); idx_artist++) {
                 QDomNode artist = similarartists.childNodes().item(idx_artist);
 
                 if(artist.nodeName().toLower().compare("artist") != 0) continue;
 
                 if(!artist.hasChildNodes()) continue;
 
-                for(int idx_content = 0; idx_content <artist.childNodes().size(); idx_content++){
+                for(int idx_content = 0; idx_content <artist.childNodes().size(); idx_content++) {
                     QDomNode content = artist.childNodes().item(idx_content);
-                    if(content.nodeName().toLower().contains("name")){
+                    if(content.nodeName().toLower().contains("name")) {
                         QDomElement e = content.toElement();
-                        if(!e.isNull()){
+                        if(!e.isNull()) {
                             artist_name = e.text();
                         }
                     }
 
-                    if(content.nodeName().toLower().contains("match")){
+                    if(content.nodeName().toLower().contains("match")) {
                         QDomElement e = content.toElement();
-                        if(!e.isNull()){
+                        if(!e.isNull()) {
                             match = e.text().toDouble();
                         }
                     }
@@ -253,7 +255,7 @@ bool LFMTrackChangedThread::search_similar_artists(){
 
 
 
-    // get random list where to search the artist in
+	// if we always take the best, it's boring
     Quality quality, quality_org;
     int rnd = rand() % 1000;
     if(rnd > 250) quality = Quality_Very_Good;			// [250-999]
@@ -263,20 +265,35 @@ bool LFMTrackChangedThread::search_similar_artists(){
     quality_org = quality;
     QMap<QString, int> possible_artists;
 
-    while(possible_artists.size() == 0){
+    while(possible_artists.size() == 0) {
 
         QMap<QString, double> quality_map = artist_match.get(quality);
         possible_artists = filter_available_artists(quality_map);
-        if(quality == Quality_Poor) quality = Quality_Very_Good;
-        else if(quality == Quality_Well) quality = Quality_Poor;
-        else if(quality == Quality_Very_Good) quality = Quality_Well;
+
+		switch(quality){
+			case Quality_Poor:
+				quality = Quality_Very_Good;
+				break;
+			case Quality_Well:
+				quality = Quality_Poor;
+				break;
+			case Quality_Very_Good:
+				quality = Quality_Well;
+				break;
+			default:
+				quality = quality_org;
+				break;
+		}
+
         if(quality == quality_org) break;
     }
 
-    if(possible_artists.size() == 0) return false;
+	if(possible_artists.size() == 0){
+		return false;
+	}
 
     _chosen_ids.clear();
-    for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++){
+    for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++) {
         _chosen_ids.push_back(it.value());
     }
 
@@ -285,22 +302,28 @@ bool LFMTrackChangedThread::search_similar_artists(){
 
 
 
-QMap<QString, int> LFMTrackChangedThread::filter_available_artists(QMap<QString, double>& artist_match){
+QMap<QString, int> LFMTrackChangedThread::filter_available_artists(const QMap<QString, double>& artist_match) {
 
+		CDatabaseConnector* db = CDatabaseConnector::getInstance();
         QMap<QString, int> possible_artists;
 
-        foreach(QString key, artist_match.keys()){
+        foreach(QString key, artist_match.keys()) {
 
-            int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
-            if(artist_id != -1){
-                possible_artists[key] = artist_id;
-            }
+			QMap<QString, float> sc_map = _smart_comparison->get_similar_strings(key);
+			foreach( QString sc_key, sc_map.keys() ){
+				int artist_id = db->getArtistID(sc_key);
+				if(artist_id >= 0 && sc_map[sc_key] > 5.0f){
+
+					possible_artists[sc_key] = artist_id;
+				}
+
+			}
         }
 
         return possible_artists;
 }
 
-bool LFMTrackChangedThread::fetch_corrections(MetaData& md, bool& loved, bool& corrected){
+bool LFMTrackChangedThread::fetch_corrections(MetaData& md, bool& loved, bool& corrected) {
 
 	md = _md_corrected;
 	loved = _loved;
@@ -310,19 +333,19 @@ bool LFMTrackChangedThread::fetch_corrections(MetaData& md, bool& loved, bool& c
 
 }
 
-bool LFMTrackChangedThread::fetch_album_info(QMap<QString, QString>& info){
+bool LFMTrackChangedThread::fetch_album_info(QMap<QString, QString>& info) {
 	info = _album_data;
 	return(info.keys().count() > 0);
 }
 
-bool LFMTrackChangedThread::fetch_artist_info( QMap<QString, QString>& info){
+bool LFMTrackChangedThread::fetch_artist_info( QMap<QString, QString>& info) {
 	info = _artist_data;
 	return(info.keys().count() > 0);
 }
 
 
 
-bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, bool& corrected){
+bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, bool& corrected) {
 	QString retval;
 	QMap<QString, QString> values;
 
@@ -354,7 +377,7 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 		search_list << LFM_TAG_TRACK_DURATION;
 		search_list << LFM_TAG_TRACK_TITLE;
 
-        foreach(QString str2search, search_list){
+        foreach(QString str2search, search_list) {
 			QString str = Helper::easy_tag_finder(str2search , retval);
 			values[str2search] = str;
 		}
@@ -370,7 +393,7 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
         bool title_cor = (title.compare(md.title, Qt::CaseInsensitive) != 0);
         bool album_cor = (album.compare(md.album, Qt::CaseInsensitive) != 0);
 
-        if(artist_cor || title_cor || album_cor){
+        if(artist_cor || title_cor || album_cor) {
 
 			corrected = true;
 			md.artist = artist;
@@ -383,7 +406,7 @@ bool LFMTrackChangedThread::get_corrected_track_info(MetaData& md, bool& loved, 
 
 
 
-bool LFMTrackChangedThread::get_artist_info(QString artist){
+bool LFMTrackChangedThread::get_artist_info(QString artist) {
 
 	QString retval;
 
@@ -412,7 +435,7 @@ bool LFMTrackChangedThread::get_artist_info(QString artist){
 
 }
 
-bool LFMTrackChangedThread::get_album_info(QString artist, QString album){
+bool LFMTrackChangedThread::get_album_info(QString artist, QString album) {
 
 	QString retval;
 

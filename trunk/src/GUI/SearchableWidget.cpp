@@ -1,8 +1,30 @@
+/* SearchableWidget.cpp */
+
+/* Copyright (C) 2011-2014  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 
 #include "GUI/SearchableWidget.h"
 
 
-SearchableTableView::SearchableTableView(QWidget* parent) : QTableView(parent){
+SearchableTableView::SearchableTableView(QWidget* parent) : QTableView(parent) {
 	_mini_searcher = new MiniSearcher(this, MiniSearcherBothButtons);
     _abstr_model = 0;
 	_cur_row = -1;
@@ -13,59 +35,54 @@ SearchableTableView::SearchableTableView(QWidget* parent) : QTableView(parent){
 
 }
 
-SearchableTableView::~SearchableTableView(){
+SearchableTableView::~SearchableTableView() {
     delete _mini_searcher;
 }
 
-void SearchableTableView::setAbstractModel(AbstractSearchTableModel* model){
+void SearchableTableView::setAbstractModel(AbstractSearchTableModel* model) {
      _abstr_model = model;
 	 _mini_searcher->setExtraTriggers(_abstr_model->getExtraTriggers());
 }
 
 
 
-void SearchableTableView::mouseMoveEvent(QMouseEvent *e){
+void SearchableTableView::mouseMoveEvent(QMouseEvent *e) {
     emit sig_mouse_moved();
     QTableView::mouseMoveEvent(e);
 
 }
 
-void SearchableTableView::mousePressEvent(QMouseEvent *e){
+void SearchableTableView::mousePressEvent(QMouseEvent *e) {
 
     emit sig_mouse_pressed();
     QTableView::mousePressEvent(e);
 }
 
 
-void SearchableTableView::mouseReleaseEvent(QMouseEvent *e){
+void SearchableTableView::mouseReleaseEvent(QMouseEvent *e) {
     emit sig_mouse_released();
     QTableView::mouseReleaseEvent(e);
 }
 
-void SearchableTableView::keyPressEvent(QKeyEvent *e){
-
-	bool shift_pressed = e->modifiers() & Qt::ShiftModifier;
-	if(shift_pressed) return;
+void SearchableTableView::keyPressEvent(QKeyEvent *e) {
 
 	bool was_initialized = _mini_searcher->isInitialized();
 	bool initialized = _mini_searcher->check_and_init(e);
 
 	if(e->key() == Qt::Key_Tab && !was_initialized) return;
 
-	if(initialized || was_initialized || shift_pressed) {
+	if(initialized || was_initialized) {
 		_mini_searcher->keyPressEvent(e);
 		e->setAccepted(false);
 		return;
 	}
-
-
 
 	QTableView::keyPressEvent(e);
 	e->setAccepted(true);
 }
 
 
-void SearchableTableView::edit_changed(QString str){
+void SearchableTableView::edit_changed(QString str) {
 
 	if(str.size() == 0) return;
 	if(!_abstr_model) return;
@@ -80,7 +97,7 @@ void SearchableTableView::edit_changed(QString str){
 }
 
 
-void SearchableTableView::fwd_clicked(){
+void SearchableTableView::fwd_clicked() {
 	QString str = _mini_searcher->getCurrentText();
 	if(str.size() == 0) return;
 	if(!_abstr_model) return;
@@ -95,7 +112,7 @@ void SearchableTableView::fwd_clicked(){
 }
 
 
-void SearchableTableView::bwd_clicked(){
+void SearchableTableView::bwd_clicked() {
 
 	QString str = _mini_searcher->getCurrentText();
 	if(str.size() == 0) return;
@@ -116,7 +133,7 @@ void SearchableTableView::bwd_clicked(){
  * LIST
  **************************************************/
 
-SearchableListView::SearchableListView(QWidget* parent) : QListView(parent){
+SearchableListView::SearchableListView(QWidget* parent) : QListView(parent) {
 	_mini_searcher = new MiniSearcher(this, MiniSearcherBothButtons);
     _abstr_model = 0;
 	_cur_row = -1;
@@ -127,37 +144,37 @@ SearchableListView::SearchableListView(QWidget* parent) : QListView(parent){
 
 }
 
-SearchableListView::~SearchableListView(){
+SearchableListView::~SearchableListView() {
     delete _mini_searcher;
 }
 
 
-void SearchableListView::setAbstractModel(AbstractSearchListModel* model){
+void SearchableListView::setAbstractModel(AbstractSearchListModel* model) {
      _abstr_model = model;
 	 _mini_searcher->setExtraTriggers(_abstr_model->getExtraTriggers());
 }
 
 
 
-void SearchableListView::mouseMoveEvent(QMouseEvent *e){
+void SearchableListView::mouseMoveEvent(QMouseEvent *e) {
     emit sig_mouse_moved();
     QListView::mouseMoveEvent(e);
 
 }
 
-void SearchableListView::mousePressEvent(QMouseEvent *e){
+void SearchableListView::mousePressEvent(QMouseEvent *e) {
 
     emit sig_mouse_pressed();
     QListView::mousePressEvent(e);
 }
 
 
-void SearchableListView::mouseReleaseEvent(QMouseEvent *e){
+void SearchableListView::mouseReleaseEvent(QMouseEvent *e) {
     emit sig_mouse_released();
     QListView::mouseReleaseEvent(e);
 }
 
-void SearchableListView::keyPressEvent(QKeyEvent *e){
+void SearchableListView::keyPressEvent(QKeyEvent *e) {
 
 	bool was_initialized = _mini_searcher->isInitialized();
 	bool initialized = _mini_searcher->check_and_init(e);
@@ -172,9 +189,10 @@ void SearchableListView::keyPressEvent(QKeyEvent *e){
 
     QListView::keyPressEvent(e);
 	e->setAccepted(true);
+
 }
 
-void SearchableListView::edit_changed(QString str){
+void SearchableListView::edit_changed(QString str) {
 
 	if(str.size() == 0) return;
 	if(!_abstr_model) return;
@@ -188,7 +206,7 @@ void SearchableListView::edit_changed(QString str){
 	this->select_row(_cur_row);
 }
 
-void SearchableListView::fwd_clicked(){
+void SearchableListView::fwd_clicked() {
 	QString str = _mini_searcher->getCurrentText();
 	if(str.size() == 0) return;
 	if(!_abstr_model) return;
@@ -204,7 +222,7 @@ void SearchableListView::fwd_clicked(){
 	this->select_rows(rows);
 }
 
-void SearchableListView::bwd_clicked(){
+void SearchableListView::bwd_clicked() {
 
 	QString str = _mini_searcher->getCurrentText();
 	if(str.size() == 0) return;

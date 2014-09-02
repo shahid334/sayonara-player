@@ -1,6 +1,6 @@
 /* GUI_Startup_Dialog.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -42,9 +42,6 @@ private slots:
     void cb_toggled(bool);
     void ok_clicked();
 
-private:
-    Ui::GUI_StartupDialog* ui;
-    
 };
 
 #endif // GUI_STARTUP_DIALOG_H

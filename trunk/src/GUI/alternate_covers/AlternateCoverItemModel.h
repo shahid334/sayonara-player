@@ -29,12 +29,17 @@
 #ifndef ALTERNATECOVERITEMMODEL_H_
 #define ALTERNATECOVERITEMMODEL_H_
 
-#include <QObject>
+#include "CoverLookup/CoverLocation.h"
 #include <QList>
+#include <QPair>
 #include <QModelIndex>
 #include <QAbstractTableModel>
-#include <QStringList>
 
+
+struct RowColumn {
+	int row;
+	int col;
+};
 
 class AlternateCoverItemModel : public QAbstractTableModel {
 
@@ -46,19 +51,25 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-	QVariant data(const QModelIndex &index, int role) const;
+	QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
 
 	Qt::ItemFlags flags(const QModelIndex &index) const;
 
-	bool setData(const QModelIndex &index, const QVariant &value, int role);
+	bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
 
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
+	bool is_valid(int row, int col);
+
+
+	RowColumn cvt_2_row_col(int idx) const ;
+	int cvt_2_idx(int row, int col) const ;
+
 
 private:
-	QStringList _pathlist;
-
-
+	QList<CoverLocation> _pathlist;
 };
+
+
 #endif

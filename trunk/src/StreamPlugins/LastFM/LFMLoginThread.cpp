@@ -1,6 +1,6 @@
 /* LFMLoginThread.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -22,10 +22,9 @@
 
 #include "StreamPlugins/LastFM/LFMLoginThread.h"
 #include "StreamPlugins/LastFM/LFMGlobals.h"
-#include <StreamPlugins/LastFM/LFMWebAccess.h>
+#include "StreamPlugins/LastFM/LFMWebAccess.h"
 #include "HelperStructs/Helper.h"
-#include <QString>
-#include <QCryptographicHash>
+
 #include <QMessageBox>
 
 
@@ -34,9 +33,9 @@ LFMLoginThread::LFMLoginThread(QObject *parent) :
 {
 }
 
-LFMLoginThread::~LFMLoginThread(){}
+LFMLoginThread::~LFMLoginThread() {}
 
-bool LFMLoginThread::get_token(){
+bool LFMLoginThread::get_token() {
 
     QString token;
     UrlParams signature_data;
@@ -48,7 +47,7 @@ bool LFMLoginThread::get_token(){
     QString response;
     bool success = lfm_wa_call_url(url, response);
 
-    if(!success){
+    if(!success) {
         qDebug() << "LFM: could not call login url " << url;
         _login_info.logged_in = false;
         return false;
@@ -62,7 +61,7 @@ bool LFMLoginThread::get_token(){
     return true;
 }
 
-bool LFMLoginThread::request_authorization(){
+bool LFMLoginThread::request_authorization() {
 
 
     if(!get_token()) return false;
@@ -89,7 +88,7 @@ bool LFMLoginThread::request_authorization(){
 
 
 
-void LFMLoginThread::run(){
+void LFMLoginThread::run() {
 
     _login_info.logged_in = false;
 
@@ -104,10 +103,8 @@ void LFMLoginThread::run(){
     QString url = lfm_wa_create_sig_url_post("https://ws.audioscrobbler.com/2.0/", signature_data, post_data);
     QString response;
 
-    qDebug() << "url = " << url;
-
     bool success = lfm_wa_call_post_url_https(url, post_data, response);
-    if(!success){
+    if(!success) {
         qDebug() << "get session: no success!";
         qDebug() << response;
         _login_info.logged_in = false;
@@ -126,12 +123,12 @@ void LFMLoginThread::run(){
 }
 
 
-void LFMLoginThread::setup_login_thread(QString username, QString password){
+void LFMLoginThread::setup_login_thread(QString username, QString password) {
 
     _username = username;
     _password = password;
 }
 
-LFMLoginStuff LFMLoginThread::getLoginStuff(){
+LFMLoginStuff LFMLoginThread::getLoginStuff() {
     return _login_info;
 }

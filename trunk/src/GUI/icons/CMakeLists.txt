@@ -3,6 +3,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 SET(ICONS 
         append.png
         append_small.png
+        audio_convert.png
+        bookmarks.png
         broom.png
         bwd.png
         bwd_orange.png
@@ -68,6 +70,7 @@ SET(ICONS
         undo.png
 	border_a.png
 	border_b.png
+        speed.png
 )
 
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)

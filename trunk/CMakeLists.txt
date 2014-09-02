@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 project("Sayonara Player")
 ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(linux_packages/resources)
+#ADD_SUBDIRECTORY(linux_packages/resources)
 
 IF(${UNIX})
         execute_process(COMMAND sh ./scripts/setversion.sh)
@@ -14,12 +14,14 @@ ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 MESSAGE("Will install to ${CMAKE_INSTALL_PREFIX}")
 MESSAGE("To change this, use the -DCMAKE_INSTALL_PREFIX parameter")
 
+SET(CMAKE_SKIP_RPATH:BOOL ON) 
+
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 
 SET(CPACK_GENERATOR "RPM")
 SET(CPACK_PACKAGE_SUMMARY "Audio player and library organizer")
 SET(CPACK_PACKAGE_NAME "sayonara")
-SET(CPACK_PACKAGE_VERSION "0.4.0")
+SET(CPACK_PACKAGE_VERSION "0.5.8")
 SET(CPACK_PACKAGE_RELEASE "1")
 SET(CPACK_PACKAGE_VENDOR "Lucio Carreras")
 SET(CPACK_PACKAGE_CONTACT "LucioCarreras@gmail.com")
@@ -51,6 +53,8 @@ INCLUDE(CPack)
 
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
+INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/sayonara)
+INSTALL(DIRECTORY "linux_packages/resources/logos/" DESTINATION share/icons/highcolor)
 
 IF(${UNIX})
 	execute_process(COMMAND update-menus)

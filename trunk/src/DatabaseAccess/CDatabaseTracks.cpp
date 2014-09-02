@@ -27,9 +27,11 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
+#include <QSqlResult>
 #include <QDir>
 
 #include <cstdlib>
+#include <QElapsedTimer>
 
 using namespace Sort;
 
@@ -51,11 +53,12 @@ using namespace Sort;
     "tracks.rating AS rating " \
     "FROM tracks " \
     "INNER JOIN albums ON tracks.albumID = albums.albumID " \
-    "INNER JOIN artists ON tracks.artistID = artists.artistID "
+	"INNER JOIN artists ON tracks.artistID = artists.artistID " \
+	"WHERE filetype is null "
 
 
 
-bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
+bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 
 
 #ifdef DEBUG_DB
@@ -70,7 +73,7 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 			qDebug() << q.executedQuery();
 		}
 
-		while (q.next()) {
+		while(q.next()) {
 
 			MetaData data;
 			data.id = 		 q.value(0).toInt();
@@ -105,7 +108,7 @@ bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result){
 }
 
 
-QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrder sort){
+QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrder sort) {
 
 
     if(sort == TrackArtistAsc) querytext += QString(" ORDER BY artistName ASC, discnumber ASC, albumName ASC, trackNum;");
@@ -134,7 +137,7 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrde
 }
 
 
-void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md){
+void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -146,7 +149,7 @@ void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 
     _database->transaction();
 
-    foreach(QString path, paths){
+    foreach(QString path, paths) {
         MetaData md = getTrackByPath(path);
         v_md.push_back(md);
     }
@@ -156,7 +159,7 @@ void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 }
 
 
-MetaData CDatabaseConnector::getTrackByPath(QString path){
+MetaData CDatabaseConnector::getTrackByPath(QString path) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
@@ -180,20 +183,18 @@ MetaData CDatabaseConnector::getTrackByPath(QString path){
 
     if(!_db_fetch_tracks(q, vec_data)) return md;
 
-    if(vec_data.size() == 0){
+    if(vec_data.size() == 0) {
         md.is_extern = true;
         return md;
     }
 
     return vec_data[0];
-
 }
 
-MetaData CDatabaseConnector::getTrackById(int id){
+MetaData CDatabaseConnector::getTrackById(int id) {
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
 #endif
-
 
 	DB_TRY_OPEN(_database);
 
@@ -224,7 +225,6 @@ int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOr
     qDebug() << Q_FUNC_INFO;
 #endif
 
-
 	DB_TRY_OPEN(_database);
 
 	QSqlQuery q (*_database);
@@ -237,7 +237,7 @@ int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOr
     return 0;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort, int discnumber){
+void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort, int discnumber) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -252,13 +252,13 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata
 	
 	if(discnumber < 0) returndata = mdlist;
 	
-	foreach(MetaData md, mdlist){
+	foreach(MetaData md, mdlist) {
 		if(discnumber != md.discnumber) continue;
 		returndata.push_back(md);
 	}
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort){
+void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -271,23 +271,23 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 
 	if(albums.size() == 0) return;
 
-	else if(albums.size() == 1){
+	else if(albums.size() == 1) {
 		querytext += "AND tracks.albumid=:albumid ";
 	}
 
 	else {
 		querytext += "AND (tracks.albumid=:albumid ";
-		for(int i=1; i<albums.size(); i++){
+		for(int i=1; i<albums.size(); i++) {
 			querytext += "OR tracks.albumid=:albumid_" + QString::number(i) + " ";
 		}
 
 		querytext += ") ";
 	}
 
-	if(filter.filtertext.length() > 0 ){
+	if(filter.filtertext.length() > 0 ) {
 
 
-		switch(filter.by_searchstring){
+		switch(filter.by_searchstring) {
 			case BY_GENRE:
                 querytext += "AND tracks.genre LIKE :filter1 ";
 				break;
@@ -327,14 +327,14 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 
 	q.prepare(querytext);
 	q.bindValue(":albumid", QVariant(albums[0]));
-	for(int i=1; i<albums.size(); i++){
+	for(int i=1; i<albums.size(); i++) {
 		q.bindValue(QString(":albumid_") + QString::number(i), albums[i]);
 	}
 
-	if(filter.filtertext.length() > 0){
+	if(filter.filtertext.length() > 0) {
 		q.bindValue(":filter1", QVariant(filter.filtertext));
 
-		switch(filter.by_searchstring){
+		switch(filter.by_searchstring) {
 			case BY_GENRE:
 			case BY_FILENAME:
 				break;
@@ -352,7 +352,7 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, SortOrder sort){
+void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, SortOrder sort) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -363,7 +363,7 @@ void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returnda
 	getAllTracksByArtist(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, SortOrder sort){
+void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, SortOrder sort) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -380,21 +380,21 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 
 	if(artists.size() == 0) return;
 
-	else if(artists.size() == 1){
+	else if(artists.size() == 1) {
 		querytext += "AND tracks.artistid=:artistid ";
 	}
 
 	else {
 		querytext += "AND (tracks.artistid=:artistid ";
-		for(int i=1; i<artists.size(); i++){
+		for(int i=1; i<artists.size(); i++) {
 			querytext += "OR tracks.artistid=:artistid_" + QString::number(i) + " ";
 		}
 
 		querytext += ") ";
 	}
 
-	if(filter.filtertext.length() > 0 ){
-		switch(filter.by_searchstring){
+	if(filter.filtertext.length() > 0 ) {
+		switch(filter.by_searchstring) {
 
 			case BY_GENRE:
                     querytext += "AND tracks.genre LIKE :filter1";
@@ -428,14 +428,14 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 
 	q.prepare(querytext);
 	q.bindValue(":artist_id", QVariant(artists[0]));
-	for(int i=1; i<artists.size(); i++){
+	for(int i=1; i<artists.size(); i++) {
 		q.bindValue(QString(":artistid_") + QString::number(i), artists[i]);
 	}
 
-	if(filter.filtertext.length() > 0 ){
+	if(filter.filtertext.length() > 0 ) {
 		q.bindValue(":filter1", QVariant(filter.filtertext));
 
-		switch(filter.by_searchstring){
+		switch(filter.by_searchstring) {
 			case BY_GENRE:
 			case BY_FILENAME:
 				break;
@@ -452,7 +452,7 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 }
 
 
-void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sort){
+void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sort) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -468,7 +468,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 	QString querytext;
     QString subquery = TRACK_SELECTOR;
 
-	switch(filter.by_searchstring){
+	switch(filter.by_searchstring) {
 
 		case BY_GENRE:
 			querytext = TRACK_SELECTOR +
@@ -502,7 +502,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 	q.prepare(querytext);
 
 
-	switch(filter.by_searchstring){
+	switch(filter.by_searchstring) {
 
 		case BY_FILENAME:
 			q.bindValue(":search_in_filename",QVariant(filter.filtertext));
@@ -526,7 +526,7 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 }
 
 
-int CDatabaseConnector::deleteTrack(MetaData& md){
+int CDatabaseConnector::deleteTrack(MetaData& md) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -565,7 +565,7 @@ int CDatabaseConnector::deleteTrack(MetaData& md){
 
 
 
-int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
+int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -578,9 +578,9 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 
 	_database->transaction();
 
-	for(uint i=0; i<vec_tracks.size(); i++){
+	for(uint i=0; i<vec_tracks.size(); i++) {
 
-		if( deleteTrack(vec_tracks[i]) == 0){
+		if( deleteTrack(vec_tracks[i]) == 0) {
 			success ++;
 		}
 	}
@@ -590,7 +590,8 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks){
 	return success;
 }
 
-int CDatabaseConnector::updateTrack(MetaData& data){
+
+int CDatabaseConnector::updateTrack(MetaData& data) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -637,7 +638,7 @@ int CDatabaseConnector::updateTrack(MetaData& data){
 	return 0;
 }
 
-int CDatabaseConnector::updateTracks(MetaDataList lst){
+int CDatabaseConnector::updateTracks(MetaDataList lst) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -670,7 +671,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 	int track_id = md.id;
 
 
-	if(track_id > 0){
+	if(track_id > 0) {
 		data.id = md.id;
 		data.artist_id = artistID;
 		data.album_id = albumID;

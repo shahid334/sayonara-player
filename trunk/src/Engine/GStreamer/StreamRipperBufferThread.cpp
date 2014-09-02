@@ -1,6 +1,6 @@
 /* StreamRipperBufferThread.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -34,16 +34,16 @@ StreamRipperBufferThread::StreamRipperBufferThread(QObject *parent) :
 
 }
 
-StreamRipperBufferThread::~StreamRipperBufferThread(){
+StreamRipperBufferThread::~StreamRipperBufferThread() {
 
 }
 
 
-void StreamRipperBufferThread::setUri(QString uri){
+void StreamRipperBufferThread::setUri(QString uri) {
     _uri = uri;
 }
 
-void StreamRipperBufferThread::run(){
+void StreamRipperBufferThread::run() {
 
     qDebug() << "Buffer file " << _uri;
     // initially fill the buffer
@@ -61,7 +61,7 @@ void StreamRipperBufferThread::run(){
         return;
     }
 
-    if(_f != NULL){
+    if(_f != NULL) {
         if(_f->isOpen()) _f->close();
         delete _f;
     }
@@ -86,20 +86,20 @@ void StreamRipperBufferThread::run(){
     _f->close();
 }
 
-QString StreamRipperBufferThread::getUri(){
+QString StreamRipperBufferThread::getUri() {
     return _uri;
 }
 
-int StreamRipperBufferThread::getSize(){
+int StreamRipperBufferThread::getSize() {
     return _size;
 }
 
-void StreamRipperBufferThread::setBufferSize(int bs){
+void StreamRipperBufferThread::setBufferSize(int bs) {
     _buffersize = bs;
 }
 
 
-void StreamRipperBufferThread::terminate(){
+void StreamRipperBufferThread::terminate() {
 
     if(_f->isOpen()) _f->close();
     _size = 0;

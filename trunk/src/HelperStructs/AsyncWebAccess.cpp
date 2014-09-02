@@ -1,6 +1,6 @@
 /* AsyncWebAccess.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -23,7 +23,7 @@
 
 
 
-AsyncWebAccess::AsyncWebAccess(QObject* parent, int id, AwaDataType type) : QThread(parent){
+AsyncWebAccess::AsyncWebAccess(QObject* parent, int id, AwaDataType type) : QThread(parent) {
     _id = id;
     _data = new QString();
     _img = new QImage();
@@ -31,7 +31,7 @@ AsyncWebAccess::AsyncWebAccess(QObject* parent, int id, AwaDataType type) : QThr
     setTerminationEnabled(true);
 }
 
-AsyncWebAccess::~AsyncWebAccess(){
+AsyncWebAccess::~AsyncWebAccess() {
 
 
     if(this->isRunning()) return;
@@ -47,24 +47,24 @@ AsyncWebAccess::~AsyncWebAccess(){
 
 }
 
-void AsyncWebAccess::terminate(){
+void AsyncWebAccess::terminate() {
     emit terminated(_id);
     QThread::terminate();
 }
 
-void AsyncWebAccess::stop(){
+void AsyncWebAccess::stop() {
 
     emit finished(_id);
     this->quit();
 
 }
 
-void AsyncWebAccess::run(){
+void AsyncWebAccess::run() {
 
     _data->clear();
 	if(_url.size() == 0) return;
 
-    switch(_type){
+    switch(_type) {
         case AwaDataTypeImage:
             Helper::read_http_into_img(_url, _img);
         default:
@@ -76,14 +76,14 @@ void AsyncWebAccess::run(){
 
 
 
-QString* AsyncWebAccess::get_data(){
+QString* AsyncWebAccess::get_data() {
     return _data;
 }
 
-QImage* AsyncWebAccess::get_image(){
+QImage* AsyncWebAccess::get_image() {
     return _img;
 }
 
-void AsyncWebAccess::set_url(QString url){
+void AsyncWebAccess::set_url(QString url) {
 	_url = url;
 }

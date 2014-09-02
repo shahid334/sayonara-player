@@ -26,22 +26,11 @@
  */
 
 
-
-/*
- * DON'T TOUCH IT! DON'T COMMENT IT!
- * I WAS YOUNG AND NEEDED THE FUNCTIONALITY
- * */
-
-
-
 #include "HelperStructs/WebAccess.h"
 #include "CoverLookup/CoverDownloader.h"
 
 #include <curl/curl.h>
 
-#include <QString>
-#include <QStringList>
-#include <QImage>
 #include <QUrl>
 #include <QDebug>
 #include <QRegExp>
@@ -62,7 +51,7 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
 
     //qDebug() << webpage;
 
-    while(n_covers < num){
+    while(n_covers < num) {
         QString re_str("(https://encrypted-tbn)(\\S)+(\")");
         QRegExp re(re_str);
         idx = re.indexIn(webpage, idx);
@@ -78,16 +67,16 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
     return adresses;
 }
 
-QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses){
 
-    qDebug() << "Url = " << url;
+QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses) {
 
     QString content;
     bool success = WebAccess::read_http_into_str(url, &content);
 
     QStringList cover_adresses;
-    if(success){
+    if(success) {
         cover_adresses = cov_calc_adresses_from_webpage(num_adresses, content);
+		content.clear();
     }
     else{
         qDebug() << "could not get cover adresses from " << url;
@@ -98,8 +87,6 @@ QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses){
 
 
 bool CoverDownloader::cov_download_cover(QString adress, QImage* img) {
-
-    qDebug() << "Cover adress = " << adress;
 
     return WebAccess::read_http_into_img(adress, img);
 

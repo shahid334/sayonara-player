@@ -29,6 +29,7 @@
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include <CoverLookup/CoverLookup.h>
 
+
 #include <QObject>
 #include <QWidget>
 #include <QTableView>
@@ -41,8 +42,12 @@
 
 
 AlternateCoverItemDelegate::AlternateCoverItemDelegate(QObject* parent) : QItemDelegate(parent) {
-label = new QLabel();
+    QPixmap pm = Helper::getPixmap("logo.png");
+	label = new QLabel();
+	label->setScaledContents(true);
+	label->setStyleSheet("background: transparent;");
 
+	label->setPixmap(pm);
 }
 
 AlternateCoverItemDelegate::~AlternateCoverItemDelegate() {
@@ -55,43 +60,33 @@ void AlternateCoverItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
     if(!index.isValid()) return;
 
+	QRect rect(option.rect);
 
-    QRect rect(option.rect);
+	painter->save();
+	painter->translate(2, 0);
 
-    painter->save();
-    painter->translate(2, 0);
+	QVariant var = index.model()->data(index);
+	CoverLocation cl = CoverLocation::getInvalidLocation();
 
-    QStringList data_lst =  index.model()->data(index, Qt::WhatsThisRole).toString().split(',');
+	if( var.canConvert<CoverLocation>()){
+		cl = var.value<CoverLocation>();
+	}
 
-    bool is_selected = false;
-
+	label->setEnabled(cl.valid);
+	label->setMinimumHeight(100);
+	label->setMinimumWidth(100);
     label->resize(100, 100);
-    label->setContentsMargins(10, 10, 10, 10);
 
+	label->setContentsMargins(10, 10, 10, 10);
 
-    if(data_lst.size() >= 2){
+	QPixmap pixmap( cl.cover_path );
 
-        QString filename = data_lst[0];
-        is_selected = (data_lst[1].toInt() == 1);
+	if(!pixmap.isNull()) {
 
-        QPixmap pixmap(filename);
-        if(!pixmap.isNull()){
+		label->setPixmap(pixmap);
+	}
 
-            label->setScaledContents(true);
-            label->setPixmap(pixmap);
-	    label->setToolTip(QString::number(pixmap.width()) + "x" + QString::number(pixmap.height()) );
-
-        }
-
-        if(!is_selected)
-            label->setStyleSheet("background-color: transparent;");
-        else label->setStyleSheet("background-color: #e8841a;");
-
-        label->render(painter, rect.topLeft() );
-    }
-
-
-
+	label->render(painter, rect.topLeft() );
 
     painter->restore();
 

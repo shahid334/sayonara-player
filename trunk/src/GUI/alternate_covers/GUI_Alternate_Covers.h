@@ -32,7 +32,7 @@
 #include "GUI/ui_GUI_Alternate_Covers.h"
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
-#include "CoverLookup/CoverLookup.h"
+#include "CoverLookup/CoverLookupAlternative.h"
 #include "HelperStructs/MetaData.h"
 
 #include <QDialog>
@@ -40,11 +40,6 @@
 #include <QPixmap>
 #include <QList>
 #include <QModelIndex>
-#include <QFileSystemWatcher>
-
-
-using namespace std;
-
 
 
 class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
@@ -55,14 +50,17 @@ public:
 	virtual ~GUI_Alternate_Covers();
 
 	signals:
-
-		void sig_search_images(const QString&);
-        void sig_covers_changed(QString, QString);
+		void sig_cover_changed(const CoverLocation&);
         void sig_no_cover();
 
 
 	public slots:
-        void start(QString, QString, QString dir="");
+		void start(Album album, const CoverLocation& cl = CoverLocation());
+		void start(int album_id, const CoverLocation& cl = CoverLocation());
+		void start(QString album_name, QString artist_name, const CoverLocation& cl = CoverLocation());
+		void start(Artist artist, const CoverLocation& cl = CoverLocation());
+		void start(QString artist_name, const CoverLocation& cl = CoverLocation());
+
         void changeSkin(bool dark);
         void language_changed();
 
@@ -71,42 +69,28 @@ public:
 		void cancel_button_pressed();
 		void search_button_pressed();
 		void cover_pressed(const QModelIndex& idx);
-		void covers_there(QString classname, int n_covers);
-		void tmp_folder_changed(const QString&);
         void open_file_dialog();
+		void cl_new_cover(const CoverLocation& path);
+		void cl_finished(bool);
 
 	private:
-		Ui::AlternateCovers* ui;
-
 		int 				_cur_idx;
-		QString				_tmp_dir;
-		QString				_class_name;
-		QString				_calling_class;
-		Album				_album;
-		Artist				_artist;
-		QStringList			_filelist;
-		bool				_search_for_album;
+		QString				_last_path;
+		CoverLocation		_cover_location;
+		QList<CoverLocation> _filelist;
+		bool				_is_searching;
 
 		AlternateCoverItemDelegate* _delegate;
 		AlternateCoverItemModel*	_model;
-        CoverFetchThread*           _cov_fetch_thread;
-        QFileSystemWatcher*			_watcher;
 
-        bool                _no_album;
-        QString             _target_filename;
-        bool                _blocked;
-        QString             _last_path;
-
+        CoverLookupAlternative*        _cl_alternative;
 
         void update_model();
+		void connect_and_start();
+		void delete_all_files();
 
-
-private slots:
-        void cft_destroyed();
-
-
-
-
+protected:
+		void closeEvent(QCloseEvent* e);
 };
 
 #endif /* GUI_ALTERNATE_COVERS_H_ */

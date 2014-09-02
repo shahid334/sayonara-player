@@ -1,6 +1,6 @@
 /* GUI_StyleSettings.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -59,7 +59,6 @@ private slots:
 
 
 private:
-    Ui::GUI_Style* ui;
 
     CDatabaseConnector* _db;
     QList<RawColorStyle> _styles;

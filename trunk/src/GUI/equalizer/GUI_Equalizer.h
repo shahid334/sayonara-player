@@ -29,23 +29,59 @@
 #ifndef GUI_EQUALIZER_H_
 #define GUI_EQUALIZER_H_
 
+#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "GUI/ui_GUI_Equalizer.h"
+
 
 #include <QObject>
 #include <vector>
 
 using namespace std;
 
+class EqSlider : public QObject{
+	Q_OBJECT
+
+	// QObject does not allow nested classes
+	// so this is a workaround
+	friend class GUI_Equalizer;
+
+	signals:
+		void valueChanged(int idx, int val);
+
+	private:
+		QSlider* _slider;
+		QLabel* _label;
+		int _idx;
+
+		EqSlider(QObject* parent) : QObject(parent) {}
+		EqSlider(QSlider* slider, QLabel* label, int idx) :
+			_slider(slider), _label(label), _idx(idx) {
+
+			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(sl_slider_changed(int)));
+		}
+		QSlider* getSlider() { return _slider; }
+		QLabel* getLabel() { return _label;}
+		void setValue(int val) {this->_slider->setValue(val);}
+
+	virtual ~EqSlider() {}
+
+
+	private slots:
+		void sl_slider_changed(int val) {
+			emit valueChanged(_idx, val);
+		}
+};
+
+
+
 class GUI_Equalizer : public PlayerPlugin, private Ui::GUI_Equalizer{
 
 	Q_OBJECT
 
 public:
-    GUI_Equalizer(QString name, QString action_name, QWidget* parent=0);
+	GUI_Equalizer(QString name,QWidget* parent=0);
 	virtual ~GUI_Equalizer();
-    static QString getVisName(){ return tr("&Equalizer"); }
-    virtual QAction* getAction();
 
 	signals:
 		void eq_changed_signal(int, int);
@@ -55,35 +91,30 @@ public:
 
 
 	private slots:
-		void sli_0_changed(int);
-		void sli_1_changed(int);
-		void sli_2_changed(int);
-		void sli_3_changed(int);
-		void sli_4_changed(int);
-		void sli_5_changed(int);
-		void sli_6_changed(int);
-		void sli_7_changed(int);
-		void sli_8_changed(int);
-		void sli_9_changed(int);
+		void sli_changed(int, int);
 
 		void but_enabled_changed(bool);
 		void preset_changed(int);
 		void btn_preset_clicked();
 
 	public slots:
-		void fill_eq_presets(const vector<EQ_Setting>&);
+		void fill_eq_presets();
 		void fill_available_equalizers(const QStringList&);
         void changeSkin(bool);
         void language_changed();
 
 	private:
-        Ui::GUI_Equalizer* _ui;
+
 		vector<EQ_Setting> _presets;
+		CSettingsStorage* _settings;
+		vector<EqSlider*> _sliders;
+
 
         double _m;
         double _t;
 
         bool _dark;
+
 };
 
 #endif /* GUI_EQUALIZER_H_ */

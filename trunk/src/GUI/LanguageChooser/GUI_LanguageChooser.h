@@ -1,6 +1,6 @@
 /* GUI_LanguageChooser.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -50,7 +50,7 @@ private slots:
 
 
 private:
-    Ui::GUI_LanguageChooser* ui;
+
     QMap<QString, QString> _map;
     int _last_idx;
     void renew_combo();

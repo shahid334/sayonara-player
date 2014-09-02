@@ -37,18 +37,12 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/ui_GUI_Equalizer.h"
 
-#include <QObject>
 #include <QDockWidget>
-#include <QDebug>
 #include <QMessageBox>
 
 
-#include <vector>
-
-using namespace std;
-
-QString calc_lab(int val){
-    if(val > 0){
+QString calc_lab(int val) {
+    if(val > 0) {
         double v = val / 2.0;
         if(val % 2 == 0)
             return QString("+") + QString::number(v) + ".0";
@@ -60,29 +54,36 @@ QString calc_lab(int val){
 
 }
 
-GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QWidget *parent) : PlayerPlugin(name, action_text, parent) {
+GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
+	PlayerPlugin(name, parent),
+	Ui::GUI_Equalizer(){
 
-    this->_ui = new Ui::GUI_Equalizer( );
-	this->_ui->setupUi(this);
+	_settings = CSettingsStorage::getInstance();
+	setupUi(this);
 
-	this->_ui->btn_preset->setIcon(QIcon(Helper::getIconPath() + "save.png"));
-	this->_ui->btn_preset->setText("");
+    btn_preset->setIcon(Helper::getIcon("save.png"));
+	btn_preset->setText("");
 
-	connect(this->_ui->sli_0, SIGNAL(valueChanged(int)), this, SLOT(sli_0_changed(int)));
-	connect(this->_ui->sli_1, SIGNAL(valueChanged(int)), this, SLOT(sli_1_changed(int)));
-	connect(this->_ui->sli_2, SIGNAL(valueChanged(int)), this, SLOT(sli_2_changed(int)));
-	connect(this->_ui->sli_3, SIGNAL(valueChanged(int)), this, SLOT(sli_3_changed(int)));
-	connect(this->_ui->sli_4, SIGNAL(valueChanged(int)), this, SLOT(sli_4_changed(int)));
-	connect(this->_ui->sli_5, SIGNAL(valueChanged(int)), this, SLOT(sli_5_changed(int)));
-	connect(this->_ui->sli_6, SIGNAL(valueChanged(int)), this, SLOT(sli_6_changed(int)));
-	connect(this->_ui->sli_7, SIGNAL(valueChanged(int)), this, SLOT(sli_7_changed(int)));
-	connect(this->_ui->sli_8, SIGNAL(valueChanged(int)), this, SLOT(sli_8_changed(int)));
-	connect(this->_ui->sli_9, SIGNAL(valueChanged(int)), this, SLOT(sli_9_changed(int)));
+	_sliders.push_back(new EqSlider(sli_0, label, 0));
+	_sliders.push_back(new EqSlider(sli_1, label_2, 1));
+	_sliders.push_back(new EqSlider(sli_2, label_3, 2));
+	_sliders.push_back(new EqSlider(sli_3, label_4, 3));
+	_sliders.push_back(new EqSlider(sli_4, label_5, 4));
+	_sliders.push_back(new EqSlider(sli_5, label_6, 5));
+	_sliders.push_back(new EqSlider(sli_6, label_7, 6));
+	_sliders.push_back(new EqSlider(sli_7, label_8, 7));
+	_sliders.push_back(new EqSlider(sli_8, label_9, 8));
+	_sliders.push_back(new EqSlider(sli_9, label_10, 9));
 
+	foreach(EqSlider* s, _sliders) {
+		connect(s, SIGNAL(valueChanged(int,int)), this, SLOT(sli_changed(int, int)));
+	}
 
-	connect(this->_ui->btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
+	connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
 
-    hide();
+	fill_eq_presets();
+
+	hide();
     _m = (100.0 / 48.0);
     _t = 50;
 
@@ -90,183 +91,99 @@ GUI_Equalizer::GUI_Equalizer(QString name, QString action_text, QWidget *parent)
 
 GUI_Equalizer::~GUI_Equalizer() {
 
-	delete _ui;
+	foreach(EqSlider* s, _sliders) {
+		delete s;
+	}
 }
 
 
-QAction* GUI_Equalizer::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
+
+void GUI_Equalizer::language_changed() {
+	retranslateUi(this);
 }
 
-void GUI_Equalizer::language_changed(){
-    _ui->retranslateUi(this);
-}
-
-void GUI_Equalizer::changeSkin(bool dark){
+void GUI_Equalizer::changeSkin(bool dark) {
 
     _dark = dark;
 }
 
 
 
-void GUI_Equalizer::sli_0_changed(int new_val){
-
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val ));
-   // this->_ui->sli_0->setStyleSheet(sli_style);
-
-
-    this->_ui->label->setText(calc_lab(new_val));
-	emit eq_changed_signal(0, new_val);
-}
-void GUI_Equalizer::sli_1_changed(int new_val){
-
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_1->setStyleSheet(sli_style);
-
-    this->_ui->label_2->setText(calc_lab(new_val));
-	emit eq_changed_signal(1, new_val);
-}
-void GUI_Equalizer::sli_2_changed(int new_val){
-
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_2->setStyleSheet(sli_style);
-
-    this->_ui->label_3->setText(calc_lab(new_val));
-	emit eq_changed_signal(2, new_val);
-}
-void GUI_Equalizer::sli_3_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_3->setStyleSheet(sli_style);
-
-    this->_ui->label_4->setText(calc_lab(new_val));
-	emit eq_changed_signal(3, new_val);
-}
-void GUI_Equalizer::sli_4_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_4->setStyleSheet(sli_style);
-
-    this->_ui->label_5->setText(calc_lab(new_val));
-	emit eq_changed_signal(4, new_val);
-}
-void GUI_Equalizer::sli_5_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_5->setStyleSheet(sli_style);
-
-    this->_ui->label_6->setText(calc_lab(new_val));
-	emit eq_changed_signal(5, new_val);
-}
-void GUI_Equalizer::sli_6_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_6->setStyleSheet(sli_style);
-
-    this->_ui->label_7->setText(calc_lab(new_val));
-	emit eq_changed_signal(6, new_val);
-}
-void GUI_Equalizer::sli_7_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark,SCALE(new_val));
-    //this->_ui->sli_7->setStyleSheet(sli_style);
-
-    this->_ui->label_8->setText(calc_lab(new_val));
-	emit eq_changed_signal(7, new_val);
-}
-void GUI_Equalizer::sli_8_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_8->setStyleSheet(sli_style);
-    this->_ui->label_9->setText(calc_lab(new_val));
-
-	emit eq_changed_signal(8, new_val);
-}
-void GUI_Equalizer::sli_9_changed(int new_val){
-    QString sli_style = Style::get_v_slider_style(_dark, SCALE(new_val));
-    //this->_ui->sli_9->setStyleSheet(sli_style);
-    this->_ui->label_10->setText(calc_lab(new_val));
-	emit eq_changed_signal(9, new_val);
+void GUI_Equalizer::sli_changed(int idx, int new_val) {
+	_sliders[idx]->getLabel()->setText(calc_lab(new_val));
+	emit eq_changed_signal(idx, new_val);
 }
 
-void GUI_Equalizer::but_enabled_changed(bool enabled){
+
+void GUI_Equalizer::but_enabled_changed(bool enabled) {
 
 }
 
 
-void GUI_Equalizer::fill_eq_presets(const vector<EQ_Setting>& presets){
+void GUI_Equalizer::fill_eq_presets() {
 
-	_presets = presets;
+	QStringList items;
+	_settings->getEqualizerSettings(_presets);
 
-	for(uint i=0; i<presets.size(); i++){
-
-		this->_ui->combo_presets->insertItem(i, presets[i].name);
+	foreach(EQ_Setting s, _presets) {
+		items << s.name;
 	}
 
-	int last_idx = CSettingsStorage::getInstance()->getLastEqualizer();
-	if(last_idx < (int) presets.size() ){
+	combo_presets->insertItems(0, items);
 
-		this->_ui->combo_presets->setCurrentIndex(last_idx);
+	int last_idx = _settings->getLastEqualizer();
+	if(last_idx < (int) _presets.size() ) {
+		combo_presets->setCurrentIndex(last_idx);
 		preset_changed(last_idx);
 	}
 
-	connect(this->_ui->combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
+	connect(combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
 }
 
 
-void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs){
+void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs) {
 	Q_UNUSED(eqs);
 }
 
 
-void GUI_Equalizer::preset_changed(int index){
+void GUI_Equalizer::preset_changed(int index) {
 
-	QList<double> setting = this->_presets[index].settings;
+	QList<double> setting = _presets[index].settings;
 
-	for(int i=0; i<setting.size(); i++){
-        int val = (int) setting[i];
-		if( i==0) this->_ui->sli_0->setValue(val);
-		else if(i == 1) this->_ui->sli_1->setValue(val);
-		else if(i == 2) this->_ui->sli_2->setValue(val);
-		else if(i == 3) this->_ui->sli_3->setValue(val);
-		else if(i == 4) this->_ui->sli_4->setValue(val);
-		else if(i == 5) this->_ui->sli_5->setValue(val);
-		else if(i == 6) this->_ui->sli_6->setValue(val);
-		else if(i == 7) this->_ui->sli_7->setValue(val);
-		else if(i == 8) this->_ui->sli_8->setValue(val);
-		else if(i == 9) this->_ui->sli_9->setValue(val);
+	for(int i=0; i<setting.size(); i++) {
+		if(i > (int) _sliders.size()) break;
 
-		emit eq_changed_signal(i, val);
+		_sliders[i]->setValue( setting[i] );
 	}
 
 
 	CSettingsStorage::getInstance()->setLastEqualizer(index);
-
 }
 
 
-void GUI_Equalizer::btn_preset_clicked(){
-	QString str = "Custom,";
-	str += _ui->label->text() + ",";
-	str += _ui->label_2->text() + ",";
-	str += _ui->label_3->text() + ",";
-	str += _ui->label_4->text() + ",";
-	str += _ui->label_5->text() + ",";
-	str += _ui->label_6->text() + ",";
-	str += _ui->label_7->text() + ",";
-	str += _ui->label_8->text() + ",";
-	str += _ui->label_9->text() + ",";
-	str += _ui->label_10->text();
+void GUI_Equalizer::btn_preset_clicked() {
+
+    bool b_save = true;
+    int current_idx = combo_presets->currentIndex();
+
+	QString str = "Custom";
+
+	foreach(EqSlider* s, _sliders) {
+		str += "," + s->getLabel()->text();
+	}
 
 	int custom_idx = -1;
-	for(uint i=0; i<_presets.size(); i++){
+	for(uint i=0; i<_presets.size(); i++) {
 
-		if(_presets[i].name == "Custom"){
-			_presets[i].parseFromString(str);
+		if(_presets[i].name == "Custom") {
+            _presets[i] = EQ_Setting::fromString(str);
 			custom_idx = i;
 			break;
 		}
 	}
 
-	bool b_save = true;
-	int current_idx = this->_ui->combo_presets->currentIndex();
+	if( custom_idx != -1 && custom_idx != current_idx ) {
 
-	if( custom_idx != -1 && custom_idx != current_idx ){
         QMessageBox msgBox(this);
          msgBox.setText(tr("This will overwrite your custom preset"));
          msgBox.setInformativeText(tr("Continue?"));
@@ -278,11 +195,12 @@ void GUI_Equalizer::btn_preset_clicked(){
 		 if(ret != QMessageBox::Yes) b_save = false;
 	}
 
-	if(b_save){
+	if(b_save) {
 		CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
-		if(custom_idx != -1) this->_ui->combo_presets->setCurrentIndex(custom_idx);
+        if(custom_idx != -1){
+            combo_presets->setCurrentIndex(custom_idx);
+        }
 	}
-
 }
 
 

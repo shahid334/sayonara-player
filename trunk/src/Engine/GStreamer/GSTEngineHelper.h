@@ -26,6 +26,8 @@
 #include <QDebug>
 #include <QString>
 #include <gst/gst.h>
+#include <gst/gstcaps.h>
+#include "Engine/Engine.h"
 
 #define ENGINE_DEBUG if(_debug) qDebug() << Q_FUNC_INFO << "; "
 
@@ -48,26 +50,88 @@ extern bool __start_at_beginning;
 extern int __start_pos_beginning;
 
 
+class MyCaps {
 
-gboolean
-bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data);
+private:
+	CapsType _type;
+	bool    _sig;
+	int     _width;
+	int     _channels;
+	bool    _parsed;
+
+public:
+
+	MyCaps(){
+		_type = CapsTypeUnknown;
+		_sig = false;
+		_width = -1;
+		_channels = -1;
+		_parsed = false;
+	}
+
+	bool is_parsed(){ return _parsed; }
+	void set_parsed(bool b){ _parsed = b; }
+
+	CapsType get_type(){ return _type; }
+	bool get_signed() {return _sig; }
+	int get_width() { return _width; }
+	int get_channels() { return _channels; }
+
+	void parse(GstCaps* caps){
+		QString info = gst_caps_to_string(caps);
+		//qDebug() << info;
+
+		QStringList lst = info.split(",");
+		foreach(QString s, lst){
+
+			s = s.trimmed();
+			if(s.startsWith("audio", Qt::CaseInsensitive)){
+				if(s.contains("int", Qt::CaseInsensitive)) _type = CapsTypeInt;
+				else if(s.contains("float", Qt::CaseInsensitive)) _type = CapsTypeFloat;
+				else _type = CapsTypeUnknown;
+			}
+
+			else if(s.startsWith("signed", Qt::CaseInsensitive)){
+				if(s.contains("true", Qt::CaseInsensitive)) _sig = true;
+				else _sig = false;
+			}
+
+			else if(s.startsWith("width", Qt::CaseInsensitive)){
+				_width = s.right(2).toInt();
+			}
+
+			else if(s.startsWith("channels", Qt::CaseInsensitive)){
+				_channels = s.right(1).toInt();
+				if(_channels > 2) _channels = 2;
+			}
+		}
+		_parsed = true;
+	}
+};
 
 
-gboolean player_change_file(GstBin* pipeline, void* data);
-
-void
-new_buffer(GstElement* sink, gpointer data);
-
-gboolean
-level_handler (GstBus * bus, GstMessage * message, gpointer data);
-
-gboolean
-spectrum_handler (GstBus * bus, GstMessage * message, gpointer data);
-
-gboolean
-show_position(GstElement* pipeline);
 
 
+namespace EngineCallbacks {
+
+	gboolean
+	bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data);
+
+
+	void
+	new_buffer(GstElement* sink, gpointer data);
+
+	gboolean
+	level_handler (GstBus * bus, GstMessage * message, gpointer data);
+
+	gboolean
+	spectrum_handler (GstBus * bus, GstMessage * message, gpointer data);
+
+	gboolean
+	show_position(GstElement* pipeline);
+
+	void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r);
+}
 
 
 #endif // GSTENGINECALLBACKS_H

@@ -1,6 +1,6 @@
 /* GUI_PlaylistChooser.h */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -68,13 +68,11 @@ public slots:
     void language_changed();
 
 public:
-    GUI_PlaylistChooser(QString name, QString action_text, QWidget *parent = 0);
+	GUI_PlaylistChooser(QString name, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
-    static QString getVisName(){ return tr("Pla&ylists"); }
-    virtual QAction* getAction();
 
 private:
-    Ui::GUI_PlaylistChooser* ui;
+
     GUI_Target_Playlist_Dialog* _target_playlist_dialog;
 
 	QMap<int, QString> _playlists;

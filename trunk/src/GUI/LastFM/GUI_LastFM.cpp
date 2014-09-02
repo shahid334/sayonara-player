@@ -31,32 +31,59 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/CSettingsStorage.h"
+
 #include <QMessageBox>
-
-#include <QString>
-#include <QCryptographicHash>
-
 
 #include <iostream>
 
 using namespace std;
 
-GUI_LastFM::GUI_LastFM(QWidget* parent) : QDialog(parent) {
+GUI_LastFM::GUI_LastFM(QWidget* parent) :
+	QDialog(parent),
+	Ui_GUI_LastFM_Dialog() {
 
-    ui = 0;
-    hide();
+	init();
+
 }
 
 
-GUI_LastFM::GUI_LastFM(QString username, QString password){
+GUI_LastFM::GUI_LastFM(QWidget* parent, QString username, QString password) :
+	QDialog(parent),
+	Ui_GUI_LastFM_Dialog() {
 
-	this->ui = new Ui_GUI_LastFM_Dialog();
-	this->ui->setupUi(this);
+	setupUi(this);
 
-	this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
+    lab_image->setPixmap(Helper::getPixmap("lastfm_logo.jpg"));
+	tf_username->setText(username);
+	tf_username->setText(password);
 
-	this->ui->tf_username->setText(username);
-	this->ui->tf_username->setText(password);
+	init();
+}
+
+void GUI_LastFM::init(){
+	setupUi(this);
+
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
+	bool enabled;
+	bool checked;
+
+	enabled = settings->getLastFMActive();
+
+	cb_activate->setChecked(enabled);
+	setLFMActive(enabled);
+
+    lab_image->setPixmap(Helper::getPixmap("lastfm_logo.jpg"));
+	checked = settings->getLastFMCorrections();
+	cb_correct_id3->setChecked(checked);
+
+	checked = settings->getLastFMShowErrors();
+	cb_error_messages->setChecked(checked);
+
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
+	connect(btn_clear_session, SIGNAL(clicked()), this, SLOT(clear_session_pressed()));
+	connect(cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
+	connect(cb_activate, SIGNAL(toggled(bool)), this, SLOT(cb_activate_toggled(bool)));
+	hide();
 }
 
 
@@ -64,99 +91,78 @@ GUI_LastFM::~GUI_LastFM() {
 
 }
 
-void GUI_LastFM::changeSkin(bool dark){
+void GUI_LastFM::changeSkin(bool dark) {
 
     _skin = dark;
 }
 
-void GUI_LastFM::language_changed(){
-    if(!ui) return;
-    this->ui->retranslateUi(this);
+void GUI_LastFM::language_changed() {
+
+	retranslateUi(this);
 }
 
-void GUI_LastFM::clear_session_pressed(){
+void GUI_LastFM::clear_session_pressed() {
 
 }
 
 
-void GUI_LastFM::save_button_pressed(){
+void GUI_LastFM::save_button_pressed() {
 
-	if(this->ui->tf_username->text().length() < 3) return;
-	if(this->ui->tf_password->text().length() < 3) return;
+	if(tf_username->text().length() < 3) return;
+	if(tf_password->text().length() < 3) return;
     CSettingsStorage* settings = CSettingsStorage::getInstance();
 
     QString user, password;
     settings-> getLastFMNameAndPW(user, password);
 
-    if (this->ui->tf_password->text() != password){
+	if (tf_password->text() != password) {
 
-        emit new_lfm_credentials(this->ui->tf_username->text(), this->ui->tf_password->text());
-        settings->setLastFMNameAndPW(this->ui->tf_username->text(), this->ui->tf_password->text());
+		emit new_lfm_credentials(tf_username->text(), tf_password->text());
+		settings->setLastFMNameAndPW(tf_username->text(), tf_password->text());
     }
 
-    settings->setLastFMShowErrors(this->ui->cb_error_messages->isChecked());
+	settings->setLastFMShowErrors(cb_error_messages->isChecked());
 
     hide();
     close();
 }
 
 
-void GUI_LastFM::show_win(){
+void GUI_LastFM::show_win() {
 
-     CSettingsStorage* settings = CSettingsStorage::getInstance();
-     if(!ui){
-        this->ui = new Ui_GUI_LastFM_Dialog();
-        this->ui->setupUi(this);
+	CSettingsStorage* settings = CSettingsStorage::getInstance();
 
-        bool enabled = settings->getLastFMActive();
-        this->ui->cb_activate->setChecked(enabled);
-        setLFMActive(enabled);
-
-        this->ui->lab_image->setPixmap(QPixmap::fromImage(QImage(Helper::getIconPath() + "lastfm_logo.jpg")));
-        bool checked = settings->getLastFMCorrections();
-        this->ui->cb_correct_id3->setChecked(checked);
-
-        checked = settings->getLastFMShowErrors();
-        this->ui->cb_error_messages->setChecked(checked);
-
-        connect(this->ui->btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
-        connect(this->ui->btn_clear_session, SIGNAL(clicked()), this, SLOT(clear_session_pressed()));
-        connect(this->ui->cb_correct_id3, SIGNAL(toggled(bool)), this, SLOT(cb_correct_id3_toggled(bool)));
-        connect(this->ui->cb_activate, SIGNAL(toggled(bool)), this, SLOT(cb_activate_toggled(bool)));
-    }
-
-
-    QString user, password;
-    settings -> getLastFMNameAndPW(user, password);
-    if (user.size() > 0) {
-        this->ui->tf_username->setText(user);
-        this->ui->tf_password->setText(password);
-    }
+	QString user, password;
+	settings -> getLastFMNameAndPW(user, password);
+	if (user.size() > 0) {
+		tf_username->setText(user);
+		tf_password->setText(password);
+	}
 
 #if QT_VERSION >= QT_VERSION_CHECK(4, 7, 0)
     else {
-        this->ui->tf_username->setPlaceholderText("Enter Usename");
-        this->ui->tf_password->setPlaceholderText("Enter Password");
+		tf_username->setPlaceholderText("Enter Usename");
+		tf_password->setPlaceholderText("Enter Password");
     }
 
 #endif
     changeSkin(_skin);
-    this->show();
+	show();
 }
 
 
-void GUI_LastFM::cb_correct_id3_toggled(bool checked){
+void GUI_LastFM::cb_correct_id3_toggled(bool checked) {
 
 	CSettingsStorage::getInstance()->setLastFMCorrections(checked);
 }
 
-void GUI_LastFM::setLFMActive(bool enabled){
-	this->ui->tf_username->setEnabled(enabled);
-	this->ui->tf_password->setEnabled(enabled);
-	this->ui->cb_correct_id3->setEnabled(enabled);
+void GUI_LastFM::setLFMActive(bool enabled) {
+	tf_username->setEnabled(enabled);
+	tf_password->setEnabled(enabled);
+	cb_correct_id3->setEnabled(enabled);
 }
 
-void GUI_LastFM::cb_activate_toggled(bool b){
+void GUI_LastFM::cb_activate_toggled(bool b) {
 	setLFMActive(b);
 	CSettingsStorage::getInstance()->setLastFMActive(b);
 	emit sig_activated(b);

@@ -1,6 +1,6 @@
 /* GUI_LevelPainter.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -18,23 +18,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-#include "GUI_LevelPainter.h"
+#include "GUI/engine/GUI_LevelPainter.h"
 #include <QPainter>
 #include <QBrush>
-#include <QDebug>
 
-
-
-GUI_LevelPainter::GUI_LevelPainter(QString name, QString action_text, QWidget *parent) :
-    PlayerPlugin(name, action_text, parent)
+GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
+    EnginePlugin(name, parent),
+	Ui::GUI_LevelPainter()
 {
-    ui = new Ui::GUI_LevelPainter();
-    ui->setupUi(this);
+	setupUi(this);
 
-
-    _ecsc = new EngineColorStyleChooser(this->minimumWidth(), this->minimumHeight());
     _cur_style_idx = 0;
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
     reload();
@@ -42,21 +35,23 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QString action_text, QWidget *p
     int n_rects = _cur_style.n_rects;
 
     _steps = new int*[2];
-    for(int b=0; b<2; b++){
+    for(int b=0; b<2; b++) {
         _steps[b] = new int[n_rects];
-        for(int r=0; r<n_rects; r++){
+        for(int r=0; r<n_rects; r++) {
             _steps[b][r] = 0;
         }
     }
 
-    _timer = new QTimer();
-    _timer->setInterval(30);
-    _timer_stopped = true;
-    connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
+   	_btn_config = new QPushButton("...", this);
+	_btn_prev = new QPushButton("<", this);
+	_btn_next = new QPushButton(">", this);
+	_btn_close = new QPushButton("x", this);
+
+	init_buttons();
 }
 
 
-void GUI_LevelPainter::set_level(float level_l, float level_r){
+void GUI_LevelPainter::set_level(float level_l, float level_r) {
 
     if(!_timer_stopped) {
         _timer->stop();
@@ -66,35 +61,10 @@ void GUI_LevelPainter::set_level(float level_l, float level_r){
     _level[0] = level_l;
     _level[1] = level_r;
 
-    this->update();
+	update();
 }
 
-void
-GUI_LevelPainter::mousePressEvent(QMouseEvent *e){
-
-    int n_styles = _ecsc->get_num_color_schemes();
-
-
-    if(e->button() == Qt::LeftButton){
-        _cur_style_idx = (_cur_style_idx +  1) % n_styles;
-
-    }
-
-    else if (e->button() == Qt::RightButton)
-       emit sig_right_clicked(_cur_style_idx);
-
-    else if (e->button() == Qt::MidButton){
-        close();
-        return;
-    }
-
-    _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
-
-    reload();
-    resize_steps(_cur_style.n_rects);
-}
-
-void GUI_LevelPainter::paintEvent(QPaintEvent* e){
+void GUI_LevelPainter::paintEvent(QPaintEvent* e) {
 
     QPainter painter(this);
 
@@ -107,17 +77,17 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
 
     int y = 10;
     int num_zero = 0;
-    for(int c=0; c<2; c++){
+    for(int c=0; c<2; c++) {
 
-        float level = (_level[c] + 45.0f) / 50.0f; // scaled from 0 - 1
+		float level = (_level[c] + 50.0f) / 50.0f; // scaled from 0 - 1
         if(level < 0) level = 0;
 
         int n_colored_rects = n_rects * level;
 
-        for(int r=0; r<n_rects; r++){
+        for(int r=0; r<n_rects; r++) {
             int x = r * (w_rect + border_x);
             QRect rect(x, y, w_rect, h_rect);
-            if(r < n_colored_rects){
+            if(r < n_colored_rects) {
                 painter.fillRect(rect, _cur_style.style[r].value(-1) );
                 _steps[c][r] = n_fading_steps - 1;
             }
@@ -129,7 +99,7 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
             }
         }
 
-        if(num_zero == 2 * n_rects){
+        if(num_zero == 2 * n_rects) {
             _timer->stop();
             _timer_stopped = true;
         }
@@ -138,82 +108,50 @@ void GUI_LevelPainter::paintEvent(QPaintEvent* e){
     }
 }
 
-QAction* GUI_LevelPainter::getAction(){
-    PlayerPlugin::calc_action(this->getVisName());
-    return _pp_action;
-}
 
+void GUI_LevelPainter::timed_out() {
 
-void GUI_LevelPainter::showEvent(QShowEvent * e){
-
-    e->accept();
-
-    _ecsc->reload(this->width(), this->height());
-    _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
-    resize_steps(_cur_style.n_rects);
-
-    psl_style_update(true);
-
-    emit sig_show(true);
-}
-
-void GUI_LevelPainter::closeEvent(QCloseEvent *e){
-    PlayerPlugin::closeEvent(e);
-    emit sig_show(false);
-}
-
-void GUI_LevelPainter::resizeEvent(QResizeEvent *e){
-    psl_style_update(true);
-}
-
-
-void GUI_LevelPainter::psl_stop(){
-
-    _timer->start();
-    _timer_stopped = false;
-
-}
-
-void GUI_LevelPainter::timed_out(){
-
-    for(int i=0; i<2; i++)
+    for(int i=0; i<2; i++){
         _level[i] -= 2.0f;
+	}
 
     update();
 }
 
+void GUI_LevelPainter::psl_style_update() {
 
-void GUI_LevelPainter::psl_style_update(bool inner){
-    _ecsc->reload(this->width(), this->height());
+	_ecsc->reload(width(), height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
-
-    if(!inner) reload();
 
     resize_steps(_cur_style.n_rects);
 
+	update();
+
 }
 
-void GUI_LevelPainter::resize_steps(int n_rects){
+void GUI_LevelPainter::resize_steps(int n_rects) {
 
-    for(int i=0; i<2; i++){
+    for(int i=0; i<2; i++) {
         delete[] _steps[i];
         _steps[i] = new int[n_rects];
-        for(int j=0; j<n_rects; j++){
+        for(int j=0; j<n_rects; j++) {
             _steps[i][j] = 0;
         }
     }
 }
 
 
-void GUI_LevelPainter::reload(){
+void GUI_LevelPainter::reload() {
     int new_height = _cur_style.rect_height * 2 + _cur_style.ver_spacing + 12;
 
-    this->setMinimumHeight(0);
-    this->setMaximumHeight(100);
+	setMinimumHeight(0);
+	setMaximumHeight(100);
 
-    this->setMinimumHeight(new_height);
-    this->setMaximumHeight(new_height);
+	setMinimumHeight(new_height);
+	setMaximumHeight(new_height);
 
-    if(this->isVisible())
+	if(isVisible()){
         emit sig_reload(this);
+	}
 }
+

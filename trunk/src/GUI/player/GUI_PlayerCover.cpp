@@ -5,7 +5,7 @@
  *      Author: luke
  */
 
-/* Copyright (C) 2012  Lucio Carreras
+/* Copyright (C) 2011 - 2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -27,67 +27,81 @@
 #include "GUI/player/GUI_Player.h"
 
 /** COVERS **/
+
+void GUI_Player::set_std_cover(bool radio) {
+
+    QIcon icon;
+	if(radio) {
+        icon = Helper::getIcon("radio.png");
+	}
+
+	else {
+        icon = Helper::getIcon("logo.png");
+	}
+
+    albumCover->setIcon(icon);
+	albumCover->repaint();
+
+}
+
+
+void GUI_Player::fetch_cover() {
+
+	set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
+
+	if(m_metadata.album_id > -1) {
+		m_cov_lookup->fetch_album_cover_by_id(m_metadata.album_id);
+	}
+
+
+	else{
+		m_cov_lookup->fetch_album_cover_standard(m_metadata.artist, m_metadata.album);
+	}
+}
+
+
 void GUI_Player::coverClicked() {
 
-   if(m_metadata.radio_mode == RADIO_STATION){
-        QString searchstring = QString("Radio ") + m_metadata.title;
-        QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+   if(m_metadata.radio_mode == RADIO_STATION) {
 
-        m_alternate_covers->start(searchstring, targetpath);
+		m_alternate_covers->start( m_metadata.album, m_metadata.title );
+    }
+
+    else if(m_metadata.album_id >= 0) {
+       m_alternate_covers->start(m_metadata.album_id);
     }
 
     else {
 
-        QString searchstring;
-        if(m_metadata.album.size() != 0 || m_metadata.artist != 0){
-            searchstring = m_metadata.album + " " + m_metadata.artist;
-        }
-
-        else {
-            searchstring = m_metadata.title + " " + m_metadata.artist;
-        }
-
-        searchstring = searchstring.trimmed();
-
-        QString targetpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-
-        m_alternate_covers->start(searchstring, targetpath);
+        m_alternate_covers->start( m_metadata.album, m_metadata.artist);
     }
-
-
 
     this->setFocus();
 }
 
-void GUI_Player::sl_alternate_cover_available(QString target_class, QString coverpath){
 
-    QString own_coverpath = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
-    if(coverpath != own_coverpath) return;
+void GUI_Player::sl_alternate_cover_available(const CoverLocation& lc) {
 
-    ui->albumCover->setIcon(QIcon(coverpath));
+	Q_UNUSED(lc);
+
+	fetch_cover();
 }
 
-void GUI_Player::sl_no_cover_available(){
 
+void GUI_Player::sl_no_cover_available() {
 
-    QString coverpath = Helper::getIconPath() + "logo.png";
-    ui->albumCover->setIcon(QIcon(coverpath));
+   set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
 }
 
 
 // public slot
 // cover was found by CoverLookup
-void GUI_Player::covers_found(const QStringList& cover_paths, QString call_id) {
+void GUI_Player::cover_found(const CoverLocation& cl) {
 
-    Q_UNUSED(cover_paths);
-    Q_UNUSED(call_id);
-    QString cover_path = Helper::get_cover_path(m_metadata.artist, m_metadata.album);
+	QIcon icon(cl.cover_path);
 
-    /*if(!cover_paths.contains(cover_path)) return;*/
-    if(!QFile::exists(cover_path)) return;
-
-    ui->albumCover->setIcon(QIcon(cover_path));
-	ui->albumCover->repaint();
+	albumCover->setIcon(icon);
+	albumCover->repaint();
 }
 
 /** COVER END **/

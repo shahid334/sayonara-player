@@ -1,6 +1,6 @@
 /* GUI_Podcasts.h */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -53,16 +53,11 @@ private slots:
 public slots:
     void language_changed();
 public:
-    GUI_Podcasts(QString name, QString action_text, QWidget *parent = 0);
+	GUI_Podcasts(QString name, QWidget *parent = 0);
     virtual ~GUI_Podcasts();
-
-    static QString getVisName(){ return tr("P&odcasts"); }
-    virtual QAction* getAction();
-
 
 
 private:
-    Ui::GUI_Podcasts* ui;
 
     void init_gui();
     QMap<QString, QString> _podcasts;

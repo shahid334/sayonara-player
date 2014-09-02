@@ -102,7 +102,6 @@ public:
 		 *  ALBUMS
 		 *****************/
 
-
             int getAlbumID (const QString& album);
 			int getMaxAlbumID();
 
@@ -117,6 +116,8 @@ public:
 
 			int insertAlbumIntoDatabase (const QString & album);
             int insertAlbumIntoDatabase (const Album& album);
+
+			int updateAlbum(const Album& album);
 
 
 
@@ -174,6 +175,15 @@ public:
             bool deletePodcast(QString name);
             bool addPodcast(QString name, QString url);
 
+			/*
+			 * Bookmarks
+			 * */
+
+			bool searchBookmarks(int track_id, QMap<quint32, QString>& bookmarks);
+			bool insertBookmark(int track_id, quint32 time, QString text);
+			bool removeBookmark(int track_id, quint32 time);
+			bool removeAllBookmarks(int track_id);
+
     void deleteTracksAlbumsArtists();
 
 
@@ -183,11 +193,19 @@ public:
 	 *******************************************/
         void load_setting(QString key, QVariant& val, QVariant def=0);
 
+        template<class T>
+        T load_setting_type(QString key, T def){
+
+			QString str = load_setting_string(key, "");
+
+			return T::fromString(str);
+        }
+
 
 		bool load_setting_bool(QString key, bool def=false);
 		QString load_setting_string(QString key, QString def="");
 		int load_setting_int(QString key, int def=0);
-		QStringList load_setting_strlist(QString key, QChar sep=',');
+        QStringList load_setting_strlist(QString key, QString def, int expected_len=-1, QChar sep=',');
 
 
    /************************************

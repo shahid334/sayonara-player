@@ -27,12 +27,9 @@
  */
 
 #include "GUI/library/delegate/LibraryItemDelegateArtists.h"
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 
-#include <QObject>
 #include <QLabel>
-#include <QDebug>
 #include <QTableView>
 #include <QItemDelegate>
 #include <QPainter>
@@ -41,9 +38,9 @@
 LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent) {
     this->_parent = parent;
 
+    _icon_single_album = Helper::getPixmap("play_small.png");
+    _icon_multi_album = Helper::getPixmap("fwd_orange.png");
 
-    _icon_single_album = QPixmap(Helper::getIconPath() + "play_small.png");
-    _icon_multi_album = QPixmap(Helper::getIconPath() + "fwd_orange.png");
     _model = model;
     _selected_background = QColor(66,78,114);
 }
@@ -65,12 +62,12 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
     int col = index.column();
     int idx_col = _model->calc_shown_col(col);
 
-    if(_model->is_selected(index.row())){
+    if(_model->is_selected(index.row())) {
         painter->fillRect(rect, _selected_background);
     }
 
 
-    if(idx_col == COL_ARTIST_N_ALBUMS){
+    if(idx_col == COL_ARTIST_N_ALBUMS) {
         int col_width = _parent->columnWidth(0)-4;
         int row_height = _parent->rowHeight(0)-4;
         rect.translate(2, 2);
@@ -85,7 +82,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
     }
 
-    else if(idx_col == COL_ARTIST_NAME){
+    else if(idx_col == COL_ARTIST_NAME) {
 
         rect.translate(2, 0);
         QString name = _model->data(index, Qt::WhatsThisRole).toString();
@@ -94,7 +91,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
     }
 
-    else if(idx_col == COL_ARTIST_TRACKS){
+    else if(idx_col == COL_ARTIST_TRACKS) {
 
         rect.translate(-2, 0);
         int n_tracks = _model->data(index, Qt::WhatsThisRole).toInt();
@@ -153,8 +150,8 @@ void LibraryItemDelegateArtists::setEditorData(QWidget *editor, const QModelInde
 }
 
 
-void LibraryItemDelegateArtists::set_skin(bool dark){
-    if(dark){
+void LibraryItemDelegateArtists::set_skin(bool dark) {
+    if(dark) {
         _selected_background = QColor(66,78,114);
     }
 

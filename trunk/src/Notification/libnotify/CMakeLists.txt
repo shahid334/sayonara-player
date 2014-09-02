@@ -39,7 +39,7 @@ if (LIBNOTIFY_FOUND)
     ADD_DEFINITIONS(${QT_DEFINITIONS})
 
     ADD_LIBRARY(sayonara_libnotify SHARED ${SOURCES} ${HEADERS_MOC})
-    TARGET_LINK_LIBRARIES(sayonara_libnotify ${QT_LIBRARIES} notify)
+    TARGET_LINK_LIBRARIES(sayonara_libnotify notify)
 
     INSTALL(TARGETS sayonara_libnotify DESTINATION lib/sayonara)
 

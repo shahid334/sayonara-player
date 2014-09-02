@@ -97,7 +97,7 @@ Q_OBJECT
 
 		virtual ~LastFM();
 
-		static LastFM* getInstance(bool init_now){
+		static LastFM* getInstance(bool init_now) {
 			static LastFM inst;
 			return &inst;
 		}

@@ -1,6 +1,6 @@
 /* PodcastParser.cpp */
 
-/* Copyright (C) 2013  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -36,26 +36,23 @@
  * */
 #include <QString>
 #include <QDomDocument>
-#include "HelperStructs/MetaData.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/WebAccess.h"
 #include "HelperStructs/PodcastParser/PodcastParser.h"
+#include "CoverLookup/CoverLocation.h"
 
-
-#include <QDebug>
-
-int find_year(QString str){
+int find_year(QString str) {
 
     int idx = str.indexOf(QRegExp("[0-9]{4,4}"));
 
-    if(idx >= 0){
+    if(idx >= 0) {
         return str.mid(idx, 4).toInt();
     }
 
     return 0;
 }
 
-bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataList& v_md){
+bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataList& v_md) {
 
     v_md.clear();
 
@@ -72,58 +69,62 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
     QString album;
 
     bool image_found = false;
-    for(int c = 0; c<entry.childNodes().size(); c++){
+    for(int c = 0; c<entry.childNodes().size(); c++) {
 
         QDomNode channel_child = entry.childNodes().at(c);
         QString nodename = channel_child.nodeName();
         QDomElement e = channel_child.toElement();
 
-        if(!nodename.compare("title", Qt::CaseInsensitive)){
+        if(!nodename.compare("title", Qt::CaseInsensitive)) {
             album = e.text();
         }
 
-        else if(!nodename.compare("itunes:author", Qt::CaseInsensitive)){
+        else if(!nodename.compare("itunes:author", Qt::CaseInsensitive)) {
             author = e.text();
         }
 
-        else if(!nodename.compare("itunes:category", Qt::CaseInsensitive)){
+        else if(!nodename.compare("itunes:category", Qt::CaseInsensitive)) {
 
             QStringList genres = e.text().split(QRegExp(",|/|;|\\."));
-            for(int i=0; i<genres.size(); i++){
+            for(int i=0; i<genres.size(); i++) {
                 genres[i] = genres[i].trimmed();
             }
 
             categories.append(genres);
         }
 
-        else if(!nodename.compare("image", Qt::CaseInsensitive) && !image_found){
+        else if(!nodename.compare("image", Qt::CaseInsensitive) && !image_found) {
             if(!channel_child.hasChildNodes()) continue;
 
-            for(int i=0; i<channel_child.childNodes().size(); i++){
+            for(int i=0; i<channel_child.childNodes().size(); i++) {
                 QDomNode item_child = channel_child.childNodes().at(i);
                 QString ic_nodename = item_child.nodeName();
                 QDomElement ic_e = item_child.toElement();
-                if(!ic_nodename.compare("url", Qt::CaseInsensitive)){
+                if(!ic_nodename.compare("url", Qt::CaseInsensitive)) {
+					QString cover_path = CoverLocation::get_cover_location(album, author).cover_path;
                     QString img_url = ic_e.text();
                     QImage img;
+
                     bool success = WebAccess::read_http_into_img(img_url, &img);
                     if(!success && !img.isNull()) continue;
-                    img.save(Helper::get_cover_path(author, album));
+					img.save( cover_path );
                 }
             }
         }
 
-        else if(!nodename.compare("itunes:image", Qt::CaseInsensitive)){
+        else if(!nodename.compare("itunes:image", Qt::CaseInsensitive)) {
             QString img_url = e.attribute("href");
             QImage img;
+			QString cover_path = CoverLocation::get_cover_location(album, author).cover_path;
             bool success = WebAccess::read_http_into_img(img_url, &img);
             if(!success && !img.isNull()) continue;
-            img.save(Helper::get_cover_path(author, album));
+
+			img.save( cover_path );
             image_found = true;
         }
 
         // item
-        else if(!nodename.compare("item", Qt::CaseInsensitive)){
+        else if(!nodename.compare("item", Qt::CaseInsensitive)) {
 
             if(!channel_child.hasChildNodes()) continue;
             MetaData md;
@@ -140,38 +141,38 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
                 QString ic_nodename = item_child.nodeName();
                 QDomElement ic_e = item_child.toElement();
 
-                if(!ic_nodename.compare("title", Qt::CaseInsensitive)){
+                if(!ic_nodename.compare("title", Qt::CaseInsensitive)) {
                     md.title = QString::fromUtf8(ic_e.text().toStdString().c_str());
                 }
 
-                else if(!ic_nodename.compare("link", Qt::CaseInsensitive)){
+                else if(!ic_nodename.compare("link", Qt::CaseInsensitive)) {
                     md.filepath = ic_e.text();
                 }
 
-                else if(!ic_nodename.compare("enclosure", Qt::CaseInsensitive)){
+                else if(!ic_nodename.compare("enclosure", Qt::CaseInsensitive)) {
                     md.filesize = ic_e.attribute("length").toLong();
                 }
 
-                else if(!ic_nodename.compare("author") && md.artist.size() == 0){
+                else if(!ic_nodename.compare("author") && md.artist.size() == 0) {
                     md.artist = QString::fromUtf8(ic_e.text().toStdString().c_str());
                 }
 
-                else if(!ic_nodename.compare("itunes:author", Qt::CaseInsensitive)){
+                else if(!ic_nodename.compare("itunes:author", Qt::CaseInsensitive)) {
                     md.artist = QString::fromUtf8(ic_e.text().toStdString().c_str());
                 }
 
-                else if(!ic_nodename.compare("itunes:duration", Qt::CaseInsensitive)){
+                else if(!ic_nodename.compare("itunes:duration", Qt::CaseInsensitive)) {
 
                     QString text = ic_e.text();
                     QStringList lst = text.split(":");
                     int len = 0;
-                    for(int i=lst.size() -1; i>=0; i--){
+                    for(int i=lst.size() -1; i>=0; i--) {
                         if(i == lst.size() -1)
                             len += lst[i].toInt();
-                        else if(i == lst.size() -2){
+                        else if(i == lst.size() -2) {
                             len += lst[i].toInt() * 60;
                         }
-                        else if(i == lst.size() -3){
+                        else if(i == lst.size() -3) {
                             len += lst[i].toInt() * 3600;
                         }
                     }
@@ -181,7 +182,7 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
 
 
                 else if(!ic_nodename.compare("pubDate", Qt::CaseInsensitive) ||
-                        !ic_nodename.compare("dc:date", Qt::CaseInsensitive)){
+                        !ic_nodename.compare("dc:date", Qt::CaseInsensitive)) {
                     md.year = find_year(ic_e.text());
                 }
             } // foreach item entry
@@ -195,7 +196,7 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
 }
 
 
-bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_md){
+bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_md) {
 
 
     QString content;

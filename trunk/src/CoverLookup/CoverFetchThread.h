@@ -30,71 +30,41 @@
 #define COVERFETCHTHREAD_H_
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
-#include "HelperStructs/AsyncWebAccess.h"
+#include "CoverLookup/CoverLocation.h"
 
 #include <QThread>
-#include <QString>
-#include <QStringList>
 #include <QMap>
 #include <QImage>
-
-#define CFT_SINGLE 0
-#define CFT_MULTI 1
 
 class CoverFetchThread : public QThread {
 
 Q_OBJECT
 
 signals:
-    void sig_finished(int);
-    void sig_one_image_available();
-
+    void sig_finished(bool);
+	void sig_cover_found(const CoverLocation&);
 
 public:
-    CoverFetchThread(QObject* parent, int id, QString url, const QStringList& target_names, QString call_id);
-    CoverFetchThread(QObject* parent, int id, QString url, int n_images);
-	virtual ~CoverFetchThread();
 
-    QStringList get_found_covers();
-    int get_id();
-    QString get_call_id();
-    void set_run(bool);
+	CoverFetchThread(QObject* parent, const CoverLocation& cl, const int n_covers);
+    virtual ~CoverFetchThread();
 
-
+    void stop();
 
 protected:
     void run();
 
 
+
 private:
 
-    int         _mode;
-    int         _id;
-    int         _n_images;
     QString     _url;
-    QString     _call_id;
-    QStringList _target_names;
-    QStringList _found_cover_paths;
+    QString     _target_file;
+    int         _n_covers;
+    bool        _run;
 
-    int         _cur_awa_idx;
-    int         _awa_id;
-
-    bool         _run;
-    int          _n_running;
-
-    QList<AsyncWebAccess*> _lst;
-    QMap<int, AsyncWebAccess*> _map;
-    QList<QImage> _imglist;
-
-
-
-    void search_single();
-    void search_multi();
-
-private slots:
-    void awa_finished(int);
-    void awa_terminated(int);
+	int run_single();
+	int run_multi();
 
 };
 
