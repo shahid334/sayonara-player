@@ -195,6 +195,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height) {
         fallback1.rect_height_level = 6;
 
 
+
         fallback2.col_list.colors << QColor(27, 32, 47)  << QColor(134, 134, 134) << QColor(216, 216, 216) << QColor(255, 255, 255);
         fallback2.col_list.name = "B/W";
         fallback2.hor_spacing_level = 2;
