@@ -171,14 +171,13 @@ int EngineColorStyleChooser::get_num_color_schemes() {
 
 
 void EngineColorStyleChooser::reload(int widget_width, int widget_height) {
-    QList< RawColorStyle > colors_active = CDatabaseConnector::getInstance()->get_raw_color_styles();
-    qDebug() << "Fetched " << colors_active.size() << " styles from db";
+
+	QList< RawColorStyle > colors_active = CDatabaseConnector::getInstance()->get_raw_color_styles();
 
     _styles_spectrum.clear();
     _styles_level.clear();
 
     if(colors_active.size() == 0) {
-
 
         RawColorStyle fallback1, fallback2;
 

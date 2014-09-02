@@ -21,6 +21,7 @@
 
 
 #include "GUI_Speed.h"
+#include "HelperStructs/Helper.h"
 
 GUI_Speed::GUI_Speed(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
@@ -28,14 +29,20 @@ GUI_Speed::GUI_Speed(QString name, QWidget *parent) :
 {
 	setupUi(this);
 
+	lab_logo->setPixmap( Helper::getPixmap("speed.png", QSize(50,50), true) );
+
 	connect(sli_speed, SIGNAL(sliderMoved(int)), this, SLOT(slider_changed(int)));
 	connect(cb_active, SIGNAL(toggled(bool)), this, SLOT(active_changed(bool)));
 }
 
 
 void GUI_Speed::slider_changed(int val) {
+
 	float val_f = val / 100.0f;
 	lab_speed->setText(QString::number(val_f, 'f', 2));
+
+	if( !cb_active->isChecked() ) return;
+
 	emit sig_speed_changed(val_f);
 }
 
@@ -43,7 +50,7 @@ void GUI_Speed::slider_changed(int val) {
 void GUI_Speed::active_changed(bool b) {
 
 	if(!b) {
-		emit sig_speed_changed(-1.0f);
+		emit sig_speed_changed(1.0f);
 	}
 
 	else {

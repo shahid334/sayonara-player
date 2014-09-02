@@ -30,6 +30,7 @@
 #include <QMap>
 #include <QString>
 #include "StreamPlugins/LastFM/LFMGlobals.h"
+#include "HelperStructs/SmartComparison.h"
 
 #include "HelperStructs/MetaData.h"
 
@@ -71,7 +72,7 @@ struct ArtistMatch{
     QMap<QString, double> get(Quality q) {
         switch(q) {
             case Quality_Poor:
-                    return poor;
+				return poor;
             case Quality_Well:
                 return well;
             case Quality_Very_Good:
@@ -154,6 +155,7 @@ public:
 
 private:
 
+	SmartComparison* _smart_comparison;
 	QString		_target_class;
 	int			_thread_tasks;
 
@@ -170,7 +172,7 @@ private:
 	QList<int>	_chosen_ids;
 
 	bool search_similar_artists();
-    QMap<QString, int> filter_available_artists(QMap<QString, double>& artists);
+	QMap<QString, int> filter_available_artists(const QMap<QString, double>& artists);
 
 
 	/* Track info */

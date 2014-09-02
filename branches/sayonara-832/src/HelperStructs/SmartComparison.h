@@ -46,7 +46,8 @@ class SmartComparison
 
 private:
 
-	ArtistList _artists;
+	QStringList  _strlist;
+	QMap< QString, QMap<QString, float> > _cache;
 	QList<QChar> _vocals;
 	QList<QChar> _consonants;
 	QList<QChar> _numbers;
@@ -65,13 +66,15 @@ private:
 
 	//float find_artist(const QString&, HashLevel level);
 
-	QMap<QString, float> get_similar_strings(const QString& str);
+	SmartComparison();
 
 
 public:
-	SmartComparison();
+	SmartComparison(const QStringList& strlist);
+	SmartComparison(const ArtistList& strlist);
 
-	void print_similar(const QString& str);
+	QMap<QString, float> get_similar_strings(const QString& str);
+
 
 };
 

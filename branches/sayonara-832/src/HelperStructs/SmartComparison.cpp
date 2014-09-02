@@ -26,25 +26,6 @@
 SmartComparison::SmartComparison()
 {
 
-//	CDatabaseConnector::getInstance()->getAllArtists(_artists);
-
-QFile file("/home/IGEL/lugmair/Desktop/artists.list");
-if(!file.open(QIODevice::ReadOnly)) {
-	qDebug() << "Cannot read file";
-}
-
-QTextStream in(&file);
-
-while(!in.atEnd()) {
-    QString line = in.readLine();  
-	Artist artist;
-	artist.name = line;  
-	_artists.push_back(artist);
-}
-
-file.close();
-
-
 	_vocals << 'a' << 'e' << 'i' << 'o' << 'u';
 	_consonants << 'b' << 'c' << 'd' << 'f' <<
 				   'g' << 'h' << 'j' << 'k' <<
@@ -54,6 +35,20 @@ file.close();
 
 
 	_numbers << '1' << '2' << '3' << '4' << '5' << '6' << '7' << '8' << '9' << '0';
+}
+
+SmartComparison::SmartComparison(const QStringList &strlist) :
+	SmartComparison()
+{
+	_strlist = strlist;
+}
+
+SmartComparison::SmartComparison(const ArtistList &artist_list) :
+	SmartComparison()
+{
+	for(auto artist = artist_list.begin(); artist != artist_list.end(); artist++){
+		_strlist << artist->name;
+	}
 }
 
 QString revert_string(const QString& str){
@@ -199,6 +194,8 @@ float SmartComparison::compare(const QString& str1, const QString& str2, HashLev
 	Hash hash1 = create_hash(str1, level);
 	Hash hash2 = create_hash(str2, level);
 
+	if(str1.compare(str2) == 0) return 1000.0f;
+
 	float similarity = compare_hashes(hash1, hash2, level, revert);
 	float similarity2 = compare_hashes(hash2, hash1, level, revert);
 
@@ -234,16 +231,7 @@ Hash SmartComparison::create_hash(const QString& str, HashLevel level){
 
 }
 
-void SmartComparison::print_similar(const QString& str){
 
-	QMap<QString, float> similar = get_similar_strings(str);
-	foreach(QString key, similar.keys()){
-
-		float val = similar.value(key);
-
-		qDebug() << str << "?     " << key << ": " << val;
-	}
-}
 
 void SmartComparison::equalize(QMap<QString, float>& map, float min, float max){
 
@@ -271,6 +259,9 @@ void SmartComparison::equalize(QMap<QString, float>& map, float min, float max){
 QMap<QString, float> SmartComparison::get_similar_strings( const QString& str){
 
 	HashLevel level = HashLevel_zero;
+	if(_cache.keys().contains(str)){
+		return _cache[str];
+	}
 
 	bool reverse = false;
 
@@ -281,10 +272,10 @@ QMap<QString, float> SmartComparison::get_similar_strings( const QString& str){
 
 		QMap<QString, float> map;
 
-		foreach(Artist artist, _artists){
+		foreach(QString tmp_str, _strlist){
 
-			float similarity = compare(artist.name, str, level, false);
-			similarity = std::max(similarity, compare(artist.name, str, level, true));
+			float similarity = compare(tmp_str, str, level, false);
+			similarity = std::max(similarity, compare(tmp_str, str, level, true));
 
 			if(similarity > max){
 				max = similarity;
@@ -294,12 +285,12 @@ QMap<QString, float> SmartComparison::get_similar_strings( const QString& str){
 				min = similarity;
 			}
 
-			if(similarity > 1.0f){
-				map.insert(artist.name, similarity);
+			if(similarity > 5.0f){
+				map.insert(tmp_str, similarity);
 			}
 		}
 
-		if( max <  1.0f && reverse == false){
+		if( max <  5.0f && reverse == false){
 			reverse = true;
 			continue;
 		}
@@ -315,7 +306,8 @@ QMap<QString, float> SmartComparison::get_similar_strings( const QString& str){
 
 		else {
 			//qDebug() << "LEvel : " << level;
-			equalize(map, min, max);
+			//equalize(map, min, max);
+			_cache[str] = map;
 			return map;
 		}
 	}

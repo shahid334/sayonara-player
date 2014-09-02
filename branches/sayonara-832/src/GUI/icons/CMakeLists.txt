@@ -70,6 +70,7 @@ SET(ICONS
         undo.png
 	border_a.png
 	border_b.png
+        speed.png
 )
 
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)

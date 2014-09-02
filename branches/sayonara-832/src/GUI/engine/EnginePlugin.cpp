@@ -110,7 +110,41 @@ void EnginePlugin::closeEvent(QCloseEvent *e) {
 }
 
 void EnginePlugin::resizeEvent(QResizeEvent* e){
-    psl_style_update();
+
+	psl_style_update();
+
+	QSize new_size = e->size();
+
+	if(!_btn_config) return;
+
+	if(new_size.height() >= 30){
+		_btn_config->setGeometry(10, 10, 20, 20);
+		_btn_prev->setGeometry(35, 10, 20, 20);
+		_btn_next->setGeometry(60, 10, 20, 20);
+		_btn_close->setGeometry(85, 10, 20, 20);
+
+		QFont font = _btn_config->font();
+		font.setPointSize(8);
+		_btn_config->setFont(font);
+		_btn_prev->setFont(font);
+		_btn_next->setFont(font);
+		_btn_close->setFont(font);
+	}
+
+	else {
+		_btn_config->setGeometry(10, 5, 15, 15);
+		_btn_prev->setGeometry(30, 5, 15, 15);
+		_btn_next->setGeometry(50, 5, 15, 15);
+		_btn_close->setGeometry(70, 5, 15, 15);
+
+		QFont font = _btn_config->font();
+		font.setPointSize(6);
+		_btn_config->setFont(font);
+		_btn_prev->setFont(font);
+		_btn_next->setFont(font);
+		_btn_close->setFont(font);
+	}
+
 }
 
 

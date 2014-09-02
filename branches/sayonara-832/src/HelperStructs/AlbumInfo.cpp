@@ -19,7 +19,6 @@
  */
 
 
-
 #include "HelperStructs/MetaDataInfo.h"
 
 AlbumInfo::AlbumInfo(QObject* parent, const MetaDataList& lst) :

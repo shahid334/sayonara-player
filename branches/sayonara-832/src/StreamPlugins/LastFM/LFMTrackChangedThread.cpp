@@ -39,11 +39,16 @@
 
 LFMTrackChangedThread::LFMTrackChangedThread(QString target_class) {
 	_target_class = target_class;
+
+	ArtistList artists;
+	CDatabaseConnector::getInstance()->getAllArtists(artists);
+
+	_smart_comparison = new SmartComparison(artists);
 }
 
 
 LFMTrackChangedThread::~LFMTrackChangedThread() {
-
+	delete _smart_comparison;
 }
 
 void LFMTrackChangedThread::setSessionKey(QString session_key) {
@@ -250,7 +255,7 @@ bool LFMTrackChangedThread::search_similar_artists() {
 
 
 
-    // get random list where to search the artist in
+	// if we always take the best, it's boring
     Quality quality, quality_org;
     int rnd = rand() % 1000;
     if(rnd > 250) quality = Quality_Very_Good;			// [250-999]
@@ -264,13 +269,28 @@ bool LFMTrackChangedThread::search_similar_artists() {
 
         QMap<QString, double> quality_map = artist_match.get(quality);
         possible_artists = filter_available_artists(quality_map);
-        if(quality == Quality_Poor) quality = Quality_Very_Good;
-        else if(quality == Quality_Well) quality = Quality_Poor;
-        else if(quality == Quality_Very_Good) quality = Quality_Well;
+
+		switch(quality){
+			case Quality_Poor:
+				quality = Quality_Very_Good;
+				break;
+			case Quality_Well:
+				quality = Quality_Poor;
+				break;
+			case Quality_Very_Good:
+				quality = Quality_Well;
+				break;
+			default:
+				quality = quality_org;
+				break;
+		}
+
         if(quality == quality_org) break;
     }
 
-    if(possible_artists.size() == 0) return false;
+	if(possible_artists.size() == 0){
+		return false;
+	}
 
     _chosen_ids.clear();
     for(QMap<QString, int>::iterator it = possible_artists.begin(); it != possible_artists.end(); it++) {
@@ -282,16 +302,22 @@ bool LFMTrackChangedThread::search_similar_artists() {
 
 
 
-QMap<QString, int> LFMTrackChangedThread::filter_available_artists(QMap<QString, double>& artist_match) {
+QMap<QString, int> LFMTrackChangedThread::filter_available_artists(const QMap<QString, double>& artist_match) {
 
+		CDatabaseConnector* db = CDatabaseConnector::getInstance();
         QMap<QString, int> possible_artists;
 
         foreach(QString key, artist_match.keys()) {
 
-            int artist_id = CDatabaseConnector::getInstance()->getArtistID(key);
-            if(artist_id != -1) {
-                possible_artists[key] = artist_id;
-            }
+			QMap<QString, float> sc_map = _smart_comparison->get_similar_strings(key);
+			foreach( QString sc_key, sc_map.keys() ){
+				int artist_id = db->getArtistID(sc_key);
+				if(artist_id >= 0 && sc_map[sc_key] > 5.0f){
+					//qDebug() << "Smart comparison: " << key << " is similar to " << sc_key << " " << sc_map[sc_key];
+					possible_artists[sc_key] = artist_id;
+				}
+
+			}
         }
 
         return possible_artists;
