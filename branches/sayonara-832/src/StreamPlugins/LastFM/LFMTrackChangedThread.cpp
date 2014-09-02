@@ -313,7 +313,7 @@ QMap<QString, int> LFMTrackChangedThread::filter_available_artists(const QMap<QS
 			foreach( QString sc_key, sc_map.keys() ){
 				int artist_id = db->getArtistID(sc_key);
 				if(artist_id >= 0 && sc_map[sc_key] > 5.0f){
-					//qDebug() << "Smart comparison: " << key << " is similar to " << sc_key << " " << sc_map[sc_key];
+
 					possible_artists[sc_key] = artist_id;
 				}
 
