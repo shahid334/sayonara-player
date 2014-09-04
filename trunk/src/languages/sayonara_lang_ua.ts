@@ -6,17 +6,17 @@
     <message>
         <location filename="../HelperStructs/AlbumInfo.cpp" line="39"/>
         <source>yes</source>
-        <translation>так</translation>
+        <translation type="unfinished">так</translation>
     </message>
     <message>
         <location filename="../HelperStructs/AlbumInfo.cpp" line="44"/>
         <source>no</source>
-        <translation>ні</translation>
+        <translation type="unfinished">ні</translation>
     </message>
     <message>
         <location filename="../HelperStructs/AlbumInfo.cpp" line="60"/>
         <source>by</source>
-        <translation>від</translation>
+        <translation type="unfinished">від</translation>
     </message>
 </context>
 <context>
@@ -75,47 +75,47 @@
     <message>
         <location filename="../application.cpp" line="145"/>
         <source>Le&amp;vel</source>
-        <translation>&amp;Рівень</translation>
+        <translation type="unfinished">&amp;Рівень</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="146"/>
         <source>&amp;Spectrum</source>
-        <translation>&amp;Діапазон</translation>
+        <translation type="unfinished">&amp;Діапазон</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="147"/>
         <source>&amp;Webstreams</source>
-        <translation>&amp;Веб-потоки</translation>
+        <translation type="unfinished">&amp;Веб-потоки</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="148"/>
         <source>P&amp;odcasts</source>
-        <translation>П&amp;одкасти</translation>
+        <translation type="unfinished">П&amp;одкасти</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="149"/>
         <source>&amp;Equalizer</source>
-        <translation>&amp;Еквалайзер</translation>
+        <translation type="unfinished">&amp;Еквалайзер</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="150"/>
         <source>Pla&amp;ylists</source>
-        <translation>Пле&amp;йлисти</translation>
+        <translation type="unfinished">Пле&amp;йлисти</translation>
     </message>
     <message>
         <location filename="../application.cpp" line="151"/>
         <source>&amp;mp3 Converter</source>
-        <translation>&amp;mp3 Конвертер</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="152"/>
         <source>&amp;Bookmarks</source>
-        <translation>&amp;Закладинки</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../application.cpp" line="153"/>
         <source>Spee&amp;d</source>
-        <translation>Швидкі&amp;сть</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -258,43 +258,43 @@
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="26"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="167"/>
         <source>Form</source>
-        <translation>Form</translation>
+        <translation type="unfinished">Form</translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="103"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="168"/>
         <source>Quality</source>
-        <translation>Якість</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="121"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="169"/>
         <source>Constant Bitrate</source>
-        <translation>Постійна швидкість передачі даних</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="139"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="170"/>
         <source>Variable Bitrate</source>
-        <translation>Перемінна швидкість передачі даних</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="195"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="172"/>
         <source>mp3 Converter</source>
-        <translation>mp3 Конвертер</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="222"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="173"/>
         <source>x</source>
-        <translation>х</translation>
+        <translation type="unfinished">х</translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConvert.ui" line="242"/>
         <location filename="../GUI/ui_GUI_AudioConvert.h" line="174"/>
         <source>Activate</source>
-        <translation>Активувати</translation>
+        <translation type="unfinished">Активувати</translation>
     </message>
 </context>
 <context>
@@ -302,12 +302,12 @@
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConverter.cpp" line="93"/>
         <source>0 (Best)</source>
-        <translation>0 (Кращих)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/AudioConverter/GUI_AudioConverter.cpp" line="102"/>
         <source>9 (Worst)</source>
-        <translation>9 (Гірших)</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -316,25 +316,25 @@
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Bookmarks.h" line="200"/>
         <source>Form</source>
-        <translation>Form</translation>
+        <translation type="unfinished">Form</translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="73"/>
         <location filename="../GUI/ui_GUI_Bookmarks.h" line="202"/>
         <source>Bookmarks</source>
-        <translation>Закладинки</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="95"/>
         <location filename="../GUI/ui_GUI_Bookmarks.h" line="203"/>
         <source>x</source>
-        <translation>х</translation>
+        <translation type="unfinished">х</translation>
     </message>
     <message>
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="157"/>
         <location filename="../GUI/ui_GUI_Bookmarks.h" line="206"/>
         <source>Loop</source>
-        <translation>Повторення</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -734,7 +734,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="289"/>
         <source>Bitrate</source>
-        <translation>Швидкість передачі даних</translation>
+        <translation>Бітрейт</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
@@ -746,7 +746,7 @@
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="211"/>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
         <source>Rating</source>
-        <translation>Рейтинг</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="212"/>
@@ -1202,31 +1202,31 @@
         <location filename="../GUI/speed/GUI_Speed.ui" line="26"/>
         <location filename="../GUI/ui_GUI_Speed.h" line="133"/>
         <source>Form</source>
-        <translation>Form</translation>
+        <translation type="unfinished">Form</translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="53"/>
         <location filename="../GUI/ui_GUI_Speed.h" line="134"/>
         <source>1.0</source>
-        <translation>1.0</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="106"/>
         <location filename="../GUI/ui_GUI_Speed.h" line="136"/>
         <source>Speed</source>
-        <translation>Швидкість</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="128"/>
         <location filename="../GUI/ui_GUI_Speed.h" line="137"/>
         <source>x</source>
-        <translation>х</translation>
+        <translation type="unfinished">х</translation>
     </message>
     <message>
         <location filename="../GUI/speed/GUI_Speed.ui" line="137"/>
         <location filename="../GUI/ui_GUI_Speed.h" line="138"/>
         <source>Active</source>
-        <translation>Активувати</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1977,13 +1977,13 @@ expression</source>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="126"/>
         <location filename="../GUI/ui_GUI_InfoDialog.h" line="263"/>
         <source>Paths</source>
-        <translation>Шляхи</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="158"/>
         <location filename="../GUI/ui_GUI_InfoDialog.h" line="264"/>
         <source>Sublable</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="179"/>
@@ -2211,97 +2211,97 @@ expression</source>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="124"/>
         <source>Various tracks</source>
-        <translation>Різні треки</translation>
+        <translation type="unfinished">Різні треки</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="132"/>
         <source>by </source>
-        <translation>від</translation>
+        <translation type="unfinished">від</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="135"/>
         <source>track on</source>
-        <translation>трек в </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="139"/>
         <source>on</source>
-        <translation>в</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="180"/>
         <source>Various artists</source>
-        <translation>Різні виконавці</translation>
+        <translation type="unfinished">Різні виконавці</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="196"/>
         <source>Various albums</source>
-        <translation>Різні альбоми</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="207"/>
         <source>1st</source>
-        <translation>1-й</translation>
+        <translation type="unfinished">1-й</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="211"/>
         <source>2nd</source>
-        <translation>2-й</translation>
+        <translation type="unfinished">2-й</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="214"/>
         <source>3rd</source>
-        <translation>3-й</translation>
+        <translation type="unfinished">3-й</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="217"/>
         <source>th</source>
-        <translation>й</translation>
+        <translation type="unfinished">й</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="253"/>
         <source>#Tracks</source>
-        <translation>#Треків</translation>
+        <translation type="unfinished">#Треків</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="255"/>
         <source>#Albums</source>
-        <translation>#Альбомів</translation>
+        <translation type="unfinished">#Альбомів</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="257"/>
         <source>#Artists</source>
-        <translation>#Виконавців</translation>
+        <translation type="unfinished">#Виконавців</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="259"/>
         <source>Filesize</source>
-        <translation>Розмір файла</translation>
+        <translation type="unfinished">Розмір файла</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="261"/>
         <source>Playing time</source>
-        <translation>Час відтворення</translation>
+        <translation type="unfinished">Час відтворення</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="263"/>
         <source>Year</source>
-        <translation>Рік</translation>
+        <translation type="unfinished">Рік</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="265"/>
         <source>Sampler? </source>
-        <translation>Збірник?</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="267"/>
         <source>Bitrate</source>
-        <translation>Швидкість передачі даних</translation>
+        <translation type="unfinished">Бітрейт</translation>
     </message>
     <message>
         <location filename="../HelperStructs/MetaDataInfo.cpp" line="269"/>
         <source>Genre</source>
-        <translation>Жанр</translation>
+        <translation type="unfinished">Жанр</translation>
     </message>
 </context>
 <context>
@@ -2388,17 +2388,17 @@ expression</source>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="315"/>
         <source>Artist</source>
-        <translation>Виконавець</translation>
+        <translation type="unfinished">Виконавець</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="316"/>
         <source>Album</source>
-        <translation>Альбом</translation>
+        <translation type="unfinished">Альбом</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/model/PlaylistItemModel.cpp" line="317"/>
         <source>Goto row</source>
-        <translation>Стрибай в рядок</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2465,7 +2465,7 @@ expression</source>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="424"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="287"/>
         <source>Gapless playback</source>
-        <translation>Безперервне відтворення</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="489"/>
@@ -2519,7 +2519,7 @@ expression</source>
         <location filename="../GUI/player/GUI_Player.ui" line="602"/>
         <location filename="../GUI/ui_GUI_Player.h" line="874"/>
         <source>Ctrl+S</source>
-        <translation>Ctrl+S</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1120"/>
@@ -2821,7 +2821,7 @@ expression</source>
     <message>
         <location filename="../Soundcloud/SoundcloudLibrary.cpp" line="152"/>
         <source>Misc</source>
-        <translation>Різні</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2829,33 +2829,33 @@ expression</source>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.cpp" line="59"/>
         <source>Edit</source>
-        <translation>Змінити</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="109"/>
         <location filename="../GUI/playlist/GUI_Playlist.cpp" line="70"/>
         <source>Ctrl+.</source>
-        <translation>Ctrl+.</translation>
+        <translation type="unfinished">Ctrl+.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="118"/>
         <source>Ctrl+?</source>
-        <translation>Ctrl+?</translation>
+        <translation type="unfinished">Ctrl+?</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="80"/>
         <source>Sayonara Player</source>
-        <translation>Sayonara Player</translation>
+        <translation type="unfinished">Sayonara Player</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="82"/>
         <source>Written by</source>
-        <translation>Автор</translation>
+        <translation type="unfinished">Автор</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.cpp" line="83"/>
         <source>Copyright</source>
-        <translation>Copyright</translation>
+        <translation type="unfinished">Copyright</translation>
     </message>
 </context>
 </TS>

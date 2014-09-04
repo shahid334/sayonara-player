@@ -41,7 +41,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../../.designer/backup/icons/play.png</normaloff>../../../../../.designer/backup/icons/play.png</iconset>
+    <normaloff>../../../../../../.designer/backup/icons/play.png</normaloff>../../../../../../.designer/backup/icons/play.png</iconset>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -195,7 +195,16 @@
        <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -254,7 +263,16 @@
        <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -433,7 +451,16 @@
        <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -1180,7 +1207,7 @@
      <x>0</x>
      <y>0</y>
      <width>951</width>
-     <height>28</height>
+     <height>20</height>
     </rect>
    </property>
    <property name="font">
@@ -1203,7 +1230,6 @@
     <addaction name="action_ImportFolder"/>
     <addaction name="action_ImportFiles"/>
     <addaction name="action_reloadLibrary"/>
-    <addaction name="action_clearLibrary"/>
     <addaction name="action_fetch_all_covers"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
@@ -1334,7 +1360,7 @@
   <action name="action_lastFM">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../Desktop/lastfm-icon.png</normaloff>../../../../../Desktop/lastfm-icon.png</iconset>
+     <normaloff>../../../../../../Desktop/lastfm-icon.png</normaloff>../../../../../../Desktop/lastfm-icon.png</iconset>
    </property>
    <property name="text">
     <string>Last.fm</string>
@@ -1401,9 +1427,6 @@
    </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
-   </property>
-   <property name="softKeyRole">
-    <enum>QAction::PositiveSoftKey</enum>
    </property>
   </action>
   <action name="action_startup">
@@ -1706,7 +1729,7 @@
   <customwidget>
    <class>SearchSlider</class>
    <extends>QSlider</extends>
-   <header location="global">GUI/player/SearchSlider.h</header>
+   <header location="global">src/GUI/player/SearchSlider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
