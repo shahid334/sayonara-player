@@ -30,7 +30,7 @@ SET(SOURCES
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
-ADD_LIBRARY(sayonara_playlist ${SOURCES} ${HEADERS_MOC})
+ADD_LIBRARY(sayonara_playlist STATIC ${SOURCES} ${HEADERS_MOC})
 TARGET_LINK_LIBRARIES(sayonara_playlist
     sayonara_helper
     sayonara_db

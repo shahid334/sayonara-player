@@ -28,7 +28,7 @@ SET(SOURCES
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
-ADD_LIBRARY(sayonara_library ${SOURCES} ${HEADERS_MOC})
+ADD_LIBRARY(sayonara_library STATIC ${SOURCES} ${HEADERS_MOC})
 TARGET_LINK_LIBRARIES(sayonara_library
 	sayonara_helper
 	sayonara_gui
