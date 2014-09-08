@@ -53,7 +53,7 @@ INCLUDE(CPack)
 
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
 INSTALL(FILES "VERSION" DESTINATION share/sayonara)
-INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/sayonara)
+INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
 INSTALL(DIRECTORY "linux_packages/resources/logos/" DESTINATION share/icons/highcolor)
 
 IF(${UNIX})
