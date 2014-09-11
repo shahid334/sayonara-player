@@ -78,19 +78,19 @@ void GUI_Player::stopClicked(bool b) {
 
 	set_std_cover( false );
 
-	if(btn_rec->isVisible() && btn_rec->isChecked()) {
-		btn_rec->setChecked(false);
-        emit sig_rec_button_toggled(false);
-    }
-
-
-
 	if(b) {
 		MetaData md;
 		m_settings->setLastTrack(md);
 
         emit sig_stop();
     }
+
+
+	if(btn_rec->isVisible() && btn_rec->isChecked()) {
+		btn_rec->setChecked(false);
+		emit sig_rec_button_toggled(false);
+	}
+
 }
 
 void GUI_Player::backwardClicked(bool) {
