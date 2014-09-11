@@ -47,7 +47,7 @@ void GUI_Player::set_std_cover(bool radio) {
 
 void GUI_Player::fetch_cover() {
 
-	set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
+	set_std_cover( (m_metadata.radio_mode != RadioModeOff) );
 
 	if(m_metadata.album_id > -1) {
 		m_cov_lookup->fetch_album_cover_by_id(m_metadata.album_id);
@@ -62,7 +62,7 @@ void GUI_Player::fetch_cover() {
 
 void GUI_Player::coverClicked() {
 
-   if(m_metadata.radio_mode == RADIO_STATION) {
+   if(m_metadata.radio_mode == RadioModeStation) {
 
 		m_alternate_covers->start( m_metadata.album, m_metadata.title );
     }
@@ -90,7 +90,7 @@ void GUI_Player::sl_alternate_cover_available(const CoverLocation& lc) {
 
 void GUI_Player::sl_no_cover_available() {
 
-   set_std_cover( (m_metadata.radio_mode != RADIO_OFF) );
+   set_std_cover( (m_metadata.radio_mode != RadioModeOff) );
 }
 
 

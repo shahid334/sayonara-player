@@ -457,7 +457,7 @@ bool Helper::is_podcastfile(const QString& filename, QString* content) {
     if(!extension_ok) return false;
 
     if( Helper::is_www(filename) ) {
-        qDebug() << "read http into str";
+		qDebug() << "read http into str " << filename;
         read_http_into_str(filename, content);
     }
 

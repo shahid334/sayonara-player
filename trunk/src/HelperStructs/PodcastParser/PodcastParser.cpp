@@ -67,8 +67,8 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
     QString author;
     QStringList categories;
     QString album;
+	QImage img;
 
-    bool image_found = false;
     for(int c = 0; c<entry.childNodes().size(); c++) {
 
         QDomNode channel_child = entry.childNodes().at(c);
@@ -93,7 +93,7 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
             categories.append(genres);
         }
 
-        else if(!nodename.compare("image", Qt::CaseInsensitive) && !image_found) {
+		else if(!nodename.compare("image", Qt::CaseInsensitive) && img.isNull()) {
             if(!channel_child.hasChildNodes()) continue;
 
             for(int i=0; i<channel_child.childNodes().size(); i++) {
@@ -114,13 +114,9 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
 
         else if(!nodename.compare("itunes:image", Qt::CaseInsensitive)) {
             QString img_url = e.attribute("href");
-            QImage img;
-			QString cover_path = CoverLocation::get_cover_location(album, author).cover_path;
-            bool success = WebAccess::read_http_into_img(img_url, &img);
-            if(!success && !img.isNull()) continue;
 
-			img.save( cover_path );
-            image_found = true;
+			bool success = WebAccess::read_http_into_img(img_url, &img);
+            if(!success && !img.isNull()) continue;
         }
 
         // item
@@ -192,6 +188,11 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
         } // item
     }
 
+	if( !img.isNull() ){
+		QString cover_path = CoverLocation::get_cover_location(album, author).cover_path;
+		img.save( cover_path );
+	}
+
     return (v_md.size() > 0);
 }
 
@@ -201,10 +202,13 @@ bool Podcast::parse_podcast_xml_file(QString podcast_filename, MetaDataList& v_m
 
     QString content;
 
-    if(Helper::is_www(podcast_filename))
-        Helper::read_http_into_str(podcast_filename, &content);
-    else
-        Helper::read_file_into_str(podcast_filename, &content);
+	if(Helper::is_www(podcast_filename)){
+		Helper::read_http_into_str(podcast_filename, &content);
+	}
+
+	else{
+		Helper::read_file_into_str(podcast_filename, &content);
+	}
 
     return parse_podcast_xml_file_content(content, v_md);
 

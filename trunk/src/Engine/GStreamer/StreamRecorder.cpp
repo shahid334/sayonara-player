@@ -36,7 +36,7 @@
 #include <QDir>
 #include <QDateTime>
 
-static bool _sr_debug = true;
+static bool _sr_debug = false;
 #define SR_DEBUG if(_sr_debug) qDebug() << "SR: " << Q_FUNC_INFO
 
 

@@ -270,7 +270,6 @@ void  GUI_Podcasts::play_podcasts(QString url, QString name) {
     qDebug() << "is podcast file? ";
     QString content;
     if(Helper::is_podcastfile(url, &content)) {
-        qDebug() << "true";
 
         MetaDataList v_md_tmp;
         if(Podcast::parse_podcast_xml_file_content(content, v_md_tmp) > 0) {

@@ -70,13 +70,13 @@ PlaylistType PlaylistHandler::determine_playlist_type(const MetaDataList& v_md) 
     MetaData md = v_md[0];
 
     switch(md.radio_mode) {
-        case RADIO_LFM:
+		case RadioModeLastFM:
             return PlaylistTypeLFM;
 
-        case RADIO_STATION:
+		case RadioModeStation:
             return PlaylistTypeStream;
 
-        case RADIO_OFF:
+		case RadioModeOff:
         default:
             return PlaylistTypeStd;
     }
@@ -122,7 +122,9 @@ bool PlaylistHandler::new_playlist(PlaylistType type) {
 // create a playlist, where metadata is already available
 void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing) {
 
+
     PlaylistType type = determine_playlist_type(v_md);
+
     bool new_created = new_playlist(type);
 
     _playlist->create_playlist(v_md, start_playing && new_created);

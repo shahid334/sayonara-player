@@ -431,7 +431,7 @@ void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected
 
     m_metadata_corrected = md;
 
-    bool radio_off = (m_metadata.radio_mode == RADIO_OFF);
+	bool radio_off = (m_metadata.radio_mode == RadioModeOff);
     bool get_lfm_corrections = m_settings->getLastFMCorrections();
 
 	btn_correct->setVisible(corrected &&
@@ -647,38 +647,38 @@ void GUI_Player::psl_reload_library_allowed(bool b) {
 void GUI_Player::setRadioMode(int radio) {
 
     bool stream_ripper = m_settings->getStreamRipper();
-	btn_bw->setEnabled(radio != RADIO_LFM);
+	btn_bw->setEnabled(radio != RadioModeLastFM);
 	btn_fw->setEnabled(true);
 
 	if(stream_ripper) {
 
-        bool btn_rec_visible = (radio != RADIO_OFF);
+		bool btn_rec_visible = (radio != RadioModeOff);
 
         if(btn_rec_visible) {
-			btn_play->setVisible(radio == RADIO_OFF);
-			btn_rec->setVisible(radio != RADIO_OFF);
+			btn_play->setVisible(radio == RadioModeOff);
+			btn_rec->setVisible(radio != RadioModeOff);
         }
 
         else {
-			btn_rec->setVisible(radio != RADIO_OFF);
-			btn_play->setVisible(radio == RADIO_OFF);
+			btn_rec->setVisible(radio != RadioModeOff);
+			btn_play->setVisible(radio == RadioModeOff);
         }
 
-		btn_play->setEnabled(radio == RADIO_OFF);
+		btn_play->setEnabled(radio == RadioModeOff);
 	}
 
 	else{
 
 		btn_rec->setVisible(false);
 		btn_play->setVisible(true);
-		btn_play->setEnabled(radio != RADIO_LFM);
+		btn_play->setEnabled(radio != RadioModeLastFM);
 	}
 
-	m_trayIcon->set_enable_play(radio != RADIO_LFM);
+	m_trayIcon->set_enable_play(radio != RadioModeLastFM);
 	m_trayIcon->set_enable_fwd(true);
-	m_trayIcon->set_enable_bwd(radio != RADIO_LFM);
+	m_trayIcon->set_enable_bwd(radio != RadioModeLastFM);
 
-	songProgress->setEnabled( (radio != RADIO_LFM) && (m_metadata.length_ms / 1000) > 0);
+	songProgress->setEnabled( (radio != RadioModeLastFM) && (m_metadata.length_ms / 1000) > 0);
 
 	emit sig_rec_button_toggled(btn_rec->isChecked() && btn_rec->isVisible());
 }
@@ -688,13 +688,13 @@ void GUI_Player::setRadioMode(int radio) {
 void GUI_Player::psl_strrip_set_active(bool b) {
 
 	if(b) {
-		btn_play->setVisible(m_metadata.radio_mode == RADIO_OFF);
-		btn_rec->setVisible(m_metadata.radio_mode != RADIO_OFF);
+		btn_play->setVisible(m_metadata.radio_mode == RadioModeOff);
+		btn_rec->setVisible(m_metadata.radio_mode != RadioModeOff);
 	}
 
 	else{
 		btn_play->setVisible(true);
-		btn_play->setEnabled(m_metadata.radio_mode == RADIO_OFF);
+		btn_play->setEnabled(m_metadata.radio_mode == RadioModeOff);
 		btn_rec->setVisible(false);
 	}
 
