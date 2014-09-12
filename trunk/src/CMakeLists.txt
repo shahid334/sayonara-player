@@ -12,7 +12,7 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 SET(CMAKE_BUILD_TYPE "Release")
 SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++11")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s")
 
 #SET(CMAKE_BUILD_TYPE "Debug")
 #SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")

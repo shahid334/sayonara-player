@@ -19,6 +19,9 @@ ELSE()
     MESSAGE("*******************************************")
 
     SET(GSTREAMER_VERSION "")
+    SET(GSTREAMER "")
+    SET(GSTREAMER_BASE "")
+    SET(GSTREAMER_BASE_APP "")
     SET(GSTREAMER_FOUND 0)
     SET(GSTREAMER_BASE_FOUND 0)
     SET(GSTREAMER_BASE_APP_FOUND 0)
@@ -86,8 +89,8 @@ ADD_LIBRARY(sayonara_gstreamer SHARED ${SOURCES} ${HEADERS_MOC})
 #TARGET_LINK_LIBRARIES(sayonara_gstreamer ${QT_LIBRARIES} gstreamer-1.0 gstbase-1.0 gstapp-1.0)
 
 TARGET_LINK_LIBRARIES(sayonara_gstreamer 
-	gstreamer-1.0 
-	gstbase-1.0
+	${GSTREAMER_LIBRARIES}
+	${GSTREAMER_BASE_LIBRARIES}
 )
 
 INSTALL(TARGETS sayonara_gstreamer DESTINATION lib/sayonara)
