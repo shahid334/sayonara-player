@@ -43,22 +43,26 @@ GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
 		_audio_src = gst_element_factory_make("uridecodebin", "src");
 		_audio_convert = gst_element_factory_make("audioconvert", "audio_convert");
 		_lame = gst_element_factory_make("lamemp3enc", "lame");
+		_resampler = gst_element_factory_make("audioresample", "resampler");
 		_xingheader = gst_element_factory_make("xingmux", "xingmux");
 		_id3mux = gst_element_factory_make("id3v2mux", "id3muxer");
 		_audio_sink = gst_element_factory_make("filesink", "filesink");
+
 
 		if(!_test_and_error(_bus, "CvtEngine: Somethink went wrong with the bus")) break;
 		if(!_test_and_error(_audio_src, "CvtEngine: Source creation fail")) break;
 		if(!_test_and_error(_audio_convert, "CvtEngine: Cannot create audio convert")) break;
 		if(!_test_and_error(_lame, "CvtEngine: Lame  failed")) break;
 		if(!_test_and_error(_id3mux, "CvtEngine: Cannot create id3muxer")) break;
+		if(!_test_and_error(_resampler, "CvtEngine: Cannot create resampler")) break;
 		if(!_test_and_error(_xingheader, "CvtEngine: Cannot create xingmuxer")) break;
 		if(!_test_and_error(_audio_sink, "CvtEngine: Cannot create audio sink")) break;
 
-		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
-		gst_element_link_many(_audio_convert, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
+		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _resampler, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
 
+		gst_element_link_many(_audio_convert, _resampler, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
 		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
+
 
 		status = true;
 

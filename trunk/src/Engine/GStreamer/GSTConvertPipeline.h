@@ -57,6 +57,7 @@ private:
 	GstElement* _decoder;
 	GstElement* _audio_convert;
 	GstElement* _audio_sink;
+	GstElement* _resampler;
 	GstElement* _id3mux;
 	GstElement* _xingheader;
 };
