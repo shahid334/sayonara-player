@@ -392,6 +392,7 @@ void Application::init_connections() {
 	CONNECT (listen, sig_dur_changed(MetaData&),                      player,              psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      playlist_handler,    psl_track_time_changed(MetaData&));
 	CONNECT (listen, sig_dur_changed(MetaData&),                      library,             psl_track_time_changed(MetaData&));
+    CONNECT (listen, sig_dl_progress(int),                           ui_playlist,         download_progress(int));
 
 	CONNECT (ui_speed, sig_speed_changed(float),                      listen,              psl_set_speed(float) );
 

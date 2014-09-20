@@ -70,9 +70,6 @@ void StreamRipperBufferThread::run() {
 
     int n_loops = 0;
     do{
-
-
-
         usleep(interval);
         max -= interval;
 

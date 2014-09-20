@@ -51,12 +51,37 @@ void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpoi
 	GstPad* ac_pad = gst_element_get_static_pad(ac, "sink");
 
 	if(ac_pad && gst_pad_is_linked(ac_pad)) {
-		ENGINE_DEBUG << " Decoder and tee are already linked";
+        ENGINE_DEBUG << " Pads are already linked";
 		return;
 	}
 
 	GstPadLinkReturn s = gst_pad_link(new_pad, ac_pad);
-	if(s != GST_PAD_LINK_OK) ENGINE_DEBUG << " Could not link decoder with tee";
+	if(s != GST_PAD_LINK_OK) {
+        ENGINE_DEBUG << " Could not link pads";
+		qDebug() << "Cannot link Error ";
+		switch(s){
+			case GST_PAD_LINK_WRONG_HIERARCHY:
+				qDebug() << "Cause: Wrong hierarchy";
+				break;
+
+			case GST_PAD_LINK_WAS_LINKED:
+				qDebug() << "Cause: Pad was already linked";
+				break;
+			case GST_PAD_LINK_WRONG_DIRECTION:
+				qDebug() << "Cause: Pads have wrong direction";
+				break;
+			case GST_PAD_LINK_NOFORMAT:
+				qDebug() << "Cause: Pads have incompatible format";
+				break;
+			case GST_PAD_LINK_NOSCHED:
+				qDebug() << "Cause: Pads cannot cooperate scheduling";
+				break;
+			case GST_PAD_LINK_REFUSED:
+			default:
+				qDebug() << "Cause: Refused because of different reason";
+				break;
+		}
+	}
 }
 
 gboolean PipelineCallbacks::show_position(gpointer data) {

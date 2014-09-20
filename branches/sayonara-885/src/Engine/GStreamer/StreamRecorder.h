@@ -67,6 +67,8 @@ public:
     bool getFinished();
 
 private:
+    static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data);
+
     MetaData    _md;
     qint64      _buffer_size;
     bool        _initialized;
@@ -80,8 +82,7 @@ private:
     GstElement* _rec_src;
     GstElement* _rec_dst;
     GstElement* _rec_pipeline;
-    GstElement* _rec_enc;
-    GstElement* _rec_cvt;
+
     GstBus*     _bus;
 
     int        _try;

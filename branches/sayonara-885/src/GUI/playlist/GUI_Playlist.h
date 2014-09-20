@@ -88,6 +88,7 @@
 			void change_playlist_mode(const PlaylistMode& mode);
 			void psl_show_small_playlist_items(bool small_items);
             void language_changed();
+            void download_progress(int);
 
 
 	private slots:
