@@ -78,8 +78,6 @@ void GUI_Player::setupConnections() {
 			SLOT(lastFMClicked(bool)));
 	connect(action_setLibPath, SIGNAL(triggered(bool)), this,
 			SLOT(setLibraryPathClicked(bool)));
-	connect(action_fetch_all_covers, SIGNAL(triggered(bool)), this,
-			SLOT(fetch_all_covers_clicked(bool)));
 	connect(action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
             SLOT(show()));
 	connect(action_min2tray, SIGNAL(toggled(bool)), this,

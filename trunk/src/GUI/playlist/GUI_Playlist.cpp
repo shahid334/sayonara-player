@@ -371,7 +371,7 @@ void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
         actions = (ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
 
 	listView->set_context_menu_actions(actions);
-	listView->set_drag_enabled(playlist_type != PlaylistTypeLFM);
+
 }
 
 

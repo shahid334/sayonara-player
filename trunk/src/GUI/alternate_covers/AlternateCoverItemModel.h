@@ -39,6 +39,10 @@
 struct RowColumn {
 	int row;
 	int col;
+    bool valid;
+    RowColumn(){
+        valid = false;
+    }
 };
 
 class AlternateCoverItemModel : public QAbstractTableModel {

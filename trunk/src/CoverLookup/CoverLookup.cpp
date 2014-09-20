@@ -74,6 +74,7 @@ void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 	connect(_cft, SIGNAL(sig_finished(bool)), this, SLOT(finished(bool)));
 	connect(_cft, SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, SLOT(cover_found(const CoverLocation&)));
+    connect(_cft, SIGNAL(destroyed()), _cft, SLOT(deleteLater()));
 
     _cft->start();
 }
@@ -153,17 +154,13 @@ bool CoverLookup::fetch_cover_by_searchstring(const QString& searchstring, const
 
 void CoverLookup::finished(bool success) {
 
-	QObject* sender = QObject::sender();
-	QObject** psender = &sender;
+    QObject* sender = this->sender();
 
 	foreach(CoverFetchThread* t, _cfts){
 		if(t == (CoverFetchThread*) sender){
 			_cfts.removeOne(t);
 		}
 	}
-
-	delete sender;
-	*psender = 0;
 
     emit sig_finished(success);
 }

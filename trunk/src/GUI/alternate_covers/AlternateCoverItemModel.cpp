@@ -45,13 +45,25 @@ AlternateCoverItemModel::~AlternateCoverItemModel() {
 
 RowColumn AlternateCoverItemModel::cvt_2_row_col(int idx) const {
 
+
 	RowColumn p;
+
+    if(idx < 0) {
+        p.row = -1;
+        p.col = -1;
+        p.valid = false;
+    }
+
 	p.row = idx / columnCount();
 	p.col = idx % columnCount();
+    p.valid = true;
+
 	return p;
 }
 
 int AlternateCoverItemModel::cvt_2_idx(int row, int col) const {
+    if(row < 0 || col < 0) return -1;
+
 	return row * columnCount() + col;
 }
 
@@ -70,6 +82,7 @@ QVariant AlternateCoverItemModel::data(const QModelIndex &index, int role) const
 {
 
 	int lin_idx = this->cvt_2_idx(index.row(), index.column());
+    if(lin_idx < 0) return QVariant();
 
 	/*qDebug() << "I want to have a cover: " << index <<
 				" valid? " << index.isValid() <<
@@ -106,9 +119,10 @@ bool AlternateCoverItemModel::setData(const QModelIndex &index, const QVariant &
     if (!index.isValid())
 		 return false;
 
+
 	int lin_idx = cvt_2_idx(index.row(), index.column());
 
-    if(lin_idx >= _pathlist.size())
+    if(lin_idx >= _pathlist.size() || lin_idx < 0)
         return false;
 
 	 if(role == Qt::EditRole) {
@@ -158,7 +172,10 @@ bool AlternateCoverItemModel::removeRows(int position, int rows, const QModelInd
 
 bool AlternateCoverItemModel::is_valid(int row, int col){
 
-	if( ! _pathlist[ cvt_2_idx(row, col) ].valid ){
+    int idx = cvt_2_idx(row, col);
+    if(idx < 0) return false;
+
+    if( ! _pathlist[ idx ].valid ){
 		return false;
 	}
 

@@ -461,14 +461,9 @@ void Application::init_connections() {
     CONNECT(ui_level, sig_right_clicked(int), ui_style_settings, show(int));
     CONNECT(ui_spectrum, sig_right_clicked(int), ui_style_settings, show(int));
 
-
-
     CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist_handler,	psl_similar_artists_available(const QList<int>&));
     CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,		last_fm_logged_in(bool));
     CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),   player,		lfm_info_fetched(const MetaData&, bool, bool));
-//    CONNECT(lastfm, sig_create_playlist(MetaDataList&, bool),               playlist_handler,   psl_createPlaylist(MetaDataList&, bool));
-//    CONNECT(lastfm, sig_new_radio_playlist(MetaDataList&),                  playlist_handler,   psl_append_tracks(MetaDataList&));
-
 
     CONNECT(ui_playlist_chooser, sig_playlist_chosen(int),		playlists, load_single_playlist(int));
     CONNECT(ui_playlist_chooser, sig_delete_playlist(int),      playlists, delete_playlist(int));

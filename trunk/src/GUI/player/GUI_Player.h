@@ -176,7 +176,6 @@ private slots:
     void lastFMClicked(bool b = true);
     void setLibraryPathClicked(bool b = true);
 
-    void fetch_all_covers_clicked(bool b = true);
     void load_pl_on_startup_toggled(bool);
     void min2tray_toggled(bool);
     void only_one_instance_toggled(bool);

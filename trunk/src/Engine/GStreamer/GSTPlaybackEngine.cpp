@@ -218,13 +218,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 			return false;
 		}
 
-		// lfm stuff is no uri?
-		if (md.radio_mode == RadioModeLastFM) {
-			gchar* filename = g_filename_from_utf8(filepath.toUtf8(),
-												   filepath.toUtf8().size(), NULL, NULL, NULL);
-			uri = g_filename_to_uri( filename, NULL, NULL);
-		}
-
 		// standard stream is already uri
 		else {
 			uri = g_filename_from_utf8(md.filepath.toUtf8(),

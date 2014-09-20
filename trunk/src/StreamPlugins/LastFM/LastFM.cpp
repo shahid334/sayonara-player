@@ -162,9 +162,6 @@ void LastFM::_login_thread_finished() {
 
 void LastFM::psl_track_changed(const MetaData& md) {
 
-
-
-
     if(!_track_changed_thread) {
         if(!_lfm_init_track_changed_thread()) return;
     }
@@ -231,108 +228,6 @@ void LastFM::psl_scrobble(const MetaData& metadata) {
 }
 
 
-
-void LastFM::psl_radio_init(const QString& str, int radio_mode) {
-
-	if(!_logged_in) {
-
-		return;
-	}
-
-    QString lfm_radio_station = QString("lastfm://");
-	QString tag_string = str;
-
-	tag_string.replace("&", "and");
-
-	switch(radio_mode) {
-
-		case LFM_RADIO_MODE_ARTIST:
-			lfm_radio_station += QString("artist/") + str + QString("/similarartists");
-			break;
-
-		case LFM_RADIO_MODE_TAG:
-			lfm_radio_station += QString("globaltags/") + str;
-			break;
-
-		case LFM_RADIO_MODE_RECOMMENDED:
-			lfm_radio_station += "user/" + str + "/recommended";
-			break;
-
-		case LFM_RADIO_MODE_USER_LIBRARY:
-			lfm_radio_station += "user/" + str + "/library";
-			break;
-
-		default:
-			break;
-	}
-
-	UrlParams data;
-        data["api_key"] = LFM_API_KEY;
-        data["method"] = "radio.tune";
-        data["sk"] = _session_key;
-        data["station"] = lfm_radio_station;
-
-
-    string post_data;
-    QString url = lfm_wa_create_sig_url_post(QString("http://ws.audioscrobbler.com/2.0/"), data, post_data);
-
-    QString response;
-    bool success = lfm_wa_call_post_url(url, post_data, response);
-
-
-    if(!_parse_error_message(response)) success = false;
-
-    if( success ) {
-
-        MetaDataList v_md;
-        MetaData md;
-        md.radio_mode = RadioModeLastFM;
-        md.id = -2;
-        v_md.push_back(md);
-        emit sig_create_playlist(v_md, true);
-
-    }
-
-    emit sig_radio_initialized(success);
-
-}
-
-
-void LastFM::psl_radio_playlist_request() {
-
-	QDomDocument xml_response;
-	MetaDataList v_md;
-
-	UrlParams data;
-        data["api_key"] = LFM_API_KEY;
-        data["discovery"] = "0";
-        data["method"] = "radio.getplaylist";
-        data["sk"] = _session_key;
-
-
-    QString url = lfm_wa_create_sig_url(QString("http://ws.audioscrobbler.com/2.0/"), data);
-
-
-	bool success = lfm_wa_call_url_xml(url, xml_response);
-	if( !success ) {
-		qDebug() << "LFM: Cannot get playlist";
-		qDebug() << "LFM: Url = " << url;
-        qDebug() << xml_response.toString();
-		return;
-	}
-
-	_lfm_parse_playlist_answer(v_md, xml_response);
-	xml_response.clear();
-
-	if(v_md.size() > 0) {
-
-		emit sig_new_radio_playlist(v_md);
-		return;
-	}
-}
-
-
-
 // private slot
 void LastFM::_sl_similar_artists_available(const QString& target_class, const QList<int>& ids) {
 	if(target_class.compare(_class_name) != 0) return;
@@ -353,78 +248,6 @@ void LastFM::_sl_corrected_data_available(const QString& target_class) {
 		emit sig_track_info_fetched(md, loved, corrected);
 }
 
-
-
-
-
-bool LastFM::_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& doc) {
-
-	v_md.clear();
-
-	QDomElement docElement = doc.documentElement();
-    QDomNode playlist = docElement.firstChildElement("playlist");
-
-
-
-    if(!playlist.hasChildNodes()) {
-        qDebug() << "playlist has no childnodes";
-        return false;
-    }
-
-    QDomNode tracklist = playlist.firstChildElement("trackList");
-    if(!tracklist.hasChildNodes()) {
-        qDebug() << "tracklist has no childnodes";
-        return false;
-    }
-
-
-	for(int idx_track=0; idx_track < tracklist.childNodes().size(); idx_track++) {
-
-		QDomNode track = tracklist.childNodes().item(idx_track);
-        if(!track.hasChildNodes()) {
-            qDebug() << "track has no childnodes";
-            continue;
-        }
-
-		MetaData md;
-
-		for(int idx_track_content = 0; idx_track_content <track.childNodes().size(); idx_track_content++) {
-
-            md.is_extern = false;
-			md.bitrate = 128000;
-
-			QDomNode content = track.childNodes().item(idx_track_content);
-			QString nodename = content.nodeName().toLower();
-
-			QDomElement e = content.toElement();
-			if(!nodename.compare("location")) {
-				md.filepath = e.text();
-			}
-
-			else if(!nodename.compare("title")) {
-				md.title = e.text();
-			}
-
-			else if(!nodename.compare("album")) {
-				md.album = e.text();
-			}
-
-			else if(!nodename.compare("creator")) {
-				md.artist = e.text();
-			}
-
-			else if(!nodename.compare("duration")) {
-				md.length_ms = e.text().toLong();
-			}
-		}
-
-        md.radio_mode = RadioModeLastFM;
-
-		v_md.push_back(md);
-	}
-
-	return (v_md.size() > 0);
-}
 
 
 void LastFM::lfm_get_friends(QStringList& friends) {

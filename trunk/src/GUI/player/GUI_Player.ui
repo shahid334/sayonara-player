@@ -1230,7 +1230,6 @@
     <addaction name="action_ImportFolder"/>
     <addaction name="action_ImportFiles"/>
     <addaction name="action_reloadLibrary"/>
-    <addaction name="action_fetch_all_covers"/>
     <addaction name="separator"/>
     <addaction name="separator"/>
     <addaction name="action_Close"/>

@@ -11,7 +11,6 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 SET(HEADERS
     Playlist.h
-    LFMPlaylist.h
     StdPlaylist.h
     StreamPlaylist.h
     PlaylistHandler.h
@@ -20,7 +19,6 @@ SET(HEADERS
 
 SET(SOURCES
     Playlist.cpp
-    LFMPlaylist.cpp
     StdPlaylist.cpp
     StreamPlaylist.cpp
     PlaylistHandler.cpp

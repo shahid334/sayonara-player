@@ -42,6 +42,7 @@ public:
 	CoverLocation();
 
 	void print() const;
+    QString toString() const;
 
 	static CoverLocation get_cover_location(const QString& album_name, const QString& artist_name);
 	static CoverLocation get_cover_location(const QString& album_name, const QStringList& artists);

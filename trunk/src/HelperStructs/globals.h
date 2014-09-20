@@ -132,7 +132,6 @@ namespace Sort {
 
 enum PlaylistType{
     PlaylistTypeStd=0,
-    PlaylistTypeLFM,
     PlaylistTypeStream
 };
 

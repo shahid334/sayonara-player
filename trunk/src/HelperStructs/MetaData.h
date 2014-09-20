@@ -48,7 +48,6 @@ enum RadioMode {
 
 	RadioModeOff = 0,
 	RadioModeStation = 1,
-	RadioModeLastFM = 2
 };
 
 class MetaData;
