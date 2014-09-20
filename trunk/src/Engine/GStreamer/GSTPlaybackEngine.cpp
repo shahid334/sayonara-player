@@ -300,7 +300,6 @@ void GSTPlaybackEngine::stop() {
 
 	// streamripper, wanna record is set when record button is pressed
 	if (_playing_stream && _sr_active) {
-		qDebug() << "Engine: stop... Playing stream";
 		_stream_recorder->stop(!_sr_wanna_record);
 	}
 

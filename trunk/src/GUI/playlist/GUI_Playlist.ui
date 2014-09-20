@@ -463,45 +463,6 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="2">
-    <widget class="QPushButton" name="btn_import">
-     <property name="minimumSize">
-      <size>
-       <width>24</width>
-       <height>24</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>26</width>
-       <height>26</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>Import new (orange) tracks to library w/o copying</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="3">
     <widget class="QPushButton" name="btn_numbers">
      <property name="minimumSize">
@@ -544,7 +505,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0" colspan="2">
+   <item row="0" column="0" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="lab_totalTime">
@@ -573,6 +534,13 @@
        </property>
        <property name="alignment">
         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="pb_download">
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>

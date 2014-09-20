@@ -83,15 +83,14 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     _playlist_mode = settings->getPlaylistMode();
 
+    pb_download->setVisible(false);
+
 
 	btn_append->setChecked(_playlist_mode.append);
 	btn_repAll->setChecked(_playlist_mode.repAll);
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
 	btn_shuffle->setChecked(_playlist_mode.shuffle);
 	btn_gapless->setChecked(_playlist_mode.gapless);
-
-
-	btn_import->setVisible(false);
 
     check_dynamic_play_button();
     setAcceptDrops(true);
@@ -165,7 +164,6 @@ void GUI_Playlist::initGUI() {
     btn_dynamic->setIcon(Helper::getIcon("dynamic.png"));
     btn_shuffle->setIcon(Helper::getIcon("shuffle.png"));
     btn_clear->setIcon(Helper::getIcon("broom.png"));
-    btn_import->setIcon(Helper::getIcon("import.png"));
     btn_numbers->setIcon(Helper::getIcon("numbers.png"));
     btn_gapless->setIcon(Helper::getIcon("gapless.png"));
 
@@ -219,7 +217,6 @@ void GUI_Playlist::clear_playlist_slot() {
 
     _total_msecs = 0;
 	lab_totalTime->setText(tr("Playlist empty"));
-	btn_import->setVisible(false);
 	listView->clear();
 
     emit sig_cleared();
@@ -394,3 +391,13 @@ void GUI_Playlist::rows_removed(const QList<int>& lst, bool select_next_row) {
 }
 
 
+void GUI_Playlist::download_progress(int progress){
+    if(progress < 0 || progress > 99){
+        pb_download->setVisible(false);
+    }
+
+    else{
+        pb_download->setVisible(true);
+        pb_download->setValue(progress);
+    }
+}

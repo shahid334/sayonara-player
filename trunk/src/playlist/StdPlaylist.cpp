@@ -108,7 +108,6 @@ void StdPlaylist::create_playlist(const QStringList& lst, bool start_playing) {
 
 void StdPlaylist:: play() {
 
-    qDebug() << "Play, cur_play_idx = " << _cur_play_idx;
     if(_v_md.size() == 0) {
         _cur_play_idx = -1;
         stop();

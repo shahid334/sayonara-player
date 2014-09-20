@@ -102,6 +102,7 @@ signals:
 	void sig_level(float, float);
     void sig_spectrum(QList<float>&);
 	void sig_bitrate_changed(qint32);
+    void sig_download_progress(int);
 
 private slots:
 	virtual void sr_initialized(bool b){ if(b) play(); }

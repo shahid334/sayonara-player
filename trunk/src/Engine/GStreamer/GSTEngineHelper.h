@@ -117,10 +117,6 @@ namespace EngineCallbacks {
 	gboolean
 	bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data);
 
-
-	void
-	new_buffer(GstElement* sink, gpointer data);
-
 	gboolean
 	level_handler (GstBus * bus, GstMessage * message, gpointer data);
 
@@ -130,7 +126,6 @@ namespace EngineCallbacks {
 	gboolean
 	show_position(GstElement* pipeline);
 
-	void calc_level(GstBuffer* buffer, MyCaps* caps, float* l, float* r);
 }
 
 
