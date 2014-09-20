@@ -264,32 +264,18 @@ void GUI_Alternate_Covers::cancel_button_pressed() {
 
 void GUI_Alternate_Covers::cl_new_cover(const CoverLocation& cl) {
 
-    int idx = 0;
 	QModelIndex model_idx;
 	QVariant var;
 
-
 	_filelist << cl;
 
-	QString dir, filename;
-	Helper::split_filename(cl.cover_path, dir, filename);
-
-	QString substr = filename.left(2);
-    if(substr.endsWith("_")) {
-		idx = filename.left(1).toInt();
-    }
-
-	RowColumn rc = _model->cvt_2_row_col(idx);
-	bool valid = _model->is_valid(rc.row, rc.col);
-	btn_save->setEnabled(valid);
-
+    RowColumn rc = _model->cvt_2_row_col(_filelist.size() -1 );
+    btn_save->setEnabled( _model->is_valid(rc.row, rc.col) );
 
 	model_idx = _model->index(rc.row, rc.col);
 	var.setValue(cl);
 
-
 	_model->setData(model_idx, var);
-
 }
 
 

@@ -22,7 +22,6 @@
  */
 
 #include "PlaylistHandler.h"
-#include "LFMPlaylist.h"
 #include "StdPlaylist.h"
 #include "StreamPlaylist.h"
 #include "HelperStructs/Helper.h"
@@ -70,10 +69,8 @@ PlaylistType PlaylistHandler::determine_playlist_type(const MetaDataList& v_md) 
     MetaData md = v_md[0];
 
     switch(md.radio_mode) {
-		case RadioModeLastFM:
-            return PlaylistTypeLFM;
 
-		case RadioModeStation:
+        case RadioModeStation:
             return PlaylistTypeStream;
 
 		case RadioModeOff:
@@ -94,10 +91,6 @@ bool PlaylistHandler::new_playlist(PlaylistType type) {
     }
 
     switch(type) {
-
-        case PlaylistTypeLFM:
-            _playlist = (Playlist*) new LFMPlaylist(0);
-            break;
         case PlaylistTypeStd:
             _playlist = (Playlist*) new StdPlaylist(0);
             break;

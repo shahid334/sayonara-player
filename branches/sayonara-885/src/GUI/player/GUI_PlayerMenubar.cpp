@@ -24,6 +24,7 @@
  */
 
 #include "GUI/player/GUI_Player.h"
+#include "CoverLookup/CoverLookupAll.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -123,9 +124,7 @@ void GUI_Player::reloadLibraryClicked(bool b) {
     emit sig_reload_library(false);
 }
 
-// prvt slot
-void GUI_Player::fetch_all_covers_clicked(bool b) {
-}
+
 /** FILE END **/
 
 

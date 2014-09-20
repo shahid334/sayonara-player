@@ -107,10 +107,11 @@ bool wa_call_url(const QString& url, QString* response) {
 
 bool WebAccess::read_http_into_str(const QString& url, QString* content) {
 
+    bool success;
     content->clear();
-    wa_call_url(url, content);
+    success = wa_call_url(url, content);
 
-    if(content->size() > 0)	return true;
+    if(success)	return true;
     else{
         qDebug() << "Read Http into str:: url: " << url;
         qDebug() << "Read Http into str:: could not get any content";

@@ -65,7 +65,7 @@ void LN_Notification::notification_show(const MetaData& md) {
 
     else{
 
-        QPixmap p(pixmap_path);
+        QPixmap p(cl.cover_path);
 
 		int scale = settings->getNotificationScale();
 		if(scale > 0) {
@@ -114,9 +114,6 @@ void LN_Notification::notification_update(const MetaData& md) {
 				md.title.toLocal8Bit().data(),
 				text.toLocal8Bit().data(),
 				pixmap_path.toLocal8Bit().data());
-
-				    
-
 }
 
 void LN_Notification::not_close() {

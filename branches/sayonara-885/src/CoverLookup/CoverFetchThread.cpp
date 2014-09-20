@@ -41,14 +41,13 @@ CoverFetchThread::CoverFetchThread(QObject* parent, const CoverLocation& cl, con
     _n_covers(n_covers),
     _run(true)
 {
-
 	_url = cl.google_url;
 	_target_file = cl.cover_path;
 }
 
 
 CoverFetchThread::~CoverFetchThread() {
-	//qDebug() << "cft deleted";
+    //qDebug() << "cft deleted";
 }
 
 

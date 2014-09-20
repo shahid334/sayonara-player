@@ -56,8 +56,6 @@ Q_OBJECT
 	signals:
 		void sig_last_fm_logged_in(bool);
 		void sig_similar_artists_available(const QList<int>&);
-        void sig_new_radio_playlist(MetaDataList&);
-        void sig_radio_initialized(bool);
         void sig_create_playlist(MetaDataList&, bool);
 		void sig_track_info_fetched(const MetaData& md, bool loved, bool corrected);
 		void sig_user_info_fetched(QMap<QString, QString>&);
@@ -68,9 +66,6 @@ Q_OBJECT
 		void psl_scrobble(const MetaData&);
 		void psl_track_changed(const MetaData&);
 		void psl_login(QString, QString);
-		void psl_radio_init(const QString&, int);
-		void psl_radio_playlist_request();
-
 
 
 	private slots:
@@ -108,7 +103,6 @@ Q_OBJECT
 		bool 	_lfm_update_track(const MetaData&);
 		void 	_lfm_get_similar_artists(const QString&);
 		QString _lfm_parse_session_answer();
-		bool 	_lfm_parse_playlist_answer(MetaDataList& v_md, const QDomDocument& xml);
 		bool 	_lfm_check_login();
         bool    _parse_error_message(QString& response, bool force=false);
         void    _show_error_message(QString err_msg);

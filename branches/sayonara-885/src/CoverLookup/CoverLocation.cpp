@@ -48,6 +48,10 @@ void CoverLocation::print() const{
 	qDebug() << "CoverLocation: " << google_url;
 }
 
+QString CoverLocation::toString() const{
+    return QString("Location ") + cover_path + " Url: " + google_url;
+}
+
 CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QString& artist_name) {
 
 	CoverLocation ret;

@@ -647,8 +647,6 @@ void GUI_Player::psl_reload_library_allowed(bool b) {
 void GUI_Player::setRadioMode(int radio) {
 
     bool stream_ripper = m_settings->getStreamRipper();
-	btn_bw->setEnabled(radio != RadioModeLastFM);
-	btn_fw->setEnabled(true);
 
 	if(stream_ripper) {
 
@@ -671,14 +669,10 @@ void GUI_Player::setRadioMode(int radio) {
 
 		btn_rec->setVisible(false);
 		btn_play->setVisible(true);
-		btn_play->setEnabled(radio != RadioModeLastFM);
 	}
 
-	m_trayIcon->set_enable_play(radio != RadioModeLastFM);
 	m_trayIcon->set_enable_fwd(true);
-	m_trayIcon->set_enable_bwd(radio != RadioModeLastFM);
-
-	songProgress->setEnabled( (radio != RadioModeLastFM) && (m_metadata.length_ms / 1000) > 0);
+    songProgress->setEnabled( (m_metadata.length_ms / 1000) > 0 );
 
 	emit sig_rec_button_toggled(btn_rec->isChecked() && btn_rec->isVisible());
 }

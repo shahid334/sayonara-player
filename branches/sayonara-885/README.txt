@@ -12,11 +12,14 @@ Libraries
 1. Linux
 
 	You need 
+	* g++ >= 4.8 (important due to C++x11 standard)
 	* cmake
 	* Qt >= 4.6 + development files (qt4-core, qt4-gui-, qt4-xml, qt4-sql, qt4-sqlite)
-	* libqtcore4 (on some distributions it's not installed by default)
+	* libqt4 (on some distributions it's not installed by default)
 	* libtaglib
-	* Gstreamer 0.10 + development files (libgstreamer0.10, libgstreamer-plugins-base0.10)
+	* Gstreamer 1.0 + development files (libgstreamer1.0, libgstreamer-plugins-base1.0)
+	  (will run and compile with gstreamer 0.10, too. In order to do so, install the
+	   corresponding gstreamer 0.10 packages)
 	* libcurl
 
 	* OPTIONAL: For notifications: libnotify + development files
@@ -28,10 +31,10 @@ Libraries
 	* make install (as root)
 	* sayonara
 	
-	1.1 apt-get
+	1.1 Debian/Ubuntu/Mint: apt-get
 	
-		* sudo apt-get install libqt4-dev libqtcore4 libtaglib2.0-cil libcurl4-gnutls-dev \
-                  libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev cmake
+		* sudo apt-get install libqt4-dev libqt4-sql-sqlite libqt4-sql libqt4-gui libqt4-sql libqt4-core libtag1-dev libcurl4-gnutls-dev \
+                  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libgstreamer-plugins-good1.0-dev cmake
 
 		* for notifications
 		  sudo apt-get install libnotify-dev
