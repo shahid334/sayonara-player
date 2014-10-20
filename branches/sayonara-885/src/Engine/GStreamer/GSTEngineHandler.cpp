@@ -120,6 +120,11 @@ void GSTEngineHandler::jump_rel(quint32 where) {
 	_cur_engine->jump_rel(where);
 }
 
+void GSTEngineHandler::jump_rel_ms(qint64 where){
+    if(!_cur_engine) return;
+    _cur_engine->jump_rel_ms(where);
+}
+
 void GSTEngineHandler::change_track(const MetaData& md, int pos_sec, bool start_play) {
 	if(!_cur_engine) return;
 	_cur_engine->change_track(md, pos_sec, start_play);

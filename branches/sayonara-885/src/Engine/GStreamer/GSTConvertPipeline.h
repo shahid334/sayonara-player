@@ -45,8 +45,6 @@ public slots:
 	void pause();
 	void stop();
 
-	qint64 get_duration_ms();
-	qint64 get_position_ms();
 	guint get_bitrate();
 
 	void set_quality(LameBitrate quality);

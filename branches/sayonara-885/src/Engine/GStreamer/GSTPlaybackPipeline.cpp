@@ -18,26 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
 #include "HelperStructs/globals.h"
 
-#include "unistd.h"
-#include <QDebug>
 
-
-
-GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
+GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
+    GSTAbstractPipeline(parent)
 {
+    bool status = false;
+    int i = 0;
 
-
-	bool status = false;
-	int i = 0;
-	_pipeline = 0;
-	_position = 0;
-	_duration = 0;
+    _speed_val = 1.0f;
+    _speed_active = false;
 
 	_timer = new QTimer();
 	_timer->setInterval(5);
@@ -57,7 +50,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		_bus = gst_pipeline_get_bus(GST_PIPELINE(tmp_pipeline));
 
 		_audio_convert = gst_element_factory_make("audioconvert", "audio_convert");
-		//_speed = gst_element_factory_make("scaletempo", "speed");
 		_equalizer = gst_element_factory_make("equalizer-10bands", "equalizer");
 		_volume = gst_element_factory_make("volume", "volume");
 
@@ -91,7 +83,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		if(!_test_and_error(_level_audio_convert, "Engine: Level converter fail")) break;
 		if(!_test_and_error(_spectrum_audio_convert, "Engine: Spectrum converter fail")) break;
 
-
 		gst_object_ref(_audio_src);
 
 		gst_bin_add_many(GST_BIN(tmp_pipeline),
@@ -101,16 +92,8 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 			_level_queue, _level_audio_convert, _level, _level_sink,
 			_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 
-
-		_speed_active = false;
-		/*if(_speed) {
-			gst_bin_add(GST_BIN(tmp_pipeline), _speed);
-		}*/
-
-
 		success = gst_element_link_many(_level_queue, _level_sink, NULL);
 		_test_and_error_bool(success, "Engine: Cannot link Level pipeline");
-
 
 		success = gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
 		_test_and_error_bool(success, "Engine: Cannot link Spectrum pipeline");
@@ -120,7 +103,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 
 		success = gst_element_link_many(_audio_convert, _equalizer, _tee, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link audio convert with tee")) break;
-
 
 		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
 
@@ -164,16 +146,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		guint64 interval = 30000000;
 		gint threshold = - crop_spectrum_at;
 
-		/*if(_speed) {
-			g_object_set(G_OBJECT(_speed),
-						 "search", "0",   // 14  [0, 500]
-						 "stride", 30,  // 30  [1, 5000]
-						 "overlap", 0.2,   // 0.2 [0, 1]
-					NULL);
-
-
-		}*/
-
 		g_object_set (G_OBJECT (_level),
 					  "message", TRUE,
 					  "interval", interval,
@@ -188,8 +160,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 					  "multi-channel", FALSE,
 					  NULL);
 
-
-
 		 /* run synced and not as fast as we can */
 		g_object_set (G_OBJECT (_level_sink), "sync", TRUE, NULL);
 		g_object_set (G_OBJECT (_level_sink), "async", FALSE, NULL);
@@ -200,7 +170,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		gst_pad_set_active(_level_pad, false);
 		gst_pad_set_active(_level_pad, true);
 
-
 		gst_element_set_state(tmp_pipeline, GST_STATE_READY);
 
 		success = true;
@@ -210,12 +179,9 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent)
 		break;
 	} while (i);
 
-	if(status) gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, engine);
-	else {
-		_pipeline=0;
-		qDebug() << "****Pipeline: constructor finished: " << status;
-		return;
-	}
+    if(status) {
+        gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, engine);
+    }
 
 	qDebug() << "****Pipeline: constructor finished: " << status;
 }
@@ -241,6 +207,9 @@ void GSTPlaybackPipeline::play() {
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
 	g_timeout_add(200, (GSourceFunc) PipelineCallbacks::show_position, this);
 
+    if(_speed_active){
+        set_speed(_speed_val);
+    }
 }
 
 
@@ -253,7 +222,7 @@ void GSTPlaybackPipeline::stop() {
 
 	_timer->stop();
 
-	_duration = 0;
+    _duration_ms = 0;
 	_uri = 0;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
@@ -279,31 +248,49 @@ void GSTPlaybackPipeline::unmute() {
 	g_object_set(G_OBJECT(_volume), "mute", FALSE, NULL);
 }
 
+bool GSTPlaybackPipeline::_seek(gint64 ns){
+
+    float f;
+
+    if(_speed_active){
+        f = _speed_val;
+    }
+
+    else {
+        f = 1.0f;
+    }
+
+    return gst_element_seek(_audio_src,
+                     f,
+                     GST_FORMAT_TIME,
+                     (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
+                     GST_SEEK_TYPE_SET, ns,
+                     GST_SEEK_TYPE_SET, _duration_ms * MIO);
+
+}
+
 gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {
 
 	gint64 new_time_ns;
 
 	 g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 
-	if (percent > 1.0f)
-		new_time_ns = ref_ns;
+    if (percent > 1.0f){
+        new_time_ns = ref_ns;
+    }
 
-	else if(percent < 0)
-		new_time_ns = 0;
+    else if(percent < 0){
+        new_time_ns = 0;
+    }
 
 	else{
 		new_time_ns = (percent * ref_ns); // nsecs
 	}
 
-	if(gst_element_seek_simple(_pipeline,
-		GST_FORMAT_TIME,
-		(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-		new_time_ns)) {
 
+    if( _seek(new_time_ns) ) {
 		return new_time_ns;
 	}
-
-	else qDebug() << "r Cannot seek to " << new_time_ns / 1000000;
 
 	return 0;
 }
@@ -311,90 +298,42 @@ gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {
 
 gint64 GSTPlaybackPipeline::seek_abs(gint64 ns) {
 
-
-	if(ns == 0) return 0;
+    if(ns == 0) return 0;
+    if(ns < 0) ns = 0;
+    if(ns > _duration_ms * MIO){
+        ns = _duration_ms * MIO;
+    }
 
 	g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 
-	if(gst_element_seek_simple(_audio_src,
-		GST_FORMAT_TIME,(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-		ns)) {
-
+    if( _seek(ns) ) {
 		return ns;
 	}
-
-	else qDebug() << "Cannot seek to " << ns / 1000000;
-
-
 
 	return 0;
 }
 
 void GSTPlaybackPipeline::set_speed(float f) {
 
-	//if(!_speed) return;
-
-
 	if(f < 0 && _speed_active) {
 
 		_speed_active = false;
-
-		/*gst_element_unlink_many(_audio_convert, _speed, _equalizer, NULL);
-		gst_element_link( _audio_convert, _equalizer );*/
-	}
+        _speed_val = 1.0f;
+   }
 
 	else if(f > 0 && !_speed_active) {
 
-		gint64 pos, dur;
-
 		_speed_active = true;
-		/*gst_element_unlink_many(_audio_convert, _equalizer, NULL);
-		gst_element_link_many(_audio_convert, _speed, _equalizer, NULL);*/
+        _speed_val = f;
 
-
-
-#if GST_CHECK_VERSION(1, 0, 0)
-    gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
-    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    gst_element_query_position(_pipeline, &format, &pos);
-    gst_element_query_duration(_pipeline, &format, &dur);
-#endif
-
-		gst_element_seek(_audio_src,
-						 f,
-						 GST_FORMAT_TIME,
-						 (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-						 GST_SEEK_TYPE_SET, pos,
-						 GST_SEEK_TYPE_SET, dur);
-
-
+        _seek(_position_ms * MIO);
 	}
 
 	else if(f > 0 && _speed_active ) {
 
-		gint64 pos, dur;
-		qDebug() << "Seek";
+        _speed_val = f;
 
-
-#if GST_CHECK_VERSION(1, 0, 0)
-    gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
-    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &dur);
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    gst_element_query_position(_pipeline, &format, &pos);
-    gst_element_query_duration(_pipeline, &format, &dur);
-#endif
-
-
-		gst_element_seek(_audio_src,
-						 f,
-						 GST_FORMAT_TIME,
-						 (GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-						 GST_SEEK_TYPE_SET, pos,
-						 GST_SEEK_TYPE_SET, dur);
-
+        _seek(_position_ms * MIO);
 	}
 }
 
@@ -403,10 +342,9 @@ void GSTPlaybackPipeline::enable_level(bool b) {
 	GstState state;
 	gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
 
-
-	if(state == GST_STATE_PLAYING)
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
-
+    if(state == GST_STATE_PLAYING){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
+    }
 
 	if(!b) {
 		gst_element_unlink_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
@@ -418,8 +356,9 @@ void GSTPlaybackPipeline::enable_level(bool b) {
 		gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
 	}
 
-	if(state == GST_STATE_PLAYING)
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    if(state == GST_STATE_PLAYING){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
+    }
 }
 
 
@@ -428,9 +367,9 @@ void GSTPlaybackPipeline::enable_spectrum(bool b) {
 	GstState state;
 	gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
 
-
-	if(state == GST_STATE_PLAYING)
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
+    if(state == GST_STATE_PLAYING){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
+    }
 
 	if(!b) {
 		gst_element_unlink_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
@@ -441,94 +380,15 @@ void GSTPlaybackPipeline::enable_spectrum(bool b) {
 		gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 	}
 
-	if(state == GST_STATE_PLAYING)
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-
-}
-
-
-qint64 GSTPlaybackPipeline::get_position_ms() {
-
-	gint64 position=0;
-	bool success = false;
-
-#if GST_CHECK_VERSION(1, 0, 0)
-    success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
-#else
-        GstFormat format = GST_FORMAT_TIME;
-    success = gst_element_query_position(_pipeline, &format, &position);
-#endif
-
-	if(!success ) {
-		_position = 0;
-		return -1;
-	}
-
-	_position = (qint64) (position / MIO);
-
-	return _position;
-}
-
-
-qint64 GSTPlaybackPipeline::get_duration_ms() {
-
-	if(_duration != 0) return _duration;
-
-	gint64 duration=0;
-	bool success = false;
-	GstState state = get_state();
-
-    if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING){
-
-#if GST_CHECK_VERSION(1, 0, 0)
-	   success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
-#else
-        GstFormat format = GST_FORMAT_TIME;
-	   success = gst_element_query_duration(_pipeline, &format, &duration);
-#endif
-
-
+    if(state == GST_STATE_PLAYING){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
     }
-
-
-	if(!success ) {
-		_duration = 0;
-		return -1;
-	}
-
-	_duration = (qint64) (duration / MIO);
-
-	return _duration;
-}
-
-
-guint GSTPlaybackPipeline::get_bitrate() {
-
-
-	GstTagList *tags=NULL;
-	guint rate=0;
-
-	bool success = false;
-
-	if(tags) {
-
-		success = gst_tag_list_get_uint (tags, GST_TAG_BITRATE, &rate);
-
-		if(success) {
-			qDebug() << "tags there, bitrate = " << rate;
-			return rate;
-		}
-	}
-
-	return 0;
 }
 
 
 bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 
 	if(!uri) return false;
-
-	ENGINE_DEBUG << "Pipeline: " << uri;
 
 	g_object_set(G_OBJECT(_audio_src), "uri", uri, NULL);
 	gst_element_set_state(_pipeline, GST_STATE_PAUSED);
@@ -537,11 +397,7 @@ bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 }
 
 
-
-
 void GSTPlaybackPipeline::start_timer(qint64 play_ms) {
-
-	ENGINE_DEBUG << "Start in " << play_ms << "ms";
 
 	if(play_ms > 0) _timer->start(play_ms);
 	else play();
@@ -552,7 +408,3 @@ void GSTPlaybackPipeline::set_eq_band(QString band_name, double val) {
 
 	g_object_set(G_OBJECT(_equalizer), band_name.toLocal8Bit(), val, NULL);
 }
-
-
-
-

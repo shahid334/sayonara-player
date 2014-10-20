@@ -43,10 +43,6 @@ public slots:
 	void pause();
 	void stop();
 
-	qint64 get_duration_ms();
-	qint64 get_position_ms();
-	guint get_bitrate();
-
 	gint64 seek_rel(float percent, gint64 ref_ns);
 	gint64 seek_abs(gint64 ns );
 
@@ -67,6 +63,7 @@ private:
 
 	int			_vol;
 	bool		_speed_active;
+    float       _speed_val;
 
 	GstElement* _audio_src;
 	GstElement* _audio_convert;
@@ -75,8 +72,6 @@ private:
 	GstElement* _equalizer;
 
 	GstElement* _volume;
-	GstElement* _speed;
-
 
 	GstPad* _app_pad;
 	GstPad* _tee_app_pad;
@@ -99,6 +94,8 @@ private:
 	GstElement* _tee;
 
 	QTimer* _timer;
+
+    bool _seek(gint64 ns);
 
 };
 

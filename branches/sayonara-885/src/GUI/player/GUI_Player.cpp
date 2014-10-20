@@ -781,7 +781,8 @@ void GUI_Player::keyPressEvent(QKeyEvent* e) {
 
 	switch (e->key()) {
 
-    case (Qt::Key_F9):
+        case (Qt::Key_F9):
+
         if(!isMaximized())
             this->showMaximized();
         else this->showNormal();

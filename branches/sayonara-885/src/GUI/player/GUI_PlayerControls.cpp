@@ -128,6 +128,16 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 }
 
 
+void GUI_Player::jump_forward_ms(){
+    emit sig_seek_rel_ms(10000);
+}
+
+void GUI_Player::jump_backward_ms(){
+    emit sig_seek_rel_ms(-10000);
+}
+
+
+
 void GUI_Player::jump_forward() {
 
 	int percent = songProgress->value();
@@ -138,6 +148,7 @@ void GUI_Player::jump_forward() {
 }
 
 void GUI_Player::jump_backward() {
+
 	int percent = songProgress->value();
     percent -= 2;
 
@@ -153,7 +164,7 @@ void GUI_Player::setProgressJump(int percent) {
 
     long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
     QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
-	curTime->setText(curPosString);
+    curTime->setText(curPosString);
 
 	emit sig_seek_rel(percent);
 }

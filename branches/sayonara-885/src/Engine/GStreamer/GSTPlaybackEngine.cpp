@@ -66,7 +66,6 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 
 	_settings = CSettingsStorage::getInstance();
 	_name = PLAYBACK_ENGINE;
-	_state = StateStop;
 
 	_scrobble_begin_ms = 0;
 	_cur_pos_ms = 0;
@@ -94,18 +93,12 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 
 GSTPlaybackEngine::~GSTPlaybackEngine() {
 
-	ENGINE_DEBUG;
-
-	qDebug() << "Engine: close engine... ";
-
 	_settings->updateLastTrack();
 	delete _pipeline;
 }
 
 
 void GSTPlaybackEngine::init() {
-
-	ENGINE_DEBUG;
 
 	gst_init(0, 0);
 
@@ -124,8 +117,6 @@ void GSTPlaybackEngine::init() {
 
 void GSTPlaybackEngine::change_track(const QString& filepath, int pos_sec, bool start_play) {
 
-	ENGINE_DEBUG << filepath << ", " << pos_sec << ",  " << start_play;
-
 	MetaData md;
 	md.filepath = filepath;
 	if (!ID3::getMetaDataOfFile(md)) {
@@ -139,13 +130,11 @@ void GSTPlaybackEngine::change_track(const QString& filepath, int pos_sec, bool 
 
 void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bool start_play) {
 
-
 	start_play = true;
 	pos_sec = 0;
 	bool success = set_uri(md, &start_play);
 
-	if (!success)
-		return;
+    if (!success) return;
 
 	_md = md;
 
@@ -160,11 +149,10 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bo
 
 void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
 
-	ENGINE_DEBUG << md.filepath << ", " << pos_sec << ",  " << start_play;
+    bool success = false;
 
 	if(_wait_for_gapless_track) {
 
-		ENGINE_DEBUG << "change track gapless";
 		change_track_gapless(md, pos_sec, start_play);
 		_wait_for_gapless_track = false;
 		return;
@@ -172,9 +160,10 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 
 	stop();
 
-	bool success = set_uri(md, &start_play);
-	if (!success)
+    success = set_uri(md, &start_play);
+    if (!success){
 		return;
+    }
 
 	_md = md;
 
@@ -194,8 +183,9 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	}
 
 	// pause if streamripper is not active
-	else if (!start_play && !(_playing_stream && _sr_active))
+    else if (!start_play && !(_playing_stream && _sr_active)){
 		pause();
+    }
 }
 
 
@@ -204,6 +194,7 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 
 	// Gstreamer needs an URI
 	gchar* uri = NULL;
+    bool success = false;
 
 	_playing_stream = Helper::is_www(md.filepath);
 
@@ -246,19 +237,16 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 								   md.filepath.toUtf8().size(), NULL, NULL, NULL);
 	}
 
-	ENGINE_DEBUG << " uri = " << uri;
 
-	bool success = false;
 
 	if(_wait_for_gapless_track) {
 
-		ENGINE_DEBUG << "Set Uri next pipeline: " << uri;
-		if(_other_pipeline)
-			success = _other_pipeline->set_uri(uri);
+        if(_other_pipeline){
+            success = _other_pipeline->set_uri(uri);
+        }
 	}
 
 	if(!success) {
-		ENGINE_DEBUG << "Set Uri current pipeline: " << uri;
 		success = _pipeline->set_uri(uri);
 	}
 
@@ -268,9 +256,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 
 void GSTPlaybackEngine::play() {
 
-	ENGINE_DEBUG;
-
-	_state = StatePlay;
 	_pipeline->play();
 
 	_may_start_timer = _gapless;
@@ -283,8 +268,8 @@ void GSTPlaybackEngine::do_jump_play() {
 		_jump_play = -1;
 		return;
 	}
+
 	if(_jump_play < 0) return;
-	ENGINE_DEBUG;
 
 	_pipeline->seek_abs(_jump_play * GST_SECOND);
 
@@ -294,11 +279,7 @@ void GSTPlaybackEngine::do_jump_play() {
 
 void GSTPlaybackEngine::stop() {
 
-	ENGINE_DEBUG;
-
-	_state = StateStop;
-
-	// streamripper, wanna record is set when record button is pressed
+    // streamripper, wanna record is set when record button is pressed
 	if (_playing_stream && _sr_active) {
 		_stream_recorder->stop(!_sr_wanna_record);
 	}
@@ -313,15 +294,12 @@ void GSTPlaybackEngine::stop() {
 
 
 void GSTPlaybackEngine::pause() {
-	ENGINE_DEBUG;
-	_state = StatePause;
 
-	_pipeline->pause();
+    _pipeline->pause();
 }
 
 
 void GSTPlaybackEngine::set_volume(int vol) {
-	ENGINE_DEBUG;
 	_vol = vol;
 	_pipeline->set_volume(vol);
 
@@ -331,8 +309,6 @@ void GSTPlaybackEngine::set_volume(int vol) {
 
 
 void GSTPlaybackEngine::jump_abs_s(quint32 where) {
-
-	ENGINE_DEBUG;
 
 	gint64 new_time_ns;
 
@@ -344,8 +320,6 @@ void GSTPlaybackEngine::jump_abs_s(quint32 where) {
 
 void GSTPlaybackEngine::jump_abs_ms(quint64 where) {
 
-	ENGINE_DEBUG;
-
 	gint64 new_time_ns;
 
 	new_time_ns = _pipeline->seek_abs(where * MIO);
@@ -356,8 +330,6 @@ void GSTPlaybackEngine::jump_abs_ms(quint64 where) {
 
 void GSTPlaybackEngine::jump_rel(quint32 where) {
 
-	ENGINE_DEBUG;
-
 	gint64 new_time_ns;
 
 	float p = where / 100.0f;
@@ -366,18 +338,28 @@ void GSTPlaybackEngine::jump_rel(quint32 where) {
 	_scrobble_begin_ms = new_time_ns / MIO;
 }
 
+void GSTPlaybackEngine::jump_rel_ms(qint64 where){
+
+    qint64 cur_pos_ms;
+
+    cur_pos_ms = _pipeline->get_position_ms();
+    cur_pos_ms += where;
+
+    _pipeline->seek_abs( (gint64) (cur_pos_ms * MIO) );
+}
+
 
 void GSTPlaybackEngine::eq_changed(int band, int val) {
 
-	ENGINE_DEBUG;
 	double new_val = 0;
 	new_val = val * 1.0;
 	if (val > 0) {
 		new_val = val * 0.25;
 	}
 
-	else
-		new_val = val * 0.75;
+    else{
+        new_val = val * 0.75;
+    }
 
 	QString band_name = QString("band") + QString::number(band);
 	_pipeline->set_eq_band(band_name, new_val);
@@ -387,39 +369,35 @@ void GSTPlaybackEngine::eq_changed(int band, int val) {
 }
 
 void GSTPlaybackEngine::eq_enable(bool) {
-	ENGINE_DEBUG;
+
 }
 
 
 void GSTPlaybackEngine::psl_calc_level(bool b) {
-	ENGINE_DEBUG;
 
 	_show_level = b;
-	if(b) _show_spectrum = false;
+    if(b) {
+        _show_spectrum = false;
+    }
 
 	_pipeline->enable_level(b);
 
-	if(_other_pipeline)
-		_other_pipeline->enable_level(b);
-
-	if(_state == StatePlay)
-		_pipeline->play();
+    if(_other_pipeline){
+        _other_pipeline->enable_level(b);
+    }
 }
 
 
 void GSTPlaybackEngine::psl_calc_spectrum(bool b) {
-	ENGINE_DEBUG;
 
 	_show_spectrum = b;
 	if(b) _show_level = false;
 
 	_pipeline->enable_spectrum(b);
 
-	if(_other_pipeline)
-		_other_pipeline->enable_spectrum(b);
-
-	if(_state == StatePlay)
-		_pipeline->play();
+    if(_other_pipeline){
+        _other_pipeline->enable_spectrum(b);
+    }
 }
 
 
@@ -447,7 +425,6 @@ void GSTPlaybackEngine::update_bitrate(qint32 bitrate) {
 
 void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 
-	ENGINE_DEBUG << pos_ms;
 	qint64 playtime_ms;
 	qint32 pos_sec;
 	qint32 cur_pos_sec;
@@ -455,8 +432,9 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 	pos_sec = pos_ms / 1000;
 	cur_pos_sec = _cur_pos_ms / 1000;
 
-	if ( cur_pos_sec == pos_sec )
-		return;
+    if ( cur_pos_sec == pos_sec ){
+        return;
+    }
 
 	_cur_pos_ms = pos_ms;
 
@@ -477,11 +455,6 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 
 
 void GSTPlaybackEngine::set_track_finished() {
-
-	ENGINE_DEBUG;
-
-
-	if( _state == StateStop ) return;
 
 	if ( _sr_active && _playing_stream ) {
 		_stream_recorder->stop(!_sr_wanna_record);
@@ -507,9 +480,7 @@ void GSTPlaybackEngine::set_track_finished() {
 
 void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 
-	ENGINE_DEBUG << "About to finish in " << time2go << "ms";
-
-	if(!_gapless) return;
+    if(!_gapless) return;
 
 	if(_may_start_timer) {
 
@@ -527,8 +498,9 @@ void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 void GSTPlaybackEngine::unmute() {
 	_pipeline->unmute();
 
-	if(_other_pipeline)
-		_other_pipeline->unmute();
+    if(_other_pipeline){
+        _other_pipeline->unmute();
+    }
 }
 
 
@@ -558,9 +530,7 @@ void GSTPlaybackEngine::psl_set_gapless(bool b) {
 void  GSTPlaybackEngine::psl_set_speed(float f) {
 	_pipeline->set_speed(f);
 
-	if(_other_pipeline)
-		_other_pipeline->set_speed(f);
+    if(_other_pipeline){
+        _other_pipeline->set_speed(f);
+    }
 }
-
-
-

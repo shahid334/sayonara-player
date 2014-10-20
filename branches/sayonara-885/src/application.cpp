@@ -310,6 +310,7 @@ Application::~Application() {
 void Application::init_connections() {
 
 	CONNECT (player, sig_seek_rel(quint32),					listen,			jump_rel(quint32));
+    CONNECT (player, sig_seek_rel_ms(qint64),				listen,			jump_rel_ms(qint64));
 	CONNECT (player, sig_volume_changed(int),				listen,			set_volume(int));
     CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
     CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,	record_button_toggled(bool));

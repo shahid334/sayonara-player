@@ -179,6 +179,13 @@ void GUI_Player::setupConnections() {
     QAction* two_perc_minus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Left));
     connect(two_perc_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward()));
 
+    QAction* two_sec_minus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Left));
+    connect(two_sec_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward_ms()));
+
+    QAction* two_sec_plus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Right));
+    connect(two_sec_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward_ms()));
+
+
     qDebug() << "connections done";
 }
 

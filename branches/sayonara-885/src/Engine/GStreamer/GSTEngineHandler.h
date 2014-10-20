@@ -53,6 +53,7 @@ public slots:
 	void jump_abs_s(quint32 where);
 	void jump_abs_ms(quint64 where);
 	void jump_rel(quint32 where);
+    void jump_rel_ms(qint64 where);
 
 	void change_track(const MetaData&, int pos_sec=0, bool start_play=true);
 	void change_track(const QString&, int pos_sec=0, bool start_play=true );
@@ -67,7 +68,7 @@ public slots:
 	void psl_calc_spectrum(bool);
 	void psl_set_gapless(bool b);
 
-	void psl_change_engine(QString name);
+    void psl_change_engine(QString name);
 
 	void start_convert();
 	void end_convert();

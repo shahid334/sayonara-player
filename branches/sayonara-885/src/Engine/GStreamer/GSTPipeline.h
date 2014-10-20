@@ -54,8 +54,8 @@ class GSTAbstractPipeline : public QObject {
 		GstElement* _pipeline;
 		gchar*		_uri;
 
-		qint64		_duration;
-		qint64		_position;
+        qint64		_duration_ms;
+        qint64		_position_ms;
 
 	signals:
 		void sig_finished();
@@ -68,16 +68,17 @@ class GSTAbstractPipeline : public QObject {
 		virtual void pause()=0;
 		virtual void stop()=0;
 
-		virtual qint64 get_duration_ms()=0;
-		virtual qint64 get_position_ms()=0;
-		virtual guint get_bitrate()=0;
+        virtual qint64 get_duration_ms() final;
+        virtual qint64 get_position_ms() final;
+        //virtual guint get_bitrate()=0;
 		virtual void set_speed(float f);
 
 	public:
+        GSTAbstractPipeline(QObject* parent=0);
 		virtual GstElement* get_pipeline();
 		virtual GstBus*		get_bus();
 		virtual GstState	get_state();
-		virtual void		refresh_cur_position(gint64 cur_pos_ms);
+        virtual void		refresh_cur_position(gint64 cur_pos_ms, gint64 duration_ms);
 		virtual void		about_to_finish();
 		virtual void		finished();
 

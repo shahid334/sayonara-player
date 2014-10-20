@@ -106,6 +106,7 @@ signals:
     void sig_rec_button_toggled(bool);
     void sig_volume_changed (int);
 	void sig_seek_rel(quint32 pos_percent);
+    void sig_seek_rel_ms(qint64 ms);
     void sig_correct_id3(const MetaData&);
 
     /* File */
@@ -149,6 +150,8 @@ private slots:
     void setProgressJump(int percent);
     void jump_forward();
     void jump_backward();
+    void jump_forward_ms();
+    void jump_backward_ms();
 
     void muteButtonPressed();
     void volumeChanged(int volume_percent);

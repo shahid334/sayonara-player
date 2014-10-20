@@ -62,7 +62,7 @@ protected:
 	qint64		_scrobble_begin_ms;
 	bool		_is_eq_enabled;
 	int			_eq_type;
-	EngineState	_state;
+
 	QString		_name;
 
 	bool 		_playing_stream;
@@ -73,7 +73,7 @@ protected:
 
 
 public:
-	virtual EngineState	getState() { return _state; }
+
 	virtual QString	getName(){ return _name; }
 	virtual void	init()=0;
 
@@ -109,7 +109,10 @@ private slots:
 	virtual void sr_ended(){}
 	virtual void sr_not_valid(){ emit sig_track_finished(); }
 	virtual void set_about_to_finish(qint64 ms){}
-	virtual void set_cur_position_ms(qint64 ms){emit sig_pos_changed_ms(ms);}
+    virtual void set_cur_position_ms(qint64 ms){
+        _cur_pos_ms = ms;
+        emit sig_pos_changed_ms(ms);
+    }
 
 
 
@@ -122,6 +125,7 @@ public slots:
 	virtual void jump_abs_s(quint32 where)=0;
 	virtual void jump_abs_ms(quint64 where)=0;
 	virtual void jump_rel(quint32 where)=0;
+    virtual void jump_rel_ms(qint64 where)=0;
 
 	virtual void change_track(const MetaData&, int pos_sec=0, bool start_play=true)=0;
 	virtual void change_track(const QString&, int pos_sec=0, bool start_play=true )=0;

@@ -179,11 +179,9 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
         case GST_MESSAGE_EOS:
             if (!engine) break;
 
-            //qDebug() << "Engine: Track finished";
             engine->set_track_finished();
 
             break;
-
 
         case GST_MESSAGE_ELEMENT:
             if(!engine) break;
@@ -206,6 +204,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
             }
 
             break;
+
 
         case GST_MESSAGE_ASYNC_DONE:
 

@@ -111,7 +111,7 @@ void GSTConvertEngine::change_track(const QString& str, int pos_sec, bool start_
 void GSTConvertEngine::play() {
 
 	_pipeline->play();
-	_state = StatePlay;
+
 	g_timeout_add(200, (GSourceFunc) PipelineCallbacks::show_position, this);
 }
 
@@ -123,8 +123,7 @@ void GSTConvertEngine::stop() {
 
 	_pipeline->stop();
 
-	_state = StateStop;
-	ID3::setMetaDataOfFile(_md_target);
+    ID3::setMetaDataOfFile(_md_target);
 }
 
 // public from Gstreamer Callbacks
@@ -133,6 +132,7 @@ void GSTConvertEngine::set_track_finished() {
 }
 
 void GSTConvertEngine::set_cur_position_ms(qint64 v) {
+
 	emit sig_pos_changed_s((quint32) v / 1000);
 }
 
@@ -151,6 +151,10 @@ void GSTConvertEngine::jump_abs_ms(quint64 v) {
 
 void GSTConvertEngine::jump_rel(quint32 v) {
 	Q_UNUSED(v);
+}
+
+void GSTConvertEngine::jump_rel_ms(qint64 v){
+    Q_UNUSED(v);
 }
 
 

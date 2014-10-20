@@ -42,13 +42,9 @@
 #include <QObject>
 #include <QDebug>
 
-
 #include <vector>
 
 using namespace std;
-
-
-
 
 class GSTPlaybackEngine : public Engine {
 
@@ -112,6 +108,7 @@ public slots:
 	virtual void jump_abs_s(quint32);
 	virtual void jump_abs_ms(quint64);
 	virtual void jump_rel(quint32);
+    virtual void jump_rel_ms(qint64 where);
 
 	virtual void change_track(const MetaData&, int pos_sec=-1, bool start_play=true);
 	virtual void change_track(const QString&, int pos_sec=-1, bool start_play=true );
