@@ -48,6 +48,9 @@ class GSTAbstractPipeline : public QObject {
 
 	Q_OBJECT
 
+	private:
+		bool		_about_to_finish;
+
 	protected:
 
 		GstBus*		_bus;
@@ -56,6 +59,7 @@ class GSTAbstractPipeline : public QObject {
 
         qint64		_duration_ms;
         qint64		_position_ms;
+
 
 	signals:
 		void sig_finished();
@@ -79,8 +83,8 @@ class GSTAbstractPipeline : public QObject {
 		virtual GstBus*		get_bus();
 		virtual GstState	get_state();
         virtual void		refresh_cur_position(gint64 cur_pos_ms, gint64 duration_ms);
-		virtual void		about_to_finish();
 		virtual void		finished();
+		virtual void		check_about_to_finish(qint64 difference);
 
 
 		virtual bool set_uri(gchar* uri);

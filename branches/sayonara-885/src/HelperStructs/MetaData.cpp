@@ -114,7 +114,7 @@ bool MetaData::operator==(const MetaData& md) {
 
 
 bool MetaData::is_equal(const MetaData& md, bool case_sensitive) {
-	QString my_filepath = this->filepath.trimmed();
+	QString my_filepath = filepath.trimmed();
 	QString their_filepath = md.filepath.trimmed();
 
 	if( case_sensitive) {
@@ -123,7 +123,7 @@ bool MetaData::is_equal(const MetaData& md, bool case_sensitive) {
 	}
 
 	// else
-		return my_filepath.compare(their_filepath, Qt::CaseInsensitive);
+		return (my_filepath.compare(their_filepath, Qt::CaseInsensitive) == 0);
 }
 
 

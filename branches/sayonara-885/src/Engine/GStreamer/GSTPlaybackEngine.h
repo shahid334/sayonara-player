@@ -63,7 +63,9 @@ public:
 
 	void		set_track_finished();
 
-	void		update_bitrate(qint32 bitrate);
+	void		update_bitrate(quint32 bitrate);
+	void		update_duration(quint64 duration_ms);
+
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
 

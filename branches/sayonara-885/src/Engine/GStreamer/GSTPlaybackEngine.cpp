@@ -175,7 +175,7 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 
 	_jump_play = pos_sec;
 
-	emit sig_dur_changed_ms(_md.length_ms);
+	emit sig_dur_changed(_md);
 	emit sig_pos_changed_s(pos_sec);
 
 	if (start_play) {
@@ -416,10 +416,26 @@ MyCaps* GSTPlaybackEngine::get_caps() {
 }
 
 
-void GSTPlaybackEngine::update_bitrate(qint32 bitrate) {
+void GSTPlaybackEngine::update_bitrate(quint32 bitrate) {
+
+	if(_md.bitrate == bitrate) return;
 
 	_md.bitrate = bitrate;
 	emit sig_bitrate_changed(bitrate);
+}
+
+
+void GSTPlaybackEngine::update_duration(quint64 duration_ms) {
+
+	if(duration_ms == 0) {
+		duration_ms = _pipeline->get_duration_ms();
+	}
+
+	if(duration_ms / 1000 == _md.length_ms / 1000) return;
+
+	_md.length_ms = duration_ms;
+
+	emit sig_dur_changed(_md);
 }
 
 
@@ -483,12 +499,10 @@ void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
     if(!_gapless) return;
 
 	if(_may_start_timer) {
-
 		_other_pipeline->start_timer(time2go);
 	}
 
 	_may_start_timer = false;
-
 	_wait_for_gapless_track = true;
 
 	emit sig_track_finished();
@@ -517,7 +531,6 @@ void GSTPlaybackEngine::psl_set_gapless(bool b) {
 		_other_pipeline->set_volume(_pipeline->get_volume());
 		_may_start_timer = true;
 		_gapless = true;
-
 	}
 
 	else {

@@ -591,7 +591,7 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
 }
 
 
-int CDatabaseConnector::updateTrack(MetaData& data) {
+int CDatabaseConnector::updateTrack(const MetaData& data) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -638,7 +638,7 @@ int CDatabaseConnector::updateTrack(MetaData& data) {
 	return 0;
 }
 
-int CDatabaseConnector::updateTracks(MetaDataList lst) {
+int CDatabaseConnector::updateTracks(const MetaDataList& lst) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -653,7 +653,7 @@ int CDatabaseConnector::updateTracks(MetaDataList lst) {
 
 }
 
-int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID) {
+int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -663,20 +663,21 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
 
 	QSqlQuery q (*_database);
 
-	data.filepath.replace("//", "/");
-	data.filepath.replace("\\\\", "\\");
+	QString filepath = data.filepath;
 
+	filepath.replace("//", "/");
+	filepath.replace("\\\\", "\\");
 
-	MetaData md =  getTrackByPath(data.filepath);
+	MetaData md =  getTrackByPath(filepath);
 	int track_id = md.id;
 
+	if(md.id > 0) {
+		MetaData track_copy = data;
+		track_copy.id = md.id;
+		track_copy.artist_id = artistID;
+		track_copy.album_id = albumID;
 
-	if(track_id > 0) {
-		data.id = md.id;
-		data.artist_id = artistID;
-		data.album_id = albumID;
-
-        updateTrack(data);
+		updateTrack(track_copy);
 		return 0;
 	}
 

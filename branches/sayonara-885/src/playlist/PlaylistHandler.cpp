@@ -191,7 +191,7 @@ void PlaylistHandler::psl_next() {
 
 
 
-void PlaylistHandler::psl_track_time_changed(MetaData& md) {
+void PlaylistHandler::psl_track_time_changed(const MetaData& md) {
 
     if(md.id >= 0) {
         _db->updateTrack(md);

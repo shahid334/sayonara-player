@@ -212,19 +212,25 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
         case GST_MESSAGE_TAG:
             GstTagList* tags;
-            uint val;
+			quint32 br;
+
             bool success;
 
             tags = NULL;
             gst_message_parse_tag(msg, &tags);
-            success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &val);
-            if(val != 0 && success) {
+			success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &br);
 
-                val = (uint) (round( val / 1000.0) * 1000.0);
+			if(br != 0 && success) {
 
-                engine->update_bitrate(val);
+				br = (quint32) (round( br / 1000.0) * 1000.0);
+
+				engine->update_bitrate(br);
+
             }
-            break;
+
+		case GST_MESSAGE_DURATION_CHANGED:
+			engine->update_duration();
+			break;
 
 
         case GST_MESSAGE_ERROR:
@@ -234,8 +240,11 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
             qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
                      << GST_MESSAGE_SRC_NAME(msg);
-            if(engine)
-                engine->set_track_finished();
+
+			if(engine){
+				engine->set_track_finished();
+			}
+
             g_error_free(err);
 
             break;

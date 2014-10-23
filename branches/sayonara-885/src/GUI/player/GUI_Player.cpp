@@ -331,39 +331,24 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
 void GUI_Player::psl_bitrate_changed(qint32 bitrate) {
 
-	QString tmp = QString("<font color=\"#FFAA00\" size=\"+10\">");
-	if (bitrate <= 96000)
-		tmp += "*";
-	else if (bitrate <= 128000)
-		tmp += "**";
-	else if (bitrate <= 160000)
-		tmp += "***";
-	else if (bitrate <= 256000)
-		tmp += "****";
-	else
-		tmp += "*****";
-	tmp += "</font>";
-
-	//lab_rating->setText(tmp);
 	lab_rating->setToolTip(
 			QString("<font color=\"#000000\">") +
 			QString::number(bitrate / 1000) +
 			QString(" kBit/s") +
-			QString("</font>"));
+			QString("</font>")
+	);
 
 	lab_rating->setText(
-			//QString("<font color=\"#000000\">") +
 			QString::number(bitrate / 1000) +
-			QString(" kBit/s"));
-		//	QString("</font>"));
+			QString(" kBit/s")
+	);
 
 }
 
 
-void GUI_Player::psl_track_time_changed(MetaData& md) {
-    m_completeLength_ms = md.length_ms;
-    QString lengthString = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
-	maxTime->setText(lengthString);
+void GUI_Player::psl_track_time_changed(const MetaData& md) {
+
+   total_time_changed(md.length_ms);
 }
 
 
@@ -371,11 +356,10 @@ void GUI_Player::psl_track_time_changed(MetaData& md) {
 // id3 tags have changed
 void GUI_Player::psl_id3_tags_changed(MetaDataList& v_md) {
 
-	MetaData md_new;
 	bool found = false;
 
 	for(uint i=0; i<v_md.size(); i++) {
-		if(m_metadata.id == v_md[i].id) {
+		if(m_metadata == v_md[i]) {
 			m_metadata = v_md[i];
 			found = true;
 			break;
@@ -386,19 +370,22 @@ void GUI_Player::psl_id3_tags_changed(MetaDataList& v_md) {
 
 	btn_correct->setVisible(false);
 
-	if (m_metadata.year < 1000 || m_metadata.album.contains(QString::number(m_metadata.year)))
+	if (m_metadata.year < 1000 || m_metadata.album.contains(QString::number(m_metadata.year))){
 		lab_album->setText(m_metadata.album);
+	}
 
-	else
+	else{
 		lab_album->setText(
-				m_metadata.album + " (" + QString::number(m_metadata.year) + ")");
+				m_metadata.album + " (" + QString::number(m_metadata.year) + ")"
+		);
+	}
 
 	lab_artist->setText(m_metadata.artist);
 	lab_title->setText(m_metadata.title);
 
     m_trayIcon->songChangedMessage(m_metadata);
 
-	this->setWindowTitle(QString("Sayonara - ") + m_metadata.title);
+	setWindowTitle(QString("Sayonara - ") + m_metadata.title);
 
 	emit sig_want_cover(m_metadata);
 }

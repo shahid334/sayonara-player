@@ -88,7 +88,7 @@ public slots:
 	virtual void psl_filter_changed(const Filter&, bool force=false);
 	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
 	virtual void psl_change_id3_tags(const QList<int>& lst);
-	virtual void psl_track_time_changed(MetaData&);
+	virtual void psl_track_time_changed(const MetaData&);
 
 	virtual void psl_delete_tracks(int);
 	virtual void psl_delete_certain_tracks(const QList<int>&,int);

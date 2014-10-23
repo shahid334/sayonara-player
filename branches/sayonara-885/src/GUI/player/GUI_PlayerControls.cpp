@@ -125,6 +125,8 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 	QString length_str = Helper::cvtMsecs2TitleLengthString(total_time, true);
     m_completeLength_ms = total_time;
 	maxTime->setText(length_str);
+	m_metadata.length_ms = total_time;
+	songProgress->setEnabled(total_time > 0);
 }
 
 

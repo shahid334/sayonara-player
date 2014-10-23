@@ -64,7 +64,7 @@ public slots:
     void update_track (const MetaData & in, int pos=0, bool playing=true);
     void setCurrentPosition (quint32 pos_sec);
     void psl_id3_tags_changed(MetaDataList& v_md);
-    void psl_track_time_changed(MetaData&);
+	void psl_track_time_changed(const MetaData&);
 	void psl_bitrate_changed(qint32);
     void psl_reload_library_allowed(bool);
     void psl_set_status_bar_text(QString, bool show);

@@ -80,7 +80,8 @@ public:
 	virtual void		set_track_finished(){}
 	virtual void        set_level(float right, float left){ emit sig_level(right, left); }
 	virtual void        set_spectrum(QList<float>& lst ){ emit sig_spectrum(lst); }
-	virtual void		update_bitrate(qint32 bitrate){}
+	virtual void		update_bitrate(quint32 bitrate=0){}
+	virtual void		update_duration(quint64 duration=0){}
 	virtual void		update_time(qint32 time){}
 	virtual bool		get_show_level(){ return false; }
 	virtual bool		get_show_spectrum(){ return false; }
@@ -90,10 +91,12 @@ public:
 	virtual void		unmute(){}
 
 
+
 signals:
 	void sig_dur_changed_ms(quint64);
 	void sig_dur_changed_s(quint32);
-	void sig_dur_changed(MetaData&);
+	void sig_dur_changed(const MetaData&);
+
 	void sig_pos_changed_ms(quint64);
 	void sig_pos_changed_s(quint32);
 
@@ -103,6 +106,7 @@ signals:
     void sig_spectrum(QList<float>&);
 	void sig_bitrate_changed(qint32);
     void sig_download_progress(int);
+
 
 private slots:
 	virtual void sr_initialized(bool b){ if(b) play(); }

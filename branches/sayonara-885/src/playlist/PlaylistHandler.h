@@ -116,7 +116,7 @@ public:
 
 		void psl_id3_tags_changed(MetaDataList&);
 
-        void psl_track_time_changed(MetaData&);
+		void psl_track_time_changed(const MetaData&);
 
 
         void psl_similar_artists_available(const QList<int>&);

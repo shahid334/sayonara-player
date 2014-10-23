@@ -177,13 +177,17 @@ void GSTEngineHandler::psl_set_gapless(bool b) {
 }
 
 void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
-	emit sig_dur_changed_ms(v);
+	if(_md.length_ms == v) return;
+
+	_md.length_ms = v;
+	emit sig_dur_changed(_md);
 }
 
 void GSTEngineHandler::sl_dur_changed_s(quint32 v) {
 	emit sig_dur_changed_s(v);
 }
-void GSTEngineHandler::sl_dur_changed(MetaData& v) {
+
+void GSTEngineHandler::sl_dur_changed(const MetaData& v) {
 	emit sig_dur_changed(v);
 }
 
@@ -224,7 +228,7 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 		disconnect(old_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
 
 		disconnect(old_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
-		disconnect(old_engine, SIGNAL(sig_dur_changed(MetaData&)), this, SLOT(sl_dur_changed(MetaData&)));
+		disconnect(old_engine, SIGNAL(sig_dur_changed(const MetaData&)), this, SLOT(sl_dur_changed(const MetaData&)));
 		disconnect(old_engine, SIGNAL(sig_pos_changed_ms(quint64)), this, SLOT(sl_pos_changed_ms(quint64)));
 		disconnect(old_engine, SIGNAL(sig_pos_changed_s(quint32)), this, SLOT(sl_pos_changed_s(quint32)));
 
@@ -239,7 +243,7 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 		connect(new_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
 
 		connect(new_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
-		connect(new_engine, SIGNAL(sig_dur_changed(MetaData&)), this, SLOT(sl_dur_changed(MetaData&)));
+		connect(new_engine, SIGNAL(sig_dur_changed(const MetaData&)), this, SLOT(sl_dur_changed(const MetaData&)));
 		connect(new_engine, SIGNAL(sig_pos_changed_ms(quint64)), this, SLOT(sl_pos_changed_ms(quint64)));
 		connect(new_engine, SIGNAL(sig_pos_changed_s(quint32)), this, SLOT(sl_pos_changed_s(quint32)));
 

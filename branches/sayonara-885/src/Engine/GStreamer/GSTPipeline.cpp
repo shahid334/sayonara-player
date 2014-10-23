@@ -135,8 +135,19 @@ void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms, gint64 duratio
         emit sig_pos_changed_ms((qint64) (cur_pos_ms));
     }
 
-	if(difference < 500 && difference > 0) {
+	check_about_to_finish(difference);
+}
+
+void GSTAbstractPipeline::check_about_to_finish(qint64 difference){
+
+	if(difference < 500 && !_about_to_finish) {
+
+		_about_to_finish = true;
 		emit sig_about_to_finish(difference - 50);
+	}
+
+	else if(difference >= 500){
+		_about_to_finish = false;
 	}
 }
 
@@ -149,20 +160,12 @@ qint64 GSTAbstractPipeline::get_position_ms(){
 }
 
 
-void GSTAbstractPipeline::about_to_finish() {
-	qint64 time2go;
-
-    time2go = (_duration_ms - _position_ms);
-
-	// ms
-	emit sig_about_to_finish(time2go);
-}
-
 void GSTAbstractPipeline::set_speed(float f) {
 	Q_UNUSED(f);
 }
 
 void GSTAbstractPipeline::finished() {
+
 	emit sig_finished();
 }
 

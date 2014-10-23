@@ -133,9 +133,9 @@ public:
 
 			void getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sortorder = TrackArtistAsc);
 
-            int insertTrackIntoDatabase (MetaData & data,int artistID, int albumID);
-            int updateTrack(MetaData& data);
-            int updateTracks(MetaDataList lst);
+			int insertTrackIntoDatabase (const MetaData & data,int artistID, int albumID);
+			int updateTrack(const MetaData& data);
+			int updateTracks(const MetaDataList& lst);
 
 			int getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);

@@ -80,7 +80,7 @@ private slots:
 
 	void sl_dur_changed_ms(quint64);
 	void sl_dur_changed_s(quint32);
-	void sl_dur_changed(MetaData&);
+	void sl_dur_changed(const MetaData&);
 	void sl_pos_changed_ms(quint64);
 	void sl_pos_changed_s(quint32);
 

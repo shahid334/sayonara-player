@@ -354,7 +354,7 @@ void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list) {
 }
 
 
-void CLibraryBase::psl_track_time_changed(MetaData& md) {
+void CLibraryBase::psl_track_time_changed(const MetaData& md) {
 
     if(md.id < 0) return;
 
