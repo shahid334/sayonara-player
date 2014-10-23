@@ -54,6 +54,6 @@ public:
 
 Q_DECLARE_METATYPE(Artist)
 
-typedef struct vector<Artist> ArtistList;
+typedef struct QVector<Artist> ArtistList;
 
 #endif

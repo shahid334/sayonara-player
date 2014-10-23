@@ -23,7 +23,7 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/globals.h"
@@ -99,13 +99,13 @@ public:
 	virtual PlaylistMode playlist_mode_backup();
 	virtual PlaylistMode playlist_mode_restore();
 
-    int find_track_by_id(int id);
-    int find_track_by_path(QString path);
-
     bool is_empty();
     PlaylistType get_type();
     int get_cur_track();
     QStringList toStringList();
+
+    int find_track(int id);
+    int find_track(const QString& filepath);
 
 	void set_playlist_mode(const PlaylistMode& mode);
 };

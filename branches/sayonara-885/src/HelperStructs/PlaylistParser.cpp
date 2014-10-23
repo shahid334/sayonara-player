@@ -251,7 +251,7 @@ int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path) {
 		track_idx = track_idx_str.toInt();
 		if( track_idx <= 0 ||
 			track_idx_str.size() == 0 ||
-			(uint)(track_idx - 1 ) >= v_md.size() ) continue;
+            (track_idx - 1 ) >= v_md.size() ) continue;
 
 		key = tmp_key.left(f_track_idx);
 
@@ -322,15 +322,17 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md) {
 		parse_asx(content, v_md_tmp, abs_path);
 	}
 
-	for(uint i=0; i<v_md_tmp.size(); i++) {
+    for(int i=0; i<v_md_tmp.size(); i++) {
 
 		MetaData md = v_md_tmp[i];
 
-		if( Helper::checkTrack(md) )
+        if( Helper::checkTrack(md) ){
 			v_md.push_back(md);
+        }
 
-		else
-			v_md_to_delete.push_back(md);
+        else{
+            v_md_to_delete.push_back(md);
+        }
 
 	}
 

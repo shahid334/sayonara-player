@@ -46,7 +46,7 @@ PlaylistItemModel::~PlaylistItemModel() {
 
 int PlaylistItemModel::rowCount(const QModelIndex &parent) const{
 	Q_UNUSED(parent);
-    return (int) (_v_meta_data.size());
+    return _v_meta_data.size();
 }
 
 QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
@@ -55,7 +55,7 @@ QVariant PlaylistItemModel::data(const QModelIndex &index, int role) const{
 		return QVariant();
 	}
 
-	if (index.row() >= (int) _v_meta_data.size() || index.row() < 0) {
+    if (index.row() >= _v_meta_data.size() || index.row() < 0) {
 		return QVariant();
 	}
 
@@ -120,7 +120,7 @@ bool PlaylistItemModel::insertRows(int position, int rows, const QModelIndex &in
         }
 
         // copy old
-        for(uint i= (uint) position; i<_v_meta_data.size(); i++) {
+        for(int i=position; i<_v_meta_data.size(); i++) {
             v_md_new.push_back(_v_meta_data[i]);
         }
 
@@ -138,8 +138,7 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
 
      MetaDataList v_md_new;
 
-     int md_size = (int) _v_meta_data.size();
-     for (int i=0; i<md_size; i++) {
+     for (int i=0; i<_v_meta_data.size(); i++) {
 
          if(i >= position &&
             i<=(position+rows-1)) continue;
@@ -159,7 +158,7 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
 
 void PlaylistItemModel::set_selected(QList<int>& rows) {
     _selected_rows = rows;
-    for(uint i=0; i<_v_meta_data.size(); i++) {
+    for(int i=0; i<_v_meta_data.size(); i++) {
         _v_meta_data[i].pl_selected = rows.contains(i);
     }
 }
@@ -192,14 +191,14 @@ QModelIndex PlaylistItemModel::getFirstRowIndexOf(QString substr) {
 
 QModelIndex PlaylistItemModel::getPrevRowIndexOf(QString substr, int row) {
 
-	int len = (int) _v_meta_data.size();
+    int len = _v_meta_data.size();
 	if(len < row) row = len - 1;
 
 	// ALBUM
 	if(substr.startsWith(ALBUM_SEARCH)) {
 		substr.remove(ALBUM_SEARCH);
 
-		for(int i=0; i<len; i++) {
+        for(int i=0; i<len; i++) {
 			if(row - i < 0) row = len - 1;
 			int row_idx = (row - i) % len;
 			QString album = _v_meta_data[row_idx].album;
@@ -252,7 +251,7 @@ QModelIndex PlaylistItemModel::getPrevRowIndexOf(QString substr, int row) {
 }
 
 QModelIndex PlaylistItemModel::getNextRowIndexOf(QString substr, int row) {
-	int len = (int) _v_meta_data.size();
+    int len = _v_meta_data.size();
 	if(len < row) row = len - 1;
 	// ALBUM
 	if(substr.startsWith(ALBUM_SEARCH)) {
@@ -286,7 +285,7 @@ QModelIndex PlaylistItemModel::getNextRowIndexOf(QString substr, int row) {
 		substr.remove(JUMP).trimmed();
 		bool ok;
 		int line = substr.toInt(&ok);
-		if(ok && (int) (_v_meta_data.size()) > line) {
+        if(ok && (_v_meta_data.size() > line) ){
 			return this->index(line, 0);
 		}
 

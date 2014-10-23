@@ -226,7 +226,10 @@ void GUI_InfoDialog::prepare_info() {
 
 void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 
-	btn_image->setIcon(QIcon(cl.cover_path));
+    QIcon icon(cl.cover_path);
+    if(icon.isNull()) return;
+
+    btn_image->setIcon(icon);
 	btn_image->update();
 }
 

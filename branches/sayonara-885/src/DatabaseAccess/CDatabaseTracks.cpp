@@ -20,7 +20,7 @@
 
 
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
@@ -578,7 +578,7 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
 
 	_database->transaction();
 
-	for(uint i=0; i<vec_tracks.size(); i++) {
+    for(int i=0; i<vec_tracks.size(); i++) {
 
 		if( deleteTrack(vec_tracks[i]) == 0) {
 			success ++;

@@ -63,7 +63,7 @@ public:
 };
 
 
-typedef vector<Album> AlbumList;
+typedef QVector<Album> AlbumList;
 
 #endif
 

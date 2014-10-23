@@ -226,6 +226,8 @@ void GUI_Playlist::clear_playlist_slot() {
 // private SLOT: playlist item pressed (init drag & drop)
 void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_rows) {
 
+	if(sel_rows.size() == 0) return;
+
 	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
     _info_dialog->setMetaData(v_md);
 
@@ -234,6 +236,9 @@ void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_r
 }
 
 void GUI_Playlist::rows_moved(const QList<int> & lst, int tgt_idx) {
+
+	if(lst.size() == 0) return;
+
     emit sig_rows_moved(lst, tgt_idx);
 }
 
@@ -361,14 +366,15 @@ void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
 
     int actions = 0;
 
-    if(playlist_type != PlaylistTypeStd)
+    if(playlist_type != PlaylistTypeStd){
         actions = ENTRY_INFO;
+    }
 
-    else
+    else{
         actions = (ENTRY_INFO | ENTRY_REMOVE | ENTRY_EDIT);
+    }
 
 	listView->set_context_menu_actions(actions);
-
 }
 
 

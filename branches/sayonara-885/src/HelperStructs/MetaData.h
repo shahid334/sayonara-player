@@ -91,18 +91,21 @@ public:
     MetaData (const MetaData& );
 	virtual ~MetaData();
 
-	bool operator==(const MetaData& md);
-	bool is_equal(const MetaData& md, bool case_sensitive=true);
+    bool operator==(const MetaData& md) const;
+    bool is_equal(const MetaData& md) const;
     
 	void print() const;
 
-	static QVariant toVariant(const MetaData& md);
-	static bool fromVariant(const QVariant& v, MetaData& md);
+    static QVariant toVariant(const MetaData& md);
+    static bool fromVariant(const QVariant& v, MetaData& md);
 };
 
 
 
-class MetaDataList : public vector<MetaData> {
+class MetaDataList : public QVector<MetaData> {
+
+    private:
+        int _cur_played_track;
 
 	public:
 
@@ -110,9 +113,14 @@ class MetaDataList : public vector<MetaData> {
 		MetaDataList(int n_elems);
 
 	    virtual ~MetaDataList();
-	    void setCurPlayTrack(uint idx);
-	    bool contains(const MetaData& md, bool cs=false);
-	    void insert(const MetaData& md, uint pos);
+        void setCurPlayTrack(int idx);
+
+        virtual bool contains(const MetaData& md) const;
+
+        int findTrack(int id) const;
+        int findTrack(const QString&) const;
+
+        QStringList toStringList() const;
 };
 
 struct CustomPlaylist{

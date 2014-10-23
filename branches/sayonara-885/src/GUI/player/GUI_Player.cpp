@@ -358,7 +358,7 @@ void GUI_Player::psl_id3_tags_changed(MetaDataList& v_md) {
 
 	bool found = false;
 
-	for(uint i=0; i<v_md.size(); i++) {
+    for(int i=0; i<v_md.size(); i++) {
 		if(m_metadata == v_md[i]) {
 			m_metadata = v_md[i];
 			found = true;

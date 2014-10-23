@@ -31,34 +31,35 @@ StdPlaylist::StdPlaylist(QObject *parent) :
 }
 
 
-
 void StdPlaylist::change_track(int idx) {
 
     _last_track = _cur_play_idx;
-    if( idx >= (int) _v_md.size() || idx < 0) {
+
+    if( idx >= _v_md.size() || idx < 0) {
+
+        _cur_play_idx = -1;
+        _v_md.setCurPlayTrack(_cur_play_idx);
+
         stop();
         return;
     }
 
-    _last_track = _cur_play_idx;
+    // track not available in file system anymore
+    if( !Helper::checkTrack(_v_md[idx]) ) {
 
-    for(uint i=0; i<_v_md.size(); i++) {
-        _v_md[i].pl_playing = ( idx == (int) i );
-        _v_md[i].pl_selected = false;
-    }
+        _v_md[idx].is_disabled = true;
 
-    MetaData md = _v_md[idx];
+        change_track(idx + 1);
 
-    if( !Helper::checkTrack(md) ) {
-        _cur_play_idx = -1;
-        _v_md.setCurPlayTrack(_cur_play_idx);
-
-        delete_track(idx);
+        return;
     }
 
     else{
         _cur_play_idx = idx;
+        _v_md.setCurPlayTrack(_cur_play_idx);
     }
+
+    _last_track = _cur_play_idx;
 
     report_changes(false, true);
 }
@@ -81,17 +82,17 @@ void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
     // check if there, check if extern
     foreach(MetaData md, lst) {
 
-        if( !Helper::checkTrack(md) ) continue;
-
         MetaData md_tmp = db->getTrackByPath(md.filepath);
+
         md.is_extern = (md_tmp.id < 0);
+        md.is_disabled = (! Helper::checkTrack(md) );
 
         _v_md.push_back(md);
     }
 
-    if(!_playlist_mode.append)
+    if(!_playlist_mode.append){
         _cur_play_idx = -1;
-
+    }
 
     report_changes(true, start_playing);
 }
@@ -143,8 +144,13 @@ void StdPlaylist::fwd() {
 void StdPlaylist::bwd() {
 
     int track_num;
-    if(_playlist_mode.shuffle && _last_track != -1 ) track_num = _last_track;
-    else  track_num = _cur_play_idx - 1;
+    if(_playlist_mode.shuffle && _last_track != -1 ) {
+        track_num = _last_track;
+    }
+
+    else {
+        track_num = _cur_play_idx - 1;
+    }
 
     change_track(track_num);
 }
@@ -222,9 +228,13 @@ void StdPlaylist::save_for_reload() {
     QStringList playlist_lst;
     foreach(MetaData md, _v_md) {
 
-        if(md.id >= 0) playlist_lst << QString::number(md.id);
-        else
+        if(md.id >= 0) {
+            playlist_lst << QString::number(md.id);
+        }
+
+        else{
             playlist_lst << md.filepath;
+        }
     }
 
     CSettingsStorage::getInstance()->setPlaylist(playlist_lst);

@@ -148,7 +148,7 @@ bool SoundcloudHelper::parse_playlist_xml(
 				album.id = e.text().toInt();
 
 				// maybe album was not set yet
-				for(int i=0; i<(int) v_md.size(); i++){
+                for(int i=0; i<v_md.size(); i++){
 					v_md[i].album_id = album.id;
 				}
 			}
@@ -157,7 +157,7 @@ bool SoundcloudHelper::parse_playlist_xml(
 				album.name = e.text();
 
 				// maybe album was not set yet
-				for(int i=0; i<(int) v_md.size(); i++){
+                for(int i=0; i<v_md.size(); i++){
 					v_md[i].album_id = album.id;
 				}
 			}

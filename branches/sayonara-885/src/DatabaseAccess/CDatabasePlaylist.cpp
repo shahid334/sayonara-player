@@ -152,9 +152,9 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
         data.id = -1;
         data.is_extern = true;
 
-        for(uint row=0; row<pl.tracks.size(); row++) {
-            if( (int) row >= position) {
-                pl.tracks.insert(data, row);
+        for(int row=0; row<pl.tracks.size(); row++) {
+            if( row >= position) {
+                pl.tracks.insert(row, data);
                 pl.num_tracks++;
                 break;
             }
@@ -291,7 +291,7 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playl
 	_database->transaction();
 
 	// fill playlist
-	for(uint i=0; i<vec_md.size(); i++) {
+    for(int i=0; i<vec_md.size(); i++) {
 
 		MetaData md = vec_md.at(i);
 		bool success = insertTrackIntoPlaylist(md, playlist_id, i);
@@ -342,7 +342,7 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_
 	_database->transaction();
 
 	// fill playlist
-	for(uint i=0; i<vec_md.size(); i++) {
+    for(int i=0; i<vec_md.size(); i++) {
 
 		MetaData md = vec_md.at(i);
 		bool success = insertTrackIntoPlaylist(md, playlist_id, i);

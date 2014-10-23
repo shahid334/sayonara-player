@@ -32,6 +32,8 @@ class StdPlaylist : public Playlist
 private:
     int _last_track;
 
+
+
 public:
     explicit StdPlaylist(QObject *parent);
     

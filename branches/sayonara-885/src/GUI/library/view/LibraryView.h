@@ -76,7 +76,7 @@ private slots:
     void rc_header_menu_changed(bool b=true);
     void rc_menu_show(const QPoint&);
     void sort_by_column(int);
-    void forbid_mimedata_destroyable();
+    void drag_deleted();
 
     void edit_clicked();
     void info_clicked();

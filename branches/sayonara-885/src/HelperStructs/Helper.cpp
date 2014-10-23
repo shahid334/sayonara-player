@@ -560,11 +560,7 @@ bool Helper::checkTrack(const MetaData& md) {
 
     if( is_www(md.filepath)) return true;
 
-	if( !QFile::exists(md.filepath) && md.id >= 0 ) {
-		return false;
-	}
-
-	return true;
+    return QFile::exists(md.filepath);
 }
 
 

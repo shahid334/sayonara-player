@@ -184,7 +184,7 @@ void GUI_TagEdit::prev_button_clicked() {
 void GUI_TagEdit::next_button_clicked() {
 
     save_metadata();
-    int tmp_md_size = (int) _vec_tmp_metadata.size();
+    int tmp_md_size = _vec_tmp_metadata.size();
 
     if(_cur_idx < tmp_md_size -1 ) {
         _cur_idx ++;
@@ -252,14 +252,14 @@ void GUI_TagEdit::cancel_button_clicked() {
 
 
 void GUI_TagEdit::all_albums_clicked() {
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
+    for(int i=0; i<_vec_tmp_metadata.size(); i++) {
 		_vec_tmp_metadata[i].album = le_album->text();
         _lst_new_albums[i] = _vec_tmp_metadata[i].album;
     }
 }
 
 void GUI_TagEdit::all_artists_clicked() {
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
+    for(int i=0; i<_vec_tmp_metadata.size(); i++) {
 		_vec_tmp_metadata[i].artist = le_artist->text();
         _lst_new_artists[i] = _vec_tmp_metadata[i].artist;
     }
@@ -267,7 +267,7 @@ void GUI_TagEdit::all_artists_clicked() {
 
 void GUI_TagEdit::all_genre_clicked() {
 
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
+    for(int i=0; i<_vec_tmp_metadata.size(); i++) {
         _vec_tmp_metadata[i].genres.clear();
 
         QStringList genres;
@@ -277,14 +277,14 @@ void GUI_TagEdit::all_genre_clicked() {
     }
 }
 void GUI_TagEdit::all_year_clicked() {
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
+    for(int i=0; i<_vec_tmp_metadata.size(); i++) {
 		_vec_tmp_metadata[i].year = sb_year->value();
     }
 }
 
 void GUI_TagEdit::all_discnumber_clicked() {
-    for(uint i=0; i<_vec_tmp_metadata.size(); i++) {
-	_vec_tmp_metadata[i].discnumber = sb_discnumber->value();
+    for(int i=0; i<_vec_tmp_metadata.size(); i++) {
+        _vec_tmp_metadata[i].discnumber = sb_discnumber->value();
     }
 }
 
@@ -366,7 +366,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
     /* create lists with all albums and artists for the tracks
      * If a track has a new album/artist create new IDs for it */
-    for(uint track = 0; track<_vec_org_metadata.size(); track++) {
+    for(int track = 0; track<_vec_org_metadata.size(); track++) {
 
             MetaData md = _db->getTrackByPath(_vec_org_metadata[track].filepath);
             if( md.id < 0) {
@@ -419,7 +419,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
     _db->getAllAlbums(vec_albums);
     _db->getAllArtists(vec_artists);
 
-    for(uint track = 0; track<_vec_org_metadata.size(); track++) {
+    for(int track = 0; track<_vec_org_metadata.size(); track++) {
 
         QString new_album_name =  _lst_new_albums[track];
         QString new_artist_name = _lst_new_artists[track];
@@ -462,7 +462,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
 
         bool artist_found = false;
         int artist_id = -1;
-        for(uint i=0; i<vec_artists.size(); i++) {
+        for(int i=0; i<vec_artists.size(); i++) {
             if(new_artist_name == vec_artists[i].name) {
                 artist_found = true;
                 artist_id = vec_artists[i].id;
@@ -530,7 +530,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 	pb_progress->setVisible(true);
 
     MetaDataList v_md_tmp;
-    int v_md_size = (int) _vec_tmp_metadata.size();
+    int v_md_size = _vec_tmp_metadata.size();
 
     for(int i=0; i<v_md_size; i++) {
 
@@ -783,7 +783,7 @@ void GUI_TagEdit::undo_tag_clicked() {
     }
 
     else{
-        for(uint i=0; i<_vec_org_metadata.size(); i++) {
+        for(int i=0; i<_vec_org_metadata.size(); i++) {
             if(_idx_affected_by_tag[i] == true) {
                 _vec_tmp_metadata[i] = _vec_org_metadata[i];
                 _idx_affected_by_tag[i] = false;
@@ -807,7 +807,7 @@ void GUI_TagEdit::apply_tag_clicked() {
     }
 
     else{
-        for(uint i=0; i<_vec_org_metadata.size(); i++) {
+        for(int i=0; i<_vec_org_metadata.size(); i++) {
             MetaData md;
             if(calc_tag(i, md)) {
                 _vec_tmp_metadata[i] = md;

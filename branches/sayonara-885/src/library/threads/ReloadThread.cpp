@@ -155,7 +155,7 @@ void ReloadThread::run() {
 	db->getTracksFromDatabase(v_metadata);
 
 	// find orphaned tracks in library && delete them
-	for(uint i=0; i<v_metadata.size(); i++) {
+    for(int i=0; i<v_metadata.size(); i++) {
 		MetaData md = v_metadata[i];
 		if(!Helper::checkTrack(md)) {
 			v_to_delete.push_back(md);

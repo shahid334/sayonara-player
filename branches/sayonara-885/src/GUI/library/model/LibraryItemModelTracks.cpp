@@ -212,7 +212,7 @@ QModelIndex	LibraryItemModelTracks::getFirstRowIndexOf(QString substr) {
 
 QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row) {
 
-	int len = (int) _tracklist.size();
+    int len = _tracklist.size();
 	if(len == 0) return this->index(-1, -1);
 
 	for(int i=0; i< len; i++) {
@@ -228,7 +228,7 @@ QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row) {
 
 QModelIndex LibraryItemModelTracks::getPrevRowIndexOf(QString substr, int row) {
 
-	int len = (int) _tracklist.size();
+    int len = _tracklist.size();
 	if(len < row) row = len - 1;
 	for(int i=0; i< len; i++) {
 		if(row - i < 0) row = len - 1;

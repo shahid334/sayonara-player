@@ -331,7 +331,7 @@ void PlaylistView::clear() {
 void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
 
 
-    this->set_delegate_max_width((int) v_md.size());
+    this->set_delegate_max_width(v_md.size());
     _cur_selected_rows.clear();
 
     IGNORE_SELECTION_CHANGES(true);
@@ -347,14 +347,13 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
     QList<int> selected_rows;
 
     QModelIndex idx_cur_playing = _model->index(0);
-	for(uint i=0; i<v_md.size(); i++) {
+    for(int i=0; i<v_md.size(); i++) {
 		
-		QVariant v;
         MetaData md = v_md[i];
 
         QModelIndex model_idx = _model->index(i, 0);
 
-        md.pl_playing = (cur_play_idx == (int) i);
+        md.pl_playing = (cur_play_idx == i);
         
 		if(md.pl_playing) {
 			idx_cur_playing = model_idx;
@@ -445,11 +444,15 @@ void PlaylistView::select_all() {
 void PlaylistView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ) {
 
     if(_ignore_selection_changes) return;
+
+    MetaDataList v_md;
+    QList<int> idx_list_int;
+
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     SearchableListView::selectionChanged(selected, deselected);
 
-    QList<int> idx_list_int;
+
 
 	foreach(QModelIndex model_idx, idx_list) {
         if(idx_list_int.contains(model_idx.row())) continue;
@@ -459,11 +462,12 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
 
    _model->set_selected(idx_list_int);
 
-	if(selected.indexes().size() > 0)
-        this->scrollTo(selected.indexes()[0]);
+    if(selected.indexes().size() > 0){
+        scrollTo(selected.indexes()[0]);
+    }
 
-    MetaDataList v_md;
     _model->get_metadata(idx_list_int, v_md);
+
     emit sig_sel_changed(v_md, idx_list_int);
 
     _cur_selected_rows = idx_list_int;
@@ -572,7 +576,6 @@ void PlaylistView::dropEvent(QDropEvent* event) {
 
 void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
-
     QList<int> affected_rows;
 
     QPoint pos = event->pos();
@@ -596,6 +599,8 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
     }
 
     const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
+
+    if(!d) return;
 
     MetaDataList v_metadata;
 
@@ -636,7 +641,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 	else if(d->hasText()) {}
     else {}
 
-	for(uint i=0; i<v_metadata.size(); i++) {
+    for(int i=0; i<v_metadata.size(); i++) {
         affected_rows << i + row + 1;
     }
 

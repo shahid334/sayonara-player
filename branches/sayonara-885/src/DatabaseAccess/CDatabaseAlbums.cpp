@@ -65,7 +65,7 @@ struct AlbumCache {
         if(_valid_at) delete[] _valid_at;
         _size = 0;
 
-        for(uint i=0; i<list.size(); i++) {
+        for(int i=0; i<list.size(); i++) {
             if(_size < list[i].id) _size = list[i].id;
         }
 
@@ -74,7 +74,7 @@ struct AlbumCache {
         _valid_at = new bool[_size];
         memset(_valid_at, 0, sizeof(bool) * (_size));
 
-        for(uint i=0;i<list.size(); i++) {
+        for(int i=0;i<list.size(); i++) {
 
             _cache[list[i].id] = list[i];
             _valid_at[list[i].id] = true;

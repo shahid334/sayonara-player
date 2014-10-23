@@ -131,7 +131,7 @@ void LibraryView::mouseMoveEvent(QMouseEvent* event) {
 
 void LibraryView::mouseDoubleClickEvent(QMouseEvent *event) {
 
-	event->setModifiers(Qt::NoModifier);
+    event->setModifiers(Qt::NoModifier);
     QTableView::mouseDoubleClickEvent(event);
 }
 
@@ -139,22 +139,22 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event) {
 
     switch (event->button()) {
 
-	case Qt::LeftButton:
+        case Qt::LeftButton:
 
-		SearchableTableView::mouseReleaseEvent(event);
-		event->accept();
+            SearchableTableView::mouseReleaseEvent(event);
+            event->accept();
 
-		_drag = false;
-		emit sig_released();
+            _drag = false;
 
-		break;
+            emit sig_released();
 
-	default:
-		break;
+            break;
+
+        default:
+            break;
     }
 }
 // mouse events end
-
 
 
 // keyboard events
@@ -276,12 +276,8 @@ int LibraryView::get_min_selected() {
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ) {
 
-    if(_qDrag) {
-        delete _qDrag;
-        _qDrag = NULL;
-    }
-
     if(_cur_filling) return;
+
 
 	QTableView::selectionChanged(selected, deselected);
 
@@ -300,7 +296,7 @@ void LibraryView::selectionChanged ( const QItemSelection & selected, const QIte
 	_model->set_selected(idx_list_int);
 
 	if(selected.indexes().size() > 0) {
-        this->scrollTo(selected.indexes()[0]);
+        scrollTo(selected.indexes()[0]);
 	}
 
     emit sig_sel_changed(idx_list_int);
@@ -333,7 +329,7 @@ void LibraryView::fill(const TList& input_data) {
 	QModelIndex idx;
 	QItemSelectionModel* sm;
 	QItemSelection sel;
-	int size = (int) input_data.size();
+    int size = input_data.size();
 	int first_selected_row = -1;
 
 	_cur_filling = true;
@@ -377,11 +373,6 @@ void LibraryView::fill(const TList& input_data) {
 
 void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder) {
 
-	if(_qDrag) {
-        delete _qDrag;
-		_qDrag = NULL;
-    }
-
     _mimedata = new CustomMimeData();
 
     QList<QUrl> urls;
@@ -411,17 +402,17 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
     _mimedata->setText(text);
     _mimedata->setUrls(urls);
 
+    if(_qDrag) delete _qDrag;
+
     _qDrag = new QDrag(this);
     _qDrag->setMimeData(_mimedata);
 
-
-    connect(_qDrag, SIGNAL(destroyed()), this, SLOT(forbid_mimedata_destroyable()));
+    connect(_qDrag, SIGNAL(destroyed()), this, SLOT(drag_deleted()));
 
     _drag = true;
 }
 
-void LibraryView::forbid_mimedata_destroyable() {
-
+void LibraryView::drag_deleted() {
     _qDrag = NULL;
 }
 

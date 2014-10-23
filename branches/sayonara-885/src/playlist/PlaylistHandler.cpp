@@ -24,7 +24,7 @@
 #include "PlaylistHandler.h"
 #include "StdPlaylist.h"
 #include "StreamPlaylist.h"
-#include "HelperStructs/Helper.h"
+
 
 
 PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent) {
@@ -51,10 +51,11 @@ void PlaylistHandler::playlist_changed(const MetaDataList& v_md, int cur_idx) {
 
 void PlaylistHandler::track_changed(const MetaData& md, int cur_idx) {
 
-    emit sig_selected_file_changed(cur_idx);
-    emit sig_selected_file_changed_md(md, _last_pos, (_state == PlaylistPlay && cur_idx >= 0));
-    _last_pos = 0;
-
+    if(!md.is_disabled){
+        emit sig_selected_file_changed(cur_idx);
+        emit sig_selected_file_changed_md(md, _last_pos, (_state == PlaylistPlay && cur_idx >= 0));
+        _last_pos = 0;
+    }
 }
 
 void PlaylistHandler::no_track_to_play() {
@@ -115,23 +116,23 @@ bool PlaylistHandler::new_playlist(PlaylistType type) {
 // create a playlist, where metadata is already available
 void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing) {
 
-
     PlaylistType type = determine_playlist_type(v_md);
 
     bool new_created = new_playlist(type);
 
     _playlist->create_playlist(v_md, start_playing && new_created);
 
-
     if(start_playing && !_playlist->is_empty()) {
 
         // is stopped now
-        if(_state == PlaylistStop)
+        if(_state == PlaylistStop){
             psl_play();
+        }
     }
 
-    else
+    else{
         psl_stop();
+    }
 }
 
 
@@ -139,8 +140,13 @@ void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing)
 // Load Folder, Load File...
 void PlaylistHandler::psl_createPlaylist(QStringList& pathlist, bool start_playing) {
 
-    if(start_playing) _state = PlaylistPlay;
-    else if(_state != PlaylistPause) _state = PlaylistStop;
+    if(start_playing) {
+        _state = PlaylistPlay;
+    }
+
+    else if(_state != PlaylistPause) {
+        _state = PlaylistStop;
+    }
 
     bool new_created = new_playlist(PlaylistTypeStd);
     _playlist->create_playlist(pathlist, start_playing && new_created);
@@ -149,9 +155,14 @@ void PlaylistHandler::psl_createPlaylist(QStringList& pathlist, bool start_playi
 
 // create playlist from saved custom playlist
 void PlaylistHandler::psl_createPlaylist(CustomPlaylist& pl, bool start_playing) {
-    if(start_playing) _state = PlaylistPlay;
-    else if(_state != PlaylistPause) _state = PlaylistStop;
 
+    if(start_playing){
+        _state = PlaylistPlay;
+    }
+
+    else if(_state != PlaylistPause){
+        _state = PlaylistStop;
+    }
 
     psl_createPlaylist(pl.tracks, start_playing);
 }
@@ -167,41 +178,45 @@ void PlaylistHandler::psl_save_playlist(QString filename, bool relative) {
    _playlist->save_to_m3u_file(filename, relative);
 }
 
-
 // --> custom playlists
 void PlaylistHandler::psl_prepare_playlist_for_save(int id) {
 
     MetaDataList v_md;
     bool may_save = _playlist->request_playlist_for_collection(v_md);
-    if(may_save)
+    if(may_save){
         emit sig_playlist_prepared(id, v_md);
+    }
 }
 
 void PlaylistHandler::psl_prepare_playlist_for_save(QString name) {
+
     MetaDataList v_md;
     bool may_save = _playlist->request_playlist_for_collection(v_md);
-    if(may_save)
+    if(may_save){
         emit sig_playlist_prepared(name, v_md);
+    }
 }
-
 
 void PlaylistHandler::psl_next() {
     _playlist->next();
 }
 
 
-
 void PlaylistHandler::psl_track_time_changed(const MetaData& md) {
+
+    int idx;
 
     if(md.id >= 0) {
         _db->updateTrack(md);
-        int idx = _playlist->find_track_by_id(md.id);
-        if(idx >= 0) _playlist->replace_track(idx, md);
+        idx = _playlist->find_track(md.id);
     }
 
     else {
-        int idx = _playlist->find_track_by_path(md.filepath);
-        if(idx >= 0) _playlist->replace_track(idx, md);
+        idx = _playlist->find_track(md.filepath);
+    }
+
+    if(idx >= 0) {
+        _playlist->replace_track(idx, md);
     }
 }
 
@@ -239,7 +254,7 @@ void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
 			md = vec_tracks.at(rnd_track);
 
             // search playlist
-            if(_playlist->find_track_by_id(md.id) != -1) {
+            if(_playlist->find_track(md.id) != -1) {
                 is_track_already_in = true;
             }
 
@@ -260,7 +275,6 @@ void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
 void PlaylistHandler::psl_clear_playlist() {
     _playlist->clear();
 }
-
 
 
 // play a track
@@ -285,27 +299,37 @@ void PlaylistHandler::psl_pause() {
     }
 }
 
+
 void PlaylistHandler::psl_stop() {
     _state = PlaylistStop;
     _playlist->stop();
 }
+
 
 void PlaylistHandler::psl_forward() {
 
     _playlist->fwd();
 }
 
+
 void PlaylistHandler::psl_backward() {
 
     _playlist->bwd();
 }
 
+
 void PlaylistHandler::psl_change_track(int idx, qint32 pos, bool start_playing) {
+
     _last_pos = pos;
-    if(start_playing)
+
+    if(start_playing){
         _state = PlaylistPlay;
-    else
+    }
+
+    else{
         _state = PlaylistPause;
+    }
+
     _playlist->change_track(idx);
 }
 
@@ -318,25 +342,25 @@ void PlaylistHandler::psl_insert_tracks(const MetaDataList& v_md, int row) {
 
     bool empty = _playlist->is_empty();
 
-    if(_playlist->get_type() != PlaylistTypeStd)
+    if(_playlist->get_type() != PlaylistTypeStd){
         this->new_playlist(PlaylistTypeStd);
+    }
 
     _playlist->insert_tracks(v_md, row);
 
-    if(empty && _state == PlaylistStop && !_playlist->is_empty())
-                  psl_play();
-
+    if(empty && _state == PlaylistStop && !_playlist->is_empty()){
+        psl_play();
+    }
 }
 
 void PlaylistHandler::psl_play_next(const MetaDataList & v_md) {
 
-    if(_playlist->get_type() != PlaylistTypeStd)
+    if(_playlist->get_type() != PlaylistTypeStd){
         this->new_playlist(PlaylistTypeStd);
+    }
 
     _playlist->insert_tracks(v_md, _playlist->get_cur_track() + 1);
 }
-
-
 
 void PlaylistHandler::psl_append_tracks(MetaDataList& v_md) {
 
@@ -347,9 +371,7 @@ void PlaylistHandler::psl_append_tracks(MetaDataList& v_md) {
     if(empty && _state == PlaylistStop && !_playlist->is_empty()) {
          psl_play();
     }
-
 }
-
 
 void PlaylistHandler::psl_remove_rows(const QList<int> & rows, bool select_next_row) {
 

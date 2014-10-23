@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $1
+
 MAJOR=0
 MINOR=4
 SUBMINOR=0
