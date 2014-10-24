@@ -143,6 +143,7 @@ void GUI_Alternate_Covers::start(Album album, const CoverLocation& cl) {
 	}
 
     _cl_alternative = new CoverLookupAlternative(this, album, 10);
+    lab_info->setText(tr("for album") + " \"" + album.name + "\"");
 
 	connect_and_start();
 }
@@ -161,6 +162,7 @@ void GUI_Alternate_Covers::start(QString album_name, QString artist_name, const 
 	}
 
 	_cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
+    lab_info->setText(tr("for album \"") + album_name + tr("\" by \"") + artist_name + "\"");
 
 	connect_and_start();
 }
@@ -178,6 +180,7 @@ void GUI_Alternate_Covers::start(Artist artist, const CoverLocation& cl) {
 	}
 
     _cl_alternative = new CoverLookupAlternative(this, artist, 10);
+    lab_info->setText(tr("for artist") + " \"" + artist.name + "\"");
 
 	connect_and_start();
 
@@ -195,6 +198,7 @@ void GUI_Alternate_Covers::start(QString artist_name, const CoverLocation& cl) {
 	}
 
 	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
+    lab_info->setText(tr("for") + " \"" + artist_name + "\"");
 
 	connect_and_start();
 }

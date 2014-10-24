@@ -73,7 +73,7 @@ protected:
 
 public:
 
-	virtual QString	getName(){ return "GStreamer Engine"; }
+    virtual QString	getName(){return _name;}
 	virtual void	init()=0;
 
 	virtual void		set_track_finished(){}

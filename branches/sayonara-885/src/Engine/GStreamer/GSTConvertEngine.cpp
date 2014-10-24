@@ -27,11 +27,10 @@
 #include <qplugin.h>
 
 
-GSTConvertEngine::GSTConvertEngine(QObject *parent)
-{
+GSTConvertEngine::GSTConvertEngine(QObject *parent){
 	_settings = CSettingsStorage::getInstance();
 	_pipeline = new GSTConvertPipeline(this);
-	_name = CONVERT_ENGINE;
+    _name = CONVERT_ENGINE;
 
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 }

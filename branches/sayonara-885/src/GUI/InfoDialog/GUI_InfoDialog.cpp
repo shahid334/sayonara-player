@@ -232,7 +232,9 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
     btn_image->setIcon(icon);
 	btn_image->update();
 
-	emit sig_cover_changed(cl);
+    if(sender() == _alternate_covers)
+        emit sig_cover_changed(cl);
+
 }
 
 

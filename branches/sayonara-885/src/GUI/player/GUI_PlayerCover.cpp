@@ -46,6 +46,8 @@ void GUI_Player::set_std_cover(bool radio) {
 
 void GUI_Player::fetch_cover() {
 
+    qDebug() << "fetch cover";
+
 	set_std_cover( (_md.radio_mode != RadioModeOff) );
 
 	if(_md.album_id > -1) {
@@ -75,21 +77,27 @@ void GUI_Player::coverClicked() {
 
 void GUI_Player::sl_alternate_cover_available(const CoverLocation& lc) {
 
+    qDebug() << sender();
 	Q_UNUSED(lc);
 
+    qDebug() << "alternative cover";
+
 	if(!m_metadata_available) return;
-	fetch_cover();
+    fetch_cover();
 }
 
 
 void GUI_Player::sl_no_cover_available() {
 
+    qDebug() << "No cover available";
    set_std_cover( (_md.radio_mode != RadioModeOff) );
 }
 
 
 void GUI_Player::sl_cover_found(const CoverLocation& cl) {
 
+
+    qDebug() << "Cover found";
 	QIcon icon(cl.cover_path);
 
 	albumCover->setIcon(icon);

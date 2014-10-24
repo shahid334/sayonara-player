@@ -94,8 +94,9 @@ void LFMTrackChangedThread::run() {
     bool dynamic = CSettingsStorage::getInstance()->getPlaylistMode().dynamic;
     if(dynamic && (_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS)) {
 		success = search_similar_artists();
-		if(success)
-			emit sig_similar_artists_available(_target_class, _chosen_ids);
+        if(success){
+            emit sig_similar_artists_available(_target_class, _chosen_ids);
+        }
 	}
 
 
@@ -117,15 +118,17 @@ void LFMTrackChangedThread::run() {
 
 	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ALBUM_INFO) {
 		success = get_album_info(_artist_name, _album_name);
-		if(success)
-			emit sig_album_info_available(_target_class);
+        if(success){
+            emit sig_album_info_available(_target_class);
+        }
 	}
 
 	if(_thread_tasks & LFM_THREAD_TASK_FETCH_ARTIST_INFO) {
 		success = get_artist_info(_artist_name);
-		if(success)
-			emit sig_artist_info_available(_target_class);
-	}
+        if(success){
+            emit sig_artist_info_available(_target_class);
+        }
+    }
 
 	_thread_tasks = 0;
 }
@@ -309,8 +312,10 @@ QMap<QString, int> LFMTrackChangedThread::filter_available_artists(const QMap<QS
 
         foreach(QString key, artist_match.keys()) {
 
-			QMap<QString, float> sc_map = _smart_comparison->get_similar_strings(key);
-			foreach( QString sc_key, sc_map.keys() ){
+#if SMART_COMP
+
+            QMap<QString, float> sc_map = _smart_comparison->get_similar_strings(key);
+            foreach( QString sc_key, sc_map.keys() ){
 				int artist_id = db->getArtistID(sc_key);
 				if(artist_id >= 0 && sc_map[sc_key] > 5.0f){
 
@@ -318,6 +323,15 @@ QMap<QString, int> LFMTrackChangedThread::filter_available_artists(const QMap<QS
 				}
 
 			}
+
+#else
+                int artist_id = db->getArtistID(key);
+                if(artist_id >= 0 ){
+
+                    possible_artists[key] = artist_id;
+                }
+
+#endif
         }
 
         return possible_artists;

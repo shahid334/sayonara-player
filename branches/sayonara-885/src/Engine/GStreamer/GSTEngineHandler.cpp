@@ -52,11 +52,9 @@ void GSTEngineHandler::start_convert() {
 
 	stop();
 
-	qDebug() << "Engine start convert";
 	if( QString::compare(_cur_engine->getName(), CONVERT_ENGINE ) != 0) {
 		psl_change_engine(CONVERT_ENGINE);
-		qDebug() << "Change to convert engine";
-	}
+    }
 }
 
 void GSTEngineHandler::end_convert() {

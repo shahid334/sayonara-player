@@ -111,7 +111,7 @@ private:
     QString                 _call_id;
 	InfoDialogMode			_mode;
 
-	QString					_cover_artist;
+    QString 				_cover_artist;
 	QString					_cover_album;
 	CoverLocation			_cl;
 

@@ -335,8 +335,8 @@ void Application::init_connections() {
     CONNECT (player, sig_backward(),                             playlist_handler,			psl_backward());
 	CONNECT (player, sig_show_small_playlist_items(bool),		 ui_playlist,		psl_show_small_playlist_items(bool));
 	CONNECT (player, sig_show_playlists(),						 ui_playlist_chooser, 	show()); // IND
-    CONNECT (player, sig_setup_LastFM(),                          ui_lastfm,              show_win()); // IND
-    CONNECT (player, sig_show_stream_rec(),                  ui_stream_rec,          show_win()); // IND
+    CONNECT (player, sig_setup_LastFM(),                         ui_lastfm,              show_win()); // IND
+    CONNECT (player, sig_show_stream_rec(),                      ui_stream_rec,          show_win()); // IND
     CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
 
     CONNECT (player, sig_skin_changed(bool),                      ui_eq,              changeSkin(bool));
@@ -347,10 +347,10 @@ void Application::init_connections() {
     CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 
 
-	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		psl_update_track(const MetaData&, int, bool));
-	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	listen, 	change_track(const MetaData &, int, bool ));
+    CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		psl_update_track(const MetaData&, int, bool));
+    CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	listen, 	change_track(const MetaData &, int, bool ));
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               lastfm,		psl_track_changed(const MetaData&));
-	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               ui_bookmarks,	track_changed(const MetaData&));
+    CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               ui_bookmarks,	track_changed(const MetaData&));
     CONNECT (playlist_handler, sig_selected_file_changed(int),                              ui_playlist, 	track_changed(int));
 
 
@@ -392,7 +392,7 @@ void Application::init_connections() {
 	CONNECT (listen, sig_dur_changed(const MetaData&),                player,              psl_dur_changed(const MetaData&));
 	CONNECT (listen, sig_dur_changed(const MetaData&),                playlist_handler,    psl_dur_changed(const MetaData&));
 	CONNECT (listen, sig_dur_changed(const MetaData&),                library,             psl_dur_changed(const MetaData&));
-    CONNECT (listen, sig_dl_progress(int),                           ui_playlist,         download_progress(int));
+    CONNECT (listen, sig_dl_progress(int),                            ui_playlist,         download_progress(int));
 
 	CONNECT (ui_speed, sig_speed_changed(float),                      listen,              psl_set_speed(float) );
 

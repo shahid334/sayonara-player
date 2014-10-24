@@ -58,9 +58,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 		if(plugin) {
 			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 			if(plugin_eng) {
-				QString name = plugin_eng->getName().toLower();
 				_vec_engines.push_back(plugin_eng);
-
 			}
 		}
 	}
@@ -83,7 +81,6 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 		Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 
 		if(plugin_eng) {
-			qDebug() << "Found engine " << plugin_eng->getName();
 			_vec_engines.push_back(plugin_eng);
 		}
 

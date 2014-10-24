@@ -191,7 +191,7 @@ void LastFM::psl_track_changed(const MetaData& md) {
 	_track_changed_thread->setUsername(_username);
 	_track_changed_thread->setSessionKey(_session_key);
 
-	_track_changed_thread->start();
+    _track_changed_thread->start();
 }
 
 

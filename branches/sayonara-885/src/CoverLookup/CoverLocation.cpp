@@ -138,6 +138,12 @@ CoverLocation CoverLocation::get_cover_location(const QString& artist) {
 
 CoverLocation CoverLocation::get_cover_location(const MetaData& md) {
 
-	return get_cover_location(md.album, md.artist);
+    CoverLocation cl;
+    if(md.album_id >= 0){
+        cl = get_cover_location(md.album_id);
+        if(cl.valid) return cl;
+    }
+
+    return get_cover_location(md.album, md.artist);
 }
 
