@@ -41,14 +41,14 @@ public:
 	virtual ~Playlists();
 
 signals:
-	void sig_single_playlist_loaded(CustomPlaylist&);
-	void sig_all_playlists_loaded(QMap<int, QString>&);
+	void sig_single_playlist_loaded(const CustomPlaylist&);
+	void sig_all_playlists_loaded(const QMap<int, QString>&);
 
 public slots:
 
 
-	void save_playlist_as_custom(QString name, MetaDataList& vec_md);
-	void save_playlist_as_custom(int id, MetaDataList& vec_md);
+	void save_playlist_as_custom(QString name, const MetaDataList& vec_md);
+	void save_playlist_as_custom(int id, const MetaDataList& vec_md);
 	void delete_playlist(int id);
 	void load_all_playlists();
 	void load_single_playlist(int id);

@@ -252,18 +252,17 @@ void GUI_Player::initGUI() {
 
 
 // new track
-void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
+void GUI_Player::psl_update_track(const MetaData & md, int pos_sec, bool playing) {
 
 	QString rating_text;
-	QString length_text;
 
-    m_metadata = md;
+	_md = md;
 
-    m_completeLength_ms = md.length_ms;
+	m_completeLength_ms = _md.length_ms;
     m_playing = playing;
     m_trayIcon->setPlaying(playing);
 
-    setCurrentPosition(pos_sec);
+	psl_set_cur_pos(pos_sec);
 
 	lab_sayonara->hide();
 	lab_title->show();
@@ -277,25 +276,12 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 	lab_copyright->hide();
 	lab_rating->show();
 
+	set_album_label();
 
-    if (md.year < 1000 || md.album.contains(QString::number(md.year))){
-		 lab_album->setText(Helper::get_album_w_disc(md));
-	}
+	lab_artist->setText(_md.artist);
+	lab_title->setText(_md.title);
 
-     else{
-		QString disc = Helper::get_album_w_disc(md);
-        lab_album->setText(disc + " (" + QString::number(md.year) + ")");
-	}
-
-	lab_artist->setText(md.artist);
-	lab_title->setText(md.title);
-
-    m_trayIcon->songChangedMessage(md);
-
-	length_text = Helper::cvtMsecs2TitleLengthString(md.length_ms, true);
-	maxTime->setText(length_text);
-	songProgress->setEnabled( md.length_ms > 0 );
-
+	m_trayIcon->show_notification(_md);
 
     if(m_playing){
         btn_play->setIcon(Helper::getIcon("pause.png"));
@@ -305,16 +291,13 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
         btn_play->setIcon(Helper::getIcon("play.png"));
 	}
 
+	total_time_changed(_md.length_ms);
 
-
-	rating_text += QString::number(md.bitrate / 1000) + " kBit/s";
-	rating_text += ", " + QString::number( (double) (md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+	rating_text += QString::number(_md.bitrate / 1000) + " kBit/s";
+	rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
 
 	lab_rating->setText(rating_text);
 	lab_rating->setToolTip(rating_text);
-
-    this->setWindowTitle(QString("Sayonara - ") + md.title);
-
 
 	btn_correct->setVisible(false);
 
@@ -324,7 +307,22 @@ void GUI_Player::update_track(const MetaData & md, int pos_sec, bool playing) {
 
     m_metadata_available = true;
 
+	this->setWindowTitle(QString("Sayonara - ") + md.title);
     this->repaint();
+}
+
+void GUI_Player::set_album_label(){
+
+	QString str_year = QString::number(_md.year);
+	QString album_name = Helper::get_album_w_disc(_md);
+
+	if(	_md.year < 1000 || _md.album.contains(str_year)){
+		 lab_album->setText(album_name);
+	}
+
+	 else{
+		lab_album->setText(album_name + " (" + str_year + ")");
+	}
 }
 
 
@@ -346,7 +344,7 @@ void GUI_Player::psl_bitrate_changed(qint32 bitrate) {
 }
 
 
-void GUI_Player::psl_track_time_changed(const MetaData& md) {
+void GUI_Player::psl_dur_changed(const MetaData& md) {
 
    total_time_changed(md.length_ms);
 }
@@ -354,50 +352,31 @@ void GUI_Player::psl_track_time_changed(const MetaData& md) {
 
 // public slot:
 // id3 tags have changed
-void GUI_Player::psl_id3_tags_changed(MetaDataList& v_md) {
+void GUI_Player::psl_id3_tags_changed(const MetaDataList& v_md) {
 
-	bool found = false;
+	int idx = v_md.findTrack(_md.filepath);
+	if(idx < 0) return;
 
-    for(int i=0; i<v_md.size(); i++) {
-		if(m_metadata == v_md[i]) {
-			m_metadata = v_md[i];
-			found = true;
-			break;
-		}
-	}
+	_md = v_md[idx];
 
-	if(!found) return;
-
+	set_album_label();
+	lab_artist->setText(_md.artist);
+	lab_title->setText(_md.title);
 	btn_correct->setVisible(false);
 
-	if (m_metadata.year < 1000 || m_metadata.album.contains(QString::number(m_metadata.year))){
-		lab_album->setText(m_metadata.album);
-	}
+	m_trayIcon->show_notification(_md);
 
-	else{
-		lab_album->setText(
-				m_metadata.album + " (" + QString::number(m_metadata.year) + ")"
-		);
-	}
-
-	lab_artist->setText(m_metadata.artist);
-	lab_title->setText(m_metadata.title);
-
-    m_trayIcon->songChangedMessage(m_metadata);
-
-	setWindowTitle(QString("Sayonara - ") + m_metadata.title);
-
-	emit sig_want_cover(m_metadata);
+	setWindowTitle(QString("Sayonara - ") + _md.title);
+	fetch_cover();
 }
-
-
 
 
 /** LAST FM **/
 void GUI_Player::last_fm_logged_in(bool b) {
 
-    if(!b && m_settings->getLastFMActive())
+	if(!b && m_settings->getLastFMActive()){
 		QMessageBox::warning(centralwidget, tr("Warning"), tr("Cannot login to Last.fm"));
+	}
 
     if(!b) {
 		action_ViewLFMRadio->setChecked(false);
@@ -418,12 +397,12 @@ void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected
 
     m_metadata_corrected = md;
 
-	bool radio_off = (m_metadata.radio_mode == RadioModeOff);
+	bool radio_off = (_md.radio_mode == RadioModeOff);
     bool get_lfm_corrections = m_settings->getLastFMCorrections();
 
 	btn_correct->setVisible(corrected &&
-    							radio_off &&
-    							get_lfm_corrections);
+							radio_off &&
+							get_lfm_corrections);
 
 	if(loved) {
 		lab_title->setText(lab_title->text());
@@ -438,11 +417,11 @@ void GUI_Player::correct_btn_clicked(bool b) {
         return;
 
     MetaData md = m_metadata_corrected;
-    m_metadata_corrected = m_metadata;
+	m_metadata_corrected = _md;
 
-    bool same_artist = (m_metadata.artist.compare(md.artist) == 0);
-    bool same_album = (m_metadata.album.compare(md.album) == 0);
-    bool same_title = (m_metadata.title.compare(md.title) == 0);
+	bool same_artist = (_md.artist.compare(md.artist) == 0);
+	bool same_album = (_md.album.compare(md.album) == 0);
+	bool same_title = (_md.title.compare(md.title) == 0);
 
     if(!same_artist) {
         m_metadata_corrected.artist = md.artist;
@@ -546,7 +525,7 @@ void GUI_Player::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
 
         break;
     case QSystemTrayIcon::MiddleClick:
-    	m_trayIcon->songChangedMessage(m_metadata);
+		m_trayIcon->show_notification(_md);
         break;
     default:
         break;
@@ -659,7 +638,7 @@ void GUI_Player::setRadioMode(int radio) {
 	}
 
 	m_trayIcon->set_enable_fwd(true);
-    songProgress->setEnabled( (m_metadata.length_ms / 1000) > 0 );
+	songProgress->setEnabled( (_md.length_ms / 1000) > 0 );
 
 	emit sig_rec_button_toggled(btn_rec->isChecked() && btn_rec->isVisible());
 }
@@ -669,13 +648,13 @@ void GUI_Player::setRadioMode(int radio) {
 void GUI_Player::psl_strrip_set_active(bool b) {
 
 	if(b) {
-		btn_play->setVisible(m_metadata.radio_mode == RadioModeOff);
-		btn_rec->setVisible(m_metadata.radio_mode != RadioModeOff);
+		btn_play->setVisible(_md.radio_mode == RadioModeOff);
+		btn_rec->setVisible(_md.radio_mode != RadioModeOff);
 	}
 
 	else{
 		btn_play->setVisible(true);
-		btn_play->setEnabled(m_metadata.radio_mode == RadioModeOff);
+		btn_play->setEnabled(_md.radio_mode == RadioModeOff);
 		btn_rec->setVisible(false);
 	}
 

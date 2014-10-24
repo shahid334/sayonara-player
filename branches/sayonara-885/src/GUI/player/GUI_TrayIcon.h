@@ -61,7 +61,7 @@ public:
 
 public slots:
     void trackChanged(const MetaData& md);
-    void songChangedMessage (const MetaData& md);
+    void show_notification (const MetaData& md);
     void setPlaying(bool);
     void setMute(bool mute);
     void change_skin(QString stylesheet);

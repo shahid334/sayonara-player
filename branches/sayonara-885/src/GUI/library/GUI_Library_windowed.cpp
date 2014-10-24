@@ -358,7 +358,7 @@ void GUI_Library_windowed::track_tab_pressed(bool mod) {
 }
 
 
-void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata) {
+void GUI_Library_windowed::fill_library_tracks(const MetaDataList& v_metadata) {
 
 	tb_title->fill<MetaDataList, MetaData>(v_metadata);
 
@@ -371,13 +371,13 @@ void GUI_Library_windowed::fill_library_tracks(MetaDataList& v_metadata) {
 }
 
 
-void GUI_Library_windowed::fill_library_albums(AlbumList& albums) {
+void GUI_Library_windowed::fill_library_albums(const AlbumList& albums) {
 
    lv_album->fill<AlbumList, Album>(albums);
 }
 
 
-void GUI_Library_windowed::fill_library_artists(ArtistList& artists) {
+void GUI_Library_windowed::fill_library_artists(const ArtistList& artists) {
 
 	lv_artist->fill<ArtistList, Artist>(artists);
 }
@@ -551,7 +551,7 @@ void GUI_Library_windowed::id3_tags_changed() {
 
 
 
-void GUI_Library_windowed::reloading_library(QString& str) {
+void GUI_Library_windowed::reloading_library(const QString& str) {
 
 	QString final_str = QString("<b>") + str + "</b>";
 	lab_status->setText(final_str);

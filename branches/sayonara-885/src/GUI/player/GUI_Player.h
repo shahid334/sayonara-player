@@ -60,11 +60,11 @@ public:
 
 public slots:
 
-	void cover_found(const CoverLocation&);
-    void update_track (const MetaData & in, int pos=0, bool playing=true);
-    void setCurrentPosition (quint32 pos_sec);
-    void psl_id3_tags_changed(MetaDataList& v_md);
-	void psl_track_time_changed(const MetaData&);
+
+	void psl_update_track (const MetaData & in, int pos=0, bool playing=true);
+	void psl_set_cur_pos (quint32 pos_sec);
+	void psl_id3_tags_changed(const MetaDataList& v_md);
+	void psl_dur_changed(const MetaData&);
 	void psl_bitrate_changed(qint32);
     void psl_reload_library_allowed(bool);
     void psl_set_status_bar_text(QString, bool show);
@@ -84,14 +84,11 @@ public slots:
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
     void stopped();
 
-
     /* Plugins */
-
     void showPlugin(PlayerPlugin* plugin);
     void hideAllPlugins();
 
-
-    void psl_libpath_changed(QString &);
+	void psl_libpath_changed(const QString &);
 
 
 signals:
@@ -110,7 +107,7 @@ signals:
     void sig_correct_id3(const MetaData&);
 
     /* File */
-    void sig_file_selected (QStringList & filelist);
+	void sig_file_selected (const QStringList & filelist);
     void sig_basedir_selected (const QString & baseDir);
     void sig_import_dir(const QString&);
     void sig_import_files(const QStringList&);
@@ -129,13 +126,8 @@ signals:
     void sig_language_changed();
 
     /* Covers */
-    void sig_want_cover(const MetaData &);
-    void sig_fetch_alternate_covers(int);
-    void sig_want_more_covers();
     void sig_fetch_all_covers();
-
     void sig_stream_selected(const QString&, const QString&);
-
 
 
 private slots:
@@ -191,17 +183,15 @@ private slots:
     void about(bool b=false);
     void help(bool b=false);
 
-
+	void sl_cover_found(const CoverLocation&);
 	void sl_alternate_cover_available(const CoverLocation&);
-    void sl_no_cover_available();
+	void sl_no_cover_available();
 
     void awa_version_finished();
     void awa_translators_finished();
 
-
     void notification_changed(bool active, int ms);
     void language_changed(QString);
-
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
@@ -249,7 +239,7 @@ private:
 
     QString                 m_skinSuffix;
 
-    MetaData			m_metadata;
+	MetaData			_md;
     MetaData			m_metadata_corrected;
     bool                m_metadata_available;
     bool                m_min2tray;
@@ -263,9 +253,8 @@ private:
 	bool				m_converter_active;
 
 
-
-
-    void setupTrayActions ();
+	void set_album_label();
+	void setupTrayActions ();
 
     void setupVolButton(int percent);
     void initGUI();
@@ -274,7 +263,7 @@ private:
     void total_time_changed(qint64);
 	void set_std_cover(bool radio);
 
-    void fetch_cover();
+	void fetch_cover();
     QAction* createAction(QKeySequence key_sequence);
     QAction* createAction(QList<QKeySequence>& key_sequences);
 

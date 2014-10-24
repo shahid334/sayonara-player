@@ -33,7 +33,7 @@ class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 	Q_OBJECT
 
 signals:
-    void sig_create_playlist(MetaDataList&, bool);
+	void sig_create_playlist(const MetaDataList&, bool);
     void sig_play_track(int, qint32, bool);
 	void sig_close_event();
 

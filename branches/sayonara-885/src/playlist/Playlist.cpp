@@ -187,7 +187,7 @@ void Playlist::insert_tracks(const MetaDataList& lst, int tgt) {
 
    MetaDataList v_md;
    for(int i=0; i<tgt; i++) {
-       MetaData md = _v_md[i];
+       const MetaData& md = _v_md[i];
        v_md.push_back(md);
    }
 
@@ -201,7 +201,7 @@ void Playlist::insert_tracks(const MetaDataList& lst, int tgt) {
 
    for(int i=tgt; i< _v_md.size(); i++) {
 
-       MetaData md = _v_md[i];
+       const MetaData& md = _v_md[i];
        v_md.push_back(md);
    }
 

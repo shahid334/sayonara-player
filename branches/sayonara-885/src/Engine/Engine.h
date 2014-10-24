@@ -63,18 +63,17 @@ protected:
 	bool		_is_eq_enabled;
 	int			_eq_type;
 
-	QString		_name;
-
 	bool 		_playing_stream;
-
 	bool		_sr_active;
 	bool		_sr_wanna_record;
 	bool		_gapless;
 
+	QString		_name;
+
 
 public:
 
-	virtual QString	getName(){ return _name; }
+	virtual QString	getName(){ return "GStreamer Engine"; }
 	virtual void	init()=0;
 
 	virtual void		set_track_finished(){}

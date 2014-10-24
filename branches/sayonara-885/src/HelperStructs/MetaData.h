@@ -64,7 +64,7 @@ public:
 	qint32 artist_id;
     QString title;
     QString artist;
-    QString album;
+    QString album;          // if radio station: name of radio station
     QStringList genres;
     quint8 rating;
     quint64 length_ms;
@@ -76,7 +76,6 @@ public:
     QString comment;
     quint8 discnumber;
     quint8 n_discs;
-
 
     bool is_extern;
     RadioMode radio_mode;
@@ -110,10 +109,12 @@ class MetaDataList : public QVector<MetaData> {
 	public:
 
 		MetaDataList();
+        MetaDataList(const MetaDataList&);
 		MetaDataList(int n_elems);
 
 	    virtual ~MetaDataList();
         void setCurPlayTrack(int idx);
+        int getCurPlayTrack();
 
         virtual bool contains(const MetaData& md) const;
 

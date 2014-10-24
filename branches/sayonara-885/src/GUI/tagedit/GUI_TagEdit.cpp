@@ -304,7 +304,7 @@ void GUI_TagEdit::artist_changed(QString text) {
 
 void GUI_TagEdit::show_metadata() {
 
-    MetaData md = _vec_tmp_metadata[_cur_idx];
+    const MetaData& md = _vec_tmp_metadata[_cur_idx];
 
 	le_album->setText(md.album);
 	le_artist->setText(md.artist);
@@ -368,7 +368,7 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
      * If a track has a new album/artist create new IDs for it */
     for(int track = 0; track<_vec_org_metadata.size(); track++) {
 
-            MetaData md = _db->getTrackByPath(_vec_org_metadata[track].filepath);
+            const MetaData& md = _db->getTrackByPath(_vec_org_metadata[track].filepath);
             if( md.id < 0) {
                 continue;
             }
@@ -467,14 +467,12 @@ void GUI_TagEdit::check_for_new_album_and_artist(QList<Album>& v_album, QList<Ar
                 artist_found = true;
                 artist_id = vec_artists[i].id;
 
-
                 for(int j=0; j<v_artist.size(); j++) {
                     if(v_artist[j].name == new_artist_name) {
                         v_artist.removeAt(j);
                         break;
                     }
                 }
-
 
                 break;
             }
@@ -534,12 +532,13 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
 
     for(int i=0; i<v_md_size; i++) {
 
-        MetaData md = _vec_tmp_metadata[i];
+        MetaData& md = _vec_tmp_metadata[i];
 		pb_progress->setValue( (int)(i * 100.0 / v_md_size) );
 
         change_mp3_file(md);
-        if(!md.is_extern)
+        if(!md.is_extern){
             v_md_tmp.push_back(md);
+        }
 
         usleep(10000);
     }

@@ -79,8 +79,8 @@ public:
 		void sig_cur_played_info_changed(const MetaData&);
 
 		void sig_search_similar_artists(const QString&);
-		void sig_playlist_prepared(int, MetaDataList&);
-		void sig_playlist_prepared(QString, MetaDataList&);
+        void sig_playlist_prepared(int, const MetaDataList&);
+        void sig_playlist_prepared(QString, const MetaDataList&);
 		void sig_library_changed();
 		void sig_import_files(const MetaDataList&);
 		void sig_need_more_radio();
@@ -90,9 +90,9 @@ public:
 
 	public slots:
 
-        void psl_createPlaylist(QStringList&, bool start_playing=true);
-        void psl_createPlaylist(MetaDataList&, bool start_playing=true);
-        void psl_createPlaylist(CustomPlaylist&, bool start_playing=false);
+        void psl_createPlaylist(const QStringList&, bool start_playing=true);
+        void psl_createPlaylist(const MetaDataList&, bool start_playing=true);
+        void psl_createPlaylist(const CustomPlaylist&, bool start_playing=false);
 
 
         void psl_play();
@@ -109,14 +109,14 @@ public:
         void psl_clear_playlist();
         void psl_insert_tracks(const MetaDataList&, int idx);
         void psl_play_next(const MetaDataList&);
-        void psl_append_tracks(MetaDataList&);
+        void psl_append_tracks(const MetaDataList&);
         void psl_move_rows(const QList<int>&, int);
         void psl_remove_rows(const QList<int> &, bool select_next_row=true);
 
 
-		void psl_id3_tags_changed(MetaDataList&);
+		void psl_id3_tags_changed(const MetaDataList&);
 
-		void psl_track_time_changed(const MetaData&);
+		void psl_dur_changed(const MetaData&);
 
 
         void psl_similar_artists_available(const QList<int>&);

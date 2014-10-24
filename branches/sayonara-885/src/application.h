@@ -134,7 +134,7 @@ private:
     void connect_languages();
 
 public:
-    void setFiles2Play(QStringList filelist);
+	void setFiles2Play(const QStringList& filelist);
     QMainWindow* getMainWindow();
     bool is_initialized();
 	void init(int n_files, QTranslator* translator);

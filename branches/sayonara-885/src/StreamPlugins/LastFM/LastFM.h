@@ -56,7 +56,7 @@ Q_OBJECT
 	signals:
 		void sig_last_fm_logged_in(bool);
 		void sig_similar_artists_available(const QList<int>&);
-        void sig_create_playlist(MetaDataList&, bool);
+		void sig_create_playlist(const MetaDataList&, bool);
 		void sig_track_info_fetched(const MetaData& md, bool loved, bool corrected);
 		void sig_user_info_fetched(QMap<QString, QString>&);
 

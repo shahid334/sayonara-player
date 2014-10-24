@@ -128,11 +128,11 @@ signals:
     void sig_track_rating_changed(int, int);
 
 public slots:
-	void fill_library_tracks(MetaDataList&);
-	void fill_library_albums(AlbumList&);
-	void fill_library_artists(ArtistList&);
+	void fill_library_tracks(const MetaDataList&);
+	void fill_library_albums(const AlbumList&);
+	void fill_library_artists(const ArtistList&);
 	void id3_tags_changed();
-	void reloading_library(QString&);
+	void reloading_library(const QString&);
 	void reloading_library_finished();
 	void library_changed();
 	void import_result(bool);

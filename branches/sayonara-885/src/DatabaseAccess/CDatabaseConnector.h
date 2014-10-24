@@ -157,7 +157,7 @@ public:
 			bool storePlaylist(const MetaDataList& vec_md, int playlist_id);
 			bool deletePlaylist(int playlist_id);
 			bool emptyPlaylist(int playlist_id);
-			bool insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos);
+            bool insertTrackIntoPlaylist(const MetaData& md, int playlist_id, int pos);
 			bool getAllPlaylists(QMap<int, QString>& mapping);
 			bool deleteFromAllPlaylists(int track_id);
 

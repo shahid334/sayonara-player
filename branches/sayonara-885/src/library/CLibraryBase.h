@@ -43,19 +43,19 @@ public:
 
 
 signals:
-	void sig_playlist_created(QStringList&);
+	void sig_playlist_created(const QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
-	void sig_all_tracks_loaded (MetaDataList&);
-	void sig_all_albums_loaded(AlbumList&);
-	void sig_all_artists_loaded(ArtistList&);
-	void sig_tracks_for_playlist_available(MetaDataList&);
-	void sig_append_tracks_to_playlist(MetaDataList&);
+	void sig_all_tracks_loaded (const MetaDataList&);
+	void sig_all_albums_loaded(const AlbumList&);
+	void sig_all_artists_loaded(const ArtistList&);
+	void sig_tracks_for_playlist_available(const MetaDataList&);
+	void sig_append_tracks_to_playlist(const MetaDataList&);
 
 	void sig_should_reload_library();
 	void sig_reload_library_finished();
 	void sig_reload_library_allowed(bool);
-	void sig_reloading_library(QString &);
-	void sig_libpath_set(QString&);
+	void sig_reloading_library(const QString&);
+	void sig_libpath_set(const QString&);
 
 	void sig_change_id3_tags(const MetaDataList&);
 
@@ -88,7 +88,7 @@ public slots:
 	virtual void psl_filter_changed(const Filter&, bool force=false);
 	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
 	virtual void psl_change_id3_tags(const QList<int>& lst);
-	virtual void psl_track_time_changed(const MetaData&);
+	virtual void psl_dur_changed(const MetaData&);
 
 	virtual void psl_delete_tracks(int);
 	virtual void psl_delete_certain_tracks(const QList<int>&,int);

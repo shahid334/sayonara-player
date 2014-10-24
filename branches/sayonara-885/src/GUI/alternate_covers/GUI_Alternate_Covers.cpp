@@ -92,7 +92,6 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	}
 
 	delete_all_files();
-
 }
 
 void GUI_Alternate_Covers::changeSkin(bool dark) {
@@ -119,7 +118,6 @@ void GUI_Alternate_Covers::connect_and_start() {
 
 	show();
 }
-
 
 void GUI_Alternate_Covers::start(int album_id, const CoverLocation& cl) {
 

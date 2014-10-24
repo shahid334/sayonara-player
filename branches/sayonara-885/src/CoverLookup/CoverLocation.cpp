@@ -32,6 +32,9 @@ CoverLocation::CoverLocation() {
 	valid = false;
 }
 
+QString CoverLocation::get_cover_directory(){
+	return Helper::getSayonaraPath() + QDir::separator() + "covers";
+}
 
 CoverLocation CoverLocation::getInvalidLocation() {
 
@@ -54,16 +57,19 @@ QString CoverLocation::toString() const{
 
 CoverLocation CoverLocation::get_cover_location(const QString& album_name, const QString& artist_name) {
 
+	QString cover_dir = get_cover_directory();
 	CoverLocation ret;
 	QString cover_token = Helper::calc_cover_token(artist_name, album_name);
-	QString cover_path =  QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + cover_token + ".jpg";
 
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
-		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
+	QString cover_path =  cover_dir + QDir::separator() + cover_token + ".jpg";
+
+	if(!QFile::exists(cover_dir)) {
+		QDir().mkdir(cover_dir);
 	}
 
 	ret.cover_path = cover_path;
 	ret.google_url = Helper::calc_google_album_adress(artist_name, album_name);
+	ret.valid = true;
 
 	return ret;
 }
@@ -113,13 +119,14 @@ CoverLocation CoverLocation::get_cover_location(const Artist& artist) {
 
 
 CoverLocation CoverLocation::get_cover_location(const QString& artist) {
+	QString cover_dir = get_cover_directory();
 	CoverLocation ret;
 
 	QString token = QString("artist_") + Helper::calc_cover_token(artist, "");
-	QString target_file = QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers" + QDir::separator() + token + ".jpg";
+	QString target_file = cover_dir + QDir::separator() + token + ".jpg";
 
-	if(!QFile::exists(QDir::homePath() + QDir::separator() +".Sayonara" + QDir::separator() + "covers")) {
-		QDir().mkdir(QDir::homePath() + QDir::separator() + ".Sayonara" + QDir::separator() + "covers");
+	if(!QFile::exists(cover_dir)) {
+		QDir().mkdir(cover_dir);
 	}
 
 	ret.cover_path = target_file;

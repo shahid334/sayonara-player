@@ -81,7 +81,4 @@ void StreamPlaylist::save_to_m3u_file(QString filepath, bool relative) {
 
 }
 
-bool StreamPlaylist::request_playlist_for_collection(MetaDataList& lst) {
-    return true;
-}
 */

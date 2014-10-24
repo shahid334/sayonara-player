@@ -46,7 +46,6 @@ public:
 
     virtual void save_for_reload();
     virtual void save_to_m3u_file(QString filepath, bool relative);
-    virtual bool request_playlist_for_collection(MetaDataList& lst);
     
 signals:
     

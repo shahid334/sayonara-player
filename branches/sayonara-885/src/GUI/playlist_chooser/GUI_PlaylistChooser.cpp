@@ -89,7 +89,7 @@ void GUI_PlaylistChooser::changeSkin(bool dark) {
 }
 
 
-void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping) {
+void GUI_PlaylistChooser::all_playlists_fetched(const QMap<int, QString>& mapping) {
     int tmp_cur_idx = _cur_idx;
 	combo_playlistchooser->clear();
 	combo_playlistchooser->addItem("", -1);

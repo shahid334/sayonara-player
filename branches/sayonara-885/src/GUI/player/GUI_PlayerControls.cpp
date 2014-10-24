@@ -123,9 +123,12 @@ void GUI_Player::sl_rec_button_toggled(bool b) {
 void GUI_Player::total_time_changed(qint64 total_time) {
 
 	QString length_str = Helper::cvtMsecs2TitleLengthString(total_time, true);
+	if(total_time == 0){
+		length_str = "";
+	}
     m_completeLength_ms = total_time;
 	maxTime->setText(length_str);
-	m_metadata.length_ms = total_time;
+	_md.length_ms = total_time;
 	songProgress->setEnabled(total_time > 0);
 }
 
@@ -164,14 +167,14 @@ void GUI_Player::setProgressJump(int percent) {
         percent = 0;
     }
 
-    long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
+    long cur_pos_ms = (percent * _md.length_ms) / 100;
     QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
     curTime->setText(curPosString);
 
 	emit sig_seek_rel(percent);
 }
 
-void GUI_Player::setCurrentPosition(quint32 pos_sec) {
+void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
     if (m_completeLength_ms != 0) {
 

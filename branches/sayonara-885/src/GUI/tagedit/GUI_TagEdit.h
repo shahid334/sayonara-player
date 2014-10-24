@@ -60,7 +60,7 @@ public:
 
 	signals:
 		void id3_tags_changed();
-		void id3_tags_changed(MetaDataList&);
+		void id3_tags_changed(const MetaDataList&);
 		void sig_success(bool);
 		void sig_cancelled();
 
@@ -118,7 +118,6 @@ public:
 		void show_metadata();
 		void save_metadata();
 		void check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist);
-
 
 		void change_mp3_file(MetaData& md);
 		bool store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists);

@@ -93,7 +93,7 @@ void Playlists::load_single_playlist(int id) {
 
 
 
-void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md) {
+void Playlists::save_playlist_as_custom(int id, const MetaDataList& vec_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
     qDebug() << "save " << vec_md.size() << " files to " << id;
@@ -113,7 +113,7 @@ void Playlists::save_playlist_as_custom(int id, MetaDataList& vec_md) {
 
 
 
-void Playlists::save_playlist_as_custom(QString name, MetaDataList& vec_md) {
+void Playlists::save_playlist_as_custom(QString name, const MetaDataList& vec_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 

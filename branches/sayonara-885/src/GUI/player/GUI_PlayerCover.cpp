@@ -41,39 +41,32 @@ void GUI_Player::set_std_cover(bool radio) {
 
     albumCover->setIcon(icon);
 	albumCover->repaint();
-
 }
 
 
 void GUI_Player::fetch_cover() {
 
-	set_std_cover( (m_metadata.radio_mode != RadioModeOff) );
+	set_std_cover( (_md.radio_mode != RadioModeOff) );
 
-	if(m_metadata.album_id > -1) {
-		m_cov_lookup->fetch_album_cover_by_id(m_metadata.album_id);
+	if(_md.album_id > -1) {
+		m_cov_lookup->fetch_album_cover_by_id(_md.album_id);
 	}
 
 
 	else{
-		m_cov_lookup->fetch_album_cover_standard(m_metadata.artist, m_metadata.album);
+		m_cov_lookup->fetch_album_cover_standard(_md.artist, _md.album);
 	}
 }
 
 
 void GUI_Player::coverClicked() {
 
-   if(m_metadata.radio_mode == RadioModeStation) {
-
-		m_alternate_covers->start( m_metadata.album, m_metadata.title );
-    }
-
-    else if(m_metadata.album_id >= 0) {
-       m_alternate_covers->start(m_metadata.album_id);
+	if(_md.album_id >= 0) {
+	   m_alternate_covers->start(_md.album_id);
     }
 
     else {
-
-        m_alternate_covers->start( m_metadata.album, m_metadata.artist);
+		m_alternate_covers->start( _md.album, _md.artist);
     }
 
     this->setFocus();
@@ -84,19 +77,18 @@ void GUI_Player::sl_alternate_cover_available(const CoverLocation& lc) {
 
 	Q_UNUSED(lc);
 
+	if(!m_metadata_available) return;
 	fetch_cover();
 }
 
 
 void GUI_Player::sl_no_cover_available() {
 
-   set_std_cover( (m_metadata.radio_mode != RadioModeOff) );
+   set_std_cover( (_md.radio_mode != RadioModeOff) );
 }
 
 
-// public slot
-// cover was found by CoverLookup
-void GUI_Player::cover_found(const CoverLocation& cl) {
+void GUI_Player::sl_cover_found(const CoverLocation& cl) {
 
 	QIcon icon(cl.cover_path);
 

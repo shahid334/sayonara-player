@@ -45,7 +45,8 @@ PlaylistHandler::~PlaylistHandler() {
 }
 
 void PlaylistHandler::playlist_changed(const MetaDataList& v_md, int cur_idx) {
-    emit sig_playlist_created(v_md, cur_idx, _playlist->get_type());
+
+	emit sig_playlist_created(v_md, cur_idx, _playlist->get_type());
     _settings->setPlaylist(_playlist->toStringList());
 }
 
@@ -67,7 +68,7 @@ void PlaylistHandler::no_track_to_play() {
 PlaylistType PlaylistHandler::determine_playlist_type(const MetaDataList& v_md) {
 
     if(v_md.size() == 0) return PlaylistTypeStd;
-    MetaData md = v_md[0];
+   const MetaData& md = v_md[0];
 
     switch(md.radio_mode) {
 
@@ -114,7 +115,7 @@ bool PlaylistHandler::new_playlist(PlaylistType type) {
 }
 
 // create a playlist, where metadata is already available
-void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing) {
+void PlaylistHandler::psl_createPlaylist(const MetaDataList& v_md, bool start_playing) {
 
     PlaylistType type = determine_playlist_type(v_md);
 
@@ -138,7 +139,7 @@ void PlaylistHandler::psl_createPlaylist(MetaDataList& v_md, bool start_playing)
 
 // create a new playlist, where only filepaths are given
 // Load Folder, Load File...
-void PlaylistHandler::psl_createPlaylist(QStringList& pathlist, bool start_playing) {
+void PlaylistHandler::psl_createPlaylist(const QStringList& pathlist, bool start_playing) {
 
     if(start_playing) {
         _state = PlaylistPlay;
@@ -154,7 +155,7 @@ void PlaylistHandler::psl_createPlaylist(QStringList& pathlist, bool start_playi
 
 
 // create playlist from saved custom playlist
-void PlaylistHandler::psl_createPlaylist(CustomPlaylist& pl, bool start_playing) {
+void PlaylistHandler::psl_createPlaylist(const CustomPlaylist& pl, bool start_playing) {
 
     if(start_playing){
         _state = PlaylistPlay;
@@ -181,18 +182,16 @@ void PlaylistHandler::psl_save_playlist(QString filename, bool relative) {
 // --> custom playlists
 void PlaylistHandler::psl_prepare_playlist_for_save(int id) {
 
-    MetaDataList v_md;
-    bool may_save = _playlist->request_playlist_for_collection(v_md);
-    if(may_save){
+    MetaDataList v_md = _playlist->get_playlist();
+    if(v_md.size() > 0){
         emit sig_playlist_prepared(id, v_md);
     }
 }
 
 void PlaylistHandler::psl_prepare_playlist_for_save(QString name) {
 
-    MetaDataList v_md;
-    bool may_save = _playlist->request_playlist_for_collection(v_md);
-    if(may_save){
+    MetaDataList v_md = _playlist->get_playlist();
+    if(v_md.size() > 0){
         emit sig_playlist_prepared(name, v_md);
     }
 }
@@ -202,7 +201,7 @@ void PlaylistHandler::psl_next() {
 }
 
 
-void PlaylistHandler::psl_track_time_changed(const MetaData& md) {
+void PlaylistHandler::psl_dur_changed(const MetaData& md) {
 
     int idx;
 
@@ -221,7 +220,7 @@ void PlaylistHandler::psl_track_time_changed(const MetaData& md) {
 }
 
 
-void PlaylistHandler::psl_id3_tags_changed(MetaDataList& new_meta_data) {
+void PlaylistHandler::psl_id3_tags_changed(const MetaDataList& new_meta_data) {
     _playlist->metadata_changed(new_meta_data);
 }
 
@@ -237,8 +236,7 @@ void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
 	srand ( time(NULL) );
 
 	int cur_artist_idx = 0;
-
-	MetaData md;
+    MetaData md;
 
     bool is_track_already_in = false;
 	do {
@@ -251,7 +249,7 @@ void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
 		for(int rounds=0; rounds < max_rounds; rounds++) {
 
 			int rnd_track = (rand() % vec_tracks.size());
-			md = vec_tracks.at(rnd_track);
+            md = vec_tracks[rnd_track];
 
             // search playlist
             if(_playlist->find_track(md.id) != -1) {
@@ -362,7 +360,7 @@ void PlaylistHandler::psl_play_next(const MetaDataList & v_md) {
     _playlist->insert_tracks(v_md, _playlist->get_cur_track() + 1);
 }
 
-void PlaylistHandler::psl_append_tracks(MetaDataList& v_md) {
+void PlaylistHandler::psl_append_tracks(const MetaDataList& v_md) {
 
     bool empty = _playlist->is_empty();
 

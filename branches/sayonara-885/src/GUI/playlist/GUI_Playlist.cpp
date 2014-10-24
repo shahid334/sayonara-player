@@ -348,7 +348,7 @@ void GUI_Playlist::set_total_time_label() {
     if(n_rows == 1)	playlist_string += tr(" Track - ");
     else playlist_string += tr(" Tracks - ");
 
-    playlist_string += Helper::cvtMsecs2TitleLengthString(_total_msecs, false);
+	playlist_string += Helper::cvtMsecs2TitleLengthString(_total_msecs, true, false);
 
 	lab_totalTime->setText(playlist_string);
 }

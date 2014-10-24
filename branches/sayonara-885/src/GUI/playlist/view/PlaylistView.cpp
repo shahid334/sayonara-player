@@ -130,20 +130,21 @@ void PlaylistView::mouseReleaseEvent(QMouseEvent* event) {
 
     switch (event->button()) {
 
-    case Qt::LeftButton:
+        case Qt::LeftButton:
 
-        if(_qDrag) {
-            delete _qDrag;
-            _qDrag = NULL;
-        }
+            if(_qDrag) {
+                delete _qDrag;
+                _qDrag = NULL;
+            }
 
-        SearchableListView::mouseReleaseEvent(event);
-        event->accept();
+            SearchableListView::mouseReleaseEvent(event);
+            event->accept();
 
-        _drag = false;
-        break;
+            _drag = false;
+            break;
 
-    default: break;
+        default: break;
+
     }
 }
 
@@ -330,7 +331,6 @@ void PlaylistView::clear() {
 
 void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
 
-
     this->set_delegate_max_width(v_md.size());
     _cur_selected_rows.clear();
 
@@ -350,7 +350,6 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
     for(int i=0; i<v_md.size(); i++) {
 		
         MetaData md = v_md[i];
-
         QModelIndex model_idx = _model->index(i, 0);
 
         md.pl_playing = (cur_play_idx == i);

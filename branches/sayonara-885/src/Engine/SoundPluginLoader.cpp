@@ -82,15 +82,13 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 
 		Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 
-
 		if(plugin_eng) {
-			QString name = plugin_eng->getName().toLower();
 			qDebug() << "Found engine " << plugin_eng->getName();
 			_vec_engines.push_back(plugin_eng);
 		}
 
 		else {
-			qDebug() << "Cannot convert object to Engine ";
+			qDebug() << "... but contains no Engine";
 		}
 
 	}

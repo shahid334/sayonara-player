@@ -210,7 +210,7 @@ QString CDatabaseConnector::getPlaylistNameById(int playlist_id) {
 }
 
 
-bool CDatabaseConnector::insertTrackIntoPlaylist(MetaData& md, int playlist_id, int pos) {
+bool CDatabaseConnector::insertTrackIntoPlaylist(const MetaData& md, int playlist_id, int pos) {
 
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);
@@ -293,7 +293,7 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playl
 	// fill playlist
     for(int i=0; i<vec_md.size(); i++) {
 
-		MetaData md = vec_md.at(i);
+        const MetaData& md = vec_md[i];
 		bool success = insertTrackIntoPlaylist(md, playlist_id, i);
 		if( !success ) {
 			qDebug() << "DB: Error during inserting track into playlist.. aborting";
@@ -344,7 +344,7 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_
 	// fill playlist
     for(int i=0; i<vec_md.size(); i++) {
 
-		MetaData md = vec_md.at(i);
+        const MetaData& md = vec_md.at(i);
 		bool success = insertTrackIntoPlaylist(md, playlist_id, i);
 		if( !success ) {
 			qDebug() << "DB: Error during inserting track into playlist.. aborting";

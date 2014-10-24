@@ -88,11 +88,11 @@ void GUI_Stream::listen_clicked() {
 	}
 
 	else{
-        qDebug() << "Emit: " << _cur_station_name << ": " << _cur_station_adress;
 		url = _cur_station_adress;
 		name = _cur_station_name;
 	}
 
+    url = url.trimmed();
 	if(url.size() > 5) {
 
         play_stream(url, name);
@@ -115,7 +115,8 @@ void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations) {
 
 	_stations[""] = "";
 
-	for(QMap<QString, QString>::iterator it = _stations.begin(); it != _stations.end(); it++) {
+    QMap<QString, QString>::iterator it;
+    for(it = _stations.begin(); it != _stations.end(); it++) {
 		combo_stream->addItem(it.key(), it.value());
 	}
 
@@ -147,7 +148,6 @@ void GUI_Stream::combo_index_changed(int idx) {
 		le_url->setText("");
 	}
 
-
 	btn_delete->setEnabled(idx > 0);
 	btn_save->setEnabled(false);
 	btn_listen->setEnabled(le_url->text().size() > 5);
@@ -161,21 +161,21 @@ void GUI_Stream::combo_text_changed(const QString& text) {
     bool name_there = false;
 	for(int i=0; i<combo_stream->count(); i++) {
 		QString str = combo_stream->itemText(i);
-        if(!str.compare(text, Qt::CaseSensitive)) {
+        if( str.compare(text) == 0) {
             name_there = true;
             break;
         }
     }
 
 	btn_delete->setEnabled(name_there);
-	btn_save->setEnabled((!name_there) && (text.size() > 0));
+    btn_save->setEnabled(text.size() > 0);
 	btn_listen->setEnabled(le_url->text().size() > 5);
 	combo_stream->setToolTip("");
 }
 
 void GUI_Stream::url_text_changed(const QString& text) {
 
-	QString key = _stations.key(text);
+    QString key = _stations.key(text.trimmed());
 
 	if(! key.isEmpty() ) {
 
@@ -206,7 +206,6 @@ void GUI_Stream::url_text_changed(const QString& text) {
 			_cur_station = -1;
 		}
 	}
-
 }
 
 
@@ -249,6 +248,13 @@ void GUI_Stream::save_clicked() {
 		QMap<QString, QString> map;
 		if(db->getAllStreams(map)) {
 			setup_stations(map);
+            for(int i=0; i<combo_stream->count(); i++){
+                QString s = combo_stream->itemText(i);
+                if(s.compare(name) == 0){
+                    combo_stream->setCurrentIndex(i);
+                    break;
+                }
+            }
 		}
 	}
 
@@ -263,25 +269,33 @@ void GUI_Stream::play_stream(QString url, QString name) {
 
     MetaDataList v_md;
 
-    // playlist radio
-    qDebug() << "is playlist file? " << url << ": " << Helper::is_playlistfile(url);
     if(Helper::is_playlistfile(url)) {
         MetaDataList v_md_tmp;
         if(PlaylistParser::parse_playlist(url, v_md_tmp) > 0) {
 
             foreach(MetaData md, v_md_tmp) {
 
-                if(name.size() > 0) md.title = name;
-                else md.title = "Radio Station";
+                if(name.isEmpty()){
+                    md.album = url;
+                    if(md.title.isEmpty()){
+                        md.title = tr("Radio station");
+                    }
+                }
 
-                if(md.artist.size() == 0)
+                else{
+                    md.album = name;
+                    if(md.title.isEmpty()){
+                        md.title = name;
+                    }
+                }
+
+                if(md.artist.isEmpty()){
                     md.artist = url;
-
-                if(md.album.size() == 0)
-                    md.album = md.title;
+                }
 
                 md.radio_mode = RadioModeStation;
                 v_md.push_back(md);
+                qDebug() << "Url = " << md.filepath;
             }
         }
     }
@@ -291,18 +305,22 @@ void GUI_Stream::play_stream(QString url, QString name) {
 
         MetaData md;
 
-        if(name.size() > 0) md.title = name;
-        else md.title = "Radio Station";
+        if(name.isEmpty()){
+            md.title = tr("Radio station");
+            md.album = url;
+        }
+
+        else{
+            md.title = name;
+            md.album = name;
+        }
 
         md.artist = url;
-        md.album = md.title;
         md.filepath = url;
         md.radio_mode = RadioModeStation;
 
         v_md.push_back(md);
     }
-
-    if(v_md.size() == 0) return;
 
     emit sig_create_playlist(v_md, true);
     emit sig_play_track(0, 0, true);

@@ -237,7 +237,7 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 	}
 }
 
-void GUI_Player::psl_libpath_changed(QString & dir) {
+void GUI_Player::psl_libpath_changed(const QString & dir) {
 
     if (dir.size() > 0 && ui_libpath) {
 

@@ -243,8 +243,3 @@ void StdPlaylist::save_for_reload() {
 void StdPlaylist::save_to_m3u_file(QString filepath, bool relative) {
     PlaylistParser::save_playlist(filepath, _v_md, relative);
 }
-
-bool StdPlaylist::request_playlist_for_collection(MetaDataList& lst) {
-    lst = _v_md;
-    return true;
-}

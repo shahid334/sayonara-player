@@ -345,7 +345,7 @@ void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list) {
     MetaDataList v_md;
 
     foreach(int idx,idx_list) {
-        MetaData md = _vec_md[idx];
+        const MetaData& md = _vec_md[idx];
         v_md.push_back(md);
         _selected_tracks << md.id;
     }
@@ -354,7 +354,7 @@ void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list) {
 }
 
 
-void CLibraryBase::psl_track_time_changed(const MetaData& md) {
+void CLibraryBase::psl_dur_changed(const MetaData& md) {
 
     if(md.id < 0) return;
 

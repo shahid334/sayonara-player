@@ -79,10 +79,15 @@ MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) : QObject(p
 		}
 
 		// paths
-		QString filename, dir;
-		Helper::split_filename(md.filepath, dir, filename);
-		if( !_paths.contains(dir)){
-			_paths << dir;
+		if(!Helper::is_www(md.filepath)){
+			QString filename, dir;
+			Helper::split_filename(md.filepath, dir, filename);
+			if( !_paths.contains(dir)){
+				_paths << dir;
+			}
+		}
+		else{
+			_paths << md.filepath;
 		}
 	}
 
@@ -116,7 +121,7 @@ void MetaDataInfo::set_header(){}
 void MetaDataInfo::set_header(const MetaDataList& lst){
 
 	if(lst.size() == 1){
-		MetaData md = lst[0];
+        const MetaData& md = lst[0];
 		_header = md.title;
 	}
 
@@ -146,7 +151,7 @@ void MetaDataInfo::set_cover_location(){}
 void MetaDataInfo::set_cover_location(const MetaDataList& lst){
 
 	if(lst.size() == 1){
-		MetaData md = lst[0];
+        const MetaData& md = lst[0];
 		_cover_location = CoverLocation::get_cover_location(md);
 	}
 
@@ -296,6 +301,7 @@ QString MetaDataInfo::get_paths_as_string(){
 	QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
 	QString str;
 	foreach(QString path, _paths){
+
 		QString name = path;
 		name.replace(lib_path, "...");
 

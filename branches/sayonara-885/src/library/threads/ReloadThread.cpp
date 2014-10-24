@@ -156,7 +156,7 @@ void ReloadThread::run() {
 
 	// find orphaned tracks in library && delete them
     for(int i=0; i<v_metadata.size(); i++) {
-		MetaData md = v_metadata[i];
+        const MetaData& md = v_metadata[i];
 		if(!Helper::checkTrack(md)) {
 			v_to_delete.push_back(md);
 		}

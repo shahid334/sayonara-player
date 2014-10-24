@@ -59,6 +59,8 @@ enum InfoDialogMode {
 class GUI_InfoDialog : public QDialog, private Ui::InfoDialog{
 Q_OBJECT
 
+signals:
+	void sig_cover_changed(const CoverLocation&);
 
 public slots:
 

@@ -92,7 +92,7 @@ public:
     virtual void replace_track(int idx, const MetaData& md);
     virtual void save_for_reload()=0;
     virtual void save_to_m3u_file(QString filepath, bool relative)=0;
-    virtual bool request_playlist_for_collection(MetaDataList& lst)=0;
+    virtual MetaDataList get_playlist(){return _v_md;}
 
     virtual void selection_changed(const QList<int>&);
 

@@ -152,7 +152,7 @@ void GUI_TrayIcon::timer_timed_out()
 }
 
 
-void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
+void GUI_TrayIcon::show_notification (const MetaData& md) {
     _md = md;
     _md_set = true;
     if(m_notification_active) {
@@ -174,7 +174,7 @@ void GUI_TrayIcon::songChangedMessage (const MetaData& md) {
 
 
 void GUI_TrayIcon::trackChanged(const MetaData& md) {
-    songChangedMessage(md);
+    show_notification(md);
 }
 
 void  GUI_TrayIcon::set_timeout(int timeout_ms) {

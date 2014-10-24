@@ -39,6 +39,7 @@
 #include <QPixmap>
 #include <QDir>
 #include <QMap>
+#include <QFileSystemWatcher>
 
 
 
@@ -98,6 +99,8 @@ private:
     CDatabaseConnector* _db;
 
 	QList<CoverFetchThread*> _cfts;
+	QFileSystemWatcher* _fsw;
+
 
 	void start_new_thread(const CoverLocation& cl);
 };

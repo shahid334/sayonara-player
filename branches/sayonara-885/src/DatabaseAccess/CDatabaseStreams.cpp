@@ -54,7 +54,7 @@ bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams) {
 	else{
 		while(q.next()) {
 			QString name = q.value(0).toString();
-			QString url = q.value(1).toString();
+            QString url = q.value(1).toString().trimmed();
 
 			streams[name] = url;
 		}
@@ -81,8 +81,6 @@ bool CDatabaseConnector::deleteStream(QString name) {
 
 	return true;
 }
-
-
 
 
 bool CDatabaseConnector::addStream(QString name, QString url) {

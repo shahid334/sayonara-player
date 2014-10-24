@@ -48,6 +48,7 @@ MetaData::MetaData() : LibraryItem() {
         pl_dragged = false;
 
         is_disabled = false;
+
 }
 
 MetaData::MetaData(const MetaData & md){
@@ -130,11 +131,21 @@ bool MetaData::is_equal(const MetaData& md) const {
 
 MetaDataList::MetaDataList() : 
     QVector<MetaData>()
-	{ }
+{
+    _cur_played_track = -1;
+}
 
 MetaDataList::MetaDataList(int n_elems) : 
     QVector<MetaData>(n_elems)
-	{ }
+{
+    _cur_played_track = -1;
+}
+
+MetaDataList::MetaDataList(const MetaDataList& lst) :
+    QVector(lst)
+{
+    _cur_played_track = lst._cur_played_track;
+}
 
 MetaDataList::~MetaDataList() {
 
@@ -168,10 +179,12 @@ bool MetaDataList::contains(const MetaData& md) const {
 
 int MetaDataList::findTrack(int id) const {
 
+	if(id == -1) return -1;
+
     MetaDataList::const_iterator it;
     int idx = 0;
     for(it = this->begin(); it != this->end(); it++, idx++) {
-        if(it->id == id) {
+		if(it->id == id) {
             return idx;
         }
     }
@@ -191,7 +204,7 @@ int MetaDataList::findTrack(const QString& path) const {
 #else
         if(it->filepath.compare(path, Qt::CaseInsensitive) == 0){
 #endif
-                return idx;
+            return idx;
         }
     }
 

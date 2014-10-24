@@ -72,8 +72,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
 	 if (role == Qt::DisplayRole){
 
-		 MetaData md = _tracklist.at(row);
-		 QString str_disc;
+         const MetaData& md = _tracklist.at(row);
 
          switch(idx_col){
 			 case COL_TRACK_NUM:
