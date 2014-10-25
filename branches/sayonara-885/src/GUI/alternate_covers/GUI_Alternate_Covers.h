@@ -74,6 +74,7 @@ public:
 		void cl_finished(bool);
 
 	private:
+
 		int 				_cur_idx;
 		QString				_last_path;
 		CoverLocation		_cover_location;
@@ -85,7 +86,7 @@ public:
 
         CoverLookupAlternative*        _cl_alternative;
 
-        void update_model();
+        void reset_model();
 		void connect_and_start();
 		void delete_all_files();
 

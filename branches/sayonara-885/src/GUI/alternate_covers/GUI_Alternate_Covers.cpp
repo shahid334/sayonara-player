@@ -104,7 +104,7 @@ void GUI_Alternate_Covers::language_changed() {
 
 void GUI_Alternate_Covers::connect_and_start() {
 
-	update_model();
+    reset_model();
 	delete_all_files();
 
 	connect(_cl_alternative, SIGNAL(sig_cover_found(const CoverLocation&)), this, SLOT(cl_new_cover(const CoverLocation&)));
@@ -113,6 +113,7 @@ void GUI_Alternate_Covers::connect_and_start() {
 	_is_searching = true;
 
 	btn_search->setText(tr("Stop"));
+    btn_save->setEnabled(false);
 
 	_cl_alternative->start();
 
@@ -271,13 +272,15 @@ void GUI_Alternate_Covers::cl_new_cover(const CoverLocation& cl) {
 
 	_filelist << cl;
 
-    RowColumn rc = _model->cvt_2_row_col(_filelist.size() -1 );
-    btn_save->setEnabled( _model->is_valid(rc.row, rc.col) );
+    RowColumn rc = _model->cvt_2_row_col( _filelist.size() - 1 );
+    RowColumn cur_idx_rc = _model->cvt_2_row_col( _cur_idx );
+    btn_save->setEnabled( _model->is_valid(cur_idx_rc.row, cur_idx_rc.col) );
 
 	model_idx = _model->index(rc.row, rc.col);
 	var.setValue(cl);
 
 	_model->setData(model_idx, var);
+    lab_status->setText(QString::number(_filelist.size()) + tr(" covers found"));
 }
 
 
@@ -301,7 +304,7 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx) {
 }
 
 
-void GUI_Alternate_Covers::update_model() {
+void GUI_Alternate_Covers::reset_model() {
     _model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, _model->rowCount());
 
@@ -314,6 +317,8 @@ void GUI_Alternate_Covers::update_model() {
 
         }
     }
+
+    lab_status->setText("");
 }
 
 
@@ -343,7 +348,7 @@ void GUI_Alternate_Covers::open_file_dialog() {
 
 	if(lst.size() == 0) return;
 
-    update_model();
+    reset_model();
 
 	int idx = 0;
     foreach(QString path, lst) {
