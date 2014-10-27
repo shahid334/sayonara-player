@@ -269,8 +269,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	_initialized = true;
 
 	_setting_thread->start();
-
-
 }
 
 Application::~Application() {
@@ -489,6 +487,7 @@ void Application::init_connections() {
     CONNECT (ui_style_settings, sig_style_update(),             ui_level, psl_style_update());
 
     bool is_socket_active = set->getSocketActivated();
+
     if(is_socket_active) {
         CONNECT (remote_socket, sig_play(),		playlist_handler,			psl_play());
         CONNECT (remote_socket, sig_next(),		playlist_handler,			psl_forward());
@@ -496,9 +495,15 @@ void Application::init_connections() {
         CONNECT (remote_socket, sig_stop(),		playlist_handler,			psl_stop());
         CONNECT (remote_socket, sig_pause(),		listen,				pause());
         CONNECT (remote_socket, sig_setVolume(int),player,			setVolume(int));
+		CONNECT (remote_socket, sig_new_fd(int), listen, psl_set_fd(int));
+
 
         remote_socket->start();
+
+
     }
+
+	CONNECT (listen, sig_data(uchar*, quint64), remote_socket, new_data(uchar*, quint64));
 
     connect_languages();
 

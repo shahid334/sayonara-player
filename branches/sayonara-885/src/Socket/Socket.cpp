@@ -46,6 +46,7 @@ Socket::Socket() {
 	_srv_socket = -1;
 	_client_socket = -1;
 	_connected = false;
+	_idx = 0;
 
 
 }
@@ -69,9 +70,10 @@ void Socket::run() {
 		}
 
 		int err = -1;
+		emit sig_new_fd(_client_socket);
 
 		while( err != 0 ) {
-			err = recv(_client_socket, msg, 1024, 0);
+			/*err = recv(_client_socket, msg, 1024, 0);
 			qDebug() << "error on port " << _client_socket << " Port = " << _port;
 			if(err != -1) {
 
@@ -105,7 +107,7 @@ void Socket::run() {
 				}
 			}
 
-			if( err == 0) break;
+			if( err == 0) break;*/
 
 			usleep(100000);
 		}
@@ -134,12 +136,13 @@ bool Socket::sock_connect() {
 		usleep(10000);
 	}
 
-	printf("bind successful: port = %d\n", _port);
+	qDebug() << "bind successful: port = " << _port;
 
 	listen(_srv_socket, 3);
 
 	while(_client_socket == -1) {
-		_client_socket = accept(_srv_socket, (struct sockaddr*) NULL, NULL);
+		_client_socket = accept(_srv_socket, NULL, NULL);
+		usleep(10000);
 	}
 
 	_connected = true;
@@ -157,6 +160,35 @@ void Socket::sock_disconnect() {
 	_connected = false;
 	_port = 1234;
 
+}
+
+void Socket::new_data(uchar* data, quint64 size){
+
+	//qDebug() << "Socket: new data  " << size;
+	ssize_t n_bytes = 0;
+	if(_client_socket < 0) return;
+
+	int free_bytes = BUFFER_SIZE - _idx;
+
+	if(size >= free_bytes){
+		memcpy(buffer + _idx, data, free_bytes);
+		n_bytes = write(_client_socket, buffer, BUFFER_SIZE);
+		qDebug() << "Sent n_bytes: " << n_bytes;
+		_idx = 0;
+	}
+
+	else{
+		memcpy(buffer + _idx, data, size);
+		_idx += size;
+	}
+
+
+	if(size > free_bytes){
+		int bytes2go = size - free_bytes;
+
+		memcpy(buffer, data + free_bytes, bytes2go);
+		_idx = bytes2go;
+	}
 }
 
 

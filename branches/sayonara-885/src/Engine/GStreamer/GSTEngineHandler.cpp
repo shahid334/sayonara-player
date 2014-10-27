@@ -174,6 +174,11 @@ void GSTEngineHandler::psl_set_gapless(bool b) {
 	_cur_engine->psl_set_gapless(b);
 }
 
+void GSTEngineHandler::psl_set_fd(int fd){
+	if(!_cur_engine) return;
+	_cur_engine->psl_set_fd(fd);
+}
+
 void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
 	if(_md.length_ms == v) return;
 
@@ -217,6 +222,8 @@ void GSTEngineHandler::sl_bitrate_changed(qint32 v) {
 	emit sig_bitrate_changed(v);
 }
 
+
+
 bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_engine) {
 
 	if(!old_engine && !new_engine) return false;
@@ -235,6 +242,7 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 		disconnect(old_engine, SIGNAL(sig_level(float, float)), this, SLOT(sl_level(float, float)));
 		disconnect(old_engine, SIGNAL(sig_spectrum(QList<float>&)), this, SLOT(sl_spectrum(QList<float>&)));
 		disconnect(old_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
+		disconnect(old_engine, SIGNAL(sig_data(uchar*,quint64)), this, SLOT(new_data(uchar*,quint64)));
 	}
 
 	if(new_engine) {
@@ -250,6 +258,7 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 		connect(new_engine, SIGNAL(sig_level(float, float)), this, SLOT(sl_level(float, float)));
 		connect(new_engine, SIGNAL(sig_spectrum(QList<float>&)), this, SLOT(sl_spectrum(QList<float>&)));
 		connect(new_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
+		connect(new_engine, SIGNAL(sig_data(uchar*,quint64)), this, SLOT(new_data(uchar*,quint64)));
 	}
 
 	return true;

@@ -119,6 +119,9 @@ CoverLocation CoverLocation::get_cover_location(const Artist& artist) {
 
 
 CoverLocation CoverLocation::get_cover_location(const QString& artist) {
+
+	if(artist.isEmpty()) return getInvalidLocation();
+
 	QString cover_dir = get_cover_directory();
 	CoverLocation ret;
 
@@ -131,6 +134,7 @@ CoverLocation CoverLocation::get_cover_location(const QString& artist) {
 
 	ret.cover_path = target_file;
 	ret.google_url = Helper::calc_google_artist_adress(artist);
+	ret.valid = true;
 
 	return ret;
 }

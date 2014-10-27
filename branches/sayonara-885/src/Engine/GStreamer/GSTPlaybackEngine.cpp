@@ -109,6 +109,7 @@ void GSTPlaybackEngine::init() {
 
 	connect(_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
+	connect(_pipeline, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 
 	_show_level = false;
 	_show_spectrum = false;
@@ -431,6 +432,8 @@ void GSTPlaybackEngine::update_duration(quint64 duration_ms) {
 		duration_ms = _pipeline->get_duration_ms();
 	}
 
+	if(duration_ms / 1000 == 0) return;
+
 	if(duration_ms / 1000 == _md.length_ms / 1000) return;
 
 	_md.length_ms = duration_ms;
@@ -526,9 +529,11 @@ void GSTPlaybackEngine::psl_set_gapless(bool b) {
 			_other_pipeline = new GSTPlaybackPipeline(this);
 			connect(_other_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 			connect(_other_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
+			connect(_other_pipeline, SIGNAL(sig_data(uchar*,  quint64)), this, SLOT(new_data(uchar*,quint64)));
 		}
 
 		_other_pipeline->set_volume(_pipeline->get_volume());
+
 		_may_start_timer = true;
 		_gapless = true;
 	}
@@ -546,4 +551,11 @@ void  GSTPlaybackEngine::psl_set_speed(float f) {
     if(_other_pipeline){
         _other_pipeline->set_speed(f);
     }
+}
+
+void GSTPlaybackEngine::psl_set_fd(int fd){
+	_pipeline->set_fd(fd);
+	if(_other_pipeline){
+		_other_pipeline->set_fd(fd);
+	}
 }

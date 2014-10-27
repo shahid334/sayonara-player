@@ -36,6 +36,7 @@ public:
 	virtual ~GSTPlaybackPipeline();
 
 	bool set_uri(gchar* uri);
+	void set_fd(int fd);
 
 public slots:
 
@@ -57,6 +58,8 @@ public slots:
 
 	void start_timer(qint64 ms);
 	void set_speed(float f);
+
+
 
 
 private:
@@ -81,14 +84,20 @@ private:
 
 	GstPadTemplate* _tee_src_pad_template;
 
-	GstElement* _level_audio_convert, *_spectrum_audio_convert;
+	GstElement* _level_audio_convert, *_spectrum_audio_convert, *_lame_audio_convert;
 	GstElement* _level, *_spectrum;
 
-	GstPad*     _level_pad, *_spectrum_pad;
-	GstPad*     _tee_level_pad, *_tee_spectrum_pad;
+	GstPad*     _level_pad, *_spectrum_pad, *_lame_pad;
+	GstPad*     _tee_level_pad, *_tee_spectrum_pad, *_tee_lame_pad;
 
 	GstElement* _level_sink, *_spectrum_sink;
-	GstElement* _level_queue, *_spectrum_queue;
+	GstElement* _level_queue, *_spectrum_queue, *_lame_queue;
+
+	GstElement* _lame;
+	GstElement* _resampler;
+	GstElement* _xingheader;
+	GstElement* _id3mux;
+	GstElement* _app_sink;
 
 
 	GstElement* _tee;

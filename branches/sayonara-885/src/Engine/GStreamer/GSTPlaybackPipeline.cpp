@@ -21,6 +21,7 @@
 #include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
 #include "HelperStructs/globals.h"
+#include <gst/app/gstappsink.h>
 
 
 GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
@@ -66,9 +67,8 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		_level_queue = gst_element_factory_make("queue", "level_queue");
 		_spectrum_queue = gst_element_factory_make("queue", "spectrum_queue");
 
-		_level_sink = gst_element_factory_make("fakesink", "level_sink");
+		_level_sink = gst_element_factory_make("tcpclientsink", "level_sink");
 		_spectrum_sink = gst_element_factory_make("fakesink", "spectrum_sink");
-
 
 		if(!_test_and_error(_bus, "Engine: Something went wrong with the bus")) break;
 		if(!_test_and_error(_audio_src, "Engine: Source creation fail")) break;
@@ -83,6 +83,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		if(!_test_and_error(_level_audio_convert, "Engine: Level converter fail")) break;
 		if(!_test_and_error(_spectrum_audio_convert, "Engine: Spectrum converter fail")) break;
 
+
 		gst_object_ref(_audio_src);
 
 		gst_bin_add_many(GST_BIN(tmp_pipeline),
@@ -90,7 +91,9 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 
 			_eq_queue, _volume, _audio_sink,
 			_level_queue, _level_audio_convert, _level, _level_sink,
-			_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
+			_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink,
+
+		NULL);
 
 		success = gst_element_link_many(_level_queue, _level_sink, NULL);
 		_test_and_error_bool(success, "Engine: Cannot link Level pipeline");
@@ -132,6 +135,8 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		_spectrum_pad = gst_element_get_static_pad(_spectrum_queue, "sink");
 			if(!_test_and_error(_spectrum_pad, "Engine: Spectrum Pad NULL")) break;
 
+
+
 		s = gst_pad_link (tee_eq_pad, eq_pad);
 			_test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee eq with eq");
 		s = gst_pad_link (_tee_level_pad, _level_pad);
@@ -143,9 +148,11 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		g_object_set (_level_queue, "silent", TRUE, NULL);
 		g_object_set(_spectrum_queue, "silent", TRUE, NULL);
 
+
 		guint64 interval = 30000000;
 		gint threshold = - crop_spectrum_at;
 
+		g_object_set(G_OBJECT(_level_sink), "host", "127.0.0.1", "port", 5000, NULL);
 		g_object_set (G_OBJECT (_level),
 					  "message", TRUE,
 					  "interval", interval,
@@ -159,6 +166,13 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 					  "message-magnitude", TRUE,
 					  "multi-channel", FALSE,
 					  NULL);
+
+		g_object_set(_lame,
+					 "cbr", true,
+					 "bitrate", 192,
+					 "target", 1,
+					 "encoding-engine-quality", 2,
+					 NULL);
 
 		 /* run synced and not as fast as we can */
 		g_object_set (G_OBJECT (_level_sink), "sync", TRUE, NULL);
@@ -394,6 +408,25 @@ bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 	gst_element_set_state(_pipeline, GST_STATE_PAUSED);
 
 	return true;
+}
+
+void GSTPlaybackPipeline::set_fd(int fd){
+	qDebug() << "New file descriptor";
+
+	/*gst_bin_add_many(GST_BIN(_pipeline), _lame_queue, _resampler, _lame, _xingheader, _app_sink, NULL);
+
+
+	_tee_lame_pad = gst_element_request_pad(_tee, _tee_src_pad_template, NULL, NULL);
+		if(!_test_and_error(_tee_lame_pad, "Engine: Tee-Lame Pad NULL")) return;
+	_lame_pad = gst_element_get_static_pad(_lame_queue, "sink");
+		if(!_test_and_error(_lame_pad, "Engine: Lame Pad NULL")) return;
+
+	bool s = gst_pad_link (_tee_lame_pad, _lame_pad);
+		_test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee with lame");
+
+	g_object_set(_lame_queue, "silent", TRUE, NULL);*/
+	g_object_set(G_OBJECT(_level_sink), "fd", fd, NULL);
+
 }
 
 

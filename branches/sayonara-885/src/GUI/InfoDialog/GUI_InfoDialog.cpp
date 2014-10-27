@@ -238,10 +238,6 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 }
 
 
-void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
-
-	_cover_lookup->fetch_cover(cover_location);
-}
 
 
 void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
@@ -301,9 +297,7 @@ void GUI_InfoDialog::show(int tab) {
 		tab_widget->setTabEnabled(TAB_LYRICS, false);
 	}
 
-    qDebug() << "Show tab " << tab;
-
-    tab_widget->setCurrentIndex(tab);
+	tab_widget->setCurrentIndex(tab);
     psl_tab_index_changed(tab);
 }
 
@@ -319,6 +313,12 @@ void GUI_InfoDialog::psl_id3_success(bool b) {
 				tr("Error"),
 				tr("ID3 tags could not be changed"));
 	}
+}
+
+
+void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
+
+	_cover_lookup->fetch_cover(cover_location);
 }
 
 

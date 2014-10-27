@@ -29,6 +29,8 @@
 #include <QThread>
 #include <netinet/in.h>
 
+#define BUFFER_SIZE 1024
+
 class Socket : public QThread {
 
 	Q_OBJECT
@@ -43,10 +45,14 @@ signals:
 	void sig_prev();
 	void sig_next();
 	void sig_setVolume(int);
+	void sig_new_fd(int);
 
 public:
 	Socket();
 	virtual ~Socket();
+
+public slots:
+	void new_data(uchar* data, quint64 size);
 
 private:
 	int		_srv_socket;
@@ -55,9 +61,14 @@ private:
 	int		_port_to;
 	bool 	_connected;
 	struct sockaddr_in _srv_info;
+	struct sockaddr_in _cli_info;
 
 	bool sock_connect();
 	void sock_disconnect();
+
+
+	uchar buffer[BUFFER_SIZE];
+	int _idx;
 
 };
 

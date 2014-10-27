@@ -65,6 +65,7 @@ class GSTAbstractPipeline : public QObject {
 		void sig_finished();
 		void sig_about_to_finish(qint64);
 		void sig_pos_changed_ms(qint64);
+		void sig_data(uchar* data, quint64 size);
 
 
 	public slots:
@@ -85,6 +86,8 @@ class GSTAbstractPipeline : public QObject {
         virtual void		refresh_cur_position(gint64 cur_pos_ms, gint64 duration_ms);
 		virtual void		finished();
 		virtual void		check_about_to_finish(qint64 difference);
+		virtual void		set_data(guint8* data, gsize size);
+		virtual void		set_fd(int fd);
 
 
 		virtual bool set_uri(gchar* uri);
@@ -96,6 +99,7 @@ namespace PipelineCallbacks {
 
 	void pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data);
 	gboolean show_position(gpointer data);
+	void new_buffer(GstElement *sink, void *data);
 
 }
 

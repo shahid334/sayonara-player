@@ -42,6 +42,7 @@ public:
 	void fill_engines(const vector<Engine*>& engines);
 	void init();
 
+
 public slots:
 
 	void play();
@@ -74,6 +75,7 @@ public slots:
 	void end_convert();
 
 	void psl_set_speed(float f);
+	void psl_set_fd(int fd);
 
 
 private slots:

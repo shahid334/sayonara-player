@@ -26,6 +26,7 @@
 #include "HelperStructs/MetaData.h"
 #include <QObject>
 #include <QStringList>
+#include "Socket/Socket.h"
 
 #include <vector>
 
@@ -91,6 +92,7 @@ public:
 
 
 
+
 signals:
 	void sig_dur_changed_ms(quint64);
 	void sig_dur_changed_s(quint32);
@@ -105,6 +107,7 @@ signals:
     void sig_spectrum(QList<float>&);
 	void sig_bitrate_changed(qint32);
     void sig_download_progress(int);
+	void sig_data(uchar* data, quint64 size);
 
 
 private slots:
@@ -116,6 +119,14 @@ private slots:
         _cur_pos_ms = ms;
         emit sig_pos_changed_ms(ms);
     }
+
+protected slots:
+	virtual void new_data(uchar* data, quint64 size){
+		//qDebug() << "Engine: new data " << size;
+		emit sig_data(data, size);
+
+	}
+
 
 
 
@@ -146,6 +157,8 @@ public slots:
 	virtual void start_convert(){}
 	virtual void end_convert(){}
 	virtual void psl_set_speed(float f){ Q_UNUSED(f); }
+
+	virtual void psl_set_fd(int fd){  }
 
 };
 
