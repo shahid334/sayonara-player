@@ -177,8 +177,6 @@ class ApplicationClient : public QObject {
 
 };
 
-
-
 #endif // APPLICATION_H
 
 

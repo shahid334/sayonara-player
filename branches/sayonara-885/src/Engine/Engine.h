@@ -107,7 +107,7 @@ signals:
     void sig_spectrum(QList<float>&);
 	void sig_bitrate_changed(qint32);
     void sig_download_progress(int);
-	void sig_data(uchar* data, quint64 size);
+	void sig_data(uchar*, quint64);
 
 
 private slots:
@@ -122,7 +122,7 @@ private slots:
 
 protected slots:
 	virtual void new_data(uchar* data, quint64 size){
-		//qDebug() << "Engine: new data " << size;
+
 		emit sig_data(data, size);
 
 	}

@@ -42,23 +42,32 @@ Socket::Socket() {
 
 	_port = db->getSocketFrom();
 	_port_to = db->getSocketTo();
+	_block = false;
 
 	_srv_socket = -1;
 	_client_socket = -1;
 	_connected = false;
-	_idx = 0;
-
 
 }
 
 
 Socket::~Socket() {
+	qDebug() << "disconnect";
+	if(_srv_socket > 0)
+		close(_srv_socket);
+	if(_client_socket > 0)
+		close(_client_socket);
 
+	_client_socket = -1;
+	_srv_socket = -1;
+
+	_connected = false;
+	_port = 1234;
 }
 
 
 void Socket::run() {
-	char msg[1024];
+	char msg[4096];
 
 	qDebug() << "Starting socket on port "<<_port;
 
@@ -72,44 +81,32 @@ void Socket::run() {
 		int err = -1;
 		emit sig_new_fd(_client_socket);
 
-		while( err != 0 ) {
-			/*err = recv(_client_socket, msg, 1024, 0);
-			qDebug() << "error on port " << _client_socket << " Port = " << _port;
+		while( true ) {
+			err = read(_client_socket, msg, 4096);
+
+
 			if(err != -1) {
 
 				QString msg_string(msg);
-				if(msg_string.startsWith("next")) {
-					emit sig_next();
-				}
-				else if(msg_string.startsWith("prev")) {
-					emit sig_prev();
-				}
-				else if(msg_string.startsWith("play")) {
-					emit sig_play();
-				}
-				else if(msg_string.startsWith("pause")) {
-					emit sig_pause();
-				}
 
-				else if(msg_string.startsWith("stop")) {
-					emit sig_stop();
-				}
+				if(msg_string.contains("GET") && !_list.isEmpty()){
 
-				else if(msg_string.startsWith("vol")) {
-					bool ok;
-					int volume = msg_string.mid(3,2).toInt(&ok);
-					if(ok) emit sig_setVolume(volume);
-				}
+					int n_bytes;
+					QByteArray answer = QByteArray("HTTP/1.1 200 Ok\r\nContent-Type: audio/mpeg;\r\n\r\n");
+					answer += QString::number(_list[0].size(), 16) + "\r\n" + _list[0] + "\r\n";
 
 
-				else if(msg_string.startsWith("q")) {
-					break;
+					n_bytes = write(_client_socket, (uchar*) answer.constData(), answer.size());
+					qDebug() << "Wrote " << n_bytes;
+					_block = true;
+					_list.pop_front();
+					_block = false;
 				}
 			}
 
-			if( err == 0) break;*/
-
-			usleep(100000);
+			else{
+				qDebug() << "error on port " << _client_socket << " Port = " << _port;
+			}
 		}
 
 		qDebug() << "Socket closed";
@@ -164,31 +161,16 @@ void Socket::sock_disconnect() {
 
 void Socket::new_data(uchar* data, quint64 size){
 
-	//qDebug() << "Socket: new data  " << size;
-	ssize_t n_bytes = 0;
-	if(_client_socket < 0) return;
+	if(_block) return;
+	/*if(_client_socket < 0 || _block) {
 
-	int free_bytes = BUFFER_SIZE - _idx;
+		return;
+	}*/
 
-	if(size >= free_bytes){
-		memcpy(buffer + _idx, data, free_bytes);
-		n_bytes = write(_client_socket, buffer, BUFFER_SIZE);
-		qDebug() << "Sent n_bytes: " << n_bytes;
-		_idx = 0;
-	}
-
-	else{
-		memcpy(buffer + _idx, data, size);
-		_idx += size;
-	}
-
-
-	if(size > free_bytes){
-		int bytes2go = size - free_bytes;
-
-		memcpy(buffer, data + free_bytes, bytes2go);
-		_idx = bytes2go;
-	}
+	//qDebug() << "Wrote " <<  write(_client_socket, data, size);
+	QByteArray arr((const char*) data, size);
+	_list << arr;
+	//delete data;
 }
 
 

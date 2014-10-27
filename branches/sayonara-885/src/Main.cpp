@@ -148,9 +148,7 @@ void segfault_handler(int sig){
 
 int main(int argc, char *argv[]) {
 
-
 #ifdef Q_OS_UNIX
-
 
 	signal(SIGSEGV, segfault_handler);
 

@@ -76,19 +76,12 @@ private:
 
 	GstElement* _volume;
 
-	GstPad* _app_pad;
-	GstPad* _tee_app_pad;
-
 	GstElement* _audio_sink;
 	GstElement* _audio_bin;
 
-	GstPadTemplate* _tee_src_pad_template;
 
 	GstElement* _level_audio_convert, *_spectrum_audio_convert, *_lame_audio_convert;
 	GstElement* _level, *_spectrum;
-
-	GstPad*     _level_pad, *_spectrum_pad, *_lame_pad;
-	GstPad*     _tee_level_pad, *_tee_spectrum_pad, *_tee_lame_pad;
 
 	GstElement* _level_sink, *_spectrum_sink;
 	GstElement* _level_queue, *_spectrum_queue, *_lame_queue;
@@ -99,12 +92,13 @@ private:
 	GstElement* _id3mux;
 	GstElement* _app_sink;
 
-
 	GstElement* _tee;
 
 	QTimer* _timer;
 
     bool _seek(gint64 ns);
+	bool tee_connect(GstPadTemplate* tee_src_pad_template, GstElement* queue, QString queue_name);
+	bool create_element(GstElement** elem, const gchar* elem_name, const gchar* name=NULL);
 
 };
 

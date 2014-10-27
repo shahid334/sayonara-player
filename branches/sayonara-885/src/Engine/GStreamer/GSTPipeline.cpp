@@ -113,42 +113,38 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 
 	return true;
 }
+//#define TCP_BUFFER_SIZE 32768
+#define TCP_BUFFER_SIZE 16384
+static uchar data[TCP_BUFFER_SIZE];
 
-
-void PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
-
+static int idx=0;
+GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 
 	GstSample* sample;
 	GstBuffer* buffer;
-	GstMapInfo map;
-	guint8* data = 0;
 	gsize size = 0;
-	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) p;
+	gsize size_new = 0;
 
-	//g_signal_emit_by_name(sink, "pull-buffer", &buffer);
+	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) p;
 
 	sample = gst_app_sink_pull_sample(GST_APP_SINK(sink));
 	if(!sample) {
 		qDebug() << "No sample";
-		return;
+		return GST_FLOW_OK;
 	}
 
 	buffer = gst_sample_get_buffer(sample);
 	if(!buffer) {
 		qDebug() << "No buffer";
-		return;
+		return GST_FLOW_OK;
 	}
 
-	gst_buffer_map(buffer, &map, GST_MAP_READ);
-	size = map.size;
-	data = new guint8[size];
-	memcpy(data, map.data, size);
+	size = gst_buffer_get_size(buffer);
 
-	gst_buffer_unmap(buffer, &map);
-	//gst_buffer_unref(buffer);
-	gst_sample_unref(sample);
+	size_new = gst_buffer_extract(buffer, 0, data, size);
+	pipeline->set_data(data, size_new);
 
-	pipeline->set_data(data, size);
+	return GST_FLOW_OK;
 }
 
 
@@ -176,8 +172,9 @@ void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms, gint64 duratio
 	check_about_to_finish(difference);
 }
 
-void GSTAbstractPipeline::set_data(guint8* data, gsize size){
-	emit sig_data((uchar*) data, (quint64) size);
+void GSTAbstractPipeline::set_data(uchar* data, quint64 size){
+
+	emit sig_data(data, size);
 }
 
 void GSTAbstractPipeline::check_about_to_finish(qint64 difference){

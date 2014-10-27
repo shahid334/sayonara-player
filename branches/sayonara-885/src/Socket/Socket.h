@@ -65,10 +65,9 @@ private:
 
 	bool sock_connect();
 	void sock_disconnect();
+	bool _block;
 
-
-	uchar buffer[BUFFER_SIZE];
-	int _idx;
+	QList<QByteArray> _list;
 
 };
 

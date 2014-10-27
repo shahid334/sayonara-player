@@ -529,7 +529,7 @@ void GSTPlaybackEngine::psl_set_gapless(bool b) {
 			_other_pipeline = new GSTPlaybackPipeline(this);
 			connect(_other_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 			connect(_other_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
-			connect(_other_pipeline, SIGNAL(sig_data(uchar*,  quint64)), this, SLOT(new_data(uchar*,quint64)));
+			connect(_other_pipeline, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 		}
 
 		_other_pipeline->set_volume(_pipeline->get_volume());
