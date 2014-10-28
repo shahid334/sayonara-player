@@ -74,8 +74,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		if(!create_element(&_resampler, "audioresample", "lame_resampler")) break;
 		if(!create_element(&_lame_audio_convert, "audioconvert", "lame_audioconvert")) break;
 		if(!create_element(&_app_sink, "appsink", "lame_appsink")) break;
-		//if(!create_element(&_app_sink, "tcpserversink", "lame_appsink")) break;
-
 
 		gst_object_ref(_audio_src);
 
@@ -134,10 +132,13 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 					  "multi-channel", FALSE,
 					  NULL);
 
-		g_object_set(_lame,
 
-					 "quality", 3,
-					 "target", 0,
+		g_object_set(G_OBJECT (_lame),
+
+					 "perfect-timestamp", true,
+					 "bitrate", 128,
+					 "target", 2,
+					 "cbr", true,
 					 "encoding-engine-quality", 2,
 					 NULL);
 

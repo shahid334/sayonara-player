@@ -45,14 +45,18 @@ signals:
 	void sig_prev();
 	void sig_next();
 	void sig_setVolume(int);
-	void sig_new_fd(int);
+
+	void sig_new_connection_req(const QString&);
+	void sig_new_connection(const QString&);
+	void sig_connection_closed(const QString&);
 
 public:
-	Socket();
+	Socket(QObject* parent=0);
 	virtual ~Socket();
 
 public slots:
 	void new_data(uchar* data, quint64 size);
+	void connection_valid(bool);
 
 private:
 	int		_srv_socket;
@@ -60,6 +64,8 @@ private:
 	int		_port;
 	int		_port_to;
 	bool 	_connected;
+	bool	_shot;
+	QString _ip;
 	struct sockaddr_in _srv_info;
 	struct sockaddr_in _cli_info;
 

@@ -23,6 +23,7 @@
  */
 #include <QDebug>
 #include <QString>
+#include <QMessageBox>
 #include "Socket/Socket.h"
 #include "HelperStructs/CSettingsStorage.h"
 
@@ -36,7 +37,7 @@
 #endif
 
 
-Socket::Socket() {
+Socket::Socket(QObject* parent) : QThread(parent) {
 
 	CSettingsStorage* db = CSettingsStorage::getInstance();
 
@@ -47,7 +48,7 @@ Socket::Socket() {
 	_srv_socket = -1;
 	_client_socket = -1;
 	_connected = false;
-
+	_shot = false;
 }
 
 
@@ -60,62 +61,41 @@ Socket::~Socket() {
 
 	_client_socket = -1;
 	_srv_socket = -1;
+	_shot = false;
 
 	_connected = false;
-	_port = 1234;
+	_port = 1024;
 }
 
 
 void Socket::run() {
+
 	char msg[4096];
 
 	qDebug() << "Starting socket on port "<<_port;
 
-	while(1) {
-
-		if(!sock_connect()) {
-			qDebug() << "Cannot establish socket";
-			return;
+	while(true){
+		if(_client_socket == -1){
+			sock_connect();
 		}
 
-		int err = -1;
-		emit sig_new_fd(_client_socket);
-
-		while( true ) {
-			err = read(_client_socket, msg, 4096);
-
-
-			if(err != -1) {
-
-				QString msg_string(msg);
-
-				if(msg_string.contains("GET") && !_list.isEmpty()){
-
-					int n_bytes;
-					QByteArray answer = QByteArray("HTTP/1.1 200 Ok\r\nContent-Type: audio/mpeg;\r\n\r\n");
-					answer += QString::number(_list[0].size(), 16) + "\r\n" + _list[0] + "\r\n";
-
-
-					n_bytes = write(_client_socket, (uchar*) answer.constData(), answer.size());
-					qDebug() << "Wrote " << n_bytes;
-					_block = true;
-					_list.pop_front();
-					_block = false;
-				}
-			}
-
-			else{
-				qDebug() << "error on port " << _client_socket << " Port = " << _port;
-			}
+		if(_connected){
+			/*read(_client_socket, msg, 4095);
+			QString qmsg(msg);
+			if(qmsg.contains("GET")){
+				_shot = false;
+			}*/
 		}
 
-		qDebug() << "Socket closed";
-
-		sock_disconnect();
+		usleep(1000000);
 	}
 }
 
 bool Socket::sock_connect() {
+
+	qDebug() << "Wait for incoming connection";
+	socklen_t addr_len;
+	struct sockaddr_in addr_in;
 
 	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
 	_srv_info.sin_family = AF_INET;
@@ -133,44 +113,87 @@ bool Socket::sock_connect() {
 		usleep(10000);
 	}
 
-	qDebug() << "bind successful: port = " << _port;
-
 	listen(_srv_socket, 3);
 
-	while(_client_socket == -1) {
-		_client_socket = accept(_srv_socket, NULL, NULL);
-		usleep(10000);
-	}
 
-	_connected = true;
+	addr_len = (socklen_t) sizeof(struct sockaddr);
+
+	_client_socket = accept(_srv_socket, (struct sockaddr *) &(addr_in),
+						   &addr_len);
+
+	if(_client_socket < 0) return false;
+
+
+	_ip = QString(inet_ntoa( addr_in.sin_addr));
+	emit sig_new_connection_req(_ip);
+
 	return true;
 }
 
 void Socket::sock_disconnect() {
 
-	qDebug() << "disconnect";
+	qDebug() << "Socket closed";
 	close(_srv_socket);
 	close(_client_socket);
 	_client_socket = -1;
 	_srv_socket = -1;
+	_shot = false;
 
 	_connected = false;
-	_port = 1234;
+	_port = 1024;
+
+
+	emit sig_connection_closed(_ip);
+	_ip = "";
+}
+
+void Socket::connection_valid(bool b){
+
+	if(!b) {
+		sock_disconnect();
+	}
+
+	else{
+		if(_srv_socket != -1){
+			_connected = true;
+			emit sig_new_connection(_ip);
+		}
+	}
 
 }
 
 void Socket::new_data(uchar* data, quint64 size){
 
-	if(_block) return;
-	/*if(_client_socket < 0 || _block) {
-
+	if(!_connected) return;
+	/*if(!data || size== 0){
+		_shot = false;
 		return;
 	}*/
 
-	//qDebug() << "Wrote " <<  write(_client_socket, data, size);
-	QByteArray arr((const char*) data, size);
-	_list << arr;
-	//delete data;
+	int n_bytes;
+
+	if(!_shot){
+		QByteArray answer = QByteArray("ICY 200 Ok\r\n"
+									   "icy-notice1:Bliblablupp\r\n"
+									   "icy-name:Awesome Sayonara stream\r\n"
+									   "icy-genre:None\r\n"
+									   "icy-url:http://sayonara.luciocarreras.de\r\n"
+									   "content-type:audio/mpeg;\r\n"
+									   "icy-br:160\r\n"
+									   "icy-pub:1\r\n"
+									   "\r\n"
+									   );
+		answer.append((const char*) data, size);
+		data = (uchar*) answer.data();
+		size = answer.size();
+		_shot = true;
+	}
+
+	n_bytes = write(_client_socket, data, size);
+
+	if(n_bytes == -1){
+		sock_disconnect();
+	}
 }
 
 

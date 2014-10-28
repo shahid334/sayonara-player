@@ -83,14 +83,14 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
     _playlist_mode = settings->getPlaylistMode();
 
-    pb_download->setVisible(false);
-
 
 	btn_append->setChecked(_playlist_mode.append);
 	btn_repAll->setChecked(_playlist_mode.repAll);
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
 	btn_shuffle->setChecked(_playlist_mode.shuffle);
 	btn_gapless->setChecked(_playlist_mode.gapless);
+	btn_dismiss->setIcon(Helper::getIcon("close.png"));
+	btn_dismiss->setVisible(false);
 
     check_dynamic_play_button();
     setAcceptDrops(true);
@@ -103,6 +103,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
 	connect(btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
 	connect(btn_gapless, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
+	connect(btn_dismiss, SIGNAL(released()), this, SLOT(dismiss()));
 
 
 	connect(listView, SIGNAL(sig_metadata_dropped(const MetaDataList&,int)), this, SLOT(metadata_dropped(const MetaDataList&,int)));
@@ -398,12 +399,50 @@ void GUI_Playlist::rows_removed(const QList<int>& lst, bool select_next_row) {
 
 
 void GUI_Playlist::download_progress(int progress){
-    if(progress < 0 || progress > 99){
-        pb_download->setVisible(false);
-    }
 
-    else{
-        pb_download->setVisible(true);
-        pb_download->setValue(progress);
-    }
+}
+
+void GUI_Playlist::new_connection(const QString &ip){
+
+
+	lab_connection->setText("1 user connected");
+	lab_connection->setToolTip(ip);
+	btn_dismiss->setVisible(true);
+	lab_connection->setContentsMargins(0, 2, 0, 2);
+}
+
+void GUI_Playlist::new_connection_request(const QString &ip_adress){
+
+	QString question  = tr("Someone tries to listen to your music.") +
+			"\nIP: " +
+			ip_adress + "\n\n" +
+			tr("OK?");
+
+	QString title = tr("Incoming request");
+
+	QMessageBox::StandardButton btn;
+	btn = QMessageBox::question(this,
+								title,
+								question,
+								QMessageBox::Yes | QMessageBox::No,
+								QMessageBox::StandardButton::Yes);
+
+	if(btn == QMessageBox::No){
+		emit sig_connection_valid(false);
+	}
+
+	else{
+		emit sig_connection_valid(true);
+	}
+}
+
+void GUI_Playlist::connection_closed(const QString & str){
+	lab_connection->setText("");
+	lab_connection->setToolTip("");
+	btn_dismiss->setVisible(false);
+}
+
+void GUI_Playlist::dismiss(){
+	emit sig_connection_valid(false);
+	connection_closed("");
 }
