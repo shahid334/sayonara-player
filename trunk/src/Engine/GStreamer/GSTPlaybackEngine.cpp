@@ -507,7 +507,7 @@ void GSTPlaybackEngine::set_track_finished() {
 
 void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 
-	ENGINE_DEBUG << "About to finish in " << time2go << "ms";
+	qDebug() << "About to finish in " << time2go << "ms";
 
 	if(!_gapless) return;
 

@@ -495,12 +495,15 @@ void Application::init_connections() {
         CONNECT (remote_socket, sig_prev(),		playlist_handler,			psl_backward());
         CONNECT (remote_socket, sig_stop(),		playlist_handler,			psl_stop());
         CONNECT (remote_socket, sig_pause(),		listen,				pause());
-        CONNECT (remote_socket, sig_setVolume(int),player,			setVolume(int));
-		CONNECT (remote_socket, sig_new_connection_req(const QString&), ui_playlist, new_connection_request(const QString&));
-		CONNECT (remote_socket, sig_new_connection(const QString&), ui_playlist, new_connection(const QString&));
-		CONNECT (remote_socket, sig_connection_closed(const QString&), ui_playlist, connection_closed(const QString&));
-		CONNECT(ui_playlist, sig_connection_valid(bool), remote_socket, connection_valid(bool));
-		CONNECT(listen, sig_data(uchar*, quint64), remote_socket, new_data(uchar*, quint64));
+
+
+//		CONNECT (remote_socket, sig_new_connection(),						listen,			pause());
+		CONNECT (remote_socket, sig_setVolume(int),							player,			setVolume(int));
+		CONNECT (remote_socket, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
+		CONNECT (remote_socket, sig_new_connection(const QString&),			ui_playlist,	new_connection(const QString&));
+		CONNECT (remote_socket, sig_connection_closed(const QString&),		ui_playlist,	connection_closed(const QString&));
+		CONNECT(ui_playlist, sig_connection_valid(bool),					remote_socket,	connection_valid(bool));
+		CONNECT(listen, sig_data(uchar*, quint64),							remote_socket,	new_data(uchar*, quint64));
 
 
         remote_socket->start();

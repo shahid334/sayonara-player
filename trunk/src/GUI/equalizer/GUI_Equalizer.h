@@ -47,7 +47,7 @@ class EqSlider : public QObject{
 	friend class GUI_Equalizer;
 
 	signals:
-		void valueChanged(int idx, int val);
+		void sig_value_changed(int idx, int val);
 
 	private:
 		QSlider* _slider;
@@ -69,7 +69,7 @@ class EqSlider : public QObject{
 
 	private slots:
 		void sl_slider_changed(int val) {
-			emit valueChanged(_idx, val);
+			emit sig_value_changed(_idx, val);
 		}
 };
 

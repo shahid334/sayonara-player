@@ -174,9 +174,9 @@ void GSTEngineHandler::psl_set_gapless(bool b) {
 	_cur_engine->psl_set_gapless(b);
 }
 
-void GSTEngineHandler::psl_set_fd(int fd){
+void GSTEngineHandler::psl_new_stream_connection(){
 	if(!_cur_engine) return;
-	_cur_engine->psl_set_fd(fd);
+	_cur_engine->psl_new_stream_connection();
 }
 
 void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {

@@ -48,6 +48,7 @@ signals:
 
 	void sig_new_connection_req(const QString&);
 	void sig_new_connection(const QString&);
+	void sig_new_connection();
 	void sig_connection_closed(const QString&);
 
 public:
@@ -64,16 +65,28 @@ private:
 	int		_port;
 	int		_port_to;
 	bool 	_connected;
-	bool	_shot;
+	bool	_send_data;
+	bool	_icy;
+
+	QByteArray _header;
+	QByteArray _icy_header;
+	bool	_header_sent;
+
 	QString _ip;
 	struct sockaddr_in _srv_info;
 	struct sockaddr_in _cli_info;
 
 	bool sock_connect();
 	void sock_disconnect();
-	bool _block;
+
+	ssize_t _bytes_written;
 
 	QList<QByteArray> _list;
+	bool send_header(const QByteArray& header);
+	bool send_icy_data();
+	qint64 send_stream_data(uchar* data , quint64 size);
+
+	bool parse_message();
 
 };
 

@@ -36,6 +36,7 @@
 #include <unistd.h>
 #endif
 
+//#define SOCKET_DEBUG
 
 Socket::Socket(QObject* parent) : QThread(parent) {
 
@@ -43,52 +44,119 @@ Socket::Socket(QObject* parent) : QThread(parent) {
 
 	_port = db->getSocketFrom();
 	_port_to = db->getSocketTo();
-	_block = false;
 
+	_icy = false;
 	_srv_socket = -1;
 	_client_socket = -1;
 	_connected = false;
-	_shot = false;
+	_header_sent = false;
+	_send_data = false;
+	_bytes_written= 0;
+	_header=  QByteArray("ICY 200 Ok\r\n"
+										   "icy-notice1:Bliblablupp\r\n"
+										   "icy-notice2:asdfasd\r\n"
+										   "icy-name:Awesome Sayonara stream\r\n"
+										   "icy-genre:None\r\n"
+										   "icy-url:http://sayonara.luciocarreras.de\r\n"
+										   "content-type:audio/mpeg\r\n"
+										   "icy-pub:1\r\n"
+										   "icy-br:128\r\n"
+
+										   );
+
+	_icy_header = QByteArray("icy-metaint:8192\r\n");
+
 }
 
 
 Socket::~Socket() {
-	qDebug() << "disconnect";
-	if(_srv_socket > 0)
+	if(_srv_socket > 0){
 		close(_srv_socket);
-	if(_client_socket > 0)
+	}
+
+	if(_client_socket > 0){
 		close(_client_socket);
+	}
 
 	_client_socket = -1;
 	_srv_socket = -1;
-	_shot = false;
-
+	_header_sent = false;
+	_send_data = false;
 	_connected = false;
+	_icy = false;
+
 	_port = 1024;
+
+}
+
+
+bool Socket::parse_message(){
+
+	ssize_t n_bytes;
+	char msg[4096];
+	bool get_received = false;
+
+	QString qmsg;
+	QStringList lst;
+	QByteArray header = _header;
+
+	n_bytes = read(_client_socket, msg, 4095);
+	if(n_bytes < 0) return false;
+
+	qmsg = QString::fromLocal8Bit(msg, n_bytes);
+
+	lst = qmsg.split("\r\n");
+	_icy = false;
+
+	foreach(QString str, lst){
+		qDebug() << str;
+		if(str.contains("GET")){
+			get_received = true;
+			continue;
+		}
+
+		if( str.contains("icy-metadata:", Qt::CaseInsensitive))
+		{
+			if(str.contains(":1") || str.contains(": 1")){
+
+				qDebug() << "Set ICY to true";
+				_icy = true;
+				header.append(_icy_header);
+				continue;
+			}
+		}
+	}
+
+	header.append("\r\n");
+	if( send_header(header) && get_received){
+		return true;
+	}
+
+	return false;
+
 }
 
 
 void Socket::run() {
 
-	char msg[4096];
-
-	qDebug() << "Starting socket on port "<<_port;
-
 	while(true){
+
 		if(_client_socket == -1){
 			sock_connect();
 		}
 
 		if(_connected){
-			/*read(_client_socket, msg, 4095);
-			QString qmsg(msg);
-			if(qmsg.contains("GET")){
-				_shot = false;
-			}*/
+
+			_send_data = parse_message();
+			if(!_send_data){
+				sock_disconnect();
+			}
 		}
 
 		usleep(1000000);
 	}
+
+	sock_disconnect();
 }
 
 bool Socket::sock_connect() {
@@ -107,24 +175,35 @@ bool Socket::sock_connect() {
 	while(bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info)) == -1) {
 		_port++;
 
-		if(_port > _port_to) return false;
+		if(_port > _port_to){
+			qDebug() << "Socket: Cannot bind";
+			return false;
+		}
 
 		_srv_info.sin_port = htons(_port);
 		usleep(10000);
 	}
 
+	qDebug() << "Listening on port " << _port;
 	listen(_srv_socket, 3);
 
 
 	addr_len = (socklen_t) sizeof(struct sockaddr);
 
-	_client_socket = accept(_srv_socket, (struct sockaddr *) &(addr_in),
-						   &addr_len);
+	/*_client_socket = accept(_srv_socket, (struct sockaddr *) &(addr_in),
+						   &addr_len);*/
 
-	if(_client_socket < 0) return false;
+	_client_socket = accept(_srv_socket, NULL, NULL);
 
 
-	_ip = QString(inet_ntoa( addr_in.sin_addr));
+	if(_client_socket < 0) {
+		qDebug() << "Socket: Cannot establish connection";
+		return false;
+	}
+
+	//_ip = QString(inet_ntoa( addr_in.sin_addr));
+	_ip = "192.168.1.105";
+
 	emit sig_new_connection_req(_ip);
 
 	return true;
@@ -133,13 +212,21 @@ bool Socket::sock_connect() {
 void Socket::sock_disconnect() {
 
 	qDebug() << "Socket closed";
-	close(_srv_socket);
-	close(_client_socket);
+	if(_srv_socket > 0){
+		close(_srv_socket);
+	}
+
+	if(_client_socket > 0){
+		close(_client_socket);
+	}
+
 	_client_socket = -1;
 	_srv_socket = -1;
-	_shot = false;
-
+	_header_sent = false;
+	_send_data = false;
 	_connected = false;
+	_icy = false;
+
 	_port = 1024;
 
 
@@ -155,8 +242,10 @@ void Socket::connection_valid(bool b){
 
 	else{
 		if(_srv_socket != -1){
+			qDebug() << "Connected t0 " << _ip;
 			_connected = true;
 			emit sig_new_connection(_ip);
+			emit sig_new_connection();
 		}
 	}
 
@@ -165,36 +254,76 @@ void Socket::connection_valid(bool b){
 void Socket::new_data(uchar* data, quint64 size){
 
 	if(!_connected) return;
-	/*if(!data || size== 0){
-		_shot = false;
-		return;
-	}*/
+	if(!_send_data) return;
 
-	int n_bytes;
+	qint64 n_bytes;
 
-	if(!_shot){
-		QByteArray answer = QByteArray("ICY 200 Ok\r\n"
-									   "icy-notice1:Bliblablupp\r\n"
-									   "icy-name:Awesome Sayonara stream\r\n"
-									   "icy-genre:None\r\n"
-									   "icy-url:http://sayonara.luciocarreras.de\r\n"
-									   "content-type:audio/mpeg;\r\n"
-									   "icy-br:160\r\n"
-									   "icy-pub:1\r\n"
-									   "\r\n"
-									   );
-		answer.append((const char*) data, size);
-		data = (uchar*) answer.data();
-		size = answer.size();
-		_shot = true;
-	}
+	n_bytes = send_stream_data(data, size);
 
-	n_bytes = write(_client_socket, data, size);
+#ifdef SOCKET_DEBUG
+	qDebug() << "Wrote " << n_bytes << " bytes";
+#endif
+
 
 	if(n_bytes == -1){
 		sock_disconnect();
 	}
+
 }
 
 
 
+bool Socket::send_header(const QByteArray& header){
+
+	ssize_t n_bytes = write(_client_socket, header.constData(), header.size());
+	if(n_bytes >= header.size()) return true;
+
+	return false;
+}
+
+
+bool Socket::send_icy_data(){
+	ssize_t n_bytes;
+	QByteArray metadata = QByteArray("StreamTitle='Super Sayonara';"
+									 "StreamUrl='';");
+	for(int i=0; i<6;i++){
+		metadata.append((char) 0x00);
+	}
+
+	metadata.prepend(0x03);
+	n_bytes = write(_client_socket, metadata.constData(), metadata.size());
+
+	return (n_bytes >= metadata.size());
+}
+
+qint64 Socket::send_stream_data(uchar* data , quint64 size){
+
+	ssize_t n_bytes;
+
+	qDebug() << _bytes_written + size << ";" << _icy;
+	if(_bytes_written + size > 8192 && _icy){
+
+		quint64 bytes_before = 8192 - _bytes_written;
+		n_bytes = write(_client_socket, data, bytes_before);
+
+		qDebug() << "time for icy package";
+		send_icy_data();
+
+		_bytes_written = 0;
+
+		if(size - bytes_before > 0){
+			n_bytes = write(_client_socket, data + bytes_before, size - bytes_before);
+			_bytes_written = n_bytes;
+		}
+	}
+
+	else{
+		n_bytes = write(_client_socket, data, size);
+		_bytes_written += n_bytes;
+	}
+
+	qDebug() << _bytes_written;
+
+	return n_bytes;
+
+}

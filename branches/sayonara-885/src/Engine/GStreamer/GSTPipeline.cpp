@@ -114,11 +114,14 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 	return true;
 }
 //#define TCP_BUFFER_SIZE 32768
+
+
 #define TCP_BUFFER_SIZE 16384
 static uchar data[TCP_BUFFER_SIZE];
 
-static int idx=0;
 GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
+
+	//qDebug() << "Send stream data";
 
 	GstSample* sample;
 	GstBuffer* buffer;
@@ -140,9 +143,9 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 	}
 
 	size = gst_buffer_get_size(buffer);
-
 	size_new = gst_buffer_extract(buffer, 0, data, size);
 	pipeline->set_data(data, size_new);
+
 
 	return GST_FLOW_OK;
 }

@@ -91,8 +91,6 @@ public:
 	virtual void		unmute(){}
 
 
-
-
 signals:
 	void sig_dur_changed_ms(quint64);
 	void sig_dur_changed_s(quint32);
@@ -158,7 +156,7 @@ public slots:
 	virtual void end_convert(){}
 	virtual void psl_set_speed(float f){ Q_UNUSED(f); }
 
-	virtual void psl_set_fd(int fd){  }
+	virtual void psl_new_stream_connection(){  }
 
 };
 

@@ -553,9 +553,9 @@ void  GSTPlaybackEngine::psl_set_speed(float f) {
     }
 }
 
-void GSTPlaybackEngine::psl_set_fd(int fd){
-	_pipeline->set_fd(fd);
+void GSTPlaybackEngine::psl_new_stream_connection(){
+	_pipeline->set_new_stream_connection();
 	if(_other_pipeline){
-		_other_pipeline->set_fd(fd);
+		_other_pipeline->set_new_stream_connection();
 	}
 }

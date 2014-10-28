@@ -75,7 +75,7 @@ public slots:
 	void end_convert();
 
 	void psl_set_speed(float f);
-	void psl_set_fd(int fd);
+	void psl_new_stream_connection();
 
 
 private slots:

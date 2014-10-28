@@ -76,7 +76,7 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	_sliders.push_back(new EqSlider(sli_9, label_10, 9));
 
 	foreach(EqSlider* s, _sliders) {
-		connect(s, SIGNAL(valueChanged(int,int)), this, SLOT(sli_changed(int, int)));
+		connect(s, SIGNAL(sig_value_changed(int,int)), this, SLOT(sli_changed(int, int)));
 	}
 
 	connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));

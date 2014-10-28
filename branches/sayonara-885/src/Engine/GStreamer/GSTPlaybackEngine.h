@@ -69,7 +69,7 @@ public:
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
 
-	void		psl_set_fd(int fd);
+	void		psl_new_stream_connection();
 
 	bool get_show_level();
 	bool get_show_spectrum();

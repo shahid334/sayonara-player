@@ -36,7 +36,7 @@ public:
 	virtual ~GSTPlaybackPipeline();
 
 	bool set_uri(gchar* uri);
-	void set_fd(int fd);
+	void set_new_stream_connection();
 
 public slots:
 

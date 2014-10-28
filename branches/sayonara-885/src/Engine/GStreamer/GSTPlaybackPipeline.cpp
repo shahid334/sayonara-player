@@ -136,9 +136,9 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		g_object_set(G_OBJECT (_lame),
 
 					 "perfect-timestamp", true,
-					 "bitrate", 128,
-					 "target", 2,
+					 "target", 1,
 					 "cbr", true,
+					 "bitrate", 128,
 					 "encoding-engine-quality", 2,
 					 NULL);
 
@@ -444,23 +444,9 @@ bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 	return true;
 }
 
-void GSTPlaybackPipeline::set_fd(int fd){
-	qDebug() << "New file descriptor";
-
-	/*gst_bin_add_many(GST_BIN(_pipeline), _lame_queue, _resampler, _lame, _xingheader, _app_sink, NULL);
-
-
-	_tee_lame_pad = gst_element_request_pad(_tee, _tee_src_pad_template, NULL, NULL);
-		if(!_test_and_error(_tee_lame_pad, "Engine: Tee-Lame Pad NULL")) return;
-	_lame_pad = gst_element_get_static_pad(_lame_queue, "sink");
-		if(!_test_and_error(_lame_pad, "Engine: Lame Pad NULL")) return;
-
-	bool s = gst_pad_link (_tee_lame_pad, _lame_pad);
-		_test_and_error_bool((s == GST_PAD_LINK_OK), "Engine: Cannot link tee with lame");
-
-	g_object_set(_lame_queue, "silent", TRUE, NULL);*/
-	g_object_set(G_OBJECT(_level_sink), "fd", fd, NULL);
-
+void GSTPlaybackPipeline::set_new_stream_connection(){
+	//g_object_set(G_OBJECT(_app_sink), "emit-signals", true, NULL );
+	//g_signal_connect (_app_sink, "new-sample", G_CALLBACK(PipelineCallbacks::new_buffer), this);
 }
 
 
