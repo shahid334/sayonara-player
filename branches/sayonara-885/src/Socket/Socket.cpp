@@ -91,24 +91,19 @@ Socket::~Socket() {
 
 void Socket::run() {
 
-	init_socket();
+	while(!init_socket()) {
+		usleep(1000000);
+	}
 
-	while( _srv_socket > 0 ){
+	while( true ){
 
-		if(_client_socket == -1){
-
-			sock_connect();
-		}
-
-		if(_connected){
-
-			_send_data = parse_message();
-			if(!_send_data){
-				sock_disconnect();
+		if(	sock_connect() ){
+			if(parse_message()){
+				_send_data = true;
 			}
 		}
 
-		usleep(10000);
+		usleep(1000000);
 	}
 
 	sock_disconnect();
@@ -143,15 +138,19 @@ bool Socket::init_socket(){
 	}
 
 	setsockopt(_srv_socket, SOL_PACKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
+	status = -1;
 
-	status = bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info));
-	if(status < 0){
-		qDebug() << "Cannot bind port " << _port;
-		qDebug() << strerror(errno);
-		close(_srv_socket);
-		_srv_socket = -1;
-		return false;
-	}
+		status = bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info));
+		if(status < 0){
+			qDebug() << "Cannot bind port " << _port;
+			qDebug() << strerror(errno);
+			close(_srv_socket);
+			_srv_socket = -1;
+			return false;
+
+		}
+
+
 
 	qDebug() << "Listening on port " << _port;
 	status = listen(_srv_socket, 3);
@@ -179,9 +178,12 @@ bool Socket::parse_message(){
 	QByteArray header = _header;
 
 	n_bytes = read(_client_socket, msg, 4095);
-	if(n_bytes < 0) return false;
+	if(n_bytes < 0) {
+		return false;
+	}
 
 	qmsg = QString::fromLocal8Bit(msg, n_bytes);
+	qDebug() << qmsg;
 
 	lst = qmsg.split("\r\n");
 	_icy = false;
@@ -213,8 +215,12 @@ bool Socket::parse_message(){
 	}
 
 	header.append("\r\n");
-	if( send_header(header) && get_received){
-		return true;
+
+	if(get_received){
+		qDebug() << "Header size = " << header.size();
+		if( send_header(header)){
+			return true;
+		}
 	}
 
 	return false;
@@ -223,6 +229,10 @@ bool Socket::parse_message(){
 
 
 bool Socket::sock_connect() {
+
+	if(_connected) return false;
+
+
 
 	qDebug() << "Wait for incoming connection";
 
@@ -262,6 +272,7 @@ void Socket::sock_disconnect() {
 	}
 
 	_client_socket = -1;
+
 	_header_sent = false;
 	_send_data = false;
 	_connected = false;

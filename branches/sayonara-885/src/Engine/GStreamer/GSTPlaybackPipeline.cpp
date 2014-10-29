@@ -117,9 +117,13 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		gint threshold = - crop_spectrum_at;
 
 
+		g_object_set (G_OBJECT (_audio_src),
+					  "use-buffering", true,
+					  NULL);
+
 
 		g_object_set (G_OBJECT (_level),
-					  "message", TRUE,
+					  "message", true,
 					  "interval", interval,
 					  NULL);
 
@@ -127,9 +131,9 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 					  "interval", interval,
 					  "bands", N_BINS,
 					  "threshold", threshold,
-					  "message-phase", FALSE,
-					  "message-magnitude", TRUE,
-					  "multi-channel", FALSE,
+					  "message-phase", false,
+					  "message-magnitude", true,
+					  "multi-channel", false,
 					  NULL);
 
 
@@ -143,11 +147,11 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 					 NULL);
 
 		/* run synced and not as fast as we can */
-		g_object_set (G_OBJECT (_level_sink), "sync", TRUE, NULL);
-		g_object_set (G_OBJECT (_level_sink), "async", FALSE, NULL);
+		g_object_set (G_OBJECT (_level_sink), "sync", true, NULL);
+		g_object_set (G_OBJECT (_level_sink), "async", false, NULL);
 
-		g_object_set (G_OBJECT (_spectrum_sink), "sync", TRUE, NULL);
-		g_object_set (G_OBJECT (_spectrum_sink), "async", FALSE, NULL);
+		g_object_set (G_OBJECT (_spectrum_sink), "sync", true, NULL);
+		g_object_set (G_OBJECT (_spectrum_sink), "async", false, NULL);
 
 		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
 
