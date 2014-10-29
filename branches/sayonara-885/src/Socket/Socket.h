@@ -28,6 +28,7 @@
 #include <QObject>
 #include <QThread>
 #include <netinet/in.h>
+#include "HelperStructs/MetaData.h"
 
 #define BUFFER_SIZE 1024
 
@@ -58,6 +59,8 @@ public:
 public slots:
 	void new_data(uchar* data, quint64 size);
 	void connection_valid(bool);
+	void stop();
+	void psl_update_track(const MetaData&);
 
 private:
 	int		_srv_socket;
@@ -82,9 +85,12 @@ private:
 	ssize_t _bytes_written;
 
 	QList<QByteArray> _list;
+	bool init_socket();
 	bool send_header(const QByteArray& header);
 	bool send_icy_data();
 	qint64 send_stream_data(uchar* data , quint64 size);
+
+	QString _stream_title;
 
 	bool parse_message();
 

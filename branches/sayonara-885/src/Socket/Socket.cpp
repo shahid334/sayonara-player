@@ -37,9 +37,14 @@
 #endif
 
 //#define SOCKET_DEBUG
+#undef SOCKET_DEBUG
+
+
+static char padding[16];
 
 Socket::Socket(QObject* parent) : QThread(parent) {
 
+	memset(padding, 0, 16);
 	CSettingsStorage* db = CSettingsStorage::getInstance();
 
 	_port = db->getSocketFrom();
@@ -52,6 +57,7 @@ Socket::Socket(QObject* parent) : QThread(parent) {
 	_header_sent = false;
 	_send_data = false;
 	_bytes_written= 0;
+	_srv_socket = -1;
 	_header=  QByteArray("ICY 200 Ok\r\n"
 										   "icy-notice1:Bliblablupp\r\n"
 										   "icy-notice2:asdfasd\r\n"
@@ -65,27 +71,99 @@ Socket::Socket(QObject* parent) : QThread(parent) {
 										   );
 
 	_icy_header = QByteArray("icy-metaint:8192\r\n");
-
 }
 
 
 Socket::~Socket() {
-	if(_srv_socket > 0){
-		close(_srv_socket);
-	}
 
 	if(_client_socket > 0){
 		close(_client_socket);
 	}
 
-	_client_socket = -1;
+	close(_srv_socket);
+	shutdown(_srv_socket, 2);
 	_srv_socket = -1;
-	_header_sent = false;
-	_send_data = false;
-	_connected = false;
-	_icy = false;
 
-	_port = 1024;
+	qDebug() << "Thread destroyed";
+}
+
+
+
+void Socket::run() {
+
+	init_socket();
+
+	while( _srv_socket > 0 ){
+
+		if(_client_socket == -1){
+
+			sock_connect();
+		}
+
+		if(_connected){
+
+			_send_data = parse_message();
+			if(!_send_data){
+				sock_disconnect();
+			}
+		}
+
+		usleep(10000);
+	}
+
+	sock_disconnect();
+
+	if(_srv_socket > 0){
+		close(_srv_socket);
+	}
+}
+
+
+
+bool Socket::init_socket(){
+
+	if(_srv_socket > 0) return true;
+
+	_connected = false;
+	memset( &_srv_info, 0, sizeof(_srv_info));
+
+	int reuse_addr;
+	int status;
+
+	_srv_info.sin_family = AF_INET;
+	_srv_info.sin_addr.s_addr = htonl(INADDR_ANY);
+	_srv_info.sin_port = htons(_port);
+
+	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
+
+	if(_srv_socket < 0){
+		qDebug() << "Server socket invalid";
+		qDebug() << strerror(errno);
+		return false;
+	}
+
+	setsockopt(_srv_socket, SOL_PACKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
+
+	status = bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info));
+	if(status < 0){
+		qDebug() << "Cannot bind port " << _port;
+		qDebug() << strerror(errno);
+		close(_srv_socket);
+		_srv_socket = -1;
+		return false;
+	}
+
+	qDebug() << "Listening on port " << _port;
+	status = listen(_srv_socket, 3);
+	if(status < 0){
+		qDebug() << "Cannot listen to port " << _port;
+		qDebug() << strerror(errno);
+		close(_srv_socket);
+		_srv_socket = -1;
+		return false;
+	}
+
+	return true;
 
 }
 
@@ -109,7 +187,11 @@ bool Socket::parse_message(){
 	_icy = false;
 
 	foreach(QString str, lst){
+
+#ifdef SOCKET_DEBUG
 		qDebug() << str;
+#endif
+
 		if(str.contains("GET")){
 			get_received = true;
 			continue;
@@ -119,7 +201,10 @@ bool Socket::parse_message(){
 		{
 			if(str.contains(":1") || str.contains(": 1")){
 
+#ifdef SOCKET_DEBUG
 				qDebug() << "Set ICY to true";
+#endif
+
 				_icy = true;
 				header.append(_icy_header);
 				continue;
@@ -137,98 +222,52 @@ bool Socket::parse_message(){
 }
 
 
-void Socket::run() {
-
-	while(true){
-
-		if(_client_socket == -1){
-			sock_connect();
-		}
-
-		if(_connected){
-
-			_send_data = parse_message();
-			if(!_send_data){
-				sock_disconnect();
-			}
-		}
-
-		usleep(1000000);
-	}
-
-	sock_disconnect();
-}
-
 bool Socket::sock_connect() {
 
 	qDebug() << "Wait for incoming connection";
+
 	socklen_t addr_len;
 	struct sockaddr_in addr_in;
-
-	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
-	_srv_info.sin_family = AF_INET;
-	_srv_info.sin_addr.s_addr = htonl(INADDR_ANY);
-	_srv_info.sin_port = htons(_port);
-
-	_connected = false;
-
-	while(bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info)) == -1) {
-		_port++;
-
-		if(_port > _port_to){
-			qDebug() << "Socket: Cannot bind";
-			return false;
-		}
-
-		_srv_info.sin_port = htons(_port);
-		usleep(10000);
-	}
-
-	qDebug() << "Listening on port " << _port;
-	listen(_srv_socket, 3);
-
+	memset( &addr_in, 0, sizeof(addr_in));
 
 	addr_len = (socklen_t) sizeof(struct sockaddr);
 
-	/*_client_socket = accept(_srv_socket, (struct sockaddr *) &(addr_in),
-						   &addr_len);*/
-
-	_client_socket = accept(_srv_socket, NULL, NULL);
+	_client_socket = accept(_srv_socket, (struct sockaddr *) &(addr_in),
+						   &addr_len);
 
 
 	if(_client_socket < 0) {
 		qDebug() << "Socket: Cannot establish connection";
+		qDebug() << strerror(errno);
 		return false;
 	}
 
-	//_ip = QString(inet_ntoa( addr_in.sin_addr));
-	_ip = "192.168.1.105";
+	_ip = QString(inet_ntoa( addr_in.sin_addr));
 
-	emit sig_new_connection_req(_ip);
+	//emit sig_new_connection_req(_ip);
+
+	qDebug() << "Connected t0 " << _ip;
+	_connected = true;
+	emit sig_new_connection(_ip);
+	emit sig_new_connection();
 
 	return true;
 }
 
 void Socket::sock_disconnect() {
 
-	qDebug() << "Socket closed";
-	if(_srv_socket > 0){
-		close(_srv_socket);
-	}
-
 	if(_client_socket > 0){
+		shutdown(_client_socket, 2);
 		close(_client_socket);
 	}
 
 	_client_socket = -1;
-	_srv_socket = -1;
 	_header_sent = false;
 	_send_data = false;
 	_connected = false;
 	_icy = false;
 
 	_port = 1024;
-
 
 	emit sig_connection_closed(_ip);
 	_ip = "";
@@ -240,9 +279,9 @@ void Socket::connection_valid(bool b){
 		sock_disconnect();
 	}
 
-	else{
+	else if(0){
 		if(_srv_socket != -1){
-			qDebug() << "Connected t0 " << _ip;
+			qDebug() << "Connected to " << _ip;
 			_connected = true;
 			emit sig_new_connection(_ip);
 			emit sig_new_connection();
@@ -268,7 +307,6 @@ void Socket::new_data(uchar* data, quint64 size){
 	if(n_bytes == -1){
 		sock_disconnect();
 	}
-
 }
 
 
@@ -283,14 +321,19 @@ bool Socket::send_header(const QByteArray& header){
 
 
 bool Socket::send_icy_data(){
-	ssize_t n_bytes;
-	QByteArray metadata = QByteArray("StreamTitle='Super Sayonara';"
-									 "StreamUrl='';");
-	for(int i=0; i<6;i++){
-		metadata.append((char) 0x00);
-	}
 
-	metadata.prepend(0x03);
+	ssize_t n_bytes;
+	QByteArray metadata = QByteArray("StreamTitle='");
+	metadata.append(_stream_title.toLocal8Bit());
+	metadata.append("';");
+	metadata.append("StreamUrl='http://sayonara.luciocarreras.de';");
+
+	int sz = metadata.size();
+	int n_padding = ( (int)((sz + 15) / 16) * 16 - sz );
+
+	metadata.append(padding, n_padding);
+	metadata.prepend((char) (int)((sz + 15) / 16));
+
 	n_bytes = write(_client_socket, metadata.constData(), metadata.size());
 
 	return (n_bytes >= metadata.size());
@@ -300,13 +343,15 @@ qint64 Socket::send_stream_data(uchar* data , quint64 size){
 
 	ssize_t n_bytes;
 
+#ifdef SOCKET_DEBUG
 	qDebug() << _bytes_written + size << ";" << _icy;
+#endif
+
 	if(_bytes_written + size > 8192 && _icy){
 
 		quint64 bytes_before = 8192 - _bytes_written;
 		n_bytes = write(_client_socket, data, bytes_before);
 
-		qDebug() << "time for icy package";
 		send_icy_data();
 
 		_bytes_written = 0;
@@ -322,8 +367,20 @@ qint64 Socket::send_stream_data(uchar* data , quint64 size){
 		_bytes_written += n_bytes;
 	}
 
+#ifdef SOCKET_DEBUG
 	qDebug() << _bytes_written;
+#endif
 
 	return n_bytes;
+}
 
+void Socket::psl_update_track(const MetaData& md){
+	_stream_title = "Sayonara Player: " + md.title + " by " + md.artist;
+}
+
+void Socket::stop(){
+	sock_disconnect();
+	close(_srv_socket);
+	shutdown(_srv_socket, 2);
+	_srv_socket = -1;
 }

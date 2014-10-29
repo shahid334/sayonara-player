@@ -276,12 +276,12 @@ Application::~Application() {
 
     CDatabaseConnector::getInstance()->store_settings();
 
-    if( set->getSocketActivated() ) {
-        if(remote_socket->isRunning()) {
-            remote_socket->quit();
-        }
-    }
-
+/*
+	if(remote_socket->isRunning()) {
+		remote_socket->connection_valid(false);
+		remote_socket->quit();
+	}
+*/
     _setting_thread->stop();
 
     delete listen;
@@ -502,9 +502,9 @@ void Application::init_connections() {
 		CONNECT (remote_socket, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
 		CONNECT (remote_socket, sig_new_connection(const QString&),			ui_playlist,	new_connection(const QString&));
 		CONNECT (remote_socket, sig_connection_closed(const QString&),		ui_playlist,	connection_closed(const QString&));
+		CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	remote_socket,		psl_update_track(const MetaData&));
 		CONNECT(ui_playlist, sig_connection_valid(bool),					remote_socket,	connection_valid(bool));
 		CONNECT(listen, sig_data(uchar*, quint64),							remote_socket,	new_data(uchar*, quint64));
-
 
         remote_socket->start();
     }
