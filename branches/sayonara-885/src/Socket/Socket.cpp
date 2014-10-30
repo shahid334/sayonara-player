@@ -41,23 +41,27 @@
 
 
 static char padding[16];
-
+static char select_buffer[512];
 Socket::Socket(QObject* parent) : QThread(parent) {
 
-	memset(padding, 0, 16);
+	strncpy(select_buffer, "HTTP/1.1 503", 13);
+
 	CSettingsStorage* db = CSettingsStorage::getInstance();
 
 	_port = db->getSocketFrom();
 	_port_to = db->getSocketTo();
 
 	_icy = false;
+
 	_srv_socket = -1;
 	_client_socket = -1;
 	_connected = false;
 	_header_sent = false;
 	_send_data = false;
 	_bytes_written= 0;
-	_srv_socket = -1;
+	_wait = false;
+
+
 	_header=  QByteArray("ICY 200 Ok\r\n"
 										   "icy-notice1:Bliblablupp\r\n"
 										   "icy-notice2:asdfasd\r\n"
@@ -71,6 +75,7 @@ Socket::Socket(QObject* parent) : QThread(parent) {
 										   );
 
 	_icy_header = QByteArray("icy-metaint:8192\r\n");
+
 }
 
 
@@ -91,18 +96,13 @@ Socket::~Socket() {
 
 void Socket::run() {
 
-	while(!init_socket()) {
-		usleep(1000000);
-	}
-
 	while( true ){
 
-		if(	sock_connect() ){
-			if(parse_message()){
-				_send_data = true;
-			}
+		if(!_wait2) {
+			_wait2 = true;
+			sock_connect();
+			_wait2 = false;
 		}
-
 		usleep(1000000);
 	}
 
@@ -117,19 +117,18 @@ void Socket::run() {
 
 bool Socket::init_socket(){
 
-	if(_srv_socket > 0) return true;
+	int status;
+	int reuse_addr = 1;
+
+	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
 
 	_connected = false;
 	memset( &_srv_info, 0, sizeof(_srv_info));
 
-	int reuse_addr;
-	int status;
 
 	_srv_info.sin_family = AF_INET;
 	_srv_info.sin_addr.s_addr = htonl(INADDR_ANY);
 	_srv_info.sin_port = htons(_port);
-
-	_srv_socket = socket(AF_INET, SOCK_STREAM, 0);
 
 	if(_srv_socket < 0){
 		qDebug() << "Server socket invalid";
@@ -137,23 +136,29 @@ bool Socket::init_socket(){
 		return false;
 	}
 
-	setsockopt(_srv_socket, SOL_PACKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
+	//setsockopt(_srv_socket, SOL_PACKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
 	status = -1;
 
+	while(true){
+
 		status = bind(_srv_socket, (struct sockaddr*) & _srv_info, sizeof(_srv_info));
-		if(status < 0){
-			qDebug() << "Cannot bind port " << _port;
-			qDebug() << strerror(errno);
-			close(_srv_socket);
-			_srv_socket = -1;
-			return false;
+		if(status != -1) break;
 
-		}
+		_port++;
+		_srv_info.sin_port = htons(_port);
+	}
 
 
+	if(status < 0){
+		qDebug() << "Cannot bind port " << _port;
+		qDebug() << strerror(errno);
+		close(_srv_socket);
+		_srv_socket = -1;
+		return false;
+	}
 
 	qDebug() << "Listening on port " << _port;
-	status = listen(_srv_socket, 3);
+	status = listen(_srv_socket, 10);
 	if(status < 0){
 		qDebug() << "Cannot listen to port " << _port;
 		qDebug() << strerror(errno);
@@ -183,15 +188,19 @@ bool Socket::parse_message(){
 	}
 
 	qmsg = QString::fromLocal8Bit(msg, n_bytes);
-	qDebug() << qmsg;
 
 	lst = qmsg.split("\r\n");
 	_icy = false;
 
+#ifdef SOCKET_DEBUG
+	qDebug();
+	qDebug();
+	qDebug() << "*** Parse Message ***";
+#endif
 	foreach(QString str, lst){
 
 #ifdef SOCKET_DEBUG
-		qDebug() << str;
+			qDebug() << str;
 #endif
 
 		if(str.contains("GET")){
@@ -203,21 +212,32 @@ bool Socket::parse_message(){
 		{
 			if(str.contains(":1") || str.contains(": 1")){
 
-#ifdef SOCKET_DEBUG
-				qDebug() << "Set ICY to true";
-#endif
-
 				_icy = true;
 				header.append(_icy_header);
 				continue;
 			}
 		}
+
+		if(str.contains("agent", Qt::CaseInsensitive)){
+			qDebug() << str;
+			if(str.size() > 11){
+				_user_agent = str.right( str.size() - 11).toLower();
+			}
+		}
 	}
+
+#ifdef SOCKET_DEBUG
+
+	qDebug() << "*** Parse Message end ***";
+	qDebug();
+	qDebug();
+#endif
 
 	header.append("\r\n");
 
 	if(get_received){
 		qDebug() << "Header size = " << header.size();
+
 		if( send_header(header)){
 			return true;
 		}
@@ -230,11 +250,18 @@ bool Socket::parse_message(){
 
 bool Socket::sock_connect() {
 
-	if(_connected) return false;
+	int status;
 
+	if(_connected) {
+		return true;
+	}
 
+	if(_srv_socket < 0){
+		if(!init_socket()) {
 
-	qDebug() << "Wait for incoming connection";
+			return false;
+		}
+	}
 
 	socklen_t addr_len;
 	struct sockaddr_in addr_in;
@@ -242,33 +269,68 @@ bool Socket::sock_connect() {
 
 	addr_len = (socklen_t) sizeof(struct sockaddr);
 
+	fd_set read_fd_set, active_fd_set;
+	FD_SET(_srv_socket, &active_fd_set);
+	read_fd_set = active_fd_set;
+	qDebug() << "Select...";
+	status = select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL);
+	if(status < 0){
+		_connected = false;
+		return false;
+	}
+
+	if(_wait) return false;
+
+	for(int i=0; i<FD_SETSIZE; i++){
+		if(FD_ISSET(i, &read_fd_set) && i == _srv_socket){
+			qDebug() << "Some client asks for permission...";
+		}
+	}
+
+	qDebug() << "Wait for incoming connection...";
 	_client_socket = accept(_srv_socket, (struct sockaddr *) &(addr_in),
 						   &addr_len);
-
 
 	if(_client_socket < 0) {
 		qDebug() << "Socket: Cannot establish connection";
 		qDebug() << strerror(errno);
+
 		return false;
 	}
 
 	_ip = QString(inet_ntoa( addr_in.sin_addr));
 
-	//emit sig_new_connection_req(_ip);
+	qDebug() << "Connected to " << _ip;
 
-	qDebug() << "Connected t0 " << _ip;
-	_connected = true;
+	if(!parse_message()){
+
+		return false;
+	}
+
 	emit sig_new_connection(_ip);
 	emit sig_new_connection();
+
+	_connected = true;
+	_send_data = true;
+	_bytes_written = 0;
 
 	return true;
 }
 
 void Socket::sock_disconnect() {
 
+	int n_bytes;
+
+
 	if(_client_socket > 0){
-		shutdown(_client_socket, 2);
-		close(_client_socket);
+		if( close(_client_socket) < 0 ){
+			qDebug() << "Cannot close client socket";
+			qDebug() << strerror(errno);
+		}
+
+		while( (n_bytes = read(_client_socket, select_buffer, 512)) != -1 ){
+			qDebug() << "Got some data before closing..." << n_bytes;
+		}
 	}
 
 	_client_socket = -1;
@@ -277,29 +339,43 @@ void Socket::sock_disconnect() {
 	_send_data = false;
 	_connected = false;
 	_icy = false;
+	_bytes_written = 0;
 
 	_port = 1024;
+	_user_agent = "";
 
 	emit sig_connection_closed(_ip);
 	_ip = "";
+	qDebug() << "Client disconnected";
+
+}
+
+void Socket::server_disconnect(){
+	if(_srv_socket > 0){
+
+		if( close(_srv_socket) < 0){
+			qDebug() << "Cannot close server socket";
+			qDebug() << strerror(errno);
+		}
+		_srv_socket = -1;
+		qDebug() << "Server disconnected";
+
+	}
+	else{
+		qDebug() << "Server already disconnected";
+	}
 }
 
 void Socket::connection_valid(bool b){
 
 	if(!b) {
+		_wait = true;
+		server_disconnect();
 		sock_disconnect();
+		_wait = false;
 	}
-
-	else if(0){
-		if(_srv_socket != -1){
-			qDebug() << "Connected to " << _ip;
-			_connected = true;
-			emit sig_new_connection(_ip);
-			emit sig_new_connection();
-		}
-	}
-
 }
+
 
 void Socket::new_data(uchar* data, quint64 size){
 
@@ -311,11 +387,11 @@ void Socket::new_data(uchar* data, quint64 size){
 	n_bytes = send_stream_data(data, size);
 
 #ifdef SOCKET_DEBUG
-	qDebug() << "Wrote " << n_bytes << " bytes";
+	//qDebug() << "Wrote " << n_bytes << " bytes";
 #endif
 
-
 	if(n_bytes == -1){
+		qDebug() << "n bytes == -1";
 		sock_disconnect();
 	}
 }
@@ -328,12 +404,13 @@ bool Socket::send_header(const QByteArray& header){
 	if(n_bytes >= header.size()) return true;
 
 	return false;
+	return true;
 }
 
 
 bool Socket::send_icy_data(){
 
-	ssize_t n_bytes;
+	ssize_t n_bytes=0;
 	QByteArray metadata = QByteArray("StreamTitle='");
 	metadata.append(_stream_title.toLocal8Bit());
 	metadata.append("';");
@@ -352,15 +429,16 @@ bool Socket::send_icy_data(){
 
 qint64 Socket::send_stream_data(uchar* data , quint64 size){
 
-	ssize_t n_bytes;
+	ssize_t n_bytes=0;
 
 #ifdef SOCKET_DEBUG
-	qDebug() << _bytes_written + size << ";" << _icy;
+	//qDebug() << _bytes_written + size << ";" << _icy;
 #endif
 
 	if(_bytes_written + size > 8192 && _icy){
 
 		quint64 bytes_before = 8192 - _bytes_written;
+
 		n_bytes = write(_client_socket, data, bytes_before);
 
 		send_icy_data();
@@ -376,10 +454,11 @@ qint64 Socket::send_stream_data(uchar* data , quint64 size){
 	else{
 		n_bytes = write(_client_socket, data, size);
 		_bytes_written += n_bytes;
+
 	}
 
 #ifdef SOCKET_DEBUG
-	qDebug() << _bytes_written;
+	//qDebug() << _bytes_written;
 #endif
 
 	return n_bytes;
@@ -392,6 +471,5 @@ void Socket::psl_update_track(const MetaData& md){
 void Socket::stop(){
 	sock_disconnect();
 	close(_srv_socket);
-	shutdown(_srv_socket, 2);
 	_srv_socket = -1;
 }

@@ -70,6 +70,10 @@ private:
 	bool 	_connected;
 	bool	_send_data;
 	bool	_icy;
+	QString _user_agent;
+	bool	_wait;
+	bool	_wait2;
+
 
 	QByteArray _header;
 	QByteArray _icy_header;
@@ -81,6 +85,7 @@ private:
 
 	bool sock_connect();
 	void sock_disconnect();
+	void server_disconnect();
 
 	ssize_t _bytes_written;
 
