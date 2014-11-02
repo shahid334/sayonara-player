@@ -32,6 +32,13 @@
 
 #define BUFFER_SIZE 1024
 
+enum HttpAnswer{
+	HttpAnswerFail=0,
+	HttpAnswerOK=1,
+	HttpAnswerReject=2
+};
+
+
 class Socket : public QThread {
 
 	Q_OBJECT
@@ -63,41 +70,45 @@ public slots:
 	void psl_update_track(const MetaData&);
 
 private:
+
 	int		_srv_socket;
-	int 	_client_socket;
+	int		_client_socket;
+
 	int		_port;
-	int		_port_to;
 	bool 	_connected;
 	bool	_send_data;
 	bool	_icy;
-	QString _user_agent;
-	bool	_wait;
-	bool	_wait2;
 
+	ssize_t _bytes_written;
+
+	QString _stream_title;
+	QString _user_agent;
 
 	QByteArray _header;
 	QByteArray _icy_header;
-	bool	_header_sent;
 
 	QString _ip;
 	struct sockaddr_in _srv_info;
 	struct sockaddr_in _cli_info;
 
-	bool sock_connect();
-	void sock_disconnect();
+
+	bool client_connect();
+	void client_disconnect();
+	void client_reset();
+	bool check_for_new_data();
+
+	bool init_server_socket();
 	void server_disconnect();
 
-	ssize_t _bytes_written;
-
-	QList<QByteArray> _list;
-	bool init_socket();
-	bool send_header(const QByteArray& header);
+	bool send_header();
+	void send_reject_header();
 	bool send_icy_data();
+
 	qint64 send_stream_data(uchar* data , quint64 size);
 
-	QString _stream_title;
 
-	bool parse_message();
+
+	HttpAnswer parse_message();
 
 };
 
