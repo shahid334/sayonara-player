@@ -404,11 +404,27 @@ void GUI_Playlist::download_progress(int progress){
 
 void GUI_Playlist::new_connection(const QString &ip){
 
+	int n_connections;
+	QString connection_str;
+	QString tooltip;
+	_connections << ip;
 
-	lab_connection->setText("1 user connected");
-	lab_connection->setToolTip(ip);
-	btn_dismiss->setVisible(true);
-	lab_connection->setContentsMargins(0, 2, 0, 2);
+	n_connections = _connections.size();
+	if(n_connections == 1){
+		connection_str = "1 user connected";
+	}
+	else{
+		connection_str = QString::number(n_connections) + " users connected";
+	}
+
+	combo_connections->clear();
+	foreach(QString str, _connections){
+		combo_connections->addItem(str);
+	}
+
+	btn_dismiss->setVisible(n_connections > 0);
+	combo_connections->setVisible(n_connections > 0);
+
 }
 
 void GUI_Playlist::new_connection_request(const QString &ip_adress){
@@ -428,21 +444,23 @@ void GUI_Playlist::new_connection_request(const QString &ip_adress){
 								QMessageBox::StandardButton::Yes);
 
 	if(btn == QMessageBox::No){
-		emit sig_connection_valid(false);
-	}
-
-	else{
-		emit sig_connection_valid(true);
+		emit sig_close_connection(0);
 	}
 }
 
 void GUI_Playlist::connection_closed(const QString & str){
-	lab_connection->setText("");
-	lab_connection->setToolTip("");
-	btn_dismiss->setVisible(false);
+
+	int idx= combo_connections->findText(str);
+
+	if(idx < combo_connections->size() && idx >= 0){
+		combo_connections->removeItem(idx);
+		_connections.removeAt(idx);
+	}
+
+	btn_dismiss->setVisible(_connections.size() > 0);
+	combo_connections->setVisible(_connections.size() > 0);
 }
 
 void GUI_Playlist::dismiss(){
-	emit sig_connection_valid(false);
-	connection_closed("");
+	emit sig_close_connection(combo_connections->currentIndex());
 }

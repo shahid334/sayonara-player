@@ -58,6 +58,7 @@ Socket::Socket(QObject* parent) : QThread(parent) {
 										   "icy-genre:None\r\n"
 										   "icy-url:http://sayonara.luciocarreras.de\r\n"
 										   "content-type:audio/mpeg\r\n"
+										   "connection:close\r\n"
 										   "icy-pub:1\r\n"
 										   "icy-br:128\r\n"
 
@@ -243,7 +244,7 @@ HttpAnswer Socket::parse_message(){
 			continue;
 		}
 
-		if(str.contains("connection: keep-alive", Qt::CaseInsensitive)){
+		if(str.contains("user-agent: gvfs", Qt::CaseInsensitive)){
 			qDebug() << "Reject!!";
 			return HttpAnswerReject;
 		}
@@ -276,7 +277,7 @@ HttpAnswer Socket::parse_message(){
 	qDebug();
 	qDebug();
 #endif
-_icy = true;
+
 	if(get_received){
 		return HttpAnswerOK;
 	}

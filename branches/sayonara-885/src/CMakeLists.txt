@@ -66,9 +66,8 @@ SET(HEADERS
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
-    Socket/Socket.h
-    #Soundcloud/SoundcloudLibrary.h
-#    Soundcloud/SoundcloudHelper.h
+    RadioStation/SocketWriter.h
+    RadioStation/StreamServer.h
 )
 
 SET(SOURCES
@@ -84,11 +83,12 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
-    Socket/Socket.cpp
     HelperStructs/SmartComparison.cpp
-#    Soundcloud/SoundcloudLibrary.cpp
-#    Soundcloud/SoundcloudHelper.cpp
+    RadioStation/SocketWriter.cpp
+    RadioStation/StreamServer.cpp
 )
+
+
 
 
 FILE (GLOB TRANSLATIONS_FILES languages/*.ts)

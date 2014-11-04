@@ -1,7 +1,7 @@
 #include <QThread>
 #include <QList>
 
-#include "Sockets/SocketWriter.h"
+#include "RadioStation/SocketWriter.h"
 
 typedef struct sockaddr_in SocketAdress;
 typedef struct sockaddr SocketAdress_t;
@@ -9,6 +9,10 @@ typedef struct sockaddr SocketAdress_t;
 class StreamServer : public QThread{
 
 	Q_OBJECT
+
+	signals:
+		void sig_new_connection(const QString&);
+		void sig_connection_closed(const QString&);
 
 	public:
 		StreamServer(QObject* parent=0);
@@ -22,7 +26,7 @@ class StreamServer : public QThread{
 		bool create_socket();
 		QList<SocketWriter*> _lst_sw;
 
-		bool accept();
+		SocketWriter* client_accept();
 
 
 
@@ -31,7 +35,8 @@ class StreamServer : public QThread{
 
 	public slots:
 		void new_data(uchar* data, quint64 size);
-		void disconnect(const QString& ip);
+		void disconnect(int idx);
 		void disconnect_all();
-		void close();
+		void update_track(const MetaData&);
+		void server_close();
 };

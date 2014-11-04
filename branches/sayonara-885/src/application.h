@@ -68,7 +68,7 @@
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
-#include "Socket/Socket.h"
+#include "RadioStation/StreamServer.h"
 
 
 
@@ -117,7 +117,7 @@ private:
 	//GUI_SoundCloudLibrary*  ui_sc;
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
-	Socket*                 remote_socket;
+	StreamServer*           stream_server;
 
 
 	SoundPluginLoader*      engine_plugin_loader;

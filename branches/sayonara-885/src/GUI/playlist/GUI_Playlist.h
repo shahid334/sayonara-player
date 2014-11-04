@@ -74,7 +74,7 @@
 
 			void search_similar_artists(const QString&);
             void sig_no_focus();
-			void sig_connection_valid(bool);
+			void sig_close_connection(int);
 
 
 
@@ -127,6 +127,8 @@
             void set_total_time_label();
 			void check_dynamic_play_button();
 			void prepare_info();
+
+			QStringList _connections;
 
     protected:
             void changeEvent(QEvent* e);

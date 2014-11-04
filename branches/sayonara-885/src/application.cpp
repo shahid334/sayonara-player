@@ -50,8 +50,6 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
-#include "Socket/Socket.h"
-
 
 #include <QMap>
 #include <QSharedMemory>
@@ -166,7 +164,7 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	ui_style_settings = new GUI_StyleSettings(player);
 
-	remote_socket       = new Socket(this);
+	stream_server       = new StreamServer(this);
 
 	_pph = new PlayerPluginHandler(NULL);
 
@@ -490,23 +488,25 @@ void Application::init_connections() {
     bool is_socket_active = set->getSocketActivated();
 
     if(is_socket_active) {
-        CONNECT (remote_socket, sig_play(),		playlist_handler,			psl_play());
-        CONNECT (remote_socket, sig_next(),		playlist_handler,			psl_forward());
-        CONNECT (remote_socket, sig_prev(),		playlist_handler,			psl_backward());
-        CONNECT (remote_socket, sig_stop(),		playlist_handler,			psl_stop());
-        CONNECT (remote_socket, sig_pause(),		listen,				pause());
+	   /* CONNECT (stream_server, sig_play(),		playlist_handler,			psl_play());
+		CONNECT (stream_server, sig_next(),		playlist_handler,			psl_forward());
+		CONNECT (stream_server, sig_prev(),		playlist_handler,			psl_backward());
+		CONNECT (stream_server, sig_stop(),		playlist_handler,			psl_stop());
+		CONNECT (stream_server, sig_pause(),		listen,				pause());*/
 
 
 //		CONNECT (remote_socket, sig_new_connection(),						listen,			pause());
-		CONNECT (remote_socket, sig_setVolume(int),							player,			setVolume(int));
-		CONNECT (remote_socket, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
-		CONNECT (remote_socket, sig_new_connection(const QString&),			ui_playlist,	new_connection(const QString&));
-		CONNECT (remote_socket, sig_connection_closed(const QString&),		ui_playlist,	connection_closed(const QString&));
-		CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	remote_socket,		psl_update_track(const MetaData&));
-		CONNECT(ui_playlist, sig_connection_valid(bool),					remote_socket,	connection_valid(bool));
-		CONNECT(listen, sig_data(uchar*, quint64),							remote_socket,	new_data(uchar*, quint64));
+		//CONNECT (stream_server, sig_setVolume(int),							player,			setVolume(int));
 
-        remote_socket->start();
+		//CONNECT (stream_server, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
+		CONNECT (stream_server, sig_new_connection(const QString&),			ui_playlist,	new_connection(const QString&));
+		CONNECT (stream_server, sig_connection_closed(const QString&),		ui_playlist,	connection_closed(const QString&));
+
+		CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,		update_track(const MetaData&));
+		CONNECT (ui_playlist, sig_close_connection(int),					stream_server,	disconnect(int));
+		CONNECT (listen, sig_data(uchar*, quint64),							stream_server,	new_data(uchar*, quint64));
+
+		stream_server->start();
     }
 
 

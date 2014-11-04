@@ -11,6 +11,12 @@
 #include <unistd.h>
 #endif
 
+enum HttpAnswer {
+	HttpAnswerFail=0,
+	HttpAnswerOK=1,
+	HttpAnswerReject=2,
+	HttpAnswerIgnore=3
+};
 
 
 class SocketWriter {
@@ -25,6 +31,7 @@ class SocketWriter {
 		bool _send_data;
 		bool _icy;
 
+
 		quint64 _sent_bytes;
 		QString _ip;
 
@@ -32,16 +39,19 @@ class SocketWriter {
 		QByteArray _header;
 		QByteArray _reject_header;
 		QString _stream_title;
+		QString _user_agent;
 
 		void reset();
 		void create_headers();
-		void send_icy_data();
+		bool send_icy_data();
 
 	public:
 		QString get_ip();
-		ip get_sd();
+		int get_sd();
+		QString get_user_agent();
 		void change_track(const MetaData& md);
-		bool send_header(bool reject);		
+		bool send_header(bool reject);
+		HttpAnswer parse_message();
 		bool send_data(const uchar*, quint64 size);
 		void disconnect();
 		void enable();

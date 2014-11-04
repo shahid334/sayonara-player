@@ -26,7 +26,7 @@
 #include "HelperStructs/MetaData.h"
 #include <QObject>
 #include <QStringList>
-#include "Socket/Socket.h"
+
 
 #include <vector>
 
