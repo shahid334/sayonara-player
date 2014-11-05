@@ -22,11 +22,13 @@ class StreamServer : public QThread{
 		int _socket;
 		int _port;
 		bool _reject;
+		bool _waiting;
 
 		bool create_socket();
 		QList<SocketWriter*> _lst_sw;
 
 		SocketWriter* client_accept();
+		MetaData _md;
 
 
 
@@ -35,8 +37,10 @@ class StreamServer : public QThread{
 
 	public slots:
 		void new_data(uchar* data, quint64 size);
-		void disconnect(int idx);
+		void dismiss(int idx);
+		void disconnect(SocketWriter* sw);
 		void disconnect_all();
 		void update_track(const MetaData&);
 		void server_close();
+		void stop();
 };

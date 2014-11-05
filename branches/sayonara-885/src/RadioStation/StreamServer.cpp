@@ -5,7 +5,8 @@ StreamServer::StreamServer(QObject* parent) :
 	QThread(parent),
 	_socket(-1),
 	_port(1024),
-	_reject(false)
+	_reject(false),
+	_waiting(false)
 {
 
 }
@@ -13,6 +14,10 @@ StreamServer::StreamServer(QObject* parent) :
 StreamServer::~StreamServer(){
 	server_close();
 	disconnect_all();
+
+	while(_socket != -1){
+		msleep(1000);
+	}
 }
 
 bool StreamServer::create_socket(){
@@ -77,38 +82,48 @@ void StreamServer::run(){
 
 	while(_socket != -1){
 
-
 		msleep(1000);
 
 		sw = client_accept();
 		if(!sw) continue;
 
-
 		answer = sw->parse_message();
 		if( answer == HttpAnswerReject ){
-			sw->send_header(true);
 			qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+			sw->send_header(true);
+			disconnect(sw);
 			continue;
 		}
 
 		else if( answer == HttpAnswerFail ){
+			qDebug() << "Fail & Reject: " << sw->get_user_agent() << ": " << sw->get_ip();
 			sw->send_header(true);
-			qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+			disconnect(sw);
 			continue;
 		}
 
 		else if( answer == HttpAnswerIgnore){
 		}
 
+		else if( answer == HttpAnswerPlaylist){
+			sw->send_playlist(_port, _md);
+			disconnect(sw);
+			continue;
+		}
+
 		else{
 			sw->send_header(false);
 			qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
+			sw->change_track(_md);
 		}
 	}
+
+	qDebug() << "Radio station: Bye";
 }
 
 SocketWriter* StreamServer::client_accept(){
 	
+	if(_waiting) return NULL;
 	int client_socket;
 	QString client_ip;
 	SocketWriter* sw=NULL;
@@ -118,31 +133,17 @@ SocketWriter* StreamServer::client_accept(){
     memset( &addr_in, 0, sizeof(addr_in));
 
     addr_len = (socklen_t) sizeof(SocketAdress);
-/*
-fd_set read_fd_set, active_fd_set;
-FD_SET(_srv_socket, &active_fd_set);
-read_fd_set = active_fd_set;
-qDebug() << "Select...";
-status = select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL);
-if(status < 0){
-	   _connected = false;
-	   return false;
-}
-
-for(int i=0; i<FD_SETSIZE; i++){
-	   if(FD_ISSET(i, &read_fd_set) && i == _srv_socket){
-			   qDebug() << "Some client asks for permission...";
-	   }
-}
-
-	*/
-
 
     qDebug() << "Wait for incoming connection...";
+
+	_waiting = true;
 	client_socket =  accept(_socket, (SocketAdress_t*) (&addr_in),
 						   &addr_len);
+	_waiting = false;
 
-	if(client_socket < 0) return NULL;
+	if(client_socket < 0) {
+		return NULL;
+	}
 
 	client_ip = QString(inet_ntoa( addr_in.sin_addr ));
 
@@ -156,7 +157,6 @@ for(int i=0; i<FD_SETSIZE; i++){
 
 void StreamServer::new_data(uchar* data, quint64 size){
 
-
 	QList<int> idx_list;
 	int idx = 0;
 
@@ -166,14 +166,20 @@ void StreamServer::new_data(uchar* data, quint64 size){
 		success = sw->send_data(data, size);
 
 		if(!success){
+
+			qDebug() << "Connection closed by client "
+					 << sw->get_user_agent()
+					 << " (" << sw->get_ip() << ")";
+
+
 			idx_list << idx;
 
-			qDebug() << "Connection closed by client " << sw->get_user_agent() << " (" << sw->get_ip() << ")";
-			emit sig_connection_closed(sw->get_ip());
 			sw->disconnect();
 
-/*			delete sw;
-			sw = 0;*/
+			emit sig_connection_closed(sw->get_ip());
+
+			delete sw;
+			sw = 0;
 		}
 
 		idx++;
@@ -187,6 +193,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 }
 
 void StreamServer::update_track(const MetaData & md){
+	_md = md;
 	foreach(SocketWriter* sw, _lst_sw){
 		sw->change_track(md);
 	}
@@ -194,6 +201,8 @@ void StreamServer::update_track(const MetaData & md){
 
 void StreamServer::server_close(){
 	
+	if(_socket == -1) return;
+
 	if( shutdown(_socket, 2) < 0 ){
 		qDebug() << "Cannot shutdown server socket";
 		qDebug() << strerror(errno);
@@ -208,20 +217,28 @@ void StreamServer::server_close(){
 }
 
 
-void StreamServer::disconnect(int idx){
+void StreamServer::dismiss(int idx){
 
 	if(idx >= _lst_sw.size()) return;
 
 	SocketWriter* sw = _lst_sw[idx];
 
-	emit sig_connection_closed( sw->get_ip() );
+	sw->disable();
+}
+
+void StreamServer::disconnect(SocketWriter* sw){
+
+	emit sig_connection_closed(sw->get_ip());
 
 	sw->disconnect();
 
-	/*delete sw;
-	sw = 0;*/
+	int idx = _lst_sw.indexOf(sw);
+	if(idx >= 0 && idx < _lst_sw.size()){
+		_lst_sw.removeAt(idx);
+	}
 
-	_lst_sw.removeAt(idx);
+	delete sw;
+	sw = 0;
 
 }
 
@@ -229,9 +246,15 @@ void StreamServer::disconnect_all(){
 
 	foreach(SocketWriter* sw, _lst_sw){
 		sw->disconnect();
-		/*delete sw;
-		sw = 0;*/
+		delete sw;
+		sw = 0;
 	}
 
 	_lst_sw.clear();
+}
+
+void StreamServer::stop(){
+
+	server_close();
+	disconnect_all();
 }

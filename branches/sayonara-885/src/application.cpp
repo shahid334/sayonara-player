@@ -501,9 +501,10 @@ void Application::init_connections() {
 		//CONNECT (stream_server, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
 		CONNECT (stream_server, sig_new_connection(const QString&),			ui_playlist,	new_connection(const QString&));
 		CONNECT (stream_server, sig_connection_closed(const QString&),		ui_playlist,	connection_closed(const QString&));
+		CONNECT (listen, destroyed(), stream_server, stop());
 
 		CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,		update_track(const MetaData&));
-		CONNECT (ui_playlist, sig_close_connection(int),					stream_server,	disconnect(int));
+		CONNECT (ui_playlist, sig_close_connection(int),					stream_server,	dismiss(int));
 		CONNECT (listen, sig_data(uchar*, quint64),							stream_server,	new_data(uchar*, quint64));
 
 		stream_server->start();

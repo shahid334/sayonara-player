@@ -91,6 +91,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	btn_gapless->setChecked(_playlist_mode.gapless);
 	btn_dismiss->setIcon(Helper::getIcon("close.png"));
 	btn_dismiss->setVisible(false);
+	combo_connections->setVisible(false);
 
     check_dynamic_play_button();
     setAcceptDrops(true);
@@ -424,7 +425,6 @@ void GUI_Playlist::new_connection(const QString &ip){
 
 	btn_dismiss->setVisible(n_connections > 0);
 	combo_connections->setVisible(n_connections > 0);
-
 }
 
 void GUI_Playlist::new_connection_request(const QString &ip_adress){
@@ -450,9 +450,18 @@ void GUI_Playlist::new_connection_request(const QString &ip_adress){
 
 void GUI_Playlist::connection_closed(const QString & str){
 
-	int idx= combo_connections->findText(str);
+	int idx = -1;
 
-	if(idx < combo_connections->size() && idx >= 0){
+	for(int i=0; i<combo_connections->count(); i++){
+		if(combo_connections->itemText(i).contains(str)){
+			idx = i;
+			break;
+		}
+	}
+
+
+
+	if(idx < combo_connections->count() && idx >= 0){
 		combo_connections->removeItem(idx);
 		_connections.removeAt(idx);
 	}
@@ -462,5 +471,15 @@ void GUI_Playlist::connection_closed(const QString & str){
 }
 
 void GUI_Playlist::dismiss(){
-	emit sig_close_connection(combo_connections->currentIndex());
+	int idx = combo_connections->currentIndex();
+	if( !_connections[idx].contains("(d)")){
+		_connections[idx] = QString("(d) ") + _connections[idx];
+	}
+
+	combo_connections->clear();
+	combo_connections->addItems(_connections);
+	combo_connections->setCurrentIndex(idx);
+
+	emit sig_close_connection(idx);
+
 }
