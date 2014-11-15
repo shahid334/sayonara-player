@@ -160,6 +160,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_audioconverter   = new GUI_AudioConverter(tr("&mp3 Converter"), player->getParentOfPlugin());
 	ui_bookmarks        = new GUI_Bookmarks(tr("&Bookmarks"), player->getParentOfPlugin());
 	ui_speed			= new GUI_Speed(tr("Spee&d"), player->getParentOfPlugin());
+	ui_broadcast		= new GUI_Broadcast(tr("&Broadcast"), player->getParentOfPlugin());
 
 
 	ui_style_settings = new GUI_StyleSettings(player);
@@ -177,6 +178,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	_pph->addPlugin(ui_audioconverter);
 	_pph->addPlugin(ui_bookmarks);
 	_pph->addPlugin(ui_speed);
+	_pph->addPlugin(ui_broadcast);
 
 	qDebug() << "Plugin " << ui_level->getVisName();
 	qDebug() << "Plugin " << ui_stream->getVisName();
@@ -186,6 +188,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	qDebug() << "Plugin " << ui_audioconverter->getVisName();
 	qDebug() << "Plugin " << ui_bookmarks->getVisName();
 	qDebug() << "Plugin " << ui_speed->getVisName();
+	qDebug() << "Plugin " << ui_broadcast->getVisName();
 
 	QString dir;
 
@@ -499,13 +502,16 @@ void Application::init_connections() {
 		//CONNECT (stream_server, sig_setVolume(int),							player,			setVolume(int));
 
 		//CONNECT (stream_server, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
-		CONNECT (stream_server, sig_new_connection(const QString&),			ui_playlist,	new_connection(const QString&));
-		CONNECT (stream_server, sig_connection_closed(const QString&),		ui_playlist,	connection_closed(const QString&));
-		CONNECT (listen, destroyed(), stream_server, stop());
+		CONNECT (stream_server, sig_new_connection_request(const QString&),	ui_broadcast,	new_connection_request(const QString&));
+		CONNECT (stream_server, sig_new_connection(const QString&),			ui_broadcast,	new_connection(const QString&));
+		CONNECT (stream_server, sig_connection_closed(const QString&),		ui_broadcast,	connection_closed(const QString&));
+		CONNECT (listen, destroyed(),										stream_server,	stop());
 
 		CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,		update_track(const MetaData&));
-		CONNECT (ui_playlist, sig_close_connection(int),					stream_server,	dismiss(int));
-		CONNECT (listen, sig_data(uchar*, quint64),							stream_server,	new_data(uchar*, quint64));
+		CONNECT (ui_broadcast, sig_dismiss(int),					stream_server,	dismiss(int));
+		CONNECT (ui_broadcast, sig_accepted(),					stream_server,	accept_client());
+		CONNECT (ui_broadcast, sig_rejected(),					stream_server,	reject_client());
+		CONNECT (listen, sig_data(uchar*, quint64),					stream_server,	new_data(uchar*, quint64));
 
 		stream_server->start();
     }

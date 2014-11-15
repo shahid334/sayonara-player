@@ -58,6 +58,8 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
 	Ui::GUI_Equalizer(){
 
+	_active_idx = -1;
+
 	_settings = CSettingsStorage::getInstance();
 	setupUi(this);
 
@@ -76,7 +78,9 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	_sliders.push_back(new EqSlider(sli_9, label_10, 9));
 
 	foreach(EqSlider* s, _sliders) {
-		connect(s, SIGNAL(valueChanged(int,int)), this, SLOT(sli_changed(int, int)));
+		connect(s, SIGNAL(sig_value_changed(int,int)), this, SLOT(sli_changed(int, int)));
+		connect(s, SIGNAL(sig_slider_pressed(int)), this, SLOT(sli_pressed(int)));
+		connect(s, SIGNAL(sig_slider_released(int)), this, SLOT(sli_released(int)));
 	}
 
 	connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
@@ -107,11 +111,46 @@ void GUI_Equalizer::changeSkin(bool dark) {
     _dark = dark;
 }
 
+void GUI_Equalizer::sli_pressed(int idx){
+	_active_idx= idx;
+	for(int i=0; i<_sliders.size(); i++){
+		_old_val[i] = _sliders[i]->getValue();
+	}
+}
 
+
+void GUI_Equalizer::sli_released(int idx){
+	_active_idx = -1;
+}
+
+
+static double scale[] = {1.0, 0.6, 0.20, 0.06, 0.01};
 
 void GUI_Equalizer::sli_changed(int idx, int new_val) {
-	_sliders[idx]->getLabel()->setText(calc_lab(new_val));
+	EqSlider* s = _sliders[idx];
+	s->getLabel()->setText(calc_lab(new_val));
+
 	emit eq_changed_signal(idx, new_val);
+
+	// this slider has been changed actively
+	if( idx == _active_idx && cb_sinus->isChecked() ){
+		int delta = new_val - _old_val[idx];
+
+		for(int i=idx-9; i<idx+9; i++){
+			if(i < 0) continue;
+			if(i == idx) continue;
+			if(i >= _sliders.size()) break;
+
+			// how far is the slider away from me?
+			int x = abs(_active_idx - i);
+
+			if(x > 4) continue;
+
+			double new_val = _old_val[i] + (delta * scale[x]);
+
+			_sliders[i]->setValue(new_val);
+		}
+	}
 }
 
 
@@ -154,6 +193,7 @@ void GUI_Equalizer::preset_changed(int index) {
 		if(i > (int) _sliders.size()) break;
 
 		_sliders[i]->setValue( setting[i] );
+		_old_val[i] = setting[i];
 	}
 
 

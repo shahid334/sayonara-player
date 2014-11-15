@@ -89,9 +89,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
 	btn_shuffle->setChecked(_playlist_mode.shuffle);
 	btn_gapless->setChecked(_playlist_mode.gapless);
-	btn_dismiss->setIcon(Helper::getIcon("close.png"));
-	btn_dismiss->setVisible(false);
-	combo_connections->setVisible(false);
 
     check_dynamic_play_button();
     setAcceptDrops(true);
@@ -104,7 +101,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(btn_dynamic, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
 	connect(btn_append, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
 	connect(btn_gapless, SIGNAL(released()), this, SLOT(playlist_mode_changed()));
-	connect(btn_dismiss, SIGNAL(released()), this, SLOT(dismiss()));
 
 
 	connect(listView, SIGNAL(sig_metadata_dropped(const MetaDataList&,int)), this, SLOT(metadata_dropped(const MetaDataList&,int)));
@@ -400,86 +396,5 @@ void GUI_Playlist::rows_removed(const QList<int>& lst, bool select_next_row) {
 
 
 void GUI_Playlist::download_progress(int progress){
-
-}
-
-void GUI_Playlist::new_connection(const QString &ip){
-
-	int n_connections;
-	QString connection_str;
-	QString tooltip;
-	_connections << ip;
-
-	n_connections = _connections.size();
-	if(n_connections == 1){
-		connection_str = "1 user connected";
-	}
-	else{
-		connection_str = QString::number(n_connections) + " users connected";
-	}
-
-	combo_connections->clear();
-	foreach(QString str, _connections){
-		combo_connections->addItem(str);
-	}
-
-	btn_dismiss->setVisible(n_connections > 0);
-	combo_connections->setVisible(n_connections > 0);
-}
-
-void GUI_Playlist::new_connection_request(const QString &ip_adress){
-
-	QString question  = tr("Someone tries to listen to your music.") +
-			"\nIP: " +
-			ip_adress + "\n\n" +
-			tr("OK?");
-
-	QString title = tr("Incoming request");
-
-	QMessageBox::StandardButton btn;
-	btn = QMessageBox::question(this,
-								title,
-								question,
-								QMessageBox::Yes | QMessageBox::No,
-								QMessageBox::StandardButton::Yes);
-
-	if(btn == QMessageBox::No){
-		emit sig_close_connection(0);
-	}
-}
-
-void GUI_Playlist::connection_closed(const QString & str){
-
-	int idx = -1;
-
-	for(int i=0; i<combo_connections->count(); i++){
-		if(combo_connections->itemText(i).contains(str)){
-			idx = i;
-			break;
-		}
-	}
-
-
-
-	if(idx < combo_connections->count() && idx >= 0){
-		combo_connections->removeItem(idx);
-		_connections.removeAt(idx);
-	}
-
-	btn_dismiss->setVisible(_connections.size() > 0);
-	combo_connections->setVisible(_connections.size() > 0);
-}
-
-void GUI_Playlist::dismiss(){
-	int idx = combo_connections->currentIndex();
-	if( !_connections[idx].contains("(d)")){
-		_connections[idx] = QString("(d) ") + _connections[idx];
-	}
-
-	combo_connections->clear();
-	combo_connections->addItems(_connections);
-	combo_connections->setCurrentIndex(idx);
-
-	emit sig_close_connection(idx);
 
 }

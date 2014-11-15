@@ -75,6 +75,7 @@
 			void search_similar_artists(const QString&);
             void sig_no_focus();
 			void sig_close_connection(int);
+			void sig_accept_connection(bool);
 
 
 
@@ -88,11 +89,6 @@
 			void psl_show_small_playlist_items(bool small_items);
             void language_changed();
             void download_progress(int);
-
-			void new_connection_request(const QString&);
-			void new_connection(const QString&);
-			void connection_closed(const QString&);
-
 
 	private slots:
 
@@ -109,7 +105,6 @@
             void metadata_dropped(const MetaDataList&, int);
             void rows_removed(const QList<int>&, bool select_next_row);
             void no_focus();
-			void dismiss();
 
 		private:
 

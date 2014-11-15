@@ -6,6 +6,7 @@ SET(ICONS
         audio_convert.png
         bookmarks.png
         broom.png
+        broadcast.png
         bwd.png
         bwd_orange.png
         close.png
@@ -71,6 +72,8 @@ SET(ICONS
 	border_a.png
 	border_b.png
         speed.png
+        tool.png
+        eq.png
 )
 
 INSTALL(FILES ${ICONS} DESTINATION share/sayonara)

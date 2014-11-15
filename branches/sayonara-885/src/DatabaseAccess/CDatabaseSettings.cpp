@@ -115,7 +115,7 @@ bool CDatabaseConnector::load_settings() {
     int eq_last = load_setting_int(SET_EQ_LAST, 0);
 	settings->setLastEqualizer(eq_last);
 
-	vector<EQ_Setting> vec_eq_settings;
+	QList<EQ_Setting> vec_eq_settings;
     vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_FLAT, EQ_Setting()));
     vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_ROCK, EQ_Setting()));
     vec_eq_settings.push_back(load_setting_type<EQ_Setting>(SET_EQ_TREBLE, EQ_Setting()));
@@ -282,6 +282,16 @@ bool CDatabaseConnector::load_settings() {
 
     int spectrum_style = load_setting_int(SET_SPECTRUM_STYLE, 0);
     settings->setSpectrumStyle(spectrum_style);
+
+	int broadcast_port = load_setting_int(SET_BROADCAST_PORT, 54054);
+	settings->setBroadcastPort(broadcast_port);
+
+	bool broadcast_active = load_setting_bool(SET_BROADCAST_ACTIVE, false);
+	settings->setBroadcastActive(broadcast_active);
+
+	bool broadcast_prompt = load_setting_bool(SET_BROADCAST_PROMPT, true);
+	settings->setBroadcastPrompt(broadcast_prompt);
+
 
     connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
     connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
@@ -459,6 +469,15 @@ bool CDatabaseConnector::store_settings() {
 
     int spectrum_style = storage->getSpectrumStyle();
     store_setting(SET_SPECTRUM_STYLE, spectrum_style);
+
+	bool broadcast_active = storage->getBroadcastActive();
+	store_setting(SET_BROADCAST_ACTIVE, broadcast_active);
+
+	bool broadcast_prompt = storage->getBroadcastPrompt();
+	store_setting(SET_BROADCAST_PROMPT, broadcast_prompt);
+
+	int broadcast_port = storage->getBroadcastPort();
+	store_setting(SET_BROADCAST_PORT, broadcast_port);
 
 	_database->commit();
 	storage->set_sth_changed(false);

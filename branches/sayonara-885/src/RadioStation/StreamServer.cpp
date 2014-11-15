@@ -4,11 +4,11 @@
 StreamServer::StreamServer(QObject* parent) : 
 	QThread(parent),
 	_socket(-1),
-	_port(1024),
-	_reject(false),
-	_waiting(false)
-{
 
+	_accepted(AcceptStateAccepted)
+{
+	settings = CSettingsStorage::getInstance();
+	_port = settings->getBroadcastPort();
 }
 
 StreamServer::~StreamServer(){
@@ -88,33 +88,28 @@ void StreamServer::run(){
 		if(!sw) continue;
 
 		answer = sw->parse_message();
-		if( answer == HttpAnswerReject ){
-			qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
-			sw->send_header(true);
-			disconnect(sw);
-			continue;
-		}
 
-		else if( answer == HttpAnswerFail ){
-			qDebug() << "Fail & Reject: " << sw->get_user_agent() << ": " << sw->get_ip();
-			sw->send_header(true);
-			disconnect(sw);
-			continue;
-		}
+		switch(answer){
 
-		else if( answer == HttpAnswerIgnore){
-		}
+			case HttpAnswerFail:
+			case HttpAnswerReject:
+				qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+				sw->send_header(true);
+				disconnect(sw);
+				break;
 
-		else if( answer == HttpAnswerPlaylist){
-			sw->send_playlist(_port, _md);
-			disconnect(sw);
-			continue;
-		}
+			case HttpAnswerIgnore:
+				break;
 
-		else{
-			sw->send_header(false);
-			qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
-			sw->change_track(_md);
+			case HttpAnswerPlaylist:
+				sw->send_playlist(_port, _md);
+				disconnect(sw);
+				break;
+
+			default:
+				sw->send_header(false);
+				qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
+				sw->change_track(_md);
 		}
 	}
 
@@ -123,37 +118,94 @@ void StreamServer::run(){
 
 SocketWriter* StreamServer::client_accept(){
 	
-	if(_waiting) return NULL;
-	int client_socket;
-	QString client_ip;
+	if(_accepted == AcceptStateWaiting) return NULL;
+
+	_accepted = AcceptStateWaiting;
+
+	qDebug() << "Wait for incoming connection...";
+
 	SocketWriter* sw=NULL;
 
-	socklen_t addr_len;
+	QString client_ip;
+	qint32 client_socket;
+	quint32 wait_for_accept = 60000;
+
+
 	SocketAdress addr_in;
-    memset( &addr_in, 0, sizeof(addr_in));
+	socklen_t addr_len = (socklen_t) sizeof(SocketAdress);
 
-    addr_len = (socklen_t) sizeof(SocketAdress);
+	memset( &addr_in, 0, sizeof(addr_in));
 
-    qDebug() << "Wait for incoming connection...";
 
-	_waiting = true;
+	/*** ACCEPT ***/
 	client_socket =  accept(_socket, (SocketAdress_t*) (&addr_in),
 						   &addr_len);
-	_waiting = false;
+	/**************/
 
 	if(client_socket < 0) {
+		_accepted = AcceptStateNone;
 		return NULL;
 	}
 
 	client_ip = QString(inet_ntoa( addr_in.sin_addr ));
 
-	sw = new SocketWriter(client_socket, client_ip);
-	_lst_sw << sw;
+	if(_accept_map.keys().contains(client_ip)){
+		// fetch the old known state
+		_accepted = _accept_map[client_ip];
+	}
 
-	emit sig_new_connection( sw->get_ip() );
+
+	else{
+
+		// No state is known so do a new request
+		emit sig_new_connection_request(client_ip);
+
+		while(_accepted == AcceptStateWaiting){
+
+			msleep(500);
+			wait_for_accept -= 500;
+
+			if(wait_for_accept <= 0){
+				_accepted = AcceptStateTimeout;
+				break;
+			}
+		}
+		// insert the new state into the map
+		_accept_map[client_ip] = _accepted;
+	}
+
+
+	switch(_accepted){
+
+		case AcceptStateRejected:
+			close(client_socket);
+			break;
+
+		case AcceptStateTimeout:
+			_accept_map.remove(client_ip);
+			break;
+
+		default:
+			sw = new SocketWriter(client_socket, client_ip);
+			_lst_sw << sw;
+
+			emit sig_new_connection( sw->get_ip() );
+			break;
+	}
 
 	return sw;
 }
+
+
+void StreamServer::accept_client(){
+	_accepted= AcceptStateAccepted;
+}
+
+
+void StreamServer::reject_client(){
+	_accepted =AcceptStateRejected;
+}
+
 
 void StreamServer::new_data(uchar* data, quint64 size){
 
@@ -164,6 +216,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 
 		bool success;
 		success = sw->send_data(data, size);
+		QString ip = sw->get_ip();
 
 		if(!success){
 
@@ -171,12 +224,11 @@ void StreamServer::new_data(uchar* data, quint64 size){
 					 << sw->get_user_agent()
 					 << " (" << sw->get_ip() << ")";
 
-
 			idx_list << idx;
 
 			sw->disconnect();
 
-			emit sig_connection_closed(sw->get_ip());
+			emit sig_connection_closed(ip);
 
 			delete sw;
 			sw = 0;

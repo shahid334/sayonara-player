@@ -127,6 +127,8 @@ namespace Helper{
 	QString get_major_artist(const QStringList& artists);
 	QString get_major_artist(const ArtistList& artists);
 
+	QString get_location_from_ip(const QString&);
+
     void set_deja_vu_font(QWidget* w, int font_size=-1);
 	void set_bin_path(const QString& str);
 }

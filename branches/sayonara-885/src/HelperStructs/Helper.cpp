@@ -828,3 +828,38 @@ void Helper::set_bin_path(const QString& str) {
     qDebug() << "Install path in " << _install_path;
 
 }
+
+
+QString Helper::get_location_from_ip(const QString& ip){
+
+	bool success;
+	QString content;
+	QString url = QString("http://freegeoip.net/xml/") + ip;
+
+	success = WebAccess::read_http_into_str(url, &content);
+
+	if(success){
+		QString country = Helper::easy_tag_finder("Response.CountryName", content);
+
+		QString city = Helper::easy_tag_finder("Response.City", content);
+
+		QString ret = "";
+
+		if(!city.isEmpty()){
+			ret = city;
+		}
+
+		if(!country.isEmpty()){
+			ret += ", " + country;
+		}
+
+		if(ret.startsWith(",")){
+			ret.remove(0, 2);
+		}
+
+		qDebug() << "Return " << ret;
+		return ret;
+	}
+
+	return "";
+}

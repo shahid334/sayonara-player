@@ -49,6 +49,7 @@
 #include "GUI/AudioConverter/GUI_AudioConverter.h"
 #include "GUI/bookmarks/GUI_Bookmarks.h"
 #include "GUI/speed/GUI_Speed.h"
+#include "GUI/broadcasting/GUI_Broadcast.h"
 //#include "GUI/soundcloud/GUI_SoundCloudLibrary.h"
 
 #include "playlist/PlaylistHandler.h"
@@ -107,6 +108,7 @@ private:
 //	GUI_LFMRadioWidget*     ui_lfm_radio;
 	GUI_Bookmarks*          ui_bookmarks;
 	GUI_Speed*				ui_speed;
+	GUI_Broadcast*			ui_broadcast;
 	PlayerPluginHandler*    _pph;
 
 	GUI_StyleSettings*      ui_style_settings;

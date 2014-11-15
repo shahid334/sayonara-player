@@ -93,6 +93,10 @@
 
 #define SET_SPECTRUM_STYLE "spectrum_style"
 
+#define SET_BROADCAST_ACTIVE "broadcast_active"
+#define SET_BROADCAST_PROMPT "broadcast_prompt"
+#define SET_BROADCAST_PORT "broadcast_port"
+
 
 #include <QString>
 #include <QThread>
@@ -109,10 +113,7 @@ class CSettingsStorage;
 
 using namespace std;
 
-
-
 	class SettingsThread : public QThread {
-
 
 	private:
 		CSettingsStorage* _settings;
@@ -126,8 +127,6 @@ using namespace std;
         SettingsThread(QWidget* parent);
 		virtual ~SettingsThread();
 		void stop();
-
-
 };
 
 
@@ -143,6 +142,7 @@ signals:
 
 	void sig_save(QString, QVariant);
 	void sig_save_all();
+
 public:
     static CSettingsStorage * getInstance();
 
@@ -187,7 +187,7 @@ private:
     int	m_volume;
     int m_last_eq;
 
-    vector<EQ_Setting> m_vec_eqSettings;
+	QList<EQ_Setting> m_vec_eqSettings;
     
     // player size
     QSize m_player_size;
@@ -259,6 +259,11 @@ private:
 
     int     m_spectrum_style;
 
+	/* broadcasting */
+	bool m_broadcast_active;
+	bool m_broadcast_prompt;
+	int m_broadcast_port;
+
 
 protected:
 
@@ -291,8 +296,8 @@ public:
 	int getLastEqualizer();
 
 	EQ_Setting getCustomEqualizer();
-	void getEqualizerSettings(vector<EQ_Setting>& vec);
-	void setEqualizerSettings(const vector<EQ_Setting>& vec);
+	void getEqualizerSettings(QList<EQ_Setting>& vec);
+	void setEqualizerSettings(const QList<EQ_Setting>& vec);
 
 	QString getLibraryPath();
 	void setLibraryPath(QString path);
@@ -427,6 +432,15 @@ public:
 
     int getSpectrumStyle();
     void setSpectrumStyle(int style);
+
+	int getBroadcastPort();
+	void setBroadcastPort(int port);
+
+	bool getBroadcastActive();
+	void setBroadcastActive(bool b);
+
+	bool getBroadcastPrompt();
+	void setBroadcastPrompt(bool b);
 
 	friend class SettingsThread;
 };

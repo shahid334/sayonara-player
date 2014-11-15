@@ -57,7 +57,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 
 		if(!create_element(&_eq_queue, "queue", "eq_queue")) break;
 		if(!create_element(&_volume, "volume")) break;
-		if(!create_element(&_audio_sink, "autoaudiosink")) break;
+		if(!create_element(&_audio_sink, "alsasink")) break;
 
 		if(!create_element(&_level_queue, "queue", "level_queue")) break;
 		if(!create_element(&_level_audio_convert, "audioconvert", "level_convert")) break;

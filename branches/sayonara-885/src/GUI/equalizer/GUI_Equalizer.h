@@ -33,11 +33,9 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "GUI/ui_GUI_Equalizer.h"
 
-
 #include <QObject>
-#include <vector>
+#include <QList>
 
-using namespace std;
 
 class EqSlider : public QObject{
 	Q_OBJECT
@@ -47,7 +45,9 @@ class EqSlider : public QObject{
 	friend class GUI_Equalizer;
 
 	signals:
-		void valueChanged(int idx, int val);
+		void sig_value_changed(int idx, int val);
+		void sig_slider_pressed(int idx);
+		void sig_slider_released(int idx);
 
 	private:
 		QSlider* _slider;
@@ -59,17 +59,28 @@ class EqSlider : public QObject{
 			_slider(slider), _label(label), _idx(idx) {
 
 			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(sl_slider_changed(int)));
+			connect(_slider, SIGNAL(sliderPressed()), this, SLOT(sl_slider_pressed()));
+			connect(_slider, SIGNAL(sliderReleased()), this, SLOT(sl_slider_released()));
 		}
 		QSlider* getSlider() { return _slider; }
 		QLabel* getLabel() { return _label;}
 		void setValue(int val) {this->_slider->setValue(val);}
+		int getValue(){ return this->_slider->value();}
 
 	virtual ~EqSlider() {}
 
 
 	private slots:
 		void sl_slider_changed(int val) {
-			emit valueChanged(_idx, val);
+			emit sig_value_changed(_idx, val);
+		}
+
+		void sl_slider_pressed(){
+			emit sig_slider_pressed(_idx);
+		}
+
+		void sl_slider_released(){
+			emit sig_slider_released(_idx);
 		}
 };
 
@@ -92,6 +103,8 @@ public:
 
 	private slots:
 		void sli_changed(int, int);
+		void sli_pressed(int);
+		void sli_released(int);
 
 		void but_enabled_changed(bool);
 		void preset_changed(int);
@@ -105,15 +118,17 @@ public:
 
 	private:
 
-		vector<EQ_Setting> _presets;
+		QList<EQ_Setting> _presets;
 		CSettingsStorage* _settings;
-		vector<EqSlider*> _sliders;
-
+		QList<EqSlider*> _sliders;
 
         double _m;
         double _t;
 
         bool _dark;
+
+		int _old_val[10];
+		int _active_idx;
 
 };
 

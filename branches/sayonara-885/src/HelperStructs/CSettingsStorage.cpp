@@ -164,9 +164,9 @@ EQ_Setting CSettingsStorage::getCustomEqualizer() {
 		return setting;
 	}
 	return this->m_vec_eqSettings[m_vec_eqSettings.size()-1]; }
-void CSettingsStorage::getEqualizerSettings(vector<EQ_Setting>& vec) {vec = this->m_vec_eqSettings;}
+void CSettingsStorage::getEqualizerSettings(QList<EQ_Setting>& vec) {vec = this->m_vec_eqSettings;}
 
-void CSettingsStorage::setEqualizerSettings(const vector<EQ_Setting>& vec) {
+void CSettingsStorage::setEqualizerSettings(const QList<EQ_Setting>& vec) {
 
 	m_vec_eqSettings.clear();
 	for(uint i=0; i<vec.size(); i++) {
@@ -559,5 +559,34 @@ void CSettingsStorage::setSpectrumStyle(int style) {
     m_spectrum_style = style;
     _sth_changed = true;
 }
+
+int CSettingsStorage::getBroadcastPort(){
+	return m_broadcast_port;
+}
+
+void CSettingsStorage::setBroadcastPort(int port){
+	m_broadcast_port = port;
+}
+
+bool CSettingsStorage::getBroadcastActive(){
+	return m_broadcast_active;
+}
+
+void CSettingsStorage::setBroadcastActive(bool b){
+	m_broadcast_active = b;
+	_sth_changed = true;
+}
+
+bool CSettingsStorage::getBroadcastPrompt(){
+	return m_broadcast_prompt;
+}
+
+void CSettingsStorage::setBroadcastPrompt(bool b){
+	m_broadcast_prompt = true;
+	_sth_changed = true;
+}
+
+
+
 
 
