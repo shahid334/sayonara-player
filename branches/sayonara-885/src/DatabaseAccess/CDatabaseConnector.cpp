@@ -29,7 +29,7 @@
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
-#include <HelperStructs/CSettingsStorage.h>
+#include <Settings/Settings.h>
 #include <HelperStructs/Helper.h>
 
 
@@ -126,18 +126,6 @@ bool CDatabaseConnector::createDB () {
         return success;
 }
 
-bool CDatabaseConnector::init_settings_storage() {
-    _settings = CSettingsStorage::getInstance();
-    if(_settings) {
-	        
-    	connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
-    	connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
-	return true;
-    }
-
-    else
-        return false;
-}
 
 bool CDatabaseConnector::openDatabase () {
     _database = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", _db_filename));
@@ -159,7 +147,7 @@ bool CDatabaseConnector::openDatabase () {
                 "PRAGMA page_size=4096;";
         q.prepare(text);
         qDebug() << "Case sensitive like: " << q.exec();
-        _settings = CSettingsStorage::getInstance();
+
     	apply_fixes();
     }
 
@@ -299,7 +287,7 @@ bool CDatabaseConnector::apply_fixes() {
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
-    int version = load_setting_int("version", 0);
+	int version = load_setting<int>("version", 0);
 	if(version == 7) return true;
 
     qDebug() << "Apply fixes";

@@ -26,7 +26,7 @@
 #include "Notification/NotificationPluginLoader.h"
 
 #include "HelperStructs/Style.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QString>
 
@@ -39,10 +39,11 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
 
     _plugin_loader = NotificationPluginLoader::getInstance();
 
-    _settings = CSettingsStorage::getInstance();
-    int timeout = _settings->getNotificationTimeout();
-    bool active = _settings->getShowNotification();
-    int scale = _settings->getNotificationScale();
+    _settings = Settings::getInstance();
+
+	int timeout = _settings->get(Set::Notification_Timeout);
+	int active = _settings->get(Set::Notification_Show);
+	int scale = _settings->get(Set::Notification_Scale);
 
     QList<Notification*> l_notifications = _plugin_loader->get_plugins();
 
@@ -92,10 +93,10 @@ void GUI_Notifications::ok_clicked() {
 
     _plugin_loader->set_cur_plugin(cur_text);
 
-    _settings->setNotification(cur_text);
-    _settings->setNotificationTimout(timeout);
-    _settings->setShowNotifications(active);
-    _settings->setNotificationScale(scale);
+	_settings->set(Set::Notification_Name, cur_text);
+	_settings->set(Set::Notification_Timeout, timeout);
+	_settings->set(Set::Notification_Show, active);
+	_settings->set(Set::Notification_Scale, scale);
 
     emit sig_settings_changed(active, timeout);
 

@@ -27,7 +27,7 @@
  */
 
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
 #include "StreamPlugins/LastFM/LastFM.h"
@@ -64,7 +64,7 @@ LastFM::LastFM() {
 	_track_changed_thread = 0;
     _login_thread = new LFMLoginThread();
     this->connect(_login_thread, SIGNAL(finished()), this, SLOT(_login_thread_finished()));
-	_settings = CSettingsStorage::getInstance();
+	_settings = Settings::getInstance();
 }
 
 
@@ -73,7 +73,15 @@ LastFM::~LastFM() {
 
 }
 
+void LastFM::get_login(QString& user, QString& pw){
+	QStringList user_pw;
+	user_pw = Settings::getInstance()->get(Set::LFM_Login);
 
+	if(user_pw.size() > 1){
+		user = user_pw[0];
+		pw = user_pw[1];
+	}
+}
 
 
 bool LastFM::_lfm_init_track_changed_thread() {
@@ -95,13 +103,15 @@ bool LastFM::_lfm_init_track_changed_thread() {
 
 
 bool LastFM::_lfm_check_login() {
+
 	if(!_logged_in || _session_key.size() != 32) {
 
 		QString username, password;
-		CSettingsStorage::getInstance()->getLastFMNameAndPW(username, password);
+		LastFM::get_login(username, password);
 
-		if(!username.isEmpty() && !password.isEmpty())
-			lfm_login(username, password);
+		if(!username.isEmpty() && !password.isEmpty()){
+			lfm_login();
+		}
 
 		if(!_logged_in || _session_key.size() != 32) {
 			return false;
@@ -118,22 +128,19 @@ bool LastFM::lfm_is_logged_in() {
 }
 
 
-void LastFM::psl_login(QString username, QString password) {
-    lfm_login(username, password, false);
+void LastFM::psl_login() {
+
+	lfm_login(false);
 }
 
-void LastFM::lfm_login(QString username, QString password, bool should_emit) {
+void LastFM::lfm_login(bool should_emit) {
+
+	QString username, password;
+	get_login(username, password);
 
     _logged_in = false;
     _username = username;
     _emit_login = should_emit;
-
-    /*QString session_key = _settings->getLastFMSessionKey();
-    if(session_key.size() == 32) {
-        _logged_in = true;
-        _session_key = session_key;
-        return;
-    }*/
 
     _login_thread->setup_login_thread(username, password);
     _login_thread->start();
@@ -152,7 +159,7 @@ void LastFM::_login_thread_finished() {
     _auth_token = login_info.token;
     _session_key = login_info.session_key;
 
-    _settings->setLastFMSessionKey(_session_key);
+	_settings->set(Set::LFM_SessionKey, _session_key);
 
     if(!_logged_in)
         emit sig_last_fm_logged_in(_logged_in);
@@ -162,16 +169,20 @@ void LastFM::_login_thread_finished() {
 
 void LastFM::psl_track_changed(const MetaData& md) {
 
+	PlaylistMode pl_mode = _settings->get(Set::PL_Mode);
+
     if(!_track_changed_thread) {
         if(!_lfm_init_track_changed_thread()) return;
     }
 
     if(_track_changed_thread->isRunning()) _track_changed_thread->terminate();
 
+	bool lfm_active = _settings->get(Set::LFM_Active);
 
-    if(!_settings->getLastFMActive() || !_logged_in) {
+	if(! lfm_active || !_logged_in) {
 
-        if(!_settings->getPlaylistMode().dynamic) return;
+
+		if(! pl_mode.dynamic ) return;
 
         _track_changed_thread->setThreadTask( LFM_THREAD_TASK_SIM_ARTISTS );
         _track_changed_thread->setTrackInfo(md);
@@ -181,7 +192,9 @@ void LastFM::psl_track_changed(const MetaData& md) {
      }
 
     int thread_task = LFM_THREAD_TASK_UPDATE_TRACK | LFM_THREAD_TASK_FETCH_TRACK_INFO;
-    if(_settings->getPlaylistMode().dynamic)
+
+
+	if( pl_mode.dynamic )
         thread_task |= LFM_THREAD_TASK_SIM_ARTISTS;
 
     _track_changed_thread->setThreadTask(thread_task);
@@ -197,7 +210,11 @@ void LastFM::psl_track_changed(const MetaData& md) {
 
 void LastFM::psl_scrobble(const MetaData& metadata) {
 
-	if(!_settings->getLastFMActive() || !_logged_in) return;
+	bool lfm_active =_settings->get(Set::LFM_Active);
+
+	if(! lfm_active || !_logged_in) {
+		return;
+	}
 
 	if(!_lfm_check_login())	return;
 
@@ -323,9 +340,17 @@ bool LastFM::lfm_get_user_info(QMap<QString, QString>& userinfo) {
 
 bool LastFM::_parse_error_message(QString& response, bool force) {
 
+	QString error_msg;
+
+	bool lfm_show_errors = _settings->get(Set::LFM_ShowErrors);
+
     if(response.left(100).contains("failed")) {
-        QString error_msg = Helper::easy_tag_finder("lfm.error", response);
-        if(_settings->getLastFMShowErrors() || force) _show_error_message(error_msg);
+
+		error_msg = Helper::easy_tag_finder("lfm.error", response);
+
+		if( lfm_show_errors || force) {
+			_show_error_message(error_msg);
+		}
 
         return false;
     }

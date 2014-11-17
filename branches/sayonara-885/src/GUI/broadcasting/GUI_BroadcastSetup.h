@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include "GUI/ui_GUI_BroadcastSetup.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 class GUI_BroadcastSetup : public QDialog, private Ui::GUI_BroadcastSetup
 {
@@ -27,7 +27,7 @@ public slots:
 	virtual void show();
 
 private:
-	CSettingsStorage* _settings;
+	Settings* _settings;
 
 };
 

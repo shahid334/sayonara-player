@@ -21,7 +21,7 @@
 
 #include "Engine/SoundPluginLoader.h"
 #include "Engine/Engine.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QDir>
 #include <QString>
@@ -47,7 +47,7 @@ SoundPluginLoader::~SoundPluginLoader() {
 
 bool SoundPluginLoader::load_plugins(QString app_dir) {
 
-	QString target_engine = CSettingsStorage::getInstance()->getSoundEngine().toLower();
+	QString target_engine = Settings::getInstance()->get(Set::Engine_Name);
 
 	QDir plugin_dir = QDir(app_dir);
 	QStringList entry_list = plugin_dir.entryList(QDir::Files);

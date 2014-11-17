@@ -42,7 +42,7 @@
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/Filter.h"
@@ -78,18 +78,26 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 
 	setupUi(this);
 
-    _settings = CSettingsStorage::getInstance();
+    _settings = Settings::getInstance();
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-    QList<int> sorting = _settings->getLibSorting();
+	QList<int> sorting = _settings->get(Set::Lib_Sorting);
+
     _sort_artists = (Sort::SortOrder) sorting[0];
     _sort_albums = (Sort::SortOrder) sorting[1];
     _sort_tracks = (Sort::SortOrder) sorting[2];
 
-    _shown_cols_tracks = _settings->getLibShownColsTitle();
-    _shown_cols_artist = _settings->getLibShownColsArtist();
-    _shown_cols_albums = _settings->getLibShownColsAlbum();
+	_shown_cols_albums = _settings->get(Set::Lib_ColsAlbum);
+	_shown_cols_artist = _settings->get(Set::Lib_ColsArtist);
+	_shown_cols_tracks = _settings->get(Set::Lib_ColsTitle);
+
+	qDebug() << "Sort artists: " << _sort_artists;
+	qDebug() << "Sort albums: " << _sort_albums;
+	qDebug() << "Sort tracks: " << _sort_tracks;
+	qDebug() << "Cols artists: " << _shown_cols_artist;
+	qDebug() << "Cols albums: " << _shown_cols_albums;
+	qDebug() << "Cols tracks: " << _shown_cols_tracks;
 
     _album_model = 0;
     _artist_model = 0;
@@ -130,7 +138,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(lv_album, SIGNAL(sig_released()), this, SLOT(album_released()));
 	connect(lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
 	connect(lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
-	connect(lv_album, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_album_changed(QStringList&)));
+	connect(lv_album, SIGNAL(sig_columns_changed(QList<int>&)), this, SLOT(columns_album_changed(QList<int>&)));
 	connect(lv_album, SIGNAL(sig_edit_clicked()), this, SLOT(edit_album()));
 	connect(lv_album, SIGNAL(sig_info_clicked()), this, SLOT(info_album()));
 	connect(lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
@@ -144,7 +152,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(tb_title, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(track_sel_changed(const QList<int>&)));
 	connect(tb_title, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(tracks_middle_clicked(const QPoint&)));
 	connect(tb_title, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_title_changed(Sort::SortOrder)));
-	connect(tb_title, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_title_changed(QStringList&)));
+	connect(tb_title, SIGNAL(sig_columns_changed(QList<int>&)), this, SLOT(columns_title_changed(QList<int>&)));
 	connect(tb_title, SIGNAL(sig_edit_clicked()), this, SLOT(edit_tracks()));
 	connect(tb_title, SIGNAL(sig_info_clicked()), this, SLOT(info_tracks()));
 	connect(tb_title, SIGNAL(sig_delete_clicked()), this, SLOT(delete_tracks()));
@@ -157,7 +165,7 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(lv_artist, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(artist_sel_changed(const QList<int>&)));
 	connect(lv_artist, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(artist_middle_clicked(const QPoint&)));
 	connect(lv_artist, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_artist_changed(Sort::SortOrder)));
-	connect(lv_artist, SIGNAL(sig_columns_changed(QStringList&)), this, SLOT(columns_artist_changed(QStringList&)));
+	connect(lv_artist, SIGNAL(sig_columns_changed(QList<int>&)), this, SLOT(columns_artist_changed(QList<int>&)));
 	connect(lv_artist, SIGNAL(sig_edit_clicked()), this, SLOT(edit_artist()));
 	connect(lv_artist, SIGNAL(sig_info_clicked()), this, SLOT(info_artist()));
 	connect(lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
@@ -175,7 +183,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(le_search, SIGNAL(returnPressed()), this, SLOT(return_pressed()));
 	connect(combo_searchfilter, SIGNAL(currentIndexChanged(int)), this, SLOT(searchfilter_changed(int)));
 
-    bool show_only_tracks = _settings->getLibShowOnlyTracks();
+	bool show_only_tracks =_settings->get(Set::Lib_OnlyTracks);
+
 	lv_artist->setVisible(!show_only_tracks);
 	lv_album->setVisible(!show_only_tracks);
 
@@ -321,21 +330,21 @@ void GUI_Library_windowed::focusInEvent(QFocusEvent *e) {
 	lv_album->setFocus();
 }
 
-void  GUI_Library_windowed::columns_album_changed(QStringList& list) {
+void  GUI_Library_windowed::columns_album_changed(QList<int>& list) {
     _shown_cols_albums = list;
-    _settings->setLibShownColsAlbum(list);
+	_settings->set(Set::Lib_ColsAlbum, list);
 }
 
 
-void  GUI_Library_windowed::columns_artist_changed(QStringList& list) {
+void  GUI_Library_windowed::columns_artist_changed(QList<int>& list) {
     _shown_cols_artist = list;
-    _settings->setLibShownColsArtist(list);
+	_settings->set(Set::Lib_ColsArtist, list);
 }
 
 
-void  GUI_Library_windowed::columns_title_changed(QStringList & list) {
+void  GUI_Library_windowed::columns_title_changed(QList<int> & list) {
     _shown_cols_tracks = list;
-    _settings->setLibShownColsTitle(list);
+	_settings->set(Set::Lib_ColsTitle, list);
 }
 
 
@@ -488,7 +497,9 @@ void GUI_Library_windowed::return_pressed() {
 
 void GUI_Library_windowed::text_line_edited(const QString& search, bool force_emit) {
 
-    if(!force_emit && !_settings->getLibLiveSheach()) return;
+	bool live_search = _settings->get(Set::Lib_LiveSearch);
+
+	if(!force_emit && !live_search ) return;
 
     QList<int> lst;
     _album_model->set_selected(lst);
@@ -760,12 +771,11 @@ void GUI_Library_windowed::import_result(bool success) {
 
 	QString success_string;
 	if(success) {
-        success_string = tr("Importing was successful"); _settings->getPlayerStyle();
+		success_string = tr("Importing was successful");
 	}
 
 	else success_string = tr("Importing failed");
 
-	//QMessageBox::information(NULL, "Information", success_string );
 	library_changed();
 }
 

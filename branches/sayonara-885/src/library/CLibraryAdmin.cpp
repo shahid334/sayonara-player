@@ -19,7 +19,7 @@
  */
 
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
@@ -57,7 +57,8 @@ void CLibraryBase::clearLibrary() {
 
 void CLibraryBase::reloadLibrary(bool clear) {
 
-    m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+	Settings* settings = Settings::getInstance();
+	m_library_path = settings->get(Set::Lib_Path);
 
     if(m_library_path.length() == 0) {
         QMessageBox msgBox(_main_window);
@@ -76,7 +77,7 @@ void CLibraryBase::reloadLibrary(bool clear) {
 
         else {
             m_library_path = dir;
-            CSettingsStorage::getInstance()->setLibraryPath(dir);
+			settings->set(Set::Lib_Path, dir);
             emit sig_libpath_set(dir);
         }
     }

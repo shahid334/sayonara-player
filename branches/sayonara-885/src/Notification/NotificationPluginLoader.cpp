@@ -20,7 +20,7 @@
 
 
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "Notification/Notification.h"
 #include "HelperStructs/Helper.h"
@@ -45,7 +45,7 @@ NotificationPluginLoader::NotificationPluginLoader() {
     #endif
 
     _cur_idx = -1;
-    QString preferred_plugin = CSettingsStorage::getInstance()->getNotification();
+	QString preferred_plugin = Settings::getInstance()->get(Set::Notification_Name);
 
     QDir plugin_dir = QDir(app_dir);
     QStringList entry_list = plugin_dir.entryList(QDir::Files);

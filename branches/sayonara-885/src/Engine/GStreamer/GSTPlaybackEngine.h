@@ -30,7 +30,7 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
@@ -86,7 +86,7 @@ private:
 	GSTPlaybackPipeline*	 _pipeline;
 	GSTPlaybackPipeline*	 _other_pipeline;
 
-	CSettingsStorage* _settings;
+	Settings* _settings;
 	StreamRecorder* _stream_recorder;
 
     LastTrack*  _last_track;

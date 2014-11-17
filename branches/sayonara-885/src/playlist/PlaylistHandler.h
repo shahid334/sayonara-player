@@ -133,7 +133,7 @@ public:
 	private:
 
         CDatabaseConnector* _db;
-        CSettingsStorage*   _settings;
+        Settings*   _settings;
         Playlist*           _playlist;
         PlaylistState       _state;
         qint32              _last_pos;

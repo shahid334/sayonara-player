@@ -63,7 +63,7 @@
 //#include "Soundcloud/SoundcloudLibrary.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "LyricLookup/LyricLookup.h"
@@ -125,8 +125,7 @@ private:
 	SoundPluginLoader*      engine_plugin_loader;
 	Engine*                 listen;
 
-	CSettingsStorage*       set;
-	SettingsThread*         _setting_thread;
+	Settings*       set;
 	QApplication*           app;
 
 	bool                    _initialized;

@@ -22,7 +22,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "PlayerPlugin/PlayerPlugin.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
@@ -44,19 +44,19 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
 
 	setupUi(this);
 
+	_last_dir = Settings::getInstance()->get(Set::Lib_Path);
+
 	_cur_idx = -1;
     _dark = false;
     _text_before_save = "";
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
-    _last_dir = CSettingsStorage::getInstance()->getLibraryPath();
 
     lab_icon->setPixmap(Helper::getPixmap("lyrics.png", QSize(50, 50), false));
 
     btn_save->setIcon(Helper::getIcon("save.png"));
     btn_save_as->setIcon(Helper::getIcon("save_as.png"));
     btn_delete->setIcon(Helper::getIcon("delete.png"));
-
 
 	btn_delete->setEnabled(false);
 	btn_save->setEnabled(false);

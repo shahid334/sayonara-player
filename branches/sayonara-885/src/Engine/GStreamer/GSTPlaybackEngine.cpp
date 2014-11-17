@@ -64,7 +64,7 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 	_caps = new MyCaps();
 	_caps->set_parsed(false);
 
-	_settings = CSettingsStorage::getInstance();
+	_settings = Settings::getInstance();
 	_name = PLAYBACK_ENGINE;
 
 	_scrobble_begin_ms = 0;
@@ -75,7 +75,14 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 	_sr_wanna_record = false;
 
 	_stream_recorder = new StreamRecorder();
-	_last_track = _settings->getLastTrack();
+
+	int last_track_id = _settings->get(Set::PL_LastTrack);
+	int last_track_pos = _settings->get(Set::PL_LastTrackPos);
+
+	MetaData md_lt = CDatabaseConnector::getInstance()->getTrackById(last_track_id);
+	_last_track = new LastTrack(md_lt);
+	_last_track->pos_sec = last_track_pos;
+
 
 	_wait_for_gapless_track = false;
 	_gapless = false;
@@ -93,7 +100,6 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 
 GSTPlaybackEngine::~GSTPlaybackEngine() {
 
-	_settings->updateLastTrack();
 	delete _pipeline;
 }
 

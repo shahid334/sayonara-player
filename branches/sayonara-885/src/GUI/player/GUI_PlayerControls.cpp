@@ -80,7 +80,7 @@ void GUI_Player::stopClicked(bool b) {
 
 	if(b) {
 		MetaData md;
-		m_settings->setLastTrack(md);
+		m_settings->set(Set::PL_LastTrack, md.id);
 
         emit sig_stop();
     }
@@ -219,7 +219,7 @@ void GUI_Player::volumeChanged(int volume_percent) {
 	volumeSlider->setValue(volume_percent);
 	emit sig_volume_changed(volume_percent);
 
-    m_settings->setVolume(volume_percent);
+	m_settings->set(Set::Engine_Vol, volume_percent);
 }
 
 void GUI_Player::volumeChangedByTick(int val) {

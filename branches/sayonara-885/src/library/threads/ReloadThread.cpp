@@ -30,7 +30,7 @@
 
 #include "library/threads/ReloadThread.h"
 #include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"

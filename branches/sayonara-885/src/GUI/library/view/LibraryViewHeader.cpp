@@ -69,7 +69,7 @@ void LibraryView::set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrde
 }
 
 
-void LibraryView::rc_header_menu_init(QStringList& shown_cols) {
+void LibraryView::rc_header_menu_init(QList<int>& shown_cols) {
 
     if(_rc_header_menu) delete _rc_header_menu;
     _rc_header_menu = new QMenu( this->horizontalHeader() );
@@ -94,7 +94,7 @@ void LibraryView::rc_header_menu_init(QStringList& shown_cols) {
         else {
 
             if(i < shown_cols.size()) {
-                action->setChecked(shown_cols[i] == "1");
+				action->setChecked(shown_cols[i] == 1);
 
                 // where should we put the sorters?
                 // if a few columns are missing before the origin position,
@@ -135,15 +135,15 @@ void LibraryView::rc_header_menu_changed(bool b) {
     _model->removeColumns(0, _model->columnCount());
 
     int col_idx = 0;
-    QStringList lst;
+	QList<int> lst;
     foreach(QAction* action, _header_rc_actions) {
 
         if(action->isChecked()) {
             _model->insertColumn(col_idx);
-            lst << "1";
+			lst << 1;
         }
 
-        else lst << "0";
+		else lst << 0;
 
         col_idx++;
     }

@@ -237,7 +237,7 @@ void StdPlaylist::save_for_reload() {
         }
     }
 
-    CSettingsStorage::getInstance()->setPlaylist(playlist_lst);
+	Settings::getInstance()->set(Set::PL_Playlist, playlist_lst);
 }
 
 void StdPlaylist::save_to_m3u_file(QString filepath, bool relative) {

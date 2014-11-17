@@ -28,7 +28,7 @@
 #include <QWidget>
 #include <QDialog>
 #include "GUI/ui_GUI_StreamRecorder.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 class GUI_StreamRecorder : public QDialog, private Ui_GUI_StreamRecorder{
 
@@ -59,7 +59,7 @@ public:
 
 	private:
 
-		CSettingsStorage* _settings;
+		Settings* _settings;
 
 		QString _path;
 		bool	_is_active;

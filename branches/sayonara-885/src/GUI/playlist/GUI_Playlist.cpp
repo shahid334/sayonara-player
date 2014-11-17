@@ -30,7 +30,7 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CustomMimeData.h"
@@ -73,16 +73,15 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	addAction(clear_action);
 
 
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
-    bool small_playlist_items = settings->getShowSmallPlaylist();
+    Settings* settings = Settings::getInstance();
+	bool small_playlist_items = settings->get(Set::PL_SmallItems);
 	listView->show_big_items(!small_playlist_items);
 
     _info_dialog = dialog;
 
     _playlist_type = PlaylistTypeStd;
 
-    _playlist_mode = settings->getPlaylistMode();
-
+	_playlist_mode = settings->get(Set::PL_Mode);
 
 	btn_append->setChecked(_playlist_mode.append);
 	btn_repAll->setChecked(_playlist_mode.repAll);
@@ -178,9 +177,9 @@ void GUI_Playlist::library_path_changed(QString path) {
 
 void GUI_Playlist::check_dynamic_play_button() {
 
-    QString libraryPath = CSettingsStorage::getInstance()->getLibraryPath();
+	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
 
-	if(libraryPath.size() == 0 || !QFile::exists(libraryPath)) {
+	if(lib_path.isEmpty() || !QFile::exists(lib_path)) {
 		btn_dynamic->setToolTip(tr("Please set library path first"));
     }
 
@@ -263,7 +262,7 @@ void GUI_Playlist::playlist_mode_changed() {
 	_playlist_mode.dynamic = btn_dynamic->isChecked();
 	_playlist_mode.gapless = btn_gapless->isChecked();
 
-    CSettingsStorage::getInstance()->setPlaylistMode(_playlist_mode);
+	Settings::getInstance()->set(Set::PL_Mode, _playlist_mode);
 
 	emit sig_playlist_mode_changed(_playlist_mode);
 	emit sig_save_playlist("bla");
@@ -385,7 +384,7 @@ void GUI_Playlist::psl_show_small_playlist_items(bool small_playlist_items) {
 
 void GUI_Playlist::btn_numbers_changed(bool b) {
 	parentWidget()->setFocus();
-    CSettingsStorage::getInstance()->setPlaylistNumbers(b);
+	Settings::getInstance()->set(Set::PL_ShowNumbers, b);
 	listView->reset();
 }
 

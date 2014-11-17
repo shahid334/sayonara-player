@@ -44,7 +44,7 @@
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CDirectoryReader.h"
@@ -120,16 +120,18 @@ void Application::init(int n_files, QTranslator *translator) {
 	check_for_crash();
 	_translator        = translator;
 
-	set                = CSettingsStorage::getInstance();
+	set                = Settings::getInstance();
+
+
+
 
 	//connect(this, SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(focus_changed(QWidget*,QWidget*)));
 
 
 	QString version    = getVersion();
-	set->setVersion( version );
+	set->set(Set::Player_Version, version);
 
 	player              = new GUI_Player(translator);
-	_setting_thread    = new SettingsThread(player);
 
 	playlist_handler    = new PlaylistHandler();
 	playlist_loader     = new PlaylistLoader(this);
@@ -207,18 +209,23 @@ void Application::init(int n_files, QTranslator *translator) {
 	}
 
    else{
-		PlaylistMode plm = set->getPlaylistMode();
-		listen->psl_sr_set_active(set->getStreamRipper());
-		listen->psl_set_gapless(plm.gapless);
+		PlaylistMode pl_mode = set->get(Set::PL_Mode);
+		bool stream_ripper_active = set->get(Set::Engine_SR_Active);
+
+
+		listen->psl_sr_set_active(stream_ripper_active);
+		listen->psl_set_gapless(pl_mode.gapless);
    }
 
 	init_connections();
+
+	stream_server->start();
 
 	// emit do connections
 	// emit connections done
 
 	qDebug() << "setting up player";
-	bool is_maximized = set->getPlayerMaximized();
+	bool is_maximized = set->get(Set::Player_Maximized);
 
 	player->setWindowTitle("Sayonara " + version);
     player->setWindowIcon(Helper::getIcon("logo.png"));
@@ -228,7 +235,8 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->setLibrary(ui_library);
 	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
-	player->setStyle( set->getPlayerStyle() );
+
+	player->setStyle( set->get(Set::Player_Style) );
 
 	/* --> INTO Player*/
 	if(is_maximized) player->showMaximized();
@@ -236,8 +244,8 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	ui_library->resize(player->getParentOfLibrary()->size());
 	ui_playlist->resize(player->getParentOfPlaylist()->size());
-	int vol = set->getVolume();
-	player->setVolume(vol);
+
+	player->setVolume( set->get(Set::Engine_Vol) );
 
 
 	qDebug() << "Set up library...";
@@ -247,10 +255,10 @@ void Application::init(int n_files, QTranslator *translator) {
 	qDebug() << "Set up Last.fm...";
 
 	/* Into LastFM */
-	QString user, password;
-	if(set->getLastFMActive()) {
-		set->getLastFMNameAndPW(user, password);
-		LastFM::getInstance()->lfm_login( user,password, true );
+
+	bool last_fm_active = set->get(Set::LFM_Active);
+	if(last_fm_active) {
+		LastFM::getInstance()->lfm_login( true );
 	}
 
 
@@ -262,28 +270,18 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->ui_loaded();
 
 	/* Into Player */
-	QString shown_plugin = set->getShownPlugin();
-	PlayerPlugin* p = _pph->find_plugin(shown_plugin);
+
+	QString shown_plugin = set->get(Set::Player_ShownPlugin);
+	PlayerPlugin* p  = _pph->find_plugin(shown_plugin);
+
 	player->showPlugin(p);
 
-    //sc_library->loadData();
-
 	_initialized = true;
-
-	_setting_thread->start();
 }
 
 Application::~Application() {
 
     CDatabaseConnector::getInstance()->store_settings();
-
-/*
-	if(remote_socket->isRunning()) {
-		remote_socket->connection_valid(false);
-		remote_socket->quit();
-	}
-*/
-    _setting_thread->stop();
 
     delete listen;
     delete ui_socket_setup;
@@ -488,33 +486,17 @@ void Application::init_connections() {
     CONNECT (ui_style_settings, sig_style_update(),             ui_spectrum, psl_style_update());
     CONNECT (ui_style_settings, sig_style_update(),             ui_level, psl_style_update());
 
-    bool is_socket_active = set->getSocketActivated();
+	CONNECT (stream_server, sig_new_connection_request(const QString&),	ui_broadcast,	new_connection_request(const QString&));
+	CONNECT (stream_server, sig_new_connection(const QString&),			ui_broadcast,	new_connection(const QString&));
+	CONNECT (stream_server, sig_connection_closed(const QString&),		ui_broadcast,	connection_closed(const QString&));
+	CONNECT (listen, destroyed(),										stream_server,	stop());
 
-    if(is_socket_active) {
-	   /* CONNECT (stream_server, sig_play(),		playlist_handler,			psl_play());
-		CONNECT (stream_server, sig_next(),		playlist_handler,			psl_forward());
-		CONNECT (stream_server, sig_prev(),		playlist_handler,			psl_backward());
-		CONNECT (stream_server, sig_stop(),		playlist_handler,			psl_stop());
-		CONNECT (stream_server, sig_pause(),		listen,				pause());*/
+	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,		update_track(const MetaData&));
+	CONNECT (ui_broadcast, sig_dismiss(int),					stream_server,	dismiss(int));
+	CONNECT (ui_broadcast, sig_accepted(),					stream_server,	accept_client());
+	CONNECT (ui_broadcast, sig_rejected(),					stream_server,	reject_client());
+	CONNECT (listen, sig_data(uchar*, quint64),					stream_server,	new_data(uchar*, quint64));
 
-
-//		CONNECT (remote_socket, sig_new_connection(),						listen,			pause());
-		//CONNECT (stream_server, sig_setVolume(int),							player,			setVolume(int));
-
-		//CONNECT (stream_server, sig_new_connection_req(const QString&),		ui_playlist,	new_connection_request(const QString&));
-		CONNECT (stream_server, sig_new_connection_request(const QString&),	ui_broadcast,	new_connection_request(const QString&));
-		CONNECT (stream_server, sig_new_connection(const QString&),			ui_broadcast,	new_connection(const QString&));
-		CONNECT (stream_server, sig_connection_closed(const QString&),		ui_broadcast,	connection_closed(const QString&));
-		CONNECT (listen, destroyed(),										stream_server,	stop());
-
-		CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,		update_track(const MetaData&));
-		CONNECT (ui_broadcast, sig_dismiss(int),					stream_server,	dismiss(int));
-		CONNECT (ui_broadcast, sig_accepted(),					stream_server,	accept_client());
-		CONNECT (ui_broadcast, sig_rejected(),					stream_server,	reject_client());
-		CONNECT (listen, sig_data(uchar*, quint64),					stream_server,	new_data(uchar*, quint64));
-
-		stream_server->start();
-    }
 
 
     connect_languages();

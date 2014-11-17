@@ -29,7 +29,7 @@
 
 
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "PlayerPlugin/PlayerPlugin.h"
@@ -60,7 +60,7 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 
 	_active_idx = -1;
 
-	_settings = CSettingsStorage::getInstance();
+	_settings = Settings::getInstance();
 	setupUi(this);
 
     btn_preset->setIcon(Helper::getIcon("save.png"));
@@ -162,7 +162,16 @@ void GUI_Equalizer::but_enabled_changed(bool enabled) {
 void GUI_Equalizer::fill_eq_presets() {
 
 	QStringList items;
-	_settings->getEqualizerSettings(_presets);
+
+	int last_idx = _settings->get(Set::Eq_Last);
+
+	_presets << _settings->get(Set::Eq_Flat);
+	_presets << _settings->get(Set::Eq_Rock);
+	_presets << _settings->get(Set::Eq_LightRock);
+	_presets << _settings->get(Set::Eq_Bass);
+	_presets << _settings->get(Set::Eq_Mid);
+	_presets << _settings->get(Set::Eq_Treble);
+	_presets << _settings->get(Set::Eq_Custom);
 
 	foreach(EQ_Setting s, _presets) {
 		items << s.name;
@@ -170,7 +179,6 @@ void GUI_Equalizer::fill_eq_presets() {
 
 	combo_presets->insertItems(0, items);
 
-	int last_idx = _settings->getLastEqualizer();
 	if(last_idx < (int) _presets.size() ) {
 		combo_presets->setCurrentIndex(last_idx);
 		preset_changed(last_idx);
@@ -196,8 +204,7 @@ void GUI_Equalizer::preset_changed(int index) {
 		_old_val[i] = setting[i];
 	}
 
-
-	CSettingsStorage::getInstance()->setLastEqualizer(index);
+	Settings::getInstance()->set(Set::Eq_Last, index);
 }
 
 
@@ -213,7 +220,7 @@ void GUI_Equalizer::btn_preset_clicked() {
 	}
 
 	int custom_idx = -1;
-	for(uint i=0; i<_presets.size(); i++) {
+	for(int i=0; i<_presets.size(); i++) {
 
 		if(_presets[i].name == "Custom") {
             _presets[i] = EQ_Setting::fromString(str);
@@ -236,7 +243,9 @@ void GUI_Equalizer::btn_preset_clicked() {
 	}
 
 	if(b_save) {
-		CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
+
+		_settings->set(Set::Eq_Custom, _presets[6]);
+
         if(custom_idx != -1){
             combo_presets->setCurrentIndex(custom_idx);
         }

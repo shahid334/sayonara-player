@@ -26,7 +26,7 @@
 #define GUISOCKETSETUP_H_
 
 #include "GUI/ui_GUI_SocketSetup.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QDialog>
 #include <QWidget>
@@ -51,7 +51,7 @@ public:
 
 private:
 
-	CSettingsStorage* 		_db;
+	Settings* 		_db;
 
 	int 					_socket_from;
 	int 					_socket_to;

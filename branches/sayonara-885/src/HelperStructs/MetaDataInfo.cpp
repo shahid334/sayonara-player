@@ -21,7 +21,7 @@
 
 
 #include "HelperStructs/MetaDataInfo.h"
-#include "CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 
 MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) : QObject(parent){
@@ -298,8 +298,10 @@ QStringList MetaDataInfo::get_paths(){
 }
 
 QString MetaDataInfo::get_paths_as_string(){
-	QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+
 	QString str;
+	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+
 	foreach(QString path, _paths){
 
 		QString name = path;

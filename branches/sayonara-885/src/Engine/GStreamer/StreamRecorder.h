@@ -24,7 +24,7 @@
 #define STREAMRECORDER_H
 
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "Engine/GStreamer/StreamRipperBufferThread.h"
 
 
@@ -77,7 +77,7 @@ private:
     QString    _sr_recording_dst;
 
     StreamRipperBufferThread* _sr_thread;
-    CSettingsStorage*         _settings;
+    Settings*         _settings;
 
     GstElement* _rec_src;
     GstElement* _rec_dst;

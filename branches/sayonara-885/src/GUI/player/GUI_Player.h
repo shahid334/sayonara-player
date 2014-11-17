@@ -246,7 +246,7 @@ private:
 
     int                 m_library_width;
     int                 m_library_stretch_factor;
-    CSettingsStorage*   m_settings;
+    Settings*   m_settings;
     QTranslator*        m_translator;
     QStringList         m_translators;
 

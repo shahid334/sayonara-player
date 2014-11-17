@@ -22,7 +22,7 @@
 
 #include "GUI/engine/GUI_Spectrum.h"
 #include "HelperStructs/globals.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QPainter>
 #include <QList>
@@ -40,7 +40,8 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-    _cur_style_idx = CSettingsStorage::getInstance()->getSpectrumStyle();
+	_cur_style_idx = Settings::getInstance()->get(Set::Spectrum_Style);
+
     _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
 
     for(int i=0; i<N_BINS; i++) {

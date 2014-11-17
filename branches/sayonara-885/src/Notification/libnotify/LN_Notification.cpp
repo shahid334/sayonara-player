@@ -26,7 +26,7 @@
 
 #include "CoverLookup/CoverLocation.h"
 #include "Notification/Notification.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "Notification/libnotify/LN_Notification.h"
 
 
@@ -51,7 +51,7 @@ void LN_Notification::notification_show(const MetaData& md) {
     if(!_initialized) return;
 
 	CoverLocation cl = CoverLocation::get_cover_location(md);
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
+	Settings* settings = Settings::getInstance();
     QString pixmap_path;
 
     not_close();
@@ -65,14 +65,16 @@ void LN_Notification::notification_show(const MetaData& md) {
 
     else{
 
+		bool success;
         QPixmap p(cl.cover_path);
 
-		int scale = settings->getNotificationScale();
+		int scale = settings->get(Set::Notification_Scale);
+
 		if(scale > 0) {
 			p = p.scaled(scale, scale, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 		}
 
-        bool success = p.save(Helper::getSayonaraPath() + "not.jpg");
+		success = p.save(Helper::getSayonaraPath() + "not.jpg");
 
 		if(success) {
             pixmap_path = Helper::getSayonaraPath() + "not.jpg";
@@ -95,7 +97,8 @@ void LN_Notification::notification_show(const MetaData& md) {
 
    _not = n;
 
-    int timeout = settings->getNotificationTimeout();
+	int timeout = settings->get(Set::Notification_Timeout);
+
     notify_notification_set_timeout     (n, timeout);
     notify_notification_show            (n, NULL);
 

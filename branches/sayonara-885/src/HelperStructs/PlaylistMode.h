@@ -73,7 +73,7 @@ struct PlaylistMode {
 			
 	}
 
-	QString toString(){
+	QString toString() const {
 		QString str;
 		str += (append ? "1" : "0")  + QString(",");
 		str += (repAll ? "1" : "0")  + QString(",");

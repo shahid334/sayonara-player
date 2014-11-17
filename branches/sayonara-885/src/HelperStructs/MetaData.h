@@ -34,15 +34,11 @@
 #include "HelperStructs/Artist.h"
 #include "HelperStructs/Album.h"
 
-#include <QString>
 #include <QStringList>
 #include <QPair>
 #include <QVariant>
 #include <QMetaType>
 
-#include <vector>
-
-using namespace std;
 
 enum RadioMode {
 

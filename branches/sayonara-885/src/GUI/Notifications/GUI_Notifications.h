@@ -24,7 +24,7 @@
 #define GUI_NOTIFICATIONS_H
 
 #include <QDialog>
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "GUI/ui_GUI_Notifications.h"
@@ -50,7 +50,7 @@ private:
 
     NotificationPluginLoader* _plugin_loader;
 
-    CSettingsStorage* _settings;
+    Settings* _settings;
 };
 
 #endif // GUI_NOTIFICATIONS_H

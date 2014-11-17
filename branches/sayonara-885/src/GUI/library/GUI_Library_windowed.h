@@ -91,7 +91,7 @@ protected:
 
 
 	Filter		_cur_searchfilter;
-    CSettingsStorage* _settings;
+    Settings* _settings;
 
 
 
@@ -195,9 +195,9 @@ protected slots:
     void sortorder_album_changed(Sort::SortOrder);
     void sortorder_artist_changed(Sort::SortOrder);
 
-    void columns_title_changed(QStringList&);
-    void columns_album_changed(QStringList&);
-    void columns_artist_changed(QStringList&);
+	void columns_title_changed(QList<int>&);
+	void columns_album_changed(QList<int>&);
+	void columns_artist_changed(QList<int>&);
 
     void timer_timed_out();
     void delete_menu();
@@ -212,9 +212,9 @@ protected:
     SortOrder _sort_artists; /* [name | tracks] [asc | desc] */
     SortOrder _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
-    QStringList _shown_cols_albums;
-    QStringList _shown_cols_artist;
-    QStringList _shown_cols_tracks;
+	QList<int> _shown_cols_albums;
+	QList<int> _shown_cols_artist;
+	QList<int> _shown_cols_tracks;
 
     QStringList _header_names_albums;
     QStringList _header_names_artists;

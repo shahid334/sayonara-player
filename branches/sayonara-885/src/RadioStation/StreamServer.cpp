@@ -7,8 +7,8 @@ StreamServer::StreamServer(QObject* parent) :
 
 	_accepted(AcceptStateAccepted)
 {
-	settings = CSettingsStorage::getInstance();
-	_port = settings->getBroadcastPort();
+	settings = Settings::getInstance();
+	_port = settings->get(Set::Broadcast_Port);
 }
 
 StreamServer::~StreamServer(){

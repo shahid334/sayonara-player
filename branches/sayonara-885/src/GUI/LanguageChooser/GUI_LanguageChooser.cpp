@@ -21,7 +21,7 @@
 
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include <QFile>
 #include <QDir>
 
@@ -79,7 +79,7 @@ void GUI_LanguageChooser::combo_changed(int idx) {
 void GUI_LanguageChooser::ok_clicked() {
 
 	int cur_idx = combo_lang->currentIndex();
-	CSettingsStorage::getInstance()->setLanguage(combo_lang->itemData(cur_idx).toString());
+	Settings::getInstance()->set(Set::Player_Language, combo_lang->itemData(cur_idx).toString());
 
 	close();
 }
@@ -95,7 +95,7 @@ void GUI_LanguageChooser::renew_combo() {
 
 	combo_lang->clear();
 
-    QString lang_setting = CSettingsStorage::getInstance()->getLanguage();
+	QString lang_setting = Settings::getInstance()->get(Set::Player_Language);
 
     int tgt_idx = 0;
     int i=0;

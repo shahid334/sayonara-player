@@ -26,7 +26,7 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "LyricLookup/LyricLookup.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/MetaDataInfo.h"
 
@@ -59,7 +59,13 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     tab_widget->addTab(ui_tag_edit, tr("Edit"));
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
-    _lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
+
+	QStringList user_pw;
+	user_pw = Settings::getInstance()->get(Set::LFM_Login);
+
+	if(user_pw.size() > 1){
+		_lfm_thread->setUsername(user_pw.first());
+	}
 
     _initialized = true;
 

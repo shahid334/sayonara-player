@@ -28,15 +28,13 @@
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/globals.h"
-#include "HelperStructs/CSettingsStorage.h"
+//#include "Settings/Settings.h"
 #include "GUI/engine/StyleTypes.h"
 
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
 #include <QList>
-
-
 
 
 
@@ -63,7 +61,7 @@ using namespace Sort;
 			    return ""
 
 
-//class CDatabaseConnector;
+
 class CDatabaseConnector : public QObject
 {
     Q_OBJECT
@@ -71,8 +69,6 @@ public:
     static CDatabaseConnector* getInstance();
     virtual ~CDatabaseConnector();
     void closeDatabase();
-
-    bool init_settings_storage();
 
 
 	/********************************************
@@ -191,22 +187,43 @@ public:
 	/********************************************
 	 * SETTINGS
 	 *******************************************/
-        void load_setting(QString key, QVariant& val, QVariant def=0);
 
-        template<class T>
-        T load_setting_type(QString key, T def){
+		template<typename T>
+		T load_setting(QString key, const T& def){
 
-			QString str = load_setting_string(key, "");
+			QVariant v;
+			bool success;
+			T ret = def;
 
-			return T::fromString(str);
-        }
+			success = load_setting_var(key, v);
+
+			if(!v.isValid() || v.isNull() || !success){
+				return ret;
+			}
+
+			if(!v.canConvert<T>()){
+				return ret;
+			}
+
+			ret = v.value<T>();
+
+			return ret;
+		}
 
 
-		bool load_setting_bool(QString key, bool def=false);
-		QString load_setting_string(QString key, QString def="");
-		int load_setting_int(QString key, int def=0);
-        QStringList load_setting_strlist(QString key, QString def, int expected_len=-1, QChar sep=',');
+		template<typename T>
+		void store_setting(QString key, const T& val){
 
+			QVariant v;
+
+			v.setValue(val);
+
+			store_setting_var(key, v);
+		}
+
+
+		bool load_setting_var(QString key, QVariant& val);
+		bool store_setting_var(QString key, const QVariant& val);
 
    /************************************
     *styles
@@ -227,7 +244,7 @@ public slots:
       * @return true on success false if failed
       */
     bool storeMetadata (MetaDataList & in);
-    void store_setting(QString, QVariant);
+
     bool load_settings();
     bool store_settings();
 
@@ -244,7 +261,7 @@ private slots:
 
 private:
     CDatabaseConnector(const CDatabaseConnector&);
-    CSettingsStorage* _settings;
+	//Settings* _settings;
 
     QSqlDatabase* _database;
     QString _db_filename;

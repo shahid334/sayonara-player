@@ -27,7 +27,7 @@
  */
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include "GUI/MyColumnHeader.h"
 #include "GUI/library/model/LibraryItemModel.h"

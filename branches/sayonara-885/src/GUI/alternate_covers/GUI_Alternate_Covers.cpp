@@ -33,6 +33,7 @@
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "Settings/Settings.h"
 
 #include <QDialog>
 #include <QPixmap>
@@ -55,9 +56,8 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 
 	setupUi(this);
 
+	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
 
-
-    QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
     if(QFile::exists(lib_path))
         _last_path = lib_path;
     else _last_path = QDir::homePath();
@@ -326,7 +326,9 @@ void GUI_Alternate_Covers::reset_model() {
 
 void GUI_Alternate_Covers::open_file_dialog() {
 
-	QDir dir( CSettingsStorage::getInstance()->getLibraryPath() );
+	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+
+	QDir dir( lib_path );
 
     QStringList filters;
         filters << "*.jpg";

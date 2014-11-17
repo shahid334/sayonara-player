@@ -31,26 +31,29 @@
 PlaylistLoader::PlaylistLoader(QObject *parent) :
     QObject(parent)
 {
-    _settings = CSettingsStorage::getInstance();
+    _settings = Settings::getInstance();
 }
 
 
 void PlaylistLoader::load_old_playlist() {
 
         CDatabaseConnector* db = CDatabaseConnector::getInstance();
+		Settings* settings = Settings::getInstance();
 
-        bool loadPlaylist = _settings->getLoadPlaylist();
-        if( !loadPlaylist ) return;
+		bool load_playlist = settings->get(Set::PL_Load);
+		if( !load_playlist ) return;
 
-        bool load_last_track = _settings->getLoadLastTrack();
-        LastTrack* last_track = _settings->getLastTrack();
-
-        bool load_last_position = _settings->getRememberTime();
-        bool start_immediatly = _settings->getStartPlaying();
-
-        QStringList saved_playlist = _settings->getPlaylist();
+		bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
+		bool last_track_position = _settings->get(Set::PL_LastTrackPos);
+		int last_track_id = _settings->get(Set::PL_LastTrack);
+		int load_last_position = _settings->get(Set::PL_RememberTime);
+		bool start_immediatly = _settings->get(Set::PL_StartPlaying);
+		QStringList saved_playlist = _settings->get(Set::PL_Playlist);
 
         if(saved_playlist.size() == 0) return;
+
+		MetaData md_lt = db->getTrackById(last_track_id);
+		LastTrack* last_track = new LastTrack( md_lt );
 
         // the path of the last played track
         QString last_track_path = last_track->filepath;
@@ -136,7 +139,8 @@ void PlaylistLoader::load_old_playlist() {
         int last_pos = 0;
         if(load_last_track && last_track_idx >= 0) {
             if(load_last_position){
-                last_pos = last_track->pos_sec;
+				last_pos = last_track_position;
+				last_pos = 0;
             }
 
             emit sig_change_track(last_track_idx, last_pos, start_immediatly);

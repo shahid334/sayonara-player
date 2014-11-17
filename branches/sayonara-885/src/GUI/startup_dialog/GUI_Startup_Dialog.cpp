@@ -22,7 +22,7 @@
 
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/ui_GUI_Startup_Dialog.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 GUI_Startup_Dialog::GUI_Startup_Dialog(QWidget *parent) :
 	QDialog(parent),
@@ -30,12 +30,20 @@ GUI_Startup_Dialog::GUI_Startup_Dialog(QWidget *parent) :
 {
 	setupUi(this);
 
-    CSettingsStorage* set = CSettingsStorage::getInstance();
+    Settings* set = Settings::getInstance();
 
-	cb_load_pl_on_startup->setChecked(set->getLoadPlaylist());
-	cb_load_last_track->setChecked(set->getLoadLastTrack());
-	cb_remember_time->setChecked(set->getRememberTime());
-	cb_start_playing->setChecked(set->getStartPlaying());
+	bool load_pl_on_startup, load_last_track, remember_time, start_playing;
+
+	load_pl_on_startup = set->get(Set::PL_Load);
+	load_last_track = set->get(Set::PL_LoadLastTrack);
+	remember_time = set->get(Set::PL_RememberTime);
+	start_playing = set->get(Set::PL_StartPlaying);
+
+	cb_load_pl_on_startup->setChecked(load_pl_on_startup);
+	cb_load_last_track->setChecked(load_last_track);
+	cb_remember_time->setChecked(remember_time);
+	cb_start_playing->setChecked(start_playing);
+
 
     cb_toggled(true);
 
@@ -72,11 +80,11 @@ void GUI_Startup_Dialog::cb_toggled(bool b) {
 
 void GUI_Startup_Dialog::ok_clicked() {
 
-    CSettingsStorage* set = CSettingsStorage::getInstance();
-	set->setLoadPlaylist(cb_load_pl_on_startup->isChecked());
-	set->setLoadLastTrack( cb_load_last_track->isChecked() && cb_load_last_track->isEnabled());
-	set->setRememberTime(cb_remember_time->isChecked() && cb_remember_time->isEnabled());
-	set->setStartPlaying(cb_start_playing->isChecked() && cb_start_playing->isEnabled());
+    Settings* set = Settings::getInstance();
+	set->set( Set::PL_Load, cb_load_pl_on_startup->isChecked() );
+	set->set( Set::PL_LoadLastTrack, (cb_load_last_track->isChecked() && cb_load_last_track->isEnabled()) );
+	set->set( Set::PL_RememberTime, (cb_remember_time->isChecked() && cb_remember_time->isEnabled()) );
+	set->set( Set::PL_StartPlaying, (cb_start_playing->isChecked() && cb_start_playing->isEnabled()) );
     close();
 }
 

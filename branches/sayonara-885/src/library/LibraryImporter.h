@@ -28,7 +28,7 @@
 #include <QStringList>
 #include "library/threads/ImportCachingThread.h"
 #include "library/threads/ImportCopyThread.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
@@ -66,7 +66,7 @@ private:
     GUI_ImportFolder*       _import_dialog;
     ImportCachingThread*    _caching_thread;
     ImportCopyThread*       _copy_thread;
-    CSettingsStorage*       _settings;
+    Settings*       _settings;
     CDatabaseConnector*     _db;
 
 

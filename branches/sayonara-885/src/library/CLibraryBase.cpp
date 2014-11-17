@@ -19,7 +19,7 @@
  */
 
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
@@ -35,14 +35,14 @@ CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
 {
     _main_window = main_window;
 
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    Settings* settings = Settings::getInstance();
     _db = CDatabaseConnector::getInstance();
 
-    m_library_path = settings->getLibraryPath();
+	m_library_path = settings->get(Set::Lib_Path);
 
     _reload_thread = new ReloadThread();
 
-    QList<int> sortings = settings->getLibSorting();
+	QList<int> sortings = settings->get(Set::Lib_Sorting);
     _artist_sortorder = (SortOrder) sortings[0];
     _album_sortorder = (SortOrder) sortings[1];
     _track_sortorder = (SortOrder) sortings[2];
@@ -73,7 +73,7 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 
     QList<int> lst;
     lst << artist_so << album_so << track_so;
-    CSettingsStorage::getInstance()->setLibSorting(lst);
+	Settings::getInstance()->set(Set::Lib_Sorting, lst);
 
     // artist sort order has changed
     if(artist_so != _artist_sortorder) {

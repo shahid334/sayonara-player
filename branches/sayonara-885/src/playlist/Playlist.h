@@ -25,7 +25,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 

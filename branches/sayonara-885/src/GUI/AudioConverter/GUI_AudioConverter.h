@@ -24,7 +24,7 @@
 #define GUI_AUDIOCONVERTER_H
 
 #include "HelperStructs/globals.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "GUI/ui_GUI_AudioConvert.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include <QAction>
@@ -58,7 +58,7 @@ protected:
 
 	
 private:
-	CSettingsStorage* _settings;
+	Settings* _settings;
 	LameBitrate _bitrate;
 
 	void fill_cbr();

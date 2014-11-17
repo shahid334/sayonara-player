@@ -24,7 +24,7 @@
 #define PLAYLISTLOADER_H
 
 #include <QObject>
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 class PlaylistLoader : public QObject
 {
@@ -41,7 +41,7 @@ signals:
 public slots:
 
 private:
-    CSettingsStorage* _settings;
+    Settings* _settings;
     
 };
 

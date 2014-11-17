@@ -22,7 +22,7 @@
 #ifndef GUI_TRAYICON_H
 #define GUI_TRAYICON_H
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/MetaData.h"
 
 #include "Notification/Notification.h"
@@ -122,7 +122,7 @@ private:
     bool                    m_notification_active;
     bool                    m_playing;
     bool                    m_mute;
-    CSettingsStorage*       m_settings;
+    Settings*       m_settings;
 
     bool 		    _md_set;
     MetaData		    _md;

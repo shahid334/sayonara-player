@@ -27,7 +27,7 @@
  */
 
 #include "GUI/playlist/entry/GUI_PlaylistEntryBig.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 
 
@@ -47,12 +47,15 @@ GUI_PlaylistEntryBig::~GUI_PlaylistEntryBig() {
 void GUI_PlaylistEntryBig::setContent(const MetaData& md, int idx) {
 
     QString titlestr;
+	bool show_numbers = Settings::getInstance()->get(Set::PL_ShowNumbers);
 
-    if(CSettingsStorage::getInstance()->getPlaylistNumbers())
-        titlestr = QString::number(idx) + ". " + md.title.trimmed();
+	if(show_numbers){
+		titlestr = QString::number(idx) + ". " + md.title.trimmed();
+	}
 
-    else
-        titlestr = md.title.trimmed();
+	else{
+		titlestr = md.title.trimmed();
+	}
 
 	lab_title->setText(titlestr);
 	lab_artist->setText(md.artist.trimmed());

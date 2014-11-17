@@ -56,6 +56,10 @@ ADD_SUBDIRECTORY(languages)
 
 SET(HEADERS
     application.h
+    Settings/SettingKey.h
+    Settings/Setting.h
+    Settings/Settings.h
+    Settings/SettingConverter.h
     Engine/Engine.h
     Engine/SoundPluginLoader.h
     Notification/Notification.h
@@ -73,6 +77,8 @@ SET(HEADERS
 SET(SOURCES
     Main.cpp
     application.cpp
+    Settings/Settings.cpp
+    Settings/Setting.cpp
     Engine/SoundPluginLoader.cpp
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp

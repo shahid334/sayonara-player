@@ -24,7 +24,7 @@
 
 #include "GUI/ui_GUI_SocketSetup.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QDialog>
 
@@ -35,14 +35,17 @@ GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) :
 
 	setupUi(this);
 
-	_db = CSettingsStorage::getInstance();
-	_socket_from = _db->getSocketFrom();
-	_socket_to = _db->getSocketTo();
+	bool active;
+
+	_db = Settings::getInstance();
+	_socket_from = _db->get(Set::Socket_From);
+	_socket_to =_db->get(Set::Socket_To);
+	active = _db->get(Set::Socket_Active);
 
 	if(_socket_from == 0 ||  _socket_from > 65535) _socket_from = 1024;
 	if(_socket_to == 0 ||  _socket_to > 65535) _socket_to = 1034;
 
-	cb_activate->setChecked(_db->getSocketActivated());
+	cb_activate->setChecked( active );
 	sb_start->setValue(_socket_from);
 	sb_increment->setValue(_socket_to);
 
@@ -69,9 +72,10 @@ void GUI_SocketSetup::_sl_start_changed(int val) {
 
 
 void GUI_SocketSetup::_sl_ok_pressed() {
-	_db->setSocketActivated(cb_activate->isChecked());
-	_db->setSocketFrom(sb_start->value());
-	_db->setSocketTo(sb_increment->value());
+
+	_db->set(Set::Socket_Active, cb_activate->isChecked());
+	_db->set(Set::Socket_From, sb_start->value());
+	_db->set(Set::Socket_To, sb_increment->value());
 
     hide();
     close();

@@ -21,14 +21,12 @@ if (LIBNOTIFY_FOUND)
 
 
     SET(HEADERS
-            ${CMAKE_SOURCE_DIR}/src/HelperStructs/CSettingsStorage.h
             ${CMAKE_SOURCE_DIR}/src/Notification/Notification.h
             ${CMAKE_SOURCE_DIR}/src/Notification/libnotify/LN_Notification.h
     )
 
     SET(SOURCES
             ${CMAKE_SOURCE_DIR}/src/HelperStructs/Helper.cpp
-            ${CMAKE_SOURCE_DIR}/src/HelperStructs/CSettingsStorage.cpp
             ${CMAKE_SOURCE_DIR}/src/Notification/libnotify/LN_Notification.cpp
     )
 

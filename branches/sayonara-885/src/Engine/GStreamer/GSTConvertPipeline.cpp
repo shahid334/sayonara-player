@@ -107,7 +107,10 @@ bool GSTConvertPipeline::set_target_uri(gchar* uri) {
 
 void GSTConvertPipeline::play() {
 
-	LameBitrate q = CSettingsStorage::getInstance()->getConvertQuality();
+	LameBitrate q;
+	int val = Settings::getInstance()->get(Set::Engine_ConvertQuality);
+	q = (LameBitrate) val;
+
 	set_quality(q);
 	qDebug() << "Convert pipeline: play";
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);

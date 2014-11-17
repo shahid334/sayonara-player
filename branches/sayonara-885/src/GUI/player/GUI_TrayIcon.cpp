@@ -19,7 +19,7 @@
  */
 
 #include "Notification/NotificationPluginLoader.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "GUI/player/GUI_TrayIcon.h"
 
@@ -36,7 +36,7 @@
 
 GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 
-	m_settings = CSettingsStorage::getInstance();
+	m_settings = Settings::getInstance();
     m_playing = false;
     m_mute = false;
 
@@ -57,8 +57,9 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     m_vol_step = 5;
 
     m_plugin_loader = NotificationPluginLoader::getInstance();
-    m_notification_active = m_settings->getShowNotification();
-    m_timeout = m_settings->getNotificationTimeout();
+
+	m_notification_active = m_settings->get(Set::Notification_Show);
+	m_timeout = m_settings->get(Set::Notification_Timeout);
     
     _timer = new QTimer(this);
     _timer->setInterval(300);
@@ -252,7 +253,7 @@ void GUI_TrayIcon::setMute(bool mute) {
     _mute = mute;
 
     QString suffix = "";
-    int style = CSettingsStorage::getInstance()->getPlayerStyle();
+	int style = m_settings->get(Set::Player_Style);
 
     if(style == 1) {
         suffix = "_dark";

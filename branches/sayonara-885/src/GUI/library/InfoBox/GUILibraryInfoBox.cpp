@@ -25,7 +25,7 @@
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/ui_GUI_Library_Info_Box.h"
 
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/Helper.h"
@@ -72,6 +72,7 @@ void GUI_Library_Info_Box::psl_refresh() {
     MetaDataList v_md;
 	AlbumList v_albums;
 	ArtistList v_artists;
+	bool lfm_active = Settings::getInstance()->get(Set::LFM_Active);
 
 	_db->getTracksFromDatabase(v_md);
 	_db->getAllAlbums(v_albums);
@@ -91,7 +92,7 @@ void GUI_Library_Info_Box::psl_refresh() {
 	_duration_string = Helper::cvtMsecs2TitleLengthString(_duration_ms, false);
     _filesize_str = Helper::calc_filesize_str(_filesize);
 
-	if( !CSettingsStorage::getInstance()->getLastFMActive() ) {
+	if( !lfm_active ) {
 		_n_lfm_playcount = -1;
 		_n_lfm_days_registered = -1;
 		lab_lfm_playcount->setText("Last.fm not active");
@@ -117,6 +118,7 @@ void GUI_Library_Info_Box::psl_refresh() {
 			lab_lfm_playcount->setText("-");
 		}
 	}
+
 	lab_album_count->setText(QString::number(_n_albums));
 	lab_track_count->setText(QString::number(_n_tracks));
 	lab_artist_count->setText(QString::number(_n_artists));

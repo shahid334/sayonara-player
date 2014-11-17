@@ -25,6 +25,7 @@
 
 #include <QDialog>
 #include "GUI/ui_GUI_Target_Playlist_Dialog.h"
+#include "Settings/Settings.h"
 
 class GUI_Target_Playlist_Dialog : public QDialog, private Ui_GUI_Target_Playlist_Dialog
 {
@@ -41,6 +42,9 @@ signals:
 private slots:
     void search_button_clicked();
     void ok_button_clicked();
+
+private:
+	Settings* _settings;
 
 
     

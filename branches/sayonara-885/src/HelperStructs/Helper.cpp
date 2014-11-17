@@ -30,15 +30,11 @@
 #include "HelperStructs/globals.h"
 #include "HelperStructs/WebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "Settings/Settings.h"
 
-#include <string>
-#include <iostream>
-#include <sstream>
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdio.h>
-#include <string.h>
 #include <ctime>
 
 #include <QDir>
@@ -225,7 +221,7 @@ QString Helper::getSayonaraPath() {
 
 QString Helper::createLink(const QString& name, const QString& target, bool underline) {
 	
-	int dark = CSettingsStorage::getInstance()->getPlayerStyle();
+	bool dark = (Settings::getInstance()->get(Set::Player_Style) == 1);
 
 	QString new_target;
 	QString content;

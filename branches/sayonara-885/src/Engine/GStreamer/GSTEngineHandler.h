@@ -22,7 +22,7 @@
 #define ENGINEHANDLER_H_
 
 #include "Engine/Engine.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include <vector>
 
 using namespace std;
@@ -94,7 +94,7 @@ private slots:
 
 
 private:
-	CSettingsStorage* _settings;
+	Settings* _settings;
 	Engine*           _cur_engine;
 	vector<Engine*>   _engines;
 

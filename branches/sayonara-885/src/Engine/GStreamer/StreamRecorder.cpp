@@ -23,7 +23,7 @@
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/GStreamer/GSTPipeline.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 #include "HelperStructs/PlaylistParser.h"
 #include "HelperStructs/Tagging/id3.h"
 
@@ -92,7 +92,7 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 {
     _buffer_size = 32767;
     _stream_ended = true;
-    _settings = CSettingsStorage::getInstance();
+    _settings = Settings::getInstance();
     _rec_pipeline = NULL;
 
     _try = 2;
@@ -217,7 +217,7 @@ void StreamRecorder::set_new_stream_session() {
     _session_path = get_time_str();
     _session_collector.clear();
 
-    QString sr_path = _settings->getStreamRipperPath();
+	QString sr_path =_settings->get(Set::Engine_SR_Path);
     QString session_path = check_session_path(sr_path);
 
     _session_playlist_name = session_path + QDir::separator() + get_time_str() + ".m3u";
@@ -276,8 +276,8 @@ bool StreamRecorder::stop(bool delete_track) {
 
     gint64 duration=0;
 
-    bool complete_tracks = _settings->getStreamRipperCompleteTracks();
     bool save_success = true;
+	bool complete_tracks = _settings->get(Set::Engine_SR_CompleteTracks);
 
     terminate_thread_if_running();
 
@@ -310,8 +310,9 @@ bool StreamRecorder::save_file() {
 
     SR_DEBUG;
 
-    QString sr_path = _settings->getStreamRipperPath();
-    QString session_path = check_session_path(sr_path);
+	QString sr_path = _settings->get(Set::Engine_SR_Path);
+
+	QString session_path = check_session_path(sr_path);
 
     QDir dir(session_path);
         dir.mkdir(_md.artist);
@@ -402,7 +403,8 @@ QString StreamRecorder::check_session_path(QString sr_path) {
 
     SR_DEBUG;
 
-    bool create_session_path = _settings->getStreamRipperSessionPath();
+	bool create_session_path =_settings->get(Set::Engine_SR_SessionPath);
+
     if(!create_session_path) return sr_path;
 
     if(!QFile::exists(sr_path + QDir::separator() + _session_path)) {

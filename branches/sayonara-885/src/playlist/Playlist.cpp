@@ -24,7 +24,7 @@
 
 Playlist::Playlist(QObject* parent) : QObject(parent) {
 
-	_playlist_mode = CSettingsStorage::getInstance()->getPlaylistMode();
+	_playlist_mode = Settings::getInstance()->get(Set::PL_Mode);
     _reports_disabled = false;
     _cur_play_idx = -1;
 }

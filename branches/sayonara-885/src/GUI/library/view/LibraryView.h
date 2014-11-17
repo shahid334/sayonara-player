@@ -54,7 +54,7 @@ class LibraryView : public SearchableTableView{
 
 signals:
 
-    void sig_columns_changed(QStringList& );
+	void sig_columns_changed(QList<int>& );
 
     void sig_middle_button_clicked(const QPoint&);
     void sig_all_selected();
@@ -96,7 +96,7 @@ public:
     LibraryView(QWidget* parent=0);
     virtual ~LibraryView();
 
-    void rc_header_menu_init(QStringList& lst);
+	void rc_header_menu_init(QList<int>& lst);
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 

@@ -28,7 +28,7 @@
 
 
 GSTConvertEngine::GSTConvertEngine(QObject *parent){
-	_settings = CSettingsStorage::getInstance();
+	_settings = Settings::getInstance();
 	_pipeline = new GSTConvertPipeline(this);
     _name = CONVERT_ENGINE;
 
@@ -45,6 +45,7 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
 	gchar* uri = NULL;
 	gchar* target_uri = NULL;
 	QString target_uri_str;
+	QString cvt_target_path;
 	bool success = false;
 
 	_playing_stream = Helper::is_www(md.filepath);
@@ -73,11 +74,11 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
 		filename = filename.left(idx);
 	}
 
-	filename = _settings->getConvertTgtPath() + "/" + filename + ".mp3";
-
+	cvt_target_path = _settings->get(Set::Engine_CovertTargetPath);
+	filename = cvt_target_path + "/" + filename + ".mp3";
 
 	target_uri = g_filename_from_utf8(filename.toUtf8(),
-							   filename.toUtf8().size(), NULL, NULL, NULL);
+				   filename.toUtf8().size(), NULL, NULL, NULL);
 
 	ENGINE_DEBUG << "Set Uri current pipeline: " << uri;
 	success = _pipeline->set_uri(uri);

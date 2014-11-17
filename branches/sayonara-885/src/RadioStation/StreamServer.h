@@ -2,7 +2,7 @@
 #include <QList>
 
 #include "RadioStation/SocketWriter.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 typedef struct sockaddr_in SocketAdress;
 typedef struct sockaddr SocketAdress_t;
@@ -29,7 +29,7 @@ class StreamServer : public QThread{
 		~StreamServer();
 
 	private:
-		CSettingsStorage* settings;
+		Settings* settings;
 		int _socket;
 		int _port;
 

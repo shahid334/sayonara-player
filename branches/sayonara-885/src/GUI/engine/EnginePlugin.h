@@ -25,7 +25,7 @@
 
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/engine/EngineColorStyleChooser.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QAction>
 #include <QColor>

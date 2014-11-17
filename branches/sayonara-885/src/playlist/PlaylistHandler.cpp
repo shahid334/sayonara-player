@@ -29,7 +29,7 @@
 
 PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent) {
 
-    _settings = CSettingsStorage::getInstance();
+    _settings = Settings::getInstance();
 	_db = CDatabaseConnector::getInstance();
     _last_pos = 0;
     _playlist = 0;
@@ -47,7 +47,8 @@ PlaylistHandler::~PlaylistHandler() {
 void PlaylistHandler::playlist_changed(const MetaDataList& v_md, int cur_idx) {
 
 	emit sig_playlist_created(v_md, cur_idx, _playlist->get_type());
-    _settings->setPlaylist(_playlist->toStringList());
+
+	_settings->set(Set::PL_Playlist, _playlist->toStringList());
 }
 
 void PlaylistHandler::track_changed(const MetaData& md, int cur_idx) {
@@ -228,7 +229,11 @@ void PlaylistHandler::psl_id3_tags_changed(const MetaDataList& new_meta_data) {
 void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
 
 	if(artists.size() == 0) return;
-    if(! (_playlist->get_type() == PlaylistTypeStd && _settings->getPlaylistMode().dynamic)) return;
+
+	PlaylistType type = _playlist->get_type();
+	PlaylistMode plm = _settings->get(Set::PL_Mode);
+
+	if( (type != PlaylistTypeStd) || !plm.dynamic ) return;
 
 
 	QList<int> artists_copy = Helper::randomize_list(artists);
@@ -400,7 +405,7 @@ void PlaylistHandler::psl_audioconvert_on(){
 
 	_playlist->set_playlist_mode(pl_mode);
 
-	_settings->setPlaylistMode(pl_mode);
+	_settings->set(Set::PL_Mode, pl_mode);
 
 	emit sig_playlist_mode_changed(pl_mode);
 }
@@ -411,8 +416,7 @@ void PlaylistHandler::psl_audioconvert_off(){
 
 	PlaylistMode pl_mode = _playlist->playlist_mode_restore();
 
-	_settings->setPlaylistMode(pl_mode);
-	_playlist->set_playlist_mode(pl_mode);
+	_settings->set(Set::PL_Mode, pl_mode);
 
 	emit sig_playlist_mode_changed(pl_mode);
 }

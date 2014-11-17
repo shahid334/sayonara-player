@@ -39,6 +39,11 @@ struct EQ_Setting{
 			settings.push_back(0);
 		}
 	}
+
+	EQ_Setting(const EQ_Setting& s){
+		settings = s.settings;
+		name = s.name;
+	}
 	
     static EQ_Setting fromString(const QString& str){
 
@@ -61,7 +66,7 @@ struct EQ_Setting{
 	}
 
 
-	QString toString(){
+	QString toString() const {
 
 		QString str = name;
 		for(int i=0; i<settings.size(); i++){
