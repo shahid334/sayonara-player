@@ -61,6 +61,7 @@ void StdPlaylist::change_track(int idx) {
 
     _last_track = _cur_play_idx;
 
+
     report_changes(false, true);
 }
 

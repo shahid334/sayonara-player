@@ -56,24 +56,26 @@ void Settings::register_setting(AbstrSetting* s){
 	_settings[ (int) key ] = s;
 }
 
-bool Settings::check_settings(){
 
+
+bool Settings::check_settings(){
 
 	QList<int> un_init;
 	for(int i=0; i<SK::Num_Setting_Keys; i++){
 		if(! _settings[i] ){
 			un_init << i;
+
 		}
 	}
 
-	if(!un_init.isEmpty()){
+	if( !un_init.empty() ){
 		qDebug() << "**** Settings " << un_init << " are not initialized ****";
 		return false;
 	}
 
-
+	else{
 		qDebug() << "**** All settings initialized ****";
-
+	}
 
 	return true;
 }

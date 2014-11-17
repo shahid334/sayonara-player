@@ -123,7 +123,7 @@ void segfault_handler(int sig){
 
 #define REGISTER_SETTING(type, key, db_key, def) set->register_setting( new Setting<type>(Set::key, db_key, def) )
 
-void register_settings(){
+bool register_settings(){
 
 	Settings* set = Settings::getInstance();
 
@@ -210,7 +210,7 @@ void register_settings(){
 	REGISTER_SETTING( bool, Broadcast_Prompt, "broadcast_prompt", false );
 	REGISTER_SETTING( int, Broadcast_Port, "broadcast_port", 54054 );
 
-	set->check_settings();
+	return set->check_settings();
 }
 
 int main(int argc, char *argv[]) {
@@ -221,7 +221,9 @@ int main(int argc, char *argv[]) {
 
 #endif
 
-	register_settings();
+	if(!register_settings()){
+		return 1;
+	}
 
 	Application app (argc, argv);
     Helper::set_bin_path(app.applicationDirPath());

@@ -287,8 +287,14 @@ bool CDatabaseConnector::apply_fixes() {
     DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	int version = load_setting<int>("version", 0);
-	if(version == 7) return true;
+	QString str_version;
+	int version;
+	bool success;
+
+	success = load_setting("version", str_version);
+	version = str_version.toInt(&success);
+
+	if(version == 7 || !success) return true;
 
     qDebug() << "Apply fixes";
 
@@ -358,12 +364,12 @@ bool CDatabaseConnector::apply_fixes() {
                 ");";
 
         bool success = check_and_create_table("VisualStyles", create_vis_styles);
-        if(success) store_setting("version", 4);
+		if(success) store_setting("version", 4);
     }
 
     if(version < 5) {
         bool success = check_and_insert_column("tracks", "rating", "integer");
-        if(success) store_setting("version", 5);
+		if(success) store_setting("version", 5);
     }
 
 	if(version < 6) {

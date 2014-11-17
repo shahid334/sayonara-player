@@ -94,7 +94,7 @@ template<>
 class SettingConverter<QSize>{
 public:
 	static QString cvt_to_string(const QSize& val){
-		return QString::number(val.width()) + "," + val.height();
+		return QString::number(val.width()) + "," + QString::number(val.height());
 	}
 
 	static bool cvt_from_string(QString val, QSize& sz){
@@ -124,7 +124,7 @@ template<>
 class SettingConverter<QPoint>{
 public:
 	static QString cvt_to_string(const QPoint& val){
-		return QString::number(val.x()) + "," + val.y();
+		return QString::number(val.x()) + "," + QString::number(val.y());
 	}
 
 	static bool cvt_from_string(QString val, QPoint& sz){
@@ -167,8 +167,6 @@ public:
 	}
 
 	static bool cvt_from_string(QString val, QList<T>& ret){
-
-		qDebug() << "cvt from string: " << val;
 
 		SettingConverter<T> sc;
 		ret.clear();

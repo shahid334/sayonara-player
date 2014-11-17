@@ -92,13 +92,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	_shown_cols_artist = _settings->get(Set::Lib_ColsArtist);
 	_shown_cols_tracks = _settings->get(Set::Lib_ColsTitle);
 
-	qDebug() << "Sort artists: " << _sort_artists;
-	qDebug() << "Sort albums: " << _sort_albums;
-	qDebug() << "Sort tracks: " << _sort_tracks;
-	qDebug() << "Cols artists: " << _shown_cols_artist;
-	qDebug() << "Cols albums: " << _shown_cols_albums;
-	qDebug() << "Cols tracks: " << _shown_cols_tracks;
-
     _album_model = 0;
     _artist_model = 0;
     _track_model = 0;

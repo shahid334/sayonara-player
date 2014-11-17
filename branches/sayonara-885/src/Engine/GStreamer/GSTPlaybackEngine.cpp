@@ -457,6 +457,8 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 	pos_sec = pos_ms / 1000;
 	cur_pos_sec = _cur_pos_ms / 1000;
 
+	Settings::getInstance()->set(Set::PL_LastTrackPos, pos_sec);
+
     if ( cur_pos_sec == pos_sec ){
         return;
     }

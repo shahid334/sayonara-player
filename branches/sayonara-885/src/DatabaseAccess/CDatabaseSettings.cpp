@@ -69,9 +69,7 @@ bool CDatabaseConnector::store_settings() {
 }
 
 
-bool CDatabaseConnector::load_setting_var(QString key, QVariant& tgt_value) {
-
-	tgt_value = 0;
+bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) {
 
 	QSqlQuery q (*_database);
 	q.prepare("select value from settings where key = ?;");
@@ -84,7 +82,7 @@ bool CDatabaseConnector::load_setting_var(QString key, QVariant& tgt_value) {
 	}
 
 	if(q.next()) {
-		tgt_value = q.value(0);
+		tgt_value = q.value(0).toString();
 		return true;
 	}
 
@@ -92,7 +90,7 @@ bool CDatabaseConnector::load_setting_var(QString key, QVariant& tgt_value) {
 }
 
 
-bool CDatabaseConnector::store_setting_var(QString key, const QVariant& value) {
+bool CDatabaseConnector::store_setting(QString key, const QVariant& value) {
 
 
 	QSqlQuery q (*_database);

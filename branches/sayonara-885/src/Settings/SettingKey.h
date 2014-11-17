@@ -117,6 +117,7 @@ namespace Set {
 	const SettingKey<bool, SK::Lib_OnlyTracks> Lib_OnlyTracks;
 	const SettingKey<bool, SK::Lib_LiveSearch> Lib_LiveSearch;
 	const SettingKey<QList<int>, SK::Lib_Sorting> Lib_Sorting;
+
 	const SettingKey<QString, SK::Player_Version> Player_Version;
 	const SettingKey<QString, SK::Player_Language> Player_Language;
 	const SettingKey<int, SK::Player_Style> Player_Style;

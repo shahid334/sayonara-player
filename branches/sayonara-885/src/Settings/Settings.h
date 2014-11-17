@@ -34,7 +34,7 @@
 
 #include "Settings/Setting.h"
 
-
+#define CHECK(expr) char fake_arr[expr ? 0: 1]; qDebug() << fake_arr[0]
 class Settings : public QObject
 {
 
@@ -60,12 +60,6 @@ public:
 	T get(const SettingKey<T,S> k){
 
 		Setting<T>* s = (Setting<T>*) _settings[(int) S];
-		if(!s){
-			qDebug() << "Warning: undefined Setting: " << (int) S << " (" << typeid(T).name() << ")";
-			T undef;
-			return undef;
-		}
-
 		return s->getValue();
 	}
 

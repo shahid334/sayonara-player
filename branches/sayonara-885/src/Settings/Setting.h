@@ -99,22 +99,25 @@ class Setting : public AbstrSetting
 
 		virtual void load_db(CDatabaseConnector* db){
 			bool success;
-			QVariant v;
-			success = db->load_setting_var(_db_key, v);
+			QString s;
+			success = db->load_setting(_db_key, s);
 			if(!success){
 				_val = _default_val;
 				return;
 			}
 
-			success = SC<T>::cvt_from_string(v.toString(), _val);
+			success = SC<T>::cvt_from_string(s, _val);
 			if(!success){
 				_val = _default_val;
 			}
+
+			qDebug() << "Load setting " << _db_key << ": " << typeid(_val).name() << " " << s << " (" << success << ")";
 		}
 
 		virtual void store_db(CDatabaseConnector* db){
 
 			QString s = SC<T>::cvt_to_string(_val);
+			qDebug() << "Store setting " << _db_key << " " << s;
 			db->store_setting(_db_key, s);
 		}
 

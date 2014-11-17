@@ -188,42 +188,9 @@ public:
 	 * SETTINGS
 	 *******************************************/
 
-		template<typename T>
-		T load_setting(QString key, const T& def){
 
-			QVariant v;
-			bool success;
-			T ret = def;
-
-			success = load_setting_var(key, v);
-
-			if(!v.isValid() || v.isNull() || !success){
-				return ret;
-			}
-
-			if(!v.canConvert<T>()){
-				return ret;
-			}
-
-			ret = v.value<T>();
-
-			return ret;
-		}
-
-
-		template<typename T>
-		void store_setting(QString key, const T& val){
-
-			QVariant v;
-
-			v.setValue(val);
-
-			store_setting_var(key, v);
-		}
-
-
-		bool load_setting_var(QString key, QVariant& val);
-		bool store_setting_var(QString key, const QVariant& val);
+		bool load_setting(QString key, QString& val);
+		bool store_setting(QString key, const QVariant& val);
 
    /************************************
     *styles
