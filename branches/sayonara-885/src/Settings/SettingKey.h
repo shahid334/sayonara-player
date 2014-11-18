@@ -92,78 +92,82 @@ template<typename T, SK::SettingKey S>
 class SettingKey
 {};
 
+
+#define INST(type, settingkey) typedef SettingKey<type, SK:: settingkey> settingkey##_t; const settingkey##_t settingkey
+
+
 namespace Set {
-	const SettingKey<QStringList, SK::LFM_Login> LFM_Login;
-	const SettingKey<bool, SK::LFM_Active>LFM_Active;
+	INST(bool, LFM_Active);
+	INST(QStringList, LFM_Login);
 
-	const SettingKey<bool, SK::LFM_Corrections> LFM_Corrections;
-	const SettingKey<bool, SK::LFM_ShowErrors> LFM_ShowErrors;
-	const SettingKey<QString, SK::LFM_SessionKey> LFM_SessionKey;
+	INST(bool, LFM_Corrections);
+	INST(bool, LFM_ShowErrors);
+	INST(QString, LFM_SessionKey);
 
-	const SettingKey<int, SK::Eq_Last> Eq_Last;
-	const SettingKey<EQ_Setting, SK::Eq_Flat> Eq_Flat;
-	const SettingKey<EQ_Setting, SK::Eq_Rock> Eq_Rock;
-	const SettingKey<EQ_Setting, SK::Eq_Treble> Eq_Treble;
-	const SettingKey<EQ_Setting, SK::Eq_Bass> Eq_Bass;
-	const SettingKey<EQ_Setting, SK::Eq_Mid> Eq_Mid;
-	const SettingKey<EQ_Setting, SK::Eq_LightRock> Eq_LightRock;
-	const SettingKey<EQ_Setting, SK::Eq_Custom> Eq_Custom;
+	INST(int, Eq_Last);
+	INST(EQ_Setting, Eq_Flat);
+	INST(EQ_Setting, Eq_Rock);
+	INST(EQ_Setting, Eq_Treble);
+	INST(EQ_Setting, Eq_Bass);
+	INST(EQ_Setting, Eq_Mid);
+	INST(EQ_Setting, Eq_LightRock);
+	INST(EQ_Setting, Eq_Custom);
 
-	const SettingKey<bool, SK::Lib_Show> Lib_Show;
-	const SettingKey<QString, SK::Lib_Path> Lib_Path;
-	const SettingKey<QList<int>, SK::Lib_ColsTitle> Lib_ColsTitle;
-	const SettingKey<QList<int>, SK::Lib_ColsArtist> Lib_ColsArtist;
-	const SettingKey<QList<int>, SK::Lib_ColsAlbum> Lib_ColsAlbum;
-	const SettingKey<bool, SK::Lib_OnlyTracks> Lib_OnlyTracks;
-	const SettingKey<bool, SK::Lib_LiveSearch> Lib_LiveSearch;
-	const SettingKey<QList<int>, SK::Lib_Sorting> Lib_Sorting;
+	INST(bool, Lib_Show);
+	INST(QString, Lib_Path);
+	INST(QList<int>, Lib_ColsTitle);
+	INST(QList<int>, Lib_ColsArtist);
+	INST(QList<int>, Lib_ColsAlbum);
+	INST(bool, Lib_OnlyTracks);
+	INST(bool, Lib_LiveSearch);
+	INST(QList<int>, Lib_Sorting);
 
-	const SettingKey<QString, SK::Player_Version> Player_Version;
-	const SettingKey<QString, SK::Player_Language> Player_Language;
-	const SettingKey<int, SK::Player_Style> Player_Style;
-	const SettingKey<QSize, SK::Player_Size> Player_Size;
-	const SettingKey<QPoint, SK::Player_Pos> Player_Pos;
-	const SettingKey<bool, SK::Player_Fullscreen> Player_Fullscreen;
-	const SettingKey<bool, SK::Player_Maximized> Player_Maximized;
-	const SettingKey<QString, SK::Player_ShownPlugin> Player_ShownPlugin;
-	const SettingKey<bool, SK::Player_OneInstance> Player_OneInstance;
-	const SettingKey<bool, SK::Player_Min2Tray> Player_Min2Tray;
-	const SettingKey<bool, SK::Player_NotifyNewVersion> Player_NotifyNewVersion;
+	INST(QString, Player_Version);
+	INST(QString, Player_Language);
+	INST(int, Player_Style);
+	INST(QSize, Player_Size);
+	INST(QPoint, Player_Pos);
+	INST(bool, Player_Fullscreen);
+	INST(bool, Player_Maximized);
+	INST(QString, Player_ShownPlugin);
+	INST(bool, Player_OneInstance);
+	INST(bool, Player_Min2Tray);
+	INST(bool, Player_NotifyNewVersion);
 
-	const SettingKey<QStringList, SK::PL_Playlist> PL_Playlist;
-	const SettingKey<bool, SK::PL_Load> PL_Load;
-	const SettingKey<bool, SK::PL_LoadLastTrack> PL_LoadLastTrack;
-	const SettingKey<bool, SK::PL_RememberTime> PL_RememberTime;
-	const SettingKey<bool, SK::PL_StartPlaying> PL_StartPlaying;
-	const SettingKey<int, SK::PL_LastTrack> PL_LastTrack;
-	const SettingKey<int, SK::PL_LastTrackPos> PL_LastTrackPos;
-	const SettingKey<PlaylistMode, SK::PL_Mode> PL_Mode;
-	const SettingKey<bool, SK::PL_ShowNumbers> PL_ShowNumbers;
-	const SettingKey<bool, SK::PL_SmallItems> PL_SmallItems;
+	INST(QStringList, PL_Playlist);
+	INST(bool, PL_Load);
+	INST(bool, PL_LoadLastTrack);
+	INST(bool, PL_RememberTime);
+	INST(bool, PL_StartPlaying);
+	INST(int, PL_LastTrack);
+	INST(int, PL_LastTrackPos);
+	INST(PlaylistMode, PL_Mode);
+	INST(bool, PL_ShowNumbers);
+	INST(bool, PL_SmallItems);
 
-	const SettingKey<bool, SK::Notification_Show> Notification_Show;
-	const SettingKey<int, SK::Notification_Timeout> Notification_Timeout;
-	const SettingKey<QString, SK::Notification_Name> Notification_Name;
-	const SettingKey<int, SK::Notification_Scale> Notification_Scale;
+	INST(bool, Notification_Show);
+	INST(int, Notification_Timeout);
+	INST(QString, Notification_Name);
+	INST(int, Notification_Scale);
 
-	const SettingKey<QString, SK::Engine_Name> Engine_Name;
-	const SettingKey<int, SK::Engine_Vol> Engine_Vol;
-	const SettingKey<int, SK::Engine_ConvertQuality> Engine_ConvertQuality;
-	const SettingKey<QString, SK::Engine_CovertTargetPath> Engine_CovertTargetPath;
+	INST(QString, Engine_Name);
+	INST(int, Engine_Vol);
+	INST(int, Engine_ConvertQuality);
+	INST(QString, Engine_CovertTargetPath);
 
-	const SettingKey<bool, SK::Engine_SR_Active> Engine_SR_Active;
-	const SettingKey<bool, SK::Engine_SR_Warning> Engine_SR_Warning;
-	const SettingKey<QString, SK::Engine_SR_Path> Engine_SR_Path;
-	const SettingKey<bool, SK::Engine_SR_CompleteTracks> Engine_SR_CompleteTracks;
-	const SettingKey<bool, SK::Engine_SR_SessionPath> Engine_SR_SessionPath;
+	INST(bool, Engine_SR_Active);
+	INST(bool, Engine_SR_Warning);
+	INST(QString, Engine_SR_Path);
+	INST(bool, Engine_SR_CompleteTracks);
+	INST(bool, Engine_SR_SessionPath);
 
-	const SettingKey<bool, SK::Socket_Active> Socket_Active;
-	const SettingKey<int, SK::Socket_From> Socket_From;
-	const SettingKey<int, SK::Socket_To> Socket_To;
-	const SettingKey<int, SK::Spectrum_Style> Spectrum_Style;
-	const SettingKey<bool, SK::BroadCast_Active> BroadCast_Active;
-	const SettingKey<bool, SK::Broadcast_Prompt> Broadcast_Prompt;
-	const SettingKey<int, SK::Broadcast_Port> Broadcast_Port;
+	INST(bool, Socket_Active);
+	INST(int, Socket_From);
+	INST(int, Socket_To);
+	INST(int, Spectrum_Style);
+	INST(bool, BroadCast_Active);
+	INST(bool, Broadcast_Prompt);
+	INST(int, Broadcast_Port);
 }
 
 

@@ -7,8 +7,13 @@ StreamServer::StreamServer(QObject* parent) :
 
 	_accepted(AcceptStateAccepted)
 {
-	settings = Settings::getInstance();
-	_port = settings->get(Set::Broadcast_Port);
+	_settings = Settings::getInstance();
+	_port = _settings->get(Set::Broadcast_Port);
+
+	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
+	REGISTER_LISTENER(Set::Broadcast_Port, port_changed);
+	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
+
 }
 
 StreamServer::~StreamServer(){
@@ -309,4 +314,16 @@ void StreamServer::stop(){
 
 	server_close();
 	disconnect_all();
+}
+
+void StreamServer::active_changed(){
+
+}
+
+void StreamServer::prompt_changed(){
+
+}
+
+void StreamServer::port_changed(){
+
 }

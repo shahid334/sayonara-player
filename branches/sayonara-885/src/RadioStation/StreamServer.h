@@ -29,7 +29,8 @@ class StreamServer : public QThread{
 		~StreamServer();
 
 	private:
-		Settings* settings;
+		Settings* _settings;
+
 		int _socket;
 		int _port;
 
@@ -41,6 +42,8 @@ class StreamServer : public QThread{
 
 		SocketWriter* client_accept();
 		MetaData _md;
+
+
 
 	protected:
 		void run();
@@ -55,4 +58,10 @@ class StreamServer : public QThread{
 		void update_track(const MetaData&);
 		void server_close();
 		void stop();
+
+	private slots:
+		void active_changed();
+		void port_changed();
+		void prompt_changed();
+
 };

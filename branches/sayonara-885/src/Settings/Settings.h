@@ -34,11 +34,43 @@
 
 #include "Settings/Setting.h"
 
-#define CHECK(expr) char fake_arr[expr ? 0: 1]; qDebug() << fake_arr[0]
-class Settings : public QObject
-{
+#define REGISTER_LISTENER(setting_key, fn) \
+	SettingNotifier<setting_key##_t>* v_##fn = SettingNotifier<setting_key##_t>::getInstance();\
+	connect(v_##fn, SIGNAL(sig_value_changed()), this, SLOT( fn() ));
+
+class AbstrSettingNotifier : public QObject{
 
 	Q_OBJECT
+
+	protected:
+		AbstrSettingNotifier(QObject* parent=0){}
+
+	signals:
+		void sig_value_changed();
+};
+
+template < typename T >
+class SettingNotifier : public AbstrSettingNotifier{
+
+	private:
+		SettingNotifier( QObject* parent=0 ) : AbstrSettingNotifier(parent){}
+		SettingNotifier( const SettingNotifier& ){}
+
+	public:
+
+	static SettingNotifier< T >* getInstance(){
+		static SettingNotifier< T > inst;
+		return &inst;
+	}
+
+	void val_changed(){
+		emit sig_value_changed();
+	}
+};
+
+
+class Settings : public QObject
+{
 
 public:
 
@@ -65,15 +97,16 @@ public:
 
 
 	template<typename T, SK::SettingKey S>
-	void set(SettingKey<T,S>, const T& val){
+	void set(SettingKey<T,S> key, const T& val){
 
 		Setting<T>* s = (Setting<T>*) _settings[(int) S];
 		s->setValue(val);
+
+		SettingNotifier< SettingKey<T, S> >* sn = SettingNotifier< SettingKey<T, S> >::getInstance();
+		sn->val_changed();
 	}
 
-
 private:
-
 	Settings();
 
 	QString _db_file;

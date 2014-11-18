@@ -46,6 +46,8 @@ class AbstrSetting{
 
 };
 
+#define SETTING_SIGNAL void sig_
+
 
 template<typename T,
 		 template <typename Arg> class SC = SettingConverter >
