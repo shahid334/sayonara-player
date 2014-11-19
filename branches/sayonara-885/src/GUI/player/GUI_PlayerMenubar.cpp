@@ -73,14 +73,14 @@ void GUI_Player::folderSelectedClicked(bool) {
 void GUI_Player::importFolderClicked(bool b) {
 	Q_UNUSED(b);
 
-	QString lib_path = m_settings->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
 	if(lib_path.size() == 0 || !QFile::exists(lib_path)) {
 
         int ret = QMessageBox::warning(this, tr("No library path"), tr("Please select library path first"), QMessageBox::Ok, QMessageBox::Cancel);
         if(ret == QMessageBox::Cancel) return;
 
-        setLibraryPathClicked();
+		sl_libpath_clicked();
         return;
     }
 
@@ -95,7 +95,7 @@ void GUI_Player::importFolderClicked(bool b) {
 void GUI_Player::importFilesClicked( bool b ) {
    Q_UNUSED(b);
 
-	QString lib_path = m_settings->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
 	if(lib_path.size() == 0 || !QFile::exists(lib_path)) {
 
@@ -105,7 +105,7 @@ void GUI_Player::importFilesClicked( bool b ) {
                                        QMessageBox::Ok, QMessageBox::Cancel);
         if(ret == QMessageBox::Cancel) return;
 
-        setLibraryPathClicked();
+		sl_libpath_clicked();
         return;
     }
 
@@ -132,7 +132,7 @@ void GUI_Player::reloadLibraryClicked(bool b) {
 
 void GUI_Player::showLibrary(bool b, bool resize) {
 
-	m_settings->set(Set::Lib_Show, b);
+	_settings->set(Set::Lib_Show, b);
 	int old_width = width();
 	int lib_width = library_widget->width();
     int new_width = old_width;
@@ -176,15 +176,12 @@ void GUI_Player::show_fullscreen_toggled(bool b) {
 		showFullScreen();
 	else showNormal();
 
-	m_settings->set(Set::Player_Fullscreen, b);
+	_settings->set(Set::Player_Fullscreen, b);
 }
 
 void GUI_Player::sl_show_only_tracks(bool b) {
 
-	m_settings->set(Set::Lib_OnlyTracks, b);
-
-	emit sig_show_only_tracks(b);
-
+	_settings->set(Set::Lib_OnlyTracks, b);
 }
 
 /** VIEW END **/
@@ -195,11 +192,11 @@ void GUI_Player::sl_show_only_tracks(bool b) {
 
 // TODO: not ok
 // -> base
-void GUI_Player::setLibraryPathClicked(bool b) {
+void GUI_Player::sl_libpath_clicked(bool b) {
 	Q_UNUSED(b);
 
 	QString start_dir = QDir::homePath();
-	QString old_dir = m_settings->get(Set::Lib_Path);
+	QString old_dir = _settings->get(Set::Lib_Path);
 
 	if (old_dir.size() > 0 && QFile::exists(old_dir)) {
 		start_dir = old_dir;
@@ -207,17 +204,16 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
 			old_dir, QFileDialog::ShowDirsOnly);
+
     if (dir.size() > 0 && (old_dir.compare(dir) != 0)) {
 
-		emit sig_libpath_changed(dir);
+		_settings->set(Set::Lib_Path, dir);
 
-		m_settings->set(Set::Lib_Path, dir);
+		if( ui_libpath->isVisible() ) {
 
-		if(ui_libpath && ui_libpath->isVisible()) {
-            ui_libpath->hide();
-            ui_libpath = 0;
+			ui_libpath->hide();
 
-			bool show_library = m_settings->get(Set::Lib_Show);
+			bool show_library = _settings->get(Set::Lib_Show);
 
 			if(show_library) {
                 ui_library->show();
@@ -235,26 +231,36 @@ void GUI_Player::setLibraryPathClicked(bool b) {
 		dialog.setDefaultButton(QMessageBox::Yes);
 
 		int answer = dialog.exec();
-		if(answer == QMessageBox::Yes)
-            emit sig_reload_library(true);
+		if(answer == QMessageBox::Yes){
+			emit sig_reload_library(true);
+		}
 
 		dialog.close();
 	}
 }
 
-void GUI_Player::psl_libpath_changed(const QString & dir) {
+void GUI_Player::sl_libpath_changed() {
 
-    if (dir.size() > 0 && ui_libpath) {
+	QString dir = _settings->get(Set::Lib_Path);
 
-		if(ui_libpath->isVisible() && library_widget->isVisible()) {
+	if (QFile::exists(dir)) {
+
+		if( library_widget->isVisible() && ui_library )
+		{
             ui_libpath->hide();
-
             ui_library->show();
 			ui_library->resize(library_widget->size());
         }
-
-        ui_libpath = 0;
     }
+
+	else{
+		if( library_widget->isVisible() && ui_library )
+		{
+			ui_library->hide();
+			ui_libpath->show();
+			ui_libpath->resize(library_widget->size());
+		}
+	}
 }
 
 
@@ -266,29 +272,28 @@ void GUI_Player::sl_action_socket_connection_triggered(bool b) {
 // prvt slot
 void GUI_Player::load_pl_on_startup_toggled(bool b) {
 
-	m_settings->set(Set::PL_Load, b);
+	_settings->set(Set::PL_Load, b);
 }
 
 // prvt slot
 void GUI_Player::show_notification_toggled(bool active) {
 
-	m_settings->set(Set::Notification_Show, active);
+	_settings->set(Set::Notification_Show, active);
 }
 
 // prvt slot
 void GUI_Player::min2tray_toggled(bool b) {
-	m_settings->set(Set::Player_Min2Tray, b);
+	_settings->set(Set::Player_Min2Tray, b);
 	m_min2tray = b;
 }
 
 void GUI_Player::only_one_instance_toggled(bool b) {
-	m_settings->set(Set::Player_OneInstance, b);
+	_settings->set(Set::Player_OneInstance, b);
 }
 
 // prvt slot
 void GUI_Player::small_playlist_items_toggled(bool b) {
-	m_settings->set(Set::PL_SmallItems, b);
-	emit sig_show_small_playlist_items(b);
+	_settings->set(Set::PL_SmallItems, b);
 }
 
 // private slot
@@ -309,7 +314,7 @@ void GUI_Player::lastFMClicked(bool b) {
 }
 
 void GUI_Player::sl_live_search(bool b) {
-	m_settings->set(Set::Lib_LiveSearch, b);
+	_settings->set(Set::Lib_LiveSearch, b);
 }
 
 void GUI_Player::sl_action_language_toggled(bool b) {
@@ -331,7 +336,7 @@ void GUI_Player::help(bool b) {
 void GUI_Player::about(bool b) {
 	Q_UNUSED(b);
 
-	QString version = m_settings->get(Set::Player_Version);
+	QString version = _settings->get(Set::Player_Version);
 	QString link = Helper::createLink("http://sayonara.luciocarreras.de");
 
     QMessageBox infobox(this);

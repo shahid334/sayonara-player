@@ -31,15 +31,12 @@
 #include <QString>
 
 GUI_Notifications::GUI_Notifications(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui_GUI_Notification()
 {
-
 	setupUi(this);
 
     _plugin_loader = NotificationPluginLoader::getInstance();
-
-    _settings = Settings::getInstance();
 
 	int timeout = _settings->get(Set::Notification_Timeout);
 	int active = _settings->get(Set::Notification_Show);
@@ -74,13 +71,14 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
 	cb_scale->setChecked(scale > 0);
 
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
-
 }
 
 GUI_Notifications::~GUI_Notifications() {
-
 }
 
+void GUI_Notifications::language_changed(){
+	retranslateUi(this);
+}
 
 void GUI_Notifications::ok_clicked() {
 
@@ -98,17 +96,5 @@ void GUI_Notifications::ok_clicked() {
 	_settings->set(Set::Notification_Show, active);
 	_settings->set(Set::Notification_Scale, scale);
 
-    emit sig_settings_changed(active, timeout);
-
     close();
 }
-
-
-void GUI_Notifications::change_skin(bool dark) {
-
-}
-
-void GUI_Notifications::language_changed() {
-	retranslateUi(this);
-}
-

@@ -24,17 +24,14 @@ void GUI_BroadcastSetup::accept(){
 
 	if(old_active != new_active){
 		_settings->set(Set::BroadCast_Active, new_active);
-		emit sig_active_changed(new_active);
 	}
 
 	if(old_prompt != new_prompt){
 		_settings->set(Set::Broadcast_Prompt, new_prompt);
-		emit sig_prompt_changed(new_prompt);
 	}
 
 	if(old_port != new_port){
 		_settings->set(Set::Broadcast_Port, new_port);
-		emit sig_port_changed(new_port);
 	}
 
 	QDialog::accept();

@@ -24,7 +24,6 @@
 #define CONNECT(a,b,c,d) app->connect(a, SIGNAL(b), c, SLOT(d))
 
 #include <QApplication>
-#include <QStringList>
 #include <QMainWindow>
 #include <QTranslator>
 
@@ -32,7 +31,6 @@
 #include "GUI/playlist/GUI_Playlist.h"
 
 #include "GUI/LastFM/GUI_LastFM.h"
-// #include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
@@ -50,27 +48,21 @@
 #include "GUI/bookmarks/GUI_Bookmarks.h"
 #include "GUI/speed/GUI_Speed.h"
 #include "GUI/broadcasting/GUI_Broadcast.h"
-//#include "GUI/soundcloud/GUI_SoundCloudLibrary.h"
 
 #include "playlist/PlaylistHandler.h"
 #include "playlist/PlaylistLoader.h"
-#include "Engine/Engine.h"
+#include "Engine/GStreamer/GSTEngineHandler.h"
 #include "Engine/SoundPluginLoader.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "library/LibraryImporter.h"
-//#include "Soundcloud/SoundcloudLibrary.h"
-#include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "Settings/Settings.h"
-#include "HelperStructs/Style.h"
-#include "HelperStructs/globals.h"
+
 #include "LyricLookup/LyricLookup.h"
 #include "playlists/Playlists.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "RadioStation/StreamServer.h"
-
 
 
 class Application : public QApplication
@@ -143,15 +135,9 @@ public:
 private:
     QString getVersion();
 	void check_for_crash();
-
-private slots:
-	void focus_changed(QWidget*, QWidget*);
-
 };
 
-
-
-
+/*
 class ApplicationClient : public QObject {
 
 	Q_OBJECT
@@ -177,7 +163,7 @@ class ApplicationClient : public QObject {
 		const Application* sayonara;
 
 };
-
+*/
 #endif // APPLICATION_H
 
 

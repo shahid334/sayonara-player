@@ -172,6 +172,8 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 	}
 
 	qDebug() << "****Pipeline: constructor finished: " << status;
+
+	REGISTER_LISTENER(Set::Engine_Vol, _sl_vol_changed);
 }
 
 
@@ -281,18 +283,15 @@ void GSTPlaybackPipeline::stop() {
 
 }
 
-void GSTPlaybackPipeline::set_volume(int vol) {
+void GSTPlaybackPipeline::_sl_vol_changed() {
 
-	_vol = vol;
-	if(vol < 0) vol = 0;
-	if(vol > 100) vol = 100;
+	_vol = _settings->get(Set::Engine_Vol);
+	if(_vol < 0) _vol = 0;
+	if(_vol > 100) _vol = 100;
 
-	float vol_val = (float) (vol * 1.0f / 100.0f);
+	float vol_val = (float) (_vol * 1.0f / 100.0f);
+
 	g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
-}
-
-int GSTPlaybackPipeline::get_volume() {
-	return _vol;
 }
 
 void GSTPlaybackPipeline::unmute() {

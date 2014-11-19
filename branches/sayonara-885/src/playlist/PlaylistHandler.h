@@ -104,7 +104,7 @@ public:
         void psl_next();
 
         void psl_selection_changed(const QList<int>&);
-        void psl_playlist_mode_changed(const PlaylistMode&);
+		void psl_playlist_mode_changed();
 
         void psl_clear_playlist();
         void psl_insert_tracks(const MetaDataList&, int idx);
@@ -121,7 +121,7 @@ public:
 
         void psl_similar_artists_available(const QList<int>&);
 
-        void psl_save_playlist_to_storage();
+
         void psl_save_playlist(QString filename, bool relative);
         void psl_prepare_playlist_for_save(int id);
         void psl_prepare_playlist_for_save(QString name);

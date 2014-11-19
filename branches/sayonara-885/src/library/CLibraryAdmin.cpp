@@ -78,7 +78,6 @@ void CLibraryBase::reloadLibrary(bool clear) {
         else {
             m_library_path = dir;
 			settings->set(Set::Lib_Path, dir);
-            emit sig_libpath_set(dir);
         }
     }
 

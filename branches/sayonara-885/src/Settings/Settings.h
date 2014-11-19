@@ -34,68 +34,46 @@
 
 #include "Settings/Setting.h"
 
-#define REGISTER_LISTENER(setting_key, fn) \
-	SettingNotifier<setting_key##_t>* v_##fn = SettingNotifier<setting_key##_t>::getInstance();\
-	connect(v_##fn, SIGNAL(sig_value_changed()), this, SLOT( fn() ));
-
-class AbstrSettingNotifier : public QObject{
-
-	Q_OBJECT
-
-	protected:
-		AbstrSettingNotifier(QObject* parent=0){}
-
-	signals:
-		void sig_value_changed();
-};
-
-template < typename T >
-class SettingNotifier : public AbstrSettingNotifier{
-
-	private:
-		SettingNotifier( QObject* parent=0 ) : AbstrSettingNotifier(parent){}
-		SettingNotifier( const SettingNotifier& ){}
-
-	public:
-
-	static SettingNotifier< T >* getInstance(){
-		static SettingNotifier< T > inst;
-		return &inst;
-	}
-
-	void val_changed(){
-		emit sig_value_changed();
-	}
-};
-
 
 class Settings : public QObject
 {
+
+private:
+	Settings();
+
+	QString _db_file;
+	QString _version;
+
+	AbstrSetting* _settings[SK::Num_Setting_Keys + 1];
+
 
 public:
 
 	static Settings* getInstance();
 	virtual ~Settings ();
 
-	QString		get_db_filename ();
-	QString		get_version();
+	/* get all settings (used by database) */
+	AbstrSetting**	get_settings();
 
-	void		set_version(QString str);
 
-	AbstrSetting** get_settings();
-
+	/* before you wanna access a setting you have to register it */
 	void register_setting(AbstrSetting* s);
+
+
+	/* checks if all settings are registered */
 	bool check_settings();
 
 
+	/* get a setting, defined by a unique, REGISTERED key */
 	template<typename T, SK::SettingKey S>
 	T get(const SettingKey<T,S> k){
-
+		Q_UNUSED(k);
 		Setting<T>* s = (Setting<T>*) _settings[(int) S];
 		return s->getValue();
 	}
 
 
+	/* set a setting, define by a unique, REGISTERED key */
 	template<typename T, SK::SettingKey S>
 	void set(SettingKey<T,S> key, const T& val){
 
@@ -105,14 +83,6 @@ public:
 		SettingNotifier< SettingKey<T, S> >* sn = SettingNotifier< SettingKey<T, S> >::getInstance();
 		sn->val_changed();
 	}
-
-private:
-	Settings();
-
-	QString _db_file;
-	QString _version;
-
-	AbstrSetting* _settings[SK::Num_Setting_Keys + 1];
 };
 
 

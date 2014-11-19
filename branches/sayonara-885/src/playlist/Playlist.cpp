@@ -47,7 +47,6 @@ void Playlist::report_changes(bool pl_changed, bool track_changed) {
 
 		else{
 			MetaData md = _v_md[_cur_play_idx];
-			Settings::getInstance()->set(Set::PL_LastTrack, md.id);
 			emit sig_track_changed(md, _cur_play_idx);
 		}
     }

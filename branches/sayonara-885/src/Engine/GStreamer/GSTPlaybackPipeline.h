@@ -47,9 +47,6 @@ public slots:
 	gint64 seek_rel(float percent, gint64 ref_ns);
 	gint64 seek_abs(gint64 ns );
 
-	void set_volume(int vol);
-	int get_volume();
-
 	void enable_level(bool b);
 	void enable_spectrum(bool b);
 
@@ -58,8 +55,6 @@ public slots:
 
 	void start_timer(qint64 ms);
 	void set_speed(float f);
-
-
 
 
 private:
@@ -99,6 +94,9 @@ private:
     bool _seek(gint64 ns);
 	bool tee_connect(GstPadTemplate* tee_src_pad_template, GstElement* queue, QString queue_name);
 	bool create_element(GstElement** elem, const gchar* elem_name, const gchar* name=NULL);
+
+private slots:
+	void _sl_vol_changed();
 
 };
 

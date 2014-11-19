@@ -26,8 +26,9 @@
 #include <QWidget>
 #include <QAction>
 #include <QCloseEvent>
+#include "HelperStructs/SayonaraClass.h"
 
-class PlayerPlugin : public QWidget
+class PlayerPlugin : public SayonaraWidget
 {
     Q_OBJECT
 
@@ -35,13 +36,11 @@ public:
 	PlayerPlugin(QString name, QWidget *parent = 0);
     virtual ~PlayerPlugin();
 
-    
 signals:
-
     void sig_action_triggered(PlayerPlugin*, bool);
     void sig_reload(PlayerPlugin*);
 
-    
+
 public slots:
 
 private slots:
@@ -70,9 +69,6 @@ public:
 
 	QAction* getAction();
 	QString getVisName();
-
-
-    
 };
 
 #endif // PLAYERPLUGIN_H

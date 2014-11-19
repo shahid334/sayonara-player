@@ -224,23 +224,6 @@ void StdPlaylist::metadata_changed(const MetaDataList& md_list) {
 }
 
 
-void StdPlaylist::save_for_reload() {
-
-    QStringList playlist_lst;
-    foreach(MetaData md, _v_md) {
-
-        if(md.id >= 0) {
-            playlist_lst << QString::number(md.id);
-        }
-
-        else{
-            playlist_lst << md.filepath;
-        }
-    }
-
-	Settings::getInstance()->set(Set::PL_Playlist, playlist_lst);
-}
-
 void StdPlaylist::save_to_m3u_file(QString filepath, bool relative) {
     PlaylistParser::save_playlist(filepath, _v_md, relative);
 }

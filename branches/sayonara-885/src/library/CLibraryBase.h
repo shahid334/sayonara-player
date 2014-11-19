@@ -55,7 +55,6 @@ signals:
 	void sig_reload_library_finished();
 	void sig_reload_library_allowed(bool);
 	void sig_reloading_library(const QString&);
-	void sig_libpath_set(const QString&);
 
 	void sig_change_id3_tags(const MetaDataList&);
 

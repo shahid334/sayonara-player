@@ -26,12 +26,10 @@
 #include <QFileDialog>
 
 GUI_Target_Playlist_Dialog::GUI_Target_Playlist_Dialog(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui_GUI_Target_Playlist_Dialog()
 {
 	setupUi(this);
-
-	_settings = Settings::getInstance();
 
 	connect(btn_choose, SIGNAL(clicked()), this, SLOT(search_button_clicked()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));
@@ -42,9 +40,6 @@ GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog() {
 }
 
 
-void GUI_Target_Playlist_Dialog::change_skin(bool dark) {
-
-}
 
 void GUI_Target_Playlist_Dialog::language_changed() {
 	retranslateUi(this);

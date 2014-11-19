@@ -28,15 +28,12 @@
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/globals.h"
-//#include "Settings/Settings.h"
 #include "GUI/engine/StyleTypes.h"
 
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
 #include <QList>
-
-
 
 using namespace Sort;
 
@@ -189,8 +186,8 @@ public:
 	 *******************************************/
 
 
-		bool load_setting(QString key, QString& val);
-		bool store_setting(QString key, const QVariant& val);
+		bool load_setting(QString key, QString& val) const;
+		bool store_setting(QString key, const QVariant& val) const;
 
    /************************************
     *styles

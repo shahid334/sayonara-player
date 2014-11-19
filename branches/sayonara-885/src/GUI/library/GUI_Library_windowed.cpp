@@ -72,7 +72,7 @@
 using namespace std;
 
 GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
-	QWidget(parent),
+	SayonaraWidget(parent),
 	Ui::Library_windowed()
 {
 
@@ -114,7 +114,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(clear_search_action, SIGNAL(triggered()), le_search, SLOT(clear()));
 	addAction(clear_search_action);
 
-
     QAction* search_action = new QAction("Search", this);
     QKeySequence sequence_search(tr("Ctrl+?"));
 
@@ -122,7 +121,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
     search_action->setShortcutContext(Qt::WindowShortcut);
 	connect(search_action, SIGNAL(triggered()), le_search, SLOT(setFocus()));
 	addAction(search_action);
-
 
 	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
 
@@ -180,6 +178,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 
 	lv_artist->setVisible(!show_only_tracks);
 	lv_album->setVisible(!show_only_tracks);
+
+	REGISTER_LISTENER(Set::Lib_OnlyTracks, _sl_show_only_tracks_changed);
 
     hide();
 }
@@ -300,11 +300,11 @@ void GUI_Library_windowed::set_info_dialog(GUI_InfoDialog *dialog) {
     _info_dialog = dialog;
 }
 
-void GUI_Library_windowed::show_only_tracks(bool b) {
+void GUI_Library_windowed::_sl_show_only_tracks_changed() {
+	bool b = _settings->get(Set::Lib_OnlyTracks);
 
 	lv_artist->setVisible(!b);
 	lv_album->setVisible(!b);
-	retranslateUi(this);
 }
 
 
@@ -793,7 +793,9 @@ void GUI_Library_windowed::timer_timed_out() {
 }
 
 
-void GUI_Library_windowed::change_skin(bool b) {
+void GUI_Library_windowed::skin_changed() {
+
+	bool b = (_settings->get(Set::Player_Style) == 1);
 
     if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
 

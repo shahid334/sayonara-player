@@ -14,6 +14,7 @@ SET(HEADERS
     Tagging/ID3_Fileheader.h
     AsyncWebAccess.h
     MetaDataInfo.h
+	SayonaraClass.h
 )
 
 SET(SOURCES

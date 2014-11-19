@@ -36,6 +36,8 @@ PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent) {
     _state = PlaylistStop;
 
     new_playlist(PlaylistTypeStd);
+
+	REGISTER_LISTENER(Set::PL_Mode, psl_playlist_mode_changed);
 }
 
 
@@ -46,9 +48,9 @@ PlaylistHandler::~PlaylistHandler() {
 
 void PlaylistHandler::playlist_changed(const MetaDataList& v_md, int cur_idx) {
 
-	emit sig_playlist_created(v_md, cur_idx, _playlist->get_type());
-
 	_settings->set(Set::PL_Playlist, _playlist->toStringList());
+
+	emit sig_playlist_created(v_md, cur_idx, _playlist->get_type());
 }
 
 void PlaylistHandler::track_changed(const MetaData& md, int cur_idx) {
@@ -169,10 +171,6 @@ void PlaylistHandler::psl_createPlaylist(const CustomPlaylist& pl, bool start_pl
     psl_createPlaylist(pl.tracks, start_playing);
 }
 
-
-void PlaylistHandler::psl_save_playlist_to_storage() {
-   _playlist->save_for_reload();
-}
 
 // GUI -->
 void PlaylistHandler::psl_save_playlist(QString filename, bool relative) {
@@ -387,8 +385,8 @@ void PlaylistHandler::psl_move_rows(const QList<int>& rows, int tgt) {
 }
 
 
-void PlaylistHandler::psl_playlist_mode_changed(const PlaylistMode& playlist_mode) {
-    _playlist->set_playlist_mode(playlist_mode);
+void PlaylistHandler::psl_playlist_mode_changed() {
+
 }
 
 
@@ -406,8 +404,6 @@ void PlaylistHandler::psl_audioconvert_on(){
 	_playlist->set_playlist_mode(pl_mode);
 
 	_settings->set(Set::PL_Mode, pl_mode);
-
-	emit sig_playlist_mode_changed(pl_mode);
 }
 
 void PlaylistHandler::psl_audioconvert_off(){
@@ -417,6 +413,4 @@ void PlaylistHandler::psl_audioconvert_off(){
 	PlaylistMode pl_mode = _playlist->playlist_mode_restore();
 
 	_settings->set(Set::PL_Mode, pl_mode);
-
-	emit sig_playlist_mode_changed(pl_mode);
 }

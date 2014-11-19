@@ -152,7 +152,8 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 
 
 GSTAbstractPipeline::GSTAbstractPipeline(QObject* parent) :
-    QObject(parent)
+	QObject(parent),
+	SayonaraClass()
 {
     _position_ms = 0;
     _duration_ms = 0;

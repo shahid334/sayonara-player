@@ -24,26 +24,18 @@
 #include "Settings/Settings.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <QFile>
-#include <QDir>
-
-
 Settings* Settings::getInstance() {
 	static Settings inst;
     return &inst;
 }
 
 Settings::Settings(){
-
 	_db_file = "player.db";
 	memset(_settings, 0, SK::Num_Setting_Keys + 1);
-
-
 }
 
 
 Settings::~Settings () {
-
 }
 
 
@@ -59,14 +51,12 @@ void Settings::register_setting(AbstrSetting* s){
 }
 
 
-
 bool Settings::check_settings(){
 
 	QList<int> un_init;
 	for(int i=0; i<SK::Num_Setting_Keys; i++){
 		if(! _settings[i] ){
 			un_init << i;
-
 		}
 	}
 
@@ -80,21 +70,4 @@ bool Settings::check_settings(){
 	}
 
 	return true;
-}
-
-
-
-QString Settings::get_version() {
-	return _version;
-}
-
-void Settings::set_version(QString version) {
-	_version = version;
-
-}
-
-
-QString Settings::get_db_filename () {
-
-	return Helper::getSayonaraPath() + _db_file;
 }

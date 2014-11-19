@@ -11,12 +11,6 @@ class GUI_BroadcastSetup : public QDialog, private Ui::GUI_BroadcastSetup
 public:
 	explicit GUI_BroadcastSetup(QWidget *parent = 0);
 
-signals:
-
-	void sig_port_changed(int);
-	void sig_active_changed(bool);
-	void sig_prompt_changed(bool);
-
 private slots:
 
 	void accept();

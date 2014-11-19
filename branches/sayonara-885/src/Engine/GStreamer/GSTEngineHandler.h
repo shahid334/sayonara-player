@@ -23,15 +23,11 @@
 
 #include "Engine/Engine.h"
 #include "Settings/Settings.h"
-#include <vector>
 
-using namespace std;
-
-
+#include <QVector>
 
 class GSTEngineHandler : public Engine
 {
-
 	Q_OBJECT
 	Q_INTERFACES(Engine)
 
@@ -39,7 +35,7 @@ public:
 	explicit GSTEngineHandler(QObject* parent=0);
 	virtual ~GSTEngineHandler();
 
-	void fill_engines(const vector<Engine*>& engines);
+	void fill_engines(const QVector<Engine*>& engines);
 	void init();
 
 
@@ -48,8 +44,6 @@ public slots:
 	void play();
 	void stop();
 	void pause();
-	void set_volume(int vol);
-	
 
 	void jump_abs_s(quint32 where);
 	void jump_abs_ms(quint64 where);
@@ -63,11 +57,9 @@ public slots:
 	void eq_enable(bool b);
 	void record_button_toggled(bool);
 
-	void psl_sr_set_active(bool);
 	void psl_new_stream_session();
 	void psl_calc_level(bool);
 	void psl_calc_spectrum(bool);
-	void psl_set_gapless(bool b);
 
     void psl_change_engine(QString name);
 
@@ -95,8 +87,8 @@ private slots:
 
 private:
 	Settings* _settings;
-	Engine*           _cur_engine;
-	vector<Engine*>   _engines;
+	Engine*          _cur_engine;
+	QVector<Engine*>   _engines;
 
 	bool configure_connections(Engine* old_engine, Engine* new_engine);
 

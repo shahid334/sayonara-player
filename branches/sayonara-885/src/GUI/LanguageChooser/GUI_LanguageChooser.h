@@ -27,36 +27,29 @@
 #include <QMap>
 #include <QShowEvent>
 
+#include "Settings/Settings.h"
 #include "GUI/ui_GUI_LanguageChooser.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_LanguageChooser : public QDialog, private Ui::GUI_LanguageChooser
+class GUI_LanguageChooser : public SayonaraDialog, private Ui::GUI_LanguageChooser
 {
     Q_OBJECT
 
 public:
-
     explicit GUI_LanguageChooser(QWidget *parent = 0);
     virtual ~GUI_LanguageChooser();
 
-signals:
-    void sig_language_changed(QString);
-    
-public slots:
-    void language_changed(bool b);
-
 private slots:
-    void combo_changed(int);
     void ok_clicked();
-
+	virtual void language_changed();
 
 private:
 
     QMap<QString, QString> _map;
-    int _last_idx;
     void renew_combo();
 
 protected:
-    void showEvent(QShowEvent *);
+	void showEvent(QShowEvent*);
     
 };
 

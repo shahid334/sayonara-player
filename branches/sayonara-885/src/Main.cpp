@@ -193,6 +193,7 @@ bool register_settings(){
 	REGISTER_SETTING( int, Engine_Vol, "volume", 50 );
 	REGISTER_SETTING( int, Engine_ConvertQuality, "convert_quality", 0 );
 	REGISTER_SETTING( QString, Engine_CovertTargetPath, "convert_target_path", QDir::homePath() );
+	REGISTER_SETTING( bool, Engine_Gapless, "gapless_playback", false);
 
 	REGISTER_SETTING( bool, Engine_SR_Active, "streamripper", false );
 	REGISTER_SETTING( bool, Engine_SR_Warning, "streamripper_warning", true );

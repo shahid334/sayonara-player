@@ -34,18 +34,16 @@
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/PlaylistMode.h"
-#include <QObject>
+#include "HelperStructs/SayonaraClass.h"
+
 #include <QMainWindow>
-#include <QWidget>
 #include <QKeyEvent>
 #include <QTextEdit>
 #include <QList>
 #include <QFocusEvent>
-#include <string>
 
 
-	class GUI_Playlist : public QWidget, private Ui::Playlist_Window
+	class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 	{
 		Q_OBJECT
 
@@ -62,9 +60,7 @@
             void sig_cur_idx_changed(int);
             void sig_selection_changed(const QList<int>&);
 
-
 			void sig_save_playlist(const QString&);
-			void sig_playlist_mode_changed(const PlaylistMode&);
 
             void sig_rows_moved(const QList<int>&, int);
             void sig_tracks_dropped(const MetaDataList&, int);
@@ -78,7 +74,6 @@
 			void sig_accept_connection(bool);
 
 
-
 		public slots:
             void fillPlaylist(const MetaDataList&, int, PlaylistType);
 			void track_changed(int);
@@ -86,9 +81,11 @@
             void library_path_changed(QString);
             void set_playlist_type(PlaylistType playlist_type);
 			void change_playlist_mode(const PlaylistMode& mode);
-			void psl_show_small_playlist_items(bool small_items);
+
             void language_changed();
             void download_progress(int);
+
+
 
 	private slots:
 
@@ -105,6 +102,8 @@
             void metadata_dropped(const MetaDataList&, int);
             void rows_removed(const QList<int>&, bool select_next_row);
             void no_focus();
+
+			void _sl_change_small_playlist_items();
 
 		private:
 

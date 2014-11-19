@@ -64,7 +64,7 @@ void signal_handler(int sig) {
 #endif
 
 GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
-	QMainWindow(parent),
+	SayonaraMainWindow(parent),
 	Ui::Sayonara() {
 
 	setupUi(this);
@@ -72,8 +72,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	initGUI();
 
     m_translator = translator;
-    m_settings = Settings::getInstance();
-	QString version = m_settings->get(Set::Player_Version);
+
+	QString version = _settings->get(Set::Player_Version);
 
     m_awa_version = new AsyncWebAccess(this);
     m_awa_translators = new AsyncWebAccess(this);
@@ -100,38 +100,38 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	m_cov_lookup = new CoverLookup(this);
 	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
 
-	m_min2tray = m_settings->get(Set::Player_Min2Tray);
+	m_min2tray = _settings->get(Set::Player_Min2Tray);
 	action_min2tray->setChecked(m_min2tray);
 
-	bool one_instance = m_settings->get(Set::Player_OneInstance);
+	bool one_instance = _settings->get(Set::Player_OneInstance);
 	action_only_one_instance->setChecked(one_instance);
 
-	bool show_small_items = m_settings->get(Set::PL_SmallItems);
+	bool show_small_items = _settings->get(Set::PL_SmallItems);
 	action_smallPlaylistItems->setChecked(show_small_items);
 
-	bool show_only_tracks = m_settings->get(Set::Lib_OnlyTracks);
+	bool show_only_tracks = _settings->get(Set::Lib_OnlyTracks);
 	action_showOnlyTracks->setChecked(show_only_tracks);
 
 	QSizePolicy p = library_widget->sizePolicy();
 	m_library_stretch_factor = p.horizontalStretch();
 
-	bool show_library = m_settings->get(Set::Lib_Show);
+	bool show_library = _settings->get(Set::Lib_Show);
 	action_viewLibrary->setChecked(show_library);
     this->showLibrary(show_library);
 
-	bool live_search = m_settings->get(Set::Lib_LiveSearch);
+	bool live_search = _settings->get(Set::Lib_LiveSearch);
 	action_livesearch->setChecked(live_search);
 
-	bool notify_new_version = m_settings->get(Set::Player_NotifyNewVersion);
+	bool notify_new_version = _settings->get(Set::Player_NotifyNewVersion);
 	action_notifyNewVersion->setChecked(notify_new_version);
 
-	bool is_fullscreen = m_settings->get(Set::Player_Fullscreen);
-	bool is_maximized = m_settings->get(Set::Player_Maximized);
+	bool is_fullscreen = _settings->get(Set::Player_Fullscreen);
+	bool is_maximized = _settings->get(Set::Player_Maximized);
 
     if(!is_fullscreen & !is_maximized) {
 
-		QSize size = m_settings->get(Set::Player_Size);
-		QPoint pos = m_settings->get(Set::Player_Pos);
+		QSize size = _settings->get(Set::Player_Size);
+		QPoint pos = _settings->get(Set::Player_Pos);
         QRect rect = this->geometry();
 
         rect.setX(pos.x());
@@ -143,12 +143,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
     m_library_width = 600;
 
-	QString lib_path = m_settings->get(Set::Lib_Path);
-    ui_libpath = 0;
-    if(lib_path.size() == 0) {
-		ui_libpath = new GUI_LibraryPath( library_widget );
-    }
-
+	ui_libpath = new GUI_LibraryPath( library_widget );
 
 	/* TRAY ACTIONS */
 	this->setupTrayActions();
@@ -163,32 +158,26 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	plugin_widget->resize(plugin_widget->width(), 0);
     ui_info_dialog = 0;
 
-	int style = m_settings->get(Set::Player_Style);
+	int style = _settings->get(Set::Player_Style);
 	changeSkin(style == 1);
 
 	stopClicked(false);
+
+	REGISTER_LISTENER(Set::Lib_Path, sl_libpath_changed);
 }
 
 
 GUI_Player::~GUI_Player() {
 	qDebug() << "closing player...";
-
 }
 
 
-void GUI_Player::language_changed(QString language) {
+void GUI_Player::language_changed() {
 
+	QString language = _settings->get(Set::Player_Language);
     m_translator->load(language, Helper::getSharePath() + "translations/");
 
 	retranslateUi(this);
-
-    ui_notifications->language_changed();
-    ui_startup_dialog->language_changed();
-    ui_language_chooser->language_changed(true);
-    m_alternate_covers->language_changed();
-
-    if(ui_libpath)
-        ui_libpath->language_changed();
 
     QList<PlayerPlugin*> all_plugins = _pph->get_all_plugins();
 	QList<QAction*> actions = menuView->actions();
@@ -209,8 +198,6 @@ void GUI_Player::language_changed(QString language) {
 
 	menuView->insertActions(action_Dark, actions);
 	menuView->insertSeparator(action_Dark);
-
-    emit sig_language_changed();
 }
 
 
@@ -377,7 +364,7 @@ void GUI_Player::psl_id3_tags_changed(const MetaDataList& v_md) {
 /** LAST FM **/
 void GUI_Player::last_fm_logged_in(bool b) {
 
-	bool active = m_settings->get(Set::LFM_Active);
+	bool active = _settings->get(Set::LFM_Active);
 
 	if(!b && active){
 		QMessageBox::warning(centralwidget, tr("Warning"), tr("Cannot login to Last.fm"));
@@ -403,7 +390,7 @@ void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected
     m_metadata_corrected = md;
 
 	bool radio_off = (_md.radio_mode == RadioModeOff);
-	bool get_lfm_corrections = m_settings->get(Set::LFM_Corrections);
+	bool get_lfm_corrections = _settings->get(Set::LFM_Corrections);
 
 	btn_correct->setVisible(corrected &&
 							radio_off &&
@@ -470,11 +457,9 @@ void GUI_Player::changeSkin(bool dark) {
 	if (dark) 	m_skinSuffix = QString("_dark");
 	else 		m_skinSuffix = QString("");
 
-	m_settings->set(Set::Player_Style, (dark ? 1 : 0) );
-    this->m_trayIcon->change_skin(stylesheet);
-
 	setupVolButton(volumeSlider->value());
-    emit sig_skin_changed(dark);
+
+	_settings->set(Set::Player_Style, (dark ? 1 : 0) );
 }
 
 
@@ -553,31 +538,26 @@ QWidget* GUI_Player::getParentOfLibrary() {
 
 
 void GUI_Player::setPlaylist(GUI_Playlist* playlist) {
+
+	if(!playlist) return;
+
 	ui_playlist = playlist;
-    if(ui_playlist) {
-        ui_playlist->show();
-		ui_playlist->resize(playlist_widget->size());
-        QAction* action = createAction( QKeySequence(tr("Ctrl+P")) );
-        connect(action, SIGNAL(triggered()), ui_playlist, SLOT(setFocus()));
-    }
+
+	QAction* action = createAction( QKeySequence(tr("Ctrl+P")) );
+	connect(action, SIGNAL(triggered()), ui_playlist, SLOT(setFocus()));
 }
 
 
 void GUI_Player::setLibrary(GUI_Library_windowed* library) {
-    ui_library = library;
-    if(ui_library && !ui_libpath) {
-        ui_library->show();
-		ui_library->resize(library_widget->size());
-        QAction* action = createAction(QKeySequence( tr("Ctrl+L")) );
-        connect(action, SIGNAL(triggered()), ui_library, SLOT(setFocus()));
-    }
 
-    else if(ui_libpath) {
-        ui_library->hide();
-        ui_libpath->show();
-		ui_libpath->resize(library_widget->size());
-    }
+	if(!library) return;
+
+	ui_library = library;
+
+	QAction* action = createAction(QKeySequence( tr("Ctrl+L")) );
+	connect(action, SIGNAL(triggered()), ui_library, SLOT(setFocus()));
 }
+
 
 void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph) {
 	_pph = pph;
@@ -591,7 +571,6 @@ void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph) {
 		// action is connected in Plugin itself
         actions << action;
 	}
-
 
 	menuView->insertActions(action_Dark, actions);
 	menuView->insertSeparator(action_Dark);
@@ -617,7 +596,7 @@ void GUI_Player::psl_reload_library_allowed(bool b) {
 // prvt fct
 void GUI_Player::setRadioMode(int radio) {
 
-	bool stream_ripper = m_settings->get(Set::Engine_SR_Active);
+	bool stream_ripper = _settings->get(Set::Engine_SR_Active);
 
 	if(stream_ripper) {
 
@@ -675,13 +654,22 @@ void GUI_Player::ui_loaded() {
         signal(SIGWINCH, signal_handler);
 
 	#endif
-    if(ui_libpath)
-		ui_libpath->resize(library_widget->size());
 
-	int style = m_settings->get(Set::Player_Style);
+	QString lib_path = _settings->get(Set::Lib_Path);
+	if(QFile::exists(lib_path)){
+		ui_libpath->hide();
+		ui_library->show();
+	}
+
+	else{
+		ui_library->hide();
+		ui_libpath->show();
+	}
+
+	int style = _settings->get(Set::Player_Style);
 	changeSkin(style == 1);
 
-	bool fullscreen = m_settings->get(Set::Player_Fullscreen);
+	bool fullscreen = _settings->get(Set::Player_Fullscreen);
 	action_Fullscreen->setChecked(fullscreen);
 
 	ui_playlist->resize(playlist_widget->size());
@@ -700,7 +688,7 @@ void GUI_Player::moveEvent(QMoveEvent *e) {
     QMainWindow::moveEvent(e);
 
     QPoint p= this->pos();
-	m_settings->set(Set::Player_Pos, p);
+	_settings->set(Set::Player_Pos, p);
 
 }
 
@@ -713,17 +701,20 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
 
 	if(library_widget->isVisible()) {
 
-        if(ui_libpath)
+		if( ui_libpath->isVisible() ){
 			ui_libpath->resize(library_widget->size());
-        else
+		}
+
+		else{
 			ui_library->resize(library_widget->size());
+		}
     }
 
 	QSize sz = plugin_widget->size();
     QSize target_size = this->size();
 
-	bool maximized = m_settings->get(Set::Player_Maximized);
-	bool fullscreen = m_settings->get(Set::Player_Fullscreen);
+	bool maximized = _settings->get(Set::Player_Maximized);
+	bool fullscreen = _settings->get(Set::Player_Fullscreen);
 
     // maybe we started the player maximized, then showNormal will deliver a strange size
 	if( maximized || fullscreen ) {
@@ -733,9 +724,9 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
     bool is_maximized = this->isMaximized();
     bool is_fullscreen = this->isFullScreen();
 
-	m_settings->set(Set::Player_Maximized, is_maximized);
+	_settings->set(Set::Player_Maximized, is_maximized);
     if(is_maximized) {
-		m_settings->set(Set::Player_Fullscreen, false);
+		_settings->set(Set::Player_Fullscreen, false);
     }
 
     // maybe we started the player maximized, then showNormal will deliver a strange size
@@ -746,9 +737,9 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
 
     _pph->resize(sz);
 
-	m_settings->set(Set::Player_Size, this->size());
+	_settings->set(Set::Player_Size, this->size());
 
-	this->update();
+	update();
 }
 
 
@@ -798,8 +789,8 @@ void GUI_Player::really_close(bool b) {
 void GUI_Player::awa_version_finished() {
 
     QString new_version = *(m_awa_version->get_data());
-	QString cur_version = m_settings->get(Set::Player_Version);
-	bool notify_new_version = m_settings->get(Set::Player_NotifyNewVersion);
+	QString cur_version = _settings->get(Set::Player_Version);
+	bool notify_new_version = _settings->get(Set::Player_NotifyNewVersion);
 
 	new_version = new_version.trimmed();
 
@@ -828,7 +819,7 @@ void GUI_Player::awa_translators_finished() {
 }
 
 void GUI_Player::sl_notify_new_version(bool b) {
-	m_settings->set(Set::Player_NotifyNewVersion, b);
+	_settings->set(Set::Player_NotifyNewVersion, b);
 }
 
 

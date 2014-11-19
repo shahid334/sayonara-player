@@ -23,34 +23,26 @@
 #ifndef GUI_NOTIFICATIONS_H
 #define GUI_NOTIFICATIONS_H
 
-#include <QDialog>
+#include "HelperStructs/SayonaraClass.h"
 #include "Settings/Settings.h"
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "GUI/ui_GUI_Notifications.h"
 
-class GUI_Notifications : public QDialog, private Ui_GUI_Notification
+class GUI_Notifications : public SayonaraDialog, private Ui_GUI_Notification
 {
     Q_OBJECT
 public:
     explicit GUI_Notifications(QWidget *parent = 0);
     virtual ~GUI_Notifications();
     
-signals:
-    void sig_settings_changed(bool, int);
-
-
-public slots:
-    void change_skin(bool dark);
-    void language_changed();
-
 private slots:
     void ok_clicked();
-private:
+	void language_changed();
 
+private:
     NotificationPluginLoader* _plugin_loader;
 
-    Settings* _settings;
 };
 
 #endif // GUI_NOTIFICATIONS_H

@@ -24,7 +24,7 @@
 #include <QDebug>
 
 PlayerPlugin::PlayerPlugin(QString name, QWidget *parent) :
-    QWidget(parent)
+	SayonaraWidget(parent)
 {
 	_pp_action = new QAction(name, NULL);
 	_pp_action->setCheckable(true);

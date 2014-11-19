@@ -31,14 +31,12 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 
-
-#include <QDialog>
 #include <QMap>
 #include <QPixmap>
 
 
 GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Library_Info_Box()
 {
 	setupUi(this);
@@ -56,10 +54,6 @@ GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 }
 
 
-void GUI_Library_Info_Box::change_skin(bool dark) {
-    _skin = dark;
-
-}
 
 void GUI_Library_Info_Box::language_changed() {
 

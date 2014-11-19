@@ -88,7 +88,6 @@ void GUI_StreamRecorder::language_changed() {
 void GUI_StreamRecorder::sl_cb_activate_toggled(bool b) {
 	_is_active = b;
 	_settings->set(Set::Engine_SR_Active, b);
-	emit sig_stream_recorder_active(b);
 }
 
 void GUI_StreamRecorder::sl_cb_complete_tracks_toggled(bool b) {

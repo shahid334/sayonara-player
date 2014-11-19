@@ -79,12 +79,8 @@ void GUI_Player::stopClicked(bool b) {
 	set_std_cover( false );
 
 	if(b) {
-		MetaData md;
-		m_settings->set(Set::PL_LastTrack, md.id);
-
         emit sig_stop();
     }
-
 
 	if(btn_rec->isVisible() && btn_rec->isChecked()) {
 		btn_rec->setChecked(false);
@@ -208,18 +204,13 @@ void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
 
 /** VOLUME **/
-void GUI_Player::setVolume(int vol) {
-	volumeSlider->setValue(vol);
-	setupVolButton(vol);
-	emit sig_volume_changed(vol);
-}
 
 void GUI_Player::volumeChanged(int volume_percent) {
 	setupVolButton(volume_percent);
 	volumeSlider->setValue(volume_percent);
-	emit sig_volume_changed(volume_percent);
 
-	m_settings->set(Set::Engine_Vol, volume_percent);
+	/// TODO: endless recursion??
+	_settings->set(Set::Engine_Vol, volume_percent);
 }
 
 void GUI_Player::volumeChangedByTick(int val) {
@@ -290,24 +281,18 @@ void GUI_Player::setupVolButton(int percent) {
 
 void GUI_Player::muteButtonPressed() {
 
-	if (m_mute) {
+	m_mute = !m_mute;
 
-		setupVolButton(volumeSlider->value());
-		emit sig_volume_changed(volumeSlider->value());
+	int vol = 0;
+	if (!m_mute) {
+		vol = volumeSlider->value();
 	}
-
-	else {
-
-        setupVolButton(0);
-		emit sig_volume_changed(0);
-	}
-
-    m_mute = !m_mute;
 
 	volumeSlider->setDisabled(m_mute);
     m_trayIcon->setMute(m_mute);
+	setupVolButton(vol);
 
-	volumeSlider->update();
+	_settings->set(Set::Engine_Vol, vol);
 }
 
 /** VOLUME END **/

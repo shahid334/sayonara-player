@@ -23,29 +23,24 @@
 #ifndef GUI_TARGET_PLAYLIST_DIALOG_H
 #define GUI_TARGET_PLAYLIST_DIALOG_H
 
-#include <QDialog>
 #include "GUI/ui_GUI_Target_Playlist_Dialog.h"
 #include "Settings/Settings.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_Target_Playlist_Dialog : public QDialog, private Ui_GUI_Target_Playlist_Dialog
+class GUI_Target_Playlist_Dialog : public SayonaraDialog, private Ui_GUI_Target_Playlist_Dialog
 {
     Q_OBJECT
 public:
     GUI_Target_Playlist_Dialog(QWidget *parent = 0);
     virtual ~GUI_Target_Playlist_Dialog();
-    void change_skin(bool dark);
-    void language_changed();
-    
+
 signals:
     void sig_target_chosen(const QString&, bool);
     
 private slots:
+	void language_changed();
     void search_button_clicked();
     void ok_button_clicked();
-
-private:
-	Settings* _settings;
-
 
     
 };

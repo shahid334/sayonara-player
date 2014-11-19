@@ -47,7 +47,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
 	_last_dir = Settings::getInstance()->get(Set::Lib_Path);
 
 	_cur_idx = -1;
-    _dark = false;
+
     _text_before_save = "";
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
@@ -84,9 +84,6 @@ void GUI_PlaylistChooser::language_changed() {
 	retranslateUi(this);
 }
 
-void GUI_PlaylistChooser::changeSkin(bool dark) {
-    _dark = dark;
-}
 
 
 void GUI_PlaylistChooser::all_playlists_fetched(const QMap<int, QString>& mapping) {
@@ -169,7 +166,7 @@ void GUI_PlaylistChooser::got_save_params(const QString& filename, bool relative
 }
 
 void GUI_PlaylistChooser::save_as_button_pressed() {
-    _target_playlist_dialog->change_skin(_dark);
+
     _target_playlist_dialog->show();
 }
 

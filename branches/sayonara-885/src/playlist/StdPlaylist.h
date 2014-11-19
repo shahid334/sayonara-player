@@ -51,7 +51,6 @@ public:
 
     virtual void metadata_changed(const MetaDataList& md_list);
 
-    virtual void save_for_reload();
     virtual void save_to_m3u_file(QString filepath, bool relative);
     
 };

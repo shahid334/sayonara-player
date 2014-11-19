@@ -96,10 +96,6 @@ public:
 
 	signals:
 		void eq_changed_signal(int, int);
-		void eq_enabled_signal(bool);
-		void eq_changed_level_signal(int);
-		void close_event();
-
 
 	private slots:
 		void sli_changed(int, int);

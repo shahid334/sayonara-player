@@ -115,8 +115,6 @@ void GUI_LastFM::save_button_pressed() {
 
 	if (tf_password->text() != password) {
 
-		emit new_lfm_credentials(tf_username->text(), tf_password->text());
-
 		QStringList user_pw;
 		user_pw << tf_username->text() << tf_password->text();
 		settings->set(Set::LFM_Login, user_pw);
@@ -165,5 +163,4 @@ void GUI_LastFM::setLFMActive(bool enabled) {
 void GUI_LastFM::cb_activate_toggled(bool b) {
 	setLFMActive(b);
 	Settings::getInstance()->set(Set::LFM_Active, b);
-	emit sig_activated(b);
 }

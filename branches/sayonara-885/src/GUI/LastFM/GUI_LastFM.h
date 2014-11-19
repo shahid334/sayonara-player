@@ -44,10 +44,6 @@ public:
 
 	virtual ~GUI_LastFM();
 
-	signals:
-		void new_lfm_credentials(QString, QString);
-		void sig_activated(bool);
-
 	private slots:
 		void save_button_pressed();
         void clear_session_pressed();

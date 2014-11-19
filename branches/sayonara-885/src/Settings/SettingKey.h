@@ -67,6 +67,7 @@ namespace SK{
 		Engine_Vol,
 		Engine_ConvertQuality,
 		Engine_CovertTargetPath,
+		Engine_Gapless,
 
 		Engine_SR_Active,
 		Engine_SR_Warning,
@@ -154,6 +155,7 @@ namespace Set {
 	INST(int, Engine_Vol);
 	INST(int, Engine_ConvertQuality);
 	INST(QString, Engine_CovertTargetPath);
+	INST(bool, Engine_Gapless);
 
 	INST(bool, Engine_SR_Active);
 	INST(bool, Engine_SR_Warning);

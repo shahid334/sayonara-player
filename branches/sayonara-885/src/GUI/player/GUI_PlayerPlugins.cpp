@@ -37,7 +37,7 @@ void GUI_Player::setInfoDialog(GUI_InfoDialog* dialog) {
 
 void GUI_Player::hideAllPlugins() {
 
-	m_settings->set(Set::Player_ShownPlugin, QString(""));
+	_settings->set(Set::Player_ShownPlugin, QString(""));
 
 	if(plugin_widget->isHidden()) return;
 
@@ -76,7 +76,7 @@ void GUI_Player::showPlugin(PlayerPlugin* plugin) {
 	_pph->resize(plugin_widget->size());
 
 	ui_playlist->resize(pl_size);
-	m_settings->set(Set::Player_ShownPlugin, plugin->getName());
+	_settings->set(Set::Player_ShownPlugin, plugin->getName());
 }
 
 

@@ -154,9 +154,7 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
         }
 
         emit sig_all_tracks_loaded(_vec_md);
-
     }
-
 }
 void CLibraryBase::refresh(bool b) {
 

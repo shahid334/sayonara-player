@@ -22,7 +22,7 @@
 #ifndef GUI_TRAYICON_H
 #define GUI_TRAYICON_H
 
-#include "Settings/Settings.h"
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/MetaData.h"
 
 #include "Notification/Notification.h"
@@ -36,7 +36,7 @@
 /**
   * Small class to be used as tray icon
   */
-class GUI_TrayIcon : public QSystemTrayIcon {
+class GUI_TrayIcon : public QSystemTrayIcon, private SayonaraClass {
     Q_OBJECT
 public:
 
@@ -54,9 +54,6 @@ public:
    void set_enable_bwd(bool);
    void set_enable_show(bool);
 
-
-
-
    int get_vol_step();
 
 public slots:
@@ -64,7 +61,7 @@ public slots:
     void show_notification (const MetaData& md);
     void setPlaying(bool);
     void setMute(bool mute);
-    void change_skin(QString stylesheet);
+	void skin_changed();
     void stop();
     void language_changed();
 

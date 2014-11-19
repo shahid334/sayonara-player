@@ -55,6 +55,7 @@
 #include "HelperStructs/CustomMimeData.h"
 
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/SayonaraClass.h"
 
 #include <QMenu>
 #include <QMap>
@@ -63,7 +64,7 @@
 
 using namespace Sort;
 
-class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
+class GUI_Library_windowed: public SayonaraWidget, private Ui::Library_windowed {
 
 Q_OBJECT
 
@@ -137,9 +138,8 @@ public slots:
 	void library_changed();
 	void import_result(bool);
 	void psl_delete_answer(QString);
-    void show_only_tracks(bool);
-	void change_skin(bool);
-    void language_changed();
+
+
 
 
 protected slots:
@@ -158,7 +158,6 @@ protected slots:
 
     void album_rating_changed(int);
     void title_rating_changed(int);
-
 
 	void clear_button_pressed();
 
@@ -202,6 +201,10 @@ protected slots:
     void timer_timed_out();
     void delete_menu();
     void import_files(const QStringList&);
+
+	void _sl_show_only_tracks_changed();
+	void skin_changed();
+	void language_changed();
 
 
 protected:

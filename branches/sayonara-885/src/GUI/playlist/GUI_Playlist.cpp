@@ -57,7 +57,7 @@
 
 // CTOR
 GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
-	QWidget(parent),
+	SayonaraWidget(parent),
 	Ui::Playlist_Window()
 {
 	setupUi(this);
@@ -72,16 +72,10 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(clear_action, SIGNAL(triggered()), btn_clear, SLOT(click()));
 	addAction(clear_action);
 
-
-    Settings* settings = Settings::getInstance();
-	bool small_playlist_items = settings->get(Set::PL_SmallItems);
-	listView->show_big_items(!small_playlist_items);
-
     _info_dialog = dialog;
 
     _playlist_type = PlaylistTypeStd;
-
-	_playlist_mode = settings->get(Set::PL_Mode);
+	_playlist_mode = _settings->get(Set::PL_Mode);
 
 	btn_append->setChecked(_playlist_mode.append);
 	btn_repAll->setChecked(_playlist_mode.repAll);
@@ -116,6 +110,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	//connect(btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	connect(btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
+
+	REGISTER_LISTENER(Set::PL_SmallItems, _sl_change_small_playlist_items);
 }
 
 
@@ -177,7 +173,7 @@ void GUI_Playlist::library_path_changed(QString path) {
 
 void GUI_Playlist::check_dynamic_play_button() {
 
-	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
 	if(lib_path.isEmpty() || !QFile::exists(lib_path)) {
 		btn_dynamic->setToolTip(tr("Please set library path first"));
@@ -262,9 +258,8 @@ void GUI_Playlist::playlist_mode_changed() {
 	_playlist_mode.dynamic = btn_dynamic->isChecked();
 	_playlist_mode.gapless = btn_gapless->isChecked();
 
-	Settings::getInstance()->set(Set::PL_Mode, _playlist_mode);
+	_settings->set(Set::PL_Mode, _playlist_mode);
 
-	emit sig_playlist_mode_changed(_playlist_mode);
 	emit sig_save_playlist("bla");
 }
 
@@ -287,8 +282,6 @@ void GUI_Playlist::change_playlist_mode(const PlaylistMode& mode){
 	btn_dynamic->setVisible(_playlist_mode.ui_dynamic);
 	btn_shuffle->setVisible(_playlist_mode.ui_shuffle);
 	btn_gapless->setVisible(_playlist_mode.ui_gapless);
-
-	//emit sig_playlist_mode_changed(_playlist_mode);
 }
 
 
@@ -376,15 +369,16 @@ void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
 
 
 
-void GUI_Playlist::psl_show_small_playlist_items(bool small_playlist_items) {
+void GUI_Playlist::_sl_change_small_playlist_items() {
 
-	listView->show_big_items(!small_playlist_items);
+	bool small_items = _settings->get(Set::PL_SmallItems);
+	listView->show_big_items(!small_items);
 }
 
 
 void GUI_Playlist::btn_numbers_changed(bool b) {
 	parentWidget()->setFocus();
-	Settings::getInstance()->set(Set::PL_ShowNumbers, b);
+	_settings->set(Set::PL_ShowNumbers, b);
 	listView->reset();
 }
 

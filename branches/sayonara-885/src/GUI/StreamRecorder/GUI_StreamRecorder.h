@@ -36,9 +36,6 @@ class GUI_StreamRecorder : public QDialog, private Ui_GUI_StreamRecorder{
 
 public:
 
-	signals:
-		void sig_stream_recorder_active(bool);
-
 	private slots:
 		void sl_cb_activate_toggled(bool);
 		void sl_cb_complete_tracks_toggled(bool);

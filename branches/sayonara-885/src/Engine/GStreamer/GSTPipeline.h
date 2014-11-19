@@ -30,6 +30,7 @@
 #include <gst/gstbuffer.h>
 
 #include "Engine/GStreamer/GSTEngineHelper.h"
+#include "HelperStructs/SayonaraClass.h"
 
 
 enum GSTFileMode{
@@ -44,7 +45,7 @@ _test_and_error(void* element, QString errorstr);
 bool
 _test_and_error_bool(bool b, QString errorstr);
 
-class GSTAbstractPipeline : public QObject {
+class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 
 	Q_OBJECT
 
@@ -75,11 +76,11 @@ class GSTAbstractPipeline : public QObject {
 
         virtual qint64 get_duration_ms() final;
         virtual qint64 get_position_ms() final;
-        //virtual guint get_bitrate()=0;
 		virtual void set_speed(float f);
 
 	public:
-        GSTAbstractPipeline(QObject* parent=0);
+		GSTAbstractPipeline(QObject* parent=0);
+
 		virtual GstElement* get_pipeline();
 		virtual GstBus*		get_bus();
 		virtual GstState	get_state();
@@ -96,8 +97,6 @@ class GSTAbstractPipeline : public QObject {
 
 
 namespace PipelineCallbacks {
-
-
 
 	void pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data);
 	gboolean show_position(gpointer data);

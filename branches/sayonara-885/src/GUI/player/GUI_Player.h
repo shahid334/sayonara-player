@@ -41,6 +41,7 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 
 #include "HelperStructs/AsyncWebAccess.h"
+#include "HelperStructs/SayonaraClass.h"
 
 #include <QMainWindow>
 #include <QCloseEvent>
@@ -51,7 +52,7 @@
 #include <QAction>
 
 
-class GUI_Player : public QMainWindow, private Ui::Sayonara
+class GUI_Player : public SayonaraMainWindow, private Ui::Sayonara
 {
     Q_OBJECT
 public:
@@ -59,7 +60,6 @@ public:
     ~GUI_Player();
 
 public slots:
-
 
 	void psl_update_track (const MetaData & in, int pos=0, bool playing=true);
 	void psl_set_cur_pos (quint32 pos_sec);
@@ -80,7 +80,6 @@ public slots:
       * Set current position in filestream
       */
     void psl_strrip_set_active(bool);
-    void setVolume(int vol);
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
     void stopped();
 
@@ -88,7 +87,7 @@ public slots:
     void showPlugin(PlayerPlugin* plugin);
     void hideAllPlugins();
 
-	void psl_libpath_changed(const QString &);
+
 
 
 signals:
@@ -101,7 +100,6 @@ signals:
     void sig_forward();
     void sig_mute();
     void sig_rec_button_toggled(bool);
-    void sig_volume_changed (int);
 	void sig_seek_rel(quint32 pos_percent);
     void sig_seek_rel_ms(qint64 ms);
     void sig_correct_id3(const MetaData&);
@@ -116,14 +114,9 @@ signals:
 
     /* Preferences / View */
     void sig_show_playlists();
-    void sig_show_small_playlist_items(bool);
     void sig_show_socket();
     void sig_show_stream_rec();
-    void sig_libpath_changed(QString);
     void sig_setup_LastFM();
-    void sig_skin_changed(bool);
-    void sig_show_only_tracks(bool);
-    void sig_language_changed();
 
     /* Covers */
     void sig_fetch_all_covers();
@@ -169,7 +162,8 @@ private slots:
     /* Preferences */
     void sl_action_language_toggled(bool b=true);
     void lastFMClicked(bool b = true);
-    void setLibraryPathClicked(bool b = true);
+	void sl_libpath_clicked(bool b = true);
+	void sl_libpath_changed();
 
     void load_pl_on_startup_toggled(bool);
     void min2tray_toggled(bool);
@@ -191,7 +185,7 @@ private slots:
     void awa_translators_finished();
 
     void notification_changed(bool active, int ms);
-    void language_changed(QString);
+	void language_changed();
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
@@ -246,7 +240,7 @@ private:
 
     int                 m_library_width;
     int                 m_library_stretch_factor;
-    Settings*   m_settings;
+
     QTranslator*        m_translator;
     QStringList         m_translators;
 

@@ -24,13 +24,9 @@
 #define ENGINE_H_
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 #include <QObject>
 #include <QStringList>
-
-
-#include <vector>
-
-using namespace std;
 
 #define PLAYBACK_ENGINE "playback_engine"
 #define CONVERT_ENGINE "convert_engine"
@@ -50,14 +46,13 @@ enum CapsType {
 };
 
 
-class Engine : public QObject {
+class Engine : public QObject, protected SayonaraClass {
 
 	Q_OBJECT
 
 protected:
 	MetaData	_md;
 	qint64		_cur_pos_ms;
-	qint32      _vol;
 
 	bool		_scrobbled;
 	qint64		_scrobble_begin_ms;
@@ -65,9 +60,7 @@ protected:
 	int			_eq_type;
 
 	bool 		_playing_stream;
-	bool		_sr_active;
 	bool		_sr_wanna_record;
-	bool		_gapless;
 
 	QString		_name;
 
@@ -132,7 +125,6 @@ public slots:
 	virtual void play()=0;
 	virtual void stop()=0;
 	virtual void pause()=0;
-	virtual void set_volume(int vol)=0;
 
 	virtual void jump_abs_s(quint32 where)=0;
 	virtual void jump_abs_ms(quint64 where)=0;
@@ -146,11 +138,9 @@ public slots:
 	virtual void eq_enable(bool b){ Q_UNUSED(b); }
 	virtual void record_button_toggled(bool b){ _sr_wanna_record = b; }
 
-	virtual void psl_sr_set_active(bool b ){ _sr_active = b; }
 	virtual void psl_new_stream_session(){}
 	virtual void psl_calc_level(bool b){}
 	virtual void psl_calc_spectrum(bool b){}
-	virtual void psl_set_gapless(bool b){ _gapless = b; }
 
 	virtual void start_convert(){}
 	virtual void end_convert(){}

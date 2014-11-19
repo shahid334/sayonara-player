@@ -38,12 +38,9 @@ class Playlist : public QObject
     Q_OBJECT
 
 signals:
-	void sig_playlist_mode_changed(const PlaylistMode&);
     void sig_playlist_changed(const MetaDataList&, int);
     void sig_track_changed(const MetaData&, int);
     void sig_stopped();
-
-
 
 protected:
     bool            _playlist_changed;
@@ -90,7 +87,6 @@ public:
     virtual void append_tracks(const MetaDataList& lst);
 
     virtual void replace_track(int idx, const MetaData& md);
-    virtual void save_for_reload()=0;
     virtual void save_to_m3u_file(QString filepath, bool relative)=0;
     virtual MetaDataList get_playlist(){return _v_md;}
 

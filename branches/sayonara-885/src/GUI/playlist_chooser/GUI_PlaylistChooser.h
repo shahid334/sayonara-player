@@ -23,6 +23,7 @@
 #define GUIPLAYLISTCHOOSER_H_
 
 #include "HelperStructs/MetaData.h"
+
 #include "PlayerPlugin/PlayerPlugin.h"
 
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
@@ -35,7 +36,6 @@
 class GUI_PlaylistChooser : public PlayerPlugin, private Ui::GUI_PlaylistChooser {
 
 Q_OBJECT
-
 
 signals:
 	void sig_playlist_chosen(int);
@@ -61,8 +61,7 @@ private slots:
 public slots:
     void playlist_changed(const MetaDataList&, int, PlaylistType);
 	void all_playlists_fetched(const QMap<int, QString>&);
-    void changeSkin(bool);
-    void language_changed();
+
 
 public:
 	GUI_PlaylistChooser(QString name, QWidget *parent = 0);
@@ -76,12 +75,14 @@ private:
 
 	int	_cur_idx;
 	bool _started;
-	bool _dark;
+
     QString _text_before_save;
     QString _last_dir;
 
     int show_warning(QString title_text);
 
+private slots:
+	void language_changed();
 };
 
 #endif /* GUIPLAYLISTCHOOSER_H_ */

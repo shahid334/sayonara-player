@@ -77,7 +77,7 @@ void GUI_Player::setupConnections() {
 	connect(action_lastFM, SIGNAL(triggered(bool)), this,
 			SLOT(lastFMClicked(bool)));
 	connect(action_setLibPath, SIGNAL(triggered(bool)), this,
-			SLOT(setLibraryPathClicked(bool)));
+			SLOT(sl_libpath_clicked(bool)));
 	connect(action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
             SLOT(show()));
 	connect(action_min2tray, SIGNAL(toggled(bool)), this,
@@ -143,11 +143,8 @@ void GUI_Player::setupConnections() {
 
     connect(m_awa_version, SIGNAL(finished()), this, SLOT(awa_version_finished()));
     connect(m_awa_translators, SIGNAL(finished()), this, SLOT(awa_translators_finished()));
-    
-    if(ui_libpath)
-        connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(setLibraryPathClicked()));
 
-
+	connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(sl_libpath_clicked()));
 
     QList<QKeySequence> lst;
     lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);

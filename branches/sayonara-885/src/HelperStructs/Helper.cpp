@@ -513,7 +513,7 @@ QString Helper::get_parent_folder(const QString& filename) {
 	ret = filename.left(filename.lastIndexOf(QDir::separator()) + 1);
 	last_idx = ret.lastIndexOf(QDir::separator());
 
-	while(last_idx == ret.size() - 1) {
+	while(last_idx == ret.size() - 1 && ret.size() > 0) {
 		ret = ret.left(ret.size() - 1);
     	last_idx = ret.lastIndexOf(QDir::separator());
     }

@@ -73,7 +73,7 @@ void GSTEngineHandler::psl_set_speed(float f) {
 	_cur_engine->psl_set_speed(f);
 }
 
-void GSTEngineHandler::fill_engines(const vector<Engine*>& engines) {
+void GSTEngineHandler::fill_engines(const QVector<Engine*>& engines) {
 	_engines = engines;
 
 	psl_change_engine(PLAYBACK_ENGINE);
@@ -97,10 +97,6 @@ void GSTEngineHandler::pause() {
 	_cur_engine->pause();
 }
 
-void GSTEngineHandler::set_volume(int vol) {
-	if(!_cur_engine) return;
-	_cur_engine->set_volume(vol);
-}
 
 
 void GSTEngineHandler::jump_abs_s(quint32 where) {
@@ -149,10 +145,6 @@ void GSTEngineHandler::record_button_toggled(bool b) {
 	_cur_engine->record_button_toggled(b);
 }
 
-void GSTEngineHandler::psl_sr_set_active(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_sr_set_active(b);
-}
 
 void GSTEngineHandler::psl_new_stream_session() {
 	if(!_cur_engine) return;
@@ -169,10 +161,6 @@ void GSTEngineHandler::psl_calc_spectrum(bool b) {
 	_cur_engine->psl_calc_spectrum(b);
 }
 
-void GSTEngineHandler::psl_set_gapless(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_set_gapless(b);
-}
 
 void GSTEngineHandler::psl_new_stream_connection(){
 	if(!_cur_engine) return;

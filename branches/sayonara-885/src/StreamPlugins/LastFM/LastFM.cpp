@@ -161,8 +161,9 @@ void LastFM::_login_thread_finished() {
 
 	_settings->set(Set::LFM_SessionKey, _session_key);
 
-    if(!_logged_in)
-        emit sig_last_fm_logged_in(_logged_in);
+	if(!_logged_in){
+		emit sig_last_fm_logged_in(_logged_in);
+	}
 }
 
 

@@ -39,23 +39,15 @@
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
 
-#include <QObject>
-#include <QDebug>
-
-#include <vector>
-
-using namespace std;
 
 class GSTPlaybackEngine : public Engine {
 
 	Q_OBJECT
 
-
 public:
 
 	GSTPlaybackEngine();
 	virtual ~GSTPlaybackEngine();
-
 
 
 // public from Gstreamer Callbacks
@@ -71,8 +63,6 @@ public:
 
 	void		psl_new_stream_connection();
 
-	bool get_show_level();
-	bool get_show_spectrum();
 
 	MyCaps* get_caps();
 	void do_jump_play();
@@ -83,21 +73,19 @@ public:
 
 private:
 	
-	GSTPlaybackPipeline*	 _pipeline;
-	GSTPlaybackPipeline*	 _other_pipeline;
+	GSTPlaybackPipeline*	_pipeline;
+	GSTPlaybackPipeline*	_other_pipeline;
 
-	Settings* _settings;
-	StreamRecorder* _stream_recorder;
+	StreamRecorder*			_stream_recorder;
 
-    LastTrack*  _last_track;
-	MyCaps*     _caps;
+	LastTrack*				_last_track;
+	MyCaps*					_caps;
 
-
-    bool        _show_level;
-    bool        _show_spectrum;
-    int         _jump_play;
-	bool		_wait_for_gapless_track;
-	bool		_may_start_timer;
+	int	 _jump_play;
+	bool _wait_for_gapless_track;
+	bool _may_start_timer;
+	bool _sr_active;
+	bool _gapless;
 
 	// methods
 	bool set_uri(const MetaData& md, bool* start_play);
@@ -107,7 +95,6 @@ public slots:
     virtual void play();
 	virtual void stop();
 	virtual void pause();
-	virtual void set_volume(int vol);
 
 	virtual void jump_abs_s(quint32);
 	virtual void jump_abs_ms(quint64);
@@ -120,11 +107,12 @@ public slots:
 	virtual void eq_changed(int, int);
 	virtual void eq_enable(bool);
 
-	virtual void psl_calc_level(bool);
-    virtual void psl_calc_spectrum(bool);
-	virtual void psl_set_gapless(bool);
-
 	virtual void psl_set_speed(float f);
+
+private slots:
+	void _change_sr_active();
+	void _change_gapless();
+
 };
 
 #endif /* GSTENGINE_H_ */

@@ -22,6 +22,7 @@
 #include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "GUI/player/GUI_TrayIcon.h"
+#include "HelperStructs/Style.h"
 
 #include <QAction>
 #include <QMenu>
@@ -105,6 +106,8 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close_clicked()));
     connect(m_muteAction, SIGNAL(triggered()), this, SLOT(mute_clicked()));
     connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
+
+	REGISTER_LISTENER(Set::Player_Style, skin_changed);
 }
 
 
@@ -130,7 +133,9 @@ void GUI_TrayIcon::language_changed() {
 }
         
 
-void GUI_TrayIcon::change_skin(QString stylesheet) {
+void GUI_TrayIcon::skin_changed() {
+	bool dark = (_settings->get(Set::Player_Style) == 1);
+	QString stylesheet = Style::get_style(dark);
     this->m_trayContextMenu->setStyleSheet(stylesheet);
     this->setMute(_mute);
 }

@@ -24,8 +24,6 @@
 #include <QString>
 #include <QDebug>
 
-
-
 #define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
 #define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
 

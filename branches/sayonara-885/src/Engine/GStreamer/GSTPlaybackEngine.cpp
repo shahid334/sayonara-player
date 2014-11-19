@@ -64,14 +64,13 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 	_caps = new MyCaps();
 	_caps->set_parsed(false);
 
-	_settings = Settings::getInstance();
 	_name = PLAYBACK_ENGINE;
 
 	_scrobble_begin_ms = 0;
 	_cur_pos_ms = 0;
 	_scrobbled = false;
 	_playing_stream = false;
-	_sr_active = false;
+
 	_sr_wanna_record = false;
 
 	_stream_recorder = new StreamRecorder();
@@ -83,9 +82,7 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 	_last_track = new LastTrack(md_lt);
 	_last_track->pos_sec = last_track_pos;
 
-
 	_wait_for_gapless_track = false;
-	_gapless = false;
 	_may_start_timer = false;
 
 	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
@@ -93,6 +90,9 @@ GSTPlaybackEngine::GSTPlaybackEngine() {
 			SLOT(sr_ended()));
 	connect(_stream_recorder, SIGNAL(sig_stream_not_valid()), this,
 			SLOT(sr_not_valid()));
+
+	REGISTER_LISTENER(Set::Engine_SR_Active, _change_sr_active);
+	REGISTER_LISTENER(Set::Engine_Gapless, _change_gapless);
 
 	init();
 }
@@ -116,9 +116,6 @@ void GSTPlaybackEngine::init() {
 	connect(_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 	connect(_pipeline, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
-
-	_show_level = false;
-	_show_spectrum = false;
 }
 
 
@@ -190,7 +187,8 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	}
 
 	// pause if streamripper is not active
-    else if (!start_play && !(_playing_stream && _sr_active)){
+
+	else if (!start_play && !(_playing_stream && _sr_active)){
 		pause();
     }
 }
@@ -306,15 +304,6 @@ void GSTPlaybackEngine::pause() {
 }
 
 
-void GSTPlaybackEngine::set_volume(int vol) {
-	_vol = vol;
-	_pipeline->set_volume(vol);
-
-	if(_other_pipeline)
-		_other_pipeline->set_volume(vol);
-}
-
-
 void GSTPlaybackEngine::jump_abs_s(quint32 where) {
 
 	gint64 new_time_ns;
@@ -380,44 +369,6 @@ void GSTPlaybackEngine::eq_enable(bool) {
 }
 
 
-void GSTPlaybackEngine::psl_calc_level(bool b) {
-
-	_show_level = b;
-    if(b) {
-        _show_spectrum = false;
-    }
-
-	_pipeline->enable_level(b);
-
-    if(_other_pipeline){
-        _other_pipeline->enable_level(b);
-    }
-}
-
-
-void GSTPlaybackEngine::psl_calc_spectrum(bool b) {
-
-	_show_spectrum = b;
-	if(b) _show_level = false;
-
-	_pipeline->enable_spectrum(b);
-
-    if(_other_pipeline){
-        _other_pipeline->enable_spectrum(b);
-    }
-}
-
-
-bool GSTPlaybackEngine::get_show_level() {
-	return _show_level;
-}
-
-
-bool GSTPlaybackEngine::get_show_spectrum() {
-	return _show_spectrum;
-}
-
-
 MyCaps* GSTPlaybackEngine::get_caps() {
 	return _caps;
 }
@@ -457,8 +408,6 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 	pos_sec = pos_ms / 1000;
 	cur_pos_sec = _cur_pos_ms / 1000;
 
-	Settings::getInstance()->set(Set::PL_LastTrackPos, pos_sec);
-
     if ( cur_pos_sec == pos_sec ){
         return;
     }
@@ -476,6 +425,8 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 	_last_track->id = _md.id;
 	_last_track->filepath = _md.filepath;
 	_last_track->pos_sec = pos_sec;
+
+	Settings::getInstance()->set(Set::PL_LastTrackPos, pos_sec);
 
 	emit sig_pos_changed_s( pos_sec );
 }
@@ -504,7 +455,6 @@ void GSTPlaybackEngine::set_track_finished() {
 }
 
 
-
 void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 
     if(!_gapless) return;
@@ -529,9 +479,11 @@ void GSTPlaybackEngine::unmute() {
 }
 
 
-void GSTPlaybackEngine::psl_set_gapless(bool b) {
+void GSTPlaybackEngine::_change_gapless() {
 
-	if(b) {
+	_gapless = _settings->get(Set::Engine_Gapless);
+
+	if(_gapless) {
 
 		if(!_other_pipeline) {
 			_other_pipeline = new GSTPlaybackPipeline(this);
@@ -540,16 +492,11 @@ void GSTPlaybackEngine::psl_set_gapless(bool b) {
 			connect(_other_pipeline, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 		}
 
-		_other_pipeline->set_volume(_pipeline->get_volume());
-
 		_may_start_timer = true;
-		_gapless = true;
 	}
 
 	else {
 		_may_start_timer = false;
-		_gapless = false;
-
 	}
 }
 
@@ -567,3 +514,9 @@ void GSTPlaybackEngine::psl_new_stream_connection(){
 		_other_pipeline->set_new_stream_connection();
 	}
 }
+
+
+void GSTPlaybackEngine::_change_sr_active(){
+	_sr_active = _settings->get(Set::Engine_SR_Active);
+}
+

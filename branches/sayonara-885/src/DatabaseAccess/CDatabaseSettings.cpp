@@ -69,7 +69,7 @@ bool CDatabaseConnector::store_settings() {
 }
 
 
-bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) {
+bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) const {
 
 	QSqlQuery q (*_database);
 	q.prepare("select value from settings where key = ?;");
@@ -90,7 +90,7 @@ bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) {
 }
 
 
-bool CDatabaseConnector::store_setting(QString key, const QVariant& value) {
+bool CDatabaseConnector::store_setting(QString key, const QVariant& value) const {
 
 
 	QSqlQuery q (*_database);
