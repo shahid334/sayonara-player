@@ -56,16 +56,28 @@ protected:
 
 	bool		_scrobbled;
 	qint64		_scrobble_begin_ms;
-	bool		_is_eq_enabled;
+
 	int			_eq_type;
 
 	bool 		_playing_stream;
 	bool		_sr_wanna_record;
 
 	QString		_name;
+	bool		_show_level;
+	bool		_show_spectrum;
+	bool		_broadcast_active;
 
 
 public:
+
+	Engine(QObject* parent=0) :
+		QObject(parent),
+		SayonaraClass()
+	{
+		REGISTER_LISTENER(Set::Engine_ShowLevel, _sl_show_level_changed);
+		REGISTER_LISTENER(Set::Engine_ShowSpectrum, _sl_show_spectrum_changed);
+		REGISTER_LISTENER(Set::BroadCast_Active, _sl_broadcast_active_changed);
+	}
 
     virtual QString	getName(){return _name;}
 	virtual void	init()=0;
@@ -76,12 +88,12 @@ public:
 	virtual void		update_bitrate(quint32 bitrate=0){}
 	virtual void		update_duration(quint64 duration=0){}
 	virtual void		update_time(qint32 time){}
-	virtual bool		get_show_level(){ return false; }
-	virtual bool		get_show_spectrum(){ return false; }
-
 
 	virtual void		do_jump_play(){}
 	virtual void		unmute(){}
+	virtual bool		get_show_level(){ return _show_level; }
+	virtual bool		get_show_spectrum(){ return _show_spectrum; }
+	virtual bool		get_broadcast_active() { return _broadcast_active; }
 
 
 signals:
@@ -111,12 +123,25 @@ private slots:
         emit sig_pos_changed_ms(ms);
     }
 
+
+	virtual void _sl_show_level_changed(){
+		_show_level = _settings->get(Set::Engine_ShowLevel);
+	}
+
+	virtual void _sl_show_spectrum_changed(){
+		_show_spectrum = _settings->get(Set::Engine_ShowSpectrum);
+	}
+
+	virtual void _sl_broadcast_active_changed(){
+		_broadcast_active = _settings->get(Set::BroadCast_Active);
+	}
+
 protected slots:
 	virtual void new_data(uchar* data, quint64 size){
-
 		emit sig_data(data, size);
-
 	}
+
+
 
 
 
@@ -135,18 +160,13 @@ public slots:
 	virtual void change_track(const QString&, int pos_sec=0, bool start_play=true )=0;
 
 	virtual void eq_changed(int band, int value){ Q_UNUSED(band); Q_UNUSED(value); }
-	virtual void eq_enable(bool b){ Q_UNUSED(b); }
 	virtual void record_button_toggled(bool b){ _sr_wanna_record = b; }
 
 	virtual void psl_new_stream_session(){}
-	virtual void psl_calc_level(bool b){}
-	virtual void psl_calc_spectrum(bool b){}
 
 	virtual void start_convert(){}
 	virtual void end_convert(){}
 	virtual void psl_set_speed(float f){ Q_UNUSED(f); }
-
-	virtual void psl_new_stream_connection(){  }
 
 };
 

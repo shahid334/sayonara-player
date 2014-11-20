@@ -132,15 +132,6 @@ void GUI_Player::setupConnections() {
             this,				SLOT(sl_no_cover_available()));
 
 
-    // notifications
-    connect(ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
-            this, SLOT(notification_changed(bool,int)));
-
-    // language chooser
-    connect(ui_language_chooser, SIGNAL(sig_language_changed(QString)),
-            this, SLOT(language_changed(QString)));
-
-
     connect(m_awa_version, SIGNAL(finished()), this, SLOT(awa_version_finished()));
     connect(m_awa_translators, SIGNAL(finished()), this, SLOT(awa_translators_finished()));
 

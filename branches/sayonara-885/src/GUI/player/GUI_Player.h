@@ -55,6 +55,7 @@
 class GUI_Player : public SayonaraMainWindow, private Ui::Sayonara
 {
     Q_OBJECT
+
 public:
     explicit GUI_Player(QTranslator* translator, QWidget *parent = 0);
     ~GUI_Player();
@@ -74,12 +75,12 @@ public slots:
     /* Last FM */
     void last_fm_logged_in(bool);
     void lfm_info_fetched(const MetaData& md, bool loved, bool corrected);
-    void psl_lfm_activated(bool b);
+
 
     /**
       * Set current position in filestream
       */
-    void psl_strrip_set_active(bool);
+
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
     void stopped();
 
@@ -163,7 +164,7 @@ private slots:
     void sl_action_language_toggled(bool b=true);
     void lastFMClicked(bool b = true);
 	void sl_libpath_clicked(bool b = true);
-	void sl_libpath_changed();
+
 
     void load_pl_on_startup_toggled(bool);
     void min2tray_toggled(bool);
@@ -184,8 +185,11 @@ private slots:
     void awa_version_finished();
     void awa_translators_finished();
 
-    void notification_changed(bool active, int ms);
 	void language_changed();
+
+	void _sl_libpath_changed();
+	void _sl_sr_active_changed();
+
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
@@ -204,7 +208,6 @@ public:
 protected:
 
     void closeEvent(QCloseEvent* e);
-
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
     void moveEvent(QMoveEvent* e);

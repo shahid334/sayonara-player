@@ -23,7 +23,6 @@
 #ifndef GSTPIPELINE_H
 #define GSTPIPELINE_H
 
-#include <QObject>
 #include <QString>
 #include <QTimer>
 #include <gst/gst.h>
@@ -36,14 +35,15 @@
 enum GSTFileMode{
 	GSTFileModeFile,
 	GSTFileModeHttp
-
 };
+
 
 bool
 _test_and_error(void* element, QString errorstr);
 
 bool
 _test_and_error_bool(bool b, QString errorstr);
+
 
 class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 
@@ -77,6 +77,7 @@ class GSTAbstractPipeline : public QObject, protected SayonaraClass {
         virtual qint64 get_duration_ms() final;
         virtual qint64 get_position_ms() final;
 		virtual void set_speed(float f);
+
 
 	public:
 		GSTAbstractPipeline(QObject* parent=0);

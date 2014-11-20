@@ -26,27 +26,19 @@
  *      Author: luke
  */
 
-
-#include "Settings/Settings.h"
-#include "HelperStructs/Helper.h"
-#include "HelperStructs/globals.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
-#include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMWebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-
-#include <iostream>
-#include <curl/curl.h>
-
-#include <string>
-#include <time.h>
 
 #include <QDomDocument>
 #include <QMessageBox>
 #include <QUrl>
-#include <QtXml>
-#include <QMap>
+
+#include <curl/curl.h>
+#include <string>
+#include <time.h>
+
 
 using namespace std;
 
@@ -57,14 +49,20 @@ LastFM* LastFM::getInstance() {
 }
 
 
-LastFM::LastFM() {
+LastFM::LastFM() :
+	QObject(),
+	SayonaraClass()
+{
 	lfm_wa_init();
 	_class_name = QString("LastFM");
 	_logged_in = false;
 	_track_changed_thread = 0;
     _login_thread = new LFMLoginThread();
-    this->connect(_login_thread, SIGNAL(finished()), this, SLOT(_login_thread_finished()));
-	_settings = Settings::getInstance();
+
+	connect(_login_thread, SIGNAL(finished()), this, SLOT(_login_thread_finished()));
+
+	REGISTER_LISTENER_NO_CALL(Set::LFM_Login, psl_login);
+	REGISTER_LISTENER(Set::LFM_Active, psl_login);
 }
 
 
@@ -110,7 +108,7 @@ bool LastFM::_lfm_check_login() {
 		LastFM::get_login(username, password);
 
 		if(!username.isEmpty() && !password.isEmpty()){
-			lfm_login();
+			psl_login();
 		}
 
 		if(!_logged_in || _session_key.size() != 32) {
@@ -120,8 +118,11 @@ bool LastFM::_lfm_check_login() {
 		return true;
 	}
 
-	else return true;
+	else {
+		return true;
+	}
 }
+
 
 bool LastFM::lfm_is_logged_in() {
 	return _logged_in;
@@ -130,19 +131,16 @@ bool LastFM::lfm_is_logged_in() {
 
 void LastFM::psl_login() {
 
-	lfm_login(false);
-}
-
-void LastFM::lfm_login(bool should_emit) {
+	if(!_settings->get(Set::LFM_Active)){
+		return;
+	}
 
 	QString username, password;
 	get_login(username, password);
 
     _logged_in = false;
     _username = username;
-    _emit_login = should_emit;
 
-    _login_thread->setup_login_thread(username, password);
     _login_thread->start();
 }
 

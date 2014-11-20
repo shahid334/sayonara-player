@@ -57,10 +57,9 @@ void CLibraryBase::clearLibrary() {
 
 void CLibraryBase::reloadLibrary(bool clear) {
 
-	Settings* settings = Settings::getInstance();
-	m_library_path = settings->get(Set::Lib_Path);
+	_library_path = _settings->get(Set::Lib_Path);
 
-    if(m_library_path.length() == 0) {
+	if(_library_path.length() == 0) {
         QMessageBox msgBox(_main_window);
         msgBox.setText(tr("Please select your library first"));
         msgBox.exec();
@@ -76,8 +75,8 @@ void CLibraryBase::reloadLibrary(bool clear) {
         }
 
         else {
-            m_library_path = dir;
-			settings->set(Set::Lib_Path, dir);
+			_library_path = dir;
+			_settings->set(Set::Lib_Path, dir);
         }
     }
 
@@ -90,7 +89,7 @@ void CLibraryBase::reloadLibrary(bool clear) {
         _reload_thread->terminate();
     }
 
-    _reload_thread->set_lib_path(m_library_path);
+	_reload_thread->set_lib_path(_library_path);
     _reload_thread->start();
 }
 

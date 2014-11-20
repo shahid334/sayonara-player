@@ -68,6 +68,8 @@ namespace SK{
 		Engine_ConvertQuality,
 		Engine_CovertTargetPath,
 		Engine_Gapless,
+		Engine_ShowSpectrum,
+		Engine_ShowLevel,
 
 		Engine_SR_Active,
 		Engine_SR_Warning,
@@ -162,6 +164,8 @@ namespace Set {
 	INST(QString, Engine_SR_Path);
 	INST(bool, Engine_SR_CompleteTracks);
 	INST(bool, Engine_SR_SessionPath);
+	INST(bool, Engine_ShowSpectrum);
+	INST(bool, Engine_ShowLevel);
 
 	INST(bool, Socket_Active);
 	INST(int, Socket_From);

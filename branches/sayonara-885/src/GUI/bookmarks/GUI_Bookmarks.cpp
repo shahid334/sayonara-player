@@ -79,7 +79,7 @@ void GUI_Bookmarks::enable_prev(int idx) {
 	val = _bookmarks.value(key);
 
 	ms = (long) (key * 1000);
-	str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+	str = Helper::cvt_ms_to_string(ms, true, false);
 
 	lab_last->setText( str );
 	btn_last->setEnabled( true);
@@ -96,7 +96,7 @@ void GUI_Bookmarks::enable_next(int idx) {
 	val = _bookmarks.value(key);
 
 	ms = (long) (key * 1000);
-	str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+	str = Helper::cvt_ms_to_string(ms, true, false);
 
 	lab_next->setText(str);
 	btn_next->setEnabled(true);
@@ -195,7 +195,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 	foreach( quint32 bm, _bookmarks.keys() ) {
 
 		long ms = (long) (bm * 1000);
-		QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+		QString str = Helper::cvt_ms_to_string(ms, true, false);
 
 		cb_bookmarks->addItem(str, bm);
 	}
@@ -285,7 +285,7 @@ void GUI_Bookmarks::new_clicked() {
 		foreach( quint32 bm, _bookmarks.keys() ) {
 
 			long ms = (long) (bm * 1000);
-			QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+			QString str = Helper::cvt_ms_to_string(ms, true, false);
 
 			cb_bookmarks->addItem(str, bm);
 

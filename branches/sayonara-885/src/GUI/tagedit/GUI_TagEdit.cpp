@@ -34,7 +34,6 @@
 #include "HelperStructs/Style.h"
 
 #include <QMessageBox>
-#include <QWidget>
 #include <QCompleter>
 #include <QDir>
 
@@ -45,7 +44,7 @@
 
 
 GUI_TagEdit::GUI_TagEdit(QWidget* parent) :
-	QWidget(parent),
+	SayonaraWidget(parent),
 	Ui::GUI_TagEdit()
 {
 	setupUi(this);

@@ -27,10 +27,8 @@
 #include "Engine/GStreamer/GSTConvertEngine.h"
 
 
-GSTEngineHandler::GSTEngineHandler(QObject* parent) {
+GSTEngineHandler::GSTEngineHandler(QObject* parent) : Engine() {
 	_cur_engine = 0;
-
-	QString dir = Helper::getLibPath();
 
 	_engines.push_back(new GSTPlaybackEngine());
 	_engines.push_back(new GSTConvertEngine());
@@ -134,11 +132,6 @@ void GSTEngineHandler::eq_changed(int band, int value) {
 	_cur_engine->eq_changed(band, value);
 }
 
-void GSTEngineHandler::eq_enable(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->eq_enable(b);
-
-}
 
 void GSTEngineHandler::record_button_toggled(bool b) {
 	if(!_cur_engine) return;
@@ -151,21 +144,6 @@ void GSTEngineHandler::psl_new_stream_session() {
 	_cur_engine->psl_new_stream_session();
 }
 
-void GSTEngineHandler::psl_calc_level(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_calc_level(b);
-}
-
-void GSTEngineHandler::psl_calc_spectrum(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_calc_spectrum(b);
-}
-
-
-void GSTEngineHandler::psl_new_stream_connection(){
-	if(!_cur_engine) return;
-	_cur_engine->psl_new_stream_connection();
-}
 
 void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
 	if(_md.length_ms == v) return;

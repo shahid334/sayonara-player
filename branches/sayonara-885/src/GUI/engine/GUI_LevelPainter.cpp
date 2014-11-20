@@ -155,3 +155,12 @@ void GUI_LevelPainter::reload() {
 	}
 }
 
+void GUI_LevelPainter::showEvent(QShowEvent* e){
+	_settings->set(Set::Engine_ShowLevel, true);
+	EnginePlugin::showEvent(e);
+}
+
+void GUI_LevelPainter::closeEvent(QCloseEvent* e){
+	_settings->set(Set::Engine_ShowLevel, false);
+	EnginePlugin::closeEvent(e);
+}

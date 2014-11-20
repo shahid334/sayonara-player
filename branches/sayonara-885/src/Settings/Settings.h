@@ -78,10 +78,11 @@ public:
 	void set(SettingKey<T,S> key, const T& val){
 
 		Setting<T>* s = (Setting<T>*) _settings[(int) S];
-		s->setValue(val);
 
-		SettingNotifier< SettingKey<T, S> >* sn = SettingNotifier< SettingKey<T, S> >::getInstance();
-		sn->val_changed();
+		if( s->setValue(val)) {
+			SettingNotifier< SettingKey<T, S> >* sn = SettingNotifier< SettingKey<T, S> >::getInstance();
+			sn->val_changed();
+		}
 	}
 };
 

@@ -54,12 +54,9 @@ public slots:
 	void change_track(const QString&, int pos_sec=0, bool start_play=true );
 
 	void eq_changed(int band, int value);
-	void eq_enable(bool b);
 	void record_button_toggled(bool);
 
 	void psl_new_stream_session();
-	void psl_calc_level(bool);
-	void psl_calc_spectrum(bool);
 
     void psl_change_engine(QString name);
 
@@ -67,7 +64,6 @@ public slots:
 	void end_convert();
 
 	void psl_set_speed(float f);
-	void psl_new_stream_connection();
 
 
 private slots:

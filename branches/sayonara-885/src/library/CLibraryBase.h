@@ -26,14 +26,14 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/SayonaraClass.h"
 
 #include <QThread>
 #include <QStringList>
 #include <QFileSystemWatcher>
 
 
-class CLibraryBase : public QObject
+class CLibraryBase : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
@@ -70,8 +70,6 @@ public slots:
 	virtual void clearLibrary();
 	virtual void refresh(bool b=true);
 
-	virtual void setLibraryPath(QString);
-
 
 /* New way */
 	virtual void psl_selected_artists_changed(const QList<int>&);
@@ -85,7 +83,6 @@ public slots:
 	virtual void psl_prepare_tracks_for_playlist(QList<int> lst);
 
 	virtual void psl_filter_changed(const Filter&, bool force=false);
-	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
 	virtual void psl_change_id3_tags(const QList<int>& lst);
 	virtual void psl_dur_changed(const MetaData&);
 
@@ -104,9 +101,11 @@ public slots:
 
 protected slots:
 
-   virtual void library_reloading_state_slot(QString);
-   virtual void library_reloading_state_new_block();
-   virtual void reload_thread_finished();
+	virtual void library_reloading_state_slot(QString);
+	virtual void library_reloading_state_new_block();
+	virtual void reload_thread_finished();
+	virtual void _sl_sortorder_changed();
+	virtual void _sl_libpath_changed();
 
 
 
@@ -116,7 +115,7 @@ protected:
 
     CDirectoryReader    _reader;
 
-    QString				m_library_path;
+	QString				_library_path;
 
     ReloadThread* 		_reload_thread;
 	int					_reload_progress;

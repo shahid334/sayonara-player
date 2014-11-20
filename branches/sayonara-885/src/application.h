@@ -94,7 +94,7 @@ private:
 	GUI_LevelPainter*       ui_level;
 	GUI_Spectrum*           ui_spectrum;
 	GUI_LastFM*             ui_lastfm;
-	GUI_Stream	*           ui_stream;
+	GUI_Stream*				ui_stream;
 	GUI_Podcasts*           ui_podcasts;
 	GUI_Equalizer*          ui_eq;
 //	GUI_LFMRadioWidget*     ui_lfm_radio;
@@ -124,7 +124,6 @@ private:
 	QTranslator*            _translator;
 
     void init_connections();
-    void connect_languages();
 
 public:
 	void setFiles2Play(const QStringList& filelist);

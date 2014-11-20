@@ -32,6 +32,7 @@ PlayerPlugin::PlayerPlugin(QString name, QWidget *parent) :
     _pp_is_shown = false;
     _pp_is_closed = true;
     connect(_pp_action, SIGNAL(triggered(bool)), this, SLOT(action_triggered(bool)));
+	hide();
 
 }
 
@@ -75,7 +76,7 @@ void PlayerPlugin::setSize(QSize size) {
 
 
 void PlayerPlugin::closeEvent(QCloseEvent* e) {
-    QWidget::close();
+	SayonaraWidget::closeEvent(e);
 
     _pp_action->setChecked(false);
     action_triggered(false);

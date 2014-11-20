@@ -22,7 +22,6 @@
 
 #include "GUI/engine/GUI_Spectrum.h"
 #include "HelperStructs/globals.h"
-#include "Settings/Settings.h"
 
 #include <QPainter>
 #include <QList>
@@ -194,3 +193,13 @@ void GUI_Spectrum::psl_style_update() {
    update();
 }
 
+
+void GUI_Spectrum::showEvent(QShowEvent* e){
+	_settings->set(Set::Engine_ShowSpectrum, true);
+	EnginePlugin::showEvent(e);
+}
+
+void GUI_Spectrum::closeEvent(QCloseEvent* e){
+	_settings->set(Set::Engine_ShowSpectrum, false);
+	EnginePlugin::closeEvent(e);
+}

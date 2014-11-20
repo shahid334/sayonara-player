@@ -13,7 +13,7 @@ class SayonaraClass {
 		Settings* _settings;
 
 	public:
-		SayonaraClass(QObject* parent=0)
+		SayonaraClass()
 		{
 			_settings = Settings::getInstance();
 		}

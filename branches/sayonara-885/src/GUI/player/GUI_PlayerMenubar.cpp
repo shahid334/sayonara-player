@@ -239,14 +239,13 @@ void GUI_Player::sl_libpath_clicked(bool b) {
 	}
 }
 
-void GUI_Player::sl_libpath_changed() {
+void GUI_Player::_sl_libpath_changed() {
 
 	QString dir = _settings->get(Set::Lib_Path);
 
 	if (QFile::exists(dir)) {
 
-		if( library_widget->isVisible() && ui_library )
-		{
+		if( library_widget->isVisible() && ui_library ){
             ui_libpath->hide();
             ui_library->show();
 			ui_library->resize(library_widget->size());
@@ -254,8 +253,8 @@ void GUI_Player::sl_libpath_changed() {
     }
 
 	else{
-		if( library_widget->isVisible() && ui_library )
-		{
+
+		if( library_widget->isVisible() && ui_library ){
 			ui_library->hide();
 			ui_libpath->show();
 			ui_libpath->resize(library_widget->size());

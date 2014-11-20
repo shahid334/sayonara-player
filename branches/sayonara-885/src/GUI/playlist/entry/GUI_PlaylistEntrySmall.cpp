@@ -37,7 +37,8 @@ GUI_PlaylistEntrySmall::~GUI_PlaylistEntrySmall() {
 void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx) {
 
 	QString titlestr;
-	bool show_numbers = Settings::getInstance()->get(Set::PL_ShowNumbers);
+	QString len_str = Helper::cvt_ms_to_string(md.length_ms, true);
+	bool show_numbers = _settings->get(Set::PL_ShowNumbers);
 
 	if(show_numbers){
 		titlestr = QString::number(idx) + ". " + md.title.trimmed();
@@ -49,7 +50,7 @@ void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx) {
 
 	lab_title->setText(titlestr);
 	lab_artist->setText(md.artist.trimmed());
-	lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms, true));
+	lab_time->setText(len_str);
 }
 
 

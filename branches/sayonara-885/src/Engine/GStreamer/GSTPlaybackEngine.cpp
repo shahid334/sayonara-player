@@ -56,7 +56,9 @@ void _calc_log10_lut() {
 }
 
 
-GSTPlaybackEngine::GSTPlaybackEngine() {
+GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
+	Engine(parent)
+{
 
 	ENGINE_DEBUG;
 	_calc_log10_lut();
@@ -364,10 +366,6 @@ void GSTPlaybackEngine::eq_changed(int band, int val) {
 		_other_pipeline->set_eq_band(band_name, new_val);
 }
 
-void GSTPlaybackEngine::eq_enable(bool) {
-
-}
-
 
 MyCaps* GSTPlaybackEngine::get_caps() {
 	return _caps;
@@ -506,13 +504,6 @@ void  GSTPlaybackEngine::psl_set_speed(float f) {
     if(_other_pipeline){
         _other_pipeline->set_speed(f);
     }
-}
-
-void GSTPlaybackEngine::psl_new_stream_connection(){
-	_pipeline->set_new_stream_connection();
-	if(_other_pipeline){
-		_other_pipeline->set_new_stream_connection();
-	}
 }
 
 

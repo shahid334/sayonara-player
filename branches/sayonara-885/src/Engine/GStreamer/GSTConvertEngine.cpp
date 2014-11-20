@@ -27,7 +27,9 @@
 #include <qplugin.h>
 
 
-GSTConvertEngine::GSTConvertEngine(QObject *parent){
+GSTConvertEngine::GSTConvertEngine(QObject *parent) :
+	Engine(parent)
+{
 	_settings = Settings::getInstance();
 	_pipeline = new GSTConvertPipeline(this);
     _name = CONVERT_ENGINE;

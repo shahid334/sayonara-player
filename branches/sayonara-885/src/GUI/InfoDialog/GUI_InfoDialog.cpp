@@ -30,10 +30,7 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/MetaDataInfo.h"
 
-#include <QWidget>
 #include <QPixmap>
-#include <QFile>
-#include <QDir>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QCloseEvent>
@@ -41,9 +38,8 @@
 #include <QDateTime>
 
 
-
 GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::InfoDialog() {
 
 	setupUi(this);
@@ -61,7 +57,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     _lfm_thread = new LFMTrackChangedThread(_class_name);
 
 	QStringList user_pw;
-	user_pw = Settings::getInstance()->get(Set::LFM_Login);
+	user_pw = _settings->get(Set::LFM_Login);
 
 	if(user_pw.size() > 1){
 		_lfm_thread->setUsername(user_pw.first());
@@ -85,9 +81,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     }
 
 	combo_servers->setCurrentIndex(0);
-
-	connect( _lfm_thread,	SIGNAL(sig_corrected_data_available(const QString&)),
-			 this,			SLOT(psl_corrected_data_available(const QString&)));
 
 
 	connect(_cover_lookup,	SIGNAL(sig_cover_found(const CoverLocation&)),

@@ -92,6 +92,8 @@ class Setting : public AbstrSetting
 			if(!success){
 				_val = _default_val;
 			}
+
+			qDebug() << "Load Setting " << _db_key << ": " << SC<T>::cvt_to_string(_val);
 		}
 
 		/* Save setting to DB */
@@ -99,6 +101,7 @@ class Setting : public AbstrSetting
 
 			QString s = SC<T>::cvt_to_string(_val);
 			db->store_setting(_db_key, s);
+			qDebug() << "Store Setting " << _db_key << ": " << s;
 		}
 
 		/* ... */
@@ -112,8 +115,14 @@ class Setting : public AbstrSetting
 		}
 
 		/* ... */
-		void setValue(const T& val){
+		bool setValue(const T& val){
+
+			if( _val == val ){
+				return false;
+			}
+
 			_val = val;
+			return true;
 		}
 };
 

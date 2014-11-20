@@ -33,12 +33,11 @@
 #include <QDir>
 
 GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
+
 	Ui_GUI_StreamRecorder() {
 
 	setupUi(this);
-
-	_settings = Settings::getInstance();
 
 	_path = _settings->get(Set::Engine_SR_Path);
 	_is_active = _settings->get(Set::Engine_SR_Active);

@@ -36,7 +36,6 @@ public:
 	virtual ~GSTPlaybackPipeline();
 
 	bool set_uri(gchar* uri);
-	void set_new_stream_connection();
 
 public slots:
 
@@ -46,9 +45,6 @@ public slots:
 
 	gint64 seek_rel(float percent, gint64 ref_ns);
 	gint64 seek_abs(gint64 ns );
-
-	void enable_level(bool b);
-	void enable_spectrum(bool b);
 
 	void set_eq_band(QString band_name, double val);
 	void unmute();
@@ -74,7 +70,6 @@ private:
 	GstElement* _audio_sink;
 	GstElement* _audio_bin;
 
-
 	GstElement* _level_audio_convert, *_spectrum_audio_convert, *_lame_audio_convert;
 	GstElement* _level, *_spectrum;
 
@@ -86,6 +81,7 @@ private:
 	GstElement* _xingheader;
 	GstElement* _id3mux;
 	GstElement* _app_sink;
+	GstElement* _fake_sink;
 
 	GstElement* _tee;
 
@@ -95,8 +91,12 @@ private:
 	bool tee_connect(GstPadTemplate* tee_src_pad_template, GstElement* queue, QString queue_name);
 	bool create_element(GstElement** elem, const gchar* elem_name, const gchar* name=NULL);
 
-private slots:
-	void _sl_vol_changed();
+
+protected slots:
+	virtual void _sl_broadcast_changed();
+	virtual void _sl_vol_changed();
+	virtual void _sl_show_level_changed();
+	virtual void _sl_show_spectrum_changed();
 
 };
 

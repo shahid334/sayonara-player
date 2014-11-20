@@ -25,6 +25,7 @@
 #ifndef GUI_INFODIALOG_H_
 #define GUI_INFODIALOG_H_
 
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/MetaData.h"
 #include "CoverLookup/CoverLookup.h"
 #include "LyricLookup/LyricLookup.h"
@@ -34,12 +35,8 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/ui_GUI_InfoDialog.h"
 
-#include <QWidget>
-#include <QDialog>
-#include <QString>
 #include <QMetaType>
 #include <QCloseEvent>
-
 
 
 #define INFO_MODE_TRACKS 0
@@ -56,7 +53,7 @@ enum InfoDialogMode {
 	InfoDialogMode_Artists
 };
 
-class GUI_InfoDialog : public QDialog, private Ui::InfoDialog{
+class GUI_InfoDialog : public SayonaraDialog, private Ui::InfoDialog{
 Q_OBJECT
 
 signals:

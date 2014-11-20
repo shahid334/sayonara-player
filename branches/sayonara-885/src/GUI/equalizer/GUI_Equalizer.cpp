@@ -29,7 +29,6 @@
 
 
 #include "HelperStructs/Equalizer_presets.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "PlayerPlugin/PlayerPlugin.h"

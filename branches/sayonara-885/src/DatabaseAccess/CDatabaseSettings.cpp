@@ -41,7 +41,6 @@ bool CDatabaseConnector::load_settings() {
 		AbstrSetting* s = settings[i];
 		if(!s) continue;
 
-		qDebug() << "Load Setting " << s->get_db_key();
 		s->load_db(this);
 	}
 
@@ -60,7 +59,6 @@ bool CDatabaseConnector::store_settings() {
 		AbstrSetting* s = settings[i];
 		if(!s) continue;
 
-		qDebug() << "Store Setting " << s->get_db_key();
 		s->store_db(this);
 	}
 

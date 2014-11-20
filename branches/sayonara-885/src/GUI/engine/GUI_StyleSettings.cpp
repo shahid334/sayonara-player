@@ -27,14 +27,12 @@
 
 
 GUI_StyleSettings::GUI_StyleSettings(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::GUI_Style()
 {
-
 	setupUi(this);
 
     _db = CDatabaseConnector::getInstance();
-
 
     btn_delete->setIcon(Helper::getIcon("delete.png"));
     btn_save->setIcon(Helper::getIcon("save.png"));

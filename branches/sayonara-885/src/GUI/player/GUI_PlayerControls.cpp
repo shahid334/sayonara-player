@@ -118,7 +118,7 @@ void GUI_Player::sl_rec_button_toggled(bool b) {
 /** PROGRESS BAR **/
 void GUI_Player::total_time_changed(qint64 total_time) {
 
-	QString length_str = Helper::cvtMsecs2TitleLengthString(total_time, true);
+	QString length_str = Helper::cvt_ms_to_string(total_time, true);
 	if(total_time == 0){
 		length_str = "";
 	}
@@ -164,7 +164,7 @@ void GUI_Player::setProgressJump(int percent) {
     }
 
     long cur_pos_ms = (percent * _md.length_ms) / 100;
-    QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
+	QString curPosString = Helper::cvt_ms_to_string(cur_pos_ms);
     curTime->setText(curPosString);
 
 	emit sig_seek_rel(percent);
@@ -191,7 +191,7 @@ void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
         if(m_completeLength_ms != 0 && pos_sec > m_completeLength_ms) pos_sec = 0;
 
-        QString curPosString = Helper::cvtMsecs2TitleLengthString(pos_sec * 1000);
+		QString curPosString = Helper::cvt_ms_to_string(pos_sec * 1000);
 		curTime->setText(curPosString);
     }
 

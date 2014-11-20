@@ -44,8 +44,7 @@ public:
     virtual ~GUI_TrayIcon();
 
     virtual bool event ( QEvent * e );
-    void set_timeout(int timeout_ms);
-    void set_notification_active(bool active);
+
 
    void set_enable_play(bool);
    void set_enable_stop(bool);
@@ -57,7 +56,7 @@ public:
    int get_vol_step();
 
 public slots:
-    void trackChanged(const MetaData& md);
+
     void show_notification (const MetaData& md);
     void setPlaying(bool);
     void setMute(bool mute);
@@ -91,43 +90,31 @@ private slots:
 	void show_clicked();
 	void close_clicked();
 	void mute_clicked();
-	void timer_timed_out();
-
 
 
 private:
     /// some shared actions
-    QAction*					m_closeAction;
-    QAction*					m_playAction;
-    QAction*					m_stopAction;
-    QAction*					m_muteAction;
-    QAction*					m_fwdAction;
-    QAction*					m_bwdAction;
-    QAction*                    m_showAction;
+	QAction* m_closeAction;
+	QAction* m_playAction;
+	QAction* m_stopAction;
+	QAction* m_muteAction;
+	QAction* m_fwdAction;
+	QAction* m_bwdAction;
+	QAction* m_showAction;
 
-    QMenu*                      m_trayContextMenu;
-
-
-    QIcon                   m_playIcon;
-    QIcon                   m_pauseIcon;
-    int                     m_timeout;
-    int						m_vol_step;
-
+	QMenu* m_trayContextMenu;
 
     NotificationPluginLoader* m_plugin_loader;
 
-    bool                    m_notification_active;
-    bool                    m_playing;
-    bool                    m_mute;
-    Settings*       m_settings;
+	bool m_notification_active;
+	bool m_playing;
+	bool m_mute;
 
-    bool 		    _md_set;
-    MetaData		    _md;
-    QTimer*		    _timer;
-    bool            _mute;
-
-
-
+	bool _md_set;
+	MetaData _md;
+	QTimer* _timer;
+	bool _mute;
+	int m_vol_step;
 
 };
 

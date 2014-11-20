@@ -25,7 +25,6 @@
 #include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 
-#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/AsyncWebAccess.h"
@@ -128,6 +127,9 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	bool is_fullscreen = _settings->get(Set::Player_Fullscreen);
 	bool is_maximized = _settings->get(Set::Player_Maximized);
 
+	int volume = _settings->get(Set::Engine_Vol);
+	volumeChanged(volume);
+
     if(!is_fullscreen & !is_maximized) {
 
 		QSize size = _settings->get(Set::Player_Size);
@@ -163,7 +165,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	stopClicked(false);
 
-	REGISTER_LISTENER(Set::Lib_Path, sl_libpath_changed);
+	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
+	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
 }
 
 
@@ -374,13 +377,6 @@ void GUI_Player::last_fm_logged_in(bool b) {
 		action_ViewLFMRadio->setChecked(false);
     }
 
-	action_ViewLFMRadio->setVisible(b);
-}
-
-
-void GUI_Player::psl_lfm_activated(bool b) {
-
-	action_ViewLFMRadio->setChecked(false);
 	action_ViewLFMRadio->setVisible(b);
 }
 
@@ -629,9 +625,11 @@ void GUI_Player::setRadioMode(int radio) {
 
 
 // public slot
-void GUI_Player::psl_strrip_set_active(bool b) {
+void GUI_Player::_sl_sr_active_changed() {
 
-	if(b) {
+	bool active = _settings->get(Set::Engine_SR_Active);
+
+	if(active) {
 		btn_play->setVisible(_md.radio_mode == RadioModeOff);
 		btn_rec->setVisible(_md.radio_mode != RadioModeOff);
 	}
@@ -642,7 +640,7 @@ void GUI_Player::psl_strrip_set_active(bool b) {
 		btn_rec->setVisible(false);
 	}
 
-	emit sig_rec_button_toggled(btn_rec->isChecked() && btn_rec->isVisible());
+	btn_rec->setChecked(false);
 }
 
 
@@ -673,13 +671,7 @@ void GUI_Player::ui_loaded() {
 	action_Fullscreen->setChecked(fullscreen);
 
 	ui_playlist->resize(playlist_widget->size());
-}
 
-
-void GUI_Player::notification_changed(bool active, int timeout_ms) {
-
-    m_trayIcon->set_timeout(timeout_ms);
-    m_trayIcon->set_notification_active(active);
 }
 
 
@@ -689,7 +681,6 @@ void GUI_Player::moveEvent(QMoveEvent *e) {
 
     QPoint p= this->pos();
 	_settings->set(Set::Player_Pos, p);
-
 }
 
 

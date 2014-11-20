@@ -37,47 +37,27 @@
 
 GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 
-	m_settings = Settings::getInstance();
     m_playing = false;
     m_mute = false;
-
-	QString icon_path = Helper::getIconPath();
-    QIcon play_icon = QIcon(icon_path + "/play.png");
-	QIcon pause_icon = QIcon(icon_path + "/pause.png");
-
-
-	m_playIcon = QIcon();
-	m_pauseIcon = QIcon();
-
-	m_playIcon.addPixmap( Helper::getPixmap("play.png", QSize(24, 24), true) );
-	m_pauseIcon.addPixmap( Helper::getPixmap("pause.png", QSize(24, 24), true) );
-
-	m_playIcon.addPixmap( Helper::getPixmap("play.png", QSize(32, 32), true) );
-	m_pauseIcon.addPixmap( Helper::getPixmap("pause.png", QSize(32, 32), true) );
 
     m_vol_step = 5;
 
     m_plugin_loader = NotificationPluginLoader::getInstance();
 
-	m_notification_active = m_settings->get(Set::Notification_Show);
-	m_timeout = m_settings->get(Set::Notification_Timeout);
-    
-    _timer = new QTimer(this);
-    _timer->setInterval(300);
     _md_set = false;
     
 	m_playAction = new QAction(tr("Play"), this);
-	m_playAction->setIcon(QIcon(icon_path + "play.png"));
+	m_playAction->setIcon(Helper::getIcon("play.png"));
 	m_stopAction = new QAction(tr("Stop"), this);
-	m_stopAction->setIcon(QIcon(icon_path + "stop.png"));
+	m_stopAction->setIcon(Helper::getIcon("stop.png"));
 	m_bwdAction = new QAction(tr("Previous"), this);
-	m_bwdAction->setIcon(QIcon(icon_path + "bwd.png"));
+	m_bwdAction->setIcon(Helper::getIcon("bwd.png"));
 	m_fwdAction = new QAction(tr("Next"), this);
-	m_fwdAction->setIcon(QIcon(icon_path + "fwd.png"));
+	m_fwdAction->setIcon(Helper::getIcon("fwd.png"));
 	m_muteAction = new QAction(tr("Mute"), this);
-	m_muteAction->setIcon(QIcon(icon_path + "vol_mute.png"));
+	m_muteAction->setIcon(Helper::getIcon("vol_mute.png"));
 	m_closeAction = new QAction(tr("Close"), this);
-	m_closeAction->setIcon(QIcon(icon_path + "close.png"));
+	m_closeAction->setIcon(Helper::getIcon("close.png"));
 	m_showAction = new QAction(tr("Show"), this);
 
     m_trayContextMenu = new QMenu();
@@ -96,7 +76,7 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
 	m_trayContextMenu->setFont(f);
 
 	this->setContextMenu(m_trayContextMenu);
-	this->setIcon(m_playIcon);
+	this->setIcon(Helper::getIcon("play.png"));
 
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(play_clicked()));
     connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(fwd_clicked()));
@@ -105,7 +85,6 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
     connect(m_showAction, SIGNAL(triggered()), this, SLOT(show_clicked()));
     connect(m_closeAction, SIGNAL(triggered()), this, SLOT(close_clicked()));
     connect(m_muteAction, SIGNAL(triggered()), this, SLOT(mute_clicked()));
-    connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
 
 	REGISTER_LISTENER(Set::Player_Style, skin_changed);
 }
@@ -150,46 +129,31 @@ bool GUI_TrayIcon::event ( QEvent * e ) {
     return true;
 }
 
-void GUI_TrayIcon::timer_timed_out()
-{
-	_timer->stop();
-	if(_md_set)
-		trackChanged(_md);
-}
-
 
 void GUI_TrayIcon::show_notification (const MetaData& md) {
+
     _md = md;
     _md_set = true;
-    if(m_notification_active) {
-        Notification* n = m_plugin_loader->get_cur_plugin();
 
-        if(n) {
+	bool active = _settings->get(Set::Notification_Show);
+	if(!active) return;
 
-            n->notification_show(md);
-        }
+	Notification* n = m_plugin_loader->get_cur_plugin();
 
-        else if (this -> isSystemTrayAvailable()) {
+	if(n) {
+		n->notification_show(md);
+	}
 
-            this -> showMessage("Sayonara", md.title + tr(" by ") + md.artist,QSystemTrayIcon::Information, m_timeout);
-        }
-    }
+	else if ( isSystemTrayAvailable() ) {
 
+		QString msg = md.title + tr(" by ") + md.artist;
+		int timeout = _settings->get(Set::Notification_Timeout);
+
+		showMessage("Sayonara", msg, QSystemTrayIcon::Information, timeout);
+	}
 }
 
 
-
-void GUI_TrayIcon::trackChanged(const MetaData& md) {
-    show_notification(md);
-}
-
-void  GUI_TrayIcon::set_timeout(int timeout_ms) {
-    m_timeout = timeout_ms;
-}
-
-void  GUI_TrayIcon::set_notification_active(bool active) {
-    m_notification_active = active;
-}
 
 void GUI_TrayIcon::set_enable_play(bool b) {
 	m_playAction->setEnabled(b);
@@ -217,12 +181,14 @@ void GUI_TrayIcon::set_enable_show(bool b) {
 
 
 void GUI_TrayIcon::play_clicked() {
-    qDebug() << "tray: play clicked";
-    if(!m_playing) {
+
+	if( !m_playing ) {
 		emit sig_play_clicked();
 	}
 
-	else emit sig_pause_clicked();
+	else {
+		emit sig_pause_clicked();
+	}
 }
 
 void GUI_TrayIcon::stop_clicked() {
@@ -258,7 +224,7 @@ void GUI_TrayIcon::setMute(bool mute) {
     _mute = mute;
 
     QString suffix = "";
-	int style = m_settings->get(Set::Player_Style);
+	int style = _settings->get(Set::Player_Style);
 
     if(style == 1) {
         suffix = "_dark";
@@ -280,18 +246,18 @@ void GUI_TrayIcon::setPlaying(bool play) {
     m_playing = play;
 
 	if(play) {
-		setIcon(m_playIcon);
-		m_playAction->setIcon(m_pauseIcon);
+		setIcon(Helper::getIcon("play.png"));
+		m_playAction->setIcon(Helper::getIcon("pause.png"));
 		m_playAction->setText(tr("Pause"));
 	}
+
 	else {
-		setIcon(m_pauseIcon);
-		m_playAction->setIcon(m_playIcon);
+		setIcon(Helper::getIcon("pause.png"));
+		m_playAction->setIcon(Helper::getIcon("play.png"));
 		m_playAction->setText(tr("Play"));
 	}
 }
 
 int GUI_TrayIcon::get_vol_step() {
 	return m_vol_step;
-
 }

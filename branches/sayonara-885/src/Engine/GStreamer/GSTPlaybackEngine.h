@@ -46,7 +46,7 @@ class GSTPlaybackEngine : public Engine {
 
 public:
 
-	GSTPlaybackEngine();
+	GSTPlaybackEngine(QObject* parent=0);
 	virtual ~GSTPlaybackEngine();
 
 
@@ -60,8 +60,6 @@ public:
 
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
-
-	void		psl_new_stream_connection();
 
 
 	MyCaps* get_caps();
@@ -105,7 +103,6 @@ public slots:
 	virtual void change_track(const QString&, int pos_sec=-1, bool start_play=true );
 
 	virtual void eq_changed(int, int);
-	virtual void eq_enable(bool);
 
 	virtual void psl_set_speed(float f);
 

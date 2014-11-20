@@ -41,7 +41,7 @@
 
 namespace Helper{
 
-	QString cvtMsecs2TitleLengthString(quint64 msec, bool empty_zero = false, bool colon=true, bool show_days=true);
+	QString cvt_ms_to_string(quint64 msec, bool empty_zero = false, bool colon=true, bool show_days=true);
 	QString cvtQString2FirstUpper(const QString& str);
 	QString calc_filesize_str(quint64 filesize);
 

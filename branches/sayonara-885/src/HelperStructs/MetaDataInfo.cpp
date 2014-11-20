@@ -227,7 +227,7 @@ QString MetaDataInfo::calc_tracknum_str( quint16 tracknum ){
 }
 
 void MetaDataInfo::insert_playing_time(quint64 len){
-	QString str = Helper::cvtMsecs2TitleLengthString(len);
+	QString str = Helper::cvt_ms_to_string(len);
 	_info.insert(Info_PlayingTime, str);
 }
 

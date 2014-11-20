@@ -112,7 +112,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
                  case COL_ALBUM_NAME:
                      return album.name;
                  case COL_ALBUM_DURATION:
-                    return Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000, true, false);
+					return Helper::cvt_ms_to_string(album.length_sec * 1000, true, false);
                  case COL_ALBUM_RATING:
                     return album.rating;
 

@@ -386,7 +386,8 @@ void PlaylistHandler::psl_move_rows(const QList<int>& rows, int tgt) {
 
 
 void PlaylistHandler::psl_playlist_mode_changed() {
-
+	PlaylistMode plm = _settings->get(Set::PL_Mode);
+	_playlist->set_playlist_mode(plm);
 }
 
 

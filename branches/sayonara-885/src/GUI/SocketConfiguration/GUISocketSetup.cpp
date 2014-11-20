@@ -30,17 +30,16 @@
 
 
 GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) :
-	QDialog(parent) ,
+	SayonaraDialog(parent),
 	Ui::SocketSetupDialog(){
 
 	setupUi(this);
 
 	bool active;
 
-	_db = Settings::getInstance();
-	_socket_from = _db->get(Set::Socket_From);
-	_socket_to =_db->get(Set::Socket_To);
-	active = _db->get(Set::Socket_Active);
+	_socket_from = _settings->get(Set::Socket_From);
+	_socket_to =_settings->get(Set::Socket_To);
+	active = _settings->get(Set::Socket_Active);
 
 	if(_socket_from == 0 ||  _socket_from > 65535) _socket_from = 1024;
 	if(_socket_to == 0 ||  _socket_to > 65535) _socket_to = 1034;
@@ -63,19 +62,21 @@ GUI_SocketSetup::~GUI_SocketSetup() {
 
 void GUI_SocketSetup::_sl_start_changed(int val) {
 
-	if(val < 65525)
+	if(val < 65525){
 		sb_increment->setValue(val + 10);
+	}
 
-	else
+	else{
 		sb_increment->setValue(65535);
+	}
 }
 
 
 void GUI_SocketSetup::_sl_ok_pressed() {
 
-	_db->set(Set::Socket_Active, cb_activate->isChecked());
-	_db->set(Set::Socket_From, sb_start->value());
-	_db->set(Set::Socket_To, sb_increment->value());
+	_settings->set(Set::Socket_Active, cb_activate->isChecked());
+	_settings->set(Set::Socket_From, sb_start->value());
+	_settings->set(Set::Socket_To, sb_increment->value());
 
     hide();
     close();

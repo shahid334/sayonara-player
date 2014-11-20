@@ -29,7 +29,8 @@
 
 
 LFMLoginThread::LFMLoginThread(QObject *parent) :
-    QThread(parent)
+	QThread(parent),
+	SayonaraClass()
 {
 }
 
@@ -63,9 +64,7 @@ bool LFMLoginThread::get_token() {
 
 bool LFMLoginThread::request_authorization() {
 
-
     if(!get_token()) return false;
-
 
     UrlParams signature_data;
         signature_data["api_key"] = LFM_API_KEY;
@@ -90,13 +89,21 @@ bool LFMLoginThread::request_authorization() {
 
 void LFMLoginThread::run() {
 
-    _login_info.logged_in = false;
+	_login_info.logged_in = false;
+	_login_info.session_key = "";
+	_login_info.subscriber = false;
+
+	QStringList login = _settings->get(Set::LFM_Login);
+	if(login.size() < 2){
+		qDebug() << "LastFM: No valid login data";
+		return;
+	}
 
     UrlParams signature_data;
         signature_data["api_key"] = LFM_API_KEY;
         signature_data["method"] = "auth.getMobileSession";
-        signature_data["password"] = _password;
-        signature_data["username"] = _username;
+		signature_data["password"] = login[1];
+		signature_data["username"] = login[0];
 
 
     string post_data;
@@ -105,12 +112,8 @@ void LFMLoginThread::run() {
 
     bool success = lfm_wa_call_post_url_https(url, post_data, response);
     if(!success) {
-        qDebug() << "get session: no success!";
+		qDebug() << "LastFM: Cannot login";
         qDebug() << response;
-        _login_info.logged_in = false;
-        _login_info.session_key = "";
-        _login_info.subscriber = false;
-
     }
 
     else {
@@ -122,12 +125,6 @@ void LFMLoginThread::run() {
     }
 }
 
-
-void LFMLoginThread::setup_login_thread(QString username, QString password) {
-
-    _username = username;
-    _password = password;
-}
 
 LFMLoginStuff LFMLoginThread::getLoginStuff() {
     return _login_info;

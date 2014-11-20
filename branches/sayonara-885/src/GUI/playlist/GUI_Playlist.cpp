@@ -30,7 +30,6 @@
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CustomMimeData.h"
@@ -45,14 +44,10 @@
 #include <QKeyEvent>
 #include <QFileDialog>
 #include <QScrollBar>
-#include <QMacStyle>
-#include <QStyleFactory>
 #include <QMessageBox>
 #include <QTextEdit>
 #include <QAction>
 #include <QMenu>
-#include <QUrl>
-#include <QFileInfo>
 
 
 // CTOR
@@ -108,10 +103,10 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(listView, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
 	connect(listView, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
 
-	//connect(btn_import, SIGNAL(clicked()), this, SLOT(import_button_clicked()));
 	connect(btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
 
 	REGISTER_LISTENER(Set::PL_SmallItems, _sl_change_small_playlist_items);
+	REGISTER_LISTENER(Set::PL_Mode, _sl_playlist_mode_changed);
 }
 
 
@@ -147,8 +142,7 @@ void GUI_Playlist::language_changed() {
     check_dynamic_play_button();
 }
 
-// initialize gui
-// maybe the button state (pressed/unpressed) should be loaded from db here
+
 void GUI_Playlist::initGUI() {
 
     btn_append->setIcon(Helper::getIcon("append.png"));
@@ -161,7 +155,8 @@ void GUI_Playlist::initGUI() {
     btn_gapless->setIcon(Helper::getIcon("gapless.png"));
 
     btn_rep1->setVisible(false);
-	set_total_time_label();
+
+	lab_totalTime->setAccessibleDescription("");
 }
 
 
@@ -194,22 +189,23 @@ void GUI_Playlist::metadata_dropped(const MetaDataList& v_md, int row) {
 void GUI_Playlist::fillPlaylist(const MetaDataList& v_metadata, int cur_play_idx, PlaylistType playlist_type) {
 
 	listView->fill(v_metadata, cur_play_idx);
-    _total_msecs = 0;
-    _playlist_type= playlist_type;
-    set_playlist_type(_playlist_type);
+
+	qint64 dur_ms = 0;
+	_playlist_type = playlist_type;
 
 	foreach(MetaData md, v_metadata) {
-        _total_msecs += md.length_ms;
+		dur_ms += md.length_ms;
     }
 
-    set_total_time_label();
+	set_total_time_label(dur_ms);
+	set_playlist_type(playlist_type);
 }
 
 // private SLOT: clear button pressed
 void GUI_Playlist::clear_playlist_slot() {
 
-    _total_msecs = 0;
 	lab_totalTime->setText(tr("Playlist empty"));
+	lab_totalTime->setAccessibleDescription("");
 	listView->clear();
 
     emit sig_cleared();
@@ -224,7 +220,8 @@ void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_r
 	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
     _info_dialog->setMetaData(v_md);
 
-	_info_dialog->set_tag_edit_visible(_playlist_type == PlaylistTypeStd);
+	_info_dialog->set_tag_edit_visible( _playlist_type == PlaylistTypeStd );
+
     emit sig_selection_changed(sel_rows);
 }
 
@@ -245,30 +242,34 @@ void GUI_Playlist::track_changed(int row) {
 }
 
 
-
-// GUI -> data
+// internal gui slot
 void GUI_Playlist::playlist_mode_changed() {
 
 	parentWidget()->setFocus();
 
-	_playlist_mode.append = btn_append->isChecked();
-	_playlist_mode.rep1 = btn_rep1->isChecked();
-	_playlist_mode.repAll = btn_repAll->isChecked();
-	_playlist_mode.shuffle = btn_shuffle->isChecked();
-	_playlist_mode.dynamic = btn_dynamic->isChecked();
-	_playlist_mode.gapless = btn_gapless->isChecked();
+	PlaylistMode plm;
 
+	plm.append = btn_append->isChecked();
+	plm.rep1 = btn_rep1->isChecked();
+	plm.repAll = btn_repAll->isChecked();
+	plm.shuffle = btn_shuffle->isChecked();
+	plm.dynamic = btn_dynamic->isChecked();
+	plm.gapless = btn_gapless->isChecked();
+
+	if(plm == _playlist_mode){
+		return;
+	}
+
+	plm = _playlist_mode;
 	_settings->set(Set::PL_Mode, _playlist_mode);
-
-	emit sig_save_playlist("bla");
 }
 
-// data -> GUI
-void GUI_Playlist::change_playlist_mode(const PlaylistMode& mode){
+// setting slot
+void GUI_Playlist::_sl_playlist_mode_changed(){
 
-	if(mode == _playlist_mode) return;
+	PlaylistMode plm = _settings->get(Set::PL_Mode);
 
-	_playlist_mode = mode;
+	if(plm == _playlist_mode) return;
 
 	btn_append->setChecked(_playlist_mode.append);
 	btn_rep1->setChecked(_playlist_mode.rep1);
@@ -290,12 +291,11 @@ void GUI_Playlist::psl_edit_tracks() {
     _info_dialog->show(TAB_EDIT);
 }
 
+
 void GUI_Playlist::psl_info_tracks() {
     if(!_info_dialog) return;
     _info_dialog->show(TAB_INFO);
 }
-
-
 
 
 void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event) {
@@ -306,6 +306,7 @@ void GUI_Playlist::dragLeaveEvent(QDragLeaveEvent* event) {
 void GUI_Playlist::dragEnterEvent(QDragEnterEvent* event) {
     event->accept();
 }
+
 
 void GUI_Playlist::dragMoveEvent(QDragMoveEvent* event) {
 	if(event->pos().y() < listView->y()) listView->scrollUp();
@@ -319,10 +320,18 @@ void GUI_Playlist::dropEvent(QDropEvent* event) {
 }
 
 
+void GUI_Playlist::set_total_time_label(qint64 dur_ms) {
 
-void GUI_Playlist::set_total_time_label() {
+	QString text = "";
+	QString time_str;
 
-    QString text = "";
+	if(dur_ms > 0){
+		time_str = Helper::cvt_ms_to_string(dur_ms, true, false);
+	}
+
+	else{
+		time_str = lab_totalTime->accessibleDescription();
+	}
 
 	if(_playlist_type == PlaylistTypeStream) {
 
@@ -330,19 +339,25 @@ void GUI_Playlist::set_total_time_label() {
         return;
     }
 
-	lab_totalTime->setContentsMargins(0, 2, 0, 2);
-
 	int n_rows = listView->get_num_rows();
     QString playlist_string = text + QString::number(n_rows);
 
-    if(n_rows == 1)	playlist_string += tr(" Track - ");
-    else playlist_string += tr(" Tracks - ");
+	if(n_rows == 1)	{
+		playlist_string += " " + tr("Track");
+	}
 
-	playlist_string += Helper::cvtMsecs2TitleLengthString(_total_msecs, true, false);
+	else {
+		playlist_string += " " + tr("Tracks");
+	}
+
+	if( !time_str.isEmpty() ){
+		playlist_string += " - " + time_str;
+		lab_totalTime->setAccessibleDescription(time_str);
+	}
 
 	lab_totalTime->setText(playlist_string);
+	lab_totalTime->setContentsMargins(0, 2, 0, 2);
 }
-
 
 
 void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
@@ -368,7 +383,6 @@ void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
 }
 
 
-
 void GUI_Playlist::_sl_change_small_playlist_items() {
 
 	bool small_items = _settings->get(Set::PL_SmallItems);
@@ -385,9 +399,4 @@ void GUI_Playlist::btn_numbers_changed(bool b) {
 
 void GUI_Playlist::rows_removed(const QList<int>& lst, bool select_next_row) {
     emit sig_rows_removed(lst, select_next_row);
-}
-
-
-void GUI_Playlist::download_progress(int progress){
-
 }

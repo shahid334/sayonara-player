@@ -29,12 +29,12 @@
 #ifndef GUI_LASTFM_H_
 #define GUI_LASTFM_H_
 
-#include <QDialog>
-#include <QObject>
+
 #include <QString>
 #include "GUI/ui_GUI_LastFM_Dialog.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Dialog{
+class GUI_LastFM : public SayonaraDialog, private Ui_GUI_LastFM_Dialog{
 
 	Q_OBJECT
 
@@ -65,10 +65,6 @@ public:
 
 	public:
 		void set_username_and_password(QString username, QString password);
-
-
-
-
 
 };
 

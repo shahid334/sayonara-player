@@ -121,14 +121,13 @@ static uchar data[TCP_BUFFER_SIZE];
 
 GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 
-	//qDebug() << "Send stream data";
-
 	GstSample* sample;
 	GstBuffer* buffer;
 	gsize size = 0;
 	gsize size_new = 0;
 
 	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) p;
+	return GST_FLOW_OK;
 
 	sample = gst_app_sink_pull_sample(GST_APP_SINK(sink));
 	if(!sample) {
@@ -241,3 +240,5 @@ gchar* GSTAbstractPipeline::get_uri() {
 void GSTAbstractPipeline::set_fd(int fd){
 
 }
+
+

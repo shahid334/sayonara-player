@@ -9,10 +9,22 @@
 	call: REGISTER_LISTENER(Set::LFM_Active, lfm_active_changed);
 	where lfm_active_changed() is a private Slot in that class;
 */
-#define REGISTER_LISTENER(setting_key, fn) \
+
+#define __REGISTER_LISTENER(setting_key, fn) \
 	SettingNotifier<setting_key##_t>* v_##fn = SettingNotifier<setting_key##_t>::getInstance();\
-	connect(v_##fn, SIGNAL(sig_value_changed()), this, SLOT( fn() )); \
-	fn()
+	connect(v_##fn, SIGNAL(sig_value_changed()), this, SLOT( fn() ))
+
+#define REGISTER_LISTENER(setting_key, fn) \
+	do { \
+		__REGISTER_LISTENER(setting_key, fn); \
+		fn(); \
+	} while(0)
+
+#define REGISTER_LISTENER_NO_CALL(setting_key, fn) \
+	do { \
+		__REGISTER_LISTENER(setting_key, fn); \
+	} while(0)
+
 
 
 

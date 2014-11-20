@@ -77,7 +77,7 @@ QString cvtNum2String(T num, int digits) {
 	return str;
 }
 
-QString Helper::cvtMsecs2TitleLengthString(quint64 msec, bool empty_zero, bool colon, bool show_days) {
+QString Helper::cvt_ms_to_string(quint64 msec, bool empty_zero, bool colon, bool show_days) {
 
 		if(msec == 0 && empty_zero){
 			return "";

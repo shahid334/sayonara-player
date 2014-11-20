@@ -25,12 +25,10 @@
 #ifndef GUI_STREAMRECORDER_H_
 #define GUI_STREAMRECORDER_H_
 
-#include <QWidget>
-#include <QDialog>
 #include "GUI/ui_GUI_StreamRecorder.h"
-#include "Settings/Settings.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_StreamRecorder : public QDialog, private Ui_GUI_StreamRecorder{
+class GUI_StreamRecorder : public SayonaraDialog, private Ui_GUI_StreamRecorder{
 
 	Q_OBJECT
 
@@ -55,8 +53,6 @@ public:
 		virtual ~GUI_StreamRecorder();
 
 	private:
-
-		Settings* _settings;
 
 		QString _path;
 		bool	_is_active;

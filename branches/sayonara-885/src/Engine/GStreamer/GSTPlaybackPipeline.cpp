@@ -74,6 +74,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		if(!create_element(&_resampler, "audioresample", "lame_resampler")) break;
 		if(!create_element(&_lame_audio_convert, "audioconvert", "lame_audioconvert")) break;
 		if(!create_element(&_app_sink, "appsink", "lame_appsink")) break;
+		if(!create_element(&_fake_sink, "fakesink", "fakesink")) break;
 
 		gst_object_ref(_audio_src);
 
@@ -174,6 +175,9 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 	qDebug() << "****Pipeline: constructor finished: " << status;
 
 	REGISTER_LISTENER(Set::Engine_Vol, _sl_vol_changed);
+	REGISTER_LISTENER(Set::BroadCast_Active, _sl_broadcast_changed);
+	REGISTER_LISTENER(Set::Engine_ShowLevel, _sl_show_level_changed);
+	REGISTER_LISTENER(Set::Engine_ShowSpectrum, _sl_show_spectrum_changed);
 }
 
 
@@ -294,9 +298,33 @@ void GSTPlaybackPipeline::_sl_vol_changed() {
 	g_object_set(G_OBJECT(_volume), "volume", vol_val, NULL);
 }
 
+
 void GSTPlaybackPipeline::unmute() {
 
 	g_object_set(G_OBJECT(_volume), "mute", FALSE, NULL);
+}
+
+void GSTPlaybackPipeline::_sl_broadcast_changed(){
+return;
+	GstState old_state;
+	gst_element_get_state(GST_ELEMENT(_pipeline), &old_state, NULL, GST_CLOCK_TIME_NONE);
+
+	if(old_state == GST_STATE_PLAYING){
+		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
+	}
+
+	bool active = _settings->get(Set::BroadCast_Active);
+	if(!active){
+		gst_element_unlink(_lame_queue, _lame_audio_convert);
+		gst_element_link(_lame_queue, _fake_sink);
+	}
+
+	else{
+		gst_element_unlink(_lame_queue, _fake_sink);
+		gst_element_link(_lame_queue, _lame_audio_convert);
+	}
+
+	gst_element_set_state(GST_ELEMENT(_pipeline), old_state);
 }
 
 bool GSTPlaybackPipeline::_seek(gint64 ns){
@@ -388,7 +416,10 @@ void GSTPlaybackPipeline::set_speed(float f) {
 	}
 }
 
-void GSTPlaybackPipeline::enable_level(bool b) {
+
+void GSTPlaybackPipeline::_sl_show_level_changed() {
+
+	bool active = _settings->get(Set::Engine_ShowLevel);
 
 	GstState state;
 	gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
@@ -397,7 +428,7 @@ void GSTPlaybackPipeline::enable_level(bool b) {
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 	}
 
-	if(!b) {
+	if(!active) {
 		gst_element_unlink_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
 		gst_element_link_many(_level_queue, _level_sink, NULL);
 	}
@@ -407,13 +438,13 @@ void GSTPlaybackPipeline::enable_level(bool b) {
 		gst_element_link_many(_level_queue, _level_audio_convert, _level, _level_sink, NULL);
 	}
 
-	if(state == GST_STATE_PLAYING){
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-	}
+	gst_element_set_state(GST_ELEMENT(_pipeline), state);
 }
 
 
-void GSTPlaybackPipeline::enable_spectrum(bool b) {
+void GSTPlaybackPipeline::_sl_show_spectrum_changed() {
+
+	bool active = _settings->get(Set::Engine_ShowSpectrum);
 
 	GstState state;
 	gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
@@ -422,18 +453,19 @@ void GSTPlaybackPipeline::enable_spectrum(bool b) {
 		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 	}
 
-	if(!b) {
+	if(!active) {
 		gst_element_unlink_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 		gst_element_link_many(_spectrum_queue, _spectrum_sink, NULL);
 	}
+
 	else{
 		gst_element_unlink_many(_spectrum_queue, _spectrum_sink, NULL);
 		gst_element_link_many(_spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink, NULL);
 	}
 
-	if(state == GST_STATE_PLAYING){
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
-	}
+
+	gst_element_set_state(GST_ELEMENT(_pipeline), state);
+
 }
 
 
@@ -445,11 +477,6 @@ bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 	gst_element_set_state(_pipeline, GST_STATE_PAUSED);
 
 	return true;
-}
-
-void GSTPlaybackPipeline::set_new_stream_connection(){
-	//g_object_set(G_OBJECT(_app_sink), "emit-signals", true, NULL );
-	//g_signal_connect (_app_sink, "new-sample", G_CALLBACK(PipelineCallbacks::new_buffer), this);
 }
 
 

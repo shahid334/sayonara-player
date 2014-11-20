@@ -25,8 +25,9 @@
 
 #include <QThread>
 
-#include <QString>
+
 #include "HelperStructs/globals.h"
+#include "HelperStructs/SayonaraClass.h"
 
 struct LFMLoginStuff{
     QString token;
@@ -36,7 +37,7 @@ struct LFMLoginStuff{
     QString error;
 };
 
-class LFMLoginThread : public QThread
+class LFMLoginThread : public QThread, SayonaraClass
 {
     Q_OBJECT
 
@@ -48,15 +49,13 @@ protected:
     void run();
 
 public:
-    void setup_login_thread(QString username, QString password);
+
     LFMLoginStuff getLoginStuff();
     bool get_token();
     bool request_authorization();
 
 
 private:
-    QString _username;
-    QString _password;
 
     LFMLoginStuff _login_info;
 

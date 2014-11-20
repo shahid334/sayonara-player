@@ -27,8 +27,7 @@
 #include <QMetaType>
 
 struct EQ_Setting{
-	
-	
+		
 	QList<double> settings;
 	QString name;
 
@@ -74,6 +73,12 @@ struct EQ_Setting{
 		}
 
 		return str;
+	}
+
+	bool operator==(const EQ_Setting& s){
+		QString str = toString();
+		QString other = s.toString();
+		return ( str.compare(other) == 0 );
 	}
 };
 

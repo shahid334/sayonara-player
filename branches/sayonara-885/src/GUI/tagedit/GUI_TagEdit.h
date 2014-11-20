@@ -37,19 +37,12 @@
 #define TAG_DISC QString("<d>")
 
 
-
 #include "GUI/ui_GUI_TagEdit.h"
 #include "HelperStructs/MetaData.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
-
-#include <QObject>
-#include <QWidget>
-#include <QList>
-#include <QString>
-#include <QStringList>
+#include "HelperStructs/SayonaraClass.h"
 
 
-class GUI_TagEdit : public QWidget, private Ui::GUI_TagEdit{
+class GUI_TagEdit : public SayonaraWidget, private Ui::GUI_TagEdit{
 
 	Q_OBJECT
 

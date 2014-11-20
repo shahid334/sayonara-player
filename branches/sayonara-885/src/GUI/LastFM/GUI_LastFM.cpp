@@ -30,14 +30,13 @@
 #include "GUI/ui_GUI_LastFM_Dialog.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include "Settings/Settings.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
 #include <QMessageBox>
 
 
 GUI_LastFM::GUI_LastFM(QWidget* parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui_GUI_LastFM_Dialog() {
 
 	init();
@@ -46,7 +45,7 @@ GUI_LastFM::GUI_LastFM(QWidget* parent) :
 
 
 GUI_LastFM::GUI_LastFM(QWidget* parent, QString username, QString password) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui_GUI_LastFM_Dialog() {
 
 	setupUi(this);
@@ -61,20 +60,18 @@ GUI_LastFM::GUI_LastFM(QWidget* parent, QString username, QString password) :
 void GUI_LastFM::init(){
 	setupUi(this);
 
-	Settings* settings = Settings::getInstance();
-
 	bool checked;
-	bool enabled = settings->get(Set::LFM_Active);
+	bool enabled = _settings->get(Set::LFM_Active);
 
 	cb_activate->setChecked(enabled);
 	setLFMActive(enabled);
 
     lab_image->setPixmap(Helper::getPixmap("lastfm_logo.jpg"));
 
-	checked = settings->get(Set::LFM_Corrections);
+	checked = _settings->get(Set::LFM_Corrections);
 	cb_correct_id3->setChecked(checked);
 
-	checked = settings->get(Set::LFM_ShowErrors);
+	checked = _settings->get(Set::LFM_ShowErrors);
 	cb_error_messages->setChecked(checked);
 
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_button_pressed()));
@@ -108,7 +105,6 @@ void GUI_LastFM::save_button_pressed() {
 
 	if(tf_username->text().length() < 3) return;
 	if(tf_password->text().length() < 3) return;
-    Settings* settings = Settings::getInstance();
 
 	QString user, password;
 	LastFM::get_login(user, password);
@@ -117,10 +113,12 @@ void GUI_LastFM::save_button_pressed() {
 
 		QStringList user_pw;
 		user_pw << tf_username->text() << tf_password->text();
-		settings->set(Set::LFM_Login, user_pw);
+		_settings->set(Set::LFM_Login, user_pw);
     }
 
-	settings->set( Set::LFM_ShowErrors, cb_error_messages->isChecked() );
+	_settings->set( Set::LFM_Active, cb_activate->isChecked() );
+	_settings->set( Set::LFM_Corrections, cb_correct_id3->isChecked() );
+	_settings->set( Set::LFM_ShowErrors, cb_error_messages->isChecked() );
 
     hide();
     close();
@@ -162,5 +160,5 @@ void GUI_LastFM::setLFMActive(bool enabled) {
 
 void GUI_LastFM::cb_activate_toggled(bool b) {
 	setLFMActive(b);
-	Settings::getInstance()->set(Set::LFM_Active, b);
+
 }

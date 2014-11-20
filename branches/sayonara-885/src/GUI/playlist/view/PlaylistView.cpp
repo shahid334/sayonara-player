@@ -248,7 +248,11 @@ void PlaylistView::init_rc_menu() {
 }
 
 void PlaylistView::set_context_menu_actions(int actions) {
-    if(!_rc_menu) init_rc_menu();
+
+	if(!_rc_menu) {
+		init_rc_menu();
+	}
+
     _rc_menu->setup_entries(actions);
 }
 

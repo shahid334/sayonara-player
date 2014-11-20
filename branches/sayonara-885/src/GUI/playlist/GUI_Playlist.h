@@ -36,98 +36,90 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
 
-#include <QMainWindow>
-#include <QKeyEvent>
 #include <QTextEdit>
-#include <QList>
 #include <QFocusEvent>
+#include <QKeyEvent>
 
 
-	class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
-	{
-		Q_OBJECT
+class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
+{
+	Q_OBJECT
 
-		public:
-			GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog);
-			~GUI_Playlist();
+	public:
+		GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog);
+		~GUI_Playlist();
 
-            void dragEnterEvent(QDragEnterEvent* event);
-            void dragLeaveEvent(QDragLeaveEvent* event);
-            void dropEvent(QDropEvent* event);
-            void dragMoveEvent(QDragMoveEvent* event);
+		void dragEnterEvent(QDragEnterEvent* event);
+		void dragLeaveEvent(QDragLeaveEvent* event);
+		void dropEvent(QDropEvent* event);
+		void dragMoveEvent(QDragMoveEvent* event);
 
-		signals:
-            void sig_cur_idx_changed(int);
-            void sig_selection_changed(const QList<int>&);
+	signals:
+		void sig_cur_idx_changed(int);
+		void sig_selection_changed(const QList<int>&);
 
-			void sig_save_playlist(const QString&);
+		void sig_save_playlist(const QString&);
 
-            void sig_rows_moved(const QList<int>&, int);
-            void sig_tracks_dropped(const MetaDataList&, int);
-            void sig_rows_removed(const QList<int>&, bool);
-            void sig_cleared();
-			void sig_gapless(bool);
+		void sig_rows_moved(const QList<int>&, int);
+		void sig_tracks_dropped(const MetaDataList&, int);
+		void sig_rows_removed(const QList<int>&, bool);
+		void sig_cleared();
+		void sig_gapless(bool);
 
-			void search_similar_artists(const QString&);
-            void sig_no_focus();
-			void sig_close_connection(int);
-			void sig_accept_connection(bool);
+		void search_similar_artists(const QString&);
+		void sig_no_focus();
+		void sig_close_connection(int);
+		void sig_accept_connection(bool);
 
 
-		public slots:
-            void fillPlaylist(const MetaDataList&, int, PlaylistType);
-			void track_changed(int);
+	public slots:
+		void fillPlaylist(const MetaDataList&, int, PlaylistType);
+		void track_changed(int);
 
-            void library_path_changed(QString);
-            void set_playlist_type(PlaylistType playlist_type);
-			void change_playlist_mode(const PlaylistMode& mode);
+		void library_path_changed(QString);
+		void set_playlist_type(PlaylistType playlist_type);
 
-            void language_changed();
-            void download_progress(int);
-
+		void language_changed();
 
 
 	private slots:
 
-            void sel_changed(const MetaDataList&, const QList<int>&);
-            void double_clicked(int);
-            void clear_playlist_slot();
-			void playlist_mode_changed();
-            void rows_moved(const QList<int>&, int);
+		void sel_changed(const MetaDataList&, const QList<int>&);
+		void double_clicked(int);
+		void clear_playlist_slot();
+		void playlist_mode_changed();
+		void rows_moved(const QList<int>&, int);
 
-            void psl_info_tracks();
-            void psl_edit_tracks();
+		void psl_info_tracks();
+		void psl_edit_tracks();
 
-            void btn_numbers_changed(bool);
-            void metadata_dropped(const MetaDataList&, int);
-            void rows_removed(const QList<int>&, bool select_next_row);
-            void no_focus();
+		void btn_numbers_changed(bool);
+		void metadata_dropped(const MetaDataList&, int);
+		void rows_removed(const QList<int>&, bool select_next_row);
+		void no_focus();
 
-			void _sl_change_small_playlist_items();
+		void _sl_change_small_playlist_items();
+		void _sl_playlist_mode_changed();
 
-		private:
+	private:
 
-			QWidget*						_parent;
-			GUI_InfoDialog*					_info_dialog;
+		QWidget*			_parent;
+		GUI_InfoDialog*		_info_dialog;
+		PlaylistMode		_playlist_mode;
+		PlaylistType		_playlist_type;
 
-			PlaylistMode					_playlist_mode;
+		void initGUI();
 
-            PlaylistType _playlist_type;
-            qint64      _total_msecs;
+		void set_total_time_label(qint64 dur_ms=0);
+		void check_dynamic_play_button();
+		void prepare_info();
 
+		QStringList _connections;
 
-			void initGUI();
-
-            void set_total_time_label();
-			void check_dynamic_play_button();
-			void prepare_info();
-
-			QStringList _connections;
-
-    protected:
-            void changeEvent(QEvent* e);
-            void resizeEvent(QResizeEvent *e);
-            void focusInEvent(QFocusEvent *e);
+	protected:
+		void changeEvent(QEvent* e);
+		void resizeEvent(QResizeEvent *e);
+		void focusInEvent(QFocusEvent *e);
 
 
 };

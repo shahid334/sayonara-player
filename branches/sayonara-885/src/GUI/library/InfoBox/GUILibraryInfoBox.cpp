@@ -83,7 +83,7 @@ void GUI_Library_Info_Box::psl_refresh() {
         _filesize += md.filesize;
 	}
 
-	_duration_string = Helper::cvtMsecs2TitleLengthString(_duration_ms, false);
+	_duration_string = Helper::cvt_ms_to_string(_duration_ms, false);
     _filesize_str = Helper::calc_filesize_str(_filesize);
 
 	if( !lfm_active ) {

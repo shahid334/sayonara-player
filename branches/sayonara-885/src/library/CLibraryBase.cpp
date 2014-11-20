@@ -31,18 +31,18 @@
 #include <QListWidget>
 
 CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
-    QObject(parent)
+	QObject(parent),
+	SayonaraClass()
 {
     _main_window = main_window;
 
-    Settings* settings = Settings::getInstance();
     _db = CDatabaseConnector::getInstance();
 
-	m_library_path = settings->get(Set::Lib_Path);
+	_library_path = _settings->get(Set::Lib_Path);
 
     _reload_thread = new ReloadThread();
 
-	QList<int> sortings = settings->get(Set::Lib_Sorting);
+	QList<int> sortings = _settings->get(Set::Lib_Sorting);
     _artist_sortorder = (SortOrder) sortings[0];
     _album_sortorder = (SortOrder) sortings[1];
     _track_sortorder = (SortOrder) sortings[2];
@@ -54,6 +54,9 @@ CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
     connect(_reload_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
     connect(_reload_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
     connect(_reload_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
+
+	REGISTER_LISTENER(Set::Lib_Sorting, _sl_sortorder_changed);
+	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 }
 
 
@@ -67,13 +70,12 @@ void CLibraryBase::emit_stuff() {
 
 
 
-void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so) {
+void CLibraryBase::_sl_sortorder_changed() {
 
-	//qDebug() << "Library: Sortorder changed";
-
-    QList<int> lst;
-    lst << artist_so << album_so << track_so;
-	Settings::getInstance()->set(Set::Lib_Sorting, lst);
+	QList<int> lst = _settings->get(Set::Lib_Sorting);
+	SortOrder artist_so = (SortOrder) lst[0];
+	SortOrder album_so = (SortOrder) lst[1];
+	SortOrder track_so = (SortOrder) lst[2];
 
     // artist sort order has changed
     if(artist_so != _artist_sortorder) {
@@ -379,12 +381,9 @@ void CLibraryBase::psl_change_id3_tags(const QList<int>& lst) {
 }
 
 
-
-void CLibraryBase::setLibraryPath(QString path) {
-
-    m_library_path = path;
+void CLibraryBase::_sl_libpath_changed(){
+	_library_path = _settings->get(Set::Lib_Path);
 }
-
 
 
 void CLibraryBase::psl_prepare_artist_for_playlist(int idx) {

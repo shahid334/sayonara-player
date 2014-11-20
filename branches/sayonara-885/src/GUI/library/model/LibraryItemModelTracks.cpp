@@ -81,7 +81,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( md.artist );
 
 			 case COL_LENGTH:
-				 return QVariant( Helper::cvtMsecs2TitleLengthString(md.length_ms)  );
+				 return QVariant( Helper::cvt_ms_to_string(md.length_ms)  );
 
 			 case COL_ALBUM:
                 return QVariant(Helper::get_album_w_disc(md));

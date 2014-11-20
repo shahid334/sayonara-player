@@ -99,8 +99,8 @@ void PlayerPluginHandler::hide_all() {
    _cur_shown_plugin = NULL;
 
    foreach(PlayerPlugin* p, _plugins) {
-       if(!p->isHidden())
-            p->close();
+	   if(!p->isHidden())
+			p->close();
    }
 
    emit sig_hide_all_plugins();

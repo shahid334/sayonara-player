@@ -48,10 +48,12 @@ static void notification_closed(gpointer notification, void* data){
 
 void LN_Notification::notification_show(const MetaData& md) {
 
-    if(!_initialized) return;
+	if(!_initialized) {
+		return;
+	}
 
 	CoverLocation cl = CoverLocation::get_cover_location(md);
-	Settings* settings = Settings::getInstance();
+
     QString pixmap_path;
 
     not_close();
@@ -68,7 +70,7 @@ void LN_Notification::notification_show(const MetaData& md) {
 		bool success;
         QPixmap p(cl.cover_path);
 
-		int scale = settings->get(Set::Notification_Scale);
+		int scale = _settings->get(Set::Notification_Scale);
 
 		if(scale > 0) {
 			p = p.scaled(scale, scale, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
@@ -97,7 +99,7 @@ void LN_Notification::notification_show(const MetaData& md) {
 
    _not = n;
 
-	int timeout = settings->get(Set::Notification_Timeout);
+	int timeout = _settings->get(Set::Notification_Timeout);
 
     notify_notification_set_timeout     (n, timeout);
     notify_notification_show            (n, NULL);
