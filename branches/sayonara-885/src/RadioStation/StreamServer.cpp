@@ -26,7 +26,7 @@ StreamServer::~StreamServer(){
 }
 
 bool StreamServer::create_socket(){
-	
+
 	int status;
     int reuse_addr = 1;
 	SocketAdress srv_adress;
@@ -81,42 +81,45 @@ void StreamServer::run(){
 	SocketWriter* sw;
 	HttpAnswer answer;
 
-	while(!create_socket()){
-		msleep(1000);
-	}
 
-	while(_socket != -1){
+    qDebug() << "Start stream server";
 
-		msleep(1000);
+    while(!create_socket()){
+        msleep(1000);
+    }
 
-		sw = client_accept();
-		if(!sw) continue;
+    while(_socket != -1){
 
-		answer = sw->parse_message();
+        msleep(1000);
 
-		switch(answer){
+        sw = client_accept();
+        if(!sw) continue;
 
-			case HttpAnswerFail:
-			case HttpAnswerReject:
-				qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
-				sw->send_header(true);
-				disconnect(sw);
-				break;
+        answer = sw->parse_message();
 
-			case HttpAnswerIgnore:
-				break;
+        switch(answer){
 
-			case HttpAnswerPlaylist:
-				sw->send_playlist(_port, _md);
-				disconnect(sw);
-				break;
+            case HttpAnswerFail:
+            case HttpAnswerReject:
+                qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+                sw->send_header(true);
+                disconnect(sw);
+                break;
 
-			default:
-				sw->send_header(false);
-				qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
-				sw->change_track(_md);
-		}
-	}
+            case HttpAnswerIgnore:
+                break;
+
+            case HttpAnswerPlaylist:
+                sw->send_playlist(_port, _md);
+                disconnect(sw);
+                break;
+
+            default:
+                sw->send_header(false);
+                qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
+                sw->change_track(_md);
+        }
+    }
 
 	qDebug() << "Radio station: Bye";
 }
@@ -296,7 +299,6 @@ void StreamServer::disconnect(SocketWriter* sw){
 
 	delete sw;
 	sw = 0;
-
 }
 
 void StreamServer::disconnect_all(){
@@ -317,7 +319,15 @@ void StreamServer::stop(){
 }
 
 void StreamServer::active_changed(){
+    bool active = _settings->get(Set::BroadCast_Active);
+    if(!active) {
+        disconnect_all();
+        server_close();
+    }
 
+    else{
+        this->start();
+    }
 }
 
 void StreamServer::prompt_changed(){

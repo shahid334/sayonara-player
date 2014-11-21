@@ -124,10 +124,9 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 	GstSample* sample;
 	GstBuffer* buffer;
 	gsize size = 0;
-	gsize size_new = 0;
+    gsize size_new = 0;
 
 	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) p;
-	return GST_FLOW_OK;
 
 	sample = gst_app_sink_pull_sample(GST_APP_SINK(sink));
 	if(!sample) {
@@ -142,6 +141,7 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 	}
 
 	size = gst_buffer_get_size(buffer);
+    qDebug() << "New buffer " << size;
 	size_new = gst_buffer_extract(buffer, 0, data, size);
 	pipeline->set_data(data, size_new);
 
@@ -235,10 +235,6 @@ bool GSTAbstractPipeline::set_uri(gchar* uri) {
 
 gchar* GSTAbstractPipeline::get_uri() {
 	return _uri;
-}
-
-void GSTAbstractPipeline::set_fd(int fd){
-
 }
 
 

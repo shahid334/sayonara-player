@@ -53,7 +53,6 @@ namespace SK{
 		PL_RememberTime,
 		PL_StartPlaying,
 		PL_LastTrack,
-		PL_LastTrackPos,
 		PL_Mode,
 		PL_ShowNumbers,
 		PL_SmallItems,
@@ -70,6 +69,7 @@ namespace SK{
 		Engine_Gapless,
 		Engine_ShowSpectrum,
 		Engine_ShowLevel,
+        Engine_CurTrackPos_s,
 
 		Engine_SR_Active,
 		Engine_SR_Warning,
@@ -86,6 +86,7 @@ namespace SK{
 		BroadCast_Active,
 		Broadcast_Prompt,
 		Broadcast_Port,
+        Broadcast_Clients,
 
 		Num_Setting_Keys
 	};
@@ -97,6 +98,7 @@ class SettingKey
 
 
 #define INST(type, settingkey) typedef SettingKey<type, SK:: settingkey> settingkey##_t; const settingkey##_t settingkey
+
 
 
 namespace Set {
@@ -143,7 +145,7 @@ namespace Set {
 	INST(bool, PL_RememberTime);
 	INST(bool, PL_StartPlaying);
 	INST(int, PL_LastTrack);
-	INST(int, PL_LastTrackPos);
+
 	INST(PlaylistMode, PL_Mode);
 	INST(bool, PL_ShowNumbers);
 	INST(bool, PL_SmallItems);
@@ -155,17 +157,19 @@ namespace Set {
 
 	INST(QString, Engine_Name);
 	INST(int, Engine_Vol);
+    INST(int, Engine_CurTrackPos_s);
 	INST(int, Engine_ConvertQuality);
 	INST(QString, Engine_CovertTargetPath);
 	INST(bool, Engine_Gapless);
+    INST(bool, Engine_ShowSpectrum);
+    INST(bool, Engine_ShowLevel);
+
 
 	INST(bool, Engine_SR_Active);
 	INST(bool, Engine_SR_Warning);
 	INST(QString, Engine_SR_Path);
 	INST(bool, Engine_SR_CompleteTracks);
 	INST(bool, Engine_SR_SessionPath);
-	INST(bool, Engine_ShowSpectrum);
-	INST(bool, Engine_ShowLevel);
 
 	INST(bool, Socket_Active);
 	INST(int, Socket_From);
@@ -174,9 +178,14 @@ namespace Set {
 	INST(bool, BroadCast_Active);
 	INST(bool, Broadcast_Prompt);
 	INST(int, Broadcast_Port);
+
 }
 
 
+namespace SetNoDB{
 
+    INST(int, Broadcast_Clients);
+
+}
 
 #endif // SETTINGKEY_H

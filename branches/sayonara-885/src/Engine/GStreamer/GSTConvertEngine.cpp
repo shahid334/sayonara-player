@@ -98,7 +98,7 @@ void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_
 	_md = md;
 
 	emit sig_dur_changed(_md);
-	emit sig_pos_changed_s(0);
+    emit sig_pos_changed_s(0);
 
 	set_uri(md, &start_play);
 

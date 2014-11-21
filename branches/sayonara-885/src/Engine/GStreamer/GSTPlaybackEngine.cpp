@@ -78,7 +78,7 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 	_stream_recorder = new StreamRecorder();
 
 	int last_track_id = _settings->get(Set::PL_LastTrack);
-	int last_track_pos = _settings->get(Set::PL_LastTrackPos);
+    int last_track_pos = _settings->get(Set::Engine_CurTrackPos_s);
 
 	MetaData md_lt = CDatabaseConnector::getInstance()->getTrackById(last_track_id);
 	_last_track = new LastTrack(md_lt);
@@ -184,13 +184,13 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	emit sig_dur_changed(_md);
 	emit sig_pos_changed_s(pos_sec);
 
-	if (start_play) {
-		play();
-	}
+
+    play();
+
 
 	// pause if streamripper is not active
 
-	else if (!start_play && !(_playing_stream && _sr_active)){
+    if (!start_play && !_playing_stream){
 		pause();
     }
 }
@@ -266,6 +266,8 @@ void GSTPlaybackEngine::play() {
 	_pipeline->play();
 
 	_may_start_timer = _gapless;
+    _settings->set(Set::PL_LastTrack, _md.id);
+
 }
 
 
@@ -424,7 +426,7 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 	_last_track->filepath = _md.filepath;
 	_last_track->pos_sec = pos_sec;
 
-	Settings::getInstance()->set(Set::PL_LastTrackPos, pos_sec);
+    _settings->set(Set::Engine_CurTrackPos_s, pos_sec);
 
 	emit sig_pos_changed_s( pos_sec );
 }

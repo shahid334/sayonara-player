@@ -323,5 +323,5 @@ void GUI_Stream::play_stream(QString url, QString name) {
     }
 
     emit sig_create_playlist(v_md, true);
-    emit sig_play_track(0, 0, true);
+    //emit sig_play_track(0, 0, true);
 }

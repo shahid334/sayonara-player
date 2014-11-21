@@ -84,7 +84,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 						 _eq_queue, _volume, _audio_sink,
 						 _level_queue, _level_audio_convert, _level, _level_sink,
 						 _spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink,
-						 _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink,
+                         _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink,
 
 						 NULL);
 
@@ -102,7 +102,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		success = gst_element_link_many(_audio_convert, _equalizer, _tee, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link audio convert with tee")) break;
 
-		success = gst_element_link_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
+        success = gst_element_link_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link lame stuff")) break;
 
 		// create tee pads
@@ -175,9 +175,9 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 	qDebug() << "****Pipeline: constructor finished: " << status;
 
 	REGISTER_LISTENER(Set::Engine_Vol, _sl_vol_changed);
-	REGISTER_LISTENER(Set::BroadCast_Active, _sl_broadcast_changed);
 	REGISTER_LISTENER(Set::Engine_ShowLevel, _sl_show_level_changed);
 	REGISTER_LISTENER(Set::Engine_ShowSpectrum, _sl_show_spectrum_changed);
+    REGISTER_LISTENER(SetNoDB::Broadcast_Clients, _sl_broadcast_clients_changed);
 }
 
 
@@ -255,23 +255,7 @@ void GSTPlaybackPipeline::play() {
 
 
 void GSTPlaybackPipeline::pause() {
-	qDebug() << gst_caps_to_string(
-					gst_pad_get_current_caps(
-						gst_element_get_static_pad ( _audio_convert, "src" )
-					)
-				);
 
-	qDebug() << gst_caps_to_string(
-					gst_pad_get_current_caps(
-						gst_element_get_static_pad ( _audio_convert, "sink" )
-					)
-				);
-
-	qDebug() << gst_caps_to_string(
-					gst_pad_get_current_caps(
-						gst_element_get_static_pad ( _app_sink, "sink" )
-					)
-				);
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
 }
 
@@ -304,28 +288,6 @@ void GSTPlaybackPipeline::unmute() {
 	g_object_set(G_OBJECT(_volume), "mute", FALSE, NULL);
 }
 
-void GSTPlaybackPipeline::_sl_broadcast_changed(){
-return;
-	GstState old_state;
-	gst_element_get_state(GST_ELEMENT(_pipeline), &old_state, NULL, GST_CLOCK_TIME_NONE);
-
-	if(old_state == GST_STATE_PLAYING){
-		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
-	}
-
-	bool active = _settings->get(Set::BroadCast_Active);
-	if(!active){
-		gst_element_unlink(_lame_queue, _lame_audio_convert);
-		gst_element_link(_lame_queue, _fake_sink);
-	}
-
-	else{
-		gst_element_unlink(_lame_queue, _fake_sink);
-		gst_element_link(_lame_queue, _lame_audio_convert);
-	}
-
-	gst_element_set_state(GST_ELEMENT(_pipeline), old_state);
-}
 
 bool GSTPlaybackPipeline::_seek(gint64 ns){
 
@@ -465,8 +427,39 @@ void GSTPlaybackPipeline::_sl_show_spectrum_changed() {
 
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), state);
-
 }
+
+
+void GSTPlaybackPipeline::_sl_broadcast_clients_changed(){
+
+    int n_clients = _settings->get(SetNoDB::Broadcast_Clients);
+    bool active = (n_clients > 0);
+
+    qDebug() << "Broadcast active? " << active;
+
+    GstState state;
+    gst_element_get_state(GST_ELEMENT(_pipeline), &state, NULL, GST_CLOCK_TIME_NONE);
+
+    if(state == GST_STATE_PLAYING){
+        gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PAUSED);
+    }
+
+    if(!active) {
+        gst_element_unlink_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
+        gst_element_link_many(_lame_queue, _app_sink, NULL);
+    }
+
+    else{
+        gst_element_unlink_many(_lame_queue, _app_sink, NULL);
+        gst_element_link_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
+    }
+
+    g_object_set(G_OBJECT(_app_sink), "emit-signals", active, NULL );
+
+    gst_element_set_state(GST_ELEMENT(_pipeline), state);
+}
+
+
 
 
 bool GSTPlaybackPipeline::set_uri(gchar* uri) {

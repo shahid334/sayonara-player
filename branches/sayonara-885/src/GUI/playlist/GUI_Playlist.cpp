@@ -260,7 +260,7 @@ void GUI_Playlist::playlist_mode_changed() {
 		return;
 	}
 
-	plm = _playlist_mode;
+    _playlist_mode = plm;
 	_settings->set(Set::PL_Mode, _playlist_mode);
 }
 

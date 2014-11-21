@@ -57,19 +57,31 @@ class Setting : public AbstrSetting
 
 		T _val;
 		T _default_val;
+        bool _db_setting;
 
 
 	public:
 
 		/* Constructor */
 		template<typename SK::SettingKey S>
-		Setting(const SettingKey<T, S> key, const char* db_key, T def) :
+        Setting(const SettingKey<T, S> key, const char* db_key, T def) :
 			AbstrSetting(S, db_key)
 		{
 			Q_UNUSED(key);
 			_default_val = def;
 			_val = def;
+            _db_setting = true;
 		}
+
+        template<typename SK::SettingKey S>
+        Setting(const SettingKey<T, S> key, T def) :
+            AbstrSetting(S, "")
+        {
+            Q_UNUSED(key);
+            _default_val = def;
+            _val = def;
+            _db_setting = false;
+        }
 
 
 		/* Destructor */
@@ -80,7 +92,10 @@ class Setting : public AbstrSetting
 
 		/* Load setting from DB */
 		virtual void load_db(const CDatabaseConnector* db){
-			bool success;
+
+            if(!_db_setting) return;
+
+            bool success;
 			QString s;
 			success = db->load_setting(_db_key, s);
 			if(!success){
@@ -99,7 +114,9 @@ class Setting : public AbstrSetting
 		/* Save setting to DB */
 		virtual void store_db(const CDatabaseConnector* db){
 
-			QString s = SC<T>::cvt_to_string(_val);
+            if(!_db_setting) return;
+
+            QString s = SC<T>::cvt_to_string(_val);
 			db->store_setting(_db_key, s);
 			qDebug() << "Store Setting " << _db_key << ": " << s;
 		}

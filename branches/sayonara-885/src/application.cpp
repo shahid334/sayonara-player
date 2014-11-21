@@ -174,7 +174,6 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	init_connections();
 
-	stream_server->start();
 
 	// emit do connections
 	// emit connections done

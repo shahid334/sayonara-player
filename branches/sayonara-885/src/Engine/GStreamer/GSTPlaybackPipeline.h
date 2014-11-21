@@ -93,7 +93,7 @@ private:
 
 
 protected slots:
-	virtual void _sl_broadcast_changed();
+    virtual void _sl_broadcast_clients_changed();
 	virtual void _sl_vol_changed();
 	virtual void _sl_show_level_changed();
 	virtual void _sl_show_spectrum_changed();

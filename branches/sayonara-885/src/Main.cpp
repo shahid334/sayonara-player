@@ -122,6 +122,7 @@ void segfault_handler(int sig){
 }
 
 #define REGISTER_SETTING(type, key, db_key, def) set->register_setting( new Setting<type>(Set::key, db_key, def) )
+#define REGISTER_SETTING_NO_DB(type, key, def) set->register_setting( new Setting<type>(SetNoDB::key, def) )
 
 bool register_settings(){
 
@@ -179,7 +180,6 @@ bool register_settings(){
 	REGISTER_SETTING( bool, PL_RememberTime, "remember_time", false );
 	REGISTER_SETTING( bool, PL_StartPlaying, "start_playing", false );
 	REGISTER_SETTING( int, PL_LastTrack, "last_track", -1 );
-	REGISTER_SETTING( int, PL_LastTrackPos, "last_track_pos", 0 );
 	REGISTER_SETTING( PlaylistMode, PL_Mode, "playlist_mode", PlaylistMode() );
 	REGISTER_SETTING( bool, PL_ShowNumbers, "show_playlist_numbers", true );
 	REGISTER_SETTING( bool, PL_SmallItems, "small_playlist_items", true );
@@ -190,6 +190,7 @@ bool register_settings(){
 	REGISTER_SETTING( int, Notification_Scale, "notification_scale", 64 );
 
 	REGISTER_SETTING( QString, Engine_Name, "sound_engine", QString() );
+    REGISTER_SETTING( int, Engine_CurTrackPos_s, "last_track_pos", 0 );
 	REGISTER_SETTING( int, Engine_Vol, "volume", 50 );
 	REGISTER_SETTING( int, Engine_ConvertQuality, "convert_quality", 0 );
 	REGISTER_SETTING( QString, Engine_CovertTargetPath, "convert_target_path", QDir::homePath() );
@@ -212,6 +213,7 @@ bool register_settings(){
 	REGISTER_SETTING( bool, BroadCast_Active, "broadcast_active", false );
 	REGISTER_SETTING( bool, Broadcast_Prompt, "broadcast_prompt", false );
 	REGISTER_SETTING( int, Broadcast_Port, "broadcast_port", 54054 );
+    REGISTER_SETTING_NO_DB( int, Broadcast_Clients, 0 );
 
 	return set->check_settings();
 }

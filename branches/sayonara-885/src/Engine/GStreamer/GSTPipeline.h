@@ -89,8 +89,6 @@ class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 		virtual void		finished();
 		virtual void		check_about_to_finish(qint64 difference);
 		virtual void		set_data(uchar* data, quint64 size);
-		virtual void		set_fd(int fd);
-
 
 		virtual bool set_uri(gchar* uri);
 		virtual gchar* get_uri();

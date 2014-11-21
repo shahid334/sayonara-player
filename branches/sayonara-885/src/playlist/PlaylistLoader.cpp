@@ -44,7 +44,7 @@ void PlaylistLoader::load_old_playlist() {
 		if( !load_playlist ) return;
 
 		bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
-		int last_track_position = _settings->get(Set::PL_LastTrackPos);
+        int last_track_position = _settings->get(Set::Engine_CurTrackPos_s);
 		int last_track_id = _settings->get(Set::PL_LastTrack);
 		bool load_last_position = _settings->get(Set::PL_RememberTime);
 		bool start_immediatly = _settings->get(Set::PL_StartPlaying);

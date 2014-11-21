@@ -199,9 +199,15 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
             gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
 
-		   /* if ( new_state == GST_STATE_PLAYING) {
+            if ( new_state == GST_STATE_PLAYING) {
                 engine->do_jump_play();
-			}*/
+            }
+
+            if (new_state == GST_STATE_NULL){
+         //       engine->stop();
+            }
+
+
 
             break;
 

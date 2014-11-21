@@ -1,5 +1,7 @@
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 #include <QByteArray>
+
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -20,7 +22,7 @@ enum HttpAnswer {
 };
 
 
-class SocketWriter {
+class SocketWriter : protected SayonaraClass {
 
 	public:
 		SocketWriter(int socket, QString ip);

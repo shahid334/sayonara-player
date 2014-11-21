@@ -3,7 +3,7 @@
 
 static char padding[256];
 
-SocketWriter::SocketWriter(int socket, QString ip)
+SocketWriter::SocketWriter(int socket, QString ip) : SayonaraClass()
 
 {
 
@@ -203,7 +203,6 @@ bool SocketWriter::send_header(bool reject){
 	
 	qint64 n_bytes;	
 	bool success;
-	bool send_data = !reject;
 
 	if(reject){
 		n_bytes = write( _socket, _reject_header.constData(), _reject_header.size() );
@@ -219,8 +218,8 @@ bool SocketWriter::send_header(bool reject){
 
 	success = (n_bytes > 0);
 
-	if(success){
-		_send_data = send_data;
+    if(success && !reject){
+        enable();
 	}
 
 	else{
@@ -313,11 +312,22 @@ bool SocketWriter::send_data(const uchar* data, quint64 size){
 }
 
 void SocketWriter::disable(){
+    if(_dismissed) return;
 	_dismissed = true;
+
+    int clients = _settings->get(SetNoDB::Broadcast_Clients);
+    if(clients > 0) {
+        clients--;
+    }
+    _settings->set(SetNoDB::Broadcast_Clients, clients);
 }
 
 void SocketWriter::enable(){
-	_send_data = true;
+
+    int clients = _settings->get(SetNoDB::Broadcast_Clients) + 1;
+    _settings->set(SetNoDB::Broadcast_Clients, clients);
+
+    _send_data = true;
 }
 
 void SocketWriter::disconnect(){

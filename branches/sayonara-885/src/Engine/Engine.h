@@ -101,8 +101,8 @@ signals:
 	void sig_dur_changed_s(quint32);
 	void sig_dur_changed(const MetaData&);
 
-	void sig_pos_changed_ms(quint64);
-	void sig_pos_changed_s(quint32);
+    void sig_pos_changed_ms(quint64);
+    void sig_pos_changed_s(quint32);
 
 	void sig_track_finished();
 	void sig_scrobble(const MetaData&);
