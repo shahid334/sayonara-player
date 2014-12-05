@@ -106,7 +106,7 @@ void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n
 		if(v_md.size() >= N_FILES_TO_STORE ) {
 			CDatabaseConnector::getInstance()->storeMetadata(v_md);
             while(_paused) {
-                usleep(10000);
+				Helper::sleep_ms(10);
             }
 
             emit sig_new_block_saved();

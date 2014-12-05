@@ -1,50 +1,44 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
+
 #include <QByteArray>
+#include <QTcpSocket>
+#include <QHostAddress>
 
-
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/ioctl.h>
-
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
 
 enum HttpAnswer {
 	HttpAnswerFail=0,
-	HttpAnswerOK=1,
-	HttpAnswerReject=2,
-	HttpAnswerIgnore=3,
-	HttpAnswerPlaylist=4
+	HttpAnswerOK,
+	HttpAnswerReject,
+	HttpAnswerIgnore,
+	HttpAnswerPlaylist,
+	HttpAnswerMP3
 };
 
 
 class SocketWriter : protected SayonaraClass {
 
 	public:
-		SocketWriter(int socket, QString ip);
+		SocketWriter(QTcpSocket* socket);
 		virtual ~SocketWriter();
 
 
 	private:
-		QString _host;
-		int _socket;
+
+		QTcpSocket* _socket;
+
 		bool _dismissed;
 		bool _send_data;
 		bool _icy;
 
-
-		quint64 _sent_bytes;
-		QString _ip;
 
 		QByteArray _icy_header;
 		QByteArray _header;
 		QByteArray _reject_header;
 		QString _stream_title;
 		QString _user_agent;
+		QString _host;
+		quint64 _sent_bytes;
 
 
 		void reset();
@@ -53,12 +47,16 @@ class SocketWriter : protected SayonaraClass {
 
 	public:
 		QString get_ip();
-		int get_sd();
 		QString get_user_agent();
+		int get_sd();
+
 		void change_track(const MetaData& md);
 		bool send_header(bool reject);
-		bool send_playlist(int port, const MetaData& md);
+		bool send_playlist(const MetaData& md);
+		bool send_html5();
+
 		HttpAnswer parse_message();
+
 		bool send_data(const uchar*, quint64 size);
 		void disconnect();
 		void enable();

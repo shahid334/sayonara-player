@@ -3,20 +3,15 @@
 
 static char padding[256];
 
-SocketWriter::SocketWriter(int socket, QString ip) : SayonaraClass()
-
+SocketWriter::SocketWriter(QTcpSocket* socket) : SayonaraClass()
 {
-
 	create_headers();
 	reset();
 
 	memset(padding, 0, 256);
 
 	_stream_title = "Sayonara Radio";
-
 	_socket = socket;
-	_ip = ip;
-
 }
 
 SocketWriter::~SocketWriter(){
@@ -24,11 +19,11 @@ SocketWriter::~SocketWriter(){
 }
 
 QString SocketWriter::get_ip(){
-	return _ip;
+	return _socket->peerAddress().toString();
 }
 
 int SocketWriter::get_sd(){
-	return _socket;
+	return _socket->socketDescriptor();
 }
 
 QString SocketWriter::get_user_agent(){
@@ -41,8 +36,6 @@ void SocketWriter::reset(){
 	_dismissed = false;
 	_icy = false;
 	_stream_title = "";
-	_ip = "";
-	_socket = -1;
 	_user_agent = "";
 	_host = "";
 }
@@ -85,33 +78,31 @@ void SocketWriter::create_headers(){
 	_reject_header.append("\r\n");
 }
 
-char msg[4096];
+
 HttpAnswer SocketWriter::parse_message(){
 
-
 	_host = "";
-	ssize_t n_bytes;
 
 	bool get_playlist = false;
 	bool get_received = false;
+	bool get_mp3 = false;
 	bool icy=false;
+	bool is_browser=false;
 
 
 	QString qmsg;
 	QStringList lst;
+	QByteArray msg;
 
+	msg = _socket->read(4096);
 
-	n_bytes = read(_socket, msg, 4095);
-	if(n_bytes < 0) {
+	if(msg.size() < 0) {
 			return HttpAnswerFail;
 	}
 
-	qmsg = QString::fromLocal8Bit(msg, n_bytes);
-
+	qmsg = QString(msg);
 	lst = qmsg.split("\r\n");
 	_icy = false;
-
-	QMap<QString, QString> map;
 
 	foreach(QString str, lst){
 
@@ -119,6 +110,7 @@ HttpAnswer SocketWriter::parse_message(){
 
 		QRegExp regex("(GET|HEAD)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_pl("(GET)(\\s|/)*(playlist.m3u)(\\s|/)*HTTP", Qt::CaseInsensitive);
+		QRegExp regex_mp3("(GET)(\\s|/)*(track.mp3)(\\s|/)*HTTP", Qt::CaseInsensitive);
 
 		if(str.contains(regex)){
 			get_received = true;
@@ -131,19 +123,22 @@ HttpAnswer SocketWriter::parse_message(){
 			continue;
 		}
 
+		if(str.contains(regex_mp3)){
+			qDebug() << "get mp3";
+			get_received = true;
+			continue;
+		}
+
+
 		if(str.toLower().contains("host:")){
 			QStringList lst = str.split(":");
 			if(lst.size() > 1){
 
 				_host = lst[1].trimmed();
 				qDebug() << "Host = " << _host;
+
 			}
 		}
-
-		/*if(str.contains("keep-alive", Qt::CaseInsensitive)){
-				qDebug() << "Reject keep alive";
-				return HttpAnswerReject;
-		}*/
 
 		if( str.contains("icy-metadata:", Qt::CaseInsensitive) ){
 			if(str.contains(":1") || str.contains(": 1")){
@@ -156,21 +151,26 @@ HttpAnswer SocketWriter::parse_message(){
 
 			if(str.size() > 11){
 				_user_agent = str.right( str.size() - 11).toLower();
+				if( _user_agent.contains("firefox", Qt::CaseInsensitive) ||
+					_user_agent.contains("safari", Qt::CaseInsensitive) ||
+					_user_agent.contains("internet explorer", Qt::CaseInsensitive) ||
+					_user_agent.contains("opera", Qt::CaseInsensitive))
+				{
+						is_browser = true;
+				}
 			}
 		}
+	}
+
+	if(is_browser && !get_mp3 && !_host.isEmpty()){
+		return HttpAnswerMP3;
 	}
 
 	if(get_playlist && !_host.isEmpty()){
 		return HttpAnswerPlaylist;
 	}
 
-	/*if(_user_agent.isEmpty()){
-			return HttpAnswerReject;
-	}*/
-
-
 	if(get_received){
-
 		_icy = icy;
 
 		return HttpAnswerOK;
@@ -179,9 +179,10 @@ HttpAnswer SocketWriter::parse_message(){
 	return HttpAnswerFail;
 }
 
-bool SocketWriter::send_playlist(int port, const MetaData& md){
+bool SocketWriter::send_playlist(const MetaData& md){
 
 	qint64 n_bytes;
+	int port = _socket->localPort();
 
 	QByteArray pl = QByteArray("#EXTM3U\n\n"
 			"#EXTINF:-1, Lucio Carreras - Sayonara Player Radio\n"
@@ -195,9 +196,42 @@ bool SocketWriter::send_playlist(int port, const MetaData& md){
 									pl
 								 );
 
-	n_bytes = write(_socket, data, data.length());
+	n_bytes = _socket->write(data);
+
 	return (n_bytes > 0);
 }
+
+
+
+bool SocketWriter::send_html5(){
+
+	int n_bytes;
+
+	QByteArray html = QByteArray(
+			"<html>"
+				"<head>"
+				"</head>"
+				"<body>"
+				"<audio controls>"
+					"<source src=\"track.mp3\" type=\"audio/mpeg\">"
+					"Your browser does not support the audio element."
+				"</audio>"
+				"</body>"
+			"<html>");
+
+	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
+								   "content-type: text/html\r\n"
+								   "content-length: " + QString::number(html.size()).toLocal8Bit() +
+								   "Connection: keep-alive\r\n\r\n" +
+								   html
+								   );
+
+	qDebug() << "send html5 " << data;
+
+	n_bytes = _socket->write(data);
+	return (n_bytes > 0);
+}
+
 
 bool SocketWriter::send_header(bool reject){
 	
@@ -205,15 +239,15 @@ bool SocketWriter::send_header(bool reject){
 	bool success;
 
 	if(reject){
-		n_bytes = write( _socket, _reject_header.constData(), _reject_header.size() );
+		n_bytes = _socket->write( _reject_header );
 	}
 
 	else if(_icy){
-		n_bytes = write( _socket, _icy_header.constData(), _icy_header.size() );	
+		n_bytes = _socket->write( _icy_header );
 	}
 
 	else{
-		n_bytes = write( _socket, _header.constData(), _header.size() );
+		n_bytes = _socket->write( _header );
 	}
 
 	success = (n_bytes > 0);
@@ -252,7 +286,7 @@ bool SocketWriter::send_icy_data(){
     metadata.append(padding, n_padding);
     metadata.prepend((char) (int)((sz + 15) / 16));
 
-    n_bytes = write(_socket, metadata.constData(), metadata.size());
+	n_bytes = _socket->write( metadata );
 
     success = (n_bytes > 0);
 
@@ -271,8 +305,8 @@ bool SocketWriter::send_data(const uchar* data, quint64 size){
 
 	if(_dismissed) {
 
-		char c = 0x00;
-		n_bytes = write(_socket, &c, 1);
+		QByteArray c(1, 0x00);
+		n_bytes = _socket->write(c);
 		return (n_bytes > 0);
 	}
 
@@ -281,12 +315,12 @@ bool SocketWriter::send_data(const uchar* data, quint64 size){
 
 			quint64 bytes_before = 8192 - _sent_bytes;
 
-            n_bytes = write(_socket, data, bytes_before);
+			n_bytes = _socket->write( (const char*) data, bytes_before);
 
             send_icy_data();
 
             if(size - bytes_before > 0){
-				n_bytes = write(_socket, data + bytes_before, size - bytes_before);
+				n_bytes = _socket->write( (const char*) (data + bytes_before), size - bytes_before);
                 _sent_bytes = n_bytes;
             }
 
@@ -296,13 +330,13 @@ bool SocketWriter::send_data(const uchar* data, quint64 size){
         }
 
 		else{
-			n_bytes = write(_socket, data, size);
+			n_bytes = _socket->write( (const char*) data, size);
 			_sent_bytes += n_bytes;
 		}
     }
 
     else{
-        n_bytes = write(_socket, data, size);
+		n_bytes = _socket->write( (const char*) data, size);
 		_sent_bytes = 0;
     }
 
@@ -312,20 +346,13 @@ bool SocketWriter::send_data(const uchar* data, quint64 size){
 }
 
 void SocketWriter::disable(){
-    if(_dismissed) return;
-	_dismissed = true;
 
-    int clients = _settings->get(SetNoDB::Broadcast_Clients);
-    if(clients > 0) {
-        clients--;
-    }
-    _settings->set(SetNoDB::Broadcast_Clients, clients);
+    if(_dismissed) return;
+
+	_dismissed = true;
 }
 
 void SocketWriter::enable(){
-
-    int clients = _settings->get(SetNoDB::Broadcast_Clients) + 1;
-    _settings->set(SetNoDB::Broadcast_Clients, clients);
 
     _send_data = true;
 }
@@ -334,10 +361,7 @@ void SocketWriter::disconnect(){
 	
 	disable();
 	
-	if( close(_socket) < 0 ){
-		qDebug() << "Cannot close client socket";
-		qDebug() << strerror(errno);
-	}
+	_socket->close();
 
 	reset();
 }

@@ -859,3 +859,8 @@ QString Helper::get_location_from_ip(const QString& ip){
 
 	return "";
 }
+
+
+void Helper::sleep_ms(unsigned long ms){
+	_Sleeper::sleep_ms(ms);
+}

@@ -88,7 +88,7 @@ void Socket::run() {
 	while(1){
 
 		while( !init_server_socket() ){
-			msleep(1000);
+			Helper::sleep_ms(1000);
 		}
 
 		while( _srv_socket > 0 ){
@@ -119,7 +119,7 @@ void Socket::run() {
 			_send_data = true;
 
 			while(_connected){
-				msleep(1000);
+				Helper::sleep_ms(1000);
 			}
 		}
 	}
@@ -365,7 +365,7 @@ void Socket::client_disconnect() {
 				qDebug() << msg;
 			}
 
-			msleep(1000);
+			Helper::sleep_ms(1000);
 		}*/
 
 		close(_client_socket);

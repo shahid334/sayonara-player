@@ -29,13 +29,7 @@
 #include "Engine/GStreamer/GSTPlaybackEngine.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
 
-
 #include <cmath>
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
-
 
 double arr[2];
 gboolean

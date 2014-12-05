@@ -34,9 +34,6 @@
 #include <QFile>
 #include <QImage>
 
-#include <unistd.h>
-
-
 CoverLookupInterface::CoverLookupInterface(QObject* parent):
 	QObject(parent) {
 

@@ -92,7 +92,7 @@ void ImportCachingThread::run() {
 
     emit sig_done();
     while(!_may_terminate && !_cancelled) {
-        usleep(10000);
+		Helper::sleep_ms(10);
     }
 }
 

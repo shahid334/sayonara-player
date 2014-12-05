@@ -18,10 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "CoverLookup/CoverLookupAll.h"
-#include <unistd.h>
 
 CoverLookupAll::CoverLookupAll(QObject* parent, const AlbumList& album_list) :
     CoverLookupInterface(parent),
@@ -62,7 +59,7 @@ void CoverLookupAll::cover_found(const CoverLocation& cl) {
     if(!_run) return;
 
     // Google and other webservices block, if looking too fast
-    usleep(1000000);
+	Helper::sleep_ms(1000);
 
     Album album = _album_list.back();
     _cl->fetch_album_cover(album);

@@ -1,11 +1,10 @@
 #include <QThread>
 #include <QList>
-
+#include <QTcpSocket>
+#include <QTcpServer>
 #include "RadioStation/SocketWriter.h"
-#include "Settings/Settings.h"
+#include "HelperStructs/SayonaraClass.h"
 
-typedef struct sockaddr_in SocketAdress;
-typedef struct sockaddr SocketAdress_t;
 
 enum AcceptState{
 	AcceptStateNone=-1,
@@ -15,7 +14,7 @@ enum AcceptState{
 	AcceptStateTimeout=3
 };
 
-class StreamServer : public QThread{
+class StreamServer : public QThread, protected SayonaraClass {
 
 	Q_OBJECT
 
@@ -29,20 +28,22 @@ class StreamServer : public QThread{
 		~StreamServer();
 
 	private:
-		Settings* _settings;
 
-		int _socket;
-		int _port;
-
-		QMap<QString, AcceptState> _accept_map;
-		AcceptState _accepted;
-
-		bool create_socket();
-		QList<SocketWriter*> _lst_sw;
-
-		SocketWriter* client_accept();
 		MetaData _md;
 
+		bool _prompt;
+		bool _active;
+		int _port;
+		int _n_clients;
+
+		QTcpServer* _server;
+		QList<QTcpSocket*> _sockets;
+
+		QMap<QString, QTcpSocket*> _queue_map;
+
+		QList<SocketWriter*> _lst_sw;
+
+		bool listen_for_connection();
 
 
 	protected:
@@ -50,8 +51,8 @@ class StreamServer : public QThread{
 
 	public slots:
 		void new_data(uchar* data, quint64 size);
-		void accept_client();
-		void reject_client();
+		void accept_client(const QString& ip);
+		void reject_client(const QString& ip);
 		void dismiss(int idx);
 		void disconnect(SocketWriter* sw);
 		void disconnect_all();
@@ -63,5 +64,6 @@ class StreamServer : public QThread{
 		void active_changed();
 		void port_changed();
 		void prompt_changed();
+		void new_client_request();
 
 };

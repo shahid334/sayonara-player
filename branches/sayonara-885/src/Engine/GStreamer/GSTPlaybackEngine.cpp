@@ -27,10 +27,6 @@
 #include <gst/gsturi.h>
 #include <cmath>
 
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
 
 #define WATCH_INTERVAL 200
 

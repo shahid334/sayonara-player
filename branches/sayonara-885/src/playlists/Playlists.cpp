@@ -29,12 +29,6 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
-
-
 Playlists::Playlists() {
 
 }

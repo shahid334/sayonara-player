@@ -38,11 +38,6 @@
 #include <stdlib.h>
 #include <ctime>
 
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
-
 using namespace std;
 
 static size_t lfm_webpage_bytes;
@@ -227,16 +222,12 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc) {
 		curl_easy_cleanup(curl);
 	}
 
-    long int t = 10000000;
+	int t = 10000;
 	while(lfm_webpage_bytes == 0) {
 
-		#ifdef Q_OS_WIN
-			Sleep(100000);
-		#else
-			usleep(100000);
-		#endif
-	
-		t -= 100000;
+		Helper::sleep_ms(100);
+
+		t -= 100;
 		if( t <= 0) break;
 	}
 

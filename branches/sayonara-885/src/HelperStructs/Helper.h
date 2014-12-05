@@ -38,6 +38,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QIcon>
+#include <QThread>
 
 namespace Helper{
 
@@ -131,6 +132,19 @@ namespace Helper{
 
     void set_deja_vu_font(QWidget* w, int font_size=-1);
 	void set_bin_path(const QString& str);
+
+
+	class _Sleeper : public QThread{
+
+		public:
+			static void sleep_ms(unsigned long ms){
+				msleep(ms);
+			}
+
+	};
+
+	void sleep_ms(unsigned long ms);
+
 }
 
 

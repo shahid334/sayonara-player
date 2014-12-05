@@ -445,11 +445,19 @@ void GSTPlaybackPipeline::_sl_broadcast_clients_changed(){
     }
 
     if(!active) {
+		gst_app_sink_set_max_buffers( GST_APP_SINK(_app_sink), 0);
+		gst_app_sink_set_drop( GST_APP_SINK(_app_sink), false);
+
+		gst_app_sink_set_drop( GST_APP_SINK(_app_sink), true);
+		gst_app_sink_set_max_buffers( GST_APP_SINK(_app_sink), 1);
         gst_element_unlink_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
         gst_element_link_many(_lame_queue, _app_sink, NULL);
     }
 
     else{
+		gst_app_sink_set_max_buffers( GST_APP_SINK(_app_sink), 1);
+		gst_app_sink_set_drop( GST_APP_SINK(_app_sink), true);
+
         gst_element_unlink_many(_lame_queue, _app_sink, NULL);
         gst_element_link_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
     }

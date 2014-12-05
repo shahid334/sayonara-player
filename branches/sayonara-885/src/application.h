@@ -63,9 +63,10 @@
 #include "playlists/Playlists.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "RadioStation/StreamServer.h"
+#include "HelperStructs/SayonaraClass.h"
 
 
-class Application : public QApplication
+class Application : public QApplication, private SayonaraClass
 {
     Q_OBJECT
 
@@ -89,7 +90,6 @@ private:
 	CLibraryBase*           library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
-//	SoundcloudLibrary*		sc_library;
 
 	GUI_LevelPainter*       ui_level;
 	GUI_Spectrum*           ui_spectrum;
@@ -97,7 +97,6 @@ private:
 	GUI_Stream*				ui_stream;
 	GUI_Podcasts*           ui_podcasts;
 	GUI_Equalizer*          ui_eq;
-//	GUI_LFMRadioWidget*     ui_lfm_radio;
 	GUI_Bookmarks*          ui_bookmarks;
 	GUI_Speed*				ui_speed;
 	GUI_Broadcast*			ui_broadcast;
@@ -108,7 +107,6 @@ private:
 	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
-	//GUI_SoundCloudLibrary*  ui_sc;
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
 	StreamServer*           stream_server;
@@ -117,7 +115,6 @@ private:
 	SoundPluginLoader*      engine_plugin_loader;
 	Engine*                 listen;
 
-	Settings*       set;
 	QApplication*           app;
 
 	bool                    _initialized;
@@ -136,33 +133,6 @@ private:
 	void check_for_crash();
 };
 
-/*
-class ApplicationClient : public QObject {
-
-	Q_OBJECT
-
-	public:
-
-		explicit ApplicationClient(QObject* parent, const Application* app) :
-			QObject(parent),
-			sayonara(app)
-		{
-			connect(app, SIGNAL(doConnections()), this, SIGNAL(initConnections()));
-			connect(app, SIGNAL(connectionsDone()), this, SIGNAL(initRemainder()));
-		}
-
-		virtual ~ApplicationClient() {}
-
-	private slots:
-
-		virtual void initConnections()=0;
-		virtual void initRemainder()=0;
-
-	private:
-		const Application* sayonara;
-
-};
-*/
 #endif // APPLICATION_H
 
 

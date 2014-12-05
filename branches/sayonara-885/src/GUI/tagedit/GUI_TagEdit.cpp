@@ -37,11 +37,6 @@
 #include <QCompleter>
 #include <QDir>
 
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
-
 
 GUI_TagEdit::GUI_TagEdit(QWidget* parent) :
 	SayonaraWidget(parent),
@@ -539,7 +534,7 @@ bool GUI_TagEdit::store_to_database(QList<Album>& new_albums, QList<Artist>& new
             v_md_tmp.push_back(md);
         }
 
-        usleep(10000);
+		Helper::sleep_ms(10);
     }
 
     return CDatabaseConnector::getInstance()->storeMetadata(v_md_tmp);

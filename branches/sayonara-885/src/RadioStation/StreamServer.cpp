@@ -1,217 +1,141 @@
 #include "RadioStation/StreamServer.h"
-
+#include "HelperStructs/Helper.h"
+#include <QHostAddress>
 
 StreamServer::StreamServer(QObject* parent) : 
 	QThread(parent),
-	_socket(-1),
-
-	_accepted(AcceptStateAccepted)
+	SayonaraClass()
 {
-	_settings = Settings::getInstance();
+	_n_clients = 0;
 	_port = _settings->get(Set::Broadcast_Port);
+
+	_server = new QTcpServer();
+	_server->setMaxPendingConnections(10);
+	connect(_server, SIGNAL(newConnection()), this, SLOT(new_client_request()));
+
+
+	while( !_server->isListening() ){
+
+		listen_for_connection();
+		Helper::sleep_ms(1000);
+	}
+
+
 
 	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
 	REGISTER_LISTENER(Set::Broadcast_Port, port_changed);
 	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
-
 }
 
 StreamServer::~StreamServer(){
-	server_close();
-	disconnect_all();
 
-	while(_socket != -1){
-		msleep(1000);
+	Helper::sleep_ms(500);
+	while(_server){
+		Helper::sleep_ms(1000);
 	}
 }
 
-bool StreamServer::create_socket(){
-
-	int status;
-    int reuse_addr = 1;
-	SocketAdress srv_adress;
-
-    _socket = socket(AF_INET, SOCK_STREAM, 0);
-
-    memset( &srv_adress, 0, sizeof(srv_adress));
-
-    srv_adress.sin_family = AF_INET;
-    srv_adress.sin_addr.s_addr = htonl(INADDR_ANY);
-    srv_adress.sin_port = htons(_port);
-
-    if(_socket < 0){
-        qDebug() << "Server socket invalid";
-        qDebug() << strerror(errno);
-
-        return false;
-    }
-
-    status = setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &reuse_addr, sizeof(reuse_addr));
-    if(status < 0){
-        qDebug() << "Reuse adress: " << strerror(errno);
-    }
-
-
-    status = bind(_socket, (SocketAdress_t*) &srv_adress, sizeof(srv_adress));
-    if(status < 0){
-        qDebug() << "Cannot bind port " << _port;
-        qDebug() << strerror(errno);
-		server_close();
-
-        return false;
-    }
-
-    qDebug() << "Listening on port " << _port;
-    status = listen(_socket, 10);
-    if(status < 0){
-        qDebug() << "Cannot listen to port " << _port;
-        qDebug() << strerror(errno);
-
-		server_close();
-
-        return false;
-    }
-
-    return true;
-
-}
 
 void StreamServer::run(){
 
-	SocketWriter* sw;
-	HttpAnswer answer;
-
-
     qDebug() << "Start stream server";
 
-    while(!create_socket()){
-        msleep(1000);
-    }
 
-    while(_socket != -1){
+	forever{
+		while(_server && _server->isListening()){
+			Helper::sleep_ms(100);
+		}
 
-        msleep(1000);
+		if(_server == NULL){
+			break;
+		}
 
-        sw = client_accept();
-        if(!sw) continue;
-
-        answer = sw->parse_message();
-
-        switch(answer){
-
-            case HttpAnswerFail:
-            case HttpAnswerReject:
-                qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
-                sw->send_header(true);
-                disconnect(sw);
-                break;
-
-            case HttpAnswerIgnore:
-                break;
-
-            case HttpAnswerPlaylist:
-                sw->send_playlist(_port, _md);
-                disconnect(sw);
-                break;
-
-            default:
-                sw->send_header(false);
-                qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
-                sw->change_track(_md);
-        }
+		Helper::sleep_ms(1000);
     }
 
 	qDebug() << "Radio station: Bye";
 }
 
-SocketWriter* StreamServer::client_accept(){
-	
-	if(_accepted == AcceptStateWaiting) return NULL;
+bool StreamServer::listen_for_connection(){
 
-	_accepted = AcceptStateWaiting;
-
-	qDebug() << "Wait for incoming connection...";
-
-	SocketWriter* sw=NULL;
-
-	QString client_ip;
-	qint32 client_socket;
-	quint32 wait_for_accept = 60000;
-
-
-	SocketAdress addr_in;
-	socklen_t addr_len = (socklen_t) sizeof(SocketAdress);
-
-	memset( &addr_in, 0, sizeof(addr_in));
-
-
-	/*** ACCEPT ***/
-	client_socket =  accept(_socket, (SocketAdress_t*) (&addr_in),
-						   &addr_len);
-	/**************/
-
-	if(client_socket < 0) {
-		_accepted = AcceptStateNone;
-		return NULL;
+	bool success;
+	if(!_server){
+		qDebug() << "Server socket invalid";
+		return false;
 	}
 
-	client_ip = QString(inet_ntoa( addr_in.sin_addr ));
+	qDebug() << "Listening on port " << _port;
+	success = _server->listen(QHostAddress::Any, _port);
 
-	if(_accept_map.keys().contains(client_ip)){
-		// fetch the old known state
-		_accepted = _accept_map[client_ip];
+	if(!success){
+		qDebug() << "Cannot listen on port " << _port;
+		_server->errorString();
+		_server->close();
+
+		return false;
 	}
 
-
-	else{
-
-		// No state is known so do a new request
-		emit sig_new_connection_request(client_ip);
-
-		while(_accepted == AcceptStateWaiting){
-
-			msleep(500);
-			wait_for_accept -= 500;
-
-			if(wait_for_accept <= 0){
-				_accepted = AcceptStateTimeout;
-				break;
-			}
-		}
-		// insert the new state into the map
-		_accept_map[client_ip] = _accepted;
-	}
+	return true;
+}
 
 
-	switch(_accepted){
+void StreamServer::new_client_request(){
 
-		case AcceptStateRejected:
-			close(client_socket);
+	QTcpSocket* socket = _server->nextPendingConnection();
+	if(!socket) return;
+
+	QString ip = socket->peerAddress().toString();
+	_queue_map[ip] = socket;
+
+	emit sig_new_connection_request(ip);
+}
+
+void StreamServer::accept_client(const QString& ip){
+
+	QTcpSocket* s = _queue_map[ip];
+
+	SocketWriter* sw = new SocketWriter(s);
+
+	HttpAnswer answer = sw->parse_message();
+
+	switch(answer){
+
+		case HttpAnswerFail:
+		case HttpAnswerReject:
+			qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+			sw->send_header(true);
+			disconnect(sw);
 			break;
 
-		case AcceptStateTimeout:
-			_accept_map.remove(client_ip);
+		case HttpAnswerIgnore:
+			break;
+
+		case HttpAnswerPlaylist:
+			sw->send_playlist(_md);
+			disconnect(sw);
+			break;
+
+		case HttpAnswerMP3:
+			sw->send_html5();
 			break;
 
 		default:
-			sw = new SocketWriter(client_socket, client_ip);
-			_lst_sw << sw;
+			qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
+			emit sig_new_connection(ip);
 
-			emit sig_new_connection( sw->get_ip() );
-			break;
+			sw->send_header(false);
+			sw->change_track(_md);
+
+			_lst_sw << sw;
+			_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
 	}
 
-	return sw;
+	_queue_map.remove(ip);
 }
 
 
-void StreamServer::accept_client(){
-	_accepted= AcceptStateAccepted;
-}
-
-
-void StreamServer::reject_client(){
-	_accepted =AcceptStateRejected;
+void StreamServer::reject_client(const QString& ip){
+	_queue_map.remove(ip);
 }
 
 
@@ -222,9 +146,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 
 	foreach(SocketWriter* sw, _lst_sw){
 
-		bool success;
-		success = sw->send_data(data, size);
-		QString ip = sw->get_ip();
+		bool success = sw->send_data(data, size);
 
 		if(!success){
 
@@ -233,13 +155,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 					 << " (" << sw->get_ip() << ")";
 
 			idx_list << idx;
-
-			sw->disconnect();
-
-			emit sig_connection_closed(ip);
-
-			delete sw;
-			sw = 0;
+			disconnect(sw);
 		}
 
 		idx++;
@@ -261,31 +177,27 @@ void StreamServer::update_track(const MetaData & md){
 
 void StreamServer::server_close(){
 	
-	if(_socket == -1) return;
-
-	if( shutdown(_socket, 2) < 0 ){
-		qDebug() << "Cannot shutdown server socket";
-		qDebug() << strerror(errno);
+	if(_server){
+		_server->close();
 	}
 
-	if( close(_socket) < 0 ){
-		qDebug() << "Cannot close server socket";
-		qDebug() << strerror(errno);
-	}
-
-	_socket = -1;
 }
 
-
+// when user forbids further streaming
 void StreamServer::dismiss(int idx){
 
-	if(idx >= _lst_sw.size()) return;
+	if( idx >= _lst_sw.size() ) return;
 
 	SocketWriter* sw = _lst_sw[idx];
 
 	sw->disable();
+
+	if(_n_clients > 0) _n_clients--;
+	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);
+
 }
 
+// real socket disconnect (if no further sending is possible)
 void StreamServer::disconnect(SocketWriter* sw){
 
 	emit sig_connection_closed(sw->get_ip());
@@ -296,6 +208,9 @@ void StreamServer::disconnect(SocketWriter* sw){
 	if(idx >= 0 && idx < _lst_sw.size()){
 		_lst_sw.removeAt(idx);
 	}
+
+	if(_n_clients > 0) _n_clients--;
+	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);
 
 	delete sw;
 	sw = 0;
@@ -316,10 +231,13 @@ void StreamServer::stop(){
 
 	server_close();
 	disconnect_all();
+	delete _server;
+	_server = NULL;
 }
 
 void StreamServer::active_changed(){
-    bool active = _settings->get(Set::BroadCast_Active);
+
+	bool active = _settings->get(Set::BroadCast_Active);
     if(!active) {
         disconnect_all();
         server_close();
@@ -331,9 +249,9 @@ void StreamServer::active_changed(){
 }
 
 void StreamServer::prompt_changed(){
-
+	_prompt = _settings->get(Set::Broadcast_Prompt);
 }
 
 void StreamServer::port_changed(){
-
+	//_port = _settings->get(Set::Broadcast_Port);
 }

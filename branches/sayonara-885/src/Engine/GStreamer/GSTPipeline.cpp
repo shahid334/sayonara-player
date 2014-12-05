@@ -141,10 +141,8 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 	}
 
 	size = gst_buffer_get_size(buffer);
-    qDebug() << "New buffer " << size;
 	size_new = gst_buffer_extract(buffer, 0, data, size);
 	pipeline->set_data(data, size_new);
-
 
 	return GST_FLOW_OK;
 }

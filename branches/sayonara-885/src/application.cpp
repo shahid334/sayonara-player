@@ -90,10 +90,8 @@ void Application::init(int n_files, QTranslator *translator) {
 	check_for_crash();
 	_translator        = translator;
 
-	set                = Settings::getInstance();
-
 	QString version    = getVersion();
-	set->set(Set::Player_Version, version);
+	_settings->set(Set::Player_Version, version);
 
 	player              = new GUI_Player(translator);
 
@@ -179,7 +177,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	// emit connections done
 
 	qDebug() << "setting up player";
-	bool is_maximized = set->get(Set::Player_Maximized);
+	bool is_maximized = _settings->get(Set::Player_Maximized);
 
 	player->setWindowTitle("Sayonara " + version);
     player->setWindowIcon(Helper::getIcon("logo.png"));
@@ -190,7 +188,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
 
-	player->setStyle( set->get(Set::Player_Style) );
+	player->setStyle( _settings->get(Set::Player_Style) );
 
 	/* --> INTO Player*/
 	if(is_maximized) player->showMaximized();
@@ -207,7 +205,7 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	/* Into LastFM */
 
-	bool last_fm_active = set->get(Set::LFM_Active);
+	bool last_fm_active = _settings->get(Set::LFM_Active);
 	if(last_fm_active) {
 		LastFM::getInstance()->psl_login();
 	}
@@ -222,7 +220,7 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	/* Into Player */
 
-	QString shown_plugin = set->get(Set::Player_ShownPlugin);
+	QString shown_plugin = _settings->get(Set::Player_ShownPlugin);
 	PlayerPlugin* p  = _pph->find_plugin(shown_plugin);
 
 	player->showPlugin(p);
@@ -416,10 +414,10 @@ void Application::init_connections() {
 	CONNECT (stream_server, sig_connection_closed(const QString&),		ui_broadcast,	connection_closed(const QString&));
 	CONNECT (listen, destroyed(),										stream_server,	stop());
 
-	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,		update_track(const MetaData&));
+	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,	update_track(const MetaData&));
 	CONNECT (ui_broadcast, sig_dismiss(int),									stream_server,	dismiss(int));
-	CONNECT (ui_broadcast, sig_accepted(),										stream_server,	accept_client());
-	CONNECT (ui_broadcast, sig_rejected(),										stream_server,	reject_client());
+	CONNECT (ui_broadcast, sig_accepted(const QString&),						stream_server,	accept_client(const QString&));
+	CONNECT (ui_broadcast, sig_rejected(const QString&),						stream_server,	reject_client(const QString&));
 	CONNECT (listen, sig_data(uchar*, quint64),									stream_server,	new_data(uchar*, quint64));
 
     qDebug() << "connections done";

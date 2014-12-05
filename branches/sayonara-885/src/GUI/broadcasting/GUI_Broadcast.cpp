@@ -48,7 +48,7 @@ void GUI_Broadcast::set_status_label(){
 void GUI_Broadcast::new_connection_request(const QString& ip){
 
 	if(ip.isEmpty()){
-		emit sig_rejected();
+		emit sig_rejected(ip);
 		return;
 	}
 
@@ -74,11 +74,11 @@ void GUI_Broadcast::new_connection_request(const QString& ip){
 								QMessageBox::StandardButton::Yes);
 
 	if(btn == QMessageBox::No){
-		emit sig_rejected();
+		emit sig_rejected(ip);
 	}
 
 	else{
-		emit sig_accepted();
+		emit sig_accepted(ip);
 	}
 }
 

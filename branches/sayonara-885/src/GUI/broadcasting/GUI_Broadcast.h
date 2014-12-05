@@ -16,8 +16,8 @@ public:
 signals:
 	void sig_dismiss(int);
 	void sig_dismiss_all();
-	void sig_accepted();
-	void sig_rejected();
+	void sig_accepted(const QString& ip);
+	void sig_rejected(const QString& ip);
 
 public slots:
 	void new_connection_request(const QString& ip);

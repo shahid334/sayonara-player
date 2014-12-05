@@ -44,7 +44,6 @@
 #include <QString>
 #include <QDebug>
 #include <QFileSystemWatcher>
-#include <unistd.h>
 #include <QRegExp>
 
 
