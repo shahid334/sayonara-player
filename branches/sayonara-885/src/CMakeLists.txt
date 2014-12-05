@@ -71,7 +71,7 @@ SET(HEADERS
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
-    RadioStation/SocketWriter.h
+	RadioStation/StreamWriter.h
     RadioStation/StreamServer.h
 )
 
@@ -91,7 +91,7 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
     HelperStructs/SmartComparison.cpp
-    RadioStation/SocketWriter.cpp
+	RadioStation/StreamWriter.cpp
     RadioStation/StreamServer.cpp
 )
 

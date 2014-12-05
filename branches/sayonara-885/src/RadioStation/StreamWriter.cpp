@@ -1,9 +1,9 @@
-#include "RadioStation/SocketWriter.h"
+#include "RadioStation/StreamWriter.h"
 
 
 static char padding[256];
 
-SocketWriter::SocketWriter(QTcpSocket* socket) : SayonaraClass()
+StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
 {
 	create_headers();
 	reset();
@@ -14,23 +14,23 @@ SocketWriter::SocketWriter(QTcpSocket* socket) : SayonaraClass()
 	_socket = socket;
 }
 
-SocketWriter::~SocketWriter(){
+StreamWriter::~StreamWriter(){
 	
 }
 
-QString SocketWriter::get_ip(){
+QString StreamWriter::get_ip(){
 	return _socket->peerAddress().toString();
 }
 
-int SocketWriter::get_sd(){
+int StreamWriter::get_sd(){
 	return _socket->socketDescriptor();
 }
 
-QString SocketWriter::get_user_agent(){
+QString StreamWriter::get_user_agent(){
 	return _user_agent;
 }
 
-void SocketWriter::reset(){
+void StreamWriter::reset(){
 	_sent_bytes = 0;
 	_send_data = false;
 	_dismissed = false;
@@ -40,7 +40,7 @@ void SocketWriter::reset(){
 	_host = "";
 }
 
-void SocketWriter::create_headers(){
+void StreamWriter::create_headers(){
 	
 	_header = QByteArray(
 				"ICY 200 Ok\r\n"
@@ -79,7 +79,7 @@ void SocketWriter::create_headers(){
 }
 
 
-HttpAnswer SocketWriter::parse_message(){
+HttpAnswer StreamWriter::parse_message(){
 
 	_host = "";
 
@@ -179,7 +179,7 @@ HttpAnswer SocketWriter::parse_message(){
 	return HttpAnswerFail;
 }
 
-bool SocketWriter::send_playlist(const MetaData& md){
+bool StreamWriter::send_playlist(const MetaData& md){
 
 	qint64 n_bytes;
 	int port = _socket->localPort();
@@ -203,7 +203,7 @@ bool SocketWriter::send_playlist(const MetaData& md){
 
 
 
-bool SocketWriter::send_html5(){
+bool StreamWriter::send_html5(){
 
 	int n_bytes;
 
@@ -233,7 +233,7 @@ bool SocketWriter::send_html5(){
 }
 
 
-bool SocketWriter::send_header(bool reject){
+bool StreamWriter::send_header(bool reject){
 	
 	qint64 n_bytes;	
 	bool success;
@@ -264,12 +264,12 @@ bool SocketWriter::send_header(bool reject){
 }
 
 
-void SocketWriter::change_track(const MetaData& md){
+void StreamWriter::change_track(const MetaData& md){
 	_stream_title = md.title + " by " + md.artist;
 }
 
 
-bool SocketWriter::send_icy_data(){
+bool StreamWriter::send_icy_data(){
 	
 	bool success;
     qint64 n_bytes=0;
@@ -294,7 +294,7 @@ bool SocketWriter::send_icy_data(){
 }
 
 
-bool SocketWriter::send_data(const uchar* data, quint64 size){
+bool StreamWriter::send_data(const uchar* data, quint64 size){
 
 	bool success;
 	qint64 n_bytes=0;	
@@ -345,19 +345,19 @@ bool SocketWriter::send_data(const uchar* data, quint64 size){
 	return success;
 }
 
-void SocketWriter::disable(){
+void StreamWriter::disable(){
 
     if(_dismissed) return;
 
 	_dismissed = true;
 }
 
-void SocketWriter::enable(){
+void StreamWriter::enable(){
 
     _send_data = true;
 }
 
-void SocketWriter::disconnect(){
+void StreamWriter::disconnect(){
 	
 	disable();
 	

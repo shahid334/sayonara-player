@@ -94,7 +94,7 @@ void StreamServer::accept_client(const QString& ip){
 
 	QTcpSocket* s = _queue_map[ip];
 
-	SocketWriter* sw = new SocketWriter(s);
+	StreamWriter* sw = new StreamWriter(s);
 
 	HttpAnswer answer = sw->parse_message();
 
@@ -144,7 +144,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 	QList<int> idx_list;
 	int idx = 0;
 
-	foreach(SocketWriter* sw, _lst_sw){
+	foreach(StreamWriter* sw, _lst_sw){
 
 		bool success = sw->send_data(data, size);
 
@@ -170,7 +170,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 
 void StreamServer::update_track(const MetaData & md){
 	_md = md;
-	foreach(SocketWriter* sw, _lst_sw){
+	foreach(StreamWriter* sw, _lst_sw){
 		sw->change_track(md);
 	}
 }
@@ -188,7 +188,7 @@ void StreamServer::dismiss(int idx){
 
 	if( idx >= _lst_sw.size() ) return;
 
-	SocketWriter* sw = _lst_sw[idx];
+	StreamWriter* sw = _lst_sw[idx];
 
 	sw->disable();
 
@@ -198,7 +198,7 @@ void StreamServer::dismiss(int idx){
 }
 
 // real socket disconnect (if no further sending is possible)
-void StreamServer::disconnect(SocketWriter* sw){
+void StreamServer::disconnect(StreamWriter* sw){
 
 	emit sig_connection_closed(sw->get_ip());
 
@@ -218,7 +218,7 @@ void StreamServer::disconnect(SocketWriter* sw){
 
 void StreamServer::disconnect_all(){
 
-	foreach(SocketWriter* sw, _lst_sw){
+	foreach(StreamWriter* sw, _lst_sw){
 		sw->disconnect();
 		delete sw;
 		sw = 0;

@@ -16,11 +16,11 @@ enum HttpAnswer {
 };
 
 
-class SocketWriter : protected SayonaraClass {
+class StreamWriter : protected SayonaraClass {
 
 	public:
-		SocketWriter(QTcpSocket* socket);
-		virtual ~SocketWriter();
+		StreamWriter(QTcpSocket* socket);
+		virtual ~StreamWriter();
 
 
 	private:

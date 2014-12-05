@@ -2,7 +2,7 @@
 #include <QList>
 #include <QTcpSocket>
 #include <QTcpServer>
-#include "RadioStation/SocketWriter.h"
+#include "RadioStation/StreamWriter.h"
 #include "HelperStructs/SayonaraClass.h"
 
 
@@ -41,7 +41,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 
 		QMap<QString, QTcpSocket*> _queue_map;
 
-		QList<SocketWriter*> _lst_sw;
+		QList<StreamWriter*> _lst_sw;
 
 		bool listen_for_connection();
 
@@ -54,7 +54,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void accept_client(const QString& ip);
 		void reject_client(const QString& ip);
 		void dismiss(int idx);
-		void disconnect(SocketWriter* sw);
+		void disconnect(StreamWriter* sw);
 		void disconnect_all();
 		void update_track(const MetaData&);
 		void server_close();
