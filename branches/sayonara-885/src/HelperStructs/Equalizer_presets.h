@@ -26,13 +26,14 @@
 #include <QStringList>
 #include <QMetaType>
 
+#define EQFactoryDefaults
 struct EQ_Setting{
 		
 	QList<double> settings;
 	QString name;
 
-	EQ_Setting(){
-		name = "";
+    EQ_Setting(QString n=""){
+        name = n;
 
 		for(int i=0; i<10; i++){
 			settings.push_back(0);
@@ -47,7 +48,7 @@ struct EQ_Setting{
     static EQ_Setting fromString(const QString& str){
 
         EQ_Setting eq;
-		QStringList list = str.split(',');
+        QStringList list = str.split(':');
 		if(list.size() == 0) {
             return eq;
 		}
@@ -68,8 +69,9 @@ struct EQ_Setting{
 	QString toString() const {
 
 		QString str = name;
+
 		for(int i=0; i<settings.size(); i++){
-			str += QString(",") + QString::number(settings[i]);
+            str += QString(":") + QString::number(settings[i]);
 		}
 
 		return str;
@@ -80,7 +82,20 @@ struct EQ_Setting{
 		QString other = s.toString();
 		return ( str.compare(other) == 0 );
 	}
+
+    static QList<EQ_Setting> get_defaults(){
+        QList<EQ_Setting> defaults;
+
+        defaults << EQ_Setting::fromString(QString("Flat:0:0:0:0:0:0:0:0:0:0"));
+        defaults << EQ_Setting::fromString(QString("Rock:2:4:8:3:1:3:7:10:14:14"));
+        defaults << EQ_Setting::fromString(QString("Light Rock:1:1:2:1:-2:-3:-1:3:5:8"));
+        defaults << EQ_Setting::fromString(QString("Treble:0:0:-3:-5:-3:2:8:15:17:13"));
+        defaults << EQ_Setting::fromString(QString("Bass:13:17:15:8:2:-3:-5:-3:0:0"));
+        defaults << EQ_Setting::fromString(QString("Mid:0:0:5:9:15:15:12:7:2:0"));
+        return defaults;
+    }
 };
+
 
 
 #endif

@@ -101,9 +101,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="cb_sinus">
+      <widget class="QCheckBox" name="cb_gauss">
        <property name="text">
-        <string>sinus</string>
+        <string>curve</string>
        </property>
       </widget>
      </item>

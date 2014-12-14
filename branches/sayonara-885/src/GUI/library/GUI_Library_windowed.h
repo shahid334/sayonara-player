@@ -113,7 +113,6 @@ signals:
 	void sig_delete_certain_tracks(const QList<int>&, int);
 
 	void sig_filter_changed(const Filter&);
-	void sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
 
 	void sig_show_id3_editor(const QList<int>&);
 	void sig_play_next_tracks(const QList<int>& lst);
@@ -210,10 +209,6 @@ protected slots:
 protected:
 	void resizeEvent(QResizeEvent* e);
     void focusInEvent(QFocusEvent *e);
-
-    SortOrder _sort_albums;  /* [name | year] [asc | desc] */
-    SortOrder _sort_artists; /* [name | tracks] [asc | desc] */
-    SortOrder _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
 
 	QList<int> _shown_cols_albums;
 	QList<int> _shown_cols_artist;

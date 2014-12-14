@@ -45,7 +45,7 @@ class AbstrSetting{
 };
 
 
-template<typename T,
+template< typename T,
 		 template <typename Arg> class SC = SettingConverter >
 
 class Setting : public AbstrSetting

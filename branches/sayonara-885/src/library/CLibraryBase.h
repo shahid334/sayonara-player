@@ -124,10 +124,6 @@ protected:
     AlbumList			_vec_albums;
     ArtistList			_vec_artists;
 
-    Sort::SortOrder		_track_sortorder;
-    Sort::SortOrder		_album_sortorder;
-    Sort::SortOrder		_artist_sortorder;
-
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;
     QList<int>          _selected_tracks;
@@ -136,6 +132,8 @@ protected:
 
     void 				emit_stuff();
     void				delete_tracks(MetaDataList& v_md, int answer);
+
+    LibSortOrder        _sortorder;
 
 };
 

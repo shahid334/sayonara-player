@@ -59,7 +59,6 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 
 	_active_idx = -1;
 
-	_settings = Settings::getInstance();
 	setupUi(this);
 
     btn_preset->setIcon(Helper::getIcon("save.png"));
@@ -76,13 +75,16 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	_sliders.push_back(new EqSlider(sli_8, label_9, 8));
 	_sliders.push_back(new EqSlider(sli_9, label_10, 9));
 
+    cb_gauss->setChecked( _settings->get(Set::Eq_Gauss));
+
 	foreach(EqSlider* s, _sliders) {
 		connect(s, SIGNAL(sig_value_changed(int,int)), this, SLOT(sli_changed(int, int)));
 		connect(s, SIGNAL(sig_slider_pressed(int)), this, SLOT(sli_pressed(int)));
 		connect(s, SIGNAL(sig_slider_released(int)), this, SLOT(sli_released(int)));
 	}
 
-	connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
+    connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_save_clicked()));
+    connect(cb_gauss, SIGNAL(toggled(bool)), this, SLOT(cb_gauss_toggled(bool)));
 
 	fill_eq_presets();
 
@@ -132,7 +134,7 @@ void GUI_Equalizer::sli_changed(int idx, int new_val) {
 	emit eq_changed_signal(idx, new_val);
 
 	// this slider has been changed actively
-	if( idx == _active_idx && cb_sinus->isChecked() ){
+    if( idx == _active_idx && cb_gauss->isChecked() ){
 		int delta = new_val - _old_val[idx];
 
 		for(int i=idx-9; i<idx+9; i++){
@@ -153,24 +155,14 @@ void GUI_Equalizer::sli_changed(int idx, int new_val) {
 }
 
 
-void GUI_Equalizer::but_enabled_changed(bool enabled) {
-
-}
-
-
 void GUI_Equalizer::fill_eq_presets() {
 
 	QStringList items;
 
 	int last_idx = _settings->get(Set::Eq_Last);
 
-	_presets << _settings->get(Set::Eq_Flat);
-	_presets << _settings->get(Set::Eq_Rock);
-	_presets << _settings->get(Set::Eq_LightRock);
-	_presets << _settings->get(Set::Eq_Bass);
-	_presets << _settings->get(Set::Eq_Mid);
-	_presets << _settings->get(Set::Eq_Treble);
-	_presets << _settings->get(Set::Eq_Custom);
+    _presets = _settings->get(Set::Eq_List);
+    qDebug() << "Got " << _presets.size() << " eq presets...";
 
 	foreach(EQ_Setting s, _presets) {
 		items << s.name;
@@ -187,11 +179,6 @@ void GUI_Equalizer::fill_eq_presets() {
 }
 
 
-void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs) {
-	Q_UNUSED(eqs);
-}
-
-
 void GUI_Equalizer::preset_changed(int index) {
 
 	QList<double> setting = _presets[index].settings;
@@ -203,52 +190,29 @@ void GUI_Equalizer::preset_changed(int index) {
 		_old_val[i] = setting[i];
 	}
 
-	Settings::getInstance()->set(Set::Eq_Last, index);
+    _settings->set(Set::Eq_Last, index);
 }
 
+void GUI_Equalizer::cb_gauss_toggled(bool b){
+    _settings->set(Set::Eq_Gauss, b);
+}
 
-void GUI_Equalizer::btn_preset_clicked() {
+void GUI_Equalizer::btn_save_clicked() {
 
-    bool b_save = true;
-    int current_idx = combo_presets->currentIndex();
+    int idx = combo_presets->currentIndex();
+    int i=0;
 
-	QString str = "Custom";
+    EQ_Setting s(combo_presets->currentText());
 
-	foreach(EqSlider* s, _sliders) {
-		str += "," + s->getLabel()->text();
-	}
+    foreach(EqSlider* sli, _sliders){
+        s.settings[i] = sli->getValue();
+        i++;
+    }
 
-	int custom_idx = -1;
-	for(int i=0; i<_presets.size(); i++) {
+    s.name = combo_presets->currentText();
 
-		if(_presets[i].name == "Custom") {
-            _presets[i] = EQ_Setting::fromString(str);
-			custom_idx = i;
-			break;
-		}
-	}
-
-	if( custom_idx != -1 && custom_idx != current_idx ) {
-
-        QMessageBox msgBox(this);
-         msgBox.setText(tr("This will overwrite your custom preset"));
-         msgBox.setInformativeText(tr("Continue?"));
-		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		 msgBox.setDefaultButton(QMessageBox::No);
-         Helper::set_deja_vu_font(&msgBox);
-		 int ret = msgBox.exec();
-
-		 if(ret != QMessageBox::Yes) b_save = false;
-	}
-
-	if(b_save) {
-
-		_settings->set(Set::Eq_Custom, _presets[6]);
-
-        if(custom_idx != -1){
-            combo_presets->setCurrentIndex(custom_idx);
-        }
-	}
+    _presets[idx] = s;
+    _settings->set(Set::Eq_List, _presets);
 }
 
 

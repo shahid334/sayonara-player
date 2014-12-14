@@ -102,20 +102,18 @@ public:
 		void sli_pressed(int);
 		void sli_released(int);
 
-		void but_enabled_changed(bool);
 		void preset_changed(int);
-		void btn_preset_clicked();
+        void cb_gauss_toggled(bool);
+        void btn_save_clicked();
 
 	public slots:
 		void fill_eq_presets();
-		void fill_available_equalizers(const QStringList&);
         void changeSkin(bool);
         void language_changed();
 
 	private:
 
 		QList<EQ_Setting> _presets;
-		Settings* _settings;
 		QList<EqSlider*> _sliders;
 
         double _m;

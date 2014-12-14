@@ -49,7 +49,7 @@ void CLibraryBase::baseDirSelected (const QString & baseDir) {
 
 void CLibraryBase::clearLibrary() {
     MetaDataList lst;
-	_db->getTracksFromDatabase(lst, _track_sortorder);
+    _db->getTracksFromDatabase(lst, _sortorder.so_tracks);
     _db->deleteTracks(lst);
     refresh();
 }
@@ -99,7 +99,7 @@ void CLibraryBase::reload_thread_finished() {
 
     _db->getAllAlbums(_vec_albums);
     _db->getAllArtists(_vec_artists);
-	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
 
     emit_stuff();
 
@@ -113,9 +113,9 @@ void CLibraryBase::library_reloading_state_new_block() {
 
     _reload_thread->pause();
 
-	_db->getAllAlbums(_vec_albums, _album_sortorder);
-	_db->getAllArtists(_vec_artists, _artist_sortorder);
-	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    _db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+    _db->getAllArtists(_vec_artists, _sortorder.so_artists);
+    _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
 
     emit_stuff();
 
@@ -134,7 +134,7 @@ void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
     _db->storeMetadata(v_md);
 
     MetaDataList data;
-	_db->getTracksFromDatabase(data, _track_sortorder);
+    _db->getTracksFromDatabase(data, _sortorder.so_tracks);
     emit sig_all_tracks_loaded(data);
 }
 
@@ -145,9 +145,9 @@ void CLibraryBase::loadDataFromDb () {
     _filter.cleared = true;
     _filter.filtertext = "";
 
-	_db->getAllArtists(_vec_artists, _artist_sortorder);
-	_db->getAllAlbums(_vec_albums, _album_sortorder);
-	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    _db->getAllArtists(_vec_artists, _sortorder.so_artists);
+    _db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+    _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
 
     emit_stuff();
 }

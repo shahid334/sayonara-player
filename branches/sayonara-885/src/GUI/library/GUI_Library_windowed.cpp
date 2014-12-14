@@ -82,12 +82,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-	QList<int> sorting = _settings->get(Set::Lib_Sorting);
-
-    _sort_artists = (Sort::SortOrder) sorting[0];
-    _sort_albums = (Sort::SortOrder) sorting[1];
-    _sort_tracks = (Sort::SortOrder) sorting[2];
-
 	_shown_cols_albums = _settings->get(Set::Lib_ColsAlbum);
 	_shown_cols_artist = _settings->get(Set::Lib_ColsArtist);
 	_shown_cols_tracks = _settings->get(Set::Lib_ColsTitle);
@@ -206,6 +200,8 @@ void  GUI_Library_windowed::init_headers() {
     if(_artist_delegate) delete _artist_delegate;
     if(_track_delegate) delete _track_delegate;
 
+    LibSortOrder so = _settings->get(Set::Lib_Sorting);
+
     QList<ColumnHeader> track_columns;
     QList<ColumnHeader> album_columns;
     QList<ColumnHeader> artist_columns;
@@ -249,13 +245,12 @@ void  GUI_Library_windowed::init_headers() {
     connect(_album_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(album_rating_changed(int)));
     connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));
 
-
-	tb_title->setModel(_track_model);
+    tb_title->setModel(_track_model);
 	tb_title->setAbstractModel((AbstractSearchTableModel*) _track_model);
 	tb_title->setItemDelegate(_track_delegate);
 	tb_title->setAlternatingRowColors(true);
 	tb_title->setDragEnabled(true);
-	tb_title->set_table_headers(track_columns, _sort_tracks);
+    tb_title->set_table_headers(track_columns, so.so_tracks);
 	tb_title->rc_header_menu_init(_shown_cols_tracks);
 
 
@@ -264,7 +259,7 @@ void  GUI_Library_windowed::init_headers() {
 	lv_artist->setItemDelegate(_artist_delegate);
 	lv_artist->setAlternatingRowColors(true);
 	lv_artist->setDragEnabled(true);
-	lv_artist->set_table_headers(artist_columns, _sort_artists);
+    lv_artist->set_table_headers(artist_columns, so.so_artists);
 	lv_artist->rc_header_menu_init(_shown_cols_artist);
 
 
@@ -273,7 +268,7 @@ void  GUI_Library_windowed::init_headers() {
 	lv_album->setItemDelegate(_album_delegate);
 	lv_album->setAlternatingRowColors(true);
 	lv_album->setDragEnabled(true);
-	lv_album->set_table_headers(album_columns, _sort_albums);
+    lv_album->set_table_headers(album_columns, so.so_albums);
 	lv_album->rc_header_menu_init(_shown_cols_albums);
 
 }
@@ -460,20 +455,29 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx) {
 
 
 void GUI_Library_windowed::sortorder_artist_changed(Sort::SortOrder s) {
-    _sort_artists = s;
-    emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
+
+    LibSortOrder so = _settings->get(Set::Lib_Sorting);
+    so.so_artists = s;
+
+     _settings->set(Set::Lib_Sorting, so);
 }
 
 
 void GUI_Library_windowed::sortorder_album_changed(Sort::SortOrder s) {
-    _sort_albums = s;
-    emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
+
+   LibSortOrder so = _settings->get(Set::Lib_Sorting);
+    so.so_albums = s;
+
+    _settings->set(Set::Lib_Sorting, so);
 }
 
 
 void GUI_Library_windowed::sortorder_title_changed(Sort::SortOrder s) {
-    _sort_tracks = s;
-    emit sig_sortorder_changed(_sort_artists, _sort_albums, _sort_tracks);
+
+    LibSortOrder so = _settings->get(Set::Lib_Sorting);
+    so.so_tracks = s;
+
+     _settings->set(Set::Lib_Sorting, so);
 }
 
 

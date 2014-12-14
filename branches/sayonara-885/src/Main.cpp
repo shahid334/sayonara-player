@@ -138,13 +138,8 @@ bool register_settings(){
 	REGISTER_SETTING( QString, LFM_SessionKey, "lfm_session_key", QString() );
 
 	REGISTER_SETTING( int, Eq_Last, "eq_last", 0);
-	REGISTER_SETTING( EQ_Setting, Eq_Flat, "EQ_pr_flat", EQ_Setting() );
-	REGISTER_SETTING( EQ_Setting, Eq_Rock, "EQ_pr_rock", EQ_Setting() );
-	REGISTER_SETTING( EQ_Setting, Eq_Treble, "EQ_pr_treble", EQ_Setting() );
-	REGISTER_SETTING( EQ_Setting, Eq_Bass, "EQ_pr_bass", EQ_Setting() );
-	REGISTER_SETTING( EQ_Setting, Eq_Mid, "EQ_pr_mid", EQ_Setting() );
-	REGISTER_SETTING( EQ_Setting, Eq_LightRock, "EQ_pr_light_rock", EQ_Setting() );
-	REGISTER_SETTING( EQ_Setting, Eq_Custom, "EQ_pr_custom", EQ_Setting() );
+    REGISTER_SETTING( QList<EQ_Setting>, Eq_List, "EQ_list", EQ_Setting::get_defaults() );
+    REGISTER_SETTING( bool, Eq_Gauss, "EQ_Gauss", true );
 
 	REGISTER_SETTING( bool, Lib_Show, "show_library", true );
 	REGISTER_SETTING( QString, Lib_Path, "library_path", QString() );
@@ -158,9 +153,7 @@ bool register_settings(){
 	REGISTER_SETTING( bool, Lib_OnlyTracks, "lib_shown_tracks", false );
 	REGISTER_SETTING( bool, Lib_LiveSearch, "lib_live_search", true );
 
-	QList<int> sortings;
-	sortings << 1 << 5 << 21;
-	REGISTER_SETTING(  QList<int> , Lib_Sorting, "lib_sortings", sortings );
+    REGISTER_SETTING( LibSortOrder , Lib_Sorting, "lib_sortings", LibSortOrder() );
 
 	REGISTER_SETTING( QString, Player_Version, "player_version", "0.4.1");
 	REGISTER_SETTING( QString, Player_Language, "player_language", "sayonara_lang_en" );

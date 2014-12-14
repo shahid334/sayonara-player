@@ -4,8 +4,10 @@
 #include <QString>
 #include <QPoint>
 #include <QSize>
+#include "library/Sorting.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/PlaylistMode.h"
+
 
 
 namespace SK{
@@ -18,13 +20,8 @@ namespace SK{
 		LFM_SessionKey,
 
 		Eq_Last,
-		Eq_Flat,
-		Eq_Rock,
-		Eq_Treble,
-		Eq_Bass,
-		Eq_Mid,
-		Eq_LightRock,
-		Eq_Custom,
+        Eq_List,
+        Eq_Gauss,
 
 		Lib_Show,
 		Lib_Path,
@@ -110,13 +107,8 @@ namespace Set {
 	INST(QString, LFM_SessionKey);
 
 	INST(int, Eq_Last);
-	INST(EQ_Setting, Eq_Flat);
-	INST(EQ_Setting, Eq_Rock);
-	INST(EQ_Setting, Eq_Treble);
-	INST(EQ_Setting, Eq_Bass);
-	INST(EQ_Setting, Eq_Mid);
-	INST(EQ_Setting, Eq_LightRock);
-	INST(EQ_Setting, Eq_Custom);
+    INST(QList<EQ_Setting>, Eq_List);
+    INST(bool, Eq_Gauss);
 
 	INST(bool, Lib_Show);
 	INST(QString, Lib_Path);
@@ -125,7 +117,7 @@ namespace Set {
 	INST(QList<int>, Lib_ColsAlbum);
 	INST(bool, Lib_OnlyTracks);
 	INST(bool, Lib_LiveSearch);
-	INST(QList<int>, Lib_Sorting);
+    INST(LibSortOrder, Lib_Sorting);
 
 	INST(QString, Player_Version);
 	INST(QString, Player_Language);
