@@ -188,7 +188,8 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 
     if (!start_play && !_playing_stream){
 		pause();
-    }
+	}
+
 }
 
 

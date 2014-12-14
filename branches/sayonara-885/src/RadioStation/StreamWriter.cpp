@@ -1,10 +1,11 @@
 #include "RadioStation/StreamWriter.h"
-
+#include "HelperStructs/Helper.h"
 
 static char padding[256];
 
 StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
 {
+
 	create_headers();
 	reset();
 
@@ -12,10 +13,11 @@ StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
 
 	_stream_title = "Sayonara Radio";
 	_socket = socket;
+
 }
 
 StreamWriter::~StreamWriter(){
-	
+
 }
 
 QString StreamWriter::get_ip(){
@@ -94,10 +96,11 @@ HttpAnswer StreamWriter::parse_message(){
 	QStringList lst;
 	QByteArray msg;
 
-	msg = _socket->read(4096);
+	msg = _socket->read(8192);
 
-	if(msg.size() < 0) {
-			return HttpAnswerFail;
+
+	if(msg.size() == 0) {
+		return HttpAnswerFail;
 	}
 
 	qmsg = QString(msg);
@@ -108,7 +111,7 @@ HttpAnswer StreamWriter::parse_message(){
 
 		qDebug() << str;
 
-		QRegExp regex("(GET|HEAD)(\\s|/)*HTTP", Qt::CaseInsensitive);
+		QRegExp regex("(GET)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_pl("(GET)(\\s|/)*(playlist.m3u)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_mp3("(GET)(\\s|/)*(track.mp3)(\\s|/)*HTTP", Qt::CaseInsensitive);
 
@@ -126,6 +129,7 @@ HttpAnswer StreamWriter::parse_message(){
 		if(str.contains(regex_mp3)){
 			qDebug() << "get mp3";
 			get_received = true;
+			get_mp3 = true;
 			continue;
 		}
 
@@ -166,6 +170,7 @@ HttpAnswer StreamWriter::parse_message(){
 		return HttpAnswerMP3;
 	}
 
+
 	if(get_playlist && !_host.isEmpty()){
 		return HttpAnswerPlaylist;
 	}
@@ -191,7 +196,7 @@ bool StreamWriter::send_playlist(const MetaData& md){
 
 	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
 									"content-type:audio/x-mpegurl\r\n"
-									"Content-Length: " + QString::number(pl.size()).toLocal8Bit() +
+									"Content-Length: " + QString::number(pl.size()).toLocal8Bit() + "\r\n"
 									"Connection: keep-alive\r\n\r\n" +
 									pl
 								 );
@@ -212,23 +217,24 @@ bool StreamWriter::send_html5(){
 				"<head>"
 				"</head>"
 				"<body>"
-				"<audio controls>"
+				"<audio autoplay controls>"
 					"<source src=\"track.mp3\" type=\"audio/mpeg\">"
 					"Your browser does not support the audio element."
 				"</audio>"
 				"</body>"
-			"<html>");
+			"</html>");
 
 	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
 								   "content-type: text/html\r\n"
 								   "content-length: " + QString::number(html.size()).toLocal8Bit() +
-								   "Connection: keep-alive\r\n\r\n" +
+								   "\r\nConnection: keep-alive\r\n\r\n" +
 								   html
 								   );
 
-	qDebug() << "send html5 " << data;
+	//qDebug() << "send html5 " << data;
 
 	n_bytes = _socket->write(data);
+
 	return (n_bytes > 0);
 }
 

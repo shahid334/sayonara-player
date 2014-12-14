@@ -22,6 +22,7 @@
 #ifndef _EQUALIZER_PRESETS_
 #define _EQUALIZER_PRESETS_
 
+#include <QDebug>
 #include <QString>
 #include <QStringList>
 #include <QMetaType>
@@ -48,19 +49,23 @@ struct EQ_Setting{
     static EQ_Setting fromString(const QString& str){
 
         EQ_Setting eq;
-        QStringList list = str.split(':');
-		if(list.size() == 0) {
+		QStringList list = str.split(':');
+		if(list.size() < 11) {
+			qDebug() << "no valid eq string: " << str;
             return eq;
 		}
+
+		qDebug() << "Load EQ from string: " << str;
 
         eq.name = list.at(0);
 		list.pop_front();
 
 		for(int i=0; i<list.size(); i++){
-
             if( i == eq.settings.size() ) break;
             eq.settings[i] = list.at(i).toDouble();
 		}
+
+		qDebug() << "Loaded equalizer: " << eq.settings;
 
         return eq;
 	}

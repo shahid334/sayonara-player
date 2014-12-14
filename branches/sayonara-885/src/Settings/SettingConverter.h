@@ -166,6 +166,7 @@ public:
 		return lst.join(",");
 	}
 
+
 	static bool cvt_from_string(QString val, QList<T>& ret){
 
 		SettingConverter<T> sc;
@@ -173,6 +174,7 @@ public:
 		QStringList lst = val.split(",");
 
 		foreach(QString l, lst){
+
 			T v;
 			sc.cvt_from_string(l, v);
 			ret << v;

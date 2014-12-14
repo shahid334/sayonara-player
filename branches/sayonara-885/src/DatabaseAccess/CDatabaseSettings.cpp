@@ -84,7 +84,7 @@ bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) const {
 		return true;
 	}
 
-	return true;
+	return false;
 }
 
 

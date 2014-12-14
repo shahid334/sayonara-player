@@ -138,7 +138,7 @@ bool register_settings(){
 	REGISTER_SETTING( QString, LFM_SessionKey, "lfm_session_key", QString() );
 
 	REGISTER_SETTING( int, Eq_Last, "eq_last", 0);
-    REGISTER_SETTING( QList<EQ_Setting>, Eq_List, "EQ_list", EQ_Setting::get_defaults() );
+	REGISTER_SETTING( QList<EQ_Setting>, Eq_List, "EQ_list", EQ_Setting::get_defaults() );
     REGISTER_SETTING( bool, Eq_Gauss, "EQ_Gauss", true );
 
 	REGISTER_SETTING( bool, Lib_Show, "show_library", true );

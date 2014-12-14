@@ -42,6 +42,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		QMap<QString, QTcpSocket*> _queue_map;
 
 		QList<StreamWriter*> _lst_sw;
+		QList<QTcpSocket*> _queue;
 
 		bool listen_for_connection();
 
@@ -51,8 +52,8 @@ class StreamServer : public QThread, protected SayonaraClass {
 
 	public slots:
 		void new_data(uchar* data, quint64 size);
-		void accept_client(const QString& ip);
-		void reject_client(const QString& ip);
+		void accept_client();
+		void reject_client();
 		void dismiss(int idx);
 		void disconnect(StreamWriter* sw);
 		void disconnect_all();

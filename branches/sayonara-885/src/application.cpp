@@ -328,8 +328,8 @@ void Application::init_connections() {
 	CONNECT (listen, sig_pos_changed_s(quint32),                      ui_bookmarks,        pos_changed_s(quint32) );
 	CONNECT (listen, sig_bitrate_changed(qint32),					  player,              psl_bitrate_changed(qint32));
 	CONNECT (listen, sig_dur_changed(const MetaData&),                player,              psl_dur_changed(const MetaData&));
-	CONNECT (listen, sig_dur_changed(const MetaData&),                playlist_handler,    psl_dur_changed(const MetaData&));
-	CONNECT (listen, sig_dur_changed(const MetaData&),                library,             psl_dur_changed(const MetaData&));
+	//CONNECT (listen, sig_dur_changed(const MetaData&),                playlist_handler,    psl_dur_changed(const MetaData&));
+	//CONNECT (listen, sig_dur_changed(const MetaData&),                library,             psl_dur_changed(const MetaData&));
 
 	CONNECT (ui_speed, sig_speed_changed(float),                      listen,              psl_set_speed(float) );
 
@@ -416,8 +416,8 @@ void Application::init_connections() {
 
 	CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),	stream_server,	update_track(const MetaData&));
 	CONNECT (ui_broadcast, sig_dismiss(int),									stream_server,	dismiss(int));
-	CONNECT (ui_broadcast, sig_accepted(const QString&),						stream_server,	accept_client(const QString&));
-	CONNECT (ui_broadcast, sig_rejected(const QString&),						stream_server,	reject_client(const QString&));
+	CONNECT (ui_broadcast, sig_accepted(),										stream_server,	accept_client());
+	CONNECT (ui_broadcast, sig_rejected(),										stream_server,	reject_client());
 	CONNECT (listen, sig_data(uchar*, quint64),									stream_server,	new_data(uchar*, quint64));
 
     qDebug() << "connections done";

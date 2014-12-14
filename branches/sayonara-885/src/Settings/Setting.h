@@ -95,16 +95,19 @@ class Setting : public AbstrSetting
 
             if(!_db_setting) return;
 
-            bool success;
 			QString s;
-			success = db->load_setting(_db_key, s);
+			bool success = db->load_setting(_db_key, s);
+
 			if(!success){
+				qDebug() << "Setting " << _db_key << ": Not found. Use default value...";
 				_val = _default_val;
+				qDebug() << "Load Setting " << _db_key << ": " << SC<T>::cvt_to_string(_val);
 				return;
 			}
 
 			success = SC<T>::cvt_from_string(s, _val);
 			if(!success){
+				qDebug() << "Setting " << _db_key << ": Cannot convert. Use default value...";
 				_val = _default_val;
 			}
 

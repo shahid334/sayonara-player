@@ -10,7 +10,8 @@ StreamServer::StreamServer(QObject* parent) :
 	_port = _settings->get(Set::Broadcast_Port);
 
 	_server = new QTcpServer();
-	_server->setMaxPendingConnections(10);
+
+	//_server->setMaxPendingConnections(10);
 	connect(_server, SIGNAL(newConnection()), this, SLOT(new_client_request()));
 
 
@@ -82,60 +83,105 @@ bool StreamServer::listen_for_connection(){
 void StreamServer::new_client_request(){
 
 	QTcpSocket* socket = _server->nextPendingConnection();
+	socket->waitForReadyRead();
+
 	if(!socket) return;
 
+	qDebug() << "*** New request " << socket->peerAddress() << "***";
+
 	QString ip = socket->peerAddress().toString();
-	_queue_map[ip] = socket;
 
-	emit sig_new_connection_request(ip);
+	StreamWriter* sw = new StreamWriter(socket);
+
+	HttpAnswer answer ;
+
+		answer = sw->parse_message();
+		switch(answer){
+
+			case HttpAnswerFail:
+			case HttpAnswerReject:
+				qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+				sw->send_header(true);
+				disconnect(sw);
+				break;
+
+			case HttpAnswerIgnore:
+				break;
+
+			case HttpAnswerPlaylist:
+				sw->send_playlist(_md);
+				disconnect(sw);
+				break;
+
+			case HttpAnswerMP3:
+				sw->send_html5();
+				break;
+
+			default:
+				qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
+				emit sig_new_connection(ip);
+
+				sw->send_header(false);
+				sw->change_track(_md);
+
+				_lst_sw << sw;
+				_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
+		}
 }
 
-void StreamServer::accept_client(const QString& ip){
+void StreamServer::accept_client(){
+/*
+	if(_queue.size() == 0) return;
 
-	QTcpSocket* s = _queue_map[ip];
+	QTcpSocket* socket = _queue[0];
+	QString ip = socket->peerAddress().toString();
 
-	StreamWriter* sw = new StreamWriter(s);
+	StreamWriter* sw = new StreamWriter(socket);
 
-	HttpAnswer answer = sw->parse_message();
+	HttpAnswer answer ;
+	do{
 
-	switch(answer){
+		answer = sw->parse_message();
+		switch(answer){
 
-		case HttpAnswerFail:
-		case HttpAnswerReject:
-			qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
-			sw->send_header(true);
-			disconnect(sw);
-			break;
+			case HttpAnswerFail:
+			case HttpAnswerReject:
+				qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
+				sw->send_header(true);
+				disconnect(sw);
+				break;
 
-		case HttpAnswerIgnore:
-			break;
+			case HttpAnswerIgnore:
+				break;
 
-		case HttpAnswerPlaylist:
-			sw->send_playlist(_md);
-			disconnect(sw);
-			break;
+			case HttpAnswerPlaylist:
+				sw->send_playlist(_md);
+				disconnect(sw);
+				break;
 
-		case HttpAnswerMP3:
-			sw->send_html5();
-			break;
+			case HttpAnswerMP3:
+				sw->send_html5();
+				break;
 
-		default:
-			qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
-			emit sig_new_connection(ip);
+			default:
+				qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
+				emit sig_new_connection(ip);
 
-			sw->send_header(false);
-			sw->change_track(_md);
+				sw->send_header(false);
+				sw->change_track(_md);
 
-			_lst_sw << sw;
-			_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
-	}
+				_lst_sw << sw;
+				_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
+		}
+	} while(answer == HttpAnswerMP3);
 
-	_queue_map.remove(ip);
+	_queue.pop_front();
+	*/
 }
 
 
-void StreamServer::reject_client(const QString& ip){
-	_queue_map.remove(ip);
+void StreamServer::reject_client(){
+	_queue.pop_front();
 }
 
 
