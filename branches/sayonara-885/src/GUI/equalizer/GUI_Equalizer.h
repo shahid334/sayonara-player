@@ -33,8 +33,9 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "GUI/ui_GUI_Equalizer.h"
 
-#include <QObject>
 #include <QList>
+#include <QMenu>
+#include <QAction>
 
 
 class EqSlider : public QObject{
@@ -105,10 +106,12 @@ public:
 		void preset_changed(int);
         void cb_gauss_toggled(bool);
         void btn_save_clicked();
+		void btn_delete_clicked();
+		void btn_reset_clicked();
+		void text_changed(QString);
 
 	public slots:
 		void fill_eq_presets();
-        void changeSkin(bool);
         void language_changed();
 
 	private:
@@ -116,13 +119,10 @@ public:
 		QList<EQ_Setting> _presets;
 		QList<EqSlider*> _sliders;
 
-        double _m;
-        double _t;
-
-        bool _dark;
-
 		int _old_val[10];
 		int _active_idx;
+
+		int find_combo_text(QString txt);
 
 };
 

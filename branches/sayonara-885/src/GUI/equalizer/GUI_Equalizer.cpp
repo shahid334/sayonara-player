@@ -25,7 +25,6 @@
  *  Created on: May 18, 2011
  *      Author: luke
  */
-#define SCALE(x) (_m * (x) + _t)
 
 
 #include "HelperStructs/Equalizer_presets.h"
@@ -35,9 +34,6 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/ui_GUI_Equalizer.h"
-
-#include <QDockWidget>
-#include <QMessageBox>
 
 
 QString calc_lab(int val) {
@@ -55,14 +51,16 @@ QString calc_lab(int val) {
 
 GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
-	Ui::GUI_Equalizer(){
+	Ui::GUI_Equalizer()
+{
 
 	_active_idx = -1;
 
 	setupUi(this);
 
-    btn_preset->setIcon(Helper::getIcon("save.png"));
-	btn_preset->setText("");
+	btn_save->setIcon(Helper::getIcon("save.png"));
+	btn_delete->setIcon(Helper::getIcon("delete.png"));
+	btn_reset->setIcon(Helper::getIcon("reload.png"));
 
 	_sliders.push_back(new EqSlider(sli_0, label, 0));
 	_sliders.push_back(new EqSlider(sli_1, label_2, 1));
@@ -83,15 +81,15 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 		connect(s, SIGNAL(sig_slider_released(int)), this, SLOT(sli_released(int)));
 	}
 
-    connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_save_clicked()));
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(btn_save_clicked()));
+	connect(btn_delete, SIGNAL(clicked()), this, SLOT(btn_delete_clicked()));
+	connect(btn_reset, SIGNAL(clicked()), this, SLOT(btn_reset_clicked()));
     connect(cb_gauss, SIGNAL(toggled(bool)), this, SLOT(cb_gauss_toggled(bool)));
+	connect(combo_presets, SIGNAL(editTextChanged(QString)), this, SLOT(text_changed(QString)));
 
 	fill_eq_presets();
 
 	hide();
-    _m = (100.0 / 48.0);
-    _t = 50;
-
 }
 
 GUI_Equalizer::~GUI_Equalizer() {
@@ -107,10 +105,16 @@ void GUI_Equalizer::language_changed() {
 	retranslateUi(this);
 }
 
-void GUI_Equalizer::changeSkin(bool dark) {
-
-    _dark = dark;
+int GUI_Equalizer::find_combo_text(QString text){
+	int ret = -1;
+	for(int i=0; i<combo_presets->count(); i++){
+		if(combo_presets->itemText(i).compare(text, Qt::CaseInsensitive) == 0){
+			ret = i;
+		}
+	}
+	return ret;
 }
+
 
 void GUI_Equalizer::sli_pressed(int idx){
 	_active_idx= idx;
@@ -158,11 +162,12 @@ void GUI_Equalizer::sli_changed(int idx, int new_val) {
 void GUI_Equalizer::fill_eq_presets() {
 
 	QStringList items;
+	int last_idx;
 
-	int last_idx = _settings->get(Set::Eq_Last);
-
+	last_idx = _settings->get(Set::Eq_Last);
     _presets = _settings->get(Set::Eq_List);
-    qDebug() << "Got " << _presets.size() << " eq presets...";
+
+	items << "";
 
 	foreach(EQ_Setting s, _presets) {
 		items << s.name;
@@ -170,21 +175,30 @@ void GUI_Equalizer::fill_eq_presets() {
 
 	combo_presets->insertItems(0, items);
 
-	if(last_idx < (int) _presets.size() ) {
-		combo_presets->setCurrentIndex(last_idx);
-		preset_changed(last_idx);
-	}
+	btn_save->setEnabled(combo_presets->currentText().size() > 0);
+	btn_delete->setEnabled(combo_presets->currentIndex() > 0);
 
 	connect(combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
+
+	if(last_idx < _presets.size() && last_idx > 0 ) {
+		combo_presets->setCurrentIndex(last_idx);
+	}
+
 }
 
 
 void GUI_Equalizer::preset_changed(int index) {
 
-	QList<double> setting = _presets[index].settings;
+
+	btn_delete->setEnabled(index > 0);
+
+	if(index == 0) return;
+	if(index > _presets.size()) return;
+
+	QList<double> setting = _presets[index - 1].settings;
 
 	for(int i=0; i<setting.size(); i++) {
-		if(i > (int) _sliders.size()) break;
+		if(i > _sliders.size()) break;
 
 		_sliders[i]->setValue( setting[i] );
 		_old_val[i] = setting[i];
@@ -199,20 +213,59 @@ void GUI_Equalizer::cb_gauss_toggled(bool b){
 
 void GUI_Equalizer::btn_save_clicked() {
 
-    int idx = combo_presets->currentIndex();
-    int i=0;
+	QString text = combo_presets->currentText();
 
-    EQ_Setting s(combo_presets->currentText());
+	int found_idx = find_combo_text(text);
 
-    foreach(EqSlider* sli, _sliders){
-        s.settings[i] = sli->getValue();
-        i++;
-    }
+	if(found_idx <= 0){
+		EQ_Setting s = EQ_Setting::fromString(text + ":0:0:0:0:0:0:0:0:0:0");
+		_presets << s;
+		combo_presets->addItem(text);
+		found_idx = combo_presets->count() - 1;
+	}
 
-    s.name = combo_presets->currentText();
+	for(int i=0; i<_sliders.size(); i++){
+		_presets[found_idx - 1].settings[i] = _sliders[i]->getValue();
+	}
 
-    _presets[idx] = s;
-    _settings->set(Set::Eq_List, _presets);
+	_settings->set(Set::Eq_List, _presets);
+
+
+	combo_presets->setCurrentIndex(found_idx);
+}
+
+void GUI_Equalizer::btn_delete_clicked(){
+
+	int idx = combo_presets->currentIndex();
+
+	combo_presets->setCurrentIndex(0);
+
+	_presets.removeAt(idx - 1);
+	combo_presets->removeItem(idx);
+
+	_settings->set(Set::Eq_List, _presets);
+}
+
+void GUI_Equalizer::btn_reset_clicked(){
+
+	QString text = combo_presets->currentText();
+
+	int found_idx = find_combo_text(text);
+
+	if(found_idx <= 0){
+		foreach(EqSlider* sli, _sliders){
+			sli->setValue(0);
+		}
+	}
+
+	else{
+		for(int i=0; i<_sliders.size(); i++){
+			_sliders[i]->setValue( _presets[found_idx - 1].settings[i] );
+		}
+	}
 }
 
 
+void GUI_Equalizer::text_changed(QString str){
+	btn_save->setEnabled(str.size() > 0);
+}

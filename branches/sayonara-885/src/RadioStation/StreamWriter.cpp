@@ -111,7 +111,7 @@ HttpAnswer StreamWriter::parse_message(){
 
 		qDebug() << str;
 
-		QRegExp regex("(GET)(\\s|/)*HTTP", Qt::CaseInsensitive);
+		QRegExp regex("(GET|HEAD)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_pl("(GET)(\\s|/)*(playlist.m3u)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_mp3("(GET)(\\s|/)*(track.mp3)(\\s|/)*HTTP", Qt::CaseInsensitive);
 

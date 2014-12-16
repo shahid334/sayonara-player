@@ -129,56 +129,6 @@ void StreamServer::new_client_request(){
 		}
 }
 
-void StreamServer::accept_client(){
-/*
-	if(_queue.size() == 0) return;
-
-	QTcpSocket* socket = _queue[0];
-	QString ip = socket->peerAddress().toString();
-
-	StreamWriter* sw = new StreamWriter(socket);
-
-	HttpAnswer answer ;
-	do{
-
-		answer = sw->parse_message();
-		switch(answer){
-
-			case HttpAnswerFail:
-			case HttpAnswerReject:
-				qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
-				sw->send_header(true);
-				disconnect(sw);
-				break;
-
-			case HttpAnswerIgnore:
-				break;
-
-			case HttpAnswerPlaylist:
-				sw->send_playlist(_md);
-				disconnect(sw);
-				break;
-
-			case HttpAnswerMP3:
-				sw->send_html5();
-				break;
-
-			default:
-				qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
-				emit sig_new_connection(ip);
-
-				sw->send_header(false);
-				sw->change_track(_md);
-
-				_lst_sw << sw;
-				_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
-		}
-	} while(answer == HttpAnswerMP3);
-
-	_queue.pop_front();
-	*/
-}
-
 
 void StreamServer::reject_client(){
 	_queue.pop_front();

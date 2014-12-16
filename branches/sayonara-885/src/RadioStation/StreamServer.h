@@ -52,7 +52,6 @@ class StreamServer : public QThread, protected SayonaraClass {
 
 	public slots:
 		void new_data(uchar* data, quint64 size);
-		void accept_client();
 		void reject_client();
 		void dismiss(int idx);
 		void disconnect(StreamWriter* sw);
