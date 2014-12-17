@@ -92,9 +92,9 @@ void GUI_Player::stopClicked(bool b) {
 void GUI_Player::backwardClicked(bool) {
 
    // albumCover->setFocus();
-	int cur_pos_sec =  (m_completeLength_ms * songProgress->value()) / 100000;
+	int cur_pos_sec = (songProgress->value() * _md.length_ms) / (songProgress->maximum() * 100);
 	if(cur_pos_sec > 3) {
-        setProgressJump(0);
+		seek(0);
     }
 
     else{
@@ -122,7 +122,7 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 	if(total_time == 0){
 		length_str = "";
 	}
-    m_completeLength_ms = total_time;
+
 	maxTime->setText(length_str);
 	_md.length_ms = total_time;
 	songProgress->setEnabled(total_time > 0);
@@ -141,55 +141,61 @@ void GUI_Player::jump_backward_ms(){
 
 void GUI_Player::jump_forward() {
 
-	int percent = songProgress->value();
-    percent += 2;
-    setProgressJump(percent);
-	songProgress->setValue(percent);
+	int val = songProgress->value();
+	val += (songProgress->maximum() / 50);
+	seek(val);
+	songProgress->setValue(val);
 
 }
 
 void GUI_Player::jump_backward() {
 
-	int percent = songProgress->value();
-    percent -= 2;
+	int val = songProgress->value();
+	val -= (songProgress->maximum() / 50);
 
-    setProgressJump(percent);
-	songProgress->setValue(percent);
+	seek(val);
+	songProgress->setValue(val);
 }
 
-void GUI_Player::setProgressJump(int percent) {
+void GUI_Player::seek(int val) {
 
-    if(percent > 100 || percent < 0) {
-        percent = 0;
+	int max = songProgress->maximum();
+	if(val > max || val < 0) {
+		val = 0;
     }
 
-    long cur_pos_ms = (percent * _md.length_ms) / 100;
-	QString curPosString = Helper::cvt_ms_to_string(cur_pos_ms);
-    curTime->setText(curPosString);
+	double percent = (val * 1.0) / max;
+	quint64 cur_pos_ms =  (quint64) (percent * _md.length_ms);
 
-	emit sig_seek_rel(percent);
+	QString curPosString = Helper::cvt_ms_to_string(cur_pos_ms);
+
+	curTime->setText(curPosString);
+
+	emit sig_seek_rel( (int) (percent * 100) );
 }
 
 void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
-    if (m_completeLength_ms != 0) {
+	int max = songProgress->maximum();
 
-		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
+	if ( _md.length_ms != 0 ) {
 
-		if (!songProgress->isSearching() && newSliderVal < songProgress->maximum()) {
+		int new_slider_val = ( pos_sec * 1000.0 * max ) / (_md.length_ms);
 
-			songProgress->setValue(newSliderVal);
+		if ( !songProgress->isSearching() && new_slider_val < max ) {
+
+			songProgress->setValue(new_slider_val);
 		}
 	}
 
-	else if(pos_sec > m_completeLength_ms / 1000) {
+	else if(pos_sec > _md.length_ms / 1000) {
 		songProgress->setValue(0);
     }
 
 
 	if(!songProgress->isSearching()) {
 
-        if(m_completeLength_ms != 0 && pos_sec > m_completeLength_ms) pos_sec = 0;
+		if(_md.length_ms != 0 && (pos_sec * 1000) > _md.length_ms) pos_sec = 0;
 
 		QString curPosString = Helper::cvt_ms_to_string(pos_sec * 1000);
 		curTime->setText(curPosString);

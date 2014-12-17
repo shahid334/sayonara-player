@@ -24,9 +24,10 @@
 #define PLAYLISTLOADER_H
 
 #include <QObject>
+#include "HelperStructs/SayonaraClass.h"
 #include "Settings/Settings.h"
 
-class PlaylistLoader : public QObject
+class PlaylistLoader : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
@@ -40,8 +41,6 @@ signals:
     
 public slots:
 
-private:
-    Settings* _settings;
     
 };
 

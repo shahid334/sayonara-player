@@ -51,6 +51,7 @@ public slots:
 
 	void start_timer(qint64 ms);
 	void set_speed(float f);
+	void set_ready();
 
 
 private:

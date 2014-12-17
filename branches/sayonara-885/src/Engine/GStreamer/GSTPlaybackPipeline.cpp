@@ -239,8 +239,13 @@ bool GSTPlaybackPipeline::tee_connect(GstPadTemplate* tee_src_pad_template, GstE
 	return true;
 }
 
+void GSTPlaybackPipeline::set_ready(){
+
+	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_READY);
+}
 
 void GSTPlaybackPipeline::play() {
+
 	_timer->stop();
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
@@ -249,8 +254,6 @@ void GSTPlaybackPipeline::play() {
 	if(_speed_active){
 		set_speed(_speed_val);
 	}
-
-
 }
 
 
@@ -268,7 +271,6 @@ void GSTPlaybackPipeline::stop() {
 	_uri = 0;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
-
 }
 
 void GSTPlaybackPipeline::_sl_vol_changed() {
@@ -342,7 +344,8 @@ gint64 GSTPlaybackPipeline::seek_abs(gint64 ns) {
 	if(ns == 0) return 0;
 	if(ns < 0) ns = 0;
 	if(ns > _duration_ms * MIO){
-		ns = _duration_ms * MIO;
+		qDebug() << "Warning: Duration = " << _duration_ms << " < " << ns / MIO;
+		return -1;
 	}
 
 	g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);

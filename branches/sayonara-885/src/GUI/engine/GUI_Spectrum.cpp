@@ -39,8 +39,7 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-	_cur_style_idx = Settings::getInstance()->get(Set::Spectrum_Style);
-
+	_cur_style_idx = _settings->get(Set::Spectrum_Style);
     _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
 
     for(int i=0; i<N_BINS; i++) {
@@ -187,6 +186,7 @@ void GUI_Spectrum::psl_style_update() {
 
    _ecsc->reload(width(), height());
    _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
+   _settings->set(Set::Spectrum_Style, _cur_style_idx);
 
    resize_steps(N_BINS, _cur_style.n_rects);
 

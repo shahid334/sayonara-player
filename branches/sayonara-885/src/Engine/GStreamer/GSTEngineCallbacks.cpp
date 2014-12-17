@@ -164,9 +164,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 	Engine* engine = (Engine*) data;
 
-    GstState old_state, new_state, pending_state;
 	int msg_type = GST_MESSAGE_TYPE(msg);
-
 
 	switch (msg_type) {
 
@@ -189,25 +187,10 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
             break;
 
         case GST_MESSAGE_STATE_CHANGED:
-            if(!engine) break;
-
-            gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
-
-            if ( new_state == GST_STATE_PLAYING) {
-                engine->do_jump_play();
-            }
-
-            if (new_state == GST_STATE_NULL){
-         //       engine->stop();
-            }
-
-
-
-            break;
+			break;
 
 
         case GST_MESSAGE_ASYNC_DONE:
-
             break;
 
         case GST_MESSAGE_TAG:

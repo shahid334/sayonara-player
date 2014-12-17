@@ -63,7 +63,6 @@ public:
 
 
 	MyCaps* get_caps();
-	void do_jump_play();
 	void unmute();
 
 	virtual void init();
@@ -76,7 +75,6 @@ private:
 
 	StreamRecorder*			_stream_recorder;
 
-	LastTrack*				_last_track;
 	MyCaps*					_caps;
 
 	int	 _jump_play;

@@ -29,7 +29,7 @@
 
 PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent) {
 
-    _settings = Settings::getInstance();
+
 	_db = CDatabaseConnector::getInstance();
     _last_pos = 0;
     _playlist = 0;
@@ -56,6 +56,7 @@ void PlaylistHandler::playlist_changed(const MetaDataList& v_md, int cur_idx) {
 void PlaylistHandler::track_changed(const MetaData& md, int cur_idx) {
 
     if(!md.is_disabled){
+		_settings->set(Set::PL_LastTrack, cur_idx);
         emit sig_selected_file_changed(cur_idx);
         emit sig_selected_file_changed_md(md, _last_pos, (_state == PlaylistPlay && cur_idx >= 0));
         _last_pos = 0;

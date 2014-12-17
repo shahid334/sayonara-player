@@ -47,10 +47,10 @@ enum RadioMode {
 };
 
 class MetaData;
-class LastTrack;
+
 
 Q_DECLARE_METATYPE(MetaData)
-Q_DECLARE_METATYPE(LastTrack)
+
 
 class MetaData : public LibraryItem {
 
@@ -138,19 +138,5 @@ struct CustomPlaylist{
     }
 };
 
-class LastTrack : public MetaData {
-
-public:
-
-    quint32 pos_sec;
-
-    LastTrack();
-    LastTrack(const MetaData& md);
-    LastTrack(const LastTrack& lt);
-    virtual ~LastTrack();
-
-    static QVariant toVariant(const LastTrack& md);
-    static bool fromVariant(const QVariant& v, LastTrack& md);
-};
 
 #endif /* METADATA_H_ */

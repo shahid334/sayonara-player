@@ -92,11 +92,10 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) data;
 	GstElement* p = pipeline->get_pipeline();
 
-
 	if(!p) return false;
 	state = pipeline->get_state();
 
-	if(state != GST_STATE_PLAYING && state != GST_STATE_PAUSED) return false;
+	if(state != GST_STATE_PLAYING && state != GST_STATE_PAUSED && state != GST_STATE_READY) return false;
 
 	ENGINE_DEBUG;
 
@@ -143,6 +142,8 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 	size = gst_buffer_get_size(buffer);
 	size_new = gst_buffer_extract(buffer, 0, data, size);
 	pipeline->set_data(data, size_new);
+
+	gst_buffer_unref(buffer);
 
 	return GST_FLOW_OK;
 }

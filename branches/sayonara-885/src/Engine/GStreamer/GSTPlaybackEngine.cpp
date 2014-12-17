@@ -73,13 +73,6 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 
 	_stream_recorder = new StreamRecorder();
 
-	int last_track_id = _settings->get(Set::PL_LastTrack);
-    int last_track_pos = _settings->get(Set::Engine_CurTrackPos_s);
-
-	MetaData md_lt = CDatabaseConnector::getInstance()->getTrackById(last_track_id);
-	_last_track = new LastTrack(md_lt);
-	_last_track->pos_sec = last_track_pos;
-
 	_wait_for_gapless_track = false;
 	_may_start_timer = false;
 
@@ -144,8 +137,9 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bo
 
 	_scrobble_begin_ms = 0;
 	_cur_pos_ms = 0;
-	_scrobbled = false;
 	_jump_play = 0;
+
+	_scrobbled = false;
 }
 
 
@@ -167,6 +161,8 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 		return;
     }
 
+	//_pipeline->set_ready();
+
 	_md = md;
 
 	_caps->set_parsed(false);
@@ -180,9 +176,7 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	emit sig_dur_changed(_md);
 	emit sig_pos_changed_s(pos_sec);
 
-
     play();
-
 
 	// pause if streamripper is not active
 
@@ -263,23 +257,6 @@ void GSTPlaybackEngine::play() {
 	_pipeline->play();
 
 	_may_start_timer = _gapless;
-    _settings->set(Set::PL_LastTrack, _md.id);
-
-}
-
-
-void GSTPlaybackEngine::do_jump_play() {
-
-	if(_playing_stream) {
-		_jump_play = -1;
-		return;
-	}
-
-	if(_jump_play < 0) return;
-
-	_pipeline->seek_abs(_jump_play * GST_SECOND);
-
-	_jump_play = -1;
 }
 
 
@@ -386,6 +363,11 @@ void GSTPlaybackEngine::update_duration(quint64 duration_ms) {
 		duration_ms = _pipeline->get_duration_ms();
 	}
 
+	if(duration_ms > 0 && _jump_play > 0){
+		_pipeline->seek_abs(_jump_play * GST_SECOND);
+		_jump_play = -1;
+	}
+
 	if(duration_ms / 1000 == 0) return;
 
 	if(duration_ms / 1000 == _md.length_ms / 1000) return;
@@ -418,10 +400,6 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 		emit sig_scrobble(_md);
 		_scrobbled = true;
 	}
-
-	_last_track->id = _md.id;
-	_last_track->filepath = _md.filepath;
-	_last_track->pos_sec = pos_sec;
 
     _settings->set(Set::Engine_CurTrackPos_s, pos_sec);
 

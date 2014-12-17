@@ -251,7 +251,6 @@ void GUI_Player::psl_update_track(const MetaData & md, int pos_sec, bool playing
 
 	_md = md;
 
-	m_completeLength_ms = _md.length_ms;
     m_playing = playing;
     m_trayIcon->setPlaying(playing);
 

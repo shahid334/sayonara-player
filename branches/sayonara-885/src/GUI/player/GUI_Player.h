@@ -133,7 +133,7 @@ private slots:
     void sl_rec_button_toggled(bool b);
     void correct_btn_clicked(bool b=false);
     void coverClicked();
-    void setProgressJump(int percent);
+	void seek(int);
     void jump_forward();
     void jump_backward();
     void jump_forward_ms();
@@ -229,7 +229,7 @@ private:
     AsyncWebAccess*         m_awa_translators;
 
     QString                 m_class_name;
-	qint64                 m_completeLength_ms;
+
     bool                    m_playing;
     bool                    m_mute;
     GUI_TrayIcon *          m_trayIcon;

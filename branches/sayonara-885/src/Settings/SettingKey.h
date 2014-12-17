@@ -79,6 +79,7 @@ namespace SK{
 		Socket_To,
 
 		Spectrum_Style,
+		Level_Style,
 
 		BroadCast_Active,
 		Broadcast_Prompt,
@@ -167,6 +168,7 @@ namespace Set {
 	INST(int, Socket_From);
 	INST(int, Socket_To);
 	INST(int, Spectrum_Style);
+	INST(int, Level_Style);
 	INST(bool, BroadCast_Active);
 	INST(bool, Broadcast_Prompt);
 	INST(int, Broadcast_Port);

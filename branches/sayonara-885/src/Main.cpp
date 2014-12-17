@@ -202,6 +202,7 @@ bool register_settings(){
 	REGISTER_SETTING( int, Socket_To, "socket_to", 54056 );
 
 	REGISTER_SETTING( int, Spectrum_Style, "spectrum_style", 0 );
+	REGISTER_SETTING( int, Level_Style, "level_style", 0 );
 
 	REGISTER_SETTING( bool, BroadCast_Active, "broadcast_active", false );
 	REGISTER_SETTING( bool, Broadcast_Prompt, "broadcast_prompt", false );

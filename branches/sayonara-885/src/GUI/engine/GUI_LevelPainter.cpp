@@ -28,7 +28,7 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
 {
 	setupUi(this);
 
-    _cur_style_idx = 0;
+	_cur_style_idx = _settings->get(Set::Level_Style);
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
     reload();
 
@@ -120,6 +120,7 @@ void GUI_LevelPainter::timed_out() {
 
 void GUI_LevelPainter::psl_style_update() {
 
+	_settings->set(Set::Level_Style, _cur_style_idx);
 	_ecsc->reload(width(), height());
     _cur_style = _ecsc->get_color_scheme_level(_cur_style_idx);
 
