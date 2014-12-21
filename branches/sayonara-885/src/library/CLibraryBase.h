@@ -68,7 +68,8 @@ public slots:
 
 	virtual void reloadLibrary(bool);
 	virtual void clearLibrary();
-	virtual void refresh(bool b=true);
+	virtual void refresh();
+	virtual void psl_metadata_changed(const MetaDataList& v_md);
 
 
 /* New way */

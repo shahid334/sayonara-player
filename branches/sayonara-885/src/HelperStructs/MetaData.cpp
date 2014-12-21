@@ -127,6 +127,34 @@ bool MetaData::is_equal(const MetaData& md) const {
 
 }
 
+bool MetaData::is_equal_deep(const MetaData& md) const{
+
+	return ( (id == md.id)  &&
+	( artist_id == md.artist_id ) &&
+	( album_id == md.album_id ) &&
+	( title == md.title ) &&
+	( artist == md.artist ) &&
+	( album == md.album ) &&
+	( rating == md.rating ) &&
+	( length_ms == md.length_ms ) &&
+	( year == md.year ) &&
+	( filepath == md.filepath ) &&
+	( track_num == md.track_num ) &&
+	( bitrate == md.bitrate ) &&
+	( is_extern == md.is_extern ) &&
+	( radio_mode == md.radio_mode ) &&
+	( filesize == md.filesize ) &&
+	( comment == md.comment ) &&
+	( discnumber == md.discnumber ) &&
+	( n_discs == md.n_discs ) &&
+
+	( pl_selected == md.pl_selected ) &&
+	( pl_playing == md.pl_playing ) &&
+	( pl_dragged == md.pl_dragged ) &&
+
+	( is_disabled == md.is_disabled ));
+}
+
 
 
 MetaDataList::MetaDataList() : 

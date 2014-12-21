@@ -29,10 +29,6 @@
 #include <QVariant>
 #include <QMetaType>
 
-#include <vector>
-
-using namespace std;
-
 
 class Artist : public LibraryItem {
 

@@ -56,7 +56,7 @@ ADD_SUBDIRECTORY(languages)
 
 SET(HEADERS
     application.h
-	Settings/SettingNotifier.h
+    Settings/SettingNotifier.h
     Settings/SettingKey.h
     Settings/Setting.h
     Settings/Settings.h
@@ -68,18 +68,20 @@ SET(HEADERS
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
     playlists/Playlists.h
+    RadioStation/StreamWriter.h
+    RadioStation/StreamServer.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
-	RadioStation/StreamWriter.h
-    RadioStation/StreamServer.h
+    TagEdit/TagEdit.h
+    TagEdit/TagExpression.h
 )
 
 SET(SOURCES
     Main.cpp
     application.cpp
     Settings/Settings.cpp
-	Settings/Setting.cpp
+    Settings/Setting.cpp
     Engine/SoundPluginLoader.cpp
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp
@@ -91,8 +93,10 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
     HelperStructs/SmartComparison.cpp
-	RadioStation/StreamWriter.cpp
+    RadioStation/StreamWriter.cpp
     RadioStation/StreamServer.cpp
+    TagEdit/TagEdit.cpp
+    TagEdit/TagExpression.cpp
 )
 
 

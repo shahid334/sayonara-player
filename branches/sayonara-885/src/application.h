@@ -104,6 +104,7 @@ private:
 
 	GUI_StyleSettings*      ui_style_settings;
 	GUI_StreamRecorder*     ui_stream_rec;
+	TagEdit*				tag_edit;
 	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;

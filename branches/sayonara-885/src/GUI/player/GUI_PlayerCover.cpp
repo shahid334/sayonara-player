@@ -39,6 +39,7 @@ void GUI_Player::set_std_cover(bool radio) {
         icon = Helper::getIcon("logo.png");
 	}
 
+	albumCover->icon().detach();
     albumCover->setIcon(icon);
 	albumCover->repaint();
 }

@@ -88,6 +88,7 @@ public:
 
     bool operator==(const MetaData& md) const;
     bool is_equal(const MetaData& md) const;
+	bool is_equal_deep(const MetaData& md) const;
     
 	void print() const;
 

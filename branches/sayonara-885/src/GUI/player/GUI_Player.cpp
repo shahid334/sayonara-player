@@ -426,7 +426,7 @@ void GUI_Player::correct_btn_clicked(bool b) {
 
 	MetaDataList lst;
 	lst.push_back(m_metadata_corrected);
-    ui_info_dialog->setMetaData(lst);
+	ui_info_dialog->set_metadata(lst);
 
     ui_info_dialog->show(TAB_EDIT);
 

@@ -82,7 +82,7 @@ public:
             bool getArtistByID( const int& id, Artist& artist);
 			int getMaxArtistID();
 
-			void getAllArtists(ArtistList& result, SortOrder sortorder = ArtistNameAsc);
+			void getAllArtists(ArtistList& result, SortOrder sortorder = ArtistNameAsc, bool also_empty=false);
 
 			void getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
 
@@ -101,7 +101,7 @@ public:
 
             bool getAlbumByID(const int& id, Album& album);
 
-			void getAllAlbums(AlbumList& result, SortOrder sortorder=AlbumNameAsc);
+			void getAllAlbums(AlbumList& result, SortOrder sortorder=AlbumNameAsc, bool also_empty=false);
 
 			void getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
 			void getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
@@ -128,7 +128,7 @@ public:
 			void getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sortorder = TrackArtistAsc);
 
 			int insertTrackIntoDatabase (const MetaData & data,int artistID, int albumID);
-			int updateTrack(const MetaData& data);
+			bool updateTrack(const MetaData& data);
 			int updateTracks(const MetaDataList& lst);
 
 			int getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
@@ -136,8 +136,11 @@ public:
 			MetaData getTrackByPath(QString path);
             void getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md);
 
-			int deleteTracks(MetaDataList&);
-			int deleteTrack(MetaData&);
+			bool deleteTrack(int id);
+
+			int deleteTracks(const MetaDataList&);
+			int deleteTracks(const QList<int>& ids);
+
 
 
 			/*

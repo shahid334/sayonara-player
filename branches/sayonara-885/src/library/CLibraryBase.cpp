@@ -150,22 +150,28 @@ void CLibraryBase::_sl_sortorder_changed() {
         emit sig_all_tracks_loaded(_vec_md);
     }
 }
-void CLibraryBase::refresh(bool b) {
 
-    if(b)
-        psl_filter_changed(_filter, true);
+void CLibraryBase::psl_metadata_changed(const MetaDataList& v_md){
+	Q_UNUSED(v_md);
+
+	refresh();
+}
+
+void CLibraryBase::refresh() {
+
+	psl_filter_changed(_filter, true);
 }
 
 void CLibraryBase::psl_filter_changed(const Filter& filter, bool force) {
 
 	//qDebug() << "Library: Filter changed";
 
-    if(     _filter.cleared &&
-            filter.cleared &&
-            filter.filtertext.size() < 5 &&
-            (_selected_artists.size() == 0) &&
-            (_selected_albums.size() == 0) &&
-            !force) return;
+	if( _filter.cleared &&
+		filter.cleared &&
+		filter.filtertext.size() < 5 &&
+		(_selected_artists.size() == 0) &&
+		(_selected_albums.size() == 0) &&
+		!force) return;
 
     _filter = filter;
 
@@ -182,7 +188,6 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force) {
         _db->getAllArtists(_vec_artists, _sortorder.so_artists);
         _db->getAllAlbums(_vec_albums, _sortorder.so_albums);
         _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
-
     }
 
     else {
@@ -193,8 +198,6 @@ void CLibraryBase::psl_filter_changed(const Filter& filter, bool force) {
     }
 
     emit_stuff();
-
-
 }
 
 
@@ -332,7 +335,7 @@ void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list) {
 
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list) {
 
-					_selected_tracks.clear();
+	_selected_tracks.clear();
 
     MetaDataList v_md;
 

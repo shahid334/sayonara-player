@@ -754,6 +754,13 @@ QPushButton[flat=false]:pressed {
    background: #323232;
 }
 
+QPushButton[flat=false]:checked {
+   border: 1px solid #e8841a;
+   border-radius: 6px;
+    padding: 4px;
+   background: #323232;
+}
+
 
 
 QPushButton[flat=false]:disabled {

@@ -129,7 +129,7 @@ void GUI_InfoDialog::language_changed() {
 
 	retranslateUi(this);
 
-    setMetaData(v_md);
+	set_metadata(v_md);
     _alternate_covers->language_changed();
 }
 
@@ -243,10 +243,7 @@ void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
 	_mode = mode;
 }
 
-void GUI_InfoDialog::setMetaData(const MetaDataList& v_md) {
-
-    ui_tag_edit->change_meta_data(v_md);
-
+void GUI_InfoDialog::set_metadata(const MetaDataList& v_md) {
 	_v_md = v_md;
 	prepare_info();
 }

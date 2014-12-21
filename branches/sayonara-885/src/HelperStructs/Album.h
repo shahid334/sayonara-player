@@ -29,11 +29,6 @@
 #include <QVariant>
 #include <QMetaType>
 
-#include <vector>
-
-
-using namespace std;
-
 class Album;
 
 Q_DECLARE_METATYPE(Album)

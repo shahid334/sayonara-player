@@ -218,7 +218,7 @@ void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_r
 	if(sel_rows.size() == 0) return;
 
 	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
-    _info_dialog->setMetaData(v_md);
+	_info_dialog->set_metadata(v_md);
 
 	_info_dialog->set_tag_edit_visible( _playlist_type == PlaylistTypeStd );
 

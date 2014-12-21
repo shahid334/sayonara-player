@@ -84,7 +84,7 @@ public:
 	virtual ~GUI_InfoDialog();
 
 	void setInfoMode(InfoDialogMode mode);
-	void setMetaData(const MetaDataList& vd);
+	void set_metadata(const MetaDataList& vd);
     void set_tag_edit_visible(bool b);
 
 	void show(int tab);

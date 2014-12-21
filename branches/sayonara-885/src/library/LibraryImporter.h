@@ -40,7 +40,7 @@ public:
     
 signals:
     void sig_lib_changes_allowed(bool);
-    void sig_import_result(bool);
+	void sig_imported();
     
 public slots:
     void psl_import_files(const QStringList&);

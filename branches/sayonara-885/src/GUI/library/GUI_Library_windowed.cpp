@@ -359,10 +359,6 @@ void GUI_Library_windowed::fill_library_tracks(const MetaDataList& v_metadata) {
 
 	tb_title->fill<MetaDataList, MetaData>(v_metadata);
 
-	if(_info_dialog){
-		_info_dialog->setMetaData(v_metadata);
-	}
-
 	lv_artist->set_mimedata(v_metadata, "tracks", true);
 	lv_album->set_mimedata(v_metadata, "tracks", true);
 }
@@ -428,9 +424,6 @@ void GUI_Library_windowed::track_info_available(const MetaDataList& v_md) {
 
 	tb_title->set_mimedata(v_md, "tracks", false);
 
-    if(_info_dialog){
-		_info_dialog->setMetaData(v_md);
-    }
 }
 
 

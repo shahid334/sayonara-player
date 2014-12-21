@@ -137,7 +137,9 @@ void LibraryImporter::caching_thread_finished() {
 
         bool success = _db->storeMetadata(v_md);
 
-        emit sig_import_result(success);
+		if(success){
+			emit sig_imported();
+		}
 
         return;
     }
@@ -192,6 +194,7 @@ void LibraryImporter::copy_thread_finished() {
             str =  tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files);
 
         QMessageBox::information( _main_window, tr("Import files"), str);
+		emit sig_imported();
     }
 
     else{
@@ -202,7 +205,7 @@ void LibraryImporter::copy_thread_finished() {
     }
 
     _import_dialog->close();
-    emit sig_import_result(success);
+
 }
 
 

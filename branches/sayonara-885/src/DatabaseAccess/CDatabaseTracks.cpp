@@ -525,47 +525,61 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 
 }
 
-
-int CDatabaseConnector::deleteTrack(MetaData& md) {
+bool CDatabaseConnector::deleteTrack(int id){
 
 #ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
+	qDebug() << Q_FUNC_INFO;
 #endif
 
 	DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_INT(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
-    //deleteTrackIndexes(md.id);
+	QSqlQuery q (*_database);
+	QString querytext = QString("DELETE FROM tracks WHERE trackID = :track_id;");
 
-    try {
-			QSqlQuery q (*_database);
-			QString querytext = QString("DELETE FROM tracks WHERE trackID = :track_id;");
+	q.prepare(querytext);
+	q.bindValue(":track_id", id);
 
-			q.prepare(querytext);
-			q.bindValue(":track_id", QVariant(md.id));
+	if (!q.exec()) {
+		qDebug() << "Cannot delete track";
+		qDebug() << q.lastError();
+		return false;
+	}
 
-			if (!q.exec()) {
-				throw QString ("SQL - Error: delete track from Database:  cannot execute query");
-			}
+	else{
+		deleteFromAllPlaylists(id);
+	}
 
-			else{
-				deleteFromAllPlaylists(md.id);
-			}
-
-			return 0;
-		}
-
-		catch (QString& ex) {
-			qDebug() << "SQL - Error: getTracksFromDatabase";
-			qDebug() << ex;
-			return -1;
-		}
+	return true;
 }
 
 
+int CDatabaseConnector::deleteTracks(const QList<int>& ids){
+
+#ifdef DEBUG_DB
+	qDebug() << Q_FUNC_INFO;
+#endif
+
+	DB_TRY_OPEN(_database);
+	 DB_RETURN_NOT_OPEN_INT(_database);
+
+	 int success = 0;
+
+	_database->transaction();
+
+		foreach(int id, ids){
+			if( deleteTrack(id) ){
+				success++;
+			};
+		}
+
+	_database->commit();
+
+	return success;
+}
 
 
-int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
+int CDatabaseConnector::deleteTracks(const MetaDataList& v_md) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -578,12 +592,11 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
 
 	_database->transaction();
 
-    for(int i=0; i<vec_tracks.size(); i++) {
-
-		if( deleteTrack(vec_tracks[i]) == 0) {
-			success ++;
+		foreach(MetaData md, v_md){
+			if( deleteTrack(md.id) ){
+				success++;
+			};
 		}
-	}
 
 	_database->commit();
 
@@ -591,7 +604,7 @@ int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
 }
 
 
-int CDatabaseConnector::updateTrack(const MetaData& data) {
+bool CDatabaseConnector::updateTrack(const MetaData& data) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -633,9 +646,10 @@ int CDatabaseConnector::updateTrack(const MetaData& data) {
 
         if (!q.exec()) {
             qDebug() << ("SQL - Error: update track " + data.filepath);
+			return false;
 		}
 
-	return 0;
+	return true;
 }
 
 int CDatabaseConnector::updateTracks(const MetaDataList& lst) {
@@ -644,10 +658,14 @@ int CDatabaseConnector::updateTracks(const MetaDataList& lst) {
     qDebug() << Q_FUNC_INFO;
 #endif
 
-    int success = 1;
+	int success = 0;
+
     _database->transaction();
-    foreach(MetaData md, lst)
-        success *= updateTrack(md);
+	foreach(MetaData md, lst){
+		if(updateTrack(md)){
+			success++;
+		}
+	}
     _database->commit();
     return success;
 
