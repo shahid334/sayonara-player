@@ -87,9 +87,15 @@ bool PlaylistItemModel::setData(const QModelIndex &index, const QVariant &value,
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
+		 int row = index.row();
          MetaData md;
          if(MetaData::fromVariant(value, md)) {
-            _v_meta_data[index.row()] = md;
+
+			 if(!_selected_rows.contains(row) && md.pl_selected){
+				 _selected_rows << row;
+			 }
+
+			_v_meta_data[row] = md;
             emit dataChanged(index, index);
          }
 	     return true;
@@ -143,24 +149,25 @@ bool PlaylistItemModel::removeRows(int position, int rows, const QModelIndex &in
          if(i >= position &&
             i<=(position+rows-1)) continue;
 
+		 _selected_rows.removeOne(i);
+
          v_md_new.push_back(_v_meta_data[i]);
 	 }
-
 
      _v_meta_data = v_md_new;
 
 	 endRemoveRows();
-	 return true;
 
+	 return true;
 }
 
 
 
 void PlaylistItemModel::set_selected(QList<int>& rows) {
     _selected_rows = rows;
-    for(int i=0; i<_v_meta_data.size(); i++) {
-        _v_meta_data[i].pl_selected = rows.contains(i);
-    }
+	for(int i=0; i<_v_meta_data.size(); i++) {
+		_v_meta_data[i].pl_selected = rows.contains(i);
+	}
 }
 
 bool PlaylistItemModel::is_selected(int row) const {

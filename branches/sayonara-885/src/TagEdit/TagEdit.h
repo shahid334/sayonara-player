@@ -14,7 +14,7 @@ signals:
 	void sig_progress(int);
 
 	void sig_metadata_received(const MetaDataList&);
-	void sig_metadata_changed(const MetaDataList&);
+	void sig_metadata_changed(const MetaDataList&, const MetaDataList&);
 	void sig_metadata_changed(int);
 
 

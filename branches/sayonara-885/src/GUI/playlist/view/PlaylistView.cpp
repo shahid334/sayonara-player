@@ -177,7 +177,7 @@ void PlaylistView::goto_row(int row) {
     QModelIndex idx = _model->index(row, 0);
     row_released(idx);
 
-    this->scrollTo(idx);
+	this->scrollTo(idx, SearchableListView::EnsureVisible);
 }
 
 
@@ -298,7 +298,8 @@ int PlaylistView::get_num_rows() {
 void PlaylistView::set_current_track(int row) {
 
 	for(int i=0; i<_model->rowCount(); i++) {
-        QModelIndex idx = _model->index(i);
+
+		QModelIndex idx = _model->index(i);
         MetaData md;
         QVariant v = _model->data(idx, Qt::WhatsThisRole);
 
@@ -309,7 +310,7 @@ void PlaylistView::set_current_track(int row) {
     }
 
     QModelIndex new_idx = _model->index(row);
-    scrollTo(new_idx);
+	scrollTo(new_idx, SearchableListView::EnsureVisible);
 }
 
 
@@ -370,7 +371,7 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
     }
 
     this->select_rows(selected_rows);
-    this->scrollTo(idx_cur_playing, SearchableListView::EnsureVisible);
+	this->scrollTo(idx_cur_playing, SearchableListView::EnsureVisible);
 }
 
 void PlaylistView::row_pressed(const QModelIndex& idx) {
@@ -413,7 +414,8 @@ void PlaylistView::select_row(int i) {
     if(_model->rowCount() == 0) return;
     if(i > _model->rowCount() - 1) i = _model->rowCount() - 1;
     if(i < 0) i = 0;
-        this->selectionModel()->setCurrentIndex(_model->index(i), QItemSelectionModel::Select);
+
+	this->selectionModel()->setCurrentIndex(_model->index(i), QItemSelectionModel::Select);
 
     QList<int> lst;
     lst << i;
@@ -455,18 +457,17 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
 
     SearchableListView::selectionChanged(selected, deselected);
 
-
-
 	foreach(QModelIndex model_idx, idx_list) {
-        if(idx_list_int.contains(model_idx.row())) continue;
+
+		if(idx_list_int.contains(model_idx.row())) continue;
 
         idx_list_int << model_idx.row();
     }
 
-   _model->set_selected(idx_list_int);
+	_model->set_selected(idx_list_int);
 
-    if(selected.indexes().size() > 0){
-        scrollTo(selected.indexes()[0]);
+	if(selected.indexes().size() > 0){
+		scrollTo(selected.indexes()[0], SearchableListView::EnsureVisible);
     }
 
     _model->get_metadata(idx_list_int, v_md);
@@ -657,7 +658,7 @@ void PlaylistView::scrollUp() {
     int cur_row = this->indexAt(p).row();
     if(cur_row <= 0) return;
 
-    this->scrollTo(_model->index(cur_row - 1));
+	this->scrollTo(_model->index(cur_row - 1), SearchableListView::EnsureVisible);
 }
 
 void PlaylistView::scrollDown() {
@@ -665,7 +666,7 @@ void PlaylistView::scrollDown() {
     int cur_row = this->indexAt(p).row();
     if(cur_row <= 0) return;
 
-    this->scrollTo(_model->index(cur_row - 1));
+	this->scrollTo(_model->index(cur_row - 1), SearchableListView::EnsureVisible);
 }
 
 void PlaylistView::remove_cur_selected_rows(bool select_next_row) {

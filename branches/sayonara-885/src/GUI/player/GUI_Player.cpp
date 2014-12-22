@@ -344,12 +344,14 @@ void GUI_Player::psl_dur_changed(const MetaData& md) {
 
 // public slot:
 // id3 tags have changed
-void GUI_Player::psl_id3_tags_changed(const MetaDataList& v_md) {
+void GUI_Player::psl_id3_tags_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new) {
 
-	int idx = v_md.findTrack(_md.filepath);
-	if(idx < 0) return;
+	QList<int> idxs = v_md_old.findTracks(_md.filepath);
+	if(idxs.isEmpty()) return;
 
-	_md = v_md[idx];
+	int idx = idxs[0];
+
+	_md = v_md_new[idx];
 
 	set_album_label();
 	lab_artist->setText(_md.artist);

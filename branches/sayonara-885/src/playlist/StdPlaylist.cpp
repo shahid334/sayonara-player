@@ -33,7 +33,7 @@ StdPlaylist::StdPlaylist(QObject *parent) :
 
 void StdPlaylist::change_track(int idx) {
 
-    _last_track = _cur_play_idx;
+	_last_track = _cur_play_idx;
 
     if( idx >= _v_md.size() || idx < 0) {
 
@@ -50,7 +50,6 @@ void StdPlaylist::change_track(int idx) {
         _v_md[idx].is_disabled = true;
 
         change_track(idx + 1);
-
         return;
     }
 
@@ -60,7 +59,6 @@ void StdPlaylist::change_track(int idx) {
     }
 
     _last_track = _cur_play_idx;
-
 
     report_changes(false, true);
 }
@@ -201,22 +199,23 @@ void StdPlaylist::next() {
 }
 
 
-void StdPlaylist::metadata_changed(const MetaDataList& md_list) {
+void StdPlaylist::metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new) {
 
     bool sth_changed = false;
-    for(int i=0; i<(int) _v_md.size(); i++) {
 
-        MetaData md_old = _v_md[i];
+	for(int i=0; i<_v_md.size(); i++) {
 
-        foreach(MetaData md_new, md_list) {
-            QString old_path = QDir(md_old.filepath).absolutePath();
-            QString new_path = QDir(md_new.filepath).absolutePath();
-            int cmp = old_path.compare(new_path, Qt::CaseInsensitive);
-            if(cmp == 0) {
+		_v_md[i].pl_selected = false;
 
-                _v_md[i] = md_new;
-                sth_changed = true;
-            }
+		for(int idx=0; idx<v_md_old.size(); idx++){
+
+			if( v_md_old[idx].is_equal( _v_md[i]) ){
+				_v_md[i] = v_md_new[idx];
+				_v_md[i].pl_selected = true;
+
+				sth_changed = true;
+				break;
+			}
         }
     }
 

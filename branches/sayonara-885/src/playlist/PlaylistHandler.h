@@ -82,6 +82,7 @@ signals:
 	void sig_need_more_radio();
 	void sig_new_stream_session();
 	void sig_playlist_mode_changed(const PlaylistMode&);
+	void sig_selection_changed(const MetaDataList&);
 
 
 public slots:
@@ -108,7 +109,7 @@ public slots:
 	void psl_move_rows(const QList<int>&, int);
 	void psl_remove_rows(const QList<int> &, bool select_next_row=true);
 
-	void psl_id3_tags_changed(const MetaDataList&);
+	void psl_id3_tags_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
 	void psl_dur_changed(const MetaData&);
 

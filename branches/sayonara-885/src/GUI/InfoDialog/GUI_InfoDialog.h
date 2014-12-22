@@ -63,11 +63,12 @@ public slots:
 
     void changeSkin(bool dark);
     void language_changed();
+	void set_metadata(const MetaDataList& vd);
+	void show(int tab);
 
 private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
-	void psl_id3_success(bool);
 	void psl_tab_index_changed(int);
     void no_cover_available();
 	void cover_clicked();
@@ -84,10 +85,9 @@ public:
 	virtual ~GUI_InfoDialog();
 
 	void setInfoMode(InfoDialogMode mode);
-	void set_metadata(const MetaDataList& vd);
-    void set_tag_edit_visible(bool b);
 
-	void show(int tab);
+
+    void set_tag_edit_visible(bool b);
 
 
 private:

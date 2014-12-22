@@ -76,6 +76,7 @@ MetaData::MetaData(const MetaData & md){
     pl_dragged = md.pl_dragged;
 
     is_disabled = md.is_disabled;
+	is_lib_selected = md.is_lib_selected;
 }
 
 
@@ -205,38 +206,41 @@ bool MetaDataList::contains(const MetaData& md) const {
     return false;
 }
 
-int MetaDataList::findTrack(int id) const {
+QList<int> MetaDataList::findTracks(int id) const {
 
-	if(id == -1) return -1;
+	QList<int> ret;
+
+	if(id == -1) return ret;
 
     MetaDataList::const_iterator it;
     int idx = 0;
     for(it = this->begin(); it != this->end(); it++, idx++) {
 		if(it->id == id) {
-            return idx;
+			ret << idx;
         }
     }
 
-    return -1;
+	return ret;
 }
 
-int MetaDataList::findTrack(const QString& path) const {
+QList<int> MetaDataList::findTracks(const QString& path) const {
 
+	QList<int> ret;
     MetaDataList::const_iterator it;
 
     int idx = 0;
     for(it = this->begin(); it != this->end(); it++, idx++) {
 
 #ifdef Q_OS_UNIX
-        if(it->filepath.compare(path, Qt::CaseSensitive) == 0){
+		if(it->filepath.compare(path, Qt::CaseSensitive) == 0){
 #else
         if(it->filepath.compare(path, Qt::CaseInsensitive) == 0){
 #endif
-            return idx;
+			ret << idx;
         }
     }
 
-    return -1;
+	return ret;
 }
 
 

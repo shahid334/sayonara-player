@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>871</width>
+    <width>876</width>
     <height>544</height>
    </rect>
   </property>
@@ -727,22 +727,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>btn_cancel</sender>
-   <signal>clicked()</signal>
-   <receiver>GUI_TagEdit</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>676</x>
-     <y>520</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>435</x>
-     <y>271</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

@@ -276,8 +276,7 @@ int LibraryView::get_min_selected() {
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ) {
 
-    if(_cur_filling) return;
-
+	if(_cur_filling) return;
 
 	QTableView::selectionChanged(selected, deselected);
 
@@ -290,7 +289,7 @@ void LibraryView::selectionChanged ( const QItemSelection & selected, const QIte
 
 		if( idx_list_int.contains(row) ) continue;
 
-		idx_list_int.push_back( row );
+		idx_list_int << row;
 	}
 
 	_model->set_selected(idx_list_int);
@@ -327,8 +326,7 @@ template < class TList, class T >
 void LibraryView::fill(const TList& input_data) {
 
 	QModelIndex idx;
-	QItemSelectionModel* sm;
-	QItemSelection sel;
+
     int size = input_data.size();
 	int first_selected_row = -1;
 
@@ -337,36 +335,23 @@ void LibraryView::fill(const TList& input_data) {
 	_model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, size);
 
-	sm = this->selectionModel();
-	sel = sm->selection();
-
 	for(int row=0; row < size; row++) {
-
-		idx = _model->index(row, 1);
-
-		if( input_data[row].is_lib_selected ) {
-
-			if(first_selected_row == -1) {
-				first_selected_row = row;
-			}
-
-			this->selectRow(row);
-			sel.merge(sm->selection(), QItemSelectionModel::Select);
-		}
 
 		QVariant var_data = T::toVariant( input_data[row] );
 
+		if(first_selected_row == -1){
+
+			if( input_data[row].is_lib_selected ) {
+				first_selected_row = row;
+			}
+		}
+
+		idx = _model->index(row, 1);
 		_model->setData(idx, var_data, Qt::EditRole );
 	}
 
-	sm->clearSelection();
-	sm->select(sel,QItemSelectionModel::Select);
-
-	if(first_selected_row >= 0) {
-		this->scrollTo(_model->index(first_selected_row, 0), QTableView::PositionAtCenter);
-	}
-
 	calc_corner_widget();
+
 	_cur_filling = false;
 }
 

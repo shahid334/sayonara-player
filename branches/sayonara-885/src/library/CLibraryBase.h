@@ -68,8 +68,11 @@ public slots:
 
 	virtual void reloadLibrary(bool);
 	virtual void clearLibrary();
+
+	virtual void refetch();
 	virtual void refresh();
-	virtual void psl_metadata_changed(const MetaDataList& v_md);
+
+	virtual void psl_metadata_changed(const MetaDataList&, const MetaDataList&);
 
 
 /* New way */
@@ -135,6 +138,16 @@ protected:
     void				delete_tracks(MetaDataList& v_md, int answer);
 
     LibSortOrder        _sortorder;
+
+	void				fetch_by_filter(const Filter& filter, bool force);
+	void				change_artist_selection(const QList<int>& idx_list);
+	void				change_album_selection(const QList<int>& idx_list);
+	MetaDataList		change_track_selection(const QList<int>& idx_list);
+
+	void restore_artist_selection(const QList<int>& old_selected_idx);
+	void restore_track_selection(const QList<int>& old_selected_idx);
+	void restore_album_selection(const QList<int>& old_selected_idx);
+
 
 };
 

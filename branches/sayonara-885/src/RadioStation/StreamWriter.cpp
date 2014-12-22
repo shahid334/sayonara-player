@@ -213,6 +213,7 @@ bool StreamWriter::send_html5(){
 	int n_bytes;
 
 	QByteArray html = QByteArray(
+			"<!DOCTYPE html>"
 			"<html>"
 				"<head>"
 				"</head>"

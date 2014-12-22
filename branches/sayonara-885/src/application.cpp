@@ -258,15 +258,12 @@ void Application::init_connections() {
 
 	CONNECT (player, sig_seek_rel(quint32),					listen,			jump_rel(quint32));
     CONNECT (player, sig_seek_rel_ms(qint64),				listen,			jump_rel_ms(qint64));
-
     CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
     CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,	record_button_toggled(bool));
-
 	CONNECT (player, sig_basedir_selected(const QString &),	library,            baseDirSelected(const QString & ));
 	CONNECT (player, sig_reload_library(bool),				library,            reloadLibrary(bool));
 	CONNECT (player, sig_import_dir(const QString&),		library_importer,        psl_import_dir(const QString&));
 	CONNECT (player, sig_import_files(const QStringList&),	library_importer,        psl_import_files(const QStringList&));
-
 	CONNECT (player, sig_file_selected(const QStringList &),playlist_handler, 			psl_createPlaylist(const QStringList&));
 	CONNECT (player, sig_play(),		playlist_handler,			psl_play());
 	CONNECT (player, sig_pause(),		playlist_handler,			psl_pause());
@@ -279,14 +276,10 @@ void Application::init_connections() {
 	CONNECT (player, sig_pause(),		ui_level,					psl_stop());
 	CONNECT (player, sig_forward(),		playlist_handler,			psl_forward());
 	CONNECT (player, sig_backward(),	playlist_handler,			psl_backward());
-
 	CONNECT (player, sig_show_playlists(),						 ui_playlist_chooser, 	show()); // IND
     CONNECT (player, sig_setup_LastFM(),                         ui_lastfm,              show_win()); // IND
     CONNECT (player, sig_show_stream_rec(),                      ui_stream_rec,          show_win()); // IND
     CONNECT (player, sig_show_socket(),                      ui_socket_setup,        show_win()); // IND
-
-
-    CONNECT (player, sig_correct_id3(const MetaData&), 	ui_id3_editor,		change_meta_data(const MetaData&)); // IND
 
 
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&, int, bool),	player,		psl_update_track(const MetaData&, int, bool));
@@ -294,21 +287,19 @@ void Application::init_connections() {
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               lastfm,		psl_track_changed(const MetaData&));
     CONNECT (playlist_handler, sig_selected_file_changed_md(const MetaData&),               ui_bookmarks,	track_changed(const MetaData&));
     CONNECT (playlist_handler, sig_selected_file_changed(int),                              ui_playlist, 	track_changed(int));
-
-
     CONNECT (playlist_handler, sig_no_track_to_play(),								listen,			stop());
     CONNECT (playlist_handler, sig_no_track_to_play(),								player,			stopped());
     CONNECT (playlist_handler, sig_goon_playing(),                                  listen,			play());
-
     CONNECT (playlist_handler, sig_playlist_created(const MetaDataList&, int, PlaylistType), 		ui_playlist, 	fillPlaylist(const MetaDataList&, int, PlaylistType));
     CONNECT (playlist_handler, sig_playlist_created(const MetaDataList&, int, PlaylistType), 		ui_playlist_chooser, 	playlist_changed(const MetaDataList&, int, PlaylistType));
 	CONNECT (playlist_handler, sig_playlist_prepared(int, const MetaDataList&),            playlists,     save_playlist_as_custom(int, const MetaDataList&));
 	CONNECT (playlist_handler, sig_playlist_prepared(QString, const MetaDataList&),        playlists,     save_playlist_as_custom(QString, const MetaDataList&));
+	CONNECT (playlist_handler, sig_selection_changed(const MetaDataList&),				   tag_edit,		set_metadata(const MetaDataList&));
+	CONNECT (playlist_handler, sig_selection_changed(const MetaDataList&),				   ui_info_dialog,	set_metadata(const MetaDataList&));
 
 	CONNECT (ui_playlist, sig_cur_idx_changed(int),                      playlist_handler, 	psl_change_track(int));
 	CONNECT (ui_playlist, sig_selection_changed(const QList<int>&),      playlist_handler, 	psl_selection_changed(const QList<int>&));
 	CONNECT (ui_playlist, sig_cleared(),                                 playlist_handler, 	psl_clear_playlist());
-
 	CONNECT (ui_playlist, sig_tracks_dropped(const MetaDataList&, int),  playlist_handler, 	psl_insert_tracks(const MetaDataList&, int));
 	CONNECT (ui_playlist, sig_rows_removed(const QList<int>&, bool),     playlist_handler, 	psl_remove_rows(const QList<int>&, bool));
 	CONNECT (ui_playlist, sig_rows_moved(const QList<int>&, int),        playlist_handler, 	psl_move_rows(const QList<int>&, int));
@@ -325,35 +316,34 @@ void Application::init_connections() {
 
 
     // should be sent to player
-	CONNECT (listen, sig_pos_changed_s(quint32),                      player,              psl_set_cur_pos(quint32) );
-	CONNECT (listen, sig_pos_changed_s(quint32),                      ui_bookmarks,        pos_changed_s(quint32) );
-	CONNECT (listen, sig_bitrate_changed(qint32),					  player,              psl_bitrate_changed(qint32));
-	CONNECT (listen, sig_dur_changed(const MetaData&),                player,              psl_dur_changed(const MetaData&));
-	//CONNECT (listen, sig_dur_changed(const MetaData&),                playlist_handler,    psl_dur_changed(const MetaData&));
-	//CONNECT (listen, sig_dur_changed(const MetaData&),                library,             psl_dur_changed(const MetaData&));
+	CONNECT (listen, sig_pos_changed_s(quint32),					player,              psl_set_cur_pos(quint32) );
+	CONNECT (listen, sig_pos_changed_s(quint32),					ui_bookmarks,        pos_changed_s(quint32) );
+	CONNECT (listen, sig_bitrate_changed(qint32),					player,              psl_bitrate_changed(qint32));
+	CONNECT (listen, sig_dur_changed(const MetaData&),				player,              psl_dur_changed(const MetaData&));
+	CONNECT (listen, sig_dur_changed(const MetaData&),				playlist_handler,    psl_dur_changed(const MetaData&));
+	//CONNECT (listen, sig_dur_changed(const MetaData&),			library,             psl_dur_changed(const MetaData&));
 
 	CONNECT (ui_speed, sig_speed_changed(float),                      listen,              psl_set_speed(float) );
 
-	CONNECT(library, sig_playlist_created(const QStringList&),            playlist_handler, 		psl_createPlaylist(const QStringList&));
+	CONNECT(library, sig_playlist_created(const QStringList&),			playlist_handler, 		psl_createPlaylist(const QStringList&));
 	CONNECT(library, sig_reloading_library(const QString&),				ui_library, 	reloading_library(const QString&));
 	CONNECT(library, sig_all_artists_loaded(const ArtistList&),			ui_library, 	fill_library_artists(const ArtistList&));
 	CONNECT(library, sig_all_albums_loaded(const AlbumList&),			ui_library, 	fill_library_albums(const AlbumList&));
 
-	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&), 			ui_library,			fill_library_tracks(const MetaDataList&));
-	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&), 			ui_info_dialog, 	set_metadata(const MetaDataList&));
-	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&), 			tag_edit,			set_metadata(const MetaDataList&));
+	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&), 		ui_library,			fill_library_tracks(const MetaDataList&));
+	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&), 		ui_info_dialog, 	set_metadata(const MetaDataList&));
+	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&), 		tag_edit,			set_metadata(const MetaDataList&));
 
-	CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			ui_library,			track_info_available(const MetaDataList&));
-	CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			ui_info_dialog, 	set_metadata(const MetaDataList&));
-	CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 			tag_edit,			set_metadata(const MetaDataList&));
+	CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 	ui_library,			track_info_available(const MetaDataList&));
+	CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 	ui_info_dialog, 	set_metadata(const MetaDataList&));
+	CONNECT(library, sig_track_mime_data_available(const MetaDataList&), 	tag_edit,			set_metadata(const MetaDataList&));
 
+	CONNECT(library, sig_tracks_for_playlist_available(const MetaDataList&),	playlist_handler, psl_createPlaylist(const MetaDataList&));
+	CONNECT(library, sig_append_tracks_to_playlist(const MetaDataList&),		playlist_handler, psl_append_tracks(const MetaDataList&));
+	CONNECT(library, sig_delete_answer(QString),								ui_library, 	psl_delete_answer(QString));
+	CONNECT(library, sig_play_next_tracks(const MetaDataList&),					playlist_handler,          psl_play_next(const MetaDataList&));
 
-	CONNECT(library, sig_tracks_for_playlist_available(const MetaDataList&),           	playlist_handler, psl_createPlaylist(const MetaDataList&));
-	CONNECT(library, sig_append_tracks_to_playlist(const MetaDataList&),                  playlist_handler, psl_append_tracks(const MetaDataList&));
-    CONNECT(library, sig_delete_answer(QString), 					ui_library, 	psl_delete_answer(QString));
-	CONNECT(library, sig_play_next_tracks(const MetaDataList&),		playlist_handler,          psl_play_next(const MetaDataList&));
-	CONNECT(library, sig_change_id3_tags(const MetaDataList&),		ui_id3_editor,	change_meta_data(const MetaDataList&)); // IND
-	CONNECT(library, sig_reload_library_finished(),                 ui_library, 	reloading_library_finished());
+	CONNECT(library, sig_reload_library_finished(),								ui_library, 	reloading_library_finished());
 
     CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));
     CONNECT(ui_library, sig_artist_dbl_clicked(int), 					library, 		psl_prepare_artist_for_playlist(int));
@@ -378,11 +368,13 @@ void Application::init_connections() {
 
     CONNECT(ui_library, sig_filter_changed(const Filter&),                   library, 		psl_filter_changed(const Filter&));
     CONNECT(ui_library, sig_no_focus(),                                      ui_playlist,   setFocus());
-    CONNECT(ui_library, sig_import_files(const QStringList&),                library_importer,       psl_import_files(const QStringList&));
+	CONNECT(ui_library, sig_import_files(const QStringList&),                library_importer,       psl_import_files(const QStringList&));
+	CONNECT(ui_library, sig_refresh(),										library,		refresh());
+	CONNECT(ui_library, sig_clear(),										library,		refetch());
 
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&),		library,			psl_metadata_changed(const MetaDataList&));
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&),		playlist_handler,	psl_id3_tags_changed(const MetaDataList&));
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&),		player,				psl_id3_tags_changed(const MetaDataList&));
+	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		library,			psl_metadata_changed(const MetaDataList&, const MetaDataList&));
+	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		playlist_handler,	psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
+	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		player,				psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
 
 	CONNECT(ui_audioconverter, sig_active(),							playlist_handler, psl_audioconvert_on());
 	CONNECT(ui_audioconverter, sig_inactive(),							playlist_handler, psl_audioconvert_off());

@@ -49,7 +49,7 @@ public:
     virtual void create_playlist(const QStringList& lst, bool start_playing=true);
 
 
-    virtual void metadata_changed(const MetaDataList& md_list);
+	virtual void metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
     virtual void save_to_m3u_file(QString filepath, bool relative);
     

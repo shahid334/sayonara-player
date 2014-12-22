@@ -60,7 +60,6 @@ struct ArtistCache {
 		_db->getAllArtists(artists, ArtistNameAsc, true);
 
 		foreach(Artist artist, artists){
-			qDebug() << "Update cache: " << artist.id << ": " << artist.name;
 			_artists_by_id.insert(artist.id, artist);
 			_artists_by_name.insert(artist.name, artist);
 		}
@@ -81,8 +80,6 @@ struct ArtistCache {
 
 		if(!_artists_by_name.keys().contains(name)) {
 			artist.id = -1;
-			qDebug() << "Cannot find Artist " << name;
-			qDebug() << "Available : " << _artists_by_name.keys();
 			return false;
 		}
 

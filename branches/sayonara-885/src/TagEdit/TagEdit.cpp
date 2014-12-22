@@ -111,6 +111,7 @@ void TagEdit::apply_artists_and_albums_to_md(){
 void TagEdit::write_tracks_to_db(){
 
 	MetaDataList v_md;
+	MetaDataList v_md_orig;
 
 	QStringList new_artists, new_albums;
 	check_for_new_artists_and_albums(new_artists, new_albums);
@@ -126,19 +127,16 @@ void TagEdit::write_tracks_to_db(){
 		if( _changed_md[i] == false ) continue;
 
 
-
-
 		qDebug() << "Write track "<< _v_md[i].title << " (" << _v_md[i].album << ") by " << _v_md[i].artist ;
 
-
 		if(_db->updateTrack(_v_md[i])){
-			_v_md_orig[i] = _v_md[i];
+			v_md.push_back(_v_md[i]);
+			v_md_orig.push_back(_v_md_orig[i]);
 		}
 	}
 
 	emit sig_progress(-1);
-	emit sig_metadata_changed(v_md);
-
+	emit sig_metadata_changed(v_md_orig, v_md);
 }
 
 

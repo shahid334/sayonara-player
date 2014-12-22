@@ -94,7 +94,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
 
     connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
-    connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
 
 	connect(combo_servers, 	SIGNAL(currentIndexChanged(int)),
             this, 					SLOT(psl_lyrics_server_changed(int)));
@@ -295,20 +294,6 @@ void GUI_InfoDialog::show(int tab) {
 
 	tab_widget->setCurrentIndex(tab);
     psl_tab_index_changed(tab);
-}
-
-void GUI_InfoDialog::psl_id3_success(bool b) {
-
-    if(b) {
-        hide();
-        close();
-    }
-
-	else{
-		QMessageBox::warning ( this,
-				tr("Error"),
-				tr("ID3 tags could not be changed"));
-	}
 }
 
 

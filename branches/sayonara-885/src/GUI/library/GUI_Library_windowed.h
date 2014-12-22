@@ -75,8 +75,6 @@ public:
 
     void set_info_dialog(GUI_InfoDialog* dialog);
 
-
-
 protected:
 
 	LibraryItemModelTracks* 		_track_model;
@@ -92,9 +90,7 @@ protected:
 
 
 	Filter		_cur_searchfilter;
-    Settings* _settings;
-
-
+	Settings*	_settings;
 
 signals:
 
@@ -126,6 +122,8 @@ signals:
 
     void sig_album_rating_changed(int, int);
     void sig_track_rating_changed(int, int);
+	void sig_refresh();
+	void sig_clear();
 
 public slots:
 	void fill_library_tracks(const MetaDataList&);
@@ -206,6 +204,8 @@ protected slots:
 	void language_changed();
 
 
+	void refresh();
+
 protected:
 	void resizeEvent(QResizeEvent* e);
     void focusInEvent(QFocusEvent *e);
@@ -228,8 +228,6 @@ protected:
 
 	int show_delete_dialog(int n_tracks);
     void init_headers();
-	void refresh();
-
 
 };
 

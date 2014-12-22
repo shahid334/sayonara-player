@@ -203,25 +203,27 @@ void PlaylistHandler::psl_next() {
 
 void PlaylistHandler::psl_dur_changed(const MetaData& md) {
 
-    int idx;
+	QList<int>idx;
 
     if(md.id >= 0) {
         _db->updateTrack(md);
-        idx = _playlist->find_track(md.id);
+
+		idx = _playlist->find_tracks(md.id);
     }
 
     else {
-        idx = _playlist->find_track(md.filepath);
+		idx = _playlist->find_tracks(md.filepath);
+
     }
 
-    if(idx >= 0) {
-        _playlist->replace_track(idx, md);
+	foreach(int i, idx){
+		_playlist->replace_track(i, md);
     }
 }
 
 
-void PlaylistHandler::psl_id3_tags_changed(const MetaDataList& new_meta_data) {
-    _playlist->metadata_changed(new_meta_data);
+void PlaylistHandler::psl_id3_tags_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new) {
+	_playlist->metadata_changed(v_md_old, v_md_new);
 }
 
 //
@@ -256,7 +258,7 @@ void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
             md = vec_tracks[rnd_track];
 
             // search playlist
-            if(_playlist->find_track(md.id) != -1) {
+			if( !_playlist->find_tracks(md.id).isEmpty() ) {
                 is_track_already_in = true;
             }
 
@@ -336,7 +338,10 @@ void PlaylistHandler::psl_change_track(int idx, qint32 pos, bool start_playing) 
 }
 
 void PlaylistHandler::psl_selection_changed(const QList<int> & lst) {
+
     _playlist->selection_changed(lst);
+
+	emit sig_selection_changed( _playlist->get_selected_tracks() );
 }
 
 

@@ -115,8 +115,8 @@ class MetaDataList : public QVector<MetaData> {
 
         virtual bool contains(const MetaData& md) const;
 
-        int findTrack(int id) const;
-        int findTrack(const QString&) const;
+		QList<int> findTracks(int id) const;
+		QList<int> findTracks(const QString&) const;
 
         QStringList toStringList() const;
 };

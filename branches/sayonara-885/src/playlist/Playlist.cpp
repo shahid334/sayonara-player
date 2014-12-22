@@ -32,6 +32,12 @@ Playlist::Playlist(QObject* parent) : QObject(parent) {
 void Playlist::report_changes(bool pl_changed, bool track_changed) {
     if(_reports_disabled) return;
 
+	for(int i=0; i<_v_md.size(); i++){
+		if(_v_md[i].pl_selected && i == 11){
+			qDebug() << "Report changes " << i << ": true";
+		}
+	}
+
 	if(pl_changed){
 		emit sig_playlist_changed(_v_md, _cur_play_idx);
 	}
@@ -212,10 +218,22 @@ void Playlist::insert_tracks(const MetaDataList& lst, int tgt) {
    report_changes(true, false);
 }
 
-void Playlist::selection_changed(const QList<int> & lst) {
+void Playlist::selection_changed(const QList<int>& lst) {
 
-    for(int i=0; i<_v_md.size(); i++) {
-        _v_md[i].pl_selected = lst.contains(i);
+	_selected_tracks.clear();
+
+	for(int i=0; i<_v_md.size(); i++){
+
+		_v_md[i].pl_selected = lst.contains(i);
+		if(_v_md[i].pl_selected){
+			qDebug() << "Playlist: Set " << i << ": true";
+		}
+
+		if(_v_md[i].pl_selected){
+
+			_selected_tracks << _v_md[i];
+
+		}
     }
 }
 
@@ -241,8 +259,15 @@ void Playlist::replace_track(int idx, const MetaData& md) {
 
     if(idx < 0 || idx >= _v_md.size()) return;
 
+	bool is_selected = _v_md[idx].pl_selected;
+	bool is_dragged = _v_md[idx].pl_dragged;
+	bool is_playing = _v_md[idx].pl_playing;
+
     _v_md[idx] = md;
     _v_md[idx].is_disabled = !(Helper::checkTrack(md));
+	_v_md[idx].pl_selected = is_selected;
+	_v_md[idx].pl_dragged = is_dragged;
+	_v_md[idx].pl_playing = is_playing;
 
     report_changes(true, false);
 }
@@ -283,10 +308,10 @@ QStringList Playlist::toStringList(){
     return _v_md.toStringList();
 }
 
-int Playlist::find_track(int idx){
-    return _v_md.findTrack(idx);
+QList<int> Playlist::find_tracks(int idx){
+	return _v_md.findTracks(idx);
 }
 
-int Playlist::find_track(const QString& filepath){
-    return _v_md.findTrack(filepath);
+QList<int> Playlist::find_tracks(const QString& filepath){
+	return _v_md.findTracks(filepath);
 }

@@ -107,14 +107,10 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 QSize LibraryItemDelegateTracks::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-
-
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
 	return QSize(1, _parent->rowHeight(index.row()));
-
-
 }
 
 

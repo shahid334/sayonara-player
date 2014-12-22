@@ -36,8 +36,9 @@ GUI_TagEdit::GUI_TagEdit(TagEdit* tag_edit, QWidget* parent) :
 	connect(btn_year, SIGNAL(toggled(bool)), this, SLOT(btn_year_checked(bool)));
 	connect(btn_disc_nr, SIGNAL(toggled(bool)), this, SLOT(btn_disc_nr_checked(bool)));
 
-	connect(tag_edit, SIGNAL(sig_progress(int)), this, SLOT(progress_changed(int)));
-	connect(tag_edit, SIGNAL(sig_metadata_received(const MetaDataList&)), this, SLOT(metadata_changed(const MetaDataList&)));
+	connect(_tag_edit, SIGNAL(sig_progress(int)), this, SLOT(progress_changed(int)));
+	connect(_tag_edit, SIGNAL(sig_metadata_received(const MetaDataList&)), this, SLOT(metadata_changed(const MetaDataList&)));
+	connect(btn_cancel, SIGNAL(clicked()), this, SLOT(btn_cancel_clicked()));
 
 	reset();
 }
@@ -47,6 +48,10 @@ GUI_TagEdit::~GUI_TagEdit(){
 
 }
 
+
+void GUI_TagEdit::btn_cancel_clicked(){
+	emit sig_cancelled();
+}
 
 void GUI_TagEdit::progress_changed(int val){
 
@@ -364,6 +369,7 @@ void GUI_TagEdit::apply_tag(int idx){
 	_tag_edit->update_track(idx, md);
 
 	if(idx == _cur_idx){
+		// force gui update
 		track_idx_changed();
 	}
 }

@@ -159,6 +159,8 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(lv_artist, SIGNAL(sig_tab_pressed(bool)), this, SLOT(artist_tab_pressed(bool)));
 	connect(lv_artist, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
+	connect(btn_refresh, SIGNAL(clicked()), this, SLOT(refresh()));
+
     btn_clear->setIcon(Helper::getIcon("broom.png"));
     btn_info->setIcon(Helper::getIcon("info.png"));
 
@@ -291,6 +293,8 @@ void GUI_Library_windowed::language_changed() {
     _track_model->set_new_header_names(_header_names_tracks);
 }
 
+
+
 void GUI_Library_windowed::set_info_dialog(GUI_InfoDialog *dialog) {
     _info_dialog = dialog;
 }
@@ -350,7 +354,6 @@ void GUI_Library_windowed::album_tab_pressed(bool mod) {
 
 void GUI_Library_windowed::track_tab_pressed(bool mod) {
 	if(mod) lv_album->setFocus();
-	//else lv_artist->setFocus();
     else emit sig_no_focus();
 }
 
@@ -375,10 +378,15 @@ void GUI_Library_windowed::fill_library_artists(const ArtistList& artists) {
 	lv_artist->fill<ArtistList, Artist>(artists);
 }
 
+
+void GUI_Library_windowed::refresh(){
+	emit sig_refresh();
+}
+
 void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst) {
 
 	_info_dialog->setInfoMode(InfoDialogMode_Artists);
-    sig_artist_sel_changed(lst);
+	emit sig_artist_sel_changed(lst);
 }
 
 void GUI_Library_windowed::album_released() {
@@ -406,12 +414,12 @@ void GUI_Library_windowed::album_sel_changed(const QList<int>& lst) {
         }
     }
 
-    sig_album_sel_changed(lst);
+	emit sig_album_sel_changed(lst);
 }
 
 void GUI_Library_windowed::track_sel_changed(const QList<int>& lst) {
 	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
-    sig_track_sel_changed(lst);
+	emit sig_track_sel_changed(lst);
 }
 
 
@@ -476,8 +484,12 @@ void GUI_Library_windowed::sortorder_title_changed(Sort::SortOrder s) {
 
 void GUI_Library_windowed::clear_button_pressed() {
 
+	disconnect(le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
+
 	le_search->setText("");
-	text_line_edited("", true);
+	emit sig_clear();
+
+	connect(le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 }
 
 void GUI_Library_windowed::return_pressed() {
@@ -490,11 +502,6 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 	bool live_search = _settings->get(Set::Lib_LiveSearch);
 
 	if(!force_emit && !live_search ) return;
-
-    QList<int> lst;
-    _album_model->set_selected(lst);
-    _track_model->set_selected(lst);
-    _artist_model->set_selected(lst);
 
     if(search.startsWith("f:", Qt::CaseInsensitive)) {
 		combo_searchfilter->setCurrentIndex(0);
@@ -539,11 +546,6 @@ void GUI_Library_windowed::searchfilter_changed(int idx) {
 	text_line_edited(_cur_searchfilter.filtertext, true);
 }
 
-
-
-void GUI_Library_windowed::refresh() {
-	text_line_edited(_cur_searchfilter.filtertext, true);
-}
 
 
 void GUI_Library_windowed::id3_tags_changed() {

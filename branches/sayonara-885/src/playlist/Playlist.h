@@ -46,6 +46,7 @@ protected:
     bool            _playlist_changed;
     int             _cur_play_idx;
     MetaDataList    _v_md;
+	MetaDataList	_selected_tracks;
     PlaylistMode	_playlist_mode;
 	PlaylistMode	_playlist_mode_backup;
     PlaylistType    _playlist_type;
@@ -72,7 +73,7 @@ public:
     virtual void create_playlist(const QStringList& lst, bool start_playing=true)=0;
     virtual void clear();
 
-    virtual void metadata_changed(const MetaDataList& md_list)=0;
+	virtual void metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new)=0;
 
     virtual void move_track(const int, int tgt);
     virtual void move_tracks(const QList<int>& lst, int tgt);
@@ -88,9 +89,10 @@ public:
 
     virtual void replace_track(int idx, const MetaData& md);
     virtual void save_to_m3u_file(QString filepath, bool relative)=0;
-    virtual MetaDataList get_playlist(){return _v_md;}
+	virtual const MetaDataList& get_playlist(){return _v_md;}
 
     virtual void selection_changed(const QList<int>&);
+	virtual const MetaDataList& get_selected_tracks(){return _selected_tracks;}
 
 	virtual PlaylistMode playlist_mode_backup();
 	virtual PlaylistMode playlist_mode_restore();
@@ -100,8 +102,8 @@ public:
     int get_cur_track();
     QStringList toStringList();
 
-    int find_track(int id);
-    int find_track(const QString& filepath);
+	QList<int> find_tracks(int id);
+	QList<int> find_tracks(const QString& filepath);
 
 	void set_playlist_mode(const PlaylistMode& mode);
 };

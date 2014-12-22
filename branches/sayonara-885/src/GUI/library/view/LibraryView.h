@@ -129,6 +129,7 @@ protected:
 	void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
 
 
+
 private:
     QWidget* 			_parent;
     QWidget*            _corner_widget;

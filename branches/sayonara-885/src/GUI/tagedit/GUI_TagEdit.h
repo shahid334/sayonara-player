@@ -22,6 +22,7 @@ signals:
 	void sig_ok_clicked(const MetaDataList&);
 	void sig_undo_clicked(int idx);
 	void sig_undo_all_clicked();
+	void sig_cancelled();
 
 
 private slots:
@@ -55,8 +56,7 @@ private slots:
 	void progress_changed(int);
 	void metadata_changed(const MetaDataList&);
 
-
-
+	void btn_cancel_clicked();
 
 private:
 	TagEdit* _tag_edit;

@@ -66,7 +66,7 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
      int idx_col = calc_shown_col(col);
 
-	 if (role == Qt::DisplayRole) {
+	 if (role == Qt::DisplayRole || role==Qt::EditRole) {
 
          const MetaData& md = _tracklist.at(row);
 
@@ -140,7 +140,7 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 		 int col_idx = calc_shown_col(col);
 
 		 if(col_idx == COL_TRACK_RATING) {
-             _tracklist[index.row()].rating = value.toInt();
+			 _tracklist[row].rating = value.toInt();
          }
 
          else{
@@ -148,8 +148,9 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
              MetaData md;
              if(!MetaData::fromVariant(value, md)) return false;
 
-             if(md.is_lib_selected)
+			 if(md.is_lib_selected && !_selected_rows.contains(row)){
 				 _selected_rows << row;
+			 }
 
 			 _tracklist[row] = md;
 

@@ -61,7 +61,6 @@ struct AlbumCache {
 		_db->getAllAlbums(albums, AlbumNameAsc, true);
 
 		foreach(Album album, albums){
-			qDebug() << "Update cache: " << album.id << ": " << album.name;
 			_albums_by_id.insert(album.id, album);
 			_albums_by_name.insert(album.name, album);
 		}
