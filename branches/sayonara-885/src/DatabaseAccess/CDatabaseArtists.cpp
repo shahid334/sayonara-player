@@ -376,10 +376,11 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
 		return -1;
     }
 
-	Artist a;
+	/*Artist a;
 	artist_cache.update();
 	artist_cache.getArtistByName(artist, a);
-	return a.id;
+	return a.id;*/
+	return this->getArtistID(artist);
 }
 
 int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
@@ -399,9 +400,11 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 		return -1;
 	}
 
-	Artist a;
+/*	Artist a;
 	artist_cache.update();
 	artist_cache.getArtistByName(artist.name, a);
-	return a.id;
+	return a.id;*/
+
+	return artist.id;
 }
 

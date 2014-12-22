@@ -45,7 +45,7 @@ struct AlbumCache {
     AlbumCache() {
 
 		_db = CDatabaseConnector::getInstance();
-		update();
+		//update();
     }
 
     ~AlbumCache() {
@@ -76,10 +76,7 @@ struct AlbumCache {
 
 	bool getAlbumByName(QString name, Album& album) {
 
-
 		if(!_albums_by_name.keys().contains(name)) {
-			qDebug() << "Cannot find album " << name;
-			qDebug() << "Available : " << _albums_by_name.keys();
 			return false;
 		}
 
@@ -495,7 +492,7 @@ int CDatabaseConnector::updateAlbum (const Album & album) {
 		return -1;
 	}
 
-	album_cache.update();
+	//album_cache.update();
 
 	return this->getAlbumID (album.name);
 }
@@ -518,14 +515,14 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 	  return -1;
     }
 
-	album_cache.update();
-
+	//album_cache.update();
+/*
 	Album a;
 	if( album_cache.getAlbumByName(album, a) ){
 		return a.id;
 	}
-
-	return -1;
+*/
+	return this->getAlbumID(album);
 }
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
@@ -551,13 +548,9 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 		return -1;
 	}
 
-	album_cache.update();
+	//album_cache.update();
+	return album.id;
 
-	Album a;
-	if( album_cache.getAlbumByID(album.id, a) ){
-		return a.id;
-	}
 
-	return -1;
 }
 
