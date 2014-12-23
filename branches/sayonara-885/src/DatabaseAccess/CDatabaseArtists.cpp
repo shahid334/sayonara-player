@@ -97,7 +97,7 @@ ArtistCache artist_cache;
                 "GROUP_CONCAT(albums.albumid) AS artistAlbums " + \
 				"FROM artists, albums, tracks "
 
-bool _db_fetch_artists(QSqlQuery& q, ArtistList& result) {
+bool CDatabaseConnector::_db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 
 #ifdef DEBUG_DB
     qDebug() << Q_FUNC_INFO;
@@ -105,34 +105,25 @@ bool _db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 
 	result.clear();
 
-	try{
-		if (!q.exec()) {
-			qDebug() << "SQL-Error: Could not get all artists from database";
-			qDebug() << q.executedQuery();
-			return false;
-		}
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-		Artist artist;
-		while (q.next()) {
-			artist.id = q.value(0).toInt();
-			artist.name = q.value(1).toString().trimmed();
-			artist.num_songs = q.value(2).toInt();
-
-			QStringList list = q.value(3).toString().split(',');
-			list.removeDuplicates();
-			artist.num_albums = list.size();
-
-
-			result.push_back(artist);
-		}
-
-		return true;
+	if (!q.exec()) {
+		show_error("Could not get all artists from database");
+		return false;
 	}
 
-	catch (QString& ex) {
-		qDebug() << "SQL-Exception (Fetch artists): ";
-		qDebug() << ex;
-		return false;
+	Artist artist;
+	while (q.next()) {
+		artist.id = q.value(0).toInt();
+		artist.name = q.value(1).toString().trimmed();
+		artist.num_songs = q.value(2).toInt();
+
+		QStringList list = q.value(3).toString().split(',');
+		list.removeDuplicates();
+		artist.num_albums = list.size();
+
+
+		result.push_back(artist);
 	}
 
 	return true;
@@ -160,7 +151,7 @@ int CDatabaseConnector::getMaxArtistID() {
     qDebug() << Q_FUNC_INFO;
 #endif
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
 	int max_id = -1;
 
@@ -168,7 +159,7 @@ int CDatabaseConnector::getMaxArtistID() {
 	q.prepare("SELECT MAX(artistID) FROM artists;");
 
 	if (!q.exec()) {
-		qDebug() << "Cannot get artists: " << _database->lastError();
+		show_error("Cannot get max artist id");
 		return -1;
 	}
 
@@ -189,12 +180,11 @@ bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist) {
 #endif
 
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 
 	ArtistList artists;
-
 
     QString query = ARTIST_ALBUM_TRACK_SELECTOR +
                 "WHERE artists.artistID = ? " +
@@ -230,15 +220,17 @@ int CDatabaseConnector::getArtistID (const QString & artist)  {
 #endif
 
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q (*_database);
     int artistID = -1;
     q.prepare("select artistID from artists where name == ?;");
     q.addBindValue(QVariant(artist));
+
     if (!q.exec()) {
-        throw QString ("SQL - Error: get Artist ID" + artist);
+		return -1;
     }
+
     if (q.next()) {
         artistID = q.value(0).toInt();
     }
@@ -253,7 +245,7 @@ void CDatabaseConnector::getAllArtists(ArtistList& result, SortOrder sortorder, 
 #endif
 
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_VOID(_database);
 
 	QSqlQuery q (*_database);
 	QString query = ARTIST_ALBUM_TRACK_SELECTOR;
@@ -279,7 +271,7 @@ void CDatabaseConnector::getAllArtistsByAlbum(int album, ArtistList& result, Sor
 #endif
 
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_VOID(_database);
 
 	QSqlQuery q (*_database);
 	q.prepare(	ARTIST_ALBUM_TRACK_SELECTOR +
@@ -298,7 +290,7 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
     qDebug() << Q_FUNC_INFO;
 #endif
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_VOID(_database);
 
 	QSqlQuery q (*_database);
 	QString query;
@@ -363,7 +355,7 @@ void CDatabaseConnector::getAllArtistsBySearchString(Filter filter, ArtistList& 
 
 int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q (*_database);
     q.prepare("INSERT INTO artists (name, cissearch) values (:artist, :cissearch);");
@@ -371,21 +363,19 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString & artist) {
     q.bindValue(":cissearch", QVariant(artist.toLower()));
 
 	if (!q.exec()) {
-		qDebug() << "Cannot insert artist " << artist;
-        qDebug()<< q.lastQuery() << q.executedQuery();
+		show_error(QString("Cannot insert artist ") + artist);
 		return -1;
     }
 
-	/*Artist a;
+	Artist a;
 	artist_cache.update();
 	artist_cache.getArtistByName(artist, a);
-	return a.id;*/
-	return this->getArtistID(artist);
+	return a.id;
 }
 
 int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q (*_database);
 
@@ -395,16 +385,13 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 	q.bindValue(":cissearch", QVariant(artist.name.toLower()));
 
 	if (!q.exec()) {
-		qDebug() << "Cannot insert artist " << artist.name;
-		qDebug() << q.lastQuery() << q.executedQuery();
+		show_error(QString("Cannot insert (2) artist ") + artist.name);
 		return -1;
 	}
 
-/*	Artist a;
+	Artist a;
 	artist_cache.update();
 	artist_cache.getArtistByName(artist.name, a);
-	return a.id;*/
-
-	return artist.id;
+	return a.id;
 }
 

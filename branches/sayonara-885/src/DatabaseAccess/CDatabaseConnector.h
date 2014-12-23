@@ -46,17 +46,21 @@ using namespace Sort;
 #define DB_TRY_OPEN(db) if (!this -> db->isOpen()) \
                             this -> db->open()
 
-#define DB_RETURN_NOT_OPEN_VOID(db) if (!this -> db->isOpen()) \
+#define DB_RETURN_NOT_OPEN_VOID(db) DB_TRY_OPEN(db); \
+									if (!this -> db->isOpen()) \
                                     return
 
-#define DB_RETURN_NOT_OPEN_INT(db)if (!this -> db->isOpen()) \
-                            return -1
+#define DB_RETURN_NOT_OPEN_INT(db) DB_TRY_OPEN(db); \
+									if (!this -> db->isOpen()) \
+									return -1
 
-#define DB_RETURN_NOT_OPEN_BOOL(db)if (!this -> db->isOpen()) \
-                            return false
+#define DB_RETURN_NOT_OPEN_BOOL(db) DB_TRY_OPEN(db); \
+									if (!this -> db->isOpen()) \
+									return false
 
-#define DB_RETURN_NOT_OPEN_STRING(db) if(!this->db->isOpen()) \
-			    return ""
+#define DB_RETURN_NOT_OPEN_STRING(db) DB_TRY_OPEN(db); \
+										if(!this->db->isOpen()) \
+										return ""
 
 
 
@@ -78,6 +82,8 @@ public:
 		 *  ARTISTS
 		 *****************/
 
+			bool _db_fetch_artists(QSqlQuery& q, ArtistList& result);
+
 			int getArtistID (const QString & artist);
             bool getArtistByID( const int& id, Artist& artist);
 			int getMaxArtistID();
@@ -95,6 +101,7 @@ public:
 		/*****************
 		 *  ALBUMS
 		 *****************/
+			bool _db_fetch_albums(QSqlQuery& q, AlbumList& result);
 
             int getAlbumID (const QString& album);
 			int getMaxAlbumID();
@@ -118,6 +125,8 @@ public:
 		/*****************
 		 *  TRACKS
 		 *****************/
+
+			bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result);
 
 			void getAllTracksByAlbum(int album, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc, int discnumber=-1);
 			void getAllTracksByAlbum(QList<int> albums, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
@@ -182,6 +191,7 @@ public:
 			bool removeAllBookmarks(int track_id);
 
     void deleteTracksAlbumsArtists();
+	void show_error(const QString& error_str) const;
 
 
 

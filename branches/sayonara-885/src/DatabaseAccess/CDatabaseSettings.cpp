@@ -32,7 +32,6 @@
 
 bool CDatabaseConnector::load_settings() {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	AbstrSetting** settings = Settings::getInstance()->get_settings();
@@ -49,8 +48,7 @@ bool CDatabaseConnector::load_settings() {
 
 bool CDatabaseConnector::store_settings() {
 
-    DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_BOOL(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	AbstrSetting** settings = Settings::getInstance()->get_settings();
 	_database->transaction();
@@ -69,13 +67,14 @@ bool CDatabaseConnector::store_settings() {
 
 bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) const {
 
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
 	QSqlQuery q (*_database);
-	q.prepare("select value from settings where key = ?;");
+	q.prepare("SELECT value FROM settings WHERE key = ?;");
 	q.addBindValue(QVariant(key));
 
 	if (!q.exec()) {
-		qDebug() << "Cannot load setting " << key;
-		qDebug() << _database->lastError();
+		show_error(QString("Cannot load setting ") + key);
 		return false;
 	}
 
@@ -90,14 +89,14 @@ bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) const {
 
 bool CDatabaseConnector::store_setting(QString key, const QVariant& value) const {
 
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
-	q.prepare("select value from settings where key = :key;");
+	q.prepare("SELECT value FROM settings WHERE key = :key;");
 	q.bindValue(":key", key);
 
 	if (!q.exec()) {
-		qDebug() << "SQL Error (1): Cannot insert " << key;
-		qDebug() << _database->lastError();
+		show_error(QString("Store setting: Cannot fetch setting ") + key);
 		return false;
 	}
 
@@ -105,29 +104,24 @@ bool CDatabaseConnector::store_setting(QString key, const QVariant& value) const
 		q.prepare("INSERT INTO settings VALUES(:key, :val);");
 		q.bindValue(":key", key);
 		q.bindValue(":value", value);
+
 		if (!q.exec()) {
-			qDebug() << "SQL Error (2): Cannot insert " << key;
-			qDebug() << _database->lastError();
+			show_error(QString("Store setting: Cannot insert setting ") + key);
 			return false;
 		}
 
-		else{
-			qDebug() << "Inserted " << key << " first time";
-		}
+		qDebug() << "Inserted " << key << " first time";
 	}
 
-	q.prepare("UPDATE settings set value=:value WHERE key=:key;");
+	q.prepare("UPDATE settings SET value=:value WHERE key=:key;");
 	q.bindValue(":key", key);
 	q.bindValue(":value", value);
 
 	if (!q.exec()) {
-		qDebug() << "SQL Error (3): Cannot insert " << key;
-		qDebug() << _database->lastError();
+		show_error(QString("Store setting: Cannot update setting ") + key);
 		return false;
 	}
 
-
 	return true;
-
 }
 

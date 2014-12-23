@@ -165,9 +165,8 @@ void CDatabaseConnector::closeDatabase() {
     for(int i = 0; i < connectionList.count(); ++i) {
         QSqlDatabase::removeDatabase(connectionList[i]);
     }
-    
 
-    _database = 0;
+	_database = 0;
 
 }
 
@@ -179,35 +178,41 @@ CDatabaseConnector::~CDatabaseConnector() {
 }
 
 bool CDatabaseConnector::check_and_drop_table(QString tablename) {
-    DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q(*_database);
     QString querytext = "DROP TABLE " +  tablename + ";";
     q.prepare(querytext);
-    return q.exec();
+
+	if(!q.exec()){
+		show_error(QString("Cannot drop table ") + tablename);
+		return false;
+	}
+
+	return true;
 }
 
 bool CDatabaseConnector::check_and_insert_column(QString tablename, QString column, QString sqltype) {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
     QString querytext = "SELECT " + column + " FROM " + tablename + ";";
     q.prepare(querytext);
 
-
-
     if(!q.exec()) {
-        qDebug() << "DB: Could not find " << column << " in " << tablename << ": inserting it";
 
         QSqlQuery q2 (*_database);
         querytext = "ALTER TABLE " + tablename + " ADD COLUMN " + column + " " + sqltype + ";";
         q2.prepare(querytext);
-        bool success = q2.exec();
-        qDebug() << (success ? "Success" : "Fail");
-        return success;
+
+		if(!q2.exec()){;
+			show_error(QString("Cannot insert column ") + column + " into " + tablename);
+			return false;
+		}
+
+		return true;
     }
 
     return true;
@@ -215,7 +220,6 @@ bool CDatabaseConnector::check_and_insert_column(QString tablename, QString colu
 
 bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_create_str) {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
@@ -223,10 +227,13 @@ bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_c
     q.prepare(querytext);
 
     if(!q.exec()) {
-        qDebug() << "DB: Table " << tablename << " does not exist: creating...";
+
         QSqlQuery q2 (*_database);
         q2.prepare(sql_create_str);
-        return q2.exec();
+
+		if(!q2.exec()){
+			show_error(QString("Cannot create table ") + tablename);
+		}
     }
 
     return true;
@@ -247,7 +254,9 @@ bool CDatabaseConnector::updateAlbumCissearch() {
         q.bindValue(":cissearch", album.name.toLower());
         q.bindValue(":id", album.id);
 
-        q.exec();
+		if(!q.exec()){
+			show_error("Cannot update album cissearch");
+		}
     }
 
     return true;
@@ -264,7 +273,10 @@ bool CDatabaseConnector::updateArtistCissearch() {
         q.prepare(str);
         q.bindValue(":cissearch", artist.name.toLower());
         q.bindValue(":id", artist.id);
-        q.exec();
+
+		if(!q.exec()){
+			show_error("Cannot update artist cissearch");
+		}
     }
 
     return true;
@@ -283,8 +295,6 @@ bool CDatabaseConnector::updateTrackCissearch() {
 
 bool CDatabaseConnector::apply_fixes() {
 
-
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QString str_version;
@@ -393,4 +403,10 @@ bool CDatabaseConnector::apply_fixes() {
 
 
 	return true;
+}
+
+
+void CDatabaseConnector::show_error(const QString& error_str) const {
+	qDebug() << "SQL ERROR: " << error_str;
+	qDebug() << _database->lastError();
 }

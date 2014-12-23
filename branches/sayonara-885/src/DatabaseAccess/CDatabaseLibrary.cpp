@@ -25,79 +25,68 @@
 #include <QFile>
 #include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
 #include <QVariant>
 #include <QObject>
 #include <QSqlError>
 
 
-
-
 void CDatabaseConnector::deleteTracksAlbumsArtists() {
 
+	DB_RETURN_NOT_OPEN_VOID(_database);
+
+	_database->transaction();
+
+	bool err = false;
+
+	for(int i=0; i<3; i++) {
 		QSqlQuery q (*_database);
 
-		_database->transaction();
+		if(i==0) q.prepare("delete from tracks;");
+		else if(i==1) q.prepare("delete from artists;");
+		else if(i==2) q.prepare("delete from albums;");
 
-		bool err = false;
-		for(int i=0; i<3; i++) {
-			if(i==0) q.prepare("delete from tracks;");
-			else if(i==1) q.prepare("delete from artists;");
-			else if(i==2) q.prepare("delete from albums;");
-
-			try{
-				q.exec();
-			}
-
-			catch(QString ex) {
-				err = true;
-				qDebug() << q.lastQuery();
-				qDebug() << ex;
-				qDebug() << q.executedQuery();
-
-			}
+		if( !q.exec() ){
+			show_error("Cannot delete all tracks, albums and artists");
+			err = true;
 		}
+	}
 
-		 if(!err) _database->commit();
+	if(err){
+		_database->commit();
+	}
+	else {
+		_database->rollback();
+	}
 }
 
 
 
 bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
     int artistID = -1, albumID = -1;
 
-
     _database->transaction();
+
     foreach (MetaData data, v_md) {
 
-    	try {
+		//first check if we know the artist and its id
+		albumID = this -> getAlbumID(data.album);
 
-    		 //first check if we know the artist and its id
-    		 albumID = this -> getAlbumID(data.album);
+		if (albumID == -1) {
+			albumID = insertAlbumIntoDatabase((QString) data.album);
+		}
 
-			if (albumID == -1) {
-				albumID = insertAlbumIntoDatabase((QString) data.album);
-			}
+		artistID = this -> getArtistID(data.artist);
+		if (artistID == -1) {
+			artistID = insertArtistIntoDatabase((QString) data.artist);
+		}
 
-            artistID = this -> getArtistID(data.artist);
-            if (artistID == -1) {
-                artistID = insertArtistIntoDatabase((QString) data.artist);
-            }
-
-            this -> insertTrackIntoDatabase (data,artistID,albumID);
-        }
-
-        catch (QString ex) {
-            qDebug() << "Error during inserting of metadata into database";
-            qDebug() << ex;
-            QSqlError er = this -> _database->lastError();
-        }
+		insertTrackIntoDatabase (data,artistID,albumID);
 
     }
-    return _database->commit();
 
+    return _database->commit();
 }
 
