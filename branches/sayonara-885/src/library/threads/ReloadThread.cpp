@@ -30,7 +30,6 @@
 
 #include "library/threads/ReloadThread.h"
 #include "HelperStructs/CDirectoryReader.h"
-#include "Settings/Settings.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
@@ -147,11 +146,11 @@ void ReloadThread::run() {
     _paused = false;
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
-	MetaDataList v_metadata;
-	MetaDataList v_to_delete;
+	MetaDataList v_metadata, v_to_delete;
 
     QString reload_status_str = tr("Delete orphaned tracks...");
     emit sig_reloading_library(reload_status_str);
+
 	db->getTracksFromDatabase(v_metadata);
 
 	// find orphaned tracks in library && delete them

@@ -77,6 +77,7 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
 	btn_shuffle->setChecked(_playlist_mode.shuffle);
 	btn_gapless->setChecked(_playlist_mode.gapless);
+	btn_numbers->setChecked(_settings->get(Set::PL_ShowNumbers));
 
     check_dynamic_play_button();
     setAcceptDrops(true);

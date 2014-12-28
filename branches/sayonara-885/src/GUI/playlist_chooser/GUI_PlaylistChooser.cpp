@@ -22,13 +22,11 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "PlayerPlugin/PlayerPlugin.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 
-#include <QWidget>
 #include <QInputDialog>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -44,7 +42,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-	_last_dir = Settings::getInstance()->get(Set::Lib_Path);
+	_last_dir = _settings->get(Set::Lib_Path);
 
 	_cur_idx = -1;
 

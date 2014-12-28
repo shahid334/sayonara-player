@@ -20,20 +20,13 @@
 
 
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include <QFile>
 #include <QDir>
-#include <QDebug>
 #include <QSqlQuery>
-#include <QVariant>
-#include <QObject>
 #include <QSqlError>
-#include <Settings/Settings.h>
-#include <HelperStructs/Helper.h>
-
-
-#include <cstdlib>
 
 
 CDatabaseConnector* CDatabaseConnector::getInstance() {
@@ -41,7 +34,8 @@ CDatabaseConnector* CDatabaseConnector::getInstance() {
 	return &instance;
 }
 
-CDatabaseConnector::CDatabaseConnector()
+CDatabaseConnector::CDatabaseConnector() :
+	QObject()
 {
     _db_filename = Helper::getSayonaraPath() + "player.db";
 

@@ -19,7 +19,6 @@
  */
 
 
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"

@@ -30,7 +30,6 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "Settings/Settings.h"
 #include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"

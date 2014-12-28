@@ -24,9 +24,6 @@
 
 #include "GUI/ui_GUI_SocketSetup.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
-#include "Settings/Settings.h"
-
-#include <QDialog>
 
 
 GUI_SocketSetup::GUI_SocketSetup(QWidget* parent) :

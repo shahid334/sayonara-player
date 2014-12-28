@@ -24,7 +24,6 @@
 #define GUI_TARGET_PLAYLIST_DIALOG_H
 
 #include "GUI/ui_GUI_Target_Playlist_Dialog.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/SayonaraClass.h"
 
 class GUI_Target_Playlist_Dialog : public SayonaraDialog, private Ui_GUI_Target_Playlist_Dialog

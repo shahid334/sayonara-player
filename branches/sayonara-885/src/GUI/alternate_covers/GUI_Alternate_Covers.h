@@ -34,15 +34,13 @@
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
 #include "CoverLookup/CoverLookupAlternative.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 
-#include <QDialog>
-#include <QWidget>
 #include <QPixmap>
 #include <QList>
 #include <QModelIndex>
 
-
-class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
+class GUI_Alternate_Covers : public SayonaraDialog, private Ui::AlternateCovers{
 
 	Q_OBJECT
 public:

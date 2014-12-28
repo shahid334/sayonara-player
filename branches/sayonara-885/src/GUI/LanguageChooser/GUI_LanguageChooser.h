@@ -23,11 +23,9 @@
 #ifndef GUI_LANGUAGECHOOSER_H
 #define GUI_LANGUAGECHOOSER_H
 
-#include <QDialog>
 #include <QMap>
 #include <QShowEvent>
 
-#include "Settings/Settings.h"
 #include "GUI/ui_GUI_LanguageChooser.h"
 #include "HelperStructs/SayonaraClass.h"
 

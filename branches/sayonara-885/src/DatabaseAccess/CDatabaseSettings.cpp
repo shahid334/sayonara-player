@@ -34,7 +34,8 @@ bool CDatabaseConnector::load_settings() {
 
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	AbstrSetting** settings = Settings::getInstance()->get_settings();
+	Settings* _settings = Settings::getInstance();
+	AbstrSetting** settings = _settings->get_settings();
 
 	for(int i=0; i<SK::Num_Setting_Keys; i++){
 		AbstrSetting* s = settings[i];
@@ -50,7 +51,8 @@ bool CDatabaseConnector::store_settings() {
 
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	AbstrSetting** settings = Settings::getInstance()->get_settings();
+	Settings* _settings = Settings::getInstance();
+	AbstrSetting** settings = _settings->get_settings();
 	_database->transaction();
 
 	for(int i=0; i<SK::Num_Setting_Keys; i++){

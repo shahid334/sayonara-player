@@ -29,7 +29,8 @@
 #include <QMessageBox>
 
 LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
-    QObject(parent)
+	QObject(parent),
+	SayonaraClass()
 {
 
    _main_window = main_window;
@@ -37,9 +38,8 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
    _copy_thread = new ImportCopyThread(this);
    _import_dialog = new GUI_ImportFolder(main_window, true);
    _db = CDatabaseConnector::getInstance();
-   _settings = Settings::getInstance();
 
-   _lib_path = Settings::getInstance()->get(Set::Lib_Path);
+   _lib_path = _settings->get(Set::Lib_Path);
 
 
    connect(_import_dialog, SIGNAL(sig_accepted(const QString&, bool)),
@@ -68,7 +68,7 @@ void LibraryImporter::psl_import_dir(const QString& str) {
 
 void LibraryImporter::psl_import_files(const QStringList& list) {
 
-	_lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	_lib_path = _settings->get(Set::Lib_Path);
 
     _src_files = list;
     _caching_thread->set_filelist(list);

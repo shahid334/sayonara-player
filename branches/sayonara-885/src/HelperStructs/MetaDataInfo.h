@@ -24,6 +24,7 @@
 #define METADATAINFO_H
 
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/SayonaraClass.h"
 #include "CoverLookup/CoverLookup.h"
 #include <QObject>
 #include <QMap>
@@ -41,7 +42,7 @@ enum InfoStrings {
 };
 
 
-class MetaDataInfo : public QObject
+class MetaDataInfo : public QObject, protected SayonaraClass
 {
 Q_OBJECT
 

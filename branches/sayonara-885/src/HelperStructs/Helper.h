@@ -31,11 +31,8 @@
 
 #include "HelperStructs/MetaData.h"
 
-#include <QString>
-#include <QStringList>
 #include <QWidget>
 #include <QImage>
-#include <QDebug>
 #include <QPixmap>
 #include <QIcon>
 #include <QThread>

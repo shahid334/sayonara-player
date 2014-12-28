@@ -21,10 +21,12 @@
 
 
 #include "HelperStructs/MetaDataInfo.h"
-#include "Settings/Settings.h"
 
 
-MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) : QObject(parent){
+MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) :
+	QObject(parent),
+	SayonaraClass()
+{
 
 	if(lst.size() == 0 ) return;
 
@@ -300,7 +302,7 @@ QStringList MetaDataInfo::get_paths(){
 QString MetaDataInfo::get_paths_as_string(){
 
 	QString str;
-	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
 	foreach(QString path, _paths){
 

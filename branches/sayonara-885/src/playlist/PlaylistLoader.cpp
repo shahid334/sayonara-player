@@ -29,9 +29,10 @@
 
 
 PlaylistLoader::PlaylistLoader(QObject *parent) :
-    QObject(parent)
+	QObject(parent),
+	SayonaraClass()
 {
-    _settings = Settings::getInstance();
+
 }
 
 

@@ -19,7 +19,6 @@
  */
 
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 
@@ -30,11 +29,10 @@
 
 
 GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::ImportFolder()
 {
 
-	Settings* settings = Settings::getInstance();
 	setupUi(this);
 
     _thread_active = false;
@@ -48,7 +46,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
 	lab_target_info->setVisible(copy_enabled);
     lab_img->setPixmap(Helper::getPixmap("import.png", QSize(100, 100), false));
 
-	QString libpath = settings->get(Set::Lib_Path);
+	QString libpath = _settings->get(Set::Lib_Path);
 	lab_target_path->setText( libpath );
 
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(bb_accepted()));
@@ -62,7 +60,7 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
 
 	setModal(true);
 
-	int style = settings->get(Set::Player_Style);
+	int style = _settings->get(Set::Player_Style);
 	changeSkin( style == 1);
 }
 
@@ -114,7 +112,7 @@ void GUI_ImportFolder::bb_rejected() {
 void GUI_ImportFolder::choose_dir() {
 
 	QString dir;
-	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
 	dir = QFileDialog::getExistingDirectory(this,
 		tr("Choose target directory"),
@@ -137,7 +135,7 @@ void GUI_ImportFolder::choose_dir() {
 
 void GUI_ImportFolder::combo_box_changed(const QString& text) {
 
-	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 	lab_target_path->setText( lib_path + QDir::separator() + text );
 }
 

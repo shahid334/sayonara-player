@@ -38,8 +38,6 @@
 #include "playlist/Playlist.h"
 
 
-using namespace std;
-
 struct BackupPlaylist{
 
 	int radio_mode;

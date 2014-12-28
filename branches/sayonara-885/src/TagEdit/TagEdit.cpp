@@ -1,4 +1,27 @@
-#include "TagEdit.h"
+/* TagEdit.cpp */
+
+/* Copyright (C) 2011-2014  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
+#include "TagEdit/TagEdit.h"
+#include "HelperStructs/Tagging/id3.h"
 
 TagEdit::TagEdit(QObject *parent) :
 	SayonaraClass()
@@ -50,6 +73,7 @@ void TagEdit::check_for_new_artists_and_albums(QStringList& new_artists, QString
 	QStringList artists;
 	QStringList albums;
 
+	// first gather all artists and albums
 	foreach(MetaData md, _v_md){
 		if(!artists.contains(md.artist)){
 			artists << md.artist;
@@ -63,6 +87,7 @@ void TagEdit::check_for_new_artists_and_albums(QStringList& new_artists, QString
 
 	foreach(QString album_name, albums){
 		int id = _db->getAlbumID(album_name);
+		qDebug() << "Album: " << album_name << ": " << id;
 		if(id < 0) new_albums << album_name;
 	}
 
@@ -108,6 +133,7 @@ void TagEdit::apply_artists_and_albums_to_md(){
 }
 
 
+
 void TagEdit::write_tracks_to_db(){
 
 	MetaDataList v_md;
@@ -122,21 +148,22 @@ void TagEdit::write_tracks_to_db(){
 	apply_artists_and_albums_to_md();
 
 	for(int i=0; i<_v_md.size(); i++){
+
 		emit sig_progress( (i * 100) / _v_md.size());
 
 		if( _changed_md[i] == false ) continue;
 
+		bool success = ID3::setMetaDataOfFile(_v_md[i]);
 
-		qDebug() << "Write track "<< _v_md[i].title << " (" << _v_md[i].album << ") by " << _v_md[i].artist ;
+		if( success && _db->updateTrack(_v_md[i]) ){
 
-		if(_db->updateTrack(_v_md[i])){
 			v_md.push_back(_v_md[i]);
 			v_md_orig.push_back(_v_md_orig[i]);
+			qDebug() << "Write track "<< _v_md[i].title << " (" << _v_md[i].album << ") by " << _v_md[i].artist;
 		}
 	}
 
 	emit sig_progress(-1);
 	emit sig_metadata_changed(v_md_orig, v_md);
 }
-
 

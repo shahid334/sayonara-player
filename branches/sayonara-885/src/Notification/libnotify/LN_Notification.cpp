@@ -26,11 +26,12 @@
 
 #include "CoverLookup/CoverLocation.h"
 #include "Notification/Notification.h"
-#include "Settings/Settings.h"
 #include "Notification/libnotify/LN_Notification.h"
 
 
-LN_Notification::LN_Notification() {
+LN_Notification::LN_Notification() :
+	SayonaraClass()
+{
 	_initialized = notify_init("Sayonara"); 
     _not = 0;
 }

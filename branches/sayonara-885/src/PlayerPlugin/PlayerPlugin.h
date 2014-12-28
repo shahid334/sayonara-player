@@ -23,7 +23,6 @@
 #ifndef PLAYERPLUGIN_H
 #define PLAYERPLUGIN_H
 
-#include <QWidget>
 #include <QAction>
 #include <QCloseEvent>
 #include "HelperStructs/SayonaraClass.h"
@@ -64,7 +63,6 @@ public:
     QSize getSize();
     QString getName();
 
-    //void setShown(bool b);
     bool isClosed();
 
 	QAction* getAction();

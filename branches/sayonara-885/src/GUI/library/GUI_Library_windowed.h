@@ -29,11 +29,14 @@
 #ifndef GUI_LIBRARY_WINDOWED_H_
 #define GUI_LIBRARY_WINDOWED_H_
 
-#include <QObject>
-#include <QWidget>
+
 #include <QAbstractTableModel>
 #include <QPoint>
 #include <QTimer>
+#include <QMenu>
+#include <QMap>
+#include <QMessageBox>
+#include <QFocusEvent>
 
 #include "GUI/ui_GUI_Library_windowed.h"
 #include "GUI/library/DiscPopupMenu.h"
@@ -54,13 +57,8 @@
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CustomMimeData.h"
 
-#include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/SayonaraClass.h"
 
-#include <QMenu>
-#include <QMap>
-#include <QMessageBox>
-#include <QFocusEvent>
 
 using namespace Sort;
 
@@ -90,7 +88,6 @@ protected:
 
 
 	Filter		_cur_searchfilter;
-	Settings*	_settings;
 
 signals:
 

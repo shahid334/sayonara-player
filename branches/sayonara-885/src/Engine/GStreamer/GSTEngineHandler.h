@@ -22,7 +22,6 @@
 #define ENGINEHANDLER_H_
 
 #include "Engine/Engine.h"
-#include "Settings/Settings.h"
 
 #include <QVector>
 
@@ -82,7 +81,7 @@ private slots:
 
 
 private:
-	Settings* _settings;
+
 	Engine*          _cur_engine;
 	QVector<Engine*>   _engines;
 

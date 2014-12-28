@@ -27,7 +27,10 @@
 
 
 
-PlaylistHandler::PlaylistHandler(QObject * parent) : QObject (parent) {
+PlaylistHandler::PlaylistHandler(QObject * parent) :
+	QObject (parent),
+	SayonaraClass()
+{
 
 
 	_db = CDatabaseConnector::getInstance();

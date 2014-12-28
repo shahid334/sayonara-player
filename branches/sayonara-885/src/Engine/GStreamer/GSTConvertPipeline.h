@@ -24,10 +24,8 @@
 #define GSTCONVERTPIPELINE_H
 
 #include "HelperStructs/globals.h"
-#include "Settings/Settings.h"
 #include "Engine/GStreamer/GSTPipeline.h"
 #include "Engine/Engine.h"
-
 
 
 class GSTConvertPipeline : public GSTAbstractPipeline

@@ -27,7 +27,6 @@
 
 #include "HelperStructs/SayonaraClass.h"
 #include "GUI/ui_GUI_SocketSetup.h"
-#include "Settings/Settings.h"
 
 
 class GUI_SocketSetup: public SayonaraDialog, private Ui::SocketSetupDialog {

@@ -24,7 +24,6 @@
 #define SEARCHABLEWIDGET_H
 
 #include <QList>
-#include <QWidget>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QTableView>

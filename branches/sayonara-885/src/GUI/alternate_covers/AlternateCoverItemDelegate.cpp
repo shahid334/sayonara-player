@@ -27,18 +27,10 @@
  */
 
 #include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
-#include <CoverLookup/CoverLookup.h>
+#include "CoverLookup/CoverLookup.h"
 
-
-#include <QObject>
-#include <QWidget>
-#include <QTableView>
-#include <QItemDelegate>
-#include <QLabel>
-#include <QItemDelegate>
 #include <QPainter>
 #include <QDebug>
-
 
 
 AlternateCoverItemDelegate::AlternateCoverItemDelegate(QObject* parent) : QItemDelegate(parent) {

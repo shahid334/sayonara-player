@@ -29,7 +29,6 @@
 #ifndef GUI_EQUALIZER_H_
 #define GUI_EQUALIZER_H_
 
-#include "Settings/Settings.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "GUI/ui_GUI_Equalizer.h"
 

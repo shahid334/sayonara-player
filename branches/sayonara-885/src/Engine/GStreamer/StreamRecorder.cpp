@@ -23,7 +23,6 @@
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/GStreamer/GSTPipeline.h"
 #include "HelperStructs/Helper.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/PlaylistParser.h"
 #include "HelperStructs/Tagging/id3.h"
 
@@ -31,8 +30,6 @@
 #include <gst/gsturi.h>
 #include <gst/app/gstappsrc.h>
 
-#include <QString>
-#include <QDebug>
 #include <QFile>
 #include <QDir>
 #include <QDateTime>
@@ -88,11 +85,12 @@ gboolean StreamRecorder::bus_state_changed(GstBus *bus, GstMessage *msg, void *u
 
 
 StreamRecorder::StreamRecorder(QObject *parent) :
-	QObject(parent), _session_collector(0)
+	QObject(parent),
+	SayonaraClass(),
+	_session_collector(0)
 {
     _buffer_size = 32767;
     _stream_ended = true;
-    _settings = Settings::getInstance();
     _rec_pipeline = NULL;
 
     _try = 2;

@@ -25,21 +25,22 @@
 
 
 
-#include <QObject>
+
 #include <QList>
+#include <QVector>
 #include <QString>
-#include <vector>
+
 
 #include "Engine/Engine.h"
 
-using namespace std;
+
 
 class SoundPluginLoader : public QObject {
 
 	Q_OBJECT
 
 private:
-	vector<Engine*> 	_vec_engines;
+	QVector<Engine*> 	_vec_engines;
 
 	bool load_plugins(QString app_dir);
 
@@ -48,7 +49,7 @@ public:
 	SoundPluginLoader(QString);
 	virtual ~SoundPluginLoader();
 
-	vector<Engine*> get_engines();
+	QVector<Engine*> get_engines();
 	Engine* get_first_engine();
 };
 

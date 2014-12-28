@@ -31,6 +31,7 @@
 #include "GUI/engine/StyleTypes.h"
 #include "library/Sorting.h"
 
+
 #include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
@@ -67,6 +68,7 @@ using namespace Sort;
 class CDatabaseConnector : public QObject
 {
     Q_OBJECT
+
 public:
     static CDatabaseConnector* getInstance();
     virtual ~CDatabaseConnector();
@@ -81,18 +83,17 @@ public:
 		/*****************
 		 *  ARTISTS
 		 *****************/
-
-			bool _db_fetch_artists(QSqlQuery& q, ArtistList& result);
+			bool db_fetch_artists(QSqlQuery& q, ArtistList& result);
 
 			int getArtistID (const QString & artist);
             bool getArtistByID( const int& id, Artist& artist);
 			int getMaxArtistID();
 
-			void getAllArtists(ArtistList& result, SortOrder sortorder = ArtistNameAsc, bool also_empty=false);
+			bool getAllArtists(ArtistList& result, SortOrder sortorder = ArtistNameAsc, bool also_empty=false);
 
-			void getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
+			bool getAllArtistsByAlbum(int album, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
 
-			void getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
+			bool getAllArtistsBySearchString(Filter filter, ArtistList& result, SortOrder sortorder = ArtistNameAsc);
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
@@ -101,19 +102,20 @@ public:
 		/*****************
 		 *  ALBUMS
 		 *****************/
-			bool _db_fetch_albums(QSqlQuery& q, AlbumList& result);
+
+			bool db_fetch_albums(QSqlQuery& q, AlbumList& result);
 
             int getAlbumID (const QString& album);
 			int getMaxAlbumID();
 
             bool getAlbumByID(const int& id, Album& album);
 
-			void getAllAlbums(AlbumList& result, SortOrder sortorder=AlbumNameAsc, bool also_empty=false);
+			bool getAllAlbums(AlbumList& result, SortOrder sortorder=AlbumNameAsc, bool also_empty=false);
 
-			void getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
-			void getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
+			bool getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
+			bool getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter=Filter(), SortOrder sortorder = AlbumNameAsc);
 
-			void getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder = AlbumNameAsc);
+			bool getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder = AlbumNameAsc);
 
 			int insertAlbumIntoDatabase (const QString & album);
             int insertAlbumIntoDatabase (const Album& album);
@@ -126,29 +128,31 @@ public:
 		 *  TRACKS
 		 *****************/
 
-			bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result);
+			bool db_fetch_tracks(QSqlQuery& q, MetaDataList& result);
 
-			void getAllTracksByAlbum(int album, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc, int discnumber=-1);
-			void getAllTracksByAlbum(QList<int> albums, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
+			bool getAllTracksByAlbum(int album, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc, int discnumber=-1);
+			bool getAllTracksByAlbum(QList<int> albums, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
 
-			void getAllTracksByArtist(int artist, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc);
-			void getAllTracksByArtist(QList<int> artists, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
+			bool getAllTracksByArtist(int artist, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder = TrackArtistAsc);
+			bool getAllTracksByArtist(QList<int> artists, MetaDataList& result, Filter filter=Filter(), SortOrder sortorder =TrackArtistAsc);
 
-			void getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sortorder = TrackArtistAsc);
+			bool getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sortorder = TrackArtistAsc);
 
 			int insertTrackIntoDatabase (const MetaData & data,int artistID, int albumID);
 			bool updateTrack(const MetaData& data);
-			int updateTracks(const MetaDataList& lst);
+			bool updateTracks(const MetaDataList& lst);
 
-			int getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
+			bool getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
 			MetaData getTrackByPath(QString path);
-            void getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md);
+			bool getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md);
 
 			bool deleteTrack(int id);
 
-			int deleteTracks(const MetaDataList&);
-			int deleteTracks(const QList<int>& ids);
+			bool deleteTracks(const MetaDataList&);
+			bool deleteTracks(const QList<int>& ids);
+			bool deleteTracksWithoutAlbum();
+			bool deleteTracksWithoutArtist();
 
 
 
@@ -199,9 +203,8 @@ public:
 	 * SETTINGS
 	 *******************************************/
 
-
-		bool load_setting(QString key, QString& val) const;
-		bool store_setting(QString key, const QVariant& val) const;
+	bool load_setting(QString key, QString& val) const;
+	bool store_setting(QString key, const QVariant& val) const;
 
    /************************************
     *styles
@@ -239,7 +242,6 @@ private slots:
 
 private:
     CDatabaseConnector(const CDatabaseConnector&);
-	//Settings* _settings;
 
     QSqlDatabase* _database;
     QString _db_filename;

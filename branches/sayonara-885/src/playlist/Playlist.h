@@ -25,14 +25,15 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "Settings/Settings.h"
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QString>
 #include <QList>
 
-class Playlist : public QObject
+
+class Playlist : public QObject, protected SayonaraClass
 {
 
     Q_OBJECT

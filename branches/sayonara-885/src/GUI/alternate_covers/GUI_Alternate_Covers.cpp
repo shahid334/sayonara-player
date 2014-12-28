@@ -33,33 +33,33 @@
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "Settings/Settings.h"
 
-#include <QDialog>
 #include <QPixmap>
 #include <QMessageBox>
 #include <QFile>
 #include <QDir>
 #include <QFileDialog>
-#include <QString>
-#include <QDebug>
 #include <QFileSystemWatcher>
 #include <QRegExp>
 
 
 
 GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::AlternateCovers()
 {
 
 	setupUi(this);
 
-	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
-    if(QFile::exists(lib_path))
-        _last_path = lib_path;
-    else _last_path = QDir::homePath();
+	if(QFile::exists(lib_path)){
+		_last_path = lib_path;
+	}
+
+	else {
+		_last_path = QDir::homePath();
+	}
 
 	_cl_alternative = 0;
 
@@ -325,7 +325,7 @@ void GUI_Alternate_Covers::reset_model() {
 
 void GUI_Alternate_Covers::open_file_dialog() {
 
-	QString lib_path = Settings::getInstance()->get(Set::Lib_Path);
+	QString lib_path = _settings->get(Set::Lib_Path);
 
 	QDir dir( lib_path );
 

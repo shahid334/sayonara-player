@@ -28,7 +28,6 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include "HelperStructs/Helper.h"
-#include "Settings/Settings.h"
 
 #include <QMap>
 #include <QStringList>
@@ -37,7 +36,10 @@
 
 #define UrlParams QMap<QString, QString>
 
-LFMTrackChangedThread::LFMTrackChangedThread(QString target_class) {
+LFMTrackChangedThread::LFMTrackChangedThread(QString target_class) :
+	QThread(),
+	SayonaraClass()
+{
 	_target_class = target_class;
 
 	ArtistList artists;
@@ -92,7 +94,7 @@ void LFMTrackChangedThread::run() {
 	}
 
 
-	PlaylistMode pl_mode = Settings::getInstance()->get(Set::PL_Mode);
+	PlaylistMode pl_mode = _settings->get(Set::PL_Mode);
 
 	if(pl_mode.dynamic && (_thread_tasks & LFM_THREAD_TASK_SIM_ARTISTS)) {
 		success = search_similar_artists();

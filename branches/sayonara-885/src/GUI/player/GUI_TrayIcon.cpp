@@ -19,7 +19,6 @@
  */
 
 #include "Notification/NotificationPluginLoader.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "GUI/player/GUI_TrayIcon.h"
 #include "HelperStructs/Style.h"
@@ -35,7 +34,10 @@
 #include <QFont>
 
 
-GUI_TrayIcon::GUI_TrayIcon (QObject *parent) : QSystemTrayIcon (parent) {
+GUI_TrayIcon::GUI_TrayIcon (QObject *parent) :
+	QSystemTrayIcon (parent),
+	SayonaraClass()
+{
 
     m_playing = false;
     m_mute = false;

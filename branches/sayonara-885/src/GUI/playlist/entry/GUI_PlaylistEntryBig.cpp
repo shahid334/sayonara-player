@@ -27,10 +27,7 @@
  */
 
 #include "GUI/playlist/entry/GUI_PlaylistEntryBig.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
-
-
 
 GUI_PlaylistEntryBig::GUI_PlaylistEntryBig(QWidget* parent) :
 	GUI_PlaylistEntry(parent),

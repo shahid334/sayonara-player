@@ -149,7 +149,7 @@ void GUI_LastFM::show_win() {
 
 void GUI_LastFM::cb_correct_id3_toggled(bool checked) {
 
-	Settings::getInstance()->set(Set::LFM_Corrections, checked);
+	_settings->set(Set::LFM_Corrections, checked);
 }
 
 void GUI_LastFM::setLFMActive(bool enabled) {

@@ -27,9 +27,8 @@
  */
 
 #include "HelperStructs/Helper.h"
-#include "Settings/Settings.h"
-
 #include "GUI/MyColumnHeader.h"
+
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/library/model/LibraryItemModelTracks.h"
 
@@ -81,10 +80,10 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( md.artist );
 
 			 case COL_LENGTH:
-				 return QVariant( Helper::cvt_ms_to_string(md.length_ms)  );
+				 return QVariant( Helper::cvt_ms_to_string(md.length_ms) );
 
 			 case COL_ALBUM:
-                return QVariant(Helper::get_album_w_disc(md));
+				return Helper::get_album_w_disc(md);
 
 			 case COL_YEAR:
 				 return QVariant(md.year);
@@ -111,8 +110,9 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
           else return Qt::AlignLeft + Qt::AlignVCenter;
 	 }
 
-	 else
+	 else{
 		 return QVariant();
+	 }
 }
 
 

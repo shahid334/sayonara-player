@@ -22,13 +22,13 @@
 
 #include "library/threads/ImportCopyThread.h"
 #include "HelperStructs/Helper.h"
-#include "Settings/Settings.h"
 
 #include <QDir>
 #include <QFile>
 
 ImportCopyThread::ImportCopyThread(QObject *parent) :
-    QThread(parent)
+	QThread(parent),
+	SayonaraClass()
 {
 }
 
@@ -203,7 +203,7 @@ void ImportCopyThread::run() {
 
 void ImportCopyThread::set_vars(QString chosen_dir, QStringList &files, QMap<QString, MetaData>& md_map, QMap<QString, QString>& pd_map) {
 
-	_lib_dir = Settings::getInstance()->get(Set::Lib_Path);
+	_lib_dir = _settings->get(Set::Lib_Path);
 
 	_chosen_dir = chosen_dir;
     _files = files;

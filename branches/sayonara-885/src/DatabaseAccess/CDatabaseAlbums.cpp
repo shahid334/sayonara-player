@@ -34,59 +34,6 @@
 
 using namespace Sort;
 
-
-
-struct AlbumCache {
-
-	CDatabaseConnector* _db;
-	QMap<int, Album> _albums_by_id;
-	QMap<QString, Album> _albums_by_name;
-
-    AlbumCache() {
-
-		_db = CDatabaseConnector::getInstance();
-		update();
-    }
-
-    ~AlbumCache() {
-
-    }
-
-	void update() {
-
-		_albums_by_id.clear();
-		_albums_by_name.clear();
-
-		AlbumList albums;
-		_db->getAllAlbums(albums, AlbumNameAsc, true);
-
-		foreach(Album album, albums){
-			_albums_by_id.insert(album.id, album);
-			_albums_by_name.insert(album.name, album);
-		}
-    }
-
-	bool getAlbumByID(int id, Album& album) {
-
-		if(!_albums_by_id.keys().contains(id)) return false;
-
-		album = _albums_by_id[id];
-		return true;
-    }
-
-	bool getAlbumByName(QString name, Album& album) {
-
-		if(!_albums_by_name.keys().contains(name)) {
-			return false;
-		}
-
-		album =  _albums_by_name[name];
-		return true;
-	}
-};
-
-AlbumCache album_cache;
-
 #define ALBUM_ARTIST_TRACK_SELECTOR QString("SELECT "  \
 			"albums.albumID AS albumID, "  \
 			"albums.name AS albumName, "  \
@@ -98,13 +45,7 @@ AlbumCache album_cache;
 			"group_concat(tracks.discnumber) AS discnumbers "  \
 			"FROM albums, artists, tracks ")
 
-bool CDatabaseConnector::_db_fetch_albums(QSqlQuery& q, AlbumList& result) {
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-	DB_RETURN_NOT_OPEN_BOOL(_database);
+bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
 	if(result.size()){
 		result.clear();
@@ -191,15 +132,6 @@ static QString _create_order_string(SortOrder sortorder) {
 
 int CDatabaseConnector::getAlbumID (const QString & album)  {
 
-	Album a;
-	if( album_cache.getAlbumByName(album, a) ){
-		return a.id;
-	}
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
 	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q (*_database);
@@ -216,14 +148,10 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 		albumID = q.value(0).toInt();
 	}
 
-
 	return albumID;
 }
 
 int CDatabaseConnector::getMaxAlbumID() {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
@@ -247,15 +175,8 @@ int CDatabaseConnector::getMaxAlbumID() {
 bool CDatabaseConnector::getAlbumByID(const int& id, Album& album) {
 
 	if(id == -1) return false;
-	if(album_cache.getAlbumByID(id, album)) {
-		return true;
-	}
 
 	AlbumList albums;
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
 
 	QSqlQuery q (*_database);
 	QString querytext =
@@ -266,19 +187,17 @@ bool CDatabaseConnector::getAlbumByID(const int& id, Album& album) {
 	q.prepare(querytext);
 	q.bindValue(":id", QVariant(id));
 
-	_db_fetch_albums(q, albums);
+	db_fetch_albums(q, albums);
     if(albums.size() > 0) {
         album = albums[0];
-        return true;
     }
 
-    return false;
+	return (albums.size() > 0);
 }
 
-void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder, bool also_empty) {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+bool CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder, bool also_empty) {
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	QString querytext = ALBUM_ARTIST_TRACK_SELECTOR ;
@@ -296,14 +215,13 @@ void CDatabaseConnector::getAllAlbums(AlbumList& result, SortOrder sortorder, bo
 
 	q.prepare(querytext);
 
-	_db_fetch_albums(q, result);
+	return db_fetch_albums(q, result);
 }
 
 
-void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder) {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+bool CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& result, Filter filter,SortOrder sortorder) {
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 
@@ -313,7 +231,9 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 			"WHERE tracks.albumID = albums.albumID AND "
 			"artists.artistid = tracks.artistid AND ";
 
-	if(artists.size() == 0) return;
+	if(artists.size() == 0) {
+		return false;
+	}
 
 	else if(artists.size() > 1) {
 		querytext += "(artists.artistid = :artist_id ";
@@ -385,24 +305,20 @@ void CDatabaseConnector::getAllAlbumsByArtist(QList<int> artists, AlbumList& res
 	}
 
 
-    _db_fetch_albums(q, result);
+	return db_fetch_albums(q, result);
 
 }
 
-void CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, SortOrder sortorder) {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+bool CDatabaseConnector::getAllAlbumsByArtist(int artist, AlbumList& result, Filter filter, SortOrder sortorder) {
+
 	QList<int> list;
 	list << artist;
-	getAllAlbumsByArtist(list, result, filter, sortorder);
+	return getAllAlbumsByArtist(list, result, filter, sortorder);
 }
 
-void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder) {
+bool CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& result, SortOrder sortorder) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	QString query;
@@ -453,7 +369,7 @@ void CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
         q.bindValue(":search_in_genre", QVariant(filter.filtertext));
     }
 
-	_db_fetch_albums(q, result);
+	return db_fetch_albums(q, result);
 }
 
 
@@ -480,15 +396,10 @@ int CDatabaseConnector::updateAlbum (const Album & album) {
 		return -1;
 	}
 
-	album_cache.update();
-
 	return this->getAlbumID (album.name);
 }
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
@@ -510,13 +421,6 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString & album) {
 		return -1;
     }
 
-	album_cache.update();
-
-	Album a;
-	if( album_cache.getAlbumByName(album, a) ){
-		return a.id;
-	}
-
 	return this->getAlbumID(album);
 }
 
@@ -528,11 +432,6 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 	}
 
 	DB_RETURN_NOT_OPEN_INT(_database);
-
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
 
 	QSqlQuery q (*_database);
 
@@ -547,9 +446,6 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album & album) {
 		return -1;
 	}
 
-	album_cache.update();
 	return album.id;
-
-
 }
 

@@ -19,8 +19,6 @@
  */
 
 
-
-#include "Settings/Settings.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "Notification/Notification.h"
 #include "HelperStructs/Helper.h"
@@ -35,7 +33,9 @@ NotificationPluginLoader* NotificationPluginLoader::getInstance() {
 }
 
 
-NotificationPluginLoader::NotificationPluginLoader() : SayonaraClass() {
+NotificationPluginLoader::NotificationPluginLoader() :
+	SayonaraClass()
+{
 
     QString app_dir;
     #ifdef Q_OS_UNIX

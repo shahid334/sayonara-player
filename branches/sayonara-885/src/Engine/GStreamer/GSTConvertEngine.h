@@ -25,7 +25,6 @@
 
 #include "Engine/Engine.h"
 #include "Engine/GStreamer/GSTConvertPipeline.h"
-#include "Settings/Settings.h"
 
 
 class GSTConvertEngine : public Engine
@@ -44,7 +43,6 @@ public:
 
 	private:
 
-		Settings* _settings;
 		GSTConvertPipeline*	 _pipeline;
 		MetaData _md_target;
 

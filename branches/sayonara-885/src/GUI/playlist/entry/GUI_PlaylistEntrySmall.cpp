@@ -19,7 +19,6 @@
  */
 
 #include "GUI/playlist/entry/GUI_PlaylistEntrySmall.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 
 

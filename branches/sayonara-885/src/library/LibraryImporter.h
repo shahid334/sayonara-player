@@ -23,16 +23,12 @@
 #ifndef LIBRARYIMPORTER_H
 #define LIBRARYIMPORTER_H
 
-#include <QObject>
-#include <QWidget>
-#include <QStringList>
 #include "library/threads/ImportCachingThread.h"
 #include "library/threads/ImportCopyThread.h"
-#include "Settings/Settings.h"
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-class LibraryImporter : public QObject
+class LibraryImporter : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
@@ -66,7 +62,6 @@ private:
     GUI_ImportFolder*       _import_dialog;
     ImportCachingThread*    _caching_thread;
     ImportCopyThread*       _copy_thread;
-    Settings*       _settings;
     CDatabaseConnector*     _db;
 
 

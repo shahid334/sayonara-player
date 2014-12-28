@@ -19,7 +19,6 @@
  */
 
 
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
@@ -59,12 +58,12 @@ void CLibraryBase::reloadLibrary(bool clear) {
 
 	_library_path = _settings->get(Set::Lib_Path);
 
-	if(_library_path.length() == 0) {
+	if(_library_path.isEmpty()) {
         QMessageBox msgBox(_main_window);
         msgBox.setText(tr("Please select your library first"));
         msgBox.exec();
 
-        QString dir = QFileDialog::getExistingDirectory(_main_window, tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
+		QString dir = QFileDialog::getExistingDirectory(_main_window, tr("Open Directory"),	QDir::homePath(), QFileDialog::ShowDirsOnly);
 
 
         if(dir.length() < 3) {

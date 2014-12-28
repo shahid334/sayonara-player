@@ -28,7 +28,6 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/MetaData.h"
 
-#include <QWidget>
 #include <QMap>
 
 

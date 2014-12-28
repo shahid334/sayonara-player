@@ -24,7 +24,6 @@
 #define GUI_NOTIFICATIONS_H
 
 #include "HelperStructs/SayonaraClass.h"
-#include "Settings/Settings.h"
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "GUI/ui_GUI_Notifications.h"

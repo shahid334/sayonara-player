@@ -28,11 +28,11 @@
 #include <QThread>
 #include <QList>
 #include <QMap>
-#include <QString>
+
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "HelperStructs/SmartComparison.h"
-
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 
 #define LFM_THREAD_TASK_UPDATE_TRACK 		1<<0
 #define LFM_THREAD_TASK_SIM_ARTISTS 		1<<1
@@ -87,7 +87,7 @@ struct ArtistMatch{
 
 };
 
-class LFMTrackChangedThread : public QThread{
+class LFMTrackChangedThread : public QThread, protected SayonaraClass {
 
 	Q_OBJECT
 

@@ -42,7 +42,6 @@
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
-#include "Settings/Settings.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/Filter.h"
@@ -77,8 +76,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 {
 
 	setupUi(this);
-
-    _settings = Settings::getInstance();
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 

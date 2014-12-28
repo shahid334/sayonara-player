@@ -26,7 +26,6 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "LyricLookup/LyricLookup.h"
-#include "Settings/Settings.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/MetaDataInfo.h"
 

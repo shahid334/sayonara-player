@@ -700,7 +700,7 @@ bool Helper::is_file(const QString& filename) {
 
 QString Helper::get_album_w_disc(const MetaData& md) {
 
-    if(md.album_id <= 0){
+	if(md.album_id < 0){
         return md.album.trimmed();
     }
 

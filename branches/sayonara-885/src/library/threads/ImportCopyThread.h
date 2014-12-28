@@ -30,11 +30,12 @@
 #include <QStringList>
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 
 #define IMPORT_COPY_THREAD_COPY 0
 #define IMPORT_COPY_THREAD_ROLLBACK 1
 
-class ImportCopyThread : public QThread
+class ImportCopyThread : public QThread, protected SayonaraClass
 {
     Q_OBJECT
 

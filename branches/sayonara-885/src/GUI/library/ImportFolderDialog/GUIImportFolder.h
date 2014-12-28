@@ -21,14 +21,15 @@
 #ifndef GUIIMPORTFOLDER_H_
 #define GUIIMPORTFOLDER_H_
 
-#include <QDialog>
+
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QStringList>
 #include "GUI/ui_GUI_ImportFolder.h"
+#include "HelperStructs/SayonaraClass.h"
 
 
-class GUI_ImportFolder : public QDialog, private Ui::ImportFolder {
+class GUI_ImportFolder : public SayonaraDialog, private Ui::ImportFolder {
 
 Q_OBJECT
 public:

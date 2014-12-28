@@ -1,3 +1,25 @@
+/* GUI_TagEdit.cpp */
+
+/* Copyright (C) 2011-2014  Lucio Carreras
+ *
+ * This file is part of sayonara player
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "TagEdit/TagExpression.h"
 #include "HelperStructs/Helper.h"
@@ -425,7 +447,7 @@ void GUI_TagEdit::tag_selection_changed(){
 
 }
 
-bool GUI_TagEdit::replace_selected_tag_text(QString t, bool b){
+bool GUI_TagEdit::replace_selected_tag_text(Tag t, bool b){
 
 	if(_tag_selection_start < 0 && b) {
 		qDebug() << "Nothing selected...";
@@ -434,23 +456,36 @@ bool GUI_TagEdit::replace_selected_tag_text(QString t, bool b){
 
 	QString text = le_tag->text();
 
+	// replace the string by a tag
 	if(b){
-		QString selected_text = text.mid( _tag_selection_start, _tag_selection_len );
+
+		ReplacedString selected_text = text.mid( _tag_selection_start, _tag_selection_len );
 		if(!_tag_expression.check_tag(t, selected_text)) return false;
 
-		_tag_str_map[t] = selected_text;
-
-		text.replace( _tag_selection_start,_tag_selection_len, t );
+		text.replace( _tag_selection_start, _tag_selection_len, t );
 		le_tag->setText(text);
+
+		_tag_str_map[t] = selected_text;
 	}
 
+	// replace tag by the original string
 	else{
+
 		text.replace(t, _tag_str_map[t]);
 		le_tag->setText(text);
+
+		_tag_str_map.remove(t);
 	}
 
-	_tag_expression.update_tag(text, _tag_edit->get_metadata(_cur_idx).filepath);
-	set_tag_colors(_tag_expression.is_valid());
+
+	if(check_idx(_cur_idx)){
+
+		// fetch corresponding filepath and update the tag expression
+		MetaData md = _tag_edit->get_metadata(_cur_idx);
+		_tag_expression.update_tag(text, md.filepath);
+
+		set_tag_colors(_tag_expression.is_valid());
+	}
 
 	return true;
 }

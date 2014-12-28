@@ -22,9 +22,12 @@
 #include "playlist/Playlist.h"
 #include <QDir>
 
-Playlist::Playlist(QObject* parent) : QObject(parent) {
+Playlist::Playlist(QObject* parent) :
+	QObject(parent),
+	SayonaraClass()
+{
 
-	_playlist_mode = Settings::getInstance()->get(Set::PL_Mode);
+	_playlist_mode = _settings->get(Set::PL_Mode);
     _reports_disabled = false;
     _cur_play_idx = -1;
 }

@@ -31,8 +31,6 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-	_settings = Settings::getInstance();
-
 	LameBitrate br = (LameBitrate) _settings->get(Set::Engine_ConvertQuality);
 
 

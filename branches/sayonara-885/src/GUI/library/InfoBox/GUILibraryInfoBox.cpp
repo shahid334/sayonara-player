@@ -25,7 +25,6 @@
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/ui_GUI_Library_Info_Box.h"
 
-#include "Settings/Settings.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/Helper.h"
@@ -66,7 +65,7 @@ void GUI_Library_Info_Box::psl_refresh() {
     MetaDataList v_md;
 	AlbumList v_albums;
 	ArtistList v_artists;
-	bool lfm_active = Settings::getInstance()->get(Set::LFM_Active);
+	bool lfm_active = _settings->get(Set::LFM_Active);
 
 	_db->getTracksFromDatabase(v_md);
 	_db->getAllAlbums(v_albums);

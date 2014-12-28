@@ -23,9 +23,7 @@
 #ifndef PLAYLISTLOADER_H
 #define PLAYLISTLOADER_H
 
-#include <QObject>
 #include "HelperStructs/SayonaraClass.h"
-#include "Settings/Settings.h"
 
 class PlaylistLoader : public QObject, protected SayonaraClass
 {
