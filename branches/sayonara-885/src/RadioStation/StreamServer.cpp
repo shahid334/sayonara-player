@@ -43,8 +43,6 @@ StreamServer::StreamServer(QObject* parent) :
 		Helper::sleep_ms(1000);
 	}
 
-
-
 	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
 	REGISTER_LISTENER(Set::Broadcast_Port, port_changed);
 	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
@@ -105,50 +103,15 @@ bool StreamServer::listen_for_connection(){
 void StreamServer::new_client_request(){
 
 	QTcpSocket* socket = _server->nextPendingConnection();
-	socket->waitForReadyRead();
 
 	if(!socket) return;
 
 	qDebug() << "*** New request " << socket->peerAddress() << "***";
 
-	QString ip = socket->peerAddress().toString();
-
 	StreamWriter* sw = new StreamWriter(socket);
 
-	HttpAnswer answer ;
-
-		answer = sw->parse_message();
-		switch(answer){
-
-			case HttpAnswerFail:
-			case HttpAnswerReject:
-				qDebug() << "Rejected: " << sw->get_user_agent() << ": " << sw->get_ip();
-				sw->send_header(true);
-				disconnect(sw);
-				break;
-
-			case HttpAnswerIgnore:
-				break;
-
-			case HttpAnswerPlaylist:
-				sw->send_playlist(_md);
-				disconnect(sw);
-				break;
-
-			case HttpAnswerMP3:
-				sw->send_html5();
-				break;
-
-			default:
-				qDebug() << "Accepted: " << sw->get_user_agent() << ": " << sw->get_ip();
-				emit sig_new_connection(ip);
-
-				sw->send_header(false);
-				sw->change_track(_md);
-
-				_lst_sw << sw;
-				_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
-		}
+	connect(sw, SIGNAL(sig_disconnected(StreamWriter*)), this, SLOT(disconnected(StreamWriter*)));
+	connect(sw, SIGNAL(sig_new_connection(const QString&)), this, SLOT(new_connection(const QString&)));
 }
 
 
@@ -159,30 +122,9 @@ void StreamServer::reject_client(){
 
 void StreamServer::new_data(uchar* data, quint64 size){
 
-	QList<int> idx_list;
-	int idx = 0;
-
 	foreach(StreamWriter* sw, _lst_sw){
 
-		bool success = sw->send_data(data, size);
-
-		if(!success){
-
-			qDebug() << "Connection closed by client "
-					 << sw->get_user_agent()
-					 << " (" << sw->get_ip() << ")";
-
-			idx_list << idx;
-			disconnect(sw);
-		}
-
-		idx++;
-	}
-
-	foreach(int idx, idx_list){
-		if(idx < _lst_sw.size()){
-			_lst_sw.removeAt(idx);
-		}
+		sw->send_data(data, size);
 	}
 }
 
@@ -209,37 +151,19 @@ void StreamServer::dismiss(int idx){
 	StreamWriter* sw = _lst_sw[idx];
 
 	sw->disable();
-
-	/*if(_n_clients > 0) _n_clients--;
-	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);*/
-
 }
 
 // real socket disconnect (if no further sending is possible)
 void StreamServer::disconnect(StreamWriter* sw){
 
-	emit sig_connection_closed(sw->get_ip());
-
 	sw->disconnect();
 
-	int idx = _lst_sw.indexOf(sw);
-	if(idx >= 0 && idx < _lst_sw.size()){
-		_lst_sw.removeAt(idx);
-	}
-
-	if(_n_clients > 0) _n_clients--;
-	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);
-
-	delete sw;
-	sw = 0;
 }
 
 void StreamServer::disconnect_all(){
 
 	foreach(StreamWriter* sw, _lst_sw){
 		sw->disconnect();
-		delete sw;
-		sw = 0;
 	}
 
 	_lst_sw.clear();
@@ -266,10 +190,34 @@ void StreamServer::active_changed(){
     }
 }
 
+void StreamServer::disconnected(StreamWriter* sw){
+
+	qDebug() << "*** STREAM WRITER DISCONNECTED ***";
+
+	int idx = _lst_sw.indexOf(sw);
+	if(idx >= 0 && idx < _lst_sw.size()){
+		_lst_sw.removeAt(idx);
+	}
+
+	emit sig_connection_closed(sw->get_ip());
+
+	if(_n_clients > 0) _n_clients--;
+	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);
+
+	delete sw;
+	sw = 0;
+}
+
 void StreamServer::prompt_changed(){
 	_prompt = _settings->get(Set::Broadcast_Prompt);
 }
 
 void StreamServer::port_changed(){
 	//_port = _settings->get(Set::Broadcast_Port);
+}
+
+void StreamServer::new_connection(const QString& ip){
+	_lst_sw << (StreamWriter*) this->sender();
+	_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
+	emit sig_new_connection(ip);
 }

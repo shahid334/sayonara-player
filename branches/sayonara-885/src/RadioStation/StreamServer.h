@@ -76,8 +76,10 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void new_data(uchar* data, quint64 size);
 		void reject_client();
 		void dismiss(int idx);
+
 		void disconnect(StreamWriter* sw);
 		void disconnect_all();
+
 		void update_track(const MetaData&);
 		void server_close();
 		void stop();
@@ -87,5 +89,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void port_changed();
 		void prompt_changed();
 		void new_client_request();
+		void disconnected(StreamWriter* sw);
+		void new_connection(const QString& ip);
 
 };

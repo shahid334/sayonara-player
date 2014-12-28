@@ -28,17 +28,27 @@
 #include <QHostAddress>
 
 
+
 enum HttpAnswer {
 	HttpAnswerFail=0,
 	HttpAnswerOK,
 	HttpAnswerReject,
 	HttpAnswerIgnore,
 	HttpAnswerPlaylist,
-	HttpAnswerMP3
+	HttpAnswerHTML5,
+	HttpAnswerMP3,
+	HttpAnswerBG,
+	HttpAnswerFavicon
 };
 
 
-class StreamWriter : protected SayonaraClass {
+class StreamWriter : public QObject, protected SayonaraClass {
+
+	Q_OBJECT
+
+	signals:
+		void sig_new_connection(const QString& ip);
+		void sig_disconnected(StreamWriter* sw);
 
 	public:
 		StreamWriter(QTcpSocket* socket);
@@ -61,6 +71,7 @@ class StreamWriter : protected SayonaraClass {
 		QString _user_agent;
 		QString _host;
 		quint64 _sent_bytes;
+		MetaData _md;
 
 
 		void reset();
@@ -76,6 +87,7 @@ class StreamWriter : protected SayonaraClass {
 		bool send_header(bool reject);
 		bool send_playlist(const MetaData& md);
 		bool send_html5();
+		bool send_bg();
 
 		HttpAnswer parse_message();
 
@@ -83,5 +95,10 @@ class StreamWriter : protected SayonaraClass {
 		void disconnect();
 		void enable();
 		void disable();
+
+	private slots:
+		void socket_disconnected();
+		void data_available();
+
 
 };

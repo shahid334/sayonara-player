@@ -24,6 +24,16 @@
 #include "HelperStructs/Helper.h"
 
 static char padding[256];
+static char bg_image[] = {
+				0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x14, 0x00, 0x00, 0x00, 0x14,
+				0x08, 0x06, 0x00, 0x00, 0x00, 0x8d, 0x89, 0x1d, 0x0d, 0x00, 0x00, 0x00, 0x09, 0x70, 0x48, 0x59, 0x73, 0x00, 0x00, 0x0b, 0x13, 0x00, 0x00, 0x0b,
+				0x13, 0x01, 0x00, 0x9a, 0x9c, 0x18, 0x00, 0x00, 0x00, 0x30, 0x49, 0x44, 0x41, 0x54, 0x38, 0xcb, 0x63, 0x54, 0x51, 0x51, 0xf9, 0xcf, 0x40, 0x04,
+				0xf8, 0xfb, 0xf7, 0x2f, 0x31, 0xca, 0x18, 0x98, 0x18, 0xa8, 0x0c, 0x46, 0x0d, 0x1c, 0x35, 0x70, 0x30, 0x18, 0xc8, 0x42, 0x6c, 0x0e, 0x60, 0x66,
+				0x66, 0x1e, 0x0d, 0xc3, 0x51, 0x03, 0x47, 0xae, 0x81, 0x00, 0x3e, 0xc9, 0x07, 0x8c, 0xff, 0xa6, 0x58, 0xa2, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
+				0x4e, 0x44, 0xae, 0x42, 0x60, 0x82
+};
+
+
 
 StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
 {
@@ -35,6 +45,9 @@ StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
 
 	_stream_title = "Sayonara Radio";
 	_socket = socket;
+
+	connect(socket, SIGNAL(disconnected()), this, SLOT(socket_disconnected()));
+	connect(socket, SIGNAL(readyRead()), this, SLOT(data_available()));
 
 }
 
@@ -110,18 +123,20 @@ HttpAnswer StreamWriter::parse_message(){
 	bool get_playlist = false;
 	bool get_received = false;
 	bool get_mp3 = false;
+	bool get_bg = false;
 	bool icy=false;
 	bool is_browser=false;
-
+	bool get_favicon=false;
 
 	QString qmsg;
 	QStringList lst;
 	QByteArray msg;
 
-	msg = _socket->read(8192);
+	msg = _socket->readAll();
 
 
 	if(msg.size() == 0) {
+		qDebug() << "Fail.. Cannot read from socket";
 		return HttpAnswerFail;
 	}
 
@@ -136,25 +151,37 @@ HttpAnswer StreamWriter::parse_message(){
 		QRegExp regex("(GET|HEAD)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_pl("(GET)(\\s|/)*(playlist.m3u)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_mp3("(GET)(\\s|/)*(track.mp3)(\\s|/)*HTTP", Qt::CaseInsensitive);
+		QRegExp regex_bg("(GET)(\\s|/)*(bg-checker.png)(\\s|/)*HTTP", Qt::CaseInsensitive);
+		QRegExp regex_favicon("(GET)(\\s|/)*(favicon.ico)(\\s|/)*HTTP", Qt::CaseInsensitive);
 
 		if(str.contains(regex)){
 			get_received = true;
 			continue;
 		}
 
+		if(str.contains(regex_favicon)){
+			get_received = true;
+			get_favicon = true;
+			continue;
+		}
+
 		if(str.contains(regex_pl)){
-			qDebug() << "get Playlist";
+			get_received = true;
 			get_playlist = true;
 			continue;
 		}
 
 		if(str.contains(regex_mp3)){
-			qDebug() << "get mp3";
 			get_received = true;
 			get_mp3 = true;
 			continue;
 		}
 
+		if(str.contains(regex_bg)){
+			get_received = true;
+			get_bg = true;
+			continue;
+		}
 
 		if(str.toLower().contains("host:")){
 			QStringList lst = str.split(":");
@@ -178,9 +205,11 @@ HttpAnswer StreamWriter::parse_message(){
 			if(str.size() > 11){
 				_user_agent = str.right( str.size() - 11).toLower();
 				if( _user_agent.contains("firefox", Qt::CaseInsensitive) ||
+					_user_agent.contains("mozilla", Qt::CaseInsensitive) ||
 					_user_agent.contains("safari", Qt::CaseInsensitive) ||
 					_user_agent.contains("internet explorer", Qt::CaseInsensitive) ||
-					_user_agent.contains("opera", Qt::CaseInsensitive))
+					_user_agent.contains("opera", Qt::CaseInsensitive) ||
+					_user_agent.contains("chrom", Qt::CaseInsensitive))
 				{
 						is_browser = true;
 				}
@@ -188,7 +217,20 @@ HttpAnswer StreamWriter::parse_message(){
 		}
 	}
 
+	if(is_browser && get_favicon && !_host.isEmpty()){
+		return HttpAnswerReject;
+	}
+
+	if(is_browser && get_bg && !_host.isEmpty()){
+		return HttpAnswerBG;
+	}
+
 	if(is_browser && !get_mp3 && !_host.isEmpty()){
+		return HttpAnswerHTML5;
+	}
+
+
+	if(is_browser && get_mp3 && !_host.isEmpty()){
 		return HttpAnswerMP3;
 	}
 
@@ -229,6 +271,25 @@ bool StreamWriter::send_playlist(const MetaData& md){
 }
 
 
+bool StreamWriter::send_bg(){
+
+	int n_bytes;
+
+	QByteArray html = QByteArray(bg_image, sizeof(bg_image) * sizeof(char));
+	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
+								 "content-type: image/png\r\n"
+								 "content-length: " + QString::number(html.size()).toLocal8Bit() +
+								 "\r\nConnection: keep-alive\r\n\r\n" +
+								 html
+								 );
+
+	n_bytes = _socket->write(data);
+
+	qDebug() << "Send background";
+
+	return (n_bytes > 0);
+
+}
 
 bool StreamWriter::send_html5(){
 
@@ -239,11 +300,16 @@ bool StreamWriter::send_html5(){
 			"<html>"
 				"<head>"
 				"</head>"
-				"<body>"
-				"<audio autoplay controls>"
-					"<source src=\"track.mp3\" type=\"audio/mpeg\">"
-					"Your browser does not support the audio element."
-				"</audio>"
+				"<body background=\"bg-checker.png\">"
+
+					"<h1 style=\"color: #f3841a; font-family: Fredoka One, lucida grande, tahoma, sans-serif; font-weight: 400;\">Sayonara Player Radio</h1>"
+					"<audio id=\"player\" autoplay controls>"
+						"<source src=\"track.mp3\" type=\"audio/mpeg\">"
+						"Your browser does not support the audio element."
+					"</audio><br /><br />"
+					"<div style=\"color: white;\">"
+						"by Lucio Carreras"
+					"</div>"
 				"</body>"
 			"</html>");
 
@@ -254,7 +320,7 @@ bool StreamWriter::send_html5(){
 								   html
 								   );
 
-	//qDebug() << "send html5 " << data;
+	qDebug() << "send html5 ";
 
 	n_bytes = _socket->write(data);
 
@@ -294,7 +360,10 @@ bool StreamWriter::send_header(bool reject){
 
 
 void StreamWriter::change_track(const MetaData& md){
+
+	_md = md;
 	_stream_title = md.title + " by " + md.artist;
+	qDebug() << "Update stream title " << _stream_title;
 }
 
 
@@ -336,7 +405,6 @@ bool StreamWriter::send_data(const uchar* data, quint64 size){
 
 		QByteArray c(1, 0x00);
 		n_bytes = _socket->write(c);
-		qDebug() << "Dismissed N bytes = " << n_bytes;
 		return (n_bytes > 0);
 	}
 
@@ -366,7 +434,9 @@ bool StreamWriter::send_data(const uchar* data, quint64 size){
     }
 
     else{
+
 		n_bytes = _socket->write( (const char*) data, size);
+
 		_sent_bytes = 0;
     }
 
@@ -394,4 +464,57 @@ void StreamWriter::disconnect(){
 	_socket->close();
 
 	reset();
+}
+
+
+void StreamWriter::socket_disconnected(){
+	emit sig_disconnected(this);
+}
+
+
+void StreamWriter::data_available(){
+
+	qDebug() << "***New data available***";
+
+	HttpAnswer answer = parse_message();
+	QString ip = get_ip();
+
+	switch(answer){
+
+		case HttpAnswerFail:
+		case HttpAnswerReject:
+			qDebug() << "Rejected: " << get_user_agent() << ": " << get_ip();
+			send_header(true);
+			break;
+
+		case HttpAnswerIgnore:
+			qDebug() << "ignore...";
+			break;
+
+		case HttpAnswerPlaylist:
+			qDebug() << "Asked for playlist";
+			send_playlist(_md);
+			break;
+
+		case HttpAnswerHTML5:
+			qDebug() << "Asked for html5";
+			send_html5();
+			break;
+
+		case HttpAnswerBG:
+			qDebug() << "Asked for background";
+			send_bg();
+			break;
+
+		case HttpAnswerFavicon:
+			qDebug() << "Asked for favicon";
+			send_header(true);
+			break;
+
+		default:
+			qDebug() << "Accepted: " << get_user_agent() << ": " << ip;
+			send_header(false);
+			emit sig_new_connection(ip);
+			break;
+	}
 }
