@@ -10,6 +10,7 @@ SET(ICONS
         bwd.png
         bwd_orange.png
         close.png
+		favicon.ico
         fwd.png
         fwd_orange.png
         gapless.png

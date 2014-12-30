@@ -108,10 +108,21 @@ void StreamServer::new_client_request(){
 
 	qDebug() << "*** New request " << socket->peerAddress() << "***";
 
-	StreamWriter* sw = new StreamWriter(socket);
+	StreamWriter* sw = new StreamWriter(socket, _md);
 
 	connect(sw, SIGNAL(sig_disconnected(StreamWriter*)), this, SLOT(disconnected(StreamWriter*)));
 	connect(sw, SIGNAL(sig_new_connection(const QString&)), this, SLOT(new_connection(const QString&)));
+
+	_lst_sw << sw;
+	_n_clients++;
+	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);
+
+	qDebug() << "Number of active connections: " << _n_clients;
+	qDebug() << "";
+
+	emit sig_new_connection(sw->get_ip());
+
+
 }
 
 
@@ -193,7 +204,8 @@ void StreamServer::active_changed(){
 void StreamServer::disconnected(StreamWriter* sw){
 
 	qDebug() << "*** STREAM WRITER DISCONNECTED ***";
-
+	qDebug() << "Number of active connections: " << _n_clients - 1;
+	qDebug() << "";
 	int idx = _lst_sw.indexOf(sw);
 	if(idx >= 0 && idx < _lst_sw.size()){
 		_lst_sw.removeAt(idx);
@@ -217,7 +229,5 @@ void StreamServer::port_changed(){
 }
 
 void StreamServer::new_connection(const QString& ip){
-	_lst_sw << (StreamWriter*) this->sender();
-	_settings->set(SetNoDB::Broadcast_Clients, ++_n_clients);
-	emit sig_new_connection(ip);
+
 }

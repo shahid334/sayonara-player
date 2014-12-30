@@ -117,6 +117,7 @@ namespace Helper{
 	bool read_file_into_str(const QString& filename, QString* content);
 	bool read_http_into_str(const QString& url, QString* content);
 	bool read_http_into_img(const QString& url, QImage* image);
+	bool read_file_into_byte_arr(const QString& filename, QByteArray& content);
 
 	QString easy_tag_finder(const QString&  tag, const QString& xml_doc);
 	QString calc_hash(const QString&  data);

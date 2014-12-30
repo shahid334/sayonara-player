@@ -563,6 +563,25 @@ bool Helper::checkTrack(const MetaData& md) {
     return QFile::exists(md.filepath);
 }
 
+bool Helper::read_file_into_byte_arr(const QString& filename, QByteArray& content){
+	QFile file(filename);
+	content.clear();
+
+
+	if(!file.open(QIODevice::ReadOnly)){
+		return false;
+	}
+
+	while(!file.atEnd()){
+		QByteArray arr = file.read(4096);
+		content.append(arr);
+	}
+
+	file.close();
+
+	return (content.size() > 0);
+}
+
 
 bool Helper::read_file_into_str(const QString& filename, QString* content) {
 

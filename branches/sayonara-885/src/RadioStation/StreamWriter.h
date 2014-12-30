@@ -38,7 +38,8 @@ enum HttpAnswer {
 	HttpAnswerHTML5,
 	HttpAnswerMP3,
 	HttpAnswerBG,
-	HttpAnswerFavicon
+	HttpAnswerFavicon,
+	HttpAnswerMetaData
 };
 
 
@@ -51,7 +52,7 @@ class StreamWriter : public QObject, protected SayonaraClass {
 		void sig_disconnected(StreamWriter* sw);
 
 	public:
-		StreamWriter(QTcpSocket* socket);
+		StreamWriter(QTcpSocket* socket, const MetaData& md);
 		virtual ~StreamWriter();
 
 
@@ -88,6 +89,8 @@ class StreamWriter : public QObject, protected SayonaraClass {
 		bool send_playlist(const MetaData& md);
 		bool send_html5();
 		bool send_bg();
+		bool send_favicon();
+		bool send_metadata();
 
 		HttpAnswer parse_message();
 

@@ -35,7 +35,7 @@ static char bg_image[] = {
 
 
 
-StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
+StreamWriter::StreamWriter(QTcpSocket* socket, const MetaData& md) : SayonaraClass()
 {
 
 	create_headers();
@@ -43,7 +43,7 @@ StreamWriter::StreamWriter(QTcpSocket* socket) : SayonaraClass()
 
 	memset(padding, 0, 256);
 
-	_stream_title = "Sayonara Radio";
+	_stream_title = md.title + " by " + md.artist;
 	_socket = socket;
 
 	connect(socket, SIGNAL(disconnected()), this, SLOT(socket_disconnected()));
@@ -89,7 +89,7 @@ void StreamWriter::create_headers(){
 				"icy-pub:1\r\n"
 				"icy-br:192\r\n"
 				"content-type:audio/mpeg\r\n"
-				"connection:close\r\n"
+				"connection:keep-alive\r\n"
 			);
 
 	_icy_header = QByteArray(
@@ -103,7 +103,7 @@ void StreamWriter::create_headers(){
 				"icy-br:192\r\n"
 				"icy-metaint:8192\r\n"
 				"content-type:audio/mpeg\r\n"
-				"connection:close\r\n"
+				"connection:keep-alive\r\n"
 			);
 
 
@@ -124,9 +124,11 @@ HttpAnswer StreamWriter::parse_message(){
 	bool get_received = false;
 	bool get_mp3 = false;
 	bool get_bg = false;
+	bool get_favicon=false;
+	bool get_metadata=false;
 	bool icy=false;
 	bool is_browser=false;
-	bool get_favicon=false;
+
 
 	QString qmsg;
 	QStringList lst;
@@ -153,32 +155,35 @@ HttpAnswer StreamWriter::parse_message(){
 		QRegExp regex_mp3("(GET)(\\s|/)*(track.mp3)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_bg("(GET)(\\s|/)*(bg-checker.png)(\\s|/)*HTTP", Qt::CaseInsensitive);
 		QRegExp regex_favicon("(GET)(\\s|/)*(favicon.ico)(\\s|/)*HTTP", Qt::CaseInsensitive);
+		QRegExp regex_metadata("(GET)(\\s|/)*(metadata)(\\s|/)*HTTP", Qt::CaseInsensitive);
+
+
 
 		if(str.contains(regex)){
 			get_received = true;
 			continue;
 		}
 
+		if(str.contains(regex_metadata)){
+			get_metadata = true;
+		}
+
 		if(str.contains(regex_favicon)){
-			get_received = true;
 			get_favicon = true;
 			continue;
 		}
 
 		if(str.contains(regex_pl)){
-			get_received = true;
 			get_playlist = true;
 			continue;
 		}
 
 		if(str.contains(regex_mp3)){
-			get_received = true;
 			get_mp3 = true;
 			continue;
 		}
 
 		if(str.contains(regex_bg)){
-			get_received = true;
 			get_bg = true;
 			continue;
 		}
@@ -218,22 +223,24 @@ HttpAnswer StreamWriter::parse_message(){
 	}
 
 	if(is_browser && get_favicon && !_host.isEmpty()){
-		return HttpAnswerReject;
+		return HttpAnswerFavicon;
 	}
 
 	if(is_browser && get_bg && !_host.isEmpty()){
 		return HttpAnswerBG;
 	}
 
+	if(is_browser && get_metadata && !_host.isEmpty()){
+		return HttpAnswerMetaData;
+	}
+
 	if(is_browser && !get_mp3 && !_host.isEmpty()){
 		return HttpAnswerHTML5;
 	}
 
-
 	if(is_browser && get_mp3 && !_host.isEmpty()){
 		return HttpAnswerMP3;
 	}
-
 
 	if(get_playlist && !_host.isEmpty()){
 		return HttpAnswerPlaylist;
@@ -261,11 +268,58 @@ bool StreamWriter::send_playlist(const MetaData& md){
 	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
 									"content-type:audio/x-mpegurl\r\n"
 									"Content-Length: " + QString::number(pl.size()).toLocal8Bit() + "\r\n"
-									"Connection: keep-alive\r\n\r\n" +
+									"Connection: close\r\n\r\n" +
 									pl
 								 );
 
 	n_bytes = _socket->write(data);
+
+	return (n_bytes > 0);
+}
+
+bool StreamWriter::send_favicon(){
+	int n_bytes;
+	bool success;
+	QByteArray arr;
+	success = Helper::read_file_into_byte_arr( Helper::getIconPath() + "favicon.ico", arr );
+
+	qDebug() << "Read favicon " << Helper::getIconPath() << "favicon.ico into arr: " << success << ": " << arr.size();
+
+	if(!success){
+		return send_header(true);
+	}
+
+
+
+	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
+								 "content-type: image/x-icon\r\n"
+								 "content-length: " + QString::number(arr.size()).toLocal8Bit() +
+								 "\r\nConnection: close\r\n\r\n" +
+								 arr
+								 );
+
+
+	n_bytes = _socket->write(data);
+
+	qDebug() << "Send favicon";
+
+	return (n_bytes > 0);
+}
+
+bool StreamWriter::send_metadata(){
+	int n_bytes;
+
+	QByteArray html = _stream_title.toLocal8Bit();
+	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
+								 "content-type: image/png\r\n"
+								 "content-length: " + QString::number(html.size()).toLocal8Bit() +
+								 "\r\nConnection: close\r\n\r\n" +
+									html
+								 );
+
+	n_bytes = _socket->write(data);
+
+	qDebug() << "Send metadata";
 
 	return (n_bytes > 0);
 }
@@ -279,7 +333,7 @@ bool StreamWriter::send_bg(){
 	QByteArray data = QByteArray("HTTP/1.1 200 OK\r\n"
 								 "content-type: image/png\r\n"
 								 "content-length: " + QString::number(html.size()).toLocal8Bit() +
-								 "\r\nConnection: keep-alive\r\n\r\n" +
+								 "\r\nConnection: close\r\n\r\n" +
 								 html
 								 );
 
@@ -299,16 +353,57 @@ bool StreamWriter::send_html5(){
 			"<!DOCTYPE html>"
 			"<html>"
 				"<head>"
+				"<link rel=\"icon\" href=\"favicon.ico\" type=\"image/x-icon\" />"
+				"<title>Sayonara Player Radio</title>"
+
+				"<script>\n"
+
+				"function loadXMLDoc()\n"
+				"{\n"
+				"var xmlhttp;\n"
+				"if (window.XMLHttpRequest)\n"
+"				  {// code for IE7+, Firefox, Chrome, Opera, Safari\n"
+				  "xmlhttp=new XMLHttpRequest();\n"
+				  "}\n"
+				"else\n"
+"				  {// code for IE6, IE5\n"
+				  "xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");\n"
+				  "}\n"
+				"xmlhttp.onreadystatechange=function()\n"
+"				  {\n"
+				  "if (xmlhttp.readyState==4 && xmlhttp.status==200)\n"
+"				    {\n"
+					"document.getElementById(\"metadata\").innerHTML=xmlhttp.responseText;\n"
+					"}\n"
+				"}\n"
+				"xmlhttp.open(\"GET\",\"metadata\",true);\n"
+				"xmlhttp.send();\n"
+				"}\n"
+
+				"function start(){\n"
+				//"setInterval(function(){loadXMLDoc(); }, 3000);\n"
+				"}"
+				"</script>"
+
+
 				"</head>"
-				"<body background=\"bg-checker.png\">"
+				"<body background=\"bg-checker.png\" onload=\"start()\" >"
 
 					"<h1 style=\"color: #f3841a; font-family: Fredoka One, lucida grande, tahoma, sans-serif; font-weight: 400;\">Sayonara Player Radio</h1>"
 					"<audio id=\"player\" autoplay controls>"
 						"<source src=\"track.mp3\" type=\"audio/mpeg\">"
 						"Your browser does not support the audio element."
 					"</audio><br /><br />"
+					"<table><tr><td>"
+					"<div id=\"metadata\" style=\"color: white;\">") +
+						_stream_title.toLocal8Bit() +
+			QByteArray("</div></td>"
+
+					"<td><div style=\"color: white;\">"
+						"<button type=\"button\" onclick=\"loadXMLDoc()\">Refresh</button><br /><br />"
+					"</div></td></tr></table><br />"
 					"<div style=\"color: white;\">"
-						"by Lucio Carreras"
+					"Stream by Lucio Carreras"
 					"</div>"
 				"</body>"
 			"</html>");
@@ -508,7 +603,12 @@ void StreamWriter::data_available(){
 
 		case HttpAnswerFavicon:
 			qDebug() << "Asked for favicon";
-			send_header(true);
+			send_favicon();
+			break;
+
+		case HttpAnswerMetaData:
+			qDebug() << "Asked for metadata";
+			send_metadata();
 			break;
 
 		default:
