@@ -551,13 +551,13 @@ void StreamWriter::disconnect(){
 	
 	disable();
 	
-	_socket->close();
-
-	reset();
+	_socket->disconnectFromHost();
 }
 
 
 void StreamWriter::socket_disconnected(){
+
+	reset();
 	emit sig_disconnected(this);
 }
 

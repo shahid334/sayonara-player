@@ -227,6 +227,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	PlayerPlugin* p  = _pph->find_plugin(shown_plugin);
 
 	player->showPlugin(p);
+	stream_server->start();
 
 	_initialized = true;
 }

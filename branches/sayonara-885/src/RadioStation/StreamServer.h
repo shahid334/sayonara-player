@@ -59,12 +59,13 @@ class StreamServer : public QThread, protected SayonaraClass {
 		int _n_clients;
 
 		QTcpServer* _server;
+		QTcpSocket* _pending_socket;
 		QList<QTcpSocket*> _sockets;
 
 		QMap<QString, QTcpSocket*> _queue_map;
 
 		QList<StreamWriter*> _lst_sw;
-		QList<QTcpSocket*> _queue;
+		QStringList _allowed_ips;
 
 		bool listen_for_connection();
 
@@ -74,6 +75,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 
 	public slots:
 		void new_data(uchar* data, quint64 size);
+		void accept_client();
 		void reject_client();
 		void dismiss(int idx);
 
@@ -85,6 +87,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void stop();
 
 	private slots:
+		void server_destroyed();
 		void active_changed();
 		void port_changed();
 		void prompt_changed();

@@ -35,6 +35,9 @@ StreamServer::StreamServer(QObject* parent) :
 
 	//_server->setMaxPendingConnections(10);
 	connect(_server, SIGNAL(newConnection()), this, SLOT(new_client_request()));
+	connect(_server, SIGNAL(destroyed()), this, SLOT(server_destroyed()));
+
+	_pending_socket = NULL;
 
 
 	while( !_server->isListening() ){
@@ -44,7 +47,7 @@ StreamServer::StreamServer(QObject* parent) :
 	}
 
 	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
-	REGISTER_LISTENER(Set::Broadcast_Port, port_changed);
+	REGISTER_LISTENER_NO_CALL(Set::Broadcast_Port, port_changed);
 	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
 }
 
@@ -56,11 +59,13 @@ StreamServer::~StreamServer(){
 	}
 }
 
+void StreamServer::server_destroyed(){
+	qDebug() << "Server destroyed";
+}
 
 void StreamServer::run(){
 
     qDebug() << "Start stream server";
-
 
 	forever{
 		while(_server && _server->isListening()){
@@ -80,12 +85,14 @@ void StreamServer::run(){
 bool StreamServer::listen_for_connection(){
 
 	bool success;
+
 	if(!_server){
 		qDebug() << "Server socket invalid";
 		return false;
 	}
 
 	qDebug() << "Listening on port " << _port;
+
 	success = _server->listen(QHostAddress::Any, _port);
 
 	if(!success){
@@ -102,32 +109,55 @@ bool StreamServer::listen_for_connection(){
 
 void StreamServer::new_client_request(){
 
-	QTcpSocket* socket = _server->nextPendingConnection();
+	_pending_socket = _server->nextPendingConnection();
 
-	if(!socket) return;
+	if(!_pending_socket) return;
 
-	qDebug() << "*** New request " << socket->peerAddress() << "***";
+	QString ip = _pending_socket->peerAddress().toString();
 
-	StreamWriter* sw = new StreamWriter(socket, _md);
+	if( _settings->get(Set::Broadcast_Prompt) ){
+
+		bool ip_found = false;
+
+		if(_allowed_ips.contains(ip)){
+			ip_found = true;
+		}
+
+		if(!ip_found){
+			emit sig_new_connection_request(ip);
+			return;
+		}
+	}
+
+	accept_client();
+
+}
+
+void StreamServer::accept_client(){
+
+
+	qDebug() << "*** New request " << _pending_socket->peerAddress() << "***";
+
+	StreamWriter* sw = new StreamWriter(_pending_socket, _md);
 
 	connect(sw, SIGNAL(sig_disconnected(StreamWriter*)), this, SLOT(disconnected(StreamWriter*)));
 	connect(sw, SIGNAL(sig_new_connection(const QString&)), this, SLOT(new_connection(const QString&)));
 
 	_lst_sw << sw;
 	_n_clients++;
+	_pending_socket = NULL;
+
 	_settings->set(SetNoDB::Broadcast_Clients, _n_clients);
 
 	qDebug() << "Number of active connections: " << _n_clients;
 	qDebug() << "";
 
 	emit sig_new_connection(sw->get_ip());
-
-
 }
 
 
 void StreamServer::reject_client(){
-	_queue.pop_front();
+	_pending_socket = NULL;
 }
 
 
@@ -150,8 +180,8 @@ void StreamServer::server_close(){
 	
 	if(_server){
 		_server->close();
+		qDebug() << "Server closed..";
 	}
-
 }
 
 // when user forbids further streaming
@@ -192,9 +222,8 @@ void StreamServer::active_changed(){
 
 	bool active = _settings->get(Set::BroadCast_Active);
     if(!active) {
-        disconnect_all();
-        server_close();
-    }
+		disconnect_all();
+	}
 
     else{
         this->start();
@@ -218,6 +247,10 @@ void StreamServer::disconnected(StreamWriter* sw){
 
 	delete sw;
 	sw = 0;
+
+	if(_n_clients == 0 && !_settings->get(Set::BroadCast_Active)){
+		server_close();
+	}
 }
 
 void StreamServer::prompt_changed(){
@@ -225,7 +258,12 @@ void StreamServer::prompt_changed(){
 }
 
 void StreamServer::port_changed(){
-	//_port = _settings->get(Set::Broadcast_Port);
+	disconnect_all();
+	server_close();
+
+	_port = _settings->get(Set::Broadcast_Port);
+
+	listen_for_connection();
 }
 
 void StreamServer::new_connection(const QString& ip){
