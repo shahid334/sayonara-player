@@ -245,7 +245,7 @@ bool CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 		querytext += ") ";
 	}
 
-	if(filter.filtertext.length() > 0 ) {
+	if( !filter.filtertext.isEmpty() ) {
 
 
 		switch(filter.by_searchstring) {

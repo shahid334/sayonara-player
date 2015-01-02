@@ -184,6 +184,7 @@ void CLibraryBase::refetch(){
 	_vec_md.clear();
 
 	_filter.cleared = true;
+	_filter.filtertext = "";
 
 	_db->getAllArtists(_vec_artists, _sortorder.so_artists);
 	_db->getAllAlbums(_vec_albums, _sortorder.so_albums);

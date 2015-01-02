@@ -89,6 +89,7 @@ class StreamWriter : public QObject, protected SayonaraClass {
 		bool send_playlist(const MetaData& md);
 		bool send_html5();
 		bool send_bg();
+
 		bool send_favicon();
 		bool send_metadata();
 
