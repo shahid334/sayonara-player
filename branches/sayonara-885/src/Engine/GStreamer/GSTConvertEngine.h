@@ -47,7 +47,7 @@ public:
 		MetaData _md_target;
 
 		// methods
-		bool set_uri(const MetaData& md, bool* start_play);
+		bool set_uri(const MetaData& md);
 
 
 	private slots:
@@ -66,8 +66,8 @@ public:
 		virtual void jump_rel(quint32);
         virtual void jump_rel_ms(qint64);
 
-		virtual void change_track(const MetaData&, int pos_sec=-1, bool start_play=true);
-		virtual void change_track(const QString&, int pos_sec=-1, bool start_play=true );
+		virtual void change_track(const MetaData&);
+		virtual void change_track(const QString&);
 };
 
 #endif // GSTCONVERTENGINE_H

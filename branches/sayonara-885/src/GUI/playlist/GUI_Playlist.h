@@ -30,7 +30,7 @@
 #define GUI_PLAYLIST_H_
 
 #include "GUI/ui_GUI_Playlist.h"
-#include "GUI/playlist/delegate/PlaylistItemDelegate.h"
+#include "GUI/playlist/PlaylistTabWidget.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 
 #include "HelperStructs/MetaData.h"
@@ -39,6 +39,7 @@
 #include <QTextEdit>
 #include <QFocusEvent>
 #include <QKeyEvent>
+
 
 
 class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
@@ -62,7 +63,7 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 
 		void sig_rows_moved(const QList<int>&, int);
 		void sig_tracks_dropped(const MetaDataList&, int);
-		void sig_rows_removed(const QList<int>&, bool);
+		void sig_rows_removed(const QList<int>&);
 		void sig_cleared();
 		void sig_gapless(bool);
 
@@ -71,9 +72,13 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		void sig_close_connection(int);
 		void sig_accept_connection(bool);
 
+		void sig_playlist_idx_changed(int);
+		void sig_delete_tab_playlist(int);
+		void sig_create_tab_playlist();
+
 
 	public slots:
-		void fillPlaylist(const MetaDataList&, int, PlaylistType);
+		void fillPlaylist(const MetaDataList&, int, PlaylistType, int pl_idx);
 		void track_changed(int);
 
 		void library_path_changed(QString);
@@ -95,11 +100,17 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 
 		void btn_numbers_changed(bool);
 		void metadata_dropped(const MetaDataList&, int);
-		void rows_removed(const QList<int>&, bool select_next_row);
+		void rows_removed(const QList<int>&);
 		void no_focus();
+
+		void new_playlist_clicked();
+		void delete_playlist_clicked(int idx);
+		void playlist_idx_changed(int idx);
 
 		void _sl_change_small_playlist_items();
 		void _sl_playlist_mode_changed();
+
+
 
 	private:
 
@@ -108,13 +119,20 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		PlaylistMode		_playlist_mode;
 		PlaylistType		_playlist_type;
 
+		QList<PlaylistView*> _playlist_views;
+		PlaylistView* _cur_playlist_view;
+		int _cur_playlist_idx;
+
 		void initGUI();
+		void initPlaylistView(const PlaylistView* pl_view);
 
 		void set_total_time_label(qint64 dur_ms=0);
 		void check_dynamic_play_button();
 		void prepare_info();
 
 		QStringList _connections;
+
+
 
 	protected:
 		void changeEvent(QEvent* e);

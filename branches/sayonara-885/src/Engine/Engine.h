@@ -156,8 +156,8 @@ public slots:
 	virtual void jump_rel(quint32 where)=0;
     virtual void jump_rel_ms(qint64 where)=0;
 
-	virtual void change_track(const MetaData&, int pos_sec=0, bool start_play=true)=0;
-	virtual void change_track(const QString&, int pos_sec=0, bool start_play=true )=0;
+	virtual void change_track(const MetaData&)=0;
+	virtual void change_track(const QString&)=0;
 
 	virtual void eq_changed(int band, int value){ Q_UNUSED(band); Q_UNUSED(value); }
 	virtual void record_button_toggled(bool b){ _sr_wanna_record = b; }

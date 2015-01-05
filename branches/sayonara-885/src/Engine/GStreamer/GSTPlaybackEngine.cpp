@@ -76,6 +76,8 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 	_wait_for_gapless_track = false;
 	_may_start_timer = false;
 
+	_jump_play = _settings->get(Set::Engine_CurTrackPos_s);
+
 	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
 	connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
 			SLOT(sr_ended()));
@@ -110,7 +112,7 @@ void GSTPlaybackEngine::init() {
 }
 
 
-void GSTPlaybackEngine::change_track(const QString& filepath, int pos_sec, bool start_play) {
+void GSTPlaybackEngine::change_track(const QString& filepath) {
 
 	MetaData md;
 	md.filepath = filepath;
@@ -119,15 +121,13 @@ void GSTPlaybackEngine::change_track(const QString& filepath, int pos_sec, bool 
 		return;
 	}
 
-	change_track(md, pos_sec, start_play);
+	change_track(md);
 }
 
 
-void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bool start_play) {
+void GSTPlaybackEngine::change_track_gapless(const MetaData& md) {
 
-	start_play = true;
-	pos_sec = 0;
-	bool success = set_uri(md, &start_play);
+	bool success = set_uri(md);
 
     if (!success) return;
 
@@ -143,25 +143,23 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md, int pos_sec, bo
 }
 
 
-void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
+void GSTPlaybackEngine::change_track(const MetaData& md) {
 
     bool success = false;
 
 	if(_wait_for_gapless_track) {
 
-		change_track_gapless(md, pos_sec, start_play);
+		change_track_gapless(md);
 		_wait_for_gapless_track = false;
 		return;
 	}
 
 	stop();
 
-    success = set_uri(md, &start_play);
+	success = set_uri(md);
     if (!success){
 		return;
     }
-
-	//_pipeline->set_ready();
 
 	_md = md;
 
@@ -171,24 +169,19 @@ void GSTPlaybackEngine::change_track(const MetaData& md, int pos_sec, bool start
 	_cur_pos_ms = 0;
 	_scrobbled = false;
 
-	_jump_play = pos_sec;
-
 	emit sig_dur_changed(_md);
-	emit sig_pos_changed_s(pos_sec);
+	emit sig_pos_changed_s(_jump_play);
 
     play();
 
-	// pause if streamripper is not active
-
-    if (!start_play && !_playing_stream){
+	if (!_playing_stream){
 		pause();
 	}
-
 }
 
 
 
-bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
+bool GSTPlaybackEngine::set_uri(const MetaData& md) {
 
 	// Gstreamer needs an URI
 	gchar* uri = NULL;
@@ -212,8 +205,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 			uri = g_filename_from_utf8(md.filepath.toUtf8(),
 									   md.filepath.toUtf8().size(), NULL, NULL, NULL);
 		}
-
-		*start_play = false;
 	}
 
 	// stream, but don't wanna record
@@ -255,7 +246,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md, bool* start_play) {
 void GSTPlaybackEngine::play() {
 
 	_pipeline->play();
-
 	_may_start_timer = _gapless;
 }
 
@@ -269,8 +259,9 @@ void GSTPlaybackEngine::stop() {
 
 	_pipeline->stop();
 
-	if(_other_pipeline)
+	if(_other_pipeline){
 		_other_pipeline->stop();
+	}
 
 	emit sig_pos_changed_s(0);
 }
@@ -365,7 +356,7 @@ void GSTPlaybackEngine::update_duration(quint64 duration_ms) {
 
 	if(duration_ms > 0 && _jump_play > 0){
 		_pipeline->seek_abs(_jump_play * GST_SECOND);
-		_jump_play = -1;
+		_jump_play = 0;
 	}
 
 	if(duration_ms / 1000 == 0) return;

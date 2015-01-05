@@ -23,8 +23,8 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/PlaylistParser.h"
 
-StdPlaylist::StdPlaylist(QObject *parent) :
-    Playlist(parent)
+StdPlaylist::StdPlaylist(int idx, QObject *parent) :
+	Playlist(idx, parent)
 {
     _playlist_type = PlaylistTypeStd;
     _last_track = -1;

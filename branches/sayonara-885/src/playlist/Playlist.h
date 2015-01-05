@@ -39,13 +39,14 @@ class Playlist : public QObject, protected SayonaraClass
     Q_OBJECT
 
 signals:
-    void sig_playlist_changed(const MetaDataList&, int);
+	void sig_playlist_changed(const Playlist*);
     void sig_track_changed(const MetaData&, int);
     void sig_stopped();
 
 protected:
     bool            _playlist_changed;
     int             _cur_play_idx;
+	int				_playlist_idx;
     MetaDataList    _v_md;
 	MetaDataList	_selected_tracks;
     PlaylistMode	_playlist_mode;
@@ -54,13 +55,14 @@ protected:
     bool            _reports_disabled;
     bool            _start_playing;
 
+
     void report_changes(bool pl_changed, bool track_changed);
     void enable_reports();
     void disable_reports();
 
 public:
 
-    Playlist(QObject* parent);
+	Playlist(int idx, QObject* parent=0);
 
     virtual void play()=0;
     virtual void pause()=0;
@@ -90,7 +92,7 @@ public:
 
     virtual void replace_track(int idx, const MetaData& md);
     virtual void save_to_m3u_file(QString filepath, bool relative)=0;
-	virtual const MetaDataList& get_playlist(){return _v_md;}
+	virtual const MetaDataList& get_playlist() const {return _v_md;}
 
     virtual void selection_changed(const QList<int>&);
 	virtual const MetaDataList& get_selected_tracks(){return _selected_tracks;}
@@ -98,15 +100,17 @@ public:
 	virtual PlaylistMode playlist_mode_backup();
 	virtual PlaylistMode playlist_mode_restore();
 
-    bool is_empty();
-    PlaylistType get_type();
-    int get_cur_track();
-    QStringList toStringList();
+	bool is_empty() const;
+	PlaylistType get_type() const;
+	int get_cur_track() const;
+	QStringList toStringList() const;
+	int get_idx() const;
 
-	QList<int> find_tracks(int id);
-	QList<int> find_tracks(const QString& filepath);
+	QList<int> find_tracks(int id) const;
+	QList<int> find_tracks(const QString& filepath) const;
 
 	void set_playlist_mode(const PlaylistMode& mode);
+	PlaylistMode get_playlist_mode() const;
 };
 
 

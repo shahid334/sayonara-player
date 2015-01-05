@@ -35,7 +35,7 @@ private:
 
 
 public:
-    explicit StdPlaylist(QObject *parent);
+	explicit StdPlaylist(int idx, QObject *parent=0);
     
     virtual void play();
     virtual void pause();
@@ -47,7 +47,6 @@ public:
 
     virtual void create_playlist(const MetaDataList& lst, bool start_playing=true);
     virtual void create_playlist(const QStringList& lst, bool start_playing=true);
-
 
 	virtual void metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 

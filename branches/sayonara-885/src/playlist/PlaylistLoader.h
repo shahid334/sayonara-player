@@ -34,7 +34,7 @@ public:
     
 signals:
 	void sig_create_playlist(const MetaDataList&, bool);
-    void sig_change_track(int, qint32, bool);
+	void sig_change_track(int);
     void sig_stop();
     
 public slots:

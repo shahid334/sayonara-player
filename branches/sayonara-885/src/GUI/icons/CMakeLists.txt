@@ -4,19 +4,20 @@ SET(ICONS
         append.png
         append_small.png
         audio_convert.png
-	bg-checker.png
+		bg-checker.png
         bookmarks.png
         broom.png
         broadcast.png
         bwd.png
         bwd_orange.png
         close.png
-	favicon.ico
+		favicon.ico
         fwd.png
         fwd_orange.png
         gapless.png
         pause.png
         play.png
+		plus.png
         rec.png
         rec_off.png
         rep1.png

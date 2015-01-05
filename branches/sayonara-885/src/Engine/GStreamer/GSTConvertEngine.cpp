@@ -41,12 +41,12 @@ void GSTConvertEngine::init() {}
 
 
 // methods
-bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
+bool GSTConvertEngine::set_uri(const MetaData& md) {
 
 	// Gstreamer needs an URI
 	gchar* uri = NULL;
 	gchar* target_uri = NULL;
-	QString target_uri_str;
+
 	QString cvt_target_path;
 	bool success = false;
 
@@ -92,7 +92,7 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
 	return success;
 }
 
-void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
+void GSTConvertEngine::change_track(const MetaData& md) {
 
 	stop();
 	_md = md;
@@ -100,13 +100,13 @@ void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_
 	emit sig_dur_changed(_md);
     emit sig_pos_changed_s(0);
 
-	set_uri(md, &start_play);
+	set_uri(md);
 
 	play();
 
 }
 
-void GSTConvertEngine::change_track(const QString& str, int pos_sec, bool start_play) {
+void GSTConvertEngine::change_track(const QString& str) {
 
 }
 

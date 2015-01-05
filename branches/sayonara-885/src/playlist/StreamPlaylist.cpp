@@ -23,8 +23,8 @@
 
 #include "playlist/StreamPlaylist.h"
 
-StreamPlaylist::StreamPlaylist(QObject *parent) :
-    StdPlaylist(parent)
+StreamPlaylist::StreamPlaylist(int idx, QObject *parent) :
+	StdPlaylist(idx, parent)
 {
     _playlist_type = PlaylistTypeStream;
 }

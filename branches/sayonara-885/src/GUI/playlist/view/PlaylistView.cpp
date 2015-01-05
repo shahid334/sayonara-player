@@ -36,7 +36,12 @@
 #include <QUrl>
 #include <QScrollBar>
 
-PlaylistView::PlaylistView(QWidget* parent) : SearchableListView(parent) {
+PlaylistView::PlaylistView(QWidget* parent) :
+	SearchableListView(parent),
+	Ui::GUI_PlaylistView()
+{
+
+	setupUi(this);
 
     _drag_allowed = true;
     _inner_drag_drop = false;
@@ -49,11 +54,13 @@ PlaylistView::PlaylistView(QWidget* parent) : SearchableListView(parent) {
 
     this->setModel(_model);
     this->setAbstractModel(_model);
+	this->setItemDelegate(_delegate);
     this->setDragEnabled(true);
     this->setAcceptDrops(true);
     this->setSelectionRectVisible(true);
     this->setAlternatingRowColors(true);
     this->setMovement(QListView::Free);
+
 
     connect(this, SIGNAL(pressed(const QModelIndex&)), this, SLOT(row_pressed(const QModelIndex&)));
     connect(this, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(row_double_clicked(const QModelIndex&)));
@@ -669,9 +676,9 @@ void PlaylistView::scrollDown() {
 	this->scrollTo(_model->index(cur_row - 1), SearchableListView::EnsureVisible);
 }
 
-void PlaylistView::remove_cur_selected_rows(bool select_next_row) {
+void PlaylistView::remove_cur_selected_rows() {
 
-    emit sig_rows_removed(_cur_selected_rows, select_next_row);
+	emit sig_rows_removed(_cur_selected_rows);
 }
 
 

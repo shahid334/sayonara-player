@@ -49,8 +49,8 @@ public slots:
 	void jump_rel(quint32 where);
     void jump_rel_ms(qint64 where);
 
-	void change_track(const MetaData&, int pos_sec=0, bool start_play=true);
-	void change_track(const QString&, int pos_sec=0, bool start_play=true );
+	void change_track(const MetaData&);
+	void change_track(const QString&);
 
 	void eq_changed(int band, int value);
 	void record_button_toggled(bool);

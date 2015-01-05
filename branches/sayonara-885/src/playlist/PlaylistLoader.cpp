@@ -117,16 +117,8 @@ void PlaylistLoader::load_old_playlist() {
 
         emit sig_create_playlist(v_md, start_immediatly);
 
-
-        int last_pos = 0;
         if(load_last_track && last_track_idx >= 0) {
-
-			if(load_last_position){
-				last_pos = _settings->get(Set::Engine_CurTrackPos_s);
-            }
-
-			emit sig_change_track(last_track_idx, last_pos, start_immediatly);
+			emit sig_change_track(last_track_idx);
         }
-
 }
 

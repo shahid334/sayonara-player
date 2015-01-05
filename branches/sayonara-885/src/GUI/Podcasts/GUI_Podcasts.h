@@ -37,7 +37,7 @@ class GUI_Podcasts : public PlayerPlugin, private Ui::GUI_Podcasts
 
 signals:
 	void sig_create_playlist(const MetaDataList&, bool);
-    void sig_play_track(int, qint32, bool);
+	void sig_play_track(int);
     void sig_close_event();
 
 private slots:

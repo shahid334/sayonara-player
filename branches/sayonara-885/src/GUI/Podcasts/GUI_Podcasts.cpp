@@ -299,6 +299,6 @@ void  GUI_Podcasts::play_podcasts(QString url, QString name) {
     if(v_md.size() == 0) return;
 
     emit sig_create_playlist(v_md, true);
-    emit sig_play_track(0, 0, true);
+	emit sig_play_track(0);
 
 }

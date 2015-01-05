@@ -22,11 +22,11 @@
 #include "playlist/Playlist.h"
 #include <QDir>
 
-Playlist::Playlist(QObject* parent) :
+Playlist::Playlist(int idx, QObject* parent) :
 	QObject(parent),
 	SayonaraClass()
 {
-
+	_playlist_idx = idx;
 	_playlist_mode = _settings->get(Set::PL_Mode);
     _reports_disabled = false;
     _cur_play_idx = -1;
@@ -42,7 +42,7 @@ void Playlist::report_changes(bool pl_changed, bool track_changed) {
 	}
 
 	if(pl_changed){
-		emit sig_playlist_changed(_v_md, _cur_play_idx);
+		emit sig_playlist_changed(this);
 	}
 
 
@@ -146,10 +146,13 @@ void Playlist::delete_tracks(const QList<int>& lst) {
         // do not delete
         if( !lst.contains(i) ) {
 
-            if(md.pl_selected && first_selected == -1) first_selected = i;
+			if(md.pl_selected && first_selected == -1) {
+				first_selected = i;
+			}
 
             md.pl_selected = false;
             v_md.push_back(md);
+
             if(md.pl_playing) {
                 _cur_play_idx = (v_md.size() -1);
             }
@@ -275,20 +278,28 @@ void Playlist::replace_track(int idx, const MetaData& md) {
     report_changes(true, false);
 }
 
-int Playlist::get_cur_track() {
+int Playlist::get_cur_track() const {
     return _cur_play_idx;
 }
 
-PlaylistType Playlist::get_type() {
+PlaylistType Playlist::get_type() const {
     return _playlist_type;
+}
+
+int Playlist::get_idx() const {
+	return _playlist_idx;
 }
 
 void Playlist::set_playlist_mode(const PlaylistMode& mode) {
     _playlist_mode = mode;
 }
 
+PlaylistMode Playlist::get_playlist_mode() const {
+	return _playlist_mode;
+}
 
-bool Playlist::is_empty() {
+
+bool Playlist::is_empty() const {
 
     return (_v_md.size() == 0);
 }
@@ -307,14 +318,14 @@ PlaylistMode Playlist::playlist_mode_restore(){
 }
 
 
-QStringList Playlist::toStringList(){
+QStringList Playlist::toStringList() const {
     return _v_md.toStringList();
 }
 
-QList<int> Playlist::find_tracks(int idx){
+QList<int> Playlist::find_tracks(int idx) const {
 	return _v_md.findTracks(idx);
 }
 
-QList<int> Playlist::find_tracks(const QString& filepath){
+QList<int> Playlist::find_tracks(const QString& filepath) const {
 	return _v_md.findTracks(filepath);
 }

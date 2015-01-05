@@ -28,6 +28,7 @@ SET(HEADERS
     player/GUI_TrayIcon.h
     player/SearchSlider.h
     playlist/GUI_Playlist.h
+	playlist/PlaylistTabWidget.h
     playlist/view/PlaylistView.h
     playlist/model/PlaylistItemModel.h
     playlist/delegate/PlaylistItemDelegate.h
@@ -155,6 +156,8 @@ SET(FORMS
     playlist/entry/GUI_PlaylistEntryBig.ui
     playlist/entry/GUI_PlaylistEntrySmall.ui
     playlist_chooser/GUI_PlaylistChooser.ui
+	playlist/view/GUI_PlaylistView.ui
+
     Podcasts/GUI_Podcasts.ui
     SocketConfiguration/GUI_SocketSetup.ui
     speed/GUI_Speed.ui

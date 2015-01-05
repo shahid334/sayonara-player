@@ -34,7 +34,7 @@ class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
 
 signals:
 	void sig_create_playlist(const MetaDataList&, bool);
-    void sig_play_track(int, qint32, bool);
+	void sig_play_track(int);
 	void sig_close_event();
 
 private slots:

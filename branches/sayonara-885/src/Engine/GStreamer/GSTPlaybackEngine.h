@@ -76,15 +76,15 @@ private:
 
 	MyCaps*					_caps;
 
-	int	 _jump_play;
+	quint32 _jump_play;
 	bool _wait_for_gapless_track;
 	bool _may_start_timer;
 	bool _sr_active;
 	bool _gapless;
 
 	// methods
-	bool set_uri(const MetaData& md, bool* start_play);
-	void change_track_gapless(const MetaData& md, int pos_sec=0, bool start_play=true);
+	bool set_uri(const MetaData& md);
+	void change_track_gapless(const MetaData& md);
 
 public slots:
     virtual void play();
@@ -96,8 +96,8 @@ public slots:
 	virtual void jump_rel(quint32);
     virtual void jump_rel_ms(qint64 where);
 
-	virtual void change_track(const MetaData&, int pos_sec=-1, bool start_play=true);
-	virtual void change_track(const QString&, int pos_sec=-1, bool start_play=true );
+	virtual void change_track(const MetaData&);
+	virtual void change_track(const QString&);
 
 	virtual void eq_changed(int, int);
 

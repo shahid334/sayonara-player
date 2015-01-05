@@ -115,13 +115,16 @@ void GUI_PlaylistChooser::all_playlists_fetched(const QMap<int, QString>& mappin
 void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, PlaylistType playlist_type) {
 
     Q_UNUSED(i);
+
     bool empty = (v_md.size() == 0);
+	bool saveable = !empty && (playlist_type == PlaylistTypeStd);
 
-	btn_save->setEnabled(!empty && playlist_type == PlaylistTypeStd);
-	btn_save_as->setEnabled(!empty && playlist_type == PlaylistTypeStd);
+	btn_save->setEnabled(saveable);
+	btn_save_as->setEnabled(saveable);
 
-    if(empty)
+	if(empty){
 		le_playlist_file->clear();
+	}
 
 	text_changed(combo_playlistchooser->currentText());
 }
