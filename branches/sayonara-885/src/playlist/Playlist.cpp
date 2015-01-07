@@ -35,12 +35,6 @@ Playlist::Playlist(int idx, QObject* parent) :
 void Playlist::report_changes(bool pl_changed, bool track_changed) {
     if(_reports_disabled) return;
 
-	for(int i=0; i<_v_md.size(); i++){
-		if(_v_md[i].pl_selected && i == 11){
-			qDebug() << "Report changes " << i << ": true";
-		}
-	}
-
 	if(pl_changed){
 		emit sig_playlist_changed(this);
 	}
@@ -231,9 +225,6 @@ void Playlist::selection_changed(const QList<int>& lst) {
 	for(int i=0; i<_v_md.size(); i++){
 
 		_v_md[i].pl_selected = lst.contains(i);
-		if(_v_md[i].pl_selected){
-			qDebug() << "Playlist: Set " << i << ": true";
-		}
 
 		if(_v_md[i].pl_selected){
 
@@ -288,6 +279,10 @@ PlaylistType Playlist::get_type() const {
 
 int Playlist::get_idx() const {
 	return _playlist_idx;
+}
+
+void Playlist::set_idx(int idx){
+	_playlist_idx = idx;
 }
 
 void Playlist::set_playlist_mode(const PlaylistMode& mode) {

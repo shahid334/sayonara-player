@@ -54,7 +54,6 @@ void Playlists::load_single_playlist(int id) {
     // empty loaded (load old playlist)
     if(id <= 0) {
         pl.is_valid = false;
-        emit sig_single_playlist_loaded(pl);
         return;
     }
 

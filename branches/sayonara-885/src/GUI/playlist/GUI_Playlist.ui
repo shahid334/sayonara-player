@@ -102,6 +102,11 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="PlaylistTabWidget" name="tw_playlists">
+       <property name="font">
+        <font>
+         <family>DejaVu Sans</family>
+        </font>
+       </property>
        <property name="tabPosition">
         <enum>QTabWidget::North</enum>
        </property>
@@ -119,10 +124,10 @@
          <string>Playlist 1</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
-         <property name="leftMargin">
+         <property name="margin">
           <number>0</number>
          </property>
-         <property name="rightMargin">
+         <property name="spacing">
           <number>0</number>
          </property>
          <item row="0" column="0">
@@ -601,8 +606,8 @@
      </property>
      <property name="iconSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>16</width>
+       <height>16</height>
       </size>
      </property>
      <property name="flat">

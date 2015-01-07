@@ -54,7 +54,7 @@ void PlaylistHandler::playlist_changed(const Playlist* pl) {
 
 	_settings->set(Set::PL_Playlist, pl->toStringList());
 
-	emit sig_playlist_created(pl->get_playlist(), pl->get_cur_track(), pl->get_type(), pl->get_idx());
+	emit sig_playlist_created( pl->get_playlist(), pl->get_cur_track(), pl->get_type(), pl->get_idx() );
 }
 
 
@@ -137,12 +137,13 @@ void PlaylistHandler::psl_createPlaylist(const MetaDataList& v_md, bool start_pl
 		if(old_type != type){
 			int idx = _cur_playlist->get_idx();
 			delete _cur_playlist;
+
 			_cur_playlist = new_playlist(type, idx);
-			_cur_playlist->create_playlist(v_md, start_playing);
+			_cur_playlist->create_playlist(v_md, _state == PlaylistStop);
 		}
 
 		else {
-			_cur_playlist->create_playlist(v_md, start_playing);
+			_cur_playlist->create_playlist(v_md, _state == PlaylistStop);
 		}
 	}
 
@@ -156,7 +157,7 @@ void PlaylistHandler::psl_createPlaylist(const MetaDataList& v_md, bool start_pl
 
 	_playlists[_cur_playlist_idx] = _cur_playlist;
 
-	if(start_playing && !_cur_playlist->is_empty()) {
+	if( !_cur_playlist->is_empty() ) {
 
         // is stopped now
         if(_state == PlaylistStop){
@@ -167,6 +168,10 @@ void PlaylistHandler::psl_createPlaylist(const MetaDataList& v_md, bool start_pl
             psl_play();
         }
     }
+
+	else if(_state != PlaylistStop){
+
+	}
 
     else{
         psl_stop();
@@ -196,15 +201,7 @@ void PlaylistHandler::psl_createPlaylist(const QStringList& pathlist, bool start
 // create playlist from saved custom playlist
 void PlaylistHandler::psl_createPlaylist(const CustomPlaylist& pl, bool start_playing) {
 
-    if(start_playing){
-        _state = PlaylistPlay;
-    }
-
-    else if(_state != PlaylistPause){
-        _state = PlaylistStop;
-    }
-
-    psl_createPlaylist(pl.tracks, start_playing);
+	psl_createPlaylist(pl.tracks);
 }
 
 
@@ -470,7 +467,6 @@ void PlaylistHandler::psl_audioconvert_off(){
 
 void PlaylistHandler::new_playlist_created(){
 
-	qDebug() << "New Playlist created";
 	Playlist* pl = new_playlist(PlaylistTypeStd, _playlists.size());
 	_playlists.append(pl);
 }
@@ -481,8 +477,6 @@ void PlaylistHandler::cur_playlist_changed(int idx){
 
 	_cur_playlist = _playlists[idx];
 	_cur_playlist_idx = idx;
-
-	qDebug() << "Playlist idx changed: " << idx;
 
 	int cur_track = _cur_playlist->get_cur_track();
 	PlaylistType cur_type = _cur_playlist->get_type();
@@ -495,4 +489,10 @@ void PlaylistHandler::playlist_closed(int idx){
 
 	delete _playlists[idx];
 	_playlists.removeAt(idx);
+
+	foreach(Playlist* pl, _playlists){
+		if(pl->get_idx() >= idx){
+			pl->set_idx(pl->get_idx() - 1);
+		}
+	}
 }

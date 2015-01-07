@@ -104,6 +104,8 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	_cur_playlist_idx = 0;
 
 	tw_playlists->hide_tabbar();
+	QTabBar* tb = tw_playlists->get_tabbar();
+	//tb->setMaximumHeight(20);
 
 	REGISTER_LISTENER(Set::PL_SmallItems, _sl_change_small_playlist_items);
 	REGISTER_LISTENER(Set::PL_Mode, _sl_playlist_mode_changed);
@@ -423,7 +425,7 @@ void GUI_Playlist::rows_removed(const QList<int>& lst) {
 void GUI_Playlist::new_playlist_clicked(){
 
 	int n_playlists = tw_playlists->count();
-	QString name = QString("PL ") + QString::number(n_playlists + 1);
+	QString name = QString("Playlist ") + QString::number(n_playlists + 1);
 
 	PlaylistView* pl_view = new PlaylistView();
 

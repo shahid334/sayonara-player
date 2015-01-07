@@ -105,7 +105,7 @@ public:
 	int get_cur_track() const;
 	QStringList toStringList() const;
 	int get_idx() const;
-
+	void set_idx(int idx);
 	QList<int> find_tracks(int id) const;
 	QList<int> find_tracks(const QString& filepath) const;
 

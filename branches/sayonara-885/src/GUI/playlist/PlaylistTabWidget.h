@@ -14,6 +14,7 @@ public:
 public:
 	void show_tabbar(){ this->tabBar()->show(); }
 	void hide_tabbar(){ this->tabBar()->hide(); }
+	QTabBar* get_tabbar() {return this->tabBar();}
 };
 
 #endif // PLAYLISTTABBAR_H

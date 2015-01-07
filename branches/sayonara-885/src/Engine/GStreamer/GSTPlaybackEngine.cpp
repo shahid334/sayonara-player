@@ -173,10 +173,6 @@ void GSTPlaybackEngine::change_track(const MetaData& md) {
 	emit sig_pos_changed_s(_jump_play);
 
     play();
-
-	if (!_playing_stream){
-		pause();
-	}
 }
 
 

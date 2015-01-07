@@ -600,7 +600,6 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 	filepath.replace("//", "/");
 	filepath.replace("\\\\", "\\");
 
-
 	MetaData md =  getTrackByPath(filepath);
 
 	if(md.id >= 0) {
@@ -612,6 +611,11 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 		if(updateTrack(track_copy)){
 			return md.id;
 		}
+	}
+
+	QString new_title = data.title;
+	if(data.title.isEmpty()){
+		new_title = "Unknown";
 	}
 
 	QString querytext = QString("INSERT INTO tracks ") +
@@ -626,7 +630,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
     q.bindValue(":artistID",QVariant(artistID));
     q.bindValue(":length",QVariant(data.length_ms));
     q.bindValue(":year",QVariant(data.year));
-    q.bindValue(":title",QVariant(data.title));
+	q.bindValue(":title",QVariant(new_title));
     q.bindValue(":track",QVariant(data.track_num));
     q.bindValue(":bitrate",QVariant(data.bitrate));
     q.bindValue(":genre", QVariant(data.genres.join(",")));

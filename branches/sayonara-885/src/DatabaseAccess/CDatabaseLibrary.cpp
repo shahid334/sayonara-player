@@ -69,21 +69,26 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
     _database->transaction();
 
-    foreach (MetaData data, v_md) {
+	foreach (MetaData md, v_md) {
 
 		//first check if we know the artist and its id
-		albumID = this -> getAlbumID(data.album);
+		albumID = getAlbumID(md.album);
 
 		if (albumID == -1) {
-			albumID = insertAlbumIntoDatabase((QString) data.album);
+			albumID = insertAlbumIntoDatabase(md.album);
 		}
 
-		artistID = this -> getArtistID(data.artist);
+		artistID = getArtistID(md.artist);
 		if (artistID == -1) {
-			artistID = insertArtistIntoDatabase((QString) data.artist);
+			artistID = insertArtistIntoDatabase(md.artist);
 		}
 
-		insertTrackIntoDatabase (data,artistID,albumID);
+		if(albumID == -1 || artistID == -1){
+			qDebug() << "Cannot insert artist or album of " << md.filepath;
+			continue;
+		}
+
+		insertTrackIntoDatabase (md, artistID, albumID);
 
     }
 
