@@ -52,7 +52,7 @@ bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts) {
     q.prepare("SELECT name, url FROM savedpodcasts;");
 
 	if (!q.exec()){
-		show_error("Cannot fetch podcasts");
+		show_error("Cannot fetch podcasts", q);
 		return false;
 	}
 
@@ -78,7 +78,7 @@ bool CDatabaseConnector::deletePodcast(QString name) {
     q.bindValue(":name", name);
 
 	if(!q.exec()) {
-		show_error(QString("Could not delete podcast ") + name);
+		show_error(QString("Could not delete podcast ") + name, q);
         return false;
     }
 

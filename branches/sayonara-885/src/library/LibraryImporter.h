@@ -27,6 +27,10 @@
 #include "library/threads/ImportCopyThread.h"
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "TagEdit/TagEdit.h"
+
+
+
 
 class LibraryImporter : public QObject, protected SayonaraClass
 {
@@ -39,7 +43,7 @@ signals:
 	void sig_imported();
     
 public slots:
-    void psl_import_files(const QStringList&);
+	void psl_import_files(const QStringList&, QString src_dir="");
     void psl_import_dir(const QString&);
 
 private slots:
@@ -55,6 +59,7 @@ private slots:
     void accept_import(const QString&, bool);
     void cancel_import();
     void import_progress(int);
+	void metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
 
 
@@ -63,12 +68,13 @@ private:
     ImportCachingThread*    _caching_thread;
     ImportCopyThread*       _copy_thread;
     CDatabaseConnector*     _db;
-
+	TagEdit*				_tag_edit;
 
     bool                    _copy_to_lib;
-    QStringList             _src_files;
+
     QString                 _import_to;
     QString                 _lib_path;
+	QString					_src_dir;
     QWidget*                _main_window;
 
 };

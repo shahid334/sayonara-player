@@ -98,10 +98,8 @@ void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
 
 void StdPlaylist::create_playlist(const QStringList& lst, bool start_playing) {
 
-    MetaDataList v_md;
-
     CDirectoryReader reader;
-    reader.getMetadataFromFileList(lst, v_md);
+	MetaDataList v_md = reader.get_md_from_filelist(lst);
 
     create_playlist(v_md, start_playing);
 }

@@ -195,7 +195,7 @@ public:
 			bool removeAllBookmarks(int track_id);
 
     void deleteTracksAlbumsArtists();
-	void show_error(const QString& error_str) const;
+	void show_error(const QString& error_str, const QSqlQuery& q) const;
 
 
 

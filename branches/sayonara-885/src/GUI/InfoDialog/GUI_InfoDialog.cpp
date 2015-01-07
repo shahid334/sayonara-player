@@ -298,6 +298,8 @@ void GUI_InfoDialog::show(int tab) {
 
 void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
 
+	if(!cover_location.valid) return;
+
 	_cover_lookup->fetch_cover(cover_location);
 }
 

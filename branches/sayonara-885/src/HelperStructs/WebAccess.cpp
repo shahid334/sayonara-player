@@ -107,6 +107,8 @@ bool wa_call_url(const QString& url, QString* response) {
 
 bool WebAccess::read_http_into_str(const QString& url, QString* content) {
 
+	if(url.isEmpty()) return false;
+
     bool success;
     content->clear();
     success = wa_call_url(url, content);

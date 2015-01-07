@@ -613,7 +613,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
     if(!d) return;
 
-    MetaDataList v_metadata;
+	MetaDataList v_md;
 
     QString text = "";
     if(d->hasText()) text = d->text();
@@ -632,11 +632,11 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
         } // end foreach
 
         CDirectoryReader reader;
-        reader.setFilter(Helper::get_soundfile_extensions());
+		reader.set_filter(Helper::get_soundfile_extensions());
 
-        reader.getMetadataFromFileList(filelist, v_metadata);
+		v_md = reader.get_md_from_filelist(filelist);
 
-        if(v_metadata.size() == 0) return;
+		if(v_md.size() == 0) return;
     }
 
 	else if(d->hasHtml()) {}
@@ -644,7 +644,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
 	else if(d->hasText() && d->hasMetaData()) {
 
-        uint sz = d->getMetaData(v_metadata);
+		uint sz = d->getMetaData(v_md);
         if(sz == 0) return;
 
     }
@@ -652,11 +652,11 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 	else if(d->hasText()) {}
     else {}
 
-    for(int i=0; i<v_metadata.size(); i++) {
+	for(int i=0; i<v_md.size(); i++) {
         affected_rows << i + row + 1;
     }
 
-    emit sig_metadata_dropped(v_metadata, row + 1);
+	emit sig_metadata_dropped(v_md, row + 1);
 }
 
 

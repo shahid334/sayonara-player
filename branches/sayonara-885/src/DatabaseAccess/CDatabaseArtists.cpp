@@ -47,7 +47,7 @@ bool CDatabaseConnector::db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 	result.clear();
 
 	if (!q.exec()) {
-		show_error("Could not get all artists from database");
+		show_error("Could not get all artists from database", q);
 		return false;
 	}
 
@@ -98,7 +98,7 @@ int CDatabaseConnector::getMaxArtistID() {
 	q.prepare("SELECT MAX(artistID) FROM artists;");
 
 	if (!q.exec()) {
-		show_error("Cannot get max artist id");
+		show_error("Cannot get max artist id", q);
 		return -1;
 	}
 
@@ -142,17 +142,12 @@ bool CDatabaseConnector::getArtistByID(const int &id, Artist& artist) {
 
 int CDatabaseConnector::getArtistID (const QString & artist)  {
 
-	QString new_artist = artist;
-	if(artist.isEmpty()) {
-		new_artist = "Unknown";
-	}
-
 	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q (*_database);
     int artistID = -1;
     q.prepare("select artistID from artists where name == ?;");
-	q.addBindValue(new_artist);
+	q.addBindValue(artist);
 
     if (!q.exec()) {
 		return -1;
@@ -270,23 +265,17 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString& artist) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
-	QString new_artist = artist;
-
-	if(artist.isEmpty()){
-		new_artist = "Unknown";
-	}
-
 	QSqlQuery q (*_database);
 	q.prepare("INSERT INTO artists (name, cissearch) values (:artist, :cissearch);");
-	q.bindValue(":artist", QVariant(new_artist));
-	q.bindValue(":cissearch", QVariant(new_artist.toLower()));
+	q.bindValue(":artist", artist);
+	q.bindValue(":cissearch", artist.toLower());
 
 	if (!q.exec()) {
-		show_error(QString("Cannot insert artist ") + artist);
+		show_error(QString("Cannot insert artist ") + artist, q);
 		return -1;
     }
 
-	return getArtistID(new_artist);
+	return getArtistID(artist);
 }
 
 int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
@@ -295,18 +284,12 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
 	QSqlQuery q (*_database);
 
-	QString new_artist_name = artist.name;
-
-	if(artist.name.isEmpty()){
-		new_artist_name = "Unknown";
-	}
-
 	q.prepare("INSERT INTO artists (name, cissearch) values (:name, :cissearch);");
-	q.bindValue(":name", QVariant(new_artist_name));
-	q.bindValue(":cissearch", QVariant(new_artist_name.toLower()));
+	q.bindValue(":name", QVariant(artist.name));
+	q.bindValue(":cissearch", QVariant(artist.name.toLower()));
 
 	if (!q.exec()) {
-		show_error(QString("Cannot insert (2) artist ") + artist.name);
+		show_error(QString("Cannot insert (2) artist ") + artist.name, q);
 		return -1;
 	}
 

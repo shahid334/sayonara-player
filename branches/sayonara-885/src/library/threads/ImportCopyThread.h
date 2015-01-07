@@ -42,10 +42,15 @@ class ImportCopyThread : public QThread, protected SayonaraClass
 public:
 
     explicit ImportCopyThread(QObject *parent = 0);
-    void set_vars(QString chosen_dir, QStringList& files, QMap<QString, MetaData>& md_map, QMap<QString, QString>& pd_map);
+	void set_vars( const QString& src_dir,
+					const QString& chosen_dir,
+				   const QStringList& files,
+				   const QMap<QString, MetaData>& md_map
+				  );
+
     int get_n_files();
     int get_copied_files();
-    void get_metadata(MetaDataList& v_md);
+	MetaDataList get_metadata();
     void set_cancelled();
     bool get_cancelled();
     void set_mode(int mode);
@@ -56,11 +61,12 @@ private:
 
 protected:
     QString        _lib_dir;
-    QString        _chosen_dir;
+	QString			_src_dir;
+	QString        _chosen_dir;
     QStringList    _files;
     QMap<QString, MetaData> _md_map;
-    QMap<QString, QString> _pd_map;
-    MetaDataList   _v_md;
+
+	MetaDataList   _v_md;
     QStringList    _lst_copied_files;
     QStringList    _created_dirs;
     int            _n_files;

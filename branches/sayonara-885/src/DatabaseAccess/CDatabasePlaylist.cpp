@@ -40,7 +40,7 @@ bool CDatabaseConnector::getAllPlaylists(QMap<int, QString>& mapping) {
 	q.prepare(querytext);
 
 	if(!q.exec()) {
-		show_error("Cannot fetch all playlists");
+		show_error("Cannot fetch all playlists", q);
 		return false;
 	}
 
@@ -124,7 +124,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
     }
 
     else{
-		show_error(QString("Cannot get tracks for playlist ") + QString::number(playlist_id));
+		show_error(QString("Cannot get tracks for playlist ") + QString::number(playlist_id), q);
     }
 
 
@@ -133,7 +133,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
     q2.bindValue(":playlist_id", playlist_id);
 
     if(!q2.exec()) {
-		show_error(QString("Cannot fetch playlist ") + QString::number(playlist_id));
+		show_error(QString("Cannot fetch playlist ") + QString::number(playlist_id), q);
         return false;
     }
 
@@ -169,7 +169,7 @@ int CDatabaseConnector::getPlaylistIdByName(QString playlist_name) {
 	q.prepare("SELECT playlistid FROM playlists WHERE playlist = :playlist_name;");
 	q.bindValue(":playlist_name", QVariant(playlist_name));
 	if(!q.exec()) {
-		show_error(QString("Cannot fetch playlist ") + playlist_name);
+		show_error(QString("Cannot fetch playlist ") + playlist_name, q);
 		return -2;
 	}
 
@@ -178,7 +178,7 @@ int CDatabaseConnector::getPlaylistIdByName(QString playlist_name) {
 		      return q.value(0).toInt();
 		  }
 
-		  show_error(QString("Playlist ") + playlist_name + " is empty");
+		  show_error(QString("Playlist ") + playlist_name + " is empty", q);
 		  return -1;
 	}
 }
@@ -192,7 +192,7 @@ QString CDatabaseConnector::getPlaylistNameById(int playlist_id) {
 		q.prepare("SELECT playlistname FROM playlists WHERE playlistid = :playlistid;");
 		q.bindValue(":playlistid", QVariant(playlist_id));
 		if(!q.exec()) {
-			show_error(QString("Cannot fetch playlist ") + QString::number(playlist_id));
+			show_error(QString("Cannot fetch playlist ") + QString::number(playlist_id), q);
 			return "";
 		}
 
@@ -201,7 +201,7 @@ QString CDatabaseConnector::getPlaylistNameById(int playlist_id) {
 				return q.value(0).toString();
 			}
 
-			show_error(QString("Playlist ") + playlist_id + " is empty");
+			show_error(QString("Playlist ") + playlist_id + " is empty", q);
 
 			return "";
 		}
@@ -227,7 +227,7 @@ bool CDatabaseConnector::insertTrackIntoPlaylist(const MetaData& md, int playlis
     q.bindValue(":filepath", QVariant(md.filepath));
 
 	if (!q.exec()) {
-		show_error("Cannot insert track into playlist");
+		show_error("Cannot insert track into playlist", q);
 		return false;
 	}
 
@@ -249,7 +249,7 @@ int CDatabaseConnector::createPlaylist(QString playlist_name) {
 	q.bindValue(":playlist_name", QVariant(playlist_name));
 
 	if(!q.exec()) {
-		show_error("Cannot create playlist");
+		show_error("Cannot create playlist", q);
 		return -1;
 	}
 
@@ -348,7 +348,7 @@ bool CDatabaseConnector::emptyPlaylist(int playlist_id) {
 	q.bindValue(":playlist_id", playlist_id);
 
 	if(!q.exec()) {
-		show_error("DB: Playlist cannot be cleared");
+		show_error("DB: Playlist cannot be cleared", q);
 		return false;
 	}
 
@@ -369,7 +369,7 @@ bool CDatabaseConnector::deletePlaylist(int playlist_id) {
 	q.bindValue(":playlist_id", playlist_id);
 
 	if(!q.exec()){
-		show_error(QString("Cannot delete playlist ") + QString::number(playlist_id));
+		show_error(QString("Cannot delete playlist ") + QString::number(playlist_id), q);
 		return false;
 	}
 
@@ -389,7 +389,7 @@ bool CDatabaseConnector::deleteFromAllPlaylists(int track_id) {
 	q.bindValue(":track_id", track_id);
 
 	if(!q.exec()){
-		show_error(QString("Cannot delete track ") + QString::number(track_id) + "from playlist");
+		show_error(QString("Cannot delete track ") + QString::number(track_id) + "from playlist", q);
 		return false;
 	}
 

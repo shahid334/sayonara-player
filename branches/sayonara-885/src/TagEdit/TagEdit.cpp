@@ -23,10 +23,11 @@
 #include "TagEdit/TagEdit.h"
 #include "HelperStructs/Tagging/id3.h"
 
-TagEdit::TagEdit(QObject *parent) :
+TagEdit::TagEdit(QObject *parent, bool is_extern) :
 	SayonaraClass()
 {
 	_db = CDatabaseConnector::getInstance();
+	_is_extern = is_extern;
 }
 
 void TagEdit::update_track(int idx, const MetaData& md){
@@ -84,7 +85,6 @@ void TagEdit::check_for_new_artists_and_albums(QStringList& new_artists, QString
 		}
 	}
 
-
 	foreach(QString album_name, albums){
 		int id = _db->getAlbumID(album_name);
 		qDebug() << "Album: " << album_name << ": " << id;
@@ -132,20 +132,20 @@ void TagEdit::apply_artists_and_albums_to_md(){
 	}
 }
 
-
-
 void TagEdit::write_tracks_to_db(){
 
 	MetaDataList v_md;
 	MetaDataList v_md_orig;
 
-	QStringList new_artists, new_albums;
-	check_for_new_artists_and_albums(new_artists, new_albums);
+	if(!_is_extern){
+		QStringList new_artists, new_albums;
+		check_for_new_artists_and_albums(new_artists, new_albums);
 
-	insert_new_albums(new_albums);
-	insert_new_artists(new_artists);
+		insert_new_albums(new_albums);
+		insert_new_artists(new_artists);
 
-	apply_artists_and_albums_to_md();
+		apply_artists_and_albums_to_md();
+	}
 
 	for(int i=0; i<_v_md.size(); i++){
 
@@ -153,13 +153,22 @@ void TagEdit::write_tracks_to_db(){
 
 		if( _changed_md[i] == false ) continue;
 
-		bool success = ID3::setMetaDataOfFile(_v_md[i]);
+		if( !_is_extern ){
 
-		if( success && _db->updateTrack(_v_md[i]) ){
+			bool success = ID3::setMetaDataOfFile(_v_md[i]);
+			qDebug() << "Write track "<< _v_md[i].title
+					 << " (" << _v_md[i].album << ") by " << _v_md[i].artist
+					 << ": " << success;
 
+			if( success && 	_db->updateTrack(_v_md[i]) ) {
+				v_md.push_back(_v_md[i]);
+				v_md_orig.push_back(_v_md_orig[i]);
+			}
+		}
+
+		else{
 			v_md.push_back(_v_md[i]);
 			v_md_orig.push_back(_v_md_orig[i]);
-			qDebug() << "Write track "<< _v_md[i].title << " (" << _v_md[i].album << ") by " << _v_md[i].artist;
 		}
 	}
 

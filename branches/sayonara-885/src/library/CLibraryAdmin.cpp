@@ -33,12 +33,12 @@
 
 /// TODO: FORBIN RELOAD LIBRARY <=> IMPORT at same time
 
-void CLibraryBase::baseDirSelected (const QString & baseDir) {
+void CLibraryBase::baseDirSelected (const QString& dir) {
 
     QStringList fileList;
-    int num_files = 0;
+	QDir base_dir(dir);
 
-    _reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
+	_reader.get_files_in_dir_rec(base_dir, fileList);
 
     emit sig_playlist_created(fileList);
 

@@ -38,11 +38,15 @@ class CDirectoryReader {
           * Set filter for files.
           * @param filter list of different filters
           */
-        void setFilter (const QStringList & filter);
+		void set_filter(const QStringList& filter);
 
-        void getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files);
-        void getFilesInsideDirectory (QDir baseDir, QStringList & files);
-        void getMetadataFromFileList(QStringList lst, MetaDataList& v_md);
+		// only real files are saved here
+		void get_files_in_dir_rec (QDir baseDir, QStringList& files);
+
+		// only real files are saved here
+
+		QStringList get_files_in_dir (QDir baseDir);
+		MetaDataList get_md_from_filelist(const QStringList& lst);
 
     private:
         QStringList m_filters;

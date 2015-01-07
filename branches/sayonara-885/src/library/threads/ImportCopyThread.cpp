@@ -35,129 +35,123 @@ ImportCopyThread::ImportCopyThread(QObject *parent) :
 
 
 void ImportCopyThread::emit_percent(int i, int n) {
+
 	int percent = (i * 100000) / n;
 	_percent = percent / 1000;
-        emit sig_progress(_percent);
-	
+
+	emit sig_progress(_percent);
 }
 
 
-QString _calc_target_path(QString src_dir, QString lib_dir, QString chosen_dir) {
+QString _create_target_path(QString src_dir,    // dir chosen when "import dir"
+						  QString filename,   // filename of current file
+						  QString lib_dir,    // library path
+						  QString chosen_dir) // chosen dir typed in the import dialog
+{
 
-	QString src_folder_name, dir;
-	if(src_dir.size() > 0) {
+	QString src_folder_name = "";
+	QString subfolders;
+
+	if( !src_dir.isEmpty() ) {
+
+		QString dir;
 
 		// /home/user/dir/ -> /home/user, dir
-	        Helper::split_filename(src_dir, dir, src_folder_name);
+		Helper::split_filename(filename, dir, src_folder_name);
 	}
 
-        else src_folder_name = "";
+	if(src_dir.size() > 0) {
 
+		// extract folders between the files and src dir and create directories
+		// /home/user/dir/subfolder/subfolder2/bla.mp3 -> subfolder/subfolder2
+		QString subfolders = Helper::get_parent_folder(filename);
+		subfolders.remove(src_dir);
+	}
 
-	// chosen dir = cd
-	QString chosen_item_str = chosen_dir + QDir::separator();
-        if(chosen_dir.size() == 0) chosen_item_str = "";
+	QString target_path =
+			lib_dir + QDir::separator() +
+			chosen_dir + QDir::separator() +
+			src_folder_name + QDir::separator() +
+			subfolders;
 
-	// /home/user/Music/cd/
-        QString target_path = lib_dir + QDir::separator() +
-                    chosen_item_str +
-                    src_folder_name;
+	if(!QFile::exists(target_path)) {
+		QDir::root().mkpath(target_path);
+	}
 
 	return target_path;
 }
 
+// example
+// i wanna import /home/user/dir
+// my music library is in /home/user/Music
+// i will type "chosen" into entry field
+// i exspect a directory /home/user/Music/chosen/dir in my music library
 
 void ImportCopyThread::copy() {
-    _v_md.clear();
-    _n_files = _files.size();
-    _copied_files = 0;
+
+	_copied_files = 0;
     _lst_copied_files.clear();
     _created_dirs.clear();
     _percent = 0;
-    int i=0;
 
-    foreach(QString filename, _files) {
-        if(_cancelled) return;
+	_v_md.clear();
 
-	// src_dir = closest dir to root where to export
-	// src_dir = /home/user/dir
-	QString src_dir = _pd_map.value(filename);
-	QString new_target_path;
+	for(int i=0; i<_files.size(); i++){
 
-	
-	// here we handle files in a folder
-        if(src_dir.size() > 0) {
-                
-                // target path = /home/user/Music/chosen_dir/dir
-                QString target_path = _calc_target_path(src_dir, _lib_dir, _chosen_dir);
+		// insert into vector for db
+		emit_percent(i, _files.size());
 
-	        // extract folders between the files and src dir and create directories
-       	 	// /home/user/dir/subfolder/subfolder2/bla.mp3 -> subfolder/subfolder2
-       	 	QString folder = Helper::get_parent_folder(filename);
-        	folder.remove(src_dir);
+		if(_cancelled) return;
 
-		// /home/user/Music/chosen_dir/dir/subfolder/subfolder2
-		new_target_path = target_path + QDir::separator() + folder;
-	}
+		// absolute path of an mp3 file
+		QString filename = _files[i];
 
-	else{
-		new_target_path = _calc_target_path("", _lib_dir, _chosen_dir);
-	}
 
-	// create that folder
-       	if(!QFile::exists(new_target_path)) {
-		 _created_dirs << new_target_path;
-            	QDir::root().mkpath(new_target_path);
-        }
+		// target path = /home/user/Music/chosen_dir/dir/subdir1/subdir2
+		// or          = /home/user/Music/chosen_dir/, if only files
+		// append chosendir to libdir and appends the "dir" string
+		QString target_path = _create_target_path(_src_dir, filename, _lib_dir, _chosen_dir);
 
-        // copy file
-        QFile f(filename);
-        QString filename_wo_folder = Helper::get_filename_of_path(filename);
-        QString new_filename = new_target_path + QDir::separator() + filename_wo_folder;
-        bool existed = QFile::exists(new_filename);
-        bool copied = f.copy(new_filename);
-        if(copied) {
+		_created_dirs << target_path;
 
-            _copied_files++;
+		// copy file
+		QFile f(filename);
+		QString filename_wo_folder = Helper::get_filename_of_path(filename);
+		QString new_filename = target_path + QDir::separator() + filename_wo_folder;
 
-            if(!existed)
-                _lst_copied_files << new_filename;
+		bool exists = QFile::exists(new_filename);
+		bool copied = f.copy(new_filename);
 
-        }
+		if(copied) {
 
-        // insert into vector for db
-	emit_percent(i++, _files.size());
+			_copied_files++;
 
-        if(!Helper::is_soundfile(filename)) continue;
-        else if(Helper::is_soundfile(filename)) {
-            if(!copied) continue;
-        }
+			if(!exists){
+				_lst_copied_files << new_filename;
+			}
+		}
 
-        MetaData md;
-        bool got_md = _md_map.keys().contains(filename);
+		if(!Helper::is_soundfile(filename)){
+			continue;
+		}
 
-        if( got_md ) {
-            md = _md_map.value(filename);
-            md.filepath = new_filename;
-            _v_md.push_back( md );
-        }
+		else if( Helper::is_soundfile(filename) ) {
+			if(!copied) continue;
+		}
 
-        else {
-            _copied_files --;
-            QFile f(new_filename);
-            f.remove();
-        }
+		MetaData md = _md_map[filename];
+		md.filepath = new_filename;
+		_v_md << md;
     }
 }
 
 void ImportCopyThread::rollback() {
 
-
     int n_operations = _lst_copied_files.size() + _created_dirs.size();
     int n_ops_todo = n_operations;
     int percent;
 
-    _v_md.clear();
+
     foreach(QString f, _lst_copied_files) {
         QFile file(f);
         file.remove();
@@ -183,32 +177,38 @@ void ImportCopyThread::rollback() {
     _copied_files = 0;
 
     _lst_copied_files.clear();
-    _created_dirs.clear();
-
+	_created_dirs.clear();
+	_v_md.clear();
 }
-
-
-
-
 
 
 void ImportCopyThread::run() {
 
     _cancelled = false;
-    if(_mode == IMPORT_COPY_THREAD_COPY) copy();
-    else if(_mode == IMPORT_COPY_THREAD_ROLLBACK) rollback();
+	if(_mode == IMPORT_COPY_THREAD_COPY){
+		copy();
+	}
 
+	else if(_mode == IMPORT_COPY_THREAD_ROLLBACK){
+		rollback();
+	}
 }
 
 
-void ImportCopyThread::set_vars(QString chosen_dir, QStringList &files, QMap<QString, MetaData>& md_map, QMap<QString, QString>& pd_map) {
+void ImportCopyThread::set_vars(const QString& src_dir,
+								const QString& chosen_dir,
+								const QStringList& files,
+								const QMap<QString, MetaData>& md_map)
+{
 
 	_lib_dir = _settings->get(Set::Lib_Path);
 
 	_chosen_dir = chosen_dir;
-    _files = files;
-    _md_map = md_map;
-    _pd_map = pd_map;
+	_files = files;
+
+	_md_map = md_map;
+	_src_dir = src_dir;
+
 }
 
 void ImportCopyThread::set_cancelled() {
@@ -220,15 +220,15 @@ bool ImportCopyThread::get_cancelled() {
 }
 
 int ImportCopyThread::get_n_files() {
-    return _n_files;
+	return _v_md.size();
 }
 
 int ImportCopyThread::get_copied_files() {
     return _copied_files;
 }
 
-void ImportCopyThread::get_metadata(MetaDataList& v_md) {
-    v_md = _v_md;
+MetaDataList ImportCopyThread::get_metadata() {
+	return _v_md;
 }
 
 void ImportCopyThread::set_mode(int mode) {

@@ -46,7 +46,7 @@ void CDatabaseConnector::deleteTracksAlbumsArtists() {
 		else if(i==2) q.prepare("delete from albums;");
 
 		if( !q.exec() ){
-			show_error("Cannot delete all tracks, albums and artists");
+			show_error("Cannot delete all tracks, albums and artists", q);
 			err = true;
 		}
 	}

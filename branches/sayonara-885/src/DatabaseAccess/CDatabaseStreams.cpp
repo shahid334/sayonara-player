@@ -48,7 +48,7 @@ bool CDatabaseConnector::getAllStreams(QMap<QString, QString> & streams) {
 	q.prepare("SELECT name, url FROM savedstreams;");
 
 	if (!q.exec()){
-		show_error("Cannot get all streams");
+		show_error("Cannot get all streams", q);
 		return false;
 	}
 
@@ -73,7 +73,7 @@ bool CDatabaseConnector::deleteStream(QString name) {
 	q.bindValue(":name", name);
 
 	if(!q.exec()) {
-		show_error(QString("Could not delete stream ") + name);
+		show_error(QString("Could not delete stream ") + name, q);
 		return false;
 	}
 
@@ -92,7 +92,7 @@ bool CDatabaseConnector::addStream(QString name, QString url) {
 	q.bindValue(":url", url);
 
 	if(!q.exec()) {
-		show_error(QString("Could not add stream ") + name);
+		show_error(QString("Could not add stream ") + name, q);
 		return false;
 	}
 

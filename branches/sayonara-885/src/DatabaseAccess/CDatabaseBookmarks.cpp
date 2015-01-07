@@ -38,7 +38,7 @@ bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& b
 	q.bindValue(":trackid", track_id);
 
 	if (!q.exec()){
-		show_error( QString("Could not fetch bookmarks for track ") + QString::number(track_id) );
+		show_error( QString("Could not fetch bookmarks for track ") + QString::number(track_id), q);
 		return false;
 	}
 
@@ -64,7 +64,7 @@ bool CDatabaseConnector::insertBookmark(int track_id, quint32 time, QString name
 	q.bindValue(":timeidx", time);
 
 	if (!q.exec()){
-		show_error("Cannot insert bookmarks");
+		show_error("Cannot insert bookmarks", q);
 		return false;
 	}
 
@@ -82,7 +82,7 @@ bool CDatabaseConnector::removeBookmark(int track_id, quint32 time) {
 	q.bindValue(":timeidx", time);
 
 	if (!q.exec()){
-		show_error("Cannot remove bookmark");
+		show_error("Cannot remove bookmark", q);
 		return false;
 	}
 
@@ -99,7 +99,7 @@ bool CDatabaseConnector::removeAllBookmarks(int track_id) {
 	q.bindValue(":trackid", track_id);
 
 	if (!q.exec()){
-		show_error("Cannot remove all bookmarks");
+		show_error("Cannot remove all bookmarks", q);
 		return false;
 	}
 

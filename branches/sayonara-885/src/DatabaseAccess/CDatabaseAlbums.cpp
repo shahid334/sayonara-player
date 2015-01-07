@@ -52,7 +52,7 @@ bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 	}
 
 	if (!q.exec()) {
-		show_error("Could not get all albums from database");
+		show_error("Could not get all albums from database", q);
 		return false;
 	}
 
@@ -134,16 +134,11 @@ int CDatabaseConnector::getAlbumID (const QString & album)  {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
-	QString new_album = album;
-	if(album.isEmpty()){
-		new_album = "Unknown";
-	}
-
 	QSqlQuery q (*_database);
     int albumID = -1;
 
     q.prepare("SELECT albumID FROM albums WHERE name = ?;");
-	q.addBindValue(new_album);
+	q.addBindValue(album);
 
 	if(!q.exec()) {
 		return -1;
@@ -381,25 +376,20 @@ bool CDatabaseConnector::getAllAlbumsBySearchString(Filter filter, AlbumList& re
 int CDatabaseConnector::updateAlbum (const Album & album) {
 	QSqlQuery q (*_database);
 
-	QString new_album = album.name;
-	if(album.name.isEmpty()){
-		new_album = "Unknown";
-	}
-
 	q.prepare("UPDATE albums "
 			  "SET name=:name, "
 			  "    cissearch=:cissearch, "
 			  "    rating=:rating "
 			  "WHERE albumID = :id;");
 
-	q.bindValue(":id", QVariant(album.id));
-	q.bindValue(":name", QVariant(new_album));
-	q.bindValue(":cissearch", QVariant(new_album.toLower()));
-	q.bindValue(":rating", QVariant(album.rating));
+	q.bindValue(":id", album.id);
+	q.bindValue(":name", album.name);
+	q.bindValue(":cissearch", album.name.toLower());
+	q.bindValue(":rating", album.rating);
 
 
 	if (!q.exec()) {
-		show_error(QString("Cannot update album ") + album.name);
+		show_error(QString("Cannot update album ") + album.name, q);
 		return -1;
 	}
 
@@ -412,11 +402,6 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString& album) {
 
 	QSqlQuery q (*_database);
 
-	QString new_album = album;
-	if(album.isEmpty()){
-		new_album = "Unknown";
-	}
-
 	int album_id = getAlbumID(album);
 	if(album_id >= 0){
 		Album a;
@@ -424,16 +409,16 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const QString& album) {
 		return updateAlbum(a);
 	}
 
-	q.prepare("INSERT INTO albums (name, cissearch) values (':album', ':cissearch');");
-	q.bindValue(":album", QVariant(new_album));
-	q.bindValue(":cissearch", QVariant(new_album.toLower()));
+	q.prepare("INSERT INTO albums (name, cissearch) values (:album, :cissearch);");
+	q.bindValue(":album", album);
+	q.bindValue(":cissearch", album.toLower());
 
 	if (!q.exec()) {
-		show_error(QString("Cannot insert album ") + album + " to db");
+		show_error(QString("Cannot insert album ") + album + " to db", q);
 		return -1;
     }
 
-	return this->getAlbumID(new_album);
+	return getAlbumID(album);
 }
 
 int CDatabaseConnector::insertAlbumIntoDatabase (const Album& album) {
@@ -444,20 +429,16 @@ int CDatabaseConnector::insertAlbumIntoDatabase (const Album& album) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
-	Album new_album = album;
-	if(album.name.isEmpty()){
-		new_album.name = "Unknown";
-	}
-
 	QSqlQuery q (*_database);
 
 	q.prepare("INSERT INTO albums (name, cissearch, rating) values (:name, :cissearch, :rating);");
-	q.bindValue(":name", QVariant(new_album.name));
-	q.bindValue(":cissearch", QVariant(new_album.name.toLower()));
-	q.bindValue(":rating", QVariant(album.rating));
+
+	q.bindValue(":name", album.name);
+	q.bindValue(":cissearch", album.name.toLower());
+	q.bindValue(":rating", album.rating);
 
 	if (!q.exec()) {
-		show_error("SQL: Cannot insert album into database");
+		show_error("SQL: Cannot insert album into database", q);
 		return -1;
 	}
 

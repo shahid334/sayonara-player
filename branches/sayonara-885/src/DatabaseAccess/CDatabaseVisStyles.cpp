@@ -72,7 +72,7 @@ QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles() {
     q.prepare("SELECT * FROM VisualStyles;" );
 
     if(!q.exec()) {
-		show_error("Could not fetch color styles");
+		show_error("Could not fetch color styles", q);
         return ret_val;
     }
 
@@ -163,7 +163,7 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs) 
 
 
     if(!q.exec()) {
-		show_error("Could not insert style");
+		show_error("Could not insert style", q);
         return false;
     }
 
@@ -225,7 +225,7 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs) {
 
 
     if(!q.exec()) {
-		show_error(QString("Could not update style ") + rcs.col_list.name);
+		show_error(QString("Could not update style ") + rcs.col_list.name, q);
         return false;
     }
 
@@ -243,7 +243,7 @@ bool CDatabaseConnector::delete_raw_color_style(QString name) {
     q.bindValue(":name", name);
 
     if(!q.exec()) {
-		show_error(QString("Could not delete Raw color style ") + name);
+		show_error(QString("Could not delete Raw color style ") + name, q);
         return false;
     }
 
@@ -260,7 +260,7 @@ bool CDatabaseConnector::raw_color_style_exists(QString name) {
     q.bindValue(":name", name);
 
 	if(!q.exec()) {
-		show_error("Cannot check if raw color style exists");
+		show_error("Cannot check if raw color style exists", q);
 		return false;
 	}
 

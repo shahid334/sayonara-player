@@ -41,7 +41,7 @@ signals:
 
 
 public:
-	explicit TagEdit(QObject *parent = 0);
+	explicit TagEdit(QObject *parent = 0, bool is_extern=false);
 
 	void undo(int idx);
 	void undo_all();
@@ -63,6 +63,7 @@ private:
 	MetaDataList _v_md;
 	MetaDataList _v_md_orig;
 	QVector<bool> _changed_md;
+	bool _is_extern;
 
 	CDatabaseConnector* _db;
 

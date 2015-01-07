@@ -36,11 +36,13 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
    _main_window = main_window;
    _caching_thread = new ImportCachingThread(this);
    _copy_thread = new ImportCopyThread(this);
-   _import_dialog = new GUI_ImportFolder(main_window, true);
+
+   _tag_edit = new TagEdit(this, true);
+   _import_dialog = new GUI_ImportFolder(main_window, _tag_edit, true);
+
    _db = CDatabaseConnector::getInstance();
 
    _lib_path = _settings->get(Set::Lib_Path);
-
 
    connect(_import_dialog, SIGNAL(sig_accepted(const QString&, bool)),
            this,            SLOT(accept_import(const QString&, bool)));
@@ -57,51 +59,47 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
 
    connect(_copy_thread, SIGNAL(finished()), this, SLOT(copy_thread_finished()));
    connect(_copy_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
+   connect(_tag_edit, SIGNAL(sig_metadata_changed(const MetaDataList&, const MetaDataList&)),
+		   this, SLOT(metadata_changed(const MetaDataList&, const MetaDataList&)));
 }
 
 
-void LibraryImporter::psl_import_dir(const QString& str) {
+void LibraryImporter::psl_import_dir(const QString& dir) {
+
     QStringList lst;
-    lst << str;
-    psl_import_files(lst);
+	lst << dir;
+	psl_import_files(lst, dir);
 }
 
-void LibraryImporter::psl_import_files(const QStringList& list) {
+void LibraryImporter::psl_import_files(const QStringList& list, QString src_dir) {
 
-	_lib_path = _settings->get(Set::Lib_Path);
+	_src_dir = src_dir;
 
-    _src_files = list;
+	QDir lib_dir(_lib_path);
+	QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
+	content.push_front("");
+
+	_import_dialog->set_folderlist(content);
+	_import_dialog->set_thread_active(true);
+	_import_dialog->set_status(IMPORT_DIALOG_CACHING);
+	_import_dialog->show();
+
     _caching_thread->set_filelist(list);
-
-
-    QDir lib_dir(_lib_path);
-    QStringList content = lib_dir.entryList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-
-    content.push_front("");
-
-    _import_dialog->set_folderlist(content);
-    _import_dialog->set_thread_active(true);
-    _import_dialog->set_status(tr("Loading files..."));
-    _import_dialog->show();
-
     _caching_thread->start();
-
 }
 
 
-// preload thread has cached everything, but maybe ok button has not been clicked yet
+// preload thread has cached everything, but ok button has not been clicked yet
 void LibraryImporter::caching_thread_done() {
+
+	MetaDataList v_md;
 
     int n_tracks = _caching_thread->get_n_tracks();
 
-    if(n_tracks > 0) {
-        QString status = tr("%1 tracks ready").arg(n_tracks);
-        _import_dialog->set_status(status);
-    }
+	v_md = _caching_thread->get_metadata();
+	_tag_edit->set_metadata(v_md);
 
-    else{
-        _import_dialog->set_status(tr("No tracks"));
-    }
+	_import_dialog->set_status(n_tracks);
 }
 
 
@@ -111,31 +109,25 @@ void LibraryImporter::caching_thread_finished() {
     _import_dialog->set_progress(0);
     _import_dialog->set_thread_active(false);
 
-    QStringList files;
-    QMap<QString, MetaData> md_map;
-    QMap<QString, QString> pd_map;
+	int n_tracks = _caching_thread->get_n_tracks();
 
-    _caching_thread->get_extracted_files(files);
-    _caching_thread->get_md_map(md_map);
-    _caching_thread->get_pd_map(pd_map);
-
-    if(md_map.keys().size() == 0) {
-        _import_dialog->set_status(tr("No tracks"));
+	if(n_tracks == 0) {
+		_import_dialog->set_status(IMPORT_DIALOG_NO_TRACKS);
         return;
     }
 
+	MetaDataList v_md = _caching_thread->get_metadata();
+	QStringList files = _caching_thread->get_extracted_files();
+	QMap<QString, MetaData> md_map = _caching_thread->get_md_map();
+
     if(!_copy_to_lib) {
-        MetaDataList v_md;
-        foreach(QString filename, files) {
-            bool has_key = md_map.keys().contains(filename);
-            if(!has_key) continue;
 
-            MetaData md;
-            md = md_map.value(filename);
-            v_md.push_back(md);
-        }
 
-        bool success = _db->storeMetadata(v_md);
+		foreach(MetaData md, md_map.values()){
+			v_md << md;
+		}
+
+		bool success = _db->storeMetadata(v_md);
 
 		if(success){
 			emit sig_imported();
@@ -144,27 +136,24 @@ void LibraryImporter::caching_thread_finished() {
         return;
     }
 
-
     _import_dialog->set_thread_active(true);
 
-    _copy_thread->set_vars(_import_to, files, md_map, pd_map);
+	_copy_thread->set_vars(_src_dir, _import_to, files, md_map);
     _copy_thread->set_mode(IMPORT_COPY_THREAD_COPY);
     _copy_thread->start();
-
 }
 
 
 
 void LibraryImporter::copy_thread_finished() {
 
-    MetaDataList v_md;
-    _copy_thread->get_metadata(v_md);
-    _import_dialog->set_thread_active(false);
+	MetaDataList v_md = _copy_thread->get_metadata();
+
+	_import_dialog->set_thread_active(false);
 
     // no tracks were copied or rollback was finished
-    if(v_md.size() == 0) {
-        _import_dialog->set_status(tr("No tracks"));
-
+	if(v_md.size() == 0) {
+		_import_dialog->set_status(IMPORT_DIALOG_NO_TRACKS);
         return;
     }
 
@@ -173,25 +162,26 @@ void LibraryImporter::copy_thread_finished() {
     if(_copy_thread->get_cancelled()) {
         _copy_thread->set_mode(IMPORT_COPY_THREAD_ROLLBACK);
         _copy_thread->start();
-        _import_dialog->set_status(tr("Rollback..."));
+		_import_dialog->set_status(IMPORT_DIALOG_ROLLBACK);
         _import_dialog->set_thread_active(true);
         return;
     }
 
     // store to db
-    bool success = _db->storeMetadata(v_md);
+	bool success = _db->storeMetadata(v_md);
     int n_snd_files = _copy_thread->get_n_files();
     int n_files_copied = _copy_thread->get_copied_files();
 
     // error and success messages
-    if(v_md.size() == 0) success = false;
     if(success) {
         QString str = "";
-        if(n_snd_files == n_files_copied)
-            str =   tr("All files could be imported");
+		if(n_snd_files == n_files_copied){
+			str =   tr("All files could be imported");
+		}
 
-        else
-            str =  tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files);
+		else{
+			str =  tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files);
+		}
 
         QMessageBox::information( _main_window, tr("Import files"), str);
 		emit sig_imported();
@@ -205,8 +195,14 @@ void LibraryImporter::copy_thread_finished() {
     }
 
     _import_dialog->close();
-
 }
+
+
+void LibraryImporter::metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md){
+
+	_caching_thread->update_metadata(old_md, new_md);
+}
+
 
 
 
@@ -237,11 +233,13 @@ void  LibraryImporter::accept_import(const QString& chosen_item, bool copy) {
 // fired if cancel button was clicked in dialog
 void LibraryImporter::cancel_import() {
 
+
+	_import_dialog->set_status(IMPORT_DIALOG_CANCELLED);
+
     // preload thread
     if(_caching_thread->isRunning()) {
 
         _caching_thread->set_cancelled();
-        _import_dialog->set_status("Cancelled");
         _import_dialog->set_thread_active(false);
         _import_dialog->close();
     }
@@ -255,7 +253,7 @@ void LibraryImporter::cancel_import() {
         }
 
         _copy_thread->set_cancelled();
-        _import_dialog->set_status(tr("Cancelled"));
+
     }
 
     // close dialog

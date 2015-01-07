@@ -61,7 +61,7 @@ bool CDatabaseConnector::db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 	result.clear();
 
 	if (!q.exec()) {
-		show_error("Cannot fetch tracks from database");
+		show_error("Cannot fetch tracks from database", q);
 		return false;
 	}
 
@@ -476,7 +476,7 @@ bool CDatabaseConnector::deleteTrack(int id){
 	q.bindValue(":track_id", id);
 
 	if (!q.exec()) {
-		show_error(QString("Cannot delete track") + QString::number(id));
+		show_error(QString("Cannot delete track") + QString::number(id), q);
 		return false;
 	}
 
@@ -567,7 +567,7 @@ bool CDatabaseConnector::updateTrack(const MetaData& data) {
 	q.bindValue(":cissearch", QVariant(data.title.toLower()));
 
 	if (!q.exec()) {
-		show_error(QString("Cannot update track ") + data.filepath);
+		show_error(QString("Cannot update track ") + data.filepath, q);
 		return false;
 	}
 
@@ -640,7 +640,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 
     if (!q.exec()) {
 
-		show_error(QString("Cannot insert track into database ") + data.filepath);
+		show_error(QString("Cannot insert track into database ") + data.filepath, q);
 		return -1;
     }
 

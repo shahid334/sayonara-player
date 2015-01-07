@@ -38,70 +38,111 @@ ImportCachingThread::ImportCachingThread(QObject *parent) :
 }
 
 void ImportCachingThread::run() {
-    _cancelled = false;
+
+	_cancelled = false;
     _may_terminate = false;
     _filelist.clear();
-    _md_map.clear();
-    _pd_map.clear();
 
+	_v_md.clear();
+
+
+	// file may be a directory or a real file,
+	// nevertheless, we want all real files files
     foreach(QString file, _files) {
 
         if(_cancelled) break;
 
         // file is a directory
+		// if "import dir" was selected
         if(Helper::is_dir(file)) {
 
-            QDir src_dir(file);
-            int n_files = 0;
-            CDirectoryReader reader;
-            QStringList tmp_filelist;
-            reader.getFilesInsiderDirRecursive(src_dir, tmp_filelist, n_files);
+			QDir src_dir(file);
+
+			CDirectoryReader reader;
+			QStringList inner_files;
+
+			reader.get_files_in_dir_rec(src_dir, inner_files);
 
             // save from which folders these files are
-            foreach(QString tmpFile, tmp_filelist) {
-                _pd_map[tmpFile] = file;
-                _filelist.push_back(tmpFile);
+			foreach(QString inner_file, inner_files) {
+				_filelist.push_back(inner_file);
             }
         }
 
         // file is standard file
+		// if import files was selected
         else if(Helper::is_file(file)) {
             _filelist.push_back(file);
         }
     }
 
     int i=0;
+
     foreach(QString filepath, _filelist) {
+
         if(_cancelled) break;
-        int percent = (i++ * 100000) / _filelist.size();
+
+		int percent = (i++ * 100000) / _filelist.size();
 
         emit sig_progress(percent / 1000);
         if(!Helper::is_soundfile(filepath)) continue;
 
-        MetaData md;
+		MetaData md;
         md.filepath = filepath;
 
         if(!ID3::getMetaDataOfFile(md)) continue;
-        _md_map[filepath] = md;
+
+		_v_md << md;
+		_md_map[md.filepath] = md;
     }
 
     if(_cancelled) {
-        _md_map.clear();
-        _pd_map.clear();
+		_md_map.clear();
+		_v_md.clear();
     }
 
     emit sig_done();
+
     while(!_may_terminate && !_cancelled) {
 		Helper::sleep_ms(10);
     }
+}
+
+void ImportCachingThread::update_metadata(const MetaDataList &old_md, const MetaDataList &new_md){
+
+	MetaDataList v_md_old = old_md;
+	MetaDataList v_md_new = new_md;
+
+	for(int i=0; i<_v_md.size(); i++){
+
+		int found_at = -1;
+
+		for(int j=0; j<v_md_old.size(); j++){
+
+			if(_v_md[i].filepath == v_md_old[j].filepath){
+				_v_md[i] = v_md_new[j];
+				found_at = j;
+			}
+		}
+
+		if(found_at != -1){
+			v_md_old.remove(found_at);
+			v_md_new.remove(found_at);
+		}
+	}
+
+	for(int i=0; i<old_md.size(); i++){
+		QString filepath = old_md[i].filepath;
+		_md_map[ filepath ] = new_md[i];
+	}
 }
 
 void ImportCachingThread::set_filelist(const QStringList& lst) {
     _files = lst;
 }
 
-void ImportCachingThread::get_extracted_files(QStringList& lst) {
-    lst =  _filelist;
+QStringList ImportCachingThread::get_extracted_files() {
+	return _filelist;
 }
 
 void ImportCachingThread::set_may_terminate(bool b) {
@@ -112,16 +153,16 @@ void ImportCachingThread::set_cancelled() {
     _cancelled = true;
 }
 
-void ImportCachingThread::get_md_map(QMap<QString, MetaData> &map) {
-    if(_cancelled) _md_map.clear();
-    map = _md_map;
+QMap<QString, MetaData> ImportCachingThread::get_md_map() {
+	if(_cancelled) _md_map.clear();
+	return _md_map;
 }
 
-void ImportCachingThread::get_pd_map(QMap<QString, QString> &map) {
-    if(_cancelled) _pd_map.clear();
-    map = _pd_map;
+MetaDataList ImportCachingThread::get_metadata(){
+	if(_cancelled) _v_md.clear();
+	return _v_md;
 }
 
 int ImportCachingThread::get_n_tracks() {
-    return _md_map.keys().size();
+	return _v_md.size();
 }

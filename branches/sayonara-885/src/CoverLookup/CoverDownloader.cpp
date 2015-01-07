@@ -70,6 +70,8 @@ QStringList CoverDownloader::cov_calc_adresses_from_webpage(uint num, QString& w
 
 QStringList CoverDownloader::cov_call_and_parse(QString url, int num_adresses) {
 
+	if(url.isEmpty()) return QStringList();
+
     QString content;
     bool success = WebAccess::read_http_into_str(url, &content);
 

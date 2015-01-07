@@ -76,7 +76,7 @@ bool CDatabaseConnector::load_setting(QString key, QString& tgt_value) const {
 	q.addBindValue(QVariant(key));
 
 	if (!q.exec()) {
-		show_error(QString("Cannot load setting ") + key);
+		show_error(QString("Cannot load setting ") + key, q);
 		return false;
 	}
 
@@ -98,7 +98,7 @@ bool CDatabaseConnector::store_setting(QString key, const QVariant& value) const
 	q.bindValue(":key", key);
 
 	if (!q.exec()) {
-		show_error(QString("Store setting: Cannot fetch setting ") + key);
+		show_error(QString("Store setting: Cannot fetch setting ") + key, q);
 		return false;
 	}
 
@@ -108,7 +108,7 @@ bool CDatabaseConnector::store_setting(QString key, const QVariant& value) const
 		q.bindValue(":value", value);
 
 		if (!q.exec()) {
-			show_error(QString("Store setting: Cannot insert setting ") + key);
+			show_error(QString("Store setting: Cannot insert setting ") + key, q);
 			return false;
 		}
 
@@ -120,7 +120,7 @@ bool CDatabaseConnector::store_setting(QString key, const QVariant& value) const
 	q.bindValue(":value", value);
 
 	if (!q.exec()) {
-		show_error(QString("Store setting: Cannot update setting ") + key);
+		show_error(QString("Store setting: Cannot update setting ") + key, q);
 		return false;
 	}
 

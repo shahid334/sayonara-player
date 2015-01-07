@@ -180,7 +180,7 @@ bool CDatabaseConnector::check_and_drop_table(QString tablename) {
     q.prepare(querytext);
 
 	if(!q.exec()){
-		show_error(QString("Cannot drop table ") + tablename);
+		show_error(QString("Cannot drop table ") + tablename, q);
 		return false;
 	}
 
@@ -202,7 +202,7 @@ bool CDatabaseConnector::check_and_insert_column(QString tablename, QString colu
         q2.prepare(querytext);
 
 		if(!q2.exec()){;
-			show_error(QString("Cannot insert column ") + column + " into " + tablename);
+			show_error(QString("Cannot insert column ") + column + " into " + tablename, q);
 			return false;
 		}
 
@@ -226,7 +226,7 @@ bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_c
         q2.prepare(sql_create_str);
 
 		if(!q2.exec()){
-			show_error(QString("Cannot create table ") + tablename);
+			show_error(QString("Cannot create table ") + tablename, q);
 		}
     }
 
@@ -249,7 +249,7 @@ bool CDatabaseConnector::updateAlbumCissearch() {
         q.bindValue(":id", album.id);
 
 		if(!q.exec()){
-			show_error("Cannot update album cissearch");
+			show_error("Cannot update album cissearch", q);
 		}
     }
 
@@ -269,7 +269,7 @@ bool CDatabaseConnector::updateArtistCissearch() {
         q.bindValue(":id", artist.id);
 
 		if(!q.exec()){
-			show_error("Cannot update artist cissearch");
+			show_error("Cannot update artist cissearch", q);
 		}
     }
 
@@ -400,7 +400,8 @@ bool CDatabaseConnector::apply_fixes() {
 }
 
 
-void CDatabaseConnector::show_error(const QString& error_str) const {
+void CDatabaseConnector::show_error(const QString& error_str, const QSqlQuery& q) const {
 	qDebug() << "SQL ERROR: " << error_str;
+	qDebug() << q.lastError();
 	qDebug() << _database->lastError();
 }
