@@ -29,12 +29,10 @@
 #include <QFileSystemWatcher>
 #include <QListWidget>
 
-CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
+CLibraryBase::CLibraryBase(QObject *parent) :
 	QObject(parent),
 	SayonaraClass()
 {
-    _main_window = main_window;
-
     _db = CDatabaseConnector::getInstance();
 
 	_library_path = _settings->get(Set::Lib_Path);

@@ -66,6 +66,7 @@
 #include <QScrollBar>
 #include <QItemSelectionModel>
 #include <QHeaderView>
+#include <QFileDialog>
 
 
 using namespace std;
@@ -646,6 +647,17 @@ void GUI_Library_windowed::psl_delete_answer(QString answer) {
 
 	answerbox.exec();
 	answerbox.close();
+}
+
+void GUI_Library_windowed::psl_no_library_path(){
+
+	QMessageBox::warning(this, tr("Warning"), tr("Please select your library path first and reload again."));
+
+	QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),	QDir::homePath(), QFileDialog::ShowDirsOnly);
+
+	if(dir.size() > 3){
+		_settings->set(Set::Lib_Path, dir);
+	}
 }
 
 

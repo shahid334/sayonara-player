@@ -50,6 +50,15 @@ public:
 	// get metadata by filepath
 	QMap<QString, MetaData> get_md_map();
 
+
+	// key: filepath
+	// value: src folder where the file has been extracted from
+	// get source folder of file
+	// This is important if we select multiple directories and import them
+	// for example dir a, b, c
+
+	QMap<QString, QString> get_pd_map();
+
 	// if metadata has been changed by id3 editor
 	void update_metadata(const MetaDataList& old_md, const MetaDataList& new_md);
 
@@ -60,16 +69,10 @@ public:
 	void set_may_terminate(bool);
 	void set_cancelled();
 
-
-
     
 signals:
     void sig_done();
     void sig_progress(int);
-
-public slots:
-
-public:
 
 
 private:
@@ -83,7 +86,10 @@ private:
 	// val: Metadata of filepath
 	QMap<QString, MetaData> _md_map;
 
-	//
+	// key: filepath
+	// val: src folder where the file has been extracted from
+	QMap<QString, QString> _pd_map;
+
 	MetaDataList			_v_md;
 };
 

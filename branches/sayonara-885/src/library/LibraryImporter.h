@@ -36,7 +36,7 @@ class LibraryImporter : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
-    explicit LibraryImporter(QWidget* main_window, QObject *parent = 0);
+	explicit LibraryImporter(QWidget* main_window, QObject *parent = 0);
     
 signals:
     void sig_lib_changes_allowed(bool);
@@ -75,7 +75,8 @@ private:
     QString                 _import_to;
     QString                 _lib_path;
 	QString					_src_dir;
-    QWidget*                _main_window;
+
+	QWidget*				_main_window;
 
 };
 

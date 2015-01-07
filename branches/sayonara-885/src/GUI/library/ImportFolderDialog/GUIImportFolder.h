@@ -45,6 +45,8 @@ public:
 	void set_status(int n_tracks);
 	void set_thread_active(bool);
     void set_folderlist(const QStringList& lst);
+	void show_info(const QString& str);
+	void show_warning(const QString& str);
 
 
 signals:
@@ -71,8 +73,8 @@ protected:
 
 private:
 
-	bool	_thread_active;
-	GUI_TagEdit* _ui_tag_edit;
+	bool			_thread_active;
+	GUI_TagEdit*	_ui_tag_edit;
 
 };
 

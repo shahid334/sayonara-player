@@ -39,6 +39,7 @@ class CDirectoryReader {
           * @param filter list of different filters
           */
 		void set_filter(const QStringList& filter);
+		void set_filter(const QString& filter);
 
 		// only real files are saved here
 		void get_files_in_dir_rec (QDir baseDir, QStringList& files);

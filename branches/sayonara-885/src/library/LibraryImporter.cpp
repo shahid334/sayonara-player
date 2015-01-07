@@ -18,13 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "library/LibraryImporter.h"
 #include "HelperStructs/MetaData.h"
 
 #include <QMap>
-#include <QDebug>
 #include <QDir>
 #include <QMessageBox>
 
@@ -33,33 +30,33 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
 	SayonaraClass()
 {
 
-   _main_window = main_window;
-   _caching_thread = new ImportCachingThread(this);
-   _copy_thread = new ImportCopyThread(this);
+	_main_window = main_window;
+	_db = CDatabaseConnector::getInstance();
 
-   _tag_edit = new TagEdit(this, true);
-   _import_dialog = new GUI_ImportFolder(main_window, _tag_edit, true);
+	_caching_thread = new ImportCachingThread(this);
+	_copy_thread = new ImportCopyThread(this);
 
-   _db = CDatabaseConnector::getInstance();
+	_tag_edit = new TagEdit(this, true);
+	_import_dialog = new GUI_ImportFolder(_main_window, _tag_edit, true);
 
-   _lib_path = _settings->get(Set::Lib_Path);
+	_lib_path = _settings->get(Set::Lib_Path);
 
-   connect(_import_dialog, SIGNAL(sig_accepted(const QString&, bool)),
-           this,            SLOT(accept_import(const QString&, bool)));
-   connect(_import_dialog, SIGNAL(sig_cancelled()),
-           this,            SLOT(cancel_import()));
-   connect(_import_dialog, SIGNAL(sig_closed()),
-           this,            SLOT(import_dialog_closed()));
-   connect(_import_dialog, SIGNAL(sig_opened()),
-           this,            SLOT(import_dialog_opened()));
+	connect(_import_dialog, SIGNAL(sig_accepted(const QString&, bool)),
+		   this,            SLOT(accept_import(const QString&, bool)));
+	connect(_import_dialog, SIGNAL(sig_cancelled()),
+		   this,            SLOT(cancel_import()));
+	connect(_import_dialog, SIGNAL(sig_closed()),
+		   this,            SLOT(import_dialog_closed()));
+	connect(_import_dialog, SIGNAL(sig_opened()),
+		   this,            SLOT(import_dialog_opened()));
 
-   connect(_caching_thread, SIGNAL(finished()), this, SLOT(caching_thread_finished()));
-   connect(_caching_thread, SIGNAL(sig_done()), this, SLOT(caching_thread_done()));
-   connect(_caching_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
+	connect(_caching_thread, SIGNAL(finished()), this, SLOT(caching_thread_finished()));
+	connect(_caching_thread, SIGNAL(sig_done()), this, SLOT(caching_thread_done()));
+	connect(_caching_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
 
-   connect(_copy_thread, SIGNAL(finished()), this, SLOT(copy_thread_finished()));
-   connect(_copy_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
-   connect(_tag_edit, SIGNAL(sig_metadata_changed(const MetaDataList&, const MetaDataList&)),
+	connect(_copy_thread, SIGNAL(finished()), this, SLOT(copy_thread_finished()));
+	connect(_copy_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
+	connect(_tag_edit, SIGNAL(sig_metadata_changed(const MetaDataList&, const MetaDataList&)),
 		   this, SLOT(metadata_changed(const MetaDataList&, const MetaDataList&)));
 }
 
@@ -119,9 +116,9 @@ void LibraryImporter::caching_thread_finished() {
 	MetaDataList v_md = _caching_thread->get_metadata();
 	QStringList files = _caching_thread->get_extracted_files();
 	QMap<QString, MetaData> md_map = _caching_thread->get_md_map();
+	QMap<QString, QString> pd_map = _caching_thread->get_pd_map();
 
     if(!_copy_to_lib) {
-
 
 		foreach(MetaData md, md_map.values()){
 			v_md << md;
@@ -138,7 +135,7 @@ void LibraryImporter::caching_thread_finished() {
 
     _import_dialog->set_thread_active(true);
 
-	_copy_thread->set_vars(_src_dir, _import_to, files, md_map);
+	_copy_thread->set_vars(_import_to, files, md_map, pd_map);
     _copy_thread->set_mode(IMPORT_COPY_THREAD_COPY);
     _copy_thread->start();
 }
@@ -183,15 +180,17 @@ void LibraryImporter::copy_thread_finished() {
 			str =  tr("%1 of %2 files could be imported").arg(n_files_copied).arg(n_snd_files);
 		}
 
-        QMessageBox::information( _main_window, tr("Import files"), str);
+		_import_dialog->show_info(str);
 		emit sig_imported();
     }
 
     else{
-        QMessageBox::warning( _main_window,
-                             tr("Import files"),
-                             tr("Sorry, but tracks could not be imported") + "<br />") +
-                tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'");
+		_import_dialog->show_warning(
+				tr("Sorry, but tracks could not be imported") +
+				"<br />" +
+				tr("Please use the import function of the file menu<br /> or move tracks to library and use 'Reload library'")
+		);
+
     }
 
     _import_dialog->close();
@@ -202,8 +201,6 @@ void LibraryImporter::metadata_changed(const MetaDataList& old_md, const MetaDat
 
 	_caching_thread->update_metadata(old_md, new_md);
 }
-
-
 
 
 void  LibraryImporter::import_dialog_opened() {

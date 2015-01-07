@@ -37,7 +37,7 @@ class CLibraryBase : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
-    CLibraryBase(QWidget* main_window, QObject *parent = 0);
+	CLibraryBase(QObject *parent = 0);
 
 	virtual void loadDataFromDb ();
 
@@ -60,6 +60,7 @@ signals:
 
     void sig_delete_answer(QString);
 	void sig_play_next_tracks(const MetaDataList&);
+	void sig_no_library_path();
 
 
 public slots:
@@ -114,7 +115,7 @@ protected slots:
 
 
 protected:
-    QWidget*            _main_window;
+
     CDatabaseConnector*	_db;
 
     CDirectoryReader    _reader;

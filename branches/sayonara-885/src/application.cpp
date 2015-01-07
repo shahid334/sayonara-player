@@ -99,8 +99,8 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	playlist_handler    = new PlaylistHandler();
 	playlist_loader     = new PlaylistLoader(this);
-	library             = new CLibraryBase(this->getMainWindow());
-	library_importer    = new LibraryImporter(this->getMainWindow());
+	library             = new CLibraryBase();
+	library_importer    = new LibraryImporter(getMainWindow(), this);
 	playlists           = new Playlists();
 
 	lastfm              = LastFM::getInstance();
@@ -258,15 +258,15 @@ Application::~Application() {
 
 void Application::init_connections() {
 
-	CONNECT (player, sig_seek_rel(quint32),					listen,			jump_rel(quint32));
-    CONNECT (player, sig_seek_rel_ms(qint64),				listen,			jump_rel_ms(qint64));
-    CONNECT (player, sig_rec_button_toggled(bool),			listen,			record_button_toggled(bool));
-    CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,	record_button_toggled(bool));
+	CONNECT (player, sig_seek_rel(quint32),					listen,				jump_rel(quint32));
+	CONNECT (player, sig_seek_rel_ms(qint64),				listen,				jump_rel_ms(qint64));
+	CONNECT (player, sig_rec_button_toggled(bool),			listen,				record_button_toggled(bool));
+	CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,		record_button_toggled(bool));
 	CONNECT (player, sig_basedir_selected(const QString &),	library,            baseDirSelected(const QString & ));
 	CONNECT (player, sig_reload_library(bool),				library,            reloadLibrary(bool));
-	CONNECT (player, sig_import_dir(const QString&),		library_importer,        psl_import_dir(const QString&));
-	CONNECT (player, sig_import_files(const QStringList&),	library_importer,        psl_import_files(const QStringList&));
-	CONNECT (player, sig_file_selected(const QStringList &),playlist_handler, 			psl_createPlaylist(const QStringList&));
+	CONNECT (player, sig_import_dir(const QString&),		library_importer,   psl_import_dir(const QString&));
+	CONNECT (player, sig_import_files(const QStringList&),	library_importer,   psl_import_files(const QStringList&));
+	CONNECT (player, sig_file_selected(const QStringList &),playlist_handler, 	psl_createPlaylist(const QStringList&));
 	CONNECT (player, sig_play(),		playlist_handler,			psl_play());
 	CONNECT (player, sig_pause(),		playlist_handler,			psl_pause());
 	CONNECT (player, sig_pause(),		listen,						pause());
@@ -350,6 +350,7 @@ void Application::init_connections() {
 	CONNECT(library, sig_play_next_tracks(const MetaDataList&),					playlist_handler,          psl_play_next(const MetaDataList&));
 
 	CONNECT(library, sig_reload_library_finished(),								ui_library, 	reloading_library_finished());
+	CONNECT(library, sig_no_library_path(),										ui_library,		psl_no_library_path());
 
     CONNECT(ui_library, sig_album_dbl_clicked(int), 					library, 		psl_prepare_album_for_playlist(int));
     CONNECT(ui_library, sig_artist_dbl_clicked(int), 					library, 		psl_prepare_artist_for_playlist(int));
@@ -407,6 +408,7 @@ void Application::init_connections() {
 
 	CONNECT(playlists, sig_single_playlist_loaded(const CustomPlaylist&),       playlist_handler, 	psl_createPlaylist(const CustomPlaylist&));
 	CONNECT(playlists, sig_all_playlists_loaded(const QMap<int, QString>&),     ui_playlist_chooser,all_playlists_fetched(const QMap<int, QString>&));
+
 	CONNECT(ui_stream, sig_create_playlist(const MetaDataList&, bool),			playlist_handler, 	psl_createPlaylist(const MetaDataList&, bool));
 	CONNECT(ui_stream, sig_play_track(int),										playlist_handler,   psl_change_track(int));
 

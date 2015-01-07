@@ -180,6 +180,14 @@ void GUI_ImportFolder::set_thread_active(bool b) {
 	}
 }
 
+void GUI_ImportFolder::show_info(const QString &str){
+	QMessageBox::information(this, tr("Info"), str);
+}
+
+void GUI_ImportFolder::show_warning(const QString &str){
+	QMessageBox::warning(this, tr("Warning"), str);
+}
+
 
 
 void GUI_ImportFolder::closeEvent(QCloseEvent* e) {
@@ -198,3 +206,5 @@ void GUI_ImportFolder::showEvent(QShowEvent* e) {
     emit sig_opened();
     e->accept();
 }
+
+

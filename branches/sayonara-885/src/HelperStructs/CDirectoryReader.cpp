@@ -44,6 +44,11 @@ void CDirectoryReader::set_filter (const QStringList & filter) {
 	m_filters = filter;
 }
 
+void CDirectoryReader::set_filter(const QString& filter){
+	m_filters.clear();
+	m_filters << filter;
+}
+
 void CDirectoryReader::get_files_in_dir_rec( QDir base_dir, QStringList& files){
 
     QStringList dirs;

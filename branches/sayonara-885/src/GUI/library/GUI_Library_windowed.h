@@ -132,6 +132,7 @@ public slots:
 	void library_changed();
 	void import_result(bool);
 	void psl_delete_answer(QString);
+	void psl_no_library_path();
 
 
 

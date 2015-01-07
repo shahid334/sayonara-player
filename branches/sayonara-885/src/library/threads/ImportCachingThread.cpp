@@ -34,7 +34,6 @@ ImportCachingThread::ImportCachingThread(QObject *parent) :
     QThread(parent)
 {
 
-
 }
 
 void ImportCachingThread::run() {
@@ -44,7 +43,6 @@ void ImportCachingThread::run() {
     _filelist.clear();
 
 	_v_md.clear();
-
 
 	// file may be a directory or a real file,
 	// nevertheless, we want all real files files
@@ -59,13 +57,14 @@ void ImportCachingThread::run() {
 			QDir src_dir(file);
 
 			CDirectoryReader reader;
+			reader.set_filter("*");
 			QStringList inner_files;
 
 			reader.get_files_in_dir_rec(src_dir, inner_files);
 
-            // save from which folders these files are
 			foreach(QString inner_file, inner_files) {
 				_filelist.push_back(inner_file);
+				_pd_map[inner_file] = file;
             }
         }
 
@@ -98,6 +97,7 @@ void ImportCachingThread::run() {
 
     if(_cancelled) {
 		_md_map.clear();
+		_pd_map.clear();
 		_v_md.clear();
     }
 
@@ -156,6 +156,11 @@ void ImportCachingThread::set_cancelled() {
 QMap<QString, MetaData> ImportCachingThread::get_md_map() {
 	if(_cancelled) _md_map.clear();
 	return _md_map;
+}
+
+QMap<QString, QString> ImportCachingThread::get_pd_map(){
+	if(_cancelled) _pd_map.clear();
+	return _pd_map;
 }
 
 MetaDataList ImportCachingThread::get_metadata(){

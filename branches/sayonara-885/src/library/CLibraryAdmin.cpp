@@ -41,9 +41,7 @@ void CLibraryBase::baseDirSelected (const QString& dir) {
 	_reader.get_files_in_dir_rec(base_dir, fileList);
 
     emit sig_playlist_created(fileList);
-
 }
-
 
 
 void CLibraryBase::clearLibrary() {
@@ -59,26 +57,10 @@ void CLibraryBase::reloadLibrary(bool clear) {
 	_library_path = _settings->get(Set::Lib_Path);
 
 	if(_library_path.isEmpty()) {
-        QMessageBox msgBox(_main_window);
-        msgBox.setText(tr("Please select your library first"));
-        msgBox.exec();
 
-		QString dir = QFileDialog::getExistingDirectory(_main_window, tr("Open Directory"),	QDir::homePath(), QFileDialog::ShowDirsOnly);
-
-
-        if(dir.length() < 3) {
-            QMessageBox msgBox(_main_window);
-            msgBox.setText(tr("I said: \"Please select your library first\". Bye bye!"));
-            msgBox.exec();
-            return;
-        }
-
-        else {
-			_library_path = dir;
-			_settings->set(Set::Lib_Path, dir);
-        }
-    }
-
+		emit sig_no_library_path();
+		return;
+	}
 
     if(clear) {
         clearLibrary();
@@ -119,7 +101,6 @@ void CLibraryBase::library_reloading_state_new_block() {
     emit_stuff();
 
     _reload_thread->goon();
-
 }
 
 void CLibraryBase::library_reloading_state_slot(QString str) {
