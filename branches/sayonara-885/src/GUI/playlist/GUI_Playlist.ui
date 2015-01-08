@@ -84,6 +84,10 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/numbers.png</normaloff>:/icons/numbers.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>20</width>
@@ -215,8 +219,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../icons/rep1.png</normaloff>../../../icons/rep1.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/rep1.png</normaloff>:/icons/rep1.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -264,8 +268,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../icons/repAll.png</normaloff>../../../icons/repAll.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/repAll.png</normaloff>:/icons/repAll.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -313,8 +317,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../icons/shuffle.png</normaloff>../../../icons/shuffle.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -362,8 +366,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../.designer/backup/icons/append.png</normaloff>../../../.designer/backup/icons/append.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/append.png</normaloff>:/icons/append.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -411,8 +415,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../icons/dynamic.png</normaloff>../../../icons/dynamic.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/dynamic.png</normaloff>:/icons/dynamic.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -458,6 +462,10 @@
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/gapless.png</normaloff>:/icons/gapless.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -507,8 +515,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>../../../.designer/backup/icons/broom.png</normaloff>../../../.designer/backup/icons/broom.png</iconset>
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -604,6 +612,10 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>16</width>
@@ -630,6 +642,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

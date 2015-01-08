@@ -226,12 +226,6 @@ void GUI_Player::initGUI() {
 
 
     btn_mute->setIcon(Helper::getIcon("vol_1.png"));
-    btn_play->setIcon(Helper::getIcon("play.png"));
-    btn_rec->setIcon(Helper::getIcon("rec.png"));
-    btn_stop->setIcon(Helper::getIcon("stop.png"));
-    btn_fw->setIcon(Helper::getIcon("fwd.png"));
-    btn_bw->setIcon(Helper::getIcon("bwd.png"));
-    btn_correct->setIcon(Helper::getIcon("edit.png"));
 
 	action_viewLibrary->setText(tr("&Library"));
 	btn_rec->setVisible(false);
@@ -247,14 +241,36 @@ void GUI_Player::initGUI() {
 // new track
 void GUI_Player::psl_update_track(const MetaData & md, int pos_sec, bool playing) {
 
-	QString rating_text;
-
-	_md = md;
-
     m_playing = playing;
     m_trayIcon->setPlaying(playing);
 
+	// sets _md = md;
+	psl_md_changed(md);
+
 	psl_set_cur_pos(pos_sec);
+
+	m_trayIcon->show_notification(_md);
+}
+
+void GUI_Player::set_album_label(){
+
+	QString str_year = QString::number(_md.year);
+	QString album_name = Helper::get_album_w_disc(_md);
+
+	if(	_md.year < 1000 || _md.album.contains(str_year)){
+		 lab_album->setText(album_name);
+	}
+
+	 else{
+		lab_album->setText(album_name + " (" + str_year + ")");
+	}
+}
+
+
+void GUI_Player::psl_md_changed(const MetaData& md) {
+
+	_md = md;
+	m_metadata_available = true;
 
 	lab_sayonara->hide();
 	lab_title->show();
@@ -273,72 +289,35 @@ void GUI_Player::psl_update_track(const MetaData & md, int pos_sec, bool playing
 	lab_artist->setText(_md.artist);
 	lab_title->setText(_md.title);
 
-	m_trayIcon->show_notification(_md);
 
-    if(m_playing){
-        btn_play->setIcon(Helper::getIcon("pause.png"));
+
+	if(m_playing){
+		btn_play->setIcon(Helper::getIcon("pause.png"));
 	}
-    
+
 	else{
-        btn_play->setIcon(Helper::getIcon("play.png"));
+		btn_play->setIcon(Helper::getIcon("play.png"));
 	}
 
 	total_time_changed(_md.length_ms);
 
-	rating_text += QString::number(_md.bitrate / 1000) + " kBit/s";
+	QString rating_text;
+
+	rating_text = QString::number(_md.bitrate / 1000) + " kBit/s";
 	rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+
 
 	lab_rating->setText(rating_text);
 	lab_rating->setToolTip(rating_text);
 
 	btn_correct->setVisible(false);
+	setRadioMode(_md.radio_mode);
 
-    fetch_cover();
-
-	setRadioMode(md.radio_mode);
-
-    m_metadata_available = true;
+	fetch_cover();
 
 	this->setWindowTitle(QString("Sayonara - ") + md.title);
-    this->repaint();
-}
+	this->repaint();
 
-void GUI_Player::set_album_label(){
-
-	QString str_year = QString::number(_md.year);
-	QString album_name = Helper::get_album_w_disc(_md);
-
-	if(	_md.year < 1000 || _md.album.contains(str_year)){
-		 lab_album->setText(album_name);
-	}
-
-	 else{
-		lab_album->setText(album_name + " (" + str_year + ")");
-	}
-}
-
-
-
-void GUI_Player::psl_bitrate_changed(qint32 bitrate) {
-
-	lab_rating->setToolTip(
-			QString("<font color=\"#000000\">") +
-			QString::number(bitrate / 1000) +
-			QString(" kBit/s") +
-			QString("</font>")
-	);
-
-	lab_rating->setText(
-			QString::number(bitrate / 1000) +
-			QString(" kBit/s")
-	);
-
-}
-
-
-void GUI_Player::psl_dur_changed(const MetaData& md) {
-
-   total_time_changed(md.length_ms);
 }
 
 

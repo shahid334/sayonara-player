@@ -45,8 +45,6 @@ namespace Helper{
 
     QIcon getIcon(const QString& icon_name);
     QPixmap getPixmap(const QString& icon_name, QSize sz=QSize(0, 0), bool keep_aspect=true);
-	QString getIconPath();
-    QString getIconPath(const QString& icon_name);
 	QString getErrorFile();
 	QString getSayonaraPath();
     QString getSharePath();

@@ -179,6 +179,12 @@
        <property name="text">
         <string/>
        </property>
+       <property name="pixmap">
+        <pixmap resource="../Icons.qrc">:/icons/audio_convert.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -245,7 +251,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

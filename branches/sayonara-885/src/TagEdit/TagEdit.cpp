@@ -160,9 +160,17 @@ void TagEdit::write_tracks_to_db(){
 					 << " (" << _v_md[i].album << ") by " << _v_md[i].artist
 					 << ": " << success;
 
-			if( success && 	_db->updateTrack(_v_md[i]) ) {
-				v_md.push_back(_v_md[i]);
-				v_md_orig.push_back(_v_md_orig[i]);
+			if( success ){
+
+				if(v_md[i].id >= 0) {
+					success = _db->updateTrack(_v_md[i]);
+				}
+
+				if(success){
+
+					v_md.push_back(_v_md[i]);
+					v_md_orig.push_back(_v_md_orig[i]);
+				}
 			}
 		}
 

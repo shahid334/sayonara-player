@@ -71,12 +71,15 @@
 
 using namespace std;
 
-GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
+GUI_Library_windowed::GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog* info_dialog, QWidget* parent) :
 	SayonaraWidget(parent),
 	Ui::Library_windowed()
 {
 
 	setupUi(this);
+
+	_library = library;
+	_info_dialog = info_dialog;
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
@@ -113,6 +116,17 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
     search_action->setShortcutContext(Qt::WindowShortcut);
 	connect(search_action, SIGNAL(triggered()), le_search, SLOT(setFocus()));
 	addAction(search_action);
+
+
+	connect(_library, SIGNAL(sig_all_artists_loaded(const ArtistList&)), this, SLOT(lib_fill_artists(const ArtistList&)));
+	connect(_library, SIGNAL(sig_all_albums_loaded(const AlbumList&)), this, SLOT(lib_fill_albums(const AlbumList&)));
+	connect(_library, SIGNAL(sig_all_tracks_loaded(const MetaDataList&)), this,	SLOT(lib_fill_tracks(const MetaDataList&)));
+	connect(_library, SIGNAL(sig_track_mime_data_available(const MetaDataList&)), this, SLOT(track_info_available(const MetaDataList&)));
+	connect(_library, SIGNAL(sig_delete_answer(QString)), this, SLOT(lib_delete_answer(QString)));
+	connect(_library, SIGNAL(sig_reloading_library(const QString&)), this, SLOT(lib_reload(const QString&)));
+	connect(_library, SIGNAL(sig_reload_library_finished()), this, SLOT(lib_reload_finished()));
+	connect(_library, SIGNAL(sig_no_library_path()), this, SLOT(lib_no_lib_path()));
+
 
 	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
 
@@ -158,9 +172,6 @@ GUI_Library_windowed::GUI_Library_windowed(QWidget* parent) :
 	connect(lv_artist, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
 	connect(btn_refresh, SIGNAL(clicked()), this, SLOT(refresh()));
-
-    btn_clear->setIcon(Helper::getIcon("broom.png"));
-    btn_info->setIcon(Helper::getIcon("info.png"));
 
 	connect(btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 	connect(btn_info, SIGNAL(clicked()), _lib_info_dialog, SLOT(psl_refresh()));
@@ -292,11 +303,6 @@ void GUI_Library_windowed::language_changed() {
 }
 
 
-
-void GUI_Library_windowed::set_info_dialog(GUI_InfoDialog *dialog) {
-    _info_dialog = dialog;
-}
-
 void GUI_Library_windowed::_sl_show_only_tracks_changed() {
 	bool b = _settings->get(Set::Lib_OnlyTracks);
 
@@ -356,7 +362,7 @@ void GUI_Library_windowed::track_tab_pressed(bool mod) {
 }
 
 
-void GUI_Library_windowed::fill_library_tracks(const MetaDataList& v_metadata) {
+void GUI_Library_windowed::lib_fill_tracks(const MetaDataList& v_metadata) {
 
 	tb_title->fill<MetaDataList, MetaData>(v_metadata);
 
@@ -365,26 +371,27 @@ void GUI_Library_windowed::fill_library_tracks(const MetaDataList& v_metadata) {
 }
 
 
-void GUI_Library_windowed::fill_library_albums(const AlbumList& albums) {
+void GUI_Library_windowed::lib_fill_albums(const AlbumList& albums) {
 
    lv_album->fill<AlbumList, Album>(albums);
 }
 
 
-void GUI_Library_windowed::fill_library_artists(const ArtistList& artists) {
+void GUI_Library_windowed::lib_fill_artists(const ArtistList& artists) {
 
 	lv_artist->fill<ArtistList, Artist>(artists);
 }
 
 
 void GUI_Library_windowed::refresh(){
-	emit sig_refresh();
+	_library->refresh();
 }
 
 void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst) {
 
 	_info_dialog->setInfoMode(InfoDialogMode_Artists);
-	emit sig_artist_sel_changed(lst);
+
+	_library->psl_selected_artists_changed(lst);
 }
 
 void GUI_Library_windowed::album_released() {
@@ -412,17 +419,17 @@ void GUI_Library_windowed::album_sel_changed(const QList<int>& lst) {
         }
     }
 
-	emit sig_album_sel_changed(lst);
+	_library->psl_selected_albums_changed(lst);
 }
 
 void GUI_Library_windowed::track_sel_changed(const QList<int>& lst) {
 	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
-	emit sig_track_sel_changed(lst);
+	_library->psl_selected_tracks_changed(lst);
 }
 
 
 void GUI_Library_windowed::disc_pressed(int disc) {
-    emit sig_disc_pressed(disc);
+	_library->psl_disc_pressed(disc);
 }
 
 
@@ -434,11 +441,11 @@ void GUI_Library_windowed::track_info_available(const MetaDataList& v_md) {
 
 
 void GUI_Library_windowed::album_dbl_clicked(const QModelIndex & idx) {
-    emit sig_album_dbl_clicked(idx.row());
+	_library->psl_prepare_album_for_playlist(idx.row());
 }
 
 void GUI_Library_windowed::artist_dbl_clicked(const QModelIndex & idx) {
-    emit sig_artist_dbl_clicked(idx.row());
+	_library->psl_prepare_artist_for_playlist(idx.row());
 }
 
 void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx) {
@@ -449,7 +456,7 @@ void GUI_Library_windowed::track_dbl_clicked(const QModelIndex& idx) {
         lst << idx.row();
     }
 
-    emit sig_tracks_dbl_clicked(lst);
+	_library->psl_prepare_tracks_for_playlist(lst);
 }
 
 
@@ -485,7 +492,7 @@ void GUI_Library_windowed::clear_button_pressed() {
 	disconnect(le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 
 	le_search->setText("");
-	emit sig_clear();
+	_library->refetch();
 
 	connect(le_search, SIGNAL( textEdited(const QString&)), this, SLOT(text_line_edited(const QString&)));
 }
@@ -536,7 +543,7 @@ void GUI_Library_windowed::text_line_edited(const QString& search, bool force_em
 
 	_cur_searchfilter = filter;
 
-    emit sig_filter_changed(filter);
+	_library->psl_filter_changed(filter);
 }
 
 void GUI_Library_windowed::searchfilter_changed(int idx) {
@@ -550,17 +557,14 @@ void GUI_Library_windowed::id3_tags_changed() {
 	refresh();
 }
 
-
-
-void GUI_Library_windowed::reloading_library(const QString& str) {
+void GUI_Library_windowed::lib_reload(const QString& str) {
 
 	QString final_str = QString("<b>") + str + "</b>";
 	lab_status->setText(final_str);
-
 }
 
 
-void GUI_Library_windowed::reloading_library_finished() {
+void GUI_Library_windowed::lib_reload_finished() {
 	lab_status->setText("");
 	refresh();
 }
@@ -606,7 +610,7 @@ void GUI_Library_windowed::info_tracks() {
 
 void GUI_Library_windowed::play_next() {
 
-	emit sig_play_next_all_tracks();
+	_library->psl_play_next_all_tracks();
 
 }
 
@@ -617,12 +621,12 @@ void GUI_Library_windowed::play_next_tracks() {
 		lst.push_back(idx.row());
 	}
 
-	emit sig_play_next_tracks(lst);
+	_library->psl_play_next_tracks(lst);
 }
 
 void GUI_Library_windowed::append() {
 
-    emit sig_append_all_tracks();
+	_library->psl_append_all_tracks();
 
 }
 
@@ -633,11 +637,11 @@ void GUI_Library_windowed::append_tracks() {
         lst.push_back(idx.row());
     }
 
-    emit sig_append_tracks(lst);
+	_library->psl_append_tracks(lst);
 }
 
 
-void GUI_Library_windowed::psl_delete_answer(QString answer) {
+void GUI_Library_windowed::lib_delete_answer(QString answer) {
 	QMessageBox answerbox(this);
 
 	answerbox.setText(tr("Info"));
@@ -649,7 +653,7 @@ void GUI_Library_windowed::psl_delete_answer(QString answer) {
 	answerbox.close();
 }
 
-void GUI_Library_windowed::psl_no_library_path(){
+void GUI_Library_windowed::lib_no_lib_path(){
 
 	QMessageBox::warning(this, tr("Warning"), tr("Please select your library path first and reload again."));
 
@@ -667,7 +671,7 @@ void GUI_Library_windowed::delete_album() {
 	int answer = show_delete_dialog(n_tracks);
 
 	if(answer) {
-		emit sig_delete_tracks(answer);
+		_library->psl_delete_tracks(answer);
 	}
 }
 
@@ -677,7 +681,7 @@ void GUI_Library_windowed::delete_artist() {
 	int answer = show_delete_dialog(n_tracks);
 
 	if(answer) {
-		emit sig_delete_tracks(answer);
+		_library->psl_delete_tracks(answer);
 	}
 }
 
@@ -692,7 +696,7 @@ void GUI_Library_windowed::delete_tracks() {
 	int answer = show_delete_dialog(lst.size());
 
     if(answer){
-		emit sig_delete_certain_tracks(lst, answer);
+		_library->psl_delete_certain_tracks(lst, answer);
     }
 }
 
@@ -700,7 +704,6 @@ void GUI_Library_windowed::delete_tracks() {
 int GUI_Library_windowed::show_delete_dialog(int n_tracks) {
 
 		QMessageBox dialog(this);
-		QString tl = le_search->text();
 		QAbstractButton* clicked_button;
         QPushButton* only_library_button;
 
@@ -757,14 +760,14 @@ void GUI_Library_windowed::title_rating_changed(int rating) {
     QList<int> idxs = _track_model->get_selected();
     if(idxs.size() == 0) return;
 
-    emit sig_track_rating_changed(idxs[0], rating);
+	_library->psl_track_rating_changed(idxs[0], rating);
 }
 
 void GUI_Library_windowed::album_rating_changed(int rating) {
     QList<int> idxs = _album_model->get_selected();
     if(idxs.size() == 0) return;
 
-    emit sig_album_rating_changed(idxs[0], rating);
+	_library->psl_album_rating_changed(idxs[0], rating);
 }
 
 

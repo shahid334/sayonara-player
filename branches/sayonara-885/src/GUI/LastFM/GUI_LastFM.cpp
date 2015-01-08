@@ -50,7 +50,6 @@ GUI_LastFM::GUI_LastFM(QWidget* parent, QString username, QString password) :
 
 	setupUi(this);
 
-    lab_image->setPixmap(Helper::getPixmap("lastfm_logo.jpg"));
 	tf_username->setText(username);
 	tf_username->setText(password);
 
@@ -65,8 +64,6 @@ void GUI_LastFM::init(){
 
 	cb_activate->setChecked(enabled);
 	setLFMActive(enabled);
-
-    lab_image->setPixmap(Helper::getPixmap("lastfm_logo.jpg"));
 
 	checked = _settings->get(Set::LFM_Corrections);
 	cb_correct_id3->setChecked(checked);

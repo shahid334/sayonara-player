@@ -33,14 +33,8 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 
 	LameBitrate br = (LameBitrate) _settings->get(Set::Engine_ConvertQuality);
 
-
-    QString logo_name = "audio_convert.png";
-    QPixmap pm = Helper::getPixmap(logo_name, lab_logo->size(), true );
-    lab_logo->setPixmap(pm);
-
 	rb_cbr->setChecked(false);
 	rb_vbr->setChecked(false);
-
 
 	connect(rb_cbr, SIGNAL(toggled(bool)), this, SLOT(rb_cbr_toggled(bool)));
 	connect(rb_vbr, SIGNAL(toggled(bool)), this, SLOT(rb_vbr_toggled(bool)));

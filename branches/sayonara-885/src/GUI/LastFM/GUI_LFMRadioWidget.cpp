@@ -50,11 +50,6 @@ GUI_LFMRadioWidget::GUI_LFMRadioWidget(QString name, QWidget *parent) : PlayerPl
 	this->_ui->setupUi(this);
 	this->_ui->cb_friends->setVisible(false);
 
-    QPixmap p = QPixmap(Helper::getIconPath() + "lastfm_red_small.png");
-	this->_ui->lab_lfm->setPixmap(p);
-
-	_ui->btn_listen->setIcon(QIcon(Helper::getIconPath() + "play.png"));
-
     _lastfm = LastFM::getInstance();
 
     connect(_ui->combo_mode, SIGNAL(currentIndexChanged(int)), SLOT(mode_index_changed(int)));

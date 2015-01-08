@@ -97,7 +97,7 @@ void GSTConvertEngine::change_track(const MetaData& md) {
 	stop();
 	_md = md;
 
-	emit sig_dur_changed(_md);
+	emit sig_md_changed(_md);
     emit sig_pos_changed_s(0);
 
 	set_uri(md);

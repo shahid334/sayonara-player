@@ -135,7 +135,14 @@ void StdPlaylist::stop() {
 }
 
 void StdPlaylist::fwd() {
-    this->next();
+
+	bool rep1 = _playlist_mode.rep1;
+	_playlist_mode.rep1 = false;
+
+	this->next();
+
+	_playlist_mode.rep1 = rep1;
+
 }
 
 void StdPlaylist::bwd() {
@@ -162,8 +169,12 @@ void StdPlaylist::next() {
         return;
     }
 
+	if(_playlist_mode.rep1){
+		track_num = _cur_play_idx;
+	}
+
     // shuffle mode
-    if(_playlist_mode.shuffle) {
+	else if(_playlist_mode.shuffle) {
         track_num = rand() % _v_md.size();
         if(track_num == _cur_play_idx) {
             track_num = (_cur_play_idx + 1) % _v_md.size();
@@ -191,7 +202,6 @@ void StdPlaylist::next() {
             }
         }
     }
-
 
 	change_track(track_num);
 }

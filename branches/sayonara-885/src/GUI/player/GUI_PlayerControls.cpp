@@ -263,7 +263,7 @@ void GUI_Player::volumeLower() {
 
 void GUI_Player::setupVolButton(int percent) {
 
-    QString butFilename = Helper::getIconPath("vol_");
+	QString butFilename = "vol_";
 
     if (percent <= 1) {
         butFilename += QString("mute") + m_skinSuffix + ".png";
@@ -281,7 +281,7 @@ void GUI_Player::setupVolButton(int percent) {
 		butFilename += QString("3") + m_skinSuffix + ".png";
 	}
 
-	btn_mute->setIcon(QIcon(butFilename));
+	btn_mute->setIcon( Helper::getIcon(butFilename) );
 
 }
 

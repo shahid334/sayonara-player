@@ -1,4 +1,4 @@
-/* Playlists.h */
+/* PlaylistChooser.h */
 
 /* Copyright (C) 2011 - 2014  Lucio Carreras
  *
@@ -20,45 +20,51 @@
 
 
 
-#ifndef PLAYLISTS_H_
-#define PLAYLISTS_H_
+#ifndef PLAYLISTCHOOSER_H_
+#define PLAYLISTCHOOSER_H_
 
 #define STATE_WAIT 0
 #define STATE_IMPORT_SUCCESS 1
 #define STATE_IMPORT_FAIL 2
 
 #include "HelperStructs/MetaData.h"
-#include <QObject>
-#include <QString>
+#include "playlist/PlaylistHandler.h"
 #include <QMap>
 
 
-class Playlists : public QObject {
+class PlaylistChooser : public QObject {
 	Q_OBJECT
 
 public:
-	Playlists();
-	virtual ~Playlists();
+	PlaylistChooser(PlaylistHandler* _playlist_handler);
+	virtual ~PlaylistChooser();
 
-signals:
-	void sig_single_playlist_loaded(const CustomPlaylist&);
-	void sig_all_playlists_loaded(const QMap<int, QString>&);
-
-public slots:
-
-
-	void save_playlist_as_custom(QString name, const MetaDataList& vec_md);
-	void save_playlist_as_custom(int id, const MetaDataList& vec_md);
 	void delete_playlist(int id);
 	void load_all_playlists();
-	void load_single_playlist(int id);
+	void load_single_playlist(int id, QString name);
 
-public:
-	void ui_loaded();
+	void save_playlist(int id);
+	void save_playlist(QString playlist_name);
+	void save_playlist_file(QString filename, bool);
+	void clear_playlist();
+	void playlist_files_selected(const QStringList& lst);
+
+signals:
+	void sig_all_playlists_loaded(const QMap<int, QString>&);
+	void sig_playlist_created(const MetaDataList&, int, PlaylistType);
+
+private slots:
+	void save_playlist_as_custom(QString name, const MetaDataList& vec_md);
+	void save_playlist_as_custom(int id, const MetaDataList& vec_md);
+	void playlist_created(const MetaDataList& v_md, int cur_idx, PlaylistType type);
+
 
 private:
 	QMap<int, QString> 	_mapping;
 	int					_import_state;
+
+	PlaylistHandler*	_playlist_handler;
+
 
 };
 

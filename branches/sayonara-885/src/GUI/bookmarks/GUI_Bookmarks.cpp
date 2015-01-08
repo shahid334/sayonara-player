@@ -38,12 +38,6 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 
 	_cur_time = -1;
 
-    btn_delete->setIcon(Helper::getIcon("delete.png"));
-    btn_new->setIcon(Helper::getIcon("save.png"));
-    btn_last->setIcon(Helper::getIcon("bwd.png"));
-    btn_next->setIcon(Helper::getIcon("fwd.png"));
-	lab_logo->setPixmap(Helper::getPixmap("bookmarks.png", lab_logo->size(), true));
-
 	connect(btn_new, SIGNAL(clicked()), this, SLOT(new_clicked()));
 	connect(btn_delete, SIGNAL(clicked()), this, SLOT(del_clicked()));
 	connect(btn_last, SIGNAL(clicked()), this, SLOT(prev_clicked()));

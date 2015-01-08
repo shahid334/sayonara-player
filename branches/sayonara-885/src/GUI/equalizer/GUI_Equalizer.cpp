@@ -53,14 +53,9 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
 	Ui::GUI_Equalizer()
 {
-
 	_active_idx = -1;
 
 	setupUi(this);
-
-	btn_save->setIcon(Helper::getIcon("save.png"));
-	btn_delete->setIcon(Helper::getIcon("delete.png"));
-	btn_reset->setIcon(Helper::getIcon("reload.png"));
 
 	_sliders.push_back(new EqSlider(sli_0, label, 0));
 	_sliders.push_back(new EqSlider(sli_1, label_2, 1));
@@ -135,7 +130,7 @@ void GUI_Equalizer::sli_changed(int idx, int new_val) {
 	EqSlider* s = _sliders[idx];
 	s->getLabel()->setText(calc_lab(new_val));
 
-	emit eq_changed_signal(idx, new_val);
+	emit sig_eq_changed(idx, new_val);
 
 	// this slider has been changed actively
     if( idx == _active_idx && cb_gauss->isChecked() ){

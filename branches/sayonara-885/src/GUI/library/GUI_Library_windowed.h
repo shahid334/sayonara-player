@@ -58,6 +58,7 @@
 #include "HelperStructs/CustomMimeData.h"
 
 #include "HelperStructs/SayonaraClass.h"
+#include "library/CLibraryBase.h"
 
 
 using namespace Sort;
@@ -68,10 +69,8 @@ Q_OBJECT
 
 public:
 
-    GUI_Library_windowed(QWidget* parent);
+	GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog* info_dialog, QWidget* parent);
 	virtual ~GUI_Library_windowed();
-
-    void set_info_dialog(GUI_InfoDialog* dialog);
 
 protected:
 
@@ -90,51 +89,15 @@ protected:
 	Filter		_cur_searchfilter;
 
 signals:
-
-    void sig_album_sel_changed(const QList<int>&);
-    void sig_artist_sel_changed(const QList<int>&);
-    void sig_track_sel_changed(const QList<int>&);
-
-    void sig_album_dbl_clicked(int);
-    void sig_artist_dbl_clicked(int);
-	void sig_track_dbl_clicked(int);
-    void sig_tracks_dbl_clicked(QList<int>);
-
-	void sig_disc_pressed(int);
-
-	void sig_delete_tracks(int);
-	void sig_delete_certain_tracks(const QList<int>&, int);
-
-	void sig_filter_changed(const Filter&);
-
-	void sig_show_id3_editor(const QList<int>&);
-	void sig_play_next_tracks(const QList<int>& lst);
-	void sig_play_next_all_tracks();
-    void sig_append_tracks(const QList<int>& lst);
-    void sig_append_all_tracks();
-
-	void sig_info_btn_clicked();
     void sig_no_focus();
     void sig_import_files(const QStringList&);
 
-    void sig_album_rating_changed(int, int);
-    void sig_track_rating_changed(int, int);
-	void sig_refresh();
-	void sig_clear();
 
 public slots:
-	void fill_library_tracks(const MetaDataList&);
-	void fill_library_albums(const AlbumList&);
-	void fill_library_artists(const ArtistList&);
 	void id3_tags_changed();
-	void reloading_library(const QString&);
-	void reloading_library_finished();
+
 	void library_changed();
 	void import_result(bool);
-	void psl_delete_answer(QString);
-	void psl_no_library_path();
-
-
 
 
 protected slots:
@@ -201,6 +164,13 @@ protected slots:
 	void skin_changed();
 	void language_changed();
 
+	void lib_reload(const QString&);
+	void lib_fill_tracks(const MetaDataList&);
+	void lib_fill_albums(const AlbumList&);
+	void lib_fill_artists(const ArtistList&);
+	void lib_delete_answer(QString);
+	void lib_reload_finished();
+	void lib_no_lib_path();
 
 	void refresh();
 
@@ -223,9 +193,11 @@ protected:
     QTimer*      _timer;
 	DiscPopupMenu* _discmenu;
 
-
 	int show_delete_dialog(int n_tracks);
     void init_headers();
+
+private:
+	CLibraryBase* _library;
 
 };
 

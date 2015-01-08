@@ -160,6 +160,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="pixmap">
+      <pixmap resource="../../Icons.qrc">:/icons/info.png</pixmap>
+     </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
      </property>
@@ -246,7 +249,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_cancel</sender>

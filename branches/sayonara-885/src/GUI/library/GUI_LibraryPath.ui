@@ -82,6 +82,10 @@
      <property name="text">
       <string>Set library path</string>
      </property>
+     <property name="icon">
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/icons/import.png</normaloff>:/icons/icons/import.png</iconset>
+     </property>
     </widget>
    </item>
    <item row="2" column="2">
@@ -125,6 +129,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

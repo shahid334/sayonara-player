@@ -89,7 +89,7 @@ public slots:
 
 	virtual void psl_filter_changed(const Filter&, bool force=false);
 	virtual void psl_change_id3_tags(const QList<int>& lst);
-	virtual void psl_dur_changed(const MetaData&);
+	virtual void psl_md_changed(const MetaData&);
 
 	virtual void psl_delete_tracks(int);
 	virtual void psl_delete_certain_tracks(const QList<int>&,int);

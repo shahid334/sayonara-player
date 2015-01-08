@@ -31,8 +31,6 @@ GUI_LibraryPath::GUI_LibraryPath(QWidget *parent) :
 {
 	setupUi(this);
 
-    btn_setLibrary->setIcon(Helper::getIcon("import.png"));
-
 	connect(btn_setLibrary, SIGNAL(clicked()), this, SLOT(btn_clicked()));
 }
 
@@ -44,11 +42,9 @@ void GUI_LibraryPath::language_changed() {
 void GUI_LibraryPath::btn_clicked() {
 
     emit sig_library_path_set();
-
 }
 
 void GUI_LibraryPath::resizeEvent(QResizeEvent* e) {
-
 
     e->accept();
 }

@@ -29,7 +29,6 @@ GUI_BroadcastSetup::GUI_BroadcastSetup(QWidget *parent) :
 	Ui::GUI_BroadcastSetup()
 {
 	setupUi(this);
-	lab_icon->setPixmap(Helper::getPixmap("broadcast.png", QSize(100, 100), true));
 }
 
 void GUI_BroadcastSetup::accept(){

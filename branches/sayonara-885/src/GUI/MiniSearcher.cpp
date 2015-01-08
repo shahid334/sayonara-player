@@ -131,7 +131,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b) {
 
 	if(left) {
 		_left_button = new QPushButton(this);
-        _left_button->setIcon(Helper::getIcon("bwd.png"));
+		_left_button->setIcon(Helper::getIcon("bwd.png"));
 		_left_button->setVisible(true);
 		_left_button->setFlat(true);
 		_left_button->setFocusPolicy(Qt::ClickFocus);

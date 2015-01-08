@@ -63,6 +63,12 @@
      <property name="text">
       <string/>
      </property>
+     <property name="pixmap">
+      <pixmap resource="../Icons.qrc">:/icons/radio.png</pixmap>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="1" column="0">
@@ -231,10 +237,14 @@
        <property name="text">
         <string/>
        </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+       </property>
        <property name="iconSize">
         <size>
-         <width>18</width>
-         <height>18</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="flat">
@@ -270,10 +280,14 @@
        <property name="text">
         <string/>
        </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+       </property>
        <property name="iconSize">
         <size>
-         <width>18</width>
-         <height>18</height>
+         <width>16</width>
+         <height>16</height>
         </size>
        </property>
        <property name="autoDefault">
@@ -333,6 +347,10 @@
        <property name="text">
         <string> Start</string>
        </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
+       </property>
        <property name="iconSize">
         <size>
          <width>18</width>
@@ -368,7 +386,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

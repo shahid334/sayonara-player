@@ -33,8 +33,6 @@ GUI_TagEdit::GUI_TagEdit(TagEdit* tag_edit, QWidget* parent) :
 
 	_tag_edit = tag_edit;
 
-	lab_icon->setPixmap(Helper::getPixmap("id3.png", QSize(50, 50), false));
-
 	connect(btn_next, SIGNAL(clicked()), this, SLOT(next_button_clicked()));
 	connect(btn_prev, SIGNAL(clicked()), this, SLOT(prev_button_clicked()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_button_clicked()));

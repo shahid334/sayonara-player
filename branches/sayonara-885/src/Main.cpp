@@ -253,6 +253,8 @@ int main(int argc, char *argv[]) {
 	}
 #endif
 
+	Q_INIT_RESOURCE(Icons);
+
 
    	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")) {
         QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");

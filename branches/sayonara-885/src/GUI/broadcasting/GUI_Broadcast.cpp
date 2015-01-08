@@ -32,10 +32,6 @@ GUI_Broadcast::GUI_Broadcast(QString name, QWidget *parent) :
 {
 	setupUi(this);
 
-
-	lab_icon->setPixmap( Helper::getPixmap("broadcast.png", QSize(50, 50), true));
-	btn_options->setIcon( Helper::getIcon("tool.png"));
-
 	btn_dismiss->setEnabled(false);
 	btn_dismiss_all->setEnabled(false);
 

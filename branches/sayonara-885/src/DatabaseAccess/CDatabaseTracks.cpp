@@ -480,7 +480,7 @@ bool CDatabaseConnector::deleteTrack(int id){
 		return false;
 	}
 
-	deleteFromAllPlaylists(id);
+	deleteFromAllPlaylistChooser(id);
 
 	return true;
 }
@@ -531,7 +531,9 @@ bool CDatabaseConnector::deleteTracksWithoutArtist(){
 }
 
 
-bool CDatabaseConnector::updateTrack(const MetaData& data) {
+bool CDatabaseConnector::updateTrack(const MetaData& md) {
+
+	if(md.id == -1) return false;
 
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
@@ -552,22 +554,22 @@ bool CDatabaseConnector::updateTrack(const MetaData& data) {
 				   "rating=:rating "
 				"WHERE TrackID = :trackID;");
 
-	q.bindValue(":albumID",QVariant(data.album_id));
-	q.bindValue(":artistID",QVariant(data.artist_id));
-	q.bindValue(":title",QVariant(data.title));
-	q.bindValue(":track",QVariant(data.track_num));
-	q.bindValue(":length", QVariant(data.length_ms));
-	q.bindValue(":bitrate", QVariant(data.bitrate));
-	q.bindValue(":year",QVariant(data.year));
-	q.bindValue(":trackID", QVariant(data.id));
-	q.bindValue(":genre", QVariant(data.genres.join(",")));
-	q.bindValue(":filesize", QVariant(data.filesize));
-	q.bindValue(":discnumber", QVariant(data.discnumber));
-	q.bindValue(":rating", QVariant(data.rating));
-	q.bindValue(":cissearch", QVariant(data.title.toLower()));
+	q.bindValue(":albumID",QVariant(md.album_id));
+	q.bindValue(":artistID",QVariant(md.artist_id));
+	q.bindValue(":title",QVariant(md.title));
+	q.bindValue(":track",QVariant(md.track_num));
+	q.bindValue(":length", QVariant(md.length_ms));
+	q.bindValue(":bitrate", QVariant(md.bitrate));
+	q.bindValue(":year",QVariant(md.year));
+	q.bindValue(":trackID", QVariant(md.id));
+	q.bindValue(":genre", QVariant(md.genres.join(",")));
+	q.bindValue(":filesize", QVariant(md.filesize));
+	q.bindValue(":discnumber", QVariant(md.discnumber));
+	q.bindValue(":rating", QVariant(md.rating));
+	q.bindValue(":cissearch", QVariant(md.title.toLower()));
 
 	if (!q.exec()) {
-		show_error(QString("Cannot update track ") + data.filepath, q);
+		show_error(QString("Cannot update track ") + md.filepath, q);
 		return false;
 	}
 

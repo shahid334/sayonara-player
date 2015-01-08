@@ -26,12 +26,10 @@
 #include "StreamPlaylist.h"
 
 
-
 PlaylistHandler::PlaylistHandler(QObject * parent) :
 	QObject (parent),
 	SayonaraClass()
 {
-
 	_db = CDatabaseConnector::getInstance();
 
     _state = PlaylistStop;
@@ -48,6 +46,23 @@ PlaylistHandler::PlaylistHandler(QObject * parent) :
 
 PlaylistHandler::~PlaylistHandler() {
 
+}
+
+void PlaylistHandler::load_old_playlist(){
+
+	if(!_settings->get(Set::PL_Load)) return;
+
+	_playlist_loader = new PlaylistLoader(this);
+
+	connect(_playlist_loader, SIGNAL(sig_stop()), this, SLOT(psl_stop()));
+
+	connect(_playlist_loader, SIGNAL(sig_create_playlist(const MetaDataList&, bool)),
+			this, SLOT(create_playlist(const MetaDataList&, bool)));
+
+	connect(_playlist_loader, SIGNAL(sig_change_track(int)),
+			this, SLOT(psl_change_track(int)));
+
+	_playlist_loader->load_old_playlist();
 }
 
 void PlaylistHandler::playlist_changed(const Playlist* pl) {
@@ -125,7 +140,7 @@ Playlist* PlaylistHandler::new_playlist(PlaylistType type, int idx) {
 }
 
 // create a playlist, where metadata is already available
-void PlaylistHandler::psl_createPlaylist(const MetaDataList& v_md, bool start_playing) {
+void PlaylistHandler::create_playlist(const MetaDataList& v_md, bool start_playing) {
 
     PlaylistType type = determine_playlist_type(v_md);
 	PlaylistType old_type;
@@ -181,7 +196,7 @@ void PlaylistHandler::psl_createPlaylist(const MetaDataList& v_md, bool start_pl
 
 // create a new playlist, where only filepaths are given
 // Load Folder, Load File...
-void PlaylistHandler::psl_createPlaylist(const QStringList& pathlist, bool start_playing) {
+void PlaylistHandler::create_playlist(const QStringList& pathlist, bool start_playing) {
 
     if(start_playing) {
         _state = PlaylistPlay;
@@ -199,9 +214,9 @@ void PlaylistHandler::psl_createPlaylist(const QStringList& pathlist, bool start
 
 
 // create playlist from saved custom playlist
-void PlaylistHandler::psl_createPlaylist(const CustomPlaylist& pl, bool start_playing) {
+void PlaylistHandler::create_playlist(const CustomPlaylist& pl, bool start_playing) {
 
-	psl_createPlaylist(pl.tracks);
+	create_playlist(pl.tracks);
 }
 
 
@@ -233,29 +248,15 @@ void PlaylistHandler::psl_next() {
 }
 
 
-void PlaylistHandler::psl_dur_changed(const MetaData& md) {
+void PlaylistHandler::psl_md_changed(const MetaData& md) {
 
-    if(md.id >= 0) {
-        _db->updateTrack(md);
-
-		foreach(Playlist* pl, _playlists){
-			QList<int> idx;
-			idx << pl->find_tracks(md.id);
-			foreach(int i, idx){
-				pl->replace_track(i, md);
-			}
+	foreach(Playlist* pl, _playlists){
+		QList<int> idx;
+		idx << pl->find_tracks(md.filepath);
+		foreach(int i, idx){
+			pl->replace_track(i, md);
 		}
-    }
-
-    else {
-		foreach(Playlist* pl, _playlists){
-			QList<int> idx;
-			idx << pl->find_tracks(md.filepath);
-			foreach(int i, idx){
-				pl->replace_track(i, md);
-			}
-		}
-    }
+	}
 }
 
 
@@ -465,15 +466,20 @@ void PlaylistHandler::psl_audioconvert_off(){
 }
 
 
-void PlaylistHandler::new_playlist_created(){
+int PlaylistHandler::add_new_playlist(QString name){
 
+	int idx = _playlists.size();
 	Playlist* pl = new_playlist(PlaylistTypeStd, _playlists.size());
 	_playlists.append(pl);
+
+	emit sig_new_playlist_added(idx, name);
+
+	return idx;
 }
 
-void PlaylistHandler::cur_playlist_changed(int idx){
+bool PlaylistHandler::change_playlist_index(int idx){
 
-	if(idx < 0 || idx >= _playlists.size()) return;
+	if(idx < 0 || idx >= _playlists.size()) return false;
 
 	_cur_playlist = _playlists[idx];
 	_cur_playlist_idx = idx;
@@ -483,9 +489,12 @@ void PlaylistHandler::cur_playlist_changed(int idx){
 
 	emit sig_playlist_created(_cur_playlist->get_playlist(), cur_track, cur_type, _cur_playlist_idx);
 	emit sig_playlist_mode_changed(_cur_playlist->get_playlist_mode());
+	emit sig_playlist_index_changed(idx);
+
+	return true;
 }
 
-void PlaylistHandler::playlist_closed(int idx){
+void PlaylistHandler::close_playlist(int idx){
 
 	delete _playlists[idx];
 	_playlists.removeAt(idx);
@@ -495,4 +504,6 @@ void PlaylistHandler::playlist_closed(int idx){
 			pl->set_idx(pl->get_idx() - 1);
 		}
 	}
+
+	emit sig_playlist_closed(idx);
 }

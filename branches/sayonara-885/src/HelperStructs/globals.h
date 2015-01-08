@@ -54,7 +54,7 @@
 #define PLUGIN_NAME_STREAM tr("&Stream")
 #define PLUGIN_NAME_PODCASTS tr("P&odcasts")
 #define PLUGIN_NAME_EQUALIZER tr("&Equalizer")
-#define PLUGIN_NAME_PLAYLIST_CHOOSER tr("&Playlists")
+#define PLUGIN_NAME_PLAYLIST_CHOOSER tr("&PlaylistChooser")
 */
 
 #define GOOGLE_IMG_ICON QString("icon")

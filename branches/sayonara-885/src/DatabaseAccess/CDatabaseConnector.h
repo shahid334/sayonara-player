@@ -168,8 +168,8 @@ public:
 			bool deletePlaylist(int playlist_id);
 			bool emptyPlaylist(int playlist_id);
             bool insertTrackIntoPlaylist(const MetaData& md, int playlist_id, int pos);
-			bool getAllPlaylists(QMap<int, QString>& mapping);
-			bool deleteFromAllPlaylists(int track_id);
+			bool getAllPlaylistChooser(QMap<int, QString>& mapping);
+			bool deleteFromAllPlaylistChooser(int track_id);
 
 			/*
 			 * Streams

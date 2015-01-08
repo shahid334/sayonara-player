@@ -1,4 +1,4 @@
-/* Playlists.cpp */
+/* PlaylistChooser.cpp */
 
 /* Copyright (C) 2011 - 2014  Lucio Carreras
  *
@@ -19,8 +19,7 @@
  */
 
 
-
-#include "playlists/Playlists.h"
+#include "PlaylistChooser/PlaylistChooser.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -29,25 +28,35 @@
 #include <QDebug>
 #include <QMessageBox>
 
-Playlists::Playlists() {
+PlaylistChooser::PlaylistChooser(PlaylistHandler* playlist_handler) {
+
+	_playlist_handler = playlist_handler;
+
+	connect (_playlist_handler, SIGNAL(sig_playlist_prepared(int, const MetaDataList&)),
+			 this,	SLOT(save_playlist_as_custom(int, const MetaDataList&)));
+
+	connect (_playlist_handler, SIGNAL(sig_playlist_prepared(QString, const MetaDataList&)),
+			 this,	SLOT(save_playlist_as_custom(QString, const MetaDataList&)));
+
+	connect(_playlist_handler, SIGNAL(sig_playlist_created(const MetaDataList&, int, PlaylistType)),
+			this, SLOT(playlist_created(const MetaDataList&, int, PlaylistType)));
+}
+
+PlaylistChooser::~PlaylistChooser() {
 
 }
 
-Playlists::~Playlists() {
-
-}
-
-void Playlists::load_all_playlists() {
+void PlaylistChooser::load_all_playlists() {
 
 	_mapping.clear();
-	bool success = CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
+	bool success = CDatabaseConnector::getInstance()->getAllPlaylistChooser(_mapping);
 
 	if(success) {
 		emit sig_all_playlists_loaded(_mapping);
 	}
 }
 
-void Playlists::load_single_playlist(int id) {
+void PlaylistChooser::load_single_playlist(int id, QString name) {
 
 	CustomPlaylist pl;
 
@@ -58,7 +67,6 @@ void Playlists::load_single_playlist(int id) {
     }
 
     bool success = CDatabaseConnector::getInstance()->getPlaylistById(id, pl);
-    qDebug() << "in my stommack are " << pl.tracks.size() << "files";
 
     MetaDataList v_md;
     pl.length = 0;
@@ -75,27 +83,27 @@ void Playlists::load_single_playlist(int id) {
         v_md.push_back(md);
     }
 
-    qDebug() << "loaded " << v_md.size() << " tracks";
-
     pl.tracks = v_md;
     pl.is_valid = success;
+
 	if(success) {
-		emit sig_single_playlist_loaded(pl);
+		int idx = _playlist_handler->add_new_playlist(name);
+		_playlist_handler->change_playlist_index(idx);
+		_playlist_handler->create_playlist(pl);
 	}
 }
 
 
 
-void Playlists::save_playlist_as_custom(int id, const MetaDataList& vec_md) {
+void PlaylistChooser::save_playlist_as_custom(int id, const MetaDataList& vec_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    qDebug() << "save " << vec_md.size() << " files to " << id;
 
     bool success = db->storePlaylist(vec_md, id);
 	if(success) {
-		qDebug() << "Saved playlist as " << id;
+
 		_mapping.clear();
-		CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
+		db->getAllPlaylistChooser(_mapping);
 		emit sig_all_playlists_loaded(_mapping);
 	}
 
@@ -106,15 +114,14 @@ void Playlists::save_playlist_as_custom(int id, const MetaDataList& vec_md) {
 
 
 
-void Playlists::save_playlist_as_custom(QString name, const MetaDataList& vec_md) {
+void PlaylistChooser::save_playlist_as_custom(QString name, const MetaDataList& vec_md) {
 
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
-    qDebug() << "save " << vec_md.size() << " files to " << name;
     bool success = db->storePlaylist(vec_md, name);
 	if(success) {
 		_mapping.clear();
-		CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
+		CDatabaseConnector::getInstance()->getAllPlaylistChooser(_mapping);
 		emit sig_all_playlists_loaded(_mapping);
 	}
 
@@ -123,27 +130,46 @@ void Playlists::save_playlist_as_custom(QString name, const MetaDataList& vec_md
 	}
 }
 
-void Playlists::delete_playlist(int id) {
+void PlaylistChooser::delete_playlist(int id) {
 
 	QString playlist_name = CDatabaseConnector::getInstance()->getPlaylistNameById(id);
 	bool success = CDatabaseConnector::getInstance()->deletePlaylist(id);
 
-	if(success) {
-		qDebug() << "playlist " << playlist_name << " deleted";
-	}
-
-	else {
+	if(!success) {
 		qDebug() << "playlist " << playlist_name << " could not be deleted";
 	}
 
 	_mapping.clear();
-	CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
+	CDatabaseConnector::getInstance()->getAllPlaylistChooser(_mapping);
 	emit sig_all_playlists_loaded(_mapping);
 }
 
-void Playlists::ui_loaded() {
-	bool success = CDatabaseConnector::getInstance()->getAllPlaylists(_mapping);
-	if(success) {
-		sig_all_playlists_loaded(_mapping);
-	}
+
+void PlaylistChooser::save_playlist(int id){
+	_playlist_handler->psl_prepare_playlist_for_save(id);
+}
+
+
+void PlaylistChooser::save_playlist(QString playlist_name){
+	_playlist_handler->psl_prepare_playlist_for_save(playlist_name);
+}
+
+
+void PlaylistChooser::save_playlist_file(QString filename, bool relative_paths){
+	_playlist_handler->psl_save_playlist(filename, relative_paths);
+}
+
+
+void PlaylistChooser::clear_playlist(){
+	_playlist_handler->psl_clear_playlist();
+}
+
+
+void PlaylistChooser::playlist_files_selected(const QStringList& lst){
+	_playlist_handler->create_playlist(lst);
+}
+
+
+void PlaylistChooser::playlist_created(const MetaDataList& v_md, int cur_idx, PlaylistType type){
+	emit sig_playlist_created(v_md, cur_idx, type);
 }

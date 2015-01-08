@@ -48,7 +48,6 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy
 	combo_folders->setVisible(copy_enabled);
 	lab_target_path->setVisible(copy_enabled);
 	lab_target_info->setVisible(copy_enabled);
-    lab_img->setPixmap(Helper::getPixmap("import.png", QSize(100, 100), false));
 
 	QString libpath = _settings->get(Set::Lib_Path);
 	lab_target_path->setText( libpath );

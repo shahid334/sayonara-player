@@ -97,9 +97,7 @@ public:
 
 
 signals:
-	void sig_dur_changed_ms(quint64);
-	void sig_dur_changed_s(quint32);
-	void sig_dur_changed(const MetaData&);
+	void sig_md_changed(const MetaData&);
 
     void sig_pos_changed_ms(quint64);
     void sig_pos_changed_s(quint32);
@@ -108,7 +106,6 @@ signals:
 	void sig_scrobble(const MetaData&);
 	void sig_level(float, float);
     void sig_spectrum(QList<float>&);
-	void sig_bitrate_changed(qint32);
     void sig_download_progress(int);
 	void sig_data(uchar*, quint64);
 

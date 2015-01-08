@@ -169,7 +169,6 @@ void GSTPlaybackEngine::change_track(const MetaData& md) {
 	_cur_pos_ms = 0;
 	_scrobbled = false;
 
-	emit sig_dur_changed(_md);
 	emit sig_pos_changed_s(_jump_play);
 
     play();
@@ -340,7 +339,9 @@ void GSTPlaybackEngine::update_bitrate(quint32 bitrate) {
 	if(_md.bitrate == bitrate) return;
 
 	_md.bitrate = bitrate;
-	emit sig_bitrate_changed(bitrate);
+
+	qDebug() << "Bitrate changed " << bitrate;
+	emit sig_md_changed(_md);
 }
 
 
@@ -361,7 +362,7 @@ void GSTPlaybackEngine::update_duration(quint64 duration_ms) {
 
 	_md.length_ms = duration_ms;
 
-	emit sig_dur_changed(_md);
+	emit sig_md_changed(_md);
 }
 
 

@@ -53,7 +53,6 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
 	btn_path->setEnabled(_is_active);
 	le_path->setEnabled(_is_active);
 
-    lab_icon->setPixmap( Helper::getPixmap("rec.png", lab_icon->maximumSize(), true));
 	setModal(true);
 
 	connect(cb_activate, SIGNAL(toggled(bool)), this, SLOT(sl_cb_activate_toggled(bool)));

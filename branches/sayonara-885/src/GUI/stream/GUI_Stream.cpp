@@ -41,15 +41,12 @@ GUI_Stream::GUI_Stream(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-	init_gui();
 	_cur_station = -1;
 
 	QMap<QString, QString> data;
 	CDatabaseConnector::getInstance()->getAllStreams(data);
 	if(data.size() > 0)
 		setup_stations(data);
-
-    btn_listen->setIcon(Helper::getIcon("play.png"));
 
 	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
@@ -123,13 +120,6 @@ void GUI_Stream::setup_stations(const QMap<QString, QString>& radio_stations) {
 	btn_listen->setEnabled(false);
 	btn_save->setEnabled(false);
 	btn_delete->setEnabled(false);
-}
-
-
-void GUI_Stream::init_gui() {
-    btn_delete->setIcon(Helper::getIcon("delete.png"));
-    btn_save->setIcon(Helper::getIcon("save.png"));
-    lab_icon->setPixmap(Helper::getPixmap("radio.png", QSize(50, 50), false));
 }
 
 

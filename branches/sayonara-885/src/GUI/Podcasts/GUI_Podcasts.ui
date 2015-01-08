@@ -99,6 +99,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="pixmap">
+      <pixmap resource="../Icons.qrc">:/icons/podcast.png</pixmap>
+     </property>
     </widget>
    </item>
    <item row="2" column="1">
@@ -203,6 +206,10 @@
        <property name="text">
         <string/>
        </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+       </property>
        <property name="iconSize">
         <size>
          <width>16</width>
@@ -241,6 +248,10 @@
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -368,7 +379,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

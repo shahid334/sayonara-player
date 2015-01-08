@@ -67,7 +67,7 @@ SET(HEADERS
     Notification/NotificationPluginLoader.h
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
-    playlists/Playlists.h
+	PlaylistChooser/PlaylistChooser.h
     RadioStation/StreamWriter.h
     RadioStation/StreamServer.h
     StreamPlugins/LastFM/LastFM.h
@@ -87,7 +87,7 @@ SET(SOURCES
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
     LyricLookup/LyricLookup.cpp
-    playlists/Playlists.cpp
+	PlaylistChooser/PlaylistChooser.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp

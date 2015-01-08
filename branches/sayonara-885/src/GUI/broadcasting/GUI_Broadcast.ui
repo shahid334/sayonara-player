@@ -100,6 +100,9 @@
        <property name="text">
         <string/>
        </property>
+       <property name="pixmap">
+        <pixmap resource="../Icons.qrc">:/icons/icons/broadcast.svg</pixmap>
+       </property>
       </widget>
      </item>
      <item>
@@ -203,6 +206,10 @@
      <property name="text">
       <string/>
      </property>
+     <property name="icon">
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/icons/tool.png</normaloff>:/icons/icons/tool.png</iconset>
+     </property>
      <property name="iconSize">
       <size>
        <width>18</width>
@@ -213,7 +220,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

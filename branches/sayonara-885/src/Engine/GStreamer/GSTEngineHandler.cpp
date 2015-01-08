@@ -144,20 +144,8 @@ void GSTEngineHandler::psl_new_stream_session() {
 	_cur_engine->psl_new_stream_session();
 }
 
-
-void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
-	if(_md.length_ms == v) return;
-
-	_md.length_ms = v;
-	emit sig_dur_changed(_md);
-}
-
-void GSTEngineHandler::sl_dur_changed_s(quint32 v) {
-	emit sig_dur_changed_s(v);
-}
-
-void GSTEngineHandler::sl_dur_changed(const MetaData& v) {
-	emit sig_dur_changed(v);
+void GSTEngineHandler::sl_md_changed(const MetaData& v) {
+	emit sig_md_changed(v);
 }
 
 void GSTEngineHandler::sl_pos_changed_ms(quint64 v) {
@@ -184,11 +172,6 @@ void GSTEngineHandler::sl_spectrum(QList<float>& lst) {
 	emit sig_spectrum(lst);
 }
 
-void GSTEngineHandler::sl_bitrate_changed(qint32 v) {
-	emit sig_bitrate_changed(v);
-}
-
-
 
 bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_engine) {
 
@@ -196,34 +179,24 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 	if(old_engine == new_engine) return false;
 
 	if(old_engine) {
-		disconnect(old_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
-
-		disconnect(old_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
-		disconnect(old_engine, SIGNAL(sig_dur_changed(const MetaData&)), this, SLOT(sl_dur_changed(const MetaData&)));
+		disconnect(old_engine, SIGNAL(sig_md_changed(const MetaData&)), this, SLOT(sl_md_changed(const MetaData&)));
 		disconnect(old_engine, SIGNAL(sig_pos_changed_ms(quint64)), this, SLOT(sl_pos_changed_ms(quint64)));
 		disconnect(old_engine, SIGNAL(sig_pos_changed_s(quint32)), this, SLOT(sl_pos_changed_s(quint32)));
-
 		disconnect(old_engine, SIGNAL(sig_track_finished()), this, SLOT(sl_track_finished()));
 		disconnect(old_engine, SIGNAL(sig_scrobble(const MetaData&)), this, SLOT(sl_scrobble(const MetaData&)));
 		disconnect(old_engine, SIGNAL(sig_level(float, float)), this, SLOT(sl_level(float, float)));
 		disconnect(old_engine, SIGNAL(sig_spectrum(QList<float>&)), this, SLOT(sl_spectrum(QList<float>&)));
-		disconnect(old_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
 		disconnect(old_engine, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 	}
 
 	if(new_engine) {
-		connect(new_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
-
-		connect(new_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
-		connect(new_engine, SIGNAL(sig_dur_changed(const MetaData&)), this, SLOT(sl_dur_changed(const MetaData&)));
+		connect(new_engine, SIGNAL(sig_md_changed(const MetaData&)), this, SLOT(sl_md_changed(const MetaData&)));
 		connect(new_engine, SIGNAL(sig_pos_changed_ms(quint64)), this, SLOT(sl_pos_changed_ms(quint64)));
 		connect(new_engine, SIGNAL(sig_pos_changed_s(quint32)), this, SLOT(sl_pos_changed_s(quint32)));
-
 		connect(new_engine, SIGNAL(sig_track_finished()), this, SLOT(sl_track_finished()));
 		connect(new_engine, SIGNAL(sig_scrobble(const MetaData&)), this, SLOT(sl_scrobble(const MetaData&)));
 		connect(new_engine, SIGNAL(sig_level(float, float)), this, SLOT(sl_level(float, float)));
 		connect(new_engine, SIGNAL(sig_spectrum(QList<float>&)), this, SLOT(sl_spectrum(QList<float>&)));
-		connect(new_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
 		connect(new_engine, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 	}
 

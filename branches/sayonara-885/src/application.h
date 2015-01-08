@@ -50,7 +50,6 @@
 #include "GUI/broadcasting/GUI_Broadcast.h"
 
 #include "playlist/PlaylistHandler.h"
-#include "playlist/PlaylistLoader.h"
 #include "Engine/GStreamer/GSTEngineHandler.h"
 #include "Engine/SoundPluginLoader.h"
 
@@ -60,7 +59,7 @@
 #include "HelperStructs/Equalizer_presets.h"
 
 #include "LyricLookup/LyricLookup.h"
-#include "playlists/Playlists.h"
+#include "PlaylistChooser/PlaylistChooser.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "RadioStation/StreamServer.h"
 #include "HelperStructs/SayonaraClass.h"
@@ -84,9 +83,8 @@ private:
 	GUI_Player*             player;
 	GUI_PlaylistChooser*    ui_playlist_chooser;
 	GUI_AudioConverter*     ui_audioconverter;
-	Playlists*              playlists;
+	PlaylistChooser*              playlist_chooser;
 	PlaylistHandler*        playlist_handler;
-	PlaylistLoader*         playlist_loader;
 	CLibraryBase*           library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;

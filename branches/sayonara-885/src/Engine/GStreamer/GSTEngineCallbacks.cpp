@@ -205,11 +205,13 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 			if(br != 0 && success) {
 
-				br = (quint32) (round( br / 1000.0) * 1000.0);
-
+				br = (quint32) (br / 1000) * 1000;
 				engine->update_bitrate(br);
-
             }
+
+			gst_tag_list_unref(tags);
+
+			break;
 
 		case GST_MESSAGE_DURATION_CHANGED:
 			engine->update_duration();

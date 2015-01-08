@@ -272,9 +272,9 @@ bool StreamWriter::send_favicon(){
 	int n_bytes;
 	bool success;
 	QByteArray arr;
-	success = Helper::read_file_into_byte_arr( Helper::getIconPath() + "favicon.ico", arr );
+	success = Helper::read_file_into_byte_arr( Helper::getSharePath() + "favicon.ico", arr );
 
-	qDebug() << "Read favicon " << Helper::getIconPath() << "favicon.ico into arr: " << success << ": " << arr.size();
+	qDebug() << "Read favicon " << Helper::getSharePath() << "favicon.ico into arr: " << success << ": " << arr.size();
 
 	if(!success){
 		return send_header(true);
@@ -320,7 +320,7 @@ bool StreamWriter::send_bg(){
 	int n_bytes;
 	QByteArray html;
 
-	bool success = Helper::read_file_into_byte_arr( Helper::getIconPath() + "bg-checker.png", html );
+	bool success = Helper::read_file_into_byte_arr( Helper::getSharePath() + "bg-checker.png", html );
 	if(!success){
 		return false;
 	}

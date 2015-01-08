@@ -32,6 +32,7 @@
 #include "GUI/ui_GUI_Playlist.h"
 #include "GUI/playlist/PlaylistTabWidget.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
+#include "playlist/PlaylistHandler.h"
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
@@ -47,7 +48,7 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 	Q_OBJECT
 
 	public:
-		GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog);
+		GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* dialog, QWidget *parent);
 		~GUI_Playlist();
 
 		void dragEnterEvent(QDragEnterEvent* event);
@@ -56,29 +57,11 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		void dragMoveEvent(QDragMoveEvent* event);
 
 	signals:
-		void sig_cur_idx_changed(int);
-		void sig_selection_changed(const QList<int>&);
-
-		void sig_save_playlist(const QString&);
-
-		void sig_rows_moved(const QList<int>&, int);
-		void sig_tracks_dropped(const MetaDataList&, int);
-		void sig_rows_removed(const QList<int>&);
-		void sig_cleared();
-		void sig_gapless(bool);
-
-		void search_similar_artists(const QString&);
 		void sig_no_focus();
-		void sig_close_connection(int);
-		void sig_accept_connection(bool);
-
-		void sig_playlist_idx_changed(int);
-		void sig_delete_tab_playlist(int);
-		void sig_create_tab_playlist();
 
 
 	public slots:
-		void fillPlaylist(const MetaDataList&, int, PlaylistType, int pl_idx);
+		void fill_playlist(const MetaDataList&, int, PlaylistType, int pl_idx);
 		void track_changed(int);
 
 		void library_path_changed(QString);
@@ -103,9 +86,13 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		void rows_removed(const QList<int>&);
 		void no_focus();
 
-		void new_playlist_clicked();
-		void delete_playlist_clicked(int idx);
+		void playlist_added(int idx, QString name);
+		void playlist_closed(int idx);
 		void playlist_idx_changed(int idx);
+
+		void add_playlist_clicked();
+		void tab_playlist_clicked(int);
+		void close_playlist_clicked(int);
 
 		void _sl_change_small_playlist_items();
 		void _sl_playlist_mode_changed();
@@ -131,6 +118,9 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		void prepare_info();
 
 		QStringList _connections;
+		PlaylistHandler*	_playlist;
+
+		int _tab_idx;
 
 
 

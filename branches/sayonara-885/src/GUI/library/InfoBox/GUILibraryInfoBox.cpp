@@ -43,8 +43,6 @@ GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) :
 	_db = CDatabaseConnector::getInstance();
 	_lfm = LastFM::getInstance();
 
-    lab_icon->setPixmap(Helper::getPixmap("info.png", QSize(80,80), false));
-
     hide();
 }
 

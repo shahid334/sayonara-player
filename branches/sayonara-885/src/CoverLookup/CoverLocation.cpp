@@ -39,7 +39,7 @@ QString CoverLocation::get_cover_directory(){
 CoverLocation CoverLocation::getInvalidLocation() {
 
 	CoverLocation cl;
-    cl.cover_path = Helper::getIconPath("logo.png");
+	cl.cover_path = Helper::getSharePath() + "logo.png";
 	cl.google_url = "";
 	cl.valid = false;
 	return cl;

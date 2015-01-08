@@ -45,7 +45,6 @@ void PlaylistLoader::load_old_playlist() {
 
 		bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
 		int last_track_idx = _settings->get(Set::PL_LastTrack);
-		bool load_last_position = _settings->get(Set::PL_RememberTime);
 		bool start_immediatly = _settings->get(Set::PL_StartPlaying);
 		QStringList saved_playlist = _settings->get(Set::PL_Playlist);
 
@@ -108,10 +107,11 @@ void PlaylistLoader::load_old_playlist() {
 
 		if(last_track_idx < 0 || last_track_idx > v_md.size()) {
             start_immediatly = false;
-            load_last_position = false;
             load_last_track = false;
+
             emit sig_create_playlist(v_md, false);
             emit sig_stop();
+
             return;
         }
 

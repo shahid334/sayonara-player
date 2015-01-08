@@ -25,7 +25,6 @@
 
 #include "playlist/StdPlaylist.h"
 
-
 class StreamPlaylist : public StdPlaylist
 {
     Q_OBJECT

@@ -160,8 +160,8 @@ QString Helper::getLibPath() {
 
 QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
-    QString path = getIconPath(icon_name);
-    QPixmap pixmap(path);
+	QString path = QString(":/icons/") + icon_name;
+	QPixmap pixmap(path);
 
     if(sz.width() == 0){
         return pixmap;
@@ -182,33 +182,9 @@ QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
 
 QIcon Helper::getIcon(const QString& icon_name){
-    QString path = Helper::getIconPath() + icon_name;
-	return QIcon(path);
+	return QIcon(QString(":/icons/") + icon_name);
 }
 
-
-QString Helper::getIconPath(const QString& icon_name){
-    return getIconPath() + icon_name;
-}
-
-QString Helper::getIconPath() {
-
-	QString path;
-
-#ifndef Q_OS_WIN
-    if(QFile::exists(_install_path + "/share/sayonara")) path = _install_path + "/share/sayonara/";
-    else if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
-    else path = "./GUI/icons/";
-#else
-	path = QDir::homePath() + QString("\\.Sayonara\\images\\");
-	if(QFile::exists(path)) {
-		return path;
-	}
-	else return QString("");
-#endif
-
-	return path;
-}
 
 QString Helper::getErrorFile(){
 	return getSayonaraPath() + "error_log";

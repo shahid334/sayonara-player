@@ -120,7 +120,7 @@ bool SoundcloudHelper::parse_playlist_xml(
 
 	if(content.size() == 0) return false;
 
-	QDomDocument doc("Playlists");
+	QDomDocument doc("PlaylistChooser");
 	doc.setContent(content);
 
 	QDomElement docElement = doc.documentElement();

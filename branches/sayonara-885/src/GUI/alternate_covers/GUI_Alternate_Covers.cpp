@@ -311,7 +311,7 @@ void GUI_Alternate_Covers::reset_model() {
 		for(int x=0; x<_model->columnCount(); x++) {
 
             QModelIndex idx = _model->index(y,x);
-            QString sayonara_logo = Helper::getIconPath("logo.png");
+			QString sayonara_logo = Helper::getSharePath() + "logo.png";
 			_model->setData(idx, sayonara_logo, Qt::EditRole);
 
         }

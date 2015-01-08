@@ -50,13 +50,17 @@
 
 
 // CTOR
-GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
+GUI_Playlist::GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* info_dialog, QWidget *parent) :
 	SayonaraWidget(parent),
 	Ui::Playlist_Window()
 {
 	setupUi(this);
 
 	_parent = parent;
+
+	_playlist = playlist;
+	_info_dialog = info_dialog;
+
 
     initGUI();
 
@@ -66,11 +70,10 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	connect(clear_action, SIGNAL(triggered()), btn_clear, SLOT(click()));
 	addAction(clear_action);
 
-    _info_dialog = dialog;
-
     _playlist_type = PlaylistTypeStd;
 	_playlist_mode = _settings->get(Set::PL_Mode);
 
+	btn_rep1->setChecked(_playlist_mode.rep1);
 	btn_append->setChecked(_playlist_mode.append);
 	btn_repAll->setChecked(_playlist_mode.repAll);
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
@@ -78,9 +81,17 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	btn_gapless->setChecked(_playlist_mode.gapless);
 	btn_numbers->setChecked(_settings->get(Set::PL_ShowNumbers));
 
+	_tab_idx = 1;
+
 
     check_dynamic_play_button();
     setAcceptDrops(true);
+
+	connect(_playlist, SIGNAL(sig_playlist_created(const MetaDataList&,int,PlaylistType,int)),
+			this, SLOT(fill_playlist(const MetaDataList&,int,PlaylistType,int)));
+	connect(_playlist, SIGNAL(sig_cur_track_idx_changed(int)), this, SLOT(track_changed(int)));
+
+
 
 	connect(btn_clear, SIGNAL(clicked()), this, SLOT(clear_playlist_slot()));
 
@@ -93,9 +104,14 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 
 	connect(btn_numbers, SIGNAL(toggled(bool)), this, SLOT(btn_numbers_changed(bool)));
 
-	connect(btn_new_tab, SIGNAL(clicked()), this, SLOT(new_playlist_clicked()));
-	connect(tw_playlists, SIGNAL(tabCloseRequested(int)), this, SLOT(delete_playlist_clicked(int)));
-	connect(tw_playlists, SIGNAL(currentChanged(int)), this, SLOT(playlist_idx_changed(int)));
+	connect(btn_new_tab, SIGNAL(clicked()), this, SLOT(add_playlist_clicked()));
+	connect(tw_playlists, SIGNAL(tabCloseRequested(int)), this, SLOT(close_playlist_clicked(int)));
+	connect(tw_playlists, SIGNAL(currentChanged(int)), this, SLOT(tab_playlist_clicked(int)));
+
+	connect(_playlist, SIGNAL(sig_new_playlist_added(int, QString)), this, SLOT(playlist_added(int, QString)));
+	connect(_playlist, SIGNAL(sig_playlist_index_changed(int)), this, SLOT(playlist_idx_changed(int)));
+	connect(_playlist, SIGNAL(sig_playlist_closed(int)), this, SLOT(playlist_closed(int)));
+
 
 	initPlaylistView(listView);
 
@@ -104,8 +120,6 @@ GUI_Playlist::GUI_Playlist(QWidget *parent, GUI_InfoDialog* dialog) :
 	_cur_playlist_idx = 0;
 
 	tw_playlists->hide_tabbar();
-	QTabBar* tb = tw_playlists->get_tabbar();
-	//tb->setMaximumHeight(20);
 
 	REGISTER_LISTENER(Set::PL_SmallItems, _sl_change_small_playlist_items);
 	REGISTER_LISTENER(Set::PL_Mode, _sl_playlist_mode_changed);
@@ -146,19 +160,6 @@ void GUI_Playlist::language_changed() {
 
 
 void GUI_Playlist::initGUI() {
-
-    btn_append->setIcon(Helper::getIcon("append.png"));
-    btn_rep1->setIcon(Helper::getIcon("rep1.png"));
-    btn_repAll->setIcon(Helper::getIcon("repAll.png"));
-    btn_dynamic->setIcon(Helper::getIcon("dynamic.png"));
-    btn_shuffle->setIcon(Helper::getIcon("shuffle.png"));
-    btn_clear->setIcon(Helper::getIcon("broom.png"));
-    btn_numbers->setIcon(Helper::getIcon("numbers.png"));
-    btn_gapless->setIcon(Helper::getIcon("gapless.png"));
-	btn_new_tab->setIcon(Helper::getIcon("plus.png"));
-
-    btn_rep1->setVisible(false);
-
 	lab_totalTime->setAccessibleDescription("");
 }
 
@@ -200,11 +201,11 @@ void GUI_Playlist::check_dynamic_play_button() {
 
 // Slot: comes from listview
 void GUI_Playlist::metadata_dropped(const MetaDataList& v_md, int row) {
-    emit sig_tracks_dropped(v_md, row);
+	_playlist->psl_insert_tracks(v_md, row);
 }
 
 // SLOT: fill all tracks in v_metadata into playlist
-void GUI_Playlist::fillPlaylist(const MetaDataList& v_metadata, int cur_play_idx, PlaylistType playlist_type, int pl_idx) {
+void GUI_Playlist::fill_playlist(const MetaDataList& v_metadata, int cur_play_idx, PlaylistType playlist_type, int pl_idx) {
 
 	_playlist_views[pl_idx]->fill(v_metadata, cur_play_idx);
 
@@ -226,7 +227,7 @@ void GUI_Playlist::clear_playlist_slot() {
 	lab_totalTime->setAccessibleDescription("");
 	_cur_playlist_view->clear();
 
-    emit sig_cleared();
+	_playlist->psl_clear_playlist();
 }
 
 
@@ -240,19 +241,19 @@ void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_r
 
 	_info_dialog->set_tag_edit_visible( _playlist_type == PlaylistTypeStd );
 
-    emit sig_selection_changed(sel_rows);
+	_playlist->psl_selection_changed(sel_rows);
 }
 
 void GUI_Playlist::rows_moved(const QList<int> & lst, int tgt_idx) {
 
 	if(lst.size() == 0) return;
 
-    emit sig_rows_moved(lst, tgt_idx);
+	_playlist->psl_move_rows(lst, tgt_idx);
 }
 
 
 void GUI_Playlist::double_clicked(int row) {
-    emit sig_cur_idx_changed(row);
+	_playlist->psl_change_track(row);
 }
 
 void GUI_Playlist::track_changed(int row) {
@@ -296,6 +297,7 @@ void GUI_Playlist::_sl_playlist_mode_changed(){
 	btn_dynamic->setChecked(_playlist_mode.dynamic);
 	btn_gapless->setChecked(_playlist_mode.gapless);
 
+	btn_rep1->setVisible(_playlist_mode.ui_rep1);
 	btn_append->setVisible(_playlist_mode.ui_append);
 	btn_repAll->setVisible(_playlist_mode.ui_repAll);
 	btn_dynamic->setVisible(_playlist_mode.ui_dynamic);
@@ -386,6 +388,7 @@ void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
 	btn_dynamic->setVisible(playlist_type == PlaylistTypeStd);
 	btn_repAll->setVisible(playlist_type == PlaylistTypeStd);
 	btn_shuffle->setVisible(playlist_type == PlaylistTypeStd);
+	btn_rep1->setVisible(playlist_type == PlaylistTypeStd);
 
     int actions = 0;
 
@@ -418,31 +421,58 @@ void GUI_Playlist::btn_numbers_changed(bool b) {
 
 
 void GUI_Playlist::rows_removed(const QList<int>& lst) {
-	emit sig_rows_removed(lst);
+	_playlist->psl_remove_rows(lst);
+}
+
+void GUI_Playlist::add_playlist_clicked(){
+	int idx = _playlist->add_new_playlist();
+	_playlist->change_playlist_index(idx);
+}
+
+void GUI_Playlist::close_playlist_clicked(int idx){
+	_playlist->close_playlist(idx);
+}
+
+void GUI_Playlist::tab_playlist_clicked(int idx){
+	_playlist->change_playlist_index(idx);
 }
 
 
-void GUI_Playlist::new_playlist_clicked(){
-
-	int n_playlists = tw_playlists->count();
-	QString name = QString("Playlist ") + QString::number(n_playlists + 1);
+void GUI_Playlist::playlist_added(int idx, QString name){
 
 	PlaylistView* pl_view = new PlaylistView();
-
 	initPlaylistView(pl_view);
 
-	_playlist_views.append(pl_view);
-	tw_playlists->addTab(pl_view, name);
+	QString new_name = name;
 
-	emit sig_create_tab_playlist();
+	if(name.isEmpty()){
+		new_name = QString("Playlist ") + QString::number(_tab_idx + 1);
+		_tab_idx++;
+	}
+
+	_playlist_views.append(pl_view);
+	tw_playlists->addTab(pl_view, new_name);
 
 	tw_playlists->show_tabbar();
-	tw_playlists->setCurrentIndex(_playlist_views.size() - 1);
+	tw_playlists->setCurrentIndex(idx);
 }
 
-void GUI_Playlist::delete_playlist_clicked(int idx){
+void GUI_Playlist::playlist_idx_changed(int idx){
 
-	emit sig_delete_tab_playlist(idx);
+	if(idx == _cur_playlist_idx) return;
+
+	if(idx >= tw_playlists->count() || idx < 0) return;
+
+	_cur_playlist_idx = idx;
+	_cur_playlist_view = _playlist_views[idx];
+
+	tw_playlists->setCurrentIndex(idx);
+}
+
+
+void GUI_Playlist::playlist_closed(int idx){
+
+	if(idx >= tw_playlists->count() || idx < 0) return;
 
 	tw_playlists->removeTab(idx);
 	_playlist_views.removeAt(idx);
@@ -450,13 +480,5 @@ void GUI_Playlist::delete_playlist_clicked(int idx){
 	if(_playlist_views.count() == 1){
 		tw_playlists->hide_tabbar();
 	}
-
 }
 
-void GUI_Playlist::playlist_idx_changed(int idx){
-
-	_cur_playlist_idx = idx;
-	_cur_playlist_view = _playlist_views[idx];
-
-	emit sig_playlist_idx_changed(idx);
-}

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>876</width>
+    <width>877</width>
     <height>544</height>
    </rect>
   </property>
@@ -385,6 +385,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="pixmap">
+      <pixmap resource="../Icons.qrc">:/icons/id3.png</pixmap>
+     </property>
      <property name="scaledContents">
       <bool>true</bool>
      </property>
@@ -726,6 +729,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

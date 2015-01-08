@@ -95,7 +95,7 @@ public:
 	virtual ~GUI_Equalizer();
 
 	signals:
-		void eq_changed_signal(int, int);
+		void sig_eq_changed(int, int);
 
 	private slots:
 		void sli_changed(int, int);

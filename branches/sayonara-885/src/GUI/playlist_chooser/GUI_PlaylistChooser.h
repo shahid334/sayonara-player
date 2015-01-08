@@ -28,6 +28,7 @@
 
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "GUI/ui_GUI_PlaylistChooser.h"
+#include "PlaylistChooser/PlaylistChooser.h"
 
 #include <QMap>
 #include <QDockWidget>
@@ -64,12 +65,13 @@ public slots:
 
 
 public:
-	GUI_PlaylistChooser(QString name, QWidget *parent = 0);
+	GUI_PlaylistChooser(QString name, PlaylistChooser* playlist_chooser, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
 
 private:
 
     GUI_Target_Playlist_Dialog* _target_playlist_dialog;
+	PlaylistChooser* _playlist_chooser;
 
 	QMap<int, QString> _playlists;
 
@@ -78,6 +80,8 @@ private:
 
     QString _text_before_save;
     QString _last_dir;
+
+
 
     int show_warning(QString title_text);
 

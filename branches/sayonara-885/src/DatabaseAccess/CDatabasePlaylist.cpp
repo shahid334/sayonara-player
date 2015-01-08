@@ -24,7 +24,7 @@
 #include <QSqlQuery>
 #include <QMap>
 
-bool CDatabaseConnector::getAllPlaylists(QMap<int, QString>& mapping) {
+bool CDatabaseConnector::getAllPlaylistChooser(QMap<int, QString>& mapping) {
 
 	mapping.clear();
 
@@ -77,29 +77,25 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
 			"tracks.track		AS track, "			// 8
 			"tracks.bitrate		AS bitrate, "		// 9
             "tracks.TrackID 	AS trackID, "		// 10
-            "playlistToTracks.filepath    AS filepath "       // 11
-            "FROM tracks, albums, artists, playlists, playlisttotracks WHERE "
-            "playlists.playlistID = :playlist_id AND playlists.playlistID = playlistToTracks.playlistID AND "
-			"playlistToTracks.trackID = tracks.trackID AND "
-			"tracks.albumID = albums.albumID AND tracks.artistID = artists.artistID "
+			"playlistToTracks.filepath AS filepath "       // 11
+			"FROM tracks, albums, artists, playlists, playlisttotracks "
+			"WHERE playlists.playlistID = :playlist_id "
+			"AND playlists.playlistID = playlistToTracks.playlistID "
+			"AND playlistToTracks.trackID = tracks.trackID "
+			"AND tracks.albumID = albums.albumID "
+			"AND tracks.artistID = artists.artistID "
             "ORDER BY playlistToTracks.position ASC; ";
-
-    QString querytext2 = QString("SELECT ") +
-            "playlisttotracks.filepath AS filepath, "
-            "playlisttotracks.position AS position "
-            "FROM playlists, playlisttotracks "
-            "WHERE playlists.playlistID = :playlist_id "
-            "AND playlists.playlistID =  playlistToTracks.playlistID "
-            "AND playlistToTracks.trackID <= 0 "
-            "ORDER BY playlistToTracks.position ASC; ";
-
 
 
 	q.prepare(querytext);
 	q.bindValue(":playlist_id", playlist_id);
 
 
-    if (q.exec()) {
+	if (!q.exec()) {
+		show_error(QString("Cannot get tracks for playlist ") + QString::number(playlist_id), q);
+	}
+
+	else{
 
         while (q.next()) {
             MetaData data;
@@ -123,17 +119,24 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
         }
     }
 
-    else{
-		show_error(QString("Cannot get tracks for playlist ") + QString::number(playlist_id), q);
-    }
+
+
+	QString querytext2 = QString("SELECT ") +
+			"playlisttotracks.filepath AS filepath, "
+			"playlisttotracks.position AS position "
+			"FROM playlists, playlisttotracks "
+			"WHERE playlists.playlistID = :playlist_id "
+			"AND playlists.playlistID =  playlistToTracks.playlistID "
+			"AND playlistToTracks.trackID <= 0 "
+			"ORDER BY playlistToTracks.position ASC; ";
 
 
     QSqlQuery q2(*_database);
     q2.prepare(querytext2);
-    q2.bindValue(":playlist_id", playlist_id);
+	q2.bindValue(":playlist_id", playlist_id);
 
     if(!q2.exec()) {
-		show_error(QString("Cannot fetch playlist ") + QString::number(playlist_id), q);
+		show_error(QString("Playlist by id: Cannot fetch playlist ") + QString::number(playlist_id), q2);
         return false;
     }
 
@@ -167,9 +170,10 @@ int CDatabaseConnector::getPlaylistIdByName(QString playlist_name) {
 	QSqlQuery q(*_database);
 
 	q.prepare("SELECT playlistid FROM playlists WHERE playlist = :playlist_name;");
-	q.bindValue(":playlist_name", QVariant(playlist_name));
+	q.bindValue(":playlist_name", playlist_name);
+
 	if(!q.exec()) {
-		show_error(QString("Cannot fetch playlist ") + playlist_name, q);
+		show_error(QString("Playlist by name: Cannot fetch playlist ") + playlist_name, q);
 		return -2;
 	}
 
@@ -189,10 +193,10 @@ QString CDatabaseConnector::getPlaylistNameById(int playlist_id) {
 
 		QSqlQuery q(*_database);
 
-		q.prepare("SELECT playlistname FROM playlists WHERE playlistid = :playlistid;");
-		q.bindValue(":playlistid", QVariant(playlist_id));
+		q.prepare("SELECT playlist FROM playlists WHERE playlistid = :playlist_id;");
+		q.bindValue(":playlist_id", playlist_id);
 		if(!q.exec()) {
-			show_error(QString("Cannot fetch playlist ") + QString::number(playlist_id), q);
+			show_error(QString("Get Playlist name by ID: Cannot fetch playlist ") + QString::number(playlist_id), q);
 			return "";
 		}
 
@@ -377,7 +381,7 @@ bool CDatabaseConnector::deletePlaylist(int playlist_id) {
 }
 
 
-bool CDatabaseConnector::deleteFromAllPlaylists(int track_id) {
+bool CDatabaseConnector::deleteFromAllPlaylistChooser(int track_id) {
 
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);

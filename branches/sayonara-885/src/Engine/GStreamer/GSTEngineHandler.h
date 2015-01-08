@@ -67,9 +67,7 @@ public slots:
 
 private slots:
 
-	void sl_dur_changed_ms(quint64);
-	void sl_dur_changed_s(quint32);
-	void sl_dur_changed(const MetaData&);
+	void sl_md_changed(const MetaData&);
 	void sl_pos_changed_ms(quint64);
 	void sl_pos_changed_s(quint32);
 
@@ -77,7 +75,6 @@ private slots:
 	void sl_scrobble(const MetaData&);
 	void sl_level(float, float);
 	void sl_spectrum(QList<float>&);
-	void sl_bitrate_changed(qint32);
 
 
 private:

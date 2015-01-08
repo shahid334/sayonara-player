@@ -478,12 +478,14 @@ void CLibraryBase::restore_track_selection(const QList<int>& old_selected_idx){
 	_selected_tracks = new_selected_tracks;
 }
 
-void CLibraryBase::psl_dur_changed(const MetaData& md) {
+void CLibraryBase::psl_md_changed(const MetaData& md) {
 
     if(md.id < 0) return;
 
     _db->updateTrack(md);
     emit_stuff();
+
+	refresh();
 }
 
 void CLibraryBase::psl_change_id3_tags(const QList<int>& lst) {

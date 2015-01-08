@@ -63,7 +63,7 @@ void LN_Notification::notification_show(const MetaData& md) {
     text.replace("&", "&amp;");
 
 	if( !QFile::exists(cl.cover_path) ) {
-        pixmap_path = Helper::getIconPath() + "logo_small.png";
+		pixmap_path = Helper::getSharePath() + "logo_small.png";
 	}
 
     else{

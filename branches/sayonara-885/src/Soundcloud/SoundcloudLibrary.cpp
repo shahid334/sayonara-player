@@ -114,7 +114,7 @@ void SoundcloudLibrary::loadData(){
 
 	success = SoundcloudHelper::parse_playlist_xml(content, _vec_md, _vec_artists, _vec_albums);
 	if(!success){
-		qDebug() << "Could not parse Playlists xml file";
+		qDebug() << "Could not parse PlaylistChooser xml file";
 		return;
 	}
 

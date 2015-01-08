@@ -35,7 +35,9 @@
 #include "HelperStructs/globals.h"
 #include "HelperStructs/SayonaraClass.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "playlist/PlaylistLoader.h"
 #include "playlist/Playlist.h"
+
 
 
 struct BackupPlaylist{
@@ -59,6 +61,11 @@ public:
     virtual ~PlaylistHandler();
 
 	uint get_num_tracks();
+
+	int add_new_playlist(QString name="");
+	bool change_playlist_index(int idx);
+	void close_playlist(int idx);
+	void load_old_playlist();
 
 signals:
 	void sig_play();
@@ -85,12 +92,12 @@ signals:
 	void sig_playlist_mode_changed(const PlaylistMode&);
 	void sig_selection_changed(const MetaDataList&);
 
+	void sig_new_playlist_added(int, QString);
+	void sig_playlist_index_changed(int);
+	void sig_playlist_closed(int);
+
 
 public slots:
-
-	void psl_createPlaylist(const QStringList&, bool start_playing=true);
-	void psl_createPlaylist(const MetaDataList&, bool start_playing=true);
-	void psl_createPlaylist(const CustomPlaylist&, bool start_playing=false);
 
 	void psl_play();
 	void psl_pause();
@@ -112,7 +119,7 @@ public slots:
 
 	void psl_id3_tags_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
-	void psl_dur_changed(const MetaData&);
+	void psl_md_changed(const MetaData&);
 
 	void psl_similar_artists_available(const QList<int>&);
 
@@ -120,10 +127,13 @@ public slots:
 	void psl_prepare_playlist_for_save(int id);
 	void psl_prepare_playlist_for_save(QString name);
 
+	void create_playlist(const QStringList&, bool start_playing=true);
+	void create_playlist(const MetaDataList&, bool start_playing=true);
+	void create_playlist(const CustomPlaylist&, bool start_playing=false);
 
-	void new_playlist_created();
-	void cur_playlist_changed(int idx);
-	void playlist_closed(int idx);
+
+
+
 
 	void psl_audioconvert_on();
 	void psl_audioconvert_off();
@@ -131,7 +141,10 @@ public slots:
 
 private:
 
+
 	CDatabaseConnector* _db;
+	PlaylistLoader*		_playlist_loader;
+
 
 	QList<Playlist*>    _playlists;
 	Playlist*			_cur_playlist;
@@ -146,11 +159,15 @@ private:
 	Playlist* new_playlist(PlaylistType type, int idx);
 
 
+
+
 private slots:
 
 	void playlist_changed(const Playlist* pl);
 	void track_changed(const MetaData&, int cur_track_idx);
 	void no_track_to_play();
+
+
 
 
 };
