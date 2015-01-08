@@ -33,9 +33,8 @@ public:
     void load_old_playlist();
     
 signals:
-	void sig_create_playlist(const MetaDataList&, bool);
+	void sig_create_playlist(const MetaDataList&);
 	void sig_change_track(int);
-    void sig_stop();
     
 public slots:
 

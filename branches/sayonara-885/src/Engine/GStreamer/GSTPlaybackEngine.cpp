@@ -66,9 +66,9 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 
 	_scrobble_begin_ms = 0;
 	_cur_pos_ms = 0;
+
 	_scrobbled = false;
 	_playing_stream = false;
-
 	_sr_wanna_record = false;
 
 	_stream_recorder = new StreamRecorder();
@@ -77,6 +77,7 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 	_may_start_timer = false;
 
 	_jump_play = _settings->get(Set::Engine_CurTrackPos_s);
+	_start = _settings->get(Set::PL_StartPlaying);
 
 	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
 	connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
@@ -171,7 +172,15 @@ void GSTPlaybackEngine::change_track(const MetaData& md) {
 
 	emit sig_pos_changed_s(_jump_play);
 
-    play();
+	if(_start){
+		play();
+	}
+
+	else{
+		pause();
+		_start = true;
+	}
+
 }
 
 
@@ -220,8 +229,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md) {
 		uri = g_filename_from_utf8(md.filepath.toUtf8(),
 								   md.filepath.toUtf8().size(), NULL, NULL, NULL);
 	}
-
-
 
 	if(_wait_for_gapless_track) {
 

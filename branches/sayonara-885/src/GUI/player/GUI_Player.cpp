@@ -83,7 +83,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	lab_copyright->setText(tr("Copyright") + " 2011-2014");
 
     m_metadata_available = false;
-	m_playing = false;
+
 	m_mute = false;
 
 	ui_playlist = 0;
@@ -165,6 +165,9 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	stopClicked(false);
 
+	bool playing = _settings->get(Set::PL_StartPlaying);
+	psl_set_play(playing);
+
 	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
 }
@@ -224,7 +227,6 @@ QAction* GUI_Player::createAction(QKeySequence seq) {
 
 void GUI_Player::initGUI() {
 
-
     btn_mute->setIcon(Helper::getIcon("vol_1.png"));
 
 	action_viewLibrary->setText(tr("&Library"));
@@ -236,18 +238,25 @@ void GUI_Player::initGUI() {
 	btn_correct->setVisible(false);
 }
 
+void GUI_Player::psl_set_play(bool play){
 
+	m_playing = play;
+	m_trayIcon->setPlaying(play);
+
+	if(m_playing){
+		btn_play->setIcon(Helper::getIcon("pause.png"));
+	}
+
+	else{
+		btn_play->setIcon(Helper::getIcon("play.png"));
+	}
+}
 
 // new track
-void GUI_Player::psl_update_track(const MetaData & md, int pos_sec, bool playing) {
-
-    m_playing = playing;
-    m_trayIcon->setPlaying(playing);
+void GUI_Player::psl_update_track(const MetaData & md) {
 
 	// sets _md = md;
 	psl_md_changed(md);
-
-	psl_set_cur_pos(pos_sec);
 
 	m_trayIcon->show_notification(_md);
 }
@@ -290,14 +299,6 @@ void GUI_Player::psl_md_changed(const MetaData& md) {
 	lab_title->setText(_md.title);
 
 
-
-	if(m_playing){
-		btn_play->setIcon(Helper::getIcon("pause.png"));
-	}
-
-	else{
-		btn_play->setIcon(Helper::getIcon("play.png"));
-	}
 
 	total_time_changed(_md.length_ms);
 

@@ -36,7 +36,7 @@ class GUI_Podcasts : public PlayerPlugin, private Ui::GUI_Podcasts
     Q_OBJECT
 
 signals:
-	void sig_create_playlist(const MetaDataList&, bool);
+	void sig_create_playlist(const MetaDataList&);
 	void sig_play_track(int);
     void sig_close_event();
 

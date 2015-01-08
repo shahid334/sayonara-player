@@ -346,10 +346,10 @@ void Application::init_connections() {
 	CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,				last_fm_logged_in(bool));
 	CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),	player,				lfm_info_fetched(const MetaData&, bool, bool));
 
-	CONNECT(ui_stream, sig_create_playlist(const MetaDataList&, bool),	playlist_handler, 	create_playlist(const MetaDataList&, bool));
+	CONNECT(ui_stream, sig_create_playlist(const MetaDataList&),		playlist_handler, 	create_playlist(const MetaDataList&));
 	CONNECT(ui_stream, sig_play_track(int),								playlist_handler,   psl_change_track(int));
 
-	CONNECT(ui_podcasts, sig_create_playlist(const MetaDataList&, bool),	playlist_handler, 	create_playlist(const MetaDataList&, bool));
+	CONNECT(ui_podcasts, sig_create_playlist(const MetaDataList&),		playlist_handler,		create_playlist(const MetaDataList&));
 	CONNECT(ui_podcasts, sig_play_track(int),								playlist_handler,   psl_change_track(int));
 
 	CONNECT (ui_style_settings, sig_style_update(),	ui_spectrum, psl_style_update());

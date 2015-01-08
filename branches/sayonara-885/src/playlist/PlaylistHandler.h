@@ -127,13 +127,9 @@ public slots:
 	void psl_prepare_playlist_for_save(int id);
 	void psl_prepare_playlist_for_save(QString name);
 
-	void create_playlist(const QStringList&, bool start_playing=true);
-	void create_playlist(const MetaDataList&, bool start_playing=true);
-	void create_playlist(const CustomPlaylist&, bool start_playing=false);
-
-
-
-
+	void create_playlist(const QStringList&);
+	void create_playlist(const MetaDataList&);
+	void create_playlist(const CustomPlaylist&);
 
 	void psl_audioconvert_on();
 	void psl_audioconvert_off();
@@ -141,10 +137,8 @@ public slots:
 
 private:
 
-
 	CDatabaseConnector* _db;
 	PlaylistLoader*		_playlist_loader;
-
 
 	QList<Playlist*>    _playlists;
 	Playlist*			_cur_playlist;

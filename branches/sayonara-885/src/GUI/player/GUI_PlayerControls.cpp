@@ -26,34 +26,29 @@
 /** PLAYER BUTTONS **/
 void GUI_Player::playClicked(bool) {
 
+	bool playing = !m_playing;
     if(!m_metadata_available) {
-        emit sig_play();
-        return;
+		playing = true;
     }
 
-    if (m_playing) {
-        btn_play->setIcon(Helper::getIcon("play.png"));
-		emit sig_pause();
-	}
-
-    else {
-
-        btn_play->setIcon(Helper::getIcon("pause.png"));
+	if(playing){
 		emit sig_play();
 	}
 
-	m_playing = !m_playing;
-	m_trayIcon->setPlaying(m_playing);
+	else{
+		emit sig_pause();
+	}
+
+	psl_set_play(playing);
 }
 
 void GUI_Player::stopClicked(bool b) {
 
-
     btn_play->setIcon(Helper::getIcon("play.png"));
     m_trayIcon->setPlaying(false);
 	m_trayIcon->stop();
-	m_playing = false;
 
+	psl_set_play(false);
 
 	lab_title->hide();
 	lab_sayonara->show();
@@ -72,6 +67,7 @@ void GUI_Player::stopClicked(bool b) {
 
 	curTime->setText("00:00");
 	maxTime->setText("00:00");
+
 
 
 	this->setWindowTitle("Sayonara");

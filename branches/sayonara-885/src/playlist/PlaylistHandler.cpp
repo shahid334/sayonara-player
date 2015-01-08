@@ -54,10 +54,8 @@ void PlaylistHandler::load_old_playlist(){
 
 	_playlist_loader = new PlaylistLoader(this);
 
-	connect(_playlist_loader, SIGNAL(sig_stop()), this, SLOT(psl_stop()));
-
-	connect(_playlist_loader, SIGNAL(sig_create_playlist(const MetaDataList&, bool)),
-			this, SLOT(create_playlist(const MetaDataList&, bool)));
+	connect(_playlist_loader, SIGNAL(sig_create_playlist(const MetaDataList&)),
+			this, SLOT(create_playlist(const MetaDataList&)));
 
 	connect(_playlist_loader, SIGNAL(sig_change_track(int)),
 			this, SLOT(psl_change_track(int)));
@@ -77,6 +75,7 @@ void PlaylistHandler::track_changed(const MetaData& md, int cur_track_idx) {
 
     if(!md.is_disabled){
 
+		qDebug() << "Track changed";
 		_settings->set(Set::PL_LastTrack, cur_track_idx);
 
 		emit sig_cur_track_idx_changed(cur_track_idx);
@@ -140,7 +139,9 @@ Playlist* PlaylistHandler::new_playlist(PlaylistType type, int idx) {
 }
 
 // create a playlist, where metadata is already available
-void PlaylistHandler::create_playlist(const MetaDataList& v_md, bool start_playing) {
+void PlaylistHandler::create_playlist(const MetaDataList& v_md) {
+
+	qDebug() << "Create Playlist...";
 
     PlaylistType type = determine_playlist_type(v_md);
 	PlaylistType old_type;
@@ -154,11 +155,11 @@ void PlaylistHandler::create_playlist(const MetaDataList& v_md, bool start_playi
 			delete _cur_playlist;
 
 			_cur_playlist = new_playlist(type, idx);
-			_cur_playlist->create_playlist(v_md, _state == PlaylistStop);
+			_cur_playlist->create_playlist(v_md, (_state == PlaylistStop));
 		}
 
 		else {
-			_cur_playlist->create_playlist(v_md, _state == PlaylistStop);
+			_cur_playlist->create_playlist(v_md, (_state == PlaylistStop));
 		}
 	}
 
@@ -179,8 +180,6 @@ void PlaylistHandler::create_playlist(const MetaDataList& v_md, bool start_playi
 
 			_active_playlist = _cur_playlist;
 			_active_playlist_idx = _cur_playlist_idx;
-
-            psl_play();
         }
     }
 
@@ -196,25 +195,17 @@ void PlaylistHandler::create_playlist(const MetaDataList& v_md, bool start_playi
 
 // create a new playlist, where only filepaths are given
 // Load Folder, Load File...
-void PlaylistHandler::create_playlist(const QStringList& pathlist, bool start_playing) {
-
-    if(start_playing) {
-        _state = PlaylistPlay;
-    }
-
-    else if(_state != PlaylistPause) {
-        _state = PlaylistStop;
-    }
+void PlaylistHandler::create_playlist(const QStringList& pathlist) {
 
 	/// TODO
 	///
 
-	_cur_playlist->create_playlist(pathlist, start_playing);
+	_cur_playlist->create_playlist(pathlist);
 }
 
 
 // create playlist from saved custom playlist
-void PlaylistHandler::create_playlist(const CustomPlaylist& pl, bool start_playing) {
+void PlaylistHandler::create_playlist(const CustomPlaylist& pl) {
 
 	create_playlist(pl.tracks);
 }
@@ -325,24 +316,22 @@ void PlaylistHandler::psl_clear_playlist() {
 // play a track
 void PlaylistHandler::psl_play() {
 
+	qDebug() << "PSL Play";
+
 	if(_state == PlaylistStop) {
-        _state = PlaylistPlay;
 		_active_playlist->play();
     }
 
-    if(_state == PlaylistPause) {
-        _state = PlaylistPlay;
-        emit sig_goon_playing();
-    }
+	emit sig_goon_playing();
 
+	_state = PlaylistPlay;
 }
 
 
 void PlaylistHandler::psl_pause() {
-    if(_state == PlaylistPlay || _state == PlaylistStop) {
-        _state = PlaylistPause;
-		_active_playlist->pause();
-    }
+
+	_state = PlaylistPause;
+	_active_playlist->pause();
 }
 
 
@@ -380,7 +369,7 @@ void PlaylistHandler::psl_selection_changed(const QList<int> & lst) {
 
 void PlaylistHandler::psl_insert_tracks(const MetaDataList& v_md, int row) {
 
-	bool empty = _cur_playlist->is_empty();
+	bool was_empty = _cur_playlist->is_empty();
 
 	if(_cur_playlist->get_type() != PlaylistTypeStd){
 
@@ -396,8 +385,9 @@ void PlaylistHandler::psl_insert_tracks(const MetaDataList& v_md, int row) {
     }
 
 	_cur_playlist->insert_tracks(v_md, row);
+	if(_cur_playlist->is_empty()) return;
 
-	if(empty && _state == PlaylistStop && !_cur_playlist->is_empty()){
+	if(was_empty && _state == PlaylistStop){
         psl_play();
     }
 }

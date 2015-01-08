@@ -77,6 +77,7 @@ private:
 	MyCaps*					_caps;
 
 	quint32 _jump_play;
+	bool _start;
 	bool _wait_for_gapless_track;
 	bool _may_start_timer;
 	bool _sr_active;

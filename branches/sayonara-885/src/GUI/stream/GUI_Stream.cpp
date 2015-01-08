@@ -312,5 +312,5 @@ void GUI_Stream::play_stream(QString url, QString name) {
         v_md.push_back(md);
     }
 
-    emit sig_create_playlist(v_md, true);
+	emit sig_create_playlist(v_md);
 }
