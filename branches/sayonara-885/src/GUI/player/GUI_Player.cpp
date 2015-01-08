@@ -256,7 +256,43 @@ void GUI_Player::psl_set_play(bool play){
 void GUI_Player::psl_update_track(const MetaData & md) {
 
 	// sets _md = md;
-	psl_md_changed(md);
+	_md = md;
+	m_metadata_available = true;
+
+	lab_sayonara->hide();
+	lab_title->show();
+
+	lab_version->hide();
+	lab_artist->show();
+
+	lab_writtenby->hide();
+	lab_album->show();
+
+	lab_copyright->hide();
+	lab_rating->show();
+
+	set_album_label();
+
+	lab_artist->setText(_md.artist);
+	lab_title->setText(_md.title);
+
+	total_time_changed(_md.length_ms);
+
+	QString rating_text;
+
+	rating_text = QString::number(_md.bitrate / 1000) + " kBit/s";
+	rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+
+	lab_rating->setText(rating_text);
+	lab_rating->setToolTip(rating_text);
+
+	btn_correct->setVisible(false);
+	setRadioMode(_md.radio_mode);
+
+	this->setWindowTitle(QString("Sayonara - ") + md.title);
+	this->repaint();
+
+	fetch_cover();
 
 	m_trayIcon->show_notification(_md);
 }
@@ -279,45 +315,16 @@ void GUI_Player::set_album_label(){
 void GUI_Player::psl_md_changed(const MetaData& md) {
 
 	_md = md;
-	m_metadata_available = true;
-
-	lab_sayonara->hide();
-	lab_title->show();
-
-	lab_version->hide();
-	lab_artist->show();
-
-	lab_writtenby->hide();
-	lab_album->show();
-
-	lab_copyright->hide();
-	lab_rating->show();
-
-	set_album_label();
-
-	lab_artist->setText(_md.artist);
-	lab_title->setText(_md.title);
-
-
-
-	total_time_changed(_md.length_ms);
-
 	QString rating_text;
 
 	rating_text = QString::number(_md.bitrate / 1000) + " kBit/s";
 	rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
 
-
 	lab_rating->setText(rating_text);
 	lab_rating->setToolTip(rating_text);
 
-	btn_correct->setVisible(false);
-	setRadioMode(_md.radio_mode);
+	total_time_changed(_md.length_ms);
 
-	fetch_cover();
-
-	this->setWindowTitle(QString("Sayonara - ") + md.title);
-	this->repaint();
 
 }
 

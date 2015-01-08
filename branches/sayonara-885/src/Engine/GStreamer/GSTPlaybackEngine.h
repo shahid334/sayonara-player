@@ -55,7 +55,7 @@ public:
 	void		set_track_finished();
 
 	void		update_bitrate(quint32 bitrate);
-	void		update_duration(quint64 duration_ms);
+	void		update_duration();
 
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
@@ -76,12 +76,11 @@ private:
 
 	MyCaps*					_caps;
 
-	quint32 _jump_play;
-	bool _start;
 	bool _wait_for_gapless_track;
 	bool _may_start_timer;
 	bool _sr_active;
 	bool _gapless;
+	int _jump_play_s;
 
 	// methods
 	bool set_uri(const MetaData& md);

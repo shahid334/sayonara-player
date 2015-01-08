@@ -482,9 +482,12 @@ void CLibraryBase::psl_md_changed(const MetaData& md) {
 
     if(md.id < 0) return;
 
-    _db->updateTrack(md);
-    emit_stuff();
+	if(_old_md.length_ms == md.length_ms) return;
 
+	_old_md = md;
+    _db->updateTrack(md);
+
+    emit_stuff();
 	refresh();
 }
 

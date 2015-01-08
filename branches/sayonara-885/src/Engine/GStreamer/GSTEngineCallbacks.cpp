@@ -186,14 +186,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
             break;
 
-        case GST_MESSAGE_STATE_CHANGED:
-			break;
-
-
-        case GST_MESSAGE_ASYNC_DONE:
-            break;
-
-        case GST_MESSAGE_TAG:
+		case GST_MESSAGE_TAG:
             GstTagList* tags;
 			quint32 br;
 
@@ -214,9 +207,9 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 			break;
 
 		case GST_MESSAGE_DURATION_CHANGED:
+
 			engine->update_duration();
 			break;
-
 
         case GST_MESSAGE_ERROR:
             GError *err;

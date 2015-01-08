@@ -87,7 +87,6 @@ void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpoi
 
 gboolean PipelineCallbacks::show_position(gpointer data) {
 
-    gint64 pos, dur;
 	GstState state;
 	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) data;
 	GstElement* p = pipeline->get_pipeline();
@@ -95,20 +94,15 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 	if(!p) return false;
 	state = pipeline->get_state();
 
-	if(state != GST_STATE_PLAYING && state != GST_STATE_PAUSED && state != GST_STATE_READY) return false;
+	if( state != GST_STATE_PLAYING &&
+		state != GST_STATE_PAUSED &&
+		state != GST_STATE_READY) return false;
 
 	ENGINE_DEBUG;
 
-#if GST_CHECK_VERSION(1, 0, 0)
-    gst_element_query_position(p, GST_FORMAT_TIME, &pos);
-    gst_element_query_duration(p, GST_FORMAT_TIME, &dur);
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    gst_element_query_position(p, &format, &pos);
-    gst_element_query_position(p, &format, &dur);
-#endif
-
-    pipeline->refresh_cur_position(pos / MIO, dur / MIO);
+	//pipeline->refresh_duration();
+	pipeline->refresh_position();
+	pipeline->check_about_to_finish();
 
 	return true;
 }
@@ -160,18 +154,31 @@ GSTAbstractPipeline::GSTAbstractPipeline(QObject* parent) :
     _uri = NULL;
 }
 
-void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms, gint64 duration_ms) {
+void GSTAbstractPipeline::refresh_position() {
 
-    _position_ms = cur_pos_ms;
-    _duration_ms = duration_ms;
+	gint64 pos;
+#if GST_CHECK_VERSION(1, 0, 0)
+	gst_element_query_position(GST_ELEMENT(_pipeline), GST_FORMAT_TIME, &pos);
+#else
+	GstFormat format = GST_FORMAT_TIME;
+	gst_element_query_position(GST_ELEMENT(_pipeline), &format, &pos);
+#endif
 
-    gint64 difference = _duration_ms - _position_ms;
+	_position_ms = pos / GST_MSECOND;
+}
 
-    if(_duration_ms >= 0){
-        emit sig_pos_changed_ms((qint64) (cur_pos_ms));
-    }
+void GSTAbstractPipeline::refresh_duration(){
 
-	check_about_to_finish(difference);
+	gint64 dur;
+
+#if GST_CHECK_VERSION(1, 0, 0)
+	gst_element_query_duration(GST_ELEMENT(_pipeline), GST_FORMAT_TIME, &dur);
+#else
+	GstFormat format = GST_FORMAT_TIME;
+	gst_element_query_duration(GST_ELEMENT(_pipeline), &format, &dur);
+#endif
+
+	_duration_ms = dur / MIO;
 }
 
 void GSTAbstractPipeline::set_data(uchar* data, quint64 size){
@@ -179,15 +186,21 @@ void GSTAbstractPipeline::set_data(uchar* data, quint64 size){
 	emit sig_data(data, size);
 }
 
-void GSTAbstractPipeline::check_about_to_finish(qint64 difference){
+void GSTAbstractPipeline::check_about_to_finish(){
 
-	if(difference < 500 && !_about_to_finish) {
+	gint64 difference = _duration_ms - _position_ms;
+
+	if(_duration_ms >= 0){
+		emit sig_pos_changed_ms((qint64) (_position_ms));
+	}
+
+	if(difference < 500 && difference > 0 && !_about_to_finish) {
 
 		_about_to_finish = true;
 		emit sig_about_to_finish(difference - 50);
 	}
 
-	else if(difference >= 500){
+	else {
 		_about_to_finish = false;
 	}
 }

@@ -60,10 +60,11 @@ void StdPlaylist::change_track(int idx) {
 
     _last_track = _cur_play_idx;
 
-    report_changes(false, true);
+	report_changes(false, true);
 }
 
-void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
+void StdPlaylist::create_playlist(const MetaDataList& lst) {
+
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
@@ -75,8 +76,9 @@ void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
     }
 
     // no tracks in new playlist
-    if(lst.size() == 0)
-        return;
+	if(lst.size() == 0){
+		return;
+	}
 
     // check if there, check if extern
     foreach(MetaData md, lst) {
@@ -93,15 +95,15 @@ void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
         _cur_play_idx = -1;
     }
 
-    report_changes(true, start_playing);
+	report_changes(true, false);
 }
 
-void StdPlaylist::create_playlist(const QStringList& lst, bool start_playing) {
+void StdPlaylist::create_playlist(const QStringList& lst) {
 
     CDirectoryReader reader;
 	MetaDataList v_md = reader.get_md_from_filelist(lst);
 
-    create_playlist(v_md, start_playing);
+	create_playlist(v_md);
 }
 
 void StdPlaylist:: play() {
@@ -117,7 +119,7 @@ void StdPlaylist:: play() {
         _v_md.setCurPlayTrack(_cur_play_idx);
     }
 
-    report_changes(false, true);
+	report_changes(false, false);
 }
 
 void StdPlaylist::pause() {

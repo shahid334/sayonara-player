@@ -72,8 +72,8 @@ public:
     virtual void next()=0;
     virtual void change_track(int idx)=0;
 
-    virtual void create_playlist(const MetaDataList& lst, bool start_playing=true)=0;
-    virtual void create_playlist(const QStringList& lst, bool start_playing=true)=0;
+	virtual void create_playlist(const MetaDataList& lst)=0;
+	virtual void create_playlist(const QStringList& lst)=0;
     virtual void clear();
 
 	virtual void metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new)=0;

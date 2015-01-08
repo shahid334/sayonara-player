@@ -85,9 +85,10 @@ class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 		virtual GstElement* get_pipeline();
 		virtual GstBus*		get_bus();
 		virtual GstState	get_state();
-        virtual void		refresh_cur_position(gint64 cur_pos_ms, gint64 duration_ms);
+		virtual void		refresh_position();
+		virtual void		refresh_duration();
 		virtual void		finished();
-		virtual void		check_about_to_finish(qint64 difference);
+		virtual void		check_about_to_finish();
 		virtual void		set_data(uchar* data, quint64 size);
 
 		virtual bool set_uri(gchar* uri);

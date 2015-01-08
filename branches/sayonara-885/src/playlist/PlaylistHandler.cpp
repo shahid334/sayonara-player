@@ -40,6 +40,8 @@ PlaylistHandler::PlaylistHandler(QObject * parent) :
 	_active_playlist = _cur_playlist;
 	_playlists.append(_cur_playlist);
 
+	_start_play = _settings->get(Set::PL_StartPlaying);
+
 	REGISTER_LISTENER(Set::PL_Mode, psl_playlist_mode_changed);
 }
 
@@ -47,6 +49,35 @@ PlaylistHandler::PlaylistHandler(QObject * parent) :
 PlaylistHandler::~PlaylistHandler() {
 
 }
+
+
+
+void PlaylistHandler::playlist_changed(const Playlist* pl) {
+
+	_settings->set(Set::PL_Playlist, pl->toStringList());
+
+	emit sig_playlist_created( pl->get_playlist(), pl->get_cur_track(), pl->get_type(), pl->get_idx() );
+}
+
+
+void PlaylistHandler::track_changed(const MetaData& md, int cur_track_idx) {
+
+	if(!md.is_disabled){
+
+		_settings->set(Set::PL_LastTrack, cur_track_idx);
+
+		emit sig_cur_track_idx_changed(cur_track_idx);
+		emit sig_cur_track_changed(md);
+	}
+}
+
+void PlaylistHandler::no_track_to_play() {
+	_state = PlaylistStop;
+	emit sig_no_track_to_play();
+}
+
+
+
 
 void PlaylistHandler::load_old_playlist(){
 
@@ -61,31 +92,6 @@ void PlaylistHandler::load_old_playlist(){
 			this, SLOT(psl_change_track(int)));
 
 	_playlist_loader->load_old_playlist();
-}
-
-void PlaylistHandler::playlist_changed(const Playlist* pl) {
-
-	_settings->set(Set::PL_Playlist, pl->toStringList());
-
-	emit sig_playlist_created( pl->get_playlist(), pl->get_cur_track(), pl->get_type(), pl->get_idx() );
-}
-
-
-void PlaylistHandler::track_changed(const MetaData& md, int cur_track_idx) {
-
-    if(!md.is_disabled){
-
-		qDebug() << "Track changed";
-		_settings->set(Set::PL_LastTrack, cur_track_idx);
-
-		emit sig_cur_track_idx_changed(cur_track_idx);
-		emit sig_cur_track_changed(md);
-    }
-}
-
-void PlaylistHandler::no_track_to_play() {
-    _state = PlaylistStop;
-    emit sig_no_track_to_play();
 }
 
 
@@ -155,11 +161,11 @@ void PlaylistHandler::create_playlist(const MetaDataList& v_md) {
 			delete _cur_playlist;
 
 			_cur_playlist = new_playlist(type, idx);
-			_cur_playlist->create_playlist(v_md, (_state == PlaylistStop));
+			_cur_playlist->create_playlist(v_md);
 		}
 
 		else {
-			_cur_playlist->create_playlist(v_md, (_state == PlaylistStop));
+			_cur_playlist->create_playlist(v_md);
 		}
 	}
 
@@ -180,6 +186,8 @@ void PlaylistHandler::create_playlist(const MetaDataList& v_md) {
 
 			_active_playlist = _cur_playlist;
 			_active_playlist_idx = _cur_playlist_idx;
+
+			psl_play();
         }
     }
 

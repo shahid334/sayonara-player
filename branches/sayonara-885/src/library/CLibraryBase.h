@@ -112,7 +112,8 @@ protected slots:
 	virtual void _sl_sortorder_changed();
 	virtual void _sl_libpath_changed();
 
-
+private:
+	MetaData			_old_md;
 
 protected:
 

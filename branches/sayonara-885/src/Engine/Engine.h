@@ -51,6 +51,7 @@ class Engine : public QObject, protected SayonaraClass {
 	Q_OBJECT
 
 protected:
+
 	MetaData	_md;
 	qint64		_cur_pos_ms;
 
@@ -85,15 +86,18 @@ public:
 	virtual void		set_track_finished(){}
 	virtual void        set_level(float right, float left){ emit sig_level(right, left); }
 	virtual void        set_spectrum(QList<float>& lst ){ emit sig_spectrum(lst); }
-	virtual void		update_bitrate(quint32 bitrate=0){}
-	virtual void		update_duration(quint64 duration=0){}
+
+	virtual void		async_done(){}
+	virtual void		update_bitrate(quint32 bitrate){}
+	virtual void		update_duration(){}
 	virtual void		update_time(qint32 time){}
 
-	virtual void		do_jump_play(){}
 	virtual void		unmute(){}
 	virtual bool		get_show_level(){ return _show_level; }
 	virtual bool		get_show_spectrum(){ return _show_spectrum; }
 	virtual bool		get_broadcast_active() { return _broadcast_active; }
+
+
 
 
 signals:
@@ -137,10 +141,6 @@ protected slots:
 	virtual void new_data(uchar* data, quint64 size){
 		emit sig_data(data, size);
 	}
-
-
-
-
 
 
 public slots:

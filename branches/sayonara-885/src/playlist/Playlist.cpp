@@ -39,7 +39,6 @@ void Playlist::report_changes(bool pl_changed, bool track_changed) {
 		emit sig_playlist_changed(this);
 	}
 
-
 	if(track_changed) {
 
         if( _cur_play_idx < 0 ||

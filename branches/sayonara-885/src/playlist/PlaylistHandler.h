@@ -148,10 +148,10 @@ private:
 
 	PlaylistState       _state;
 	BackupPlaylist      _ba_playlist;
+	bool				_start_play;
 
 	PlaylistType determine_playlist_type(const MetaDataList& v_md);
 	Playlist* new_playlist(PlaylistType type, int idx);
-
 
 
 

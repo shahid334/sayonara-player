@@ -76,8 +76,7 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 	_wait_for_gapless_track = false;
 	_may_start_timer = false;
 
-	_jump_play = _settings->get(Set::Engine_CurTrackPos_s);
-	_start = _settings->get(Set::PL_StartPlaying);
+	_jump_play_s = _settings->get(Set::Engine_CurTrackPos_s);
 
 	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
 	connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
@@ -138,7 +137,6 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md) {
 
 	_scrobble_begin_ms = 0;
 	_cur_pos_ms = 0;
-	_jump_play = 0;
 
 	_scrobbled = false;
 }
@@ -170,16 +168,9 @@ void GSTPlaybackEngine::change_track(const MetaData& md) {
 	_cur_pos_ms = 0;
 	_scrobbled = false;
 
-	emit sig_pos_changed_s(_jump_play);
+	//emit sig_pos_changed_s(_jump_play_s);
 
-	if(_start){
-		play();
-	}
-
-	else{
-		pause();
-		_start = true;
-	}
+	play();
 
 }
 
@@ -347,25 +338,25 @@ void GSTPlaybackEngine::update_bitrate(quint32 bitrate) {
 
 	_md.bitrate = bitrate;
 
-	qDebug() << "Bitrate changed " << bitrate;
 	emit sig_md_changed(_md);
 }
 
 
-void GSTPlaybackEngine::update_duration(quint64 duration_ms) {
+void GSTPlaybackEngine::update_duration() {
 
-	if(duration_ms == 0) {
-		duration_ms = _pipeline->get_duration_ms();
+	_pipeline->refresh_duration();
+
+	if(_jump_play_s > 0){
+		_pipeline->seek_abs(_jump_play_s * GST_SECOND);
+		_jump_play_s = 0;
 	}
+	qint64 duration_ms = _pipeline->get_duration_ms();
+	quint32 duration_s = duration_ms / 1000;
+	quint32 md_duration_s = _md.length_ms / 1000;
 
-	if(duration_ms > 0 && _jump_play > 0){
-		_pipeline->seek_abs(_jump_play * GST_SECOND);
-		_jump_play = 0;
-	}
-
-	if(duration_ms / 1000 == 0) return;
-
-	if(duration_ms / 1000 == _md.length_ms / 1000) return;
+	if(duration_s <= 0) return;
+	if(duration_s == md_duration_s) return;
+	if(duration_s > 15000) return;
 
 	_md.length_ms = duration_ms;
 
