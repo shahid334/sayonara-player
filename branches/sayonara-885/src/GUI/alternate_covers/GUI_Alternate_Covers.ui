@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>545</width>
-    <height>387</height>
+    <height>392</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,6 @@
     <widget class="QLabel" name="lab_title">
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -51,13 +50,8 @@
        <height>27</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Search</string>
@@ -79,7 +73,7 @@
       </size>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>...</string>
@@ -103,11 +97,6 @@
        <height>27</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
       <enum>Qt::ClickFocus</enum>
      </property>
@@ -116,7 +105,7 @@
    <item row="3" column="0">
     <widget class="QRadioButton" name="rb_online">
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Online search</string>
@@ -126,7 +115,7 @@
    <item row="2" column="0">
     <widget class="QRadioButton" name="rb_local">
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Local search</string>
@@ -153,11 +142,6 @@
        <width>520</width>
        <height>220</height>
       </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarAsNeeded</enum>
@@ -248,13 +232,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Close</string>
@@ -275,16 +254,15 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Save</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
        </property>
       </widget>
      </item>
@@ -292,11 +270,6 @@
    </item>
    <item row="4" column="0" colspan="4">
     <widget class="Line" name="line">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -325,7 +298,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>rb_online</sender>

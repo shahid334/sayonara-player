@@ -66,7 +66,6 @@ signals:
     void sig_sortorder_changed(Sort::SortOrder);
 
     void sig_no_disc_menu();
-    void sig_tab_pressed(bool);
     void sig_import_files(const QStringList&);
     void sig_double_clicked(const QList<int>&);
     void sig_sel_changed(const QList<int>&);

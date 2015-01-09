@@ -23,13 +23,12 @@
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/Helper.h"
+#include <QMessageBox>
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 
 #include <QInputDialog>
 #include <QFileDialog>
-#include <QMessageBox>
 #include <QPixmap>
 
 #include "GUI/ui_GUI_PlaylistChooser.h"
@@ -257,7 +256,7 @@ void GUI_PlaylistChooser::text_changed(const QString & text) {
 
 int GUI_PlaylistChooser::show_warning(QString title_text) {
 
-    QMessageBox warning_box(this);
+	QMessageBox warning_box(this);
         warning_box.setParent(this);
         warning_box.setModal(true);
         warning_box.setWindowFlags(Qt::Dialog);
@@ -267,8 +266,6 @@ int GUI_PlaylistChooser::show_warning(QString title_text) {
         warning_box.setInformativeText(tr("Are you sure?"));
         warning_box.setWindowTitle(title_text);
         warning_box.setDefaultButton(QMessageBox::No);
-        Helper::set_deja_vu_font(&warning_box);
-
 
     return warning_box.exec();
 }

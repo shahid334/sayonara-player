@@ -228,10 +228,6 @@ void PlaylistView::keyPressEvent(QKeyEvent* event) {
         this->sig_double_clicked(min_row);
         break;
 
-    case Qt::Key_Tab:
-        emit sig_no_focus();
-        break;
-
     default: break;
     }
 

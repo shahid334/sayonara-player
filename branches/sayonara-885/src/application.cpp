@@ -41,13 +41,13 @@ Application::Application(int & argc, char ** argv) :
 	QApplication(argc, argv),
 	SayonaraClass()
 {
-
+	_system_font = this->font();
 }
 
 void Application::check_for_crash(){
 	QString error_file = Helper::getErrorFile();
-	if(!QFile::exists(error_file)) return;
 
+	if(!QFile::exists(error_file)) return;
 
 	QString info_text;
 	QString mail;
@@ -83,7 +83,6 @@ void Application::check_for_crash(){
 	f.close();
 
 	return;
-
 }
 
 void Application::init(int n_files, QTranslator *translator) {
@@ -94,6 +93,8 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	QString version    = getVersion();
 	_settings->set(Set::Player_Version, version);
+
+
 
 	player              = new GUI_Player(translator);
 
@@ -223,6 +224,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->showPlugin(p);
 
 	_initialized = true;
+	REGISTER_LISTENER(Set::Player_Style, skin_changed);
 }
 
 Application::~Application() {
@@ -322,9 +324,6 @@ void Application::init_connections() {
 	CONNECT(library_importer, sig_lib_changes_allowed(bool),	player,         psl_reload_library_allowed(bool));
 	CONNECT(library_importer, sig_imported(),					library,		refresh());
 
-	CONNECT (ui_playlist, sig_no_focus(),						ui_library,		setFocus());
-	CONNECT(ui_library, sig_no_focus(),							ui_playlist,	  setFocus());
-
 	CONNECT(ui_library, sig_import_files(const QStringList&),	library_importer, psl_import_files(const QStringList&));
 
 	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		library,			psl_metadata_changed(const MetaDataList&, const MetaDataList&));
@@ -408,4 +407,36 @@ QString Application::getVersion() {
 
 QMainWindow* Application::getMainWindow() {
     return this->player;
+}
+
+
+void Application::skin_changed(){
+
+	return;
+	bool m_dark = (_settings->get(Set::Player_Style) == 0);
+	QFont font;
+
+	qDebug() << "Skin changed";
+
+	if(m_dark){
+
+		qDebug() << "Dark";
+		font.setFamily("DejaVu Sans");
+		font.setPointSize(9);
+		font.setWeight(55);
+		font.setItalic(false);
+
+	}
+
+	else{
+		font = _system_font;
+	}
+
+	font.setHintingPreference(QFont::PreferNoHinting);
+	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
+	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
+
+	this->setFont(font);
+	player->setFont(font);
+	player->repaint();
 }

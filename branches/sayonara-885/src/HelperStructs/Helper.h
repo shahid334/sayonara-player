@@ -73,8 +73,6 @@ namespace Helper{
 	void split_filename(const QString& src, QString& path, QString& filename);
 	QStringList extract_folders_of_files(const QStringList& list);
 
-    QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');
-
 
     // Everything clear
 	bool is_url(const QString& str);
@@ -126,7 +124,6 @@ namespace Helper{
 
 	QString get_location_from_ip(const QString&);
 
-    void set_deja_vu_font(QWidget* w, int font_size=-1);
 	void set_bin_path(const QString& str);
 
 

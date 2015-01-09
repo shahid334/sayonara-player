@@ -56,9 +56,6 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		void dropEvent(QDropEvent* event);
 		void dragMoveEvent(QDragMoveEvent* event);
 
-	signals:
-		void sig_no_focus();
-
 
 	public slots:
 		void fill_playlist(const MetaDataList&, int, PlaylistType, int pl_idx);
@@ -84,7 +81,6 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 		void btn_numbers_changed(bool);
 		void metadata_dropped(const MetaDataList&, int);
 		void rows_removed(const QList<int>&);
-		void no_focus();
 
 		void playlist_added(int idx, QString name);
 		void playlist_closed(int idx);
@@ -127,7 +123,6 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 	protected:
 		void changeEvent(QEvent* e);
 		void resizeEvent(QResizeEvent *e);
-		void focusInEvent(QFocusEvent *e);
 
 
 };

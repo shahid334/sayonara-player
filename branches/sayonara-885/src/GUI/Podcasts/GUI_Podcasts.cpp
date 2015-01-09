@@ -27,13 +27,12 @@
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/PodcastParser/PodcastParser.h"
+#include <QMessageBox>
 
 #include <QIcon>
 #include <QPixmap>
 #include <QMap>
 #include <QInputDialog>
-#include <QMessageBox>
-
 
 GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
@@ -203,13 +202,12 @@ void GUI_Podcasts::delete_clicked() {
     if(_cur_podcast == -1) return;
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    QMessageBox msgBox(this);
+	QMessageBox msgBox(this);
     QString ask = tr("Really wanna delete %1?").arg(_cur_podcast_name);
     msgBox.setText(ask );
     msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);
-    Helper::set_deja_vu_font(&msgBox);
 
     int ret = msgBox.exec();
     if(ret == QMessageBox::Yes) {

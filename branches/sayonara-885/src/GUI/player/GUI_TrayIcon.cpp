@@ -59,7 +59,7 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) :
 	m_muteAction = new QAction(tr("Mute"), this);
 	m_muteAction->setIcon(Helper::getIcon("vol_mute.png"));
 	m_closeAction = new QAction(tr("Close"), this);
-	m_closeAction->setIcon(Helper::getIcon("close.png"));
+	m_closeAction->setIcon(Helper::getIcon("power_off.png"));
 	m_showAction = new QAction(tr("Show"), this);
 
     m_trayContextMenu = new QMenu();
@@ -73,9 +73,6 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) :
 	m_trayContextMenu->addSeparator();
 	m_trayContextMenu->addAction(m_showAction);
 	m_trayContextMenu->addAction(m_closeAction);
-	QFont f = m_trayContextMenu->font();
-	f.setFamily("DejaVu Sans");
-	m_trayContextMenu->setFont(f);
 
 	this->setContextMenu(m_trayContextMenu);
 	this->setIcon(Helper::getIcon("play.png"));
@@ -247,14 +244,18 @@ void GUI_TrayIcon::setPlaying(bool play) {
 
     m_playing = play;
 
+	this->setContextMenu(m_trayContextMenu);
+
 	if(play) {
 		setIcon(Helper::getIcon("play.png"));
+
 		m_playAction->setIcon(Helper::getIcon("pause.png"));
 		m_playAction->setText(tr("Pause"));
 	}
 
 	else {
 		setIcon(Helper::getIcon("pause.png"));
+
 		m_playAction->setIcon(Helper::getIcon("play.png"));
 		m_playAction->setText(tr("Play"));
 	}

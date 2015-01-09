@@ -47,6 +47,7 @@
 #include <QMimeData>
 
 LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
+
     _parent = parent;
     _qDrag = 0;
     _rc_header_menu = 0;
@@ -60,8 +61,6 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
     _corner_widget = new QWidget(this);
     _corner_widget->hide();
-
-    Helper::set_deja_vu_font(horizontalHeader(), 12);
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
@@ -230,17 +229,7 @@ void LibraryView::keyPressEvent(QKeyEvent* event) {
 
             break;
 
-		case Qt::Key_Tab:
-            if(alt_pressed || ctrl_pressed) break;
-            emit sig_tab_pressed(false);
-            break;
-
-        case Qt::Key_Backtab:
-            if(alt_pressed || ctrl_pressed) break;
-            emit sig_tab_pressed(true);
-			break;
-
-        case Qt::Key_End:
+		case Qt::Key_End:
 			this->selectRow(_model->rowCount() - 1);
             break;
 

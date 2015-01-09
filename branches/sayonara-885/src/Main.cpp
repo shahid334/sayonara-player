@@ -260,10 +260,8 @@ int main(int argc, char *argv[]) {
         QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 	}
 
-
     app.setApplicationName("Sayonara");
     app.setWindowIcon(Helper::getIcon("logo.png"));
-
 
     QStringList params;
     for(int i=1; i<argc; i++) {
@@ -277,11 +275,7 @@ int main(int argc, char *argv[]) {
     translator.load(language, Helper::getSharePath() + "translations");
     app.installTranslator(&translator);
 
-    QFont font("DejaVu Sans", 9, 55,  false);
-	font.setHintingPreference(QFont::PreferNoHinting);
-	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
-	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
-    app.setFont(font);
+
 
     app.init(params.size(), &translator);
     if(!app.is_initialized()) return 0;

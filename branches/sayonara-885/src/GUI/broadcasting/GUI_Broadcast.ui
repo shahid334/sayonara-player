@@ -42,7 +42,6 @@
     <widget class="Line" name="line_2">
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>9</pointsize>
       </font>
      </property>
@@ -58,7 +57,6 @@
     <widget class="QLabel" name="lab_status">
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>9</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -90,7 +88,6 @@
        </property>
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
        </property>
@@ -101,7 +98,10 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../Icons.qrc">:/icons/icons/broadcast.svg</pixmap>
+        <pixmap resource="../Icons.qrc">:/icons/broadcast.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -109,7 +109,6 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>11</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -131,11 +130,6 @@
          <height>18</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
@@ -152,7 +146,6 @@
       <widget class="QComboBox" name="combo_clients">
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
        </property>
@@ -165,7 +158,6 @@
       <widget class="QPushButton" name="btn_dismiss">
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
        </property>
@@ -175,13 +167,16 @@
        <property name="text">
         <string>Dismiss</string>
        </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_dismiss_all">
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
        </property>
@@ -190,6 +185,10 @@
        </property>
        <property name="text">
         <string>Dismiss all</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
        </property>
       </widget>
      </item>
@@ -208,7 +207,7 @@
      </property>
      <property name="icon">
       <iconset resource="../Icons.qrc">
-       <normaloff>:/icons/icons/tool.png</normaloff>:/icons/icons/tool.png</iconset>
+       <normaloff>:/icons/tool.png</normaloff>:/icons/tool.png</iconset>
      </property>
      <property name="iconSize">
       <size>

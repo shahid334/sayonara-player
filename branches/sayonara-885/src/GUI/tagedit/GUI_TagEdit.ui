@@ -59,13 +59,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Cancel</string>
@@ -80,16 +75,15 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
-        <string>Ok</string>
+        <string>Save</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
        </property>
       </widget>
      </item>
@@ -97,32 +91,16 @@
    </item>
    <item row="16" column="0">
     <widget class="QLabel" name="label_5">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Genres</string>
      </property>
     </widget>
    </item>
    <item row="20" column="1" colspan="6">
-    <widget class="QLineEdit" name="le_comment">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="le_comment"/>
    </item>
    <item row="21" column="5">
     <spacer name="verticalSpacer">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -136,13 +114,8 @@
    </item>
    <item row="15" column="7">
     <widget class="QCheckBox" name="cb_artist_all">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>all</string>
@@ -150,21 +123,10 @@
     </widget>
    </item>
    <item row="16" column="1" colspan="6">
-    <widget class="QLineEdit" name="le_genre">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="le_genre"/>
    </item>
    <item row="13" column="0">
     <widget class="QLabel" name="lab_title">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Title</string>
      </property>
@@ -172,11 +134,6 @@
    </item>
    <item row="15" column="0">
     <widget class="QLabel" name="label_2">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Artist</string>
      </property>
@@ -189,11 +146,6 @@
        <width>1564654</width>
        <height>16777215</height>
       </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
      </property>
      <property name="minimum">
       <number>-1</number>
@@ -208,11 +160,6 @@
    </item>
    <item row="20" column="0">
     <widget class="QLabel" name="label_6">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Comment</string>
      </property>
@@ -220,11 +167,6 @@
    </item>
    <item row="19" column="6">
     <widget class="QSpinBox" name="sb_discnumber">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="minimum">
       <number>-1</number>
      </property>
@@ -235,11 +177,6 @@
    </item>
    <item row="5" column="0" colspan="8">
     <widget class="Line" name="line_2">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -261,13 +198,8 @@
          <height>30</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>&lt;</string>
@@ -276,14 +208,6 @@
      </item>
      <item>
       <widget class="QLabel" name="lab_track_num">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-         <pointsize>9</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
        <property name="text">
         <string>Track</string>
        </property>
@@ -306,13 +230,8 @@
          <height>30</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>&gt;</string>
@@ -322,32 +241,15 @@
     </layout>
    </item>
    <item row="14" column="1" colspan="6">
-    <widget class="QLineEdit" name="le_album">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="le_album"/>
    </item>
    <item row="13" column="1" colspan="6">
-    <widget class="QLineEdit" name="le_title">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="le_title"/>
    </item>
    <item row="16" column="7">
     <widget class="QCheckBox" name="cb_genre_all">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>all</string>
@@ -355,13 +257,7 @@
     </widget>
    </item>
    <item row="17" column="1">
-    <widget class="QSpinBox" name="sb_track_num">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QSpinBox" name="sb_track_num"/>
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="lab_icon">
@@ -376,11 +272,6 @@
        <width>50</width>
        <height>50</height>
       </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
      </property>
      <property name="text">
       <string/>
@@ -398,32 +289,16 @@
    </item>
    <item row="17" column="0">
     <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string># Track</string>
      </property>
     </widget>
    </item>
    <item row="15" column="1" colspan="6">
-    <widget class="QLineEdit" name="le_artist">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-    </widget>
+    <widget class="QLineEdit" name="le_artist"/>
    </item>
    <item row="14" column="0">
     <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Album</string>
      </property>
@@ -431,13 +306,8 @@
    </item>
    <item row="19" column="7">
     <widget class="QCheckBox" name="cb_discnumber_all">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>all</string>
@@ -446,13 +316,8 @@
    </item>
    <item row="17" column="7">
     <widget class="QCheckBox" name="cb_year_all">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -464,11 +329,6 @@
    </item>
    <item row="12" column="0" colspan="8">
     <widget class="Line" name="line">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -482,13 +342,8 @@
        <height>30</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>?</string>
@@ -497,11 +352,6 @@
    </item>
    <item row="17" column="4" colspan="2">
     <widget class="QLabel" name="label_4">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Year</string>
      </property>
@@ -512,11 +362,6 @@
    </item>
    <item row="19" column="5">
     <widget class="QLabel" name="label_9">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Discnumber</string>
      </property>
@@ -527,13 +372,8 @@
    </item>
    <item row="14" column="7">
     <widget class="QCheckBox" name="cb_album_all">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>all</string>
@@ -545,7 +385,7 @@
      <item>
       <widget class="QPushButton" name="btn_title">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Title</string>
@@ -558,7 +398,7 @@
      <item>
       <widget class="QPushButton" name="btn_album">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Album</string>
@@ -571,7 +411,7 @@
      <item>
       <widget class="QPushButton" name="btn_artist">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Artist</string>
@@ -584,7 +424,7 @@
      <item>
       <widget class="QPushButton" name="btn_year">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Year</string>
@@ -597,7 +437,7 @@
      <item>
       <widget class="QPushButton" name="btn_disc_nr">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Disc Nr</string>
@@ -610,7 +450,7 @@
      <item>
       <widget class="QPushButton" name="btn_track_nr">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string># Track</string>
@@ -636,11 +476,6 @@
        <height>50</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="readOnly">
       <bool>true</bool>
      </property>
@@ -651,11 +486,6 @@
    </item>
    <item row="7" column="0">
     <widget class="QLabel" name="label_8">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Expression</string>
      </property>
@@ -670,11 +500,6 @@
    </item>
    <item row="22" column="0" colspan="2">
     <widget class="QProgressBar" name="pb_progress">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="value">
       <number>24</number>
      </property>
@@ -695,11 +520,6 @@
    </item>
    <item row="7" column="1" colspan="5">
     <widget class="QLineEdit" name="le_tag">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="readOnly">
       <bool>false</bool>
      </property>
@@ -707,13 +527,8 @@
    </item>
    <item row="7" column="6">
     <widget class="QPushButton" name="btn_apply_tag">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Apply</string>

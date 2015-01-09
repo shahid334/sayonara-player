@@ -46,6 +46,7 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/CustomMimeData.h"
+#include <QMessageBox>
 
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -60,7 +61,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QPixmap>
-#include <QMessageBox>
+
 #include <QPalette>
 #include <QBrush>
 #include <QScrollBar>
@@ -142,7 +143,6 @@ GUI_Library_windowed::GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog
 	connect(lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 	connect(lv_album, SIGNAL(sig_append_clicked()), this, SLOT(append()));
 	connect(lv_album, SIGNAL(sig_no_disc_menu()), this, SLOT(delete_menu()));
-	connect(lv_album, SIGNAL(sig_tab_pressed(bool)), this, SLOT(album_tab_pressed(bool)));
 	connect(lv_album, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
 	connect(tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
@@ -155,7 +155,6 @@ GUI_Library_windowed::GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog
 	connect(tb_title, SIGNAL(sig_delete_clicked()), this, SLOT(delete_tracks()));
 	connect(tb_title, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next_tracks()));
 	connect(tb_title, SIGNAL(sig_append_clicked()), this, SLOT(append_tracks()));
-	connect(tb_title, SIGNAL(sig_tab_pressed(bool)), this, SLOT(track_tab_pressed(bool)));
 	connect(tb_title, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
 	connect(lv_artist, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(artist_dbl_clicked(const QModelIndex & )));
@@ -168,7 +167,6 @@ GUI_Library_windowed::GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog
 	connect(lv_artist, SIGNAL(sig_delete_clicked()), this, SLOT(delete_artist()));
 	connect(lv_artist, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 	connect(lv_artist, SIGNAL(sig_append_clicked()), this, SLOT(append()));
-	connect(lv_artist, SIGNAL(sig_tab_pressed(bool)), this, SLOT(artist_tab_pressed(bool)));
 	connect(lv_artist, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
 
 	connect(btn_refresh, SIGNAL(clicked()), this, SLOT(refresh()));
@@ -320,11 +318,6 @@ void GUI_Library_windowed::resizeEvent(QResizeEvent* e) {
 	tb_title->set_col_sizes();
 }
 
-void GUI_Library_windowed::focusInEvent(QFocusEvent *e) {
-
-    QWidget::focusInEvent(e);
-	lv_album->setFocus();
-}
 
 void  GUI_Library_windowed::columns_album_changed(QList<int>& list) {
     _shown_cols_albums = list;
@@ -341,24 +334,6 @@ void  GUI_Library_windowed::columns_artist_changed(QList<int>& list) {
 void  GUI_Library_windowed::columns_title_changed(QList<int> & list) {
     _shown_cols_tracks = list;
 	_settings->set(Set::Lib_ColsTitle, list);
-}
-
-
-void GUI_Library_windowed::artist_tab_pressed(bool mod) {
-	if(mod) tb_title->setFocus();
-	else lv_album->setFocus();
-}
-
-
-void GUI_Library_windowed::album_tab_pressed(bool mod) {
-	if(mod) lv_artist->setFocus();
-	else tb_title->setFocus();
-}
-
-
-void GUI_Library_windowed::track_tab_pressed(bool mod) {
-	if(mod) lv_album->setFocus();
-    else emit sig_no_focus();
 }
 
 
@@ -647,7 +622,6 @@ void GUI_Library_windowed::lib_delete_answer(QString answer) {
 	answerbox.setText(tr("Info"));
 	answerbox.setIcon(QMessageBox::Information);
 	answerbox.setInformativeText(answer);
-    Helper::set_deja_vu_font(&answerbox);
 
 	answerbox.exec();
 	answerbox.close();
@@ -714,8 +688,6 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks) {
 		only_library_button = dialog.addButton(tr("Only from library"), QMessageBox::AcceptRole);
 		dialog.setDefaultButton(QMessageBox::No);
 		QString info_text = tr("You are about to delete %1 files").arg(n_tracks);
-        Helper::set_deja_vu_font(&dialog);
-
 
 		dialog.setInformativeText(info_text + "\n" + tr("Continue?") );
 

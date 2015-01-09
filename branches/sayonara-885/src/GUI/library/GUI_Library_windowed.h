@@ -58,6 +58,8 @@
 #include "HelperStructs/CustomMimeData.h"
 
 #include "HelperStructs/SayonaraClass.h"
+#include <QMessageBox>
+
 #include "library/CLibraryBase.h"
 
 
@@ -89,7 +91,7 @@ protected:
 	Filter		_cur_searchfilter;
 
 signals:
-    void sig_no_focus();
+
     void sig_import_files(const QStringList&);
 
 
@@ -109,10 +111,6 @@ protected slots:
 	void track_info_available(const MetaDataList& v_md);
 
 	void disc_pressed(int);
-
-    void artist_tab_pressed(bool);
-    void album_tab_pressed(bool);
-    void track_tab_pressed(bool);
 
     void album_rating_changed(int);
     void title_rating_changed(int);
@@ -176,7 +174,6 @@ protected slots:
 
 protected:
 	void resizeEvent(QResizeEvent* e);
-    void focusInEvent(QFocusEvent *e);
 
 	QList<int> _shown_cols_albums;
 	QList<int> _shown_cols_artist;

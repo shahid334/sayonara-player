@@ -41,11 +41,11 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView* parent, bool small) {
 
 	if(small) { 	
 		_row_height = 20;
-		_pl_entry = new GUI_PlaylistEntrySmall();
+		_pl_entry = new GUI_PlaylistEntrySmall(parent);
 	}
 	else{
 		_row_height = 31;		
-		_pl_entry = new GUI_PlaylistEntryBig();
+		_pl_entry = new GUI_PlaylistEntryBig(parent);
 	}
 
 	_parent = parent;

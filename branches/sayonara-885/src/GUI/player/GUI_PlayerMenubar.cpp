@@ -28,7 +28,7 @@
 
 #include <QDir>
 #include <QFileDialog>
-
+#include <QMessageBox>
 
 
 /** FILE **/
@@ -338,7 +338,7 @@ void GUI_Player::about(bool b) {
 	QString version = _settings->get(Set::Player_Version);
 	QString link = Helper::createLink("http://sayonara.luciocarreras.de");
 
-    QMessageBox infobox(this);
+	QMessageBox infobox(this);
     infobox.setParent(this);
     infobox.setIconPixmap(Helper::getPixmap("logo.png", QSize(150, 150), true));
     infobox.setWindowFlags(Qt::Dialog);
@@ -372,8 +372,7 @@ void GUI_Player::about(bool b) {
                                 );
 
     infobox.setStandardButtons(QMessageBox::Ok);
-    infobox.button(QMessageBox::Ok)->setFocusPolicy(Qt::NoFocus);
-    Helper::set_deja_vu_font(&infobox);
+
     infobox.exec();
 }
 

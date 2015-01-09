@@ -16,11 +16,6 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="font">
-   <font>
-    <family>DejaVu Sans</family>
-   </font>
-  </property>
   <property name="windowTitle">
    <string/>
   </property>
@@ -71,19 +66,14 @@
        <height>16777215</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Set library path</string>
      </property>
      <property name="icon">
-      <iconset resource="../Icons.qrc">
+      <iconset>
        <normaloff>:/icons/icons/import.png</normaloff>:/icons/icons/import.png</iconset>
      </property>
     </widget>

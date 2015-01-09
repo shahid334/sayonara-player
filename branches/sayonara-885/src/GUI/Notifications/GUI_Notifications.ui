@@ -19,11 +19,6 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
     <widget class="Line" name="line">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -31,13 +26,8 @@
    </item>
    <item row="2" column="0" colspan="2">
     <widget class="QCheckBox" name="cb_activate">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>Activate</string>
@@ -52,13 +42,8 @@
        <height>16777215</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string>OK</string>
@@ -67,13 +52,8 @@
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QComboBox" name="combo_notification">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <item>
       <property name="text">
@@ -84,11 +64,6 @@
    </item>
    <item row="4" column="1">
     <widget class="QSpinBox" name="sb_timeout">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
       <enum>Qt::WheelFocus</enum>
      </property>
@@ -108,11 +83,6 @@
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="label_3">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Timeout (ms)</string>
      </property>
@@ -122,7 +92,6 @@
     <widget class="QLabel" name="label_2">
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -134,11 +103,6 @@
    </item>
    <item row="5" column="1">
     <widget class="QSpinBox" name="sb_scale">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="minimum">
       <number>32</number>
      </property>
@@ -152,11 +116,6 @@
    </item>
    <item row="5" column="0">
     <widget class="QCheckBox" name="cb_scale">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Icon scaling</string>
      </property>

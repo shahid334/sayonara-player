@@ -633,41 +633,6 @@ QString Helper::calc_hash(const QString& data) {
 }
 
 
-QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep) {
-
-    QFontMetrics fm(w->font());
-
-    int width = w->width();
-
-
-    QString subtext = str;
-    QStringList lst;
-
-    while(fm.width(subtext) > width) {
-        int textsize = fm.width(subtext);
-        double scale = (width * 1.0) / textsize;
-        int idx = subtext.size() * scale - 2;
-        if(idx < 0) idx = 0;
-
-        while(idx < subtext.size() && idx >= 0 && subtext.at(idx) != sep) {
-            idx --;
-        }
-
-        if(idx >= 0) {
-
-            lst << subtext.left(idx+1);
-            subtext = subtext.right(subtext.size() - idx);
-        }
-
-        else
-            break;
-
-    }
-
-    lst << subtext;
-    return lst.join("<br />");
-}
-
 bool Helper::is_url(const QString& str) {
     if(is_www(str)) return true;
     if(str.startsWith("file"), Qt::CaseInsensitive) return true;
@@ -796,20 +761,9 @@ QString Helper::get_newest_version() {
     QString str;
     WebAccess::read_http_into_str("http://sayonara.luciocarreras.de/newest", &str);
     return str;
-
 }
 
 
-void Helper::set_deja_vu_font(QWidget* w, int font_size) {
-    QFont f = w->font();
-    f.setFamily("DejaVu Sans");
-    if(font_size > 0) {
-        f.setPixelSize(font_size);
-    }
-    f.setStyleStrategy(QFont::PreferAntialias);
-    f.setHintingPreference(QFont::PreferNoHinting);
-    w->setFont(f);
-}
 
 void Helper::set_bin_path(const QString& str) {
 

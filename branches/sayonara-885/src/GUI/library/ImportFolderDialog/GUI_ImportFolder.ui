@@ -16,11 +16,6 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="7" column="0" colspan="2">
     <widget class="Line" name="line">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -52,16 +47,11 @@
              <height>30</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <family>DejaVu Sans</family>
-            </font>
-           </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
-            <string>cancel</string>
+            <string>Cancel</string>
            </property>
           </widget>
          </item>
@@ -79,16 +69,11 @@
              <height>30</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <family>DejaVu Sans</family>
-            </font>
-           </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
-            <string>ok</string>
+            <string>OK</string>
            </property>
           </widget>
          </item>
@@ -116,11 +101,6 @@
              <height>25</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <family>DejaVu Sans</family>
-            </font>
-           </property>
            <property name="value">
             <number>24</number>
            </property>
@@ -134,11 +114,6 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="font">
-            <font>
-             <family>DejaVu Sans</family>
-            </font>
-           </property>
            <property name="text">
             <string/>
            </property>
@@ -148,11 +123,6 @@
        </item>
        <item row="4" column="0" colspan="5">
         <widget class="Line" name="line_2">
-         <property name="font">
-          <font>
-           <family>DejaVu Sans</family>
-          </font>
-         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -160,11 +130,6 @@
        </item>
        <item row="8" column="0" colspan="5">
         <widget class="QLabel" name="lab_target_path">
-         <property name="font">
-          <font>
-           <family>DejaVu Sans</family>
-          </font>
-         </property>
          <property name="text">
           <string>/music/library</string>
          </property>
@@ -192,11 +157,6 @@
              <height>25</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <family>DejaVu Sans</family>
-            </font>
-           </property>
            <property name="focusPolicy">
             <enum>Qt::ClickFocus</enum>
            </property>
@@ -219,13 +179,8 @@
              <height>25</height>
             </size>
            </property>
-           <property name="font">
-            <font>
-             <family>DejaVu Sans</family>
-            </font>
-           </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
             <string>...</string>
@@ -238,14 +193,14 @@
         <widget class="QLabel" name="lab_img">
          <property name="minimumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>80</width>
+           <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
-           <height>100</height>
+           <width>80</width>
+           <height>80</height>
           </size>
          </property>
          <property name="sizeIncrement">
@@ -260,26 +215,19 @@
            <height>0</height>
           </size>
          </property>
-         <property name="font">
-          <font>
-           <family>DejaVu Sans</family>
-          </font>
-         </property>
          <property name="text">
           <string/>
          </property>
+         <property name="pixmap">
+          <pixmap resource="../../Icons.qrc">:/icons/import.png</pixmap>
+         </property>
          <property name="scaledContents">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
         </widget>
        </item>
        <item row="6" column="0" colspan="4">
         <widget class="QLabel" name="lab_target_info">
-         <property name="font">
-          <font>
-           <family>DejaVu Sans</family>
-          </font>
-         </property>
          <property name="text">
           <string>Select target folder</string>
          </property>
@@ -287,13 +235,8 @@
        </item>
        <item row="6" column="4">
         <widget class="QCheckBox" name="cb_copy2lib">
-         <property name="font">
-          <font>
-           <family>DejaVu Sans</family>
-          </font>
-         </property>
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="text">
           <string>Copy tracks to library</string>
@@ -312,11 +255,6 @@
        </item>
        <item row="11" column="1" colspan="3">
         <spacer name="horizontalSpacer">
-         <property name="font">
-          <font>
-           <family>DejaVu Sans</family>
-          </font>
-         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -332,7 +270,6 @@
         <widget class="QLabel" name="label">
          <property name="font">
           <font>
-           <family>DejaVu Sans</family>
            <weight>75</weight>
            <bold>true</bold>
           </font>
@@ -348,7 +285,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>cb_copy2lib</sender>

@@ -64,6 +64,8 @@
 #include "RadioStation/StreamServer.h"
 #include "HelperStructs/SayonaraClass.h"
 
+#include <QFont>
+
 
 class Application : public QApplication, private SayonaraClass
 {
@@ -130,6 +132,10 @@ public:
 private:
     QString getVersion();
 	void check_for_crash();
+	QFont _system_font;
+
+private slots:
+	void skin_changed();
 };
 
 #endif // APPLICATION_H

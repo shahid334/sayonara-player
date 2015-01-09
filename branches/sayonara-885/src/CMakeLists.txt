@@ -19,6 +19,7 @@ SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
 SET(CMAKE_C_FLAGS "-Wall")
 
 SET(QT_USE_QTSQL TRUE)
+SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTNETWORK TRUE)
 

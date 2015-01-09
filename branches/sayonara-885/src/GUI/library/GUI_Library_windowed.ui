@@ -51,14 +51,13 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>8</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="acceptDrops">
       <bool>true</bool>
@@ -135,14 +134,13 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>8</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="acceptDrops">
       <bool>true</bool>
@@ -210,14 +208,13 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>8</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="acceptDrops">
       <bool>true</bool>
@@ -271,13 +268,8 @@
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QFrame" name="frame">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -308,14 +300,13 @@
        </property>
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
          <weight>50</weight>
          <bold>false</bold>
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</string>
@@ -362,7 +353,6 @@
        </property>
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
        </property>
@@ -388,13 +378,8 @@
          <height>25</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Show all interprets, albums, tracks</string>
@@ -404,7 +389,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/icons/broom.png</normaloff>:/icons/icons/broom.png</iconset>
+         <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
        </property>
       </widget>
      </item>
@@ -427,7 +412,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/icons/undo.png</normaloff>:/icons/icons/undo.png</iconset>
+         <normaloff>:/icons/undo.png</normaloff>:/icons/undo.png</iconset>
        </property>
       </widget>
      </item>
@@ -445,14 +430,13 @@
        </property>
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Music Library  </string>
@@ -461,13 +445,8 @@
      </item>
      <item>
       <widget class="QLabel" name="lab_status">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -488,13 +467,8 @@
          <height>24</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Information</string>
@@ -504,7 +478,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/icons/info_small.png</normaloff>:/icons/icons/info_small.png</iconset>
+         <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
        </property>
        <property name="iconSize">
         <size>

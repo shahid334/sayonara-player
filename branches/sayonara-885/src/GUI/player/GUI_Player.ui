@@ -28,13 +28,8 @@
     <height>2000</height>
    </size>
   </property>
-  <property name="font">
-   <font>
-    <family>DejaVu Sans</family>
-   </font>
-  </property>
   <property name="focusPolicy">
-   <enum>Qt::NoFocus</enum>
+   <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
    <string>Sayonara Player</string>
@@ -102,7 +97,7 @@
        </size>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="styleSheet">
        <string notr="true"/>
@@ -118,7 +113,7 @@
        </sizepolicy>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -151,7 +146,7 @@
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -183,7 +178,7 @@
        </size>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -195,7 +190,16 @@
        <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -216,7 +220,7 @@
           </size>
          </property>
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="text">
           <string/>
@@ -242,7 +246,7 @@
     <item row="5" column="1" rowspan="2" colspan="2">
      <widget class="QFrame" name="my_frame_3">
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -254,7 +258,16 @@
        <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_6">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -286,7 +299,7 @@
           </font>
          </property>
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="styleSheet">
           <string notr="true"/>
@@ -302,7 +315,7 @@
        <item row="1" column="1">
         <spacer name="horizontalSpacer">
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -344,7 +357,7 @@
           </font>
          </property>
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="lineWidth">
           <number>0</number>
@@ -384,7 +397,7 @@
           </size>
          </property>
          <property name="focusPolicy">
-          <enum>Qt::NoFocus</enum>
+          <enum>Qt::StrongFocus</enum>
          </property>
          <property name="maximum">
           <number>1000</number>
@@ -424,7 +437,7 @@
        </size>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
@@ -436,7 +449,16 @@
        <number>0</number>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <property name="spacing">
@@ -477,7 +499,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
             <string/>
@@ -518,7 +540,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
             <string/>
@@ -559,7 +581,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
             <string/>
@@ -606,7 +628,7 @@
             </size>
            </property>
            <property name="focusPolicy">
-            <enum>Qt::NoFocus</enum>
+            <enum>Qt::StrongFocus</enum>
            </property>
            <property name="text">
             <string/>
@@ -640,7 +662,7 @@
        </sizepolicy>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
      </widget>
     </item>
@@ -673,7 +695,7 @@
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="text">
          <string/>
@@ -717,7 +739,7 @@
          </size>
         </property>
         <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
+         <enum>Qt::StrongFocus</enum>
         </property>
         <property name="value">
          <number>50</number>
@@ -759,7 +781,7 @@
        </size>
       </property>
       <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
+       <enum>Qt::StrongFocus</enum>
       </property>
       <property name="text">
        <string/>
@@ -811,7 +833,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
            <string>Sayonara Player</string>
@@ -850,7 +872,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true">border-bottom: 1px groove qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0, stop:0 transparent, stop: 0.3 #242424, stop: 0.7 #242424, stop: 1.0 transparent);</string>
@@ -906,7 +928,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
            <string/>
@@ -945,7 +967,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -1004,7 +1026,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
            <string>Written by Lucio Carreras</string>
@@ -1043,7 +1065,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -1090,7 +1112,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
            <string>Copyright 2011-2013</string>
@@ -1123,7 +1145,7 @@
            </font>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="text">
            <string notr="true"/>
@@ -1148,7 +1170,7 @@
            </size>
           </property>
           <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
+           <enum>Qt::StrongFocus</enum>
           </property>
           <property name="toolTip">
            <string>Correct Metadata</string>
@@ -1183,20 +1205,10 @@
      <x>0</x>
      <y>0</y>
      <width>951</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-    </font>
-   </property>
    <widget class="QMenu" name="menuFle">
-    <property name="font">
-     <font>
-      <family>DejaVu Sans</family>
-     </font>
-    </property>
     <property name="title">
      <string>File</string>
     </property>
@@ -1211,11 +1223,6 @@
     <addaction name="action_Close"/>
    </widget>
    <widget class="QMenu" name="menuView">
-    <property name="font">
-     <font>
-      <family>DejaVu Sans</family>
-     </font>
-    </property>
     <property name="styleSheet">
      <string notr="true"/>
     </property>
@@ -1230,11 +1237,6 @@
     <addaction name="action_Fullscreen"/>
    </widget>
    <widget class="QMenu" name="menuPreferences">
-    <property name="font">
-     <font>
-      <family>DejaVu Sans</family>
-     </font>
-    </property>
     <property name="title">
      <string>Preferences</string>
     </property>
@@ -1255,11 +1257,6 @@
     <addaction name="action_livesearch"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
-    <property name="font">
-     <font>
-      <family>DejaVu Sans</family>
-     </font>
-    </property>
     <property name="title">
      <string>Help</string>
     </property>
@@ -1275,33 +1272,15 @@
    <property name="text">
     <string>Open File</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_OpenFolder">
    <property name="text">
     <string>Open Folder</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_Close">
    <property name="text">
     <string>Close</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="action_ViewEqualizer">
@@ -1325,12 +1304,6 @@
    <property name="text">
     <string>Dark</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_lastFM">
    <property name="icon">
@@ -1340,54 +1313,25 @@
    <property name="text">
     <string>Last.fm</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_reloadLibrary">
    <property name="text">
     <string>Reload Library</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="action_clearLibrary">
    <property name="text">
     <string>Clear Library</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_setLibPath">
    <property name="text">
     <string>Library Path</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-    </font>
-   </property>
   </action>
   <action name="action_fetch_all_covers">
    <property name="text">
     <string>Fetch all covers</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="action_ViewLFMRadio">
@@ -1414,33 +1358,15 @@
    <property name="toolTip">
     <string>Load playlist on startup</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_ImportFolder">
    <property name="text">
     <string>Import Folder</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_ImportFiles">
    <property name="text">
     <string>Import Files</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="action_ViewPlaylistChooser">
@@ -1458,20 +1384,10 @@
    <property name="text">
     <string>Help</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-    </font>
-   </property>
   </action>
   <action name="action_about">
    <property name="text">
     <string>About</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-    </font>
    </property>
   </action>
   <action name="action_notification">
@@ -1500,12 +1416,6 @@
    <property name="text">
     <string>&amp;Library</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
    <property name="shortcutContext">
     <enum>Qt::ApplicationShortcut</enum>
    </property>
@@ -1517,12 +1427,6 @@
    <property name="text">
     <string>Close to tray</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_only_one_instance">
    <property name="checkable">
@@ -1530,12 +1434,6 @@
    </property>
    <property name="text">
     <string>Only one instance</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="action_Fullscreen">
@@ -1545,12 +1443,6 @@
    <property name="text">
     <string>Fullscreen </string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_smallPlaylistItems">
    <property name="checkable">
@@ -1559,12 +1451,6 @@
    <property name="text">
     <string>Small Playlist Items</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_showOnlyTracks">
    <property name="checkable">
@@ -1572,12 +1458,6 @@
    </property>
    <property name="text">
     <string>Only tracks in library</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="actionSound_Engine">
@@ -1602,12 +1482,6 @@
    <property name="text">
     <string>Stream recorder</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_streamripper_path">
    <property name="text">
@@ -1629,22 +1503,10 @@
    <property name="text">
     <string>Socket connection</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_notifications">
    <property name="text">
     <string>Notifications</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
    </property>
   </action>
   <action name="action_ViewPodcasts">
@@ -1665,12 +1527,6 @@
    <property name="text">
     <string>Library live search</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_notifyNewVersion">
    <property name="checkable">
@@ -1682,21 +1538,10 @@
    <property name="text">
     <string>Update notifier</string>
    </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
   </action>
   <action name="action_Language">
    <property name="text">
     <string>Language</string>
-   </property>
-   <property name="font">
-    <font>
-     <family>DejaVu Sans</family>
-    </font>
    </property>
   </action>
  </widget>

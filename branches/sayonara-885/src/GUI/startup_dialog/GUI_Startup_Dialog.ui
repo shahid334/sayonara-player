@@ -37,11 +37,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_cancel">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="text">
         <string>Cancel</string>
        </property>
@@ -49,13 +44,8 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_ok">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="text">
-        <string>Ok</string>
+        <string>OK</string>
        </property>
       </widget>
      </item>
@@ -63,11 +53,6 @@
    </item>
    <item row="5" column="0">
     <widget class="QCheckBox" name="cb_load_last_track">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Load last track on startup</string>
      </property>
@@ -75,11 +60,6 @@
    </item>
    <item row="6" column="0">
     <widget class="QCheckBox" name="cb_remember_time">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Remember time of last track</string>
      </property>
@@ -89,7 +69,6 @@
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -101,11 +80,6 @@
    </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="cb_load_pl_on_startup">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Load playlist on startup</string>
      </property>
@@ -130,11 +104,6 @@
    </item>
    <item row="3" column="0">
     <widget class="QCheckBox" name="cb_start_playing">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="text">
       <string>Start playing</string>
      </property>

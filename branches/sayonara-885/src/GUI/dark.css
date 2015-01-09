@@ -1,4 +1,9 @@
+QMainWindow {
+/*	font: 500 8pt "DejaVu Sans";*/
+}
+
 QMainWindow, QDialog {
+	
 	border: none;
 	background-color: #3c3c3c;
 	color: #D8D8D8;
@@ -9,7 +14,13 @@ QWidget {
 	border: none;
 	color: #D8D8D8;
 	selection-background-color: #424e72;
+	font-family: "DejaVu Sans";
+/*	font: 500 7pt "DejaVu Sans";*/
+}
 
+
+QWidget:focus {
+	outline: none;
 }
 
 QGroupBox  {
@@ -59,11 +70,13 @@ MiniSearcher {
 QLabel, QScrollArea{
 	border: none;
 	background: transparent;
+	/*font: 500 8pt "DejaVu Sans";*/
 }
 
 QListView, QTableView{
 
 
+	font: 500 7pt "DejaVu Sans";
 	border: 1px solid #282828;
         color: #D8D8D8;
 	background-color: #282828;
@@ -261,18 +274,14 @@ QTableView QHeaderView::down-arrow {
         margin-right: 2px;
 }
 
-
-
-
-
-
 QMenuBar {
-   color: #D8D8D8;
-   background-color: transparent;
+	color: #D8D8D8;
+	background-color: transparent;
+	font: 400 8pt "DejaVu Sans"
  }
 
  QMenuBar::item {
-   color: #D8D8D8;
+	color: #D8D8D8;
     background-color: transparent;
  }
 
@@ -287,7 +296,7 @@ QMenu {
       background-color: #383838;
       padding-left: 2px;
       padding-right: 2px;
-
+	  font: 400 8pt "DejaVu Sans"
 }
 
 QMenu::item {

@@ -35,6 +35,7 @@ class GUI_PlaylistEntry : public QFrame, protected SayonaraClass {
 
 public:
 	GUI_PlaylistEntry(QWidget* parent=0) :
+		QFrame(parent),
 		SayonaraClass()
 	{
 

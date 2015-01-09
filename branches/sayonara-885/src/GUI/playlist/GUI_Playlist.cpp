@@ -141,16 +141,6 @@ void GUI_Playlist::resizeEvent(QResizeEvent* e) {
 	_cur_playlist_view->reset();
 }
 
-void GUI_Playlist::focusInEvent(QFocusEvent *e) {
-
-	_cur_playlist_view->setFocus();
-}
-
-void GUI_Playlist::no_focus() {
-	parentWidget()->setFocus();
-    emit sig_no_focus();
-}
-
 void GUI_Playlist::language_changed() {
 
 	retranslateUi(this);
@@ -175,7 +165,6 @@ void GUI_Playlist::initPlaylistView(const PlaylistView* pl_view){
 	connect(pl_view, SIGNAL(sig_sel_changed(const MetaDataList&, const QList<int>&)),
 			this, SLOT(sel_changed(const MetaDataList&, const QList<int>&)));
 	connect(pl_view, SIGNAL(sig_double_clicked(int)), this, SLOT(double_clicked(int)));
-	connect(pl_view, SIGNAL(sig_no_focus()), this, SLOT(no_focus()));
 }
 
 

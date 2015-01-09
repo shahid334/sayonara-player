@@ -45,11 +45,6 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
@@ -107,13 +102,8 @@
          <height>24</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Save as custom</string>
@@ -180,13 +170,8 @@
      </item>
      <item>
       <spacer name="horizontalSpacer">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -207,13 +192,8 @@
          <height>18</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>x</string>
@@ -232,12 +212,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -260,12 +239,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -288,12 +266,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -316,12 +293,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -344,12 +320,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -372,12 +347,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -400,12 +374,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -438,13 +411,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -483,13 +451,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -528,13 +491,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -573,13 +531,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -618,13 +571,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -663,13 +611,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -708,13 +651,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -753,13 +691,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -804,13 +737,8 @@
        <height>0</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -845,12 +773,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">29</string>
@@ -870,12 +797,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">59</string>
@@ -895,12 +821,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">119</string>
@@ -920,12 +845,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">237</string>
@@ -945,12 +869,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">474</string>
@@ -970,12 +893,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">947</string>
@@ -995,12 +917,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">1.9k</string>
@@ -1020,12 +941,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">3.8k</string>
@@ -1045,12 +965,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">7.5k</string>
@@ -1070,12 +989,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string notr="true">15k</string>
@@ -1087,13 +1005,8 @@
    </item>
    <item row="5" column="0" colspan="10">
     <widget class="Line" name="line">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -1120,13 +1033,8 @@
        <height>5000</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="minimum">
       <number>-24</number>
@@ -1155,12 +1063,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -1183,12 +1090,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
@@ -1211,12 +1117,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>7</pointsize>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
