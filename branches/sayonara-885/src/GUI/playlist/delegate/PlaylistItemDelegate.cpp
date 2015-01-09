@@ -48,6 +48,8 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView* parent, bool small) {
 		_pl_entry = new GUI_PlaylistEntryBig(parent);
 	}
 
+	_pl_entry->hide();
+
 	_parent = parent;
 	_rendered_items = 0;
 }
@@ -104,7 +106,7 @@ void PlaylistItemDelegate::paint( QPainter *painter, const QStyleOptionViewItem 
 		style = QString("background-color: ") + 
 			col_highlight.name() + ";" + 
 			get_fg_color(highlight_val);
-    }
+	}
 
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
 	_pl_entry->setStyleSheet(style);

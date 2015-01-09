@@ -56,15 +56,15 @@ void GUI_PlaylistEntryBig::setContent(const MetaData& md, int idx) {
 		titlestr = md.title.trimmed();
 	}
 
-	lab_title->setText(titlestr);
-	lab_artist->setText(md.artist.trimmed());
-	lab_time->setText(len_str);
+	lab_pl_big_title->setText(titlestr);
+	lab_pl_big_artist->setText(md.artist.trimmed());
+	lab_pl_big_time->setText(len_str);
     if(md.album == "") {
-		lab_album->setText("");
+		lab_pl_big_album->setText("");
         return;
     }
 
-	lab_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
+	lab_pl_big_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
 
 }
 

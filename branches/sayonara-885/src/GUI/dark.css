@@ -1,5 +1,5 @@
 QMainWindow {
-/*	font: 500 8pt "DejaVu Sans";*/
+	font: 500 7pt "DejaVu Sans";
 }
 
 QMainWindow, QDialog {
@@ -15,7 +15,6 @@ QWidget {
 	color: #D8D8D8;
 	selection-background-color: #424e72;
 	font-family: "DejaVu Sans";
-/*	font: 500 7pt "DejaVu Sans";*/
 }
 
 
@@ -73,8 +72,39 @@ QLabel, QScrollArea{
 	/*font: 500 8pt "DejaVu Sans";*/
 }
 
-QListView, QTableView{
+QLabel#lab_pl_small_title {
+	font: 500 8pt "DejaVu Sans";
+}
 
+QLabel#lab_pl_small_time, QLabel#lab_pl_small_artist {
+	font: 300 6pt "DejaVu Sans";
+}
+
+QLabel#lab_pl_big_title {
+	font: 500 7pt "DejaVu Sans";
+}
+
+QLabel#lab_pl_big_artist, QLabel#lab_pl_big_album, QLabel#lab_pl_big_time {
+	font: 300 7pt "DejaVu Sans";
+}
+
+QLabel#lab_pl_small_title {
+	font: 500 7pt "DejaVu Sans";
+}
+
+QLabel#lab_pl_small_title {
+	font: 500 7pt "DejaVu Sans";
+}
+
+
+
+QLabel#lab_pl_small_title {
+	font: 500 7pt "DejaVu Sans";
+}
+
+
+
+QListView, QTableView {
 
 	font: 500 7pt "DejaVu Sans";
 	border: 1px solid #282828;
@@ -255,6 +285,8 @@ QTableView QHeaderView::section {
 	 border: 0px;
 	 border-bottom: 1px solid #323232;
          border-right: 1px solid qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #303030, stop:0.5 #505050, stop:0.6 #505050, stop:1 #303030);
+
+	font-size: 8pt;
 
 
 }

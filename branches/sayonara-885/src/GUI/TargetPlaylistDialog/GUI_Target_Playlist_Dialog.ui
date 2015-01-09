@@ -10,6 +10,11 @@
     <height>144</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>7</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Choose target playlist</string>
   </property>
@@ -97,6 +102,7 @@
     <widget class="QLabel" name="label">
      <property name="font">
       <font>
+       <pointsize>9</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>

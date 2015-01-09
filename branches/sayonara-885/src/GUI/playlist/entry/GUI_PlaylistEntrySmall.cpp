@@ -47,9 +47,9 @@ void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx) {
 		titlestr = md.title.trimmed();
 	}
 
-	lab_title->setText(titlestr);
-	lab_artist->setText(md.artist.trimmed());
-	lab_time->setText(len_str);
+	lab_pl_small_title->setText(titlestr);
+	lab_pl_small_artist->setText(md.artist.trimmed());
+	lab_pl_small_time->setText(len_str);
 }
 
 
