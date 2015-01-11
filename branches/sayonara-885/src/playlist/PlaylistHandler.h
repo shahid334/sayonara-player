@@ -67,12 +67,15 @@ public:
 	void close_playlist(int idx);
 	void load_old_playlist();
 
+private:
+	void apply_state(PlaylistState state);
+
 signals:
 	void sig_play();
 
 	void sig_playlist_created(const MetaDataList&, int cur_track_idx, PlaylistType type, int playlist_idx=-1);
 	void sig_auto_next_file(const MetaData&);
-	void sig_cur_track_changed(const MetaData&);
+	void sig_cur_track_changed(const MetaData&, bool start_play);
 	void sig_cur_track_idx_changed(int track_idx);
 
 	void sig_no_track_to_play();
@@ -146,9 +149,9 @@ private:
 	int					_cur_playlist_idx;
 	int					_active_playlist_idx;
 
-	PlaylistState       _state;
 	BackupPlaylist      _ba_playlist;
 	bool				_start_play;
+	PlaylistState		_state;
 
 	PlaylistType determine_playlist_type(const MetaDataList& v_md);
 	Playlist* new_playlist(PlaylistType type, int idx);
@@ -157,9 +160,9 @@ private:
 
 private slots:
 
-	void playlist_changed(const Playlist* pl);
-	void track_changed(const MetaData&, int cur_track_idx);
-	void no_track_to_play();
+	void playlist_changed(const Playlist* pl, int playlist_idx);
+	void track_changed(const MetaData&, int cur_track_idx, int playlist_idx);
+	void no_track_to_play(int playlist_idx);
 
 
 

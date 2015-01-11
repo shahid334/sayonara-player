@@ -93,7 +93,6 @@ namespace SK{
 		Engine_SR_Active,
 		Engine_SR_Warning,
 		Engine_SR_Path,
-		Engine_SR_CompleteTracks,
 		Engine_SR_SessionPath,
 
 		Socket_Active,
@@ -122,85 +121,83 @@ class SettingKey
 
 
 namespace Set {
-	INST(bool, LFM_Active);
-	INST(QStringList, LFM_Login);
+	INST(bool, LFM_Active);					/* is lastFM active? */
+	INST(QStringList, LFM_Login);			/* 2-Tupel, username, password */
 
-	INST(bool, LFM_Corrections);
-	INST(bool, LFM_ShowErrors);
-	INST(QString, LFM_SessionKey);
+	INST(bool, LFM_Corrections);			/* propose lfm corrections */
+	INST(bool, LFM_ShowErrors);				/* get error message, if there are lfm problems */
+	INST(QString, LFM_SessionKey);			/* lfm session key */
 
-	INST(int, Eq_Last);
-    INST(QList<EQ_Setting>, Eq_List);
-    INST(bool, Eq_Gauss);
+	INST(int, Eq_Last);						/* last equalizer index */
+	INST(QList<EQ_Setting>, Eq_List);		/* All equalizers */
+	INST(bool, Eq_Gauss);					/* do curve, when changing eq setting */
 
-	INST(bool, Lib_Show);
-	INST(QString, Lib_Path);
-	INST(QList<int>, Lib_ColsTitle);
-	INST(QList<int>, Lib_ColsArtist);
-	INST(QList<int>, Lib_ColsAlbum);
-	INST(bool, Lib_OnlyTracks);
-	INST(bool, Lib_LiveSearch);
-    INST(LibSortOrder, Lib_Sorting);
+	INST(bool, Lib_Show);					/* show library */
+	INST(QString, Lib_Path);				/* library path */
+	INST(QList<int>, Lib_ColsTitle);		/* shown columns tracks */
+	INST(QList<int>, Lib_ColsArtist);		/* shown columns artist */
+	INST(QList<int>, Lib_ColsAlbum);		/* shown columns albums */
+	INST(bool, Lib_OnlyTracks);				/* show only tracks in library */
+	INST(bool, Lib_LiveSearch);				/* library live search */
+	INST(LibSortOrder, Lib_Sorting);		/* how to sort in lib */
 
-	INST(QString, Player_Version);
-	INST(QString, Player_Language);
-	INST(int, Player_Style);
-	INST(QSize, Player_Size);
-	INST(QPoint, Player_Pos);
-	INST(bool, Player_Fullscreen);
-	INST(bool, Player_Maximized);
-	INST(QString, Player_ShownPlugin);
-	INST(bool, Player_OneInstance);
-	INST(bool, Player_Min2Tray);
-	INST(bool, Player_NotifyNewVersion);
+	INST(QString, Player_Version);			/* Version string of player */
+	INST(QString, Player_Language);			/* language of player */
+	INST(int, Player_Style);				/* dark or native: native = 0, dark = 1 */
+	INST(QSize, Player_Size);				/* player size */
+	INST(QPoint, Player_Pos);				/* player position */
+	INST(bool, Player_Fullscreen);			/* player fullscreen */
+	INST(bool, Player_Maximized);			/* player maximized */
+	INST(QString, Player_ShownPlugin);		/* current shown plugin in player, empty if none */
+	INST(bool, Player_OneInstance);			/* only one Sayonara instance is allowed */
+	INST(bool, Player_Min2Tray);			/* minimize Sayonara to tray */
+	INST(bool, Player_NotifyNewVersion);	/* check for new version on startup */
 
-	INST(QStringList, PL_Playlist);
-	INST(bool, PL_Load);
-	INST(bool, PL_LoadLastTrack);
-	INST(bool, PL_RememberTime);
-	INST(bool, PL_StartPlaying);
-	INST(int, PL_LastTrack);
+	INST(QStringList, PL_Playlist);			/* old playlist: list of integers in case of library tracks, if no library track, filepath */
+	INST(bool, PL_Load);					/* load old playlist on startup */
+	INST(bool, PL_LoadLastTrack);			/* load last track on startup */
+	INST(bool, PL_RememberTime);			/* remember time of last track */
+	INST(bool, PL_StartPlaying);			/* start playing immediatly when opening Sayonara */
+	INST(int, PL_LastTrack);				/* last track idx in playlist */
 
-	INST(PlaylistMode, PL_Mode);
-	INST(bool, PL_ShowNumbers);
-	INST(bool, PL_SmallItems);
+	INST(PlaylistMode, PL_Mode);			/* playlist mode: rep1, repAll, shuffle... */
+	INST(bool, PL_ShowNumbers);				/* show numbers in playlist */
+	INST(bool, PL_SmallItems);				/* show small items in playlist */
 
-	INST(bool, Notification_Show);
-	INST(int, Notification_Timeout);
-	INST(QString, Notification_Name);
-	INST(int, Notification_Scale);
+	INST(bool, Notification_Show);			/* show notifications */
+	INST(int, Notification_Timeout);		/* notification timeout */
+	INST(QString, Notification_Name);		/* type of notifications: libnotify or empty for native baloons :( */
+	INST(int, Notification_Scale);			/* scaling of notification item (pixels) */
 
-	INST(QString, Engine_Name);
-	INST(int, Engine_Vol);
-    INST(int, Engine_CurTrackPos_s);
-	INST(int, Engine_ConvertQuality);
-	INST(QString, Engine_CovertTargetPath);
-	INST(bool, Engine_Gapless);
-    INST(bool, Engine_ShowSpectrum);
-    INST(bool, Engine_ShowLevel);
+	INST(QString, Engine_Name);				/* Deprecated: Engine name */
+	INST(int, Engine_Vol);					/* Volume */
+	INST(int, Engine_CurTrackPos_s);		/* position of track (used to load old position) */
+	INST(int, Engine_ConvertQuality);		/* Convert quality, 1-10 for variable, > 64 for fixed bitrate */
+	INST(QString, Engine_CovertTargetPath); /* last convert path */
+	INST(bool, Engine_Gapless);				/* gapless playback */
+	INST(bool, Engine_ShowSpectrum);		/* show spectrum */
+	INST(bool, Engine_ShowLevel);			/* show level */
 
 
-	INST(bool, Engine_SR_Active);
-	INST(bool, Engine_SR_Warning);
-	INST(QString, Engine_SR_Path);
-	INST(bool, Engine_SR_CompleteTracks);
-	INST(bool, Engine_SR_SessionPath);
+	INST(bool, Engine_SR_Active);			/* Streamripper active */
+	INST(bool, Engine_SR_Warning);			/* streamripper warnings */
+	INST(QString, Engine_SR_Path);			/* streamripper paths */
+	INST(bool, Engine_SR_SessionPath);		/* streamripper session path */
 
-	INST(bool, Socket_Active);
-	INST(int, Socket_From);
-	INST(int, Socket_To);
-	INST(int, Spectrum_Style);
-	INST(int, Level_Style);
-	INST(bool, BroadCast_Active);
-	INST(bool, Broadcast_Prompt);
-	INST(int, Broadcast_Port);
+	INST(bool, Socket_Active);				/* remote control active */
+	INST(int, Socket_From);					/* Deprecated: First port that should be tried */
+	INST(int, Socket_To);					/* Deprecated: Last port that should be tried */
+	INST(int, Spectrum_Style);				/* index of spectrum style */
+	INST(int, Level_Style);					/* index of level style */
+	INST(bool, BroadCast_Active);			/* is broadcast active? */
+	INST(bool, Broadcast_Prompt);			/* prompt when new connection arrives? */
+	INST(int, Broadcast_Port);				/* broadcast port */
 
 }
 
-
 namespace SetNoDB{
 
-    INST(int, Broadcast_Clients);
+	INST(int, Broadcast_Clients);
 
 }
 

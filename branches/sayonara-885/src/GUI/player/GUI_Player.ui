@@ -74,7 +74,7 @@
      <number>5</number>
     </property>
     <property name="verticalSpacing">
-     <number>0</number>
+     <number>2</number>
     </property>
     <item row="0" column="4" rowspan="10" colspan="4">
      <widget class="QWidget" name="library_widget" native="true">
@@ -226,7 +226,7 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="../Icons.qrc">
+          <iconset>
            <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
          </property>
          <property name="iconSize">
@@ -295,7 +295,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>7</pointsize>
+           <pointsize>8</pointsize>
           </font>
          </property>
          <property name="focusPolicy">
@@ -326,7 +326,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>85</width>
-           <height>13</height>
+           <height>10</height>
           </size>
          </property>
         </spacer>
@@ -353,7 +353,7 @@
          </property>
          <property name="font">
           <font>
-           <pointsize>7</pointsize>
+           <pointsize>8</pointsize>
           </font>
          </property>
          <property name="focusPolicy">
@@ -505,7 +505,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../Icons.qrc">
+            <iconset>
              <normaloff>:/icons/bwd.png</normaloff>:/icons/bwd.png</iconset>
            </property>
            <property name="iconSize">
@@ -546,7 +546,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../Icons.qrc">
+            <iconset>
              <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
            </property>
            <property name="iconSize">
@@ -587,7 +587,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../Icons.qrc">
+            <iconset>
              <normaloff>:/icons/rec.png</normaloff>:/icons/rec.png</iconset>
            </property>
            <property name="iconSize">
@@ -634,7 +634,7 @@
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="../Icons.qrc">
+            <iconset>
              <normaloff>:/icons/fwd.png</normaloff>:/icons/fwd.png</iconset>
            </property>
            <property name="iconSize">
@@ -701,7 +701,7 @@
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../Icons.qrc">
+         <iconset>
           <normaloff>:/icons/vol_mute.png</normaloff>:/icons/vol_mute.png</iconset>
         </property>
         <property name="iconSize">
@@ -826,7 +826,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
             <weight>75</weight>
             <bold>true</bold>
             <stylestrategy>PreferAntialias</stylestrategy>
@@ -865,7 +865,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>10</pointsize>
+            <pointsize>11</pointsize>
             <weight>75</weight>
             <bold>true</bold>
             <stylestrategy>PreferAntialias</stylestrategy>
@@ -960,7 +960,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>7</pointsize>
+            <pointsize>8</pointsize>
             <weight>75</weight>
             <bold>true</bold>
             <stylestrategy>PreferAntialias</stylestrategy>
@@ -1021,7 +1021,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>7</pointsize>
+            <pointsize>8</pointsize>
             <stylestrategy>PreferAntialias</stylestrategy>
            </font>
           </property>
@@ -1058,7 +1058,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>7</pointsize>
+            <pointsize>8</pointsize>
             <weight>75</weight>
             <bold>true</bold>
             <stylestrategy>PreferAntialias</stylestrategy>
@@ -1107,7 +1107,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>7</pointsize>
+            <pointsize>8</pointsize>
             <stylestrategy>PreferAntialias</stylestrategy>
            </font>
           </property>
@@ -1138,9 +1138,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>7</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
+            <pointsize>8</pointsize>
             <stylestrategy>PreferAntialias</stylestrategy>
            </font>
           </property>
@@ -1179,7 +1177,7 @@
            <string/>
           </property>
           <property name="icon">
-           <iconset resource="../Icons.qrc">
+           <iconset>
             <normaloff>:/icons/id3.png</normaloff>:/icons/id3.png</iconset>
           </property>
           <property name="iconSize">
@@ -1552,8 +1550,6 @@
    <header location="global">src/GUI/player/SearchSlider.h</header>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

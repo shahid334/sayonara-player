@@ -163,7 +163,7 @@ void GUI_Bookmarks::calc_next(quint32 time_s) {
 }
 
 
-void GUI_Bookmarks::track_changed(const MetaData& md) {
+void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
 
 	bool success;
 

@@ -112,18 +112,6 @@ void GSTPlaybackEngine::init() {
 }
 
 
-void GSTPlaybackEngine::change_track(const QString& filepath) {
-
-	MetaData md;
-	md.filepath = filepath;
-	if (!ID3::getMetaDataOfFile(md)) {
-		stop();
-		return;
-	}
-
-	change_track(md);
-}
-
 
 void GSTPlaybackEngine::change_track_gapless(const MetaData& md) {
 
@@ -142,9 +130,26 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md) {
 }
 
 
-void GSTPlaybackEngine::change_track(const MetaData& md) {
+
+void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
+
+	MetaData md;
+	md.filepath = filepath;
+	if (!ID3::getMetaDataOfFile(md)) {
+		stop();
+		return;
+	}
+
+	change_track(md, start_play);
+}
+
+
+void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
     bool success = false;
+	if(md.radio_mode == RadioModeStation){
+		_settings->set(Set::Engine_CurTrackPos_s, 0);
+	}
 
 	if(_wait_for_gapless_track) {
 
@@ -168,10 +173,15 @@ void GSTPlaybackEngine::change_track(const MetaData& md) {
 	_cur_pos_ms = 0;
 	_scrobbled = false;
 
-	//emit sig_pos_changed_s(_jump_play_s);
+	emit sig_pos_changed_s(_jump_play_s);
 
-	play();
+	if(start_play){
+		play();
+	}
 
+	else{
+		pause();
+	}
 }
 
 
@@ -256,6 +266,7 @@ void GSTPlaybackEngine::stop() {
 		_other_pipeline->stop();
 	}
 
+	_settings->set(Set::Engine_CurTrackPos_s, 0);
 	emit sig_pos_changed_s(0);
 }
 
@@ -387,7 +398,13 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 		_scrobbled = true;
 	}
 
-    _settings->set(Set::Engine_CurTrackPos_s, pos_sec);
+	if(_md.radio_mode == RadioModeOff){
+		_settings->set(Set::Engine_CurTrackPos_s, pos_sec);
+	}
+
+	else{
+		_settings->set(Set::Engine_CurTrackPos_s, 0);
+	}
 
 	emit sig_pos_changed_s( pos_sec );
 }

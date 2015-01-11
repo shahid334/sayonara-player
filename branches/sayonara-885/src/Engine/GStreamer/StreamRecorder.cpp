@@ -275,7 +275,6 @@ bool StreamRecorder::stop(bool delete_track) {
     gint64 duration=0;
 
     bool save_success = true;
-	bool complete_tracks = _settings->get(Set::Engine_SR_CompleteTracks);
 
     terminate_thread_if_running();
 
@@ -289,7 +288,7 @@ bool StreamRecorder::stop(bool delete_track) {
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_READY);
 
-    if( (!_stream_ended && complete_tracks) || delete_track) {
+	if( (!_stream_ended) || delete_track) {
         qDebug() << "Remove w/o saving";
         QFile::remove(_sr_recording_dst);
         return false;

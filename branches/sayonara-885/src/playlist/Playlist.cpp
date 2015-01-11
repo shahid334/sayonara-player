@@ -36,7 +36,7 @@ void Playlist::report_changes(bool pl_changed, bool track_changed) {
     if(_reports_disabled) return;
 
 	if(pl_changed){
-		emit sig_playlist_changed(this);
+		emit sig_playlist_changed(this, _playlist_idx);
 	}
 
 	if(track_changed) {
@@ -44,12 +44,12 @@ void Playlist::report_changes(bool pl_changed, bool track_changed) {
         if( _cur_play_idx < 0 ||
             _cur_play_idx >= _v_md.size() ){
 
-			emit sig_stopped();
+			emit sig_stopped(_playlist_idx);
 		}
 
 		else{
 			MetaData md = _v_md[_cur_play_idx];
-			emit sig_track_changed(md, _cur_play_idx);
+			emit sig_track_changed(md, _cur_play_idx, _playlist_idx);
 		}
     }
 }
@@ -322,4 +322,12 @@ QList<int> Playlist::find_tracks(int idx) const {
 
 QList<int> Playlist::find_tracks(const QString& filepath) const {
 	return _v_md.findTracks(filepath);
+}
+
+void Playlist::set_playlist_state(PlaylistState state){
+	_playlist_state = state;
+}
+
+PlaylistState Playlist::get_playlist_state(){
+	return _playlist_state;
 }

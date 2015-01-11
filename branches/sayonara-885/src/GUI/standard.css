@@ -5,7 +5,7 @@ QListView, QTableView{
 
 QListView:focus, QTableView:focus{
 
-        border: 2px solid #424e72;
+        border: 1px solid #424e72;
 }
 
 

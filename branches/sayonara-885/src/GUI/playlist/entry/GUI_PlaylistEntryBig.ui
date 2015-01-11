@@ -121,10 +121,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>7</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
+       <pointsize>8</pointsize>
       </font>
      </property>
      <property name="text">
@@ -154,10 +151,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>7</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
+       <pointsize>8</pointsize>
       </font>
      </property>
      <property name="text">
@@ -203,10 +197,7 @@
      </property>
      <property name="font">
       <font>
-       <pointsize>7</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
+       <pointsize>8</pointsize>
       </font>
      </property>
      <property name="text">

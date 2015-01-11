@@ -96,8 +96,8 @@ public slots:
 	virtual void jump_rel(quint32);
     virtual void jump_rel_ms(qint64 where);
 
-	virtual void change_track(const MetaData&);
-	virtual void change_track(const QString&);
+	virtual void change_track(const MetaData&, bool start_play);
+	virtual void change_track(const QString&, bool start_play);
 
 	virtual void eq_changed(int, int);
 

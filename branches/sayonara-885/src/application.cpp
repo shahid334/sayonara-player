@@ -42,6 +42,8 @@ Application::Application(int & argc, char ** argv) :
 	SayonaraClass()
 {
 	_system_font = this->font();
+	_system_font.setPointSize(8);
+	app->setFont(_system_font);
 }
 
 void Application::check_for_crash(){
@@ -280,10 +282,10 @@ void Application::init_connections() {
 	CONNECT (player, sig_show_socket(),						ui_socket_setup,	show_win()); // IND
 
 	CONNECT (playlist_handler, sig_no_track_to_play(),					player,			stopped());
-	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&),	player,			psl_update_track(const MetaData&));
-	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&),	listen,			change_track(const MetaData&));
-	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&),	lastfm,			psl_track_changed(const MetaData&));
-	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&),	ui_bookmarks,	track_changed(const MetaData&));
+	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&, bool),	player,			psl_update_track(const MetaData&, bool));
+	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&, bool),	listen,			change_track(const MetaData&, bool));
+	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&, bool),	lastfm,			psl_track_changed(const MetaData&, bool));
+	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&, bool),	ui_bookmarks,	track_changed(const MetaData&, bool));
 	CONNECT (playlist_handler, sig_no_track_to_play(),					listen,			stop());
 	CONNECT (playlist_handler, sig_goon_playing(),						listen,			play());
 
@@ -345,8 +347,8 @@ void Application::init_connections() {
 	CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,				last_fm_logged_in(bool));
 	CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),	player,				lfm_info_fetched(const MetaData&, bool, bool));
 
-	CONNECT(ui_stream, sig_create_playlist(const MetaDataList&),		playlist_handler, 	create_playlist(const MetaDataList&));
-	CONNECT(ui_stream, sig_play_track(int),								playlist_handler,   psl_change_track(int));
+	CONNECT(ui_stream, sig_create_playlist(const MetaDataList&),		playlist_handler,		create_playlist(const MetaDataList&));
+	CONNECT(ui_stream, sig_play_track(int),								playlist_handler,		psl_change_track(int));
 
 	CONNECT(ui_podcasts, sig_create_playlist(const MetaDataList&),		playlist_handler,		create_playlist(const MetaDataList&));
 	CONNECT(ui_podcasts, sig_play_track(int),								playlist_handler,   psl_change_track(int));

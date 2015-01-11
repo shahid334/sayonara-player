@@ -36,7 +36,6 @@ public:
 
 	private slots:
 		void sl_cb_activate_toggled(bool);
-		void sl_cb_complete_tracks_toggled(bool);
         void sl_cb_create_session_path_toggled(bool);
         void sl_le_text_changed(QString &);
 		void sl_btn_path_clicked();
@@ -56,7 +55,6 @@ public:
 
 		QString _path;
 		bool	_is_active;
-		bool	_is_complete_tracks;
         bool	_is_create_session_path;
         bool    _skin;
 

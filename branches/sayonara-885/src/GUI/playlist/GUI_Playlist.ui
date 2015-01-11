@@ -85,7 +85,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../Icons.qrc">
+      <iconset>
        <normaloff>:/icons/numbers.png</normaloff>:/icons/numbers.png</iconset>
      </property>
      <property name="iconSize">
@@ -213,7 +213,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/rep1.png</normaloff>:/icons/rep1.png</iconset>
        </property>
        <property name="iconSize">
@@ -257,7 +257,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/repAll.png</normaloff>:/icons/repAll.png</iconset>
        </property>
        <property name="iconSize">
@@ -301,7 +301,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
        </property>
        <property name="iconSize">
@@ -345,7 +345,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/append.png</normaloff>:/icons/append.png</iconset>
        </property>
        <property name="iconSize">
@@ -389,7 +389,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/dynamic.png</normaloff>:/icons/dynamic.png</iconset>
        </property>
        <property name="iconSize">
@@ -433,7 +433,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/gapless.png</normaloff>:/icons/gapless.png</iconset>
        </property>
        <property name="iconSize">
@@ -479,7 +479,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../Icons.qrc">
+      <iconset>
        <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
      </property>
      <property name="iconSize">
@@ -530,7 +530,6 @@
        </property>
        <property name="font">
         <font>
-         <pointsize>9</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -566,7 +565,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../Icons.qrc">
+      <iconset>
        <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
      </property>
      <property name="iconSize">
@@ -595,8 +594,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

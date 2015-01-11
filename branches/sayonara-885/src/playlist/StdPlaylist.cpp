@@ -65,6 +65,7 @@ void StdPlaylist::change_track(int idx) {
 
 void StdPlaylist::create_playlist(const MetaDataList& lst) {
 
+	bool start_playing = false;
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
@@ -95,7 +96,13 @@ void StdPlaylist::create_playlist(const MetaDataList& lst) {
         _cur_play_idx = -1;
     }
 
-	report_changes(true, false);
+	if( !_v_md.isEmpty() &&  _playlist_state == PlaylistStop ){
+		start_playing = true;
+		_cur_play_idx = 0;
+		_v_md.setCurPlayTrack(0);
+	}
+
+	report_changes(true, start_playing );
 }
 
 void StdPlaylist::create_playlist(const QStringList& lst) {
@@ -106,9 +113,12 @@ void StdPlaylist::create_playlist(const QStringList& lst) {
 	create_playlist(v_md);
 }
 
-void StdPlaylist:: play() {
+void StdPlaylist::play() {
 
-    if(_v_md.size() == 0) {
+	if(_playlist_state != PlaylistStop) return;
+
+
+	if( _v_md.isEmpty() ) {
         _cur_play_idx = -1;
         stop();
         return;
@@ -119,7 +129,7 @@ void StdPlaylist:: play() {
         _v_md.setCurPlayTrack(_cur_play_idx);
     }
 
-	report_changes(false, false);
+	report_changes(false, true);
 }
 
 void StdPlaylist::pause() {
@@ -184,7 +194,8 @@ void StdPlaylist::next() {
     }
 
     else {
-        if(_cur_play_idx >= (int) _v_md.size() -1) {
+
+		if(_cur_play_idx >= (int) _v_md.size() -1) {
 
 			if(_playlist_mode.repAll){
 				track_num = 0;

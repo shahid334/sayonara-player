@@ -56,7 +56,7 @@ Q_OBJECT
 
 	public slots:
 		void psl_scrobble(const MetaData&);
-		void psl_track_changed(const MetaData&);
+		void psl_track_changed(const MetaData&, bool start_play);
 		void psl_login();
 
 

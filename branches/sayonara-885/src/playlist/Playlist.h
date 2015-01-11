@@ -39,9 +39,9 @@ class Playlist : public QObject, protected SayonaraClass
     Q_OBJECT
 
 signals:
-	void sig_playlist_changed(const Playlist*);
-    void sig_track_changed(const MetaData&, int);
-    void sig_stopped();
+	void sig_playlist_changed(const Playlist*, int playlist_idx);
+	void sig_track_changed(const MetaData&, int cur_track_idx, int playlist_idx);
+	void sig_stopped(int playlist_idx);
 
 protected:
     bool            _playlist_changed;
@@ -54,7 +54,7 @@ protected:
     PlaylistType    _playlist_type;
     bool            _reports_disabled;
     bool            _start_playing;
-
+	PlaylistState	_playlist_state;
 
     void report_changes(bool pl_changed, bool track_changed);
     void enable_reports();
@@ -111,6 +111,9 @@ public:
 
 	void set_playlist_mode(const PlaylistMode& mode);
 	PlaylistMode get_playlist_mode() const;
+
+	void set_playlist_state(PlaylistState state);
+	PlaylistState get_playlist_state();
 };
 
 

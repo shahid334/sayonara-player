@@ -220,16 +220,16 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_cancel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>80</width>
          <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -242,16 +242,16 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_save">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>80</width>
          <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
         </size>
        </property>
        <property name="focusPolicy">
@@ -261,8 +261,14 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -298,9 +304,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../Icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>rb_online</sender>

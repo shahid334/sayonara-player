@@ -41,7 +41,7 @@ signals:
 	void sig_bookmark(quint32);
 	
 public slots:
-	void track_changed(const MetaData&);
+	void track_changed(const MetaData&, bool start_play);
 	void pos_changed_s(quint32);
 
 private slots:

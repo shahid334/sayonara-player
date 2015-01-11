@@ -117,14 +117,14 @@ void GSTEngineHandler::jump_rel_ms(qint64 where){
     _cur_engine->jump_rel_ms(where);
 }
 
-void GSTEngineHandler::change_track(const MetaData& md) {
+void GSTEngineHandler::change_track(const MetaData& md, bool start_play) {
 	if(!_cur_engine) return;
-	_cur_engine->change_track(md);
+	_cur_engine->change_track(md, start_play);
 }
 
-void GSTEngineHandler::change_track(const QString& str) {
+void GSTEngineHandler::change_track(const QString& str, bool start_play) {
 	if(!_cur_engine) return;
-	_cur_engine->change_track(str);
+	_cur_engine->change_track(str, start_play);
 }
 
 void GSTEngineHandler::eq_changed(int band, int value) {

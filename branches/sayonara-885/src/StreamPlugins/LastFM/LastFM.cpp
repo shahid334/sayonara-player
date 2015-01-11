@@ -166,7 +166,7 @@ void LastFM::_login_thread_finished() {
 
 
 
-void LastFM::psl_track_changed(const MetaData& md) {
+void LastFM::psl_track_changed(const MetaData& md, bool start_play) {
 
 	PlaylistMode pl_mode = _settings->get(Set::PL_Mode);
 

@@ -57,7 +57,6 @@
     <widget class="QLabel" name="lab_status">
      <property name="font">
       <font>
-       <pointsize>9</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -98,7 +97,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../Icons.qrc">:/icons/broadcast.png</pixmap>
+        <pixmap>:/icons/broadcast.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -144,10 +143,11 @@
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QComboBox" name="combo_clients">
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
@@ -156,11 +156,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_dismiss">
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
@@ -168,18 +163,19 @@
         <string>Dismiss</string>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_dismiss_all">
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
@@ -187,8 +183,14 @@
         <string>Dismiss all</string>
        </property>
        <property name="icon">
-        <iconset resource="../Icons.qrc">
+        <iconset>
          <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>16</width>
+         <height>16</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -206,7 +208,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../Icons.qrc">
+      <iconset>
        <normaloff>:/icons/tool.png</normaloff>:/icons/tool.png</iconset>
      </property>
      <property name="iconSize">
@@ -219,9 +221,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../Icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>btn_close</sender>

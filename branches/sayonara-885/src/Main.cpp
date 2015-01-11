@@ -194,7 +194,6 @@ bool register_settings(){
 	REGISTER_SETTING( bool, Engine_SR_Active, "streamripper", false );
 	REGISTER_SETTING( bool, Engine_SR_Warning, "streamripper_warning", true );
 	REGISTER_SETTING( QString, Engine_SR_Path, "streamripper_path", QDir::homePath() );
-	REGISTER_SETTING( bool, Engine_SR_CompleteTracks, "streamripper_complete_tracks", true );
 	REGISTER_SETTING( bool, Engine_SR_SessionPath, "streamripper_session_path", true );
 
 	REGISTER_SETTING( bool, Socket_Active, "socket_active", false );

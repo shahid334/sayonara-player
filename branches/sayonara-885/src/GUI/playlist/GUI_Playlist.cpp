@@ -378,6 +378,7 @@ void GUI_Playlist::set_playlist_type(PlaylistType playlist_type) {
 	btn_repAll->setVisible(playlist_type == PlaylistTypeStd);
 	btn_shuffle->setVisible(playlist_type == PlaylistTypeStd);
 	btn_rep1->setVisible(playlist_type == PlaylistTypeStd);
+	btn_gapless->setVisible(playlist_type == PlaylistTypeStd);
 
     int actions = 0;
 

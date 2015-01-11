@@ -165,8 +165,11 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	stopClicked(false);
 
-	bool playing = _settings->get(Set::PL_StartPlaying);
-	psl_set_play(playing);
+	psl_set_play(_settings->get(Set::PL_StartPlaying));
+
+	if(_settings->get(Set::PL_LoadLastTrack) && _settings->get(Set::PL_RememberTime)){
+		psl_set_cur_pos(_settings->get(Set::Engine_CurTrackPos_s));
+	}
 
 	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
@@ -253,7 +256,7 @@ void GUI_Player::psl_set_play(bool play){
 }
 
 // new track
-void GUI_Player::psl_update_track(const MetaData & md) {
+void GUI_Player::psl_update_track(const MetaData & md, bool start_play) {
 
 	// sets _md = md;
 	_md = md;

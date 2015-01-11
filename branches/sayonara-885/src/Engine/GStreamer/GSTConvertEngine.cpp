@@ -92,7 +92,9 @@ bool GSTConvertEngine::set_uri(const MetaData& md) {
 	return success;
 }
 
-void GSTConvertEngine::change_track(const MetaData& md) {
+void GSTConvertEngine::change_track(const MetaData& md, bool start_play) {
+
+	Q_UNUSED(start_play);
 
 	stop();
 	_md = md;
@@ -106,12 +108,14 @@ void GSTConvertEngine::change_track(const MetaData& md) {
 
 }
 
-void GSTConvertEngine::change_track(const QString& str) {
-
+void GSTConvertEngine::change_track(const QString& str, bool start_play) {
+	Q_UNUSED(str);
+	Q_UNUSED(start_play);
 }
 
 
 void GSTConvertEngine::play() {
+
 
 	_pipeline->play();
 

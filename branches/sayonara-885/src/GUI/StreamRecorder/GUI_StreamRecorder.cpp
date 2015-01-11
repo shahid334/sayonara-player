@@ -40,15 +40,12 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
 
 	_path = _settings->get(Set::Engine_SR_Path);
 	_is_active = _settings->get(Set::Engine_SR_Active);
-	_is_complete_tracks = _settings->get(Set::Engine_SR_CompleteTracks);
 	_is_create_session_path = _settings->get(Set::Engine_SR_SessionPath);
 
 	le_path->setText(_path);
 	cb_activate->setChecked(_is_active);
-	cb_complete_tracks->setChecked(_is_complete_tracks);
 	cb_create_session_path->setChecked(_is_create_session_path);
 
-	cb_complete_tracks->setEnabled(_is_active);
 	cb_create_session_path->setEnabled(_is_active);
 	btn_path->setEnabled(_is_active);
 	le_path->setEnabled(_is_active);
@@ -56,9 +53,7 @@ GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
 	setModal(true);
 
 	connect(cb_activate, SIGNAL(toggled(bool)), this, SLOT(sl_cb_activate_toggled(bool)));
-	connect(cb_complete_tracks, SIGNAL(toggled(bool)), this, SLOT(sl_cb_complete_tracks_toggled(bool)));
 	connect(cb_create_session_path, SIGNAL(toggled(bool)), this, SLOT(sl_cb_create_session_path_toggled(bool)));
-	//connect(le_path, SIGNAL(textEdited(QString&)), this, SLOT(sl_le_text_changed(QString&)));
 	connect(btn_path, SIGNAL(clicked()), this, SLOT(sl_btn_path_clicked()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
 
@@ -85,11 +80,6 @@ void GUI_StreamRecorder::language_changed() {
 void GUI_StreamRecorder::sl_cb_activate_toggled(bool b) {
 	_is_active = b;
 	_settings->set(Set::Engine_SR_Active, b);
-}
-
-void GUI_StreamRecorder::sl_cb_complete_tracks_toggled(bool b) {
-	_is_complete_tracks = b;
-	_settings->set(Set::Engine_SR_CompleteTracks, b);
 }
 
 void GUI_StreamRecorder::sl_cb_create_session_path_toggled(bool b) {

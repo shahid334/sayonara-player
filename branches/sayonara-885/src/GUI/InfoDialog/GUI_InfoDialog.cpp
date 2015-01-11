@@ -51,7 +51,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
     ui_tag_edit = tag_edit;
 
-    tab_widget->addTab(ui_tag_edit, tr("Edit"));
+	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit.png"), tr("Edit"));
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
 
