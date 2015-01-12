@@ -10,15 +10,16 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-SET(CMAKE_BUILD_TYPE "Release")
-SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++11")
+#SET(CMAKE_BUILD_TYPE "Release")
+#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
+#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++11")
 
-#SET(CMAKE_BUILD_TYPE "Debug")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
-#SET(CMAKE_C_FLAGS "-Wall")
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
+SET(CMAKE_C_FLAGS "-Wall")
 
 SET(QT_USE_QTSQL TRUE)
+SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTNETWORK TRUE)
 
@@ -56,38 +57,47 @@ ADD_SUBDIRECTORY(languages)
 
 SET(HEADERS
     application.h
+    Settings/SettingNotifier.h
+    Settings/SettingKey.h
+    Settings/Setting.h
+    Settings/Settings.h
+    Settings/SettingConverter.h
     Engine/Engine.h
     Engine/SoundPluginLoader.h
     Notification/Notification.h
     Notification/NotificationPluginLoader.h
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
-    playlists/Playlists.h
+	PlaylistChooser/PlaylistChooser.h
+    RadioStation/StreamWriter.h
+    RadioStation/StreamServer.h
     StreamPlugins/LastFM/LastFM.h
     StreamPlugins/LastFM/LFMTrackChangedThread.h
     StreamPlugins/LastFM/LFMLoginThread.h
-    Socket/Socket.h
-    #Soundcloud/SoundcloudLibrary.h
-#    Soundcloud/SoundcloudHelper.h
+    TagEdit/TagEdit.h
+    TagEdit/TagExpression.h
 )
 
 SET(SOURCES
     Main.cpp
     application.cpp
+    Settings/Settings.cpp
+    Settings/Setting.cpp
     Engine/SoundPluginLoader.cpp
     Notification/NotificationPluginLoader.cpp
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
     LyricLookup/LyricLookup.cpp
-    playlists/Playlists.cpp
+	PlaylistChooser/PlaylistChooser.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
-    Socket/Socket.cpp
     HelperStructs/SmartComparison.cpp
-#    Soundcloud/SoundcloudLibrary.cpp
-#    Soundcloud/SoundcloudHelper.cpp
+    RadioStation/StreamWriter.cpp
+    RadioStation/StreamServer.cpp
+    TagEdit/TagEdit.cpp
+    TagEdit/TagExpression.cpp
 )
 
 

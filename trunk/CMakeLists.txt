@@ -4,7 +4,7 @@ ADD_SUBDIRECTORY(src)
 #ADD_SUBDIRECTORY(linux_packages/resources)
 
 IF(${UNIX})
-        execute_process(COMMAND sh ./scripts/setversion.sh)
+        execute_process(COMMAND sh ${CMAKE_BINARY_DIR}/scripts/setversion.sh ${CMAKE_BINARY_DIR})
 ENDIF(${UNIX})
 
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
