@@ -34,33 +34,32 @@
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-#include <QDialog>
 #include <QPixmap>
 #include <QMessageBox>
 #include <QFile>
 #include <QDir>
 #include <QFileDialog>
-#include <QString>
-#include <QDebug>
 #include <QFileSystemWatcher>
-#include <unistd.h>
 #include <QRegExp>
 
 
 
 GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::AlternateCovers()
 {
 
 	setupUi(this);
 
+	QString lib_path = _settings->get(Set::Lib_Path);
 
+	if(QFile::exists(lib_path)){
+		_last_path = lib_path;
+	}
 
-    QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
-    if(QFile::exists(lib_path))
-        _last_path = lib_path;
-    else _last_path = QDir::homePath();
+	else {
+		_last_path = QDir::homePath();
+	}
 
 	_cl_alternative = 0;
 
@@ -92,7 +91,6 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	}
 
 	delete_all_files();
-
 }
 
 void GUI_Alternate_Covers::changeSkin(bool dark) {
@@ -105,7 +103,7 @@ void GUI_Alternate_Covers::language_changed() {
 
 void GUI_Alternate_Covers::connect_and_start() {
 
-	update_model();
+    reset_model();
 	delete_all_files();
 
 	connect(_cl_alternative, SIGNAL(sig_cover_found(const CoverLocation&)), this, SLOT(cl_new_cover(const CoverLocation&)));
@@ -114,12 +112,12 @@ void GUI_Alternate_Covers::connect_and_start() {
 	_is_searching = true;
 
 	btn_search->setText(tr("Stop"));
+    btn_save->setEnabled(false);
 
 	_cl_alternative->start();
 
 	show();
 }
-
 
 void GUI_Alternate_Covers::start(int album_id, const CoverLocation& cl) {
 
@@ -145,6 +143,7 @@ void GUI_Alternate_Covers::start(Album album, const CoverLocation& cl) {
 	}
 
     _cl_alternative = new CoverLookupAlternative(this, album, 10);
+    lab_info->setText(tr("for album") + " \"" + album.name + "\"");
 
 	connect_and_start();
 }
@@ -163,6 +162,7 @@ void GUI_Alternate_Covers::start(QString album_name, QString artist_name, const 
 	}
 
 	_cl_alternative = new CoverLookupAlternative(this, album_name, artist_name, 10);
+    lab_info->setText(tr("for album \"") + album_name + tr("\" by \"") + artist_name + "\"");
 
 	connect_and_start();
 }
@@ -180,6 +180,7 @@ void GUI_Alternate_Covers::start(Artist artist, const CoverLocation& cl) {
 	}
 
     _cl_alternative = new CoverLookupAlternative(this, artist, 10);
+    lab_info->setText(tr("for artist") + " \"" + artist.name + "\"");
 
 	connect_and_start();
 
@@ -197,6 +198,7 @@ void GUI_Alternate_Covers::start(QString artist_name, const CoverLocation& cl) {
 	}
 
 	_cl_alternative = new CoverLookupAlternative(this, artist_name, 10);
+    lab_info->setText(tr("for") + " \"" + artist_name + "\"");
 
 	connect_and_start();
 }
@@ -269,13 +271,15 @@ void GUI_Alternate_Covers::cl_new_cover(const CoverLocation& cl) {
 
 	_filelist << cl;
 
-    RowColumn rc = _model->cvt_2_row_col(_filelist.size() -1 );
-    btn_save->setEnabled( _model->is_valid(rc.row, rc.col) );
+    RowColumn rc = _model->cvt_2_row_col( _filelist.size() - 1 );
+    RowColumn cur_idx_rc = _model->cvt_2_row_col( _cur_idx );
+    btn_save->setEnabled( _model->is_valid(cur_idx_rc.row, cur_idx_rc.col) );
 
 	model_idx = _model->index(rc.row, rc.col);
 	var.setValue(cl);
 
 	_model->setData(model_idx, var);
+    lab_status->setText(QString::number(_filelist.size()) + tr(" covers found"));
 }
 
 
@@ -299,7 +303,7 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx) {
 }
 
 
-void GUI_Alternate_Covers::update_model() {
+void GUI_Alternate_Covers::reset_model() {
     _model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, _model->rowCount());
 
@@ -307,11 +311,13 @@ void GUI_Alternate_Covers::update_model() {
 		for(int x=0; x<_model->columnCount(); x++) {
 
             QModelIndex idx = _model->index(y,x);
-            QString sayonara_logo = Helper::getIconPath("logo.png");
+			QString sayonara_logo = Helper::getSharePath() + "logo.png";
 			_model->setData(idx, sayonara_logo, Qt::EditRole);
 
         }
     }
+
+    lab_status->setText("");
 }
 
 
@@ -319,7 +325,9 @@ void GUI_Alternate_Covers::update_model() {
 
 void GUI_Alternate_Covers::open_file_dialog() {
 
-	QDir dir( CSettingsStorage::getInstance()->getLibraryPath() );
+	QString lib_path = _settings->get(Set::Lib_Path);
+
+	QDir dir( lib_path );
 
     QStringList filters;
         filters << "*.jpg";
@@ -341,7 +349,7 @@ void GUI_Alternate_Covers::open_file_dialog() {
 
 	if(lst.size() == 0) return;
 
-    update_model();
+    reset_model();
 
 	int idx = 0;
     foreach(QString path, lst) {

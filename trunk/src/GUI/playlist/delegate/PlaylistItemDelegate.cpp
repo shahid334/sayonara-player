@@ -41,12 +41,14 @@ PlaylistItemDelegate::PlaylistItemDelegate(QListView* parent, bool small) {
 
 	if(small) { 	
 		_row_height = 20;
-		_pl_entry = new GUI_PlaylistEntrySmall();
+		_pl_entry = new GUI_PlaylistEntrySmall(parent);
 	}
 	else{
 		_row_height = 31;		
-		_pl_entry = new GUI_PlaylistEntryBig();
+		_pl_entry = new GUI_PlaylistEntryBig(parent);
 	}
+
+	_pl_entry->hide();
 
 	_parent = parent;
 	_rendered_items = 0;
@@ -104,7 +106,7 @@ void PlaylistItemDelegate::paint( QPainter *painter, const QStyleOptionViewItem 
 		style = QString("background-color: ") + 
 			col_highlight.name() + ";" + 
 			get_fg_color(highlight_val);
-    }
+	}
 
 	int y = rect.topLeft().y() +  _pl_entry->height() -1;
 	_pl_entry->setStyleSheet(style);
@@ -129,7 +131,7 @@ QSize PlaylistItemDelegate::sizeHint(const QStyleOptionViewItem &option,
 	Q_UNUSED(option);
 	Q_UNUSED(index);
 
-    return QSize(_max_width, _row_height);
+	return QSize(_max_width, _row_height);
 }
 
 

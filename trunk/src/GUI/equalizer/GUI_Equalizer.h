@@ -29,15 +29,13 @@
 #ifndef GUI_EQUALIZER_H_
 #define GUI_EQUALIZER_H_
 
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "GUI/ui_GUI_Equalizer.h"
 
+#include <QList>
+#include <QMenu>
+#include <QAction>
 
-#include <QObject>
-#include <vector>
-
-using namespace std;
 
 class EqSlider : public QObject{
 	Q_OBJECT
@@ -48,6 +46,8 @@ class EqSlider : public QObject{
 
 	signals:
 		void sig_value_changed(int idx, int val);
+		void sig_slider_pressed(int idx);
+		void sig_slider_released(int idx);
 
 	private:
 		QSlider* _slider;
@@ -59,10 +59,13 @@ class EqSlider : public QObject{
 			_slider(slider), _label(label), _idx(idx) {
 
 			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(sl_slider_changed(int)));
+			connect(_slider, SIGNAL(sliderPressed()), this, SLOT(sl_slider_pressed()));
+			connect(_slider, SIGNAL(sliderReleased()), this, SLOT(sl_slider_released()));
 		}
 		QSlider* getSlider() { return _slider; }
 		QLabel* getLabel() { return _label;}
 		void setValue(int val) {this->_slider->setValue(val);}
+		int getValue(){ return this->_slider->value();}
 
 	virtual ~EqSlider() {}
 
@@ -70,6 +73,14 @@ class EqSlider : public QObject{
 	private slots:
 		void sl_slider_changed(int val) {
 			emit sig_value_changed(_idx, val);
+		}
+
+		void sl_slider_pressed(){
+			emit sig_slider_pressed(_idx);
+		}
+
+		void sl_slider_released(){
+			emit sig_slider_released(_idx);
 		}
 };
 
@@ -84,36 +95,33 @@ public:
 	virtual ~GUI_Equalizer();
 
 	signals:
-		void eq_changed_signal(int, int);
-		void eq_enabled_signal(bool);
-		void eq_changed_level_signal(int);
-		void close_event();
-
+		void sig_eq_changed(int, int);
 
 	private slots:
 		void sli_changed(int, int);
+		void sli_pressed(int);
+		void sli_released(int);
 
-		void but_enabled_changed(bool);
 		void preset_changed(int);
-		void btn_preset_clicked();
+        void cb_gauss_toggled(bool);
+        void btn_save_clicked();
+		void btn_delete_clicked();
+		void btn_reset_clicked();
+		void text_changed(QString);
 
 	public slots:
 		void fill_eq_presets();
-		void fill_available_equalizers(const QStringList&);
-        void changeSkin(bool);
         void language_changed();
 
 	private:
 
-		vector<EQ_Setting> _presets;
-		CSettingsStorage* _settings;
-		vector<EqSlider*> _sliders;
+		QList<EQ_Setting> _presets;
+		QList<EqSlider*> _sliders;
 
+		int _old_val[10];
+		int _active_idx;
 
-        double _m;
-        double _t;
-
-        bool _dark;
+		int find_combo_text(QString txt);
 
 };
 

@@ -24,15 +24,13 @@
 
 
 
-GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
+GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent) :
+    GSTAbstractPipeline(parent)
 {
 
 	GstElement* tmp_pipeline;
 
 	bool status = false;
-	_pipeline = 0;
-	_position = 0;
-	_duration = 0;
 
 	do{
 
@@ -63,18 +61,18 @@ GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent)
 		gst_element_link_many(_audio_convert, _resampler, _lame, _xingheader, /*_id3mux,*/ _audio_sink, NULL);
 		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
 
-
+        _pipeline = tmp_pipeline;
 		status = true;
 
 	} while(0);
 
 	if(status) {
-		_pipeline = tmp_pipeline;
+
 		gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, engine);
 	}
 
 	else {
-		_pipeline=0;
+
 		qDebug() << "****Pipeline: constructor finished: " << status;
 		return;
 	}
@@ -109,8 +107,9 @@ bool GSTConvertPipeline::set_target_uri(gchar* uri) {
 
 void GSTConvertPipeline::play() {
 
-	LameBitrate q = CSettingsStorage::getInstance()->getConvertQuality();
+	LameBitrate q = (LameBitrate) _settings->get(Set::Engine_ConvertQuality);
 	set_quality(q);
+
 	qDebug() << "Convert pipeline: play";
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_PLAYING);
 	g_timeout_add(200, (GSourceFunc) PipelineCallbacks::show_position, this);
@@ -124,66 +123,11 @@ void GSTConvertPipeline::pause() {
 
 
 void GSTConvertPipeline::stop() {
-	_duration = 0;
+    _duration_ms = 0;
 	_uri = 0;
 
 	gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
 }
-
-
-qint64 GSTConvertPipeline::get_duration_ms() {
-
-	if(_duration != 0) return _duration;
-
-	gint64 duration=0;
-	bool success = false;
-	GstState state = get_state();
-
-    if(state == GST_STATE_PAUSED || state == GST_STATE_PLAYING){
-
-#if GST_CHECK_VERSION(1, 0, 0)
-    success = gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    success = gst_element_query_duration(_pipeline, &format, &duration);
-#endif
-
-    }
-
-	if(!success ) {
-		_duration = 0;
-		return -1;
-	}
-
-	_duration = (qint64) (duration / MIO);
-
-	return _duration;
-}
-
-
-
-qint64 GSTConvertPipeline::get_position_ms() {
-
-    gint64 pos=0;
-	bool success = false;
-
-#if GST_CHECK_VERSION(1, 0, 0)
-    success = gst_element_query_position(_pipeline, GST_FORMAT_TIME, &pos);
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    success = gst_element_query_position(_pipeline, &format, &pos);
-#endif
-
-	if(!success ) {
-		_position = 0;
-		return -1;
-	}
-
-    _position = (qint64) (pos / MIO);
-
-	return _position;
-}
-
 
 
 guint GSTConvertPipeline::get_bitrate() {

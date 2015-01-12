@@ -29,16 +29,9 @@
 #ifndef LIBRARYITEMMODELTRACKS_H_
 #define LIBRARYITEMMODELTRACKS_H_
 
-
-#include <QObject>
-#include <QStringList>
-#include <QList>
-
 #include "HelperStructs/MetaData.h"
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/MyColumnHeader.h"
-
-
 
 class LibraryItemModelTracks : public LibraryItemModel {
 
@@ -68,6 +61,7 @@ public:
 
 private:
 	QList<MetaData>			_tracklist;
+	QMap<int, QString>		_albums_w_disc;
 };
 
 #endif /* LIBRARYITEMMODELTRACKS_H_ */

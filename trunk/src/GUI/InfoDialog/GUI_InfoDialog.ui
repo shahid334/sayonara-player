@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>767</width>
-    <height>509</height>
+    <height>555</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,12 +24,11 @@
      </property>
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <kerning>true</kerning>
       </font>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="tabPosition">
       <enum>QTabWidget::North</enum>
@@ -38,21 +37,19 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
-     </property>
-     <property name="elideMode">
-      <enum>Qt::ElideNone</enum>
+      <number>0</number>
      </property>
      <property name="usesScrollButtons">
-      <bool>false</bool>
-     </property>
-     <property name="documentMode">
       <bool>false</bool>
      </property>
      <property name="tabsClosable">
       <bool>false</bool>
      </property>
      <widget class="QWidget" name="tab_1">
+      <attribute name="icon">
+       <iconset resource="../Icons.qrc">
+        <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
+      </attribute>
       <attribute name="title">
        <string>Info</string>
       </attribute>
@@ -65,11 +62,6 @@
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="6" column="1">
            <spacer name="horizontalSpacer_2">
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
-            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -83,13 +75,26 @@
           </item>
           <item row="6" column="2">
            <widget class="QPushButton" name="btn_close1">
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
             </property>
             <property name="focusPolicy">
-             <enum>Qt::NoFocus</enum>
+             <enum>Qt::StrongFocus</enum>
             </property>
             <property name="text">
              <string>Close</string>
@@ -116,11 +121,6 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
             </property>
             <property name="text">
              <string>Paths</string>
@@ -169,7 +169,6 @@
             </property>
             <property name="font">
              <font>
-              <family>DejaVu Sans</family>
               <pointsize>12</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -190,11 +189,6 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
             </property>
             <property name="text">
              <string>Info</string>
@@ -252,13 +246,8 @@
                 <height>300</height>
                </size>
               </property>
-              <property name="font">
-               <font>
-                <family>DejaVu Sans</family>
-               </font>
-              </property>
               <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
+               <enum>Qt::StrongFocus</enum>
               </property>
               <property name="text">
                <string/>
@@ -295,6 +284,10 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2">
+      <attribute name="icon">
+       <iconset resource="../Icons.qrc">
+        <normaloff>:/icons/lyrics.png</normaloff>:/icons/lyrics.png</iconset>
+      </attribute>
       <attribute name="title">
        <string>Lyrics</string>
       </attribute>
@@ -310,11 +303,6 @@
          <layout class="QGridLayout" name="gridLayout_6">
           <item row="1" column="1">
            <spacer name="horizontalSpacer">
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
-            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -334,11 +322,6 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
-            </property>
             <property name="currentIndex">
              <number>-1</number>
             </property>
@@ -355,10 +338,17 @@
           </item>
           <item row="1" column="2">
            <widget class="QPushButton" name="btn_close">
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
+            <property name="minimumSize">
+             <size>
+              <width>80</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>80</width>
+              <height>16777215</height>
+             </size>
             </property>
             <property name="text">
              <string>Close</string>
@@ -385,11 +375,6 @@
               <height>0</height>
              </size>
             </property>
-            <property name="font">
-             <font>
-              <family>DejaVu Sans</family>
-             </font>
-            </property>
             <property name="horizontalScrollBarPolicy">
              <enum>Qt::ScrollBarAlwaysOff</enum>
             </property>
@@ -404,7 +389,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

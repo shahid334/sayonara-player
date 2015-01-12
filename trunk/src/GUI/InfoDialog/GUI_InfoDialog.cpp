@@ -26,14 +26,10 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "LyricLookup/LyricLookup.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Style.h"
 #include "HelperStructs/MetaDataInfo.h"
 
-#include <QWidget>
 #include <QPixmap>
-#include <QFile>
-#include <QDir>
 #include <QMessageBox>
 #include <QScrollBar>
 #include <QCloseEvent>
@@ -41,9 +37,8 @@
 #include <QDateTime>
 
 
-
 GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::InfoDialog() {
 
 	setupUi(this);
@@ -56,10 +51,16 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
     ui_tag_edit = tag_edit;
 
-    tab_widget->addTab(ui_tag_edit, tr("Edit"));
+	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit.png"), tr("Edit"));
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
-    _lfm_thread->setUsername(CSettingsStorage::getInstance()->getLastFMNameAndPW().first);
+
+	QStringList user_pw;
+	user_pw = _settings->get(Set::LFM_Login);
+
+	if(user_pw.size() > 1){
+		_lfm_thread->setUsername(user_pw.first());
+	}
 
     _initialized = true;
 
@@ -80,9 +81,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
 	combo_servers->setCurrentIndex(0);
 
-	connect( _lfm_thread,	SIGNAL(sig_corrected_data_available(const QString&)),
-			 this,			SLOT(psl_corrected_data_available(const QString&)));
-
 
 	connect(_cover_lookup,	SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, 			SLOT(psl_cover_available(const CoverLocation&)));
@@ -95,7 +93,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
 
     connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
-    connect(ui_tag_edit, SIGNAL(sig_success(bool)), this, SLOT(psl_id3_success(bool)));
 
 	connect(combo_servers, 	SIGNAL(currentIndexChanged(int)),
             this, 					SLOT(psl_lyrics_server_changed(int)));
@@ -130,7 +127,7 @@ void GUI_InfoDialog::language_changed() {
 
 	retranslateUi(this);
 
-    setMetaData(v_md);
+	set_metadata(v_md);
     _alternate_covers->language_changed();
 }
 
@@ -226,25 +223,25 @@ void GUI_InfoDialog::prepare_info() {
 
 void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 
-	btn_image->setIcon(QIcon(cl.cover_path));
+    QIcon icon(cl.cover_path);
+    if(icon.isNull()) return;
+
+    btn_image->setIcon(icon);
 	btn_image->update();
+
+    if(sender() == _alternate_covers)
+        emit sig_cover_changed(cl);
+
 }
 
 
-void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
-
-	_cover_lookup->fetch_cover(cover_location);
-}
 
 
 void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
 	_mode = mode;
 }
 
-void GUI_InfoDialog::setMetaData(const MetaDataList& v_md) {
-
-    ui_tag_edit->change_meta_data(v_md);
-
+void GUI_InfoDialog::set_metadata(const MetaDataList& v_md) {
 	_v_md = v_md;
 	prepare_info();
 }
@@ -294,24 +291,16 @@ void GUI_InfoDialog::show(int tab) {
 		tab_widget->setTabEnabled(TAB_LYRICS, false);
 	}
 
-    qDebug() << "Show tab " << tab;
-
-    tab_widget->setCurrentIndex(tab);
+	tab_widget->setCurrentIndex(tab);
     psl_tab_index_changed(tab);
 }
 
-void GUI_InfoDialog::psl_id3_success(bool b) {
 
-    if(b) {
-        hide();
-        close();
-    }
+void GUI_InfoDialog::prepare_cover(const CoverLocation& cover_location) {
 
-	else{
-		QMessageBox::warning ( this,
-				tr("Error"),
-				tr("ID3 tags could not be changed"));
-	}
+	if(!cover_location.valid) return;
+
+	_cover_lookup->fetch_cover(cover_location);
 }
 
 

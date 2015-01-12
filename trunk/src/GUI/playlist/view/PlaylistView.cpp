@@ -36,7 +36,12 @@
 #include <QUrl>
 #include <QScrollBar>
 
-PlaylistView::PlaylistView(QWidget* parent) : SearchableListView(parent) {
+PlaylistView::PlaylistView(QWidget* parent) :
+	SearchableListView(parent),
+	Ui::GUI_PlaylistView()
+{
+
+	setupUi(this);
 
     _drag_allowed = true;
     _inner_drag_drop = false;
@@ -49,11 +54,13 @@ PlaylistView::PlaylistView(QWidget* parent) : SearchableListView(parent) {
 
     this->setModel(_model);
     this->setAbstractModel(_model);
+	this->setItemDelegate(_delegate);
     this->setDragEnabled(true);
     this->setAcceptDrops(true);
     this->setSelectionRectVisible(true);
     this->setAlternatingRowColors(true);
     this->setMovement(QListView::Free);
+
 
     connect(this, SIGNAL(pressed(const QModelIndex&)), this, SLOT(row_pressed(const QModelIndex&)));
     connect(this, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(row_double_clicked(const QModelIndex&)));
@@ -130,20 +137,21 @@ void PlaylistView::mouseReleaseEvent(QMouseEvent* event) {
 
     switch (event->button()) {
 
-    case Qt::LeftButton:
+        case Qt::LeftButton:
 
-        if(_qDrag) {
-            delete _qDrag;
-            _qDrag = NULL;
-        }
+            if(_qDrag) {
+                delete _qDrag;
+                _qDrag = NULL;
+            }
 
-        SearchableListView::mouseReleaseEvent(event);
-        event->accept();
+            SearchableListView::mouseReleaseEvent(event);
+            event->accept();
 
-        _drag = false;
-        break;
+            _drag = false;
+            break;
 
-    default: break;
+        default: break;
+
     }
 }
 
@@ -176,7 +184,7 @@ void PlaylistView::goto_row(int row) {
     QModelIndex idx = _model->index(row, 0);
     row_released(idx);
 
-    this->scrollTo(idx);
+	this->scrollTo(idx, SearchableListView::EnsureVisible);
 }
 
 
@@ -220,10 +228,6 @@ void PlaylistView::keyPressEvent(QKeyEvent* event) {
         this->sig_double_clicked(min_row);
         break;
 
-    case Qt::Key_Tab:
-        emit sig_no_focus();
-        break;
-
     default: break;
     }
 
@@ -247,7 +251,11 @@ void PlaylistView::init_rc_menu() {
 }
 
 void PlaylistView::set_context_menu_actions(int actions) {
-    if(!_rc_menu) init_rc_menu();
+
+	if(!_rc_menu) {
+		init_rc_menu();
+	}
+
     _rc_menu->setup_entries(actions);
 }
 
@@ -293,7 +301,8 @@ int PlaylistView::get_num_rows() {
 void PlaylistView::set_current_track(int row) {
 
 	for(int i=0; i<_model->rowCount(); i++) {
-        QModelIndex idx = _model->index(i);
+
+		QModelIndex idx = _model->index(i);
         MetaData md;
         QVariant v = _model->data(idx, Qt::WhatsThisRole);
 
@@ -304,7 +313,7 @@ void PlaylistView::set_current_track(int row) {
     }
 
     QModelIndex new_idx = _model->index(row);
-    scrollTo(new_idx);
+	scrollTo(new_idx, SearchableListView::EnsureVisible);
 }
 
 
@@ -330,8 +339,7 @@ void PlaylistView::clear() {
 
 void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
 
-
-    this->set_delegate_max_width((int) v_md.size());
+    this->set_delegate_max_width(v_md.size());
     _cur_selected_rows.clear();
 
     IGNORE_SELECTION_CHANGES(true);
@@ -347,14 +355,12 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
     QList<int> selected_rows;
 
     QModelIndex idx_cur_playing = _model->index(0);
-	for(uint i=0; i<v_md.size(); i++) {
+    for(int i=0; i<v_md.size(); i++) {
 		
-		QVariant v;
         MetaData md = v_md[i];
-
         QModelIndex model_idx = _model->index(i, 0);
 
-        md.pl_playing = (cur_play_idx == (int) i);
+        md.pl_playing = (cur_play_idx == i);
         
 		if(md.pl_playing) {
 			idx_cur_playing = model_idx;
@@ -368,7 +374,7 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
     }
 
     this->select_rows(selected_rows);
-    this->scrollTo(idx_cur_playing, SearchableListView::EnsureVisible);
+	this->scrollTo(idx_cur_playing, SearchableListView::EnsureVisible);
 }
 
 void PlaylistView::row_pressed(const QModelIndex& idx) {
@@ -411,7 +417,8 @@ void PlaylistView::select_row(int i) {
     if(_model->rowCount() == 0) return;
     if(i > _model->rowCount() - 1) i = _model->rowCount() - 1;
     if(i < 0) i = 0;
-        this->selectionModel()->setCurrentIndex(_model->index(i), QItemSelectionModel::Select);
+
+	this->selectionModel()->setCurrentIndex(_model->index(i), QItemSelectionModel::Select);
 
     QList<int> lst;
     lst << i;
@@ -445,25 +452,29 @@ void PlaylistView::select_all() {
 void PlaylistView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ) {
 
     if(_ignore_selection_changes) return;
+
+    MetaDataList v_md;
+    QList<int> idx_list_int;
+
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
     SearchableListView::selectionChanged(selected, deselected);
 
-    QList<int> idx_list_int;
-
 	foreach(QModelIndex model_idx, idx_list) {
-        if(idx_list_int.contains(model_idx.row())) continue;
+
+		if(idx_list_int.contains(model_idx.row())) continue;
 
         idx_list_int << model_idx.row();
     }
 
-   _model->set_selected(idx_list_int);
+	_model->set_selected(idx_list_int);
 
-	if(selected.indexes().size() > 0)
-        this->scrollTo(selected.indexes()[0]);
+	if(selected.indexes().size() > 0){
+		scrollTo(selected.indexes()[0], SearchableListView::EnsureVisible);
+    }
 
-    MetaDataList v_md;
     _model->get_metadata(idx_list_int, v_md);
+
     emit sig_sel_changed(v_md, idx_list_int);
 
     _cur_selected_rows = idx_list_int;
@@ -572,7 +583,6 @@ void PlaylistView::dropEvent(QDropEvent* event) {
 
 void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
-
     QList<int> affected_rows;
 
     QPoint pos = event->pos();
@@ -597,7 +607,9 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
     const CustomMimeData* d = (const CustomMimeData*) event->mimeData();
 
-    MetaDataList v_metadata;
+    if(!d) return;
+
+	MetaDataList v_md;
 
     QString text = "";
     if(d->hasText()) text = d->text();
@@ -616,11 +628,11 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
         } // end foreach
 
         CDirectoryReader reader;
-        reader.setFilter(Helper::get_soundfile_extensions());
+		reader.set_filter(Helper::get_soundfile_extensions());
 
-        reader.getMetadataFromFileList(filelist, v_metadata);
+		v_md = reader.get_md_from_filelist(filelist);
 
-        if(v_metadata.size() == 0) return;
+		if(v_md.size() == 0) return;
     }
 
 	else if(d->hasHtml()) {}
@@ -628,7 +640,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
 	else if(d->hasText() && d->hasMetaData()) {
 
-        uint sz = d->getMetaData(v_metadata);
+		uint sz = d->getMetaData(v_md);
         if(sz == 0) return;
 
     }
@@ -636,11 +648,11 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 	else if(d->hasText()) {}
     else {}
 
-	for(uint i=0; i<v_metadata.size(); i++) {
+	for(int i=0; i<v_md.size(); i++) {
         affected_rows << i + row + 1;
     }
 
-    emit sig_metadata_dropped(v_metadata, row + 1);
+	emit sig_metadata_dropped(v_md, row + 1);
 }
 
 
@@ -649,7 +661,7 @@ void PlaylistView::scrollUp() {
     int cur_row = this->indexAt(p).row();
     if(cur_row <= 0) return;
 
-    this->scrollTo(_model->index(cur_row - 1));
+	this->scrollTo(_model->index(cur_row - 1), SearchableListView::EnsureVisible);
 }
 
 void PlaylistView::scrollDown() {
@@ -657,12 +669,12 @@ void PlaylistView::scrollDown() {
     int cur_row = this->indexAt(p).row();
     if(cur_row <= 0) return;
 
-    this->scrollTo(_model->index(cur_row - 1));
+	this->scrollTo(_model->index(cur_row - 1), SearchableListView::EnsureVisible);
 }
 
-void PlaylistView::remove_cur_selected_rows(bool select_next_row) {
+void PlaylistView::remove_cur_selected_rows() {
 
-    emit sig_rows_removed(_cur_selected_rows, select_next_row);
+	emit sig_rows_removed(_cur_selected_rows);
 }
 
 

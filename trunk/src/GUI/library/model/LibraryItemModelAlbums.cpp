@@ -87,41 +87,42 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 
 QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 {
-		if (!index.isValid())
-			 return QVariant();
+	if (!index.isValid())
+		 return QVariant();
 
-		if (index.row() >= _album_list.size())
-			 return QVariant();
+	if (index.row() >= _album_list.size())
+		 return QVariant();
 
-        // qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
-		 if(role == Qt::DisplayRole || role==Qt::EditRole) {
+	// qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
+	 if(role == Qt::DisplayRole || role==Qt::EditRole) {
 
-            int row = index.row();
-            int col = index.column();
+		int row = index.row();
+		int col = index.column();
 
-            Album album = _album_list[row];
-            int idx_col = calc_shown_col(col);
+		const Album& album = _album_list.at(row);
 
-			 switch(idx_col) {
-                 case COL_ALBUM_SAMPLER:
-                    return album.is_sampler;
-                 case COL_ALBUM_N_SONGS:
-                     return album.num_songs;
-                 case COL_ALBUM_YEAR:
-                     return album.year;
-                 case COL_ALBUM_NAME:
-                     return album.name;
-                 case COL_ALBUM_DURATION:
-                    return Helper::cvtMsecs2TitleLengthString(album.length_sec * 1000, true, false);
-                 case COL_ALBUM_RATING:
-                    return album.rating;
+		int idx_col = calc_shown_col(col);
+
+		 switch(idx_col) {
+			 case COL_ALBUM_SAMPLER:
+				return album.is_sampler;
+			 case COL_ALBUM_N_SONGS:
+				 return album.num_songs;
+			 case COL_ALBUM_YEAR:
+				 return album.year;
+			 case COL_ALBUM_NAME:
+				 return album.name;
+			 case COL_ALBUM_DURATION:
+				return Helper::cvt_ms_to_string(album.length_sec * 1000, true, false);
+			 case COL_ALBUM_RATING:
+				return album.rating;
 
 
-                default: return "";
-             }
-         }
+			default: return "";
+		 }
+	 }
 
-         return QVariant();
+	 return QVariant();
 }
 
 
@@ -131,25 +132,25 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
-         int col_idx = calc_shown_col(index.column());
+		 int row = index.row();
+		 int col = index.column();
+		 int col_idx = calc_shown_col(col);
 
 		 if(col_idx == COL_ALBUM_RATING) {
-             _album_list[index.row()].rating = value.toInt();
-
+			 _album_list[row].rating = value.toInt();
          }
 
          else {
 
              Album album;
-             bool success = Album::fromVariant(value, album);
+			 if(!Album::fromVariant(value, album)) return false;
 
-             if(!success) return false;
-
-             if(album.is_lib_selected && !_selected_rows.contains(index.row())){
-                _selected_rows << index.row();
+			 if(album.is_lib_selected && !_selected_rows.contains(row)){
+				_selected_rows << row;
              }
 
-			 _album_list.replace(index.row(), album);
+			 _album_list[row] = album;
+
               emit dataChanged(index, index);
 		 }
 

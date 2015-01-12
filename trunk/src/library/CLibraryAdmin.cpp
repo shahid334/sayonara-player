@@ -19,7 +19,6 @@
  */
 
 
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
@@ -34,22 +33,20 @@
 
 /// TODO: FORBIN RELOAD LIBRARY <=> IMPORT at same time
 
-void CLibraryBase::baseDirSelected (const QString & baseDir) {
+void CLibraryBase::baseDirSelected (const QString& dir) {
 
     QStringList fileList;
-    int num_files = 0;
+	QDir base_dir(dir);
 
-    _reader.getFilesInsiderDirRecursive(QDir(baseDir),fileList, num_files);
+	_reader.get_files_in_dir_rec(base_dir, fileList);
 
     emit sig_playlist_created(fileList);
-
 }
-
 
 
 void CLibraryBase::clearLibrary() {
     MetaDataList lst;
-	_db->getTracksFromDatabase(lst, _track_sortorder);
+    _db->getTracksFromDatabase(lst, _sortorder.so_tracks);
     _db->deleteTracks(lst);
     refresh();
 }
@@ -57,30 +54,13 @@ void CLibraryBase::clearLibrary() {
 
 void CLibraryBase::reloadLibrary(bool clear) {
 
-    m_library_path = CSettingsStorage::getInstance()->getLibraryPath();
+	_library_path = _settings->get(Set::Lib_Path);
 
-    if(m_library_path.length() == 0) {
-        QMessageBox msgBox(_main_window);
-        msgBox.setText(tr("Please select your library first"));
-        msgBox.exec();
+	if(_library_path.isEmpty()) {
 
-        QString dir = QFileDialog::getExistingDirectory(_main_window, tr("Open Directory"),	getenv("$HOME"), QFileDialog::ShowDirsOnly);
-
-
-        if(dir.length() < 3) {
-            QMessageBox msgBox(_main_window);
-            msgBox.setText(tr("I said: \"Please select your library first\". Bye bye!"));
-            msgBox.exec();
-            return;
-        }
-
-        else {
-            m_library_path = dir;
-            CSettingsStorage::getInstance()->setLibraryPath(dir);
-            emit sig_libpath_set(dir);
-        }
-    }
-
+		emit sig_no_library_path();
+		return;
+	}
 
     if(clear) {
         clearLibrary();
@@ -90,7 +70,7 @@ void CLibraryBase::reloadLibrary(bool clear) {
         _reload_thread->terminate();
     }
 
-    _reload_thread->set_lib_path(m_library_path);
+	_reload_thread->set_lib_path(_library_path);
     _reload_thread->start();
 }
 
@@ -100,7 +80,7 @@ void CLibraryBase::reload_thread_finished() {
 
     _db->getAllAlbums(_vec_albums);
     _db->getAllArtists(_vec_artists);
-	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
 
     emit_stuff();
 
@@ -114,14 +94,13 @@ void CLibraryBase::library_reloading_state_new_block() {
 
     _reload_thread->pause();
 
-	_db->getAllAlbums(_vec_albums, _album_sortorder);
-	_db->getAllArtists(_vec_artists, _artist_sortorder);
-	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    _db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+    _db->getAllArtists(_vec_artists, _sortorder.so_artists);
+    _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
 
     emit_stuff();
 
     _reload_thread->goon();
-
 }
 
 void CLibraryBase::library_reloading_state_slot(QString str) {
@@ -135,7 +114,7 @@ void CLibraryBase::insertMetaDataIntoDB(MetaDataList& v_md) {
     _db->storeMetadata(v_md);
 
     MetaDataList data;
-	_db->getTracksFromDatabase(data, _track_sortorder);
+    _db->getTracksFromDatabase(data, _sortorder.so_tracks);
     emit sig_all_tracks_loaded(data);
 }
 
@@ -146,9 +125,9 @@ void CLibraryBase::loadDataFromDb () {
     _filter.cleared = true;
     _filter.filtertext = "";
 
-	_db->getAllArtists(_vec_artists, _artist_sortorder);
-	_db->getAllAlbums(_vec_albums, _album_sortorder);
-	_db->getTracksFromDatabase(_vec_md, _track_sortorder);
+    _db->getAllArtists(_vec_artists, _sortorder.so_artists);
+    _db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+    _db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
 
     emit_stuff();
 }

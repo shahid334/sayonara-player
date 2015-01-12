@@ -20,12 +20,10 @@
 
 
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
+
 #include <QFile>
-#include <QDebug>
 #include <QSqlQuery>
-#include <QVariant>
-#include <QObject>
 #include <QSqlError>
 #include <QSqlResult>
 #include <QDir>
@@ -58,50 +56,35 @@ using namespace Sort;
 
 
 
-bool _db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
-
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+bool CDatabaseConnector::db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 
 	result.clear();
 
-	try{
-		if (!q.exec()) {
-			qDebug() << "SQL-Error: Cannot fetch tracks from database";
-			qDebug() << q.executedQuery();
-		}
-
-		while(q.next()) {
-
-			MetaData data;
-			data.id = 		 q.value(0).toInt();
-			data.title = 	 q.value(1).toString();
-			data.length_ms = q.value(2).toInt();
-			data.year = 	 q.value(3).toInt();
-			data.bitrate = 	 q.value(4).toInt();
-			data.filepath =  q.value(5).toString();
-			data.track_num = q.value(6).toInt();
-			data.album_id =  q.value(7).toInt();
-			data.artist_id = q.value(8).toInt();
-			data.album = 	 q.value(9).toString().trimmed();
-			data.artist = 	 q.value(10).toString().trimmed();
-            data.genres =	 q.value(11).toString().split(",");
-            data.filesize =  q.value(12).toInt();
-            data.discnumber = q.value(13).toInt();
-            data.rating = q.value(14).toInt();
-
-			result.push_back(data);
-		}
-
-		return true;
-	}
-	catch (QString& ex) {
-		qDebug() << "SQL-Exception (Fetch tracks):";
-		qDebug() << ex;
-
+	if (!q.exec()) {
+		show_error("Cannot fetch tracks from database", q);
 		return false;
+	}
+
+	while(q.next()) {
+
+		MetaData data;
+		data.id = 		 q.value(0).toInt();
+		data.title = 	 q.value(1).toString();
+		data.length_ms = q.value(2).toInt();
+		data.year = 	 q.value(3).toInt();
+		data.bitrate = 	 q.value(4).toInt();
+		data.filepath =  q.value(5).toString();
+		data.track_num = q.value(6).toInt();
+		data.album_id =  q.value(7).toInt();
+		data.artist_id = q.value(8).toInt();
+		data.album = 	 q.value(9).toString().trimmed();
+		data.artist = 	 q.value(10).toString().trimmed();
+		data.genres =	 q.value(11).toString().split(",");
+		data.filesize =  q.value(12).toInt();
+		data.discnumber = q.value(13).toInt();
+		data.rating = q.value(14).toInt();
+
+		result.push_back(data);
 	}
 
 	return true;
@@ -137,15 +120,9 @@ QString CDatabaseConnector::append_track_sort_string(QString querytext, SortOrde
 }
 
 
-void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md) {
+bool CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-
-    DB_TRY_OPEN(_database);
-     DB_RETURN_NOT_OPEN_VOID(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
     _database->transaction();
 
@@ -156,14 +133,11 @@ void CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 
     _database->commit();
 
+	return (v_md.size() == paths.size());
 }
 
 
 MetaData CDatabaseConnector::getTrackByPath(QString path) {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
 
 	DB_TRY_OPEN(_database);
 
@@ -181,7 +155,7 @@ MetaData CDatabaseConnector::getTrackByPath(QString path) {
 	md.id = -1;
     md.filepath = path;
 
-    if(!_db_fetch_tracks(q, vec_data)) return md;
+	if(!db_fetch_tracks(q, vec_data)) return md;
 
     if(vec_data.size() == 0) {
         md.is_extern = true;
@@ -192,9 +166,6 @@ MetaData CDatabaseConnector::getTrackByPath(QString path) {
 }
 
 MetaData CDatabaseConnector::getTrackById(int id) {
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
 
 	DB_TRY_OPEN(_database);
 
@@ -209,7 +180,7 @@ MetaData CDatabaseConnector::getTrackById(int id) {
 	MetaData md;
 	md.id = -1;
 
-    if(!_db_fetch_tracks(q, vec_data)) return md;
+	if(!db_fetch_tracks(q, vec_data)) return md;
 
     if(vec_data.size() == 0) {
         md.is_extern = true;
@@ -219,36 +190,28 @@ MetaData CDatabaseConnector::getTrackById(int id) {
 }
 
 
-int CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOrder sort) {
+bool CDatabaseConnector::getTracksFromDatabase (MetaDataList & returndata, SortOrder sort) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 
 	QString querytext = append_track_sort_string(TRACK_SELECTOR, sort);
 	q.prepare(querytext);
 
-	_db_fetch_tracks(q, returndata);
-
-    return 0;
+	return db_fetch_tracks(q, returndata);
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort, int discnumber) {
+bool CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata, Filter filter, SortOrder sort, int discnumber) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
+	bool success;
 	QList<int> list;
+
 	MetaDataList mdlist;
 	list << album;
 	returndata.clear();
 
-	getAllTracksByAlbum(list, mdlist, filter, sort);
+	success = getAllTracksByAlbum(list, mdlist, filter, sort);
 	
 	if(discnumber < 0) returndata = mdlist;
 	
@@ -256,20 +219,18 @@ void CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata
 		if(discnumber != md.discnumber) continue;
 		returndata.push_back(md);
 	}
+
+	return success;
 }
 
-void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort) {
+bool CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& returndata, Filter filter, SortOrder sort) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-	DB_TRY_OPEN(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	QString querytext = TRACK_SELECTOR;
 
-	if(albums.size() == 0) return;
+	if(albums.size() == 0) return false;
 
 	else if(albums.size() == 1) {
 		querytext += "AND tracks.albumid=:albumid ";
@@ -284,7 +245,7 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 		querytext += ") ";
 	}
 
-	if(filter.filtertext.length() > 0 ) {
+	if( !filter.filtertext.isEmpty() ) {
 
 
 		switch(filter.by_searchstring) {
@@ -348,39 +309,29 @@ void CDatabaseConnector::getAllTracksByAlbum(QList<int> albums, MetaDataList& re
 
 	}
 
-	_db_fetch_tracks(q, returndata);
+	return db_fetch_tracks(q, returndata);
 
 }
 
-void CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, SortOrder sort) {
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+bool CDatabaseConnector::getAllTracksByArtist(int artist, MetaDataList& returndata, Filter filter, SortOrder sort) {
 
 	QList<int> list;
 	list << artist;
-	getAllTracksByArtist(list, returndata, filter, sort);
+	return getAllTracksByArtist(list, returndata, filter, sort);
 }
 
-void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, SortOrder sort) {
+bool CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& returndata, Filter filter, SortOrder sort) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-	DB_TRY_OPEN(_database);
-
-	MetaData data;
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	QString querytext = TRACK_SELECTOR;
 
+	if(artists.size() == 0){
+		return false;
+	}
 
-
-	if(artists.size() == 0) return;
-
-	else if(artists.size() == 1) {
+	if(artists.size() == 1) {
 		querytext += "AND tracks.artistid=:artistid ";
 	}
 
@@ -448,25 +399,16 @@ void CDatabaseConnector::getAllTracksByArtist(QList<int> artists, MetaDataList& 
 		}
 	}
 
-	_db_fetch_tracks(q, returndata);
+	return db_fetch_tracks(q, returndata);
 }
 
 
-void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sort) {
+bool CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList& result, SortOrder sort) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-
-	DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_VOID(_database);
-
-	MetaData data;
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	QString querytext;
-    QString subquery = TRACK_SELECTOR;
 
 	switch(filter.by_searchstring) {
 
@@ -520,166 +462,163 @@ void CDatabaseConnector::getAllTracksBySearchString(Filter filter, MetaDataList&
 	}
 
 
-	_db_fetch_tracks(q, result);
+	return db_fetch_tracks(q, result);
+}
 
+bool CDatabaseConnector::deleteTrack(int id){
 
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	QSqlQuery q (*_database);
+	QString querytext = QString("DELETE FROM tracks WHERE trackID = :track_id;");
+
+	q.prepare(querytext);
+	q.bindValue(":track_id", id);
+
+	if (!q.exec()) {
+		show_error(QString("Cannot delete track") + QString::number(id), q);
+		return false;
+	}
+
+	deleteFromAllPlaylistChooser(id);
+
+	return true;
 }
 
 
-int CDatabaseConnector::deleteTrack(MetaData& md) {
+bool CDatabaseConnector::deleteTracks(const QList<int>& ids){
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+	 int success = 0;
 
-	DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_INT(_database);
+	_database->transaction();
 
-    //deleteTrackIndexes(md.id);
-
-    try {
-			QSqlQuery q (*_database);
-			QString querytext = QString("DELETE FROM tracks WHERE trackID = :track_id;");
-
-			q.prepare(querytext);
-			q.bindValue(":track_id", QVariant(md.id));
-
-			if (!q.exec()) {
-				throw QString ("SQL - Error: delete track from Database:  cannot execute query");
-			}
-
-			else{
-				deleteFromAllPlaylists(md.id);
-			}
-
-			return 0;
+		foreach(int id, ids){
+			if( deleteTrack(id) ){
+				success++;
+			};
 		}
 
-		catch (QString& ex) {
-			qDebug() << "SQL - Error: getTracksFromDatabase";
-			qDebug() << ex;
-			return -1;
-		}
+	_database->commit();
+
+	return (success == ids.size());
 }
 
 
-
-
-int CDatabaseConnector::deleteTracks(MetaDataList& vec_tracks) {
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-	DB_TRY_OPEN(_database);
-     DB_RETURN_NOT_OPEN_INT(_database);
+bool CDatabaseConnector::deleteTracks(const MetaDataList& v_md) {
 
 	int success = 0;
 
 	_database->transaction();
 
-	for(uint i=0; i<vec_tracks.size(); i++) {
-
-		if( deleteTrack(vec_tracks[i]) == 0) {
-			success ++;
+		foreach(MetaData md, v_md){
+			if( deleteTrack(md.id) ){
+				success++;
+			};
 		}
-	}
 
 	_database->commit();
 
-	return success;
+	return (success == v_md.size());
+}
+
+bool CDatabaseConnector::deleteTracksWithoutAlbum(){
+	//QString query = "DELETE FROM tracks WHERE albumID ";
+	return false;
+}
+
+bool CDatabaseConnector::deleteTracksWithoutArtist(){
+	return false;
 }
 
 
-int CDatabaseConnector::updateTrack(MetaData& data) {
+bool CDatabaseConnector::updateTrack(const MetaData& md) {
 
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
+	if(md.id == -1) return false;
 
-	DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_INT(_database);
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 
-        q.prepare("UPDATE Tracks "
-                  "SET albumID=:albumID, "
-                       "artistID=:artistID, "
-                       "title=:title, "
-                       "year=:year, "
-                       "length=:length, "
-                       "bitrate=:bitrate, "
-                       "track=:track, "
-                       "genre=:genre, "
-                       "filesize=:filesize, "
-                       "discnumber=:discnumber, "
-                       "cissearch=:cissearch, "
-                       "rating=:rating "
-                    "WHERE TrackID = :trackID;");
+	q.prepare("UPDATE Tracks "
+			  "SET albumID=:albumID, "
+				   "artistID=:artistID, "
+				   "title=:title, "
+				   "year=:year, "
+				   "length=:length, "
+				   "bitrate=:bitrate, "
+				   "track=:track, "
+				   "genre=:genre, "
+				   "filesize=:filesize, "
+				   "discnumber=:discnumber, "
+				   "cissearch=:cissearch, "
+				   "rating=:rating "
+				"WHERE TrackID = :trackID;");
 
-		q.bindValue(":albumID",QVariant(data.album_id));
-		q.bindValue(":artistID",QVariant(data.artist_id));
-        q.bindValue(":title",QVariant(data.title));
-		q.bindValue(":track",QVariant(data.track_num));
-        q.bindValue(":length", QVariant(data.length_ms));
-        q.bindValue(":bitrate", QVariant(data.bitrate));
-		q.bindValue(":year",QVariant(data.year));
-		q.bindValue(":trackID", QVariant(data.id));
-        q.bindValue(":genre", QVariant(data.genres.join(",")));
-        q.bindValue(":filesize", QVariant(data.filesize));
-        q.bindValue(":discnumber", QVariant(data.discnumber));
-        q.bindValue(":rating", QVariant(data.rating));
-        q.bindValue(":cissearch", QVariant(data.title.toLower()));
+	q.bindValue(":albumID",QVariant(md.album_id));
+	q.bindValue(":artistID",QVariant(md.artist_id));
+	q.bindValue(":title",QVariant(md.title));
+	q.bindValue(":track",QVariant(md.track_num));
+	q.bindValue(":length", QVariant(md.length_ms));
+	q.bindValue(":bitrate", QVariant(md.bitrate));
+	q.bindValue(":year",QVariant(md.year));
+	q.bindValue(":trackID", QVariant(md.id));
+	q.bindValue(":genre", QVariant(md.genres.join(",")));
+	q.bindValue(":filesize", QVariant(md.filesize));
+	q.bindValue(":discnumber", QVariant(md.discnumber));
+	q.bindValue(":rating", QVariant(md.rating));
+	q.bindValue(":cissearch", QVariant(md.title.toLower()));
 
-        if (!q.exec()) {
-            qDebug() << ("SQL - Error: update track " + data.filepath);
-		}
-
-	return 0;
-}
-
-int CDatabaseConnector::updateTracks(MetaDataList lst) {
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-    int success = 1;
-    _database->transaction();
-    foreach(MetaData md, lst)
-        success *= updateTrack(md);
-    _database->commit();
-    return success;
-
-}
-
-int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, int albumID) {
-
-#ifdef DEBUG_DB
-    qDebug() << Q_FUNC_INFO;
-#endif
-
-	DB_TRY_OPEN(_database);
-
-	QSqlQuery q (*_database);
-
-	data.filepath.replace("//", "/");
-	data.filepath.replace("\\\\", "\\");
-
-
-	MetaData md =  getTrackByPath(data.filepath);
-	int track_id = md.id;
-
-
-	if(track_id > 0) {
-		data.id = md.id;
-		data.artist_id = artistID;
-		data.album_id = albumID;
-
-        updateTrack(data);
-		return 0;
+	if (!q.exec()) {
+		show_error(QString("Cannot update track ") + md.filepath, q);
+		return false;
 	}
 
+	return true;
+}
+
+bool CDatabaseConnector::updateTracks(const MetaDataList& lst) {
+
+	int success = 0;
+
+    _database->transaction();
+	foreach(MetaData md, lst){
+		if(updateTrack(md)){
+			success++;
+		}
+	}
+    _database->commit();
+
+	return (success == lst.size());
+}
+
+int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
+
+	DB_RETURN_NOT_OPEN_INT(_database);
+
+	QSqlQuery q (*_database);
+
+	QString filepath = data.filepath;
+
+	filepath.replace("//", "/");
+	filepath.replace("\\\\", "\\");
+
+	MetaData md =  getTrackByPath(filepath);
+
+	if(md.id >= 0) {
+		MetaData track_copy = data;
+		track_copy.id = md.id;
+		track_copy.artist_id = artistID;
+		track_copy.album_id = albumID;
+
+		if(updateTrack(track_copy)){
+			return md.id;
+		}
+	}
+
+	QString new_title = data.title;
+	if(data.title.isEmpty()){
+		new_title = "Unknown";
+	}
 
 	QString querytext = QString("INSERT INTO tracks ") +
                 "(filename,albumID,artistID,title,year,length,track,bitrate,genre,filesize,discnumber,cissearch) " +
@@ -693,7 +632,7 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     q.bindValue(":artistID",QVariant(artistID));
     q.bindValue(":length",QVariant(data.length_ms));
     q.bindValue(":year",QVariant(data.year));
-    q.bindValue(":title",QVariant(data.title));
+	q.bindValue(":title",QVariant(new_title));
     q.bindValue(":track",QVariant(data.track_num));
     q.bindValue(":bitrate",QVariant(data.bitrate));
     q.bindValue(":genre", QVariant(data.genres.join(",")));
@@ -701,14 +640,13 @@ int CDatabaseConnector::insertTrackIntoDatabase (MetaData & data, int artistID, 
     q.bindValue(":discnumber", QVariant(data.discnumber));
     q.bindValue(":cissearch", QVariant(data.title.toLower()));
 
-
     if (!q.exec()) {
-    	if(track_id < 0)
-    		throw QString ("SQL - Error: insert track into database " + data.filepath);
-    	else
-    		throw QString ("SQL - Error: update track in database " + data.filepath);
+
+		show_error(QString("Cannot insert track into database ") + data.filepath, q);
+		return -1;
     }
-    return 0;
+
+	return md.id;
 }
 
 

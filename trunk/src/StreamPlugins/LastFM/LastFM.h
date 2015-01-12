@@ -29,43 +29,35 @@
 #ifndef LASTFM_H_
 #define LASTFM_H_
 
-
+#include "HelperStructs/Helper.h"
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "StreamPlugins/LastFM/LFMLoginThread.h"
 
-
-#include <QObject>
-#include <QString>
-#include <QList>
 #include <QMap>
 #include <QtXml>
-#include <string>
-
 
 
 // singleton base LastFM API class
 // signals and slots are handled by the adapter class
-class LastFM : public QObject{
+class LastFM : public QObject, protected SayonaraClass{
 
 Q_OBJECT
-
 
 	signals:
 		void sig_last_fm_logged_in(bool);
 		void sig_similar_artists_available(const QList<int>&);
-        void sig_create_playlist(MetaDataList&, bool);
+		void sig_create_playlist(const MetaDataList&, bool);
 		void sig_track_info_fetched(const MetaData& md, bool loved, bool corrected);
 		void sig_user_info_fetched(QMap<QString, QString>&);
 
 
-
 	public slots:
 		void psl_scrobble(const MetaData&);
-		void psl_track_changed(const MetaData&);
-		void psl_login(QString, QString);
+		void psl_track_changed(const MetaData&, bool start_play);
+		void psl_login();
 
 
 	private slots:
@@ -73,31 +65,24 @@ Q_OBJECT
 		void _sl_corrected_data_available(const QString&);
         void _login_thread_finished();
 
+
+
 	public:
+
 		static LastFM * getInstance();
+		virtual ~LastFM();
 
-
-        void lfm_login(QString username, QString password, bool should_emit=true);
 		void lfm_get_friends(QStringList& );
 		bool lfm_get_user_info(QMap<QString, QString>&);
 		bool lfm_is_logged_in();
+		static void get_login(QString& user, QString& pw);
+
 
 	private:
 
 		LastFM();
 		LastFM(const LastFM&);
 		LastFM& operator=(const LastFM&);
-
-	public:
-
-		virtual ~LastFM();
-
-		static LastFM* getInstance(bool init_now) {
-			static LastFM inst;
-			return &inst;
-		}
-
-	private:
 
 		bool 	_lfm_init_track_changed_thread();
 		bool 	_lfm_update_track(const MetaData&);
@@ -108,18 +93,12 @@ Q_OBJECT
         void    _show_error_message(QString err_msg);
 
 
-		QString			_class_name;
-
 		bool 			_logged_in;
-        bool            _emit_login;
 
+		QString			_class_name;
 		QString			_username;
 		QString			_auth_token;
 		QString			_session_key;
-		QString			_session_key2;
-		MetaData		_loved_tracks;
-
-		CSettingsStorage* _settings;
 
 		LFMTrackChangedThread* _track_changed_thread;
         LFMLoginThread* _login_thread;

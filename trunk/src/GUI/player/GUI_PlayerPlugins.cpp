@@ -30,12 +30,15 @@ QWidget* GUI_Player::getParentOfPlugin() {
 
 void GUI_Player::setInfoDialog(GUI_InfoDialog* dialog) {
     ui_info_dialog = dialog;
+	connect(ui_info_dialog, SIGNAL(sig_cover_changed(const CoverLocation&)),
+			this, SLOT(sl_alternate_cover_available(const CoverLocation&)));
 }
 
 
 void GUI_Player::hideAllPlugins() {
 
-    m_settings->setShownPlugin("");
+	_settings->set(Set::Player_ShownPlugin, QString(""));
+
 	if(plugin_widget->isHidden()) return;
 
 	int old_h = this->plugin_widget->minimumHeight();
@@ -73,7 +76,7 @@ void GUI_Player::showPlugin(PlayerPlugin* plugin) {
 	_pph->resize(plugin_widget->size());
 
 	ui_playlist->resize(pl_size);
-    m_settings->setShownPlugin(plugin->getName());
+	_settings->set(Set::Player_ShownPlugin, plugin->getName());
 }
 
 

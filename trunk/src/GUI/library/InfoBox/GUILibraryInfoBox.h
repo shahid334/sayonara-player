@@ -25,15 +25,17 @@
 #ifndef GUILIBRARYINFOBOX_H_
 #define GUILIBRARYINFOBOX_H_
 
-#include <QObject>
-#include <QDialog>
+
+
 #include <QString>
-#include "GUI/ui_GUI_Library_Info_Box.h"
 
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
-class GUI_Library_Info_Box : public QDialog, private Ui::Library_Info_Box {
+#include "HelperStructs/SayonaraClass.h"
+#include "GUI/ui_GUI_Library_Info_Box.h"
+
+class GUI_Library_Info_Box : public SayonaraDialog, private Ui::Library_Info_Box {
 
 	Q_OBJECT
 
@@ -41,15 +43,16 @@ public:
 	GUI_Library_Info_Box(QWidget* parent=0);
 	virtual ~GUI_Library_Info_Box();
 
-
 signals:
 	void sig_lfm_usercount_request();
 
 public slots:
 	void psl_refresh();
 	void lfm_data_available();
-    void change_skin(bool);
-    void language_changed();
+
+
+private slots:
+	void language_changed();
 
 private:
 

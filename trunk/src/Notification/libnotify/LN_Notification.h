@@ -24,13 +24,12 @@
 #ifndef LN_NOTIFICATION_H_
 #define LN_NOTIFICATION_H_
 
-#include <QString>
+#include "HelperStructs/SayonaraClass.h"
 #include "Notification/Notification.h"
 #include "HelperStructs/MetaData.h"
 
 
-
-class LN_Notification : public Notification {
+class LN_Notification : public Notification, protected SayonaraClass {
 
 	Q_OBJECT
 	Q_INTERFACES(Notification)

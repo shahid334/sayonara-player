@@ -21,12 +21,12 @@
 
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
+
 #include <QFile>
 #include <QDir>
 
 GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::GUI_LanguageChooser()
 {
 	setupUi(this);
@@ -45,9 +45,6 @@ GUI_LanguageChooser::GUI_LanguageChooser(QWidget *parent) :
     _map["ru"] = QString::fromUtf8("Русский");
     _map["ua"] = QString::fromUtf8("Українська");
 
-
-    _last_idx = -1;
-
 	setModal(true);
 
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
@@ -57,29 +54,17 @@ GUI_LanguageChooser::~GUI_LanguageChooser() {
 
 }
 
-
-void GUI_LanguageChooser::language_changed(bool b) {
-
-	disconnect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+void GUI_LanguageChooser::language_changed(){
 	retranslateUi(this);
-	connect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
-    renew_combo();
-
-}
-
-void GUI_LanguageChooser::combo_changed(int idx) {
-	int cur_idx = combo_lang->currentIndex();
-    _last_idx = cur_idx;
-	emit sig_language_changed(combo_lang->itemData(cur_idx).toString());
-
-
 }
 
 
 void GUI_LanguageChooser::ok_clicked() {
 
 	int cur_idx = combo_lang->currentIndex();
-	CSettingsStorage::getInstance()->setLanguage(combo_lang->itemData(cur_idx).toString());
+	QString cur_language = combo_lang->itemData(cur_idx).toString();
+
+	_settings->set(Set::Player_Language, cur_language);
 
 	close();
 }
@@ -87,51 +72,47 @@ void GUI_LanguageChooser::ok_clicked() {
 
 void GUI_LanguageChooser::renew_combo() {
 
-	disconnect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+
+	QString lang_setting = _settings->get(Set::Player_Language);
+	qDebug() << "Language setting = " << lang_setting;
     QDir dir(Helper::getSharePath() + "translations/");
-    QStringList filters;
-    filters << "*.qm";
+
+	QStringList filters;
+		filters << "*.qm";
     QStringList files = dir.entryList(filters);
 
 	combo_lang->clear();
 
-    QString lang_setting = CSettingsStorage::getInstance()->getLanguage();
-
-    int tgt_idx = 0;
     int i=0;
     foreach(QString file, files) {
-        int idx = file.lastIndexOf(QDir::separator());
-        QString name = file.right(file.size() - idx);
 
-        name = name.left(name.size() - 3);
+		QString filename, dirname;
+		Helper::split_filename(file, dirname, filename);
 
-        QString two = name.right(2);
+		filename = filename.left(filename.size() - 3);
+
+		QString two = filename.right(2);
         QString title = _map.value(two);
         QString flag = Helper::getSharePath() + "translations/icons/" + two + ".png";
 
-        if(title.size() > 0)
-			combo_lang->addItem(QIcon(flag), title, name);
-        else
-			combo_lang->addItem(name, name);
+		if(title.size() > 0){
+			combo_lang->addItem(QIcon(flag), title, filename);
+		}
 
+		else{
+			combo_lang->addItem(filename, filename);
+		}
 
-        if(name.compare(lang_setting, Qt::CaseInsensitive) == 0) tgt_idx = i;
-        i++;
+		if(filename.compare(lang_setting, Qt::CaseInsensitive) == 0){
+			combo_lang->setCurrentIndex(i);
+		}
+
+		i++;
     }
-
-    if(_last_idx == -1) _last_idx = tgt_idx;
-    else tgt_idx = _last_idx;
-
-	combo_lang->setCurrentIndex(tgt_idx);
-	connect(combo_lang, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 }
 
-void GUI_LanguageChooser::showEvent(QShowEvent * event) {
-
+void GUI_LanguageChooser::showEvent(QShowEvent* e) {
 
     renew_combo();
-    _last_idx = -1;
-
-
-    event->accept();
+	QDialog::showEvent(e);
 }

@@ -34,15 +34,13 @@
 #include "GUI/alternate_covers/AlternateCoverItemModel.h"
 #include "CoverLookup/CoverLookupAlternative.h"
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 
-#include <QDialog>
-#include <QWidget>
 #include <QPixmap>
 #include <QList>
 #include <QModelIndex>
 
-
-class GUI_Alternate_Covers : public QDialog, private Ui::AlternateCovers{
+class GUI_Alternate_Covers : public SayonaraDialog, private Ui::AlternateCovers{
 
 	Q_OBJECT
 public:
@@ -74,6 +72,7 @@ public:
 		void cl_finished(bool);
 
 	private:
+
 		int 				_cur_idx;
 		QString				_last_path;
 		CoverLocation		_cover_location;
@@ -85,7 +84,7 @@ public:
 
         CoverLookupAlternative*        _cl_alternative;
 
-        void update_model();
+        void reset_model();
 		void connect_and_start();
 		void delete_all_files();
 

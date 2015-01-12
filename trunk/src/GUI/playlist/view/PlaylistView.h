@@ -35,27 +35,25 @@
 #include "GUI/playlist/delegate/PlaylistItemDelegate.h"
 #include "GUI/ContextMenu.h"
 #include "GUI/SearchableWidget.h"
+#include "GUI/ui_GUI_PlaylistView.h"
 
-
-#include <QEvent>
 #include <QPoint>
 #include <QDrag>
 #include <QList>
 #include <QMenu>
 #include <QModelIndex>
 #include <QMouseEvent>
-#include <QListView>
 
 
 
-class PlaylistView :public SearchableListView{
+class PlaylistView : public SearchableListView, private Ui::GUI_PlaylistView{
 
 	Q_OBJECT
 
 	signals:
 		void context_menu_emitted(const QPoint&);
         void sig_metadata_dropped(const MetaDataList&, int);
-        void sig_rows_removed(const QList<int> &, bool);
+		void sig_rows_removed(const QList<int>&);
         void sig_rows_moved(const QList<int>&, int);
         void sig_info_clicked();
         void sig_remove_clicked();
@@ -122,7 +120,7 @@ class PlaylistView :public SearchableListView{
         void dropEvent(QDropEvent* event);
         void handle_drop(QDropEvent* event, bool from_outside=false);
 
-        void remove_cur_selected_rows(bool select_next_row=true);
+		void remove_cur_selected_rows();
 
 
         void goto_row(int row);
@@ -150,9 +148,9 @@ class PlaylistView :public SearchableListView{
 
         ContextMenu* 	_rc_menu;
 
-        PlaylistItemModel*        _model;
-        PlaylistItemDelegate* 	        _delegate;
-        bool            _sel_changed;
+		PlaylistItemModel*		_model;
+		PlaylistItemDelegate*	_delegate;
+		bool					_sel_changed;
 
 };
 

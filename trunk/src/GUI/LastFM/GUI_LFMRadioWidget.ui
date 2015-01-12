@@ -57,13 +57,8 @@
          <height>50</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -74,14 +69,13 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>11</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Last.fm</string>
@@ -96,13 +90,8 @@
          <height>18</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>x</string>
@@ -135,12 +124,11 @@
        </property>
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>9</pointsize>
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="sizeAdjustPolicy">
         <enum>QComboBox::AdjustToContents</enum>
@@ -181,11 +169,6 @@
          <height>25</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
@@ -210,11 +193,6 @@
          <width>16777215</width>
          <height>25</height>
         </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
@@ -244,13 +222,8 @@
          <height>25</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -270,13 +243,8 @@
    </item>
    <item row="10" column="0" colspan="2">
     <widget class="Line" name="line">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>

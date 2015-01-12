@@ -41,22 +41,38 @@ public:
     void run();
 
     void set_filelist(const QStringList& list);
-    void get_extracted_files(QStringList& lst);
-    void set_may_terminate(bool);
-    void set_cancelled();
-    void get_md_map(QMap<QString, MetaData>& map);
-    void get_pd_map(QMap<QString, QString>& map);
+
+	// get all files, even images and so on
+	QStringList get_extracted_files();
+
+	// key: filepath
+	// value: MetaData
+	// get metadata by filepath
+	QMap<QString, MetaData> get_md_map();
+
+
+	// key: filepath
+	// value: src folder where the file has been extracted from
+	// get source folder of file
+	// This is important if we select multiple directories and import them
+	// for example dir a, b, c
+
+	QMap<QString, QString> get_pd_map();
+
+	// if metadata has been changed by id3 editor
+	void update_metadata(const MetaDataList& old_md, const MetaDataList& new_md);
+
+	MetaDataList get_metadata();
+
     int get_n_tracks();
 
+	void set_may_terminate(bool);
+	void set_cancelled();
 
     
 signals:
     void sig_done();
     void sig_progress(int);
-
-public slots:
-
-public:
 
 
 private:
@@ -65,16 +81,16 @@ private:
     QStringList             _filelist;
     bool                    _may_terminate;
     bool                    _cancelled;
-    QMap<QString, MetaData> _md_map;
 
-    // map for the parent directories
-    QMap<QString, QString>  _pd_map;
+	// key: filepath
+	// val: Metadata of filepath
+	QMap<QString, MetaData> _md_map;
 
+	// key: filepath
+	// val: src folder where the file has been extracted from
+	QMap<QString, QString> _pd_map;
 
-
-
-
-    
+	MetaDataList			_v_md;
 };
 
 #endif // IMPORTFOLDERTHREAD_H

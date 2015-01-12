@@ -77,7 +77,7 @@ void GUI_Player::setupConnections() {
 	connect(action_lastFM, SIGNAL(triggered(bool)), this,
 			SLOT(lastFMClicked(bool)));
 	connect(action_setLibPath, SIGNAL(triggered(bool)), this,
-			SLOT(setLibraryPathClicked(bool)));
+			SLOT(sl_libpath_clicked(bool)));
 	connect(action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
             SLOT(show()));
 	connect(action_min2tray, SIGNAL(toggled(bool)), this,
@@ -113,17 +113,17 @@ void GUI_Player::setupConnections() {
     		SLOT(volumeChanged(int)));
 
 	connect(songProgress, SIGNAL(searchSliderReleased(int)), this,
-    		SLOT(setProgressJump(int)));
+			SLOT(seek(int)));
 	connect(songProgress, SIGNAL(searchSliderPressed(int)), this,
-			SLOT(setProgressJump(int)));
+			SLOT(seek(int)));
 	connect(songProgress, SIGNAL(searchSliderMoved(int)), this,
-			SLOT(setProgressJump(int)));
+			SLOT(seek(int)));
 
 
 
 	// cover lookup
 	connect(m_cov_lookup, SIGNAL(sig_cover_found(const CoverLocation&)),
-			this, SLOT(cover_found(const CoverLocation&)));
+			this, SLOT(sl_cover_found(const CoverLocation&)));
 
 	connect(m_alternate_covers, SIGNAL(sig_cover_changed(const CoverLocation&)),
 			this,				SLOT(sl_alternate_cover_available(const CoverLocation&)));
@@ -132,22 +132,10 @@ void GUI_Player::setupConnections() {
             this,				SLOT(sl_no_cover_available()));
 
 
-    // notifications
-    connect(ui_notifications, SIGNAL(sig_settings_changed(bool,int)),
-            this, SLOT(notification_changed(bool,int)));
-
-    // language chooser
-    connect(ui_language_chooser, SIGNAL(sig_language_changed(QString)),
-            this, SLOT(language_changed(QString)));
-
-
     connect(m_awa_version, SIGNAL(finished()), this, SLOT(awa_version_finished()));
     connect(m_awa_translators, SIGNAL(finished()), this, SLOT(awa_translators_finished()));
-    
-    if(ui_libpath)
-        connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(setLibraryPathClicked()));
 
-
+	connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(sl_libpath_clicked()));
 
     QList<QKeySequence> lst;
     lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);
@@ -178,6 +166,13 @@ void GUI_Player::setupConnections() {
 
     QAction* two_perc_minus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Left));
     connect(two_perc_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward()));
+
+    QAction* two_sec_minus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Left));
+    connect(two_sec_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward_ms()));
+
+    QAction* two_sec_plus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Right));
+    connect(two_sec_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward_ms()));
+
 
     qDebug() << "connections done";
 }

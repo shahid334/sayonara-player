@@ -25,12 +25,7 @@
 
 
 #include <QFile>
-#include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
-#include <QVariant>
-#include <QObject>
-#include <QSqlError>
 #include <QColor>
 
 QString col2String(QColor col) {
@@ -48,21 +43,20 @@ bool colFromString(QString str, QColor& c) {
     QStringList colors = str.split(",");
 
     if(colors.size() < 3) {
-		/*c.setRed(-1);
-        c.setGreen(-1);
-		c.setBlue(-1);*/
-
-
-        return false;
+		return false;
     }
 
     c.setRed(colors[0].toInt());
     c.setGreen(colors[1].toInt());
     c.setBlue(colors[2].toInt());
-    if(colors.size() == 4)
-        c.setAlpha(colors[3].toInt());
-    else
-        c.setAlpha(255);
+
+	if(colors.size() == 4){
+		c.setAlpha(colors[3].toInt());
+	}
+
+	else{
+		c.setAlpha(255);
+	}
 
     return true;
 
@@ -72,14 +66,13 @@ QList<RawColorStyle> CDatabaseConnector::get_raw_color_styles() {
 
     DB_TRY_OPEN(_database);
 
-
-    QList<RawColorStyle> ret_val;
+	QList<RawColorStyle> ret_val;
 
     QSqlQuery q (*_database);
     q.prepare("SELECT * FROM VisualStyles;" );
 
     if(!q.exec()) {
-        qDebug() << "Could not fetch Color styles";
+		show_error("Could not fetch color styles", q);
         return ret_val;
     }
 
@@ -122,7 +115,6 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs) 
     if(raw_color_style_exists(rcs.col_list.name))
         return update_raw_color_style(rcs);
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QString col_str;
@@ -171,7 +163,7 @@ bool CDatabaseConnector::insert_raw_color_style_to_db(const RawColorStyle& rcs) 
 
 
     if(!q.exec()) {
-        qDebug() << "DB: Could not insert style";
+		show_error("Could not insert style", q);
         return false;
     }
 
@@ -185,7 +177,6 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs) {
     if(!raw_color_style_exists(rcs.col_list.name))
         return insert_raw_color_style_to_db(rcs);
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QString col_str;
@@ -234,7 +225,7 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs) {
 
 
     if(!q.exec()) {
-        qDebug() << "DB: Could not update style " << rcs.col_list.name;
+		show_error(QString("Could not update style ") + rcs.col_list.name, q);
         return false;
     }
 
@@ -245,7 +236,6 @@ bool CDatabaseConnector::update_raw_color_style(const RawColorStyle& rcs) {
 
 bool CDatabaseConnector::delete_raw_color_style(QString name) {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
@@ -253,7 +243,7 @@ bool CDatabaseConnector::delete_raw_color_style(QString name) {
     q.bindValue(":name", name);
 
     if(!q.exec()) {
-        qDebug() << "DB: Could not delete Raw color style";
+		show_error(QString("Could not delete Raw color style ") + name, q);
         return false;
     }
 
@@ -263,17 +253,21 @@ bool CDatabaseConnector::delete_raw_color_style(QString name) {
 
 bool CDatabaseConnector::raw_color_style_exists(QString name) {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
     q.prepare("SELECT * FROM visualstyles WHERE name=:name;");
     q.bindValue(":name", name);
 
-    if(!q.exec()) return false;
-    if(!q.next()) return false;
+	if(!q.exec()) {
+		show_error("Cannot check if raw color style exists", q);
+		return false;
+	}
+
+	if(!q.next()){
+		return false;
+	}
 
     return true;
-
 }
 

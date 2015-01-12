@@ -19,8 +19,6 @@
  */
 
 
-
-#include "HelperStructs/CSettingsStorage.h"
 #include "Notification/NotificationPluginLoader.h"
 #include "Notification/Notification.h"
 #include "HelperStructs/Helper.h"
@@ -35,7 +33,9 @@ NotificationPluginLoader* NotificationPluginLoader::getInstance() {
 }
 
 
-NotificationPluginLoader::NotificationPluginLoader() {
+NotificationPluginLoader::NotificationPluginLoader() :
+	SayonaraClass()
+{
 
     QString app_dir;
     #ifdef Q_OS_UNIX
@@ -45,7 +45,7 @@ NotificationPluginLoader::NotificationPluginLoader() {
     #endif
 
     _cur_idx = -1;
-    QString preferred_plugin = CSettingsStorage::getInstance()->getNotification();
+	QString preferred_plugin = _settings->get(Set::Notification_Name);
 
     QDir plugin_dir = QDir(app_dir);
     QStringList entry_list = plugin_dir.entryList(QDir::Files);
@@ -64,9 +64,12 @@ NotificationPluginLoader::NotificationPluginLoader() {
         qDebug() << "Found plugin " << notification->get_name();
         _notification_plugins.push_back(notification);
 
-        if(!preferred_plugin.compare(notification->get_name(), Qt::CaseInsensitive))
-            _cur_idx = _notification_plugins.size() -1;
+		if(!preferred_plugin.compare(notification->get_name(), Qt::CaseInsensitive)){
+			_cur_idx = _notification_plugins.size() -1;
+		}
     }
+
+	REGISTER_LISTENER(Set::Notification_Name, _sl_cur_plugin_changed);
 }
 
 
@@ -75,11 +78,14 @@ QList<Notification*> NotificationPluginLoader::get_plugins() {
 	return _notification_plugins;
 }
 
-
+void NotificationPluginLoader::_sl_cur_plugin_changed(){
+	QString cur_plugin = _settings->get(Set::Notification_Name);
+	set_cur_plugin(cur_plugin);
+}
 
 void NotificationPluginLoader::set_cur_plugin(QString name) {
 
-    _cur_idx = 0;
+	_cur_idx = -1;
 
     for(int i=0; i<_notification_plugins.size(); i++) {
         QString name_tmp = _notification_plugins[i]->get_name();

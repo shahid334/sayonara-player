@@ -17,6 +17,8 @@ SET(HEADERS
     RatingLabel.h
     AudioConverter/GUI_AudioConverter.h
     bookmarks/GUI_Bookmarks.h
+    broadcasting/GUI_Broadcast.h
+    broadcasting/GUI_BroadcastSetup.h
     engine/EnginePlugin.h
     engine/GUI_LevelPainter.h
     engine/GUI_Spectrum.h
@@ -26,6 +28,7 @@ SET(HEADERS
     player/GUI_TrayIcon.h
     player/SearchSlider.h
     playlist/GUI_Playlist.h
+	playlist/PlaylistTabWidget.h
     playlist/view/PlaylistView.h
     playlist/model/PlaylistItemModel.h
     playlist/delegate/PlaylistItemDelegate.h
@@ -73,6 +76,8 @@ SET(SOURCES
     RatingLabel.cpp
     AudioConverter/GUI_AudioConverter.cpp
     bookmarks/GUI_Bookmarks.cpp
+    broadcasting/GUI_Broadcast.cpp
+    broadcasting/GUI_BroadcastSetup.cpp
     engine/EnginePlugin.cpp
     engine/GUI_LevelPainter.cpp
     engine/GUI_Spectrum.cpp
@@ -131,6 +136,8 @@ SET(FORMS
     alternate_covers/GUI_Alternate_Covers.ui
     AudioConverter/GUI_AudioConvert.ui
     bookmarks/GUI_Bookmarks.ui
+    broadcasting/GUI_Broadcast.ui
+    broadcasting/GUI_BroadcastSetup.ui
     engine/GUI_LevelPainter.ui
     engine/GUI_Spectrum.ui
     engine/GUI_Style.ui
@@ -149,6 +156,8 @@ SET(FORMS
     playlist/entry/GUI_PlaylistEntryBig.ui
     playlist/entry/GUI_PlaylistEntrySmall.ui
     playlist_chooser/GUI_PlaylistChooser.ui
+	playlist/view/GUI_PlaylistView.ui
+
     Podcasts/GUI_Podcasts.ui
     SocketConfiguration/GUI_SocketSetup.ui
     speed/GUI_Speed.ui
@@ -159,13 +168,15 @@ SET(FORMS
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.ui
 )
 
-
-
+SET(RESOURCES
+	Icons.qrc
+)
 
 QT4_WRAP_UI(FORMS_HEADERS ${FORMS})
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
+QT4_ADD_RESOURCES(RESOURCES_RCC ${RESOURCES})
 
-ADD_LIBRARY(sayonara_gui STATIC ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS})
+ADD_LIBRARY(sayonara_gui STATIC ${SOURCES} ${HEADERS_MOC} ${FORMS_HEADERS} ${RESOURCES_RCC})
 TARGET_LINK_LIBRARIES(sayonara_gui
 	sayonara_helper
 	sayonara_db

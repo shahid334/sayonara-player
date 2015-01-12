@@ -31,24 +31,20 @@
 
 #include "HelperStructs/MetaData.h"
 
-#include <QString>
-#include <QStringList>
 #include <QWidget>
 #include <QImage>
-#include <QDebug>
 #include <QPixmap>
 #include <QIcon>
+#include <QThread>
 
 namespace Helper{
 
-	QString cvtMsecs2TitleLengthString(quint64 msec, bool colon=true, bool show_days=true);
+	QString cvt_ms_to_string(quint64 msec, bool empty_zero = false, bool colon=true, bool show_days=true);
 	QString cvtQString2FirstUpper(const QString& str);
 	QString calc_filesize_str(quint64 filesize);
 
     QIcon getIcon(const QString& icon_name);
     QPixmap getPixmap(const QString& icon_name, QSize sz=QSize(0, 0), bool keep_aspect=true);
-	QString getIconPath();
-    QString getIconPath(const QString& icon_name);
 	QString getErrorFile();
 	QString getSayonaraPath();
     QString getSharePath();
@@ -76,8 +72,6 @@ namespace Helper{
 	QString get_filename_of_path(const QString& path);
 	void split_filename(const QString& src, QString& path, QString& filename);
 	QStringList extract_folders_of_files(const QStringList& list);
-
-    QString split_string_to_widget(QString str, QWidget* w, QChar sep=' ');
 
 
     // Everything clear
@@ -119,6 +113,7 @@ namespace Helper{
 	bool read_file_into_str(const QString& filename, QString* content);
 	bool read_http_into_str(const QString& url, QString* content);
 	bool read_http_into_img(const QString& url, QImage* image);
+	bool read_file_into_byte_arr(const QString& filename, QByteArray& content);
 
 	QString easy_tag_finder(const QString&  tag, const QString& xml_doc);
 	QString calc_hash(const QString&  data);
@@ -127,8 +122,22 @@ namespace Helper{
 	QString get_major_artist(const QStringList& artists);
 	QString get_major_artist(const ArtistList& artists);
 
-    void set_deja_vu_font(QWidget* w, int font_size=-1);
+	QString get_location_from_ip(const QString&);
+
 	void set_bin_path(const QString& str);
+
+
+	class _Sleeper : public QThread{
+
+		public:
+			static void sleep_ms(unsigned long ms){
+				msleep(ms);
+			}
+
+	};
+
+	void sleep_ms(unsigned long ms);
+
 }
 
 

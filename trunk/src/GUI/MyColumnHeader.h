@@ -33,6 +33,7 @@
 #include <QString>
 #include <QDebug>
 #include "HelperStructs/globals.h"
+#include "library/Sorting.h"
 
 #define COL_HEADER_SIZE_TYPE_ABS 0
 #define COL_HEADER_SIZE_TYPE_REL 1

@@ -23,15 +23,16 @@
 #ifndef STYLESETTINGS_H
 #define STYLESETTINGS_H
 
-#include <QWidget>
+
 #include <QList>
 #include <QCloseEvent>
 
 #include "GUI/ui_GUI_Style.h"
 #include "GUI/engine/StyleTypes.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_StyleSettings : public QDialog, private Ui::GUI_Style
+class GUI_StyleSettings : public SayonaraDialog, private Ui::GUI_Style
 {
     Q_OBJECT
 public:
@@ -42,7 +43,7 @@ signals:
     
 public slots:
     void show(int);
-    void language_changed();
+	void language_changed();
 
 private slots:
     void combo_styles_changed(int);
@@ -59,15 +60,19 @@ private slots:
 
 
 private:
-
     CDatabaseConnector* _db;
-    QList<RawColorStyle> _styles;
+
+	QList<RawColorStyle> _styles;
     QList<RawColorStyle> _styles_old;
-    RawColorStyle _cur_style;
+
+	RawColorStyle _cur_style;
     QColor _colors[4];
-    bool _sth_changed;
+
     QString _cur_text;
     int _cur_idx;
+	bool _sth_changed;
+
+
     void init();
 
     void connect_spinboxes();

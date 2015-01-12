@@ -25,28 +25,23 @@
 #include "GUI/library/InfoBox/GUILibraryInfoBox.h"
 #include "GUI/ui_GUI_Library_Info_Box.h"
 
-#include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 
-
-#include <QDialog>
 #include <QMap>
 #include <QPixmap>
 
 
 GUI_Library_Info_Box::GUI_Library_Info_Box(QWidget* parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Library_Info_Box()
 {
 	setupUi(this);
 
 	_db = CDatabaseConnector::getInstance();
 	_lfm = LastFM::getInstance();
-
-    lab_icon->setPixmap(Helper::getPixmap("info.png", QSize(80,80), false));
 
     hide();
 }
@@ -56,10 +51,6 @@ GUI_Library_Info_Box::~GUI_Library_Info_Box() {
 }
 
 
-void GUI_Library_Info_Box::change_skin(bool dark) {
-    _skin = dark;
-
-}
 
 void GUI_Library_Info_Box::language_changed() {
 
@@ -72,6 +63,7 @@ void GUI_Library_Info_Box::psl_refresh() {
     MetaDataList v_md;
 	AlbumList v_albums;
 	ArtistList v_artists;
+	bool lfm_active = _settings->get(Set::LFM_Active);
 
 	_db->getTracksFromDatabase(v_md);
 	_db->getAllAlbums(v_albums);
@@ -88,10 +80,10 @@ void GUI_Library_Info_Box::psl_refresh() {
         _filesize += md.filesize;
 	}
 
-	_duration_string = Helper::cvtMsecs2TitleLengthString(_duration_ms, false);
+	_duration_string = Helper::cvt_ms_to_string(_duration_ms, false);
     _filesize_str = Helper::calc_filesize_str(_filesize);
 
-	if( !CSettingsStorage::getInstance()->getLastFMActive() ) {
+	if( !lfm_active ) {
 		_n_lfm_playcount = -1;
 		_n_lfm_days_registered = -1;
 		lab_lfm_playcount->setText("Last.fm not active");
@@ -117,6 +109,7 @@ void GUI_Library_Info_Box::psl_refresh() {
 			lab_lfm_playcount->setText("-");
 		}
 	}
+
 	lab_album_count->setText(QString::number(_n_albums));
 	lab_track_count->setText(QString::number(_n_tracks));
 	lab_artist_count->setText(QString::number(_n_artists));

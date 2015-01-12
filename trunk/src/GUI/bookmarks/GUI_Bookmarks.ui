@@ -57,13 +57,18 @@
        <property name="text">
         <string/>
        </property>
+       <property name="pixmap">
+        <pixmap resource="../Icons.qrc">:/icons/bookmark.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_3">
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
          <pointsize>11</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -89,7 +94,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>x</string>
@@ -103,10 +108,14 @@
      <item>
       <widget class="QPushButton" name="btn_last">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/bwd.png</normaloff>:/icons/bwd.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -128,7 +137,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -151,7 +160,7 @@
      <item>
       <widget class="QCheckBox" name="cb_loop">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Loop</string>
@@ -180,7 +189,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -190,10 +199,14 @@
      <item>
       <widget class="QPushButton" name="btn_next">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/fwd.png</normaloff>:/icons/fwd.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -244,10 +257,14 @@
       </size>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -272,10 +289,14 @@
       </size>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="text">
       <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../Icons.qrc">
+       <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -300,13 +321,15 @@
       </size>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

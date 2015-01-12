@@ -27,10 +27,8 @@
 #include "Engine/GStreamer/GSTConvertEngine.h"
 
 
-GSTEngineHandler::GSTEngineHandler(QObject* parent) {
+GSTEngineHandler::GSTEngineHandler(QObject* parent) : Engine() {
 	_cur_engine = 0;
-
-	QString dir = Helper::getLibPath();
 
 	_engines.push_back(new GSTPlaybackEngine());
 	_engines.push_back(new GSTConvertEngine());
@@ -52,11 +50,9 @@ void GSTEngineHandler::start_convert() {
 
 	stop();
 
-	qDebug() << "Engine start convert";
 	if( QString::compare(_cur_engine->getName(), CONVERT_ENGINE ) != 0) {
 		psl_change_engine(CONVERT_ENGINE);
-		qDebug() << "Change to convert engine";
-	}
+    }
 }
 
 void GSTEngineHandler::end_convert() {
@@ -75,7 +71,7 @@ void GSTEngineHandler::psl_set_speed(float f) {
 	_cur_engine->psl_set_speed(f);
 }
 
-void GSTEngineHandler::fill_engines(const vector<Engine*>& engines) {
+void GSTEngineHandler::fill_engines(const QVector<Engine*>& engines) {
 	_engines = engines;
 
 	psl_change_engine(PLAYBACK_ENGINE);
@@ -99,10 +95,6 @@ void GSTEngineHandler::pause() {
 	_cur_engine->pause();
 }
 
-void GSTEngineHandler::set_volume(int vol) {
-	if(!_cur_engine) return;
-	_cur_engine->set_volume(vol);
-}
 
 
 void GSTEngineHandler::jump_abs_s(quint32 where) {
@@ -120,14 +112,19 @@ void GSTEngineHandler::jump_rel(quint32 where) {
 	_cur_engine->jump_rel(where);
 }
 
-void GSTEngineHandler::change_track(const MetaData& md, int pos_sec, bool start_play) {
-	if(!_cur_engine) return;
-	_cur_engine->change_track(md, pos_sec, start_play);
+void GSTEngineHandler::jump_rel_ms(qint64 where){
+    if(!_cur_engine) return;
+    _cur_engine->jump_rel_ms(where);
 }
 
-void GSTEngineHandler::change_track(const QString& str, int pos_sec, bool start_play) {
+void GSTEngineHandler::change_track(const MetaData& md, bool start_play) {
 	if(!_cur_engine) return;
-	_cur_engine->change_track(str, pos_sec, start_play);
+	_cur_engine->change_track(md, start_play);
+}
+
+void GSTEngineHandler::change_track(const QString& str, bool start_play) {
+	if(!_cur_engine) return;
+	_cur_engine->change_track(str, start_play);
 }
 
 void GSTEngineHandler::eq_changed(int band, int value) {
@@ -135,51 +132,20 @@ void GSTEngineHandler::eq_changed(int band, int value) {
 	_cur_engine->eq_changed(band, value);
 }
 
-void GSTEngineHandler::eq_enable(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->eq_enable(b);
-
-}
 
 void GSTEngineHandler::record_button_toggled(bool b) {
 	if(!_cur_engine) return;
 	_cur_engine->record_button_toggled(b);
 }
 
-void GSTEngineHandler::psl_sr_set_active(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_sr_set_active(b);
-}
 
 void GSTEngineHandler::psl_new_stream_session() {
 	if(!_cur_engine) return;
 	_cur_engine->psl_new_stream_session();
 }
 
-void GSTEngineHandler::psl_calc_level(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_calc_level(b);
-}
-
-void GSTEngineHandler::psl_calc_spectrum(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_calc_spectrum(b);
-}
-
-void GSTEngineHandler::psl_set_gapless(bool b) {
-	if(!_cur_engine) return;
-	_cur_engine->psl_set_gapless(b);
-}
-
-void GSTEngineHandler::sl_dur_changed_ms(quint64 v) {
-	emit sig_dur_changed_ms(v);
-}
-
-void GSTEngineHandler::sl_dur_changed_s(quint32 v) {
-	emit sig_dur_changed_s(v);
-}
-void GSTEngineHandler::sl_dur_changed(MetaData& v) {
-	emit sig_dur_changed(v);
+void GSTEngineHandler::sl_md_changed(const MetaData& v) {
+	emit sig_md_changed(v);
 }
 
 void GSTEngineHandler::sl_pos_changed_ms(quint64 v) {
@@ -206,9 +172,6 @@ void GSTEngineHandler::sl_spectrum(QList<float>& lst) {
 	emit sig_spectrum(lst);
 }
 
-void GSTEngineHandler::sl_bitrate_changed(qint32 v) {
-	emit sig_bitrate_changed(v);
-}
 
 bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_engine) {
 
@@ -216,33 +179,25 @@ bool GSTEngineHandler::configure_connections(Engine* old_engine, Engine* new_eng
 	if(old_engine == new_engine) return false;
 
 	if(old_engine) {
-		disconnect(old_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
-
-		disconnect(old_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
-		disconnect(old_engine, SIGNAL(sig_dur_changed(MetaData&)), this, SLOT(sl_dur_changed(MetaData&)));
+		disconnect(old_engine, SIGNAL(sig_md_changed(const MetaData&)), this, SLOT(sl_md_changed(const MetaData&)));
 		disconnect(old_engine, SIGNAL(sig_pos_changed_ms(quint64)), this, SLOT(sl_pos_changed_ms(quint64)));
 		disconnect(old_engine, SIGNAL(sig_pos_changed_s(quint32)), this, SLOT(sl_pos_changed_s(quint32)));
-
 		disconnect(old_engine, SIGNAL(sig_track_finished()), this, SLOT(sl_track_finished()));
 		disconnect(old_engine, SIGNAL(sig_scrobble(const MetaData&)), this, SLOT(sl_scrobble(const MetaData&)));
 		disconnect(old_engine, SIGNAL(sig_level(float, float)), this, SLOT(sl_level(float, float)));
 		disconnect(old_engine, SIGNAL(sig_spectrum(QList<float>&)), this, SLOT(sl_spectrum(QList<float>&)));
-		disconnect(old_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
+		disconnect(old_engine, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 	}
 
 	if(new_engine) {
-		connect(new_engine, SIGNAL(sig_dur_changed_ms(quint64)), this, SLOT(sl_dur_changed_ms(quint64)));
-
-		connect(new_engine, SIGNAL(sig_dur_changed_s(quint32)), this, SLOT(sl_dur_changed_s(quint32)));
-		connect(new_engine, SIGNAL(sig_dur_changed(MetaData&)), this, SLOT(sl_dur_changed(MetaData&)));
+		connect(new_engine, SIGNAL(sig_md_changed(const MetaData&)), this, SLOT(sl_md_changed(const MetaData&)));
 		connect(new_engine, SIGNAL(sig_pos_changed_ms(quint64)), this, SLOT(sl_pos_changed_ms(quint64)));
 		connect(new_engine, SIGNAL(sig_pos_changed_s(quint32)), this, SLOT(sl_pos_changed_s(quint32)));
-
 		connect(new_engine, SIGNAL(sig_track_finished()), this, SLOT(sl_track_finished()));
 		connect(new_engine, SIGNAL(sig_scrobble(const MetaData&)), this, SLOT(sl_scrobble(const MetaData&)));
 		connect(new_engine, SIGNAL(sig_level(float, float)), this, SLOT(sl_level(float, float)));
 		connect(new_engine, SIGNAL(sig_spectrum(QList<float>&)), this, SLOT(sl_spectrum(QList<float>&)));
-		connect(new_engine, SIGNAL(sig_bitrate_changed(qint32)), this, SLOT(sl_bitrate_changed(qint32)));
+		connect(new_engine, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 	}
 
 	return true;

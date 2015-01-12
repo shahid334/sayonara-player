@@ -31,16 +31,10 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-	_settings = CSettingsStorage::getInstance();
-	LameBitrate br = _settings->getConvertQuality();
-
-    QString logo_name = "audio_convert.png";
-    QPixmap pm = Helper::getPixmap(logo_name, lab_logo->size(), true );
-    lab_logo->setPixmap(pm);
+	LameBitrate br = (LameBitrate) _settings->get(Set::Engine_ConvertQuality);
 
 	rb_cbr->setChecked(false);
 	rb_vbr->setChecked(false);
-
 
 	connect(rb_cbr, SIGNAL(toggled(bool)), this, SLOT(rb_cbr_toggled(bool)));
 	connect(rb_vbr, SIGNAL(toggled(bool)), this, SLOT(rb_vbr_toggled(bool)));
@@ -141,9 +135,12 @@ void GUI_AudioConverter::rb_vbr_toggled(bool b) {
 void GUI_AudioConverter::cb_active_toggled(bool b) {
 
 	if(b) {
-		QString dir = QFileDialog::getExistingDirectory(this, "Choose target directory", _settings->getConvertTgtPath());
+
+		QString cvt_target_path = _settings->get(Set::Engine_CovertTargetPath);
+		QString dir = QFileDialog::getExistingDirectory(this, "Choose target directory", cvt_target_path);
+
 		if(dir.size() > 0) {
-			_settings->setConvertTgtPath(dir);
+			_settings->set(Set::Engine_CovertTargetPath, dir);
 			emit sig_active();
 		}
 
@@ -161,6 +158,6 @@ void GUI_AudioConverter::cb_active_toggled(bool b) {
 void GUI_AudioConverter::quality_changed(int index) {
 	LameBitrate q = (LameBitrate) cb_quality->itemData(index).toInt();
 	qDebug() << "Quality: " << q;
-	_settings->setConvertQuality(q);
+	_settings->set(Set::Engine_ConvertQuality, (int) q);
 }
 

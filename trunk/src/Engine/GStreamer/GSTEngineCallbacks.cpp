@@ -29,13 +29,7 @@
 #include "Engine/GStreamer/GSTPlaybackEngine.h"
 #include "Engine/GStreamer/GSTEngineHelper.h"
 
-
 #include <cmath>
-#ifdef Q_OS_LINUX
-#include <unistd.h>
-#endif
-
-
 
 double arr[2];
 gboolean
@@ -170,20 +164,16 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 	Engine* engine = (Engine*) data;
 
-    GstState old_state, new_state, pending_state;
 	int msg_type = GST_MESSAGE_TYPE(msg);
-
 
 	switch (msg_type) {
 
         case GST_MESSAGE_EOS:
             if (!engine) break;
 
-            //qDebug() << "Engine: Track finished";
             engine->set_track_finished();
 
             break;
-
 
         case GST_MESSAGE_ELEMENT:
             if(!engine) break;
@@ -196,37 +186,30 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
             break;
 
-        case GST_MESSAGE_STATE_CHANGED:
-            if(!engine) break;
-
-            gst_message_parse_state_changed (msg, &old_state, &new_state, &pending_state);
-
-            if ( new_state == GST_STATE_PLAYING) {
-                engine->do_jump_play();
-            }
-
-            break;
-
-        case GST_MESSAGE_ASYNC_DONE:
-
-            break;
-
-        case GST_MESSAGE_TAG:
+		case GST_MESSAGE_TAG:
             GstTagList* tags;
-            uint val;
+			quint32 br;
+
             bool success;
 
             tags = NULL;
             gst_message_parse_tag(msg, &tags);
-            success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &val);
-            if(val != 0 && success) {
+			success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &br);
 
-                val = (uint) (round( val / 1000.0) * 1000.0);
+			if(br != 0 && success) {
 
-                engine->update_bitrate(val);
+				br = (quint32) (br / 1000) * 1000;
+				engine->update_bitrate(br);
             }
-            break;
 
+			gst_tag_list_unref(tags);
+
+			break;
+
+		case GST_MESSAGE_DURATION_CHANGED:
+
+			engine->update_duration();
+			break;
 
         case GST_MESSAGE_ERROR:
             GError *err;
@@ -235,8 +218,11 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
             qDebug() << "Engine: GST_MESSAGE_ERROR: " << err->message << ": "
                      << GST_MESSAGE_SRC_NAME(msg);
-            if(engine)
-                engine->set_track_finished();
+
+			if(engine){
+				engine->set_track_finished();
+			}
+
             g_error_free(err);
 
             break;

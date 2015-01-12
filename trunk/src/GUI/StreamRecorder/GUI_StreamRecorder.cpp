@@ -25,7 +25,6 @@
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QFileDialog>
@@ -33,35 +32,28 @@
 #include <QDir>
 
 GUI_StreamRecorder::GUI_StreamRecorder(QWidget* parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
+
 	Ui_GUI_StreamRecorder() {
 
 	setupUi(this);
 
-	_settings = CSettingsStorage::getInstance();
-
-	_path = _settings->getStreamRipperPath();
-	_is_active = _settings->getStreamRipper();
-	_is_complete_tracks = _settings->getStreamRipperCompleteTracks();
-	_is_create_session_path = _settings->getStreamRipperSessionPath();
+	_path = _settings->get(Set::Engine_SR_Path);
+	_is_active = _settings->get(Set::Engine_SR_Active);
+	_is_create_session_path = _settings->get(Set::Engine_SR_SessionPath);
 
 	le_path->setText(_path);
 	cb_activate->setChecked(_is_active);
-	cb_complete_tracks->setChecked(_is_complete_tracks);
 	cb_create_session_path->setChecked(_is_create_session_path);
 
-	cb_complete_tracks->setEnabled(_is_active);
 	cb_create_session_path->setEnabled(_is_active);
 	btn_path->setEnabled(_is_active);
 	le_path->setEnabled(_is_active);
 
-    lab_icon->setPixmap( Helper::getPixmap("rec.png", lab_icon->maximumSize(), true));
 	setModal(true);
 
 	connect(cb_activate, SIGNAL(toggled(bool)), this, SLOT(sl_cb_activate_toggled(bool)));
-	connect(cb_complete_tracks, SIGNAL(toggled(bool)), this, SLOT(sl_cb_complete_tracks_toggled(bool)));
 	connect(cb_create_session_path, SIGNAL(toggled(bool)), this, SLOT(sl_cb_create_session_path_toggled(bool)));
-	//connect(le_path, SIGNAL(textEdited(QString&)), this, SLOT(sl_le_text_changed(QString&)));
 	connect(btn_path, SIGNAL(clicked()), this, SLOT(sl_btn_path_clicked()));
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(sl_ok()));
 
@@ -87,18 +79,12 @@ void GUI_StreamRecorder::language_changed() {
 
 void GUI_StreamRecorder::sl_cb_activate_toggled(bool b) {
 	_is_active = b;
-	_settings->setStreamRipper(b);
-	emit sig_stream_recorder_active(b);
-}
-
-void GUI_StreamRecorder::sl_cb_complete_tracks_toggled(bool b) {
-	_is_complete_tracks = b;
-	_settings->setStreamRipperCompleteTracks(b);
+	_settings->set(Set::Engine_SR_Active, b);
 }
 
 void GUI_StreamRecorder::sl_cb_create_session_path_toggled(bool b) {
     _is_create_session_path = b;
-    _settings->setStreamRipperSessionPath(b);
+	_settings->set(Set::Engine_SR_SessionPath, b);
 }
 
 void GUI_StreamRecorder::sl_btn_path_clicked() {
@@ -106,7 +92,7 @@ void GUI_StreamRecorder::sl_btn_path_clicked() {
 	QString dir = QFileDialog::getExistingDirectory(this, tr("Choose target directory"), _path, QFileDialog::ShowDirsOnly);
 	if(dir.size() > 0) {
 		_path = dir;
-		_settings->setStreamRipperPath(_path);
+		_settings->set(Set::Engine_SR_Path, _path);
 		le_path->setText(_path);
 	}
 }
@@ -130,13 +116,16 @@ void GUI_StreamRecorder::sl_ok() {
     if(!QFile::exists(str)) {
         bool create_success = QDir::root().mkpath(str);
         if(!create_success) {
-            QMessageBox::warning(this, tr("Could not create directory"), str + tr(" could not be created\nPlease choose another folder"));
-			le_path->setText(_settings->getStreamRipperPath());
+			QString sr_path = _settings->get(Set::Engine_SR_Path);
+			le_path->setText(sr_path);
+
+			QMessageBox::warning(this, tr("Could not create directory"), str + tr(" could not be created\nPlease choose another folder"));
+
             return;
         }
     }
 
-    _settings->setStreamRipperPath(str);
+	_settings->set(Set::Engine_SR_Path, str);
     _path = str;
 
 	CDatabaseConnector::getInstance()->store_settings();

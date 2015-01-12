@@ -25,6 +25,7 @@
 #ifndef GUI_INFODIALOG_H_
 #define GUI_INFODIALOG_H_
 
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/MetaData.h"
 #include "CoverLookup/CoverLookup.h"
 #include "LyricLookup/LyricLookup.h"
@@ -34,12 +35,8 @@
 #include "GUI/alternate_covers/GUI_Alternate_Covers.h"
 #include "GUI/ui_GUI_InfoDialog.h"
 
-#include <QWidget>
-#include <QDialog>
-#include <QString>
 #include <QMetaType>
 #include <QCloseEvent>
-
 
 
 #define INFO_MODE_TRACKS 0
@@ -56,19 +53,22 @@ enum InfoDialogMode {
 	InfoDialogMode_Artists
 };
 
-class GUI_InfoDialog : public QDialog, private Ui::InfoDialog{
+class GUI_InfoDialog : public SayonaraDialog, private Ui::InfoDialog{
 Q_OBJECT
 
+signals:
+	void sig_cover_changed(const CoverLocation&);
 
 public slots:
 
     void changeSkin(bool dark);
     void language_changed();
+	void set_metadata(const MetaDataList& vd);
+	void show(int tab);
 
 private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
-	void psl_id3_success(bool);
 	void psl_tab_index_changed(int);
     void no_cover_available();
 	void cover_clicked();
@@ -85,10 +85,9 @@ public:
 	virtual ~GUI_InfoDialog();
 
 	void setInfoMode(InfoDialogMode mode);
-	void setMetaData(const MetaDataList& vd);
-    void set_tag_edit_visible(bool b);
 
-	void show(int tab);
+
+    void set_tag_edit_visible(bool b);
 
 
 private:
@@ -109,7 +108,7 @@ private:
     QString                 _call_id;
 	InfoDialogMode			_mode;
 
-	QString					_cover_artist;
+    QString 				_cover_artist;
 	QString					_cover_album;
 	CoverLocation			_cl;
 

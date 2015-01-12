@@ -23,27 +23,27 @@
 #ifndef LIBRARYIMPORTER_H
 #define LIBRARYIMPORTER_H
 
-#include <QObject>
-#include <QWidget>
-#include <QStringList>
 #include "library/threads/ImportCachingThread.h"
 #include "library/threads/ImportCopyThread.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "TagEdit/TagEdit.h"
 
-class LibraryImporter : public QObject
+
+
+
+class LibraryImporter : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
-    explicit LibraryImporter(QWidget* main_window, QObject *parent = 0);
+	explicit LibraryImporter(QWidget* main_window, QObject *parent = 0);
     
 signals:
     void sig_lib_changes_allowed(bool);
-    void sig_import_result(bool);
+	void sig_imported();
     
 public slots:
-    void psl_import_files(const QStringList&);
+	void psl_import_files(const QStringList&, QString src_dir="");
     void psl_import_dir(const QString&);
 
 private slots:
@@ -59,6 +59,7 @@ private slots:
     void accept_import(const QString&, bool);
     void cancel_import();
     void import_progress(int);
+	void metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
 
 
@@ -66,15 +67,16 @@ private:
     GUI_ImportFolder*       _import_dialog;
     ImportCachingThread*    _caching_thread;
     ImportCopyThread*       _copy_thread;
-    CSettingsStorage*       _settings;
     CDatabaseConnector*     _db;
-
+	TagEdit*				_tag_edit;
 
     bool                    _copy_to_lib;
-    QStringList             _src_files;
+
     QString                 _import_to;
     QString                 _lib_path;
-    QWidget*                _main_window;
+	QString					_src_dir;
+
+	QWidget*				_main_window;
 
 };
 

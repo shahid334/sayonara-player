@@ -24,13 +24,13 @@
 #define NOTIFICATION_PLUGIN_LOADER_H_
 
 #include "Notification/Notification.h"
+#include "HelperStructs/SayonaraClass.h"
+
 #include <QList>
-#include <QObject>
-#include <QString>
 
 class NotificationPluginLoader;
 
-class NotificationPluginLoader : public QObject {
+class NotificationPluginLoader : public QObject, protected SayonaraClass {
 
     Q_OBJECT
 
@@ -42,6 +42,9 @@ public:
     Notification* get_cur_plugin();
     void set_cur_plugin(Notification* n);
     void set_cur_plugin(QString name);
+
+private slots:
+	void _sl_cur_plugin_changed();
 
 private:
 

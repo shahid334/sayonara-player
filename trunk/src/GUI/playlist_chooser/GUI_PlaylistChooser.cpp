@@ -22,41 +22,34 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "PlayerPlugin/PlayerPlugin.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/Helper.h"
+#include <QMessageBox>
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
 
-#include <QWidget>
 #include <QInputDialog>
 #include <QFileDialog>
-#include <QMessageBox>
 #include <QPixmap>
 
 #include "GUI/ui_GUI_PlaylistChooser.h"
 
 
-GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, PlaylistChooser* playlist_chooser, QWidget *parent) :
 	PlayerPlugin(name, parent),
 	Ui::GUI_PlaylistChooser()
 {
 
 	setupUi(this);
 
+	_playlist_chooser = playlist_chooser;
+
+	_last_dir = _settings->get(Set::Lib_Path);
+
 	_cur_idx = -1;
-    _dark = false;
+
     _text_before_save = "";
 
     _target_playlist_dialog = new GUI_Target_Playlist_Dialog(this);
-    _last_dir = CSettingsStorage::getInstance()->getLibraryPath();
-
-    lab_icon->setPixmap(Helper::getPixmap("lyrics.png", QSize(50, 50), false));
-
-    btn_save->setIcon(Helper::getIcon("save.png"));
-    btn_save_as->setIcon(Helper::getIcon("save_as.png"));
-    btn_delete->setIcon(Helper::getIcon("delete.png"));
-
 
 	btn_delete->setEnabled(false);
 	btn_save->setEnabled(false);
@@ -69,6 +62,15 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
 	connect(combo_playlistchooser, SIGNAL(activated(int)), this, SLOT(playlist_selected(int)));
 	connect(combo_playlistchooser, SIGNAL(editTextChanged( const QString & )), this, SLOT(text_changed ( const QString & )));
     connect(_target_playlist_dialog, SIGNAL(sig_target_chosen(QString,bool)), this, SLOT(got_save_params(QString,bool)));
+
+	connect(_playlist_chooser, SIGNAL(sig_all_playlists_loaded(const QMap<int,QString>&)),
+			this, SLOT(all_playlists_fetched(const QMap<int,QString>&)));
+
+	connect(_playlist_chooser, SIGNAL(sig_playlist_created(const MetaDataList&, int, PlaylistType)),
+			this, SLOT(playlist_changed(const MetaDataList&, int, PlaylistType)));
+
+
+	_playlist_chooser->load_all_playlists();
 
     hide();
 
@@ -84,12 +86,9 @@ void GUI_PlaylistChooser::language_changed() {
 	retranslateUi(this);
 }
 
-void GUI_PlaylistChooser::changeSkin(bool dark) {
-    _dark = dark;
-}
 
 
-void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping) {
+void GUI_PlaylistChooser::all_playlists_fetched(const QMap<int, QString>& mapping) {
     int tmp_cur_idx = _cur_idx;
 	combo_playlistchooser->clear();
 	combo_playlistchooser->addItem("", -1);
@@ -116,17 +115,20 @@ void GUI_PlaylistChooser::all_playlists_fetched(QMap<int, QString>& mapping) {
 	text_changed(combo_playlistchooser->currentText());
 }
 
-// Playlist -> this
+
 void GUI_PlaylistChooser::playlist_changed(const MetaDataList& v_md, int i, PlaylistType playlist_type) {
 
     Q_UNUSED(i);
+
     bool empty = (v_md.size() == 0);
+	bool saveable = !empty && (playlist_type == PlaylistTypeStd);
 
-	btn_save->setEnabled(!empty && playlist_type == PlaylistTypeStd);
-	btn_save_as->setEnabled(!empty && playlist_type == PlaylistTypeStd);
+	btn_save->setEnabled(saveable);
+	btn_save_as->setEnabled(saveable);
 
-    if(empty)
+	if(empty){
 		le_playlist_file->clear();
+	}
 
 	text_changed(combo_playlistchooser->currentText());
 }
@@ -152,24 +154,25 @@ void GUI_PlaylistChooser::save_button_pressed() {
 		int val = combo_playlistchooser->itemData(_cur_idx).toInt();
         int answer = show_warning(tr("Overwrite?"));
 
-		if(answer == QMessageBox::Yes)
-            emit sig_save_playlist(val);
+		if(answer == QMessageBox::Yes){
+			_playlist_chooser->save_playlist(val);
+		}
+
 	}
 
     else if(cur_text.size() > 0 ) {
-        emit sig_save_playlist(cur_text);
+		_playlist_chooser->save_playlist(cur_text);
     }
 
 	else return;
 }
 
 void GUI_PlaylistChooser::got_save_params(const QString& filename, bool relative) {
-    emit sig_save_playlist_file(filename, relative);
-
+	_playlist_chooser->save_playlist_file(filename, relative);
 }
 
 void GUI_PlaylistChooser::save_as_button_pressed() {
-    _target_playlist_dialog->change_skin(_dark);
+
     _target_playlist_dialog->show();
 }
 
@@ -181,8 +184,10 @@ void GUI_PlaylistChooser::delete_button_pressed() {
 
 	if(_cur_idx < combo_playlistchooser->count() && _cur_idx != -1) {
 		int val = combo_playlistchooser->itemData(_cur_idx).toInt();
-		if(val >= 0 && answer == QMessageBox::Yes)
-			emit sig_delete_playlist(val);
+
+		if(val >= 0 && answer == QMessageBox::Yes){
+			_playlist_chooser->delete_playlist(val);
+		}
 	}
 }
 
@@ -192,13 +197,14 @@ void GUI_PlaylistChooser::playlist_selected(int idx) {
 	_cur_idx = idx;
 	if(_cur_idx >= combo_playlistchooser->count() || _cur_idx < 0) return;
 
+	QString name = combo_playlistchooser->currentText();
+
 	int val = combo_playlistchooser->itemData(idx).toInt();
     bool val_bigger_zero = (val > 0);
 	btn_delete->setEnabled(val_bigger_zero);
-	text_changed(combo_playlistchooser->currentText());
+	text_changed(name);
 
-
-    emit sig_playlist_chosen(val);
+	_playlist_chooser->load_single_playlist(val, name);
 
 	le_playlist_file->clear();
 }
@@ -228,7 +234,7 @@ void GUI_PlaylistChooser::load_button_pressed() {
 	le_playlist_file->setText(lab_text);
 
     if(filelist.size() > 0) {
-        emit sig_files_selected(filelist);
+		_playlist_chooser->playlist_files_selected(filelist);
     }
 }
 
@@ -250,7 +256,7 @@ void GUI_PlaylistChooser::text_changed(const QString & text) {
 
 int GUI_PlaylistChooser::show_warning(QString title_text) {
 
-    QMessageBox warning_box(this);
+	QMessageBox warning_box(this);
         warning_box.setParent(this);
         warning_box.setModal(true);
         warning_box.setWindowFlags(Qt::Dialog);
@@ -260,8 +266,6 @@ int GUI_PlaylistChooser::show_warning(QString title_text) {
         warning_box.setInformativeText(tr("Are you sure?"));
         warning_box.setWindowTitle(title_text);
         warning_box.setDefaultButton(QMessageBox::No);
-        Helper::set_deja_vu_font(&warning_box);
-
 
     return warning_box.exec();
 }

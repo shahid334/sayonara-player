@@ -24,10 +24,8 @@
 #define GSTCONVERTPIPELINE_H
 
 #include "HelperStructs/globals.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "Engine/GStreamer/GSTPipeline.h"
 #include "Engine/Engine.h"
-
 
 
 class GSTConvertPipeline : public GSTAbstractPipeline
@@ -45,8 +43,6 @@ public slots:
 	void pause();
 	void stop();
 
-	qint64 get_duration_ms();
-	qint64 get_position_ms();
 	guint get_bitrate();
 
 	void set_quality(LameBitrate quality);

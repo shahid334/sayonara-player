@@ -29,9 +29,10 @@
 
 
 PlaylistLoader::PlaylistLoader(QObject *parent) :
-    QObject(parent)
+	QObject(parent),
+	SayonaraClass()
 {
-    _settings = CSettingsStorage::getInstance();
+
 }
 
 
@@ -39,25 +40,16 @@ void PlaylistLoader::load_old_playlist() {
 
         CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
-        bool loadPlaylist = _settings->getLoadPlaylist();
-        if( !loadPlaylist ) return;
+		bool load_playlist = _settings->get(Set::PL_Load);
+		if( !load_playlist ) return;
 
-        bool load_last_track = _settings->getLoadLastTrack();
-        LastTrack* last_track = _settings->getLastTrack();
+		bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
+		int last_track_idx = _settings->get(Set::PL_LastTrack);
 
-        bool load_last_position = _settings->getRememberTime();
-        bool start_immediatly = _settings->getStartPlaying();
-
-        QStringList saved_playlist = _settings->getPlaylist();
+		QStringList saved_playlist = _settings->get(Set::PL_Playlist);
 
         if(saved_playlist.size() == 0) return;
 
-        // the path of the last played track
-        QString last_track_path = last_track->filepath;
-        QDir d2(last_track_path);
-        last_track_path = d2.absolutePath();
-
-        int last_track_idx = -1;
         MetaDataList v_md;
 
         // run over all tracks
@@ -92,10 +84,6 @@ void PlaylistLoader::load_old_playlist() {
                 else{
                     track.is_extern = false;
                 }
-
-                if(track_id == last_track->id){
-                    last_track_idx = i;
-                }
             }
 
             // we have an filepath
@@ -110,10 +98,6 @@ void PlaylistLoader::load_old_playlist() {
                 }
 
                 track.is_extern = true;
-
-                if(!path_in_list.compare(last_track_path, Qt::CaseInsensitive)) {
-                    last_track_idx = i;
-                }
             }
 
             v_md.push_back(track);
@@ -121,26 +105,13 @@ void PlaylistLoader::load_old_playlist() {
 
         if(v_md.size() == 0) return;
 
-        if(last_track_idx == -1) {
-            start_immediatly = false;
-            load_last_position = false;
-            load_last_track = false;
-            emit sig_create_playlist(v_md, false);
-            emit sig_stop();
-            return;
+
+		emit sig_create_playlist(v_md);
+
+		if(last_track_idx >= v_md.size() || last_track_idx < 0) return;
+
+		if(load_last_track) {
+			emit sig_change_track(last_track_idx);
         }
-
-        emit sig_create_playlist(v_md, start_immediatly);
-
-
-        int last_pos = 0;
-        if(load_last_track && last_track_idx >= 0) {
-            if(load_last_position){
-                last_pos = last_track->pos_sec;
-            }
-
-            emit sig_change_track(last_track_idx, last_pos, start_immediatly);
-        }
-
 }
 

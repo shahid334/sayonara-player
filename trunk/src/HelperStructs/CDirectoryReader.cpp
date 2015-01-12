@@ -31,72 +31,72 @@
 
 CDirectoryReader::CDirectoryReader () {
 
-	this->m_filters = Helper::get_soundfile_extensions();
+	m_filters = Helper::get_soundfile_extensions();
 
 }
+
 CDirectoryReader::~CDirectoryReader () {
 
 }
 
+void CDirectoryReader::set_filter (const QStringList & filter) {
 
-void CDirectoryReader::setFilter (const QStringList & filter) {
-
-    this -> m_filters = filter;
+	m_filters = filter;
 }
 
-void CDirectoryReader::getFilesInsiderDirRecursive (QDir baseDir, QStringList & files, int& num_files) {
+void CDirectoryReader::set_filter(const QString& filter){
+	m_filters.clear();
+	m_filters << filter;
+}
+
+void CDirectoryReader::get_files_in_dir_rec( QDir base_dir, QStringList& files){
 
     QStringList dirs;
-    baseDir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+	base_dir.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    dirs = baseDir.entryList();
+	dirs = base_dir.entryList();
 
     foreach (QString dir, dirs) {
 
-    	baseDir.cd(dir);
-
-        this -> getFilesInsiderDirRecursive(baseDir, files, num_files);
-        baseDir.cd("..");
+		base_dir.cd(dir);
+		get_files_in_dir_rec(base_dir, files);
+		base_dir.cd("..");
     }
 
-    QStringList tmp;
-
-    baseDir.setFilter(QDir::Files);
-    baseDir.setNameFilters(this -> m_filters);
-    this -> getFilesInsideDirectory (baseDir, tmp);
-    num_files += tmp.size();
-
-    // absolute paths
-    files += tmp;
+	files << get_files_in_dir(base_dir);
 }
 
-void CDirectoryReader::getFilesInsideDirectory (QDir baseDir, QStringList & files) {
+QStringList CDirectoryReader::get_files_in_dir (QDir base_dir) {
 
-    //qDebug() << "Get files inside " << baseDir.path();
-    baseDir.setFilter(QDir::Files);
-    baseDir.setNameFilters(this -> m_filters);
-    QStringList tmp;
+	QStringList entries;
+	QStringList files;
 
-    tmp = baseDir.entryList();
-    foreach (QString f, tmp) {
-       // qDebug() << "found file in " << baseDir.path();
-        files.push_back(baseDir.absoluteFilePath(f));
+	base_dir.setFilter(QDir::Files);
+	base_dir.setNameFilters( m_filters );
+
+	entries = base_dir.entryList();
+
+	foreach (QString file, entries) {
+		files << base_dir.absoluteFilePath(file);
     }
+
+	return files;
 }
 
-void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_md) {
+MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 
     qDebug() << "get metadata of filelist";
+
+	MetaDataList v_md;
+	QStringList files;
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
-    QStringList files;
 
-
-    // fetch sound and playlist files
+	// fetch sound and playlist files
     QStringList filter = Helper::get_soundfile_extensions();
     filter.append(Helper::get_playlistfile_extensions());
 
-    setFilter(filter);
+	set_filter(filter);
 
     foreach(QString str, lst) {
 
@@ -104,12 +104,10 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
 
         if(Helper::is_dir(str)) {
 
-            int n_files;
-
             QDir dir(str);
             dir.cd(str);
 
-            getFilesInsiderDirRecursive(dir, files, n_files);
+			get_files_in_dir_rec(dir, files);
         }
 
         else if(Helper::is_file(str)) {
@@ -131,8 +129,6 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
             playlist_paths.push_back(filepath);
             continue;
         }
-
-
 
         if(Helper::is_soundfile(filepath)) {
 
@@ -168,6 +164,5 @@ void CDirectoryReader::getMetadataFromFileList(QStringList lst, MetaDataList& v_
         }
 	}
 
-
-
+	return v_md;
 }

@@ -21,28 +21,21 @@
 
 
 #include "GUI/Notifications/GUI_Notifications.h"
-
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"
-
 #include "HelperStructs/Style.h"
-#include "HelperStructs/CSettingsStorage.h"
-
-#include <QString>
 
 GUI_Notifications::GUI_Notifications(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui_GUI_Notification()
 {
-
 	setupUi(this);
 
     _plugin_loader = NotificationPluginLoader::getInstance();
 
-    _settings = CSettingsStorage::getInstance();
-    int timeout = _settings->getNotificationTimeout();
-    bool active = _settings->getShowNotification();
-    int scale = _settings->getNotificationScale();
+	int timeout = _settings->get(Set::Notification_Timeout);
+	int active = _settings->get(Set::Notification_Show);
+	int scale = _settings->get(Set::Notification_Scale);
 
     QList<Notification*> l_notifications = _plugin_loader->get_plugins();
 
@@ -73,13 +66,14 @@ GUI_Notifications::GUI_Notifications(QWidget *parent) :
 	cb_scale->setChecked(scale > 0);
 
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(ok_clicked()));
-
 }
 
 GUI_Notifications::~GUI_Notifications() {
-
 }
 
+void GUI_Notifications::language_changed(){
+	retranslateUi(this);
+}
 
 void GUI_Notifications::ok_clicked() {
 
@@ -92,22 +86,10 @@ void GUI_Notifications::ok_clicked() {
 
     _plugin_loader->set_cur_plugin(cur_text);
 
-    _settings->setNotification(cur_text);
-    _settings->setNotificationTimout(timeout);
-    _settings->setShowNotifications(active);
-    _settings->setNotificationScale(scale);
-
-    emit sig_settings_changed(active, timeout);
+	_settings->set(Set::Notification_Name, cur_text);
+	_settings->set(Set::Notification_Timeout, timeout);
+	_settings->set(Set::Notification_Show, active);
+	_settings->set(Set::Notification_Scale, scale);
 
     close();
 }
-
-
-void GUI_Notifications::change_skin(bool dark) {
-
-}
-
-void GUI_Notifications::language_changed() {
-	retranslateUi(this);
-}
-

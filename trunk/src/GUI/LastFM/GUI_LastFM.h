@@ -29,12 +29,12 @@
 #ifndef GUI_LASTFM_H_
 #define GUI_LASTFM_H_
 
-#include <QDialog>
-#include <QObject>
+
 #include <QString>
 #include "GUI/ui_GUI_LastFM_Dialog.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_LastFM : public QDialog, private Ui_GUI_LastFM_Dialog{
+class GUI_LastFM : public SayonaraDialog, private Ui_GUI_LastFM_Dialog{
 
 	Q_OBJECT
 
@@ -43,10 +43,6 @@ public:
 	GUI_LastFM(QWidget* parent, QString username, QString password);
 
 	virtual ~GUI_LastFM();
-
-	signals:
-		void new_lfm_credentials(QString, QString);
-		void sig_activated(bool);
 
 	private slots:
 		void save_button_pressed();
@@ -66,12 +62,9 @@ public:
 		void setLFMActive(bool b);
         bool _skin;
 
+
 	public:
 		void set_username_and_password(QString username, QString password);
-
-
-
-
 
 };
 

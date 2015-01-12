@@ -37,7 +37,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/SmartComparison.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "Settings/Settings.h"
 
 #include <QDir>
 #include <QFile>
@@ -91,31 +91,6 @@ void printHelp() {
 
 
 
-/*
-int main(int argc, char* argv[]){
-
-	SmartComparison sc;
-
-	sc.print_similar("velvt undergrond");
-	sc.print_similar("etalliccca");
-	sc.print_similar("punk floid");
-	sc.print_similar("ponk floyd");
-	sc.print_similar("floyd pink");
-	sc.print_similar("fanta vier");
-	sc.print_similar("floyd");
-	sc.print_similar("tdoooors");
-	sc.print_similar("gnsrses");
-	sc.print_similar("joint");
-	sc.print_similar("venture joint");
-	sc.print_similar("sniff tears");
-	sc.print_similar("michael jackson with fergie");
-	sc.print_similar("michael jackson fergie");
-	sc.print_similar("michael jackson");
-	sc.print_similar("guns and roses with axl rose");
-}
-*/
-
-
 void segfault_handler(int sig){
 	void *array[10];
 	size_t size;
@@ -146,22 +121,113 @@ void segfault_handler(int sig){
 	exit(1);
 }
 
+#define REGISTER_SETTING(type, key, db_key, def) set->register_setting( new Setting<type>(Set::key, db_key, def) )
+#define REGISTER_SETTING_NO_DB(type, key, def) set->register_setting( new Setting<type>(SetNoDB::key, def) )
+
+bool register_settings(){
+
+	Settings* set = Settings::getInstance();
+
+	QStringList lfm_login;
+	lfm_login << "None" << "None";
+	REGISTER_SETTING(QStringList, LFM_Login, "LastFM_login", lfm_login);
+
+	REGISTER_SETTING( bool, LFM_Active, "LastFM_active", false );
+	REGISTER_SETTING( bool, LFM_Corrections, "lfm_corrections", false );
+	REGISTER_SETTING( bool, LFM_ShowErrors, "lfm_show_errors", false );
+	REGISTER_SETTING( QString, LFM_SessionKey, "lfm_session_key", QString() );
+
+	REGISTER_SETTING( int, Eq_Last, "eq_last", 0);
+	REGISTER_SETTING( QList<EQ_Setting>, Eq_List, "EQ_list", EQ_Setting::get_defaults() );
+    REGISTER_SETTING( bool, Eq_Gauss, "EQ_Gauss", true );
+
+	REGISTER_SETTING( bool, Lib_Show, "show_library", true );
+	REGISTER_SETTING( QString, Lib_Path, "library_path", QString() );
+
+	QList<int> shown_cols;
+	shown_cols << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1 << 1;
+	REGISTER_SETTING(  QList<int> , Lib_ColsTitle, "lib_shown_cols_title", shown_cols );
+	REGISTER_SETTING(  QList<int> , Lib_ColsArtist, "lib_shown_cols_artist", shown_cols );
+	REGISTER_SETTING(  QList<int> , Lib_ColsAlbum, "lib_shown_cols_album", shown_cols );
+
+	REGISTER_SETTING( bool, Lib_OnlyTracks, "lib_shown_tracks", false );
+	REGISTER_SETTING( bool, Lib_LiveSearch, "lib_live_search", true );
+
+    REGISTER_SETTING( LibSortOrder , Lib_Sorting, "lib_sortings", LibSortOrder() );
+
+	REGISTER_SETTING( QString, Player_Version, "player_version", "0.4.1");
+	REGISTER_SETTING( QString, Player_Language, "player_language", "sayonara_lang_en" );
+	REGISTER_SETTING( int, Player_Style, "player_style", 0 );
+	REGISTER_SETTING( QSize, Player_Size, "player_size", QSize(800,600) );
+	REGISTER_SETTING( QPoint, Player_Pos, "player_pos", QPoint(50,50) );
+	REGISTER_SETTING( bool, Player_Fullscreen, "player_fullscreen", false );
+	REGISTER_SETTING( bool, Player_Maximized, "player_maximized", false );
+	REGISTER_SETTING( QString, Player_ShownPlugin, "shown_plugin", QString() );
+	REGISTER_SETTING( bool, Player_OneInstance, "only_one_instance", true );
+	REGISTER_SETTING( bool, Player_Min2Tray, "min_to_tray", false );
+	REGISTER_SETTING( bool, Player_NotifyNewVersion, "notify_new_version", true );
+
+	REGISTER_SETTING( QStringList, PL_Playlist, "playlist", QStringList() );
+	REGISTER_SETTING( bool, PL_Load, "load_playlist", false );
+	REGISTER_SETTING( bool, PL_LoadLastTrack, "load_last_track", false );
+	REGISTER_SETTING( bool, PL_RememberTime, "remember_time", false );
+	REGISTER_SETTING( bool, PL_StartPlaying, "start_playing", false );
+	REGISTER_SETTING( int, PL_LastTrack, "last_track", -1 );
+	REGISTER_SETTING( PlaylistMode, PL_Mode, "playlist_mode", PlaylistMode() );
+	REGISTER_SETTING( bool, PL_ShowNumbers, "show_playlist_numbers", true );
+	REGISTER_SETTING( bool, PL_SmallItems, "small_playlist_items", true );
+
+	REGISTER_SETTING( bool, Notification_Show, "show_notifications", true );
+	REGISTER_SETTING( int, Notification_Timeout, "notification_timeout", 5000 );
+	REGISTER_SETTING( QString, Notification_Name, "notification_name", "libnotify" );
+	REGISTER_SETTING( int, Notification_Scale, "notification_scale", 64 );
+
+	REGISTER_SETTING( QString, Engine_Name, "sound_engine", QString() );
+    REGISTER_SETTING( int, Engine_CurTrackPos_s, "last_track_pos", 0 );
+	REGISTER_SETTING( int, Engine_Vol, "volume", 50 );
+	REGISTER_SETTING( int, Engine_ConvertQuality, "convert_quality", 0 );
+	REGISTER_SETTING( QString, Engine_CovertTargetPath, "convert_target_path", QDir::homePath() );
+	REGISTER_SETTING( bool, Engine_Gapless, "gapless_playback", false);
+	REGISTER_SETTING( bool, Engine_ShowLevel, "show_level", false);
+	REGISTER_SETTING( bool, Engine_ShowSpectrum, "show_spectrum", false);
+
+	REGISTER_SETTING( bool, Engine_SR_Active, "streamripper", false );
+	REGISTER_SETTING( bool, Engine_SR_Warning, "streamripper_warning", true );
+	REGISTER_SETTING( QString, Engine_SR_Path, "streamripper_path", QDir::homePath() );
+	REGISTER_SETTING( bool, Engine_SR_SessionPath, "streamripper_session_path", true );
+
+	REGISTER_SETTING( bool, Socket_Active, "socket_active", false );
+	REGISTER_SETTING( int, Socket_From, "socket_from", 54055 );
+	REGISTER_SETTING( int, Socket_To, "socket_to", 54056 );
+
+	REGISTER_SETTING( int, Spectrum_Style, "spectrum_style", 0 );
+	REGISTER_SETTING( int, Level_Style, "level_style", 0 );
+
+	REGISTER_SETTING( bool, BroadCast_Active, "broadcast_active", false );
+	REGISTER_SETTING( bool, Broadcast_Prompt, "broadcast_prompt", false );
+	REGISTER_SETTING( int, Broadcast_Port, "broadcast_port", 54054 );
+    REGISTER_SETTING_NO_DB( int, Broadcast_Clients, 0 );
+
+	return set->check_settings();
+}
+
 int main(int argc, char *argv[]) {
 
-
 #ifdef Q_OS_UNIX
-
 
 	signal(SIGSEGV, segfault_handler);
 
 #endif
 
+	if(!register_settings()){
+		return 1;
+	}
+
 	Application app (argc, argv);
     Helper::set_bin_path(app.applicationDirPath());
 
-    CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    db->init_settings_storage();
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
+    Settings* settings = Settings::getInstance();
+
     bool success = CDatabaseConnector::getInstance()->load_settings();
 	
     if(!success) {
@@ -171,7 +237,9 @@ int main(int argc, char *argv[]) {
 
 
 #ifdef Q_OS_UNIX
-	if(settings->getAllowOnlyOneInstance()) {
+	bool one_instance = settings->get(Set::Player_OneInstance);
+
+	if(one_instance) {
 		int pid = check_for_another_instance_unix();
 		if(pid > 0) {
 			qDebug() << "another instance is already running";
@@ -184,15 +252,15 @@ int main(int argc, char *argv[]) {
 	}
 #endif
 
+	Q_INIT_RESOURCE(Icons);
+
 
    	if(!QFile::exists(QDir::homePath() + QDir::separator() + ".Sayonara")) {
         QDir().mkdir(QDir::homePath() + QDir::separator() +  "/.Sayonara");
 	}
 
-
     app.setApplicationName("Sayonara");
     app.setWindowIcon(Helper::getIcon("logo.png"));
-
 
     QStringList params;
     for(int i=1; i<argc; i++) {
@@ -200,16 +268,13 @@ int main(int argc, char *argv[]) {
         params.push_back(param);
     }
 
-    QString language = CSettingsStorage::getInstance()->getLanguage();
-    QTranslator translator;
+	QTranslator translator;
+	QString language = Settings::getInstance()->get(Set::Player_Language);
+
     translator.load(language, Helper::getSharePath() + "translations");
     app.installTranslator(&translator);
 
-    QFont font("DejaVu Sans", 9, 55,  false);
-	font.setHintingPreference(QFont::PreferNoHinting);
-	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
-	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
-    app.setFont(font);
+
 
     app.init(params.size(), &translator);
     if(!app.is_initialized()) return 0;

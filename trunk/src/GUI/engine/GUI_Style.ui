@@ -46,7 +46,7 @@
      <item>
       <widget class="QPushButton" name="btn_close">
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string>Close</string>
@@ -65,11 +65,6 @@
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="6" column="1">
          <widget class="QSpinBox" name="sb_rect_height_sp">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="minimum">
            <number>1</number>
           </property>
@@ -80,11 +75,6 @@
         </item>
         <item row="5" column="0">
          <widget class="QLabel" name="label_4">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="text">
            <string>Vert. spacing</string>
           </property>
@@ -92,11 +82,6 @@
         </item>
         <item row="7" column="0">
          <widget class="QLabel" name="label_2">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="text">
            <string>Bins</string>
           </property>
@@ -104,11 +89,6 @@
         </item>
         <item row="6" column="0">
          <widget class="QLabel" name="label_3">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="text">
            <string>Rect height</string>
           </property>
@@ -116,11 +96,6 @@
         </item>
         <item row="0" column="1">
          <widget class="QSpinBox" name="sb_fading_steps_sp">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="minimum">
            <number>0</number>
           </property>
@@ -134,11 +109,6 @@
         </item>
         <item row="5" column="1">
          <widget class="QSpinBox" name="sb_v_spacing_sp">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="maximum">
            <number>20</number>
           </property>
@@ -160,24 +130,13 @@
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_8">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="text">
            <string>Fading steps</string>
           </property>
          </widget>
         </item>
         <item row="7" column="1">
-         <widget class="QSpinBox" name="sb_n_bins_sp">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
-         </widget>
+         <widget class="QSpinBox" name="sb_n_bins_sp"/>
         </item>
        </layout>
       </widget>
@@ -190,11 +149,6 @@
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="2" column="0">
          <widget class="QLabel" name="label_12">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="text">
            <string>Hor. spacing</string>
           </property>
@@ -254,11 +208,6 @@
         </item>
         <item row="2" column="1">
          <widget class="QSpinBox" name="sb_h_spacing_lv">
-          <property name="font">
-           <font>
-            <family>DejaVu Sans</family>
-           </font>
-          </property>
           <property name="maximum">
            <number>20</number>
           </property>
@@ -280,7 +229,6 @@
     <widget class="QLabel" name="label_5">
      <property name="font">
       <font>
-       <family>DejaVu Sans</family>
        <pointsize>12</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -295,11 +243,6 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QComboBox" name="combo_styles">
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="editable">
         <bool>true</bool>
        </property>
@@ -320,10 +263,14 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/undo.png</normaloff>:/icons/undo.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -347,16 +294,15 @@
          <height>24</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -380,16 +326,15 @@
          <height>24</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -438,13 +383,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -564,13 +504,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -594,13 +529,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -621,13 +551,8 @@
          <height>16777215</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -670,7 +595,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

@@ -22,10 +22,7 @@
 
 #include "StreamRipperBufferThread.h"
 #include <QFile>
-#include <QString>
-#include <QDebug>
-#include <unistd.h>
-
+#include <HelperStructs/Helper.h>
 
 StreamRipperBufferThread::StreamRipperBufferThread(QObject *parent) :
     QThread(parent)
@@ -47,8 +44,8 @@ void StreamRipperBufferThread::run() {
 
     qDebug() << "Buffer file " << _uri;
     // initially fill the buffer
-    qint64 max = 5000000;
-    qint64 interval = 10000;
+	int max = 5000;
+	int interval = 10;
 
     _size = 0;
 
@@ -70,7 +67,7 @@ void StreamRipperBufferThread::run() {
 
     int n_loops = 0;
     do{
-        usleep(interval);
+		Helper::sleep_ms(interval);
         max -= interval;
 
         n_loops++;

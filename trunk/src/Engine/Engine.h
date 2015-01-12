@@ -24,12 +24,9 @@
 #define ENGINE_H_
 
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 #include <QObject>
 #include <QStringList>
-
-#include <vector>
-
-using namespace std;
 
 #define PLAYBACK_ENGINE "playback_engine"
 #define CONVERT_ENGINE "convert_engine"
@@ -49,92 +46,120 @@ enum CapsType {
 };
 
 
-class Engine : public QObject {
+class Engine : public QObject, protected SayonaraClass {
 
 	Q_OBJECT
 
 protected:
+
 	MetaData	_md;
 	qint64		_cur_pos_ms;
-	qint32      _vol;
 
 	bool		_scrobbled;
 	qint64		_scrobble_begin_ms;
-	bool		_is_eq_enabled;
+
 	int			_eq_type;
-	EngineState	_state;
-	QString		_name;
 
 	bool 		_playing_stream;
-
-	bool		_sr_active;
 	bool		_sr_wanna_record;
-	bool		_gapless;
+
+	QString		_name;
+	bool		_show_level;
+	bool		_show_spectrum;
+	bool		_broadcast_active;
 
 
 public:
-	virtual EngineState	getState() { return _state; }
-	virtual QString	getName(){ return _name; }
+
+	Engine(QObject* parent=0) :
+		QObject(parent),
+		SayonaraClass()
+	{
+		REGISTER_LISTENER(Set::Engine_ShowLevel, _sl_show_level_changed);
+		REGISTER_LISTENER(Set::Engine_ShowSpectrum, _sl_show_spectrum_changed);
+		REGISTER_LISTENER(Set::BroadCast_Active, _sl_broadcast_active_changed);
+	}
+
+    virtual QString	getName(){return _name;}
 	virtual void	init()=0;
 
 	virtual void		set_track_finished(){}
 	virtual void        set_level(float right, float left){ emit sig_level(right, left); }
 	virtual void        set_spectrum(QList<float>& lst ){ emit sig_spectrum(lst); }
-	virtual void		update_bitrate(qint32 bitrate){}
+
+	virtual void		async_done(){}
+	virtual void		update_bitrate(quint32 bitrate){}
+	virtual void		update_duration(){}
 	virtual void		update_time(qint32 time){}
-	virtual bool		get_show_level(){ return false; }
-	virtual bool		get_show_spectrum(){ return false; }
 
-
-	virtual void		do_jump_play(){}
 	virtual void		unmute(){}
+	virtual bool		get_show_level(){ return _show_level; }
+	virtual bool		get_show_spectrum(){ return _show_spectrum; }
+	virtual bool		get_broadcast_active() { return _broadcast_active; }
+
+
 
 
 signals:
-	void sig_dur_changed_ms(quint64);
-	void sig_dur_changed_s(quint32);
-	void sig_dur_changed(MetaData&);
-	void sig_pos_changed_ms(quint64);
-	void sig_pos_changed_s(quint32);
+	void sig_md_changed(const MetaData&);
+
+    void sig_pos_changed_ms(quint64);
+    void sig_pos_changed_s(quint32);
 
 	void sig_track_finished();
 	void sig_scrobble(const MetaData&);
 	void sig_level(float, float);
     void sig_spectrum(QList<float>&);
-	void sig_bitrate_changed(qint32);
     void sig_download_progress(int);
+	void sig_data(uchar*, quint64);
+
 
 private slots:
 	virtual void sr_initialized(bool b){ if(b) play(); }
 	virtual void sr_ended(){}
 	virtual void sr_not_valid(){ emit sig_track_finished(); }
 	virtual void set_about_to_finish(qint64 ms){}
-	virtual void set_cur_position_ms(qint64 ms){emit sig_pos_changed_ms(ms);}
+    virtual void set_cur_position_ms(qint64 ms){
+        _cur_pos_ms = ms;
+        emit sig_pos_changed_ms(ms);
+    }
 
+
+	virtual void _sl_show_level_changed(){
+		_show_level = _settings->get(Set::Engine_ShowLevel);
+	}
+
+	virtual void _sl_show_spectrum_changed(){
+		_show_spectrum = _settings->get(Set::Engine_ShowSpectrum);
+	}
+
+	virtual void _sl_broadcast_active_changed(){
+		_broadcast_active = _settings->get(Set::BroadCast_Active);
+	}
+
+protected slots:
+	virtual void new_data(uchar* data, quint64 size){
+		emit sig_data(data, size);
+	}
 
 
 public slots:
 	virtual void play()=0;
 	virtual void stop()=0;
 	virtual void pause()=0;
-	virtual void set_volume(int vol)=0;
 
 	virtual void jump_abs_s(quint32 where)=0;
 	virtual void jump_abs_ms(quint64 where)=0;
 	virtual void jump_rel(quint32 where)=0;
+    virtual void jump_rel_ms(qint64 where)=0;
 
-	virtual void change_track(const MetaData&, int pos_sec=0, bool start_play=true)=0;
-	virtual void change_track(const QString&, int pos_sec=0, bool start_play=true )=0;
+	virtual void change_track(const MetaData&, bool start_play)=0;
+	virtual void change_track(const QString&, bool start_play)=0;
 
 	virtual void eq_changed(int band, int value){ Q_UNUSED(band); Q_UNUSED(value); }
-	virtual void eq_enable(bool b){ Q_UNUSED(b); }
 	virtual void record_button_toggled(bool b){ _sr_wanna_record = b; }
 
-	virtual void psl_sr_set_active(bool b ){ _sr_active = b; }
 	virtual void psl_new_stream_session(){}
-	virtual void psl_calc_level(bool b){}
-	virtual void psl_calc_spectrum(bool b){}
-	virtual void psl_set_gapless(bool b){ _gapless = b; }
 
 	virtual void start_convert(){}
 	virtual void end_convert(){}

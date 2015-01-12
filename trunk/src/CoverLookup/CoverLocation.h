@@ -53,6 +53,8 @@ public:
 	static CoverLocation get_cover_location(const MetaData& md);
 	static CoverLocation getInvalidLocation();
 
+	static QString get_cover_directory();
+
 };
 
 Q_DECLARE_METATYPE(CoverLocation)

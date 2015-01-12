@@ -48,6 +48,7 @@ MetaData::MetaData() : LibraryItem() {
         pl_dragged = false;
 
         is_disabled = false;
+
 }
 
 MetaData::MetaData(const MetaData & md){
@@ -75,6 +76,7 @@ MetaData::MetaData(const MetaData & md){
     pl_dragged = md.pl_dragged;
 
     is_disabled = md.is_disabled;
+	is_lib_selected = md.is_lib_selected;
 }
 
 
@@ -108,122 +110,155 @@ bool MetaData::fromVariant(const QVariant& v, MetaData& md) {
 	return true;
 }
 
-bool MetaData::operator==(const MetaData& md) {
-	return this->is_equal(md, true);
+bool MetaData::operator==(const MetaData& md) const {
+    return this->is_equal(md);
 }
 
 
-bool MetaData::is_equal(const MetaData& md, bool case_sensitive) {
-	QString my_filepath = this->filepath.trimmed();
+bool MetaData::is_equal(const MetaData& md) const {
+
+    QString my_filepath = filepath.trimmed();
 	QString their_filepath = md.filepath.trimmed();
 
-	if( case_sensitive) {
-
+#ifdef Q_OS_UNIX
 		return (my_filepath.compare(their_filepath) == 0);
-	}
+#else
+		return (my_filepath.compare(their_filepath, Qt::CaseInsensitive) == 0);
+#endif
 
-	// else
-		return my_filepath.compare(their_filepath, Qt::CaseInsensitive);
+}
+
+bool MetaData::is_equal_deep(const MetaData& md) const{
+
+	return ( (id == md.id)  &&
+	( artist_id == md.artist_id ) &&
+	( album_id == md.album_id ) &&
+	( title == md.title ) &&
+	( artist == md.artist ) &&
+	( album == md.album ) &&
+	( rating == md.rating ) &&
+	( length_ms == md.length_ms ) &&
+	( year == md.year ) &&
+	( filepath == md.filepath ) &&
+	( track_num == md.track_num ) &&
+	( bitrate == md.bitrate ) &&
+	( is_extern == md.is_extern ) &&
+	( radio_mode == md.radio_mode ) &&
+	( filesize == md.filesize ) &&
+	( comment == md.comment ) &&
+	( discnumber == md.discnumber ) &&
+	( n_discs == md.n_discs ) &&
+
+	( pl_selected == md.pl_selected ) &&
+	( pl_playing == md.pl_playing ) &&
+	( pl_dragged == md.pl_dragged ) &&
+
+	( is_disabled == md.is_disabled ));
 }
 
 
 
 MetaDataList::MetaDataList() : 
-	vector<MetaData>() 
-	{ }
+    QVector<MetaData>()
+{
+    _cur_played_track = -1;
+}
 
 MetaDataList::MetaDataList(int n_elems) : 
-	vector<MetaData>(n_elems)
-	{ }
+    QVector<MetaData>(n_elems)
+{
+    _cur_played_track = -1;
+}
+
+MetaDataList::MetaDataList(const MetaDataList& lst) :
+    QVector(lst)
+{
+    _cur_played_track = lst._cur_played_track;
+}
 
 MetaDataList::~MetaDataList() {
 
 }
 
-void MetaDataList::setCurPlayTrack(uint idx) {
+void MetaDataList::setCurPlayTrack(int idx) {
 
-   for(uint i=0; i<size(); i++) {
-       this->at(i).pl_playing = (i == idx);
-   }
+    if(_cur_played_track >= 0){
+        (this->data() + _cur_played_track)->pl_playing = false;
+    }
+
+    if(idx < 0) return;
+
+    _cur_played_track = idx;
+    (this->data() + _cur_played_track)->pl_playing = true;
 }
 
-bool MetaDataList::contains(const MetaData& md, bool cs) {
-    QString filepath;
 
-    if(cs) {
-        filepath = md.filepath.trimmed();
+bool MetaDataList::contains(const MetaData& md) const {
 
-        for(uint i=0; i<size(); i++) {
+    MetaDataList::const_iterator it;
+    for(it = this->begin(); it != this->end(); it++) {
 
-			if( this->at(i).is_equal(md, cs) ) {
-				return true;
-			}
-
+        if( it->is_equal(md) ) {
+            return true;
         }
     }
 
     return false;
 }
 
+QList<int> MetaDataList::findTracks(int id) const {
 
-void MetaDataList::insert(const MetaData& md, uint pos) {
+	QList<int> ret;
 
-    if(pos >= size()) {
-        push_back(md);
-        return;
+	if(id == -1) return ret;
+
+    MetaDataList::const_iterator it;
+    int idx = 0;
+    for(it = this->begin(); it != this->end(); it++, idx++) {
+		if(it->id == id) {
+			ret << idx;
+        }
     }
 
-    uint sz = size();
+	return ret;
+}
 
-    // copy last element
-    push_back(at(sz - 1));
-    sz++;
+QList<int> MetaDataList::findTracks(const QString& path) const {
 
-    // s
-    for(uint j= sz-2; j>pos; j--) {
-        at(j) = at(j-1);
+	QList<int> ret;
+    MetaDataList::const_iterator it;
+
+    int idx = 0;
+    for(it = this->begin(); it != this->end(); it++, idx++) {
+
+#ifdef Q_OS_UNIX
+		if(it->filepath.compare(path, Qt::CaseSensitive) == 0){
+#else
+        if(it->filepath.compare(path, Qt::CaseInsensitive) == 0){
+#endif
+			ret << idx;
+        }
     }
 
-    // replace
-    at(pos) = md;
+	return ret;
 }
 
 
+QStringList MetaDataList::toStringList() const {
 
-LastTrack::LastTrack() : MetaData(){
+    QStringList lst;
+    MetaDataList::const_iterator it;
 
-}
+    for(it = this->begin(); it != this->end(); it++) {
 
-LastTrack::LastTrack(const MetaData& md) :
-    MetaData(md){
+        if(it->id >= 0) {
+            lst << QString::number(it->id);
+        }
 
-    pos_sec = 0;
-}
-
-LastTrack::LastTrack(const LastTrack& lt) :
-    MetaData(lt){
-
-    pos_sec = 0;
-}
-
-LastTrack::~LastTrack(){
-
-}
-
-QVariant LastTrack::toVariant(const LastTrack& md) {
-
-    QVariant v;
-    v.setValue<LastTrack>(md);
-
-    return v;
-}
-
-bool LastTrack::fromVariant(const QVariant& v, LastTrack& md) {
-
-    if(! v.canConvert<LastTrack>() ) {
-        return false;
+        else{
+            lst << it->filepath;
+        }
     }
 
-    md = v.value<LastTrack>() ;
-    return true;
+    return lst;
 }

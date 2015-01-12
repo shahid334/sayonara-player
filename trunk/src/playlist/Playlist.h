@@ -23,37 +23,38 @@
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/PlaylistMode.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/globals.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QString>
 #include <QList>
 
-class Playlist : public QObject
+
+class Playlist : public QObject, protected SayonaraClass
 {
 
     Q_OBJECT
 
 signals:
-	void sig_playlist_mode_changed(const PlaylistMode&);
-    void sig_playlist_changed(const MetaDataList&, int);
-    void sig_track_changed(const MetaData&, int);
-    void sig_stopped();
-
-
+	void sig_playlist_changed(const Playlist*, int playlist_idx);
+	void sig_track_changed(const MetaData&, int cur_track_idx, int playlist_idx);
+	void sig_stopped(int playlist_idx);
 
 protected:
     bool            _playlist_changed;
     int             _cur_play_idx;
+	int				_playlist_idx;
     MetaDataList    _v_md;
+	MetaDataList	_selected_tracks;
     PlaylistMode	_playlist_mode;
 	PlaylistMode	_playlist_mode_backup;
     PlaylistType    _playlist_type;
     bool            _reports_disabled;
     bool            _start_playing;
+	PlaylistState	_playlist_state;
 
     void report_changes(bool pl_changed, bool track_changed);
     void enable_reports();
@@ -61,7 +62,7 @@ protected:
 
 public:
 
-    Playlist(QObject* parent);
+	Playlist(int idx, QObject* parent=0);
 
     virtual void play()=0;
     virtual void pause()=0;
@@ -71,11 +72,11 @@ public:
     virtual void next()=0;
     virtual void change_track(int idx)=0;
 
-    virtual void create_playlist(const MetaDataList& lst, bool start_playing=true)=0;
-    virtual void create_playlist(const QStringList& lst, bool start_playing=true)=0;
+	virtual void create_playlist(const MetaDataList& lst)=0;
+	virtual void create_playlist(const QStringList& lst)=0;
     virtual void clear();
 
-    virtual void metadata_changed(const MetaDataList& md_list)=0;
+	virtual void metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new)=0;
 
     virtual void move_track(const int, int tgt);
     virtual void move_tracks(const QList<int>& lst, int tgt);
@@ -90,24 +91,29 @@ public:
     virtual void append_tracks(const MetaDataList& lst);
 
     virtual void replace_track(int idx, const MetaData& md);
-    virtual void save_for_reload()=0;
     virtual void save_to_m3u_file(QString filepath, bool relative)=0;
-    virtual bool request_playlist_for_collection(MetaDataList& lst)=0;
+	virtual const MetaDataList& get_playlist() const {return _v_md;}
 
     virtual void selection_changed(const QList<int>&);
+	virtual const MetaDataList& get_selected_tracks(){return _selected_tracks;}
 
 	virtual PlaylistMode playlist_mode_backup();
 	virtual PlaylistMode playlist_mode_restore();
 
-    int find_track_by_id(int id);
-    int find_track_by_path(QString path);
-
-    bool is_empty();
-    PlaylistType get_type();
-    int get_cur_track();
-    QStringList toStringList();
+	bool is_empty() const;
+	PlaylistType get_type() const;
+	int get_cur_track() const;
+	QStringList toStringList() const;
+	int get_idx() const;
+	void set_idx(int idx);
+	QList<int> find_tracks(int id) const;
+	QList<int> find_tracks(const QString& filepath) const;
 
 	void set_playlist_mode(const PlaylistMode& mode);
+	PlaylistMode get_playlist_mode() const;
+
+	void set_playlist_state(PlaylistState state);
+	PlaylistState get_playlist_state();
 };
 
 

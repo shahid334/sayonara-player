@@ -25,23 +25,17 @@
 #ifndef GUI_STREAMRECORDER_H_
 #define GUI_STREAMRECORDER_H_
 
-#include <QWidget>
-#include <QDialog>
 #include "GUI/ui_GUI_StreamRecorder.h"
-#include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_StreamRecorder : public QDialog, private Ui_GUI_StreamRecorder{
+class GUI_StreamRecorder : public SayonaraDialog, private Ui_GUI_StreamRecorder{
 
 	Q_OBJECT
 
 public:
 
-	signals:
-		void sig_stream_recorder_active(bool);
-
 	private slots:
 		void sl_cb_activate_toggled(bool);
-		void sl_cb_complete_tracks_toggled(bool);
         void sl_cb_create_session_path_toggled(bool);
         void sl_le_text_changed(QString &);
 		void sl_btn_path_clicked();
@@ -59,11 +53,8 @@ public:
 
 	private:
 
-		CSettingsStorage* _settings;
-
 		QString _path;
 		bool	_is_active;
-		bool	_is_complete_tracks;
         bool	_is_create_session_path;
         bool    _skin;
 

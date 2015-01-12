@@ -25,20 +25,15 @@
  *  Created on: May 18, 2011
  *      Author: luke
  */
-#define SCALE(x) (_m * (x) + _t)
 
 
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/ui_GUI_Equalizer.h"
-
-#include <QDockWidget>
-#include <QMessageBox>
 
 
 QString calc_lab(int val) {
@@ -56,13 +51,11 @@ QString calc_lab(int val) {
 
 GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
-	Ui::GUI_Equalizer(){
+	Ui::GUI_Equalizer()
+{
+	_active_idx = -1;
 
-	_settings = CSettingsStorage::getInstance();
 	setupUi(this);
-
-    btn_preset->setIcon(Helper::getIcon("save.png"));
-	btn_preset->setText("");
 
 	_sliders.push_back(new EqSlider(sli_0, label, 0));
 	_sliders.push_back(new EqSlider(sli_1, label_2, 1));
@@ -75,18 +68,23 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 	_sliders.push_back(new EqSlider(sli_8, label_9, 8));
 	_sliders.push_back(new EqSlider(sli_9, label_10, 9));
 
+    cb_gauss->setChecked( _settings->get(Set::Eq_Gauss));
+
 	foreach(EqSlider* s, _sliders) {
 		connect(s, SIGNAL(sig_value_changed(int,int)), this, SLOT(sli_changed(int, int)));
+		connect(s, SIGNAL(sig_slider_pressed(int)), this, SLOT(sli_pressed(int)));
+		connect(s, SIGNAL(sig_slider_released(int)), this, SLOT(sli_released(int)));
 	}
 
-	connect(btn_preset, SIGNAL(clicked()), this, SLOT(btn_preset_clicked()));
+	connect(btn_save, SIGNAL(clicked()), this, SLOT(btn_save_clicked()));
+	connect(btn_delete, SIGNAL(clicked()), this, SLOT(btn_delete_clicked()));
+	connect(btn_reset, SIGNAL(clicked()), this, SLOT(btn_reset_clicked()));
+    connect(cb_gauss, SIGNAL(toggled(bool)), this, SLOT(cb_gauss_toggled(bool)));
+	connect(combo_presets, SIGNAL(editTextChanged(QString)), this, SLOT(text_changed(QString)));
 
 	fill_eq_presets();
 
 	hide();
-    _m = (100.0 / 48.0);
-    _t = 50;
-
 }
 
 GUI_Equalizer::~GUI_Equalizer() {
@@ -102,28 +100,69 @@ void GUI_Equalizer::language_changed() {
 	retranslateUi(this);
 }
 
-void GUI_Equalizer::changeSkin(bool dark) {
-
-    _dark = dark;
+int GUI_Equalizer::find_combo_text(QString text){
+	int ret = -1;
+	for(int i=0; i<combo_presets->count(); i++){
+		if(combo_presets->itemText(i).compare(text, Qt::CaseInsensitive) == 0){
+			ret = i;
+		}
+	}
+	return ret;
 }
 
 
+void GUI_Equalizer::sli_pressed(int idx){
+	_active_idx= idx;
+	for(int i=0; i<_sliders.size(); i++){
+		_old_val[i] = _sliders[i]->getValue();
+	}
+}
+
+
+void GUI_Equalizer::sli_released(int idx){
+	_active_idx = -1;
+}
+
+
+static double scale[] = {1.0, 0.6, 0.20, 0.06, 0.01};
 
 void GUI_Equalizer::sli_changed(int idx, int new_val) {
-	_sliders[idx]->getLabel()->setText(calc_lab(new_val));
-	emit eq_changed_signal(idx, new_val);
-}
+	EqSlider* s = _sliders[idx];
+	s->getLabel()->setText(calc_lab(new_val));
 
+	emit sig_eq_changed(idx, new_val);
 
-void GUI_Equalizer::but_enabled_changed(bool enabled) {
+	// this slider has been changed actively
+    if( idx == _active_idx && cb_gauss->isChecked() ){
+		int delta = new_val - _old_val[idx];
 
+		for(int i=idx-9; i<idx+9; i++){
+			if(i < 0) continue;
+			if(i == idx) continue;
+			if(i >= _sliders.size()) break;
+
+			// how far is the slider away from me?
+			int x = abs(_active_idx - i);
+
+			if(x > 4) continue;
+
+			double new_val = _old_val[i] + (delta * scale[x]);
+
+			_sliders[i]->setValue(new_val);
+		}
+	}
 }
 
 
 void GUI_Equalizer::fill_eq_presets() {
 
 	QStringList items;
-	_settings->getEqualizerSettings(_presets);
+	int last_idx;
+
+	last_idx = _settings->get(Set::Eq_Last);
+    _presets = _settings->get(Set::Eq_List);
+
+	items << "";
 
 	foreach(EQ_Setting s, _presets) {
 		items << s.name;
@@ -131,76 +170,97 @@ void GUI_Equalizer::fill_eq_presets() {
 
 	combo_presets->insertItems(0, items);
 
-	int last_idx = _settings->getLastEqualizer();
-	if(last_idx < (int) _presets.size() ) {
-		combo_presets->setCurrentIndex(last_idx);
-		preset_changed(last_idx);
-	}
+	btn_save->setEnabled(combo_presets->currentText().size() > 0);
+	btn_delete->setEnabled(combo_presets->currentIndex() > 0);
 
 	connect(combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
-}
 
+	if(last_idx < _presets.size() && last_idx > 0 ) {
+		combo_presets->setCurrentIndex(last_idx);
+	}
 
-void GUI_Equalizer::fill_available_equalizers(const QStringList& eqs) {
-	Q_UNUSED(eqs);
 }
 
 
 void GUI_Equalizer::preset_changed(int index) {
 
-	QList<double> setting = _presets[index].settings;
+
+	btn_delete->setEnabled(index > 0);
+
+	if(index == 0) return;
+	if(index > _presets.size()) return;
+
+	QList<double> setting = _presets[index - 1].settings;
 
 	for(int i=0; i<setting.size(); i++) {
-		if(i > (int) _sliders.size()) break;
+		if(i > _sliders.size()) break;
 
 		_sliders[i]->setValue( setting[i] );
+		_old_val[i] = setting[i];
 	}
 
-
-	CSettingsStorage::getInstance()->setLastEqualizer(index);
+    _settings->set(Set::Eq_Last, index);
 }
 
+void GUI_Equalizer::cb_gauss_toggled(bool b){
+    _settings->set(Set::Eq_Gauss, b);
+}
 
-void GUI_Equalizer::btn_preset_clicked() {
+void GUI_Equalizer::btn_save_clicked() {
 
-    bool b_save = true;
-    int current_idx = combo_presets->currentIndex();
+	QString text = combo_presets->currentText();
 
-	QString str = "Custom";
+	int found_idx = find_combo_text(text);
 
-	foreach(EqSlider* s, _sliders) {
-		str += "," + s->getLabel()->text();
+	if(found_idx <= 0){
+		EQ_Setting s = EQ_Setting::fromString(text + ":0:0:0:0:0:0:0:0:0:0");
+		_presets << s;
+		combo_presets->addItem(text);
+		found_idx = combo_presets->count() - 1;
 	}
 
-	int custom_idx = -1;
-	for(uint i=0; i<_presets.size(); i++) {
+	for(int i=0; i<_sliders.size(); i++){
+		_presets[found_idx - 1].settings[i] = _sliders[i]->getValue();
+	}
 
-		if(_presets[i].name == "Custom") {
-            _presets[i] = EQ_Setting::fromString(str);
-			custom_idx = i;
-			break;
+	_settings->set(Set::Eq_List, _presets);
+
+
+	combo_presets->setCurrentIndex(found_idx);
+}
+
+void GUI_Equalizer::btn_delete_clicked(){
+
+	int idx = combo_presets->currentIndex();
+
+	combo_presets->setCurrentIndex(0);
+
+	_presets.removeAt(idx - 1);
+	combo_presets->removeItem(idx);
+
+	_settings->set(Set::Eq_List, _presets);
+}
+
+void GUI_Equalizer::btn_reset_clicked(){
+
+	QString text = combo_presets->currentText();
+
+	int found_idx = find_combo_text(text);
+
+	if(found_idx <= 0){
+		foreach(EqSlider* sli, _sliders){
+			sli->setValue(0);
 		}
 	}
 
-	if( custom_idx != -1 && custom_idx != current_idx ) {
-
-        QMessageBox msgBox(this);
-         msgBox.setText(tr("This will overwrite your custom preset"));
-         msgBox.setInformativeText(tr("Continue?"));
-		 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		 msgBox.setDefaultButton(QMessageBox::No);
-         Helper::set_deja_vu_font(&msgBox);
-		 int ret = msgBox.exec();
-
-		 if(ret != QMessageBox::Yes) b_save = false;
-	}
-
-	if(b_save) {
-		CSettingsStorage::getInstance()->setEqualizerSettings(_presets);
-        if(custom_idx != -1){
-            combo_presets->setCurrentIndex(custom_idx);
-        }
+	else{
+		for(int i=0; i<_sliders.size(); i++){
+			_sliders[i]->setValue( _presets[found_idx - 1].settings[i] );
+		}
 	}
 }
 
 
+void GUI_Equalizer::text_changed(QString str){
+	btn_save->setEnabled(str.size() > 0);
+}

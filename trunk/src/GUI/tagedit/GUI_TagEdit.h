@@ -1,6 +1,6 @@
 /* GUI_TagEdit.h */
 
-/* Copyright (C) 2011  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -19,116 +19,100 @@
  */
 
 
-/*
- * GUI_TagEdit.h
- *
- *  Created on: May 24, 2011
- *      Author: luke
- */
+
 
 #ifndef GUI_TAGEDIT_H_
 #define GUI_TAGEDIT_H_
 
-#define TAG_TITLE QString("<t>")
-#define TAG_ALBUM QString("<al>")
-#define TAG_ARTIST QString("<ar>")
-#define TAG_TRACK_NUM QString("<nr>")
-#define TAG_YEAR QString("<y>")
-#define TAG_DISC QString("<d>")
-
-
-
-#include "GUI/ui_GUI_TagEdit.h"
-#include "HelperStructs/MetaData.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
-
-#include <QObject>
-#include <QWidget>
-#include <QList>
 #include <QString>
-#include <QStringList>
+#include <QRegExp>
 
+#include "HelperStructs/SayonaraClass.h"
+#include "TagEdit/TagExpression.h"
+#include "TagEdit/TagEdit.h"
+#include "GUI/ui_GUI_TagEdit.h"
 
-class GUI_TagEdit : public QWidget, private Ui::GUI_TagEdit{
+typedef QString Tag;
+typedef QString ReplacedString;
+
+class GUI_TagEdit : public SayonaraWidget, private Ui::GUI_TagEdit {
 
 	Q_OBJECT
-
-
 public:
-	GUI_TagEdit(QWidget* parent=0);
+	GUI_TagEdit(TagEdit* tag_edit, QWidget* parent=0);
 	virtual ~GUI_TagEdit();
 
-	signals:
-		void id3_tags_changed();
-		void id3_tags_changed(MetaDataList&);
-		void sig_success(bool);
-		void sig_cancelled();
+signals:
+	void sig_ok_clicked(const MetaDataList&);
+	void sig_undo_clicked(int idx);
+	void sig_undo_all_clicked();
+	void sig_cancelled();
 
 
-	private slots:
-		void prev_button_clicked();
-		void next_button_clicked();
-		void ok_button_clicked();
-		void cancel_button_clicked();
-		void album_changed(QString text);
-		void artist_changed(QString text);
+private slots:
+	void next_button_clicked();
+	void prev_button_clicked();
+	void apply_tag_clicked();
+	void apply_tag_all_clicked();
 
-		void all_albums_clicked();
-		void all_artists_clicked();
-		void all_genre_clicked();
-		void all_year_clicked();
-		void all_discnumber_clicked();
-	        void all_tag_clicked();
+	void album_all_changed(bool);
+	void artist_all_changed(bool);
+	void genre_all_changed(bool);
+	void year_all_changed(bool);
+	void discnumber_all_changed(bool);
 
-        void help_tag_clicked();
-        void undo_tag_clicked();
-        void apply_tag_clicked();
+	void tag_selection_changed();
 
-        void tag_from_path_text_changed(const QString&);
+	void btn_title_checked(bool b);
+	void btn_artist_checked(bool b);
+	void btn_album_checked(bool b);
+	void btn_track_nr_checked(bool b);
+	void btn_disc_nr_checked(bool b);
+	void btn_year_checked(bool b);
 
+	void tag_text_changed(const QString&);
+	void set_tag_colors(bool valid);
+	void ok_button_clicked();
 
-	public slots:
-		void change_meta_data(const MetaDataList&);
-		void change_meta_data(const MetaData&);
-        void show_win();
-        void changeSkin(bool dark);
-        void language_changed();
+	void undo_clicked();
+	void undo_all_clicked();
 
+	void progress_changed(int);
+	void metadata_changed(const MetaDataList&);
 
-	private:
+	void btn_cancel_clicked();
 
-		QWidget*	_parent;
-        QMap<int, bool>  _idx_affected_by_tag;
+private:
+	TagEdit* _tag_edit;
+	TagExpression _tag_expression;
 
-		int _cur_idx;
-		MetaDataList _vec_org_metadata;
-		MetaDataList _vec_tmp_metadata;
+	int _cur_idx;
 
-		QStringList _lst_new_albums;
-		QStringList _lst_new_artists;
+	QString _album_all;
+	QString _artist_all;
+	QString _genre_all;
 
-		CDatabaseConnector* _db;
+	int _discnumber_all;
+	int _year_all;
 
-		int _max_album_id;
-		int _max_artist_id;
-
-		void init();
-		void clear_checkboxes();
-
-		void show_metadata();
-		void save_metadata();
-		void check_for_new_album_and_artist(QList<Album>& v_album, QList<Artist>& v_artist);
+	int _tag_selection_start;
+	int _tag_selection_len;
 
 
-		void change_mp3_file(MetaData& md);
-		bool store_to_database(QList<Album>& new_albums, QList<Artist>& new_artists);
+	// keys: The different tags like <al>...
+	// val: The string replaced by this tag
+	// this map is used for reverting the string replaced by a tag
+	QMap<Tag, ReplacedString> _tag_str_map;
 
 
-        bool calc_tag(int idx, MetaData& md);
-        bool remove_aftertag_str(QString& str, QString aftertag, bool looking_for_num);
-        bool has_open_tag(QString str);
-        bool has_tag(QString str);
-        bool is_valid_tag_str(QString str);
+	bool replace_selected_tag_text(QString t, bool b);
+	void apply_tag(int idx);
+
+	void track_idx_changed();
+	void reset();
+	void write_changes(int idx);
+	bool check_tag(int idx, const QString& str);
+	bool check_idx(int idx);
 };
 
-#endif /* GUI_TAGEDIT_H_ */
+#endif

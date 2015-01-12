@@ -41,6 +41,8 @@ using namespace std;
 
 bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts) {
 
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
     podcasts.clear();
 
     if (!this -> _database->isOpen())
@@ -49,17 +51,17 @@ bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts) {
     QSqlQuery q (*_database);
     q.prepare("SELECT name, url FROM savedpodcasts;");
 
-    if (!q.exec())
-        return false;
+	if (!q.exec()){
+		show_error("Cannot fetch podcasts", q);
+		return false;
+	}
 
-    else{
-        while(q.next()) {
-            QString name = q.value(0).toString();
-            QString url = q.value(1).toString();
+	while(q.next()) {
+		QString name = q.value(0).toString();
+		QString url = q.value(1).toString();
 
-            podcasts[name] = url;
-        }
-    }
+		podcasts[name] = url;
+	}
 
     return true;
 }
@@ -67,18 +69,18 @@ bool CDatabaseConnector::getAllPodcasts(QMap<QString, QString> & podcasts) {
 
 
 bool CDatabaseConnector::deletePodcast(QString name) {
-    if (!this -> _database->isOpen())
-             this -> _database->open();
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
-    q.prepare("DELETE FROM savedpodcasts WHERE name = :name;" );
+
+	q.prepare("DELETE FROM savedpodcasts WHERE name = :name;" );
     q.bindValue(":name", name);
-    if(!q.exec()) {
-        qDebug() << "Could not delete podcast " << name;
+
+	if(!q.exec()) {
+		show_error(QString("Could not delete podcast ") + name, q);
         return false;
     }
-
-    qDebug() << "podcast " << name << " successfully deleted";
 
     return true;
 }
@@ -87,8 +89,8 @@ bool CDatabaseConnector::deletePodcast(QString name) {
 
 
 bool CDatabaseConnector::addPodcast(QString name, QString url) {
-    if (!this -> _database->isOpen())
-             this -> _database->open();
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
     q.prepare("INSERT INTO savedpodcasts (name, url) VALUES (:name, :url); " );

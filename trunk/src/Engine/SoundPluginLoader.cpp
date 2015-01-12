@@ -21,7 +21,6 @@
 
 #include "Engine/SoundPluginLoader.h"
 #include "Engine/Engine.h"
-#include "HelperStructs/CSettingsStorage.h"
 
 #include <QDir>
 #include <QString>
@@ -47,8 +46,6 @@ SoundPluginLoader::~SoundPluginLoader() {
 
 bool SoundPluginLoader::load_plugins(QString app_dir) {
 
-	QString target_engine = CSettingsStorage::getInstance()->getSoundEngine().toLower();
-
 	QDir plugin_dir = QDir(app_dir);
 	QStringList entry_list = plugin_dir.entryList(QDir::Files);
 
@@ -58,9 +55,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 		if(plugin) {
 			Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 			if(plugin_eng) {
-				QString name = plugin_eng->getName().toLower();
 				_vec_engines.push_back(plugin_eng);
-
 			}
 		}
 	}
@@ -82,15 +77,12 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 
 		Engine* plugin_eng =  qobject_cast<Engine*>(plugin);
 
-
 		if(plugin_eng) {
-			QString name = plugin_eng->getName().toLower();
-			qDebug() << "Found engine " << plugin_eng->getName();
 			_vec_engines.push_back(plugin_eng);
 		}
 
 		else {
-			qDebug() << "Cannot convert object to Engine ";
+			qDebug() << "... but contains no Engine";
 		}
 
 	}
@@ -104,7 +96,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 	return true;
 }
 
-vector<Engine*> SoundPluginLoader::get_engines() {
+QVector<Engine*> SoundPluginLoader::get_engines() {
 	return _vec_engines;
 }
 

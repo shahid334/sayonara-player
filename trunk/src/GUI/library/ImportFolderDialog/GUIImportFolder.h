@@ -21,23 +21,33 @@
 #ifndef GUIIMPORTFOLDER_H_
 #define GUIIMPORTFOLDER_H_
 
-#include <QDialog>
+
 #include <QCloseEvent>
 #include <QShowEvent>
 #include <QStringList>
+#include "GUI/tagedit/GUI_TagEdit.h"
+#include "TagEdit/TagEdit.h"
 #include "GUI/ui_GUI_ImportFolder.h"
+#include "HelperStructs/SayonaraClass.h"
 
+#define IMPORT_DIALOG_CANCELLED -3
+#define IMPORT_DIALOG_ROLLBACK -2
+#define IMPORT_DIALOG_CACHING -1
+#define IMPORT_DIALOG_NO_TRACKS 0
 
-class GUI_ImportFolder : public QDialog, private Ui::ImportFolder {
+class GUI_ImportFolder : public SayonaraDialog, private Ui::ImportFolder {
 
 Q_OBJECT
 public:
-    GUI_ImportFolder(QWidget* parent, bool copy_enabled);
+	GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
     void set_progress(int);
-    void set_status(QString str);
+	void set_status(int n_tracks);
 	void set_thread_active(bool);
     void set_folderlist(const QStringList& lst);
+	void show_info(const QString& str);
+	void show_warning(const QString& str);
+
 
 signals:
     void sig_accepted(const QString&, bool);
@@ -63,7 +73,8 @@ protected:
 
 private:
 
-	bool	_thread_active;
+	bool			_thread_active;
+	GUI_TagEdit*	_ui_tag_edit;
 
 };
 

@@ -19,7 +19,6 @@
  */
 
 #include "GUI/playlist/entry/GUI_PlaylistEntrySmall.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 
 
@@ -37,16 +36,20 @@ GUI_PlaylistEntrySmall::~GUI_PlaylistEntrySmall() {
 void GUI_PlaylistEntrySmall::setContent(const MetaData& md, int idx) {
 
 	QString titlestr;
+	QString len_str = Helper::cvt_ms_to_string(md.length_ms, true);
+	bool show_numbers = _settings->get(Set::PL_ShowNumbers);
 
-	if(CSettingsStorage::getInstance()->getPlaylistNumbers())
-        titlestr = QString::number(idx) + ". " + md.title.trimmed();
+	if(show_numbers){
+		titlestr = QString::number(idx) + ". " + md.title.trimmed();
+	}
 
-	else
-        titlestr = md.title.trimmed();
+	else{
+		titlestr = md.title.trimmed();
+	}
 
-	lab_title->setText(titlestr);
-	lab_artist->setText(md.artist.trimmed());
-	lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+	lab_pl_small_title->setText(titlestr);
+	lab_pl_small_artist->setText(md.artist.trimmed());
+	lab_pl_small_time->setText(len_str);
 }
 
 

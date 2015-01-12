@@ -27,14 +27,12 @@
  */
 
 #include "GUI/playlist/entry/GUI_PlaylistEntryBig.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
-
-
 
 GUI_PlaylistEntryBig::GUI_PlaylistEntryBig(QWidget* parent) :
 	GUI_PlaylistEntry(parent),
-	Ui::PlaylistEntryBig(){
+	Ui::PlaylistEntryBig()
+{
 
 	setupUi(this);
 }
@@ -47,22 +45,26 @@ GUI_PlaylistEntryBig::~GUI_PlaylistEntryBig() {
 void GUI_PlaylistEntryBig::setContent(const MetaData& md, int idx) {
 
     QString titlestr;
+	QString len_str = Helper::cvt_ms_to_string(md.length_ms, true);
+	bool show_numbers = _settings->get(Set::PL_ShowNumbers);
 
-    if(CSettingsStorage::getInstance()->getPlaylistNumbers())
-        titlestr = QString::number(idx) + ". " + md.title.trimmed();
+	if(show_numbers){
+		titlestr = QString::number(idx) + ". " + md.title.trimmed();
+	}
 
-    else
-        titlestr = md.title.trimmed();
+	else{
+		titlestr = md.title.trimmed();
+	}
 
-	lab_title->setText(titlestr);
-	lab_artist->setText(md.artist.trimmed());
-	lab_time->setText(Helper::cvtMsecs2TitleLengthString(md.length_ms));
+	lab_pl_big_title->setText(titlestr);
+	lab_pl_big_artist->setText(md.artist.trimmed());
+	lab_pl_big_time->setText(len_str);
     if(md.album == "") {
-		lab_album->setText("");
+		lab_pl_big_album->setText("");
         return;
     }
 
-	lab_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
+	lab_pl_big_album->setText(QString(" [ ") + Helper::get_album_w_disc(md) + " ]");
 
 }
 

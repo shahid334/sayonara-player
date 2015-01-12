@@ -11,21 +11,20 @@ INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 SET(HEADERS
-	CSettingsStorage.h
     Tagging/ID3_Fileheader.h
     AsyncWebAccess.h
     MetaDataInfo.h
+	SayonaraClass.h
 )
 
 SET(SOURCES
-	MetaDataInfo.cpp
+    MetaDataInfo.cpp
     ArtistInfo.cpp
     AlbumInfo.cpp
     MetaData.cpp
     Artist.cpp
     Album.cpp
     Helper.cpp
-    CSettingsStorage.cpp
     Style.cpp
     CDirectoryReader.cpp
     PlaylistParser.cpp

@@ -30,7 +30,6 @@
 
 #include "library/threads/ReloadThread.h"
 #include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
@@ -106,7 +105,7 @@ void ReloadThread::get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n
 		if(v_md.size() >= N_FILES_TO_STORE ) {
 			CDatabaseConnector::getInstance()->storeMetadata(v_md);
             while(_paused) {
-                usleep(10000);
+				Helper::sleep_ms(10);
             }
 
             emit sig_new_block_saved();
@@ -147,16 +146,16 @@ void ReloadThread::run() {
     _paused = false;
 	CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
-	MetaDataList v_metadata;
-	MetaDataList v_to_delete;
+	MetaDataList v_metadata, v_to_delete;
 
     QString reload_status_str = tr("Delete orphaned tracks...");
     emit sig_reloading_library(reload_status_str);
+
 	db->getTracksFromDatabase(v_metadata);
 
 	// find orphaned tracks in library && delete them
-	for(uint i=0; i<v_metadata.size(); i++) {
-		MetaData md = v_metadata[i];
+    for(int i=0; i<v_metadata.size(); i++) {
+        const MetaData& md = v_metadata[i];
 		if(!Helper::checkTrack(md)) {
 			v_to_delete.push_back(md);
 		}

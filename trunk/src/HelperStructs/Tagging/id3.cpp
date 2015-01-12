@@ -103,13 +103,13 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
 }
 
 
-void ID3::setMetaDataOfFile(MetaData& md) {
+bool ID3::setMetaDataOfFile(MetaData& md) {
 
 	md.filepath = QDir(md.filepath).absolutePath();
     TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
     if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ) {
         qDebug() << "ID3 cannot save";
-		return;
+		return false;
 	}
 
 	TagLib::String album(md.album.toUtf8().data(), TagLib::String::UTF8);
@@ -132,21 +132,22 @@ void ID3::setMetaDataOfFile(MetaData& md) {
 
     if(!f_mp3) {
         qDebug() << "Tagging: no mp3 header";
-        return;
+		return true;
     }
 
     TagLib::ID3v2::Tag* id3_tag = f_mp3->ID3v2Tag();
     if(!id3_tag) {
         qDebug() << "Tagging: no valid id3 tag";
-        return;
+		return true;
     }
 
     ID3_FileHeader fh(md.filepath);
 
-    if(fh.is_valid())
-        id3_write_discnumber(fh, md.discnumber, md.n_discs);
+	if(fh.is_valid()){
+		id3_write_discnumber(fh, md.discnumber, md.n_discs);
+	}
 
-	return;
+	return true;
 }
 
 

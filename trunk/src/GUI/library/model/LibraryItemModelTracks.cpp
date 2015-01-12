@@ -27,9 +27,8 @@
  */
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
-
 #include "GUI/MyColumnHeader.h"
+
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/library/model/LibraryItemModelTracks.h"
 
@@ -66,10 +65,9 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 
      int idx_col = calc_shown_col(col);
 
-	 if (role == Qt::DisplayRole) {
+	 if (role == Qt::DisplayRole || role==Qt::EditRole) {
 
-		 MetaData md = _tracklist.at(row);
-		 QString str_disc;
+         const MetaData& md = _tracklist.at(row);
 
 		 switch(idx_col) {
 			 case COL_TRACK_NUM:
@@ -82,10 +80,10 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 				 return QVariant( md.artist );
 
 			 case COL_LENGTH:
-				 return QVariant( Helper::cvtMsecs2TitleLengthString(md.length_ms)  );
+				 return QVariant( Helper::cvt_ms_to_string(md.length_ms) );
 
 			 case COL_ALBUM:
-                return QVariant(Helper::get_album_w_disc(md));
+				return Helper::get_album_w_disc(md);
 
 			 case COL_YEAR:
 				 return QVariant(md.year);
@@ -112,8 +110,9 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
           else return Qt::AlignLeft + Qt::AlignVCenter;
 	 }
 
-	 else
+	 else{
 		 return QVariant();
+	 }
 }
 
 
@@ -141,7 +140,7 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 		 int col_idx = calc_shown_col(col);
 
 		 if(col_idx == COL_TRACK_RATING) {
-             _tracklist[index.row()].rating = value.toInt();
+			 _tracklist[row].rating = value.toInt();
          }
 
          else{
@@ -149,8 +148,9 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
              MetaData md;
              if(!MetaData::fromVariant(value, md)) return false;
 
-             if(md.is_lib_selected)
+			 if(md.is_lib_selected && !_selected_rows.contains(row)){
 				 _selected_rows << row;
+			 }
 
 			 _tracklist[row] = md;
 
@@ -212,7 +212,7 @@ QModelIndex	LibraryItemModelTracks::getFirstRowIndexOf(QString substr) {
 
 QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row) {
 
-	int len = (int) _tracklist.size();
+    int len = _tracklist.size();
 	if(len == 0) return this->index(-1, -1);
 
 	for(int i=0; i< len; i++) {
@@ -228,7 +228,7 @@ QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row) {
 
 QModelIndex LibraryItemModelTracks::getPrevRowIndexOf(QString substr, int row) {
 
-	int len = (int) _tracklist.size();
+    int len = _tracklist.size();
 	if(len < row) row = len - 1;
 	for(int i=0; i< len; i++) {
 		if(row - i < 0) row = len - 1;

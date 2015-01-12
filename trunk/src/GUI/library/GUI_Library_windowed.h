@@ -29,11 +29,14 @@
 #ifndef GUI_LIBRARY_WINDOWED_H_
 #define GUI_LIBRARY_WINDOWED_H_
 
-#include <QObject>
-#include <QWidget>
+
 #include <QAbstractTableModel>
 #include <QPoint>
 #include <QTimer>
+#include <QMenu>
+#include <QMap>
+#include <QMessageBox>
+#include <QFocusEvent>
 
 #include "GUI/ui_GUI_Library_windowed.h"
 #include "GUI/library/DiscPopupMenu.h"
@@ -54,27 +57,22 @@
 #include "HelperStructs/globals.h"
 #include "HelperStructs/CustomMimeData.h"
 
-#include "DatabaseAccess/CDatabaseConnector.h"
-
-#include <QMenu>
-#include <QMap>
+#include "HelperStructs/SayonaraClass.h"
 #include <QMessageBox>
-#include <QFocusEvent>
+
+#include "library/CLibraryBase.h"
+
 
 using namespace Sort;
 
-class GUI_Library_windowed: public QWidget, private Ui::Library_windowed {
+class GUI_Library_windowed: public SayonaraWidget, private Ui::Library_windowed {
 
 Q_OBJECT
 
 public:
 
-    GUI_Library_windowed(QWidget* parent);
+	GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog* info_dialog, QWidget* parent);
 	virtual ~GUI_Library_windowed();
-
-    void set_info_dialog(GUI_InfoDialog* dialog);
-
-
 
 protected:
 
@@ -91,55 +89,17 @@ protected:
 
 
 	Filter		_cur_searchfilter;
-    CSettingsStorage* _settings;
-
-
 
 signals:
 
-    void sig_album_sel_changed(const QList<int>&);
-    void sig_artist_sel_changed(const QList<int>&);
-    void sig_track_sel_changed(const QList<int>&);
-
-    void sig_album_dbl_clicked(int);
-    void sig_artist_dbl_clicked(int);
-	void sig_track_dbl_clicked(int);
-    void sig_tracks_dbl_clicked(QList<int>);
-
-	void sig_disc_pressed(int);
-
-	void sig_delete_tracks(int);
-	void sig_delete_certain_tracks(const QList<int>&, int);
-
-	void sig_filter_changed(const Filter&);
-	void sig_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
-
-	void sig_show_id3_editor(const QList<int>&);
-	void sig_play_next_tracks(const QList<int>& lst);
-	void sig_play_next_all_tracks();
-    void sig_append_tracks(const QList<int>& lst);
-    void sig_append_all_tracks();
-
-	void sig_info_btn_clicked();
-    void sig_no_focus();
     void sig_import_files(const QStringList&);
 
-    void sig_album_rating_changed(int, int);
-    void sig_track_rating_changed(int, int);
 
 public slots:
-	void fill_library_tracks(MetaDataList&);
-	void fill_library_albums(AlbumList&);
-	void fill_library_artists(ArtistList&);
 	void id3_tags_changed();
-	void reloading_library(QString&);
-	void reloading_library_finished();
+
 	void library_changed();
 	void import_result(bool);
-	void psl_delete_answer(QString);
-    void show_only_tracks(bool);
-	void change_skin(bool);
-    void language_changed();
 
 
 protected slots:
@@ -152,13 +112,8 @@ protected slots:
 
 	void disc_pressed(int);
 
-    void artist_tab_pressed(bool);
-    void album_tab_pressed(bool);
-    void track_tab_pressed(bool);
-
     void album_rating_changed(int);
     void title_rating_changed(int);
-
 
 	void clear_button_pressed();
 
@@ -195,26 +150,34 @@ protected slots:
     void sortorder_album_changed(Sort::SortOrder);
     void sortorder_artist_changed(Sort::SortOrder);
 
-    void columns_title_changed(QStringList&);
-    void columns_album_changed(QStringList&);
-    void columns_artist_changed(QStringList&);
+	void columns_title_changed(QList<int>&);
+	void columns_album_changed(QList<int>&);
+	void columns_artist_changed(QList<int>&);
 
     void timer_timed_out();
     void delete_menu();
     void import_files(const QStringList&);
 
+	void _sl_show_only_tracks_changed();
+	void skin_changed();
+	void language_changed();
+
+	void lib_reload(const QString&);
+	void lib_fill_tracks(const MetaDataList&);
+	void lib_fill_albums(const AlbumList&);
+	void lib_fill_artists(const ArtistList&);
+	void lib_delete_answer(QString);
+	void lib_reload_finished();
+	void lib_no_lib_path();
+
+	void refresh();
 
 protected:
 	void resizeEvent(QResizeEvent* e);
-    void focusInEvent(QFocusEvent *e);
 
-    SortOrder _sort_albums;  /* [name | year] [asc | desc] */
-    SortOrder _sort_artists; /* [name | tracks] [asc | desc] */
-    SortOrder _sort_tracks;  /* [title | album | artist | tracknum] [asc | desc] */
-
-    QStringList _shown_cols_albums;
-    QStringList _shown_cols_artist;
-    QStringList _shown_cols_tracks;
+	QList<int> _shown_cols_albums;
+	QList<int> _shown_cols_artist;
+	QList<int> _shown_cols_tracks;
 
     QStringList _header_names_albums;
     QStringList _header_names_artists;
@@ -227,11 +190,11 @@ protected:
     QTimer*      _timer;
 	DiscPopupMenu* _discmenu;
 
-
 	int show_delete_dialog(int n_tracks);
     void init_headers();
-	void refresh();
 
+private:
+	CLibraryBase* _library;
 
 };
 

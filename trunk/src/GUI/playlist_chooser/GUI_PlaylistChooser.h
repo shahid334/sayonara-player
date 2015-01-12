@@ -23,21 +23,20 @@
 #define GUIPLAYLISTCHOOSER_H_
 
 #include "HelperStructs/MetaData.h"
+
 #include "PlayerPlugin/PlayerPlugin.h"
 
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "GUI/ui_GUI_PlaylistChooser.h"
+#include "PlaylistChooser/PlaylistChooser.h"
 
 #include <QMap>
 #include <QDockWidget>
 
 
-
-
 class GUI_PlaylistChooser : public PlayerPlugin, private Ui::GUI_PlaylistChooser {
 
 Q_OBJECT
-
 
 signals:
 	void sig_playlist_chosen(int);
@@ -47,7 +46,7 @@ signals:
 	void sig_save_playlist_file(QString, bool);
 	void sig_closed();
 	void sig_clear_playlist();
-        void sig_files_selected(QStringList&);
+	void sig_files_selected(const QStringList&);
 
 
 private slots:
@@ -60,34 +59,34 @@ private slots:
     void got_save_params(const QString&, bool);
 
 
-
 public slots:
     void playlist_changed(const MetaDataList&, int, PlaylistType);
-	void all_playlists_fetched(QMap<int, QString>&);
-    void changeSkin(bool);
-    void language_changed();
+	void all_playlists_fetched(const QMap<int, QString>&);
+
 
 public:
-	GUI_PlaylistChooser(QString name, QWidget *parent = 0);
+	GUI_PlaylistChooser(QString name, PlaylistChooser* playlist_chooser, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
 
 private:
 
     GUI_Target_Playlist_Dialog* _target_playlist_dialog;
+	PlaylistChooser* _playlist_chooser;
 
 	QMap<int, QString> _playlists;
 
-    int	_cur_idx;
+	int	_cur_idx;
 	bool _started;
-    bool _dark;
+
     QString _text_before_save;
     QString _last_dir;
 
 
 
-
     int show_warning(QString title_text);
 
+private slots:
+	void language_changed();
 };
 
 #endif /* GUIPLAYLISTCHOOSER_H_ */

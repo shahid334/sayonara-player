@@ -38,12 +38,6 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 
 	_cur_time = -1;
 
-    btn_delete->setIcon(Helper::getIcon("delete.png"));
-    btn_new->setIcon(Helper::getIcon("save.png"));
-    btn_last->setIcon(Helper::getIcon("bwd.png"));
-    btn_next->setIcon(Helper::getIcon("fwd.png"));
-	lab_logo->setPixmap(Helper::getPixmap("bookmarks.png", lab_logo->size(), true));
-
 	connect(btn_new, SIGNAL(clicked()), this, SLOT(new_clicked()));
 	connect(btn_delete, SIGNAL(clicked()), this, SLOT(del_clicked()));
 	connect(btn_last, SIGNAL(clicked()), this, SLOT(prev_clicked()));
@@ -79,7 +73,7 @@ void GUI_Bookmarks::enable_prev(int idx) {
 	val = _bookmarks.value(key);
 
 	ms = (long) (key * 1000);
-	str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+	str = Helper::cvt_ms_to_string(ms, true, false);
 
 	lab_last->setText( str );
 	btn_last->setEnabled( true);
@@ -96,7 +90,7 @@ void GUI_Bookmarks::enable_next(int idx) {
 	val = _bookmarks.value(key);
 
 	ms = (long) (key * 1000);
-	str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+	str = Helper::cvt_ms_to_string(ms, true, false);
 
 	lab_next->setText(str);
 	btn_next->setEnabled(true);
@@ -169,7 +163,7 @@ void GUI_Bookmarks::calc_next(quint32 time_s) {
 }
 
 
-void GUI_Bookmarks::track_changed(const MetaData& md) {
+void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
 
 	bool success;
 
@@ -195,7 +189,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 	foreach( quint32 bm, _bookmarks.keys() ) {
 
 		long ms = (long) (bm * 1000);
-		QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+		QString str = Helper::cvt_ms_to_string(ms, true, false);
 
 		cb_bookmarks->addItem(str, bm);
 	}
@@ -285,7 +279,7 @@ void GUI_Bookmarks::new_clicked() {
 		foreach( quint32 bm, _bookmarks.keys() ) {
 
 			long ms = (long) (bm * 1000);
-			QString str = Helper::cvtMsecs2TitleLengthString(ms, true, false);
+			QString str = Helper::cvt_ms_to_string(ms, true, false);
 
 			cb_bookmarks->addItem(str, bm);
 

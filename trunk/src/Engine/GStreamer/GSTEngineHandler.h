@@ -22,16 +22,11 @@
 #define ENGINEHANDLER_H_
 
 #include "Engine/Engine.h"
-#include "HelperStructs/CSettingsStorage.h"
-#include <vector>
 
-using namespace std;
-
-
+#include <QVector>
 
 class GSTEngineHandler : public Engine
 {
-
 	Q_OBJECT
 	Q_INTERFACES(Engine)
 
@@ -39,35 +34,30 @@ public:
 	explicit GSTEngineHandler(QObject* parent=0);
 	virtual ~GSTEngineHandler();
 
-	void fill_engines(const vector<Engine*>& engines);
+	void fill_engines(const QVector<Engine*>& engines);
 	void init();
+
 
 public slots:
 
 	void play();
 	void stop();
 	void pause();
-	void set_volume(int vol);
-	
 
 	void jump_abs_s(quint32 where);
 	void jump_abs_ms(quint64 where);
 	void jump_rel(quint32 where);
+    void jump_rel_ms(qint64 where);
 
-	void change_track(const MetaData&, int pos_sec=0, bool start_play=true);
-	void change_track(const QString&, int pos_sec=0, bool start_play=true );
+	void change_track(const MetaData&, bool start_play);
+	void change_track(const QString&, bool start_play);
 
 	void eq_changed(int band, int value);
-	void eq_enable(bool b);
 	void record_button_toggled(bool);
 
-	void psl_sr_set_active(bool);
 	void psl_new_stream_session();
-	void psl_calc_level(bool);
-	void psl_calc_spectrum(bool);
-	void psl_set_gapless(bool b);
 
-	void psl_change_engine(QString name);
+    void psl_change_engine(QString name);
 
 	void start_convert();
 	void end_convert();
@@ -77,9 +67,7 @@ public slots:
 
 private slots:
 
-	void sl_dur_changed_ms(quint64);
-	void sl_dur_changed_s(quint32);
-	void sl_dur_changed(MetaData&);
+	void sl_md_changed(const MetaData&);
 	void sl_pos_changed_ms(quint64);
 	void sl_pos_changed_s(quint32);
 
@@ -87,13 +75,12 @@ private slots:
 	void sl_scrobble(const MetaData&);
 	void sl_level(float, float);
 	void sl_spectrum(QList<float>&);
-	void sl_bitrate_changed(qint32);
 
 
 private:
-	CSettingsStorage* _settings;
-	Engine*           _cur_engine;
-	vector<Engine*>   _engines;
+
+	Engine*          _cur_engine;
+	QVector<Engine*>   _engines;
 
 	bool configure_connections(Engine* old_engine, Engine* new_engine);
 

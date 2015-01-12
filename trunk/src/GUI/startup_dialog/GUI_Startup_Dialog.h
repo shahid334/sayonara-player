@@ -23,10 +23,11 @@
 #ifndef GUI_STARTUP_DIALOG_H
 #define GUI_STARTUP_DIALOG_H
 
-#include <QDialog>
-#include "GUI/ui_GUI_Startup_Dialog.h"
 
-class GUI_Startup_Dialog : public QDialog, private Ui::GUI_StartupDialog
+#include "GUI/ui_GUI_Startup_Dialog.h"
+#include "HelperStructs/SayonaraClass.h"
+
+class GUI_Startup_Dialog : public SayonaraDialog, private Ui::GUI_StartupDialog
 {
     Q_OBJECT
 public:

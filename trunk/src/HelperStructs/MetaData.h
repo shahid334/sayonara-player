@@ -34,15 +34,11 @@
 #include "HelperStructs/Artist.h"
 #include "HelperStructs/Album.h"
 
-#include <QString>
 #include <QStringList>
 #include <QPair>
 #include <QVariant>
 #include <QMetaType>
 
-#include <vector>
-
-using namespace std;
 
 enum RadioMode {
 
@@ -51,10 +47,10 @@ enum RadioMode {
 };
 
 class MetaData;
-class LastTrack;
+
 
 Q_DECLARE_METATYPE(MetaData)
-Q_DECLARE_METATYPE(LastTrack)
+
 
 class MetaData : public LibraryItem {
 
@@ -64,7 +60,7 @@ public:
 	qint32 artist_id;
     QString title;
     QString artist;
-    QString album;
+    QString album;          // if radio station: name of radio station
     QStringList genres;
     quint8 rating;
     quint64 length_ms;
@@ -76,7 +72,6 @@ public:
     QString comment;
     quint8 discnumber;
     quint8 n_discs;
-
 
     bool is_extern;
     RadioMode radio_mode;
@@ -91,28 +86,39 @@ public:
     MetaData (const MetaData& );
 	virtual ~MetaData();
 
-	bool operator==(const MetaData& md);
-	bool is_equal(const MetaData& md, bool case_sensitive=true);
+    bool operator==(const MetaData& md) const;
+    bool is_equal(const MetaData& md) const;
+	bool is_equal_deep(const MetaData& md) const;
     
 	void print() const;
 
-	static QVariant toVariant(const MetaData& md);
-	static bool fromVariant(const QVariant& v, MetaData& md);
+    static QVariant toVariant(const MetaData& md);
+    static bool fromVariant(const QVariant& v, MetaData& md);
 };
 
 
 
-class MetaDataList : public vector<MetaData> {
+class MetaDataList : public QVector<MetaData> {
+
+    private:
+        int _cur_played_track;
 
 	public:
 
 		MetaDataList();
+        MetaDataList(const MetaDataList&);
 		MetaDataList(int n_elems);
 
 	    virtual ~MetaDataList();
-	    void setCurPlayTrack(uint idx);
-	    bool contains(const MetaData& md, bool cs=false);
-	    void insert(const MetaData& md, uint pos);
+        void setCurPlayTrack(int idx);
+        int getCurPlayTrack();
+
+        virtual bool contains(const MetaData& md) const;
+
+		QList<int> findTracks(int id) const;
+		QList<int> findTracks(const QString&) const;
+
+        QStringList toStringList() const;
 };
 
 struct CustomPlaylist{
@@ -133,19 +139,5 @@ struct CustomPlaylist{
     }
 };
 
-class LastTrack : public MetaData {
-
-public:
-
-    quint32 pos_sec;
-
-    LastTrack();
-    LastTrack(const MetaData& md);
-    LastTrack(const LastTrack& lt);
-    virtual ~LastTrack();
-
-    static QVariant toVariant(const LastTrack& md);
-    static bool fromVariant(const QVariant& v, LastTrack& md);
-};
 
 #endif /* METADATA_H_ */

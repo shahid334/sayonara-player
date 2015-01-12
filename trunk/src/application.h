@@ -24,7 +24,6 @@
 #define CONNECT(a,b,c,d) app->connect(a, SIGNAL(b), c, SLOT(d))
 
 #include <QApplication>
-#include <QStringList>
 #include <QMainWindow>
 #include <QTranslator>
 
@@ -32,7 +31,6 @@
 #include "GUI/playlist/GUI_Playlist.h"
 
 #include "GUI/LastFM/GUI_LastFM.h"
-// #include "GUI/LastFM/GUI_LFMRadioWidget.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
@@ -49,30 +47,27 @@
 #include "GUI/AudioConverter/GUI_AudioConverter.h"
 #include "GUI/bookmarks/GUI_Bookmarks.h"
 #include "GUI/speed/GUI_Speed.h"
-//#include "GUI/soundcloud/GUI_SoundCloudLibrary.h"
+#include "GUI/broadcasting/GUI_Broadcast.h"
 
 #include "playlist/PlaylistHandler.h"
-#include "playlist/PlaylistLoader.h"
-#include "Engine/Engine.h"
+#include "Engine/GStreamer/GSTEngineHandler.h"
 #include "Engine/SoundPluginLoader.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "library/CLibraryBase.h"
 #include "library/LibraryImporter.h"
-//#include "Soundcloud/SoundcloudLibrary.h"
-#include "HelperStructs/Helper.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
-#include "HelperStructs/Style.h"
-#include "HelperStructs/globals.h"
+
 #include "LyricLookup/LyricLookup.h"
-#include "playlists/Playlists.h"
+#include "PlaylistChooser/PlaylistChooser.h"
 #include "PlayerPlugin/PlayerPluginHandler.h"
-#include "Socket/Socket.h"
+#include "RadioStation/StreamServer.h"
+#include "HelperStructs/SayonaraClass.h"
+
+#include <QFont>
 
 
-
-class Application : public QApplication
+class Application : public QApplication, private SayonaraClass
 {
     Q_OBJECT
 
@@ -90,51 +85,46 @@ private:
 	GUI_Player*             player;
 	GUI_PlaylistChooser*    ui_playlist_chooser;
 	GUI_AudioConverter*     ui_audioconverter;
-	Playlists*              playlists;
+	PlaylistChooser*              playlist_chooser;
 	PlaylistHandler*        playlist_handler;
-	PlaylistLoader*         playlist_loader;
 	CLibraryBase*           library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
-//	SoundcloudLibrary*		sc_library;
 
 	GUI_LevelPainter*       ui_level;
 	GUI_Spectrum*           ui_spectrum;
 	GUI_LastFM*             ui_lastfm;
-	GUI_Stream	*           ui_stream;
+	GUI_Stream*				ui_stream;
 	GUI_Podcasts*           ui_podcasts;
 	GUI_Equalizer*          ui_eq;
-//	GUI_LFMRadioWidget*     ui_lfm_radio;
 	GUI_Bookmarks*          ui_bookmarks;
 	GUI_Speed*				ui_speed;
+	GUI_Broadcast*			ui_broadcast;
 	PlayerPluginHandler*    _pph;
 
 	GUI_StyleSettings*      ui_style_settings;
 	GUI_StreamRecorder*     ui_stream_rec;
+	TagEdit*				tag_edit;
 	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
-	//GUI_SoundCloudLibrary*  ui_sc;
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
-	Socket*                 remote_socket;
+	StreamServer*           stream_server;
 
 
 	SoundPluginLoader*      engine_plugin_loader;
 	Engine*                 listen;
 
-	CSettingsStorage*       set;
-	SettingsThread*         _setting_thread;
 	QApplication*           app;
 
 	bool                    _initialized;
 	QTranslator*            _translator;
 
     void init_connections();
-    void connect_languages();
 
 public:
-    void setFiles2Play(QStringList filelist);
+	void setFiles2Play(const QStringList& filelist);
     QMainWindow* getMainWindow();
     bool is_initialized();
 	void init(int n_files, QTranslator* translator);
@@ -142,42 +132,11 @@ public:
 private:
     QString getVersion();
 	void check_for_crash();
+	QFont _system_font;
 
 private slots:
-	void focus_changed(QWidget*, QWidget*);
-
+	void skin_changed();
 };
-
-
-
-
-class ApplicationClient : public QObject {
-
-	Q_OBJECT
-
-	public:
-
-		explicit ApplicationClient(QObject* parent, const Application* app) :
-			QObject(parent),
-			sayonara(app)
-		{
-			connect(app, SIGNAL(doConnections()), this, SIGNAL(initConnections()));
-			connect(app, SIGNAL(connectionsDone()), this, SIGNAL(initRemainder()));
-		}
-
-		virtual ~ApplicationClient() {}
-
-	private slots:
-
-		virtual void initConnections()=0;
-		virtual void initRemainder()=0;
-
-	private:
-		const Application* sayonara;
-
-};
-
-
 
 #endif // APPLICATION_H
 

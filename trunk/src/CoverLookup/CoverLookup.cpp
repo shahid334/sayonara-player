@@ -34,9 +34,6 @@
 #include <QFile>
 #include <QImage>
 
-#include <unistd.h>
-
-
 CoverLookupInterface::CoverLookupInterface(QObject* parent):
 	QObject(parent) {
 
@@ -48,7 +45,6 @@ CoverLookup::CoverLookup(QObject* parent, int n_covers) :
     _n_covers(n_covers),
 	_cft(NULL)
 {
-
     _db = CDatabaseConnector::getInstance();
 }
 
@@ -66,7 +62,6 @@ void CoverLookup::start_new_thread(const CoverLocation& cl ) {
 	if(_cft) {
 		_cft->stop();
 	}
-
 
 	_cft = new CoverFetchThread(this, cl, _n_covers);
 	_cfts << _cft;

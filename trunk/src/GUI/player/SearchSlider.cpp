@@ -49,7 +49,7 @@ bool SearchSlider::event(QEvent* e) {
 
 
 
-	int percent;
+	double percent;
     int cur_val = this->value() * 1.0;
     QMouseEvent* mouseEvent;
     QWheelEvent* wheelEvent;
@@ -81,14 +81,17 @@ bool SearchSlider::event(QEvent* e) {
             _searching = true;
 
 
-			if(this->orientation() == Qt::Horizontal)
-				percent = (mouseEvent->x() * 100) / this->width();
-			else
-				percent = 100 - (mouseEvent->y() * 100 / this->height());
+			if(this->orientation() == Qt::Horizontal){
+				percent = (mouseEvent->x() * 1.0) / this->width();
+			}
+
+			else{
+				percent = 1.0 - ((mouseEvent->y() * 1.0) / this->height());
+			}
 
             if (percent < 0) percent = 0;
-            if (percent > 100) percent = 100;
-			this->setValue(percent);
+			if (percent > 1.0) percent = 1.0;
+			this->setValue( (int) (percent * maximum()) );
 
 			emit searchSliderPressed(percent);
 
@@ -99,18 +102,21 @@ bool SearchSlider::event(QEvent* e) {
 
 			mouseEvent = (QMouseEvent*) e;
             e->accept();
+			if(this->orientation() == Qt::Horizontal){
+				percent = (mouseEvent->x() * 1.0) / this->width();
+			}
 
-			if(this->orientation() == Qt::Horizontal)
-				percent = (mouseEvent->x() * 100) / this->width();
-			else
-				percent = 100 - (mouseEvent->y() * 100 / this->height());
+			else{
+				percent = 1.0 - ((mouseEvent->y() * 1.0) / this->height());
+			}
 
-            if (percent < 0) percent = 0;
-            if (percent > 100) percent = 100;
-			this->setValue(percent);
+			if (percent < 0) percent = 0;
+			if (percent > 1.0) percent = 1.0;
+			this->setValue( (int) (percent * maximum()) );
 
-			if(_searching)
-				emit searchSliderMoved(percent);
+			if(_searching){
+				emit searchSliderMoved( this->value() );
+			}
 
 			break;
 
@@ -125,17 +131,20 @@ bool SearchSlider::event(QEvent* e) {
 			mouseEvent = (QMouseEvent*) e;
             e->accept();
 
-			if(this->orientation() == Qt::Horizontal)
-				percent = (mouseEvent->x() * 100) / this->width();
-			else
-				percent = 100 - (mouseEvent->y() * 100 / this->height());
+			if(this->orientation() == Qt::Horizontal){
+				percent = (mouseEvent->x() * 1.0) / this->width();
+			}
 
-            if (percent < 0) percent = 0;
-            if (percent > 100) percent = 100;
+			else{
+				percent = 1.0 - ((mouseEvent->y() * 1.0) / this->height());
+			}
 
-			this->setValue(percent);
+			if (percent < 0) percent = 0;
+			if (percent > 1.0) percent = 1.0;
 
-			emit searchSliderReleased(percent);
+			this->setValue( (int) (percent * maximum()) );
+			emit searchSliderReleased( this->value() );
+
 			_searching = false;
 			break;
 
@@ -145,10 +154,12 @@ bool SearchSlider::event(QEvent* e) {
 
             e->accept();
             wheelEvent = (QWheelEvent*) e;
+			percent = (cur_val * 1.0) / maximum();
+			percent += ( wheelEvent->delta() / abs(wheelEvent->delta()) ) * 0.03;
 
-            percent = cur_val + (wheelEvent->delta() / abs(wheelEvent->delta()) * 3);
+			this->setValue( (int) (percent * maximum()) );
+			emit searchSliderMoved( this->value() );
 
-            emit searchSliderMoved(percent);
             _searching = false;
             break;
 

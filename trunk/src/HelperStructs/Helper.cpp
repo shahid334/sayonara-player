@@ -30,15 +30,11 @@
 #include "HelperStructs/globals.h"
 #include "HelperStructs/WebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "Settings/Settings.h"
 
-#include <string>
-#include <iostream>
-#include <sstream>
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdio.h>
-#include <string.h>
 #include <ctime>
 
 #include <QDir>
@@ -81,7 +77,11 @@ QString cvtNum2String(T num, int digits) {
 	return str;
 }
 
-QString Helper::cvtMsecs2TitleLengthString(quint64 msec, bool colon, bool show_days) {
+QString Helper::cvt_ms_to_string(quint64 msec, bool empty_zero, bool colon, bool show_days) {
+
+		if(msec == 0 && empty_zero){
+			return "";
+		}
 
 		bool show_hrs = false;
 
@@ -160,8 +160,8 @@ QString Helper::getLibPath() {
 
 QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
-    QString path = getIconPath(icon_name);
-    QPixmap pixmap(path);
+	QString path = QString(":/icons/") + icon_name;
+	QPixmap pixmap(path);
 
     if(sz.width() == 0){
         return pixmap;
@@ -182,33 +182,9 @@ QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
 
 QIcon Helper::getIcon(const QString& icon_name){
-    QString path = Helper::getIconPath() + icon_name;
-	return QIcon(path);
+	return QIcon(QString(":/icons/") + icon_name);
 }
 
-
-QString Helper::getIconPath(const QString& icon_name){
-    return getIconPath() + icon_name;
-}
-
-QString Helper::getIconPath() {
-
-	QString path;
-
-#ifndef Q_OS_WIN
-    if(QFile::exists(_install_path + "/share/sayonara")) path = _install_path + "/share/sayonara/";
-    else if(QFile::exists("/usr/share/sayonara")) path = "/usr/share/sayonara/";
-    else path = "./GUI/icons/";
-#else
-	path = QDir::homePath() + QString("\\.Sayonara\\images\\");
-	if(QFile::exists(path)) {
-		return path;
-	}
-	else return QString("");
-#endif
-
-	return path;
-}
 
 QString Helper::getErrorFile(){
 	return getSayonaraPath() + "error_log";
@@ -221,7 +197,7 @@ QString Helper::getSayonaraPath() {
 
 QString Helper::createLink(const QString& name, const QString& target, bool underline) {
 	
-	int dark = CSettingsStorage::getInstance()->getPlayerStyle();
+	bool dark = (Settings::getInstance()->get(Set::Player_Style) == 1);
 
 	QString new_target;
 	QString content;
@@ -513,7 +489,7 @@ QString Helper::get_parent_folder(const QString& filename) {
 	ret = filename.left(filename.lastIndexOf(QDir::separator()) + 1);
 	last_idx = ret.lastIndexOf(QDir::separator());
 
-	while(last_idx == ret.size() - 1) {
+	while(last_idx == ret.size() - 1 && ret.size() > 0) {
 		ret = ret.left(ret.size() - 1);
     	last_idx = ret.lastIndexOf(QDir::separator());
     }
@@ -560,11 +536,26 @@ bool Helper::checkTrack(const MetaData& md) {
 
     if( is_www(md.filepath)) return true;
 
-	if( !QFile::exists(md.filepath) && md.id >= 0 ) {
+    return QFile::exists(md.filepath);
+}
+
+bool Helper::read_file_into_byte_arr(const QString& filename, QByteArray& content){
+	QFile file(filename);
+	content.clear();
+
+
+	if(!file.open(QIODevice::ReadOnly)){
 		return false;
 	}
 
-	return true;
+	while(!file.atEnd()){
+		QByteArray arr = file.read(4096);
+		content.append(arr);
+	}
+
+	file.close();
+
+	return (content.size() > 0);
 }
 
 
@@ -642,41 +633,6 @@ QString Helper::calc_hash(const QString& data) {
 }
 
 
-QString Helper::split_string_to_widget(QString str, QWidget* w, QChar sep) {
-
-    QFontMetrics fm(w->font());
-
-    int width = w->width();
-
-
-    QString subtext = str;
-    QStringList lst;
-
-    while(fm.width(subtext) > width) {
-        int textsize = fm.width(subtext);
-        double scale = (width * 1.0) / textsize;
-        int idx = subtext.size() * scale - 2;
-        if(idx < 0) idx = 0;
-
-        while(idx < subtext.size() && idx >= 0 && subtext.at(idx) != sep) {
-            idx --;
-        }
-
-        if(idx >= 0) {
-
-            lst << subtext.left(idx+1);
-            subtext = subtext.right(subtext.size() - idx);
-        }
-
-        else
-            break;
-
-    }
-
-    lst << subtext;
-    return lst.join("<br />");
-}
-
 bool Helper::is_url(const QString& str) {
     if(is_www(str)) return true;
     if(str.startsWith("file"), Qt::CaseInsensitive) return true;
@@ -704,7 +660,7 @@ bool Helper::is_file(const QString& filename) {
 
 QString Helper::get_album_w_disc(const MetaData& md) {
 
-    if(md.album_id <= 0){
+	if(md.album_id < 0){
         return md.album.trimmed();
     }
 
@@ -805,20 +761,9 @@ QString Helper::get_newest_version() {
     QString str;
     WebAccess::read_http_into_str("http://sayonara.luciocarreras.de/newest", &str);
     return str;
-
 }
 
 
-void Helper::set_deja_vu_font(QWidget* w, int font_size) {
-    QFont f = w->font();
-    f.setFamily("DejaVu Sans");
-    if(font_size > 0) {
-        f.setPixelSize(font_size);
-    }
-    f.setStyleStrategy(QFont::PreferAntialias);
-    f.setHintingPreference(QFont::PreferNoHinting);
-    w->setFont(f);
-}
 
 void Helper::set_bin_path(const QString& str) {
 
@@ -827,4 +772,44 @@ void Helper::set_bin_path(const QString& str) {
     _install_path = d.absolutePath();
     qDebug() << "Install path in " << _install_path;
 
+}
+
+
+QString Helper::get_location_from_ip(const QString& ip){
+
+	bool success;
+	QString content;
+	QString url = QString("http://freegeoip.net/xml/") + ip;
+
+	success = WebAccess::read_http_into_str(url, &content);
+
+	if(success){
+		QString country = Helper::easy_tag_finder("Response.CountryName", content);
+
+		QString city = Helper::easy_tag_finder("Response.City", content);
+
+		QString ret = "";
+
+		if(!city.isEmpty()){
+			ret = city;
+		}
+
+		if(!country.isEmpty()){
+			ret += ", " + country;
+		}
+
+		if(ret.startsWith(",")){
+			ret.remove(0, 2);
+		}
+
+		qDebug() << "Return " << ret;
+		return ret;
+	}
+
+	return "";
+}
+
+
+void Helper::sleep_ms(unsigned long ms){
+	_Sleeper::sleep_ms(ms);
 }

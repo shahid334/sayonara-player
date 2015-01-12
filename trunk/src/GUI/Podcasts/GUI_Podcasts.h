@@ -28,7 +28,6 @@
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "HelperStructs/MetaData.h"
 
-#include <QWidget>
 #include <QMap>
 
 
@@ -37,8 +36,8 @@ class GUI_Podcasts : public PlayerPlugin, private Ui::GUI_Podcasts
     Q_OBJECT
 
 signals:
-    void sig_create_playlist(MetaDataList&, bool);
-    void sig_play_track(int, qint32, bool);
+	void sig_create_playlist(const MetaDataList&);
+	void sig_play_track(int);
     void sig_close_event();
 
 private slots:
@@ -49,9 +48,9 @@ private slots:
     void delete_clicked();
     void save_clicked();
 
-
 public slots:
     void language_changed();
+
 public:
 	GUI_Podcasts(QString name, QWidget *parent = 0);
     virtual ~GUI_Podcasts();
@@ -59,7 +58,6 @@ public:
 
 private:
 
-    void init_gui();
     QMap<QString, QString> _podcasts;
     int _cur_podcast;
     QString _cur_podcast_name;
@@ -67,8 +65,6 @@ private:
 
     void setup_podcasts(const QMap<QString, QString>&);
     void play_podcasts(QString url, QString name);
-
-
 
 };
 

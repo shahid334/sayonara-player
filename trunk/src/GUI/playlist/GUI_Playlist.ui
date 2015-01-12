@@ -31,6 +31,11 @@
     <height>16777215</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>8</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -56,43 +61,41 @@
    <property name="spacing">
     <number>3</number>
    </property>
-   <item row="0" column="3">
-    <widget class="QPushButton" name="btn_clear">
+   <item row="4" column="3">
+    <widget class="QPushButton" name="btn_numbers">
      <property name="minimumSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>28</width>
+       <height>28</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>26</width>
-       <height>26</height>
+       <width>28</width>
+       <height>28</height>
       </size>
      </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
      <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
+      <enum>Qt::StrongFocus</enum>
      </property>
      <property name="toolTip">
-      <string>Clear Playlist</string>
+      <string>Show numbers in playlist</string>
      </property>
      <property name="text">
       <string/>
      </property>
      <property name="icon">
       <iconset>
-       <normaloff>../../../.designer/backup/icons/broom.png</normaloff>../../../.designer/backup/icons/broom.png</iconset>
+       <normaloff>:/icons/numbers.png</normaloff>:/icons/numbers.png</iconset>
      </property>
      <property name="iconSize">
       <size>
-       <width>24</width>
-       <height>24</height>
+       <width>20</width>
+       <height>20</height>
       </size>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
      </property>
      <property name="flat">
       <bool>true</bool>
@@ -102,56 +105,89 @@
    <item row="1" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="PlaylistView" name="listView">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
+      <widget class="PlaylistTabWidget" name="tw_playlists">
+       <property name="tabPosition">
+        <enum>QTabWidget::North</enum>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>167721</width>
-         <height>16777215</height>
-        </size>
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::NoEditTriggers</set>
-       </property>
-       <property name="tabKeyNavigation">
+       <property name="tabsClosable">
         <bool>true</bool>
        </property>
-       <property name="alternatingRowColors">
-        <bool>true</bool>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::ExtendedSelection</enum>
-       </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectRows</enum>
-       </property>
+       <widget class="QWidget" name="tab_pl1">
+        <attribute name="title">
+         <string>Playlist 1</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item row="0" column="0">
+          <widget class="PlaylistView" name="listView">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>167721</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="tabKeyNavigation">
+            <bool>true</bool>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QPushButton" name="btn_rep1">
@@ -167,13 +203,8 @@
          <height>28</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Repeat 1</string>
@@ -183,7 +214,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../icons/rep1.png</normaloff>../../../icons/rep1.png</iconset>
+         <normaloff>:/icons/rep1.png</normaloff>:/icons/rep1.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -216,13 +247,8 @@
          <height>28</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Repeat All</string>
@@ -232,7 +258,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../icons/repAll.png</normaloff>../../../icons/repAll.png</iconset>
+         <normaloff>:/icons/repAll.png</normaloff>:/icons/repAll.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -265,13 +291,8 @@
          <height>28</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Shuffle</string>
@@ -281,7 +302,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../icons/shuffle.png</normaloff>../../../icons/shuffle.png</iconset>
+         <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -314,13 +335,8 @@
          <height>28</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Append when adding new tracks</string>
@@ -330,7 +346,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../.designer/backup/icons/append.png</normaloff>../../../.designer/backup/icons/append.png</iconset>
+         <normaloff>:/icons/append.png</normaloff>:/icons/append.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -363,13 +379,8 @@
          <height>28</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Dynamic playing</string>
@@ -379,7 +390,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../../icons/dynamic.png</normaloff>../../../icons/dynamic.png</iconset>
+         <normaloff>:/icons/dynamic.png</normaloff>:/icons/dynamic.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -412,19 +423,18 @@
          <height>28</height>
         </size>
        </property>
-       <property name="font">
-        <font>
-         <family>DejaVu Sans</family>
-        </font>
-       </property>
        <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
+        <enum>Qt::StrongFocus</enum>
        </property>
        <property name="toolTip">
         <string>Gapless playback</string>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>:/icons/gapless.png</normaloff>:/icons/gapless.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -445,13 +455,46 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="1" colspan="2">
-    <spacer name="horizontalSpacer">
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
+   <item row="0" column="3">
+    <widget class="QPushButton" name="btn_clear">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="toolTip">
+      <string>Clear Playlist</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -463,52 +506,16 @@
      </property>
     </spacer>
    </item>
-   <item row="3" column="3">
-    <widget class="QPushButton" name="btn_numbers">
-     <property name="minimumSize">
-      <size>
-       <width>28</width>
-       <height>28</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>28</width>
-       <height>28</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>DejaVu Sans</family>
-      </font>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>Show numbers in playlist</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>20</width>
-       <height>20</height>
-      </size>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="3">
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLabel" name="lab_totalTime">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -523,8 +530,6 @@
        </property>
        <property name="font">
         <font>
-         <family>DejaVu Sans</family>
-         <pointsize>9</pointsize>
          <weight>75</weight>
          <bold>true</bold>
         </font>
@@ -537,14 +542,42 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QProgressBar" name="pb_download">
-       <property name="value">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
     </layout>
+   </item>
+   <item row="0" column="2">
+    <widget class="QPushButton" name="btn_new_tab">
+     <property name="minimumSize">
+      <size>
+       <width>24</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>26</width>
+       <height>26</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Create new Playlist</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -553,6 +586,12 @@
    <class>PlaylistView</class>
    <extends>QListView</extends>
    <header>GUI/playlist/view/PlaylistView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlaylistTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>GUI/playlist/PlaylistTabWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

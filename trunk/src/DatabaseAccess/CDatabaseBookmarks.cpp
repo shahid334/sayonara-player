@@ -20,23 +20,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QFile>
-#include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
 #include <QVariant>
-#include <QObject>
 #include <QSqlError>
 
-using namespace std;
-
-
 bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& bookmarks) {
-	if (!this -> _database->isOpen())
-			 this -> _database->open();
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	bookmarks.clear();
 
@@ -44,16 +37,16 @@ bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& b
 	q.prepare("SELECT name, timeidx FROM savedbookmarks WHERE trackid=:trackid;");
 	q.bindValue(":trackid", track_id);
 
-	if (!q.exec())
+	if (!q.exec()){
+		show_error( QString("Could not fetch bookmarks for track ") + QString::number(track_id), q);
 		return false;
+	}
 
-	else{
-		while(q.next()) {
-			QString name = q.value(0).toString();
-			quint32 bm = q.value(1).toUInt();
+	while(q.next()) {
+		QString name = q.value(0).toString();
+		quint32 bm = q.value(1).toUInt();
 
-			bookmarks.insert(bm, name);
-		}
+		bookmarks.insert(bm, name);
 	}
 
 	return true;
@@ -61,9 +54,8 @@ bool CDatabaseConnector::searchBookmarks(int track_id, QMap<quint32, QString>& b
 
 
 bool CDatabaseConnector::insertBookmark(int track_id, quint32 time, QString name) {
-	if (!this -> _database->isOpen())
-			 this -> _database->open();
 
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	q.prepare("INSERT INTO savedbookmarks (trackid, name, timeidx) VALUES(:trackid, :name, :timeidx);");
@@ -71,40 +63,45 @@ bool CDatabaseConnector::insertBookmark(int track_id, quint32 time, QString name
 	q.bindValue(":name", name);
 	q.bindValue(":timeidx", time);
 
-	if (!q.exec())
+	if (!q.exec()){
+		show_error("Cannot insert bookmarks", q);
 		return false;
+	}
 
 	return true;
 }
 
 
 bool CDatabaseConnector::removeBookmark(int track_id, quint32 time) {
-	if (!this -> _database->isOpen())
-			 this -> _database->open();
 
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	q.prepare("DELETE FROM savedbookmarks WHERE trackid=:trackid AND timeidx=:timeidx;");
 	q.bindValue(":trackid", track_id);
 	q.bindValue(":timeidx", time);
 
-	if (!q.exec())
+	if (!q.exec()){
+		show_error("Cannot remove bookmark", q);
 		return false;
+	}
 
 	return true;
 }
 
 
 bool CDatabaseConnector::removeAllBookmarks(int track_id) {
-	if (!this -> _database->isOpen())
-			 this -> _database->open();
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q (*_database);
 	q.prepare("DELETE FROM savedbookmarks WHERE trackid=:trackid;");
 	q.bindValue(":trackid", track_id);
 
-	if (!q.exec())
+	if (!q.exec()){
+		show_error("Cannot remove all bookmarks", q);
 		return false;
+	}
 
 	return true;
 }

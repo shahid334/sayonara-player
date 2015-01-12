@@ -41,6 +41,7 @@ struct PlaylistMode {
 	bool				dynamic;
 	bool				gapless;
 
+	bool				ui_rep1;
 	bool				ui_repAll;
 	bool				ui_append;
 	bool				ui_shuffle;
@@ -55,6 +56,7 @@ struct PlaylistMode {
 		shuffle = false;
 		gapless = false;
 
+		ui_rep1 = true;
 		ui_repAll = true;
 		ui_append = true;
 		ui_shuffle = true;
@@ -73,7 +75,7 @@ struct PlaylistMode {
 			
 	}
 
-	QString toString(){
+	QString toString() const {
 		QString str;
 		str += (append ? "1" : "0")  + QString(",");
 		str += (repAll ? "1" : "0")  + QString(",");

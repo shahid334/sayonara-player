@@ -24,8 +24,6 @@
 #include <QString>
 #include <QDebug>
 
-
-
 #define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
 #define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
 
@@ -56,7 +54,7 @@
 #define PLUGIN_NAME_STREAM tr("&Stream")
 #define PLUGIN_NAME_PODCASTS tr("P&odcasts")
 #define PLUGIN_NAME_EQUALIZER tr("&Equalizer")
-#define PLUGIN_NAME_PLAYLIST_CHOOSER tr("&Playlists")
+#define PLUGIN_NAME_PLAYLIST_CHOOSER tr("&PlaylistChooser")
 */
 
 #define GOOGLE_IMG_ICON QString("icon")
@@ -86,48 +84,6 @@
 							return &inst; \
 					}\
 
-
-namespace Sort {
-
-	enum SortOrder{
-		NoSorting=0,
-		ArtistNameAsc,
-		ArtistNameDesc,
-		ArtistTrackcountAsc,
-		ArtistTrackcountDesc,
-		AlbumNameAsc,
-		AlbumNameDesc,
-		AlbumYearAsc,
-		AlbumYearDesc,
-		AlbumTracksAsc,
-		AlbumTracksDesc,
-		AlbumDurationAsc,
-		AlbumDurationDesc,
-		AlbumRatingAsc,
-		AlbumRatingDesc,
-		TrackNumAsc,
-		TrackNumDesc,
-		TrackTitleAsc,
-		TrackTitleDesc,
-		TrackAlbumAsc,
-		TrackAlbumDesc,
-		TrackArtistAsc,
-		TrackArtistDesc,
-		TrackYearAsc,
-		TrackYearDesc,
-		TrackLenghtAsc,
-		TrackLengthDesc,
-		TrackBitrateAsc,
-		TrackBitrateDesc,
-		TrackSizeAsc,
-		TrackSizeDesc,
-		TrackDiscnumberAsc,
-		TrackDiscnumberDesc,
-		TrackRatingAsc,
-		TrackRatingDesc
-	};
-
-}
 
 
 enum PlaylistType{

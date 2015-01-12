@@ -29,12 +29,9 @@
 #include "CoverLookup/CoverFetchThread.h"
 #include "CoverLookup/CoverDownloader.h"
 
-
 #include <QDebug>
 #include <QFile>
 #include <QDir>
-
-
 
 CoverFetchThread::CoverFetchThread(QObject* parent, const CoverLocation& cl, const int n_covers) :
     QThread(parent),
@@ -52,6 +49,8 @@ CoverFetchThread::~CoverFetchThread() {
 
 
 int CoverFetchThread::run_single() {
+
+	if(_url.isEmpty()) return 0;
 
 	QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
 
@@ -85,6 +84,8 @@ int CoverFetchThread::run_single() {
 int CoverFetchThread::run_multi() {
 
 	int idx=0;
+	if(_url.isEmpty()) return 0;
+
     QStringList adresses = CoverDownloader::cov_call_and_parse(_url, _n_covers * 2);
 
     foreach(QString adress, adresses) {
@@ -138,8 +139,6 @@ void CoverFetchThread::run() {
     else {
         n_covers_found = run_multi();
     }
-
-
 
     if( n_covers_found >= _n_covers ) {
         emit sig_finished(true);

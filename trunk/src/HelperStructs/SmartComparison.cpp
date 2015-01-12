@@ -23,6 +23,8 @@
 #include "SmartComparison.h"
 #include <QFile>
 
+using namespace std;
+
 SmartComparison::SmartComparison()
 {
 

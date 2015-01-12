@@ -23,20 +23,20 @@
 #ifndef GSTPIPELINE_H
 #define GSTPIPELINE_H
 
-#include <QObject>
 #include <QString>
 #include <QTimer>
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
 
 #include "Engine/GStreamer/GSTEngineHelper.h"
+#include "HelperStructs/SayonaraClass.h"
 
 
 enum GSTFileMode{
 	GSTFileModeFile,
 	GSTFileModeHttp
-
 };
+
 
 bool
 _test_and_error(void* element, QString errorstr);
@@ -44,9 +44,13 @@ _test_and_error(void* element, QString errorstr);
 bool
 _test_and_error_bool(bool b, QString errorstr);
 
-class GSTAbstractPipeline : public QObject {
+
+class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 
 	Q_OBJECT
+
+	private:
+		bool		_about_to_finish;
 
 	protected:
 
@@ -54,13 +58,15 @@ class GSTAbstractPipeline : public QObject {
 		GstElement* _pipeline;
 		gchar*		_uri;
 
-		qint64		_duration;
-		qint64		_position;
+        qint64		_duration_ms;
+        qint64		_position_ms;
+
 
 	signals:
 		void sig_finished();
 		void sig_about_to_finish(qint64);
 		void sig_pos_changed_ms(qint64);
+		void sig_data(uchar*, quint64);
 
 
 	public slots:
@@ -68,19 +74,22 @@ class GSTAbstractPipeline : public QObject {
 		virtual void pause()=0;
 		virtual void stop()=0;
 
-		virtual qint64 get_duration_ms()=0;
-		virtual qint64 get_position_ms()=0;
-		virtual guint get_bitrate()=0;
+        virtual qint64 get_duration_ms() final;
+        virtual qint64 get_position_ms() final;
 		virtual void set_speed(float f);
 
+
 	public:
+		GSTAbstractPipeline(QObject* parent=0);
+
 		virtual GstElement* get_pipeline();
 		virtual GstBus*		get_bus();
 		virtual GstState	get_state();
-		virtual void		refresh_cur_position(gint64 cur_pos_ms);
-		virtual void		about_to_finish();
+		virtual void		refresh_position();
+		virtual void		refresh_duration();
 		virtual void		finished();
-
+		virtual void		check_about_to_finish();
+		virtual void		set_data(uchar* data, quint64 size);
 
 		virtual bool set_uri(gchar* uri);
 		virtual gchar* get_uri();
@@ -91,6 +100,7 @@ namespace PipelineCallbacks {
 
 	void pad_added_handler(GstElement *src, GstPad *new_pad, gpointer data);
 	gboolean show_position(gpointer data);
+	GstFlowReturn new_buffer(GstElement *sink, gpointer data);
 
 }
 

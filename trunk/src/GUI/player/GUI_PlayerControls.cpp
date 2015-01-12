@@ -26,34 +26,29 @@
 /** PLAYER BUTTONS **/
 void GUI_Player::playClicked(bool) {
 
+	bool playing = !m_playing;
     if(!m_metadata_available) {
-        emit sig_play();
-        return;
+		playing = true;
     }
 
-    if (m_playing) {
-        btn_play->setIcon(Helper::getIcon("play.png"));
-		emit sig_pause();
-	}
-
-    else {
-
-        btn_play->setIcon(Helper::getIcon("pause.png"));
+	if(playing){
 		emit sig_play();
 	}
 
-	m_playing = !m_playing;
-	m_trayIcon->setPlaying(m_playing);
+	else{
+		emit sig_pause();
+	}
+
+	psl_set_play(playing);
 }
 
 void GUI_Player::stopClicked(bool b) {
 
-
     btn_play->setIcon(Helper::getIcon("play.png"));
     m_trayIcon->setPlaying(false);
 	m_trayIcon->stop();
-	m_playing = false;
 
+	psl_set_play(false);
 
 	lab_title->hide();
 	lab_sayonara->show();
@@ -74,17 +69,14 @@ void GUI_Player::stopClicked(bool b) {
 	maxTime->setText("00:00");
 
 
+
 	this->setWindowTitle("Sayonara");
 
 	set_std_cover( false );
 
 	if(b) {
-		MetaData md;
-		m_settings->setLastTrack(md);
-
         emit sig_stop();
     }
-
 
 	if(btn_rec->isVisible() && btn_rec->isChecked()) {
 		btn_rec->setChecked(false);
@@ -96,9 +88,9 @@ void GUI_Player::stopClicked(bool b) {
 void GUI_Player::backwardClicked(bool) {
 
    // albumCover->setFocus();
-	int cur_pos_sec =  (m_completeLength_ms * songProgress->value()) / 100000;
+	int cur_pos_sec = (songProgress->value() * _md.length_ms) / (songProgress->maximum() * 100);
 	if(cur_pos_sec > 3) {
-        setProgressJump(0);
+		seek(0);
     }
 
     else{
@@ -122,64 +114,86 @@ void GUI_Player::sl_rec_button_toggled(bool b) {
 /** PROGRESS BAR **/
 void GUI_Player::total_time_changed(qint64 total_time) {
 
-	QString length_str = Helper::cvtMsecs2TitleLengthString(total_time, true);
-    m_completeLength_ms = total_time;
+	QString length_str = Helper::cvt_ms_to_string(total_time, true);
+	if(total_time == 0){
+		length_str = "";
+	}
+
 	maxTime->setText(length_str);
+	_md.length_ms = total_time;
+	songProgress->setEnabled(total_time > 0);
 }
+
+
+void GUI_Player::jump_forward_ms(){
+    emit sig_seek_rel_ms(10000);
+}
+
+void GUI_Player::jump_backward_ms(){
+    emit sig_seek_rel_ms(-10000);
+}
+
 
 
 void GUI_Player::jump_forward() {
 
-	int percent = songProgress->value();
-    percent += 2;
-    setProgressJump(percent);
-	songProgress->setValue(percent);
+	int val = songProgress->value();
+	val += (songProgress->maximum() / 50);
+	seek(val);
+	songProgress->setValue(val);
 
 }
 
 void GUI_Player::jump_backward() {
-	int percent = songProgress->value();
-    percent -= 2;
 
-    setProgressJump(percent);
-	songProgress->setValue(percent);
+	int val = songProgress->value();
+	val -= (songProgress->maximum() / 50);
+
+	seek(val);
+	songProgress->setValue(val);
 }
 
-void GUI_Player::setProgressJump(int percent) {
+void GUI_Player::seek(int val) {
 
-    if(percent > 100 || percent < 0) {
-        percent = 0;
+	int max = songProgress->maximum();
+	if(val > max || val < 0) {
+		val = 0;
     }
 
-    long cur_pos_ms = (percent * m_metadata.length_ms) / 100;
-    QString curPosString = Helper::cvtMsecs2TitleLengthString(cur_pos_ms);
+	double percent = (val * 1.0) / max;
+	quint64 cur_pos_ms =  (quint64) (percent * _md.length_ms);
+
+	QString curPosString = Helper::cvt_ms_to_string(cur_pos_ms);
+
 	curTime->setText(curPosString);
 
-	emit sig_seek_rel(percent);
+	emit sig_seek_rel( (int) (percent * 100) );
 }
 
-void GUI_Player::setCurrentPosition(quint32 pos_sec) {
+void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
-    if (m_completeLength_ms != 0) {
+	int max = songProgress->maximum();
 
-		int newSliderVal = (pos_sec * 100000) / (m_completeLength_ms);
+	if ( _md.length_ms != 0 ) {
 
-		if (!songProgress->isSearching() && newSliderVal < songProgress->maximum()) {
+		int new_slider_val = ( pos_sec * 1000.0 * max ) / (_md.length_ms);
 
-			songProgress->setValue(newSliderVal);
+		if ( !songProgress->isSearching() && new_slider_val < max ) {
+
+			songProgress->setValue(new_slider_val);
 		}
 	}
 
-	else if(pos_sec > m_completeLength_ms / 1000) {
+	else if(pos_sec > _md.length_ms / 1000) {
 		songProgress->setValue(0);
     }
 
 
 	if(!songProgress->isSearching()) {
 
-        if(m_completeLength_ms != 0 && pos_sec > m_completeLength_ms) pos_sec = 0;
+		if(_md.length_ms != 0 && (pos_sec * 1000) > _md.length_ms) pos_sec = 0;
 
-        QString curPosString = Helper::cvtMsecs2TitleLengthString(pos_sec * 1000);
+		QString curPosString = Helper::cvt_ms_to_string(pos_sec * 1000);
 		curTime->setText(curPosString);
     }
 
@@ -192,18 +206,13 @@ void GUI_Player::setCurrentPosition(quint32 pos_sec) {
 
 
 /** VOLUME **/
-void GUI_Player::setVolume(int vol) {
-	volumeSlider->setValue(vol);
-	setupVolButton(vol);
-	emit sig_volume_changed(vol);
-}
 
 void GUI_Player::volumeChanged(int volume_percent) {
 	setupVolButton(volume_percent);
 	volumeSlider->setValue(volume_percent);
-	emit sig_volume_changed(volume_percent);
 
-    m_settings->setVolume(volume_percent);
+	/// TODO: endless recursion??
+	_settings->set(Set::Engine_Vol, volume_percent);
 }
 
 void GUI_Player::volumeChangedByTick(int val) {
@@ -250,7 +259,7 @@ void GUI_Player::volumeLower() {
 
 void GUI_Player::setupVolButton(int percent) {
 
-    QString butFilename = Helper::getIconPath("vol_");
+	QString butFilename = "vol_";
 
     if (percent <= 1) {
         butFilename += QString("mute") + m_skinSuffix + ".png";
@@ -268,30 +277,24 @@ void GUI_Player::setupVolButton(int percent) {
 		butFilename += QString("3") + m_skinSuffix + ".png";
 	}
 
-	btn_mute->setIcon(QIcon(butFilename));
+	btn_mute->setIcon( Helper::getIcon(butFilename) );
 
 }
 
 void GUI_Player::muteButtonPressed() {
 
-	if (m_mute) {
+	m_mute = !m_mute;
 
-		setupVolButton(volumeSlider->value());
-		emit sig_volume_changed(volumeSlider->value());
+	int vol = 0;
+	if (!m_mute) {
+		vol = volumeSlider->value();
 	}
-
-	else {
-
-        setupVolButton(0);
-		emit sig_volume_changed(0);
-	}
-
-    m_mute = !m_mute;
 
 	volumeSlider->setDisabled(m_mute);
     m_trayIcon->setMute(m_mute);
+	setupVolButton(vol);
 
-	volumeSlider->update();
+	_settings->set(Set::Engine_Vol, vol);
 }
 
 /** VOLUME END **/

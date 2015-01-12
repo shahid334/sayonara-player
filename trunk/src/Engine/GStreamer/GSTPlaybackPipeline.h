@@ -43,30 +43,22 @@ public slots:
 	void pause();
 	void stop();
 
-	qint64 get_duration_ms();
-	qint64 get_position_ms();
-	guint get_bitrate();
-
 	gint64 seek_rel(float percent, gint64 ref_ns);
 	gint64 seek_abs(gint64 ns );
-
-	void set_volume(int vol);
-	int get_volume();
-
-	void enable_level(bool b);
-	void enable_spectrum(bool b);
 
 	void set_eq_band(QString band_name, double val);
 	void unmute();
 
 	void start_timer(qint64 ms);
 	void set_speed(float f);
+	void set_ready();
 
 
 private:
 
 	int			_vol;
 	bool		_speed_active;
+    float       _speed_val;
 
 	GstElement* _audio_src;
 	GstElement* _audio_convert;
@@ -75,30 +67,37 @@ private:
 	GstElement* _equalizer;
 
 	GstElement* _volume;
-	GstElement* _speed;
-
-
-	GstPad* _app_pad;
-	GstPad* _tee_app_pad;
 
 	GstElement* _audio_sink;
 	GstElement* _audio_bin;
 
-	GstPadTemplate* _tee_src_pad_template;
-
-	GstElement* _level_audio_convert, *_spectrum_audio_convert;
+	GstElement* _level_audio_convert, *_spectrum_audio_convert, *_lame_audio_convert;
 	GstElement* _level, *_spectrum;
 
-	GstPad*     _level_pad, *_spectrum_pad;
-	GstPad*     _tee_level_pad, *_tee_spectrum_pad;
-
 	GstElement* _level_sink, *_spectrum_sink;
-	GstElement* _level_queue, *_spectrum_queue;
+	GstElement* _level_queue, *_spectrum_queue, *_lame_queue;
 
+	GstElement* _lame;
+	GstElement* _resampler;
+	GstElement* _xingheader;
+	GstElement* _id3mux;
+	GstElement* _app_sink;
+	GstElement* _fake_sink;
 
 	GstElement* _tee;
 
 	QTimer* _timer;
+
+    bool _seek(gint64 ns);
+	bool tee_connect(GstPadTemplate* tee_src_pad_template, GstElement* queue, QString queue_name);
+	bool create_element(GstElement** elem, const gchar* elem_name, const gchar* name=NULL);
+
+
+protected slots:
+    virtual void _sl_broadcast_clients_changed();
+	virtual void _sl_vol_changed();
+	virtual void _sl_show_level_changed();
+	virtual void _sl_show_spectrum_changed();
 
 };
 

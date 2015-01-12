@@ -19,7 +19,6 @@
  */
 
 
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/Helper.h"
 #include "library/CLibraryBase.h"
 #include "HelperStructs/Tagging/id3.h"
@@ -30,22 +29,17 @@
 #include <QFileSystemWatcher>
 #include <QListWidget>
 
-CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
-    QObject(parent)
+CLibraryBase::CLibraryBase(QObject *parent) :
+	QObject(parent),
+	SayonaraClass()
 {
-    _main_window = main_window;
-
-    CSettingsStorage* settings = CSettingsStorage::getInstance();
     _db = CDatabaseConnector::getInstance();
 
-    m_library_path = settings->getLibraryPath();
+	_library_path = _settings->get(Set::Lib_Path);
 
     _reload_thread = new ReloadThread();
 
-    QList<int> sortings = settings->getLibSorting();
-    _artist_sortorder = (SortOrder) sortings[0];
-    _album_sortorder = (SortOrder) sortings[1];
-    _track_sortorder = (SortOrder) sortings[2];
+    _sortorder = _settings->get(Set::Lib_Sorting);
 
     _filter.by_searchstring = BY_FULLTEXT;
     _filter.filtertext = "";
@@ -54,6 +48,9 @@ CLibraryBase::CLibraryBase(QWidget* main_window, QObject *parent) :
     connect(_reload_thread, SIGNAL(sig_reloading_library(QString)), this, SLOT(library_reloading_state_slot(QString)));
     connect(_reload_thread, SIGNAL(sig_new_block_saved()), this, SLOT(library_reloading_state_new_block()));
     connect(_reload_thread, SIGNAL(finished()), this, SLOT(reload_thread_finished()));
+
+	REGISTER_LISTENER(Set::Lib_Sorting, _sl_sortorder_changed);
+	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 }
 
 
@@ -67,29 +64,25 @@ void CLibraryBase::emit_stuff() {
 
 
 
-void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so, SortOrder track_so) {
+void CLibraryBase::_sl_sortorder_changed() {
 
-	//qDebug() << "Library: Sortorder changed";
-
-    QList<int> lst;
-    lst << artist_so << album_so << track_so;
-    CSettingsStorage::getInstance()->setLibSorting(lst);
+    LibSortOrder so = _settings->get(Set::Lib_Sorting);
 
     // artist sort order has changed
-    if(artist_so != _artist_sortorder) {
+    if(so.so_artists != _sortorder.so_artists) {
 
-        _artist_sortorder = artist_so;
+        _sortorder = so;
         _vec_artists.clear();
 
         if(!_filter.cleared) {
-            _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
+            _db->getAllArtistsBySearchString(_filter, _vec_artists, so.so_artists);
         }
 
         else{
-            _db->getAllArtists(_vec_artists, _artist_sortorder);
+            _db->getAllArtists(_vec_artists, so.so_artists);
         }
 
-        for(uint i=0; i<_vec_artists.size(); i++) {
+        for(int i=0; i<_vec_artists.size(); i++) {
             _vec_artists[i].is_lib_selected = _selected_artists.contains(_vec_artists[i].id);
         }
 
@@ -98,27 +91,27 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 
 
     // album sort order has changed
-    if(album_so != _album_sortorder) {
+    if(so.so_albums != _sortorder.so_albums) {
 
-        _album_sortorder = album_so;
+        _sortorder = so;
         _vec_albums.clear();
 
         // selected artists and maybe filter
         if (_selected_artists.size() > 0) {
-            _db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _album_sortorder);
+            _db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, so.so_albums);
         }
 
         // only filter
         else if( !_filter.cleared ) {
-            _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
+            _db->getAllAlbumsBySearchString(_filter, _vec_albums, so.so_albums);
         }
 
         // all albums
         else{
-            _db->getAllAlbums(_vec_albums, _album_sortorder);
+            _db->getAllAlbums(_vec_albums, so.so_albums);
         }
 
-        for(uint i=0; i<_vec_albums.size(); i++) {
+        for(int i=0; i<_vec_albums.size(); i++) {
             _vec_albums[i].is_lib_selected = _selected_albums.contains(_vec_albums[i].id);
         }
 
@@ -127,128 +120,219 @@ void CLibraryBase::psl_sortorder_changed(SortOrder artist_so, SortOrder album_so
 
 
     // track sort order has changed
-    if(track_so != _track_sortorder) {
+    if(so.so_tracks != _sortorder.so_tracks) {
 
-        _track_sortorder = track_so;
+        _sortorder = so;
         _vec_md.clear();
 
         if(_selected_albums.size() > 0) {
-            _db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, _track_sortorder);
+            _db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, so.so_tracks);
         }
         else if(_selected_artists.size() > 0) {
-            _db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
+            _db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, so.so_tracks);
         }
 
         else if(!_filter.cleared) {
-            _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
+            _db->getAllTracksBySearchString(_filter, _vec_md, so.so_tracks);
         }
 
         else {
-            _db->getTracksFromDatabase(_vec_md, _track_sortorder);
+            _db->getTracksFromDatabase(_vec_md, so.so_tracks);
         }
 
-
-
-        for(uint i=0; i<_vec_md.size(); i++) {
+        for(int i=0; i<_vec_md.size(); i++) {
             _vec_md[i].is_lib_selected = _selected_tracks.contains(_vec_md[i].id);
         }
 
         emit sig_all_tracks_loaded(_vec_md);
-
     }
-
 }
-void CLibraryBase::refresh(bool b) {
 
-    if(b)
-        psl_filter_changed(_filter, true);
+void CLibraryBase::psl_metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new){
+
+	// check for new artists and albums
+	for(int i=0; i<v_md_old.size(); i++){
+		int new_artist_id = v_md_new[i].artist_id;
+		int new_album_id = v_md_new[i].album_id;
+
+		if( v_md_old[i].artist_id != new_artist_id ){
+			if( !_selected_artists.contains(new_artist_id) ){
+				_selected_artists << new_artist_id;
+			}
+		}
+
+		if( v_md_old[i].album_id != new_album_id){
+			if( !_selected_albums.contains(new_album_id) ){
+				_selected_albums << new_album_id;
+			}
+		}
+	}
+
+	refresh();
 }
+
+void CLibraryBase::refetch(){
+
+	_selected_albums.clear();
+	_selected_artists.clear();
+	_selected_tracks.clear();
+
+	_vec_albums.clear();
+	_vec_artists.clear();
+	_vec_md.clear();
+
+	_filter.cleared = true;
+	_filter.filtertext = "";
+
+	_db->getAllArtists(_vec_artists, _sortorder.so_artists);
+	_db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+	_db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
+
+	emit_stuff();
+}
+
+void CLibraryBase::refresh() {
+
+	QList<int> sel_artists, sel_albums, sel_tracks;
+	QList<int> sel_artists_idx, sel_albums_idx, sel_tracks_idx;
+
+	sel_artists = _selected_artists;
+	sel_albums = _selected_albums;
+	sel_tracks = _selected_tracks;
+
+	fetch_by_filter(_filter, true);
+
+	for(int i=0; i<_vec_artists.size(); i++){
+		if(sel_artists.contains(_vec_artists[i].id)) {
+			_vec_artists[i].is_lib_selected = true;
+			sel_artists_idx << i;
+		}
+	}
+
+	change_artist_selection(sel_artists_idx);
+
+	for(int i=0; i<_vec_albums.size(); i++){
+		if(sel_albums.contains(_vec_albums[i].id)) {
+			_vec_albums[i].is_lib_selected = true;
+			sel_albums_idx << i;
+		}
+	}
+
+	change_album_selection(sel_albums_idx);
+
+	for(int i=0; i<_vec_md.size(); i++){
+		if(sel_tracks.contains(_vec_md[i].id)) {
+			_vec_md[i].is_lib_selected = true;
+			sel_tracks_idx << i;
+		}
+	}
+
+	emit_stuff();
+
+	if(sel_tracks_idx.size() > 0){
+		MetaDataList v_md = change_track_selection(sel_tracks_idx);
+
+		if(v_md.size() > 0){
+			emit sig_track_mime_data_available(v_md);
+		}
+	}
+}
+
+void CLibraryBase::fetch_by_filter(const Filter& filter, bool force){
+
+	if( _filter.cleared &&
+		filter.cleared &&
+		filter.filtertext.size() < 5 &&
+		(_selected_artists.size() == 0) &&
+		(_selected_albums.size() == 0) &&
+		!force) return;
+
+	_filter = filter;
+
+	_vec_albums.clear();
+	_vec_artists.clear();
+	_vec_md.clear();
+
+	_selected_albums.clear();
+	_selected_artists.clear();
+
+
+	if(_filter.cleared) {
+
+		_db->getAllArtists(_vec_artists, _sortorder.so_artists);
+		_db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+		_db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
+	}
+
+	else {
+		_db->getAllArtistsBySearchString(_filter, _vec_artists, _sortorder.so_artists);
+		_db->getAllAlbumsBySearchString(_filter, _vec_albums, _sortorder.so_albums);
+		_db->getAllTracksBySearchString(_filter, _vec_md, _sortorder.so_tracks);
+	}
+}
+
 
 void CLibraryBase::psl_filter_changed(const Filter& filter, bool force) {
 
 	//qDebug() << "Library: Filter changed";
-
-    if(     _filter.cleared &&
-            filter.cleared &&
-            filter.filtertext.size() < 5 &&
-            (_selected_artists.size() == 0) &&
-            (_selected_albums.size() == 0) &&
-            !force) return;
-
-    _filter = filter;
-
-    _vec_albums.clear();
-    _vec_artists.clear();
-    _vec_md.clear();
-
-    _selected_albums.clear();
-    _selected_artists.clear();
-
-
-    if(_filter.cleared) {
-
-        _db->getAllArtists(_vec_artists, _artist_sortorder);
-        _db->getAllAlbums(_vec_albums, _album_sortorder);
-        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
-
-    }
-
-    else {
-        _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
-        _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
-        _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
-
-    }
-
+	fetch_by_filter(filter, force);
     emit_stuff();
+}
 
 
+void CLibraryBase::change_artist_selection(const QList<int>& idx_list){
+
+	//qDebug() << "Library: Selected artists changed";
+
+	QList<int> selected_artists;
+
+	foreach(int idx, idx_list) {
+		Artist artist = _vec_artists[idx];
+		selected_artists << artist.id;
+	}
+
+	if(selected_artists == _selected_artists && _selected_albums.size() == 0) {
+
+		restore_album_selection(_selected_albums);
+		restore_track_selection(_selected_tracks);
+
+		emit sig_all_albums_loaded(_vec_albums);
+		emit sig_all_tracks_loaded(_vec_md);
+		return;
+	}
+
+	_vec_albums.clear();
+	_vec_md.clear();
+
+	_selected_artists = selected_artists;
+
+	if(_selected_artists.size() > 0) {
+		_db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _sortorder.so_tracks);
+		_db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _sortorder.so_albums);
+	}
+
+	else if(!_filter.cleared) {
+		_db->getAllTracksBySearchString(_filter, _vec_md, _sortorder.so_tracks);
+		_db->getAllAlbumsBySearchString(_filter, _vec_albums, _sortorder.so_albums);
+		_db->getAllArtistsBySearchString(_filter, _vec_artists, _sortorder.so_artists);
+	}
+
+	else{
+		_db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
+		_db->getAllAlbums(_vec_albums, _sortorder.so_albums);
+	}
+
+	restore_album_selection(_selected_albums);
+	restore_track_selection(_selected_tracks);
 }
 
 
 void CLibraryBase::psl_selected_artists_changed(const QList<int>& idx_list) {
 
-	//qDebug() << "Library: Selected artists changed";
+	change_artist_selection(idx_list);
 
-    QList<int> selected_artists;
-
-    foreach(int idx, idx_list) {
-        Artist artist = _vec_artists[idx];
-        selected_artists << artist.id;
-    }
-
-    if(selected_artists == _selected_artists && _selected_albums.size() == 0) {
-        emit sig_all_albums_loaded(_vec_albums);
-        emit sig_all_tracks_loaded(_vec_md);
-    }
-
-    _vec_albums.clear();
-    _vec_md.clear();
-
-    _selected_artists = selected_artists;
-
-    if(_selected_artists.size() > 0) {
-        _db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
-        _db->getAllAlbumsByArtist(_selected_artists, _vec_albums, _filter, _album_sortorder);
-    }
-
-    else if(!_filter.cleared) {
-        _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
-        _db->getAllAlbumsBySearchString(_filter, _vec_albums, _album_sortorder);
-        _db->getAllArtistsBySearchString(_filter, _vec_artists, _artist_sortorder);
-    }
-
-    else{
-        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
-        _db->getAllAlbums(_vec_albums, _album_sortorder);
-    }
-
-    _selected_albums.clear();
-    _selected_tracks.clear();
-
-
-    emit sig_all_albums_loaded(_vec_albums);
-    emit sig_all_tracks_loaded(_vec_md);
+	emit sig_all_albums_loaded(_vec_albums);
+	emit sig_all_tracks_loaded(_vec_md);
 }
 
 void CLibraryBase::psl_disc_pressed(int disc) {
@@ -268,98 +352,143 @@ void CLibraryBase::psl_disc_pressed(int disc) {
     emit sig_all_tracks_loaded(_vec_md);
 }
 
+void CLibraryBase::change_album_selection(const QList<int>& idx_list){
+
+	QList<int> selected_albums;
+
+	foreach(int idx, idx_list) {
+		Album album = _vec_albums[idx];
+		_selected_albums << album.id;
+	}
+
+	if(selected_albums == _selected_albums) return;
+
+	_vec_md.clear();
+	_selected_albums = selected_albums;
+
+	foreach(int idx, idx_list) {
+
+		Album album = _vec_albums[idx];
+		_selected_albums << album.id;
+	}
+
+	// only show tracks of selected album / artist
+	if(_selected_artists.size() > 0) {
+		MetaDataList v_md;
+		if(_selected_albums.size() > 0) {
+			_db->getAllTracksByAlbum(_selected_albums, v_md, _filter, _sortorder.so_tracks);
+
+			// filter by artist
+			foreach(MetaData md, v_md) {
+				if(_selected_artists.contains(md.artist_id))
+					_vec_md.push_back(md);
+			}
+		}
+
+		else
+			_db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _sortorder.so_tracks);
+	}
+
+	// only album is selected
+	else if(_selected_albums.size() > 0) {
+		_db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, _sortorder.so_tracks);
+	}
+
+	// neither album nor artist, but searchstring
+	else if(!_filter.cleared) {
+		_db->getAllTracksBySearchString(_filter, _vec_md, _sortorder.so_tracks);
+	}
+
+	// no album, no artist, no searchstring
+	else{
+		_db->getTracksFromDatabase(_vec_md, _sortorder.so_tracks);
+	}
+
+	restore_track_selection(_selected_tracks);
+}
+
 void CLibraryBase::psl_selected_albums_changed(const QList<int>& idx_list) {
 
-
-    QList<int> selected_albums;
-
-    foreach(int idx, idx_list) {
-        Album album = _vec_albums[idx];
-        _selected_albums << album.id;
-    }
-
-    if(selected_albums == _selected_albums) return;
-
-    _vec_md.clear();
-
-    _selected_albums = selected_albums;
-
-    foreach(int idx, idx_list) {
-
-        Album album = _vec_albums[idx];
-        _selected_albums << album.id;
-    }
-
-
-    // only show tracks of selected album / artist
-    if(_selected_artists.size() > 0) {
-        MetaDataList v_md;
-        if(_selected_albums.size() > 0) {
-            _db->getAllTracksByAlbum(_selected_albums, v_md, _filter, _track_sortorder);
-
-            // filter by artist
-            foreach(MetaData md, v_md) {
-                if(_selected_artists.contains(md.artist_id))
-                    _vec_md.push_back(md);
-            }
-        }
-
-        else
-            _db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _track_sortorder);
-    }
-
-    // only album is selected
-    else if(_selected_albums.size() > 0) {
-        _db->getAllTracksByAlbum(_selected_albums, _vec_md, _filter, _track_sortorder);
-    }
-
-    // neither album nor artist, but searchstring
-    else if(!_filter.cleared) {
-        _db->getAllTracksBySearchString(_filter, _vec_md, _track_sortorder);
-    }
-
-    // no album, no artist, no searchstring
-    else{
-        _db->getTracksFromDatabase(_vec_md, _track_sortorder);
-    }
-
-
-    QList<int> new_selected_tracks;
-    for(uint i=0; i<_vec_md.size(); i++) {
-        if(!_selected_tracks.contains(_vec_md[i].id)) continue;
-        _vec_md[i].is_lib_selected = true;
-        new_selected_tracks << _vec_md[i].id;
-    }
-
-    _selected_tracks = new_selected_tracks;
-
-
+	change_album_selection(idx_list);
     emit sig_all_tracks_loaded(_vec_md);
 }
 
+MetaDataList CLibraryBase::change_track_selection(const QList<int>& idx_list){
+
+	_selected_tracks.clear();
+
+	MetaDataList v_md;
+
+	foreach(int idx,idx_list) {
+		const MetaData& md = _vec_md[idx];
+		v_md.push_back(md);
+		_selected_tracks << md.id;
+	}
+
+	return v_md;
+}
 
 void CLibraryBase::psl_selected_tracks_changed(const QList<int>& idx_list) {
 
-					_selected_tracks.clear();
-
-    MetaDataList v_md;
-
-    foreach(int idx,idx_list) {
-        MetaData md = _vec_md[idx];
-        v_md.push_back(md);
-        _selected_tracks << md.id;
-    }
-
-    emit sig_track_mime_data_available(v_md);
+	MetaDataList v_md =	change_track_selection(idx_list);
+	if(v_md.size() > 0){
+		emit sig_track_mime_data_available(v_md);
+	}
 }
 
 
-void CLibraryBase::psl_track_time_changed(MetaData& md) {
+void CLibraryBase::restore_artist_selection(const QList<int>& old_selected_idx){
+
+	QList<int> new_selected_artists;
+	for(int i=0; i<_vec_artists.size(); i++) {
+		if(!_selected_artists.contains(_vec_artists[i].id)) continue;
+		_vec_artists[i].is_lib_selected = true;
+		new_selected_artists << _vec_artists[i].id;
+	}
+
+	_selected_artists = new_selected_artists;
+}
+
+
+void CLibraryBase::restore_album_selection(const QList<int>& old_selected_idx){
+
+	QList<int> new_selected_albums;
+	for(int i=0; i<_vec_albums.size(); i++) {
+		if(!_selected_albums.contains(_vec_albums[i].id)) continue;
+		_vec_albums[i].is_lib_selected = true;
+		new_selected_albums << _vec_albums[i].id;
+	}
+
+	_selected_albums = new_selected_albums;
+
+}
+
+
+void CLibraryBase::restore_track_selection(const QList<int>& old_selected_idx){
+
+	QList<int> new_selected_tracks;
+	for(int i=0; i<_vec_md.size(); i++) {
+		if(!old_selected_idx.contains(_vec_md[i].id)) continue;
+
+		qDebug() << "Restore tracks: " << i;
+		_vec_md[i].is_lib_selected = true;
+		new_selected_tracks << _vec_md[i].id;
+	}
+
+	_selected_tracks = new_selected_tracks;
+}
+
+void CLibraryBase::psl_md_changed(const MetaData& md) {
 
     if(md.id < 0) return;
 
+	if(_old_md.length_ms == md.length_ms) return;
+
+	_old_md = md;
     _db->updateTrack(md);
+
     emit_stuff();
+	refresh();
 }
 
 void CLibraryBase::psl_change_id3_tags(const QList<int>& lst) {
@@ -381,12 +510,9 @@ void CLibraryBase::psl_change_id3_tags(const QList<int>& lst) {
 }
 
 
-
-void CLibraryBase::setLibraryPath(QString path) {
-
-    m_library_path = path;
+void CLibraryBase::_sl_libpath_changed(){
+	_library_path = _settings->get(Set::Lib_Path);
 }
-
 
 
 void CLibraryBase::psl_prepare_artist_for_playlist(int idx) {

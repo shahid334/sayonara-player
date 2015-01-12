@@ -27,13 +27,12 @@
 #include "HelperStructs/Style.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "HelperStructs/PodcastParser/PodcastParser.h"
+#include <QMessageBox>
 
 #include <QIcon>
 #include <QPixmap>
 #include <QMap>
 #include <QInputDialog>
-#include <QMessageBox>
-
 
 GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
@@ -42,8 +41,6 @@ GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-    init_gui();
-
     _cur_podcast = -1;
 
     QMap<QString, QString> data;
@@ -51,8 +48,6 @@ GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
 	if(data.size() > 0){
 		setup_podcasts(data);
 	}
-
-    btn_listen->setIcon(Helper::getIcon("play.png"));
 
 	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
@@ -120,13 +115,6 @@ void GUI_Podcasts::setup_podcasts(const QMap<QString, QString>& podcasts) {
 	btn_listen->setEnabled(false);
 	btn_save->setEnabled(false);
 	btn_delete->setEnabled(false);
-}
-
-
-void GUI_Podcasts::init_gui() {
-    btn_delete->setIcon(Helper::getIcon("delete.png"));
-    btn_save->setIcon(Helper::getIcon("save.png"));
-    lab_icon->setPixmap(Helper::getPixmap("podcast.png", lab_icon->size(), false));
 }
 
 
@@ -214,13 +202,12 @@ void GUI_Podcasts::delete_clicked() {
     if(_cur_podcast == -1) return;
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
-    QMessageBox msgBox(this);
+	QMessageBox msgBox(this);
     QString ask = tr("Really wanna delete %1?").arg(_cur_podcast_name);
     msgBox.setText(ask );
     msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);
-    Helper::set_deja_vu_font(&msgBox);
 
     int ret = msgBox.exec();
     if(ret == QMessageBox::Yes) {
@@ -298,7 +285,7 @@ void  GUI_Podcasts::play_podcasts(QString url, QString name) {
 
     if(v_md.size() == 0) return;
 
-    emit sig_create_playlist(v_md, true);
-    emit sig_play_track(0, 0, true);
+	emit sig_create_playlist(v_md);
+	emit sig_play_track(0);
 
 }

@@ -20,20 +20,13 @@
 
 
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/Helper.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include <QFile>
 #include <QDir>
-#include <QDebug>
 #include <QSqlQuery>
-#include <QVariant>
-#include <QObject>
 #include <QSqlError>
-#include <HelperStructs/CSettingsStorage.h>
-#include <HelperStructs/Helper.h>
-
-
-#include <cstdlib>
 
 
 CDatabaseConnector* CDatabaseConnector::getInstance() {
@@ -41,7 +34,8 @@ CDatabaseConnector* CDatabaseConnector::getInstance() {
 	return &instance;
 }
 
-CDatabaseConnector::CDatabaseConnector()
+CDatabaseConnector::CDatabaseConnector() :
+	QObject()
 {
     _db_filename = Helper::getSayonaraPath() + "player.db";
 
@@ -126,18 +120,6 @@ bool CDatabaseConnector::createDB () {
         return success;
 }
 
-bool CDatabaseConnector::init_settings_storage() {
-    _settings = CSettingsStorage::getInstance();
-    if(_settings) {
-	        
-    	connect(_settings, SIGNAL(sig_save(QString, QVariant)), this, SLOT(store_setting(QString, QVariant)));
-    	connect(_settings, SIGNAL(sig_save_all()), this, SLOT(store_settings()));
-	return true;
-    }
-
-    else
-        return false;
-}
 
 bool CDatabaseConnector::openDatabase () {
     _database = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", _db_filename));
@@ -159,7 +141,7 @@ bool CDatabaseConnector::openDatabase () {
                 "PRAGMA page_size=4096;";
         q.prepare(text);
         qDebug() << "Case sensitive like: " << q.exec();
-        _settings = CSettingsStorage::getInstance();
+
     	apply_fixes();
     }
 
@@ -177,9 +159,8 @@ void CDatabaseConnector::closeDatabase() {
     for(int i = 0; i < connectionList.count(); ++i) {
         QSqlDatabase::removeDatabase(connectionList[i]);
     }
-    
 
-    _database = 0;
+	_database = 0;
 
 }
 
@@ -191,35 +172,41 @@ CDatabaseConnector::~CDatabaseConnector() {
 }
 
 bool CDatabaseConnector::check_and_drop_table(QString tablename) {
-    DB_TRY_OPEN(_database);
-    DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q(*_database);
     QString querytext = "DROP TABLE " +  tablename + ";";
     q.prepare(querytext);
-    return q.exec();
+
+	if(!q.exec()){
+		show_error(QString("Cannot drop table ") + tablename, q);
+		return false;
+	}
+
+	return true;
 }
 
 bool CDatabaseConnector::check_and_insert_column(QString tablename, QString column, QString sqltype) {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
     QString querytext = "SELECT " + column + " FROM " + tablename + ";";
     q.prepare(querytext);
 
-
-
     if(!q.exec()) {
-        qDebug() << "DB: Could not find " << column << " in " << tablename << ": inserting it";
 
         QSqlQuery q2 (*_database);
         querytext = "ALTER TABLE " + tablename + " ADD COLUMN " + column + " " + sqltype + ";";
         q2.prepare(querytext);
-        bool success = q2.exec();
-        qDebug() << (success ? "Success" : "Fail");
-        return success;
+
+		if(!q2.exec()){;
+			show_error(QString("Cannot insert column ") + column + " into " + tablename, q);
+			return false;
+		}
+
+		return true;
     }
 
     return true;
@@ -227,7 +214,6 @@ bool CDatabaseConnector::check_and_insert_column(QString tablename, QString colu
 
 bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_create_str) {
 
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
     QSqlQuery q (*_database);
@@ -235,10 +221,13 @@ bool CDatabaseConnector::check_and_create_table(QString tablename, QString sql_c
     q.prepare(querytext);
 
     if(!q.exec()) {
-        qDebug() << "DB: Table " << tablename << " does not exist: creating...";
+
         QSqlQuery q2 (*_database);
         q2.prepare(sql_create_str);
-        return q2.exec();
+
+		if(!q2.exec()){
+			show_error(QString("Cannot create table ") + tablename, q);
+		}
     }
 
     return true;
@@ -259,7 +248,9 @@ bool CDatabaseConnector::updateAlbumCissearch() {
         q.bindValue(":cissearch", album.name.toLower());
         q.bindValue(":id", album.id);
 
-        q.exec();
+		if(!q.exec()){
+			show_error("Cannot update album cissearch", q);
+		}
     }
 
     return true;
@@ -276,7 +267,10 @@ bool CDatabaseConnector::updateArtistCissearch() {
         q.prepare(str);
         q.bindValue(":cissearch", artist.name.toLower());
         q.bindValue(":id", artist.id);
-        q.exec();
+
+		if(!q.exec()){
+			show_error("Cannot update artist cissearch", q);
+		}
     }
 
     return true;
@@ -295,12 +289,16 @@ bool CDatabaseConnector::updateTrackCissearch() {
 
 bool CDatabaseConnector::apply_fixes() {
 
-
-    DB_TRY_OPEN(_database);
     DB_RETURN_NOT_OPEN_BOOL(_database);
 
-    int version = load_setting_int("version", 0);
-	if(version == 7) return true;
+	QString str_version;
+	int version;
+	bool success;
+
+	success = load_setting("version", str_version);
+	version = str_version.toInt(&success);
+
+	if(version == 7 || !success) return true;
 
     qDebug() << "Apply fixes";
 
@@ -370,12 +368,12 @@ bool CDatabaseConnector::apply_fixes() {
                 ");";
 
         bool success = check_and_create_table("VisualStyles", create_vis_styles);
-        if(success) store_setting("version", 4);
+		if(success) store_setting("version", 4);
     }
 
     if(version < 5) {
         bool success = check_and_insert_column("tracks", "rating", "integer");
-        if(success) store_setting("version", 5);
+		if(success) store_setting("version", 5);
     }
 
 	if(version < 6) {
@@ -399,4 +397,11 @@ bool CDatabaseConnector::apply_fixes() {
 
 
 	return true;
+}
+
+
+void CDatabaseConnector::show_error(const QString& error_str, const QSqlQuery& q) const {
+	qDebug() << "SQL ERROR: " << error_str;
+	qDebug() << q.lastError();
+	qDebug() << _database->lastError();
 }

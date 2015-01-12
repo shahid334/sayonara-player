@@ -19,7 +19,7 @@
  */
 
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
-#include "HelperStructs/CSettingsStorage.h"
+
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/Style.h"
 
@@ -29,12 +29,15 @@
 #include <QMessageBox>
 
 
-GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
-	QDialog(parent),
+GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy_enabled) :
+	SayonaraDialog(parent),
 	Ui::ImportFolder()
 {
-
 	setupUi(this);
+
+	_ui_tag_edit = new GUI_TagEdit(tag_edit, this);
+
+	tw_tabs->addTab(_ui_tag_edit, tr("Edit"));
 
     _thread_active = false;
 
@@ -45,9 +48,8 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
 	combo_folders->setVisible(copy_enabled);
 	lab_target_path->setVisible(copy_enabled);
 	lab_target_info->setVisible(copy_enabled);
-    lab_img->setPixmap(Helper::getPixmap("import.png", QSize(100, 100), false));
 
-    QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
+	QString libpath = _settings->get(Set::Lib_Path);
 	lab_target_path->setText( libpath );
 
 	connect(btn_ok, SIGNAL(clicked()), this, SLOT(bb_accepted()));
@@ -55,14 +57,13 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
 	connect(btn_choose_dir, SIGNAL(clicked()), this, SLOT(choose_dir()));
 	connect(btn_cancel, SIGNAL(clicked()), this, SLOT(bb_rejected()));
 
-
 	pb_progress->setValue(0);
 	pb_progress->setVisible(false);
 
 	setModal(true);
 
-    bool dark = (CSettingsStorage::getInstance()->getPlayerStyle() == 1);
-    changeSkin(dark);
+	int style = _settings->get(Set::Player_Style);
+	changeSkin( style == 1);
 }
 
 
@@ -80,10 +81,36 @@ void GUI_ImportFolder::set_folderlist(const QStringList& lst) {
 	combo_folders->addItems(lst);
 }
 
-void GUI_ImportFolder::set_status(QString str) {
+void GUI_ImportFolder::set_status(int status) {
+
 	pb_progress->hide();
 	lab_status->show();
-	lab_status->setText(str);
+
+	tw_tabs->setCurrentIndex(0);
+	tw_tabs->setTabEnabled(1, false );
+
+	switch(status){
+		case IMPORT_DIALOG_CACHING:
+			lab_status->setText(tr("Loading tracks..."));
+			break;
+
+		case IMPORT_DIALOG_CANCELLED:
+			lab_status->setText(tr("Cancelled"));
+			break;
+
+		case IMPORT_DIALOG_NO_TRACKS:
+			lab_status->setText(tr("No tracks"));
+			break;
+
+		case IMPORT_DIALOG_ROLLBACK:
+			lab_status->setText(tr("Rollback"));
+			break;
+
+		default:
+			lab_status->setText(tr("%1 tracks available").arg(status));
+			tw_tabs->setTabEnabled(1, true);
+			break;
+	}
 }
 
 void GUI_ImportFolder::set_progress(int val) {
@@ -93,15 +120,15 @@ void GUI_ImportFolder::set_progress(int val) {
 		lab_status->hide();
     }
 
-    else
+	else{
 		pb_progress->hide();
+	}
 
 	pb_progress->setValue(val);
     if(val == 100) val = 0;
 }
 
 void GUI_ImportFolder::bb_accepted() {
-
 	emit sig_accepted(combo_folders->currentText().trimmed(), cb_copy2lib->isChecked());
 }
 
@@ -112,9 +139,10 @@ void GUI_ImportFolder::bb_rejected() {
 
 void GUI_ImportFolder::choose_dir() {
 
+	QString dir;
+	QString lib_path = _settings->get(Set::Lib_Path);
 
-    QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
-    QString dir = QFileDialog::getExistingDirectory(this, 
+	dir = QFileDialog::getExistingDirectory(this,
 		tr("Choose target directory"),
                 lib_path, QFileDialog::ShowDirsOnly);
 
@@ -135,19 +163,31 @@ void GUI_ImportFolder::choose_dir() {
 
 void GUI_ImportFolder::combo_box_changed(const QString& text) {
 
-    QString libpath = CSettingsStorage::getInstance()->getLibraryPath();
-	lab_target_path->setText( libpath + QDir::separator() + text );
+	QString lib_path = _settings->get(Set::Lib_Path);
+	lab_target_path->setText( lib_path + QDir::separator() + text );
 }
 
 void GUI_ImportFolder::set_thread_active(bool b) {
     _thread_active = b;
 
-    if(b)
+	if(b){
 		btn_cancel->setText(tr("Cancel"));
-    else
-		btn_cancel->setText(tr("Close"));
+	}
 
+	else{
+		btn_cancel->setText(tr("Close"));
+	}
 }
+
+void GUI_ImportFolder::show_info(const QString &str){
+	QMessageBox::information(this, tr("Info"), str);
+}
+
+void GUI_ImportFolder::show_warning(const QString &str){
+	QMessageBox::warning(this, tr("Warning"), str);
+}
+
+
 
 void GUI_ImportFolder::closeEvent(QCloseEvent* e) {
 
@@ -165,3 +205,5 @@ void GUI_ImportFolder::showEvent(QShowEvent* e) {
     emit sig_opened();
     e->accept();
 }
+
+

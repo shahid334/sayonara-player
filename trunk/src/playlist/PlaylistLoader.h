@@ -23,10 +23,9 @@
 #ifndef PLAYLISTLOADER_H
 #define PLAYLISTLOADER_H
 
-#include <QObject>
-#include "HelperStructs/CSettingsStorage.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class PlaylistLoader : public QObject
+class PlaylistLoader : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
@@ -34,14 +33,11 @@ public:
     void load_old_playlist();
     
 signals:
-    void sig_create_playlist(MetaDataList&, bool);
-    void sig_change_track(int, qint32, bool);
-    void sig_stop();
+	void sig_create_playlist(const MetaDataList&);
+	void sig_change_track(int);
     
 public slots:
 
-private:
-    CSettingsStorage* _settings;
     
 };
 

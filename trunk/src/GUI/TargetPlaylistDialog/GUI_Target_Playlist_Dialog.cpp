@@ -23,12 +23,10 @@
 #include "GUI/ui_GUI_Target_Playlist_Dialog.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
 #include "HelperStructs/Style.h"
-#include "HelperStructs/CSettingsStorage.h"
-
 #include <QFileDialog>
 
 GUI_Target_Playlist_Dialog::GUI_Target_Playlist_Dialog(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui_GUI_Target_Playlist_Dialog()
 {
 	setupUi(this);
@@ -42,9 +40,6 @@ GUI_Target_Playlist_Dialog::~GUI_Target_Playlist_Dialog() {
 }
 
 
-void GUI_Target_Playlist_Dialog::change_skin(bool dark) {
-
-}
 
 void GUI_Target_Playlist_Dialog::language_changed() {
 	retranslateUi(this);
@@ -53,9 +48,12 @@ void GUI_Target_Playlist_Dialog::language_changed() {
 
 
 void GUI_Target_Playlist_Dialog::search_button_clicked() {
+
+	QString lib_path = _settings->get(Set::Lib_Path);
+
     QString target_filename = QFileDialog::getSaveFileName(this,
                                                            tr("Choose target file"),
-                                                           CSettingsStorage::getInstance()->getLibraryPath(),
+															lib_path,
                                                            "*.m3u");
 
     if(!target_filename.endsWith("m3u", Qt::CaseInsensitive)) target_filename.append(".m3u");

@@ -23,18 +23,15 @@
 #ifndef STREAMRECORDER_H
 #define STREAMRECORDER_H
 
+#include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "Engine/GStreamer/StreamRipperBufferThread.h"
-
-
-#include <QObject>
 
 #include <gst/gst.h>
 #include <gst/gsturi.h>
 #include <gst/app/gstappsrc.h>
 
-class StreamRecorder : public QObject
+class StreamRecorder : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
@@ -77,7 +74,6 @@ private:
     QString    _sr_recording_dst;
 
     StreamRipperBufferThread* _sr_thread;
-    CSettingsStorage*         _settings;
 
     GstElement* _rec_src;
     GstElement* _rec_dst;

@@ -79,52 +79,86 @@ QString _correct_filepath(QString filepath, QString abs_path) {
 int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
 	QStringList list = file_content.split('\n');
 
-    MetaData ext_md;
+    QString artist;
+    QString title;
+    quint64 len_ms = 0;
+
 	foreach(QString line, list) {
-        qDebug() << "line = " << line;
 
-		// remove comments
-		int comment_idx=line.indexOf('#');
-		if(comment_idx >= 0)
-			line = line.mid(comment_idx, line.size() - comment_idx);
+        //qDebug() << "Line = " << line.trimmed();
 
-        if(line.trimmed().size() <= 0) continue;
+        line = line.trimmed();
+        if(line.startsWith("#EXTINF:", Qt::CaseInsensitive)) {
+            QStringList sl1;
 
-        if(line.toUpper().startsWith("#EXTINF:")) {
-            int first_comma = line.indexOf(",");
-            int space_after = line.indexOf(" - ", first_comma);
-            ext_md.artist = line.mid(first_comma + 1, space_after - first_comma);
-            ext_md.title = line.right(line.size() - (space_after + 3));
+            line.remove("#EXTINF:", Qt::CaseInsensitive);
+
+            sl1 = line.split(",");
+
+            if(sl1.size() > 0){
+                qint32 len = sl1[0].toInt();
+                if(len > 0){
+                    len_ms = (quint64) (len * 1000);
+                }
+            }
+
+            if(sl1.size() > 1){
+                QStringList sl2;
+                sl2 = sl1[1].split("-");
+                if(sl2.size() > 0){
+                    artist = sl2[0];
+                }
+
+                if(sl2.size() > 1){
+                    title = sl2[1];
+                }
+            }
+
+            continue;
+        }
+
+        if(line.trimmed().startsWith('#')) {
             continue;
         }
 
         MetaData md;
-       /* if(ext_md.artist.size() > 0 || ext_md.title.size() > 0) md = ext_md;*/
 
         if( !Helper::is_www(line)) {
             md.filepath = _correct_filepath(line, abs_path);
 
             MetaData md_tmp = db->getTrackByPath(md.filepath);
 
-            if( md_tmp.id >= 0) v_md.push_back(md_tmp);
-            else if( md.filepath.size() > 0 && ID3::getMetaDataOfFile(md) ) {
-				v_md.push_back(md);
+            if( md_tmp.id >= 0) {
+                v_md.push_back(md_tmp);
+            }
+
+            else if( !md.filepath.isEmpty() &&
+                     ID3::getMetaDataOfFile(md) ) {
+
+                v_md.push_back(md);
 			}
 		}
 
 		else {
 
-            if(md.artist.size() == 0)
+            if(md.artist.size() == 0 && artist.isEmpty()){
                 md.artist = line;
+            }
 
+            else{
+                md.artist = artist;
+            }
+
+            md.title = title;
             md.filepath = _correct_filepath(line, abs_path);
-
 			md.album = "";
+            md.length_ms = len_ms;
             v_md.push_back(md);
-		}
 
-        ext_md.artist = "";
-        ext_md.title = "";
+            artist = "";
+            title = "";
+            len_ms = 0;
+		}
 	}
 
 
@@ -251,7 +285,7 @@ int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path) {
 		track_idx = track_idx_str.toInt();
 		if( track_idx <= 0 ||
 			track_idx_str.size() == 0 ||
-			(uint)(track_idx - 1 ) >= v_md.size() ) continue;
+            (track_idx - 1 ) >= v_md.size() ) continue;
 
 		key = tmp_key.left(f_track_idx);
 
@@ -293,11 +327,11 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md) {
 		is_local_file = false;
 	}
 
-	else
+    else{
         success = Helper::read_file_into_str(playlist_file, &content);
+    }
 
 	if(!success) return 0;
-
 
 	if(is_local_file) {
 		int last_slash = playlist_file.lastIndexOf(QDir::separator());
@@ -314,7 +348,6 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md) {
 	}
 
 	else if(playlist_file.toLower().endsWith("pls")) {
-
 		parse_pls(content, v_md_tmp, abs_path);
 	}
 
@@ -322,16 +355,17 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md) {
 		parse_asx(content, v_md_tmp, abs_path);
 	}
 
-	for(uint i=0; i<v_md_tmp.size(); i++) {
+    for(int i=0; i<v_md_tmp.size(); i++) {
 
-		MetaData md = v_md_tmp[i];
+        const MetaData& md = v_md_tmp[i];
 
-		if( Helper::checkTrack(md) )
+        if( Helper::checkTrack(md) ){
 			v_md.push_back(md);
+        }
 
-		else
-			v_md_to_delete.push_back(md);
-
+        else{
+            v_md_to_delete.push_back(md);
+        }
 	}
 
 	CDatabaseConnector::getInstance()->deleteTracks(v_md_to_delete);

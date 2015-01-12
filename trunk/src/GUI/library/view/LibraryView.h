@@ -54,7 +54,7 @@ class LibraryView : public SearchableTableView{
 
 signals:
 
-    void sig_columns_changed(QStringList& );
+	void sig_columns_changed(QList<int>& );
 
     void sig_middle_button_clicked(const QPoint&);
     void sig_all_selected();
@@ -66,7 +66,6 @@ signals:
     void sig_sortorder_changed(Sort::SortOrder);
 
     void sig_no_disc_menu();
-    void sig_tab_pressed(bool);
     void sig_import_files(const QStringList&);
     void sig_double_clicked(const QList<int>&);
     void sig_sel_changed(const QList<int>&);
@@ -76,7 +75,7 @@ private slots:
     void rc_header_menu_changed(bool b=true);
     void rc_menu_show(const QPoint&);
     void sort_by_column(int);
-    void forbid_mimedata_destroyable();
+    void drag_deleted();
 
     void edit_clicked();
     void info_clicked();
@@ -96,7 +95,7 @@ public:
     LibraryView(QWidget* parent=0);
     virtual ~LibraryView();
 
-    void rc_header_menu_init(QStringList& lst);
+	void rc_header_menu_init(QList<int>& lst);
     void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
     void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
@@ -127,6 +126,7 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event);
 
 	void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+
 
 
 private:

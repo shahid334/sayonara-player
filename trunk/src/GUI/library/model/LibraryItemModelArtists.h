@@ -36,8 +36,6 @@
 #include <QList>
 
 
-
-
 class LibraryItemModelArtists : public LibraryItemModel {
 
 Q_OBJECT

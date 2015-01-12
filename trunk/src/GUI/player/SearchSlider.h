@@ -25,7 +25,6 @@
 #ifndef SEARCHSLIDER_H_
 #define SEARCHSLIDER_H_
 
-#include <QWidget>
 #include <QSlider>
 
 class SearchSlider: public QSlider {

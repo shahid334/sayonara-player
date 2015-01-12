@@ -32,8 +32,10 @@ class StdPlaylist : public Playlist
 private:
     int _last_track;
 
+
+
 public:
-    explicit StdPlaylist(QObject *parent);
+	explicit StdPlaylist(int idx, QObject *parent=0);
     
     virtual void play();
     virtual void pause();
@@ -43,16 +45,12 @@ public:
     virtual void next();
     virtual void change_track(int idx);
 
-    virtual void create_playlist(const MetaDataList& lst, bool start_playing=true);
-    virtual void create_playlist(const QStringList& lst, bool start_playing=true);
+	virtual void create_playlist(const MetaDataList& lst);
+	virtual void create_playlist(const QStringList& lst);
 
+	virtual void metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
-    virtual void metadata_changed(const MetaDataList& md_list);
-
-    virtual void save_for_reload();
     virtual void save_to_m3u_file(QString filepath, bool relative);
-    virtual bool request_playlist_for_collection(MetaDataList& lst);
-
     
 };
 

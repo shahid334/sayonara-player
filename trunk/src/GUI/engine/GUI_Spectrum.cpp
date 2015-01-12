@@ -22,7 +22,6 @@
 
 #include "GUI/engine/GUI_Spectrum.h"
 #include "HelperStructs/globals.h"
-#include "HelperStructs/CSettingsStorage.h"
 
 #include <QPainter>
 #include <QList>
@@ -40,7 +39,7 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-    _cur_style_idx = CSettingsStorage::getInstance()->getSpectrumStyle();
+	_cur_style_idx = _settings->get(Set::Spectrum_Style);
     _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
 
     for(int i=0; i<N_BINS; i++) {
@@ -187,9 +186,20 @@ void GUI_Spectrum::psl_style_update() {
 
    _ecsc->reload(width(), height());
    _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);
+   _settings->set(Set::Spectrum_Style, _cur_style_idx);
 
    resize_steps(N_BINS, _cur_style.n_rects);
 
    update();
 }
 
+
+void GUI_Spectrum::showEvent(QShowEvent* e){
+	_settings->set(Set::Engine_ShowSpectrum, true);
+	EnginePlugin::showEvent(e);
+}
+
+void GUI_Spectrum::closeEvent(QCloseEvent* e){
+	_settings->set(Set::Engine_ShowSpectrum, false);
+	EnginePlugin::closeEvent(e);
+}

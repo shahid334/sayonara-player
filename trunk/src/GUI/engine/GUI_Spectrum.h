@@ -38,6 +38,8 @@ public:
 
 protected:
     void paintEvent(QPaintEvent* e);
+	void showEvent(QShowEvent*);
+	void closeEvent(QCloseEvent*);
 
 protected slots:
     virtual void timed_out();

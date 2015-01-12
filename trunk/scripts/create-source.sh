@@ -6,9 +6,18 @@ REV=`svn info | grep Revision | tail -c 4`
 TARGET_FILENAME="sayonara-player-r${REV}"
 TARGET_PATH="/tmp/${TARGET_FILENAME}"
 
+ARG="b"
+if [ $# -ge 1 ] ; then
+	ARG=$1
+fi
+
 
 echo "Checking out..."
-svn export "https://sayonara-player.googlecode.com/svn/trunk" ${TARGET_PATH} 
+if [ $ARG = "a" ] ; then
+	svn export "https://sayonara-player.googlecode.com/svn/" ${TARGET_PATH} 
+else
+	svn export "https://sayonara-player.googlecode.com/svn/trunk" ${TARGET_PATH} 
+fi
 
 echo "Creating archive"
 

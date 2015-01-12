@@ -29,8 +29,6 @@ GUI_Speed::GUI_Speed(QString name, QWidget *parent) :
 {
 	setupUi(this);
 
-	lab_logo->setPixmap( Helper::getPixmap("speed.png", QSize(50,50), true) );
-
 	connect(sli_speed, SIGNAL(sliderMoved(int)), this, SLOT(slider_changed(int)));
 	connect(cb_active, SIGNAL(toggled(bool)), this, SLOT(active_changed(bool)));
 }

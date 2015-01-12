@@ -23,17 +23,24 @@
 #ifndef GUI_PLAYLISTENTRY_H
 #define GUI_PLAYLISTENTRY_H
 
-#include <QObject>
+
 #include <QFrame>
 #include <QWidget>
 #include "HelperStructs/MetaData.h"
+#include "HelperStructs/SayonaraClass.h"
 
-class GUI_PlaylistEntry : public QFrame {
+class GUI_PlaylistEntry : public QFrame, protected SayonaraClass {
 
     Q_OBJECT
 
 public:
-    GUI_PlaylistEntry(QWidget* parent){}
+	GUI_PlaylistEntry(QWidget* parent=0) :
+		QFrame(parent),
+		SayonaraClass()
+	{
+
+	}
+
     virtual ~GUI_PlaylistEntry(){}
 
     virtual  void setContent(const MetaData& md, int idx)=0;

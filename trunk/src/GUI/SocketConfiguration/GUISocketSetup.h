@@ -25,14 +25,11 @@
 #ifndef GUISOCKETSETUP_H_
 #define GUISOCKETSETUP_H_
 
+#include "HelperStructs/SayonaraClass.h"
 #include "GUI/ui_GUI_SocketSetup.h"
-#include "HelperStructs/CSettingsStorage.h"
-
-#include <QDialog>
-#include <QWidget>
 
 
-class GUI_SocketSetup: public QDialog, private Ui::SocketSetupDialog {
+class GUI_SocketSetup: public SayonaraDialog, private Ui::SocketSetupDialog {
 
 	Q_OBJECT
 
@@ -50,8 +47,6 @@ public:
 
 
 private:
-
-	CSettingsStorage* 		_db;
 
 	int 					_socket_from;
 	int 					_socket_to;

@@ -27,11 +27,12 @@
 #include <qplugin.h>
 
 
-GSTConvertEngine::GSTConvertEngine(QObject *parent)
+GSTConvertEngine::GSTConvertEngine(QObject *parent) :
+	Engine(parent)
 {
-	_settings = CSettingsStorage::getInstance();
+
 	_pipeline = new GSTConvertPipeline(this);
-	_name = CONVERT_ENGINE;
+    _name = CONVERT_ENGINE;
 
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 }
@@ -40,12 +41,13 @@ void GSTConvertEngine::init() {}
 
 
 // methods
-bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
+bool GSTConvertEngine::set_uri(const MetaData& md) {
 
 	// Gstreamer needs an URI
 	gchar* uri = NULL;
 	gchar* target_uri = NULL;
-	QString target_uri_str;
+
+	QString cvt_target_path;
 	bool success = false;
 
 	_playing_stream = Helper::is_www(md.filepath);
@@ -74,11 +76,11 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
 		filename = filename.left(idx);
 	}
 
-	filename = _settings->getConvertTgtPath() + "/" + filename + ".mp3";
-
+	cvt_target_path = _settings->get(Set::Engine_CovertTargetPath);
+	filename = cvt_target_path + "/" + filename + ".mp3";
 
 	target_uri = g_filename_from_utf8(filename.toUtf8(),
-							   filename.toUtf8().size(), NULL, NULL, NULL);
+				   filename.toUtf8().size(), NULL, NULL, NULL);
 
 	ENGINE_DEBUG << "Set Uri current pipeline: " << uri;
 	success = _pipeline->set_uri(uri);
@@ -90,28 +92,33 @@ bool GSTConvertEngine::set_uri(const MetaData& md, bool* start_play) {
 	return success;
 }
 
-void GSTConvertEngine::change_track(const MetaData& md, int pos_sec, bool start_play) {
+void GSTConvertEngine::change_track(const MetaData& md, bool start_play) {
+
+	Q_UNUSED(start_play);
 
 	stop();
 	_md = md;
-	emit sig_dur_changed_ms(_md.length_ms);
-	emit sig_pos_changed_s(0);
 
-	set_uri(md, &start_play);
+	emit sig_md_changed(_md);
+    emit sig_pos_changed_s(0);
+
+	set_uri(md);
 
 	play();
 
 }
 
-void GSTConvertEngine::change_track(const QString& str, int pos_sec, bool start_play) {
-
+void GSTConvertEngine::change_track(const QString& str, bool start_play) {
+	Q_UNUSED(str);
+	Q_UNUSED(start_play);
 }
 
 
 void GSTConvertEngine::play() {
 
+
 	_pipeline->play();
-	_state = StatePlay;
+
 	g_timeout_add(200, (GSourceFunc) PipelineCallbacks::show_position, this);
 }
 
@@ -123,8 +130,7 @@ void GSTConvertEngine::stop() {
 
 	_pipeline->stop();
 
-	_state = StateStop;
-	ID3::setMetaDataOfFile(_md_target);
+    ID3::setMetaDataOfFile(_md_target);
 }
 
 // public from Gstreamer Callbacks
@@ -133,6 +139,7 @@ void GSTConvertEngine::set_track_finished() {
 }
 
 void GSTConvertEngine::set_cur_position_ms(qint64 v) {
+
 	emit sig_pos_changed_s((quint32) v / 1000);
 }
 
@@ -151,6 +158,10 @@ void GSTConvertEngine::jump_abs_ms(quint64 v) {
 
 void GSTConvertEngine::jump_rel(quint32 v) {
 	Q_UNUSED(v);
+}
+
+void GSTConvertEngine::jump_rel_ms(qint64 v){
+    Q_UNUSED(v);
 }
 
 

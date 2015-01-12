@@ -30,7 +30,6 @@
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/Engine.h"
@@ -39,27 +38,15 @@
 #include <gst/gst.h>
 #include <gst/gstbuffer.h>
 
-#include <QObject>
-#include <QDebug>
-
-
-#include <vector>
-
-using namespace std;
-
-
-
 
 class GSTPlaybackEngine : public Engine {
 
 	Q_OBJECT
 
-
 public:
 
-	GSTPlaybackEngine();
+	GSTPlaybackEngine(QObject* parent=0);
 	virtual ~GSTPlaybackEngine();
-
 
 
 // public from Gstreamer Callbacks
@@ -67,15 +54,14 @@ public:
 
 	void		set_track_finished();
 
-	void		update_bitrate(qint32 bitrate);
+	void		update_bitrate(quint32 bitrate);
+	void		update_duration();
+
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
 
-	bool get_show_level();
-	bool get_show_spectrum();
 
 	MyCaps* get_caps();
-	void do_jump_play();
 	void unmute();
 
 	virtual void init();
@@ -83,47 +69,44 @@ public:
 
 private:
 	
-	GSTPlaybackPipeline*	 _pipeline;
-	GSTPlaybackPipeline*	 _other_pipeline;
+	GSTPlaybackPipeline*	_pipeline;
+	GSTPlaybackPipeline*	_other_pipeline;
 
-	CSettingsStorage* _settings;
-	StreamRecorder* _stream_recorder;
+	StreamRecorder*			_stream_recorder;
 
-    LastTrack*  _last_track;
-	MyCaps*     _caps;
+	MyCaps*					_caps;
 
-
-    bool        _show_level;
-    bool        _show_spectrum;
-    int         _jump_play;
-	bool		_wait_for_gapless_track;
-	bool		_may_start_timer;
+	bool _wait_for_gapless_track;
+	bool _may_start_timer;
+	bool _sr_active;
+	bool _gapless;
+	int _jump_play_s;
 
 	// methods
-	bool set_uri(const MetaData& md, bool* start_play);
-	void change_track_gapless(const MetaData& md, int pos_sec=0, bool start_play=true);
+	bool set_uri(const MetaData& md);
+	void change_track_gapless(const MetaData& md);
 
 public slots:
     virtual void play();
 	virtual void stop();
 	virtual void pause();
-	virtual void set_volume(int vol);
 
 	virtual void jump_abs_s(quint32);
 	virtual void jump_abs_ms(quint64);
 	virtual void jump_rel(quint32);
+    virtual void jump_rel_ms(qint64 where);
 
-	virtual void change_track(const MetaData&, int pos_sec=-1, bool start_play=true);
-	virtual void change_track(const QString&, int pos_sec=-1, bool start_play=true );
+	virtual void change_track(const MetaData&, bool start_play);
+	virtual void change_track(const QString&, bool start_play);
 
 	virtual void eq_changed(int, int);
-	virtual void eq_enable(bool);
-
-	virtual void psl_calc_level(bool);
-    virtual void psl_calc_spectrum(bool);
-	virtual void psl_set_gapless(bool);
 
 	virtual void psl_set_speed(float f);
+
+private slots:
+	void _change_sr_active();
+	void _change_gapless();
+
 };
 
 #endif /* GSTENGINE_H_ */

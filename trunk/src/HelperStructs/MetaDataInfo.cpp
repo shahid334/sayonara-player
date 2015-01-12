@@ -21,10 +21,12 @@
 
 
 #include "HelperStructs/MetaDataInfo.h"
-#include "CSettingsStorage.h"
 
 
-MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) : QObject(parent){
+MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) :
+	QObject(parent),
+	SayonaraClass()
+{
 
 	if(lst.size() == 0 ) return;
 
@@ -79,10 +81,15 @@ MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) : QObject(p
 		}
 
 		// paths
-		QString filename, dir;
-		Helper::split_filename(md.filepath, dir, filename);
-		if( !_paths.contains(dir)){
-			_paths << dir;
+		if(!Helper::is_www(md.filepath)){
+			QString filename, dir;
+			Helper::split_filename(md.filepath, dir, filename);
+			if( !_paths.contains(dir)){
+				_paths << dir;
+			}
+		}
+		else{
+			_paths << md.filepath;
 		}
 	}
 
@@ -116,7 +123,7 @@ void MetaDataInfo::set_header(){}
 void MetaDataInfo::set_header(const MetaDataList& lst){
 
 	if(lst.size() == 1){
-		MetaData md = lst[0];
+        const MetaData& md = lst[0];
 		_header = md.title;
 	}
 
@@ -146,7 +153,7 @@ void MetaDataInfo::set_cover_location(){}
 void MetaDataInfo::set_cover_location(const MetaDataList& lst){
 
 	if(lst.size() == 1){
-		MetaData md = lst[0];
+        const MetaData& md = lst[0];
 		_cover_location = CoverLocation::get_cover_location(md);
 	}
 
@@ -222,7 +229,7 @@ QString MetaDataInfo::calc_tracknum_str( quint16 tracknum ){
 }
 
 void MetaDataInfo::insert_playing_time(quint64 len){
-	QString str = Helper::cvtMsecs2TitleLengthString(len);
+	QString str = Helper::cvt_ms_to_string(len);
 	_info.insert(Info_PlayingTime, str);
 }
 
@@ -293,9 +300,12 @@ QStringList MetaDataInfo::get_paths(){
 }
 
 QString MetaDataInfo::get_paths_as_string(){
-	QString lib_path = CSettingsStorage::getInstance()->getLibraryPath();
+
 	QString str;
+	QString lib_path = _settings->get(Set::Lib_Path);
+
 	foreach(QString path, _paths){
+
 		QString name = path;
 		name.replace(lib_path, "...");
 

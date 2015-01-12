@@ -21,6 +21,7 @@
 
 
 #include "Engine/GStreamer/GSTPipeline.h"
+#include <gst/app/gstappsink.h>
 
 
 
@@ -86,79 +87,139 @@ void PipelineCallbacks::pad_added_handler(GstElement *src, GstPad *new_pad, gpoi
 
 gboolean PipelineCallbacks::show_position(gpointer data) {
 
-	gint64 pos;
 	GstState state;
 	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) data;
 	GstElement* p = pipeline->get_pipeline();
 
-
 	if(!p) return false;
 	state = pipeline->get_state();
 
-	if(state != GST_STATE_PLAYING && state != GST_STATE_PAUSED) return false;
+	if( state != GST_STATE_PLAYING &&
+		state != GST_STATE_PAUSED &&
+		state != GST_STATE_READY) return false;
 
 	ENGINE_DEBUG;
 
-#if GST_CHECK_VERSION(1, 0, 0)
-    gst_element_query_position(p, GST_FORMAT_TIME, &pos);
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    gst_element_query_position(p, &format, &pos);
-#endif
-
-	pipeline->refresh_cur_position(pos / MIO);
+	//pipeline->refresh_duration();
+	pipeline->refresh_position();
+	pipeline->check_about_to_finish();
 
 	return true;
 }
+//#define TCP_BUFFER_SIZE 32768
 
 
-void GSTAbstractPipeline::refresh_cur_position(gint64 cur_pos_ms) {
-	_position = cur_pos_ms;
+#define TCP_BUFFER_SIZE 16384
+static uchar data[TCP_BUFFER_SIZE];
 
-	gint64 difference = get_duration_ms() - _position;
+GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 
-	if(_duration >= 0)
-		emit sig_pos_changed_ms((qint64) (cur_pos_ms));
+	GstSample* sample;
+	GstBuffer* buffer;
+	gsize size = 0;
+    gsize size_new = 0;
 
-	if(difference < 500 && difference > 0) {
+	GSTAbstractPipeline* pipeline = (GSTAbstractPipeline*) p;
+
+	sample = gst_app_sink_pull_sample(GST_APP_SINK(sink));
+	if(!sample) {
+		qDebug() << "No sample";
+		return GST_FLOW_OK;
+	}
+
+	buffer = gst_sample_get_buffer(sample);
+	if(!buffer) {
+		qDebug() << "No buffer";
+		return GST_FLOW_OK;
+	}
+
+	size = gst_buffer_get_size(buffer);
+	size_new = gst_buffer_extract(buffer, 0, data, size);
+	pipeline->set_data(data, size_new);
+
+	gst_buffer_unref(buffer);
+
+	return GST_FLOW_OK;
+}
+
+
+GSTAbstractPipeline::GSTAbstractPipeline(QObject* parent) :
+	QObject(parent),
+	SayonaraClass()
+{
+    _position_ms = 0;
+    _duration_ms = 0;
+    _bus = 0;
+    _pipeline = 0;
+    _uri = NULL;
+}
+
+void GSTAbstractPipeline::refresh_position() {
+
+	gint64 pos;
+#if GST_CHECK_VERSION(1, 0, 0)
+	gst_element_query_position(GST_ELEMENT(_pipeline), GST_FORMAT_TIME, &pos);
+#else
+	GstFormat format = GST_FORMAT_TIME;
+	gst_element_query_position(GST_ELEMENT(_pipeline), &format, &pos);
+#endif
+
+	_position_ms = pos / GST_MSECOND;
+}
+
+void GSTAbstractPipeline::refresh_duration(){
+
+	gint64 dur;
+
+#if GST_CHECK_VERSION(1, 0, 0)
+	gst_element_query_duration(GST_ELEMENT(_pipeline), GST_FORMAT_TIME, &dur);
+#else
+	GstFormat format = GST_FORMAT_TIME;
+	gst_element_query_duration(GST_ELEMENT(_pipeline), &format, &dur);
+#endif
+
+	_duration_ms = dur / MIO;
+}
+
+void GSTAbstractPipeline::set_data(uchar* data, quint64 size){
+
+	emit sig_data(data, size);
+}
+
+void GSTAbstractPipeline::check_about_to_finish(){
+
+	gint64 difference = _duration_ms - _position_ms;
+
+	if(_duration_ms >= 0){
+		emit sig_pos_changed_ms((qint64) (_position_ms));
+	}
+
+	if(difference < 500 && difference > 0 && !_about_to_finish) {
+
+		_about_to_finish = true;
 		emit sig_about_to_finish(difference - 50);
-		_duration = -1;
+	}
+
+	else {
+		_about_to_finish = false;
 	}
 }
 
-
-void GSTAbstractPipeline::about_to_finish() {
-	gint64 position;
-	gint64 duration;
-	qint64 time2go;
-
-
-
-
-#if GST_CHECK_VERSION(1, 0, 0)
-    gst_element_query_duration(_pipeline, GST_FORMAT_TIME, &duration);
-	gst_element_query_position(_pipeline, GST_FORMAT_TIME, &position);
-
-#else
-    GstFormat format = GST_FORMAT_TIME;
-    gst_element_query_duration(_pipeline, &format, &duration);
-	gst_element_query_position(_pipeline, &format, &position);
-
-#endif
-
-
-
-	time2go = (duration - position) / MIO;
-
-	// ms
-	emit sig_about_to_finish(time2go);
+qint64 GSTAbstractPipeline::get_duration_ms(){
+    return _duration_ms;
 }
+
+qint64 GSTAbstractPipeline::get_position_ms(){
+    return _position_ms;
+}
+
 
 void GSTAbstractPipeline::set_speed(float f) {
 	Q_UNUSED(f);
 }
 
 void GSTAbstractPipeline::finished() {
+
 	emit sig_finished();
 }
 
@@ -187,4 +248,5 @@ bool GSTAbstractPipeline::set_uri(gchar* uri) {
 gchar* GSTAbstractPipeline::get_uri() {
 	return _uri;
 }
+
 

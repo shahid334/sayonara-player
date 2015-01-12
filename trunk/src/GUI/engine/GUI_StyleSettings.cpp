@@ -27,18 +27,12 @@
 
 
 GUI_StyleSettings::GUI_StyleSettings(QWidget *parent) :
-	QDialog(parent),
+	SayonaraDialog(parent),
 	Ui::GUI_Style()
 {
-
 	setupUi(this);
 
     _db = CDatabaseConnector::getInstance();
-
-
-    btn_delete->setIcon(Helper::getIcon("delete.png"));
-    btn_save->setIcon(Helper::getIcon("save.png"));
-    btn_undo->setIcon(Helper::getIcon("undo.png"));
 
 	connect(combo_styles, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_styles_changed(int)));
 	connect(combo_styles, SIGNAL(editTextChanged(const QString&)), this, SLOT(combo_text_changed(const QString&)));

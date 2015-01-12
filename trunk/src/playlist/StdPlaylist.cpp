@@ -23,47 +23,49 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/PlaylistParser.h"
 
-StdPlaylist::StdPlaylist(QObject *parent) :
-    Playlist(parent)
+StdPlaylist::StdPlaylist(int idx, QObject *parent) :
+	Playlist(idx, parent)
 {
     _playlist_type = PlaylistTypeStd;
     _last_track = -1;
 }
 
 
-
 void StdPlaylist::change_track(int idx) {
 
-    _last_track = _cur_play_idx;
-    if( idx >= (int) _v_md.size() || idx < 0) {
+	_last_track = _cur_play_idx;
+
+    if( idx >= _v_md.size() || idx < 0) {
+
+        _cur_play_idx = -1;
+        _v_md.setCurPlayTrack(_cur_play_idx);
+
         stop();
         return;
     }
 
-    _last_track = _cur_play_idx;
+    // track not available in file system anymore
+    if( !Helper::checkTrack(_v_md[idx]) ) {
 
-    for(uint i=0; i<_v_md.size(); i++) {
-        _v_md[i].pl_playing = ( idx == (int) i );
-        _v_md[i].pl_selected = false;
-    }
+        _v_md[idx].is_disabled = true;
 
-    MetaData md = _v_md[idx];
-
-    if( !Helper::checkTrack(md) ) {
-        _cur_play_idx = -1;
-        _v_md.setCurPlayTrack(_cur_play_idx);
-
-        delete_track(idx);
+        change_track(idx + 1);
+        return;
     }
 
     else{
         _cur_play_idx = idx;
+        _v_md.setCurPlayTrack(_cur_play_idx);
     }
 
-    report_changes(false, true);
+    _last_track = _cur_play_idx;
+
+	report_changes(false, true);
 }
 
-void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
+void StdPlaylist::create_playlist(const MetaDataList& lst) {
+
+	bool start_playing = false;
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
@@ -75,40 +77,48 @@ void StdPlaylist::create_playlist(const MetaDataList& lst, bool start_playing) {
     }
 
     // no tracks in new playlist
-    if(lst.size() == 0)
-        return;
+	if(lst.size() == 0){
+		return;
+	}
 
     // check if there, check if extern
     foreach(MetaData md, lst) {
 
-        if( !Helper::checkTrack(md) ) continue;
-
         MetaData md_tmp = db->getTrackByPath(md.filepath);
+
         md.is_extern = (md_tmp.id < 0);
+        md.is_disabled = (! Helper::checkTrack(md) );
 
         _v_md.push_back(md);
     }
 
-    if(!_playlist_mode.append)
+    if(!_playlist_mode.append){
         _cur_play_idx = -1;
+    }
 
+	if( !_v_md.isEmpty() &&  _playlist_state == PlaylistStop ){
+		start_playing = true;
+		_cur_play_idx = 0;
+		_v_md.setCurPlayTrack(0);
+	}
 
-    report_changes(true, start_playing);
+	report_changes(true, start_playing );
 }
 
-void StdPlaylist::create_playlist(const QStringList& lst, bool start_playing) {
-
-    MetaDataList v_md;
+void StdPlaylist::create_playlist(const QStringList& lst) {
 
     CDirectoryReader reader;
-    reader.getMetadataFromFileList(lst, v_md);
+	MetaDataList v_md = reader.get_md_from_filelist(lst);
 
-    create_playlist(v_md, start_playing);
+	create_playlist(v_md);
 }
 
-void StdPlaylist:: play() {
+void StdPlaylist::play() {
 
-    if(_v_md.size() == 0) {
+	if(_playlist_state != PlaylistStop) return;
+
+
+	if( _v_md.isEmpty() ) {
         _cur_play_idx = -1;
         stop();
         return;
@@ -119,7 +129,7 @@ void StdPlaylist:: play() {
         _v_md.setCurPlayTrack(_cur_play_idx);
     }
 
-    report_changes(false, true);
+	report_changes(false, true);
 }
 
 void StdPlaylist::pause() {
@@ -137,14 +147,26 @@ void StdPlaylist::stop() {
 }
 
 void StdPlaylist::fwd() {
-    this->next();
+
+	bool rep1 = _playlist_mode.rep1;
+	_playlist_mode.rep1 = false;
+
+	this->next();
+
+	_playlist_mode.rep1 = rep1;
+
 }
 
 void StdPlaylist::bwd() {
 
     int track_num;
-    if(_playlist_mode.shuffle && _last_track != -1 ) track_num = _last_track;
-    else  track_num = _cur_play_idx - 1;
+    if(_playlist_mode.shuffle && _last_track != -1 ) {
+        track_num = _last_track;
+    }
+
+    else {
+        track_num = _cur_play_idx - 1;
+    }
 
     change_track(track_num);
 }
@@ -159,8 +181,12 @@ void StdPlaylist::next() {
         return;
     }
 
+	if(_playlist_mode.rep1){
+		track_num = _cur_play_idx;
+	}
+
     // shuffle mode
-    if(_playlist_mode.shuffle) {
+	else if(_playlist_mode.shuffle) {
         track_num = rand() % _v_md.size();
         if(track_num == _cur_play_idx) {
             track_num = (_cur_play_idx + 1) % _v_md.size();
@@ -168,7 +194,8 @@ void StdPlaylist::next() {
     }
 
     else {
-        if(_cur_play_idx >= (int) _v_md.size() -1) {
+
+		if(_cur_play_idx >= (int) _v_md.size() -1) {
 
 			if(_playlist_mode.repAll){
 				track_num = 0;
@@ -189,27 +216,27 @@ void StdPlaylist::next() {
         }
     }
 
-
 	change_track(track_num);
 }
 
 
-void StdPlaylist::metadata_changed(const MetaDataList& md_list) {
+void StdPlaylist::metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new) {
 
     bool sth_changed = false;
-    for(int i=0; i<(int) _v_md.size(); i++) {
 
-        MetaData md_old = _v_md[i];
+	for(int i=0; i<_v_md.size(); i++) {
 
-        foreach(MetaData md_new, md_list) {
-            QString old_path = QDir(md_old.filepath).absolutePath();
-            QString new_path = QDir(md_new.filepath).absolutePath();
-            int cmp = old_path.compare(new_path, Qt::CaseInsensitive);
-            if(cmp == 0) {
+		_v_md[i].pl_selected = false;
 
-                _v_md[i] = md_new;
-                sth_changed = true;
-            }
+		for(int idx=0; idx<v_md_old.size(); idx++){
+
+			if( v_md_old[idx].is_equal( _v_md[i]) ){
+				_v_md[i] = v_md_new[idx];
+				_v_md[i].pl_selected = true;
+
+				sth_changed = true;
+				break;
+			}
         }
     }
 
@@ -217,24 +244,6 @@ void StdPlaylist::metadata_changed(const MetaDataList& md_list) {
 }
 
 
-void StdPlaylist::save_for_reload() {
-
-    QStringList playlist_lst;
-    foreach(MetaData md, _v_md) {
-
-        if(md.id >= 0) playlist_lst << QString::number(md.id);
-        else
-            playlist_lst << md.filepath;
-    }
-
-    CSettingsStorage::getInstance()->setPlaylist(playlist_lst);
-}
-
 void StdPlaylist::save_to_m3u_file(QString filepath, bool relative) {
     PlaylistParser::save_playlist(filepath, _v_md, relative);
-}
-
-bool StdPlaylist::request_playlist_for_collection(MetaDataList& lst) {
-    lst = _v_md;
-    return true;
 }

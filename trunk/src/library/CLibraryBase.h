@@ -26,41 +26,41 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Filter.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
+#include "HelperStructs/SayonaraClass.h"
 
 #include <QThread>
 #include <QStringList>
 #include <QFileSystemWatcher>
 
 
-class CLibraryBase : public QObject
+class CLibraryBase : public QObject, protected SayonaraClass
 {
     Q_OBJECT
 public:
-    CLibraryBase(QWidget* main_window, QObject *parent = 0);
+	CLibraryBase(QObject *parent = 0);
 
 	virtual void loadDataFromDb ();
 
 
 signals:
-	void sig_playlist_created(QStringList&);
+	void sig_playlist_created(const QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
-	void sig_all_tracks_loaded (MetaDataList&);
-	void sig_all_albums_loaded(AlbumList&);
-	void sig_all_artists_loaded(ArtistList&);
-	void sig_tracks_for_playlist_available(MetaDataList&);
-	void sig_append_tracks_to_playlist(MetaDataList&);
+	void sig_all_tracks_loaded (const MetaDataList&);
+	void sig_all_albums_loaded(const AlbumList&);
+	void sig_all_artists_loaded(const ArtistList&);
+	void sig_tracks_for_playlist_available(const MetaDataList&);
+	void sig_append_tracks_to_playlist(const MetaDataList&);
 
 	void sig_should_reload_library();
 	void sig_reload_library_finished();
 	void sig_reload_library_allowed(bool);
-	void sig_reloading_library(QString &);
-	void sig_libpath_set(QString&);
+	void sig_reloading_library(const QString&);
 
 	void sig_change_id3_tags(const MetaDataList&);
 
     void sig_delete_answer(QString);
 	void sig_play_next_tracks(const MetaDataList&);
+	void sig_no_library_path();
 
 
 public slots:
@@ -69,9 +69,11 @@ public slots:
 
 	virtual void reloadLibrary(bool);
 	virtual void clearLibrary();
-	virtual void refresh(bool b=true);
 
-	virtual void setLibraryPath(QString);
+	virtual void refetch();
+	virtual void refresh();
+
+	virtual void psl_metadata_changed(const MetaDataList&, const MetaDataList&);
 
 
 /* New way */
@@ -86,9 +88,8 @@ public slots:
 	virtual void psl_prepare_tracks_for_playlist(QList<int> lst);
 
 	virtual void psl_filter_changed(const Filter&, bool force=false);
-	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
 	virtual void psl_change_id3_tags(const QList<int>& lst);
-	virtual void psl_track_time_changed(MetaData&);
+	virtual void psl_md_changed(const MetaData&);
 
 	virtual void psl_delete_tracks(int);
 	virtual void psl_delete_certain_tracks(const QList<int>&,int);
@@ -105,19 +106,22 @@ public slots:
 
 protected slots:
 
-   virtual void library_reloading_state_slot(QString);
-   virtual void library_reloading_state_new_block();
-   virtual void reload_thread_finished();
+	virtual void library_reloading_state_slot(QString);
+	virtual void library_reloading_state_new_block();
+	virtual void reload_thread_finished();
+	virtual void _sl_sortorder_changed();
+	virtual void _sl_libpath_changed();
 
-
+private:
+	MetaData			_old_md;
 
 protected:
-    QWidget*            _main_window;
+
     CDatabaseConnector*	_db;
 
     CDirectoryReader    _reader;
 
-    QString				m_library_path;
+	QString				_library_path;
 
     ReloadThread* 		_reload_thread;
 	int					_reload_progress;
@@ -125,10 +129,6 @@ protected:
     MetaDataList        _vec_md;
     AlbumList			_vec_albums;
     ArtistList			_vec_artists;
-
-    Sort::SortOrder		_track_sortorder;
-    Sort::SortOrder		_album_sortorder;
-    Sort::SortOrder		_artist_sortorder;
 
     QList<int>			_selected_artists;
     QList<int>			_selected_albums;
@@ -138,6 +138,18 @@ protected:
 
     void 				emit_stuff();
     void				delete_tracks(MetaDataList& v_md, int answer);
+
+    LibSortOrder        _sortorder;
+
+	void				fetch_by_filter(const Filter& filter, bool force);
+	void				change_artist_selection(const QList<int>& idx_list);
+	void				change_album_selection(const QList<int>& idx_list);
+	MetaDataList		change_track_selection(const QList<int>& idx_list);
+
+	void restore_artist_selection(const QList<int>& old_selected_idx);
+	void restore_track_selection(const QList<int>& old_selected_idx);
+	void restore_album_selection(const QList<int>& old_selected_idx);
+
 
 };
 

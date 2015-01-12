@@ -23,7 +23,6 @@
 #include "Engine/GStreamer/StreamRecorder.h"
 #include "Engine/GStreamer/GSTPipeline.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CSettingsStorage.h"
 #include "HelperStructs/PlaylistParser.h"
 #include "HelperStructs/Tagging/id3.h"
 
@@ -31,8 +30,6 @@
 #include <gst/gsturi.h>
 #include <gst/app/gstappsrc.h>
 
-#include <QString>
-#include <QDebug>
 #include <QFile>
 #include <QDir>
 #include <QDateTime>
@@ -88,11 +85,12 @@ gboolean StreamRecorder::bus_state_changed(GstBus *bus, GstMessage *msg, void *u
 
 
 StreamRecorder::StreamRecorder(QObject *parent) :
-	QObject(parent), _session_collector(0)
+	QObject(parent),
+	SayonaraClass(),
+	_session_collector(0)
 {
     _buffer_size = 32767;
     _stream_ended = true;
-    _settings = CSettingsStorage::getInstance();
     _rec_pipeline = NULL;
 
     _try = 2;
@@ -217,7 +215,7 @@ void StreamRecorder::set_new_stream_session() {
     _session_path = get_time_str();
     _session_collector.clear();
 
-    QString sr_path = _settings->getStreamRipperPath();
+	QString sr_path =_settings->get(Set::Engine_SR_Path);
     QString session_path = check_session_path(sr_path);
 
     _session_playlist_name = session_path + QDir::separator() + get_time_str() + ".m3u";
@@ -276,7 +274,6 @@ bool StreamRecorder::stop(bool delete_track) {
 
     gint64 duration=0;
 
-    bool complete_tracks = _settings->getStreamRipperCompleteTracks();
     bool save_success = true;
 
     terminate_thread_if_running();
@@ -291,7 +288,7 @@ bool StreamRecorder::stop(bool delete_track) {
 
     gst_element_set_state(GST_ELEMENT(_rec_pipeline), GST_STATE_READY);
 
-    if( (!_stream_ended && complete_tracks) || delete_track) {
+	if( (!_stream_ended) || delete_track) {
         qDebug() << "Remove w/o saving";
         QFile::remove(_sr_recording_dst);
         return false;
@@ -310,8 +307,9 @@ bool StreamRecorder::save_file() {
 
     SR_DEBUG;
 
-    QString sr_path = _settings->getStreamRipperPath();
-    QString session_path = check_session_path(sr_path);
+	QString sr_path = _settings->get(Set::Engine_SR_Path);
+
+	QString session_path = check_session_path(sr_path);
 
     QDir dir(session_path);
         dir.mkdir(_md.artist);
@@ -402,7 +400,8 @@ QString StreamRecorder::check_session_path(QString sr_path) {
 
     SR_DEBUG;
 
-    bool create_session_path = _settings->getStreamRipperSessionPath();
+	bool create_session_path =_settings->get(Set::Engine_SR_SessionPath);
+
     if(!create_session_path) return sr_path;
 
     if(!QFile::exists(sr_path + QDir::separator() + _session_path)) {

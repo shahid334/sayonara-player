@@ -29,7 +29,6 @@
 #ifndef ALTERNATECOVERITEMDELEGATE_H_
 #define ALTERNATECOVERITEMDELEGATE_H_
 
-#include <QObject>
 #include <QWidget>
 #include <QTableView>
 #include <QItemDelegate>
