@@ -3,7 +3,7 @@
 cd $1
 
 MAJOR=0
-MINOR=4
+MINOR=6
 SUBMINOR=0
 REV=`svn info | grep Revision | tail -c 4`
 

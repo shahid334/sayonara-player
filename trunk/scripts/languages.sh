@@ -11,7 +11,7 @@ if [ "$1" = "update" ] ; then
 	STR=""
 	for f in ./src/languages/*.ts ; do
 
-		lupdate . -ts ./$f
+		lupdate -noobsolete . -ts ./$f
 		STR="$STR ./$f"
 	done
 	

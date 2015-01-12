@@ -385,7 +385,7 @@ QString Application::getVersion() {
     QString version_file = Helper::getSharePath() + "VERSION";
 
     istr.open(version_file.toUtf8()  );
-    if(!istr || !istr.is_open() ) return "0.3.1";
+    if(!istr || !istr.is_open() ) return "0.6";
 
     QMap<QString, int> map;
 
