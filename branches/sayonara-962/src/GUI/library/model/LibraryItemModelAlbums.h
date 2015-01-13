@@ -34,7 +34,7 @@
 #include "GUI/MyColumnHeader.h"
 
 #include <QAbstractTableModel>
-#include <QList>
+#include <QVector>
 
 
 
@@ -66,7 +66,7 @@ public:
     QList<quint8> get_discnumbers(const QModelIndex& idx);
 
 private:
-	QList<Album> 			_album_list;
+	AlbumList 			_albums;
 
 };
 

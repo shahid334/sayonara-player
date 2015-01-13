@@ -349,6 +349,7 @@ void GUI_Library_windowed::lib_fill_tracks(const MetaDataList& v_metadata) {
 void GUI_Library_windowed::lib_fill_albums(const AlbumList& albums) {
 
    lv_album->fill<AlbumList, Album>(albums);
+
 }
 
 

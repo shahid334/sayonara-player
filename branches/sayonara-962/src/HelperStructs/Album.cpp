@@ -30,9 +30,22 @@ Album::Album() : LibraryItem() {
     length_sec = 0;
     year = 0;
     n_discs = 1;
-    is_splitted = false;
     is_sampler = false;
     rating = 0;
+}
+
+Album::Album(const Album& album){
+
+	name = album.name;
+	id = album.id;
+	num_songs = album.num_songs;
+	length_sec = album.length_sec;
+	year = album.year;
+	artists = album.artists;
+	discnumbers = album.discnumbers;
+	n_discs = album.n_discs;
+	rating = album.rating;
+	is_sampler = album.is_sampler;
 }
 
 

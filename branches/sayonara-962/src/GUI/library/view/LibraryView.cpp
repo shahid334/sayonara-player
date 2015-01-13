@@ -307,9 +307,8 @@ QList<int> LibraryView::get_selections() {
 
 
 template void LibraryView::fill<MetaDataList, MetaData>(const MetaDataList&);
-template void LibraryView::fill<AlbumList, Album>(const AlbumList&);
 template void LibraryView::fill<ArtistList, Artist>(const ArtistList&);
-
+template void LibraryView::fill<AlbumList, Album>(const AlbumList&);
 
 template < class TList, class T >
 void LibraryView::fill(const TList& input_data) {

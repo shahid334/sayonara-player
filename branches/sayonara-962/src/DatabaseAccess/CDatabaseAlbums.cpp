@@ -56,36 +56,45 @@ bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 		return false;
 	}
 
-	Album album;
+
+	int n_albums=0;
+	while(q.next()){
+		n_albums++;
+	}
+
+	result.reserve(n_albums);
+
+	q.first();
+	AlbumList::iterator album = result.begin();
+
 	while (q.next()) {
-		album.id = q.value(0).toInt();
-		album.name = q.value(1).toString().trimmed();
-		album.length_sec = q.value(2).toInt();
-		album.rating = q.value(3).toInt();
-		album.num_songs = q.value(4).toInt();
-		album.year = q.value(5).toInt();
+
+		album->id = q.value(0).toInt();
+		album->name = q.value(1).toString().trimmed();
+		album->length_sec = q.value(2).toInt();
+		album->rating = q.value(3).toInt();
+		album->num_songs = q.value(4).toInt();
+		album->year = q.value(5).toInt();
 		QStringList artistList = q.value(6).toString().split(',');
 		artistList.removeDuplicates();
-		album.artists = artistList;
+		album->artists = artistList;
 
 		QStringList discnumberList = q.value(7).toString().split(',');
-		album.discnumbers.clear();
+		album->discnumbers.clear();
 
 		for(const QString& disc : discnumberList) {
 			int d = disc.toInt();
-			if(album.discnumbers.contains(d)) continue;
+			if(album->discnumbers.contains(d)) continue;
 
-			album.discnumbers << d;
+			album->discnumbers << d;
 		}
 
-		if(album.discnumbers.size() == 0) {
-			album.discnumbers << 1;
+		if(album->discnumbers.size() == 0) {
+			album->discnumbers << 1;
 		}
 
-		album.n_discs = album.discnumbers.size();
-		album.is_sampler = (artistList.size() > 1);
-
-		result.push_back(album);
+		album->n_discs = album->discnumbers.size();
+		album->is_sampler = (artistList.size() > 1);
 	}
 
 	return true;

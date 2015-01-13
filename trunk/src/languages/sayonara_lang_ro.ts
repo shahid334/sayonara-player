@@ -73,13 +73,13 @@
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="294"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="223"/>
         <source>Alternative Cover</source>
-        <translation type="unfinished"></translation>
+        <translation>Copertile alternativ</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.ui" line="301"/>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="224"/>
         <source>for</source>
-        <translation type="unfinished">pentru</translation>
+        <translation>pentru</translation>
     </message>
 </context>
 <context>
@@ -132,7 +132,7 @@
     <message>
         <location filename="../application.cpp" line="132"/>
         <source>&amp;Broadcast</source>
-        <translation type="unfinished"></translation>
+        <translation>Post de Radio</translation>
     </message>
 </context>
 <context>
@@ -267,7 +267,7 @@
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="282"/>
         <source> covers found</source>
-        <translation type="unfinished"></translation>
+        <translation>Copertile găsit</translation>
     </message>
     <message>
         <location filename="../GUI/alternate_covers/GUI_Alternate_Covers.cpp" line="346"/>
@@ -362,7 +362,7 @@
         <location filename="../GUI/bookmarks/GUI_Bookmarks.ui" line="166"/>
         <location filename="../GUI/ui_GUI_Bookmarks.h" line="219"/>
         <source>Loop</source>
-        <translation type="unfinished"></translation>
+        <translation>repetiţie</translation>
     </message>
 </context>
 <context>
@@ -380,17 +380,17 @@
     <message>
         <location filename="../GUI/broadcasting/broadcast_setup.ui" line="70"/>
         <source>Ask for permission</source>
-        <translation type="unfinished"></translation>
+        <translation>cer permisiunea</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/broadcast_setup.ui" line="87"/>
         <source>Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Port</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/broadcast_setup.ui" line="101"/>
         <source>Broadcasting</source>
-        <translation type="unfinished"></translation>
+        <translation>Post de Radio</translation>
     </message>
 </context>
 <context>
@@ -406,13 +406,13 @@
         <location filename="../GUI/ui_GUI_Broadcast.h" line="162"/>
         <source>3 users listening</source>
         <translatorcomment>Muss nicht übersetzt werden</translatorcomment>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.ui" line="120"/>
         <location filename="../GUI/ui_GUI_Broadcast.h" line="164"/>
         <source>Broadcasting</source>
-        <translation type="unfinished"></translation>
+        <translation>Post de Radio</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.ui" line="136"/>
@@ -424,34 +424,34 @@
         <location filename="../GUI/broadcasting/GUI_Broadcast.ui" line="163"/>
         <location filename="../GUI/ui_GUI_Broadcast.h" line="166"/>
         <source>Dismiss</source>
-        <translation type="unfinished"></translation>
+        <translation>deconectare</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.ui" line="183"/>
         <location filename="../GUI/ui_GUI_Broadcast.h" line="167"/>
         <source>Dismiss all</source>
-        <translation type="unfinished"></translation>
+        <translation>deconectare toţi</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="58"/>
         <source>listener</source>
-        <translation type="unfinished"></translation>
+        <translation>ascultător</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="62"/>
         <source>listeners</source>
-        <translation type="unfinished"></translation>
+        <translation>ascultători</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="74"/>
         <source>Someone tries to listen to your music.
 </source>
-        <translation type="unfinished"></translation>
+        <translation>Cineva încerce se ascultă.Musica.ta.</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="80"/>
         <source>from</source>
-        <translation type="unfinished"></translation>
+        <translation>din</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="83"/>
@@ -461,7 +461,7 @@
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="85"/>
         <source>Incoming request</source>
-        <translation type="unfinished"></translation>
+        <translation>Cerere de intrare</translation>
     </message>
 </context>
 <context>
@@ -482,19 +482,19 @@
         <location filename="../GUI/broadcasting/GUI_BroadcastSetup.ui" line="76"/>
         <location filename="../GUI/ui_GUI_BroadcastSetup.h" line="128"/>
         <source>Ask for permission</source>
-        <translation type="unfinished"></translation>
+        <translation>cer permisiunea</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_BroadcastSetup.ui" line="100"/>
         <location filename="../GUI/ui_GUI_BroadcastSetup.h" line="130"/>
         <source>Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Port</translation>
     </message>
     <message>
         <location filename="../GUI/broadcasting/GUI_BroadcastSetup.ui" line="114"/>
         <location filename="../GUI/ui_GUI_BroadcastSetup.h" line="131"/>
         <source>Broadcasting</source>
-        <translation type="unfinished"></translation>
+        <translation>Post de Radio</translation>
     </message>
 </context>
 <context>
@@ -515,7 +515,7 @@
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="167"/>
         <location filename="../GUI/ui_GUI_Equalizer.h" line="577"/>
         <source>curve</source>
-        <translation type="unfinished"></translation>
+        <translation>curbă</translation>
     </message>
     <message>
         <location filename="../GUI/equalizer/GUI_Equalizer.ui" line="199"/>
@@ -529,7 +529,7 @@
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="94"/>
         <source>Loading tracks...</source>
-        <translation type="unfinished"></translation>
+        <translation>încărca titlu...</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="98"/>
@@ -549,7 +549,7 @@
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="110"/>
         <source>%1 tracks available</source>
-        <translation type="unfinished">%1 melodii gata</translation>
+        <translation>%1 melodii gata</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUIImportFolder.cpp" line="146"/>
@@ -804,7 +804,7 @@
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="632"/>
         <source>Please select your library path first and reload again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Te rog mai întâi alege calea librăriei si încărca mai odată.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.cpp" line="634"/>
@@ -1040,7 +1040,7 @@
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="208"/>
         <source>Saved
 Playlists</source>
-        <translation type="unfinished"></translation>
+        <translation>Listă salvate</translation>
     </message>
     <message>
         <location filename="../GUI/playlist_chooser/GUI_PlaylistChooser.ui" line="73"/>
@@ -1375,7 +1375,7 @@ Playlists</source>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="271"/>
         <location filename="../GUI/stream/GUI_Stream.cpp" line="299"/>
         <source>Radio station</source>
-        <translation type="unfinished"></translation>
+        <translation>Post de Radio</translation>
     </message>
 </context>
 <context>
@@ -1620,13 +1620,13 @@ Te rog alege alt dosar</translation>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="389"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="457"/>
         <source>Disc Nr</source>
-        <translation type="unfinished"></translation>
+        <translation>CD Nr</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="436"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="459"/>
         <source>Expression</source>
-        <translation type="unfinished"></translation>
+        <translation>expresie</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="443"/>
@@ -1696,25 +1696,25 @@ Te rog alege alt dosar</translation>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="480"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="461"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplicare</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="487"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="462"/>
         <source>Apply to all</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplicare tot</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="514"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="463"/>
         <source>Undo all</source>
-        <translation type="unfinished"></translation>
+        <translation>Anulare tot</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="539"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="464"/>
         <source>Undo</source>
-        <translation type="unfinished"></translation>
+        <translation>Anulare</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="567"/>
@@ -1726,7 +1726,7 @@ Te rog alege alt dosar</translation>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="595"/>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="466"/>
         <source>Save</source>
-        <translation type="unfinished">Salvează</translation>
+        <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.ui" line="312"/>
@@ -1743,7 +1743,7 @@ Te rog alege alt dosar</translation>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="405"/>
         <source>Cannot apply tag for</source>
-        <translation type="unfinished"></translation>
+        <translation>Nu se poate aplicare expresie pentru</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="415"/>
@@ -1753,7 +1753,7 @@ Te rog alege alt dosar</translation>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="419"/>
         <source>Ignore these tracks?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignoră titlu asta?</translation>
     </message>
     <message>
         <location filename="../GUI/tagedit/GUI_TagEdit.cpp" line="427"/>
@@ -1897,7 +1897,7 @@ Te rog alege alt dosar</translation>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="31"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="250"/>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Importare</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="145"/>
@@ -2364,7 +2364,7 @@ Te rog alege alt dosar</translation>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="123"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="285"/>
         <source>Playlist 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Lista 1</translation>
     </message>
     <message>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="226"/>
@@ -2411,7 +2411,7 @@ Te rog alege alt dosar</translation>
         <location filename="../GUI/playlist/GUI_Playlist.ui" line="562"/>
         <location filename="../GUI/ui_GUI_Playlist.h" line="321"/>
         <source>Create new Playlist</source>
-        <translation type="unfinished"></translation>
+        <translation>Creare lista nou</translation>
     </message>
 </context>
 <context>

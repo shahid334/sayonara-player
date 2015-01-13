@@ -46,10 +46,10 @@ public:
     quint8 n_discs;
     quint8 rating;
 
-    bool is_splitted;
     bool is_sampler;
 
     Album();
+	Album(const Album& album);
     ~Album();
 
 	static QVariant toVariant(const Album& album);
@@ -58,7 +58,14 @@ public:
 };
 
 
-typedef QVector<Album> AlbumList;
+class AlbumList : public QVector<Album> {
+
+private:
+	void push_back(const Album &t);
+
+
+
+};
 
 #endif
 

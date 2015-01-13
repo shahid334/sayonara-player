@@ -44,7 +44,7 @@ LibraryItemModelAlbums::~LibraryItemModelAlbums() {
 
 int LibraryItemModelAlbums::rowCount(const QModelIndex & parent) const
 {	Q_UNUSED(parent);
-	return _album_list.size();
+	return _albums.size();
 }
 
 
@@ -56,7 +56,7 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
 	 for (int row = 0; row < rows; ++row) {
-		 _album_list.removeAt(position);
+		 _albums.remove(position);
 	 }
 
 	 endRemoveRows();
@@ -76,7 +76,7 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 	 for (int row = 0; row < rows; ++row) {
 
 		 Album album;
-		 _album_list.insert(position, album);
+		 _albums.insert(position, album);
 	 }
 
 	 endInsertRows();
@@ -90,7 +90,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 	if (!index.isValid())
 		 return QVariant();
 
-	if (index.row() >= _album_list.size())
+	if (index.row() >= _albums.size())
 		 return QVariant();
 
 	// qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
@@ -99,7 +99,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 		int row = index.row();
 		int col = index.column();
 
-		const Album& album = _album_list.at(row);
+		const Album& album = _albums[row];
 
 		int idx_col = calc_shown_col(col);
 
@@ -125,8 +125,6 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 	 return QVariant();
 }
 
-
-
 bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant & value, int role)
 {
 
@@ -137,7 +135,7 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 		 int col_idx = calc_shown_col(col);
 
 		 if(col_idx == COL_ALBUM_RATING) {
-			 _album_list[row].rating = value.toInt();
+			 _albums[row].rating = value.toInt();
          }
 
          else {
@@ -149,7 +147,7 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 				_selected_rows << row;
              }
 
-			 _album_list[row] = album;
+			 _albums[row] = album;
 
               emit dataChanged(index, index);
 		 }
@@ -186,7 +184,7 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order) {
 }
 
 QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr) {
-    if(_album_list.isEmpty()) {
+	if(_albums.isEmpty()) {
         return this->index(-1, -1);
     }
 
@@ -201,7 +199,7 @@ QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr) {
 
 QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 
-	int len = _album_list.size();
+	int len = _albums.size();
     if(len == 0)  {
         return this->index(-1, -1);
     }
@@ -225,7 +223,7 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 
 QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
 
-	int len = _album_list.size();
+	int len = _albums.size();
     if(len < row){
         row = len - 1;
     }
@@ -263,10 +261,10 @@ QList<quint8> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx) {
     }
 
     if( idx.row() < 0 ||
-        idx.row() >= _album_list.size())
+		idx.row() >= _albums.size())
     {
         return QList<quint8>();
     }
 
-    return _album_list[idx.row()].discnumbers;
+	return _albums[idx.row()].discnumbers;
 }
