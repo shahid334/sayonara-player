@@ -23,6 +23,7 @@
 
 #include <QString>
 #include <QDebug>
+#include <QTime>
 
 #define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
 #define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
@@ -124,6 +125,13 @@ enum LameBitrate {
 
 
 #define N_BINS 70
+
+#define MEASURE_TIME(x) QTime myTimer; \
+						myTimer.start(); \
+						{ \
+						x \
+						} \
+						qDebug() << "Time: " << myTimer.elapsed();
 
 
 #endif /* GLOBALS_H_ */

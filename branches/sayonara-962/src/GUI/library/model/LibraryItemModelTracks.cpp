@@ -48,7 +48,7 @@ LibraryItemModelTracks::~LibraryItemModelTracks() {
 int LibraryItemModelTracks::rowCount(const QModelIndex &parent) const{
 
 	Q_UNUSED(parent);
-	return _tracklist.size();
+	return _tracks.size();
 }
 
 
@@ -60,14 +60,14 @@ QVariant LibraryItemModelTracks::data(const QModelIndex &index, int role) const{
 	if (!index.isValid())
 		 return QVariant();
 
-	 if (row >= _tracklist.size())
+	 if (row >= _tracks.size())
 		 return QVariant();
 
      int idx_col = calc_shown_col(col);
 
 	 if (role == Qt::DisplayRole || role==Qt::EditRole) {
 
-         const MetaData& md = _tracklist.at(row);
+		 const MetaData& md = _tracks.at(row);
 
 		 switch(idx_col) {
 			 case COL_TRACK_NUM:
@@ -140,7 +140,7 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 		 int col_idx = calc_shown_col(col);
 
 		 if(col_idx == COL_TRACK_RATING) {
-			 _tracklist[row].rating = value.toInt();
+			 _tracks[row].rating = value.toInt();
          }
 
          else{
@@ -152,7 +152,7 @@ bool LibraryItemModelTracks::setData(const QModelIndex &index, const QVariant &v
 				 _selected_rows << row;
 			 }
 
-			 _tracklist[row] = md;
+			 _tracks[row] = md;
 
              emit dataChanged(index, index);
          }
@@ -172,11 +172,8 @@ bool LibraryItemModelTracks::insertRows(int position, int rows, const QModelInde
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-
-		 MetaData md;
-		 _tracklist.insert(position, md);
-	 }
+	 MetaData md;
+	 _tracks.insert(position, rows, md);
 
 	 endInsertRows();
 
@@ -191,9 +188,7 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 _tracklist.removeAt(position);
-	 }
+	 _tracks.remove(position, rows);
 
 	 endRemoveRows();
 
@@ -201,8 +196,25 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 
 }
 
+
+
+void LibraryItemModelTracks::remove_all_and_insert(int n){
+
+	beginRemoveRows(QModelIndex(), 0, _tracks.size() - 1);
+		 _tracks.clear();
+	endRemoveRows();
+
+	if(n <= 0) return;
+
+	beginInsertRows(QModelIndex(), 0, n-1);
+		_tracks.resize(n);
+	 endInsertRows();
+}
+
+
+
 QModelIndex	LibraryItemModelTracks::getFirstRowIndexOf(QString substr) {
-	if(_tracklist.isEmpty()) return this->index(-1, -1);
+	if(_tracks.isEmpty()) return this->index(-1, -1);
 
 	if(_selected_rows.size() > 0)
 		return getNextRowIndexOf(substr, _selected_rows[0]);
@@ -212,12 +224,12 @@ QModelIndex	LibraryItemModelTracks::getFirstRowIndexOf(QString substr) {
 
 QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row) {
 
-    int len = _tracklist.size();
+	int len = _tracks.size();
 	if(len == 0) return this->index(-1, -1);
 
 	for(int i=0; i< len; i++) {
 		int row_idx = (i + row) % len;
-		QString title = _tracklist[row_idx].title;
+		QString title = _tracks[row_idx].title;
 		if(title.startsWith(substr, Qt::CaseInsensitive)) {
 			return this->index(row_idx, 0);
 		}
@@ -228,12 +240,12 @@ QModelIndex LibraryItemModelTracks::getNextRowIndexOf(QString substr, int row) {
 
 QModelIndex LibraryItemModelTracks::getPrevRowIndexOf(QString substr, int row) {
 
-    int len = _tracklist.size();
+	int len = _tracks.size();
 	if(len < row) row = len - 1;
 	for(int i=0; i< len; i++) {
 		if(row - i < 0) row = len - 1;
 		int row_idx = (row - i) % len;
-		QString title = _tracklist[row_idx].title;
+		QString title = _tracks[row_idx].title;
 		if(title.startsWith(substr, Qt::CaseInsensitive)) {
 			return this->index(row_idx, 0);
 		}

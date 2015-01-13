@@ -83,6 +83,7 @@ public:
     int 		columnCount(const QModelIndex& parent=QModelIndex()) const;
     bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
     bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
+	virtual void remove_all_and_insert(int n)=0;
 
 
 	virtual QMap<QChar, QString> getExtraTriggers();

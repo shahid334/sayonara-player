@@ -349,10 +349,6 @@ QStringList Helper::get_soundfile_extensions() {
 			<< "*.aac"
 			<< "*.wma";
 
-	for(const QString& filter : filters) {
-		filters.push_back(filter.toUpper());
-	}
-
 	return filters;
 }
 

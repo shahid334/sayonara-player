@@ -65,9 +65,17 @@ bool CDatabaseConnector::db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 		return false;
 	}
 
-	while(q.next()) {
+	q.last();
 
-		MetaData data;
+	int i=0;
+	int n_rows = q.at() + 1;
+
+	result.resize(n_rows);
+
+	for(bool is_element = q.first(); is_element; is_element = q.next(), i++){
+
+		MetaData& data = result[i];
+
 		data.id = 		 q.value(0).toInt();
 		data.title = 	 q.value(1).toString();
 		data.length_ms = q.value(2).toInt();
@@ -83,8 +91,6 @@ bool CDatabaseConnector::db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 		data.filesize =  q.value(12).toInt();
 		data.discnumber = q.value(13).toInt();
 		data.rating = q.value(14).toInt();
-
-		result.push_back(data);
 	}
 
 	return true;

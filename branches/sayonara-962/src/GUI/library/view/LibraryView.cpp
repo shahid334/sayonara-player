@@ -320,8 +320,7 @@ void LibraryView::fill(const TList& input_data) {
 
 	_cur_filling = true;
 
-	_model->removeRows(0, _model->rowCount());
-	_model->insertRows(0, size);
+	_model->remove_all_and_insert(size);
 
 	for(int row=0; row < size; row++) {
 

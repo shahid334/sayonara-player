@@ -51,9 +51,17 @@ bool CDatabaseConnector::db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 		return false;
 	}
 
-	Artist artist;
+	q.last();
 
-	while (q.next()) {
+	int i=0;
+	int n_rows = q.at() + 1;
+
+	result.resize(n_rows);
+
+	for(bool is_element=q.first(); is_element; is_element = q.next(), i++){
+
+		Artist& artist = result[i];
+
 		artist.id = q.value(0).toInt();
 		artist.name = q.value(1).toString().trimmed();
 		artist.num_songs = q.value(2).toInt();

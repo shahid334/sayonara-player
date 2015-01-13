@@ -64,6 +64,7 @@ public:
 	virtual QModelIndex	getPrevRowIndexOf(QString substr, int row);
 
     QList<quint8> get_discnumbers(const QModelIndex& idx);
+	virtual void remove_all_and_insert(int n);
 
 private:
 	AlbumList 			_albums;

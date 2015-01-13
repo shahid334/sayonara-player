@@ -67,9 +67,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
         int row_height = _parent->rowHeight(0)-4;
         rect.translate(2, 2);
 
-        //int num_albums = _model->data(index).toInt();
         int num_albums = index.data().toInt();
-
 
         if(num_albums <= 1)
             painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
@@ -82,7 +80,7 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_NAME) {
 
         rect.translate(2, 0);
-        //QString name = _model->data(index).toString();
+
         QString name = index.data().toString();
         painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
     }
@@ -91,7 +89,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_YEAR) {
 
         rect.translate(-2, 0);
-        //int year = _model->data(index).toInt();
         int year = index.data().toInt();
 
         QString year_str = QString::number(year);
@@ -103,7 +100,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_N_SONGS) {
 
         rect.translate(-2, 0);
-        //QString n_songs = _model->data(index).toString() + " tracks";
         QString n_songs = index.data().toString() + " tracks";
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, n_songs);
     }
@@ -111,7 +107,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     else if(idx_col == COL_ALBUM_DURATION) {
 
         rect.translate(-2, 0);
-        //QString duration = _model->data(index).toString();
         QString duration = index.data().toString();
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, duration);
     }

@@ -55,14 +55,11 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 _albums.remove(position);
-	 }
+	_albums.remove(position, rows);
 
 	 endRemoveRows();
 	 return true;
 }
-
 
 
 bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelIndex & index)
@@ -73,15 +70,29 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-
-		 Album album;
-		 _albums.insert(position, album);
-	 }
+	 Album album;
+	 _albums.insert(position, rows, album);
 
 	 endInsertRows();
 	 return true;
 }
+
+
+void LibraryItemModelAlbums::remove_all_and_insert(int n){
+
+	beginRemoveRows(QModelIndex(), 0, _albums.size() - 1);
+		 _albums.clear();
+	endRemoveRows();
+
+	if(n <= 0) return;
+
+	beginInsertRows(QModelIndex(), 0, n - 1);
+		_albums.resize(n);
+	 endInsertRows();
+}
+
+
+
 
 
 
@@ -141,7 +152,7 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
          else {
 
              Album album;
-			 if(!Album::fromVariant(value, album)) return false;
+			 if( !Album::fromVariant(value, album) ) return false;
 
 			 if(album.is_lib_selected && !_selected_rows.contains(row)){
 				_selected_rows << row;
@@ -204,10 +215,11 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
         return this->index(-1, -1);
     }
 
-	for(int i=0; i<len; i++) {
+	int i=0;
+	for(const Album& album : _albums) {
         int row_idx = (i + row) % len;
 
-		QString album_name = _album_list[row_idx].name;
+		QString album_name = album.name;
 		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
@@ -216,6 +228,8 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
             album_name.startsWith(substr, Qt::CaseInsensitive )){
                 return this->index(row_idx, 0);
         }
+
+		i++;
 	}
 
 	return this->index(-1, -1);
@@ -237,7 +251,7 @@ QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
         }
 
         row_idx = (row-i) % len;
-        album_name = _album_list[row_idx].name;
+		album_name = _albums[row_idx].name;
 
         if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {

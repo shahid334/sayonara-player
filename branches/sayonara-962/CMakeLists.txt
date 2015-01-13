@@ -15,14 +15,6 @@ ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 MESSAGE("Will install to ${CMAKE_INSTALL_PREFIX}")
 MESSAGE("To change this, use the -DCMAKE_INSTALL_PREFIX parameter")
 
-#SET(CMAKE_BUILD_TYPE "Release")
-#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
-
-SET(CMAKE_BUILD_TYPE "Debug")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
-SET(CMAKE_C_FLAGS "-Wall")
-
 ADD_DEFINITIONS(-std=c++11)
 
 SET(CMAKE_SKIP_RPATH:BOOL ON) 
