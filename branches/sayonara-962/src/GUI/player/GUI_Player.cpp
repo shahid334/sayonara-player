@@ -160,9 +160,6 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	plugin_widget->resize(plugin_widget->width(), 0);
     ui_info_dialog = 0;
 
-	int style = _settings->get(Set::Player_Style);
-	changeSkin(style == 1);
-
 	stopClicked(false);
 
 	psl_set_play(_settings->get(Set::PL_StartPlaying));
@@ -425,18 +422,13 @@ void GUI_Player::correct_btn_clicked(bool b) {
 }
 /** LAST FM **/
 
-
-
-
-void GUI_Player::setStyle(int style) {
-
-	bool dark = (style == 1);
-	changeSkin(dark);
-	action_Dark->setChecked(dark);
+void GUI_Player::skin_toggled(bool on){
+	_settings->set(Set::Player_Style, (on ? 1 : 0) );
 }
 
-void GUI_Player::changeSkin(bool dark) {
+void GUI_Player::skin_changed() {
 
+	bool dark = (_settings->get(Set::Player_Style) == 1);
     QString stylesheet = Style::get_style(dark);
 
 	this->setStyleSheet(stylesheet);
@@ -445,8 +437,6 @@ void GUI_Player::changeSkin(bool dark) {
 	else 		m_skinSuffix = QString("");
 
 	setupVolButton(volumeSlider->value());
-
-	_settings->set(Set::Player_Style, (dark ? 1 : 0) );
 }
 
 
@@ -655,14 +645,10 @@ void GUI_Player::ui_loaded() {
 		ui_libpath->show();
 	}
 
-	int style = _settings->get(Set::Player_Style);
-	changeSkin(style == 1);
-
 	bool fullscreen = _settings->get(Set::Player_Fullscreen);
 	action_Fullscreen->setChecked(fullscreen);
 
 	ui_playlist->resize(playlist_widget->size());
-
 }
 
 

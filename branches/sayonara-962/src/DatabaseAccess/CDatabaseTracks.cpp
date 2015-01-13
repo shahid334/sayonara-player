@@ -126,7 +126,7 @@ bool CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 
     _database->transaction();
 
-    foreach(QString path, paths) {
+	for(const QString& path : paths) {
         MetaData md = getTrackByPath(path);
         v_md.push_back(md);
     }
@@ -137,12 +137,13 @@ bool CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 }
 
 
-MetaData CDatabaseConnector::getTrackByPath(QString path) {
+MetaData CDatabaseConnector::getTrackByPath(const QString& _path) {
 
 	DB_TRY_OPEN(_database);
 
+	QString path;
 	MetaDataList vec_data;
-	QDir d(path);
+	QDir d(_path);
     path = d.absolutePath();
 
 	QSqlQuery q (*_database);
@@ -215,7 +216,7 @@ bool CDatabaseConnector::getAllTracksByAlbum(int album, MetaDataList& returndata
 	
 	if(discnumber < 0) returndata = mdlist;
 	
-	foreach(MetaData md, mdlist) {
+	foreach(const MetaData& md, mdlist) {
 		if(discnumber != md.discnumber) continue;
 		returndata.push_back(md);
 	}
@@ -492,7 +493,7 @@ bool CDatabaseConnector::deleteTracks(const QList<int>& ids){
 
 	_database->transaction();
 
-		foreach(int id, ids){
+		for(const int& id : ids){
 			if( deleteTrack(id) ){
 				success++;
 			};
@@ -510,7 +511,7 @@ bool CDatabaseConnector::deleteTracks(const MetaDataList& v_md) {
 
 	_database->transaction();
 
-		foreach(MetaData md, v_md){
+		for(const MetaData& md : v_md){
 			if( deleteTrack(md.id) ){
 				success++;
 			};
@@ -581,7 +582,7 @@ bool CDatabaseConnector::updateTracks(const MetaDataList& lst) {
 	int success = 0;
 
     _database->transaction();
-	foreach(MetaData md, lst){
+	for(const MetaData& md : lst){
 		if(updateTrack(md)){
 			success++;
 		}

@@ -93,9 +93,6 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 	delete_all_files();
 }
 
-void GUI_Alternate_Covers::changeSkin(bool dark) {
-
-}
 
 void GUI_Alternate_Covers::language_changed() {
 	retranslateUi(this);
@@ -338,7 +335,7 @@ void GUI_Alternate_Covers::open_file_dialog() {
 	dir.setNameFilters(filters);
 
 
-	foreach (QString f, dir.entryList()) {
+	for(const QString& f : dir.entryList()) {
 		QFile::remove(dir.absoluteFilePath(f));
 	}
 
@@ -352,7 +349,7 @@ void GUI_Alternate_Covers::open_file_dialog() {
     reset_model();
 
 	int idx = 0;
-    foreach(QString path, lst) {
+	for(const QString& path : lst) {
 
 		RowColumn rc = _model->cvt_2_row_col( idx );
 
@@ -367,7 +364,7 @@ void GUI_Alternate_Covers::open_file_dialog() {
 
 void GUI_Alternate_Covers::delete_all_files() {
 
-	foreach(CoverLocation cl, _filelist) {
+	for(const CoverLocation& cl : _filelist) {
 		if(!cl.valid) continue;
 		QFile f(cl.cover_path);
 		f.remove();

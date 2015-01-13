@@ -102,8 +102,9 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 
     // delete old stream ripper files
     QStringList lst = d.entryList(Helper::get_soundfile_extensions());
-    foreach(QString str, lst) {
-        qDebug() << "Remove " << d.absolutePath() + QDir::separator() + str;
+	for( const QString& str : lst) {
+
+		qDebug() << "Remove " << d.absolutePath() + QDir::separator() + str;
         QFile f(d.absolutePath() + QDir::separator() + str);
         f.remove();
     }

@@ -132,10 +132,6 @@ public:
 private:
     QString getVersion();
 	void check_for_crash();
-	QFont _system_font;
-
-private slots:
-	void skin_changed();
 };
 
 #endif // APPLICATION_H

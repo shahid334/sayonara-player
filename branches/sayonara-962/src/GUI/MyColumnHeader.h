@@ -90,13 +90,13 @@ class ColumnHeader {
 			_abs_size = false;
 		}
 
-		QString getTitle(){ return _title; }
-		bool getSwitchable(){ return _switchable; }
-		int getSizeType(){ return (_abs_size ? COL_HEADER_SIZE_TYPE_ABS : COL_HEADER_SIZE_TYPE_REL); }
-		int get_preferred_size_abs(){ return _preferred_size_abs; }
-        double get_preferred_size_rel(){ return _preferred_size_rel; }
-		Sort::SortOrder get_asc_sortorder() { return _sort_asc; }
-		Sort::SortOrder get_desc_sortorder() { return _sort_desc; }
+		QString getTitle() const { return _title; }
+		bool getSwitchable() const { return _switchable; }
+		int getSizeType() const { return (_abs_size ? COL_HEADER_SIZE_TYPE_ABS : COL_HEADER_SIZE_TYPE_REL); }
+		int get_preferred_size_abs() const { return _preferred_size_abs; }
+		double get_preferred_size_rel() const { return _preferred_size_rel; }
+		Sort::SortOrder get_asc_sortorder() const { return _sort_asc; }
+		Sort::SortOrder get_desc_sortorder() const { return _sort_desc; }
 
 };
 

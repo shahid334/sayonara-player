@@ -61,9 +61,6 @@ GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy
 	pb_progress->setVisible(false);
 
 	setModal(true);
-
-	int style = _settings->get(Set::Player_Style);
-	changeSkin( style == 1);
 }
 
 
@@ -71,7 +68,7 @@ GUI_ImportFolder::~GUI_ImportFolder() {
 
 }
 
-void GUI_ImportFolder::changeSkin(bool dark) {
+void GUI_ImportFolder::language_changed(){
 
 }
 

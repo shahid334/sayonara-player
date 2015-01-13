@@ -37,26 +37,24 @@ public:
 	private slots:
 		void sl_cb_activate_toggled(bool);
         void sl_cb_create_session_path_toggled(bool);
-        void sl_le_text_changed(QString &);
 		void sl_btn_path_clicked();
 		void sl_ok();
 
 	public slots:
-        void show_win();
-        void changeSkin(bool dark);
         void record_button_toggled(bool);
-        void language_changed();
 
 	public:
 		GUI_StreamRecorder(QWidget* parent=0);
 		virtual ~GUI_StreamRecorder();
+
+	protected:
+		void language_changed();
 
 	private:
 
 		QString _path;
 		bool	_is_active;
         bool	_is_create_session_path;
-        bool    _skin;
 
 };
 

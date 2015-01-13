@@ -56,6 +56,10 @@ void GUI_BroadcastSetup::accept(){
 	QDialog::accept();
 }
 
+void GUI_BroadcastSetup::language_changed(){
+	
+}
+
 void GUI_BroadcastSetup::reject(){
 	QDialog::reject();
 }

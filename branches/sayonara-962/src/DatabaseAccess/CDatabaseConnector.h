@@ -144,7 +144,7 @@ public:
 
 			bool getTracksFromDatabase (MetaDataList& returndata, SortOrder sortorder = TrackArtistAsc);
 			MetaData getTrackById(int id);
-			MetaData getTrackByPath(QString path);
+			MetaData getTrackByPath(const QString& path);
 			bool getMultipleTracksByPath(QStringList& paths, MetaDataList& v_md);
 
 			bool deleteTrack(int id);

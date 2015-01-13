@@ -83,11 +83,11 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
     QString title;
     quint64 len_ms = 0;
 
-	foreach(QString line, list) {
+	for(const QString& _line : list) {
 
         //qDebug() << "Line = " << line.trimmed();
 
-        line = line.trimmed();
+		QString line = _line.trimmed();
         if(line.startsWith("#EXTINF:", Qt::CaseInsensitive)) {
             QStringList sl1;
 
@@ -250,10 +250,16 @@ int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path) {
 		v_md.push_back(md);
 	}
 
-	foreach(QString line, lines) {
+	foreach(const QString& _line, lines) {
 
-		if(line.trimmed().size() == 0 ||
-			line.trimmed().startsWith("#")) continue;
+
+		if(_line.trimmed().size() == 0 ||
+			_line.trimmed().startsWith("#")){
+
+			continue;
+		}
+
+		QString line = _line;
 
 		// remove comments
 		int comment_idx=line.indexOf('#');
@@ -386,7 +392,7 @@ void PlaylistParser::save_playlist(QString filename, const MetaDataList& v_md, b
     if(!file) return;
     fputs("#EXTM3U\n", file);
     qint64 lines = 0;
-    foreach(MetaData md, v_md) {
+	for(const MetaData& md : v_md) {
 
         QString str;
         if(relative) {

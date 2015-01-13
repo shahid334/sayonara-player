@@ -216,7 +216,7 @@ void EngineColorStyleChooser::reload(int widget_width, int widget_height) {
     }
 
 
-    foreach(RawColorStyle rcs, colors_active) {
+	for(const RawColorStyle& rcs : colors_active) {
         ColorStyle style_spectrum;
         ColorStyle style_level;
 

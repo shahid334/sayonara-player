@@ -270,7 +270,7 @@ void MiniSearcher::setExtraTriggers(QMap<QChar, QString> triggers) {
 	_triggers = triggers;
 	QString tooltip;
 
-	foreach(QChar key, triggers.keys()) {
+	for(const QChar& key : triggers.keys()) {
 		tooltip += QString(key) + " = " + triggers.value(key) + "\n";
 	}
 

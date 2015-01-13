@@ -48,10 +48,6 @@ private slots:
 private:
     void play_stream(QString url, QString station_name);
 
-public slots:
-    void changeSkin(bool);
-    void language_changed();
-
 
 public:
 	GUI_Stream(QString name, QWidget *parent = 0);
@@ -63,6 +59,9 @@ public:
 	QString _cur_station_adress;
 
 	void setup_stations(const QMap<QString, QString>&);
+
+protected:
+	void language_changed();
 
 
 };

@@ -57,6 +57,9 @@ private:
 	void dismiss_at(int idx);
 	void set_status_label();
 
+protected:
+	void language_changed();
+
 
 
 };

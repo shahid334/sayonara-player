@@ -69,6 +69,10 @@ GUI_Spectrum::GUI_Spectrum(QString name, QWidget *parent) :
 	update();
 }
 
+void GUI_Spectrum::language_changed(){
+
+}
+
 
 void
 GUI_Spectrum::set_spectrum(QList<float>& lst) {

@@ -74,7 +74,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     _tag_edit_visible = true;
 
     QStringList server_list = _lyric_thread->getServers();
-    foreach(QString server, server_list) {
+	for(const QString& server : server_list) {
 
 		combo_servers->addItem(server);
     }
@@ -116,19 +116,13 @@ void GUI_InfoDialog::psl_tag_edit_deleted(){
     qDebug() << "Tag edit deleted";
 }
 
-void GUI_InfoDialog::changeSkin(bool dark) {
-
-    _dark = dark;
-}
 
 void GUI_InfoDialog::language_changed() {
 
     MetaDataList v_md = _v_md;
 
 	retranslateUi(this);
-
 	set_metadata(v_md);
-    _alternate_covers->language_changed();
 }
 
 

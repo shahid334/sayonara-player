@@ -81,7 +81,7 @@ void LibraryView::rc_header_menu_init(QList<int>& shown_cols) {
 
     int i =0;
     bool show_sorter = true;
-    foreach(ColumnHeader header, _table_headers) {
+	for(const ColumnHeader& header : _table_headers) {
         QAction* action = new QAction(header.getTitle(), this);
         action->setCheckable(true);
 
@@ -136,7 +136,7 @@ void LibraryView::rc_header_menu_changed(bool b) {
 
     int col_idx = 0;
 	QList<int> lst;
-    foreach(QAction* action, _header_rc_actions) {
+	for(const QAction* action : _header_rc_actions) {
 
         if(action->isChecked()) {
             _model->insertColumn(col_idx);
@@ -151,8 +151,9 @@ void LibraryView::rc_header_menu_changed(bool b) {
     emit sig_columns_changed(lst);
     set_col_sizes();
 
-    foreach(int row, sel_list)
-        this->selectRow(row);
+	for(const int& row : sel_list){
+		this->selectRow(row);
+	}
 }
 
 

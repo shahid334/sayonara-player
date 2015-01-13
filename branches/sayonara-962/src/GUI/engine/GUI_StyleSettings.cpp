@@ -79,7 +79,7 @@ void GUI_StyleSettings::init() {
 
     _styles.push_front(style);
 
-    foreach(RawColorStyle style, _styles) {
+	for(const RawColorStyle& style : _styles) {
 		combo_styles->addItem(style.col_list.name);
     }
 

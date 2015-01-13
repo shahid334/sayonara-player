@@ -56,7 +56,7 @@ void CDirectoryReader::get_files_in_dir_rec( QDir base_dir, QStringList& files){
 
 	dirs = base_dir.entryList();
 
-    foreach (QString dir, dirs) {
+	for(const QString& dir : dirs) {
 
 		base_dir.cd(dir);
 		get_files_in_dir_rec(base_dir, files);
@@ -76,7 +76,7 @@ QStringList CDirectoryReader::get_files_in_dir (QDir base_dir) {
 
 	entries = base_dir.entryList();
 
-	foreach (QString file, entries) {
+	for(const QString& file : entries) {
 		files << base_dir.absoluteFilePath(file);
     }
 
@@ -98,7 +98,7 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 
 	set_filter(filter);
 
-    foreach(QString str, lst) {
+	for( const QString& str : lst) {
 
         if(!QFile::exists(str)) continue;
 
@@ -116,38 +116,39 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
     }
 
 
-    // this has to be so strange,
-    MetaDataList v_possible_md;
     QStringList playlist_paths;
 
-    db->getMultipleTracksByPath(files, v_possible_md);
+	db->getMultipleTracksByPath(files, v_md);
 
-    foreach(MetaData md, v_possible_md) {
-        QString filepath = QDir(md.filepath).absolutePath();
+	for(MetaDataList::iterator it=v_md.begin(); it != v_md.end(); it++) {
+
+		QString filepath = QDir(it->filepath).absolutePath();
 
         if(Helper::is_playlistfile(filepath)) {
             playlist_paths.push_back(filepath);
+			it = v_md.erase(it);
             continue;
         }
 
         if(Helper::is_soundfile(filepath)) {
 
-            qDebug() << md.filepath << " is soundfile " << md.id;
-            if(md.id < 0) {
-                if(!ID3::getMetaDataOfFile(md)) {
+			qDebug() << it->filepath << " is soundfile " << it->filepath;
+			if(it->id < 0) {
+
+				if(!ID3::getMetaDataOfFile(*it)) {
+					it = v_md.erase(it);
                     continue;
                 }
-                md.is_extern = true;
+
+				it->is_extern = true;
             }
-            //qDebug() << "push back " << md.filepath;
-            v_md.push_back(md);
         }
     }
 
 
     // TODO: look for playlists if paths could be read from database
 	//extract media files out of playlist files
-    foreach(QString path, playlist_paths) {
+	for(const QString& path : playlist_paths) {
 
         qDebug() << "parse playlist file " << path;
 
@@ -155,7 +156,7 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
         PlaylistParser::parse_playlist(path, v_md_pl);
 
         // check, that metadata is not already available
-        foreach(MetaData md_pl, v_md_pl) {
+		for(const MetaData& md_pl : v_md_pl) {
 
             if(!v_md.contains(md_pl)) {
                 //qDebug() << md_pl.filepath << " not in vector";

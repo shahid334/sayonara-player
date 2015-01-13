@@ -49,6 +49,10 @@ GUI_Broadcast::~GUI_Broadcast(){
 
 }
 
+void GUI_Broadcast::language_changed(){
+	retranslateUi(this);
+}
+
 
 void GUI_Broadcast::set_status_label(){
 	int n_listeners = combo_clients->count();

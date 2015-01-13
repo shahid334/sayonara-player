@@ -240,7 +240,7 @@ void SmartComparison::equalize(QMap<QString, float>& map, float min, float max){
 	float stretch = 1.0f / (max - min);
 	QStringList to_remove;
 
-	foreach(QString key, map.keys()){
+	for(const QString& key : map.keys()){
 		float val = map.value(key);
 
 		val = (val - min) * stretch;
@@ -253,7 +253,7 @@ void SmartComparison::equalize(QMap<QString, float>& map, float min, float max){
 		}
 	}
 
-	foreach(QString str, to_remove){
+	for(const QString& str : to_remove){
 		map.remove(str);
 	}
 }
@@ -274,7 +274,7 @@ QMap<QString, float> SmartComparison::get_similar_strings( const QString& str){
 
 		QMap<QString, float> map;
 
-		foreach(QString tmp_str, _strlist){
+		for(const QString& tmp_str : _strlist){
 
 			float similarity = compare(tmp_str, str, level, false);
 			similarity = std::max(similarity, compare(tmp_str, str, level, true));

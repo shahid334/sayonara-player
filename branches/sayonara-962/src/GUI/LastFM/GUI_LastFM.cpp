@@ -83,10 +83,6 @@ GUI_LastFM::~GUI_LastFM() {
 
 }
 
-void GUI_LastFM::changeSkin(bool dark) {
-
-    _skin = dark;
-}
 
 void GUI_LastFM::language_changed() {
 
@@ -139,7 +135,7 @@ void GUI_LastFM::show_win() {
     }
 
 #endif
-    changeSkin(_skin);
+
 	show();
 }
 

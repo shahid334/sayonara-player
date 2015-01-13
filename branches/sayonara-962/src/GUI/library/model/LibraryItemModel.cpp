@@ -33,7 +33,7 @@ LibraryItemModel::LibraryItemModel(QList<ColumnHeader>& headers) {
 		_cols_active = new bool[_n_all_cols];
 
 		int i=0;
-		foreach(ColumnHeader h, headers) {
+		for(const ColumnHeader& h : headers) {
 			_header_names.push_back(h.getTitle());
 			_cols_active[i] = true;
 		}

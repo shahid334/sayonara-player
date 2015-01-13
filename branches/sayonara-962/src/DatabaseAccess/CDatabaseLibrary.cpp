@@ -69,7 +69,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
     _database->transaction();
 
-	foreach (MetaData md, v_md) {
+	for(const MetaData& md : v_md) {
 
 		//first check if we know the artist and its id
 		albumID = getAlbumID(md.album);

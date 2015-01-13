@@ -52,6 +52,7 @@ private:
 
 
 protected:
+	virtual void language_changed()=0;
     QAction*    _pp_action;
     void setSize(QSize size);
     void closeEvent(QCloseEvent *);

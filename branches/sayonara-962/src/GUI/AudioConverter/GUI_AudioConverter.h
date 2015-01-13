@@ -54,6 +54,7 @@ private slots:
 
 protected:
 	void closeEvent(QCloseEvent* e);
+	void language_changed();
 
 	
 private:

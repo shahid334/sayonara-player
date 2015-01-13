@@ -50,6 +50,10 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
 	init_buttons();
 }
 
+void GUI_LevelPainter::language_changed(){
+
+}
+
 
 void GUI_LevelPainter::set_level(float level_l, float level_r) {
 

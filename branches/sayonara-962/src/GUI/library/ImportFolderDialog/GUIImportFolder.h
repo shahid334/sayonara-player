@@ -41,6 +41,7 @@ Q_OBJECT
 public:
 	GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
+
     void set_progress(int);
 	void set_status(int n_tracks);
 	void set_thread_active(bool);
@@ -62,13 +63,10 @@ private slots:
 	void combo_box_changed(const QString&);
     void choose_dir();
 
-
-public slots:
-    void changeSkin(bool);
-
 protected:
 	void closeEvent(QCloseEvent* e);
 	void showEvent(QShowEvent* e);
+    virtual	void language_changed();
 
 
 private:

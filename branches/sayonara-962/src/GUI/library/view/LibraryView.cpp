@@ -51,7 +51,7 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
     _parent = parent;
     _qDrag = 0;
     _rc_header_menu = 0;
-    _dark = true;
+	_dark = true;
     _cur_filling = false;
 
     _mimedata = new CustomMimeData();
@@ -257,7 +257,7 @@ int LibraryView::get_min_selected() {
     QList<int> selections = _model->get_selected();
     if(selections.size() == 0) return 0;
     int min = 10000;
-	foreach(int i, selections) {
+	for(const int& i : selections) {
         if(i < min) min = i;
     }
     return min;
@@ -272,7 +272,7 @@ void LibraryView::selectionChanged ( const QItemSelection & selected, const QIte
     QModelIndexList idx_list = this->selectionModel()->selectedIndexes();
 
 	QList<int> idx_list_int;
-	foreach(QModelIndex model_idx, idx_list) {
+	for(const QModelIndex& model_idx : idx_list) {
 
 		int row = model_idx.row();
 
@@ -296,7 +296,7 @@ QList<int> LibraryView::get_selections() {
     QList<int> idx_list_int;
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
-	foreach(QModelIndex model_idx, idx_list) {
+	for(const QModelIndex& model_idx : idx_list) {
         idx_list_int.push_back(model_idx.row());
     }
 
@@ -351,7 +351,7 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
 
     QList<QUrl> urls;
 	if(!drop_entire_folder) {
-		foreach(MetaData md, v_md) {
+		for(const MetaData& md : v_md) {
             QUrl url(QString("file://") + md.filepath);
             urls << url;
         }
@@ -361,12 +361,12 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
         QStringList filenames;
 		QStringList folders;
 
-		foreach(MetaData md, v_md){
+		for(const MetaData& md : v_md) {
             filenames << md.filepath;
 		}
 
 		folders = Helper::extract_folders_of_files(filenames);
-		foreach(QString folder, folders) {
+		for(const QString& folder : folders) {
             QUrl url(QString("file://") + folder);
             urls << url;
         }
@@ -464,7 +464,7 @@ void LibraryView::dropEvent(QDropEvent *event) {
     }
 
 	QStringList filelist;
-	foreach(QUrl url, mime_data->urls()) {
+	for(const QUrl& url : mime_data->urls()) {
         QString path;
         QString url_str = url.toString();
         path =  url_str.right(url_str.length() - 7).trimmed();

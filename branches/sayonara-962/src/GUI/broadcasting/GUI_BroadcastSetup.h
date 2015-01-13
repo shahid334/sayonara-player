@@ -32,6 +32,9 @@ class GUI_BroadcastSetup : public SayonaraDialog, private Ui::GUI_BroadcastSetup
 public:
 	explicit GUI_BroadcastSetup(QWidget *parent = 0);
 
+protected:
+	virtual	void language_changed();
+
 private slots:
 
 	void accept();

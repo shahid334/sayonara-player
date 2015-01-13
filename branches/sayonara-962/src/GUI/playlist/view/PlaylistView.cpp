@@ -166,7 +166,7 @@ int PlaylistView::get_min_selected() {
         return 0;
     }
 
-	foreach(QModelIndex i, lst) {
+	for(const QModelIndex& i : lst) {
 
 		if(i.row() < min_row) {
             min_row = i.row();
@@ -268,7 +268,7 @@ void PlaylistView::set_mimedata(MetaDataList& v_md, QString text) {
     CustomMimeData* mimedata = new CustomMimeData();
 
     QList<QUrl> urls;
-	foreach(MetaData md, v_md) {
+	for(const MetaData& md : v_md) {
         QUrl url(QString("file://") + md.filepath);
         urls << url;
     }
@@ -384,7 +384,7 @@ void PlaylistView::row_pressed(const QModelIndex& idx) {
 
     MetaDataList v_md;
 
-	foreach(int row, selected_rows) {
+	for(const int& row : selected_rows) {
         QVariant mdvariant = _model->data(_model->index(row), Qt::WhatsThisRole);
         MetaData md;
 
@@ -432,7 +432,7 @@ void PlaylistView::select_rows(QList<int> lst) {
     if(lst.size() > 0)
         this->setCurrentIndex(_model->index(lst[0]));
 
-	foreach(int row, lst) {
+	for(const int& row : lst) {
         QModelIndex idx = _model->index(row);
 
         sm->select(idx, QItemSelectionModel::Select);
@@ -460,7 +460,7 @@ void PlaylistView::selectionChanged ( const QItemSelection & selected, const QIt
 
     SearchableListView::selectionChanged(selected, deselected);
 
-	foreach(QModelIndex model_idx, idx_list) {
+	for(const QModelIndex& model_idx : idx_list) {
 
 		if(idx_list_int.contains(model_idx.row())) continue;
 
@@ -487,7 +487,7 @@ QList<int> PlaylistView::get_selections() {
     QList<int> idx_list_int;
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
-	foreach(QModelIndex model_idx, idx_list) {
+	for(const QModelIndex& model_idx : idx_list) {
         idx_list_int.push_back(model_idx.row());
     }
 
@@ -618,7 +618,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 	if( d->hasUrls() && text.compare("tracks", Qt::CaseInsensitive) ) {
 
         QStringList filelist;
-		foreach(QUrl url, d->urls()) {
+		for(const QUrl& url : d->urls()) {
             QString path;
             QString url_str = url.toString();
             path =  url_str.right(url_str.length() - 7).trimmed();

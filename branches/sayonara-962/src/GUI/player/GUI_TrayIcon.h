@@ -62,7 +62,7 @@ public slots:
     void setMute(bool mute);
 	void skin_changed();
     void stop();
-    void language_changed();
+
 
 
 signals:
@@ -91,6 +91,8 @@ private slots:
 	void close_clicked();
 	void mute_clicked();
 
+protected:
+	void language_changed();
 
 private:
     /// some shared actions

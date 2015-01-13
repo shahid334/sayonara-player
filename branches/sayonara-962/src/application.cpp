@@ -41,9 +41,9 @@ Application::Application(int & argc, char ** argv) :
 	QApplication(argc, argv),
 	SayonaraClass()
 {
-	_system_font = this->font();
-	_system_font.setPointSize(8);
-	app->setFont(_system_font);
+	QFont font = this->font();
+	font.setPointSize(8);
+	app->setFont(font);
 }
 
 void Application::check_for_crash(){
@@ -193,8 +193,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
 
-	player->setStyle( _settings->get(Set::Player_Style) );
-
 	/* --> INTO Player*/
 	if(is_maximized) player->showMaximized();
 	else player->show();
@@ -226,7 +224,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->showPlugin(p);
 
 	_initialized = true;
-	REGISTER_LISTENER(Set::Player_Style, skin_changed);
 }
 
 Application::~Application() {
@@ -411,34 +408,3 @@ QMainWindow* Application::getMainWindow() {
     return this->player;
 }
 
-
-void Application::skin_changed(){
-
-	return;
-	bool m_dark = (_settings->get(Set::Player_Style) == 0);
-	QFont font;
-
-	qDebug() << "Skin changed";
-
-	if(m_dark){
-
-		qDebug() << "Dark";
-		font.setFamily("DejaVu Sans");
-		font.setPointSize(9);
-		font.setWeight(55);
-		font.setItalic(false);
-
-	}
-
-	else{
-		font = _system_font;
-	}
-
-	font.setHintingPreference(QFont::PreferNoHinting);
-	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
-	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
-
-	this->setFont(font);
-	player->setFont(font);
-	player->repaint();
-}

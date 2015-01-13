@@ -28,7 +28,7 @@
 
 #ifndef LIBRARYITEMDELEGATEALBUMS_H_
 #define LIBRARYITEMDELEGATEALBUMS_H_
-#include <QObject>
+
 #include <QLabel>
 #include <QTableView>
 #include <QPen>
@@ -48,18 +48,13 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    void set_skin(bool dark);
-
 
 private:
-
 	QPixmap _icon_single_album;
 	QPixmap _icon_multi_album;
 
 	QPen _pen;
 	LibraryItemModel* _model;
-	QColor _selected_background;
-
 
 };
 

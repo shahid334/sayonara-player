@@ -68,6 +68,10 @@ GUI_TagEdit::~GUI_TagEdit(){
 
 }
 
+void GUI_TagEdit::language_changed(){
+
+}
+
 
 void GUI_TagEdit::btn_cancel_clicked(){
 	emit sig_cancelled();
@@ -357,7 +361,7 @@ void GUI_TagEdit::apply_tag(int idx){
 	QMap<QString, QString> tag_cap_map = _tag_expression.get_tag_val_map();
 	MetaData md = _tag_edit->get_metadata(idx);
 
-	foreach(QString tag, tag_cap_map.keys()){
+	for(const QString& tag : tag_cap_map.keys()){
 
 		QString cap = tag_cap_map[tag];
 

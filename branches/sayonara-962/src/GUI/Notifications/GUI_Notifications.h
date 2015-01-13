@@ -37,10 +37,12 @@ public:
     
 private slots:
     void ok_clicked();
-	void language_changed();
 
 private:
     NotificationPluginLoader* _plugin_loader;
+
+protected:
+	void language_changed();
 
 };
 

@@ -39,6 +39,7 @@ protected:
    void paintEvent(QPaintEvent* e);
    void showEvent(QShowEvent*);
    void closeEvent(QCloseEvent*);
+   void language_changed();
 
 protected slots:
 	virtual void timed_out();

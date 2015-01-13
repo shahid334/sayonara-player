@@ -159,8 +159,6 @@ protected slots:
     void import_files(const QStringList&);
 
 	void _sl_show_only_tracks_changed();
-	void skin_changed();
-	void language_changed();
 
 	void lib_reload(const QString&);
 	void lib_fill_tracks(const MetaDataList&);
@@ -192,6 +190,7 @@ protected:
 
 	int show_delete_dialog(int n_tracks);
     void init_headers();
+	void language_changed();
 
 private:
 	CLibraryBase* _library;

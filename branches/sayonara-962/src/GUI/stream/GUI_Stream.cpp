@@ -65,10 +65,6 @@ GUI_Stream::~GUI_Stream() {
 }
 
 
-void GUI_Stream::changeSkin(bool dark) {
-
-}
-
 void GUI_Stream::language_changed() {
 	retranslateUi(this);
 }
@@ -261,9 +257,9 @@ void GUI_Stream::play_stream(QString url, QString name) {
 
     if(Helper::is_playlistfile(url)) {
         MetaDataList v_md_tmp;
-        if(PlaylistParser::parse_playlist(url, v_md_tmp) > 0) {
+		if(PlaylistParser::parse_playlist(url, v_md) > 0) {
 
-            foreach(MetaData md, v_md_tmp) {
+			for(MetaData& md : v_md_tmp) {
 
                 if(name.isEmpty()){
                     md.album = url;
@@ -284,7 +280,6 @@ void GUI_Stream::play_stream(QString url, QString name) {
                 }
 
                 md.radio_mode = RadioModeStation;
-                v_md.push_back(md);
                 qDebug() << "Url = " << md.filepath;
             }
         }

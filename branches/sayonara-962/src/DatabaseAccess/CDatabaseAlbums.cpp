@@ -71,7 +71,7 @@ bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 		QStringList discnumberList = q.value(7).toString().split(',');
 		album.discnumbers.clear();
 
-		foreach(QString disc, discnumberList) {
+		for(const QString& disc : discnumberList) {
 			int d = disc.toInt();
 			if(album.discnumbers.contains(d)) continue;
 

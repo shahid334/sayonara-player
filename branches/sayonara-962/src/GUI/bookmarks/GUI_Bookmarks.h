@@ -72,8 +72,9 @@ private:
 	void disable_prev();
 	void disable_next();
 
-	void set_idx(int idx);
-	
+protected:
+	void language_changed();
+
 };
 
 #endif // GUI_BOOKMARKS_H

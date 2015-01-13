@@ -85,7 +85,7 @@ private:
 
     int show_warning(QString title_text);
 
-private slots:
+protected:
 	void language_changed();
 };
 

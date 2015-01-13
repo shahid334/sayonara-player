@@ -154,10 +154,10 @@ private slots:
 
     /* View */
     void showLibrary(bool, bool resize=true);
-    void changeSkin(bool);
     void small_playlist_items_toggled(bool);
     void show_notification_toggled(bool);
     void show_fullscreen_toggled(bool);
+	void skin_toggled(bool);
 
 
     /* Preferences */
@@ -185,8 +185,6 @@ private slots:
     void awa_version_finished();
     void awa_translators_finished();
 
-	void language_changed();
-
 	void _sl_libpath_changed();
 	void _sl_sr_active_changed();
 
@@ -202,7 +200,6 @@ public:
     QWidget* getParentOfPlugin();
 
     void ui_loaded();
-    void setStyle(int);
 
 
 protected:
@@ -211,6 +208,9 @@ protected:
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
     void moveEvent(QMoveEvent* e);
+
+	void language_changed();
+	virtual void skin_changed();
 
 private:
 

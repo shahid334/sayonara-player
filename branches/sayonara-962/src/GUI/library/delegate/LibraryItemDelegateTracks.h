@@ -44,18 +44,14 @@ public:
 	virtual ~LibraryItemDelegateTracks();
 
 public:
-	    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-        void set_skin(bool dark);
+	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 
 private:
-		QTableView* _parent;
-        QPen        _pen;
-        LibraryItemModel* _model;
-        QColor _selected_background;
-
+	QTableView* _parent;
+	QPen        _pen;
+	LibraryItemModel* _model;
 };
 
 #endif /* IBRARYITEMDELEGATETRACKS_H_ */

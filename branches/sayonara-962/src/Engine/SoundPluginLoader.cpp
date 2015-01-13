@@ -62,7 +62,7 @@ bool SoundPluginLoader::load_plugins(QString app_dir) {
 
 
 	// dynamic plugins
-	foreach(QString filename, entry_list) {
+	for(const QString& filename : entry_list) {
 		qDebug() << "possible plugin: " << plugin_dir.absoluteFilePath(filename);
 		QPluginLoader loader(plugin_dir.absoluteFilePath(filename));
 

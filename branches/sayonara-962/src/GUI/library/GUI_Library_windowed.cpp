@@ -592,7 +592,7 @@ void GUI_Library_windowed::play_next() {
 void GUI_Library_windowed::play_next_tracks() {
 	QModelIndexList idx_list = tb_title->selectionModel()->selectedRows(0);
 	QList<int> lst;
-	foreach(QModelIndex idx, idx_list) {
+	for(const QModelIndex& idx : idx_list) {
 		lst.push_back(idx.row());
 	}
 
@@ -608,7 +608,7 @@ void GUI_Library_windowed::append() {
 void GUI_Library_windowed::append_tracks() {
 	QModelIndexList idx_list = tb_title->selectionModel()->selectedRows(0);
     QList<int> lst;
-    foreach(QModelIndex idx, idx_list) {
+	for(const QModelIndex&  idx : idx_list) {
         lst.push_back(idx.row());
     }
 
@@ -663,7 +663,7 @@ void GUI_Library_windowed::delete_tracks() {
 
 	QModelIndexList idx_list = tb_title->selectionModel()->selectedRows(0);
 	QList<int> lst;
-	foreach(QModelIndex idx, idx_list) {
+	for(const QModelIndex& idx : idx_list) {
 		lst.push_back(idx.row());
 	}
 
@@ -773,22 +773,6 @@ void GUI_Library_windowed::timer_timed_out() {
 
 	QPoint p = QCursor::pos();
 	_discmenu->popup(p);
-}
-
-
-void GUI_Library_windowed::skin_changed() {
-
-	bool b = (_settings->get(Set::Player_Style) == 1);
-
-    if(!_album_delegate || !_artist_delegate || !_track_delegate) return;
-
-	_album_delegate->set_skin(b);
-	_artist_delegate->set_skin(b);
-	_track_delegate->set_skin(b);
-
-	lv_album->set_skin(b);
-	lv_artist->set_skin(b);
-	tb_title->set_skin(b);
 }
 
 void GUI_Library_windowed::import_files(const QStringList & lst) {

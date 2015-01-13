@@ -48,6 +48,10 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 	disable_prev();
 }
 
+void GUI_Bookmarks::language_changed(){
+	retranslateUi(this);
+}
+
 
 void GUI_Bookmarks::disable_prev() {
 	_last_idx = -1;

@@ -201,7 +201,7 @@ void GUI_Playlist::fill_playlist(const MetaDataList& v_metadata, int cur_play_id
 	qint64 dur_ms = 0;
 	_playlist_type = playlist_type;
 
-	foreach(MetaData md, v_metadata) {
+	for(const MetaData& md : v_metadata) {
 		dur_ms += md.length_ms;
     }
 

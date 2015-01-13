@@ -44,9 +44,6 @@ LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, Li
     _icon_multi_album = Helper::getPixmap("fwd_orange.png");
 
     _model = model;
-
-    _selected_background = QColor(66,78,114);
-
 }
 
 
@@ -64,10 +61,6 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
     painter->save();
 
     int idx_col = _model->calc_shown_col(index.column());
-
-    if(_model->is_selected(index.row())) {
-        painter->fillRect(rect, _selected_background);
-    }
 
     if(idx_col == COL_ALBUM_SAMPLER) {
         int col_width = _parent->columnWidth(0)-4;
@@ -140,18 +133,5 @@ QSize LibraryItemDelegateAlbums::sizeHint(const QStyleOptionViewItem & option, c
     Q_UNUSED(index);
 
     return QSize(1, _parent->rowHeight(index.row()));
-}
-
-
-
-void LibraryItemDelegateAlbums::set_skin(bool dark) {
-    if(dark) {
-        _selected_background = QColor(66,78,114);
-    }
-
-    else{
-        _selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-    }
-
 }
 

@@ -37,15 +37,12 @@ public:
 signals:
     void sig_library_path_set();
     
-public slots:
-    void language_changed();
-
 private slots:
     void btn_clicked();
 
 protected:
     void resizeEvent(QResizeEvent* e);
-    
+	void language_changed();
 };
 
 #endif // GUI_LIBRARYPATH_H

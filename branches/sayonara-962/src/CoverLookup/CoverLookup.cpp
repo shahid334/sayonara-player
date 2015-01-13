@@ -151,7 +151,7 @@ void CoverLookup::finished(bool success) {
 
     QObject* sender = this->sender();
 
-	foreach(CoverFetchThread* t, _cfts){
+	for( CoverFetchThread* t : _cfts){
 		if(t == (CoverFetchThread*) sender){
 			_cfts.removeOne(t);
 		}

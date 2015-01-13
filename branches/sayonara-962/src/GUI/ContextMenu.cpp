@@ -71,8 +71,9 @@ void ContextMenu::clear_actions() {
 
     QList<QAction*> actions = this->actions();
     if(actions.size() > 0) {
-        foreach(QAction* a, actions)
-            this->removeAction(a);
+		foreach(QAction* a, actions){
+			this->removeAction(a);
+		}
     }
 
     disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_clicked()));

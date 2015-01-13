@@ -44,7 +44,7 @@ MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) :
 	year_min = 0xFFFF;
 	year_max = 0;
 
-	foreach(MetaData md, lst){
+	for(const MetaData& md : lst){
 
 		if(!_artists.contains(md.artist)){
 			_artists << md.artist;
@@ -70,7 +70,7 @@ MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) :
 		if(md.year > year_max) year_max = md.year;
 
 		// genre
-		foreach(QString genre, md.genres){
+		for(const QString& genre : md.genres){
 
 			QString first_upper = Helper::cvtQString2FirstUpper(genre).trimmed();
 
@@ -288,7 +288,7 @@ QMap<InfoStrings, QString> MetaDataInfo::get_info(){
 QString MetaDataInfo::get_info_as_string(){
 	QString str;
 
-	foreach( InfoStrings key, _info.keys() ){
+	for( const InfoStrings& key : _info.keys() ){
 		str += BOLD(get_info_string(key)) + _info.value(key) + CAR_RET;
 	}
 
@@ -304,7 +304,7 @@ QString MetaDataInfo::get_paths_as_string(){
 	QString str;
 	QString lib_path = _settings->get(Set::Lib_Path);
 
-	foreach(QString path, _paths){
+	for(const QString& path : _paths){
 
 		QString name = path;
 		name.replace(lib_path, "...");

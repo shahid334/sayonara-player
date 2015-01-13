@@ -42,7 +42,6 @@ LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, 
     _icon_multi_album = Helper::getPixmap("fwd_orange.png");
 
     _model = model;
-    _selected_background = QColor(66,78,114);
 }
 
 LibraryItemDelegateArtists::~LibraryItemDelegateArtists() {
@@ -61,11 +60,6 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
     int col = index.column();
     int idx_col = _model->calc_shown_col(col);
-
-    if(_model->is_selected(index.row())) {
-        painter->fillRect(rect, _selected_background);
-    }
-
 
     if(idx_col == COL_ARTIST_N_ALBUMS) {
         int col_width = _parent->columnWidth(0)-4;
@@ -110,16 +104,10 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 QSize LibraryItemDelegateArtists::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-
-
     Q_UNUSED(option);
     Q_UNUSED(index);
 
-
-
     return QSize(1, _parent->rowHeight(index.row()));
-
-
 }
 
 
@@ -141,21 +129,9 @@ QWidget *LibraryItemDelegateArtists::createEditor(QWidget *parent, const QStyleO
 }
 
 
-
-
 void LibraryItemDelegateArtists::setEditorData(QWidget *editor, const QModelIndex & index) const
 {
     Q_UNUSED(editor);
     Q_UNUSED(index);
 }
 
-
-void LibraryItemDelegateArtists::set_skin(bool dark) {
-    if(dark) {
-        _selected_background = QColor(66,78,114);
-    }
-
-    else{
-        _selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-    }
-}

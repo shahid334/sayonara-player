@@ -54,7 +54,7 @@ int CoverFetchThread::run_single() {
 
 	QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
 
-    foreach(QString adress, adresses) {
+	for(const QString& adress : adresses) {
 
         if(!_run) return 0;
 
@@ -63,8 +63,8 @@ int CoverFetchThread::run_single() {
         bool success = CoverDownloader::cov_download_cover(adress, &img);
 
         if(success) {
-			CoverLocation cl;
 
+			CoverLocation cl;
 			img.save(_target_file);
 
 			cl.cover_path = _target_file;
@@ -88,7 +88,7 @@ int CoverFetchThread::run_multi() {
 
     QStringList adresses = CoverDownloader::cov_call_and_parse(_url, _n_covers * 2);
 
-    foreach(QString adress, adresses) {
+	for(const QString& adress : adresses) {
 
         if(!_run) return idx;
 

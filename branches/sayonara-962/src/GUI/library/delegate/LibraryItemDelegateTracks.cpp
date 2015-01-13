@@ -40,7 +40,6 @@
 LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent, bool enabled) : LibraryRatingDelegate(model, parent, enabled) {
 	this->_parent = parent;
 	_model = model;
-	_selected_background = QColor(66,78,114);
 }
 
 LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
@@ -60,10 +59,6 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
     QRect 	rect(option.rect);
     QString	text = index.data().toString();
-
-    if(_model->is_selected(index.row())) {
-        painter->fillRect(rect, _selected_background);
-    }
 
     if(idx_col == COL_FILESIZE) {
         text = Helper::calc_filesize_str(text.toInt());
@@ -111,17 +106,4 @@ QSize LibraryItemDelegateTracks::sizeHint(const QStyleOptionViewItem & option, c
 	Q_UNUSED(index);
 
 	return QSize(1, _parent->rowHeight(index.row()));
-}
-
-
-
-
-void LibraryItemDelegateTracks::set_skin(bool dark) {
-    if(dark) {
-		_selected_background = QColor(66,78,114);
-	}
-
-	else{
-		_selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-	}
 }
