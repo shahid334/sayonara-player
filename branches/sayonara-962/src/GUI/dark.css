@@ -6,13 +6,11 @@ QMainWindow, QDialog {
 	border: none;
 	background-color: #3c3c3c;
 	color: #D8D8D8;
-	selection-background-color: #424e72;
 }
 
 QWidget {
 	border: none;
 	color: #D8D8D8;
-	selection-background-color: #424e72;
 	font-family: "DejaVu Sans";
 }
 
@@ -68,7 +66,6 @@ MiniSearcher {
 QLabel, QScrollArea{
 	border: none;
 	background: transparent;
-	/*font: 500 8pt "DejaVu Sans";*/
 }
 
 QLabel#lab_pl_small_title, QLabel#lab_pl_big_title {
@@ -93,10 +90,11 @@ QListView, QTableView {
 	selection-background-color: #424e72;
 }
 
-QListView:focus, QTableView:focus{
+QListView:focus, QTableView:focus {
 
-/*	border: 1px solid #424e72;*/
+	border: 1px solid #424e72;
 }
+
 
 QScrollBar::vertical {
 

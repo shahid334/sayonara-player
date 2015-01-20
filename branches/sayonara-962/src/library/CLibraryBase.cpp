@@ -358,7 +358,7 @@ void CLibraryBase::change_album_selection(const QList<int>& idx_list){
 
 	foreach(int idx, idx_list) {
 		Album album = _vec_albums[idx];
-		_selected_albums << album.id;
+		selected_albums << album.id;
 	}
 
 	if(selected_albums == _selected_albums) return;
@@ -366,16 +366,11 @@ void CLibraryBase::change_album_selection(const QList<int>& idx_list){
 	_vec_md.clear();
 	_selected_albums = selected_albums;
 
-	foreach(int idx, idx_list) {
-
-		Album album = _vec_albums[idx];
-		_selected_albums << album.id;
-	}
-
 	// only show tracks of selected album / artist
 	if(_selected_artists.size() > 0) {
 		MetaDataList v_md;
 		if(_selected_albums.size() > 0) {
+
 			_db->getAllTracksByAlbum(_selected_albums, v_md, _filter, _sortorder.so_tracks);
 
 			// filter by artist
@@ -385,8 +380,9 @@ void CLibraryBase::change_album_selection(const QList<int>& idx_list){
 			}
 		}
 
-		else
+		else{
 			_db->getAllTracksByArtist(_selected_artists, _vec_md, _filter, _sortorder.so_tracks);
+		}
 	}
 
 	// only album is selected
@@ -480,15 +476,18 @@ void CLibraryBase::restore_track_selection(const QList<int>& old_selected_idx){
 
 void CLibraryBase::psl_md_changed(const MetaData& md) {
 
-    if(md.id < 0) return;
+	if( md.id < 0 ) return;
 
 	if(_old_md.length_ms == md.length_ms) return;
 
-	_old_md = md;
-    _db->updateTrack(md);
+
+	if(md.id >= 0){
+		_db->updateTrack(md);
+		refresh();
+	}
 
     emit_stuff();
-	refresh();
+
 }
 
 void CLibraryBase::psl_change_id3_tags(const QList<int>& lst) {

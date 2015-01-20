@@ -37,9 +37,10 @@
 #include <QItemDelegate>
 #include <QPainter>
 
-LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent, bool enabled) : LibraryRatingDelegate(model, parent, enabled) {
-	this->_parent = parent;
-	_model = model;
+LibraryItemDelegateTracks::LibraryItemDelegateTracks(LibraryView* parent, bool enabled) :
+	LibraryRatingDelegate(parent, enabled)
+{
+
 }
 
 LibraryItemDelegateTracks::~LibraryItemDelegateTracks() {
@@ -51,13 +52,15 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
 
 	if(!index.isValid()) return;
 
+	QRect 	rect(option.rect);
+	painter->save();
+
+	LibraryItemModelTracks* model = (LibraryItemModelTracks*) index.model();
+
     int col = index.column();
-
-    LibraryItemModelTracks* model = (LibraryItemModelTracks*) index.model();
     int idx_col = model->calc_shown_col(col);
-    painter->save();
 
-    QRect 	rect(option.rect);
+
     QString	text = index.data().toString();
 
     if(idx_col == COL_FILESIZE) {
@@ -93,7 +96,6 @@ void LibraryItemDelegateTracks::paint(QPainter *painter, const QStyleOptionViewI
         rect.translate(2, 0);
         painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, text);
     }
-
 
     painter->restore();
 }

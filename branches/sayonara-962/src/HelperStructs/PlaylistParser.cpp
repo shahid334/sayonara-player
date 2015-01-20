@@ -128,7 +128,7 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
 
             MetaData md_tmp = db->getTrackByPath(md.filepath);
 
-            if( md_tmp.id >= 0) {
+			if( md_tmp.id >= 0 ) {
                 v_md.push_back(md_tmp);
             }
 

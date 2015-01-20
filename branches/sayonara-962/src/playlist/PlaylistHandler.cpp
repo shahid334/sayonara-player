@@ -310,7 +310,7 @@ void PlaylistHandler::psl_similar_artists_available(const QList<int>& artists) {
 	} while(is_track_already_in && cur_artist_idx < artists_copy.size());
 
 
-    if(md.id < 0) return;
+	if(md.id < 0) return;
 
 	if(!is_track_already_in){
 		_active_playlist->append_track(md);

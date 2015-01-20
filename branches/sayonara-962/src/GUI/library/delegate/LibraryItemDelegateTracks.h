@@ -40,7 +40,7 @@
 class LibraryItemDelegateTracks : public LibraryRatingDelegate {
 
 public:
-	LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent, bool enabled);
+	LibraryItemDelegateTracks(LibraryView* parent, bool enabled);
 	virtual ~LibraryItemDelegateTracks();
 
 public:
@@ -49,7 +49,7 @@ public:
 
 
 private:
-	QTableView* _parent;
+
 	QPen        _pen;
 	LibraryItemModel* _model;
 };

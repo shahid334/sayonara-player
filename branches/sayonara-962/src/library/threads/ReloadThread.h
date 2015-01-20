@@ -31,8 +31,8 @@
 
 
 #include <QThread>
-#include <QObject>
 #include <QString>
+#include "DatabaseAccess/CDatabaseConnector.h"
 #include <HelperStructs/CDirectoryReader.h>
 #include "HelperStructs/MetaData.h"
 
@@ -52,7 +52,7 @@ public:
 	virtual ~ReloadThread();
 
 	void set_lib_path(QString library_path);
-	void get_metadata(MetaDataList&);
+	MetaDataList get_metadata();
 	int getState();
     void pause();
     void goon();
@@ -69,6 +69,10 @@ private:
 
     int get_and_save_all_files();
     void get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n_files);
+
+	CDatabaseConnector* _db;
+
+
 };
 
 #endif /* RELOADTHREAD_H_ */

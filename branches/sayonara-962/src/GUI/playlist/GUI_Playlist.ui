@@ -76,7 +76,7 @@
       </size>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Show numbers in playlist</string>
@@ -85,7 +85,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../Icons.qrc">
        <normaloff>:/icons/numbers.png</normaloff>:/icons/numbers.png</iconset>
      </property>
      <property name="iconSize">
@@ -106,6 +106,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="PlaylistTabWidget" name="tw_playlists">
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="tabPosition">
         <enum>QTabWidget::North</enum>
        </property>
@@ -204,7 +207,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Repeat 1</string>
@@ -213,7 +216,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/rep1.png</normaloff>:/icons/rep1.png</iconset>
        </property>
        <property name="iconSize">
@@ -248,7 +251,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Repeat All</string>
@@ -257,7 +260,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/repAll.png</normaloff>:/icons/repAll.png</iconset>
        </property>
        <property name="iconSize">
@@ -292,7 +295,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Shuffle</string>
@@ -301,7 +304,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/shuffle.png</normaloff>:/icons/shuffle.png</iconset>
        </property>
        <property name="iconSize">
@@ -336,7 +339,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Append when adding new tracks</string>
@@ -345,7 +348,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/append.png</normaloff>:/icons/append.png</iconset>
        </property>
        <property name="iconSize">
@@ -380,7 +383,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Dynamic playing</string>
@@ -389,7 +392,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/dynamic.png</normaloff>:/icons/dynamic.png</iconset>
        </property>
        <property name="iconSize">
@@ -424,7 +427,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="toolTip">
         <string>Gapless playback</string>
@@ -433,7 +436,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/gapless.png</normaloff>:/icons/gapless.png</iconset>
        </property>
        <property name="iconSize">
@@ -470,7 +473,7 @@
       </size>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="toolTip">
       <string>Clear Playlist</string>
@@ -479,7 +482,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../Icons.qrc">
        <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
      </property>
      <property name="iconSize">
@@ -495,6 +498,9 @@
    </item>
    <item row="4" column="1">
     <spacer name="horizontalSpacer">
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -534,6 +540,9 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
        <property name="text">
         <string notr="true">0m 0s</string>
        </property>
@@ -558,6 +567,9 @@
        <height>26</height>
       </size>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="toolTip">
       <string>Create new Playlist</string>
      </property>
@@ -565,7 +577,7 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset>
+      <iconset resource="../Icons.qrc">
        <normaloff>:/icons/plus.png</normaloff>:/icons/plus.png</iconset>
      </property>
      <property name="iconSize">
@@ -594,6 +606,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

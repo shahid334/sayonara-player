@@ -132,7 +132,7 @@ bool LibraryItemModel::removeColumns(int position, int cols, const QModelIndex &
 }
 
 
-void LibraryItemModel::set_selected(QList<int>& rows) {
+void LibraryItemModel::set_selected(const QList<int>& rows) {
     _selected_rows = rows;
 }
 

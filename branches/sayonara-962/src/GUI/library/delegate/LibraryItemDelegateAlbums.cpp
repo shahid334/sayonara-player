@@ -37,13 +37,11 @@
 #include <QStyleOptionViewItem>
 
 
-LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent, bool enabled) :
-	LibraryRatingDelegate(model, parent, enabled) {
-
+LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryView* parent, bool enabled) :
+	LibraryRatingDelegate(parent, enabled)
+{
     _icon_single_album = Helper::getPixmap("play_small.png");
     _icon_multi_album = Helper::getPixmap("fwd_orange.png");
-
-    _model = model;
 }
 
 
@@ -60,7 +58,10 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
     painter->save();
 
-    int idx_col = _model->calc_shown_col(index.column());
+	LibraryItemModelAlbums* model = (LibraryItemModelAlbums*) index.model();
+
+	int col = index.column();
+	int idx_col = model->calc_shown_col(col);
 
     if(idx_col == COL_ALBUM_SAMPLER) {
         int col_width = _parent->columnWidth(0)-4;
@@ -69,11 +70,13 @@ void LibraryItemDelegateAlbums::paint(QPainter *painter, const QStyleOptionViewI
 
         int num_albums = index.data().toInt();
 
-        if(num_albums <= 1)
-            painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
+		if(num_albums <= 1){
+			painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
+		}
 
-        else
+		else{
             painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
+		}
     }
 
 

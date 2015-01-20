@@ -43,7 +43,14 @@ void MiniSearcherLineEdit::keyPressEvent(QKeyEvent *e) {
 		case Qt::Key_Escape:
 		case Qt::Key_Enter:
 		case Qt::Key_Return:
-			e->setAccepted(false);
+			if(this->isVisible()){
+				e->setAccepted(false);
+			}
+
+			else {
+				e->setAccepted(true);
+			}
+
 			return;
 
 		default:

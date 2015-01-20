@@ -130,6 +130,9 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	int volume = _settings->get(Set::Engine_Vol);
 	volumeChanged(volume);
 
+	action_Dark->setChecked(_settings->get(Set::Player_Style) == 1);
+	skin_changed();
+
     if(!is_fullscreen & !is_maximized) {
 
 		QSize size = _settings->get(Set::Player_Size);

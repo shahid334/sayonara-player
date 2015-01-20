@@ -269,7 +269,7 @@
    <item row="3" column="0" colspan="2">
     <widget class="QFrame" name="frame">
      <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -299,7 +299,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="toolTip">
         <string>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</string>
@@ -367,7 +367,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="toolTip">
         <string>Show all interprets, albums, tracks</string>
@@ -376,7 +376,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
        </property>
       </widget>
@@ -395,11 +395,14 @@
          <height>25</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/undo.png</normaloff>:/icons/undo.png</iconset>
        </property>
        <property name="iconSize">
@@ -430,7 +433,7 @@
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="text">
         <string>Music Library  </string>
@@ -440,7 +443,7 @@
      <item>
       <widget class="QLabel" name="lab_status">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -462,7 +465,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="toolTip">
         <string>Information</string>
@@ -471,7 +474,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
        </property>
        <property name="iconSize">
@@ -496,6 +499,13 @@
    <header>GUI/library/view/LibraryView.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <tabstops>
+  <tabstop>lv_artist</tabstop>
+  <tabstop>lv_album</tabstop>
+  <tabstop>tb_title</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

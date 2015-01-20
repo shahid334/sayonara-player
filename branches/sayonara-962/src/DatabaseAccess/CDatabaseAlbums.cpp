@@ -54,7 +54,9 @@ bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 		return false;
 	}
 
-	q.last();
+	if(!q.last()){
+		return true;
+	}
 
 	int i=0;
 	int n_rows = q.at() + 1;

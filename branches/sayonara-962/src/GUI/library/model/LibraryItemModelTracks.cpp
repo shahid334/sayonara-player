@@ -193,7 +193,6 @@ bool LibraryItemModelTracks::removeRows(int position, int rows, const QModelInde
 	 endRemoveRows();
 
 	 return true;
-
 }
 
 

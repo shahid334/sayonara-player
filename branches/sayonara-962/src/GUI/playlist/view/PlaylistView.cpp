@@ -207,31 +207,35 @@ void PlaylistView::keyPressEvent(QKeyEvent* event) {
     int min_row = get_min_selected();
 
 	switch(key) {
-    case Qt::Key_A:
-        if( modifiers & Qt::ControlModifier ) select_all();
-        break;
+		case Qt::Key_A:
+			if( modifiers & Qt::ControlModifier ) select_all();
+			break;
 
-    case Qt::Key_Delete:
-        remove_cur_selected_rows();
-        break;
+		case Qt::Key_Delete:
+			remove_cur_selected_rows();
+			break;
 
-    case Qt::Key_End:
-        new_row = _model->rowCount() - 1;
-        break;
+		case Qt::Key_End:
+			new_row = _model->rowCount() - 1;
+			break;
 
-    case Qt::Key_Home:
-        new_row = 0;
-        break;
+		case Qt::Key_Home:
+			new_row = 0;
+			break;
 
-    case Qt::Key_Return:
-    case Qt::Key_Enter:
-        this->sig_double_clicked(min_row);
-        break;
+		case Qt::Key_Return:
+		case Qt::Key_Enter:
+			this->sig_double_clicked(min_row);
+			break;
 
-    default: break;
+		default:
+
+			break;
     }
 
-    if(new_row != -1) goto_row(new_row);
+	if(new_row != -1) {
+		goto_row(new_row);
+	}
 }
 
 void PlaylistView::resizeEvent(QResizeEvent *e) {

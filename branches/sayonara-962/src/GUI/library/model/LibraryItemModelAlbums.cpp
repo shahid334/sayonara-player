@@ -215,11 +215,11 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
         return this->index(-1, -1);
     }
 
-	int i=0;
-	for(const Album& album : _albums) {
+
+	for(int i=0; i<len; i++) {
         int row_idx = (i + row) % len;
 
-		QString album_name = album.name;
+		QString album_name = _albums[row_idx].name;
 		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
@@ -228,8 +228,6 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
             album_name.startsWith(substr, Qt::CaseInsensitive )){
                 return this->index(row_idx, 0);
         }
-
-		i++;
 	}
 
 	return this->index(-1, -1);

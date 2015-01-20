@@ -157,7 +157,6 @@ bool MetaData::is_equal_deep(const MetaData& md) const{
 }
 
 
-
 MetaDataList::MetaDataList() : 
     QVector<MetaData>()
 {
@@ -251,7 +250,7 @@ QStringList MetaDataList::toStringList() const {
 
     for(it = this->begin(); it != this->end(); it++) {
 
-        if(it->id >= 0) {
+		if( it->id >= 0 ) {
             lst << QString::number(it->id);
         }
 

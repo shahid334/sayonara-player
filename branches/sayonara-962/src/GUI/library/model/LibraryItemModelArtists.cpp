@@ -139,14 +139,16 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
+		 int row = index.row();
+
          Artist artist;
 		 Artist::fromVariant(value, artist);
 
-         if(artist.is_lib_selected && !_selected_rows.contains(index.row()))
+		 if(artist.is_lib_selected && !_selected_rows.contains(row)){
             _selected_rows << index.row();
+		 }
 
-		 _artists.replace(index.row(), artist);
-
+		 _artists[row] = artist;
 
 	     emit dataChanged(index, index);
 	     return true;
@@ -167,10 +169,13 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 
 QModelIndex LibraryItemModelArtists::getFirstRowIndexOf(QString substr) {
 	if(_artists.isEmpty()) return this->index(-1, -1);
-	if(_selected_rows.size() > 0)
+	if(_selected_rows.size() > 0){
 		return getNextRowIndexOf(substr, _selected_rows[0]);
-	else
+	}
+
+	else{
 		return getNextRowIndexOf(substr, 0);
+	}
 
 }
 

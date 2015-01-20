@@ -85,12 +85,9 @@ QStringList CDirectoryReader::get_files_in_dir (QDir base_dir) {
 
 MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 
-    qDebug() << "get metadata of filelist";
-
 	MetaDataList v_md;
 	QStringList files;
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
-
 
 	// fetch sound and playlist files
     QStringList filter = Helper::get_soundfile_extensions();
@@ -133,7 +130,7 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
         if(Helper::is_soundfile(filepath)) {
 
 			qDebug() << it->filepath << " is soundfile " << it->filepath;
-			if(it->id < 0) {
+			if( it->id < 0 ) {
 
 				if(!ID3::getMetaDataOfFile(*it)) {
 					it = v_md.erase(it);

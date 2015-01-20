@@ -185,7 +185,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
 	_md = md;
 
 	success = _db->searchBookmarks(md.id, _bookmarks);
-	if(!success || _bookmarks.size() == 0 || md.id < 0) {
+	if( !success || _bookmarks.size() == 0 || (md.id < 0) ) {
 		connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 		return;
 	}

@@ -67,10 +67,10 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
         col = SAYONARA_ORANGE_COL;
 
-        painter->setPen(QColor(50, 50, 50));
+		painter->setPen(QColor(50, 50, 50));
 
         painter->drawRect(rect);
-        painter->fillRect(rating_rect, col);
+		painter->fillRect(rating_rect, col);
     }
 
     for(int rating= _rating; rating < 5; rating ++) {
@@ -82,7 +82,7 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 
         col = QColor(50, 50, 50);
 
-        painter->fillRect(rating_rect, col);
+		painter->fillRect(rating_rect, col);
     }
 
 }
@@ -143,10 +143,12 @@ void RatingLabel::mouseMoveEvent(QMouseEvent *e) {
 
 void RatingLabel::mousePressEvent(QMouseEvent *e) {
 
+
 	if(!_enabled) return;
-	this->setMouseTracking(false);
+
+	this->setMouseTracking(true);
     int rating = calc_rating(e->pos());
-    this->update_rating(rating);
+	update_rating(rating);
 }
 
 

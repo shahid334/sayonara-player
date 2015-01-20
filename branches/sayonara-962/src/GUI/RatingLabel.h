@@ -71,7 +71,7 @@ public:
     void focusOutEvent(QFocusEvent* e);
     void mousePressEvent(QMouseEvent *ev);
     void mouseReleaseEvent(QMouseEvent* ev);
-    void mouseMoveEvent(QMouseEvent *ev);
+	void mouseMoveEvent(QMouseEvent *ev);
 
     void set_rating(Rating rating);
     Rating get_rating();

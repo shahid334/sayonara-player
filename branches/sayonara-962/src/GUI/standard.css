@@ -1,8 +1,8 @@
-QListView, QTableView{
+/*QListView, QTableView{
         background: #FFFFFF;
         alternate-background-color: #DADADA;
 }
-
+*/
 QListView:focus, QTableView:focus{
 
         border: 1px solid #424e72;

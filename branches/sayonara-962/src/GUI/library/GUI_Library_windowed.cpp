@@ -245,14 +245,14 @@ void  GUI_Library_windowed::init_headers() {
     artist_columns << ar_h0 << ar_h1 << ar_h2;
 
     _album_model = new LibraryItemModelAlbums(album_columns);
-	_album_delegate = new LibraryItemDelegateAlbums(_album_model, lv_album, true);
+	_album_delegate = new LibraryItemDelegateAlbums(lv_album, true);
     _artist_model = new LibraryItemModelArtists(artist_columns);
-	_artist_delegate = new LibraryItemDelegateArtists(_artist_model, lv_artist);
+	_artist_delegate = new LibraryItemDelegateArtists(lv_artist);
     _track_model = new LibraryItemModelTracks(track_columns);
-	_track_delegate = new LibraryItemDelegateTracks(_track_model, tb_title, true);
+	_track_delegate = new LibraryItemDelegateTracks(tb_title, true);
 
-    connect(_album_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(album_rating_changed(int)));
-    connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));
+	connect(_album_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(album_rating_changed(int)));
+	connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));
 
     tb_title->setModel(_track_model);
 	tb_title->setAbstractModel((AbstractSearchTableModel*) _track_model);

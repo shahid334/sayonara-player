@@ -55,6 +55,7 @@ public:
 	static QVariant toVariant(const Album& album);
 	static bool fromVariant(const QVariant& v, Album& album);
 	void print() const;
+
 };
 
 

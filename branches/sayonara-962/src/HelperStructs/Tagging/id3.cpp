@@ -23,6 +23,7 @@
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Helper.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QDir>
 #include <QFile>
@@ -71,8 +72,15 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
 	uint year = tag->year();
 	uint track = tag->track();
 
+	MetaData md_tmp = CDatabaseConnector::getInstance()->getTrackByPath(md.filepath);
+
 	int bitrate = f.audioProperties()->bitrate() * 1000;
-	int length = f.audioProperties()->length();
+	int length = f.audioProperties()->length() * 1000;
+
+	if( md_tmp.id >= 0 ){
+		bitrate = md.bitrate;
+		length = md.length_ms;
+	}
 
     QStringList genres;
     QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
@@ -84,7 +92,7 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
     md.album = QString::fromLocal8Bit(album.c_str());
     md.artist = QString::fromLocal8Bit(artist.c_str());
     md.title = QString::fromLocal8Bit(title.c_str());
-    md.length_ms = length * 1000;
+	md.length_ms = length;
 	md.year = year;
 	md.track_num = track;
 	md.bitrate = bitrate;

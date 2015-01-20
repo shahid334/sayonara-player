@@ -36,13 +36,14 @@
 #include "GUI/library/delegate/LibraryRatingDelegate.h"
 #include "GUI/library/model/LibraryItemModelAlbums.h"
 #include "GUI/library/view/LibraryView.h"
+#include <QItemDelegate>
 
 class LibraryItemDelegateAlbums : public LibraryRatingDelegate {
 
 	Q_OBJECT
 
 public:
-	LibraryItemDelegateAlbums(LibraryItemModel* model, LibraryView* parent, bool enabled);
+	LibraryItemDelegateAlbums(LibraryView* parent, bool enabled);
 	virtual ~LibraryItemDelegateAlbums();
 
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -54,7 +55,6 @@ private:
 	QPixmap _icon_multi_album;
 
 	QPen _pen;
-	LibraryItemModel* _model;
 
 };
 

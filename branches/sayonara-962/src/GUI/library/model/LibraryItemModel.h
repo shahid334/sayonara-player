@@ -75,7 +75,7 @@ public:
     bool			is_col_shown(int col) const;
 	virtual bool 	is_selected(int row) const;
 	virtual QList<int>  get_selected() const;
-	virtual void    set_selected(QList<int>& rows);
+	virtual void    set_selected(const QList<int>& rows);
 
 
 	/** Overloaded from QAbstractTableModel **/

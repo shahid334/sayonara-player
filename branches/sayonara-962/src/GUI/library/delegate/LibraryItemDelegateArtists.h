@@ -41,7 +41,7 @@
 class LibraryItemDelegateArtists : public QItemDelegate {
 	Q_OBJECT
 public:
-    LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent=0);
+	LibraryItemDelegateArtists(QTableView* parent=0);
 	virtual ~LibraryItemDelegateArtists();
 
 public:
@@ -62,8 +62,6 @@ private:
         QPixmap _icon_single_album;
         QPixmap _icon_multi_album;
         QPen _pen;
-
-        LibraryItemModel* _model;
 };
 
 #endif /* LIBRARYITEMDELEGATEARTISTS_H_ */

@@ -76,7 +76,7 @@ void PlaylistLoader::load_old_playlist() {
                 track = db->getTrackById(track_id);
 
                 // this track id cannot be found in db
-                if(track.id < 0) {
+				if( track.id < 0 ) {
                     if(!ID3::getMetaDataOfFile(track)) continue;
                     track.is_extern = true;
                 }
@@ -93,7 +93,7 @@ void PlaylistLoader::load_old_playlist() {
                 // maybe it's in the library neverthe less
                 track = db->getTrackByPath(path_in_list);
                 // we expected that.. try to get metadata
-                if(track.id < 0) {
+				if( track.id < 0 ) {
                     if(!ID3::getMetaDataOfFile(track)) continue;
                 }
 
