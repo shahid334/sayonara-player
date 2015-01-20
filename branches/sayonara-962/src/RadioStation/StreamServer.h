@@ -44,6 +44,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void sig_new_connection_request(const QString&);
 		void sig_new_connection(const QString&);
 		void sig_connection_closed(const QString&);
+		void sig_can_listen(bool);
 
 	public:
 		StreamServer(QObject* parent=0);
@@ -85,6 +86,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void update_track(const MetaData&);
 		void server_close();
 		void stop();
+		void retry();
 
 	private slots:
 		void server_destroyed();

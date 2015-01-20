@@ -223,6 +223,8 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	player->showPlugin(p);
 
+	stream_server->retry();
+
 	_initialized = true;
 }
 
@@ -348,20 +350,22 @@ void Application::init_connections() {
 	CONNECT(ui_stream, sig_play_track(int),								playlist_handler,		psl_change_track(int));
 
 	CONNECT(ui_podcasts, sig_create_playlist(const MetaDataList&),		playlist_handler,		create_playlist(const MetaDataList&));
-	CONNECT(ui_podcasts, sig_play_track(int),								playlist_handler,   psl_change_track(int));
+	CONNECT(ui_podcasts, sig_play_track(int),							playlist_handler,		psl_change_track(int));
 
-	CONNECT (ui_style_settings, sig_style_update(),	ui_spectrum, psl_style_update());
-	CONNECT (ui_style_settings, sig_style_update(),	ui_level, psl_style_update());
+	CONNECT (ui_style_settings,		sig_style_update(),		ui_spectrum,	psl_style_update());
+	CONNECT (ui_style_settings,		sig_style_update(),		ui_level,		psl_style_update());
 
 	CONNECT (stream_server, sig_new_connection_request(const QString&),	ui_broadcast,	new_connection_request(const QString&));
 	CONNECT (stream_server, sig_new_connection(const QString&),			ui_broadcast,	new_connection(const QString&));
 	CONNECT (stream_server, sig_connection_closed(const QString&),		ui_broadcast,	connection_closed(const QString&));
+	CONNECT (stream_server, sig_can_listen(bool),						ui_broadcast,	can_listen(bool));
 	CONNECT (listen, destroyed(),										stream_server,	stop());
 
 	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&),			stream_server,	update_track(const MetaData&));
 	CONNECT (ui_broadcast, sig_dismiss(int),									stream_server,	dismiss(int));
 	CONNECT (ui_broadcast, sig_accepted(),										stream_server,	accept_client());
 	CONNECT (ui_broadcast, sig_rejected(),										stream_server,	reject_client());
+	CONNECT (ui_broadcast, sig_retry(),											stream_server,  retry());
 	CONNECT (listen, sig_data(uchar*, quint64),									stream_server,	new_data(uchar*, quint64));
 
     qDebug() << "connections done";

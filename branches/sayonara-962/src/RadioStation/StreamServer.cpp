@@ -33,22 +33,22 @@ StreamServer::StreamServer(QObject* parent) :
 
 	_server = new QTcpServer();
 
-	//_server->setMaxPendingConnections(10);
+	_server->setMaxPendingConnections(10);
 	connect(_server, SIGNAL(newConnection()), this, SLOT(new_client_request()));
 	connect(_server, SIGNAL(destroyed()), this, SLOT(server_destroyed()));
 
 	_pending_socket = NULL;
 
 
-	while( !_server->isListening() ){
 
-		listen_for_connection();
-		Helper::sleep_ms(1000);
-	}
 
 	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
 	REGISTER_LISTENER_NO_CALL(Set::Broadcast_Port, port_changed);
 	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
+
+	if( !_server->isListening() ){
+		listen_for_connection();
+	}
 }
 
 StreamServer::~StreamServer(){
@@ -65,7 +65,9 @@ void StreamServer::server_destroyed(){
 
 void StreamServer::run(){
 
-    qDebug() << "Start stream server";
+
+	emit sig_can_listen(_server->isListening());
+
 
 	forever{
 		while(_server && _server->isListening()){
@@ -97,13 +99,12 @@ bool StreamServer::listen_for_connection(){
 
 	if(!success){
 		qDebug() << "Cannot listen on port " << _port;
-		_server->errorString();
-		_server->close();
+		qDebug() << _server->errorString();
 
-		return false;
+		_server->close();
 	}
 
-	return true;
+	return success;
 }
 
 
@@ -221,12 +222,23 @@ void StreamServer::stop(){
 void StreamServer::active_changed(){
 
 	bool active = _settings->get(Set::BroadCast_Active);
+
     if(!active) {
 		disconnect_all();
 	}
 
     else{
-        this->start();
+
+		bool success = _server->isListening();
+
+		if( !success ){
+			success = listen_for_connection();
+			emit sig_can_listen(success);
+		}
+
+		if(success){
+			this->start();
+		}
     }
 }
 
@@ -258,14 +270,41 @@ void StreamServer::prompt_changed(){
 }
 
 void StreamServer::port_changed(){
+
+	bool success;
+
 	disconnect_all();
 	server_close();
 
 	_port = _settings->get(Set::Broadcast_Port);
 
-	listen_for_connection();
+	success = listen_for_connection();
+
+	emit sig_can_listen(success);
 }
 
 void StreamServer::new_connection(const QString& ip){
+
+}
+
+void StreamServer::retry(){
+
+	if(!_settings->get(Set::BroadCast_Active)){
+		return;
+	}
+
+
+	bool success;
+	if(_server->isListening()){
+		success = true;
+	}
+
+	else{
+		success = listen_for_connection();
+	}
+
+
+
+	emit sig_can_listen(success);
 
 }

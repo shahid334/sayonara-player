@@ -39,6 +39,7 @@ GUI_Broadcast::GUI_Broadcast(QString name, QWidget *parent) :
 	connect(btn_dismiss_all, SIGNAL(clicked()), this, SLOT(dismiss_all_clicked()));
 	connect(btn_options, SIGNAL(clicked()), this, SLOT(option_clicked()));
 	connect(combo_clients, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+	connect(btn_retry, SIGNAL(clicked()), this, SLOT(retry()));
 
 	set_status_label();
 
@@ -135,6 +136,24 @@ void GUI_Broadcast::connection_closed(const QString& ip){
 	}
 
 	set_status_label();
+}
+
+void GUI_Broadcast::can_listen(bool success){
+
+	lab_status->setVisible(success);
+	lab_error->setVisible(!success);
+	btn_retry->setVisible(!success);
+
+	if(!success){
+		QString msg = tr("Cannot broadcast on port %1").arg(_settings->get(Set::Broadcast_Port));
+		msg += "\n" + tr("Maybe another application is using this port?");
+
+		QMessageBox::warning(this, tr("Warning"), msg);
+	}
+}
+
+void GUI_Broadcast::retry(){
+	emit sig_retry();
 }
 
 
