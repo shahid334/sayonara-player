@@ -137,7 +137,7 @@ void GUI_TagEdit::track_idx_changed(){
 
 	if(le_tag->text().isEmpty()){
 
-		le_tag->setText(md.filepath);
+		le_tag->setText(md.filepath());
 	}
 
 	else if( !(btn_album->isChecked() ||
@@ -147,10 +147,10 @@ void GUI_TagEdit::track_idx_changed(){
 			btn_disc_nr->isChecked() ||
 			btn_track_nr->isChecked()))
 	{
-		le_tag->setText(md.filepath);
+		le_tag->setText(md.filepath());
 	}
 
-	_tag_expression.update_tag(le_tag->text(), md.filepath);
+	_tag_expression.update_tag(le_tag->text(), md.filepath());
 	set_tag_colors(_tag_expression.is_valid());
 
 	le_title->setText(md.title);
@@ -190,7 +190,7 @@ void GUI_TagEdit::track_idx_changed(){
 
 
 	lab_filepath->clear();
-	lab_filepath->insertPlainText( QDir(md.filepath).absolutePath() );
+	lab_filepath->insertPlainText( md.filepath() );
 	lab_track_num->setText(
 			tr("Track ") +
 			QString::number( _cur_idx+1 ) + "/" + QString::number( n_tracks )
@@ -348,7 +348,8 @@ void GUI_TagEdit::set_tag_colors(bool valid){
 void GUI_TagEdit::tag_text_changed(const QString& str){
 
 	if( !check_idx(_cur_idx) ) return;
-	_tag_expression.update_tag(str, _tag_edit->get_metadata(_cur_idx).filepath);
+	MetaData md = _tag_edit->get_metadata(_cur_idx);
+	_tag_expression.update_tag(str, md.filepath() );
 
 	set_tag_colors(_tag_expression.is_valid());
 
@@ -412,7 +413,7 @@ void GUI_TagEdit::apply_tag_all_clicked(){
 
 	for(int i=0; i<n_tracks; i++){
 
-		_tag_expression.update_tag(le_tag->text(), v_md[i].filepath);
+		_tag_expression.update_tag(le_tag->text(), v_md[i].filepath() );
 
 		if(!_tag_expression.is_valid()){
 			not_valid << i;
@@ -436,7 +437,7 @@ void GUI_TagEdit::apply_tag_all_clicked(){
 		for(int i=0; i<n_tracks; i++){
 			if(not_valid.contains(i)) continue;
 
-			_tag_expression.update_tag(le_tag->text(), v_md[i].filepath);
+			_tag_expression.update_tag(le_tag->text(), v_md[i].filepath() );
 			apply_tag(i);
 		}
 	}
@@ -484,7 +485,7 @@ bool GUI_TagEdit::replace_selected_tag_text(Tag t, bool b){
 
 		// fetch corresponding filepath and update the tag expression
 		MetaData md = _tag_edit->get_metadata(_cur_idx);
-		_tag_expression.update_tag(text, md.filepath);
+		_tag_expression.update_tag(text, md.filepath() );
 
 		set_tag_colors(_tag_expression.is_valid());
 	}

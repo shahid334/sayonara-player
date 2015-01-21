@@ -290,7 +290,7 @@ void GUI_Player::psl_update_track(const MetaData & md, bool start_play) {
 	lab_rating->setToolTip(rating_text);
 
 	btn_correct->setVisible(false);
-	setRadioMode(_md.radio_mode);
+	setRadioMode( _md.radio_mode() );
 
 	this->setWindowTitle(QString("Sayonara - ") + md.title);
 	this->repaint();
@@ -336,7 +336,7 @@ void GUI_Player::psl_md_changed(const MetaData& md) {
 // id3 tags have changed
 void GUI_Player::psl_id3_tags_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new) {
 
-	QList<int> idxs = v_md_old.findTracks(_md.filepath);
+	QList<int> idxs = v_md_old.findTracks(_md.filepath());
 	if(idxs.isEmpty()) return;
 
 	int idx = idxs[0];
@@ -376,7 +376,7 @@ void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected
 
     m_metadata_corrected = md;
 
-	bool radio_off = (_md.radio_mode == RadioModeOff);
+	bool radio_off = ( _md.radio_mode() == RadioModeOff );
 	bool get_lfm_corrections = _settings->get(Set::LFM_Corrections);
 
 	btn_correct->setVisible(corrected &&
@@ -614,13 +614,13 @@ void GUI_Player::_sl_sr_active_changed() {
 	bool active = _settings->get(Set::Engine_SR_Active);
 
 	if(active) {
-		btn_play->setVisible(_md.radio_mode == RadioModeOff);
-		btn_rec->setVisible(_md.radio_mode != RadioModeOff);
+		btn_play->setVisible(_md.radio_mode() == RadioModeOff);
+		btn_rec->setVisible(_md.radio_mode() != RadioModeOff);
 	}
 
 	else{
 		btn_play->setVisible(true);
-		btn_play->setEnabled(_md.radio_mode == RadioModeOff);
+		btn_play->setEnabled(_md.radio_mode() == RadioModeOff);
 		btn_rec->setVisible(false);
 	}
 

@@ -54,6 +54,10 @@ Q_DECLARE_METATYPE(MetaData)
 
 class MetaData : public LibraryItem {
 
+private:
+	QString _filepath;
+	RadioMode _radio_mode;
+
 public:
 	qint32 id;
 	qint32 album_id;
@@ -65,7 +69,7 @@ public:
     quint8 rating;
     quint64 length_ms;
     quint16 year;
-    QString filepath;
+
     quint16 track_num;
     quint32 bitrate;
     quint64 filesize;
@@ -74,7 +78,7 @@ public:
     quint8 n_discs;
 
     bool is_extern;
-    RadioMode radio_mode;
+
 
     bool pl_selected;
     bool pl_playing;
@@ -85,6 +89,11 @@ public:
 	MetaData ();
     MetaData (const MetaData& );
 	virtual ~MetaData();
+
+	QString filepath() const;
+	QString set_filepath(QString filepath);
+
+	RadioMode radio_mode() const;
 
     bool operator==(const MetaData& md) const;
     bool is_equal(const MetaData& md) const;

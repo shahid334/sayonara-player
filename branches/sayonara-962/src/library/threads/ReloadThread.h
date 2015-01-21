@@ -68,7 +68,7 @@ private:
     bool    _paused;
 
     int get_and_save_all_files();
-    void get_files_recursive (QDir baseDir, MetaDataList& v_md, int* n_files);
+	void get_files_recursive (QDir base_dir, MetaDataList& v_md, int* n_files);
 
 	CDatabaseConnector* _db;
 

@@ -97,7 +97,7 @@ public:
 
 			int insertArtistIntoDatabase (const QString & artist);
 			int insertArtistIntoDatabase (const Artist & artist);
-
+			int updateArtist(const Artist& artist);
 
 		/*****************
 		 *  ALBUMS
@@ -151,8 +151,8 @@ public:
 
 			bool deleteTracks(const MetaDataList&);
 			bool deleteTracks(const QList<int>& ids);
-			bool deleteTracksWithoutAlbum();
-			bool deleteTracksWithoutArtist();
+			bool deleteInvalidTracks();
+
 
 
 

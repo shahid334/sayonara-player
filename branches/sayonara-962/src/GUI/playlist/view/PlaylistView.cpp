@@ -273,7 +273,7 @@ void PlaylistView::set_mimedata(MetaDataList& v_md, QString text) {
 
     QList<QUrl> urls;
 	for(const MetaData& md : v_md) {
-        QUrl url(QString("file://") + md.filepath);
+		QUrl url(QString("file://") + md.filepath());
         urls << url;
     }
 

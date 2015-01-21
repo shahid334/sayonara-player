@@ -262,7 +262,6 @@ void  GUI_Podcasts::play_podcasts(QString url, QString name) {
 
 			for(MetaData& md : v_md) {
 
-                md.radio_mode = RadioModeStation;
                 if(md.title.size() == 0) {
 					if(name.size() > 0){
 						md.title = name;

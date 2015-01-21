@@ -279,8 +279,7 @@ void GUI_Stream::play_stream(QString url, QString name) {
                     md.artist = url;
                 }
 
-                md.radio_mode = RadioModeStation;
-                qDebug() << "Url = " << md.filepath;
+				qDebug() << "Url = " << md.filepath();
             }
         }
     }
@@ -301,8 +300,7 @@ void GUI_Stream::play_stream(QString url, QString name) {
         }
 
         md.artist = url;
-        md.filepath = url;
-        md.radio_mode = RadioModeStation;
+		md.set_filepath(url);
 
         v_md.push_back(md);
     }

@@ -77,7 +77,7 @@ void ImportCachingThread::run() {
 
     int i=0;
 
-    foreach(QString filepath, _filelist) {
+	for(const QString& filepath : _filelist) {
 
         if(_cancelled) break;
 
@@ -87,12 +87,12 @@ void ImportCachingThread::run() {
         if(!Helper::is_soundfile(filepath)) continue;
 
 		MetaData md;
-        md.filepath = filepath;
+		md.set_filepath( filepath );
 
         if(!ID3::getMetaDataOfFile(md)) continue;
 
 		_v_md << md;
-		_md_map[md.filepath] = md;
+		_md_map[md.filepath()] = md;
     }
 
     if(_cancelled) {
@@ -113,16 +113,12 @@ void ImportCachingThread::update_metadata(const MetaDataList &old_md, const Meta
 	MetaDataList v_md_old = old_md;
 	MetaDataList v_md_new = new_md;
 
-	for(int i=0; i<_v_md.size(); i++){
+	for(MetaData& md : _v_md){
 
 		int found_at = -1;
-
-		for(int j=0; j<v_md_old.size(); j++){
-
-			if(_v_md[i].filepath == v_md_old[j].filepath){
-				_v_md[i] = v_md_new[j];
-				found_at = j;
-			}
+		QList<int> found_idxs = v_md_old.findTracks(md.filepath());
+		if(found_idxs.size() > 0){
+			found_at = found_idxs[0];
 		}
 
 		if(found_at != -1){
@@ -132,7 +128,7 @@ void ImportCachingThread::update_metadata(const MetaDataList &old_md, const Meta
 	}
 
 	for(int i=0; i<old_md.size(); i++){
-		QString filepath = old_md[i].filepath;
+		QString filepath = old_md[i].filepath();
 		_md_map[ filepath ] = new_md[i];
 	}
 }

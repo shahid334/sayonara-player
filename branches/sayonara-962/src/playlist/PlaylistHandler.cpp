@@ -120,7 +120,7 @@ PlaylistType PlaylistHandler::determine_playlist_type(const MetaDataList& v_md) 
     if(v_md.size() == 0) return PlaylistTypeStd;
    const MetaData& md = v_md[0];
 
-    switch(md.radio_mode) {
+	switch( md.radio_mode() ) {
 
         case RadioModeStation:
             return PlaylistTypeStream;
@@ -252,7 +252,7 @@ void PlaylistHandler::psl_md_changed(const MetaData& md) {
 
 	foreach(Playlist* pl, _playlists){
 		QList<int> idx;
-		idx << pl->find_tracks(md.filepath);
+		idx << pl->find_tracks(md.filepath());
 		foreach(int i, idx){
 			pl->replace_track(i, md);
 		}

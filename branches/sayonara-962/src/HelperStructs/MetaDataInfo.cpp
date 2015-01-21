@@ -81,15 +81,15 @@ MetaDataInfo::MetaDataInfo(QObject* parent, const MetaDataList& lst) :
 		}
 
 		// paths
-		if(!Helper::is_www(md.filepath)){
+		if(!Helper::is_www(md.filepath())){
 			QString filename, dir;
-			Helper::split_filename(md.filepath, dir, filename);
+			Helper::split_filename(md.filepath(), dir, filename);
 			if( !_paths.contains(dir)){
 				_paths << dir;
 			}
 		}
 		else{
-			_paths << md.filepath;
+			_paths << md.filepath();
 		}
 	}
 

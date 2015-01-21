@@ -350,7 +350,7 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
     QList<QUrl> urls;
 	if(!drop_entire_folder) {
 		for(const MetaData& md : v_md) {
-            QUrl url(QString("file://") + md.filepath);
+			QUrl url(QString("file://") + md.filepath());
             urls << url;
         }
     }
@@ -360,7 +360,7 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
 		QStringList folders;
 
 		for(const MetaData& md : v_md) {
-            filenames << md.filepath;
+			filenames << md.filepath();
 		}
 
 		folders = Helper::extract_folders_of_files(filenames);

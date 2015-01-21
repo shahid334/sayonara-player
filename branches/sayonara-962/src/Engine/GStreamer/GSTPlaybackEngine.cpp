@@ -134,7 +134,7 @@ void GSTPlaybackEngine::change_track_gapless(const MetaData& md) {
 void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 
 	MetaData md;
-	md.filepath = filepath;
+	md.set_filepath(filepath);
 	if (!ID3::getMetaDataOfFile(md)) {
 		stop();
 		return;
@@ -147,7 +147,7 @@ void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
     bool success = false;
-	if(md.radio_mode == RadioModeStation){
+	if(md.radio_mode() == RadioModeStation){
 		_settings->set(Set::Engine_CurTrackPos_s, 0);
 	}
 
@@ -192,7 +192,7 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md) {
 	gchar* uri = NULL;
     bool success = false;
 
-	_playing_stream = Helper::is_www(md.filepath);
+	_playing_stream = Helper::is_www(md.filepath());
 
 	// stream && streamripper active
 	if (_playing_stream && _sr_active) {
@@ -207,28 +207,28 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md) {
 
 		// standard stream is already uri
 		else {
-			uri = g_filename_from_utf8(md.filepath.toUtf8(),
-									   md.filepath.toUtf8().size(), NULL, NULL, NULL);
+			uri = g_filename_from_utf8(md.filepath().toUtf8(),
+									   md.filepath().toUtf8().size(), NULL, NULL, NULL);
 		}
 	}
 
 	// stream, but don't wanna record
 	// stream is already uri
 	else if (_playing_stream && !_sr_active) {
-		uri = g_filename_from_utf8(md.filepath.toUtf8(),
-								   md.filepath.toUtf8().size(), NULL, NULL, NULL);
+		uri = g_filename_from_utf8(md.filepath().toUtf8(),
+								   md.filepath().toUtf8().size(), NULL, NULL, NULL);
 	}
 
 	// no stream (not quite right because of mms, rtsp or other streams
 	// normal filepath -> no uri
-	else if (!md.filepath.contains("://")) {
+	else if (!md.filepath().contains("://")) {
 
-		uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
+		uri = g_filename_to_uri(md.filepath().toLocal8Bit(), NULL, NULL);
 	}
 
 	else {
-		uri = g_filename_from_utf8(md.filepath.toUtf8(),
-								   md.filepath.toUtf8().size(), NULL, NULL, NULL);
+		uri = g_filename_from_utf8(md.filepath().toUtf8(),
+								   md.filepath().toUtf8().size(), NULL, NULL, NULL);
 	}
 
 	if(_wait_for_gapless_track) {
@@ -398,7 +398,7 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 		_scrobbled = true;
 	}
 
-	if(_md.radio_mode == RadioModeOff){
+	if(_md.radio_mode() == RadioModeOff){
 		_settings->set(Set::Engine_CurTrackPos_s, pos_sec);
 	}
 

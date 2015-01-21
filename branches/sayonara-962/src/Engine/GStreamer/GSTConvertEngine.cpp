@@ -50,27 +50,27 @@ bool GSTConvertEngine::set_uri(const MetaData& md) {
 	QString cvt_target_path;
 	bool success = false;
 
-	_playing_stream = Helper::is_www(md.filepath);
+	_playing_stream = Helper::is_www( md.filepath() );
 
 	if (_playing_stream) {
-		uri = g_filename_from_utf8(md.filepath.toUtf8(),
-								   md.filepath.toUtf8().size(), NULL, NULL, NULL);
+		uri = g_filename_from_utf8(md.filepath().toUtf8(),
+								   md.filepath().toUtf8().size(), NULL, NULL, NULL);
 	}
 
 	// no stream (not quite right because of mms, rtsp or other streams
 	// normal filepath -> no uri
-	else if (!md.filepath.contains("://")) {
+	else if (!md.filepath().contains("://")) {
 
-		uri = g_filename_to_uri(md.filepath.toLocal8Bit(), NULL, NULL);
+		uri = g_filename_to_uri(md.filepath().toLocal8Bit(), NULL, NULL);
 	}
 
 	else {
-		uri = g_filename_from_utf8(md.filepath.toUtf8(),
-								   md.filepath.toUtf8().size(), NULL, NULL, NULL);
+		uri = g_filename_from_utf8(md.filepath().toUtf8(),
+								   md.filepath().toUtf8().size(), NULL, NULL, NULL);
 	}
 
 
-	QString filename = Helper::get_filename_of_path(md.filepath);
+	QString filename = Helper::get_filename_of_path(md.filepath());
 	int idx = filename.lastIndexOf(".");
 	if(idx > 0) {
 		filename = filename.left(idx);
@@ -87,7 +87,7 @@ bool GSTConvertEngine::set_uri(const MetaData& md) {
 	_pipeline->set_target_uri(target_uri);
 
 	_md_target = md;
-	_md_target.filepath = filename;
+	_md_target.set_filepath(filename);
 
 	return success;
 }

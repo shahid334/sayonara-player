@@ -84,12 +84,11 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 		}
 
 		if(albumID == -1 || artistID == -1){
-			qDebug() << "Cannot insert artist or album of " << md.filepath;
+			qDebug() << "Cannot insert artist or album of " << md.filepath();
 			continue;
 		}
 
 		insertTrackIntoDatabase (md, artistID, albumID);
-
     }
 
     return _database->commit();

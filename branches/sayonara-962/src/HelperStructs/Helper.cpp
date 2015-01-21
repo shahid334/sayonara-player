@@ -530,9 +530,10 @@ QStringList Helper::extract_folders_of_files(const QStringList& files) {
 
 bool Helper::checkTrack(const MetaData& md) {
 
-    if( is_www(md.filepath)) return true;
+	QString filepath = md.filepath();
+	if( is_www(filepath) ) return true;
 
-    return QFile::exists(md.filepath);
+	return QFile::exists( filepath );
 }
 
 bool Helper::read_file_into_byte_arr(const QString& filename, QByteArray& content){

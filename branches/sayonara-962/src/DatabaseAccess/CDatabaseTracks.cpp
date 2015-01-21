@@ -83,7 +83,7 @@ bool CDatabaseConnector::db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 		data.length_ms = q.value(2).toInt();
 		data.year = 	 q.value(3).toInt();
 		data.bitrate = 	 q.value(4).toInt();
-		data.filepath =  q.value(5).toString();
+		data.set_filepath(q.value(5).toString());
 		data.track_num = q.value(6).toInt();
 		data.album_id =  q.value(7).toInt();
 		data.artist_id = q.value(8).toInt();
@@ -145,14 +145,11 @@ bool CDatabaseConnector::getMultipleTracksByPath(QStringList& paths, MetaDataLis
 }
 
 
-MetaData CDatabaseConnector::getTrackByPath(const QString& _path) {
+MetaData CDatabaseConnector::getTrackByPath(const QString& path) {
 
 	DB_TRY_OPEN(_database);
 
-	QString path;
 	MetaDataList vec_data;
-	QDir d(_path);
-    path = d.absolutePath();
 
 	QSqlQuery q (*_database);
 
@@ -162,7 +159,7 @@ MetaData CDatabaseConnector::getTrackByPath(const QString& _path) {
 
 	MetaData md;
 	md.id = -1;
-    md.filepath = path;
+	md.set_filepath(path);
 
 	if(!db_fetch_tracks(q, vec_data)) return md;
 
@@ -497,19 +494,20 @@ bool CDatabaseConnector::deleteTrack(int id){
 
 bool CDatabaseConnector::deleteTracks(const QList<int>& ids){
 
-	 int success = 0;
+	 int n_files = 0;
+	 bool success;
 
 	_database->transaction();
 
 		for(const int& id : ids){
 			if( deleteTrack(id) ){
-				success++;
+				n_files++;
 			};
 		}
 
-	_database->commit();
+	success = _database->commit();
 
-	return (success == ids.size());
+	return success && (n_files == ids.size());
 }
 
 
@@ -530,12 +528,52 @@ bool CDatabaseConnector::deleteTracks(const MetaDataList& v_md) {
 	return (success == v_md.size());
 }
 
-bool CDatabaseConnector::deleteTracksWithoutAlbum(){
-	//QString query = "DELETE FROM tracks WHERE albumID ";
-	return false;
-}
+bool CDatabaseConnector::deleteInvalidTracks(){
 
-bool CDatabaseConnector::deleteTracksWithoutArtist(){
+	bool success;
+
+	MetaDataList v_md;
+	QMap<QString, int> map;
+	QList<int> to_delete;
+	MetaDataList v_md_update;
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	QSqlQuery q(*_database);
+
+
+	if(!getTracksFromDatabase(v_md)){
+		qDebug() << "Cannot get tracks from db";
+		return false;
+	}
+
+	int idx = 0;
+	for(const MetaData& md : v_md){
+
+		if(map.contains(md.filepath())){
+			qDebug() << "found double path: " << md.filepath();
+			int old_idx = map[md.filepath()];
+			to_delete << md.id;
+			v_md_update << v_md[old_idx];
+		}
+
+		else{
+			map.insert(md.filepath(), idx);
+		}
+
+		idx++;
+	}
+
+	qDebug() << "Will delete " << to_delete;
+	success = deleteTracks(to_delete);
+	qDebug() << "delete tracks " << success;
+
+	success = deleteTracks(v_md_update);
+	qDebug() << "delete other tracks " << success;
+
+	success = storeMetadata(v_md_update);
+	qDebug() << "update tracks " << success;
+
 	return false;
 }
 
@@ -578,7 +616,7 @@ bool CDatabaseConnector::updateTrack(const MetaData& md) {
 	q.bindValue(":cissearch", QVariant(md.title.toLower()));
 
 	if (!q.exec()) {
-		show_error(QString("Cannot update track ") + md.filepath, q);
+		show_error(QString("Cannot update track ") + md.filepath(), q);
 		return false;
 	}
 
@@ -587,47 +625,42 @@ bool CDatabaseConnector::updateTrack(const MetaData& md) {
 
 bool CDatabaseConnector::updateTracks(const MetaDataList& lst) {
 
-	int success = 0;
+	bool success;
+	int n_files = 0;
 
     _database->transaction();
 	for(const MetaData& md : lst){
+
 		if(updateTrack(md)){
-			success++;
+			n_files++;
 		}
 	}
-    _database->commit();
 
-	return (success == lst.size());
+	success = _database->commit();
+
+	return success && (n_files == lst.size());
 }
 
-int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int artistID, int albumID) {
+int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & md, int artistID, int albumID) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q (*_database);
 
-	QString filepath = data.filepath;
+	MetaData md_tmp = getTrackByPath( md.filepath() );
 
-	filepath.replace("//", "/");
-	filepath.replace("\\\\", "\\");
-
-	MetaData md =  getTrackByPath(filepath);
-
-	if(md.id >= 0) {
-		MetaData track_copy = data;
-		track_copy.id = md.id;
+	if( md_tmp.id >= 0 ) {
+		MetaData track_copy = md;
+		track_copy.id = md_tmp.id;
 		track_copy.artist_id = artistID;
 		track_copy.album_id = albumID;
 
-		if(updateTrack(track_copy)){
-			return md.id;
+		if( updateTrack(track_copy) ){
+			return md_tmp.id;
 		}
 	}
 
-	QString new_title = data.title;
-	if(data.title.isEmpty()){
-		new_title = "Unknown";
-	}
+	qDebug() << "insert new track: " << md.filepath();
 
 	QString querytext = QString("INSERT INTO tracks ") +
                 "(filename,albumID,artistID,title,year,length,track,bitrate,genre,filesize,discnumber,cissearch) " +
@@ -636,26 +669,26 @@ int CDatabaseConnector::insertTrackIntoDatabase (const MetaData & data, int arti
 
 	q.prepare(querytext);
 
-	q.bindValue(":filename",QVariant(data.filepath));
-    q.bindValue(":albumID",QVariant(albumID));
-    q.bindValue(":artistID",QVariant(artistID));
-    q.bindValue(":length",QVariant(data.length_ms));
-    q.bindValue(":year",QVariant(data.year));
-	q.bindValue(":title",QVariant(new_title));
-    q.bindValue(":track",QVariant(data.track_num));
-    q.bindValue(":bitrate",QVariant(data.bitrate));
-    q.bindValue(":genre", QVariant(data.genres.join(",")));
-    q.bindValue(":filesize", QVariant(data.filesize));
-    q.bindValue(":discnumber", QVariant(data.discnumber));
-    q.bindValue(":cissearch", QVariant(data.title.toLower()));
+	q.bindValue(":filename", md.filepath());
+	q.bindValue(":albumID", albumID);
+	q.bindValue(":artistID",artistID);
+	q.bindValue(":length", md.length_ms);
+	q.bindValue(":year", md.year);
+	q.bindValue(":title", md.title);
+	q.bindValue(":track", md.track_num);
+	q.bindValue(":bitrate", md.bitrate);
+	q.bindValue(":genre", md.genres.join(","));
+	q.bindValue(":filesize", md.filesize);
+	q.bindValue(":discnumber", md.discnumber);
+	q.bindValue(":cissearch", md.title.toLower());
 
     if (!q.exec()) {
 
-		show_error(QString("Cannot insert track into database ") + data.filepath, q);
+		show_error(QString("Cannot insert track into database ") + md.filepath(), q);
 		return -1;
     }
 
-	return md.id;
+	return getTrackByPath(md.filepath()).id;
 }
 
 

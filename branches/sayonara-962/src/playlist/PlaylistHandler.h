@@ -40,16 +40,6 @@
 
 
 
-struct BackupPlaylist{
-
-	int radio_mode;
-    bool is_valid;
-    int cur_play_idx;
-
-    MetaDataList v_md;
-};
-
-
 class Playlist;
 class PlaylistHandler : public QObject, protected SayonaraClass {
 
@@ -149,7 +139,6 @@ private:
 	int					_cur_playlist_idx;
 	int					_active_playlist_idx;
 
-	BackupPlaylist      _ba_playlist;
 	bool				_start_play;
 	PlaylistState		_state;
 

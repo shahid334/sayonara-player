@@ -21,6 +21,8 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include <QDir>
+#include <QUrl>
 
 MetaData::MetaData() : LibraryItem() {
 
@@ -33,11 +35,11 @@ MetaData::MetaData() : LibraryItem() {
         rating = 0;
         length_ms = 0;
         year = 0;
-        filepath = "";
+		_filepath = "";
         track_num = 0;
         bitrate = 0;
         is_extern = false;
-        radio_mode = RadioModeOff;
+		_radio_mode = RadioModeOff;
         filesize = 0;
         comment = "";
         discnumber = 0;
@@ -61,11 +63,11 @@ MetaData::MetaData(const MetaData & md){
     rating = md.rating;
     length_ms = md.length_ms;
     year = md.year;
-    filepath = md.filepath;
+	_filepath = md.filepath();
     track_num = md.track_num;
     bitrate = md.bitrate;
     is_extern = md.is_extern;
-    radio_mode = md.radio_mode;
+	_radio_mode = md.radio_mode();
     filesize = md.filesize;
     comment = md.comment;
     discnumber = md.discnumber;
@@ -88,7 +90,7 @@ void MetaData::print() const {
 	qDebug() << title
              << " by " << artist
              << " from " << album
-             << " (" << length_ms << " m_sec) :: " << filepath;
+			 << " (" << length_ms << " m_sec) :: " << _filepath;
  
 }
 
@@ -117,13 +119,18 @@ bool MetaData::operator==(const MetaData& md) const {
 
 bool MetaData::is_equal(const MetaData& md) const {
 
-    QString my_filepath = filepath.trimmed();
-	QString their_filepath = md.filepath.trimmed();
+	QDir first_path(_filepath);
+	QDir other_path(md.filepath());
+
+	QString s_first_path = first_path.absolutePath();
+	QString s_other_path = other_path.absolutePath();
+
+
 
 #ifdef Q_OS_UNIX
-		return (my_filepath.compare(their_filepath) == 0);
+		return (s_first_path.compare(s_other_path) == 0);
 #else
-		return (my_filepath.compare(their_filepath, Qt::CaseInsensitive) == 0);
+		return (s_first_path.compare(s_other_path, Qt::CaseInsensitive) == 0);
 #endif
 
 }
@@ -139,11 +146,11 @@ bool MetaData::is_equal_deep(const MetaData& md) const{
 	( rating == md.rating ) &&
 	( length_ms == md.length_ms ) &&
 	( year == md.year ) &&
-	( filepath == md.filepath ) &&
+	( filepath() == md.filepath() ) &&
 	( track_num == md.track_num ) &&
 	( bitrate == md.bitrate ) &&
 	( is_extern == md.is_extern ) &&
-	( radio_mode == md.radio_mode ) &&
+	( _radio_mode == md.radio_mode() ) &&
 	( filesize == md.filesize ) &&
 	( comment == md.comment ) &&
 	( discnumber == md.discnumber ) &&
@@ -154,6 +161,43 @@ bool MetaData::is_equal_deep(const MetaData& md) const{
 	( pl_dragged == md.pl_dragged ) &&
 
 	( is_disabled == md.is_disabled ));
+}
+
+QString MetaData::filepath() const{
+	return _filepath;
+}
+
+
+QString MetaData::set_filepath(QString filepath){
+
+	bool is_local_path = false;
+
+	#ifdef Q_OS_UNIX
+		if(filepath.startsWith("/")){
+			is_local_path = true;
+		}
+	#else
+		if(filepath.contains(":\\") || filepath.contains("\\\\")){
+			is_local_path = true;
+		}
+	#endif
+
+	if(is_local_path){
+		QDir dir(filepath);
+		_filepath = dir.absolutePath();
+		_radio_mode = RadioModeOff;
+	}
+
+	else{
+		_filepath = filepath;
+		_radio_mode = RadioModeStation;
+	}
+
+	return _filepath;
+}
+
+RadioMode MetaData::radio_mode() const {
+	return _radio_mode;
 }
 
 
@@ -230,10 +274,12 @@ QList<int> MetaDataList::findTracks(const QString& path) const {
     int idx = 0;
     for(it = this->begin(); it != this->end(); it++, idx++) {
 
+		QString filepath = it->filepath();
+
 #ifdef Q_OS_UNIX
-		if(it->filepath.compare(path, Qt::CaseSensitive) == 0){
+		if(filepath.compare(path, Qt::CaseSensitive) == 0){
 #else
-        if(it->filepath.compare(path, Qt::CaseInsensitive) == 0){
+		if(filepath.compare(path, Qt::CaseInsensitive) == 0){
 #endif
 			ret << idx;
         }
@@ -255,9 +301,12 @@ QStringList MetaDataList::toStringList() const {
         }
 
         else{
-            lst << it->filepath;
+			lst << it->filepath();
         }
     }
 
     return lst;
 }
+
+
+

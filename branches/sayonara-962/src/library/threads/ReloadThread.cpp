@@ -65,44 +65,39 @@ int ReloadThread::get_and_save_all_files() {
 	}
 
 	return n_files;
-
 }
 
 
-void ReloadThread::get_files_recursive(QDir baseDir, MetaDataList& v_md, int* n_files) {
+void ReloadThread::get_files_recursive(QDir base_dir, MetaDataList& v_md, int* n_files) {
 
-	QDir baseDirDirs(baseDir);
-	QDir baseDirFiles(baseDir);
-    QStringList dirs;
+	QStringList soundfile_exts = Helper::get_soundfile_extensions();
+	QStringList sub_dirs;
+	QStringList sub_files;
 
-	baseDirDirs.setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-    dirs = baseDirDirs.entryList();
+	sub_dirs = base_dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-	for(const QString& dir : dirs) {
-    	baseDirDirs.cd(dir);
-		get_files_recursive(baseDirDirs, v_md, n_files);
-        baseDirDirs.cd("..");
+	for(const QString& dir : sub_dirs) {
+
+		base_dir.cd(dir);
+			get_files_recursive(base_dir, v_md, n_files);
+		base_dir.cdUp();
     }
 
     int num_files = *n_files;
 
-    dirs.clear();
-    baseDirFiles.setFilter(QDir::Files);
-    baseDirFiles.setNameFilters( Helper::get_soundfile_extensions() );
-    dirs = baseDirFiles.entryList();
+	sub_files = base_dir.entryList(soundfile_exts, QDir::Files);
 
-    QString reload_status_str;
-	for(const QString& f : dirs) {
+	for(const QString& f : sub_files) {
 
     	MetaData md;
-        md.filepath = baseDirFiles.absoluteFilePath(f);
+		md.set_filepath( base_dir.absoluteFilePath(f) );
 
-        if(ID3::getMetaDataOfFile(md)) {
+		if( ID3::getMetaDataOfFile(md) ) {
 			v_md.push_back(md);
 			num_files ++;
 
 			if(num_files % 20 == 0) {
-                reload_status_str = tr("Reloading %1 tracks").arg(num_files);
+				QString reload_status_str = tr("Reloading %1 tracks").arg(num_files);
                 emit sig_reloading_library( reload_status_str );
 			}
 		}
@@ -149,6 +144,13 @@ void ReloadThread::run() {
     emit sig_reloading_library(reload_status_str);
 
 	_db->getTracksFromDatabase(v_metadata);
+	qDebug() << "Had " << v_metadata.size() << " tracks";
+	v_metadata.clear();
+
+	_db->deleteInvalidTracks();
+
+	_db->getTracksFromDatabase(v_metadata);
+	qDebug() << "Have " << v_metadata.size() << " tracks";
 
 	// find orphaned tracks in library && delete them
 	for(const MetaData& md : v_metadata){

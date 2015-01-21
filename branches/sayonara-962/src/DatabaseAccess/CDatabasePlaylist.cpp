@@ -99,7 +99,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
 
         while (q.next()) {
             MetaData data;
-            data.filepath =  q.value(0).toString();
+			data.set_filepath(q.value(0).toString());
             data.album = 	 q.value(1).toString().trimmed();
             data.album_id =  q.value(2).toInt();
             data.artist_id = q.value(3).toInt();
@@ -110,7 +110,6 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
             data.track_num = q.value(8).toInt();
             data.bitrate = 	 q.value(9).toInt();
             data.id = 		 q.value(10).toInt();
-            data.filepath =  q.value(11).toString().trimmed();
             data.is_extern = false;
 
             pl.tracks.push_back(data);
@@ -145,7 +144,7 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
         int position = q2.value(1).toInt();
 
         MetaData data;
-        data.filepath =  q2.value(0).toString();
+		data.set_filepath( q2.value(0).toString() );
         data.id = -1;
         data.is_extern = true;
 
@@ -225,10 +224,10 @@ bool CDatabaseConnector::insertTrackIntoPlaylist(const MetaData& md, int playlis
 
 
 	q.prepare(query_string);
-	q.bindValue(":track_id", QVariant(md.id));
-	q.bindValue(":playlist_id", QVariant(playlist_id));
-	q.bindValue(":position", QVariant(pos));
-    q.bindValue(":filepath", QVariant(md.filepath));
+	q.bindValue(":track_id", md.id);
+	q.bindValue(":playlist_id", playlist_id);
+	q.bindValue(":position", pos);
+	q.bindValue(":filepath", md.filepath());
 
 	if (!q.exec()) {
 		show_error("Cannot insert track into playlist", q);

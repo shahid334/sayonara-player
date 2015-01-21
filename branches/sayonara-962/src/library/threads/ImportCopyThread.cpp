@@ -144,7 +144,7 @@ void ImportCopyThread::copy() {
 		_copied_files++;
 
 		MetaData md = _md_map[filename];
-		md.filepath = new_filename;
+		md.set_filepath( new_filename );
 		_v_md << md;
     }
 }

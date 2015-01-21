@@ -84,7 +84,7 @@ void StdPlaylist::create_playlist(const MetaDataList& lst) {
     // check if there, check if extern
     foreach(MetaData md, lst) {
 
-        MetaData md_tmp = db->getTrackByPath(md.filepath);
+		MetaData md_tmp = db->getTrackByPath(md.filepath());
 
 		md.is_extern = ( md_tmp.id < 0 );
         md.is_disabled = (! Helper::checkTrack(md) );

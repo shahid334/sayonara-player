@@ -119,7 +119,7 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 
 	for(MetaDataList::iterator it=v_md.begin(); it != v_md.end(); it++) {
 
-		QString filepath = QDir(it->filepath).absolutePath();
+		QString filepath = it->filepath();
 
         if(Helper::is_playlistfile(filepath)) {
             playlist_paths.push_back(filepath);
@@ -129,7 +129,7 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 
         if(Helper::is_soundfile(filepath)) {
 
-			qDebug() << it->filepath << " is soundfile " << it->filepath;
+			qDebug() << filepath << " is soundfile ";
 			if( it->id < 0 ) {
 
 				if(!ID3::getMetaDataOfFile(*it)) {

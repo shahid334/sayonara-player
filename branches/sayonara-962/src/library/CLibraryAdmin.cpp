@@ -158,8 +158,8 @@ void CLibraryBase::delete_tracks(MetaDataList& vec_md, int answer) {
     int n_files = vec_md.size();
     int n_fails = 0;
 
-    foreach(MetaData md, vec_md) {
-        file_list.push_back(md.filepath);
+	for(const MetaData& md : vec_md) {
+		file_list << md.filepath();
     }
 
     _db->deleteTracks(vec_md);
