@@ -24,14 +24,10 @@
 #define COVERLOCATION_H
 
 #include "HelperStructs/MetaData.h"
-class CoverLocation;
 
+class MetaData;
 class CoverLocation
 {
-
-private:
-
-
 
 public:
 

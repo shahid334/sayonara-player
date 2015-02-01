@@ -51,7 +51,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
     ui_tag_edit = tag_edit;
 
-	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit.png"), tr("Edit"));
+	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit"), tr("Edit"));
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
 
@@ -223,12 +223,10 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
     btn_image->setIcon(icon);
 	btn_image->update();
 
-    if(sender() == _alternate_covers)
-        emit sig_cover_changed(cl);
-
+	if(sender() == _alternate_covers){
+		emit sig_cover_changed(cl);
+	}
 }
-
-
 
 
 void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
@@ -316,7 +314,7 @@ void GUI_InfoDialog::cover_clicked() {
 }
 
 void GUI_InfoDialog::no_cover_available() {
-    btn_image->setIcon(Helper::getIcon("logo.png"));
+	btn_image->setIcon(Helper::getIcon("logo"));
 }
 
 void GUI_InfoDialog::init() {

@@ -270,7 +270,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/undo.png</normaloff>:/icons/undo.png</iconset>
+         <normaloff>:/icons/undo.svg.png</normaloff>:/icons/undo.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -302,7 +302,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+         <normaloff>:/icons/save.svg.png</normaloff>:/icons/save.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -334,7 +334,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+         <normaloff>:/icons/delete.svg.png</normaloff>:/icons/delete.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>

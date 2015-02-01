@@ -105,18 +105,10 @@ void GUI_Player::setupConnections() {
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
 
 
-	connect(volumeSlider, SIGNAL(searchSliderMoved(int)), this,
+	connect(volumeSlider, SIGNAL(sig_slider_moved(int)), this,
 			SLOT(volumeChanged(int)));
-	connect(volumeSlider, SIGNAL(searchSliderReleased(int)), this,
-    		SLOT(volumeChanged(int)));
-	connect(volumeSlider, SIGNAL(searchSliderPressed(int)), this,
-    		SLOT(volumeChanged(int)));
 
-	connect(songProgress, SIGNAL(searchSliderReleased(int)), this,
-			SLOT(seek(int)));
-	connect(songProgress, SIGNAL(searchSliderPressed(int)), this,
-			SLOT(seek(int)));
-	connect(songProgress, SIGNAL(searchSliderMoved(int)), this,
+	connect(songProgress, SIGNAL(sig_slider_moved(int)), this,
 			SLOT(seek(int)));
 
 
@@ -160,19 +152,6 @@ void GUI_Player::setupConnections() {
 
     QAction* leiser_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Down));
     connect(leiser_action, SIGNAL(triggered()), this, SLOT(volumeLower()));
-
-    QAction* two_perc_plus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Right));
-    connect(two_perc_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward()));
-
-    QAction* two_perc_minus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Left));
-    connect(two_perc_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward()));
-
-    QAction* two_sec_minus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Left));
-    connect(two_sec_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward_ms()));
-
-    QAction* two_sec_plus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Right));
-    connect(two_sec_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward_ms()));
-
 
     qDebug() << "connections done";
 }

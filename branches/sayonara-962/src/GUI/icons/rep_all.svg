@@ -14,7 +14,10 @@
    height="64"
    id="svg4110"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="rep_all.svg">
+   sodipodi:docname="rep_all.svg"
+   inkscape:export-filename="/home/luke/sayonara/branches/sayonara-962/src/GUI/icons/rep_all.svg.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -24,16 +27,16 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="840"
-     inkscape:window-height="480"
+     inkscape:window-width="2560"
+     inkscape:window-height="1355"
      id="namedview7989"
      showgrid="false"
      inkscape:zoom="3.6875"
-     inkscape:cx="32"
+     inkscape:cx="-12.881356"
      inkscape:cy="32"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="0"
+     inkscape:window-x="1680"
+     inkscape:window-y="35"
+     inkscape:window-maximized="1"
      inkscape:current-layer="svg4110" />
   <defs
      id="defs4112" />
@@ -45,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -58,18 +61,27 @@
      height="60.796463"
      width="60.796463" />
   <path
-     d="m 13.032811,11.793608 37.73597,0 c 0,17.991948 0,36.858797 0,36.858797 l -34.887194,0"
+     d="m 13.032811,11.793608 39.905462,0 c 0,17.991948 0,41.19778 0,41.19778 l -34.344822,0"
      id="path4174-5"
-     style="fill:none;stroke:#ffffff;stroke-width:6.30211449;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-     inkscape:connector-curvature="0" />
+     style="fill:none;stroke:#ffffff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="cccc" />
   <path
-     d="M 11.304312,48.509285 23.611686,43.653701"
-     id="path4180-0"
-     style="fill:none;stroke:#ffffff;stroke-width:3.78126955;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-     inkscape:connector-curvature="0" />
-  <path
-     d="m 11.529815,48.765041 12.112097,4.430587"
-     id="path4180-7-7"
-     style="fill:none;stroke:#ffffff;stroke-width:3.78126955;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-     inkscape:connector-curvature="0" />
+     sodipodi:type="star"
+     style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:2.32557201;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="path3756"
+     sodipodi:sides="3"
+     sodipodi:cx="11.932203"
+     sodipodi:cy="21.423729"
+     sodipodi:r1="4.8605962"
+     sodipodi:r2="9.7211924"
+     sodipodi:arg1="1.0447299"
+     sodipodi:arg2="2.0919275"
+     inkscape:flatsided="false"
+     inkscape:rounded="0"
+     inkscape:randomized="0"
+     d="m 14.372881,25.627119 -7.2804849,4.227378 -0.020774,-8.418774 -0.020774,-8.418774 7.3012593,4.191396 7.301259,4.191396 z"
+     inkscape:transform-center-x="3.5117928"
+     inkscape:transform-center-y="0.91024183"
+     transform="matrix(0.43526374,-0.52684663,0.75389891,0.30417505,-3.1890163,52.109975)" />
 </svg>

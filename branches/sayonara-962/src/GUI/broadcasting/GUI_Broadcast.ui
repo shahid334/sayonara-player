@@ -63,7 +63,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+         <normaloff>:/icons/delete.svg.png</normaloff>:/icons/delete.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -83,7 +83,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+         <normaloff>:/icons/delete.svg.png</normaloff>:/icons/delete.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -108,7 +108,7 @@
      </property>
      <property name="icon">
       <iconset resource="../Icons.qrc">
-       <normaloff>:/icons/tool.png</normaloff>:/icons/tool.png</iconset>
+       <normaloff>:/icons/tool.svg.png</normaloff>:/icons/tool.svg.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -146,7 +146,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../Icons.qrc">:/icons/broadcast.png</pixmap>
+        <pixmap resource="../Icons.qrc">:/icons/broadcast.svg.png</pixmap>
        </property>
        <property name="scaledContents">
         <bool>true</bool>
@@ -231,7 +231,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/undo.png</normaloff>:/icons/undo.png</iconset>
+         <normaloff>:/icons/undo.svg.png</normaloff>:/icons/undo.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>

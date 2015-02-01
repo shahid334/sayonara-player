@@ -24,6 +24,7 @@
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
+#include "Soundcloud/SoundcloudHelper.h"
 #include <QDir>
 
 
@@ -37,6 +38,26 @@ PlaylistLoader::PlaylistLoader(QObject *parent) :
 
 
 void PlaylistLoader::load_old_playlist() {
+
+#if 1
+	MetaDataList v_md;
+	ArtistList artists;
+	AlbumList albums;
+
+	artists = SoundcloudHelper::search_artist("Alloinyx");
+
+	if(artists.size() > 0){
+		SoundcloudHelper::get_all_playlists(artists[0].id, v_md, albums);
+	}
+
+	emit sig_create_playlist(v_md);
+
+	for(const MetaData& md : v_md){
+		qDebug() << md.filepath();
+	}
+	return;
+#else
+
 
         CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
@@ -113,5 +134,7 @@ void PlaylistLoader::load_old_playlist() {
 		if(load_last_track) {
 			emit sig_change_track(last_track_idx);
         }
+
+#endif
 }
 

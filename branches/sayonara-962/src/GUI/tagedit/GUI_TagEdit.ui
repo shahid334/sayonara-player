@@ -220,7 +220,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/icons/id3.png</pixmap>
+      <pixmap>:/icons/id3.svg.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -596,7 +596,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+         <normaloff>:/icons/save.svg.png</normaloff>:/icons/save.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>

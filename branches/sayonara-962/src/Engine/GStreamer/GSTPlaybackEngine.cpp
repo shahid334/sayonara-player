@@ -76,7 +76,9 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 	_wait_for_gapless_track = false;
 	_may_start_timer = false;
 
-	_jump_play_s = _settings->get(Set::Engine_CurTrackPos_s);
+	if(_settings->get(Set::PL_LastTrack) >= 0){
+		_jump_play_s = _settings->get(Set::Engine_CurTrackPos_s);
+	}
 
 	connect(_stream_recorder, SIGNAL(sig_initialized(bool)), this, SLOT(sr_initialized(bool)));
 	connect(_stream_recorder, SIGNAL(sig_stream_ended()), this,
@@ -147,7 +149,7 @@ void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
     bool success = false;
-	if(md.radio_mode() == RadioModeStation){
+	if(md.radio_mode() != RadioModeOff){
 		_settings->set(Set::Engine_CurTrackPos_s, 0);
 	}
 

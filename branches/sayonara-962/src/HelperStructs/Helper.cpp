@@ -160,8 +160,22 @@ QString Helper::getLibPath() {
 
 QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
+
+
 	QString path = QString(":/icons/") + icon_name;
+	if(path.endsWith(".png")){
+		// alles paletti
+	}
+
+	else if(!path.endsWith(".svg.png")){
+			path += ".svg.png";
+	}
+
 	QPixmap pixmap(path);
+
+	if(pixmap.isNull()){
+		qDebug() << "*Warning*: Pixmap " << path << " does not exist";
+	}
 
     if(sz.width() == 0){
         return pixmap;
@@ -182,7 +196,29 @@ QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
 
 QIcon Helper::getIcon(const QString& icon_name){
-	return QIcon(QString(":/icons/") + icon_name);
+
+	QString path;
+
+	if(icon_name.endsWith(".png")){
+		path = icon_name;
+		// alles paletti
+	}
+
+
+
+	else if(!icon_name.endsWith(".svg.png")){
+
+		path = icon_name + ".svg.png";
+	}
+
+	path.prepend(":/icons/");
+
+	QIcon icon = QIcon(path);
+	if(icon.isNull()){
+		qDebug() << "*Warning*: Icon " << path << " does not exist";
+	}
+
+	return icon;
 }
 
 

@@ -57,16 +57,13 @@ public:
 	void close_playlist(int idx);
 	void load_old_playlist();
 
-private:
-	void apply_state(PlaylistState state);
-
 signals:
 	void sig_play();
 
 	void sig_playlist_created(const MetaDataList&, int cur_track_idx, PlaylistType type, int playlist_idx=-1);
 	void sig_auto_next_file(const MetaData&);
 	void sig_cur_track_changed(const MetaData&, bool start_play);
-	void sig_cur_track_idx_changed(int track_idx);
+	void sig_cur_track_idx_changed(int track_idx, int playlist_idx);
 
 	void sig_no_track_to_play();
 	void sig_goon_playing();
@@ -97,7 +94,7 @@ public slots:
 	void psl_stop();
 	void psl_forward();
 	void psl_backward();
-	void psl_change_track(int);
+	void psl_change_track(int idx, int playlist_idx = -1);
 	void psl_next();
 
 	void psl_selection_changed(const QList<int>&);
@@ -110,7 +107,7 @@ public slots:
 	void psl_move_rows(const QList<int>&, int);
 	void psl_remove_rows(const QList<int> &);
 
-	void psl_id3_tags_changed(const MetaDataList& old_md, const MetaDataList& new_md);
+	void psl_md_changed(const MetaDataList& old_md, const MetaDataList& new_md);
 
 	void psl_md_changed(const MetaData&);
 
@@ -123,6 +120,7 @@ public slots:
 	void create_playlist(const QStringList&);
 	void create_playlist(const MetaDataList&);
 	void create_playlist(const CustomPlaylist&);
+	void create_playlist(const QString& dir);
 
 	void psl_audioconvert_on();
 	void psl_audioconvert_off();
@@ -134,28 +132,23 @@ private:
 	PlaylistLoader*		_playlist_loader;
 
 	QList<Playlist*>    _playlists;
-	Playlist*			_cur_playlist;
-	Playlist*			_active_playlist;
+
 	int					_cur_playlist_idx;
 	int					_active_playlist_idx;
 
 	bool				_start_play;
 	PlaylistState		_state;
 
+	int					_last_track;
+
 	PlaylistType determine_playlist_type(const MetaDataList& v_md);
 	Playlist* new_playlist(PlaylistType type, int idx);
 
+	Playlist* get_active();
+	Playlist* get_current();
 
-
-private slots:
-
-	void playlist_changed(const Playlist* pl, int playlist_idx);
-	void track_changed(const MetaData&, int cur_track_idx, int playlist_idx);
-	void no_track_to_play(int playlist_idx);
-
-
-
-
+	void emit_playlist_created();
+	void emit_cur_track_changed();
 };
 
 #endif /* PLAYLISTHANDLER_H_ */

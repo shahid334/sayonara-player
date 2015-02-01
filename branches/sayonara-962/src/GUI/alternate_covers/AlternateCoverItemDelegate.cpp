@@ -34,7 +34,7 @@
 
 
 AlternateCoverItemDelegate::AlternateCoverItemDelegate(QObject* parent) : QItemDelegate(parent) {
-    QPixmap pm = Helper::getPixmap("logo.png");
+	QPixmap pm = Helper::getPixmap("logo.png");
 	label = new QLabel();
 	label->setScaledContents(true);
 	label->setStyleSheet("background: transparent;");

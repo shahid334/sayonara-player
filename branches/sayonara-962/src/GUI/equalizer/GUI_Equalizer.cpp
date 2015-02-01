@@ -57,23 +57,34 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 
 	setupUi(this);
 
-	_sliders.push_back(new EqSlider(sli_0, label, 0));
-	_sliders.push_back(new EqSlider(sli_1, label_2, 1));
-	_sliders.push_back(new EqSlider(sli_2, label_3, 2));
-	_sliders.push_back(new EqSlider(sli_3, label_4, 3));
-	_sliders.push_back(new EqSlider(sli_4, label_5, 4));
-	_sliders.push_back(new EqSlider(sli_5, label_6, 5));
-	_sliders.push_back(new EqSlider(sli_6, label_7, 6));
-	_sliders.push_back(new EqSlider(sli_7, label_8, 7));
-	_sliders.push_back(new EqSlider(sli_8, label_9, 8));
-	_sliders.push_back(new EqSlider(sli_9, label_10, 9));
+	sli_0->setData(0, label);
+	sli_1->setData(1, label_2);
+	sli_2->setData(2, label_3);
+	sli_3->setData(3, label_4);
+	sli_4->setData(4, label_5);
+	sli_5->setData(5, label_6);
+	sli_6->setData(6, label_7);
+	sli_7->setData(7, label_8);
+	sli_8->setData(8, label_9);
+	sli_9->setData(9, label_10);
+
+	_sliders.push_back(sli_0);
+	_sliders.push_back(sli_1);
+	_sliders.push_back(sli_2);
+	_sliders.push_back(sli_3);
+	_sliders.push_back(sli_4);
+	_sliders.push_back(sli_5);
+	_sliders.push_back(sli_6);
+	_sliders.push_back(sli_7);
+	_sliders.push_back(sli_8);
+	_sliders.push_back(sli_9);
 
     cb_gauss->setChecked( _settings->get(Set::Eq_Gauss));
 
 	foreach(EqSlider* s, _sliders) {
 		connect(s, SIGNAL(sig_value_changed(int,int)), this, SLOT(sli_changed(int, int)));
-		connect(s, SIGNAL(sig_slider_pressed(int)), this, SLOT(sli_pressed(int)));
-		connect(s, SIGNAL(sig_slider_released(int)), this, SLOT(sli_released(int)));
+		connect(s, SIGNAL(sig_slider_got_focus(int)), this, SLOT(sli_pressed(int)));
+		connect(s, SIGNAL(sig_slider_lost_focus(int)), this, SLOT(sli_released(int)));
 	}
 
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(btn_save_clicked()));
@@ -114,7 +125,7 @@ int GUI_Equalizer::find_combo_text(QString text){
 void GUI_Equalizer::sli_pressed(int idx){
 	_active_idx= idx;
 	for(int i=0; i<_sliders.size(); i++){
-		_old_val[i] = _sliders[i]->getValue();
+		_old_val[i] = _sliders[i]->value();
 	}
 }
 
@@ -220,7 +231,7 @@ void GUI_Equalizer::btn_save_clicked() {
 	}
 
 	for(int i=0; i<_sliders.size(); i++){
-		_presets[found_idx - 1].settings[i] = _sliders[i]->getValue();
+		_presets[found_idx - 1].settings[i] = _sliders[i]->value();
 	}
 
 	_settings->set(Set::Eq_List, _presets);

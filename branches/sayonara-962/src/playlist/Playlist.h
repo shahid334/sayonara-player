@@ -32,16 +32,29 @@
 #include <QString>
 #include <QList>
 
+class PlaylistReport{
 
-class Playlist : public QObject, protected SayonaraClass
+private:
+	bool _cur_idx_changed;
+	bool _pl_changed;
+
+public:
+	PlaylistReport(bool cur_idx_changed, bool pl_changed){
+		_cur_idx_changed = cur_idx_changed;
+		_pl_changed = pl_changed;
+	}
+
+	bool has_cur_idx_changed(){
+		return _cur_idx_changed;
+	}
+
+	bool has_pl_changed(){
+		return _pl_changed;
+	}
+};
+
+class Playlist : protected SayonaraClass
 {
-
-    Q_OBJECT
-
-signals:
-	void sig_playlist_changed(const Playlist*, int playlist_idx);
-	void sig_track_changed(const MetaData&, int cur_track_idx, int playlist_idx);
-	void sig_stopped(int playlist_idx);
 
 protected:
     bool            _playlist_changed;
@@ -52,28 +65,22 @@ protected:
     PlaylistMode	_playlist_mode;
 	PlaylistMode	_playlist_mode_backup;
     PlaylistType    _playlist_type;
-    bool            _reports_disabled;
     bool            _start_playing;
-	PlaylistState	_playlist_state;
 
-    void report_changes(bool pl_changed, bool track_changed);
-    void enable_reports();
-    void disable_reports();
 
 public:
 
-	Playlist(int idx, QObject* parent=0);
+	Playlist(int idx);
 
-    virtual void play()=0;
-    virtual void pause()=0;
-    virtual void stop()=0;
-    virtual void fwd()=0;
-    virtual void bwd()=0;
+	virtual void play()=0;
+	virtual void pause()=0;
+	virtual void stop()=0;
+	virtual void fwd()=0;
+	virtual void bwd()=0;
     virtual void next()=0;
-    virtual void change_track(int idx)=0;
+	virtual bool change_track(int idx)=0;
 
-	virtual void create_playlist(const MetaDataList& lst)=0;
-	virtual void create_playlist(const QStringList& lst)=0;
+	virtual int create_playlist(const MetaDataList& v_md)=0;
     virtual void clear();
 
 	virtual void metadata_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new)=0;
@@ -102,7 +109,8 @@ public:
 
 	bool is_empty() const;
 	PlaylistType get_type() const;
-	int get_cur_track() const;
+	int get_cur_track_idx() const;
+	bool get_cur_track(MetaData& md) const;
 	QStringList toStringList() const;
 	int get_idx() const;
 	void set_idx(int idx);
@@ -111,9 +119,6 @@ public:
 
 	void set_playlist_mode(const PlaylistMode& mode);
 	PlaylistMode get_playlist_mode() const;
-
-	void set_playlist_state(PlaylistState state);
-	PlaylistState get_playlist_state();
 };
 
 

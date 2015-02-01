@@ -174,7 +174,6 @@ void MetaDataInfo::set_cover_location(const MetaDataList& lst){
 }
 
 
-
 QString MetaDataInfo::calc_artist_str(){
 
 	QString str;

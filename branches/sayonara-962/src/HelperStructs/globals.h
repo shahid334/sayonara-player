@@ -96,9 +96,10 @@ enum PlaylistType{
 enum PlaylistState{
 
     PlaylistUndefState=0,
-    PlaylistPlay=1,
-    PlaylistPause=2,
-    PlaylistStop=3
+	PlaylistPlay,
+	PlaylistPause,
+	PlaylistStop,
+	PlaylistWaiting // only on startup
 };
 
 

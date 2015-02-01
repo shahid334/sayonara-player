@@ -37,53 +37,6 @@
 #include <QAction>
 
 
-class EqSlider : public QObject{
-	Q_OBJECT
-
-	// QObject does not allow nested classes
-	// so this is a workaround
-	friend class GUI_Equalizer;
-
-	signals:
-		void sig_value_changed(int idx, int val);
-		void sig_slider_pressed(int idx);
-		void sig_slider_released(int idx);
-
-	private:
-		QSlider* _slider;
-		QLabel* _label;
-		int _idx;
-
-		EqSlider(QObject* parent) : QObject(parent) {}
-		EqSlider(QSlider* slider, QLabel* label, int idx) :
-			_slider(slider), _label(label), _idx(idx) {
-
-			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(sl_slider_changed(int)));
-			connect(_slider, SIGNAL(sliderPressed()), this, SLOT(sl_slider_pressed()));
-			connect(_slider, SIGNAL(sliderReleased()), this, SLOT(sl_slider_released()));
-		}
-		QSlider* getSlider() { return _slider; }
-		QLabel* getLabel() { return _label;}
-		void setValue(int val) {this->_slider->setValue(val);}
-		int getValue(){ return this->_slider->value();}
-
-	virtual ~EqSlider() {}
-
-
-	private slots:
-		void sl_slider_changed(int val) {
-			emit sig_value_changed(_idx, val);
-		}
-
-		void sl_slider_pressed(){
-			emit sig_slider_pressed(_idx);
-		}
-
-		void sl_slider_released(){
-			emit sig_slider_released(_idx);
-		}
-};
-
 
 
 class GUI_Equalizer : public PlayerPlugin, private Ui::GUI_Equalizer{

@@ -167,10 +167,6 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	psl_set_play(_settings->get(Set::PL_StartPlaying));
 
-	if(_settings->get(Set::PL_LoadLastTrack) && _settings->get(Set::PL_RememberTime)){
-		psl_set_cur_pos(_settings->get(Set::Engine_CurTrackPos_s));
-	}
-
 	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
 }
@@ -230,7 +226,7 @@ QAction* GUI_Player::createAction(QKeySequence seq) {
 
 void GUI_Player::initGUI() {
 
-    btn_mute->setIcon(Helper::getIcon("vol_1.png"));
+	btn_mute->setIcon(Helper::getIcon("vol_1"));
 
 	action_viewLibrary->setText(tr("&Library"));
 	btn_rec->setVisible(false);
@@ -247,11 +243,11 @@ void GUI_Player::psl_set_play(bool play){
 	m_trayIcon->setPlaying(play);
 
 	if(m_playing){
-		btn_play->setIcon(Helper::getIcon("pause.png"));
+		btn_play->setIcon(Helper::getIcon("pause"));
 	}
 
 	else{
-		btn_play->setIcon(Helper::getIcon("play.png"));
+		btn_play->setIcon(Helper::getIcon("play"));
 	}
 }
 
@@ -281,10 +277,14 @@ void GUI_Player::psl_update_track(const MetaData & md, bool start_play) {
 
 	total_time_changed(_md.length_ms);
 
+	psl_set_play(true);
+
 	QString rating_text;
 
 	rating_text = QString::number(_md.bitrate / 1000) + " kBit/s";
-	rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+	if(_md.filesize > 0){
+		rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+	}
 
 	lab_rating->setText(rating_text);
 	lab_rating->setToolTip(rating_text);
@@ -321,7 +321,9 @@ void GUI_Player::psl_md_changed(const MetaData& md) {
 	QString rating_text;
 
 	rating_text = QString::number(_md.bitrate / 1000) + " kBit/s";
-	rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+	if(_md.filesize > 0){
+		rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
+	}
 
 	lab_rating->setText(rating_text);
 	lab_rating->setToolTip(rating_text);

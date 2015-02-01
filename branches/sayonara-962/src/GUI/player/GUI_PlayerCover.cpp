@@ -32,11 +32,11 @@ void GUI_Player::set_std_cover(bool radio) {
 
     QIcon icon;
 	if(radio) {
-        icon = Helper::getIcon("radio.png");
+		icon = Helper::getIcon("radio");
 	}
 
 	else {
-        icon = Helper::getIcon("logo.png");
+		icon = Helper::getIcon("logo.png");
 	}
 
 	albumCover->icon().detach();
@@ -49,14 +49,8 @@ void GUI_Player::fetch_cover() {
 
 	set_std_cover( (_md.radio_mode() != RadioModeOff) );
 
-	if(_md.album_id > -1) {
-		m_cov_lookup->fetch_album_cover_by_id(_md.album_id);
-	}
-
-
-	else{
-		m_cov_lookup->fetch_album_cover_standard(_md.artist, _md.album);
-	}
+	CoverLocation cover_location = CoverLocation::get_cover_location(_md);
+	m_cov_lookup->fetch_cover(cover_location);
 }
 
 

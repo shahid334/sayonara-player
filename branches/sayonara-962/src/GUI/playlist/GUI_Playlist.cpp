@@ -89,7 +89,7 @@ GUI_Playlist::GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* info_dialo
 
 	connect(_playlist, SIGNAL(sig_playlist_created(const MetaDataList&,int,PlaylistType,int)),
 			this, SLOT(fill_playlist(const MetaDataList&,int,PlaylistType,int)));
-	connect(_playlist, SIGNAL(sig_cur_track_idx_changed(int)), this, SLOT(track_changed(int)));
+	connect(_playlist, SIGNAL(sig_cur_track_idx_changed(int, int)), this, SLOT(track_changed(int, int)));
 
 
 
@@ -242,11 +242,22 @@ void GUI_Playlist::rows_moved(const QList<int> & lst, int tgt_idx) {
 
 
 void GUI_Playlist::double_clicked(int row) {
-	_playlist->psl_change_track(row);
+	_playlist->psl_change_track(row, _cur_playlist_idx);
 }
 
-void GUI_Playlist::track_changed(int row) {
-	_cur_playlist_view->set_current_track(row);
+void GUI_Playlist::track_changed(int row, int playlist_idx) {
+
+	_playlist_views[playlist_idx]->set_current_track(row);
+
+
+	for(int i=0; i<tw_playlists->count(); i++){
+		QIcon icon;
+		tw_playlists->setTabIcon(i, icon);
+		tw_playlists->setIconSize(QSize(16, 16));
+	}
+
+	QIcon icon_play = Helper::getIcon("play");
+	tw_playlists->setTabIcon(playlist_idx, icon_play);
 }
 
 

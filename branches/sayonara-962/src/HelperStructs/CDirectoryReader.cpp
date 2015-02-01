@@ -117,19 +117,19 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 
 	db->getMultipleTracksByPath(files, v_md);
 
-	for(MetaDataList::iterator it=v_md.begin(); it != v_md.end(); it++) {
+	MetaDataList::iterator it = v_md.begin();
+
+	while(it != v_md.end()){
 
 		QString filepath = it->filepath();
 
-        if(Helper::is_playlistfile(filepath)) {
-            playlist_paths.push_back(filepath);
+		if(Helper::is_playlistfile(filepath)) {
+			playlist_paths << filepath;
 			it = v_md.erase(it);
             continue;
         }
 
         if(Helper::is_soundfile(filepath)) {
-
-			qDebug() << filepath << " is soundfile ";
 			if( it->id < 0 ) {
 
 				if(!ID3::getMetaDataOfFile(*it)) {
@@ -140,11 +140,13 @@ MetaDataList CDirectoryReader::get_md_from_filelist(const QStringList& lst) {
 				it->is_extern = true;
             }
         }
+
+		it++;
     }
 
 
     // TODO: look for playlists if paths could be read from database
-	//extract media files out of playlist files
+	// extract media files out of playlist files
 	for(const QString& path : playlist_paths) {
 
         qDebug() << "parse playlist file " << path;

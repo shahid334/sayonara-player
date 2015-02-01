@@ -48,7 +48,7 @@
      <widget class="QWidget" name="tab_1">
       <attribute name="icon">
        <iconset resource="../Icons.qrc">
-        <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
+        <normaloff>:/icons/info.svg.png</normaloff>:/icons/info.svg.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Info</string>
@@ -286,7 +286,7 @@
      <widget class="QWidget" name="tab_2">
       <attribute name="icon">
        <iconset resource="../Icons.qrc">
-        <normaloff>:/icons/lyrics.png</normaloff>:/icons/lyrics.png</iconset>
+        <normaloff>:/icons/lyrics.svg.png</normaloff>:/icons/lyrics.svg.png</iconset>
       </attribute>
       <attribute name="title">
        <string>Lyrics</string>

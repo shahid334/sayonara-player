@@ -34,7 +34,7 @@ Album::Album() : LibraryItem() {
     rating = 0;
 }
 
-Album::Album(const Album& album){
+Album::Album(const Album& album) : LibraryItem(album){
 
 	name = album.name;
 	id = album.id;

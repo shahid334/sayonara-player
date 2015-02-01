@@ -60,7 +60,7 @@
 #include "HelperStructs/SayonaraClass.h"
 #include <QMessageBox>
 
-#include "library/CLibraryBase.h"
+#include "Library/LocalLibrary.h"
 
 
 using namespace Sort;
@@ -71,7 +71,7 @@ Q_OBJECT
 
 public:
 
-	GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog* info_dialog, QWidget* parent);
+	GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog* info_dialog, QWidget* parent);
 	virtual ~GUI_Library_windowed();
 
 protected:
@@ -188,12 +188,12 @@ protected:
     QTimer*      _timer;
 	DiscPopupMenu* _discmenu;
 
-	int show_delete_dialog(int n_tracks);
+	LocalLibrary::TrackDeletionMode show_delete_dialog(int n_tracks);
     void init_headers();
 	void language_changed();
 
 private:
-	CLibraryBase* _library;
+	LocalLibrary* _library;
 
 };
 

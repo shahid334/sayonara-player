@@ -52,7 +52,14 @@ int CoverFetchThread::run_single() {
 
 	if(_url.isEmpty()) return 0;
 
-	QStringList adresses = CoverDownloader::cov_call_and_parse(_url, 10);
+	QStringList adresses;
+	if(_url.contains("google")){
+		adresses = CoverDownloader::cov_call_and_parse(_url, 10);
+	}
+
+	else {
+		adresses << _url;
+	}
 
 	for(const QString& adress : adresses) {
 

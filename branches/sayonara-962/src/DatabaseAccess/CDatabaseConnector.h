@@ -29,7 +29,7 @@
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/globals.h"
 #include "GUI/engine/StyleTypes.h"
-#include "library/Sorting.h"
+#include "Library/Sorting.h"
 
 
 #include <QObject>

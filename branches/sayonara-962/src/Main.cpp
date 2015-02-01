@@ -260,7 +260,7 @@ int main(int argc, char *argv[]) {
 	}
 
     app.setApplicationName("Sayonara");
-    app.setWindowIcon(Helper::getIcon("logo.png"));
+	app.setWindowIcon(Helper::getIcon("logo"));
 
     QStringList params;
     for(int i=1; i<argc; i++) {

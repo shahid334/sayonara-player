@@ -62,10 +62,11 @@ ADD_SUBDIRECTORY(HelperStructs)
 ADD_SUBDIRECTORY(DatabaseAccess)
 ADD_SUBDIRECTORY(GUI)
 ADD_SUBDIRECTORY(playlist)
-ADD_SUBDIRECTORY(library)
+ADD_SUBDIRECTORY(Library)
 ADD_SUBDIRECTORY(CoverLookup)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
+ADD_SUBDIRECTORY(Soundcloud)
 ADD_SUBDIRECTORY(languages)
 
 SET(HEADERS
@@ -81,7 +82,7 @@ SET(HEADERS
     Notification/NotificationPluginLoader.h
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
-	PlaylistChooser/PlaylistChooser.h
+    PlaylistChooser/PlaylistChooser.h
     RadioStation/StreamWriter.h
     RadioStation/StreamServer.h
     StreamPlugins/LastFM/LastFM.h
@@ -101,7 +102,7 @@ SET(SOURCES
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
     LyricLookup/LyricLookup.cpp
-	PlaylistChooser/PlaylistChooser.cpp
+    PlaylistChooser/PlaylistChooser.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
@@ -113,28 +114,24 @@ SET(SOURCES
     TagEdit/TagExpression.cpp
 )
 
-
 FILE (GLOB TRANSLATIONS_FILES languages/*.ts)
-QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
-ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
+QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
+ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
 
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${QM_FILES})
 
 TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} 
-#	tag 
 	curl 
 	sayonara_helper 
 	sayonara_db 
 	sayonara_gui 
 	sayonara_playlist 
 	sayonara_library 
-	sayonara_covers 
-#	sayonara_gstreamer
+        sayonara_covers
+        sayonara_soundcloud
 )
-
-
 
 INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES ${QM_FILES} DESTINATION share/sayonara/translations)

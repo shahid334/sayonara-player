@@ -15,6 +15,9 @@ SET(HEADERS
     SearchableWidget.h
     MiniSearcher.h
     RatingLabel.h
+    alternate_covers/AlternateCoverItemDelegate.h
+    alternate_covers/AlternateCoverItemModel.h
+    alternate_covers/GUI_Alternate_Covers.h
     AudioConverter/GUI_AudioConverter.h
     bookmarks/GUI_Bookmarks.h
     broadcasting/GUI_Broadcast.h
@@ -24,22 +27,11 @@ SET(HEADERS
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
     engine/GUI_StyleSettings.h
-    player/GUI_Player.h
-    player/GUI_TrayIcon.h
-    player/SearchSlider.h
-    playlist/GUI_Playlist.h
-	playlist/PlaylistTabWidget.h
-    playlist/view/PlaylistView.h
-    playlist/model/PlaylistItemModel.h
-    playlist/delegate/PlaylistItemDelegate.h
-    playlist/entry/GUI_PlaylistEntry.h
-    playlist/entry/GUI_PlaylistEntryBig.h
-    playlist/entry/GUI_PlaylistEntrySmall.h
-    playlist_chooser/GUI_PlaylistChooser.h
-    TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
+    equalizer/EqSlider.h
+    equalizer/GUI_Equalizer.h
     LastFM/GUI_LastFM.h
     library/GUI_Library_windowed.h
-    library/view/LibraryView.h    
+    library/view/LibraryView.h
     library/model/LibraryItemModel.h
     library/model/LibraryItemModelTracks.h
     library/model/LibraryItemModelAlbums.h
@@ -51,11 +43,22 @@ SET(HEADERS
     library/ImportFolderDialog/GUIImportFolder.h
     library/DiscPopupMenu.h
     library/GUI_LibraryPath.h
-    alternate_covers/AlternateCoverItemDelegate.h
-    alternate_covers/AlternateCoverItemModel.h
-    alternate_covers/GUI_Alternate_Covers.h
+    player/GUI_Player.h
+    player/GUI_TrayIcon.h
+    player/SearchSlider.h
+    playlist/GUI_Playlist.h
+    playlist/PlaylistTabWidget.h
+    playlist/view/PlaylistView.h
+    playlist/model/PlaylistItemModel.h
+    playlist/delegate/PlaylistItemDelegate.h
+    playlist/entry/GUI_PlaylistEntry.h
+    playlist/entry/GUI_PlaylistEntryBig.h
+    playlist/entry/GUI_PlaylistEntrySmall.h
+    playlist_chooser/GUI_PlaylistChooser.h
+    soundcloud/GUI_SoundcloudLibrary.h
     tagedit/GUI_TagEdit.h
-    equalizer/GUI_Equalizer.h
+    TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
+
     Podcasts/GUI_Podcasts.h
     MyColumnHeader.h
     ContextMenu.h
@@ -74,6 +77,9 @@ SET(SOURCES
     SearchableWidget.cpp
     MiniSearcher.cpp
     RatingLabel.cpp
+    alternate_covers/AlternateCoverItemDelegate.cpp
+    alternate_covers/AlternateCoverItemModel.cpp
+    alternate_covers/GUI_Alternate_Covers.cpp
     AudioConverter/GUI_AudioConverter.cpp
     bookmarks/GUI_Bookmarks.cpp
     broadcasting/GUI_Broadcast.cpp
@@ -83,6 +89,8 @@ SET(SOURCES
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp
     engine/GUI_StyleSettings.cpp
+    equalizer/GUI_Equalizer.cpp
+    equalizer/EqSlider.cpp
     player/GUI_Player.cpp
     player/GUI_PlayerPlugins.cpp
     player/GUI_PlayerMenubar.cpp
@@ -114,11 +122,8 @@ SET(SOURCES
     library/InfoBox/GUILibraryInfoBox.cpp
     library/ImportFolderDialog/GUIImportFolder.cpp
     library/GUI_LibraryPath.cpp
-    alternate_covers/AlternateCoverItemDelegate.cpp
-    alternate_covers/AlternateCoverItemModel.cpp
-    alternate_covers/GUI_Alternate_Covers.cpp
+    soundcloud/GUI_SoundcloudLibrary.cpp
     tagedit/GUI_TagEdit.cpp
-    equalizer/GUI_Equalizer.cpp
     Podcasts/GUI_Podcasts.cpp
     ContextMenu.cpp
     stream/GUI_Stream.cpp

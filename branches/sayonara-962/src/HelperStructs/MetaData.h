@@ -33,6 +33,7 @@
 #include "HelperStructs/LibraryItem.h"
 #include "HelperStructs/Artist.h"
 #include "HelperStructs/Album.h"
+#include "CoverLookup/CoverLocation.h"
 
 #include <QStringList>
 #include <QPair>
@@ -43,14 +44,9 @@
 enum RadioMode {
 
 	RadioModeOff = 0,
-	RadioModeStation = 1,
+	RadioModeStation,
+	RadioModeSoundcloud
 };
-
-class MetaData;
-
-
-Q_DECLARE_METATYPE(MetaData)
-
 
 class MetaData : public LibraryItem {
 
@@ -105,7 +101,7 @@ public:
     static bool fromVariant(const QVariant& v, MetaData& md);
 };
 
-
+Q_DECLARE_METATYPE(MetaData)
 
 class MetaDataList : public QVector<MetaData> {
 
@@ -119,8 +115,8 @@ class MetaDataList : public QVector<MetaData> {
 		MetaDataList(int n_elems);
 
 	    virtual ~MetaDataList();
-        void setCurPlayTrack(int idx);
-        int getCurPlayTrack();
+		void setCurPlayTrack(int idx);
+		int getCurPlayTrack() const;
 
         virtual bool contains(const MetaData& md) const;
 

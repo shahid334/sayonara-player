@@ -24,28 +24,63 @@
 #define SHOUTCASTHELPER_H
 
 #include "HelperStructs/Helper.h"
-#include <QtXml>
+
+struct JsonItem {
+	enum Type {
+		TypeArray=0,
+		TypeNumber,
+		TypeString,
+		TypeBlock
+	} type;
+
+	QList<JsonItem> values;
+	QString key;
+	QString pure_value;
+
+	void print(const QString& parent_key="") const {
+
+
+		QString my_key = parent_key + "." + key;
+		int i=0;
+		for(const JsonItem& item : values){
+			item.print(my_key);
+			i++;
+		}
+
+		if(values.size() == 0){
+			qDebug() << my_key << " = " << pure_value;
+		}
+	}
+
+};
+
 
 namespace SoundcloudHelper
 {
+
 
 	QString				create_dl_get_artist(QString name);
 	QString				create_dl_get_playlists(qint64 artist_id);
 	QString				create_dl_get_tracks(qint64 artist_id);
 
-	bool				parse_artist_xml(const QString& content, Artist& artist);
-	bool				parse_playlist_xml(const QString& content,
-									   MetaDataList& v_md,
-									   ArtistList& v_artists,
-									   AlbumList& v_albums);
-	bool				parse_tracks_xml(const QString& content,
-										 MetaDataList& v_md);
+	ArtistList			search_artist(const QString& name);
+	bool				get_all_playlists(qint32 artist_id, MetaDataList& v_md, AlbumList& albums);
 
-	bool				parse_artist_dom(QDomNode node, Artist& artist);
-	bool				parse_track_dom(QDomNode node, MetaData& md, Artist& artist);
+	JsonItem			parse(QString key, const QString& content);
+
+	JsonItem			parse_array(QString key, QString content);
+	JsonItem			parse_block(QString key, QString content);
+	JsonItem			parse_standard(QString key, QString content);
+
+	int					find_block_end(const QString& content, int start_at=0);
+	int					find_array_end(const QString& content, int start_at=0);
+	int					find_value_end(const QString& content, int start_at=0);
+
+	bool				extract_track(const JsonItem& item, MetaData& md);
+	bool				extract_artist(const JsonItem& item, Artist& artist);
+	bool				extract_playlist(const JsonItem& item, Album& album, MetaDataList& v_md);
 
 
-
-};
+}
 
 #endif // SHOUTCASTHELPER_H

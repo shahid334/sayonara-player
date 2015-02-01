@@ -54,8 +54,8 @@
 #include "Engine/SoundPluginLoader.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
-#include "library/CLibraryBase.h"
-#include "library/LibraryImporter.h"
+#include "Library/LocalLibrary.h"
+#include "Library/LibraryImporter.h"
 #include "HelperStructs/Equalizer_presets.h"
 
 #include "LyricLookup/LyricLookup.h"
@@ -85,9 +85,9 @@ private:
 	GUI_Player*             player;
 	GUI_PlaylistChooser*    ui_playlist_chooser;
 	GUI_AudioConverter*     ui_audioconverter;
-	PlaylistChooser*              playlist_chooser;
+	PlaylistChooser*		playlist_chooser;
 	PlaylistHandler*        playlist_handler;
-	CLibraryBase*           library;
+	LocalLibrary*           library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
 

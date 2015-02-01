@@ -37,7 +37,8 @@ public:
     qint32 id;                                                                                                                                       
     QString name;                                                                                                                                                      
     quint16 num_songs;                                                                                                           
-    quint16 num_albums;                                                                                           
+	quint16 num_albums;
+
 
 	Artist();
 	virtual	~Artist();

@@ -59,7 +59,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/icons/radio.png</pixmap>
+      <pixmap>:/icons/radio.svg.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -203,7 +203,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+         <normaloff>:/icons/delete.svg.png</normaloff>:/icons/delete.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -241,7 +241,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+         <normaloff>:/icons/save.svg.png</normaloff>:/icons/save.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -298,7 +298,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
+         <normaloff>:/icons/play.svg.png</normaloff>:/icons/play.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>

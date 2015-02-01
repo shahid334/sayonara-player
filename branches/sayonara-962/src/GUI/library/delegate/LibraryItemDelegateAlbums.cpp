@@ -40,8 +40,8 @@
 LibraryItemDelegateAlbums::LibraryItemDelegateAlbums(LibraryView* parent, bool enabled) :
 	LibraryRatingDelegate(parent, enabled)
 {
-    _icon_single_album = Helper::getPixmap("play_small.png");
-    _icon_multi_album = Helper::getPixmap("fwd_orange.png");
+	_icon_single_album = Helper::getPixmap("play_orange", QSize(16, 16), false);
+	_icon_multi_album = Helper::getPixmap("fwd_orange", QSize(16, 16), false);
 }
 
 

@@ -32,28 +32,28 @@ class SearchSlider: public QSlider {
 	Q_OBJECT
 
 	signals:
-	void searchSliderPressed(int);
-	void searchSliderReleased(int);
-	void searchSliderMoved(int);
-
+		void sig_slider_moved(int);
 
 public:
+
 	SearchSlider(QWidget* parent=0);
 	virtual ~SearchSlider();
 
-	bool isSearching();
-
+	virtual void setValue(int i);
+	virtual void increment(int i);
+	virtual void decrement(int i);
 
 
 protected:
-	virtual bool event(QEvent* e);
+
+	virtual void mousePressEvent(QMouseEvent* e);
+	virtual void mouseReleaseEvent(QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
+	virtual bool event(QEvent *event);
+
 
 private:
 	bool	_searching;
-    int     _old_value;
-
-
-
 };
 
 #endif /* SEARCHSLIDER_H_ */

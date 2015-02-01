@@ -59,13 +59,15 @@ public:
 
 public slots:
 	void fill_playlist(const MetaDataList&, int, PlaylistType, int pl_idx);
-	void track_changed(int);
+
 
 	void library_path_changed(QString);
 	void set_playlist_type(PlaylistType playlist_type);
 
 
 private slots:
+
+	void track_changed(int row, int playlist_idx);
 
 	void sel_changed(const MetaDataList&, const QList<int>&);
 	void double_clicked(int);

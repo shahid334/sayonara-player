@@ -348,7 +348,9 @@ int PlaylistParser::parse_playlist(QString playlist_file, MetaDataList& v_md) {
         success = Helper::read_file_into_str(playlist_file, &content);
     }
 
-	if(!success) return 0;
+	if(!success) {
+		return 0;
+	}
 
 	if(is_local_file) {
 		int last_slash = playlist_file.lastIndexOf(QDir::separator());

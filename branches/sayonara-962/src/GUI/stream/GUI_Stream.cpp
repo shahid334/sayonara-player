@@ -45,8 +45,10 @@ GUI_Stream::GUI_Stream(QString name, QWidget *parent) :
 
 	QMap<QString, QString> data;
 	CDatabaseConnector::getInstance()->getAllStreams(data);
-	if(data.size() > 0)
+	if(data.size() > 0){
 		setup_stations(data);
+	}
+
 
 	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
@@ -253,13 +255,14 @@ void GUI_Stream::save_clicked() {
 
 void GUI_Stream::play_stream(QString url, QString name) {
 
+	qDebug() << "Play stream: " << name;
+
     MetaDataList v_md;
 
     if(Helper::is_playlistfile(url)) {
-        MetaDataList v_md_tmp;
 		if(PlaylistParser::parse_playlist(url, v_md) > 0) {
 
-			for(MetaData& md : v_md_tmp) {
+			for(MetaData& md : v_md) {
 
                 if(name.isEmpty()){
                     md.album = url;

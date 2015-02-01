@@ -49,17 +49,17 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) :
     _md_set = false;
     
 	m_playAction = new QAction(tr("Play"), this);
-	m_playAction->setIcon(Helper::getIcon("play.png"));
+	m_playAction->setIcon(Helper::getIcon("play"));
 	m_stopAction = new QAction(tr("Stop"), this);
-	m_stopAction->setIcon(Helper::getIcon("stop.png"));
+	m_stopAction->setIcon(Helper::getIcon("stop"));
 	m_bwdAction = new QAction(tr("Previous"), this);
-	m_bwdAction->setIcon(Helper::getIcon("bwd.png"));
+	m_bwdAction->setIcon(Helper::getIcon("bwd"));
 	m_fwdAction = new QAction(tr("Next"), this);
-	m_fwdAction->setIcon(Helper::getIcon("fwd.png"));
+	m_fwdAction->setIcon(Helper::getIcon("fwd"));
 	m_muteAction = new QAction(tr("Mute"), this);
-	m_muteAction->setIcon(Helper::getIcon("vol_mute.png"));
+	m_muteAction->setIcon(Helper::getIcon("vol_mute"));
 	m_closeAction = new QAction(tr("Close"), this);
-	m_closeAction->setIcon(Helper::getIcon("power_off.png"));
+	m_closeAction->setIcon(Helper::getIcon("power_off"));
 	m_showAction = new QAction(tr("Show"), this);
 
     m_trayContextMenu = new QMenu();
@@ -75,7 +75,7 @@ GUI_TrayIcon::GUI_TrayIcon (QObject *parent) :
 	m_trayContextMenu->addAction(m_closeAction);
 
 	this->setContextMenu(m_trayContextMenu);
-	this->setIcon(Helper::getIcon("play.png"));
+	this->setIcon(Helper::getIcon("play"));
 
     connect(m_playAction, SIGNAL(triggered()), this, SLOT(play_clicked()));
     connect(m_fwdAction, SIGNAL(triggered()), this, SLOT(fwd_clicked()));
@@ -230,12 +230,12 @@ void GUI_TrayIcon::setMute(bool mute) {
     }
 
 	if(!mute) {
-        m_muteAction->setIcon(Helper::getIcon("vol_mute" + suffix + ".png"));
+		m_muteAction->setIcon(Helper::getIcon("vol_mute" + suffix));
         m_muteAction->setText(tr("Mute"));
 	}
 
 	else {
-        m_muteAction->setIcon(Helper::getIcon("vol_3" + suffix + ".png"));
+		m_muteAction->setIcon(Helper::getIcon("vol_3" + suffix));
         m_muteAction->setText(tr("Unmute"));
 	}
 }
@@ -247,16 +247,16 @@ void GUI_TrayIcon::setPlaying(bool play) {
 	this->setContextMenu(m_trayContextMenu);
 
 	if(play) {
-		setIcon(Helper::getIcon("play.png"));
+		setIcon(Helper::getIcon("play"));
 
-		m_playAction->setIcon(Helper::getIcon("pause.png"));
+		m_playAction->setIcon(Helper::getIcon("pause"));
 		m_playAction->setText(tr("Pause"));
 	}
 
 	else {
-		setIcon(Helper::getIcon("pause.png"));
+		setIcon(Helper::getIcon("pause"));
 
-		m_playAction->setIcon(Helper::getIcon("play.png"));
+		m_playAction->setIcon(Helper::getIcon("play"));
 		m_playAction->setText(tr("Play"));
 	}
 }

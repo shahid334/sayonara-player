@@ -340,7 +340,7 @@ void GUI_Player::about(bool b) {
 
 	QMessageBox infobox(this);
     infobox.setParent(this);
-    infobox.setIconPixmap(Helper::getPixmap("logo.png", QSize(150, 150), true));
+	infobox.setIconPixmap(Helper::getPixmap("logo.png", QSize(150, 150), true));
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 

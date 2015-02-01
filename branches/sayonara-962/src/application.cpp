@@ -30,6 +30,8 @@
 #include <fstream>
 #include <string>
 
+#include "Soundcloud/SoundcloudHelper.h"
+
 using namespace std;
 
 bool Application::is_initialized() {
@@ -101,7 +103,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	player              = new GUI_Player(translator);
 
 	playlist_handler    = new PlaylistHandler();
-	library             = new CLibraryBase();
+	library             = new LocalLibrary();
 	library_importer    = new LibraryImporter(getMainWindow(), this);
 	playlist_chooser    = new PlaylistChooser(playlist_handler);
 
@@ -185,7 +187,7 @@ void Application::init(int n_files, QTranslator *translator) {
 	bool is_maximized = _settings->get(Set::Player_Maximized);
 
 	player->setWindowTitle("Sayonara " + version);
-    player->setWindowIcon(Helper::getIcon("logo.png"));
+	player->setWindowIcon(Helper::getIcon("logo.png"));
 
 	/* Into Player */
 	player->setPlaylist(ui_playlist);
@@ -259,11 +261,13 @@ void Application::init_connections() {
 	CONNECT (player, sig_seek_rel_ms(qint64),				listen,				jump_rel_ms(qint64));
 	CONNECT (player, sig_rec_button_toggled(bool),			listen,				record_button_toggled(bool));
 	CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,		record_button_toggled(bool));
-	CONNECT (player, sig_basedir_selected(const QString &),	library,            baseDirSelected(const QString & ));
-	CONNECT (player, sig_reload_library(bool),				library,            reloadLibrary(bool));
+
+	CONNECT (player, sig_reload_library(bool),				library,            psl_reload_library(bool));
 	CONNECT (player, sig_import_dir(const QString&),		library_importer,   psl_import_dir(const QString&));
 	CONNECT (player, sig_import_files(const QStringList&),	library_importer,   psl_import_files(const QStringList&));
 	CONNECT (player, sig_file_selected(const QStringList &),playlist_handler, 	create_playlist(const QStringList&));
+	CONNECT (player, sig_basedir_selected(const QString &),	playlist_handler,   create_playlist(const QString&));
+
 	CONNECT (player, sig_play(),							playlist_handler,	psl_play());
 	CONNECT (player, sig_pause(),							playlist_handler,	psl_pause());
 	CONNECT (player, sig_pause(),							listen,				pause());
@@ -275,7 +279,6 @@ void Application::init_connections() {
 	CONNECT (player, sig_pause(),							ui_level,			psl_stop());
 	CONNECT (player, sig_forward(),							playlist_handler,	psl_forward());
 	CONNECT (player, sig_backward(),						playlist_handler,	psl_backward());
-	CONNECT (player, sig_show_playlists(),					ui_playlist_chooser,show()); // IND
 	CONNECT (player, sig_setup_LastFM(),					ui_lastfm,			show_win()); // IND
 	CONNECT (player, sig_show_stream_rec(),					ui_stream_rec,		show_win()); // IND
 	CONNECT (player, sig_show_socket(),						ui_socket_setup,	show_win()); // IND
@@ -306,7 +309,7 @@ void Application::init_connections() {
 
 	CONNECT (listen, sig_md_changed(const MetaData&),	player,				psl_md_changed(const MetaData&));
 	CONNECT (listen, sig_md_changed(const MetaData&),	playlist_handler,	psl_md_changed(const MetaData&));
-	CONNECT (listen, sig_md_changed(const MetaData&),	library,			psl_md_changed(const MetaData&));
+	CONNECT (listen, sig_md_changed(const MetaData&),	library,			psl_metadata_changed(const MetaData&));
 
 
 	CONNECT (ui_speed, sig_speed_changed(float),		listen,				psl_set_speed(float) );

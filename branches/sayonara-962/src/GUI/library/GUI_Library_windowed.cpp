@@ -26,10 +26,6 @@
  *      Author: luke
  */
 
-#define SEL_ARTISTS 0
-#define SEL_ALBUMS 1
-#define SEL_TRACKS 2
-
 
 #include "GUI/MyColumnHeader.h"
 #include "GUI/library/GUI_Library_windowed.h"
@@ -46,7 +42,7 @@
 #include "HelperStructs/Style.h"
 #include "HelperStructs/Filter.h"
 #include "HelperStructs/CustomMimeData.h"
-#include <QMessageBox>
+
 
 #include "CoverLookup/CoverLookup.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -61,6 +57,7 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QPixmap>
+#include <QMessageBox>
 
 #include <QPalette>
 #include <QBrush>
@@ -72,7 +69,7 @@
 
 using namespace std;
 
-GUI_Library_windowed::GUI_Library_windowed(CLibraryBase* library, GUI_InfoDialog* info_dialog, QWidget* parent) :
+GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog* info_dialog, QWidget* parent) :
 	SayonaraWidget(parent),
 	Ui::Library_windowed()
 {
@@ -643,9 +640,9 @@ void GUI_Library_windowed::lib_no_lib_path(){
 void GUI_Library_windowed::delete_album() {
 
 	int n_tracks = _track_model->rowCount();
-	int answer = show_delete_dialog(n_tracks);
+	LocalLibrary::TrackDeletionMode answer = show_delete_dialog(n_tracks);
 
-	if(answer) {
+	if(answer != LocalLibrary::TrackDeletionModeNone) {
 		_library->psl_delete_tracks(answer);
 	}
 }
@@ -653,7 +650,7 @@ void GUI_Library_windowed::delete_album() {
 void GUI_Library_windowed::delete_artist() {
 
 	int n_tracks = _track_model->rowCount();
-	int answer = show_delete_dialog(n_tracks);
+	LocalLibrary::TrackDeletionMode answer = show_delete_dialog(n_tracks);
 
 	if(answer) {
 		_library->psl_delete_tracks(answer);
@@ -668,7 +665,7 @@ void GUI_Library_windowed::delete_tracks() {
 		lst.push_back(idx.row());
 	}
 
-	int answer = show_delete_dialog(lst.size());
+	LocalLibrary::TrackDeletionMode answer = show_delete_dialog(lst.size());
 
     if(answer){
 		_library->psl_delete_certain_tracks(lst, answer);
@@ -676,7 +673,7 @@ void GUI_Library_windowed::delete_tracks() {
 }
 
 
-int GUI_Library_windowed::show_delete_dialog(int n_tracks) {
+LocalLibrary::TrackDeletionMode GUI_Library_windowed::show_delete_dialog(int n_tracks) {
 
 		QMessageBox dialog(this);
 		QAbstractButton* clicked_button;
@@ -697,17 +694,19 @@ int GUI_Library_windowed::show_delete_dialog(int n_tracks) {
 		dialog.close();
 
 
-		if(answer == QMessageBox::No)
-			return 0;
-
-		if(answer == QMessageBox::Yes)
-			return 1;
-
-		if(clicked_button->text() == only_library_button->text()) {
-			return 2;
+		if(answer == QMessageBox::No){
+			return LocalLibrary::TrackDeletionModeNone;
 		}
 
-		return 0;
+		if(answer == QMessageBox::Yes){
+			return LocalLibrary::TrackDeletionModeAlsoFiles;
+		}
+
+		if(clicked_button->text() == only_library_button->text()) {
+			return LocalLibrary::TrackDeletionModeOnlyLibrary;
+		}
+
+		return LocalLibrary::TrackDeletionModeNone;;
 }
 
 void GUI_Library_windowed::artist_middle_clicked(const QPoint& pt) {

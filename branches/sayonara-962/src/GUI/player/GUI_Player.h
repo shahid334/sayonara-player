@@ -212,6 +212,8 @@ protected:
 	void language_changed();
 	virtual void skin_changed();
 
+	virtual void set_cur_pos_label(int val);
+
 private:
 
     GUI_Playlist*           ui_playlist;

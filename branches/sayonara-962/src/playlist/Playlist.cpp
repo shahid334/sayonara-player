@@ -22,51 +22,20 @@
 #include "playlist/Playlist.h"
 #include <QDir>
 
-Playlist::Playlist(int idx, QObject* parent) :
-	QObject(parent),
+Playlist::Playlist(int idx) :
 	SayonaraClass()
 {
 	_playlist_idx = idx;
 	_playlist_mode = _settings->get(Set::PL_Mode);
-    _reports_disabled = false;
     _cur_play_idx = -1;
 }
 
-void Playlist::report_changes(bool pl_changed, bool track_changed) {
-    if(_reports_disabled) return;
-
-	if(pl_changed){
-		emit sig_playlist_changed(this, _playlist_idx);
-	}
-
-	if(track_changed) {
-
-        if( _cur_play_idx < 0 ||
-            _cur_play_idx >= _v_md.size() ){
-
-			emit sig_stopped(_playlist_idx);
-		}
-
-		else{
-			MetaData md = _v_md[_cur_play_idx];
-			emit sig_track_changed(md, _cur_play_idx, _playlist_idx);
-		}
-    }
-}
-
-void Playlist::enable_reports() {
-    _reports_disabled = false;
-}
-
-void Playlist::disable_reports() {
-    _reports_disabled = true;
-}
 
 void Playlist::clear() {
 
     _v_md.clear();
     _cur_play_idx = -1;
-    report_changes(true, false);
+
 }
 
 void Playlist::move_track(const int idx, int tgt) {
@@ -79,7 +48,7 @@ void Playlist::move_tracks(const QList<int>& lst, int tgt) {
 
     MetaDataList v_md_to_move;
     MetaDataList v_md_before_tgt;
-    MetaDataList v_md_after_tgt;
+	MetaDataList v_md_after_tgt;
 
     for(int i=0; i< _v_md.size(); i++) {
 
@@ -113,8 +82,6 @@ void Playlist::move_tracks(const QList<int>& lst, int tgt) {
         _v_md.push_back(md);
         if(md.pl_playing) _cur_play_idx = _v_md.size() - 1;
     }
-
-    report_changes(true, false);
 }
 
 
@@ -171,11 +138,11 @@ void Playlist::delete_tracks(const QList<int>& lst) {
         v_md[v_md.size() - 1].pl_selected = true;
 
     _v_md = v_md;
-    report_changes(true, false);
 }
 
 
 void Playlist::insert_track(const MetaData& md, int tgt) {
+
     MetaDataList v_md;
     v_md.push_back(md);
     insert_tracks(v_md, tgt);
@@ -213,8 +180,10 @@ void Playlist::insert_tracks(const MetaDataList& lst, int tgt) {
 
    _v_md = v_md;
 
-   if(tgt <= _cur_play_idx) _cur_play_idx += lst.size();
-   report_changes(true, false);
+   if(tgt <= _cur_play_idx){
+	   _cur_play_idx += lst.size();
+   }
+
 }
 
 void Playlist::selection_changed(const QList<int>& lst) {
@@ -226,9 +195,7 @@ void Playlist::selection_changed(const QList<int>& lst) {
 		_v_md[i].pl_selected = lst.contains(i);
 
 		if(_v_md[i].pl_selected){
-
 			_selected_tracks << _v_md[i];
-
 		}
     }
 }
@@ -246,8 +213,6 @@ void Playlist::append_tracks(const MetaDataList& lst) {
         md.is_disabled = !(Helper::checkTrack(md));
         _v_md.push_back(md);
     }
-
-    report_changes(true, false);
 }
 
 
@@ -264,13 +229,8 @@ void Playlist::replace_track(int idx, const MetaData& md) {
 	_v_md[idx].pl_selected = is_selected;
 	_v_md[idx].pl_dragged = is_dragged;
 	_v_md[idx].pl_playing = is_playing;
-
-    report_changes(true, false);
 }
 
-int Playlist::get_cur_track() const {
-    return _cur_play_idx;
-}
 
 PlaylistType Playlist::get_type() const {
     return _playlist_type;
@@ -292,6 +252,18 @@ PlaylistMode Playlist::get_playlist_mode() const {
 	return _playlist_mode;
 }
 
+int Playlist::get_cur_track_idx() const {
+	return _cur_play_idx;
+}
+
+bool Playlist::get_cur_track(MetaData &md) const {
+	if(_cur_play_idx < 0 || _cur_play_idx >= _v_md.size() ){
+		return false;
+	}
+
+	md = _v_md[_cur_play_idx];
+	return true;
+}
 
 bool Playlist::is_empty() const {
 
@@ -322,12 +294,4 @@ QList<int> Playlist::find_tracks(int idx) const {
 
 QList<int> Playlist::find_tracks(const QString& filepath) const {
 	return _v_md.findTracks(filepath);
-}
-
-void Playlist::set_playlist_state(PlaylistState state){
-	_playlist_state = state;
-}
-
-PlaylistState Playlist::get_playlist_state(){
-	return _playlist_state;
 }

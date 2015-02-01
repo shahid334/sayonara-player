@@ -36,7 +36,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../../../../../../.designer/backup/icons/play.png</normaloff>../../../../../../.designer/backup/icons/play.png</iconset>
+    <normaloff>../../../../../../.designer/backup/icons/play.svg.png</normaloff>../../../../../../.designer/backup/icons/play.svg.png</iconset>
   </property>
   <property name="toolButtonStyle">
    <enum>Qt::ToolButtonIconOnly</enum>
@@ -227,7 +227,7 @@
          </property>
          <property name="icon">
           <iconset resource="../Icons.qrc">
-           <normaloff>:/icons/stop.png</normaloff>:/icons/stop.png</iconset>
+           <normaloff>:/icons/stop.svg.png</normaloff>:/icons/stop.svg.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -506,7 +506,7 @@
            </property>
            <property name="icon">
             <iconset resource="../Icons.qrc">
-             <normaloff>:/icons/bwd.png</normaloff>:/icons/bwd.png</iconset>
+             <normaloff>:/icons/bwd.svg.png</normaloff>:/icons/bwd.svg.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -547,7 +547,7 @@
            </property>
            <property name="icon">
             <iconset resource="../Icons.qrc">
-             <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
+             <normaloff>:/icons/play.svg.png</normaloff>:/icons/play.svg.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -588,7 +588,7 @@
            </property>
            <property name="icon">
             <iconset resource="../Icons.qrc">
-             <normaloff>:/icons/rec.png</normaloff>:/icons/rec.png</iconset>
+             <normaloff>:/icons/rec.svg.png</normaloff>:/icons/rec.svg.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -635,7 +635,7 @@
            </property>
            <property name="icon">
             <iconset resource="../Icons.qrc">
-             <normaloff>:/icons/fwd.png</normaloff>:/icons/fwd.png</iconset>
+             <normaloff>:/icons/fwd.svg.png</normaloff>:/icons/fwd.svg.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -702,7 +702,7 @@
         </property>
         <property name="icon">
          <iconset resource="../Icons.qrc">
-          <normaloff>:/icons/vol_mute.png</normaloff>:/icons/vol_mute.png</iconset>
+          <normaloff>:/icons/vol_mute.svg.png</normaloff>:/icons/vol_mute.svg.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -1178,7 +1178,7 @@
           </property>
           <property name="icon">
            <iconset resource="../Icons.qrc">
-            <normaloff>:/icons/id3.png</normaloff>:/icons/id3.png</iconset>
+            <normaloff>:/icons/id3.svg.png</normaloff>:/icons/id3.svg.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -1306,7 +1306,7 @@
   <action name="action_lastFM">
    <property name="icon">
     <iconset>
-     <normaloff>../../../../../../Desktop/lastfm-icon.png</normaloff>../../../../../../Desktop/lastfm-icon.png</iconset>
+     <normaloff>../../../../../../Desktop/lastfm-icon.svg.png</normaloff>../../../../../../Desktop/lastfm-icon.svg.png</iconset>
    </property>
    <property name="text">
     <string>Last.fm</string>

@@ -50,10 +50,9 @@ MetaData::MetaData() : LibraryItem() {
         pl_dragged = false;
 
         is_disabled = false;
-
 }
 
-MetaData::MetaData(const MetaData & md){
+MetaData::MetaData(const MetaData & md) : LibraryItem(md){
     id = md.id;
     artist_id = md.artist_id;
     album_id = md.album_id;
@@ -160,7 +159,8 @@ bool MetaData::is_equal_deep(const MetaData& md) const{
 	( pl_playing == md.pl_playing ) &&
 	( pl_dragged == md.pl_dragged ) &&
 
-	( is_disabled == md.is_disabled ));
+	( is_disabled == md.is_disabled )
+	);
 }
 
 QString MetaData::filepath() const{
@@ -186,6 +186,11 @@ QString MetaData::set_filepath(QString filepath){
 		QDir dir(filepath);
 		_filepath = dir.absolutePath();
 		_radio_mode = RadioModeOff;
+	}
+
+	else if(filepath.contains("soundcloud.com")){
+		_filepath = filepath;
+		_radio_mode = RadioModeSoundcloud;
 	}
 
 	else{
@@ -229,10 +234,14 @@ void MetaDataList::setCurPlayTrack(int idx) {
         (this->data() + _cur_played_track)->pl_playing = false;
     }
 
-    if(idx < 0) return;
+	if(idx < 0) return;
 
-    _cur_played_track = idx;
+	_cur_played_track = idx;
     (this->data() + _cur_played_track)->pl_playing = true;
+}
+
+int MetaDataList::getCurPlayTrack() const {
+	return _cur_played_track;
 }
 
 
@@ -307,6 +316,7 @@ QStringList MetaDataList::toStringList() const {
 
     return lst;
 }
+
 
 
 
