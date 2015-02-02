@@ -59,11 +59,11 @@ public:
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
 
   	void sort(int column, Qt::SortOrder order);
+
     virtual QModelIndex	getFirstRowIndexOf(QString substr);
 	virtual QModelIndex	getNextRowIndexOf(QString substr, int row);
 	virtual QModelIndex	getPrevRowIndexOf(QString substr, int row);
 
-    QList<quint8> get_discnumbers(const QModelIndex& idx);
 	virtual void remove_all_and_insert(int n);
 
 private:

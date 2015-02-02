@@ -91,15 +91,13 @@ public:
     void set_new_header_names(QStringList& lst);
 
 
-
-
 private:
-    QStringList				_header_names;
-    int						_n_all_cols;
-    bool*                   _cols_active;
+	QStringList		_header_names;
+	int				_n_all_cols;
+	QVector<bool>	_cols_active;
 
 protected:
-    QList<int>				_selected_rows;
+	QList<int>		_selected_rows;
 
 };
 

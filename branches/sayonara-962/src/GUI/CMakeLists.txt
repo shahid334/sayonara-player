@@ -32,6 +32,7 @@ SET(HEADERS
     LastFM/GUI_LastFM.h
     library/GUI_Library_windowed.h
     library/view/LibraryView.h
+	library/view/LibraryViewAlbum.h
     library/model/LibraryItemModel.h
     library/model/LibraryItemModelTracks.h
     library/model/LibraryItemModelAlbums.h
@@ -111,6 +112,7 @@ SET(SOURCES
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
     library/view/LibraryViewHeader.cpp
+	library/view/LibraryViewAlbum.cpp
     library/model/LibraryItemModel.cpp
     library/model/LibraryItemModelTracks.cpp
     library/model/LibraryItemModelAlbums.cpp

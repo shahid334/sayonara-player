@@ -32,14 +32,12 @@
 
 #include <QAbstractTableModel>
 #include <QPoint>
-#include <QTimer>
 #include <QMenu>
 #include <QMap>
 #include <QMessageBox>
 #include <QFocusEvent>
 
 #include "GUI/ui_GUI_Library_windowed.h"
-#include "GUI/library/DiscPopupMenu.h"
 #include "GUI/library/model/LibraryItemModelTracks.h"
 #include "GUI/library/model/LibraryItemModelArtists.h"
 #include "GUI/library/model/LibraryItemModelAlbums.h"
@@ -58,10 +56,8 @@
 #include "HelperStructs/CustomMimeData.h"
 
 #include "HelperStructs/SayonaraClass.h"
-#include <QMessageBox>
 
 #include "Library/LocalLibrary.h"
-
 
 using namespace Sort;
 
@@ -104,71 +100,69 @@ public slots:
 
 protected slots:
 
-    void artist_sel_changed(const QList<int>&);
-    void album_sel_changed(const QList<int>&);
-    void album_released();
-    void track_sel_changed(const QList<int>&);
-	void track_info_available(const MetaDataList& v_md);
+	virtual void artist_sel_changed(const QList<int>&);
+	virtual void album_sel_changed(const QList<int>&);
+	virtual void track_sel_changed(const QList<int>&);
+	virtual void track_info_available(const MetaDataList& v_md);
 
-	void disc_pressed(int);
+	virtual void disc_pressed(int);
 
-    void album_rating_changed(int);
-    void title_rating_changed(int);
+	virtual void album_rating_changed(int);
+	virtual void title_rating_changed(int);
 
-	void clear_button_pressed();
+	virtual void clear_button_pressed();
 
-	void artist_dbl_clicked(const QModelIndex &);
-	void album_dbl_clicked(const QModelIndex &);
-	void track_dbl_clicked(const QModelIndex &);
+	virtual void artist_dbl_clicked(const QModelIndex &);
+	virtual void album_dbl_clicked(const QModelIndex &);
+	virtual void track_dbl_clicked(const QModelIndex &);
 
-	void searchfilter_changed(int);
-	void text_line_edited(const QString&, bool force_emit=false);
-    void return_pressed();
+	virtual void searchfilter_changed(int);
+	virtual void text_line_edited(const QString&, bool force_emit=false);
+	virtual void return_pressed();
 
-	void artist_middle_clicked(const QPoint& p);
-	void album_middle_clicked(const QPoint& p);
-	void tracks_middle_clicked(const QPoint& p);
+	virtual void artist_middle_clicked(const QPoint& p);
+	virtual void album_middle_clicked(const QPoint& p);
+	virtual void tracks_middle_clicked(const QPoint& p);
 
-	void info_artist();
-	void info_album();
-	void info_tracks();
+	virtual void info_artist();
+	virtual void info_album();
+	virtual void info_tracks();
 
-	void edit_artist();
-	void edit_album();
-	void edit_tracks();
+	virtual void edit_artist();
+	virtual void edit_album();
+	virtual void edit_tracks();
 
-	void delete_artist();
-	void delete_album();
-	void delete_tracks();
+	virtual void delete_artist();
+	virtual void delete_album();
+	virtual void delete_tracks();
 
-	void play_next();
-	void play_next_tracks();
-    void append();
-    void append_tracks();
+	virtual void play_next();
+	virtual void play_next_tracks();
+	virtual void append();
+	virtual void append_tracks();
 
-    void sortorder_title_changed(Sort::SortOrder);
-    void sortorder_album_changed(Sort::SortOrder);
-    void sortorder_artist_changed(Sort::SortOrder);
+	virtual void sortorder_title_changed(Sort::SortOrder);
+	virtual void sortorder_album_changed(Sort::SortOrder);
+	virtual void sortorder_artist_changed(Sort::SortOrder);
 
-	void columns_title_changed(QList<int>&);
-	void columns_album_changed(QList<int>&);
-	void columns_artist_changed(QList<int>&);
+	virtual void columns_title_changed(QList<int>&);
+	virtual void columns_album_changed(QList<int>&);
+	virtual void columns_artist_changed(QList<int>&);
 
-    void timer_timed_out();
-    void delete_menu();
-    void import_files(const QStringList&);
 
-	void _sl_show_only_tracks_changed();
+	virtual void import_files(const QStringList&);
 
-	void lib_reload(const QString&);
-	void lib_fill_tracks(const MetaDataList&);
-	void lib_fill_albums(const AlbumList&);
-	void lib_fill_artists(const ArtistList&);
-	void lib_delete_answer(QString);
-	void lib_reload_finished();
-	void lib_no_lib_path();
+	virtual void _sl_show_only_tracks_changed();
 
-	void refresh();
+	virtual void lib_reload(const QString&);
+	virtual void lib_fill_tracks(const MetaDataList&);
+	virtual void lib_fill_albums(const AlbumList&);
+	virtual void lib_fill_artists(const ArtistList&);
+	virtual void lib_delete_answer(QString);
+	virtual void lib_reload_finished();
+	virtual void lib_no_lib_path();
+
+	virtual void refresh();
 
 protected:
 	void resizeEvent(QResizeEvent* e);
@@ -185,8 +179,6 @@ protected:
 	GUI_Library_Info_Box* _lib_info_dialog;
 
 	MetaDataList _v_md_tmp;
-    QTimer*      _timer;
-	DiscPopupMenu* _discmenu;
 
 	LocalLibrary::TrackDeletionMode show_delete_dialog(int n_tracks);
     void init_headers();

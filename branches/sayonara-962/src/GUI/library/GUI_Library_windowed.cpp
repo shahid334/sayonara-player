@@ -94,8 +94,7 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 
     init_headers();
 
-	_discmenu = 0;
-	_timer = new QTimer(this);
+
     setAcceptDrops(true);
 
 
@@ -125,12 +124,8 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 	connect(_library, SIGNAL(sig_reload_library_finished()), this, SLOT(lib_reload_finished()));
 	connect(_library, SIGNAL(sig_no_library_path()), this, SLOT(lib_no_lib_path()));
 
-
-	connect(_timer, SIGNAL(timeout()), this, SLOT(timer_timed_out()));
-
 	connect(lv_album, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(album_dbl_clicked(const QModelIndex & )));
 	connect(lv_album, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(album_sel_changed(const QList<int>&)));
-	connect(lv_album, SIGNAL(sig_released()), this, SLOT(album_released()));
 	connect(lv_album, SIGNAL(sig_middle_button_clicked(const QPoint&)), this, SLOT(album_middle_clicked(const QPoint&)));
 	connect(lv_album, SIGNAL(sig_sortorder_changed(Sort::SortOrder)), this, SLOT(sortorder_album_changed(Sort::SortOrder)));
 	connect(lv_album, SIGNAL(sig_columns_changed(QList<int>&)), this, SLOT(columns_album_changed(QList<int>&)));
@@ -139,8 +134,8 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 	connect(lv_album, SIGNAL(sig_delete_clicked()), this, SLOT(delete_album()));
 	connect(lv_album, SIGNAL(sig_play_next_clicked()), this, SLOT(play_next()));
 	connect(lv_album, SIGNAL(sig_append_clicked()), this, SLOT(append()));
-	connect(lv_album, SIGNAL(sig_no_disc_menu()), this, SLOT(delete_menu()));
 	connect(lv_album, SIGNAL(sig_import_files(const QStringList&)), this, SLOT(import_files(const QStringList&)));
+	connect(lv_album, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
 
 	connect(tb_title, SIGNAL(doubleClicked(const QModelIndex & )), this, SLOT(track_dbl_clicked(const QModelIndex & )));
 	connect(tb_title, SIGNAL(sig_sel_changed(const QList<int> & )), this, SLOT(track_sel_changed(const QList<int>&)));
@@ -367,30 +362,10 @@ void GUI_Library_windowed::artist_sel_changed(const QList<int>& lst) {
 	_library->psl_selected_artists_changed(lst);
 }
 
-void GUI_Library_windowed::album_released() {
-    if(_discmenu) {
-        delete _discmenu;
-        _discmenu = 0;
-    }
-}
 
 void GUI_Library_windowed::album_sel_changed(const QList<int>& lst) {
 
 	_info_dialog->setInfoMode(InfoDialogMode_Albums);
-	//_info_dialog->set_tag_edit_visible(true);
-    _timer->stop();
-    if(lst.size() == 1) {
-        QModelIndex idx = _album_model->index(lst[0], 0);
-        QList<quint8> discnumbers = _album_model->get_discnumbers(idx);
-
-        if(discnumbers.size() > 1 && lst.size() == 1 ) {
-            delete_menu();
-			_discmenu = new DiscPopupMenu(lv_album, discnumbers);
-
-            connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
-            _timer->start(500);
-        }
-    }
 
 	_library->psl_selected_albums_changed(lst);
 }
@@ -755,25 +730,6 @@ void GUI_Library_windowed::import_result(bool success) {
 	library_changed();
 }
 
-void GUI_Library_windowed::delete_menu() {
-	if(!_discmenu)return;
-	
-	_discmenu->hide();
-	_discmenu->close();
-		
-    	disconnect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
-	delete _discmenu;
-	_discmenu = 0;
-	
-}
-
-void GUI_Library_windowed::timer_timed_out() {
-	_timer->stop();
-	if(!_discmenu) return;
-
-	QPoint p = QCursor::pos();
-	_discmenu->popup(p);
-}
 
 void GUI_Library_windowed::import_files(const QStringList & lst) {
     emit sig_import_files(lst);

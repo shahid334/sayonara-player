@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
 SET(ICONS
 	bg-checker.png
-        favicon.ico
+#avicon.ico
 	logo.png
 )	
 	

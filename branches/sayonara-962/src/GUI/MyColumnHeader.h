@@ -35,8 +35,10 @@
 #include "HelperStructs/globals.h"
 #include "Library/Sorting.h"
 
-#define COL_HEADER_SIZE_TYPE_ABS 0
-#define COL_HEADER_SIZE_TYPE_REL 1
+enum ColHeaderSize {
+	ColHeaderSizeAbs=0,
+	ColHeaderSizeRel
+};
 
 class ColumnHeader {
 
@@ -92,7 +94,7 @@ class ColumnHeader {
 
 		QString getTitle() const { return _title; }
 		bool getSwitchable() const { return _switchable; }
-		int getSizeType() const { return (_abs_size ? COL_HEADER_SIZE_TYPE_ABS : COL_HEADER_SIZE_TYPE_REL); }
+		ColHeaderSize getSizeType() const { return (_abs_size ? ColHeaderSizeAbs : ColHeaderSizeRel); }
 		int get_preferred_size_abs() const { return _preferred_size_abs; }
 		double get_preferred_size_rel() const { return _preferred_size_rel; }
 		Sort::SortOrder get_asc_sortorder() const { return _sort_asc; }

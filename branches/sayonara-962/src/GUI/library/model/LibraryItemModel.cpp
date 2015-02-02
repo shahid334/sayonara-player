@@ -30,7 +30,8 @@
 LibraryItemModel::LibraryItemModel(QList<ColumnHeader>& headers) {
 
 		_n_all_cols = headers.size();
-		_cols_active = new bool[_n_all_cols];
+
+		_cols_active = QVector<bool>(_n_all_cols);
 
 		int i=0;
 		for(const ColumnHeader& h : headers) {
@@ -40,7 +41,7 @@ LibraryItemModel::LibraryItemModel(QList<ColumnHeader>& headers) {
 }
 
 LibraryItemModel::~LibraryItemModel() {
-    delete[] _cols_active;
+
 }
 
 void LibraryItemModel::set_new_header_names(QStringList& lst) {
@@ -78,11 +79,17 @@ int LibraryItemModel::get_n_cols() const {
 // input: seen column
 // returns: real index of column
 int LibraryItemModel::calc_shown_col(int col) const {
+
 	int idx_col = 0;
-	int n_true = -1;
+	int n_active = -1;
+
 	for(idx_col=0; idx_col<_n_all_cols; idx_col++) {
-		if(_cols_active[idx_col]) n_true++;
-		if(n_true == col) break;
+
+		if(_cols_active[idx_col]) {
+			n_active++;
+		}
+
+		if(n_active == col) break;
 	}
 
 	return idx_col;
@@ -98,8 +105,11 @@ int LibraryItemModel::columnCount(const QModelIndex& parent) const{
 	Q_UNUSED(parent);
 
 	int n_active = 0;
+
 	for(int i=0; i<_n_all_cols; i++) {
-		if(_cols_active[i]) n_active++;
+		if(_cols_active[i]) {
+			n_active++;
+		}
 	}
 
 	return n_active;

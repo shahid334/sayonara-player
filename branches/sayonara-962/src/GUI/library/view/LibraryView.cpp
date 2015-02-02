@@ -48,19 +48,14 @@
 
 LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
-    _parent = parent;
     _qDrag = 0;
     _rc_header_menu = 0;
-	_dark = true;
     _cur_filling = false;
 
     _mimedata = new CustomMimeData();
     _editor = 0;
 
     rc_menu_init();
-
-    _corner_widget = new QWidget(this);
-    _corner_widget->hide();
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
@@ -71,7 +66,6 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
 LibraryView::~LibraryView() {
     delete _rc_menu;
-    delete _corner_widget;
 }
 
 
@@ -123,7 +117,6 @@ void LibraryView::mouseMoveEvent(QMouseEvent* event) {
     int distance = abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
     if (_drag && _qDrag && distance > 20) {
-        emit sig_no_disc_menu();
         _qDrag->exec(Qt::CopyAction);
     }
 }
@@ -144,8 +137,6 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event) {
             event->accept();
 
             _drag = false;
-
-            emit sig_released();
 
             break;
 
@@ -310,6 +301,7 @@ template void LibraryView::fill<MetaDataList, MetaData>(const MetaDataList&);
 template void LibraryView::fill<ArtistList, Artist>(const ArtistList&);
 template void LibraryView::fill<AlbumList, Album>(const AlbumList&);
 
+
 template < class TList, class T >
 void LibraryView::fill(const TList& input_data) {
 
@@ -336,8 +328,6 @@ void LibraryView::fill(const TList& input_data) {
 		idx = _model->index(row, 1);
 		_model->setData(idx, var_data, Qt::EditRole );
 	}
-
-	calc_corner_widget();
 
 	_cur_filling = false;
 }
@@ -387,44 +377,8 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
 void LibraryView::drag_deleted() {
     _qDrag = NULL;
 }
-
-// appearance
-void LibraryView::set_skin(bool dark) {
-    _dark = dark;
-    calc_corner_widget();
-}
-
-void LibraryView::calc_corner_widget() {
-
-	if(!this->verticalScrollBar() || !this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()) {
-        this->setCornerWidget(NULL);
-        _corner_widget->hide();
-        return;
-    }
-
-	if(!this->cornerWidget()) {
-        this->setCornerWidget(_corner_widget);
-        _corner_widget->show();
-		return;
-    }
-
-	if(this->cornerWidget()) {
-        if(_dark)
-            this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
-        else{
-            QPalette palette = _parent->palette();
-            QColor bg = palette.color(QPalette::Normal, QPalette::Window);
-            this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
-        }
-    }
-}
-
-void LibraryView::resizeEvent(QResizeEvent* event) {
-    event->ignore();
-	SearchableTableView::resizeEvent(event);
-    calc_corner_widget();
-}
 // appearance end
+
 
 void LibraryView::set_editor(RatingLabel *editor) {
 
@@ -495,8 +449,6 @@ void LibraryView::rc_menu_init() {
 }
 
 void LibraryView::rc_menu_show(const QPoint& p) {
-
-    emit sig_no_disc_menu();
 
     connect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
     connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));

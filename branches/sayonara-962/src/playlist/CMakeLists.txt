@@ -14,7 +14,6 @@ SET(HEADERS
     StdPlaylist.h
     StreamPlaylist.h
     PlaylistHandler.h
-    PlaylistIdxHandler.h
     PlaylistLoader.h
 )
 
@@ -23,9 +22,7 @@ SET(SOURCES
     StdPlaylist.cpp
     StreamPlaylist.cpp
     PlaylistHandler.cpp
-    PlaylistIdxHandler.cpp
     PlaylistLoader.cpp
-
 )
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})

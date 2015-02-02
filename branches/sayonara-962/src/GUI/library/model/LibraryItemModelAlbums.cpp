@@ -264,19 +264,3 @@ QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
 
 	return this->index(-1, -1);
 }
-
-
-QList<quint8> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx) {
-
-    if(!idx.isValid()) {
-        return QList<quint8>();
-    }
-
-    if( idx.row() < 0 ||
-		idx.row() >= _albums.size())
-    {
-        return QList<quint8>();
-    }
-
-	return _albums[idx.row()].discnumbers;
-}

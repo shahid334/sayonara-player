@@ -68,7 +68,6 @@ protected:
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
 	void keyPressEvent(QKeyEvent *);
-	//bool event(QEvent *event);
 
 };
 

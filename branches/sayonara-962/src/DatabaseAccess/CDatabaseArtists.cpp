@@ -58,8 +58,6 @@ bool CDatabaseConnector::db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 	int i=0;
 	int n_rows = q.at() + 1;
 
-	qDebug() << "N rows = " << n_rows;
-
 	result.resize(n_rows);
 
 	for(bool is_element=q.first(); is_element; is_element = q.next(), i++){
@@ -76,8 +74,6 @@ bool CDatabaseConnector::db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 
 		result[i] = artist;
 	}
-
-	qDebug() << "Got " << result.size() << ", " << i << " artists";
 
 	return true;
 }

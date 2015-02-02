@@ -129,8 +129,8 @@ TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES}
 	sayonara_gui 
 	sayonara_playlist 
 	sayonara_library 
-        sayonara_covers
-        sayonara_soundcloud
+    sayonara_covers
+    sayonara_soundcloud
 )
 
 INSTALL(TARGETS sayonara DESTINATION bin)
