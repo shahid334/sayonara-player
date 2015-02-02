@@ -29,7 +29,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
@@ -226,7 +226,7 @@ private:
     CoverLookup*            m_cov_lookup;
     PlayerPluginHandler*    _pph;
 
-    GUI_Alternate_Covers*   m_alternate_covers;
+    GUI_AlternativeCovers*   m_AlternativeCovers;
     AsyncWebAccess*         m_awa_version;
     AsyncWebAccess*         m_awa_translators;
 

@@ -23,7 +23,7 @@
 #include "GUI/player/GUI_TrayIcon.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 
 #include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
@@ -97,7 +97,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	m_converter_active = false;
 
 	m_cov_lookup = new CoverLookup(this);
-	m_alternate_covers = new GUI_Alternate_Covers(this->centralWidget(), m_class_name);
+	m_AlternativeCovers = new GUI_AlternativeCovers(this->centralWidget(), m_class_name);
 
 	m_min2tray = _settings->get(Set::Player_Min2Tray);
 	action_min2tray->setChecked(m_min2tray);

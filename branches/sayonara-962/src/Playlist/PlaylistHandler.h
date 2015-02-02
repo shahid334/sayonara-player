@@ -35,8 +35,8 @@
 #include "HelperStructs/globals.h"
 #include "HelperStructs/SayonaraClass.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "playlist/PlaylistLoader.h"
-#include "playlist/Playlist.h"
+#include "Playlist/PlaylistLoader.h"
+#include "Playlist/Playlist.h"
 
 
 

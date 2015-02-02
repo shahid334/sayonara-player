@@ -32,7 +32,7 @@
 #include "GUI/ui_GUI_Playlist.h"
 #include "GUI/playlist/PlaylistTabWidget.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
-#include "playlist/PlaylistHandler.h"
+#include "Playlist/PlaylistHandler.h"
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"

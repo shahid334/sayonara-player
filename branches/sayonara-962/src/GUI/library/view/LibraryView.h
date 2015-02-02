@@ -33,7 +33,7 @@
 #include "GUI/ContextMenu.h"
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/MiniSearcher.h"
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 #include "GUI/SearchableWidget.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/globals.h"

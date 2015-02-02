@@ -21,7 +21,7 @@
 
 
 
-#include "playlist/StreamPlaylist.h"
+#include "Playlist/StreamPlaylist.h"
 
 StreamPlaylist::StreamPlaylist(int idx) :
 	StdPlaylist(idx)

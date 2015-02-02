@@ -21,7 +21,7 @@
 
 
 #include "LibraryRatingDelegate.h"
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 #include <QDebug>
 
 LibraryRatingDelegate::LibraryRatingDelegate(LibraryView* parent, bool enabled) :

@@ -32,7 +32,7 @@
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/ui_GUI_InfoDialog.h"
 
 #include <QMetaType>
@@ -92,7 +92,7 @@ private:
 
 	GUI_TagEdit*			ui_tag_edit;
 
-	GUI_Alternate_Covers*	_alternate_covers;
+	GUI_AlternativeCovers*	_AlternativeCovers;
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
 	LyricLookupThread*		_lyric_thread;

@@ -1,4 +1,4 @@
-/* GUI_Alternate_Covers.h */
+/* GUI_AlternativeCovers.h */
 
 /* Copyright (C) 2011  Lucio Carreras
  *
@@ -20,7 +20,7 @@
 
 
 /*
- * GUI_Alternate_Covers.h
+ * GUI_AlternativeCovers.h
  *
  *  Created on: Jul 1, 2011
  *      Author: luke
@@ -29,9 +29,9 @@
 #ifndef GUI_ALTERNATE_COVERS_H_
 #define GUI_ALTERNATE_COVERS_H_
 
-#include "GUI/ui_GUI_Alternate_Covers.h"
-#include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
-#include "GUI/alternate_covers/AlternateCoverItemModel.h"
+#include "GUI/ui_GUI_AlternativeCovers.h"
+#include "GUI/AlternativeCovers/AlternativeCoverItemDelegate.h"
+#include "GUI/AlternativeCovers/AlternativeCoverItemModel.h"
 #include "CoverLookup/CoverLookupAlternative.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
@@ -40,12 +40,12 @@
 #include <QList>
 #include <QModelIndex>
 
-class GUI_Alternate_Covers : public SayonaraDialog, private Ui::AlternateCovers{
+class GUI_AlternativeCovers : public SayonaraDialog, private Ui::AlternativeCovers{
 
 	Q_OBJECT
 public:
-	GUI_Alternate_Covers(QWidget* parent, QString calling_class);
-	virtual ~GUI_Alternate_Covers();
+	GUI_AlternativeCovers(QWidget* parent, QString calling_class);
+	virtual ~GUI_AlternativeCovers();
 
 signals:
 	void sig_cover_changed(const CoverLocation&);

@@ -26,7 +26,7 @@
  *      Author: luke
  */
 
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 #include "GUI/library/delegate/LibraryItemDelegateAlbums.h"
 #include "HelperStructs/Helper.h"
 

@@ -57,11 +57,11 @@ void GUI_Player::fetch_cover() {
 void GUI_Player::coverClicked() {
 
 	if(_md.album_id >= 0) {
-	   m_alternate_covers->start(_md.album_id);
+	   m_AlternativeCovers->start(_md.album_id);
     }
 
     else {
-		m_alternate_covers->start( _md.album, _md.artist);
+		m_AlternativeCovers->start( _md.album, _md.artist);
     }
 
     this->setFocus();

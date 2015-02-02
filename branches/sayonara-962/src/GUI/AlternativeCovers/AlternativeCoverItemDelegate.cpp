@@ -26,7 +26,7 @@
  *      Author: luke
  */
 
-#include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
+#include "GUI/AlternativeCovers/AlternativeCoverItemDelegate.h"
 #include "CoverLookup/CoverLookup.h"
 
 #include <QPainter>

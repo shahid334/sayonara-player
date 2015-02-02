@@ -20,9 +20,10 @@
 
 
 
-#include "broadcasting/GUI_Broadcast.h"
 #include "HelperStructs/Helper.h"
-#include "broadcasting/GUI_BroadcastSetup.h"
+#include "GUI/broadcasting/GUI_Broadcast.h"
+#include "GUI/broadcasting/GUI_BroadcastSetup.h"
+
 #include <QMessageBox>
 
 

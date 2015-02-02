@@ -3,7 +3,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src) 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/GUI) 
+
 FIND_PACKAGE(Qt4 REQUIRED)
 
 INCLUDE(${QT_USE_FILE})
@@ -14,10 +14,9 @@ ADD_SUBDIRECTORY(icons)
 SET(HEADERS
     SearchableWidget.h
     MiniSearcher.h
-    RatingLabel.h
-    alternate_covers/AlternateCoverItemDelegate.h
-    alternate_covers/AlternateCoverItemModel.h
-    alternate_covers/GUI_Alternate_Covers.h
+    AlternativeCovers/AlternativeCoverItemDelegate.h
+    AlternativeCovers/AlternativeCoverItemModel.h
+    AlternativeCovers/GUI_AlternativeCovers.h
     AudioConverter/GUI_AudioConverter.h
     bookmarks/GUI_Bookmarks.h
     broadcasting/GUI_Broadcast.h
@@ -31,8 +30,9 @@ SET(HEADERS
     equalizer/GUI_Equalizer.h
     LastFM/GUI_LastFM.h
     library/GUI_Library_windowed.h
+    library/RatingLabel.h
     library/view/LibraryView.h
-	library/view/LibraryViewAlbum.h
+    library/view/LibraryViewAlbum.h
     library/model/LibraryItemModel.h
     library/model/LibraryItemModelTracks.h
     library/model/LibraryItemModelAlbums.h
@@ -77,10 +77,10 @@ SET(SOURCES
 
     SearchableWidget.cpp
     MiniSearcher.cpp
-    RatingLabel.cpp
-    alternate_covers/AlternateCoverItemDelegate.cpp
-    alternate_covers/AlternateCoverItemModel.cpp
-    alternate_covers/GUI_Alternate_Covers.cpp
+
+    AlternativeCovers/AlternativeCoverItemDelegate.cpp
+    AlternativeCovers/AlternativeCoverItemModel.cpp
+    AlternativeCovers/GUI_AlternativeCovers.cpp
     AudioConverter/GUI_AudioConverter.cpp
     bookmarks/GUI_Bookmarks.cpp
     broadcasting/GUI_Broadcast.cpp
@@ -109,10 +109,11 @@ SET(SOURCES
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
+    library/RatingLabel.cpp
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
     library/view/LibraryViewHeader.cpp
-	library/view/LibraryViewAlbum.cpp
+    library/view/LibraryViewAlbum.cpp
     library/model/LibraryItemModel.cpp
     library/model/LibraryItemModelTracks.cpp
     library/model/LibraryItemModelAlbums.cpp
@@ -140,7 +141,7 @@ SET(SOURCES
 
 
 SET(FORMS
-    alternate_covers/GUI_Alternate_Covers.ui
+    AlternativeCovers/GUI_AlternativeCovers.ui
     AudioConverter/GUI_AudioConvert.ui
     bookmarks/GUI_Bookmarks.ui
     broadcasting/GUI_Broadcast.ui
@@ -152,7 +153,6 @@ SET(FORMS
     InfoDialog/GUI_InfoDialog.ui
     LanguageChooser/GUI_LanguageChooser.ui
     LastFM/GUI_LastFM_Dialog.ui
-#    LastFM/GUI_LFMRadioWidget.ui
     library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui

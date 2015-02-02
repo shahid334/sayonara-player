@@ -26,7 +26,7 @@
  *      Author: luke
  */
 
-#include "GUI/alternate_covers/AlternateCoverItemModel.h"
+#include "GUI/AlternativeCovers/AlternativeCoverItemModel.h"
 #include "CoverLookup/CoverLocation.h"
 #include <QModelIndex>
 #include <QVariant>

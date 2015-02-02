@@ -20,7 +20,7 @@
 
 
 
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 #include "HelperStructs/globals.h"
 #include <QPainter>
 #include <QRect>

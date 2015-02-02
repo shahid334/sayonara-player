@@ -28,7 +28,7 @@
 
 #include "GUI/library/delegate/LibraryItemDelegateTracks.h"
 #include "GUI/library/model/LibraryItemModelTracks.h"
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 
 #include "HelperStructs/Helper.h"
 

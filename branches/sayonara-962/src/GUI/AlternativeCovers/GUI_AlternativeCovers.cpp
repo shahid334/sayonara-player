@@ -1,4 +1,4 @@
-/* GUI_Alternate_Covers.cpp */
+/* GUI_AlternativeCovers.cpp */
 
 /* Copyright (C) 2011  Lucio Carreras
  *
@@ -20,16 +20,16 @@
 
 
 /*
- * GUI_Alternate_Covers.cpp
+ * GUI_AlternativeCovers.cpp
  *
  *  Created on: Jul 1, 2011
  *      Author: luke
  */
 #include "HelperStructs/Style.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
-#include "GUI/alternate_covers/AlternateCoverItemDelegate.h"
-#include "GUI/alternate_covers/AlternateCoverItemModel.h"
-#include "GUI/ui_GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
+#include "GUI/AlternativeCovers/AlternativeCoverItemDelegate.h"
+#include "GUI/AlternativeCovers/AlternativeCoverItemModel.h"
+#include "GUI/ui_GUI_AlternativeCovers.h"
 #include "CoverLookup/CoverLookup.h"
 #include "HelperStructs/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -44,9 +44,9 @@
 
 
 
-GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_class) :
+GUI_AlternativeCovers::GUI_AlternativeCovers(QWidget* parent, QString calling_class) :
 	SayonaraDialog(parent),
-	Ui::AlternateCovers()
+	Ui::AlternativeCovers()
 {
 
 	setupUi(this);
@@ -82,7 +82,7 @@ GUI_Alternate_Covers::GUI_Alternate_Covers(QWidget* parent, QString calling_clas
 }
 
 
-GUI_Alternate_Covers::~GUI_Alternate_Covers() {
+GUI_AlternativeCovers::~GUI_AlternativeCovers() {
 	delete _model;
 	delete _delegate;
 
@@ -94,11 +94,11 @@ GUI_Alternate_Covers::~GUI_Alternate_Covers() {
 }
 
 
-void GUI_Alternate_Covers::language_changed() {
+void GUI_AlternativeCovers::language_changed() {
 	retranslateUi(this);
 }
 
-void GUI_Alternate_Covers::connect_and_start() {
+void GUI_AlternativeCovers::connect_and_start() {
 
     reset_model();
 	delete_all_files();
@@ -116,7 +116,7 @@ void GUI_Alternate_Covers::connect_and_start() {
 	show();
 }
 
-void GUI_Alternate_Covers::start(int album_id, const CoverLocation& cl) {
+void GUI_AlternativeCovers::start(int album_id, const CoverLocation& cl) {
 
     if(album_id < 0) return;
 
@@ -128,7 +128,7 @@ void GUI_Alternate_Covers::start(int album_id, const CoverLocation& cl) {
 	start(album, cl);
 }
 
-void GUI_Alternate_Covers::start(Album album, const CoverLocation& cl) {
+void GUI_AlternativeCovers::start(Album album, const CoverLocation& cl) {
 
 	le_search->setText(album.name + " " + Helper::get_major_artist(album.artists));
 
@@ -146,7 +146,7 @@ void GUI_Alternate_Covers::start(Album album, const CoverLocation& cl) {
 }
 
 
-void GUI_Alternate_Covers::start(QString album_name, QString artist_name, const CoverLocation& cl) {
+void GUI_AlternativeCovers::start(QString album_name, QString artist_name, const CoverLocation& cl) {
 
 	le_search->setText(album_name + " " + artist_name);
 
@@ -164,7 +164,7 @@ void GUI_Alternate_Covers::start(QString album_name, QString artist_name, const 
 	connect_and_start();
 }
 
-void GUI_Alternate_Covers::start(Artist artist, const CoverLocation& cl) {
+void GUI_AlternativeCovers::start(Artist artist, const CoverLocation& cl) {
 
 	le_search->setText(artist.name);
 
@@ -184,7 +184,7 @@ void GUI_Alternate_Covers::start(Artist artist, const CoverLocation& cl) {
 }
 
 
-void GUI_Alternate_Covers::start(QString artist_name, const CoverLocation& cl) {
+void GUI_AlternativeCovers::start(QString artist_name, const CoverLocation& cl) {
 
 	le_search->setText(artist_name);
 	if(!cl.valid){
@@ -201,7 +201,7 @@ void GUI_Alternate_Covers::start(QString artist_name, const CoverLocation& cl) {
 }
 
 
-void GUI_Alternate_Covers::search_button_pressed() {
+void GUI_AlternativeCovers::search_button_pressed() {
 
 	if(_is_searching && _cl_alternative){
 		_cl_alternative->stop();
@@ -215,7 +215,7 @@ void GUI_Alternate_Covers::search_button_pressed() {
 }
 
 
-void GUI_Alternate_Covers::save_button_pressed() {
+void GUI_AlternativeCovers::save_button_pressed() {
 
 	if(_cur_idx == -1) return;
 
@@ -247,7 +247,7 @@ void GUI_Alternate_Covers::save_button_pressed() {
 }
 
 
-void GUI_Alternate_Covers::cancel_button_pressed() {
+void GUI_AlternativeCovers::cancel_button_pressed() {
 
     hide();
     close();
@@ -261,7 +261,7 @@ void GUI_Alternate_Covers::cancel_button_pressed() {
 
 
 
-void GUI_Alternate_Covers::cl_new_cover(const CoverLocation& cl) {
+void GUI_AlternativeCovers::cl_new_cover(const CoverLocation& cl) {
 
 	QModelIndex model_idx;
 	QVariant var;
@@ -280,7 +280,7 @@ void GUI_Alternate_Covers::cl_new_cover(const CoverLocation& cl) {
 }
 
 
-void GUI_Alternate_Covers::cl_finished(bool b) {
+void GUI_AlternativeCovers::cl_finished(bool b) {
 
 	_is_searching = false;
 
@@ -289,7 +289,7 @@ void GUI_Alternate_Covers::cl_finished(bool b) {
 
 
 
-void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx) {
+void GUI_AlternativeCovers::cover_pressed(const QModelIndex& idx) {
 
 	_cur_idx = _model->cvt_2_idx(idx.row(), idx.column());
 
@@ -300,7 +300,7 @@ void GUI_Alternate_Covers::cover_pressed(const QModelIndex& idx) {
 }
 
 
-void GUI_Alternate_Covers::reset_model() {
+void GUI_AlternativeCovers::reset_model() {
     _model->removeRows(0, _model->rowCount());
 	_model->insertRows(0, _model->rowCount());
 
@@ -320,7 +320,7 @@ void GUI_Alternate_Covers::reset_model() {
 
 
 
-void GUI_Alternate_Covers::open_file_dialog() {
+void GUI_AlternativeCovers::open_file_dialog() {
 
 	QString lib_path = _settings->get(Set::Lib_Path);
 
@@ -362,7 +362,7 @@ void GUI_Alternate_Covers::open_file_dialog() {
 }
 
 
-void GUI_Alternate_Covers::delete_all_files() {
+void GUI_AlternativeCovers::delete_all_files() {
 
 	for(const CoverLocation& cl : _filelist) {
 		if(!cl.valid) continue;
@@ -374,7 +374,7 @@ void GUI_Alternate_Covers::delete_all_files() {
 }
 
 
-void GUI_Alternate_Covers::closeEvent(QCloseEvent *e) {
+void GUI_AlternativeCovers::closeEvent(QCloseEvent *e) {
 
 	delete_all_files();
 	QDialog::closeEvent(e);

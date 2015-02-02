@@ -40,7 +40,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/engine/GUI_LevelPainter.h"
 #include "GUI/engine/GUI_Spectrum.h"
 #include "GUI/engine/GUI_StyleSettings.h"
@@ -49,7 +49,7 @@
 #include "GUI/speed/GUI_Speed.h"
 #include "GUI/broadcasting/GUI_Broadcast.h"
 
-#include "playlist/PlaylistHandler.h"
+#include "Playlist/PlaylistHandler.h"
 #include "Engine/GStreamer/GSTEngineHandler.h"
 #include "Engine/SoundPluginLoader.h"
 

@@ -23,7 +23,7 @@
 #ifndef STREAMPLAYLIST_H
 #define STREAMPLAYLIST_H
 
-#include "playlist/StdPlaylist.h"
+#include "Playlist/StdPlaylist.h"
 
 class StreamPlaylist : public StdPlaylist
 {

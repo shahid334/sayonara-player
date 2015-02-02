@@ -23,7 +23,7 @@
  */
 
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "LyricLookup/LyricLookup.h"
 #include "HelperStructs/Style.h"
@@ -69,7 +69,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     _lyrics_visible = true;
 
 	_cover_lookup = new CoverLookup(this);
-    _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
+    _AlternativeCovers = new GUI_AlternativeCovers(this, _class_name );
 
     _tag_edit_visible = true;
 
@@ -85,7 +85,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 	connect(_cover_lookup,	SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, 			SLOT(psl_cover_available(const CoverLocation&)));
 
-	connect(_alternate_covers,	SIGNAL(sig_cover_changed(const CoverLocation&)),
+	connect(_AlternativeCovers,	SIGNAL(sig_cover_changed(const CoverLocation&)),
 			this,				SLOT(psl_cover_available(const CoverLocation&)));
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
@@ -223,7 +223,7 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
     btn_image->setIcon(icon);
 	btn_image->update();
 
-	if(sender() == _alternate_covers){
+	if(sender() == _AlternativeCovers){
 		emit sig_cover_changed(cl);
 	}
 }
@@ -301,15 +301,15 @@ void GUI_InfoDialog::cover_clicked() {
 	setFocus();
 
 	if(_cover_artist.size() > 0 && _cover_album.size() > 0){
-		_alternate_covers->start(_cover_album, _cover_artist, _cl);
+		_AlternativeCovers->start(_cover_album, _cover_artist, _cl);
 	}
 
 	else if(_cover_artist.size() > 0){
-		_alternate_covers->start(_cover_artist, _cl);
+		_AlternativeCovers->start(_cover_artist, _cl);
 	}
 
 	else if(_cover_album.size() > 0){
-		_alternate_covers->start(_cover_album, "Various artists", _cl);
+		_AlternativeCovers->start(_cover_album, "Various artists", _cl);
 	}
 }
 

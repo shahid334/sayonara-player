@@ -61,7 +61,7 @@ LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 ADD_SUBDIRECTORY(HelperStructs)
 ADD_SUBDIRECTORY(DatabaseAccess)
 ADD_SUBDIRECTORY(GUI)
-ADD_SUBDIRECTORY(playlist)
+ADD_SUBDIRECTORY(Playlist)
 ADD_SUBDIRECTORY(Library)
 ADD_SUBDIRECTORY(CoverLookup)
 ADD_SUBDIRECTORY(Engine/GStreamer)
@@ -126,7 +126,7 @@ TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES}
 	curl 
 	sayonara_helper 
 	sayonara_db 
-	sayonara_gui 
+        sayonara_gui
 	sayonara_playlist 
 	sayonara_library 
     sayonara_covers

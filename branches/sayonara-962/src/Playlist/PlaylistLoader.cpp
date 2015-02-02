@@ -20,7 +20,7 @@
 
 
 
-#include "playlist/PlaylistLoader.h"
+#include "Playlist/PlaylistLoader.h"
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "DatabaseAccess/CDatabaseConnector.h"

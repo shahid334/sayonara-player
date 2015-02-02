@@ -19,7 +19,7 @@
  */
 
 
-#include "playlist/Playlist.h"
+#include "Playlist/Playlist.h"
 #include <QDir>
 
 Playlist::Playlist(int idx) :

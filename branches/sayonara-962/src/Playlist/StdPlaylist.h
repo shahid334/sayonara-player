@@ -23,7 +23,7 @@
 #ifndef STDPLAYLIST_H
 #define STDPLAYLIST_H
 
-#include "playlist/Playlist.h"
+#include "Playlist/Playlist.h"
 
 class StdPlaylist : public Playlist
 {
