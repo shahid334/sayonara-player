@@ -370,7 +370,7 @@ void PlaylistHandler::psl_backward() {
 
 void PlaylistHandler::psl_change_track(int idx, int playlist_idx) {
 
-	if(playlist_idx != _active_playlist_idx){
+	if(playlist_idx != _active_playlist_idx && playlist_idx >= 0){
 		get_active()->stop();
 		_active_playlist_idx = playlist_idx;
 	}

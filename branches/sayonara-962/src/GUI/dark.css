@@ -192,7 +192,7 @@ QScrollBar::sub-line:horizontal {
     padding-top: 3px;
     padding-bottom: 3px;
     padding-left: -2px;
-    image: url(:/icons/arrow_left.svg.svg.png);
+    image: url(:/icons/arrow_left.svg.png);
 }
 
  QScrollBar::sub-line:horizontal:hover {
@@ -270,7 +270,7 @@ QTableView QHeaderView::up-arrow {
 
 	width: 8px;
 	
-        image: url(:arrow_up.svg.png);
+        image: url(:/icons/arrow_up.svg.png);
         margin-right: 2px;
 }
 
@@ -339,11 +339,11 @@ QMenu::separator {
  }
 
 QMenu::indicator:non-exclusive:checked {
-     image: url(:cb_checked.svg.png);
+     image: url(:/icons/cb_checked.svg.png);
 }
 
 QMenu::indicator:non-exclusive:checked {
-     image: url(:cb_checked.svg.png);
+     image: url(:/icons/cb_checked.svg.png);
 }
 
 
@@ -476,15 +476,15 @@ QTabBar::tab:!selected {
 
 QTabBar::close-button {
      padding: 5px 6px;
-     image: url(:icons/close.svg.png)
+     image: url(:/icons/close.svg.png)
 }
 
 QTabBar::close-button:disabled {
-     image: url(:icons/close_disabled.svg.png)
+     image: url(:/icons/close_disabled.svg.png)
 }
 
 QTabBar::close-button:hover {
-     image: url(:icons/close_orange.svg.png)
+     image: url(:/icons/close_orange.svg.png)
 }
 
 

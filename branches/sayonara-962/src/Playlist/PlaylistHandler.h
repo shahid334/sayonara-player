@@ -94,7 +94,7 @@ public slots:
 	void psl_stop();
 	void psl_forward();
 	void psl_backward();
-	void psl_change_track(int idx, int playlist_idx = -1);
+	void psl_change_track(int idx, int playlist_idx=-1);
 	void psl_next();
 
 	void psl_selection_changed(const QList<int>&);
@@ -108,7 +108,6 @@ public slots:
 	void psl_remove_rows(const QList<int> &);
 
 	void psl_md_changed(const MetaDataList& old_md, const MetaDataList& new_md);
-
 	void psl_md_changed(const MetaData&);
 
 	void psl_similar_artists_available(const QList<int>&);

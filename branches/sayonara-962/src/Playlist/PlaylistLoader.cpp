@@ -39,7 +39,7 @@ PlaylistLoader::PlaylistLoader(QObject *parent) :
 
 void PlaylistLoader::load_old_playlist() {
 
-#if 1
+#if 0
 	MetaDataList v_md;
 	ArtistList artists;
 	AlbumList albums;

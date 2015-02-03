@@ -83,6 +83,8 @@ bool SearchSlider::event(QEvent *e){
 				delta_val = 50;
 			}
 
+
+
 			if(ke->key() == Qt::Key_Right){
 
 				_searching = false;
@@ -121,12 +123,24 @@ bool SearchSlider::event(QEvent *e){
 
 void SearchSlider::mousePressEvent(QMouseEvent* e){
 	QSlider::mousePressEvent(e);
+
+	int percent = (e->pos().x() * 100) / geometry().width();
+	int new_val =  (this->maximum() * percent) / 100;
+	setValue(new_val);
+
 	_searching = true;
 }
 
 void SearchSlider::mouseReleaseEvent(QMouseEvent* e){
+
 	QSlider::mouseReleaseEvent(e);
+
 	_searching = false;
+
+	int percent = (e->pos().x() * 100) / geometry().width();
+	int new_val =  (this->maximum() * percent) / 100;
+
+	emit sig_slider_moved( new_val );
 }
 
 void SearchSlider::mouseMoveEvent(QMouseEvent *e){

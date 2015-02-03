@@ -163,9 +163,10 @@ void GUI_Player::jump_backward() {
 void GUI_Player::seek(int val) {
 
 	set_cur_pos_label(val);
-	float percent = (val * 1.0f) / songProgress->maximum();
 
-	emit sig_seek_rel( (int) (percent * 100) );
+	float percent = (val * 100.0f) / songProgress->maximum();
+
+	emit sig_seek_rel( (int) (percent) );
 }
 
 void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {

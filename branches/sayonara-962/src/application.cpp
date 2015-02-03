@@ -312,7 +312,7 @@ void Application::init_connections() {
 	CONNECT (listen, sig_md_changed(const MetaData&),	library,			psl_metadata_changed(const MetaData&));
 
 
-	CONNECT (ui_speed, sig_speed_changed(float),		listen,				psl_set_speed(float) );
+	CONNECT(ui_speed, sig_speed_changed(float),		listen,				psl_set_speed(float) );
 
 	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&),			ui_info_dialog, set_metadata(const MetaDataList&));
 	CONNECT(library, sig_track_mime_data_available(const MetaDataList&),	ui_info_dialog, set_metadata(const MetaDataList&));
@@ -331,7 +331,7 @@ void Application::init_connections() {
 	CONNECT(ui_library, sig_import_files(const QStringList&),	library_importer, psl_import_files(const QStringList&));
 
 	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		library,			psl_metadata_changed(const MetaDataList&, const MetaDataList&));
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		playlist_handler,	psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
+	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		playlist_handler,	psl_md_changed(const MetaDataList&, const MetaDataList&));
 	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		player,				psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
 
 	CONNECT(ui_audioconverter, sig_active(),		playlist_handler, psl_audioconvert_on());
