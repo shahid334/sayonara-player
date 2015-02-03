@@ -6,10 +6,10 @@ SoundcloudData::SoundcloudData(QObject *parent) :
 
 }
 
-SoundcloudData::~SoundcloudData(){
+SoundcloudData::~SoundcloudData()
+{
 
 }
-
 
 
 bool artist_less_than_name(const Artist& artist1, const Artist& artist2){
@@ -19,7 +19,6 @@ bool artist_less_than_name(const Artist& artist1, const Artist& artist2){
 bool artist_less_than_trackcount(const Artist& artist1, const Artist& artist2){
 	return (artist1.name < artist2.name);
 }
-
 
 bool album_less_than_name(const Album& album1, const Album& album2){
 	return (album1.name < album2.name);
@@ -36,8 +35,6 @@ bool album_less_than_num_songs(const Album& album1, const Album& album2){
 bool album_less_than_year(const Album& album1, const Album& album2){
 	return (album1.year < album2.year);
 }
-
-
 
 bool album_greater_than_name(const Album& album1, const Album& album2){
 	return (album1.name > album2.name);
@@ -59,13 +56,14 @@ bool album_greater_than_year(const Album& album1, const Album& album2){
 bool SoundcloudData::load(){
 
 	_artist_cache = SoundcloudHelper::search_artist("Alloinyx");
+
 	if(_artist_cache.size() == 0){
 		return false;
 	}
 
 	return SoundcloudHelper::get_all_playlists(_artist_cache[0].id, _track_cache, _album_cache);
-
 }
+
 
 void SoundcloudData::get_all_artists(ArtistList& artists, LibSortOrder so){
 
@@ -75,6 +73,7 @@ void SoundcloudData::get_all_artists(ArtistList& artists, LibSortOrder so){
 		qSort(artists.begin(), artists.end(), artist_less_than_name);
 	}
 }
+
 
 void SoundcloudData::get_all_albums(AlbumList& albums, LibSortOrder so){
 	albums = _album_cache;
@@ -112,6 +111,7 @@ void SoundcloudData::get_all_albums(AlbumList& albums, LibSortOrder so){
 		}
 	}
 }
+
 
 void SoundcloudData::get_all_tracks(MetaDataList& v_md, LibSortOrder so){
 	v_md = _track_cache;

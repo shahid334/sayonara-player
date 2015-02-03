@@ -84,11 +84,11 @@ void LibraryView::mousePressEvent(QMouseEvent* event) {
 
 		SearchableTableView::mousePressEvent(event);
 
-		idx = indexAt(event->pos());
+		/*idx = indexAt(event->pos());
 		if(idx.isValid()){
 			idxs << idx.row();
 			emit sig_sel_changed(idxs);
-		}
+		}*/
 
         _drag_pos = pos_org;
         _drag = true;
@@ -344,6 +344,7 @@ void LibraryView::fill(const TList& input_data) {
 
 void LibraryView::set_mimedata(const MetaDataList& v_md, bool drop_entire_folder, bool for_artist) {
 
+	qDebug() << "Mimedata: " << v_md.size() << this->objectName();
     _mimedata = new CustomMimeData();
 
     QList<QUrl> urls;

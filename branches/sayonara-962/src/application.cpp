@@ -21,6 +21,7 @@
 #include "application.h"
 
 #include <QMetaType>
+#include <QMessageBox>
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 

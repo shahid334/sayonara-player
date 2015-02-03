@@ -13,7 +13,9 @@ LibraryViewAlbum::LibraryViewAlbum(QWidget *parent) :
 template<> void LibraryViewAlbum::fill<AlbumList, Album>(const AlbumList& input_data){
 
 	_discnumbers.clear();
+	qDebug() << "Fill...";
 	for(const Album& album: input_data){
+		qDebug() << "Fill discnumbers " << album.discnumbers;
 		_discnumbers << album.discnumbers;
 	}
 
@@ -116,6 +118,11 @@ void LibraryViewAlbum::calc_discmenu_point(QModelIndex idx){
 void LibraryViewAlbum::init_discmenu(QModelIndex idx){
 
 	int row = idx.row();
+	qDebug() << "row = " << row;
+	qDebug() << "discnumbers.size() = " << _discnumbers.size();
+	if(row >= _discnumbers.size()){
+		return;
+	}
 
 	calc_discmenu_point(idx);
 

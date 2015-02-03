@@ -47,7 +47,7 @@
 #include <QDropEvent>
 #include <QKeyEvent>
 
-class LibraryView : public SearchableTableView {
+class LibraryView : public SearchableTableView{
 
     Q_OBJECT
 
@@ -82,9 +82,6 @@ protected slots:
 	virtual void append_clicked();
 
 	virtual void editorDestroyed(QObject* editor=0);
-
-
-
 
 
 public:

@@ -29,6 +29,7 @@ SET(HEADERS
     equalizer/EqSlider.h
     equalizer/GUI_Equalizer.h
     LastFM/GUI_LastFM.h
+    library/GUI_AbstractLibrary.h
     library/GUI_Library_windowed.h
     library/RatingLabel.h
     library/view/LibraryView.h
@@ -109,6 +110,7 @@ SET(SOURCES
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
+    library/GUI_AbstractLibrary.cpp
     library/RatingLabel.cpp
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
