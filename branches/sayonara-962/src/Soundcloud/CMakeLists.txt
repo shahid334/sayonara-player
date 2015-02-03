@@ -11,11 +11,13 @@ INCLUDE(${QT_USE_FILE})
 #ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
 
 SET(HEADERS
+	SoundcloudData.h
 	SoundcloudHelper.h
 	SoundcloudLibrary.h
 )
 
 SET(SOURCES
+	SoundcloudData.cpp
 	SoundcloudHelper.cpp
 	SoundcloudLibrary.cpp
 )
@@ -25,8 +27,7 @@ QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 ADD_LIBRARY(sayonara_soundcloud STATIC ${SOURCES} ${HEADERS_MOC})
 
 TARGET_LINK_LIBRARIES(sayonara_soundcloud
-	curl
-	sayonara_db
+	sayonara_library
 )
 
 

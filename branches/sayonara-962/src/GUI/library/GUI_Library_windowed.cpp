@@ -333,8 +333,8 @@ void GUI_Library_windowed::lib_fill_tracks(const MetaDataList& v_metadata) {
 
 	tb_title->fill<MetaDataList, MetaData>(v_metadata);
 
-	lv_artist->set_mimedata(v_metadata, "tracks", true);
-	lv_album->set_mimedata(v_metadata, "tracks", true);
+	lv_artist->set_mimedata(v_metadata, true, true);
+	lv_album->set_mimedata(v_metadata, true);
 }
 
 
@@ -383,7 +383,7 @@ void GUI_Library_windowed::disc_pressed(int disc) {
 
 void GUI_Library_windowed::track_info_available(const MetaDataList& v_md) {
 
-	tb_title->set_mimedata(v_md, "tracks", false);
+	tb_title->set_mimedata(v_md, false);
 
 }
 
@@ -498,7 +498,6 @@ void GUI_Library_windowed::searchfilter_changed(int idx) {
 	Q_UNUSED(idx);
 	text_line_edited(_cur_searchfilter.filtertext, true);
 }
-
 
 
 void GUI_Library_windowed::id3_tags_changed() {
@@ -617,9 +616,8 @@ void GUI_Library_windowed::delete_album() {
 	int n_tracks = _track_model->rowCount();
 	LocalLibrary::TrackDeletionMode answer = show_delete_dialog(n_tracks);
 
-	if(answer != LocalLibrary::TrackDeletionModeNone) {
-		_library->psl_delete_tracks(answer);
-	}
+	_library->delete_current_tracks(answer);
+
 }
 
 void GUI_Library_windowed::delete_artist() {
@@ -627,9 +625,8 @@ void GUI_Library_windowed::delete_artist() {
 	int n_tracks = _track_model->rowCount();
 	LocalLibrary::TrackDeletionMode answer = show_delete_dialog(n_tracks);
 
-	if(answer) {
-		_library->psl_delete_tracks(answer);
-	}
+	_library->delete_current_tracks(answer);
+
 }
 
 void GUI_Library_windowed::delete_tracks() {
@@ -643,7 +640,7 @@ void GUI_Library_windowed::delete_tracks() {
 	LocalLibrary::TrackDeletionMode answer = show_delete_dialog(lst.size());
 
     if(answer){
-		_library->psl_delete_certain_tracks(lst, answer);
+		_library->delete_tracks_by_idx(lst, answer);
     }
 }
 

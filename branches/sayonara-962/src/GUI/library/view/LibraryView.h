@@ -92,7 +92,7 @@ public:
     virtual ~LibraryView();
 
 	virtual void rc_header_menu_init(QList<int>& lst);
-	virtual void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
+	virtual void set_mimedata(const MetaDataList& v_md, bool drop_entire_folder, bool for_artist=false);
 	virtual void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
 	template < class TList, class T>

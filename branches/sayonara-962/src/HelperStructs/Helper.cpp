@@ -160,8 +160,6 @@ QString Helper::getLibPath() {
 
 QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
-
-
 	QString path = QString(":/icons/") + icon_name;
 	if(path.endsWith(".png")){
 		// alles paletti

@@ -40,6 +40,7 @@ protected:
 
 	virtual void rc_menu_show(const QPoint& p);
 	virtual void mousePressEvent(QMouseEvent* e);
+	virtual void mouseMoveEvent(QMouseEvent* e);
 
 };
 

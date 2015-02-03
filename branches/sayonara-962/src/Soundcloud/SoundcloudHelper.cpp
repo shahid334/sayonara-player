@@ -82,7 +82,7 @@ QString	SoundcloudHelper::create_dl_get_tracks(qint64 artist_id){
 }
 
 
-int	SoundcloudHelper::find_value_end(const QString& content, int start_at){
+int	SoundcloudHelper::Parser::find_value_end(const QString& content, int start_at){
 
 	int quote_counter = 0;
 
@@ -105,7 +105,7 @@ int	SoundcloudHelper::find_value_end(const QString& content, int start_at){
 }
 
 
-int	SoundcloudHelper::find_block_end(const QString& content, int start_at){
+int	SoundcloudHelper::Parser::find_block_end(const QString& content, int start_at){
 
 	int quote_counter = 0;
 
@@ -129,7 +129,7 @@ int	SoundcloudHelper::find_block_end(const QString& content, int start_at){
 	return content.size() - 1;
 }
 
-int	SoundcloudHelper::find_array_end(const QString& content, int start_at){
+int	SoundcloudHelper::Parser::find_array_end(const QString& content, int start_at){
 	int quote_counter = 0;
 
 	for(int i=start_at; i<content.size(); i++){
@@ -152,15 +152,15 @@ int	SoundcloudHelper::find_array_end(const QString& content, int start_at){
 
 
 
-JsonItem SoundcloudHelper::parse(QString key, const QString& content){
+JsonItem SoundcloudHelper::Parser::parse(QString key, const QString& content){
 
 	JsonItem ret;
 	if(content.startsWith('[')){
-		ret = parse_array(key, content);
+		ret = Parser::parse_array(key, content);
 	}
 
 	else if(content.startsWith('{')){
-		ret = parse_block(key, content);
+		ret = Parser::parse_block(key, content);
 	}
 
 	else {
@@ -170,7 +170,7 @@ JsonItem SoundcloudHelper::parse(QString key, const QString& content){
 	return ret;
 }
 
-JsonItem SoundcloudHelper::parse_array(QString key, QString content){
+JsonItem SoundcloudHelper::Parser::parse_array(QString key, QString content){
 
 	JsonItem ret;
 	ret.key = key;
@@ -181,13 +181,13 @@ JsonItem SoundcloudHelper::parse_array(QString key, QString content){
 	int i=0;
 	forever{
 
-		int end = find_block_end(content);
+		int end = Parser::find_block_end(content);
 		if(end == 0) break;
 
 		QString str = content.left(end + 1);
 		if(str.size() == 0) break;
 
-		ret.values << parse_block(QString::number(i), str);
+		ret.values << Parser::parse_block(QString::number(i), str);
 
 		int letters_left = content.size() - str.size();
 		if(letters_left <= 0) break;
@@ -199,7 +199,7 @@ JsonItem SoundcloudHelper::parse_array(QString key, QString content){
 	return ret;
 }
 
-JsonItem SoundcloudHelper::parse_block(QString key, QString content){
+JsonItem SoundcloudHelper::Parser::parse_block(QString key, QString content){
 
 	JsonItem ret;
 	ret.key = key;
@@ -254,13 +254,13 @@ JsonItem SoundcloudHelper::parse_block(QString key, QString content){
 		int new_start;
 
 		if(c == '['){
-			new_start = find_array_end(content);
+			new_start = Parser::find_array_end(content);
 			substr = content.left(new_start);
 			ret.values << parse_array(item_key, substr);
 		}
 
 		else if(c == '{'){
-			new_start = find_block_end(content);
+			new_start = Parser::find_block_end(content);
 			substr = content.left(new_start);
 			ret.values << parse_block(item_key, substr);
 		}
@@ -268,7 +268,7 @@ JsonItem SoundcloudHelper::parse_block(QString key, QString content){
 		else{
 			new_start = find_value_end(content);
 			substr = content.left(new_start);
-			ret.values << parse_standard(item_key, substr);
+			ret.values << Parser::parse_standard(item_key, substr);
 		}
 
 		content = content.right(content.size() - new_start);
@@ -278,12 +278,12 @@ JsonItem SoundcloudHelper::parse_block(QString key, QString content){
 	return ret;
 }
 
-JsonItem SoundcloudHelper::parse_standard(QString key, QString content){
+JsonItem SoundcloudHelper::Parser::parse_standard(QString key, QString content){
 
 	JsonItem ret;
 	ret.key = key;
 
-	int end = find_value_end(content);
+	int end = Parser::find_value_end(content);
 	content = content.left(end + 1);
 
 	if(content.startsWith('\"')){
@@ -307,11 +307,11 @@ ArtistList SoundcloudHelper::search_artist(const QString& name){
 	QString url = create_dl_get_artist(name);
 	Helper::read_http_into_str(url, &content);
 
-	JsonItem item = parse("Artists", content);
+	JsonItem item = Parser::parse("Artists", content);
 
 	for(const JsonItem& artist_item : item.values){
 		Artist artist;
-		extract_artist(artist_item, artist);
+		Parser::extract_artist(artist_item, artist);
 		artists << artist;
 	}
 
@@ -326,7 +326,7 @@ bool SoundcloudHelper::get_all_playlists(qint32 artist_id, MetaDataList& v_md, A
 	QString url = create_dl_get_playlists(artist_id);
 	Helper::read_http_into_str(url, &content);
 
-	JsonItem item = parse("Playlists", content);
+	JsonItem item = Parser::parse("Playlists", content);
 
 	// iterate over playlists
 	for(const JsonItem& album_item : item.values){
@@ -334,7 +334,7 @@ bool SoundcloudHelper::get_all_playlists(qint32 artist_id, MetaDataList& v_md, A
 		Album album;
 		MetaDataList v_md_tmp;
 
-		bool success = extract_playlist(album_item, album, v_md_tmp);
+		bool success = Parser::extract_playlist(album_item, album, v_md_tmp);
 
 		if(!success){
 			continue;
@@ -355,7 +355,7 @@ bool SoundcloudHelper::get_all_playlists(qint32 artist_id, MetaDataList& v_md, A
 }
 
 
-bool SoundcloudHelper::extract_track(const JsonItem& item, MetaData& md){
+bool SoundcloudHelper::Parser::extract_track(const JsonItem& item, MetaData& md){
 
 	if(item.type != JsonItem::TypeBlock){
 		return false;
@@ -403,7 +403,7 @@ bool SoundcloudHelper::extract_track(const JsonItem& item, MetaData& md){
 	return true;
 }
 
-bool SoundcloudHelper::extract_artist(const JsonItem& item, Artist& artist){
+bool SoundcloudHelper::Parser::extract_artist(const JsonItem& item, Artist& artist){
 
 	if(item.type != JsonItem::TypeBlock){
 		return false;
@@ -426,7 +426,7 @@ bool SoundcloudHelper::extract_artist(const JsonItem& item, Artist& artist){
 	return true;
 }
 
-bool SoundcloudHelper::extract_playlist(const JsonItem& item, Album& album, MetaDataList& v_md){
+bool SoundcloudHelper::Parser::extract_playlist(const JsonItem& item, Album& album, MetaDataList& v_md){
 
 	if(item.type != JsonItem::TypeBlock){
 		return false;
@@ -462,7 +462,7 @@ bool SoundcloudHelper::extract_playlist(const JsonItem& item, Album& album, Meta
 
 				MetaData md;
 				md.track_num = i++;
-				bool success = extract_track(track, md);
+				bool success = Parser::extract_track(track, md);
 
 				if(success){
 					v_md << md;
@@ -471,7 +471,7 @@ bool SoundcloudHelper::extract_playlist(const JsonItem& item, Album& album, Meta
 		}
 
 		else if(album_info.key == "user"){
-			extract_artist(album_info, artist);
+			Parser::extract_artist(album_info, artist);
 		}
 	}
 

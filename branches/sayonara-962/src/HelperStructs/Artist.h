@@ -28,6 +28,7 @@
 #include <QString>
 #include <QVariant>
 #include <QMetaType>
+#include <QVector>
 
 
 class Artist : public LibraryItem {

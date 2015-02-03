@@ -204,7 +204,7 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	qDebug() << "Set up library...";
 	/* Into Library */
-	library->loadDataFromDb();
+	library->load();
 
 	qDebug() << "Set up Last.fm...";
 

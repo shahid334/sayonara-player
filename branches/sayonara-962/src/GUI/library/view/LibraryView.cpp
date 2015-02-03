@@ -45,6 +45,7 @@
 #include <QScrollBar>
 #include <QFont>
 #include <QMimeData>
+#include "HelperStructs/MetaDataInfo.h"
 
 LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
@@ -74,12 +75,20 @@ void LibraryView::mousePressEvent(QMouseEvent* event) {
 
 	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
+	QModelIndex idx;
+	QList<int> idxs;
 
 	switch(event->button()) {
 
 	case Qt::LeftButton:
 
 		SearchableTableView::mousePressEvent(event);
+
+		idx = indexAt(event->pos());
+		if(idx.isValid()){
+			idxs << idx.row();
+			emit sig_sel_changed(idxs);
+		}
 
         _drag_pos = pos_org;
         _drag = true;
@@ -333,7 +342,7 @@ void LibraryView::fill(const TList& input_data) {
 }
 
 
-void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder) {
+void LibraryView::set_mimedata(const MetaDataList& v_md, bool drop_entire_folder, bool for_artist) {
 
     _mimedata = new CustomMimeData();
 
@@ -361,13 +370,42 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
     }
 
     _mimedata->setMetaData(v_md);
-    _mimedata->setText(text);
+	_mimedata->setText("tracks");
     _mimedata->setUrls(urls);
 
-    if(_qDrag) delete _qDrag;
+	if(_qDrag){
+		delete _qDrag;
+	}
 
     _qDrag = new QDrag(this);
     _qDrag->setMimeData(_mimedata);
+
+
+
+	QPixmap pm = Helper::getPixmap("append", QSize(48, 48), false);
+
+	if(v_md.size() > 0){
+
+		CoverLocation cl;
+		if(for_artist){
+
+			ArtistInfo ai(this, v_md);
+			cl = ai.get_cover_location();
+		}
+
+		else{
+			MetaDataInfo mdi(this, v_md);
+			cl = mdi.get_cover_location();
+		}
+
+		QFile f(cl.cover_path);
+
+		if(f.exists()){
+			pm = QPixmap(cl.cover_path).scaled(QSize(48, 48), Qt::KeepAspectRatio, Qt::SmoothTransformation) ;
+		}
+	}
+
+	_qDrag->setPixmap(pm);
 
     connect(_qDrag, SIGNAL(destroyed()), this, SLOT(drag_deleted()));
 

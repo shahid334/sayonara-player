@@ -40,6 +40,19 @@ void LibraryViewAlbum::mousePressEvent(QMouseEvent *e){
 	}
 }
 
+void LibraryViewAlbum::mouseMoveEvent(QMouseEvent* e){
+	QPoint pos = e->pos();
+	int distance = abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
+
+	if (_drag && _qDrag && distance > 20) {
+		delete_discmenu();
+		_qDrag->exec(Qt::CopyAction);
+
+		_timer->stop();
+
+	}
+}
+
 
 void LibraryViewAlbum::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ){
 
@@ -76,10 +89,8 @@ void LibraryViewAlbum::selectionChanged ( const QItemSelection & selected, const
 	emit sig_sel_changed(idx_list_int);
 }
 
-void LibraryViewAlbum::disc_pressed(int idx){
-	emit sig_disc_pressed(idx);
-}
 
+/* where to show the popup */
 void LibraryViewAlbum::calc_discmenu_point(QModelIndex idx){
 
 	_discmenu_point = QCursor::pos();
@@ -101,6 +112,7 @@ void LibraryViewAlbum::calc_discmenu_point(QModelIndex idx){
 	}
 }
 
+/* starts timer, after 500ms the popup is displayed */
 void LibraryViewAlbum::init_discmenu(QModelIndex idx){
 
 	int row = idx.row();
@@ -135,16 +147,22 @@ void LibraryViewAlbum::delete_discmenu(){
 	_discmenu = 0;
 }
 
+void LibraryViewAlbum::timer_timed_out() {
+	show_discmenu();
+}
+
 
 void LibraryViewAlbum::show_discmenu(){
 	_timer->stop();
+
 	if(!_discmenu) return;
 
 	_discmenu->popup(_discmenu_point);
 }
 
-
-void LibraryViewAlbum::timer_timed_out() {
-	show_discmenu();
+/* index in popup selected */
+void LibraryViewAlbum::disc_pressed(int idx){
+	emit sig_disc_pressed(idx);
 }
+
 

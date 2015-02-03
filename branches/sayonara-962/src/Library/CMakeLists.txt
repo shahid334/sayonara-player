@@ -10,6 +10,7 @@ INCLUDE(${QT_USE_FILE})
 #ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 SET(HEADERS
+	AbstractLibrary.h
     LocalLibrary.h
     LibraryImporter.h
     threads/ReloadThread.h
@@ -18,7 +19,7 @@ SET(HEADERS
 )
 
 SET(SOURCES
-    LocalLibraryAdmin.cpp
+	AbstractLibrary.cpp
     LocalLibrary.cpp
     LibraryImporter.cpp
     threads/ReloadThread.cpp

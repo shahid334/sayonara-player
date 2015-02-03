@@ -24,7 +24,7 @@
 
 
 GUI_SoundCloudLibrary::GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent) :
-	GUI_Library_windowed(library, info_dialog, parent)
+	QObject(parent)
 {
 
 }

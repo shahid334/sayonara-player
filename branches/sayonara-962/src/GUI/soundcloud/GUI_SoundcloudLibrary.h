@@ -27,18 +27,14 @@
 #include "GUI/library/GUI_Library_windowed.h"
 #include "Soundcloud/SoundcloudLibrary.h"
 
-class Soundcloud_windowed : public Ui::Library_windowed {
 
-};
-
-class GUI_SoundCloudLibrary : public GUI_Library_windowed, private Soundcloud_windowed
+class GUI_SoundCloudLibrary : public QObject
 {
 	Q_OBJECT
 
 public:
 	explicit GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent = 0);
 
-	
 };
 
 #endif // GUI_SOUNDCLOUDLIBRARY_H

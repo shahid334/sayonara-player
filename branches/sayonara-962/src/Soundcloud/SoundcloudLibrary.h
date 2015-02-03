@@ -22,23 +22,37 @@
 #ifndef SOUNDCLOUD_H
 #define SOUNDCLOUD_H
 
-#include "Library/LocalLibrary.h"
-#include "HelperStructs/CDirectoryReader.h"
+#include "Library/AbstractLibrary.h"
+#include "SoundcloudData.h"
 #include "HelperStructs/MetaData.h"
-#include "HelperStructs/Filter.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
-
-#include <QThread>
-#include <QStringList>
-#include <QtXml>
 
 
-class SoundcloudLibrary : public LocalLibrary
+
+class SoundcloudLibrary : public AbstractLibrary
 {
 	Q_OBJECT
 
 public:
 	SoundcloudLibrary(QObject *parent = 0);
+
+protected:
+
+	SoundcloudData*		_scd;
+
+	virtual void		get_all_artists(ArtistList& artists, LibSortOrder so);
+	virtual void		get_all_artists_by_searchstring(Filter filter, ArtistList& artists, LibSortOrder so);
+
+	virtual void		get_all_albums(AlbumList& albums, LibSortOrder so);
+	virtual void		get_all_albums_by_artist(QList<int> artist_ids, AlbumList& albums, Filter filter, LibSortOrder so);
+	virtual void		get_all_albums_by_searchstring(Filter filter, AlbumList& albums, LibSortOrder so);
+
+	virtual void		get_all_tracks(MetaDataList& v_md, LibSortOrder so);
+	virtual void		get_all_tracks_by_artist(QList<int> artist_ids, MetaDataList& v_md, Filter filter, LibSortOrder so);
+	virtual	void		get_all_tracks_by_album(QList<int> album_ids, MetaDataList& v_md, Filter filter, LibSortOrder so);
+	virtual void		get_all_tracks_by_searchstring(Filter filter, MetaDataList& v_md, LibSortOrder so);
+
+	virtual void		update_track(const MetaData& md);
+	virtual void		update_album(const Album& album);
 
 };
 

@@ -26,9 +26,54 @@
 
 
 SoundcloudLibrary::SoundcloudLibrary(QObject *parent) :
-	LocalLibrary(parent)
+	AbstractLibrary(parent)
 {
-	_db = CDatabaseConnector::getInstance();
+	_scd = new SoundcloudData(this);
+}
+
+
+void SoundcloudLibrary::get_all_artists(ArtistList& artists, LibSortOrder so){
+	_scd->get_all_artists(artists, so);
+}
+
+void SoundcloudLibrary::get_all_artists_by_searchstring(Filter filter, ArtistList& artists, LibSortOrder so){
+	_scd->get_all_artists(artists, so);
+}
+
+void SoundcloudLibrary::get_all_albums(AlbumList& albums, LibSortOrder so){
+	_scd->get_all_albums(albums, so);
+}
+
+void SoundcloudLibrary::get_all_albums_by_artist(QList<int> artist_ids, AlbumList& albums, Filter filter, LibSortOrder so){
+	_scd->get_all_albums(albums, so);
+}
+
+void SoundcloudLibrary::get_all_albums_by_searchstring(Filter filter, AlbumList& albums, LibSortOrder so){
+	_scd->get_all_albums(albums, so);
+}
+
+void SoundcloudLibrary::get_all_tracks(MetaDataList& v_md, LibSortOrder so){
+	_scd->get_all_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::get_all_tracks_by_artist(QList<int> artist_ids, MetaDataList& v_md, Filter filter, LibSortOrder so){
+	_scd->get_all_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::get_all_tracks_by_album(QList<int> album_ids, MetaDataList& v_md, Filter filter, LibSortOrder so){
+	_scd->get_all_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::get_all_tracks_by_searchstring(Filter filter, MetaDataList& v_md, LibSortOrder so){
+	_scd->get_all_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::update_track(const MetaData& md){
+
+}
+
+void SoundcloudLibrary::update_album(const Album& album){
+
 }
 
 

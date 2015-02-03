@@ -58,28 +58,30 @@ struct JsonItem {
 namespace SoundcloudHelper
 {
 
+	ArtistList			search_artist(const QString& name);
+	bool				get_all_playlists(qint32 artist_id, MetaDataList& v_md, AlbumList& albums);
 
 	QString				create_dl_get_artist(QString name);
 	QString				create_dl_get_playlists(qint64 artist_id);
 	QString				create_dl_get_tracks(qint64 artist_id);
 
-	ArtistList			search_artist(const QString& name);
-	bool				get_all_playlists(qint32 artist_id, MetaDataList& v_md, AlbumList& albums);
+	namespace Parser {
 
-	JsonItem			parse(QString key, const QString& content);
 
-	JsonItem			parse_array(QString key, QString content);
-	JsonItem			parse_block(QString key, QString content);
-	JsonItem			parse_standard(QString key, QString content);
+		JsonItem			parse(QString key, const QString& content);
 
-	int					find_block_end(const QString& content, int start_at=0);
-	int					find_array_end(const QString& content, int start_at=0);
-	int					find_value_end(const QString& content, int start_at=0);
+		JsonItem			parse_array(QString key, QString content);
+		JsonItem			parse_block(QString key, QString content);
+		JsonItem			parse_standard(QString key, QString content);
 
-	bool				extract_track(const JsonItem& item, MetaData& md);
-	bool				extract_artist(const JsonItem& item, Artist& artist);
-	bool				extract_playlist(const JsonItem& item, Album& album, MetaDataList& v_md);
+		int					find_block_end(const QString& content, int start_at=0);
+		int					find_array_end(const QString& content, int start_at=0);
+		int					find_value_end(const QString& content, int start_at=0);
 
+		bool				extract_track(const JsonItem& item, MetaData& md);
+		bool				extract_artist(const JsonItem& item, Artist& artist);
+		bool				extract_playlist(const JsonItem& item, Album& album, MetaDataList& v_md);
+	}
 
 }
 
