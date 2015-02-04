@@ -32,6 +32,7 @@
 
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/library/GUI_Library_windowed.h"
+#include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -55,6 +56,7 @@
 
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "Library/LocalLibrary.h"
+#include "Soundcloud/SoundcloudLibrary.h"
 #include "Library/LibraryImporter.h"
 #include "HelperStructs/Equalizer_presets.h"
 
@@ -88,6 +90,7 @@ private:
 	PlaylistChooser*		playlist_chooser;
 	PlaylistHandler*        playlist_handler;
 	LocalLibrary*           library;
+	SoundcloudLibrary*		sc_library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
 
@@ -108,6 +111,7 @@ private:
 	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
+	GUI_SoundCloudLibrary*  ui_sc_library;
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
 	StreamServer*           stream_server;

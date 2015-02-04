@@ -530,7 +530,7 @@ void GUI_Player::setPlaylist(GUI_Playlist* playlist) {
 }
 
 
-void GUI_Player::setLibrary(GUI_Library_windowed* library) {
+void GUI_Player::setLibrary(GUI_AbstractLibrary* library) {
 
 	if(!library) return;
 

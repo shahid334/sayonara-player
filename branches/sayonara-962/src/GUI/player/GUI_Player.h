@@ -191,7 +191,7 @@ private slots:
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
-    void setLibrary(GUI_Library_windowed* library);
+	void setLibrary(GUI_AbstractLibrary* library);
     void setInfoDialog(GUI_InfoDialog* info_dialog);
     void setPlayerPluginHandler(PlayerPluginHandler* pph);
 
@@ -217,7 +217,7 @@ protected:
 private:
 
     GUI_Playlist*           ui_playlist;
-    GUI_Library_windowed*   ui_library;
+	GUI_AbstractLibrary*	ui_library;
     GUI_LibraryPath*        ui_libpath;
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;

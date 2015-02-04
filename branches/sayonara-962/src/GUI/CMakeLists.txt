@@ -155,7 +155,7 @@ SET(FORMS
     InfoDialog/GUI_InfoDialog.ui
     LanguageChooser/GUI_LanguageChooser.ui
     LastFM/GUI_LastFM_Dialog.ui
-    library/GUI_Library_windowed.ui
+	library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
     library/GUI_LibraryPath.ui
@@ -169,6 +169,7 @@ SET(FORMS
 
     Podcasts/GUI_Podcasts.ui
     SocketConfiguration/GUI_SocketSetup.ui
+	soundcloud/GUI_SoundcloudLibrary.ui
     speed/GUI_Speed.ui
     startup_dialog/GUI_Startup_Dialog.ui
     stream/GUI_Stream.ui

@@ -75,8 +75,7 @@ void LibraryView::mousePressEvent(QMouseEvent* event) {
 
 	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
-	QModelIndex idx;
-	QList<int> idxs;
+
 
 	switch(event->button()) {
 
@@ -84,11 +83,20 @@ void LibraryView::mousePressEvent(QMouseEvent* event) {
 
 		SearchableTableView::mousePressEvent(event);
 
-		/*idx = indexAt(event->pos());
-		if(idx.isValid()){
-			idxs << idx.row();
-			emit sig_sel_changed(idxs);
-		}*/
+		// if we do nothing here, we cannot drag again
+		// the same marked lines, because drag has been
+		// deleted and selectionChanged is not called
+
+		if(!_qDrag){
+
+			QModelIndex idx;
+			QList<int> idxs;
+			idx = indexAt(event->pos());
+			if(idx.isValid()){
+				idxs << idx.row();
+				emit sig_sel_changed(idxs);
+			}
+		}
 
         _drag_pos = pos_org;
         _drag = true;
@@ -344,7 +352,6 @@ void LibraryView::fill(const TList& input_data) {
 
 void LibraryView::set_mimedata(const MetaDataList& v_md, bool drop_entire_folder, bool for_artist) {
 
-	qDebug() << "Mimedata: " << v_md.size() << this->objectName();
     _mimedata = new CustomMimeData();
 
     QList<QUrl> urls;

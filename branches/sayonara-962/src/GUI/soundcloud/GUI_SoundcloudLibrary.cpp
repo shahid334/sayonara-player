@@ -19,12 +19,35 @@
  */
 
 
-
 #include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
 
 
 GUI_SoundCloudLibrary::GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent) :
-	QObject(parent)
+	GUI_AbstractLibrary(library, info_dialog, parent),
+	Ui::GUI_SoundcloudLibrary()
 {
+	setupUi(this);
 
+	set_combo_lib_chooser(combo_lib_chooser);
+	set_lv_elems(lv_artist, lv_album, tb_title);
+	set_search_elems(combo_searchfilter, btn_clear, le_search);
+	set_btn_info(btn_info);
+	set_btn_refresh(btn_refresh);
+	set_lab_status(lab_status);
+	init_finished();
+
+	setAcceptDrops(false);
+
+	connect(btn_add, SIGNAL(clicked()), this, SLOT(btn_add_clicked()));
+
+	hide();
+}
+
+AbstractLibrary::TrackDeletionMode GUI_SoundCloudLibrary::show_delete_dialog(int n_tracks){
+
+	return AbstractLibrary::TrackDeletionModeNone;
+}
+
+void GUI_SoundCloudLibrary::btn_add_clicked(){
+	// popup little window
 }

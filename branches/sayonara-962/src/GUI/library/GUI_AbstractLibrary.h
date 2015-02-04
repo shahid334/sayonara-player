@@ -73,8 +73,10 @@ protected:
 	virtual AbstractLibrary::TrackDeletionMode show_delete_dialog(int n_tracks)=0;
 
 	virtual void resizeEvent(QResizeEvent* e);
+	void init_finished();
 
 private:
+	QComboBox*		_lib_chooser;
 	LibraryView*	_lv_artist;
 	LibraryViewAlbum*	_lv_album;
 	LibraryView*	_lv_tracks;
@@ -154,8 +156,11 @@ protected slots:
 public slots:
 	virtual void id3_tags_changed();
 
-public:
-	void init_finished();
+protected:
+
+	void set_combo_lib_chooser(QComboBox* lib_chooser){
+		_lib_chooser = lib_chooser;
+	}
 
 	void set_lv_elems(LibraryView* lv_artist, LibraryViewAlbum* lv_album, LibraryView* lv_tracks){
 		_lv_artist = lv_artist;

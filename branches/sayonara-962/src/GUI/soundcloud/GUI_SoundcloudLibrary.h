@@ -26,14 +26,20 @@
 #include "GUI/ui_GUI_Library_windowed.h"
 #include "GUI/library/GUI_Library_windowed.h"
 #include "Soundcloud/SoundcloudLibrary.h"
+#include "GUI/ui_GUI_SoundcloudLibrary.h"
 
-
-class GUI_SoundCloudLibrary : public QObject
+class GUI_SoundCloudLibrary : public GUI_AbstractLibrary, protected Ui::GUI_SoundcloudLibrary
 {
 	Q_OBJECT
 
 public:
 	explicit GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent = 0);
+
+protected:
+	virtual AbstractLibrary::TrackDeletionMode show_delete_dialog(int n_tracks);
+
+protected slots:
+	void btn_add_clicked();
 
 };
 

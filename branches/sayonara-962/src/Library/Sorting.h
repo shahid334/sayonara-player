@@ -18,13 +18,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #ifndef SORTING_H
 #define SORTING_H
 
 #include <QStringList>
-
 
 namespace Sort {
 

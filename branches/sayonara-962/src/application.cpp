@@ -104,7 +104,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	player              = new GUI_Player(translator);
 
 	playlist_handler    = new PlaylistHandler();
-	library             = new LocalLibrary();
 	library_importer    = new LibraryImporter(getMainWindow(), this);
 	playlist_chooser    = new PlaylistChooser(playlist_handler);
 
@@ -118,7 +117,11 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
 	ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
+	library             = new LocalLibrary();
+	sc_library			= new SoundcloudLibrary();
+
 	ui_library          = new GUI_Library_windowed(library, ui_info_dialog, player->getParentOfLibrary());
+	ui_sc_library		= new GUI_SoundCloudLibrary(sc_library, ui_info_dialog, player->getParentOfLibrary());
 
 	ui_playlist         = new GUI_Playlist(playlist_handler, ui_info_dialog, player->getParentOfPlaylist());
 
@@ -192,20 +195,29 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	/* Into Player */
 	player->setPlaylist(ui_playlist);
-	player->setLibrary(ui_library);
+
+	player->setLibrary(ui_sc_library);
+	//player->setLibrary(ui_library);
+
 	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
 
 	/* --> INTO Player*/
-	if(is_maximized) player->showMaximized();
-	else player->show();
+	if(is_maximized) {
+		player->showMaximized();
+	}
+	else {
+		player->show();
+	}
 
 	ui_library->resize(player->getParentOfLibrary()->size());
+	ui_sc_library->resize(player->getParentOfLibrary()->size());
 	ui_playlist->resize(player->getParentOfPlaylist()->size());
 
 	qDebug() << "Set up library...";
 	/* Into Library */
 	library->load();
+	sc_library->load();
 
 	qDebug() << "Set up Last.fm...";
 

@@ -13,7 +13,12 @@ GUI_AbstractLibrary::GUI_AbstractLibrary(AbstractLibrary* library, GUI_InfoDialo
 }
 
 GUI_AbstractLibrary::~GUI_AbstractLibrary(){
-
+	delete _album_model;
+	delete _album_delegate;
+	delete _artist_model;
+	delete _artist_delegate;
+	delete _track_model;
+	delete _track_delegate;
 }
 
 void GUI_AbstractLibrary::init_finished(){
@@ -259,7 +264,6 @@ void GUI_AbstractLibrary::lib_fill_artists(const ArtistList& artists) {
 
 void GUI_AbstractLibrary::track_info_available(const MetaDataList& v_md) {
 
-	qDebug() << "Track info available..";
 	_lv_tracks->set_mimedata(v_md, false);
 
 }
@@ -284,7 +288,6 @@ void GUI_AbstractLibrary::album_sel_changed(const QList<int>& lst) {
 
 void GUI_AbstractLibrary::track_sel_changed(const QList<int>& lst) {
 	_info_dialog->setInfoMode(InfoDialogMode_Tracks);
-	qDebug() << "Change track selection";
 	_library->psl_selected_tracks_changed(lst);
 }
 
@@ -517,10 +520,6 @@ void GUI_AbstractLibrary::reload_finished() {
 void GUI_AbstractLibrary::id3_tags_changed() {
 	refresh();
 }
-
-
-
-
 
 
 void GUI_AbstractLibrary::show_delete_answer(QString answer) {

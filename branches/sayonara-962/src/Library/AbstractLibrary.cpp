@@ -343,10 +343,8 @@ MetaDataList AbstractLibrary::change_track_selection(const QList<int>& idx_list)
 
 void AbstractLibrary::psl_selected_tracks_changed(const QList<int>& idx_list) {
 
-	qDebug() << "selected track changed";
 	MetaDataList v_md =	change_track_selection(idx_list);
 	if(v_md.size() > 0){
-		qDebug() << "2: mimedata";
 		emit sig_track_mime_data_available(v_md);
 	}
 }

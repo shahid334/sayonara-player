@@ -35,6 +35,8 @@ class SoundcloudLibrary : public AbstractLibrary
 public:
 	SoundcloudLibrary(QObject *parent = 0);
 
+	virtual void load();
+
 protected:
 
 	SoundcloudData*		_scd;
@@ -54,6 +56,10 @@ protected:
 	virtual void		update_track(const MetaData& md);
 	virtual void		update_album(const Album& album);
 
+	virtual void		delete_tracks(const MetaDataList& v_md, TrackDeletionMode mode);
+
+public slots:
+	virtual void		psl_reload_library(bool);
 };
 
 #endif // LocalLibrary_H

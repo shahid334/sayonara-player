@@ -39,6 +39,7 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
+	set_combo_lib_chooser(combo_lib_chooser);
 	set_lv_elems(lv_artist, lv_album, tb_title);
 	set_search_elems(combo_searchfilter, btn_clear, le_search);
 	set_btn_info(btn_info);
@@ -62,12 +63,7 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 
 
 GUI_Library_windowed::~GUI_Library_windowed() {
-	delete _album_model;
-	delete _album_delegate;
-	delete _artist_model;
-	delete _artist_delegate;
-	delete _track_model;
-	delete _track_delegate;
+
 	delete _lib_info_dialog;
 }
 
@@ -123,8 +119,6 @@ void GUI_Library_windowed::disc_pressed(int disc) {
 }
 
 
-
-
 void GUI_Library_windowed::lib_no_lib_path(){
 
 	QMessageBox::warning(this, tr("Warning"), tr("Please select your library path first and reload again."));
@@ -136,9 +130,11 @@ void GUI_Library_windowed::lib_no_lib_path(){
 	}
 }
 
+
 void GUI_Library_windowed::import_files(const QStringList & lst) {
     emit sig_import_files(lst);
 }
+
 
 void GUI_Library_windowed::import_result(bool success) {
 

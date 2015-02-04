@@ -31,13 +31,41 @@ SoundcloudLibrary::SoundcloudLibrary(QObject *parent) :
 	_scd = new SoundcloudData(this);
 }
 
+void SoundcloudLibrary::load(){
+	_scd->load();
+	AbstractLibrary::load();
+}
+
 
 void SoundcloudLibrary::get_all_artists(ArtistList& artists, LibSortOrder so){
 	_scd->get_all_artists(artists, so);
 }
 
 void SoundcloudLibrary::get_all_artists_by_searchstring(Filter filter, ArtistList& artists, LibSortOrder so){
-	_scd->get_all_artists(artists, so);
+
+	ArtistList tmp_artists;
+	bool* found_artists;
+	_scd->get_all_artists(tmp_artists, so);
+	found_artists = new bool[tmp_artists.size()];
+
+
+	QMap<int, int> artist_map;
+
+	int i=0;
+	for(const Artist& a : tmp_artists){
+		if(a.name.contains(filter.filtertext)){
+			artists << a;
+			found_artists[i] = true;
+		}
+
+		else{
+			found_artists[i] = false;
+		}
+
+		artist_map.insert(a.id, i);
+
+		i++;
+	}
 }
 
 void SoundcloudLibrary::get_all_albums(AlbumList& albums, LibSortOrder so){
@@ -45,11 +73,21 @@ void SoundcloudLibrary::get_all_albums(AlbumList& albums, LibSortOrder so){
 }
 
 void SoundcloudLibrary::get_all_albums_by_artist(QList<int> artist_ids, AlbumList& albums, Filter filter, LibSortOrder so){
-	_scd->get_all_albums(albums, so);
+
+
 }
 
 void SoundcloudLibrary::get_all_albums_by_searchstring(Filter filter, AlbumList& albums, LibSortOrder so){
-	_scd->get_all_albums(albums, so);
+
+
+	AlbumList tmp_albums;
+	_scd->get_all_albums(tmp_albums, so);
+
+	for(const Album& a : tmp_albums){
+		if(a.name.contains(filter.filtertext)){
+			albums << a;
+		}
+	}
 }
 
 void SoundcloudLibrary::get_all_tracks(MetaDataList& v_md, LibSortOrder so){
@@ -73,6 +111,14 @@ void SoundcloudLibrary::update_track(const MetaData& md){
 }
 
 void SoundcloudLibrary::update_album(const Album& album){
+
+}
+
+void SoundcloudLibrary::delete_tracks(const MetaDataList& v_md, TrackDeletionMode mode){
+
+}
+
+void SoundcloudLibrary::psl_reload_library(bool b){
 
 }
 

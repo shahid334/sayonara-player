@@ -13,9 +13,8 @@ LibraryViewAlbum::LibraryViewAlbum(QWidget *parent) :
 template<> void LibraryViewAlbum::fill<AlbumList, Album>(const AlbumList& input_data){
 
 	_discnumbers.clear();
-	qDebug() << "Fill...";
+
 	for(const Album& album: input_data){
-		qDebug() << "Fill discnumbers " << album.discnumbers;
 		_discnumbers << album.discnumbers;
 	}
 
@@ -47,11 +46,11 @@ void LibraryViewAlbum::mouseMoveEvent(QMouseEvent* e){
 	int distance = abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
 	if (_drag && _qDrag && distance > 20) {
+
 		delete_discmenu();
 		_qDrag->exec(Qt::CopyAction);
 
 		_timer->stop();
-
 	}
 }
 
@@ -118,25 +117,27 @@ void LibraryViewAlbum::calc_discmenu_point(QModelIndex idx){
 void LibraryViewAlbum::init_discmenu(QModelIndex idx){
 
 	int row = idx.row();
-	qDebug() << "row = " << row;
-	qDebug() << "discnumbers.size() = " << _discnumbers.size();
-	if(row >= _discnumbers.size()){
+	QList<quint8> discnumbers;
+
+	if( !idx.isValid() ||
+		(row > _discnumbers.size()) ||
+		(row < 0) )
+	{
+		return;
+	}
+
+	discnumbers = _discnumbers[row];
+	if(discnumbers.size() < 2) {
 		return;
 	}
 
 	calc_discmenu_point(idx);
+	delete_discmenu();
 
-	QList<quint8> discnumbers = _discnumbers.at( row );
+	_discmenu = new DiscPopupMenu(this, discnumbers);
+	_timer->start(500);
 
-	if( discnumbers.size() > 1 ) {
-
-		delete_discmenu();
-
-		_discmenu = new DiscPopupMenu(this, discnumbers);
-		_timer->start(500);
-
-		connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
-	}
+	connect(_discmenu, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
 }
 
 

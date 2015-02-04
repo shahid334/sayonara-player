@@ -7,6 +7,8 @@
 #include "Library/Sorting.h"
 #include "Soundcloud/SoundcloudHelper.h"
 
+
+
 class SoundcloudData : public QObject
 {
 	Q_OBJECT
@@ -23,12 +25,10 @@ public:
 
 
 private:
-	AlbumList		_album_cache;
-	ArtistList		_artist_cache;
-	MetaDataList	_track_cache;
+
+	SoundcloudParser* _sc_parser;
 
 	LibSortOrder	_sortorder;
-
 };
 
 #endif // SOUNDCLOUDDATA_H
