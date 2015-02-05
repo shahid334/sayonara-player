@@ -95,11 +95,32 @@ void SoundcloudLibrary::get_all_tracks(MetaDataList& v_md, LibSortOrder so){
 }
 
 void SoundcloudLibrary::get_all_tracks_by_artist(QList<int> artist_ids, MetaDataList& v_md, Filter filter, LibSortOrder so){
-	_scd->get_all_tracks(v_md, so);
+
+	for(int artist_id : artist_ids){
+
+		MetaDataList v_md_tmp;
+		_scd->get_all_tracks_by_artist(v_md_tmp, artist_id, so);
+		for(const MetaData& md : v_md_tmp){
+			v_md << md;
+		}
+	}
+
+	_scd->sort_tracks(v_md, so);
+
 }
 
 void SoundcloudLibrary::get_all_tracks_by_album(QList<int> album_ids, MetaDataList& v_md, Filter filter, LibSortOrder so){
-	_scd->get_all_tracks(v_md, so);
+
+	for(int album_id : album_ids){
+
+		MetaDataList v_md_tmp;
+		_scd->get_all_tracks_by_album(v_md_tmp, album_id, so);
+		for(const MetaData& md : v_md_tmp){
+			v_md << md;
+		}
+	}
+
+	_scd->sort_tracks(v_md, so);
 }
 
 void SoundcloudLibrary::get_all_tracks_by_searchstring(Filter filter, MetaDataList& v_md, LibSortOrder so){

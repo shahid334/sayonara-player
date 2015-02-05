@@ -676,6 +676,7 @@ bool SoundcloudParser::extract_playlist(const JsonItem& item, Album& album, Meta
 	}
 
 	for(MetaData& md : v_md){
+
 		md.album_id = album.id;
 		md.album = album.name;
 		md.artist = artist.name;
