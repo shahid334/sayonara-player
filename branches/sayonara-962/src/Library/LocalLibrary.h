@@ -87,6 +87,10 @@ protected:
 	virtual	void		get_all_tracks_by_album(QList<int> album_ids, MetaDataList& v_md, Filter filter, LibSortOrder so);
 	virtual void		get_all_tracks_by_searchstring(Filter filter, MetaDataList& v_md, LibSortOrder so);
 
+	virtual void		get_album_by_id(int album_id, Album& album);
+	virtual void		get_artist_by_id(int artist_id, Artist& artist);
+
+
 	virtual void		update_track(const MetaData& md);
 	virtual void		update_album(const Album& album);
 

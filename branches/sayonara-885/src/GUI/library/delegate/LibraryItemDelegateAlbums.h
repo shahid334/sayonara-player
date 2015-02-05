@@ -48,8 +48,6 @@ public:
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-    void set_skin(bool dark);
-
 
 private:
 
@@ -58,9 +56,6 @@ private:
 
 	QPen _pen;
 	LibraryItemModel* _model;
-	QColor _selected_background;
-
-
 };
 
 #endif /* LIBRARYITEMDELEGATEALBUMS_H_ */

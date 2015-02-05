@@ -35,7 +35,6 @@ class GUI_SocketSetup: public SayonaraDialog, private Ui::SocketSetupDialog {
 
 public slots:
     void show_win();
-    void language_changed();
 
 private slots:
 	void _sl_start_changed(int);
@@ -45,13 +44,15 @@ public:
 	GUI_SocketSetup(QWidget* parent=0);
 	virtual ~GUI_SocketSetup();
 
+protected:
+	virtual void language_changed();
+
 
 private:
 
 	int 					_socket_from;
 	int 					_socket_to;
 	bool					_is_activated;
-
 
 
 };

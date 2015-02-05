@@ -185,8 +185,6 @@ private slots:
     void awa_version_finished();
     void awa_translators_finished();
 
-	void language_changed();
-
 	void _sl_libpath_changed();
 	void _sl_sr_active_changed();
 
@@ -211,6 +209,7 @@ protected:
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
     void moveEvent(QMoveEvent* e);
+	virtual void language_changed();
 
 private:
 

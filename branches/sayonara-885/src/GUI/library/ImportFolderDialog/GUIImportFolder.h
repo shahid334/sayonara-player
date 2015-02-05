@@ -63,16 +63,12 @@ private slots:
     void choose_dir();
 
 
-public slots:
-    void changeSkin(bool);
-
 protected:
 	void closeEvent(QCloseEvent* e);
 	void showEvent(QShowEvent* e);
 
 
 private:
-
 	bool			_thread_active;
 	GUI_TagEdit*	_ui_tag_edit;
 

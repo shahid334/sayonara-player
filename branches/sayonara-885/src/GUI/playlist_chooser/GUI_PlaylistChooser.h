@@ -85,8 +85,8 @@ private:
 
     int show_warning(QString title_text);
 
-private slots:
-	void language_changed();
+protected:
+	virtual void language_changed();
 };
 
 #endif /* GUIPLAYLISTCHOOSER_H_ */

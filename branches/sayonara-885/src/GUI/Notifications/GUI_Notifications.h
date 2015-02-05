@@ -31,16 +31,19 @@
 class GUI_Notifications : public SayonaraDialog, private Ui_GUI_Notification
 {
     Q_OBJECT
+
 public:
     explicit GUI_Notifications(QWidget *parent = 0);
     virtual ~GUI_Notifications();
     
 private slots:
     void ok_clicked();
-	void language_changed();
 
 private:
     NotificationPluginLoader* _plugin_loader;
+
+protected:
+	virtual void language_changed();
 
 };
 

@@ -56,9 +56,6 @@ public:
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
-    void set_skin(bool dark);
-
-
 private:
 
 		QTableView* _parent;
@@ -67,7 +64,6 @@ private:
         QPen _pen;
 
         LibraryItemModel* _model;
-        QColor _selected_background;
 };
 
 #endif /* LIBRARYITEMDELEGATEARTISTS_H_ */

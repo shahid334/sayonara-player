@@ -62,7 +62,6 @@ public slots:
     void setMute(bool mute);
 	void skin_changed();
     void stop();
-    void language_changed();
 
 
 signals:
@@ -115,6 +114,9 @@ private:
 	QTimer* _timer;
 	bool _mute;
 	int m_vol_step;
+
+protected:
+	virtual void language_changed();
 
 };
 

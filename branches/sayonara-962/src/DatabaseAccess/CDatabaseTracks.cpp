@@ -55,7 +55,6 @@ using namespace Sort;
 	"WHERE filetype is null "
 
 
-
 bool CDatabaseConnector::db_fetch_tracks(QSqlQuery& q, MetaDataList& result) {
 
 	result.clear();

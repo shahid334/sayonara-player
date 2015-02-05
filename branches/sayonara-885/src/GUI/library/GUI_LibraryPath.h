@@ -31,20 +31,20 @@
 class GUI_LibraryPath : public QWidget, private Ui::GUI_SetLibrary
 {
     Q_OBJECT
+
 public:
     explicit GUI_LibraryPath(QWidget *parent = 0);
     
 signals:
     void sig_library_path_set();
     
-public slots:
-    void language_changed();
 
 private slots:
     void btn_clicked();
 
 protected:
     void resizeEvent(QResizeEvent* e);
+	virtual void language_changed();
     
 };
 

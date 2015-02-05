@@ -61,8 +61,6 @@ signals:
 
 public slots:
 
-    void changeSkin(bool dark);
-    void language_changed();
 	void set_metadata(const MetaDataList& vd);
 	void show(int tab);
 
@@ -79,6 +77,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent *e);
+	virtual void language_changed();
 
 public:
     GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit);

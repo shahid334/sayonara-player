@@ -48,8 +48,6 @@ private slots:
     void delete_clicked();
     void save_clicked();
 
-public slots:
-    void language_changed();
 
 public:
 	GUI_Podcasts(QString name, QWidget *parent = 0);
@@ -65,6 +63,9 @@ private:
 
     void setup_podcasts(const QMap<QString, QString>&);
     void play_podcasts(QString url, QString name);
+
+protected:
+	virtual void language_changed();
 
 };
 

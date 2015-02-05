@@ -48,8 +48,7 @@ private slots:
 private:
     void play_stream(QString url, QString station_name);
 
-public slots:
-    void changeSkin(bool);
+protected:
     void language_changed();
 
 

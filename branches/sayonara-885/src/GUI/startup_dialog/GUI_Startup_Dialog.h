@@ -30,13 +30,12 @@
 class GUI_Startup_Dialog : public SayonaraDialog, private Ui::GUI_StartupDialog
 {
     Q_OBJECT
+
 public:
     GUI_Startup_Dialog(QWidget *parent = 0);
     virtual ~GUI_Startup_Dialog();
     
-signals:
-    
-public slots:
+protected:
     void language_changed();
 
 private slots:

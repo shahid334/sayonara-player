@@ -160,7 +160,6 @@ protected slots:
 
 	void _sl_show_only_tracks_changed();
 	void skin_changed();
-	void language_changed();
 
 	void lib_reload(const QString&);
 	void lib_fill_tracks(const MetaDataList&);
@@ -174,6 +173,7 @@ protected slots:
 
 protected:
 	void resizeEvent(QResizeEvent* e);
+	virtual void language_changed();
 
 	QList<int> _shown_cols_albums;
 	QList<int> _shown_cols_artist;

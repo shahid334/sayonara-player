@@ -94,34 +94,37 @@ public:
 	GUI_Equalizer(QString name,QWidget* parent=0);
 	virtual ~GUI_Equalizer();
 
-	signals:
-		void sig_eq_changed(int, int);
+signals:
+	void sig_eq_changed(int, int);
 
-	private slots:
-		void sli_changed(int, int);
-		void sli_pressed(int);
-		void sli_released(int);
+private slots:
+	void sli_changed(int, int);
+	void sli_pressed(int);
+	void sli_released(int);
 
-		void preset_changed(int);
-        void cb_gauss_toggled(bool);
-        void btn_save_clicked();
-		void btn_delete_clicked();
-		void btn_reset_clicked();
-		void text_changed(QString);
+	void preset_changed(int);
+	void cb_gauss_toggled(bool);
+	void btn_save_clicked();
+	void btn_delete_clicked();
+	void btn_reset_clicked();
+	void text_changed(QString);
 
-	public slots:
-		void fill_eq_presets();
-        void language_changed();
+public slots:
+	void fill_eq_presets();
 
-	private:
 
-		QList<EQ_Setting> _presets;
-		QList<EqSlider*> _sliders;
+private:
 
-		int _old_val[10];
-		int _active_idx;
+	QList<EQ_Setting> _presets;
+	QList<EqSlider*> _sliders;
 
-		int find_combo_text(QString txt);
+	int _old_val[10];
+	int _active_idx;
+
+	int find_combo_text(QString txt);
+
+protected:
+	virtual void language_changed();
 
 };
 

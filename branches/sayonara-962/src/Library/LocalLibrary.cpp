@@ -170,6 +170,15 @@ void LocalLibrary::get_all_tracks_by_searchstring(Filter filter, MetaDataList& v
 	_db->getAllTracksBySearchString(filter, v_md, so.so_tracks);
 }
 
+void LocalLibrary::get_album_by_id(int album_id, Album& album){
+	_db->getAlbumByID(album_id, album);
+}
+
+void LocalLibrary::get_artist_by_id(int artist_id, Artist& artist){
+	_db->getArtistByID(artist_id, artist);
+}
+
+
 void LocalLibrary::update_track(const MetaData& md){
 	_db->updateTrack(md);
 }

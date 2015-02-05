@@ -47,15 +47,10 @@ public:
 	    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 	    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
-        void set_skin(bool dark);
-
-
 private:
 		QTableView* _parent;
         QPen        _pen;
         LibraryItemModel* _model;
-        QColor _selected_background;
-
 };
 
 #endif /* IBRARYITEMDELEGATETRACKS_H_ */

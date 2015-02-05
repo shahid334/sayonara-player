@@ -61,7 +61,7 @@ void GUI_Player::setupConnections() {
 	connect(action_viewLibrary, SIGNAL(toggled(bool)), this,
 			SLOT(showLibrary(bool)));
 	connect(action_Dark, SIGNAL(toggled(bool)), this,
-			SLOT(changeSkin(bool)));
+			SLOT(skin_toggled(bool)));
 
 	connect(action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
 			SLOT(small_playlist_items_toggled(bool)));

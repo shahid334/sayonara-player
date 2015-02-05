@@ -47,49 +47,49 @@ public:
 	GUI_Alternate_Covers(QWidget* parent, QString calling_class);
 	virtual ~GUI_Alternate_Covers();
 
-	signals:
-		void sig_cover_changed(const CoverLocation&);
-        void sig_no_cover();
+signals:
+	void sig_cover_changed(const CoverLocation&);
+	void sig_no_cover();
 
 
-	public slots:
-		void start(Album album, const CoverLocation& cl = CoverLocation());
-		void start(int album_id, const CoverLocation& cl = CoverLocation());
-		void start(QString album_name, QString artist_name, const CoverLocation& cl = CoverLocation());
-		void start(Artist artist, const CoverLocation& cl = CoverLocation());
-		void start(QString artist_name, const CoverLocation& cl = CoverLocation());
+public slots:
+	void start(Album album, const CoverLocation& cl = CoverLocation());
+	void start(int album_id, const CoverLocation& cl = CoverLocation());
+	void start(QString album_name, QString artist_name, const CoverLocation& cl = CoverLocation());
+	void start(Artist artist, const CoverLocation& cl = CoverLocation());
+	void start(QString artist_name, const CoverLocation& cl = CoverLocation());
 
-        void changeSkin(bool dark);
-        void language_changed();
 
-	private slots:
-		void save_button_pressed();
-		void cancel_button_pressed();
-		void search_button_pressed();
-		void cover_pressed(const QModelIndex& idx);
-        void open_file_dialog();
-		void cl_new_cover(const CoverLocation& path);
-		void cl_finished(bool);
+private slots:
+	void save_button_pressed();
+	void cancel_button_pressed();
+	void search_button_pressed();
+	void cover_pressed(const QModelIndex& idx);
+	void open_file_dialog();
+	void cl_new_cover(const CoverLocation& path);
+	void cl_finished(bool);
 
-	private:
+private:
 
-		int 				_cur_idx;
-		QString				_last_path;
-		CoverLocation		_cover_location;
-		QList<CoverLocation> _filelist;
-		bool				_is_searching;
+	int 				_cur_idx;
+	QString				_last_path;
+	CoverLocation		_cover_location;
+	QList<CoverLocation> _filelist;
+	bool				_is_searching;
 
-		AlternateCoverItemDelegate* _delegate;
-		AlternateCoverItemModel*	_model;
+	AlternateCoverItemDelegate* _delegate;
+	AlternateCoverItemModel*	_model;
 
-        CoverLookupAlternative*        _cl_alternative;
+	CoverLookupAlternative*        _cl_alternative;
 
-        void reset_model();
-		void connect_and_start();
-		void delete_all_files();
+	void reset_model();
+	void connect_and_start();
+	void delete_all_files();
 
 protected:
-		void closeEvent(QCloseEvent* e);
+	void closeEvent(QCloseEvent* e);
+
+	virtual void language_changed();
 };
 
 #endif /* GUI_ALTERNATE_COVERS_H_ */

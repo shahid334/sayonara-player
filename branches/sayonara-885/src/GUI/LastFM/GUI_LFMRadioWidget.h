@@ -42,26 +42,24 @@ public:
 	GUI_LFMRadioWidget(QString name, QWidget *parent = 0);
 	virtual ~GUI_LFMRadioWidget();
 
-	signals:
-		void listen_clicked(const QString&, int artist);
-		void close_event();
-
-    public slots:
-        void changeSkin(bool);
-        void language_changed();
+signals:
+	void listen_clicked(const QString&, int artist);
+	void close_event();
 
 
-	private slots:
-		void start_listen();
-        void mode_index_changed(int i);
-        void psl_radio_initialized(bool);
+private slots:
+	void start_listen();
+	void mode_index_changed(int i);
+	void psl_radio_initialized(bool);
 
 
-	private:
+private:
+	Ui::GUI_LFMRadioWidget* _ui;
+	QStringList _friends;
+	LastFM* _lastfm;
 
-        Ui::GUI_LFMRadioWidget* _ui;
-		QStringList _friends;
-        LastFM* _lastfm;
+protected:
+	virtual void language_changed();
 
 };
 
