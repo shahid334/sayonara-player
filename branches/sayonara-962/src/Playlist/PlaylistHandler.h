@@ -147,7 +147,7 @@ private:
 	Playlist* get_current();
 
 	void emit_playlist_created(Playlist* pl=NULL);
-	void emit_cur_track_changed(Playlist* pl=NULL);
+	void emit_cur_track_changed(bool start_play = true, Playlist* pl=NULL);
 };
 
 #endif /* PLAYLISTHANDLER_H_ */

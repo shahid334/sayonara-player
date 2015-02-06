@@ -277,7 +277,7 @@ void GUI_Player::psl_update_track(const MetaData & md, bool start_play) {
 
 	total_time_changed(_md.length_ms);
 
-	psl_set_play(true);
+	psl_set_play(start_play);
 
 	QString rating_text;
 

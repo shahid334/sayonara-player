@@ -12,7 +12,7 @@ QWidget {
 	border: none;
 	color: #D8D8D8;
 	font-family: "DejaVu Sans";
-	selection-background-color: #424e72;
+	selection-background-color: #6b7aaa;
 }
 
 
@@ -441,10 +441,6 @@ QTabWidget::pane {
      border: 1px solid #525252;
 }
 
-QTabWidget::tab-bar {
-    left: 5px;
- /* move to the right by 5px */}
-
 QTabBar::tab {
     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #525252, stop: 0.4 #383838, stop: 0.5 #383838, stop: 1.0 #424242);
     border: 1px solid #242424;
@@ -487,6 +483,47 @@ QTabBar::close-button:disabled {
 QTabBar::close-button:hover {
      image: url(:/icons/close_orange.svg.png)
 }
+
+QTabBar QToolButton {
+background: #3c3c3c;
+padding-top: 11px;
+padding-bottom: 11px;
+
+}
+
+QTabBar:tear {
+	padding-top: 40px;
+	width: 0px;
+}
+
+
+QTabBar QToolButton::right-arrow { /* the arrow mark in the tool buttons */
+/*     border-right: 1px solid #202020;*/
+     image: url(:/icons/arrow_right.svg.png);
+}
+
+QTabBar QToolButton::left-arrow {
+/*     border-left: 1px solid #202020;*/
+     image: url(:/icons/arrow_left.svg.png);
+}
+
+QTabBar QToolButton::right-arrow:hover { /* the arrow mark in the tool buttons */
+     image: url(:/icons/arrow_right_orange.svg.png);
+}
+
+QTabBar QToolButton::left-arrow:hover {
+     image: url(:/icons/arrow_left_orange.svg.png);
+}
+
+QTabBar QToolButton::right-arrow:disabled { /* the arrow mark in the tool buttons */
+     image: url(:/icons/arrow_right_disabled.svg.png);
+}
+
+QTabBar QToolButton::left-arrow:disabled {
+     image: url(:/icons/arrow_left_disabled.svg.png);
+}
+
+
 
 
 QSpinBox {

@@ -116,6 +116,7 @@ GUI_Playlist::GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* info_dialo
 	initPlaylistView(listView);
 
 	_playlist_views.append(listView);
+	_total_time.append(0);
 	_cur_playlist_view = listView;
 	_cur_playlist_idx = 0;
 
@@ -150,7 +151,7 @@ void GUI_Playlist::language_changed() {
 
 
 void GUI_Playlist::initGUI() {
-	lab_totalTime->setAccessibleDescription("");
+
 }
 
 void GUI_Playlist::initPlaylistView(const PlaylistView* pl_view){
@@ -205,7 +206,9 @@ void GUI_Playlist::fill_playlist(const MetaDataList& v_metadata, int cur_play_id
 		dur_ms += md.length_ms;
     }
 
+	_total_time[pl_idx] = dur_ms;
 	set_total_time_label(dur_ms);
+
 	set_playlist_type(playlist_type);
 }
 
@@ -213,8 +216,9 @@ void GUI_Playlist::fill_playlist(const MetaDataList& v_metadata, int cur_play_id
 void GUI_Playlist::clear_playlist_slot() {
 
 	lab_totalTime->setText(tr("Playlist empty"));
-	lab_totalTime->setAccessibleDescription("");
+
 	_cur_playlist_view->clear();
+	_total_time[_cur_playlist_idx] = 0;
 
 	_playlist->psl_clear_playlist();
 }
@@ -348,9 +352,9 @@ void GUI_Playlist::set_total_time_label(qint64 dur_ms) {
 	if(dur_ms > 0){
 		time_str = Helper::cvt_ms_to_string(dur_ms, true, false);
 	}
-
 	else{
-		time_str = lab_totalTime->accessibleDescription();
+		lab_totalTime->setText(tr("Playlist empty"));
+		return;
 	}
 
 	if(_playlist_type == PlaylistTypeStream) {
@@ -372,7 +376,6 @@ void GUI_Playlist::set_total_time_label(qint64 dur_ms) {
 
 	if( !time_str.isEmpty() ){
 		playlist_string += " - " + time_str;
-		lab_totalTime->setAccessibleDescription(time_str);
 	}
 
 	lab_totalTime->setText(playlist_string);
@@ -452,15 +455,14 @@ void GUI_Playlist::playlist_added(int idx, QString name){
 	}
 
 	_playlist_views.append(pl_view);
-	tw_playlists->addTab(pl_view, new_name);
+	_total_time.append(0);
 
+	tw_playlists->addTab(pl_view, new_name);
 	tw_playlists->show_tabbar();
 	tw_playlists->setCurrentIndex(idx);
 }
 
 void GUI_Playlist::playlist_idx_changed(int idx){
-
-	if(idx == _cur_playlist_idx) return;
 
 	if(idx >= tw_playlists->count() || idx < 0) return;
 
@@ -468,6 +470,7 @@ void GUI_Playlist::playlist_idx_changed(int idx){
 	_cur_playlist_view = _playlist_views[idx];
 
 	tw_playlists->setCurrentIndex(idx);
+	set_total_time_label( _total_time[idx] );
 }
 
 
@@ -475,10 +478,13 @@ void GUI_Playlist::playlist_closed(int idx){
 
 	if(idx >= tw_playlists->count() || idx < 0) return;
 
-	tw_playlists->removeTab(idx);
 	_playlist_views.removeAt(idx);
 
-	if(_playlist_views.count() == 1){
+	_total_time.remove(idx);
+	tw_playlists->removeTab(idx);
+
+
+	if(tw_playlists->count() == 1){
 		tw_playlists->hide_tabbar();
 	}
 }

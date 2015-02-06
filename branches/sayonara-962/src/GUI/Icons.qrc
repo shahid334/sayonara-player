@@ -65,5 +65,7 @@
         <file>icons/close_orange.svg.png</file>
         <file>icons/close.svg.png</file>
         <file>icons/play_orange.svg.png</file>
+        <file>icons/arrow_left_disabled.svg.png</file>
+        <file>icons/arrow_right_disabled.svg.png</file>
     </qresource>
 </RCC>

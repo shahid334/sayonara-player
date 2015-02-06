@@ -117,6 +117,7 @@ private:
 	PlaylistHandler*	_playlist;
 
 	int _tab_idx;
+	QVector<qint64>		_total_time;
 
 
 
