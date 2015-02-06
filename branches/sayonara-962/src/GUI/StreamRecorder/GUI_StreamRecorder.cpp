@@ -109,9 +109,9 @@ void GUI_StreamRecorder::sl_ok() {
     }
 
 	_settings->set(Set::Engine_SR_Path, str);
+	_settings->set(Set::Engine_SR_Active, cb_activate->isChecked());
     _path = str;
 
-	CDatabaseConnector::getInstance()->store_settings();
     hide();
     close();
 }

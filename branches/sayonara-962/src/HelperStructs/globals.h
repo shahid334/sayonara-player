@@ -25,6 +25,12 @@
 #include <QDebug>
 #include <QTime>
 
+#define SINGLETON(class_name) protected: \
+						class_name (); \
+						public: \
+						static class_name *getInstance() { static class_name instance; return &instance; } \
+						virtual ~class_name ();
+
 #define DARK_BLUE(x) QString("<font color=#0000FF>") + x + QString("</font>")
 #define LIGHT_BLUE(x) QString("<font color=#8888FF>") + x + QString("</font>")
 
@@ -70,22 +76,6 @@
 #define GOOGLE_FT_PNG QString("png")
 #define GOOGLE_FT_GIF QString("gif")
 #define GOOGLE_FT_BMP QString("bmp")
-
-
-#define SINGLETON(x) private: \
-						x(); \
-						x(const x&); \
-						x& operator=(const x&); \
-						\
-					public:\
-							virtual ~x(); \
-						\
-					static x* getInstance(){ \
-							static x inst; \
-							return &inst; \
-					}\
-
-
 
 enum PlaylistType{
     PlaylistTypeStd=0,

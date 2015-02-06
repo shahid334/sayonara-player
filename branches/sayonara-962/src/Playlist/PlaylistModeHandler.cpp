@@ -18,8 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
 #include "playlist/PlaylistModeHandler.h"
 #include "HelperStructs/CSettingsStorage.h"
 
@@ -27,10 +25,6 @@
 								x ; \
 								if( tmp_mode_ == _mode ) return
 
-PlaylistModeHandler* PlaylistModeHandler::getInstance(){
-	static PlaylistModeHandler pmh;
-	return &pmh;
-}
 
 PlaylistModeHandler::PlaylistModeHandler(QObject* parent) : 
 	QObject(parent) {

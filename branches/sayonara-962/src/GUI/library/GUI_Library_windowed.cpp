@@ -35,17 +35,10 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 	GUI_AbstractLibrary(library, info_dialog, parent),
 	Ui::Library_windowed()
 {
-	setupUi(this);
+	setup_parent(this);
 
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
-	set_combo_lib_chooser(combo_lib_chooser);
-	set_lv_elems(lv_artist, lv_album, tb_title);
-	set_search_elems(combo_searchfilter, btn_clear, le_search);
-	set_btn_info(btn_info);
-	set_btn_refresh(btn_refresh);
-	set_lab_status(lab_status);
-	init_finished();
 
     setAcceptDrops(true);
 

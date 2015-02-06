@@ -27,12 +27,6 @@
 #include <QPluginLoader>
 
 
-NotificationPluginLoader* NotificationPluginLoader::getInstance() {
-    static NotificationPluginLoader instance;
-    return &instance;
-}
-
-
 NotificationPluginLoader::NotificationPluginLoader() :
 	SayonaraClass()
 {
@@ -70,6 +64,10 @@ NotificationPluginLoader::NotificationPluginLoader() :
     }
 
 	REGISTER_LISTENER(Set::Notification_Name, _sl_cur_plugin_changed);
+}
+
+NotificationPluginLoader::~NotificationPluginLoader(){
+
 }
 
 

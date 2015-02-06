@@ -62,7 +62,7 @@ signals:
 
 	void sig_playlist_created(const MetaDataList&, int cur_track_idx, PlaylistType type, int playlist_idx=-1);
 	void sig_auto_next_file(const MetaData&);
-	void sig_cur_track_changed(const MetaData&, bool start_play);
+	void sig_cur_track_changed(const MetaData&, bool start_play=true);
 	void sig_cur_track_idx_changed(int track_idx, int playlist_idx);
 
 	void sig_no_track_to_play();
@@ -146,8 +146,8 @@ private:
 	Playlist* get_active();
 	Playlist* get_current();
 
-	void emit_playlist_created();
-	void emit_cur_track_changed();
+	void emit_playlist_created(Playlist* pl=NULL);
+	void emit_cur_track_changed(Playlist* pl=NULL);
 };
 
 #endif /* PLAYLISTHANDLER_H_ */

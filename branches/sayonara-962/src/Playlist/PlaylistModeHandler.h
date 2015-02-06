@@ -23,16 +23,16 @@
 #ifndef _PLAYLIST_MODES_
 #define _PLAYLIST_MODES_
 
-#include <QObject>
+#include "HelperStructs/globals.h"
 #include "HelperStructs/PlaylistMode.h"
 
 class PlaylistModeHandler : public QObject {
 
 	Q_OBJECT
+	SINGLETON(PlaylistModeHandler)
 
 	private:
 
-		PlaylistModeHandler(QObject* parent=0);
 		PlaylistMode _mode;
 		PlaylistMode _old_mode;
 
@@ -66,12 +66,6 @@ class PlaylistModeHandler : public QObject {
 		void toggle_gapless( bool );
 
 		void set_mode(const PlaylistMode& mode);
-
-	public:
-		
-		~PlaylistModeHandler();
-
-		static	PlaylistModeHandler* getInstance();
 };
 
 

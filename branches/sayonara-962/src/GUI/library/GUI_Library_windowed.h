@@ -41,6 +41,8 @@ using namespace Sort;
 
 class GUI_Library_windowed: public GUI_AbstractLibrary, private Ui::Library_windowed {
 
+	friend class GUI_AbstractLibrary;
+
 Q_OBJECT
 
 public:
@@ -67,6 +69,8 @@ protected slots:
 
 private:
 	GUI_Library_Info_Box* _lib_info_dialog;
+
+
 
 };
 

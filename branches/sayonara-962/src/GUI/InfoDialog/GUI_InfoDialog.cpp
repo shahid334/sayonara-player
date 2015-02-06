@@ -43,8 +43,6 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
 	setupUi(this);
 
-    _db = CDatabaseConnector::getInstance();
-
     _class_name = QString("InfoDialog");
 
     _initialized = false;

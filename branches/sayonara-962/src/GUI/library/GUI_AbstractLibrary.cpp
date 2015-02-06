@@ -7,6 +7,11 @@ GUI_AbstractLibrary::GUI_AbstractLibrary(AbstractLibrary* library, GUI_InfoDialo
 	_library = library;
 	_info_dialog = info_dialog;
 
+	_combo_libchooser = 0;
+	_lv_album = 0;
+	_lv_artist = 0;
+	_lv_tracks = 0;
+
 	_shown_cols_albums = _settings->get(Set::Lib_ColsAlbum);
 	_shown_cols_artist = _settings->get(Set::Lib_ColsArtist);
 	_shown_cols_tracks = _settings->get(Set::Lib_ColsTitle);
@@ -78,6 +83,12 @@ void GUI_AbstractLibrary::init_finished(){
 	REGISTER_LISTENER(Set::Lib_OnlyTracks, _sl_show_only_tracks_changed);
 }
 
+void GUI_AbstractLibrary::set_lib_chooser(const QStringList& lst){
+	if(!_combo_libchooser) return;
+
+	_combo_libchooser->addItems(lst);
+}
+
 void GUI_AbstractLibrary::language_changed(){
 
 	_header_names_tracks.clear();
@@ -130,13 +141,13 @@ void GUI_AbstractLibrary::init_headers(){
 	_artist_model = new LibraryItemModelArtists(_artist_columns);
 	_track_model = new LibraryItemModelTracks(_track_columns);
 
-
 	_album_delegate = new LibraryItemDelegateAlbums(_lv_album, true);
 	_artist_delegate = new LibraryItemDelegateArtists(_lv_artist);
 	_track_delegate = new LibraryItemDelegateTracks(_lv_tracks, true);
 
 	connect(_album_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(album_rating_changed(int)));
 	connect(_track_delegate, SIGNAL(sig_rating_changed(int)), this, SLOT(title_rating_changed(int)));
+
 
 	_lv_tracks->setModel(_track_model);
 	_lv_tracks->setAbstractModel((AbstractSearchTableModel*) _track_model);
@@ -146,7 +157,6 @@ void GUI_AbstractLibrary::init_headers(){
 	_lv_tracks->set_table_headers(_track_columns, so.so_tracks);
 	_lv_tracks->rc_header_menu_init(_shown_cols_tracks);
 
-
 	_lv_artist->setModel(_artist_model);
 	_lv_artist->setAbstractModel((AbstractSearchTableModel*) _artist_model);
 	_lv_artist->setItemDelegate(_artist_delegate);
@@ -155,7 +165,6 @@ void GUI_AbstractLibrary::init_headers(){
 	_lv_artist->set_table_headers(_artist_columns, so.so_artists);
 	_lv_artist->rc_header_menu_init(_shown_cols_artist);
 
-
 	_lv_album->setModel(_album_model);
 	_lv_album->setAbstractModel((AbstractSearchTableModel*) _album_model);
 	_lv_album->setItemDelegate(_album_delegate);
@@ -163,7 +172,6 @@ void GUI_AbstractLibrary::init_headers(){
 	_lv_album->setDragEnabled(true);
 	_lv_album->set_table_headers(_album_columns, so.so_albums);
 	_lv_album->rc_header_menu_init(_shown_cols_albums);
-
 
 }
 
@@ -243,16 +251,15 @@ void GUI_AbstractLibrary::refresh(){
 void GUI_AbstractLibrary::lib_fill_tracks(const MetaDataList& v_metadata) {
 
 	_lv_tracks->fill<MetaDataList, MetaData>(v_metadata);
-
 	_lv_artist->set_mimedata(v_metadata, true, true);
 	_lv_album->set_mimedata(v_metadata, true);
+
 }
 
 
 void GUI_AbstractLibrary::lib_fill_albums(const AlbumList& albums) {
 
-   _lv_album->fill<AlbumList, Album>(albums);
-
+	_lv_album->fill<AlbumList, Album>(albums);
 }
 
 
@@ -265,7 +272,6 @@ void GUI_AbstractLibrary::lib_fill_artists(const ArtistList& artists) {
 void GUI_AbstractLibrary::track_info_available(const MetaDataList& v_md) {
 
 	_lv_tracks->set_mimedata(v_md, false);
-
 }
 
 
@@ -328,11 +334,6 @@ void GUI_AbstractLibrary::track_dbl_clicked(const QModelIndex& idx) {
 }
 
 
-
-
-
-
-
 void  GUI_AbstractLibrary::columns_album_changed(QList<int>& list) {
 	_shown_cols_albums = list;
 	_settings->set(Set::Lib_ColsAlbum, list);
@@ -380,19 +381,16 @@ void GUI_AbstractLibrary::sortorder_title_changed(Sort::SortOrder s) {
 
 
 void GUI_AbstractLibrary::edit_album() {
-	if(!_info_dialog) return;
 
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_AbstractLibrary::edit_artist() {
-	if(!_info_dialog) return;
 
 	_info_dialog->show(TAB_EDIT);
 }
 
 void GUI_AbstractLibrary::edit_tracks() {
-	if(!_info_dialog) return;
 
 	_info_dialog->show(TAB_EDIT);
 }
@@ -405,13 +403,11 @@ void GUI_AbstractLibrary::info_album() {
 }
 
 void GUI_AbstractLibrary::info_artist() {
-	if(!_info_dialog) return;
 
 	_info_dialog->show(TAB_INFO);
 }
 
 void GUI_AbstractLibrary::info_tracks() {
-	if(!_info_dialog) return;
 
 	_info_dialog->show(TAB_INFO);
 }
@@ -478,6 +474,7 @@ void GUI_AbstractLibrary::append() {
 
 
 void GUI_AbstractLibrary::append_tracks() {
+
 	QModelIndexList idx_list = _lv_tracks->selectionModel()->selectedRows(0);
 	QList<int> lst;
 	for(const QModelIndex&  idx : idx_list) {
@@ -495,6 +492,7 @@ void GUI_AbstractLibrary::play_next() {
 
 
 void GUI_AbstractLibrary::play_next_tracks() {
+
 	QModelIndexList idx_list = _lv_tracks->selectionModel()->selectedRows(0);
 	QList<int> lst;
 	for(const QModelIndex& idx : idx_list) {
@@ -508,12 +506,15 @@ void GUI_AbstractLibrary::play_next_tracks() {
 void GUI_AbstractLibrary::lib_reload(const QString& str) {
 
 	QString final_str = QString("<b>") + str + "</b>";
+
 	_lab_status->setText(final_str);
 }
 
 
 void GUI_AbstractLibrary::reload_finished() {
+
 	_lab_status->setText("");
+
 	refresh();
 }
 
@@ -540,6 +541,7 @@ void GUI_AbstractLibrary::_sl_show_only_tracks_changed() {
 
 	_lv_artist->setVisible(!b);
 	_lv_album->setVisible(!b);
+
 }
 
 

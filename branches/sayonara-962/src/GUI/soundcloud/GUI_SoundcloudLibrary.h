@@ -30,6 +30,7 @@
 
 class GUI_SoundCloudLibrary : public GUI_AbstractLibrary, protected Ui::GUI_SoundcloudLibrary
 {
+	friend class GUI_AbstractLibrary;
 	Q_OBJECT
 
 public:

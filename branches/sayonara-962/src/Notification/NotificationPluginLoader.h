@@ -34,9 +34,10 @@ class NotificationPluginLoader : public QObject, protected SayonaraClass {
 
     Q_OBJECT
 
+	SINGLETON(NotificationPluginLoader)
+
 public:
 	
-    static NotificationPluginLoader* getInstance();
     NotificationPluginLoader(NotificationPluginLoader&);
     QList<Notification*> get_plugins();
     Notification* get_cur_plugin();
@@ -47,9 +48,6 @@ private slots:
 	void _sl_cur_plugin_changed();
 
 private:
-
-    NotificationPluginLoader();
-
     QString app_dir;
 
     QList<Notification*> _notification_plugins;

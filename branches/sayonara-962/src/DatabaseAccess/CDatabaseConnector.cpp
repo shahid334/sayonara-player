@@ -29,11 +29,6 @@
 #include <QSqlError>
 
 
-CDatabaseConnector* CDatabaseConnector::getInstance() {
-	static CDatabaseConnector instance;
-	return &instance;
-}
-
 CDatabaseConnector::CDatabaseConnector() :
 	QObject()
 {

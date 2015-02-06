@@ -207,7 +207,9 @@ void GUI_Stream::delete_clicked() {
 	msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);
+
 	int ret = msgBox.exec();
+
 	if(ret == QMessageBox::Yes) {
 		if(db->deleteStream(_cur_station_name)) {
 			qDebug() << _cur_station_name << "successfully deleted";

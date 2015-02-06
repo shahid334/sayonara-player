@@ -31,8 +31,6 @@
 #include "GUI/engine/StyleTypes.h"
 #include "Library/Sorting.h"
 
-
-#include <QObject>
 #include <QSqlDatabase>
 #include <QMap>
 #include <QList>
@@ -69,9 +67,9 @@ class CDatabaseConnector : public QObject
 {
     Q_OBJECT
 
+	SINGLETON(CDatabaseConnector)
+
 public:
-    static CDatabaseConnector* getInstance();
-    virtual ~CDatabaseConnector();
     void closeDatabase();
 
 
@@ -228,15 +226,6 @@ public slots:
 
     bool load_settings();
     bool store_settings();
-
-
-
-
-protected:
-    CDatabaseConnector();
-
-
-private slots:
 
 
 

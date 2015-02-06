@@ -127,6 +127,33 @@ void SoundcloudLibrary::get_all_tracks_by_searchstring(Filter filter, MetaDataLi
 	_scd->get_all_tracks(v_md, so);
 }
 
+void SoundcloudLibrary::get_album_by_id(int album_id, Album& album){
+
+	AlbumList albums;
+	_scd->get_all_albums(albums, LibSortOrder());
+
+	for(const Album& a : albums){
+		if(a.id == album_id){
+			album = a;
+			return;
+		}
+	}
+}
+
+void SoundcloudLibrary::get_artist_by_id(int artist_id, Artist& artist){
+
+	ArtistList artists;
+	_scd->get_all_artists(artists, LibSortOrder());
+
+	for(const Artist& a : artists){
+		if(a.id == artist_id){
+			artist = a;
+			return;
+		}
+	}
+}
+
+
 void SoundcloudLibrary::update_track(const MetaData& md){
 
 }

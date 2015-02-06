@@ -22,10 +22,8 @@
 #ifndef SOUNDCLOUD_H
 #define SOUNDCLOUD_H
 
+#include "Soundcloud/SoundcloudData.h"
 #include "Library/AbstractLibrary.h"
-#include "SoundcloudData.h"
-#include "HelperStructs/MetaData.h"
-
 
 
 class SoundcloudLibrary : public AbstractLibrary
@@ -57,6 +55,8 @@ protected:
 	virtual void		update_album(const Album& album);
 
 	virtual void		delete_tracks(const MetaDataList& v_md, TrackDeletionMode mode);
+	virtual void		get_album_by_id(int album_id, Album& album);
+	virtual void		get_artist_by_id(int artist_id, Artist& artist);
 
 public slots:
 	virtual void		psl_reload_library(bool);

@@ -45,7 +45,7 @@ CoverLookup::CoverLookup(QObject* parent, int n_covers) :
     _n_covers(n_covers),
 	_cft(NULL)
 {
-    _db = CDatabaseConnector::getInstance();
+
 }
 
 CoverLookup::~CoverLookup() {

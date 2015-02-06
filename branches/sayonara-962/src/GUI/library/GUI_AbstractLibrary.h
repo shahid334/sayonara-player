@@ -33,8 +33,14 @@ class GUI_AbstractLibrary : public SayonaraWidget
 	Q_OBJECT
 
 public:
-	explicit GUI_AbstractLibrary(AbstractLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent);
+
+	explicit GUI_AbstractLibrary(AbstractLibrary* library,
+								 GUI_InfoDialog* info_dialog,
+								 QWidget *parent=0);
+
 	virtual ~GUI_AbstractLibrary();
+
+	void set_lib_chooser(const QStringList& lst);
 
 
 protected:
@@ -73,20 +79,22 @@ protected:
 	virtual AbstractLibrary::TrackDeletionMode show_delete_dialog(int n_tracks)=0;
 
 	virtual void resizeEvent(QResizeEvent* e);
-	void init_finished();
+
 
 private:
-	QComboBox*		_lib_chooser;
-	LibraryView*	_lv_artist;
+	QComboBox*			_combo_libchooser;
+	LibraryView*		_lv_artist;
 	LibraryViewAlbum*	_lv_album;
-	LibraryView*	_lv_tracks;
+	LibraryView*		_lv_tracks;
 
-	QComboBox*		_combo_search;
-	QPushButton*	_btn_clear;
-	QLineEdit*		_le_search;
-	QPushButton*	_btn_info;
-	QPushButton*	_btn_refresh;
-	QLabel*			_lab_status;
+	QComboBox*			_combo_search;
+	QPushButton*		_btn_clear;
+	QLineEdit*			_le_search;
+	QPushButton*		_btn_info;
+	QPushButton*		_btn_refresh;
+	QLabel*				_lab_status;
+
+	void init_finished();
 
 
 
@@ -157,33 +165,24 @@ public slots:
 	virtual void id3_tags_changed();
 
 protected:
+	template<typename T>
+	void setup_parent(T* subclass){
 
-	void set_combo_lib_chooser(QComboBox* lib_chooser){
-		_lib_chooser = lib_chooser;
-	}
+		subclass->setupUi(subclass);
 
-	void set_lv_elems(LibraryView* lv_artist, LibraryViewAlbum* lv_album, LibraryView* lv_tracks){
-		_lv_artist = lv_artist;
-		_lv_album = lv_album;
-		_lv_tracks = lv_tracks;
-	}
+		_combo_libchooser = subclass->combo_lib_chooser;
+		_lv_artist = subclass->lv_artist;
+		_lv_album = subclass->lv_album;
+		_lv_tracks = subclass->tb_title;
+		_btn_clear = subclass->btn_clear;
+		_le_search = subclass->le_search;
+		_combo_search = subclass->combo_searchfilter;
+		_btn_info = subclass->btn_info;
+		_btn_refresh = subclass->btn_refresh;
+		_lab_status = subclass->lab_status;
 
-	void set_search_elems(QComboBox* combo_search, QPushButton* btn_clear, QLineEdit* le_search){
-		_btn_clear = btn_clear;
-		_le_search = le_search;
-		_combo_search = combo_search;
-	}
+		init_finished();
 
-	void set_btn_info(QPushButton* btn_info){
-		_btn_info = btn_info;
-	}
-
-	void set_btn_refresh(QPushButton* btn_refresh){
-		_btn_refresh = btn_refresh;
-	}
-
-	void set_lab_status(QLabel* lab_status){
-		_lab_status = lab_status;
 	}
 };
 

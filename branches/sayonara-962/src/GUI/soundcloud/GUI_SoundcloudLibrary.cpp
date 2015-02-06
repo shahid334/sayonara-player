@@ -26,15 +26,7 @@ GUI_SoundCloudLibrary::GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_Inf
 	GUI_AbstractLibrary(library, info_dialog, parent),
 	Ui::GUI_SoundcloudLibrary()
 {
-	setupUi(this);
-
-	set_combo_lib_chooser(combo_lib_chooser);
-	set_lv_elems(lv_artist, lv_album, tb_title);
-	set_search_elems(combo_searchfilter, btn_clear, le_search);
-	set_btn_info(btn_info);
-	set_btn_refresh(btn_refresh);
-	set_lab_status(lab_status);
-	init_finished();
+	setup_parent(this);
 
 	setAcceptDrops(false);
 

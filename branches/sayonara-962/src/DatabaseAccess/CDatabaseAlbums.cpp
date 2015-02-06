@@ -34,6 +34,7 @@
 
 using namespace Sort;
 
+
 #define ALBUM_ARTIST_TRACK_SELECTOR QString("SELECT "  \
 			"albums.albumID AS albumID, "  \
 			"albums.name AS albumName, "  \

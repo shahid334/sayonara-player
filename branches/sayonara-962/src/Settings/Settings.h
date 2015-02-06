@@ -38,8 +38,9 @@
 class Settings : public QObject
 {
 
+	SINGLETON(Settings)
+
 private:
-	Settings();
 
 	QString _db_file;
 	QString _version;
@@ -48,9 +49,6 @@ private:
 
 
 public:
-
-	static Settings* getInstance();
-	virtual ~Settings ();
 
 	/* get all settings (used by database) */
 	AbstrSetting**	get_settings();

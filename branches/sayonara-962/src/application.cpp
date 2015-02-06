@@ -118,10 +118,10 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
 	library             = new LocalLibrary();
-	sc_library			= new SoundcloudLibrary();
-
 	ui_library          = new GUI_Library_windowed(library, ui_info_dialog, player->getParentOfLibrary());
-	ui_sc_library		= new GUI_SoundCloudLibrary(sc_library, ui_info_dialog, player->getParentOfLibrary());
+
+/*	sc_library			= new SoundcloudLibrary();
+	ui_sc_library		= new GUI_SoundCloudLibrary(sc_library, ui_info_dialog, player->getParentOfLibrary());*/
 
 	ui_playlist         = new GUI_Playlist(playlist_handler, ui_info_dialog, player->getParentOfPlaylist());
 
@@ -196,8 +196,8 @@ void Application::init(int n_files, QTranslator *translator) {
 	/* Into Player */
 	player->setPlaylist(ui_playlist);
 
-	player->setLibrary(ui_sc_library);
-	//player->setLibrary(ui_library);
+	//player->setLibrary(ui_sc_library);
+	player->setLibrary(ui_library);
 
 	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
@@ -211,13 +211,16 @@ void Application::init(int n_files, QTranslator *translator) {
 	}
 
 	ui_library->resize(player->getParentOfLibrary()->size());
-	ui_sc_library->resize(player->getParentOfLibrary()->size());
+	//ui_sc_library->resize(player->getParentOfLibrary()->size());
 	ui_playlist->resize(player->getParentOfPlaylist()->size());
 
 	qDebug() << "Set up library...";
 	/* Into Library */
 	library->load();
-	sc_library->load();
+	QStringList libraries;
+	libraries << tr("Music Library");
+	ui_library->set_lib_chooser(libraries);
+	//sc_library->load();
 
 	qDebug() << "Set up Last.fm...";
 
@@ -293,7 +296,6 @@ void Application::init_connections() {
 	CONNECT (player, sig_forward(),							playlist_handler,	psl_forward());
 	CONNECT (player, sig_backward(),						playlist_handler,	psl_backward());
 	CONNECT (player, sig_setup_LastFM(),					ui_lastfm,			show_win()); // IND
-	CONNECT (player, sig_show_stream_rec(),					ui_stream_rec,		show_win()); // IND
 	CONNECT (player, sig_show_socket(),						ui_socket_setup,	show_win()); // IND
 
 	CONNECT (playlist_handler, sig_no_track_to_play(),					player,			stopped());

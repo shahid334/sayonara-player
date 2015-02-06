@@ -12,6 +12,7 @@ QWidget {
 	border: none;
 	color: #D8D8D8;
 	font-family: "DejaVu Sans";
+	selection-background-color: #424e72;
 }
 
 

@@ -96,7 +96,7 @@ private:
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
 	LyricLookupThread*		_lyric_thread;
-	CDatabaseConnector* 	_db;
+
 	QString 				_class_name;
 	int						_lyric_server;
 	bool					_lyrics_visible;

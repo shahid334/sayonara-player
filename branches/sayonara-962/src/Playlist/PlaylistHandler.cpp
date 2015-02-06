@@ -56,21 +56,30 @@ PlaylistHandler::~PlaylistHandler() {
 
 }
 
-void PlaylistHandler::emit_playlist_created(){
+void PlaylistHandler::emit_playlist_created(Playlist* pl){
+
+	if(!pl){
+		pl = get_current();
+	}
+
 	emit sig_playlist_created(
-				get_current()->get_playlist(),
-				get_current()->get_cur_track_idx(),
-				get_current()->get_type(),
-				get_current()->get_idx()
+				pl->get_playlist(),
+				pl->get_cur_track_idx(),
+				pl->get_type(),
+				pl->get_idx()
 	);
 }
 
-void PlaylistHandler::emit_cur_track_changed(){
+void PlaylistHandler::emit_cur_track_changed(Playlist* pl){
 
 	bool success;
 	MetaData md;
 
-	success = get_active()->get_cur_track(md);
+	if(!pl){
+		pl = get_active();
+	}
+
+	success = pl->get_cur_track(md);
 
 	if(!success){
 		emit sig_no_track_to_play();
@@ -78,11 +87,11 @@ void PlaylistHandler::emit_cur_track_changed(){
 	}
 
 
-	_settings->set(Set::PL_LastTrack, get_active()->get_cur_track_idx());
+	_settings->set(Set::PL_LastTrack, pl->get_cur_track_idx());
 
 	_state = PlaylistPlay;
-	emit sig_cur_track_idx_changed(get_active()->get_cur_track_idx(),
-								   get_active()->get_idx());
+	emit sig_cur_track_idx_changed( pl->get_cur_track_idx(),
+									pl->get_idx() );
 
 	emit sig_cur_track_changed(md, true);
 }
