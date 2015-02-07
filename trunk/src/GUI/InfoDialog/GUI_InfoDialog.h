@@ -32,7 +32,7 @@
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/ui_GUI_InfoDialog.h"
 
 #include <QMetaType>
@@ -60,9 +60,6 @@ signals:
 	void sig_cover_changed(const CoverLocation&);
 
 public slots:
-
-    void changeSkin(bool dark);
-    void language_changed();
 	void set_metadata(const MetaDataList& vd);
 	void show(int tab);
 
@@ -79,6 +76,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent *e);
+	void language_changed();
 
 public:
     GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit);
@@ -94,11 +92,11 @@ private:
 
 	GUI_TagEdit*			ui_tag_edit;
 
-	GUI_Alternate_Covers*	_alternate_covers;
+	GUI_AlternativeCovers*	_AlternativeCovers;
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
 	LyricLookupThread*		_lyric_thread;
-	CDatabaseConnector* 	_db;
+
 	QString 				_class_name;
 	int						_lyric_server;
 	bool					_lyrics_visible;

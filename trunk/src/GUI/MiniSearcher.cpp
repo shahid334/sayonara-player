@@ -43,7 +43,14 @@ void MiniSearcherLineEdit::keyPressEvent(QKeyEvent *e) {
 		case Qt::Key_Escape:
 		case Qt::Key_Enter:
 		case Qt::Key_Return:
-			e->setAccepted(false);
+			if(this->isVisible()){
+				e->setAccepted(false);
+			}
+
+			else {
+				e->setAccepted(true);
+			}
+
 			return;
 
 		default:
@@ -131,7 +138,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b) {
 
 	if(left) {
 		_left_button = new QPushButton(this);
-		_left_button->setIcon(Helper::getIcon("bwd.png"));
+		_left_button->setIcon(Helper::getIcon("bwd"));
 		_left_button->setVisible(true);
 		_left_button->setFlat(true);
 		_left_button->setFocusPolicy(Qt::ClickFocus);
@@ -142,7 +149,7 @@ void MiniSearcher::initLayout(MiniSearcherButtons b) {
 
 	if(right) {
 		_right_button = new QPushButton(this);
-        _right_button->setIcon(Helper::getIcon("fwd.png"));
+		_right_button->setIcon(Helper::getIcon("fwd"));
 		_right_button->setVisible(true);
 		_right_button->setFlat(true);
 		_right_button->setFocusPolicy(Qt::ClickFocus);
@@ -270,7 +277,7 @@ void MiniSearcher::setExtraTriggers(QMap<QChar, QString> triggers) {
 	_triggers = triggers;
 	QString tooltip;
 
-	foreach(QChar key, triggers.keys()) {
+	for(const QChar& key : triggers.keys()) {
 		tooltip += QString(key) + " = " + triggers.value(key) + "\n";
 	}
 

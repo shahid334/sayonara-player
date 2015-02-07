@@ -64,6 +64,10 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 	}
 }
 
+void GUI_AudioConverter::language_changed(){
+	retranslateUi(this);
+}
+
 
 void GUI_AudioConverter::fill_cbr() {
 

@@ -34,6 +34,7 @@
 
 using namespace Sort;
 
+
 #define ALBUM_ARTIST_TRACK_SELECTOR QString("SELECT "  \
 			"albums.albumID AS albumID, "  \
 			"albums.name AS albumName, "  \
@@ -47,17 +48,26 @@ using namespace Sort;
 
 bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
-	if(result.size()){
-		result.clear();
-	}
+	result.clear();
 
 	if (!q.exec()) {
 		show_error("Could not get all albums from database", q);
 		return false;
 	}
 
-	Album album;
-	while (q.next()) {
+	if(!q.last()){
+		return true;
+	}
+
+	int i=0;
+	int n_rows = q.at() + 1;
+
+	result.resize(n_rows);
+
+	for(bool is_element=q.first(); is_element; is_element = q.next(), i++){
+
+		Album& album = result[i];
+
 		album.id = q.value(0).toInt();
 		album.name = q.value(1).toString().trimmed();
 		album.length_sec = q.value(2).toInt();
@@ -71,7 +81,7 @@ bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 		QStringList discnumberList = q.value(7).toString().split(',');
 		album.discnumbers.clear();
 
-		foreach(QString disc, discnumberList) {
+		for(const QString& disc : discnumberList) {
 			int d = disc.toInt();
 			if(album.discnumbers.contains(d)) continue;
 
@@ -84,9 +94,9 @@ bool CDatabaseConnector::db_fetch_albums(QSqlQuery& q, AlbumList& result) {
 
 		album.n_discs = album.discnumbers.size();
 		album.is_sampler = (artistList.size() > 1);
+	};
 
-		result.push_back(album);
-	}
+
 
 	return true;
 }

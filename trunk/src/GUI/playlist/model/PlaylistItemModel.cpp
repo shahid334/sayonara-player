@@ -177,8 +177,9 @@ bool PlaylistItemModel::is_selected(int row) const {
 void PlaylistItemModel::get_metadata(const QList<int>& rows, MetaDataList& v_md) {
 
     v_md.clear();
-    foreach(int row, rows)
-        v_md.push_back( this->_v_meta_data[row] );
+	for(const int& row : rows){
+		v_md.push_back( _v_meta_data[row] );
+	}
 }
 
 #define ALBUM_SEARCH '%'

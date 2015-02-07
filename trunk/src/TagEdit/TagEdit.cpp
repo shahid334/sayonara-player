@@ -162,7 +162,7 @@ void TagEdit::write_tracks_to_db(){
 
 			if( success ){
 
-				if(v_md[i].id >= 0) {
+				if( _v_md[i].id >= 0 ){
 					success = _db->updateTrack(_v_md[i]);
 				}
 

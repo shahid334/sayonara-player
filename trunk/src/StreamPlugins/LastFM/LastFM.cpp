@@ -39,15 +39,7 @@
 #include <string>
 #include <time.h>
 
-
 using namespace std;
-
-LastFM* LastFM::getInstance() {
-	static LastFM instance;
-	return &instance;
-
-}
-
 
 LastFM::LastFM() :
 	QObject(),

@@ -34,10 +34,8 @@ public:
     GUI_Startup_Dialog(QWidget *parent = 0);
     virtual ~GUI_Startup_Dialog();
     
-signals:
-    
-public slots:
-    void language_changed();
+protected:
+	void language_changed();
 
 private slots:
     void cb_toggled(bool);

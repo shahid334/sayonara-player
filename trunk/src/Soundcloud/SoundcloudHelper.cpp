@@ -1,4 +1,4 @@
-/* SoundcloudHelper.cpp */
+/* SoundcloudParser.cpp */
 
 /* Copyright (C) 2011-2014  Lucio Carreras
  *
@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#define sc_debug qDebug() << "Soundcloud: "
 
 #include "Soundcloud/SoundcloudHelper.h"
 #include "HelperStructs/MetaData.h"
@@ -27,7 +27,265 @@
 #define CLIENT_ID QString("ab7d663fc58d0257c64443358292f6ce")
 #define CLIENT_ID_STR QString("client_id=") + CLIENT_ID
 
-QString	SoundcloudHelper::create_dl_get_artist(QString name){
+
+
+void remove_first_and_last(QString& str, QChar first, QChar last){
+	if(str.startsWith(first)){
+		str.remove(0, 1);
+	}
+
+	if(str.endsWith(last)){
+		str.remove(str.size() - 1, 1);
+	}
+}
+
+
+
+SoundcloudParser::SoundcloudParser(){
+
+}
+
+
+SoundcloudParser::~SoundcloudParser(){
+
+}
+
+
+ArtistList SoundcloudParser::search_artist(const QString& name){
+
+	ArtistList artists;
+
+	if(_artist_name_mapping.contains(name)){
+
+		int idx = _artist_idx_mapping[ _artist_name_mapping[name] ];
+
+		artists << _artist_cache[idx];
+
+		return artists;
+	}
+
+	QString content;
+	QString url = create_dl_get_artist(name);
+	Helper::read_http_into_str(url, &content);
+
+	JsonItem item = parse("Artists", content);
+
+	for(const JsonItem& artist_item : item.values){
+		Artist artist;
+		extract_artist(artist_item, artist);
+
+		if(_artist_available.contains(artist.id)){
+			continue;
+		}
+
+		int idx = _artist_cache.size();
+		_artist_cache << artist;
+		_artist_available.insert(artist.id, true);
+		_artist_idx_mapping.insert(artist.id, idx);
+		_artist_name_mapping.insert(artist.name, idx);
+
+		create_artist_cache(artist.id);
+
+		artists << artist;
+	}
+
+
+	sc_debug << "Found " << artists.size() << " artists";
+	sc_debug << "Found " << _album_cache.size() << " albums";
+	sc_debug << "Found " << _track_cache.size() << " tracks";
+
+	return artists;
+}
+
+bool SoundcloudParser::create_artist_cache(const QString &name){
+
+	ArtistID id;
+	if(!_artist_name_mapping.contains(name)){
+		ArtistList artists = search_artist(name);
+		if(artists.size() == 0){
+			return false;
+		}
+	}
+
+	id = _artist_name_mapping[name];
+
+	return create_artist_cache(id);
+}
+
+
+bool SoundcloudParser::create_artist_cache(ArtistID artist_id){
+
+	QString content;
+	QString url = create_dl_get_playlists(artist_id);
+	Helper::read_http_into_str(url, &content);
+
+	JsonItem item = parse("Playlists", content);
+
+	// iterate over playlists
+	QList<AlbumCacheIdx> artist_album_idxs = _artist_album_mapping[artist_id];
+	QList<TrackCacheIdx> artist_track_idxs = _artist_track_mapping[artist_id];
+
+
+	for(const JsonItem& album_item : item.values){
+
+		Album album;
+		MetaDataList v_md_tmp;
+
+
+		bool success = extract_playlist(album_item, album, v_md_tmp);
+
+		if(!success){
+			continue;
+		}
+
+		if(!_album_available.contains(album.id)){
+
+			int idx = _album_cache.size();
+			_album_cache << album;
+			_album_available.insert(album.id, true);
+			_album_idx_mapping.insert(album.id, idx);
+
+			artist_album_idxs << idx;
+		}
+
+		else{
+			qDebug() << "Check album " << album.name << "... Old";
+		}
+
+
+		QList<TrackCacheIdx> album_track_idxs = _album_track_mapping[album.id];
+
+		for(const MetaData& md : v_md_tmp){
+
+			qDebug() << "Found track " << md.title;
+			if(_track_available.contains(md.id)){
+				qDebug() << "Found track " << md.title << " ... old";
+				continue;
+			}
+
+			qDebug() << "Found track " << md.title << " ... new";
+
+			int idx = _track_cache.size();
+			_track_cache << md;
+			_track_available.insert(md.id, true);
+			_track_idx_mapping.insert(md.id, idx);
+
+			artist_track_idxs << idx;
+			album_track_idxs << idx;
+		}
+
+		_album_track_mapping[album.id] = album_track_idxs;
+	}
+
+	_artist_album_mapping[artist_id] = artist_album_idxs;
+	_artist_track_mapping[artist_id] = artist_track_idxs;
+
+	return true;
+}
+
+ArtistList SoundcloudParser::get_all_artists(){
+	return _artist_cache;
+}
+
+MetaDataList SoundcloudParser::get_all_tracks(){
+	return _track_cache;
+}
+
+AlbumList SoundcloudParser::get_all_albums(){
+
+	return _album_cache;
+}
+
+MetaDataList SoundcloudParser::get_all_tracks_by_artist(const QString& name){
+
+	if(!_artist_name_mapping.contains(name)){
+		create_artist_cache(name);
+		if(!_artist_name_mapping.contains(name)){
+			MetaDataList v_md;
+			return v_md;
+		}
+	}
+
+	int id = _artist_name_mapping[name];
+	return get_all_tracks_by_artist(id);
+
+}
+
+AlbumList SoundcloudParser::get_all_albums_by_artist(const QString& name){
+
+	AlbumList albums;
+	if(!_artist_name_mapping.contains(name)){
+		create_artist_cache(name);
+		if(!_artist_name_mapping.contains(name)){
+			return albums;
+		}
+	}
+
+	int id = _artist_name_mapping[name];
+	return get_all_albums_by_artist(id);
+
+}
+
+MetaDataList SoundcloudParser::get_all_tracks_by_artist(ArtistID id){
+
+	MetaDataList v_md;
+	if(!_artist_track_mapping.contains(id)){
+		create_artist_cache(id);
+		if(!_artist_track_mapping.contains(id)){
+			return v_md;
+		}
+	}
+
+	QList<int> idxs = _artist_track_mapping[id];
+
+	for(int idx : idxs){
+		v_md << _track_cache[idx];
+	}
+
+	return v_md;
+}
+
+AlbumList SoundcloudParser::get_all_albums_by_artist(ArtistID id){
+	AlbumList albums;
+	if(!_artist_album_mapping.contains(id)){
+		create_artist_cache(id);
+		if(!_artist_album_mapping.contains(id)){
+			return albums;
+		}
+	}
+	QList<int> idxs = _artist_album_mapping[id];
+
+	for(int idx : idxs){
+		albums << _album_cache[idx];
+	}
+
+	return albums;
+}
+
+MetaDataList SoundcloudParser::get_all_tracks_by_album(AlbumID album_id){
+
+	MetaDataList v_md;
+
+	if(!_album_track_mapping.contains(album_id)){
+		return v_md;
+	}
+
+	QList<int> idxs = _album_track_mapping[album_id];
+
+	for(int idx : idxs){
+		v_md << _track_cache[idx];
+	}
+
+	return v_md;
+}
+
+
+
+
+
+/*** PRIVATE ***/
+
+QString	SoundcloudParser::create_dl_get_artist(QString name){
 	QString ret = "";
 	if(name.size() == 0) return ret;
 
@@ -36,13 +294,13 @@ QString	SoundcloudHelper::create_dl_get_artist(QString name){
 			"&q=" +
 			name;
 
-	qDebug() << "Get Artist info from " << ret;
+	sc_debug << "Get Artist info from " << ret;
 
 	return ret;
 }
 
 
-QString	SoundcloudHelper::create_dl_get_playlists(qint64 artist_id){
+QString	SoundcloudParser::create_dl_get_playlists(qint64 artist_id){
 	QString ret = "";
 
 	ret = QString("http://api.soundcloud.com/users/") +
@@ -50,13 +308,13 @@ QString	SoundcloudHelper::create_dl_get_playlists(qint64 artist_id){
 			"playlists?" +
 			CLIENT_ID_STR;
 
-	qDebug() << "Get Artist playlists from " << ret;
+	sc_debug << "Get Artist playlists from " << ret;
 
 	return ret;
 }
 
 
-QString	SoundcloudHelper::create_dl_get_tracks(qint64 artist_id){
+QString	SoundcloudParser::create_dl_get_tracks(qint64 artist_id){
 	QString ret = "";
 
 	ret = QString("http://api.soundcloud.com/users/") +
@@ -64,317 +322,373 @@ QString	SoundcloudHelper::create_dl_get_tracks(qint64 artist_id){
 			"tracks?" +
 			CLIENT_ID_STR;
 
-	qDebug() << "Get Artist playlists from " << ret;
+	sc_debug << "Get Artist playlists from " << ret;
 
 	return ret;
 }
 
 
-bool SoundcloudHelper::parse_artist_xml(const QString& content, Artist& artist){
+int	SoundcloudParser::find_value_end(const QString& content, int start_at){
 
-	artist.id = -1;
+	int quote_counter = 0;
 
-	QDomDocument doc("Artist");
-	doc.setContent(content);
-
-	QDomElement docElement = doc.documentElement();
-	QDomNode entry = docElement.firstChildElement("user");
-
-	if(!entry.hasChildNodes()) return false;
-
-	for(int entry_child=0; entry_child<entry.childNodes().size(); entry_child++)
-	{
-		QDomNode content = entry.childNodes().at(entry_child);
-		QString nodename = content.nodeName().toLower();
-		QDomElement e = content.toElement();
-
-		if(!nodename.compare("id", Qt::CaseInsensitive)){
-			artist.id = e.text().toInt();
+	for(int i=start_at; i<content.size(); i++){
+		QChar c = content[i];
+		if(c == '\"'){
+			quote_counter ++;
 		}
 
-		else if(!nodename.compare("username")){
-			artist.name = e.text();
+		if(quote_counter % 2 == 0 && c == ','){
+			return i;
 		}
 
-		else if(!nodename.compare("track-count")){
-			artist.num_songs = e.text().toInt();
-		}
-
-		else if(!nodename.compare("playlist-count")){
-			artist.num_albums = e.text().toInt();
+		if(c == '}'){
+			return i;
 		}
 	}
 
-	return (artist.id > 0);
+	return content.size() - 1;
 }
 
-bool SoundcloudHelper::parse_playlist_xml(
-		const QString& content,
-		MetaDataList& v_md,
-		ArtistList& v_artists,
-		AlbumList& v_albums){
 
-	v_md.clear();
-	v_artists.clear();
-	v_albums.clear();
+int	SoundcloudParser::find_block_end(const QString& content, int start_at){
 
-	if(content.size() == 0) return false;
+	int quote_counter = 0;
 
-	QDomDocument doc("PlaylistChooser");
-	doc.setContent(content);
+	for(int i=start_at; i<content.size(); i++){
+		QChar c = content[i];
+		if(c == '{'){
+			quote_counter ++;
+		}
 
-	QDomElement docElement = doc.documentElement();
-	QDomNode entry = docElement.firstChildElement("playlist");
+		else if(c == '}'){
+			quote_counter --;
+		}
 
-	if(!entry.hasChildNodes()) return false;
+		if(quote_counter == 0){
+			if(c == ',' || c == ']'){
+				return i;
+			}
+		}
+	}
+
+	return content.size() - 1;
+}
+
+int	SoundcloudParser::find_array_end(const QString& content, int start_at){
+	int quote_counter = 0;
+
+	for(int i=start_at; i<content.size(); i++){
+		QChar c = content[i];
+		if(c == '['){
+			quote_counter ++;
+		}
+
+		else if(c == ']'){
+			quote_counter --;
+		}
+
+		if(quote_counter == 0 && c == ','){
+			return i;
+		}
+	}
+
+	return content.size() - 1;
+}
 
 
 
-	do{
+JsonItem SoundcloudParser::parse(QString key, const QString& content){
 
-		Album album;
+	JsonItem ret;
+	if(content.startsWith('[')){
+		ret = parse_array(key, content);
+	}
 
-		QDomNodeList child_nodes = entry.childNodes();
-		int n_child_nodes = child_nodes.size();
+	else if(content.startsWith('{')){
+		ret = parse_block(key, content);
+	}
 
-		for(int entry_child=0; entry_child<n_child_nodes; entry_child++)
-		{
-			QDomNode content = child_nodes.at(entry_child);
-			QString nodename = content.nodeName().toLower();
-			QDomElement e = content.toElement();
+	else {
+		ret = parse_standard(key, content);
+	}
 
-			if(!nodename.compare("id", Qt::CaseInsensitive)){
+	return ret;
+}
 
-				album.id = e.text().toInt();
+JsonItem SoundcloudParser::parse_array(QString key, QString content){
 
-				// maybe album was not set yet
-                for(int i=0; i<v_md.size(); i++){
-					v_md[i].album_id = album.id;
+	JsonItem ret;
+	ret.key = key;
+	ret.type = JsonItem::TypeArray;
+
+	remove_first_and_last(content, '[', ']');
+
+	int i=0;
+	forever{
+
+		int end = find_block_end(content);
+		if(end == 0) break;
+
+		QString str = content.left(end + 1);
+		if(str.size() == 0) break;
+
+		ret.values << parse_block(QString::number(i), str);
+
+		int letters_left = content.size() - str.size();
+		if(letters_left <= 0) break;
+
+		content = content.right(letters_left);
+		i++;
+	}
+
+	return ret;
+}
+
+JsonItem SoundcloudParser::parse_block(QString key, QString content){
+
+	JsonItem ret;
+	ret.key = key;
+	ret.type = JsonItem::TypeBlock;
+
+	remove_first_and_last(content, '{', '}');
+
+	forever{
+
+		// find key
+
+		QString item_key;
+
+		int i;
+		int quote_counter = 0;
+		for(i=0; i<content.size(); i++){
+
+			QChar c = content[i];
+
+			if(c == '\"'){
+				quote_counter ++;
+			}
+
+			else if(quote_counter == 1){
+				item_key.push_back(c);
+			}
+
+			if(quote_counter == 2){
+				if(c == ':'){
+					i++;
+					break;
 				}
 			}
-
-			else if(!nodename.compare("title", Qt::CaseInsensitive)){
-				album.name = e.text();
-
-				// maybe album was not set yet
-                for(int i=0; i<v_md.size(); i++){
-					v_md[i].album_id = album.id;
-				}
-			}
-
-			else if(!nodename.compare("track-count", Qt::CaseInsensitive)){
-				album.num_songs = e.text().toInt();
-			}
-
-			else if(!nodename.compare("duration", Qt::CaseInsensitive)){
-				album.length_sec = e.text().toInt() / 1000;
-			}
-
-
-			else if(!nodename.compare("tracks", Qt::CaseInsensitive)){
-
-				qDebug() << "Found tracks for playlist " << album.name << ", " << album.id;
-				QDomNode first_track = e.firstChildElement("track");
-
-				while(true){
-
-					bool success;
-					MetaData md;
-					Artist artist;
-					artist.id = -1;
-
-					if(first_track.isNull()) break;
-
-					if(!first_track.hasChildNodes()){
-						first_track = first_track.nextSibling();
-						continue;
-					}
-
-					md.album_id = album.id;
-					md.album = album.name;
-
-					success = parse_track_dom(first_track, md, artist);
-
-					if(success){
-						v_md.push_back(md);
-
-						if(album.artists.size() == 0 && artist.id > 0){
-							album.artists << artist.name;
-
-						}
-
-						if(v_artists.size() == 0 && artist.id > 0){
-							v_artists.push_back(artist);
-						}
-					}
-
-					first_track = first_track.nextSibling();
-				}
-			}
 		}
 
-		if(album.id > 0) {
-			v_albums.push_back(album);
+		if(content.size() == 0){
+			break;
 		}
 
-		entry = entry.nextSibling();
+		if(quote_counter == 0){
+			break;
+		}
 
-	} while( !entry.isNull() );
+		if(i >= content.size() - 2){
+			break;
+		}
 
-	if(v_artists.size() > 0){
-		v_artists[0].num_albums = v_albums.size();
-		v_artists[0].num_songs = v_md.size();
+		QChar c = content[i];
+		QString substr;
+		content = content.right(content.size() - i);
+
+		int new_start;
+
+		if(c == '['){
+			new_start = find_array_end(content);
+			substr = content.left(new_start);
+			ret.values << parse_array(item_key, substr);
+		}
+
+		else if(c == '{'){
+			new_start = find_block_end(content);
+			substr = content.left(new_start);
+			ret.values << parse_block(item_key, substr);
+		}
+
+		else{
+			new_start = find_value_end(content);
+			substr = content.left(new_start);
+			ret.values << parse_standard(item_key, substr);
+		}
+
+		content = content.right(content.size() - new_start);
+		if(content.size() == 0) break;
 	}
 
-	return (v_md.size() > 0);
+	return ret;
 }
 
+JsonItem SoundcloudParser::parse_standard(QString key, QString content){
 
-bool SoundcloudHelper::parse_tracks_xml(const QString& content,
-					 MetaDataList& v_md){
+	JsonItem ret;
+	ret.key = key;
 
-	bool success;
-	QDomDocument doc("Tracks");
-	doc.setContent(content);
+	int end = find_value_end(content);
+	content = content.left(end + 1);
 
-	QDomElement docElement = doc.documentElement();
-	QDomNode entry = docElement.firstChildElement("track");
-
-	v_md.clear();
-
-	if( !entry.hasChildNodes() ) return 0;
-
-	do {
-
-		MetaData md;
-		Artist artist;
-
-		success = parse_track_dom(entry, md, artist);
-		if(success){
-			v_md.push_back(md);
-		}
-
-		entry = entry.nextSibling();
-
-	} while( !entry.isNull() );
-
-	return (v_md.size() > 0);
-
-}
-
-
-
-
-bool SoundcloudHelper::parse_artist_dom(QDomNode node, Artist& artist){
-
-	artist.id = -1;
-
-	if(!node.hasChildNodes()) return false;
-
-	QDomNodeList child_nodes = node.childNodes();
-	int n_child_nodes = child_nodes.size();
-
-	for(int entry_child=0; entry_child<n_child_nodes; entry_child++)
-	{
-		QDomNode content = child_nodes.at(entry_child);
-		QString nodename = content.nodeName().toLower();
-		QDomElement e = content.toElement();
-
-		if(!nodename.compare("id", Qt::CaseInsensitive)){
-			artist.id = e.text().toInt();
-		}
-
-		else if(!nodename.compare("username", Qt::CaseInsensitive)){
-			artist.name = e.text();
-		}
-
-		else if(!nodename.compare("track-count", Qt::CaseInsensitive)){
-			artist.num_songs = e.text().toInt();
-		}
-
-		else if(!nodename.compare("playlist-count", Qt::CaseInsensitive)){
-			artist.num_albums = e.text().toInt();
-		}
+	if(content.startsWith('\"')){
+		remove_first_and_last(content, '\"', '\"');
+		ret.type = JsonItem::TypeString;
 	}
 
-	return (artist.id > 0);
-}
-
-
-
-bool SoundcloudHelper::parse_track_dom(QDomNode node, MetaData& md, Artist& artist){
-
-	if(!node.hasChildNodes()) return false;
-
-	bool streamable = false;
-	QDomNodeList child_nodes = node.childNodes();
-	int n_child_nodes = child_nodes.size();
-
-	md.id = -1;
-	md.filepath = "";
-
-
-	for(int entry_child=0; entry_child<n_child_nodes; entry_child++)
-	{
-		QDomNode content = child_nodes.at(entry_child);
-		QString nodename = content.nodeName().toLower();
-		QDomElement e = content.toElement();
-
-		md.artist_id = -1;
-
-		if(!nodename.compare("id", Qt::CaseInsensitive)){
-			md.id = e.text().toInt();
-		}
-
-		else if(!nodename.compare("title", Qt::CaseInsensitive)){
-			md.title = e.text();
-		}
-
-		else if(!nodename.compare("user-id", Qt::CaseInsensitive)){
-			md.artist_id = e.text().toLong();
-		}
-
-		else if(!nodename.compare("duration", Qt::CaseInsensitive)){
-			md.length_ms = e.text().toLong();
-		}
-
-		else if(!nodename.compare("genre", Qt::CaseInsensitive)){
-			md.genres << e.text();
-		}
-
-		else if(!nodename.compare("release-year", Qt::CaseInsensitive)){
-			QString t = e.text();
-			if(t.size() > 0) md.year = t.toInt();
-		}
-
-		else if(!nodename.compare("stream-url", Qt::CaseInsensitive)){
-			md.filepath = e.text();
-		}
-
-		else if(!nodename.compare("description", Qt::CaseInsensitive)){
-			md.comment = e.text();
-		}
-
-		else if(!nodename.compare("streamable", Qt::CaseInsensitive)){
-			streamable = (e.text().compare("true", Qt::CaseInsensitive) == 0);
-		}
-
-		else if(!nodename.compare("user", Qt::CaseInsensitive) && md.artist_id < 0){
-
-			bool success;
-			success = parse_artist_dom(content, artist);
-			if(!success) continue;
-
-			md.artist = artist.name;
-			md.artist_id = artist.id;
-		}
+	else{
+		ret.type = JsonItem::TypeNumber;
 	}
 
-	if(!streamable) return false;
-	if(md.id < 0) return false;
-	if(md.filepath.size() == 0) return false;
+	ret.pure_value = content;
 
-	md.radio_mode = RADIO_SOUNDCLOUD;
+	return ret;
+}
+
+bool SoundcloudParser::extract_track(const JsonItem& item, MetaData& md){
+
+	if(item.type != JsonItem::TypeBlock){
+		return false;
+	}
+
+	for(const JsonItem& track_info : item.values){
+
+		if(track_info.key == "duration"){
+			md.length_ms = (quint32) track_info.pure_value.toLong();
+		}
+
+		else if(track_info.key == "id"){
+			md.id = track_info.pure_value.toInt();
+		}
+
+		else if(track_info.key == "user_id"){
+			md.artist_id = track_info.pure_value.toInt();
+		}
+
+		else if(track_info.key == "title"){
+			md.title = track_info.pure_value;
+		}
+
+		else if(track_info.key == "release_year"){
+			md.year = track_info.pure_value.toInt();
+		}
+
+		else if(track_info.key == "stream_url"){
+			md.set_filepath(track_info.pure_value + "?" + CLIENT_ID_STR);
+		}
+
+		else if(track_info.key == "username"){
+			md.artist = track_info.pure_value;
+		}
+
+		else if(track_info.key == "genre"){
+			md.genres << track_info.pure_value;
+		}
+
+		else if(track_info.key == "artwork_url"){
+			md.cover_download_url = track_info.pure_value;
+		}
+	}
 
 	return true;
 }
+
+bool SoundcloudParser::extract_artist(const JsonItem& item, Artist& artist){
+
+	if(item.type != JsonItem::TypeBlock){
+		return false;
+	}
+
+	for(const JsonItem& artist_info : item.values){
+		if(artist_info.key == "id"){
+			artist.id = artist_info.pure_value.toInt();
+		}
+
+		else if(artist_info.key == "username"){
+			artist.name = artist_info.pure_value;
+		}
+
+		else if(artist_info.key == "avatar_url"){
+			artist.cover_download_url = artist_info.pure_value;
+		}
+	}
+
+	return true;
+}
+
+bool SoundcloudParser::extract_playlist(const JsonItem& item, Album& album, MetaDataList& v_md){
+
+	if(item.type != JsonItem::TypeBlock){
+		return false;
+	}
+
+	Artist artist;
+
+	// iterate over elements in album
+	for(const JsonItem& album_info : item.values){
+
+		if(album_info.key == "uri"){
+
+
+			QString uri = album_info.pure_value;
+
+			int idx = uri.lastIndexOf("/") + 1;
+
+			if(idx == 0) continue;
+
+			album.id = uri.right(uri.size() - idx).trimmed().toInt();
+
+		}
+		else if(album_info.key == "title"){
+			album.name = album_info.pure_value;
+		}
+
+		else if(album_info.key == "track_count"){
+			album.num_songs = album_info.pure_value.toInt();
+		}
+
+		else if(album_info.key == "duration"){
+			album.length_sec = (quint32) (album_info.pure_value.toLong() / 1000);
+		}
+
+		else if(album_info.key == "artwork_url"){
+			album.cover_download_url = album_info.pure_value;
+		}
+
+		else if(album_info.key == "tracks"){
+			int i=1;
+			for(const JsonItem& track : album_info.values){
+
+				MetaData md;
+				md.track_num = i++;
+				bool success = extract_track(track, md);
+
+				if(success){
+					v_md << md;
+				}
+			}
+		}
+
+		else if(album_info.key == "user"){
+			extract_artist(album_info, artist);
+		}
+	}
+
+	for(MetaData& md : v_md){
+
+		md.album_id = album.id;
+		md.album = album.name;
+		md.artist = artist.name;
+		md.artist_id = artist.id;
+
+		if(!album.cover_download_url.isEmpty()){
+			md.cover_download_url = album.cover_download_url;
+		}
+	}
+
+	album.artists << artist.name;
+
+	return true;
+}
+

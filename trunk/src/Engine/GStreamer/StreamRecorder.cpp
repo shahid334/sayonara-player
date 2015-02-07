@@ -102,8 +102,9 @@ StreamRecorder::StreamRecorder(QObject *parent) :
 
     // delete old stream ripper files
     QStringList lst = d.entryList(Helper::get_soundfile_extensions());
-    foreach(QString str, lst) {
-        qDebug() << "Remove " << d.absolutePath() + QDir::separator() + str;
+	for( const QString& str : lst) {
+
+		qDebug() << "Remove " << d.absolutePath() + QDir::separator() + str;
         QFile f(d.absolutePath() + QDir::separator() + str);
         f.remove();
     }
@@ -235,16 +236,19 @@ QString StreamRecorder::changeTrack(const MetaData& md, int trys) {
 
     // stream file to _sr_recording_dst
     QString title = _md.title;
-    QString org_src_filename = _md.filepath;
+	QString org_src_filename = _md.filepath();
 
     title.replace(" ", "_");
     title.replace("/", "_");
     title.replace("\\", "_");
 
-    if(Helper::is_soundfile(md.filepath))
-        _sr_recording_dst = Helper::getSayonaraPath() + title + ".mp3";
-    else
-        _sr_recording_dst = Helper::getSayonaraPath() + title + "_" + QDateTime::currentDateTime().toString("yyMMdd_hhmm") + ".mp3";
+	if(Helper::is_soundfile( _md.filepath() )){
+		_sr_recording_dst = Helper::getSayonaraPath() + title + ".mp3";
+	}
+
+	else{
+		_sr_recording_dst = Helper::getSayonaraPath() + title + "_" + QDateTime::currentDateTime().toString("yyMMdd_hhmm") + ".mp3";
+	}
 
     // record from org_src_filename to new_src_filename
 
@@ -337,7 +341,7 @@ bool StreamRecorder::save_file() {
         return false;
     }
 
-    _md.filepath = dst_name;
+	_md.set_filepath(dst_name);
     ID3::setMetaDataOfFile(_md);
 
     _session_collector.push_back(_md);

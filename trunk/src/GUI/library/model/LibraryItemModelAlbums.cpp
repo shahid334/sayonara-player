@@ -44,7 +44,7 @@ LibraryItemModelAlbums::~LibraryItemModelAlbums() {
 
 int LibraryItemModelAlbums::rowCount(const QModelIndex & parent) const
 {	Q_UNUSED(parent);
-	return _album_list.size();
+	return _albums.size();
 }
 
 
@@ -55,14 +55,11 @@ bool LibraryItemModelAlbums::removeRows(int position, int rows, const QModelInde
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 _album_list.removeAt(position);
-	 }
+	_albums.remove(position, rows);
 
 	 endRemoveRows();
 	 return true;
 }
-
 
 
 bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelIndex & index)
@@ -73,15 +70,29 @@ bool LibraryItemModelAlbums::insertRows(int position, int rows, const QModelInde
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-
-		 Album album;
-		 _album_list.insert(position, album);
-	 }
+	 Album album;
+	 _albums.insert(position, rows, album);
 
 	 endInsertRows();
 	 return true;
 }
+
+
+void LibraryItemModelAlbums::remove_all_and_insert(int n){
+
+	beginRemoveRows(QModelIndex(), 0, _albums.size() - 1);
+		 _albums.clear();
+	endRemoveRows();
+
+	if(n <= 0) return;
+
+	beginInsertRows(QModelIndex(), 0, n - 1);
+		_albums.resize(n);
+	 endInsertRows();
+}
+
+
+
 
 
 
@@ -90,7 +101,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 	if (!index.isValid())
 		 return QVariant();
 
-	if (index.row() >= _album_list.size())
+	if (index.row() >= _albums.size())
 		 return QVariant();
 
 	// qDebug() << "Edit Role= " << Qt::EditRole << " my role = " << role;
@@ -99,7 +110,7 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 		int row = index.row();
 		int col = index.column();
 
-		const Album& album = _album_list.at(row);
+		const Album& album = _albums[row];
 
 		int idx_col = calc_shown_col(col);
 
@@ -125,8 +136,6 @@ QVariant LibraryItemModelAlbums::data(const QModelIndex & index, int role) const
 	 return QVariant();
 }
 
-
-
 bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant & value, int role)
 {
 
@@ -137,19 +146,19 @@ bool LibraryItemModelAlbums::setData(const QModelIndex & index, const QVariant &
 		 int col_idx = calc_shown_col(col);
 
 		 if(col_idx == COL_ALBUM_RATING) {
-			 _album_list[row].rating = value.toInt();
+			 _albums[row].rating = value.toInt();
          }
 
          else {
 
              Album album;
-			 if(!Album::fromVariant(value, album)) return false;
+			 if( !Album::fromVariant(value, album) ) return false;
 
 			 if(album.is_lib_selected && !_selected_rows.contains(row)){
 				_selected_rows << row;
              }
 
-			 _album_list[row] = album;
+			 _albums[row] = album;
 
               emit dataChanged(index, index);
 		 }
@@ -186,7 +195,7 @@ void LibraryItemModelAlbums::sort(int column, Qt::SortOrder order) {
 }
 
 QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr) {
-    if(_album_list.isEmpty()) {
+	if(_albums.isEmpty()) {
         return this->index(-1, -1);
     }
 
@@ -201,15 +210,16 @@ QModelIndex LibraryItemModelAlbums::getFirstRowIndexOf(QString substr) {
 
 QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 
-	int len = _album_list.size();
+	int len = _albums.size();
     if(len == 0)  {
         return this->index(-1, -1);
     }
 
+
 	for(int i=0; i<len; i++) {
         int row_idx = (i + row) % len;
 
-		QString album_name = _album_list[row_idx].name;
+		QString album_name = _albums[row_idx].name;
 		if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			album_name = album_name.right(album_name.size() -4);
@@ -225,7 +235,7 @@ QModelIndex LibraryItemModelAlbums::getNextRowIndexOf(QString substr, int row) {
 
 QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
 
-	int len = _album_list.size();
+	int len = _albums.size();
     if(len < row){
         row = len - 1;
     }
@@ -239,7 +249,7 @@ QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
         }
 
         row_idx = (row-i) % len;
-        album_name = _album_list[row_idx].name;
+		album_name = _albums[row_idx].name;
 
         if( album_name.startsWith("the ", Qt::CaseInsensitive) ||
 			album_name.startsWith("die ", Qt::CaseInsensitive) ) {
@@ -253,20 +263,4 @@ QModelIndex LibraryItemModelAlbums::getPrevRowIndexOf(QString substr, int row) {
 	}
 
 	return this->index(-1, -1);
-}
-
-
-QList<quint8> LibraryItemModelAlbums::get_discnumbers(const QModelIndex& idx) {
-
-    if(!idx.isValid()) {
-        return QList<quint8>();
-    }
-
-    if( idx.row() < 0 ||
-        idx.row() >= _album_list.size())
-    {
-        return QList<quint8>();
-    }
-
-    return _album_list[idx.row()].discnumbers;
 }

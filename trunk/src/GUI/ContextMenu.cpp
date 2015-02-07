@@ -29,12 +29,12 @@ ContextMenu::ContextMenu(QWidget* parent) :
     QMenu(parent)
 {
 
-	_info_action = new QAction(Helper::getIcon("info.png"), tr("Info"), this);
-    _edit_action = new QAction(Helper::getIcon("edit.png"), tr("Edit"), this);
-    _remove_action = new QAction(Helper::getIcon("delete.png"), tr("Remove"), this);
-    _delete_action = new QAction(Helper::getIcon("delete.png"), tr("Delete"), this);
-    _play_next_action = new QAction(Helper::getIcon("fwd_orange.png"), tr("Play next"), this);
-    _append_action = new QAction(Helper::getIcon("append.png"), tr("Append"), this);
+	_info_action = new QAction(Helper::getIcon("info"), tr("Info"), this);
+	_edit_action = new QAction(Helper::getIcon("edit"), tr("Edit"), this);
+	_remove_action = new QAction(Helper::getIcon("delete"), tr("Remove"), this);
+	_delete_action = new QAction(Helper::getIcon("delete"), tr("Delete"), this);
+	_play_next_action = new QAction(Helper::getIcon("fwd_orange"), tr("Play next"), this);
+	_append_action = new QAction(Helper::getIcon("append"), tr("Append"), this);
 }
 
 
@@ -71,8 +71,9 @@ void ContextMenu::clear_actions() {
 
     QList<QAction*> actions = this->actions();
     if(actions.size() > 0) {
-        foreach(QAction* a, actions)
-            this->removeAction(a);
+		foreach(QAction* a, actions){
+			this->removeAction(a);
+		}
     }
 
     disconnect(_info_action, SIGNAL(triggered()), this, SLOT(info_clicked()));

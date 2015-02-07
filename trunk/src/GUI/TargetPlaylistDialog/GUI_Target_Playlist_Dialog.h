@@ -37,9 +37,12 @@ signals:
     void sig_target_chosen(const QString&, bool);
     
 private slots:
-	void language_changed();
     void search_button_clicked();
     void ok_button_clicked();
+
+protected:
+	void language_changed();
+
 
     
 };

@@ -119,7 +119,7 @@
     </widget>
    </item>
    <item row="2" column="2" colspan="2">
-    <widget class="LibraryView" name="lv_album">
+    <widget class="LibraryViewAlbum" name="lv_album">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>1</horstretch>
@@ -269,7 +269,7 @@
    <item row="3" column="0" colspan="2">
     <widget class="QFrame" name="frame">
      <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
+      <enum>Qt::ClickFocus</enum>
      </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
@@ -299,7 +299,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="toolTip">
         <string>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</string>
@@ -367,7 +367,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="toolTip">
         <string>Show all interprets, albums, tracks</string>
@@ -376,7 +376,7 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/broom.png</normaloff>:/icons/broom.png</iconset>
        </property>
       </widget>
@@ -395,12 +395,15 @@
          <height>25</height>
         </size>
        </property>
+       <property name="focusPolicy">
+        <enum>Qt::ClickFocus</enum>
+       </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>:/icons/undo.png</normaloff>:/icons/undo.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/undo.svg.png</normaloff>:/icons/undo.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -415,32 +418,12 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="lab_music_library">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
-       </property>
-       <property name="text">
-        <string>Music Library  </string>
-       </property>
-      </widget>
+      <widget class="QComboBox" name="combo_lib_chooser"/>
      </item>
      <item>
       <widget class="QLabel" name="lab_status">
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="text">
         <string/>
@@ -462,7 +445,7 @@
         </size>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
+        <enum>Qt::ClickFocus</enum>
        </property>
        <property name="toolTip">
         <string>Information</string>
@@ -471,8 +454,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>:/icons/info.png</normaloff>:/icons/info.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/info.svg.png</normaloff>:/icons/info.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -495,7 +478,19 @@
    <extends>QTableView</extends>
    <header>GUI/library/view/LibraryView.h</header>
   </customwidget>
+  <customwidget>
+   <class>LibraryViewAlbum</class>
+   <extends>QTableView</extends>
+   <header>GUI/library/view/LibraryViewAlbum.h</header>
+  </customwidget>
  </customwidgets>
- <resources/>
+ <tabstops>
+  <tabstop>lv_artist</tabstop>
+  <tabstop>lv_album</tabstop>
+  <tabstop>tb_title</tabstop>
+ </tabstops>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

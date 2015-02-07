@@ -268,7 +268,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>:/icons/import.png</pixmap>
+          <pixmap>:/icons/import.svg.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>

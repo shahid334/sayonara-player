@@ -22,12 +22,12 @@
 #ifndef LIBRARY_RATING_DELEGATE_H
 #define LIBRARY_RATING_DELEGATE_H
 
-#include <QStyledItemDelegate>
+#include <QItemDelegate>
 #include "GUI/library/view/LibraryView.h"
 #include "GUI/library/model/LibraryItemModel.h"
 
 
-class LibraryRatingDelegate : public QStyledItemDelegate
+class LibraryRatingDelegate : public QItemDelegate
 {
     Q_OBJECT
 
@@ -35,7 +35,7 @@ signals:
     void sig_rating_changed(int);
 
 public:
-	LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent, bool enabled);
+	LibraryRatingDelegate(LibraryView* parent, bool enabled);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void setEditorData(QWidget *editor, const QModelIndex &index) const;

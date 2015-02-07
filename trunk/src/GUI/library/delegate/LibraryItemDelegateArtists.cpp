@@ -35,14 +35,13 @@
 #include <QPainter>
 
 
-LibraryItemDelegateArtists::LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent) {
-    this->_parent = parent;
+LibraryItemDelegateArtists::LibraryItemDelegateArtists(QTableView* parent) : QItemDelegate(parent){
 
-    _icon_single_album = Helper::getPixmap("play_small.png");
-    _icon_multi_album = Helper::getPixmap("fwd_orange.png");
+	_parent = parent;
 
-    _model = model;
-    _selected_background = QColor(66,78,114);
+	_icon_single_album = Helper::getPixmap("play_orange", QSize(16, 16), false);
+	_icon_multi_album = Helper::getPixmap("fwd_orange", QSize(16, 16), false);
+
 }
 
 LibraryItemDelegateArtists::~LibraryItemDelegateArtists() {
@@ -56,36 +55,34 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
     if(!index.isValid()) return;
 
     QRect rect(option.rect);
+	painter->save();
 
-    painter->save();
+	LibraryItemModelArtists* model = (LibraryItemModelArtists*) index.model();
 
     int col = index.column();
-    int idx_col = _model->calc_shown_col(col);
-
-    if(_model->is_selected(index.row())) {
-        painter->fillRect(rect, _selected_background);
-    }
-
+	int idx_col = model->calc_shown_col(col);
 
     if(idx_col == COL_ARTIST_N_ALBUMS) {
         int col_width = _parent->columnWidth(0)-4;
         int row_height = _parent->rowHeight(0)-4;
         rect.translate(2, 2);
 
-        int num_albums = _model->data(index, Qt::WhatsThisRole).toInt();
+		int num_albums = index.data(Qt::WhatsThisRole).toInt();
 
-        if(num_albums <= 1)
-            painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
+		if(num_albums <= 1){
+			painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_single_album);
+		}
 
-        else
+		else{
             painter->drawPixmap(rect.x(), rect.y(), col_width, row_height, _icon_multi_album);
+		}
 
     }
 
     else if(idx_col == COL_ARTIST_NAME) {
 
         rect.translate(2, 0);
-        QString name = _model->data(index, Qt::WhatsThisRole).toString();
+		QString name = index.data(Qt::WhatsThisRole).toString();
 
         painter->drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, name);
 
@@ -94,7 +91,7 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
     else if(idx_col == COL_ARTIST_TRACKS) {
 
         rect.translate(-2, 0);
-        int n_tracks = _model->data(index, Qt::WhatsThisRole).toInt();
+		int n_tracks = index.data(Qt::WhatsThisRole).toInt();
 
         painter->drawText(rect, Qt::AlignRight | Qt::AlignVCenter, QString::number(n_tracks) + " tracks");
 
@@ -110,16 +107,10 @@ void LibraryItemDelegateArtists::paint(QPainter *painter, const QStyleOptionView
 
 QSize LibraryItemDelegateArtists::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
-
-
     Q_UNUSED(option);
     Q_UNUSED(index);
 
-
-
     return QSize(1, _parent->rowHeight(index.row()));
-
-
 }
 
 
@@ -141,21 +132,9 @@ QWidget *LibraryItemDelegateArtists::createEditor(QWidget *parent, const QStyleO
 }
 
 
-
-
 void LibraryItemDelegateArtists::setEditorData(QWidget *editor, const QModelIndex & index) const
 {
     Q_UNUSED(editor);
     Q_UNUSED(index);
 }
 
-
-void LibraryItemDelegateArtists::set_skin(bool dark) {
-    if(dark) {
-        _selected_background = QColor(66,78,114);
-    }
-
-    else{
-        _selected_background = _parent->palette().color(QPalette::Active, QPalette::Highlight);
-    }
-}

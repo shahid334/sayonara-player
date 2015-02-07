@@ -39,16 +39,14 @@ public:
 
 private slots:
     void ok_clicked();
-	virtual void language_changed();
 
 private:
-
     QMap<QString, QString> _map;
     void renew_combo();
 
 protected:
 	void showEvent(QShowEvent*);
-    
+	void language_changed();
 };
 
 #endif // GUI_LANGUAGECHOOSER_H

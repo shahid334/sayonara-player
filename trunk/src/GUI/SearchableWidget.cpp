@@ -133,10 +133,14 @@ void SearchableTableView::bwd_clicked() {
  * LIST
  **************************************************/
 
-SearchableListView::SearchableListView(QWidget* parent) : QListView(parent) {
+SearchableListView::SearchableListView(QWidget* parent) :
+	QListView(parent)
+{
+
 	_mini_searcher = new MiniSearcher(this, MiniSearcherBothButtons);
     _abstr_model = 0;
 	_cur_row = -1;
+
 
 	connect(_mini_searcher, SIGNAL(sig_text_changed(QString)), this, SLOT(edit_changed(QString)));
 	connect(_mini_searcher, SIGNAL(sig_find_next_row()), this, SLOT(fwd_clicked()));
@@ -178,7 +182,12 @@ void SearchableListView::keyPressEvent(QKeyEvent *e) {
 
 	bool was_initialized = _mini_searcher->isInitialized();
 	bool initialized = _mini_searcher->check_and_init(e);
-	if(e->key() == Qt::Key_Tab && !was_initialized) return;
+	if(e->key() == Qt::Key_Tab && !was_initialized){
+		QListView::setTabKeyNavigation(false);
+		QListView::keyPressEvent(e);
+		e->setAccepted(false);
+		return;
+	}
 
 	if(initialized || was_initialized) {
 		_mini_searcher->keyPressEvent(e);

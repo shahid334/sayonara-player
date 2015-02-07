@@ -45,7 +45,7 @@ CoverLookup::CoverLookup(QObject* parent, int n_covers) :
     _n_covers(n_covers),
 	_cft(NULL)
 {
-    _db = CDatabaseConnector::getInstance();
+
 }
 
 CoverLookup::~CoverLookup() {
@@ -151,7 +151,7 @@ void CoverLookup::finished(bool success) {
 
     QObject* sender = this->sender();
 
-	foreach(CoverFetchThread* t, _cfts){
+	for( CoverFetchThread* t : _cfts){
 		if(t == (CoverFetchThread*) sender){
 			_cfts.removeOne(t);
 		}

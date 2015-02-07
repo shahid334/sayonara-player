@@ -51,9 +51,19 @@ bool CDatabaseConnector::db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 		return false;
 	}
 
-	Artist artist;
+	if(!q.last()){
+		return true;
+	}
 
-	while (q.next()) {
+	int i=0;
+	int n_rows = q.at() + 1;
+
+	result.resize(n_rows);
+
+	for(bool is_element=q.first(); is_element; is_element = q.next(), i++){
+
+		Artist& artist = result[i];
+
 		artist.id = q.value(0).toInt();
 		artist.name = q.value(1).toString().trimmed();
 		artist.num_songs = q.value(2).toInt();
@@ -62,7 +72,7 @@ bool CDatabaseConnector::db_fetch_artists(QSqlQuery& q, ArtistList& result) {
 		list.removeDuplicates();
 		artist.num_albums = list.size();
 
-		result.push_back(artist);
+		result[i] = artist;
 	}
 
 	return true;
@@ -265,6 +275,11 @@ int CDatabaseConnector::insertArtistIntoDatabase (const QString& artist) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
+	int id = getArtistID(artist);
+	if(id >= 0){
+		return id;
+	}
+
 	QSqlQuery q (*_database);
 	q.prepare("INSERT INTO artists (name, cissearch) values (:artist, :cissearch);");
 	q.bindValue(":artist", artist);
@@ -282,11 +297,27 @@ int CDatabaseConnector::insertArtistIntoDatabase (const Artist & artist) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
+	if(artist.id >= 0){
+		updateArtist(artist);
+		return artist.id;
+	}
+
+	return insertArtistIntoDatabase(artist.name);
+
+}
+
+
+int CDatabaseConnector::updateArtist(const Artist &artist){
+	DB_RETURN_NOT_OPEN_INT(_database);
+
 	QSqlQuery q (*_database);
 
-	q.prepare("INSERT INTO artists (name, cissearch) values (:name, :cissearch);");
-	q.bindValue(":name", QVariant(artist.name));
-	q.bindValue(":cissearch", QVariant(artist.name.toLower()));
+	if(artist.id < 0) return -1;
+
+	q.prepare("UPDATE artists SET name = :name, cissearch = :cissearch WHERE artistid = :artist_id;");
+	q.bindValue(":name", artist.name);
+	q.bindValue(":cissearch", artist.name.toLower());
+	q.bindValue(":artist_id", artist.id);
 
 	if (!q.exec()) {
 		show_error(QString("Cannot insert (2) artist ") + artist.name, q);

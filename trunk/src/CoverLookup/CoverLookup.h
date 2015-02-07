@@ -96,11 +96,9 @@ private:
 	int _n_covers;
 
     CoverFetchThread* _cft;
-    CDatabaseConnector* _db;
 
 	QList<CoverFetchThread*> _cfts;
 	QFileSystemWatcher* _fsw;
-
 
 	void start_new_thread(const CoverLocation& cl);
 };

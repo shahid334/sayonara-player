@@ -50,15 +50,13 @@ public slots:
 	void psl_refresh();
 	void lfm_data_available();
 
-
-private slots:
+protected:
 	void language_changed();
 
 private:
 
 	CDatabaseConnector*   	_db;
 	LastFM*					_lfm;
-    bool                    _skin;
 
 	uint 		_n_tracks;
 	uint		_n_albums;

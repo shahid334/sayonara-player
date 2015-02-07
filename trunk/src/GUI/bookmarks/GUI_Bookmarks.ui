@@ -58,10 +58,10 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../Icons.qrc">:/icons/bookmark.png</pixmap>
+        <pixmap resource="../Icons.qrc">:/icons/bookmarks.svg.png</pixmap>
        </property>
        <property name="scaledContents">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -115,7 +115,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/bwd.png</normaloff>:/icons/bwd.png</iconset>
+         <normaloff>:/icons/bwd.svg.png</normaloff>:/icons/bwd.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -206,7 +206,7 @@
        </property>
        <property name="icon">
         <iconset resource="../Icons.qrc">
-         <normaloff>:/icons/fwd.png</normaloff>:/icons/fwd.png</iconset>
+         <normaloff>:/icons/fwd.svg.png</normaloff>:/icons/fwd.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -264,7 +264,7 @@
      </property>
      <property name="icon">
       <iconset resource="../Icons.qrc">
-       <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+       <normaloff>:/icons/delete.svg.png</normaloff>:/icons/delete.svg.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -296,7 +296,7 @@
      </property>
      <property name="icon">
       <iconset resource="../Icons.qrc">
-       <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+       <normaloff>:/icons/save.svg.png</normaloff>:/icons/save.svg.png</iconset>
      </property>
      <property name="iconSize">
       <size>

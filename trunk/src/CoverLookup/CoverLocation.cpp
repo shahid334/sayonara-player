@@ -100,21 +100,37 @@ CoverLocation CoverLocation::get_cover_location(const Album& album) {
 	int n_artists;
 
 	n_artists = album.artists.size();
+
+	CoverLocation cl;
+
 	if( n_artists > 1 ) {
-		return CoverLocation::get_cover_location(album.name, album.artists);
+		cl = CoverLocation::get_cover_location(album.name, album.artists);
 	}
 
 	else if( n_artists == 1 ) {
-		return CoverLocation::get_cover_location(album.name, album.artists[0]);
+		cl = CoverLocation::get_cover_location(album.name, album.artists[0]);
 	}
 
 	else {
-		return CoverLocation::get_cover_location(album.name, "");
+		cl = CoverLocation::get_cover_location(album.name, "");
 	}
+
+	if(!album.cover_download_url.isEmpty()){
+		cl.google_url = album.cover_download_url;
+	}
+
+	return cl;
 }
 
 CoverLocation CoverLocation::get_cover_location(const Artist& artist) {
-	return CoverLocation::get_cover_location(artist.name);
+
+	CoverLocation cl = CoverLocation::get_cover_location(artist.name);
+
+	if(!artist.cover_download_url.isEmpty()){
+		cl.google_url = artist.cover_download_url;
+	}
+
+	return cl;
 }
 
 
@@ -145,9 +161,16 @@ CoverLocation CoverLocation::get_cover_location(const MetaData& md) {
     CoverLocation cl;
     if(md.album_id >= 0){
         cl = get_cover_location(md.album_id);
-        if(cl.valid) return cl;
     }
 
-    return get_cover_location(md.album, md.artist);
+	if(!cl.valid){
+		cl = get_cover_location(md.album, md.artist);
+	}
+
+	if(!md.cover_download_url.isEmpty()){
+		cl.google_url = md.cover_download_url;
+	}
+
+	return cl;
 }
 

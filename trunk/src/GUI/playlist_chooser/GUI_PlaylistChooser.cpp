@@ -94,7 +94,7 @@ void GUI_PlaylistChooser::all_playlists_fetched(const QMap<int, QString>& mappin
 	combo_playlistchooser->addItem("", -1);
 
 	QList<int> keys = mapping.keys();
-	foreach(int key, keys) {
+	for(const int& key : keys) {
 		QString name = mapping.value(key);
 		combo_playlistchooser->addItem(name, key);
 	}
@@ -219,8 +219,9 @@ void GUI_PlaylistChooser::load_button_pressed() {
                     Helper::get_playlistfile_extensions().join(" "));
 
     QString lab_text = "";
-    foreach(QString filename, filelist) {
-        int last_index_of_sep = filename.lastIndexOf(QDir::separator());
+	for(const QString& filename : filelist) {
+
+		int last_index_of_sep = filename.lastIndexOf(QDir::separator());
         _last_dir = filename.left(last_index_of_sep);
 
         QString trimmed_filename = filename.right(filename.size() - last_index_of_sep - 1);

@@ -30,7 +30,6 @@ Artist::Artist() : LibraryItem() {
 }
 
 
-
 Artist::~Artist() {
 
 }

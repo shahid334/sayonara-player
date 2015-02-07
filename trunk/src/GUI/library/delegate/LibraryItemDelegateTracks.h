@@ -40,22 +40,18 @@
 class LibraryItemDelegateTracks : public LibraryRatingDelegate {
 
 public:
-	LibraryItemDelegateTracks(LibraryItemModel* model, LibraryView* parent, bool enabled);
+	LibraryItemDelegateTracks(LibraryView* parent, bool enabled);
 	virtual ~LibraryItemDelegateTracks();
 
 public:
-	    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-	    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-
-        void set_skin(bool dark);
+	void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 
 private:
-		QTableView* _parent;
-        QPen        _pen;
-        LibraryItemModel* _model;
-        QColor _selected_background;
 
+	QPen        _pen;
+	LibraryItemModel* _model;
 };
 
 #endif /* IBRARYITEMDELEGATETRACKS_H_ */

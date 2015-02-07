@@ -33,6 +33,7 @@
 #include "HelperStructs/LibraryItem.h"
 #include "HelperStructs/Artist.h"
 #include "HelperStructs/Album.h"
+#include "CoverLookup/CoverLocation.h"
 
 #include <QStringList>
 #include <QPair>
@@ -43,16 +44,15 @@
 enum RadioMode {
 
 	RadioModeOff = 0,
-	RadioModeStation = 1,
+	RadioModeStation,
+	RadioModeSoundcloud
 };
 
-class MetaData;
-
-
-Q_DECLARE_METATYPE(MetaData)
-
-
 class MetaData : public LibraryItem {
+
+private:
+	QString _filepath;
+	RadioMode _radio_mode;
 
 public:
 	qint32 id;
@@ -65,7 +65,7 @@ public:
     quint8 rating;
     quint64 length_ms;
     quint16 year;
-    QString filepath;
+
     quint16 track_num;
     quint32 bitrate;
     quint64 filesize;
@@ -74,7 +74,7 @@ public:
     quint8 n_discs;
 
     bool is_extern;
-    RadioMode radio_mode;
+
 
     bool pl_selected;
     bool pl_playing;
@@ -86,6 +86,11 @@ public:
     MetaData (const MetaData& );
 	virtual ~MetaData();
 
+	QString filepath() const;
+	QString set_filepath(QString filepath);
+
+	RadioMode radio_mode() const;
+
     bool operator==(const MetaData& md) const;
     bool is_equal(const MetaData& md) const;
 	bool is_equal_deep(const MetaData& md) const;
@@ -96,7 +101,7 @@ public:
     static bool fromVariant(const QVariant& v, MetaData& md);
 };
 
-
+Q_DECLARE_METATYPE(MetaData)
 
 class MetaDataList : public QVector<MetaData> {
 
@@ -110,8 +115,8 @@ class MetaDataList : public QVector<MetaData> {
 		MetaDataList(int n_elems);
 
 	    virtual ~MetaDataList();
-        void setCurPlayTrack(int idx);
-        int getCurPlayTrack();
+		void setCurPlayTrack(int idx);
+		int getCurPlayTrack() const;
 
         virtual bool contains(const MetaData& md) const;
 

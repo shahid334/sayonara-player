@@ -37,7 +37,7 @@ void GUI_Player::fileSelectedClicked(bool) {
 	QStringList filetypes = Helper::get_soundfile_extensions();
     filetypes.append(Helper::get_playlistfile_extensions());
 	QString filetypes_str = QString(tr("Media files") + " (");
-	foreach(QString filetype, filetypes) {
+	for(const QString& filetype : filetypes) {
 		filetypes_str += filetype;
 		if(filetype != filetypes.last()) {
 			filetypes_str += " ";
@@ -340,7 +340,7 @@ void GUI_Player::about(bool b) {
 
 	QMessageBox infobox(this);
     infobox.setParent(this);
-    infobox.setIconPixmap(Helper::getPixmap("logo.png", QSize(150, 150), true));
+	infobox.setIconPixmap(Helper::getPixmap("logo.png", QSize(150, 150), true));
     infobox.setWindowFlags(Qt::Dialog);
     infobox.setModal(true);
 

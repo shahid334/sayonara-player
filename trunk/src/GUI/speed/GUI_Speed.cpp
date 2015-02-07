@@ -33,6 +33,10 @@ GUI_Speed::GUI_Speed(QString name, QWidget *parent) :
 	connect(cb_active, SIGNAL(toggled(bool)), this, SLOT(active_changed(bool)));
 }
 
+void GUI_Speed::language_changed(){
+	retranslateUi(this);
+}
+
 
 void GUI_Speed::slider_changed(int val) {
 

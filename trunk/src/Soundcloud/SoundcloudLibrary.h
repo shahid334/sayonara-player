@@ -22,103 +22,44 @@
 #ifndef SOUNDCLOUD_H
 #define SOUNDCLOUD_H
 
-#include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/MetaData.h"
-#include "HelperStructs/Filter.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/CSettingsStorage.h"
-
-#include <QThread>
-#include <QStringList>
-#include <QtXml>
+#include "Soundcloud/SoundcloudData.h"
+#include "Library/AbstractLibrary.h"
 
 
-class SoundcloudLibrary : public QObject
+class SoundcloudLibrary : public AbstractLibrary
 {
 	Q_OBJECT
+
 public:
-	SoundcloudLibrary(QWidget* main_window, QObject *parent = 0);
+	SoundcloudLibrary(QObject *parent = 0);
 
-	void loadData();
-
-
-signals:
-	void sig_playlist_created(QStringList&);
-	void sig_track_mime_data_available(const MetaDataList&);
-	void sig_all_tracks_loaded (MetaDataList&);
-	void sig_all_albums_loaded(AlbumList&);
-	void sig_all_artists_loaded(ArtistList&);
-	void sig_tracks_for_playlist_available(MetaDataList&);
-	void sig_append_tracks_to_playlist(MetaDataList&);
-
-	void sig_play_next_tracks(const MetaDataList&);
-
-
-public slots:
-
-	virtual void reloadLibrary(bool);
-	virtual void clearLibrary();
-	virtual void refresh(bool b=true);
-
-	virtual void psl_selected_artists_changed(const QList<int>&);
-	virtual void psl_selected_albums_changed(const QList<int>&);
-	virtual void psl_selected_tracks_changed(const QList<int>&);
-
-	virtual void psl_prepare_album_for_playlist(int idx=0);
-	virtual void psl_prepare_artist_for_playlist(int idx=0);
-	virtual void psl_prepare_track_for_playlist(int idx);
-	virtual void psl_prepare_tracks_for_playlist(QList<int> lst);
-
-	virtual void psl_sortorder_changed(Sort::SortOrder, Sort::SortOrder, Sort::SortOrder);
-
-	virtual void psl_delete_tracks(int);
-	virtual void psl_delete_certain_tracks(const QList<int>&,int);
-
-	virtual void psl_play_next_all_tracks();
-	virtual void psl_play_next_tracks(const QList<int>&);
-
-	virtual void psl_append_all_tracks();
-	virtual void psl_append_tracks(const QList<int>&);
-
-	virtual void psl_track_rating_changed(int idx, int rating);
-	virtual void psl_album_rating_changed(int idx, int rating);
-
-
-protected slots:
-
-   virtual void library_reloading_state_slot(QString);
-   virtual void library_reloading_state_new_block();
-   virtual void reload_thread_finished();
-
+	virtual void load();
 
 protected:
-	QWidget*            _main_window;
-	CDatabaseConnector*	_db;
-	CSettingsStorage*   _settings;
 
-	MetaDataList        _vec_md;
-	AlbumList			_vec_albums;
-	ArtistList			_vec_artists;
+	SoundcloudData*		_scd;
 
-	Sort::SortOrder		_track_sortorder;
-	Sort::SortOrder		_album_sortorder;
-	Sort::SortOrder		_artist_sortorder;
+	virtual void		get_all_artists(ArtistList& artists, LibSortOrder so);
+	virtual void		get_all_artists_by_searchstring(Filter filter, ArtistList& artists, LibSortOrder so);
 
-	QList<int>			_selected_artists;
-	QList<int>			_selected_albums;
-	QList<int>          _selected_tracks;
+	virtual void		get_all_albums(AlbumList& albums, LibSortOrder so);
+	virtual void		get_all_albums_by_artist(QList<int> artist_ids, AlbumList& albums, Filter filter, LibSortOrder so);
+	virtual void		get_all_albums_by_searchstring(Filter filter, AlbumList& albums, LibSortOrder so);
 
-	void 				emit_stuff();
+	virtual void		get_all_tracks(MetaDataList& v_md, LibSortOrder so);
+	virtual void		get_all_tracks_by_artist(QList<int> artist_ids, MetaDataList& v_md, Filter filter, LibSortOrder so);
+	virtual	void		get_all_tracks_by_album(QList<int> album_ids, MetaDataList& v_md, Filter filter, LibSortOrder so);
+	virtual void		get_all_tracks_by_searchstring(Filter filter, MetaDataList& v_md, LibSortOrder so);
 
-	bool				dl_all_playlists_by_artist(qint64 id, QString& content);
-	bool				dl_all_tracks_by_artist(qint64 id, QString& content);
-	bool				dl_all_artist_info(QString name, Artist& artist);
+	virtual void		update_track(const MetaData& md);
+	virtual void		update_album(const Album& album);
 
+	virtual void		delete_tracks(const MetaDataList& v_md, TrackDeletionMode mode);
+	virtual void		get_album_by_id(int album_id, Album& album);
+	virtual void		get_artist_by_id(int artist_id, Artist& artist);
 
-
-
-
-
+public slots:
+	virtual void		psl_reload_library(bool);
 };
 
-#endif // CLIBRARYBASE_H
+#endif // LocalLibrary_H

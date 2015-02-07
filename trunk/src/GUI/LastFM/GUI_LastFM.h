@@ -44,27 +44,25 @@ public:
 
 	virtual ~GUI_LastFM();
 
-	private slots:
-		void save_button_pressed();
-        void clear_session_pressed();
-		void cb_correct_id3_toggled(bool);
-		void cb_activate_toggled(bool);
+private slots:
+	void save_button_pressed();
+	void clear_session_pressed();
+	void cb_correct_id3_toggled(bool);
+	void cb_activate_toggled(bool);
 
 
-	public slots:
-		void show_win();
-        void changeSkin(bool);
-        void language_changed();
+public slots:
+	void show_win();
 
-	private:
+private:
+	void init();
+	void setLFMActive(bool b);
 
-		void init();
-		void setLFMActive(bool b);
-        bool _skin;
+protected:
+	void language_changed();
 
-
-	public:
-		void set_username_and_password(QString username, QString password);
+public:
+	void set_username_and_password(QString username, QString password);
 
 };
 

@@ -26,7 +26,7 @@
 #include <QString>
 #include <QPoint>
 #include <QSize>
-#include "library/Sorting.h"
+#include "Library/Sorting.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/PlaylistMode.h"
 

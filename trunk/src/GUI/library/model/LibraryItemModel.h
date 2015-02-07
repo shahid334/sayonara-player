@@ -75,7 +75,7 @@ public:
     bool			is_col_shown(int col) const;
 	virtual bool 	is_selected(int row) const;
 	virtual QList<int>  get_selected() const;
-	virtual void    set_selected(QList<int>& rows);
+	virtual void    set_selected(const QList<int>& rows);
 
 
 	/** Overloaded from QAbstractTableModel **/
@@ -83,6 +83,7 @@ public:
     int 		columnCount(const QModelIndex& parent=QModelIndex()) const;
     bool 		insertColumns(int position, int cols, const QModelIndex &index=QModelIndex());
     bool 		removeColumns(int position, int cols, const QModelIndex &index=QModelIndex());
+	virtual void remove_all_and_insert(int n)=0;
 
 
 	virtual QMap<QChar, QString> getExtraTriggers();
@@ -90,15 +91,13 @@ public:
     void set_new_header_names(QStringList& lst);
 
 
-
-
 private:
-    QStringList				_header_names;
-    int						_n_all_cols;
-    bool*                   _cols_active;
+	QStringList		_header_names;
+	int				_n_all_cols;
+	QVector<bool>	_cols_active;
 
 protected:
-    QList<int>				_selected_rows;
+	QList<int>		_selected_rows;
 
 };
 

@@ -131,7 +131,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap resource="../../Icons.qrc">:/icons/info.png</pixmap>
+      <pixmap resource="../../Icons.qrc">:/icons/info.svg.png</pixmap>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

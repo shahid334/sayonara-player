@@ -24,11 +24,6 @@
 #include "Settings/Settings.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
-Settings* Settings::getInstance() {
-	static Settings inst;
-    return &inst;
-}
-
 Settings::Settings(){
 	_db_file = "player.db";
 	memset(_settings, 0, SK::Num_Setting_Keys + 1);

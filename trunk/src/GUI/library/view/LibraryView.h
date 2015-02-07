@@ -33,20 +33,19 @@
 #include "GUI/ContextMenu.h"
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/MiniSearcher.h"
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 #include "GUI/SearchableWidget.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/Helper.h"
 
-
 #include <QTableView>
 #include <QPoint>
-#include <QKeyEvent>
 #include <QMenu>
 #include <QAction>
 #include <QLineEdit>
 #include <QDropEvent>
+#include <QKeyEvent>
 
 class LibraryView : public SearchableTableView{
 
@@ -69,75 +68,64 @@ signals:
     void sig_import_files(const QStringList&);
     void sig_double_clicked(const QList<int>&);
     void sig_sel_changed(const QList<int>&);
-    void sig_released();
 
-private slots:
-    void rc_header_menu_changed(bool b=true);
-    void rc_menu_show(const QPoint&);
-    void sort_by_column(int);
-    void drag_deleted();
+protected slots:
+	virtual void rc_header_menu_changed(bool b=true);
+	virtual void rc_menu_show(const QPoint&);
+	virtual void sort_by_column(int);
+	virtual void drag_deleted();
 
-    void edit_clicked();
-    void info_clicked();
-    void delete_clicked();
-    void play_next_clicked();
-    void append_clicked();
+	virtual void edit_clicked();
+	virtual void info_clicked();
+	virtual void delete_clicked();
+	virtual void play_next_clicked();
+	virtual void append_clicked();
 
-    void editorDestroyed(QObject* editor=0);
-
-
-private:
-    void rc_menu_init();
-    void calc_corner_widget();
+	virtual void editorDestroyed(QObject* editor=0);
 
 
 public:
     LibraryView(QWidget* parent=0);
     virtual ~LibraryView();
 
-	void rc_header_menu_init(QList<int>& lst);
-    void set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder);
-    void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
+	virtual void rc_header_menu_init(QList<int>& lst);
+	virtual void set_mimedata(const MetaDataList& v_md, bool drop_entire_folder, bool for_artist=false);
+	virtual void set_table_headers(QList<ColumnHeader>& headers, Sort::SortOrder sorting);
 
 	template < class TList, class T>
 	void fill(const TList& input_data);
 
-    void set_editor(RatingLabel* editor);
+	virtual void set_editor(RatingLabel* editor);
 
+	virtual void set_col_sizes();
 
-    void set_col_sizes();
-
-    QList<int> get_selections();
-    void force_selections();
-    void set_skin(bool dark);
+	virtual QList<int> get_selections();
 
     using QTableView::setModel;
     virtual void setModel(LibraryItemModel* model);
 
 protected:
-    void mousePressEvent(QMouseEvent* event);
-    void mouseReleaseEvent(QMouseEvent* event);
-    void mouseMoveEvent(QMouseEvent* event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
-	void keyPressEvent(QKeyEvent* event);
-    void resizeEvent(QResizeEvent* event);
-	void dropEvent(QDropEvent* event);
-	void dragEnterEvent(QDragEnterEvent *event);
-    void dragMoveEvent(QDragMoveEvent *event);
+	virtual void mousePressEvent(QMouseEvent* event);
+	virtual void mouseReleaseEvent(QMouseEvent* event);
+	virtual void mouseMoveEvent(QMouseEvent* event);
+	virtual void mouseDoubleClickEvent(QMouseEvent *event);
+	virtual void keyPressEvent(QKeyEvent* event);
+	virtual void dropEvent(QDropEvent* event);
+	virtual void dragEnterEvent(QDragEnterEvent *event);
+	virtual void dragMoveEvent(QDragMoveEvent *event);
 
-	void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+	virtual void selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected );
+	virtual void rc_menu_init();
 
 
+protected:
 
-private:
-    QWidget* 			_parent;
-    QWidget*            _corner_widget;
-    bool				_drag;
+	bool				_drag;
     QPoint				_drag_pos;
     QDrag*				_qDrag;
-    QList<ColumnHeader> _table_headers;
 
-    QMenu*              _rc_header_menu;
+	QMenu*              _rc_header_menu;
+    QList<ColumnHeader> _table_headers;
     QList<QAction*> 	_header_rc_actions;
 
     ContextMenu*        _rc_menu;
@@ -145,21 +133,11 @@ private:
     Sort::SortOrder		_sort_order;
     CustomMimeData*		_mimedata;
 
-    bool                _dark;
-
     LibraryItemModel*   _model;
     RatingLabel*        _editor;
     bool                _cur_filling;
 
-    int get_min_selected();
-
-    // prepares model and returns the QItemSelection for the table
-    QItemSelection reset_and_get_selection(int size);
-
-    // selects according to selctions
-	void select_and_scroll_to(int row);
-
-
+	virtual int get_min_selected();
 };
 
 #endif /* MYLISTVIEW_H_ */

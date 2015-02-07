@@ -31,146 +31,144 @@
 #include <cmath>
 
 
-SearchSlider::SearchSlider(QWidget* parent) : QSlider(parent) {
+SearchSlider::SearchSlider(QWidget* parent) :
+	QSlider(parent)
+{
 	_searching = false;
-    _old_value = 0;
 }
 
 SearchSlider::~SearchSlider() {
 
 }
 
-bool SearchSlider::isSearching() {
-	return _searching;
-}
 
+bool SearchSlider::event(QEvent *e){
 
-bool SearchSlider::event(QEvent* e) {
+	QWheelEvent* we;
+	QKeyEvent* ke;
+	int delta_val = 5;
 
+	switch(e->type()){
 
+		case QEvent::Wheel:
 
-	double percent;
-    int cur_val = this->value() * 1.0;
-    QMouseEvent* mouseEvent;
-    QWheelEvent* wheelEvent;
-
-    mouseEvent = dynamic_cast<QMouseEvent*>( e );
-    if(mouseEvent && mouseEvent->button() == Qt::MiddleButton) {
-        e->ignore();
-        return true;
-    }
-
-
-
-    switch(e->type()) {
-
-        case QEvent::MouseButtonDblClick:
-        e->accept();
-        break;
-
-		case QEvent::MouseButtonPress:
-
-
-            if(!isEnabled()) break;
-
-            mouseEvent = (QMouseEvent*) e;
-
-
-            e->accept();
-
-            _searching = true;
-
-
-			if(this->orientation() == Qt::Horizontal){
-				percent = (mouseEvent->x() * 1.0) / this->width();
+			we = (QWheelEvent*) e;
+			if(we->modifiers() & Qt::ShiftModifier){
+				delta_val = 10;
 			}
 
+			else if(we->modifiers() & Qt::AltModifier){
+				delta_val = 50;
+			}
+
+
+			if(we->delta() > 0){
+				setValue(value() + delta_val);
+			}
 			else{
-				percent = 1.0 - ((mouseEvent->y() * 1.0) / this->height());
+				setValue(value() - delta_val);
 			}
 
-            if (percent < 0) percent = 0;
-			if (percent > 1.0) percent = 1.0;
-			this->setValue( (int) (percent * maximum()) );
-
-			emit searchSliderPressed(percent);
-
+			emit sig_slider_moved(value());
 			break;
 
-		case QEvent::MouseMove:
-            if(!isEnabled()) break;
+		case QEvent::KeyPress:
+			ke = (QKeyEvent*) e;
 
-			mouseEvent = (QMouseEvent*) e;
-            e->accept();
-			if(this->orientation() == Qt::Horizontal){
-				percent = (mouseEvent->x() * 1.0) / this->width();
+			if(ke->modifiers() & Qt::ShiftModifier){
+				delta_val = 10;
 			}
 
-			else{
-				percent = 1.0 - ((mouseEvent->y() * 1.0) / this->height());
+			else if(ke->modifiers() & Qt::AltModifier){
+				delta_val = 50;
 			}
 
-			if (percent < 0) percent = 0;
-			if (percent > 1.0) percent = 1.0;
-			this->setValue( (int) (percent * maximum()) );
 
-			if(_searching){
-				emit searchSliderMoved( this->value() );
+
+			if(ke->key() == Qt::Key_Right){
+
+				_searching = false;
+				setValue(value() + delta_val);
+				_searching = true;
+				emit sig_slider_moved(value());
+			}
+
+			else if(ke->key() == Qt::Key_Left){
+				_searching = false;
+				setValue(value() - delta_val);
+				_searching = true;
+				emit sig_slider_moved(value());
+			}
+			break;
+
+		case QEvent::KeyRelease:
+			ke = (QKeyEvent*) e;
+
+			if(ke->key() == Qt::Key_Right){
+				_searching = false;
+			}
+
+			else if(ke->key() == Qt::Key_Left){
+				_searching = false;
 			}
 
 			break;
-
-        case QEvent::MouseTrackingChange:
-            e->accept();
-            break;
-
-		case QEvent::MouseButtonRelease:
-
-            if(!isEnabled()) break;
-
-			mouseEvent = (QMouseEvent*) e;
-            e->accept();
-
-			if(this->orientation() == Qt::Horizontal){
-				percent = (mouseEvent->x() * 1.0) / this->width();
-			}
-
-			else{
-				percent = 1.0 - ((mouseEvent->y() * 1.0) / this->height());
-			}
-
-			if (percent < 0) percent = 0;
-			if (percent > 1.0) percent = 1.0;
-
-			this->setValue( (int) (percent * maximum()) );
-			emit searchSliderReleased( this->value() );
-
-			_searching = false;
-			break;
-
-        case QEvent::Wheel:
-
-            if(!isEnabled()) break;
-
-            e->accept();
-            wheelEvent = (QWheelEvent*) e;
-			percent = (cur_val * 1.0) / maximum();
-			percent += ( wheelEvent->delta() / abs(wheelEvent->delta()) ) * 0.03;
-
-			this->setValue( (int) (percent * maximum()) );
-			emit searchSliderMoved( this->value() );
-
-            _searching = false;
-            break;
 
 		default:
-            QSlider::event(e);
-            e->accept();
-
 			break;
 	}
 
-
-	return true;
+	return QSlider::event(e);
 }
+
+void SearchSlider::mousePressEvent(QMouseEvent* e){
+	QSlider::mousePressEvent(e);
+
+	int percent = (e->pos().x() * 100) / geometry().width();
+	int new_val =  (this->maximum() * percent) / 100;
+	setValue(new_val);
+
+	_searching = true;
+}
+
+void SearchSlider::mouseReleaseEvent(QMouseEvent* e){
+
+	QSlider::mouseReleaseEvent(e);
+
+	_searching = false;
+
+	int percent = (e->pos().x() * 100) / geometry().width();
+	int new_val =  (this->maximum() * percent) / 100;
+
+	emit sig_slider_moved( new_val );
+}
+
+void SearchSlider::mouseMoveEvent(QMouseEvent *e){
+	QSlider::mouseMoveEvent(e);
+	emit sig_slider_moved(this->value());
+}
+
+
+void SearchSlider::setValue(int i){
+
+	if(_searching) return;
+
+	QSlider::setValue(i);
+}
+
+void SearchSlider::increment(int i){
+
+	setValue( value() + i );
+
+	emit sig_slider_moved(this->value());
+}
+
+void SearchSlider::decrement(int i){
+
+	setValue( value() - i );
+
+	emit sig_slider_moved(this->value());
+}
+
+
 

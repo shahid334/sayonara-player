@@ -3,6 +3,7 @@ project("Sayonara Player")
 ADD_SUBDIRECTORY(src)
 #ADD_SUBDIRECTORY(linux_packages/resources)
 
+
 IF(${UNIX})
         execute_process(COMMAND sh ${CMAKE_BINARY_DIR}/scripts/setversion.sh ${CMAKE_BINARY_DIR})
 ENDIF(${UNIX})
@@ -14,8 +15,9 @@ ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 MESSAGE("Will install to ${CMAKE_INSTALL_PREFIX}")
 MESSAGE("To change this, use the -DCMAKE_INSTALL_PREFIX parameter")
 
-SET(CMAKE_SKIP_RPATH:BOOL ON) 
+ADD_DEFINITIONS(-std=c++11)
 
+SET(CMAKE_SKIP_RPATH:BOOL ON) 
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 
 SET(CPACK_GENERATOR "RPM")

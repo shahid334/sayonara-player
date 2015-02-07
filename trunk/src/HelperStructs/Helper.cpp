@@ -161,7 +161,19 @@ QString Helper::getLibPath() {
 QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
 	QString path = QString(":/icons/") + icon_name;
+	if(path.endsWith(".png")){
+		// alles paletti
+	}
+
+	else if(!path.endsWith(".svg.png")){
+			path += ".svg.png";
+	}
+
 	QPixmap pixmap(path);
+
+	if(pixmap.isNull()){
+		qDebug() << "*Warning*: Pixmap " << path << " does not exist";
+	}
 
     if(sz.width() == 0){
         return pixmap;
@@ -182,7 +194,29 @@ QPixmap Helper::getPixmap(const QString& icon_name, QSize sz, bool keep_aspect){
 
 
 QIcon Helper::getIcon(const QString& icon_name){
-	return QIcon(QString(":/icons/") + icon_name);
+
+	QString path;
+
+	if(icon_name.endsWith(".png")){
+		path = icon_name;
+		// alles paletti
+	}
+
+
+
+	else if(!icon_name.endsWith(".svg.png")){
+
+		path = icon_name + ".svg.png";
+	}
+
+	path.prepend(":/icons/");
+
+	QIcon icon = QIcon(path);
+	if(icon.isNull()){
+		qDebug() << "*Warning*: Icon " << path << " does not exist";
+	}
+
+	return icon;
 }
 
 
@@ -349,17 +383,13 @@ QStringList Helper::get_soundfile_extensions() {
 			<< "*.aac"
 			<< "*.wma";
 
-	foreach(QString filter, filters) {
-		filters.push_back(filter.toUpper());
-	}
-
 	return filters;
 }
 
 bool Helper::is_soundfile(const QString& filename) {
 
 	QStringList extensions = get_soundfile_extensions();
-	foreach(QString extension, extensions) {
+	for(const QString& extension : extensions) {
 		if(filename.toLower().endsWith(extension.right(4))) {
 			return true;
 		}
@@ -379,7 +409,7 @@ QStringList Helper::get_playlistfile_extensions() {
 			<< "*.asx";
 
 
-	foreach(QString filter, filters) {
+	for(const QString& filter : filters) {
 		filters.push_back(filter.toUpper());
 	}
 
@@ -390,7 +420,7 @@ QStringList Helper::get_playlistfile_extensions() {
 
 bool Helper::is_playlistfile(const QString& filename) {
 	QStringList extensions = get_playlistfile_extensions();
-	foreach(QString extension, extensions) {
+	for(const QString& extension : extensions) {
 		if(filename.toLower().endsWith(extension.right(4).toLower())) {
 			return true;
 		}
@@ -408,7 +438,7 @@ QStringList Helper::get_podcast_extensions() {
     filters << "*.xml"
             << "*.rss";
 
-    foreach(QString filter, filters) {
+	for(const QString& filter : filters) {
         filters.push_back(filter.toUpper());
     }
 
@@ -420,7 +450,7 @@ bool Helper::is_podcastfile(const QString& filename, QString* content) {
     QStringList extensions = get_podcast_extensions();
 
     bool extension_ok = false;
-    foreach(QString extension, extensions) {
+	for(const QString& extension : extensions) {
 
         if(filename.toLower().endsWith(extension.right(4).toLower())) {
             extension_ok = true;
@@ -474,7 +504,7 @@ void Helper::remove_files_in_directory(const QString& dir_name, const QStringLis
 
 	file_list = dir.entryList();
 
-	foreach(QString filename, file_list) {
+	for(const QString& filename : file_list) {
 
 		QFile file(dir.absoluteFilePath(filename));
 		file.remove();
@@ -520,8 +550,9 @@ void Helper::split_filename(const QString& src, QString& path, QString& filename
 
 
 QStringList Helper::extract_folders_of_files(const QStringList& files) {
-    QStringList folders;
-    foreach(QString file, files) {
+
+	QStringList folders;
+	for(const QString& file : files) {
         QString folder = get_parent_folder(file);
 		if(!folders.contains(folder)){
 			folders << folder;
@@ -529,14 +560,14 @@ QStringList Helper::extract_folders_of_files(const QStringList& files) {
     }
 
     return folders;
-
 }
 
 bool Helper::checkTrack(const MetaData& md) {
 
-    if( is_www(md.filepath)) return true;
+	QString filepath = md.filepath();
+	if( is_www(filepath) ) return true;
 
-    return QFile::exists(md.filepath);
+	return QFile::exists( filepath );
 }
 
 bool Helper::read_file_into_byte_arr(const QString& filename, QByteArray& content){
@@ -693,7 +724,7 @@ QString Helper::get_major_artist(const ArtistList& artists) {
 
     QStringList lst;
 
-    foreach(Artist artist, artists) {
+	for(const Artist& artist : artists) {
         lst << artist.name;
     }
 
@@ -708,7 +739,7 @@ QString Helper::get_major_artist(const QStringList& artists) {
 
     int n_artists = artists.size();
 
-    foreach(QString artist, artists) {
+	for(const QString& artist : artists) {
 
         QString alower = artist.toLower().trimmed();
 
@@ -722,7 +753,7 @@ QString Helper::get_major_artist(const QStringList& artists) {
     }
 
     // n_appearances have to be at least 2/3 of all apperances
-    foreach(QString artist, map.keys()) {
+	for(const QString& artist : map.keys()) {
 
         int n_appearances = map.value(artist);
         if(n_appearances * 3 > n_artists * 2) return artist;

@@ -3,18 +3,20 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}) 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src) 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/GUI) 
+
 FIND_PACKAGE(Qt4 REQUIRED)
 
 INCLUDE(${QT_USE_FILE})
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+#ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
 
 ADD_SUBDIRECTORY(icons)
 
 SET(HEADERS
     SearchableWidget.h
     MiniSearcher.h
-    RatingLabel.h
+    AlternativeCovers/AlternativeCoverItemDelegate.h
+    AlternativeCovers/AlternativeCoverItemModel.h
+    AlternativeCovers/GUI_AlternativeCovers.h
     AudioConverter/GUI_AudioConverter.h
     bookmarks/GUI_Bookmarks.h
     broadcasting/GUI_Broadcast.h
@@ -24,22 +26,14 @@ SET(HEADERS
     engine/GUI_Spectrum.h
     engine/EngineColorStyleChooser.h
     engine/GUI_StyleSettings.h
-    player/GUI_Player.h
-    player/GUI_TrayIcon.h
-    player/SearchSlider.h
-    playlist/GUI_Playlist.h
-	playlist/PlaylistTabWidget.h
-    playlist/view/PlaylistView.h
-    playlist/model/PlaylistItemModel.h
-    playlist/delegate/PlaylistItemDelegate.h
-    playlist/entry/GUI_PlaylistEntry.h
-    playlist/entry/GUI_PlaylistEntryBig.h
-    playlist/entry/GUI_PlaylistEntrySmall.h
-    playlist_chooser/GUI_PlaylistChooser.h
-    TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
+    equalizer/EqSlider.h
+    equalizer/GUI_Equalizer.h
     LastFM/GUI_LastFM.h
+    library/GUI_AbstractLibrary.h
     library/GUI_Library_windowed.h
-    library/view/LibraryView.h    
+    library/RatingLabel.h
+    library/view/LibraryView.h
+    library/view/LibraryViewAlbum.h
     library/model/LibraryItemModel.h
     library/model/LibraryItemModelTracks.h
     library/model/LibraryItemModelAlbums.h
@@ -51,11 +45,22 @@ SET(HEADERS
     library/ImportFolderDialog/GUIImportFolder.h
     library/DiscPopupMenu.h
     library/GUI_LibraryPath.h
-    alternate_covers/AlternateCoverItemDelegate.h
-    alternate_covers/AlternateCoverItemModel.h
-    alternate_covers/GUI_Alternate_Covers.h
+    player/GUI_Player.h
+    player/GUI_TrayIcon.h
+    player/SearchSlider.h
+    playlist/GUI_Playlist.h
+    playlist/PlaylistTabWidget.h
+    playlist/view/PlaylistView.h
+    playlist/model/PlaylistItemModel.h
+    playlist/delegate/PlaylistItemDelegate.h
+    playlist/entry/GUI_PlaylistEntry.h
+    playlist/entry/GUI_PlaylistEntryBig.h
+    playlist/entry/GUI_PlaylistEntrySmall.h
+    playlist_chooser/GUI_PlaylistChooser.h
+    soundcloud/GUI_SoundcloudLibrary.h
     tagedit/GUI_TagEdit.h
-    equalizer/GUI_Equalizer.h
+    TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
+
     Podcasts/GUI_Podcasts.h
     MyColumnHeader.h
     ContextMenu.h
@@ -73,7 +78,10 @@ SET(SOURCES
 
     SearchableWidget.cpp
     MiniSearcher.cpp
-    RatingLabel.cpp
+
+    AlternativeCovers/AlternativeCoverItemDelegate.cpp
+    AlternativeCovers/AlternativeCoverItemModel.cpp
+    AlternativeCovers/GUI_AlternativeCovers.cpp
     AudioConverter/GUI_AudioConverter.cpp
     bookmarks/GUI_Bookmarks.cpp
     broadcasting/GUI_Broadcast.cpp
@@ -83,6 +91,8 @@ SET(SOURCES
     engine/GUI_Spectrum.cpp
     engine/EngineColorStyleChooser.cpp
     engine/GUI_StyleSettings.cpp
+    equalizer/GUI_Equalizer.cpp
+    equalizer/EqSlider.cpp
     player/GUI_Player.cpp
     player/GUI_PlayerPlugins.cpp
     player/GUI_PlayerMenubar.cpp
@@ -100,9 +110,12 @@ SET(SOURCES
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
     LastFM/GUI_LastFM.cpp
+    library/GUI_AbstractLibrary.cpp
+    library/RatingLabel.cpp
     library/GUI_Library_windowed.cpp
     library/view/LibraryView.cpp
     library/view/LibraryViewHeader.cpp
+    library/view/LibraryViewAlbum.cpp
     library/model/LibraryItemModel.cpp
     library/model/LibraryItemModelTracks.cpp
     library/model/LibraryItemModelAlbums.cpp
@@ -114,11 +127,8 @@ SET(SOURCES
     library/InfoBox/GUILibraryInfoBox.cpp
     library/ImportFolderDialog/GUIImportFolder.cpp
     library/GUI_LibraryPath.cpp
-    alternate_covers/AlternateCoverItemDelegate.cpp
-    alternate_covers/AlternateCoverItemModel.cpp
-    alternate_covers/GUI_Alternate_Covers.cpp
+    soundcloud/GUI_SoundcloudLibrary.cpp
     tagedit/GUI_TagEdit.cpp
-    equalizer/GUI_Equalizer.cpp
     Podcasts/GUI_Podcasts.cpp
     ContextMenu.cpp
     stream/GUI_Stream.cpp
@@ -133,7 +143,7 @@ SET(SOURCES
 
 
 SET(FORMS
-    alternate_covers/GUI_Alternate_Covers.ui
+    AlternativeCovers/GUI_AlternativeCovers.ui
     AudioConverter/GUI_AudioConvert.ui
     bookmarks/GUI_Bookmarks.ui
     broadcasting/GUI_Broadcast.ui
@@ -145,8 +155,7 @@ SET(FORMS
     InfoDialog/GUI_InfoDialog.ui
     LanguageChooser/GUI_LanguageChooser.ui
     LastFM/GUI_LastFM_Dialog.ui
-#    LastFM/GUI_LFMRadioWidget.ui
-    library/GUI_Library_windowed.ui
+	library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
     library/GUI_LibraryPath.ui
@@ -160,6 +169,7 @@ SET(FORMS
 
     Podcasts/GUI_Podcasts.ui
     SocketConfiguration/GUI_SocketSetup.ui
+	soundcloud/GUI_SoundcloudLibrary.ui
     speed/GUI_Speed.ui
     startup_dialog/GUI_Startup_Dialog.ui
     stream/GUI_Stream.ui

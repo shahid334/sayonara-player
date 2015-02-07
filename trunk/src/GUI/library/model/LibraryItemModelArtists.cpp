@@ -45,7 +45,7 @@ LibraryItemModelArtists::~LibraryItemModelArtists() {
 int LibraryItemModelArtists::rowCount(const QModelIndex & parent) const
 {
 	Q_UNUSED(parent);
-	return _artist_list.size();
+	return _artists.size();
 }
 
 
@@ -59,9 +59,7 @@ bool LibraryItemModelArtists::removeRows(int position, int rows, const QModelInd
 
 	 beginRemoveRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 _artist_list.removeAt(position);
-	 }
+	 _artists.remove(position, rows);
 
 	 endRemoveRows();
 	 return true;
@@ -77,15 +75,27 @@ bool LibraryItemModelArtists::insertRows(int position, int rows, const QModelInd
 
 	beginInsertRows(QModelIndex(), position, position+rows-1);
 
-	 for (int row = 0; row < rows; ++row) {
-		 Artist artist;
-		 _artist_list.insert(position, artist);
-	 }
+	 Artist artist;
+	 _artists.insert(position, rows, artist);
 
 	 endInsertRows();
 	 return true;
 }
 
+
+
+void LibraryItemModelArtists::remove_all_and_insert(int n){
+
+	beginRemoveRows(QModelIndex(), 0, _artists.size() - 1);
+		 _artists.clear();
+	endRemoveRows();
+
+	if(n <= 0) return;
+
+	beginInsertRows(QModelIndex(), 0, n - 1);
+		_artists.resize(n);
+	 endInsertRows();
+}
 
 
 
@@ -96,7 +106,7 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
     if (!index.isValid())
          return QVariant();
 
-     if (index.row() >= _artist_list.size())
+	 if (index.row() >= _artists.size())
          return QVariant();
 
 	 if(role == Qt::WhatsThisRole) {
@@ -104,7 +114,7 @@ QVariant LibraryItemModelArtists::data(const QModelIndex & index, int role) cons
         int row = index.row();
         int col = index.column();
 
-        Artist artist = _artist_list[row];
+		Artist artist = _artists[row];
         int idx_col = calc_shown_col(col);
 
 		switch(idx_col) {
@@ -129,14 +139,16 @@ bool LibraryItemModelArtists::setData(const QModelIndex & index, const QVariant 
 
 	 if (index.isValid() && role == Qt::EditRole) {
 
+		 int row = index.row();
+
          Artist artist;
 		 Artist::fromVariant(value, artist);
 
-         if(artist.is_lib_selected && !_selected_rows.contains(index.row()))
+		 if(artist.is_lib_selected && !_selected_rows.contains(row)){
             _selected_rows << index.row();
+		 }
 
-		 _artist_list.replace(index.row(), artist);
-
+		 _artists[row] = artist;
 
 	     emit dataChanged(index, index);
 	     return true;
@@ -156,24 +168,27 @@ Qt::ItemFlags LibraryItemModelArtists::flags(const QModelIndex & index) const
 }
 
 QModelIndex LibraryItemModelArtists::getFirstRowIndexOf(QString substr) {
-	if(_artist_list.isEmpty()) return this->index(-1, -1);
-	if(_selected_rows.size() > 0)
+	if(_artists.isEmpty()) return this->index(-1, -1);
+	if(_selected_rows.size() > 0){
 		return getNextRowIndexOf(substr, _selected_rows[0]);
-	else
+	}
+
+	else{
 		return getNextRowIndexOf(substr, 0);
+	}
 
 }
 
 
 QModelIndex	LibraryItemModelArtists::getNextRowIndexOf(QString substr, int row) {
 
-	int len = _artist_list.size();
+	int len = _artists.size();
 	if( len == 0 ) return this->index(-1, -1);
 
 	for(int i=0; i<len; i++) {
 		int row_idx = (i + row) % len;
 
-		QString artist_name = _artist_list[row_idx].name;
+		QString artist_name = _artists[row_idx].name;
         if( artist_name.startsWith("the ", Qt::CaseInsensitive) ||
 			artist_name.startsWith("die ", Qt::CaseInsensitive) ) {
             artist_name = artist_name.right(artist_name.size() -4);
@@ -190,7 +205,7 @@ QModelIndex	LibraryItemModelArtists::getNextRowIndexOf(QString substr, int row) 
 
 QModelIndex	LibraryItemModelArtists::getPrevRowIndexOf(QString substr, int row) {
 
-	int len = _artist_list.size();
+	int len = _artists.size();
 	if( len < row) row = len - 1;
 
 	for(int i=0; i<len; i++) {
@@ -198,7 +213,7 @@ QModelIndex	LibraryItemModelArtists::getPrevRowIndexOf(QString substr, int row) 
 		if(row - i < 0) row = len - 1;
 		int row_idx = (row-i) % len;
 
-		QString artist_name = _artist_list[row_idx].name;
+		QString artist_name = _artists[row_idx].name;
 		if( artist_name.startsWith("the ", Qt::CaseInsensitive) ||
 			artist_name.startsWith("die ", Qt::CaseInsensitive) ) {
 			artist_name = artist_name.right(artist_name.size() -4);

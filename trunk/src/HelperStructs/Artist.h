@@ -28,6 +28,7 @@
 #include <QString>
 #include <QVariant>
 #include <QMetaType>
+#include <QVector>
 
 
 class Artist : public LibraryItem {
@@ -37,7 +38,8 @@ public:
     qint32 id;                                                                                                                                       
     QString name;                                                                                                                                                      
     quint16 num_songs;                                                                                                           
-    quint16 num_albums;                                                                                           
+	quint16 num_albums;
+
 
 	Artist();
 	virtual	~Artist();

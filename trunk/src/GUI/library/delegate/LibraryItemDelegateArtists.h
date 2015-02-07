@@ -41,7 +41,7 @@
 class LibraryItemDelegateArtists : public QItemDelegate {
 	Q_OBJECT
 public:
-    LibraryItemDelegateArtists(LibraryItemModel* model, QTableView* parent=0);
+	LibraryItemDelegateArtists(QTableView* parent=0);
 	virtual ~LibraryItemDelegateArtists();
 
 public:
@@ -56,18 +56,12 @@ public:
 	void setEditorData(QWidget *editor, const QModelIndex &index) const;
 	void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const;
 
-    void set_skin(bool dark);
-
-
 private:
 
 		QTableView* _parent;
         QPixmap _icon_single_album;
         QPixmap _icon_multi_album;
         QPen _pen;
-
-        LibraryItemModel* _model;
-        QColor _selected_background;
 };
 
 #endif /* LIBRARYITEMDELEGATEARTISTS_H_ */

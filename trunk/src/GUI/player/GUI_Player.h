@@ -29,7 +29,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/stream/GUI_Stream.h"
 #include "GUI/Podcasts/GUI_Podcasts.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
@@ -154,10 +154,10 @@ private slots:
 
     /* View */
     void showLibrary(bool, bool resize=true);
-    void changeSkin(bool);
     void small_playlist_items_toggled(bool);
     void show_notification_toggled(bool);
     void show_fullscreen_toggled(bool);
+	void skin_toggled(bool);
 
 
     /* Preferences */
@@ -185,15 +185,13 @@ private slots:
     void awa_version_finished();
     void awa_translators_finished();
 
-	void language_changed();
-
 	void _sl_libpath_changed();
 	void _sl_sr_active_changed();
 
 
 public:
     void setPlaylist(GUI_Playlist* playlist);
-    void setLibrary(GUI_Library_windowed* library);
+	void setLibrary(GUI_AbstractLibrary* library);
     void setInfoDialog(GUI_InfoDialog* info_dialog);
     void setPlayerPluginHandler(PlayerPluginHandler* pph);
 
@@ -202,7 +200,6 @@ public:
     QWidget* getParentOfPlugin();
 
     void ui_loaded();
-    void setStyle(int);
 
 
 protected:
@@ -212,10 +209,15 @@ protected:
     void resizeEvent(QResizeEvent* e);
     void moveEvent(QMoveEvent* e);
 
+	void language_changed();
+	virtual void skin_changed();
+
+	virtual void set_cur_pos_label(int val);
+
 private:
 
     GUI_Playlist*           ui_playlist;
-    GUI_Library_windowed*   ui_library;
+	GUI_AbstractLibrary*	ui_library;
     GUI_LibraryPath*        ui_libpath;
     GUI_InfoDialog*         ui_info_dialog;
     GUI_Notifications*      ui_notifications;
@@ -224,7 +226,7 @@ private:
     CoverLookup*            m_cov_lookup;
     PlayerPluginHandler*    _pph;
 
-    GUI_Alternate_Covers*   m_alternate_covers;
+    GUI_AlternativeCovers*   m_AlternativeCovers;
     AsyncWebAccess*         m_awa_version;
     AsyncWebAccess*         m_awa_translators;
 

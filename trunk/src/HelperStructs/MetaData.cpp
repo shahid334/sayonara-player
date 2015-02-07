@@ -21,6 +21,8 @@
 
 
 #include "HelperStructs/MetaData.h"
+#include <QDir>
+#include <QUrl>
 
 MetaData::MetaData() : LibraryItem() {
 
@@ -33,11 +35,11 @@ MetaData::MetaData() : LibraryItem() {
         rating = 0;
         length_ms = 0;
         year = 0;
-        filepath = "";
+		_filepath = "";
         track_num = 0;
         bitrate = 0;
         is_extern = false;
-        radio_mode = RadioModeOff;
+		_radio_mode = RadioModeOff;
         filesize = 0;
         comment = "";
         discnumber = 0;
@@ -48,10 +50,9 @@ MetaData::MetaData() : LibraryItem() {
         pl_dragged = false;
 
         is_disabled = false;
-
 }
 
-MetaData::MetaData(const MetaData & md){
+MetaData::MetaData(const MetaData & md) : LibraryItem(md){
     id = md.id;
     artist_id = md.artist_id;
     album_id = md.album_id;
@@ -61,11 +62,11 @@ MetaData::MetaData(const MetaData & md){
     rating = md.rating;
     length_ms = md.length_ms;
     year = md.year;
-    filepath = md.filepath;
+	_filepath = md.filepath();
     track_num = md.track_num;
     bitrate = md.bitrate;
     is_extern = md.is_extern;
-    radio_mode = md.radio_mode;
+	_radio_mode = md.radio_mode();
     filesize = md.filesize;
     comment = md.comment;
     discnumber = md.discnumber;
@@ -88,7 +89,7 @@ void MetaData::print() const {
 	qDebug() << title
              << " by " << artist
              << " from " << album
-             << " (" << length_ms << " m_sec) :: " << filepath;
+			 << " (" << length_ms << " m_sec) :: " << _filepath;
  
 }
 
@@ -117,13 +118,18 @@ bool MetaData::operator==(const MetaData& md) const {
 
 bool MetaData::is_equal(const MetaData& md) const {
 
-    QString my_filepath = filepath.trimmed();
-	QString their_filepath = md.filepath.trimmed();
+	QDir first_path(_filepath);
+	QDir other_path(md.filepath());
+
+	QString s_first_path = first_path.absolutePath();
+	QString s_other_path = other_path.absolutePath();
+
+
 
 #ifdef Q_OS_UNIX
-		return (my_filepath.compare(their_filepath) == 0);
+		return (s_first_path.compare(s_other_path) == 0);
 #else
-		return (my_filepath.compare(their_filepath, Qt::CaseInsensitive) == 0);
+		return (s_first_path.compare(s_other_path, Qt::CaseInsensitive) == 0);
 #endif
 
 }
@@ -139,11 +145,11 @@ bool MetaData::is_equal_deep(const MetaData& md) const{
 	( rating == md.rating ) &&
 	( length_ms == md.length_ms ) &&
 	( year == md.year ) &&
-	( filepath == md.filepath ) &&
+	( filepath() == md.filepath() ) &&
 	( track_num == md.track_num ) &&
 	( bitrate == md.bitrate ) &&
 	( is_extern == md.is_extern ) &&
-	( radio_mode == md.radio_mode ) &&
+	( _radio_mode == md.radio_mode() ) &&
 	( filesize == md.filesize ) &&
 	( comment == md.comment ) &&
 	( discnumber == md.discnumber ) &&
@@ -153,9 +159,51 @@ bool MetaData::is_equal_deep(const MetaData& md) const{
 	( pl_playing == md.pl_playing ) &&
 	( pl_dragged == md.pl_dragged ) &&
 
-	( is_disabled == md.is_disabled ));
+	( is_disabled == md.is_disabled )
+	);
 }
 
+QString MetaData::filepath() const{
+	return _filepath;
+}
+
+
+QString MetaData::set_filepath(QString filepath){
+
+	bool is_local_path = false;
+
+	#ifdef Q_OS_UNIX
+		if(filepath.startsWith("/")){
+			is_local_path = true;
+		}
+	#else
+		if(filepath.contains(":\\") || filepath.contains("\\\\")){
+			is_local_path = true;
+		}
+	#endif
+
+	if(is_local_path){
+		QDir dir(filepath);
+		_filepath = dir.absolutePath();
+		_radio_mode = RadioModeOff;
+	}
+
+	else if(filepath.contains("soundcloud.com")){
+		_filepath = filepath;
+		_radio_mode = RadioModeSoundcloud;
+	}
+
+	else{
+		_filepath = filepath;
+		_radio_mode = RadioModeStation;
+	}
+
+	return _filepath;
+}
+
+RadioMode MetaData::radio_mode() const {
+	return _radio_mode;
+}
 
 
 MetaDataList::MetaDataList() : 
@@ -186,10 +234,14 @@ void MetaDataList::setCurPlayTrack(int idx) {
         (this->data() + _cur_played_track)->pl_playing = false;
     }
 
-    if(idx < 0) return;
+	if(idx < 0) return;
 
-    _cur_played_track = idx;
+	_cur_played_track = idx;
     (this->data() + _cur_played_track)->pl_playing = true;
+}
+
+int MetaDataList::getCurPlayTrack() const {
+	return _cur_played_track;
 }
 
 
@@ -231,10 +283,12 @@ QList<int> MetaDataList::findTracks(const QString& path) const {
     int idx = 0;
     for(it = this->begin(); it != this->end(); it++, idx++) {
 
+		QString filepath = it->filepath();
+
 #ifdef Q_OS_UNIX
-		if(it->filepath.compare(path, Qt::CaseSensitive) == 0){
+		if(filepath.compare(path, Qt::CaseSensitive) == 0){
 #else
-        if(it->filepath.compare(path, Qt::CaseInsensitive) == 0){
+		if(filepath.compare(path, Qt::CaseInsensitive) == 0){
 #endif
 			ret << idx;
         }
@@ -251,14 +305,18 @@ QStringList MetaDataList::toStringList() const {
 
     for(it = this->begin(); it != this->end(); it++) {
 
-        if(it->id >= 0) {
+		if( it->id >= 0 ) {
             lst << QString::number(it->id);
         }
 
         else{
-            lst << it->filepath;
+			lst << it->filepath();
         }
     }
 
     return lst;
 }
+
+
+
+

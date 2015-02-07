@@ -113,6 +113,9 @@ private:
 	void write_changes(int idx);
 	bool check_tag(int idx, const QString& str);
 	bool check_idx(int idx);
+
+protected:
+	void language_changed();
 };
 
 #endif

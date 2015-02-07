@@ -21,6 +21,7 @@
 #include "application.h"
 
 #include <QMetaType>
+#include <QMessageBox>
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
@@ -29,6 +30,8 @@
 
 #include <fstream>
 #include <string>
+
+#include "Soundcloud/SoundcloudHelper.h"
 
 using namespace std;
 
@@ -41,9 +44,9 @@ Application::Application(int & argc, char ** argv) :
 	QApplication(argc, argv),
 	SayonaraClass()
 {
-	_system_font = this->font();
-	_system_font.setPointSize(8);
-	app->setFont(_system_font);
+	QFont font = this->font();
+	font.setPointSize(8);
+	app->setFont(font);
 }
 
 void Application::check_for_crash(){
@@ -101,7 +104,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	player              = new GUI_Player(translator);
 
 	playlist_handler    = new PlaylistHandler();
-	library             = new CLibraryBase();
 	library_importer    = new LibraryImporter(getMainWindow(), this);
 	playlist_chooser    = new PlaylistChooser(playlist_handler);
 
@@ -115,7 +117,11 @@ void Application::init(int n_files, QTranslator *translator) {
 	ui_info_dialog      = new GUI_InfoDialog(player->centralWidget(), ui_id3_editor);
 	ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
+	library             = new LocalLibrary();
 	ui_library          = new GUI_Library_windowed(library, ui_info_dialog, player->getParentOfLibrary());
+
+/*	sc_library			= new SoundcloudLibrary();
+	ui_sc_library		= new GUI_SoundCloudLibrary(sc_library, ui_info_dialog, player->getParentOfLibrary());*/
 
 	ui_playlist         = new GUI_Playlist(playlist_handler, ui_info_dialog, player->getParentOfPlaylist());
 
@@ -185,26 +191,36 @@ void Application::init(int n_files, QTranslator *translator) {
 	bool is_maximized = _settings->get(Set::Player_Maximized);
 
 	player->setWindowTitle("Sayonara " + version);
-    player->setWindowIcon(Helper::getIcon("logo.png"));
+	player->setWindowIcon(Helper::getIcon("logo.png"));
 
 	/* Into Player */
 	player->setPlaylist(ui_playlist);
+
+	//player->setLibrary(ui_sc_library);
 	player->setLibrary(ui_library);
+
 	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
 
-	player->setStyle( _settings->get(Set::Player_Style) );
-
 	/* --> INTO Player*/
-	if(is_maximized) player->showMaximized();
-	else player->show();
+	if(is_maximized) {
+		player->showMaximized();
+	}
+	else {
+		player->show();
+	}
 
 	ui_library->resize(player->getParentOfLibrary()->size());
+	//ui_sc_library->resize(player->getParentOfLibrary()->size());
 	ui_playlist->resize(player->getParentOfPlaylist()->size());
 
 	qDebug() << "Set up library...";
 	/* Into Library */
-	library->loadDataFromDb();
+	library->load();
+	QStringList libraries;
+	libraries << tr("Music Library");
+	ui_library->set_lib_chooser(libraries);
+	//sc_library->load();
 
 	qDebug() << "Set up Last.fm...";
 
@@ -225,8 +241,9 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	player->showPlugin(p);
 
+	stream_server->retry();
+
 	_initialized = true;
-	REGISTER_LISTENER(Set::Player_Style, skin_changed);
 }
 
 Application::~Application() {
@@ -260,11 +277,13 @@ void Application::init_connections() {
 	CONNECT (player, sig_seek_rel_ms(qint64),				listen,				jump_rel_ms(qint64));
 	CONNECT (player, sig_rec_button_toggled(bool),			listen,				record_button_toggled(bool));
 	CONNECT (player, sig_rec_button_toggled(bool),			ui_stream_rec,		record_button_toggled(bool));
-	CONNECT (player, sig_basedir_selected(const QString &),	library,            baseDirSelected(const QString & ));
-	CONNECT (player, sig_reload_library(bool),				library,            reloadLibrary(bool));
+
+	CONNECT (player, sig_reload_library(bool),				library,            psl_reload_library(bool));
 	CONNECT (player, sig_import_dir(const QString&),		library_importer,   psl_import_dir(const QString&));
 	CONNECT (player, sig_import_files(const QStringList&),	library_importer,   psl_import_files(const QStringList&));
 	CONNECT (player, sig_file_selected(const QStringList &),playlist_handler, 	create_playlist(const QStringList&));
+	CONNECT (player, sig_basedir_selected(const QString &),	playlist_handler,   create_playlist(const QString&));
+
 	CONNECT (player, sig_play(),							playlist_handler,	psl_play());
 	CONNECT (player, sig_pause(),							playlist_handler,	psl_pause());
 	CONNECT (player, sig_pause(),							listen,				pause());
@@ -276,9 +295,7 @@ void Application::init_connections() {
 	CONNECT (player, sig_pause(),							ui_level,			psl_stop());
 	CONNECT (player, sig_forward(),							playlist_handler,	psl_forward());
 	CONNECT (player, sig_backward(),						playlist_handler,	psl_backward());
-	CONNECT (player, sig_show_playlists(),					ui_playlist_chooser,show()); // IND
 	CONNECT (player, sig_setup_LastFM(),					ui_lastfm,			show_win()); // IND
-	CONNECT (player, sig_show_stream_rec(),					ui_stream_rec,		show_win()); // IND
 	CONNECT (player, sig_show_socket(),						ui_socket_setup,	show_win()); // IND
 
 	CONNECT (playlist_handler, sig_no_track_to_play(),					player,			stopped());
@@ -307,10 +324,10 @@ void Application::init_connections() {
 
 	CONNECT (listen, sig_md_changed(const MetaData&),	player,				psl_md_changed(const MetaData&));
 	CONNECT (listen, sig_md_changed(const MetaData&),	playlist_handler,	psl_md_changed(const MetaData&));
-	CONNECT (listen, sig_md_changed(const MetaData&),	library,			psl_md_changed(const MetaData&));
+	CONNECT (listen, sig_md_changed(const MetaData&),	library,			psl_metadata_changed(const MetaData&));
 
 
-	CONNECT (ui_speed, sig_speed_changed(float),		listen,				psl_set_speed(float) );
+	CONNECT(ui_speed, sig_speed_changed(float),		listen,				psl_set_speed(float) );
 
 	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&),			ui_info_dialog, set_metadata(const MetaDataList&));
 	CONNECT(library, sig_track_mime_data_available(const MetaDataList&),	ui_info_dialog, set_metadata(const MetaDataList&));
@@ -329,7 +346,7 @@ void Application::init_connections() {
 	CONNECT(ui_library, sig_import_files(const QStringList&),	library_importer, psl_import_files(const QStringList&));
 
 	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		library,			psl_metadata_changed(const MetaDataList&, const MetaDataList&));
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		playlist_handler,	psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
+	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		playlist_handler,	psl_md_changed(const MetaDataList&, const MetaDataList&));
 	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		player,				psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
 
 	CONNECT(ui_audioconverter, sig_active(),		playlist_handler, psl_audioconvert_on());
@@ -351,20 +368,22 @@ void Application::init_connections() {
 	CONNECT(ui_stream, sig_play_track(int),								playlist_handler,		psl_change_track(int));
 
 	CONNECT(ui_podcasts, sig_create_playlist(const MetaDataList&),		playlist_handler,		create_playlist(const MetaDataList&));
-	CONNECT(ui_podcasts, sig_play_track(int),								playlist_handler,   psl_change_track(int));
+	CONNECT(ui_podcasts, sig_play_track(int),							playlist_handler,		psl_change_track(int));
 
-	CONNECT (ui_style_settings, sig_style_update(),	ui_spectrum, psl_style_update());
-	CONNECT (ui_style_settings, sig_style_update(),	ui_level, psl_style_update());
+	CONNECT (ui_style_settings,		sig_style_update(),		ui_spectrum,	psl_style_update());
+	CONNECT (ui_style_settings,		sig_style_update(),		ui_level,		psl_style_update());
 
 	CONNECT (stream_server, sig_new_connection_request(const QString&),	ui_broadcast,	new_connection_request(const QString&));
 	CONNECT (stream_server, sig_new_connection(const QString&),			ui_broadcast,	new_connection(const QString&));
 	CONNECT (stream_server, sig_connection_closed(const QString&),		ui_broadcast,	connection_closed(const QString&));
+	CONNECT (stream_server, sig_can_listen(bool),						ui_broadcast,	can_listen(bool));
 	CONNECT (listen, destroyed(),										stream_server,	stop());
 
 	CONNECT (playlist_handler, sig_cur_track_changed(const MetaData&),			stream_server,	update_track(const MetaData&));
 	CONNECT (ui_broadcast, sig_dismiss(int),									stream_server,	dismiss(int));
 	CONNECT (ui_broadcast, sig_accepted(),										stream_server,	accept_client());
 	CONNECT (ui_broadcast, sig_rejected(),										stream_server,	reject_client());
+	CONNECT (ui_broadcast, sig_retry(),											stream_server,  retry());
 	CONNECT (listen, sig_data(uchar*, quint64),									stream_server,	new_data(uchar*, quint64));
 
     qDebug() << "connections done";
@@ -411,34 +430,3 @@ QMainWindow* Application::getMainWindow() {
     return this->player;
 }
 
-
-void Application::skin_changed(){
-
-	return;
-	bool m_dark = (_settings->get(Set::Player_Style) == 0);
-	QFont font;
-
-	qDebug() << "Skin changed";
-
-	if(m_dark){
-
-		qDebug() << "Dark";
-		font.setFamily("DejaVu Sans");
-		font.setPointSize(9);
-		font.setWeight(55);
-		font.setItalic(false);
-
-	}
-
-	else{
-		font = _system_font;
-	}
-
-	font.setHintingPreference(QFont::PreferNoHinting);
-	int strategy =  (QFont::PreferDefault | QFont::PreferQuality);
-	font.setStyleStrategy((QFont::StyleStrategy) strategy  );
-
-	this->setFont(font);
-	player->setFont(font);
-	player->repaint();
-}

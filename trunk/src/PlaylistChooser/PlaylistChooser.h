@@ -28,7 +28,9 @@
 #define STATE_IMPORT_FAIL 2
 
 #include "HelperStructs/MetaData.h"
-#include "playlist/PlaylistHandler.h"
+#include "Playlist/PlaylistHandler.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
+
 #include <QMap>
 
 
@@ -64,6 +66,7 @@ private:
 	int					_import_state;
 
 	PlaylistHandler*	_playlist_handler;
+	CDatabaseConnector* _db;
 
 
 };

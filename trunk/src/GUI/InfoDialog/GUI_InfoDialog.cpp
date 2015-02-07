@@ -23,7 +23,7 @@
  */
 
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "LyricLookup/LyricLookup.h"
 #include "HelperStructs/Style.h"
@@ -43,15 +43,13 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 
 	setupUi(this);
 
-    _db = CDatabaseConnector::getInstance();
-
     _class_name = QString("InfoDialog");
 
     _initialized = false;
 
     ui_tag_edit = tag_edit;
 
-	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit.png"), tr("Edit"));
+	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit"), tr("Edit"));
 
     _lfm_thread = new LFMTrackChangedThread(_class_name);
 
@@ -69,12 +67,12 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
     _lyrics_visible = true;
 
 	_cover_lookup = new CoverLookup(this);
-    _alternate_covers = new GUI_Alternate_Covers(this, _class_name );
+    _AlternativeCovers = new GUI_AlternativeCovers(this, _class_name );
 
     _tag_edit_visible = true;
 
     QStringList server_list = _lyric_thread->getServers();
-    foreach(QString server, server_list) {
+	for(const QString& server : server_list) {
 
 		combo_servers->addItem(server);
     }
@@ -85,7 +83,7 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 	connect(_cover_lookup,	SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, 			SLOT(psl_cover_available(const CoverLocation&)));
 
-	connect(_alternate_covers,	SIGNAL(sig_cover_changed(const CoverLocation&)),
+	connect(_AlternativeCovers,	SIGNAL(sig_cover_changed(const CoverLocation&)),
 			this,				SLOT(psl_cover_available(const CoverLocation&)));
 
     connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
@@ -116,19 +114,13 @@ void GUI_InfoDialog::psl_tag_edit_deleted(){
     qDebug() << "Tag edit deleted";
 }
 
-void GUI_InfoDialog::changeSkin(bool dark) {
-
-    _dark = dark;
-}
 
 void GUI_InfoDialog::language_changed() {
 
     MetaDataList v_md = _v_md;
 
 	retranslateUi(this);
-
 	set_metadata(v_md);
-    _alternate_covers->language_changed();
 }
 
 
@@ -229,12 +221,10 @@ void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
     btn_image->setIcon(icon);
 	btn_image->update();
 
-    if(sender() == _alternate_covers)
-        emit sig_cover_changed(cl);
-
+	if(sender() == _AlternativeCovers){
+		emit sig_cover_changed(cl);
+	}
 }
-
-
 
 
 void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
@@ -309,20 +299,20 @@ void GUI_InfoDialog::cover_clicked() {
 	setFocus();
 
 	if(_cover_artist.size() > 0 && _cover_album.size() > 0){
-		_alternate_covers->start(_cover_album, _cover_artist, _cl);
+		_AlternativeCovers->start(_cover_album, _cover_artist, _cl);
 	}
 
 	else if(_cover_artist.size() > 0){
-		_alternate_covers->start(_cover_artist, _cl);
+		_AlternativeCovers->start(_cover_artist, _cl);
 	}
 
 	else if(_cover_album.size() > 0){
-		_alternate_covers->start(_cover_album, "Various artists", _cl);
+		_AlternativeCovers->start(_cover_album, "Various artists", _cl);
 	}
 }
 
 void GUI_InfoDialog::no_cover_available() {
-    btn_image->setIcon(Helper::getIcon("logo.png"));
+	btn_image->setIcon(Helper::getIcon("logo"));
 }
 
 void GUI_InfoDialog::init() {

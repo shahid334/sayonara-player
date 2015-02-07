@@ -23,6 +23,7 @@
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Tagging/id3access.h"
 #include "HelperStructs/Helper.h"
+#include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QDir>
 #include <QFile>
@@ -43,15 +44,14 @@ using namespace Helper;
 
 bool ID3::getMetaDataOfFile(MetaData& md) {
 
-	md.filepath = QDir(md.filepath).absolutePath();
-    QFile qf(md.filepath);
+	QFile qf(md.filepath());
     md.filesize = qf.size();
     qf.close();
 
-	TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()), true, TagLib::AudioProperties::Accurate);
+	TagLib::FileRef f(TagLib::FileName(md.filepath().toUtf8()), true, TagLib::AudioProperties::Accurate);
 
-	if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(md.filepath.toUtf8()) ) {
-		qDebug() << md.filepath << ": Something's wrong with this file";
+	if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isReadable(md.filepath().toUtf8()) ) {
+		qDebug() << md.filepath() << ": Something's wrong with this file";
 		return false;
 	}
 
@@ -72,7 +72,8 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
 	uint track = tag->track();
 
 	int bitrate = f.audioProperties()->bitrate() * 1000;
-	int length = f.audioProperties()->length();
+	int length = f.audioProperties()->length() * 1000;
+
 
     QStringList genres;
     QString genre_str = cvtQString2FirstUpper(QString::fromLocal8Bit(genre.c_str()));
@@ -84,7 +85,7 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
     md.album = QString::fromLocal8Bit(album.c_str());
     md.artist = QString::fromLocal8Bit(artist.c_str());
     md.title = QString::fromLocal8Bit(title.c_str());
-    md.length_ms = length * 1000;
+	md.length_ms = length;
 	md.year = year;
 	md.track_num = track;
 	md.bitrate = bitrate;
@@ -94,9 +95,14 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
     md.comment = QString::fromLocal8Bit(comment.c_str());
 
 	if(md.title.length() == 0) {
-		int idx = md.filepath.lastIndexOf('/');
-		md.title = md.filepath.right(md.filepath.length() - idx -1);
-		md.title = md.title.left(md.title.length() - 4);
+		QString dir, filename;
+		Helper::split_filename(md.filepath(), dir, filename);
+
+		if(filename.size() > 4){
+			filename = filename.left(filename.length() - 4);
+		}
+
+		md.title = filename;
 	}
 
 	return true;
@@ -105,9 +111,9 @@ bool ID3::getMetaDataOfFile(MetaData& md) {
 
 bool ID3::setMetaDataOfFile(MetaData& md) {
 
-	md.filepath = QDir(md.filepath).absolutePath();
-    TagLib::FileRef f(TagLib::FileName(md.filepath.toUtf8()));
-    if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isWritable(md.filepath.toUtf8()) ) {
+	QString filepath = md.filepath();
+	TagLib::FileRef f(TagLib::FileName(filepath.toUtf8()));
+	if(f.isNull() || !f.tag() || !f.file()->isValid() || !f.file()->isWritable(filepath.toUtf8()) ) {
         qDebug() << "ID3 cannot save";
 		return false;
 	}
@@ -141,7 +147,7 @@ bool ID3::setMetaDataOfFile(MetaData& md) {
 		return true;
     }
 
-    ID3_FileHeader fh(md.filepath);
+	ID3_FileHeader fh(md.filepath());
 
 	if(fh.is_valid()){
 		id3_write_discnumber(fh, md.discnumber, md.n_discs);
@@ -156,7 +162,7 @@ void ID3::checkForBrokenFiles(MetaDataList v_md, MetaDataList& v_md_broken) {
 	return;
 	int i=0;
 	foreach(MetaData md, v_md) {
-		ID3_FileHeader header(md.filepath);
+		ID3_FileHeader header(md.filepath());
 		if(header.is_broken()) {
 			qDebug() << md.title << "by (" << md.artist << ") on " << md.album << " is broken";
 			v_md_broken.push_back(md);

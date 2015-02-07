@@ -2,6 +2,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
 INCLUDE(FindPkgConfig)
+INCLUDE(CheckCXXCompilerFlag)
 
 PKG_CHECK_MODULES(GLIB glib-2.0)
 PKG_CHECK_MODULES(GOBJECT gobject-2.0)
@@ -10,13 +11,14 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
-SET(CMAKE_BUILD_TYPE "Release")
-SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++11")
 
-#SET(CMAKE_BUILD_TYPE "Debug")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
-#SET(CMAKE_C_FLAGS "-Wall")
+#SET(CMAKE_BUILD_TYPE "Release")
+#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
+#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
+
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
+SET(CMAKE_C_FLAGS "-Wall")
 
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
@@ -36,7 +38,19 @@ INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
-ADD_DEFINITIONS(${QT_DEFINITIONS})
+CHECK_CXX_COMPILER_FLAG("-std=c++11" CXX_CAN_11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" CXX_CAN_0X)
+
+IF( ${CXX_CAN_11} )
+	MESSAGE("Your Compiler supports C++11")
+ELSEIF( ${CXX_CAN_0X} )
+	MESSAGE("Your Compiler supports C++0x")
+ELSE()
+	FATAL_ERROR("Your Compiler is not C++11 ready!")
+ENDIF()
+
+
+ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
 
 LINK_DIRECTORIES(${TAGLIB_LIBRARY_DIRS})
 LINK_DIRECTORIES(${CURL_LIBRARY_DIRS})
@@ -47,11 +61,12 @@ LINK_DIRECTORIES(${GSTREAMER_LIBRARY_DIRS})
 ADD_SUBDIRECTORY(HelperStructs)
 ADD_SUBDIRECTORY(DatabaseAccess)
 ADD_SUBDIRECTORY(GUI)
-ADD_SUBDIRECTORY(playlist)
-ADD_SUBDIRECTORY(library)
+ADD_SUBDIRECTORY(Playlist)
+ADD_SUBDIRECTORY(Library)
 ADD_SUBDIRECTORY(CoverLookup)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
+ADD_SUBDIRECTORY(Soundcloud)
 ADD_SUBDIRECTORY(languages)
 
 SET(HEADERS
@@ -67,7 +82,7 @@ SET(HEADERS
     Notification/NotificationPluginLoader.h
     PlayerPlugin/PlayerPlugin.h
     PlayerPlugin/PlayerPluginHandler.h
-	PlaylistChooser/PlaylistChooser.h
+    PlaylistChooser/PlaylistChooser.h
     RadioStation/StreamWriter.h
     RadioStation/StreamServer.h
     StreamPlugins/LastFM/LastFM.h
@@ -87,7 +102,7 @@ SET(SOURCES
     PlayerPlugin/PlayerPlugin.cpp
     PlayerPlugin/PlayerPluginHandler.cpp
     LyricLookup/LyricLookup.cpp
-	PlaylistChooser/PlaylistChooser.cpp
+    PlaylistChooser/PlaylistChooser.cpp
     StreamPlugins/LastFM/LastFM.cpp
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
@@ -99,28 +114,24 @@ SET(SOURCES
     TagEdit/TagExpression.cpp
 )
 
-
 FILE (GLOB TRANSLATIONS_FILES languages/*.ts)
-QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
-ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
+QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
+ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
 
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${QM_FILES})
 
 TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} 
-#	tag 
 	curl 
 	sayonara_helper 
 	sayonara_db 
-	sayonara_gui 
+        sayonara_gui
 	sayonara_playlist 
 	sayonara_library 
-	sayonara_covers 
-#	sayonara_gstreamer
+    sayonara_covers
+    sayonara_soundcloud
 )
-
-
 
 INSTALL(TARGETS sayonara DESTINATION bin)
 INSTALL(FILES ${QM_FILES} DESTINATION share/sayonara/translations)

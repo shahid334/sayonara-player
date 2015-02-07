@@ -69,7 +69,7 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 
     _database->transaction();
 
-	foreach (MetaData md, v_md) {
+	for(const MetaData& md : v_md) {
 
 		//first check if we know the artist and its id
 		albumID = getAlbumID(md.album);
@@ -84,12 +84,11 @@ bool CDatabaseConnector::storeMetadata (MetaDataList & v_md)  {
 		}
 
 		if(albumID == -1 || artistID == -1){
-			qDebug() << "Cannot insert artist or album of " << md.filepath;
+			qDebug() << "Cannot insert artist or album of " << md.filepath();
 			continue;
 		}
 
 		insertTrackIntoDatabase (md, artistID, albumID);
-
     }
 
     return _database->commit();

@@ -52,6 +52,7 @@ public:
 
 	bool insertRows(int position, int rows, const QModelIndex &index=QModelIndex());
 	bool removeRows(int position, int rows, const QModelIndex &index=QModelIndex());
+	virtual void remove_all_and_insert(int n);
 
     virtual QModelIndex	getFirstRowIndexOf(QString substr);
 	virtual QModelIndex	getPrevRowIndexOf(QString substr, int row);
@@ -60,7 +61,7 @@ public:
 
 
 private:
-	QList<MetaData>			_tracklist;
+	MetaDataList			_tracks;
 	QMap<int, QString>		_albums_w_disc;
 };
 

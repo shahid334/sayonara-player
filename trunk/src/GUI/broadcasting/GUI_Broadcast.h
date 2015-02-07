@@ -40,22 +40,27 @@ signals:
 	void sig_dismiss_all();
 	void sig_accepted();
 	void sig_rejected();
+	void sig_retry();
 
 public slots:
 	void new_connection_request(const QString& ip);
 	void new_connection(const QString& ip);
 	void connection_closed(const QString& ip);
+	void can_listen(bool);
 
 private slots:
 	void dismiss_clicked();
 	void dismiss_all_clicked();
 	void option_clicked();
 	void combo_changed(int idx);
+	void retry();
 
 private:
-
 	void dismiss_at(int idx);
 	void set_status_label();
+
+protected:
+	void language_changed();
 
 
 

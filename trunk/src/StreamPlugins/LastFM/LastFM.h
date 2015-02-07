@@ -44,7 +44,8 @@
 // signals and slots are handled by the adapter class
 class LastFM : public QObject, protected SayonaraClass{
 
-Q_OBJECT
+	Q_OBJECT
+	SINGLETON(LastFM)
 
 	signals:
 		void sig_last_fm_logged_in(bool);
@@ -68,10 +69,6 @@ Q_OBJECT
 
 
 	public:
-
-		static LastFM * getInstance();
-		virtual ~LastFM();
-
 		void lfm_get_friends(QStringList& );
 		bool lfm_get_user_info(QMap<QString, QString>&);
 		bool lfm_is_logged_in();
@@ -80,7 +77,6 @@ Q_OBJECT
 
 	private:
 
-		LastFM();
 		LastFM(const LastFM&);
 		LastFM& operator=(const LastFM&);
 

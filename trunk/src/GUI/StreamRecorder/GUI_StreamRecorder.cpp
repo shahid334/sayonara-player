@@ -66,11 +66,6 @@ GUI_StreamRecorder::~GUI_StreamRecorder() {
 }
 
 
-void GUI_StreamRecorder::changeSkin(bool dark) {
-    _skin = dark;
-
-}
-
 void GUI_StreamRecorder::language_changed() {
 
 	retranslateUi(this);
@@ -97,18 +92,6 @@ void GUI_StreamRecorder::sl_btn_path_clicked() {
 	}
 }
 
-void GUI_StreamRecorder::sl_le_text_changed(QString & str) {
-
-}
-
-void GUI_StreamRecorder::show_win() {
-
-
-
-
-    changeSkin(_skin);
-    show();
-}
 
 void GUI_StreamRecorder::sl_ok() {
 
@@ -126,9 +109,9 @@ void GUI_StreamRecorder::sl_ok() {
     }
 
 	_settings->set(Set::Engine_SR_Path, str);
+	_settings->set(Set::Engine_SR_Active, cb_activate->isChecked());
     _path = str;
 
-	CDatabaseConnector::getInstance()->store_settings();
     hide();
     close();
 }

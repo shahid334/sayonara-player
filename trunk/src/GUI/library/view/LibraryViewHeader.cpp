@@ -20,9 +20,7 @@
 
 #include "GUI/library/view/LibraryView.h"
 #include <QHeaderView>
-#include <QTableView>
 #include <QMouseEvent>
-#include <QAction>
 
 
 template <typename T>
@@ -36,10 +34,12 @@ void LibraryView::sort_by_column(int col) {
 
     int idx_col = _model->calc_shown_col(col);
 
-    if(idx_col >= _table_headers.size()) return;
+	if(idx_col >= _table_headers.size()) {
+		return;
+	}
 
     ColumnHeader h = _table_headers[idx_col];
-    switch_sorters(_sort_order, h.get_asc_sortorder(), h.get_desc_sortorder());
+	switch_sorters( _sort_order, h.get_asc_sortorder(), h.get_desc_sortorder() );
 
     emit sig_sortorder_changed(_sort_order);
 }
@@ -81,7 +81,7 @@ void LibraryView::rc_header_menu_init(QList<int>& shown_cols) {
 
     int i =0;
     bool show_sorter = true;
-    foreach(ColumnHeader header, _table_headers) {
+	for(const ColumnHeader& header : _table_headers) {
         QAction* action = new QAction(header.getTitle(), this);
         action->setCheckable(true);
 
@@ -136,7 +136,7 @@ void LibraryView::rc_header_menu_changed(bool b) {
 
     int col_idx = 0;
 	QList<int> lst;
-    foreach(QAction* action, _header_rc_actions) {
+	for(const QAction* action : _header_rc_actions) {
 
         if(action->isChecked()) {
             _model->insertColumn(col_idx);
@@ -151,8 +151,9 @@ void LibraryView::rc_header_menu_changed(bool b) {
     emit sig_columns_changed(lst);
     set_col_sizes();
 
-    foreach(int row, sel_list)
-        this->selectRow(row);
+	for(const int& row : sel_list){
+		this->selectRow(row);
+	}
 }
 
 
@@ -170,7 +171,7 @@ void LibraryView::set_col_sizes() {
         int preferred_size = 0;
 
         ColumnHeader h = _table_headers[col];
-        if(h.getSizeType() == COL_HEADER_SIZE_TYPE_ABS) {
+		if(h.getSizeType() == ColHeaderSizeAbs) {
 
             preferred_size = h.get_preferred_size_abs();
         }
@@ -205,7 +206,7 @@ void LibraryView::set_col_sizes() {
 
 
         ColumnHeader h = _table_headers[col];
-        if(h.getSizeType() == COL_HEADER_SIZE_TYPE_REL) {
+		if(h.getSizeType() == ColHeaderSizeRel) {
 
             preferred_size = (h.get_preferred_size_rel() / altogether_percentage) * target_width;
         }
@@ -216,7 +217,5 @@ void LibraryView::set_col_sizes() {
 
         this->setColumnWidth(i, preferred_size);
     }
-
-    calc_corner_widget();
 }
 // header end

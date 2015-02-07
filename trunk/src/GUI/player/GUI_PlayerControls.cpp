@@ -44,7 +44,7 @@ void GUI_Player::playClicked(bool) {
 
 void GUI_Player::stopClicked(bool b) {
 
-    btn_play->setIcon(Helper::getIcon("play.png"));
+	btn_play->setIcon(Helper::getIcon("play"));
     m_trayIcon->setPlaying(false);
 	m_trayIcon->stop();
 
@@ -112,6 +112,22 @@ void GUI_Player::sl_rec_button_toggled(bool b) {
 
 
 /** PROGRESS BAR **/
+
+void GUI_Player::set_cur_pos_label(int val){
+
+	int max = songProgress->maximum();
+	if(val > max || val < 0) {
+		val = 0;
+	}
+
+	double percent = (val * 1.0) / max;
+	quint64 cur_pos_ms =  (quint64) (percent * _md.length_ms);
+
+	QString curPosString = Helper::cvt_ms_to_string(cur_pos_ms);
+
+	curTime->setText(curPosString);
+}
+
 void GUI_Player::total_time_changed(qint64 total_time) {
 
 	QString length_str = Helper::cvt_ms_to_string(total_time, true);
@@ -136,67 +152,42 @@ void GUI_Player::jump_backward_ms(){
 
 
 void GUI_Player::jump_forward() {
-
-	int val = songProgress->value();
-	val += (songProgress->maximum() / 50);
-	seek(val);
-	songProgress->setValue(val);
-
+	songProgress->increment(50);
 }
 
 void GUI_Player::jump_backward() {
 
-	int val = songProgress->value();
-	val -= (songProgress->maximum() / 50);
-
-	seek(val);
-	songProgress->setValue(val);
+	songProgress->increment(-50);
 }
 
 void GUI_Player::seek(int val) {
 
-	int max = songProgress->maximum();
-	if(val > max || val < 0) {
-		val = 0;
-    }
+	set_cur_pos_label(val);
 
-	double percent = (val * 1.0) / max;
-	quint64 cur_pos_ms =  (quint64) (percent * _md.length_ms);
+	float percent = (val * 100.0f) / songProgress->maximum();
 
-	QString curPosString = Helper::cvt_ms_to_string(cur_pos_ms);
-
-	curTime->setText(curPosString);
-
-	emit sig_seek_rel( (int) (percent * 100) );
+	emit sig_seek_rel( (int) (percent) );
 }
 
 void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
 	int max = songProgress->maximum();
+	int new_val;
 
-	if ( _md.length_ms != 0 ) {
-
-		int new_slider_val = ( pos_sec * 1000.0 * max ) / (_md.length_ms);
-
-		if ( !songProgress->isSearching() && new_slider_val < max ) {
-
-			songProgress->setValue(new_slider_val);
-		}
+	if ( _md.length_ms > 0 ) {
+		new_val = ( pos_sec * 1000.0 * max ) / (_md.length_ms);
 	}
 
 	else if(pos_sec > _md.length_ms / 1000) {
-		songProgress->setValue(0);
+		new_val = 0;
     }
 
+	else{
+		return;
+	}
 
-	if(!songProgress->isSearching()) {
-
-		if(_md.length_ms != 0 && (pos_sec * 1000) > _md.length_ms) pos_sec = 0;
-
-		QString curPosString = Helper::cvt_ms_to_string(pos_sec * 1000);
-		curTime->setText(curPosString);
-    }
-
+	songProgress->setValue(new_val);
+	set_cur_pos_label(songProgress->value());
 }
 
 /** PROGRESS BAR END **/
@@ -262,19 +253,19 @@ void GUI_Player::setupVolButton(int percent) {
 	QString butFilename = "vol_";
 
     if (percent <= 1) {
-        butFilename += QString("mute") + m_skinSuffix + ".png";
+		butFilename += QString("mute") + m_skinSuffix;
 	}
 
 	else if (percent < 40) {
-		butFilename += QString("1") + m_skinSuffix + ".png";
+		butFilename += QString("1") + m_skinSuffix;
 	}
 
 	else if (percent < 80) {
-		butFilename += QString("2") + m_skinSuffix + ".png";
+		butFilename += QString("2") + m_skinSuffix;
 	}
 
 	else {
-		butFilename += QString("3") + m_skinSuffix + ".png";
+		butFilename += QString("3") + m_skinSuffix;
 	}
 
 	btn_mute->setIcon( Helper::getIcon(butFilename) );

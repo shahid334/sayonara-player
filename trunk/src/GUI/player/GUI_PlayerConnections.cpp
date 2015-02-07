@@ -61,7 +61,7 @@ void GUI_Player::setupConnections() {
 	connect(action_viewLibrary, SIGNAL(toggled(bool)), this,
 			SLOT(showLibrary(bool)));
 	connect(action_Dark, SIGNAL(toggled(bool)), this,
-			SLOT(changeSkin(bool)));
+			SLOT(skin_toggled(bool)));
 
 	connect(action_smallPlaylistItems, SIGNAL(toggled(bool)), this,
 			SLOT(small_playlist_items_toggled(bool)));
@@ -105,18 +105,10 @@ void GUI_Player::setupConnections() {
     connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
 
 
-	connect(volumeSlider, SIGNAL(searchSliderMoved(int)), this,
+	connect(volumeSlider, SIGNAL(sig_slider_moved(int)), this,
 			SLOT(volumeChanged(int)));
-	connect(volumeSlider, SIGNAL(searchSliderReleased(int)), this,
-    		SLOT(volumeChanged(int)));
-	connect(volumeSlider, SIGNAL(searchSliderPressed(int)), this,
-    		SLOT(volumeChanged(int)));
 
-	connect(songProgress, SIGNAL(searchSliderReleased(int)), this,
-			SLOT(seek(int)));
-	connect(songProgress, SIGNAL(searchSliderPressed(int)), this,
-			SLOT(seek(int)));
-	connect(songProgress, SIGNAL(searchSliderMoved(int)), this,
+	connect(songProgress, SIGNAL(sig_slider_moved(int)), this,
 			SLOT(seek(int)));
 
 
@@ -125,10 +117,10 @@ void GUI_Player::setupConnections() {
 	connect(m_cov_lookup, SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, SLOT(sl_cover_found(const CoverLocation&)));
 
-	connect(m_alternate_covers, SIGNAL(sig_cover_changed(const CoverLocation&)),
+	connect(m_AlternativeCovers, SIGNAL(sig_cover_changed(const CoverLocation&)),
 			this,				SLOT(sl_alternate_cover_available(const CoverLocation&)));
 
-    connect(m_alternate_covers, SIGNAL(sig_no_cover()),
+    connect(m_AlternativeCovers, SIGNAL(sig_no_cover()),
             this,				SLOT(sl_no_cover_available()));
 
 
@@ -160,19 +152,6 @@ void GUI_Player::setupConnections() {
 
     QAction* leiser_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Down));
     connect(leiser_action, SIGNAL(triggered()), this, SLOT(volumeLower()));
-
-    QAction* two_perc_plus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Right));
-    connect(two_perc_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward()));
-
-    QAction* two_perc_minus_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Left));
-    connect(two_perc_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward()));
-
-    QAction* two_sec_minus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Left));
-    connect(two_sec_minus_action, SIGNAL(triggered()), this, SLOT(jump_backward_ms()));
-
-    QAction* two_sec_plus_action = createAction(QKeySequence(Qt::ShiftModifier | Qt::Key_Right));
-    connect(two_sec_plus_action, SIGNAL(triggered()), this, SLOT(jump_forward_ms()));
-
 
     qDebug() << "connections done";
 }

@@ -29,11 +29,6 @@
 #include <QSqlError>
 
 
-CDatabaseConnector* CDatabaseConnector::getInstance() {
-	static CDatabaseConnector instance;
-	return &instance;
-}
-
 CDatabaseConnector::CDatabaseConnector() :
 	QObject()
 {
@@ -241,7 +236,7 @@ bool CDatabaseConnector::updateAlbumCissearch() {
 
     AlbumList albums;
     getAllAlbums(albums);
-    foreach(Album album, albums) {
+	for(const Album& album : albums) {
         QString str = "UPDATE albums SET cissearch=:cissearch WHERE albumID=:id;";
         QSqlQuery q(*_database);
         q.prepare(str);
@@ -261,7 +256,7 @@ bool CDatabaseConnector::updateArtistCissearch() {
 
     ArtistList artists;
     getAllArtists(artists);
-    foreach(Artist artist, artists) {
+	for(const Artist& artist : artists) {
         QString str = "UPDATE artists SET cissearch=:cissearch WHERE artistID=:id;";
         QSqlQuery q(*_database);
         q.prepare(str);
@@ -280,7 +275,7 @@ bool CDatabaseConnector::updateTrackCissearch() {
 
     MetaDataList v_md;
     getTracksFromDatabase(v_md);
-    foreach(MetaData md, v_md) {
+	for(const MetaData& md : v_md) {
         updateTrack(md);
     }
 

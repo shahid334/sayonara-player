@@ -29,10 +29,8 @@
 #ifndef GUIRADIOWIDGET_H_
 #define GUIRADIOWIDGET_H_
 
-#include "GUI/ui_GUI_LFMRadioWidget.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "StreamPlugins/LastFM/LastFM.h"
-#include <QWidget>
 
 class GUI_LFMRadioWidget : public PlayerPlugin, private Ui::GUI_LFMRadioWidget{
 
@@ -46,11 +44,6 @@ public:
 		void listen_clicked(const QString&, int artist);
 		void close_event();
 
-    public slots:
-        void changeSkin(bool);
-        void language_changed();
-
-
 	private slots:
 		void start_listen();
         void mode_index_changed(int i);
@@ -58,10 +51,12 @@ public:
 
 
 	private:
-
         Ui::GUI_LFMRadioWidget* _ui;
 		QStringList _friends;
         LastFM* _lastfm;
+
+protected:
+	void language_changed();
 
 };
 

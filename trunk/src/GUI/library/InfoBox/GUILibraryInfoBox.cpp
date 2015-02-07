@@ -75,7 +75,7 @@ void GUI_Library_Info_Box::psl_refresh() {
 	_duration_ms = 0;
     _filesize = 0;
 
-	foreach(MetaData md, v_md) {
+	for( const MetaData& md : v_md ) {
 		_duration_ms += md.length_ms;
         _filesize += md.filesize;
 	}

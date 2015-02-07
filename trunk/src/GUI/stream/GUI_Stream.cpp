@@ -45,8 +45,10 @@ GUI_Stream::GUI_Stream(QString name, QWidget *parent) :
 
 	QMap<QString, QString> data;
 	CDatabaseConnector::getInstance()->getAllStreams(data);
-	if(data.size() > 0)
+	if(data.size() > 0){
 		setup_stations(data);
+	}
+
 
 	connect(btn_listen, SIGNAL(clicked()), this, SLOT(listen_clicked()));
 	connect(btn_save, SIGNAL(clicked()), this, SLOT(save_clicked()));
@@ -64,10 +66,6 @@ GUI_Stream::~GUI_Stream() {
 
 }
 
-
-void GUI_Stream::changeSkin(bool dark) {
-
-}
 
 void GUI_Stream::language_changed() {
 	retranslateUi(this);
@@ -209,7 +207,9 @@ void GUI_Stream::delete_clicked() {
 	msgBox.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
     msgBox.setModal(true);
     msgBox.setIcon(QMessageBox::Information);
+
 	int ret = msgBox.exec();
+
 	if(ret == QMessageBox::Yes) {
 		if(db->deleteStream(_cur_station_name)) {
 			qDebug() << _cur_station_name << "successfully deleted";
@@ -257,13 +257,14 @@ void GUI_Stream::save_clicked() {
 
 void GUI_Stream::play_stream(QString url, QString name) {
 
+	qDebug() << "Play stream: " << name;
+
     MetaDataList v_md;
 
     if(Helper::is_playlistfile(url)) {
-        MetaDataList v_md_tmp;
-        if(PlaylistParser::parse_playlist(url, v_md_tmp) > 0) {
+		if(PlaylistParser::parse_playlist(url, v_md) > 0) {
 
-            foreach(MetaData md, v_md_tmp) {
+			for(MetaData& md : v_md) {
 
                 if(name.isEmpty()){
                     md.album = url;
@@ -283,9 +284,7 @@ void GUI_Stream::play_stream(QString url, QString name) {
                     md.artist = url;
                 }
 
-                md.radio_mode = RadioModeStation;
-                v_md.push_back(md);
-                qDebug() << "Url = " << md.filepath;
+				qDebug() << "Url = " << md.filepath();
             }
         }
     }
@@ -306,8 +305,7 @@ void GUI_Stream::play_stream(QString url, QString name) {
         }
 
         md.artist = url;
-        md.filepath = url;
-        md.radio_mode = RadioModeStation;
+		md.set_filepath(url);
 
         v_md.push_back(md);
     }

@@ -90,7 +90,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/icons/podcast.png</pixmap>
+      <pixmap resource="../Icons.qrc">:/icons/podcast.png</pixmap>
      </property>
     </widget>
    </item>
@@ -172,8 +172,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>:/icons/delete.png</normaloff>:/icons/delete.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/delete.svg.png</normaloff>:/icons/delete.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -210,8 +210,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>:/icons/save.png</normaloff>:/icons/save.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/save.svg.png</normaloff>:/icons/save.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -267,8 +267,8 @@
         <string> Start</string>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>:/icons/play.png</normaloff>:/icons/play.png</iconset>
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/play.svg.png</normaloff>:/icons/play.svg.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -327,7 +327,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_close</sender>

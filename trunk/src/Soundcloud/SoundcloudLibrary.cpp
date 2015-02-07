@@ -25,223 +25,149 @@
 #include "HelperStructs/WebAccess.h"
 
 
-SoundcloudLibrary::SoundcloudLibrary(QWidget* main_window, QObject *parent) :
-	QObject(parent)
+SoundcloudLibrary::SoundcloudLibrary(QObject *parent) :
+	AbstractLibrary(parent)
 {
+	_scd = new SoundcloudData(this);
+}
 
-	_main_window = main_window;
-	_settings = CSettingsStorage::getInstance();
-	_db = CDatabaseConnector::getInstance();
-
-	QList<int> sortings = _settings->getLibSorting();
-
-
-	_artist_sortorder = (SortOrder) sortings[0];
-	_album_sortorder = (SortOrder) sortings[1];
-	_track_sortorder = (SortOrder) sortings[2];
+void SoundcloudLibrary::load(){
+	_scd->load();
+	AbstractLibrary::load();
 }
 
 
-
-
-bool SoundcloudLibrary::dl_all_artist_info(QString name, Artist& artist){
-	bool success;
-	QString content;
-
-	QString dl = SoundcloudHelper::create_dl_get_artist(name);
-	if(dl.size() == 0) return false;
-
-	success = WebAccess::read_http_into_str(dl, &content);
-	if(!success || content.size() == 0) return false;
-
-	success = SoundcloudHelper::parse_artist_xml(content, artist);
-	return success;
+void SoundcloudLibrary::get_all_artists(ArtistList& artists, LibSortOrder so){
+	_scd->get_all_artists(artists, so);
 }
 
+void SoundcloudLibrary::get_all_artists_by_searchstring(Filter filter, ArtistList& artists, LibSortOrder so){
 
-bool SoundcloudLibrary::dl_all_playlists_by_artist(qint64 artist_id, QString& content){
-
-	bool success;
-
-	QString dl = SoundcloudHelper::create_dl_get_playlists(artist_id);
-	if(dl.size() == 0) return false;
-
-	success = WebAccess::read_http_into_str(dl, &content);
-	if(!success || content.size() == 0) {
-		qDebug() << "Cannot get any data from " << dl;
-		return false;
-	}
-
-	return success;
-}
+	ArtistList tmp_artists;
+	bool* found_artists;
+	_scd->get_all_artists(tmp_artists, so);
+	found_artists = new bool[tmp_artists.size()];
 
 
-bool SoundcloudLibrary::dl_all_tracks_by_artist(qint64 artist_id, QString& content){
+	QMap<int, int> artist_map;
 
-	bool success;
-
-	QString dl = SoundcloudHelper::create_dl_get_tracks(artist_id);
-	if(dl.size() == 0) return false;
-
-	success = WebAccess::read_http_into_str(dl, &content);
-	if(!success || content.size() == 0) {
-		qDebug() << "Cannot get any data from " << dl;
-		return false;
-	}
-
-	return success;
-}
-
-
-void SoundcloudLibrary::loadData(){
-
-	return;
-
-	bool success;
-	Artist artist;
-	QString content;
-
-	success = dl_all_artist_info("Alloinyx", artist);
-	if(!success){
-		qDebug() << "Cannot get info from Shoutcast Artist Alloinyx";
-		return;
-	}
-
-	success = dl_all_playlists_by_artist(artist.id, content);
-	if(!success){
-		return;
-	}
-
-	success = SoundcloudHelper::parse_playlist_xml(content, _vec_md, _vec_artists, _vec_albums);
-	if(!success){
-		qDebug() << "Could not parse PlaylistChooser xml file";
-		return;
-	}
-
-	qDebug() << "Got " << _vec_md.size() << " tracks "
-			 << ", " << _vec_artists.size() << " artists "
-			 << ", " << _vec_albums.size() << " albums";
-
-	content.clear();
-
-	MetaDataList v_md;
-	success = dl_all_tracks_by_artist(artist.id, content);
-	if(!success){
-		return;
-	}
-
-	success = SoundcloudHelper::parse_tracks_xml(content, v_md);
-	qDebug() << "Got " << v_md.size() << " tracks ";
-
-	if( v_md.size() == _vec_md.size() ) return;
-
-	foreach(MetaData md_wo_pl, v_md){
-
-		bool track_found_in_pl = false;
-		foreach(MetaData md_in_pl, _vec_md){
-
-			if(md_wo_pl.id == md_in_pl.id){
-				track_found_in_pl = true;
-				break;
-			}
+	int i=0;
+	for(const Artist& a : tmp_artists){
+		if(a.name.contains(filter.filtertext)){
+			artists << a;
+			found_artists[i] = true;
 		}
 
-		if(!track_found_in_pl){
-			qDebug() << "Add one track " << md_wo_pl.title;
-			md_wo_pl.album_id = 0;
-			md_wo_pl.album = tr("Misc");
-			_vec_md.push_back(md_wo_pl);
+		else{
+			found_artists[i] = false;
+		}
+
+		artist_map.insert(a.id, i);
+
+		i++;
+	}
+}
+
+void SoundcloudLibrary::get_all_albums(AlbumList& albums, LibSortOrder so){
+	_scd->get_all_albums(albums, so);
+}
+
+void SoundcloudLibrary::get_all_albums_by_artist(QList<int> artist_ids, AlbumList& albums, Filter filter, LibSortOrder so){
+
+
+}
+
+void SoundcloudLibrary::get_all_albums_by_searchstring(Filter filter, AlbumList& albums, LibSortOrder so){
+
+
+	AlbumList tmp_albums;
+	_scd->get_all_albums(tmp_albums, so);
+
+	for(const Album& a : tmp_albums){
+		if(a.name.contains(filter.filtertext)){
+			albums << a;
+		}
+	}
+}
+
+void SoundcloudLibrary::get_all_tracks(MetaDataList& v_md, LibSortOrder so){
+	_scd->get_all_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::get_all_tracks_by_artist(QList<int> artist_ids, MetaDataList& v_md, Filter filter, LibSortOrder so){
+
+	for(int artist_id : artist_ids){
+
+		MetaDataList v_md_tmp;
+		_scd->get_all_tracks_by_artist(v_md_tmp, artist_id, so);
+		for(const MetaData& md : v_md_tmp){
+			v_md << md;
+		}
+	}
+
+	_scd->sort_tracks(v_md, so);
+
+}
+
+void SoundcloudLibrary::get_all_tracks_by_album(QList<int> album_ids, MetaDataList& v_md, Filter filter, LibSortOrder so){
+
+	for(int album_id : album_ids){
+
+		MetaDataList v_md_tmp;
+		_scd->get_all_tracks_by_album(v_md_tmp, album_id, so);
+		for(const MetaData& md : v_md_tmp){
+			v_md << md;
+		}
+	}
+
+	_scd->sort_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::get_all_tracks_by_searchstring(Filter filter, MetaDataList& v_md, LibSortOrder so){
+	_scd->get_all_tracks(v_md, so);
+}
+
+void SoundcloudLibrary::get_album_by_id(int album_id, Album& album){
+
+	AlbumList albums;
+	_scd->get_all_albums(albums, LibSortOrder());
+
+	for(const Album& a : albums){
+		if(a.id == album_id){
+			album = a;
+			return;
+		}
+	}
+}
+
+void SoundcloudLibrary::get_artist_by_id(int artist_id, Artist& artist){
+
+	ArtistList artists;
+	_scd->get_all_artists(artists, LibSortOrder());
+
+	for(const Artist& a : artists){
+		if(a.id == artist_id){
+			artist = a;
+			return;
 		}
 	}
 }
 
 
-void SoundcloudLibrary::reloadLibrary(bool clear){
+void SoundcloudLibrary::update_track(const MetaData& md){
 
 }
 
-void SoundcloudLibrary::clearLibrary(){
+void SoundcloudLibrary::update_album(const Album& album){
 
 }
 
-void SoundcloudLibrary::refresh(bool emit_changed){
+void SoundcloudLibrary::delete_tracks(const MetaDataList& v_md, TrackDeletionMode mode){
 
 }
 
-void SoundcloudLibrary::psl_selected_artists_changed(const QList<int>& lst){
-
-}
-
-void SoundcloudLibrary::psl_selected_albums_changed(const QList<int>& lst){
-
-}
-
-void SoundcloudLibrary::psl_selected_tracks_changed(const QList<int>& lst){
-
-}
-
-void SoundcloudLibrary::psl_prepare_album_for_playlist(int idx){
-
-}
-
-void SoundcloudLibrary::psl_prepare_artist_for_playlist(int idx){
-
-}
-
-void SoundcloudLibrary::psl_prepare_track_for_playlist(int idx){
-
-}
-
-void SoundcloudLibrary::psl_prepare_tracks_for_playlist(QList<int> lst){
+void SoundcloudLibrary::psl_reload_library(bool b){
 
 }
 
 
-void SoundcloudLibrary::
-psl_sortorder_changed(Sort::SortOrder artist_sort, Sort::SortOrder album_sort, Sort::SortOrder track_sort){
-
-}
-
-void SoundcloudLibrary::psl_delete_tracks(int idx){
-
-}
-
-void SoundcloudLibrary::psl_delete_certain_tracks(const QList<int>&,int lst){
-
-}
-
-void SoundcloudLibrary::psl_play_next_all_tracks(){
-
-}
-
-void SoundcloudLibrary::psl_play_next_tracks(const QList<int>& lst){
-
-}
-
-void SoundcloudLibrary::psl_append_all_tracks(){
-
-}
-
-void SoundcloudLibrary::psl_append_tracks(const QList<int>& lst){
-
-}
-
-void SoundcloudLibrary::psl_track_rating_changed(int idx, int rating){
-
-}
-
-void SoundcloudLibrary::psl_album_rating_changed(int idx, int rating){
-
-}
-
-void SoundcloudLibrary::library_reloading_state_slot(QString str){
-
-}
-
-void SoundcloudLibrary::library_reloading_state_new_block(){
-
-}
-
-void SoundcloudLibrary::reload_thread_finished(){
-
-}

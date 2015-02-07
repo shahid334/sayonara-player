@@ -30,13 +30,16 @@ class LibraryItem {
 public:
 
 	bool is_lib_selected;
+	QString cover_download_url;
 
-	LibraryItem() : is_lib_selected(false) {
-
+	LibraryItem()  {
+		is_lib_selected = false;
+		cover_download_url = "";
 	}
 
 	LibraryItem(const LibraryItem& li){
 		is_lib_selected = li.is_lib_selected;
+		cover_download_url = li.cover_download_url;
 	}
 
 

@@ -45,22 +45,18 @@
 #include <QScrollBar>
 #include <QFont>
 #include <QMimeData>
+#include "HelperStructs/MetaDataInfo.h"
 
 LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
-    _parent = parent;
     _qDrag = 0;
     _rc_header_menu = 0;
-    _dark = true;
     _cur_filling = false;
 
     _mimedata = new CustomMimeData();
     _editor = 0;
 
     rc_menu_init();
-
-    _corner_widget = new QWidget(this);
-    _corner_widget->hide();
 
     connect(this->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(sort_by_column(int)));
     setAcceptDrops(true);
@@ -71,7 +67,6 @@ LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
 LibraryView::~LibraryView() {
     delete _rc_menu;
-    delete _corner_widget;
 }
 
 
@@ -81,11 +76,27 @@ void LibraryView::mousePressEvent(QMouseEvent* event) {
 	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
 
+
 	switch(event->button()) {
 
 	case Qt::LeftButton:
 
 		SearchableTableView::mousePressEvent(event);
+
+		// if we do nothing here, we cannot drag again
+		// the same marked lines, because drag has been
+		// deleted and selectionChanged is not called
+
+		if(!_qDrag){
+
+			QModelIndex idx;
+			QList<int> idxs;
+			idx = indexAt(event->pos());
+			if(idx.isValid()){
+				idxs << idx.row();
+				emit sig_sel_changed(idxs);
+			}
+		}
 
         _drag_pos = pos_org;
         _drag = true;
@@ -123,7 +134,6 @@ void LibraryView::mouseMoveEvent(QMouseEvent* event) {
     int distance = abs(pos.x() - _drag_pos.x()) +	abs(pos.y() - _drag_pos.y());
 
     if (_drag && _qDrag && distance > 20) {
-        emit sig_no_disc_menu();
         _qDrag->exec(Qt::CopyAction);
     }
 }
@@ -144,8 +154,6 @@ void LibraryView::mouseReleaseEvent(QMouseEvent* event) {
             event->accept();
 
             _drag = false;
-
-            emit sig_released();
 
             break;
 
@@ -257,7 +265,7 @@ int LibraryView::get_min_selected() {
     QList<int> selections = _model->get_selected();
     if(selections.size() == 0) return 0;
     int min = 10000;
-	foreach(int i, selections) {
+	for(const int& i : selections) {
         if(i < min) min = i;
     }
     return min;
@@ -272,7 +280,7 @@ void LibraryView::selectionChanged ( const QItemSelection & selected, const QIte
     QModelIndexList idx_list = this->selectionModel()->selectedIndexes();
 
 	QList<int> idx_list_int;
-	foreach(QModelIndex model_idx, idx_list) {
+	for(const QModelIndex& model_idx : idx_list) {
 
 		int row = model_idx.row();
 
@@ -296,7 +304,7 @@ QList<int> LibraryView::get_selections() {
     QList<int> idx_list_int;
     QModelIndexList idx_list = this->selectionModel()->selectedRows();
 
-	foreach(QModelIndex model_idx, idx_list) {
+	for(const QModelIndex& model_idx : idx_list) {
         idx_list_int.push_back(model_idx.row());
     }
 
@@ -307,8 +315,8 @@ QList<int> LibraryView::get_selections() {
 
 
 template void LibraryView::fill<MetaDataList, MetaData>(const MetaDataList&);
-template void LibraryView::fill<AlbumList, Album>(const AlbumList&);
 template void LibraryView::fill<ArtistList, Artist>(const ArtistList&);
+template void LibraryView::fill<AlbumList, Album>(const AlbumList&);
 
 
 template < class TList, class T >
@@ -321,8 +329,7 @@ void LibraryView::fill(const TList& input_data) {
 
 	_cur_filling = true;
 
-	_model->removeRows(0, _model->rowCount());
-	_model->insertRows(0, size);
+	_model->remove_all_and_insert(size);
 
 	for(int row=0; row < size; row++) {
 
@@ -339,20 +346,18 @@ void LibraryView::fill(const TList& input_data) {
 		_model->setData(idx, var_data, Qt::EditRole );
 	}
 
-	calc_corner_widget();
-
 	_cur_filling = false;
 }
 
 
-void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop_entire_folder) {
+void LibraryView::set_mimedata(const MetaDataList& v_md, bool drop_entire_folder, bool for_artist) {
 
     _mimedata = new CustomMimeData();
 
     QList<QUrl> urls;
 	if(!drop_entire_folder) {
-		foreach(MetaData md, v_md) {
-            QUrl url(QString("file://") + md.filepath);
+		for(const MetaData& md : v_md) {
+			QUrl url(QString("file://") + md.filepath());
             urls << url;
         }
     }
@@ -361,25 +366,54 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
         QStringList filenames;
 		QStringList folders;
 
-		foreach(MetaData md, v_md){
-            filenames << md.filepath;
+		for(const MetaData& md : v_md) {
+			filenames << md.filepath();
 		}
 
 		folders = Helper::extract_folders_of_files(filenames);
-		foreach(QString folder, folders) {
+		for(const QString& folder : folders) {
             QUrl url(QString("file://") + folder);
             urls << url;
         }
     }
 
     _mimedata->setMetaData(v_md);
-    _mimedata->setText(text);
+	_mimedata->setText("tracks");
     _mimedata->setUrls(urls);
 
-    if(_qDrag) delete _qDrag;
+	if(_qDrag){
+		delete _qDrag;
+	}
 
     _qDrag = new QDrag(this);
     _qDrag->setMimeData(_mimedata);
+
+
+
+	QPixmap pm = Helper::getPixmap("append", QSize(48, 48), false);
+
+	if(v_md.size() > 0){
+
+		CoverLocation cl;
+		if(for_artist){
+
+			ArtistInfo ai(this, v_md);
+			cl = ai.get_cover_location();
+		}
+
+		else{
+			MetaDataInfo mdi(this, v_md);
+			cl = mdi.get_cover_location();
+		}
+
+		QFile f(cl.cover_path);
+
+		if(f.exists()){
+			pm = QPixmap(cl.cover_path).scaled(QSize(48, 48), Qt::KeepAspectRatio, Qt::SmoothTransformation) ;
+		}
+	}
+
+	_qDrag->setPixmap(pm);
 
     connect(_qDrag, SIGNAL(destroyed()), this, SLOT(drag_deleted()));
 
@@ -389,44 +423,8 @@ void LibraryView::set_mimedata(const MetaDataList& v_md, QString text, bool drop
 void LibraryView::drag_deleted() {
     _qDrag = NULL;
 }
-
-// appearance
-void LibraryView::set_skin(bool dark) {
-    _dark = dark;
-    calc_corner_widget();
-}
-
-void LibraryView::calc_corner_widget() {
-
-	if(!this->verticalScrollBar() || !this->verticalScrollBar()->isVisible() || !this->horizontalScrollBar()->isVisible()) {
-        this->setCornerWidget(NULL);
-        _corner_widget->hide();
-        return;
-    }
-
-	if(!this->cornerWidget()) {
-        this->setCornerWidget(_corner_widget);
-        _corner_widget->show();
-		return;
-    }
-
-	if(this->cornerWidget()) {
-        if(_dark)
-            this->cornerWidget()->setStyleSheet(QString("background: #3c3c3c;"));
-        else{
-            QPalette palette = _parent->palette();
-            QColor bg = palette.color(QPalette::Normal, QPalette::Window);
-            this->cornerWidget()->setStyleSheet(QString("background: ") + bg.name() + ";");
-        }
-    }
-}
-
-void LibraryView::resizeEvent(QResizeEvent* event) {
-    event->ignore();
-	SearchableTableView::resizeEvent(event);
-    calc_corner_widget();
-}
 // appearance end
+
 
 void LibraryView::set_editor(RatingLabel *editor) {
 
@@ -464,7 +462,7 @@ void LibraryView::dropEvent(QDropEvent *event) {
     }
 
 	QStringList filelist;
-	foreach(QUrl url, mime_data->urls()) {
+	for(const QUrl& url : mime_data->urls()) {
         QString path;
         QString url_str = url.toString();
         path =  url_str.right(url_str.length() - 7).trimmed();
@@ -497,8 +495,6 @@ void LibraryView::rc_menu_init() {
 }
 
 void LibraryView::rc_menu_show(const QPoint& p) {
-
-    emit sig_no_disc_menu();
 
     connect(_rc_menu, SIGNAL(sig_edit_clicked()), this, SLOT(edit_clicked()));
     connect(_rc_menu, SIGNAL(sig_info_clicked()), this, SLOT(info_clicked()));

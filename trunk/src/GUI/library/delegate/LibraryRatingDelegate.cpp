@@ -21,10 +21,11 @@
 
 
 #include "LibraryRatingDelegate.h"
-#include "GUI/RatingLabel.h"
+#include "GUI/library/RatingLabel.h"
 #include <QDebug>
 
-LibraryRatingDelegate::LibraryRatingDelegate(LibraryItemModel* model, LibraryView* parent, bool enabled)
+LibraryRatingDelegate::LibraryRatingDelegate(LibraryView* parent, bool enabled) :
+	QItemDelegate(parent)
 {
     _parent = parent;
 	_enabled = enabled;

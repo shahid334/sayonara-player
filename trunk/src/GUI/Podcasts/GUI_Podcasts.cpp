@@ -258,20 +258,17 @@ void  GUI_Podcasts::play_podcasts(QString url, QString name) {
     QString content;
     if(Helper::is_podcastfile(url, &content)) {
 
-        MetaDataList v_md_tmp;
-        if(Podcast::parse_podcast_xml_file_content(content, v_md_tmp) > 0) {
+		if(Podcast::parse_podcast_xml_file_content(content, v_md) > 0) {
 
-            foreach(MetaData md, v_md_tmp) {
+			for(MetaData& md : v_md) {
 
-                md.radio_mode = RadioModeStation;
                 if(md.title.size() == 0) {
-                    if(name.size() > 0)
-                        md.title = name;
+					if(name.size() > 0){
+						md.title = name;
+					}
                     else md.title = "Podcast";
                 }
-
-                v_md.push_back(md);
-            }
+			}
         }
 
         else {

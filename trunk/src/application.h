@@ -32,6 +32,7 @@
 
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/library/GUI_Library_windowed.h"
+#include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
 #include "GUI/tagedit/GUI_TagEdit.h"
 #include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -40,7 +41,7 @@
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 #include "GUI/SocketConfiguration/GUISocketSetup.h"
-#include "GUI/alternate_covers/GUI_Alternate_Covers.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/engine/GUI_LevelPainter.h"
 #include "GUI/engine/GUI_Spectrum.h"
 #include "GUI/engine/GUI_StyleSettings.h"
@@ -49,13 +50,14 @@
 #include "GUI/speed/GUI_Speed.h"
 #include "GUI/broadcasting/GUI_Broadcast.h"
 
-#include "playlist/PlaylistHandler.h"
+#include "Playlist/PlaylistHandler.h"
 #include "Engine/GStreamer/GSTEngineHandler.h"
 #include "Engine/SoundPluginLoader.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
-#include "library/CLibraryBase.h"
-#include "library/LibraryImporter.h"
+#include "Library/LocalLibrary.h"
+#include "Soundcloud/SoundcloudLibrary.h"
+#include "Library/LibraryImporter.h"
 #include "HelperStructs/Equalizer_presets.h"
 
 #include "LyricLookup/LyricLookup.h"
@@ -85,9 +87,10 @@ private:
 	GUI_Player*             player;
 	GUI_PlaylistChooser*    ui_playlist_chooser;
 	GUI_AudioConverter*     ui_audioconverter;
-	PlaylistChooser*              playlist_chooser;
+	PlaylistChooser*		playlist_chooser;
 	PlaylistHandler*        playlist_handler;
-	CLibraryBase*           library;
+	LocalLibrary*           library;
+	SoundcloudLibrary*		sc_library;
 	LibraryImporter*        library_importer;
 	LastFM*                 lastfm;
 
@@ -108,6 +111,7 @@ private:
 	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
+	GUI_SoundCloudLibrary*  ui_sc_library;
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
 	StreamServer*           stream_server;
@@ -132,10 +136,6 @@ public:
 private:
     QString getVersion();
 	void check_for_crash();
-	QFont _system_font;
-
-private slots:
-	void skin_changed();
 };
 
 #endif // APPLICATION_H

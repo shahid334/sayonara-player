@@ -48,6 +48,10 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 	disable_prev();
 }
 
+void GUI_Bookmarks::language_changed(){
+	retranslateUi(this);
+}
+
 
 void GUI_Bookmarks::disable_prev() {
 	_last_idx = -1;
@@ -181,7 +185,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
 	_md = md;
 
 	success = _db->searchBookmarks(md.id, _bookmarks);
-	if(!success || _bookmarks.size() == 0 || md.id < 0) {
+	if( !success || _bookmarks.size() == 0 || (md.id < 0) ) {
 		connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 		return;
 	}

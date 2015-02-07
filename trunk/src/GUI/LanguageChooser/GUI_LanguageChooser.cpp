@@ -84,7 +84,7 @@ void GUI_LanguageChooser::renew_combo() {
 	combo_lang->clear();
 
     int i=0;
-    foreach(QString file, files) {
+	for(const QString file : files) {
 
 		QString filename, dirname;
 		Helper::split_filename(file, dirname, filename);

@@ -142,7 +142,7 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
                 }
 
                 else if(!ic_nodename.compare("link", Qt::CaseInsensitive)) {
-                    md.filepath = ic_e.text();
+					md.set_filepath(ic_e.text());
                 }
 
                 else if(!ic_nodename.compare("enclosure", Qt::CaseInsensitive)) {
@@ -183,8 +183,9 @@ bool  Podcast::parse_podcast_xml_file_content(const QString& content, MetaDataLi
                 }
             } // foreach item entry
 
-            if(md.filepath.size() > 0)
+			if( !md.filepath().isEmpty() ){
                 v_md.push_back(md);
+			}
         } // item
     }
 

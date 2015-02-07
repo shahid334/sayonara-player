@@ -43,7 +43,7 @@ signals:
     
 public slots:
     void show(int);
-	void language_changed();
+
 
 private slots:
     void combo_styles_changed(int);
@@ -81,7 +81,7 @@ private:
 
 protected:
     void closeEvent(QCloseEvent *);
-    
+	void language_changed();
 };
 
 #endif // STYLESETTINGS_H
