@@ -1202,14 +1202,12 @@ Playlists</source>
     <name>GUI_SetLibrary</name>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="48"/>
-        <location filename="../GUI/library/ui_GUI_LibraryPath.h" line="97"/>
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="97"/>
         <source>You haven&apos;t specified a library path yet</source>
         <translation>Non è ancora stato specificato un percorso per la Libreria</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="73"/>
-        <location filename="../GUI/library/ui_GUI_LibraryPath.h" line="98"/>
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="98"/>
         <source>Set library path</source>
         <translation>Definire il percorso di accesso alla Libreria</translation>
@@ -1941,63 +1939,54 @@ Seleziona un&apos;altra cartella</translation>
     <name>ImportFolder</name>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="14"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="240"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="240"/>
         <source>Dialog</source>
         <translation>Dialogo</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="180"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="247"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="247"/>
         <source>Copy tracks to library</source>
         <translation>Copia la traccia nella libreria</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="127"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="243"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="243"/>
         <source>Import tracks to library</source>
         <translation>Importa la traccia nella libreria</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="86"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="242"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="242"/>
         <source>Select target folder</source>
         <translation>Seleziona la cartella desiderata</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="31"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="250"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="250"/>
         <source>Import</source>
         <translation>Importa</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="145"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="244"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="244"/>
         <source>Cancel</source>
         <translation>Annulla</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="161"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="245"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="245"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="170"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="246"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="246"/>
         <source>/music/library</source>
         <translation>/musica/libreria</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="235"/>
-        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="248"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="248"/>
         <source>...</source>
         <translation>...</translation>
@@ -2111,56 +2100,48 @@ Seleziona un&apos;altra cartella</translation>
     <name>Library_Info_Box</name>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="14"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="159"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="159"/>
         <source>Info</source>
         <translation>Info</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="40"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="162"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="162"/>
         <source>LastFM Playcount</source>
         <translation>Riprodotto da LastFM</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="53"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="163"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="163"/>
         <source>Artists</source>
         <translation>Artisti</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="80"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="166"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="166"/>
         <source>Tracks</source>
         <translation>Tracce</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="93"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="167"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="167"/>
         <source>Duration</source>
         <translation>Durata</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="106"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="168"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="168"/>
         <source>Albums</source>
         <translation>Albums</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="157"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="171"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="171"/>
         <source>Filesize</source>
         <translation>Grandezza del file</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="198"/>
-        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="173"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="173"/>
         <source>Close</source>
         <translation>Chiudi</translation>
@@ -2170,64 +2151,51 @@ Seleziona un&apos;altra cartella</translation>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="257"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="246"/>
         <source>Library</source>
         <translation>Libreria</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="305"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="265"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="254"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Abbreviazione: &lt;br /&gt;Cerca &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Percorso &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="318"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="260"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="249"/>
         <source>Search</source>
         <translation>Cerca</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="323"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="261"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="250"/>
         <source>Genre</source>
         <translation>Genere</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="328"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="262"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="251"/>
         <source>Path</source>
         <translation>Percorso</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="351"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="268"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
         <source>Search for title, interprets and albums</source>
         <translation>Cerca tiolo, interpreti e albums</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="271"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="260"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Mostra tutti gli intepreti, gli albums e le tracce</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="451"/>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="278"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Information</source>
         <translation>Informazioni</translation>
-    </message>
-    <message>
-        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="275"/>
-        <source>Music Library  </source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

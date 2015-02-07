@@ -1560,10 +1560,6 @@ Kérjük, válasszon egy másik mappát</translation>
         <source>Search for title, interprets and albums</source>
         <translation>Search for title, interprets and albums</translation>
     </message>
-    <message>
-        <source>Music Library  </source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>LyricLookupThread</name>
