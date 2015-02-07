@@ -6,22 +6,22 @@
     <message>
         <location filename="../Library/AbstractLibrary.cpp" line="558"/>
         <source>entries</source>
-        <translation type="unfinished">înregistrări</translation>
+        <translation>înregistrări</translation>
     </message>
     <message>
         <location filename="../Library/AbstractLibrary.cpp" line="563"/>
         <source>files</source>
-        <translation type="unfinished">fișiere</translation>
+        <translation>fișiere</translation>
     </message>
     <message>
         <location filename="../Library/AbstractLibrary.cpp" line="573"/>
         <source>All %1 could be removed</source>
-        <translation type="unfinished">Toate %1 pot fi îndepărtate</translation>
+        <translation>Toate %1 pot fi îndepărtate</translation>
     </message>
     <message>
         <location filename="../Library/AbstractLibrary.cpp" line="577"/>
         <source>%1 of %2 %3 could not be removed</source>
-        <translation type="unfinished">%1 din %2 %3 nu pot fi îndepărtate</translation>
+        <translation>%1 din %2 %3 nu pot fi îndepărtate</translation>
     </message>
 </context>
 <context>
@@ -101,61 +101,61 @@
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="14"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="213"/>
         <source>Search alternative image</source>
-        <translation type="unfinished">Caută o imagine alternativă</translation>
+        <translation>Caută o imagine alternativă</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="57"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="215"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Caută</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="79"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="216"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="111"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="217"/>
         <source>Online search</source>
-        <translation type="unfinished">Căutare online</translation>
+        <translation>Căutare online</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="121"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="218"/>
         <source>Local search</source>
-        <translation type="unfinished">Căutare locală</translation>
+        <translation>Căutare locală</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="131"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="219"/>
         <source>Select and preview multiple covers</source>
-        <translation type="unfinished">Alege și previzualizează multiple coperți</translation>
+        <translation>Alege și previzualizează multiple coperți</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="239"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="221"/>
         <source>Close</source>
-        <translation type="unfinished">Închide</translation>
+        <translation>Închide</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="261"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="222"/>
         <source>Save</source>
-        <translation type="unfinished">Salvează</translation>
+        <translation>Salvează</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="294"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="223"/>
         <source>Alternative Cover</source>
-        <translation type="unfinished">Copertile alternativ</translation>
+        <translation>Copertile alternativ</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="301"/>
         <location filename="../GUI/ui_GUI_AlternativeCovers.h" line="224"/>
         <source>for</source>
-        <translation type="unfinished">pentru</translation>
+        <translation>pentru</translation>
     </message>
 </context>
 <context>
@@ -213,7 +213,7 @@
     <message>
         <location filename="../application.cpp" line="221"/>
         <source>Music Library</source>
-        <translation type="unfinished"></translation>
+        <translation>Muzică Librărie</translation>
     </message>
 </context>
 <context>
@@ -261,7 +261,7 @@
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <source>Title</source>
-        <translation type="unfinished">Titlu</translation>
+        <translation>Titlu</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
@@ -269,7 +269,7 @@
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="113"/>
         <source>Artist</source>
-        <translation type="unfinished">Artist</translation>
+        <translation>Artist</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
@@ -277,7 +277,7 @@
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="112"/>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
@@ -285,31 +285,31 @@
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="112"/>
         <source>Year</source>
-        <translation type="unfinished">An</translation>
+        <translation>An</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <source>Dur.</source>
-        <translation type="unfinished">Dur.</translation>
+        <translation>Dur.</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <source>Bitrate</source>
-        <translation type="unfinished">Rată biți</translation>
+        <translation>Rată biți</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="98"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <source>Filesize</source>
-        <translation type="unfinished">Dimensiune</translation>
+        <translation>Dimensiune</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="99"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="112"/>
         <source>Duration</source>
-        <translation type="unfinished">Durată</translation>
+        <translation>Durată</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="99"/>
@@ -317,18 +317,18 @@
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="112"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="113"/>
         <source>#Tracks</source>
-        <translation type="unfinished">#Melodii</translation>
+        <translation>#Melodii</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="111"/>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="112"/>
         <source>Rating</source>
-        <translation type="unfinished">Apreciere</translation>
+        <translation>Apreciere</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_AbstractLibrary.cpp" line="529"/>
         <source>Info</source>
-        <translation type="unfinished">Info</translation>
+        <translation>Info</translation>
     </message>
 </context>
 <context>
@@ -336,57 +336,57 @@
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="111"/>
         <source>Stop</source>
-        <translation type="unfinished">Stop</translation>
+        <translation>Stop</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="143"/>
         <source>for album</source>
-        <translation type="unfinished">pentru album</translation>
+        <translation>pentru album</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="162"/>
         <source>for album &quot;</source>
-        <translation type="unfinished">pentru album &quot;</translation>
+        <translation>pentru album &quot;</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="162"/>
         <source>&quot; by &quot;</source>
-        <translation type="unfinished">de</translation>
+        <translation>de</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="180"/>
         <source>for artist</source>
-        <translation type="unfinished">pentru artist</translation>
+        <translation>pentru artist</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="198"/>
         <source>for</source>
-        <translation type="unfinished">pentru</translation>
+        <translation>pentru</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="235"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Informații</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="235"/>
         <source>This cover does not exist</source>
-        <translation type="unfinished">Această copertă nu există</translation>
+        <translation>Această copertă nu există</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="279"/>
         <source> covers found</source>
-        <translation type="unfinished">Copertile găsit</translation>
+        <translation>Copertile găsit</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="287"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Caută</translation>
     </message>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.cpp" line="343"/>
         <source>Open image files</source>
-        <translation type="unfinished">Deschide fișiere imagini</translation>
+        <translation>Deschide fișiere imagini</translation>
     </message>
 </context>
 <context>
@@ -597,7 +597,7 @@
     <message>
         <location filename="../GUI/broadcasting/GUI_Broadcast.cpp" line="152"/>
         <source>Warning</source>
-        <translation type="unfinished">Avertisment</translation>
+        <translation>Avertisment</translation>
     </message>
 </context>
 <context>
@@ -1269,49 +1269,49 @@ Playlists</source>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="26"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="280"/>
         <source>Library</source>
-        <translation type="unfinished">Librărie</translation>
+        <translation>Librărie</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="305"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="288"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
-        <translation type="unfinished">Scurtături: &lt;br /&gt;Căutare &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Gen &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Cale &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
+        <translation>Scurtături: &lt;br /&gt;Căutare &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Gen &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Cale &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="318"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="283"/>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Caută</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="323"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="284"/>
         <source>Genre</source>
-        <translation type="unfinished">Gen</translation>
+        <translation>Gen</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="328"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="285"/>
         <source>Path</source>
-        <translation type="unfinished">Cale</translation>
+        <translation>Cale</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="351"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="291"/>
         <source>Search for title, interprets and albums</source>
-        <translation type="unfinished">Căutare titlu, interpreți și albume</translation>
+        <translation>Căutare titlu, interpreți și albume</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="373"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="294"/>
         <source>Show all interprets, albums, tracks</source>
-        <translation type="unfinished">Arată toți interpreții, albumele și melodiile</translation>
+        <translation>Arată toți interpreții, albumele și melodiile</translation>
     </message>
     <message>
         <location filename="../GUI/soundcloud/GUI_SoundcloudLibrary.ui" line="506"/>
         <location filename="../GUI/ui_GUI_SoundcloudLibrary.h" line="302"/>
         <source>Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Informații</translation>
     </message>
 </context>
 <context>
