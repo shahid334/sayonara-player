@@ -162,7 +162,9 @@ void GUI_Player::jump_backward() {
 
 void GUI_Player::seek(int val) {
 
+	if(val < 0) return;
 	set_cur_pos_label(val);
+
 
 	float percent = (val * 100.0f) / songProgress->maximum();
 
@@ -187,7 +189,10 @@ void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 	}
 
 	songProgress->setValue(new_val);
-	set_cur_pos_label(songProgress->value());
+
+	QString curPosString = Helper::cvt_ms_to_string(pos_sec * 1000);
+	curTime->setText(curPosString);
+
 }
 
 /** PROGRESS BAR END **/

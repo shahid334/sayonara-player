@@ -135,10 +135,10 @@ private:
 	int					_cur_playlist_idx;
 	int					_active_playlist_idx;
 
-	bool				_start_play;
 	PlaylistState		_state;
 
 	int					_last_track;
+	bool				_first_creation;
 
 	PlaylistType determine_playlist_type(const MetaDataList& v_md);
 	Playlist* new_playlist(PlaylistType type, int idx);
