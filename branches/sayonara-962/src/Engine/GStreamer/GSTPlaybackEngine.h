@@ -91,10 +91,10 @@ public slots:
 	virtual void stop();
 	virtual void pause();
 
-	virtual void jump_abs_s(quint32);
-	virtual void jump_abs_ms(quint64);
-	virtual void jump_rel(quint32);
-    virtual void jump_rel_ms(qint64 where);
+	virtual void jump_abs_s(quint32 pos_s);
+	virtual void jump_abs_ms(quint64 pos_ms);
+	virtual void jump_rel(quint32 percent);
+	virtual void jump_rel_ms(qint64 pos_ms);
 
 	virtual void change_track(const MetaData&, bool start_play);
 	virtual void change_track(const QString&, bool start_play);

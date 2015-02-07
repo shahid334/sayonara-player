@@ -365,12 +365,6 @@ void GUI_Player::last_fm_logged_in(bool b) {
 	if(!b && active){
 		QMessageBox::warning(centralwidget, tr("Warning"), tr("Cannot login to Last.fm"));
 	}
-
-    if(!b) {
-		action_ViewLFMRadio->setChecked(false);
-    }
-
-	action_ViewLFMRadio->setVisible(b);
 }
 
 

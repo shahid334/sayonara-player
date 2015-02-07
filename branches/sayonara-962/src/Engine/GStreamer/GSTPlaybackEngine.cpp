@@ -57,6 +57,7 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 {
 
 	ENGINE_DEBUG;
+	_md.id = -1;
 	_calc_log10_lut();
 
 	_caps = new MyCaps();
@@ -76,7 +77,11 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 	_wait_for_gapless_track = false;
 	_may_start_timer = false;
 
-	if(_settings->get(Set::PL_LastTrack) >= 0){
+	_jump_play_s = 0;
+
+	if(_settings->get(Set::PL_LastTrack) >= 0 &&
+		_settings->get(Set::PL_Load) &&
+		_settings->get(Set::PL_RememberTime)){
 		_jump_play_s = _settings->get(Set::Engine_CurTrackPos_s);
 	}
 
@@ -148,7 +153,11 @@ void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 
 void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
-    bool success = false;
+	if(start_play && !md.is_equal(_md) && _md.id >= 0){
+		_jump_play_s = 0;
+	}
+
+	bool success = false;
 	if(md.radio_mode() != RadioModeOff){
 		_settings->set(Set::Engine_CurTrackPos_s, 0);
 	}
@@ -279,21 +288,21 @@ void GSTPlaybackEngine::pause() {
 }
 
 
-void GSTPlaybackEngine::jump_abs_s(quint32 where) {
+void GSTPlaybackEngine::jump_abs_s(quint32 pos_s) {
 
 	gint64 new_time_ns;
 
-	new_time_ns = _pipeline->seek_abs(where * MRD);
+	new_time_ns = _pipeline->seek_abs(pos_s * MRD);
 
 	_scrobble_begin_ms = new_time_ns / MIO;
 }
 
 
-void GSTPlaybackEngine::jump_abs_ms(quint64 where) {
+void GSTPlaybackEngine::jump_abs_ms(quint64 pos_ms) {
 
 	gint64 new_time_ns;
 
-	new_time_ns = _pipeline->seek_abs(where * MIO);
+	new_time_ns = _pipeline->seek_abs(pos_ms * MIO);
 
 	_scrobble_begin_ms = new_time_ns / MIO;
 }
@@ -302,8 +311,9 @@ void GSTPlaybackEngine::jump_abs_ms(quint64 where) {
 void GSTPlaybackEngine::jump_rel(quint32 where) {
 
 	gint64 new_time_ns;
-
 	float p = where / 100.0f;
+
+
 	new_time_ns = _pipeline->seek_rel(p, _md.length_ms * MIO);
 
 	_scrobble_begin_ms = new_time_ns / MIO;
@@ -479,6 +489,7 @@ void GSTPlaybackEngine::_change_gapless() {
 		_may_start_timer = false;
 	}
 }
+
 
 void  GSTPlaybackEngine::psl_set_speed(float f) {
 	_pipeline->set_speed(f);

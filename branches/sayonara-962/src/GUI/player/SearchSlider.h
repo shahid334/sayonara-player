@@ -54,6 +54,7 @@ protected:
 
 private:
 	bool	_searching;
+	void	emit_new_val(int value);
 };
 
 #endif /* SEARCHSLIDER_H_ */

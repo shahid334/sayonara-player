@@ -69,7 +69,7 @@ bool SearchSlider::event(QEvent *e){
 				setValue(value() - delta_val);
 			}
 
-			emit sig_slider_moved(value());
+			emit_new_val(value());
 			break;
 
 		case QEvent::KeyPress:
@@ -90,14 +90,14 @@ bool SearchSlider::event(QEvent *e){
 				_searching = false;
 				setValue(value() + delta_val);
 				_searching = true;
-				emit sig_slider_moved(value());
+				emit_new_val(value());
 			}
 
 			else if(ke->key() == Qt::Key_Left){
 				_searching = false;
 				setValue(value() - delta_val);
 				_searching = true;
-				emit sig_slider_moved(value());
+				emit_new_val(value());
 			}
 			break;
 
@@ -140,12 +140,12 @@ void SearchSlider::mouseReleaseEvent(QMouseEvent* e){
 	int percent = (e->pos().x() * 100) / geometry().width();
 	int new_val =  (this->maximum() * percent) / 100;
 
-	emit sig_slider_moved( new_val );
+	emit_new_val( new_val );
 }
 
 void SearchSlider::mouseMoveEvent(QMouseEvent *e){
 	QSlider::mouseMoveEvent(e);
-	emit sig_slider_moved(this->value());
+	emit_new_val(this->value());
 }
 
 
@@ -160,15 +160,21 @@ void SearchSlider::increment(int i){
 
 	setValue( value() + i );
 
-	emit sig_slider_moved(this->value());
+	emit_new_val(this->value());
 }
 
 void SearchSlider::decrement(int i){
 
 	setValue( value() - i );
 
-	emit sig_slider_moved(this->value());
+	emit_new_val(this->value());
 }
 
 
 
+void SearchSlider::emit_new_val(int value){
+	if(value < 0) value = 0;
+	if(value > maximum()) value = maximum();
+
+	emit sig_slider_moved(value);
+}
