@@ -196,13 +196,15 @@ GSTPlaybackPipeline::~GSTPlaybackPipeline() {
 
 bool GSTPlaybackPipeline::create_element(GstElement** elem, const gchar* elem_name, const gchar* name){
 
-	QString error_msg = QString("Engine: ") + name + " creation failed";
+	QString error_msg;
 	if(name){
 		*elem = gst_element_factory_make(elem_name, name);
+		 error_msg = QString("Engine: ") + name + " creation failed";
 	}
 
 	else {
 		*elem = gst_element_factory_make(elem_name, elem_name);
+		 error_msg = QString("Engine: ") + elem_name + " creation failed";
 	}
 
 	return _test_and_error(*elem, error_msg);
