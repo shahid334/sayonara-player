@@ -98,8 +98,6 @@ public:
 	virtual bool		get_broadcast_active() { return _broadcast_active; }
 
 
-
-
 signals:
 	void sig_md_changed(const MetaData&);
 

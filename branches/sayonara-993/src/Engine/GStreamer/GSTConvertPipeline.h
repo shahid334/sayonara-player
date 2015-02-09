@@ -36,7 +36,6 @@ public:
 	virtual ~GSTConvertPipeline();
 	bool set_uri(gchar* uri);
 	bool set_target_uri(gchar* uri);
-	
 
 public slots:
 	void play();
@@ -54,7 +53,6 @@ private:
 	GstElement* _audio_convert;
 	GstElement* _audio_sink;
 	GstElement* _resampler;
-	GstElement* _id3mux;
 	GstElement* _xingheader;
 };
 

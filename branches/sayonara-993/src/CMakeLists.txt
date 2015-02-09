@@ -12,17 +12,19 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-SET(CMAKE_BUILD_TYPE "Release")
-SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
+#SET(CMAKE_BUILD_TYPE "Release")
+#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
+#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
 
-#SET(CMAKE_BUILD_TYPE "Debug")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
-#SET(CMAKE_C_FLAGS "-Wall")
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
+SET(CMAKE_C_FLAGS "-Wall")
 
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTNETWORK TRUE)
+
+
 
 SET(LANG ${CMAKE_CURRENT_SOURCE_DIR}/languages/sayonara_lang_de.ts)
 
@@ -51,6 +53,7 @@ ENDIF()
 
 
 ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
+ADD_DEFINITIONS(-DLIB_INSTALL_DIR="${LIB_INSTALL_DIR}")
 
 LINK_DIRECTORIES(${TAGLIB_LIBRARY_DIRS})
 LINK_DIRECTORIES(${CURL_LIBRARY_DIRS})

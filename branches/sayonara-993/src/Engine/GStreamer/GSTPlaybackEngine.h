@@ -61,8 +61,8 @@ public:
 	void		set_cur_position_ms(qint64 pos_ms);
 
 
-	MyCaps* get_caps();
-	void unmute();
+	MyCaps*		get_caps();
+	void		unmute();
 
 	virtual void init();
 
@@ -76,11 +76,11 @@ private:
 
 	MyCaps*					_caps;
 
-	bool _wait_for_gapless_track;
-	bool _may_start_timer;
-	bool _sr_active;
-	bool _gapless;
-	int _jump_play_s;
+	bool					_wait_for_gapless_track;
+	bool					_may_start_timer;
+	bool					_sr_active;
+	bool					_gapless;
+	int						_jump_play_s;
 
 	// methods
 	bool set_uri(const MetaData& md);
