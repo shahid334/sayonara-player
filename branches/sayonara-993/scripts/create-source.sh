@@ -3,8 +3,9 @@
 svn update
 
 REV=`svn info | grep Revision | tail -c 4`
-TARGET_FILENAME="sayonara-player-r${REV}"
+TARGET_FILENAME="sayonara-player"
 TARGET_PATH="/tmp/${TARGET_FILENAME}"
+rm $TARGET_PATH
 
 ARG="b"
 if [ $# -ge 1 ] ; then

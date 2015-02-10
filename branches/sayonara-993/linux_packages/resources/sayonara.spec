@@ -1,8 +1,6 @@
-%global svnrev  r992
-
 Name:           sayonara
-Version:        0.6.1
-Release:        1.5.svn992%{?dist}
+Version:        <<VERSION>>
+Release:        1.<<REVISION>>
 Summary:        A lightweight Qt Audio player
 
 License:        GPLv3
@@ -10,7 +8,7 @@ URL:            http://code.google.com/p/sayonara-player/
 # download instructions
 # svn co -r992 http://sayonara-player.googlecode.com/svn/trunk/ sayonara-player-r992
 # tar cfz sayonara-player-r992.tar.gz sayonara-player-r992
-Source0:        sayonara-player-%{svnrev}.tar.gz
+Source0:        sayonara-player-<<VERSION>>-<<REVISION>>.tar.gz
 #Patch0:         sayonara-desktop.patch
 #Patch1:         sayonara-libdir.patch
 
@@ -31,9 +29,9 @@ benefits of this player. Sayonara should be easy and intuitive to use and
 therefore it should be able to compete with the most popular music players.
 
 %prep
-%setup -q -n %{name}-player-%{svnrev}
-%patch0 -p1
-%patch1 -p1
+%setup -q -n sayonara-player-<<VERSION>>-<<REVISION>>
+#%patch0 -p1
+#%patch1 -p1
 
 # enabled debuging information due rpmlint error message debuginfo-without-sources
 sed -i \
@@ -91,7 +89,7 @@ fi
 
 #files -f %{name}.lang
 %files
-%doc MANUAL README.txt VERSION
+%doc MANUAL README.txt
 %{_bindir}/%{name}
 %{_libdir}/%{name}
 %{_datadir}/%{name}/

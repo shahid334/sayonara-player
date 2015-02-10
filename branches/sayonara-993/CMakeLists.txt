@@ -1,3 +1,5 @@
+#VERSION 0.6.2
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 
 project("Sayonara Player")
