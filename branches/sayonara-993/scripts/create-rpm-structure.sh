@@ -27,11 +27,9 @@ SOURCE_PATH="${RPM_PATH}/SOURCES"
 CHANGELOG_DATE=`date +"%a %b %d %Y"`
 CHANGELOG_ENTRY="\%changelog\n\* ${CHANGELOG_DATE} Lucio Carreras <luciocarreras@gmail.com> - ${VERSION}-${REVISION}\n- write some changelog here\n"
 
-rm -rf ${RPM_PATH}
-
-mkdir ${RPM_PATH}
-mkdir ${SPEC_PATH}
-mkdir ${SOURCE_PATH}
+mkdir -p ${RPM_PATH}
+mkdir -p ${SPEC_PATH}
+mkdir -p ${SOURCE_PATH}
 
 cp linux_packages/resources/sayonara.spec ${SPEC_PATH}
 sed -i "s/<<VERSION>>/${VERSION}/g" ${SPEC_PATH}/sayonara.spec
