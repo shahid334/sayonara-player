@@ -29,7 +29,7 @@ benefits of this player. Sayonara should be easy and intuitive to use and
 therefore it should be able to compete with the most popular music players.
 
 %prep
-%setup -q -n sayonara-player-<<VERSION>>-<<REVISION>>
+%setup -q -n sayonara-player
 #%patch0 -p1
 #%patch1 -p1
 
