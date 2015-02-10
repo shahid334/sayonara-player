@@ -1,10 +1,8 @@
 #!/bin/bash
 
-cd $1
-
 MAJOR=0
 MINOR=6
-SUBMINOR=0
+SUBMINOR=1
 REV=`svn info | grep Revision | tail -c 4`
 
 echo "MAJOR ${MAJOR}" > VERSION
@@ -13,4 +11,5 @@ echo "SUBMINOR ${SUBMINOR}" >> VERSION
 echo "BUILD ${REV}" >> VERSION
 
 echo "Update to Version ${MAJOR}.${MINOR}.${SUBMINOR}-r${REV}"
+echo "Version: ${MAJOR}.${MINOR}.${SUBMINOR}" >> linux_packages/resources/sayonara.desktop
 
