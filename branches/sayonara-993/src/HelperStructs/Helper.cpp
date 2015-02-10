@@ -26,11 +26,11 @@
  *      Author: luke
  */
 
-+#ifndef Q_OS_WIN
-+# ifndef LIB_INSTALL_DIR
-+#   define LIB_INSTALL_DIR "/usr/lib"
-+# endif
-+#endif
+#ifndef Q_OS_WIN
+#ifndef LIB_INSTALL_DIR
+#define LIB_INSTALL_DIR "/usr/lib"
+#endif
+#endif
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
